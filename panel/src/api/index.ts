@@ -1,14 +1,14 @@
-import Auth from "./auth.js";
-import Files from "./files.js";
-import Languages from "./languages.js";
-import Pages from "./pages.js";
-import Roles from "./roles.js";
-import System from "./system.js";
-import Site from "./site.js";
-import Translations from "./translations.js";
-import Users from "./users.js";
+import Auth from "./auth";
+import Files from "./files";
+import Languages from "./languages";
+import Pages from "./pages";
+import Roles from "./roles";
+import System from "./system";
+import Site from "./site";
+import Translations from "./translations";
+import Users from "./users";
 
-import { request } from "@/panel/request";
+import { request, type PanelRequestOptions } from "@/panel/request";
 import { ltrim, rtrim } from "@/helpers/string";
 import { buildQuery } from "@/helpers/url";
 
@@ -16,9 +16,25 @@ import { buildQuery } from "@/helpers/url";
  * Panel API Setup
  */
 export default class Api {
-	requests = [];
+	csrf: string;
+	endpoint: string;
+	methodOverride: boolean;
+	language: string;
+	panel: TODO;
+	pingId?: ReturnType<typeof setInterval>;
+	requests: string[] = [];
 
-	constructor(panel) {
+	auth: ReturnType<typeof Auth>;
+	files: ReturnType<typeof Files>;
+	languages: ReturnType<typeof Languages>;
+	pages: ReturnType<typeof Pages>;
+	roles: ReturnType<typeof Roles>;
+	system: ReturnType<typeof System>;
+	site: ReturnType<typeof Site>;
+	translations: ReturnType<typeof Translations>;
+	users: ReturnType<typeof Users>;
+
+	constructor(panel: TODO) {
 		this.panel = panel;
 		this.csrf = panel.system.csrf;
 		this.endpoint = rtrim(panel.urls.api, "/");
@@ -43,14 +59,24 @@ export default class Api {
 	/**
 	 * Sends DELETE request
 	 */
-	async delete(path, data, options, silent = false) {
-		return this.post(path, data, options, "DELETE", silent);
+	async delete<T>(
+		path: string,
+		data?: Record<string, unknown>,
+		options?: Record<string, unknown>,
+		silent = false
+	): Promise<T> {
+		return this.post<T>(path, data, options, "DELETE", silent);
 	}
 
 	/**
 	 * Sends GET request
 	 */
-	async get(path, query, options, silent = false) {
+	async get<T>(
+		path: string,
+		query?: Record<string, unknown>,
+		options?: Record<string, unknown>,
+		silent = false
+	): Promise<T> {
 		if (query) {
 			const search = buildQuery(query).toString();
 
@@ -59,14 +85,19 @@ export default class Api {
 			}
 		}
 
-		return this.request(path, { ...options, method: "GET" }, silent);
+		return this.request<T>(path, { ...options, method: "GET" }, silent);
 	}
 
 	/**
 	 * Sends PATCH request
 	 */
-	async patch(path, data, options, silent = false) {
-		return this.post(path, data, options, "PATCH", silent);
+	async patch<T>(
+		path: string,
+		data?: Record<string, unknown>,
+		options?: Record<string, unknown>,
+		silent = false
+	): Promise<T> {
+		return this.post<T>(path, data, options, "PATCH", silent);
 	}
 
 	/**
@@ -88,15 +119,25 @@ export default class Api {
 	/**
 	 * Sends POST request
 	 */
-	async post(path, data, options, method = "POST", silent = false) {
-		return this.request(
+	async post<T>(
+		path: string,
+		data?: Record<string, unknown>,
+		options?: Record<string, unknown>,
+		method = "POST",
+		silent = false
+	): Promise<T> {
+		return this.request<T>(
 			path,
-			{ ...options, method: method, body: JSON.stringify(data) },
+			{ ...options, method, body: JSON.stringify(data) },
 			silent
 		);
 	}
 
-	async request(path, options = {}, silent = false) {
+	async request<T>(
+		path: string,
+		options: Record<string, unknown> = {},
+		silent = false
+	): Promise<T> {
 		// create a request id
 		const id = path + "/" + JSON.stringify(options);
 
@@ -113,19 +154,19 @@ export default class Api {
 		this.language = this.panel.language.code;
 
 		try {
-			const method = options.method ?? "GET";
-			const url = rtrim(api.endpoint, "/") + "/" + ltrim(path, "/");
+			const method = (options.method as string) ?? "GET";
+			const url = rtrim(this.endpoint, "/") + "/" + ltrim(path, "/");
 
 			// Rewrite non-GET/POST methods as POST when method override is enabled
 			const overrideMethod =
-				api.methodOverride && method !== "GET" && method !== "POST";
+				this.methodOverride && method !== "GET" && method !== "POST";
 
 			const { response } = await request(url, {
-				...options,
-				csrf: api.csrf,
+				...(options as Partial<PanelRequestOptions>),
+				csrf: this.csrf,
 				method: overrideMethod ? "POST" : method,
 				headers: {
-					"x-language": api.language,
+					"x-language": this.language,
 					...(overrideMethod ? { "x-http-method-override": method } : {}),
 					...(options.headers ?? {})
 				}
@@ -135,10 +176,10 @@ export default class Api {
 
 			// simplify the response
 			if (data.data && data.type === "model") {
-				return data.data;
+				return data.data as T;
 			}
 
-			return data;
+			return data as T;
 		} finally {
 			// restart the ping
 			this.ping();
