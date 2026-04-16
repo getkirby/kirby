@@ -16,82 +16,83 @@ import { rtrim } from "@/helpers/string";
 
 /**
  * Panel API Setup
- *
- * @param {object} panel
  */
-export default (panel) => {
-	const api = {
-		csrf: panel.system.csrf,
-		endpoint: rtrim(panel.urls.api, "/"),
-		methodOverride: panel.config.api?.methodOverride ?? false,
-		ping: null,
-		requests: [],
-		running: 0
-	};
+export default class Api {
+	requests = [];
 
-	// clear and restart the auth beacon
-	const ping = () => {
-		clearInterval(api.ping);
-		api.ping = setInterval(
+	constructor(panel) {
+		this.panel = panel;
+		this.csrf = panel.system.csrf;
+		this.endpoint = rtrim(panel.urls.api, "/");
+		this.methodOverride = panel.config.api?.methodOverride ?? false;
+		this.language = panel.language.code;
+
+		// methods
+		this.get = Get(this);
+		this.post = Post(this);
+		this.patch = Patch(this);
+		this.delete = Delete(this);
+
+		// modules
+		this.auth = Auth(this);
+		this.files = Files(this);
+		this.languages = Languages(this);
+		this.pages = Pages(this);
+		this.roles = Roles(this);
+		this.system = System(this);
+		this.site = Site(this);
+		this.translations = Translations(this);
+		this.users = Users(this);
+
+		// regularly ping API to keep session alive
+		this.ping();
+	}
+
+	/**
+	 * Clear and restart the auth beacon
+	 */
+	ping() {
+		clearInterval(this.pingId);
+
+		this.pingId = setInterval(
 			() => {
-				if (panel.isOffline === false) {
-					api.auth.ping();
+				if (this.panel.isOffline === false) {
+					this.auth.ping();
 				}
 			},
 			5 * 60 * 1000
 		);
-	};
+	}
 
-	// setup the main request method
-	api.request = async (path, options = {}, silent = false) => {
+	async request(path, options = {}, silent = false) {
 		// create a request id
 		const id = path + "/" + JSON.stringify(options);
 
 		// keep track of the request
-		api.requests.push(id);
+		this.requests.push(id);
 
 		// start the loader if it's not a silent request
 		if (silent === false && options.silent !== true) {
-			panel.isLoading = true;
+			this.panel.isLoading = true;
 		}
 
 		// always update the language on each request to ensure
 		// that only the most current one is used
-		api.language = panel.language.code;
+		this.language = this.panel.language.code;
 
 		try {
-			return await Request(api)(path, options);
+			return await Request(this)(path, options);
 		} finally {
 			// restart the ping
-			ping();
+			this.ping();
 
 			// remove the request from the running list
-			api.requests = api.requests.filter((value) => value !== id);
+			this.requests = this.requests.filter((value) => value !== id);
 
 			// stop the loader if all requests ended
-			if (api.requests.length === 0) {
-				panel.isLoading = false;
+			if (this.requests.length === 0) {
+				this.panel.isLoading = false;
 			}
 		}
-	};
-
-	// modules
-	api.auth = Auth(api);
-	api.delete = Delete(api);
-	api.files = Files(api);
-	api.get = Get(api);
-	api.languages = Languages(api);
-	api.pages = Pages(api);
-	api.patch = Patch(api);
-	api.post = Post(api);
-	api.roles = Roles(api);
-	api.system = System(api);
-	api.site = Site(api);
-	api.translations = Translations(api);
-	api.users = Users(api);
-
-	// regularly ping API to keep session alive
-	ping();
-
-	return api;
-};
+	}
+}
