@@ -7,6 +7,7 @@ use Kirby\Cms\Language;
 use Kirby\Cms\Page;
 use Kirby\Cms\User;
 use Kirby\Data\Data;
+use Kirby\Exception\LogicException;
 use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -579,6 +580,64 @@ class PlainTextStorageTest extends TestCase
 
 		$this->storage->update(VersionId::latest(), Language::single(), $fields);
 		$this->assertSame($fields, Data::read($this->model->root() . '/article.txt'));
+	}
+
+	public function testUpdateLatestSingleLangFailsForStalePageAfterMove(): void
+	{
+		$this->setUpSingleLanguage([
+			'children' => [
+				[
+					'slug'     => 'a-page',
+					'template' => 'article',
+				],
+				[
+					'slug'     => 'a',
+					'template' => 'article',
+					'num'      => 1,
+				],
+				[
+					'slug'     => 'b',
+					'template' => 'article',
+					'num'      => 2,
+				],
+				[
+					'slug'     => 'c',
+					'template' => 'article',
+					'num'      => 3,
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		Data::write($this->app->page('a')->root() . '/article.txt', []);
+		Data::write($this->app->page('b')->root() . '/article.txt', []);
+		Data::write($this->app->page('c')->root() . '/article.txt', []);
+
+		$stalePage = $this->app->page('b')->clone();
+		$freshPage = $this->app->page('b');
+		$storage   = new PlainTextStorage($stalePage);
+
+		$this->assertSame(static::TMP . '/content/2_b', $stalePage->root());
+
+		$freshPage = $freshPage->changeSort(3);
+
+		$this->assertSame(static::TMP . '/content/3_b', $freshPage->root());
+		$this->assertDirectoryExists(static::TMP . '/content/3_b');
+		$this->assertDirectoryDoesNotExist(static::TMP . '/content/2_b');
+
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('The page was moved during a concurrent operation.');
+
+		try {
+			$storage->update(VersionId::latest(), Language::single(), [
+				'title' => 'Updated'
+			]);
+		} finally {
+			$this->assertDirectoryDoesNotExist(static::TMP . '/content/2_b');
+			$this->assertDirectoryExists(static::TMP . '/content/3_b');
+			$this->assertFileDoesNotExist(static::TMP . '/content/2_b/article.txt');
+		}
 	}
 
 	public function testUpdateForFileWithMetaData(): void
