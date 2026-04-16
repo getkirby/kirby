@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\DuplicateException;
+use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\Attributes\CoversClass;
 use TypeError;
@@ -487,20 +488,34 @@ class PageCreateTest extends ModelTestCase
 
 	public function testCreateStripInjectedBlueprint(): void
 	{
-		$page = Page::create([
-			'slug'      => 'new-page',
-			'blueprint' => [
-				'options' => [
-					// would deny creation if respected
-					'create' => false
+		$this->app = $this->app->clone([
+			'roles' => [
+				[
+					'name'        => 'editor',
+					'permissions' => [
+						'pages' => [
+							'create' => false,
+						]
+					]
 				]
+			],
+			'user'  => 'editor@domain.com',
+			'users' => [
+				['email' => 'editor@domain.com', 'role' => 'editor']
 			]
 		]);
 
-		// creation succeeded, injected options were stripped
-		$this->assertTrue($page->exists());
-		// blueprint is the default, not the injected one
-		$this->assertNull($page->blueprint()->option('create'));
+		$this->expectException(PermissionException::class);
+
+		Page::create([
+			'slug'      => 'new-page',
+			'blueprint' => [
+				'options' => [
+					// would allow creation if respected, must be stripped
+					'create' => true
+				]
+			]
+		]);
 	}
 
 	/**

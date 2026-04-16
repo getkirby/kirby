@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\PermissionException;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(User::class)]
@@ -296,20 +297,36 @@ class UserCreateTest extends ModelTestCase
 
 	public function testCreateStripInjectedBlueprint(): void
 	{
-		$user = User::create([
+		$this->app = $this->app->clone([
+			'roles' => [
+				['name' => 'admin'],
+				[
+					'name'        => 'editor',
+					'permissions' => [
+						'users' => [
+							'create' => false,
+						]
+					]
+				]
+			],
+			'user'  => 'editor@getkirby.com',
+			'users' => [
+				['email' => 'admin@getkirby.com', 'role' => 'admin'],
+				['email' => 'editor@getkirby.com', 'role' => 'editor']
+			]
+		]);
+
+		$this->expectException(PermissionException::class);
+
+		User::create([
 			'email'     => 'new@domain.com',
 			'role'      => 'editor',
 			'blueprint' => [
 				'options' => [
-					// would deny creation if respected
-					'create' => false
+					// would allow creation if respected, must be stripped
+					'create' => true
 				]
 			]
 		]);
-
-		// creation succeeded, injected options were stripped
-		$this->assertTrue($user->exists());
-		// blueprint is the default, not the injected one
-		$this->assertNull($user->blueprint()->option('create'));
 	}
 }

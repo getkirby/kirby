@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\File as BaseFile;
 use Kirby\Image\Image;
@@ -322,25 +323,39 @@ class FileCreateTest extends ModelTestCase
 
 	public function testCreateStripInjectedBlueprint(): void
 	{
+		$this->app = $this->app->clone([
+			'roles' => [
+				[
+					'name'        => 'editor',
+					'permissions' => [
+						'files' => [
+							'create' => false,
+						]
+					]
+				]
+			],
+			'user'  => 'editor@domain.com',
+			'users' => [
+				['email' => 'editor@domain.com', 'role' => 'editor']
+			]
+		]);
+
 		$parent = new Page(['slug' => 'test']);
 
 		F::write($source = static::TMP . '/source.md', '# Test');
 
-		$result = File::create([
+		$this->expectException(PermissionException::class);
+
+		File::create([
 			'filename'  => 'test.md',
 			'source'    => $source,
 			'parent'    => $parent,
 			'blueprint' => [
 				'options' => [
-					// would deny creation if respected
-					'create' => false
+					// would allow creation if respected, must be stripped
+					'create' => true
 				]
 			]
 		]);
-
-		// creation succeeded, injected options were stripped
-		$this->assertFileExists($result->root());
-		// blueprint is the default, not the injected one
-		$this->assertNull($result->blueprint()->option('create'));
 	}
 }
