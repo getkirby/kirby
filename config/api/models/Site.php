@@ -11,7 +11,7 @@ return [
 	'fields' => [
 		'blueprint'  => fn (Site $site) => $site->blueprint(),
 		'children'   => fn (Site $site) => $site->children()->filter('isListable', true),
-		'content'    => fn (Site $site) => Form::for($site)->values(),
+		'content'    => fn (Site $site) => Form::for($site)->toFormValues(),
 		'drafts'     => fn (Site $site) => $site->drafts()->filter('isListable', true),
 		'files'      => fn (Site $site) => $site->files()->sorted()->filter('isListable', true),
 		'options'    => fn (Site $site) => $site->permissions()->toArray(),
