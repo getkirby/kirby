@@ -541,6 +541,8 @@ class FindTest extends TestCase
 			'users' => [
 				[
 					'email' => 'admin@getkirby.com',
+				],
+				[
 					'email' => 'editor@getkirby.com',
 				]
 			]
