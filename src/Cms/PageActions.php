@@ -497,6 +497,11 @@ trait PageActions
 	 */
 	public static function create(array $props): Page
 	{
+		// Prevent injecting blueprint as this always must be derived from
+		// the template/model name and blueprint object in the app,
+		// never directly be supplied by the caller
+		unset($props['blueprint']);
+
 		// clean up the slug
 		$props['slug']      = Url::slug($props['slug'] ?? $props['content']['title'] ?? null);
 		$props['template']  = $props['model'] = strtolower($props['template'] ?? 'default');

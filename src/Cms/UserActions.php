@@ -214,6 +214,11 @@ trait UserActions
 	 */
 	public static function create(array|null $props = null): User
 	{
+		// Prevent injecting blueprint as this always must be derived from
+		// the template/model name and blueprint object in the app,
+		// never directly be supplied by the caller
+		unset($props['blueprint']);
+
 		$data = $props;
 
 		if (isset($props['email']) === true) {
