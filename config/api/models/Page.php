@@ -14,7 +14,7 @@ return [
 		'content'     => fn (Page $page) => Form::for($page)->values(),
 		'drafts'      => fn (Page $page) => $page->drafts()->filter('isListable', true),
 		'errors'      => fn (Page $page) => $page->errors(),
-		'files'       => fn (Page $page) => $page->files()->sorted(),
+		'files'       => fn (Page $page) => $page->files()->sorted()->filter('isListable', true),
 		'hasChildren' => fn (Page $page) => $page->hasChildren(),
 		'hasDrafts'   => fn (Page $page) => $page->hasDrafts(),
 		'hasFiles'    => fn (Page $page) => $page->hasFiles(),

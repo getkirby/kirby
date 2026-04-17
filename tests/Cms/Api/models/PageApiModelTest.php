@@ -141,6 +141,8 @@ class PageApiModelTest extends ApiModelTestCase
 
 	public function testFiles(): void
 	{
+		$this->app->impersonate('kirby');
+
 		$page = new Page([
 			'slug' => 'test',
 			'files' => [
@@ -153,6 +155,48 @@ class PageApiModelTest extends ApiModelTestCase
 
 		$this->assertSame('a.jpg', $model['files'][0]['filename']);
 		$this->assertSame('b.jpg', $model['files'][1]['filename']);
+	}
+
+	public function testFilesInaccessible(): void
+	{
+		$this->app = new App([
+			'roots' => ['index' => static::TMP],
+			'blueprints' => [
+				'files/files-restricted' => [
+					'options' => ['list' => false]
+				]
+			],
+			'roles' => [
+				['name' => 'editor']
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'test',
+						'num'   => 1,
+						'files' => [
+							['filename' => 'a.jpg'],
+							['filename' => 'b.jpg', 'template' => 'files-restricted'],
+							['filename' => 'c.jpg'],
+						]
+					]
+				]
+			],
+			'users' => [
+				['id' => 'editor', 'role' => 'editor']
+			]
+		]);
+
+		$this->app->impersonate('editor');
+		$this->api = $this->app->api();
+
+		$page  = $this->app->page('test');
+		$model = $this->api->resolve($page)->select('files')->toArray();
+
+		$filenames = array_column($model['files'], 'filename');
+		$this->assertContains('a.jpg', $filenames);
+		$this->assertNotContains('b.jpg', $filenames);
+		$this->assertContains('c.jpg', $filenames);
 	}
 
 	public function testHasDrafts(): void
