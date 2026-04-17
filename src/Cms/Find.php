@@ -148,7 +148,7 @@ class Find
 		}
 
 		throw new NotFoundException(
-			key: 'site.notFound'
+			key: 'site.notAccessible'
 		);
 	}
 
