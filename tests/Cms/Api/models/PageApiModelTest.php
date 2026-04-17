@@ -221,6 +221,100 @@ class PageApiModelTest extends ApiModelTestCase
 		$this->assertAttr($page, 'num', 2);
 	}
 
+	public function testParent(): void
+	{
+		$this->app = new App([
+			'roots' => ['index' => static::TMP],
+			'blueprints' => [
+				'pages/parent-restricted' => [
+					'options' => ['list' => false]
+				]
+			],
+			'roles' => [
+				['name' => 'editor']
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'accessible',
+						'num'      => 1,
+						'children' => [
+							['slug' => 'child', 'num' => 1]
+						]
+					],
+					[
+						'slug'     => 'restricted',
+						'num'      => 2,
+						'template' => 'parent-restricted',
+						'children' => [
+							['slug' => 'child', 'num' => 1]
+						]
+					]
+				]
+			],
+			'users' => [
+				['id' => 'editor', 'role' => 'editor']
+			]
+		]);
+
+		$this->app->impersonate('editor');
+		$this->api = $this->app->api();
+
+		$page  = $this->app->page('accessible/child');
+		$model = $this->api->resolve($page)->select('parent')->toArray();
+		$this->assertSame('accessible', $model['parent']['id']);
+
+		$page  = $this->app->page('restricted/child');
+		$model = $this->api->resolve($page)->select('parent')->toArray();
+		$this->assertNull($model['parent']);
+	}
+
+	public function testParents(): void
+	{
+		$this->app = new App([
+			'roots' => ['index' => static::TMP],
+			'blueprints' => [
+				'pages/parents-restricted' => [
+					'options' => ['list' => false]
+				]
+			],
+			'roles' => [
+				['name' => 'editor']
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'grandparent',
+						'num'      => 1,
+						'children' => [
+							[
+								'slug'     => 'parent',
+								'num'      => 1,
+								'template' => 'parents-restricted',
+								'children' => [
+									['slug' => 'child', 'num' => 1]
+								]
+							]
+						]
+					]
+				]
+			],
+			'users' => [
+				['id' => 'editor', 'role' => 'editor']
+			]
+		]);
+
+		$this->app->impersonate('editor');
+		$this->api = $this->app->api();
+
+		$page  = $this->app->page('grandparent/parent/child');
+		$model = $this->api->resolve($page)->select('parents')->toArray();
+
+		$parentIds = array_column($model['parents'], 'id');
+		$this->assertContains('grandparent', $parentIds);
+		$this->assertNotContains('grandparent/parent', $parentIds);
+	}
+
 	public function testSiblings(): void
 	{
 		$this->app = new App([

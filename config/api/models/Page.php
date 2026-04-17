@@ -23,8 +23,16 @@ return [
 		'num'     	  => fn (Page $page) => $page->num(),
 		'options' 	  => fn (Page $page) => $page->panel()->options(['preview']),
 		'panelImage'  => fn (Page $page) => $page->panel()->image(),
-		'parent'      => fn (Page $page) => $page->parent(),
-		'parents'     => fn (Page $page) => $page->parents()->flip(),
+		'parent'      => function (Page $page) {
+			$parent = $page->parent();
+
+			if ($parent === null || $parent->isListable() === false) {
+				return null;
+			}
+
+			return $parent;
+		},
+		'parents'     => fn (Page $page) => $page->parents()->flip()->filter('isListable', true),
 		'previewUrl'  => fn (Page $page) => $page->previewUrl(),
 		'siblings'    => function (Page $page) {
 			if ($page->isDraft() === true) {
