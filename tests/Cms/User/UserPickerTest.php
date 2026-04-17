@@ -22,11 +22,6 @@ class UserPickerTest extends ModelTestCase
 				['email' => 'a@getkirby.com', 'role' => 'editor-' . $uuid],
 				['email' => 'b@getkirby.com', 'role' => 'editor-' . $uuid],
 				['email' => 'c@getkirby.com', 'role' => 'editor-' . $uuid]
-			],
-			'roles' => [
-				// without role, the users would get the nobody role,
-				// which is not listable.
-				['name' => 'editor-' . $uuid],
 			]
 		]);
 
