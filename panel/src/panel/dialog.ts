@@ -1,19 +1,28 @@
-import Modal, { defaults as modalDefaults } from "./modal.js";
+import Modal, { defaults as modalDefaults, type ModalState } from "./modal";
 import { isObject } from "@/helpers/object";
 import { reactive } from "vue";
+import { type Listener } from "./listeners";
 
-export const defaults = () => {
+export type DialogState = ModalState & {};
+
+export function defaults(): DialogState {
 	return {
 		...modalDefaults()
 	};
+}
+
+// Options used when opening a dialog
+export type DialogOptions = DialogState & {
+	replace?: boolean;
+	url?: string;
 };
 
 /**
  * @since 4.0.0
  */
-export default (panel) => {
+export default function Dialog(panel: TODO) {
 	// shortcut to submit dialogs
-	panel.events.on("dialog.save", (e) => {
+	panel.events.on("dialog.save", (e: Event) => {
 		e?.preventDefault?.();
 		panel.dialog.submit();
 	});
@@ -56,12 +65,14 @@ export default (panel) => {
 		 *     cancel: () => {}
 		 *   }
 		 * });
-		 *
-		 * @param {String|Object} dialog
-		 * @param {Object|Function} options
-		 * @returns {Object}
 		 */
-		async open(dialog, options = {}) {
+		async open(
+			dialog: string | URL | Partial<Prettify<DialogOptions>>,
+			options: Partial<Prettify<DialogOptions>> | Listener = {}
+		): Promise<Prettify<DialogState>> {
+			// extract replace before dialog is transformed
+			const replace = isObject(dialog) ? dialog.replace : undefined;
+
 			// handle drawer object with url property
 			if (isObject(dialog) && dialog.url) {
 				options = dialog;
@@ -78,10 +89,11 @@ export default (panel) => {
 
 			// add it to the history
 			if (state?.id) {
-				this.history.add(state, dialog.replace);
+				const milestone = state as DialogState & { id: string };
+				this.history.add(milestone, replace);
 			}
 
 			return state;
 		}
 	});
-};
+}

@@ -1,21 +1,31 @@
-import Modal, { defaults as modalDefaults } from "./modal.js";
+import Modal, { defaults as modalDefaults, type ModalState } from "./modal";
 import { isObject } from "@/helpers/object";
 import { reactive } from "vue";
+import { type Listener } from "./listeners";
 
-export const defaults = () => {
+export type DrawerState = ModalState & {};
+
+export function defaults(): DrawerState {
 	return {
 		...modalDefaults()
 	};
+}
+
+// Options used when opening a drawer
+export type DrawerOptions = DrawerState & {
+	replace?: boolean;
+	tab?: string;
+	url?: string;
 };
 
 /**
  * @since 4.0.0
  */
-export default (panel) => {
+export default function Drawer(panel: TODO) {
 	const parent = Modal(panel, "drawer", defaults());
 
 	// shortcut to submit drawers
-	panel.events.on("drawer.save", (e) => {
+	panel.events.on("drawer.save", (e: Event) => {
 		e.preventDefault();
 		panel.drawer.submit();
 	});
@@ -23,15 +33,16 @@ export default (panel) => {
 	return reactive({
 		...parent,
 
-		get breadcrumb() {
+		get breadcrumb(): DrawerState[] {
 			return this.history.milestones;
 		},
 
-		get icon() {
-			return this.props.icon ?? "box";
+		get icon(): string {
+			const icon = this.props.icon as string | undefined;
+			return icon ?? "box";
 		},
 
-		listeners() {
+		listeners(): Record<string, Listener> {
 			return {
 				...parent.listeners.call(this),
 				crumb: this.goTo.bind(this),
@@ -72,12 +83,15 @@ export default (panel) => {
 		 *     cancel: () => {}
 		 *   }
 		 * });
-		 *
-		 * @param {String|Object} drawer
-		 * @param {Object|Function} options
-		 * @returns {Object}
 		 */
-		async open(drawer, options = {}) {
+		async open(
+			drawer: string | URL | Partial<Prettify<DrawerOptions>>,
+			options: Partial<Prettify<DrawerOptions>> | Listener = {}
+		): Promise<Prettify<DrawerState>> {
+			// extract replace and tab before drawer is transformed
+			const replace = isObject(drawer) ? drawer.replace : undefined;
+			const tab = isObject(drawer) ? drawer.tab : undefined;
+
 			// handle drawer object with url property
 			if (isObject(drawer) && drawer.url) {
 				options = drawer;
@@ -93,13 +107,15 @@ export default (panel) => {
 			await parent.open.call(this, drawer, options);
 
 			// open the provided or first tab
-			this.tab(drawer.tab);
+			this.tab(tab);
 
 			// get the current state and add it to the history
 			// (we need to fetch the state freshly as it is altered by `this.tab()`)
 			const state = this.state();
+
 			if (state?.id) {
-				this.history.add(state, drawer.replace);
+				const milestone = state as DrawerState & { id: string };
+				this.history.add(milestone, replace);
 			}
 
 			this.focus();
@@ -107,12 +123,15 @@ export default (panel) => {
 			return state;
 		},
 
-		tab(tab) {
-			const tabs = this.props.tabs ?? {};
-			tab ??= Object.keys(tabs ?? {})[0];
+		tab(tab?: string): void {
+			const tabs = (this.props.tabs ?? {}) as Record<
+				string,
+				{ fields: unknown }
+			>;
+			tab ??= Object.keys(tabs)[0];
 
 			if (!tab) {
-				return false;
+				return;
 			}
 
 			this.props.fields = tabs[tab].fields;
@@ -125,4 +144,4 @@ export default (panel) => {
 			});
 		}
 	});
-};
+}

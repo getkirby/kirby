@@ -4,12 +4,12 @@
  *
  * @example
  * const form = document.querySelector(".k-form");
- * focus(form, "") // focuses first input in form
+ * focus(form) // focuses first input in form
  * focus(".k-dialog", "title") // focuses field named "title" inside dialog
  */
 export default function focus(
 	element: HTMLElement | string | null,
-	field: string
+	field?: string
 ): HTMLElement | false {
 	if (typeof element === "string") {
 		element = document.querySelector<HTMLElement>(element);

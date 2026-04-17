@@ -1,9 +1,9 @@
 import Activation from "./activation";
 import Api from "@/api/index.js";
 import Content from "./content.js";
-import Dialog from "./dialog.js";
+import Dialog from "./dialog";
 import Drag from "./drag";
-import Drawer from "./drawer.js";
+import Drawer from "./drawer";
 import Dropdown from "./dropdown.js";
 import Events from "./events";
 import Language from "./language";
@@ -38,7 +38,7 @@ export const globals = {
 	multilang: false,
 	permissions: {},
 	searches: {},
-	urls: {},
+	urls: {}
 };
 
 /**
@@ -60,7 +60,7 @@ export const states = [
 	"notification",
 	"system",
 	"translation",
-	"user",
+	"user"
 ];
 
 /**
@@ -233,7 +233,7 @@ export default {
 	async get(url, options = {}) {
 		const { response } = await this.request(url, {
 			method: "GET",
-			...options,
+			...options
 		});
 
 		return response?.json ?? {};
@@ -315,7 +315,7 @@ export default {
 		const { response } = await this.request(url, {
 			method: "POST",
 			body: data,
-			...options,
+			...options
 		});
 
 		return response.json;
@@ -337,7 +337,7 @@ export default {
 		return request(url, {
 			referrer: this.view.path,
 			csrf: this.system.csrf,
-			...options,
+			...options
 		});
 	},
 
@@ -491,5 +491,5 @@ export default {
 	 */
 	url(url = "", query = {}, origin) {
 		return buildUrl(url, query, origin);
-	},
+	}
 };
