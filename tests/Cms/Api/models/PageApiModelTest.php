@@ -10,6 +10,8 @@ class PageApiModelTest extends ApiModelTestCase
 
 	public function testChildren(): void
 	{
+		$this->app->impersonate('kirby');
+
 		$page = new Page([
 			'slug' => 'test',
 			'children' => [
@@ -22,6 +24,47 @@ class PageApiModelTest extends ApiModelTestCase
 
 		$this->assertSame('test/a', $model['children'][0]['id']);
 		$this->assertSame('test/b', $model['children'][1]['id']);
+	}
+
+	public function testChildrenInaccessible(): void
+	{
+		$this->app = new App([
+			'roots' => ['index' => static::TMP],
+			'blueprints' => [
+				'pages/children-restricted' => [
+					'options' => ['list' => false]
+				]
+			],
+			'roles' => [
+				['name' => 'editor']
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'parent',
+						'children' => [
+							['slug' => 'a', 'num' => 1],
+							['slug' => 'b', 'num' => 2, 'template' => 'children-restricted'],
+							['slug' => 'c', 'num' => 3],
+						]
+					]
+				]
+			],
+			'users' => [
+				['id' => 'editor', 'role' => 'editor']
+			]
+		]);
+
+		$this->app->impersonate('editor');
+		$this->api = $this->app->api();
+
+		$page  = $this->app->page('parent');
+		$model = $this->api->resolve($page)->select('children')->toArray();
+
+		$childIds = array_column($model['children'], 'id');
+		$this->assertContains('parent/a', $childIds);
+		$this->assertNotContains('parent/b', $childIds);
+		$this->assertContains('parent/c', $childIds);
 	}
 
 	public function testContent(): void
@@ -39,6 +82,8 @@ class PageApiModelTest extends ApiModelTestCase
 
 	public function testDrafts(): void
 	{
+		$this->app->impersonate('kirby');
+
 		$page = new Page([
 			'slug' => 'test',
 			'drafts' => [
@@ -51,6 +96,47 @@ class PageApiModelTest extends ApiModelTestCase
 
 		$this->assertSame('test/a', $model['drafts'][0]['id']);
 		$this->assertSame('test/b', $model['drafts'][1]['id']);
+	}
+
+	public function testDraftsInaccessible(): void
+	{
+		$this->app = new App([
+			'roots' => ['index' => static::TMP],
+			'blueprints' => [
+				'pages/drafts-restricted' => [
+					'options' => ['list' => false]
+				]
+			],
+			'roles' => [
+				['name' => 'editor']
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'   => 'parent',
+						'drafts' => [
+							['slug' => 'a'],
+							['slug' => 'b', 'template' => 'drafts-restricted'],
+							['slug' => 'c'],
+						]
+					]
+				]
+			],
+			'users' => [
+				['id' => 'editor', 'role' => 'editor']
+			]
+		]);
+
+		$this->app->impersonate('editor');
+		$this->api = $this->app->api();
+
+		$page  = $this->app->page('parent');
+		$model = $this->api->resolve($page)->select('drafts')->toArray();
+
+		$draftIds = array_column($model['drafts'], 'id');
+		$this->assertContains('parent/a', $draftIds);
+		$this->assertNotContains('parent/b', $draftIds);
+		$this->assertContains('parent/c', $draftIds);
 	}
 
 	public function testFiles(): void
@@ -144,6 +230,9 @@ class PageApiModelTest extends ApiModelTestCase
 					'options' => ['access' => false]
 				]
 			],
+			'roles' => [
+				['name' => 'editor']
+			],
 			'site' => [
 				'children' => [
 					[
@@ -157,11 +246,11 @@ class PageApiModelTest extends ApiModelTestCase
 				]
 			],
 			'users' => [
-				['id' => 'test', 'role' => 'admin']
+				['id' => 'editor', 'role' => 'editor']
 			]
 		]);
 
-		$this->app->impersonate('test');
+		$this->app->impersonate('editor');
 		$this->api = $this->app->api();
 
 		$page  = $this->app->page('parent/a');
@@ -182,6 +271,9 @@ class PageApiModelTest extends ApiModelTestCase
 					'options' => ['access' => false]
 				]
 			],
+			'roles' => [
+				['name' => 'editor']
+			],
 			'site' => [
 				'children' => [
 					[
@@ -197,11 +289,11 @@ class PageApiModelTest extends ApiModelTestCase
 				]
 			],
 			'users' => [
-				['id' => 'test', 'role' => 'admin']
+				['id' => 'editor', 'role' => 'editor']
 			]
 		]);
 
-		$this->app->impersonate('test');
+		$this->app->impersonate('editor');
 		$this->api = $this->app->api();
 
 		$parent = $this->app->page('parent');

@@ -10,9 +10,9 @@ return [
 	'fields' => [
 		'blueprint'   => fn (Page $page) => $page->blueprint(),
 		'blueprints'  => fn (Page $page) => $page->blueprints(),
-		'children'    => fn (Page $page) => $page->children(),
+		'children'    => fn (Page $page) => $page->children()->filter('isListable', true),
 		'content'     => fn (Page $page) => Form::for($page)->values(),
-		'drafts'      => fn (Page $page) => $page->drafts(),
+		'drafts'      => fn (Page $page) => $page->drafts()->filter('isListable', true),
 		'errors'      => fn (Page $page) => $page->errors(),
 		'files'       => fn (Page $page) => $page->files()->sorted(),
 		'hasChildren' => fn (Page $page) => $page->hasChildren(),
