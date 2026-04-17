@@ -28,10 +28,12 @@ return [
 		'previewUrl'  => fn (Page $page) => $page->previewUrl(),
 		'siblings'    => function (Page $page) {
 			if ($page->isDraft() === true) {
-				return $page->parentModel()->children()->not($page);
+				$siblings = $page->parentModel()->children()->not($page);
+			} else {
+				$siblings = $page->siblings();
 			}
 
-			return $page->siblings();
+			return $siblings->filter('isListable', true);
 		},
 		'slug'     => fn (Page $page) => $page->slug(),
 		'status'   => fn (Page $page) => $page->status(),

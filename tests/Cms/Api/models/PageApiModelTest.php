@@ -135,6 +135,86 @@ class PageApiModelTest extends ApiModelTestCase
 		$this->assertAttr($page, 'num', 2);
 	}
 
+	public function testSiblings(): void
+	{
+		$this->app = new App([
+			'roots' => ['index' => static::TMP],
+			'blueprints' => [
+				'pages/siblings-restricted' => [
+					'options' => ['access' => false]
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'parent',
+						'children' => [
+							['slug' => 'a', 'num' => 1],
+							['slug' => 'b', 'num' => 2, 'template' => 'siblings-restricted'],
+							['slug' => 'c', 'num' => 3],
+						]
+					]
+				]
+			],
+			'users' => [
+				['id' => 'test', 'role' => 'admin']
+			]
+		]);
+
+		$this->app->impersonate('test');
+		$this->api = $this->app->api();
+
+		$page  = $this->app->page('parent/a');
+		$model = $this->api->resolve($page)->select('siblings')->toArray();
+
+		$siblingIds = array_column($model['siblings'], 'id');
+		$this->assertContains('parent/a', $siblingIds);
+		$this->assertNotContains('parent/b', $siblingIds);
+		$this->assertContains('parent/c', $siblingIds);
+	}
+
+	public function testSiblingsForDraft(): void
+	{
+		$this->app = new App([
+			'roots' => ['index' => static::TMP],
+			'blueprints' => [
+				'pages/draft-siblings-restricted' => [
+					'options' => ['access' => false]
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'parent',
+						'children' => [
+							['slug' => 'a', 'num' => 1],
+							['slug' => 'b', 'num' => 2, 'template' => 'draft-siblings-restricted'],
+						],
+						'drafts' => [
+							['slug' => 'draft-test']
+						]
+					]
+				]
+			],
+			'users' => [
+				['id' => 'test', 'role' => 'admin']
+			]
+		]);
+
+		$this->app->impersonate('test');
+		$this->api = $this->app->api();
+
+		$parent = $this->app->page('parent');
+		$draft  = $parent->draft('draft-test');
+
+		$model = $this->api->resolve($draft)->select('siblings')->toArray();
+
+		$siblingIds = array_column($model['siblings'], 'id');
+		$this->assertContains('parent/a', $siblingIds);
+		$this->assertNotContains('parent/b', $siblingIds);
+		$this->assertNotContains('parent/draft-test', $siblingIds);
+	}
+
 	public function testSlug(): void
 	{
 		$page = new Page([
