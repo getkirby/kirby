@@ -225,10 +225,13 @@ class Api extends BaseApi
 
 	/**
 	 * Returns the site object
+	 *
+	 * @throws \Kirby\Exception\NotFoundException if the site cannot be accessed
+	 * @since 5.4.0
 	 */
 	public function site(): Site
 	{
-		return $this->kirby->site();
+		return Find::site();
 	}
 
 	/**
