@@ -186,7 +186,7 @@ return [
 		'method'  => 'PATCH',
 		'action'  => function (string $id) {
 			$user        = Find::user($id);
-			$currentUser = Find::user();
+			$currentUser = $this->kirby()->user();
 
 			// validate password of acting user unless they have logged in to reset it;
 			// always validate password of acting user when changing password of other users
