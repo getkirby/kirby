@@ -11,7 +11,7 @@ return [
 		'blueprint'   => fn (Page $page) => $page->blueprint(),
 		'blueprints'  => fn (Page $page) => $page->blueprints(),
 		'children'    => fn (Page $page) => $page->children()->filter('isListable', true),
-		'content'     => fn (Page $page) => Form::for($page)->values(),
+		'content'     => fn (Page $page) => Form::for($page)->toFormValues(),
 		'drafts'      => fn (Page $page) => $page->drafts()->filter('isListable', true),
 		'errors'      => fn (Page $page) => $page->errors(),
 		'files'       => fn (Page $page) => $page->files()->sorted()->filter('isListable', true),
