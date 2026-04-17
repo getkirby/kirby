@@ -160,7 +160,7 @@ class Find
 	 * @param string|null $id User's id
 	 * @throws \Kirby\Exception\NotFoundException if the user for the given id cannot be found
 	 */
-	public static function user(string|null $id = null): User|null
+	public static function user(string|null $id = null): User
 	{
 		// account is a reserved word to find the current
 		// user. It's used in various API and area routes.
