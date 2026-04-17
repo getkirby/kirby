@@ -65,6 +65,7 @@ class UserApiModelTest extends ApiModelTestCase
 				['email' => 'a@test.com', 'name' => 'A User', 'role' => 'editor'],
 				['email' => 'b@test.com', 'name' => 'B User', 'role' => 'editor'],
 				['email' => 'c@test.com', 'name' => 'C User', 'role' => 'restricted'],
+				['email' => 'd@test.com', 'name' => 'D User', 'role' => 'editor'],
 			]
 		]);
 
@@ -72,7 +73,7 @@ class UserApiModelTest extends ApiModelTestCase
 		$user   = $app->user('b@test.com');
 		$result = $app->api()->resolve($user)->select('next')->toArray();
 
-		$this->assertNull($result['next']);
+		$this->assertSame('D User', $result['next']['name']);
 	}
 
 	public function testPrevSkipsInaccessibleUser(): void
@@ -91,16 +92,17 @@ class UserApiModelTest extends ApiModelTestCase
 				'index' => '/dev/null'
 			],
 			'users' => [
-				['email' => 'a@test.com', 'name' => 'A User', 'role' => 'restricted'],
-				['email' => 'b@test.com', 'name' => 'B User', 'role' => 'editor'],
+				['email' => 'a@test.com', 'name' => 'A User', 'role' => 'editor'],
+				['email' => 'b@test.com', 'name' => 'B User', 'role' => 'restricted'],
 				['email' => 'c@test.com', 'name' => 'C User', 'role' => 'editor'],
+				['email' => 'd@test.com', 'name' => 'D User', 'role' => 'editor'],
 			]
 		]);
 
-		$app->impersonate('b@test.com');
-		$user   = $app->user('b@test.com');
+		$app->impersonate('c@test.com');
+		$user   = $app->user('c@test.com');
 		$result = $app->api()->resolve($user)->select('prev')->toArray();
 
-		$this->assertNull($result['prev']);
+		$this->assertSame('A User', $result['prev']['name']);
 	}
 }
