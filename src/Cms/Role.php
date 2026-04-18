@@ -123,10 +123,13 @@ class Role implements Stringable
 		}
 
 		// check `user.access` for the current user with the same role
+		// (also ensures `access` option of the user's current role)
 		if ($user->role()->is($this) === true) {
 			return $user->isAccessible();
 		}
 
+		// check `users.access` for different roles
+		// (also ensures `access` option of the target role)
 		$tmpUser = new User([
 			'email' => 'test@getkirby.com',
 			'role'  => $this->id()
