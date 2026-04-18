@@ -128,6 +128,47 @@ class RoleTest extends TestCase
 		$this->assertTrue($editorRole->isAccessible());
 	}
 
+	public function testIsAccessibleWithBlueprintOptions(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'blueprints' => [
+				'users/restricted' => [
+					'options' => [
+						'access' => [
+							'editor' => true,
+							'*'      => false
+						]
+					]
+				]
+			],
+			'roles' => [
+				['name' => 'editor'],
+				['name' => 'restricted'],
+			],
+			'users' => [
+				['email' => 'editor@test.com', 'role' => 'editor'],
+				['email' => 'restricted@test.com', 'role' => 'restricted'],
+			]
+		]);
+
+		$restrictedRole = $app->role('restricted');
+
+		// editor can access the restricted role due to explicit blueprint option
+		$app->impersonate('editor@test.com');
+		$this->assertTrue($restrictedRole->isAccessible());
+
+		// user with the restricted role cannot access their own role (wildcard blocks it)
+		$app->impersonate('restricted@test.com');
+		$this->assertFalse($restrictedRole->isAccessible());
+
+		// almighty kirby user bypasses blueprint options
+		$app->impersonate('kirby');
+		$this->assertTrue($restrictedRole->isAccessible());
+	}
+
 	public function testIsAccessibleWithoutUser(): void
 	{
 		new App([

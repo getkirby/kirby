@@ -127,8 +127,12 @@ class Role implements Stringable
 			return $user->isAccessible();
 		}
 
-		// check `users.access` for the current user with a different role
-		return $user->role()->permissions()->for('users', 'access');
+		$tmpUser = new User([
+			'email' => 'test@getkirby.com',
+			'role'  => $this->id()
+		]);
+
+		return $tmpUser->isAccessible();
 	}
 
 	public function isAdmin(): bool
