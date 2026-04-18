@@ -2,55 +2,53 @@ import fs from "fs";
 import { glob } from "glob";
 import path from "path";
 import { fileURLToPath, pathToFileURL } from "url";
-import docgen from "vue-docgen-api";
+import docgen, { type ComponentDoc } from "vue-docgen-api";
+
+type Doc = Omit<ComponentDoc, "exportName" | "sourceFiles"> & {
+	component: string;
+	sourceFile: string;
+};
 
 /**
  * Normalize doc json and strip unnecessary data
- *
- * @param {Object} data
- * @param {String} path
- * @returns {Object}
  */
-export function normalizeDoc(data, path) {
-	// add additional data
-	data.component =
-		"k-" +
-		data.displayName.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
-	data.sourceFile = path;
+export function normalizeDoc(
+	{ exportName: _, sourceFiles: __, ...data }: ComponentDoc,
+	path: string
+): Doc {
+	const doc: Doc = {
+		...data,
+		component:
+			"k-" +
+			data.displayName.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase(),
+		sourceFile: path
+	};
 
-	// strip unnecessary data
-	delete data.exportName;
-
-	for (const access in data.tags.access ?? []) {
-		delete data.tags.access[access].title;
+	for (const access in doc.tags.access ?? []) {
+		delete doc.tags.access[access].title;
 	}
 
 	for (const type of ["props", "slots", "events", "methods"]) {
-		for (const key in data[type] ?? {}) {
-			delete data[type][key].mixin;
-			delete data[type][key].defaultValue?.func;
-			delete data[type][key].tags?.func;
+		for (const key in doc[type] ?? {}) {
+			delete doc[type][key].mixin;
+			delete doc[type][key].defaultValue?.func;
+			delete doc[type][key].tags?.func;
 
-			for (const access in data[type][key].tags?.access ?? []) {
-				delete data[type][key].tags?.access[access].title;
+			for (const access in doc[type][key].tags?.access ?? []) {
+				delete doc[type][key].tags?.access[access].title;
 			}
 		}
 	}
 
-	delete data.sourceFiles;
-
-	return data;
+	return doc;
 }
 
 /**
  * Generates JSON files for the Vue component
  * passed to the function, or all Vue components
  * if no argument is given.
- *
- * @param {String} file
- * @returns {Array}
  */
-export default async function generate(file = undefined) {
+export default async function generate(file?: string): Promise<Doc[]> {
 	const script = path.dirname(fileURLToPath(import.meta.url));
 	const root = path.resolve(script, "../");
 	const alias = { "@": path.resolve(root, "./src/") };
@@ -80,10 +78,10 @@ export default async function generate(file = undefined) {
 
 		// parse with Vue docgen API
 		try {
-			let doc = await docgen.parse(file, { alias });
+			let data = await docgen.parse(file, { alias });
 
-			if (doc.tags.internal?.[0]?.description !== true) {
-				doc = normalizeDoc(doc, path.relative(root, file));
+			if (!data.tags.internal) {
+				const doc = normalizeDoc(data, path.relative(root, file));
 
 				// write file
 				fs.writeFileSync(
