@@ -1,11 +1,12 @@
 /* eslint-env node */
 import fs from "fs";
 import generateDocs from "./docs";
+import { type Plugin } from "vite";
 
 /**
  * Runs callback on any kind of console exit
  */
-function onExit(callback) {
+function onExit(callback: () => void): void {
 	for (const event of ["exit", "SIGINT", "uncaughtException"]) {
 		process.on(event, function (err) {
 			callback?.();
@@ -22,7 +23,7 @@ function onExit(callback) {
 /**
  * Creates flag file to tell Kirby that we are in dev mode
  */
-function devMode() {
+function devMode(): Plugin {
 	return {
 		name: "kirby-dev-mode",
 		apply: "serve",
@@ -50,7 +51,7 @@ function devMode() {
  * and send reload events to client for docs
  * and lab example changes.
  */
-function labDev() {
+function labDev(): Plugin {
 	return {
 		name: "kirby-lab-dev",
 		apply: "serve",
@@ -76,20 +77,21 @@ function labDev() {
 /**
  * Generate all UI docs on build
  */
-function labBuild() {
+function labBuild(): Plugin {
 	return {
 		name: "kirby-lab-build",
 		apply: "build",
 		async writeBundle() {
 			process.stdout.write("  Generating UI docs...");
 			const docs = await generateDocs();
-			process.stdout.write(`\r\x1b[32m✓\x1b[0m ${docs.length} UI docs generated.   \n`);
+			process.stdout.write(
+				`\r\x1b[32m✓\x1b[0m ${docs.length} UI docs generated.   \n`
+			);
 		}
 	};
 }
 
-
-function removeDocsBlock() {
+function removeDocsBlock(): Plugin {
 	return {
 		name: "kirby-remove-docs-block",
 		transform: {
@@ -101,6 +103,6 @@ function removeDocsBlock() {
 	};
 }
 
-export default function kirby() {
+export default function kirby(): Plugin[] {
 	return [devMode(), removeDocsBlock(), labDev(), labBuild()];
 }

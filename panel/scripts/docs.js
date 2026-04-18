@@ -50,7 +50,7 @@ export function normalizeDoc(data, path) {
  * @param {String} file
  * @returns {Array}
  */
-export default async function generate(file) {
+export default async function generate(file = undefined) {
 	const script = path.dirname(fileURLToPath(import.meta.url));
 	const root = path.resolve(script, "../");
 	const alias = { "@": path.resolve(root, "./src/") };
