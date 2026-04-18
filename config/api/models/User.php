@@ -31,7 +31,7 @@ return [
 
 			return $role;
 		},
-		'roles'       => fn (User $user) => $user->roles()->filterBy('isAccessible', true),
+		'roles'       => fn (User $user) => $user->roles(),
 		'username'    => fn (User $user) => $user->username(),
 		'uuid'        => fn (User $user) => $user->uuid()?->toString()
 	],
