@@ -22,7 +22,15 @@ return [
 		'panelImage'  => fn (User $user) => $user->panel()->image(),
 		'permissions' => fn (User $user) => $user->role()->permissions()->toArray(),
 		'prev'        => fn (User $user) => $user->prev($user->siblings()->filter('isListable', true)),
-		'role'        => fn (User $user) => $user->role(),
+		'role'        => function (User $user) {
+			$role = $user->role();
+
+			if ($role->isAccessible() === false) {
+				return null;
+			}
+
+			return $role;
+		},
 		'roles'       => fn (User $user) => $user->roles(),
 		'username'    => fn (User $user) => $user->username(),
 		'uuid'        => fn (User $user) => $user->uuid()?->toString()

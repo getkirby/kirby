@@ -134,6 +134,36 @@ class Find
 	}
 
 	/**
+	 * Returns the role object for the given name
+	 *
+	 * @param string $name Role name/id
+	 * @throws \Kirby\Exception\NotFoundException if the role cannot be found
+	 */
+	public static function role(string $name): Role
+	{
+		$role = App::instance()->role($name);
+
+		if ($role?->isAccessible() === true) {
+			return $role;
+		}
+
+		throw new NotFoundException(
+			key: 'role.notFound',
+			data: ['name' => $name]
+		);
+	}
+
+	/**
+	 * Returns all accessible roles
+	 *
+	 * @since 5.4.0
+	 */
+	public static function roles(): Roles
+	{
+		return App::instance()->roles()->filter('isAccessible', true);
+	}
+
+	/**
 	 * Returns the site object if the site is accessible
 	 *
 	 * @throws \Kirby\Exception\NotFoundException if the site cannot be accessed
