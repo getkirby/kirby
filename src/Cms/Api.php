@@ -259,7 +259,7 @@ class Api extends BaseApi
 	 */
 	public function users(): Users
 	{
-		return $this->kirby->users();
+		return Find::users();
 	}
 
 	/**
