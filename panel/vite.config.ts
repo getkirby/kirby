@@ -152,7 +152,12 @@ export default defineConfig(({ mode }) => {
 					chunkFileNames: "js/[name].min.js",
 					assetFileNames: "[ext]/[name].min.[ext]",
 					codeSplitting: {
-						groups: [{ name: "vendor", test: /node_modules\/(?!sortablejs)/ }]
+						groups: [
+							{
+								name: "vendor",
+								test: /node_modules\/(?!sortablejs\/)|plugin-vue:export-helper|vite\/preload-helper|rolldown:runtime/
+							}
+						]
 					}
 				}
 			}
