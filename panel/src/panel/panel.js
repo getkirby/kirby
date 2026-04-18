@@ -119,7 +119,7 @@ export default {
 
 		// api needs the initial state
 		// for the endpoint config
-		this.api = Api(this);
+		this.api = new Api(this);
 
 		// Turn the entire panel object  reactive. This will only be applied
 		// to objects and arrays. Methods won't be touched.
