@@ -622,8 +622,6 @@ class User extends ModelWithContent
 	 * `filter('isAccessible', true)` internally and
 	 * the no-permission branch applies it explicitly.
 	 *
-	 * Note: this method is not the right tool for
-	 * validating whether a role change is allowed.
 	 * For all roles the authenticated user can assign
 	 * independent of a specific user context,
 	 * use `$kirby->roles()->canBeCreated()`.
