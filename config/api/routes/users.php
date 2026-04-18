@@ -221,7 +221,7 @@ return [
 			'users/(:any)/roles',
 		],
 		'action'  => function (string $id) {
-			return Find::user($id)->roles($this->requestQuery('purpose'));
+			return Find::user($id)->roles();
 		}
 	],
 	[
