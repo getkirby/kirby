@@ -1,60 +1,33 @@
-import { responder, safeFetch } from "@/panel/request";
-import { toLowerKeys } from "@/helpers/object";
+import { request } from "@/panel/request";
 import { ltrim, rtrim } from "@/helpers/string";
 
-export default (api) => {
+export default function (api) {
 	return async (path, options = {}) => {
-		// create options object
-		options = {
-			cache: "no-store",
-			credentials: "same-origin",
-			mode: "same-origin",
-			...options
-		};
+		const method = options.method ?? "GET";
+		const url = rtrim(api.endpoint, "/") + "/" + ltrim(path, "/");
 
-		// make sure to keep essential headers
-		// unless they are explicitely overwritten
-		options.headers = {
-			"content-type": "application/json",
-			"x-csrf": api.csrf,
-			"x-language": api.language,
-			...toLowerKeys(options.headers ?? {})
-		};
+		// Rewrite non-GET/POST methods as POST when method override is enabled
+		const overrideMethod =
+			api.methodOverride && method !== "GET" && method !== "POST";
 
-		// adapt headers for all non-GET and non-POST methods
-		if (
-			api.methodOverride &&
-			options.method !== "GET" &&
-			options.method !== "POST"
-		) {
-			options.headers["x-http-method-override"] = options.method;
-			options.method = "POST";
-		}
-
-		// remove null headers
-		for (const key in options.headers) {
-			if (options.headers[key] === null) {
-				delete options.headers[key];
+		const { response } = await request(url, {
+			...options,
+			csrf: api.csrf,
+			method: overrideMethod ? "POST" : method,
+			headers: {
+				"x-language": api.language,
+				...(overrideMethod ? { "x-http-method-override": method } : {}),
+				...(options.headers ?? {})
 			}
-		}
+		});
 
-		// build the request URL
-		options.url = rtrim(api.endpoint, "/") + "/" + ltrim(path, "/");
-
-		// The request object is a nice way to access all the
-		// important parts later in errors for example
-		const request = new Request(options.url, options);
-
-		// fetch the resquest's response
-		const { response } = await responder(request, await safeFetch(request));
-
-		let data = response.json;
+		const data = response.json;
 
 		// simplify the response
 		if (data.data && data.type === "model") {
-			data = data.data;
+			return data.data;
 		}
 
 		return data;
 	};
-};
+}
