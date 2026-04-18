@@ -6,9 +6,10 @@ import type { PanelResponse } from "@/panel/request";
  * @since 4.0.0
  */
 export default class RequestError extends Error {
+	key: string | undefined;
+	details: unknown;
 	request: Request;
 	response: PanelResponse;
-	details: unknown;
 
 	constructor(
 		message: string,
@@ -29,6 +30,7 @@ export default class RequestError extends Error {
 		this.request = request;
 		this.response = response;
 		this.details = response.json.details;
+		this.key = response.json.key as string | undefined;
 	}
 
 	dialog() {
