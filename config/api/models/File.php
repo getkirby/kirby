@@ -9,7 +9,7 @@ use Kirby\Form\Form;
 return [
 	'fields' => [
 		'blueprint'  => fn (File $file) => $file->blueprint(),
-		'content'    => fn (File $file) => Form::for($file)->values(),
+		'content'    => fn (File $file) => Form::for($file)->toFormValues(),
 		'dimensions' => fn (File $file) => $file->dimensions()->toArray(),
 		'dragText'   => fn (File $file) => $file->panel()->dragText(),
 		'exists'     => fn (File $file) => $file->exists(),
