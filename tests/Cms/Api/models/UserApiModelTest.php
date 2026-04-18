@@ -26,6 +26,8 @@ class UserApiModelTest extends ApiModelTestCase
 			]
 		]);
 
+		$this->app->impersonate('kirby');
+
 		$model = $this->api->resolve($user)->select('files')->toArray();
 
 		$this->assertSame('a.jpg', $model['files'][0]['filename']);
