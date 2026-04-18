@@ -1,3 +1,4 @@
+import { reactive } from "vue";
 import Activation from "./activation";
 import Api from "@/api/index.js";
 import Content from "./content.js";
@@ -15,14 +16,14 @@ import Search from "./search";
 import System from "./system";
 import Theme from "./theme";
 import Translation from "./translation";
-import { buildUrl, isUrl } from "@/helpers/url";
-import { reactive } from "vue";
-import { redirect, request } from "./request";
 import Upload from "./upload";
 import User from "./user";
 import View from "./view";
+import { redirect, request } from "./request";
+import { isAbortError } from "@/helpers/error";
 import { isObject, length } from "@/helpers/object";
 import { isEmpty } from "@/helpers/string";
+import { buildUrl, isUrl } from "@/helpers/url";
 import OfflineError from "@/errors/OfflineError";
 import RedirectError from "@/errors/RedirectError";
 
@@ -190,7 +191,7 @@ export default {
 	 * @param {Boolean} openNotification
 	 */
 	error(error, openNotification = true) {
-		if (error.name === "AbortError") {
+		if (isAbortError(error) === true) {
 			return;
 		}
 

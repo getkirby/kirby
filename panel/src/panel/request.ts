@@ -1,10 +1,11 @@
-import { buildUrl, isSameOrigin, makeAbsolute } from "@/helpers/url";
-import { toLowerKeys } from "../helpers/object";
 import AuthError from "@/errors/AuthError.js";
 import JsonRequestError from "@/errors/JsonRequestError.js";
 import OfflineError from "@/errors/OfflineError.js";
 import RedirectError from "@/errors/RedirectError.js";
 import RequestError from "@/errors/RequestError.js";
+import { isAbortError } from "@/helpers/error";
+import { toLowerKeys } from "@/helpers/object";
+import { buildUrl, isSameOrigin, makeAbsolute } from "@/helpers/url";
 
 export interface PanelResponse {
 	headers: Headers;
@@ -175,7 +176,7 @@ export async function responder(
 		response.text = await raw.text();
 		response.json = JSON.parse(response.text);
 	} catch (error) {
-		if (error instanceof Error && error.name === "AbortError") {
+		if (isAbortError(error) === true) {
 			throw error;
 		}
 
@@ -216,7 +217,7 @@ export async function safeFetch(request: Request): Promise<Response> {
 	try {
 		return await fetch(request);
 	} catch (error) {
-		if (error instanceof Error && error.name === "AbortError") {
+		if (isAbortError(error) === true) {
 			throw error;
 		}
 

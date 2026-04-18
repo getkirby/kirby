@@ -1,3 +1,5 @@
+import { isAbortError } from "@/helpers/error";
+
 export type SearchResponse = {
 	results: unknown[] | null;
 	pagination: Record<string, unknown>;
@@ -65,7 +67,7 @@ export default function Search(panel: TODO) {
 			} catch (error) {
 				// if fails and not because request was aborted by subsequent request,
 				// return empty response
-				if (error instanceof Error && error.name !== "AbortError") {
+				if (isAbortError(error) === false) {
 					return {
 						results: [],
 						pagination: {}
