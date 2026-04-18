@@ -13,7 +13,7 @@ return [
 		'blueprint'   => fn (User $user) => $user->blueprint(),
 		'content'     => fn (User $user) => Form::for($user)->toFormValues(),
 		'email'       => fn (User $user) => $user->email(),
-		'files'       => fn (User $user) => $user->files()->sorted(),
+		'files'       => fn (User $user) => $user->files()->sorted()->filter('isListable', true),
 		'id'          => fn (User $user) => $user->id(),
 		'language'    => fn (User $user) => $user->language(),
 		'name'        => fn (User $user) => $user->name()->value(),
