@@ -11,7 +11,7 @@ return [
 	'fields' => [
 		'avatar'      => fn (User $user) => $user->avatar()?->crop(512),
 		'blueprint'   => fn (User $user) => $user->blueprint(),
-		'content'     => fn (User $user) => Form::for($user)->values(),
+		'content'     => fn (User $user) => Form::for($user)->toFormValues(),
 		'email'       => fn (User $user) => $user->email(),
 		'files'       => fn (User $user) => $user->files()->sorted(),
 		'id'          => fn (User $user) => $user->id(),
