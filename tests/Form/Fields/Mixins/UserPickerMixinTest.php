@@ -28,6 +28,8 @@ class UserPickerMixinTest extends TestCase
 				['email' => 'c@getkirby.com', 'role' => 'editor']
 			]
 		]);
+
+		$app->impersonate('kirby');
 	}
 
 	public function testUsersWithoutQuery()
