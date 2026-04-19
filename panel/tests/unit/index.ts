@@ -31,7 +31,7 @@ export const it = Object.assign(vitestIt, {
 	},
 	acceptsStyle(Component: Mountable) {
 		vitestIt("accepts a custom style", () => {
-			const wrapper = ensureMount(Component, { style: "--foo: 1" });
+			const wrapper = ensureMount(Component, { style: { "--foo:": "bar" } });
 			expect(wrapper.attributes("style")).toContain("--foo");
 		});
 	},
@@ -42,13 +42,16 @@ export const it = Object.assign(vitestIt, {
 		});
 	},
 	rendersAs(Component: Mountable, tag: string, className?: string) {
-		vitestIt(`renders a <${tag}>${className ? ` with class ${className}` : ""}`, () => {
-			const wrapper = ensureMount(Component);
-			expect(wrapper.element.tagName).toBe(tag);
+		vitestIt(
+			`renders a <${tag}>${className ? ` with class ${className}` : ""}`,
+			() => {
+				const wrapper = ensureMount(Component);
+				expect(wrapper.element.tagName).toBe(tag);
 
-			if (className) {
-				expect(wrapper.classes()).toContain(className);
+				if (className) {
+					expect(wrapper.classes()).toContain(className);
+				}
 			}
-		});
+		);
 	}
 });
