@@ -96,9 +96,10 @@ describe("Frame.vue", () => {
 
 	// slots
 	describe("default slot", () => {
-		it("renders slotted content", () => {
-			const wrapper = mount({}, {}, { default: "<img src='test.jpg' />" });
-			expect(wrapper.find("img").exists()).toBe(true);
+		it("renders slotted content as direct child", () => {
+			const slot = '<img src="test.jpg">';
+			const wrapper = mount({}, {}, { default: slot });
+			expect(wrapper.element.innerHTML).toBe(slot);
 		});
 	});
 });
