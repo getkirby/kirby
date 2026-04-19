@@ -165,6 +165,15 @@ abstract class ModelPermissions
 		return static::CATEGORY;
 	}
 
+	/**
+	 * Clears the static permission cache
+	 * @since 5.4.0
+	 */
+	public static function flushCache(): void
+	{
+		ModelPermissions::$cache = [];
+	}
+
 	public function toArray(): array
 	{
 		$array = [];
