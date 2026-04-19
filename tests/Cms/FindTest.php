@@ -537,8 +537,8 @@ class FindTest extends TestCase
 	{
 		$app = $this->app->clone([
 			'blueprints' => [
-				'users/editor' => [
-					'name'    => 'editor',
+				'users/admin' => [
+					'name'    => 'admin',
 					'options' => ['access' => false]
 				]
 			],
@@ -554,12 +554,12 @@ class FindTest extends TestCase
 			]
 		]);
 
-		$app->impersonate('admin@getkirby.com');
+		$app->impersonate('test@getkirby.com');
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The user "test@getkirby.com" cannot be found');
+		$this->expectExceptionMessage('The user "admin@getkirby.com" cannot be found');
 
-		Find::parent('users/test@getkirby.com');
+		Find::parent('users/admin@getkirby.com');
 	}
 
 	public function testUser(): void
@@ -671,8 +671,8 @@ class FindTest extends TestCase
 	{
 		$app = $this->app->clone([
 			'blueprints' => [
-				'users/editor' => [
-					'name'    => 'editor',
+				'users/admin' => [
+					'name'    => 'admin',
 					'options' => ['access' => false]
 				]
 			],
@@ -688,12 +688,12 @@ class FindTest extends TestCase
 			]
 		]);
 
-		$app->impersonate('admin@getkirby.com');
+		$app->impersonate('test@getkirby.com');
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The user "test@getkirby.com" cannot be found');
+		$this->expectExceptionMessage('The user "admin@getkirby.com" cannot be found');
 
-		Find::user('test@getkirby.com');
+		Find::user('admin@getkirby.com');
 	}
 
 	public function testUserNotFound(): void
