@@ -412,6 +412,24 @@ class UserRulesTest extends ModelTestCase
 		UserRules::createAvatar($user, '/tmp/avatar.jpg', 'jpg');
 	}
 
+	public function testCreateAvatarWhenAvatarExists(): void
+	{
+		$avatar = $this->createMock(File::class);
+		$avatar->method('filename')->willReturn('profile.jpg');
+
+		$permissions = $this->createMock(UserPermissions::class);
+		$permissions->method('can')->with('update')->willReturn(true);
+
+		$user = $this->createMock(User::class);
+		$user->method('avatar')->willReturn($avatar);
+		$user->method('permissions')->willReturn($permissions);
+
+		$this->expectException(DuplicateException::class);
+		$this->expectExceptionMessage('A file with the name "profile.jpg" already exists');
+
+		UserRules::createAvatar($user, '/tmp/avatar.jpg', 'jpg');
+	}
+
 	public function testDeleteAvatar(): void
 	{
 		$avatar = $this->createMock(File::class);

@@ -231,6 +231,13 @@ class UserRules
 				data: ['name' => $user->username()]
 			);
 		}
+
+		if ($user->avatar() !== null) {
+			throw new DuplicateException(
+				key: 'file.duplicate',
+				data: ['filename' => $user->avatar()->filename()]
+			);
+		}
 	}
 
 	/**
