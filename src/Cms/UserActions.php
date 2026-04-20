@@ -215,6 +215,25 @@ trait UserActions
 	}
 
 	/**
+	 * Creates a new avatar for the user
+	 */
+	public function createAvatar(string $source, string $extension): static
+	{
+		return $this->commit('createAvatar', ['user' => $this, 'source' => $source, 'extension' => $extension], function ($user, $source, $extension) {
+			$user->createFile(
+				props: [
+					'filename' => 'profile.' . $extension,
+					'template' => 'avatar',
+					'source'   => $source
+				],
+				move: true
+			);
+
+			return $user;
+		});
+	}
+
+	/**
 	 * Returns a random user id
 	 */
 	public function createId(): string
@@ -267,6 +286,17 @@ trait UserActions
 			Dir::remove($old->root());
 
 			return true;
+		});
+	}
+
+	/**
+	 * Deletes the existing avatar if it exists
+	 */
+	public function deleteAvatar(): static
+	{
+		return $this->commit('deleteAvatar', ['user' => $this], function ($user) {
+			$user->avatar()->delete();
+			return $user;
 		});
 	}
 
@@ -345,6 +375,33 @@ trait UserActions
 		}
 
 		return $secrets;
+	}
+
+	/**
+	 * Replaces the existing avatar for the user
+	 */
+	public function replaceAvatar(string $source, string $extension): static
+	{
+		return $this->commit('replaceAvatar', ['user' => $this, 'source' => $source, 'extension' => $extension], function ($user, $source, $extension) {
+			// clean up the old avatar first to allow uploading
+			// a new avatar with a different file type.
+			//
+			// If we use the replace method here, we can only upload
+			// files with the exact same type. But as long as it
+			// is a valid avatar, a different type should be allowed.
+			$user->avatar()->delete();
+
+			$user->createFile(
+				props: [
+					'filename' => 'profile.' . $extension,
+					'template' => 'avatar',
+					'source'   => $source
+				],
+				move: true
+			);
+
+			return $user;
+		});
 	}
 
 	/**
