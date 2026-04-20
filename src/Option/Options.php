@@ -26,8 +26,10 @@ class Options extends Collection
 		}
 	}
 
-	public static function factory(array $items = []): static
-	{
+	public static function factory(
+		array $items = [],
+		bool $resolve = true
+	): static {
 		$collection = new static();
 
 		foreach ($items as $key => $option) {
@@ -43,7 +45,7 @@ class Options extends Collection
 				};
 			}
 
-			$option = Option::factory($option);
+			$option = Option::factory($option, $resolve);
 			$collection->__set($option->id(), $option);
 		}
 

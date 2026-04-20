@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Data\Data;
+use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 
@@ -44,6 +45,7 @@ class UserActionsTest extends TestCase
 
 	public function tearDown(): void
 	{
+		Blueprint::$loaded = [];
 		$this->app->session()->destroy();
 		Dir::remove(static::TMP);
 		App::destroy();
@@ -207,22 +209,28 @@ class UserActionsTest extends TestCase
 
 	public function testCreateWithDefaults()
 	{
-		$user = User::create([
-			'email' => 'new@domain.com',
-			'role'  => 'editor',
-			'blueprint' => [
-				'name' => 'editor',
-				'fields' => [
-					'a'  => [
-						'type'    => 'text',
-						'default' => 'A'
-					],
-					'b' => [
-						'type'    => 'textarea',
-						'default' => 'B'
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'users/editor' => [
+					'name'   => 'editor',
+					'fields' => [
+						'a' => [
+							'type'    => 'text',
+							'default' => 'A'
+						],
+						'b' => [
+							'type'    => 'textarea',
+							'default' => 'B'
+						],
 					]
 				]
 			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$user = User::create([
+			'email' => 'new@domain.com',
+			'role'  => 'editor',
 		]);
 
 		$this->assertSame('A', $user->a()->value());
@@ -231,29 +239,64 @@ class UserActionsTest extends TestCase
 
 	public function testCreateWithDefaultsAndContent()
 	{
-		$user = User::create([
-			'email' => 'new@domain.com',
-			'role'  => 'editor',
-			'content' => [
-				'a' => 'Custom A'
-			],
-			'blueprint' => [
-				'name' => 'editor',
-				'fields' => [
-					'a'  => [
-						'type'    => 'text',
-						'default' => 'A'
-					],
-					'b' => [
-						'type'    => 'textarea',
-						'default' => 'B'
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'users/editor' => [
+					'name'   => 'editor',
+					'fields' => [
+						'a' => [
+							'type'    => 'text',
+							'default' => 'A'
+						],
+						'b' => [
+							'type'    => 'textarea',
+							'default' => 'B'
+						],
 					]
 				]
 			]
 		]);
+		$this->app->impersonate('kirby');
+
+		$user = User::create([
+			'email'   => 'new@domain.com',
+			'role'    => 'editor',
+			'content' => ['a' => 'Custom A'],
+		]);
 
 		$this->assertSame('Custom A', $user->a()->value());
 		$this->assertSame('B', $user->b()->value());
+	}
+
+	public function testCreateStripInjectedBlueprint(): void
+	{
+		$this->app = $this->app->clone([
+			'roles' => [
+				['name' => 'admin'],
+				[
+					'name'        => 'editor',
+					'permissions' => [
+						'users' => [
+							'create' => false,
+						]
+					]
+				]
+			],
+			'user' => 'editor@domain.com'
+		]);
+
+		$this->expectException(PermissionException::class);
+
+		User::create([
+			'email'     => 'new@domain.com',
+			'role'      => 'editor',
+			'blueprint' => [
+				'options' => [
+					// would allow creation if respected, must be stripped
+					'create' => true
+				]
+			]
+		]);
 	}
 
 	public function testCreateWithContentMultilang()

@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\DuplicateException;
+use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\TestCase;
@@ -41,6 +42,7 @@ class PageCreateTest extends TestCase
 
 	public function tearDown(): void
 	{
+		Blueprint::$loaded = [];
 		Dir::remove(static::TMP);
 
 		Page::$models = [];
@@ -62,22 +64,28 @@ class PageCreateTest extends TestCase
 
 	public function testCreateDraftWithDefaults()
 	{
-		$site = $this->app->site();
-		$page = Page::create([
-			'slug' => 'new-page',
-			'blueprint' => [
-				'name'   => 'test',
-				'fields' => [
-					'a'  => [
-						'type'    => 'text',
-						'default' => 'A'
-					],
-					'b' => [
-						'type'    => 'textarea',
-						'default' => 'B'
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => [
+					'name'   => 'test',
+					'fields' => [
+						'a' => [
+							'type'    => 'text',
+							'default' => 'A'
+						],
+						'b' => [
+							'type'    => 'textarea',
+							'default' => 'B'
+						],
 					]
 				]
 			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$page = Page::create([
+			'slug'     => 'new-page',
+			'template' => 'test',
 		]);
 
 		$this->assertSame('A', $page->a()->value());
@@ -86,25 +94,29 @@ class PageCreateTest extends TestCase
 
 	public function testCreateDraftWithDefaultsAndContent()
 	{
-		$site = $this->app->site();
-		$page = Page::create([
-			'content' => [
-				'a' => 'Custom A'
-			],
-			'slug' => 'new-page',
-			'blueprint' => [
-				'name'   => 'test',
-				'fields' => [
-					'a'  => [
-						'type'    => 'text',
-						'default' => 'A'
-					],
-					'b' => [
-						'type'    => 'textarea',
-						'default' => 'B'
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => [
+					'name'   => 'test',
+					'fields' => [
+						'a' => [
+							'type'    => 'text',
+							'default' => 'A'
+						],
+						'b' => [
+							'type'    => 'textarea',
+							'default' => 'B'
+						],
 					]
 				]
 			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$page = Page::create([
+			'content'  => ['a' => 'Custom A'],
+			'slug'     => 'new-page',
+			'template' => 'test',
 		]);
 
 		$this->assertSame('Custom A', $page->a()->value());
@@ -207,6 +219,38 @@ class PageCreateTest extends TestCase
 		}
 
 		$this->assertTrue($mother->drafts()->isEmpty());
+	}
+
+	public function testCreateStripInjectedBlueprint(): void
+	{
+		$this->app = $this->app->clone([
+			'roles' => [
+				[
+					'name'        => 'editor',
+					'permissions' => [
+						'pages' => [
+							'create' => false,
+						]
+					]
+				]
+			],
+			'user'  => 'editor@domain.com',
+			'users' => [
+				['email' => 'editor@domain.com', 'role' => 'editor']
+			]
+		]);
+
+		$this->expectException(PermissionException::class);
+
+		Page::create([
+			'slug'      => 'new-page',
+			'blueprint' => [
+				'options' => [
+					// would allow creation if respected, must be stripped
+					'create' => true
+				]
+			]
+		]);
 	}
 
 	public function testCreateFile()

@@ -428,11 +428,12 @@ trait PageActions
 	}
 
 	/**
-	 * Copies the page to a new parent
+	 * Copies the page to a new parent.
+	 * Low-level method, ensure to run all necessary checks
+	 * (e.g. permissions) before calling it.
+	 * @internal
 	 *
 	 * @throws \Kirby\Exception\DuplicateException If the page already exists
-	 *
-	 * @internal
 	 */
 	public function copy(array $options = []): static
 	{
@@ -496,6 +497,11 @@ trait PageActions
 	 */
 	public static function create(array $props): Page
 	{
+		// Prevent injecting blueprint as this always must be derived from
+		// the template/model name and blueprint object in the app,
+		// never directly be supplied by the caller
+		unset($props['blueprint']);
+
 		// clean up the slug
 		$props['slug']      = Url::slug($props['slug'] ?? $props['content']['title'] ?? null);
 		$props['template']  = $props['model'] = strtolower($props['template'] ?? 'default');

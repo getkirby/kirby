@@ -27,6 +27,7 @@ class PageSortTest extends TestCase
 
 	public function tearDown(): void
 	{
+		Blueprint::$loaded = [];
 		Dir::remove(static::TMP);
 	}
 
@@ -159,16 +160,23 @@ class PageSortTest extends TestCase
 
 	public function testChangeStatusToInvalidStatus()
 	{
-		$page = Page::create([
-			'slug' => 'test',
-			'blueprint' => [
-				'title'  => 'Test',
-				'name'   => 'test',
-				'status' => [
-					'draft'  => 'Draft',
-					'listed' => 'Published'
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => [
+					'title'  => 'Test',
+					'name'   => 'test',
+					'status' => [
+						'draft'  => 'Draft',
+						'listed' => 'Published'
+					]
 				]
 			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$page = Page::create([
+			'slug'     => 'test',
+			'template' => 'test',
 		]);
 
 		$this->assertSame('draft', $page->status());
@@ -635,14 +643,21 @@ class PageSortTest extends TestCase
 
 	public function testUpdateWithDateBasedNumbering()
 	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => [
+					'title' => 'Test',
+					'name'  => 'test',
+					'num'   => 'date',
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
 		$page = Page::create([
-			'slug' => 'test',
-			'blueprint' => [
-				'title' => 'Test',
-				'name'  => 'test',
-				'num'   => 'date'
-			],
-			'content' => [
+			'slug'     => 'test',
+			'template' => 'test',
+			'content'  => [
 				'date' => '2012-12-12'
 			]
 		]);

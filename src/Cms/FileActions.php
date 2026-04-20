@@ -223,6 +223,11 @@ trait FileActions
 	 */
 	public static function create(array $props, bool $move = false): File
 	{
+		// Prevent injecting blueprint as this always must be derived from
+		// the template/model name and blueprint object in the app,
+		// never directly be supplied by the caller
+		unset($props['blueprint']);
+
 		if (isset($props['source'], $props['parent']) === false) {
 			throw new InvalidArgumentException('Please provide the "source" and "parent" props for the File');
 		}

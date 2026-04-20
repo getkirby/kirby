@@ -150,6 +150,6 @@ class OptionsApi extends OptionsProvider
 		}
 
 		// create Options object and render this subsequently
-		return $this->options = Options::factory($options);
+		return $this->options = Options::factory($options, resolve: false);
 	}
 }

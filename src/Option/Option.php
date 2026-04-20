@@ -3,6 +3,7 @@
 namespace Kirby\Option;
 
 use Kirby\Blueprint\Factory;
+use Kirby\Blueprint\NodeI18n;
 use Kirby\Blueprint\NodeIcon;
 use Kirby\Blueprint\NodeText;
 use Kirby\Cms\ModelWithContent;
@@ -22,22 +23,24 @@ class Option
 		public string|int|float|null $value,
 		public bool $disabled = false,
 		public NodeIcon|null $icon = null,
-		public NodeText|null $info = null,
-		public NodeText|null $text = null
+		public NodeI18n|NodeText|null $info = null,
+		public NodeI18n|NodeText|null $text = null
 	) {
 		$this->text ??= new NodeText(['en' => $this->value]);
 	}
 
-	public static function factory(string|int|float|array|null $props): static
-	{
+	public static function factory(
+		string|int|float|array|null $props,
+		bool $resolve = true
+	): static {
 		if (is_array($props) === false) {
 			$props = ['value' => $props];
 		}
 
 		$props = Factory::apply($props, [
 			'icon' => NodeIcon::class,
-			'info' => NodeText::class,
-			'text' => NodeText::class
+			'info' => $resolve ? NodeText::class : NodeI18n::class,
+			'text' => $resolve ? NodeText::class : NodeI18n::class
 		]);
 
 		return new static(...$props);
