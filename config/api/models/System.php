@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Cms\System;
+use Kirby\Exception\PermissionException;
 use Kirby\Toolkit\Str;
 
 /**
@@ -42,11 +43,12 @@ return [
 		'kirbytext' => fn () => $this->kirby()->option('panel.kirbytext') ?? true,
 		'user' => fn () => $this->user(),
 		'version' => function () {
-			if ($this->user()?->role()->permissions()->for('access', 'system') === true) {
+			try {
+				$this->validateAreaAccess('system');
 				return $this->kirby()->version();
+			} catch (PermissionException) {
+				return null;
 			}
-
-			return null;
 		}
 	],
 	'type'   => System::class,
