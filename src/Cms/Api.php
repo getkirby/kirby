@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Api\Api as BaseApi;
 use Kirby\Exception\NotFoundException;
+use Kirby\Exception\PermissionException;
 use Kirby\Form\Form;
 use Kirby\Session\Session;
 
@@ -256,5 +257,17 @@ class Api extends BaseApi
 	public function users(): Users
 	{
 		return $this->kirby->users();
+	}
+
+	/**
+	 * Validates that the acting user has access to the given area.
+	 *
+	 * @throws \Kirby\Exception\PermissionException
+	 */
+	public function validateAreaAccess(string $area): void
+	{
+		if ($this->kirby->user()?->role()->permissions()->for('access', $area) !== true) {
+			throw new PermissionException('No access');
+		}
 	}
 }
