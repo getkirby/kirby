@@ -130,11 +130,6 @@ class Core
 			'blocks/video'    => $this->root . '/blocks/video/video.yml',
 
 			// file blueprints
-			'files/avatar' => [
-				'title' => 'Avatar',
-				'accept' => 'image/*'
-			],
-
 			'files/default' => [
 				'title' => 'File'
 			],
