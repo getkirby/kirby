@@ -217,16 +217,16 @@ trait UserActions
 	/**
 	 * Creates a new avatar for the user
 	 */
-	public function createAvatar(string $source, string $extension): static
+	public function createAvatar(string $source, string $extension, bool $move = false): static
 	{
-		return $this->commit('createAvatar', ['user' => $this, 'source' => $source, 'extension' => $extension], function ($user, $source, $extension) {
+		return $this->commit('createAvatar', ['user' => $this, 'source' => $source, 'extension' => $extension], function ($user, $source, $extension) use ($move) {
 			$user->createFile(
 				props: [
 					'filename' => 'profile.' . $extension,
 					'template' => 'avatar',
 					'source'   => $source
 				],
-				move: true
+				move: $move
 			);
 
 			return $user;
@@ -379,9 +379,9 @@ trait UserActions
 	/**
 	 * Replaces the existing avatar for the user
 	 */
-	public function replaceAvatar(string $source, string $extension): static
+	public function replaceAvatar(string $source, string $extension, bool $move = false): static
 	{
-		return $this->commit('replaceAvatar', ['user' => $this, 'source' => $source, 'extension' => $extension], function ($user, $source, $extension) {
+		return $this->commit('replaceAvatar', ['user' => $this, 'source' => $source, 'extension' => $extension], function ($user, $source, $extension) use ($move) {
 
 			$oldAvatar = $user->avatar();
 
@@ -390,7 +390,7 @@ trait UserActions
 			if ($oldAvatar->extension() === $extension) {
 				$oldAvatar->replace(
 					source: $source,
-					move: true
+					move: $move
 				);
 
 				return $user;
@@ -403,7 +403,7 @@ trait UserActions
 					'template' => 'avatar',
 					'source'   => $source,
 				],
-				move: true
+				move: $move
 			);
 
 			// if the new avatar was successfully created,

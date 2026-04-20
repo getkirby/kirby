@@ -86,7 +86,11 @@ return [
 					$user   = Find::user($id);
 					$method = $user->avatar() === null ? 'createAvatar' : 'replaceAvatar';
 
-					return $user->$method($source, F::extension($filename))->avatar();
+					return $user->$method(
+						source: $source,
+						extension: F::extension($filename),
+						move: true
+					)->avatar();
 				},
 				single: true
 			);
