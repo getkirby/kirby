@@ -8,6 +8,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
+use Kirby\Filesystem\F;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\Totp;
 use Kirby\Toolkit\V;
@@ -238,6 +239,8 @@ class UserRules
 				data: ['filename' => $user->avatar()->filename()]
 			);
 		}
+
+		static::validAvatar($user, $source, $extension);
 	}
 
 	/**
@@ -295,7 +298,7 @@ class UserRules
 	 *
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the avatar
 	 */
-	public static function replaceAvatar(User $user, string $source): void
+	public static function replaceAvatar(User $user, string $source, string $extension): void
 	{
 		if ($user->permissions()->can('update') !== true) {
 			throw new PermissionException(
@@ -310,6 +313,8 @@ class UserRules
 				data: ['filename' => 'avatar']
 			);
 		}
+
+		static::validAvatar($user, $source, $extension);
 	}
 
 	/**
@@ -356,6 +361,27 @@ class UserRules
 			throw new DuplicateException(
 				key: 'user.duplicate',
 				data: ['email' => $email]
+			);
+		}
+	}
+
+	public static function validAvatar(User $user, string $source, string $extension): void
+	{
+		$type = F::extensionToType($extension);
+
+		if ($type !== 'image') {
+			throw new Exception(
+				key: 'file.type.invalid',
+				data: compact('type')
+			);
+		}
+
+		$mime = F::mime($source);
+
+		if (Str::startsWith($mime, 'image/') !== true) {
+			throw new Exception(
+				key: 'file.mime.invalid',
+				data: compact('mime')
 			);
 		}
 	}

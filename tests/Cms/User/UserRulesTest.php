@@ -485,7 +485,7 @@ class UserRulesTest extends ModelTestCase
 		$user->method('avatar')->willReturn($avatar);
 		$user->method('permissions')->willReturn($permissions);
 
-		UserRules::replaceAvatar($user, '/tmp/avatar.jpg');
+		UserRules::replaceAvatar($user, '/tmp/avatar.jpg', 'jpg');
 	}
 
 	public function testReplaceAvatarNotFound(): void
@@ -500,7 +500,7 @@ class UserRulesTest extends ModelTestCase
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionCode('error.file.notFound');
 
-		UserRules::replaceAvatar($user, '/tmp/avatar.jpg');
+		UserRules::replaceAvatar($user, '/tmp/avatar.jpg', 'jpg');
 	}
 
 	public function testReplaceAvatarWithoutPermission(): void
@@ -515,7 +515,7 @@ class UserRulesTest extends ModelTestCase
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('You are not allowed to update the user "test"');
 
-		UserRules::replaceAvatar($user, '/tmp/avatar.jpg');
+		UserRules::replaceAvatar($user, '/tmp/avatar.jpg', 'jpg');
 	}
 
 	public function testUpdate(): void
@@ -593,6 +593,38 @@ class UserRulesTest extends ModelTestCase
 			['kirby'],
 			['nobody']
 		];
+	}
+
+	public function testValidAvatar(): void
+	{
+		$this->expectNotToPerformAssertions();
+
+		$user = $this->createMock(User::class);
+
+		UserRules::validAvatar($user, __DIR__ . '/../Api/routes/fixtures/avatar.jpg', 'jpg');
+	}
+
+	public function testValidAvatarWithInvalidExtension(): void
+	{
+		$user = $this->createMock(User::class);
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Invalid file type: document');
+
+		UserRules::validAvatar($user, '/tmp/file.pdf', 'pdf');
+	}
+
+	public function testValidAvatarWithInvalidMime(): void
+	{
+		$source = static::TMP . '/fake-image.jpg';
+		file_put_contents($source, 'this is not an image');
+
+		$user = $this->createMock(User::class);
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionCode('error.file.mime.invalid');
+
+		UserRules::validAvatar($user, $source, 'jpg');
 	}
 
 	#[DataProvider('validIdProvider')]
