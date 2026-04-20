@@ -383,22 +383,33 @@ trait UserActions
 	public function replaceAvatar(string $source, string $extension): static
 	{
 		return $this->commit('replaceAvatar', ['user' => $this, 'source' => $source, 'extension' => $extension], function ($user, $source, $extension) {
-			// clean up the old avatar first to allow uploading
-			// a new avatar with a different file type.
-			//
-			// If we use the replace method here, we can only upload
-			// files with the exact same type. But as long as it
-			// is a valid avatar, a different type should be allowed.
-			$user->avatar()->delete();
 
+			$oldAvatar = $user->avatar();
+
+			// if the file type stayed the same, we can fall back to the
+			// replace method, which is the cleanest solution here.
+			if ($oldAvatar->extension() === $extension) {
+				$oldAvatar->replace(
+					source: $source,
+					move: true
+				);
+
+				return $user;
+			}
+
+			// try to create the new avatar
 			$user->createFile(
 				props: [
 					'filename' => 'profile.' . $extension,
 					'template' => 'avatar',
-					'source'   => $source
+					'source'   => $source,
 				],
 				move: true
 			);
+
+			// if the new avatar was successfully created,
+			// delete the old one to make sure that we don't have two.
+			$oldAvatar->delete();
 
 			return $user;
 		});
