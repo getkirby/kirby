@@ -176,6 +176,23 @@ class UserAvatarTest extends ModelTestCase
 		$this->assertFileExists($user->root() . '/profile.jpg');
 	}
 
+	public function testReplaceAvatarWithDifferentExtension(): void
+	{
+		$user = $this->app->user('admin@getkirby.com');
+		$user->createAvatar($this->avatarSource(), 'jpg');
+
+		$this->assertFileExists($user->root() . '/profile.jpg');
+
+		$source = static::TMP . '/tmp-avatar.png';
+		F::copy(static::FIXTURES . '/avatar.jpg', $source);
+
+		$result = $user->replaceAvatar($source, 'png');
+
+		$this->assertInstanceOf(User::class, $result);
+		$this->assertFileDoesNotExist($user->root() . '/profile.jpg');
+		$this->assertFileExists($user->root() . '/profile.png');
+	}
+
 	public function testReplaceAvatarWithoutPermission(): void
 	{
 		$user = $this->app->user('admin@getkirby.com');
