@@ -414,12 +414,31 @@ class UserRulesTest extends ModelTestCase
 
 	public function testDeleteAvatar(): void
 	{
-		$this->expectNotToPerformAssertions();
+		$avatar = $this->createMock(File::class);
 
-		$this->app->impersonate('admin@domain.com');
-		$user = $this->app->user('user@domain.com');
+		$permissions = $this->createMock(UserPermissions::class);
+		$permissions->method('can')->with('update')->willReturn(true);
+
+		$user = $this->createMock(User::class);
+		$user->method('avatar')->willReturn($avatar);
+		$user->method('permissions')->willReturn($permissions);
 
 		UserRules::deleteAvatar($user);
+	}
+
+	public function testDeleteAvatarNotFound(): void
+	{
+		$permissions = $this->createMock(UserPermissions::class);
+		$permissions->method('can')->with('update')->willReturn(true);
+
+		$user = $this->createMock(User::class);
+		$user->method('avatar')->willReturn(null);
+		$user->method('permissions')->willReturn($permissions);
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionCode('error.file.notFound');
+
+		UserRules::deleteAvatar($user, '/tmp/avatar.jpg');
 	}
 
 	public function testDeleteAvatarWithoutPermission(): void

@@ -274,6 +274,13 @@ class UserRules
 				data: ['name' => $user->username()]
 			);
 		}
+
+		if ($user->avatar() === null) {
+			throw new NotFoundException(
+				key: 'file.notFound',
+				data: ['filename' => 'avatar']
+			);
+		}
 	}
 
 	/**
@@ -293,7 +300,7 @@ class UserRules
 		if ($user->avatar() === null) {
 			throw new NotFoundException(
 				key: 'file.notFound',
-				data: ['name' => 'avatar']
+				data: ['filename' => 'avatar']
 			);
 		}
 	}
