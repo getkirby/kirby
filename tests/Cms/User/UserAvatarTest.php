@@ -55,9 +55,8 @@ class UserAvatarTest extends ModelTestCase
 					$phpunit->assertSame('jpg', $extension);
 					$calls++;
 				},
-				'user.createAvatar:after' => function (User $newUser, User $oldUser) use ($phpunit, &$calls) {
-					$phpunit->assertSame('admin@getkirby.com', $newUser->email());
-					$phpunit->assertSame('admin@getkirby.com', $oldUser->email());
+				'user.createAvatar:after' => function (User $user) use ($phpunit, &$calls) {
+					$phpunit->assertSame('admin@getkirby.com', $user->email());
 					$calls++;
 				}
 			]
@@ -119,9 +118,9 @@ class UserAvatarTest extends ModelTestCase
 					$phpunit->assertSame('admin@getkirby.com', $user->email());
 					$calls++;
 				},
-				'user.deleteAvatar:after' => function (bool $status, User $oldUser) use ($phpunit, &$calls) {
+				'user.deleteAvatar:after' => function (bool $status, User $user) use ($phpunit, &$calls) {
 					$phpunit->assertTrue($status);
-					$phpunit->assertSame('admin@getkirby.com', $oldUser->email());
+					$phpunit->assertSame('admin@getkirby.com', $user->email());
 					$calls++;
 				}
 			]
@@ -217,9 +216,8 @@ class UserAvatarTest extends ModelTestCase
 					$phpunit->assertSame('jpg', $extension);
 					$calls++;
 				},
-				'user.replaceAvatar:after' => function (User $newUser, User $oldUser) use ($phpunit, &$calls) {
-					$phpunit->assertSame('admin@getkirby.com', $newUser->email());
-					$phpunit->assertSame('admin@getkirby.com', $oldUser->email());
+				'user.replaceAvatar:after' => function (User $user) use ($phpunit, &$calls) {
+					$phpunit->assertSame('admin@getkirby.com', $user->email());
 					$calls++;
 				}
 			]
