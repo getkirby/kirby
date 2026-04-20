@@ -396,6 +396,11 @@ trait UserActions
 				return $user;
 			}
 
+			// check if the user can delete the old avatar,
+			// but don't delete it yet. If creating the new one fails
+			// we can still keep the old one around
+			FileRules::delete($oldAvatar);
+
 			// try to create the new avatar
 			$user->createFile(
 				props: [
