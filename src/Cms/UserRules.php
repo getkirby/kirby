@@ -3,8 +3,10 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\DuplicateException;
+use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\Totp;
@@ -217,6 +219,21 @@ class UserRules
 	}
 
 	/**
+	 * Validates if a new avatar can be created
+	 *
+	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to create a new avatar
+	 */
+	public static function createAvatar(User $user, string $source, string $extension): void
+	{
+		if ($user->permissions()->can('update') !== true) {
+			throw new PermissionException(
+				key: 'user.update.permission',
+				data: ['name' => $user->username()]
+			);
+		}
+	}
+
+	/**
 	 * Validates if the user can be deleted
 	 *
 	 * @throws \Kirby\Exception\LogicException If this is the last user or last admin, which cannot be deleted
@@ -240,6 +257,43 @@ class UserRules
 			throw new PermissionException(
 				key: 'user.delete.permission',
 				data: ['name' => $user->username()]
+			);
+		}
+	}
+
+	/**
+	 * Validates if the avatar for the user can be deleted
+	 *
+	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to delete this user's avatar
+	 */
+	public static function deleteAvatar(User $user): void
+	{
+		if ($user->permissions()->can('update') !== true) {
+			throw new PermissionException(
+				key: 'user.update.permission',
+				data: ['name' => $user->username()]
+			);
+		}
+	}
+
+	/**
+	 * Validates if the avatar can be replaced
+	 *
+	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the avatar
+	 */
+	public static function replaceAvatar(User $user, string $source): void
+	{
+		if ($user->permissions()->can('update') !== true) {
+			throw new PermissionException(
+				key: 'user.update.permission',
+				data: ['name' => $user->username()]
+			);
+		}
+
+		if ($user->avatar() === null) {
+			throw new NotFoundException(
+				key: 'file.notFound',
+				data: ['name' => 'avatar']
 			);
 		}
 	}
