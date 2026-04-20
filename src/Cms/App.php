@@ -1238,6 +1238,36 @@ class App
 		// set the current locale
 		$this->setCurrentLanguage($language);
 
+		// canonicalize repeated slashes only in page resolution
+		// read the original request, not `$path`, because upstream parsing
+		// may already have collapsed duplicate slashes
+		$requestUri = $this->environment()->get('REQUEST_URI');
+
+		if (is_string($requestUri) === true) {
+			[$requestPath, $requestQuery] = array_pad(
+				explode('?', $requestUri, 2),
+				2,
+				null
+			);
+
+			if (Str::contains($requestPath, '//') === true) {
+				// collapse repeated slashes in the path to a single slash
+				// and keep the query string unchanged
+				$normalizedPath = preg_replace('!/{2,}!', '/', $requestPath);
+
+				if ($normalizedPath !== $requestPath) {
+					// send clients to the canonical page URL to avoid duplicate content
+					$location = $normalizedPath ?: '/';
+
+					if ($requestQuery !== null && $requestQuery !== '') {
+						$location .= '?' . $requestQuery;
+					}
+
+					return Response::redirect($location, 301);
+				}
+			}
+		}
+
 		// directly prevent path with incomplete content representation
 		if (Str::endsWith($path, '.') === true) {
 			return null;

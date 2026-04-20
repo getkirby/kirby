@@ -32,6 +32,65 @@ class AppResolveTest extends TestCase
 		$this->assertTrue($result->isHomePage());
 	}
 
+	public function testResolveRedirectsLeadingRepeatedSlashes(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test'
+					]
+				]
+			],
+			'server' => [
+				'REQUEST_URI' => '//test?foo=bar'
+			],
+			'urls' => [
+				'index' => 'https://getkirby.test'
+			]
+		]);
+
+		$response = $app->resolve(null);
+
+		$this->assertSame(301, $response->code());
+		$this->assertSame('/test?foo=bar', $response->headers()['Location']->toString());
+	}
+
+	public function testResolveRedirectsInnerRepeatedSlashes(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+						'children' => [
+							[
+								'slug' => 'subpage'
+							]
+						]
+					]
+				]
+			],
+			'server' => [
+				'REQUEST_URI' => '/test//subpage?foo=bar'
+			],
+			'urls' => [
+				'index' => 'https://getkirby.test'
+			]
+		]);
+
+		$response = $app->resolve('test/subpage');
+
+		$this->assertSame(301, $response->code());
+		$this->assertSame('/test/subpage?foo=bar', $response->headers()['Location']->toString());
+	}
+
 	public function testResolveMainPage(): void
 	{
 		$app = new App([
