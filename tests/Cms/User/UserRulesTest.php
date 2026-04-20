@@ -6,6 +6,7 @@ use Kirby\Exception\DuplicateException;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -384,6 +385,100 @@ class UserRulesTest extends ModelTestCase
 			'password' => 12345678,
 			'role'     => 'foo'
 		]);
+	}
+
+	public function testCreateAvatar(): void
+	{
+		$this->expectNotToPerformAssertions();
+
+		$this->app->impersonate('admin@domain.com');
+		$user = $this->app->user('user@domain.com');
+
+		UserRules::createAvatar($user, '/tmp/avatar.jpg', 'jpg');
+	}
+
+	public function testCreateAvatarWithoutPermission(): void
+	{
+		$permissions = $this->createMock(UserPermissions::class);
+		$permissions->method('can')->with('update')->willReturn(false);
+
+		$user = $this->createMock(User::class);
+		$user->method('permissions')->willReturn($permissions);
+		$user->method('username')->willReturn('test');
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to update the user "test"');
+
+		UserRules::createAvatar($user, '/tmp/avatar.jpg', 'jpg');
+	}
+
+	public function testDeleteAvatar(): void
+	{
+		$this->expectNotToPerformAssertions();
+
+		$this->app->impersonate('admin@domain.com');
+		$user = $this->app->user('user@domain.com');
+
+		UserRules::deleteAvatar($user);
+	}
+
+	public function testDeleteAvatarWithoutPermission(): void
+	{
+		$permissions = $this->createMock(UserPermissions::class);
+		$permissions->method('can')->with('update')->willReturn(false);
+
+		$user = $this->createMock(User::class);
+		$user->method('permissions')->willReturn($permissions);
+		$user->method('username')->willReturn('test');
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to update the user "test"');
+
+		UserRules::deleteAvatar($user);
+	}
+
+	public function testReplaceAvatar(): void
+	{
+		$avatar = $this->createMock(File::class);
+
+		$permissions = $this->createMock(UserPermissions::class);
+		$permissions->method('can')->with('update')->willReturn(true);
+
+		$user = $this->createMock(User::class);
+		$user->method('avatar')->willReturn($avatar);
+		$user->method('permissions')->willReturn($permissions);
+
+		UserRules::replaceAvatar($user, '/tmp/avatar.jpg');
+	}
+
+	public function testReplaceAvatarNotFound(): void
+	{
+		$permissions = $this->createMock(UserPermissions::class);
+		$permissions->method('can')->with('update')->willReturn(true);
+
+		$user = $this->createMock(User::class);
+		$user->method('avatar')->willReturn(null);
+		$user->method('permissions')->willReturn($permissions);
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionCode('error.file.notFound');
+
+		UserRules::replaceAvatar($user, '/tmp/avatar.jpg');
+	}
+
+	public function testReplaceAvatarWithoutPermission(): void
+	{
+		$permissions = $this->createMock(UserPermissions::class);
+		$permissions->method('can')->with('update')->willReturn(false);
+
+		$user = $this->createMock(User::class);
+		$user->method('permissions')->willReturn($permissions);
+		$user->method('username')->willReturn('test');
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to update the user "test"');
+
+		UserRules::replaceAvatar($user, '/tmp/avatar.jpg');
 	}
 
 	public function testUpdate(): void
