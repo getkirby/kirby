@@ -83,17 +83,10 @@ return [
 		'action'  => function (string $id) {
 			return $this->upload(
 				function ($source, $filename) use ($id) {
-					// delete the old avatar
-					Find::user($id)->avatar()?->delete();
+					$user   = Find::user($id);
+					$method = $user->avatar() === null ? 'createAvatar' : 'replaceAvatar';
 
-					$props = [
-						'filename' => 'profile.' . F::extension($filename),
-						'template' => 'avatar',
-						'source'   => $source
-					];
-
-					// move the source file from the temp dir
-					return Find::user($id)->createFile($props, true);
+					return $user->$method($source, F::extension($filename))->avatar();
 				},
 				single: true
 			);
@@ -107,7 +100,7 @@ return [
 		],
 		'method'  => 'DELETE',
 		'action'  => function (string $id) {
-			return Find::user($id)->avatar()->delete();
+			return Find::user($id)->deleteAvatar();
 		}
 	],
 	[
