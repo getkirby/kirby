@@ -1,9 +1,7 @@
 <?php
 
 use Kirby\Cms\Find;
-use Kirby\Exception\Exception;
 use Kirby\Filesystem\F;
-use Kirby\Toolkit\Str;
 
 /**
  * User Routes
@@ -85,22 +83,6 @@ return [
 		'action'  => function (string $id) {
 			return $this->upload(
 				function ($source, $filename) use ($id) {
-					$type = F::type($filename);
-					if ($type !== 'image') {
-						throw new Exception(
-							key: 'file.type.invalid',
-							data: compact('type')
-						);
-					}
-
-					$mime = F::mime($source);
-					if (Str::startsWith($mime, 'image/') !== true) {
-						throw new Exception(
-							key: 'file.mime.invalid',
-							data: compact('mime')
-						);
-					}
-
 					// delete the old avatar
 					Find::user($id)->avatar()?->delete();
 
