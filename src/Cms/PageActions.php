@@ -30,10 +30,11 @@ trait PageActions
 {
 	/**
 	 * Changes the sorting number.
-	 * The sorting number must already be correct
-	 * when the method is called.
-	 * This only affects this page,
-	 * siblings will not be resorted.
+	 * Low-level method, ensure to run all necessary checks
+	 * (e.g. permissions) before calling it. The sorting number
+	 * must already be correct when the method is called.
+	 * This only affects this page, siblings will not be resorted.
+	 * @internal
 	 *
 	 * @return $this|static
 	 * @throws \Kirby\Exception\LogicException If a draft is being sorted or the directory cannot be moved
