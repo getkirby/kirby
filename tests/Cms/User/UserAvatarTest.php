@@ -104,7 +104,7 @@ class UserAvatarTest extends ModelTestCase
 
 		$result = $user->deleteAvatar();
 
-		$this->assertInstanceOf(User::class, $result);
+		$this->assertTrue($result);
 		$this->assertFileDoesNotExist($user->root() . '/profile.jpg');
 	}
 
@@ -119,8 +119,8 @@ class UserAvatarTest extends ModelTestCase
 					$phpunit->assertSame('admin@getkirby.com', $user->email());
 					$calls++;
 				},
-				'user.deleteAvatar:after' => function (User $newUser, User $oldUser) use ($phpunit, &$calls) {
-					$phpunit->assertSame('admin@getkirby.com', $newUser->email());
+				'user.deleteAvatar:after' => function (bool $status, User $oldUser) use ($phpunit, &$calls) {
+					$phpunit->assertTrue($status);
 					$phpunit->assertSame('admin@getkirby.com', $oldUser->email());
 					$calls++;
 				}

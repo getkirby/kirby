@@ -292,11 +292,10 @@ trait UserActions
 	/**
 	 * Deletes the existing avatar if it exists
 	 */
-	public function deleteAvatar(): static
+	public function deleteAvatar(): bool
 	{
 		return $this->commit('deleteAvatar', ['user' => $this], function ($user) {
-			$user->avatar()->delete();
-			return $user;
+			return $user->avatar()->delete();
 		});
 	}
 
