@@ -106,7 +106,7 @@ class App
 		// start with fresh caches
 		Snippet::$cache = [];
 		VersionCache::reset();
-		ModelPermissions::flushCache();
+		ModelPermissions::$cache = [];
 		Uuids::$enabled = null;
 
 		// register all roots to be able to load stuff afterwards

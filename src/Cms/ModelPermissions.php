@@ -19,7 +19,7 @@ abstract class ModelPermissions
 	protected const CATEGORY = 'model';
 	protected array $options;
 
-	protected static array $cache = [];
+	public static array $cache = [];
 
 	public function __construct(protected ModelWithContent|Language $model)
 	{
@@ -163,15 +163,6 @@ abstract class ModelPermissions
 	protected static function category(ModelWithContent|Language $model): string
 	{
 		return static::CATEGORY;
-	}
-
-	/**
-	 * Clears the static permission cache
-	 * @since 5.4.0
-	 */
-	public static function flushCache(): void
-	{
-		ModelPermissions::$cache = [];
 	}
 
 	public function toArray(): array
