@@ -103,11 +103,10 @@ class App
 		$this->core   = new Core($this);
 		$this->events = new Events($this);
 
-		// start with a fresh snippet and version cache
+		// start with fresh caches
 		Snippet::$cache = [];
 		VersionCache::reset();
-
-		// reset the UUIDs option cache
+		ModelPermissions::$cache = [];
 		Uuids::$enabled = null;
 
 		// register all roots to be able to load stuff afterwards

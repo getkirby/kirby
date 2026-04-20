@@ -21,6 +21,10 @@ class UserTotpDisableDialogTest extends TestCase
 			'roots' => [
 				'index' => static::TMP,
 			],
+			'roles' => [
+				['name' => 'admin'],
+				['name' => 'editor']
+			],
 			'users' => [
 				[
 					'id'    => 'test',
@@ -30,6 +34,7 @@ class UserTotpDisableDialogTest extends TestCase
 				[
 					'id'    => 'homer',
 					'email' => 'homer@simpson.com',
+					'role'  => 'editor'
 				]
 			],
 			'user' => 'test@getkirby.com'

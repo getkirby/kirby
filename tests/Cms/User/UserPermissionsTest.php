@@ -118,9 +118,6 @@ class UserPermissionsTest extends ModelTestCase
 		$user1->logout();
 	}
 
-	/**
-	 * @covers \Kirby\Cms\ModelPermissions::canFromCache
-	 */
 	public function testCanFromCache()
 	{
 		$app = new App([
@@ -151,9 +148,6 @@ class UserPermissionsTest extends ModelTestCase
 		$this->assertFalse(UserPermissions::canFromCache($user, 'list'));
 	}
 
-	/**
-	 * @covers \Kirby\Cms\ModelPermissions::canFromCache
-	 */
 	public function testCanFromCacheDynamic()
 	{
 		$this->expectException(LogicException::class);
