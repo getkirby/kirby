@@ -189,6 +189,6 @@ class OptionsQuery extends OptionsProvider
 			return compact('text', 'value', 'icon', 'info');
 		});
 
-		return $this->options = Options::factory($options);
+		return $this->options = Options::factory($options, resolve: false);
 	}
 }

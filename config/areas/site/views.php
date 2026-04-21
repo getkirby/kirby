@@ -1,6 +1,5 @@
 <?php
 
-use Kirby\Cms\App;
 use Kirby\Cms\Find;
 
 return [
@@ -16,7 +15,7 @@ return [
 	],
 	'site' => [
 		'pattern' => 'site',
-		'action'  => fn () => App::instance()->site()->panel()->view()
+		'action'  => fn () => Find::site()->panel()->view()
 	],
 	'site.file' => [
 		'pattern' => 'site/files/(:any)',

@@ -1,0 +1,6 @@
+[
+	{
+		"value": "a",
+		"title": "{{ page.slug }}"
+	}
+]

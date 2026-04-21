@@ -294,6 +294,32 @@ class OptionsQueryTest extends TestCase
 	/**
 	 * @covers ::resolve
 	 */
+	public function testResolveNoDoubleResolution(): void
+	{
+		// a page whose title contains a query pattern simulates an editor
+		// injecting a template expression into user-controlled content;
+		// the pattern must survive as a literal string after render()
+		$app = new App([
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'a',
+						'content' => [
+							'title' => '{{ page.slug }}'
+						]
+					],
+				]
+			]
+		]);
+
+		$options = (new OptionsQuery('site.children'))->render($app->site());
+
+		$this->assertSame('{{ page.slug }}', $options[0]['text']);
+	}
+
+	/**
+	 * @covers ::resolve
+	 */
 	public function testResolveInvalid()
 	{
 		$app = new App([

@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\LogicException;
+use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\File as BaseFile;
@@ -715,6 +716,25 @@ class FileActionsTest extends TestCase
 	 */
 	public function testCreateWithDefaults($parent)
 	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'files/test' => [
+					'name'   => 'test',
+					'fields' => [
+						'a' => [
+							'type'    => 'text',
+							'default' => 'A'
+						],
+						'b' => [
+							'type'    => 'textarea',
+							'default' => 'B'
+						],
+					]
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
 		$source = static::TMP . '/source.md';
 
 		// create the dummy source
@@ -724,19 +744,7 @@ class FileActionsTest extends TestCase
 			'filename' => 'test.md',
 			'source'   => $source,
 			'parent'   => $parent,
-			'blueprint' => [
-				'name' => 'test',
-				'fields' => [
-					'a'  => [
-						'type'    => 'text',
-						'default' => 'A'
-					],
-					'b' => [
-						'type'    => 'textarea',
-						'default' => 'B'
-					]
-				]
-			]
+			'template' => 'test',
 		]);
 
 		$this->assertSame('A', $result->a()->value());
@@ -748,31 +756,36 @@ class FileActionsTest extends TestCase
 	 */
 	public function testCreateWithDefaultsAndContent($parent)
 	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'files/test' => [
+					'name'   => 'test',
+					'fields' => [
+						'a' => [
+							'type'    => 'text',
+							'default' => 'A'
+						],
+						'b' => [
+							'type'    => 'textarea',
+							'default' => 'B'
+						],
+					]
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
 		$source = static::TMP . '/source.md';
 
 		// create the dummy source
 		F::write($source, '# Test');
 
 		$result = File::create([
-			'content' => [
-				'a' => 'Custom A'
-			],
+			'content'  => ['a' => 'Custom A'],
 			'filename' => 'test.md',
 			'source'   => $source,
 			'parent'   => $parent,
-			'blueprint' => [
-				'name' => 'test',
-				'fields' => [
-					'a'  => [
-						'type'    => 'text',
-						'default' => 'A'
-					],
-					'b' => [
-						'type'    => 'textarea',
-						'default' => 'B'
-					]
-				]
-			]
+			'template' => 'test',
 		]);
 
 		$this->assertSame('Custom A', $result->a()->value());
@@ -802,19 +815,27 @@ class FileActionsTest extends TestCase
 	 */
 	public function testCreateImageAndManipulate($parent)
 	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'files/test' => [
+					'name'   => 'test',
+					'create' => [
+						'width'  => 100,
+						'height' => 100,
+						'format' => 'webp',
+					]
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
 		$source = static::FIXTURES . '/test.jpg';
+
 		$result = File::create([
 			'filename' => 'test.jpg',
 			'source'   => $source,
 			'parent'   => $parent,
-			'blueprint' => [
-				'name' => 'test',
-				'create' => [
-					'width'  => 100,
-					'height' => 100,
-					'format' => 'webp'
-				]
-			]
+			'template' => 'test',
 		]);
 
 		$this->assertFileExists($result->root());
@@ -830,23 +851,68 @@ class FileActionsTest extends TestCase
 	 */
 	public function testCreateManipulateNonImage($parent)
 	{
-		$source = static::FIXTURES . '/test.pdf';
-
-		$result = File::create([
-			'filename'  => 'test.pdf',
-			'source'    => $source,
-			'parent'    => $parent,
-			'blueprint' => [
-				'name'   => 'test',
-				'create' => [
-					'width'  => 100,
-					'height' => 100,
-					'format' => 'webp'
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'files/test' => [
+					'name'   => 'test',
+					'create' => [
+						'width'  => 100,
+						'height' => 100,
+						'format' => 'webp',
+					]
 				]
 			]
 		]);
+		$this->app->impersonate('kirby');
+
+		$source = static::FIXTURES . '/test.pdf';
+
+		$result = File::create([
+			'filename' => 'test.pdf',
+			'source'   => $source,
+			'parent'   => $parent,
+			'template' => 'test',
+		]);
 
 		$this->assertFileEquals($source, $result->root());
+	}
+
+	public function testCreateStripInjectedBlueprint(): void
+	{
+		$this->app = $this->app->clone([
+			'roles' => [
+				[
+					'name' => 'editor',
+					'permissions' => [
+						'files' => [
+							'create' => false,
+						]
+					]
+				]
+			],
+			'user'  => 'editor@domain.com',
+			'users' => [
+				['email' => 'editor@domain.com', 'role' => 'editor']
+			]
+		]);
+
+		$parent = new Page(['slug' => 'test']);
+
+		F::write($source = static::TMP . '/source.md', '# Test');
+
+		$this->expectException(PermissionException::class);
+
+		File::create([
+			'filename'  => 'test.md',
+			'source'    => $source,
+			'parent'    => $parent,
+			'blueprint' => [
+				'options' => [
+					// would allow creation if respected, must be stripped
+					'create' => true
+				]
+			]
+		]);
 	}
 
 	/**
@@ -1010,6 +1076,20 @@ class FileActionsTest extends TestCase
 	 */
 	public function testReplaceManipulateNonImage($parent)
 	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'files/test' => [
+					'name'   => 'test',
+					'create' => [
+						'width'  => 100,
+						'height' => 100,
+						'format' => 'webp',
+					]
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
 		$original    = static::FIXTURES . '/test.pdf';
 		$replacement = static::FIXTURES . '/doc.pdf';
 
@@ -1017,14 +1097,7 @@ class FileActionsTest extends TestCase
 			'filename' => 'test.pdf',
 			'source'   => $original,
 			'parent'   => $parent,
-			'blueprint' => [
-				'name' => 'test',
-				'create' => [
-					'width'  => 100,
-					'height' => 100,
-					'format' => 'webp'
-				]
-			]
+			'template' => 'test',
 		]);
 
 		$this->assertFileEquals($original, $originalFile->root());

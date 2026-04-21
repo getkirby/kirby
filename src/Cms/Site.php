@@ -280,6 +280,15 @@ class Site extends ModelWithContent
 	}
 
 	/**
+	 * Checks if the site is accessible to the current user
+	 * @since 4.9.0
+	 */
+	public function isAccessible(): bool
+	{
+		return $this->permissions()->can('access');
+	}
+
+	/**
 	 * Returns the root to the media folder for the site
 	 * @internal
 	 */

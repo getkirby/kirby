@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Api\Api as BaseApi;
 use Kirby\Exception\NotFoundException;
+use Kirby\Exception\PermissionException;
 use Kirby\Form\Form;
 use Kirby\Session\Session;
 
@@ -223,10 +224,13 @@ class Api extends BaseApi
 
 	/**
 	 * Returns the site object
+	 *
+	 * @throws \Kirby\Exception\NotFoundException if the site cannot be accessed
+	 * @since 4.9.0
 	 */
 	public function site(): Site
 	{
-		return $this->kirby->site();
+		return Find::site();
 	}
 
 	/**
@@ -256,5 +260,17 @@ class Api extends BaseApi
 	public function users(): Users
 	{
 		return Find::users();
+	}
+
+	/**
+	 * Validates that the acting user has access to the given area.
+	 *
+	 * @throws \Kirby\Exception\PermissionException
+	 */
+	public function validateAreaAccess(string $area): void
+	{
+		if ($this->kirby->user()?->role()->permissions()->for('access', $area) !== true) {
+			throw new PermissionException('No access');
+		}
 	}
 }
