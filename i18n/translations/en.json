@@ -198,7 +198,6 @@
 	"error.site.changeTitle.empty": "The title must not be empty",
 	"error.site.changeTitle.permission": "You are not allowed to change the title of the site",
 	"error.site.notAccessible": "The site is not accessible",
-	"error.site.notFound": "The site cannot be found",
 	"error.site.update.permission": "You are not allowed to update the site",
 
 	"error.structure.validation": "There's an error on the \"{field}\" field in row {index}",
