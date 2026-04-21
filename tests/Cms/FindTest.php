@@ -97,6 +97,8 @@ class FindTest extends TestCase
 	 */
 	public function testFileNotFound()
 	{
+		$this->app->impersonate('kirby');
+
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The file "nope.jpg" cannot be found');
 
@@ -109,6 +111,11 @@ class FindTest extends TestCase
 	public function testFileNotReadable()
 	{
 		$app = $this->app->clone([
+			'blueprints' => [
+				'files/protected' => [
+					'options' => ['read' => false]
+				]
+			],
 			'site' => [
 				'files' => [
 					[
@@ -116,8 +123,16 @@ class FindTest extends TestCase
 						'template' => 'protected'
 					]
 				]
+			],
+			'users' => [
+				[
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin'
+				]
 			]
 		]);
+
+		$app->impersonate('admin@getkirby.com');
 
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The file "protected.jpg" cannot be found');
@@ -325,11 +340,80 @@ class FindTest extends TestCase
 	/**
 	 * @covers ::parent
 	 */
+	public function testParentSiteNotAccessible(): void
+	{
+		$app = $this->app->clone([
+			'roles' => [
+				[
+					'name'        => 'editor',
+					'permissions' => [
+						'site' => ['access' => false]
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor'
+				]
+			]
+		]);
+
+		$app->impersonate('editor@getkirby.com');
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The site is not accessible');
+
+		Find::parent('site');
+	}
+
+	/**
+	 * @covers ::parent
+	 */
 	public function testParentUndefined()
 	{
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The user "does-not-exist" cannot be found');
 		$this->assertNull(Find::parent('users/does-not-exist'));
+	}
+
+	/**
+	 * @covers ::site
+	 */
+	public function testSite(): void
+	{
+		$this->app->impersonate('kirby');
+		$this->assertIsSite(Find::site());
+	}
+
+	/**
+	 * @covers ::site
+	 */
+	public function testSiteNotAccessible(): void
+	{
+		$app = $this->app->clone([
+			'roles' => [
+				[
+					'name'        => 'editor',
+					'permissions' => [
+						'site' => ['access' => false]
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor'
+				]
+			]
+		]);
+
+		$app->impersonate('editor@getkirby.com');
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The site is not accessible');
+
+		Find::site();
 	}
 
 	/**

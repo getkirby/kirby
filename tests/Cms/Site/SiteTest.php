@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Filesystem\F;
 use Kirby\Panel\Site as Panel;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class SiteTest extends TestCase
 {
@@ -187,6 +188,72 @@ class SiteTest extends TestCase
 	}
 
 
+	public function testIsAccessible(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'roles' => [
+				[
+					'name' => 'editor',
+					'permissions' => [
+						'site' => [
+							'access' => false
+						],
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor'
+				]
+			],
+		]);
+
+		$site = $app->site();
+
+		$app->impersonate('editor@getkirby.com');
+		$this->assertFalse($site->isAccessible());
+
+		$app->impersonate('kirby');
+		$this->assertTrue($site->isAccessible());
+	}
+
+	public function testIsAccessibleBlueprint(): void
+	{
+		$app = new App([
+			'blueprints' => [
+				'site' => [
+					'options' => ['access' => false]
+				]
+			],
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'roles' => [
+				[
+					'name' => 'editor'
+				]
+			],
+			'users' => [
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor'
+				]
+			],
+		]);
+
+		$site = $app->site();
+
+		$app->impersonate('editor@getkirby.com');
+		$this->assertFalse($site->isAccessible());
+
+		$app->impersonate('kirby');
+		$this->assertTrue($site->isAccessible());
+	}
+
 	public static function previewUrlProvider(): array
 	{
 		return [
@@ -201,6 +268,7 @@ class SiteTest extends TestCase
 	/**
 	 * @dataProvider previewUrlProvider
 	 */
+	#[DataProvider('previewUrlProvider')]
 	public function testCustomPreviewUrl(
 		$input,
 		$expected,
