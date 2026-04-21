@@ -44,7 +44,7 @@ class Options extends Collection
 	 */
 	public static function factory(
 		array $items = [],
-		bool $resolve = false
+		bool $resolve = true
 	): static {
 		$collection = new static();
 
