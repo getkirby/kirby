@@ -6,6 +6,7 @@ use Exception;
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 
 class UserRulesTest extends TestCase
@@ -425,6 +426,49 @@ class UserRulesTest extends TestCase
 		]);
 	}
 
+	public function testCreateAvatar(): void
+	{
+		$this->expectNotToPerformAssertions();
+
+		$this->appWithAdmin()->impersonate('admin@domain.com');
+		$user = $this->appWithAdmin()->user('user@domain.com');
+
+		UserRules::createAvatar($user, __DIR__ . '/../Api/routes/fixtures/avatar.jpg', 'jpg');
+	}
+
+	public function testCreateAvatarWhenAvatarExists(): void
+	{
+		$avatar = $this->createMock(File::class);
+		$avatar->method('filename')->willReturn('profile.jpg');
+
+		$permissions = $this->createMock(UserPermissions::class);
+		$permissions->method('can')->with('update')->willReturn(true);
+
+		$user = $this->createMock(User::class);
+		$user->method('avatar')->willReturn($avatar);
+		$user->method('permissions')->willReturn($permissions);
+
+		$this->expectException(DuplicateException::class);
+		$this->expectExceptionMessage('A file with the name "profile.jpg" already exists');
+
+		UserRules::createAvatar($user, __DIR__ . '/../Api/routes/fixtures/avatar.jpg', 'jpg');
+	}
+
+	public function testCreateAvatarWithoutPermission(): void
+	{
+		$permissions = $this->createMock(UserPermissions::class);
+		$permissions->method('can')->with('update')->willReturn(false);
+
+		$user = $this->createMock(User::class);
+		$user->method('permissions')->willReturn($permissions);
+		$user->method('username')->willReturn('test');
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to update the user "test"');
+
+		UserRules::createAvatar($user, __DIR__ . '/../Api/routes/fixtures/avatar.jpg', 'jpg');
+	}
+
 	public function testUpdate()
 	{
 		$app  = $this->appWithAdmin();
@@ -477,6 +521,130 @@ class UserRulesTest extends TestCase
 		$this->expectExceptionMessage('You are not allowed to delete the user "test"');
 
 		UserRules::delete($user);
+	}
+
+	public function testDeleteAvatar(): void
+	{
+		$this->expectNotToPerformAssertions();
+
+		$avatar = $this->createMock(File::class);
+
+		$permissions = $this->createMock(UserPermissions::class);
+		$permissions->method('can')->willReturn(true);
+
+		$user = $this->createMock(User::class);
+		$user->method('avatar')->willReturn($avatar);
+		$user->method('permissions')->willReturn($permissions);
+
+		UserRules::deleteAvatar($user);
+	}
+
+	public function testDeleteAvatarNotFound(): void
+	{
+		$permissions = $this->createMock(UserPermissions::class);
+		$permissions->method('can')->with('update')->willReturn(true);
+
+		$user = $this->createMock(User::class);
+		$user->method('avatar')->willReturn(null);
+		$user->method('permissions')->willReturn($permissions);
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionCode('error.file.notFound');
+
+		UserRules::deleteAvatar($user);
+	}
+
+	public function testDeleteAvatarWithoutPermission(): void
+	{
+		$permissions = $this->createMock(UserPermissions::class);
+		$permissions->method('can')->with('update')->willReturn(false);
+
+		$user = $this->createMock(User::class);
+		$user->method('permissions')->willReturn($permissions);
+		$user->method('username')->willReturn('test');
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to update the user "test"');
+
+		UserRules::deleteAvatar($user);
+	}
+
+	public function testReplaceAvatar(): void
+	{
+		$this->expectNotToPerformAssertions();
+
+		$avatar = $this->createMock(File::class);
+
+		$permissions = $this->createMock(UserPermissions::class);
+		$permissions->method('can')->willReturn(true);
+
+		$user = $this->createMock(User::class);
+		$user->method('avatar')->willReturn($avatar);
+		$user->method('permissions')->willReturn($permissions);
+
+		UserRules::replaceAvatar($user, __DIR__ . '/../Api/routes/fixtures/avatar.jpg', 'jpg');
+	}
+
+	public function testReplaceAvatarNotFound(): void
+	{
+		$permissions = $this->createMock(UserPermissions::class);
+		$permissions->method('can')->with('update')->willReturn(true);
+
+		$user = $this->createMock(User::class);
+		$user->method('avatar')->willReturn(null);
+		$user->method('permissions')->willReturn($permissions);
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionCode('error.file.notFound');
+
+		UserRules::replaceAvatar($user, __DIR__ . '/../Api/routes/fixtures/avatar.jpg', 'jpg');
+	}
+
+	public function testReplaceAvatarWithoutPermission(): void
+	{
+		$permissions = $this->createMock(UserPermissions::class);
+		$permissions->method('can')->with('update')->willReturn(false);
+
+		$user = $this->createMock(User::class);
+		$user->method('permissions')->willReturn($permissions);
+		$user->method('username')->willReturn('test');
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to update the user "test"');
+
+		UserRules::replaceAvatar($user, __DIR__ . '/../Api/routes/fixtures/avatar.jpg', 'jpg');
+	}
+
+	public function testValidAvatar(): void
+	{
+		$this->expectNotToPerformAssertions();
+
+		$user = $this->createMock(User::class);
+
+		UserRules::validAvatar($user, __DIR__ . '/../Api/routes/fixtures/avatar.jpg', 'jpg');
+	}
+
+	public function testValidAvatarWithInvalidExtension(): void
+	{
+		$user = $this->createMock(User::class);
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Invalid file type: document');
+
+		UserRules::validAvatar($user, '/tmp/file.pdf', 'pdf');
+	}
+
+	public function testValidAvatarWithInvalidMime(): void
+	{
+		$source = sys_get_temp_dir() . '/kirby-fake-image-' . uniqid() . '.jpg';
+		file_put_contents($source, 'this is not an image');
+
+		$user = $this->createMock(User::class);
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionCode('error.file.mime.invalid');
+
+		UserRules::validAvatar($user, $source, 'jpg');
 	}
 
 	public static function validIdProvider(): array
