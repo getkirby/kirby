@@ -204,6 +204,8 @@
 	"error.page.undefined": "Sivua ei l\u00f6ytynyt",
 	"error.page.update.permission": "Sinulla ei ole oikeutta päivittää sivua \"{slug}\"",
 
+	"error.role.notFound": "The role \"{name}\" cannot be found",
+
 	"error.section.files.max.plural": "Et voi lisätä enemmän kuin {max} tiedostoa osioon \"{section}\"",
 	"error.section.files.max.singular": "Et voi lisätä enempää kuin yhden tiedoston osioon \"{section}\"",
 	"error.section.files.min.plural": "Osio \"{section}\" vaatii ainakin {min} tiedostoa",
@@ -219,6 +221,7 @@
 
 	"error.site.changeTitle.empty": "Nimi ei voi olla tyhjä",
 	"error.site.changeTitle.permission": "Sinulla ei ole oikeutta päivittää sivuston nimeä",
+	"error.site.notAccessible": "The site is not accessible",
 	"error.site.update.permission": "Sinulla ei ole oikeutta päivittää sivuston tietoja",
 
 	"error.structure.validation": "There's an error on the \"{field}\" field in row {index}",
