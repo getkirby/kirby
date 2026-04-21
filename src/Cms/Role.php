@@ -94,6 +94,46 @@ class Role
 		return $this->name();
 	}
 
+	/**
+	 * Compares the current object with the given role object
+	 */
+	public function is(Role|null $role = null): bool
+	{
+		if ($role === null) {
+			return false;
+		}
+
+		return $this->id() === $role->id();
+	}
+
+	/**
+	 * Checks if the role is accessible to the current user
+	 */
+	public function isAccessible(): bool
+	{
+		$user = App::instance()->user();
+
+		// no access without authenticated user
+		if ($user === null) {
+			return false;
+		}
+
+		// check `user.access` for the current user with the same role
+		// (also ensures `access` option of the user's current role)
+		if ($user->role()->is($this) === true) {
+			return $user->isAccessible();
+		}
+
+		// check `users.access` for different roles
+		// (also ensures `access` option of the target role)
+		$tmpUser = new User([
+			'email' => 'test@getkirby.com',
+			'role'  => $this->id()
+		]);
+
+		return $tmpUser->isAccessible();
+	}
+
 	public function isAdmin(): bool
 	{
 		return $this->name() === 'admin';
