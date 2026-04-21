@@ -28,32 +28,77 @@ class UserApiModelTest extends ApiModelTestCase
 			]
 		]);
 
+		$this->app->impersonate('kirby');
+
 		$model = $this->api->resolve($user)->select('files')->toArray();
 
 		$this->assertSame('a.jpg', $model['files'][0]['filename']);
 		$this->assertSame('b.jpg', $model['files'][1]['filename']);
 	}
 
+	public function testInaccessibleRole(): void
+	{
+		$uuid = uuid();
+
+		$this->app = new App([
+			'roots' => ['index' => static::TMP],
+			'blueprints' => [
+				'users/restricted-' . $uuid => [
+					'options' => [
+						'access' => [
+							'editor-' . $uuid => true,
+							'*'      => false
+						]
+					]
+				]
+			],
+			'roles' => [
+				['name' => 'editor-' . $uuid],
+				['name' => 'restricted-' . $uuid],
+			],
+			'users' => [
+				['email' => 'editor@test.com', 'role' => 'editor-' . $uuid],
+				['email' => 'restricted@test.com', 'role' => 'restricted-' . $uuid],
+			]
+		]);
+
+		$this->api = $this->app->api();
+
+		$restrictedUser = $this->app->user('restricted@test.com');
+
+		// editor can see the restricted role
+		$this->app->impersonate('editor@test.com');
+		$model = $this->api->resolve($restrictedUser)->select('role')->toArray();
+		$this->assertNotNull($model['role']);
+
+		// restricted user cannot see their own role
+		$this->app->impersonate('restricted@test.com');
+		$model = $this->api->resolve($restrictedUser)->select('role')->toArray();
+		$this->assertNull($model['role']);
+	}
+
 	public function testNextSkipsInaccessibleUser(): void
 	{
+		$uuid = uuid();
+
 		$app = new App([
 			'blueprints' => [
-				'users/restricted' => [
+				'users/restricted-' . $uuid => [
 					'options' => ['access' => false]
 				]
 			],
 			'roles' => [
-				['name' => 'editor'],
-				['name' => 'restricted'],
+				['name' => 'editor-' . $uuid],
+				['name' => 'restricted-' . $uuid],
 			],
 			'roots' => [
 				'index' => '/dev/null'
 			],
 			'users' => [
-				['email' => 'a@test.com', 'name' => 'A User', 'role' => 'editor'],
-				['email' => 'b@test.com', 'name' => 'B User', 'role' => 'editor'],
-				['email' => 'c@test.com', 'name' => 'C User', 'role' => 'restricted'],
-				['email' => 'd@test.com', 'name' => 'D User', 'role' => 'editor'],
+				['email' => 'a@test.com', 'name' => 'A User', 'role' => 'editor-' . $uuid],
+				['email' => 'b@test.com', 'name' => 'B User', 'role' => 'editor-' . $uuid],
+				['email' => 'c@test.com', 'name' => 'C User', 'role' => 'restricted-' . $uuid],
+				['email' => 'd@test.com', 'name' => 'D User', 'role' => 'editor-' . $uuid],
 			]
 		]);
 
@@ -66,24 +111,26 @@ class UserApiModelTest extends ApiModelTestCase
 
 	public function testPrevSkipsInaccessibleUser(): void
 	{
+		$uuid = uuid();
+
 		$app = new App([
 			'blueprints' => [
-				'users/restricted' => [
+				'users/restricted-' . $uuid => [
 					'options' => ['access' => false]
 				]
 			],
 			'roles' => [
-				['name' => 'editor'],
-				['name' => 'restricted'],
+				['name' => 'editor-' . $uuid],
+				['name' => 'restricted-' . $uuid],
 			],
 			'roots' => [
 				'index' => '/dev/null'
 			],
 			'users' => [
-				['email' => 'a@test.com', 'name' => 'A User', 'role' => 'editor'],
-				['email' => 'b@test.com', 'name' => 'B User', 'role' => 'restricted'],
-				['email' => 'c@test.com', 'name' => 'C User', 'role' => 'editor'],
-				['email' => 'd@test.com', 'name' => 'D User', 'role' => 'editor'],
+				['email' => 'a@test.com', 'name' => 'A User', 'role' => 'editor-' . $uuid],
+				['email' => 'b@test.com', 'name' => 'B User', 'role' => 'restricted-' . $uuid],
+				['email' => 'c@test.com', 'name' => 'C User', 'role' => 'editor-' . $uuid],
+				['email' => 'd@test.com', 'name' => 'D User', 'role' => 'editor-' . $uuid],
 			]
 		]);
 
