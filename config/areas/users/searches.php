@@ -11,6 +11,7 @@ return [
 		'query' => function (string|null $query, int $limit, int $page) {
 			$kirby = App::instance();
 			$users = $kirby->users()
+				->filter('isListable', true)
 				->search($query)
 				->paginate($limit, $page);
 

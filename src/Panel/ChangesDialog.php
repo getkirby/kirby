@@ -24,6 +24,11 @@ class ChangesDialog
 				$path  = $uri->path()->toString();
 				$query = $uri->query();
 				$model = Find::parent($path);
+
+				if ($model->isListable() === false) {
+					continue;
+				}
+
 				$item  = $model->panel()->dropdownOption();
 
 				// add the language to each option, if it is included in the query

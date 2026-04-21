@@ -289,6 +289,19 @@ class User extends ModelWithContent
 	}
 
 	/**
+	 * Checks if the user is accessible to the current user
+	 */
+	public function isAccessible(): bool
+	{
+		static $accessible    = [];
+		$currentRole          = $this->kirby()->user()?->role()->id() ?? '__none__';
+		$userId               = $this->id();
+		$accessible[$currentRole] ??= [];
+
+		return $accessible[$currentRole][$userId] ??= $this->permissions()->can('access');
+	}
+
+	/**
 	 * Checks if this user has the admin role
 	 */
 	public function isAdmin(): bool
@@ -303,6 +316,24 @@ class User extends ModelWithContent
 	public function isKirby(): bool
 	{
 		return $this->isAdmin() && $this->id() === 'kirby';
+	}
+
+	/**
+	 * Checks if the user is listable by the current user
+	 */
+	public function isListable(): bool
+	{
+		// not accessible also means not listable
+		if ($this->isAccessible() === false) {
+			return false;
+		}
+
+		static $listable      = [];
+		$currentRole          = $this->kirby()->user()?->role()->id() ?? '__none__';
+		$userId               = $this->id();
+		$listable[$currentRole] ??= [];
+
+		return $listable[$currentRole][$userId] ??= $this->permissions()->can('list');
 	}
 
 	/**

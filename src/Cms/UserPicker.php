@@ -55,6 +55,9 @@ class UserPicker extends Picker
 			throw new InvalidArgumentException('Your query must return a set of users');
 		}
 
+		// filter protected and hidden users
+		$users = $users->filter('isListable', true);
+
 		// search
 		$users = $this->search($users);
 

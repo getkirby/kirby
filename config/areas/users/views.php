@@ -26,7 +26,7 @@ return [
 					},
 					'roles' => array_values($roles),
 					'users' => function () use ($kirby, $role) {
-						$users = $kirby->users();
+						$users = $kirby->users()->filter('isListable', true);
 
 						if (empty($role) === false) {
 							$users = $users->role($role);
