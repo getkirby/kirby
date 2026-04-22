@@ -236,6 +236,6 @@ class Find
 	 */
 	public static function users(): Users
 	{
-		return App::instance()->users()->filter('isAccessible', true);
+		return App::instance()->users()->filter('isListable', true);
 	}
 }

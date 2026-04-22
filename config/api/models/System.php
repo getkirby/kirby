@@ -34,12 +34,13 @@ return [
 		// provide the value even if `site.access` permission is disabled
 		'title'       => fn () => $this->kirby()->site()->title()->value(),
 		'translation' => function () {
-			$code = $this->user()?->language() ??
-					$this->kirby()->panelLanguage();
+			$kirby = $this->kirby();
+			$code = $kirby->user()?->language() ??
+					$kirby->panelLanguage();
 
 			return
-				$this->kirby()->translation($code) ??
-				$this->kirby()->translation('en');
+				$kirby->translation($code) ??
+				$kirby->translation('en');
 		},
 		'kirbytext' => fn () => $this->kirby()->option('panel.kirbytext') ?? true,
 		'user'      => fn () => $this->user(),

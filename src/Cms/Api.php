@@ -106,7 +106,7 @@ class Api extends BaseApi
 	 */
 	public function files(string $path): Files
 	{
-		return $this->parent($path)->files()->filter('isAccessible', true);
+		return $this->parent($path)->files()->filter('isListable', true);
 	}
 
 	/**
@@ -169,7 +169,7 @@ class Api extends BaseApi
 			default           => $parent->children()
 		};
 
-		return $pages->filter('isAccessible', true);
+		return $pages->filter('isListable', true);
 	}
 
 	/**

@@ -4,6 +4,7 @@ namespace Kirby\Panel;
 
 use Kirby\Cms\App;
 use Kirby\Cms\File;
+use Kirby\Cms\Find;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Roles;
@@ -208,8 +209,8 @@ class Field
 	): array {
 		$kirby = App::instance();
 
-		// if no $roles where provided, fall back to all roles
-		$roles ??= $kirby->roles();
+		// if no $roles where provided, fall back to all accessible roles
+		$roles ??= Find::roles();
 
 		// exclude the admin role, if the user
 		// is not allowed to change role to admin
