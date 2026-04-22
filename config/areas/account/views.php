@@ -1,6 +1,5 @@
 <?php
 
-use Kirby\Cms\App;
 use Kirby\Cms\Find;
 use Kirby\Toolkit\I18n;
 
@@ -9,7 +8,7 @@ return [
 		'pattern' => 'account',
 		'action'  => fn () => [
 			'component' => 'k-account-view',
-			'props'     => App::instance()->user()->panel()->props(),
+			'props'     => Find::user()->panel()->props(),
 		],
 	],
 	'account.file' => [

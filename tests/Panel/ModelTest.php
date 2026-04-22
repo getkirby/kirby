@@ -273,6 +273,8 @@ class ModelTest extends TestCase
 	 */
 	public function testImage()
 	{
+		$this->app->impersonate('kirby');
+
 		$panel = $this->panel([
 			'files' => [
 				['filename' => 'test.jpg']
@@ -467,6 +469,8 @@ class ModelTest extends TestCase
 				]
 			]
 		]);
+
+		$app->impersonate('kirby');
 
 		$panel = $app->page('test')->panel();
 		$image = $panel->image([]);

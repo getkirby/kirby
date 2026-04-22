@@ -100,6 +100,44 @@ class UsersTest extends AreaTestCase
 		$this->assertSame('The file "no-exist.jpg" cannot be found', $props['error']);
 	}
 
+	public function testUsersWithInaccessibleRoles(): void
+	{
+		$this->app([
+			'blueprints' => [
+				'users/editor' => [
+					'name'  => 'editor',
+					'title' => 'Editor',
+				],
+				'users/secret' => [
+					'name'    => 'secret',
+					'title'   => 'Secret',
+					'options' => [
+						'access' => [
+							'*' => false
+						]
+					]
+				]
+			],
+			'users' => [
+				[
+					'id'    => 'editor',
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor',
+				]
+			]
+		]);
+
+		$this->login('editor@getkirby.com');
+
+		$view  = $this->view('users');
+		$props = $view['props'];
+
+		$this->assertSame([
+			['id' => 'admin',  'title' => 'Admin'],
+			['id' => 'editor', 'title' => 'Editor'],
+		], $props['roles']);
+	}
+
 	public function testUsersWithNonListableUsers(): void
 	{
 		// use uuid-based roles and user IDs to avoid static permission cache collisions

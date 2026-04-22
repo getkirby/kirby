@@ -61,6 +61,36 @@ class AccountTest extends AreaTestCase
 		$this->assertSame('The file "no-exist.jpg" cannot be found', $props['error']);
 	}
 
+	public function testAccountNotAccessible(): void
+	{
+		// use uuid-based role and user IDs to avoid static permission cache collisions
+		$uuid = uuid();
+
+		$this->installable();
+		$this->app([
+			'blueprints' => [
+				'users/restricted-' . $uuid => [
+					'options' => [
+						'access' => false
+					]
+				]
+			],
+			'roles' => [
+				['name' => 'restricted-' . $uuid],
+			],
+			'users' => [
+				[
+					'id'    => $uuid,
+					'email' => 'restricted@getkirby.com',
+					'role'  => 'restricted-' . $uuid,
+				]
+			]
+		]);
+
+		$this->login('restricted@getkirby.com');
+		$this->assertErrorView('account', 'The user cannot be found');
+	}
+
 	public function testResetPassword(): void
 	{
 		$this->install();

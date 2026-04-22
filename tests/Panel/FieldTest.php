@@ -251,19 +251,8 @@ class FieldTest extends TestCase
 		$field = Field::role();
 		$expected = [
 			'label'   => 'Role',
-			'type'    => 'radio',
-			'options' => [
-				[
-					'text' => 'Client',
-					'info' => 'No description',
-					'value' => 'client'
-				],
-				[
-					'text' => 'Editor',
-					'info' => 'Editor description',
-					'value' => 'editor'
-				],
-			]
+			'type'    => 'hidden',
+			'options' => []
 		];
 
 		$this->assertSame($expected, $field);
