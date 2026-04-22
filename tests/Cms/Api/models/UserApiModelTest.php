@@ -50,6 +50,47 @@ class UserApiModelTest extends ApiModelTestCase
 		$this->assertSame($expected, $image);
 	}
 
+	public function testInaccessibleRolePermissions(): void
+	{
+		$uuid = uuid();
+
+		$this->app = new App([
+			'roots' => ['index' => static::TMP],
+			'blueprints' => [
+				'users/restricted-' . $uuid => [
+					'options' => [
+						'access' => [
+							'editor-' . $uuid => true,
+							'*'      => false
+						]
+					]
+				]
+			],
+			'roles' => [
+				['name' => 'editor-' . $uuid],
+				['name' => 'restricted-' . $uuid],
+			],
+			'users' => [
+				['email' => 'editor@test.com', 'role' => 'editor-' . $uuid],
+				['email' => 'restricted@test.com', 'role' => 'restricted-' . $uuid],
+			]
+		]);
+
+		$this->api = $this->app->api();
+
+		$restrictedUser = $this->app->user('restricted@test.com');
+
+		// editor can see permissions of the restricted role
+		$this->app->impersonate('editor@test.com');
+		$model = $this->api->resolve($restrictedUser)->select('permissions')->toArray();
+		$this->assertNotNull($model['permissions']);
+
+		// restricted user cannot see permissions of their own inaccessible role
+		$this->app->impersonate('restricted@test.com');
+		$model = $this->api->resolve($restrictedUser)->select('permissions')->toArray();
+		$this->assertNull($model['permissions']);
+	}
+
 	public function testNextSkipsInaccessibleUser(): void
 	{
 		$uuid = uuid();
