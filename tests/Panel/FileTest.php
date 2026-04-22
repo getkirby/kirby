@@ -843,6 +843,8 @@ class FileTest extends TestCase
 	 */
 	public function testPropsPrevNext()
 	{
+		$this->app->impersonate('kirby');
+
 		$page = new ModelPage([
 			'slug'  => 'test',
 			'files' => [
@@ -871,6 +873,8 @@ class FileTest extends TestCase
 	 */
 	public function testPropsPrevNextWithSort()
 	{
+		$this->app->impersonate('kirby');
+
 		$page = new ModelPage([
 			'slug'  => 'test',
 			'files' => [
@@ -899,6 +903,8 @@ class FileTest extends TestCase
 	 */
 	public function testPropsPrevNextWithTab()
 	{
+		$this->app->impersonate('kirby');
+
 		$page = new ModelPage([
 			'slug'  => 'test',
 			'files' => [
@@ -983,6 +989,8 @@ class FileTest extends TestCase
 	 */
 	public function testPrevNext()
 	{
+		$this->app->impersonate('kirby');
+
 		$page = new ModelPage([
 			'slug'  => 'test',
 			'files' => [

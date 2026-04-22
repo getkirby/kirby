@@ -20,7 +20,15 @@ return [
 		'next'        => fn (User $user) => $user->next($user->siblings()->filter('isListable', true)),
 		'options'     => fn (User $user) => $user->panel()->options(),
 		'panelImage'  => fn (User $user) => $user->panel()->image(),
-		'permissions' => fn (User $user) => $user->role()->permissions()->toArray(),
+		'permissions' => function (User $user) {
+			$role = $user->role();
+
+			if ($role->isAccessible() === false) {
+				return null;
+			}
+
+			return $role->permissions()->toArray();
+		},
 		'prev'        => fn (User $user) => $user->prev($user->siblings()->filter('isListable', true)),
 		'role'        => function (User $user) {
 			$role = $user->role();

@@ -62,6 +62,8 @@ class SiteTest extends TestCase
 	 */
 	public function testImage()
 	{
+		$this->app->impersonate('kirby');
+
 		$panel = $this->panel([
 			'files' => [
 				['filename' => 'test.jpg']
@@ -88,6 +90,8 @@ class SiteTest extends TestCase
 				]
 			]
 		]);
+
+		$app->impersonate('kirby');
 
 		$site  = $app->site();
 		$panel = new Site($site);
