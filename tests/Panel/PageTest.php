@@ -264,6 +264,8 @@ class PageTest extends TestCase
 
 	public function testImage(): void
 	{
+		$this->app->impersonate('kirby');
+
 		$page = new ModelPage([
 			'slug'  => 'test',
 			'files' => [
@@ -304,6 +306,8 @@ class PageTest extends TestCase
 				]
 			]
 		]);
+
+		$app->impersonate('kirby');
 
 		$page  = $app->page('test');
 
