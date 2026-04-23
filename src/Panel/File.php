@@ -453,7 +453,7 @@ class File extends Model
 	public function prevNext(): array
 	{
 		$file     = $this->model;
-		$siblings = $file->templateSiblings()->sortBy(
+		$siblings = $file->templateSiblings()->filter('isListable', true)->sortBy(
 			'sort',
 			'asc',
 			'filename',

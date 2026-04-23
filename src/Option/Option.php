@@ -18,18 +18,27 @@ class Option
 {
 	public string|array $text;
 
+	/**
+	 * @param bool $resolve Deprecated, will be removed in v6
+	 */
 	public function __construct(
 		public string|int|float|null $value,
 		public bool $disabled = false,
 		public string|null $icon = null,
 		public string|array|null $info = null,
-		string|array|null $text = null
+		string|array|null $text = null,
+		public bool $resolve = true
 	) {
 		$this->text = $text ?? ['en' => $this->value];
 	}
 
-	public static function factory(string|int|float|array|null $props): static
-	{
+	/**
+	 * @param bool $resolve Deprecated, will be removed in v6
+	 */
+	public static function factory(
+		string|int|float|array|null $props,
+		bool $resolve = true
+	): static {
 		if (is_array($props) === false) {
 			$props = ['value' => $props];
 		}
@@ -54,7 +63,7 @@ class Option
 			};
 		}
 
-		return new static(...$props);
+		return new static(...$props, resolve: $resolve);
 	}
 
 	public function id(): string|int|float
@@ -76,8 +85,8 @@ class Option
 		return [
 			'disabled' => $this->disabled,
 			'icon'     => $this->icon,
-			'info'     => $info ? $model->$method($info) : $info,
-			'text'     => $text ? $model->$method($text) : $text,
+			'info'     => $info && $this->resolve === true ? $model->$method($info) : $info,
+			'text'     => $text && $this->resolve === true ? $model->$method($text) : $text,
 			'value'    => $this->value
 		];
 	}

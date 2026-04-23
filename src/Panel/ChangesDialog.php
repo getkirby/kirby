@@ -34,7 +34,7 @@ class ChangesDialog
 	 */
 	public function files(): array
 	{
-		return $this->items($this->changes->files());
+		return $this->items($this->changes->files()->filter('isListable', true));
 	}
 
 	/**
@@ -83,7 +83,7 @@ class ChangesDialog
 	 */
 	public function pages(): array
 	{
-		return $this->items($this->changes->pages());
+		return $this->items($this->changes->pages()->filter('isListable', true));
 	}
 
 	/**
@@ -91,6 +91,6 @@ class ChangesDialog
 	 */
 	public function users(): array
 	{
-		return $this->items($this->changes->users());
+		return $this->items($this->changes->users()->filter('isListable', true));
 	}
 }

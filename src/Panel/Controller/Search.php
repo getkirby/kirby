@@ -26,7 +26,8 @@ class Search
 		int $page = 1
 	): array {
 		$kirby = App::instance();
-		$files = $kirby->site()
+		$files = $kirby
+			->site()
 			->index(true)
 			->filter('isListable', true)
 			->files();
@@ -53,10 +54,11 @@ class Search
 		int $page = 1
 	): array {
 		$kirby = App::instance();
-		$pages = $kirby->site()
+		$pages = $kirby
+			->site()
 			->index(true)
-			->search($query)
-			->filter('isListable', true);
+			->filter('isListable', true)
+			->search($query);
 
 		if ($limit !== null) {
 			$pages = $pages->paginate($limit, $page);
@@ -74,7 +76,10 @@ class Search
 		int $page = 1
 	): array {
 		$kirby = App::instance();
-		$users = $kirby->users()->search($query);
+		$users = $kirby
+			->users()
+			->filter('isListable', true)
+			->search($query);
 
 		if ($limit !== null) {
 			$users = $users->paginate($limit, $page);

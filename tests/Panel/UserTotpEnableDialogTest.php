@@ -18,16 +18,22 @@ class UserTotpEnableDialogTest extends TestCase
 	protected function setUp(): void
 	{
 		$this->app = new App([
+			'options' => [
+				'api.allowImpersonation' => true
+			],
 			'roots' => [
 				'index' => static::TMP,
 			],
 			'users' => [
 				[
+					'id'    => 'test',
 					'email' => 'test@getkirby.com',
+					'role'  => 'admin'
 				]
 			],
-			'user' => 'test@getkirby.com'
 		]);
+
+		$this->app->impersonate('test@getkirby.com');
 
 		Dir::make(static::TMP);
 	}

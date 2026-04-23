@@ -53,6 +53,8 @@ class UsersCollector extends ModelsCollector
 			return new Users([]);
 		}
 
+		$models = $models->filter('isListable', true);
+
 		if ($this->role !== null) {
 			$models = $models->role($this->role);
 		}

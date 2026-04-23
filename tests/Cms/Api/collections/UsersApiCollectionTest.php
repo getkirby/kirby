@@ -23,6 +23,8 @@ class UsersApiCollectionTest extends ApiCollectionTestCase
 
 		$this->api = $this->app->api();
 		Dir::make(static::TMP);
+
+		$this->app->impersonate('kirby');
 	}
 
 	public function testDefaultCollection(): void

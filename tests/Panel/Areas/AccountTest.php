@@ -61,6 +61,31 @@ class AccountTest extends AreaTestCase
 		$this->assertSame('The file "no-exist.jpg" cannot be found', $props['error']);
 	}
 
+	public function testAccountNotAccessible(): void
+	{
+		$this->installable();
+		$this->app([
+			'roles' => [
+				[
+					'name'        => 'editor',
+					'permissions' => [
+						'user' => ['access' => false]
+					]
+				]
+			],
+			'users' => [
+				[
+					'id'    => 'editor',
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor',
+				]
+			]
+		]);
+
+		$this->login('editor@getkirby.com');
+		$this->assertErrorView('account', 'The user cannot be found');
+	}
+
 	public function testResetPassword(): void
 	{
 		$this->install();

@@ -84,6 +84,8 @@ class FindTest extends TestCase
 
 	public function testFileNotFound(): void
 	{
+		$this->app->impersonate('kirby');
+
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The file "nope.jpg" cannot be found');
 
@@ -93,6 +95,11 @@ class FindTest extends TestCase
 	public function testFileNotReadable(): void
 	{
 		$app = $this->app->clone([
+			'blueprints' => [
+				'files/protected' => [
+					'options' => ['read' => false]
+				]
+			],
 			'site' => [
 				'files' => [
 					[
@@ -100,8 +107,16 @@ class FindTest extends TestCase
 						'template' => 'protected'
 					]
 				]
+			],
+			'users' => [
+				[
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin'
+				]
 			]
 		]);
+
+		$app->impersonate('admin@getkirby.com');
 
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The file "protected.jpg" cannot be found');
@@ -208,6 +223,175 @@ class FindTest extends TestCase
 		Find::page('does-not-exist');
 	}
 
+	public function testRole(): void
+	{
+		$uuid = uuid();
+
+		$app = $this->app->clone([
+			'roles' => [
+				['name' => 'editor-' . $uuid]
+			],
+			'users' => [
+				[
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin'
+				]
+			]
+		]);
+
+		$app->impersonate('admin@getkirby.com');
+		$this->assertSame('editor-' . $uuid, Find::role('editor-' . $uuid)->name());
+	}
+
+	public function testRoleNotAccessibleForOwnRole(): void
+	{
+		$uuid = uuid();
+
+		$app = $this->app->clone([
+			'roles' => [
+				[
+					'name'        => 'editor-' . $uuid,
+					'permissions' => [
+						'user' => ['access' => false]
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor-' . $uuid
+				]
+			]
+		]);
+
+		$app->impersonate('editor@getkirby.com');
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The role "editor-' . $uuid . '" cannot be found');
+
+		Find::role('editor-' . $uuid);
+	}
+
+	public function testRoleNotAccessibleForOtherRole(): void
+	{
+		$uuid = uuid();
+
+		$app = $this->app->clone([
+			'roles' => [
+				[
+					'name'        => 'author-' . $uuid,
+					'permissions' => [
+						'users' => ['access' => false]
+					]
+				],
+				[
+					'name' => 'editor-' . $uuid
+				]
+			],
+			'users' => [
+				[
+					'email' => 'author@getkirby.com',
+					'role'  => 'author-' . $uuid
+				]
+			]
+		]);
+
+		$app->impersonate('author@getkirby.com');
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The role "editor-' . $uuid . '" cannot be found');
+
+		Find::role('editor-' . $uuid);
+	}
+
+	public function testRoleNotFound(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The role "does-not-exist" cannot be found');
+
+		Find::role('does-not-exist');
+	}
+
+	public function testRoles(): void
+	{
+		$uuid = uuid();
+
+		$app = $this->app->clone([
+			'roles' => [
+				['name' => 'editor-' . $uuid],
+				['name' => 'author-' . $uuid]
+			],
+			'users' => [
+				[
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin'
+				]
+			]
+		]);
+
+		$app->impersonate('admin@getkirby.com');
+		$this->assertSame(3, $app->roles()->count()); // admin + editor + author
+		$this->assertSame(3, Find::roles()->count());
+	}
+
+	public function testRolesNotAccessible(): void
+	{
+		$uuid = uuid();
+
+		$app = $this->app->clone([
+			'roles' => [
+				[
+					'name' => 'editor-' . $uuid,
+					'permissions' => [
+						'users' => [
+							'access' => false
+						],
+					]
+				],
+				[
+					'name' => 'author-' . $uuid,
+					'permissions' => [
+						'user' => [
+							'access' => false
+						],
+						'users' => [
+							'access' => false
+						]
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin'
+				],
+				[
+					'email' => 'author@getkirby.com',
+					'role'  => 'author-' . $uuid
+				],
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor-' . $uuid
+				]
+			]
+		]);
+
+		// admin + editor both accessible to admin
+		$app->impersonate('admin@getkirby.com');
+		$this->assertSame(3, Find::roles()->count());
+
+		// only their own role is accessible for the editor
+		$app->impersonate('editor@getkirby.com');
+		$this->assertSame(1, Find::roles()->count());
+		$this->assertSame('editor-' . $uuid, Find::roles()->first()->name());
+
+		// the author has no access to any role
+		$app->impersonate('author@getkirby.com');
+		$this->assertSame(0, Find::roles()->count());
+	}
+
 	public function testParent(): void
 	{
 		$app = $this->app->clone([
@@ -282,11 +466,100 @@ class FindTest extends TestCase
 		$this->assertNull(Find::parent('pages/does-not-exist'));
 	}
 
+	public function testParentSiteNotAccessible(): void
+	{
+		$app = $this->app->clone([
+			'roles' => [
+				[
+					'name'        => 'editor',
+					'permissions' => [
+						'site' => ['access' => false]
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor'
+				]
+			]
+		]);
+
+		$app->impersonate('editor@getkirby.com');
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The site is not accessible');
+
+		Find::parent('site');
+	}
+
 	public function testParentUndefined(): void
 	{
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The user cannot be found');
+		$this->expectExceptionMessage('The user "does-not-exist" cannot be found');
 		$this->assertNull(Find::parent('users/does-not-exist'));
+	}
+
+	public function testSite(): void
+	{
+		$this->app->impersonate('kirby');
+		$this->assertIsSite(Find::site());
+	}
+
+	public function testSiteNotAccessible(): void
+	{
+		$app = $this->app->clone([
+			'roles' => [
+				[
+					'name'        => 'editor',
+					'permissions' => [
+						'site' => ['access' => false]
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor'
+				]
+			]
+		]);
+
+		$app->impersonate('editor@getkirby.com');
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The site is not accessible');
+
+		Find::site();
+	}
+
+	public function testParentUserNotAccessible(): void
+	{
+		$app = $this->app->clone([
+			'blueprints' => [
+				'users/admin' => [
+					'name'    => 'admin',
+					'options' => ['access' => false]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin'
+				],
+				[
+					'email' => 'test@getkirby.com',
+					'role'  => 'editor'
+				]
+			]
+		]);
+
+		$app->impersonate('test@getkirby.com');
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The user "admin@getkirby.com" cannot be found');
+
+		Find::parent('users/admin@getkirby.com');
 	}
 
 	public function testUser(): void
@@ -310,6 +583,7 @@ class FindTest extends TestCase
 			'users' => [
 				[
 					'email' => 'test@getkirby.com',
+					'role'  => 'admin'
 				]
 			],
 			'options' => [
@@ -321,6 +595,38 @@ class FindTest extends TestCase
 
 		$app->impersonate('test@getkirby.com');
 		$this->assertSame('test@getkirby.com', Find::user()->email());
+	}
+
+	public function testUserWithAuthenticationNotAccessible(): void
+	{
+		$app = $this->app->clone([
+			'roles' => [
+				[
+					'name'        => 'editor',
+					'permissions' => [
+						'user' => ['access' => false]
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'test@getkirby.com',
+					'role'  => 'editor'
+				]
+			],
+			'options' => [
+				'api' => [
+					'allowImpersonation' => true,
+				]
+			]
+		]);
+
+		$app->impersonate('test@getkirby.com');
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The user cannot be found');
+
+		Find::user();
 	}
 
 	public function testUserWithoutAllowedImpersonation(): void
@@ -361,11 +667,101 @@ class FindTest extends TestCase
 		$this->assertSame('test@getkirby.com', Find::user('account')->email());
 	}
 
+	public function testUserNotAccessible(): void
+	{
+		$app = $this->app->clone([
+			'blueprints' => [
+				'users/admin' => [
+					'name'    => 'admin',
+					'options' => ['access' => false]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin'
+				],
+				[
+					'email' => 'test@getkirby.com',
+					'role'  => 'editor'
+				]
+			]
+		]);
+
+		$app->impersonate('test@getkirby.com');
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The user "admin@getkirby.com" cannot be found');
+
+		Find::user('admin@getkirby.com');
+	}
+
 	public function testUserNotFound(): void
 	{
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The user "nope@getkirby.com" cannot be found');
 
 		Find::user('nope@getkirby.com');
+	}
+
+	public function testUsers(): void
+	{
+		$app = $this->app->clone([
+			'users' => [
+				[
+					'email' => 'admin@getkirby.com',
+				],
+				[
+					'email' => 'editor@getkirby.com',
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$this->assertSame($app->users()->pluck('email'), Find::users()->pluck('email'));
+	}
+
+	public function testUsersNotAccessible(): void
+	{
+		// create a random role id to avoid permission cache issues
+		$uuid = uuid();
+
+		$app = $this->app->clone([
+			'blueprints' => [
+				'users/admin-' . $uuid => [
+					'name' => 'admin-' . $uuid,
+				],
+				'users/editor-' . $uuid => [
+					'name' => 'editor-' . $uuid,
+					'permissions' => [
+						'users' => [
+							'access' => false
+						]
+					]
+				],
+			],
+			'users' => [
+				[
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin-' . $uuid
+				],
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor-' . $uuid
+				],
+			]
+		]);
+
+		$app->impersonate('admin@getkirby.com');
+
+		$this->assertSame(2, $app->users()->count());
+		$this->assertSame(2, Find::users()->count());
+
+
+		$app->impersonate('editor@getkirby.com');
+		$this->assertSame(2, $app->users()->count());
+		$this->assertSame(1, Find::users()->count());
+		$this->assertSame('editor-' . $uuid, Find::users()->first()->role()->name());
 	}
 }

@@ -518,7 +518,7 @@ return [
 		'submit' => function (string $id) {
 			$kirby    = App::instance();
 			$parentId = $kirby->request()->get('parent');
-			$parent   = (empty($parentId) === true || $parentId === '/' || $parentId === 'site://') ? $kirby->site() : Find::page($parentId);
+			$parent   = (empty($parentId) === true || $parentId === '/' || $parentId === 'site://') ? Find::site() : Find::page($parentId);
 			$oldPage  = Find::page($id);
 			$newPage  = $oldPage->move($parent);
 
@@ -532,6 +532,8 @@ return [
 	'site.changeTitle' => [
 		'pattern' => 'site/changeTitle',
 		'load' => function () {
+			$site = Find::site();
+
 			return [
 				'component' => 'k-form-dialog',
 				'props' => [
@@ -543,14 +545,14 @@ return [
 					],
 					'submitButton' => I18n::translate('rename'),
 					'value' => [
-						'title' => App::instance()->site()->title()->value()
+						'title' => $site->title()->value()
 					]
 				]
 			];
 		},
 		'submit' => function () {
 			$kirby = App::instance();
-			$kirby->site()->changeTitle($kirby->request()->get('title'));
+			Find::site()->changeTitle($kirby->request()->get('title'));
 
 			return [
 				'event' => 'site.changeTitle',

@@ -18,8 +18,15 @@ class UserTotpDisableDialogTest extends TestCase
 	protected function setUp(): void
 	{
 		$this->app = new App([
+			'options' => [
+				'api.allowImpersonation' => true
+			],
 			'roots' => [
 				'index' => static::TMP,
+			],
+			'roles' => [
+				['name' => 'admin'],
+				['name' => 'editor']
 			],
 			'users' => [
 				[
@@ -30,10 +37,12 @@ class UserTotpDisableDialogTest extends TestCase
 				[
 					'id'    => 'homer',
 					'email' => 'homer@simpson.com',
+					'role'  => 'editor'
 				]
-			],
-			'user' => 'test@getkirby.com'
+			]
 		]);
+
+		$this->app->impersonate('test@getkirby.com');
 
 		Dir::make(static::TMP);
 	}

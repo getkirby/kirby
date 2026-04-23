@@ -204,6 +204,8 @@
 	"error.page.undefined": "The page cannot be found",
 	"error.page.update.permission": "You are not allowed to update \"{slug}\"",
 
+	"error.role.notFound": "The role \"{name}\" cannot be found",
+
 	"error.section.files.max.plural": "You must not add more than {max} files to the \"{section}\" section",
 	"error.section.files.max.singular": "You must not add more than one file to the \"{section}\" section",
 	"error.section.files.min.plural": "The \"{section}\" section requires at least {min} files",
@@ -219,6 +221,7 @@
 
 	"error.site.changeTitle.empty": "The title must not be empty",
 	"error.site.changeTitle.permission": "You are not allowed to change the title of the site",
+	"error.site.notAccessible": "The site is not accessible",
 	"error.site.update.permission": "You are not allowed to update the site",
 
 	"error.structure.validation": "There's an error on the \"{field}\" field in row {index}",

@@ -191,16 +191,17 @@ class PageUpdateTest extends ModelTestCase
 
 	public function testUpdateWithDateBasedNumbering(): void
 	{
-		$page = Page::create([
-			'slug' => 'test',
-			'blueprint' => [
-				'title' => 'Test',
-				'name'  => 'test',
-				'num'   => 'date'
-			],
-			'content' => [
-				'date' => '2012-12-12'
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => ['title' => 'Test', 'num' => 'date']
 			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$page = Page::create([
+			'slug'     => 'test',
+			'template' => 'test',
+			'content'  => ['date' => '2012-12-12']
 		]);
 
 		// publish the new page

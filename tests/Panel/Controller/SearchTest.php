@@ -279,6 +279,58 @@ class SearchTest extends TestCase
 		$this->assertCount(0, $result['results']);
 	}
 
+	public function testUsersNotListable(): void
+	{
+		// use a uuid-based role to avoid static permission cache
+		// collisions with roles used in other tests
+		$uuid = uuid();
+
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'users/restricted-' . $uuid => [
+					'name'    => 'restricted-' . $uuid,
+					'options' => ['list' => false]
+				]
+			],
+			'roles' => [
+				['name' => 'editor-' . $uuid],
+				['name' => 'restricted-' . $uuid]
+			],
+			'users' => [
+				[
+					'email' => 'a@getkirby.com',
+					'role'  => 'editor-' . $uuid
+				],
+				[
+					'email' => 'b@getkirby.com',
+					'role'  => 'restricted-' . $uuid
+				],
+				[
+					'email' => 'c@getkirby.com',
+					'role'  => 'restricted-' . $uuid
+				]
+			]
+		]);
+
+		// the kirby superuser bypasses all blueprint restrictions
+		$this->app->impersonate('kirby');
+		$result = Search::users('getkirby.com');
+		$this->assertCount(3, $result['results']);
+		$this->assertEqualsCanonicalizing([
+			'a@getkirby.com',
+			'b@getkirby.com',
+			'c@getkirby.com'
+		], array_column($result['results'], 'text'));
+
+		// the editor can only access their own account
+		$this->app->impersonate('a@getkirby.com');
+		$result = Search::users('getkirby.com');
+		$this->assertCount(1, $result['results']);
+		$this->assertEqualsCanonicalizing([
+			'a@getkirby.com'
+		], array_column($result['results'], 'text'));
+	}
+
 	public function testUsersPaginated(): void
 	{
 		$result = Search::users('simpson', limit: 1);

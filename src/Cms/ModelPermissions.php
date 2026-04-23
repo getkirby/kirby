@@ -19,7 +19,7 @@ abstract class ModelPermissions
 	protected const CATEGORY = 'model';
 	protected array $options;
 
-	protected static array $cache = [];
+	public static array $cache = [];
 
 	public function __construct(protected ModelWithContent|Language $model)
 	{

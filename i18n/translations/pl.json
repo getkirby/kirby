@@ -204,6 +204,8 @@
 	"error.page.undefined": "Nie udało się znaleźć strony",
 	"error.page.update.permission": "Nie masz uprawnień, by zaktualizować \"{slug}\"",
 
+	"error.role.notFound": "The role \"{name}\" cannot be found",
+
 	"error.section.files.max.plural": "Do sekcji \"{section}\" można dodać nie więcej niż {max} plików",
 	"error.section.files.max.singular": "Do sekcji \"{section}\" można dodać tylko jeden plik",
 	"error.section.files.min.plural": "W sekcji \"{section}\" musi być co najmniej {min} pliki/-ów",
@@ -219,6 +221,7 @@
 
 	"error.site.changeTitle.empty": "Tytuł nie może być pusty",
 	"error.site.changeTitle.permission": "Nie masz uprawnień, by zmienić tytuł strony",
+	"error.site.notAccessible": "The site is not accessible",
 	"error.site.update.permission": "Nie masz uprawnień, by zaktualizować stronę",
 
 	"error.structure.validation": "Wystąpił błąd w polu \"{field}\" w wierszu {index}",

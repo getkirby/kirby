@@ -12,7 +12,7 @@ return [
 		'action'  => function () {
 			$kirby = App::instance();
 			$role  = $kirby->request()->get('role');
-			$roles = $kirby->roles()->toArray(fn ($role) => [
+			$roles = Find::roles()->toArray(fn ($role) => [
 				'id'    => $role->id(),
 				'title' => $role->title(),
 			]);
