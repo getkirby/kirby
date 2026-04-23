@@ -40,7 +40,7 @@ class Roles extends Collection
 	public function canBeChanged(): static
 	{
 		if (App::instance()->user()?->isAdmin() !== true) {
-			return $this->filter(function ($role) {
+			return $this->filter('isAccessible', true)->filter(function ($role) {
 				$newUser = new User([
 					'email' => 'test@getkirby.com',
 					'role'  => $role->id()
@@ -66,7 +66,7 @@ class Roles extends Collection
 	public function canBeCreated(): static
 	{
 		if (App::instance()->user()?->isAdmin() !== true) {
-			return $this->filter(function ($role) {
+			return $this->filter('isAccessible', true)->filter(function ($role) {
 				$newUser = new User([
 					'email' => 'test@getkirby.com',
 					'role'  => $role->id()

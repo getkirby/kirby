@@ -57,6 +57,9 @@ class UserPicker extends Picker
 			);
 		}
 
+		// filter protected and hidden users
+		$users = $users->filter('isListable', true);
+
 		// search & sort
 		$users = $this->search($users)->sort('username', 'asc');
 

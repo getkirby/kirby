@@ -44,6 +44,8 @@ class PageCreateDialogTest extends AreaTestCase
 			]
 		]);
 
+		$this->login();
+
 		$dialog = new PageCreateDialog(
 			null,
 			null,
@@ -71,6 +73,8 @@ class PageCreateDialogTest extends AreaTestCase
 			]
 		]);
 
+		$this->login();
+
 		$dialog = new PageCreateDialog(
 			null,
 			null,
@@ -95,6 +99,8 @@ class PageCreateDialogTest extends AreaTestCase
 				]
 			]
 		]);
+
+		$this->login();
 
 		$dialog = new PageCreateDialog(
 			null,
@@ -121,6 +127,8 @@ class PageCreateDialogTest extends AreaTestCase
 				]
 			]
 		]);
+
+		$this->login();
 
 		$dialog = new PageCreateDialog(
 			null,
@@ -167,6 +175,8 @@ class PageCreateDialogTest extends AreaTestCase
 				]
 			]
 		]);
+
+		$this->login();
 
 		$dialog = new PageCreateDialog(
 			null,
@@ -245,6 +255,7 @@ class PageCreateDialogTest extends AreaTestCase
 			]
 		]);
 
+		$this->login();
 
 		$dialog = new PageCreateDialog(
 			null,
@@ -273,6 +284,8 @@ class PageCreateDialogTest extends AreaTestCase
 				]
 			]
 		]);
+
+		$this->login();
 
 		$dialog = new PageCreateDialog(
 			null,
@@ -307,6 +320,8 @@ class PageCreateDialogTest extends AreaTestCase
 				]
 			]
 		]);
+
+		$this->login();
 
 		$dialog = new PageCreateDialog(
 			null,
@@ -351,6 +366,8 @@ class PageCreateDialogTest extends AreaTestCase
 				]
 			]
 		]);
+
+		$this->login();
 
 		$dialog = new PageCreateDialog(
 			null,
@@ -430,6 +447,8 @@ class PageCreateDialogTest extends AreaTestCase
 				]
 			]
 		]);
+
+		$this->login();
 
 		$dialog = new PageCreateDialog(
 			null,
