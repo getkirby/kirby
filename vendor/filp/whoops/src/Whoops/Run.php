@@ -87,6 +87,11 @@ final class Run implements RunInterface
         $this->inspectorFactory = new InspectorFactory();
     }
 
+    public function __destruct()
+    {
+        $this->unregister();
+    }
+
     /**
      * Explicitly request your handler runs as the last of all currently registered handlers.
      *
@@ -502,6 +507,11 @@ final class Run implements RunInterface
         // to the exception handler. Pass that information along.
         $this->canThrowExceptions = false;
 
+        // If we are not currently registered, we should not do anything
+        if (!$this->isRegistered) {
+            return;
+        }
+
         $error = $this->system->getLastError();
         if ($error && Misc::isLevelFatal($error['type'])) {
             // If there was a fatal error,
@@ -531,7 +541,7 @@ final class Run implements RunInterface
     {
         if (!is_callable($filterCallback)) {
             throw new \InvalidArgumentException(sprintf(
-                "A frame filter must be of type callable, %s type given.", 
+                "A frame filter must be of type callable, %s type given.",
                 gettype($filterCallback)
             ));
         }
