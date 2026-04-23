@@ -9,7 +9,7 @@ return [
 		'pattern' => 'account',
 		'action'  => fn () => [
 			'component' => 'k-account-view',
-			'props'     => App::instance()->user()->panel()->props(),
+			'props'     => Find::user()->panel()->props(),
 		],
 	],
 	'account.file' => [

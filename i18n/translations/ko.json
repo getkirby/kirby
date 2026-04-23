@@ -204,6 +204,8 @@
 	"error.page.undefined": "\ud398\uc774\uc9c0\uac00 \uc5c6\uc2b5\ub2c8\ub2e4.",
 	"error.page.update.permission": "페이지({slug})를 변경할 권한이 없습니다.",
 
+	"error.role.notFound": "The role \"{name}\" cannot be found",
+
 	"error.section.files.max.plural": "이 섹션({section})에는 파일을 {max}개 이상 추가할 수 없습니다.",
 	"error.section.files.max.singular": "이 섹션({section})에는 파일을 하나 이상 추가할 수 없습니다.",
 	"error.section.files.min.plural": "이 섹션({section})에는 파일이 {min}개 이상 필요합니다.",
@@ -219,6 +221,7 @@
 
 	"error.site.changeTitle.empty": "제목을 입력하세요.",
 	"error.site.changeTitle.permission": "사이트명을 변경할 권한이 없습니다.",
+	"error.site.notAccessible": "The site is not accessible",
 	"error.site.update.permission": "사이트 정보를 변경할 권한이 없습니다.",
 
 	"error.structure.validation": "{index}번째 필드({field})에 오류가 있습니다.",

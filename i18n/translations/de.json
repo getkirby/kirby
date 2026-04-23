@@ -204,6 +204,8 @@
 	"error.page.undefined": "Die Seite konnte nicht gefunden werden",
 	"error.page.update.permission": "Du kannst die Seite \"{slug}\" nicht editieren",
 
+	"error.role.notFound": "Die Rolle \"{name}\" wurde nicht gefunden",
+
 	"error.section.files.max.plural": "Bitte füge nicht mehr als {max} Dateien zum Bereich \"{section}\" hinzu",
 	"error.section.files.max.singular": "Bitte füge nicht mehr als eine Datei zum Bereich \"{section}\" hinzu",
 	"error.section.files.min.plural": "Der Bereich \"{section}\" benötigt mindestens {min} Dateien",
@@ -219,6 +221,7 @@
 
 	"error.site.changeTitle.empty": "Bitte gib einen Titel an",
 	"error.site.changeTitle.permission": "Du kannst den Titel der Seite nicht ändern",
+	"error.site.notAccessible": "Die Seite ist nicht zugänglich",
 	"error.site.update.permission": "Du darfst die Seite nicht bearbeiten",
 
 	"error.structure.validation": "Fehler im Feld \"{field}\" in Zeile {index}",

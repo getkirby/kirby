@@ -30,10 +30,11 @@ trait PageActions
 {
 	/**
 	 * Changes the sorting number.
-	 * The sorting number must already be correct
-	 * when the method is called.
-	 * This only affects this page,
-	 * siblings will not be resorted.
+	 * Low-level method, ensure to run all necessary checks
+	 * (e.g. permissions) before calling it. The sorting number
+	 * must already be correct when the method is called.
+	 * This only affects this page, siblings will not be resorted.
+	 * @internal
 	 *
 	 * @return $this|static
 	 * @throws \Kirby\Exception\LogicException If a draft is being sorted or the directory cannot be moved
@@ -361,7 +362,10 @@ trait PageActions
 	}
 
 	/**
-	 * Copies the page to a new parent
+	 * Copies the page to a new parent.
+	 * Low-level method, ensure to run all necessary checks
+	 * (e.g. permissions) before calling it.
+	 * @internal
 	 *
 	 * @throws \Kirby\Exception\DuplicateException If the page already exists
 	 */
@@ -713,6 +717,11 @@ trait PageActions
 
 	protected static function normalizeProps(array $props): array
 	{
+		// Prevent injecting blueprint as this always must be derived from
+		// the template/model name and blueprint object in the app,
+		// never directly be supplied by the caller
+		unset($props['blueprint']);
+
 		$content  = $props['content']  ?? [];
 		$template = $props['template'] ?? 'default';
 

@@ -204,6 +204,8 @@
 	"error.page.undefined": "Stránku nie je možné nájsť",
 	"error.page.update.permission": "Nemáte povolenie na aktualizáciu \"{slug}\"",
 
+	"error.role.notFound": "The role \"{name}\" cannot be found",
+
 	"error.section.files.max.plural": "Nemôžete pridať viac ako {max} súbory/ov do sekcie \"{section}\"",
 	"error.section.files.max.singular": "Nemôžete pridať viac ako 1 súbor do sekcie \"{section}\"",
 	"error.section.files.min.plural": "The \"{section}\" section requires at least {min} files",
@@ -219,6 +221,7 @@
 
 	"error.site.changeTitle.empty": "Titulok nemôže byť prázdny",
 	"error.site.changeTitle.permission": "Nemáte povolenie na zmenu titulku pre portál",
+	"error.site.notAccessible": "The site is not accessible",
 	"error.site.update.permission": "Nemáte povolenie na aktualizovanie portálu",
 
 	"error.structure.validation": "There's an error on the \"{field}\" field in row {index}",

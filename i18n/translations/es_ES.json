@@ -204,6 +204,8 @@
 	"error.page.undefined": "No se puede encontrar la página",
 	"error.page.update.permission": "No tienes permiso para actualizar \"{slug}\"",
 
+	"error.role.notFound": "The role \"{name}\" cannot be found",
+
 	"error.section.files.max.plural": "No debes agregar más de {max} archivos a la sección \"{section}\"",
 	"error.section.files.max.singular": "No debes agregar más de 1 archivo a la sección \"{section}\"",
 	"error.section.files.min.plural": "La sección \"{section}\" requiere al menos {min} archivos",
@@ -219,6 +221,7 @@
 
 	"error.site.changeTitle.empty": "El título no debe estar vacío.",
 	"error.site.changeTitle.permission": "No  tienes permiso para cambiar el título del sitio",
+	"error.site.notAccessible": "The site is not accessible",
 	"error.site.update.permission": "No tienes permiso para actualizar el sitio",
 
 	"error.structure.validation": "There's an error on the \"{field}\" field in row {index}",

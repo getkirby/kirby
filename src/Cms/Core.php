@@ -130,10 +130,14 @@ class Core
 			'blocks/video'    => $this->root . '/blocks/video/video.yml',
 
 			// file blueprints
-			'files/default' => ['title' => 'File'],
+			'files/default' => [
+				'title' => 'File'
+			],
 
 			// page blueprints
-			'pages/default' => ['title' => 'Page'],
+			'pages/default' => [
+				'title' => 'Page'
+			],
 
 			// site blueprints
 			'site' => [
