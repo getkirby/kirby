@@ -22,7 +22,7 @@
 		"prosemirror-keymap": "^1.2.3",
 		"prosemirror-model": "^1.25.4",
 		"prosemirror-schema-list": "^1.5.1",
-		"prosemirror-view": "^1.41.7",
+		"prosemirror-view": "^1.41.8",
 		"sortablejs": "^1.15.7",
 		"vue": "^2.7.16"
 	},
@@ -34,11 +34,11 @@
 		"eslint-plugin-vue": "^9.33.0",
 		"glob": "^13.0.6",
 		"jsdom": "^27.4.0",
-		"prettier": "^3.8.1",
+		"prettier": "^3.8.3",
 		"terser": "^5.46.1",
-		"vite": "^7.3.1",
+		"vite": "^7.3.2",
 		"vite-plugin-static-copy": "^3.4.0",
-		"vitest": "^4.1.1",
+		"vitest": "^4.1.5",
 		"vue-docgen-api": "^4.79.2"
 	},
 	"browserslist": [
