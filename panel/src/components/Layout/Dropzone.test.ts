@@ -2,6 +2,8 @@ import { describe, it, expect, vi } from "@test/unit";
 import { mount as vueMount } from "@vue/test-utils";
 import Dropzone from "./Dropzone.vue";
 
+type DropzoneInstance = { $events: { emit: ReturnType<typeof vi.fn> } };
+
 function mount(props = {}, attrs = {}) {
 	return vueMount(Dropzone, {
 		props,
@@ -86,7 +88,7 @@ describe("Dropzone.vue", () => {
 				dataTransfer: { files }
 			});
 			expect(wrapper.emitted("drop")?.[0][0]).toEqual(files);
-			expect((wrapper.vm as any).$events.emit).toHaveBeenCalledWith(
+			expect((wrapper.vm as unknown as DropzoneInstance).$events.emit).toHaveBeenCalledWith(
 				"dropzone.drop"
 			);
 		});
@@ -97,7 +99,7 @@ describe("Dropzone.vue", () => {
 				dataTransfer: { files: [] }
 			});
 			expect(wrapper.emitted("drop")).toBeUndefined();
-			expect((wrapper.vm as any).$events.emit).not.toHaveBeenCalled();
+			expect((wrapper.vm as unknown as DropzoneInstance).$events.emit).not.toHaveBeenCalled();
 		});
 
 		it("does not emit drop when event is not an upload event", async () => {
@@ -111,7 +113,7 @@ describe("Dropzone.vue", () => {
 			});
 			await wrapper.trigger("drop", { dataTransfer: { files: [] } });
 			expect(wrapper.emitted("drop")).toBeUndefined();
-			expect((wrapper.vm as any).$events.emit).not.toHaveBeenCalled();
+			expect((wrapper.vm as unknown as DropzoneInstance).$events.emit).not.toHaveBeenCalled();
 		});
 
 		it("resets dragging and over state after drop", async () => {

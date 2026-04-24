@@ -2,6 +2,9 @@ import { describe, it, expect, vi } from "@test/unit";
 import { mount } from "@vue/test-utils";
 import Stat from "./Stat.vue";
 
+type StatInstance = { target: string | null | (() => void) };
+type StatInstanceFn = { target: () => void };
+
 describe("Stat.vue", () => {
 	// $el
 	describe("element", () => {
@@ -110,18 +113,18 @@ describe("Stat.vue", () => {
 	describe("target computed", () => {
 		it("returns null by default", () => {
 			const wrapper = mount(Stat);
-			expect((wrapper.vm as any).target).toBeNull();
+			expect((wrapper.vm as unknown as StatInstance).target).toBeNull();
 		});
 
 		it("returns the link", () => {
 			const wrapper = mount(Stat, { props: { link: "/pages" } });
-			expect((wrapper.vm as any).target).toBe("/pages");
+			expect((wrapper.vm as unknown as StatInstance).target).toBe("/pages");
 		});
 
 		it("returns the click function", () => {
 			const click = () => {};
 			const wrapper = mount(Stat, { props: { click } });
-			expect((wrapper.vm as any).target).toBe(click);
+			expect((wrapper.vm as unknown as StatInstance).target).toBe(click);
 		});
 
 		it("returns a function that opens the dialog", () => {
@@ -130,7 +133,7 @@ describe("Stat.vue", () => {
 				props: { dialog: "pages/create" },
 				global: { mocks: { $panel: { dialog: { open } } } }
 			});
-			(wrapper.vm as any).target();
+			(wrapper.vm as unknown as StatInstanceFn).target();
 			expect(open).toHaveBeenCalledWith("pages/create");
 		});
 
@@ -140,7 +143,7 @@ describe("Stat.vue", () => {
 				props: { drawer: "pages/preview" },
 				global: { mocks: { $panel: { drawer: { open } } } }
 			});
-			(wrapper.vm as any).target();
+			(wrapper.vm as unknown as StatInstanceFn).target();
 			expect(open).toHaveBeenCalledWith("pages/preview");
 		});
 
