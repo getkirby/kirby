@@ -65,7 +65,7 @@ class UserViewController extends ModelViewController
 	public function next(): array|null
 	{
 		return static::prevNext(
-			$this->model->next($this->siblings),
+			$this->model->next($this->siblings()),
 			'username'
 		);
 	}
@@ -73,7 +73,7 @@ class UserViewController extends ModelViewController
 	public function prev(): array|null
 	{
 		return static::prevNext(
-			$this->model->prev($this->siblings),
+			$this->model->prev($this->siblings()),
 			'username'
 		);
 	}
