@@ -399,10 +399,10 @@ class UserRulesTest extends ModelTestCase
 
 	public function testCreateAvatarWithoutPermission(): void
 	{
-		$permissions = $this->createMock(UserPermissions::class);
-		$permissions->method('can')->with('update')->willReturn(false);
+		$permissions = $this->createStub(UserPermissions::class);
+		$permissions->method('can')->willReturn(false);
 
-		$user = $this->createMock(User::class);
+		$user = $this->createStub(User::class);
 		$user->method('permissions')->willReturn($permissions);
 		$user->method('username')->willReturn('test');
 
@@ -414,13 +414,13 @@ class UserRulesTest extends ModelTestCase
 
 	public function testCreateAvatarWhenAvatarExists(): void
 	{
-		$avatar = $this->createMock(File::class);
+		$avatar = $this->createStub(File::class);
 		$avatar->method('filename')->willReturn('profile.jpg');
 
-		$permissions = $this->createMock(UserPermissions::class);
-		$permissions->method('can')->with('update')->willReturn(true);
+		$permissions = $this->createStub(UserPermissions::class);
+		$permissions->method('can')->willReturn(true);
 
-		$user = $this->createMock(User::class);
+		$user = $this->createStub(User::class);
 		$user->method('avatar')->willReturn($avatar);
 		$user->method('permissions')->willReturn($permissions);
 
@@ -432,12 +432,14 @@ class UserRulesTest extends ModelTestCase
 
 	public function testDeleteAvatar(): void
 	{
-		$avatar = $this->createMock(File::class);
+		$this->expectNotToPerformAssertions();
 
-		$permissions = $this->createMock(UserPermissions::class);
-		$permissions->method('can')->with('update')->willReturn(true);
+		$avatar = $this->createStub(File::class);
 
-		$user = $this->createMock(User::class);
+		$permissions = $this->createStub(UserPermissions::class);
+		$permissions->method('can')->willReturn(true);
+
+		$user = $this->createStub(User::class);
 		$user->method('avatar')->willReturn($avatar);
 		$user->method('permissions')->willReturn($permissions);
 
@@ -446,10 +448,10 @@ class UserRulesTest extends ModelTestCase
 
 	public function testDeleteAvatarNotFound(): void
 	{
-		$permissions = $this->createMock(UserPermissions::class);
-		$permissions->method('can')->with('update')->willReturn(true);
+		$permissions = $this->createStub(UserPermissions::class);
+		$permissions->method('can')->willReturn(true);
 
-		$user = $this->createMock(User::class);
+		$user = $this->createStub(User::class);
 		$user->method('avatar')->willReturn(null);
 		$user->method('permissions')->willReturn($permissions);
 
@@ -461,10 +463,10 @@ class UserRulesTest extends ModelTestCase
 
 	public function testDeleteAvatarWithoutPermission(): void
 	{
-		$permissions = $this->createMock(UserPermissions::class);
-		$permissions->method('can')->with('update')->willReturn(false);
+		$permissions = $this->createStub(UserPermissions::class);
+		$permissions->method('can')->willReturn(false);
 
-		$user = $this->createMock(User::class);
+		$user = $this->createStub(User::class);
 		$user->method('permissions')->willReturn($permissions);
 		$user->method('username')->willReturn('test');
 
@@ -476,12 +478,14 @@ class UserRulesTest extends ModelTestCase
 
 	public function testReplaceAvatar(): void
 	{
-		$avatar = $this->createMock(File::class);
+		$this->expectNotToPerformAssertions();
 
-		$permissions = $this->createMock(UserPermissions::class);
-		$permissions->method('can')->with('update')->willReturn(true);
+		$avatar = $this->createStub(File::class);
 
-		$user = $this->createMock(User::class);
+		$permissions = $this->createStub(UserPermissions::class);
+		$permissions->method('can')->willReturn(true);
+
+		$user = $this->createStub(User::class);
 		$user->method('avatar')->willReturn($avatar);
 		$user->method('permissions')->willReturn($permissions);
 
@@ -490,10 +494,10 @@ class UserRulesTest extends ModelTestCase
 
 	public function testReplaceAvatarNotFound(): void
 	{
-		$permissions = $this->createMock(UserPermissions::class);
-		$permissions->method('can')->with('update')->willReturn(true);
+		$permissions = $this->createStub(UserPermissions::class);
+		$permissions->method('can')->willReturn(true);
 
-		$user = $this->createMock(User::class);
+		$user = $this->createStub(User::class);
 		$user->method('avatar')->willReturn(null);
 		$user->method('permissions')->willReturn($permissions);
 
@@ -505,10 +509,10 @@ class UserRulesTest extends ModelTestCase
 
 	public function testReplaceAvatarWithoutPermission(): void
 	{
-		$permissions = $this->createMock(UserPermissions::class);
-		$permissions->method('can')->with('update')->willReturn(false);
+		$permissions = $this->createStub(UserPermissions::class);
+		$permissions->method('can')->willReturn(false);
 
-		$user = $this->createMock(User::class);
+		$user = $this->createStub(User::class);
 		$user->method('permissions')->willReturn($permissions);
 		$user->method('username')->willReturn('test');
 
@@ -599,14 +603,14 @@ class UserRulesTest extends ModelTestCase
 	{
 		$this->expectNotToPerformAssertions();
 
-		$user = $this->createMock(User::class);
+		$user = $this->createStub(User::class);
 
 		UserRules::validAvatar($user, __DIR__ . '/../Api/routes/fixtures/avatar.jpg', 'jpg');
 	}
 
 	public function testValidAvatarWithInvalidExtension(): void
 	{
-		$user = $this->createMock(User::class);
+		$user = $this->createStub(User::class);
 
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Invalid file type: document');
@@ -619,7 +623,7 @@ class UserRulesTest extends ModelTestCase
 		$source = static::TMP . '/fake-image.jpg';
 		file_put_contents($source, 'this is not an image');
 
-		$user = $this->createMock(User::class);
+		$user = $this->createStub(User::class);
 
 		$this->expectException(Exception::class);
 		$this->expectExceptionCode('error.file.mime.invalid');
