@@ -2,10 +2,48 @@
 
 namespace Kirby\Form\Field;
 
+use Closure;
+use Kirby\Cms\Api;
 use Kirby\Cms\App;
+use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Cms\User;
+
+class FilesFieldTestApi extends Api
+{
+	public string|null $template = null;
+
+	public function upload(
+		Closure $callback,
+		bool $single = false,
+		bool $debug = false,
+		string|null $template = null
+	): array {
+		$this->template = $template;
+
+		return [
+			'status' => 'ok',
+			'data'   => $callback('source.txt', 'test.txt')
+		];
+	}
+}
+
+class FilesFieldTestPage extends Page
+{
+	public array $createdFile = [];
+
+	public function createFile(array $props, bool $move = false): File
+	{
+		$this->createdFile = $props;
+
+		return new File([
+			'filename' => $props['filename'],
+			'parent'   => $this,
+			'template' => $props['template']
+		]);
+	}
+}
 
 class FilesFieldTest extends TestCase
 {
@@ -276,6 +314,39 @@ class FilesFieldTest extends TestCase
 		$this->assertSame('a.jpg', $api['data'][0]['id']);
 		$this->assertSame('b.jpg', $api['data'][1]['id']);
 		$this->assertSame('c.jpg', $api['data'][2]['id']);
+	}
+
+	public function testUploadPassesTemplateToApi(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'files/custom' => [
+					'name'   => 'custom',
+					'accept' => ['extension' => 'txt']
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$parent = new FilesFieldTestPage(['slug' => 'test']);
+
+		$field = $this->field('files', [
+			'model'   => $parent,
+			'uploads' => 'custom'
+		]);
+		$this->assertSame('.txt', $field->uploads()['accept']);
+
+		$api = new FilesFieldTestApi(['kirby' => $this->app]);
+
+		$result = $field->upload(
+			$api,
+			$field->uploads(),
+			fn ($file) => $file->template()
+		);
+
+		$this->assertSame('custom', $api->template);
+		$this->assertSame('custom', $parent->createdFile['template']);
+		$this->assertSame('custom', $result['data']);
 	}
 
 	public function testParentModel(): void

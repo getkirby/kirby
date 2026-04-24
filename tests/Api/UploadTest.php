@@ -49,12 +49,14 @@ class UploadTest extends TestCase
 	protected function upload(
 		array $api = [],
 		bool $single = true,
-		bool $debug = false
+		bool $debug = false,
+		string|null $template = null
 	): Upload {
 		return new Upload(
-			api:    $this->api($api),
-			single: $single,
-			debug:  $debug
+			api:      $this->api($api),
+			single:   $single,
+			debug:    $debug,
+			template: $template
 		);
 	}
 
@@ -583,6 +585,95 @@ class UploadTest extends TestCase
 				]
 			]
 		]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.file.maxsize');
+		$upload->processChunk($source, basename($source));
+	}
+
+	public function testValidateChunkWithTemplate(): void
+	{
+		$source = static::TMP . '/a.md';
+		$this->app->clone([
+			'blueprints' => [
+				'files/test' => [
+					'name'   => 'test',
+					'accept' => ['maxsize' => 100]
+				]
+			]
+		]);
+		$upload = $this->upload([
+			'requestData' => [
+				'headers' => [
+					'Upload-Length' => 120,
+					'Upload-Offset' => 0,
+					'Upload-Id'     => 'abcd'
+				]
+			]
+		], template: 'test');
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.file.maxsize');
+		$upload->processChunk($source, basename($source));
+	}
+
+	public function testValidateChunkWithCustomTemplate(): void
+	{
+		$source = static::TMP . '/a.md';
+		F::write($source, 'abcdef');
+
+		$this->app->clone([
+			'blueprints' => [
+				'files/default' => [
+					'name'   => 'default',
+					'accept' => ['maxsize' => 100]
+				],
+				'files/custom' => [
+					'name'   => 'custom',
+					'accept' => ['maxsize' => 200]
+				]
+			]
+		]);
+		$upload = $this->upload([
+			'requestData' => [
+				'headers' => [
+					'Upload-Length' => 120,
+					'Upload-Offset' => 0,
+					'Upload-Id'     => 'abcd'
+				]
+			]
+		], template: 'custom');
+
+		$this->assertNull($upload->processChunk($source, basename($source)));
+	}
+
+	public function testValidateChunkTemplatePriority(): void
+	{
+		$source = static::TMP . '/a.md';
+		$this->app->clone([
+			'blueprints' => [
+				'files/large' => [
+					'name'   => 'large',
+					'accept' => ['maxsize' => 200]
+				],
+				'files/small' => [
+					'name'   => 'small',
+					'accept' => ['maxsize' => 100]
+				]
+			]
+		]);
+		$upload = $this->upload([
+			'requestData' => [
+				'body' => [
+					'template' => 'large'
+				],
+				'headers' => [
+					'Upload-Length' => 120,
+					'Upload-Offset' => 0,
+					'Upload-Id'     => 'abcd'
+				]
+			]
+		], template: 'small');
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionCode('error.file.maxsize');

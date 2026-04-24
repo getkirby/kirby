@@ -615,8 +615,9 @@ class Api
 	public function upload(
 		Closure $callback,
 		bool $single = false,
-		bool $debug = false
+		bool $debug = false,
+		string|null $template = null
 	): array {
-		return (new Upload($this, $single, $debug))->process($callback);
+		return (new Upload($this, $single, $debug, $template))->process($callback);
 	}
 }
