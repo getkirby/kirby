@@ -211,6 +211,7 @@ class UserTest extends TestCase
 		$user->kirby()->impersonate('kirby');
 
 		$expected = [
+			'access'         => true,
 			'create'         => true,
 			'changeEmail'    => true,
 			'changeLanguage' => true,
@@ -218,6 +219,7 @@ class UserTest extends TestCase
 			'changePassword' => true,
 			'changeRole'     => true,
 			'delete'         => true,
+			'list'           => true,
 			'update'         => true,
 		];
 
@@ -235,6 +237,7 @@ class UserTest extends TestCase
 
 		// without override
 		$expected = [
+			'access'         => false,
 			'create'         => false,
 			'changeEmail'    => false,
 			'changeLanguage' => false,
@@ -242,6 +245,7 @@ class UserTest extends TestCase
 			'changePassword' => false,
 			'changeRole'     => false,
 			'delete'         => false,
+			'list'           => false,
 			'update'         => false,
 		];
 
@@ -250,6 +254,7 @@ class UserTest extends TestCase
 
 		// with override
 		$expected = [
+			'access'         => false,
 			'create'         => false,
 			'changeEmail'    => true,
 			'changeLanguage' => false,
@@ -257,6 +262,7 @@ class UserTest extends TestCase
 			'changePassword' => false,
 			'changeRole'     => false,
 			'delete'         => false,
+			'list'           => false,
 			'update'         => false,
 		];
 

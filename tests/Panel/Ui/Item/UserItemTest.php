@@ -43,6 +43,7 @@ class UserItemTest extends TestCase
 			'id'          => 'test',
 			'link'        => '/users/test',
 			'permissions' => [
+				'access'         => false,
 				'create'         => false,
 				'changeEmail'    => false,
 				'changeLanguage' => false,
@@ -50,6 +51,7 @@ class UserItemTest extends TestCase
 				'changePassword' => false,
 				'changeRole'     => false,
 				'delete'         => false,
+				'list'           => false,
 				'update'         => false,
 			],
 			'uuid'         => 'user://test',

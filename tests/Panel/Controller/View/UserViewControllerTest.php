@@ -111,6 +111,8 @@ class UserViewControllerTest extends TestCase
 			]
 		]);
 
+		$this->app->impersonate('kirby');
+
 		$controller = new UserViewController($this->app->user('a'));
 		$next       = $controller->next();
 		$this->assertSame('User B', $next['title']);
@@ -128,6 +130,8 @@ class UserViewControllerTest extends TestCase
 				]
 			]
 		]);
+
+		$this->app->impersonate('kirby');
 
 		$controller = new UserViewController($this->app->user('a'));
 		$next       = $controller->next();
@@ -172,10 +176,71 @@ class UserViewControllerTest extends TestCase
 			]
 		]);
 
+		$this->app->impersonate('kirby');
+
 		$controller = new UserViewController($this->app->user('b'));
 		$prev       = $controller->prev();
 		$this->assertSame('User A', $prev['title']);
 		$this->assertSame('/users/a?tab=test', $prev['link']);
+	}
+
+	public function testPrevNextNotListable(): void
+	{
+		// use uuid-based roles to avoid static permission cache collisions
+		$uuid = uuid();
+
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'users/restricted-' . $uuid => [
+					'name'    => 'restricted-' . $uuid,
+					'options' => ['list' => false]
+				]
+			],
+			'roles' => [
+				['name' => 'editor-' . $uuid],
+				['name' => 'restricted-' . $uuid]
+			],
+			'users' => [
+				[
+					'id'    => 'a',
+					'name'  => 'User A',
+					'email' => 'a@getkirby.com',
+					'role'  => 'editor-' . $uuid
+				],
+				[
+					'id'    => 'b',
+					'name'  => 'User B',
+					'email' => 'b@getkirby.com',
+					'role'  => 'restricted-' . $uuid
+				],
+				[
+					'id'    => 'c',
+					'name'  => 'User C',
+					'email' => 'c@getkirby.com',
+					'role'  => 'editor-' . $uuid
+				]
+			]
+		]);
+
+		// as a regular editor, non-listable user b is skipped in navigation
+		$this->app->impersonate('a@getkirby.com');
+
+		$controller = new UserViewController($this->app->user('a'));
+		$this->assertNull($controller->prev());
+		$this->assertSame('User C', $controller->next()['title']);
+
+		$controller = new UserViewController($this->app->user('c'));
+		$this->assertSame('User A', $controller->prev()['title']);
+		$this->assertNull($controller->next());
+
+		// the kirby superuser sees all users including non-listable ones
+		$this->app->impersonate('kirby');
+
+		$controller = new UserViewController($this->app->user('a'));
+		$this->assertSame('User B', $controller->next()['title']);
+
+		$controller = new UserViewController($this->app->user('c'));
+		$this->assertSame('User B', $controller->prev()['title']);
 	}
 
 	public function testTitle(): void

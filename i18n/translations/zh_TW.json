@@ -204,6 +204,8 @@
 	"error.page.undefined": "\u627e\u4e0d\u5230\u9801\u9762",
 	"error.page.update.permission": "你沒有更新「{slug}」的權限",
 
+	"error.role.notFound": "The role \"{name}\" cannot be found",
+
 	"error.section.files.max.plural": "「{section}」區段中最多只能加入 {max} 個檔案",
 	"error.section.files.max.singular": "「{section}」區段中最多只能加入 1 個檔案",
 	"error.section.files.min.plural": "「{section}」區段中至少需要 {min} 個檔案",
@@ -219,6 +221,7 @@
 
 	"error.site.changeTitle.empty": "網站標題不得為空",
 	"error.site.changeTitle.permission": "你沒有變更網站標題的權限",
+	"error.site.notAccessible": "The site is not accessible",
 	"error.site.update.permission": "你沒有變更網站設定的權限",
 
 	"error.structure.validation": "第 {index} 列的「{field}」欄位發生錯誤",

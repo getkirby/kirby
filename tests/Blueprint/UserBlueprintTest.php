@@ -34,6 +34,7 @@ class UserBlueprintTest extends TestCase
 		]);
 
 		$expected = [
+			'access'         => null,
 			'create'         => null,
 			'changeEmail'    => null,
 			'changeLanguage' => null,
@@ -41,6 +42,7 @@ class UserBlueprintTest extends TestCase
 			'changePassword' => null,
 			'changeRole'     => null,
 			'delete'         => null,
+			'list'           => null,
 			'update'         => null,
 		];
 

@@ -151,7 +151,9 @@ class OptionsApi extends OptionsProvider
 			];
 		}
 
-		// create Options object and render this subsequently
-		return $this->options = Options::factory($options);
+		// create Options object and render this subsequently;
+		// ensure not to resolve Kirby queries again
+		// to prevent double-resolution of user-controlled content
+		return $this->options = Options::factory($options, resolve: false);
 	}
 }

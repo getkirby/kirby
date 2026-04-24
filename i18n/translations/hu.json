@@ -204,6 +204,8 @@
 	"error.page.undefined": "Az oldal nem tal\u00e1lhat\u00f3",
 	"error.page.update.permission": "Nincs jogosultságod a(z) \"{slug}\" oldal frissítéséhez",
 
+	"error.role.notFound": "The role \"{name}\" cannot be found",
+
 	"error.section.files.max.plural": "Maximum {max} fájlt adhatsz hozzá a(z) \"{section}\" szekcióhoz",
 	"error.section.files.max.singular": "Nem adhatsz hozzá egynél több fájlt a(z) \"{section}\" szekcióhoz",
 	"error.section.files.min.plural": "A \"{section}\" szakasz legalább {min} fájlt igényel",
@@ -219,6 +221,7 @@
 
 	"error.site.changeTitle.empty": "A cím nem lehet üres",
 	"error.site.changeTitle.permission": "Nincs jogosultságod megváltoztatni az honlap címét",
+	"error.site.notAccessible": "The site is not accessible",
 	"error.site.update.permission": "Nincs jogosultságod frissíteni a honlapot",
 
 	"error.structure.validation": "There's an error on the \"{field}\" field in row {index}",

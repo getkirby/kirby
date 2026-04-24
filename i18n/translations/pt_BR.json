@@ -204,6 +204,8 @@
 	"error.page.undefined": "P\u00e1gina n\u00e3o encontrada",
 	"error.page.update.permission": "Você não tem permissão para atualizar \"{slug}\"",
 
+	"error.role.notFound": "The role \"{name}\" cannot be found",
+
 	"error.section.files.max.plural": "Você não pode adicionar mais do que {max} arquivos à seção \"{section}\"",
 	"error.section.files.max.singular": "Você não pode adicionar mais do que um arquivo à seção \"{section}\"",
 	"error.section.files.min.plural": "A seção “{section}” precisa ter pelo menos {min} arquivos",
@@ -219,6 +221,7 @@
 
 	"error.site.changeTitle.empty": "O título não pode ficar em branco",
 	"error.site.changeTitle.permission": "Você não tem permissão para alterar o título do site",
+	"error.site.notAccessible": "The site is not accessible",
 	"error.site.update.permission": "Você não tem permissão para atualizar o site",
 
 	"error.structure.validation": "Existe um erro no campo \"{field}\" na linha {index}",

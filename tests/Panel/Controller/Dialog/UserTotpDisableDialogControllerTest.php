@@ -19,6 +19,13 @@ class UserTotpDisableDialogControllerTest extends TestCase
 		parent::setUp();
 
 		$this->app = $this->app->clone([
+			'options' => [
+				'api.allowImpersonation' => true
+			],
+			'roles' => [
+				['name' => 'admin'],
+				['name' => 'editor']
+			],
 			'users' => [
 				[
 					'id'    => 'test',
@@ -28,10 +35,12 @@ class UserTotpDisableDialogControllerTest extends TestCase
 				[
 					'id'    => 'homer',
 					'email' => 'homer@simpson.com',
+					'role'  => 'editor'
 				]
-			],
-			'user' => 'test@getkirby.com'
+			]
 		]);
+
+		$this->app->impersonate('test@getkirby.com');
 	}
 
 	public function testFactory(): void

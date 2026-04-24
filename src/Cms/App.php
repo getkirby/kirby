@@ -108,10 +108,11 @@ class App
 		$this->core   = new Core($this);
 		$this->events = new Events($this);
 
-		// start with a fresh snippet and version cache
+		// start with fresh caches
 		Snippet::$cache = [];
 		Stack::reset();
 		VersionCache::reset();
+		ModelPermissions::$cache = [];
 
 		// start with a fresh Query runner option
 		Query::$runner = null;

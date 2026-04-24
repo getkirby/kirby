@@ -6,6 +6,7 @@ use Kirby\Blueprint\Blueprint;
 use Kirby\Blueprint\Section;
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Form\Field;
 use Kirby\TestCase;
@@ -60,6 +61,39 @@ class UsersRoutesTest extends TestCase
 		Field::$types = [];
 		Section::$types = [];
 		Dir::remove(static::TMP);
+	}
+
+	protected function setUpAppWithoutUserAccess(): App
+	{
+		$app = $this->app->clone([
+			'blueprints' => [
+				'users/restricted' => [
+					'name'    => 'restricted',
+					'options' => ['access' => false]
+				]
+			],
+			'roles' => [
+				[
+					'name' => 'restricted'
+				]
+			],
+			'users' => [
+				[
+					'name'  => 'Admin',
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin'
+				],
+				[
+					'name'  => 'Restricted',
+					'email' => 'restricted@getkirby.com',
+					'role'  => 'restricted'
+				]
+			]
+		]);
+
+		$app->impersonate('admin@getkirby.com');
+
+		return $app;
 	}
 
 	public function testAvatar(): void
@@ -277,6 +311,16 @@ class UsersRoutesTest extends TestCase
 		$this->assertTrue($response);
 	}
 
+	public function testDeleteWithoutAccess(): void
+	{
+		$app = $this->setUpAppWithoutUserAccess();
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The user "restricted@getkirby.com" cannot be found');
+
+		$app->api()->call('users/restricted@getkirby.com', 'DELETE');
+	}
+
 	public function testFields(): void
 	{
 		$app = $this->app->clone([
@@ -410,6 +454,16 @@ class UsersRoutesTest extends TestCase
 		$this->assertSame('admin@getkirby.com', $response['data']['email']);
 	}
 
+	public function testGetWithoutAccess(): void
+	{
+		$app = $this->setUpAppWithoutUserAccess();
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The user "restricted@getkirby.com" cannot be found');
+
+		$app->api()->call('users/restricted@getkirby.com');
+	}
+
 	public function testRoles(): void
 	{
 		$this->app->impersonate('kirby');
@@ -451,6 +505,19 @@ class UsersRoutesTest extends TestCase
 		$this->assertSame('editor@getkirby.com', $response['data'][0]['email']);
 	}
 
+	public function testSearchWithGetRequestWithoutAccess(): void
+	{
+		$app = $this->setUpAppWithoutUserAccess();
+
+		$response = $app->api()->call('users/search', 'GET', [
+			'query' => [
+				'q' => 'Restricted'
+			]
+		]);
+
+		$this->assertCount(0, $response['data']);
+	}
+
 	public function testSearchWithPostRequest(): void
 	{
 		$app = $this->app;
@@ -463,6 +530,19 @@ class UsersRoutesTest extends TestCase
 
 		$this->assertCount(1, $response['data']);
 		$this->assertSame('editor@getkirby.com', $response['data'][0]['email']);
+	}
+
+	public function testSearchWithPostRequestWithoutAccess(): void
+	{
+		$app = $this->setUpAppWithoutUserAccess();
+
+		$response = $app->api()->call('users/search', 'POST', [
+			'body' => [
+				'search' => 'Restricted'
+			]
+		]);
+
+		$this->assertCount(0, $response['data']);
 	}
 
 	public function testSections(): void
@@ -512,11 +592,35 @@ class UsersRoutesTest extends TestCase
 		$this->assertSame('Admin', $response['data']['content']['position']);
 	}
 
+	public function testUpdateWithoutAccess(): void
+	{
+		$app = $this->setUpAppWithoutUserAccess();
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The user "restricted@getkirby.com" cannot be found');
+
+		$app->api()->call('users/restricted@getkirby.com', 'PATCH', [
+			'body' => [
+				'position' => 'Restricted'
+			]
+		]);
+	}
+
 	public function testUsers(): void
 	{
 		$response = $this->app->api()->call('users');
 
 		$this->assertSame('admin@getkirby.com', $response['data'][0]['email']);
 		$this->assertSame('editor@getkirby.com', $response['data'][1]['email']);
+	}
+
+	public function testUsersWithoutAccess(): void
+	{
+		$app = $this->setUpAppWithoutUserAccess();
+
+		$response = $app->api()->call('users');
+
+		$this->assertCount(1, $response['data']);
+		$this->assertSame('admin@getkirby.com', $response['data'][0]['email']);
 	}
 }

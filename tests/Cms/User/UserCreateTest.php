@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\PermissionException;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(User::class)]
@@ -92,22 +93,28 @@ class UserCreateTest extends ModelTestCase
 
 	public function testCreateWithDefaults(): void
 	{
-		$user = User::create([
-			'email' => 'new@domain.com',
-			'role'  => 'editor',
-			'blueprint' => [
-				'name' => 'editor',
-				'fields' => [
-					'a'  => [
-						'type'    => 'text',
-						'default' => 'A'
-					],
-					'b' => [
-						'type'    => 'textarea',
-						'default' => 'B'
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'users/editor' => [
+					'name'   => 'editor',
+					'fields' => [
+						'a' => [
+							'type'    => 'text',
+							'default' => 'A'
+						],
+						'b' => [
+							'type'    => 'textarea',
+							'default' => 'B'
+						],
 					]
 				]
 			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$user = User::create([
+			'email' => 'new@domain.com',
+			'role'  => 'editor',
 		]);
 
 		$this->assertSame('A', $user->a()->value());
@@ -116,25 +123,29 @@ class UserCreateTest extends ModelTestCase
 
 	public function testCreateWithDefaultsAndContent(): void
 	{
-		$user = User::create([
-			'email' => 'new@domain.com',
-			'role'  => 'editor',
-			'content' => [
-				'a' => 'Custom A'
-			],
-			'blueprint' => [
-				'name' => 'editor',
-				'fields' => [
-					'a'  => [
-						'type'    => 'text',
-						'default' => 'A'
-					],
-					'b' => [
-						'type'    => 'textarea',
-						'default' => 'B'
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'users/editor' => [
+					'name'   => 'editor',
+					'fields' => [
+						'a' => [
+							'type'    => 'text',
+							'default' => 'A'
+						],
+						'b' => [
+							'type'    => 'textarea',
+							'default' => 'B'
+						],
 					]
 				]
 			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$user = User::create([
+			'email'   => 'new@domain.com',
+			'role'    => 'editor',
+			'content' => ['a' => 'Custom A'],
 		]);
 
 		$this->assertSame('Custom A', $user->a()->value());
@@ -284,4 +295,38 @@ class UserCreateTest extends ModelTestCase
 		$this->assertSame('Title DE', $user->content('de')->title()->value());
 	}
 
+	public function testCreateStripInjectedBlueprint(): void
+	{
+		$this->app = $this->app->clone([
+			'roles' => [
+				['name' => 'admin'],
+				[
+					'name'        => 'editor',
+					'permissions' => [
+						'users' => [
+							'create' => false,
+						]
+					]
+				]
+			],
+			'user'  => 'editor@getkirby.com',
+			'users' => [
+				['email' => 'admin@getkirby.com', 'role' => 'admin'],
+				['email' => 'editor@getkirby.com', 'role' => 'editor']
+			]
+		]);
+
+		$this->expectException(PermissionException::class);
+
+		User::create([
+			'email'     => 'new@domain.com',
+			'role'      => 'editor',
+			'blueprint' => [
+				'options' => [
+					// would allow creation if respected, must be stripped
+					'create' => true
+				]
+			]
+		]);
+	}
 }

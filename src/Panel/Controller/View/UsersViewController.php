@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Controller\View;
 
 use Kirby\Cms\App;
+use Kirby\Cms\Find;
 use Kirby\Cms\Role;
 use Kirby\Cms\User;
 use Kirby\Panel\Collector\UsersCollector;
@@ -65,7 +66,7 @@ class UsersViewController extends ViewController
 
 	public function roles(): array
 	{
-		return $this->roles ??= $this->kirby->roles()->toArray(fn (Role $role) => [
+		return $this->roles ??= Find::roles()->toArray(fn (Role $role) => [
 			'id'    => $role->id(),
 			'title' => $role->title(),
 		]);

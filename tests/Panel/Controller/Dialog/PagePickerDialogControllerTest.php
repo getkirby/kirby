@@ -136,6 +136,8 @@ class PagePickerDialogControllerTest extends TestCase
 			],
 		]);
 
+		$this->app->impersonate('kirby');
+
 		$controller = new PagePickerDialogController(
 			model: $this->app->site()
 		);
@@ -152,6 +154,8 @@ class PagePickerDialogControllerTest extends TestCase
 				],
 			],
 		]);
+
+		$this->app->impersonate('kirby');
 
 		$controller = new PagePickerDialogController(
 			model: $this->app->site()
@@ -190,6 +194,8 @@ class PagePickerDialogControllerTest extends TestCase
 			],
 		]);
 
+		$this->app->impersonate('kirby');
+
 		$controller = new PagePickerDialogController(
 			model: $this->app->site()
 		);
@@ -224,6 +230,8 @@ class PagePickerDialogControllerTest extends TestCase
 				],
 			],
 		]);
+
+		$this->app->impersonate('kirby');
 
 		$controller = new PagePickerDialogController(
 			model: $this->app->site()

@@ -89,6 +89,48 @@ class UsersViewControllerTest extends TestCase
 		], $controller->roles());
 	}
 
+	public function testRolesWithInaccessibleRoles(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'users/editor' => [
+					'name'  => 'editor',
+					'title' => 'Editor',
+				],
+				'users/secret' => [
+					'name'    => 'secret',
+					'title'   => 'Secret',
+					'options' => [
+						'access' => [
+							'*' => false
+						]
+					]
+				]
+			],
+			'users' => [
+				[
+					'id'    => 'editor',
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor',
+				]
+			]
+		]);
+
+		$this->app->impersonate('editor@getkirby.com');
+
+		$controller = new UsersViewController();
+		$this->assertSame([
+			'admin' => [
+				'id'    => 'admin',
+				'title' => 'Admin'
+			],
+			'editor' => [
+				'id'    => 'editor',
+				'title' => 'Editor'
+			]
+		], $controller->roles());
+	}
+
 	public function testUsers(): void
 	{
 		$controller = new UsersViewController();

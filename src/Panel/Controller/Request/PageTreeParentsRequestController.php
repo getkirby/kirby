@@ -24,7 +24,7 @@ class PageTreeParentsRequestController extends RequestController
 	public function __construct()
 	{
 		parent::__construct();
-		$this->page = $this->site->page($this->request->get('page'));
+		$this->page = $this->kirby->page($this->request->get('page'));
 		$this->root = $this->request->get('root') === 'true';
 	}
 
@@ -37,7 +37,7 @@ class PageTreeParentsRequestController extends RequestController
 		$parents ??= [];
 
 		if ($this->root === true) {
-			array_unshift($parents, $this->site->uuid()?->toString() ?? '/');
+			array_unshift($parents, $this->kirby->site()->uuid()?->toString() ?? '/');
 		}
 
 		return [
