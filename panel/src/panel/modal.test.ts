@@ -14,7 +14,7 @@ describe("panel.modal", () => {
 				isLoading: false,
 				on: {},
 				path: null,
-				props: { value: {} },
+				props: {},
 				query: {},
 				referrer: null,
 				timestamp: null
@@ -127,7 +127,7 @@ describe("panel.modal", () => {
 
 			modal.input({ foo: "bar" });
 
-			expect(modal.props.value).toStrictEqual({});
+			expect(modal.props).toStrictEqual({});
 		});
 
 		it("should change value", async () => {

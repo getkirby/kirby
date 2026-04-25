@@ -14,7 +14,7 @@ describe("panel.drawer", () => {
 				isLoading: false,
 				on: {},
 				path: null,
-				props: { value: {} },
+				props: {},
 				query: {},
 				referrer: null,
 				timestamp: null
@@ -55,7 +55,10 @@ describe("panel.drawer", () => {
 			const panel = Panel.create(app);
 			const drawer = Drawer(panel);
 
-			await drawer.open({ component: "k-page-drawer", props: { icon: "page", value: {} } });
+			await drawer.open({
+				component: "k-page-drawer",
+				props: { icon: "page", value: {} }
+			});
 
 			expect(drawer.icon).toStrictEqual("page");
 		});

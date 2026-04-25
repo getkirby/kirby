@@ -13,7 +13,7 @@ describe("panel.dialog", () => {
 				isLoading: false,
 				on: {},
 				path: null,
-				props: { value: {} },
+				props: {},
 				query: {},
 				referrer: null,
 				timestamp: null
