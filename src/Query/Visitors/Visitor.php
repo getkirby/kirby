@@ -5,19 +5,10 @@ namespace Kirby\Query\Visitors;
 use Closure;
 
 /**
- * @package   Kirby Query
- * @author    Roman Steiner <roman@toastlab.ch>,
- *            Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @license   https://opensource.org/licenses/MIT
  * @since     5.1.0
+ *
  * @unstable
- *
- * Every visitor class must implement the following methods.
- * As PHP won't allow increasing the typing specificity, we
- * aren't actually adding them here in the abstract class, so that
- * the actual visitor classes can work with much more specific type hints.
- *
  * @method mixed arguments(array $arguments)
  * @method mixed arithmetic(mixed $left, string $operator, mixed $right)
  * @method mixed arrayList(array $elements)

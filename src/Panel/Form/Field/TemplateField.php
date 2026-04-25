@@ -4,6 +4,12 @@ namespace Kirby\Panel\Form\Field;
 
 use Kirby\Form\Field\SelectField;
 
+/**
+ * Panel field override for selecting a page template
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 class TemplateField extends SelectField
 {
 	public function __construct(

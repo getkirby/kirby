@@ -12,12 +12,10 @@ use Kirby\Panel\Ui\Item\PageItem;
 /**
  * Controls the Panel dialog for selecting pages
  *
- * @package   Kirby Panel
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
+ *
  * @unstable
  */
 class PagePickerDialogController extends ModelPickerDialogController

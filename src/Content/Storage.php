@@ -14,12 +14,10 @@ use Kirby\Toolkit\A;
  * handlers because the CMS core relies on the filesystem
  * and cannot fully benefit from this abstraction yet
  *
- * @package   Kirby Content
- * @author    Lukas Bestle <lukas@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     4.0.0
+ *
  * @unstable
  */
 abstract class Storage

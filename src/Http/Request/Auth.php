@@ -8,9 +8,6 @@ use Stringable;
 /**
  * Base class for auth types
  *
- * @package   Kirby Http
- * @author    Lukas Bestle <lukas@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */

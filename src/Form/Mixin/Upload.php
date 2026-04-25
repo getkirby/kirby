@@ -11,6 +11,12 @@ use Kirby\Cms\User;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 
+/**
+ * Provides upload options and file linking functionality
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 trait Upload
 {
 	/**

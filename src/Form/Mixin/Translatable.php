@@ -4,6 +4,12 @@ namespace Kirby\Form\Mixin;
 
 use Kirby\Cms\Language;
 
+/**
+ * Provides the `translate` prop to mark the field as translatable
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 trait Translatable
 {
 	/**

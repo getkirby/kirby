@@ -9,9 +9,6 @@ use SensitiveParameter;
  * Template class for authentication challenges
  * that create and verify one-time auth codes
  *
- * @package   Kirby Cms
- * @author    Lukas Bestle <lukas@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */

@@ -6,6 +6,12 @@ use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Mixin;
 
+/**
+ * Allows editors to fill in a structured set of fields as a single value object
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 class ObjectField extends InputField
 {
 	use Mixin\EmptyState;

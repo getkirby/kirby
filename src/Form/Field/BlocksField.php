@@ -20,6 +20,12 @@ use Kirby\Panel\Controller\Drawer\FieldDrawerController;
 use Kirby\Toolkit\Str;
 use Throwable;
 
+/**
+ * Allows editors to add, arrange, and configure multiple block types in a single field
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 class BlocksField extends InputField
 {
 	use EmptyState;

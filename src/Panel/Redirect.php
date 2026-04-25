@@ -9,13 +9,10 @@ use Throwable;
  * The Redirect exception can be thrown in all Panel
  * routes to send a redirect response. It is
  * primarily used in `Panel::go($location)`
- * @since 3.6.0
  *
- * @package   Kirby Panel
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     3.6.0
  */
 class Redirect extends Exception
 {

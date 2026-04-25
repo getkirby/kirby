@@ -17,9 +17,6 @@ use Kirby\Toolkit\A;
  * on demand and also makes sure to create proper asset URLs
  * depending on dev mode
  *
- * @package   Kirby Panel
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     4.0.0

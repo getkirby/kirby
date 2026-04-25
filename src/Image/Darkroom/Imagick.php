@@ -10,9 +10,6 @@ use Kirby\Image\Focus;
 /**
  * Imagick darkroom driver
  *
- * @package   Kirby Image
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  * @since     5.1.0
