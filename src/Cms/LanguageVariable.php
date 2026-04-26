@@ -48,12 +48,12 @@ class LanguageVariable
 			);
 		}
 
-		$kirby        = App::instance();
-		$language     = $kirby->defaultLanguage();
-		$translations = $language->translations();
+		$kirby     = App::instance();
+		$language  = $kirby->defaultLanguage();
+		$variables = $language->variables()->toArray();
 
 		if ($kirby->translation()->get($key) !== null) {
-			if (isset($translations[$key]) === true) {
+			if (isset($variables[$key]) === true) {
 				throw new DuplicateException(
 					message: 'The variable already exists'
 				);
@@ -64,9 +64,9 @@ class LanguageVariable
 			);
 		}
 
-		$translations[$key] = $value ?? '';
+		$variables[$key] = $value ?? '';
 
-		$language = $language->update(['translations' => $translations]);
+		$language = $language->update(['variables' => $variables]);
 
 		return $language->variable($key);
 	}
@@ -80,11 +80,9 @@ class LanguageVariable
 	{
 		// go through all languages and remove the variable
 		foreach ($this->kirby->languages() as $language) {
-			$variables = $language->translations();
-
-			unset($variables[$this->key]);
-
-			$language->update(['translations' => $variables]);
+			$variables = $language->variables();
+			$variables->remove($this->key);
+			$language->update(['variables' => $variables->toArray()]);
 		}
 
 		return true;
@@ -96,7 +94,7 @@ class LanguageVariable
 	public function exists(): bool
 	{
 		$language = $this->kirby->defaultLanguage();
-		return isset($language->translations()[$this->key]) === true;
+		return $language->variables()->get($this->key) !== null;
 	}
 
 	/**
@@ -130,19 +128,19 @@ class LanguageVariable
 	 */
 	public function update(string|array|null $value = null): static
 	{
-		$translations             = $this->language->translations();
-		$translations[$this->key] = $value ?? '';
+		$variables = $this->language->variables();
+		$variables->set($this->key, $value);
 
-		$language = $this->language->update(['translations' => $translations]);
+		$language = $this->language->update(['variables' => $variables->toArray()]);
 
 		return $language->variable($this->key);
 	}
 
 	/**
-	 * Returns the value if the variable has been translated.
+	 * Returns the value if the variable has been translated
 	 */
 	public function value(): string|array|null
 	{
-		return $this->language->translations()[$this->key] ?? null;
+		return $this->language->variables()->get($this->key);
 	}
 }
