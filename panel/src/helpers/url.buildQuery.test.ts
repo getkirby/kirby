@@ -19,6 +19,15 @@ describe("$helper.url.buildQuery", () => {
 		expect(query.toString()).toStrictEqual("search=Test");
 	});
 
+	it("should skip undefined", () => {
+		const query = url.buildQuery({
+			search: "Test",
+			page: undefined
+		});
+
+		expect(query.toString()).toStrictEqual("search=Test");
+	});
+
 	it("should keep values from origin", () => {
 		const origin = "?page=1";
 
