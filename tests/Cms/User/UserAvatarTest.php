@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(User::class)]
 class UserAvatarTest extends ModelTestCase
 {
-	public const FIXTURES = __DIR__ . '/../../Api/routes/fixtures';
+	public const FIXTURES = __DIR__ . '/../../Api/Routes/fixtures';
 	public const TMP = KIRBY_TMP_DIR . '/Cms.UserAvatar';
 
 	public function setUp(): void
@@ -30,7 +30,7 @@ class UserAvatarTest extends ModelTestCase
 	protected function avatarSource(): string
 	{
 		$source = static::TMP . '/tmp-avatar.jpg';
-		F::copy(static::FIXTURES . '/avatar.jpg', $source);
+		$this->assertTrue(F::copy(static::FIXTURES . '/avatar.jpg', $source, true));
 		return $source;
 	}
 

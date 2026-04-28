@@ -605,7 +605,7 @@ class UserRulesTest extends ModelTestCase
 
 		$user = $this->createStub(User::class);
 
-		UserRules::validAvatar($user, __DIR__ . '/../Api/routes/fixtures/avatar.jpg', 'jpg');
+		UserRules::validAvatar($user, __DIR__ . '/../../Api/Routes/fixtures/avatar.jpg', 'jpg');
 	}
 
 	public function testValidAvatarWithInvalidExtension(): void
