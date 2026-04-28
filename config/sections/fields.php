@@ -17,7 +17,7 @@ return [
 			);
 		},
 		'fields' => function () {
-			return $this->form->fields()->toProps();
+			return $this->form->fields()->toProps(fail: false);
 		}
 	],
 	'methods' => [
