@@ -10,6 +10,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
 use Kirby\Form\Field;
+use Kirby\Form\Field\SectionField;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
@@ -819,7 +820,7 @@ class Blueprint
 	public function section(string $name): Section|null
 	{
 		if (empty($this->sections[$name]) === true) {
-			return null;
+			return $this->sectionFromField($name);
 		}
 
 		if ($this->sections[$name] instanceof Section) {
@@ -834,6 +835,24 @@ class Blueprint
 
 		// create a new section object
 		return $this->sections[$name] = new Section($props['type'], $props);
+	}
+
+	protected function sectionFromField(string $name): Section|null
+	{
+		if ($fieldProps = $this->field($name)) {
+			if ($fieldProps['type'] !== 'section') {
+				return null;
+			}
+
+			unset($fieldProps['type']);
+
+			$field = new SectionField(...$fieldProps);
+			$field->setModel($this->model());
+
+			return $field->section();
+		}
+
+		return null;
 	}
 
 	/**
