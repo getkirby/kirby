@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel\Controller\View;
 
+use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Panel\TestCase;
 use Kirby\Panel\Ui\View;
@@ -52,6 +53,33 @@ class PreviewViewControllerTest extends TestCase
 		$controller = PreviewViewController::factory('site', 'changes');
 		$this->assertInstanceOf(PreviewViewController::class, $controller);
 		$this->assertSame($this->app->site(), $controller->model);
+	}
+
+	public function testFactoryNotAccessible(): void
+	{
+		$this->app = $this->app->clone([
+			'roles' => [
+				[
+					'name'        => 'editor',
+					'permissions' => [
+						'site' => ['access' => false]
+					]
+				]
+			],
+			'users' => [
+				[
+					'id'    => 'editor',
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor',
+				]
+			]
+		]);
+
+		$this->app->impersonate('editor@getkirby.com');
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The site is not accessible');
+		PreviewViewController::factory('site', 'changes');
 	}
 
 	public function testId(): void

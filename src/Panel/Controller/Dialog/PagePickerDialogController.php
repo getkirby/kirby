@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel\Controller\Dialog;
 
+use Kirby\Cms\Find;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
@@ -178,7 +179,7 @@ class PagePickerDialogController extends ModelPickerDialogController
 	public function root(): Page|Site
 	{
 		if ($this->query === null) {
-			return $this->site;
+			return Find::site();
 		}
 
 		$parent = $this->model->query($this->query);
@@ -187,6 +188,6 @@ class PagePickerDialogController extends ModelPickerDialogController
 			$parent = $parent->parent();
 		}
 
-		return $parent ?? $this->site;
+		return $parent ?? Find::site();
 	}
 }

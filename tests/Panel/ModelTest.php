@@ -191,6 +191,8 @@ class ModelTest extends TestCase
 
 	public function testImage(): void
 	{
+		$this->app->impersonate('kirby');
+
 		$panel = $this->panel([
 			'files' => [
 				['filename' => 'test.jpg']
@@ -382,6 +384,8 @@ class ModelTest extends TestCase
 			]
 		]);
 
+		$app->impersonate('kirby');
+
 		$panel = $app->page('test')->panel();
 		$image = $panel->image([]);
 		$this->assertStringEndsWith('test.jpg', $image['url']);
@@ -425,6 +429,7 @@ class ModelTest extends TestCase
 			'id' => null,
 			'link' => '/site',
 			'permissions' => [
+				'access' => false,
 				'changeTitle' => false,
 				'update' => false,
 			],

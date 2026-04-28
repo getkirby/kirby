@@ -204,6 +204,8 @@
 	"error.page.undefined": "La paĝo ne estas trovebla",
 	"error.page.update.permission": "Vi ne rajtas ĝisdatigi \"{slug}\"",
 
+	"error.role.notFound": "The role \"{name}\" cannot be found",
+
 	"error.section.files.max.plural": "Vi devas aldoni maksimume {max} dosierojn al sekcio \"{section}\"",
 	"error.section.files.max.singular": "Vi devas aldoni maksimume unu dosieron al sekcio \"{section}\"",
 	"error.section.files.min.plural": "La sekcio \"{section}\" bezonas almenaŭ {min} dosierojn",
@@ -219,6 +221,7 @@
 
 	"error.site.changeTitle.empty": "La titolo ne rajtas esti malplena",
 	"error.site.changeTitle.permission": "Vi ne rajtas ŝanĝi la titolon de la retejo",
+	"error.site.notAccessible": "The site is not accessible",
 	"error.site.update.permission": "Vi ne rajtas ĝisdatigi la retejon",
 
 	"error.structure.validation": "There's an error on the \"{field}\" field in row {index}",

@@ -9,7 +9,7 @@ use Kirby\Form\Form;
 return [
 	'fields' => [
 		'blueprint'  => fn (File $file) => $file->blueprint(),
-		'content'    => fn (File $file) => Form::for($file)->values(),
+		'content'    => fn (File $file) => Form::for($file)->toFormValues(),
 		'dimensions' => fn (File $file) => $file->dimensions()->toArray(),
 		'dragText'   => fn (File $file) => $file->panel()->dragText(),
 		'exists'     => fn (File $file) => $file->exists(),
@@ -20,9 +20,17 @@ return [
 		'mime'       => fn (File $file) => $file->mime(),
 		'modified'   => fn (File $file) => $file->modified('c'),
 		'name'       => fn (File $file) => $file->name(),
-		'next'       => fn (File $file) => $file->next(),
+		'next'       => function (File $file) {
+			$next = $file->next();
+
+			if ($next === null || $next->isListable() === false) {
+				return null;
+			}
+
+			return $next;
+		},
 		'nextWithTemplate' => function (File $file) {
-			$files = $file->templateSiblings()->sorted();
+			$files = $file->templateSiblings()->sorted()->filter('isListable', true);
 			$index = $files->indexOf($file);
 
 			return $files->nth($index + 1);
@@ -31,15 +39,31 @@ return [
 		'options'    => fn (File $file) => $file->panel()->options(),
 		'panelImage' => fn (File $file) => $file->panel()->image(),
 		'panelUrl'   => fn (File $file) => $file->panel()->url(true),
-		'prev'       => fn (File $file) => $file->prev(),
+		'prev'       => function (File $file) {
+			$prev = $file->prev();
+
+			if ($prev === null || $prev->isListable() === false) {
+				return null;
+			}
+
+			return $prev;
+		},
 		'prevWithTemplate' => function (File $file) {
-			$files = $file->templateSiblings()->sorted();
+			$files = $file->templateSiblings()->sorted()->filter('isListable', true);
 			$index = $files->indexOf($file);
 
 			return $files->nth($index - 1);
 		},
-		'parent'     => fn (File $file) => $file->parent(),
-		'parents'    => fn (File $file) => $file->parents()->flip(),
+		'parent'     => function (File $file) {
+			$parent = $file->parent();
+
+			if ($parent === null || $parent->isListable() === false) {
+				return null;
+			}
+
+			return $parent;
+		},
+		'parents'    => fn (File $file) => $file->parents()->flip()->filter('isListable', true),
 		'size'       => fn (File $file) => $file->size(),
 		'template'   => fn (File $file) => $file->template(),
 		'thumbs'     => function ($file) {

@@ -52,10 +52,58 @@ class PageItemsRequestControllerTest extends TestCase
 			]
 		]);
 
+		$this->app->impersonate('kirby');
+
 		$controller = new PageItemsRequestController();
 		$data       = $controller->load();
 		$this->assertSame('articles', $data['items'][0]['id']);
 		$this->assertNull($data['items'][1]);
 		$this->assertSame('articles/article', $data['items'][2]['id']);
+	}
+
+	public function testLoadNotListable(): void
+	{
+		$this->app = $this->app->clone([
+			'users' => [
+				[
+					'id'    => 'editor',
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor'
+				]
+			],
+			'blueprints' => [
+				'users/editor'  => ['name' => 'editor'],
+				'pages/article' => [
+					'options' => ['list' => false]
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'articles',
+						'content'  => ['uuid' => 'articles'],
+						'children' => [
+							[
+								'slug'     => 'article',
+								'template' => 'article',
+								'content'  => ['uuid' => 'article'],
+							]
+						]
+					]
+				]
+			],
+			'request' => [
+				'query' => [
+					'items' => 'page://articles,page://article'
+				],
+			]
+		]);
+
+		$this->app->impersonate('editor@getkirby.com');
+
+		$controller = new PageItemsRequestController();
+		$data       = $controller->load();
+		$this->assertSame('articles', $data['items'][0]['id']);
+		$this->assertNull($data['items'][1]);
 	}
 }

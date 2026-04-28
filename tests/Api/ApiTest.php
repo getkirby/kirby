@@ -5,11 +5,13 @@ namespace Kirby\Api;
 use Exception;
 use Kirby\Cms\App;
 use Kirby\Cms\Auth;
+use Kirby\Cms\Blueprint;
 use Kirby\Cms\Response;
 use Kirby\Cms\User;
 use Kirby\Exception\AuthException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Response as HttpResponse;
 use Kirby\TestCase;
@@ -82,6 +84,7 @@ class ApiTest extends TestCase
 
 	protected function tearDown(): void
 	{
+		Blueprint::$loaded = [];
 		setlocale(LC_ALL, 'C');
 		Dir::remove(static::TMP);
 	}
@@ -673,9 +676,16 @@ class ApiTest extends TestCase
 				'files' => [
 					['filename' => 'protected.jpg', 'template' => 'protected']
 				]
+			],
+			'users' => [
+				[
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin'
+				]
 			]
 		]);
 
+		$app->impersonate('admin@getkirby.com');
 		$this->api->file('site', 'protected.jpg');
 	}
 
@@ -1308,6 +1318,38 @@ class ApiTest extends TestCase
 		$app->api()->sectionApi($page, 'nonexists');
 	}
 
+	public function testSite(): void
+	{
+		$this->assertSame($this->app->site(), $this->api->site());
+	}
+
+	public function testSiteNotAccessible(): void
+	{
+		$app = $this->app->clone([
+			'roles' => [
+				[
+					'name'        => 'editor',
+					'permissions' => [
+						'site' => ['access' => false],
+					],
+				],
+			],
+			'users' => [
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor'
+				]
+			]
+		]);
+
+		$app->impersonate('editor@getkirby.com');
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The site is not accessible');
+
+		$app->api()->site();
+	}
+
 	public function testUpload(): void
 	{
 		$api = new Api([
@@ -1379,9 +1421,11 @@ class ApiTest extends TestCase
 			'users' => [
 				[
 					'email' => 'current@getkirby.com',
+					'role'  => 'admin',
 				],
 				[
 					'email' => 'test@getkirby.com',
+					'role'  => 'admin',
 				]
 			],
 		]);
@@ -1397,8 +1441,88 @@ class ApiTest extends TestCase
 		$this->api->user('nope@getkirby.com');
 	}
 
+	public function testUserNotAccessible(): void
+	{
+		$app = $this->app->clone([
+			'blueprints' => [
+				'users/admin' => [
+					'name'    => 'admin',
+					'options' => ['access' => ['*' => false, 'admin' => true]]
+				],
+				'users/editor' => [
+					'name' => 'editor',
+				],
+			],
+			'users' => [
+				[
+					'email' => 'current@getkirby.com',
+					'role'  => 'editor'
+				],
+				[
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin'
+				],
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor'
+				]
+			],
+		]);
+
+		$app->impersonate('current@getkirby.com');
+		$api = $app->api();
+
+		$this->assertSame('current@getkirby.com', $api->user()->email());
+		$this->assertSame('editor@getkirby.com', $api->user('editor@getkirby.com')->email());
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The user "admin@getkirby.com" cannot be found');
+		$this->api->user('admin@getkirby.com');
+	}
+
 	public function testUsers(): void
 	{
-		$this->assertSame($this->app->users(), $this->api->users());
+		$this->assertSame(
+			$this->app->users()->pluck('email'),
+			$this->api->users()->pluck('email')
+		);
+	}
+
+	public function testValidateAccess(): void
+	{
+		// kirby (superuser) always has access to all areas
+		$this->api->validateAreaAccess('users');
+		$this->expectNotToPerformAssertions();
+	}
+
+	public function testValidateAccessWithoutPermission(): void
+	{
+		$app = $this->app->clone([
+			'options' => [
+				'api' => [
+					'allowImpersonation' => true,
+				],
+			],
+			'roles' => [
+				[
+					'name'        => 'editor',
+					'permissions' => [
+						'access' => ['users' => false],
+					],
+				],
+			],
+			'users' => [
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor'
+				]
+			]
+		]);
+
+		$app->impersonate('editor@getkirby.com');
+
+		$this->expectException(PermissionException::class);
+
+		$app->api()->validateAreaAccess('users');
 	}
 }

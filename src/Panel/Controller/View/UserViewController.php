@@ -5,6 +5,7 @@ namespace Kirby\Panel\Controller\View;
 use Kirby\Cms\Find;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\User;
+use Kirby\Cms\Users;
 use Kirby\Panel\Model;
 use Kirby\Panel\Ui\Button\ViewButtons;
 
@@ -29,6 +30,7 @@ class UserViewController extends ModelViewController
 	 * @var \Kirby\Panel\User
 	 */
 	protected Model $panel;
+	protected Users $siblings;
 
 	public function __construct(
 		User $model
@@ -55,19 +57,25 @@ class UserViewController extends ModelViewController
 		);
 	}
 
-	public static function factory(string $id): static
+	public static function factory(string|null $id = null): static
 	{
 		return new static(model: Find::user($id));
 	}
 
 	public function next(): array|null
 	{
-		return static::prevNext($this->model->next(), 'username');
+		return static::prevNext(
+			$this->model->next($this->siblings()),
+			'username'
+		);
 	}
 
 	public function prev(): array|null
 	{
-		return static::prevNext($this->model->prev(), 'username');
+		return static::prevNext(
+			$this->model->prev($this->siblings()),
+			'username'
+		);
 	}
 
 	public function props(): array
@@ -89,6 +97,13 @@ class UserViewController extends ModelViewController
 			'search'            => 'users',
 			'username'          => $this->model->username(),
 		];
+	}
+
+	protected function siblings(): Users
+	{
+		return $this->siblings ??= $this->model
+			->siblings()
+			->filter('isListable', true);
 	}
 
 	public function title(): string

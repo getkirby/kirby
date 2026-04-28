@@ -64,10 +64,12 @@ class Permissions
 			'update'         => true
 		],
 		'site' => [
+			'access'      => true,
 			'changeTitle' => true,
 			'update'      => true
 		],
 		'users' => [
+			'access'         => true,
 			'changeEmail'    => true,
 			'changeLanguage' => true,
 			'changeName'     => true,
@@ -75,15 +77,18 @@ class Permissions
 			'changeRole'     => true,
 			'create'         => true,
 			'delete'         => true,
+			'list'           => true,
 			'update'         => true
 		],
 		'user' => [
+			'access'         => true,
 			'changeEmail'    => true,
 			'changeLanguage' => true,
 			'changeName'     => true,
 			'changePassword' => true,
 			'changeRole'     => true,
 			'delete'         => true,
+			'list'           => true,
 			'update'         => true
 		]
 	];

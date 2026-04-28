@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Controller\Dialog;
 
 use Kirby\Blueprint\Blueprint;
+use Kirby\Cms\Find;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
@@ -34,7 +35,7 @@ abstract class ModelCreateDialogController extends DialogController
 	) {
 		parent::__construct();
 
-		$this->parent = $parent ?? $this->site;
+		$this->parent = $parent ?? Find::site();
 	}
 
 	/**

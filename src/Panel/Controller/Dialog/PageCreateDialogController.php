@@ -163,7 +163,7 @@ class PageCreateDialogController extends ModelCreateDialogController
 		$kirby   = App::instance();
 		$request = $kirby->request();
 		$view    = $request->get('view');
-		$parent  = $view ? Find::parent($view) : $kirby->site();
+		$parent  = $view ? Find::parent($view) : Find::site();
 		$section = $request->get('section');
 
 		return new static(

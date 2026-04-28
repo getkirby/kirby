@@ -2,7 +2,6 @@
 
 namespace Kirby\Panel\Controller\Dialog;
 
-use Kirby\Cms\App;
 use Kirby\Cms\Find;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
@@ -25,7 +24,7 @@ class UserTotpDisableDialogController extends UserDialogController
 {
 	public static function factory(string|null $id = null): static
 	{
-		return new static($id ? Find::user($id) : App::instance()->user());
+		return new static(Find::user($id));
 	}
 
 	public function load(): Dialog
