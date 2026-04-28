@@ -5,6 +5,7 @@ namespace Kirby\Session;
 use Kirby\Cms\App;
 use Kirby\Http\Cookie;
 use Kirby\TestCase;
+use Kirby\Tests\MockTime;
 use PHPUnit\Framework\Attributes\CoversClass;
 use ReflectionClass;
 
