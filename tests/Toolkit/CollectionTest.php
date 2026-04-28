@@ -166,6 +166,7 @@ class CollectionTest extends TestCase
 
 	public function testFirst(): void
 	{
+		$this->assertNull((new Collection())->first());
 		$this->assertSame('My first element', $this->collection->first());
 	}
 
@@ -566,6 +567,7 @@ class CollectionTest extends TestCase
 
 	public function testLast(): void
 	{
+		$this->assertNull((new Collection())->last());
 		$this->assertSame('My third element', $this->collection->last());
 	}
 
