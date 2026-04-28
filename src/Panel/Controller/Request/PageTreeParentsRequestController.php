@@ -30,7 +30,7 @@ class PageTreeParentsRequestController extends RequestController
 
 	public function load(): array
 	{
-		$parents   = $this->page?->parents()->flip();
+		$parents   = $this->page?->parents()->flip()->filter('isListable', true);
 		$parents   = $parents?->values(
 			fn ($parent) => $parent->uuid()?->toString() ?? $parent->id()
 		);
