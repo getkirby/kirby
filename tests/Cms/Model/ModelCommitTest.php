@@ -293,6 +293,67 @@ class ModelCommitTest extends TestCase
 		], $args);
 	}
 
+	public function testAfterHookArgumentsForUserAvatarCreate(): void
+	{
+		$user = new User([
+			'email' => 'test@test.com'
+		]);
+
+		$commit = new ModelCommit(
+			model: $user,
+			action: 'createAvatar'
+		);
+
+		$args = $commit->afterHookArguments(
+			state: $user
+		);
+
+		$this->assertSame([
+			'user' => $user
+		], $args);
+	}
+
+	public function testAfterHookArgumentsForUserAvatarDelete(): void
+	{
+		$user = new User([
+			'email' => 'test@test.com'
+		]);
+
+		$commit = new ModelCommit(
+			model: $user,
+			action: 'deleteAvatar'
+		);
+
+		$args = $commit->afterHookArguments(
+			state: true
+		);
+
+		$this->assertSame([
+			'status' => true,
+			'user'   => $user
+		], $args);
+	}
+
+	public function testAfterHookArgumentsForUserAvatarReplace(): void
+	{
+		$user = new User([
+			'email' => 'test@test.com'
+		]);
+
+		$commit = new ModelCommit(
+			model: $user,
+			action: 'replaceAvatar'
+		);
+
+		$args = $commit->afterHookArguments(
+			state: $user
+		);
+
+		$this->assertSame([
+			'user' => $user
+		], $args);
+	}
+
 	public function testAfterHookArgumentsForUserCreate(): void
 	{
 		$user = new User([
