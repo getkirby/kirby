@@ -24,20 +24,20 @@ class PageTreeParentsRequestController extends RequestController
 	public function __construct()
 	{
 		parent::__construct();
-		$this->page = $this->site->page($this->request->get('page'));
+		$this->page = $this->kirby->page($this->request->get('page'));
 		$this->root = $this->request->get('root') === 'true';
 	}
 
 	public function load(): array
 	{
-		$parents   = $this->page?->parents()->flip();
+		$parents   = $this->page?->parents()->flip()->filter('isListable', true);
 		$parents   = $parents?->values(
 			fn ($parent) => $parent->uuid()?->toString() ?? $parent->id()
 		);
 		$parents ??= [];
 
 		if ($this->root === true) {
-			array_unshift($parents, $this->site->uuid()?->toString() ?? '/');
+			array_unshift($parents, $this->kirby->site()->uuid()?->toString() ?? '/');
 		}
 
 		return [

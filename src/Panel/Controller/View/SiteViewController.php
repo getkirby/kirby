@@ -2,7 +2,7 @@
 
 namespace Kirby\Panel\Controller\View;
 
-use Kirby\Cms\App;
+use Kirby\Cms\Find;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Site;
 use Kirby\Panel\Model;
@@ -47,7 +47,7 @@ class SiteViewController extends ModelViewController
 
 	public static function factory(): static
 	{
-		return new static(model: App::instance()->site());
+		return new static(model: Find::site());
 	}
 
 	public function props(): array

@@ -204,6 +204,8 @@
 	"error.page.undefined": "Stranica ne može biti pronađena",
 	"error.page.update.permission": "Nije Vam dozvoljeno da ažurirate \"{slug}\"",
 
+	"error.role.notFound": "The role \"{name}\" cannot be found",
+
 	"error.section.files.max.plural": "Ne možete dodati više od {max} fajlova u \"{section}\" sekciju",
 	"error.section.files.max.singular": "Ne možete dodati više od jednog fajla u \"{section}\" sekciju",
 	"error.section.files.min.plural": "\"{section}\" sekcija zahteva najmanje {min} fajlova",
@@ -219,6 +221,7 @@
 
 	"error.site.changeTitle.empty": "Naslov ne može biti prazan",
 	"error.site.changeTitle.permission": "Nije Vam dozvoljeno da promenite naziv sajta",
+	"error.site.notAccessible": "The site is not accessible",
 	"error.site.update.permission": "Nije Vam dozvoljeno da ažurirate sajt",
 
 	"error.structure.validation": "Postoji greška u redu \"{field}\" na ovom polju {index}",

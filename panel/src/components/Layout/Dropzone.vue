@@ -52,8 +52,6 @@ export default {
 				return this.reset();
 			}
 
-			this.$events.emit("dropzone.drop");
-
 			this.files = $event.dataTransfer.files;
 			/**
 			 * The drop event is triggered when files are being dropped into the dropzone.
@@ -61,6 +59,7 @@ export default {
 			 * @property {array} files The event receives the files list as argument, which can then be used to start an upload for example.
 			 */
 			this.$emit("drop", this.files);
+			this.$events.emit("dropzone.drop");
 			this.reset();
 		},
 		onEnter($event) {

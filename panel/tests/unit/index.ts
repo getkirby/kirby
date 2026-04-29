@@ -1,9 +1,10 @@
 export * from "vitest";
 import { it as vitestIt, expect } from "vitest";
-import { mount, type VueWrapper } from "@vue/test-utils";
+import { mount, type VueWrapper, type DOMWrapper } from "@vue/test-utils";
 import type { Component } from "vue";
 
-type MountCallback = (attrs?: Record<string, unknown>) => VueWrapper;
+type Wrapper = VueWrapper | DOMWrapper<Element>;
+type MountCallback = (attrs?: Record<string, unknown>) => Wrapper;
 type Mountable = Component | MountCallback;
 
 /**
@@ -13,7 +14,7 @@ type Mountable = Component | MountCallback;
 function ensureMount(
 	Component: Mountable,
 	attrs: Record<string, unknown> = {}
-): VueWrapper {
+): Wrapper {
 	if (typeof Component === "function") {
 		return (Component as MountCallback)(attrs);
 	}
@@ -30,7 +31,7 @@ export const it = Object.assign(vitestIt, {
 	},
 	acceptsStyle(Component: Mountable) {
 		vitestIt("accepts a custom style", () => {
-			const wrapper = ensureMount(Component, { style: "--foo: 1" });
+			const wrapper = ensureMount(Component, { style: { "--foo:": "bar" } });
 			expect(wrapper.attributes("style")).toContain("--foo");
 		});
 	},
@@ -40,11 +41,17 @@ export const it = Object.assign(vitestIt, {
 			expect(wrapper.attributes("data-foo")).toBeUndefined();
 		});
 	},
-	rendersAs(Component: Mountable, tag: string, className: string) {
-		vitestIt(`renders a <${tag}> with class ${className}`, () => {
-			const wrapper = ensureMount(Component);
-			expect(wrapper.element.tagName).toBe(tag);
-			expect(wrapper.classes()).toContain(className);
-		});
+	rendersAs(Component: Mountable, tag: string, className?: string) {
+		vitestIt(
+			`renders a <${tag}>${className ? ` with class ${className}` : ""}`,
+			() => {
+				const wrapper = ensureMount(Component);
+				expect(wrapper.element.tagName).toBe(tag);
+
+				if (className) {
+					expect(wrapper.classes()).toContain(className);
+				}
+			}
+		);
 	}
 });

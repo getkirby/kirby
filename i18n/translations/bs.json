@@ -204,6 +204,8 @@
 	"error.page.undefined": "Stranica nije pronađena",
 	"error.page.update.permission": "Nemate dozvolu da uredite \"{slug}\"",
 
+	"error.role.notFound": "The role \"{name}\" cannot be found",
+
 	"error.section.files.max.plural": "Nije moguće dodati više od {max} datoteka u \"{section}\" sekciju",
 	"error.section.files.max.singular": "Nije moguće dodati više od jedne datoteke u \"{section}\" sekciju",
 	"error.section.files.min.plural": "Sekcija \"{section}\" zahtjeva najmanje {min} datoteka",
@@ -219,6 +221,7 @@
 
 	"error.site.changeTitle.empty": "The title must not be empty",
 	"error.site.changeTitle.permission": "Nemate dozvolu da promijenite naslov stranice",
+	"error.site.notAccessible": "The site is not accessible",
 	"error.site.update.permission": "Nemate dozvolu da uredite stranicu",
 
 	"error.structure.validation": "Postoji greška na \"{field}\" polju u redu {index}",

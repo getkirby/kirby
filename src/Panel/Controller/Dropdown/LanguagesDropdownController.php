@@ -2,7 +2,6 @@
 
 namespace Kirby\Panel\Controller\Dropdown;
 
-use Kirby\Cms\App;
 use Kirby\Cms\Find;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
@@ -43,7 +42,7 @@ class LanguagesDropdownController extends DropdownController
 			return new static(model: Find::parent($parent));
 		}
 
-		return new static(model: App::instance()->site());
+		return new static(model: Find::site());
 	}
 
 	/**

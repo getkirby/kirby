@@ -48,10 +48,51 @@ class UserItemsRequestControllerTest extends TestCase
 			]
 		]);
 
+		$this->app->impersonate('kirby');
+
 		$controller = new UserItemsRequestController();
 		$data       = $controller->load();
 		$this->assertSame('homer@getkirby.com', $data['items'][0]['text']);
 		$this->assertNull($data['items'][1]);
 		$this->assertSame('bart@getkirby.com', $data['items'][2]['text']);
+	}
+
+	public function testLoadNotListable(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'users/restricted' => [
+					'name'    => 'restricted',
+					'options' => ['list' => false]
+				]
+			],
+			'users' => [
+				[
+					'id'    => 'admin',
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin'
+				],
+				[
+					'id'    => 'homer',
+					'email' => 'homer@getkirby.com',
+					'role'  => 'restricted'
+				],
+				[
+					'id'    => 'bart',
+					'email' => 'bart@getkirby.com'
+				]
+			],
+			'request' => [
+				'query' => [
+					'items' => 'user://homer,user://bart'
+				],
+			]
+		]);
+		$this->app->impersonate('admin@getkirby.com');
+
+		$controller = new UserItemsRequestController();
+		$data       = $controller->load();
+		$this->assertNull($data['items'][0]);
+		$this->assertSame('bart@getkirby.com', $data['items'][1]['text']);
 	}
 }

@@ -204,6 +204,8 @@
 	"error.page.undefined": "\u0421\u0442\u0440\u0430\u043d\u0438\u0446\u0430\u0442\u0430 \u043d\u0435 \u043c\u043e\u0436\u0435 \u0434\u0430 \u0431\u044a\u0434\u0435 \u043d\u0430\u043c\u0435\u0440\u0435\u043d\u0430",
 	"error.page.update.permission": "Не можете да обновите \"{slug}\"",
 
+	"error.role.notFound": "The role \"{name}\" cannot be found",
+
 	"error.section.files.max.plural": "Не можете да добавяте повече от {max} файлa в секция \"{section}\"",
 	"error.section.files.max.singular": "Не можете да добавяте повече от един файл в секция \"{section}\"",
 	"error.section.files.min.plural": "The \"{section}\" section requires at least {min} files",
@@ -219,6 +221,7 @@
 
 	"error.site.changeTitle.empty": "Заглавието е задължително",
 	"error.site.changeTitle.permission": "Не може да променяте заглавието на сайта",
+	"error.site.notAccessible": "The site is not accessible",
 	"error.site.update.permission": "Нямате права за да обновите сайта",
 
 	"error.structure.validation": "There's an error on the \"{field}\" field in row {index}",

@@ -204,6 +204,8 @@
 	"error.page.undefined": "La p\u00e0gina no s'ha trobat",
 	"error.page.update.permission": "No tens permís per actualitzar \"{slug}\"",
 
+	"error.role.notFound": "The role \"{name}\" cannot be found",
+
 	"error.section.files.max.plural": "No has d'afegir més de {max} fitxers a la secció \"{section}\"",
 	"error.section.files.max.singular": "No podeu afegir més d'un fitxer a la secció \"{section}\"",
 	"error.section.files.min.plural": "La secció \"{section}\" requereix almenys {min} fitxer",
@@ -219,6 +221,7 @@
 
 	"error.site.changeTitle.empty": "El títol no pot estar buit",
 	"error.site.changeTitle.permission": "No tens permís per canviar el títol del lloc web",
+	"error.site.notAccessible": "The site is not accessible",
 	"error.site.update.permission": "No tens permís per actualitzar el lloc web",
 
 	"error.structure.validation": "There's an error on the \"{field}\" field in row {index}",

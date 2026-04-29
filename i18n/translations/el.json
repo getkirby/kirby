@@ -204,6 +204,8 @@
 	"error.page.undefined": "Δεν ήταν δυνατή η εύρεση της σελίδας",
 	"error.page.update.permission": "Δεν επιτρέπεται η ενημέρωση της σελίδας \"{slug}\"",
 
+	"error.role.notFound": "The role \"{name}\" cannot be found",
+
 	"error.section.files.max.plural": "Δεν πρέπει να προσθέσετε περισσότερα από {max} αρχεία στην ενότητα \"{section}\"",
 	"error.section.files.max.singular": "Δεν πρέπει να προσθέσετε περισσότερα από ένα αρχεία στην ενότητα \"{section}\"",
 	"error.section.files.min.plural": "The \"{section}\" section requires at least {min} files",
@@ -219,6 +221,7 @@
 
 	"error.site.changeTitle.empty": "Ο τίτλος δεν μπορεί να είναι κενός",
 	"error.site.changeTitle.permission": "Δεν επιτρέπεται να αλλάξετε τον τίτλο του ιστότοπου",
+	"error.site.notAccessible": "The site is not accessible",
 	"error.site.update.permission": "Δεν επιτρέπεται η ενημέρωση του ιστότοπου",
 
 	"error.structure.validation": "There's an error on the \"{field}\" field in row {index}",

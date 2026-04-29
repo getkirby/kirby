@@ -23,6 +23,8 @@ class PageCreateDialogControllerTest extends TestCase
 			]
 		]);
 
+		$this->app->impersonate('kirby');
+
 		$controller = new PageCreateDialogController();
 		$fields     = $controller->coreFields();
 
@@ -44,6 +46,8 @@ class PageCreateDialogControllerTest extends TestCase
 				]
 			]
 		]);
+
+		$this->app->impersonate('kirby');
 
 		$controller = new PageCreateDialogController();
 		$fields     = $controller->coreFields();
@@ -71,6 +75,8 @@ class PageCreateDialogControllerTest extends TestCase
 			]
 		]);
 
+		$this->app->impersonate('kirby');
+
 		$controller = new PageCreateDialogController();
 		$fields     = $controller->coreFields();
 
@@ -94,6 +100,8 @@ class PageCreateDialogControllerTest extends TestCase
 				]
 			]
 		]);
+
+		$this->app->impersonate('kirby');
 
 		$controller = new PageCreateDialogController();
 
@@ -205,6 +213,8 @@ class PageCreateDialogControllerTest extends TestCase
 
 	public function testLoad(): void
 	{
+		$this->app->impersonate('kirby');
+
 		$controller = new PageCreateDialogController();
 		$dialog     = $controller->load();
 		$this->assertSame('k-page-create-dialog', $dialog->component);
@@ -353,6 +363,8 @@ class PageCreateDialogControllerTest extends TestCase
 			]
 		]);
 
+		$this->app->impersonate('kirby');
+
 		$controller = new PageCreateDialogController();
 		$model      = $controller->model();
 
@@ -392,6 +404,8 @@ class PageCreateDialogControllerTest extends TestCase
 			]
 		]);
 
+		$this->app->impersonate('kirby');
+
 		$controller = new PageCreateDialogController();
 		$model      = $controller->model();
 
@@ -410,6 +424,8 @@ class PageCreateDialogControllerTest extends TestCase
 			]
 		]);
 
+		$this->app->impersonate('kirby');
+
 		$controller = new PageCreateDialogController();
 		$model      = $controller->model();
 		$this->assertSame('__temp__', $model->slug());
@@ -425,6 +441,8 @@ class PageCreateDialogControllerTest extends TestCase
 			]
 		]);
 
+		$this->app->impersonate('kirby');
+
 		$controller = new PageCreateDialogController();
 		$model      = $controller->model();
 		$this->assertSame('__temp__', $model->slug());
@@ -439,6 +457,8 @@ class PageCreateDialogControllerTest extends TestCase
 				]
 			]
 		]);
+
+		$this->app->impersonate('kirby');
 
 		$controller = new PageCreateDialogController();
 		$model      = $controller->model();
@@ -462,6 +482,8 @@ class PageCreateDialogControllerTest extends TestCase
 				]
 			]
 		]);
+
+		$this->app->impersonate('kirby');
 
 		$controller = new PageCreateDialogController();
 		$input      = $controller->resolveFieldTemplates([
@@ -507,6 +529,8 @@ class PageCreateDialogControllerTest extends TestCase
 				]
 			]
 		]);
+
+		$this->app->impersonate('kirby');
 
 		$controller = new PageCreateDialogController();
 		$input      = $controller->sanitize([
@@ -867,6 +891,8 @@ class PageCreateDialogControllerTest extends TestCase
 			]
 		]);
 
+		$this->app->impersonate('kirby');
+
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionCode('error.page.changeTitle.empty');
 
@@ -883,6 +909,9 @@ class PageCreateDialogControllerTest extends TestCase
 				]
 			]
 		]);
+
+		$this->app->impersonate('kirby');
+
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionCode('error.page.slug.invalid');
 
@@ -916,6 +945,8 @@ class PageCreateDialogControllerTest extends TestCase
 			]
 		]);
 
+		$this->app->impersonate('kirby');
+
 		$controller = new PageCreateDialogController();
 		$controller->validate([
 			'slug'    => 'foo',
@@ -942,6 +973,8 @@ class PageCreateDialogControllerTest extends TestCase
 				]
 			]
 		]);
+
+		$this->app->impersonate('kirby');
 
 		$controller = new PageCreateDialogController();
 		$valid      = $controller->validate([
@@ -975,6 +1008,8 @@ class PageCreateDialogControllerTest extends TestCase
 				]
 			]
 		]);
+
+		$this->app->impersonate('kirby');
 
 		$controller = new PageCreateDialogController();
 		$value      = $controller->value();

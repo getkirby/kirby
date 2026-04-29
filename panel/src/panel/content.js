@@ -1,5 +1,6 @@
-import { isObject, length } from "@/helpers/object";
 import { reactive } from "vue";
+import { isAbortError } from "@/helpers/error";
+import { isObject, length } from "@/helpers/object";
 import throttle from "@/helpers/throttle";
 
 /**
@@ -298,7 +299,7 @@ export default (panel) => {
 				this.emit("save", { values }, env);
 			} catch (error) {
 				// handle aborted requests silently
-				if (error.name === "AbortError") {
+				if (isAbortError(error) === true) {
 					return;
 				}
 

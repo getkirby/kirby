@@ -1,9 +1,10 @@
+import { reactive } from "vue";
 import Activation from "./activation";
 import Api from "@/api/index.js";
 import Content from "./content.js";
-import Dialog from "./dialog.js";
+import Dialog from "./dialog";
 import Drag from "./drag";
-import Drawer from "./drawer.js";
+import Drawer from "./drawer";
 import Dropdown from "./dropdown.js";
 import Events from "./events";
 import Language from "./language";
@@ -15,14 +16,14 @@ import Search from "./search";
 import System from "./system";
 import Theme from "./theme";
 import Translation from "./translation";
-import { buildUrl, isUrl } from "@/helpers/url";
-import { reactive } from "vue";
-import { redirect, request } from "./request";
 import Upload from "./upload";
 import User from "./user";
 import View from "./view";
+import { redirect, request } from "./request";
+import { isAbortError } from "@/helpers/error";
 import { isObject, length } from "@/helpers/object";
 import { isEmpty } from "@/helpers/string";
+import { buildUrl, isUrl } from "@/helpers/url";
 import OfflineError from "@/errors/OfflineError";
 import RedirectError from "@/errors/RedirectError";
 
@@ -38,7 +39,7 @@ export const globals = {
 	multilang: false,
 	permissions: {},
 	searches: {},
-	urls: {},
+	urls: {}
 };
 
 /**
@@ -60,7 +61,7 @@ export const states = [
 	"notification",
 	"system",
 	"translation",
-	"user",
+	"user"
 ];
 
 /**
@@ -190,7 +191,7 @@ export default {
 	 * @param {Boolean} openNotification
 	 */
 	error(error, openNotification = true) {
-		if (error.name === "AbortError") {
+		if (isAbortError(error) === true) {
 			return;
 		}
 
@@ -233,7 +234,7 @@ export default {
 	async get(url, options = {}) {
 		const { response } = await this.request(url, {
 			method: "GET",
-			...options,
+			...options
 		});
 
 		return response?.json ?? {};
@@ -315,7 +316,7 @@ export default {
 		const { response } = await this.request(url, {
 			method: "POST",
 			body: data,
-			...options,
+			...options
 		});
 
 		return response.json;
@@ -337,7 +338,7 @@ export default {
 		return request(url, {
 			referrer: this.view.path,
 			csrf: this.system.csrf,
-			...options,
+			...options
 		});
 	},
 
@@ -491,5 +492,5 @@ export default {
 	 */
 	url(url = "", query = {}, origin) {
 		return buildUrl(url, query, origin);
-	},
+	}
 };

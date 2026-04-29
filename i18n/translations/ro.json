@@ -204,6 +204,8 @@
 	"error.page.undefined": "Pagina nu a fost găsită",
 	"error.page.update.permission": "Nu ai voie să actualizezi \"{slug}\"",
 
+	"error.role.notFound": "The role \"{name}\" cannot be found",
+
 	"error.section.files.max.plural": "Nu poți avea mai mult de {max} fișiere în secțiunea \"{section}\"",
 	"error.section.files.max.singular": "Nu poți avea mai mult de un fișier în secțiunea \"{section}\"",
 	"error.section.files.min.plural": "Secțiunea \"{section}\" are nevoie de cel puțin {min} fișiere",
@@ -219,6 +221,7 @@
 
 	"error.site.changeTitle.empty": "Titlul nu poate să rămână gol",
 	"error.site.changeTitle.permission": "Nu ai voie să schimbi titlul site-ului",
+	"error.site.notAccessible": "The site is not accessible",
 	"error.site.update.permission": "Nu ai voie să actualizezi site-ul",
 
 	"error.structure.validation": "Există o eroare la câmpul \"{field}\" pe rândul {index}",

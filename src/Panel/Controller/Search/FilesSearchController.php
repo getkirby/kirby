@@ -27,7 +27,8 @@ class FilesSearchController extends ModelsSearchController
 
 	public function models(): Files
 	{
-		$files = $this->kirby->site()
+		$files = $this->kirby
+			->site()
 			->index(true)
 			->filter('isListable', true)
 			->files();
@@ -36,7 +37,9 @@ class FilesSearchController extends ModelsSearchController
 		$files = $files->add($this->kirby->site()->files());
 
 		// filter and search among those files
-		$files = $files->filter('isListable', true)->search($this->query);
+		$files = $files
+			->filter('isListable', true)
+			->search($this->query);
 
 		return $files;
 	}

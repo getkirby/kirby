@@ -72,7 +72,7 @@ class PageTreeRequestController extends RequestController
 	{
 		if ($this->parent === null) {
 			return [
-				$this->entry($this->site)
+				$this->entry(Find::site())
 			];
 		}
 

@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Controller\Dialog;
 
 use Kirby\Cms\Page;
+use Kirby\Exception\NotFoundException;
 use Kirby\Panel\TestCase;
 use Kirby\Panel\Ui\Dialog\FormDialog;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -93,7 +94,7 @@ class PageMoveDialogControllerTest extends TestCase
 		$this->assertSame('/', $controller->parent());
 	}
 
-	public function testSubmit(): void
+	public function testSubmitToPage(): void
 	{
 		$parentA = Page::create([
 			'slug'     => 'parent-a',
@@ -123,5 +124,67 @@ class PageMoveDialogControllerTest extends TestCase
 		$controller = new PageMoveDialogController($child);
 		$response   = $controller->submit();
 		$this->assertSame('page.move', $response['event']);
+	}
+
+	public function testSubmitToSite(): void
+	{
+		$parent = Page::create([
+			'slug'     => 'parent',
+			'template' => 'test'
+		]);
+
+		$child = Page::create([
+			'parent' => $parent,
+			'slug'   => 'child'
+		]);
+
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'parent' => 'site://'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PageMoveDialogController($child);
+		$response   = $controller->submit();
+		$this->assertSame('page.move', $response['event']);
+	}
+
+	public function testSubmitToSiteNotAccessible(): void
+	{
+		$this->app = $this->app->clone([
+			'roles' => [
+				[
+					'name'        => 'editor',
+					'permissions' => [
+						'site' => ['access' => false]
+					]
+				]
+			],
+			'users' => [
+				[
+					'id'    => 'editor',
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor',
+				]
+			],
+			'request' => [
+				'query' => [
+					'parent' => '/'
+				]
+			]
+		]);
+
+		$this->app->impersonate('editor@getkirby.com');
+
+		$page       = $this->app->page('a/test');
+		$controller = new PageMoveDialogController($page);
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The site is not accessible');
+		$controller->submit();
 	}
 }

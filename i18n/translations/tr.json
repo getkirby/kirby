@@ -204,6 +204,8 @@
 	"error.page.undefined": "Sayfa bulunamad\u0131",
 	"error.page.update.permission": "\"{slug}\" güncellemesine izin verilmiyor",
 
+	"error.role.notFound": "The role \"{name}\" cannot be found",
+
 	"error.section.files.max.plural": "\"{section}\" bölümüne {max} dosyadan daha fazlasını eklememelisiniz",
 	"error.section.files.max.singular": "\"{section}\" bölümüne birden fazla dosya eklememelisiniz",
 	"error.section.files.min.plural": "\"{section}\" bölümü en az {min} dosya gerektiriyor",
@@ -219,6 +221,7 @@
 
 	"error.site.changeTitle.empty": "Başlık boş bırakılamaz",
 	"error.site.changeTitle.permission": "Sitenin başlığını değiştiremezsin",
+	"error.site.notAccessible": "The site is not accessible",
 	"error.site.update.permission": "Siteyi güncellemenize izin verilmiyor",
 
 	"error.structure.validation": "{index} satırındaki \"{field}\" alanında bir hata var",

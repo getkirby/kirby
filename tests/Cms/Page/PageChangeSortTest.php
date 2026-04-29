@@ -59,42 +59,30 @@ class PageChangeSortTest extends ModelTestCase
 
 	public function testChangeSortDateBased(): void
 	{
-		Page::create([
-			'slug' => 'a',
-			'num'  => 1,
-		]);
-
-		Page::create([
-			'slug' => 'b',
-			'num'  => 2,
-		]);
-
-		Page::create([
-			'slug' => 'c',
-			'num'  => 20180104,
-			'blueprint' => [
-				'title' => 'DateBased',
-				'name'  => 'datebased',
-				'num'   => 'date'
-			],
-			'content' => [
-				'date' => '2018-01-04'
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/datebased' => ['title' => 'DateBased', 'num' => 'date'],
+				'pages/zerobased' => ['title' => 'ZeroBased', 'num' => 'zero'],
 			]
 		]);
+		$this->app->impersonate('kirby');
+
+		Page::create(['slug' => 'a', 'num' => 1]);
+		Page::create(['slug' => 'b', 'num' => 2]);
 
 		Page::create([
-			'slug' => 'd',
-			'num'  => 4,
+			'slug'     => 'c',
+			'num'      => 20180104,
+			'template' => 'datebased',
+			'content'  => ['date' => '2018-01-04']
 		]);
 
+		Page::create(['slug' => 'd', 'num' => 4]);
+
 		Page::create([
-			'slug' => 'e',
-			'num'  => 0,
-			'blueprint' => [
-				'title' => 'ZeroBased',
-				'name'  => 'zerobased',
-				'num'   => 'zero'
-			],
+			'slug'     => 'e',
+			'num'      => 0,
+			'template' => 'zerobased',
 		]);
 
 		$site = $this->site();
@@ -151,5 +139,33 @@ class PageChangeSortTest extends ModelTestCase
 		$this->assertDirectoryExists(static::TMP . '/content/3_b');
 		$this->assertDirectoryExists(static::TMP . '/content/2_c');
 		$this->assertDirectoryExists(static::TMP . '/content/1_d');
+	}
+
+	public function testFreshPageRemainsWritableAfterChangeSort(): void
+	{
+		Page::create([
+			'slug' => 'a',
+			'num'  => 1,
+		]);
+
+		Page::create([
+			'slug' => 'b',
+			'num'  => 2,
+		]);
+
+		Page::create([
+			'slug' => 'c',
+			'num'  => 3,
+		]);
+
+		$page = $this->site()->find('b')->changeSort(3);
+		$page = $page->update([
+			'headline' => 'Sorted'
+		]);
+
+		$this->assertSame('Sorted', $page->headline()->value());
+		$this->assertSame(3, $page->num());
+		$this->assertDirectoryExists(static::TMP . '/content/3_b');
+		$this->assertFileExists(static::TMP . '/content/3_b/default.txt');
 	}
 }

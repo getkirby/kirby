@@ -5,6 +5,7 @@ namespace Kirby\Panel\Controller\Dropdown;
 use Kirby\Cms\App;
 use Kirby\Cms\Language;
 use Kirby\Cms\Page;
+use Kirby\Exception\NotFoundException;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -98,6 +99,39 @@ class LanguagesDropdownControllerTest extends TestCase
 		$dropdown = LanguagesDropdownController::factory();
 		$this->assertInstanceOf(LanguagesDropdownController::class, $dropdown);
 		$this->assertSame($app->site(), $dropdown->model);
+	}
+
+	public function testFactoryForSiteNotAccessible(): void
+	{
+		$app = new App([
+			'languages' => [
+				'en' => [
+					'code' => 'en',
+					'name' => 'English',
+				]
+			],
+			'roles' => [
+				[
+					'name'        => 'editor',
+					'permissions' => [
+						'site' => ['access' => false]
+					]
+				]
+			],
+			'users' => [
+				[
+					'id'    => 'editor',
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor',
+				]
+			]
+		]);
+
+		$app->impersonate('editor@getkirby.com');
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The site is not accessible');
+		LanguagesDropdownController::factory('site');
 	}
 
 	public function testFactoryForUser(): void

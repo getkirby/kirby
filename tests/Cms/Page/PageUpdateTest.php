@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\LogicException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -190,16 +191,17 @@ class PageUpdateTest extends ModelTestCase
 
 	public function testUpdateWithDateBasedNumbering(): void
 	{
-		$page = Page::create([
-			'slug' => 'test',
-			'blueprint' => [
-				'title' => 'Test',
-				'name'  => 'test',
-				'num'   => 'date'
-			],
-			'content' => [
-				'date' => '2012-12-12'
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => ['title' => 'Test', 'num' => 'date']
 			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$page = Page::create([
+			'slug'     => 'test',
+			'template' => 'test',
+			'content'  => ['date' => '2012-12-12']
 		]);
 
 		// publish the new page
@@ -228,6 +230,46 @@ class PageUpdateTest extends ModelTestCase
 		$updated = $updated->update(['test' => null]);
 
 		$this->assertNull($updated->test()->value());
+	}
+
+	public function testUpdateFailsForStalePageAfterConcurrentMove(): void
+	{
+		Page::create([
+			'slug' => 'a',
+			'num'  => 1,
+		]);
+
+		Page::create([
+			'slug' => 'b',
+			'num'  => 2,
+		]);
+
+		Page::create([
+			'slug' => 'c',
+			'num'  => 3,
+		]);
+
+		$stalePage = $this->app->site()->find('b')->clone();
+		$freshPage = $this->app->site()->find('b');
+
+		$this->assertSame(static::TMP . '/content/2_b', $stalePage->root());
+
+		$freshPage = $freshPage->changeSort(3);
+
+		$this->assertSame(static::TMP . '/content/3_b', $freshPage->root());
+		$this->assertDirectoryExists(static::TMP . '/content/3_b');
+		$this->assertDirectoryDoesNotExist(static::TMP . '/content/2_b');
+
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('The page was moved during a concurrent operation.');
+
+		try {
+			$stalePage->update(['headline' => 'Test']);
+		} finally {
+			$this->assertDirectoryDoesNotExist(static::TMP . '/content/2_b');
+			$this->assertDirectoryExists(static::TMP . '/content/3_b');
+			$this->assertFileDoesNotExist(static::TMP . '/content/2_b/default.txt');
+		}
 	}
 
 }

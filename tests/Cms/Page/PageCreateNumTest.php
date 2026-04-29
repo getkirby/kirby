@@ -188,14 +188,17 @@ class PageCreateNumTest extends ModelTestCase
 
 	public function testCreateQueryBasedNum(): void
 	{
-		$page = Page::create([
-			'slug' => 'test',
-			'blueprint' => [
-				'num' => '{{ page.year }}'
-			],
-			'content' => [
-				'year' => 2016
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/query-num' => ['num' => '{{ page.year }}']
 			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$page = Page::create([
+			'slug'     => 'test',
+			'template' => 'query-num',
+			'content'  => ['year' => 2016]
 		]);
 
 		$this->assertSame(2016, $page->createNum());
@@ -203,11 +206,16 @@ class PageCreateNumTest extends ModelTestCase
 
 	public function testCreateQueryBasedNumWithoutResult(): void
 	{
-		$page = Page::create([
-			'slug' => 'test',
-			'blueprint' => [
-				'num' => '{{ page.year }}'
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/query-num' => ['num' => '{{ page.year }}']
 			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$page = Page::create([
+			'slug'     => 'test',
+			'template' => 'query-num',
 		]);
 
 		$this->assertSame(0, $page->createNum());

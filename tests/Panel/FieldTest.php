@@ -192,24 +192,11 @@ class FieldTest extends TestCase
 			]
 		]);
 
+		// without authenticated user
 		$field = Field::role();
 
-		$options = [
-			[
-				'text' => 'Client',
-				'info' => 'No description',
-				'value' => 'client'
-			],
-			[
-				'text' => 'Editor',
-				'info' => 'Editor description',
-				'value' => 'editor'
-			],
-		];
-
-		$this->assertSame('Role', $field['label']);
-		$this->assertSame('radio', $field['type']);
-		$this->assertSame($options, $field['options']);
+		$this->assertSame('role', $field['name']);
+		$this->assertSame('hidden', $field['type']);
 
 		// with authenticated admin
 		$this->app->impersonate('kirby');
@@ -218,23 +205,24 @@ class FieldTest extends TestCase
 
 		$options = [
 			[
-				'text' => 'Admin',
-				'info' => 'Admin description',
+				'text'  => 'Admin',
+				'info'  => 'Admin description',
 				'value' => 'admin'
 			],
 			[
-				'text' => 'Client',
-				'info' => 'No description',
+				'text'  => 'Client',
+				'info'  => 'No description',
 				'value' => 'client'
 			],
 			[
-				'text' => 'Editor',
-				'info' => 'Editor description',
+				'text'  => 'Editor',
+				'info'  => 'Editor description',
 				'value' => 'editor'
-			],
+			]
 		];
 
 		$this->assertSame('Role', $field['label']);
+		$this->assertSame('role', $field['name']);
 		$this->assertSame('radio', $field['type']);
 		$this->assertSame($options, $field['options']);
 	}

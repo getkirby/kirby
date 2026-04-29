@@ -8,6 +8,18 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Http\Response;
+use Kirby\Image\Darkroom;
+
+class MediaTestTrackingDarkroom extends Darkroom
+{
+	public static string|null $processedFile = null;
+
+	public function process(string $file, array $options = []): array
+	{
+		static::$processedFile = $file;
+		return $options;
+	}
+}
 
 class MediaTest extends TestCase
 {
@@ -305,6 +317,49 @@ class MediaTest extends TestCase
 		$this->expectExceptionMessage('File not found');
 
 		Media::thumb($site, $file->mediaHash(), $file->filename());
+	}
+
+	public function testThumbComponentUsesTempFile(): void
+	{
+		$originalDarkroomTypes = Darkroom::$types;
+		Darkroom::$types['tracking-test'] = MediaTestTrackingDarkroom::class;
+		MediaTestTrackingDarkroom::$processedFile = null;
+
+		App::destroy();
+		$this->app = new App([
+			'options' => [
+				'thumbs.driver' => 'tracking-test'
+			],
+			'roots'   => [
+				'index' => static::TMP
+			]
+		]);
+
+		Dir::make(static::TMP . '/content');
+		Dir::make(static::TMP . '/media');
+		F::copy(static::FIXTURES . '/files/test.jpg', $source = static::TMP . '/content/test.jpg');
+
+		try {
+			$this->assertSame(
+				$destination = static::TMP . '/media/test.jpg',
+				$this->app->thumb($source, $destination, [
+					'width'  => 64,
+					'height' => 64,
+					'crop'   => 'center'
+				])
+			);
+		} finally {
+			Darkroom::$types = $originalDarkroomTypes;
+			$processedFile = MediaTestTrackingDarkroom::$processedFile;
+			MediaTestTrackingDarkroom::$processedFile = null;
+		}
+
+		$this->assertNotNull($processedFile);
+		$this->assertNotSame($destination, $processedFile);
+		$this->assertStringStartsWith(static::TMP . '/media/test.tmp-', $processedFile);
+		$this->assertStringEndsWith('.jpg', $processedFile);
+		$this->assertFileExists($destination);
+		$this->assertFileDoesNotExist($processedFile);
 	}
 
 	public function testThumbStringModel(): void

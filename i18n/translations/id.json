@@ -204,6 +204,8 @@
 	"error.page.undefined": "Halaman tidak dapat ditemukan",
 	"error.page.update.permission": "Anda tidak diizinkan memperbaharui \"{slug}\"",
 
+	"error.role.notFound": "The role \"{name}\" cannot be found",
+
 	"error.section.files.max.plural": "Anda hanya boleh menambahkan maksimal {max} berkas ke bagian \"{section}\"",
 	"error.section.files.max.singular": "Anda hanya boleh menambahkan satu berkas ke bagian \"{section}\"",
 	"error.section.files.min.plural": "Bagian \"{section}\" setidaknya memiliki {min} berkas",
@@ -219,6 +221,7 @@
 
 	"error.site.changeTitle.empty": "Judul harus diisi",
 	"error.site.changeTitle.permission": "Anda tidak diizinkan mengubah judul situs",
+	"error.site.notAccessible": "The site is not accessible",
 	"error.site.update.permission": "Anda tidak diizinkan memperbaharui situs",
 
 	"error.structure.validation": "Ada kesalahan pada bidang \"{field}\" di baris {index}",

@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel\Controller\View;
 
+use Kirby\Exception\NotFoundException;
 use Kirby\Panel\Ui\Button\ViewButtons;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -37,5 +38,32 @@ class AccountViewControllerTest extends UserViewControllerTest
 	{
 		$controller = new AccountViewController($this->user);
 		$this->assertSame('k-account-view', $controller->component());
+	}
+
+	public function testFactoryUserNotAccesible(): void
+	{
+		$this->app = $this->app->clone([
+			'roles' => [
+				[
+					'name'        => 'editor',
+					'permissions' => [
+						'user' => ['access' => false]
+					]
+				]
+			],
+			'users' => [
+				[
+					'id'    => 'editor',
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor',
+				]
+			]
+		]);
+
+		$this->app->impersonate('editor@getkirby.com');
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The user cannot be found');
+		AccountViewController::factory();
 	}
 }
