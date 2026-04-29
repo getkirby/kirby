@@ -30,7 +30,10 @@ export default class InputValidator extends HTMLElement {
 		const id = this.getAttribute("id");
 
 		if (id) {
-			this.input.setAttribute("id", id);
+			if (this.input.hasAttribute("id") === false) {
+				this.input.setAttribute("id", id);
+			}
+
 			this.removeAttribute("id");
 		}
 
