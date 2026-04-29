@@ -204,6 +204,8 @@
 	"error.page.undefined": "Síðan fannst ekkert",
 	"error.page.update.permission": "Þú mátt ekkert uppfæra síðuna \"{slug}\"",
 
+	"error.role.notFound": "The role \"{name}\" cannot be found",
+
 	"error.section.files.max.plural": "Ekki fleiri en {max} skrár í  \"{section}\" svæðið",
 	"error.section.files.max.singular": "Aðeins ein skrá í  \"{section}\" svæðið",
 	"error.section.files.min.plural": "\"{section}\" svæðið krefst a.m.k. {min} skrá sem innihalds",
@@ -219,6 +221,7 @@
 
 	"error.site.changeTitle.empty": "Ekki skilja titilinn eftir tóman",
 	"error.site.changeTitle.permission": "Þú mátt ekkert breyta titil vefsvæðisins",
+	"error.site.notAccessible": "The site is not accessible",
 	"error.site.update.permission": "Þú mátt ekkert uppfæra vefsvæðið",
 
 	"error.structure.validation": "Það er villa í \"{field}\" sviðinu í röð {index}",

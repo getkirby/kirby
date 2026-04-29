@@ -159,6 +159,46 @@ class RolesTest extends TestCase
 		$this->assertCount(2, $canBeChanged);
 	}
 
+	public function testCanBeChangedWithInaccessibleRole(): void
+	{
+		$uuid = uuid();
+
+		$app = new App([
+			'roots' => ['index' => '/dev/null'],
+			'users' => [
+				[
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin'
+				],
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor-' . $uuid
+				]
+			],
+			'roles' => [
+				['name' => 'editor-' . $uuid],
+				['name' => 'restricted-' . $uuid],
+			],
+			'blueprints' => [
+				'users/restricted-' . $uuid => [
+					'options' => ['access' => false]
+				]
+			]
+		]);
+
+		$roles = $app->roles();
+
+		// editor cannot see the inaccessible role
+		$app->impersonate('editor@getkirby.com');
+		$canBeChanged = $roles->canBeChanged();
+		$this->assertNull($canBeChanged->find('restricted-' . $uuid));
+
+		// admin bypasses the accessibility filter and sees all roles
+		$app->impersonate('admin@getkirby.com');
+		$canBeChanged = $roles->canBeChanged();
+		$this->assertNotNull($canBeChanged->find('restricted-' . $uuid));
+	}
+
 	public function testCanBeCreated(): void
 	{
 		$app = new App([
@@ -195,5 +235,45 @@ class RolesTest extends TestCase
 		$app->impersonate('admin@getkirby.com');
 		$canBeCreated = $roles->canBeCreated();
 		$this->assertCount(2, $canBeCreated);
+	}
+
+	public function testCanBeCreatedWithInaccessibleRole(): void
+	{
+		$uuid = uuid();
+
+		$app = new App([
+			'roots' => ['index' => '/dev/null'],
+			'users' => [
+				[
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin'
+				],
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor-' . $uuid
+				]
+			],
+			'roles' => [
+				['name' => 'editor-' . $uuid],
+				['name' => 'restricted-' . $uuid],
+			],
+			'blueprints' => [
+				'users/restricted-' . $uuid => [
+					'options' => ['access' => false]
+				]
+			]
+		]);
+
+		$roles = $app->roles();
+
+		// editor cannot see the inaccessible role
+		$app->impersonate('editor@getkirby.com');
+		$canBeCreated = $roles->canBeCreated();
+		$this->assertNull($canBeCreated->find('restricted-' . $uuid));
+
+		// admin bypasses the accessibility filter and sees all roles
+		$app->impersonate('admin@getkirby.com');
+		$canBeCreated = $roles->canBeCreated();
+		$this->assertNotNull($canBeCreated->find('restricted-' . $uuid));
 	}
 }

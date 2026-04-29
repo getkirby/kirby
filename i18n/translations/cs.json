@@ -204,6 +204,8 @@
 	"error.page.undefined": "Str\u00e1nku se nepoda\u0159ilo nal\u00e9zt.",
 	"error.page.update.permission": "Nemáte dovoleno upravit \"{slug}\"",
 
+	"error.role.notFound": "The role \"{name}\" cannot be found",
+
 	"error.section.files.max.plural": "Sekce \"{section}\" nesmí obsahovat více jak {max} souborů",
 	"error.section.files.max.singular": "Sekce \"{section}\" může obsahovat nejvýše jeden soubor",
 	"error.section.files.min.plural": "Sekce \"{section}\" vyžaduje nejméně {min} souborů",
@@ -219,6 +221,7 @@
 
 	"error.site.changeTitle.empty": "Titulek nesmí být prázdný",
 	"error.site.changeTitle.permission": "Nemáte dovoleno změnit titulek stránky",
+	"error.site.notAccessible": "The site is not accessible",
 	"error.site.update.permission": "Nemáte dovoleno upravit stránku",
 
 	"error.structure.validation": "Chyba v poli \"{field}\" na řádku {index}",

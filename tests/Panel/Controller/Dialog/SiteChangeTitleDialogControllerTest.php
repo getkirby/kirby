@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel\Controller\Dialog;
 
+use Kirby\Exception\NotFoundException;
 use Kirby\Panel\TestCase;
 use Kirby\Panel\Ui\Dialog\FormDialog;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -36,6 +37,33 @@ class SiteChangeTitleDialogControllerTest extends TestCase
 		$props = $dialog->props();
 		$this->assertArrayHasKey('title', $props['fields']);
 		$this->assertSame('My Site', $props['value']['title']);
+	}
+
+	public function testConstructNotAccessible(): void
+	{
+		$this->app = $this->app->clone([
+			'roles' => [
+				[
+					'name'        => 'editor',
+					'permissions' => [
+						'site' => ['access' => false]
+					]
+				]
+			],
+			'users' => [
+				[
+					'id'    => 'editor',
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor',
+				]
+			]
+		]);
+
+		$this->app->impersonate('editor@getkirby.com');
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The site is not accessible');
+		new SiteChangeTitleDialogController();
 	}
 
 	public function testSubmit(): void

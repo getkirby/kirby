@@ -21,6 +21,7 @@ class PageTreeParentsRequestControllerTest extends TestCase
 				'children' => [
 					[
 						'slug'     => 'articles',
+						'template' => 'articles',
 						'content'  => ['uuid' => 'articles'],
 						'children' => [
 							[
@@ -54,6 +55,8 @@ class PageTreeParentsRequestControllerTest extends TestCase
 			]
 		]);
 
+		$this->app->impersonate('kirby');
+
 		$controller = new PageTreeParentsRequestController();
 		$data       = $controller->load();
 		$this->assertSame([
@@ -71,11 +74,50 @@ class PageTreeParentsRequestControllerTest extends TestCase
 			]
 		]);
 
+		$this->app->impersonate('kirby');
+
 		$controller = new PageTreeParentsRequestController();
 		$data       = $controller->load();
 		$this->assertSame([
 			'site://',
 			'page://articles',
+			'page://article'
+		], $data['data']);
+	}
+
+	public function testLoadNotListable(): void
+	{
+		$this->app = $this->app->clone([
+			'users' => [
+				[
+					'id'    => 'editor',
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor'
+				]
+			],
+			'blueprints' => [
+				'users/editor' => [
+					'name'        => 'editor',
+					'permissions' => [
+						'pages' => ['*' => true]
+					]
+				],
+				'pages/articles' => [
+					'options' => ['list' => false]
+				]
+			],
+			'request' => [
+				'query' => [
+					'page' => 'articles/article/subarticle'
+				],
+			]
+		]);
+
+		$this->app->impersonate('editor@getkirby.com');
+
+		$controller = new PageTreeParentsRequestController();
+		$data       = $controller->load();
+		$this->assertSame([
 			'page://article'
 		], $data['data']);
 	}
@@ -94,6 +136,8 @@ class PageTreeParentsRequestControllerTest extends TestCase
 				],
 			]
 		]);
+
+		$this->app->impersonate('kirby');
 
 		$controller = new PageTreeParentsRequestController();
 		$data       = $controller->load();
@@ -116,6 +160,8 @@ class PageTreeParentsRequestControllerTest extends TestCase
 				],
 			]
 		]);
+
+		$this->app->impersonate('kirby');
 
 		$controller = new PageTreeParentsRequestController();
 		$data       = $controller->load();

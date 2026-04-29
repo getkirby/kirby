@@ -31,7 +31,6 @@ class FileViewController extends ModelViewController
 	 * @var \Kirby\Panel\File
 	 */
 	protected Model $panel;
-
 	protected Files $siblings;
 
 	public function __construct(
@@ -102,12 +101,15 @@ class FileViewController extends ModelViewController
 
 	protected function siblings(): Files
 	{
-		return $this->siblings ??= $this->model->templateSiblings()->sortBy(
-			'sort',
-			'asc',
-			'filename',
-			'asc'
-		);
+		return $this->siblings ??= $this->model
+			->templateSiblings()
+			->filter('isListable', true)
+			->sortBy(
+				'sort',
+				'asc',
+				'filename',
+				'asc'
+			);
 	}
 
 	public function title(): string

@@ -93,4 +93,58 @@ class UsersSearchControllerTest extends TestCase
 		$models     = $controller->models();
 		$this->assertCount(0, $models);
 	}
+
+	public function testModelsNotListable(): void
+	{
+		// use a uuid-based role to avoid static permission cache
+		// collisions with roles used in other tests
+		$uuid = uuid();
+
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'users/restricted-' . $uuid => [
+					'name'    => 'restricted-' . $uuid,
+					'options' => ['list' => false]
+				]
+			],
+			'roles' => [
+				['name' => 'editor-' . $uuid],
+				['name' => 'restricted-' . $uuid]
+			],
+			'users' => [
+				[
+					'email' => 'a@getkirby.com',
+					'role'  => 'editor-' . $uuid
+				],
+				[
+					'email' => 'b@getkirby.com',
+					'role'  => 'restricted-' . $uuid
+				],
+				[
+					'email' => 'c@getkirby.com',
+					'role'  => 'restricted-' . $uuid
+				]
+			]
+		]);
+
+		// the kirby superuser bypasses all blueprint restrictions
+		$this->app->impersonate('kirby');
+		$controller = new UsersSearchController(query: 'getkirby.com');
+		$models     = $controller->models();
+		$this->assertCount(3, $models);
+		$this->assertEqualsCanonicalizing([
+			'a@getkirby.com',
+			'b@getkirby.com',
+			'c@getkirby.com'
+		], $models->values(fn ($model) => $model->email()));
+
+		// the editor can only access their own account
+		$this->app->impersonate('a@getkirby.com');
+		$controller = new UsersSearchController(query: 'getkirby.com');
+		$models     = $controller->models();
+		$this->assertCount(1, $models);
+		$this->assertEqualsCanonicalizing([
+			'a@getkirby.com'
+		], $models->values(fn ($model) => $model->email()));
+	}
 }

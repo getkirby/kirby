@@ -3,7 +3,6 @@
 namespace Kirby\Panel\Controller;
 
 use Kirby\Cms\App;
-use Kirby\Cms\Site;
 use Kirby\Http\Request;
 use Kirby\Toolkit\HasI18n;
 
@@ -24,13 +23,11 @@ abstract class Controller
 
 	protected App $kirby;
 	protected Request $request;
-	protected Site $site;
 
 	public function __construct()
 	{
 		$this->kirby   = App::instance();
 		$this->request = $this->kirby->request();
-		$this->site    = $this->kirby->site();
 	}
 
 	abstract public function load(): mixed;

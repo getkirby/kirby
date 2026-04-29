@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Controller\View;
 
 use Kirby\Cms\Site;
+use Kirby\Exception\NotFoundException;
 use Kirby\Panel\TestCase;
 use Kirby\Panel\Ui\Button\ViewButtons;
 use Kirby\Panel\Ui\View;
@@ -43,6 +44,33 @@ class SiteViewControllerTest extends TestCase
 		$controller = SiteViewController::factory();
 		$this->assertInstanceOf(SiteViewController::class, $controller);
 		$this->assertSame($this->site, $controller->model());
+	}
+
+	public function testFactoryNotAccessible(): void
+	{
+		$this->app = $this->app->clone([
+			'roles' => [
+				[
+					'name'        => 'editor',
+					'permissions' => [
+						'site' => ['access' => false]
+					]
+				]
+			],
+			'users' => [
+				[
+					'id'    => 'editor',
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor',
+				]
+			]
+		]);
+
+		$this->app->impersonate('editor@getkirby.com');
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The site is not accessible');
+		SiteViewController::factory();
 	}
 
 	public function testLoad(): void

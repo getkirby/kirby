@@ -374,6 +374,7 @@ class PageRulesTest extends ModelTestCase
 
 		$page = $this->createStub(Page::class);
 		$page->method('slug')->willReturn('');
+		$page->method('isDraft')->willReturn(true);
 		$page->method('permissions')->willReturn($permissions);
 
 		$this->expectException(InvalidArgumentException::class);
@@ -425,8 +426,28 @@ class PageRulesTest extends ModelTestCase
 
 		$page = $this->createStub(Page::class);
 		$page->method('kirby')->willReturn($this->app);
+		$page->method('isDraft')->willReturn(true);
 		$page->method('permissions')->willReturn($permissions);
 		$page->method('slug')->willReturn('api');
+
+		PageRules::create($page);
+	}
+
+	public function testCreateNonDraftWithoutChangeStatusPermission(): void
+	{
+		$permissions = $this->createStub(PagePermissions::class);
+		$permissions->method('can')->willReturnMap([
+			['create', true],
+			['changeStatus', false],
+		]);
+
+		$page = $this->createStub(Page::class);
+		$page->method('slug')->willReturn('test');
+		$page->method('isDraft')->willReturn(false);
+		$page->method('permissions')->willReturn($permissions);
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('The status for this page cannot be changed');
 
 		PageRules::create($page);
 	}

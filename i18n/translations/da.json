@@ -204,6 +204,8 @@
 	"error.page.undefined": "Siden kunne ikke findes",
 	"error.page.update.permission": "Du har ikke tilladelse til at opdatere \"{slug}\"",
 
+	"error.role.notFound": "The role \"{name}\" cannot be found",
+
 	"error.section.files.max.plural": "Du kan ikk tilføje mere end {max} filer til \"{section}\" sektionen",
 	"error.section.files.max.singular": "Du kan ikke tilføje mere end een fil til \"{section}\" sektionen",
 	"error.section.files.min.plural": "Sektionen \"{section}\" kræver mindst {min} filer",
@@ -219,6 +221,7 @@
 
 	"error.site.changeTitle.empty": "Titlen kan ikke være tom",
 	"error.site.changeTitle.permission": "Du har ikke tilladelse til at ændre titlen på sitet",
+	"error.site.notAccessible": "The site is not accessible",
 	"error.site.update.permission": "Du har ikke tilladelse til at opdatere sitet",
 
 	"error.structure.validation": "There's an error on the \"{field}\" field in row {index}",

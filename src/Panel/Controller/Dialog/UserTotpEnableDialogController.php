@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel\Controller\Dialog;
 
+use Kirby\Cms\Find;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Image\QrCode;
@@ -27,7 +28,7 @@ class UserTotpEnableDialogController extends DialogController
 	public function __construct()
 	{
 		parent::__construct();
-		$this->user  = $this->kirby->user();
+		$this->user = Find::user();
 	}
 
 	public function load(): Dialog

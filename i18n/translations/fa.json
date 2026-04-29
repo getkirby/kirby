@@ -204,6 +204,8 @@
 	"error.page.undefined": "صفحه مورد نظر پیدا نشد",
 	"error.page.update.permission": "شما اجازه بروزرسانی «{slug}» را ندارید",
 
+	"error.role.notFound": "The role \"{name}\" cannot be found",
+
 	"error.section.files.max.plural": "نباید بیش از {max} فایل به بخش «{section}» اضافه کنید",
 	"error.section.files.max.singular": "نباید بیش از یک فایل به بخش «{section}» اضافه کنید",
 	"error.section.files.min.plural": "The \"{section}\" section requires at least {min} files",
@@ -219,6 +221,7 @@
 
 	"error.site.changeTitle.empty": "عنوان اجباری است",
 	"error.site.changeTitle.permission": "شما اجازه تغییر عنوان سایت را ندارید",
+	"error.site.notAccessible": "The site is not accessible",
 	"error.site.update.permission": "شما اجازه بروزرسانی سایت را ندارید",
 
 	"error.structure.validation": "There's an error on the \"{field}\" field in row {index}",

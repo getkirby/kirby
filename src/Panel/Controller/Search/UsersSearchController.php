@@ -27,6 +27,9 @@ class UsersSearchController extends ModelsSearchController
 
 	public function models(): Users
 	{
-		return $this->kirby->users()->search($this->query);
+		return $this->kirby
+			->users()
+			->filter('isListable', true)
+			->search($this->query);
 	}
 }

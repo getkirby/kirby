@@ -59,42 +59,30 @@ class PageChangeSortTest extends ModelTestCase
 
 	public function testChangeSortDateBased(): void
 	{
-		Page::create([
-			'slug' => 'a',
-			'num'  => 1,
-		]);
-
-		Page::create([
-			'slug' => 'b',
-			'num'  => 2,
-		]);
-
-		Page::create([
-			'slug' => 'c',
-			'num'  => 20180104,
-			'blueprint' => [
-				'title' => 'DateBased',
-				'name'  => 'datebased',
-				'num'   => 'date'
-			],
-			'content' => [
-				'date' => '2018-01-04'
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/datebased' => ['title' => 'DateBased', 'num' => 'date'],
+				'pages/zerobased' => ['title' => 'ZeroBased', 'num' => 'zero'],
 			]
 		]);
+		$this->app->impersonate('kirby');
+
+		Page::create(['slug' => 'a', 'num' => 1]);
+		Page::create(['slug' => 'b', 'num' => 2]);
 
 		Page::create([
-			'slug' => 'd',
-			'num'  => 4,
+			'slug'     => 'c',
+			'num'      => 20180104,
+			'template' => 'datebased',
+			'content'  => ['date' => '2018-01-04']
 		]);
 
+		Page::create(['slug' => 'd', 'num' => 4]);
+
 		Page::create([
-			'slug' => 'e',
-			'num'  => 0,
-			'blueprint' => [
-				'title' => 'ZeroBased',
-				'name'  => 'zerobased',
-				'num'   => 'zero'
-			],
+			'slug'     => 'e',
+			'num'      => 0,
+			'template' => 'zerobased',
 		]);
 
 		$site = $this->site();

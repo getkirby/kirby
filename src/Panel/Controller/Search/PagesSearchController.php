@@ -27,9 +27,10 @@ class PagesSearchController extends ModelsSearchController
 
 	public function models(): Pages
 	{
-		return $this->kirby->site()
+		return $this->kirby
+			->site()
 			->index(true)
-			->search($this->query)
-			->filter('isListable', true);
+			->filter('isListable', true)
+			->search($this->query);
 	}
 }

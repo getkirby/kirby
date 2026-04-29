@@ -204,6 +204,8 @@
 	"error.page.undefined": "Puslapis nerastas",
 	"error.page.update.permission": "Neturite leidimo atnaujinti \"{slug}\"",
 
+	"error.role.notFound": "The role \"{name}\" cannot be found",
+
 	"error.section.files.max.plural": "Į sekciją \"{section}\" negalima pridėti daugiau nei {max} failų",
 	"error.section.files.max.singular": "Į sekciją \"{section}\" negalima pridėti daugiau nei vieną failą",
 	"error.section.files.min.plural": "Sekcija \"{section}\" reikalauja bent {min} failų",
@@ -219,6 +221,7 @@
 
 	"error.site.changeTitle.empty": "Pavadinimas negali būti tuščias",
 	"error.site.changeTitle.permission": "Neturite leidimo keisti svetainės pavadinimo",
+	"error.site.notAccessible": "The site is not accessible",
 	"error.site.update.permission": "Neturite leidimo atnaujinti svetainės",
 
 	"error.structure.validation": "There's an error on the \"{field}\" field in row {index}",

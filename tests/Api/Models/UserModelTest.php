@@ -2,6 +2,7 @@
 
 namespace Kirby\Api;
 
+use Kirby\Cms\App;
 use Kirby\Cms\User;
 
 class UserModelTest extends ModelTestCase
@@ -18,6 +19,8 @@ class UserModelTest extends ModelTestCase
 
 	public function testFiles(): void
 	{
+		$this->app->impersonate('kirby');
+
 		$user = new User([
 			'email' => 'test@getkirby.com',
 			'files' => [
@@ -25,6 +28,8 @@ class UserModelTest extends ModelTestCase
 				['filename' => 'b.jpg'],
 			]
 		]);
+
+		$this->app->impersonate('kirby');
 
 		$model = $this->api->resolve($user)->select('files')->toArray();
 
@@ -44,5 +49,151 @@ class UserModelTest extends ModelTestCase
 		];
 
 		$this->assertSame($expected, $image);
+	}
+
+	public function testInaccessibleRolePermissions(): void
+	{
+		$uuid = uuid();
+
+		$this->app = new App([
+			'roots' => ['index' => static::TMP],
+			'blueprints' => [
+				'users/restricted-' . $uuid => [
+					'options' => [
+						'access' => [
+							'editor-' . $uuid => true,
+							'*'      => false
+						]
+					]
+				]
+			],
+			'roles' => [
+				['name' => 'editor-' . $uuid],
+				['name' => 'restricted-' . $uuid],
+			],
+			'users' => [
+				['email' => 'editor@test.com', 'role' => 'editor-' . $uuid],
+				['email' => 'restricted@test.com', 'role' => 'restricted-' . $uuid],
+			]
+		]);
+
+		$this->api = $this->app->api();
+
+		$restrictedUser = $this->app->user('restricted@test.com');
+
+		// editor can see permissions of the restricted role
+		$this->app->impersonate('editor@test.com');
+		$model = $this->api->resolve($restrictedUser)->select('permissions')->toArray();
+		$this->assertNotNull($model['permissions']);
+
+		// restricted user cannot see permissions of their own inaccessible role
+		$this->app->impersonate('restricted@test.com');
+		$model = $this->api->resolve($restrictedUser)->select('permissions')->toArray();
+		$this->assertNull($model['permissions']);
+	}
+
+	public function testNextSkipsInaccessibleUser(): void
+	{
+		$uuid = uuid();
+
+		$app = new App([
+			'blueprints' => [
+				'users/restricted-' . $uuid => [
+					'options' => ['access' => false]
+				]
+			],
+			'roles' => [
+				['name' => 'editor-' . $uuid],
+				['name' => 'restricted-' . $uuid],
+			],
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'users' => [
+				['email' => 'a@test.com', 'name' => 'A User', 'role' => 'editor-' . $uuid],
+				['email' => 'b@test.com', 'name' => 'B User', 'role' => 'editor-' . $uuid],
+				['email' => 'c@test.com', 'name' => 'C User', 'role' => 'restricted-' . $uuid],
+				['email' => 'd@test.com', 'name' => 'D User', 'role' => 'editor-' . $uuid],
+			]
+		]);
+
+		$app->impersonate('b@test.com');
+		$user   = $app->user('b@test.com');
+		$result = $app->api()->resolve($user)->select('next')->toArray();
+
+		$this->assertSame('D User', $result['next']['name']);
+	}
+
+	public function testInaccessibleRole(): void
+	{
+		$uuid = uuid();
+
+		$this->app = new App([
+			'roots' => ['index' => static::TMP],
+			'blueprints' => [
+				'users/restricted-' . $uuid => [
+					'options' => [
+						'access' => [
+							'editor-' . $uuid => true,
+							'*'      => false
+						]
+					]
+				]
+			],
+			'roles' => [
+				['name' => 'editor-' . $uuid],
+				['name' => 'restricted-' . $uuid],
+			],
+			'users' => [
+				['email' => 'editor@test.com', 'role' => 'editor-' . $uuid],
+				['email' => 'restricted@test.com', 'role' => 'restricted-' . $uuid],
+			]
+		]);
+
+		$this->api = $this->app->api();
+
+		$restrictedUser = $this->app->user('restricted@test.com');
+
+		// editor can see the restricted role
+		$this->app->impersonate('editor@test.com');
+		$model = $this->api->resolve($restrictedUser)->select('role')->toArray();
+		$this->assertNotNull($model['role']);
+
+		// restricted user cannot see their own role
+		$this->app->impersonate('restricted@test.com');
+		$model = $this->api->resolve($restrictedUser)->select('role')->toArray();
+		$this->assertNull($model['role']);
+	}
+
+	public function testPrevSkipsInaccessibleUser(): void
+	{
+		$uuid = uuid();
+
+		$app = new App([
+			'blueprints' => [
+				'users/restricted-' . $uuid => [
+					'options' => ['access' => false]
+				]
+			],
+			'roles' => [
+				['name' => 'editor-' . $uuid],
+				['name' => 'restricted-' . $uuid],
+			],
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'users' => [
+				['email' => 'a@test.com', 'name' => 'A User', 'role' => 'editor-' . $uuid],
+				['email' => 'b@test.com', 'name' => 'B User', 'role' => 'restricted-' . $uuid],
+				['email' => 'c@test.com', 'name' => 'C User', 'role' => 'editor-' . $uuid],
+				['email' => 'd@test.com', 'name' => 'D User', 'role' => 'editor-' . $uuid],
+			]
+		]);
+
+		$app->impersonate('c@test.com');
+		$user   = $app->user('c@test.com');
+		$result = $app->api()->resolve($user)->select('prev')->toArray();
+
+		$this->assertSame('A User', $result['prev']['name']);
 	}
 }

@@ -204,6 +204,8 @@
 	"error.page.undefined": "De pagina kan niet worden gevonden",
 	"error.page.update.permission": "Je hebt geen rechten om \"{slug}\" te updaten",
 
+	"error.role.notFound": "The role \"{name}\" cannot be found",
+
 	"error.section.files.max.plural": "Voeg niet meer dan {max} bestanden toe aan de zone \"{section}\"",
 	"error.section.files.max.singular": "Je kunt niet meer dan 1 bestand toevoegen aan de zone \"{section}\"",
 	"error.section.files.min.plural": "De \"{section}\" sectie moet minimaal {min} bestanden bevatten.",
@@ -219,6 +221,7 @@
 
 	"error.site.changeTitle.empty": "De titel mag niet leeg zijn",
 	"error.site.changeTitle.permission": "Je hebt geen rechten om de titel van de site te wijzigen",
+	"error.site.notAccessible": "The site is not accessible",
 	"error.site.update.permission": "Je hebt geen rechten om de site te updaten",
 
 	"error.structure.validation": "Er is een fout opgetreden in veld \"{field}\" in rij {index}",

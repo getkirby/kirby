@@ -201,6 +201,8 @@ class OptionsQuery extends OptionsProvider
 			return compact('text', 'value', 'icon', 'info');
 		});
 
-		return $this->options = Options::factory($options);
+		// ensure not to resolve Kirby queries again
+		// to prevent double-resolution of user-controlled content
+		return $this->options = Options::factory($options, resolve: false);
 	}
 }

@@ -37,7 +37,7 @@ abstract class ModelItemsRequestController extends RequestController
 		$ids    = $this->request->get('items', '');
 		$ids    = Str::split($ids);
 		$models = A::map($ids, fn ($id) => $id ? $this->model($id) : null);
-		$items  = A::map($models, fn ($model) => $model ? $this->item($model)->props() : null);
+		$items  = A::map($models, fn ($model) => $model?->isListable() === true ? $this->item($model)->props() : null);
 		return ['items' => $items];
 	}
 

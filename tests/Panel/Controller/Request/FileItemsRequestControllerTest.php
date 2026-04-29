@@ -50,10 +50,42 @@ class FileItemsRequestControllerTest extends TestCase
 			]
 		]);
 
+		$this->app->impersonate('kirby');
+
 		$controller = new FileItemsRequestController();
 		$data       = $controller->load();
 		$this->assertSame('test.jpg', $data['items'][0]['id']);
 		$this->assertNull($data['items'][1]);
 		$this->assertSame('test.pdf', $data['items'][2]['id']);
+	}
+
+	public function testLoadNotListable(): void
+	{
+		$this->app = $this->app->clone([
+			'users' => [
+				[
+					'id'    => 'editor',
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor'
+				]
+			],
+			'blueprints' => [
+				'files/default' => [
+					'options' => ['list' => false]
+				]
+			],
+			'request' => [
+				'query' => [
+					'items' => 'file://jpg,file://pdf'
+				],
+			]
+		]);
+
+		$this->app->impersonate('editor@getkirby.com');
+
+		$controller = new FileItemsRequestController();
+		$data       = $controller->load();
+		$this->assertNull($data['items'][0]);
+		$this->assertNull($data['items'][1]);
 	}
 }

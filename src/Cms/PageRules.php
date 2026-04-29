@@ -214,6 +214,12 @@ class PageRules
 			);
 		}
 
+		// creating a non-draft bypasses the normal publish flow;
+		// enforce the same rules
+		if ($page->isDraft() === false) {
+			self::publish($page);
+		}
+
 		self::validateSlugLength($page->slug());
 		self::validateSlugProtectedPaths($page, $page->slug());
 

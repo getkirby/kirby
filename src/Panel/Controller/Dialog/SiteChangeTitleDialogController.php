@@ -2,7 +2,6 @@
 
 namespace Kirby\Panel\Controller\Dialog;
 
-use Kirby\Panel\Controller\DialogController;
 use Kirby\Panel\Field;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
@@ -18,7 +17,7 @@ use Kirby\Panel\Ui\Dialog\FormDialog;
  * @since     6.0.0
  * @unstable
  */
-class SiteChangeTitleDialogController extends DialogController
+class SiteChangeTitleDialogController extends SiteDialogController
 {
 	public function load(): Dialog
 	{

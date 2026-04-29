@@ -115,14 +115,14 @@ class Find
 		$kirby = App::instance();
 
 		$model = match ($modelName) {
-			'site'    => $kirby->site(),
+			'site'    => static::site(),
 			'account' => static::user(),
 			'page'    => static::page(basename($path)),
 			// regular expression to split the path at the last
 			// occurrence of /files/ which separates parent path
 			// and filename
 			'file'    => static::file(...preg_split('$.*\K(/files/)$', $path)),
-			'user'    => $kirby->user(basename($path)),
+			'user'    => static::user(basename($path)),
 			default   => throw new InvalidArgumentException(
 				message: 'Invalid model type: ' . $modelType
 			)
@@ -134,6 +134,55 @@ class Find
 	}
 
 	/**
+	 * Returns the role object for the given name
+	 *
+	 * @param string $name Role name/id
+	 * @throws \Kirby\Exception\NotFoundException if the role cannot be found
+	 */
+	public static function role(string $name): Role
+	{
+		$role = App::instance()->role($name);
+
+		if ($role?->isAccessible() === true) {
+			return $role;
+		}
+
+		throw new NotFoundException(
+			key: 'role.notFound',
+			data: ['name' => $name]
+		);
+	}
+
+	/**
+	 * Returns all accessible roles
+	 *
+	 * @since 5.4.0
+	 */
+	public static function roles(): Roles
+	{
+		return App::instance()->roles()->filter('isAccessible', true);
+	}
+
+	/**
+	 * Returns the site object if the site is accessible
+	 *
+	 * @throws \Kirby\Exception\NotFoundException if the site cannot be accessed
+	 * @since 5.4.0
+	 */
+	public static function site(): Site
+	{
+		$site = App::instance()->site();
+
+		if ($site->isAccessible() === true) {
+			return $site;
+		}
+
+		throw new NotFoundException(
+			key: 'site.notAccessible'
+		);
+	}
+
+	/**
 	 * Returns the user object for the given id or
 	 * returns the current authenticated user if no
 	 * id is passed
@@ -141,7 +190,7 @@ class Find
 	 * @param string|null $id User's id
 	 * @throws \Kirby\Exception\NotFoundException if the user for the given id cannot be found
 	 */
-	public static function user(string|null $id = null): User|null
+	public static function user(string|null $id = null): User
 	{
 		// account is a reserved word to find the current
 		// user. It's used in various API and area routes.
@@ -158,15 +207,35 @@ class Find
 				$kirby->option('api.allowImpersonation', false)
 			);
 
-			return $user ?? throw new NotFoundException(
+			if ($user?->isAccessible() === true) {
+				return $user;
+			}
+
+			throw new NotFoundException(
 				key: 'user.undefined'
 			);
 		}
 
 		// get a specific user by id
-		return $kirby->user($id) ?? throw new NotFoundException(
+		$user = $kirby->user($id);
+
+		if ($user?->isAccessible() === true) {
+			return $user;
+		}
+
+		throw new NotFoundException(
 			key: 'user.notFound',
 			data: ['name' => $id]
 		);
+	}
+
+	/**
+	 * Returns all accessible users
+	 *
+	 * @since 5.4.0
+	 */
+	public static function users(): Users
+	{
+		return App::instance()->users()->filter('isListable', true);
 	}
 }

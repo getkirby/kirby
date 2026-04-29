@@ -451,7 +451,13 @@ class Xml
 			return null;
 		}
 
-		if (Str::startsWith($value, '<![CDATA[') === true) {
+		// accept raw CDATA only if the entire string is made up of
+		// complete consecutive CDATA blocks without any content outside
+		if (
+			Str::startsWith($value, '<![CDATA[') === true &&
+			Str::endsWith($value, ']]>') === true &&
+			Str::matches($value, '/\]\]>(?!<!\[CDATA\[|$)/') === false
+		) {
 			return $value;
 		}
 

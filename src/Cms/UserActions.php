@@ -215,6 +215,25 @@ trait UserActions
 	}
 
 	/**
+	 * Creates a new avatar for the user
+	 */
+	public function createAvatar(string $source, string $extension, bool $move = false): static
+	{
+		return $this->commit('createAvatar', ['user' => $this, 'source' => $source, 'extension' => $extension], function ($user, $source, $extension) use ($move) {
+			$user->createFile(
+				props: [
+					'filename' => 'profile.' . $extension,
+					'template' => 'avatar',
+					'source'   => $source
+				],
+				move: $move
+			);
+
+			return $user;
+		});
+	}
+
+	/**
 	 * Returns a random user id
 	 */
 	public function createId(): string
@@ -270,8 +289,23 @@ trait UserActions
 		});
 	}
 
+	/**
+	 * Deletes the existing avatar if it exists
+	 */
+	public function deleteAvatar(): bool
+	{
+		return $this->commit('deleteAvatar', ['user' => $this], function ($user) {
+			return $user->avatar()->delete();
+		});
+	}
+
 	protected static function normalizeProps(array $props): array
 	{
+		// Prevent injecting blueprint as this always must be derived from
+		// the template/model name and blueprint object in the app,
+		// never directly be supplied by the caller
+		unset($props['blueprint']);
+
 		$content = $props['content'] ?? [];
 		$role    = $props['role']    ?? 'default';
 
@@ -340,6 +374,49 @@ trait UserActions
 		}
 
 		return $secrets;
+	}
+
+	/**
+	 * Replaces the existing avatar for the user
+	 */
+	public function replaceAvatar(string $source, string $extension, bool $move = false): static
+	{
+		return $this->commit('replaceAvatar', ['user' => $this, 'source' => $source, 'extension' => $extension], function ($user, $source, $extension) use ($move) {
+
+			$oldAvatar = $user->avatar();
+
+			// if the file type stayed the same, we can fall back to the
+			// replace method, which is the cleanest solution here.
+			if ($oldAvatar->extension() === $extension) {
+				$oldAvatar->replace(
+					source: $source,
+					move: $move
+				);
+
+				return $user;
+			}
+
+			// check if the user can delete the old avatar,
+			// but don't delete it yet. If creating the new one fails
+			// we can still keep the old one around
+			FileRules::delete($oldAvatar);
+
+			// try to create the new avatar
+			$user->createFile(
+				props: [
+					'filename' => 'profile.' . $extension,
+					'template' => 'avatar',
+					'source'   => $source,
+				],
+				move: $move
+			);
+
+			// if the new avatar was successfully created,
+			// delete the old one to make sure that we don't have two.
+			$oldAvatar->delete();
+
+			return $user;
+		});
 	}
 
 	/**

@@ -6,6 +6,7 @@ use Kirby\Exception\DuplicateException;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -386,6 +387,141 @@ class UserRulesTest extends ModelTestCase
 		]);
 	}
 
+	public function testCreateAvatar(): void
+	{
+		$this->expectNotToPerformAssertions();
+
+		$this->app->impersonate('admin@domain.com');
+		$user = $this->app->user('user@domain.com');
+
+		UserRules::createAvatar($user, '/tmp/avatar.jpg', 'jpg');
+	}
+
+	public function testCreateAvatarWithoutPermission(): void
+	{
+		$permissions = $this->createStub(UserPermissions::class);
+		$permissions->method('can')->willReturn(false);
+
+		$user = $this->createStub(User::class);
+		$user->method('permissions')->willReturn($permissions);
+		$user->method('username')->willReturn('test');
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to update the user "test"');
+
+		UserRules::createAvatar($user, '/tmp/avatar.jpg', 'jpg');
+	}
+
+	public function testCreateAvatarWhenAvatarExists(): void
+	{
+		$avatar = $this->createStub(File::class);
+		$avatar->method('filename')->willReturn('profile.jpg');
+
+		$permissions = $this->createStub(UserPermissions::class);
+		$permissions->method('can')->willReturn(true);
+
+		$user = $this->createStub(User::class);
+		$user->method('avatar')->willReturn($avatar);
+		$user->method('permissions')->willReturn($permissions);
+
+		$this->expectException(DuplicateException::class);
+		$this->expectExceptionMessage('A file with the name "profile.jpg" already exists');
+
+		UserRules::createAvatar($user, '/tmp/avatar.jpg', 'jpg');
+	}
+
+	public function testDeleteAvatar(): void
+	{
+		$this->expectNotToPerformAssertions();
+
+		$avatar = $this->createStub(File::class);
+
+		$permissions = $this->createStub(UserPermissions::class);
+		$permissions->method('can')->willReturn(true);
+
+		$user = $this->createStub(User::class);
+		$user->method('avatar')->willReturn($avatar);
+		$user->method('permissions')->willReturn($permissions);
+
+		UserRules::deleteAvatar($user);
+	}
+
+	public function testDeleteAvatarNotFound(): void
+	{
+		$permissions = $this->createStub(UserPermissions::class);
+		$permissions->method('can')->willReturn(true);
+
+		$user = $this->createStub(User::class);
+		$user->method('avatar')->willReturn(null);
+		$user->method('permissions')->willReturn($permissions);
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionCode('error.file.notFound');
+
+		UserRules::deleteAvatar($user, '/tmp/avatar.jpg');
+	}
+
+	public function testDeleteAvatarWithoutPermission(): void
+	{
+		$permissions = $this->createStub(UserPermissions::class);
+		$permissions->method('can')->willReturn(false);
+
+		$user = $this->createStub(User::class);
+		$user->method('permissions')->willReturn($permissions);
+		$user->method('username')->willReturn('test');
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to update the user "test"');
+
+		UserRules::deleteAvatar($user);
+	}
+
+	public function testReplaceAvatar(): void
+	{
+		$this->expectNotToPerformAssertions();
+
+		$avatar = $this->createStub(File::class);
+
+		$permissions = $this->createStub(UserPermissions::class);
+		$permissions->method('can')->willReturn(true);
+
+		$user = $this->createStub(User::class);
+		$user->method('avatar')->willReturn($avatar);
+		$user->method('permissions')->willReturn($permissions);
+
+		UserRules::replaceAvatar($user, '/tmp/avatar.jpg', 'jpg');
+	}
+
+	public function testReplaceAvatarNotFound(): void
+	{
+		$permissions = $this->createStub(UserPermissions::class);
+		$permissions->method('can')->willReturn(true);
+
+		$user = $this->createStub(User::class);
+		$user->method('avatar')->willReturn(null);
+		$user->method('permissions')->willReturn($permissions);
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionCode('error.file.notFound');
+
+		UserRules::replaceAvatar($user, '/tmp/avatar.jpg', 'jpg');
+	}
+
+	public function testReplaceAvatarWithoutPermission(): void
+	{
+		$permissions = $this->createStub(UserPermissions::class);
+		$permissions->method('can')->willReturn(false);
+
+		$user = $this->createStub(User::class);
+		$user->method('permissions')->willReturn($permissions);
+		$user->method('username')->willReturn('test');
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to update the user "test"');
+
+		UserRules::replaceAvatar($user, '/tmp/avatar.jpg', 'jpg');
+	}
+
 	public function testUpdate(): void
 	{
 		$this->expectNotToPerformAssertions();
@@ -461,6 +597,38 @@ class UserRulesTest extends ModelTestCase
 			['kirby'],
 			['nobody']
 		];
+	}
+
+	public function testValidAvatar(): void
+	{
+		$this->expectNotToPerformAssertions();
+
+		$user = $this->createStub(User::class);
+
+		UserRules::validAvatar($user, __DIR__ . '/../../Api/Routes/fixtures/avatar.jpg', 'jpg');
+	}
+
+	public function testValidAvatarWithInvalidExtension(): void
+	{
+		$user = $this->createStub(User::class);
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Invalid file type: document');
+
+		UserRules::validAvatar($user, '/tmp/file.pdf', 'pdf');
+	}
+
+	public function testValidAvatarWithInvalidMime(): void
+	{
+		$source = static::TMP . '/fake-image.jpg';
+		file_put_contents($source, 'this is not an image');
+
+		$user = $this->createStub(User::class);
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionCode('error.file.mime.invalid');
+
+		UserRules::validAvatar($user, $source, 'jpg');
 	}
 
 	#[DataProvider('validIdProvider')]

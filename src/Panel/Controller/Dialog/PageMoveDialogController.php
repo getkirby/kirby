@@ -47,7 +47,7 @@ class PageMoveDialogController extends PageDialogController
 		$parent = $this->request->get('parent');
 
 		if ($parent === '' || $parent === '/' || $parent === 'site://') {
-			$parent = $this->kirby->site();
+			$parent = Find::site();
 		} else {
 			$parent = Find::page($parent);
 		}

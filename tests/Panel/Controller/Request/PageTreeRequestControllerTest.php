@@ -153,6 +153,8 @@ class PageTreeRequestControllerTest extends TestCase
 			]
 		]);
 
+		$this->app->impersonate('kirby');
+
 		$controller = new PageTreeRequestController();
 		$data       = $controller->load();
 

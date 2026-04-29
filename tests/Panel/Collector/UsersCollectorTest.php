@@ -68,6 +68,50 @@ class UsersCollectorTest extends TestCase
 		$this->assertCollectUnauthenticated(UsersCollector::class);
 	}
 
+	public function testCollectWithNonListableUsers(): void
+	{
+		// use a uuid-based role to avoid static permission cache
+		// collisions with the admin role used in other tests
+		$uuid = uuid();
+
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'users/manager-' . $uuid => [
+					'name' => 'manager-' . $uuid,
+				],
+				'users/editor-' . $uuid => [
+					'name'    => 'editor-' . $uuid,
+					'options' => ['list' => false]
+				]
+			],
+			'roles' => [
+				['name' => 'manager-' . $uuid],
+				['name' => 'editor-' . $uuid]
+			],
+			'users' => [
+				[
+					'id'    => 'a',
+					'email' => 'a@getkirby.com',
+					'role'  => 'manager-' . $uuid,
+				],
+				[
+					'id'    => 'b',
+					'email' => 'b@getkirby.com',
+					'role'  => 'editor-' . $uuid,
+				],
+				[
+					'id'    => 'c',
+					'email' => 'c@getkirby.com',
+					'role'  => 'editor-' . $uuid,
+				],
+			]
+		]);
+
+		// manager only sees users whose blueprint allows listing
+		$this->app->impersonate('a@getkirby.com');
+		$this->assertCollect(UsersCollector::class, ['a']);
+	}
+
 	public function testFilterByRole(): void
 	{
 		$this->setUpUsers();

@@ -32,6 +32,7 @@ class UserBlueprint extends Blueprint
 			$this->props['options'] ?? true,
 			// defaults
 			[
+				'access'         => null,
 				'create'         => null,
 				'changeEmail'    => null,
 				'changeLanguage' => null,
@@ -39,6 +40,7 @@ class UserBlueprint extends Blueprint
 				'changePassword' => null,
 				'changeRole'     => null,
 				'delete'         => null,
+				'list'           => null,
 				'update'         => null,
 			]
 		);
