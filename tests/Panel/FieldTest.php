@@ -195,13 +195,6 @@ class FieldTest extends TestCase
 		// without authenticated user
 		$field = Field::role();
 
-		$expected = [
-			'hidden'   => true,
-			'name'     => 'role',
-			'saveable' => true,
-			'type'     => 'hidden'
-		];
-
 		$this->assertSame('role', $field['name']);
 		$this->assertSame('hidden', $field['type']);
 
@@ -228,8 +221,8 @@ class FieldTest extends TestCase
 			]
 		];
 
-		$this->assertSame('role', $field['name']);
 		$this->assertSame('Role', $field['label']);
+		$this->assertSame('role', $field['name']);
 		$this->assertSame('radio', $field['type']);
 		$this->assertSame($options, $field['options']);
 	}
