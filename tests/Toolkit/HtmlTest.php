@@ -82,6 +82,45 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $html);
 	}
 
+	public function testAWithDangerousSchemes(): void
+	{
+		// javascript://
+		$html = Html::a('javascript://comment%0Aalert(1)', 'click');
+		$this->assertStringNotContainsString('javascript:', $html);
+		$this->assertStringContainsString('href=""', $html);
+
+		// bare javascript: (no //)
+		$html = Html::a('javascript:alert(1)', 'click');
+		$this->assertStringNotContainsString('javascript:', $html);
+
+		// other dangerous schemes
+		$html = Html::a('vbscript://x', 'click');
+		$this->assertStringNotContainsString('vbscript:', $html);
+
+		$html = Html::a('data://text/html;base64,PHN2Zz4=', 'click');
+		$this->assertStringNotContainsString('data:', $html);
+
+		$html = Html::a('livescript://x', 'click');
+		$this->assertStringNotContainsString('livescript:', $html);
+
+		// whitespace/tab prefix bypass attempts
+		$html = Html::a(' javascript://x', 'click');
+		$this->assertStringNotContainsString('javascript:', $html);
+
+		$html = Html::a("\tjavascript://x", 'click');
+		$this->assertStringNotContainsString('javascript:', $html);
+
+		// safe schemes must still work
+		$html = Html::a('https://getkirby.com', 'Kirby');
+		$this->assertStringContainsString('href="https://getkirby.com"', $html);
+
+		$html = Html::a('custom://getkirby.com', 'Kirby');
+		$this->assertStringContainsString('href="custom://getkirby.com"', $html);
+
+		$html = Html::a('/relative/path', 'link');
+		$this->assertStringContainsString('href="/relative/path"', $html);
+	}
+
 	#[DataProvider('attrProvider')]
 	public function testAttr(
 		array $input,
