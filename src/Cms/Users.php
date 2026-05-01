@@ -7,6 +7,7 @@ use Kirby\Exception\LogicException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\Str;
+use Kirby\Toolkit\V;
 use Kirby\Uuid\HasUuids;
 
 /**
@@ -159,11 +160,17 @@ class Users extends LazyCollection
 			return null;
 		}
 
+		// ensure the user ID only contains safe characters
+		// to prevent path traversal into subfolders
+		if (V::match($key, '/^([a-z0-9_-])+$/i') !== true) {
+			return null;
+		}
+
 		// check if the user directory exists if not all keys have been
 		// populated in the collection, otherwise we can assume that
 		// this method will only be called on "unhydrated" user IDs
 		$root = $this->root . '/' . $key;
-		if ($this->initialized === false && is_dir($root) === false) {
+		if ($this->initialized === false && Dir::exists($root, $this->root) === false) {
 			return null;
 		}
 
