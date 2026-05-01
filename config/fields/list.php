@@ -1,5 +1,7 @@
 <?php
 
+use Kirby\Sane\Sane;
+
 return [
 	'props' => [
 		/**
@@ -17,7 +19,9 @@ return [
 	],
 	'computed' => [
 		'value' => function () {
-			return trim($this->value ?? '');
+			$value = trim($this->value ?? '');
+			$value = Sane::sanitizeProseMirrorFields($value);
+			return $value;
 		}
 	]
 ];
