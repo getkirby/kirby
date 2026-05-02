@@ -24,7 +24,7 @@ class FilesFieldTestApi extends Api
 
 		return [
 			'status' => 'ok',
-			'data'   => $callback('source.txt', 'test.txt')
+			'data'   => $callback('source.txt', 'test.txt', $template)
 		];
 	}
 }

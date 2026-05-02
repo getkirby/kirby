@@ -186,7 +186,7 @@ readonly class Upload
 				// (incomplete chunk request will return empty $source)
 				$data = match ($source) {
 					null    => null,
-					default => $callback($source, $filename)
+					default => $callback($source, $filename, $this->template)
 				};
 
 				$uploads[$upload['name']] = match (true) {

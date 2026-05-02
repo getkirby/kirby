@@ -59,11 +59,10 @@ return [
 				);
 			}
 
-			$parent = $this->uploadParent($params['parent'] ?? null);
-
+			$parent   = $this->uploadParent($params['parent'] ?? null);
 			$template = $params['template'] ?? null;
 
-			return $api->upload(function ($source, $filename) use ($parent, $template, $map) {
+			return $api->upload(function ($source, $filename, $template) use ($parent, $map) {
 				$props = [
 					'source'   => $source,
 					'template' => $template,
