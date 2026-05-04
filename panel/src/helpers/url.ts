@@ -14,16 +14,16 @@ export function base(): URL {
  * @since 4.0.0
  */
 export function buildQuery(
-	query: Record<string, string | null> = {},
+	query: Record<string, unknown> = {},
 	origin: string | Record<string, string> | URL = {}
 ): URLSearchParams {
 	const search = origin instanceof URL ? origin.search : origin;
 	const params = new URLSearchParams(search);
 
-	// add all data params unless they are empty/null
+	// add all data params unless they are null or undefined
 	for (const [key, value] of Object.entries(query)) {
-		if (value !== null) {
-			params.set(key, value);
+		if (value != null) {
+			params.set(key, String(value));
 		}
 	}
 
