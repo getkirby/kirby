@@ -183,7 +183,12 @@ class Api extends BaseApi
 			return $pages->search($this->requestQuery('q'));
 		}
 
-		return $pages->query($this->requestBody());
+		return $pages->query(array_filter([
+			'limit'    => $this->requestBody('limit'),
+			'offset'   => $this->requestBody('offset'),
+			'paginate' => $this->requestBody('paginate'),
+			'search'   => $this->requestBody('search'),
+		], fn ($value) => $value !== null));
 	}
 
 	/**

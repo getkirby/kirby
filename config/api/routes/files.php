@@ -70,7 +70,12 @@ return [
 				return $files->search($this->requestQuery('q'));
 			}
 
-			return $files->query($this->requestBody());
+			return $files->query(array_filter([
+				'limit'    => $this->requestBody('limit'),
+				'offset'   => $this->requestBody('offset'),
+				'paginate' => $this->requestBody('paginate'),
+				'search'   => $this->requestBody('search'),
+			], fn ($value) => $value !== null));
 		}
 	],
 	[
@@ -140,7 +145,12 @@ return [
 				return $files->search($this->requestQuery('q'));
 			}
 
-			return $files->query($this->requestBody());
+			return $files->query(array_filter([
+				'limit'    => $this->requestBody('limit'),
+				'offset'   => $this->requestBody('offset'),
+				'paginate' => $this->requestBody('paginate'),
+				'search'   => $this->requestBody('search'),
+			], fn ($value) => $value !== null));
 		}
 	],
 ];

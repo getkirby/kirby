@@ -331,4 +331,67 @@ class SiteRoutesTest extends TestCase
 		$this->assertCount(1, $response['data']);
 		$this->assertSame('parent/child', $response['data'][0]['id']);
 	}
+
+	public function testSearchWithPostRequestIgnoresFilterBy(): void
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'    => 'photography',
+						'content' => ['title' => 'Photography']
+					],
+					[
+						'slug'    => 'design',
+						'content' => ['title' => 'Design']
+					]
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		// filterBy slug = photography would normally return only 1 page;
+		// since filterBy is stripped from the body, both pages are returned
+		$response = $app->api()->call('site/search', 'POST', [
+			'body' => [
+				'filterBy' => [
+					['field' => 'slug', 'operator' => '==', 'value' => 'photography']
+				]
+			]
+		]);
+
+		$this->assertCount(2, $response['data']);
+	}
+
+	public function testSearchWithPostRequestIgnoresSortBy(): void
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'    => 'a',
+						'content' => ['title' => 'A']
+					],
+					[
+						'slug'    => 'b',
+						'content' => ['title' => 'B']
+					]
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		// sortBy in the body is stripped; default order (a, b) is preserved
+		$response = $app->api()->call('site/search', 'POST', [
+			'body' => [
+				'sortBy' => 'slug desc'
+			]
+		]);
+
+		$this->assertCount(2, $response['data']);
+		$this->assertSame('a', $response['data'][0]['id']);
+		$this->assertSame('b', $response['data'][1]['id']);
+	}
 }

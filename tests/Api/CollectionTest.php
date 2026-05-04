@@ -116,4 +116,99 @@ class CollectionTest extends TestCase
 			'limit'  => 100
 		], $result['pagination']);
 	}
+
+	public function testToResponseIgnoresFilterByInQuery(): void
+	{
+		$api = new Api([
+			'models' => [
+				'test' => [
+					'type'   => Page::class,
+					'fields' => [
+						'value' => fn ($model) => $model->slug()
+					]
+				]
+			],
+			'requestData' => [
+				'query' => [
+					'query' => [
+						'filterBy' => [
+							['field' => 'slug', 'operator' => '==', 'value' => 'a']
+						]
+					]
+				]
+			]
+		]);
+		$collection = new Collection($api, new Pages([
+			new Page(['slug' => 'a']),
+			new Page(['slug' => 'b']),
+			new Page(['slug' => 'c']),
+		]), [
+			'model' => 'test'
+		]);
+
+		// filterBy is stripped; all three pages are returned
+		$this->assertCount(3, $collection->toResponse()['data']);
+	}
+
+	public function testToResponseIgnoresSortByInQuery(): void
+	{
+		$api = new Api([
+			'models' => [
+				'test' => [
+					'type'   => Page::class,
+					'fields' => [
+						'value' => fn ($model) => $model->slug()
+					]
+				]
+			],
+			'requestData' => [
+				'query' => [
+					'query' => [
+						'sortBy' => 'slug desc'
+					]
+				]
+			]
+		]);
+		$collection = new Collection($api, new Pages([
+			new Page(['slug' => 'a']),
+			new Page(['slug' => 'b']),
+		]), [
+			'model' => 'test'
+		]);
+
+		// sortBy is stripped; original order (a, b) is preserved
+		$result = $collection->toResponse()['data'];
+		$this->assertSame('a', $result[0]['value']);
+		$this->assertSame('b', $result[1]['value']);
+	}
+
+	public function testToResponseRespectsLimitInQuery(): void
+	{
+		$api = new Api([
+			'models' => [
+				'test' => [
+					'type'   => Page::class,
+					'fields' => [
+						'value' => fn ($model) => $model->slug()
+					]
+				]
+			],
+			'requestData' => [
+				'query' => [
+					'query' => [
+						'limit' => 2
+					]
+				]
+			]
+		]);
+		$collection = new Collection($api, new Pages([
+			new Page(['slug' => 'a']),
+			new Page(['slug' => 'b']),
+			new Page(['slug' => 'c']),
+		]), [
+			'model' => 'test'
+		]);
+
+		$this->assertCount(2, $collection->toResponse()['data']);
+	}
 }
