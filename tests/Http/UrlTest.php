@@ -97,10 +97,14 @@ class UrlTest extends TestCase
 		$this->assertTrue(Url::hasDangerousScheme('vbscript://x'));
 		$this->assertTrue(Url::hasDangerousScheme('data://text/html;base64,PHN2Zz4='));
 		$this->assertTrue(Url::hasDangerousScheme('livescript://x'));
+		$this->assertTrue(Url::hasDangerousScheme('mocha://x'));
+		$this->assertTrue(Url::hasDangerousScheme('jar://x'));
 		$this->assertTrue(Url::hasDangerousScheme('JAVASCRIPT://x'));
 		// whitespace prefix bypass attempts
 		$this->assertTrue(Url::hasDangerousScheme(' javascript://x'));
 		$this->assertTrue(Url::hasDangerousScheme("\tjavascript://x"));
+		$this->assertTrue(Url::hasDangerousScheme("\njavascript://x"));
+		$this->assertTrue(Url::hasDangerousScheme("\rjavascript://x"));
 
 		$this->assertFalse(Url::hasDangerousScheme('https://getkirby.com'));
 		$this->assertFalse(Url::hasDangerousScheme('//getkirby.com'));
@@ -119,6 +123,8 @@ class UrlTest extends TestCase
 		$this->assertFalse(Url::isAbsolute('../getkirby.com/docs'));
 		$this->assertFalse(Url::isAbsolute('javascript:alert("XSS")'));
 		$this->assertFalse(Url::isAbsolute('javascript://comment%0Aalert(1)'));
+		$this->assertFalse(Url::isAbsolute('vbscript://x'));
+		$this->assertFalse(Url::isAbsolute('data://text/html;base64,PHN2Zz4='));
 	}
 
 	public function testMakeAbsolute(): void
