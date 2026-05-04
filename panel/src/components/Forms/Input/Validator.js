@@ -29,11 +29,13 @@ export default class InputValidator extends HTMLElement {
 		// pass-through the id attribute
 		const id = this.getAttribute("id");
 
-		if (id) {
+		if (id && this.input) {
 			if (this.input.hasAttribute("id") === false) {
 				this.input.setAttribute("id", id);
 			}
 
+			// always strip own id to avoid duplicate ids in the DOM,
+			// even when the transfer was skipped because the child already has one
 			this.removeAttribute("id");
 		}
 
