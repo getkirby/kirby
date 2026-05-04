@@ -7,6 +7,7 @@ use Kirby\Exception\LogicException;
 use Kirby\Filesystem\Dir;
 use Kirby\Panel\Site as Panel;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\BlockCollectionAccess;
 
 /**
  * The `$site` object is the root element
@@ -140,6 +141,7 @@ class Site extends ModelWithContent
 	 * Returns the url to the api endpoint
 	 * @internal
 	 */
+	#[BlockCollectionAccess]
 	public function apiUrl(bool $relative = false): string
 	{
 		if ($relative === true) {
@@ -249,6 +251,7 @@ class Site extends ModelWithContent
 	 * and children in the site directory
 	 * @internal
 	 */
+	#[BlockCollectionAccess]
 	public function inventory(): array
 	{
 		if ($this->inventory !== null) {
@@ -292,6 +295,7 @@ class Site extends ModelWithContent
 	 * Returns the root to the media folder for the site
 	 * @internal
 	 */
+	#[BlockCollectionAccess]
 	public function mediaRoot(): string
 	{
 		return $this->kirby()->root('media') . '/site';
@@ -374,6 +378,7 @@ class Site extends ModelWithContent
 	 * Preview Url
 	 * @internal
 	 */
+	#[BlockCollectionAccess]
 	public function previewUrl(): string|null
 	{
 		$preview = $this->blueprint()->preview();
@@ -394,6 +399,7 @@ class Site extends ModelWithContent
 	/**
 	 * Returns the absolute path to the content directory
 	 */
+	#[BlockCollectionAccess]
 	public function root(): string
 	{
 		return $this->root ??= $this->kirby()->root('content');
@@ -482,6 +488,7 @@ class Site extends ModelWithContent
 	 * returns the current page
 	 * @internal
 	 */
+	#[BlockCollectionAccess]
 	public function visit(
 		string|Page $page,
 		string|null $languageCode = null

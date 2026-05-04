@@ -13,6 +13,7 @@ use Kirby\Http\Uri;
 use Kirby\Panel\Page as Panel;
 use Kirby\Template\Template;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\LazyValue;
 use Kirby\Toolkit\Str;
 use Throwable;
@@ -186,6 +187,7 @@ class Page extends ModelWithContent
 	 * Returns the url to the api endpoint
 	 * @internal
 	 */
+	#[BlockCollectionAccess]
 	public function apiUrl(bool $relative = false): string
 	{
 		if ($relative === true) {
@@ -302,6 +304,7 @@ class Page extends ModelWithContent
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the controller returns invalid objects for `kirby`, `site`, `pages` or `page`
 	 */
+	#[BlockCollectionAccess]
 	public function controller(
 		array $data = [],
 		string $contentType = 'html'
@@ -426,6 +429,7 @@ class Page extends ModelWithContent
 	 * @param array $options Options for `Kirby\Http\Uri` to create URL parts
 	 * @param int $code HTTP status code
 	 */
+	#[BlockCollectionAccess]
 	public function go(array $options = [], int $code = 302): void
 	{
 		Response::go($this->url($options), $code);
@@ -475,6 +479,7 @@ class Page extends ModelWithContent
 	 * children and content files
 	 * @internal
 	 */
+	#[BlockCollectionAccess]
 	public function inventory(): array
 	{
 		if ($this->inventory !== null) {
@@ -797,6 +802,7 @@ class Page extends ModelWithContent
 	 * Returns the root to the media folder for the page
 	 * @internal
 	 */
+	#[BlockCollectionAccess]
 	public function mediaRoot(): string
 	{
 		return $this->kirby()->root('media') . '/pages/' . $this->id();
@@ -934,6 +940,7 @@ class Page extends ModelWithContent
 	 * Draft preview Url
 	 * @internal
 	 */
+	#[BlockCollectionAccess]
 	public function previewUrl(): string|null
 	{
 		$preview = $this->blueprint()->preview();
@@ -967,6 +974,7 @@ class Page extends ModelWithContent
 	 * @param string $contentType
 	 * @throws \Kirby\Exception\NotFoundException If the default template cannot be found
 	 */
+	#[BlockCollectionAccess]
 	public function render(array $data = [], $contentType = 'html'): string
 	{
 		$kirby = $this->kirby();
@@ -1047,6 +1055,7 @@ class Page extends ModelWithContent
 	 * @internal
 	 * @throws \Kirby\Exception\NotFoundException If the content representation cannot be found
 	 */
+	#[BlockCollectionAccess]
 	public function representation(mixed $type): Template
 	{
 		$kirby          = $this->kirby();
@@ -1064,6 +1073,7 @@ class Page extends ModelWithContent
 	 * Returns the absolute root to the page directory
 	 * No matter if it exists or not.
 	 */
+	#[BlockCollectionAccess]
 	public function root(): string
 	{
 		return $this->root ??= $this->kirby()->root('content') . '/' . $this->diruri();

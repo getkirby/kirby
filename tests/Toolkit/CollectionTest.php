@@ -2,6 +2,51 @@
 
 namespace Kirby\Toolkit;
 
+class AccessibleObject
+{
+	public function value(): string
+	{
+		return 'accessible';
+	}
+}
+
+class BlockedObject
+{
+	#[BlockCollectionAccess]
+	public function secret(): string
+	{
+		return 'sensitive';
+	}
+}
+
+class HasMethodsObject
+{
+	public static array $methods = [];
+
+	public function __call(string $name, array $args): mixed
+	{
+		return $this->getMethod($name)?->call($this, ...$args);
+	}
+
+	public function getMethod(string $method): \Closure|null
+	{
+		return static::$methods[$method] ?? null;
+	}
+
+	public function hasMethod(string $method): bool
+	{
+		return isset(static::$methods[$method]);
+	}
+}
+
+class MagicCallObject
+{
+	public function __call(string $name, array $args): string
+	{
+		return 'magic';
+	}
+}
+
 class StringObject
 {
 	protected $value;
@@ -251,6 +296,36 @@ class CollectionTest extends TestCase
 
 		$this->assertSame('Homer', $collection->getAttribute($collection->first(), 'username'));
 		$this->assertSame('Marge', $collection->getAttribute($collection->last(), 'username'));
+	}
+
+	public function testGetAttributeFromObjectAccessibleMethod(): void
+	{
+		$obj        = new AccessibleObject();
+		$collection = new Collection([$obj]);
+		$this->assertSame('accessible', $collection->getAttribute($obj, 'value'));
+	}
+
+	public function testGetAttributeFromObjectBlockedMethod(): void
+	{
+		$obj        = new BlockedObject();
+		$collection = new Collection([$obj]);
+		$this->assertNull($collection->getAttribute($obj, 'secret'));
+	}
+
+	public function testGetAttributeFromObjectViaHasMethods(): void
+	{
+		HasMethodsObject::$methods['custom'] = fn () => 'custom value';
+		$obj        = new HasMethodsObject();
+		$collection = new Collection([$obj]);
+		$this->assertSame('custom value', $collection->getAttribute($obj, 'custom'));
+		HasMethodsObject::$methods = [];
+	}
+
+	public function testGetAttributeFromObjectViaMagicCall(): void
+	{
+		$obj        = new MagicCallObject();
+		$collection = new Collection([$obj]);
+		$this->assertSame('magic', $collection->getAttribute($obj, 'anything'));
 	}
 
 	/**

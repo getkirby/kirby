@@ -8,6 +8,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\IsFile;
 use Kirby\Panel\File as Panel;
+use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Str;
 
 /**
@@ -134,6 +135,7 @@ class File extends ModelWithContent
 	 * Returns the url to api endpoint
 	 * @internal
 	 */
+	#[BlockCollectionAccess]
 	public function apiUrl(bool $relative = false): string
 	{
 		return $this->parent()->apiUrl($relative) . '/files/' . $this->filename();
@@ -389,6 +391,7 @@ class File extends ModelWithContent
 	 * Creates a unique media hash
 	 * @internal
 	 */
+	#[BlockCollectionAccess]
 	public function mediaHash(): string
 	{
 		return $this->mediaToken() . '-' . $this->modifiedFile();
@@ -398,6 +401,7 @@ class File extends ModelWithContent
 	 * Returns the absolute path to the file in the public media folder
 	 * @internal
 	 */
+	#[BlockCollectionAccess]
 	public function mediaRoot(): string
 	{
 		return $this->parent()->mediaRoot() . '/' . $this->mediaHash() . '/' . $this->filename();
@@ -407,6 +411,7 @@ class File extends ModelWithContent
 	 * Creates a non-guessable token string for this file
 	 * @internal
 	 */
+	#[BlockCollectionAccess]
 	public function mediaToken(): string
 	{
 		$token = $this->kirby()->contentToken($this, $this->id());
@@ -529,6 +534,7 @@ class File extends ModelWithContent
 	/**
 	 * Returns the absolute root to the file
 	 */
+	#[BlockCollectionAccess]
 	public function root(): string|null
 	{
 		return $this->root ??= $this->parent()->root() . '/' . $this->filename();
@@ -623,6 +629,7 @@ class File extends ModelWithContent
 	 * option is used to disable this behavior or enable it
 	 * on a per-file basis.
 	 */
+	#[BlockCollectionAccess]
 	public function previewUrl(): string|null
 	{
 		// check if the clean file URL is accessible,
