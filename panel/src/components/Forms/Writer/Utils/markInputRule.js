@@ -17,7 +17,7 @@ function getMarksBetween(start, end, state) {
 	return marks;
 }
 
-export default function (regexp, markType, getAttrs) {
+export default function markInputRule(regexp, markType, getAttrs) {
 	return new InputRule(regexp, (state, match, start, end) => {
 		const attrs = getAttrs instanceof Function ? getAttrs(match) : getAttrs;
 		const { tr } = state;

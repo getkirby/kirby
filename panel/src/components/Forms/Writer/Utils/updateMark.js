@@ -1,6 +1,6 @@
 import getMarkRange from "./getMarkRange";
 
-export default function (type, attrs) {
+export default function updateMark(type, attrs) {
 	return (state, dispatch) => {
 		const { tr, selection, doc } = state;
 

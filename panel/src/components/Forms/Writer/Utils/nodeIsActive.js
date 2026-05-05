@@ -3,7 +3,7 @@ import { length } from "@/helpers/object";
 import findParentNode from "./findParentNode";
 import findSelectedNodeOfType from "./findSelectedNodeOfType";
 
-export default (state, type, attrs = {}) => {
+export default function nodeIsActive(state, type, attrs = {}) {
 	const predicate = (node) => node.type === type;
 	const node =
 		findSelectedNodeOfType(type)(state.selection) ||
@@ -14,4 +14,4 @@ export default (state, type, attrs = {}) => {
 	}
 
 	return node.node.hasMarkup(type, { ...node.node.attrs, ...attrs });
-};
+}

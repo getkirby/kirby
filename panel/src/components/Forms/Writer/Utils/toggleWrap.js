@@ -1,7 +1,7 @@
 import { lift, wrapIn } from "prosemirror-commands";
 import nodeIsActive from "./nodeIsActive";
 
-export default function (type, attrs = {}) {
+export default function toggleWrap(type, attrs = {}) {
 	return (state, dispatch, view) => {
 		const isActive = nodeIsActive(state, type, attrs);
 

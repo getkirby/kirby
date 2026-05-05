@@ -1,7 +1,7 @@
 import { setBlockType } from "prosemirror-commands";
 import nodeIsActive from "./nodeIsActive";
 
-export default function (type, toggleType, attrs = {}) {
+export default function toggleBlockType(type, toggleType, attrs = {}) {
 	return (state, dispatch, view) => {
 		const isActive = nodeIsActive(state, type, attrs);
 

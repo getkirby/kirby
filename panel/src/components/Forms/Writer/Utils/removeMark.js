@@ -1,6 +1,6 @@
 import getMarkRange from "./getMarkRange";
 
-export default function (type) {
+export default function removeMark(type) {
 	return (state, dispatch) => {
 		const { tr, selection } = state;
 		let { from, to } = selection;

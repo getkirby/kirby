@@ -1,8 +1,8 @@
+import { NodeSelection } from "prosemirror-state";
+
 /**
  * Taken from: https://github.com/atlassian/prosemirror-utils
  */
-import { NodeSelection } from "prosemirror-state";
-
-export default (selection) => {
+export default function isNodeSelection(selection) {
 	return selection instanceof NodeSelection;
-};
+}

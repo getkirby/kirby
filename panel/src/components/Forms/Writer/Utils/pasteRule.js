@@ -1,7 +1,7 @@
 import { Plugin } from "prosemirror-state";
 import { Slice, Fragment } from "prosemirror-model";
 
-export default function (regexp, type, getAttrs) {
+export default function pasteRule(regexp, type, getAttrs) {
 	const handler = (fragment) => {
 		const nodes = [];
 
