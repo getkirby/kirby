@@ -370,11 +370,10 @@ class LockTest extends TestCase
 
 	public function testToArray(): void
 	{
+		$this->app->impersonate('kirby');
+
 		$lock = new Lock(
-			user: $user = new User([
-				'email' => 'test@getkirby.com',
-				'id'    => 'test'
-			]),
+			user: $this->app->user('editor'),
 			modified: $modified = time()
 		);
 
@@ -383,8 +382,50 @@ class LockTest extends TestCase
 			'isLocked' => true,
 			'modified' => date('c', $modified),
 			'user'     => [
-				'id'    => 'test',
-				'email' => 'test@getkirby.com'
+				'id'    => 'editor',
+				'email' => 'editor@getkirby.com'
+			]
+		], $lock->toArray());
+	}
+
+	public function testToArrayWithUnlistableUser(): void
+	{
+		$this->app = $this->app->clone([
+			'roles' => [
+				[
+					'name'        => 'restricted',
+					'permissions' => [
+						'users' => ['list' => false]
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'admin@getkirby.com',
+					'id'    => 'admin',
+				],
+				[
+					'email' => 'editor@getkirby.com',
+					'id'    => 'editor',
+					'role'  => 'restricted',
+				],
+			]
+		]);
+
+		$this->app->impersonate('editor');
+
+		$lock = new Lock(
+			user: $this->app->user('admin'),
+			modified: $modified = time()
+		);
+
+		$this->assertSame([
+			'isLegacy' => false,
+			'isLocked' => true,
+			'modified' => date('c', $modified),
+			'user'     => [
+				'id'    => null,
+				'email' => null
 			]
 		], $lock->toArray());
 	}
