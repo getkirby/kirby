@@ -76,10 +76,11 @@ class ContentLock
 		if (empty($data) === false && $data['user'] !== $this->user()->id()) {
 			if ($user = $this->kirby()->user($data['user'])) {
 				$time = (int)($data['time']);
+				$user = $user->isListable() === true ? $user : null;
 
 				return [
-					'user'       => $user->id(),
-					'email'      => $user->email(),
+					'user'       => $user?->id(),
+					'email'      => $user?->email(),
 					'time'       => $time,
 					'unlockable' => ($time + 60) <= time()
 				];
