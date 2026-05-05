@@ -1,8 +1,10 @@
+import type { Attrs, MarkType } from "prosemirror-model";
+import type { Command } from "prosemirror-state";
 import getMarkRange from "./getMarkRange";
 
-export default function updateMark(type, attrs) {
-	return (state, dispatch) => {
-		const { tr, selection, doc } = state;
+export default function updateMark(type: MarkType, attrs: Attrs): Command {
+	return (state, dispatch): boolean => {
+		const { tr, selection } = state;
 
 		const { ranges, empty } = selection;
 
@@ -15,19 +17,11 @@ export default function updateMark(type, attrs) {
 
 			const { from, to } = range;
 
-			if (doc.rangeHasMark(from, to, type)) {
-				tr.removeMark(from, to, type);
-			}
-
+			tr.removeMark(from, to, type);
 			tr.addMark(from, to, type.create(attrs));
 		} else {
-			ranges.forEach((ref$1) => {
-				const { $to, $from } = ref$1;
-
-				if (doc.rangeHasMark($from.pos, $to.pos, type)) {
-					tr.removeMark($from.pos, $to.pos, type);
-				}
-
+			ranges.forEach(({ $to, $from }) => {
+				tr.removeMark($from.pos, $to.pos, type);
 				tr.addMark($from.pos, $to.pos, type.create(attrs));
 			});
 		}

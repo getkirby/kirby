@@ -1,9 +1,9 @@
-/**
- * @param {import("prosemirror-model").ResolvedPos | null} [$pos]
- * @param {import("prosemirror-model").MarkType | null} [type]
- * @returns {{ from: number, to: number } | false}
- */
-export default function getMarkRange($pos = null, type = null) {
+import { MarkType, ResolvedPos } from "prosemirror-model";
+
+export default function getMarkRange(
+	$pos: ResolvedPos | null = null,
+	type: MarkType | null = null
+): { from: number; to: number } | false {
 	if (!$pos || !type) {
 		return false;
 	}
@@ -14,19 +14,20 @@ export default function getMarkRange($pos = null, type = null) {
 		return false;
 	}
 
-	const link = start.node.marks.find((mark) => mark.type === type);
-	if (!link) {
+	const mark = start.node.marks.find((mark) => mark.type === type);
+
+	if (!mark) {
 		return false;
 	}
 
-	let startIndex = $pos.index();
+	let startIndex = start.index;
 	let startPos = $pos.start() + start.offset;
 	let endIndex = startIndex + 1;
 	let endPos = startPos + start.node.nodeSize;
 
 	while (
 		startIndex > 0 &&
-		link.isInSet($pos.parent.child(startIndex - 1).marks)
+		mark.isInSet($pos.parent.child(startIndex - 1).marks)
 	) {
 		startIndex -= 1;
 		startPos -= $pos.parent.child(startIndex).nodeSize;
@@ -34,7 +35,7 @@ export default function getMarkRange($pos = null, type = null) {
 
 	while (
 		endIndex < $pos.parent.childCount &&
-		link.isInSet($pos.parent.child(endIndex).marks)
+		mark.isInSet($pos.parent.child(endIndex).marks)
 	) {
 		endPos += $pos.parent.child(endIndex).nodeSize;
 		endIndex += 1;

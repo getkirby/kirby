@@ -1,3 +1,5 @@
+import { Node, ResolvedPos } from "prosemirror-model";
+
 /**
  * Taken from: https://github.com/atlassian/prosemirror-utils
  *
@@ -10,7 +12,10 @@
  * const predicate = node => node.type === schema.nodes.blockquote;
  * const parent = findParentNodeClosestToPos(state.doc.resolve(5), predicate);
  */
-export default function findParentNodeClosestToPos($pos, predicate) {
+export default function findParentNodeClosestToPos(
+	$pos: ResolvedPos,
+	predicate: (node: Node) => boolean
+): { pos: number; start: number; depth: number; node: Node } | undefined {
 	for (let i = $pos.depth; i > 0; i--) {
 		const node = $pos.node(i);
 

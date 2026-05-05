@@ -1,9 +1,22 @@
+import {
+	Slice,
+	Fragment,
+	type Attrs,
+	type MarkType,
+	type Node
+} from "prosemirror-model";
 import { Plugin } from "prosemirror-state";
-import { Slice, Fragment } from "prosemirror-model";
 
-export default function pasteRule(regexp, type, getAttrs) {
-	const handler = (fragment) => {
-		const nodes = [];
+/**
+ * @deprecate 6.0.0 Use `markPasteRule` instead
+ */
+export default function pasteRule(
+	regexp: RegExp,
+	type: MarkType,
+	getAttrs: Attrs | ((match: string) => Attrs) = {}
+): Plugin {
+	const handler = (fragment: Fragment): Fragment => {
+		const nodes: Node[] = [];
 
 		fragment.forEach((child) => {
 			if (child.isText) {
@@ -12,7 +25,7 @@ export default function pasteRule(regexp, type, getAttrs) {
 				let match;
 
 				do {
-					match = regexp.exec(text);
+					match = regexp.exec(text!);
 					if (match) {
 						const start = match.index;
 						const end = start + match[0].length;
@@ -33,7 +46,7 @@ export default function pasteRule(regexp, type, getAttrs) {
 					}
 				} while (match);
 
-				if (pos < text.length) {
+				if (pos < text!.length) {
 					nodes.push(child.cut(pos));
 				}
 			} else {
