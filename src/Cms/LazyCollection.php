@@ -207,7 +207,7 @@ abstract class LazyCollection extends Collection
 	/**
 	 * Returns the first element
 	 *
-	 * @return TValue
+	 * @return TValue|null
 	 */
 	public function first()
 	{
@@ -337,7 +337,7 @@ abstract class LazyCollection extends Collection
 	/**
 	 * Returns the last element
 	 *
-	 * @return TValue
+	 * @return TValue|null
 	 */
 	public function last()
 	{

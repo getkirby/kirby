@@ -413,7 +413,7 @@ class Collection extends Iterator implements Stringable
 	/**
 	 * Returns the first element
 	 *
-	 * @return TValue
+	 * @return TValue|null
 	 */
 	public function first()
 	{
@@ -640,7 +640,7 @@ class Collection extends Iterator implements Stringable
 	/**
 	 * Returns the last element
 	 *
-	 * @return TValue
+	 * @return TValue|null
 	 */
 	public function last()
 	{
