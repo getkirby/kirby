@@ -1,7 +1,11 @@
 export default class Emitter {
+	#callbacks = {};
+
+	/**
+	 * Call all registered listeners for that event
+	 */
 	emit(event, ...args) {
-		this._callbacks ??= {};
-		const callbacks = this._callbacks[event] ?? [];
+		const callbacks = this.#callbacks[event] ?? [];
 
 		for (const callback of callbacks) {
 			callback.apply(this, args);
@@ -16,19 +20,21 @@ export default class Emitter {
 	 * If neither is provided, all event listeners will be removed.
 	 */
 	off(event, fn) {
-		if (!arguments.length) {
-			this._callbacks = {};
-		} else {
-			// event listeners for the given event
-			const callbacks = this._callbacks ? this._callbacks[event] : null;
-			if (callbacks) {
-				if (fn) {
-					// remove specific handler
-					this._callbacks[event] = callbacks.filter((cb) => cb !== fn);
-				} else {
-					// remove all handlers
-					delete this._callbacks[event];
-				}
+		if (event === undefined) {
+			this.#callbacks = {};
+			return this;
+		}
+
+		// event listeners for the given event
+		const callbacks = this.#callbacks[event];
+
+		if (callbacks) {
+			if (fn) {
+				// remove specific handler
+				this.#callbacks[event] = callbacks.filter((cb) => cb !== fn);
+			} else {
+				// remove all handlers
+				delete this.#callbacks[event];
 			}
 		}
 
@@ -39,9 +45,8 @@ export default class Emitter {
 	 * Add an event listener for given event
 	 */
 	on(event, fn) {
-		this._callbacks ??= {};
-		this._callbacks[event] ??= [];
-		this._callbacks[event].push(fn);
+		this.#callbacks[event] ??= [];
+		this.#callbacks[event].push(fn);
 		return this;
 	}
 }
