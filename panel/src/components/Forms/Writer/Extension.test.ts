@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
-import Extension from "./Extension";
+import type Editor from "./Editor";
+import Extension, { type BaseContext } from "./Extension";
 
-class TestExtension extends Extension {
+class TestExtension extends Extension<{ color: string; size: number }> {
 	get name() {
 		return "test";
 	}
@@ -17,6 +18,10 @@ class BareExtension extends Extension {
 	}
 }
 
+const ext = new TestExtension();
+const bare = new BareExtension();
+const context = {} as BaseContext;
+
 describe("Extension", () => {
 	describe("constructor", () => {
 		it("merges provided options with defaults", () => {
@@ -25,47 +30,57 @@ describe("Extension", () => {
 		});
 
 		it("uses defaults when no options are provided", () => {
-			const ext = new TestExtension();
 			expect(ext.options).toStrictEqual({ color: "red", size: 10 });
 		});
 	});
 
 	describe("bindEditor", () => {
 		it("sets the editor reference", () => {
-			const ext = new TestExtension();
-			const fakeEditor = {};
+			const fakeEditor = {} as Editor;
 			ext.bindEditor(fakeEditor);
 			expect(ext.editor).toBe(fakeEditor);
 		});
 	});
 
+	describe("button", () => {
+		it("is undefined by default", () => {
+			expect(bare.button).toBeUndefined();
+		});
+	});
+
+	describe("commands", () => {
+		it("returns an empty object by default", () => {
+			expect(bare.commands(context)).toStrictEqual({});
+		});
+	});
+
 	describe("inputRules", () => {
 		it("returns an empty array by default", () => {
-			expect(new BareExtension().inputRules()).toStrictEqual([]);
+			expect(bare.inputRules(context)).toStrictEqual([]);
 		});
 	});
 
 	describe("keys", () => {
 		it("returns an empty object by default", () => {
-			expect(new BareExtension().keys()).toStrictEqual({});
+			expect(bare.keys(context)).toStrictEqual({});
 		});
 	});
 
 	describe("pasteRules", () => {
 		it("returns an empty array by default", () => {
-			expect(new BareExtension().pasteRules()).toStrictEqual([]);
+			expect(bare.pasteRules(context)).toStrictEqual([]);
 		});
 	});
 
 	describe("plugins", () => {
 		it("returns an empty array by default", () => {
-			expect(new BareExtension().plugins()).toStrictEqual([]);
+			expect(bare.plugins()).toStrictEqual([]);
 		});
 	});
 
 	describe("type", () => {
 		it("returns 'extension'", () => {
-			expect(new BareExtension().type).toBe("extension");
+			expect(bare.type).toBe("extension");
 		});
 	});
 });
