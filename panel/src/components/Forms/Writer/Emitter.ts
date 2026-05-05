@@ -1,10 +1,10 @@
 export default class Emitter {
-	#callbacks = {};
+	#callbacks: Record<string, ((...args: any[]) => void)[]> = {};
 
 	/**
 	 * Call all registered listeners for that event
 	 */
-	emit(event, ...args) {
+	emit(event: string, ...args: unknown[]): this {
 		const callbacks = this.#callbacks[event] ?? [];
 
 		for (const callback of callbacks) {
@@ -19,7 +19,7 @@ export default class Emitter {
 	 * If fn is not provided, all event listeners for that event will be removed.
 	 * If neither is provided, all event listeners will be removed.
 	 */
-	off(event, fn) {
+	off(event?: string, fn?: (...args: any[]) => void): this {
 		if (event === undefined) {
 			this.#callbacks = {};
 			return this;
@@ -44,7 +44,7 @@ export default class Emitter {
 	/**
 	 * Add an event listener for given event
 	 */
-	on(event, fn) {
+	on(event: string, fn: (...args: any[]) => void): this {
 		this.#callbacks[event] ??= [];
 		this.#callbacks[event].push(fn);
 		return this;
