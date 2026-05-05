@@ -141,10 +141,9 @@ class Sane
 	 * @since 5.4.1
 	 */
 	public static function sanitizeProseMirrorFields(
-		string $string,
-		bool $isExternal = false
+		string $string
 	): string {
-		$string = static::sanitize($string, 'html', $isExternal);
+		$string = static::sanitize($string, 'html');
 
 		// convert non-breaking spaces to HTML entity
 		// as that's how ProseMirror handles it internally;
