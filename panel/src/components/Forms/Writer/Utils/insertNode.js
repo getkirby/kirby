@@ -1,9 +1,14 @@
 export default function insertNode(type, attrs, content, marks) {
 	return (state, dispatch) => {
-		dispatch(
-			state.tr
-				.replaceSelectionWith(type.create(attrs, content, marks))
-				.scrollIntoView()
-		);
+		const { tr } = state;
+		const node = type.create(attrs, content, marks);
+
+		tr.replaceSelectionWith(node).scrollIntoView();
+
+		if (dispatch) {
+			dispatch(tr);
+		}
+
+		return true;
 	};
 }

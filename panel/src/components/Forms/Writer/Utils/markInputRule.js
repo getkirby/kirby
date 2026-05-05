@@ -39,7 +39,7 @@ export default function (regexp, markType, getAttrs) {
 				.filter((item) => item.end > matchStart);
 
 			if (excludedMarks.length) {
-				return false;
+				return null;
 			}
 
 			if (textEnd < matchEnd) {

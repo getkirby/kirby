@@ -1,3 +1,8 @@
+/**
+ * @param {import("prosemirror-model").ResolvedPos | null} [$pos]
+ * @param {import("prosemirror-model").MarkType | null} [type]
+ * @returns {{ from: number, to: number } | false}
+ */
 export default function getMarkRange($pos = null, type = null) {
 	if (!$pos || !type) {
 		return false;

@@ -9,12 +9,20 @@ export default function (type) {
 		if (empty) {
 			const range = getMarkRange($from, type);
 
+			if (range === false) {
+				return false;
+			}
+
 			from = range.from;
 			to = range.to;
 		}
 
 		tr.removeMark(from, to, type);
 
-		return dispatch(tr);
+		if (dispatch) {
+			dispatch(tr);
+		}
+
+		return true;
 	};
 }
