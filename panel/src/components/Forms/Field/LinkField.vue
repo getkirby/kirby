@@ -58,32 +58,32 @@
 			</div>
 
 			<!-- Page or file browser -->
-			<div
-				v-if="currentType.id === 'page'"
-				v-show="expanded"
-				data-type="page"
-				class="k-link-input-body"
-			>
-				<div class="k-page-browser">
-					<k-page-tree
-						:current="$helper.link.getPageUUID(value)"
-						:root="false"
+			<template v-if="expanded">
+				<div
+					v-if="currentType.id === 'page'"
+					data-type="page"
+					class="k-link-input-body"
+				>
+					<div class="k-page-browser">
+						<k-page-tree
+							:current="$helper.link.getPageUUID(value)"
+							:root="false"
+							@select="selectModel($event)"
+						/>
+					</div>
+				</div>
+				<div
+					v-else-if="currentType.id === 'file'"
+					data-type="file"
+					class="k-link-input-body"
+				>
+					<k-file-browser
+						:opened="$panel.view.props.model.uuid ?? $panel.view.props.model.id"
+						:selected="$helper.link.getFileUUID(value)"
 						@select="selectModel($event)"
 					/>
 				</div>
-			</div>
-			<div
-				v-else-if="currentType.id === 'file'"
-				v-show="expanded"
-				data-type="file"
-				class="k-link-input-body"
-			>
-				<k-file-browser
-					:opened="$panel.view.props.model.uuid ?? $panel.view.props.model.id"
-					:selected="$helper.link.getFileUUID(value)"
-					@select="selectModel($event)"
-				/>
-			</div>
+			</template>
 		</k-input>
 	</k-field>
 </template>

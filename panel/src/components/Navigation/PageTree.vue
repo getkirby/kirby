@@ -83,6 +83,15 @@ export default {
 			this.$set(item, "loading", false);
 		},
 		async preselect(page) {
+			// skip the parents API call
+			// if the page is already in the loaded items
+			const existing = this.findItem(page);
+
+			if (existing) {
+				this.$emit("select", existing);
+				return;
+			}
+
 			// get array of parent uuids/ids
 			const response = await this.$panel.get("site/tree/parents", {
 				query: {
@@ -90,8 +99,8 @@ export default {
 					root: this.root
 				}
 			});
-			const parents = response.data;
 
+			const parents = response.data;
 			let tree = this;
 
 			// go through all parents, try to find the matching item,
