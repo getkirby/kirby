@@ -439,6 +439,185 @@ class AppResolveTest extends TestCase
 	/**
 	 * @covers ::resolve
 	 */
+	public function testResolveDraft(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'   => 'test',
+						'drafts' => [
+							['slug' => 'a-draft']
+						]
+					]
+				]
+			]
+		]);
+
+		$result = $app->resolve('test/a-draft');
+		$this->assertNull($result);
+	}
+
+	/**
+	 * @covers ::resolve
+	 */
+	public function testResolveDraftWithUser(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'   => 'test',
+						'drafts' => [
+							['slug' => 'a-draft']
+						]
+					]
+				]
+			],
+			'users' => [
+				['email' => 'admin@getkirby.com', 'role' => 'admin']
+			]
+		]);
+
+		$app->impersonate('admin@getkirby.com');
+
+		$result = $app->resolve('test/a-draft');
+
+		$this->assertIsPage($result);
+		$this->assertSame('test/a-draft', $result->id());
+	}
+
+	/**
+	 * @covers ::resolve
+	 */
+	public function testResolveDraftWithUserDeniedByPermission(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'   => 'test',
+						'drafts' => [
+							['slug' => 'a-draft']
+						]
+					]
+				]
+			],
+			'roles' => [
+				[
+					'name'        => 'editor',
+					'permissions' => [
+						'pages' => ['access' => false]
+					]
+				]
+			],
+			'users' => [
+				['email' => 'editor@getkirby.com', 'role' => 'editor']
+			]
+		]);
+
+		$app->impersonate('editor@getkirby.com');
+
+		$result = $app->resolve('test/a-draft');
+
+		$this->assertNull($result);
+	}
+
+	/**
+	 * @covers ::resolve
+	 */
+	public function testResolveDraftWithToken(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'   => 'test',
+						'drafts' => [
+							['slug' => 'a-draft']
+						]
+					]
+				]
+			]
+		]);
+
+		$draft = $app->page('test/a-draft');
+		$token = $app->contentToken($draft, $draft->id() . $draft->template());
+		$app   = $app->clone([
+			'request' => [
+				'query' => ['token' => $token]
+			]
+		]);
+
+		$result = $app->resolve('test/a-draft');
+
+		$this->assertIsPage($result);
+		$this->assertSame('test/a-draft', $result->id());
+	}
+
+	/**
+	 * @covers ::resolve
+	 */
+	public function testResolveDraftWithTokenBypassesPermission(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'   => 'test',
+						'drafts' => [
+							['slug' => 'a-draft']
+						]
+					]
+				]
+			],
+			'roles' => [
+				[
+					'name'        => 'editor',
+					'permissions' => [
+						'pages' => ['access' => false]
+					]
+				]
+			],
+			'users' => [
+				['email' => 'editor@getkirby.com', 'role' => 'editor']
+			]
+		]);
+
+		$draft = $app->page('test/a-draft');
+		$token = $app->contentToken($draft, $draft->id() . $draft->template());
+		$app   = $app->clone([
+			'request' => [
+				'query' => ['token' => $token]
+			]
+		]);
+
+		$app->impersonate('editor@getkirby.com');
+
+		$result = $app->resolve('test/a-draft');
+
+		$this->assertIsPage($result);
+		$this->assertSame('test/a-draft', $result->id());
+	}
+
+	/**
+	 * @covers ::resolve
+	 */
 	public function testRepresentationErrorType()
 	{
 		$this->app = new App([
