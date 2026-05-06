@@ -131,11 +131,10 @@ export default {
 	gap: var(--spacing-6);
 }
 
-.k-login-stack .k-user-info {
-	margin-bottom: var(--spacing-6);
-}
-
 .k-login-form {
+	display: flex;
+	flex-direction: column;
+	gap: var(--spacing-6);
 	padding: var(--spacing-6);
 	background: light-dark(var(--color-white), var(--color-gray-950));
 	border-radius: var(--rounded);

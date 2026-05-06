@@ -550,7 +550,7 @@ Shared behavior has been extracted into reusable mixins, such as:
 - New `k-panel-notifications` [#7797](https://github.com/getkirby/kirby/pull/7797)
 - `k-button` apply all `aria-` attributes [#7801](https://github.com/getkirby/kirby/pull/7801)
 - DOM structure of `k-item` has been changes. An additional wrapper `.k-item-box` div was added. [#7361](https://github.com/getkirby/kirby/pull/7361)
-- New k-login-back-button [#7840](https://github.com/getkirby/kirby/pull/7840)
+- New k-login-back [#7840](https://github.com/getkirby/kirby/pull/7840)
 - Remove `light-dark()` polyfill [#7902](https://github.com/getkirby/kirby/pull/7902)
 - `<k-breadcrumb>` has a new responsive behavior (backend by `<k-collapsible>`) [#7901](https://github.com/getkirby/kirby/pull/7901)
 - `files`, `pages` and `users` fields use new picker dialogs
