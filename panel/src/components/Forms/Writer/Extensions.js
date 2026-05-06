@@ -3,12 +3,16 @@ import { keymap } from "prosemirror-keymap";
 import utils from "./Utils";
 
 export default class Extensions {
+	editor;
+	extensions;
+
 	constructor(extensions = [], editor) {
 		for (const extension of extensions) {
 			extension.bindEditor(editor);
 			extension.init();
 		}
 
+		this.editor = editor;
 		this.extensions = extensions;
 	}
 
