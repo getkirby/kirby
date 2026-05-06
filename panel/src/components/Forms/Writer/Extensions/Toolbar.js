@@ -32,6 +32,10 @@ export default class Toolbar extends Extension {
 		});
 	}
 
+	get name() {
+		return "toolbar";
+	}
+
 	get type() {
 		return "toolbar";
 	}

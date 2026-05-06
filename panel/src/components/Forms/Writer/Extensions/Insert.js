@@ -5,11 +5,26 @@ export default class Insert extends Extension {
 	commands() {
 		return {
 			insertHtml: (value) => (state, dispatch) => {
-				let dom = document.createElement("div");
+				if (typeof value !== "string") {
+					return false;
+				}
+
+				const dom = document.createElement("div");
 				dom.innerHTML = value.trim();
+				const { tr } = state;
 				const node = DOMParser.fromSchema(state.schema).parse(dom);
-				dispatch(state.tr.replaceSelectionWith(node).scrollIntoView());
+				tr.replaceSelectionWith(node).scrollIntoView();
+
+				if (dispatch) {
+					dispatch(tr);
+				}
+
+				return true;
 			}
 		};
+	}
+
+	get name() {
+		return "insert";
 	}
 }

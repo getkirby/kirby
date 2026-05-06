@@ -13,8 +13,8 @@ export default class History extends Extension {
 
 	get defaults() {
 		return {
-			depth: "",
-			newGroupDelay: ""
+			depth: undefined,
+			newGroupDelay: undefined
 		};
 	}
 
