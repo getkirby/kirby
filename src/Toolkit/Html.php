@@ -120,6 +120,10 @@ class Html extends Xml
 			return static::tel(substr($href, 4), $text, $attr);
 		}
 
+		if (Url::hasDangerousScheme($href) === true) {
+			$href = '';
+		}
+
 		return static::link($href, $text, $attr);
 	}
 

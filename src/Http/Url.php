@@ -94,17 +94,34 @@ class Url
 	}
 
 	/**
+	 * Checks if a URL starts with a dangerous URI scheme
+	 * (e.g. javascript:) that must never appear in rendered href
+	 * or src attributes.
+	 * @since 4.9.1
+	 */
+	public static function hasDangerousScheme(string|null $url = null): bool
+	{
+		return
+			$url !== null &&
+			// strip leading whitespace to prevent
+			// tab/space-prefix bypass attempts
+			preg_match('!^(?:javascript|vbscript|livescript|mocha|jar|data)\s*:!i', ltrim($url)) === 1;
+	}
+
+	/**
 	 * Checks if an URL is absolute
 	 */
 	public static function isAbsolute(string|null $url = null): bool
 	{
+		if ($url === null || static::hasDangerousScheme($url) === true) {
+			return false;
+		}
+
 		// matches the following groups of URLs:
 		//  //example.com/uri
 		//  http://example.com/uri, https://example.com/uri, ftp://example.com/uri
 		//  mailto:example@example.com, geo:49.0158,8.3239?z=11
-		return
-			$url !== null &&
-			preg_match('!^(//|[a-z0-9+-.]+://|mailto:|tel:|geo:)!i', $url) === 1;
+		return preg_match('!^(//|[a-z0-9+-.]+://|mailto:|tel:|geo:)!i', $url) === 1;
 	}
 
 	/**
