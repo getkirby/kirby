@@ -4,6 +4,8 @@ namespace Kirby\Toolkit;
 
 use Closure;
 use Exception;
+use ReflectionFunction;
+use ReflectionMethod;
 use Stringable;
 
 /**
@@ -478,10 +480,56 @@ class Collection extends Iterator implements Stringable
 		return $array[$attribute] ?? null;
 	}
 
+	/**
+	 * Blocks access to methods that are marked with the
+	 * #[BlockCollectionAccess] attribute to prevent sensitive data
+	 * exposure (e.g. password hashes) or unintended write actions
+	 * through collection operations driven by user input.
+	 *
+	 * This applies to both explicit PHP methods and closures registered
+	 * via HasMethods::$methods. Attributes resolved via __call() that
+	 * have no matching PHP method or registered closure (i.e. content
+	 * fields) are always allowed through.
+	 */
 	protected function getAttributeFromObject(
 		object $object,
 		string $attribute
 	): mixed {
+		static $cache = [];
+		$key = $object::class . '::' . strtolower($attribute);
+
+		if (isset($cache[$key]) === false) {
+			if (method_exists($object, $attribute) === true) {
+				// explicit PHP method: check for #[BlockCollectionAccess] via reflection
+				$cache[$key] = (new ReflectionMethod($object, $attribute))
+					->getAttributes(BlockCollectionAccess::class) === [];
+			} elseif (method_exists($object, 'hasMethod') === true && $object->hasMethod($attribute) === true) {
+				// closure registered via HasMethods::$methods: check the closure's attributes
+				$closure = $object->getMethod($attribute);
+				$cache[$key] = $closure === null ||
+					(new ReflectionFunction($closure))
+						->getAttributes(BlockCollectionAccess::class) === [];
+			} else {
+				// no PHP method and no registered closure (e.g. a CMS content field
+				// resolved via __call()): always allow through
+				$cache[$key] = true;
+			}
+		}
+
+		if ($cache[$key] === false) {
+			// throw in debug mode so developers get a clear signal instead of a silent null
+			if (
+				class_exists('Kirby\Cms\App', false) === true &&
+				\Kirby\Cms\App::instance(lazy: true)?->option('debug') === true
+			) {
+				throw new \InvalidArgumentException(
+					'The "' . $attribute . '" method is not accessible in collection operations.'
+				);
+			}
+
+			return null;
+		}
+
 		return $object->{$attribute}();
 	}
 
@@ -1237,7 +1285,7 @@ Collection::$filters['not in'] = [
  * Contains Filter
  */
 Collection::$filters['*='] = [
-	'validator' => fn ($value, $test) => str_contains($value, $test) === true,
+	'validator' => fn ($value, $test) => $value !== null && str_contains($value, $test) === true,
 	'strict'    => false
 ];
 
@@ -1245,7 +1293,7 @@ Collection::$filters['*='] = [
  * Not Contains Filter
  */
 Collection::$filters['!*='] = [
-	'validator' => fn ($value, $test) => str_contains($value, $test) === false
+	'validator' => fn ($value, $test) => $value === null || str_contains($value, $test) === false
 ];
 
 /**

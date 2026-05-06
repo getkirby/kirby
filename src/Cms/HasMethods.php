@@ -53,7 +53,7 @@ trait HasMethods
 	 * the current class or from a parent class ordered by
 	 * inheritance order (top to bottom)
 	 */
-	protected function getMethod(string $method): Closure|null
+	public function getMethod(string $method): Closure|null
 	{
 		if (isset(static::$methods[$method]) === true) {
 			return static::$methods[$method];
