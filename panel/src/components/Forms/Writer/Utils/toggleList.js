@@ -39,7 +39,7 @@ export default function toggleList(listType, itemType) {
 					dispatch(tr);
 				}
 
-				return false;
+				return true;
 			}
 		}
 

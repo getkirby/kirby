@@ -7,7 +7,14 @@ export default function (type, attrs) {
 		const { ranges, empty } = selection;
 
 		if (empty) {
-			const { from, to } = getMarkRange(selection.$from, type);
+			const range = getMarkRange(selection.$from, type);
+
+			if (range === false) {
+				return false;
+			}
+
+			const { from, to } = range;
+
 			if (doc.rangeHasMark(from, to, type)) {
 				tr.removeMark(from, to, type);
 			}
@@ -25,6 +32,10 @@ export default function (type, attrs) {
 			});
 		}
 
-		return dispatch(tr);
+		if (dispatch) {
+			dispatch(tr);
+		}
+
+		return true;
 	};
 }
