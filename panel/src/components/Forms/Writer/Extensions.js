@@ -16,6 +16,30 @@ export default class Extensions {
 		this.extensions = extensions;
 	}
 
+	buttons(type = "mark") {
+		const buttons = {};
+
+		for (const extension of this.extensions) {
+			if (extension.type !== type || !extension.button) {
+				continue;
+			}
+
+			if (Array.isArray(extension.button)) {
+				for (const button of extension.button) {
+					const name = button.id ?? button.name;
+
+					if (name) {
+						buttons[name] = button;
+					}
+				}
+			} else {
+				buttons[extension.name] = { name: extension.name, ...extension.button };
+			}
+		}
+
+		return buttons;
+	}
+
 	commands({ schema, view }) {
 		return this.extensions
 			.filter((extension) => extension.commands)
@@ -81,30 +105,6 @@ export default class Extensions {
 					...commands
 				};
 			}, {});
-	}
-
-	buttons(type = "mark") {
-		const buttons = {};
-
-		for (const extension of this.extensions) {
-			if (extension.type !== type || !extension.button) {
-				continue;
-			}
-
-			if (Array.isArray(extension.button)) {
-				for (const button of extension.button) {
-					const name = button.id ?? button.name;
-
-					if (name) {
-						buttons[name] = button;
-					}
-				}
-			} else {
-				buttons[extension.name] = { name: extension.name, ...extension.button };
-			}
-		}
-
-		return buttons;
 	}
 
 	getAllowedExtensions(excludedExtensions) {
