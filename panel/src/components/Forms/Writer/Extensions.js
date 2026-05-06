@@ -93,7 +93,11 @@ export default class Extensions {
 
 			if (Array.isArray(extension.button)) {
 				for (const button of extension.button) {
-					buttons[button.id ?? button.name] = button;
+					const name = button.id ?? button.name;
+
+					if (name) {
+						buttons[name] = button;
+					}
 				}
 			} else {
 				buttons[extension.name] = { name: extension.name, ...extension.button };
