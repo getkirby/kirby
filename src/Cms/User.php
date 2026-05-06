@@ -13,6 +13,7 @@ use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Panel\User as Panel;
 use Kirby\Session\Session;
+use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Str;
 use SensitiveParameter;
 
@@ -131,6 +132,7 @@ class User extends ModelWithContent
 	 * Returns the url to the api endpoint
 	 * @internal
 	 */
+	#[BlockCollectionAccess]
 	public function apiUrl(bool $relative = false): string
 	{
 		if ($relative === true) {
@@ -224,6 +226,7 @@ class User extends ModelWithContent
 	 * Hashes the provided password unless it is `null`,
 	 * which will leave it as `null`
 	 */
+	#[BlockCollectionAccess]
 	public static function hashPassword(
 		#[SensitiveParameter]
 		string|null $password = null
@@ -257,6 +260,7 @@ class User extends ModelWithContent
 	 * Returns the inventory of files
 	 * children and content files
 	 */
+	#[BlockCollectionAccess]
 	public function inventory(): array
 	{
 		if ($this->inventory !== null) {
@@ -376,6 +380,7 @@ class User extends ModelWithContent
 	 *
 	 * @param \Kirby\Session\Session|array|null $session Session options or session object to set the user in
 	 */
+	#[BlockCollectionAccess]
 	public function login(
 		#[SensitiveParameter]
 		string $password,
@@ -392,6 +397,7 @@ class User extends ModelWithContent
 	 *
 	 * @param \Kirby\Session\Session|array|null $session Session options or session object to set the user in
 	 */
+	#[BlockCollectionAccess]
 	public function loginPasswordless(
 		Session|array|null $session = null
 	): void {
@@ -429,6 +435,7 @@ class User extends ModelWithContent
 	 *
 	 * @param \Kirby\Session\Session|array|null $session Session options or session object to unset the user in
 	 */
+	#[BlockCollectionAccess]
 	public function logout(Session|array|null $session = null): void
 	{
 		$kirby   = $this->kirby();
@@ -459,6 +466,7 @@ class User extends ModelWithContent
 	/**
 	 * Returns the absolute path to the media folder for the user
 	 */
+	#[BlockCollectionAccess]
 	public function mediaDir(): string
 	{
 		return $this->kirby()->root('media') . '/users/' . $this->id();
@@ -467,6 +475,7 @@ class User extends ModelWithContent
 	/**
 	 * @see `::mediaDir`
 	 */
+	#[BlockCollectionAccess]
 	public function mediaRoot(): string
 	{
 		return $this->mediaDir();
@@ -538,6 +547,7 @@ class User extends ModelWithContent
 	/**
 	 * Returns the encrypted user password
 	 */
+	#[BlockCollectionAccess]
 	public function password(): string|null
 	{
 		return $this->password ??= $this->readPassword();
@@ -547,6 +557,7 @@ class User extends ModelWithContent
 	 * Returns the timestamp when the password
 	 * was last changed
 	 */
+	#[BlockCollectionAccess]
 	public function passwordTimestamp(): int|null
 	{
 		$file = $this->secretsFile();
@@ -637,6 +648,7 @@ class User extends ModelWithContent
 	/**
 	 * The absolute path to the user directory
 	 */
+	#[BlockCollectionAccess]
 	public function root(): string
 	{
 		return $this->kirby()->root('accounts') . '/' . $this->id();
@@ -655,6 +667,7 @@ class User extends ModelWithContent
 	 * Reads a specific secret from the user secrets file on disk
 	 * @since 4.0.0
 	 */
+	#[BlockCollectionAccess]
 	public function secret(string $key): mixed
 	{
 		return $this->readSecrets()[$key] ?? null;
@@ -756,6 +769,7 @@ class User extends ModelWithContent
 	 * @throws \Kirby\Exception\InvalidArgumentException If the entered password is not valid
 	 *                                                   or does not match the user password
 	 */
+	#[BlockCollectionAccess]
 	public function validatePassword(
 		#[SensitiveParameter]
 		string|null $password = null

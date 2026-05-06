@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Toolkit\BlockCollectionAccess;
 
 /**
  * SiteActions
@@ -40,6 +41,7 @@ trait SiteActions
 	/**
 	 * Change the site title
 	 */
+	#[BlockCollectionAccess]
 	public function changeTitle(
 		string $title,
 		string|null $languageCode = null
@@ -68,6 +70,7 @@ trait SiteActions
 	/**
 	 * Creates a main page
 	 */
+	#[BlockCollectionAccess]
 	public function createChild(array $props): Page
 	{
 		return Page::create([
@@ -84,6 +87,7 @@ trait SiteActions
 	 *
 	 * @return $this
 	 */
+	#[BlockCollectionAccess]
 	public function purge(): static
 	{
 		parent::purge();
