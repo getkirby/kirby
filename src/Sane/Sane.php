@@ -135,11 +135,9 @@ class Sane
 	 * Sanitizes the given string from ProseMirror-backed fields
 	 * @since 4.9.1
 	 */
-	public static function sanitizeProseMirrorFields(
-		string $string,
-		bool $isExternal = false
-	): string {
-		$string = static::sanitize($string, 'html', $isExternal);
+	public static function sanitizeProseMirrorFields(string $string): string
+	{
+		$string = static::sanitize($string, 'html');
 
 		// convert non-breaking spaces to HTML entity
 		// as that's how ProseMirror handles it internally;
