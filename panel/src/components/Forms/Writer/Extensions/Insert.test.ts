@@ -17,12 +17,13 @@ const schema = new Schema({
 });
 
 const state = EditorState.create({ schema });
+const insert = new Insert();
 
 describe("Insert", () => {
 	describe("commands", () => {
 		describe("insertHtml", () => {
 			it("dispatches a transaction", () => {
-				const { insertHtml } = new Insert().commands();
+				const { insertHtml } = insert.commands();
 				const dispatch = vi.fn();
 				const command = insertHtml("<p>Hello</p>");
 				expect(command(state, dispatch)).toBe(true);
@@ -30,19 +31,19 @@ describe("Insert", () => {
 			});
 
 			it("does not dispatch or throw when dispatch is undefined", () => {
-				const { insertHtml } = new Insert().commands();
+				const { insertHtml } = insert.commands();
 				const command = insertHtml("<p>Hello</p>");
 				expect(() => command(state, undefined)).not.toThrow();
 			});
 
 			it("returns false when value is not a string", () => {
-				const { insertHtml } = new Insert().commands();
+				const { insertHtml } = insert.commands();
 				const command = insertHtml(42);
 				expect(command(state, vi.fn())).toBe(false);
 			});
 
 			it("trims whitespace from the html value", () => {
-				const { insertHtml } = new Insert().commands();
+				const { insertHtml } = insert.commands();
 				const dispatch = vi.fn();
 				const command = insertHtml("  <p>Hello</p>  ");
 				command(state, dispatch);
@@ -53,13 +54,13 @@ describe("Insert", () => {
 
 	describe("name", () => {
 		it("returns 'insert'", () => {
-			expect(new Insert().name).toBe("insert");
+			expect(insert.name).toBe("insert");
 		});
 	});
 
 	describe("type", () => {
 		it("returns 'extension'", () => {
-			expect(new Insert().type).toBe("extension");
+			expect(insert.type).toBe("extension");
 		});
 	});
 });

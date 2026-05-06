@@ -1,7 +1,10 @@
 import Extension from "../Extension";
 import { history, undo, redo, undoDepth, redoDepth } from "prosemirror-history";
 
-export default class History extends Extension {
+export default class History extends Extension<{
+	depth?: number;
+	newGroupDelay?: number;
+}> {
 	commands() {
 		return {
 			undo: () => undo,

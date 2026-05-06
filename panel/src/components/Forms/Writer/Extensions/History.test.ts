@@ -3,10 +3,12 @@ import { Plugin } from "prosemirror-state";
 import { undo, redo, undoDepth, redoDepth } from "prosemirror-history";
 import History from "./History";
 
+const history = new History();
+
 describe("History", () => {
 	describe("constructor", () => {
 		it("uses defaults when no options are provided", () => {
-			expect(new History().options).toStrictEqual({
+			expect(history.options).toStrictEqual({
 				depth: undefined,
 				newGroupDelay: undefined
 			});
@@ -22,53 +24,53 @@ describe("History", () => {
 
 	describe("commands", () => {
 		it("undo returns the undo function", () => {
-			expect(new History().commands().undo()).toBe(undo);
+			expect(history.commands().undo()).toBe(undo);
 		});
 
 		it("redo returns the redo function", () => {
-			expect(new History().commands().redo()).toBe(redo);
+			expect(history.commands().redo()).toBe(redo);
 		});
 
 		it("undoDepth returns the undoDepth function", () => {
-			expect(new History().commands().undoDepth()).toBe(undoDepth);
+			expect(history.commands().undoDepth()).toBe(undoDepth);
 		});
 
 		it("redoDepth returns the redoDepth function", () => {
-			expect(new History().commands().redoDepth()).toBe(redoDepth);
+			expect(history.commands().redoDepth()).toBe(redoDepth);
 		});
 	});
 
 	describe("keys", () => {
 		it("maps Mod-z to undo", () => {
-			expect(new History().keys()["Mod-z"]).toBe(undo);
+			expect(history.keys()["Mod-z"]).toBe(undo);
 		});
 
 		it("maps Mod-y to redo", () => {
-			expect(new History().keys()["Mod-y"]).toBe(redo);
+			expect(history.keys()["Mod-y"]).toBe(redo);
 		});
 
 		it("maps Shift-Mod-z to redo", () => {
-			expect(new History().keys()["Shift-Mod-z"]).toBe(redo);
+			expect(history.keys()["Shift-Mod-z"]).toBe(redo);
 		});
 
 		it("maps Mod-я to undo", () => {
-			expect(new History().keys()["Mod-я"]).toBe(undo);
+			expect(history.keys()["Mod-я"]).toBe(undo);
 		});
 
 		it("maps Shift-Mod-я to redo", () => {
-			expect(new History().keys()["Shift-Mod-я"]).toBe(redo);
+			expect(history.keys()["Shift-Mod-я"]).toBe(redo);
 		});
 	});
 
 	describe("name", () => {
 		it("returns 'history'", () => {
-			expect(new History().name).toBe("history");
+			expect(history.name).toBe("history");
 		});
 	});
 
 	describe("plugins", () => {
 		it("returns one Plugin instance", () => {
-			const plugins = new History().plugins();
+			const plugins = history.plugins();
 			expect(plugins).toHaveLength(1);
 			expect(plugins[0]).toBeInstanceOf(Plugin);
 		});
@@ -76,7 +78,7 @@ describe("History", () => {
 
 	describe("type", () => {
 		it("returns 'extension'", () => {
-			expect(new History().type).toBe("extension");
+			expect(history.type).toBe("extension");
 		});
 	});
 });

@@ -1,10 +1,12 @@
 import { describe, expect, it, vi } from "vitest";
 import Keys from "./Keys";
 
+const keys = new Keys();
+
 describe("Keys", () => {
 	describe("keys", () => {
 		it("returns an empty object when no options are provided", () => {
-			expect(new Keys().keys()).toStrictEqual({});
+			expect(keys.keys()).toStrictEqual({});
 		});
 
 		it("creates a key entry for each option", () => {
@@ -28,13 +30,13 @@ describe("Keys", () => {
 
 	describe("name", () => {
 		it("returns 'keys'", () => {
-			expect(new Keys().name).toBe("keys");
+			expect(keys.name).toBe("keys");
 		});
 	});
 
 	describe("type", () => {
 		it("returns 'extension'", () => {
-			expect(new Keys().type).toBe("extension");
+			expect(keys.type).toBe("extension");
 		});
 	});
 });
