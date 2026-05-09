@@ -11,9 +11,6 @@ use Stringable;
  * interface around arrays of arrays or objects,
  * with advanced filters, sorting, navigation and more.
  *
- * @package   Kirby Toolkit
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  *

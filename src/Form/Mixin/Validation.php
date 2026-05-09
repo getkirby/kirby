@@ -9,6 +9,12 @@ use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\V;
 
+/**
+ * Provides the validation logic for running and collecting field errors
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 trait Validation
 {
 	/**

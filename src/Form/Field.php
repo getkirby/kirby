@@ -14,9 +14,6 @@ use Kirby\Toolkit\I18n;
  * array of properties and methods and converts them
  * to a usable field option array for the API.
  *
- * @package   Kirby Form
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  *

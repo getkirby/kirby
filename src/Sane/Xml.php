@@ -9,14 +9,10 @@ use Kirby\Toolkit\Str;
 
 /**
  * Sane handler for XML files
- * @since 3.5.4
  *
- * @package   Kirby Sane
- * @author    Bastian Allgeier <bastian@getkirby.com>,
- *            Lukas Bestle <lukas@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
+ * @since     3.5.4
  */
 class Xml extends DomHandler
 {

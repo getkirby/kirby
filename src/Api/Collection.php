@@ -13,9 +13,6 @@ use Kirby\Toolkit\Str;
  * stuff like pagination and proper JSON output
  * for collections in REST calls.
  *
- * @package   Kirby Api
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */

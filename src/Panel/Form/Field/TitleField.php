@@ -4,6 +4,12 @@ namespace Kirby\Panel\Form\Field;
 
 use Kirby\Form\Field\TextField;
 
+/**
+ * Panel field override for the page or file title with panel defaults
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 class TitleField extends TextField
 {
 	public function icon(): string

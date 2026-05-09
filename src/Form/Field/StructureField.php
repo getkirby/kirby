@@ -7,6 +7,12 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Mixin;
 use Kirby\Toolkit\Str;
 
+/**
+ * Allows editors to manage a list of structured items, each with its own set of fields
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 class StructureField extends InputField
 {
 	use Mixin\Batch;

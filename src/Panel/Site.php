@@ -9,13 +9,10 @@ use Kirby\Panel\Controller\View\SiteViewController;
 
 /**
  * Provides information about the site model for the Panel
- * @since 3.6.0
  *
- * @package   Kirby Panel
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     3.6.0
  */
 class Site extends Model
 {

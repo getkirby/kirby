@@ -50,9 +50,6 @@ use Throwable;
  * aspects of your site, like the options, urls,
  * roots, languages, roles, etc.
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */

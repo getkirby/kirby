@@ -10,12 +10,10 @@ use Kirby\Toolkit\HasStringTemplate;
  * UI button that belongs to a model
  * and can resolve string templates based on the model
  *
- * @package   Kirby Panel
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
+ *
  * @unstable
  */
 class ModelButton extends Button

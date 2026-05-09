@@ -9,9 +9,6 @@ use Kirby\Toolkit\Str;
 /**
  * Kirby Txt Data Handler
  *
- * @package   Kirby Data
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */

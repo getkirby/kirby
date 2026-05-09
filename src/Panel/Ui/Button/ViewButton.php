@@ -12,9 +12,6 @@ use Kirby\Toolkit\Controller;
  * A view button is a UI button, by default small in size and filles,
  * that optionally defines options for a dropdown
  *
- * @package   Kirby Panel
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     5.0.0

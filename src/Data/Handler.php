@@ -10,9 +10,6 @@ use Kirby\Filesystem\F;
  * which needs to be extended to
  * create valid data handlers
  *
- * @package   Kirby Data
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */

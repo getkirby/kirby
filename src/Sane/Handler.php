@@ -9,13 +9,10 @@ use Kirby\Filesystem\F;
  * Base handler abstract,
  * which needs to be extended to
  * create valid sane handlers
- * @since 3.5.4
  *
- * @package   Kirby Sane
- * @author    Lukas Bestle <lukas@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
+ * @since     3.5.4
  */
 abstract class Handler
 {

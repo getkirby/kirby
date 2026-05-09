@@ -10,9 +10,6 @@ use Kirby\Exception\LogicException;
  * blueprint and wraps a couple useful methods
  * around it to check for available permissions.
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */

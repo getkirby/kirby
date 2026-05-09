@@ -25,9 +25,6 @@ use Kirby\Toolkit\Str;
  * In addition the File class handles
  * meta data via `Kirby\Cms\Content`.
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *

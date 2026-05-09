@@ -5,6 +5,12 @@ namespace Kirby\Panel\Form\Field;
 use Kirby\Cms\App;
 use Kirby\Form\Field\SelectField;
 
+/**
+ * Panel field override for selecting a language translation
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 class TranslationField extends SelectField
 {
 	public function icon(): string

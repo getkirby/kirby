@@ -11,9 +11,6 @@ use Kirby\Form\Form;
  * The Content class handles all fields
  * for content from pages, the site and users
  *
- * @package   Kirby Content
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */

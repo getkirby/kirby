@@ -8,9 +8,6 @@ use Kirby\Toolkit\Collection as BaseCollection;
 /**
  * NestCollection
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *

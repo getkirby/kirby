@@ -9,11 +9,9 @@ use Kirby\Exception\InvalidArgumentException;
  * fetch the right files for the API calls
  * for the user picker component in the panel.
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
  * @deprecated 6.0.0 Use `Kirby\Panel\Controller\Dialog\UserPickerDialogController` instead
  */
 class UserPicker extends Picker

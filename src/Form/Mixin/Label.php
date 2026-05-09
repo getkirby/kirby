@@ -4,6 +4,12 @@ namespace Kirby\Form\Mixin;
 
 use Kirby\Toolkit\Str;
 
+/**
+ * Provides the `label` prop with translation support
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 trait Label
 {
 	/**

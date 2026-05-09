@@ -9,9 +9,6 @@ use Kirby\Toolkit\Str;
  * Wrapper around Kirby's localization files,
  * which are stored in `kirby/translations`.
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */

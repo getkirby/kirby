@@ -5,6 +5,12 @@ namespace Kirby\Form\Mixin;
 use Kirby\Cms\Language;
 use ReflectionProperty;
 
+/**
+ * Provides value storage, filling, and retrieval for form fields
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 trait Value
 {
 	/**
