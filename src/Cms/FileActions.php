@@ -7,6 +7,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\F;
 use Kirby\Form\Form;
+use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Uuid\Uuid;
 use Kirby\Uuid\Uuids;
 
@@ -41,6 +42,7 @@ trait FileActions
 	 *
 	 * @throws \Kirby\Exception\LogicException
 	 */
+	#[BlockCollectionAccess]
 	public function changeName(
 		string $name,
 		bool $sanitize = true,
@@ -100,6 +102,7 @@ trait FileActions
 	/**
 	 * Changes the file's sorting number in the meta file
 	 */
+	#[BlockCollectionAccess]
 	public function changeSort(int $sort): static
 	{
 		// skip if the sort number stays the same
@@ -117,6 +120,7 @@ trait FileActions
 	/**
 	 * @return $this|static
 	 */
+	#[BlockCollectionAccess]
 	public function changeTemplate(string|null $template): static
 	{
 		if ($template === $this->template()) {
@@ -189,6 +193,7 @@ trait FileActions
 	 * Copy the file to the given page
 	 * @internal
 	 */
+	#[BlockCollectionAccess]
 	public function copy(Page $page): static
 	{
 		F::copy($this->root(), $page->root() . '/' . $this->filename());
@@ -313,6 +318,7 @@ trait FileActions
 	 * Deletes the file. The store is used to
 	 * manipulate the filesystem or whatever you prefer.
 	 */
+	#[BlockCollectionAccess]
 	public function delete(): bool
 	{
 		return $this->commit('delete', ['file' => $this], function ($file) {
@@ -335,6 +341,7 @@ trait FileActions
 	/**
 	 * Resizes/crops the original file with Kirby's thumb handler
 	 */
+	#[BlockCollectionAccess]
 	public function manipulate(array|null $options = []): static
 	{
 		// nothing to process
@@ -361,6 +368,7 @@ trait FileActions
 	 *
 	 * @return $this
 	 */
+	#[BlockCollectionAccess]
 	public function publish(): static
 	{
 		Media::publish($this, $this->mediaRoot());
@@ -377,6 +385,7 @@ trait FileActions
 	 * @param bool $move If set to `true`, the source will be deleted
 	 * @throws \Kirby\Exception\LogicException
 	 */
+	#[BlockCollectionAccess]
 	public function replace(string $source, bool $move = false): static
 	{
 		$file = $this->clone();
@@ -429,6 +438,7 @@ trait FileActions
 	 *
 	 * @return $this
 	 */
+	#[BlockCollectionAccess]
 	public function unpublish(bool $onlyMedia = false): static
 	{
 		// unpublish media files
@@ -451,6 +461,7 @@ trait FileActions
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the input array contains invalid values
 	 */
+	#[BlockCollectionAccess]
 	public function update(
 		array|null $input = null,
 		string|null $languageCode = null,
