@@ -47,7 +47,7 @@ describe("HardBreak node", () => {
 		});
 
 		it("does not map Enter by default", () => {
-			const keys = node.keys(context);
+			const keys = node.keys(context) as Record<string, unknown>;
 			expect(keys["Enter"]).toBeUndefined();
 		});
 
@@ -55,7 +55,7 @@ describe("HardBreak node", () => {
 			const node = new HardBreak({ enter: true });
 
 			it("maps Enter to the hard break command", () => {
-				const keys = node.keys(context);
+				const keys = node.keys(context) as Record<string, unknown>;
 				expect(keys["Enter"]).toBeDefined();
 			});
 		});

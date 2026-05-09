@@ -58,7 +58,7 @@ describe("Heading node", () => {
 
 		it("does not set separator on other buttons", () => {
 			const buttons = node.button;
-			buttons.slice(0, -1).forEach((b) => expect(b.separator).toBeUndefined());
+			buttons.slice(0, -1).forEach((b: Record<string, unknown>) => expect(b.separator).toBeUndefined());
 		});
 
 		describe("with custom levels [2, 3]", () => {
@@ -100,7 +100,7 @@ describe("Heading node", () => {
 			const commands = node.commands({
 				...context,
 				utils: { ...utils, toggleBlockType }
-			});
+			}) as Record<string, (...args: unknown[]) => unknown>;
 
 			for (const level of [1, 2, 3, 4, 5, 6]) {
 				commands[`h${level}`]();
@@ -118,7 +118,7 @@ describe("Heading node", () => {
 				const commands = customNode.commands({
 					...customContext,
 					utils: { ...utils, toggleBlockType }
-				});
+				}) as Record<string, ((...args: unknown[]) => unknown) | undefined>;
 
 				expect(commands.h2).toBeDefined();
 				expect(commands.h3).toBeDefined();
@@ -130,7 +130,7 @@ describe("Heading node", () => {
 				const commands = customNode.commands({
 					...customContext,
 					utils: { ...utils, toggleBlockType }
-				});
+				}) as Record<string, (...args: unknown[]) => unknown>;
 
 				commands.h2();
 				expect(toggleBlockType).toHaveBeenCalledWith(
