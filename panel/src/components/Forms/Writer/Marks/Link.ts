@@ -1,6 +1,9 @@
-import Mark from "../Mark";
+import type { MarkSpec } from "prosemirror-model";
+import type { Plugin, PluginSpec } from "prosemirror-state";
+import type { EditorView } from "prosemirror-view";
+import Mark, { type MarkContext } from "../Mark";
 
-export default class Link extends Mark {
+export default class Link extends Mark<{ target: string | null }> {
 	get button() {
 		return {
 			icon: "url",
@@ -10,22 +13,20 @@ export default class Link extends Mark {
 
 	commands() {
 		return {
-			link: (event) => {
+			link: (event: MouseEvent) => {
 				if (event.altKey || event.metaKey) {
 					return this.remove();
 				}
 
 				this.editor.emit("link", this.editor);
 			},
-			insertLink: (attrs = {}) => {
-				const { selection } = this.editor.state;
+			insertLink: (attrs: { href?: string } = {}) => {
+				const { selection } = this.editor.state!;
 
 				// if no text is selected and link mark is not active
 				// we insert the link as text
-				if (
-					selection.empty &&
-					this.editor.activeMarks.includes("link") === false
-				) {
+				// @ts-expect-error fixed once Editor.js is migrated to TS
+				if (selection.empty && !this.editor.activeMarks.includes("link")) {
 					this.editor.insertText(attrs.href, true);
 				}
 
@@ -36,8 +37,8 @@ export default class Link extends Mark {
 			removeLink: () => {
 				return this.remove();
 			},
-			toggleLink: (attrs = {}) => {
-				if (attrs.href?.length > 0) {
+			toggleLink: (attrs: { href?: string } = {}) => {
+				if (attrs.href) {
 					this.editor.command("insertLink", attrs);
 				} else {
 					this.editor.command("removeLink");
@@ -56,7 +57,7 @@ export default class Link extends Mark {
 		return "link";
 	}
 
-	pasteRules({ type, utils }) {
+	pasteRules({ type, utils }: MarkContext): Plugin[] {
 		return [
 			utils.pasteRule(
 				/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z]{2,}\b([-a-zA-Z0-9@:%_+.~#?&//=,]*)/gi,
@@ -66,11 +67,12 @@ export default class Link extends Mark {
 		];
 	}
 
-	plugins() {
+	plugins(): PluginSpec<null>[] {
 		return [
 			{
 				props: {
-					handleClick: (view, pos, event) => {
+					handleClick: (_view: EditorView, _pos: number, event: MouseEvent) => {
+						// @ts-expect-error fixed once Editor.js is migrated to TS
 						const attrs = this.editor.getMarkAttrs("link");
 
 						if (
@@ -87,14 +89,14 @@ export default class Link extends Mark {
 		];
 	}
 
-	get schema() {
+	get schema(): MarkSpec {
 		return {
 			attrs: {
 				href: {
 					default: null
 				},
 				target: {
-					default: null
+					default: this.options.target
 				},
 				title: {
 					default: null

@@ -89,8 +89,7 @@ export function applyPasteRule(
 	return toHTML(schema, schema.node("doc", null, result.content));
 }
 
-// Marks from .js files don't satisfy MarkSpec until migrated to TypeScript
-export function createSchemaWithMarks(marks: Record<string, object>): Schema {
+export function createSchemaWithMarks(marks: Record<string, MarkSpec>): Schema {
 	return new Schema({
 		nodes: {
 			doc: { content: "block+" },
@@ -102,7 +101,7 @@ export function createSchemaWithMarks(marks: Record<string, object>): Schema {
 			},
 			text: { group: "inline" }
 		},
-		marks: marks as Record<string, MarkSpec>
+		marks
 	});
 }
 

@@ -1,3 +1,4 @@
+import type { MarkSpec } from "prosemirror-model";
 import Mark from "../Mark";
 
 export default class Underline extends Mark {
@@ -22,7 +23,7 @@ export default class Underline extends Mark {
 		return "underline";
 	}
 
-	get schema() {
+	get schema(): MarkSpec {
 		return {
 			parseDOM: [
 				{
@@ -30,7 +31,7 @@ export default class Underline extends Mark {
 				},
 				{
 					style: "text-decoration",
-					getAttrs: (value) => value === "underline"
+					getAttrs: (value) => value === "underline" && null
 				}
 			],
 			toDOM: () => ["u", 0]

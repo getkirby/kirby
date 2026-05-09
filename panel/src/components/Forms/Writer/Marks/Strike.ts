@@ -1,4 +1,7 @@
-import Mark from "../Mark";
+import type { InputRule } from "prosemirror-inputrules";
+import type { MarkSpec } from "prosemirror-model";
+import type { Plugin } from "prosemirror-state";
+import Mark, { type MarkContext } from "../Mark";
 
 export default class Strike extends Mark {
 	get button() {
@@ -12,7 +15,7 @@ export default class Strike extends Mark {
 		return () => this.toggle();
 	}
 
-	inputRules({ type, utils }) {
+	inputRules({ type, utils }: MarkContext): InputRule[] {
 		return [utils.markInputRule(/~([^~]+)~$/, type)];
 	}
 
@@ -26,25 +29,19 @@ export default class Strike extends Mark {
 		return "strike";
 	}
 
-	pasteRules({ type, utils }) {
+	pasteRules({ type, utils }: MarkContext): Plugin[] {
 		return [utils.markPasteRule(/~([^~]+)~/g, type)];
 	}
 
-	get schema() {
+	get schema(): MarkSpec {
 		return {
 			parseDOM: [
-				{
-					tag: "s"
-				},
-				{
-					tag: "del"
-				},
-				{
-					tag: "strike"
-				},
+				{ tag: "s" },
+				{ tag: "del" },
+				{ tag: "strike" },
 				{
 					style: "text-decoration",
-					getAttrs: (value) => value === "line-through"
+					getAttrs: (value) => value === "line-through" && null
 				}
 			],
 			toDOM: () => ["s", 0]

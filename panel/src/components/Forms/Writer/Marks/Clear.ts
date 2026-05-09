@@ -1,3 +1,4 @@
+import type { MarkSpec } from "prosemirror-model";
 import Mark from "../Mark";
 
 export default class Clear extends Mark {
@@ -8,14 +9,10 @@ export default class Clear extends Mark {
 		};
 	}
 
-	commands() {
-		return () => this.clear();
-	}
-
 	clear() {
-		const { state } = this.editor;
+		const { state, view } = this.editor;
 
-		if (!state) {
+		if (!state || !view) {
 			return;
 		}
 
@@ -23,16 +20,20 @@ export default class Clear extends Mark {
 
 		for (const mark of this.editor.activeMarks) {
 			const schema = state.schema.marks[mark];
-			const tr = this.editor.state.tr.removeMark(from, to, schema);
-			this.editor.view.dispatch(tr);
+			const tr = state.tr.removeMark(from, to, schema);
+			view.dispatch(tr);
 		}
+	}
+
+	commands() {
+		return () => this.clear();
 	}
 
 	get name() {
 		return "clear";
 	}
 
-	get schema() {
+	get schema(): MarkSpec {
 		return {};
 	}
 }

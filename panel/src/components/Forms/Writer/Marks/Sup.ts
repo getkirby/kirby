@@ -1,3 +1,4 @@
+import type { MarkSpec } from "prosemirror-model";
 import Mark from "../Mark";
 
 export default class Sup extends Mark {
@@ -16,7 +17,7 @@ export default class Sup extends Mark {
 		return "sup";
 	}
 
-	get schema() {
+	get schema(): MarkSpec {
 		return {
 			parseDOM: [{ tag: "sup" }],
 			toDOM: () => ["sup", 0]
