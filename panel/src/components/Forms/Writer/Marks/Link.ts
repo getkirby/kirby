@@ -3,7 +3,13 @@ import type { Plugin, PluginSpec } from "prosemirror-state";
 import type { EditorView } from "prosemirror-view";
 import Mark, { type MarkContext } from "../Mark";
 
-export default class Link extends Mark<{ target: string | null }> {
+interface LinkAttrs {
+	href: string;
+	target?: string;
+	title?: string;
+}
+
+export default class Link extends Mark<{ target?: string }> {
 	get button() {
 		return {
 			icon: "url",
@@ -29,8 +35,11 @@ export default class Link extends Mark<{ target: string | null }> {
 
 				// if no text is selected and link mark is not active
 				// we insert the link as text
-				// @ts-expect-error fixed once Editor.js is migrated to TS
-				if (selection.empty && !this.editor.activeMarks.includes("link")) {
+				if (
+					selection.empty &&
+					!this.editor.activeMarks.includes("link") &&
+					attrs.href
+				) {
 					this.editor.insertText(attrs.href, true);
 				}
 
@@ -51,7 +60,7 @@ export default class Link extends Mark<{ target: string | null }> {
 
 	get defaults() {
 		return {
-			target: null
+			target: undefined
 		};
 	}
 
@@ -74,8 +83,7 @@ export default class Link extends Mark<{ target: string | null }> {
 			{
 				props: {
 					handleClick: (_view: EditorView, _pos: number, event: MouseEvent) => {
-						// @ts-expect-error fixed once Editor.js is migrated to TS
-						const attrs = this.editor.getMarkAttrs("link");
+						const attrs = this.editor.getMarkAttrs<LinkAttrs>("link")!;
 
 						if (
 							attrs.href &&
@@ -95,13 +103,13 @@ export default class Link extends Mark<{ target: string | null }> {
 		return {
 			attrs: {
 				href: {
-					default: null
+					default: ""
 				},
 				target: {
 					default: this.options.target
 				},
 				title: {
-					default: null
+					default: undefined
 				}
 			},
 			inclusive: false,

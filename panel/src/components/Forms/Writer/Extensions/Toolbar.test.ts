@@ -46,11 +46,10 @@ describe("Toolbar", () => {
 	});
 
 	describe("deselect", () => {
-		it("calls component.close with the event", () => {
+		it("calls component.close", () => {
 			const { toolbar, trigger } = createToolbar();
-			const event = new Event("mousedown");
-			trigger("deselect", { event });
-			expect(toolbar.close).toHaveBeenCalledWith(event);
+			trigger("deselect", {});
+			expect(toolbar.close).toHaveBeenCalledOnce();
 		});
 	});
 

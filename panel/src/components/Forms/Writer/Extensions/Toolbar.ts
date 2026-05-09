@@ -21,9 +21,7 @@ export default class Toolbar extends Extension {
 	}
 
 	override init(): void {
-		// @ts-expect-error – event payload typed once Editor is migrated to TS
-		this.editor.on("deselect", ({ event }) => this.component?.close(event));
-		// @ts-expect-error – event payload typed once Editor is migrated to TS
+		this.editor.on("deselect", () => this.component?.close());
 		this.editor.on("select", ({ hasChanged }) => {
 			/**
 			 * If the selection did not change,
