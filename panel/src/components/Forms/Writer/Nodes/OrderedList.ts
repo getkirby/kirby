@@ -1,4 +1,6 @@
-import Node from "../Node";
+import type { NodeSpec } from "prosemirror-model";
+import type { Command } from "prosemirror-state";
+import Node, { type NodeContext } from "../Node";
 
 export default class OrderedList extends Node {
 	get button() {
@@ -12,11 +14,11 @@ export default class OrderedList extends Node {
 		};
 	}
 
-	commands({ type, schema, utils }) {
+	commands({ type, schema, utils }: NodeContext) {
 		return () => utils.toggleList(type, schema.nodes.listItem);
 	}
 
-	inputRules({ type, utils }) {
+	inputRules({ type, utils }: NodeContext) {
 		return [
 			utils.wrappingInputRule(
 				/^(\d+)\.\s$/,
@@ -27,7 +29,7 @@ export default class OrderedList extends Node {
 		];
 	}
 
-	keys({ type, schema, utils }) {
+	keys({ type, schema, utils }: NodeContext): Record<string, Command> {
 		return {
 			"Shift-Ctrl-9": utils.toggleList(type, schema.nodes.listItem)
 		};
@@ -37,7 +39,7 @@ export default class OrderedList extends Node {
 		return "orderedList";
 	}
 
-	get schema() {
+	get schema(): NodeSpec {
 		return {
 			attrs: {
 				order: {
@@ -50,7 +52,7 @@ export default class OrderedList extends Node {
 				{
 					tag: "ol",
 					getAttrs: (dom) => ({
-						order: dom.hasAttribute("start") ? +dom.getAttribute("start") : 1
+						order: dom.hasAttribute("start") ? +dom.getAttribute("start")! : 1
 					})
 				}
 			],

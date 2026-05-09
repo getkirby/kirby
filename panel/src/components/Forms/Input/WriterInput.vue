@@ -270,7 +270,6 @@ export default {
 			if (typeof nodes === "object" && nodes !== null) {
 				nodes.hardBreak = {
 					...(typeof nodes.hardBreak === "object" ? nodes.hardBreak : {}),
-					text: true,
 					enter: this.inline
 				};
 

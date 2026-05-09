@@ -173,7 +173,6 @@ describe("availableNodes", () => {
 		const nodes = availableNodes();
 		expect(nodes.heading.options.levels).toEqual([1, 2, 3, 4, 5, 6]);
 		expect(nodes.hardBreak.options.enter).toBe(false);
-		expect(nodes.hardBreak.options.text).toBe(false);
 		expect(nodes.doc.options.inline).toBe(false);
 	});
 
