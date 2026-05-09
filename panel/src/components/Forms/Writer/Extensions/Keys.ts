@@ -1,5 +1,9 @@
 import Extension from "../Extension";
 
+/**
+ * Binds arbitrary key handlers passed as options.
+ * Each handler returns true to suppress the default browser key event.
+ */
 export default class Keys extends Extension<Record<string, () => void>> {
 	get name() {
 		return "keys";
@@ -11,9 +15,6 @@ export default class Keys extends Extension<Record<string, () => void>> {
 		for (const option of Object.keys(this.options)) {
 			keys[option] = () => {
 				this.options[option]();
-
-				// insert a return true in every callback function
-				// which suppresses the default key event
 				return true;
 			};
 		}

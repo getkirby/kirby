@@ -2,6 +2,10 @@ import { DOMParser } from "prosemirror-model";
 import type { Command } from "prosemirror-state";
 import Extension from "../Extension";
 
+/**
+ * Provides the `insertHtml` command, which parses an HTML string
+ * and replaces the current selection with the resulting document nodes.
+ */
 export default class Insert extends Extension {
 	commands() {
 		return {
