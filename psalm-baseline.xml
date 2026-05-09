@@ -254,8 +254,6 @@
       <code><![CDATA[TValue]]></code>
       <code><![CDATA[TValue]]></code>
       <code><![CDATA[TValue]]></code>
-      <code><![CDATA[TValue]]></code>
-      <code><![CDATA[TValue]]></code>
       <code><![CDATA[\Iterator<TKey, TValue>]]></code>
     </InvalidReturnType>
     <LessSpecificImplementedReturnType>
