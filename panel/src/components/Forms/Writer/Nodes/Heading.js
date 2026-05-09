@@ -6,7 +6,7 @@ export default class Heading extends Node {
 			id: `h${level}`,
 			command: `h${level}`,
 			icon: `h${level}`,
-			label: window.panel.$t("toolbar.button.heading." + level),
+			label: window.panel.t("toolbar.button.heading." + level),
 			attrs: { level },
 			name: this.name,
 			when: ["heading", "paragraph"]

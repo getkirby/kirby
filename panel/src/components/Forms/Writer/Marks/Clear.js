@@ -4,7 +4,7 @@ export default class Clear extends Mark {
 	get button() {
 		return {
 			icon: "clear",
-			label: window.panel.$t("toolbar.button.clear")
+			label: window.panel.t("toolbar.button.clear")
 		};
 	}
 

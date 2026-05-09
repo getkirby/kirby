@@ -4,7 +4,7 @@ export default class Strike extends Mark {
 	get button() {
 		return {
 			icon: "strikethrough",
-			label: window.panel.$t("toolbar.button.strike")
+			label: window.panel.t("toolbar.button.strike")
 		};
 	}
 

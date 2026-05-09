@@ -24,11 +24,11 @@ export function status(
 		size: "xs",
 		style: "--icon-size: 15px",
 		theme: "positive-icon",
-		title: panel.$t("page.status") + ": " + panel.$t("page.status." + status)
+		title: panel.t("page.status") + ": " + panel.t("page.status." + status)
 	};
 
 	if (disabled) {
-		button.title += ` (${panel.$t("disabled")})`;
+		button.title += ` (${panel.t("disabled")})`;
 	}
 
 	if (status === "draft") {

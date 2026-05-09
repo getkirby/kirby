@@ -4,7 +4,7 @@ export default class Underline extends Mark {
 	get button() {
 		return {
 			icon: "underline",
-			label: window.panel.$t("toolbar.button.underline")
+			label: window.panel.t("toolbar.button.underline")
 		};
 	}
 

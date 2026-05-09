@@ -5,7 +5,7 @@ export default class OrderedList extends Node {
 		return {
 			id: this.name,
 			icon: "list-numbers",
-			label: window.panel.$t("toolbar.button.ol"),
+			label: window.panel.t("toolbar.button.ol"),
 			name: this.name,
 			when: ["listItem", "bulletList", "orderedList", "paragraph"],
 			separator: true

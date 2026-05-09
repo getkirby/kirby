@@ -4,7 +4,7 @@ export default class Code extends Mark {
 	get button() {
 		return {
 			icon: "code",
-			label: window.panel.$t("toolbar.button.code")
+			label: window.panel.t("toolbar.button.code")
 		};
 	}
 

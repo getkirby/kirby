@@ -4,7 +4,7 @@ export default class Bold extends Mark {
 	get button() {
 		return {
 			icon: "bold",
-			label: window.panel.$t("toolbar.button.bold")
+			label: window.panel.t("toolbar.button.bold")
 		};
 	}
 

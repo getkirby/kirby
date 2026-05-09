@@ -77,19 +77,19 @@ export default class InputValidator extends HTMLElement {
 		if (required && this.entries.length === 0) {
 			this.internals.setValidity(
 				{ valueMissing: true },
-				window.panel.$t("error.validation.required"),
+				window.panel.t("error.validation.required"),
 				this.input
 			);
 		} else if (this.hasAttribute("min") && this.entries.length < min) {
 			this.internals.setValidity(
 				{ rangeUnderflow: true },
-				window.panel.$t("error.validation.min", { min }),
+				window.panel.t("error.validation.min", { min }),
 				this.input
 			);
 		} else if (this.hasAttribute("max") && this.entries.length > max) {
 			this.internals.setValidity(
 				{ rangeOverflow: true },
-				window.panel.$t("error.validation.max", { max }),
+				window.panel.t("error.validation.max", { max }),
 				this.input
 			);
 		} else {
