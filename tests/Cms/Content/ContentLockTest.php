@@ -27,9 +27,9 @@ class ContentLockTest extends TestCase
 				]
 			],
 			'users' => [
-				['email' => 'test@getkirby.com'],
-				['email' => 'homer@simpson.com'],
-				['email' => 'peter@lustig.de']
+				['email' => 'test@getkirby.com', 'role' => 'admin'],
+				['email' => 'homer@simpson.com', 'role' => 'admin'],
+				['email' => 'peter@lustig.de', 'role' => 'admin']
 			]
 		]);
 	}
@@ -139,6 +139,44 @@ class ContentLockTest extends TestCase
 		$data = $page->lock()->get();
 		$this->assertFileDoesNotExist(static::TMP . '/content/test/.lock');
 		$this->assertFalse($data);
+	}
+
+	public function testGetWithUnlistableUser(): void
+	{
+		$app = $this->app->clone([
+			'roles' => [
+				[
+					'name'        => 'restricted',
+					'permissions' => [
+						'users' => ['list' => false]
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin',
+				],
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'restricted',
+				],
+			]
+		]);
+
+		$page = $app->page('test');
+
+		$app->impersonate('admin@getkirby.com');
+		$page->lock()->create();
+
+		$app->impersonate('editor@getkirby.com');
+		$data = $page->lock()->get();
+
+		$this->assertNotEmpty($data);
+		$this->assertNull($data['user']);
+		$this->assertNull($data['email']);
+		$this->assertArrayHasKey('time', $data);
+		$this->assertFalse($data['unlockable']);
 	}
 
 	public function testIsLocked()
