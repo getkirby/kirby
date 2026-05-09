@@ -109,7 +109,7 @@ class HtmlTest extends TestCase
 		$html = Html::a('jar://x', 'click');
 		$this->assertStringNotContainsString('jar:', $html);
 
-		// whitespace/tab/newline prefix bypass attempts
+		// whitespace/tab/newline bypass attempts
 		$html = Html::a(' javascript://x', 'click');
 		$this->assertStringNotContainsString('javascript:', $html);
 
@@ -117,6 +117,18 @@ class HtmlTest extends TestCase
 		$this->assertStringNotContainsString('javascript:', $html);
 
 		$html = Html::a("\njavascript://x", 'click');
+		$this->assertStringNotContainsString('javascript:', $html);
+
+		$html = Html::a('java script://x', 'click');
+		$this->assertStringNotContainsString('javascript:', $html);
+
+		$html = Html::a('java script://x', 'click');
+		$this->assertStringNotContainsString('javascript:', $html);
+
+		$html = Html::a("java\tscript://x", 'click');
+		$this->assertStringNotContainsString('javascript:', $html);
+
+		$html = Html::a("javasc\nript://x", 'click');
 		$this->assertStringNotContainsString('javascript:', $html);
 
 		// safe schemes must still work
