@@ -1,4 +1,7 @@
-import Mark from "../Mark";
+import type { InputRule } from "prosemirror-inputrules";
+import type { MarkSpec } from "prosemirror-model";
+import type { Plugin } from "prosemirror-state";
+import Mark, { type MarkContext } from "../Mark";
 
 export default class Bold extends Mark {
 	get button() {
@@ -12,7 +15,7 @@ export default class Bold extends Mark {
 		return () => this.toggle();
 	}
 
-	inputRules({ type, utils }) {
+	inputRules({ type, utils }: MarkContext): InputRule[] {
 		return [
 			utils.markInputRule(/(?:^|\s)(\*\*([^*\s](?:[^*]*[^*\s])?)\*\*)$/, type),
 			utils.markInputRule(/(?:^|\s)(__([^_\s](?:[^_]*[^_\s])?)__)$/, type)
@@ -29,26 +32,26 @@ export default class Bold extends Mark {
 		return "bold";
 	}
 
-	pasteRules({ type, utils }) {
+	pasteRules({ type, utils }: MarkContext): Plugin[] {
 		return [
-			utils.markPasteRule(/(?<!\S)\*\*([^*\s](?:[^*]*[^*\s])?)\*\*(?!\S)/g, type),
+			utils.markPasteRule(/(?<!\S)\*\*([^*\s](?:[^*]*[^*\s])?)\*\*(?!\S)/g,
+				type),
 			utils.markPasteRule(/(?<!\S)__([^_\s](?:[^_]*[^_\s])?)__(?!\S)/g, type)
 		];
 	}
 
-	get schema() {
+	get schema(): MarkSpec {
 		return {
 			parseDOM: [
-				{
-					tag: "strong"
-				},
+				{ tag: "strong" },
 				{
 					tag: "b",
 					getAttrs: (node) => node.style.fontWeight !== "normal" && null
 				},
 				{
 					style: "font-weight",
-					getAttrs: (value) => /^(bold(er)?|[5-9]\d{2,})$/.test(value) && null
+					getAttrs: (value) =>
+						/^(bold(er)?|[5-9]\d{2,})$/.test(value as string) && null
 				}
 			],
 			toDOM: () => ["strong", 0]

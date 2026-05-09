@@ -1,6 +1,7 @@
+import type { MarkSpec } from "prosemirror-model";
 import Mark from "../Mark";
 
-export default class Sup extends Mark {
+export default class Sub extends Mark {
 	get button() {
 		return {
 			icon: "subscript",
@@ -16,7 +17,7 @@ export default class Sup extends Mark {
 		return "sub";
 	}
 
-	get schema() {
+	get schema(): MarkSpec {
 		return {
 			parseDOM: [{ tag: "sub" }],
 			toDOM: () => ["sub", 0]
