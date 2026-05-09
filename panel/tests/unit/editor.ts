@@ -114,8 +114,9 @@ export function createSchemaWithMarks(marks: Record<string, MarkSpec>): Schema {
 	return new Schema({ nodes: BASE_NODES, marks });
 }
 
-export function createSchemaWithNodes(nodes: Record<string, NodeSpec>): Schema {
-	return new Schema({ nodes: { ...BASE_NODES, ...nodes } });
+// TODO: remove cast once node files are converted to TypeScript
+export function createSchemaWithNodes(nodes: Record<string, unknown>): Schema {
+	return new Schema({ nodes: { ...BASE_NODES, ...nodes } as Record<string, NodeSpec> });
 }
 
 function firstInlineNode(schema: Schema, html: string): Node {
