@@ -62,6 +62,7 @@ describe("Italic mark", () => {
 				["* foo*"],
 				["*foo *"],
 				["* foo *"],
+				["foo*bar fox*baz"],
 				["**"],
 				["* *"]
 			])("does not trigger for %s", (input) => {
@@ -86,6 +87,7 @@ describe("Italic mark", () => {
 				["_ foo_"],
 				["_foo _"],
 				["_ foo _"],
+				["foo_bar fox_baz"],
 				["__"],
 				["_ _"]
 			])("does not trigger for %s", (input) => {
@@ -131,6 +133,7 @@ describe("Italic mark", () => {
 				["* foo*", "<p>* foo*</p>"],
 				["*foo *", "<p>*foo *</p>"],
 				["* foo *", "<p>* foo *</p>"],
+				["foo*bar fox*baz", "<p>foo*bar fox*baz</p>"],
 				["**", "<p>**</p>"],
 				["* *", "<p>* *</p>"]
 			])("does not apply italic for %s", (input, expected) => {
@@ -156,6 +159,7 @@ describe("Italic mark", () => {
 				["_ foo_", "<p>_ foo_</p>"],
 				["_foo _", "<p>_foo _</p>"],
 				["_ foo _", "<p>_ foo _</p>"],
+				["foo_bar fox_baz", "<p>foo_bar fox_baz</p>"],
 				["__", "<p>__</p>"],
 				["_ _", "<p>_ _</p>"]
 			])("does not apply italic for %s", (input, expected) => {
