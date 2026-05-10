@@ -26,7 +26,7 @@ class BasicAuthMethod extends Method
 	 * @throws \Kirby\Exception\InvalidArgumentException If the password is missing
 	 */
 	public function authenticate(
-		string $email,
+		string|null $email,
 		#[SensitiveParameter]
 		string|null $password = null,
 		bool $long = false

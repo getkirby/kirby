@@ -35,7 +35,7 @@ abstract class Method
 	 * a pending status if a challenge is required.
 	 */
 	abstract public function authenticate(
-		string $email,
+		string|null $email,
 		#[SensitiveParameter]
 		string|null $password = null,
 		bool $long = false
