@@ -19,7 +19,7 @@ export default class Api {
 	csrf: string;
 	endpoint: string;
 	methodOverride: boolean;
-	language: string;
+	language: string | null;
 	panel: TODO;
 	pingId?: ReturnType<typeof setInterval>;
 	requests: string[] = [];
@@ -166,7 +166,7 @@ export default class Api {
 				csrf: this.csrf,
 				method: overrideMethod ? "POST" : method,
 				headers: {
-					"x-language": this.language,
+					...(this.language !== null ? { "x-language": this.language } : {}),
 					...(overrideMethod ? { "x-http-method-override": method } : {}),
 					...(options.headers ?? {})
 				}

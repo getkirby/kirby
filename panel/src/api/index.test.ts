@@ -293,7 +293,10 @@ describe("api", () => {
 
 		it("should forward custom headers from options", async () => {
 			const api = new Api(makePanel());
-			await api.request("pages", { method: "GET", headers: { "x-custom": "value" } });
+			await api.request("pages", {
+				method: "GET",
+				headers: { "x-custom": "value" }
+			});
 			expect(vi.mocked(mockRequest)).toHaveBeenCalledWith(
 				"https://example.com/api/pages",
 				expect.objectContaining({
