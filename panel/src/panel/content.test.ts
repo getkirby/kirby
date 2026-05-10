@@ -1,14 +1,14 @@
 import { describe, expect, it, vi, afterEach, beforeEach } from "vitest";
 import Content from "./content";
 
-const createPanel = () => ({
+const createPanel = ({ latest = {}, changes = {}, lock = {} } = {}) => ({
 	view: {
 		props: {
 			api: "/pages/test",
-			lock: { isLocked: false, modified: new Date("2024-01-01") },
+			lock: { isLocked: false, modified: new Date("2024-01-01"), ...lock },
 			versions: {
-				latest: { title: "Original" } as Record<string, unknown>,
-				changes: { title: "Original" } as Record<string, unknown>
+				latest: { title: "Original", ...latest } as Record<string, unknown>,
+				changes: { title: "Original", ...changes } as Record<string, unknown>
 			}
 		},
 		reload: vi.fn()
@@ -58,16 +58,16 @@ describe("panel.content", () => {
 		});
 
 		it("returns changed fields", () => {
-			const panel = createPanel();
-			panel.view.props.versions.changes = { title: "Updated" };
+			const panel = createPanel({ changes: { title: "Updated" } });
 			const content = Content(panel);
 			expect(content.diff()).toStrictEqual({ title: "Updated" });
 		});
 
 		it("includes null for fields absent in changes", () => {
-			const panel = createPanel();
-			panel.view.props.versions.latest = { title: "Original", slug: "test" };
-			panel.view.props.versions.changes = { title: "Original" };
+			const panel = createPanel({
+				latest: { title: "Original", slug: "test" },
+				changes: { title: "Original" }
+			});
 			const content = Content(panel);
 			expect(content.diff()).toStrictEqual({ slug: null });
 		});
@@ -99,8 +99,7 @@ describe("panel.content", () => {
 		});
 
 		it("throws when content is locked", async () => {
-			const panel = createPanel();
-			panel.view.props.lock.isLocked = true;
+			const panel = createPanel({ lock: { isLocked: true } });
 			const content = Content(panel);
 			await expect(content.discard()).rejects.toThrow(
 				"Cannot discard locked changes"
@@ -119,12 +118,13 @@ describe("panel.content", () => {
 		});
 
 		it("resets changes to latest version after discard", async () => {
-			const panel = createPanel();
-			panel.view.props.versions.latest = { title: "Published" };
-			panel.view.props.versions.changes = { title: "Draft" };
+			const panel = createPanel({
+				latest: { title: "Published" },
+				changes: { title: "Draft" }
+			});
 			const content = Content(panel);
 			await content.discard();
-			expect(panel.view.props.versions.changes).toStrictEqual({
+			expect(content.version("changes")).toStrictEqual({
 				title: "Published"
 			});
 		});
@@ -198,8 +198,7 @@ describe("panel.content", () => {
 		});
 
 		it("returns true when changes differ from latest", () => {
-			const panel = createPanel();
-			panel.view.props.versions.changes = { title: "Updated" };
+			const panel = createPanel({ changes: { title: "Updated" } });
 			const content = Content(panel);
 			expect(content.hasDiff()).toStrictEqual(true);
 		});
@@ -236,8 +235,7 @@ describe("panel.content", () => {
 		});
 
 		it("returns true when content is locked", () => {
-			const panel = createPanel();
-			panel.view.props.lock.isLocked = true;
+			const panel = createPanel({ lock: { isLocked: true } });
 			const content = Content(panel);
 			expect(content.isLocked()).toStrictEqual(true);
 		});
@@ -277,7 +275,9 @@ describe("panel.content", () => {
 			const panel = createPanel();
 			const content = Content(panel);
 			content.lockDialog({ isLocked: true, modified: new Date() });
-			const { on } = panel.dialog.open.mock.calls[0][0];
+			const { on } = vi.mocked(panel.dialog.open).mock.calls[0][0] as {
+				on: Record<string, () => void>;
+			};
 			on.close();
 			expect(panel.view.reload).toHaveBeenCalledOnce();
 		});
@@ -288,7 +288,7 @@ describe("panel.content", () => {
 			const panel = createPanel();
 			const content = Content(panel);
 			content.merge({ title: "New Title" });
-			expect(panel.view.props.versions.changes).toStrictEqual({
+			expect(content.version("changes")).toStrictEqual({
 				title: "New Title"
 			});
 		});
@@ -301,11 +301,10 @@ describe("panel.content", () => {
 		});
 
 		it("preserves existing changes when merging", () => {
-			const panel = createPanel();
-			panel.view.props.versions.changes = { title: "Draft", slug: "draft" };
+			const panel = createPanel({ changes: { title: "Draft", slug: "draft" } });
 			const content = Content(panel);
 			content.merge({ title: "Updated" });
-			expect(panel.view.props.versions.changes).toStrictEqual({
+			expect(content.version("changes")).toStrictEqual({
 				title: "Updated",
 				slug: "draft"
 			});
@@ -349,11 +348,10 @@ describe("panel.content", () => {
 		});
 
 		it("updates latest version to current changes after publish", async () => {
-			const panel = createPanel();
-			panel.view.props.versions.changes = { title: "Draft" };
+			const panel = createPanel({ changes: { title: "Draft" } });
 			const content = Content(panel);
 			await content.publish();
-			expect(panel.view.props.versions.latest).toStrictEqual({
+			expect(content.version("latest")).toStrictEqual({
 				title: "Draft"
 			});
 		});
@@ -380,9 +378,9 @@ describe("panel.content", () => {
 		it("replaces the lock's modified timestamp with a new date", () => {
 			const panel = createPanel();
 			const content = Content(panel);
-			const before = panel.view.props.lock.modified;
+			const before = content.lock().modified;
 			content.renewLock();
-			expect(panel.view.props.lock.modified).not.toBe(before);
+			expect(content.lock().modified).not.toBe(before);
 		});
 	});
 
@@ -401,9 +399,9 @@ describe("panel.content", () => {
 		it("renews lock after saving", async () => {
 			const panel = createPanel();
 			const content = Content(panel);
-			const before = panel.view.props.lock.modified;
+			const before = content.lock().modified;
 			await content.save({});
-			expect(panel.view.props.lock.modified).not.toBe(before);
+			expect(content.lock().modified).not.toBe(before);
 		});
 
 		it("emits save event with values", async () => {
@@ -511,7 +509,7 @@ describe("panel.content", () => {
 			const panel = createPanel();
 			const content = Content(panel);
 			content.updateLazy({ title: "Lazy Title" });
-			expect(panel.view.props.versions.changes).toStrictEqual({
+			expect(content.version("changes")).toStrictEqual({
 				title: "Lazy Title"
 			});
 		});
@@ -547,7 +545,8 @@ describe("panel.content", () => {
 			const panel = createPanel();
 			const content = Content(panel);
 			expect(content.version("latest")).toStrictEqual(
-				panel.view.props.versions.latest
+				(panel.view.props.versions as Record<string, Record<string, unknown>>)
+					.latest
 			);
 		});
 
@@ -555,7 +554,8 @@ describe("panel.content", () => {
 			const panel = createPanel();
 			const content = Content(panel);
 			expect(content.version("changes")).toStrictEqual(
-				panel.view.props.versions.changes
+				(panel.view.props.versions as Record<string, Record<string, unknown>>)
+					.changes
 			);
 		});
 	});

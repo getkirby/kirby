@@ -7,7 +7,7 @@ import Dialog from "./dialog";
 
 type Env = {
 	api: string;
-	language: string;
+	language: string | null;
 };
 
 type Lock = {
@@ -107,7 +107,7 @@ export default function Content(panel: TODO) {
 				await this.request("discard", {}, env);
 
 				// update the props for the current view
-				panel.view.props.versions.changes = this.version("latest");
+				this.versions().changes = this.version("latest");
 
 				this.emit("discard", {}, env);
 			} catch (error) {
@@ -144,7 +144,7 @@ export default function Content(panel: TODO) {
 		 */
 		env(env: Partial<Env> = {}): Env {
 			return {
-				api: panel.view.props.api,
+				api: panel.view.props.api as string,
 				language: panel.language.code,
 				...env
 			};
@@ -188,7 +188,7 @@ export default function Content(panel: TODO) {
 				);
 			}
 
-			return panel.view.props.lock;
+			return panel.view.props.lock as Lock;
 		},
 
 		/**
@@ -234,12 +234,10 @@ export default function Content(panel: TODO) {
 				values = {};
 			}
 
-			panel.view.props.versions.changes = {
+			return (this.versions().changes = {
 				...this.version("changes"),
 				...values
-			};
-
-			return panel.view.props.versions.changes;
+			});
 		},
 
 		/**
@@ -273,7 +271,7 @@ export default function Content(panel: TODO) {
 				this.dialog?.close();
 
 				// update the props for the current view
-				panel.view.props.versions.latest = this.version("changes");
+				this.versions().latest = this.version("changes");
 
 				this.emit("publish", { values }, env);
 			} catch (error) {
@@ -299,9 +297,7 @@ export default function Content(panel: TODO) {
 			const { api, language } = this.env(env);
 
 			const options: RequestInit & { silent?: boolean } = {
-				headers: {
-					"x-language": language
-				}
+				headers: language !== null ? { "x-language": language } : {}
 			};
 
 			if (method === "save") {
@@ -309,7 +305,11 @@ export default function Content(panel: TODO) {
 				options.silent = true;
 			}
 
-			panel.api.post(api + "/changes/" + method, values, options);
+			panel.api.post(
+				api + "/changes/" + method,
+				values,
+				options as Record<string, unknown>
+			);
 		},
 
 		/**
@@ -439,7 +439,10 @@ export default function Content(panel: TODO) {
 		 * Returns all versions of the content
 		 */
 		versions(): Record<VersionId, Record<string, unknown>> {
-			return panel.view.props.versions;
+			return panel.view.props.versions as Record<
+				VersionId,
+				Record<string, unknown>
+			>;
 		}
 	});
 
