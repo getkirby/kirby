@@ -47,10 +47,6 @@ export default class InputValidator extends HTMLElement {
 		);
 	}
 
-	get isEmpty() {
-		return this.selected.length === 0;
-	}
-
 	get name() {
 		return this.getAttribute("name");
 	}
