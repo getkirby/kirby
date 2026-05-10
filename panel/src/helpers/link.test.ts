@@ -9,7 +9,6 @@ import {
 	types
 } from "./link";
 
-// mock $t() function
 window.panel = {
 	t: (value: string) => value
 };
