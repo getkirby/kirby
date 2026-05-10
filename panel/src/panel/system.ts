@@ -2,21 +2,21 @@ import State from "./state";
 
 export type SystemState = {
 	ascii: Record<string, string>;
-	csrf: string | null;
+	csrf: string;
 	isLocal: boolean;
 	locales: Record<string, string>;
 	slugs: string[];
-	title: string | null;
+	title: string;
 };
 
 export function defaults(): SystemState {
 	return {
 		ascii: {},
-		csrf: null,
+		csrf: "",
 		isLocal: false,
 		locales: {},
 		slugs: [],
-		title: null
+		title: ""
 	};
 }
 
