@@ -116,7 +116,7 @@ export function redirect(url: string | URL): never {
  * @since 4.0.0
  */
 export async function request(
-	url: string,
+	url: string | URL,
 	options: Partial<PanelRequestOptions> = {}
 ): Promise<{ request: Request; response: PanelResponse }> {
 	// extract Request options from options
