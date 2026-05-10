@@ -14,6 +14,6 @@ export default {
 		/**
 		 * Handles any Vue errors
 		 */
-		app.config.errorHandler = window.panel.error.bind(window.panel);
+		app.config.errorHandler = (err) => window.panel.error(err);
 	}
 };
