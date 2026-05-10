@@ -16,7 +16,7 @@ describe("panel.dropdown", () => {
 				props: {},
 				query: {},
 				referrer: null,
-				timestamp: null,
+				timestamp: null
 			};
 
 			expect(dropdown.key()).toStrictEqual("dropdown");
@@ -47,9 +47,9 @@ describe("panel.dropdown", () => {
 					on: {
 						close: () => {
 							emitted = true;
-						},
-					},
-				},
+						}
+					}
+				}
 			);
 
 			dropdown.close();
