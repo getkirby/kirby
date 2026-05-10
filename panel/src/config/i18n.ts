@@ -1,7 +1,11 @@
+import type { App, DirectiveBinding } from "vue";
+
 export default {
-	install(app) {
-		const dir = (el, binding) => {
-			if (binding.instance.disabled !== true) {
+	install(app: App) {
+		const dir = (el: HTMLElement, binding: DirectiveBinding) => {
+			const instance = binding.instance as { disabled?: boolean } | null;
+
+			if (instance?.disabled !== true) {
 				el.dir = window.panel.language.direction;
 			} else {
 				el.removeAttribute("dir");
