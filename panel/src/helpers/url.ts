@@ -37,7 +37,7 @@ export function buildQuery(
  */
 export function buildUrl(
 	url: string | URL = "",
-	query: Record<string, string | null> = {},
+	query: Record<string, unknown> = {},
 	origin?: string | URL
 ): URL {
 	const result = toObject(url, origin);
