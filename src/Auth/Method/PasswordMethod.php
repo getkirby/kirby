@@ -8,6 +8,7 @@ use Kirby\Auth\Method;
 use Kirby\Auth\Status;
 use Kirby\Cms\User;
 use Kirby\Panel\Ui\Button;
+use Kirby\Panel\Ui\Component;
 use SensitiveParameter;
 
 /**
@@ -53,6 +54,17 @@ class PasswordMethod extends Method
 		]);
 
 		return $user;
+	}
+
+	public function form(): Component
+	{
+		return new Component(
+			component: 'k-login-password-method-form',
+			submit: [
+				'icon'  => static::icon(),
+				'label' => static::i18n('login'),
+			],
+		);
 	}
 
 	/**

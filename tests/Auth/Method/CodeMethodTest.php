@@ -8,6 +8,7 @@ use Kirby\Auth\Methods;
 use Kirby\Auth\Status;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Panel\Ui\Component;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -59,6 +60,20 @@ class CodeMethodTest extends TestCase
 		$result = $method->authenticate('lisa@simpsons.com', long: false);
 		$this->assertSame($status, $result);
 		$this->assertSame(['lisa@simpsons.com', false, 'login'], $args);
+	}
+
+	public function testForm(): void
+	{
+		$auth   = $this->auth();
+		$method = new CodeMethod(auth: $auth);
+		$form   = $method->form();
+
+		$this->assertInstanceOf(Component::class, $form);
+
+		$rendered = $form->render();
+		$this->assertSame('k-login-code-method-form', $rendered['component']);
+		$this->assertSame('hashtag', $rendered['props']['submit']['icon']);
+		$this->assertSame('Log in', $rendered['props']['submit']['label']);
 	}
 
 	public function testIcon(): void

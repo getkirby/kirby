@@ -49,7 +49,7 @@ class View extends Component
 		];
 	}
 
-	public function render(): array|null
+	public function render(): array
 	{
 		$view = [
 			...parent::render(),

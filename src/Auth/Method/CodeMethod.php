@@ -8,6 +8,7 @@ use Kirby\Auth\Status;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\Ui\Button;
+use Kirby\Panel\Ui\Component;
 
 /**
  * Passwordless login via one-time code
@@ -29,6 +30,17 @@ class CodeMethod extends Method
 			mode: 'login',
 			email: $email,
 			long:  $long,
+		);
+	}
+
+	public function form(): Component
+	{
+		return new Component(
+			component: 'k-login-code-method-form',
+			submit: [
+				'icon'  => static::icon(),
+				'label' => static::i18n('login'),
+			],
 		);
 	}
 

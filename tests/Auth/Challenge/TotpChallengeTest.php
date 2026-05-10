@@ -7,6 +7,7 @@ use Kirby\Auth\Pending;
 use Kirby\Auth\TestCase;
 use Kirby\Cms\User;
 use Kirby\Filesystem\F;
+use Kirby\Panel\Ui\Component;
 use Kirby\Toolkit\Totp;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -46,6 +47,21 @@ class TotpChallengeTest extends TestCase
 	{
 		$challenge = new TotpChallenge($this->user, 'login', 600);
 		$this->assertNull($challenge->create());
+	}
+
+	public function testForm(): void
+	{
+		$challenge = new TotpChallenge($this->user, 'login', 600);
+		$pending   = new Pending();
+		$form      = $challenge->form($pending);
+
+		$this->assertInstanceOf(Component::class, $form);
+
+		$rendered = $form->render();
+		$this->assertSame('k-login-totp-challenge-form', $rendered['component']);
+		$this->assertSame('check', $rendered['props']['submit']['icon']);
+		$this->assertSame('Log in', $rendered['props']['submit']['label']);
+		$this->assertSame('marge@simpsons.com', $rendered['props']['user']);
 	}
 
 	public function testIsAvailable(): void
