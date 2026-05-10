@@ -1,3 +1,4 @@
+import type { ConcreteComponent } from "vue";
 import { clone } from "./object";
 
 type Field = Record<string, unknown>;
@@ -15,7 +16,9 @@ export function defaultValue(field: Field): unknown {
 		return clone(field.default);
 	}
 
-	const component = window.panel.app.component(`k-${field.type}-field`);
+	const component = window.panel.app.component(`k-${field.type}-field`) as
+		| ConcreteComponent
+		| undefined;
 	const valueProp = component?.props?.value;
 
 	// if the field has no value prop,
