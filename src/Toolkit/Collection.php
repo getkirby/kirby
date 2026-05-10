@@ -4,6 +4,8 @@ namespace Kirby\Toolkit;
 
 use Closure;
 use Exception;
+use InvalidArgumentException;
+use Kirby\Cms\App;
 use ReflectionFunction;
 use ReflectionMethod;
 use Stringable;
@@ -520,9 +522,9 @@ class Collection extends Iterator implements Stringable
 			// throw in debug mode so developers get a clear signal instead of a silent null
 			if (
 				class_exists('Kirby\Cms\App', false) === true &&
-				\Kirby\Cms\App::instance(lazy: true)?->option('debug') === true
+				App::instance(lazy: true)?->option('debug') === true
 			) {
-				throw new \InvalidArgumentException(
+				throw new InvalidArgumentException(
 					'The "' . $attribute . '" method is not accessible in collection operations.'
 				);
 			}
