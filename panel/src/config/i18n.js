@@ -1,10 +1,10 @@
 export default {
 	install(app) {
-		const dir = (el, binding, vnode) => {
-			if (vnode.context.disabled !== true) {
+		const dir = (el, binding) => {
+			if (binding.instance.disabled !== true) {
 				el.dir = window.panel.language.direction;
 			} else {
-				el.dir = null;
+				el.removeAttribute("dir");
 			}
 		};
 
@@ -14,8 +14,8 @@ export default {
 		 * component isn't disabled
 		 */
 		app.directive("direction", {
-			bind: dir,
-			update: dir
+			beforeMount: dir,
+			updated: dir
 		});
 	}
 };
