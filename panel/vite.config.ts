@@ -88,11 +88,13 @@ function createPlugins(mode: string): Plugin[] {
 				targets: [
 					{
 						src: "node_modules/vue/dist/vue.esm-browser.js",
-						dest: "js"
+						dest: "js",
+						rename: { stripBase: true }
 					},
 					{
 						src: "node_modules/vue/dist/vue.esm-browser.prod.js",
-						dest: "js"
+						dest: "js",
+						rename: { stripBase: true }
 					}
 				]
 			})
