@@ -1,6 +1,6 @@
 import State from "./state";
 
-type UserState = {
+export type UserState = {
 	email: string | null;
 	id: string | null;
 	language: string | null;

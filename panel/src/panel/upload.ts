@@ -23,7 +23,7 @@ type UploadFileData = {
 	[key: string]: unknown;
 };
 
-type UploadState = {
+export type UploadState = {
 	accept: string;
 	attributes: Record<string, string | number>;
 	files: UploadFileData[];

@@ -3,7 +3,7 @@ import State from "./state";
 
 // TODO: replace with proper menu entry/button type
 type MenuItems = Array<Record<string, unknown> | "-">;
-type MenuState = {
+export type MenuState = {
 	hover: boolean;
 	isOpen: boolean;
 	items: MenuItems;

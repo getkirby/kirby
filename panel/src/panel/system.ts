@@ -1,6 +1,6 @@
 import State from "./state";
 
-type SystemState = {
+export type SystemState = {
 	ascii: Record<string, string>;
 	csrf: string | null;
 	isLocal: boolean;

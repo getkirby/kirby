@@ -2,7 +2,7 @@ import { reactive } from "vue";
 import Feature, { defaults, type FeatureState } from "./feature";
 import { type Listener } from "./listeners";
 
-type DropdownState = FeatureState & {};
+export type DropdownState = FeatureState & {};
 
 /**
  * @since 4.0.0

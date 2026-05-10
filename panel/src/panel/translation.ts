@@ -2,7 +2,7 @@ import { reactive } from "vue";
 import { StringTemplateValues, template } from "@/helpers/string";
 import State from "./state";
 
-type TranslationState = {
+export type TranslationState = {
 	code: string | null;
 	data: StringTemplateValues;
 	direction: string;

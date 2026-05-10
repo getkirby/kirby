@@ -1,7 +1,7 @@
 import { reactive } from "vue";
 import State from "./state";
 
-type ThemeState = {
+export type ThemeState = {
 	setting: string | null;
 	system: string;
 };

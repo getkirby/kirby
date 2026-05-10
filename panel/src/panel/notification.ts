@@ -5,7 +5,7 @@ import RequestError from "@/errors/RequestError";
 import State from "./state";
 import Timer from "@/helpers/timer";
 
-type NotificationState = {
+export type NotificationState = {
 	context: "dialog" | "drawer" | "view" | null;
 	details: Record<string, unknown>;
 	icon: string | null;
