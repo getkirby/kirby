@@ -4,7 +4,7 @@ export default class Italic extends Mark {
 	get button() {
 		return {
 			icon: "italic",
-			label: window.panel.$t("toolbar.button.italic")
+			label: window.panel.t("toolbar.button.italic")
 		};
 	}
 

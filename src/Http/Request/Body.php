@@ -10,9 +10,6 @@ use Stringable;
  * interface to get values from
  * structured bodies (json encoded or form data)
  *
- * @package   Kirby Http
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */

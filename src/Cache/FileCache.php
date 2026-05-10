@@ -10,9 +10,6 @@ use Kirby\Toolkit\Str;
 /**
  * File System Cache Driver
  *
- * @package   Kirby Cache
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */

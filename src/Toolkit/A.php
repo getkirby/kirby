@@ -13,9 +13,6 @@ use InvalidArgumentException;
  * fetching elements from arrays, merging and
  * sorting or shuffling arrays.
  *
- * @package   Kirby Toolkit
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */

@@ -24,7 +24,7 @@ describe("panel.search", () => {
 			expect(escape).toHaveBeenCalledOnce();
 			expect(open).toHaveBeenCalledWith({
 				component: "k-search-dialog",
-				props: { type: "pages" },
+				props: { type: "pages" }
 			});
 		});
 	});
@@ -51,7 +51,7 @@ describe("panel.search", () => {
 		it("should return search from the API response", async () => {
 			const search = {
 				results: [{ title: "Home" }],
-				pagination: { total: 1 },
+				pagination: { total: 1 }
 			};
 
 			vi.spyOn(panel, "get").mockResolvedValue({ search });
@@ -69,7 +69,7 @@ describe("panel.search", () => {
 
 			expect(get).toHaveBeenCalledWith("/search/pages", {
 				query: { query: "test", limit: 10, page: 2 },
-				signal: expect.any(AbortSignal),
+				signal: expect.any(AbortSignal)
 			});
 		});
 
@@ -83,7 +83,7 @@ describe("panel.search", () => {
 
 		it("should return undefined on AbortError", async () => {
 			const abortError = Object.assign(new Error("Aborted"), {
-				name: "AbortError",
+				name: "AbortError"
 			});
 			vi.spyOn(panel, "get").mockRejectedValue(abortError);
 

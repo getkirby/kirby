@@ -8,9 +8,6 @@ namespace Kirby\Cms;
  * provide a more globally usable interface
  * for any searches.
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */

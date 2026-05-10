@@ -2,6 +2,12 @@
 
 namespace Kirby\Form\Mixin;
 
+/**
+ * Provides the `help` prop for optional help text below the field
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 trait Help
 {
 	/**

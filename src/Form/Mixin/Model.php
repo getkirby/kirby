@@ -5,6 +5,12 @@ namespace Kirby\Form\Mixin;
 use Kirby\Cms\App;
 use Kirby\Cms\ModelWithContent;
 
+/**
+ * Provides access to the content model and the Kirby instance
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 trait Model
 {
 	protected ModelWithContent|null $model;

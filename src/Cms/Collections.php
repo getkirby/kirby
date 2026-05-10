@@ -15,9 +15,6 @@ use Kirby\Toolkit\Controller;
  * This class is mainly used in the `$kirby->collection()`
  * method to provide easy access to registered collections
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */

@@ -1,7 +1,7 @@
 import { reactive } from "vue";
 import State from "./state";
 
-type LanguageState = {
+export type LanguageState = {
 	code: string | null;
 	default: boolean;
 	direction: string;

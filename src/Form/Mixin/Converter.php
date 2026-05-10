@@ -5,6 +5,12 @@ namespace Kirby\Form\Mixin;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Str;
 
+/**
+ * Provides the `converter` prop to transform the field value before saving
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 trait Converter
 {
 	/**

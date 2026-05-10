@@ -2,6 +2,12 @@
 
 namespace Kirby\Form\Mixin;
 
+/**
+ * Provides the `disabled` prop to make the field non-editable and prevent saving
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 trait Disabled
 {
 	/**

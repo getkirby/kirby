@@ -14,9 +14,6 @@ use Kirby\Toolkit\Str;
  * Bundles all the data for the state to be sent to the Panel
  * in as much of a lazy manner than possible
  *
- * @package   Kirby Panel
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0

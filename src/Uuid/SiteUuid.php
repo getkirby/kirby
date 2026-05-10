@@ -8,13 +8,10 @@ use Kirby\Cms\Site;
 
 /**
  * UUID for \Kirby\Cms\Site
- * @since 3.8.0
  *
- * @package   Kirby Uuid
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     3.8.0
  */
 class SiteUuid extends Uuid
 {

@@ -1,7 +1,7 @@
 import { reactive } from "vue";
 import State from "./state";
 
-type DragState = {
+export type DragState = {
 	type?: string | null;
 	data: Record<string, unknown>;
 };

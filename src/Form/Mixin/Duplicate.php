@@ -2,6 +2,12 @@
 
 namespace Kirby\Form\Mixin;
 
+/**
+ * Provides the `duplicate` prop to allow or prevent duplicating field items
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 trait Duplicate
 {
 	/**

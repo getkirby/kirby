@@ -1,9 +1,9 @@
-import { h, resolveComponent } from "vue";
+import { defineComponent, h, resolveComponent } from "vue";
 
 /**
  * @since 4.0.0
  */
-export default {
+export default defineComponent({
 	computed: {
 		component() {
 			return this.$panel.view.component;
@@ -50,5 +50,7 @@ export default {
 				...this.view
 			});
 		}
+
+		return null;
 	}
-};
+});

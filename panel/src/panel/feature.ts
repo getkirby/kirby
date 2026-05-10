@@ -33,7 +33,7 @@ export function defaults(): FeatureState {
 		props: {},
 		query: {},
 		referrer: null,
-		timestamp: null,
+		timestamp: null
 	};
 }
 
@@ -46,7 +46,11 @@ export function defaults(): FeatureState {
  * @param key - Identifies this state in backend responses
  * @param defaults - Initial values; also defines which keys are tracked
  */
-export default function Feature<T extends FeatureState>(panel: TODO, key: string, defaults: T) {
+export default function Feature<T extends FeatureState>(
+	panel: TODO,
+	key: string,
+	defaults: T
+) {
 	const parent = State(key, defaults);
 
 	return reactive({
@@ -65,7 +69,7 @@ export default function Feature<T extends FeatureState>(panel: TODO, key: string
 		 */
 		async get(
 			url: string | URL,
-			options?: Partial<Prettify<T>>,
+			options?: Partial<Prettify<T>>
 		): Promise<Record<string, unknown> | false> {
 			this.isLoading = true;
 
@@ -100,7 +104,7 @@ export default function Feature<T extends FeatureState>(panel: TODO, key: string
 		 */
 		async load(
 			url: string | URL,
-			options: Partial<Prettify<T>> & { silent?: boolean } = {},
+			options: Partial<Prettify<T>> & { silent?: boolean } = {}
 		): Promise<Prettify<T>> {
 			// each feature can have its own loading state
 			// the panel.open method also triggers the global loading
@@ -119,7 +123,7 @@ export default function Feature<T extends FeatureState>(panel: TODO, key: string
 			// or a notification by sending the matching object
 			await panel.open(url, {
 				...options,
-				signal: this.abortController.signal,
+				signal: this.abortController.signal
 			});
 
 			// stop the feature loader
@@ -148,12 +152,14 @@ export default function Feature<T extends FeatureState>(panel: TODO, key: string
 		 */
 		async open(
 			feature: string | URL | Partial<Prettify<T>>,
-			options: Partial<Prettify<T>> | Listener = {},
+			options: Partial<Prettify<T>> | Listener = {}
 		): Promise<Prettify<T>> {
 			const listeners: Record<string, unknown> | undefined =
 				typeof options === "function" ? { submit: options } : options.on;
 			const state: Partial<T> =
-				typeof options === "function" ? ({ on: listeners } as Partial<T>) : options;
+				typeof options === "function"
+					? ({ on: listeners } as Partial<T>)
+					: options;
 
 			// the feature needs to be loaded first
 			// before it can be opened. This will route
@@ -180,7 +186,7 @@ export default function Feature<T extends FeatureState>(panel: TODO, key: string
 		 */
 		async post(
 			value: Record<string, unknown>,
-			options: Partial<Prettify<T>> = {},
+			options: Partial<Prettify<T>> = {}
 		): Promise<Record<string, unknown> | false> {
 			if (!this.path) {
 				throw new Error(`The ${this.key()} cannot be posted`);
@@ -208,7 +214,9 @@ export default function Feature<T extends FeatureState>(panel: TODO, key: string
 		/**
 		 * Reloads the properties for the feature to refresh its state
 		 */
-		async refresh(options: Partial<T> & { url?: string | URL } = {}): Promise<T | undefined> {
+		async refresh(
+			options: Partial<T> & { url?: string | URL } = {}
+		): Promise<T | undefined> {
 			const url = options.url ?? this.url();
 			const response = await this.get(url, options);
 
@@ -263,6 +271,6 @@ export default function Feature<T extends FeatureState>(panel: TODO, key: string
 		 */
 		url(): URL {
 			return panel.url(this.path, this.query);
-		},
+		}
 	});
 }

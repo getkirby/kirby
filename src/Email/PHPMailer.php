@@ -9,10 +9,6 @@ use PHPMailer\PHPMailer\PHPMailer as Mailer;
 /**
  * Wrapper for PHPMailer library
  *
- * @package   Kirby Email
- * @author    Bastian Allgeier <bastian@getkirby.com>,
- *            Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */

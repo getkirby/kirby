@@ -14,6 +14,12 @@ use Kirby\Form\Form;
 use Kirby\Toolkit\Str;
 use Throwable;
 
+/**
+ * Allows editors to arrange content blocks in configurable column layouts
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 class LayoutField extends BlocksField
 {
 	/**

@@ -14,9 +14,6 @@ use SensitiveParameter;
  * Creates and verifies one-time auth codes
  * that are sent via email
  *
- * @package   Kirby Auth
- * @author    Lukas Bestle <lukas@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0

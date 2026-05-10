@@ -10,12 +10,10 @@ use Kirby\Panel\Ui\Item\UserItem;
 /**
  * Controls the Panel dialog for selecting users
  *
- * @package   Kirby Panel
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
+ *
  * @unstable
  */
 class UserPickerDialogController extends ModelPickerDialogController

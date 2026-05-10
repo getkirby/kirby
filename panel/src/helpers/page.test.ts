@@ -1,9 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { status } from "./page";
 
-// mock $t() function
 window.panel = {
-	$t: (value: string) => value
+	t: (value: string) => value
 };
 
 describe("$helper.page.status()", () => {

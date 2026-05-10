@@ -39,7 +39,7 @@ import toggleList from "./toggleList";
 import toggleWrap from "./toggleWrap";
 import updateMark from "./updateMark";
 
-export default {
+const utils = {
 	// prosemirror
 	chainCommands,
 	exitCode,
@@ -76,3 +76,6 @@ export default {
 	toggleWrap,
 	updateMark
 };
+
+export type Utils = typeof utils;
+export default utils;

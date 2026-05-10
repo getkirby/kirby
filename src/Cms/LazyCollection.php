@@ -23,9 +23,6 @@ use Kirby\Exception\LogicException;
  *    `initialize` method that defines which keys
  *    are available.
  *
- * @package   Kirby Cms
- * @author    Lukas Bestle <lukas@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
@@ -207,7 +204,7 @@ abstract class LazyCollection extends Collection
 	/**
 	 * Returns the first element
 	 *
-	 * @return TValue
+	 * @return TValue|null
 	 */
 	public function first()
 	{
@@ -337,7 +334,7 @@ abstract class LazyCollection extends Collection
 	/**
 	 * Returns the last element
 	 *
-	 * @return TValue
+	 * @return TValue|null
 	 */
 	public function last()
 	{

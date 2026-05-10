@@ -9,9 +9,6 @@ namespace Kirby\Http\Request;
  * for the same key, it will produce a more
  * usable array.
  *
- * @package   Kirby Http
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */

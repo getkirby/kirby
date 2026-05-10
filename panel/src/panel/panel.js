@@ -1,7 +1,7 @@
 import { reactive } from "vue";
 import Activation from "./activation";
 import Api from "@/api/index.js";
-import Content from "./content.js";
+import Content from "./content";
 import Dialog from "./dialog";
 import Drag from "./drag";
 import Drawer from "./drawer";
@@ -119,7 +119,7 @@ export default {
 
 		// api needs the initial state
 		// for the endpoint config
-		this.api = Api(this);
+		this.api = new Api(this);
 
 		// Turn the entire panel object  reactive. This will only be applied
 		// to objects and arrays. Methods won't be touched.

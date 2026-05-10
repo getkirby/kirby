@@ -8,9 +8,6 @@ use Kirby\Toolkit\Xml as XmlConverter;
 /**
  * Simple Wrapper around the XML parser of the Toolkit
  *
- * @package   Kirby Data
- * @author    Lukas Bestle <lukas@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */

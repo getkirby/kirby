@@ -1,7 +1,7 @@
 import { reactive } from "vue";
 import State from "./state";
 
-type ActivationState = {
+export type ActivationState = {
 	isOpen: boolean;
 };
 

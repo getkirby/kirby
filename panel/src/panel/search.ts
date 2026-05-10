@@ -5,6 +5,12 @@ export type SearchResponse = {
 	pagination: Record<string, unknown>;
 };
 
+export type SearchType = {
+	icon: string;
+	label: string;
+	id: string;
+};
+
 /**
  * @since 4.4.0
  */
@@ -42,7 +48,7 @@ export default function Search(panel: TODO) {
 		async query(
 			type: string,
 			query: string,
-			options: { limit?: number; page?: number }
+			options: { limit?: number; page?: number } = {}
 		): Promise<Prettify<SearchResponse> | undefined> {
 			// abort any previous ongoing search requests
 			this.controller?.abort();
@@ -63,7 +69,7 @@ export default function Search(panel: TODO) {
 					query: { query, ...options },
 					signal: this.controller.signal
 				});
-				return search;
+				return search as SearchResponse;
 			} catch (error) {
 				// if fails and not because request was aborted by subsequent request,
 				// return empty response

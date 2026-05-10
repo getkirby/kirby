@@ -88,11 +88,13 @@ function createPlugins(mode: string): Plugin[] {
 				targets: [
 					{
 						src: "node_modules/vue/dist/vue.esm-browser.js",
-						dest: "js"
+						dest: "js",
+						rename: { stripBase: true }
 					},
 					{
 						src: "node_modules/vue/dist/vue.esm-browser.prod.js",
-						dest: "js"
+						dest: "js",
+						rename: { stripBase: true }
 					}
 				]
 			})
@@ -154,8 +156,16 @@ export default defineConfig(({ mode }) => {
 					codeSplitting: {
 						groups: [
 							{
+								name: "Lab",
+								test: /src\/components\/Lab\//
+							},
+							{
+								name: "Sortable",
+								test: /node_modules\/sortablejs\//
+							},
+							{
 								name: "vendor",
-								test: /node_modules\/(?!sortablejs\/)|plugin-vue:export-helper|vite\/preload-helper|rolldown:runtime/
+								test: /node_modules\/(?!sortablejs\/)|plugin-vue:export-helper|vite\/preload-helper/
 							}
 						]
 					}

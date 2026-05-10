@@ -12,7 +12,7 @@ import { type Listener } from "./listeners";
 
 export type ModalState = FeatureState & {
 	id: string | null;
-	props: Record<string, unknown> & { value: Record<string, unknown> };
+	props: Record<string, unknown>;
 };
 
 type ModalSubmitResponse = {
@@ -31,7 +31,7 @@ export function defaults(): ModalState {
 	return {
 		...featureDefaults(),
 		id: null,
-		props: { value: {} }
+		props: {}
 	};
 }
 
@@ -363,7 +363,8 @@ export default function Modal<T extends ModalState>(
 		 * so this seems useful.
 		 */
 		get value(): Record<string, unknown> {
-			return this.props.value;
+			const value = this.props.value as Record<string, unknown> | undefined;
+			return value ?? {};
 		}
 	});
 }

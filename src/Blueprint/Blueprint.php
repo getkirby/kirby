@@ -20,9 +20,6 @@ use Throwable;
  * blueprint file and converts sections, columns, fields
  * etc. into a correct tab layout.
  *
- * @package   Kirby Blueprint
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */

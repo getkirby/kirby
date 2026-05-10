@@ -5,7 +5,7 @@ export default class Quote extends Node {
 		return {
 			id: this.name,
 			icon: "quote",
-			label: window.panel.$t("field.blocks.quote.name"),
+			label: window.panel.t("field.blocks.quote.name"),
 			name: this.name
 		};
 	}

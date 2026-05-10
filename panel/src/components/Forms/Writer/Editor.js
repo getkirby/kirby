@@ -535,7 +535,7 @@ export default class Editor extends Emitter {
 	}
 
 	setContent(content = {}, emitUpdate = false, parseOptions) {
-		const { doc, tr } = this.state;
+		const { doc, tr } = toRaw(this.state);
 		const document = this.createDocument(content, parseOptions);
 		const transaction = tr
 			.replaceWith(0, doc.content.size, document)

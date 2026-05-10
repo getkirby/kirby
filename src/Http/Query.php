@@ -10,9 +10,6 @@ use Stringable;
  * that converts it into a Kirby Obj for easier
  * access of each query attribute.
  *
- * @package   Kirby Http
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */

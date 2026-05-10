@@ -6,6 +6,12 @@ use Kirby\Cms\App;
 use Kirby\Cms\Roles;
 use Kirby\Form\Field\RadioField;
 
+/**
+ * Panel field override for selecting a user role
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 class RoleField extends RadioField
 {
 	public function __construct(

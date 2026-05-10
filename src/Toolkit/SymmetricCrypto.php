@@ -11,13 +11,10 @@ use SensitiveParameter;
  * User-friendly and safe abstraction for symmetric
  * authenticated encryption and decryption using the
  * PHP `sodium` extension
- * @since 3.9.8
  *
- * @package   Kirby Toolkit
- * @author    Lukas Bestle <lukas@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
+ * @since     3.9.8
  */
 class SymmetricCrypto
 {

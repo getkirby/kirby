@@ -13,9 +13,6 @@ use SensitiveParameter;
  * Each method either logs the user in or returns a
  * pending status that expects a follow-up challenge
  *
- * @package   Kirby Auth
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0

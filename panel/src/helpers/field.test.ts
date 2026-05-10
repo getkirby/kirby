@@ -1,3 +1,4 @@
+import type { ConcreteComponent } from "vue";
 import { describe, expect, it } from "vitest";
 import { form } from "./field";
 
@@ -6,7 +7,7 @@ describe("$helper.field.form()", () => {
 	window.panel = {
 		app: {
 			component(name: string) {
-				const components: Record<string, unknown> = {
+				const components: Record<string, ConcreteComponent> = {
 					"k-custom-field": {
 						props: {
 							value: {
@@ -15,6 +16,7 @@ describe("$helper.field.form()", () => {
 						}
 					}
 				};
+
 				return components[name];
 			}
 		}

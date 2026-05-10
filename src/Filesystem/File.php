@@ -17,13 +17,9 @@ use Stringable;
  * Flexible File object with a set of helpful
  * methods to inspect and work with files.
  *
- * @since 3.6.0
- *
- * @package   Kirby Filesystem
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     3.6.0
  */
 class File implements Stringable
 {

@@ -16,9 +16,6 @@ use SensitiveParameter;
  * (storing the TOTP secret in their user account).
  *
  *
- * @package   Kirby Cms
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0

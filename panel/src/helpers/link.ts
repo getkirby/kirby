@@ -123,7 +123,7 @@ async function previewForPage(
 	fields = ["title", "panelImage"]
 ): Promise<LinkPreview> {
 	if (id === "site://") {
-		return { label: window.panel.$t("view.site") };
+		return { label: window.panel.t("view.site") };
 	}
 
 	try {
@@ -148,9 +148,9 @@ export function types(keys: string[] = []): Record<string, LinkType> {
 			detect: (value) => /^(http|https):\/\//.test(value),
 			icon: "url",
 			id: "url",
-			label: panel.$t("url"),
+			label: panel.t("url"),
 			link: (value) => value,
-			placeholder: panel.$t("url.placeholder"),
+			placeholder: panel.t("url.placeholder"),
 			input: "url",
 			value: (value) => value
 		},
@@ -158,9 +158,9 @@ export function types(keys: string[] = []): Record<string, LinkType> {
 			detect: (value) => isPageUUID(value) === true,
 			icon: "page",
 			id: "page",
-			label: panel.$t("page"),
+			label: panel.t("page"),
 			link: (value) => value,
-			placeholder: panel.$t("select") + " …",
+			placeholder: panel.t("select") + " …",
 			input: "text",
 			value: (value) => value
 		},
@@ -168,18 +168,18 @@ export function types(keys: string[] = []): Record<string, LinkType> {
 			detect: (value) => isFileUUID(value) === true,
 			icon: "file",
 			id: "file",
-			label: panel.$t("file"),
+			label: panel.t("file"),
 			link: (value) => value,
-			placeholder: panel.$t("select") + " …",
+			placeholder: panel.t("select") + " …",
 			value: (value) => value
 		},
 		email: {
 			detect: (value) => value.startsWith("mailto:"),
 			icon: "email",
 			id: "email",
-			label: panel.$t("email"),
+			label: panel.t("email"),
 			link: (value) => value.replace(/^mailto:/, ""),
-			placeholder: panel.$t("email.placeholder"),
+			placeholder: panel.t("email.placeholder"),
 			input: "email",
 			value: (value) => "mailto:" + value
 		},
@@ -187,10 +187,10 @@ export function types(keys: string[] = []): Record<string, LinkType> {
 			detect: (value) => value.startsWith("tel:"),
 			icon: "phone",
 			id: "tel",
-			label: panel.$t("tel"),
+			label: panel.t("tel"),
 			link: (value) => value.replace(/^tel:/, ""),
 			pattern: "[+]{0,1}[0-9]+",
-			placeholder: panel.$t("tel.placeholder"),
+			placeholder: panel.t("tel.placeholder"),
 			input: "tel",
 			value: (value) => "tel:" + value
 		},
@@ -209,7 +209,7 @@ export function types(keys: string[] = []): Record<string, LinkType> {
 			detect: () => true,
 			icon: "title",
 			id: "custom",
-			label: panel.$t("custom"),
+			label: panel.t("custom"),
 			link: (value) => value,
 			input: "text",
 			value: (value) => value

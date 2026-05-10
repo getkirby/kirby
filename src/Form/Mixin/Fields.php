@@ -4,6 +4,12 @@ namespace Kirby\Form\Mixin;
 
 use Kirby\Form\Form;
 
+/**
+ * Provides nested fields and form handling for complex field types
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 trait Fields
 {
 	/**

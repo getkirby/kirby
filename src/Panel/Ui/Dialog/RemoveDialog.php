@@ -5,12 +5,10 @@ namespace Kirby\Panel\Ui\Dialog;
 /**
  * Dialog that removes something
  *
- * @package   Kirby Panel
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
+ *
  * @unstable
  */
 class RemoveDialog extends TextDialog

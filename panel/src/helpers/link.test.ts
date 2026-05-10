@@ -9,9 +9,8 @@ import {
 	types
 } from "./link";
 
-// mock $t() function
 window.panel = {
-	$t: (value: string) => value
+	t: (value: string) => value
 };
 
 describe("$helper.link.detect()", () => {

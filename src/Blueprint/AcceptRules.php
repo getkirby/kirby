@@ -8,9 +8,6 @@ use Kirby\Cms\App;
  * The AcceptRules class goes through all blueprint settings for
  * sections and fields and collects rules for accepted files
  *
- * @package   Kirby Blueprint
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0

@@ -12,9 +12,6 @@ use Kirby\Session\Session;
  * Designed to avoid ad-hoc arrays and keep the
  * status surface consistent across auth flows.
  *
- * @package   Kirby Auth
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0

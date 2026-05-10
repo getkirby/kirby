@@ -14,13 +14,10 @@ use Kirby\Toolkit\Str;
  * a working panel view with all the right URLs
  * and other panel options. The view template is
  * located in `kirby/views/panel.php`
- * @since 3.6.0
  *
- * @package   Kirby Panel
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     3.6.0
  */
 class Panel
 {

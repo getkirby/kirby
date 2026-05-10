@@ -4,7 +4,7 @@ import Feature, {
 	type FeatureState
 } from "./feature";
 
-type ViewState = FeatureState & {
+export type ViewState = FeatureState & {
 	breadcrumb: {
 		link: string;
 		label: string;

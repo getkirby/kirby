@@ -11,9 +11,6 @@ use Kirby\Option\OptionsQuery;
 /**
  * Foundation for radio and select
  *
- * @package   Kirby Field
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */

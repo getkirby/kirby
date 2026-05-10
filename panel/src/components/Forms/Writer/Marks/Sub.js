@@ -4,7 +4,7 @@ export default class Sup extends Mark {
 	get button() {
 		return {
 			icon: "subscript",
-			label: window.panel.$t("toolbar.button.sub")
+			label: window.panel.t("toolbar.button.sub")
 		};
 	}
 

@@ -13,12 +13,10 @@ use Kirby\Toolkit\HasI18n;
  * The Menu class takes care of gathering
  * all menu entries for the Panel
  *
- * @package   Kirby Panel
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     4.0.0
+ *
  * @unstable
  */
 class Menu
