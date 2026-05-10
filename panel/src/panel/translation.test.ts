@@ -78,10 +78,22 @@ describe("panel.translation", () => {
 			expect(translation.translate("count")).toStrictEqual(42);
 		});
 
-		it("returns the fallback when key does not exist", () => {
+		it("uses the key as fallback when key does not exist", () => {
+			const translation = Translation();
+			expect(translation.translate("missing.key")).toStrictEqual("missing.key");
+		});
+
+		it("accepts fallback as second argument", () => {
+			const translation = Translation();
+			expect(translation.translate("missing.key", "Fallback")).toStrictEqual(
+				"Fallback"
+			);
+		});
+
+		it("accepts fallback as third argument alongside data", () => {
 			const translation = Translation();
 			expect(
-				translation.translate("does-not-exist", {}, "Fallback")
+				translation.translate("missing.key", { name: "Peter" }, "Fallback")
 			).toStrictEqual("Fallback");
 		});
 
