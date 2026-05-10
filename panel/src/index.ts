@@ -1,16 +1,16 @@
 import { createApp } from "vue";
 
-import App from "./panel/app.js";
-import Components from "./components/index.js";
+import App from "./panel/app";
+import Components from "./components/index";
 import ErrorHandling from "./config/errorhandling";
 import Helpers from "./helpers/index";
-import I18n from "./config/i18n.js";
-import Legacy from "./panel/legacy.js";
+import I18n from "./config/i18n";
+import Legacy from "./panel/legacy";
 import Libraries from "./libraries/index";
-import Panel from "./panel/panel.js";
+import Panel from "./panel/panel";
 
-import preserveDataAttrs from "./mixins/preserveDataAttrs.js";
-import preserveListeners from "./mixins/preserveListeners.js";
+import preserveDataAttrs from "./mixins/preserveDataAttrs";
+import preserveListeners from "./mixins/preserveListeners";
 
 /**
  * Global styles need to be loaded before

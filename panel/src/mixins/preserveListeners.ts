@@ -1,3 +1,4 @@
+import type { ComponentOptions } from "vue";
 import { wrap } from "@/helpers/array.js";
 
 /**
@@ -40,4 +41,4 @@ export default {
 	unmounted() {
 		this.__listenersController.abort();
 	}
-};
+} satisfies ComponentOptions;

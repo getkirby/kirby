@@ -148,7 +148,7 @@ export default defineConfig(({ mode }) => {
 			rolldownOptions: {
 				checks: { pluginTimings: false },
 				external: ["vue"],
-				input: "./src/index.js",
+				input: "./src/index.ts",
 				output: {
 					entryFileNames: "js/[name].min.js",
 					chunkFileNames: "js/[name].min.js",

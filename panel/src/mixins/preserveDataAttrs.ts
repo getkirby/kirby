@@ -1,3 +1,5 @@
+import type { ComponentOptions } from "vue";
+
 /**
  * Ensures that even when a component prohibits to
  * inherit non-prop attributes, all `data-` attributes
@@ -14,4 +16,4 @@ export default {
 			}
 		}
 	}
-};
+} satisfies ComponentOptions;
