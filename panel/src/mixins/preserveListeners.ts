@@ -1,4 +1,5 @@
-import { wrap } from "@/helpers/array.js";
+import type { ComponentOptions } from "vue";
+import { wrap } from "@/helpers/array";
 
 /**
  * Ensures that even when a component prohibits to
@@ -40,4 +41,4 @@ export default {
 	unmounted() {
 		this.__listenersController.abort();
 	}
-};
+} satisfies ComponentOptions;
