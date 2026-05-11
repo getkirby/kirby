@@ -1,9 +1,6 @@
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
+import { wrap } from "@/helpers/array";
 import InputValidator from "./Validator.js";
-
-/**
- * @typedef {InputValidator & HTMLElement} InputValidatorEl
- */
 
 const TAG = "k-input-validator-test";
 
@@ -20,14 +17,14 @@ beforeAll(() => {
 			validity: {},
 			validationMessage: "",
 			willValidate: true
-		};
+		} as ElementInternals;
 	};
 
 	customElements.define(TAG, InputValidator);
 
 	// Minimal panel.t shim used by validate()
 	window.panel ??= {};
-	window.panel.t = (key) => key;
+	window.panel.t = (key: string) => key;
 });
 
 afterEach(() => {
@@ -38,21 +35,18 @@ afterEach(() => {
 /**
  * Creates a validator element with the given attributes and children
  * and appends it to the document body so connectedCallback fires.
- *
- * @param {Record<string, string>} [attrs]
- * @param {HTMLElement | HTMLElement[]} [children]
- * @returns {InputValidatorEl}
  */
-function mount(attrs = {}, children = []) {
-	const validator = /** @type {InputValidatorEl} */ (
-		document.createElement(TAG)
-	);
+function mount(
+	attrs: Record<string, string> = {},
+	children: HTMLElement | HTMLElement[] = []
+): InputValidator {
+	const validator = document.createElement(TAG) as InputValidator;
 
 	for (const [key, value] of Object.entries(attrs)) {
 		validator.setAttribute(key, value);
 	}
 
-	for (const child of [].concat(children)) {
+	for (const child of wrap(children)) {
 		validator.appendChild(child);
 	}
 
@@ -60,15 +54,13 @@ function mount(attrs = {}, children = []) {
 	return validator;
 }
 
-/**
- * @param {Record<string, string>} [attrs]
- * @returns {HTMLInputElement}
- */
-function input(attrs = {}) {
+function input(attrs: Record<string, string> = {}): HTMLInputElement {
 	const el = document.createElement("input");
+
 	for (const [key, value] of Object.entries(attrs)) {
 		el.setAttribute(key, value);
 	}
+
 	return el;
 }
 
@@ -276,6 +268,7 @@ describe("InputValidator", () => {
 
 		it("falls back to an empty array for non-string input", () => {
 			const validator = mount();
+			// @ts-expect-error testing invalid input
 			validator.value = null;
 			expect(validator.entries).toEqual([]);
 		});
@@ -288,6 +281,7 @@ describe("InputValidator", () => {
 
 		it("returns an empty array as JSON when entries are missing", () => {
 			const validator = mount();
+			// @ts-expect-error testing invalid input
 			validator.entries = null;
 			expect(validator.value).toBe("[]");
 		});

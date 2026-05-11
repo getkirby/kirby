@@ -4,22 +4,21 @@
  */
 export default class InputValidator extends HTMLElement {
 	static formAssociated = true;
-	/** @type {ElementInternals} */
-	internals = this.attachInternals();
-	/** @type {Array<unknown>} */
-	entries = [];
-	/** @type {number | null} */
-	max = null;
-	/** @type {number | null} */
-	min = null;
-	/** @type {boolean} */
-	required = false;
+	internals: ElementInternals = this.attachInternals();
+	entries: Array<unknown> = [];
+	max: number | null = null;
+	min: number | null = null;
+	required: boolean = false;
 
 	static get observedAttributes() {
-		return ["min", "max", "required", "value"];
+		return ["max", "min", "required", "value"];
 	}
 
-	attributeChangedCallback(attribute, oldValue, newValue) {
+	attributeChangedCallback(
+		attribute: "max" | "min" | "required" | "value",
+		oldValue: string,
+		newValue: string
+	) {
 		if (attribute === "required") {
 			this.required = newValue !== null && newValue !== "false";
 		} else if (attribute === "min" || attribute === "max") {
@@ -41,15 +40,24 @@ export default class InputValidator extends HTMLElement {
 		return this.internals.form;
 	}
 
-	has(value) {
+	has(value: unknown) {
 		return this.entries.includes(value);
 	}
 
-	get input() {
+	get input(): HTMLElement {
+		const anchor = this.getAttribute("anchor");
+
+		if (anchor) {
+			const input = this.querySelector(anchor);
+
+			if (input) {
+				return input as HTMLElement;
+			}
+		}
+
 		return (
-			this.querySelector(this.getAttribute("anchor")) ??
 			this.querySelector("input, textarea, select, button") ??
-			this.querySelector(":scope > *")
+			this.querySelector(":scope > *")!
 		);
 	}
 
