@@ -1202,6 +1202,7 @@ class Page extends ModelWithContent
 	 * Converts the most important
 	 * properties to array
 	 */
+	#[BlockCollectionAccess]
 	public function toArray(): array
 	{
 		return [

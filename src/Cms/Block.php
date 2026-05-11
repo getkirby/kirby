@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Content\Content;
 use Kirby\Content\Field;
+use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Str;
 use Stringable;
@@ -101,6 +102,7 @@ class Block extends Item implements Stringable
 	/**
 	 * Controller for the block snippet
 	 */
+	#[BlockCollectionAccess]
 	public function controller(): array
 	{
 		return [
@@ -203,6 +205,7 @@ class Block extends Item implements Stringable
 	/**
 	 * Converts the block to HTML
 	 */
+	#[BlockCollectionAccess]
 	public function toHtml(): string
 	{
 		try {

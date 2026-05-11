@@ -5,6 +5,7 @@ namespace Kirby\Query;
 use Closure;
 use Kirby\Exception\BadMethodCallException;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Str;
 
 /**
@@ -85,6 +86,7 @@ class Segment
 	 *
 	 * @param mixed $base Current value of the query chain
 	 */
+	#[BlockCollectionAccess]
 	public function resolve(mixed $base = null, array|object $data = []): mixed
 	{
 		// resolve arguments to array

@@ -173,6 +173,7 @@ trait UserActions
 	/**
 	 * Creates a new User from the given props and returns a new User object
 	 */
+	#[BlockCollectionAccess]
 	public static function create(array $props): User
 	{
 		$input = $props;

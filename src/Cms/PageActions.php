@@ -444,6 +444,7 @@ trait PageActions
 	/**
 	 * Creates and stores a new page
 	 */
+	#[BlockCollectionAccess]
 	public static function create(array $props): Page
 	{
 		$props = self::normalizeProps($props);
