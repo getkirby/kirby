@@ -1,12 +1,14 @@
+import type { MarkType } from "prosemirror-model";
+import type { Command } from "prosemirror-state";
 import getMarkRange from "./getMarkRange";
 
-export default function (type) {
-	return (state, dispatch) => {
+export default function removeMark(type: MarkType): Command {
+	return (state, dispatch): boolean => {
 		const { tr, selection } = state;
 		let { from, to } = selection;
 		const { $from, empty } = selection;
 
-		if (empty) {
+		if (empty === true) {
 			const range = getMarkRange($from, type);
 
 			if (range === false) {
