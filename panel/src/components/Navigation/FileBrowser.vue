@@ -154,6 +154,10 @@ export default {
 	justify-content: end;
 }
 
+.k-file-browser-pagination .k-pagination {
+	margin-bottom: 0;
+}
+
 @container (max-width: 30rem) {
 	.k-file-browser-layout {
 		grid-template-columns: minmax(0, 1fr);
