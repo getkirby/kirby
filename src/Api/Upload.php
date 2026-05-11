@@ -32,7 +32,8 @@ readonly class Upload
 	public function __construct(
 		protected Api $api,
 		protected bool $single = true,
-		protected bool $debug = false
+		protected bool $debug = false,
+		protected string|null $template = null
 	) {
 	}
 
@@ -183,7 +184,7 @@ readonly class Upload
 				// (incomplete chunk request will return empty $source)
 				$data = match ($source) {
 					null    => null,
-					default => $callback($source, $filename)
+					default => $callback($source, $filename, $this->template)
 				};
 
 				$uploads[$upload['name']] = match (true) {
@@ -237,7 +238,7 @@ readonly class Upload
 			tmp:      $tmpRoot,
 			total:    $total,
 			offset:   $this->api->requestHeaders('Upload-Offset'),
-			template: $this->api->requestBody('template'),
+			template: $this->template ?? $this->api->requestBody('template'),
 		);
 
 		// stream chunk content and append it to partial file
