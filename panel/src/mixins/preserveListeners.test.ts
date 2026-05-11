@@ -31,10 +31,12 @@ describe("preserveListeners", () => {
 		});
 
 		it("does not attach non-event attributes as listeners", async () => {
+			const handler = vi.fn();
 			const wrapper = mount(ComponentWithoutInherit, {
-				attrs: { "data-foo": "bar" }
+				attrs: { "data-foo": handler }
 			});
-			expect(wrapper.attributes("data-foo")).toBeUndefined();
+			await wrapper.trigger("click");
+			expect(handler).not.toHaveBeenCalled();
 		});
 
 		it("removes listeners when unmounted", async () => {

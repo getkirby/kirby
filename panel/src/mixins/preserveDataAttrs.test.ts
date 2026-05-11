@@ -1,6 +1,7 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { mount } from "@vue/test-utils";
 import preserveDataAttrs from "./preserveDataAttrs";
+import preserveListeners from "./preserveListeners";
 
 const ComponentWithoutInherit = {
 	mixins: [preserveDataAttrs],
@@ -46,5 +47,23 @@ describe("preserveDataAttrs", () => {
 			});
 			expect(wrapper.attributes("data-foo")).toBe("bar");
 		});
+	});
+});
+
+describe("preserveDataAttrs + preserveListeners combined", () => {
+	const ComponentWithBoth = {
+		mixins: [preserveDataAttrs, preserveListeners],
+		inheritAttrs: false,
+		template: "<div />"
+	};
+
+	it("applies data- attributes and attaches event listeners", async () => {
+		const handler = vi.fn();
+		const wrapper = mount(ComponentWithBoth, {
+			attrs: { "data-id": "42", onClick: handler }
+		});
+		expect(wrapper.attributes("data-id")).toBe("42");
+		await wrapper.trigger("click");
+		expect(handler).toHaveBeenCalledOnce();
 	});
 });

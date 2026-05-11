@@ -1,5 +1,5 @@
 import type { ComponentOptions } from "vue";
-import { wrap } from "@/helpers/array.js";
+import { wrap } from "@/helpers/array";
 
 /**
  * Ensures that even when a component prohibits to
