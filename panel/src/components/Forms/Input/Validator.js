@@ -4,32 +4,32 @@
  */
 export default class InputValidator extends HTMLElement {
 	static formAssociated = true;
+	/** @type {ElementInternals} */
+	internals = this.attachInternals();
+	/** @type {Array<unknown>} */
+	entries = [];
+	/** @type {number | null} */
+	max = null;
+	/** @type {number | null} */
+	min = null;
+	/** @type {boolean} */
+	required = false;
 
 	static get observedAttributes() {
 		return ["min", "max", "required", "value"];
 	}
 
 	attributeChangedCallback(attribute, oldValue, newValue) {
-		this[attribute] = newValue;
-	}
-
-	constructor() {
-		super();
-		this.internals = this.attachInternals();
-		this.entries = [];
+		if (attribute === "required") {
+			this.required = newValue !== null && newValue !== "false";
+		} else if (attribute === "min" || attribute === "max") {
+			this[attribute] = newValue === null ? null : parseInt(newValue);
+		} else {
+			this[attribute] = newValue;
+		}
 	}
 
 	connectedCallback() {
-		this.tabIndex = 0;
-
-		// pass-through the id attribute
-		const id = this.getAttribute("id");
-
-		if (id) {
-			this.input.setAttribute("id", id);
-			this.removeAttribute("id");
-		}
-
 		this.validate();
 	}
 
@@ -53,10 +53,6 @@ export default class InputValidator extends HTMLElement {
 		);
 	}
 
-	get isEmpty() {
-		return this.selected.length === 0;
-	}
-
 	get name() {
 		return this.getAttribute("name");
 	}
@@ -70,26 +66,22 @@ export default class InputValidator extends HTMLElement {
 	}
 
 	validate() {
-		const max = parseInt(this.max);
-		const min = parseInt(this.min);
-		const required = this.required === "true";
-
-		if (required && this.entries.length === 0) {
+		if (this.required && this.entries.length === 0) {
 			this.internals.setValidity(
 				{ valueMissing: true },
 				window.panel.t("error.validation.required"),
 				this.input
 			);
-		} else if (this.hasAttribute("min") && this.entries.length < min) {
+		} else if (this.min !== null && this.entries.length < this.min) {
 			this.internals.setValidity(
 				{ rangeUnderflow: true },
-				window.panel.t("error.validation.min", { min }),
+				window.panel.t("error.validation.min", { min: this.min }),
 				this.input
 			);
-		} else if (this.hasAttribute("max") && this.entries.length > max) {
+		} else if (this.max !== null && this.entries.length > this.max) {
 			this.internals.setValidity(
 				{ rangeOverflow: true },
-				window.panel.t("error.validation.max", { max }),
+				window.panel.t("error.validation.max", { max: this.max }),
 				this.input
 			);
 		} else {

@@ -2,11 +2,48 @@
 
 namespace Kirby\Form\Field;
 
+use Closure;
+use Kirby\Api\Api;
 use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Panel\Controller\Dialog\FilePickerDialogController;
 use PHPUnit\Framework\Attributes\CoversClass;
+
+class FilePickerFieldTestApi extends Api
+{
+	public string|null $template = null;
+
+	public function upload(
+		Closure $callback,
+		bool $single = false,
+		bool $debug = false,
+		string|null $template = null
+	): array {
+		$this->template = $template;
+
+		return [
+			'status' => 'ok',
+			'data'   => $callback('source.txt', 'test.txt', $template)
+		];
+	}
+}
+
+class FilePickerFieldTestPage extends Page
+{
+	public array $createdFile = [];
+
+	public function createFile(array $props, bool $move = false): File
+	{
+		$this->createdFile = $props;
+
+		return new File([
+			'filename' => $props['filename'],
+			'parent'   => $this,
+			'template' => $props['template']
+		]);
+	}
+}
 
 #[CoversClass(FilePickerField::class)]
 #[CoversClass(ModelPickerField::class)]
@@ -237,6 +274,39 @@ class FilePickerFieldTest extends TestCase
 		];
 
 		$this->assertSame($expected, $props);
+	}
+
+	public function testUploadPassesTemplateToApi(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'files/custom' => [
+					'name'   => 'custom',
+					'accept' => ['extension' => 'txt']
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$parent = new FilePickerFieldTestPage(['slug' => 'test']);
+
+		$field = $this->field('files', [
+			'model'   => $parent,
+			'uploads' => 'custom'
+		]);
+		$this->assertSame('.txt', $field->uploads()['accept']);
+
+		$api = new FilePickerFieldTestApi(['kirby' => $this->app]);
+
+		$result = $field->upload(
+			$api,
+			$field->uploads(),
+			fn ($file) => $file->template()
+		);
+
+		$this->assertSame('custom', $api->template);
+		$this->assertSame('custom', $parent->createdFile['template']);
+		$this->assertSame('custom', $result['data']);
 	}
 
 	public function testParentModel(): void

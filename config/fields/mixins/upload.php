@@ -59,12 +59,13 @@ return [
 				);
 			}
 
-			$parent = $this->uploadParent($params['parent'] ?? null);
+			$parent   = $this->uploadParent($params['parent'] ?? null);
+			$template = $params['template'] ?? null;
 
-			return $api->upload(function ($source, $filename) use ($parent, $params, $map) {
+			return $api->upload(function ($source, $filename, $template) use ($parent, $map) {
 				$props = [
 					'source'   => $source,
-					'template' => $params['template'] ?? null,
+					'template' => $template,
 					'filename' => $filename,
 				];
 
@@ -78,7 +79,7 @@ return [
 				}
 
 				return $map($file, $parent);
-			});
+			}, template: $template);
 		},
 		'uploadParent' => function (string|null $parentQuery = null) {
 			$parent = $this->model();
