@@ -736,6 +736,7 @@ class User extends ModelWithContent
 	 * Converts the most important user properties
 	 * to an array
 	 */
+	#[BlockCollectionAccess]
 	public function toArray(): array
 	{
 		return array_merge(parent::toArray(), [

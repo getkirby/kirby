@@ -8,6 +8,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\F;
+use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Locale;
 use Kirby\Toolkit\Str;
 use Throwable;
@@ -144,6 +145,7 @@ class Language
 	 * Creates a new language object
 	 * @internal
 	 */
+	#[BlockCollectionAccess]
 	public static function create(array $props): static
 	{
 		$kirby = App::instance();
@@ -211,6 +213,7 @@ class Language
 	 *
 	 * @throws \Kirby\Exception\Exception
 	 */
+	#[BlockCollectionAccess]
 	public function delete(): bool
 	{
 		$kirby = App::instance();
@@ -392,6 +395,7 @@ class Language
 	/**
 	 * Returns the absolute path to the language file
 	 */
+	#[BlockCollectionAccess]
 	public function root(): string
 	{
 		return App::instance()->root('languages') . '/' . $this->code() . '.php';
@@ -424,6 +428,7 @@ class Language
 	 *
 	 * @return $this
 	 */
+	#[BlockCollectionAccess]
 	public function save(): static
 	{
 		try {
@@ -514,6 +519,7 @@ class Language
 	 * Update language properties and save them
 	 * @internal
 	 */
+	#[BlockCollectionAccess]
 	public function update(array|null $props = null): static
 	{
 		$kirby = App::instance();

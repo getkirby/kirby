@@ -8,6 +8,7 @@ use Kirby\Cms\App;
 use Kirby\Cms\HasSiblings;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Data\Data;
+use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 use Throwable;
@@ -161,6 +162,7 @@ abstract class FieldClass
 	/**
 	 * Setter for the value
 	 */
+	#[BlockCollectionAccess]
 	public function fill(mixed $value = null): void
 	{
 		$this->value = $value;

@@ -503,6 +503,7 @@ trait PageActions
 	/**
 	 * Creates and stores a new page
 	 */
+	#[BlockCollectionAccess]
 	public static function create(array $props): Page
 	{
 		// Prevent injecting blueprint as this always must be derived from
