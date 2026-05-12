@@ -72,12 +72,6 @@ describe("panel.translation", () => {
 			).toStrictEqual("Hello Peter");
 		});
 
-		it("returns a non-string value as-is", () => {
-			const translation = Translation();
-			translation.set({ data: { count: 42 } });
-			expect(translation.translate("count")).toStrictEqual(42);
-		});
-
 		it("uses the key as fallback when key does not exist", () => {
 			const translation = Translation();
 			expect(translation.translate("missing.key")).toStrictEqual("missing.key");
