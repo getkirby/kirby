@@ -15,7 +15,7 @@ const context = { type: schema.nodes.quote, schema, utils };
 
 describe("Quote node", () => {
 	beforeEach(() => {
-		vi.stubGlobal("panel", { $t: (key: string) => key });
+		vi.stubGlobal("panel", { t: (key: string) => key });
 	});
 
 	afterEach(() => {

@@ -25,7 +25,7 @@ function withActiveNodes(activeNodes: string[]) {
 
 describe("Paragraph node", () => {
 	beforeEach(() => {
-		vi.stubGlobal("panel", { $t: (key: string) => key });
+		vi.stubGlobal("panel", { t: (key: string) => key });
 	});
 
 	afterEach(() => {
