@@ -4,9 +4,9 @@ namespace Kirby\Content;
 
 use Kirby\Cms\Helpers;
 use Kirby\Cms\Language;
-use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Exception\Exception;
+use Kirby\Toolkit\BlockCollectionAccess;
 
 /**
  * Each page, file or site can have multiple

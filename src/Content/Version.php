@@ -4,7 +4,6 @@ namespace Kirby\Content;
 
 use Kirby\Cms\Language;
 use Kirby\Cms\Languages;
-use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
@@ -12,6 +11,7 @@ use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Form\Fields;
 use Kirby\Http\Uri;
+use Kirby\Toolkit\BlockCollectionAccess;
 
 /**
  * The Version class handles all actions for a single

@@ -4,8 +4,8 @@ namespace Kirby\Cms;
 
 use Kirby\Content\Content;
 use Kirby\Content\Field;
-use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Str;
 use Stringable;
 use Throwable;

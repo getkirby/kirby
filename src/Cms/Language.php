@@ -4,10 +4,10 @@ namespace Kirby\Cms;
 
 use Kirby\Data\Data;
 use Kirby\Exception\Exception;
-use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
+use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Locale;
 use Kirby\Toolkit\Str;
 use Stringable;
