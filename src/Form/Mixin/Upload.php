@@ -41,24 +41,27 @@ trait Upload
 
 		$parent = $this->uploadParent($params['parent'] ?? null);
 
-		return $api->upload(function ($source, $filename) use ($parent, $params, $map) {
-			$props = [
-				'source'   => $source,
-				'template' => $params['template'] ?? null,
-				'filename' => $filename,
-			];
+		return $api->upload(
+			callback: function ($source, $filename, $template) use ($parent, $map) {
+				$props = [
+					'source'   => $source,
+					'template' => $template,
+					'filename' => $filename,
+				];
 
-			// move the source file from the temp dir
-			$file = $parent->createFile($props, true);
+				// move the source file from the temp dir
+				$file = $parent->createFile($props, true);
 
-			if ($file instanceof File === false) {
-				throw new Exception(
-					message: 'The file could not be uploaded'
-				);
-			}
+				if ($file instanceof File === false) {
+					throw new Exception(
+						message: 'The file could not be uploaded'
+					);
+				}
 
-			return $map($file, $parent);
-		});
+				return $map($file, $parent);
+			},
+			template: $params['template'] ?? null
+		);
 	}
 
 	protected function uploadParent(

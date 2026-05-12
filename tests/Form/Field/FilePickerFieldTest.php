@@ -10,7 +10,7 @@ use Kirby\Cms\Page;
 use Kirby\Panel\Controller\Dialog\FilePickerDialogController;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-class FilesFieldTestApi extends Api
+class FilePickerFieldTestApi extends Api
 {
 	public string|null $template = null;
 
@@ -29,7 +29,7 @@ class FilesFieldTestApi extends Api
 	}
 }
 
-class FilesFieldTestPage extends Page
+class FilePickerFieldTestPage extends Page
 {
 	public array $createdFile = [];
 
@@ -47,7 +47,7 @@ class FilesFieldTestPage extends Page
 
 #[CoversClass(FilePickerField::class)]
 #[CoversClass(ModelPickerField::class)]
-class FilesFieldTest extends TestCase
+class FilePickerFieldTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Form.Fields.FilePickerField';
 
@@ -288,7 +288,7 @@ class FilesFieldTest extends TestCase
 		]);
 		$this->app->impersonate('kirby');
 
-		$parent = new FilesFieldTestPage(['slug' => 'test']);
+		$parent = new FilePickerFieldTestPage(['slug' => 'test']);
 
 		$field = $this->field('files', [
 			'model'   => $parent,
@@ -296,7 +296,7 @@ class FilesFieldTest extends TestCase
 		]);
 		$this->assertSame('.txt', $field->uploads()['accept']);
 
-		$api = new FilesFieldTestApi(['kirby' => $this->app]);
+		$api = new FilePickerFieldTestApi(['kirby' => $this->app]);
 
 		$result = $field->upload(
 			$api,
