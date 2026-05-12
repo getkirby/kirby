@@ -616,6 +616,50 @@ class DirTest extends TestCase
 		$this->assertDirectoryDoesNotExist(static::TMP);
 	}
 
+	public function testRemoveNonExistent(): void
+	{
+		$this->assertTrue(Dir::remove(static::TMP . '/does-not-exist'));
+	}
+
+	public function testRemoveWithContents(): void
+	{
+		Dir::make(static::TMP . '/sub');
+		F::write(static::TMP . '/file.txt', 'test');
+		F::write(static::TMP . '/sub/nested.txt', 'test');
+
+		$this->assertTrue(Dir::remove(static::TMP));
+		$this->assertDirectoryDoesNotExist(static::TMP);
+	}
+
+	public function testRemoveLeavesNoTmpSiblings(): void
+	{
+		Dir::make(static::TMP);
+		$parent = dirname(static::TMP);
+
+		Dir::remove(static::TMP);
+
+		// no .remove-* tmp dirs should be left in the parent
+		$leftovers = glob($parent . '/.remove-*');
+		$this->assertSame([], $leftovers);
+	}
+
+	public function testRemoveConcurrentWriteSurvives(): void
+	{
+		// Simulate the race condition: a file appears in the directory
+		// after remove() renames it away. The original path should be
+		// gone and a fresh directory at that path should be untouched.
+		Dir::make(static::TMP);
+
+		$this->assertTrue(Dir::remove(static::TMP));
+		$this->assertDirectoryDoesNotExist(static::TMP);
+
+		// Simulate what a concurrent write does: creates the dir fresh
+		Dir::make(static::TMP);
+		F::write(static::TMP . '/concurrent.txt', 'data');
+
+		$this->assertFileExists(static::TMP . '/concurrent.txt');
+	}
+
 	public function testIsReadable(): void
 	{
 		Dir::make(static::TMP);

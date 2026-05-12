@@ -574,6 +574,81 @@ class Dir
 			return F::unlink($dir);
 		}
 
+		// Attempt an atomic rename before deletion to prevent race conditions
+		// where concurrent processes write new files between our scandir() and
+		// rmdir() calls: once renamed, the original path is gone and concurrent
+		// writes land in a fresh directory.
+		// The system tmp dir is tried first so the OS can garbage-collect any
+		// leftovers automatically; rename() across filesystems fails immediately
+		// (e.g. Linux tmpfs), so we fall back to a same-filesystem sibling dir.
+		$tmp = null;
+
+		foreach ([sys_get_temp_dir(), dirname($dir)] as $tmpParent) {
+			$candidate = $tmpParent . '/.remove-' . uniqid('', true);
+
+			$renamed = Helpers::handleErrors(
+				fn (): bool => rename($dir, $candidate),
+				fn () => true,
+				false
+			);
+
+			if ($renamed === true) {
+				$tmp = $candidate;
+				break;
+			}
+		}
+
+		if ($tmp !== null) {
+			// Original path is atomically gone; clean up the renamed copy.
+			// A leftover tmp dir on failure is a best-effort leak; the caller
+			// already considers the target removed and returns true either way.
+			try {
+				static::removeRecursive($tmp);
+			} catch (Throwable) {
+				// ignore
+			}
+			return true;
+		}
+
+		// Rename failed (e.g. permission on parent); fall back to in-place removal.
+		// Delete all contents first, then retry rmdir to tolerate transient
+		// "directory not empty" errors caused by concurrent writes.
+		static::removeRecursive($dir);
+
+		// removeRecursive may have already removed $dir successfully;
+		// only retry if it still exists
+		if (is_dir($dir) === false) {
+			return true;
+		}
+
+		for ($attempt = 0; $attempt < 5; $attempt++) {
+			if ($attempt > 0) {
+				usleep(10_000);
+			}
+
+			// Suppress all rmdir warnings (locale-independent); success is
+			// determined by checking whether the directory still exists
+			Helpers::handleErrors(
+				fn (): bool => rmdir($dir),
+				fn () => true,
+				null
+			);
+
+			if (is_dir($dir) === false) {
+				return true;
+			}
+		}
+
+		throw new Exception('The directory could not be deleted');
+	}
+
+	/**
+	 * Recursively removes all contents of a directory and then the directory
+	 * itself; errors on the final rmdir are silently suppressed so that
+	 * partial failures (e.g. inside a renamed tmp dir) do not abort callers
+	 */
+	protected static function removeRecursive(string $dir): void
+	{
 		foreach (scandir($dir) as $childName) {
 			if (in_array($childName, ['.', '..'], true) === true) {
 				continue;
@@ -582,16 +657,16 @@ class Dir
 			$child = $dir . '/' . $childName;
 
 			if (is_dir($child) === true && is_link($child) === false) {
-				static::remove($child);
+				static::removeRecursive($child);
 			} else {
 				F::unlink($child);
 			}
 		}
 
-		return Helpers::handleErrors(
+		Helpers::handleErrors(
 			fn (): bool => rmdir($dir),
-			fn (int $errno, string $errstr) => true,
-			fn (): never => throw new Exception('The directory could not be deleted'),
+			fn () => true,
+			null
 		);
 	}
 
