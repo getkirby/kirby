@@ -120,10 +120,6 @@ class Html extends Xml
 			return static::tel(substr($href, 4), $text, $attr);
 		}
 
-		if (Url::hasDangerousScheme($href) === true) {
-			$href = '';
-		}
-
 		return static::link($href, $text, $attr);
 	}
 
@@ -354,6 +350,10 @@ class Html extends Xml
 		string|array|null $text = null,
 		array $attr = []
 	): string {
+		if (Url::hasDangerousScheme($href) === true) {
+			$href = '';
+		}
+
 		$attr = array_merge(['href' => $href], $attr);
 
 		if (empty($text) === true) {
