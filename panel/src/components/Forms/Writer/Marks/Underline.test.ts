@@ -1,5 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { createSchemaWithMarks, hasMark, mockEditor, toHTML } from "@test/unit/editor";
+import {
+	createSchemaWithMarks,
+	hasMark,
+	mockEditor,
+	toHTML
+} from "@test/unit/editor";
 import Underline from "./Underline";
 
 const mark = new Underline();
@@ -7,7 +12,7 @@ const schema = createSchemaWithMarks({ underline: mark.schema });
 
 describe("Underline mark", () => {
 	beforeEach(() => {
-		vi.stubGlobal("panel", { $t: (key: string) => key });
+		vi.stubGlobal("panel", { t: (key: string) => key });
 	});
 
 	afterEach(() => {

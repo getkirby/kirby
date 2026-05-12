@@ -16,7 +16,7 @@ const context = { type: schema.marks.code, schema, utils };
 
 describe("Code mark", () => {
 	beforeEach(() => {
-		vi.stubGlobal("panel", { $t: (key: string) => key });
+		vi.stubGlobal("panel", { t: (key: string) => key });
 	});
 
 	afterEach(() => {

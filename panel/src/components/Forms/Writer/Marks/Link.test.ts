@@ -16,7 +16,7 @@ const context = { type: schema.marks.link, schema, utils };
 
 describe("Link mark", () => {
 	beforeEach(() => {
-		vi.stubGlobal("panel", { $t: (key: string) => key });
+		vi.stubGlobal("panel", { t: (key: string) => key });
 	});
 
 	afterEach(() => {

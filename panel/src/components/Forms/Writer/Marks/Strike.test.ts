@@ -14,10 +14,9 @@ const mark = new Strike();
 const schema = createSchemaWithMarks({ strike: mark.schema });
 const context = { type: schema.marks.strike, schema, utils };
 
-
 describe("Strike mark", () => {
 	beforeEach(() => {
-		vi.stubGlobal("panel", { $t: (key: string) => key });
+		vi.stubGlobal("panel", { t: (key: string) => key });
 	});
 
 	afterEach(() => {
@@ -55,12 +54,9 @@ describe("Strike mark", () => {
 			expect(applyInputRule(schema, rule, input)).toBe(expected);
 		});
 
-		it.each([["~foo"], ["~~"]])(
-			"does not trigger for %s",
-			(input) => {
-				expect(applyInputRule(schema, rule, input)).toBeNull();
-			}
-		);
+		it.each([["~foo"], ["~~"]])("does not trigger for %s", (input) => {
+			expect(applyInputRule(schema, rule, input)).toBeNull();
+		});
 	});
 
 	describe("keys", () => {
