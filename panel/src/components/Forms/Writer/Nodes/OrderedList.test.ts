@@ -19,7 +19,7 @@ const context = { type: schema.nodes.orderedList, schema, utils };
 
 describe("OrderedList node", () => {
 	beforeEach(() => {
-		vi.stubGlobal("panel", { $t: (key: string) => key });
+		vi.stubGlobal("panel", { t: (key: string) => key });
 	});
 
 	afterEach(() => {

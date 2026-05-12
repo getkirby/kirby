@@ -18,7 +18,7 @@ const context = { type: schema.nodes.bulletList, schema, utils };
 
 describe("BulletList node", () => {
 	beforeEach(() => {
-		vi.stubGlobal("panel", { $t: (key: string) => key });
+		vi.stubGlobal("panel", { t: (key: string) => key });
 	});
 
 	afterEach(() => {

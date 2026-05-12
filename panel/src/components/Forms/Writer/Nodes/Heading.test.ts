@@ -23,7 +23,7 @@ const customContext = {
 
 describe("Heading node", () => {
 	beforeEach(() => {
-		vi.stubGlobal("panel", { $t: (key: string) => key });
+		vi.stubGlobal("panel", { t: (key: string) => key });
 	});
 
 	afterEach(() => {
@@ -58,7 +58,11 @@ describe("Heading node", () => {
 
 		it("does not set separator on other buttons", () => {
 			const buttons = node.button;
-			buttons.slice(0, -1).forEach((b: Record<string, unknown>) => expect(b.separator).toBeUndefined());
+			buttons
+				.slice(0, -1)
+				.forEach((b: Record<string, unknown>) =>
+					expect(b.separator).toBeUndefined()
+				);
 		});
 
 		describe("with custom levels [2, 3]", () => {
