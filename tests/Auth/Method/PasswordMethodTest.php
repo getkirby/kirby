@@ -7,6 +7,7 @@ use Kirby\Auth\Auth;
 use Kirby\Auth\Method;
 use Kirby\Auth\Status;
 use Kirby\Cms\User;
+use Kirby\Panel\Ui\Component;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use RuntimeException;
@@ -46,6 +47,20 @@ class PasswordMethodTest extends TestCase
 			'createMode' => 'cookie',
 			'long'       => true
 		]], $login);
+	}
+
+	public function testForm(): void
+	{
+		$auth   = $this->createStub(Auth::class);
+		$method = new PasswordMethod(auth: $auth);
+		$form   = $method->form();
+
+		$this->assertInstanceOf(Component::class, $form);
+
+		$rendered = $form->render();
+		$this->assertSame('k-login-password-method-form', $rendered['component']);
+		$this->assertSame('key', $rendered['props']['submit']['icon']);
+		$this->assertSame('Log in', $rendered['props']['submit']['label']);
 	}
 
 	public function testAuthenticateWith2FA(): void
