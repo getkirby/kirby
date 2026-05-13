@@ -119,11 +119,18 @@ class Url
 	 */
 	public static function hasDangerousScheme(string|null $url = null): bool
 	{
-		return
-			$url !== null &&
-			// strip leading whitespace to prevent
-			// tab/space-prefix bypass attempts
-			preg_match('!^(?:javascript|vbscript|livescript|mocha|jar|data)\s*:!i', ltrim($url)) === 1;
+		if ($url === null) {
+			return false;
+		}
+
+		// strip any weird characters to prevent bypass attempts,
+		// keeping only the characters we test for below
+		// (especially removes any whitespace that the browser would ignore
+		// when the resulting URL is evaluated)
+		$url = preg_replace('/[^a-z:]/i', '', $url);
+
+		// try to find a match from the blocklist case-insensitively
+		return preg_match('!^(?:javascript|vbscript|livescript|mocha|jar|data):!i', $url) === 1;
 	}
 
 	/**

@@ -84,49 +84,80 @@ class HtmlTest extends TestCase
 
 	public function testAWithDangerousSchemes(): void
 	{
+		// dangerous schemes are blocked via Html::link delegation
+		$html = Html::a('javascript:alert(1)', 'click');
+		$this->assertStringNotContainsString('javascript:', $html);
+		$this->assertStringContainsString('href=""', $html);
+	}
+
+	public function testLink(): void
+	{
+		$html = Html::link('https://getkirby.com');
+		$expected = '<a href="https://getkirby.com">getkirby.com</a>';
+		$this->assertSame($expected, $html);
+
+		$html = Html::link('https://getkirby.com', 'Kirby');
+		$expected = '<a href="https://getkirby.com">Kirby</a>';
+		$this->assertSame($expected, $html);
+	}
+
+	public function testLinkWithDangerousSchemes(): void
+	{
 		// javascript://
-		$html = Html::a('javascript://comment%0Aalert(1)', 'click');
+		$html = Html::link('javascript://comment%0Aalert(1)', 'click');
 		$this->assertStringNotContainsString('javascript:', $html);
 		$this->assertStringContainsString('href=""', $html);
 
 		// bare javascript: (no //)
-		$html = Html::a('javascript:alert(1)', 'click');
+		$html = Html::link('javascript:alert(1)', 'click');
 		$this->assertStringNotContainsString('javascript:', $html);
 
 		// other dangerous schemes
-		$html = Html::a('vbscript://x', 'click');
+		$html = Html::link('vbscript://x', 'click');
 		$this->assertStringNotContainsString('vbscript:', $html);
 
-		$html = Html::a('data://text/html;base64,PHN2Zz4=', 'click');
+		$html = Html::link('data://text/html;base64,PHN2Zz4=', 'click');
 		$this->assertStringNotContainsString('data:', $html);
 
-		$html = Html::a('livescript://x', 'click');
+		$html = Html::link('livescript://x', 'click');
 		$this->assertStringNotContainsString('livescript:', $html);
 
-		$html = Html::a('mocha://x', 'click');
+		$html = Html::link('mocha://x', 'click');
 		$this->assertStringNotContainsString('mocha:', $html);
 
-		$html = Html::a('jar://x', 'click');
+		$html = Html::link('jar://x', 'click');
 		$this->assertStringNotContainsString('jar:', $html);
 
-		// whitespace/tab/newline prefix bypass attempts
-		$html = Html::a(' javascript://x', 'click');
+		// whitespace/tab/newline bypass attempts
+		$html = Html::link(' javascript://x', 'click');
 		$this->assertStringNotContainsString('javascript:', $html);
 
-		$html = Html::a("\tjavascript://x", 'click');
+		$html = Html::link("\tjavascript://x", 'click');
 		$this->assertStringNotContainsString('javascript:', $html);
 
-		$html = Html::a("\njavascript://x", 'click');
+		$html = Html::link("\njavascript://x", 'click');
+		$this->assertStringNotContainsString('javascript:', $html);
+
+		$html = Html::link('java script://x', 'click');
+		$this->assertStringNotContainsString('javascript:', $html);
+
+		$html = Html::link('java script://x', 'click');
+		$this->assertStringNotContainsString('javascript:', $html);
+
+		$html = Html::link("java\tscript://x", 'click');
+		$this->assertStringNotContainsString('javascript:', $html);
+
+		$html = Html::link("javasc\nript://x", 'click');
 		$this->assertStringNotContainsString('javascript:', $html);
 
 		// safe schemes must still work
-		$html = Html::a('https://getkirby.com', 'Kirby');
+		$html = Html::link('https://getkirby.com', 'Kirby');
 		$this->assertStringContainsString('href="https://getkirby.com"', $html);
 
-		$html = Html::a('custom://getkirby.com', 'Kirby');
+		$html = Html::link('custom://getkirby.com', 'Kirby');
 		$this->assertStringContainsString('href="custom://getkirby.com"', $html);
 
-		$html = Html::a('/relative/path', 'link');
+		$html = Html::link('/relative/path', 'link');
 		$this->assertStringContainsString('href="/relative/path"', $html);
 	}
 
