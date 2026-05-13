@@ -100,11 +100,19 @@ class UrlTest extends TestCase
 		$this->assertTrue(Url::hasDangerousScheme('mocha://x'));
 		$this->assertTrue(Url::hasDangerousScheme('jar://x'));
 		$this->assertTrue(Url::hasDangerousScheme('JAVASCRIPT://x'));
+
 		// whitespace prefix bypass attempts
 		$this->assertTrue(Url::hasDangerousScheme(' javascript://x'));
 		$this->assertTrue(Url::hasDangerousScheme("\tjavascript://x"));
 		$this->assertTrue(Url::hasDangerousScheme("\njavascript://x"));
 		$this->assertTrue(Url::hasDangerousScheme("\rjavascript://x"));
+
+		// whitespace bypass in the middle of the string
+		$this->assertTrue(Url::hasDangerousScheme('java script://x'));
+		$this->assertTrue(Url::hasDangerousScheme('java script://x'));
+		$this->assertTrue(Url::hasDangerousScheme("java\tscript://x"));
+		$this->assertTrue(Url::hasDangerousScheme("javas\ncript://x"));
+		$this->assertTrue(Url::hasDangerousScheme("javasc\rript://x"));
 
 		$this->assertFalse(Url::hasDangerousScheme('https://getkirby.com'));
 		$this->assertFalse(Url::hasDangerousScheme('//getkirby.com'));
