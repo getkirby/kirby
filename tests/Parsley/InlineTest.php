@@ -181,6 +181,41 @@ class InlineTest extends TestCase
 	/**
 	 * @covers ::parseNode
 	 */
+	public function testSkipsDangerousHref()
+	{
+		$dom  = new Dom('<p><a href="javascript://x%0Aalert(1)">Test</a></p>');
+		$p    = $dom->query('//p')[0];
+		$html = Inline::parseNode($p, [
+			'a' => [
+				'attrs' => ['href', 'rel'],
+				'defaults' => [
+					'rel' => 'noreferrer'
+				]
+			],
+		]);
+
+		$this->assertSame('<a rel="noreferrer">Test</a>', $html);
+	}
+
+	/**
+	 * @covers ::parseNode
+	 */
+	public function testSkipsObfuscatedHref()
+	{
+		$dom  = new Dom("<p><a href=\"java\tscript://x%0Aalert(1)\">Test</a></p>");
+		$p    = $dom->query('//p')[0];
+		$html = Inline::parseNode($p, [
+			'a' => [
+				'attrs' => ['href'],
+			],
+		]);
+
+		$this->assertSame('<a>Test</a>', $html);
+	}
+
+	/**
+	 * @covers ::parseNode
+	 */
 	public function testParseNodeWithUnkownMarks()
 	{
 		$dom     = new Dom('<p><b>Test</b> <i>Test</i></p>');

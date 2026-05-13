@@ -435,6 +435,29 @@ class BlocksTest extends TestCase
 		return $this->assertSame($expected, $this->schema->img($element));
 	}
 
+	public function testImgDangerousLink()
+	{
+		$html = <<<HTML
+            <a href="javascript://x%0Aalert(1)">
+                <img src="https://getkirby.com/image.jpg" alt="Test">
+            </a>
+        HTML;
+
+		$element  = $this->element($html, '//img');
+		$expected = [
+			'content' => [
+				'alt'      => 'Test',
+				'caption'  => null,
+				'link'     => null,
+				'location' => 'web',
+				'src'      => 'https://getkirby.com/image.jpg'
+			],
+			'type' => 'image',
+		];
+
+		return $this->assertSame($expected, $this->schema->img($element));
+	}
+
 	public function testImgWithCaption()
 	{
 		$html = <<<HTML
