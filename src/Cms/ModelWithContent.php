@@ -11,6 +11,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Form\Form;
 use Kirby\Panel\Model;
+use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Str;
 use Kirby\Uuid\Identifiable;
 use Kirby\Uuid\Uuid;
@@ -106,6 +107,7 @@ abstract class ModelWithContent implements Identifiable
 	 *
 	 * @todo eventually refactor without need of propertyData
 	 */
+	#[BlockCollectionAccess]
 	public function clone(array $props = []): static
 	{
 		return new static(array_replace_recursive($this->propertyData, $props));
@@ -175,6 +177,7 @@ abstract class ModelWithContent implements Identifiable
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the language for the given code does not exist
 	 */
+	#[BlockCollectionAccess]
 	public function contentFile(
 		string|null $languageCode = null,
 		bool $force = false
@@ -196,6 +199,7 @@ abstract class ModelWithContent implements Identifiable
 	 * @todo Remove in v5
 	 * @codeCoverageIgnore
 	 */
+	#[BlockCollectionAccess]
 	public function contentFiles(): array
 	{
 		Helpers::deprecated('The internal $model->contentFiles() method has been deprecated. You can use $model->storage()->contentFiles() instead, however please note that this method is also internal and may be removed in the future.', 'model-content-file');
@@ -226,6 +230,7 @@ abstract class ModelWithContent implements Identifiable
 	 * @todo Remove in v5
 	 * @codeCoverageIgnore
 	 */
+	#[BlockCollectionAccess]
 	public function contentFileDirectory(): string|null
 	{
 		Helpers::deprecated('The internal $model->contentFileDirectory() method has been deprecated. Please let us know via a GitHub issue if you need this method and tell us your use case.', 'model-content-file');
@@ -312,6 +317,7 @@ abstract class ModelWithContent implements Identifiable
 	/**
 	 * Decrement a given field value
 	 */
+	#[BlockCollectionAccess]
 	public function decrement(
 		string $field,
 		int $by = 1,
@@ -344,6 +350,7 @@ abstract class ModelWithContent implements Identifiable
 	 * Creates a clone and fetches all
 	 * lazy-loaded getters to get a full copy
 	 */
+	#[BlockCollectionAccess]
 	public function hardcopy(): static
 	{
 		$clone = $this->clone();
@@ -368,6 +375,7 @@ abstract class ModelWithContent implements Identifiable
 	/**
 	 * Increment a given field value
 	 */
+	#[BlockCollectionAccess]
 	public function increment(
 		string $field,
 		int $by = 1,
@@ -515,6 +523,7 @@ abstract class ModelWithContent implements Identifiable
 	 * Stores the content on disk
 	 * @internal
 	 */
+	#[BlockCollectionAccess]
 	public function save(
 		array|null $data = null,
 		string|null $languageCode = null,
@@ -765,6 +774,7 @@ abstract class ModelWithContent implements Identifiable
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the input array contains invalid values
 	 */
+	#[BlockCollectionAccess]
 	public function update(
 		array|null $input = null,
 		string|null $languageCode = null,
@@ -811,6 +821,7 @@ abstract class ModelWithContent implements Identifiable
 	 * to store the given data on disk or anywhere else
 	 * @internal
 	 */
+	#[BlockCollectionAccess]
 	public function writeContent(array $data, string|null $languageCode = null): bool
 	{
 		$data = $this->contentFileData($data, $languageCode);

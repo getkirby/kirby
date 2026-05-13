@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Exception;
 use Kirby\Data\Data;
 use Kirby\Filesystem\F;
+use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\I18n;
 
 /**
@@ -144,6 +145,7 @@ class Role
 		return $this->name() === 'nobody';
 	}
 
+	#[BlockCollectionAccess]
 	public static function load(string $file, array $inject = []): static
 	{
 		$data = Data::read($file);

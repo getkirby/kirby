@@ -1092,6 +1092,7 @@ class Page extends ModelWithContent
 	/**
 	 * Search all pages within the current page
 	 */
+	#[BlockCollectionAccess]
 	public function search(string|null $query = null, string|array $params = []): Pages
 	{
 		return $this->index()->search($query, $params);

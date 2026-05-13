@@ -219,6 +219,7 @@ class Block extends Item
 	 * object. This can be used further
 	 * with all available field methods
 	 */
+	#[BlockCollectionAccess]
 	public function toField(): Field
 	{
 		return new Field($this->parent(), $this->id(), $this->toHtml());

@@ -37,6 +37,7 @@ class Segment
 	 *
 	 * @throws \Kirby\Exception\BadMethodCallException
 	 */
+	#[BlockCollectionAccess]
 	public static function error(mixed $data, string $name, string $label): void
 	{
 		$type = strtolower(gettype($data));
