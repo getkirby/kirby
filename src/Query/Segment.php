@@ -39,6 +39,7 @@ class Segment
 	 *
 	 * @throws \Kirby\Exception\BadMethodCallException
 	 */
+	#[BlockCollectionAccess]
 	public static function error(
 		mixed $data,
 		string $name,

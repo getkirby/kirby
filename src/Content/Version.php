@@ -631,6 +631,7 @@ class Version
 	 * Returns the preview URL with authentication for drafts and versions
 	 * @unstable
 	 */
+	#[BlockCollectionAccess]
 	public function url(): string|null
 	{
 		if (
