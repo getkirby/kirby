@@ -10,6 +10,28 @@ use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 use PHPUnit\Framework\Attributes\CoversClass;
 
+class DirFlakyRemoveRecursive extends Dir
+{
+	public static int $failCount = 0;
+
+	protected static function removeRecursive(string $dir): void
+	{
+		if (static::$failCount > 0) {
+			static::$failCount--;
+			return;
+		}
+		parent::removeRecursive($dir);
+	}
+}
+
+class DirRemoveRecursiveThrows extends Dir
+{
+	protected static function removeRecursive(string $dir): void
+	{
+		throw new \Exception('test: cleanup failure');
+	}
+}
+
 #[CoversClass(Dir::class)]
 class DirTest extends TestCase
 {
@@ -621,6 +643,32 @@ class DirTest extends TestCase
 		$this->assertTrue(Dir::remove(static::TMP . '/does-not-exist'));
 	}
 
+	public function testRemoveThrowsAfterRetryExhausted(): void
+	{
+		if (posix_getuid() === 0) {
+			$this->markTestSkipped('Cannot test permission-restricted removal as root');
+		}
+
+		$parent = static::TMP . '/locked-parent';
+		$dir    = $parent . '/locked';
+
+		Dir::make($dir . '/inner');
+
+		// Read-only parent prevents rename() from removing $dir's directory entry.
+		// Read-only $dir prevents removeRecursive() from deleting the inner subdirectory.
+		chmod($parent, 0555);
+		chmod($dir, 0555);
+
+		try {
+			$this->expectException(Exception::class);
+			$this->expectExceptionMessage('The directory could not be deleted');
+			Dir::remove($dir);
+		} finally {
+			chmod($dir, 0755);
+			chmod($parent, 0755);
+		}
+	}
+
 	public function testRemoveWithContents(): void
 	{
 		Dir::make(static::TMP . '/sub');
@@ -629,6 +677,82 @@ class DirTest extends TestCase
 
 		$this->assertTrue(Dir::remove(static::TMP));
 		$this->assertDirectoryDoesNotExist(static::TMP);
+	}
+
+	public function testRemoveWithDeeplyNested(): void
+	{
+		Dir::make(static::TMP . '/a');
+		Dir::make(static::TMP . '/a/b');
+		Dir::make(static::TMP . '/a/b/c');
+		F::write(static::TMP . '/a/file.txt', 'test');
+		F::write(static::TMP . '/a/b/file.txt', 'test');
+		F::write(static::TMP . '/a/b/c/file.txt', 'test');
+
+		$this->assertTrue(Dir::remove(static::TMP));
+		$this->assertDirectoryDoesNotExist(static::TMP);
+	}
+
+	public function testRemoveWithSymlinkChild(): void
+	{
+		$source = static::TMP . '/source';
+		$dir    = static::TMP . '/dir';
+
+		Dir::make($source);
+		Dir::make($dir);
+		symlink($source, $dir . '/link');
+
+		$this->assertTrue(Dir::remove($dir));
+		$this->assertDirectoryDoesNotExist($dir);
+		$this->assertDirectoryExists($source);
+	}
+
+	public function testRemoveCatchesCleanupError(): void
+	{
+		Dir::make(static::TMP);
+
+		// DirRemoveRecursiveThrows always throws from removeRecursive;
+		// remove() must catch it and still return true because the
+		// original path was already atomically renamed away before cleanup ran.
+		$this->assertTrue(DirRemoveRecursiveThrows::remove(static::TMP));
+		$this->assertDirectoryDoesNotExist(static::TMP);
+	}
+
+	public function testRemoveFallbackSucceedsOnFirstAttempt(): void
+	{
+		Dir::make(static::TMP . '/sub');
+		F::write(static::TMP . '/file.txt', 'test');
+
+		// Blocking rename forces the in-place fallback; the first removeRecursive
+		// call should clear all content and delete the directory.
+		FileTest::$block[] = 'rename';
+
+		try {
+			$this->assertTrue(Dir::remove(static::TMP));
+			$this->assertDirectoryDoesNotExist(static::TMP);
+		} finally {
+			FileTest::$block = [];
+		}
+	}
+
+	public function testRemoveFallbackSucceedsOnRetry(): void
+	{
+		$dir = static::TMP . '/target';
+
+		Dir::make($dir . '/inner');
+
+		// Blocking rename forces the fallback; DirFlakyRemoveRecursive is a
+		// no-op for the first two calls so the retry loop must eventually
+		// succeed and return true from inside the loop.
+		FileTest::$block[]                  = 'rename';
+		DirFlakyRemoveRecursive::$failCount = 2;
+
+		try {
+			$this->assertTrue(DirFlakyRemoveRecursive::remove($dir));
+			$this->assertDirectoryDoesNotExist($dir);
+		} finally {
+			FileTest::$block                    = [];
+			DirFlakyRemoveRecursive::$failCount = 0;
+		}
 	}
 
 	public function testRemoveLeavesNoTmpSiblings(): void
