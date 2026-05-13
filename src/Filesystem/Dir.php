@@ -600,8 +600,8 @@ class Dir
 
 		if ($tmp !== null) {
 			// Original path is atomically gone; clean up the renamed copy.
-			// A leftover tmp dir on failure is a best-effort leak; the caller
-			// already considers the target removed and returns true either way.
+			// If cleanup fails, we still return true because the original path
+			// no longer exists and any tmp leftovers will be garbage-collected by the OS.
 			try {
 				static::removeRecursive($tmp);
 			} catch (Throwable) {
@@ -611,7 +611,7 @@ class Dir
 		}
 
 		// Rename failed (e.g. permission on parent); fall back to in-place removal.
-		// Delete all contents first, then retry rmdir to tolerate transient
+		// Delete all contents first, then retry to tolerate transient
 		// "directory not empty" errors caused by concurrent writes.
 		static::removeRecursive($dir);
 
@@ -626,13 +626,7 @@ class Dir
 				usleep(10_000);
 			}
 
-			// Suppress all rmdir warnings (locale-independent); success is
-			// determined by checking whether the directory still exists
-			Helpers::handleErrors(
-				fn (): bool => rmdir($dir),
-				fn () => true,
-				null
-			);
+			static::removeRecursive($dir);
 
 			if (is_dir($dir) === false) {
 				return true;
@@ -665,8 +659,7 @@ class Dir
 
 		Helpers::handleErrors(
 			fn (): bool => rmdir($dir),
-			fn () => true,
-			null
+			fn () => true
 		);
 	}
 
