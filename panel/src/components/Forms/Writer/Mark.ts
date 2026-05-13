@@ -1,5 +1,5 @@
 import type { InputRule } from "prosemirror-inputrules";
-import type { MarkSpec, MarkType } from "prosemirror-model";
+import type { Attrs, MarkSpec, MarkType } from "prosemirror-model";
 import type { Command, Plugin } from "prosemirror-state";
 import type { MarkViewConstructor } from "prosemirror-view";
 import Extension, { type BaseContext, type Commands } from "./Extension";
@@ -10,7 +10,7 @@ export default abstract class Mark<
 	TOptions extends Record<string, unknown> = Record<string, unknown>
 > extends Extension<TOptions> {
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	commands(_context: BaseContext): Commands {
+	commands(context: MarkContext): Commands {
 		return {};
 	}
 
@@ -43,7 +43,7 @@ export default abstract class Mark<
 		return "mark";
 	}
 
-	update(attrs: Record<string, unknown>): void {
+	update(attrs: Attrs): void {
 		this.editor.updateMark(this.name, attrs);
 	}
 
