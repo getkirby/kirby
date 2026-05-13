@@ -4,6 +4,7 @@ namespace Kirby\Parsley\Schema;
 
 use DOMElement;
 use DOMText;
+use Kirby\Http\Url;
 use Kirby\Parsley\Element;
 use Kirby\Toolkit\Str;
 
@@ -154,6 +155,10 @@ class Blocks extends Plain
 		$link       = $node->find('ancestor::a')?->attr('href');
 		$figcaption = $node->find('ancestor::figure[1]//figcaption');
 		$caption    = $figcaption?->innerHTML($this->marks());
+
+		if (Url::hasDangerousScheme($link) === true) {
+			$link = null;
+		}
 
 		// avoid parsing the caption twice
 		$figcaption?->remove();
