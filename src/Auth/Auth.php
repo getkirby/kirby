@@ -56,7 +56,7 @@ class Auth
 	 */
 	public function authenticate(
 		string $method,
-		string $email,
+		string|null $email,
 		#[SensitiveParameter]
 		string|null $password = null,
 		bool $long = false

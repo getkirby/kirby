@@ -17,7 +17,7 @@ use Kirby\Panel\Ui\Component;
 class PasswordResetMethod extends CodeMethod
 {
 	public function authenticate(
-		string $email,
+		string|null $email,
 		string|null $password = null,
 		bool $long = false
 	): Status {

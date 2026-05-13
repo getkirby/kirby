@@ -40,7 +40,7 @@ class Methods
 	 */
 	public function authenticate(
 		string $type,
-		string $email,
+		string|null $email,
 		string|null $password = null,
 		bool $long = false
 	): User|Status {
