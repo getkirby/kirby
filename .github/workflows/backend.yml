@@ -138,7 +138,7 @@ jobs:
         with:
           php: ${{ env.php }}
           tools: |
-            composer:2.9.1, composer-normalize:2.48.2, composer-require-checker:4.18.0,
+            composer:2.9.8, composer-normalize:2.48.2, composer-require-checker:4.18.0,
             composer-unused:0.9.5, psalm:6.15.0
 
       - name: Setup problem matchers
