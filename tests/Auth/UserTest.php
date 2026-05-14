@@ -96,6 +96,25 @@ class UserTest extends TestCase
 		$this->assertNull($this->user->fromSession($session));
 	}
 
+	public function testFromSessionInvalidatedWithNonIntTimestamp(): void
+	{
+		$session = $this->app->session();
+		$session->set('kirby.userId', 'homer');
+		$session->set('kirby.loginTimestamp', 'not-a-timestamp');
+
+		$this->assertNull($this->user->fromSession($session));
+	}
+
+	public function testFromSessionInvalidatedWithMissingTimestamp(): void
+	{
+		$session = $this->app->session();
+		$session->set('kirby.userId', 'homer');
+		// no kirby.loginTimestamp set — sessions from pre-3.5.8.3
+		// or from before the user gained a password
+
+		$this->assertNull($this->user->fromSession($session));
+	}
+
 	public function testFromSessionMissingUser(): void
 	{
 		$session = $this->app->session();

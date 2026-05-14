@@ -98,9 +98,9 @@ class User
 		if ($password = $user->passwordTimestamp()) {
 			$login = $session->data()->get('kirby.loginTimestamp');
 
-			// invalidate the session if the password
-			// changed since the login
-			if ($login < $password) {
+			// invalidate the session if the password changed since
+			// the login, or if no login timestamp is set
+			if (is_int($login) !== true || $login < $password) {
 				$user->logout();
 				return null;
 			}
