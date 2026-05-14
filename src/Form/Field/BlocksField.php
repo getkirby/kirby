@@ -15,6 +15,7 @@ use Kirby\Form\Form;
 use Kirby\Form\Mixin\EmptyState;
 use Kirby\Form\Mixin\Max;
 use Kirby\Form\Mixin\Min;
+use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Str;
 use Throwable;
 
@@ -104,6 +105,7 @@ class BlocksField extends FieldClass
 		return empty($groups) === true ? null : $groups;
 	}
 
+	#[BlockCollectionAccess]
 	public function fill(mixed $value = null): void
 	{
 		$value  = BlocksCollection::parse($value);
