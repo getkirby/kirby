@@ -143,7 +143,7 @@ class MethodsTest extends TestCase
 		$api->method('requestBody')->willReturnCallback(
 			fn ($key) => match ($key) {
 				'email'    => 'marge@simpsons.com',
-				'password' => '',
+				'password' => null,
 				'long'     => false
 			}
 		);

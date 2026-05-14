@@ -64,9 +64,9 @@ class Methods
 		$password = $api->requestBody('password');
 
 		$method = match (true) {
-			$password !== ''  || $password === null => 'password',
-			$this->has('code')                      => 'code',
-			$this->has('password-reset')            => 'password-reset',
+			is_string($password) && $password !== '' => 'password',
+			$this->has('code')                       => 'code',
+			$this->has('password-reset')             => 'password-reset',
 			default => throw new InvalidArgumentException(
 				message: 'Login without password is not enabled'
 			)
