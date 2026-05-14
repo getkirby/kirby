@@ -1,4 +1,5 @@
 import Mark from "../Mark";
+import { isEmail } from "@/helpers/string";
 
 export default class Email extends Mark {
 	get button() {
@@ -54,9 +55,11 @@ export default class Email extends Mark {
 
 	pasteRules({ type, utils }) {
 		return [
-			utils.pasteRule(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/gi, type, (url) => ({
-				href: url
-			}))
+			utils.pasteRule(
+				/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/gi,
+				type,
+				(url) => ({ href: url })
+			)
 		];
 	}
 
@@ -73,7 +76,7 @@ export default class Email extends Mark {
 							event.target instanceof HTMLAnchorElement
 						) {
 							event.stopPropagation();
-							window.open(attrs.href);
+							window.open("mailto:" + attrs.href);
 						}
 					}
 				}
@@ -95,10 +98,19 @@ export default class Email extends Mark {
 			parseDOM: [
 				{
 					tag: "a[href^='mailto:']",
-					getAttrs: (dom) => ({
-						href: dom.getAttribute("href").replace("mailto:", ""),
-						title: dom.getAttribute("title")
-					})
+					getAttrs: (dom) => {
+						const raw = dom.getAttribute("href") ?? "";
+						const href = raw.replace(/^mailto:/i, "");
+
+						if (isEmail(href) === false) {
+							return false;
+						}
+
+						return {
+							href,
+							title: dom.getAttribute("title")
+						};
+					}
 				}
 			],
 			toDOM: (node) => [
