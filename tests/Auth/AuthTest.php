@@ -383,6 +383,34 @@ class AuthTest extends TestCase
 		$this->assertFalse($app->response()->usesAuth());
 	}
 
+	public function testTypeBasicWithInvalidConfiguration(): void
+	{
+		// when api.basicAuth is enabled and the request carries a Basic
+		// header but a gating condition fails (e.g. no HTTPS),
+		// type() must still return 'basic' so the basic-auth path
+		// surfaces a precise PermissionException rather than silently
+		// falling back to session auth
+
+		$app = $this->app->clone([
+			'options' => [
+				'api' => [
+					'basicAuth'     => true,
+					'allowInsecure' => false
+				]
+			],
+			'server' => [
+				'HTTPS'              => '',
+				'HTTP_AUTHORIZATION' => 'Basic ' . base64_encode('marge@simpsons.com:springfield123')
+			]
+		]);
+
+		$this->assertSame('basic', $app->auth()->type());
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('Basic authentication is only allowed over HTTPS');
+		$app->auth()->currentUserFromBasicAuth();
+	}
+
 	public function testTypeImpersonate(): void
 	{
 		$this->app->auth()->impersonate('kirby');

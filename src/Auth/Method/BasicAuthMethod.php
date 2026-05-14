@@ -43,6 +43,26 @@ class BasicAuthMethod extends Method
 
 	/**
 	 * Checks whether the current request attempts
+	 * to use HTTP basic authentication, regardless of
+	 * whether all gating conditions are met.
+	 */
+	public static function isAttempted(Auth $auth): bool
+	{
+		$kirby = $auth->kirby();
+
+		if ($kirby->option('api.basicAuth', false) !== true) {
+			return false;
+		}
+
+		if ($kirby->request()->auth() instanceof BasicAuth === true) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Checks whether the current request attempts
 	 * to use HTTP basic authentication
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException if the authorization header is invalid

@@ -457,7 +457,9 @@ class Auth
 	 */
 	public function type(bool $allowImpersonation = true): string
 	{
-		if (BasicAuthMethod::isEnabled($this) === true) {
+		// route on attempt, not full validity, so misconfigured basic auth
+		// raises a precise error rather than silently using a session
+		if (BasicAuthMethod::isAttempted($this) === true) {
 			return 'basic';
 		}
 

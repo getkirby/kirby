@@ -119,6 +119,39 @@ class BasicAuthMethodTest extends TestCase
 		$method->authenticate('kirby@getkirby.com');
 	}
 
+	public function testIsAttempted(): void
+	{
+		$auth = $this->auth(header: $this->header());
+		$this->assertTrue(BasicAuthMethod::isAttempted($auth));
+	}
+
+	public function testIsAttemptedOptionDisabled(): void
+	{
+		$auth = $this->auth(auth: false, header: $this->header());
+		$this->assertFalse(BasicAuthMethod::isAttempted($auth));
+	}
+
+	public function testIsAttemptedNoHeader(): void
+	{
+		$auth = $this->auth(header: null);
+		$this->assertFalse(BasicAuthMethod::isAttempted($auth));
+	}
+
+	public function testIsAttemptedIgnoresGating(): void
+	{
+		// even when the gating conditions are not met (no SSL, 2FA, ...),
+		// isAttempted() must still report true so the basic-auth path is
+		// taken and produces a precise error rather than silent session fallback
+		$auth = $this->auth(
+			isSsl: false,
+			allowInsecure: false,
+			hasAnyWith2FA: true,
+			hasPassword: false,
+			header: $this->header()
+		);
+		$this->assertTrue(BasicAuthMethod::isAttempted($auth));
+	}
+
 	public function testIsEnabled(): void
 	{
 		$header = $this->header();
