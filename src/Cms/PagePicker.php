@@ -194,13 +194,24 @@ class PagePicker extends Picker
 
 	/**
 	 * Returns the parent model.
-	 * The model will be used to fetch
-	 * subpages unless there's a specific
-	 * query to find pages instead.
+	 * The model will be used to f subpages unless there's a specific
+	 * query to find pages instead. Falls back to the site root
+	 * when the requested parent is missing or not listable
+	 * for the current user.
 	 */
 	public function parent(): Page|Site
 	{
-		return $this->parent ??= $this->kirby->page($this->options['parent']) ?? $this->site;
+		if ($this->parent !== null) {
+			return $this->parent;
+			}
+
+		$page = $this->kirby->page($this->options['parent']);
+
+		if ($page?->isListable() === true) {
+			return $this->parent = $page;
+		}
+
+		return $this->parent = $this->site;
 	}
 
 	/**

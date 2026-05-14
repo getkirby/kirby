@@ -65,6 +65,32 @@ class PagePickerTest extends ModelTestCase
 		$this->assertSame($picker->start(), $this->app->site());
 	}
 
+	public function testParenNotListableFallsBackToSite(): void
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'drafts' => [
+					[
+						'slug'    => 'secret-draft',
+						'content' => ['title' => 'Top Secret']
+					],
+				],
+			],
+		]);
+
+		$this->app->impersonate('nobody');
+
+		// confirm the draft is in the tree but not listable
+		$draft = $this->app->page('secret-draft');
+		$this->assertNotNull($draft);
+		$this->assertFalse($draft->isListable());
+
+		// requesting parent=secret-draft must fall back to the site
+		$picker = new PagePicker(['parent' => 'secret-draft']);
+
+		$this->assertSame($this->app->site(), $picker->parent());
+	}
+
 	public function testQuery(): void
 	{
 		$picker = new PagePicker([
