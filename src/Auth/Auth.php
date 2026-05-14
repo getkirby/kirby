@@ -591,12 +591,12 @@ class Auth
 				$this->logout();
 			}
 
-			if (empty($email) === false) {
-				$this->kirby->trigger('user.login:failed', ['email' => $email]);
-
-				if ($e instanceof RateLimitException === false) {
-					$this->limits->track($email);
-				}
+			// hook was already fired for RateLimitException
+			if (
+				empty($email) === false &&
+				$e instanceof RateLimitException === false
+			) {
+				$this->limits->track($email);
 			}
 
 			// sleep for a random amount of milliseconds

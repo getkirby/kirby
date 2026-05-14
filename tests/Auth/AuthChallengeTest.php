@@ -240,6 +240,75 @@ class AuthChallengeTest extends TestCase
 		}
 	}
 
+	public function testVerifyChallengeInvalidCodeFiresLoginFailedHookOnce(): void
+	{
+		F::remove(static::TMP . '/site/accounts/.logins');
+		$this->app->visitor()->ip('10.3.123.234');
+
+		$count = 0;
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'user.login:failed' => function () use (&$count) {
+					$count++;
+				}
+			]
+		]);
+		$this->auth = $this->app->auth();
+
+		$session = $this->app->session();
+		$session->set('kirby.challenge.email', 'marge@simpsons.com');
+		$session->set('kirby.challenge.data', ['secret' => self::$password]);
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.type', 'email');
+		$session->set('kirby.challenge.timeout', time() + 1000);
+
+		try {
+			$this->auth->verifyChallenge('000000');
+		} catch (PermissionException) {
+			// expected
+		}
+
+		$this->assertSame(1, $count);
+	}
+
+	public function testVerifyChallengeRateLimitedFiresFailedHookOnce(): void
+	{
+		$count = 0;
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'user.login:failed' => function () use (&$count) {
+					$count++;
+				}
+			]
+		]);
+		$this->auth = $this->app->auth();
+
+		$session = $this->app->session();
+		$session->set('kirby.challenge.email', 'marge@simpsons.com');
+		$session->set('kirby.challenge.data', ['secret' => self::$password]);
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.type', 'email');
+		$session->set('kirby.challenge.timeout', time() + 1000);
+
+		F::write(static::TMP . '/site/accounts/.logins', json_encode([
+			'by-ip' => [],
+			'by-email' => [
+				'marge@simpsons.com' => [
+					'time'   => time(),
+					'trials' => 3
+				]
+			]
+		]));
+
+		try {
+			$this->auth->verifyChallenge('123456');
+		} catch (RateLimitException) {
+			// expected
+		}
+
+		$this->assertSame(1, $count);
+	}
+
 	public function testVerifyChallengeReturnsNullIfFailDoesNotThrow(): void
 	{
 		// custom auth that swallows fail() to reach the null return
