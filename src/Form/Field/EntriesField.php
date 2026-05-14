@@ -10,6 +10,7 @@ use Kirby\Form\Mixin\EmptyState;
 use Kirby\Form\Mixin\Max;
 use Kirby\Form\Mixin\Min;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Str;
 
 /**
@@ -58,6 +59,7 @@ class EntriesField extends FieldClass
 	 * @psalm-suppress MethodSignatureMismatch
 	 * @todo Remove psalm suppress after https://github.com/vimeo/psalm/issues/8673 is fixed
 	 */
+	#[BlockCollectionAccess]
 	public function fill(mixed $value): static
 	{
 		$this->value = Data::decode($value ?? '', 'yaml');
