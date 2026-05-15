@@ -11,8 +11,12 @@ class RouteTest extends TestCase
 {
 	public function _route()
 	{
-		$route = new Route('a', 'GET', function () {});
-		return $route;
+		return new Route(
+			'a',
+			'GET',
+			function () {
+			}
+		);
 	}
 
 	public function testConstruct(): void
