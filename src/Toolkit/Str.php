@@ -1281,11 +1281,10 @@ class Str
 		$out   = [];
 
 		foreach ($parts as $p) {
-			$p = trim($p);
-			if (
-				static::length($p) > 0 &&
-				static::length($p) >= $length
-			) {
+			$p   = trim($p);
+			$len = static::length($p);
+
+			if ($len > 0 && $len >= $length) {
 				$out[] = $p;
 			}
 		}
