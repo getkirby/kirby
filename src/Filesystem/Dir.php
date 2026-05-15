@@ -216,6 +216,8 @@ class Dir
 	 * relevant information.
 	 *
 	 * Don't use outside the Cms context.
+	 *
+	 * @deprecated 5.5.0 Use `Kirby\Cms\Inventory::for()` instead. Will be removed in Kirby 6.
 	 */
 	public static function inventory(
 		string $dir,
@@ -306,6 +308,7 @@ class Dir
 
 	/**
 	 * Collect information for a child for the inventory
+	 * @deprecated 5.5.0
 	 */
 	protected static function inventoryChild(
 		string $item,
@@ -348,6 +351,7 @@ class Dir
 	/**
 	 * Determines the main template for the inventory
 	 * from all collected content files, ignore file meta files
+	 * @deprecated 5.5.0
 	 */
 	protected static function inventoryTemplate(
 		array $content,
