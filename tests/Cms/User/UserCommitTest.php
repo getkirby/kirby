@@ -85,7 +85,8 @@ class UserCommitTest extends ModelTestCase
 		$class->getMethod('commit')->invokeArgs($user, [
 			'changeName',
 			['user' => $user, 'name' => 'target'],
-			function () {}
+			function () {
+			}
 		]);
 	}
 
