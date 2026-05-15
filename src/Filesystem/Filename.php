@@ -250,13 +250,12 @@ class Filename implements Stringable
 				...Language::loadRules($this->language)];
 		}
 
-		// sanitize name
-		$name = F::safeBasename($this->filename);
-
-		// restore language rules
-		Str::$language = $rules;
-
-		return $name;
+		try {
+			return F::safeBasename($this->filename);
+		} finally {
+			// restore language rules even if F::safeBasename throws
+			Str::$language = $rules;
+		}
 	}
 
 	/**
