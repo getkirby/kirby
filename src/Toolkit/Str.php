@@ -305,12 +305,11 @@ class Str
 			return true;
 		}
 
-		$method = match ($caseInsensitive) {
-			true  => 'stripos',
-			false => 'strpos'
-		};
+		$string ??= '';
 
-		return call_user_func($method, $string ?? '', $needle) !== false;
+		return $caseInsensitive === true
+			? stripos($string, $needle) !== false
+			: strpos($string, $needle) !== false;
 	}
 
 	/**
