@@ -79,7 +79,7 @@ jobs:
         uses: ./.github/actions/setup-php
         with:
           php: ${{ matrix.php }}
-          ini: apc.enabled=1, apc.enable_cli=1, pcov.directory=., "pcov.exclude=\"~(vendor|tests)~\""
+          ini: apc.enabled=1, apc.enable_cli=1, pcov.directory=., pcov.exclude=~(vendor|tests)~
           coverage: pcov
           tools: phpunit:12.5.25, brianium/paratest:7.22.4
 
