@@ -1017,9 +1017,11 @@ class A
 			$keys = static::wrap($keys);
 		}
 
+		$exclude = array_flip($keys);
+
 		return static::filter(
 			$array,
-			fn ($value, $key) => in_array($key, $keys, true) === false
+			fn ($value, $key) => isset($exclude[$key]) === false
 		);
 	}
 
