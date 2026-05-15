@@ -96,7 +96,7 @@ class I18n
 	 */
 	public static function locale(): string
 	{
-		if (is_callable(static::$locale) === true) {
+		if (static::$locale instanceof Closure) {
 			static::$locale = (static::$locale)();
 		}
 
