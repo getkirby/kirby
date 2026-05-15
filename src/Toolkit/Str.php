@@ -1149,30 +1149,48 @@ class Str
 		string $second,
 		bool $caseInsensitive = false
 	): array {
-		$matches = 0;
-		$percent = 0.0;
-
 		if ($caseInsensitive === true) {
 			$first  = static::lower($first);
 			$second = static::lower($second);
 		}
 
-		if (static::length($first) + static::length($second) > 0) {
-			$pos1 = $pos2 = $max = 0;
-			$len1 = static::length($first);
-			$len2 = static::length($second);
+		// split once up front so we can recursively compare characters
+		return static::similarityFromChars(
+			first:  mb_str_split($first, 1, 'UTF-8'),
+			second: mb_str_split($second, 1, 'UTF-8'));
+	}
 
+	/**
+	 * Calculates the similarity between two character arrays
+	 * @since 5.5.0
+	 */
+	protected static function similarityFromChars(
+		array $first,
+		array $second
+	): array {
+		$matches = 0;
+		$percent = 0.0;
+		$len1 = count($first);
+		$len2 = count($second);
+
+		if ($len1 + $len2 > 0) {
+			$pos1 = $pos2 = $max = 0;
+
+			// find the longest common substring by checking every
+			// (p, q) start pair and extending forward while chars match
 			for ($p = 0; $p < $len1; ++$p) {
 				for ($q = 0; $q < $len2; ++$q) {
 					for (
 						$l = 0;
 						($p + $l < $len1) && ($q + $l < $len2) &&
-						static::substr($first, $p + $l, 1) === static::substr($second, $q + $l, 1);
+						$first[$p + $l] === $second[$q + $l];
 						++$l
 					) {
 						// nothing to do
 					}
 
+					// record the longest match seen so far and its
+					// starting positions in both inputs
 					if ($l > $max) {
 						$max  = $l;
 						$pos1 = $p;
@@ -1184,19 +1202,23 @@ class Str
 			$matches = $max;
 
 			if ($matches) {
+				// recurse on the segments left of the longest match
 				if ($pos1 && $pos2) {
-					$similarity = static::similarity(
-						static::substr($first, 0, $pos1),
-						static::substr($second, 0, $pos2)
+					$similarity = static::similarityFromChars(
+						first:  array_slice($first, 0, $pos1),
+						second: array_slice($second, 0, $pos2)
 					);
+
 					$matches += $similarity['matches'];
 				}
 
+				// recurse on the segments right of the longest match
 				if (($pos1 + $max < $len1) && ($pos2 + $max < $len2)) {
-					$similarity = static::similarity(
-						static::substr($first, $pos1 + $max, $len1 - $pos1 - $max),
-						static::substr($second, $pos2 + $max, $len2 - $pos2 - $max)
+					$similarity = static::similarityFromChars(
+						first:  array_slice($first, $pos1 + $max),
+						second: array_slice($second, $pos2 + $max)
 					);
+
 					$matches += $similarity['matches'];
 				}
 			}
