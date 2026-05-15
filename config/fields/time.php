@@ -107,7 +107,7 @@ return [
 					key: 'validation.time.between',
 					data: [
 						'min' => $min->format($format),
-						'max' => $min->format($format)
+						'max' => $max->format($format)
 					]
 				);
 			}
