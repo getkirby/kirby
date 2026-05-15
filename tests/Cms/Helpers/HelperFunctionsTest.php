@@ -246,6 +246,20 @@ class HelperFunctionsTest extends TestCase
 		$this->assertSame($gist, $expected);
 	}
 
+	public function testGet(): void
+	{
+		$this->app->clone([
+			'request' => [
+				'query' => [
+					'foo' => 'bar'
+				]
+			]
+		]);
+
+		$this->assertSame('bar', get('foo'));
+		$this->assertSame('fallback', get('does-not-exist', 'fallback'));
+	}
+
 	public function testH(): void
 	{
 		$html = h('Guns & Roses');
@@ -624,6 +638,9 @@ class HelperFunctionsTest extends TestCase
 
 		$pages = pages('a', 'b');
 		$this->assertCount(2, $pages);
+
+		$pages = pages(['a', 'b']);
+		$this->assertCount(2, $pages);
 	}
 
 	public function testParam(): void
@@ -946,6 +963,20 @@ class HelperFunctionsTest extends TestCase
 		$this->assertSame('1.234.567 Autos', tc('car', 1234567, 'de'));
 		$this->assertSame('1.234.567 Autos', tc('car', 1234567, 'de', true));
 		$this->assertSame('1234567 Autos', tc('car', 1234567, 'de', false));
+	}
+
+	public function testTt(): void
+	{
+		$this->app->clone([
+			'translations' => [
+				'en' => [
+					'welcome' => 'Welcome {name}'
+				]
+			]
+		]);
+
+		$this->assertSame('Welcome Kirby', tt('welcome', ['name' => 'Kirby']));
+		$this->assertSame('Hello Kirby', tt('does-not-exist', 'Hello {name}', ['name' => 'Kirby']));
 	}
 
 	public function testUrl(): void
