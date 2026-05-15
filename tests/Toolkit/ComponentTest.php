@@ -20,6 +20,7 @@ class ComponentTest extends TestCase
 	{
 		Component::$types  = [];
 		Component::$mixins = [];
+		Component::$setups = [];
 	}
 
 	public function testProp(): void
