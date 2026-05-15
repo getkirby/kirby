@@ -78,10 +78,10 @@ class File implements Stringable
 
 		if (
 			$this->model !== null &&
-			method_exists($this->model, 'hasIsFileTrait') !== true
+			defined($this->model::class . '::IS_FILE_TRAIT') === false
 		) {
 			throw new InvalidArgumentException(
-				message: 'The model object must use the "Kirby\Filesystem\IsFile" trait'
+				message: 'The model object must use the "' . IsFile::class . '" trait'
 			);
 		}
 	}
