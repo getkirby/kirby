@@ -59,6 +59,30 @@ class MimeTest extends TestCase
 		$this->assertFalse($mime);
 	}
 
+	public function testFromSvgNonSvgFile(): void
+	{
+		$mime = Mime::fromSvg(static::FIXTURES . '/something.json');
+		$this->assertFalse($mime);
+	}
+
+	public function testFromSvgMalformedXml(): void
+	{
+		$mime = Mime::fromSvg(static::FIXTURES . '/malformed.svg');
+		$this->assertFalse($mime);
+	}
+
+	public function testFromSvgEmptyFile(): void
+	{
+		$mime = Mime::fromSvg(static::FIXTURES . '/empty.svg');
+		$this->assertFalse($mime);
+	}
+
+	public function testFromSvgNotAtRoot(): void
+	{
+		$mime = Mime::fromSvg(static::FIXTURES . '/inline-svg.html');
+		$this->assertFalse($mime);
+	}
+
 	public function testIsAccepted(): void
 	{
 		$pattern = 'text/html,text/plain;q=0.8,application/*;q=0.7';

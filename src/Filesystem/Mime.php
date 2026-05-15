@@ -4,7 +4,6 @@ namespace Kirby\Filesystem;
 
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
-use SimpleXMLElement;
 
 /**
  * The `Mime` class provides method
@@ -218,17 +217,26 @@ class Mime
 	 */
 	public static function fromSvg(string $file): string|false
 	{
-		if (file_exists($file) === true) {
-			libxml_use_internal_errors(true);
+		if (file_exists($file) === false) {
+			return false;
+		}
 
-			$svg = new SimpleXMLElement(file_get_contents($file));
+		// only read the first KB: per XML spec the root element follows
+		// the prolog, so <svg should appear well within the first KB even
+		// with an XML declaration, DOCTYPE and comments
+		$head = file_get_contents($file, length: 1024);
 
-			if (
-				$svg !== false &&
-				$svg->getName() === 'svg'
-			) {
-				return 'image/svg+xml';
-			}
+		if ($head === false) {
+			return false; // @codeCoverageIgnore
+		}
+
+		// match <svg only as the root element: allow an optional BOM and any
+		// combination of whitespace, XML declaration, comments and DOCTYPE
+		// before it, but nothing else
+		$pattern = '/\A(?:\xEF\xBB\xBF)?(?:\s+|<\?xml[^?]*\?>|<!--.*?-->|<!DOCTYPE[^>]*>)*<svg[\s>]/s';
+
+		if (preg_match($pattern, $head) === 1) {
+			return 'image/svg+xml';
 		}
 
 		return false;
