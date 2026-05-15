@@ -6,6 +6,7 @@ use Closure;
 use Kirby\Cms\HasSiblings;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Field\BaseField;
+use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Component;
 use Kirby\Toolkit\I18n;
 
@@ -302,6 +303,7 @@ class Field extends Component
 	/**
 	 * Sets a new value for the field
 	 */
+	#[BlockCollectionAccess]
 	public function fill(mixed $value): static
 	{
 		// remember the current state to restore it afterwards
@@ -334,6 +336,7 @@ class Field extends Component
 	 *
 	 * @since 5.2.0
 	 */
+	#[BlockCollectionAccess]
 	public function fillWithEmptyValue(): static
 	{
 		$this->value = $this->emptyValue();

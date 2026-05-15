@@ -212,6 +212,7 @@ trait FileActions
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 * @throws \Kirby\Exception\LogicException
 	 */
+	#[BlockCollectionAccess]
 	public static function create(array $props, bool $move = false): static
 	{
 		$props = static::normalizeProps($props);
