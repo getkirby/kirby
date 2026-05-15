@@ -79,8 +79,10 @@ class SectionTest extends TestCase
 		$routes = [
 			[
 				'pattern' => 'foo',
-				'load'    => function () {},
-				'submit'  => function () {}
+				'load'    => function () {
+				},
+				'submit'  => function () {
+				}
 			]
 		];
 
@@ -132,8 +134,10 @@ class SectionTest extends TestCase
 		$routes = [
 			[
 				'pattern' => 'foo',
-				'load'    => function () {},
-				'submit'  => function () {}
+				'load'    => function () {
+				},
+				'submit'  => function () {
+				}
 			]
 		];
 
