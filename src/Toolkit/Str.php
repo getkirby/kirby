@@ -390,8 +390,8 @@ class Str
 	{
 		$encoded = '';
 
-		for ($i = 0; $i < static::length($string); $i++) {
-			$char     = static::substr($string, $i, 1);
+		// pre-split into characters once
+		foreach (mb_str_split($string, 1, 'UTF-8') as $char) {
 			$char     = mb_convert_encoding($char, 'UCS-4BE', 'UTF-8');
 			[, $code] = unpack('N', $char);
 			$encoded .= match (random_int(1, 2)) {
