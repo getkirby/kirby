@@ -1,4 +1,4 @@
-import { DOMParser } from "prosemirror-model";
+import { DOMParser as ProseMirrorDOMParser } from "prosemirror-model";
 import type { Command } from "prosemirror-state";
 import Extension from "../Extension";
 
@@ -16,10 +16,12 @@ export default class Insert extends Extension {
 						return false;
 					}
 
-					const dom = document.createElement("div");
-					dom.innerHTML = value.trim();
 					const { tr } = state;
-					const node = DOMParser.fromSchema(state.schema).parse(dom);
+					const dom = new DOMParser().parseFromString(
+						value.trim(),
+						"text/html"
+					).body;
+					const node = ProseMirrorDOMParser.fromSchema(state.schema).parse(dom);
 					tr.replaceSelectionWith(node).scrollIntoView();
 
 					if (dispatch) {

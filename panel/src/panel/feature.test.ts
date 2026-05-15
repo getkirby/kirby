@@ -274,7 +274,7 @@ describe("panel.feature", () => {
 			const panel = {
 				...Panel(),
 				async get() {
-					return { $test: { component: "k-other", props: {} } };
+					return { test: { component: "k-other", props: {} } };
 				}
 			};
 			const feature = Feature(panel, "test", defaults());
@@ -288,7 +288,7 @@ describe("panel.feature", () => {
 				...Panel(),
 				async get() {
 					return {
-						$test: { component: "k-test", props: { message: "updated" } }
+						test: { component: "k-test", props: { message: "updated" } }
 					};
 				}
 			};

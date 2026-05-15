@@ -224,7 +224,7 @@ export default function Feature<T extends FeatureState>(
 				return;
 			}
 
-			const state = response["$" + this.key()] as FeatureState | undefined;
+			const state = response[this.key()] as FeatureState | undefined;
 
 			// the state cannot be updated
 			if (!state || state.component !== this.component) {

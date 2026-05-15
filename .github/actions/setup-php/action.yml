@@ -22,7 +22,7 @@ runs:
     - name: Setup PHP cache environment
       if: inputs.extensions != ''
       id: php-cache
-      uses: shivammathur/cache-extensions@4595bea7d6630821b0a3a4894f816402faaf324c # v1
+      uses: shivammathur/cache-extensions@256729b5fef535345e27904657f78048c0990f81 # v1
       with:
         php-version: ${{ inputs.php }}
         extensions: ${{ inputs.extensions }}
@@ -30,14 +30,14 @@ runs:
 
     - name: Cache PHP extensions
       if: inputs.extensions != ''
-      uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+      uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
       with:
         path: ${{ steps.php-cache.outputs.dir }}
         key: ${{ steps.php-cache.outputs.key }}
 
     - name: Setup PHP environment
       id: php-setup
-      uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1 # v2
+      uses: shivammathur/setup-php@7c071dfe9dc99bdf297fa79cb49ea005b9fcadbc # v2
       with:
         php-version: ${{ inputs.php }}
         extensions: ${{ inputs.extensions }}
