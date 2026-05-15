@@ -407,5 +407,29 @@ class ImagickTest extends TestCase
 		$meta = shell_exec('identify -verbose ' . escapeshellarg($file));
 		$this->assertStringNotContainsString('photoshop:CaptionWriter', $meta);
 		$this->assertStringNotContainsString('GPS', $meta);
+		$this->assertStringNotContainsString('Profile-iptc', $meta);
+	}
+
+	public function testStripPreservesProfileFromOption(): void
+	{
+		$fixture = static::FIXTURES . '/image/onigiri-adobe-rgb-gps.jpg';
+
+		// confirm the fixture has IPTC data before processing
+		$command = 'identify -verbose ' . escapeshellarg($fixture) . ' 2>/dev/null';
+		$this->assertStringContainsString('Profile-iptc', shell_exec($command));
+
+		// IPTC is preserved when listed in profiles option
+		copy($fixture, $file = static::TMP . '/onigiri-iptc-preserved.jpg');
+		$imagick = new Imagick(['profiles' => ['icc', 'iptc'], 'width' => 250]);
+		$imagick->process($file);
+		$meta = shell_exec('identify -verbose ' . escapeshellarg($file) . ' 2>/dev/null');
+		$this->assertStringContainsString('Profile-iptc', $meta);
+
+		// IPTC is stripped when not listed in profiles option
+		copy($fixture, $file = static::TMP . '/onigiri-iptc-stripped.jpg');
+		$imagick = new Imagick(['width' => 250]);
+		$imagick->process($file);
+		$meta = shell_exec('identify -verbose ' . escapeshellarg($file) . ' 2>/dev/null');
+		$this->assertStringNotContainsString('Profile-iptc', $meta);
 	}
 }

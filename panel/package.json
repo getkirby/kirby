@@ -27,13 +27,13 @@
 		"vue": "^2.7.16"
 	},
 	"devDependencies": {
-		"@csstools/postcss-light-dark-function": "^2.0.11",
+		"@csstools/postcss-light-dark-function": "^3.0.0",
 		"@vitejs/plugin-vue2": "^2.3.4",
 		"eslint": "^9.39.4",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-vue": "^9.33.0",
 		"glob": "^13.0.6",
-		"jsdom": "^27.4.0",
+		"jsdom": "^29.0.2",
 		"prettier": "^3.8.3",
 		"terser": "^5.46.1",
 		"vite": "^7.3.2",

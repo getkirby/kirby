@@ -40,7 +40,9 @@ export default (panel) => {
 		input: null,
 		announce() {
 			panel.notification.success({ context: "view" });
-			panel.events.emit("model.update");
+			panel.events.emit("model.update", {
+				path: this.replacing?.link
+			});
 		},
 		/**
 		 * Called when dialog's cancel button was clicked

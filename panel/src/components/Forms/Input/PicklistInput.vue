@@ -169,7 +169,7 @@ export default {
 		filteredOptions() {
 			// min length for the search to kick in
 			if (this.query.length < (this.search.min ?? 0)) {
-				return;
+				return this.options;
 			}
 			// include the info field in the search if the user has set the option to true...
 			if (this.search.info) {

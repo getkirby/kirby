@@ -139,6 +139,10 @@ export const responder = async (request, response) => {
 		response.text = await response.text();
 		response.json = JSON.parse(response.text);
 	} catch (error) {
+		if (error.name === "AbortError") {
+			throw error;
+		}
+
 		throw new JsonRequestError("Invalid JSON response", {
 			cause: error,
 			request,
