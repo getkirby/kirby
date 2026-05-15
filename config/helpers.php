@@ -202,7 +202,7 @@ if (Helpers::hasOverride('go') === false) { // @codeCoverageIgnore
 	 */
 	function go(string $url = '/', int $code = 302): never
 	{
-		Response::go($url, $code);
+		Response::go($url, $code); // @codeCoverageIgnore
 	}
 }
 
