@@ -605,6 +605,7 @@ class File extends ModelWithContent
 	 * by injecting the information from
 	 * the asset.
 	 */
+	#[BlockCollectionAccess]
 	public function toArray(): array
 	{
 		return [

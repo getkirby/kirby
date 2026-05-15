@@ -16,6 +16,7 @@ use Kirby\Form\Form;
 use Kirby\Form\Mixin\EmptyState;
 use Kirby\Form\Mixin\Max;
 use Kirby\Form\Mixin\Min;
+use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Str;
 use Throwable;
 
@@ -108,6 +109,7 @@ class BlocksField extends FieldClass
 	 * @psalm-suppress MethodSignatureMismatch
 	 * @todo Remove psalm suppress after https://github.com/vimeo/psalm/issues/8673 is fixed
 	 */
+	#[BlockCollectionAccess]
 	public function fill(mixed $value): static
 	{
 		$value  = BlocksCollection::parse($value);
