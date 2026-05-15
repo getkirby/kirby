@@ -226,6 +226,7 @@ trait FileActions
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 * @throws \Kirby\Exception\LogicException
 	 */
+	#[BlockCollectionAccess]
 	public static function create(array $props, bool $move = false): File
 	{
 		// Prevent injecting blueprint as this always must be derived from

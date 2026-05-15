@@ -222,6 +222,7 @@ trait UserActions
 	/**
 	 * Creates a new User from the given props and returns a new User object
 	 */
+	#[BlockCollectionAccess]
 	public static function create(array|null $props = null): User
 	{
 		// Prevent injecting blueprint as this always must be derived from

@@ -3,6 +3,7 @@
 namespace Kirby\Content;
 
 use Kirby\Cms\ModelWithContent;
+use Kirby\Toolkit\BlockCollectionAccess;
 
 /**
  * Each page, file or site can have multiple
@@ -83,6 +84,7 @@ class ContentTranslation
 	/**
 	 * Absolute path to the translation content file
 	 */
+	#[BlockCollectionAccess]
 	public function contentFile(): string
 	{
 		// temporary compatibility change (TODO: take this from the parent `ModelVersion` object)
