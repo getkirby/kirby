@@ -1310,7 +1310,11 @@ class Str
 			return str_starts_with($string ?? '', $needle);
 		}
 
-		return static::position($string, $needle, true) === 0;
+		$probe  = static::substr($string, 0, static::length($needle));
+		$probe  = static::lower($probe);
+		$needle = static::lower($needle);
+
+		return $needle === $probe;
 	}
 
 	/**
