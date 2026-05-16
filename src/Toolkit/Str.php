@@ -264,7 +264,7 @@ class Str
 	 * Returns everything between two strings from the first occurrence of a given string
 	 */
 	public static function between(
-		string|null $string,
+		string $string,
 		string $start,
 		string $end
 	): string {
