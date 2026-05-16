@@ -1154,10 +1154,31 @@ class Str
 			$second = static::lower($second);
 		}
 
+		// identical inputs always score 100 %
+		if ($first === $second) {
+			$length = static::length($first);
+
+			return [
+				'matches' => $length,
+				'percent' => $length > 0 ? 100.0 : 0.0,
+			];
+		}
+
+		// ASCII fast path: native similar_text() is bit-identical to the
+		// recursive scan below for inputs without multibyte characters
+		if (
+			mb_check_encoding($first, 'ASCII') === true &&
+			mb_check_encoding($second, 'ASCII') === true
+		) {
+			$matches = similar_text($first, $second, $percent);
+			return compact('matches', 'percent');
+		}
+
 		// split once up front so we can recursively compare characters
 		return static::similarityFromChars(
 			first:  mb_str_split($first, 1, 'UTF-8'),
-			second: mb_str_split($second, 1, 'UTF-8'));
+			second: mb_str_split($second, 1, 'UTF-8')
+		);
 	}
 
 	/**
