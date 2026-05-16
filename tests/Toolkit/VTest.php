@@ -521,6 +521,20 @@ class VTest extends TestCase
 		$this->assertTrue(V::maxWords('This is Kirby ', 3));
 
 		$this->assertFalse(V::maxWords('This is Kirby', 2));
+
+		// double spaces don't introduce a third word
+		$this->assertTrue(V::maxWords('hello  world', 2));
+
+		// tabs and newlines count as separators
+		$this->assertTrue(V::maxWords("hello\tworld", 2));
+		$this->assertTrue(V::maxWords("hello\nworld", 2));
+
+		// mixed whitespace
+		$this->assertTrue(V::maxWords("foo  bar\t\tbaz", 3));
+
+		// empty string has zero words
+		$this->assertTrue(V::maxWords('', 0));
+		$this->assertTrue(V::maxWords('   ', 0));
 	}
 
 	public function testMinWords(): void
@@ -530,6 +544,20 @@ class VTest extends TestCase
 
 		$this->assertFalse(V::minWords('This is Kirby', 4));
 		$this->assertFalse(V::minWords('This is Kirby ', 4));
+
+		// double spaces don't introduce a third word
+		$this->assertFalse(V::minWords('hello  world', 3));
+
+		// tabs and newlines count as separators
+		$this->assertTrue(V::minWords("hello\tworld", 2));
+		$this->assertTrue(V::minWords("hello\nworld", 2));
+
+		// mixed whitespace
+		$this->assertTrue(V::minWords("foo  bar\t\tbaz", 3));
+
+		// empty string has zero words
+		$this->assertFalse(V::minWords('', 1));
+		$this->assertFalse(V::minWords('   ', 1));
 	}
 
 	public function testMore(): void
