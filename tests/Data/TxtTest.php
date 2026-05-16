@@ -150,6 +150,21 @@ class TxtTest extends TestCase
 		$this->assertSame($array, $data);
 	}
 
+	public function testDecodeEmptyKey(): void
+	{
+		// a field whose key is only whitespace trims down to
+		// an empty key and is skipped
+		$this->assertSame([], Txt::decode('   : value'));
+
+		// the empty-key field is dropped while valid fields remain
+		$string = "Title: A title\n----\n   : orphan\n----\nText: Some text";
+
+		$this->assertSame([
+			'title' => 'A title',
+			'text'  => 'Some text'
+		], Txt::decode($string));
+	}
+
 	public function testDecodeBom1(): void
 	{
 		$string = "\xEF\xBB\xBFTitle: title field with BOM \xEF\xBB\xBF\n----\nText: text field";

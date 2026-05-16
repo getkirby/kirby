@@ -29,7 +29,7 @@ class Txt extends Handler
 				continue;
 			}
 
-			$key          = Str::ucfirst(Str::slug($key));
+			$key          = ucfirst(Str::slug($key));
 			$value        = static::encodeValue($value);
 			$result[$key] = static::encodeResult($key, $value);
 		}
@@ -63,11 +63,11 @@ class Txt extends Handler
 		$value = trim($value);
 		$result = $key . ':';
 
-		$result .= match (preg_match('!\R!', $value)) {
+		$result .= match (str_contains($value, "\n") || str_contains($value, "\r")) {
 			// multi-line content
-			1 => "\n\n",
+			true  => "\n\n",
 			// single line content, just add space after colon
-			default => ' ',
+			false => ' ',
 		};
 
 		$result .= $value;
@@ -95,7 +95,7 @@ class Txt extends Handler
 		}
 
 		// remove Unicode BOM at the beginning of the file
-		if (Str::startsWith($string, "\xEF\xBB\xBF") === true) {
+		if (str_starts_with($string, "\xEF\xBB\xBF") === true) {
 			$string = substr($string, 3);
 		}
 
@@ -107,24 +107,32 @@ class Txt extends Handler
 
 		// loop through all fields and add them to the content
 		foreach ($fields as $field) {
-			if ($pos = strpos($field, ':')) {
-				$key = strtolower(trim(substr($field, 0, $pos)));
-				$key = str_replace(['-', ' '], '_', $key);
+			$pos = strpos($field, ':');
 
-				// Don't add fields with empty keys
-				if (empty($key) === true) {
-					continue;
-				}
+			if ($pos === false || $pos === 0) {
+				continue;
+			}
 
-				$value = trim(substr($field, $pos + 1));
+			$key = strtolower(trim(substr($field, 0, $pos)));
+			$key = str_replace(['-', ' '], '_', $key);
 
-				// unescape escaped dividers within a field
-				$data[$key] = preg_replace(
+			// Don't add fields with empty keys
+			if (empty($key) === true) {
+				continue;
+			}
+
+			$value = trim(substr($field, $pos + 1));
+
+			// unescape escaped dividers within a field
+			if (str_contains($value, '\\----') === true) {
+				$value = preg_replace(
 					'!(?<=\n|^)\\\\----!',
 					'----',
 					$value
 				);
 			}
+
+			$data[$key] = $value;
 		}
 
 		return $data;
