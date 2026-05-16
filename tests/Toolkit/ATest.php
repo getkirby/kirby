@@ -319,6 +319,18 @@ class ATest extends TestCase
 
 		$array = ['a' => 'A', 'b' => 'B', 'c' => ['C', 'D']];
 		$this->assertSame('ABCD', A::implode($array));
+
+		// '0' as first element must not swallow the next separator
+		$this->assertSame('0-b-c', A::implode(['0', 'b', 'c'], '-'));
+		$this->assertSame('a-0-b', A::implode(['a', '0', 'b'], '-'));
+
+		// leading empty strings should produce leading separators
+		$this->assertSame('-b-c', A::implode(['', 'b', 'c'], '-'));
+		$this->assertSame('a--c', A::implode(['a', '', 'c'], '-'));
+
+		// '0' inside nested arrays must round-trip
+		$this->assertSame('x-0-b', A::implode([['x'], '0', 'b'], '-'));
+		$this->assertSame('0-x-y', A::implode([['0'], 'x', 'y'], '-'));
 	}
 
 	public function testMap(): void

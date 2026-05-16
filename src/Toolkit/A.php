@@ -372,21 +372,15 @@ class A
 		array $array,
 		string $separator = ''
 	): string {
-		$result = '';
+		$parts = [];
 
 		foreach ($array as $value) {
-			if (empty($result) === false) {
-				$result .= $separator;
-			}
-
-			if (is_array($value) === true) {
-				$value = static::implode($value, $separator);
-			}
-
-			$result .= $value;
+			$parts[] = is_array($value) === true
+				? static::implode($value, $separator)
+				: $value;
 		}
 
-		return $result;
+		return implode($separator, $parts);
 	}
 
 	/**
