@@ -35,4 +35,21 @@ class LazyValueTest extends TestCase
 		$value = LazyValue::unwrap([$lazy, 'b', 'c']);
 		$this->assertSame($expected, $value);
 	}
+
+	public function testUnwrapArgs(): void
+	{
+		$captured = null;
+		$lazy = new LazyValue(function (...$args) use (&$captured) {
+			$captured = $args;
+			return 'resolved';
+		});
+
+		LazyValue::unwrap([$lazy], 'a', 'b');
+		$this->assertSame(['a', 'b'], $captured);
+
+		$lazy = new LazyValue(fn (string $prefix) => $prefix . '-resolved');
+
+		$result = LazyValue::unwrap([[$lazy, 'plain']], 'deep');
+		$this->assertSame([['deep-resolved', 'plain']], $result);
+	}
 }
