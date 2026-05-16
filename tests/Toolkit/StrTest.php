@@ -1347,6 +1347,11 @@ class StrTest extends TestCase
 		$this->assertSame(2 * 1024 * 1024, Str::toBytes('2m'));
 		$this->assertSame(2 * 1024 * 1024 * 1024, Str::toBytes('2G'));
 		$this->assertSame(2 * 1024 * 1024 * 1024, Str::toBytes('2g'));
+
+		// fractional sizes
+		$this->assertSame((int)(1.5 * 1024), Str::toBytes('1.5K'));
+		$this->assertSame((int)(1.5 * 1024 * 1024), Str::toBytes('1.5M'));
+		$this->assertSame((int)(1.5 * 1024 * 1024 * 1024), Str::toBytes('1.5G'));
 	}
 
 	public function testToType(): void

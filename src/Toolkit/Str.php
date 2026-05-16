@@ -1400,7 +1400,7 @@ class Str
 					}
 				}
 
-				// wihtout a result, keep the original placeholder
+				// without a result, keep the original placeholder
 				return $result ?? $match[0];
 			},
 			$string
@@ -1409,13 +1409,14 @@ class Str
 
 	/**
 	 * Converts a filesize string with shortcuts
-	 * like M, G or K to an integer value
+	 * like M, G or K to an integer value.
+	 * Fractional sizes are supported (e.g. `1.5G` returns 1.5 GiB).
 	 */
 	public static function toBytes(string $size): int
 	{
 		$size = trim($size);
 		$last = strtolower($size[strlen($size) - 1] ?? '');
-		$size = (int)$size;
+		$size = (float)$size;
 
 		$size *= match ($last) {
 			'g'     => 1024 * 1024 * 1024,
@@ -1424,7 +1425,7 @@ class Str
 			default => 1
 		};
 
-		return $size;
+		return (int)$size;
 	}
 
 	/**
