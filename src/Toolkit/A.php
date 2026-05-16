@@ -61,7 +61,7 @@ class A
 			return null;
 		}
 
-		return round((array_sum($array) / sizeof($array)), $decimals);
+		return round((array_sum($array) / count($array)), $decimals);
 	}
 
 	/**
