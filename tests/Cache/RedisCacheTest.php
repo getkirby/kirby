@@ -83,6 +83,39 @@ class RedisCacheTest extends TestCase
 		$this->assertFalse($cache->exists('c'));
 	}
 
+	public function testFlushWithPrefix(): void
+	{
+		$cache1 = new RedisCache([
+			'prefix' => 'test1:'
+		]);
+		$cache2 = new RedisCache([
+			'prefix' => 'test2:'
+		]);
+
+		$cache1->set('a', 'A basic value');
+		$cache1->set('b', 'A basic value');
+		$cache2->set('a', 'A basic value');
+		$cache2->set('b', 'A basic value');
+		$cache1->set('c/a', 'A basic value');
+		$cache2->set('c/a', 'A basic value');
+
+		$this->assertTrue($cache1->exists('a'));
+		$this->assertTrue($cache1->exists('b'));
+		$this->assertTrue($cache1->exists('c/a'));
+		$this->assertTrue($cache2->exists('a'));
+		$this->assertTrue($cache2->exists('b'));
+		$this->assertTrue($cache2->exists('c/a'));
+
+		$this->assertTrue($cache1->flush());
+
+		$this->assertFalse($cache1->exists('a'));
+		$this->assertFalse($cache1->exists('b'));
+		$this->assertFalse($cache1->exists('c/a'));
+		$this->assertTrue($cache2->exists('a'));
+		$this->assertTrue($cache2->exists('b'));
+		$this->assertTrue($cache2->exists('c/a'));
+	}
+
 	public function testOperations(): void
 	{
 		$cache = new RedisCache();

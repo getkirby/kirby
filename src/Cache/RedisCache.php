@@ -103,11 +103,42 @@ class RedisCache extends Cache
 
 	/**
 	 * Removes keys from the database
-	 * and returns whether the operation was successful
+	 * and returns whether the operation was successful;
+	 * scoped to the configured prefix
 	 */
 	public function flush(): bool
 	{
-		return $this->connection->flushDB();
+		$prefix = $this->options['prefix'] ?? null;
+
+		// no prefix means this driver owns the whole DB anyway
+		if ($prefix === null || $prefix === '') {
+			return $this->connection->flushDB();
+		}
+
+		// fetch the normalized prefix the constructor set on the connection
+		// (so we don't have to duplicate the rtrim + '/' normalization here)
+		$prefix = $this->connection->getOption(Redis::OPT_PREFIX);
+
+		// ->scan() returns full key names with prefix already included.
+		// Clear OPT_PREFIX so ->del() doesn't double-prefix them.
+		$this->connection->setOption(Redis::OPT_PREFIX, '');
+
+		// SCAN_RETRY skips empty batches so the while-loop only exits
+		// when the iteration is genuinely done.
+		$this->connection->setOption(Redis::OPT_SCAN, Redis::SCAN_RETRY);
+
+		try {
+			$it = null;
+
+			while ($keys = $this->connection->scan($it, $prefix . '*')) {
+				$this->connection->del($keys);
+			}
+		} finally {
+			// restore the prefix to OPT_PREFIX
+			$this->connection->setOption(Redis::OPT_PREFIX, $prefix);
+		}
+
+		return true;
 	}
 
 	/**
