@@ -413,6 +413,7 @@ class Site extends ModelWithContent
 	/**
 	 * Search all pages in the site
 	 */
+	#[BlockCollectionAccess]
 	public function search(
 		string|null $query = null,
 		string|array $params = []

@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Content\Content;
 use Kirby\Content\Field;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Str;
 use Stringable;
 use Throwable;
@@ -101,6 +102,7 @@ class Block extends Item implements Stringable
 	/**
 	 * Controller for the block snippet
 	 */
+	#[BlockCollectionAccess]
 	public function controller(): array
 	{
 		return [
@@ -195,6 +197,7 @@ class Block extends Item implements Stringable
 	 * object. This can be used further
 	 * with all available field methods
 	 */
+	#[BlockCollectionAccess]
 	public function toField(): Field
 	{
 		return new Field($this->parent(), $this->id(), $this->toHtml());
@@ -203,6 +206,7 @@ class Block extends Item implements Stringable
 	/**
 	 * Converts the block to HTML
 	 */
+	#[BlockCollectionAccess]
 	public function toHtml(): string
 	{
 		try {

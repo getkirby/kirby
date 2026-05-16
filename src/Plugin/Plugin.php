@@ -10,6 +10,7 @@ use Kirby\Cms\System\UpdateStatus;
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 use Throwable;
@@ -189,6 +190,7 @@ class Plugin
 	/**
 	 * Returns the path to the plugin's composer.json
 	 */
+	#[BlockCollectionAccess]
 	public function manifest(): string
 	{
 		return $this->root() . '/composer.json';
@@ -197,6 +199,7 @@ class Plugin
 	/**
 	 * Returns the root where plugin assets are copied to
 	 */
+	#[BlockCollectionAccess]
 	public function mediaRoot(): string
 	{
 		return $this->kirby()->root('media') . '/plugins/' . $this->name();
@@ -237,6 +240,7 @@ class Plugin
 	/**
 	 * Returns the root where the plugin files are stored
 	 */
+	#[BlockCollectionAccess]
 	public function root(): string
 	{
 		return $this->root;
@@ -245,6 +249,7 @@ class Plugin
 	/**
 	 * Returns all available plugin metadata
 	 */
+	#[BlockCollectionAccess]
 	public function toArray(): array
 	{
 		return [
