@@ -66,7 +66,7 @@ class ViewButtonTest extends AreaTestCase
 				'test' => fn () => [
 					'buttons' => [
 						'test' => ['component' => 'result'],
-						'foo'  => function () {}
+						'foo'  => fn () => null
 					]
 				]
 			]
