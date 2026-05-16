@@ -134,6 +134,15 @@ class Snippet extends Tpl
 	}
 
 	/**
+	 * Returns whether the snippet has any closed slots
+	 * @since 5.5.0
+	 */
+	public function hasSlots(): bool
+	{
+		return $this->slots !== [];
+	}
+
+	/**
 	 * Closes the last openend slot
 	 */
 	public function endslot(): void
