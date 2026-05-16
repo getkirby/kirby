@@ -428,12 +428,13 @@ class Str
 			return true;
 		}
 
-		$probe = static::substr($string, -static::length($needle));
-
-		if ($caseInsensitive === true) {
-			$needle = static::lower($needle);
-			$probe  = static::lower($probe);
+		if ($caseInsensitive === false) {
+			return str_ends_with($string ?? '', $needle);
 		}
+
+		$probe  = static::substr($string, -static::length($needle));
+		$probe  = static::lower($probe);
+		$needle = static::lower($needle);
 
 		return $needle === $probe;
 	}
@@ -1305,7 +1306,11 @@ class Str
 			return true;
 		}
 
-		return static::position($string, $needle, $caseInsensitive) === 0;
+		if ($caseInsensitive === false) {
+			return str_starts_with($string ?? '', $needle);
+		}
+
+		return static::position($string, $needle, true) === 0;
 	}
 
 	/**
