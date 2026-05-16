@@ -450,6 +450,27 @@ class DateTest extends TestCase
 		], $config);
 	}
 
+	public function testStepConfigWithPartialArray(): void
+	{
+		// array with only size must fall back to default unit
+		$this->assertSame(
+			['size' => 5, 'unit' => 'day'],
+			Date::stepConfig(['size' => 5])
+		);
+
+		// array with only unit must fall back to default size
+		$this->assertSame(
+			['size' => 1, 'unit' => 'month'],
+			Date::stepConfig(['unit' => 'Month'])
+		);
+
+		// empty array = full defaults
+		$this->assertSame(
+			['size' => 1, 'unit' => 'day'],
+			Date::stepConfig([])
+		);
+	}
+
 	public function testStepConfigWithInt(): void
 	{
 		$config = Date::stepConfig(5);
