@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\PermissionException;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Page::class)]
@@ -65,30 +66,133 @@ class PagePickerTest extends ModelTestCase
 		$this->assertSame($picker->start(), $this->app->site());
 	}
 
-	public function testParenNotListableFallsBackToSite(): void
+	public function testParentAccessibleButNotListable(): void
 	{
+		ModelPermissions::$cache = [];
+
 		$this->app = $this->app->clone([
-			'site' => [
-				'drafts' => [
-					[
-						'slug'    => 'secret-draft',
-						'content' => ['title' => 'Top Secret']
-					],
-				],
+			'blueprints' => [
+				'pages/limited' => [
+					'options' => [
+						'list' => false
+					]
+				]
 			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'visible-page',
+						'template' => 'limited'
+					]
+				]
+			],
+			'roles' => [
+				['name' => 'admin'],
+				['name' => 'editor']
+			],
+			'users' => [
+				['id' => 'editor', 'role' => 'editor']
+			]
 		]);
 
-		$this->app->impersonate('nobody');
+		$this->app->impersonate('editor');
 
-		// confirm the draft is in the tree but not listable
-		$draft = $this->app->page('secret-draft');
-		$this->assertNotNull($draft);
-		$this->assertFalse($draft->isListable());
+		$page = $this->app->page('visible-page');
+		$this->assertTrue($page->isAccessible());
+		$this->assertFalse($page->isListable());
 
-		// requesting parent=secret-draft must fall back to the site
-		$picker = new PagePicker(['parent' => 'secret-draft']);
+		// accessible-but-not-listable pages are valid picker parents
+		$picker = new PagePicker(['parent' => 'visible-page']);
+
+		$this->assertSame($page, $picker->parent());
+	}
+
+	public function testParentNotAccessibleFallsBackToSite(): void
+	{
+		ModelPermissions::$cache = [];
+
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/forbidden' => [
+					'options' => [
+						'access' => false
+					]
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'hidden-page',
+						'template' => 'forbidden'
+					]
+				]
+			],
+			'roles' => [
+				['name' => 'admin'],
+				['name' => 'editor']
+			],
+			'users' => [
+				['id' => 'editor', 'role' => 'editor']
+			]
+		]);
+
+		$this->app->impersonate('editor');
+
+		$page = $this->app->page('hidden-page');
+		$this->assertFalse($page->isAccessible());
+		$this->assertTrue($this->app->site()->isAccessible());
+
+		// inaccessible parents must fall back to the site
+		$picker = new PagePicker(['parent' => 'hidden-page']);
 
 		$this->assertSame($this->app->site(), $picker->parent());
+	}
+
+	public function testParentAndSiteNotAccessibleThrows(): void
+	{
+		ModelPermissions::$cache = [];
+
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/forbidden' => [
+					'options' => [
+						'access' => false
+					]
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'hidden-page',
+						'template' => 'forbidden'
+					]
+				]
+			],
+			'roles' => [
+				['name' => 'admin'],
+				[
+					'name' => 'editor',
+					'permissions' => [
+						'site' => [
+							'access' => false
+						]
+					]
+				]
+			],
+			'users' => [
+				['id' => 'editor', 'role' => 'editor']
+			]
+		]);
+
+		$this->app->impersonate('editor');
+
+		$this->assertFalse($this->app->page('hidden-page')->isAccessible());
+		$this->assertFalse($this->app->site()->isAccessible());
+
+		$picker = new PagePicker(['parent' => 'hidden-page']);
+
+		$this->expectException(PermissionException::class);
+		$picker->parent();
 	}
 
 	public function testQuery(): void
