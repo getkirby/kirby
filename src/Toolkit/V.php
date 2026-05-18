@@ -504,14 +504,14 @@ V::$validators = [
 	 * Checks if the number of words in the value equals or is below the given maximum
 	 */
 	'maxWords' => function (string|null $value, $max): bool {
-		return V::max(explode(' ', trim($value)), $max) === true;
+		return V::max(preg_split('/\s+/', trim($value ?? ''), -1, PREG_SPLIT_NO_EMPTY), $max) === true;
 	},
 
 	/**
-	 * Checks if the number of words in the value equals or is below the given maximum
+	 * Checks if the number of words in the value equals or is above the given minimum
 	 */
 	'minWords' => function (string|null $value, $min): bool {
-		return V::min(explode(' ', trim($value)), $min) === true;
+		return V::min(preg_split('/\s+/', trim($value ?? ''), -1, PREG_SPLIT_NO_EMPTY), $min) === true;
 	},
 
 	/**
