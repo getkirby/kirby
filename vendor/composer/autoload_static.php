@@ -426,6 +426,7 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
         'Kirby\\Text\\Markdown' => __DIR__ . '/../..' . '/src/Text/Markdown.php',
         'Kirby\\Text\\SmartyPants' => __DIR__ . '/../..' . '/src/Text/SmartyPants.php',
         'Kirby\\Toolkit\\A' => __DIR__ . '/../..' . '/src/Toolkit/A.php',
+        'Kirby\\Toolkit\\BlockCollectionAccess' => __DIR__ . '/../..' . '/src/Toolkit/BlockCollectionAccess.php',
         'Kirby\\Toolkit\\Collection' => __DIR__ . '/../..' . '/src/Toolkit/Collection.php',
         'Kirby\\Toolkit\\Component' => __DIR__ . '/../..' . '/src/Toolkit/Component.php',
         'Kirby\\Toolkit\\Config' => __DIR__ . '/../..' . '/src/Toolkit/Config.php',
