@@ -1,4 +1,5 @@
 {
+	"account": "Account",
 	"account.changeName": "Endre navnet ditt",
 	"account.delete": "Slett kontoen din",
 	"account.delete.confirm": "Er du sikker på at du vil slette kontoen din? Du vil bli logget ut umiddelbart. Kontoen din kan ikke gjenopprettes.",
@@ -15,7 +16,7 @@
 	"changes": "Endringer",
 	"confirm": "Lagre",
 	"collapse": "Skjul",
-	"collapse.all": "Skjule alle",
+	"collapse.all": "Collapse all",
 	"color": "Farge",
 	"coordinates": "Koordinater",
 	"copy": "Kopier",
@@ -42,6 +43,9 @@
 
 	"delete": "Slett",
 	"delete.all": "Slett alle",
+
+	"deselect": "Deselect",
+	"deselect.all": "Deselect all",
 
 	"dialog.fields.empty": "Denne dialogen har ingen felter",
 	"dialog.files.empty": "Ingen filer å velge",
@@ -297,8 +301,12 @@
 	"error.validation.uuid": "Please enter a valid UUID",
 	"error.validation.url": "Vennligst skriv inn en gyldig URL",
 
+	"error.version.discard.permission": "You are not allowed to discard this version",
+	"error.version.publish.permission": "You are not allowed to publish this version",
+	"error.version.save.permission": "You are not allowed to change this version",
+
 	"expand": "Utvid",
-	"expand.all": "Utvid alle",
+	"expand.all": "Expand all",
 
 	"field.invalid": "The field is invalid",
 	"field.required": "Feltet er påkrevd",
@@ -379,6 +387,7 @@
 
 	"field.structure.delete.confirm": "\u00d8nsker du virkelig \u00e5 slette denne oppf\u00f8ringen?",
 	"field.structure.delete.confirm.all": "Vil du virkelig slette alle oppføringer?",
+	"field.structure.delete.confirm.selected": "Do you really want to delete the selected entries?",
 	"field.structure.empty": "Ingen oppf\u00f8ringer enda",
 
 	"field.users.empty": "Ingen bruker har blitt valgt",
@@ -452,7 +461,12 @@
 	"language.variables.empty": "Ingen oversettelse enda",
 
 	"language.variable.delete.confirm": "Ønsker du virkelig å slette variablen for {key}?",
+	"language.variable.entries": "Values",
+	"language.variable.entries.help": "Each string will be used for its matching count, e.g. three strings will match in order to counts <code>0</code>, <code>1</code>, <code>2 and more</code>. Use the <code>{count}</code> placeholder to insert the actual count.",
 	"language.variable.key": "Key",
+	"language.variable.multiple": "Countable?",
+	"language.variable.multiple.text": "Use different translation strings",
+	"language.variable.multiple.help": "You can use different values depending on a count you pass along with the language variable, allowing you to create dynamic translations, e.g. singular and plural.",
 	"language.variable.notFound": "Variablen kan ikke bli funnet",
 	"language.variable.value": "Verdi",
 
@@ -472,6 +486,7 @@
 	"license.code": "Kode",
 	"license.code.help": "Du har mottatt din lisenskoden via e-post etter kjøpet. Vennligst kopier og lim den inn her.",
 	"license.code.label": "Vennligst skriv inn din lisenskode",
+	"license.remove.text": "<p>Removing the license will irreversibly delete the license file from this site. You can then activate this site with a different license key or re-register the same license key if the domain remains the same.</p><p>To change the domain associated with the license, please contact the Kirby team. <a href='https://getkirby.com/license'>Read more &rarr;</a></p>",
 	"license.status.active.info": "Inkluderer nye hovedversjoner til {date}",
 	"license.status.active.label": "Gyldig lisens",
 	"license.status.demo.info": "This is a demo installation",
@@ -623,7 +638,9 @@
 	"plugin": "Utvidelse",
 	"plugins": "Plugins",
 	"prev": "Forrige",
+
 	"preview": "Forhåndsvisning",
+	"preview.browser.scroll": "Sync scroll",
 
 	"publish": "Publish",
 	"published": "Publisert",
@@ -659,6 +676,7 @@
 
 	"security": "Sikkerhet",
 	"select": "Velg",
+	"select.all": "Select all",
 	"server": "Server",
 	"settings": "Innstillinger",
 	"show": "Vis",
@@ -767,11 +785,13 @@
 	"user.changePassword.current": "Your current password",
 	"user.changePassword.new": "Nytt passord",
 	"user.changePassword.new.confirm": "Bekreft nytt passord…",
+	"user.changePassword.own": "Your own password",
 	"user.changeRole": "Bytt rolle",
 	"user.changeRole.select": "Velg en ny rolle",
 	"user.create": "Legg til ny bruker",
 	"user.delete": "Slett denne brukeren",
 	"user.delete.confirm": "Vil du virkelig slette denne konten?",
+	"user.setPassword": "Set password",
 
 	"users": "Brukere",
 

@@ -1,4 +1,5 @@
 {
+	"account": "Account",
 	"account.changeName": "Изменить имя",
 	"account.delete": "Удалить пользователя",
 	"account.delete.confirm": "Вы действительно хотите удалить свой аккаунт? Вы сразу покинете панель управления, а аккаунт нельзя будет восстановить.",
@@ -15,7 +16,7 @@
 	"changes": "Изменения",
 	"confirm": "Ок",
 	"collapse": "Свернуть",
-	"collapse.all": "Свернуть все",
+	"collapse.all": "Collapse all",
 	"color": "Цвет",
 	"coordinates": "Координаты",
 	"copy": "Скопировать",
@@ -42,6 +43,9 @@
 
 	"delete": "\u0423\u0434\u0430\u043b\u0438\u0442\u044c",
 	"delete.all": "Удалить все",
+
+	"deselect": "Deselect",
+	"deselect.all": "Deselect all",
 
 	"dialog.fields.empty": "Для этого окна нет полей",
 	"dialog.files.empty": "Нет файлов для выбора",
@@ -297,8 +301,12 @@
 	"error.validation.uuid": "Пожалуйста, введите правильный UUID",
 	"error.validation.url": "Пожалуйста, введите правильный URL",
 
+	"error.version.discard.permission": "You are not allowed to discard this version",
+	"error.version.publish.permission": "You are not allowed to publish this version",
+	"error.version.save.permission": "You are not allowed to change this version",
+
 	"expand": "Развернуть",
-	"expand.all": "Развернуть все",
+	"expand.all": "Expand all",
 
 	"field.invalid": "Неверное поле",
 	"field.required": "Поле обязательно",
@@ -379,6 +387,7 @@
 
 	"field.structure.delete.confirm": "Вы точно хотите удалить эту запись?",
 	"field.structure.delete.confirm.all": "Вы действительно хотите удалить все значения?",
+	"field.structure.delete.confirm.selected": "Do you really want to delete the selected entries?",
 	"field.structure.empty": "Записей нет",
 
 	"field.users.empty": "Пользователей нет",
@@ -452,7 +461,12 @@
 	"language.variables.empty": "Пока нет переводов",
 
 	"language.variable.delete.confirm": "Вы действительно хотите удалить переменную для {key}?",
+	"language.variable.entries": "Values",
+	"language.variable.entries.help": "Each string will be used for its matching count, e.g. three strings will match in order to counts <code>0</code>, <code>1</code>, <code>2 and more</code>. Use the <code>{count}</code> placeholder to insert the actual count.",
 	"language.variable.key": "Ключ",
+	"language.variable.multiple": "Countable?",
+	"language.variable.multiple.text": "Use different translation strings",
+	"language.variable.multiple.help": "You can use different values depending on a count you pass along with the language variable, allowing you to create dynamic translations, e.g. singular and plural.",
 	"language.variable.notFound": "Переменная не найдена",
 	"language.variable.value": "Значение",
 
@@ -472,6 +486,7 @@
 	"license.code": "Код",
 	"license.code.help": "Вставьте код лицензии, который вы получили Email после покупки.",
 	"license.code.label": "Пожалуйста вставьте код лицензии",
+	"license.remove.text": "<p>Removing the license will irreversibly delete the license file from this site. You can then activate this site with a different license key or re-register the same license key if the domain remains the same.</p><p>To change the domain associated with the license, please contact the Kirby team. <a href='https://getkirby.com/license'>Read more &rarr;</a></p>",
 	"license.status.active.info": "Включает обновления до {date}",
 	"license.status.active.label": "Действительная лицензия",
 	"license.status.demo.info": "Это демонстрационная установка",
@@ -623,7 +638,9 @@
 	"plugin": "Расширение",
 	"plugins": "Плагины",
 	"prev": "Предыдущий",
+
 	"preview": "Предпросмотр",
+	"preview.browser.scroll": "Sync scroll",
 
 	"publish": "Опубликовать",
 	"published": "Опубликовано",
@@ -659,6 +676,7 @@
 
 	"security": "Безопасность",
 	"select": "Выбрать",
+	"select.all": "Select all",
 	"server": "Сервер",
 	"settings": "Настройка",
 	"show": "Показать",
@@ -767,11 +785,13 @@
 	"user.changePassword.current": "Ваш текущий пароль",
 	"user.changePassword.new": "Новый пароль",
 	"user.changePassword.new.confirm": "Подтвердить новый пароль…",
+	"user.changePassword.own": "Your own password",
 	"user.changeRole": "Изменить роль",
 	"user.changeRole.select": "Выбрать новую роль",
 	"user.create": "Добавить нового пользователя",
 	"user.delete": "Удалить этого пользователя",
 	"user.delete.confirm": "Вы действительно хотите аккаунт <br><strong>{email}</strong>?",
+	"user.setPassword": "Set password",
 
 	"users": "Пользователи",
 

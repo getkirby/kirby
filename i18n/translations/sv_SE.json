@@ -1,4 +1,5 @@
 {
+	"account": "Konto",
 	"account.changeName": "Ändra ditt namn",
 	"account.delete": "Radera ditt konto",
 	"account.delete.confirm": "Vill du verkligen radera ditt konto? Du kommer att loggas ut omedelbart. Ditt konto kan inte återställas.",
@@ -15,7 +16,7 @@
 	"changes": "Ändringar",
 	"confirm": "Spara",
 	"collapse": "Kollapsa",
-	"collapse.all": "Kollapsa alla",
+	"collapse.all": "Stäng alla",
 	"color": "Färg",
 	"coordinates": "Koordinater",
 	"copy": "Kopiera",
@@ -42,6 +43,9 @@
 
 	"delete": "Radera",
 	"delete.all": "Radera allt",
+
+	"deselect": "Avmarkera",
+	"deselect.all": "Avmarkera alla",
 
 	"dialog.fields.empty": "Den här dialogrutan har inga fält",
 	"dialog.files.empty": "Inga filer att välja",
@@ -98,17 +102,17 @@
 	"error.content.lock.replace": "Versionen är låst och kan inte bytas ut",
 	"error.content.lock.update": "Versionen är låst och kan inte uppdateras",
 
-	"error.entries.max.plural": "You must not add more than {max} entries",
-	"error.entries.max.singular": "You must not add more than one entry",
-	"error.entries.min.plural": "You must add at least {min} entries",
-	"error.entries.min.singular": "You must add at least one entry",
-	"error.entries.supports": "\"{type}\" field type is not supported for the entries field",
+	"error.entries.max.plural": "Du får inte lägga till fler än {max} poster",
+	"error.entries.max.singular": "Du får inte lägga till mer än en post",
+	"error.entries.min.plural": "Du måste lägga till minst {min} poster",
+	"error.entries.min.singular": "Du måste lägga till minst en post",
+	"error.entries.supports": "Fälttypen \"{type}\" stöds inte för fältet \"entries\"",
 	"error.entries.validation": "Det finns ett fel i fältet \"{field}\" i rad {index}",
 
 	"error.email.preset.notFound": "E-postförinställningen \"{name}\" kan inte hittas",
 
 	"error.field.converter.invalid": "Ogiltig omvandlare \"{converter}\"",
-	"error.field.link.options": "Invalid options: {options}",
+	"error.field.link.options": "Ogiltiga alternativ: {options}",
 	"error.field.type.missing": "Fältet \"{ name }\": Fälttypen \"{ type }\" finns inte",
 
 	"error.file.changeName.empty": "Namnet får inte vara tomt",
@@ -116,7 +120,7 @@
 	"error.file.changeTemplate.invalid": "Mallen för filen \"{id}\" kan inte ändras till \"{template}\" (giltiga mallar: \"{blueprints}\")",
 	"error.file.changeTemplate.permission": "Du saknar behörighet för att ändra mallen för filen \"{id}\"",
 
-	"error.file.delete.multiple": "Not all files could be deleted. Try each remaining file individually to see the specific error that prevents deletion.",
+	"error.file.delete.multiple": "Alla filer kunde inte raderas. Prova varje återstående fil individuellt för att se det specifika felet som förhindrar radering.",
 	"error.file.duplicate": "En fil med namnet \"{filename}\" existerar redan",
 	"error.file.extension.forbidden": "Filändelsen \"{extension}\" är inte tillåten",
 	"error.file.extension.invalid": "Ogiltig filändelse: {extension}",
@@ -179,7 +183,7 @@
 	"error.page.delete": "Sidan \"{slug}\" kan inte raderas",
 	"error.page.delete.confirm": "Fyll i sidans titel för att bekräfta",
 	"error.page.delete.hasChildren": "Sidan har undersidor och kan inte raderas",
-	"error.page.delete.multiple": "Not all pages could be deleted. Try each remaining page individually to see the specific error that prevents deletion.",
+	"error.page.delete.multiple": "Alla sidor kunde inte raderas. Prova varje återstående sida individuellt för att se det specifika felet som förhindrar radering.",
 	"error.page.delete.permission": "Du har inte behörighet att radera \"{slug}\"",
 	"error.page.draft.duplicate": "Ett utkast med URL-appendixen \"{slug}\" existerar redan",
 	"error.page.duplicate": "En sida med URL-appendixen \"{slug}\" existerar redan",
@@ -200,7 +204,7 @@
 	"error.page.undefined": "Sidan kan inte hittas",
 	"error.page.update.permission": "Du har inte behörighet att uppdatera \"{slug}\"",
 
-	"error.role.notFound": "The role \"{name}\" cannot be found",
+	"error.role.notFound": "Rollen \"{name}\" hittades inte",
 
 	"error.section.files.max.plural": "Du får inte lägga till mer än {max} filer till sektionen \"{section}\"",
 	"error.section.files.max.singular": "Du får inte lägga till mer än en fil i sektionen \"{section}\"",
@@ -217,7 +221,7 @@
 
 	"error.site.changeTitle.empty": "Titeln får inte vara tom",
 	"error.site.changeTitle.permission": "Du har inte behörighet att ändra titeln på webbplatsen",
-	"error.site.notAccessible": "The site is not accessible",
+	"error.site.notAccessible": "Sajten är inte tillgänglig",
 	"error.site.update.permission": "Du har inte behörighet att uppdatera webbplatsen",
 
 	"error.structure.validation": "Det finns ett fel i fältet \"{field}\" i rad {index}",
@@ -297,8 +301,12 @@
 	"error.validation.uuid": "Ange ett giltigt UUID",
 	"error.validation.url": "Ange en giltig URL",
 
+	"error.version.discard.permission": "Du har inte behörighet att slänga denna version",
+	"error.version.publish.permission": "Du har inte behörighet att publicera denna version",
+	"error.version.save.permission": "Du har inte behörighet att ändra denna version",
+
 	"expand": "Expandera",
-	"expand.all": "Expandera alla",
+	"expand.all": "Öppna alla",
 
 	"field.invalid": "Fältet är ogiltigt",
 	"field.required": "Fältet krävs",
@@ -379,6 +387,7 @@
 
 	"field.structure.delete.confirm": "Vill du verkligen radera denna rad?",
 	"field.structure.delete.confirm.all": "Vill du verkligen radera alla poster?",
+	"field.structure.delete.confirm.selected": "Vill du verkligen radera de valda posterna?",
 	"field.structure.empty": "Inga poster än",
 
 	"field.users.empty": "Inga användare valda än",
@@ -397,7 +406,7 @@
 	"file.sort": "Ändra position",
 
 	"files": "Filer",
-	"files.delete.confirm.selected": "Do you really want to delete the selected files? This action cannot be undone.",
+	"files.delete.confirm.selected": "Vill du verkligen ta bort de markerade filerna? Denna åtgärd kan inte ångras.",
 	"files.empty": "Inga filer än",
 
 	"filter": "Filter",
@@ -452,7 +461,12 @@
 	"language.variables.empty": "Inga översättningar ännu",
 
 	"language.variable.delete.confirm": "Vill du verkligen ta bort variabeln för {key}?",
+	"language.variable.entries": "Värden",
+	"language.variable.entries.help": "Varje textsträng kommer att användas för sitt matchande antal, t.ex. tre strängar kommer att matcha för att få antalen <code>0</code>, <code>1</code>, <code>2 och fler</code>. Använd platshållaren <code>{count}</code> för att infoga det faktiska antalet.",
 	"language.variable.key": "Nyckel",
+	"language.variable.multiple": "Räknebar?",
+	"language.variable.multiple.text": "Använd olika översättningssträngar",
+	"language.variable.multiple.help": "Du kan använda olika värden beroende på ett antal som du skickar tillsammans med språkvariabeln, vilket gör att du kan skapa dynamiska översättningar, t.ex. singular och plural.",
 	"language.variable.notFound": "Variabeln kunde inte hittas",
 	"language.variable.value": "Värde",
 
@@ -472,6 +486,7 @@
 	"license.code": "Kod",
 	"license.code.help": "Du fick din licenskod efter köpet via e-post. Kopiera och klistra in det här.",
 	"license.code.label": "Ange din licenskod",
+	"license.remove.text": "<p>Om du tar bort licensen raderas licensfilen permanent från webbplatsen. Du kan sedan aktivera webbplatsen med en annan licensnyckel eller omregistrera samma licensnyckel om domänen förblir densamma.</p><p>För att ändra domänen som är kopplad till licensen, vänligen kontakta Kirby-teamet. <a href='https://getkirby.com/license'>Läs mer &rarr;</a></p>",
 	"license.status.active.info": "Inkluderar nya större versioner fram till {date}",
 	"license.status.active.label": "Giltig licens",
 	"license.status.demo.info": "Detta är en demoinstallation",
@@ -485,7 +500,7 @@
 	"license.status.missing.info": "Ingen giltig licens",
 	"license.status.missing.label": "Vänligen aktivera din licens",
 	"license.status.unknown.info": "Licensstatusen är okänd",
-	"license.status.unknown.label": "Unknown",
+	"license.status.unknown.label": "Okänd",
 	"license.manage": "Hantera dina licenser",
 	"license.purchased": "Köpt",
 	"license.success": "Tack för att du stödjer Kirby",
@@ -607,7 +622,7 @@
 	"page.status.unlisted.description": "Sidan är endast åtkomlig via URL",
 
 	"pages": "Sidor",
-	"pages.delete.confirm.selected": "Do you really want to delete the selected pages? This action cannot be undone.",
+	"pages.delete.confirm.selected": "Vill du verkligen ta bort de valda sidorna? Denna åtgärd kan inte ångras.",
 	"pages.empty": "Inga sidor än",
 	"pages.status.draft": "Utkast",
 	"pages.status.listed": "Publicerade",
@@ -623,7 +638,9 @@
 	"plugin": "Tillägg",
 	"plugins": "Tillägg",
 	"prev": "Föregående",
+
 	"preview": "Förhandsgranska",
+	"preview.browser.scroll": "Synkronisera skrollning",
 
 	"publish": "Publicera",
 	"published": "Publicerade",
@@ -659,6 +676,7 @@
 
 	"security": "Säkerhet",
 	"select": "Välj",
+	"select.all": "Markera alla",
 	"server": "Server",
 	"settings": "Inställningar",
 	"show": "Visa",
@@ -682,9 +700,9 @@
 	"system.issues.git": "Mappen .git verkar vara exponerad",
 	"system.issues.https": "Vi rekommenderar HTTPS för alla dina webbplatser",
 	"system.issues.kirby": "Mappen kirby verkar vara exponerad",
-	"system.issues.local": "The site is running locally with relaxed security checks",
+	"system.issues.local": "Sajten drivs lokalt med förenklade säkerhetskontroller",
 	"system.issues.site": "Mappen site verkar vara exponerad",
-	"system.issues.vue.compiler": "The Vue template compiler is enabled",
+	"system.issues.vue.compiler": "Mallkompilatorn för Vue är aktiverad",
 	"system.issues.vulnerability.kirby": "Din installation kan vara påverkad av följande sårbarhet ({ severity } allvarlighetsgrad): { description }",
 	"system.issues.vulnerability.plugin": "Din installation kan vara påverkad av följande sårbarhet i tillägget { plugin } ({ severity } allvarlighetsgrad): { description }",
 	"system.updateStatus": "Uppdateringsstatus",
@@ -764,14 +782,16 @@
 	"user.changeLanguage": "Ändra språk",
 	"user.changeName": "Byt namn på denna användare",
 	"user.changePassword": "Ändra lösenord",
-	"user.changePassword.current": "Your current password",
+	"user.changePassword.current": "Ditt nuvarande lösenord",
 	"user.changePassword.new": "Nytt lösenord",
 	"user.changePassword.new.confirm": "Bekräfta det nya lösenordet...",
+	"user.changePassword.own": "Ditt eget lösenord",
 	"user.changeRole": "Ändra roll",
 	"user.changeRole.select": "Välj en ny roll",
 	"user.create": "Lägg till en ny användare",
 	"user.delete": "Radera denna användare",
 	"user.delete.confirm": "Vill du verkligen radera <br><strong>{email}</strong>?",
+	"user.setPassword": "Ange lösenord",
 
 	"users": "Användare",
 

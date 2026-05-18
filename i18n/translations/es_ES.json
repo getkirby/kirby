@@ -1,4 +1,5 @@
 {
+	"account": "Account",
 	"account.changeName": "Cambiar nombre",
 	"account.delete": "Borrar cuenta",
 	"account.delete.confirm": "¿Realmente quieres eliminar tu cuenta? Tu sesión se cerrará inmediatamente. La cuenta no podrá ser recuperada.",
@@ -15,7 +16,7 @@
 	"changes": "Changes",
 	"confirm": "Confirmar",
 	"collapse": "Colapsar",
-	"collapse.all": "Colapsar todo",
+	"collapse.all": "Collapse all",
 	"color": "Color",
 	"coordinates": "Coordinates",
 	"copy": "Copiar",
@@ -42,6 +43,9 @@
 
 	"delete": "Eliminar",
 	"delete.all": "Eliminar todo",
+
+	"deselect": "Deselect",
+	"deselect.all": "Deselect all",
 
 	"dialog.fields.empty": "This dialog has no fields",
 	"dialog.files.empty": "No hay archivos para seleccionar",
@@ -297,8 +301,12 @@
 	"error.validation.uuid": "Please enter a valid UUID",
 	"error.validation.url": "Por favor, introduce un URL válido",
 
+	"error.version.discard.permission": "You are not allowed to discard this version",
+	"error.version.publish.permission": "You are not allowed to publish this version",
+	"error.version.save.permission": "You are not allowed to change this version",
+
 	"expand": "Expandir",
-	"expand.all": "Expandir todo",
+	"expand.all": "Expand all",
 
 	"field.invalid": "The field is invalid",
 	"field.required": "Este campo es obligatorio",
@@ -379,6 +387,7 @@
 
 	"field.structure.delete.confirm": "¿Realmente quieres eliminar esta fila?",
 	"field.structure.delete.confirm.all": "¿Realmente quieres eliminar todas las entradas?",
+	"field.structure.delete.confirm.selected": "Do you really want to delete the selected entries?",
 	"field.structure.empty": "Aún no hay entradas",
 
 	"field.users.empty": "Aún no hay usuarios seleccionados",
@@ -452,7 +461,12 @@
 	"language.variables.empty": "No translations yet",
 
 	"language.variable.delete.confirm": "Do you really want to delete the variable for {key}?",
+	"language.variable.entries": "Values",
+	"language.variable.entries.help": "Each string will be used for its matching count, e.g. three strings will match in order to counts <code>0</code>, <code>1</code>, <code>2 and more</code>. Use the <code>{count}</code> placeholder to insert the actual count.",
 	"language.variable.key": "Key",
+	"language.variable.multiple": "Countable?",
+	"language.variable.multiple.text": "Use different translation strings",
+	"language.variable.multiple.help": "You can use different values depending on a count you pass along with the language variable, allowing you to create dynamic translations, e.g. singular and plural.",
 	"language.variable.notFound": "The variable could not be found",
 	"language.variable.value": "Value",
 
@@ -472,6 +486,7 @@
 	"license.code": "Código",
 	"license.code.help": "You received your license code after the purchase via email. Please copy and paste it here.",
 	"license.code.label": "Por favor, introduce tu código de licencia",
+	"license.remove.text": "<p>Removing the license will irreversibly delete the license file from this site. You can then activate this site with a different license key or re-register the same license key if the domain remains the same.</p><p>To change the domain associated with the license, please contact the Kirby team. <a href='https://getkirby.com/license'>Read more &rarr;</a></p>",
 	"license.status.active.info": "Includes new major versions until {date}",
 	"license.status.active.label": "Valid license",
 	"license.status.demo.info": "This is a demo installation",
@@ -623,7 +638,9 @@
 	"plugin": "Plugin",
 	"plugins": "Plugins",
 	"prev": "Anterior",
+
 	"preview": "Previsualizar",
+	"preview.browser.scroll": "Sync scroll",
 
 	"publish": "Publish",
 	"published": "Publicadas",
@@ -659,6 +676,7 @@
 
 	"security": "Seguridad",
 	"select": "Seleccionar",
+	"select.all": "Select all",
 	"server": "Servidor",
 	"settings": "Ajustes",
 	"show": "Mostrar",
@@ -767,11 +785,13 @@
 	"user.changePassword.current": "Your current password",
 	"user.changePassword.new": "Nueva contraseña",
 	"user.changePassword.new.confirm": "Confirmar nueva contraseña…",
+	"user.changePassword.own": "Your own password",
 	"user.changeRole": "Cambiar rol",
 	"user.changeRole.select": "Seleccionar un nuevo rol",
 	"user.create": "Añadir un nuevo usuario",
 	"user.delete": "Eliminar este usuario",
 	"user.delete.confirm": "¿Realmente quieres eliminar <br><strong>{email}</strong>?",
+	"user.setPassword": "Set password",
 
 	"users": "Usuarios",
 

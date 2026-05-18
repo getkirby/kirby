@@ -1,4 +1,5 @@
 {
+	"account": "Account",
 	"account.changeName": "Deinen Namen ändern",
 	"account.delete": "Deinen Account löschen",
 	"account.delete.confirm": "Willst du deinen Account wirklich löschen? Du wirst sofort danach abgemeldet. Dein Account kann nicht wieder hergestellt werden.",
@@ -42,6 +43,9 @@
 
 	"delete": "L\u00f6schen",
 	"delete.all": "Alle löschen",
+
+	"deselect": "Abwählen",
+	"deselect.all": "Alles abwählen",
 
 	"dialog.fields.empty": "Der Dialog hat keine Felder",
 	"dialog.files.empty": "Keine verfügbaren Dateien",
@@ -105,7 +109,7 @@
 	"error.entries.supports": "Der Feldtyp \"{type}\" wird im Entries Feld nicht unterstützt.",
 	"error.entries.validation": "Fehler im Feld \"{field}\" in Zeile {index}",
 
-	"error.email.preset.notFound": "Die E-Mailvorlage \"{name}\" wurde nicht gefunden",
+	"error.email.preset.notFound": "Die E-Mail-Vorlage \"{name}\" wurde nicht gefunden",
 
 	"error.field.converter.invalid": "Ungültiger Konverter:  \"{converter}\"",
 	"error.field.link.options": "Ungültige Optionen: {options}",
@@ -200,7 +204,7 @@
 	"error.page.undefined": "Die Seite konnte nicht gefunden werden",
 	"error.page.update.permission": "Du kannst die Seite \"{slug}\" nicht editieren",
 
-	"error.role.notFound": "The role \"{name}\" cannot be found",
+	"error.role.notFound": "Die Rolle \"{name}\" wurde nicht gefunden",
 
 	"error.section.files.max.plural": "Bitte füge nicht mehr als {max} Dateien zum Bereich \"{section}\" hinzu",
 	"error.section.files.max.singular": "Bitte füge nicht mehr als eine Datei zum Bereich \"{section}\" hinzu",
@@ -217,7 +221,7 @@
 
 	"error.site.changeTitle.empty": "Bitte gib einen Titel an",
 	"error.site.changeTitle.permission": "Du kannst den Titel der Seite nicht ändern",
-	"error.site.notAccessible": "The site is not accessible",
+	"error.site.notAccessible": "Die Seite ist nicht zugänglich",
 	"error.site.update.permission": "Du darfst die Seite nicht bearbeiten",
 
 	"error.structure.validation": "Fehler im Feld \"{field}\" in Zeile {index}",
@@ -297,6 +301,10 @@
 	"error.validation.uuid": "Bitte gib eine gültige UUID an",
 	"error.validation.url": "Bitte gib eine gültige URL ein",
 
+	"error.version.discard.permission": "Du darfst diese Version nicht verwerfen",
+	"error.version.publish.permission": "Du darfst diese Version nicht veröffentlichen",
+	"error.version.save.permission": "Du darfst diese Version nicht ändern",
+
 	"expand": "Aufklappen",
 	"expand.all": "Alle aufklappen",
 
@@ -310,7 +318,7 @@
 	"field.blocks.delete.confirm.all": "Willst du wirklich alle Blöcke löschen?",
 	"field.blocks.delete.confirm.selected": "Willst du wirklich die ausgewählten Blöcke löschen?",
 	"field.blocks.empty": "Keine Blöcke",
-	"field.blocks.fieldsets.empty": "Keine Block Definition",
+	"field.blocks.fieldsets.empty": "Keine Blockdefinitionen",
 	"field.blocks.fieldsets.label": "Bitte wähle einen Blocktyp aus …",
 	"field.blocks.fieldsets.paste": "Drücke <kbd>{{ shortcut }}</kbd> um Layouts/Blocks von deinem Clipboard zu importieren. <small>Nur die, die im aktuellen Feld erlaubt sind werden eingefügt.</small>",
 	"field.blocks.gallery.name": "Galerie",
@@ -360,7 +368,7 @@
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
 	"field.entries.delete.confirm.all": "Möchtest du wirklich alle Einträge löschen?",
-	"field.entries.empty": "Es bestehen keine Einträge.",
+	"field.entries.empty": "Keine Einträge",
 
 	"field.files.empty": "Keine Dateien ausgewählt",
 	"field.files.empty.single": "Keine Dateien ausgewählt",
@@ -379,6 +387,7 @@
 
 	"field.structure.delete.confirm": "Willst du diesen Eintrag wirklich l\u00f6schen?",
 	"field.structure.delete.confirm.all": "Möchtest du wirklich alle Einträge löschen?",
+	"field.structure.delete.confirm.selected": "Willst du die ausgewählten Einträge wirklich löschen?",
 	"field.structure.empty": "Es bestehen keine Eintr\u00e4ge.",
 
 	"field.users.empty": "Keine Accounts ausgewählt",
@@ -452,7 +461,12 @@
 	"language.variables.empty": "Keine Übersetzung",
 
 	"language.variable.delete.confirm": "Willst du wirklich die Variable \"{key}\" entfernen?",
+	"language.variable.entries": "Werte",
+	"language.variable.entries.help": "Jeder Eintrag wird für die entsprechende Anzahl verwendet, z. B. werden drei Einträge in der Reihenfolge mit den Anzahlen <code>0</code>, <code>1</code>, <code>2 und mehr</code> übereinstimmen. Verwende den Platzhalter <code>{count}</code>, um die tatsächliche Anzahl einzufügen.",
 	"language.variable.key": "Schlüssel",
+	"language.variable.multiple": "Zählbar?",
+	"language.variable.multiple.text": "Benutze unterschiedliche Übersetzungen, abhängig von der Anzahl",
+	"language.variable.multiple.help": "Du kannst verschiedene Werte anlegen, die von einer Anzahl abhängen. Diese übergibst du zusammen mit der Sprachvariablen. So kannst du dynamische Übersetzungen erstellen, zum Beispiel für Singular und Plural.",
 	"language.variable.notFound": "Die Variable konnte nicht gefunden werden",
 	"language.variable.value": "Wert",
 
@@ -466,12 +480,13 @@
 	"license.activate": "Aktiviere Kirby jetzt",
 	"license.activate.label": "Bitte aktiviere deine Lizenz",
 	"license.activate.domain": "Deine Lizenz wird für die Domain <strong>{host}</strong> aktiviert.",
-	"license.activate.local": "Du bist dabei, deine Kirby Lizenz für die lokale Domain <strong>{host}</strong> zu aktivieren. Falls diese Seite später unter einer anderen Domain veröffentlicht wird, solltest du sie erst dort aktivieren. Falls {host} die Domain ist, die du für deine Lizenz nutzen möchtest, fahre bitte fort. ",
+	"license.activate.local": "Du bist dabei, deine Kirby-Lizenz für die lokale Domain <strong>{host}</strong> zu aktivieren. Falls diese Seite später unter einer anderen Domain veröffentlicht wird, solltest du sie erst dort aktivieren. Falls {host} die Domain ist, die du für deine Lizenz nutzen möchtest, fahre bitte fort. ",
 	"license.activated": "Aktiviert",
 	"license.buy": "Kaufe eine Lizenz",
 	"license.code": "Code",
-	"license.code.help": "Du hast deinen Lizenz Code nach dem Kauf per Email bekommen. Bitte kopiere sie aus der Email und füge sie hier ein. ",
-	"license.code.label": "Bitte gib deinen Lizenzcode ein",
+	"license.code.help": "Du hast deinen Lizenzschlüssel nach dem Kauf per E-Mail bekommen. Bitte kopiere ihn aus der E-Mail und füge ihn hier ein. ",
+	"license.code.label": "Bitte gib deinen Lizenzschlüssel ein",
+	"license.remove.text": "<p>Durch das Entfernen der Lizenz wird die Lizenzdatei unwiderruflich von dieser Website gelöscht. Du kannst diese Website dann mit einem anderen Lizenzschlüssel aktivieren oder denselben Lizenzschlüssel erneut registrieren, wenn die Domain unverändert bleibt.</p> <p>Um die mit der Lizenz verknüpfte Domain zu ändern, wende dich bitte an das Kirby-Team. <a href='https://getkirby.com/license'>Weiterlesen &rarr;</a></p>",
 	"license.status.active.info": "Beinhaltet neue Major Versionen bis {date}",
 	"license.status.active.label": "Gültige Lizenz",
 	"license.status.demo.info": "Dies ist eine Demo Installation",
@@ -623,7 +638,9 @@
 	"plugin": "Plugin",
 	"plugins": "Plugins",
 	"prev": "Vorheriger Eintrag",
+
 	"preview": "Vorschau",
+	"preview.browser.scroll": "Scrollen synchronisieren",
 
 	"publish": "Veröffentlichen",
 	"published": "Veröffentlicht",
@@ -659,6 +676,7 @@
 
 	"security": "Sicherheit",
 	"select": "Auswählen",
+	"select.all": "Alles auswählen",
 	"server": "Server",
 	"settings": "Einstellungen",
 	"show": "Anzeigen",
@@ -767,11 +785,13 @@
 	"user.changePassword.current": "Dein aktuelles Passwort",
 	"user.changePassword.new": "Neues Passwort",
 	"user.changePassword.new.confirm": "Wiederhole das Passwort …",
+	"user.changePassword.own": "Dein eigenes Passwort",
 	"user.changeRole": "Rolle ändern",
 	"user.changeRole.select": "Neue Rolle auswählen",
 	"user.create": "Neuen Account anlegen",
 	"user.delete": "Account löschen",
 	"user.delete.confirm": "Willst du den Account <br><strong>{email}</strong> wirklich löschen?",
+	"user.setPassword": "Passwort anlegen",
 
 	"users": "Accounts",
 
