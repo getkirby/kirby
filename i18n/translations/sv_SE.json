@@ -1,5 +1,5 @@
 {
-	"account": "Account",
+	"account": "Konto",
 	"account.changeName": "Ändra ditt namn",
 	"account.delete": "Radera ditt konto",
 	"account.delete.confirm": "Vill du verkligen radera ditt konto? Du kommer att loggas ut omedelbart. Ditt konto kan inte återställas.",
@@ -16,7 +16,7 @@
 	"changes": "Ändringar",
 	"confirm": "Spara",
 	"collapse": "Kollapsa",
-	"collapse.all": "Collapse all",
+	"collapse.all": "Stäng alla",
 	"color": "Färg",
 	"coordinates": "Koordinater",
 	"copy": "Kopiera",
@@ -44,8 +44,8 @@
 	"delete": "Radera",
 	"delete.all": "Radera allt",
 
-	"deselect": "Deselect",
-	"deselect.all": "Deselect all",
+	"deselect": "Avmarkera",
+	"deselect.all": "Avmarkera alla",
 
 	"dialog.fields.empty": "Den här dialogrutan har inga fält",
 	"dialog.files.empty": "Inga filer att välja",
@@ -204,7 +204,7 @@
 	"error.page.undefined": "Sidan kan inte hittas",
 	"error.page.update.permission": "Du har inte behörighet att uppdatera \"{slug}\"",
 
-	"error.role.notFound": "The role \"{name}\" cannot be found",
+	"error.role.notFound": "Rollen \"{name}\" hittades inte",
 
 	"error.section.files.max.plural": "Du får inte lägga till mer än {max} filer till sektionen \"{section}\"",
 	"error.section.files.max.singular": "Du får inte lägga till mer än en fil i sektionen \"{section}\"",
@@ -221,7 +221,7 @@
 
 	"error.site.changeTitle.empty": "Titeln får inte vara tom",
 	"error.site.changeTitle.permission": "Du har inte behörighet att ändra titeln på webbplatsen",
-	"error.site.notAccessible": "The site is not accessible",
+	"error.site.notAccessible": "Sajten är inte tillgänglig",
 	"error.site.update.permission": "Du har inte behörighet att uppdatera webbplatsen",
 
 	"error.structure.validation": "Det finns ett fel i fältet \"{field}\" i rad {index}",
@@ -301,12 +301,12 @@
 	"error.validation.uuid": "Ange ett giltigt UUID",
 	"error.validation.url": "Ange en giltig URL",
 
-	"error.version.discard.permission": "You are not allowed to discard this version",
-	"error.version.publish.permission": "You are not allowed to publish this version",
-	"error.version.save.permission": "You are not allowed to change this version",
+	"error.version.discard.permission": "Du har inte behörighet att slänga denna version",
+	"error.version.publish.permission": "Du har inte behörighet att publicera denna version",
+	"error.version.save.permission": "Du har inte behörighet att ändra denna version",
 
 	"expand": "Expandera",
-	"expand.all": "Expand all",
+	"expand.all": "Öppna alla",
 
 	"field.invalid": "Fältet är ogiltigt",
 	"field.required": "Fältet krävs",
@@ -387,7 +387,7 @@
 
 	"field.structure.delete.confirm": "Vill du verkligen radera denna rad?",
 	"field.structure.delete.confirm.all": "Vill du verkligen radera alla poster?",
-	"field.structure.delete.confirm.selected": "Do you really want to delete the selected entries?",
+	"field.structure.delete.confirm.selected": "Vill du verkligen radera de valda posterna?",
 	"field.structure.empty": "Inga poster än",
 
 	"field.users.empty": "Inga användare valda än",
@@ -461,12 +461,12 @@
 	"language.variables.empty": "Inga översättningar ännu",
 
 	"language.variable.delete.confirm": "Vill du verkligen ta bort variabeln för {key}?",
-	"language.variable.entries": "Values",
-	"language.variable.entries.help": "Each string will be used for its matching count, e.g. three strings will match in order to counts <code>0</code>, <code>1</code>, <code>2 and more</code>. Use the <code>{count}</code> placeholder to insert the actual count.",
+	"language.variable.entries": "Värden",
+	"language.variable.entries.help": "Varje textsträng kommer att användas för sitt matchande antal, t.ex. tre strängar kommer att matcha för att få antalen <code>0</code>, <code>1</code>, <code>2 och fler</code>. Använd platshållaren <code>{count}</code> för att infoga det faktiska antalet.",
 	"language.variable.key": "Nyckel",
-	"language.variable.multiple": "Countable?",
-	"language.variable.multiple.text": "Use different translation strings",
-	"language.variable.multiple.help": "You can use different values depending on a count you pass along with the language variable, allowing you to create dynamic translations, e.g. singular and plural.",
+	"language.variable.multiple": "Räknebar?",
+	"language.variable.multiple.text": "Använd olika översättningssträngar",
+	"language.variable.multiple.help": "Du kan använda olika värden beroende på ett antal som du skickar tillsammans med språkvariabeln, vilket gör att du kan skapa dynamiska översättningar, t.ex. singular och plural.",
 	"language.variable.notFound": "Variabeln kunde inte hittas",
 	"language.variable.value": "Värde",
 
@@ -486,7 +486,7 @@
 	"license.code": "Kod",
 	"license.code.help": "Du fick din licenskod efter köpet via e-post. Kopiera och klistra in det här.",
 	"license.code.label": "Ange din licenskod",
-	"license.remove.text": "<p>Removing the license will irreversibly delete the license file from this site. You can then activate this site with a different license key or re-register the same license key if the domain remains the same.</p><p>To change the domain associated with the license, please contact the Kirby team. <a href='https://getkirby.com/license'>Read more &rarr;</a></p>",
+	"license.remove.text": "<p>Om du tar bort licensen raderas licensfilen permanent från webbplatsen. Du kan sedan aktivera webbplatsen med en annan licensnyckel eller omregistrera samma licensnyckel om domänen förblir densamma.</p><p>För att ändra domänen som är kopplad till licensen, vänligen kontakta Kirby-teamet. <a href='https://getkirby.com/license'>Läs mer &rarr;</a></p>",
 	"license.status.active.info": "Inkluderar nya större versioner fram till {date}",
 	"license.status.active.label": "Giltig licens",
 	"license.status.demo.info": "Detta är en demoinstallation",
@@ -640,7 +640,7 @@
 	"prev": "Föregående",
 
 	"preview": "Förhandsgranska",
-	"preview.browser.scroll": "Sync scroll",
+	"preview.browser.scroll": "Synkronisera skrollning",
 
 	"publish": "Publicera",
 	"published": "Publicerade",
@@ -676,7 +676,7 @@
 
 	"security": "Säkerhet",
 	"select": "Välj",
-	"select.all": "Select all",
+	"select.all": "Markera alla",
 	"server": "Server",
 	"settings": "Inställningar",
 	"show": "Visa",
@@ -785,13 +785,13 @@
 	"user.changePassword.current": "Ditt nuvarande lösenord",
 	"user.changePassword.new": "Nytt lösenord",
 	"user.changePassword.new.confirm": "Bekräfta det nya lösenordet...",
-	"user.changePassword.own": "Your own password",
+	"user.changePassword.own": "Ditt eget lösenord",
 	"user.changeRole": "Ändra roll",
 	"user.changeRole.select": "Välj en ny roll",
 	"user.create": "Lägg till en ny användare",
 	"user.delete": "Radera denna användare",
 	"user.delete.confirm": "Vill du verkligen radera <br><strong>{email}</strong>?",
-	"user.setPassword": "Set password",
+	"user.setPassword": "Ange lösenord",
 
 	"users": "Användare",
 

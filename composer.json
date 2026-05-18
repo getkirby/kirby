@@ -3,7 +3,7 @@
 	"description": "The Kirby core",
 	"license": "proprietary",
 	"type": "kirby-cms",
-	"version": "6.0.0-alpha.2",
+	"version": "6.0.0-alpha.3",
 	"keywords": [
 		"kirby",
 		"cms",
@@ -43,10 +43,10 @@
 		"getkirby/composer-installer": "^1.2.1",
 		"laminas/laminas-escaper": "2.18.0",
 		"michelf/php-smartypants": "1.8.1",
-		"phpmailer/phpmailer": "7.0.2",
-		"symfony/polyfill-intl-idn": "1.36.0",
-		"symfony/polyfill-mbstring": "1.36.0",
-		"symfony/yaml": "7.4.8"
+		"phpmailer/phpmailer": "7.1.1",
+		"symfony/polyfill-intl-idn": "1.37.0",
+		"symfony/polyfill-mbstring": "1.37.0",
+		"symfony/yaml": "7.4.11"
 	},
 	"suggest": {
 		"ext-apcu": "Support for the Apcu cache driver",
