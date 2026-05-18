@@ -397,6 +397,7 @@ return array(
     'Kirby\\Text\\Markdown' => $baseDir . '/src/Text/Markdown.php',
     'Kirby\\Text\\SmartyPants' => $baseDir . '/src/Text/SmartyPants.php',
     'Kirby\\Toolkit\\A' => $baseDir . '/src/Toolkit/A.php',
+    'Kirby\\Toolkit\\BlockCollectionAccess' => $baseDir . '/src/Toolkit/BlockCollectionAccess.php',
     'Kirby\\Toolkit\\Collection' => $baseDir . '/src/Toolkit/Collection.php',
     'Kirby\\Toolkit\\Component' => $baseDir . '/src/Toolkit/Component.php',
     'Kirby\\Toolkit\\Config' => $baseDir . '/src/Toolkit/Config.php',
