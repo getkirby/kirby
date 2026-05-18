@@ -36,7 +36,7 @@ class LazyValue
 	public static function unwrap(mixed $data, mixed ...$args): mixed
 	{
 		if (is_array($data) === true) {
-			return A::map($data, fn ($value) => static::unwrap($value, $args));
+			return A::map($data, fn ($value) => static::unwrap($value, ...$args));
 		}
 
 		if ($data instanceof static) {
