@@ -233,7 +233,7 @@ class Mime
 		// match <svg only as the root element: allow an optional BOM and any
 		// combination of whitespace, XML declaration, comments and DOCTYPE
 		// before it, but nothing else
-		$pattern = '/\A(?:\xEF\xBB\xBF)?(?:\s+|<\?xml[^?]*\?>|<!--.*?-->|<!DOCTYPE[^>]*>)*<svg[\s>]/s';
+		$pattern = '/\A(?:\xEF\xBB\xBF)?(?:\s+|<\?[^?]*\?>|<!--.*?-->|<!DOCTYPE(?:[^>[]*|\[[^\]]*\])*>)*<svg[\s>\/]/s';
 
 		if (preg_match($pattern, $head) === 1) {
 			return 'image/svg+xml';
