@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Blueprint\Blueprint;
 use Kirby\Data\Data;
 use Kirby\Filesystem\F;
+use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 use Stringable;
@@ -146,6 +147,7 @@ class Role implements Stringable
 		return $this->name() === 'nobody';
 	}
 
+	#[BlockCollectionAccess]
 	public static function load(string $file, array $inject = []): static
 	{
 		$data = [

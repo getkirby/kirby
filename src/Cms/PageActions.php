@@ -12,6 +12,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\Dir;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 use Kirby\Uuid\Uuid;
@@ -36,6 +37,7 @@ trait PageActions
 	 * @return $this|static
 	 * @throws \Kirby\Exception\LogicException If a draft is being sorted or the directory cannot be moved
 	 */
+	#[BlockCollectionAccess]
 	public function changeNum(int|null $num = null): static
 	{
 		if ($this->isDraft() === true) {
@@ -80,6 +82,7 @@ trait PageActions
 	 * @return $this|static
 	 * @throws \Kirby\Exception\LogicException If the directory cannot be moved
 	 */
+	#[BlockCollectionAccess]
 	public function changeSlug(
 		string $slug,
 		string|null $languageCode = null
@@ -197,6 +200,7 @@ trait PageActions
 	 * @param int|null $position Optional sorting number
 	 * @throws \Kirby\Exception\InvalidArgumentException If an invalid status is being passed
 	 */
+	#[BlockCollectionAccess]
 	public function changeStatus(
 		string $status,
 		int|null $position = null
@@ -285,6 +289,7 @@ trait PageActions
 	 *
 	 * @return $this|static
 	 */
+	#[BlockCollectionAccess]
 	public function changeSort(int|null $position = null): static
 	{
 		return $this->changeStatus('listed', $position);
@@ -296,6 +301,7 @@ trait PageActions
 	 * @return $this|static
 	 * @throws \Kirby\Exception\LogicException If the textfile cannot be renamed/moved
 	 */
+	#[BlockCollectionAccess]
 	public function changeTemplate(string $template): static
 	{
 		if ($template === $this->intendedTemplate()->name()) {
@@ -311,6 +317,7 @@ trait PageActions
 	/**
 	 * Change the page title
 	 */
+	#[BlockCollectionAccess]
 	public function changeTitle(
 		string $title,
 		string|null $languageCode = null
@@ -366,6 +373,7 @@ trait PageActions
 	 *
 	 * @throws \Kirby\Exception\DuplicateException If the page already exists
 	 */
+	#[BlockCollectionAccess]
 	public function copy(array $options = []): static
 	{
 		$slug        = $options['slug']     ?? $this->slug();
@@ -433,6 +441,7 @@ trait PageActions
 	/**
 	 * Creates and stores a new page
 	 */
+	#[BlockCollectionAccess]
 	public static function create(array $props): Page
 	{
 		$props = self::normalizeProps($props);
@@ -502,6 +511,7 @@ trait PageActions
 	/**
 	 * Creates a child of the current page
 	 */
+	#[BlockCollectionAccess]
 	public function createChild(array $props): Page
 	{
 		$props = [
@@ -526,6 +536,7 @@ trait PageActions
 	 * Create the sorting number for the page
 	 * depending on the blueprint settings
 	 */
+	#[BlockCollectionAccess]
 	public function createNum(int|null $num = null): int
 	{
 		$mode = $this->blueprint()->num();
@@ -582,6 +593,7 @@ trait PageActions
 	/**
 	 * Deletes the page
 	 */
+	#[BlockCollectionAccess]
 	public function delete(bool $force = false): bool
 	{
 		return $this->commit('delete', ['page' => $this, 'force' => $force], function ($page, $force) {
@@ -634,6 +646,7 @@ trait PageActions
 	 * Duplicates the page with the given
 	 * slug and optionally copies all files
 	 */
+	#[BlockCollectionAccess]
 	public function duplicate(string|null $slug = null, array $options = []): static
 	{
 		// create the slug for the duplicate
@@ -666,6 +679,7 @@ trait PageActions
 	 * Moves the page to a new parent if the
 	 * new parent accepts the page type
 	 */
+	#[BlockCollectionAccess]
 	public function move(Site|Page $parent): Page
 	{
 		// nothing to move
@@ -734,6 +748,7 @@ trait PageActions
 	 * @return $this|static
 	 * @throws \Kirby\Exception\LogicException If the folder cannot be moved
 	 */
+	#[BlockCollectionAccess]
 	public function publish(): static
 	{
 		if ($this->isDraft() === false) {
@@ -781,6 +796,7 @@ trait PageActions
 	 *
 	 * @return $this
 	 */
+	#[BlockCollectionAccess]
 	public function purge(): static
 	{
 		parent::purge();
@@ -850,6 +866,7 @@ trait PageActions
 	/**
 	 * @internal
 	 */
+	#[BlockCollectionAccess]
 	public function resortSiblingsAfterUnlisting(): bool
 	{
 		$index    = 0;
@@ -886,6 +903,7 @@ trait PageActions
 	 * @return $this|static
 	 * @throws \Kirby\Exception\LogicException If the folder cannot be moved
 	 */
+	#[BlockCollectionAccess]
 	public function unpublish(): static
 	{
 		if ($this->isDraft() === true) {
@@ -930,6 +948,7 @@ trait PageActions
 	/**
 	 * Updates the page data
 	 */
+	#[BlockCollectionAccess]
 	public function update(
 		array|null $input = null,
 		string|null $languageCode = null,

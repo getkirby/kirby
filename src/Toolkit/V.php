@@ -415,7 +415,7 @@ class V
 	 */
 	public static function maxWords(string|null $value, $max): bool
 	{
-		return static::max(explode(' ', trim($value)), $max) === true;
+		return V::max(preg_split('/\s+/', trim($value ?? ''), -1, PREG_SPLIT_NO_EMPTY), $max) === true;
 	}
 
 	/**
@@ -484,11 +484,11 @@ class V
 
 	/**
 	 * Checks if the number of words in the value equals or
-	 * is below the given maximum
+	 * is greater the given minimum
 	 */
 	public static function minWords(string|null $value, $min): bool
 	{
-		return static::min(explode(' ', trim($value)), $min) === true;
+		return V::min(preg_split('/\s+/', trim($value ?? ''), -1, PREG_SPLIT_NO_EMPTY), $min) === true;
 	}
 
 	/**

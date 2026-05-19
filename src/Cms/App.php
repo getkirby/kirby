@@ -1279,7 +1279,7 @@ class App
 		// search for a draft if the page cannot be found
 		if (!$page && $draft = $site->draft($path)) {
 			if (
-				$this->user() ||
+				($this->user() && $draft->isAccessible()) ||
 				$draft->renderVersionFromRequest() !== null
 			) {
 				$page = $draft;

@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Filesystem\F;
 
 class UsersTest extends TestCase
 {
@@ -223,6 +224,35 @@ class UsersTest extends TestCase
 		$this->assertNull($users->find('c@getkirby.com'));
 		$this->assertNull($users->find('bar'));
 		$this->assertNull($users->find('user://bar'));
+	}
+
+	public function testFindPathTraversal(): void
+	{
+		$app = new App([
+			'roots' => [
+				'accounts' => static::TMP . '/accounts',
+				'index'    => '/dev/null'
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$app->users()->create(['id' => 'homer', 'email' => 'a@getkirby.com', 'password' => '12345678']);
+
+		$contents = '<?php throw new PHPUnit\Framework\AssertionFailedError("File was accessible via path traversal");';
+		F::write(static::TMP . '/index.php', $contents);
+		F::write(static::TMP . '/accounts/homer/subfolder/index.php', $contents);
+
+		// initialize a new fresh app instance to start with an empty collection
+		$app   = $app->clone();
+		$users = $app->users();
+
+		// block slashes in user IDs to prevent disclosure of path structures and access to subfolders
+		$this->assertNull($users->find('../accounts/homer'));
+		$this->assertNull($users->find('homer/subfolder'));
+
+		// block path traversal outside of the `accounts` directory
+		$this->assertNull($users->find('..'));
 	}
 
 	public function testCustomMethods(): void

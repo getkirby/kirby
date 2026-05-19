@@ -302,12 +302,11 @@ class Str
 			return true;
 		}
 
-		$method = match ($caseInsensitive) {
-			true  => 'stripos',
-			false => 'strpos'
-		};
+		$string ??= '';
 
-		return call_user_func($method, $string ?? '', $needle) !== false;
+		return $caseInsensitive === true
+			? stripos($string, $needle) !== false
+			: strpos($string, $needle) !== false;
 	}
 
 	/**
@@ -388,8 +387,8 @@ class Str
 	{
 		$encoded = '';
 
-		for ($i = 0; $i < static::length($string); $i++) {
-			$char     = static::substr($string, $i, 1);
+		// pre-split into characters once
+		foreach (mb_str_split($string, 1, 'UTF-8') as $char) {
 			$char     = mb_convert_encoding($char, 'UCS-4BE', 'UTF-8');
 			[, $code] = unpack('N', $char);
 			$encoded .= match (random_int(1, 2)) {
@@ -425,12 +424,13 @@ class Str
 			return true;
 		}
 
-		$probe = static::substr($string, -static::length($needle));
-
-		if ($caseInsensitive === true) {
-			$needle = static::lower($needle);
-			$probe  = static::lower($probe);
+		if ($caseInsensitive === false) {
+			return str_ends_with($string ?? '', $needle);
 		}
+
+		$probe  = static::substr($string, -static::length($needle));
+		$probe  = static::lower($probe);
+		$needle = static::lower($needle);
 
 		return $needle === $probe;
 	}
@@ -1278,11 +1278,10 @@ class Str
 		$out   = [];
 
 		foreach ($parts as $p) {
-			$p = trim($p);
-			if (
-				static::length($p) > 0 &&
-				static::length($p) >= $length
-			) {
+			$p   = trim($p);
+			$len = static::length($p);
+
+			if ($len > 0 && $len >= $length) {
 				$out[] = $p;
 			}
 		}
@@ -1302,7 +1301,15 @@ class Str
 			return true;
 		}
 
-		return static::position($string, $needle, $caseInsensitive) === 0;
+		if ($caseInsensitive === false) {
+			return str_starts_with($string ?? '', $needle);
+		}
+
+		$probe  = static::substr($string, 0, static::length($needle));
+		$probe  = static::lower($probe);
+		$needle = static::lower($needle);
+
+		return $needle === $probe;
 	}
 
 	/**

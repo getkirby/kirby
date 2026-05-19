@@ -4,7 +4,6 @@ namespace Kirby\Filesystem;
 
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
-use SimpleXMLElement;
 
 /**
  * The `Mime` class provides method
@@ -37,13 +36,20 @@ class Mime
 		'eml'   => 'message/rfc822',
 		'eps'   => 'application/postscript',
 		'exe'   => ['application/octet-stream', 'application/x-msdownload'],
+		'flac'  => 'audio/flac',
+		'flv'   => 'video/x-flv',
 		'gif'   => 'image/gif',
 		'gtar'  => 'application/x-gtar',
 		'gz'    => 'application/x-gzip',
+		'gzip'  => 'application/x-gzip',
+		'heic'  => 'image/heic',
+		'heif'  => 'image/heif',
 		'htm'   => 'text/html',
 		'html'  => 'text/html',
 		'ico'   => 'image/x-icon',
 		'ics'   => 'text/calendar',
+		'indd'  => 'application/x-indesign',
+		'java'  => 'text/x-java-source',
 		'js'    => ['application/javascript', 'application/x-javascript'],
 		'json'  => ['application/json', 'text/json'],
 		'j2k'   => ['image/jp2'],
@@ -51,14 +57,17 @@ class Mime
 		'jpg'   => ['image/jpeg', 'image/pjpeg'],
 		'jpeg'  => ['image/jpeg', 'image/pjpeg'],
 		'jpe'   => ['image/jpeg', 'image/pjpeg'],
+		'jxl'   => 'image/jxl',
 		'log'   => ['text/plain', 'text/x-log'],
 		'm4a'   => 'audio/mp4',
 		'm4v'   => 'video/mp4',
 		'md'    => 'text/markdown',
+		'mdown' => 'text/markdown',
 		'mid'   => 'audio/midi',
 		'midi'  => 'audio/midi',
 		'mif'   => 'application/vnd.mif',
 		'mjs'   => 'text/javascript',
+		'mkv'   => 'video/x-matroska',
 		'mov'   => 'video/quicktime',
 		'movie' => 'video/x-sgi-movie',
 		'mp2'   => 'audio/mpeg',
@@ -71,6 +80,10 @@ class Mime
 		'odc'   => 'application/vnd.oasis.opendocument.chart',
 		'odp'   => 'application/vnd.oasis.opendocument.presentation',
 		'odt'   => 'application/vnd.oasis.opendocument.text',
+		'ogg'   => 'audio/ogg',
+		'ogv'   => 'video/ogg',
+		'opus'  => 'audio/opus',
+		'otf'   => 'font/otf',
 		'pdf'   => ['application/pdf', 'application/x-download'],
 		'php'   => ['text/php', 'text/x-php', 'application/x-httpd-php', 'application/php', 'application/x-php', 'application/x-httpd-php-source'],
 		'php3'  => ['text/php', 'text/x-php', 'application/x-httpd-php', 'application/php', 'application/x-php', 'application/x-httpd-php-source'],
@@ -83,10 +96,13 @@ class Mime
 		'potx'  => 'application/vnd.openxmlformats-officedocument.presentationml.template',
 		'ps'    => 'application/postscript',
 		'psd'   => 'application/x-photoshop',
+		'py'    => 'text/x-python',
 		'qt'    => 'video/quicktime',
+		'rb'    => 'text/x-ruby',
 		'rss'   => 'application/rss+xml',
 		'rtf'   => 'text/rtf',
 		'rtx'   => 'text/richtext',
+		'scss'  => 'text/x-scss',
 		'shtml' => 'text/html',
 		'svg'   => 'image/svg+xml',
 		'swf'   => 'application/x-shockwave-flash',
@@ -96,10 +112,13 @@ class Mime
 		'tgz'   => ['application/x-tar', 'application/x-gzip-compressed'],
 		'tif'   => 'image/tiff',
 		'tiff'  => 'image/tiff',
+		'ttf'   => 'font/ttf',
 		'wav'   => ['audio/wav', 'audio/x-wav', 'audio/vnd.wave', 'audio/wave'],
 		'wbxml' => 'application/wbxml',
 		'webm'  => ['video/webm', 'audio/webm'],
 		'webp'  => 'image/webp',
+		'woff'  => 'font/woff',
+		'woff2' => 'font/woff2',
 		'word'  => ['application/msword', 'application/octet-stream'],
 		'xhtml' => 'application/xhtml+xml',
 		'xht'   => 'application/xhtml+xml',
@@ -215,14 +234,26 @@ class Mime
 	 */
 	public static function fromSvg(string $file): string|false
 	{
-		if (file_exists($file) === true) {
-			libxml_use_internal_errors(true);
+		if (file_exists($file) === false) {
+			return false;
+		}
 
-			$svg = new SimpleXMLElement(file_get_contents($file));
+		// only read the first KB: per XML spec the root element follows
+		// the prolog, so <svg should appear well within the first KB even
+		// with an XML declaration, DOCTYPE and comments
+		$head = file_get_contents($file, length: 1024);
 
-			if ($svg->getName() === 'svg') {
-				return 'image/svg+xml';
-			}
+		if ($head === false) {
+			return false; // @codeCoverageIgnore
+		}
+
+		// match <svg only as the root element: allow an optional BOM and any
+		// combination of whitespace, XML declaration, comments and DOCTYPE
+		// before it, but nothing else
+		$pattern = '/\A(?:\xEF\xBB\xBF)?(?:\s+|<\?[^?]*\?>|<!--.*?-->|<!DOCTYPE(?:[^>[]*|\[[^\]]*\])*>)*<svg[\s>\/]/s';
+
+		if (preg_match($pattern, $head) === 1) {
+			return 'image/svg+xml';
 		}
 
 		return false;

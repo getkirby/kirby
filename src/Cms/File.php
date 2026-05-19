@@ -9,6 +9,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\IsFile;
 use Kirby\Panel\File as Panel;
+use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Str;
 
 /**
@@ -137,6 +138,7 @@ class File extends ModelWithContent
 	 * Returns the url to api endpoint
 	 * @internal
 	 */
+	#[BlockCollectionAccess]
 	public function apiUrl(bool $relative = false): string
 	{
 		return $this->parent()->apiUrl($relative) . '/files/' . $this->filename();
@@ -367,6 +369,7 @@ class File extends ModelWithContent
 	 * for the file and its versions
 	 * @since 5.0.0
 	 */
+	#[BlockCollectionAccess]
 	public function mediaDir(): string
 	{
 		return $this->parent()->mediaDir() . '/' . $this->mediaHash();
@@ -375,6 +378,7 @@ class File extends ModelWithContent
 	/**
 	 * Creates a unique media hash
 	 */
+	#[BlockCollectionAccess]
 	public function mediaHash(): string
 	{
 		return $this->mediaToken() . '-' . $this->modifiedFile();
@@ -385,6 +389,7 @@ class File extends ModelWithContent
 	 *
 	 * @param string|null $filename Optional override for the filename
 	 */
+	#[BlockCollectionAccess]
 	public function mediaRoot(string|null $filename = null): string
 	{
 		$filename ??= $this->filename();
@@ -395,6 +400,7 @@ class File extends ModelWithContent
 	/**
 	 * Creates a non-guessable token string for this file
 	 */
+	#[BlockCollectionAccess]
 	public function mediaToken(): string
 	{
 		$token = $this->kirby()->contentToken($this, $this->id());
@@ -520,6 +526,7 @@ class File extends ModelWithContent
 	/**
 	 * Returns the absolute root to the file
 	 */
+	#[BlockCollectionAccess]
 	public function root(): string|null
 	{
 		return $this->root ??= $this->parent()->root() . '/' . $this->filename();
@@ -590,6 +597,7 @@ class File extends ModelWithContent
 	 * by injecting the information from
 	 * the asset.
 	 */
+	#[BlockCollectionAccess]
 	public function toArray(): array
 	{
 		return [
@@ -615,6 +623,7 @@ class File extends ModelWithContent
 	 * option is used to disable this behavior or enable it
 	 * on a per-file basis.
 	 */
+	#[BlockCollectionAccess]
 	public function previewUrl(): string|null
 	{
 		// check if the clean file URL is accessible,

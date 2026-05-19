@@ -141,6 +141,17 @@ class SaneTest extends TestCase
 		$this->assertFileEquals($expected, $tmp);
 	}
 
+	public function testSanitizeProseMirrorFields(): void
+	{
+		$this->assertSame(
+			'This is a <strong>test</strong> with <em>formatting</em>',
+			Sane::sanitizeProseMirrorFields('This is a <strong>test</strong><script>alert("Hacked")</script> with <em>formatting</em>')
+		);
+
+		// non-breaking spaces are converted to HTML entities
+		$this->assertSame('foo&nbsp;bar', Sane::sanitizeProseMirrorFields("foo\u{00A0}bar"));
+	}
+
 	public function testValidate(): void
 	{
 		$this->assertNull(Sane::validate('<svg></svg>', 'svg'));
