@@ -12,6 +12,7 @@ use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Http\Idn;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Str;
 use SensitiveParameter;
 use Throwable;
@@ -30,6 +31,7 @@ trait UserActions
 	/**
 	 * Changes the user email address
 	 */
+	#[BlockCollectionAccess]
 	public function changeEmail(string $email): static
 	{
 		$email = trim($email);
@@ -45,6 +47,7 @@ trait UserActions
 	/**
 	 * Changes the user language
 	 */
+	#[BlockCollectionAccess]
 	public function changeLanguage(string $language): static
 	{
 		return $this->commit('changeLanguage', ['user' => $this, 'language' => $language], function ($user, $language) {
@@ -58,6 +61,7 @@ trait UserActions
 	/**
 	 * Changes the screen name of the user
 	 */
+	#[BlockCollectionAccess]
 	public function changeName(string $name): static
 	{
 		$name = trim($name);
@@ -76,6 +80,7 @@ trait UserActions
 	 * If this method is used with user input, it is recommended to also
 	 * confirm the current password by the user via `::validatePassword()`
 	 */
+	#[BlockCollectionAccess]
 	public function changePassword(
 		#[SensitiveParameter]
 		string $password
@@ -101,6 +106,7 @@ trait UserActions
 	/**
 	 * Changes the user role
 	 */
+	#[BlockCollectionAccess]
 	public function changeRole(string $role): static
 	{
 		return $this->commit('changeRole', ['user' => $this, 'role' => $role], function ($user, $role) {
@@ -115,6 +121,7 @@ trait UserActions
 	 * Changes the user's TOTP secret
 	 * @since 4.0.0
 	 */
+	#[BlockCollectionAccess]
 	public function changeTotp(
 		#[SensitiveParameter]
 		string|null $secret
@@ -166,6 +173,7 @@ trait UserActions
 	/**
 	 * Creates a new User from the given props and returns a new User object
 	 */
+	#[BlockCollectionAccess]
 	public static function create(array $props): User
 	{
 		$input = $props;
@@ -217,6 +225,7 @@ trait UserActions
 	/**
 	 * Creates a new avatar for the user
 	 */
+	#[BlockCollectionAccess]
 	public function createAvatar(string $source, string $extension, bool $move = false): static
 	{
 		return $this->commit('createAvatar', ['user' => $this, 'source' => $source, 'extension' => $extension], function ($user, $source, $extension) use ($move) {
@@ -236,6 +245,7 @@ trait UserActions
 	/**
 	 * Returns a random user id
 	 */
+	#[BlockCollectionAccess]
 	public function createId(): string
 	{
 		$length = 8;
@@ -260,6 +270,7 @@ trait UserActions
 	 *
 	 * @throws \Kirby\Exception\LogicException
 	 */
+	#[BlockCollectionAccess]
 	public function delete(): bool
 	{
 		return $this->commit('delete', ['user' => $this], function ($user) {
@@ -292,6 +303,7 @@ trait UserActions
 	/**
 	 * Deletes the existing avatar if it exists
 	 */
+	#[BlockCollectionAccess]
 	public function deleteAvatar(): bool
 	{
 		return $this->commit('deleteAvatar', ['user' => $this], function ($user) {
@@ -379,6 +391,7 @@ trait UserActions
 	/**
 	 * Replaces the existing avatar for the user
 	 */
+	#[BlockCollectionAccess]
 	public function replaceAvatar(string $source, string $extension, bool $move = false): static
 	{
 		return $this->commit('replaceAvatar', ['user' => $this, 'source' => $source, 'extension' => $extension], function ($user, $source, $extension) use ($move) {
@@ -422,6 +435,7 @@ trait UserActions
 	/**
 	 * Updates the user data
 	 */
+	#[BlockCollectionAccess]
 	public function update(
 		array|null $input = null,
 		string|null $languageCode = null,

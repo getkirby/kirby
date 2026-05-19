@@ -5,6 +5,51 @@ namespace Kirby\Toolkit;
 use Exception;
 use PHPUnit\Framework\Attributes\CoversClass;
 
+class AccessibleObject
+{
+	public function value(): string
+	{
+		return 'accessible';
+	}
+}
+
+class BlockedObject
+{
+	#[BlockCollectionAccess]
+	public function secret(): string
+	{
+		return 'sensitive';
+	}
+}
+
+class HasMethodsObject
+{
+	public static array $methods = [];
+
+	public function __call(string $name, array $args): mixed
+	{
+		return $this->getMethod($name)?->call($this, ...$args);
+	}
+
+	public function getMethod(string $method): \Closure|null
+	{
+		return static::$methods[$method] ?? null;
+	}
+
+	public function hasMethod(string $method): bool
+	{
+		return isset(static::$methods[$method]);
+	}
+}
+
+class MagicCallObject
+{
+	public function __call(string $name, array $args): string
+	{
+		return 'magic';
+	}
+}
+
 class StringObject
 {
 	public function __construct(
@@ -166,6 +211,7 @@ class CollectionTest extends TestCase
 
 	public function testFirst(): void
 	{
+		$this->assertNull((new Collection())->first());
 		$this->assertSame('My first element', $this->collection->first());
 	}
 
@@ -192,9 +238,22 @@ class CollectionTest extends TestCase
 		$this->assertSame('Homer', $collection->getAttribute($collection->first(), 'username'));
 		$this->assertSame('Marge', $collection->getAttribute($collection->last(), 'username'));
 
-		// split
+		// split with default comma separator (bool true)
 		$this->assertSame(['simpson', 'male'], $collection->getAttribute($collection->first(), 'tags', true));
 		$this->assertSame(['simpson', 'female'], $collection->getAttribute($collection->last(), 'tags', true));
+
+		// split with explicit comma separator (string ',')
+		$this->assertSame(['simpson', 'male'], $collection->getAttribute($collection->first(), 'tags', ','));
+		$this->assertSame(['simpson', 'female'], $collection->getAttribute($collection->last(), 'tags', ','));
+
+		// split with non-comma separator
+		$collection2 = new Collection([
+			'a' => ['username' => 'Homer', 'tags' => 'simpson; male'],
+			'b' => ['username' => 'Marge', 'tags' => 'simpson; female'],
+		]);
+
+		$this->assertSame(['simpson', 'male'], $collection2->getAttribute($collection2->first(), 'tags', ';'));
+		$this->assertSame(['simpson', 'female'], $collection2->getAttribute($collection2->last(), 'tags', ';'));
 	}
 
 	public function testGetAttributeFromObject(): void
@@ -210,6 +269,36 @@ class CollectionTest extends TestCase
 
 		$this->assertSame('Homer', $collection->getAttribute($collection->first(), 'username'));
 		$this->assertSame('Marge', $collection->getAttribute($collection->last(), 'username'));
+	}
+
+	public function testGetAttributeFromObjectAccessibleMethod(): void
+	{
+		$obj        = new AccessibleObject();
+		$collection = new Collection([$obj]);
+		$this->assertSame('accessible', $collection->getAttribute($obj, 'value'));
+	}
+
+	public function testGetAttributeFromObjectBlockedMethod(): void
+	{
+		$obj        = new BlockedObject();
+		$collection = new Collection([$obj]);
+		$this->assertNull($collection->getAttribute($obj, 'secret'));
+	}
+
+	public function testGetAttributeFromObjectViaHasMethods(): void
+	{
+		HasMethodsObject::$methods['custom'] = fn () => 'custom value';
+		$obj        = new HasMethodsObject();
+		$collection = new Collection([$obj]);
+		$this->assertSame('custom value', $collection->getAttribute($obj, 'custom'));
+		HasMethodsObject::$methods = [];
+	}
+
+	public function testGetAttributeFromObjectViaMagicCall(): void
+	{
+		$obj        = new MagicCallObject();
+		$collection = new Collection([$obj]);
+		$this->assertSame('magic', $collection->getAttribute($obj, 'anything'));
 	}
 
 	public function testGetters(): void
@@ -553,6 +642,7 @@ class CollectionTest extends TestCase
 
 	public function testLast(): void
 	{
+		$this->assertNull((new Collection())->last());
 		$this->assertSame('My third element', $this->collection->last());
 	}
 

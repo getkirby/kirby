@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Exception;
 use Kirby\Content\Field;
+use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Obj;
 use PHPUnit\Framework\Attributes\CoversClass;
 use stdClass;
@@ -44,6 +45,12 @@ class MockObject
 class CollectionTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.Collection';
+
+	public function tearDown(): void
+	{
+		parent::tearDown();
+		unset(User::$methods['allowedCustomMethod'], User::$methods['blockedCustomMethod']);
+	}
 
 	public function testCollectionMethods(): void
 	{
@@ -111,6 +118,121 @@ class CollectionTest extends TestCase
 		$value      = $collection->getAttribute($object, 'id');
 
 		$this->assertSame($field, $value);
+	}
+
+	public function testGetAttributeFromObjectBlocksRegisteredClosure(): void
+	{
+		User::$methods['blockedCustomMethod'] = #[BlockCollectionAccess] function () {
+			return 'sensitive data';
+		};
+
+		User::$methods['allowedCustomMethod'] = function () {
+			return 'safe data';
+		};
+
+		$users = Users::factory([['email' => 'test@getkirby.com']]);
+		$user  = $users->first();
+
+		// closure with #[BlockCollectionAccess] must be blocked
+		$this->assertNull($users->getAttribute($user, 'blockedCustomMethod'));
+
+		// closure without #[BlockCollectionAccess] must be allowed
+		$this->assertSame('safe data', $users->getAttribute($user, 'allowedCustomMethod'));
+	}
+
+	public function testGetAttributeFromObjectBlocksSensitiveMethod(): void
+	{
+		$users = Users::factory([
+			[
+				'email'    => 'test@getkirby.com',
+				'password' => 'supersecret'
+			]
+		]);
+
+		$user = $users->first();
+
+		// password() has #[BlockCollectionAccess] - must be blocked
+		$this->assertNull($users->getAttribute($user, 'password'));
+
+		// passwordTimestamp() has #[BlockCollectionAccess] - must be blocked
+		$this->assertNull($users->getAttribute($user, 'passwordTimestamp'));
+
+		// secret() has #[BlockCollectionAccess] - must be blocked
+		$this->assertNull($users->getAttribute($user, 'secret'));
+	}
+
+	public function testGetAttributeFromObjectAllowsContentField(): void
+	{
+		$users = Users::factory([
+			[
+				'email'   => 'test@getkirby.com',
+				'content' => ['bio' => 'hello world']
+			]
+		]);
+
+		$user = $users->first();
+
+		// content fields accessed via __call() must always be allowed
+		$this->assertSame('hello world', (string)$users->getAttribute($user, 'bio'));
+	}
+
+	public function testGetAttributeFromObjectAllowsAccessibleField(): void
+	{
+		$users = Users::factory([
+			['email' => 'test@getkirby.com']
+		]);
+
+		$user = $users->first();
+
+		// email() has no #[BlockCollectionAccess] - must be allowed
+		$this->assertSame('test@getkirby.com', $users->getAttribute($user, 'email'));
+	}
+
+	public function testGetAttributeFromObjectBlockedInDebugMode(): void
+	{
+		new App([
+			'roots'   => ['index' => '/dev/null'],
+			'options' => ['debug' => true]
+		]);
+
+		$users = Users::factory([
+			['email' => 'test@getkirby.com', 'password' => 'supersecret']
+		]);
+
+		$user = $users->first();
+
+		$this->expectException(\InvalidArgumentException::class);
+		$users->getAttribute($user, 'password');
+	}
+
+	public function testGetAttributeFromObjectWithoutAccessibleFields(): void
+	{
+		// MockObject methods don't have #[BlockCollectionAccess] - access must be allowed
+		$collection = new Collection([
+			$obj = new MockObject(['id' => 'a', 'group' => 'x'])
+		]);
+
+		$this->assertSame('a', $collection->getAttribute($obj, 'id'));
+		$this->assertSame('x', $collection->getAttribute($obj, 'group'));
+	}
+
+	public function testFilterByPasswordIsBlocked(): void
+	{
+		$users = Users::factory([
+			[
+				'email'    => 'a@getkirby.com',
+				'password' => '$2y$10$abcdefghijklmnopqrstuvwxyABCDEFGHIJKLMNOPQRSTUVWXYZ01234'
+			],
+			[
+				'email'    => 'b@getkirby.com',
+				'password' => '$2y$10$zzzzzzzzzzzzzzzzzzzzzzzzABCDEFGHIJKLMNOPQRSTUVWXYZ01234'
+			]
+		]);
+
+		// filtering by password must return no match (null != any value)
+		// rather than exposing hash contents via binary oracle
+		$result = $users->filter('password', '*=', '$2y$');
+		$this->assertCount(0, $result);
 	}
 
 	public function testAppend(): void
