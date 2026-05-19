@@ -99,6 +99,14 @@ class App
 	{
 		$this->core = new Core($this);
 
+		// start with fresh permission caches
+		File::$accessibleCache = [];
+		File::$listableCache   = [];
+		File::$readableCache   = [];
+		Page::$accessibleCache = [];
+		Page::$listableCache   = [];
+		Page::$readableCache   = [];
+
 		// register all roots to be able to load stuff afterwards
 		$this->bakeRoots($props['roots'] ?? []);
 

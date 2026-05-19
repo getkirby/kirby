@@ -329,6 +329,10 @@ class File extends ModelWithContent
 		return $this->id() === $file->id();
 	}
 
+	public static array $accessibleCache = [];
+	public static array $listableCache   = [];
+	public static array $readableCache   = [];
+
 	/**
 	 * Checks if the files is accessible.
 	 * This permission depends on the `read` option until v5
@@ -340,12 +344,11 @@ class File extends ModelWithContent
 			return false;
 		}
 
-		static $accessible   = [];
-		$role                = $this->kirby()->user()?->role()->id() ?? '__none__';
-		$template            = $this->template() ?? '__none__';
-		$accessible[$role] ??= [];
+		$role     = $this->kirby()->user()?->role()->id() ?? '__none__';
+		$template = $this->template() ?? '__none__';
+		static::$accessibleCache[$role] ??= [];
 
-		return $accessible[$role][$template] ??= $this->permissions()->can('access');
+		return static::$accessibleCache[$role][$template] ??= $this->permissions()->can('access');
 	}
 
 	/**
@@ -364,12 +367,11 @@ class File extends ModelWithContent
 			return false;
 		}
 
-		static $listable   = [];
-		$role              = $this->kirby()->user()?->role()->id() ?? '__none__';
-		$template          = $this->template() ?? '__none__';
-		$listable[$role] ??= [];
+		$role     = $this->kirby()->user()?->role()->id() ?? '__none__';
+		$template = $this->template() ?? '__none__';
+		static::$listableCache[$role] ??= [];
 
-		return $listable[$role][$template] ??= $this->permissions()->can('list');
+		return static::$listableCache[$role][$template] ??= $this->permissions()->can('list');
 	}
 
 	/**
@@ -379,12 +381,11 @@ class File extends ModelWithContent
 	 */
 	public function isReadable(): bool
 	{
-		static $readable   = [];
-		$role              = $this->kirby()->user()?->role()->id() ?? '__none__';
-		$template          = $this->template() ?? '__none__';
-		$readable[$role] ??= [];
+		$role     = $this->kirby()->user()?->role()->id() ?? '__none__';
+		$template = $this->template() ?? '__none__';
+		static::$readableCache[$role] ??= [];
 
-		return $readable[$role][$template] ??= $this->permissions()->can('read');
+		return static::$readableCache[$role][$template] ??= $this->permissions()->can('read');
 	}
 
 	/**
