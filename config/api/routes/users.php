@@ -30,7 +30,12 @@ return [
 				return Find::users()->search($this->requestQuery('q'));
 			}
 
-			return Find::users()->query($this->requestBody());
+			return Find::users()->query(array_filter([
+				'limit'    => $this->requestBody('limit'),
+				'offset'   => $this->requestBody('offset'),
+				'paginate' => $this->requestBody('paginate'),
+				'search'   => $this->requestBody('search'),
+			], fn ($value) => $value !== null));
 		}
 	],
 	[

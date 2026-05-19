@@ -7,6 +7,7 @@ use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
+use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Locale;
 use Kirby\Toolkit\Str;
 use Stringable;
@@ -150,6 +151,7 @@ class Language implements Stringable
 	/**
 	 * Creates a new language object
 	 */
+	#[BlockCollectionAccess]
 	public static function create(array $props): static
 	{
 		$kirby         = App::instance();
@@ -213,6 +215,7 @@ class Language implements Stringable
 	 *
 	 * @throws \Kirby\Exception\Exception
 	 */
+	#[BlockCollectionAccess]
 	public function delete(): bool
 	{
 		$kirby = App::instance();
@@ -453,6 +456,7 @@ class Language implements Stringable
 	/**
 	 * Returns the absolute path to the language file
 	 */
+	#[BlockCollectionAccess]
 	public function root(): string
 	{
 		return App::instance()->root('languages') . '/' . $this->code() . '.php';
@@ -486,6 +490,7 @@ class Language implements Stringable
 	 *
 	 * @return $this
 	 */
+	#[BlockCollectionAccess]
 	public function save(): static
 	{
 		$existingData = Data::read($this->root(), fail: false);
@@ -584,6 +589,7 @@ class Language implements Stringable
 	/**
 	 * Update language properties and save them
 	 */
+	#[BlockCollectionAccess]
 	public function update(array|null $props = null): static
 	{
 		$kirby = App::instance();

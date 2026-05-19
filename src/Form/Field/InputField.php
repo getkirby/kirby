@@ -4,6 +4,7 @@ namespace Kirby\Form\Field;
 
 use Kirby\Form\Fields;
 use Kirby\Form\Mixin;
+use Kirby\Toolkit\BlockCollectionAccess;
 
 /**
  * Input class for fields that have a value
@@ -68,6 +69,7 @@ abstract class InputField extends BaseField
 	 * @since 5.2.0
 	 * @todo Move to `Value` mixin once array-based fields are unsupported
 	 */
+	#[BlockCollectionAccess]
 	public function reset(): static
 	{
 		$this->value = $this->emptyValue();

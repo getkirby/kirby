@@ -3,6 +3,7 @@
 namespace Kirby\Plugin;
 
 use Kirby\Filesystem\F;
+use Kirby\Toolkit\BlockCollectionAccess;
 use Stringable;
 
 /**
@@ -35,6 +36,7 @@ class Asset implements Stringable
 	/**
 	 * Create a unique media hash
 	 */
+	#[BlockCollectionAccess]
 	public function mediaHash(): string
 	{
 		return crc32($this->filename()) . '-' . $this->modified();
@@ -43,6 +45,7 @@ class Asset implements Stringable
 	/**
 	 * Absolute path to the asset file in the media folder
 	 */
+	#[BlockCollectionAccess]
 	public function mediaRoot(): string
 	{
 		return $this->plugin()->mediaRoot() . '/' . $this->mediaHash() . '/' . $this->path();
@@ -78,6 +81,7 @@ class Asset implements Stringable
 	 * Publishes the asset file to the plugin's media folder
 	 * by creating a symlink
 	 */
+	#[BlockCollectionAccess]
 	public function publish(): void
 	{
 		F::link($this->root(), $this->mediaRoot(), 'symlink');
@@ -89,6 +93,7 @@ class Asset implements Stringable
 	 * @deprecated 4.0.0
 	 * @codeCoverageIgnore
 	 */
+	#[BlockCollectionAccess]
 	public function publishAt(string $path): void
 	{
 		F::link(
@@ -98,6 +103,7 @@ class Asset implements Stringable
 		);
 	}
 
+	#[BlockCollectionAccess]
 	public function root(): string
 	{
 		return $this->root;
