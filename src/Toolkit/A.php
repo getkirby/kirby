@@ -58,7 +58,7 @@ class A
 			return null;
 		}
 
-		return round((array_sum($array) / sizeof($array)), $decimals);
+		return round((array_sum($array) / count($array)), $decimals);
 	}
 
 	/**
@@ -369,21 +369,15 @@ class A
 		array $array,
 		string $separator = ''
 	): string {
-		$result = '';
+		$parts = [];
 
 		foreach ($array as $value) {
-			if (empty($result) === false) {
-				$result .= $separator;
-			}
-
-			if (is_array($value) === true) {
-				$value = static::implode($value, $separator);
-			}
-
-			$result .= $value;
+			$parts[] = is_array($value) === true
+				? static::implode($value, $separator)
+				: $value;
 		}
 
-		return $result;
+		return implode($separator, $parts);
 	}
 
 	/**
@@ -454,7 +448,7 @@ class A
 	/**
 	 * Returns the last element of an array
 	 *
-	 * ```php
+	 * @example
 	 * $array = [
 	 *   'cat'  => 'miao',
 	 *   'dog'  => 'wuff',
@@ -463,14 +457,10 @@ class A
 	 *
 	 * $last = A::last($array);
 	 * // last: 'tweet'
-	 * ```
-	 *
-	 * @param array $array The source array
-	 * @return mixed The last element
 	 */
 	public static function last(array $array): mixed
 	{
-		return array_pop($array);
+		return $array[array_key_last($array)] ?? null;
 	}
 
 	/**

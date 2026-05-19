@@ -249,6 +249,10 @@ class StrTest extends TestCase
 	{
 		$email = 'test@getkirby.com';
 		$this->assertSame($email, Html::decode(Str::encode($email)));
+
+		// multibyte round-trip (IDN-style local part)
+		$email = 'tête@example.com';
+		$this->assertSame($email, Html::decode(Str::encode($email)));
 	}
 
 	public function testEncoding(): void

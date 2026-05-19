@@ -600,14 +600,20 @@ class Dir
 			return false;
 		}
 
-		// Get size for all direct files
-		$size = F::size(static::files($dir, null, true));
+		$size = 0;
 
-		// if recursive, add sizes of all subdirectories
-		if ($recursive === true) {
-			foreach (static::dirs($dir, null, true) as $subdir) {
-				$size += static::size($subdir);
+		// Read once and distinguish files from subdirs per entry
+		// instead of scanning the directory twice via ::files() and ::dirs()
+		foreach (static::read($dir, absolute: true) as $item) {
+			if (is_dir($item) === true) {
+				if ($recursive === true) {
+					$size += static::size($item);
+				}
+
+				continue;
 			}
+
+			$size += F::size($item);
 		}
 
 		return $size;
