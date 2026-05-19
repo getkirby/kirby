@@ -6,6 +6,7 @@ use Kirby\Cms\Helpers;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Exception\Exception;
+use Kirby\Toolkit\BlockCollectionAccess;
 
 /**
  * Each page, file or site can have multiple
@@ -62,6 +63,7 @@ class Translation
 	 *
 	 * @deprecated 5.0.0
 	 */
+	#[BlockCollectionAccess]
 	public function contentFile(): string
 	{
 		Helpers::deprecated('`$translation->contentFile()` has been deprecated. Please let us know if you have a use case for a replacement.', 'translation-methods');
@@ -74,6 +76,7 @@ class Translation
 	 * @todo Needs to be refactored as soon as Version::create becomes static
 	 * 		 (see https://github.com/getkirby/kirby/pull/6491#discussion_r1652264408)
 	 */
+	#[BlockCollectionAccess]
 	public static function create(
 		ModelWithContent $model,
 		Version $version,

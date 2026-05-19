@@ -529,6 +529,35 @@ class UsersRoutesTest extends TestCase
 		$this->assertSame('editor@getkirby.com', $response['data'][0]['email']);
 	}
 
+	public function testSearchWithPostRequestIgnoresFilterBy(): void
+	{
+		// filterBy role == editor would normally return only 1 user;
+		// since filterBy is stripped from the body, both users are returned
+		$response = $this->app->api()->call('users/search', 'POST', [
+			'body' => [
+				'filterBy' => [
+					['field' => 'role', 'operator' => '==', 'value' => 'editor']
+				]
+			]
+		]);
+
+		$this->assertCount(2, $response['data']);
+	}
+
+	public function testSearchWithPostRequestIgnoresSortBy(): void
+	{
+		// sortBy in the body is stripped; default order (alphabetical asc) is preserved
+		$response = $this->app->api()->call('users/search', 'POST', [
+			'body' => [
+				'sortBy' => 'email desc'
+			]
+		]);
+
+		$this->assertCount(2, $response['data']);
+		$this->assertSame('admin@getkirby.com', $response['data'][0]['email']);
+		$this->assertSame('editor@getkirby.com', $response['data'][1]['email']);
+	}
+
 	public function testSearchWithPostRequestWithoutAccess(): void
 	{
 		$app = $this->setUpAppWithoutUserAccess();
@@ -540,6 +569,41 @@ class UsersRoutesTest extends TestCase
 		]);
 
 		$this->assertCount(0, $response['data']);
+	}
+
+	public function testSearchWithPostRequestRespectsLimit(): void
+	{
+		$response = $this->app->api()->call('users/search', 'POST', [
+			'body' => [
+				'limit' => 1,
+			]
+		]);
+
+		$this->assertCount(1, $response['data']);
+	}
+
+	public function testSearchWithPostRequestIgnoresNullValues(): void
+	{
+		// search: null should not restrict results
+		$response = $this->app->api()->call('users/search', 'POST', [
+			'body' => [
+				'search' => null,
+			]
+		]);
+
+		$this->assertCount(2, $response['data']);
+	}
+
+	public function testSearchWithPostRequestIgnoresNotKey(): void
+	{
+		// the 'not' key is stripped; both users are returned
+		$response = $this->app->api()->call('users/search', 'POST', [
+			'body' => [
+				'not' => ['admin@getkirby.com'],
+			]
+		]);
+
+		$this->assertCount(2, $response['data']);
 	}
 
 	public function testSections(): void

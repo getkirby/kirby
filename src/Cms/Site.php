@@ -8,6 +8,7 @@ use Kirby\Exception\LogicException;
 use Kirby\Filesystem\Dir;
 use Kirby\Panel\Site as Panel;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\BlockCollectionAccess;
 
 /**
  * The `$site` object is the root element
@@ -150,6 +151,7 @@ class Site extends ModelWithContent
 	 * Returns the url to the api endpoint
 	 * @internal
 	 */
+	#[BlockCollectionAccess]
 	public function apiUrl(bool $relative = false): string
 	{
 		if ($relative === true) {
@@ -245,6 +247,7 @@ class Site extends ModelWithContent
 	 * Creates an inventory of all files
 	 * and children in the site directory
 	 */
+	#[BlockCollectionAccess]
 	public function inventory(): array
 	{
 		if ($this->inventory !== null) {
@@ -285,6 +288,7 @@ class Site extends ModelWithContent
 	/**
 	 * Returns the absolute path to the media folder for the page
 	 */
+	#[BlockCollectionAccess]
 	public function mediaDir(): string
 	{
 		return $this->kirby()->root('media') . '/site';
@@ -293,6 +297,7 @@ class Site extends ModelWithContent
 	/**
 	 * @see `::mediaDir`
 	 */
+	#[BlockCollectionAccess]
 	public function mediaRoot(): string
 	{
 		return $this->mediaDir();
@@ -374,6 +379,7 @@ class Site extends ModelWithContent
 	 * Returns the preview URL with authentication for drafts and versions
 	 * @unstable
 	 */
+	#[BlockCollectionAccess]
 	public function previewUrl(VersionId|string $versionId = 'latest'): string|null
 	{
 		// the site previews the home page and thus needs to check permissions for it
@@ -387,6 +393,7 @@ class Site extends ModelWithContent
 	/**
 	 * Returns the absolute path to the content directory
 	 */
+	#[BlockCollectionAccess]
 	public function root(): string
 	{
 		return $this->root ??= $this->kirby()->root('content');
@@ -405,6 +412,7 @@ class Site extends ModelWithContent
 	/**
 	 * Search all pages in the site
 	 */
+	#[BlockCollectionAccess]
 	public function search(
 		string|null $query = null,
 		string|array $params = []
@@ -476,6 +484,7 @@ class Site extends ModelWithContent
 	 * Sets the current page by id or page object and
 	 * returns the current page
 	 */
+	#[BlockCollectionAccess]
 	public function visit(
 		string|Page $page,
 		string|null $languageCode = null

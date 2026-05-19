@@ -137,6 +137,23 @@ class Sane
 	}
 
 	/**
+	 * Sanitizes the given string from ProseMirror-backed fields
+	 * @since 5.4.1
+	 */
+	public static function sanitizeProseMirrorFields(
+		string $string
+	): string {
+		$string = static::sanitize($string, 'html');
+
+		// convert non-breaking spaces to HTML entity
+		// as that's how ProseMirror handles it internally;
+		// will allow comparing saved and current content
+		$string = str_replace(' ', '&nbsp;', $string);
+
+		return $string;
+	}
+
+	/**
 	 * Validates file contents with the specified handler
 	 *
 	 * @param bool $isExternal Whether the string is from an external file

@@ -146,6 +146,14 @@ class BlocksTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
+	public function testParseSkipsDangerousHref(): void
+	{
+		$value  = Blocks::parse('<a href="javascript://x%0Aalert(1)">Test</a>');
+		$blocks = Blocks::factory($value);
+
+		$this->assertSame('<p><a rel="noreferrer">Test</a></p>', $blocks->toHtml());
+	}
+
 	public function testParsePageObject(): void
 	{
 		$expected = [

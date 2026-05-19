@@ -17,6 +17,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Fields;
 use Kirby\Form\Form;
 use Kirby\Panel\Model;
+use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Str;
 use Kirby\Uuid\Identifiable;
 use Kirby\Uuid\Uuid;
@@ -109,6 +110,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	 * @since 5.0.0
 	 * @unstable
 	 */
+	#[BlockCollectionAccess]
 	public function changeStorage(Storage|string $toStorage, bool $copy = false): static
 	{
 		if (is_string($toStorage) === true) {
@@ -132,6 +134,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	 *
 	 * @todo eventually refactor without need of propertyData
 	 */
+	#[BlockCollectionAccess]
 	public function clone(array $props = []): static
 	{
 		$props = array_replace_recursive($this->propertyData, $props);
@@ -268,6 +271,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	/**
 	 * Decrement a given field value
 	 */
+	#[BlockCollectionAccess]
 	public function decrement(
 		string $field,
 		int $by = 1,
@@ -300,6 +304,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	 * Creates a clone and fetches all
 	 * lazy-loaded getters to get a full copy
 	 */
+	#[BlockCollectionAccess]
 	public function hardcopy(): static
 	{
 		$clone = $this->clone();
@@ -324,6 +329,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	/**
 	 * Increment a given field value
 	 */
+	#[BlockCollectionAccess]
 	public function increment(
 		string $field,
 		int $by = 1,
@@ -442,6 +448,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	 * Low-level method to save the model with the given data.
 	 * Consider using `::update()` instead.
 	 */
+	#[BlockCollectionAccess]
 	public function save(
 		array|null $data = null,
 		string|null $languageCode = null,
@@ -655,6 +662,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the input array contains invalid values
 	 */
+	#[BlockCollectionAccess]
 	public function update(
 		array|null $input = null,
 		string|null $languageCode = null,
@@ -723,6 +731,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	 * @internal
 	 * @deprecated 5.0.0 Use `->version()->save()` instead
 	 */
+	#[BlockCollectionAccess]
 	public function writeContent(array $data, string|null $languageCode = null): bool
 	{
 		Helpers::deprecated('$model->writeContent() is deprecated. Use $model->version()->save() instead.'); // @codeCoverageIgnore
