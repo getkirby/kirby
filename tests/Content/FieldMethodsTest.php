@@ -230,6 +230,36 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame('cover.jpg', $page->coverid()->toFile()->filename());
 	}
 
+	public function testToFileDeadUuidNoIndex(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'options' => [
+				'content' => [
+					'uuid' => [
+						'index' => false
+					]
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'content' => [
+							'cover' => 'file://does-not-exist'
+						],
+						'slug' => 'test'
+					]
+				]
+			]
+		]);
+
+		$page = $app->page('test');
+		$this->assertNull($page->cover()->toFile());
+		$this->assertSame([], $page->cover()->toFiles()->data());
+	}
+
 	public function testToFiles(): void
 	{
 		$page = new Page([
@@ -379,6 +409,27 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame($a, $this->field(Yaml::encode(['a']))->toPage());
 		$this->assertSame($b, $this->field(Yaml::encode(['b', 'a']))->toPage());
 		$this->assertSame($c, $this->field(Yaml::encode(['page://uuid-c', 'b', 'a']))->toPage());
+	}
+
+	public function testToPageDeadUuidNoIndex(): void
+	{
+		new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'options' => [
+				'content' => [
+					'uuid' => [
+						'index' => false
+					]
+				]
+			]
+		]);
+
+		$value = Yaml::encode(['page://does-not-exist']);
+
+		$this->assertNull($this->field('page://does-not-exist')->toPage());
+		$this->assertSame([], $this->field($value)->toPages()->data());
 	}
 
 	public function testToPages(): void
@@ -640,6 +691,27 @@ class FieldMethodsTest extends TestCase
 
 		$this->assertSame($a, $this->field(Yaml::encode(['a@company.com']))->toUser());
 		$this->assertSame($b, $this->field(Yaml::encode(['b@company.com', 'a@company.com']))->toUser());
+	}
+
+	public function testToUserDeadUuidNoIndex(): void
+	{
+		new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'options' => [
+				'content' => [
+					'uuid' => [
+						'index' => false
+					]
+				]
+			]
+		]);
+
+		$value = Yaml::encode(['user://does-not-exist']);
+
+		$this->assertNull($this->field('user://does-not-exist')->toUser());
+		$this->assertSame([], $this->field($value)->toUsers()->data());
 	}
 
 	public function testToUsers(): void
