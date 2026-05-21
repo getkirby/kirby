@@ -360,8 +360,9 @@ class Environment
 
 		// prefer the standardized `Forwarded` header if defined
 		if ($forwarded = $this->get('HTTP_FORWARDED')) {
-			// only use the first (outermost) proxy by using the first set of values
-			// before the first comma (but only a comma outside of quotes)
+			// only use the first (outermost) proxy by using
+			// the first set of values before the first comma
+			// (but only a comma outside of quotes)
 			if (Str::contains($forwarded, ',') === true) {
 				$forwarded = preg_split('/"[^"]*"(*SKIP)(*F)|,/', $forwarded)[0];
 			}
@@ -372,6 +373,7 @@ class Environment
 
 			// split key and value into an associative array
 			$fields = [];
+
 			foreach ($rawFields as $field) {
 				$key   = Str::lower(Str::before($field, '='));
 				$value = Str::after($field, '=');
@@ -399,7 +401,7 @@ class Environment
 				$data['port'] ??= 443;
 			}
 
-			$data['for'] = $parts['for'] ?? null;
+			$data['for'] = $fields['for'] ?? null;
 
 			return $data;
 		}
