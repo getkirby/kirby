@@ -1,24 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="6.16.1@f1f5de594dc76faf8784e02d3dc4716c91c6f6ac">
-  <file src="config/tags.php">
-    <UndefinedPropertyAssignment>
-      <code><![CDATA[$tag->alt]]></code>
-      <code><![CDATA[$tag->caption]]></code>
-      <code><![CDATA[$tag->caption]]></code>
-      <code><![CDATA[$tag->file]]></code>
-      <code><![CDATA[$tag->file]]></code>
-      <code><![CDATA[$tag->height]]></code>
-      <code><![CDATA[$tag->height]]></code>
-      <code><![CDATA[$tag->poster]]></code>
-      <code><![CDATA[$tag->src]]></code>
-      <code><![CDATA[$tag->src]]></code>
-      <code><![CDATA[$tag->srcset]]></code>
-      <code><![CDATA[$tag->text]]></code>
-      <code><![CDATA[$tag->title]]></code>
-      <code><![CDATA[$tag->width]]></code>
-      <code><![CDATA[$tag->width]]></code>
-    </UndefinedPropertyAssignment>
-  </file>
   <file src="src/Api/Api.php">
     <UndefinedMethod>
       <code><![CDATA[files]]></code>

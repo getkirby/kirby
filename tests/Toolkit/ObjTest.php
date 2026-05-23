@@ -21,6 +21,17 @@ class ObjTest extends TestCase
 		$this->assertNull($obj->foo);
 	}
 
+	public function test__set(): void
+	{
+		$obj = new Obj();
+		$obj->foo = 'bar';
+		$this->assertSame('bar', $obj->foo);
+
+		// overwriting should also work
+		$obj->foo = 'baz';
+		$this->assertSame('baz', $obj->foo);
+	}
+
 	public function testGetMultiple(): void
 	{
 		$obj = new Obj([

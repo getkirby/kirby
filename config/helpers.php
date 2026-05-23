@@ -4,7 +4,6 @@ use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Helpers;
 use Kirby\Cms\Html;
-use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
 use Kirby\Cms\Response;
@@ -473,7 +472,7 @@ if (Helpers::hasOverride('qr') === false) { // @codeCoverageIgnore
 	 */
 	function qr(string|Page|Site|File $data): QrCode
 	{
-    	if (is_string($data) === false) {
+		if (is_string($data) === false) {
 			$data = $data->url();
 		}
 
