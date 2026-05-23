@@ -638,6 +638,66 @@ class ApiTest extends TestCase
 		$this->assertSame('test.jpg', $api->file('users/test@getkirby.com', 'test.jpg')->filename());
 	}
 
+	public function testFiles(): void
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'a',
+						'files' => [
+							['filename' => 'a1.jpg'],
+							['filename' => 'a2.jpg']
+						]
+					]
+				],
+				'files' => [
+					['filename' => 'site.jpg']
+				]
+			],
+			'users' => [
+				[
+					'id'    => 'test',
+					'email' => 'test@getkirby.com',
+					'files' => [
+						['filename' => 'user.jpg']
+					]
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+		$api = $app->api();
+
+		$this->assertSame(['site.jpg'], $api->files('site')->keys());
+		$this->assertSame(['a/a1.jpg', 'a/a2.jpg'], $api->files('pages/a')->keys());
+		$this->assertSame(['test/user.jpg'], $api->files('users/test@getkirby.com')->keys());
+	}
+
+	public function testFilesInvalidParent(): void
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'a',
+						'files' => [
+							['filename' => 'a.jpg']
+						]
+					]
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+		$api = $app->api();
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Not a valid file parent: a/a.jpg');
+
+		$api->files('pages/a/files/a.jpg');
+	}
+
 	public function testFileGetRoute(): void
 	{
 		// regular
