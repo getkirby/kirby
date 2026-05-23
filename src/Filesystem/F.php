@@ -508,6 +508,7 @@ class F
 	 *
 	 * @param 'date'|'intl'|'strftime'|null $handler Custom date handler or `null`
 	 *                                               for the globally configured one
+	 * @return ($format is null ? int|false : string|false)
 	 */
 	public static function modified(
 		string $file,

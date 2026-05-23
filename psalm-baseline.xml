@@ -180,11 +180,9 @@
     <InvalidReturnStatement>
       <code><![CDATA[$this->parent()]]></code>
       <code><![CDATA[$this->parent()]]></code>
-      <code><![CDATA[F::modified($this->root())]]></code>
     </InvalidReturnStatement>
     <InvalidReturnType>
       <code><![CDATA[Site]]></code>
-      <code><![CDATA[int]]></code>
     </InvalidReturnType>
     <NullableReturnStatement>
       <code><![CDATA[$this->blueprint ??= FileBlueprint::factory(
@@ -1002,12 +1000,6 @@
     <FalsableReturnStatement>
       <code><![CDATA[max($modified)]]></code>
     </FalsableReturnStatement>
-    <InvalidReturnStatement>
-      <code><![CDATA[max($modified)]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[int]]></code>
-    </InvalidReturnType>
   </file>
   <file src="src/Panel/State.php">
     <InvalidArgument>
@@ -1072,14 +1064,6 @@
 			$this->i18n($this->value)
 		)]]></code>
     </NullableReturnStatement>
-  </file>
-  <file src="src/Plugin/Asset.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[F::modified($this->root())]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[int|false]]></code>
-    </InvalidReturnType>
   </file>
 
   <file src="src/Query/Expression.php">
