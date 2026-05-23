@@ -1203,22 +1203,7 @@
       <code><![CDATA[$time]]></code>
     </FalsableReturnStatement>
   </file>
-  <file src="src/Template/Snippet.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[string]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[App::instance()->root('snippets')]]></code>
-    </NullableReturnStatement>
-  </file>
-  <file src="src/Template/Template.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[string]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[App::instance()->root($this->store())]]></code>
-    </NullableReturnStatement>
-  </file>
+
   <file src="src/Text/KirbyTags.php">
     <InvalidNullableReturnType>
       <code><![CDATA[string]]></code>
@@ -1249,7 +1234,6 @@
 		}, $text)]]></code>
     </NullableReturnStatement>
   </file>
-
   <file src="src/Toolkit/Collection.php">
     <InvalidArgument>
       <code><![CDATA[$item]]></code>

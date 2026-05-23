@@ -332,7 +332,9 @@ class Snippet extends Tpl
 	 */
 	public static function root(): string
 	{
-		return App::instance()->root('snippets');
+		/** @var string $root */
+		$root = App::instance()->root('snippets');
+		return $root;
 	}
 
 	/**

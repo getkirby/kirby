@@ -3,6 +3,7 @@
 namespace Kirby\Template;
 
 use Kirby\Cms\App;
+use Kirby\Exception\LogicException;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Template::class)]
@@ -92,6 +93,21 @@ class TemplateTest extends TestCase
 		$template = new Template('test');
 		$this->assertSame('templates', $template->store());
 		$this->assertSame($root, $template->root());
+	}
+
+	public function testRootInvalid(): void
+	{
+		$template = new class ('test') extends Template {
+			public function store(): string
+			{
+				return 'foo';
+			}
+		};
+
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('Kirby root "foo" does not exist');
+
+		$template->root();
 	}
 
 	public function testRender(): void
