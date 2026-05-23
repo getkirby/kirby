@@ -154,8 +154,8 @@ Query::$entries['t'] = function (
 	string|array|null $fallback = null,
 	string|null $locale = null
 ): string|null {
-    $result = I18n::translate($key, $fallback, $locale);
-    return is_string($result) ? $result : null;
+	$result = I18n::translate($key, $fallback, $locale);
+	return is_string($result) ? $result : null;
 };
 
 Query::$entries['user'] = function (string|null $id = null): User|null {

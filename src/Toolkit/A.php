@@ -495,14 +495,14 @@ class A
 		// get the first two arrays that should be merged
 		$merged = array_shift($arrays);
 
-		 // no arrays passed (or only a mode constant)
+		// no arrays passed (or only a mode constant)
 		if (is_array($merged) === false) {
 			return [];
 		}
 
 		$join = array_shift($arrays);
 
-		 // only one array passed: nothing to merge into
+		// only one array passed: nothing to merge into
 		if (is_array($join) === false) {
 			return $merged;
 		}

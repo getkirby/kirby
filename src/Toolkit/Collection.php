@@ -355,7 +355,7 @@ class Collection extends Iterator implements Stringable
 	/**
 	 * Find one or multiple elements by id
 	 *
-     * @param string|list<string> ...$keys One or more keys, or a single array of keys
+	 * @param string|list<string> ...$keys One or more keys, or a single array of keys
 	 * @return TValue|static
 	 */
 	public function find(...$keys)

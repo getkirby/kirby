@@ -30,7 +30,7 @@ class Uri extends BaseUri
 	public function __construct(
 		array|string $props = [],
 		array $inject = []
-	 ) {
+	) {
 		// treat `site://` differently:
 		// there is no host for site type, rest is always the path
 		if (

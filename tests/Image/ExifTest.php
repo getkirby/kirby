@@ -170,7 +170,7 @@ class ExifTest extends TestCase
 
 		$parse = $ref->getMethod('parseTimestamp');
 
-		$this->assertSame((string) $options['FileDateTime'], $parse->invoke($exif));
+		$this->assertSame((string)$options['FileDateTime'], $parse->invoke($exif));
 	}
 
 	public function testParseTimestampFallsBackToImageModified(): void
@@ -185,7 +185,7 @@ class ExifTest extends TestCase
 		$parse = $ref->getMethod('parseTimestamp');
 
 		$this->assertSame(
-			(string) filemtime(static::FIXTURES . '/image/cat.jpg'),
+			(string)filemtime(static::FIXTURES . '/image/cat.jpg'),
 			$parse->invoke($exif)
 		);
 	}

@@ -38,7 +38,7 @@ trait HasStringTemplate
 	}
 
 	/**
- 	 * @return ($string is null ? null : string)
+	 * @return ($string is null ? null : string)
 	 */
 	protected function stringTemplateI18n(
 		array|string|null $string = null,

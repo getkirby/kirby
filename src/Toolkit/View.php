@@ -3,9 +3,7 @@
 namespace Kirby\Toolkit;
 
 use Exception;
-use Kirby\Filesystem\F;
 use Stringable;
-use Throwable;
 
 /**
  * Simple PHP view engine

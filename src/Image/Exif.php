@@ -163,11 +163,11 @@ class Exif
 		}
 
 		if (isset($this->data['FileDateTime']) === true) {
-			return (string) $this->data['FileDateTime'];
+			return (string)$this->data['FileDateTime'];
 		}
 
 		$modified = $this->image->modified();
-    	return $modified === false ? null : (string)$modified;
+		return $modified === false ? null : (string)$modified;
 	}
 
 	/**

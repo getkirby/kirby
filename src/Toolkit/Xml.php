@@ -289,7 +289,7 @@ class Xml
 	 * structure of arrays and strings
 	 *
 	 * @param bool $collectName Whether the element name should be collected (for the root element)
-	  * @return ($collectName is true ? array : array|string)
+	 * @return ($collectName is true ? array : array|string)
 	 */
 	public static function simplify(
 		SimpleXMLElement $element,

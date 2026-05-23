@@ -639,7 +639,7 @@ class Session
 		if (is_string($time) === true) {
 			$timestamp = strtotime($time, $now);
 
-			 if ($timestamp === false) {
+			if ($timestamp === false) {
 				throw new InvalidArgumentException(
 					message: 'Invalid time string: ' . $time
 				);
