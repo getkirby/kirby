@@ -464,19 +464,6 @@
       <code><![CDATA[contentFile]]></code>
     </UndefinedMethod>
   </file>
-  <file src="src/Data/Json.php">
-    <FalsableReturnStatement>
-      <code><![CDATA[json_encode($data, $constants)]]></code>
-    </FalsableReturnStatement>
-  </file>
-  <file src="src/Data/Txt.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[string]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$value]]></code>
-    </NullableReturnStatement>
-  </file>
   <file src="src/Data/YamlSpyc.php">
     <InvalidArgument>
       <code><![CDATA[false]]></code>

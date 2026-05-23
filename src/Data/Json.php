@@ -17,7 +17,7 @@ class Json extends Handler
 	 */
 	public static function encode($data, bool $pretty = false): string
 	{
-		$constants = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
+		$constants = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR;
 
 		if ($pretty === true) {
 			$constants |= JSON_PRETTY_PRINT;
