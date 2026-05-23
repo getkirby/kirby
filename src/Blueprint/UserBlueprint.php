@@ -2,6 +2,8 @@
 
 namespace Kirby\Blueprint;
 
+use Kirby\Cms\ModelWithContent;
+
 /**
  * Extension of the basic blueprint class
  * to handle all blueprints for users.
@@ -11,6 +13,9 @@ namespace Kirby\Blueprint;
  */
 class UserBlueprint extends Blueprint
 {
+	/** @var \Kirby\Cms\User */
+	protected ModelWithContent $model;
+
 	/**
 	 * UserBlueprint constructor.
 	 *
