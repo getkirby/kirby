@@ -1097,66 +1097,7 @@
       <code><![CDATA[$this->root]]></code>
     </NullableReturnStatement>
   </file>
-  <file src="src/Query/AST/ArgumentListNode.php">
-    <UndefinedMethod>
-      <code><![CDATA[arguments]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="src/Query/AST/ArithmeticNode.php">
-    <UndefinedMethod>
-      <code><![CDATA[arithmetic]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="src/Query/AST/ArrayListNode.php">
-    <UndefinedMethod>
-      <code><![CDATA[arrayList]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="src/Query/AST/ClosureNode.php">
-    <UndefinedMethod>
-      <code><![CDATA[closure]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="src/Query/AST/CoalesceNode.php">
-    <UndefinedMethod>
-      <code><![CDATA[coalescence]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="src/Query/AST/ComparisonNode.php">
-    <UndefinedMethod>
-      <code><![CDATA[comparison]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="src/Query/AST/GlobalFunctionNode.php">
-    <UndefinedMethod>
-      <code><![CDATA[function]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="src/Query/AST/LiteralNode.php">
-    <UndefinedMethod>
-      <code><![CDATA[literal]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="src/Query/AST/LogicalNode.php">
-    <UndefinedMethod>
-      <code><![CDATA[logical]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="src/Query/AST/MemberAccessNode.php">
-    <UndefinedMethod>
-      <code><![CDATA[memberAccess]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="src/Query/AST/TernaryNode.php">
-    <UndefinedMethod>
-      <code><![CDATA[ternary]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="src/Query/AST/VariableNode.php">
-    <UndefinedMethod>
-      <code><![CDATA[variable]]></code>
-    </UndefinedMethod>
-  </file>
+
   <file src="src/Query/Expression.php">
     <FalsableReturnStatement>
       <code><![CDATA[preg_split(
@@ -1165,24 +1106,6 @@
 			flags: PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY
 		)]]></code>
     </FalsableReturnStatement>
-  </file>
-  <file src="src/Query/Parser/Parser.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[Token|false]]></code>
-      <code><![CDATA[Token|false]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$this->advance()]]></code>
-      <code><![CDATA[$this->advance()]]></code>
-    </NullableReturnStatement>
-  </file>
-  <file src="src/Query/Query.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[I18n::translate($key, $fallback, $locale)]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[string|null]]></code>
-    </InvalidReturnType>
   </file>
   <file src="src/Query/Segments.php">
     <FalsableReturnStatement>
@@ -1193,7 +1116,6 @@
 		)]]></code>
     </FalsableReturnStatement>
   </file>
-
   <file src="src/Text/KirbyTags.php">
     <InvalidNullableReturnType>
       <code><![CDATA[string]]></code>

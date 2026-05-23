@@ -32,7 +32,7 @@ class DefaultVisitor extends Visitor
 		int|float $left,
 		string $operator,
 		int|float $right
-	): mixed {
+	): int|float {
 		return match ($operator) {
 			'+'     => $left + $right,
 			'-'     => $left - $right,

@@ -131,7 +131,7 @@ class Parser
 		string|false $error = false
 	): Token|false {
 		if ($this->is($type) === true) {
-			return $this->advance();
+    		return $this->advance() ?? false;
 		}
 
 		if (is_string($error) === true) {
@@ -148,7 +148,7 @@ class Parser
 	{
 		foreach ($types as $type) {
 			if ($this->is($type) === true) {
-				return $this->advance();
+				return $this->advance() ?? false;
 			}
 		}
 
