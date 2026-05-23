@@ -500,6 +500,21 @@ class ATest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
+	public function testMergeInvalid(): void
+	{
+		// no arrays at all
+		$this->assertSame([], A::merge());
+
+		// only a mode constant
+		$this->assertSame([], A::merge(A::MERGE_REPLACE));
+
+		// single array, no second to merge into
+		$this->assertSame(['a' => 'b'], A::merge(['a' => 'b']));
+
+		// single array with a trailing mode constant
+		$this->assertSame(['a' => 'b'], A::merge(['a' => 'b'], A::MERGE_REPLACE));
+	}
+
 	public function testPrepend(): void
 	{
 		// associative

@@ -3,6 +3,7 @@
 namespace Kirby\Toolkit;
 
 use Exception;
+use JsonException;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 class AccessibleObject
@@ -914,6 +915,13 @@ class CollectionTest extends TestCase
 		// non-associative
 		$collection = new Collection(['a', 'b', 'c']);
 		$this->assertSame('["a","b","c"]', $collection->toJson());
+	}
+
+	public function testToJsonFailure(): void
+	{
+		$collection = new Collection(['invalid' => "\xb1\x31"]);
+		$this->expectException(JsonException::class);
+		$collection->toJson();
 	}
 
 	public function testToString(): void

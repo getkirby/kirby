@@ -245,6 +245,14 @@ class StrTest extends TestCase
 		$this->assertSame('ISO-8859-1', Str::encoding($result));
 	}
 
+	public function testConvertInvalid(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Could not convert string "ÖÄÜ" from "UTF-8" to "ASCII"');
+
+		Str::convert('ÖÄÜ', 'ASCII', 'UTF-8');
+	}
+
 	public function testEncode(): void
 	{
 		$email = 'test@getkirby.com';
@@ -660,6 +668,10 @@ class StrTest extends TestCase
 		$this->assertMatchesRegularExpression('/^[[:digit:]]+$/', Str::random($length, 'num'));
 
 		$this->assertFalse(Str::random($length, 'something invalid'));
+
+		// non-positive lengths return an empty string
+		$this->assertSame('', Str::random(0));
+		$this->assertSame('', Str::random(-5));
 	}
 
 	public function testReplace(): void

@@ -3,6 +3,7 @@
 namespace Kirby\Content;
 
 use Closure;
+use DOMElement;
 use IntlDateFormatter;
 use Kirby\Cms\Blocks;
 use Kirby\Cms\Collection;
@@ -292,6 +293,7 @@ trait FieldMethods
 	 */
 	public function permalinksToUrls(): static
 	{
+		/** @var \Kirby\Content\Field $field */
 		$field = clone $this;
 
 		if ($field->isNotEmpty() === true) {
@@ -300,19 +302,21 @@ trait FieldMethods
 			$elements   = $dom->query('//*[' . implode(' | ', A::map($attributes, fn ($attribute) => '@' . $attribute)) . ']');
 
 			foreach ($elements as $element) {
-				foreach ($attributes as $attribute) {
-					if (
-						$element->hasAttribute($attribute) &&
-						$url = $element->getAttribute($attribute)
-					) {
-						try {
-							$permalink = Permalink::from($url);
+				if ($element instanceof DOMElement === true) {
+					foreach ($attributes as $attribute) {
+						if (
+							$element->hasAttribute($attribute) &&
+							$url = $element->getAttribute($attribute)
+						) {
+							try {
+								$permalink = Permalink::from($url);
 
-							if ($url = $permalink?->model()?->url()) {
-								$element->setAttribute($attribute, $url);
+								if ($url = $permalink?->model()?->url()) {
+									$element->setAttribute($attribute, $url);
+								}
+							} catch (InvalidArgumentException) {
+								// ignore anything else than permalinks
 							}
-						} catch (InvalidArgumentException) {
-							// ignore anything else than permalinks
 						}
 					}
 				}

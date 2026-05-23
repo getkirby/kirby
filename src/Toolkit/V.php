@@ -654,7 +654,7 @@ class V
 		array $rules,
 		array $messages = [],
 		bool $fail = true
-	): bool|array {
+	): true|array {
 		$errors = [];
 
 		foreach ($rules as $validator => $options) {

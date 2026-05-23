@@ -377,7 +377,15 @@ class Str
 			return $string;
 		}
 
-		return iconv($sourceEncoding, $targetEncoding, $string);
+		$result = @iconv($sourceEncoding, $targetEncoding, $string);
+
+		if ($result === false) {
+			throw new InvalidArgumentException(
+				message: 'Could not convert string "' . $string . '" from "' . $sourceEncoding . '" to "' . $targetEncoding . '"'
+			);
+		}
+
+		return $result;
 	}
 
 	/**
@@ -409,7 +417,7 @@ class Str
 			$string,
 			'UTF-8, ISO-8859-1, windows-1251',
 			true
-		);
+		) ?: 'UTF-8';
 	}
 
 	/**
@@ -810,13 +818,15 @@ class Str
 		$regex = '/[^' . $pool . ']/';
 
 		// collect characters until we have our required length
-		$result = '';
+		$result    = '';
+		$remaining = $length;
 
-		while (($currentLength = strlen($result)) < $length) {
-			$missing = $length - $currentLength;
-			$bytes   = random_bytes($missing);
-			$allowed = preg_replace($regex, '', base64_encode($bytes));
-			$result .= substr($allowed, 0, $missing);
+		while ($remaining > 0) {
+			$bytes      = random_bytes($remaining);
+			$allowed    = preg_replace($regex, '', base64_encode($bytes));
+			$chunk      = substr($allowed, 0, $remaining);
+			$result    .= $chunk;
+			$remaining -= strlen($chunk);
 		}
 
 		return $result;

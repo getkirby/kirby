@@ -158,7 +158,7 @@ abstract class LazyCollection extends Collection
 	/**
 	 * Find one or multiple elements by id
 	 *
-	 * @param string ...$keys
+     * @param string|list<string>
 	 * @return TValue|static
 	 */
 	public function find(...$keys)

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="6.15.0@204d06619833a297b402cbc66be7f2df74437db4">
+<files psalm-version="6.16.1@f1f5de594dc76faf8784e02d3dc4716c91c6f6ac">
   <file src="config/components.php">
     <InvalidNullableReturnType>
       <code><![CDATA[string|SessionStore]]></code>
@@ -487,8 +487,6 @@
     <InvalidArgument>
       <code><![CDATA[false]]></code>
       <code><![CDATA[false]]></code>
-      <code><![CDATA[false]]></code>
-      <code><![CDATA[false]]></code>
     </InvalidArgument>
   </file>
   <file src="src/Content/Content.php">
@@ -501,8 +499,6 @@
   </file>
   <file src="src/Content/FieldMethods.php">
     <InvalidArgument>
-      <code><![CDATA[false]]></code>
-      <code><![CDATA[false]]></code>
       <code><![CDATA[false]]></code>
       <code><![CDATA[false]]></code>
     </InvalidArgument>
@@ -531,10 +527,6 @@
     <UndefinedMethod>
       <code><![CDATA[contentFile]]></code>
     </UndefinedMethod>
-    <UndefinedPropertyAssignment>
-      <code><![CDATA[$uri->query()->_token]]></code>
-      <code><![CDATA[$uri->query()->_version]]></code>
-    </UndefinedPropertyAssignment>
   </file>
   <file src="src/Data/Json.php">
     <FalsableReturnStatement>
@@ -914,13 +906,6 @@
       <code><![CDATA[$model]]></code>
     </MoreSpecificImplementedParamType>
   </file>
-  <file src="src/Panel/Controller/View/PreviewViewController.php">
-    <UndefinedPropertyAssignment>
-      <code><![CDATA[$uri->query()->_preview]]></code>
-      <code><![CDATA[$url->query()->_params]]></code>
-      <code><![CDATA[$url->query()->_query]]></code>
-    </UndefinedPropertyAssignment>
-  </file>
   <file src="src/Panel/Controller/View/UserViewController.php">
     <InvalidNullableReturnType>
       <code><![CDATA[string]]></code>
@@ -1264,29 +1249,12 @@
 		}, $text)]]></code>
     </NullableReturnStatement>
   </file>
-  <file src="src/Toolkit/A.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[$merged]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[array]]></code>
-    </InvalidReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$merged]]></code>
-    </NullableReturnStatement>
-  </file>
+
   <file src="src/Toolkit/Collection.php">
-    <FalsableReturnStatement>
-      <code><![CDATA[json_encode($this->toArray())]]></code>
-    </FalsableReturnStatement>
     <InvalidArgument>
       <code><![CDATA[$item]]></code>
       <code><![CDATA[$item]]></code>
-      <code><![CDATA[$this->keys()]]></code>
     </InvalidArgument>
-    <InvalidCast>
-      <code><![CDATA[$this->keys()]]></code>
-    </InvalidCast>
     <InvalidPropertyAssignmentValue>
       <code><![CDATA[$collection]]></code>
       <code><![CDATA[$this->data]]></code>
@@ -1299,37 +1267,6 @@
       <code><![CDATA[$this->data]]></code>
     </InvalidPropertyAssignmentValue>
   </file>
-  <file src="src/Toolkit/Date.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[array]]></code>
-      <code><![CDATA[string|int|DateTimeInterface]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$default]]></code>
-      <code><![CDATA[$nearest]]></code>
-    </NullableReturnStatement>
-  </file>
-  <file src="src/Toolkit/Dom.php">
-    <InvalidArrayAccess>
-      <code><![CDATA[$this->query('/html/body')[0]]]></code>
-    </InvalidArrayAccess>
-    <UndefinedPropertyFetch>
-      <code><![CDATA[$node->data]]></code>
-      <code><![CDATA[$node->data]]></code>
-    </UndefinedPropertyFetch>
-  </file>
-  <file src="src/Toolkit/Html.php">
-    <UndefinedPropertyAssignment>
-      <code><![CDATA[$query->start]]></code>
-      <code><![CDATA[$query->start]]></code>
-    </UndefinedPropertyAssignment>
-  </file>
-  <file src="src/Toolkit/I18n.php">
-    <FalsableReturnStatement>
-      <code><![CDATA[reset($fallback)]]></code>
-      <code><![CDATA[reset($key)]]></code>
-    </FalsableReturnStatement>
-  </file>
   <file src="src/Toolkit/Iterator.php">
     <FalsableReturnStatement>
       <code><![CDATA[current($this->data)]]></code>
@@ -1337,28 +1274,7 @@
       <code><![CDATA[prev($this->data)]]></code>
     </FalsableReturnStatement>
   </file>
-  <file src="src/Toolkit/Obj.php">
-    <FalsableReturnStatement>
-      <code><![CDATA[json_encode($this->toArray(), ...$arguments)]]></code>
-    </FalsableReturnStatement>
-  </file>
-  <file src="src/Toolkit/Pagination.php">
-    <NullableReturnStatement>
-      <code><![CDATA[array_pop($range)]]></code>
-    </NullableReturnStatement>
-  </file>
   <file src="src/Toolkit/Str.php">
-    <FalsableReturnStatement>
-      <code><![CDATA[iconv($sourceEncoding, $targetEncoding, $string)]]></code>
-      <code><![CDATA[mb_detect_encoding(
-			$string,
-			'UTF-8, ISO-8859-1, windows-1251',
-			true
-		)]]></code>
-    </FalsableReturnStatement>
-    <InvalidArgument>
-      <code><![CDATA[$missing]]></code>
-    </InvalidArgument>
     <InvalidNullableReturnType>
       <code><![CDATA[string]]></code>
       <code><![CDATA[string]]></code>
@@ -1412,35 +1328,6 @@
 			}
 			return '&nbsp;' . $matches[2];
 		}, $string)]]></code>
-    </NullableReturnStatement>
-  </file>
-  <file src="src/Toolkit/Tpl.php">
-    <FalsableReturnStatement>
-      <code><![CDATA[$content]]></code>
-    </FalsableReturnStatement>
-  </file>
-  <file src="src/Toolkit/V.php">
-    <FalsableReturnStatement>
-      <code><![CDATA[$errors]]></code>
-    </FalsableReturnStatement>
-  </file>
-  <file src="src/Toolkit/View.php">
-    <FalsableReturnStatement>
-      <code><![CDATA[$content]]></code>
-    </FalsableReturnStatement>
-  </file>
-  <file src="src/Toolkit/Xml.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[array]]></code>
-    </InvalidNullableReturnType>
-    <InvalidReturnStatement>
-      <code><![CDATA[static::simplify($xml)]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[array|null]]></code>
-    </InvalidReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[self::$entities]]></code>
     </NullableReturnStatement>
   </file>
   <file src="src/Uuid/FieldUuid.php">

@@ -355,7 +355,7 @@ class Collection extends Iterator implements Stringable
 	/**
 	 * Find one or multiple elements by id
 	 *
-	 * @param string ...$keys
+     * @param string|list<string> ...$keys One or more keys, or a single array of keys
 	 * @return TValue|static
 	 */
 	public function find(...$keys)
@@ -381,6 +381,7 @@ class Collection extends Iterator implements Stringable
 		}
 
 		$collection = clone $this;
+		/** @var array<string, TValue> $result */
 		$collection->data = $result;
 		return $collection;
 	}
@@ -1161,7 +1162,7 @@ class Collection extends Iterator implements Stringable
 	 */
 	public function toJson(): string
 	{
-		return json_encode($this->toArray());
+		return json_encode($this->toArray(), JSON_THROW_ON_ERROR);
 	}
 
 	/**

@@ -66,22 +66,7 @@ class View implements Stringable
 			throw new Exception($this->missingViewMessage());
 		}
 
-		ob_start();
-
-		try {
-			F::load($this->file(), null, $this->data());
-		} catch (Throwable $e) {
-			$exception = $e;
-		}
-
-		$content = ob_get_contents();
-		ob_end_clean();
-
-		if (isset($exception) === true) {
-			throw $exception;
-		}
-
-		return $content;
+		return Tpl::load($this->file(), $this->data());
 	}
 
 	/**
