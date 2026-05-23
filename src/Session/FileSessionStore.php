@@ -212,10 +212,22 @@ class FileSessionStore extends SessionStore
 
 		clearstatcache();
 		$filesize = filesize($path);
+
 		if ($filesize > 0) {
 			// always read the whole file
 			rewind($handle);
 			$string = fread($handle, $filesize);
+
+			if ($string === false) {
+				// @codeCoverageIgnoreStart
+				throw new Exception(
+					key: 'session.filestore.unexpectedFilesystemError',
+					fallback: 'Unexpected file system error',
+					translate: false,
+					httpCode: 500
+				);
+				// @codeCoverageIgnoreEnd
+			}
 		} else {
 			// we don't need to read empty files
 			$string = '';

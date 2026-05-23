@@ -740,6 +740,17 @@ class SessionTest extends TestCase
 		$this->assertSame(strtotime('tomorrow', 1357924680), $timeToTimestamp->invoke(null, 'tomorrow', 1357924680));
 	}
 
+	public function testTimeToTimestampInvalidTimeString(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid time string: not a real date');
+
+		$reflector = new ReflectionClass(Session::class);
+		$timeToTimestamp = $reflector->getMethod('timeToTimestamp');
+
+		$timeToTimestamp->invoke(null, 'not a real date');
+	}
+
 	public function testTimeToTimestampInvalidParam(): void
 	{
 		$this->expectException(TypeError::class);
@@ -748,16 +759,6 @@ class SessionTest extends TestCase
 		$timeToTimestamp = $reflector->getMethod('timeToTimestamp');
 
 		$timeToTimestamp->invoke(null, ['tomorrow']);
-	}
-
-	public function testTimeToTimestampInvalidTimeString(): void
-	{
-		$this->expectException(TypeError::class);
-
-		$reflector = new ReflectionClass(Session::class);
-		$timeToTimestamp = $reflector->getMethod('timeToTimestamp');
-
-		$timeToTimestamp->invoke(null, ['some gibberish that is definitely no valid time']);
 	}
 
 	public function testInit(): void

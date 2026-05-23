@@ -1193,16 +1193,6 @@
 		)]]></code>
     </FalsableReturnStatement>
   </file>
-  <file src="src/Session/FileSessionStore.php">
-    <FalsableReturnStatement>
-      <code><![CDATA[$string]]></code>
-    </FalsableReturnStatement>
-  </file>
-  <file src="src/Session/Session.php">
-    <FalsableReturnStatement>
-      <code><![CDATA[$time]]></code>
-    </FalsableReturnStatement>
-  </file>
 
   <file src="src/Text/KirbyTags.php">
     <InvalidNullableReturnType>

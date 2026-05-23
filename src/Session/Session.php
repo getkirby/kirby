@@ -637,7 +637,15 @@ class Session
 
 		// convert date strings to a timestamp first
 		if (is_string($time) === true) {
-			$time = strtotime($time, $now);
+			$timestamp = strtotime($time, $now);
+
+			 if ($timestamp === false) {
+				throw new InvalidArgumentException(
+					message: 'Invalid time string: ' . $time
+				);
+			}
+
+			return $timestamp;
 		}
 
 		return $time;
