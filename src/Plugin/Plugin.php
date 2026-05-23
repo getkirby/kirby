@@ -27,6 +27,7 @@ class Plugin
 {
 	protected Assets $assets;
 	protected License|Closure|array|string $license;
+	protected string $root;
 	protected UpdateStatus|null $updateStatus = null;
 
 	/**
@@ -40,7 +41,7 @@ class Plugin
 		protected array $extends = [],
 		protected array $info = [],
 		Closure|string|array|null $license = null,
-		protected string|null $root = null,
+		string|null $root = null,
 		protected string|null $version = null,
 	) {
 		static::validateName($name);
@@ -52,7 +53,7 @@ class Plugin
 			unset($this->extends['root']);
 		}
 
-		$this->root ??= dirname(debug_backtrace()[0]['file']);
+		$this->root = $root ?? dirname(debug_backtrace()[0]['file']);
 
 		// TODO: Remove in v7
 		if ($info = $extends['info'] ?? null) {

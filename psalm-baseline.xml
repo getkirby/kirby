@@ -1081,22 +1081,6 @@
       <code><![CDATA[int|false]]></code>
     </InvalidReturnType>
   </file>
-  <file src="src/Plugin/Assets.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[Plugin]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$this->parent]]></code>
-    </NullableReturnStatement>
-  </file>
-  <file src="src/Plugin/Plugin.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[string]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$this->root]]></code>
-    </NullableReturnStatement>
-  </file>
 
   <file src="src/Query/Expression.php">
     <FalsableReturnStatement>
