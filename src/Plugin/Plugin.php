@@ -47,9 +47,9 @@ class Plugin
 		static::validateName($name);
 
 		// TODO: Remove in v7
-		if ($root = $extends['root'] ?? null) {
+		if ($extendsRoot = $extends['root'] ?? null) {
 			Helpers::deprecated('Plugin "' . $name . '": Passing the `root` inside the `extends` array has been deprecated. Pass it directly as named argument `root`.', 'plugin-extends-root');
-			$this->root ??= $root;
+			$root ??= $extendsRoot;
 			unset($this->extends['root']);
 		}
 
