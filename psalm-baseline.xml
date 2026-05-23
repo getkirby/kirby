@@ -1,26 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="6.16.1@f1f5de594dc76faf8784e02d3dc4716c91c6f6ac">
-  <file src="config/components.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[string|SessionStore]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$kirby->root('sessions')]]></code>
-    </NullableReturnStatement>
-  </file>
-  <file src="config/helpers.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[App::instance()->site()->find($id)]]></code>
-      <code><![CDATA[App::instance()->site()->find($id)]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[Pages|null]]></code>
-      <code><![CDATA[Page|null]]></code>
-    </InvalidReturnType>
-    <UndefinedMethod>
-      <code><![CDATA[url]]></code>
-    </UndefinedMethod>
-  </file>
   <file src="config/tags.php">
     <UndefinedPropertyAssignment>
       <code><![CDATA[$tag->alt]]></code>
