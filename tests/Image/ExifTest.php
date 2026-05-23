@@ -156,6 +156,55 @@ class ExifTest extends TestCase
 		$this->assertSame((string)strtotime('11.12.2016 11:13:14'), $parse->invoke($exif));
 	}
 
+	public function testParseTimestampFileDateTime(): void
+	{
+		$exif = $this->_exif();
+
+		// strip DateTimeOriginal so the FileDateTime branch is reached;
+		// FileDateTime is already present from exif_read_data
+		$ref     = new ReflectionClass($exif);
+		$data    = $ref->getProperty('data');
+		$options = $data->getValue($exif);
+		unset($options['DateTimeOriginal']);
+		$data->setValue($exif, $options);
+
+		$parse = $ref->getMethod('parseTimestamp');
+
+		$this->assertSame((string) $options['FileDateTime'], $parse->invoke($exif));
+	}
+
+	public function testParseTimestampFallsBackToImageModified(): void
+	{
+		$exif = $this->_exif();
+
+		// strip both timestamp keys so we fall through to image->modified()
+		$ref  = new ReflectionClass($exif);
+		$data = $ref->getProperty('data');
+		$data->setValue($exif, []);
+
+		$parse = $ref->getMethod('parseTimestamp');
+
+		$this->assertSame(
+			(string) filemtime(static::FIXTURES . '/image/cat.jpg'),
+			$parse->invoke($exif)
+		);
+	}
+
+	public function testParseTimestampReturnsNullWhenUnavailable(): void
+	{
+		// image pointing at a non-existent file makes modified() return false
+		$image = new Image(static::FIXTURES . '/image/does-not-exist.jpg');
+		$exif  = new Exif($image);
+
+		$ref  = new ReflectionClass($exif);
+		$data = $ref->getProperty('data');
+		$data->setValue($exif, []);
+
+		$parse = $ref->getMethod('parseTimestamp');
+
+		$this->assertNull($parse->invoke($exif));
+	}
+
 	public function testToArray(): void
 	{
 		$exif  = $this->_exif();

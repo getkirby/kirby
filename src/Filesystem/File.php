@@ -367,6 +367,7 @@ class File implements Stringable
 	 *
 	 * @param 'date'|'intl'|'strftime'|null $handler Custom date handler or `null`
 	 *                                               for the globally configured one
+	 * @return ($format is null ? int|false : string|false)
 	 */
 	public function modified(
 		string|IntlDateFormatter|null $format = null,

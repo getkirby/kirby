@@ -154,7 +154,7 @@ class Exif
 	/**
 	 * Return the timestamp when the picture has been taken
 	 */
-	protected function parseTimestamp(): string
+	protected function parseTimestamp(): string|null
 	{
 		if (isset($this->data['DateTimeOriginal']) === true) {
 			if ($time = strtotime($this->data['DateTimeOriginal'])) {
@@ -162,7 +162,12 @@ class Exif
 			}
 		}
 
-		return $this->data['FileDateTime'] ?? $this->image->modified();
+		if (isset($this->data['FileDateTime']) === true) {
+			return (string) $this->data['FileDateTime'];
+		}
+
+		$modified = $this->image->modified();
+    	return $modified === false ? null : (string)$modified;
 	}
 
 	/**

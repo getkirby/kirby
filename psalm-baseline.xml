@@ -805,37 +805,6 @@
       <code><![CDATA[$volatile]]></code>
     </NullableReturnStatement>
   </file>
-  <file src="src/Image/Exif.php">
-    <FalsableReturnStatement>
-      <code><![CDATA[$this->data['FileDateTime'] ?? $this->image->modified()]]></code>
-    </FalsableReturnStatement>
-  </file>
-  <file src="src/Image/QrCode.php">
-    <FalsableReturnStatement>
-      <code><![CDATA[$image]]></code>
-    </FalsableReturnStatement>
-    <InvalidArrayOffset>
-      <code><![CDATA[$matrix[$c]]]></code>
-    </InvalidArrayOffset>
-    <InvalidReturnStatement>
-      <code><![CDATA[match ($mask) {
-			0 => !(($row + $column) % 2),
-			1 => !($row % 2),
-			2 => !($column % 3),
-			3 => !(($row + $column) % 3),
-			4 => !((floor($row / 2) + floor($column / 3)) % 2),
-			5 => !(((($row * $column) % 2) + (($row * $column) % 3))),
-			6 => !(((($row * $column) % 2) + (($row * $column) % 3)) % 2),
-			7 => !(((($row + $column) % 2) + (($row * $column) % 3)) % 2),
-			default => throw new LogicException(message: 'Invalid QR mask') // @codeCoverageIgnore
-		}]]></code>
-      <code><![CDATA[min($a, $b) * 10]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[int]]></code>
-      <code><![CDATA[int]]></code>
-    </InvalidReturnType>
-  </file>
 
 
   <file src="src/Panel/Area.php">
