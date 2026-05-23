@@ -15,6 +15,7 @@ trait HasStringTemplate
 
 	/**
 	 * Parses a string template in the given value
+	 * @return ($string is null ? null : string)
 	 */
 	protected function stringTemplate(
 		string|null $string = null,
@@ -36,6 +37,9 @@ trait HasStringTemplate
 		};
 	}
 
+	/**
+ 	 * @return ($string is null ? null : string)
+	 */
 	protected function stringTemplateI18n(
 		array|string|null $string = null,
 		bool $safe = true

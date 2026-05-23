@@ -27,7 +27,7 @@ class Item extends Component
 		return $this->info;
 	}
 
-	protected function image(): array|false|null
+	protected function image(): string|array|false|null
 	{
 		return $this->image;
 	}

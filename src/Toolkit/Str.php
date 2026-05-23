@@ -810,6 +810,7 @@ class Str
 
 		// catch invalid pools
 		if (!$pool) {
+			// TODO: throw here to make problem and return type clearer
 			return false;
 		}
 
@@ -1271,6 +1272,7 @@ class Str
 	 * @param string $separator The string to split by
 	 * @param int $length The min length of values.
 	 * @return array An array of found values
+	 * @psalm-return ($string is array ? array : list<string>)
 	 */
 	public static function split(
 		string|array|null $string,

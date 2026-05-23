@@ -4,6 +4,7 @@ namespace Kirby\Panel\Ui;
 
 use Kirby\Cms\ModelWithContent;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Toolkit\HasStringTemplate;
 
 /**
  * @copyright Bastian Allgeier
@@ -12,6 +13,8 @@ use Kirby\Exception\InvalidArgumentException;
  */
 class Stat extends Component
 {
+	use HasStringTemplate;
+
 	public function __construct(
 		public array|string $label,
 		public array|string $value,
@@ -64,16 +67,12 @@ class Stat extends Component
 
 	public function info(): string|null
 	{
-		return $this->stringTemplate(
-			$this->i18n($this->info)
-		);
+		return $this->stringTemplateI18n($this->info);
 	}
 
 	public function label(): string
 	{
-		return $this->stringTemplate(
-			$this->i18n($this->label)
-		);
+		return $this->stringTemplateI18n($this->label);
 	}
 
 	public function link(): string|null
@@ -95,19 +94,6 @@ class Stat extends Component
 		];
 	}
 
-	protected function stringTemplate(string|null $string = null): string|null
-	{
-		if ($this->model === null) {
-			return $string;
-		}
-
-		if ($string !== null) {
-			return $this->model->toString($string);
-		}
-
-		return null;
-	}
-
 	public function theme(): string|null
 	{
 		return $this->stringTemplate($this->theme);
@@ -115,8 +101,6 @@ class Stat extends Component
 
 	public function value(): string
 	{
-		return $this->stringTemplate(
-			$this->i18n($this->value)
-		);
+		return $this->stringTemplateI18n($this->value);
 	}
 }

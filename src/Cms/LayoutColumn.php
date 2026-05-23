@@ -93,7 +93,7 @@ class LayoutColumn extends Item
 		$a = $fraction[0] ?? 1;
 		$b = $fraction[1] ?? 1;
 
-		return $columns * $a / $b;
+		return (int)($columns * $a / $b);
 	}
 
 	/**

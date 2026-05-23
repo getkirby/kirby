@@ -654,14 +654,6 @@
       <code><![CDATA[label]]></code>
     </UndefinedMethod>
   </file>
-  <file src="src/Form/Field/EmailField.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[string]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[parent::placeholder() ?? $this->i18n('email.placeholder')]]></code>
-    </NullableReturnStatement>
-  </file>
   <file src="src/Form/Field/FilePickerField.php">
     <MoreSpecificImplementedParamType>
       <code><![CDATA[$model]]></code>
@@ -698,15 +690,6 @@
       <code><![CDATA[$model]]></code>
     </MoreSpecificImplementedParamType>
   </file>
-  <file src="src/Form/Field/SlugField.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[string]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$this->i18n('slug')]]></code>
-      <code><![CDATA[parent::label()]]></code>
-    </NullableReturnStatement>
-  </file>
   <file src="src/Form/Field/StructureField.php">
     <UndefinedMethod>
       <code><![CDATA[label]]></code>
@@ -716,14 +699,6 @@
     <UndefinedMethod>
       <code><![CDATA[is]]></code>
     </UndefinedMethod>
-  </file>
-  <file src="src/Form/Field/TimeField.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[string]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$this->i18n($this->display)]]></code>
-    </NullableReturnStatement>
   </file>
   <file src="src/Form/Field/UserPickerField.php">
     <MoreSpecificImplementedParamType>
@@ -861,6 +836,8 @@
       <code><![CDATA[int]]></code>
     </InvalidReturnType>
   </file>
+
+
   <file src="src/Panel/Area.php">
     <InvalidNullableReturnType>
       <code><![CDATA[string]]></code>
@@ -871,22 +848,6 @@
       <code><![CDATA[$this->i18n($this->breadcrumbLabel ?? $this->label())]]></code>
       <code><![CDATA[$this->i18n($this->label ?? $this->id)]]></code>
       <code><![CDATA[$this->i18n($this->title ?? $this->label())]]></code>
-    </NullableReturnStatement>
-  </file>
-  <file src="src/Panel/Assets.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[string]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$icons]]></code>
-    </NullableReturnStatement>
-  </file>
-  <file src="src/Panel/Collector/ModelsCollector.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[Pagination]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$this->models(paginated: true)->pagination()]]></code>
     </NullableReturnStatement>
   </file>
   <file src="src/Panel/Controller/Dialog/FilePickerDialogController.php">
@@ -904,168 +865,11 @@
       <code><![CDATA[$model]]></code>
     </MoreSpecificImplementedParamType>
   </file>
-  <file src="src/Panel/Controller/View/UserViewController.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[string]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$this->model->username()]]></code>
-    </NullableReturnStatement>
-  </file>
-  <file src="src/Panel/Form/Field/FilePositionField.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[string]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$this->i18n('file.sort')]]></code>
-      <code><![CDATA[parent::label()]]></code>
-    </NullableReturnStatement>
-  </file>
-  <file src="src/Panel/Form/Field/PagePositionField.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[string]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$this->i18n('page.changeStatus.position')]]></code>
-      <code><![CDATA[parent::label()]]></code>
-    </NullableReturnStatement>
-  </file>
-  <file src="src/Panel/Form/Field/RoleField.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[string]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$this->i18n('role')]]></code>
-      <code><![CDATA[parent::label()]]></code>
-    </NullableReturnStatement>
-  </file>
-  <file src="src/Panel/Form/Field/TemplateField.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[string]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$this->i18n('template')]]></code>
-      <code><![CDATA[parent::label()]]></code>
-    </NullableReturnStatement>
-  </file>
-  <file src="src/Panel/Form/Field/TitleField.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[string]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$this->i18n('title')]]></code>
-      <code><![CDATA[parent::label()]]></code>
-    </NullableReturnStatement>
-  </file>
-  <file src="src/Panel/Form/Field/TranslationField.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[string]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$this->i18n('language')]]></code>
-      <code><![CDATA[parent::label()]]></code>
-    </NullableReturnStatement>
-  </file>
-  <file src="src/Panel/Form/Field/UsernameField.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[string]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$this->i18n('name')]]></code>
-      <code><![CDATA[parent::label()]]></code>
-    </NullableReturnStatement>
-  </file>
-  <file src="src/Panel/Lab/Example.php">
-    <FalsableReturnStatement>
-      <code><![CDATA[F::read($file)]]></code>
-    </FalsableReturnStatement>
-  </file>
-  <file src="src/Panel/Model.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[array]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$this->viewController()->load()->render()]]></code>
-    </NullableReturnStatement>
-  </file>
-  <file src="src/Panel/Panel.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[string]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$url]]></code>
-    </NullableReturnStatement>
-  </file>
-  <file src="src/Panel/Plugins.php">
-    <FalsableReturnStatement>
-      <code><![CDATA[max($modified)]]></code>
-    </FalsableReturnStatement>
-  </file>
-  <file src="src/Panel/State.php">
-    <InvalidArgument>
-      <code><![CDATA[$result]]></code>
-    </InvalidArgument>
-  </file>
-  <file src="src/Panel/Ui/Button/VersionsButton.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[$this->options ??= [
-			[
-				'label'   => $this->i18n('version.form'),
-				'icon'    => 'edit-line',
-				'link'    => $this->url('form'),
-				'current' => $this->isCurrent('form')
-			],
-			'-',
-			[
-				'label'   => $this->i18n('version.compare'),
-				'icon'    => 'layout-columns',
-				'link'    => $this->url('compare'),
-				'current' => $this->isCurrent('compare')
-			],
-			'-',
-			[
-				'label'   => $this->i18n('version.latest'),
-				'icon'    => 'git-branch',
-				'link'    => $this->url('latest'),
-				'current' => $this->isCurrent('latest')
-			],
-			[
-				'label'   => $this->i18n('version.changes'),
-				'icon'    => 'git-branch',
-				'link'    => $this->url('changes'),
-				'current' => $this->isCurrent('changes')
-			]
-		]]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[array]]></code>
-    </InvalidReturnType>
-  </file>
   <file src="src/Panel/Ui/Component.php">
     <FalsableReturnStatement>
       <code><![CDATA[$this->key ??= Str::random(10, 'alphaNum')]]></code>
     </FalsableReturnStatement>
   </file>
-  <file src="src/Panel/Ui/Item.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[$this->image]]></code>
-    </InvalidReturnStatement>
-  </file>
-  <file src="src/Panel/Ui/Stat.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[string]]></code>
-      <code><![CDATA[string]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$this->stringTemplate(
-			$this->i18n($this->label)
-		)]]></code>
-      <code><![CDATA[$this->stringTemplate(
-			$this->i18n($this->value)
-		)]]></code>
-    </NullableReturnStatement>
-  </file>
-
   <file src="src/Query/Expression.php">
     <FalsableReturnStatement>
       <code><![CDATA[preg_split(

@@ -125,7 +125,13 @@ class Example
 			return null;
 		}
 
-		return F::read($file);
+		$content = F::read($file);
+
+		if ($content === false) {
+			return null;
+		}
+
+		return $content;
 	}
 
 	public function root(): string

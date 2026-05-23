@@ -132,6 +132,8 @@ class Url
 
 	/**
 	 * Checks if an URL is absolute
+	 *
+	 * @psalm-assert-if-true non-empty-string $url
 	 */
 	public static function isAbsolute(string|null $url = null): bool
 	{

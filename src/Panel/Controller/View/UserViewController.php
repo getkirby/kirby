@@ -105,6 +105,6 @@ class UserViewController extends ModelViewController
 
 	public function title(): string
 	{
-		return $this->model->username();
+		return $this->model->username() ?: $this->model->id();
 	}
 }
