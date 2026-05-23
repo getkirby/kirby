@@ -1458,40 +1458,9 @@
       <code><![CDATA[parent]]></code>
     </UndefinedMethod>
   </file>
-  <file src="src/Uuid/FileUuid.php">
-    <UndefinedInterfaceMethod>
-      <code><![CDATA[file]]></code>
-    </UndefinedInterfaceMethod>
-    <UndefinedMethod>
-      <code><![CDATA[filename]]></code>
-      <code><![CDATA[parent]]></code>
-    </UndefinedMethod>
-  </file>
   <file src="src/Uuid/ModelUuid.php">
     <MoreSpecificImplementedParamType>
       <code><![CDATA[$model]]></code>
     </MoreSpecificImplementedParamType>
-  </file>
-  <file src="src/Uuid/PageUuid.php">
-    <UndefinedMethod>
-      <code><![CDATA[children]]></code>
-      <code><![CDATA[children]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="src/Uuid/Uri.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[string]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$this->scheme]]></code>
-    </NullableReturnStatement>
-  </file>
-  <file src="src/Uuid/UserUuid.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[string]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$this->uri->host()]]></code>
-    </NullableReturnStatement>
   </file>
 </files>

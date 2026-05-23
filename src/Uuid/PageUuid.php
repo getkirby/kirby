@@ -12,8 +12,6 @@ use Kirby\Cms\Page;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     3.8.0
- *
- * @method \Kirby\Cms\Page|null model(bool $lazy = false)
  */
 class PageUuid extends ModelUuid
 {
@@ -30,10 +28,7 @@ class PageUuid extends ModelUuid
 	 */
 	public function clear(bool $recursive = false): bool
 	{
-		/**
-		 * If $recursive, also clear UUIDs from cache for all children
-		 * @var \Kirby\Cms\Page $model
-		 */
+		// if $recursive, also clear UUIDs from cache for all children
 		if ($recursive === true && $model = $this->model()) {
 			foreach ($model->children() as $child) {
 				$child->uuid()->clear(true);
@@ -74,6 +69,14 @@ class PageUuid extends ModelUuid
 	}
 
 	/**
+	 * Returns the page object
+	 */
+	public function model(bool $lazy = false): Page|null
+	{
+		return parent::model($lazy);
+	}
+
+	/**
 	 * Feeds the UUID for the page (and optionally
 	 * its children) into the cache
 	 */
@@ -81,10 +84,7 @@ class PageUuid extends ModelUuid
 		bool $force = false,
 		bool $recursive = false
 	): bool {
-		/**
-		 * If $recursive, also populate UUIDs for all children
-		 * @var \Kirby\Cms\Page $model
-		 */
+		// if $recursive, also populate UUIDs for all children
 		if ($recursive === true && $model = $this->model()) {
 			foreach ($model->children() as $child) {
 				$child->uuid()->populate($force, true);

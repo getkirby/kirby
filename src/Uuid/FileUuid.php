@@ -11,8 +11,6 @@ use Kirby\Cms\File;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     3.8.0
- *
- * @method \Kirby\Cms\File|null model(bool $lazy = false)
  */
 class FileUuid extends ModelUuid
 {
@@ -36,6 +34,7 @@ class FileUuid extends ModelUuid
 			if ($value = Uuids::cache()->get($key)) {
 				// value is an array containing
 				// the UUID for the parent and the filename
+				/** @var \Kirby\Cms\Site|\Kirby\Cms\Page|\Kirby\Cms\User $parent */
 				$parent = Uuid::from($value['parent'])->model();
 				return $parent?->file($value['filename']);
 			}
@@ -63,6 +62,14 @@ class FileUuid extends ModelUuid
 		foreach (UserUuid::index() as $user) {
 			yield from $user->files();
 		}
+	}
+
+	/**
+	 * Returns the file object
+	 */
+	public function model(bool $lazy = false): File|null
+	{
+		return parent::model($lazy);
 	}
 
 	/**

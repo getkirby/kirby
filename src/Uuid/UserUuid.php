@@ -29,6 +29,7 @@ class UserUuid extends Uuid
 	 */
 	public function id(): string
 	{
+		/** @var string - is always set from User::id() at construction */
 		return $this->uri->host();
 	}
 

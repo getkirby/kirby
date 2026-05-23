@@ -22,13 +22,15 @@ class Uri extends BaseUri
 		'page',
 		'file',
 		'user',
-		// TODO: acitivate for uuid-block-structure-support
+		// TODO: activate for uuid-block-structure-support
 		// 'block',
 		// 'struct'
 	];
 
-	public function __construct(array|string $props = [], array $inject = [])
-	{
+	public function __construct(
+		array|string $props = [],
+		array $inject = []
+	 ) {
 		// treat `site://` differently:
 		// there is no host for site type, rest is always the path
 		if (
@@ -86,6 +88,7 @@ class Uri extends BaseUri
 	 */
 	public function type(): string
 	{
+		/** @var string - scheme is always passed for any UUID Uri */
 		return $this->scheme;
 	}
 }
