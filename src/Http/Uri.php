@@ -24,7 +24,7 @@ class Uri implements Stringable
 	/**
 	 * The fragment after the hash
 	 */
-	protected string|false|null $fragment;
+	protected string|null $fragment;
 
 	/**
 	 * The host address
@@ -489,9 +489,16 @@ class Uri implements Stringable
 		return $array;
 	}
 
-	public function toJson(...$arguments): string
+	public function toJson(int $flags = 0, int $depth = 512): string
 	{
-		return json_encode($this->toArray(), ...$arguments);
+		/** @var string $json */
+		$json = json_encode(
+			$this->toArray(),
+			$flags | JSON_THROW_ON_ERROR,
+			$depth
+		);
+
+		return $json;
 	}
 
 	/**

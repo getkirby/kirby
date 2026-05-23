@@ -50,7 +50,8 @@ class Body implements Stringable
 			return $this->contents = $_POST;
 		}
 
-		return $this->contents = file_get_contents('php://input');
+		$contents = file_get_contents('php://input');
+		return $this->contents = $contents !== false ? $contents : '';
 	}
 
 	/**

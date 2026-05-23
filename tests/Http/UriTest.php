@@ -2,6 +2,7 @@
 
 namespace Kirby\Http;
 
+use JsonException;
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
@@ -344,6 +345,28 @@ class UriTest extends TestCase
 		$this->assertSame('https', $result['scheme']);
 		$this->assertSame(true, $result['slash']);
 		$this->assertSame('testuser', $result['username']);
+	}
+
+	public function testToJson(): void
+	{
+		$url = new Uri(static::$example1);
+		$this->assertSame(json_encode($url->toArray()), $url->toJson());
+	}
+
+	public function testToJsonFailure(): void
+	{
+		$url = new Uri(static::$example1);
+
+		// inject an unencodable byte sequence into the array via subclass
+		$bad = new class (static::$example1) extends Uri {
+			public function toArray(): array
+			{
+				return ['invalid' => "\xb1\x31"];
+			}
+		};
+
+		$this->expectException(JsonException::class);
+		$bad->toJson();
 	}
 
 	public static function buildProvider(): array

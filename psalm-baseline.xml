@@ -759,52 +759,6 @@
       <code><![CDATA[pattern]]></code>
     </UndefinedMethod>
   </file>
-  <file src="src/Http/Cookie.php">
-    <InvalidArgument>
-      <code><![CDATA[false]]></code>
-    </InvalidArgument>
-  </file>
-  <file src="src/Http/Request.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[string]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$this->url()->domain()]]></code>
-    </NullableReturnStatement>
-  </file>
-  <file src="src/Http/Request/Body.php">
-    <FalsableReturnStatement>
-      <code><![CDATA[$this->contents = file_get_contents('php://input')]]></code>
-    </FalsableReturnStatement>
-  </file>
-  <file src="src/Http/Uri.php">
-    <FalsableReturnStatement>
-      <code><![CDATA[$this->fragment]]></code>
-      <code><![CDATA[json_encode($this->toArray(), ...$arguments)]]></code>
-    </FalsableReturnStatement>
-  </file>
-  <file src="src/Http/Url.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[string]]></code>
-    </InvalidNullableReturnType>
-    <InvalidReturnStatement>
-      <code><![CDATA[$handler->getEditorHref($file, $line)]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[string|null]]></code>
-    </InvalidReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[static::$home]]></code>
-    </NullableReturnStatement>
-  </file>
-  <file src="src/Http/VolatileHeaders.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[array]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$volatile]]></code>
-    </NullableReturnStatement>
-  </file>
 
 
   <file src="src/Panel/Area.php">

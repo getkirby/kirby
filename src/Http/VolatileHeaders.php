@@ -26,7 +26,7 @@ class VolatileHeaders
 	protected function append(
 		string $name,
 		array|null $values = null,
-		array|null &$target = null
+    	array &$target = []
 	): void {
 		if ($values === null) {
 			$target[$name] = null;
