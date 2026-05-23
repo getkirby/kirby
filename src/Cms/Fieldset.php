@@ -26,7 +26,7 @@ class Fieldset extends Item
 	protected array $fields = [];
 	protected string|null $icon;
 	protected string|null $label;
-	protected string|null $name;
+	protected string $name;
 	protected string|bool|null $preview;
 	protected array $tabs;
 	protected bool $translate;
@@ -53,7 +53,7 @@ class Fieldset extends Item
 		$this->editable    = $params['editable'] ?? true;
 		$this->icon        = $params['icon'] ?? null;
 		$params['title'] ??= $params['name'] ?? Str::label($this->type);
-		$this->name        = $this->createName($params['title']);
+		$this->name        = $this->createName($params['title']) ?? Str::label($this->type);
 		$this->label       = $this->createLabel($params['label'] ?? null);
 		$this->preview     = $params['preview'] ?? null;
 		$this->tabs        = $this->createTabs($params);
@@ -85,12 +85,14 @@ class Fieldset extends Item
 
 	protected function createName(array|string $name): string|null
 	{
-		return I18n::translate($name, $name);
+		$result = I18n::translate($name, $name);
+		return is_string($result) ? $result : null;
 	}
 
 	protected function createLabel(array|string|null $label = null): string|null
 	{
-		return I18n::translate($label, $label);
+		$result = I18n::translate($label, $label);
+		return is_string($result) ? $result : null;
 	}
 
 	protected function createTabs(array $params = []): array

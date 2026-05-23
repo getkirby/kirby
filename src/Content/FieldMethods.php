@@ -45,6 +45,8 @@ use Throwable;
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @mixin \Kirby\Content\Field
  */
 trait FieldMethods
 {
@@ -619,13 +621,8 @@ trait FieldMethods
 	 */
 	public function toPages(string $separator = 'yaml'): Pages
 	{
-		// always pass at least two arguments even if the
-		// data is empty so that `$site->find()` always
-		// returns a collection, not a single page
 		return $this->kirby()->site()->find(
-			false,
-			false,
-			...$this->toData($separator)
+			$this->toData($separator)
 		);
 	}
 
@@ -693,13 +690,8 @@ trait FieldMethods
 	 */
 	public function toUsers(string $separator = 'yaml'): Users
 	{
-		// always pass at least two arguments even if the
-		// data is empty so that `$users->find()` always
-		// returns a collection, not a single user
 		return $this->kirby()->users()->find(
-			false,
-			false,
-			...$this->toData($separator)
+			$this->toData($separator)
 		);
 	}
 

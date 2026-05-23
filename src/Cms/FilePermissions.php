@@ -7,6 +7,8 @@ namespace Kirby\Cms;
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @extends \Kirby\Cms\ModelPermissions<\Kirby\Cms\File>
  */
 class FilePermissions extends ModelPermissions
 {
@@ -14,9 +16,13 @@ class FilePermissions extends ModelPermissions
 
 	/**
 	 * Used to cache once determined permissions in memory
+	 *
+	 * @param \Kirby\Cms\File $model
+	 * @psalm-suppress MoreSpecificImplementedParamType
 	 */
-	protected static function cacheKey(ModelWithContent|Language $model): string
-	{
+	protected static function cacheKey(
+		ModelWithContent|Language $model
+	): string {
 		return $model->template() ?? '__none__';
 	}
 

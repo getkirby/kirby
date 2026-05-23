@@ -3,10 +3,8 @@
 namespace Kirby\Panel\Controller\View;
 
 use Kirby\Cms\Find;
-use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
-use Kirby\Panel\Model;
 use Kirby\Panel\Ui\Button\ViewButtons;
 
 /**
@@ -15,19 +13,11 @@ use Kirby\Panel\Ui\Button\ViewButtons;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
+ *
+ * @extends \Kirby\Panel\Controller\View\ModelViewController<\Kirby\Cms\Page, \Kirby\Panel\Page>
  */
 class PageViewController extends ModelViewController
 {
-	/**
-	 * @var \Kirby\Cms\Page $model
-	 */
-	protected ModelWithContent $model;
-
-	/**
-	 * @var \Kirby\Panel\Page
-	 */
-	protected Model $panel;
-
 	public function __construct(
 		Page $model
 	) {

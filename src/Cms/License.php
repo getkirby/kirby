@@ -61,12 +61,26 @@ class License
 
 	/**
 	 * Returns the activation date if available
+	 *
+	 * @return ($format is null ? int|null : string|null)
 	 */
 	public function activation(
 		string|IntlDateFormatter|null $format = null,
 		string|null $handler = null
 	): int|string|null {
-		return $this->activation !== null ? Str::date(strtotime($this->activation), $format, $handler) : null;
+		if ($this->activation === null) {
+			return null;
+		}
+
+		$timestamp = strtotime($this->activation);
+
+		if ($timestamp === false) {
+			return null;
+		}
+
+		$result = Str::date($timestamp, $format, $handler);
+
+		return $result === false ? null : $result;
 	}
 
 	/**
@@ -104,12 +118,26 @@ class License
 
 	/**
 	 * Returns the purchase date if available
+	 *
+	 * @return ($format is null ? int|null : string|null)
 	 */
 	public function date(
 		string|IntlDateFormatter|null $format = null,
 		string|null $handler = null
 	): int|string|null {
-		return $this->date !== null ? Str::date(strtotime($this->date), $format, $handler) : null;
+		if ($this->date === null) {
+			return null;
+		}
+
+		$timestamp = strtotime($this->date);
+
+		if ($timestamp === false) {
+			return null;
+		}
+
+		$result = Str::date($timestamp, $format, $handler);
+
+		return $result === false ? null : $result;
 	}
 
 	/**
@@ -443,17 +471,28 @@ class License
 
 	/**
 	 * Returns the renewal date
+	 *
+	 * @return ($format is null ? int|null : string|null)
 	 */
 	public function renewal(
 		string|IntlDateFormatter|null $format = null,
 		string|null $handler = null
 	): int|string|null {
-		if ($this->activation === null) {
+		$activation = $this->activation();
+
+		if ($activation === null) {
 			return null;
 		}
 
-		$time = strtotime('+3 years', $this->activation());
-		return Str::date($time, $format, $handler);
+		$timestamp = strtotime('+3 years', $activation);
+
+		if ($timestamp === false) {
+			return null;
+		}
+
+		$result = Str::date($timestamp, $format, $handler);
+
+		return $result === false ? null : $result;
 	}
 
 	/**
@@ -479,7 +518,15 @@ class License
 			);
 		}
 
-		return $response->json();
+		$result = $response->json();
+
+		if ($result === null) {
+			throw new LogicException(
+				message: 'Invalid JSON response from hub'
+			);
+		}
+
+		return $result;
 		// @codeCoverageIgnoreEnd
 	}
 
@@ -489,6 +536,7 @@ class License
 	 */
 	public static function root(): string
 	{
+		/** @var string */
 		return App::instance()->root('license');
 	}
 

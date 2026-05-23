@@ -3,7 +3,6 @@
 namespace Kirby\Panel;
 
 use Kirby\Cms\File as CmsFile;
-use Kirby\Cms\ModelWithContent;
 use Kirby\Filesystem\Asset;
 use Kirby\Panel\Controller\View\SiteViewController;
 
@@ -13,14 +12,11 @@ use Kirby\Panel\Controller\View\SiteViewController;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     3.6.0
+ *
+ * @extends \Kirby\Panel\Model<\Kirby\Cms\Site>
  */
 class Site extends Model
 {
-	/**
-	 * @var \Kirby\Cms\Site
-	 */
-	protected ModelWithContent $model;
-
 	/**
 	 * Returns the setup for a dropdown option
 	 * which is used in the changes dropdown

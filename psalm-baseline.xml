@@ -7,11 +7,7 @@
       <code><![CDATA[$this->name]]></code>
     </UndefinedThisPropertyFetch>
   </file>
-
   <file src="src/Cms/App.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[string]]></code>
-    </InvalidNullableReturnType>
     <InvalidReturnStatement>
       <code><![CDATA[match ($code ?? 'current') {
 			'default' => $this->defaultLanguage(),
@@ -22,10 +18,6 @@
     <InvalidReturnType>
       <code><![CDATA[Language|null]]></code>
     </InvalidReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$text]]></code>
-      <code><![CDATA[$this->setPath($path)->path]]></code>
-    </NullableReturnStatement>
   </file>
   <file src="src/Cms/AppErrors.php">
     <InvalidArrayOffset>
@@ -75,14 +67,6 @@
       <code><![CDATA[$code]]></code>
     </FalsableReturnStatement>
   </file>
-  <file src="src/Cms/BlockConverter.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[array_filter($blocks)]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[array]]></code>
-    </InvalidReturnType>
-  </file>
   <file src="src/Cms/Collection.php">
     <InvalidPropertyAssignmentValue>
       <code><![CDATA[$this->data]]></code>
@@ -95,121 +79,19 @@
       <code><![CDATA[[...$this->data, ...$object->data]]]></code>
     </InvalidPropertyAssignmentValue>
   </file>
-  <file src="src/Cms/Fieldset.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[string]]></code>
-    </InvalidNullableReturnType>
-    <InvalidReturnStatement>
-      <code><![CDATA[I18n::translate($label, $label)]]></code>
-      <code><![CDATA[I18n::translate($name, $name)]]></code>
-    </InvalidReturnStatement>
-    <NullableReturnStatement>
-      <code><![CDATA[$this->name]]></code>
-    </NullableReturnStatement>
-  </file>
-  <file src="src/Cms/File.php">
-    <FalsableReturnStatement>
-      <code><![CDATA[F::modified($this->root())]]></code>
-    </FalsableReturnStatement>
-    <InvalidNullableReturnType>
-      <code><![CDATA[FileBlueprint]]></code>
-      <code><![CDATA[string]]></code>
-    </InvalidNullableReturnType>
-    <InvalidReturnStatement>
-      <code><![CDATA[$this->parent()]]></code>
-      <code><![CDATA[$this->parent()]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[Site]]></code>
-    </InvalidReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$this->blueprint ??= FileBlueprint::factory(
-			'files/' . $this->template(),
-			'files/default',
-			$this
-		)]]></code>
-      <code><![CDATA[$this->parent()->id()]]></code>
-    </NullableReturnStatement>
-  </file>
-  <file src="src/Cms/FileModifications.php">
-    <UndefinedMethod>
-      <code><![CDATA[focus]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="src/Cms/FilePermissions.php">
-    <UndefinedMethod>
-      <code><![CDATA[template]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="src/Cms/FileVersion.php">
-    <InvalidReturnType>
-      <code><![CDATA[mixed]]></code>
-    </InvalidReturnType>
-  </file>
   <file src="src/Cms/Files.php">
     <InvalidArgument>
       <code><![CDATA[$file]]></code>
     </InvalidArgument>
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[$collection->data]]></code>
+      <code><![CDATA[[...$this->data, ...$object->data]]]></code>
+    </InvalidPropertyAssignmentValue>
   </file>
   <file src="src/Cms/HasSiblings.php">
-    <InvalidArgument>
-      <code><![CDATA[$this]]></code>
-    </InvalidArgument>
-    <InvalidCast>
-      <code><![CDATA[$this]]></code>
-    </InvalidCast>
     <InvalidMethodCall>
       <code><![CDATA[not]]></code>
     </InvalidMethodCall>
-  </file>
-  <file src="src/Cms/Language.php">
-    <NullableReturnStatement>
-      <code><![CDATA[$kirbyUrl]]></code>
-      <code><![CDATA[Url::base($languageUrl) ?? $kirbyUrl]]></code>
-    </NullableReturnStatement>
-  </file>
-  <file src="src/Cms/LayoutColumn.php">
-    <InvalidReturnType>
-      <code><![CDATA[mixed]]></code>
-    </InvalidReturnType>
-  </file>
-  <file src="src/Cms/LazyCollection.php">
-    <InvalidArgument>
-      <code><![CDATA[$key]]></code>
-    </InvalidArgument>
-    <InvalidReturnStatement>
-      <code><![CDATA[$this->hydrateElement($key)]]></code>
-      <code><![CDATA[$this->hydrateElement($key)]]></code>
-      <code><![CDATA[$this->hydrateElement($key)]]></code>
-      <code><![CDATA[$this->hydrateElement($key)]]></code>
-      <code><![CDATA[$this->hydrateElement($key)]]></code>
-      <code><![CDATA[$this->hydrateElement($key)]]></code>
-      <code><![CDATA[$this->hydrateElement($key)]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[TValue]]></code>
-      <code><![CDATA[TValue]]></code>
-      <code><![CDATA[TValue]]></code>
-      <code><![CDATA[\Iterator<TKey, TValue>]]></code>
-    </InvalidReturnType>
-    <LessSpecificImplementedReturnType>
-      <code><![CDATA[\Iterator<TKey, TValue>]]></code>
-    </LessSpecificImplementedReturnType>
-  </file>
-  <file src="src/Cms/License.php">
-    <FalsableReturnStatement>
-      <code><![CDATA[$this->activation !== null ? Str::date(strtotime($this->activation), $format, $handler) : null]]></code>
-      <code><![CDATA[$this->date !== null ? Str::date(strtotime($this->date), $format, $handler) : null]]></code>
-      <code><![CDATA[Str::date($time, $format, $handler)]]></code>
-    </FalsableReturnStatement>
-    <InvalidNullableReturnType>
-      <code><![CDATA[array]]></code>
-      <code><![CDATA[string]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$response->json()]]></code>
-      <code><![CDATA[App::instance()->root('license')]]></code>
-    </NullableReturnStatement>
   </file>
   <file src="src/Cms/LicenseStatus.php">
     <InvalidReturnStatement>
@@ -245,186 +127,41 @@
 		}]]></code>
     </NullableReturnStatement>
   </file>
-  <file src="src/Cms/ModelState.php">
-    <InvalidArgument>
-      <code><![CDATA[$next]]></code>
-    </InvalidArgument>
-  </file>
-  <file src="src/Cms/Nest.php">
-    <InvalidArgument>
-      <code><![CDATA[$result]]></code>
-    </InvalidArgument>
-  </file>
-  <file src="src/Cms/Page.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[PageBlueprint]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$this->blueprint ??= PageBlueprint::factory(
-			'pages/' . $this->intendedTemplate(),
-			'pages/default',
-			$this
-		)]]></code>
-    </NullableReturnStatement>
-  </file>
-  <file src="src/Cms/PageActions.php">
-    <UndefinedMethod>
-      <code><![CDATA[changeNum]]></code>
-      <code><![CDATA[contentFiles]]></code>
-      <code><![CDATA[contentFiles]]></code>
-      <code><![CDATA[createNum]]></code>
-      <code><![CDATA[isListed]]></code>
-      <code><![CDATA[mediaRoot]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="src/Cms/PagePermissions.php">
-    <UndefinedMethod>
-      <code><![CDATA[intendedTemplate]]></code>
-      <code><![CDATA[isErrorPage]]></code>
-      <code><![CDATA[isErrorPage]]></code>
-      <code><![CDATA[isErrorPage]]></code>
-      <code><![CDATA[isHomeOrErrorPage]]></code>
-      <code><![CDATA[isHomeOrErrorPage]]></code>
-      <code><![CDATA[isHomeOrErrorPage]]></code>
-      <code><![CDATA[isListed]]></code>
-    </UndefinedMethod>
-  </file>
   <file src="src/Cms/Pages.php">
     <InvalidArgument>
       <code><![CDATA[$args[0]]]></code>
       <code><![CDATA[$page]]></code>
     </InvalidArgument>
-  </file>
-  <file src="src/Cms/Responder.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[string|$this]]></code>
-    </InvalidNullableReturnType>
-    <InvalidReturnStatement>
-      <code><![CDATA[$this
-			->header('Location', (string)$location)
-			->code($code ?? 302)]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[$this]]></code>
-    </InvalidReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$this
-			->header('Location', (string)$location)
-			->code($code ?? 302)]]></code>
-      <code><![CDATA[$this->type('application/json')]]></code>
-    </NullableReturnStatement>
-    <UndefinedMethod>
-      <code><![CDATA[$this->headers()]]></code>
-    </UndefinedMethod>
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[$children->data]]></code>
+      <code><![CDATA[$children->data]]></code>
+      <code><![CDATA[$drafts->data]]></code>
+      <code><![CDATA[$files->data]]></code>
+      <code><![CDATA[$index->data]]></code>
+      <code><![CDATA[$index->data]]></code>
+      <code><![CDATA[[...$collection->data, ...$args[0]->data]]]></code>
+      <code><![CDATA[[...$this->data, ...$object->data]]]></code>
+    </InvalidPropertyAssignmentValue>
   </file>
   <file src="src/Cms/Site.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[SiteBlueprint]]></code>
-      <code><![CDATA[string]]></code>
-      <code><![CDATA[string]]></code>
-      <code><![CDATA[string]]></code>
-    </InvalidNullableReturnType>
     <InvalidReturnStatement>
       <code><![CDATA[$this->errorPage ??= $this->find($this->errorPageId())]]></code>
       <code><![CDATA[$this->find($path)]]></code>
       <code><![CDATA[$this->homePage ??= $this->find($this->homePageId())]]></code>
     </InvalidReturnStatement>
-    <NullableReturnStatement>
-      <code><![CDATA[$this->blueprint = SiteBlueprint::factory('site', null, $this)]]></code>
-      <code><![CDATA[$this->kirby()->language($languageCode)?->url() ??
-			$this->kirby()->url()]]></code>
-      <code><![CDATA[$this->root ??= $this->kirby()->root('content')]]></code>
-      <code><![CDATA[$this->url ?? $this->kirby()->url()]]></code>
-    </NullableReturnStatement>
-  </file>
-  <file src="src/Cms/System.php">
-    <FalsableReturnStatement>
-      <code><![CDATA[strtok($software, ' ')]]></code>
-    </FalsableReturnStatement>
-  </file>
-  <file src="src/Cms/System/UpdateStatus.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[$this->versionEntry]]></code>
-    </InvalidReturnStatement>
-  </file>
-  <file src="src/Cms/Translation.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[string]]></code>
-      <code><![CDATA[string]]></code>
-      <code><![CDATA[string]]></code>
-      <code><![CDATA[string]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$this->get('translation.author', 'Kirby')]]></code>
-      <code><![CDATA[$this->get('translation.direction', 'ltr')]]></code>
-      <code><![CDATA[$this->get('translation.locale', $default)]]></code>
-      <code><![CDATA[$this->get('translation.name', $this->code)]]></code>
-    </NullableReturnStatement>
-  </file>
-  <file src="src/Cms/Url.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[string]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[App::instance()->url()]]></code>
-    </NullableReturnStatement>
-  </file>
-  <file src="src/Cms/User.php">
-    <FalsableReturnStatement>
-      <code><![CDATA[$this->password ??= $this->readPassword()]]></code>
-      <code><![CDATA[filemtime($file)]]></code>
-    </FalsableReturnStatement>
-    <InvalidNullableReturnType>
-      <code><![CDATA[UserBlueprint]]></code>
-    </InvalidNullableReturnType>
-    <InvalidReturnStatement>
-      <code><![CDATA[$this->role =
-			$this->kirby()->roles()->find($name) ??
-			Role::defaultNobody()]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[Role]]></code>
-    </InvalidReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$this->blueprint ??= UserBlueprint::factory(
-				'users/' . $this->role(),
-				'users/default',
-				$this
-			)]]></code>
-    </NullableReturnStatement>
-  </file>
-  <file src="src/Cms/UserActions.php">
-    <UndefinedMethod>
-      <code><![CDATA[isLoggedIn]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="src/Cms/UserPermissions.php">
-    <InvalidArgument>
-      <code><![CDATA[$model]]></code>
-    </InvalidArgument>
-    <UndefinedMethod>
-      <code><![CDATA[isAdmin]]></code>
-      <code><![CDATA[isAdmin]]></code>
-      <code><![CDATA[isLastAdmin]]></code>
-      <code><![CDATA[isLastAdmin]]></code>
-      <code><![CDATA[role]]></code>
-    </UndefinedMethod>
   </file>
   <file src="src/Cms/Users.php">
     <InvalidArgument>
       <code><![CDATA[$user]]></code>
     </InvalidArgument>
     <InvalidPropertyAssignmentValue>
+      <code><![CDATA[$files->data]]></code>
       <code><![CDATA[$this->data]]></code>
       <code><![CDATA[[...$this->data, ...$existing]]]></code>
+      <code><![CDATA[[...$this->data, ...$object->data]]]></code>
     </InvalidPropertyAssignmentValue>
   </file>
-  <file src="src/Content/Changes.php">
-    <InvalidArgument>
-      <code><![CDATA[false]]></code>
-      <code><![CDATA[false]]></code>
-    </InvalidArgument>
-  </file>
+
   <file src="src/Content/Content.php">
     <InvalidReturnStatement>
       <code><![CDATA[$this->get($name)]]></code>
@@ -434,10 +171,6 @@
     </InvalidReturnType>
   </file>
   <file src="src/Content/FieldMethods.php">
-    <InvalidArgument>
-      <code><![CDATA[false]]></code>
-      <code><![CDATA[false]]></code>
-    </InvalidArgument>
     <InvalidReturnType>
       <code><![CDATA[Pages]]></code>
       <code><![CDATA[Users]]></code>
@@ -575,9 +308,6 @@
     <InvalidReturnType>
       <code><![CDATA[Fieldset]]></code>
     </InvalidReturnType>
-    <UndefinedMethod>
-      <code><![CDATA[label]]></code>
-    </UndefinedMethod>
   </file>
   <file src="src/Form/Field/FilePickerField.php">
     <MoreSpecificImplementedParamType>
@@ -592,11 +322,6 @@
     <UndefinedThisPropertyAssignment>
       <code><![CDATA[$this->value]]></code>
     </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="src/Form/Field/LayoutField.php">
-    <UndefinedMethod>
-      <code><![CDATA[label]]></code>
-    </UndefinedMethod>
   </file>
   <file src="src/Form/Field/NumberField.php">
     <InvalidReturnStatement>
@@ -615,11 +340,6 @@
       <code><![CDATA[$model]]></code>
     </MoreSpecificImplementedParamType>
   </file>
-  <file src="src/Form/Field/StructureField.php">
-    <UndefinedMethod>
-      <code><![CDATA[label]]></code>
-    </UndefinedMethod>
-  </file>
   <file src="src/Form/Field/TextareaField.php">
     <UndefinedMethod>
       <code><![CDATA[is]]></code>
@@ -629,22 +349,6 @@
     <MoreSpecificImplementedParamType>
       <code><![CDATA[$model]]></code>
     </MoreSpecificImplementedParamType>
-  </file>
-  <file src="src/Form/Fields.php">
-    <InvalidArrayOffset>
-      <code><![CDATA[$field['name']]]></code>
-      <code><![CDATA[$field['type']]]></code>
-    </InvalidArrayOffset>
-    <InvalidReturnStatement>
-      <code><![CDATA[$field]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[Field|BaseField]]></code>
-    </InvalidReturnType>
-    <UndefinedMethod>
-      <code><![CDATA[label]]></code>
-      <code><![CDATA[reset]]></code>
-    </UndefinedMethod>
   </file>
   <file src="src/Form/Form.php">
     <InvalidReturnStatement>
@@ -684,8 +388,6 @@
       <code><![CDATA[pattern]]></code>
     </UndefinedMethod>
   </file>
-
-
   <file src="src/Panel/Area.php">
     <InvalidNullableReturnType>
       <code><![CDATA[string]]></code>
@@ -804,7 +506,6 @@
       <code><![CDATA[$string]]></code>
       <code><![CDATA[$string]]></code>
       <code><![CDATA[$string]]></code>
-      <code><![CDATA[$time]]></code>
       <code><![CDATA[preg_replace('!(' . preg_quote($trim) . ')+$!', '', $string)]]></code>
       <code><![CDATA[preg_replace('!^(' . preg_quote($trim) . ')+!', '', $string)]]></code>
       <code><![CDATA[preg_replace('/[^\x09\x0A\x0D\x20-\x7E]/', '', $string)]]></code>

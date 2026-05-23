@@ -203,6 +203,7 @@ class Page extends ModelWithContent
 	 */
 	public function blueprint(): PageBlueprint
 	{
+		/** @var \Kirby\Blueprint\PageBlueprint */
 		return $this->blueprint ??= PageBlueprint::factory(
 			'pages/' . $this->intendedTemplate(),
 			'pages/default',

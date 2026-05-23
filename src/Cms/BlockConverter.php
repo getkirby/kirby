@@ -56,8 +56,8 @@ class BlockConverter
 			return $blocks;
 		}
 
-		$list = [];
-		$listStart = null;
+		$list      = [];
+		$listStart = 0;
 
 		foreach ($blocks as $index => $block) {
 			if (in_array($block['type'], ['ul', 'ol'], true) === true) {
@@ -94,15 +94,15 @@ class BlockConverter
 						$blocks[$x] = false;
 					}
 
-					$listStart = null;
-					$list = [];
+					$listStart = 0;
+					$list      = [];
 				}
 			} else {
 				$blocks[$index] = static::editorBlock($block);
 			}
 		}
 
-		return array_filter($blocks);
+		return array_values(array_filter($blocks));
 	}
 
 	public static function editorBlockquote(array $params): array

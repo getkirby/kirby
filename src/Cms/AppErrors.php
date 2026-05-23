@@ -51,7 +51,11 @@ trait AppErrors
 			$this->root('index') => '{index}'
 		];
 
-		return str_replace(array_keys($disguise), array_values($disguise), $file);
+		return str_replace(
+			array_keys($disguise),
+			array_values($disguise),
+			$file
+		);
 	}
 
 	/**

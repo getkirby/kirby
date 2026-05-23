@@ -27,6 +27,7 @@ class Url extends BaseUrl
 	 */
 	public static function home(): string
 	{
+		/** @var string */
 		return App::instance()->url();
 	}
 

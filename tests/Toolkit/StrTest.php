@@ -228,6 +228,12 @@ class StrTest extends TestCase
 		// `strftime` handler
 		$this->assertSame($time, Str::date($time, null, 'strftime'));
 		$this->assertSame('29.01.2020', Str::date($time, '%d.%m.%Y', 'strftime'));
+
+		// null time + no format: defaults to current time
+		$this->assertSame(MockTime::$time, Str::date(null));
+
+		// null time + format: formats current time
+		$this->assertSame(date('Y', MockTime::$time), Str::date(null, 'Y'));
 	}
 
 	public function testConvert(): void

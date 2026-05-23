@@ -56,6 +56,9 @@ class Collection extends BaseCollection
 		if ($this->hasMethod($key) === true) {
 			return $this->callMethod($key, $arguments);
 		}
+
+		// fall back to item access by key
+		return parent::__call($key, $arguments);
 	}
 
 	/**

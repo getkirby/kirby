@@ -3,7 +3,6 @@
 namespace Kirby\Panel;
 
 use Kirby\Cms\File as CmsFile;
-use Kirby\Cms\ModelWithContent;
 use Kirby\Filesystem\Asset;
 use Kirby\Panel\Controller\Dropdown\FileSettingsDropdownController;
 use Kirby\Panel\Controller\View\FileViewController;
@@ -16,14 +15,11 @@ use Throwable;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     3.6.0
+ *
+ * @extends \Kirby\Panel\Model<\Kirby\Cms\File>
  */
 class File extends Model
 {
-	/**
-	 * @var \Kirby\Cms\File
-	 */
-	protected ModelWithContent $model;
-
 	/**
 	 * Provides a kirbytag or markdown
 	 * tag for the file, which will be

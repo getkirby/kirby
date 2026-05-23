@@ -104,6 +104,8 @@ class Obj extends stdClass
 
 	/**
 	 * Converts the object to a json string
+	 *
+	 * @throws \JsonException for invalid JSON
 	 */
 	public function toJson(int $flags = 0, int $depth = 512): string
 	{

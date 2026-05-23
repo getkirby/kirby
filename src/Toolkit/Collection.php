@@ -1159,6 +1159,8 @@ class Collection extends Iterator implements Stringable
 
 	/**
 	 * Converts the object into a JSON string
+	 *
+	 * @throws \JsonException for invalid JSON
 	 */
 	public function toJson(): string
 	{

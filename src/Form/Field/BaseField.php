@@ -6,6 +6,7 @@ use Kirby\Form\Fields;
 use Kirby\Form\Mixin;
 use Kirby\Reflection\Constructor;
 use Kirby\Toolkit\HasStringTemplate;
+use Stringable;
 
 /**
  * Base class for any field type
@@ -14,7 +15,7 @@ use Kirby\Toolkit\HasStringTemplate;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  */
-abstract class BaseField
+abstract class BaseField implements Stringable
 {
 	use HasStringTemplate;
 	use Mixin\Api;
@@ -34,6 +35,11 @@ abstract class BaseField
 		$this->name  = $name;
 		$this->when  = $when;
 		$this->width = $width;
+	}
+
+	public function __toString(): string
+	{
+		return $this->name();
 	}
 
 	/**
@@ -99,6 +105,14 @@ abstract class BaseField
 	public function isHidden(): bool
 	{
 		return false;
+	}
+
+	/**
+	 * Returns the field's label, if it has one
+	 */
+	public function label(): string|null
+	{
+		return null;
 	}
 
 	/**

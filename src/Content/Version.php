@@ -92,7 +92,7 @@ class Version
 	 * Creates a new version for the given language
 	 * @todo Convert to a static method that creates the version initially with all relevant languages
 	 *
-	 * @param array<string, string> $fields Content fields
+	 * @param array<string, mixed> $fields Content fields
 	 */
 	#[BlockCollectionAccess]
 	public function create(
@@ -514,7 +514,7 @@ class Version
 	/**
 	 * Replaces the content of the current version with the given fields
 	 *
-	 * @param array<string, string> $fields Content fields
+	 * @param array<string, mixed> $fields Content fields; null removes a field
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
@@ -620,7 +620,7 @@ class Version
 	/**
 	 * Updates the content fields of an existing version
 	 *
-	 * @param array<string, string> $fields Content fields
+	 * @param array<string, mixed> $fields Content fields; null removes a field
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */

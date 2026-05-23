@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Closure;
 use Kirby\Content\ImmutableMemoryStorage;
 use Kirby\Content\MemoryStorage;
+use Kirby\Content\PlainTextStorage;
 use Kirby\Content\VersionCache;
 use Kirby\Content\VersionId;
 use Kirby\Exception\DuplicateException;
@@ -23,6 +24,8 @@ use Kirby\Uuid\Uuids;
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @mixin \Kirby\Cms\Page
  */
 trait PageActions
 {
@@ -51,29 +54,37 @@ trait PageActions
 			return $this;
 		}
 
-		return $this->commit('changeNum', ['page' => $this, 'num' => $num], function ($oldPage, $num) {
-			$newPage = $oldPage->clone([
-				'num'      => $num,
-				'dirname'  => null,
-				'root'     => null,
-				'template' => $oldPage->intendedTemplate()->name(),
-			]);
+		return $this->commit(
+			action:    'changeNum',
+			arguments: ['page' => $this, 'num' => $num],
+			callback:  function (
+				Page $oldPage,
+				int|null $num
+			): Page {
+				$newPage = $oldPage->clone([
+					'num'      => $num,
+					'dirname'  => null,
+					'root'     => null,
+					'template' => $oldPage->intendedTemplate()->name(),
+				]);
 
-			// actually move the page on disk
-			if ($oldPage->exists() === true) {
-				if (Dir::move($oldPage->root(), $newPage->root()) === true) {
-					// Updates the root path of the old page with the root path
-					// of the moved new page to use fly actions on old page in loop
-					$oldPage->root = $newPage->root();
-				} else {
-					throw new LogicException(
-						message: 'The page directory cannot be moved'
-					);
+				// actually move the page on disk
+				if ($oldPage->exists() === true) {
+					if (Dir::move($oldPage->root(), $newPage->root()) === true) {
+						// Updates the root path of the old page
+						// with the root path of the moved new page
+						// to use fly actions on old page in loop
+						$oldPage->root = $newPage->root();
+					} else {
+						throw new LogicException(
+							message: 'The page directory cannot be moved'
+						);
+					}
 				}
-			}
 
-			return $newPage;
-		});
+				return $newPage;
+			}
+		);
 	}
 
 	/**
@@ -104,49 +115,56 @@ trait PageActions
 			return $this;
 		}
 
-		$arguments = [
-			'page'         => $this,
-			'slug'         => $slug,
-			'languageCode' => null,
-			'language'     => $language
-		];
+		return $this->commit(
+			action:    'changeSlug',
+			arguments: [
+				'page'         => $this,
+				'slug'         => $slug,
+				'languageCode' => null,
+				'language'     => $language
+			],
+			callback: function (
+				Page $oldPage,
+				string $slug,
+				string|null $languageCode,
+				Language $language
+			): Page {
+				$newPage = $oldPage->clone([
+					'slug'     => $slug,
+					'dirname'  => null,
+					'root'     => null,
+					'template' => $oldPage->intendedTemplate()->name(),
+				]);
 
-		return $this->commit('changeSlug', $arguments, function ($oldPage, $slug, $languageCode, $language) {
-			$newPage = $oldPage->clone([
-				'slug'     => $slug,
-				'dirname'  => null,
-				'root'     => null,
-				'template' => $oldPage->intendedTemplate()->name(),
-			]);
+				// clear UUID cache recursively (for children and files as well)
+				$oldPage->uuid()?->clear(recursive: true);
 
-			// clear UUID cache recursively (for children and files as well)
-			$oldPage->uuid()?->clear(recursive: true);
+				if ($oldPage->exists() === true) {
+					// actually move stuff on disk
+					if (Dir::move($oldPage->root(), $newPage->root()) !== true) {
+						throw new LogicException(
+							message: 'The page directory cannot be moved'
+						);
+					}
 
-			if ($oldPage->exists() === true) {
-				// actually move stuff on disk
-				if (Dir::move($oldPage->root(), $newPage->root()) !== true) {
-					throw new LogicException(
-						message: 'The page directory cannot be moved'
+					// hard reset for the version cache
+					// to avoid broken/overlapping page references
+					VersionCache::reset();
+
+					// remove from the siblings
+					ModelState::update(
+						method: 'remove',
+						current: $oldPage,
 					);
+
+					Dir::remove($oldPage->mediaRoot());
 				}
 
-				// hard reset for the version cache
-				// to avoid broken/overlapping page references
-				VersionCache::reset();
+				$newPage->uuid()?->populate(recursive: true);
 
-				// remove from the siblings
-				ModelState::update(
-					method: 'remove',
-					current: $oldPage,
-				);
-
-				Dir::remove($oldPage->mediaRoot());
+				return $newPage;
 			}
-
-			$newPage->uuid()?->populate(recursive: true);
-
-			return $newPage;
-		});
+		);
 	}
 
 	/**
@@ -167,27 +185,35 @@ trait PageActions
 			);
 		}
 
-		$arguments = [
-			'page'         => $this,
-			'slug'         => $slug,
-			'languageCode' => $language->code(),
-			'language'     => $language
-		];
+		return $this->commit(
+			action:    'changeSlug',
+			arguments: [
+				'page'         => $this,
+				'slug'         => $slug,
+				'languageCode' => $language->code(),
+				'language'     => $language
+			],
+			callback: function (
+				Page $page,
+				string $slug,
+				string|null $languageCode,
+				Language $language
+			): Page {
+				// remove the slug if it's the same as the folder name
+				if ($slug === $page->uid()) {
+					$slug = null;
+				}
 
-		return $this->commit('changeSlug', $arguments, function ($page, $slug, $languageCode, $language) {
-			// remove the slug if it's the same as the folder name
-			if ($slug === $page->uid()) {
-				$slug = null;
+				// make sure to update the slug in the changes version as well
+				// otherwise the new slug would be lost
+				// as soon as the changes are saved
+				if ($page->version('changes')->exists($language) === true) {
+					$page->version('changes')->update(['slug' => $slug], $language);
+				}
+
+				return $page->save(['slug' => $slug], $languageCode);
 			}
-
-			// make sure to update the slug in the changes version as well
-			// otherwise the new slug would be lost as soon as the changes are saved
-			if ($page->version('changes')->exists($language) === true) {
-				$page->version('changes')->update(['slug' => $slug], $language);
-			}
-
-			return $page->save(['slug' => $slug], $languageCode);
-		});
+		);
 	}
 
 	/**
@@ -217,14 +243,15 @@ trait PageActions
 
 	protected function changeStatusToDraft(): static
 	{
-		$arguments = ['page' => $this, 'status' => 'draft', 'position' => null];
-		$page = $this->commit(
-			'changeStatus',
-			$arguments,
-			fn ($page) => $page->unpublish()
+		return $this->commit(
+			action:    'changeStatus',
+			arguments: [
+				'page'     => $this,
+				'status'   => 'draft',
+				'position' => null
+			],
+			callback:  fn (Page $page): Page => $page->unpublish()
 		);
-
-		return $page;
 	}
 
 	/**
@@ -241,14 +268,19 @@ trait PageActions
 		}
 
 		$page = $this->commit(
-			'changeStatus',
-			[
+			action:    'changeStatus',
+			arguments: [
 				'page'     => $this,
 				'status'   => 'listed',
 				'position' => $num
 			],
-			fn ($page, $status, $position) =>
-				$page->publish()->changeNum($position)
+			callback: function (
+				Page $page,
+				string $status,
+				int|null $position
+			): Page {
+				return $page->publish()->changeNum($position);
+			}
 		);
 
 		if ($this->blueprint()->num() === 'default') {
@@ -268,13 +300,15 @@ trait PageActions
 		}
 
 		$page = $this->commit(
-			'changeStatus',
-			[
+			action:    'changeStatus',
+			arguments: [
 				'page'     => $this,
 				'status'   => 'unlisted',
 				'position' => null
 			],
-			fn ($page) => $page->publish()->changeNum(null)
+			callback: function (Page $page): Page {
+				return $page->publish()->changeNum(null);
+			}
 		);
 
 		$this->resortSiblingsAfterUnlisting();
@@ -308,10 +342,14 @@ trait PageActions
 			return $this;
 		}
 
-		return $this->commit('changeTemplate', ['page' => $this, 'template' => $template], function ($oldPage, $template) {
-			// convert for new template/blueprint
-			return $oldPage->convertTo($template);
-		});
+		return $this->commit(
+			action:    'changeTemplate',
+			arguments: ['page' => $this, 'template' => $template],
+			callback:  function (Page $oldPage, string $template): Page {
+				// convert for new template/blueprint
+				return $oldPage->convertTo($template);
+			}
+		);
 	}
 
 	/**
@@ -324,23 +362,30 @@ trait PageActions
 	): static {
 		$language = Language::ensure($languageCode ?? 'current');
 
-		$arguments = [
-			'page'         => $this,
-			'title'        => $title,
-			'languageCode' => $languageCode,
-			'language'     => $language
-		];
+		return $this->commit(
+			action:    'changeTitle',
+			arguments: [
+				'page'         => $this,
+				'title'        => $title,
+				'languageCode' => $languageCode,
+				'language'     => $language
+			],
+			callback:  function (
+				Page $page,
+				string $title,
+				string|null $languageCode,
+				Language $language
+			): Page {
+				// make sure to update the title in the changes version as well
+				// otherwise the new title would be lost
+				// as soon as the changes are saved
+				if ($page->version('changes')->exists($language) === true) {
+					$page->version('changes')->update(['title' => $title], $language);
+				}
 
-		return $this->commit('changeTitle', $arguments, function ($page, $title, $languageCode, $language) {
-
-			// make sure to update the title in the changes version as well
-			// otherwise the new title would be lost as soon as the changes are saved
-			if ($page->version('changes')->exists($language) === true) {
-				$page->version('changes')->update(['title' => $title], $language);
+				return $page->save(['title' => $title], $language->code());
 			}
-
-			return $page->save(['title' => $title], $language->code());
-		});
+		);
 	}
 
 	/**
@@ -409,8 +454,15 @@ trait PageActions
 				$ignore[] = $file->root();
 
 				// append all content files
-				array_push($ignore, ...$file->storage()->contentFiles(VersionId::latest()));
-				array_push($ignore, ...$file->storage()->contentFiles(VersionId::changes()));
+				$storage = $file->storage();
+
+				if ($storage instanceof PlainTextStorage) {
+					array_push(
+						$ignore,
+						...$storage->contentFiles(VersionId::latest()),
+						...$storage->contentFiles(VersionId::changes())
+					);
+				}
 			}
 		}
 
@@ -485,12 +537,12 @@ trait PageActions
 
 		// run the hooks and creation action
 		$page = $page->commit(
-			'create',
-			[
+			action:    'create',
+			arguments: [
 				'page'  => $page,
 				'input' => $props
 			],
-			function ($page) use ($storage) {
+			callback: function (Page $page) use ($storage): Page {
 				// move to final storage
 				$page->changeStorage($storage);
 
@@ -596,50 +648,54 @@ trait PageActions
 	#[BlockCollectionAccess]
 	public function delete(bool $force = false): bool
 	{
-		return $this->commit('delete', ['page' => $this, 'force' => $force], function ($page, $force) {
-			$old = $page->clone();
+		return $this->commit(
+			action:    'delete',
+			arguments: ['page' => $this, 'force' => $force],
+			callback:  function (Page $page, bool $force): bool {
+				$old = $page->clone();
 
-			// keep the content in iummtable memory storage
-			// to still have access to it in after hooks
-			$page->changeStorage(ImmutableMemoryStorage::class);
+				// keep the content in iummtable memory storage
+				// to still have access to it in after hooks
+				$page->changeStorage(ImmutableMemoryStorage::class);
 
-			// clear UUID cache
-			$page->uuid()?->clear(recursive: true);
+				// clear UUID cache
+				$page->uuid()?->clear(recursive: true);
 
-			// Explanation: The two while loops below are only
-			// necessary because our property caches result in
-			// outdated collections when deleting nested pages.
-			// When we use a foreach loop to go through those collections,
-			// we encounter outdated objects. Using a while loop
-			// fixes this issue.
-			//
-			// TODO: We can remove this part as soon
-			// as we move away from our immutable object architecture.
+				// Explanation: The two while loops below are only
+				// necessary because our property caches result in
+				// outdated collections when deleting nested pages.
+				// When we use a foreach loop to go through those collections,
+				// we encounter outdated objects. Using a while loop
+				// fixes this issue.
+				//
+				// TODO: We can remove this part as soon
+				// as we move away from our immutable object architecture.
 
-			// delete all files individually
-			while ($file = $page->files()->first()) {
-				$file->delete();
+				// delete all files individually
+				while ($file = $page->files()->first()) {
+					$file->delete();
+				}
+
+				// delete all children individually
+				while ($child = $page->childrenAndDrafts()->first()) {
+					$child->delete(true);
+				}
+
+				// delete all versions,
+				// the plain text storage handler will then clean
+				// up the directory if it's empty
+				$old->versions()->delete();
+
+				if (
+					$page->isListed() === true &&
+					$page->blueprint()->num() === 'default'
+				) {
+					$page->resortSiblingsAfterUnlisting();
+				}
+
+				return true;
 			}
-
-			// delete all children individually
-			while ($child = $page->childrenAndDrafts()->first()) {
-				$child->delete(true);
-			}
-
-			// delete all versions,
-			// the plain text storage handler will then clean
-			// up the directory if it's empty
-			$old->versions()->delete();
-
-			if (
-				$page->isListed() === true &&
-				$page->blueprint()->num() === 'default'
-			) {
-				$page->resortSiblingsAfterUnlisting();
-			}
-
-			return true;
-		});
+		);
 	}
 
 	/**
@@ -647,32 +703,41 @@ trait PageActions
 	 * slug and optionally copies all files
 	 */
 	#[BlockCollectionAccess]
-	public function duplicate(string|null $slug = null, array $options = []): static
-	{
+	public function duplicate(
+		string|null $slug = null,
+		array $options = []
+	): static {
 		// create the slug for the duplicate
-		$slug = Url::slug($slug ?? $this->slug() . '-' . Url::slug(I18n::translate('page.duplicate.appendix')));
+		$slug ??= $this->slug() . '-' . I18n::translate('page.duplicate.appendix');
+		$slug   = Url::slug($slug);
 
-		$arguments = [
-			'originalPage' => $this,
-			'input'        => $slug,
-			'options'      => $options
-		];
+		return $this->commit(
+			action:    'duplicate',
+			arguments: [
+				'originalPage' => $this,
+				'input'        => $slug,
+				'options'      => $options
+			],
+			callback: function (
+				Page $page,
+				string $slug,
+				array $options
+			): Page {
+				$page = $this->copy([
+					'parent'   => $this->parent(),
+					'slug'     => $slug,
+					'isDraft'  => true,
+					'files'    => $options['files']    ?? false,
+					'children' => $options['children'] ?? false,
+				]);
 
-		return $this->commit('duplicate', $arguments, function ($page, $slug, $options) {
-			$page = $this->copy([
-				'parent'   => $this->parent(),
-				'slug'     => $slug,
-				'isDraft'  => true,
-				'files'    => $options['files']    ?? false,
-				'children' => $options['children'] ?? false,
-			]);
+				if (isset($options['title']) === true) {
+					$page = $page->changeTitle($options['title']);
+				}
 
-			if (isset($options['title']) === true) {
-				$page = $page->changeTitle($options['title']);
+				return $page;
 			}
-
-			return $page;
-		});
+		);
 	}
 
 	/**
@@ -687,41 +752,45 @@ trait PageActions
 			return $this;
 		}
 
-		$arguments = [
-			'page'   => $this,
-			'parent' => $parent
-		];
+		return $this->commit(
+			action:    'move',
+			arguments: [
+				'page'   => $this,
+				'parent' => $parent
+			],
+			callback: function (Page $page, Site|Page $parent): Page {
+				// remove the uuid cache for this page
+				$page->uuid()?->clear(true);
 
-		return $this->commit('move', $arguments, function ($page, $parent) {
-			// remove the uuid cache for this page
-			$page->uuid()?->clear(true);
+				// move drafts into the drafts folder of the parent
+				$newRoot = match ($page->isDraft()) {
+					true  => $parent->root() . '/_drafts/' . $page->dirname(),
+					false => $parent->root() . '/' . $page->dirname()
+				};
 
-			// move drafts into the drafts folder of the parent
-			$newRoot = match ($page->isDraft()) {
-				true  => $parent->root() . '/_drafts/' . $page->dirname(),
-				false => $parent->root() . '/' . $page->dirname()
-			};
+				// try to move the page directory on disk
+				if (Dir::move($page->root(), $newRoot) !== true) {
+					throw new LogicException(key: 'page.move.directory');
+				}
 
-			// try to move the page directory on disk
-			if (Dir::move($page->root(), $newRoot) !== true) {
-				throw new LogicException(key: 'page.move.directory');
+				// flush all collection caches to be sure that
+				// the new child is included afterwards
+				$parent->purge();
+
+				// double-check if the new child can actually be found
+				$children = $parent->childrenAndDrafts();
+
+				if (!$newPage = $children->findByKey($page->slug())) {
+					throw new LogicException(
+						key: 'page.move.notFound'
+					);
+				}
+
+				$newPage->uuid()?->populate(recursive: true);
+
+				return $newPage;
 			}
-
-			// flush all collection caches to be sure that
-			// the new child is included afterwards
-			$parent->purge();
-
-			// double-check if the new child can actually be found
-			if (!$newPage = $parent->childrenAndDrafts()->find($page->slug())) {
-				throw new LogicException(
-					key: 'page.move.notFound'
-				);
-			}
-
-			$newPage->uuid()?->populate(recursive: true);
-
-			return $newPage;
-		});
+		);
 	}
 
 	protected static function normalizeProps(array $props): array
@@ -958,6 +1027,7 @@ trait PageActions
 			$validate = false;
 		}
 
+		/** @var Page $page */
 		$page = parent::update($input, $languageCode, $validate);
 
 		// if num is created from page content, update num on content update

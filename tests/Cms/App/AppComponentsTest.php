@@ -196,6 +196,9 @@ class AppComponentsTest extends TestCase
 		$expected = '"Test"';
 
 		$this->assertSame($expected, $this->app->smartypants($text));
+
+		// null text is coerced to empty string
+		$this->assertSame('', $this->app->smartypants(null));
 	}
 
 	public function testSmartypantsOptions(): void

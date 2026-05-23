@@ -315,19 +315,22 @@ class Str
 	 *
 	 * @param 'date'|'intl'|'strftime'|null $handler Custom date handler or `null`
 	 *                                               for the globally configured one
+	 * @return ($format is null ? int : string|false)
 	 */
 	public static function date(
 		int|null $time,
 		string|IntlDateFormatter|null $format = null,
 		string|null $handler = null
 	): string|int|false {
+		$time ??= time();
+
 		if (is_null($format) === true) {
 			return $time;
 		}
 
 		// $format is an IntlDateFormatter instance
 		if ($format instanceof IntlDateFormatter) {
-			return $format->format($time ?? time());
+			return $format->format($time);
 		}
 
 		// automatically determine the handler from global configuration
@@ -363,6 +366,8 @@ class Str
 
 	/**
 	 * Converts a string to a different encoding
+	 *
+	 * @throws \Kirby\Exception\InvalidArgumentException when conversion failed
 	 */
 	public static function convert(
 		string $string,

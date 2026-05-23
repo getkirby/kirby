@@ -513,6 +513,7 @@ class Dom
 	 * Executes an XPath query in the document
 	 *
 	 * @param \DOMNode|null $node Optional context node for relative queries
+	 * @throws \Kirby\Exception\InvalidArgumentException for invalid XPath queries
 	 */
 	public function query(
 		string $query,

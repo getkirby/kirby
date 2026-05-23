@@ -153,6 +153,7 @@ class User extends ModelWithContent
 	public function blueprint(): UserBlueprint
 	{
 		try {
+			/** @var \Kirby\Blueprint\UserBlueprint */
 			return $this->blueprint ??= UserBlueprint::factory(
 				'users/' . $this->role(),
 				'users/default',
@@ -547,7 +548,17 @@ class User extends ModelWithContent
 	#[BlockCollectionAccess]
 	public function password(): string|null
 	{
-		return $this->password ??= $this->readPassword();
+		if ($this->password !== null) {
+			return $this->password;
+		}
+
+		$password = $this->readPassword();
+
+		if ($password === false) {
+			return $this->password = '';
+		}
+
+		return $this->password = $password;
 	}
 
 	/**
@@ -568,7 +579,13 @@ class User extends ModelWithContent
 			return null;
 		}
 
-		return filemtime($file);
+		$time = filemtime($file);
+
+		if ($time === false) {
+			return null;
+		}
+
+		return $time;
 	}
 
 	public function permissions(): UserPermissions
@@ -588,7 +605,7 @@ class User extends ModelWithContent
 		$name = $this->role ?? $this->credentials()['role'] ?? 'default';
 
 		return $this->role =
-			$this->kirby()->roles()->find($name) ??
+			$this->kirby()->roles()->findByKey($name) ??
 			Role::defaultNobody();
 	}
 

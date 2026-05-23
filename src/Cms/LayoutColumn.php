@@ -47,6 +47,8 @@ class LayoutColumn extends Item
 		if ($this->hasMethod($method) === true) {
 			return $this->callMethod($method, $args);
 		}
+
+		return null;
 	}
 
 	/**

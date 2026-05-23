@@ -149,6 +149,7 @@ class File extends ModelWithContent
 	 */
 	public function blueprint(): FileBlueprint
 	{
+		/** @var \Kirby\Blueprint\FileBlueprint */
 		return $this->blueprint ??= FileBlueprint::factory(
 			'files/' . $this->template(),
 			'files/default',
@@ -452,7 +453,7 @@ class File extends ModelWithContent
 	 */
 	protected function modifiedFile(): int
 	{
-		return F::modified($this->root());
+		return F::modified($this->root()) ?: 0;
 	}
 
 	/**
@@ -460,8 +461,10 @@ class File extends ModelWithContent
 	 */
 	public function page(): Page|null
 	{
-		if ($this->parent() instanceof Page) {
-			return $this->parent();
+		$parent = $this->parent();
+
+		if ($parent instanceof Page) {
+			return $parent;
 		}
 
 		return null;
@@ -486,7 +489,7 @@ class File extends ModelWithContent
 	/**
 	 * Returns the parent id if a parent exists
 	 */
-	public function parentId(): string
+	public function parentId(): string|null
 	{
 		return $this->parent()->id();
 	}
@@ -569,8 +572,10 @@ class File extends ModelWithContent
 	 */
 	public function site(): Site
 	{
-		if ($this->parent() instanceof Site) {
-			return $this->parent();
+		$parent = $this->parent();
+
+		if ($parent instanceof Site) {
+			return $parent;
 		}
 
 		return $this->kirby()->site();
