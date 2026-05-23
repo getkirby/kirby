@@ -7,19 +7,7 @@
       <code><![CDATA[$this->name]]></code>
     </UndefinedThisPropertyFetch>
   </file>
-  <file src="src/Cache/RedisCache.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[$this->connection->del($this->key($key))]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[bool]]></code>
-    </InvalidReturnType>
-  </file>
-  <file src="src/Cache/Value.php">
-    <FalsableReturnStatement>
-      <code><![CDATA[json_encode($this->toArray())]]></code>
-    </FalsableReturnStatement>
-  </file>
+
   <file src="src/Cms/App.php">
     <InvalidNullableReturnType>
       <code><![CDATA[string]]></code>
