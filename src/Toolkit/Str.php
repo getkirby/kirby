@@ -1201,11 +1201,11 @@ class Str
 	/**
 	 * Convert a string to a safe version to be used in a URL
 	 *
-	 * @param string $string The unsafe string
-	 * @param string $separator To be used instead of space and
-	 *                          other non-word characters.
-	 * @param string $allowed List of all allowed characters (regex)
-	 * @param int $maxlength The maximum length of the slug
+	 * @param string|null $string The unsafe string
+	 * @param string|null $separator To be used instead of space and
+	 *                               other non-word characters.
+	 * @param string|null $allowed List of all allowed characters (regex)
+	 * @param int|false $maxlength The maximum length of the slug
 	 * @return string The safe string
 	 */
 	public static function slug(
