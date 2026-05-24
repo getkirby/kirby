@@ -323,11 +323,18 @@ class Database
 			$this->statement->execute();
 
 			$this->affected  = $this->statement->rowCount();
-			$this->lastId    = Str::startsWith($query, 'insert ', true) ? $this->connection->lastInsertId() : null;
 			$this->lastError = null;
+
+			if (Str::startsWith($query, 'insert ', true) === true) {
+				$lastId       = $this->connection->lastInsertId();
+				$this->lastId = $lastId !== false ? (int)$lastId : null;
+			} else {
+				$this->lastId = null;
+			}
 
 			// store the final sql to add it to the trace later
 			$this->lastQuery = $this->statement->queryString;
+
 		} catch (Throwable $e) {
 			// store the error
 			$this->affected  = 0;

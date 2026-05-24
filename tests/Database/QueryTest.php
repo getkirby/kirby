@@ -164,6 +164,14 @@ class QueryTest extends TestCase
 		$this->assertSame($expected, $query['query']);
 	}
 
+	public function testBuildInvalidType(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid query type: foo');
+
+		$this->database->table('users')->build('foo');
+	}
+
 	public function testOrder(): void
 	{
 		$user = $this->database

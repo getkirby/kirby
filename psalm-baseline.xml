@@ -178,58 +178,13 @@
       <code><![CDATA[$directory]]></code>
     </NullableReturnStatement>
   </file>
-
-
   <file src="src/Data/YamlSpyc.php">
     <InvalidArgument>
       <code><![CDATA[false]]></code>
       <code><![CDATA[false]]></code>
     </InvalidArgument>
   </file>
-  <file src="src/Database/Database.php">
-    <InvalidPropertyAssignmentValue>
-      <code><![CDATA[Str::startsWith($query, 'insert ', true) ? $this->connection->lastInsertId() : null]]></code>
-    </InvalidPropertyAssignmentValue>
-  </file>
-  <file src="src/Database/Query.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[array]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[match ($type) {
-			'select' => $sql->select([
-				'table'    => $this->table,
-				'columns'  => $this->select,
-				'join'     => $this->join,
-				'distinct' => $this->distinct,
-				'where'    => $this->where,
-				'group'    => $this->group,
-				'having'   => $this->having,
-				'order'    => $this->order,
-				'offset'   => $this->offset,
-				'limit'    => $this->limit,
-				'bindings' => $this->bindings
-			]),
-			'update' => $sql->update([
-				'table'    => $this->table,
-				'where'    => $this->where,
-				'values'   => $this->values,
-				'bindings' => $this->bindings
-			]),
-			'insert' => $sql->insert([
-				'table'    => $this->table,
-				'values'   => $this->values,
-				'bindings' => $this->bindings
-			]),
-			'delete' => $sql->delete([
-				'table'    => $this->table,
-				'where'    => $this->where,
-				'bindings' => $this->bindings
-			]),
-			default => null
-		}]]></code>
-    </NullableReturnStatement>
-  </file>
+
   <file src="src/Exception/Exception.php">
     <InvalidPropertyAssignmentValue>
       <code><![CDATA[self::$prefix . '.' . $this->code]]></code>
