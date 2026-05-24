@@ -73,7 +73,15 @@ class Version
 	#[BlockCollectionAccess]
 	public function contentFile(Language|string $language = 'default'): string
 	{
-		return $this->model->storage()->contentFile(
+		$storage = $this->model->storage();
+
+		if ($storage instanceof PlainTextStorage === false) {
+			throw new LogicException(
+				message: 'Version::contentFile() is only available for plain text storage'
+			);
+		}
+
+		return $storage->contentFile(
 			$this->id,
 			Language::ensure($language)
 		);
@@ -660,7 +668,8 @@ class Version
 	public function url(): string|null
 	{
 		if (
-			($this->model instanceof Page || $this->model instanceof Site) === false
+			$this->model instanceof Page === false &&
+			$this->model instanceof Site === false
 		) {
 			throw new LogicException('Only pages and the site have a content preview URL');
 		}

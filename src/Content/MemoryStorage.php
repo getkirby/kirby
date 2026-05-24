@@ -60,7 +60,13 @@ class MemoryStorage extends Storage
 			return null;
 		}
 
-		return $this->cache->modified($this->cacheId($versionId, $language));
+		$modified = $this->cache->modified($this->cacheId($versionId, $language));
+
+		if ($modified === false) {
+			return null; // @codeCoverageIgnore
+		}
+
+		return $modified;
 	}
 
 	/**

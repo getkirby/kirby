@@ -161,15 +161,6 @@
       <code><![CDATA[[...$this->data, ...$object->data]]]></code>
     </InvalidPropertyAssignmentValue>
   </file>
-
-  <file src="src/Content/Content.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[$this->get($name)]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[Field]]></code>
-    </InvalidReturnType>
-  </file>
   <file src="src/Content/FieldMethods.php">
     <InvalidReturnType>
       <code><![CDATA[Pages]]></code>
@@ -179,11 +170,6 @@
       <code><![CDATA[title]]></code>
     </UndefinedMethod>
   </file>
-  <file src="src/Content/MemoryStorage.php">
-    <FalsableReturnStatement>
-      <code><![CDATA[$this->cache->modified($this->cacheId($versionId, $language))]]></code>
-    </FalsableReturnStatement>
-  </file>
   <file src="src/Content/PlainTextStorage.php">
     <InvalidNullableReturnType>
       <code><![CDATA[string]]></code>
@@ -192,11 +178,8 @@
       <code><![CDATA[$directory]]></code>
     </NullableReturnStatement>
   </file>
-  <file src="src/Content/Version.php">
-    <UndefinedMethod>
-      <code><![CDATA[contentFile]]></code>
-    </UndefinedMethod>
-  </file>
+
+
   <file src="src/Data/YamlSpyc.php">
     <InvalidArgument>
       <code><![CDATA[false]]></code>
