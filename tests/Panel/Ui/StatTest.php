@@ -79,6 +79,19 @@ class StatTest extends TestCase
 
 			$this->assertSame('test', $stat->$prop());
 		}
+
+		// HTML entities must pass through unescaped;
+		// the Panel's Vue layer is responsible for escaping.
+		// Encoding here would double-escape.
+		$stat = new Stat(
+			...[
+				'model' => $this->model,
+				'label' => 'Test Label',
+				'value' => 'Test Value',
+				$prop   => 'A & B',
+			]
+		);
+		$this->assertSame('A & B', $stat->$prop());
 	}
 
 	public function testComponent(): void

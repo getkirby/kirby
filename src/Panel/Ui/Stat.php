@@ -31,12 +31,12 @@ class Stat extends Component
 
 	public function dialog(): string|null
 	{
-		return $this->stringTemplate($this->dialog);
+		return $this->stringTemplate($this->dialog, safe: false);
 	}
 
 	public function drawer(): string|null
 	{
-		return $this->stringTemplate($this->drawer);
+		return $this->stringTemplate($this->drawer, safe: false);
 	}
 
 	public static function from(
@@ -62,22 +62,22 @@ class Stat extends Component
 
 	public function icon(): string|null
 	{
-		return $this->stringTemplate($this->icon);
+		return $this->stringTemplate($this->icon, safe: false);
 	}
 
 	public function info(): string|null
 	{
-		return $this->stringTemplateI18n($this->info);
+		return $this->stringTemplateI18n($this->info, safe: false);
 	}
 
 	public function label(): string
 	{
-		return $this->stringTemplateI18n($this->label);
+		return $this->stringTemplateI18n($this->label, safe: false);
 	}
 
 	public function link(): string|null
 	{
-		return $this->stringTemplate($this->link);
+		return $this->stringTemplate($this->link, safe: false);
 	}
 
 	public function props(): array
@@ -96,11 +96,11 @@ class Stat extends Component
 
 	public function theme(): string|null
 	{
-		return $this->stringTemplate($this->theme);
+		return $this->stringTemplate($this->theme, safe: false);
 	}
 
 	public function value(): string
 	{
-		return $this->stringTemplateI18n($this->value);
+		return $this->stringTemplateI18n($this->value, safe: false);
 	}
 }
