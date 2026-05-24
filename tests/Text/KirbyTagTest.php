@@ -111,6 +111,13 @@ class KirbyTagTest extends TestCase
 		// overwriting should also work
 		$tag->text = 'Other Text';
 		$this->assertSame('Other Text', $tag->text);
+
+		// case insensitive properties
+		$tag->Caption = 'My Caption';
+		$this->assertSame('My Caption', $tag->caption);
+		$this->assertSame('My Caption', $tag->Caption);
+		$this->assertSame('My Caption', $tag->attr('Caption'));
+		$this->assertSame('My Caption', $tag->attr('caption'));
 	}
 
 	public function test__callStatic(): void
