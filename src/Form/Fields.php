@@ -232,6 +232,8 @@ class Fields extends Collection
 	 * if the field does not exist
 	 *
 	 * @since 5.0.0
+	 *
+	 * @return ($values is null ? array : static)
 	 */
 	public function passthrough(array|null $values = null): static|array
 	{

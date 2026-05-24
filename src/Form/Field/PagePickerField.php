@@ -13,6 +13,8 @@ use Kirby\Panel\Ui\Item\PageItem;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
+ *
+ * @extends \Kirby\Form\Field\ModelPickerField<\Kirby\Cms\Page>
  */
 class PagePickerField extends ModelPickerField
 {

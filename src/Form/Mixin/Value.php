@@ -7,10 +7,16 @@ use Kirby\Toolkit\BlockCollectionAccess;
 use ReflectionProperty;
 
 /**
- * Provides value storage, filling, and retrieval for form fields
+ * Provides value storage, filling, and retrieval for form fields.
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * The using class must declare a `protected $value` property
+ * (typed and with a default value that defines the "empty" value
+ * used by `Value::emptyValue()` via reflection).
+ *
+ * @property mixed $value
  */
 trait Value
 {
@@ -18,8 +24,9 @@ trait Value
 	 * @deprecated 5.0.0 Use `::toStoredValue()` instead to receive
 	 * the value in the format that will be needed for content files.
 	 *
-	 * If you need to get the value with the default as fallback, you should use
-	 * the fill method first `$field->fill($field->default())->toStoredValue()`
+	 * If you need to get the value with the default as fallback,
+	 * you should use the fill method first
+	 * `$field->fill($field->default())->toStoredValue()`
 	 */
 	public function data(bool $default = false): mixed
 	{
@@ -29,6 +36,8 @@ trait Value
 
 		return $this->toStoredValue();
 	}
+
+	abstract public function default(): mixed;
 
 	/**
 	 * Returns the fallback value when the field should be empty
@@ -44,6 +53,7 @@ trait Value
 	#[BlockCollectionAccess]
 	public function fill(mixed $value): static
 	{
+		/** @psalm-suppress UndefinedThisPropertyAssignment using classes declare `$value` */
 		$this->value = $value ?? $this->emptyValue();
 		return $this;
 	}
@@ -107,28 +117,6 @@ trait Value
 	}
 
 	/**
-	 * Checks if the field needs a value before being saved;
-	 * this is the case if all of the following requirements are met:
-	 * - The field has a value
-	 * - The field is required
-	 * - The field is currently empty
-	 * - The field is not currently inactive because of a `when` rule
-	 */
-	protected function needsValue(): bool
-	{
-		if (
-			$this->hasValue() === false ||
-			$this->isRequired() === false ||
-			$this->isEmpty() === false ||
-			$this->isActive() === false
-		) {
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
 	 * Checks if the field is saveable
 	 * @deprecated 5.0.0 Use `::hasValue()` instead
 	 */
@@ -162,6 +150,7 @@ trait Value
 			return null;
 		}
 
+		/** @psalm-suppress UndefinedThisPropertyFetch using classes declare `$value` */
 		return $this->value ?? null;
 	}
 

@@ -14,6 +14,8 @@ use Kirby\Panel\Ui\Item\FileItem;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
+ *
+ * @extends \Kirby\Form\Field\ModelPickerField<\Kirby\Cms\File>
  */
 class FilePickerField extends ModelPickerField
 {

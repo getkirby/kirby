@@ -2,12 +2,14 @@
 
 namespace Kirby\Form\Field;
 
-use Kirby\Form\Fields;
 use Kirby\Form\Mixin;
 use Kirby\Toolkit\BlockCollectionAccess;
 
 /**
  * Input class for fields that have a value
+ *
+ * Concrete subclasses must declare a typed `$value` property with a
+ * default that defines the empty value.
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
@@ -72,6 +74,7 @@ abstract class InputField extends BaseField
 	#[BlockCollectionAccess]
 	public function reset(): static
 	{
+		/** @psalm-suppress UndefinedThisPropertyAssignment concrete subclasses declare `$value` */
 		$this->value = $this->emptyValue();
 		return $this;
 	}

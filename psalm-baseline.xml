@@ -195,8 +195,6 @@
       <code><![CDATA[string]]></code>
     </InvalidReturnType>
   </file>
-
-
   <file src="src/Form/Field.php">
     <UndefinedThisPropertyFetch>
       <code><![CDATA[$this->after]]></code>
@@ -207,73 +205,10 @@
       <code><![CDATA[$this->placeholder]]></code>
     </UndefinedThisPropertyFetch>
   </file>
-  <file src="src/Form/Field/BlocksField.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[$fieldset]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[Fieldset]]></code>
-    </InvalidReturnType>
-  </file>
-  <file src="src/Form/Field/FilePickerField.php">
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[$model]]></code>
-      <code><![CDATA[$model]]></code>
-    </MoreSpecificImplementedParamType>
-    <UndefinedMethod>
-      <code><![CDATA[apiUrl]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="src/Form/Field/InputField.php">
-    <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->value]]></code>
-    </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="src/Form/Field/NumberField.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[match(true) {
-			$value === ''     => null,
-			is_null($value)   => $value,
-			is_bool($value)   => $value,
-			is_float($value)  => $value,
-			is_int($value)    => $value,
-			default           => (float)Str::float($value),
-		}]]></code>
-    </InvalidReturnStatement>
-  </file>
-  <file src="src/Form/Field/PagePickerField.php">
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[$model]]></code>
-    </MoreSpecificImplementedParamType>
-  </file>
   <file src="src/Form/Field/TextareaField.php">
     <UndefinedMethod>
       <code><![CDATA[is]]></code>
     </UndefinedMethod>
-  </file>
-  <file src="src/Form/Field/UserPickerField.php">
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[$model]]></code>
-    </MoreSpecificImplementedParamType>
-  </file>
-  <file src="src/Form/Form.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[$this->fields->passthrough()]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[static|array]]></code>
-    </InvalidReturnType>
-  </file>
-  <file src="src/Form/Mixin/Value.php">
-    <UndefinedMethod>
-      <code><![CDATA[isRequired]]></code>
-    </UndefinedMethod>
-    <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->value]]></code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch>
-      <code><![CDATA[$this->value]]></code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="src/Form/Validations.php">
     <UndefinedMethod>
