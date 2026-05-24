@@ -984,7 +984,7 @@ class App
 		$site = $this->site();
 
 		yield from $site->files();
-		yield 'site' => $site;
+		yield '' => $site;
 
 		foreach ($site->index(true) as $page) {
 			yield from $page->files();

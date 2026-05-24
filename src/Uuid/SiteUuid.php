@@ -38,7 +38,7 @@ class SiteUuid extends Uuid
 	 */
 	public static function index(): Generator
 	{
-		yield 'site' => App::instance()->site();
+		yield '' => App::instance()->site();
 	}
 
 	/**

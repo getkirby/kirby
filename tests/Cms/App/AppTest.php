@@ -389,18 +389,26 @@ class AppTest extends TestCase
 			]
 		]);
 
+		$user = $app->users()->first();
+
 		$models = $app->models();
 
+		$this->assertSame('sitefile.jpg', $models->key());
 		$this->assertSame('sitefile.jpg', $models->current()->filename());
 		$models->next();
+		$this->assertSame('', $models->key());
 		$this->assertIsSite($models->current());
 		$models->next();
+		$this->assertSame('test/pagefile.jpg', $models->key());
 		$this->assertSame('pagefile.jpg', $models->current()->filename());
 		$models->next();
+		$this->assertSame('test', $models->key());
 		$this->assertSame('test', $models->current()->slug());
 		$models->next();
+		$this->assertSame($user->id() . '/userfile.jpg', $models->key());
 		$this->assertSame('userfile.jpg', $models->current()->filename());
 		$models->next();
+		$this->assertSame($user->id(), $models->key());
 		$this->assertSame('test@getkirby.com', $models->current()->email());
 	}
 
