@@ -172,7 +172,7 @@ class Mime
 
 		if ($mode = $map[$mime][$extension] ?? null) {
 			if (is_callable($mode) === true) {
-				return $mode($file, $mime, $extension);
+				return $mode($file, $mime, $extension) ?: null;
 			}
 
 			if (is_string($mode) === true) {

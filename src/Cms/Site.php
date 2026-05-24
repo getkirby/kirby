@@ -309,11 +309,13 @@ class Site extends ModelWithContent
 	/**
 	 * Gets the last modification date of all pages
 	 * in the content folder.
+	 *
+	 * @return ($format is null ? int : string|false)
 	 */
 	public function modified(
 		string|null $format = null,
 		string|null $handler = null
-	): int|string {
+	): int|string|false {
 		return Dir::modified($this->root(), $format, $handler);
 	}
 

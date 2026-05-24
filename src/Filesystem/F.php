@@ -612,7 +612,8 @@ class F
 		}
 
 		// the math magic
-		$size = round($size / 1024 ** ($unit = floor(log($size, 1024))), 2);
+		$unit = (int)floor(log($size, 1024));
+		$size = round($size / 1024 ** $unit, 2);
 
 		// format the number if requested
 		if ($locale !== false) {
@@ -887,7 +888,7 @@ class F
 		$name      = static::name($path);
 		$extension = static::extension($path);
 		$glob      = $dir . '/' . $name . $pattern . '.' . $extension;
-		return glob($glob);
+		return glob($glob) ?: [];
 	}
 
 	/**

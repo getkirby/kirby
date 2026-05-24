@@ -184,7 +184,6 @@
       <code><![CDATA[false]]></code>
     </InvalidArgument>
   </file>
-
   <file src="src/Exception/Exception.php">
     <InvalidPropertyAssignmentValue>
       <code><![CDATA[self::$prefix . '.' . $this->code]]></code>
@@ -196,39 +195,8 @@
       <code><![CDATA[string]]></code>
     </InvalidReturnType>
   </file>
-  <file src="src/Filesystem/Asset.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[string]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$this->root()]]></code>
-    </NullableReturnStatement>
-  </file>
-  <file src="src/Filesystem/Dir.php">
-    <FalsableReturnStatement>
-      <code><![CDATA[Str::date($modified, $format, $handler)]]></code>
-    </FalsableReturnStatement>
-  </file>
-  <file src="src/Filesystem/F.php">
-    <FalsableReturnStatement>
-      <code><![CDATA[glob($glob)]]></code>
-    </FalsableReturnStatement>
-    <InvalidArrayOffset>
-      <code><![CDATA[static::$units[$unit]]]></code>
-    </InvalidArrayOffset>
-  </file>
-  <file src="src/Filesystem/File.php">
-    <FalsableReturnStatement>
-      <code><![CDATA[json_encode($this->toArray())]]></code>
-      <code><![CDATA[realpath($this->root())]]></code>
-      <code><![CDATA[sha1_file($this->root())]]></code>
-    </FalsableReturnStatement>
-  </file>
-  <file src="src/Filesystem/Mime.php">
-    <FalsableReturnStatement>
-      <code><![CDATA[$mode($file, $mime, $extension)]]></code>
-    </FalsableReturnStatement>
-  </file>
+
+
   <file src="src/Form/Field.php">
     <UndefinedThisPropertyFetch>
       <code><![CDATA[$this->after]]></code>

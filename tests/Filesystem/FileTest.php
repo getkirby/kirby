@@ -3,6 +3,7 @@
 namespace Kirby\Filesystem;
 
 use Exception as GlobalException;
+use JsonException;
 use Kirby\Cms\App;
 use Kirby\Cms\File as CmsFile;
 use Kirby\Cms\Page;
@@ -476,6 +477,18 @@ class FileTest extends TestCase
 		$this->assertFalse($file->read());
 	}
 
+	public function testRealpath(): void
+	{
+		$file = $this->_file();
+		$this->assertSame(static::TMP . '/test.js', $file->realpath());
+	}
+
+	public function testRealpathMissingFile(): void
+	{
+		$file = $this->_file('does-not-exist.txt');
+		$this->assertFalse($file->realpath());
+	}
+
 	public function testRename(): void
 	{
 		$file = new File(static::TMP . '/test.js');
@@ -510,7 +523,6 @@ class FileTest extends TestCase
 	{
 		$file = $this->_file();
 		$this->assertSame(static::TMP . '/test.js', $file->root());
-		$this->assertSame(static::TMP . '/test.js', $file->realpath());
 	}
 
 	public function testSanitizeContentsValid(): void
@@ -565,6 +577,16 @@ class FileTest extends TestCase
 		$this->assertSame('25f2d6df4f2a30f29f6f80da1e95011044b0b8f7', $file->sha1());
 	}
 
+	public function testSha1MissingFile(): void
+	{
+		$file = $this->_file('does-not-exist.txt');
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('could not be hashed');
+
+		$file->sha1();
+	}
+
 	public function testToArray(): void
 	{
 		$file = $this->_file('blank.pdf');
@@ -580,6 +602,14 @@ class FileTest extends TestCase
 		$file = $this->_file();
 		$this->assertIsString($json = $file->toJson());
 		$this->assertSame('test.js', json_decode($json)->filename);
+	}
+
+	public function testToJsonInvalid(): void
+	{
+		$file = $this->_file("invalid-\xB1\x31.txt");
+
+		$this->expectException(JsonException::class);
+		$file->toJson();
 	}
 
 	public function testToString(): void
