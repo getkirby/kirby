@@ -203,7 +203,9 @@ class Cookie
 	{
 		if (isset($_COOKIE[$key]) === true) {
 			unset($_COOKIE[$key]);
-			return setcookie($key, '', 1, '/');
+			return
+				setcookie($key, '', 1, '/') &&
+				setcookie($key, false);
 		}
 
 		return false;

@@ -229,6 +229,11 @@
       <code><![CDATA[pattern]]></code>
     </UndefinedMethod>
   </file>
+  <file src="src/Http/Cookie.php">
+    <InvalidArgument>
+      <code><![CDATA[false]]></code>
+    </InvalidArgument>
+  </file>
   <file src="src/Panel/Area.php">
     <InvalidNullableReturnType>
       <code><![CDATA[string]]></code>
