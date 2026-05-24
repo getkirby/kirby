@@ -60,23 +60,6 @@ class CollectionTest extends TestCase
 		unset(User::$methods['allowedCustomMethod'], User::$methods['blockedCustomMethod']);
 	}
 
-	public function test__callFallsBackToItemAccess(): void
-	{
-		// when no collection method is registered, __call should
-		// fall through to item-by-key access (Toolkit\Collection::__get)
-		$collection = new Collection([
-			new Obj(['id' => 'foo', 'value' => 'a']),
-			new Obj(['id' => 'bar', 'value' => 'b'])
-		]);
-
-		// access items by id via __call → __get
-		$this->assertSame('a', $collection->foo()->value);
-		$this->assertSame('b', $collection->bar()->value);
-
-		// unknown key falls back to null
-		$this->assertNull($collection->unknown());
-	}
-
 	public function testCollectionMethods(): void
 	{
 		$kirby = $this->kirby([

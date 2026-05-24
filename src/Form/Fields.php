@@ -40,6 +40,16 @@ class Fields extends Collection
 		}
 	}
 
+
+	public function __call(string $key, $arguments)
+	{
+		if ($method = parent::__call($key, $arguments)) {
+			return $method;
+		}
+
+		return $this->__get($key);
+	}
+
 	/**
 	 * Internal setter for each object in the Collection.
 	 * This takes care of validation and of setting
