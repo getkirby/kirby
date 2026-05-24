@@ -343,11 +343,7 @@ class Str
 		// `intl` handler
 		if ($handler === 'intl') {
 			$datetime = new DateTime();
-
-			if ($time !== null) {
-				$datetime->setTimestamp($time);
-			}
-
+			$datetime->setTimestamp($time);
 			return IntlDateFormatter::formatObject($datetime, $format);
 		}
 
