@@ -34,11 +34,11 @@ class SiteUuid extends Uuid
 	/**
 	 * Generator for the one and only site object
 	 *
-	 * @return \Generator|\Kirby\Cms\Site[]
+	 * @return \Generator<string, \Kirby\Cms\Site>
 	 */
 	public static function index(): Generator
 	{
-		yield App::instance()->site();
+		yield 'site' => App::instance()->site();
 	}
 
 	/**

@@ -36,7 +36,7 @@ class UserUuid extends Uuid
 	/**
 	 * Generator for all users
 	 *
-	 * @return \Generator|\Kirby\Cms\User[]
+	 * @return \Generator<string, \Kirby\Cms\User>
 	 */
 	public static function index(): Generator
 	{

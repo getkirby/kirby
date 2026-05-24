@@ -47,7 +47,7 @@ class FileUuid extends ModelUuid
 	 * Generator for all files in the site
 	 * (of all pages, users and site)
 	 *
-	 * @return \Generator|\Kirby\Cms\File[]
+	 * @return \Generator<string, \Kirby\Cms\File>
 	 */
 	public static function index(): Generator
 	{

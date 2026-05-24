@@ -56,14 +56,14 @@ class PageUuid extends ModelUuid
 	/**
 	 * Generator for all pages and drafts in the site
 	 *
-	 * @return \Generator|\Kirby\Cms\Page[]
+	 * @return \Generator<string, \Kirby\Cms\Page>
 	 */
 	public static function index(Page|null $entry = null): Generator
 	{
 		$entry ??= App::instance()->site();
 
 		foreach ($entry->childrenAndDrafts() as $page) {
-			yield $page;
+			yield $page->id() => $page;
 			yield from static::index($page);
 		}
 	}
