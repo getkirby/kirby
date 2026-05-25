@@ -346,9 +346,13 @@ abstract class Uuid implements Stringable
 
 		if ($lazy === false) {
 			if (App::instance()->option('content.uuid.index') === false) {
-				throw new NotFoundException(
-					message: 'Model for UUID ' . $this->uri->toString() . ' could not be found without searching in the site index'
-				);
+				if (App::instance()->option('debug') === true) {
+					throw new NotFoundException(
+						message: 'Model for UUID ' . $this->uri->toString() . ' could not be found without searching in the site index'
+					);
+				}
+
+				return null;
 			}
 
 			if ($this->model = $this->findByIndex()) {

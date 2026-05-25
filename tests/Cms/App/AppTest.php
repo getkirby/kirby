@@ -869,6 +869,24 @@ class AppTest extends TestCase
 		$this->assertIsFile($file, $app->file('file://my-file'));
 	}
 
+	public function testFindFileByDeadUuidNoIndex(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'options' => [
+				'content' => [
+					'uuid' => [
+						'index' => false
+					]
+				]
+			]
+		]);
+
+		$this->assertNull($app->file('file://does-not-exist'));
+	}
+
 	public function testBlueprints(): void
 	{
 		$app = new App([
