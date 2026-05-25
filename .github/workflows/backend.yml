@@ -149,7 +149,7 @@ jobs:
 
       - name: Statically analyze using Psalm
         if: always() && steps.finishPrepare.outcome == 'success' && matrix.php != '8.5'
-        run: composer run analyze:psalm -- --output-format=github --php-version=${{ matrix.php }} --report=sarif/psalm.sarif --report-show-info=false
+        run: composer run analyze:psalm -- --output-format=github --php-version=${{ matrix.php }} --report=sarif/psalm.sarif --report-show-info=false --force-jit
 
       - name: Upload coverage results to Codecov
         env:
