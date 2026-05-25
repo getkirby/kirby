@@ -5,6 +5,7 @@ name: CI - Backend
 env:
   OS: &os ubuntu-24.04
   TIMEOUT: &timeout 5
+  COVERAGE_PHP: "8.4"
 
   # run job only under the following conditions:
   # - can be triggered manually from any repository
@@ -80,7 +81,7 @@ jobs:
         with:
           php: ${{ matrix.php }}
           ini: 'apc.enabled=1, apc.enable_cli=1, pcov.directory=., pcov.exclude="~(vendor|tests)~"'
-          coverage: pcov
+          coverage: ${{ matrix.php == env.COVERAGE_PHP && 'pcov' || 'none' }}
 
       - name: Check Composer platform requirements
         run: composer check-platform-reqs
@@ -95,15 +96,15 @@ jobs:
             phpunit-
 
       - name: Run PHPUnit tests
-        if: matrix.php != '8.4'
+        if: matrix.php != env.COVERAGE_PHP
         run: composer run test -- --configuration phpunit.ci.xml --processes 4
 
       - name: Run PHPUnit tests with coverage
-        if: matrix.php == '8.4'
+        if: matrix.php == env.COVERAGE_PHP
         run: composer run test -- --configuration phpunit.ci.xml --processes 4 --coverage-clover ${{ github.workspace }}/clover.xml --exclude-source-from-xml-coverage
 
       - name: Upload coverage results to Codecov
-        if: matrix.php == '8.4'
+        if: matrix.php == env.COVERAGE_PHP
         uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6
         with:
           # for better reliability if the GitHub API is down
@@ -172,23 +173,6 @@ jobs:
         uses: github/codeql-action/upload-sarif@68bde559dea0fdcac2102bfdf6230c5f70eb485e # v4
         with:
           sarif_file: sarif
-
-  # ======================== Coding Style ========================
-  coding-style:
-    name: "Coding Style"
-    if: *should-run
-    runs-on: *os
-    timeout-minutes: *timeout
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-
-      - name: Setup PHP environment
-        uses: ./.github/actions/setup-php
-        with:
-          php: 8.3 # should be the minimum supported PHP version
-          extensions: ""
 
       - name: Cache PHP-CS-Fixer data
         uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
