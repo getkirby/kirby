@@ -28,12 +28,12 @@ git diff-index --cached --name-only HEAD | while read -r file; do
     case "$file" in
         bootstrap.php | router.php | @(config|src|tests|views)/**.php)
             echo "### PHP-CS-Fixer on $file"
-            php-cs-fixer fix --dry-run --diff "$file"
+            composer run fix -- --dry-run --diff "$file"
             echo
 
             if [[ "$file" != tests/** ]]; then
                 echo "### Psalm on $file"
-                psalm "$file"
+                composer run analyze:psalm -- "$file"
                 echo
             fi
         ;;

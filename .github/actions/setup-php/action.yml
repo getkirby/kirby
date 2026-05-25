@@ -44,3 +44,26 @@ runs:
         ini-values: ${{ inputs.ini }}
         coverage: ${{ inputs.coverage }}
         tools: ${{ inputs.tools }}
+
+    - name: Cache composer global
+      id: composer-global-cache
+      uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
+      with:
+        path: ~/.composer/vendor
+        key: composer-global-cpx-1.0.4-${{ runner.os }}
+
+    - name: Install cpx
+      if: steps.composer-global-cache.outputs.cache-hit != 'true'
+      shell: bash
+      run: composer global require cpx/cpx:1.0.4
+
+    - name: Ensure cpx cache dir exists
+      shell: bash
+      run: mkdir -p ~/.cpx
+
+    - name: Cache cpx tools
+      uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
+      with:
+        path: ~/.cpx
+        key: cpx-${{ runner.os }}-${{ hashFiles('composer.json') }}
+        restore-keys: cpx-${{ runner.os }}-
