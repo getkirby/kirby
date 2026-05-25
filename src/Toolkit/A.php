@@ -460,7 +460,11 @@ class A
 	 */
 	public static function last(array $array): mixed
 	{
-		return $array[array_key_last($array)] ?? null;
+		if ($array === []) {
+			return null;
+		}
+
+		return $array[array_key_last($array)];
 	}
 
 	/**
