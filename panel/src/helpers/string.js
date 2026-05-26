@@ -81,7 +81,7 @@ export function hasEmoji(string) {
 /**
  * Checks if a string is shaped like an email address.
  *
- * @since 5.4.1
+ * @since 5.4.3
  * @param {string} unknown
  * @param {boolean} strict Whether to reject trailing mailto-URI parts
  * @returns {boolean}
