@@ -7,6 +7,8 @@ use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
 use Kirby\Cms\Site;
+use Kirby\Exception\NotFoundException;
+use Kirby\Exception\PermissionException;
 use Kirby\Panel\Collector\PagesCollector;
 use Kirby\Panel\Ui\Item\PageItem;
 
@@ -106,25 +108,58 @@ class PagePickerDialogController extends ModelPickerDialogController
 	}
 
 	/**
-	 * Returns the parent model object that
-	 * is currently selected in the page picker.
-	 * It normally starts at the site, but can
-	 * also be any subpage. When a query is given
-	 * and subpage navigation is deactivated,
-	 * there will be no model available at all.
+	 * Resolves the parent model that is currently
+	 * selected in the page picker. It normally starts
+	 * at the site, but can also be any subpage. When
+	 * a query is given and subpage navigation is
+	 * deactivated, there will be no model available
+	 * at all. Falls back to the root when the
+	 * requested parent is missing or not accessible
+	 * for the current user.
+	 *
+	 * @throws \Kirby\Exception\PermissionException if neither
+	 *                                              the requested parent nor the root are accessible
 	 */
-	public function parent(): array|null
+	public function parent(): Page|Site|null
 	{
 		// no subpages navigation = no current parent
 		if ($this->subpages === false) {
 			return null;
 		}
 
-		if ($parent = $this->request->get('parent')) {
-			$parent = $this->find($parent);
-		} else {
-			$parent = $this->root();
+		if ($id = $this->request->get('parent')) {
+			$parent = $this->find($id);
+
+			if ($parent?->isAccessible() === true) {
+				return $parent;
+			}
 		}
+
+		try {
+			$root = $this->root();
+
+			if ($root->isAccessible() === true) {
+				return $root;
+			}
+		} catch (NotFoundException) {
+			// fall through to throw PermissionException
+		}
+
+		throw new PermissionException(
+			key: 'page.undefined'
+		);
+	}
+
+	/**
+	 * Returns the parent representation for the
+	 * dialog props: `null` when no parent applies,
+	 * or an array with the parent's `id`, `parent`
+	 * and `title`. The `id` is `null` when the
+	 * top-most reachable model has been reached.
+	 */
+	protected function parentProps(): array|null
+	{
+		$parent = $this->parent();
 
 		if ($parent === null) {
 			return null;
@@ -155,15 +190,23 @@ class PagePickerDialogController extends ModelPickerDialogController
 		return [
 			...parent::props(),
 			'component' => 'k-page-picker-dialog',
-			'parent'    => $this->parent()
+			'parent'    => $this->parentProps()
 		];
 	}
 
 	public function query(): string
 	{
-		// if a current parent is present, use its children
-		if ($current = $this->request->get('parent')) {
-			return 'page("' . $current . '").children';
+		$parent = $this->parent();
+
+		// if a specific parent is currently selected and accessible,
+		// use its children for the picker query; otherwise (no parent
+		// requested, or the requested parent fell back to the root)
+		// use the default query
+		if (
+			$parent !== null &&
+			$parent->id() !== $this->root()->id()
+		) {
+			return 'page("' . $parent->id() . '").children';
 		}
 
 		return $this->query ?? 'site.children';

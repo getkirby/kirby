@@ -2,8 +2,10 @@
 
 namespace Kirby\Panel\Controller\Dialog;
 
+use Kirby\Cms\ModelPermissions;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
+use Kirby\Exception\PermissionException;
 use Kirby\Panel\Collector\PagesCollector;
 use Kirby\Panel\TestCase;
 use Kirby\Panel\Ui\Dialog;
@@ -142,7 +144,7 @@ class PagePickerDialogControllerTest extends TestCase
 			model: $this->app->site()
 		);
 
-		$parent = $controller->parent();
+		$parent = $controller->props()['parent'];
 		$this->assertSame('beta', $parent['id']);
 		$this->assertNull($parent['parent']);
 
@@ -161,7 +163,7 @@ class PagePickerDialogControllerTest extends TestCase
 			model: $this->app->site()
 		);
 
-		$parent = $controller->parent();
+		$parent = $controller->props()['parent'];
 		$this->assertSame('gamma/epsilon', $parent['id']);
 		$this->assertSame('gamma', $parent['parent']);
 
@@ -171,7 +173,7 @@ class PagePickerDialogControllerTest extends TestCase
 			query: 'page("gamma/epsilon")'
 		);
 
-		$parent = $controller->parent();
+		$parent = $controller->props()['parent'];
 		$this->assertNull($parent['id']);
 		$this->assertNull($parent['parent']);
 		$this->assertSame('epsilon', $parent['title']);
@@ -182,10 +184,10 @@ class PagePickerDialogControllerTest extends TestCase
 			subpages: false
 		);
 
-		$parent = $controller->parent();
+		$parent = $controller->props()['parent'];
 		$this->assertNull($parent);
 
-		// invalid parent
+		// invalid parent falls back to the root
 		$this->app = $this->app->clone([
 			'request' => [
 				'query' => [
@@ -200,8 +202,164 @@ class PagePickerDialogControllerTest extends TestCase
 			model: $this->app->site()
 		);
 
-		$parent = $controller->parent();
-		$this->assertNull($parent);
+		$parent = $controller->props()['parent'];
+		$this->assertNull($parent['id']);
+		$this->assertNull($parent['parent']);
+	}
+
+	public function testParentAccessibleButNotListable(): void
+	{
+		ModelPermissions::$cache = [];
+
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/limited' => [
+					'options' => [
+						'list' => false
+					]
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'visible-page',
+						'template' => 'limited'
+					]
+				]
+			],
+			'roles' => [
+				['name' => 'admin'],
+				['name' => 'editor']
+			],
+			'users' => [
+				['id' => 'editor', 'role' => 'editor']
+			],
+			'request' => [
+				'query' => [
+					'parent' => 'visible-page',
+				],
+			],
+		]);
+
+		$this->app->impersonate('editor');
+
+		$page = $this->app->page('visible-page');
+		$this->assertTrue($page->isAccessible());
+		$this->assertFalse($page->isListable());
+
+		// accessible-but-not-listable pages are valid picker parents
+		$controller = new PagePickerDialogController(
+			model: $this->app->site()
+		);
+
+		$this->assertSame($page, $controller->parent());
+		$this->assertSame('visible-page', $controller->props()['parent']['id']);
+		$this->assertSame('page("visible-page").children', $controller->query());
+	}
+
+	public function testParentNotAccessibleFallsBackToRoot(): void
+	{
+		ModelPermissions::$cache = [];
+
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/forbidden' => [
+					'options' => [
+						'access' => false
+					]
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'hidden-page',
+						'template' => 'forbidden'
+					]
+				]
+			],
+			'roles' => [
+				['name' => 'admin'],
+				['name' => 'editor']
+			],
+			'users' => [
+				['id' => 'editor', 'role' => 'editor']
+			],
+			'request' => [
+				'query' => [
+					'parent' => 'hidden-page',
+				],
+			],
+		]);
+
+		$this->app->impersonate('editor');
+
+		$page = $this->app->page('hidden-page');
+		$this->assertFalse($page->isAccessible());
+		$this->assertTrue($this->app->site()->isAccessible());
+
+		// inaccessible parents must fall back to the root
+		$controller = new PagePickerDialogController(
+			model: $this->app->site()
+		);
+
+		$this->assertInstanceOf(Site::class, $controller->parent());
+		$this->assertNull($controller->props()['parent']['id']);
+		// the query also falls back to the default
+		$this->assertSame('site.children', $controller->query());
+	}
+
+	public function testParentAndRootNotAccessibleThrows(): void
+	{
+		ModelPermissions::$cache = [];
+
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/forbidden' => [
+					'options' => [
+						'access' => false
+					]
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'hidden-page',
+						'template' => 'forbidden'
+					]
+				]
+			],
+			'roles' => [
+				['name' => 'admin'],
+				[
+					'name' => 'editor',
+					'permissions' => [
+						'site' => [
+							'access' => false
+						]
+					]
+				]
+			],
+			'users' => [
+				['id' => 'editor', 'role' => 'editor']
+			],
+			'request' => [
+				'query' => [
+					'parent' => 'hidden-page',
+				],
+			],
+		]);
+
+		$this->app->impersonate('editor');
+
+		$this->assertFalse($this->app->page('hidden-page')->isAccessible());
+		$this->assertFalse($this->app->site()->isAccessible());
+
+		$controller = new PagePickerDialogController(
+			model: $this->app->site()
+		);
+
+		$this->expectException(PermissionException::class);
+		$controller->parent();
 	}
 
 	public function testProps(): void
@@ -264,6 +422,8 @@ class PagePickerDialogControllerTest extends TestCase
 				],
 			],
 		]);
+
+		$this->app->impersonate('kirby');
 
 		$controller = new PagePickerDialogController(
 			model: $this->app->site()
