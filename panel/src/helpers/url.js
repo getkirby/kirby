@@ -70,7 +70,7 @@ export function isAbsolute(url) {
  *
  * @param {unknown} url
  * @returns {boolean}
- * @since 5.4.2
+ * @since 5.4.3
  */
 export function hasDangerousScheme(url) {
 	if (url === null || url === undefined) {
