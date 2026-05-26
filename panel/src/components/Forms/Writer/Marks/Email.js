@@ -19,10 +19,24 @@ export default class Email extends Mark {
 				this.editor.emit("email", this.editor);
 			},
 			insertEmail: (attrs = {}) => {
+				const hasEmailMark = this.editor.activeMarks.includes("email");
+
+				// reject anything that doesn't look like an email so it
+				// never enters the document state; if an email mark is
+				// already active, remove it entirely
+				if (attrs.href && isEmail(attrs.href) === false) {
+					if (hasEmailMark === true) {
+						return this.remove();
+					}
+
+					return;
+				}
+
 				const { selection } = this.editor.state;
 
-				// if no text is selected, we insert the link as text
-				if (selection.empty) {
+				// if no text is selected and email mark is not active
+				// we insert the email as text
+				if (selection.empty && hasEmailMark === false) {
 					this.editor.insertText(attrs.href, true);
 				}
 
@@ -73,7 +87,8 @@ export default class Email extends Mark {
 						if (
 							attrs.href &&
 							event.altKey === true &&
-							event.target instanceof HTMLAnchorElement
+							event.target instanceof HTMLAnchorElement &&
+							isEmail(attrs.href) === true
 						) {
 							event.stopPropagation();
 							window.open("mailto:" + attrs.href);
