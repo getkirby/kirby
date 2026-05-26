@@ -19,9 +19,16 @@ export default class Link extends Mark {
 				this.editor.emit("link", this.editor);
 			},
 			insertLink: (attrs = {}) => {
+				const hasLinkMark = this.editor.activeMarks.includes("link");
+
 				// reject dangerous schemes (javascript:, vbscript:, data: etc.)
-				// at insert time so they never enter the document state
+				// at insert time so they never enter the document state;
+				// if a link mark is already active, remove it entirely
 				if (hasDangerousScheme(attrs.href) === true) {
+					if (hasLinkMark === true) {
+						return this.remove();
+					}
+
 					return;
 				}
 
@@ -29,10 +36,7 @@ export default class Link extends Mark {
 
 				// if no text is selected and link mark is not active
 				// we insert the link as text
-				if (
-					selection.empty &&
-					this.editor.activeMarks.includes("link") === false
-				) {
+				if (selection.empty && hasLinkMark === false) {
 					this.editor.insertText(attrs.href, true);
 				}
 
