@@ -6,7 +6,7 @@
 		class="k-user-view"
 	>
 		<template #topbar>
-			<k-prev-next :prev="prev" :next="next" />
+			<k-prev-next v-if="$options.prevnext !== false" :prev="prev" :next="next" />
 		</template>
 
 		<k-header
