@@ -365,9 +365,9 @@ class UuidTest extends TestCase
 	public function testModelNotFoundNoIndex(): void
 	{
 		$this->app->clone(['options' => ['content' => ['uuid' => ['index' => false]]]]);
-		$this->assertNull(Uuid::for('page://something')->model());
-		$this->assertNull(Uuid::for('user://something')->model());
-		$this->assertNull(Uuid::for('file://something')->model());
+		$this->assertNull(Uuid::from('page://something')->model());
+		$this->assertNull(Uuid::from('user://something')->model());
+		$this->assertNull(Uuid::from('file://something')->model());
 	}
 
 	public function testModelNotFoundNoIndexDebug(): void
@@ -386,7 +386,7 @@ class UuidTest extends TestCase
 	{
 		$this->app->clone(['options' => ['content' => ['uuid' => ['index' => false]]]]);
 
-		$uuid = Uuid::for('file://my-file');
+		$uuid = Uuid::from('file://my-file');
 		Uuids::cache()->set($uuid->key(), [
 			'parent'   => 'page://something',
 			'filename' => 'test.pdf'
