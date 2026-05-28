@@ -355,6 +355,36 @@
       <code><![CDATA[preg_replace('!(' . preg_quote($trim) . ')+$!', '', $string)]]></code>
       <code><![CDATA[preg_replace('!^(' . preg_quote($trim) . ')+!', '', $string)]]></code>
       <code><![CDATA[preg_replace('/[^\x09\x0A\x0D\x20-\x7E]/', '', $string)]]></code>
+      <code><![CDATA[preg_replace_callback(
+			'!' . $start . '(.*?)' . $end . '!',
+			function (array $match) use ($data, $fallback, $callback) {
+				$query = trim($match[1]);
+
+				try {
+					$result = Query::factory($query)->resolve($data);
+				} catch (Throwable) {
+					$result = null;
+				}
+
+				// if we don't have a result, use the fallback if given
+				$result ??= $fallback;
+
+				// callback on result if given
+				if ($callback !== null) {
+					$callback = $callback((string)$result, $query, $data);
+
+					if ($result !== null || $callback !== '') {
+						// the empty string came just from string casting,
+						// keep the null value and ignore the callback result
+						$result = $callback;
+					}
+				}
+
+				// without a result, keep the original placeholder
+				return $result ?? $match[0];
+			},
+			$string
+		)]]></code>
       <code><![CDATA[preg_replace_callback('|(\s)(?=\S*$)(\S+)|u', function ($matches) {
 			if (static::contains($matches[2], '-')) {
 				$matches[2] = str_replace('-', '&#8209;', $matches[2]);
