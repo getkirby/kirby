@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { NodeSpec } from "prosemirror-model";
-import type { BaseContext } from "./Extension";
-import Node from "./Node";
+import Node, { type NodeContext } from "./Node";
 
 class TestNode extends Node {
 	get name() {
@@ -13,9 +12,15 @@ class TestNode extends Node {
 }
 
 const node = new TestNode();
-const context = {} as BaseContext;
+const context = {} as NodeContext;
 
 describe("Node", () => {
+	describe("button", () => {
+		it("returns undefined by default", () => {
+			expect(node.button).toBeUndefined();
+		});
+	});
+
 	describe("commands", () => {
 		it("returns an empty object by default", () => {
 			const commands = node.commands(context);
@@ -41,6 +46,12 @@ describe("Node", () => {
 		it("returns an empty array by default", () => {
 			const rules = node.pasteRules(context);
 			expect(rules).toStrictEqual([]);
+		});
+	});
+
+	describe("plugins", () => {
+		it("returns an empty array by default", () => {
+			expect(node.plugins()).toStrictEqual([]);
 		});
 	});
 

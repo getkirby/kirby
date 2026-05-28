@@ -23,6 +23,7 @@ export type Button = {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ExtensionCommand = (...args: any[]) => unknown;
+export type Commands = ExtensionCommand | Record<string, ExtensionCommand>;
 
 export default abstract class Extension<
 	TOptions extends Record<string, unknown> = Record<string, unknown>
@@ -57,7 +58,7 @@ export default abstract class Extension<
 	commands(
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		_context: BaseContext
-	): ExtensionCommand | Record<string, ExtensionCommand> {
+	): Commands {
 		return {};
 	}
 
