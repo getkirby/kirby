@@ -79,6 +79,26 @@ export function hasEmoji(string) {
 }
 
 /**
+ * Checks if a string is shaped like an email address.
+ *
+ * @since 5.4.4
+ * @param {string} unknown
+ * @param {boolean} strict Whether to reject trailing mailto-URI parts
+ * @returns {boolean}
+ */
+export function isEmail(string, strict = false) {
+	if (typeof string !== "string") {
+		return false;
+	}
+
+	if (strict === true) {
+		return /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i.test(string);
+	}
+
+	return /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}(?:[?#].*)?$/i.test(string);
+}
+
+/**
  * Checks if a string is empty
  * @since 4.0.0
  * @param {String|undefined|null} string
@@ -311,6 +331,7 @@ export default {
 	camelToKebab,
 	escapeHTML,
 	hasEmoji,
+	isEmail,
 	isEmpty,
 	lcfirst,
 	ltrim,
