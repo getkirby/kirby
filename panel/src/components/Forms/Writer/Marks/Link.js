@@ -1,3 +1,4 @@
+import { hasDangerousScheme } from "@/helpers/url.js";
 import Mark from "../Mark";
 
 export default class Link extends Mark {
@@ -18,14 +19,24 @@ export default class Link extends Mark {
 				this.editor.emit("link", this.editor);
 			},
 			insertLink: (attrs = {}) => {
+				const hasLinkMark = this.editor.activeMarks.includes("link");
+
+				// reject dangerous schemes (javascript:, vbscript:, data: etc.)
+				// at insert time so they never enter the document state;
+				// if a link mark is already active, remove it entirely
+				if (hasDangerousScheme(attrs.href) === true) {
+					if (hasLinkMark === true) {
+						return this.remove();
+					}
+
+					return;
+				}
+
 				const { selection } = this.editor.state;
 
 				// if no text is selected and link mark is not active
 				// we insert the link as text
-				if (
-					selection.empty &&
-					this.editor.activeMarks.includes("link") === false
-				) {
+				if (selection.empty && hasLinkMark === false) {
 					this.editor.insertText(attrs.href, true);
 				}
 
@@ -76,7 +87,8 @@ export default class Link extends Mark {
 						if (
 							attrs.href &&
 							event.altKey === true &&
-							event.target instanceof HTMLAnchorElement
+							event.target instanceof HTMLAnchorElement &&
+							hasDangerousScheme(attrs.href) === false
 						) {
 							event.stopPropagation();
 							window.open(attrs.href, attrs.target);
@@ -104,11 +116,21 @@ export default class Link extends Mark {
 			parseDOM: [
 				{
 					tag: "a[href]:not([href^='mailto:'])",
-					getAttrs: (dom) => ({
-						href: dom.getAttribute("href"),
-						target: dom.getAttribute("target"),
-						title: dom.getAttribute("title")
-					})
+					getAttrs: (dom) => {
+						const href = dom.getAttribute("href");
+
+						// reject the link entirely if the href uses a
+						// dangerous scheme (javascript:, vbscript:, data: etc.)
+						if (hasDangerousScheme(href) === true) {
+							return false;
+						}
+
+						return {
+							href,
+							target: dom.getAttribute("target"),
+							title: dom.getAttribute("title")
+						};
+					}
 				}
 			],
 			toDOM: (node) => [
