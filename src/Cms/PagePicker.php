@@ -211,7 +211,9 @@ class PagePicker extends Picker
 			return $this->parent = $this->site;
 		}
 
-		throw new PermissionException('page.undefined');
+		throw new PermissionException([
+			'key' => 'page.undefined'
+		]);
 	}
 
 	/**
