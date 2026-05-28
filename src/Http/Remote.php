@@ -186,7 +186,9 @@ class Remote
 					$value = $key . ': ' . $value;
 				}
 
-				$headers[] = $value;
+				// Prevent header injection by
+				// stripping new line characters
+				$headers[] = str_replace(["\r", "\n"], '', $value);
 			}
 
 			$this->curlopt[CURLOPT_HTTPHEADER] = $headers;
