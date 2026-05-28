@@ -20,6 +20,7 @@ class ComponentTest extends TestCase
 	{
 		Component::$types  = [];
 		Component::$mixins = [];
+		Component::$setups = [];
 	}
 
 	public function testProp(): void
@@ -345,5 +346,85 @@ class ComponentTest extends TestCase
 
 		$component = new Component('test');
 		$this->assertSame([], $component->defaults());
+	}
+
+	public function testSetupCacheHit(): void
+	{
+		Component::$types = [
+			'test' => [
+				'props' => [
+					'prop' => fn ($prop) => $prop
+				]
+			]
+		];
+
+		$first = Component::setup('test');
+		$this->assertArrayHasKey('prop', $first['props']);
+
+		// poison the stored options; the next call must return
+		// the sentinel, proving the cache path was taken
+		Component::$setups[Component::class]['test']['options'] = ['poisoned' => true];
+
+		$second = Component::setup('test');
+		$this->assertSame(['poisoned' => true], $second);
+	}
+
+	public function testSetupCacheInvalidation(): void
+	{
+		Component::$types = [
+			'test' => [
+				'props' => [
+					'a' => fn ($prop) => $prop
+				]
+			]
+		];
+
+		$first = Component::setup('test');
+		$this->assertArrayHasKey('a', $first['props']);
+
+		// replace the type definition with a new array;
+		// the cached entry's definition reference no longer
+		// matches, so setup() must re-resolve
+		Component::$types['test'] = [
+			'props' => [
+				'b' => fn ($prop) => $prop
+			]
+		];
+
+		$second = Component::setup('test');
+		$this->assertArrayHasKey('b', $second['props']);
+		$this->assertArrayNotHasKey('a', $second['props']);
+	}
+
+	public function testSetupCachePerClass(): void
+	{
+		Component::$types = [
+			'test_a' => [
+				'props' => [
+					'a' => fn ($prop) => $prop
+				]
+			],
+			'test_b' => [
+				'props' => [
+					'b' => fn ($prop) => $prop
+				]
+			]
+		];
+
+		$base   = Component::setup('test_a');
+		$custom = TestComponentWithCustomProperty::setup('test_b');
+
+		$this->assertArrayHasKey('a', $base['props']);
+		$this->assertArrayHasKey('b', $custom['props']);
+
+		// each class caches under its own `static::class` slot
+		$this->assertSame(
+			['test_a'],
+			array_keys(Component::$setups[Component::class])
+		);
+		$this->assertSame(
+			['test_b'],
+			array_keys(Component::$setups[TestComponentWithCustomProperty::class])
+		);
 	}
 }
