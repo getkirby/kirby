@@ -19,6 +19,11 @@ use Kirby\Image\Image;
 trait IsFile
 {
 	/**
+	 * Marker constant for detecting use of this trait
+	 */
+	public const IS_FILE_TRAIT = true;
+
+	/**
 	 * File asset object
 	 */
 	protected File|null $asset = null;
@@ -108,17 +113,6 @@ trait IsFile
 		// to avoid infinite loops when trying
 		// to proxy the method from the asset object
 		return file_exists($this->root()) === true;
-	}
-
-	/**
-	 * To check the existence of the IsFile trait
-	 *
-	 * @todo Switch to class constant in traits when min PHP version 8.2 required
-	 * @codeCoverageIgnore
-	 */
-	protected function hasIsFileTrait(): bool
-	{
-		return true;
 	}
 
 	/**
