@@ -223,7 +223,10 @@ class PagePickerDialogControllerTest extends TestCase
 				'children' => [
 					[
 						'slug'     => 'visible-page',
-						'template' => 'limited'
+						'template' => 'limited',
+						'children' => [
+							['slug' => 'visible-sub', 'num' => 1]
+						]
 					]
 				]
 			],
@@ -254,7 +257,13 @@ class PagePickerDialogControllerTest extends TestCase
 
 		$this->assertSame($page, $controller->parent());
 		$this->assertSame('visible-page', $controller->props()['parent']['id']);
-		$this->assertSame('page("visible-page").children', $controller->query());
+
+		// the picker navigates into the accessible page, listing its
+		// children rather than the (filtered) site children
+		$this->assertSame(
+			['visible-page/visible-sub'],
+			array_column($controller->items(), 'id')
+		);
 	}
 
 	public function testParentNotAccessibleFallsBackToRoot(): void
@@ -304,8 +313,14 @@ class PagePickerDialogControllerTest extends TestCase
 
 		$this->assertInstanceOf(Site::class, $controller->parent());
 		$this->assertNull($controller->props()['parent']['id']);
-		// the query also falls back to the default
-		$this->assertSame('site.children', $controller->query());
+
+		// falls back to listing the root's (listable) children rather
+		// than navigating into the inaccessible page
+		$root = $this->app->site()->children()->filter('isListable', true);
+		$this->assertSame(
+			$root->values(fn (Page $model) => $model->id()),
+			array_column($controller->items(), 'id')
+		);
 	}
 
 	public function testParentAndRootNotAccessibleThrows(): void
@@ -399,26 +414,23 @@ class PagePickerDialogControllerTest extends TestCase
 		$this->assertSame(['alpha', 'beta'], $props['value']);
 	}
 
-	public function testQuery(): void
+	public function testItemsWithParentNavigation(): void
 	{
+		// default: lists the site's children
 		$controller = new PagePickerDialogController(
 			model: $this->app->site()
 		);
 
-		$this->assertSame('site.children', $controller->query());
-
-		$controller = new PagePickerDialogController(
-			model: $this->app->page('alpha'),
-			query: 'page("alpha").children'
+		$this->assertSame(
+			['alpha', 'beta', 'gamma'],
+			array_column($controller->items(), 'id')
 		);
 
-		$this->assertSame('page("alpha").children', $controller->query());
-
-		// test with parent
+		// navigating into a parent lists that parent's children
 		$this->app = $this->app->clone([
 			'request' => [
 				'query' => [
-					'parent' => 'beta',
+					'parent' => 'gamma',
 				],
 			],
 		]);
@@ -429,7 +441,10 @@ class PagePickerDialogControllerTest extends TestCase
 			model: $this->app->site()
 		);
 
-		$this->assertSame('page("beta").children', $controller->query());
+		$this->assertSame(
+			['gamma/delta', 'gamma/epsilon'],
+			array_column($controller->items(), 'id')
+		);
 	}
 
 	public function testRoot(): void

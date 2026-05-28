@@ -54,13 +54,30 @@ class PagePickerDialogController extends ModelPickerDialogController
 
 	public function collector(): PagesCollector
 	{
+		$parent = $this->parent();
+
+		// if a specific parent is currently selected and accessible,
+		// navigate into its children directly via the parent object;
+		// otherwise (no parent requested, or the requested parent fell
+		// back to the root) run the configured query (or the default)
+		// against the model
+		$navigate =
+			$parent !== null &&
+			$parent->id() !== $this->root()->id();
+
 		return $this->collector ??= new class (
 			limit:  $this->limit,
 			page:   $this->page,
-			parent: $this->model,
-			query:  $this->query(),
+			parent: $navigate ? $parent : $this->model,
+			query:  $navigate ? null : ($this->query ?? 'site.children'),
 			search: $this->search,
 		) extends PagesCollector {
+			// subpage navigation: collect the selected parent's children
+			protected function collect(): Pages
+			{
+				return $this->parent()->children();
+			}
+
 			// if the query only returns a site or page object
 			// instead of a pages collection, use its children
 			protected function collectByQuery(): Pages
@@ -192,24 +209,6 @@ class PagePickerDialogController extends ModelPickerDialogController
 			'component' => 'k-page-picker-dialog',
 			'parent'    => $this->parentProps()
 		];
-	}
-
-	public function query(): string
-	{
-		$parent = $this->parent();
-
-		// if a specific parent is currently selected and accessible,
-		// use its children for the picker query; otherwise (no parent
-		// requested, or the requested parent fell back to the root)
-		// use the default query
-		if (
-			$parent !== null &&
-			$parent->id() !== $this->root()->id()
-		) {
-			return 'page("' . $parent->id() . '").children';
-		}
-
-		return $this->query ?? 'site.children';
 	}
 
 	/**
