@@ -233,6 +233,45 @@ class A
 	}
 
 	/**
+	 * Inverts the given array into a multimap of value → keys.
+	 * Values may be scalar (a single key) or arrays (each element
+	 * becomes its own key in the result). Unlike PHP's array_flip(),
+	 * duplicate values are preserved: every original key that maps
+	 * to the same value ends up in the resulting list.
+	 *
+	 * ```php
+	 * $array = [
+	 *   'apple'      => ['red', 'green'],
+	 *   'strawberry' => 'red',
+	 *   'banana'     => 'yellow',
+	 *   'kiwi'       => 'green',
+	 * ];
+	 *
+	 * A::flip($array);
+	 *
+	 * // result: [
+	 * //   'red'    => ['apple', 'strawberry'],
+	 * //   'green'  => ['apple', 'kiwi'],
+	 * //   'yellow' => ['banana'],
+	 * // ]
+	 * ```
+	 *
+	 * @since 5.5.0
+	 */
+	public static function flip(array $array): array
+	{
+		$result = [];
+
+		foreach ($array as $key => $value) {
+			foreach (static::wrap($value) as $v) {
+				$result[$v][] = $key;
+			}
+		}
+
+		return $result;
+	}
+
+	/**
 	 * Gets an element of an array by key
 	 *
 	 * ```php

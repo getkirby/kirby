@@ -253,9 +253,19 @@ class Xml
 			$string = Html::encode($string, false);
 		}
 
+		// cache the keys/values arrays;
+		// invalidates if $entities changes
+		static $cached = null;
+		static $html   = [];
+		static $xml    = [];
+
 		$entities = self::entities();
-		$html = array_keys($entities);
-		$xml  = array_values($entities);
+
+		if ($cached !== $entities) {
+			$html   = array_keys($entities);
+			$xml    = array_values($entities);
+			$cached = $entities;
+		}
 
 		return str_replace($html, $xml, $string);
 	}

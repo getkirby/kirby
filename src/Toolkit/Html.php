@@ -153,11 +153,22 @@ class Html extends Xml
 			return null;
 		}
 
+		// cache the keys/values arrays;
+		// invalidates if $entities changes
+		static $cached = null;
+		static $html   = [];
+		static $xml    = [];
+
 		// HTML supports named entities
 		$entities = parent::entities();
-		$html     = array_keys($entities);
-		$xml      = array_values($entities);
-		$attr     = str_replace($xml, $html, $attr);
+
+		if ($cached !== $entities) {
+			$html   = array_keys($entities);
+			$xml    = array_values($entities);
+			$cached = $entities;
+		}
+
+		$attr = str_replace($xml, $html, $attr);
 
 		if ($attr) {
 			return $before . $attr . $after;
