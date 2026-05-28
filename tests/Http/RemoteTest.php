@@ -210,6 +210,23 @@ class RemoteTest extends TestCase
 		$this->assertSame('DELETE', $request->method());
 	}
 
+	public function testFetchStripsCRLFFromHeaders(): void
+	{
+		$request = Remote::get('https://getkirby.com', [
+			'headers' => [
+				// associative form: "X-Foo: bar\r\nX-Injected: evil"
+				'X-Foo' => "bar\r\nX-Injected: evil",
+				// indexed form: prebuilt header string
+				"X-Bar: bar\r\nX-Other: evil",
+			],
+		]);
+
+		$this->assertSame([
+			'X-Foo: barX-Injected: evil',
+			'X-Bar: barX-Other: evil',
+		], $request->curlopt[CURLOPT_HTTPHEADER]);
+	}
+
 	public function testGet(): void
 	{
 		// default
