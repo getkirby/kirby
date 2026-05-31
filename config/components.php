@@ -216,7 +216,7 @@ return [
 			}
 
 			if (empty($options['fields']) === false) {
-				$fields = array_map('strtolower', $options['fields']);
+				$fields = array_map(strtolower(...), $options['fields']);
 				$keys   = array_intersect($keys, $fields);
 			}
 

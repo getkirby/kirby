@@ -99,10 +99,10 @@ class Dir
 		bool $absolute = false
 	): array {
 		$scan   = static::read($dir, $ignore, true);
-		$result = array_values(array_filter($scan, 'is_dir'));
+		$result = array_values(array_filter($scan, is_dir(...)));
 
 		if ($absolute !== true) {
-			$result = array_map('basename', $result);
+			$result = array_map(basename(...), $result);
 		}
 
 		return $result;
@@ -130,10 +130,10 @@ class Dir
 		bool $absolute = false
 	): array {
 		$scan   = static::read($dir, $ignore, true);
-		$result = array_values(array_filter($scan, 'is_file'));
+		$result = array_values(array_filter($scan, is_file(...)));
 
 		if ($absolute !== true) {
-			$result = array_map('basename', $result);
+			$result = array_map(basename(...), $result);
 		}
 
 		return $result;
