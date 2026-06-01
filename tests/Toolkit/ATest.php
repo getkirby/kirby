@@ -641,6 +641,38 @@ class ATest extends TestCase
 		$this->assertSame('miao', A::first($this->_array()));
 	}
 
+	public function testFlip(): void
+	{
+		// scalar values
+		$this->assertSame(
+			['miao' => ['cat'], 'wuff' => ['dog'], 'tweet' => ['bird']],
+			A::flip(['cat' => 'miao', 'dog' => 'wuff', 'bird' => 'tweet'])
+		);
+
+		// array values: each element becomes its own key in the result
+		$this->assertSame(
+			[
+				'image/jpeg'  => ['jpg', 'jpeg'],
+				'image/pjpeg' => ['jpg', 'jpeg'],
+				'image/png'   => ['png'],
+			],
+			A::flip([
+				'jpg'  => ['image/jpeg', 'image/pjpeg'],
+				'jpeg' => ['image/jpeg', 'image/pjpeg'],
+				'png'  => 'image/png',
+			])
+		);
+
+		// duplicate scalar values: both keys preserved (unlike array_flip)
+		$this->assertSame(
+			['x' => ['a', 'b']],
+			A::flip(['a' => 'x', 'b' => 'x'])
+		);
+
+		// empty array
+		$this->assertSame([], A::flip([]));
+	}
+
 	public function testLast(): void
 	{
 		$this->assertSame('tweet', A::last($this->_array()));

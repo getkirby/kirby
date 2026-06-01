@@ -224,7 +224,7 @@ jobs:
           php-version: ${{ env.php }}
           extensions: ${{ env.extensions }}
           coverage: none
-          tools: composer:2.9.8, composer-normalize:2.51.0, phpmd:2.15.0
+          tools: composer:2.9.8, composer-normalize:2.52.0, phpmd:2.15.0
 
       - name: Cache composer global
         id: composer-global-cache
