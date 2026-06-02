@@ -744,7 +744,7 @@ class HelperFunctionsTest extends TestCase
 	public function testSmartypants(): void
 	{
 		$text     = smartypants('"Test"');
-		$expected = '&#8220;Test&#8221;';
+		$expected = '“Test”';
 
 		$this->assertSame($expected, $text);
 	}
@@ -761,7 +761,7 @@ class HelperFunctionsTest extends TestCase
 		]);
 
 		$text     = kirbytextinline('"Test"');
-		$expected = '&#8220;Test&#8221;';
+		$expected = '“Test”';
 
 		$this->assertSame($expected, $text);
 	}

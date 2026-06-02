@@ -935,7 +935,7 @@ class FieldMethodsTest extends TestCase
 	public function testSmartypants(): void
 	{
 		$text     = '"Test"';
-		$expected = '&#8220;Test&#8221;';
+		$expected = '“Test”';
 
 		$this->assertSame($expected, $this->field($text)->smartypants()->value());
 	}
@@ -952,7 +952,7 @@ class FieldMethodsTest extends TestCase
 		]);
 
 		$text     = '"Test"';
-		$expected = '&#8220;Test&#8221;';
+		$expected = '“Test”';
 
 		$this->assertSame($expected, $this->field($text)->kti()->value());
 	}
