@@ -3,26 +3,16 @@
 namespace Kirby\Panel\Ui\Item;
 
 use Kirby\Cms\File;
-use Kirby\Cms\ModelWithContent;
-use Kirby\Panel\Model;
 
 /**
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     5.1.0
+ *
+ * @extends \Kirby\Panel\Ui\Item\ModelItem<\Kirby\Cms\File, \Kirby\Panel\File>
  */
 class FileItem extends ModelItem
 {
-	/**
-	 * @var \Kirby\Cms\File
-	 */
-	protected ModelWithContent $model;
-
-	/**
-	 * @var \Kirby\Panel\File
-	 */
-	protected Model $panel;
-
 	public function __construct(
 		File $file,
 		protected bool $dragTextIsAbsolute = false,

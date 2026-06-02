@@ -155,6 +155,21 @@ class FieldsTest extends TestCase
 		$this->assertSame('test', $fields->field('test')->name());
 	}
 
+	public function test__call(): void
+	{
+		$fields = new Fields([
+			'title' => [
+				'type' => 'text',
+			],
+		], $this->model);
+
+		// `$fields->fieldName()` resolves to the field stored under that key
+		$this->assertSame('title', $fields->title()->name());
+
+		// unknown field falls through to null
+		$this->assertNull($fields->unknown());
+	}
+
 	public function testFieldWithMissingField(): void
 	{
 		$fields = new Fields([

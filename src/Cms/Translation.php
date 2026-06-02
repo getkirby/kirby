@@ -82,8 +82,9 @@ class Translation
 	}
 
 	/**
-	 * Returns a single translation
-	 * string by key
+	 * Returns a single translation string by key
+	 *
+	 * @return ($default is null ? string|null : string)
 	 */
 	public function get(string $key, string|null $default = null): string|null
 	{

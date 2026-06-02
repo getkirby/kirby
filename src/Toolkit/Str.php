@@ -30,83 +30,83 @@ class Str
 	 * Ascii translation table
 	 */
 	public static array $ascii = [
-		'/°|₀/' => '0',
-		'/¹|₁/' => '1',
-		'/²|₂/' => '2',
-		'/³|₃/' => '3',
-		'/⁴|₄/' => '4',
-		'/⁵|₅/' => '5',
-		'/⁶|₆/' => '6',
-		'/⁷|₇/' => '7',
-		'/⁸|₈/' => '8',
-		'/⁹|₉/' => '9',
-		'/À|Á|Â|Ã|Å|Ǻ|Ā|Ă|Ą|Ǎ|Ä|A/' => 'A',
-		'/à|á|â|ã|å|ǻ|ā|ă|ą|ǎ|ª|æ|ǽ|ä|a|а/' => 'a',
-		'/Б/' => 'B',
-		'/б/' => 'b',
-		'/Ç|Ć|Ĉ|Ċ|Č|Ц/' => 'C',
-		'/ç|ć|ĉ|ċ|č|ц/' => 'c',
-		'/Ð|Ď|Đ/' => 'Dj',
-		'/ð|ď|đ/' => 'dj',
-		'/Д/' => 'D',
-		'/д/' => 'd',
-		'/È|É|Ê|Ë|Ē|Ĕ|Ė|Ę|Ě|Е|Ё|Э/' => 'E',
-		'/è|é|ê|ë|ē|ĕ|ė|ę|ě|е|ё|э/' => 'e',
-		'/Ф/' => 'F',
-		'/ƒ|ф/' => 'f',
-		'/Ĝ|Ğ|Ġ|Ģ|Г/' => 'G',
-		'/ĝ|ğ|ġ|ģ|г/' => 'g',
-		'/Ĥ|Ħ|Х/' => 'H',
-		'/ĥ|ħ|х/' => 'h',
-		'/Ì|Í|Î|Ï|Ĩ|Ī|Ĭ|Ǐ|Į|İ|И/' => 'I',
-		'/ì|í|î|ï|ĩ|ī|ĭ|ǐ|į|ı|и|i̇/' => 'i',
-		'/Ĵ|Й/' => 'J',
-		'/ĵ|й/' => 'j',
-		'/Ķ|К/' => 'K',
-		'/ķ|к/' => 'k',
-		'/Ĺ|Ļ|Ľ|Ŀ|Ł|Л/' => 'L',
-		'/ĺ|ļ|ľ|ŀ|ł|л/' => 'l',
-		'/М/' => 'M',
-		'/м/' => 'm',
-		'/Ñ|Ń|Ņ|Ň|Н/' => 'N',
-		'/ñ|ń|ņ|ň|ŉ|н/' => 'n',
-		'/Ò|Ó|Ô|Õ|Ō|Ŏ|Ǒ|Ő|Ơ|Ø|Ǿ|Ö|O/' => 'O',
-		'/ò|ó|ô|õ|ō|ŏ|ǒ|ő|ơ|ø|ǿ|º|ö|o|о/' => 'o',
-		'/П/' => 'P',
-		'/п/' => 'p',
-		'/Ŕ|Ŗ|Ř|Р/' => 'R',
-		'/ŕ|ŗ|ř|р/' => 'r',
-		'/Ś|Ŝ|Ş|Ș|Š|С/' => 'S',
-		'/ś|ŝ|ş|ș|š|ſ|с/' => 's',
-		'/Ţ|Ț|Ť|Ŧ|Т/' => 'T',
-		'/ţ|ț|ť|ŧ|т/' => 't',
-		'/Ù|Ú|Û|Ũ|Ū|Ŭ|Ů|Ű|Ų|Ư|Ǔ|Ǖ|Ǘ|Ǚ|Ǜ|У|Ü|U/' => 'U',
-		'/ù|ú|û|ũ|ū|ŭ|ů|ű|ų|ư|ǔ|ǖ|ǘ|ǚ|ǜ|у|ü|u/' => 'u',
-		'/В/' => 'V',
-		'/в/' => 'v',
-		'/Ý|Ÿ|Ŷ|Ы/' => 'Y',
-		'/ý|ÿ|ŷ|ы/' => 'y',
-		'/Ŵ/' => 'W',
-		'/ŵ/' => 'w',
-		'/Ź|Ż|Ž|З/' => 'Z',
-		'/ź|ż|ž|з/' => 'z',
-		'/Æ|Ǽ/' => 'AE',
-		'/ß/' => 'ss',
-		'/Ĳ/' => 'IJ',
-		'/ĳ/' => 'ij',
-		'/Œ/' => 'OE',
-		'/Ч/' => 'Ch',
-		'/ч/' => 'ch',
-		'/Ю/' => 'Ju',
-		'/ю/' => 'ju',
-		'/Я/' => 'Ja',
-		'/я/' => 'ja',
-		'/Ш/' => 'Sh',
-		'/ш/' => 'sh',
-		'/Щ/' => 'Shch',
-		'/щ/' => 'shch',
-		'/Ж/' => 'Zh',
-		'/ж/' => 'zh',
+		'°|₀' => '0',
+		'¹|₁' => '1',
+		'²|₂' => '2',
+		'³|₃' => '3',
+		'⁴|₄' => '4',
+		'⁵|₅' => '5',
+		'⁶|₆' => '6',
+		'⁷|₇' => '7',
+		'⁸|₈' => '8',
+		'⁹|₉' => '9',
+		'À|Á|Â|Ã|Å|Ǻ|Ā|Ă|Ą|Ǎ|Ä|A' => 'A',
+		'à|á|â|ã|å|ǻ|ā|ă|ą|ǎ|ª|æ|ǽ|ä|a|а' => 'a',
+		'Б' => 'B',
+		'б' => 'b',
+		'Ç|Ć|Ĉ|Ċ|Č|Ц' => 'C',
+		'ç|ć|ĉ|ċ|č|ц' => 'c',
+		'Ð|Ď|Đ' => 'Dj',
+		'ð|ď|đ' => 'dj',
+		'Д' => 'D',
+		'д' => 'd',
+		'È|É|Ê|Ë|Ē|Ĕ|Ė|Ę|Ě|Е|Ё|Э' => 'E',
+		'è|é|ê|ë|ē|ĕ|ė|ę|ě|е|ё|э' => 'e',
+		'Ф' => 'F',
+		'ƒ|ф' => 'f',
+		'Ĝ|Ğ|Ġ|Ģ|Г' => 'G',
+		'ĝ|ğ|ġ|ģ|г' => 'g',
+		'Ĥ|Ħ|Х' => 'H',
+		'ĥ|ħ|х' => 'h',
+		'Ì|Í|Î|Ï|Ĩ|Ī|Ĭ|Ǐ|Į|İ|И' => 'I',
+		'ì|í|î|ï|ĩ|ī|ĭ|ǐ|į|ı|и|i̇' => 'i',
+		'Ĵ|Й' => 'J',
+		'ĵ|й' => 'j',
+		'Ķ|К' => 'K',
+		'ķ|к' => 'k',
+		'Ĺ|Ļ|Ľ|Ŀ|Ł|Л' => 'L',
+		'ĺ|ļ|ľ|ŀ|ł|л' => 'l',
+		'М' => 'M',
+		'м' => 'm',
+		'Ñ|Ń|Ņ|Ň|Н' => 'N',
+		'ñ|ń|ņ|ň|ŉ|н' => 'n',
+		'Ò|Ó|Ô|Õ|Ō|Ŏ|Ǒ|Ő|Ơ|Ø|Ǿ|Ö|O' => 'O',
+		'ò|ó|ô|õ|ō|ŏ|ǒ|ő|ơ|ø|ǿ|º|ö|o|о' => 'o',
+		'П' => 'P',
+		'п' => 'p',
+		'Ŕ|Ŗ|Ř|Р' => 'R',
+		'ŕ|ŗ|ř|р' => 'r',
+		'Ś|Ŝ|Ş|Ș|Š|С' => 'S',
+		'ś|ŝ|ş|ș|š|ſ|с' => 's',
+		'Ţ|Ț|Ť|Ŧ|Т' => 'T',
+		'ţ|ț|ť|ŧ|т' => 't',
+		'Ù|Ú|Û|Ũ|Ū|Ŭ|Ů|Ű|Ų|Ư|Ǔ|Ǖ|Ǘ|Ǚ|Ǜ|У|Ü|U' => 'U',
+		'ù|ú|û|ũ|ū|ŭ|ů|ű|ų|ư|ǔ|ǖ|ǘ|ǚ|ǜ|у|ü|u' => 'u',
+		'В' => 'V',
+		'в' => 'v',
+		'Ý|Ÿ|Ŷ|Ы' => 'Y',
+		'ý|ÿ|ŷ|ы' => 'y',
+		'Ŵ' => 'W',
+		'ŵ' => 'w',
+		'Ź|Ż|Ž|З' => 'Z',
+		'ź|ż|ž|з' => 'z',
+		'Æ|Ǽ' => 'AE',
+		'ß' => 'ss',
+		'Ĳ' => 'IJ',
+		'ĳ' => 'ij',
+		'Œ' => 'OE',
+		'Ч' => 'Ch',
+		'ч' => 'ch',
+		'Ю' => 'Ju',
+		'ю' => 'ju',
+		'Я' => 'Ja',
+		'я' => 'ja',
+		'Ш' => 'Sh',
+		'ш' => 'sh',
+		'Щ' => 'Shch',
+		'щ' => 'shch',
+		'Ж' => 'Zh',
+		'ж' => 'zh',
 	];
 
 	/**
@@ -205,17 +205,39 @@ class Str
 	 */
 	public static function ascii(string $string): string
 	{
-		$string  = str_replace(
+		static $ascii = null;
+		static $strtr = [];
+
+		$string = str_replace(
 			array_keys(static::$language),
 			array_values(static::$language),
 			$string
 		);
 
-		$string  = preg_replace(
-			array_keys(static::$ascii),
-			array_values(static::$ascii),
-			$string
-		);
+		// fast-path: nothing to change if string is already 7-bit ASCII
+		if (preg_match('/[^\x09\x0A\x0D\x20-\x7E]/', $string) === 0) {
+			return $string;
+		}
+
+		// (re)build the flat strtr lookup map when static::$ascii changed
+		if ($ascii !== static::$ascii) {
+			$ascii = static::$ascii;
+			$strtr = [];
+
+			foreach ($ascii as $group => $replacement) {
+				// remove legacy '/.../' delimiters
+				$group = trim($group, '/');
+
+				foreach (explode('|', $group) as $char) {
+					if ($char !== '') {
+						$strtr[$char] = $replacement;
+					}
+				}
+			}
+		}
+
+		// single-pass per-character replacement via the flat map
+		$string = strtr($string, $strtr);
 
 		return preg_replace('/[^\x09\x0A\x0D\x20-\x7E]/', '', $string);
 	}
@@ -261,7 +283,7 @@ class Str
 	 * Returns everything between two strings from the first occurrence of a given string
 	 */
 	public static function between(
-		string|null $string,
+		string $string,
 		string $start,
 		string $end
 	): string {
@@ -315,19 +337,22 @@ class Str
 	 *
 	 * @param 'date'|'intl'|'strftime'|null $handler Custom date handler or `null`
 	 *                                               for the globally configured one
+	 * @return ($format is null ? int : string|false)
 	 */
 	public static function date(
 		int|null $time,
 		string|IntlDateFormatter|null $format = null,
 		string|null $handler = null
 	): string|int|false {
+		$time ??= time();
+
 		if (is_null($format) === true) {
 			return $time;
 		}
 
 		// $format is an IntlDateFormatter instance
 		if ($format instanceof IntlDateFormatter) {
-			return $format->format($time ?? time());
+			return $format->format($time);
 		}
 
 		// automatically determine the handler from global configuration
@@ -340,11 +365,7 @@ class Str
 		// `intl` handler
 		if ($handler === 'intl') {
 			$datetime = new DateTime();
-
-			if ($time !== null) {
-				$datetime->setTimestamp($time);
-			}
-
+			$datetime->setTimestamp($time);
 			return IntlDateFormatter::formatObject($datetime, $format);
 		}
 
@@ -363,6 +384,8 @@ class Str
 
 	/**
 	 * Converts a string to a different encoding
+	 *
+	 * @throws \Kirby\Exception\InvalidArgumentException when conversion failed
 	 */
 	public static function convert(
 		string $string,
@@ -377,7 +400,15 @@ class Str
 			return $string;
 		}
 
-		return iconv($sourceEncoding, $targetEncoding, $string);
+		$result = @iconv($sourceEncoding, $targetEncoding, $string);
+
+		if ($result === false) {
+			throw new InvalidArgumentException(
+				message: 'Could not convert string "' . $string . '" from "' . $sourceEncoding . '" to "' . $targetEncoding . '"'
+			);
+		}
+
+		return $result;
 	}
 
 	/**
@@ -409,7 +440,7 @@ class Str
 			$string,
 			'UTF-8, ISO-8859-1, windows-1251',
 			true
-		);
+		) ?: 'UTF-8';
 	}
 
 	/**
@@ -802,6 +833,7 @@ class Str
 
 		// catch invalid pools
 		if (!$pool) {
+			// TODO: throw here to make problem and return type clearer
 			return false;
 		}
 
@@ -810,13 +842,15 @@ class Str
 		$regex = '/[^' . $pool . ']/';
 
 		// collect characters until we have our required length
-		$result = '';
+		$result    = '';
+		$remaining = $length;
 
-		while (($currentLength = strlen($result)) < $length) {
-			$missing = $length - $currentLength;
-			$bytes   = random_bytes($missing);
-			$allowed = preg_replace($regex, '', base64_encode($bytes));
-			$result .= substr($allowed, 0, $missing);
+		while ($remaining > 0) {
+			$bytes      = random_bytes($remaining);
+			$allowed    = preg_replace($regex, '', base64_encode($bytes));
+			$chunk      = substr($allowed, 0, $remaining);
+			$result    .= $chunk;
+			$remaining -= strlen($chunk);
 		}
 
 		return $result;
@@ -1185,11 +1219,11 @@ class Str
 	/**
 	 * Convert a string to a safe version to be used in a URL
 	 *
-	 * @param string $string The unsafe string
-	 * @param string $separator To be used instead of space and
-	 *                          other non-word characters.
-	 * @param string $allowed List of all allowed characters (regex)
-	 * @param int $maxlength The maximum length of the slug
+	 * @param string|null $string The unsafe string
+	 * @param string|null $separator To be used instead of space and
+	 *                               other non-word characters.
+	 * @param string|null $allowed List of all allowed characters (regex)
+	 * @param int|false $maxlength The maximum length of the slug
 	 * @return string The safe string
 	 */
 	public static function slug(
@@ -1261,6 +1295,7 @@ class Str
 	 * @param string $separator The string to split by
 	 * @param int $length The min length of values.
 	 * @return array An array of found values
+	 * @psalm-return ($string is array ? array : list<string>)
 	 */
 	public static function split(
 		string|array|null $string,
@@ -1397,7 +1432,7 @@ class Str
 					}
 				}
 
-				// wihtout a result, keep the original placeholder
+				// without a result, keep the original placeholder
 				return $result ?? $match[0];
 			},
 			$string
@@ -1406,13 +1441,14 @@ class Str
 
 	/**
 	 * Converts a filesize string with shortcuts
-	 * like M, G or K to an integer value
+	 * like M, G or K to an integer value.
+	 * Fractional sizes are supported (e.g. `1.5G` returns 1.5 GiB).
 	 */
 	public static function toBytes(string $size): int
 	{
 		$size = trim($size);
 		$last = strtolower($size[strlen($size) - 1] ?? '');
-		$size = (int)$size;
+		$size = (float)$size;
 
 		$size *= match ($last) {
 			'g'     => 1024 * 1024 * 1024,
@@ -1421,7 +1457,7 @@ class Str
 			default => 1
 		};
 
-		return $size;
+		return (int)$size;
 	}
 
 	/**

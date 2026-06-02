@@ -3,7 +3,6 @@
 namespace Kirby\Panel;
 
 use Kirby\Cms\File as CmsFile;
-use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Translation;
 use Kirby\Cms\Url;
 use Kirby\Filesystem\Asset;
@@ -17,14 +16,11 @@ use Kirby\Panel\Ui\Item\UserItem;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     3.6.0
+ *
+ * @extends \Kirby\Panel\Model<\Kirby\Cms\User>
  */
 class User extends Model
 {
-	/**
-	 * @var \Kirby\Cms\User
-	 */
-	protected ModelWithContent $model;
-
 	/**
 	 * Provides options for the user dropdown
 	 * @deprecated 6.0.0 Use `Kirby\Panel\Controller\Dropdown\FileSettingsDropdownController` instead

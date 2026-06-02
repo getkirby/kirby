@@ -812,6 +812,22 @@ class FieldTest extends TestCase
 		$this->assertSame($model, $field->model());
 	}
 
+	public function testId(): void
+	{
+		Field::$types = [
+			'test' => []
+		];
+
+		// id mirrors name
+		$field = new Field('test', [
+			'model' => new Page(['slug' => 'test']),
+			'name'  => 'mytest'
+		]);
+
+		$this->assertSame('mytest', $field->id());
+		$this->assertSame($field->name(), $field->id());
+	}
+
 	public function testName(): void
 	{
 		Field::$types = [

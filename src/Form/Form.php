@@ -2,7 +2,6 @@
 
 namespace Kirby\Form;
 
-use Kirby\Cms\File;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Data\Data;
@@ -269,6 +268,8 @@ class Form
 	 * if the field does not exist
 	 *
 	 * @since 5.0.0
+	 *
+	 * @return ($values is null ? array : static)
 	 */
 	public function passthrough(
 		array|null $values = null

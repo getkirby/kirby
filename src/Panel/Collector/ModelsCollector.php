@@ -135,6 +135,7 @@ abstract class ModelsCollector
 
 	public function pagination(): Pagination
 	{
+		/** @var \Kirby\Cms\Pagination */
 		return $this->models(paginated: true)->pagination();
 	}
 

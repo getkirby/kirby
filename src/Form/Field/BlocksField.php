@@ -248,7 +248,7 @@ class BlocksField extends InputField
 
 	public function fieldset(string $type): Fieldset
 	{
-		if ($fieldset = $this->fieldsets()->find($type)) {
+		if ($fieldset = $this->fieldsets()->findByKey($type)) {
 			return $fieldset;
 		}
 

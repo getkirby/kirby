@@ -158,7 +158,7 @@ abstract class LazyCollection extends Collection
 	/**
 	 * Find one or multiple elements by id
 	 *
-	 * @param string ...$keys
+	 * @param string|list<string> ...$keys
 	 * @return TValue|static
 	 */
 	public function find(...$keys)
@@ -224,7 +224,7 @@ abstract class LazyCollection extends Collection
 
 	/**
 	 * Returns an iterator for the elements
-	 * @return \Iterator<TKey, TValue>
+	 * @return \Iterator<string, TValue>
 	 */
 	public function getIterator(): Iterator
 	{
@@ -236,13 +236,17 @@ abstract class LazyCollection extends Collection
 				$value = $this->hydrateElement($key);
 			}
 
+			if ($value === null) {
+				continue;
+			}
+
 			yield $key => $value;
 		}
 	}
 
 	/**
 	 * Checks by key if an element is included
-	 * @param TKey $key
+	 * @param string|TValue $key
 	 */
 	public function has(mixed $key): bool
 	{
@@ -280,6 +284,8 @@ abstract class LazyCollection extends Collection
 	 * and returns the hydrated object value (or `null` if the
 	 * element does not exist in the collection); to be
 	 * implemented in each specific collection
+	 *
+	 * @return TValue|null
 	 */
 	abstract protected function hydrateElement(string $key): object|null;
 

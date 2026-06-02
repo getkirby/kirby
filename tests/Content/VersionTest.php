@@ -171,6 +171,23 @@ class VersionTest extends TestCase
 		$this->assertSame($this->contentFile(), $version->contentFile());
 	}
 
+	public function testContentFileInvalidStorage(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$this->model->changeStorage(MemoryStorage::class);
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::latest()
+		);
+
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('Version::contentFile() is only available for plain text storage');
+
+		$version->contentFile();
+	}
+
 	public function testCreateMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();

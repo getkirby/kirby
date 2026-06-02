@@ -229,10 +229,11 @@ class I18n
 
 		// otherwise the first array element of the input
 		// or the first array element of the fallback
-		if (is_array($key) === true) {
+		if (is_array($key) === true && $key !== []) {
 			return reset($key);
 		}
-		if (is_array($fallback) === true) {
+
+		if (is_array($fallback) === true && $fallback !== []) {
 			return reset($fallback);
 		}
 

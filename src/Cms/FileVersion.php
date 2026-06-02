@@ -50,6 +50,8 @@ class FileVersion
 		if ($this->original() instanceof File) {
 			return $this->original()->content()->get($method);
 		}
+
+		return null;
 	}
 
 	/**

@@ -6,12 +6,33 @@ use Kirby\TestCase;
 
 class LayoutColumnTest extends TestCase
 {
+	protected function tearDown(): void
+	{
+		parent::tearDown();
+		LayoutColumn::$methods = [];
+	}
+
 	public function testConstruct(): void
 	{
 		$column = new LayoutColumn();
 		$this->assertInstanceOf(Blocks::class, $column->blocks());
 		$this->assertSame('1/1', $column->width());
 		$this->assertSame(12, $column->span());
+	}
+
+	public function testCall(): void
+	{
+		// registered method
+		LayoutColumn::$methods['custom'] = fn () => 'method result';
+		LayoutColumn::$methods['echo']   = fn ($value) => $value;
+
+		$column = new LayoutColumn();
+
+		$this->assertSame('method result', $column->custom());
+		$this->assertSame('hello', $column->echo('hello'));
+
+		// unknown method returns null
+		$this->assertNull($column->unknown());
 	}
 
 	public function testBlocks(): void

@@ -2,6 +2,7 @@
 
 namespace Kirby\Blueprint;
 
+use Kirby\Cms\ModelWithContent;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\Mime;
 use Kirby\Toolkit\Str;
@@ -15,6 +16,9 @@ use Kirby\Toolkit\Str;
  */
 class FileBlueprint extends Blueprint
 {
+	/** @var \Kirby\Cms\File */
+	protected ModelWithContent $model;
+
 	/**
 	 * `true` if the default accepted
 	 * types are being used

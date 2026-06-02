@@ -4,13 +4,13 @@ namespace Kirby\Form;
 
 use Closure;
 use Kirby\Cms\App;
+use Kirby\Cms\Collection;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Exception\FormValidationException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Form\Field\BaseField;
 use Kirby\Toolkit\A;
-use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Str;
 
 /**
@@ -19,7 +19,7 @@ use Kirby\Toolkit\Str;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  *
- * @extends \Kirby\Toolkit\Collection<\Kirby\Form\Field|\Kirby\Form\Field\BaseField>
+ * @extends \Kirby\Cms\Collection<\Kirby\Form\Field|\Kirby\Form\Field\BaseField>
  */
 class Fields extends Collection
 {
@@ -40,12 +40,22 @@ class Fields extends Collection
 		}
 	}
 
+
+	public function __call(string $key, $arguments)
+	{
+		if ($method = parent::__call($key, $arguments)) {
+			return $method;
+		}
+
+		return $this->__get($key);
+	}
+
 	/**
 	 * Internal setter for each object in the Collection.
 	 * This takes care of validation and of setting
 	 * the collection prop on each object correctly.
 	 *
-	 * @param \Kirby\Form\Field|\Kirby\Form\Field\BaseField\array $field
+	 * @param \Kirby\Form\Field|\Kirby\Form\Field\BaseField|array $field
 	 */
 	public function __set(string $name, $field): void
 	{
@@ -81,7 +91,7 @@ class Fields extends Collection
 
 			if ($fieldErrors !== []) {
 				$errors[$name] = [
-					'label'   => $field->label(),
+					'label'   => $field->label() ?? Str::label($field->name()),
 					'message' => $fieldErrors
 				];
 			}
@@ -99,7 +109,7 @@ class Fields extends Collection
 	 */
 	public function field(string $name): Field|BaseField
 	{
-		if ($field = $this->find($name)) {
+		if ($field = $this->findByKey($name)) {
 			return $field;
 		}
 
@@ -232,6 +242,8 @@ class Fields extends Collection
 	 * if the field does not exist
 	 *
 	 * @since 5.0.0
+	 *
+	 * @return ($values is null ? array : static)
 	 */
 	public function passthrough(array|null $values = null): static|array
 	{
@@ -275,7 +287,7 @@ class Fields extends Collection
 			if ($field->hasValue() === true) {
 				if ($field instanceof Field) {
 					$field->fillWithEmptyValue(); // @codeCoverageIgnore
-				} else {
+				} elseif (method_exists($field, 'reset')) {
 					$field->reset();
 				}
 			}

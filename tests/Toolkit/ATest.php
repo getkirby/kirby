@@ -500,6 +500,21 @@ class ATest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
+	public function testMergeInvalid(): void
+	{
+		// no arrays at all
+		$this->assertSame([], A::merge());
+
+		// only a mode constant
+		$this->assertSame([], A::merge(A::MERGE_REPLACE));
+
+		// single array, no second to merge into
+		$this->assertSame(['a' => 'b'], A::merge(['a' => 'b']));
+
+		// single array with a trailing mode constant
+		$this->assertSame(['a' => 'b'], A::merge(['a' => 'b'], A::MERGE_REPLACE));
+	}
+
 	public function testPrepend(): void
 	{
 		// associative
@@ -639,6 +654,38 @@ class ATest extends TestCase
 	public function testFirst(): void
 	{
 		$this->assertSame('miao', A::first($this->_array()));
+	}
+
+	public function testFlip(): void
+	{
+		// scalar values
+		$this->assertSame(
+			['miao' => ['cat'], 'wuff' => ['dog'], 'tweet' => ['bird']],
+			A::flip(['cat' => 'miao', 'dog' => 'wuff', 'bird' => 'tweet'])
+		);
+
+		// array values: each element becomes its own key in the result
+		$this->assertSame(
+			[
+				'image/jpeg'  => ['jpg', 'jpeg'],
+				'image/pjpeg' => ['jpg', 'jpeg'],
+				'image/png'   => ['png'],
+			],
+			A::flip([
+				'jpg'  => ['image/jpeg', 'image/pjpeg'],
+				'jpeg' => ['image/jpeg', 'image/pjpeg'],
+				'png'  => 'image/png',
+			])
+		);
+
+		// duplicate scalar values: both keys preserved (unlike array_flip)
+		$this->assertSame(
+			['x' => ['a', 'b']],
+			A::flip(['a' => 'x', 'b' => 'x'])
+		);
+
+		// empty array
+		$this->assertSame([], A::flip([]));
 	}
 
 	public function testLast(): void

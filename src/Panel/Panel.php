@@ -181,30 +181,30 @@ class Panel
 	public function url(string|null $url = null, array $options = []): string
 	{
 		// only touch relative paths
-		if (Url::isAbsolute($url) === false) {
-			$slug  = $this->kirby->option('panel.slug', 'panel');
-			$path  = trim($url ?? '', '/');
-
-			$baseUri  = new Uri($this->kirby->url());
-			$basePath = trim($baseUri->path()->toString(), '/');
-
-			// removes base path if relative path contains it
-			if (
-				empty($basePath) === false &&
-				Str::startsWith($path, $basePath) === true
-			) {
-				$path = Str::after($path, $basePath);
-			}
-			// add the panel slug prefix if it it's not
-			// included in the path yet
-			elseif (Str::startsWith($path, $slug . '/') === false) {
-				$path = $slug . '/' . $path;
-			}
-
-			// create an absolute URL
-			$url = CmsUrl::to($path, $options);
+		if (Url::isAbsolute($url) === true) {
+			return $url;
 		}
 
-		return $url;
+		$slug = $this->kirby->option('panel.slug', 'panel');
+		$path = trim($url ?? '', '/');
+
+		$baseUri  = new Uri($this->kirby->url());
+		$basePath = trim($baseUri->path()->toString(), '/');
+
+		// removes base path if relative path contains it
+		if (
+			empty($basePath) === false &&
+			Str::startsWith($path, $basePath) === true
+		) {
+			$path = Str::after($path, $basePath);
+		}
+		// add the panel slug prefix if it it's not
+		// included in the path yet
+		elseif (Str::startsWith($path, $slug . '/') === false) {
+			$path = $slug . '/' . $path;
+		}
+
+		// create an absolute URL
+		return CmsUrl::to($path, $options);
 	}
 }

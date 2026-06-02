@@ -3,9 +3,7 @@
 namespace Kirby\Panel\Controller\View;
 
 use Kirby\Cms\Find;
-use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Site;
-use Kirby\Panel\Model;
 use Kirby\Panel\Ui\Button\ViewButtons;
 
 /**
@@ -14,19 +12,11 @@ use Kirby\Panel\Ui\Button\ViewButtons;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
+ *
+ * @extends \Kirby\Panel\Controller\View\ModelViewController<\Kirby\Cms\Site, \Kirby\Panel\Site>
  */
 class SiteViewController extends ModelViewController
 {
-	/**
-	 * @var \Kirby\Cms\Site $model
-	 */
-	protected ModelWithContent $model;
-
-	/**
-	 * @var \Kirby\Panel\Site
-	 */
-	protected Model $panel;
-
 	public function __construct(
 		Site $model
 	) {

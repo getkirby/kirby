@@ -13,6 +13,12 @@ class MockBaseField extends BaseField
 #[CoversClass(BaseField::class)]
 class BaseFieldTest extends TestCase
 {
+	public function test__toString(): void
+	{
+		$field = new MockBaseField(name: 'my-field');
+		$this->assertSame('my-field', (string)$field);
+	}
+
 	public function testDialogs(): void
 	{
 		$field = new MockBaseField();
@@ -60,6 +66,13 @@ class BaseFieldTest extends TestCase
 	{
 		$field = new MockBaseField();
 		$this->assertFalse($field->isHidden());
+	}
+
+	public function testLabel(): void
+	{
+		// default label is null; subclasses (via Mixin\Label) override
+		$field = new MockBaseField();
+		$this->assertNull($field->label());
 	}
 
 	public function testName(): void

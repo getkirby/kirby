@@ -7,14 +7,20 @@ namespace Kirby\Cms;
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @extends \Kirby\Cms\ModelPermissions<\Kirby\Cms\User>
  */
 class UserPermissions extends ModelPermissions
 {
 	/**
 	 * Used to cache once determined permissions in memory
+	 *
+	 * @param \Kirby\Cms\User $model
+	 * @psalm-suppress MoreSpecificImplementedParamType
 	 */
-	protected static function cacheKey(ModelWithContent|Language $model): string
-	{
+	protected static function cacheKey(
+		ModelWithContent|Language $model
+	): string {
 		return $model->role()->id();
 	}
 
@@ -56,6 +62,10 @@ class UserPermissions extends ModelPermissions
 		return $this->model->isLastAdmin() !== true;
 	}
 
+	/**
+	 * @param \Kirby\Cms\User $model
+	 * @psalm-suppress MoreSpecificImplementedParamType
+	 */
 	protected static function category(ModelWithContent|Language $model): string
 	{
 		// change the scope of the permissions,

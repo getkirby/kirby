@@ -4,7 +4,6 @@ use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Helpers;
 use Kirby\Cms\Html;
-use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
 use Kirby\Cms\Response;
@@ -399,10 +398,11 @@ if (Helpers::hasOverride('page') === false) { // @codeCoverageIgnore
 	 */
 	function page(string|null $id = null): Page|null
 	{
-		if (empty($id) === true) {
+		if ($id === null || $id === '') {
 			return App::instance()->site()->page();
 		}
 
+		/** @var \Kirby\Cms\Page|null */
 		return App::instance()->site()->find($id);
 	}
 }
@@ -421,6 +421,7 @@ if (Helpers::hasOverride('pages') === false) { // @codeCoverageIgnore
 
 		// always passes $id an array; ensures we get a
 		// collection even if only one ID is passed
+		/** @var \Kirby\Cms\Pages|null */
 		return App::instance()->site()->find($id);
 	}
 }
@@ -469,9 +470,9 @@ if (Helpers::hasOverride('qr') === false) { // @codeCoverageIgnore
 	/**
 	 * Creates a QR code object
 	 */
-	function qr(string|ModelWithContent $data): QrCode
+	function qr(string|Page|Site|File $data): QrCode
 	{
-		if ($data instanceof ModelWithContent) {
+		if (is_string($data) === false) {
 			$data = $data->url();
 		}
 

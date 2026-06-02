@@ -17,7 +17,7 @@ trait Label
 	 */
 	protected array|string|null $label;
 
-	public function label(): string|null
+	public function label(): string
 	{
 		if ($this->label === null || $this->label === []) {
 			return Str::label($this->name());

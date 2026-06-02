@@ -73,7 +73,15 @@ class Version
 	#[BlockCollectionAccess]
 	public function contentFile(Language|string $language = 'default'): string
 	{
-		return $this->model->storage()->contentFile(
+		$storage = $this->model->storage();
+
+		if ($storage instanceof PlainTextStorage === false) {
+			throw new LogicException(
+				message: 'Version::contentFile() is only available for plain text storage'
+			);
+		}
+
+		return $storage->contentFile(
 			$this->id,
 			Language::ensure($language)
 		);
@@ -92,7 +100,7 @@ class Version
 	 * Creates a new version for the given language
 	 * @todo Convert to a static method that creates the version initially with all relevant languages
 	 *
-	 * @param array<string, string> $fields Content fields
+	 * @param array<string, mixed> $fields Content fields
 	 */
 	#[BlockCollectionAccess]
 	public function create(
@@ -514,7 +522,7 @@ class Version
 	/**
 	 * Replaces the content of the current version with the given fields
 	 *
-	 * @param array<string, string> $fields Content fields
+	 * @param array<string, mixed> $fields Content fields; null removes a field
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
@@ -620,7 +628,7 @@ class Version
 	/**
 	 * Updates the content fields of an existing version
 	 *
-	 * @param array<string, string> $fields Content fields
+	 * @param array<string, mixed> $fields Content fields; null removes a field
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
@@ -660,7 +668,8 @@ class Version
 	public function url(): string|null
 	{
 		if (
-			($this->model instanceof Page || $this->model instanceof Site) === false
+			$this->model instanceof Page === false &&
+			$this->model instanceof Site === false
 		) {
 			throw new LogicException('Only pages and the site have a content preview URL');
 		}

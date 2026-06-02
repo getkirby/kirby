@@ -10,6 +10,8 @@ use Kirby\Toolkit\A;
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @template TModel of \Kirby\Cms\ModelWithContent|\Kirby\Cms\Language
  */
 abstract class ModelPermissions
 {
@@ -18,8 +20,17 @@ abstract class ModelPermissions
 
 	public static array $cache = [];
 
-	public function __construct(protected ModelWithContent|Language $model)
+	/**
+	 * @var TModel
+	 */
+	protected ModelWithContent|Language $model;
+
+	/**
+	 * @param TModel $model
+	 */
+	public function __construct(ModelWithContent|Language $model)
 	{
+		$this->model   = $model;
 		$this->options = match (true) {
 			$model instanceof ModelWithContent => $model->blueprint()->options(),
 			default                            => []
@@ -44,10 +55,12 @@ abstract class ModelPermissions
 	 * Can be overridden by specific child classes
 	 * to return a model-specific value used to
 	 * cache a once determined permission in memory
+	 *
 	 * @codeCoverageIgnore
 	 */
-	protected static function cacheKey(ModelWithContent|Language $model): string
-	{
+	protected static function cacheKey(
+		ModelWithContent|Language $model
+	): string {
 		return '';
 	}
 
@@ -113,7 +126,12 @@ abstract class ModelPermissions
 		}
 
 		$permissions = $user->role()->permissions();
-		return $permissions->for(static::category($this->model), $action, $default);
+
+		return $permissions->for(
+			category: static::category($this->model),
+			action:   $action,
+			default:  $default
+		);
 	}
 
 	/**

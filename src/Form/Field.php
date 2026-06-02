@@ -357,6 +357,16 @@ class Field extends Component
 	}
 
 	/**
+	 * The field's unique id is the same as its name
+	 * @see self::name()
+	 * @since 6.0.0
+	 */
+	public function id(): string
+	{
+		return $this->name();
+	}
+
+	/**
 	 * Checks if the field is disabled
 	 */
 	public function isDisabled(): bool

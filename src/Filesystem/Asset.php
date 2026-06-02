@@ -75,6 +75,7 @@ class Asset
 	 */
 	public function id(): string
 	{
+		/** @var string */
 		return $this->root();
 	}
 

@@ -280,6 +280,25 @@ class LazyCollectionTest extends TestCase
 		$this->assertTrue($collection->initialized);
 	}
 
+	public function testIterateSkipsUnhydratable(): void
+	{
+		// targetData only contains 'a' and 'c', so 'b' will hydrate to null
+		// and should be skipped during iteration
+		$collection = new MockLazyCollectionWithInitialization();
+		$collection->targetData = [
+			'a' => new Obj(['id' => 'a', 'type' => 'static']),
+			'c' => new Obj(['id' => 'c', 'type' => 'static'])
+		];
+		$collection->data = ['a' => null, 'b' => null, 'c' => null];
+
+		$keys = [];
+		foreach ($collection as $key => $value) {
+			$keys[] = $key;
+		}
+
+		$this->assertSame(['a', 'c'], $keys);
+	}
+
 	public function testUnset(): void
 	{
 		$collection = new MockLazyCollectionWithInitialization();

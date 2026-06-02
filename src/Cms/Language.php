@@ -105,6 +105,7 @@ class Language implements Stringable
 	 */
 	public function baseUrl(): string
 	{
+		/** @var string $kirbyUrl */
 		$kirbyUrl    = $this->kirby()->url();
 		$languageUrl = $this->url();
 

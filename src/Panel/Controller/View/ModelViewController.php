@@ -17,15 +17,26 @@ use Kirby\Panel\Ui\View;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
+ *
+ * @template TModel of \Kirby\Cms\ModelWithContent
+ * @template TPanel of \Kirby\Panel\Model
  */
 abstract class ModelViewController extends ViewController
 {
+	/** @var TModel */
+	protected ModelWithContent $model;
+
+	/** @var TPanel */
 	protected Model $panel;
 
-	public function __construct(
-		protected ModelWithContent $model
-	) {
+	/**
+	 * @param TModel $model
+	 */
+	public function __construct(ModelWithContent $model)
+	{
 		parent::__construct();
+		$this->model = $model;
+		/** @var TPanel */
 		$this->panel = $this->model->panel();
 	}
 
@@ -49,6 +60,9 @@ abstract class ModelViewController extends ViewController
 		return new View(...$this->props());
 	}
 
+	/**
+	 * @return TModel
+	 */
 	public function model(): ModelWithContent
 	{
 		return $this->model;

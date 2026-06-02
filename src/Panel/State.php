@@ -119,7 +119,7 @@ class State
 
 		if (empty($filter) === false) {
 			// split include string into an array of fields
-			$keys = Str::split($filter, ',');
+			$keys = Str::split((string)$filter, ',');
 
 			// take care of potentially requested globals
 			$globals     = $this->globals();

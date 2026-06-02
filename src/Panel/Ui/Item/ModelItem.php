@@ -10,13 +10,23 @@ use Kirby\Panel\Ui\Item;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     5.1.0
+ *
+ * @template TModel of \Kirby\Cms\ModelWithContent
+ * @template TPanel of \Kirby\Panel\Model
  */
 class ModelItem extends Item
 {
+	/** @var TModel */
+	protected ModelWithContent $model;
+
+	/** @var TPanel */
 	protected Panel $panel;
 
+	/**
+	 * @param TModel $model
+	 */
 	public function __construct(
-		protected ModelWithContent $model,
+		ModelWithContent $model,
 		string|array|false|null $image = [],
 		string|null $info = null,
 		string|null $layout = null,
@@ -29,7 +39,9 @@ class ModelItem extends Item
 			layout: $layout
 		);
 
-		$this->panel = $this->model->panel();
+		$this->model = $model;
+		/** @var TPanel */
+		$this->panel = $model->panel();
 	}
 
 	protected function info(): string|null

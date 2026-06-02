@@ -3,6 +3,7 @@
 namespace Kirby\Image;
 
 use Closure;
+use Exception;
 use GdImage;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
@@ -97,6 +98,14 @@ class QrCode implements Stringable
 
 		// create image baseplate
 		$image = imagecreatetruecolor($size, $size);
+
+		if ($image === false) {
+			// @codeCoverageIgnoreStart
+			throw new Exception(
+				message: 'Could not create QR code image'
+			);
+			// @codeCoverageIgnoreEnd
+		}
 
 		$allocateColor = static function (string $hex) use ($image) {
 			$hex = preg_replace('/[^0-9A-Fa-f]/', '', $hex);
@@ -806,7 +815,7 @@ class QrCode implements Stringable
 
 			for ($i = 0; $i < 18; $i++) {
 				$r = $size - 9 - ($i % 3);
-				$c = 5 - floor($i / 3);
+				$c = 5 - intdiv($i, 3);
 				$matrix[$r][$c] = $version[$i];
 				$matrix[$c][$r] = $version[$i];
 			}
@@ -822,7 +831,7 @@ class QrCode implements Stringable
 		return $matrix;
 	}
 
-	protected function mask(int $mask, int $row, int $column): int
+	protected function mask(int $mask, int $row, int $column): bool
 	{
 		return match ($mask) {
 			0 => !(($row + $column) % 2),
@@ -1004,7 +1013,7 @@ class QrCode implements Stringable
 		$dark /= $size * $size;
 		$a     = abs(floor($dark) - 10);
 		$b     = abs(ceil($dark) - 10);
-		return min($a, $b) * 10;
+		return (int)min($a, $b) * 10;
 	}
 
 	/**

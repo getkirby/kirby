@@ -2,6 +2,8 @@
 
 namespace Kirby\Blueprint;
 
+use Kirby\Cms\ModelWithContent;
+
 /**
  * PageBlueprint
  *
@@ -10,6 +12,9 @@ namespace Kirby\Blueprint;
  */
 class PageBlueprint extends Blueprint
 {
+	/** @var \Kirby\Cms\Page */
+	protected ModelWithContent $model;
+
 	/**
 	 * Creates a new page blueprint object
 	 * with the given props

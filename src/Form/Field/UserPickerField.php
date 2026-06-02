@@ -13,6 +13,8 @@ use Kirby\Panel\Ui\Item\UserItem;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
+ *
+ * @extends \Kirby\Form\Field\ModelPickerField<\Kirby\Cms\User>
  */
 class UserPickerField extends ModelPickerField
 {

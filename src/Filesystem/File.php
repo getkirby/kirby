@@ -74,10 +74,10 @@ class File implements Stringable
 
 		if (
 			$this->model !== null &&
-			method_exists($this->model, 'hasIsFileTrait') !== true
+			defined($this->model::class . '::IS_FILE_TRAIT') === false
 		) {
 			throw new InvalidArgumentException(
-				message: 'The model object must use the "Kirby\Filesystem\IsFile" trait'
+				message: 'The model object must use the "' . IsFile::class . '" trait'
 			);
 		}
 	}
@@ -367,6 +367,7 @@ class File implements Stringable
 	 *
 	 * @param 'date'|'intl'|'strftime'|null $handler Custom date handler or `null`
 	 *                                               for the globally configured one
+	 * @return ($format is null ? int|false : string|false)
 	 */
 	public function modified(
 		string|IntlDateFormatter|null $format = null,
@@ -423,8 +424,9 @@ class File implements Stringable
 
 	/**
 	 * Returns the absolute path to the file
+	 * or `false` if the file does not exist
 	 */
-	public function realpath(): string
+	public function realpath(): string|false
 	{
 		return realpath($this->root());
 	}
@@ -489,10 +491,30 @@ class File implements Stringable
 	/**
 	 * Returns the sha1 hash of the file
 	 * @since 3.6.0
+	 *
+	 * @throws \Kirby\Exception\Exception If the file cannot be read
 	 */
 	public function sha1(): string
 	{
-		return sha1_file($this->root());
+		if (is_file($this->root()) === false) {
+			throw new Exception(
+				message: 'The file "' . $this->root() . '" could not be hashed'
+			);
+		}
+
+		$hash = sha1_file($this->root());
+
+		// @codeCoverageIgnoreStart
+		// `sha1_file` failure after `is_file === true` would require
+		// a filesystem race condition between the two calls
+		if ($hash === false) {
+			throw new Exception(
+				message: 'The file "' . $this->root() . '" could not be hashed'
+			);
+		}
+		// @codeCoverageIgnoreEnd
+
+		return $hash;
 	}
 
 	/**
@@ -534,7 +556,7 @@ class File implements Stringable
 	 */
 	public function toJson(): string
 	{
-		return json_encode($this->toArray());
+		return json_encode($this->toArray(), JSON_THROW_ON_ERROR);
 	}
 
 	/**

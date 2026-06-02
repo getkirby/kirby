@@ -3,6 +3,7 @@
 namespace Kirby\Plugin;
 
 use Kirby\Cms\App;
+use Kirby\Exception\LogicException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\TestCase;
@@ -146,6 +147,16 @@ class AssetsTest extends TestCase
 
 		$assets = Assets::factory($plugin);
 		$this->assertSame($plugin, $assets->plugin());
+	}
+
+	public function testPluginWithoutParent(): void
+	{
+		$assets = new Assets();
+
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('This assets collection has no associated plugin');
+
+		$assets->plugin();
 	}
 
 	public function testResolve(): void

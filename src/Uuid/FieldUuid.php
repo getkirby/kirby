@@ -84,7 +84,7 @@ abstract class FieldUuid extends Uuid
 	 * Generator function that returns collections for all fields globally
 	 * (in any page's, file's, user's or site's content file)
 	 *
-	 * @return \Generator|\Kirby\Cms\Collection[]
+	 * @return \Generator<string, \Kirby\Cms\Collection>
 	 */
 	public static function index(): Generator
 	{
@@ -94,7 +94,7 @@ abstract class FieldUuid extends Uuid
 
 				foreach ($fields as $name => $field) {
 					if (A::get($field, 'type') === static::FIELD) {
-						yield static::fieldToCollection($model->$name());
+						yield $model->id() . '.' . $name => static::fieldToCollection($model->$name());
 					}
 				}
 			}

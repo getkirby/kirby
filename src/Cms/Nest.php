@@ -10,10 +10,10 @@ use Kirby\Content\Field;
  * can be used make any type of array compatible
  * with Kirby queries.
  *
- * REFACTOR: move this to the toolkit
- *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @todo REFACTOR: move this to the toolkit
  */
 class Nest
 {

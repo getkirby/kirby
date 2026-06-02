@@ -10,7 +10,7 @@ use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\V;
 
 /**
- * Provides the validation logic for running and collecting field errors
+ * Provides the validation logic for running and collecting field errors.
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
@@ -67,6 +67,12 @@ trait Validation
 		return $errors;
 	}
 
+	abstract public function hasValue(): bool;
+
+	abstract public function isActive(): bool;
+
+	abstract public function isEmpty(): bool;
+
 	/**
 	 * Checks if the field is invalid
 	 */
@@ -74,6 +80,8 @@ trait Validation
 	{
 		return $this->errors() !== [];
 	}
+
+	abstract public function isRequired(): bool;
 
 	/**
 	 * Checks if the field is valid
@@ -84,10 +92,34 @@ trait Validation
 	}
 
 	/**
+	 * Checks if the field needs a value before being saved;
+	 * this is the case if all of the following requirements are met:
+	 * - The field has a value
+	 * - The field is required
+	 * - The field is currently empty
+	 * - The field is not currently inactive because of a `when` rule
+	 */
+	protected function needsValue(): bool
+	{
+		if (
+			$this->hasValue() === false ||
+			$this->isRequired() === false ||
+			$this->isEmpty() === false ||
+			$this->isActive() === false
+		) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Defines all validation rules
 	 */
 	protected function validations(): array
 	{
 		return [];
 	}
+
+	abstract public function value(bool $default = false): mixed;
 }

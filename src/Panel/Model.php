@@ -16,12 +16,20 @@ use Kirby\Toolkit\A;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     3.6.0
+ *
+ * @template TModel of \Kirby\Cms\ModelWithContent
  */
 abstract class Model
 {
-	public function __construct(
-		protected ModelWithContent $model
-	) {
+	/** @var TModel */
+	protected ModelWithContent $model;
+
+	/**
+	 * @param TModel $model
+	 */
+	public function __construct(ModelWithContent $model)
+	{
+		$this->model = $model;
 	}
 
 	/**
@@ -284,6 +292,8 @@ abstract class Model
 	/**
 	 * Returns the corresponding model object
 	 * @since 5.0.0
+	 *
+	 * @return TModel
 	 */
 	public function model(): ModelWithContent
 	{

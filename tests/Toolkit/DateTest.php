@@ -272,6 +272,14 @@ class DateTest extends TestCase
 		$this->assertSame($a, $date->nearest($a, $b, $c));
 	}
 
+	public function testNearestEmpty(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('At least one datetime must be provided');
+
+		(new Date('2021-12-12'))->nearest();
+	}
+
 	public function testNow(): void
 	{
 		$date = Date::now();

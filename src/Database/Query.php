@@ -439,8 +439,9 @@ class Query
 	 * Builds the different types of SQL queries
 	 * This uses the SQL class to build stuff.
 	 *
-	 * @param string $type (select, update, insert)
+	 * @param string $type (select, update, insert, delete)
 	 * @return array The final query
+	 * @throws \InvalidArgumentException If the query type is invalid
 	 */
 	public function build(string $type): array
 	{
@@ -476,7 +477,9 @@ class Query
 				'where'    => $this->where,
 				'bindings' => $this->bindings
 			]),
-			default => null
+			default => throw new InvalidArgumentException(
+				'Invalid query type: ' . $type
+			)
 		};
 	}
 

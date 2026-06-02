@@ -131,12 +131,12 @@ class NumberField extends InputField
 	public static function toNumber(mixed $value): float|null
 	{
 		return match(true) {
-			$value === ''     => null,
-			is_null($value)   => $value,
-			is_bool($value)   => $value,
-			is_float($value)  => $value,
-			is_int($value)    => $value,
-			default           => (float)Str::float($value),
+			$value === ''    => null,
+			is_null($value)  => null,
+			is_float($value) => $value,
+			is_int($value)   => (float)$value,
+			is_bool($value)  => (float)$value,
+			default          => (float)Str::float($value),
 		};
 	}
 

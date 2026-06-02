@@ -459,6 +459,22 @@ class PagesTest extends TestCase
 		$this->assertIsPage('c/d', $app->page('page://test-d'));
 	}
 
+	public function testFindByDeadUuidNoIndex(): void
+	{
+		$app = $this->app->clone([
+			'options' => [
+				'content' => [
+					'uuid' => [
+						'index' => false
+					]
+				]
+			]
+		]);
+
+		$this->assertNull($app->site()->find('page://does-not-exist'));
+		$this->assertNull($app->page('page://does-not-exist'));
+	}
+
 	public function testFindChildren(): void
 	{
 		$site = new Site([

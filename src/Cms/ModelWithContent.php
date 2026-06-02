@@ -67,6 +67,11 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	}
 
 	/**
+	 * Returns the url to the api endpoint
+	 */
+	abstract public function apiUrl(bool $relative = false): string;
+
+	/**
 	 * Returns the blueprint of the model
 	 */
 	abstract public function blueprint(): Blueprint;

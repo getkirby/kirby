@@ -113,8 +113,7 @@ class V
 		// simple date validation
 		if (count($args) === 1) {
 			$date = date_parse($value);
-			return $date !== false &&
-					$date['error_count'] === 0 &&
+			return $date['error_count'] === 0 &&
 					$date['warning_count'] === 0;
 		}
 
@@ -654,7 +653,7 @@ class V
 		array $rules,
 		array $messages = [],
 		bool $fail = true
-	): bool|array {
+	): true|array {
 		$errors = [];
 
 		foreach ($rules as $validator => $options) {

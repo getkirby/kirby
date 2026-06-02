@@ -14,6 +14,7 @@ trait HasI18n
 {
 	/**
 	 * Translates a key or template string
+	 * @return ($key is string|array ? string : string|null)
 	 */
 	protected static function i18n(
 		Closure|string|array|null $key,

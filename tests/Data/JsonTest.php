@@ -3,6 +3,7 @@
 namespace Kirby\Data;
 
 use Exception;
+use JsonException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -85,5 +86,13 @@ class JsonTest extends TestCase
 	{
 		$string  = 'здравей';
 		$this->assertSame('"' . $string . '"', Json::encode($string));
+	}
+
+	public function testEncodeInvalid(): void
+	{
+		$this->expectException(JsonException::class);
+
+		// invalid UTF-8 sequence makes json_encode fail
+		Json::encode("\xb1\x31");
 	}
 }

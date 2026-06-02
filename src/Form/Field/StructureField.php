@@ -178,7 +178,7 @@ class StructureField extends InputField
 					throw new InvalidArgumentException(
 						key: 'structure.validation',
 						data: [
-							'field' => $field->label() ?? Str::ucfirst($field->name()),
+							'field' => $field->label() ?? Str::label($field->name()),
 							'index' => $index + 1
 						]
 					);

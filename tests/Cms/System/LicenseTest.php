@@ -53,6 +53,20 @@ class LicenseTest extends TestCase
 		$this->assertSame(strtotime($date), $license->activation());
 		$this->assertSame($date, $license->activation('Y-m-d'));
 		$this->assertSame('1/12/2023 00:00', $license->activation('d/M/yyyy HH:mm', 'intl'));
+
+		// no activation set
+		$license = new License();
+
+		$this->assertNull($license->activation());
+		$this->assertNull($license->activation('Y-m-d'));
+
+		// unparseable activation string
+		$license = new License(
+			activation: 'not a real date'
+		);
+
+		$this->assertNull($license->activation());
+		$this->assertNull($license->activation('Y-m-d'));
 	}
 
 	public function testCode(): void
@@ -98,6 +112,20 @@ class LicenseTest extends TestCase
 		$this->assertSame(strtotime($date), $license->date());
 		$this->assertSame($date, $license->date('Y-m-d'));
 		$this->assertSame('1/12/2023 00:00', $license->date('d/M/yyyy HH:mm', 'intl'));
+
+		// no date set
+		$license = new License();
+
+		$this->assertNull($license->date());
+		$this->assertNull($license->date('Y-m-d'));
+
+		// unparseable date string
+		$license = new License(
+			date: 'not a real date'
+		);
+
+		$this->assertNull($license->date());
+		$this->assertNull($license->date('Y-m-d'));
 	}
 
 	public function testDelete(): void
@@ -470,6 +498,14 @@ class LicenseTest extends TestCase
 
 		// not activated
 		$license = new License();
+		$this->assertNull($license->renewal());
+		$this->assertNull($license->renewal('Y-m-d'));
+
+		// unparseable activation string
+		$license = new License(
+			activation: 'not a real date'
+		);
+		$this->assertNull($license->renewal());
 		$this->assertNull($license->renewal('Y-m-d'));
 	}
 

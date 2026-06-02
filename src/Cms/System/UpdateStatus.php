@@ -45,7 +45,7 @@ class UpdateStatus
 	// caches
 	protected array $messages;
 	protected array $targetData;
-	protected array|bool $versionEntry;
+	protected array|false $versionEntry;
 	protected array $vulnerabilities;
 
 	/**

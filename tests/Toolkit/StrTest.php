@@ -35,10 +35,50 @@ class StrTest extends TestCase
 
 	public function testAscii(): void
 	{
+		// clean ASCII
+		$this->assertSame('hello world', Str::ascii('hello world'));
+		$this->assertSame('123 abc XYZ', Str::ascii('123 abc XYZ'));
+
+		// conversion needed
 		$this->assertSame('aouss', Str::ascii('äöüß'));
 		$this->assertSame('Istanbul', Str::ascii('İstanbul'));
 		$this->assertSame('istanbul', Str::ascii('i̇stanbul'));
 		$this->assertSame('Nashata istorija', Str::ascii('Нашата история'));
+
+		// strips control characters
+		$this->assertSame('abc', Str::ascii("a\x00b\x01c"));
+	}
+
+	public function testAsciiUsesLanguageRules(): void
+	{
+		Str::$language = ['ä' => 'ae', 'ü' => 'ue'];
+
+		try {
+			$this->assertSame('fuer', Str::ascii('für'));
+			$this->assertSame('haengematte', Str::ascii('hängematte'));
+		} finally {
+			Str::$language = [];
+		}
+	}
+
+	public function testAsciiMutatedMap(): void
+	{
+		$original = Str::$ascii;
+
+		try {
+			Str::$ascii = $original + ['☃' => 'snowman'];
+			$this->assertSame('a snowman b', Str::ascii('a ☃ b'));
+			$this->assertSame('-', Str::ascii('€-¥'));
+
+			Str::$ascii = Str::$ascii + ['€|¥' => 'currency'];
+			$this->assertSame('currency-currency', Str::ascii('€-¥'));
+
+			// legacy plugin shape with PCRE delimiters
+			Str::$ascii = Str::$ascii + ['/£|¤/' => 'money'];
+			$this->assertSame('money-money', Str::ascii('£-¤'));
+		} finally {
+			Str::$ascii = $original;
+		}
 	}
 
 	public function testAfter(): void
@@ -228,6 +268,12 @@ class StrTest extends TestCase
 		// `strftime` handler
 		$this->assertSame($time, Str::date($time, null, 'strftime'));
 		$this->assertSame('29.01.2020', Str::date($time, '%d.%m.%Y', 'strftime'));
+
+		// null time + no format: defaults to current time
+		$this->assertSame(MockTime::$time, Str::date(null));
+
+		// null time + format: formats current time
+		$this->assertSame(date('Y', MockTime::$time), Str::date(null, 'Y'));
 	}
 
 	public function testConvert(): void
@@ -243,6 +289,14 @@ class StrTest extends TestCase
 		$result = Str::convert($source, 'ISO-8859-1');
 		$this->assertSame('UTF-8', Str::encoding($source));
 		$this->assertSame('ISO-8859-1', Str::encoding($result));
+	}
+
+	public function testConvertInvalid(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Could not convert string "ÖÄÜ" from "UTF-8" to "ASCII"');
+
+		Str::convert('ÖÄÜ', 'ASCII', 'UTF-8');
 	}
 
 	public function testEncode(): void
@@ -660,6 +714,10 @@ class StrTest extends TestCase
 		$this->assertMatchesRegularExpression('/^[[:digit:]]+$/', Str::random($length, 'num'));
 
 		$this->assertFalse(Str::random($length, 'something invalid'));
+
+		// non-positive lengths return an empty string
+		$this->assertSame('', Str::random(0));
+		$this->assertSame('', Str::random(-5));
 	}
 
 	public function testReplace(): void
@@ -1347,6 +1405,11 @@ class StrTest extends TestCase
 		$this->assertSame(2 * 1024 * 1024, Str::toBytes('2m'));
 		$this->assertSame(2 * 1024 * 1024 * 1024, Str::toBytes('2G'));
 		$this->assertSame(2 * 1024 * 1024 * 1024, Str::toBytes('2g'));
+
+		// fractional sizes
+		$this->assertSame((int)(1.5 * 1024), Str::toBytes('1.5K'));
+		$this->assertSame((int)(1.5 * 1024 * 1024), Str::toBytes('1.5M'));
+		$this->assertSame((int)(1.5 * 1024 * 1024 * 1024), Str::toBytes('1.5G'));
 	}
 
 	public function testToType(): void

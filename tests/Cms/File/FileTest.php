@@ -127,6 +127,16 @@ class FileTest extends ModelTestCase
 		$this->assertSame('test', $file->parentId());
 	}
 
+	public function testParentIdWithSite(): void
+	{
+		$file = new File([
+			'filename' => 'test.jpg',
+			'parent'   => new Site()
+		]);
+
+		$this->assertNull($file->parentId());
+	}
+
 	public function testToString(): void
 	{
 		$page = new Page(['slug' => 'test']);

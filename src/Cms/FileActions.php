@@ -9,6 +9,7 @@ use Kirby\Content\VersionCache;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\F;
+use Kirby\Filesystem\File as FilesystemFile;
 use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Uuid\Uuid;
 use Kirby\Uuid\Uuids;
@@ -18,6 +19,8 @@ use Kirby\Uuid\Uuids;
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @mixin \Kirby\Cms\File
  */
 trait FileActions
 {
@@ -57,42 +60,54 @@ trait FileActions
 			return $this;
 		}
 
-		return $this->commit('changeName', ['file' => $this, 'name' => $name, 'extension' => $extension], function ($oldFile, $name, $extension) {
-			$newFile = $oldFile->clone([
-				'filename' => $name . '.' . $extension,
-			]);
+		return $this->commit(
+			action:    'changeName',
+			arguments: [
+				'file'      => $this,
+				'name'      => $name,
+				'extension' => $extension
+			],
+			callback: function (
+				File $oldFile,
+				string $name,
+				string $extension
+			): File {
+				$newFile = $oldFile->clone([
+					'filename' => $name . '.' . $extension,
+				]);
 
-			// remove all public versions, lock and clear UUID cache
-			$oldFile->unpublish();
+				// remove all public versions, lock and clear UUID cache
+				$oldFile->unpublish();
 
-			if ($oldFile->exists() === false) {
+				if ($oldFile->exists() === false) {
+					return $newFile;
+				}
+
+				if ($newFile->exists() === true) {
+					throw new LogicException(
+						message: 'The new file exists and cannot be overwritten'
+					);
+				}
+
+				// rename the main file
+				F::move($oldFile->root(), $newFile->root());
+
+				// hard reset for the version cache
+				// to avoid broken/overlapping file references
+				VersionCache::reset();
+
+				// move the content storage versions
+				$oldFile->storage()->moveAll(to: $newFile->storage());
+
+				// update collections
+				$newFile->parent()->files()->remove($oldFile->id());
+				$newFile->parent()->files()->set($newFile->id(), $newFile);
+
+				$newFile->uuid()?->populate();
+
 				return $newFile;
 			}
-
-			if ($newFile->exists() === true) {
-				throw new LogicException(
-					message: 'The new file exists and cannot be overwritten'
-				);
-			}
-
-			// rename the main file
-			F::move($oldFile->root(), $newFile->root());
-
-			// hard reset for the version cache
-			// to avoid broken/overlapping file references
-			VersionCache::reset();
-
-			// move the content storage versions
-			$oldFile->storage()->moveAll(to: $newFile->storage());
-
-			// update collections
-			$newFile->parent()->files()->remove($oldFile->id());
-			$newFile->parent()->files()->set($newFile->id(), $newFile);
-
-			$newFile->uuid()?->populate();
-
-			return $newFile;
-		});
+		);
 	}
 
 	/**
@@ -106,15 +121,13 @@ trait FileActions
 			return $this;
 		}
 
-		$arguments = [
-			'file'     => $this,
-			'position' => $sort
-		];
-
 		return $this->commit(
-			'changeSort',
-			$arguments,
-			function ($file, $sort) {
+			action:    'changeSort',
+			arguments: [
+				'file'     => $this,
+				'position' => $sort
+			],
+			callback: function (File $file, int $sort): File {
 				// make sure to update the sort in the changes version as well
 				// otherwise the new sort would be lost as soon as the changes are saved
 				if ($file->version('changes')->exists() === true) {
@@ -136,21 +149,23 @@ trait FileActions
 			return $this;
 		}
 
-		$arguments = [
-			'file'     => $this,
-			'template' => $template ?? 'default'
-		];
+		return $this->commit(
+			action:    'changeTemplate',
+			arguments: [
+				'file'     => $this,
+				'template' => $template ?? 'default'
+			],
+			callback: function (File $oldFile, string $template): File {
+				// convert to new template/blueprint incl. content
+				$file = $oldFile->convertTo($template);
 
-		return $this->commit('changeTemplate', $arguments, function ($oldFile, $template) {
-			// convert to new template/blueprint incl. content
-			$file = $oldFile->convertTo($template);
+				// resize the file if configured by new blueprint
+				$create = $file->blueprint()->create();
+				$file   = $file->manipulate($create);
 
-			// resize the file if configured by new blueprint
-			$create = $file->blueprint()->create();
-			$file   = $file->manipulate($create);
-
-			return $file;
-		});
+				return $file;
+			}
+		);
 	}
 
 	/**
@@ -181,7 +196,10 @@ trait FileActions
 	#[BlockCollectionAccess]
 	public function copy(Page $page): static
 	{
-		F::copy($this->root(), $page->root() . '/' . $this->filename());
+		F::copy(
+			$this->root(),
+			$page->root() . '/' . $this->filename()
+		);
 
 		$copy = new static([
 			'parent'   => $page,
@@ -275,34 +293,43 @@ trait FileActions
 		$create = $file->blueprint()->create();
 
 		// run the hook
-		$arguments = compact('file', 'upload');
-		return $file->commit('create', $arguments, function ($file, $upload) use ($create, $move, $storage) {
-			// remove all public versions, lock and clear UUID cache
-			$file->unpublish();
+		return $file->commit(
+			action:    'create',
+			arguments: [
+				'file'   => $file,
+				'upload' => $upload
+			],
+			callback: function (
+				File $file,
+				FilesystemFile $upload
+			) use ($create, $move, $storage): File {
+				// remove all public versions, lock and clear UUID cache
+				$file->unpublish();
 
-			// only move the original source if intended
-			$method = $move === true ? 'move' : 'copy';
+				// only move the original source if intended
+				$method = $move === true ? 'move' : 'copy';
 
-			// overwrite the original
-			if (F::$method($upload->root(), $file->root(), true) !== true) {
-				// @codeCoverageIgnoreStart
-				throw new LogicException(
-					message: 'The file could not be created'
-				);
-				// @codeCoverageIgnoreEnd
+				// overwrite the original
+				if (F::$method($upload->root(), $file->root(), true) !== true) {
+					// @codeCoverageIgnoreStart
+					throw new LogicException(
+						message: 'The file could not be created'
+					);
+					// @codeCoverageIgnoreEnd
+				}
+
+				// resize the file on upload if configured
+				$file = $file->manipulate($create);
+
+				// store the content if necessary
+				$file->changeStorage($storage);
+
+				$file->uuid()?->populate();
+
+				// return a fresh clone
+				return $file->clone();
 			}
-
-			// resize the file on upload if configured
-			$file = $file->manipulate($create);
-
-			// store the content if necessary
-			$file->changeStorage($storage);
-
-			$file->uuid()?->populate();
-
-			// return a fresh clone
-			return $file->clone();
-		});
+		);
 	}
 
 	/**
@@ -312,27 +339,31 @@ trait FileActions
 	#[BlockCollectionAccess]
 	public function delete(): bool
 	{
-		return $this->commit('delete', ['file' => $this], function ($file) {
-			$old = $file->clone();
+		return $this->commit(
+			action:    'delete',
+			arguments: ['file' => $this],
+			callback:  function (File $file): bool {
+				$old = $file->clone();
 
-			// keep the content in iummtable memory storage
-			// to still have access to it in after hooks
-			$file->changeStorage(ImmutableMemoryStorage::class);
+				// keep the content in iummtable memory storage
+				// to still have access to it in after hooks
+				$file->changeStorage(ImmutableMemoryStorage::class);
 
-			// clear UUID cache
-			$file->uuid()?->clear();
+				// clear UUID cache
+				$file->uuid()?->clear();
 
-			// remove all public versions and clear the UUID cache
-			$old->unpublish();
+				// remove all public versions and clear the UUID cache
+				$old->unpublish();
 
-			// delete all versions
-			$old->versions()->delete();
+				// delete all versions
+				$old->versions()->delete();
 
-			// delete the file from disk
-			F::remove($old->root());
+				// delete the file from disk
+				F::remove($old->root());
 
-			return true;
-		});
+				return true;
+			}
+		);
 	}
 
 	/**
@@ -417,32 +448,37 @@ trait FileActions
 	{
 		$file = $this->clone();
 
-		$arguments = [
-			'file' => $file,
-			'upload' => $file->asset($source)
-		];
+		return $this->commit(
+			action:    'replace',
+			arguments: [
+				'file'   => $file,
+				'upload' => $file->asset($source)
+			],
+			callback: function (
+				File $file,
+				FilesystemFile $upload
+			) use ($move): File {
+				// delete all public versions
+				$file->unpublish(true);
 
-		return $this->commit('replace', $arguments, function ($file, $upload) use ($move) {
-			// delete all public versions
-			$file->unpublish(true);
+				// only move the original source if intended
+				$method = $move === true ? 'move' : 'copy';
 
-			// only move the original source if intended
-			$method = $move === true ? 'move' : 'copy';
+				// overwrite the original
+				if (F::$method($upload->root(), $file->root(), true) !== true) {
+					throw new LogicException(
+						message: 'The file could not be created'
+					);
+				}
 
-			// overwrite the original
-			if (F::$method($upload->root(), $file->root(), true) !== true) {
-				throw new LogicException(
-					message: 'The file could not be created'
-				);
+				// apply the resizing/crop options from the blueprint
+				$create = $file->blueprint()->create();
+				$file   = $file->manipulate($create);
+
+				// return a fresh clone
+				return $file->clone();
 			}
-
-			// apply the resizing/crop options from the blueprint
-			$create = $file->blueprint()->create();
-			$file   = $file->manipulate($create);
-
-			// return a fresh clone
-			return $file->clone();
-		});
+		);
 	}
 
 	/**

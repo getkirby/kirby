@@ -977,23 +977,23 @@ class App
 	 * Yields all models (site, pages, files and users) of this site
 	 * @since 4.0.0
 	 *
-	 * @return \Generator|\Kirby\Cms\ModelWithContent[]
+	 * @return \Generator<string, \Kirby\Cms\ModelWithContent>
 	 */
 	public function models(): Generator
 	{
 		$site = $this->site();
 
 		yield from $site->files();
-		yield $site;
+		yield '' => $site;
 
 		foreach ($site->index(true) as $page) {
 			yield from $page->files();
-			yield $page;
+			yield $page->id() => $page;
 		}
 
 		foreach ($this->users() as $user) {
 			yield from $user->files();
-			yield $user;
+			yield $user->id() => $user;
 		}
 	}
 
@@ -1196,14 +1196,15 @@ class App
 	public function path(): string
 	{
 		if (is_string($this->path) === true) {
-			return $this->path;
+			return $this->path; // @codeCoverageIgnore
 		}
 
 		$current = $this->request()->path()->toString();
 		$index   = $this->environment()->baseUri()->path()->toString();
 		$path    = Str::afterStart($current, $index);
 
-		return $this->setPath($path)->path;
+		$this->setPath($path);
+		return $path;
 	}
 
 	/**
@@ -1586,6 +1587,7 @@ class App
 	public function smartypants(string|null $text = null): string
 	{
 		$options = $this->option('smartypants', []);
+		$text  ??= '';
 
 		if ($options === false) {
 			return $text;
