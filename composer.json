@@ -87,19 +87,24 @@
 		"post-update-cmd": "curl -o cacert.pem https://curl.se/ca/cacert.pem",
 		"analyze": [
 			"@analyze:composer",
+			"@analyze:composer:unused",
 			"@analyze:psalm"
 		],
 		"analyze:composer": "composer validate --strict --no-check-version --no-check-all",
-		"analyze:psalm": "psalm",
+		"analyze:composer:unused": "cpx icanhazstring/composer-unused:0.9.6 --no-progress",
+		"analyze:psalm": "cpx vimeo/psalm:6.16.1",
 		"build": "./scripts/build",
 		"ci": [
 			"@fix",
 			"@analyze",
 			"@test"
 		],
-		"fix": "php-cs-fixer fix",
-		"test": "paratest",
-		"test:coverage": "XDEBUG_MODE=coverage paratest --coverage-html=tests/coverage",
+		"fix": "cpx friendsofphp/php-cs-fixer:3.95.2 fix",
+		"test": "cpx brianium/paratest:7.20.0",
+		"test:coverage": [
+			"@putenv XDEBUG_MODE=coverage",
+			"@test --coverage-html=tests/coverage"
+		],
 		"zip": "composer archive --format=zip --file=dist"
 	}
 }

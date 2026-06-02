@@ -79,9 +79,8 @@ jobs:
         uses: ./.github/actions/setup-php
         with:
           php: ${{ matrix.php }}
-          ini: apc.enabled=1, apc.enable_cli=1, pcov.directory=., pcov.exclude=~(vendor|tests)~
+          ini: 'apc.enabled=1, apc.enable_cli=1, pcov.directory=., pcov.exclude="~(vendor|tests)~"'
           coverage: pcov
-          tools: phpunit:12.5.25, brianium/paratest:7.20.0
 
       - name: Check Composer platform requirements
         run: composer check-platform-reqs
@@ -97,11 +96,11 @@ jobs:
 
       - name: Run PHPUnit tests
         if: matrix.php != '8.4'
-        run: paratest -c phpunit.ci.xml --processes 4
+        run: composer run test -- --configuration phpunit.ci.xml --processes 4
 
       - name: Run PHPUnit tests with coverage
         if: matrix.php == '8.4'
-        run: paratest -c phpunit.ci.xml --processes 4 --coverage-clover ${{ github.workspace }}/clover.xml --exclude-source-from-xml-coverage
+        run: composer run test -- --configuration phpunit.ci.xml --processes 4 --coverage-clover ${{ github.workspace }}/clover.xml --exclude-source-from-xml-coverage
 
       - name: Upload coverage results to Codecov
         if: matrix.php == '8.4'
@@ -137,9 +136,7 @@ jobs:
         uses: ./.github/actions/setup-php
         with:
           php: ${{ env.php }}
-          tools: |
-            composer:2.9.8, composer-normalize:2.52.0, composer-require-checker:4.24.0,
-            composer-unused:0.9.6, psalm:6.16.1
+          tools: composer-normalize:2.52.0
 
       - name: Setup problem matchers
         run: |
@@ -156,17 +153,19 @@ jobs:
             psalm-
 
       - name: Validate composer.json/composer.lock
-        run: composer validate --strict --no-check-version --no-check-all
+        run: composer run analyze:composer
 
       - name: Ensure that composer.json is normalized
+        env:
+          GITHUB_TOKEN: ""
         run: composer-normalize --dry-run
 
       - name: Check for unused Composer dependencies
-        run: composer-unused --no-progress
+        run: composer run analyze:composer:unused
 
       - name: Statically analyze using Psalm
         id: psalm
-        run: psalm --output-format=github --php-version=${{ matrix.php }} --report=sarif/psalm.sarif --report-show-info=false
+        run: composer run analyze:psalm -- --output-format=github --php-version=${{ env.php }} --report=sarif/psalm.sarif --report-show-info=false --force-jit
 
       - name: Upload code scanning results to GitHub
         if: github.repository == 'getkirby/kirby' && steps.psalm.outcome == 'success'
@@ -190,7 +189,6 @@ jobs:
         with:
           php: 8.3 # should be the minimum supported PHP version
           extensions: ""
-          tools: php-cs-fixer:3.95.2
 
       - name: Cache PHP-CS-Fixer data
         uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
@@ -201,4 +199,4 @@ jobs:
             php-cs-fixer-
 
       - name: Run PHP-CS-Fixer to catch PHP coding style violations
-        run: php-cs-fixer fix --diff --dry-run
+        run: composer run fix -- --diff --dry-run
