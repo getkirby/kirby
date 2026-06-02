@@ -630,14 +630,18 @@ class Dom
 	 */
 	public static function unwrap(DOMNode $node): void
 	{
-		foreach ($node->childNodes as $childNode) {
+		// snapshot because `insertBefore` moves children out of `$node`,
+		// shifting the live `DOMNodeList`
+		foreach (iterator_to_array($node->childNodes, false) as $childNode) {
 			// discard text nodes as they can be unexpected
 			// directly in the parent element
 			if ($childNode instanceof DOMText) {
 				continue;
 			}
 
-			$node->parentNode->insertBefore(clone $childNode, $node);
+			// move (don't clone) so descendants pending in the
+			// `Dom::sanitize()` snapshot are still sanitized
+			$node->parentNode->insertBefore($childNode, $node);
 		}
 
 		static::remove($node);
