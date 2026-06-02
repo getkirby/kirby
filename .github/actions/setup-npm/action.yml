@@ -4,14 +4,20 @@ description: Shared steps to set up Node & npm
 runs:
   using: composite
   steps:
-    - name: Set up Node.js and cache npm dependencies
+    - name: Set up Node.js
       uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
       with:
         node-version: 22
-        cache: "npm"
-        cache-dependency-path: panel/package-lock.json
+
+    - name: Cache node_modules
+      id: node-modules-cache
+      uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
+      with:
+        path: panel/node_modules
+        key: node-modules-${{ runner.os }}-${{ hashFiles('panel/package-lock.json') }}
 
     - name: Install npm dependencies
+      if: steps.node-modules-cache.outputs.cache-hit != 'true'
       shell: bash
       working-directory: panel
       run: npm ci
