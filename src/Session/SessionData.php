@@ -29,70 +29,12 @@ class SessionData
 	}
 
 	/**
-	 * Sets one or multiple session values by key
-	 *
-	 * @param string|array $key The key to define or a key-value array with multiple values
-	 * @param mixed $value The value for the passed key (only if one $key is passed)
+	 * Clears all session data
 	 */
-	public function set(
-		string|array $key,
-		mixed $value = null
-	): void {
-		$this->session->ensureToken();
+	public function clear(): void
+	{
 		$this->session->prepareForWriting();
-
-		if (is_string($key) === true) {
-			$this->data[$key] = $value;
-		} else {
-			$this->data = array_replace($this->data, $key);
-		}
-	}
-
-	/**
-	 * Increments one or multiple session values by a specified amount
-	 *
-	 * @param string|array $key The key to increment or an array with multiple keys
-	 * @param int $by Increment by which amount?
-	 * @param int|null $max Maximum amount (value is not incremented further)
-	 */
-	public function increment(
-		string|array $key,
-		int $by = 1,
-		int|null $max = null
-	): void {
-		// if array passed, call method recursively
-		if (is_array($key) === true) {
-			foreach ($key as $k) {
-				$this->increment($k, $by, $max);
-			}
-
-			return;
-		}
-
-		// make sure we have the correct values before getting
-		$this->session->prepareForWriting();
-
-		$value = $this->get($key, 0);
-
-		if (is_int($value) === false) {
-			throw new LogicException(
-				key: 'session.data.increment.nonInt',
-				data: ['key' => $key],
-				fallback: 'Session value "' . $key . '" is not an integer and cannot be incremented',
-				translate: false
-			);
-		}
-
-		// increment the value, but ensure $max constraint
-		if (is_int($max) === true && $value + $by > $max) {
-			// set the value to $max
-			// but not if the current $value is already larger than $max
-			$value = max($value, $max);
-		} else {
-			$value += $by;
-		}
-
-		$this->set($key, $value);
+		$this->data = [];
 	}
 
 	/**
@@ -160,6 +102,53 @@ class SessionData
 	}
 
 	/**
+	 * Increments one or multiple session values by a specified amount
+	 *
+	 * @param string|array $key The key to increment or an array with multiple keys
+	 * @param int $by Increment by which amount?
+	 * @param int|null $max Maximum amount (value is not incremented further)
+	 */
+	public function increment(
+		string|array $key,
+		int $by = 1,
+		int|null $max = null
+	): void {
+		// if array passed, call method recursively
+		if (is_array($key) === true) {
+			foreach ($key as $k) {
+				$this->increment($k, $by, $max);
+			}
+
+			return;
+		}
+
+		// make sure we have the correct values before getting
+		$this->session->prepareForWriting();
+
+		$value = $this->get($key, 0);
+
+		if (is_int($value) === false) {
+			throw new LogicException(
+				key: 'session.data.increment.nonInt',
+				data: ['key' => $key],
+				fallback: 'Session value "' . $key . '" is not an integer and cannot be incremented',
+				translate: false
+			);
+		}
+
+		// increment the value, but ensure $max constraint
+		if (is_int($max) === true && $value + $by > $max) {
+			// set the value to $max
+			// but not if the current $value is already larger than $max
+			$value = max($value, $max);
+		} else {
+			$value += $by;
+		}
+
+		$this->set($key, $value);
+	}
+
+	/**
 	 * Retrieves a value and removes it afterwards
 	 *
 	 * @param string $key The key to get
@@ -177,6 +166,17 @@ class SessionData
 	}
 
 	/**
+	 * Reloads the data array with the current session data
+	 * Only used internally
+	 *
+	 * @param array $data Currently stored session data
+	 */
+	public function reload(array $data): void
+	{
+		$this->data = $data;
+	}
+
+	/**
 	 * Removes one or multiple session values by key
 	 *
 	 * @param string|array $key The key to remove or an array with multiple keys
@@ -191,22 +191,22 @@ class SessionData
 	}
 
 	/**
-	 * Clears all session data
-	 */
-	public function clear(): void
-	{
-		$this->session->prepareForWriting();
-		$this->data = [];
-	}
-
-	/**
-	 * Reloads the data array with the current session data
-	 * Only used internally
+	 * Sets one or multiple session values by key
 	 *
-	 * @param array $data Currently stored session data
+	 * @param string|array $key The key to define or a key-value array with multiple values
+	 * @param mixed $value The value for the passed key (only if one $key is passed)
 	 */
-	public function reload(array $data): void
-	{
-		$this->data = $data;
+	public function set(
+		string|array $key,
+		mixed $value = null
+	): void {
+		$this->session->ensureToken();
+		$this->session->prepareForWriting();
+
+		if (is_string($key) === true) {
+			$this->data[$key] = $value;
+		} else {
+			$this->data = array_replace($this->data, $key);
+		}
 	}
 }
