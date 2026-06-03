@@ -338,13 +338,13 @@ class Form
 	 */
 	public function toArray(): array
 	{
-		$array = [
-			'errors'  => $this->fields->errors(),
-			'fields'  => $this->fields->toArray(),
-			'invalid' => $this->isInvalid()
-		];
+		$errors = $this->fields->errors();
 
-		return $array;
+		return [
+			'errors'  => $errors,
+			'fields'  => $this->fields->toArray(),
+			'invalid' => $errors !== []
+		];
 	}
 
 	/**
