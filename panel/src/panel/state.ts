@@ -1,4 +1,5 @@
 import { reactive } from "vue";
+import { HtmlString } from "./html";
 import { isObject } from "@/helpers/object";
 
 /**
@@ -57,6 +58,11 @@ export default function State<T extends Record<string, unknown>>(
 			if (isObject(state) === false) {
 				throw new Error(`Invalid ${this.key()} state`);
 			}
+
+			// rewrap any `<key>` payloads into HtmlString instances
+			// (including nested objects and arrays), so that the
+			// backend can flag trusted HTML through the same JSON shape
+			state = HtmlString.resolve(state);
 
 			const defaults = this.defaults();
 

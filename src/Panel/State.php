@@ -8,6 +8,7 @@ use Kirby\Cms\Language;
 use Kirby\Cms\User;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Date;
+use Kirby\Toolkit\HtmlString;
 use Kirby\Toolkit\Str;
 
 /**
@@ -273,17 +274,20 @@ class State
 		if ($globals === false) {
 			// filter data, if only globals headers or
 			// query parameters are requested
-			return $this->filter($data);
+			$data = $this->filter($data);
+			return HtmlString::resolve($data);
 		}
 
 		// load globals for the full document response
 		$globals = $this->globals();
 
 		// resolve and merge globals and shared data
-		return array_merge_recursive(
+		$data = array_merge_recursive(
 			A::apply($globals),
 			A::apply($data)
 		);
+
+		return HtmlString::resolve($data);
 	}
 
 	public function translation(): array

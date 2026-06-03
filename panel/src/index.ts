@@ -8,6 +8,7 @@ import I18n from "./config/i18n";
 import Legacy from "./panel/legacy";
 import Libraries from "./libraries/index";
 import Panel from "./panel/panel";
+import SafeHtml from "./config/safeHtml";
 
 import preserveDataAttrs from "./mixins/preserveDataAttrs";
 import preserveListeners from "./mixins/preserveListeners";
@@ -54,6 +55,7 @@ import "./styles/utilities.css";
  */
 app.use(I18n);
 app.use(ErrorHandling);
+app.use(SafeHtml);
 app.use(Legacy);
 
 /**
