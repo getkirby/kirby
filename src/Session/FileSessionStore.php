@@ -72,9 +72,10 @@ class FileSessionStore extends SessionStore
 
 		// ensure that no other thread already wrote to the same file,
 		// otherwise try again (very unlikely scenario!)
-		$contents = $this->get($expiryTime, $id);
+		// otherwise try again (very unlikely scenario!)
+		$stat = fstat($this->handle($name));
 
-		if ($contents !== '') {
+		if ($stat === false || $stat['size'] !== 0) {
 			// @codeCoverageIgnoreStart
 			$this->unlock($expiryTime, $id);
 			return $this->createId($expiryTime);
