@@ -350,7 +350,10 @@ class FileSessionStore extends SessionStore
 	 */
 	public function collectGarbage(): void
 	{
-		$iterator = new FilesystemIterator($this->path);
+		$iterator = new FilesystemIterator(
+			$this->path,
+			FilesystemIterator::SKIP_DOTS
+		);
 
 		$currentTime = time();
 		foreach ($iterator as $file) {
