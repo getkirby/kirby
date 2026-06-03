@@ -609,6 +609,36 @@ class SqlTest extends TestCase
 		$this->sql->join('SIDEWAYS JOIN', 'test', 'test.id = another.id');
 	}
 
+	public function testJoinsPropagatesBindings(): void
+	{
+		// Sql::join() never returns bindings, but a driver registered
+		// via Database::$types can parameterise the ON value
+		$sql = new class ($this->database) extends MockSql {
+			public function join(string $type, string $table, string $on): array
+			{
+				return [
+					'query'    => $type . ' ' . $table . ' ON ' . $on,
+					'bindings' => ['join_' . $table => $table]
+				];
+			}
+		};
+
+		$result = $sql->joins([
+			['table' => 'roles', 'on' => 'roles.id = users.id'],
+			['table' => 'teams', 'on' => 'teams.id = users.id']
+		]);
+
+		$this->assertSame([
+			'join_roles' => 'roles',
+			'join_teams' => 'teams'
+		], $result['bindings']);
+
+		$this->assertSame(
+			'JOIN roles ON roles.id = users.id JOIN teams ON teams.id = users.id',
+			$result['query']
+		);
+	}
+
 	public function testValueSet(): void
 	{
 		$this->database->createTable('users', [

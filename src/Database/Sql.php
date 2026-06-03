@@ -513,7 +513,7 @@ abstract class Sql
 
 		return [
 			'query'    => implode(' ', array_filter($query)),
-			'bindings' => [],
+			'bindings' => $bindings,
 		];
 	}
 
