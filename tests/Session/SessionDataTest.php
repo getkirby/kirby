@@ -2,6 +2,7 @@
 
 namespace Kirby\Session;
 
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -61,6 +62,14 @@ class SessionDataTest extends TestCase
 		$this->assertSame(85, $this->sessionData->get('someInt'));
 	}
 
+	public function testDecrementNegativeBy(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.invalidArgument');
+
+		$this->sessionData->decrement('someInt', -10);
+	}
+
 	public function testDecrementNonIntValue(): void
 	{
 		$this->expectException(LogicException::class);
@@ -107,6 +116,14 @@ class SessionDataTest extends TestCase
 
 		$this->sessionData->increment('someInt', 10, 200);
 		$this->assertSame(155, $this->sessionData->get('someInt'));
+	}
+
+	public function testIncrementNegativeBy(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.invalidArgument');
+
+		$this->sessionData->increment('someInt', -10);
 	}
 
 	public function testIncrementNonIntValue(): void

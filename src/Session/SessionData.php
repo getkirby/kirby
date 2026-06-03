@@ -2,6 +2,7 @@
 
 namespace Kirby\Session;
 
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Toolkit\A;
 
@@ -29,6 +30,54 @@ class SessionData
 	}
 
 	/**
+	 * Alters one or multiple numeric session values by a specified amount
+	 *
+	 * @param string|array $key The key to adjust or an array with multiple keys
+	 * @param int $by Adjustment amount
+	 * @param int|null $bound Maximum (when incrementing) or minimum (when decrementing); skipped if null
+	 */
+	protected function adjust(
+		string|array $key,
+		int $by = 1,
+		int|null $bound = null
+	): void {
+		// if array passed, call method recursively
+		if (is_array($key) === true) {
+			foreach ($key as $k) {
+				$this->adjust($k, $by, $bound);
+			}
+
+			return;
+		}
+
+		// make sure we have the correct values before getting
+		$this->session->prepareForWriting();
+
+		$value = $this->get($key, 0);
+
+		if (is_int($value) === false) {
+			$kind = $by > 0 ? 'increment' : 'decrement';
+
+			throw new LogicException(
+				key: 'session.data.' . $kind . '.nonInt',
+				data: ['key' => $key],
+				fallback: 'Session value "' . $key . '" is not an integer and cannot be ' . $kind . 'ed',
+				translate: false
+			);
+		}
+
+		// adjust the value, but ensure the $bound constraint;
+		// don't change a value that's already beyond the bound
+		$value = match (true) {
+			$bound === null => $value + $by,
+			$by > 0         => max($value, min($value + $by, $bound)),
+			default         => min($value, max($value + $by, $bound))
+		};
+
+		$this->set($key, $value);
+	}
+
+	/**
 	 * Clears all session data
 	 */
 	public function clear(): void
@@ -49,39 +98,14 @@ class SessionData
 		int $by = 1,
 		int|null $min = null
 	): void {
-		// if array passed, call method recursively
-		if (is_array($key) === true) {
-			foreach ($key as $k) {
-				$this->decrement($k, $by, $min);
-			}
-
-			return;
-		}
-
-		// make sure we have the correct values before getting
-		$this->session->prepareForWriting();
-
-		$value = $this->get($key, 0);
-
-		if (is_int($value) === false) {
-			throw new LogicException(
-				key: 'session.data.decrement.nonInt',
-				data: ['key' => $key],
-				fallback: 'Session value "' . $key . '" is not an integer and cannot be decremented',
+		if ($by < 0) {
+			throw new InvalidArgumentException(
+				data: ['method' => 'SessionData::decrement', 'argument' => '$by'],
 				translate: false
 			);
 		}
 
-		// decrement the value, but ensure $min constraint
-		if (is_int($min) === true && $value - $by < $min) {
-			// set the value to $min
-			// but not if the current $value is already smaller than $min
-			$value = min($value, $min);
-		} else {
-			$value -= $by;
-		}
-
-		$this->set($key, $value);
+		$this->adjust($key, $by * -1, $min);
 	}
 
 	/**
@@ -113,39 +137,14 @@ class SessionData
 		int $by = 1,
 		int|null $max = null
 	): void {
-		// if array passed, call method recursively
-		if (is_array($key) === true) {
-			foreach ($key as $k) {
-				$this->increment($k, $by, $max);
-			}
-
-			return;
-		}
-
-		// make sure we have the correct values before getting
-		$this->session->prepareForWriting();
-
-		$value = $this->get($key, 0);
-
-		if (is_int($value) === false) {
-			throw new LogicException(
-				key: 'session.data.increment.nonInt',
-				data: ['key' => $key],
-				fallback: 'Session value "' . $key . '" is not an integer and cannot be incremented',
+		if ($by < 0) {
+			throw new InvalidArgumentException(
+				data: ['method' => 'SessionData::increment', 'argument' => '$by'],
 				translate: false
 			);
 		}
 
-		// increment the value, but ensure $max constraint
-		if (is_int($max) === true && $value + $by > $max) {
-			// set the value to $max
-			// but not if the current $value is already larger than $max
-			$value = max($value, $max);
-		} else {
-			$value += $by;
-		}
-
-		$this->set($key, $value);
+		$this->adjust($key, $by, $max);
 	}
 
 	/**
