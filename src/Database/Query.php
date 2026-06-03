@@ -821,14 +821,14 @@ class Query
 	/**
 	 * Builder for where and having clauses
 	 *
-	 * @param array $args Arguments, see where() description
-	 * @param mixed $current Current value (like $this->where)
+	 * @param $args Arguments, see where() description
+	 * @param $current Current value (like $this->where)
 	 */
 	protected function filterQuery(
 		array $args,
-		$current,
+		string|null $current,
 		string $mode = 'AND'
-	) {
+	): string|null {
 		$result = '';
 
 		switch (count($args)) {
