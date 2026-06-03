@@ -407,7 +407,7 @@ class Query
 	 *
 	 * @return $this
 	 */
-	public function order(string|null $order = null)
+	public function order(string|null $order = null): static
 	{
 		$this->order = $order;
 		return $this;
