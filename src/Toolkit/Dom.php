@@ -639,6 +639,22 @@ class Dom
 				continue;
 			}
 
+			// the child may use a default namespace (`xmlns="…"`)
+			// that was declared on `$node`; once `$node` is gone,
+			// libxml would rename it to `<default:child>`, so we
+			// copy the declaration to the child to suppress it
+			if (
+				$childNode instanceof DOMElement &&
+				($childNode->prefix === '' || $childNode->prefix === null) &&
+				is_string($childNode->namespaceURI) === true
+			) {
+				$childNode->setAttributeNS(
+					'http://www.w3.org/2000/xmlns/',
+					'xmlns',
+					$childNode->namespaceURI
+				);
+			}
+
 			// move (don't clone) so descendants pending in the
 			// `Dom::sanitize()` snapshot are still sanitized
 			$node->parentNode->insertBefore($childNode, $node);

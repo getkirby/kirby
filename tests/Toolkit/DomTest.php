@@ -1544,7 +1544,7 @@ class DomTest extends TestCase
 					'allowedTags' => ['xml' => true, 'test:a' => true]
 				],
 
-				'<default:a xmlns:default="https://example.com/test">A</default:a>',
+				'<a xmlns="https://example.com/test">A</a>',
 				['The "xml" element (line 1) is not allowed, but its children can be kept']
 			],
 			[
@@ -1690,7 +1690,7 @@ class DomTest extends TestCase
 					'allowedTags' => ['xml' => true, 'b' => true]
 				],
 
-				'<xml><default:b xmlns:default="https://example.com/test">B1</default:b><default:b xmlns:default="https://example.com/test">B2</default:b></xml>',
+				'<xml><b xmlns="https://example.com/test">B1</b><b xmlns="https://example.com/test">B2</b></xml>',
 				['The "a" element (line 1) is not allowed, but its children can be kept']
 			],
 
