@@ -702,7 +702,7 @@ class Session
 		}
 
 		// decode the serialized data
-		$data = @unserialize($data);
+		$data = @unserialize($data, ['allowed_classes' => false]);
 
 		if ($data === false) {
 			throw new LogicException(
