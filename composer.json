@@ -100,7 +100,7 @@
 			"@test"
 		],
 		"fix": "cpx friendsofphp/php-cs-fixer:3.95.3 fix",
-		"test": "cpx brianium/paratest:7.22.4",
+		"test": "cpx brianium/paratest:7.20.0",
 		"test:coverage": [
 			"@putenv XDEBUG_MODE=coverage",
 			"@test --coverage-html=tests/coverage"
