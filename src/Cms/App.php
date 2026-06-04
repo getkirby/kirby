@@ -1312,6 +1312,17 @@ class App
 
 		// try to resolve clean URLs to files for pages and drafts
 		if ($page = $site->findPageOrDraft($id)) {
+			// don't leak files on draft pages through clean URLs:
+			// only serve them to an authenticated user with access
+			// permission or a request with a valid preview token
+			if (
+				$page->isDraft() === true &&
+				($this->user() && $page->isAccessible()) === false &&
+				$page->renderVersionFromRequest() === null
+			) {
+				return null;
+			}
+
 			return $this->resolveFile($page->file($filename));
 		}
 
