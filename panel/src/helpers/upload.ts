@@ -140,7 +140,7 @@ export async function uploadAsChunks(
 	size: number = 5242880
 ): Promise<unknown> {
 	const parts = Math.ceil(file.size / size);
-	const id = random(4).toLowerCase();
+	const id = random(16).toLowerCase();
 	let response: unknown;
 
 	for (let i = 0; i < parts; i++) {
