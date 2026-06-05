@@ -1037,6 +1037,14 @@ class QrCode implements Stringable
 			}
 		}
 
+		// reject data that does not fit into the largest QR version
+		// instead of overflowing into undefined version/capacity
+		if ($version > 40) {
+			throw new InvalidArgumentException(
+				message: 'The provided data exceeds the maximum capacity of a QR code'
+			);
+		}
+
 		// with the version in place, try to raise
 		// the error correction level as long as
 		// the data still fits

@@ -146,6 +146,15 @@ class QrCodeTest extends TestCase
 		$this->assertSame($qr->toSvg(), (string)$qr);
 	}
 
+	public function testVersionDataExceedsCapacity(): void
+	{
+		// binary mode caps at 2953 bytes
+		$qr = new QrCode(str_repeat('a', 3000));
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The provided data exceeds the maximum capacity of a QR code');
+		$qr->toSvg();
+	}
+
 	public function testWrite(): void
 	{
 		Dir::make(static::TMP);
