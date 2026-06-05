@@ -129,6 +129,7 @@ describe("Italic mark", () => {
 			});
 
 			it.each([
+				["word*foo*", "<p>word*foo*</p>"],
 				["*foo", "<p>*foo</p>"],
 				["* foo*", "<p>* foo*</p>"],
 				["*foo *", "<p>*foo *</p>"],
@@ -155,6 +156,7 @@ describe("Italic mark", () => {
 			});
 
 			it.each([
+				["word_foo_", "<p>word_foo_</p>"],
 				["_foo", "<p>_foo</p>"],
 				["_ foo_", "<p>_ foo_</p>"],
 				["_foo _", "<p>_foo _</p>"],

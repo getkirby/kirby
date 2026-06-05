@@ -130,6 +130,7 @@ describe("Bold mark", () => {
 			});
 
 			it.each([
+				["word**foo**", "<p>word**foo**</p>"],
 				["**foo", "<p>**foo</p>"],
 				["** foo**", "<p>** foo**</p>"],
 				["**foo **", "<p>**foo **</p>"],
@@ -158,6 +159,7 @@ describe("Bold mark", () => {
 			});
 
 			it.each([
+				["word__foo__", "<p>word__foo__</p>"],
 				["__foo", "<p>__foo</p>"],
 				["__ foo__", "<p>__ foo__</p>"],
 				["__foo __", "<p>__foo __</p>"],
