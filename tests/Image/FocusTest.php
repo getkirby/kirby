@@ -115,6 +115,12 @@ class FocusTest extends TestCase
 		$this->assertSame('50% 100%', Focus::normalize('bottom'));
 		$this->assertSame('0% 100%', Focus::normalize('bottom left'));
 		$this->assertSame('70% 30%', Focus::normalize('{"x":0.7,"y":0.3}'));
+
+		// invalid JSON
+		$this->assertSame('50% 50%', Focus::normalize('{not json'));
+		$this->assertSame('50% 50%', Focus::normalize('{"x":0.5}'));
+		$this->assertSame('50% 50%', Focus::normalize('{"x":"a","y":"b"}'));
+		$this->assertSame('50% 50%', Focus::normalize('{}'));
 	}
 
 	public function testParse(): void
