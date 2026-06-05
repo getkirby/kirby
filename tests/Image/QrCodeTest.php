@@ -115,6 +115,31 @@ class QrCodeTest extends TestCase
 		$this->assertStringContainsString('<rect width="100%" height="100%" fill="#00ff00"/>', $svg);
 	}
 
+	public function testToSvgEscapesAttrs(): void
+	{
+		$qr = new QrCode('https://getkirby.com');
+
+		// none of the attribute values may break out of their attribute
+		$svg = $qr->toSvg(
+			color: '#000" onload="alert(1)',
+			back:  '#fff"><script>alert(2)</script>',
+			size:  '1px" onload="alert(3)'
+		);
+		$this->assertStringNotContainsString('<script', $svg);
+		$this->assertStringNotContainsString('onload="', $svg);
+		$this->assertStringStartsWith('<svg', $svg);
+		$this->assertStringEndsWith('</svg>', $svg);
+
+		// valid hex colors and CSS sizes pass through unchanged
+		$svg = $qr->toSvg(size: '100%', color: '#ff0000', back: '#00ff00');
+		$this->assertStringContainsString('style="width: 100%"', $svg);
+		$this->assertStringContainsString('fill="#ff0000"', $svg);
+		$this->assertStringContainsString('fill="#00ff00"', $svg);
+		$svg = $qr->toSvg(color: 'rgb(255, 0, 0)', back: 'hsl(120, 100%, 50%)');
+		$this->assertStringContainsString('fill="rgb(255, 0, 0)"', $svg);
+		$this->assertStringContainsString('fill="hsl(120, 100%, 50%)"', $svg);
+	}
+
 	public function testToString(): void
 	{
 		$qr = new QrCode('https://getkirby.com');
