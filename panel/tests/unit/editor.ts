@@ -1,4 +1,4 @@
-import type { InputRule } from "prosemirror-inputrules";
+import { inputRules, type InputRule } from "prosemirror-inputrules";
 import {
 	DOMParser,
 	DOMSerializer,
@@ -26,37 +26,45 @@ export function applyInputRule(
 	rule: InputRule,
 	text: string
 ): string | null {
+	const trigger = text.slice(-1);
 	const docText = text.slice(0, -1);
 
-	const { match: regex, handler } = rule as unknown as {
-		match: RegExp;
-		handler: (...args: unknown[]) => Transaction | null;
-	};
-
-	const match = text.match(regex);
-
-	if (!match) {
-		return null;
-	}
-
 	const doc = schema.node("doc", null, [
-		schema.node("paragraph", null, [schema.text(docText)])
+		schema.node("paragraph", null, docText ? [schema.text(docText)] : [])
 	]);
 
-	const state = EditorState.create({ doc });
+	const initial = EditorState.create({ doc });
+	let result = initial;
 
-	const matchArray = Object.assign(Array.from(match), {
-		index: match.index ?? 0,
-		input: text
-	}) as RegExpMatchArray;
+	// Drive the rule through the `inputRules` plugin's
+	// `handleTextInput` prop, exactly the path ProseMirror
+	// takes when the trigger character is typed at the
+	// end of the paragraph
+	const view = {
+		composing: false,
+		state: initial,
+		dispatch: (tr: Transaction) => {
+			result = initial.apply(tr);
+		}
+	};
 
-	const tr = handler(state, matchArray, 1, 1 + docText.length);
+	const end = 1 + docText.length;
+	const handled = (
+		inputRules({ rules: [rule] }).props as {
+			handleTextInput: (
+				view: unknown,
+				from: number,
+				to: number,
+				text: string
+			) => boolean;
+		}
+	).handleTextInput(view, end, end, trigger);
 
-	if (!tr) {
+	if (handled !== true) {
 		return null;
 	}
 
-	return toHTML(schema, tr.doc);
+	return toHTML(schema, result.doc);
 }
 
 /**
@@ -98,18 +106,27 @@ export function createSchemaWithMarks(marks: Record<string, object>): Schema {
 	});
 }
 
+function firstInlineNode(schema: Schema, html: string): Node {
+	const node = parseHTML(schema, html).firstChild?.firstChild;
+
+	if (!node) {
+		throw new Error(`No inline node found in parsed HTML: "${html}"`);
+	}
+
+	return node;
+}
+
 export function getMarkAttrs(
 	schema: Schema,
 	html: string,
 	mark: MarkType
 ): Record<string, unknown> | undefined {
-	const node = parseHTML(schema, html);
-	return node.firstChild!.firstChild!.marks.find((m) => m.type === mark)?.attrs;
+	return firstInlineNode(schema, html).marks.find((m) => m.type === mark)
+		?.attrs;
 }
 
 export function hasMark(schema: Schema, html: string, mark: MarkType): boolean {
-	const node = parseHTML(schema, html);
-	return node.firstChild!.firstChild!.marks.some((m) => m.type === mark);
+	return firstInlineNode(schema, html).marks.some((m) => m.type === mark);
 }
 
 export function mockEditor(overrides = {}): Editor {
