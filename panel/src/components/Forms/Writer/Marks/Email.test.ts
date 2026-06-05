@@ -112,6 +112,20 @@ describe("Email mark", () => {
 
 				expect(editor.updateMark).not.toHaveBeenCalled();
 			});
+
+			it("does not insert as text when href is absent", () => {
+				const mark = new Email();
+				const editor = mockEditor({
+					insertText: vi.fn(),
+					state: { selection: { empty: true } }
+				});
+				mark.bindEditor(editor);
+
+				const { insertEmail } = mark.commands();
+				insertEmail({});
+
+				expect(editor.insertText).not.toHaveBeenCalled();
+			});
 		});
 
 		describe("removeEmail", () => {
@@ -181,9 +195,67 @@ describe("Email mark", () => {
 			);
 		});
 
+		it("converts an email address within text to email mark when pasting", () => {
+			const result = applyPasteRule(
+				schema,
+				rule,
+				"Write to test@example.com please"
+			);
+			expect(result).toBe(
+				'<p>Write to <a href="mailto:test@example.com">test@example.com</a> please</p>'
+			);
+		});
+
 		it("does not convert plain text to email mark", () => {
 			const result = applyPasteRule(schema, rule, "not-an-email");
 			expect(result).toBe("<p>not-an-email</p>");
+		});
+	});
+
+	describe("plugins", () => {
+		const handleClick = (mark: Email) =>
+			mark.plugins()[0].props?.handleClick as unknown as (
+				view: unknown,
+				pos: number,
+				event: MouseEvent
+			) => void;
+
+		it("opens a `mailto:` URL when alt-clicking an email link", () => {
+			const mark = new Email();
+			const editor = mockEditor({
+				getMarkAttrs: vi.fn(() => ({ href: "test@example.com" }))
+			});
+			mark.bindEditor(editor);
+
+			const open = vi.fn();
+			vi.stubGlobal("open", open);
+
+			handleClick(mark)(null, 0, {
+				altKey: true,
+				target: document.createElement("a"),
+				stopPropagation: vi.fn()
+			} as unknown as MouseEvent);
+
+			expect(open).toHaveBeenCalledWith("mailto:test@example.com");
+		});
+
+		it("does not open a URL when the alt key is not pressed", () => {
+			const mark = new Email();
+			const editor = mockEditor({
+				getMarkAttrs: vi.fn(() => ({ href: "test@example.com" }))
+			});
+			mark.bindEditor(editor);
+
+			const open = vi.fn();
+			vi.stubGlobal("open", open);
+
+			handleClick(mark)(null, 0, {
+				altKey: false,
+				target: document.createElement("a"),
+				stopPropagation: vi.fn()
+			} as unknown as MouseEvent);
+
+			expect(open).not.toHaveBeenCalled();
 		});
 	});
 

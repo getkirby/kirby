@@ -34,8 +34,10 @@ export default class Bold extends Mark {
 
 	pasteRules({ type, utils }: MarkContext): Plugin[] {
 		return [
-			utils.markPasteRule(/(?<!\S)\*\*([^*\s](?:[^*]*[^*\s])?)\*\*(?!\S)/g,
-				type),
+			utils.markPasteRule(
+				/(?<!\S)\*\*([^*\s](?:[^*]*[^*\s])?)\*\*(?!\S)/g,
+				type
+			),
 			utils.markPasteRule(/(?<!\S)__([^_\s](?:[^_]*[^_\s])?)__(?!\S)/g, type)
 		];
 	}

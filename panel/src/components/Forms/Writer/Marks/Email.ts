@@ -21,16 +21,18 @@ export default class Email extends Mark {
 				this.editor.emit("email", this.editor);
 			},
 			insertEmail: (attrs: { href?: string } = {}) => {
+				if (!attrs.href) {
+					return;
+				}
+
 				const { selection } = this.editor.state!;
 
-				// if no text is selected, we insert the link as text
+				// if no text is selected, we insert the email as text
 				if (selection.empty) {
 					this.editor.insertText(attrs.href, true);
 				}
 
-				if (attrs.href) {
-					return this.update(attrs);
-				}
+				return this.update(attrs);
 			},
 			removeEmail: () => {
 				return this.remove();
