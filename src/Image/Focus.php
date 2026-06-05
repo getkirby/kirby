@@ -82,9 +82,19 @@ class Focus
 		// support for former Focus plugin
 		if (Str::startsWith($value, '{') === true) {
 			$focus = json_decode($value);
-			$x     = round(100 * $focus->x);
-			$y     = round(100 * $focus->y);
-			return "$x% $y%";
+
+			// ignore malformed/partial JSON
+			if (
+				is_object($focus) === true &&
+				is_numeric($focus->x ?? null) === true &&
+				is_numeric($focus->y ?? null) === true
+			) {
+				$x = round(100 * $focus->x);
+				$y = round(100 * $focus->y);
+				return "$x% $y%";
+			}
+
+			return '50% 50%';
 		}
 
 		if (static::isFocalPoint($value) === false) {
