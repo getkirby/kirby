@@ -54,9 +54,9 @@ We are really happy about any help with translations. Please do not directly tra
 
 ## How we write code
 
-### Panel development
+### Development setup
 
-We recommend the [Kirby sandbox](https://github.com/getkirby/sandbox) as your local development environment. Set up a `sandbox.test` virtual host pointing to its `/public` folder (e.g. with [Laravel Herd](https://herd.laravel.com)). Then:
+We recommend the [Kirby sandbox](https://github.com/getkirby/sandbox) as your local development environment. Set up a `sandbox.test` virtual host pointing to its `/public` folder (e.g. with [Laravel Herd](https://herd.laravel.com)):
 
 ```bash
 # Clone and initialize
@@ -66,14 +66,31 @@ git submodule update --init --recursive
 
 # Create a sandbox.test virtual host (requires Laravel Herd)
 herd link
+```
 
-# Start the Panel dev server
+The sandbox comes with a pre-configured admin account (`test@getkirby.com` / `12345678`).
+
+#### Backend (PHP)
+
+We use [`cpx`](https://github.com/laravel/cpx) to run our PHP dev tools (e.g. PHP CS Fixer, PHPUnit, Psalm). Instead of installing each tool globally, `cpx` pulls and runs the right version on demand. The versions are pinned per branch in `composer.json`, so checking out a different branch automatically uses the matching tool versions.
+
+Install `cpx` globally once via Composer:
+
+```bash
+composer global require laravel/cpx
+```
+
+Make sure Composer's global `bin` directory is on your `PATH` (run `composer global config bin-dir --absolute` to find it). After that you don't need to install PHPUnit, Psalm or PHP CS Fixer globally. The `composer` scripts (`composer fix`, `composer test`, `composer analyze`) call them through `cpx` for you.
+
+#### Frontend/Panel (JavaScript, Vue)
+
+Start the Panel dev server from the `kirby/panel` folder:
+
+```bash
 cd kirby/panel
 npm install
 npm run dev
 ```
-
-The sandbox comes with a pre-configured admin account (`test@getkirby.com` / `12345678`).
 
 ### Style
 
@@ -81,7 +98,7 @@ We use an [`.editorconfig`](https://editorconfig.org) file to enforce basic form
 
 #### Backend (PHP)
 
-We use [PHP CS Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer) to ensure a consistent style for our PHP code. It is mainly based on [PSR-12](https://www.php-fig.org/psr/psr-12/). [Install PHP CS Fixer globally](https://github.com/FriendsOfPHP/PHP-CS-Fixer#globally-composer) via Composer and then run `composer fix` in the `kirby` folder to check for inconsistencies and fix them. Our automated PR checks will fail if there are code style issues with your code.
+We use [PHP CS Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer) to ensure a consistent style for our PHP code. It is mainly based on [PSR-12](https://www.php-fig.org/psr/psr-12/). Run `composer fix` in the `kirby` folder to check for inconsistencies and fix them (this runs PHP CS Fixer through [`cpx`](#development-setup), no separate installation needed). Our automated PR checks will fail if there are code style issues with your code.
 
 #### Frontend/Panel (JavaScript, Vue)
 
@@ -120,6 +137,8 @@ We use [Psalm](https://psalm.dev) for static type analysis. You can run it from 
 ```bash
 composer analyze
 ```
+
+Both `composer test` and `composer analyze` run their tools through [`cpx`](#development-setup), so make sure it's installed first.
 
 Our automated PR checks will fail if PHPUnit or Psalm report issues with your code.
 
