@@ -21,6 +21,10 @@ export default class Link extends Mark<{ target: string | null }> {
 				this.editor.emit("link", this.editor);
 			},
 			insertLink: (attrs: { href?: string } = {}) => {
+				if (!attrs.href) {
+					return;
+				}
+
 				const { selection } = this.editor.state!;
 
 				// if no text is selected and link mark is not active
@@ -30,9 +34,7 @@ export default class Link extends Mark<{ target: string | null }> {
 					this.editor.insertText(attrs.href, true);
 				}
 
-				if (attrs.href) {
-					return this.update(attrs);
-				}
+				return this.update(attrs);
 			},
 			removeLink: () => {
 				return this.remove();
