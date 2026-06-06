@@ -37,10 +37,10 @@ class Challenges
 
 	public function available(User $user, string $mode): array
 	{
-		return A::filter(
+		return array_values(A::filter(
 			$this->enabled(),
 			fn ($type) => $this->class($type)::isAvailable($user, $mode)
-		);
+		));
 	}
 
 	/**
@@ -114,10 +114,10 @@ class Challenges
 	{
 		$config = $this->kirby->option('auth.challenges', ['totp', 'email']);
 
-		return A::filter(
+		return array_values(A::filter(
 			A::wrap($config),
 			fn ($type) => $this->class($type)::isEnabled($this->auth)
-		);
+		));
 	}
 
 	/**
