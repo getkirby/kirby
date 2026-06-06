@@ -200,8 +200,8 @@ class PagePicker extends Picker
 	 * site root when the requested parent is missing or not
 	 * accessible for the current user.
 	 *
-	 * @throws \Kirby\Exception\PermissionException if neither
-	 *         the requested parent nor the site are accessible
+	 * @throws \Kirby\Exception\PermissionException if neither the requested parent
+	 *                                              nor the site are accessible
 	 */
 	public function parent(): Page|Site
 	{
