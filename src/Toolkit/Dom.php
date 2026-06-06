@@ -626,14 +626,34 @@ class Dom
 	 */
 	public static function unwrap(DOMNode $node): void
 	{
-		foreach ($node->childNodes as $childNode) {
+		// snapshot because `insertBefore` moves children out of `$node`,
+		// shifting the live `DOMNodeList`
+		foreach (iterator_to_array($node->childNodes, false) as $childNode) {
 			// discard text nodes as they can be unexpected
 			// directly in the parent element
 			if ($childNode instanceof DOMText) {
 				continue;
 			}
 
-			$node->parentNode->insertBefore(clone $childNode, $node);
+			// the child may use a default namespace (`xmlns="…"`)
+			// that was declared on `$node`; once `$node` is gone,
+			// libxml would rename it to `<default:child>`, so we
+			// copy the declaration to the child to suppress it
+			if (
+				$childNode instanceof DOMElement &&
+				($childNode->prefix === '' || $childNode->prefix === null) &&
+				is_string($childNode->namespaceURI) === true
+			) {
+				$childNode->setAttributeNS(
+					'http://www.w3.org/2000/xmlns/',
+					'xmlns',
+					$childNode->namespaceURI
+				);
+			}
+
+			// move (don't clone) so descendants pending in the
+			// `Dom::sanitize()` snapshot are still sanitized
+			$node->parentNode->insertBefore($childNode, $node);
 		}
 
 		static::remove($node);
