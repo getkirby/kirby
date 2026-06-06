@@ -323,8 +323,7 @@ class LoginViewControllerTest extends TestCase
 
 		$this->assertSame('pending', $props['state']);
 		$this->assertSame('k-login-test-challenge-form', $props['form']['component']);
-		// when current is a Challenge, the first enabled method is shown as active
-		$this->assertTrue($props['methods'][0]['active']);
+		$this->assertSame([], $props['methods']);
 		$this->assertCount(2, $props['challenges']);
 		$this->assertTrue($props['challenges'][0]['active']);
 		$this->assertFalse($props['challenges'][1]['active']);

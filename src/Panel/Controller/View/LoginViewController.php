@@ -7,6 +7,7 @@ use Kirby\Auth\Method;
 use Kirby\Auth\Pending;
 use Kirby\Auth\State;
 use Kirby\Auth\Status;
+use Kirby\Exception\LogicException;
 use Kirby\Panel\Controller\ViewController;
 use Kirby\Panel\Panel;
 use Kirby\Panel\Ui\Component;
@@ -68,37 +69,6 @@ class LoginViewController extends ViewController
 		return $challenges->get($type, $user, $mode);
 	}
 
-	protected function form(): array
-	{
-		$data = $this->status->data() ?? new Pending();
-		$form = $this->current instanceof Challenge
-			? $this->current->form($data)
-			: $this->current->form();
-
-		if ($form instanceof Component) {
-			$form = $form->render();
-		}
-
-		assert($form !== null);
-
-		if ($value = $this->value()) {
-			$form['props']['value'] = $value;
-		}
-
-		return $form;
-	}
-
-	public function load(): View
-	{
-		return new View(
-			component:  'k-login-view',
-			form:       $this->form(),
-			challenges: $this->challenges(),
-			methods:    $this->methods(),
-			state:      $this->status->state()->value,
-		);
-	}
-
 	private function challenges(): array
 	{
 		if ($this->status->state() !== State::Pending) {
@@ -123,6 +93,41 @@ class LoginViewController extends ViewController
 		);
 	}
 
+	protected function form(): array
+	{
+		$data = $this->status->data() ?? new Pending();
+		$form = $this->current instanceof Challenge
+			? $this->current->form($data)
+			: $this->current->form();
+
+		if ($form instanceof Component) {
+			$form = $form->render();
+		}
+
+		if ($form === null) {
+			throw new LogicException(
+				message: 'The login form could not be rendered'
+			);
+		}
+
+		if ($value = $this->value()) {
+			$form['props']['value'] = $value;
+		}
+
+		return $form;
+	}
+
+	public function load(): View
+	{
+		return new View(
+			component:  'k-login-view',
+			form:       $this->form(),
+			challenges: $this->challenges(),
+			methods:    $this->methods(),
+			state:      $this->status->state()->value,
+		);
+	}
+
 	private function method(string|null $name): Method
 	{
 		$methods = $this->kirby->auth()->methods();
@@ -140,13 +145,17 @@ class LoginViewController extends ViewController
 
 	private function methods(): array
 	{
+		if ($this->status->state() === State::Pending) {
+			return [];
+		}
+
 		$methods = $this->kirby->auth()->methods();
 		$enabled = A::map(
 			array_keys($methods->enabled()),
 			fn ($type) => $methods->get($type),
 		);
 
-		$active = $this->current instanceof Method ? $this->current : $enabled[0];
+		$active = $this->current instanceof Method ? $this->current::type() : null;
 
 		return A::map(
 			$enabled,
@@ -154,7 +163,7 @@ class LoginViewController extends ViewController
 				'type'   => $method::type(),
 				'label'  => static::i18n('login.method.' . $method::type() . '.label'),
 				'icon'   => $method::icon(),
-				'active' => $method::type() === $active::type(),
+				'active' => $method::type() === $active,
 			]
 		);
 	}
