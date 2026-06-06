@@ -1873,6 +1873,10 @@ class DomTest extends TestCase
 		]);
 	}
 
+	/**
+	 * @covers ::sanitize
+	 * @covers ::unwrap
+	 */
 	public function testSanitizeElementsEvenWhenUnwrapped(): void
 	{
 		$html = '<body><wrapper><script>alert(1)</script><img src="x" onerror="alert(2)"></wrapper></body>';
@@ -1890,6 +1894,9 @@ class DomTest extends TestCase
 		$this->assertSame('<body><img src="x"></body>', $dom->toString());
 	}
 
+	/**
+	 * @covers ::unwrap
+	 */
 	public function testUnwrap(): void
 	{
 		$dom = new Dom('<body><p>This is a test</p><invalid>And this is <p>Awesome<strong>!</strong></p> but contains text</invalid></body>', 'HTML');
