@@ -365,7 +365,7 @@ class LoginRequestControllerTest extends TestCase
 		$session->set('kirby.challenge.type', 'email');
 		$session->set('kirby.challenge.mode', 'password-reset');
 		$session->set('kirby.challenge.data', [
-			'secret' => password_hash('654321', PASSWORD_DEFAULT)
+			'secret' => User::hashPassword('654321')
 		]);
 		$session->set('kirby.challenge.timeout', time() + 600);
 

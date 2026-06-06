@@ -6,6 +6,7 @@ use Kirby\Auth\Challenge;
 use Kirby\Auth\Challenges;
 use Kirby\Auth\Pending;
 use Kirby\Cms\User;
+use Kirby\Exception\LogicException;
 use Kirby\Panel\Redirect;
 use Kirby\Panel\TestCase;
 use Kirby\Panel\Ui\Component;
@@ -73,6 +74,21 @@ class TestChallenge2 extends Challenge
 	}
 }
 
+class TestNullFormChallenge extends TestChallenge2
+{
+	public function form(Pending $pending): Component
+	{
+		// a malformed component whose render() yields null, e.g. as
+		// could be returned by a third-party method or challenge
+		return new class (component: 'k-login-null-form') extends Component {
+			public function render(): array|null
+			{
+				return null;
+			}
+		};
+	}
+}
+
 #[CoversClass(LoginViewController::class)]
 class LoginViewControllerTest extends TestCase
 {
@@ -81,22 +97,54 @@ class LoginViewControllerTest extends TestCase
 		parent::setUp();
 
 		TestChallenge::$available   = true;
-		Challenges::$challenges['test']  = TestChallenge::class;
-		Challenges::$challenges['test2'] = TestChallenge2::class;
+		Challenges::$challenges['test']           = TestChallenge::class;
+		Challenges::$challenges['test2']          = TestChallenge2::class;
+		Challenges::$challenges['test-null-form'] = TestNullFormChallenge::class;
 	}
 
 	public function tearDown(): void
 	{
 		parent::tearDown();
 
-		unset(Challenges::$challenges['test'], Challenges::$challenges['test2']);
-
+		unset(
+			Challenges::$challenges['test'],
+			Challenges::$challenges['test2'],
+			Challenges::$challenges['test-null-form']
+		);
 	}
 
 	public function testConstructUnknownChallenge(): void
 	{
-		$this->expectException(Redirect::class);
-		new LoginViewController('challenge', 'unknown');
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'challenges' => ['test', 'test2']
+				]
+			],
+			'users' => [
+				[
+					'email' => 'test@example.com',
+					'role'  => 'admin'
+				]
+			]
+		]);
+
+		$session = $this->app->session();
+		$session->set('kirby.challenge.email', 'test@example.com');
+		$session->set('kirby.challenge.type', 'test');
+		$session->set('kirby.challenge.mode', 'login');
+
+		$exception = null;
+
+		try {
+			new LoginViewController('challenge', 'unknown');
+		} catch (Redirect $e) {
+			$exception = $e;
+		}
+
+		// an unknown challenge name redirects to the active challenge
+		$this->assertInstanceOf(Redirect::class, $exception);
+		$this->assertStringEndsWith('login/challenge/test', $exception->location());
 	}
 
 	public function testConstructUnknownMethod(): void
@@ -191,6 +239,33 @@ class LoginViewControllerTest extends TestCase
 	{
 		$challenges = (new LoginViewController())->load()->props()['challenges'];
 		$this->assertSame([], $challenges);
+	}
+
+	public function testFormThrowsWhenComponentRendersNull(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'challenges' => ['test-null-form']
+				]
+			],
+			'users' => [
+				[
+					'email' => 'test@example.com',
+					'role'  => 'admin'
+				]
+			]
+		]);
+
+		$session = $this->app->session();
+		$session->set('kirby.challenge.email', 'test@example.com');
+		$session->set('kirby.challenge.type', 'test-null-form');
+		$session->set('kirby.challenge.mode', 'login');
+
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('The login form could not be rendered');
+
+		(new LoginViewController('challenge', 'test-null-form'))->load();
 	}
 
 	public function testLoad(): void
