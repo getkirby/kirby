@@ -509,6 +509,25 @@ class FormTest extends TestCase
 		$this->assertFalse($form->toArray()['invalid']);
 	}
 
+	public function testToArrayInvalid(): void
+	{
+		$form = new Form([
+			'fields' => [
+				'a' => [
+					'label'    => 'A',
+					'type'     => 'text',
+					'required' => true,
+				]
+			],
+			'model' => $this->model,
+		]);
+
+		$array = $form->toArray();
+
+		$this->assertArrayHasKey('a', $array['errors']);
+		$this->assertTrue($array['invalid']);
+	}
+
 	public function testToFormValues(): void
 	{
 		$form = new Form([

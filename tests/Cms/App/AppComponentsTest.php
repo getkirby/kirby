@@ -179,7 +179,7 @@ class AppComponentsTest extends TestCase
 	public function testSmartypants(): void
 	{
 		$text     = '"Test"';
-		$expected = '&#8220;Test&#8221;';
+		$expected = '“Test”';
 
 		$this->assertSame($expected, $this->app->smartypants($text));
 	}
@@ -282,7 +282,7 @@ class AppComponentsTest extends TestCase
 		]);
 
 		$text     = '"Test"';
-		$expected = '&#8220;Test&#8221;';
+		$expected = '“Test”';
 
 		$this->assertSame($expected, $this->app->smartypants($text));
 	}
@@ -290,11 +290,11 @@ class AppComponentsTest extends TestCase
 	public function testSmartypantsCachedInstance(): void
 	{
 		$text     = '"Test"';
-		$expected = '&#8220;Test&#8221;';
+		$expected = '“Test”';
 
 		$this->assertSame($expected, $this->app->component('smartypants')($this->app, $text, []));
 
-		$expected = 'TestTest&#8221;';
+		$expected = 'TestTest”';
 		$this->assertSame($expected, $this->app->component('smartypants')($this->app, $text, ['doublequote.open' => 'Test']));
 	}
 

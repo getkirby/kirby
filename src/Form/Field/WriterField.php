@@ -119,7 +119,7 @@ class WriterField extends StringField
 
 	public function nodes(): array|bool|null
 	{
-		return $this->marks;
+		return $this->nodes;
 	}
 
 	public function toolbar(): array|bool|null

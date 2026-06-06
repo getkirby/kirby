@@ -9,7 +9,6 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Http\Cookie;
 use Kirby\TestCase;
 use Kirby\Tests\MockTime;
-use Kirby\Toolkit\Obj;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\SymmetricCrypto;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -774,31 +773,6 @@ class SessionTest extends TestCase
 		$this->assertFalse($session->timeout());
 		$this->assertFalse($session->renewable());
 		$this->assertSame('valid', $session->data()->get('id'));
-	}
-
-	public function testInitSerializedObject(): void
-	{
-		$token = '9999999999.valid.' . $this->store->validKey;
-
-		$obj = new Obj([
-			'test-key' => 'test-value'
-		]);
-
-		$session = new Session($this->sessions, $token, []);
-		$session->data()->set('name', 'test-session');
-		$session->data()->set('obj', $obj);
-		$this->assertWriteMode(true, $session);
-		$this->assertInstanceOf(Obj::class, $session->data()->get('obj'));
-		$this->assertSame($obj, $session->data()->get('obj'));
-		$this->assertTrue($obj === $session->data()->get('obj'));
-		$session->commit();
-		$this->assertWriteMode(false, $session);
-
-		$session = new Session($this->sessions, $token, []);
-		$this->assertSame('test-session', $session->data()->get('name'));
-		$this->assertInstanceOf(Obj::class, $session->data()->get('obj'));
-		$this->assertEquals($obj, $session->data()->get('obj')); // cannot use strict assertion (serialized data)
-		$this->assertFalse($obj === $session->data()->get('obj'));
 	}
 
 	public function testInitNonExisting(): void

@@ -25,16 +25,16 @@
 		"prosemirror-schema-list": "^1.5.1",
 		"prosemirror-view": "^1.41.8",
 		"sortablejs": "^1.15.7",
-		"vue": "^3.5.34"
+		"vue": "^3.5.35"
 	},
 	"devDependencies": {
 		"@eslint/js": "^10.0.1",
 		"@types/autosize": "^4.0.3",
 		"@vitejs/plugin-vue": "^6.0.7",
-		"@vitest/eslint-plugin": "1.6.17",
-		"@vue/compiler-sfc": "^3.5.34",
+		"@vitest/eslint-plugin": "1.6.19",
+		"@vue/compiler-sfc": "^3.5.35",
 		"@vue/test-utils": "^2.4.10",
-		"eslint": "^10.4.0",
+		"eslint": "^10.4.1",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-vue": "^10.9.1",
 		"glob": "^13.0.6",
@@ -43,12 +43,12 @@
 		"prettier": "^3.8.3",
 		"terser": "^5.48.0",
 		"typescript": "^6.0.3",
-		"typescript-eslint": "^8.59.4",
-		"vite": "^8.0.13",
+		"typescript-eslint": "^8.60.1",
+		"vite": "^8.0.16",
 		"vite-plugin-static-copy": "^4.1.0",
 		"vitest": "^4.1.7",
 		"vue-docgen-api": "^4.79.2",
-		"vue-tsc": "^3.3.0"
+		"vue-tsc": "^3.3.3"
 	},
 	"browserslist": [
 		"Chrome >= 123",

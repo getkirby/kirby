@@ -1055,6 +1055,20 @@ class StrTest extends TestCase
 			'percent' => 75.0
 		], Str::similarity('Tête', 'tête'));
 
+		// multibyte recursive path: matching tail recurses on
+		// the segment right of the longest common substring
+		$this->assertSame([
+			'matches' => 3,
+			'percent' => 75.0
+		], Str::similarity('café', 'caté'));
+
+		// multibyte recursive path: matching prefix recurses on
+		// the segment left of the longest common substring
+		$this->assertSame([
+			'matches' => 6,
+			'percent' => 85.71428571428571
+		], Str::similarity('München', 'Munchen'));
+
 		$this->assertSame([
 			'matches' => 0,
 			'percent' => 0.0

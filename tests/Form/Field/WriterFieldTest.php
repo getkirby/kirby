@@ -7,6 +7,24 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(WriterField::class)]
 class WriterFieldTest extends TestCase
 {
+	public function testMarks(): void
+	{
+		$field = $this->field('writer', [
+			'marks' => $marks = ['bold', 'italic']
+		]);
+
+		$this->assertSame($marks, $field->marks());
+	}
+
+	public function testNodes(): void
+	{
+		$field = $this->field('writer', [
+			'nodes' => $nodes = ['paragraph', 'heading']
+		]);
+
+		$this->assertSame($nodes, $field->nodes());
+	}
+
 	public function testProps(): void
 	{
 		$field = $this->field('writer');
