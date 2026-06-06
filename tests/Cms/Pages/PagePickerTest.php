@@ -2,8 +2,8 @@
 
 namespace Kirby\Cms;
 
-use Kirby\TestCase;
 use Kirby\Exception\PermissionException;
+use Kirby\TestCase;
 
 class PagePickerTest extends TestCase
 {
