@@ -64,9 +64,9 @@ return [
 			$password = $this->requestBody('password');
 
 			$method = match (true) {
-				$password !== null && $password !== ''  => 'password',
-				$auth->methods()->has('code')           => 'code',
-				$auth->methods()->has('password-reset') => 'password-reset',
+				is_string($password) && $password !== '' => 'password',
+				$auth->methods()->has('code')            => 'code',
+				$auth->methods()->has('password-reset')  => 'password-reset',
 				default => throw new InvalidArgumentException(
 					message: 'Login without password is not enabled'
 				)
