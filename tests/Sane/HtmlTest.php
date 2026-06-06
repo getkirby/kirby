@@ -44,4 +44,10 @@ class HtmlTest extends TestCase
 		$this->expectExceptionMessage('The URL points outside of the site index URL');
 		Html::validateFile($fixture);
 	}
+
+	public function testSanitizeDisallowedWrapperDoesNotSkipChildrenSanitization(): void
+	{
+		$payload = '<marquee><img src=x onerror="alert(1)"><p>Some text</p><script>alert(2)</script></marquee>';
+		$this->assertSame('<p>Some text</p>', Html::sanitize($payload));
+	}
 }

@@ -221,6 +221,162 @@ class AppResolveTest extends TestCase
 	 * @covers ::resolve
 	 * @covers ::resolveFile
 	 */
+	public function testResolveDraftFileWithoutAccess(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null',
+			],
+			'site' => [
+				'drafts' => [
+					[
+						'slug' => 'a-draft',
+						'files' => [
+							['filename' => 'test.jpg']
+						],
+					]
+				]
+			],
+			'options' => [
+				'content' => [
+					'fileRedirects' => true
+				]
+			]
+		]);
+
+		// a file on a draft page must not be exposed to
+		// anonymous visitors through clean file URLs
+		$result = $app->resolve('a-draft/test.jpg');
+		$this->assertNull($result);
+	}
+
+	/**
+	 * @covers ::resolve
+	 * @covers ::resolveFile
+	 */
+	public function testResolveDraftFileWithUser(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null',
+			],
+			'site' => [
+				'drafts' => [
+					[
+						'slug' => 'a-draft',
+						'files' => [
+							['filename' => 'test.jpg']
+						],
+					]
+				]
+			],
+			'users' => [
+				['email' => 'admin@getkirby.com', 'role' => 'admin']
+			],
+			'options' => [
+				'content' => [
+					'fileRedirects' => true
+				]
+			]
+		]);
+
+		$app->impersonate('admin@getkirby.com');
+
+		$result = $app->resolve('a-draft/test.jpg');
+
+		$this->assertIsFile($result);
+		$this->assertSame('a-draft/test.jpg', $result->id());
+	}
+
+	/**
+	 * @covers ::resolve
+	 * @covers ::resolveFile
+	 */
+	public function testResolveDraftFileWithUserDeniedByPermission(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null',
+			],
+			'site' => [
+				'drafts' => [
+					[
+						'slug' => 'a-draft',
+						'files' => [
+							['filename' => 'test.jpg']
+						],
+					]
+				]
+			],
+			'roles' => [
+				[
+					'name' => 'editor',
+					'permissions' => [
+						'pages' => ['access' => false]
+					]
+				]
+			],
+			'users' => [
+				['email' => 'editor@getkirby.com', 'role' => 'editor']
+			],
+			'options' => [
+				'content' => [
+					'fileRedirects' => true
+				]
+			]
+		]);
+
+		$app->impersonate('editor@getkirby.com');
+
+		$result = $app->resolve('a-draft/test.jpg');
+		$this->assertNull($result);
+	}
+
+	/**
+	 * @covers ::resolve
+	 * @covers ::resolveFile
+	 */
+	public function testResolveDraftFileWithToken(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null',
+			],
+			'site' => [
+				'drafts' => [
+					[
+						'slug' => 'a-draft',
+						'files' => [
+							['filename' => 'test.jpg']
+						],
+					]
+				]
+			],
+			'options' => [
+				'content' => [
+					'fileRedirects' => true
+				]
+			]
+		]);
+
+		$draft = $app->page('a-draft');
+		$token = $app->contentToken($draft, $draft->id() . $draft->template());
+		$app   = $app->clone([
+			'request' => [
+				'query' => ['token' => $token]
+			]
+		]);
+
+		$result = $app->resolve('a-draft/test.jpg');
+
+		$this->assertIsFile($result);
+		$this->assertSame('a-draft/test.jpg', $result->id());
+	}
+
+	/**
+	 * @covers ::resolve
+	 * @covers ::resolveFile
+	 */
 	public function testResolveFileEnabled()
 	{
 		$app = new App([
