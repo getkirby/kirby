@@ -501,6 +501,119 @@ class FTest extends TestCase
 		$this->assertSame(filemtime($this->test), F::modified($this->test));
 	}
 
+	public function testModifyCreatesFileAndParentDir(): void
+	{
+		$target = static::TMP . '/nested/dir/new.txt';
+		$this->assertFileDoesNotExist($target);
+
+		$received = null;
+		$result = F::modify($target, function (string $contents) use (&$received): string {
+			$received = $contents;
+			return 'fresh';
+		});
+
+		$this->assertTrue($result);
+		$this->assertSame('', $received);
+		$this->assertSame('fresh', file_get_contents($target));
+	}
+
+	public function testModifyExistingFileTruncatesToNewContents(): void
+	{
+		F::write($this->test, 'a long original content');
+
+		$result = F::modify(
+			$this->test,
+			fn (string $contents) => strtoupper($contents) . '!'
+		);
+
+		$this->assertTrue($result);
+		$this->assertSame('A LONG ORIGINAL CONTENT!', file_get_contents($this->test));
+	}
+
+	public function testModifyShorterReplacementIsNotPaddedFromOldContents(): void
+	{
+		F::write($this->test, 'the original is much longer than the replacement');
+
+		F::modify($this->test, fn () => 'short');
+
+		// must not contain trailing bytes from the original
+		$this->assertSame('short', file_get_contents($this->test));
+	}
+
+	public function testModifyAbortsWhenModifierReturnsNull(): void
+	{
+		F::write($this->test, 'untouched');
+
+		$result = F::modify($this->test, fn () => null);
+
+		$this->assertFalse($result);
+		$this->assertSame('untouched', file_get_contents($this->test));
+	}
+
+	public function testModifyAbortsWhenModifierReturnsNonString(): void
+	{
+		F::write($this->test, 'untouched');
+
+		// only a string is written; any other return value
+		// (here an int) aborts the write like `null` does
+		$result = F::modify($this->test, fn () => 123);
+
+		$this->assertFalse($result);
+		$this->assertSame('untouched', file_get_contents($this->test));
+	}
+
+	public function testModifyReturnsFalseWhenFileCannotBeOpened(): void
+	{
+		// a directory cannot be opened with `fopen()` in `c+` mode,
+		// so `modify()` returns false without invoking the modifier
+		Dir::make($dir = static::TMP . '/a-directory');
+
+		$called = false;
+		$result = F::modify($dir, function () use (&$called) {
+			$called = true;
+			return 'nope';
+		});
+
+		$this->assertFalse($result);
+		$this->assertFalse($called);
+	}
+
+	public function testModifyPropagatesModifierException(): void
+	{
+		F::write($this->test, 'before');
+
+		try {
+			F::modify($this->test, function (): string {
+				throw new Exception('boom');
+			});
+			$this->fail('Expected exception was not thrown');
+
+		} catch (Exception $e) {
+			$this->assertSame('boom', $e->getMessage());
+		}
+
+		// file should remain unchanged
+		$this->assertSame('before', file_get_contents($this->test));
+
+		// lock must have been released, a new modify succeeds
+		$this->assertTrue(F::modify($this->test, fn () => 'after'));
+		$this->assertSame('after', file_get_contents($this->test));
+	}
+
+	public function testModifySerializesSequentialReadModifyWrites(): void
+	{
+		F::write($this->test, '0');
+
+		for ($i = 0; $i < 50; $i++) {
+			F::modify(
+				$this->test,
+				fn ($content): string => (string)((int)$content + 1)
+			);
+		}
+
+		$this->assertSame('50', file_get_contents($this->test));
+	}
+
 	public function testName(): void
 	{
 		$this->assertSame('test', F::name($this->sample));
