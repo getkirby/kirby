@@ -71,9 +71,7 @@ function createPlugins(mode: string): Plugin[] {
 		vue({
 			template: {
 				compilerOptions: {
-					isCustomElement: (tag) =>
-						["k-input-validator"].includes(tag) ||
-						(!!process.env.VITEST && tag.startsWith("k-"))
+					isCustomElement: (tag) => ["k-input-validator"].includes(tag)
 				}
 			}
 		}),
@@ -119,7 +117,8 @@ function createTest() {
 			include: ["src/**/*.{js,ts,vue}"],
 			exclude: ["src/**/*.test.{js,ts}", "src/**/index.{js,ts}"],
 			// local: html report for browsing; CI: lcov for the Codecov upload
-			reporter: process.env.CI ? ["lcov"] : ["text", "html"]
+			reporter: process.env.CI ? ["lcov"] : ["text", "html"],
+			reportsDirectory: "./tests/coverage"
 		}
 	};
 }
