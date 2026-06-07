@@ -62,6 +62,11 @@ describe("$helper.string.slug()", () => {
 		expect(result).toBe("1-plus-1");
 	});
 
+	it("should apply slash-delimited rules", () => {
+		const result = slug("foo", [{ "/o/": "0" }]);
+		expect(result).toBe("f00");
+	});
+
 	it("handles asterisks", () => {
 		const resultA = slug("***");
 		expect(resultA).toBe("");
