@@ -33,6 +33,7 @@ export default function Dropdown(panel: TODO) {
 		/**
 		 * @deprecated 4.0.0
 		 */
+		/* v8 ignore next -- deprecated, excluded from coverage */
 		openAsync(
 			dropdown: string,
 			options: Partial<Prettify<DropdownState>> | Listener = {}
