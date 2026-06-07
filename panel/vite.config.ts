@@ -113,7 +113,14 @@ function createTest() {
 		environment: "happy-dom",
 		include: ["**/*.test.{js,ts}"],
 		reporter: "dot",
-		setupFiles: ["tests/unit/setup.ts"]
+		setupFiles: ["tests/unit/setup.ts"],
+		coverage: {
+			provider: "v8",
+			include: ["src/**/*.{js,ts,vue}"],
+			exclude: ["src/**/*.test.{js,ts}", "src/**/index.{js,ts}"],
+			// local: html report for browsing; CI: lcov for the Codecov upload
+			reporter: process.env.CI ? ["lcov"] : ["text", "html"]
+		}
 	};
 }
 

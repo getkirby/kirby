@@ -11,6 +11,7 @@
 		"lint:fix": "npm run lint -- --fix",
 		"test": "npm run test:unit",
 		"test:unit": "vitest run --no-isolate",
+		"test:coverage": "npm run test:unit -- --coverage",
 		"types": "vue-tsc --noEmit"
 	},
 	"dependencies": {
@@ -31,6 +32,7 @@
 		"@eslint/js": "^10.0.1",
 		"@types/autosize": "^4.0.3",
 		"@vitejs/plugin-vue": "^6.0.7",
+		"@vitest/coverage-v8": "^4.1.7",
 		"@vitest/eslint-plugin": "1.6.19",
 		"@vue/compiler-sfc": "^3.5.35",
 		"@vue/test-utils": "^2.4.10",
