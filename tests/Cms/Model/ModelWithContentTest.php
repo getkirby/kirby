@@ -17,6 +17,11 @@ use PHPUnit\Framework\Attributes\DataProvider;
 
 class ExtendedModelWithContent extends ModelWithContent
 {
+	public function apiUrl(bool $relative = false): string
+	{
+		return 'test';
+	}
+
 	public function blueprint(): Blueprint
 	{
 		return new Blueprint([]);

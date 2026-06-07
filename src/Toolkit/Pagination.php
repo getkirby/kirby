@@ -280,6 +280,7 @@ class Pagination
 
 	/**
 	 * Creates a range of page numbers for Google-like pagination
+	 * @return non-empty-list<int>
 	 */
 	public function range(int $range = 5): array
 	{
@@ -289,6 +290,7 @@ class Pagination
 		$end   = $pages;
 
 		if ($pages <= $range) {
+			/** @var non-empty-list<int> */
 			return range($start, $end);
 		}
 
@@ -306,6 +308,7 @@ class Pagination
 			$end   = $pages;
 		}
 
+		/** @var non-empty-list<int> */
 		return range($start, $end);
 	}
 

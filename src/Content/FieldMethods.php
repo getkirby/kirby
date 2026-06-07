@@ -3,6 +3,7 @@
 namespace Kirby\Content;
 
 use Closure;
+use DOMElement;
 use IntlDateFormatter;
 use Kirby\Cms\Blocks;
 use Kirby\Cms\Collection;
@@ -44,6 +45,8 @@ use Throwable;
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @mixin \Kirby\Content\Field
  */
 trait FieldMethods
 {
@@ -292,6 +295,7 @@ trait FieldMethods
 	 */
 	public function permalinksToUrls(): static
 	{
+		/** @var \Kirby\Content\Field $field */
 		$field = clone $this;
 
 		if ($field->isNotEmpty() === true) {
@@ -300,19 +304,21 @@ trait FieldMethods
 			$elements   = $dom->query('//*[' . implode(' | ', A::map($attributes, fn ($attribute) => '@' . $attribute)) . ']');
 
 			foreach ($elements as $element) {
-				foreach ($attributes as $attribute) {
-					if (
-						$element->hasAttribute($attribute) &&
-						$url = $element->getAttribute($attribute)
-					) {
-						try {
-							$permalink = Permalink::from($url);
+				if ($element instanceof DOMElement === true) {
+					foreach ($attributes as $attribute) {
+						if (
+							$element->hasAttribute($attribute) &&
+							$url = $element->getAttribute($attribute)
+						) {
+							try {
+								$permalink = Permalink::from($url);
 
-							if ($url = $permalink?->model()?->url()) {
-								$element->setAttribute($attribute, $url);
+								if ($url = $permalink?->model()?->url()) {
+									$element->setAttribute($attribute, $url);
+								}
+							} catch (InvalidArgumentException) {
+								// ignore anything else than permalinks
 							}
-						} catch (InvalidArgumentException) {
-							// ignore anything else than permalinks
 						}
 					}
 				}
@@ -615,13 +621,8 @@ trait FieldMethods
 	 */
 	public function toPages(string $separator = 'yaml'): Pages
 	{
-		// always pass at least two arguments even if the
-		// data is empty so that `$site->find()` always
-		// returns a collection, not a single page
 		return $this->kirby()->site()->find(
-			false,
-			false,
-			...$this->toData($separator)
+			$this->toData($separator)
 		);
 	}
 
@@ -689,13 +690,8 @@ trait FieldMethods
 	 */
 	public function toUsers(string $separator = 'yaml'): Users
 	{
-		// always pass at least two arguments even if the
-		// data is empty so that `$users->find()` always
-		// returns a collection, not a single user
 		return $this->kirby()->users()->find(
-			false,
-			false,
-			...$this->toData($separator)
+			$this->toData($separator)
 		);
 	}
 

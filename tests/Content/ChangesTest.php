@@ -4,6 +4,8 @@ namespace Kirby\Content;
 
 use Kirby\Cache\Cache;
 use Kirby\Cms\App;
+use Kirby\Cms\Pages;
+use Kirby\Cms\Users;
 use Kirby\TestCase;
 use Kirby\Uuid\Uuids;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -145,6 +147,7 @@ class ChangesTest extends TestCase
 
 		// in cache, but changes don't exist in reality
 		$this->assertCount(0, $changes->pages());
+		$this->assertInstanceOf(Pages::class, $changes->pages());
 		$this->assertSame([], $this->app->cache('changes')->get('pages'));
 
 		// in cache and changes exist in reality
@@ -153,7 +156,15 @@ class ChangesTest extends TestCase
 
 		$this->assertSame($cache, $this->app->cache('changes')->get('pages'));
 		$this->assertCount(1, $changes->pages());
+		$this->assertInstanceOf(Pages::class, $changes->pages());
 		$this->assertSame('test', $changes->pages()->first()->id());
+
+		// no cache entry, read returns []
+		$this->app->cache('changes')->flush();
+		$changes = new Changes();
+		$result  = $changes->pages();
+		$this->assertInstanceOf(Pages::class, $result);
+		$this->assertCount(0, $result);
 	}
 
 	public function testRead(): void
@@ -316,6 +327,7 @@ class ChangesTest extends TestCase
 
 		// in cache, but changes don't exist in reality
 		$this->assertCount(0, $changes->users());
+		$this->assertInstanceOf(Users::class, $changes->users());
 		$this->assertSame([], $this->app->cache('changes')->get('users'));
 
 		// in cache and changes exist in reality
@@ -324,6 +336,14 @@ class ChangesTest extends TestCase
 
 		$this->assertSame($cache, $this->app->cache('changes')->get('users'));
 		$this->assertCount(1, $changes->users());
+		$this->assertInstanceOf(Users::class, $changes->users());
 		$this->assertSame('test', $changes->users()->first()->id());
+
+		// no cache entry, read returns []
+		$this->app->cache('changes')->flush();
+		$changes = new Changes();
+		$result  = $changes->users();
+		$this->assertInstanceOf(Users::class, $result);
+		$this->assertCount(0, $result);
 	}
 }

@@ -53,7 +53,7 @@ class Plugins
 		$modified = [0];
 
 		foreach ($files as $file) {
-			$modified[] = F::modified($file);
+			$modified[] = F::modified($file) ?: 0;
 		}
 
 		return max($modified);

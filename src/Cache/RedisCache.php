@@ -124,7 +124,7 @@ class RedisCache extends Cache
 	 */
 	public function remove(string $key): bool
 	{
-		return $this->connection->del($this->key($key));
+		return $this->connection->del($this->key($key)) > 0;
 	}
 
 	/**

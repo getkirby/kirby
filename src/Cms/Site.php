@@ -164,11 +164,8 @@ class Site extends ModelWithContent
 	 */
 	public function blueprint(): SiteBlueprint
 	{
-		if ($this->blueprint instanceof SiteBlueprint) {
-			return $this->blueprint;
-		}
-
-		return $this->blueprint = SiteBlueprint::factory('site', null, $this);
+		/** @var \Kirby\Blueprint\SiteBlueprint */
+		return $this->blueprint ??= SiteBlueprint::factory('site', null, $this);
 	}
 
 	/**
@@ -312,11 +309,13 @@ class Site extends ModelWithContent
 	/**
 	 * Gets the last modification date of all pages
 	 * in the content folder.
+	 *
+	 * @return ($format is null ? int : string|false)
 	 */
 	public function modified(
 		string|null $format = null,
 		string|null $handler = null
-	): int|string {
+	): int|string|false {
 		return Dir::modified($this->root(), $format, $handler);
 	}
 
@@ -394,6 +393,7 @@ class Site extends ModelWithContent
 	#[BlockCollectionAccess]
 	public function root(): string
 	{
+		/** @var string */
 		return $this->root ??= $this->kirby()->root('content');
 	}
 
@@ -462,6 +462,7 @@ class Site extends ModelWithContent
 			return $this->urlForLanguage($language);
 		}
 
+		/** @var string */
 		return $this->url ?? $this->kirby()->url();
 	}
 
@@ -473,6 +474,7 @@ class Site extends ModelWithContent
 		string|null $languageCode = null,
 		array|null $options = null
 	): string {
+		/** @var string */
 		return
 			$this->kirby()->language($languageCode)?->url() ??
 			$this->kirby()->url();

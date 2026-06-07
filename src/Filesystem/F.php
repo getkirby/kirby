@@ -508,6 +508,7 @@ class F
 	 *
 	 * @param 'date'|'intl'|'strftime'|null $handler Custom date handler or `null`
 	 *                                               for the globally configured one
+	 * @return ($format is null ? int|false : string|false)
 	 */
 	public static function modified(
 		string $file,
@@ -611,7 +612,8 @@ class F
 		}
 
 		// the math magic
-		$size = round($size / 1024 ** ($unit = floor(log($size, 1024))), 2);
+		$unit = (int)floor(log($size, 1024));
+		$size = round($size / 1024 ** $unit, 2);
 
 		// format the number if requested
 		if ($locale !== false) {
@@ -886,7 +888,7 @@ class F
 		$name      = static::name($path);
 		$extension = static::extension($path);
 		$glob      = $dir . '/' . $name . $pattern . '.' . $extension;
-		return glob($glob);
+		return glob($glob) ?: [];
 	}
 
 	/**

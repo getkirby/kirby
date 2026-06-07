@@ -11,7 +11,7 @@ use Kirby\Toolkit\Collection as BaseCollection;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @extends \Kirby\Toolkit\Collection<\Kirby\Cms\NestObject|\Kirby\Content\Field>
+ * @extends \Kirby\Toolkit\Collection<\Kirby\Cms\NestCollection|\Kirby\Cms\NestObject|\Kirby\Content\Field>
  */
 class NestCollection extends BaseCollection
 {

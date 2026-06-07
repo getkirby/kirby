@@ -3,10 +3,8 @@
 namespace Kirby\Panel\Controller\View;
 
 use Kirby\Cms\Find;
-use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\User;
 use Kirby\Cms\Users;
-use Kirby\Panel\Model;
 use Kirby\Panel\Ui\Button\ViewButtons;
 
 /**
@@ -15,18 +13,11 @@ use Kirby\Panel\Ui\Button\ViewButtons;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
+ *
+ * @extends \Kirby\Panel\Controller\View\ModelViewController<\Kirby\Cms\User, \Kirby\Panel\User>
  */
 class UserViewController extends ModelViewController
 {
-	/**
-	 * @var \Kirby\Cms\User $model
-	 */
-	protected ModelWithContent $model;
-
-	/**
-	 * @var \Kirby\Panel\User
-	 */
-	protected Model $panel;
 	protected Users $siblings;
 
 	public function __construct(
@@ -105,6 +96,6 @@ class UserViewController extends ModelViewController
 
 	public function title(): string
 	{
-		return $this->model->username();
+		return $this->model->username() ?: $this->model->id();
 	}
 }

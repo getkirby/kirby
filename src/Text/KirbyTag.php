@@ -94,6 +94,11 @@ class KirbyTag
 		return $this->$attr ?? null;
 	}
 
+	public function __set(string $name, mixed $value): void
+	{
+		$this->{strtolower($name)} = $value;
+	}
+
 	public function attr(string $name, $default = null)
 	{
 		$name = strtolower($name);

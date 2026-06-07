@@ -113,17 +113,8 @@ class Changes
 	 */
 	public function pages(): Pages
 	{
-		/**
-		 * @var \Kirby\Cms\Pages $pages
-		 *
-		 * Always pass at least two arguments even if the
-		 * data is empty so that `$site->find()` always
-		 * returns a collection, not a single page
-		 */
 		$pages = $this->kirby->site()->find(
-			false,
-			false,
-			...$this->read('pages')
+			$this->read('pages')
 		);
 
 		return $this->ensure($pages);
@@ -184,17 +175,8 @@ class Changes
 	 */
 	public function users(): Users
 	{
-		/**
-		 * @var \Kirby\Cms\Users $users
-		 *
-		 * Always pass at least two arguments even if the
-		 * data is empty so that `$users->find()` always
-		 * returns a collection, not a single user
-		 */
 		$users = $this->kirby->users()->find(
-			false,
-			false,
-			...$this->read('users')
+			$this->read('users')
 		);
 
 		return $this->ensure($users);

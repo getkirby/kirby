@@ -427,7 +427,7 @@ class System
 	public function serverSoftwareShort(): string
 	{
 		$software = $this->serverSoftware();
-		return strtok($software, ' ');
+		return explode(' ', $software, 2)[0];
 	}
 
 	/**

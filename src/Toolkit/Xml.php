@@ -253,9 +253,19 @@ class Xml
 			$string = Html::encode($string, false);
 		}
 
+		// cache the keys/values arrays;
+		// invalidates if $entities changes
+		static $cached = null;
+		static $html   = [];
+		static $xml    = [];
+
 		$entities = self::entities();
-		$html = array_keys($entities);
-		$xml  = array_values($entities);
+
+		if ($cached !== $entities) {
+			$html   = array_keys($entities);
+			$xml    = array_values($entities);
+			$cached = $entities;
+		}
 
 		return str_replace($html, $xml, $string);
 	}
@@ -265,7 +275,7 @@ class Xml
 	 */
 	public static function entities(): array
 	{
-		return self::$entities;
+		return self::$entities ?? [];
 	}
 
 	/**
@@ -289,6 +299,7 @@ class Xml
 	 * structure of arrays and strings
 	 *
 	 * @param bool $collectName Whether the element name should be collected (for the root element)
+	 * @return ($collectName is true ? array : array|string)
 	 */
 	public static function simplify(
 		SimpleXMLElement $element,

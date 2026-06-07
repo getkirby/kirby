@@ -2,21 +2,17 @@
 
 namespace Kirby\Panel\Ui\Item;
 
-use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\User;
 
 /**
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     5.1.0
+ *
+ * @extends \Kirby\Panel\Ui\Item\ModelItem<\Kirby\Cms\User, \Kirby\Panel\User>
  */
 class UserItem extends ModelItem
 {
-	/**
-	 * @var \Kirby\Cms\User
-	 */
-	protected ModelWithContent $model;
-
 	public function __construct(
 		User $user,
 		string|array|false|null $image = [],

@@ -4,6 +4,7 @@ namespace Kirby\Template;
 
 use Exception;
 use Kirby\Cms\App;
+use Kirby\Exception\LogicException;
 use Kirby\Filesystem\F;
 use Stringable;
 
@@ -160,7 +161,16 @@ class Template implements Stringable
 	 */
 	public function root(): string
 	{
-		return App::instance()->root($this->store());
+		$store = $this->store();
+		$root  = App::instance()->root($store);
+
+		if ($root === null) {
+			throw new LogicException(
+				message: 'Kirby root "' . $store . '" does not exist'
+			);
+		}
+
+		return $root;
 	}
 
 	/**

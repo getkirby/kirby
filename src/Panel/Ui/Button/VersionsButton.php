@@ -70,6 +70,7 @@ class VersionsButton extends ViewButton
 	 */
 	public function options(): array
 	{
+		/** @var array */
 		return $this->options ??= [
 			[
 				'label'   => $this->i18n('version.form'),

@@ -4,6 +4,7 @@ namespace Kirby\Toolkit;
 
 use Closure;
 use DOMAttr;
+use DOMComment;
 use DOMDocument;
 use DOMDocumentType;
 use DOMElement;
@@ -84,10 +85,9 @@ class Dom
 
 				if (
 					// Case 1: libxml preserved it as a processing instruction
-					($node->nodeType === XML_PI_NODE && $node->data === $xml) ||
+					($node instanceof DOMProcessingInstruction && $node->data === $xml) ||
 					// Case 2: libxml converted it into a comment node
-					// (<!--?xml encoding="UTF-8" id="..."-->)
-					($node->nodeType === XML_COMMENT_NODE && strpos($node->data, $xml) !== false)
+					($node instanceof DOMComment && strpos($node->data, $xml) !== false)
 				) {
 					static::remove($node);
 					break;
@@ -513,12 +513,22 @@ class Dom
 	 * Executes an XPath query in the document
 	 *
 	 * @param \DOMNode|null $node Optional context node for relative queries
+	 * @throws \Kirby\Exception\InvalidArgumentException for invalid XPath queries
 	 */
 	public function query(
 		string $query,
 		DOMNode|null $node = null
-	): DOMNodeList|false {
-		return (new DOMXPath($this->doc))->query($query, $node);
+	): DOMNodeList {
+		$path   = new DOMXPath($this->doc);
+		$result = @$path->query($query, $node);
+
+		if ($result === false) {
+			throw new InvalidArgumentException(
+				message: 'Invalid XPath query: ' . $query
+			);
+		}
+
+		return $result;
 	}
 
 	/**

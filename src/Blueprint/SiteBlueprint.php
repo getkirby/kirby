@@ -2,6 +2,8 @@
 
 namespace Kirby\Blueprint;
 
+use Kirby\Cms\ModelWithContent;
+
 /**
  * Extension of the basic blueprint class
  * to handle the blueprint for the site.
@@ -11,6 +13,9 @@ namespace Kirby\Blueprint;
  */
 class SiteBlueprint extends Blueprint
 {
+	/** @var \Kirby\Cms\Site */
+	protected ModelWithContent $model;
+
 	/**
 	 * Creates a new page blueprint object
 	 * with the given props

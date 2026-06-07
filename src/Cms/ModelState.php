@@ -15,6 +15,10 @@ class ModelState
 {
 	/**
 	 * Updates the state of the given model.
+	 *
+	 * @template TModel of \Kirby\Cms\ModelWithContent
+	 * @param TModel $current
+	 * @param TModel|bool|null $next
 	 */
 	public static function update(
 		string $method,
@@ -83,9 +87,10 @@ class ModelState
 	 */
 	protected static function updateSite(
 		Site $current,
-		Site|null $next = null
+		Site|bool|null $next = null
 	): void {
-		App::instance()->setSite($next ?? $current);
+		$next = $next instanceof Site ? $next : $current;
+		App::instance()->setSite($next);
 	}
 
 	/**

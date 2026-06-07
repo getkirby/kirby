@@ -5,6 +5,7 @@ namespace Kirby\Plugin;
 use Closure;
 use Kirby\Cms\App;
 use Kirby\Cms\Collection;
+use Kirby\Exception\LogicException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Http\Response;
@@ -137,6 +138,12 @@ class Assets extends Collection
 
 	public function plugin(): Plugin
 	{
+		if ($this->parent instanceof Plugin === false) {
+			throw new LogicException(
+				message: 'This assets collection has no associated plugin'
+			);
+		}
+
 		return $this->parent;
 	}
 

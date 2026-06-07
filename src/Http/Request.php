@@ -254,7 +254,7 @@ class Request
 	/**
 	 * Returns the domain
 	 */
-	public function domain(): string
+	public function domain(): string|null
 	{
 		return $this->url()->domain();
 	}

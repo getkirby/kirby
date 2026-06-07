@@ -3,7 +3,6 @@
 namespace Kirby\Panel;
 
 use Kirby\Cms\File as CmsFile;
-use Kirby\Cms\ModelWithContent;
 use Kirby\Filesystem\Asset;
 use Kirby\Panel\Controller\Dropdown\PageSettingsDropdownController;
 use Kirby\Panel\Controller\View\PageViewController;
@@ -15,14 +14,11 @@ use Kirby\Panel\Ui\Item\PageItem;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     3.6.0
+ *
+ * @extends \Kirby\Panel\Model<\Kirby\Cms\Page>
  */
 class Page extends Model
 {
-	/**
-	 * @var \Kirby\Cms\Page
-	 */
-	protected ModelWithContent $model;
-
 	/**
 	 * Provides a kirbytag or markdown
 	 * tag for the page, which will be

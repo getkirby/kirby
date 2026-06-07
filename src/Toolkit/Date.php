@@ -300,9 +300,15 @@ class Date extends DateTime implements Stringable
 	public function nearest(
 		string|int|DateTimeInterface ...$datetime
 	): string|int|DateTimeInterface {
+		if ($datetime === []) {
+			throw new InvalidArgumentException(
+				message: 'At least one datetime must be provided'
+			);
+		}
+
 		$timestamp = $this->timestamp();
+		$nearest   = $datetime[0];
 		$minDiff   = PHP_INT_MAX;
-		$nearest   = null;
 
 		foreach ($datetime as $item) {
 			$itemObject    = new static($item, $this->timezone());
@@ -446,12 +452,12 @@ class Date extends DateTime implements Stringable
 	 *
 	 * @param array|string|int|null $input Full array with `size` and/or `unit` keys, `unit`
 	 *                                     string, `size` int or `null` for the default
-	 * @param array|null $default Default values to use if one or both values are not provided
+	 * @param array $default Default values to use if one or both values are not provided
 	 */
 	public static function stepConfig(
 		// no type hint to use InvalidArgumentException at the end
 		$input = null,
-		array|null $default = ['size' => 1, 'unit' => 'day']
+		array $default = ['size' => 1, 'unit' => 'day']
 	): array {
 		if ($input === null) {
 			return $default;

@@ -3,24 +3,13 @@
 namespace Kirby\Query\Visitors;
 
 use Closure;
+use Kirby\Query\AST\ClosureNode;
 
 /**
  * @license   https://opensource.org/licenses/MIT
  * @since     5.1.0
  *
  * @unstable
- * @method mixed arguments(array $arguments)
- * @method mixed arithmetic(mixed $left, string $operator, mixed $right)
- * @method mixed arrayList(array $elements)
- * @method mixed closure($ClosureNode $node))
- * @method mixed coalescence($left, $right)
- * @method mixed comparison(mixed $left, string $operator, mixed $right)
- * @method mixed function($name, $arguments)
- * @method mixed literal($value)
- * @method mixed logical(mixed $left, string $operator, mixed $right)
- * @method mixed memberAccess($object, string|int $member, $arguments, bool $nullSafe = false)
- * @method mixed ternary($condition, $true, $false)
- * @method mixed variable(string $name)
  */
 abstract class Visitor
 {
@@ -34,4 +23,49 @@ abstract class Visitor
 		protected Closure|null $interceptor = null
 	) {
 	}
+
+	abstract public function arguments(array $arguments): array;
+
+	abstract public function arithmetic(
+		int|float $left,
+		string $operator,
+		int|float $right
+	): int|float;
+
+	abstract public function arrayList(array $elements): array;
+
+	abstract public function closure(ClosureNode $node): Closure;
+
+	abstract public function coalescence(mixed $left, mixed $right): mixed;
+
+	abstract public function comparison(
+		mixed $left,
+		string $operator,
+		mixed $right
+	): bool;
+
+	abstract public function function(string $name, array $arguments): mixed;
+
+	abstract public function literal(mixed $value): mixed;
+
+	abstract public function logical(
+		mixed $left,
+		string $operator,
+		mixed $right
+	): bool;
+
+	abstract public function memberAccess(
+		mixed $object,
+		string|int $member,
+		array|null $arguments,
+		bool $nullSafe = false
+	): mixed;
+
+	abstract public function ternary(
+		mixed $condition,
+		mixed $true,
+		mixed $false
+	): mixed;
+
+	abstract public function variable(string $name): mixed;
 }

@@ -233,6 +233,45 @@ class A
 	}
 
 	/**
+	 * Inverts the given array into a multimap of value → keys.
+	 * Values may be scalar (a single key) or arrays (each element
+	 * becomes its own key in the result). Unlike PHP's array_flip(),
+	 * duplicate values are preserved: every original key that maps
+	 * to the same value ends up in the resulting list.
+	 *
+	 * ```php
+	 * $array = [
+	 *   'apple'      => ['red', 'green'],
+	 *   'strawberry' => 'red',
+	 *   'banana'     => 'yellow',
+	 *   'kiwi'       => 'green',
+	 * ];
+	 *
+	 * A::flip($array);
+	 *
+	 * // result: [
+	 * //   'red'    => ['apple', 'strawberry'],
+	 * //   'green'  => ['apple', 'kiwi'],
+	 * //   'yellow' => ['banana'],
+	 * // ]
+	 * ```
+	 *
+	 * @since 5.5.0
+	 */
+	public static function flip(array $array): array
+	{
+		$result = [];
+
+		foreach ($array as $key => $value) {
+			foreach (static::wrap($value) as $v) {
+				$result[$v][] = $key;
+			}
+		}
+
+		return $result;
+	}
+
+	/**
 	 * Gets an element of an array by key
 	 *
 	 * ```php
@@ -460,7 +499,11 @@ class A
 	 */
 	public static function last(array $array): mixed
 	{
-		return $array[array_key_last($array)] ?? null;
+		if ($array === []) {
+			return null;
+		}
+
+		return $array[array_key_last($array)];
 	}
 
 	/**
@@ -494,7 +537,18 @@ class A
 
 		// get the first two arrays that should be merged
 		$merged = array_shift($arrays);
-		$join   = array_shift($arrays);
+
+		// no arrays passed (or only a mode constant)
+		if (is_array($merged) === false) {
+			return [];
+		}
+
+		$join = array_shift($arrays);
+
+		// only one array passed: nothing to merge into
+		if (is_array($join) === false) {
+			return $merged;
+		}
 
 		if (
 			static::isAssociative($merged) === false &&

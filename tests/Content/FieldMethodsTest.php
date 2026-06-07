@@ -429,7 +429,7 @@ class FieldMethodsTest extends FieldTest
 	public function testSmartypants(): void
 	{
 		$text     = '"Test"';
-		$expected = '&#8220;Test&#8221;';
+		$expected = '“Test”';
 
 		$this->assertSame($expected, $this->field($text)->smartypants()->value());
 
@@ -449,7 +449,7 @@ class FieldMethodsTest extends FieldTest
 		]);
 
 		$text     = '"Test"';
-		$expected = '&#8220;Test&#8221;';
+		$expected = '“Test”';
 
 		$this->assertSame($expected, $this->field($text)->kti()->value());
 	}
@@ -728,6 +728,36 @@ class FieldMethodsTest extends FieldTest
 		$this->assertSame('cover.jpg', $page->coverid()->toFile()->filename());
 	}
 
+	public function testToFileDeadUuidNoIndex(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'options' => [
+				'content' => [
+					'uuid' => [
+						'index' => false
+					]
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'content' => [
+							'cover' => 'file://does-not-exist'
+						],
+						'slug' => 'test'
+					]
+				]
+			]
+		]);
+
+		$page = $app->page('test');
+		$this->assertNull($page->cover()->toFile());
+		$this->assertSame([], $page->cover()->toFiles()->data());
+	}
+
 	public function testToFiles(): void
 	{
 		$page = new Page([
@@ -939,6 +969,27 @@ class FieldMethodsTest extends FieldTest
 		$this->assertSame($c, $this->field(Yaml::encode(['page://uuid-c', 'b', 'a']))->toPage());
 	}
 
+	public function testToPageDeadUuidNoIndex(): void
+	{
+		new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'options' => [
+				'content' => [
+					'uuid' => [
+						'index' => false
+					]
+				]
+			]
+		]);
+
+		$value = Yaml::encode(['page://does-not-exist']);
+
+		$this->assertNull($this->field('page://does-not-exist')->toPage());
+		$this->assertSame([], $this->field($value)->toPages()->data());
+	}
+
 	public function testToPages(): void
 	{
 		$app = new App([
@@ -979,7 +1030,7 @@ class FieldMethodsTest extends FieldTest
 		$this->assertInstanceOf(Pages::class, $result);
 		$this->assertSame($pages->data(), $result->data());
 
-		// no results
+		// no matching results
 		$content = Yaml::encode([
 			'c',
 			'd'
@@ -988,6 +1039,26 @@ class FieldMethodsTest extends FieldTest
 		$result = $this->field($content)->toPages();
 		$this->assertInstanceOf(Pages::class, $result);
 		$this->assertSame([], $result->data());
+
+		// single non-matching id
+		$result = $this->field('nonexistent')->toPages();
+		$this->assertInstanceOf(Pages::class, $result);
+		$this->assertCount(0, $result);
+
+		// empty content
+		$result = $this->field('')->toPages();
+		$this->assertInstanceOf(Pages::class, $result);
+		$this->assertCount(0, $result);
+
+		// mix of matching and non-matching ids
+		$content = Yaml::encode([
+			'a',
+			'nonexistent',
+			'b'
+		]);
+		$result = $this->field($content)->toPages();
+		$this->assertInstanceOf(Pages::class, $result);
+		$this->assertSame(['a', 'b'], $result->keys());
 	}
 
 	public function testToQrCode(): void
@@ -1162,6 +1233,27 @@ class FieldMethodsTest extends FieldTest
 		$this->assertSame($b, $this->field(Yaml::encode(['b@company.com', 'a@company.com']))->toUser());
 	}
 
+	public function testToUserDeadUuidNoIndex(): void
+	{
+		new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'options' => [
+				'content' => [
+					'uuid' => [
+						'index' => false
+					]
+				]
+			]
+		]);
+
+		$value = Yaml::encode(['user://does-not-exist']);
+
+		$this->assertNull($this->field('user://does-not-exist')->toUser());
+		$this->assertSame([], $this->field($value)->toUsers()->data());
+	}
+
 	public function testToUsers(): void
 	{
 		$app = new App([
@@ -1174,21 +1266,48 @@ class FieldMethodsTest extends FieldTest
 			]
 		]);
 
-		// two results
+		// two matching emails
 		$content = Yaml::encode([
 			'a@company.com',
 			'b@company.com'
 		]);
+		$result = $this->field($content)->toUsers();
+		$this->assertInstanceOf(Users::class, $result);
+		$this->assertSame(['a@company.com', 'b@company.com'], $result->pluck('email'));
 
-		$this->assertSame(['a@company.com', 'b@company.com'], $this->field($content)->toUsers()->pluck('email'));
-
-		// no results
+		// no matching emails
 		$content = Yaml::encode([
 			'c@company.com',
 			'd@company.com'
 		]);
+		$result = $this->field($content)->toUsers();
+		$this->assertInstanceOf(Users::class, $result);
+		$this->assertCount(0, $result);
 
-		$this->assertInstanceOf(Users::class, $this->field($content)->toUsers());
+		// single matching email
+		$result = $this->field('a@company.com')->toUsers();
+		$this->assertInstanceOf(Users::class, $result);
+		$this->assertSame(['a@company.com'], $result->pluck('email'));
+
+		// single non-matching email
+		$result = $this->field('nobody@company.com')->toUsers();
+		$this->assertInstanceOf(Users::class, $result);
+		$this->assertCount(0, $result);
+
+		// empty content
+		$result = $this->field('')->toUsers();
+		$this->assertInstanceOf(Users::class, $result);
+		$this->assertCount(0, $result);
+
+		// mix of matching and non-matching emails
+		$content = Yaml::encode([
+			'a@company.com',
+			'nobody@company.com',
+			'b@company.com'
+		]);
+		$result = $this->field($content)->toUsers();
+		$this->assertInstanceOf(Users::class, $result);
+		$this->assertSame(['a@company.com', 'b@company.com'], $result->pluck('email'));
 	}
 
 	public function testUpper(): void

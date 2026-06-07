@@ -15,6 +15,8 @@ use Kirby\Uuid\Uuids;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
+ *
+ * @template TModel of \Kirby\Cms\ModelWithContent
  */
 abstract class ModelPickerField extends InputField
 {
@@ -255,6 +257,9 @@ abstract class ModelPickerField extends InputField
 		return $this->size ?? 'auto';
 	}
 
+	/**
+	 * @param TModel|null $model
+	 */
 	public function store(ModelWithContent|null $model = null): string
 	{
 		if (Uuids::enabled() === false) {
@@ -284,8 +289,14 @@ abstract class ModelPickerField extends InputField
 		return $ids;
 	}
 
+	/**
+	 * @param TModel $model
+	 */
 	abstract public function toItem(ModelWithContent $model): array;
 
+	/**
+	 * @return TModel|null
+	 */
 	abstract public function toModel(string $id): ModelWithContent|null;
 
 	public function toStoredValue(): array

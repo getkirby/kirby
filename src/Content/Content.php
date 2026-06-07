@@ -153,6 +153,8 @@ class Content
 	/**
 	 * Returns either a single field object
 	 * or all registered fields
+	 *
+	 * @return ($key is null ? array<string, Field> : Field)
 	 */
 	public function get(string|null $key = null): Field|array
 	{

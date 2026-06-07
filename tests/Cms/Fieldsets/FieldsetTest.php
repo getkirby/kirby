@@ -183,6 +183,16 @@ class FieldsetTest extends TestCase
 		$this->assertSame('English name', $fieldset->name());
 	}
 
+	public function testNameFallbackType(): void
+	{
+		$fieldset = new Fieldset([
+			'type'  => 'my-type',
+			'name'  => []
+		]);
+
+		$this->assertSame('My type', $fieldset->name());
+	}
+
 	public function testNameFromTitle(): void
 	{
 		$fieldset = new Fieldset([

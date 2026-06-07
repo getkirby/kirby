@@ -15,6 +15,7 @@ use Kirby\Cms\Site;
 use Kirby\Cms\User;
 use Kirby\Cms\Users;
 use Kirby\Exception\Exception as ExceptionException;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\F;
@@ -319,7 +320,19 @@ class Api
 	 */
 	public function files(string $path): Files
 	{
-		return $this->parent($path)->files()->filter('isListable', true);
+		$parent = $this->parent($path);
+
+		if (
+			$parent instanceof Site === false &&
+			$parent instanceof Page === false &&
+			$parent instanceof User === false
+		) {
+			throw new InvalidArgumentException(
+				message: 'Not a valid file parent: ' . $parent->id()
+			);
+		}
+
+		return $parent->files()->filter('isListable', true);
 	}
 
 	/**

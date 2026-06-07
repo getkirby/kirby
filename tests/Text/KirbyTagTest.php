@@ -88,6 +88,38 @@ class KirbyTagTest extends TestCase
 		$this->assertSame('dataC', $tag->c());
 	}
 
+	public function test__get(): void
+	{
+		$tag = new KirbyTag('test', 'test value', ['a' => 'attrA']);
+
+		// known attribute
+		$this->assertSame('attrA', $tag->a);
+
+		// case-insensitive lookup (attribute name gets lowercased)
+		$this->assertSame('attrA', $tag->A);
+
+		// unknown attribute returns null
+		$this->assertNull($tag->unknown);
+	}
+
+	public function test__set(): void
+	{
+		$tag = new KirbyTag('test', 'test value');
+		$tag->text = 'My Text';
+		$this->assertSame('My Text', $tag->text);
+
+		// overwriting should also work
+		$tag->text = 'Other Text';
+		$this->assertSame('Other Text', $tag->text);
+
+		// case insensitive properties
+		$tag->Caption = 'My Caption';
+		$this->assertSame('My Caption', $tag->caption);
+		$this->assertSame('My Caption', $tag->Caption);
+		$this->assertSame('My Caption', $tag->attr('Caption'));
+		$this->assertSame('My Caption', $tag->attr('caption'));
+	}
+
 	public function test__callStatic(): void
 	{
 		$attr = [

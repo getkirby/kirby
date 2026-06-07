@@ -434,12 +434,13 @@ class Dir
 	 * @param string $dir The path of the directory
 	 * @param 'date'|'intl'|'strftime'|null $handler Custom date handler or `null`
 	 *                                               for the globally configured one
+	 * @return ($format is null ? int : string|false)
 	 */
 	public static function modified(
 		string $dir,
 		string|null $format = null,
 		string|null $handler = null
-	): int|string {
+	): int|string|false {
 		$modified = filemtime($dir);
 		$items    = static::read($dir);
 

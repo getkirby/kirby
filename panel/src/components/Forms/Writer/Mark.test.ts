@@ -1,8 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import type { MarkSpec } from "prosemirror-model";
 import type Editor from "./Editor";
-import type { BaseContext } from "./Extension";
-import Mark from "./Mark";
+import Mark, { type MarkContext } from "./Mark";
 
 class TestMark extends Mark {
 	get name() {
@@ -22,20 +21,44 @@ const mockEditor = (overrides = {}) =>
 	}) as unknown as Editor;
 
 const mark = new TestMark();
-const context = {} as BaseContext;
+const context = {} as MarkContext;
 const editor = mockEditor();
 mark.bindEditor(editor);
 
 describe("Mark", () => {
+	describe("button", () => {
+		it("returns undefined by default", () => {
+			expect(mark.button).toBeUndefined();
+		});
+	});
+
+	describe("commands", () => {
+		it("returns an empty object by default", () => {
+			expect(mark.commands(context)).toStrictEqual({});
+		});
+	});
+
 	describe("inputRules", () => {
 		it("returns an empty array by default", () => {
 			expect(mark.inputRules(context)).toStrictEqual([]);
 		});
 	});
 
+	describe("keys", () => {
+		it("returns an empty object by default", () => {
+			expect(mark.keys(context)).toStrictEqual({});
+		});
+	});
+
 	describe("pasteRules", () => {
 		it("returns an empty array by default", () => {
 			expect(mark.pasteRules(context)).toStrictEqual([]);
+		});
+	});
+
+	describe("plugins", () => {
+		it("returns an empty array by default", () => {
+			expect(mark.plugins()).toStrictEqual([]);
 		});
 	});
 

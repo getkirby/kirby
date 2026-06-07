@@ -362,12 +362,37 @@ class UuidTest extends TestCase
 		$this->assertNull(Uuid::from('file://something')->model());
 	}
 
-	public function testModelNotFoundIndexLookupDisabled(): void
+	public function testModelNotFoundNoIndex(): void
 	{
 		$this->app->clone(['options' => ['content' => ['uuid' => ['index' => false]]]]);
+		$this->assertNull(Uuid::from('page://something')->model());
+		$this->assertNull(Uuid::from('user://something')->model());
+		$this->assertNull(Uuid::from('file://something')->model());
+	}
+
+	public function testModelNotFoundNoIndexDebug(): void
+	{
+		$this->app->clone(['options' => [
+			'content' => ['uuid' => ['index' => false]],
+			'debug'   => true
+		]]);
+
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('Model for UUID page://something could not be found without searching in the site index');
 		Uuid::from('page://something')->model();
+	}
+
+	public function testModelStaleFileParentNoIndex(): void
+	{
+		$this->app->clone(['options' => ['content' => ['uuid' => ['index' => false]]]]);
+
+		$uuid = Uuid::from('file://my-file');
+		Uuids::cache()->set($uuid->key(), [
+			'parent'   => 'page://something',
+			'filename' => 'test.pdf'
+		]);
+
+		$this->assertNull($uuid->model());
 	}
 
 	public function testPopulateGenerate(): void

@@ -5,8 +5,6 @@ namespace Kirby\Panel\Controller\View;
 use Kirby\Cms\File;
 use Kirby\Cms\Files;
 use Kirby\Cms\Find;
-use Kirby\Cms\ModelWithContent;
-use Kirby\Panel\Model;
 use Kirby\Panel\Ui\Button\ViewButtons;
 use Kirby\Panel\Ui\FilePreview;
 
@@ -16,18 +14,11 @@ use Kirby\Panel\Ui\FilePreview;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
+ *
+ * @extends \Kirby\Panel\Controller\View\ModelViewController<\Kirby\Cms\File, \Kirby\Panel\File>
  */
 class FileViewController extends ModelViewController
 {
-	/**
-	 * @var \Kirby\Cms\File $model
-	 */
-	protected ModelWithContent $model;
-
-	/**
-	 * @var \Kirby\Panel\File
-	 */
-	protected Model $panel;
 	protected Files $siblings;
 
 	public function __construct(

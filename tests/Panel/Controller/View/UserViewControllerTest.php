@@ -248,4 +248,11 @@ class UserViewControllerTest extends TestCase
 		$controller = new UserViewController($this->user);
 		$this->assertSame('Test User', $controller->title());
 	}
+
+	public function testTitleFallbackToId(): void
+	{
+		$user       = new User(['id' => 'no-name', 'email' => '']);
+		$controller = new UserViewController($user);
+		$this->assertSame('no-name', $controller->title());
+	}
 }

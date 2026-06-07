@@ -40,9 +40,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # ===================== Unit Tests =====================
+  # ===================== Tests & Style =====================
   tests:
-    name: "Unit Tests"
+    name: "Tests & Style"
     if: *should-run
     runs-on: *os
     timeout-minutes: *timeout
@@ -62,24 +62,6 @@ jobs:
 
       - name: Check for TypeScript type errors
         run: npm run types
-        working-directory: panel
-
-  # ===================== Coding Style =====================
-  coding-style:
-    name: "Coding Style"
-    if: *should-run
-    runs-on: *os
-    timeout-minutes: *timeout
-    defaults:
-      run:
-        working-directory: panel
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-
-      - name: Setup Node/npm
-        uses: ./.github/actions/setup-npm
 
       - name: "ESLint: JavaScript coding style violations"
         run: npm run lint -- --max-warnings 0 --format stylish --no-fix

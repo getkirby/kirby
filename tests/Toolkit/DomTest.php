@@ -1290,6 +1290,16 @@ class DomTest extends TestCase
 		$this->assertSame('<span>Test test</span>', $dom->document()->saveHtml($node));
 	}
 
+	public function testQueryInvalid(): void
+	{
+		$dom = new Dom('<span>Test</span>', 'HTML');
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid XPath query: //[invalid');
+
+		$dom->query('//[invalid');
+	}
+
 	public static function sanitizeProvider(): array
 	{
 		return [

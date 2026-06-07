@@ -49,7 +49,7 @@ class Txt extends Handler
 		};
 
 		// escape accidental dividers within a field
-		$value = preg_replace('!(?<=\n|^)----!', '\\----', $value);
+		$value = preg_replace('!(?<=\n|^)----!', '\\----', $value) ?? $value;
 
 		return $value;
 	}

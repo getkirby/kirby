@@ -2,6 +2,7 @@
 
 namespace Kirby\Toolkit;
 
+use JsonException;
 use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -18,6 +19,17 @@ class ObjTest extends TestCase
 	{
 		$obj = new Obj();
 		$this->assertNull($obj->foo);
+	}
+
+	public function test__set(): void
+	{
+		$obj = new Obj();
+		$obj->foo = 'bar';
+		$this->assertSame('bar', $obj->foo);
+
+		// overwriting should also work
+		$obj->foo = 'baz';
+		$this->assertSame('baz', $obj->foo);
 	}
 
 	public function testGetMultiple(): void
@@ -73,6 +85,22 @@ class ObjTest extends TestCase
 	{
 		$obj = new Obj($expected = ['foo' => 'bar']);
 		$this->assertSame(json_encode($expected), $obj->toJson());
+	}
+
+	public function testToJsonWithFlags(): void
+	{
+		$obj = new Obj(['foo' => 'bar']);
+		$this->assertSame(
+			"{\n    \"foo\": \"bar\"\n}",
+			$obj->toJson(JSON_PRETTY_PRINT)
+		);
+	}
+
+	public function testToJsonFailure(): void
+	{
+		$obj = new Obj(['invalid' => "\xb1\x31"]);
+		$this->expectException(JsonException::class);
+		$obj->toJson();
 	}
 
 	public function testToKeys(): void

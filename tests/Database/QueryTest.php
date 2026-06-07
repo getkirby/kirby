@@ -164,6 +164,14 @@ class QueryTest extends TestCase
 		$this->assertSame($expected, $query['query']);
 	}
 
+	public function testBuildInvalidType(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid query type: foo');
+
+		$this->database->table('users')->build('foo');
+	}
+
 	public function testOrder(): void
 	{
 		$user = $this->database
@@ -273,6 +281,24 @@ class QueryTest extends TestCase
 			->all();
 
 		$this->assertCount(4, $users);
+	}
+
+	public function testDeleteRejectsInvalidWhereColumn(): void
+	{
+		$this->assertCount(5, $this->database->table('users')->all());
+
+		try {
+			$this->database
+				->table('users')
+				->delete(['foo' => 'whatever']);
+
+			$this->fail('Expected an exception for an invalid where column');
+		} catch (InvalidArgumentException) {
+			// expected to throw instead of deleting every row
+		}
+
+		// the table must be untouched
+		$this->assertCount(5, $this->database->table('users')->all());
 	}
 
 	public function testMagicCall(): void
@@ -458,6 +484,17 @@ class QueryTest extends TestCase
 		$this->assertCount(2, $users);
 	}
 
+	public function testHavingInvalidColumn(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid column "foo" in clause');
+
+		$this->database
+			->table('users')
+			->having('foo', '>', 1)
+			->count();
+	}
+
 	public function testWhere(): void
 	{
 		// numeric comparison
@@ -576,6 +613,28 @@ class QueryTest extends TestCase
 		$this->database
 			->table('users')
 			->where('username', '<!>', 'john')
+			->count();
+	}
+
+	public function testWhereInvalidColumnArray(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid column "foo" in clause');
+
+		$this->database
+			->table('users')
+			->where(['foo' => 'whatever'])
+			->count();
+	}
+
+	public function testWhereInvalidColumn(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid column "foo" in clause');
+
+		$this->database
+			->table('users')
+			->where('foo', '=', 'whatever')
 			->count();
 	}
 

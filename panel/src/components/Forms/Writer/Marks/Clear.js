@@ -26,4 +26,8 @@ export default class Clear extends Mark {
 	get name() {
 		return "clear";
 	}
+
+	get schema() {
+		return {};
+	}
 }
