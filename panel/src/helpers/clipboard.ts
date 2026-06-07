@@ -53,6 +53,7 @@ export function write(value: unknown, e?: Event) {
 	document.body.append(input);
 
 	// iOS
+	/* v8 ignore if */
 	if (navigator.userAgent.match(/ipad|ipod|iphone/i)) {
 		input.contentEditable = "true";
 		input.readOnly = true;
