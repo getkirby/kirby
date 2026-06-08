@@ -2,9 +2,13 @@ import { describe, expect, it } from "vitest";
 import dayjs from "./dayjs";
 
 describe("dayjs.pattern.at()", () => {
-	const data: Record<string, { start: number; end?: number; unit: string }[]> =
+	const data: {
+		format: string;
+		cursors: { start: number; end?: number; unit: string }[];
+	}[] = [
 		{
-			"YYYY-MM-DD": [
+			format: "YYYY-MM-DD",
+			cursors: [
 				{ start: 0, unit: "year" },
 				{ start: 2, unit: "year" },
 				{ start: 5, unit: "month" },
@@ -13,8 +17,11 @@ describe("dayjs.pattern.at()", () => {
 				{ start: 8, end: 10, unit: "day" },
 				{ start: 6, end: 10, unit: "month" },
 				{ start: 0, end: 4, unit: "year" }
-			],
-			"MM/DD/YY HH:mm": [
+			]
+		},
+		{
+			format: "MM/DD/YY HH:mm",
+			cursors: [
 				{ start: 0, unit: "month" },
 				{ start: 1, unit: "month" },
 				{ start: 3, unit: "day" },
@@ -23,18 +30,17 @@ describe("dayjs.pattern.at()", () => {
 				{ start: 10, unit: "hour" },
 				{ start: 9, end: 11, unit: "hour" }
 			]
-		};
+		}
+	];
 
-	for (const test in data) {
-		it(test, () => {
-			const pattern = dayjs.pattern(test);
+	describe.each(data)("%format", ({ format, cursors }) => {
+		const pattern = dayjs.pattern(format);
 
-			for (const cursor of data[test]) {
-				const part = pattern.at(cursor.start, cursor.end);
-				expect(part!.unit).toBe(cursor.unit);
-			}
+		it.each(cursors)("%start - %end: %unit", ({ start, end, unit }) => {
+			const part = pattern.at(start, end);
+			expect(part!.unit).toBe(unit);
 		});
-	}
+	});
 });
 
 describe("dayjs.pattern.format()", () => {
@@ -50,18 +56,15 @@ describe("dayjs.pattern.format()", () => {
 
 	const dt = dayjs("2020-05-04 13:14:03");
 
-	const data: Record<string, string> = {
-		"YYYY-MM-DD": "2020-05-04",
-		"M/D/YY h:m a": "5/4/20 1:14 pm",
-		"H:m:s": "13:14:3"
-	};
-
-	for (const test in data) {
-		it(test, () => {
-			const pattern = dayjs.pattern(test);
-			expect(pattern.format(dt)).toBe(data[test]);
-		});
-	}
+	it.each(
+		Object.entries({
+			"YYYY-MM-DD": "2020-05-04",
+			"M/D/YY h:m a": "5/4/20 1:14 pm",
+			"H:m:s": "13:14:3"
+		})
+	)("%s", (format, expected) => {
+		expect(dayjs.pattern(format).format(dt)).toBe(expected);
+	});
 });
 
 describe("dayjs.pattern.parts", () => {
@@ -98,10 +101,7 @@ describe("dayjs.pattern.parts", () => {
 		]
 	};
 
-	for (const test in data) {
-		it(test, () => {
-			const pattern = dayjs.pattern(test);
-			expect(pattern.parts).toEqual(data[test]);
-		});
-	}
+	it.each(Object.entries(data))("%s", (format, parts) => {
+		expect(dayjs.pattern(format).parts).toEqual(parts);
+	});
 });

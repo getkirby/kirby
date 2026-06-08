@@ -3,36 +3,39 @@ import type { UnitType } from "dayjs";
 import dayjs from "./dayjs";
 
 describe("dayjs.merge()", () => {
-	const data: [string, string, "date" | "time" | UnitType[], string][] = [
-		[
-			"2020-02-29 16:05:15",
-			"2021-03-01 18:42:11",
-			"date",
-			"2021-03-01 16:05:15"
-		],
-		[
-			"2020-02-29 16:05:15",
-			"2020-03-01 18:42:11",
-			"time",
-			"2020-02-29 18:42:11"
-		],
-		[
-			"2020-02-29 16:05:15",
-			"2021-03-01 18:42:11",
-			["year", "date", "minute"],
-			"2021-02-01 16:42:15"
-		]
+	const data: {
+		name: string;
+		a: string;
+		b: string;
+		unit: "date" | "time" | UnitType[];
+		expected: string;
+	}[] = [
+		{
+			name: "date",
+			a: "2020-02-29 16:05:15",
+			b: "2021-03-01 18:42:11",
+			unit: "date",
+			expected: "2021-03-01 16:05:15"
+		},
+		{
+			name: "time",
+			a: "2020-02-29 16:05:15",
+			b: "2020-03-01 18:42:11",
+			unit: "time",
+			expected: "2020-02-29 18:42:11"
+		},
+		{
+			name: "year/date/minute",
+			a: "2020-02-29 16:05:15",
+			b: "2021-03-01 18:42:11",
+			unit: ["year", "date", "minute"],
+			expected: "2021-02-01 16:42:15"
+		}
 	];
 
-	for (const test in data) {
-		it(`${data[test][2]}: ${data[test][0]} <- ${
-			Array.isArray(data[test][1]) ? data[test][1].join(",") : data[test][1]
-		}`, () => {
-			const a = dayjs(data[test][0]);
-			const b = dayjs(data[test][1]);
-			expect(a.merge(b, data[test][2])).toEqual(dayjs(data[test][3]));
-		});
-	}
+	it.each(data)("$name", ({ a, b, unit, expected }) => {
+		expect(dayjs(a).merge(dayjs(b), unit)).toEqual(dayjs(expected));
+	});
 
 	it("Invalid input", () => {
 		const a = dayjs("2020-01-01");

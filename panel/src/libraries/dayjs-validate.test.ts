@@ -64,18 +64,19 @@ describe("dayjs.validate()", () => {
 		}
 	};
 
-	for (const test in data) {
-		it(test, () => {
-			for (const input in data[test].inputs) {
+	it.each(Object.entries(data))(
+		"%s",
+		(_name, { boundary, type, unit, inputs }) => {
+			for (const input in inputs) {
 				const result = (dayjs.iso(input) ?? dayjs(input)).validate(
-					data[test].boundary,
-					data[test].type,
-					data[test].unit
+					boundary,
+					type,
+					unit
 				);
-				expect(result).toBe(data[test].inputs[input]);
+				expect(result).toBe(inputs[input]);
 			}
-		});
-	}
+		}
+	);
 
 	it("no parameters", () => {
 		expect(dayjs().validate()).toBe(true);
@@ -84,5 +85,9 @@ describe("dayjs.validate()", () => {
 
 	it("invalid dayjs object", () => {
 		expect(dayjs("Invalid").validate("2020-01-01")).toBe(false);
+	});
+
+	it("invalid boundary", () => {
+		expect(dayjs("2020-01-05").validate("not a date")).toBe(false);
 	});
 });
