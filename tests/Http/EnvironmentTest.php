@@ -964,6 +964,20 @@ class EnvironmentTest extends TestCase
 
 		$env = new Environment(null, [
 			'REMOTE_ADDR' => $address,
+			'HTTP_X_CLIENT_IP' => $forwardedFor,
+		]);
+
+		$this->assertSame($expected, $env->isLocal());
+
+		$env = new Environment(null, [
+			'REMOTE_ADDR' => $address,
+			'HTTP_X_REAL_IP' => $forwardedFor,
+		]);
+
+		$this->assertSame($expected, $env->isLocal());
+
+		$env = new Environment(null, [
+			'REMOTE_ADDR' => $address,
 			'HTTP_FORWARDED' => 'for="' . $forwardedFor . '"',
 		]);
 
