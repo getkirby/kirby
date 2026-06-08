@@ -337,6 +337,24 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $html);
 	}
 
+	public function testGistWithDisallowedDomain(): void
+	{
+		$this->assertSame('', Html::gist('https://example.com/foo/bar'));
+		$this->assertSame('', Html::gist('https://gist.github.com.evil.com/foo'));
+		$this->assertSame('', Html::gist('javascript:alert(1)'));
+	}
+
+	public function testGistWithCustomDomain(): void
+	{
+		$domains = Html::$gistDomains;
+		Html::$gistDomains[] = 'gist.example.com';
+
+		$html = Html::gist($url = 'https://gist.example.com/foo/bar');
+		$this->assertSame('<script src="' . $url . '.js"></script>', $html);
+
+		Html::$gistDomains = $domains;
+	}
+
 	public function testIframe(): void
 	{
 		$html = Html::iframe($url = 'https://getkirby.com');
