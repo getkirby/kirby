@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import embed from "./embed";
+import { video, vimeo, youtube } from "./embed";
 
-describe("$helper.embed()", () => {
+describe("$helper.embed", () => {
 	const tests: [string, string | false, string | false][] = [
 		// YouTube
 		[
@@ -157,23 +157,54 @@ describe("$helper.embed()", () => {
 		["https://vimeo.com/öööö", false, false]
 	];
 
-	it("should create the right embed URLs", () => {
-		for (const test of tests) {
-			const input = test[0];
-			const expected = test[1];
-			const result = embed.video(input);
+	describe("video()", () => {
+		it("should create the right embed URLs", () => {
+			for (const test of tests) {
+				const input = test[0];
+				const expected = test[1];
+				const result = video(input);
 
-			expect(result).toBe(expected);
-		}
+				expect(result).toBe(expected);
+			}
+		});
+
+		it("should work with doNotTrack flag for youtube and vimeo videos", () => {
+			for (const test of tests) {
+				const input = test[0];
+				const expected = test[2];
+				const result = video(input, true);
+
+				expect(result).toBe(expected);
+			}
+		});
+
+		it("should return false for a malformed or unsupported url", () => {
+			expect(video("not a url")).toBe(false);
+			expect(video("http://www.my-favorite-videos.com/embed/d9NF2edxy-M")).toBe(
+				false
+			);
+		});
 	});
 
-	it("should work with doNotTrack flag for youtube and vimeo videos", () => {
-		for (const test of tests) {
-			const input = test[0];
-			const expected = test[2];
-			const result = embed.video(input, true);
+	describe("youtube()", () => {
+		it("should return false for a non-youtube url", () => {
+			expect(youtube("https://example.com")).toBe(false);
+		});
 
-			expect(result).toBe(expected);
-		}
+		it("should return false for a malformed url containing youtu", () => {
+			expect(youtube("youtu-not-a-url")).toBe(false);
+		});
+
+		it("should return false for a playlist with an invalid list id", () => {
+			expect(youtube("https://www.youtube.com/playlist?list=invalid!")).toBe(
+				false
+			);
+		});
+	});
+
+	describe("vimeo()", () => {
+		it("should return false for a malformed url", () => {
+			expect(vimeo("not a url")).toBe(false);
+		});
 	});
 });

@@ -41,6 +41,7 @@
 </template>
 
 <script>
+/* v8 ignore file */
 import Dialog from "@/mixins/dialog.js";
 import Search from "@/mixins/search.js";
 

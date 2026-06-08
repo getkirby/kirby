@@ -36,4 +36,20 @@ describe("$helper.array.search()", () => {
 		const result = search(array, "Or");
 		expect(result).toEqual([{ text: "orange", code: "OR" }]);
 	});
+
+	it("should skip items without the searched field", () => {
+		const result = search(
+			[{ text: "apple" }, { code: "AP" }, { text: "grape" }] as Record<
+				string,
+				unknown
+			>[],
+			"a"
+		);
+		expect(result).toEqual([{ text: "apple" }, { text: "grape" }]);
+	});
+
+	it("should respect the limit option", () => {
+		const result = search(array, "a", { limit: 1 });
+		expect(result).toHaveLength(1);
+	});
 });

@@ -198,4 +198,16 @@ describe("History", () => {
 			expect(history.has("b")).toStrictEqual(false);
 		});
 	});
+
+	describe("replace()", () => {
+		it("should replace the item at a specific index", () => {
+			const history = new History();
+
+			history.add({ id: "a" });
+			history.add({ id: "b" });
+			history.replace(0, { id: "c" });
+
+			expect(history.get()).toStrictEqual([{ id: "c" }, { id: "b" }]);
+		});
+	});
 });

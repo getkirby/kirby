@@ -1,4 +1,5 @@
 <script>
+/* v8 ignore file */
 /**
  * @deprecated 5.0.0 Use `k-writer-input` instead.
  */

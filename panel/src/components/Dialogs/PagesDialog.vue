@@ -31,6 +31,7 @@
 </template>
 
 <script>
+/* v8 ignore file */
 import Dialog from "@/mixins/dialog.js";
 import { props as ModelsDialogProps } from "./ModelsDialog.vue";
 

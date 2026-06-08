@@ -56,12 +56,13 @@ describe("dayjs.round()", () => {
 		"1Y: ceil sub": ["year", 1, "2020-09-29 16:05:15", "2021-01-01 00:00:00"]
 	};
 
-	for (const test in data) {
-		it(test, () => {
-			const result = dayjs(data[test][2]).round(data[test][0], data[test][1]);
-			expect(result.format("YYYY-MM-DD HH:mm:ss")).toBe(data[test][3]);
-		});
-	}
+	it.each(Object.entries(data))(
+		"%s",
+		(_name, [unit, size, input, expected]) => {
+			const result = dayjs(input).round(unit, size);
+			expect(result.format("YYYY-MM-DD HH:mm:ss")).toBe(expected);
+		}
+	);
 
 	it("Unsupported unit", () => {
 		expect(() => {
@@ -79,16 +80,11 @@ describe("dayjs.round()", () => {
 		{ unit: "year", size: 2 }
 	];
 
-	for (const test in sizes) {
-		it("Unsupported size: " + sizes[test].unit, () => {
-			expect(() => {
-				dayjs("2020-01-01").round(
-					sizes[test].unit as UnitType,
-					sizes[test].size
-				);
-			}).toThrow("Invalid rounding size");
-		});
-	}
+	it.each(sizes)("Unsupported size: $unit", ({ unit, size }) => {
+		expect(() => {
+			dayjs("2020-01-01").round(unit as UnitType, size);
+		}).toThrow("Invalid rounding size");
+	});
 
 	it("Transform 'day' to 'date'", () => {
 		const dt = dayjs("2020-01-01");
