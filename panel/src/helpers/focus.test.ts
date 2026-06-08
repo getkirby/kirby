@@ -45,6 +45,14 @@ describe("isFocusable()", () => {
 		parent.appendChild(input);
 		expect(isFocusable(input)).toBe(false);
 	});
+
+	it("should return false for an element without a focus method", () => {
+		const fake = {
+			matches: () => false,
+			closest: () => null
+		} as unknown as HTMLElement;
+		expect(isFocusable(fake)).toBe(false);
+	});
 });
 
 describe("focusIsInModal()", () => {
@@ -146,5 +154,12 @@ describe("focus()", () => {
 		document.body.appendChild(parent);
 		input.focus();
 		expect(focus(parent, "")).toBe(false);
+	});
+
+	it("should return false when nothing is focusable", () => {
+		const el = document.createElement("div");
+		el.setAttribute("aria-disabled", "true");
+		document.body.appendChild(el);
+		expect(focus(el, "")).toBe(false);
 	});
 });

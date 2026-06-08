@@ -119,26 +119,26 @@ describe("clipboard.write()", () => {
 	});
 
 	it("should copy the value via execCommand fallback", () => {
-		let copiedValue: string | null = null;
+		let value: string | null = null;
 		document.execCommand = vi.fn().mockImplementation(() => {
-			copiedValue = document.querySelector("textarea")?.value ?? null;
+			value = document.querySelector("textarea")?.value ?? null;
 			return true;
 		});
 
 		write("hello");
 
-		expect(copiedValue).toBe("hello");
+		expect(value).toBe("hello");
 	});
 
 	it("should serialize objects to JSON when using execCommand fallback", () => {
-		let copiedValue: string | null = null;
+		let value: string | null = null;
 		document.execCommand = vi.fn().mockImplementation(() => {
-			copiedValue = document.querySelector("textarea")?.value ?? null;
+			value = document.querySelector("textarea")?.value ?? null;
 			return true;
 		});
 
 		write({ foo: "bar" });
 
-		expect(copiedValue).toBe('{\n  "foo": "bar"\n}');
+		expect(value).toBe('{\n  "foo": "bar"\n}');
 	});
 });

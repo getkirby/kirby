@@ -5,8 +5,6 @@ type UploadParams = {
 	abort?: AbortSignal;
 	/** Additional attributes added to the FormData */
 	attributes?: Record<string, string | number>;
-	/** Callback when upload completed */
-	complete?: () => void;
 	/** Callback when upload failed */
 	error?: (xhr: XMLHttpRequest, file: File, response: unknown) => void;
 	/** FormData field name for the file */
@@ -43,7 +41,6 @@ export async function upload(
 			filename: file.name,
 			headers: {},
 			attributes: {},
-			complete: () => {},
 			error: () => {},
 			success: () => {},
 			progress: () => {},

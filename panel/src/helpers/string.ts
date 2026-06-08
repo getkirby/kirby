@@ -329,7 +329,7 @@ export function template(
 	values: StringTemplateValues = {}
 ): string {
 	const resolve = (parts: string[], data: StringTemplateValues = {}) => {
-		const part = escapeHTML(parts.shift() ?? "");
+		const part = escapeHTML(parts.shift());
 		const value = data[part] ?? "…";
 
 		if (value === "…" || parts.length === 0) {
