@@ -311,6 +311,7 @@ export default {
 		/**
 		 * @deprecated 5.0.0 Use `restoreSelection` instead
 		 */
+		/* v8 ignore next */
 		restoreSelectionCallback() {
 			// restore selection as `insert` method
 			// depends on it

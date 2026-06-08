@@ -1,4 +1,5 @@
 <script>
+/* v8 ignore file */
 import ModelsField from "./LegacyModelsField.vue";
 
 /**

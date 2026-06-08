@@ -41,6 +41,7 @@
 </template>
 
 <script>
+/* v8 ignore file */
 import { props as FieldProps } from "@/components/Forms/Field.vue";
 import { autofocus, layout } from "@/mixins/props.js";
 

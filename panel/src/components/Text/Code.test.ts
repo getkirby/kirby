@@ -2,10 +2,15 @@ import { describe, it, expect } from "@test/unit";
 import { mount as vueMount } from "@vue/test-utils";
 import Code from "./Code.vue";
 
+const global = {
+	stubs: { "k-highlight": { template: "<div><slot /></div>" } }
+};
+
 function mount(props = {}, attrs = {}) {
 	return vueMount(Code, {
 		props,
 		attrs,
+		global,
 		slots: { default: "const x = 1;" }
 	}).find("pre.k-code");
 }
@@ -43,6 +48,7 @@ describe("Code.vue", () => {
 	describe("default slot", () => {
 		it("renders slotted content", () => {
 			const wrapper = vueMount(Code, {
+				global,
 				slots: { default: "const x = 1;" }
 			});
 			expect(wrapper.find("code").text()).toBe("const x = 1;");
