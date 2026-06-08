@@ -762,7 +762,9 @@ class Environment
 		$ips = [
 			$this->get('REMOTE_ADDR'),
 			$this->get('HTTP_X_FORWARDED_FOR'),
-			$this->get('HTTP_CLIENT_IP')
+			$this->get('HTTP_CLIENT_IP'),
+			$this->get('HTTP_X_CLIENT_IP'),
+			$this->get('HTTP_X_REAL_IP'),
 		];
 
 		if ($this->get('HTTP_FORWARDED')) {
