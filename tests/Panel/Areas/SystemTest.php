@@ -56,7 +56,7 @@ class SystemTest extends AreaTestCase
 		return [
 			'id'    => 'content-salt',
 			'link'  => 'https://getkirby.com/security/content-salt',
-			'text'  => 'No custom content salt is configured',
+			'text'  => 'The content salt has not been changed from its default value',
 			'theme' => 'notice'
 		];
 	}
