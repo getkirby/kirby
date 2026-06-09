@@ -4,6 +4,7 @@ namespace Kirby\Panel\Areas;
 
 use Kirby\Cms\App;
 use Kirby\Cms\System\UpdateStatus;
+use Kirby\Http\Cookie;
 
 class SystemTest extends AreaTestCase
 {
@@ -20,6 +21,12 @@ class SystemTest extends AreaTestCase
 	public static function tearDownAfterClass(): void
 	{
 		UpdateStatus::$host = static::$host;
+	}
+
+	public function tearDown(): void
+	{
+		Cookie::$key = 'KirbyHttpCookieKey';
+		parent::tearDown();
 	}
 
 	public function setUp(): void
@@ -50,6 +57,16 @@ class SystemTest extends AreaTestCase
 			'id'    => 'content-salt',
 			'link'  => 'https://getkirby.com/security/content-salt',
 			'text'  => 'No custom content salt is configured',
+			'theme' => 'notice'
+		];
+	}
+
+	protected function cookieKeyWarning(): array
+	{
+		return [
+			'id'    => 'cookie-key',
+			'link'  => 'https://getkirby.com/security/cookie-key',
+			'text'  => 'The cookie signing key has not been changed from its default value',
 			'theme' => 'notice'
 		];
 	}
@@ -140,7 +157,8 @@ class SystemTest extends AreaTestCase
 				'text' => 'The Vue template compiler is enabled',
 				'theme' => 'notice',
 			],
-			$this->contentSaltWarning()
+			$this->contentSaltWarning(),
+			$this->cookieKeyWarning()
 		], $props['security']);
 		$this->assertSame([
 			'content' => 'https://example.com/content/site.txt',
@@ -173,7 +191,8 @@ class SystemTest extends AreaTestCase
 				'text'  => 'The site is running locally with relaxed security checks'
 			],
 			$this->compilerWarning(),
-			$this->contentSaltWarning()
+			$this->contentSaltWarning(),
+			$this->cookieKeyWarning()
 		], $props['security']);
 	}
 
@@ -201,7 +220,8 @@ class SystemTest extends AreaTestCase
 				'link'  => 'https://getkirby.com/security/debug'
 			],
 			$this->compilerWarning(),
-			$this->contentSaltWarning()
+			$this->contentSaltWarning(),
+			$this->cookieKeyWarning()
 		], $props['security']);
 	}
 
@@ -231,7 +251,8 @@ class SystemTest extends AreaTestCase
 
 		$this->assertSame([
 			$this->customWarning(),
-			$this->contentSaltWarning()
+			$this->contentSaltWarning(),
+			$this->cookieKeyWarning()
 		], $props['security']);
 	}
 
@@ -259,7 +280,34 @@ class SystemTest extends AreaTestCase
 		$view  = $this->view('system');
 		$props = $view['props'];
 
-		$this->assertArrayNotHasKey(2, $props['security']);
+		$this->assertSame([
+			$this->customWarning(),
+			$this->compilerWarning(),
+			$this->cookieKeyWarning()
+		], $props['security']);
+	}
+
+	public function testViewWithoutCustomCookieKey(): void
+	{
+		$this->login();
+
+		$view  = $this->view('system');
+		$props = $view['props'];
+
+		$this->assertArrayHasKey(3, $props['security']);
+		$this->assertSame($this->cookieKeyWarning(), $props['security'][3]);
+	}
+
+	public function testViewWithCustomCookieKey(): void
+	{
+		Cookie::$key = 'custom-cookie-key';
+
+		$this->login();
+
+		$view  = $this->view('system');
+		$props = $view['props'];
+
+		$this->assertArrayNotHasKey(3, $props['security']);
 	}
 
 	public function testViewHttps(): void
@@ -283,7 +331,8 @@ class SystemTest extends AreaTestCase
 				'link' => 'https://getkirby.com/security/https'
 			],
 			$this->compilerWarning(),
-			$this->contentSaltWarning()
+			$this->contentSaltWarning(),
+			$this->cookieKeyWarning()
 		], $props['security']);
 	}
 
@@ -489,6 +538,8 @@ class SystemTest extends AreaTestCase
 				'updates'            => false,
 			]
 		]);
+
+		Cookie::$key = 'custom-cookie-key';
 
 		App::plugin('getkirby/public', [
 			'info' => [
