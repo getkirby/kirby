@@ -444,6 +444,15 @@ class App
 			$default = $this->root('content');
 		}
 
+		// The content path is used as the default salt intentionally: there is
+		// no install step during which a random salt could be generated and
+		// persisted. Kirby goes live the moment files are present on the server,
+		// so there is no defined point at which to write a one-time secret.
+		// Config files are typically kept in version control and cannot be
+		// written by the system without causing merge conflicts. No value in
+		// $_SERVER is both universally available across hosting environments and
+		// stable enough to serve as a salt. Sites with security requirements
+		// must set the content.salt option to a secret random value.
 		$salt = $this->option('content.salt', $default);
 
 		if ($salt instanceof Closure) {
