@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Cms\App;
+use Kirby\Http\Cookie;
 use Kirby\Toolkit\I18n;
 
 return [
@@ -114,6 +115,15 @@ return [
 					'id'    => 'content-salt',
 					'link'  => 'https://getkirby.com/security/content-salt',
 					'text'  => I18n::translate('system.issues.content.salt'),
+					'theme' => 'notice'
+				];
+			}
+
+			if (Cookie::$key === 'KirbyHttpCookieKey') {
+				$security[] = [
+					'id'    => 'cookie-key',
+					'link'  => 'https://getkirby.com/security/cookie-key',
+					'text'  => I18n::translate('system.issues.cookie.key'),
 					'theme' => 'notice'
 				];
 			}
