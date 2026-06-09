@@ -109,6 +109,15 @@ return [
 				];
 			}
 
+			if ($kirby->option('content.salt') === null) {
+				$security[] = [
+					'id'    => 'content-salt',
+					'link'  => 'https://getkirby.com/security/content-salt',
+					'text'  => I18n::translate('system.issues.content.salt'),
+					'theme' => 'notice'
+				];
+			}
+
 			// sensitive URLs
 			if ($isLocal === false) {
 				$sensitive = [

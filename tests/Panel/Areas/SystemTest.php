@@ -44,6 +44,16 @@ class SystemTest extends AreaTestCase
 		];
 	}
 
+	protected function contentSaltWarning(): array
+	{
+		return [
+			'id'    => 'content-salt',
+			'link'  => 'https://getkirby.com/security/content-salt',
+			'text'  => 'No custom content salt is configured',
+			'theme' => 'notice'
+		];
+	}
+
 	protected function customWarning(): array
 	{
 		return [
@@ -107,7 +117,8 @@ class SystemTest extends AreaTestCase
 				'link' => 'https://getkirby.com/security/vue-compiler',
 				'text' => 'The Vue template compiler is enabled',
 				'theme' => 'notice',
-			]
+			],
+			$this->contentSaltWarning()
 		], $props['security']);
 		$this->assertSame([
 			'content' => 'https://example.com/content/site.txt',
@@ -139,7 +150,8 @@ class SystemTest extends AreaTestCase
 				'theme' => 'info',
 				'text'  => 'The site is running locally with relaxed security checks'
 			],
-			$this->compilerWarning()
+			$this->compilerWarning(),
+			$this->contentSaltWarning()
 		], $props['security']);
 	}
 
@@ -166,7 +178,8 @@ class SystemTest extends AreaTestCase
 				'text'  => 'Debugging must be turned off in production',
 				'link'  => 'https://getkirby.com/security/debug'
 			],
-			$this->compilerWarning()
+			$this->compilerWarning(),
+			$this->contentSaltWarning()
 		], $props['security']);
 	}
 
@@ -194,7 +207,37 @@ class SystemTest extends AreaTestCase
 		$view  = $this->view('system');
 		$props = $view['props'];
 
-		$this->assertArrayNotHasKey(1, $props['security']);
+		$this->assertSame([
+			$this->customWarning(),
+			$this->contentSaltWarning()
+		], $props['security']);
+	}
+
+	public function testViewWithoutContentSalt(): void
+	{
+		$this->login();
+
+		$view  = $this->view('system');
+		$props = $view['props'];
+
+		$this->assertArrayHasKey(2, $props['security']);
+		$this->assertSame($this->contentSaltWarning(), $props['security'][2]);
+	}
+
+	public function testViewWithContentSalt(): void
+	{
+		$this->app([
+			'options' => [
+				'content.salt' => 'custom-salt'
+			]
+		]);
+
+		$this->login();
+
+		$view  = $this->view('system');
+		$props = $view['props'];
+
+		$this->assertArrayNotHasKey(2, $props['security']);
 	}
 
 	public function testViewHttps(): void
@@ -217,7 +260,8 @@ class SystemTest extends AreaTestCase
 				'text' => 'We recommend HTTPS for all your sites',
 				'link' => 'https://getkirby.com/security/https'
 			],
-			$this->compilerWarning()
+			$this->compilerWarning(),
+			$this->contentSaltWarning()
 		], $props['security']);
 	}
 
@@ -412,8 +456,9 @@ class SystemTest extends AreaTestCase
 	{
 		$this->app([
 			'options' => [
-				'updates' => false,
-				'panel.vue.compiler' => true
+				'content.salt'       => 'custom-salt',
+				'panel.vue.compiler' => true,
+				'updates'            => false,
 			]
 		]);
 
