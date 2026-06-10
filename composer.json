@@ -39,6 +39,8 @@
 		"christian-riesen/base32": "1.6.0",
 		"claviska/simpleimage": "4.4.0",
 		"composer/semver": "3.4.4",
+		"erusev/parsedown": "1.8.0",
+		"erusev/parsedown-extra": "0.9.0",
 		"filp/whoops": "2.18.4",
 		"getkirby/composer-installer": "^1.2.1",
 		"laminas/laminas-escaper": "2.18.0",
