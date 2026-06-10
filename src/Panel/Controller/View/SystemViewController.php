@@ -5,6 +5,7 @@ namespace Kirby\Panel\Controller\View;
 use Kirby\Cms\License;
 use Kirby\Cms\System;
 use Kirby\Cms\System\UpdateStatus;
+use Kirby\Http\Cookie;
 use Kirby\Panel\Controller\ViewController;
 use Kirby\Panel\Ui\Button\ViewButtons;
 use Kirby\Panel\Ui\Stat;
@@ -145,6 +146,24 @@ class SystemViewController extends ViewController
 				'icon'  => 'info',
 				'theme' => 'info',
 				'text'  => $this->i18n('system.issues.local')
+			];
+		}
+
+		if ($this->kirby->option('content.salt') === null) {
+			$security[] = [
+				'id'    => 'content-salt',
+				'link'  => 'https://getkirby.com/security/content-salt',
+				'text'  => $this->i18n('system.issues.content.salt'),
+				'theme' => 'notice'
+			];
+		}
+
+		if (Cookie::$key === 'KirbyHttpCookieKey') {
+			$security[] = [
+				'id'    => 'cookie-key',
+				'link'  => 'https://getkirby.com/security/cookie-key',
+				'text'  => $this->i18n('system.issues.cookie.key'),
+				'theme' => 'notice'
 			];
 		}
 

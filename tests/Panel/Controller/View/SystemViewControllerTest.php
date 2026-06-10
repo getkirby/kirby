@@ -4,6 +4,7 @@ namespace Kirby\Panel\Controller\View;
 
 use Kirby\Cms\App;
 use Kirby\Cms\System\UpdateStatus;
+use Kirby\Http\Cookie;
 use Kirby\Panel\TestCase;
 use Kirby\Panel\Ui\Button\ViewButtons;
 use Kirby\Panel\Ui\Stats;
@@ -15,6 +16,26 @@ use PHPUnit\Framework\Attributes\CoversClass;
  */
 class SystemMock
 {
+	public static function contentSaltWarning(): array
+	{
+		return [
+			'id'    => 'content-salt',
+			'link'  => 'https://getkirby.com/security/content-salt',
+			'text'  => 'The content salt has not been changed from its default value',
+			'theme' => 'notice'
+		];
+	}
+
+	public static function cookieKeyWarning(): array
+	{
+		return [
+			'id'    => 'cookie-key',
+			'link'  => 'https://getkirby.com/security/cookie-key',
+			'text'  => 'The cookie signing key has not been changed from its default value',
+			'theme' => 'notice'
+		];
+	}
+
 	public static function customWarning(): array
 	{
 		return [
@@ -75,6 +96,12 @@ class SystemViewControllerTest extends TestCase
 				'url' => 'https://example.com'
 			]
 		]);
+	}
+
+	protected function tearDown(): void
+	{
+		Cookie::$key = 'KirbyHttpCookieKey';
+		parent::tearDown();
 	}
 
 	protected function installPlugins(): void
@@ -270,6 +297,8 @@ class SystemViewControllerTest extends TestCase
 		$security   = $controller->security();
 		$this->assertSame([
 			SystemMock::customWarning(),
+			SystemMock::contentSaltWarning(),
+			SystemMock::cookieKeyWarning()
 		], $security);
 	}
 
@@ -292,6 +321,8 @@ class SystemViewControllerTest extends TestCase
 				'text'  => 'Debugging must be turned off in production',
 				'link'  => 'https://getkirby.com/security/debug'
 			],
+			SystemMock::contentSaltWarning(),
+			SystemMock::cookieKeyWarning()
 		], $security);
 	}
 
@@ -313,6 +344,8 @@ class SystemViewControllerTest extends TestCase
 				'theme' => 'info',
 				'text'  => 'The site is running locally with relaxed security checks'
 			],
+			SystemMock::contentSaltWarning(),
+			SystemMock::cookieKeyWarning()
 		], $security);
 	}
 
@@ -326,7 +359,10 @@ class SystemViewControllerTest extends TestCase
 
 		$controller = new SystemViewController();
 		$security   = $controller->security();
-		$this->assertSame([], $security);
+		$this->assertSame([
+			SystemMock::contentSaltWarning(),
+			SystemMock::cookieKeyWarning()
+		], $security);
 	}
 
 	public function testSecurityMissingHttps(): void
@@ -346,7 +382,45 @@ class SystemViewControllerTest extends TestCase
 				'text' => 'We recommend HTTPS for all your sites',
 				'link' => 'https://getkirby.com/security/https'
 			],
+			SystemMock::contentSaltWarning(),
+			SystemMock::cookieKeyWarning()
 		], $security);
+	}
+
+	public function testSecurityWithoutContentSalt(): void
+	{
+		$controller = new SystemViewController();
+		$security   = $controller->security();
+		$this->assertContains(SystemMock::contentSaltWarning(), $security);
+	}
+
+	public function testSecurityWithContentSalt(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'content.salt' => 'custom-salt'
+			]
+		]);
+
+		$controller = new SystemViewController();
+		$security   = $controller->security();
+		$this->assertNotContains(SystemMock::contentSaltWarning(), $security);
+	}
+
+	public function testSecurityWithoutCustomCookieKey(): void
+	{
+		$controller = new SystemViewController();
+		$security   = $controller->security();
+		$this->assertContains(SystemMock::cookieKeyWarning(), $security);
+	}
+
+	public function testSecurityWithCustomCookieKey(): void
+	{
+		Cookie::$key = 'custom-cookie-key';
+
+		$controller = new SystemViewController();
+		$security   = $controller->security();
+		$this->assertNotContains(SystemMock::cookieKeyWarning(), $security);
 	}
 
 	public function testStats(): void
