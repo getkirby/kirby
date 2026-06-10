@@ -72,7 +72,6 @@ class FileSessionStore extends SessionStore
 
 		// ensure that no other thread already wrote to the same file,
 		// otherwise try again (very unlikely scenario!)
-		// otherwise try again (very unlikely scenario!)
 		$stat = fstat($this->handle($name));
 
 		if ($stat === false || $stat['size'] !== 0) {
