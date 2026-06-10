@@ -10,15 +10,18 @@ use PHPUnit\Framework\Attributes\CoversClass;
 class CookieTest extends TestCase
 {
 	protected string $cookieKey;
+	protected array $cookies;
 
 	public function setUp(): void
 	{
 		$this->cookieKey = Cookie::$key;
+		$this->cookies   = $_COOKIE;
 	}
 
 	public function tearDown(): void
 	{
 		Cookie::$key = $this->cookieKey;
+		$_COOKIE     = $this->cookies;
 
 		App::destroy();
 	}
