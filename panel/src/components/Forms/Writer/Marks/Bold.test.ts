@@ -51,7 +51,10 @@ describe("Bold mark", () => {
 			it.each([
 				["**foo**", "<p><strong>foo</strong></p>"],
 				["**x**", "<p><strong>x</strong></p>"],
-				["**foo bar**", "<p><strong>foo bar</strong></p>"]
+				["**foo bar**", "<p><strong>foo bar</strong></p>"],
+				["**Mitarbeiter*innen**", "<p><strong>Mitarbeiter*innen</strong></p>"],
+				["**Lehrer*in**", "<p><strong>Lehrer*in</strong></p>"],
+				["**Bürger*innen**", "<p><strong>Bürger*innen</strong></p>"]
 			])("converts %s to bold mark", (input, expected) => {
 				expect(applyInputRule(schema, rule, input)).toBe(expected);
 			});
@@ -124,7 +127,14 @@ describe("Bold mark", () => {
 					"**foo** and **bar**",
 					"<p><strong>foo</strong> and <strong>bar</strong></p>"
 				],
-				["before **foo** after", "<p>before <strong>foo</strong> after</p>"]
+				["before **foo** after", "<p>before <strong>foo</strong> after</p>"],
+				["**Mitarbeiter*innen**", "<p><strong>Mitarbeiter*innen</strong></p>"],
+				["**Lehrer*in**", "<p><strong>Lehrer*in</strong></p>"],
+				["**Bürger*innen**", "<p><strong>Bürger*innen</strong></p>"],
+				[
+					"Liebe **Mitarbeiter*innen**",
+					"<p>Liebe <strong>Mitarbeiter*innen</strong></p>"
+				]
 			])("converts %s to bold mark when pasting", (input, expected) => {
 				expect(applyPasteRule(schema, rule, input)).toBe(expected);
 			});
