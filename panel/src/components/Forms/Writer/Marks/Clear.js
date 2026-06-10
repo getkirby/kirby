@@ -14,6 +14,11 @@ export default class Clear extends Mark {
 
 	clear() {
 		const { state } = this.editor;
+
+		if (!state) {
+			return;
+		}
+
 		const { from, to } = state.tr.selection;
 
 		for (const mark of this.editor.activeMarks) {

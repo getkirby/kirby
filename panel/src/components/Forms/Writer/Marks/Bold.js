@@ -14,11 +14,8 @@ export default class Bold extends Mark {
 
 	inputRules({ type, utils }) {
 		return [
-			utils.markInputRule(
-				/(?:^|\s)(\*\*(?!\s+\*\*)((?:[^*]+))\*\*(?!\s+\*\*))$/,
-				type
-			),
-			utils.markInputRule(/(?:^|\s)(__(?!\s+__)((?:[^_]+))__(?!\s+__))$/, type)
+			utils.markInputRule(/(?:^|\s)(\*\*([^*\s](?:(?:[^*]|\*(?![*\s]))*[^*\s])?)\*\*)$/, type),
+			utils.markInputRule(/(?:^|\s)(__([^_\s](?:(?:[^_]|_(?![_\s]))*[^_\s])?)__)$/, type)
 		];
 	}
 
@@ -34,11 +31,8 @@ export default class Bold extends Mark {
 
 	pasteRules({ type, utils }) {
 		return [
-			utils.markPasteRule(
-				/(?:^|\s)(\*\*(?!\s+\*\*)((?:[^*]+))\*\*(?!\s+\*\*))/g,
-				type
-			),
-			utils.markPasteRule(/(?:^|\s)(__(?!\s+__)((?:[^_]+))__(?!\s+__))/g, type)
+			utils.markPasteRule(/(?<!\S)\*\*([^*\s](?:(?:[^*]|\*(?![*\s]))*[^*\s])?)\*\*(?!\S)/g, type),
+			utils.markPasteRule(/(?<!\S)__([^_\s](?:(?:[^_]|_(?![_\s]))*[^_\s])?)__(?!\S)/g, type)
 		];
 	}
 
