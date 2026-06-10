@@ -1,5 +1,7 @@
+import type { InputRule } from "prosemirror-inputrules";
 import type { NodeSpec } from "prosemirror-model";
 import type { EditorState, Transaction } from "prosemirror-state";
+import type { ExtensionCommand } from "../Extension";
 import Node, { type NodeContext } from "../Node";
 
 type InputRuleHandler = (
@@ -10,11 +12,11 @@ type InputRuleHandler = (
 ) => Transaction | null;
 
 export default class HorizontalRule extends Node {
-	commands({ type, utils }: NodeContext) {
+	commands({ type, utils }: NodeContext): ExtensionCommand {
 		return () => utils.insertNode(type);
 	}
 
-	inputRules({ type, utils }: NodeContext) {
+	inputRules({ type, utils }: NodeContext): InputRule[] {
 		// create regular input rule for horizontal rule
 		const rule = utils.nodeInputRule(/^(?:---|___\s|\*\*\*\s)$/, type);
 

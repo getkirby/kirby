@@ -1,5 +1,7 @@
+import type { InputRule } from "prosemirror-inputrules";
 import type { NodeSpec } from "prosemirror-model";
 import type { Command } from "prosemirror-state";
+import type { ExtensionCommand } from "../Extension";
 import Node, { type NodeContext } from "../Node";
 
 export default class BulletList extends Node {
@@ -13,11 +15,11 @@ export default class BulletList extends Node {
 		};
 	}
 
-	commands({ type, schema, utils }: NodeContext) {
+	commands({ type, schema, utils }: NodeContext): ExtensionCommand {
 		return () => utils.toggleList(type, schema.nodes.listItem);
 	}
 
-	inputRules({ type, utils }: NodeContext) {
+	inputRules({ type, utils }: NodeContext): InputRule[] {
 		return [utils.wrappingInputRule(/^\s*([-+*])\s$/, type)];
 	}
 
