@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { Schema } from "prosemirror-model";
 import { Plugin } from "prosemirror-state";
+import type { InputRule } from "prosemirror-inputrules";
 import type { MarkSpec, NodeSpec } from "prosemirror-model";
 import type {
 	EditorView,
@@ -323,6 +324,103 @@ describe("Extensions", () => {
 		});
 	});
 
+	describe("inputRules", () => {
+		it("collects input rules from extensions and nodes/marks", () => {
+			const rule = {} as unknown as InputRule;
+
+			class RuleExtension extends PlainExtension {
+				inputRules() {
+					return [rule];
+				}
+			}
+
+			class RuleMark extends MarkExtension {
+				inputRules() {
+					return [rule];
+				}
+			}
+
+			const exts = new Extensions(
+				[new RuleExtension(), new RuleMark()],
+				mockEditor
+			);
+
+			expect(exts.inputRules({ schema })).toStrictEqual([rule, rule]);
+		});
+
+		it("excludes all extensions when excludedExtensions is true", () => {
+			const rule = {} as unknown as InputRule;
+
+			class RuleExtension extends PlainExtension {
+				inputRules() {
+					return [rule];
+				}
+			}
+
+			const exts = new Extensions([new RuleExtension()], mockEditor);
+
+			expect(
+				exts.inputRules({ schema, excludedExtensions: true })
+			).toStrictEqual([]);
+		});
+
+		it("excludes named extensions from input rules", () => {
+			const rule = {} as unknown as InputRule;
+
+			class RuleExtension extends PlainExtension {
+				inputRules() {
+					return [rule];
+				}
+			}
+
+			const exts = new Extensions([new RuleExtension()], mockEditor);
+
+			expect(
+				exts.inputRules({ schema, excludedExtensions: ["plain"] })
+			).toStrictEqual([]);
+			expect(
+				exts.inputRules({ schema, excludedExtensions: ["other"] })
+			).toStrictEqual([rule]);
+		});
+	});
+
+	describe("keymaps", () => {
+		it("returns a keymap Plugin for each extension that defines keys", () => {
+			class KeyExtension extends PlainExtension {
+				keys() {
+					return { "Ctrl-Z": vi.fn() };
+				}
+			}
+
+			const exts = new Extensions([new KeyExtension()], mockEditor);
+			const result = exts.keymaps({ schema });
+
+			expect(result).toHaveLength(1);
+			expect(result[0]).toBeInstanceOf(Plugin);
+		});
+
+		it("includes keymaps from both extensions and nodes/marks", () => {
+			class KeyExtension extends PlainExtension {
+				keys() {
+					return { "Ctrl-Z": vi.fn() };
+				}
+			}
+
+			class KeyMark extends MarkExtension {
+				keys() {
+					return { "Ctrl-B": vi.fn() };
+				}
+			}
+
+			const exts = new Extensions(
+				[new KeyExtension(), new KeyMark()],
+				mockEditor
+			);
+
+			expect(exts.keymaps({ schema })).toHaveLength(2);
+		});
+	});
+
 	describe("marks", () => {
 		it("returns a map of mark name to MarkSpec, excluding non-marks", () => {
 			const exts = new Extensions(
@@ -362,6 +460,129 @@ describe("Extensions", () => {
 
 			expect(Object.keys(exts.nodeViews)).toStrictEqual(["image"]);
 			expect(exts.nodeViews["image"]).toBe(withView.view);
+		});
+	});
+
+	describe("options", () => {
+		it("returns the current option values for each extension", () => {
+			class ConfiguredExtension extends PlainExtension {
+				get defaults() {
+					return { color: "red" } as Record<string, unknown>;
+				}
+			}
+
+			const ext = new ConfiguredExtension({ color: "blue" });
+			const exts = new Extensions([ext], mockEditor);
+
+			expect(exts.options["plain"]["color"]).toBe("blue");
+		});
+
+		it("calls view.updateState when an option value changes", () => {
+			const updateState = vi.fn();
+			const editor = {
+				view: { state: {}, updateState }
+			} as unknown as Editor;
+
+			class ConfiguredExtension extends PlainExtension {
+				get defaults() {
+					return { color: "red" } as Record<string, unknown>;
+				}
+			}
+
+			const exts = new Extensions([new ConfiguredExtension()], editor);
+			exts.options["plain"]["color"] = "blue";
+
+			expect(updateState).toHaveBeenCalledOnce();
+		});
+
+		it("does not call view.updateState when the value is unchanged", () => {
+			const updateState = vi.fn();
+			const editor = {
+				view: { state: {}, updateState }
+			} as unknown as Editor;
+
+			class ConfiguredExtension extends PlainExtension {
+				get defaults() {
+					return { color: "red" } as Record<string, unknown>;
+				}
+			}
+
+			const exts = new Extensions([new ConfiguredExtension()], editor);
+			exts.options["plain"]["color"] = "red";
+
+			expect(updateState).not.toHaveBeenCalled();
+		});
+
+		it("does not throw when the editor has no view", () => {
+			class ConfiguredExtension extends PlainExtension {
+				get defaults() {
+					return { color: "red" } as Record<string, unknown>;
+				}
+			}
+
+			const exts = new Extensions([new ConfiguredExtension()], mockEditor);
+
+			expect(() => {
+				exts.options["plain"]["color"] = "blue";
+			}).not.toThrow();
+		});
+	});
+
+	describe("pasteRules", () => {
+		it("collects paste rules from extensions and nodes/marks", () => {
+			const plugin = new Plugin({});
+
+			class PasteExtension extends PlainExtension {
+				pasteRules() {
+					return [plugin];
+				}
+			}
+
+			class PasteMark extends MarkExtension {
+				pasteRules() {
+					return [new Plugin({})];
+				}
+			}
+
+			const exts = new Extensions(
+				[new PasteExtension(), new PasteMark()],
+				mockEditor
+			);
+			const result = exts.pasteRules({ schema });
+
+			expect(result).toHaveLength(2);
+			expect(result[0]).toBe(plugin);
+		});
+
+		it("excludes all extensions when excludedExtensions is true", () => {
+			class PasteExtension extends PlainExtension {
+				pasteRules() {
+					return [new Plugin({})];
+				}
+			}
+
+			const exts = new Extensions([new PasteExtension()], mockEditor);
+
+			expect(
+				exts.pasteRules({ schema, excludedExtensions: true })
+			).toStrictEqual([]);
+		});
+
+		it("excludes named extensions from paste rules", () => {
+			class PasteExtension extends PlainExtension {
+				pasteRules() {
+					return [new Plugin({})];
+				}
+			}
+
+			const exts = new Extensions([new PasteExtension()], mockEditor);
+
+			expect(
+				exts.pasteRules({ schema, excludedExtensions: ["plain"] })
+			).toStrictEqual([]);
+			expect(
+				exts.pasteRules({ schema, excludedExtensions: ["other"] })
+			).toHaveLength(1);
 		});
 	});
 
