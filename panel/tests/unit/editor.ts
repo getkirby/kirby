@@ -7,30 +7,51 @@ import {
 	Slice,
 	type MarkSpec,
 	type MarkType,
-	type Node
+	type Node,
+	type NodeSpec,
+	type NodeType
 } from "prosemirror-model";
 import { EditorState, type Plugin, type Transaction } from "prosemirror-state";
 import { vi } from "vitest";
 import type Editor from "@/components/Forms/Writer/Editor";
 
+const BASE_NODES = {
+	doc: { content: "block+" },
+	paragraph: {
+		content: "inline*",
+		group: "block",
+		parseDOM: [{ tag: "p" }],
+		toDOM: () => ["p", 0] as const
+	},
+	text: { group: "inline" }
+} satisfies Record<string, NodeSpec>;
+
 /**
- * Simulates typing `text` into a paragraph and returns the resulting HTML,
- * or null if the rule's regex did not match.
+ * Simulates typing `text` into a paragraph and returns the content of the
+ * resulting block as HTML, or null if the rule's regex did not match.
  *
  * The last character of `text` is treated as the trigger that fired the
  * rule. It is not present in the document when the handler runs, matching how
  * ProseMirror calls input rule handlers.
+ *
+ * `suffix` is text that already follows the cursor when the rule fires, e.g.
+ * the heading content in `applyInputRule(schema, rule, "# ", "Hello")`.
  */
 export function applyInputRule(
 	schema: Schema,
 	rule: InputRule,
-	text: string
+	text: string,
+	suffix: string = ""
 ): string | null {
 	const trigger = text.slice(-1);
 	const docText = text.slice(0, -1);
 
+	// The text before the trigger, plus any `suffix` that should already
+	// follow the cursor when the rule fires (e.g. the heading text after
+	// typing "# ").
+	const combined = docText + suffix;
 	const doc = schema.node("doc", null, [
-		schema.node("paragraph", null, docText ? [schema.text(docText)] : [])
+		schema.node("paragraph", null, combined ? [schema.text(combined)] : [])
 	]);
 
 	const initial = EditorState.create({ doc });
@@ -38,8 +59,8 @@ export function applyInputRule(
 
 	// Drive the rule through the `inputRules` plugin's
 	// `handleTextInput` prop, exactly the path ProseMirror
-	// takes when the trigger character is typed at the
-	// end of the paragraph
+	// takes when the trigger character is typed at the end
+	// of the text before the cursor
 	const view = {
 		composing: false,
 		state: initial,
@@ -90,19 +111,12 @@ export function applyPasteRule(
 }
 
 export function createSchemaWithMarks(marks: Record<string, MarkSpec>): Schema {
-	return new Schema({
-		nodes: {
-			doc: { content: "block+" },
-			paragraph: {
-				content: "inline*",
-				group: "block",
-				parseDOM: [{ tag: "p" }],
-				toDOM: () => ["p", 0] as const
-			},
-			text: { group: "inline" }
-		},
-		marks
-	});
+	return new Schema({ nodes: BASE_NODES, marks });
+}
+
+// TODO: remove cast once node files are converted to TypeScript
+export function createSchemaWithNodes(nodes: Record<string, unknown>): Schema {
+	return new Schema({ nodes: { ...BASE_NODES, ...nodes } as Record<string, NodeSpec> });
 }
 
 function firstInlineNode(schema: Schema, html: string): Node {
@@ -122,6 +136,25 @@ export function getMarkAttrs(
 ): Record<string, unknown> | undefined {
 	return firstInlineNode(schema, html).marks.find((m) => m.type === mark)
 		?.attrs;
+}
+
+export function getNodeAttrs(
+	schema: Schema,
+	html: string,
+	type: NodeType
+): Record<string, unknown> | undefined {
+	const div = document.createElement("div");
+	div.innerHTML = html;
+	const doc = DOMParser.fromSchema(schema).parse(div);
+	const node = doc.firstChild;
+	return node?.type === type ? node.attrs : undefined;
+}
+
+export function hasNode(schema: Schema, html: string, type: NodeType): boolean {
+	const div = document.createElement("div");
+	div.innerHTML = html;
+	const doc = DOMParser.fromSchema(schema).parse(div);
+	return doc.firstChild?.type === type;
 }
 
 export function hasMark(schema: Schema, html: string, mark: MarkType): boolean {
