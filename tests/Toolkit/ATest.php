@@ -1228,4 +1228,14 @@ class ATest extends TestCase
 		$this->assertSame([1 => 'dog', 2 => 'bird', 3 => 'cat', 4 => 'dog', 5 => 'bird'], A::without($indexedArray, 0));
 		$this->assertSame(['cat', 'dog', 'bird', 'cat', 'dog', 'bird'], A::without($indexedArray, -1));
 	}
+
+	public function testWithoutNumericStringKeys(): void
+	{
+		// PHP normalizes integer-like string keys to integers,
+		// so '1' and 1 refer to the same slot when used as keys
+		$array = [1 => 'a', 2 => 'b'];
+
+		$this->assertSame([2 => 'b'], A::without($array, [1]));
+		$this->assertSame([2 => 'b'], A::without($array, ['1']));
+	}
 }

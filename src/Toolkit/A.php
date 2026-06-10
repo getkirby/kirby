@@ -1021,6 +1021,11 @@ class A
 
 	/**
 	 * Remove key(s) from an array
+	 *
+	 * Keys are matched using PHP's array-key semantics, so integer-like
+	 * string keys (e.g. `'1'`) and their integer counterparts (`1`) are
+	 * treated as equivalent.
+	 *
 	 * @since 3.6.5
 	 */
 	public static function without(array $array, int|string|array $keys): array
@@ -1029,9 +1034,11 @@ class A
 			$keys = static::wrap($keys);
 		}
 
+		$exclude = array_flip($keys);
+
 		return static::filter(
 			$array,
-			fn ($value, $key) => in_array($key, $keys, true) === false
+			fn ($value, $key) => isset($exclude[$key]) === false
 		);
 	}
 
