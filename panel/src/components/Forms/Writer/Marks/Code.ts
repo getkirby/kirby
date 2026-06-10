@@ -1,4 +1,7 @@
-import Mark from "../Mark";
+import type { InputRule } from "prosemirror-inputrules";
+import type { MarkSpec } from "prosemirror-model";
+import type { Plugin } from "prosemirror-state";
+import Mark, { type MarkContext } from "../Mark";
 
 export default class Code extends Mark {
 	get button() {
@@ -12,7 +15,7 @@ export default class Code extends Mark {
 		return () => this.toggle();
 	}
 
-	inputRules({ type, utils }) {
+	inputRules({ type, utils }: MarkContext): InputRule[] {
 		return [utils.markInputRule(/(?:`)([^`]+)(?:`)$/, type)];
 	}
 
@@ -26,11 +29,11 @@ export default class Code extends Mark {
 		return "code";
 	}
 
-	pasteRules({ type, utils }) {
+	pasteRules({ type, utils }: MarkContext): Plugin[] {
 		return [utils.markPasteRule(/(?:`)([^`]+)(?:`)/g, type)];
 	}
 
-	get schema() {
+	get schema(): MarkSpec {
 		return {
 			excludes: "_",
 			parseDOM: [{ tag: "code" }],

@@ -1,4 +1,7 @@
-import Mark from "../Mark";
+import type { MarkSpec } from "prosemirror-model";
+import type { Plugin, PluginSpec } from "prosemirror-state";
+import type { EditorView } from "prosemirror-view";
+import Mark, { type MarkContext } from "../Mark";
 
 export default class Email extends Mark {
 	get button() {
@@ -10,30 +13,32 @@ export default class Email extends Mark {
 
 	commands() {
 		return {
-			email: (event) => {
+			email: (event: MouseEvent) => {
 				if (event.altKey || event.metaKey) {
 					return this.remove();
 				}
 
 				this.editor.emit("email", this.editor);
 			},
-			insertEmail: (attrs = {}) => {
-				const { selection } = this.editor.state;
+			insertEmail: (attrs: { href?: string } = {}) => {
+				if (!attrs.href) {
+					return;
+				}
 
-				// if no text is selected, we insert the link as text
+				const { selection } = this.editor.state!;
+
+				// if no text is selected, we insert the email as text
 				if (selection.empty) {
 					this.editor.insertText(attrs.href, true);
 				}
 
-				if (attrs.href) {
-					return this.update(attrs);
-				}
+				return this.update(attrs);
 			},
 			removeEmail: () => {
 				return this.remove();
 			},
-			toggleEmail: (attrs = {}) => {
-				if (attrs.href?.length > 0) {
+			toggleEmail: (attrs: { href?: string } = {}) => {
+				if (attrs.href) {
 					this.editor.command("insertEmail", attrs);
 				} else {
 					this.editor.command("removeEmail");
@@ -42,29 +47,24 @@ export default class Email extends Mark {
 		};
 	}
 
-	get defaults() {
-		return {
-			target: null
-		};
-	}
-
 	get name() {
 		return "email";
 	}
 
-	pasteRules({ type, utils }) {
+	pasteRules({ type, utils }: MarkContext): Plugin[] {
 		return [
-			utils.pasteRule(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/gi, type, (url) => ({
+			utils.pasteRule(/[\w-.]+@([\w-]+\.)+[\w-]{2,4}/gi, type, (url) => ({
 				href: url
 			}))
 		];
 	}
 
-	plugins() {
+	plugins(): PluginSpec<null>[] {
 		return [
 			{
 				props: {
-					handleClick: (view, pos, event) => {
+					handleClick: (_view: EditorView, _pos: number, event: MouseEvent) => {
+						// @ts-expect-error fixed once Editor.js is migrated to TS
 						const attrs = this.editor.getMarkAttrs("email");
 
 						if (
@@ -73,7 +73,7 @@ export default class Email extends Mark {
 							event.target instanceof HTMLAnchorElement
 						) {
 							event.stopPropagation();
-							window.open(attrs.href);
+							window.open("mailto:" + attrs.href);
 						}
 					}
 				}
@@ -81,7 +81,7 @@ export default class Email extends Mark {
 		];
 	}
 
-	get schema() {
+	get schema(): MarkSpec {
 		return {
 			attrs: {
 				href: {
@@ -96,7 +96,7 @@ export default class Email extends Mark {
 				{
 					tag: "a[href^='mailto:']",
 					getAttrs: (dom) => ({
-						href: dom.getAttribute("href").replace("mailto:", ""),
+						href: dom.getAttribute("href")!.replace("mailto:", ""),
 						title: dom.getAttribute("title")
 					})
 				}

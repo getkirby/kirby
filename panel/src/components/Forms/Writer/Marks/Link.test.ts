@@ -145,6 +145,21 @@ describe("Link mark", () => {
 
 				expect(editor.updateMark).not.toHaveBeenCalled();
 			});
+
+			it("does not insert as text when href is absent", () => {
+				const mark = new Link();
+				const editor = mockEditor({
+					insertText: vi.fn(),
+					state: { selection: { empty: true } },
+					activeMarks: []
+				});
+				mark.bindEditor(editor);
+
+				const { insertLink } = mark.commands();
+				insertLink({});
+
+				expect(editor.insertText).not.toHaveBeenCalled();
+			});
 		});
 
 		describe("removeLink", () => {
