@@ -79,7 +79,10 @@ describe("Italic mark", () => {
 			it.each([
 				["_foo_", "<p><em>foo</em></p>"],
 				["_x_", "<p><em>x</em></p>"],
-				["_foo bar_", "<p><em>foo bar</em></p>"]
+				["_foo bar_", "<p><em>foo bar</em></p>"],
+				["_Lehrer_in_", "<p><em>Lehrer_in</em></p>"],
+				["_Mitarbeiter_innen_", "<p><em>Mitarbeiter_innen</em></p>"],
+				["_Bürger_innen_", "<p><em>Bürger_innen</em></p>"]
 			])("converts %s to italic mark", (input, expected) => {
 				expect(applyInputRule(schema, rule, input)).toBe(expected);
 			});
@@ -160,7 +163,14 @@ describe("Italic mark", () => {
 				["_x_", "<p><em>x</em></p>"],
 				["_foo bar_", "<p><em>foo bar</em></p>"],
 				["_foo_ and _bar_", "<p><em>foo</em> and <em>bar</em></p>"],
-				["before _foo_ after", "<p>before <em>foo</em> after</p>"]
+				["before _foo_ after", "<p>before <em>foo</em> after</p>"],
+				["_Lehrer_in_", "<p><em>Lehrer_in</em></p>"],
+				["_Mitarbeiter_innen_", "<p><em>Mitarbeiter_innen</em></p>"],
+				["_Bürger_innen_", "<p><em>Bürger_innen</em></p>"],
+				[
+					"Liebe _Mitarbeiter_innen_",
+					"<p>Liebe <em>Mitarbeiter_innen</em></p>"
+				]
 			])("converts %s to italic mark when pasting", (input, expected) => {
 				expect(applyPasteRule(schema, rule, input)).toBe(expected);
 			});

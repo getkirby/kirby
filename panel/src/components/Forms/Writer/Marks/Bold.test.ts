@@ -78,7 +78,10 @@ describe("Bold mark", () => {
 			it.each([
 				["__foo__", "<p><strong>foo</strong></p>"],
 				["__x__", "<p><strong>x</strong></p>"],
-				["__foo bar__", "<p><strong>foo bar</strong></p>"]
+				["__foo bar__", "<p><strong>foo bar</strong></p>"],
+				["__Lehrer_in__", "<p><strong>Lehrer_in</strong></p>"],
+				["__Mitarbeiter_innen__", "<p><strong>Mitarbeiter_innen</strong></p>"],
+				["__Bürger_innen__", "<p><strong>Bürger_innen</strong></p>"]
 			])("converts %s to bold mark", (input, expected) => {
 				expect(applyInputRule(schema, rule, input)).toBe(expected);
 			});
@@ -163,7 +166,14 @@ describe("Bold mark", () => {
 					"__foo__ and __bar__",
 					"<p><strong>foo</strong> and <strong>bar</strong></p>"
 				],
-				["before __foo__ after", "<p>before <strong>foo</strong> after</p>"]
+				["before __foo__ after", "<p>before <strong>foo</strong> after</p>"],
+				["__Lehrer_in__", "<p><strong>Lehrer_in</strong></p>"],
+				["__Mitarbeiter_innen__", "<p><strong>Mitarbeiter_innen</strong></p>"],
+				["__Bürger_innen__", "<p><strong>Bürger_innen</strong></p>"],
+				[
+					"Liebe __Mitarbeiter_innen__",
+					"<p>Liebe <strong>Mitarbeiter_innen</strong></p>"
+				]
 			])("converts %s to bold mark when pasting", (input, expected) => {
 				expect(applyPasteRule(schema, rule, input)).toBe(expected);
 			});
