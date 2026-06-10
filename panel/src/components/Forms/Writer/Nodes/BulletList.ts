@@ -1,4 +1,8 @@
-import Node from "../Node";
+import type { InputRule } from "prosemirror-inputrules";
+import type { NodeSpec } from "prosemirror-model";
+import type { Command } from "prosemirror-state";
+import type { ExtensionCommand } from "../Extension";
+import Node, { type NodeContext } from "../Node";
 
 export default class BulletList extends Node {
 	get button() {
@@ -11,15 +15,15 @@ export default class BulletList extends Node {
 		};
 	}
 
-	commands({ type, schema, utils }) {
+	commands({ type, schema, utils }: NodeContext): ExtensionCommand {
 		return () => utils.toggleList(type, schema.nodes.listItem);
 	}
 
-	inputRules({ type, utils }) {
+	inputRules({ type, utils }: NodeContext): InputRule[] {
 		return [utils.wrappingInputRule(/^\s*([-+*])\s$/, type)];
 	}
 
-	keys({ type, schema, utils }) {
+	keys({ type, schema, utils }: NodeContext): Record<string, Command> {
 		return {
 			"Shift-Ctrl-8": utils.toggleList(type, schema.nodes.listItem)
 		};
@@ -29,7 +33,7 @@ export default class BulletList extends Node {
 		return "bulletList";
 	}
 
-	get schema() {
+	get schema(): NodeSpec {
 		return {
 			content: "listItem+",
 			group: "block",

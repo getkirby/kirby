@@ -4,7 +4,7 @@ import type { Attrs, NodeType } from "prosemirror-model";
 export default function nodeInputRule(
 	regexp: RegExp,
 	type: NodeType,
-	getAttrs: Attrs | ((match: RegExpMatchArray) => Attrs)
+	getAttrs: Attrs | ((match: RegExpMatchArray) => Attrs) = {}
 ): InputRule {
 	return new InputRule(regexp, (state, match, start, end) => {
 		const attrs = getAttrs instanceof Function ? getAttrs(match) : getAttrs;

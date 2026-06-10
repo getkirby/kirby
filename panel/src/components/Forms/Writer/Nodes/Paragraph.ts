@@ -1,4 +1,5 @@
-import Node from "../Node";
+import type { NodeSpec } from "prosemirror-model";
+import Node, { type NodeContext } from "../Node";
 
 export default class Paragraph extends Node {
 	get button() {
@@ -11,24 +12,27 @@ export default class Paragraph extends Node {
 		};
 	}
 
-	commands({ utils, schema, type }) {
+	commands({ utils, schema, type }: NodeContext) {
 		return {
 			paragraph: () => {
-				if (this.editor.activeNodes.includes("bulletList")) {
+				// TODO: Remove type cast once Editor.js migrated to TS
+				const activeNodes = this.editor.activeNodes as string[];
+
+				if (activeNodes.includes("bulletList")) {
 					return utils.toggleList(
 						schema.nodes.bulletList,
 						schema.nodes.listItem
 					);
 				}
 
-				if (this.editor.activeNodes.includes("orderedList")) {
+				if (activeNodes.includes("orderedList")) {
 					return utils.toggleList(
 						schema.nodes.orderedList,
 						schema.nodes.listItem
 					);
 				}
 
-				if (this.editor.activeNodes.includes("quote")) {
+				if (activeNodes.includes("quote")) {
 					return utils.toggleWrap(schema.nodes.quote);
 				}
 
@@ -37,21 +41,17 @@ export default class Paragraph extends Node {
 		};
 	}
 
-	get schema() {
+	get name() {
+		return "paragraph";
+	}
+
+	get schema(): NodeSpec {
 		return {
 			content: "inline*",
 			group: "block",
 			draggable: false,
-			parseDOM: [
-				{
-					tag: "p"
-				}
-			],
+			parseDOM: [{ tag: "p" }],
 			toDOM: () => ["p", 0]
 		};
-	}
-
-	get name() {
-		return "paragraph";
 	}
 }

@@ -1,8 +1,12 @@
-import Node from "../Node";
+import type { InputRule } from "prosemirror-inputrules";
+import type { NodeSpec } from "prosemirror-model";
+import type { Command } from "prosemirror-state";
+import type { Button, ExtensionCommand } from "../Extension";
+import Node, { type NodeContext } from "../Node";
 
-export default class Heading extends Node {
+export default class Heading extends Node<{ levels: number[] }> {
 	get button() {
-		const buttons = this.options.levels.map((level) => ({
+		const buttons: Button[] = this.options.levels.map((level) => ({
 			id: `h${level}`,
 			command: `h${level}`,
 			icon: `h${level}`,
@@ -12,14 +16,17 @@ export default class Heading extends Node {
 			when: ["heading", "paragraph"]
 		}));
 
-		// last button has separator line afterwards
 		buttons[buttons.length - 1].separator = true;
 
 		return buttons;
 	}
 
-	commands({ type, schema, utils }) {
-		let commands = {
+	commands({
+		type,
+		schema,
+		utils
+	}: NodeContext): Record<string, ExtensionCommand> {
+		const commands: Record<string, ExtensionCommand> = {
 			toggleHeading: (attrs) =>
 				utils.toggleBlockType(type, schema.nodes.paragraph, attrs)
 		};
@@ -38,25 +45,23 @@ export default class Heading extends Node {
 		};
 	}
 
-	inputRules({ type, utils }) {
+	inputRules({ type, utils }: NodeContext): InputRule[] {
 		return this.options.levels.map((level) =>
 			utils.textblockTypeInputRule(
-				new RegExp(`^(#{${level}})\\s$`),
+				new RegExp(`^#{${level}}\\s$`),
 				type,
 				() => ({ level })
 			)
 		);
 	}
 
-	keys({ type, utils }) {
+	keys({ type, utils }: NodeContext): Record<string, Command> {
 		return this.options.levels.reduce(
 			(items, level) => ({
 				...items,
-				...{
-					[`Shift-Ctrl-${level}`]: utils.setBlockType(type, { level })
-				}
+				[`Shift-Ctrl-${level}`]: utils.setBlockType(type, { level })
 			}),
-			{}
+			{} as Record<string, Command>
 		);
 	}
 
@@ -64,7 +69,7 @@ export default class Heading extends Node {
 		return "heading";
 	}
 
-	get schema() {
+	get schema(): NodeSpec {
 		return {
 			attrs: {
 				level: {

@@ -1,6 +1,7 @@
+import type { NodeSpec } from "prosemirror-model";
 import Node from "../Node";
 
-export default class Doc extends Node {
+export default class Doc extends Node<{ inline: boolean }> {
 	get defaults() {
 		return {
 			inline: false
@@ -11,7 +12,7 @@ export default class Doc extends Node {
 		return "doc";
 	}
 
-	get schema() {
+	get schema(): NodeSpec {
 		return {
 			content: this.options.inline ? "inline*" : "block+"
 		};
