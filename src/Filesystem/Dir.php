@@ -44,6 +44,10 @@ class Dir
 		'@eaDir'
 	];
 
+	/**
+	 * @deprecated 5.5.0 Will be changed to `Kirby\Cms\Inventory::$numSeparator` in v6
+	 * @todo Migrate in v6
+	 */
 	public static string $numSeparator = '_';
 
 	/**
