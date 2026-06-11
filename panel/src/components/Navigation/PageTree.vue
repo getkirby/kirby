@@ -115,6 +115,11 @@ export default {
 				}
 
 				await this.open(item);
+
+				if (!tree.$refs[value]?.[0]) {
+					return;
+				}
+
 				tree = tree.$refs[value][0];
 			}
 
