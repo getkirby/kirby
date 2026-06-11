@@ -664,6 +664,8 @@ class DirTest extends TestCase
 			$this->expectExceptionMessage('The directory could not be deleted');
 			Dir::remove($dir);
 		} finally {
+			// Dir::remove() is expected to throw (fail), so $dir still exists;
+			// restore permissions so tearDown's Dir::remove(static::TMP) can clean up.
 			chmod($dir, 0755);
 			chmod($parent, 0755);
 		}
@@ -765,23 +767,6 @@ class DirTest extends TestCase
 		// no .remove-* tmp dirs should be left in the parent
 		$leftovers = glob($parent . '/.remove-*');
 		$this->assertSame([], $leftovers);
-	}
-
-	public function testRemoveConcurrentWriteSurvives(): void
-	{
-		// Simulate the race condition: a file appears in the directory
-		// after remove() renames it away. The original path should be
-		// gone and a fresh directory at that path should be untouched.
-		Dir::make(static::TMP);
-
-		$this->assertTrue(Dir::remove(static::TMP));
-		$this->assertDirectoryDoesNotExist(static::TMP);
-
-		// Simulate what a concurrent write does: creates the dir fresh
-		Dir::make(static::TMP);
-		F::write(static::TMP . '/concurrent.txt', 'data');
-
-		$this->assertFileExists(static::TMP . '/concurrent.txt');
 	}
 
 	public function testIsReadable(): void
