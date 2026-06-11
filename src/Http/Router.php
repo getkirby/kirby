@@ -68,7 +68,7 @@ class Router
 			$patterns = A::wrap($props['pattern']);
 			$methods  = A::map(
 				explode('|', strtoupper($props['method'] ?? 'GET')),
-				'trim'
+				trim(...)
 			);
 
 			if ($methods === ['ALL']) {

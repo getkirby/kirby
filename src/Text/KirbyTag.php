@@ -194,7 +194,7 @@ class KirbyTag
 		// convert it to arrays of keys and values
 		$chunks = array_chunk($search, 2);
 		$keys   = array_column($chunks, 0);
-		$values = array_map('trim', array_column($chunks, 1));
+		$values = array_map(trim(...), array_column($chunks, 1));
 
 		// ensure that there is a value for each key
 		// otherwise combining won't work

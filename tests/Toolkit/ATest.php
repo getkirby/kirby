@@ -356,7 +356,7 @@ class ATest extends TestCase
 		$array    = [' A ', 'B ', ' C'];
 		$expected = ['A', 'B', 'C'];
 
-		$this->assertSame($expected, A::map($array, 'trim'));
+		$this->assertSame($expected, A::map($array, trim(...)));
 	}
 
 	public function testMapWithClassMethod(): void
