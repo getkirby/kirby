@@ -1,4 +1,10 @@
-import type { App, Plugin, ComponentOptions, ConcreteComponent } from "vue";
+import type {
+	App,
+	ComponentOptions,
+	ComponentPublicInstance,
+	ConcreteComponent,
+	Plugin
+} from "vue";
 import isComponent from "@/helpers/isComponent";
 import { isObject } from "@/helpers/object";
 
@@ -200,7 +206,7 @@ export function resolveComponentRender(component: Component): Component {
  */
 export type PanelPlugins = Partial<{
 	components: Record<string, ComponentOptions>;
-	created: ((app: ConcreteComponent) => void)[];
+	created: ((instance: ComponentPublicInstance) => void)[];
 	icons: Record<string, string>;
 	login: ComponentOptions;
 	textareaButtons: Record<string, unknown>;
