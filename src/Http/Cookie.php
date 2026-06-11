@@ -170,7 +170,7 @@ class Cookie
 		// prefer the option if it was set, otherwise use the value
 		// set directly to this class (for backwards-compatibility)
 		// or fall back to the fixed default set directly with the prop
-		$key = App::instance(lazy: true)?->option('cookie.key') ?? static::$key;
+		$key = App::instance(lazy: true)?->option('cookie.key') ?: static::$key;
 
 		return hash_hmac('sha1', $value, $key);
 	}
