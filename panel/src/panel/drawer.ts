@@ -26,7 +26,7 @@ export default function Drawer(panel: Panel) {
 	const parent = Modal(panel, "drawer", defaults());
 
 	// shortcut to submit drawers
-	panel.events.on("drawer.save", (e) => {
+	panel.events.on("drawer.save", (e?: Event) => {
 		e?.preventDefault();
 		panel.drawer.submit();
 	});

@@ -23,7 +23,7 @@ export type DialogOptions = DialogState & {
  */
 export default function Dialog(panel: Panel) {
 	// shortcut to submit dialogs
-	panel.events.on("dialog.save", (e) => {
+	panel.events.on("dialog.save", (e?: Event) => {
 		e?.preventDefault();
 		panel.dialog.submit();
 	});

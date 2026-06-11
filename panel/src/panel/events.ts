@@ -261,9 +261,9 @@ export default function (panel: Panel) {
 		/**
 		 * Proxy for mitt's off method
 		 */
-		off: emitter.off as (
+		off: emitter.off as <E = unknown>(
 			type: string,
-			handler?: (event?: Event) => void
+			handler?: (event?: E) => void
 		) => void,
 
 		/**
@@ -276,7 +276,10 @@ export default function (panel: Panel) {
 		/**
 		 * Proxy for mitt's on method
 		 */
-		on: emitter.on as (type: string, handler?: (event?: Event) => void) => void,
+		on: emitter.on as <E = unknown>(
+			type: string,
+			handler?: (event?: E) => void
+		) => void,
 
 		/**
 		 * The Panel is online again after
