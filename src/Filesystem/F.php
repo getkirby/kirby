@@ -1011,8 +1011,9 @@ class F
 	): bool {
 		// ensure the parent directory exists so `fopen('c+')`
 		// can create the file if it does not yet exist
-		if (is_dir(dirname($file)) === false) {
-			if (Dir::make(dirname($file)) === false) {
+		$dir = dirname($file);
+		if (is_dir($dir) === false) {
+			if (Dir::make($dir) === false) {
 				return false; // @codeCoverageIgnore
 			}
 		}
@@ -1054,8 +1055,7 @@ class F
 				return false; // @codeCoverageIgnore
 			}
 
-			fflush($handle);
-			return true;
+			return fflush($handle);
 		} finally {
 			// `fclose()` releases the `flock()` automatically
 			fclose($handle);
