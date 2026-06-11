@@ -8,15 +8,20 @@ use Kirby\TestCase;
 class CookieTest extends TestCase
 {
 	protected $cookieKey;
+	protected array $cookies;
 
 	public function setUp(): void
 	{
 		$this->cookieKey = Cookie::$key;
+		$this->cookies   = $_COOKIE;
 	}
 
 	public function tearDown(): void
 	{
 		Cookie::$key = $this->cookieKey;
+		$_COOKIE     = $this->cookies;
+
+		App::destroy();
 	}
 
 	public function testKey()
@@ -24,6 +29,26 @@ class CookieTest extends TestCase
 		$this->assertSame('KirbyHttpCookieKey', Cookie::$key);
 		Cookie::$key = 'KirbyToolkitCookieKey';
 		$this->assertSame('KirbyToolkitCookieKey', Cookie::$key);
+	}
+
+	public function testKeyFromAppOption()
+	{
+		Cookie::set('foo', 'bar');
+		$this->assertSame('171fb1229817374e4110110384cb6be060d97351+bar', $_COOKIE['foo']);
+
+		new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'options' => [
+				'cookie' => [
+					'key' => 'VerySecureLongRandomString'
+				]
+			]
+		]);
+
+		Cookie::set('foo', 'bar');
+		$this->assertSame('bead491a9fad2a1c2cc5d337a0a42a9276ac329d+bar', $_COOKIE['foo']);
 	}
 
 	public function testLifetime()
