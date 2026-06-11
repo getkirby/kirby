@@ -7,6 +7,7 @@ import Drag from "./drag";
 import Drawer from "./drawer";
 import Dropdown from "./dropdown.js";
 import Events from "./events";
+import html from "./html";
 import Language from "./language";
 import Notification from "./notification";
 import Observers from "./observers";
@@ -105,6 +106,7 @@ export default {
 		this.dialog = Dialog(this);
 
 		// methods
+		this.html = html;
 		this.redirect = redirect;
 		this.reload = this.view.reload.bind(this.view);
 
