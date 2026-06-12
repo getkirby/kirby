@@ -89,7 +89,7 @@ class ViewButtons
 			}
 		}
 
-		return array_values($buttons);
+		return $buttons;
 	}
 
 	/**

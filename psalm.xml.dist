@@ -67,6 +67,9 @@
 		<UndefinedMagicMethod errorLevel="suppress" />
 		<UndefinedMagicPropertyFetch errorLevel="suppress" />
 		<UndefinedMagicPropertyAssignment errorLevel="suppress" />
+
+		<!-- Level 4 preparation -->
+		<RedundantFunctionCall errorLevel="error" />
 	</issueHandlers>
 
 	<plugins>
