@@ -723,8 +723,10 @@ class A
 	 */
 	public static function nest(array $array, array $ignore = []): array
 	{
-		// convert a simple ignore list to a nested $key => true array
+		// convert a simple ignore list
+		// to a nested $key => true array
 		if (isset($ignore[0]) === true) {
+			/** @psalm-suppress TooManyArguments */
 			$ignore = array_map(fn () => true, array_flip($ignore));
 			$ignore = A::nest($ignore);
 		}
