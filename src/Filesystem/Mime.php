@@ -180,9 +180,7 @@ class Mime
 				return $mode($file, $mime, $extension) ?: null;
 			}
 
-			if (is_string($mode) === true) {
-				return $mode;
-			}
+			return $mode;
 		}
 
 		return $mime;

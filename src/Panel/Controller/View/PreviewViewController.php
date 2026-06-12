@@ -128,28 +128,27 @@ class PreviewViewController extends ViewController
 			$redirect = new Uri($redirect);
 
 			// Look up new model and redirect to its preview
-			if ($model = $this->modelFromUri($redirect)) {
-				$url = $model->panel()->url() . '/' . $this->path();
-				$url = new Uri($url);
+			$model = $this->modelFromUri($redirect);
+			$url   = $model->panel()->url() . '/' . $this->path();
+			$url   = new Uri($url);
 
-				// Preserve the redirect URL's query and params
-				// and inject them into the new URL
-				unset(
-					$redirect->query()->_token,
-					$redirect->query()->_version,
-					$redirect->query()->_preview
-				);
+			// Preserve the redirect URL's query and params
+			// and inject them into the new URL
+			unset(
+				$redirect->query()->_token,
+				$redirect->query()->_version,
+				$redirect->query()->_preview
+			);
 
-				if ($redirect->query()->isNotEmpty() === true) {
-					$url->query()->_query = $redirect->query()->toString();
-				}
-
-				if ($redirect->params()->isNotEmpty() === true) {
-					$url->query()->_params = $redirect->params()->toString();
-				}
-
-				return $url->toString();
+			if ($redirect->query()->isNotEmpty() === true) {
+				$url->query()->_query = $redirect->query()->toString();
 			}
+
+			if ($redirect->params()->isNotEmpty() === true) {
+				$url->query()->_params = $redirect->params()->toString();
+			}
+
+			return $url->toString();
 		}
 
 		return null;

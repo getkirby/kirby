@@ -473,7 +473,7 @@ class App
 		if (strpos($name, '/') === false) {
 			$site   = $this->controllerLookup('site', $contentType);
 			$site ??= $this->controllerLookup('site');
-			$data   = (array)$site?->call($this, $arguments) ?? [];
+			$data   = (array)$site?->call($this, $arguments);
 		}
 
 		// try to find a specific representation controller
@@ -484,7 +484,7 @@ class App
 
 		return [
 			...$data,
-			...(array)$controller?->call($this, $arguments) ?? []
+			...(array)$controller?->call($this, $arguments)
 		];
 	}
 
@@ -619,7 +619,7 @@ class App
 				Str::substr($acceptedLocale, 0, $precision);
 
 			// Find exact locale matches (e.g. en_GB => en_GB)
-			if ($language = $languages->filter(fn ($language) => $match($language, 5))?->first()) {
+			if ($language = $languages->filter(fn ($language) => $match($language, 5))->first()) {
 				return $language;
 			}
 
@@ -629,7 +629,7 @@ class App
 			}
 
 			// Find broad locale matches (e.g. en_GB => en)
-			if ($language = $languages->filter(fn ($language) => $match($language, 2))?->first()) {
+			if ($language = $languages->filter(fn ($language) => $match($language, 2))->first()) {
 				return $language;
 			}
 		}
@@ -1619,7 +1619,7 @@ class App
 		}
 
 		if ($this->multilang() === true) {
-			$languageSmartypants = $this->language()->smartypants() ?? [];
+			$languageSmartypants = $this->language()->smartypants();
 
 			if ($languageSmartypants !== []) {
 				$options = [...$options, ...$languageSmartypants];

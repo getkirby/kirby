@@ -389,12 +389,9 @@ class Pages extends Collection
 
 		foreach ($this->data as $pageKey => $page) {
 			$index->data[$pageKey] = $page;
-			$pageIndex = $page->index($drafts);
 
-			if ($pageIndex) {
-				foreach ($pageIndex as $childKey => $child) {
-					$index->data[$childKey] = $child;
-				}
+			foreach ($page->index($drafts) as $childKey => $child) {
+				$index->data[$childKey] = $child;
 			}
 		}
 
@@ -464,17 +461,15 @@ class Pages extends Collection
 		// merge an array
 		if (is_array($args[0]) === true) {
 			$collection = clone $this;
+
 			foreach ($args[0] as $arg) {
 				$collection = $collection->merge($arg);
 			}
+
 			return $collection;
 		}
 
-		if (is_string($args[0]) === true) {
-			return $this->merge(App::instance()->site()->find($args[0]));
-		}
-
-		return $this;
+		return $this->merge(App::instance()->site()->find($args[0]));
 	}
 
 	/**

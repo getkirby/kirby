@@ -53,7 +53,7 @@ class Events
 	{
 		// get all hooks for the event name
 		$name   = $event->name();
-		$hooks  = $this->app->extensions('hooks') ?? [];
+		$hooks  = $this->app->extensions('hooks');
 		$result = $hooks[$name] ?? [];
 
 		// get all hooks for the event name wildcards

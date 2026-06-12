@@ -34,10 +34,10 @@ class PageMoveDialogController extends PageDialogController
 		$parent = $this->page->parentModel();
 
 		if (Uuids::enabled() === false) {
-			return $parent?->id() ?? '/';
+			return $parent->id() ?? '/';
 		}
 
-		return $parent?->uuid()->toString() ?? 'site://';
+		return $parent->uuid()->toString();
 	}
 
 	public function submit(): array|true

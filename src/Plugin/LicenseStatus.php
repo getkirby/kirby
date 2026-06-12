@@ -63,8 +63,7 @@ class LicenseStatus implements Stringable
 			return new static(...$status);
 		}
 
-		$status   = SystemLicenseStatus::from($status ?? 'unknown');
-		$status ??= SystemLicenseStatus::Unknown;
+		$status = SystemLicenseStatus::from($status ?? 'unknown');
 
 		return new static(
 			value: $status->value,

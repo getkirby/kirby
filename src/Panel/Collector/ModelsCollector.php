@@ -130,7 +130,7 @@ abstract class ModelsCollector
 			$models = $this->flip($models);
 		}
 
-		return $this->models ??= $models;
+		return $this->models = $models;
 	}
 
 	public function pagination(): Pagination

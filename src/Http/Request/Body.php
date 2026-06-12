@@ -84,10 +84,7 @@ class Body implements Stringable
 		if (str_contains($contents, '=') === true) {
 			// try to parse the body as query string
 			parse_str($contents, $parsed);
-
-			if (is_array($parsed) === true) {
-				return $this->data = $parsed;
-			}
+			return $this->data = $parsed;
 		}
 
 		return $this->data = [];

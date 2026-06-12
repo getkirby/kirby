@@ -387,7 +387,7 @@ class BlocksField extends InputField
 					if (isset($forms[$type]) === false) {
 						try {
 							$fieldset     = $this->fieldset($type);
-							$fields       = $fieldset->fields() ?? [];
+							$fields       = $fieldset->fields();
 							$forms[$type] = $this->form($fields);
 						} catch (Throwable) {
 							// skip invalid blocks

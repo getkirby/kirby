@@ -51,12 +51,8 @@ class Items extends Collection
 		array|null $items = null,
 		array $params = []
 	): static {
-		if (empty($items) === true || is_array($items) === false) {
+		if ($items === null || $items === []) {
 			return new static();
-		}
-
-		if (is_array($params) === false) {
-			throw new InvalidArgumentException(message: 'Invalid item options');
 		}
 
 		// create a new collection of blocks

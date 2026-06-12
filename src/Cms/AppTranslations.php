@@ -21,7 +21,7 @@ trait AppTranslations
 	protected function i18n(): void
 	{
 		I18n::$load = function ($locale): array {
-			$data = $this->translation($locale)?->data() ?? [];
+			$data = $this->translation($locale)->data();
 
 			// inject translations from the current language
 			if (
@@ -157,18 +157,16 @@ trait AppTranslations
 		$translations = $this->extensions['translations'] ?? [];
 
 		// injects languages translations
-		if ($languages = $this->languages()) {
-			foreach ($languages as $language) {
-				$languageCode         = $language->code();
-				$languageTranslations = $language->translations();
+		foreach ($this->languages() as $language) {
+			$languageCode         = $language->code();
+			$languageTranslations = $language->translations();
 
-				// merges language translations with extensions translations
-				if (empty($languageTranslations) === false) {
-					$translations[$languageCode] = [
-						...$translations[$languageCode] ?? [],
-						...$languageTranslations
-					];
-				}
+			// merges language translations with extensions translations
+			if (empty($languageTranslations) === false) {
+				$translations[$languageCode] = [
+					...$translations[$languageCode] ?? [],
+					...$languageTranslations
+				];
 			}
 		}
 

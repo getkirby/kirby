@@ -70,9 +70,10 @@ class LanguageRules
 
 		// if language was the default language and got demoted…
 		if (
-			$oldLanguage?->isDefault() === true &&
+			$oldLanguage !== null &&
+			$oldLanguage->isDefault() === true &&
 			$newLanguage->isDefault() === false &&
-			$kirby->defaultLanguage()->code() === $oldLanguage?->code()
+			$kirby->defaultLanguage()->code() === $oldLanguage->code()
 		) {
 			// ensure another language has already been set as default
 			throw new LogicException(
