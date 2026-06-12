@@ -94,7 +94,9 @@ class Site extends Model
 			'title'       => $model['title'],
 			'permissions' => [
 				...$props['permissions'],
-				'preview' => $this->model->homePage()?->permissions()->can('preview') === true,
+				'preview' =>
+					$this->model->permissions()->can('preview') === true &&
+					$this->model->homePage()?->permissions()->can('preview') === true,
 			],
 		];
 	}

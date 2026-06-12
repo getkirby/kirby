@@ -461,6 +461,7 @@ class ModelTest extends TestCase
 			'permissions' => [
 				'access' => false,
 				'changeTitle' => false,
+				'preview' => false,
 				'update' => false,
 			],
 			'text' => '',
