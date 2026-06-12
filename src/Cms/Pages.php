@@ -97,7 +97,7 @@ class Pages extends Collection
 
 	/**
 	 * Returns all children for each page in the array
-	 * @return \Kirby\Cms\Pages<TValue>
+	 * @return static<TValue>
 	 */
 	public function children(): static
 	{
@@ -175,7 +175,7 @@ class Pages extends Collection
 
 	/**
 	 * Fetch all drafts for all pages in the collection
-	 * @return \Kirby\Cms\Pages<TValue>
+	 * @return static<TValue>
 	 */
 	public function drafts(): static
 	{
@@ -374,6 +374,7 @@ class Pages extends Collection
 	/**
 	 * Create a recursive flat index of all
 	 * pages and subpages, etc.
+	 * @return static<TValue>
 	 */
 	public function index(bool $drafts = false): static
 	{
@@ -406,7 +407,7 @@ class Pages extends Collection
 
 	/**
 	 * Returns all listed pages in the collection
-	 * @return \Kirby\Cms\Pages<TValue>
+	 * @return static<TValue>
 	 */
 	public function listed(): static
 	{
@@ -415,7 +416,7 @@ class Pages extends Collection
 
 	/**
 	 * Returns all unlisted pages in the collection
-	 * @return \Kirby\Cms\Pages<TValue>
+	 * @return static<TValue>
 	 */
 	public function unlisted(): static
 	{
@@ -507,7 +508,7 @@ class Pages extends Collection
 
 	/**
 	 * Returns all listed and unlisted pages in the collection
-	 * @return \Kirby\Cms\Pages<TValue>
+	 * @return static<TValue>
 	 */
 	public function published(): static
 	{

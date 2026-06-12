@@ -192,7 +192,7 @@ class Files extends Collection
 	/**
 	 * Returns the collection sorted by
 	 * the sort number and the filename
-	 * @return \Kirby\Cms\Files<TValue>
+	 * @return static<TValue>
 	 */
 	public function sorted(): static
 	{
