@@ -46,6 +46,11 @@
 		<UnusedFunctionCall errorLevel="suppress" />
 		<UnusedVariable errorLevel="suppress" />
 		<UndefinedClass errorLevel="suppress" />
+
+		<!-- Don't warn about undefined magic methods/properties as Kirby resolves much of its API dynamically through __call/__callStatic/__get/__set, which Psalm cannot follow statically -->
+		<UndefinedMagicMethod errorLevel="suppress" />
+		<UndefinedMagicPropertyFetch errorLevel="suppress" />
+		<UndefinedMagicPropertyAssignment errorLevel="suppress" />
 	</issueHandlers>
 
 	<plugins>
