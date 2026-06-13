@@ -9,6 +9,13 @@ namespace Kirby\Session;
 abstract class SessionStore
 {
 	/**
+	 * Deletes all expired sessions
+	 *
+	 * Needs to throw an Exception on error.
+	 */
+	abstract public function collectGarbage(): void;
+
+	/**
 	 * Creates a new session ID with the given expiry time
 	 *
 	 * Needs to make sure that the session does not already exist
@@ -18,6 +25,16 @@ abstract class SessionStore
 	 * @return string Randomly generated session ID (without timestamp)
 	 */
 	abstract public function createId(int $expiryTime): string;
+
+	/**
+	 * Deletes the given session
+	 *
+	 * Needs to throw an Exception on error.
+	 *
+	 * @param int $expiryTime Timestamp
+	 * @param string $id Session ID
+	 */
+	abstract public function destroy(int $expiryTime, string $id): void;
 
 	/**
 	 * Checks if the given session exists
@@ -30,24 +47,14 @@ abstract class SessionStore
 	abstract public function exists(int $expiryTime, string $id): bool;
 
 	/**
-	 * Locks the given session exclusively
+	 * Securely generates a random session ID
 	 *
-	 * Needs to throw an Exception on error.
-	 *
-	 * @param int $expiryTime Timestamp
-	 * @param string $id Session ID
+	 * @return string Random hex string with 20 bytes
 	 */
-	abstract public function lock(int $expiryTime, string $id): void;
-
-	/**
-	 * Removes all locks on the given session
-	 *
-	 * Needs to throw an Exception on error.
-	 *
-	 * @param int $expiryTime Timestamp
-	 * @param string $id Session ID
-	 */
-	abstract public function unlock(int $expiryTime, string $id): void;
+	protected static function generateId(): string
+	{
+		return bin2hex(random_bytes(10));
+	}
 
 	/**
 	 * Returns the stored session data of the given session
@@ -58,6 +65,16 @@ abstract class SessionStore
 	 * @param string $id Session ID
 	 */
 	abstract public function get(int $expiryTime, string $id): string;
+
+	/**
+	 * Locks the given session exclusively
+	 *
+	 * Needs to throw an Exception on error.
+	 *
+	 * @param int $expiryTime Timestamp
+	 * @param string $id Session ID
+	 */
+	abstract public function lock(int $expiryTime, string $id): void;
 
 	/**
 	 * Stores data to the given session
@@ -72,29 +89,12 @@ abstract class SessionStore
 	abstract public function set(int $expiryTime, string $id, string $data): void;
 
 	/**
-	 * Deletes the given session
+	 * Removes all locks on the given session
 	 *
 	 * Needs to throw an Exception on error.
 	 *
 	 * @param int $expiryTime Timestamp
 	 * @param string $id Session ID
 	 */
-	abstract public function destroy(int $expiryTime, string $id): void;
-
-	/**
-	 * Deletes all expired sessions
-	 *
-	 * Needs to throw an Exception on error.
-	 */
-	abstract public function collectGarbage(): void;
-
-	/**
-	 * Securely generates a random session ID
-	 *
-	 * @return string Random hex string with 20 bytes
-	 */
-	protected static function generateId(): string
-	{
-		return bin2hex(random_bytes(10));
-	}
+	abstract public function unlock(int $expiryTime, string $id): void;
 }

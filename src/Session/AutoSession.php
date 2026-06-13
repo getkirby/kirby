@@ -51,6 +51,38 @@ class AutoSession
 	}
 
 	/**
+	 * Deletes all expired sessions
+	 *
+	 * If the `gcInterval` is configured, this is done automatically
+	 * when initializing the AutoSession class
+	 */
+	public function collectGarbage(): void
+	{
+		$this->sessions->collectGarbage();
+	}
+
+	/**
+	 * Creates a new empty session that is *not* automatically
+	 * transmitted to the client;
+	 * Useful for custom applications like a password reset link
+	 * Does *not* affect the automatic session
+	 *
+	 * @param array $options Optional additional options:
+	 *                       - `startTime`: Time the session starts being valid (date string or timestamp); defaults to `now`
+	 *                       - `expiryTime`: Time the session expires (date string or timestamp); defaults to `+ 2 hours`
+	 *                       - `timeout`: Activity timeout in seconds (integer or false for none); defaults to `1800` (half an hour)
+	 *                       - `renewable`: Should it be possible to extend the expiry date?; defaults to `true`
+	 */
+	public function createManually(array $options = []): Session
+	{
+		// only ever allow manual transmission mode
+		// to prevent overwriting our "auto" session
+		$options['mode'] = 'manual';
+
+		return $this->sessions->create($options);
+	}
+
+	/**
 	 * Returns the automatic session
 	 *
 	 * @param array $options Optional additional options:
@@ -130,27 +162,6 @@ class AutoSession
 	}
 
 	/**
-	 * Creates a new empty session that is *not* automatically
-	 * transmitted to the client;
-	 * Useful for custom applications like a password reset link
-	 * Does *not* affect the automatic session
-	 *
-	 * @param array $options Optional additional options:
-	 *                       - `startTime`: Time the session starts being valid (date string or timestamp); defaults to `now`
-	 *                       - `expiryTime`: Time the session expires (date string or timestamp); defaults to `+ 2 hours`
-	 *                       - `timeout`: Activity timeout in seconds (integer or false for none); defaults to `1800` (half an hour)
-	 *                       - `renewable`: Should it be possible to extend the expiry date?; defaults to `true`
-	 */
-	public function createManually(array $options = []): Session
-	{
-		// only ever allow manual transmission mode
-		// to prevent overwriting our "auto" session
-		$options['mode'] = 'manual';
-
-		return $this->sessions->create($options);
-	}
-
-	/**
 	 * Returns the specified Session object
 	 * @since 3.3.1
 	 *
@@ -159,16 +170,5 @@ class AutoSession
 	public function getManually(string $token): Session
 	{
 		return $this->sessions->get($token, 'manual');
-	}
-
-	/**
-	 * Deletes all expired sessions
-	 *
-	 * If the `gcInterval` is configured, this is done automatically
-	 * when initializing the AutoSession class
-	 */
-	public function collectGarbage(): void
-	{
-		$this->sessions->collectGarbage();
 	}
 }

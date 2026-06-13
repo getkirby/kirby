@@ -122,178 +122,6 @@ class Session
 	}
 
 	/**
-	 * Gets the session token or null if the session doesn't have a token yet
-	 */
-	public function token(): string|null
-	{
-		if ($this->tokenExpiry !== null) {
-			$token = $this->tokenExpiry . '.' . $this->tokenId;
-
-			if (is_string($this->tokenKey) === true) {
-				$token .= '.' . $this->tokenKey;
-			}
-
-			return $token;
-		}
-
-		return null;
-	}
-
-	/**
-	 * Gets or sets the transmission mode
-	 * Setting only works for new sessions that haven't been transmitted yet
-	 *
-	 * @param string|null $mode Optional new transmission mode
-	 * @return string Transmission mode
-	 */
-	public function mode(string|null $mode = null): string
-	{
-		if ($mode !== null) {
-			// only allow this if this is a new session, otherwise the change
-			// might not be applied correctly to the current request
-			if ($this->token() !== null) {
-				throw new InvalidArgumentException(
-					data: ['method' => 'Session::mode', 'argument' => '$mode'],
-					translate: false
-				);
-			}
-
-			$this->mode = $mode;
-		}
-
-		return $this->mode;
-	}
-
-	/**
-	 * Gets the session start time
-	 *
-	 * @return int Timestamp
-	 */
-	public function startTime(): int
-	{
-		return $this->startTime;
-	}
-
-	/**
-	 * Gets or sets the session expiry time
-	 * Setting the expiry time also updates the duration and regenerates the session token
-	 *
-	 * @param string|int|null $expiryTime Optional new expiry timestamp or time string to set
-	 * @return int Timestamp
-	 */
-	public function expiryTime(string|int|null $expiryTime = null): int
-	{
-		if ($expiryTime !== null) {
-			// convert to a timestamp
-			$expiryTime = static::timeToTimestamp($expiryTime);
-			$now        = time();
-
-			// verify that the expiry time is not in the past
-			if ($expiryTime <= $now) {
-				throw new InvalidArgumentException(
-					data: [
-						'method'   => 'Session::expiryTime',
-						'argument' => '$expiryTime'
-					],
-					translate: false
-				);
-			}
-
-			$this->prepareForWriting();
-			$this->expiryTime = $expiryTime;
-			$this->duration   = $expiryTime - $now;
-			$this->regenerateTokenIfNotNew();
-		}
-
-		return $this->expiryTime;
-	}
-
-	/**
-	 * Gets or sets the session duration
-	 * Setting the duration also updates the expiry time and regenerates the session token
-	 *
-	 * @param int|null $duration Optional new duration in seconds to set
-	 * @return int Number of seconds
-	 */
-	public function duration(int|null $duration = null): int
-	{
-		if ($duration !== null) {
-			// verify that the duration is at least 1 second
-			if ($duration < 1) {
-				throw new InvalidArgumentException(
-					data: [
-						'method'   => 'Session::duration',
-						'argument' => '$duration'
-					],
-					translate: false
-				);
-			}
-
-			$this->prepareForWriting();
-			$this->duration   = $duration;
-			$this->expiryTime = time() + $duration;
-			$this->regenerateTokenIfNotNew();
-		}
-
-		return $this->duration;
-	}
-
-	/**
-	 * Gets or sets the session timeout
-	 *
-	 * @param int|false|null $timeout Optional new timeout to set or false to disable timeout
-	 * @return int|false Number of seconds or false for "no timeout"
-	 */
-	public function timeout(int|false|null $timeout = null): int|false
-	{
-		if ($timeout !== null) {
-			// verify that the timeout is at least 1 second
-			if (is_int($timeout) === true && $timeout < 1) {
-				throw new InvalidArgumentException(
-					data: [
-						'method'   => 'Session::timeout',
-						'argument' => '$timeout'
-					],
-					translate: false
-				);
-			}
-
-			$this->prepareForWriting();
-			$this->timeout      = $timeout;
-			$this->lastActivity = is_int($timeout) ? time() : null;
-		}
-
-		return $this->timeout;
-	}
-
-	/**
-	 * Gets or sets the renewable flag
-	 * Automatically renews the session if renewing gets enabled
-	 *
-	 * @param bool|null $renewable Optional new renewable flag to set
-	 */
-	public function renewable(bool|null $renewable = null): bool
-	{
-		if ($renewable !== null) {
-			$this->prepareForWriting();
-			$this->renewable = $renewable;
-			$this->autoRenew();
-		}
-
-		return $this->renewable;
-	}
-
-	/**
-	 * Returns the session data object
-	 *
-	 * @return \Kirby\Session\SessionData
-	 */
-	public function data()
-	{
-		return $this->data;
-	}
-
-	/**
 	 * Magic call method that proxies all calls to session data methods
 	 *
 	 * @param string $name Method name (one of set, increment, decrement, get, pull, remove, clear)
@@ -320,6 +148,36 @@ class Session
 		}
 
 		return $this->data()->$name(...$arguments);
+	}
+
+	/**
+	 * Ensures that all pending changes are written
+	 * to disk before the object is destructed
+	 *
+	 * @return void
+	 */
+	public function __destruct()
+	{
+		$this->commit();
+	}
+
+	/**
+	 * Automatically renews the session if possible and necessary
+	 */
+	protected function autoRenew(): void
+	{
+		// check if the session needs renewal at all
+		if ($this->needsRenewal() !== true) {
+			return;
+		}
+
+		// re-load the session and check again to make sure that no other thread
+		// already renewed the session in the meantime
+		$this->prepareForWriting();
+
+		if ($this->needsRenewal() === true) {
+			$this->renew();
+		}
 	}
 
 	/**
@@ -383,6 +241,32 @@ class Session
 	}
 
 	/**
+	 * Returns a symmetric crypto instance based on the
+	 * token key of the session
+	 */
+	protected function crypto(): SymmetricCrypto|null
+	{
+		if (
+			$this->tokenKey === null ||
+			SymmetricCrypto::isAvailable() === false
+		) {
+			return null; // @codeCoverageIgnore
+		}
+
+		return new SymmetricCrypto(secretKey: hex2bin($this->tokenKey));
+	}
+
+	/**
+	 * Returns the session data object
+	 *
+	 * @return \Kirby\Session\SessionData
+	 */
+	public function data()
+	{
+		return $this->data;
+	}
+
+	/**
 	 * Entirely destroys the session
 	 */
 	public function destroy(): void
@@ -405,97 +289,33 @@ class Session
 	}
 
 	/**
-	 * Renews the session with the same session duration
-	 * Renewing also regenerates the session token
-	 */
-	public function renew(): void
-	{
-		if ($this->renewable() !== true) {
-			throw new LogicException(
-				key: 'session.notRenewable',
-				fallback: 'Cannot renew a session that is not renewable, call $session->renewable(true) first',
-				translate: false,
-			);
-		}
-
-		$this->prepareForWriting();
-		$this->expiryTime = time() + $this->duration();
-		$this->regenerateTokenIfNotNew();
-	}
-
-	/**
-	 * Regenerates the session token
-	 * The old token will keep its validity for a 30 second grace period
-	 */
-	public function regenerateToken(): void
-	{
-		// don't do anything for destroyed sessions
-		if ($this->destroyed === true) {
-			return;
-		}
-
-		$this->prepareForWriting();
-
-		// generate new token
-		$tokenExpiry = $this->expiryTime;
-		$tokenId     = $this->sessions->store()->createId($tokenExpiry);
-		$tokenKey    = bin2hex(random_bytes(32));
-
-		// mark the old session as moved if there is one
-		if ($this->tokenExpiry !== null) {
-			$this->newSession = [$tokenExpiry . '.' . $tokenId, $tokenKey];
-			$this->commit();
-
-			// we are now in the context of the new session
-			$this->newSession = null;
-		}
-
-		// set new data as instance vars
-		$this->tokenExpiry = $tokenExpiry;
-		$this->tokenId     = $tokenId;
-		$this->tokenKey    = $tokenKey;
-
-		// the new session needs to be written for the first time
-		$this->writeMode = true;
-
-		// (re)transmit session token
-		if ($this->mode === 'cookie') {
-			$cookieDomain = $this->sessions->cookieDomain();
-
-			Cookie::set($this->sessions->cookieName(), $this->token(), [
-				'lifetime' => $this->tokenExpiry,
-				'path'     => $cookieDomain ? '/' : Url::index(['host' => null, 'trailingSlash' => true]),
-				'domain'   => $cookieDomain,
-				'secure'   => Url::scheme() === 'https',
-				'httpOnly' => true,
-				'sameSite' => 'Lax'
-			]);
-		} else {
-			$this->needsRetransmission = true;
-		}
-
-		// update cache of the Sessions instance with the new token
-		$this->sessions->updateCache($this);
-	}
-
-	/**
-	 * Returns whether the session token needs to be retransmitted to the client
-	 * Only relevant in header and manual modes
-	 */
-	public function needsRetransmission(): bool
-	{
-		return $this->needsRetransmission;
-	}
-
-	/**
-	 * Ensures that all pending changes are written
-	 * to disk before the object is destructed
+	 * Gets or sets the session duration
+	 * Setting the duration also updates the expiry time and regenerates the session token
 	 *
-	 * @return void
+	 * @param int|null $duration Optional new duration in seconds to set
+	 * @return int Number of seconds
 	 */
-	public function __destruct()
+	public function duration(int|null $duration = null): int
 	{
-		$this->commit();
+		if ($duration !== null) {
+			// verify that the duration is at least 1 second
+			if ($duration < 1) {
+				throw new InvalidArgumentException(
+					data: [
+						'method'   => 'Session::duration',
+						'argument' => '$duration'
+					],
+					translate: false
+				);
+			}
+
+			$this->prepareForWriting();
+			$this->duration   = $duration;
+			$this->expiryTime = time() + $duration;
+			$this->regenerateTokenIfNotNew();
+		}
+
+		return $this->duration;
 	}
 
 	/**
@@ -510,135 +330,37 @@ class Session
 	}
 
 	/**
-	 * Puts the session into write mode by acquiring a lock
-	 * and reloading the data
-	 * @unstable
-	 */
-	public function prepareForWriting(): void
-	{
-		// verify that we need to get into write mode:
-		// - new sessions are only written to if the token has explicitly been ensured
-		//   using $session->ensureToken() -> lazy session creation
-		// - destroyed sessions are never written to
-		// - no need to lock and re-init if we are already in write mode
-		if (
-			$this->tokenExpiry === null ||
-			$this->destroyed === true ||
-			$this->writeMode === true
-		) {
-			return;
-		}
-
-		// don't allow writing for read-only sessions
-		// (only the case for moved sessions when the PHP `sodium` extension is not available)
-		if ($this->tokenKey === null) {
-			throw new LogicException(
-				key: 'session.readonly',
-				data: ['token' => $this->token()],
-				fallback: 'Session "' . $this->token() . '" is currently read-only because it was accessed via an old session token',
-				translate: false
-			);
-		}
-
-		$this->sessions->store()->lock($this->tokenExpiry, $this->tokenId);
-		$this->init();
-		$this->writeMode = true;
-	}
-
-	/**
-	 * Returns a symmetric crypto instance based on the
-	 * token key of the session
-	 */
-	protected function crypto(): SymmetricCrypto|null
-	{
-		if (
-			$this->tokenKey === null ||
-			SymmetricCrypto::isAvailable() === false
-		) {
-			return null; // @codeCoverageIgnore
-		}
-
-		return new SymmetricCrypto(secretKey: hex2bin($this->tokenKey));
-	}
-
-	/**
-	 * Parses a token string into its parts and sets them as instance vars
+	 * Gets or sets the session expiry time
+	 * Setting the expiry time also updates the duration and regenerates the session token
 	 *
-	 * @param string $token Session token
-	 * @param bool $withoutKey If true, $token is passed without key
+	 * @param string|int|null $expiryTime Optional new expiry timestamp or time string to set
+	 * @return int Timestamp
 	 */
-	protected function parseToken(string $token, bool $withoutKey = false): void
+	public function expiryTime(string|int|null $expiryTime = null): int
 	{
-		// split the token into its parts
-		$parts = explode('.', $token);
+		if ($expiryTime !== null) {
+			// convert to a timestamp
+			$expiryTime = static::timeToTimestamp($expiryTime);
+			$now        = time();
 
-		// only continue if the token has exactly the right amount of parts
-		$expectedParts = ($withoutKey === true) ? 2 : 3;
-
-		if (count($parts) !== $expectedParts) {
-			throw new InvalidArgumentException(
-				data: [
-					'method'   => 'Session::parseToken',
-					'argument' => '$token'
-				],
-				translate: false
-			);
-		}
-
-		$tokenExpiry = (int)$parts[0];
-		$tokenId     = $parts[1];
-		$tokenKey    = ($withoutKey === true) ? null : $parts[2];
-
-		// verify that all parts were parsed correctly using reassembly
-		$expectedToken = $tokenExpiry . '.' . $tokenId;
-
-		if ($withoutKey === false) {
-			$expectedToken .= '.' . $tokenKey;
-		}
-
-		if ($expectedToken !== $token) {
-			throw new InvalidArgumentException(
-				data: [
-					'method'   => 'Session::parseToken',
-					'argument' => '$token'
-				],
-				translate: false
-			);
-		}
-
-		$this->tokenExpiry = $tokenExpiry;
-		$this->tokenId     = $tokenId;
-		$this->tokenKey    = $tokenKey;
-	}
-
-	/**
-	 * Makes sure that the given value is a valid timestamp
-	 *
-	 * @param string|int $time Timestamp or date string (must be supported by `strtotime()`)
-	 * @param int|null $now Timestamp to use as a base for the calculation of relative dates
-	 * @return int Timestamp value
-	 */
-	protected static function timeToTimestamp(
-		string|int $time,
-		int|null $now = null
-	): int {
-		// default to current time as $now
-		$now ??= time();
-
-		// convert date strings to a timestamp first
-		if (is_string($time) === true) {
-			$timestamp = strtotime($time, $now);
-
-			if ($timestamp === false) {
+			// verify that the expiry time is not in the past
+			if ($expiryTime <= $now) {
 				throw new InvalidArgumentException(
-					message: 'Invalid time string: ' . $time
+					data: [
+						'method'   => 'Session::expiryTime',
+						'argument' => '$expiryTime'
+					],
+					translate: false
 				);
 			}
 
-			return $timestamp;
+			$this->prepareForWriting();
+			$this->expiryTime = $expiryTime;
+			$this->duration   = $expiryTime - $now;
+			$this->regenerateTokenIfNotNew();
 		}
 
-		return $time;
+		return $this->expiryTime;
 	}
 
 	/**
@@ -790,32 +512,28 @@ class Session
 	}
 
 	/**
-	 * Regenerate session token, but only if there is already one
+	 * Gets or sets the transmission mode
+	 * Setting only works for new sessions that haven't been transmitted yet
+	 *
+	 * @param string|null $mode Optional new transmission mode
+	 * @return string Transmission mode
 	 */
-	protected function regenerateTokenIfNotNew(): void
+	public function mode(string|null $mode = null): string
 	{
-		if ($this->tokenExpiry !== null) {
-			$this->regenerateToken();
-		}
-	}
+		if ($mode !== null) {
+			// only allow this if this is a new session, otherwise the change
+			// might not be applied correctly to the current request
+			if ($this->token() !== null) {
+				throw new InvalidArgumentException(
+					data: ['method' => 'Session::mode', 'argument' => '$mode'],
+					translate: false
+				);
+			}
 
-	/**
-	 * Automatically renews the session if possible and necessary
-	 */
-	protected function autoRenew(): void
-	{
-		// check if the session needs renewal at all
-		if ($this->needsRenewal() !== true) {
-			return;
+			$this->mode = $mode;
 		}
 
-		// re-load the session and check again to make sure that no other thread
-		// already renewed the session in the meantime
-		$this->prepareForWriting();
-
-		if ($this->needsRenewal() === true) {
-			$this->renew();
-		}
+		return $this->mode;
 	}
 
 	/**
@@ -827,5 +545,288 @@ class Session
 		return
 			$this->renewable() === true &&
 			$this->expiryTime() - time() < $this->duration() / 2;
+	}
+
+	/**
+	 * Returns whether the session token needs to be retransmitted to the client
+	 * Only relevant in header and manual modes
+	 */
+	public function needsRetransmission(): bool
+	{
+		return $this->needsRetransmission;
+	}
+
+	/**
+	 * Parses a token string into its parts and sets them as instance vars
+	 *
+	 * @param string $token Session token
+	 * @param bool $withoutKey If true, $token is passed without key
+	 */
+	protected function parseToken(string $token, bool $withoutKey = false): void
+	{
+		// split the token into its parts
+		$parts = explode('.', $token);
+
+		// only continue if the token has exactly the right amount of parts
+		$expectedParts = ($withoutKey === true) ? 2 : 3;
+
+		if (count($parts) !== $expectedParts) {
+			throw new InvalidArgumentException(
+				data: [
+					'method'   => 'Session::parseToken',
+					'argument' => '$token'
+				],
+				translate: false
+			);
+		}
+
+		$tokenExpiry = (int)$parts[0];
+		$tokenId     = $parts[1];
+		$tokenKey    = ($withoutKey === true) ? null : $parts[2];
+
+		// verify that all parts were parsed correctly using reassembly
+		$expectedToken = $tokenExpiry . '.' . $tokenId;
+
+		if ($withoutKey === false) {
+			$expectedToken .= '.' . $tokenKey;
+		}
+
+		if ($expectedToken !== $token) {
+			throw new InvalidArgumentException(
+				data: [
+					'method'   => 'Session::parseToken',
+					'argument' => '$token'
+				],
+				translate: false
+			);
+		}
+
+		$this->tokenExpiry = $tokenExpiry;
+		$this->tokenId     = $tokenId;
+		$this->tokenKey    = $tokenKey;
+	}
+
+	/**
+	 * Puts the session into write mode by acquiring a lock
+	 * and reloading the data
+	 * @unstable
+	 */
+	public function prepareForWriting(): void
+	{
+		// verify that we need to get into write mode:
+		// - new sessions are only written to if the token has explicitly been ensured
+		//   using $session->ensureToken() -> lazy session creation
+		// - destroyed sessions are never written to
+		// - no need to lock and re-init if we are already in write mode
+		if (
+			$this->tokenExpiry === null ||
+			$this->destroyed === true ||
+			$this->writeMode === true
+		) {
+			return;
+		}
+
+		// don't allow writing for read-only sessions
+		// (only the case for moved sessions when the PHP `sodium` extension is not available)
+		if ($this->tokenKey === null) {
+			throw new LogicException(
+				key: 'session.readonly',
+				data: ['token' => $this->token()],
+				fallback: 'Session "' . $this->token() . '" is currently read-only because it was accessed via an old session token',
+				translate: false
+			);
+		}
+
+		$this->sessions->store()->lock($this->tokenExpiry, $this->tokenId);
+		$this->init();
+		$this->writeMode = true;
+	}
+
+	/**
+	 * Regenerates the session token
+	 * The old token will keep its validity for a 30 second grace period
+	 */
+	public function regenerateToken(): void
+	{
+		// don't do anything for destroyed sessions
+		if ($this->destroyed === true) {
+			return;
+		}
+
+		$this->prepareForWriting();
+
+		// generate new token
+		$tokenExpiry = $this->expiryTime;
+		$tokenId     = $this->sessions->store()->createId($tokenExpiry);
+		$tokenKey    = bin2hex(random_bytes(32));
+
+		// mark the old session as moved if there is one
+		if ($this->tokenExpiry !== null) {
+			$this->newSession = [$tokenExpiry . '.' . $tokenId, $tokenKey];
+			$this->commit();
+
+			// we are now in the context of the new session
+			$this->newSession = null;
+		}
+
+		// set new data as instance vars
+		$this->tokenExpiry = $tokenExpiry;
+		$this->tokenId     = $tokenId;
+		$this->tokenKey    = $tokenKey;
+
+		// the new session needs to be written for the first time
+		$this->writeMode = true;
+
+		// (re)transmit session token
+		if ($this->mode === 'cookie') {
+			$cookieDomain = $this->sessions->cookieDomain();
+
+			Cookie::set($this->sessions->cookieName(), $this->token(), [
+				'lifetime' => $this->tokenExpiry,
+				'path'     => $cookieDomain ? '/' : Url::index(['host' => null, 'trailingSlash' => true]),
+				'domain'   => $cookieDomain,
+				'secure'   => Url::scheme() === 'https',
+				'httpOnly' => true,
+				'sameSite' => 'Lax'
+			]);
+		} else {
+			$this->needsRetransmission = true;
+		}
+
+		// update cache of the Sessions instance with the new token
+		$this->sessions->updateCache($this);
+	}
+
+	/**
+	 * Regenerate session token, but only if there is already one
+	 */
+	protected function regenerateTokenIfNotNew(): void
+	{
+		if ($this->tokenExpiry !== null) {
+			$this->regenerateToken();
+		}
+	}
+
+	/**
+	 * Renews the session with the same session duration
+	 * Renewing also regenerates the session token
+	 */
+	public function renew(): void
+	{
+		if ($this->renewable() !== true) {
+			throw new LogicException(
+				key: 'session.notRenewable',
+				fallback: 'Cannot renew a session that is not renewable, call $session->renewable(true) first',
+				translate: false,
+			);
+		}
+
+		$this->prepareForWriting();
+		$this->expiryTime = time() + $this->duration();
+		$this->regenerateTokenIfNotNew();
+	}
+
+	/**
+	 * Gets or sets the renewable flag
+	 * Automatically renews the session if renewing gets enabled
+	 *
+	 * @param bool|null $renewable Optional new renewable flag to set
+	 */
+	public function renewable(bool|null $renewable = null): bool
+	{
+		if ($renewable !== null) {
+			$this->prepareForWriting();
+			$this->renewable = $renewable;
+			$this->autoRenew();
+		}
+
+		return $this->renewable;
+	}
+
+	/**
+	 * Gets the session start time
+	 *
+	 * @return int Timestamp
+	 */
+	public function startTime(): int
+	{
+		return $this->startTime;
+	}
+
+	/**
+	 * Gets or sets the session timeout
+	 *
+	 * @param int|false|null $timeout Optional new timeout to set or false to disable timeout
+	 * @return int|false Number of seconds or false for "no timeout"
+	 */
+	public function timeout(int|false|null $timeout = null): int|false
+	{
+		if ($timeout !== null) {
+			// verify that the timeout is at least 1 second
+			if (is_int($timeout) === true && $timeout < 1) {
+				throw new InvalidArgumentException(
+					data: [
+						'method'   => 'Session::timeout',
+						'argument' => '$timeout'
+					],
+					translate: false
+				);
+			}
+
+			$this->prepareForWriting();
+			$this->timeout      = $timeout;
+			$this->lastActivity = is_int($timeout) ? time() : null;
+		}
+
+		return $this->timeout;
+	}
+
+	/**
+	 * Makes sure that the given value is a valid timestamp
+	 *
+	 * @param string|int $time Timestamp or date string (must be supported by `strtotime()`)
+	 * @param int|null $now Timestamp to use as a base for the calculation of relative dates
+	 * @return int Timestamp value
+	 */
+	protected static function timeToTimestamp(
+		string|int $time,
+		int|null $now = null
+	): int {
+		// default to current time as $now
+		$now ??= time();
+
+		// convert date strings to a timestamp first
+		if (is_string($time) === true) {
+			$timestamp = strtotime($time, $now);
+
+			if ($timestamp === false) {
+				throw new InvalidArgumentException(
+					message: 'Invalid time string: ' . $time
+				);
+			}
+
+			return $timestamp;
+		}
+
+		return $time;
+	}
+
+	/**
+	 * Gets the session token or null
+	 * if the session doesn't have a token yet
+	 */
+	public function token(): string|null
+	{
+		if ($this->tokenExpiry !== null) {
+			$token = $this->tokenExpiry . '.' . $this->tokenId;
+
+			if (is_string($this->tokenKey) === true) {
+				$token .= '.' . $this->tokenKey;
+			}
+
+			return $token;
+		}
+
+		return null;
 	}
 }
