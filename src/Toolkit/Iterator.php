@@ -44,6 +44,7 @@ class Iterator implements Countable, IteratorAggregate
 	 * Returns the current key
 	 * @deprecated
 	 * @todo Remove in v6
+	 * @return TKey|null
 	 */
 	public function key(): int|string|null
 	{

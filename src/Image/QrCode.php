@@ -93,7 +93,7 @@ class QrCode implements Stringable
 		// get code and size measurements
 		$code   = $this->encode($border);
 		[$width, $height] = $this->measure($code);
-		$size ??= ceil($width * 4);
+		$size ??= (int) ceil($width * 4);
 		$ws     = $size / $width;
 		$hs     = $size / $height;
 
@@ -125,10 +125,10 @@ class QrCode implements Stringable
 			$code,
 			fn ($x, $y, $width, $height) => imagefilledrectangle(
 				$image,
-				floor($x * $ws),
-				floor($y * $hs),
-				floor($x * $ws + $ws * $width) - 1,
-				floor($y * $hs + $hs * $height) - 1,
+				(int) floor($x * $ws),
+				(int) floor($y * $hs),
+				(int) floor($x * $ws + $ws * $width) - 1,
+				(int) floor($y * $hs + $hs * $height) - 1,
 				$color
 			)
 		);
@@ -192,23 +192,37 @@ class QrCode implements Stringable
 		int $border = 4
 	): void {
 		$format = F::extension($file);
-		$args    = [$size, $color, $back, $border];
+
+		// the string size form is only supported by SVG (CSS width);
+		// raster formats require an integer pixel size
+		if (is_string($size) === true) {
+			$size = (int)$size;
+		}
+
+		if ($format === 'svg') {
+			$svg = $this->toSvg($size, $color, $back, $border);
+			F::write($file, $svg);
+			return;
+		}
+
+		$img = $this->toImage($size, $color, $back, $border);
 
 		match ($format) {
-			'gif'   => imagegif($this->toImage(...$args), $file),
-			'jpg',
-			'jpeg'  => imagejpeg($this->toImage(...$args), $file),
-			'png'   => imagepng($this->toImage(...$args), $file),
-			'svg'   => F::write($file, $this->toSvg(...$args)),
-			'webp'  => imagewebp($this->toImage(...$args), $file),
-			default => throw new InvalidArgumentException(
+			'gif'         => imagegif($img, $file),
+			'jpg', 'jpeg' => imagejpeg($img, $file),
+			'png'         => imagepng($img, $file),
+			'webp'        => imagewebp($img, $file),
+			default       => throw new InvalidArgumentException(
 				message: 'Cannot write QR code as ' . $format
 			)
 		};
 	}
 
-	protected function applyMask(array $matrix, int $size, int $mask): array
-	{
+	protected function applyMask(
+		array $matrix,
+		int $size,
+		int $mask
+	): array {
 		for ($i = 0; $i < $size; $i++) {
 			for ($j = 0; $j < $size; $j++) {
 				if ($matrix[$i][$j] >= 4 && $this->mask($mask, $i, $j)) {
