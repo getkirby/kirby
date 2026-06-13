@@ -58,7 +58,7 @@ class PageCreateDialogController extends ModelCreateDialogController
 	/**
 	 * @var \Kirby\Cms\Page
 	 */
-	public ModelWithContent $model;
+	public ModelWithContent|null $model = null;
 
 	/**
 	 * @var \Kirby\Cms\Page|\Kirby\Cms\Site

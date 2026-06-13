@@ -52,7 +52,7 @@ class Page extends ModelWithContent
 	/**
 	 * Nesting level
 	 */
-	protected int $depth;
+	protected int|null $depth = null;
 
 	/**
 	 * Sorting number + slug

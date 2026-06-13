@@ -25,7 +25,7 @@ use Throwable;
  */
 class Plugin
 {
-	protected Assets $assets;
+	protected Assets|null $assets = null;
 	protected License|Closure|array|string $license;
 	protected string $root;
 	protected UpdateStatus|null $updateStatus = null;

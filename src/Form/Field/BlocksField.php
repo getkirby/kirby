@@ -42,7 +42,7 @@ class BlocksField extends InputField
 	/**
 	 * Cache for the Fieldsets collection
 	 */
-	protected Fieldsets $fieldsetsCollection;
+	protected Fieldsets|null $fieldsetsCollection = null;
 
 	/**
 	 * Cache for all Form instances for each fieldset

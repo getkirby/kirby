@@ -21,7 +21,7 @@ use Kirby\Panel\Ui\View;
  */
 class UsersViewController extends ViewController
 {
-	protected array $roles;
+	protected array|null $roles = null;
 
 	public function __construct(
 		public string|null $role = null

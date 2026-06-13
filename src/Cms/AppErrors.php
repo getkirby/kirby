@@ -33,7 +33,7 @@ trait AppErrors
 	/**
 	 * Whoops instance cache
 	 */
-	protected Whoops $whoops;
+	protected Whoops|null $whoops = null;
 
 	/**
 	 * Replaces absolute file paths with placeholders such as

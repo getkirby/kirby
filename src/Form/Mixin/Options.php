@@ -16,7 +16,7 @@ trait Options
 	 * An array with options
 	 */
 	protected array|string|null $options;
-	protected array $optionsCache;
+	protected array|null $optionsCache = null;
 
 	protected function fetchOptions(): array
 	{

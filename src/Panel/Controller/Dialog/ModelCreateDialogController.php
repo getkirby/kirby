@@ -23,8 +23,8 @@ abstract class ModelCreateDialogController extends DialogController
 {
 	public static array $fieldTypes = [];
 
-	protected Blueprint $blueprint;
-	public ModelWithContent $model;
+	protected Blueprint|null $blueprint = null;
+	public ModelWithContent|null $model = null;
 	public Page|Site|User $parent;
 
 	public function __construct(

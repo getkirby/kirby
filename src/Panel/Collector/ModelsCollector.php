@@ -22,12 +22,12 @@ abstract class ModelsCollector
 	/**
 	 * @var TModels
 	 */
-	protected Files|Pages|Users $models;
+	protected Files|Pages|Users|null $models = null;
 
 	/**
 	 * @var TModels
 	 */
-	protected Files|Pages|Users $paginated;
+	protected Files|Pages|Users|null $paginated = null;
 
 	public function __construct(
 		protected int|null $limit = null,

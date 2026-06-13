@@ -13,7 +13,7 @@ class AutoSession
 	protected Sessions $sessions;
 	protected array $options;
 
-	protected Session $createdSession;
+	protected Session|null $createdSession = null;
 
 	/**
 	 * Creates a new AutoSession instance

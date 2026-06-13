@@ -28,7 +28,7 @@ class Blueprint
 	public static array $presets = [];
 	public static array $loaded = [];
 
-	protected AcceptRules $acceptRules;
+	protected AcceptRules|null $acceptRules = null;
 
 	/**
 	 * Global field definitions that can be referenced

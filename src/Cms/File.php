@@ -49,7 +49,7 @@ class File extends ModelWithContent
 
 	protected string $filename;
 
-	protected string $id;
+	protected string|null $id = null;
 
 	/**
 	 * The parent object

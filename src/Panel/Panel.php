@@ -21,10 +21,10 @@ use Kirby\Toolkit\Str;
  */
 class Panel
 {
-	protected Access $access;
-	protected Areas $areas;
-	protected Home $home;
-	protected Router $router;
+	protected Access|null $access = null;
+	protected Areas|null $areas = null;
+	protected Home|null $home = null;
+	protected Router|null $router = null;
 
 	public function __construct(
 		protected App $kirby
