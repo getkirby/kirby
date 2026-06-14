@@ -152,6 +152,14 @@ class KirbyTag
 		return $this->data['kirby'] ?? App::instance();
 	}
 
+	/**
+	 * Returns the parent model
+	 */
+	public function parent(): ModelWithContent|null
+	{
+		return $this->data['parent'] ?? null;
+	}
+
 	public static function parse(
 		string $string,
 		array $data = []
@@ -201,14 +209,6 @@ class KirbyTag
 		$value = array_shift($attributes);
 
 		return new static($type, $value, $attributes, $data);
-	}
-
-	/**
-	 * Returns the parent model
-	 */
-	public function parent(): ModelWithContent|null
-	{
-		return $this->data['parent'] ?? null;
 	}
 
 	public function render(): string
