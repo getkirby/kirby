@@ -19,15 +19,20 @@
 	</projectFiles>
 
 	<issueHandlers>
+		<!-- Don't warn about duplicate array keys as Psalm will throw false positive when unpacking arrays -->
+		<DuplicateArrayKey errorLevel="suppress" />
+
+		<!-- Don't warn about access to @internal symbols as Kirby uses @internal to document API that is not meant for site/plugin developers, not to restrict access within core itself -->
+		<InternalClass errorLevel="suppress" />
+		<InternalMethod errorLevel="suppress" />
+		<InternalProperty errorLevel="suppress" />
+
 		<!-- Don't warn about "$this in a non-class context" in the config dir -->
 		<InvalidScope>
 			<errorLevel type="suppress">
 				<directory name="config" />
 			</errorLevel>
 		</InvalidScope>
-
-		<!-- Don't warn about duplicate array keys as Psalm will throw false positive when unpacking arrays -->
-		<DuplicateArrayKey errorLevel="suppress" />
 
 		<!-- Don't warn about missing overrides attributes - we do not want to use them so far -->
 		<MissingOverrideAttribute errorLevel="suppress" />
