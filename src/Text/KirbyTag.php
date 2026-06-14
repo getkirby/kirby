@@ -6,7 +6,6 @@ use AllowDynamicProperties;
 use Closure;
 use Kirby\Cms\App;
 use Kirby\Cms\File;
-use Kirby\Cms\Helpers;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Exception\BadMethodCallException;
 use Kirby\Exception\InvalidArgumentException;
@@ -27,11 +26,6 @@ class KirbyTag
 
 	public array $attrs = [];
 	public array $data = [];
-
-	/**
-	 * @deprecated 5.5.0 Use `$tag->kirby()->option()` instead.
-	 */
-	public array $options = [];
 	public string $type;
 	public string|null $value = null;
 
@@ -39,8 +33,7 @@ class KirbyTag
 		string $type,
 		string|null $value = null,
 		array $attrs = [],
-		array $data = [],
-		array $options = []
+		array $data = []
 	) {
 		// type aliases
 		if (isset(static::$types[$type]) === false) {
@@ -69,12 +62,11 @@ class KirbyTag
 			}
 		}
 
-		$this->attrs   = $attrs;
-		$this->data    = $data;
-		$this->options = $options;
-		$this->$type   = $value;
-		$this->type    = $type;
-		$this->value   = $value;
+		$this->attrs = $attrs;
+		$this->data  = $data;
+		$this->$type = $value;
+		$this->type  = $type;
+		$this->value = $value;
 	}
 
 	/**
@@ -160,20 +152,9 @@ class KirbyTag
 		return $this->data['kirby'] ?? App::instance();
 	}
 
-	/**
-	 * @deprecated 5.5.0 Use `$tag->kirby()->option()` instead.
-	 */
-	public function option(string $key, $default = null)
-	{
-		Helpers::deprecated('`$tag->option()` has been deprecated. Use `$tag->kirby()->option()` instead.', 'kirbytag-option');
-
-		return $this->kirby()->option($key, $default);
-	}
-
 	public static function parse(
 		string $string,
-		array $data = [],
-		array $options = []
+		array $data = []
 	): static {
 		// remove the brackets, extract the first attribute (the tag type)
 		$tag  = trim(ltrim($string, '('));
@@ -219,7 +200,7 @@ class KirbyTag
 		// extract and pass its value separately
 		$value = array_shift($attributes);
 
-		return new static($type, $value, $attributes, $data, $options);
+		return new static($type, $value, $attributes, $data);
 	}
 
 	/**

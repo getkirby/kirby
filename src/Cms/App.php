@@ -892,7 +892,7 @@ class App
 		$debug   = ($options['debug'] ?? false) === true;
 
 		$text = $this->apply('kirbytags:before', compact('text', 'data', 'options'));
-		$text = KirbyTags::parse($text, $data, debug: $debug);
+		$text = KirbyTags::parse($text, $data, $debug);
 		$text = $this->apply('kirbytags:after', compact('text', 'data', 'options'));
 
 		return $text;
