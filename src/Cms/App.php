@@ -873,7 +873,7 @@ class App
 		$data['site']   ??= $data['kirby']->site();
 		$data['parent'] ??= $data['site']->page();
 
-		return (new KirbyTag($type, $value, $attr, $data))->render();
+		return KirbyTag::factory($type, $value, $attr, $data)->render();
 	}
 
 	/**

@@ -2,7 +2,7 @@
 
 use Kirby\Cms\Html;
 use Kirby\Cms\Url;
-use Kirby\Text\KirbyTag;
+use Kirby\Text\LegacyKirbyTag;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\Str;
@@ -20,7 +20,7 @@ return [
 		'attr' => [
 			'expiry'
 		],
-		'html' => function (KirbyTag $tag): string {
+		'html' => function (LegacyKirbyTag $tag): string {
 			if (strtolower($tag->date) === 'year') {
 				// make sure cached pages reset the year at New Year,
 				// unless a custom expiry point has been requested
@@ -54,7 +54,7 @@ return [
 			'text',
 			'title'
 		],
-		'html' => function (KirbyTag $tag): string {
+		'html' => function (LegacyKirbyTag $tag): string {
 			return Html::email($tag->value, $tag->text, [
 				'class'  => $tag->class,
 				'rel'    => $tag->rel,
@@ -76,7 +76,7 @@ return [
 			'text',
 			'title'
 		],
-		'html' => function (KirbyTag $tag): string {
+		'html' => function (LegacyKirbyTag $tag): string {
 			if (!$file = $tag->file($tag->value)) {
 				return $tag->text ?? $tag->value;
 			}
@@ -104,7 +104,7 @@ return [
 		'attr' => [
 			'file'
 		],
-		'html' => function (KirbyTag $tag): string {
+		'html' => function (LegacyKirbyTag $tag): string {
 			return Html::gist($tag->value, $tag->file);
 		}
 	],
@@ -127,7 +127,7 @@ return [
 			'title',
 			'width'
 		],
-		'html' => function (KirbyTag $tag): string {
+		'html' => function (LegacyKirbyTag $tag): string {
 			$kirby = $tag->kirby();
 
 			$tag->width  ??= $kirby->option('kirbytext.image.width');
@@ -215,7 +215,7 @@ return [
 			'title',
 			'text',
 		],
-		'html' => function (KirbyTag $tag): string {
+		'html' => function (LegacyKirbyTag $tag): string {
 			// keep $tag->value as the original value (e.g. UUID) for errors
 			$link = $tag->value;
 
@@ -275,7 +275,7 @@ return [
 			'text',
 			'title'
 		],
-		'html' => function (KirbyTag $tag): string {
+		'html' => function (LegacyKirbyTag $tag): string {
 			return Html::tel($tag->value, $tag->text, [
 				'class' => $tag->class,
 				'rel'   => $tag->rel,
@@ -302,7 +302,7 @@ return [
 			'preload',
 			'width',
 		],
-		'html' => function (KirbyTag $tag): string {
+		'html' => function (LegacyKirbyTag $tag): string {
 			// checks and gets if poster is local file
 			if (
 				empty($tag->poster) === false &&
