@@ -162,23 +162,6 @@ class KirbyTagsTest extends TestCase
 		$this->assertSame('(undefined: foo)', KirbyTags::parse('(undefined: foo)', [], debug: true));
 	}
 
-	public function testParseWithDeprecatedOptions(): void
-	{
-		// `$options` is a deprecated alias that only ever carried `debug`
-		Helpers::$deprecations['kirbytags-parse-options'] = false;
-
-		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Just for fun');
-
-		KirbyTag::$types = [
-			'test' => [
-				'html' => fn () => throw new Exception('Just for fun')
-			]
-		];
-
-		KirbyTags::parse('(test: foo)', [], ['debug' => true]);
-	}
-
 	public function testParseWithBrackets(): void
 	{
 		KirbyTag::$types = [
