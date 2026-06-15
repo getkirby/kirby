@@ -88,11 +88,6 @@
       <code><![CDATA[[...$this->data, ...$object->data]]]></code>
     </InvalidPropertyAssignmentValue>
   </file>
-  <file src="src/Cms/HasSiblings.php">
-    <InvalidMethodCall>
-      <code><![CDATA[not]]></code>
-    </InvalidMethodCall>
-  </file>
   <file src="src/Cms/LicenseStatus.php">
     <InvalidReturnStatement>
       <code><![CDATA[I18n::translate('license.status.' . $this->value . '.label')]]></code>
