@@ -1,0 +1,7 @@
+*$*alpha.
+
+*£*bravo.
+
+*€*charlie.
+
+*𞋿*delta.
