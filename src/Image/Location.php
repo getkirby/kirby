@@ -85,6 +85,11 @@ class Location implements Stringable
 			return (float)$parts[0];
 		}
 
+		// guard against forged EXIF with a zero denominator
+		if ((float)$parts[1] === 0.0) {
+			return 0.0;
+		}
+
 		return (float)($parts[0]) / (float)($parts[1]);
 	}
 
