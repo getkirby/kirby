@@ -3,7 +3,7 @@
 	"description": "The Kirby core",
 	"license": "proprietary",
 	"type": "kirby-cms",
-	"version": "4.9.3",
+	"version": "4.9.4",
 	"keywords": [
 		"kirby",
 		"cms",
@@ -45,7 +45,7 @@
 		"michelf/php-smartypants": "1.8.1",
 		"phpmailer/phpmailer": "6.10.0",
 		"symfony/polyfill-intl-idn": "1.38.1",
-		"symfony/polyfill-mbstring": "1.38.1",
+		"symfony/polyfill-mbstring": "1.38.2",
 		"symfony/yaml": "6.4.41"
 	},
 	"replace": {
