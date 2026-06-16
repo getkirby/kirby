@@ -164,6 +164,7 @@ return array(
     'Kirby\\Content\\VersionRules' => $baseDir . '/src/Content/VersionRules.php',
     'Kirby\\Content\\Versions' => $baseDir . '/src/Content/Versions.php',
     'Kirby\\Data\\Data' => $baseDir . '/src/Data/Data.php',
+    'Kirby\\Data\\Frontmatter' => $baseDir . '/src/Data/Frontmatter.php',
     'Kirby\\Data\\Handler' => $baseDir . '/src/Data/Handler.php',
     'Kirby\\Data\\Json' => $baseDir . '/src/Data/Json.php',
     'Kirby\\Data\\PHP' => $baseDir . '/src/Data/PHP.php',

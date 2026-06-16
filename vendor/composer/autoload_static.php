@@ -285,6 +285,7 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
         'Kirby\\Content\\VersionRules' => __DIR__ . '/../..' . '/src/Content/VersionRules.php',
         'Kirby\\Content\\Versions' => __DIR__ . '/../..' . '/src/Content/Versions.php',
         'Kirby\\Data\\Data' => __DIR__ . '/../..' . '/src/Data/Data.php',
+        'Kirby\\Data\\Frontmatter' => __DIR__ . '/../..' . '/src/Data/Frontmatter.php',
         'Kirby\\Data\\Handler' => __DIR__ . '/../..' . '/src/Data/Handler.php',
         'Kirby\\Data\\Json' => __DIR__ . '/../..' . '/src/Data/Json.php',
         'Kirby\\Data\\PHP' => __DIR__ . '/../..' . '/src/Data/PHP.php',
