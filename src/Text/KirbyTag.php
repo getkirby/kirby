@@ -6,6 +6,7 @@ use AllowDynamicProperties;
 use Closure;
 use Kirby\Cms\App;
 use Kirby\Cms\File;
+use Kirby\Cms\Helpers;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Exception\BadMethodCallException;
 use Kirby\Exception\InvalidArgumentException;
@@ -26,6 +27,10 @@ class KirbyTag
 
 	public array $attrs = [];
 	public array $data = [];
+
+	/**
+	 * @deprecated 5.5.0 Use `$tag->kirby()->option()` instead.
+	 */
 	public array $options = [];
 	public string $type;
 	public string|null $value = null;
@@ -155,9 +160,14 @@ class KirbyTag
 		return $this->data['kirby'] ?? App::instance();
 	}
 
+	/**
+	 * @deprecated 5.5.0 Use `$tag->kirby()->option()` instead.
+	 */
 	public function option(string $key, $default = null)
 	{
-		return $this->options[$key] ?? $default;
+		Helpers::deprecated('`$tag->option()` has been deprecated. Use `$tag->kirby()->option()` instead.', 'kirbytag-option');
+
+		return $this->kirby()->option($key, $default);
 	}
 
 	public static function parse(
