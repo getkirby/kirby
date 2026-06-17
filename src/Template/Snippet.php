@@ -130,6 +130,15 @@ class Snippet extends Tpl
 	}
 
 	/**
+	 * Returns whether the snippet has any closed slots
+	 * @since 5.5.0
+	 */
+	public function hasSlots(): bool
+	{
+		return $this->slots !== [];
+	}
+
+	/**
 	 * Loads the code of the given snippet.
 	 *
 	 * @param string $file Path to the snippet file

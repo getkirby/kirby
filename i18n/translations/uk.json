@@ -204,6 +204,8 @@
 	"error.page.undefined": "Сторінку не знайдено",
 	"error.page.update.permission": "Вам заборонено оновлювати \"{slug}\"",
 
+	"error.role.notFound": "The role \"{name}\" cannot be found",
+
 	"error.section.files.max.plural": "Не можна додати більше ніж {max} файлів до секції \"{section}\"",
 	"error.section.files.max.singular": "Не можна додати більше одного файлу до секції \"{section}\"",
 	"error.section.files.min.plural": "Секція \"{section}\" вимагає щонайменше {min} файлів",
@@ -219,6 +221,7 @@
 
 	"error.site.changeTitle.empty": "Заголовок не може бути порожнім",
 	"error.site.changeTitle.permission": "Вам заборонено змінювати заголовок сайту",
+	"error.site.notAccessible": "The site is not accessible",
 	"error.site.update.permission": "Вам заборонено оновлювати сайт",
 
 	"error.structure.validation": "Помилка у полі \"{field}\" у рядку {index}",

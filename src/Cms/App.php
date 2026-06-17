@@ -872,7 +872,7 @@ class App
 		$data['site']   ??= $data['kirby']->site();
 		$data['parent'] ??= $data['site']->page();
 
-		return (new KirbyTag($type, $value, $attr, $data, $this->options))->render();
+		return (new KirbyTag($type, $value, $attr, $data))->render();
 	}
 
 	/**
@@ -887,9 +887,10 @@ class App
 		$data['parent'] ??= $data['site']->page();
 
 		$options = $this->options;
+		$debug   = ($options['debug'] ?? false) === true;
 
 		$text = $this->apply('kirbytags:before', compact('text', 'data', 'options'));
-		$text = KirbyTags::parse($text, $data, $options);
+		$text = KirbyTags::parse($text, $data, debug: $debug);
 		$text = $this->apply('kirbytags:after', compact('text', 'data', 'options'));
 
 		return $text;

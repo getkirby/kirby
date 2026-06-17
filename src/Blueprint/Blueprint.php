@@ -38,6 +38,7 @@ class Blueprint
 
 	// Cache for collected field props
 	protected array $fields = [];
+	protected array|null $fieldsLower = null;
 	protected ModelWithContent $model;
 	protected array $props;
 	protected array $sections = [];
@@ -309,7 +310,15 @@ class Blueprint
 	 */
 	public function field(string $name): array|null
 	{
-		return $this->fields()[$name] ?? null;
+		$fields = $this->fields();
+
+		if (isset($fields[$name]) === true) {
+			return $fields[$name];
+		}
+
+		// field objects use normalized lowercase keys
+		$this->fieldsLower ??= array_change_key_case($fields);
+		return $this->fieldsLower[Str::lower($name)] ?? null;
 	}
 
 	/**
