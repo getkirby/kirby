@@ -133,14 +133,16 @@ class Totp
 		// from user input to increase UX
 		$totp = preg_replace('/[^0-9]/', '', $totp);
 
-		// also allow the previous and upcoming codes
-		// to account for time sync issues
+		// also allow the previous and upcoming codes to
+		// account for time sync issues. Accumulate via OR
+		// without short-circuiting so the total time does
+		// not leak which window matched.
+		$matched = 0;
+
 		foreach ([0, -1, 1] as $offset) {
-			if (hash_equals($this->generate($offset), $totp) === true) {
-				return true;
-			}
+			$matched |= (int)hash_equals($this->generate($offset), $totp);
 		}
 
-		return false;
+		return $matched === 1;
 	}
 }

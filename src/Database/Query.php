@@ -848,11 +848,25 @@ class Query
 				// ->where(['username' => 'myuser']);
 				} elseif (is_array($args[0]) === true) {
 					// simple array mode (AND operator)
-					$sql = $this->database->sql()->values($this->table, $args[0], ' AND ', true, true);
+					$sql = $this->database->sql();
 
-					$result = $sql['query'];
+					// every column in the array must be a valid column;
+					// otherwise the condition would be silently dropped
+					// (in Sql::valueSet()) and the clause could collapse to
+					// nothing, turning a scoped update/delete into a
+					// full-table operation
+					foreach (array_keys($args[0]) as $column) {
+						if ($sql->columnName($this->table, $column) === null) {
+							throw new InvalidArgumentException(
+								message: 'Invalid column "' . $column . '" in clause'
+							);
+						}
+					}
 
-					$this->bindings($sql['bindings']);
+					$values = $sql->values($this->table, $args[0], ' AND ', true, true);
+					$result = $values['query'];
+
+					$this->bindings($values['bindings']);
 				} elseif (is_callable($args[0]) === true) {
 					$query = clone $this;
 
@@ -905,6 +919,12 @@ class Query
 					// validate column
 					$sql = $this->database->sql();
 					$key = $sql->columnName($this->table, $args[0]);
+
+					if ($key === null) {
+						throw new InvalidArgumentException(
+							message: 'Invalid column "' . $args[0] . '" in clause'
+						);
+					}
 
 					// ->where('username', 'in', ['myuser', 'myotheruser']);
 					// ->where('quantity', 'between', [10, 50]);

@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Cms\App;
+use Kirby\Http\Cookie;
 use Kirby\Panel\Ui\Buttons\ViewButtons;
 use Kirby\Toolkit\I18n;
 
@@ -107,6 +108,24 @@ return [
 					'id'    => 'vue-compiler',
 					'link'  => 'https://getkirby.com/security/vue-compiler',
 					'text'  => I18n::translate('system.issues.vue.compiler'),
+					'theme' => 'notice'
+				];
+			}
+
+			if ($kirby->option('content.salt') === null) {
+				$security[] = [
+					'id'    => 'content-salt',
+					'link'  => 'https://getkirby.com/security/content-salt',
+					'text'  => I18n::translate('system.issues.content.salt'),
+					'theme' => 'notice'
+				];
+			}
+
+			if (Cookie::$key === 'KirbyHttpCookieKey') {
+				$security[] = [
+					'id'    => 'cookie-key',
+					'link'  => 'https://getkirby.com/security/cookie-key',
+					'text'  => I18n::translate('system.issues.cookie.key'),
 					'theme' => 'notice'
 				];
 			}

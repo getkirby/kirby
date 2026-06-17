@@ -931,25 +931,47 @@ class EnvironmentTest extends TestCase
 	public static function isLocalWithIpProvider(): array
 	{
 		return [
-			['127.0.0.1', '127.0.0.1', '127.0.0.1', true],
-			['::1', '::1', '::1', true],
-			['127.0.0.1', '::1', null, true],
-			['::1', '127.0.0.1', false, true],
-			['1.2.3.4', '127.0.0.1', '::1', false],
-			['127.0.0.1', null, '1.2.3.4', false],
-			['127.0.0.1', null, '', true],
-			[null, null, null, false],
-			['', null, false, false],
+			['127.0.0.1', '127.0.0.1', true],
+			['::1', '::1', true],
+			['127.0.0.1', '::1', true],
+			['::1', '127.0.0.1', true],
+			['1.2.3.4', '127.0.0.1', false],
+			['127.0.0.1', '1.2.3.4', false],
+			['1234::5678:abcd:efgh', '127.0.0.1', false],
+			['127.0.0.1', '1234::5678:abcd:efgh', false],
+			['127.0.0.1', null, true],
+			[null, '127.0.0.1', true],
+			['', null, false],
 		];
 	}
 
 	#[DataProvider('isLocalWithIpProvider')]
-	public function testIsLocalWithIp($address, $forwardedFor, $clientIp, bool $expected): void
+	public function testIsLocalWithIp(string|null $address, string|null $forwardedFor, bool $expected): void
 	{
 		$env = new Environment(null, [
 			'REMOTE_ADDR' => $address,
 			'HTTP_X_FORWARDED_FOR' => $forwardedFor,
-			'HTTP_CLIENT_IP' => $clientIp,
+		]);
+
+		$this->assertSame($expected, $env->isLocal());
+
+		$env = new Environment(null, [
+			'REMOTE_ADDR' => $address,
+			'HTTP_CLIENT_IP' => $forwardedFor,
+		]);
+
+		$this->assertSame($expected, $env->isLocal());
+
+		$env = new Environment(null, [
+			'REMOTE_ADDR' => $address,
+			'HTTP_X_CLIENT_IP' => $forwardedFor,
+		]);
+
+		$this->assertSame($expected, $env->isLocal());
+
+		$env = new Environment(null, [
+			'REMOTE_ADDR' => $address,
+			'HTTP_X_REAL_IP' => $forwardedFor,
 		]);
 
 		$this->assertSame($expected, $env->isLocal());
@@ -957,10 +979,45 @@ class EnvironmentTest extends TestCase
 		$env = new Environment(null, [
 			'REMOTE_ADDR' => $address,
 			'HTTP_FORWARDED' => 'for="' . $forwardedFor . '"',
-			'HTTP_CLIENT_IP' => $clientIp,
 		]);
 
 		$this->assertSame($expected, $env->isLocal());
+	}
+
+	public function testIsLocalWithForwardedForOnly(): void
+	{
+		// HTTP_FORWARDED carries a localhost `for=` value as the only IP signal.
+		// isLocal() must treat the request as local, just like it does for
+		// HTTP_X_FORWARDED_FOR with the same value.
+		$env = new Environment(null, [
+			'HTTP_FORWARDED' => 'for=127.0.0.1',
+		]);
+
+		$this->assertTrue($env->isLocal());
+	}
+
+	public function testIsLocalWithExternalForwardedForOnly(): void
+	{
+		// HTTP_FORWARDED carries a remote `for=` value as the only IP signal.
+		// isLocal() must treat the request as non-local, just like it does for
+		// HTTP_X_FORWARDED_FOR with the same value.
+		$env = new Environment(null, [
+			'HTTP_FORWARDED' => 'for=1.2.3.4',
+		]);
+
+		$this->assertFalse($env->isLocal());
+	}
+
+	public function testIsLocalWithForwardedForAndHost(): void
+	{
+		// Even when the Forwarded header also carries host/proto fields,
+		// the for= value must be extracted.
+		$env = new Environment(null, [
+			'REMOTE_ADDR'    => '127.0.0.1',
+			'HTTP_FORWARDED' => 'for=1.2.3.4;host=example.com;proto=https',
+		]);
+
+		$this->assertFalse($env->isLocal());
 	}
 
 	public static function isLocalWithServerNameProvider(): array

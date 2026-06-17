@@ -30,6 +30,7 @@ class Blueprint
 	public static array $loaded = [];
 
 	protected array $fields = [];
+	protected array|null $fieldsLower = null;
 	protected ModelWithContent $model;
 	protected array $props;
 	protected array $sections = [];
@@ -366,7 +367,13 @@ class Blueprint
 	 */
 	public function field(string $name): array|null
 	{
-		return $this->fields[$name] ?? null;
+		if (isset($this->fields[$name]) === true) {
+			return $this->fields[$name];
+		}
+
+		// field objects use normalized lowercase keys
+		$this->fieldsLower ??= array_change_key_case($this->fields);
+		return $this->fieldsLower[Str::lower($name)] ?? null;
 	}
 
 	/**

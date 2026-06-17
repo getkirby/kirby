@@ -19,6 +19,16 @@ class Cookie
 {
 	/**
 	 * Key to use for cookie signing
+	 *
+	 * A hardcoded default is used intentionally: there is no install step
+	 * during which a random key could be generated and persisted. Kirby goes
+	 * live the moment files are present on the server, so there is no defined
+	 * point at which to write a one-time secret. Config files are typically
+	 * kept in version control and cannot be written by the system without
+	 * causing merge conflicts. No value in $_SERVER is both universally
+	 * available across hosting environments and stable enough to serve as a
+	 * key. Sites with security requirements must override this property with
+	 * a secret random value before the first cookie is set.
 	 */
 	public static string $key = 'KirbyHttpCookieKey';
 
@@ -157,7 +167,12 @@ class Cookie
 	 */
 	protected static function hmac(string $value): string
 	{
-		return hash_hmac('sha1', $value, static::$key);
+		// prefer the option if it was set, otherwise use the value
+		// set directly to this class (for backwards-compatibility)
+		// or fall back to the fixed default set directly with the prop
+		$key = App::instance(lazy: true)?->option('cookie.key') ?: static::$key;
+
+		return hash_hmac('sha1', $value, $key);
 	}
 
 	/**
