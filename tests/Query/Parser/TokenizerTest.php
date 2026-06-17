@@ -251,4 +251,27 @@ class TokenizerTest extends TestCase
 		$this->assertSame($expectedLexeme, $token->lexeme);
 
 	}
+
+	public function testTokensWithMultibyteCharacters(): void
+	{
+		// Multibyte (UTF-8) characters in a non-final token must not desync
+		// the tokenizer cursor: the byte length of the lexeme drives the
+		// position, not its character count.
+		$query     = "x.or('Questions fréquentes')";
+		$tokenizer = new Tokenizer($query);
+		$tokens    = iterator_to_array($tokenizer->tokens());
+
+		$expected = [
+			TokenType::T_IDENTIFIER,    // x
+			TokenType::T_DOT,
+			TokenType::T_IDENTIFIER,    // or
+			TokenType::T_OPEN_PAREN,
+			TokenType::T_STRING,        // 'Questions fréquentes'
+			TokenType::T_CLOSE_PAREN,
+			TokenType::T_EOF,
+		];
+
+		$this->assertSame($expected, array_map(fn ($t) => $t->type, $tokens));
+		$this->assertSame('Questions fréquentes', $tokens[4]->literal);
+	}
 }
