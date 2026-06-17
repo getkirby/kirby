@@ -288,6 +288,24 @@ class SystemTest extends AreaTestCase
 		$this->assertArrayNotHasKey(3, $props['security']);
 	}
 
+	public function testViewWithCustomCookieKeyInConfig(): void
+	{
+		$this->app([
+			'options' => [
+				'cookie' => [
+					'key' => 'custom-cookie-key'
+				]
+			]
+		]);
+
+		$this->login();
+
+		$view  = $this->view('system');
+		$props = $view['props'];
+
+		$this->assertArrayNotHasKey(3, $props['security']);
+	}
+
 	public function testViewHttps(): void
 	{
 		$this->app([
