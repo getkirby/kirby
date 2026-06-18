@@ -120,6 +120,14 @@ class I18nTest extends TestCase
 			'Das ist ein test template',
 			I18n::template('template', null, ['test' => 'test template'], 'de')
 		);
+
+		// without replace argument (no TypeError)
+		I18n::$translations = [
+			'en' => [
+				'simple' => 'No placeholders here'
+			]
+		];
+		$this->assertSame('No placeholders here', I18n::template('simple'));
 	}
 
 	public function testTranslateI18nKey(): void
