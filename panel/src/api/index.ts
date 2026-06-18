@@ -8,6 +8,7 @@ import Site from "./site";
 import Translations from "./translations";
 import Users from "./users";
 
+import type Panel from "@/panel/panel";
 import { request, type PanelRequestOptions } from "@/panel/request";
 import { ltrim, rtrim } from "@/helpers/string";
 import { buildQuery } from "@/helpers/url";
@@ -20,7 +21,7 @@ export default class Api {
 	endpoint: string;
 	methodOverride: boolean;
 	language: string | null;
-	panel: TODO;
+	panel: Panel;
 	pingId?: ReturnType<typeof setInterval>;
 	requests: string[] = [];
 
@@ -34,7 +35,7 @@ export default class Api {
 	translations: ReturnType<typeof Translations>;
 	users: ReturnType<typeof Users>;
 
-	constructor(panel: TODO) {
+	constructor(panel: Panel) {
 		this.panel = panel;
 		this.csrf = panel.system.csrf;
 		this.endpoint = rtrim(panel.urls.api, "/");

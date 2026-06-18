@@ -1,10 +1,10 @@
+import type { App } from "vue";
+
 export default {
-	install(app) {
+	install(app: App) {
 		/**
 		 * Handles promise rejections that have
 		 * not been caught
-		 *
-		 * @param {Event} event
 		 */
 		window.onunhandledrejection = (event) => {
 			event.preventDefault();

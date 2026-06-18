@@ -105,9 +105,9 @@ async function previewForFile(
 	fields = ["filename", "panelImage"]
 ): Promise<LinkPreview> {
 	try {
-		const file = await window.panel.api.files.get(null, id, {
+		const file = (await window.panel.api.files.get(null, id, {
 			select: fields.join(",")
-		});
+		})) as { filename: string; panelImage: unknown };
 
 		return {
 			label: file.filename,
@@ -127,9 +127,9 @@ async function previewForPage(
 	}
 
 	try {
-		const page = await window.panel.api.pages.get(id, {
+		const page = (await window.panel.api.pages.get(id, {
 			select: fields.join(",")
-		});
+		})) as { title: string; panelImage: unknown };
 
 		return {
 			label: page.title,

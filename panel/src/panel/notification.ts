@@ -4,9 +4,10 @@ import JsonRequestError from "@/errors/JsonRequestError";
 import RequestError from "@/errors/RequestError";
 import State from "./state";
 import Timer from "@/helpers/timer";
+import type Panel from "./panel";
 
 export type NotificationState = {
-	context: "dialog" | "drawer" | "view" | null;
+	context: Panel["context"] | null;
 	details: Record<string, unknown>;
 	icon: string | null;
 	isOpen: boolean;
@@ -32,7 +33,7 @@ export function defaults(): NotificationState {
 /**
  * Normalizes an unknown value to an Error instance
  */
-function toError(error: unknown): Error {
+function toError(error: unknown): Error & { details?: unknown } {
 	if (typeof error === "string") {
 		return new Error(error);
 	}
@@ -52,7 +53,7 @@ function toError(error: unknown): Error {
  * Manages the Panel's notifications
  * @since 4.0.0
  */
-export default function Notification(panel: TODO) {
+export default function Notification(panel: Panel) {
 	const parent = State("notification", defaults());
 
 	return reactive({
@@ -109,7 +110,10 @@ export default function Notification(panel: TODO) {
 				} else {
 					panel.dialog.open({
 						component: "k-error-dialog",
-						props: err
+						props: {
+							message: err.message ?? "Something went wrong",
+							details: err.details ?? {}
+						}
 					});
 				}
 			}

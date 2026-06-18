@@ -1,29 +1,12 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import Feature, { defaults } from "./feature";
 import { type Listener } from "./listeners";
-
-// dummy panel to avoid dependencies
-const Panel = () => ({
-	dialog: {},
-	drawer: {},
-	error() {},
-	async get() {
-		return {} as Record<string, unknown>;
-	},
-	async open() {
-		return {};
-	},
-	async post() {
-		return {} as Record<string, unknown>;
-	},
-	url(path?: string | null) {
-		return path;
-	}
-});
+import Panel from "./panel";
 
 describe("panel.feature", () => {
 	it("should add event listeners", async () => {
-		const feature = Feature(Panel(), "test", defaults());
+		const panel = Panel.create(app);
+		const feature = Feature(panel, "test", defaults());
 		const listeners = {
 			submit: () => {},
 			cancel: () => {}
@@ -35,7 +18,8 @@ describe("panel.feature", () => {
 	});
 
 	it("should ignore invalid event listeners", async () => {
-		const feature = Feature(Panel(), "test", defaults());
+		const panel = Panel.create(app);
+		const feature = Feature(panel, "test", defaults());
 		const listeners = {
 			submit: () => {},
 			cancel: () => {}
@@ -50,7 +34,8 @@ describe("panel.feature", () => {
 	});
 
 	it("should detect event listeners", async () => {
-		const feature = Feature(Panel(), "test", defaults());
+		const panel = Panel.create(app);
+		const feature = Feature(panel, "test", defaults());
 		const listeners = {
 			submit: () => {}
 		};
@@ -62,7 +47,8 @@ describe("panel.feature", () => {
 	});
 
 	it("should emit events", async () => {
-		const feature = Feature(Panel(), "test", defaults());
+		const panel = Panel.create(app);
+		const feature = Feature(panel, "test", defaults());
 		let emitted = false;
 
 		feature.addEventListeners({
@@ -79,43 +65,32 @@ describe("panel.feature", () => {
 	describe("get()", () => {
 		it("should return the response", async () => {
 			const data = { $test: { component: "k-test" } };
-			const panel = {
-				...Panel(),
-				async get() {
-					return data;
-				}
-			};
+			const panel = Panel.create(app);
+			vi.spyOn(panel, "get").mockResolvedValue(data);
 			const feature = Feature(panel, "test", defaults());
 
 			expect(await feature.get("/some/url")).toStrictEqual(data);
 		});
 
 		it("should return false when the request fails", async () => {
-			const panel = {
-				...Panel(),
-				async get() {
-					throw new Error("Network error");
-				}
-			};
+			const panel = Panel.create(app);
+			vi.spyOn(panel, "get").mockRejectedValue(new Error("Network error"));
 			const feature = Feature(panel, "test", defaults());
 
 			expect(await feature.get("/some/url")).toStrictEqual(false);
 		});
 
 		it("should reset isLoading after the request", async () => {
-			const feature = Feature(Panel(), "test", defaults());
+			const panel = Panel.create(app);
+			const feature = Feature(panel, "test", defaults());
 			await feature.get("/some/url");
 
 			expect(feature.isLoading).toStrictEqual(false);
 		});
 
 		it("should reset isLoading after a failed request", async () => {
-			const panel = {
-				...Panel(),
-				async get() {
-					throw new Error();
-				}
-			};
+			const panel = Panel.create(app);
+			vi.spyOn(panel, "get").mockRejectedValue(new Error());
 			const feature = Feature(panel, "test", defaults());
 			await feature.get("/some/url");
 
@@ -125,7 +100,8 @@ describe("panel.feature", () => {
 
 	describe("load()", () => {
 		it("should reset isLoading after loading", async () => {
-			const feature = Feature(Panel(), "test", defaults());
+			const panel = Panel.create(app);
+			const feature = Feature(panel, "test", defaults());
 			await feature.load("/some/path");
 
 			expect(feature.isLoading).toStrictEqual(false);
@@ -133,23 +109,22 @@ describe("panel.feature", () => {
 
 		it("should not set isLoading when silent", async () => {
 			let isLoadingDuringOpen = false;
-			const ref: { feature?: ReturnType<typeof Feature> } = {};
+			const panel = Panel.create(app);
+			const feature = Feature(panel, "test", defaults());
 
-			const panel = {
-				...Panel(),
-				async open() {
-					isLoadingDuringOpen = ref.feature?.isLoading ?? false;
-				}
-			};
+			vi.spyOn(panel, "open").mockImplementation(async () => {
+				isLoadingDuringOpen = feature.isLoading;
+				return undefined;
+			});
 
-			ref.feature = Feature(panel, "test", defaults());
-			await ref.feature.load("/some/path", { silent: true });
+			await feature.load("/some/path", { silent: true });
 
 			expect(isLoadingDuringOpen).toStrictEqual(false);
 		});
 
 		it("should add listeners from options", async () => {
-			const feature = Feature(Panel(), "test", defaults());
+			const panel = Panel.create(app);
+			const feature = Feature(panel, "test", defaults());
 			const submit = () => {};
 			await feature.load("/some/path", { on: { submit } });
 
@@ -159,7 +134,8 @@ describe("panel.feature", () => {
 
 	describe("open()", () => {
 		it("should open with state", async () => {
-			const feature = Feature(Panel(), "test", defaults());
+			const panel = Panel.create(app);
+			const feature = Feature(panel, "test", defaults());
 
 			await feature.open({
 				component: "k-test-component",
@@ -171,7 +147,8 @@ describe("panel.feature", () => {
 		});
 
 		it("should open with submitter", async () => {
-			const feature = Feature(Panel(), "test", defaults());
+			const panel = Panel.create(app);
+			const feature = Feature(panel, "test", defaults());
 			const submitter = () => {};
 
 			await feature.open("/some/path", submitter);
@@ -180,7 +157,8 @@ describe("panel.feature", () => {
 		});
 
 		it("should emit open event", async () => {
-			const feature = Feature(Panel(), "test", defaults());
+			const panel = Panel.create(app);
+			const feature = Feature(panel, "test", defaults());
 			let emitted = false;
 
 			await feature.open(
@@ -200,7 +178,8 @@ describe("panel.feature", () => {
 
 	describe("post()", () => {
 		it("should throw when no path is set", async () => {
-			const feature = Feature(Panel(), "test", defaults());
+			const panel = Panel.create(app);
+			const feature = Feature(panel, "test", defaults());
 			await expect(feature.post({})).rejects.toThrow(
 				"The test cannot be posted"
 			);
@@ -208,12 +187,8 @@ describe("panel.feature", () => {
 
 		it("should return the response", async () => {
 			const data = { ok: true };
-			const panel = {
-				...Panel(),
-				async post() {
-					return data;
-				}
-			};
+			const panel = Panel.create(app);
+			vi.spyOn(panel, "post").mockResolvedValue(data);
 			const feature = Feature(panel, "test", defaults());
 			feature.set({ path: "/some/path" });
 
@@ -221,12 +196,8 @@ describe("panel.feature", () => {
 		});
 
 		it("should return false when the request fails", async () => {
-			const panel = {
-				...Panel(),
-				async post() {
-					throw new Error();
-				}
-			};
+			const panel = Panel.create(app);
+			vi.spyOn(panel, "post").mockRejectedValue(new Error());
 			const feature = Feature(panel, "test", defaults());
 			feature.set({ path: "/some/path" });
 
@@ -234,7 +205,8 @@ describe("panel.feature", () => {
 		});
 
 		it("should reset isLoading after the request", async () => {
-			const feature = Feature(Panel(), "test", defaults());
+			const panel = Panel.create(app);
+			const feature = Feature(panel, "test", defaults());
 			feature.set({ path: "/some/path" });
 			await feature.post({});
 
@@ -242,12 +214,8 @@ describe("panel.feature", () => {
 		});
 
 		it("should reset isLoading after a failed request", async () => {
-			const panel = {
-				...Panel(),
-				async post() {
-					throw new Error();
-				}
-			};
+			const panel = Panel.create(app);
+			vi.spyOn(panel, "post").mockRejectedValue(new Error());
 			const feature = Feature(panel, "test", defaults());
 			feature.set({ path: "/some/path" });
 			await feature.post({});
@@ -258,12 +226,8 @@ describe("panel.feature", () => {
 
 	describe("refresh()", () => {
 		it("should return undefined when the request fails", async () => {
-			const panel = {
-				...Panel(),
-				async get() {
-					throw new Error();
-				}
-			};
+			const panel = Panel.create(app);
+			vi.spyOn(panel, "get").mockRejectedValue(new Error());
 			const feature = Feature(panel, "test", defaults());
 			feature.set({ component: "k-test", path: "/some/path" });
 
@@ -271,12 +235,10 @@ describe("panel.feature", () => {
 		});
 
 		it("should return undefined when the component changed", async () => {
-			const panel = {
-				...Panel(),
-				async get() {
-					return { test: { component: "k-other", props: {} } };
-				}
-			};
+			const panel = Panel.create(app);
+			vi.spyOn(panel, "get").mockResolvedValue({
+				test: { component: "k-other", props: {} }
+			});
 			const feature = Feature(panel, "test", defaults());
 			feature.set({ component: "k-test", path: "/some/path" });
 
@@ -284,14 +246,10 @@ describe("panel.feature", () => {
 		});
 
 		it("should update props when the component matches", async () => {
-			const panel = {
-				...Panel(),
-				async get() {
-					return {
-						test: { component: "k-test", props: { message: "updated" } }
-					};
-				}
-			};
+			const panel = Panel.create(app);
+			vi.spyOn(panel, "get").mockResolvedValue({
+				test: { component: "k-test", props: { message: "updated" } }
+			});
 			const feature = Feature(panel, "test", defaults());
 			feature.set({ component: "k-test", path: "/some/path" });
 			await feature.refresh();
@@ -302,12 +260,14 @@ describe("panel.feature", () => {
 
 	describe("reload()", () => {
 		it("should return false when no path is set", async () => {
-			const feature = Feature(Panel(), "test", defaults());
+			const panel = Panel.create(app);
+			const feature = Feature(panel, "test", defaults());
 			expect(await feature.reload()).toStrictEqual(false);
 		});
 
 		it("should reload when a path is set", async () => {
-			const feature = Feature(Panel(), "test", defaults());
+			const panel = Panel.create(app);
+			const feature = Feature(panel, "test", defaults());
 			feature.set({ path: "/some/path" });
 
 			expect(await feature.reload()).not.toStrictEqual(false);
@@ -315,7 +275,8 @@ describe("panel.feature", () => {
 	});
 
 	it("should set state", async () => {
-		const feature = Feature(Panel(), "test", defaults());
+		const panel = Panel.create(app);
+		const feature = Feature(panel, "test", defaults());
 
 		feature.set({
 			component: "k-test"
@@ -326,7 +287,8 @@ describe("panel.feature", () => {
 	});
 
 	it("should set state with event listeners", async () => {
-		const feature = Feature(Panel(), "test", defaults());
+		const panel = Panel.create(app);
+		const feature = Feature(panel, "test", defaults());
 
 		const listeners = {
 			submit: () => {}
@@ -360,12 +322,13 @@ describe("panel.feature", () => {
 	});
 
 	it("should return the full URL", async () => {
-		const feature = Feature(Panel(), "test", defaults());
+		const panel = Panel.create(app);
+		const feature = Feature(panel, "test", defaults());
 
 		feature.set({
 			path: "/a/b/c"
 		});
 
-		expect(feature.url()).toStrictEqual("/a/b/c");
+		expect(feature.url().pathname).toStrictEqual("/a/b/c");
 	});
 });
