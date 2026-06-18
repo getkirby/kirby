@@ -313,7 +313,8 @@ class Responder implements Stringable
 				if (isset($injectedHeaders['Vary']) === true) {
 					// split CORS Vary into individual values
 					// to avoid duplication
-					$corsVaryValues = array_map('trim', explode(',', $injectedHeaders['Vary']));
+					$corsVaryValues = explode(',', $injectedHeaders['Vary']);
+					$corsVaryValues = array_map(trim(...), $corsVaryValues);
 					array_push($vary, ...$corsVaryValues);
 				}
 

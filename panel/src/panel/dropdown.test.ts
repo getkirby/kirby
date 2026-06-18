@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import Dropdown from "./dropdown";
-import Panel from "./panel.js";
+import Panel from "./panel";
 
 describe("panel.dropdown", () => {
 	describe("state", () => {

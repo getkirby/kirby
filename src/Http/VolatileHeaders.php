@@ -62,7 +62,7 @@ class VolatileHeaders
 
 		foreach ($corsHeaders as $name => $value) {
 			if ($name === 'Vary') {
-				$corsVaryValues = array_map('trim', explode(',', $value));
+				$corsVaryValues = array_map(trim(...), explode(',', $value));
 				$this->append($name, $corsVaryValues, $volatile);
 				continue;
 			}
@@ -87,7 +87,7 @@ class VolatileHeaders
 	 */
 	protected function normalizeVaryValues(string $value): array
 	{
-		$values = A::map(explode(',', $value), 'trim');
+		$values = A::map(explode(',', $value), trim(...));
 		$values = A::filter($values, static fn ($entry) => $entry !== '');
 
 		return array_values(array_unique($values));
@@ -98,7 +98,7 @@ class VolatileHeaders
 	 */
 	protected function removeVaryValues(array $values, array $remove): array
 	{
-		$removeLower = A::map($remove, 'strtolower');
+		$removeLower = A::map($remove, strtolower(...));
 
 		return array_values(A::filter(
 			$values,

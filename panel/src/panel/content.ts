@@ -4,6 +4,7 @@ import { isAbortError } from "@/helpers/error";
 import { isObject, length } from "@/helpers/object";
 import throttle from "@/helpers/throttle";
 import Dialog from "./dialog";
+import type Panel from "./panel";
 
 type Env = {
 	api: string;
@@ -29,7 +30,7 @@ const isLockRequestError = (
 /**
  * @since 5.0.0
  */
-export default function Content(panel: TODO) {
+export default function Content(panel: Panel) {
 	const content = reactive({
 		/**
 		 * Cancel any scheduled or ongoing save requests

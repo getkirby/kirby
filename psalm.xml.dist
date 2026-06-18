@@ -7,27 +7,43 @@
 	xmlns="https://getpsalm.org/schema/config"
 	xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
 >
-	<projectFiles>
-		<directory name="config" />
-		<directory name="src" />
-		<directory name="views" />
-		<file name="bootstrap.php" />
-		<file name="router.php" />
-		<ignoreFiles>
-			<directory name="vendor" />
-		</ignoreFiles>
-	</projectFiles>
+	<forbiddenFunctions>
+		<function name="var_dump" />
+		<function name="dd" />
+		<function name="ray" />
+		<function name="phpinfo" />
+		<function name="eval" />
+		<function name="create_function" />
+		<function name="exec" />
+		<function name="shell_exec" />
+		<function name="system" />
+		<function name="passthru" />
+		<function name="proc_open" />
+		<function name="popen" />
+	</forbiddenFunctions>
 
 	<issueHandlers>
+		<!-- Don't warn about duplicate array keys as Psalm will throw false positive when unpacking arrays -->
+		<DuplicateArrayKey errorLevel="suppress" />
+
+		<!-- Allow ImageMagick to run exec() call -->
+		<ForbiddenCode>
+			<errorLevel type="suppress">
+				<file name="src/Image/Darkroom/ImageMagick.php" />
+			</errorLevel>
+		</ForbiddenCode>
+
+		<!-- Don't warn about access to @internal symbols as Kirby uses @internal to document API that is not meant for site/plugin developers, not to restrict access within core itself -->
+		<InternalClass errorLevel="suppress" />
+		<InternalMethod errorLevel="suppress" />
+		<InternalProperty errorLevel="suppress" />
+
 		<!-- Don't warn about "$this in a non-class context" in the config dir -->
 		<InvalidScope>
 			<errorLevel type="suppress">
 				<directory name="config" />
 			</errorLevel>
 		</InvalidScope>
-
-		<!-- Don't warn about duplicate array keys as Psalm will throw false positive when unpacking arrays -->
-		<DuplicateArrayKey errorLevel="suppress" />
 
 		<!-- Don't warn about missing overrides attributes - we do not want to use them so far -->
 		<MissingOverrideAttribute errorLevel="suppress" />
@@ -46,9 +62,28 @@
 		<UnusedFunctionCall errorLevel="suppress" />
 		<UnusedVariable errorLevel="suppress" />
 		<UndefinedClass errorLevel="suppress" />
+
+		<!-- Don't warn about undefined magic methods/properties as Kirby resolves much of its API dynamically through __call/__callStatic/__get/__set, which Psalm cannot follow statically -->
+		<UndefinedMagicMethod errorLevel="suppress" />
+		<UndefinedMagicPropertyFetch errorLevel="suppress" />
+		<UndefinedMagicPropertyAssignment errorLevel="suppress" />
+
+		<!-- Level 4 preparation -->
+		<RedundantFunctionCall errorLevel="error" />
 	</issueHandlers>
 
 	<plugins>
 		<plugin filename="etc/psalm-plugins/HelperFunctionUsePlugin.php" />
 	</plugins>
+
+	<projectFiles>
+		<directory name="config" />
+		<directory name="src" />
+		<directory name="views" />
+		<file name="bootstrap.php" />
+		<file name="router.php" />
+		<ignoreFiles>
+			<directory name="vendor" />
+		</ignoreFiles>
+	</projectFiles>
 </psalm>

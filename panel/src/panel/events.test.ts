@@ -1,6 +1,6 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import Events from "./events";
-import Panel from "./panel.js";
+import Panel from "./panel";
 
 describe("panel.events", () => {
 	describe("drag & drop", () => {
@@ -155,7 +155,7 @@ describe("panel.events", () => {
 	});
 
 	describe("online/offline", () => {
-		const panel = Panel.create(app) as TODO;
+		const panel = Panel.create(app);
 		const events = Events(panel);
 
 		it("should set panel.isOffline to true on offline", () => {
@@ -210,8 +210,7 @@ describe("panel.events", () => {
 		const events = Events(panel);
 
 		it("should call panel.search on keydown.cmd.shift.f", () => {
-			let searched = false;
-			panel.search = () => (searched = true);
+			const search = vi.spyOn(panel, "search").mockResolvedValue(undefined);
 
 			events.keydown({
 				metaKey: true,
@@ -219,19 +218,18 @@ describe("panel.events", () => {
 				key: "f"
 			} as unknown as KeyboardEvent);
 
-			expect(searched).toStrictEqual(true);
+			expect(search).toHaveBeenCalled();
 		});
 
 		it("should call panel.search on keydown.cmd./", () => {
-			let searched = false;
-			panel.search = () => (searched = true);
+			const search = vi.spyOn(panel, "search").mockResolvedValue(undefined);
 
 			events.keydown({
 				metaKey: true,
 				key: "/"
 			} as unknown as KeyboardEvent);
 
-			expect(searched).toStrictEqual(true);
+			expect(search).toHaveBeenCalled();
 		});
 	});
 });

@@ -12,7 +12,7 @@ import {
 
 window.panel = {
 	t: (value: string) => value
-};
+} as unknown as typeof window.panel;
 
 describe("$helper.link", () => {
 	describe("detect()", () => {
@@ -80,7 +80,7 @@ describe("$helper.link", () => {
 					files: { get: vi.fn() },
 					pages: { get: vi.fn() }
 				}
-			};
+			} as unknown as typeof window.panel;
 		});
 
 		it("should return null when there is no link", async () => {
@@ -96,7 +96,7 @@ describe("$helper.link", () => {
 		});
 
 		it("should return a page preview", async () => {
-			window.panel.api.pages.get.mockResolvedValue({
+			vi.mocked(window.panel.api.pages.get).mockResolvedValue({
 				title: "About",
 				panelImage: "IMG"
 			});
@@ -120,12 +120,14 @@ describe("$helper.link", () => {
 		});
 
 		it("should return null when the page api throws", async () => {
-			window.panel.api.pages.get.mockRejectedValue(new Error("nope"));
+			vi.mocked(window.panel.api.pages.get).mockRejectedValue(
+				new Error("nope")
+			);
 			expect(await preview({ type: "page", link: "page://2" })).toBeNull();
 		});
 
 		it("should return a file preview", async () => {
-			window.panel.api.files.get.mockResolvedValue({
+			vi.mocked(window.panel.api.files.get).mockResolvedValue({
 				filename: "image.png",
 				panelImage: "IMG"
 			});
@@ -146,7 +148,9 @@ describe("$helper.link", () => {
 		});
 
 		it("should return null when the file api throws", async () => {
-			window.panel.api.files.get.mockRejectedValue(new Error("nope"));
+			vi.mocked(window.panel.api.files.get).mockRejectedValue(
+				new Error("nope")
+			);
 			expect(await preview({ type: "file", link: "file://1" })).toBeNull();
 		});
 	});

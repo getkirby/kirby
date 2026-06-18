@@ -1,5 +1,6 @@
 import { describe, expect, it, beforeEach, afterEach, vi } from "vitest";
 import Menu from "./menu";
+import Panel from "./panel";
 
 const createMenu = (isMobile = false) => {
 	vi.spyOn(window, "matchMedia").mockReturnValue({
@@ -7,7 +8,7 @@ const createMenu = (isMobile = false) => {
 		addEventListener: vi.fn()
 	} as unknown as MediaQueryList);
 
-	const panel = { events: { on: vi.fn() } };
+	const panel = Panel.create(app);
 	return Menu(panel);
 };
 
@@ -22,13 +23,14 @@ describe("panel.menu", () => {
 	});
 
 	it("registers escape and click handlers on panel events", () => {
-		const on = vi.fn();
 		vi.spyOn(window, "matchMedia").mockReturnValue({
 			matches: false,
 			addEventListener: vi.fn()
 		} as unknown as MediaQueryList);
 
-		Menu({ events: { on } });
+		const panel = Panel.create(app);
+		const on = vi.spyOn(panel.events, "on");
+		Menu(panel);
 
 		expect(on).toHaveBeenCalledWith("keydown.esc", expect.any(Function));
 		expect(on).toHaveBeenCalledWith("click", expect.any(Function));

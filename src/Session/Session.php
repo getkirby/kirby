@@ -82,9 +82,10 @@ class Session
 		}
 
 		// new session ($token = null)
+		$now = time();
 
 		// set data based on options
-		$this->startTime  = static::timeToTimestamp($options['startTime'] ?? time());
+		$this->startTime  = static::timeToTimestamp($options['startTime'] ?? $now);
 		$this->expiryTime = static::timeToTimestamp($options['expiryTime'] ?? '+ 2 hours', $this->startTime);
 		$this->duration   = $this->expiryTime - $this->startTime;
 		$this->timeout    = $options['timeout'] ?? 1800;
@@ -92,7 +93,7 @@ class Session
 		$this->data       = new SessionData($this, []);
 
 		// validate persistent data
-		if (time() > $this->expiryTime) {
+		if ($now > $this->expiryTime) {
 			// session must not already be expired, but the start time may be in the future
 			throw new InvalidArgumentException(
 				data: [
@@ -116,7 +117,7 @@ class Session
 
 		// set activity time if a timeout was requested
 		if (is_int($this->timeout) === true) {
-			$this->lastActivity = time();
+			$this->lastActivity = $now;
 		}
 	}
 
@@ -185,9 +186,10 @@ class Session
 		if ($expiryTime !== null) {
 			// convert to a timestamp
 			$expiryTime = static::timeToTimestamp($expiryTime);
+			$now        = time();
 
 			// verify that the expiry time is not in the past
-			if ($expiryTime <= time()) {
+			if ($expiryTime <= $now) {
 				throw new InvalidArgumentException(
 					data: [
 						'method'   => 'Session::expiryTime',
@@ -199,7 +201,7 @@ class Session
 
 			$this->prepareForWriting();
 			$this->expiryTime = $expiryTime;
-			$this->duration   = $expiryTime - time();
+			$this->duration   = $expiryTime - $now;
 			$this->regenerateTokenIfNotNew();
 		}
 
@@ -715,9 +717,11 @@ class Session
 		}
 
 		// verify start and expiry time
+		$now = time();
+
 		if (
-			time() < $data['startTime'] ||
-			time() > $data['expiryTime']
+			$now < $data['startTime'] ||
+			$now > $data['expiryTime']
 		) {
 			throw new LogicException(
 				key: 'session.invalid',
@@ -751,7 +755,7 @@ class Session
 
 		// verify timeout
 		if (is_int($data['timeout']) === true) {
-			if (time() - $data['lastActivity'] > $data['timeout']) {
+			if ($now - $data['lastActivity'] > $data['timeout']) {
 				throw new LogicException(
 					key: 'session.invalid',
 					data: ['token' => $this->token()],
@@ -761,19 +765,21 @@ class Session
 				);
 			}
 
-			// set a new activity timestamp, but only every few minutes for better performance
-			// don't do this if another call to init() is already doing it to prevent endless loops;
+			// set a new activity timestamp, but only every few minutes for
+			// better performance; don't do this if another call to init()
+			// is already doing it to prevent endless loops;
 			// also don't do this for read-only sessions
 			if (
 				$this->updatingLastActivity === false &&
 				$this->tokenKey !== null &&
-				time() - $data['lastActivity'] > $data['timeout'] / 15
+				$now - $data['lastActivity'] > $data['timeout'] / 15
 			) {
 				$this->updatingLastActivity = true;
 				$this->prepareForWriting();
 
-				// the remaining init steps have been done by prepareForWriting()
-				$this->lastActivity = time();
+				// the remaining init steps have been done
+				// by prepareForWriting()
+				$this->lastActivity         = $now;
 				$this->updatingLastActivity = false;
 				return;
 			}
