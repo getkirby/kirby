@@ -1,6 +1,7 @@
 import type { MarkSpec } from "prosemirror-model";
 import type { Plugin, PluginSpec } from "prosemirror-state";
 import type { EditorView } from "prosemirror-view";
+import { isEmail } from "@/helpers/string";
 import Mark, { type MarkContext } from "../Mark";
 
 export default class Email extends Mark {
@@ -25,10 +26,24 @@ export default class Email extends Mark {
 					return;
 				}
 
+				const hasEmailMark = this.editor.activeMarks.includes("email");
+
+				// reject anything that doesn't look like an email so it
+				// never enters the document state; if an email mark is
+				// already active, remove it entirely
+				if (isEmail(attrs.href) === false) {
+					if (hasEmailMark === true) {
+						return this.remove();
+					}
+
+					return;
+				}
+
 				const { selection } = this.editor.state!;
 
-				// if no text is selected, we insert the email as text
-				if (selection.empty) {
+				// if no text is selected and email mark is not active
+				// we insert the email as text
+				if (selection.empty && hasEmailMark === false) {
 					this.editor.insertText(attrs.href, true);
 				}
 
@@ -53,9 +68,11 @@ export default class Email extends Mark {
 
 	pasteRules({ type, utils }: MarkContext): Plugin[] {
 		return [
-			utils.pasteRule(/[\w-.]+@([\w-]+\.)+[\w-]{2,4}/gi, type, (url) => ({
-				href: url
-			}))
+			utils.pasteRule(
+				/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/gi,
+				type,
+				(url) => ({ href: url })
+			)
 		];
 	}
 
@@ -70,7 +87,8 @@ export default class Email extends Mark {
 						if (
 							attrs.href &&
 							event.altKey === true &&
-							event.target instanceof HTMLAnchorElement
+							event.target instanceof HTMLAnchorElement &&
+							isEmail(attrs.href) === true
 						) {
 							event.stopPropagation();
 							window.open("mailto:" + attrs.href);
@@ -95,10 +113,19 @@ export default class Email extends Mark {
 			parseDOM: [
 				{
 					tag: "a[href^='mailto:']",
-					getAttrs: (dom) => ({
-						href: dom.getAttribute("href")!.replace("mailto:", ""),
-						title: dom.getAttribute("title")
-					})
+					getAttrs: (dom) => {
+						const raw = dom.getAttribute("href") ?? "";
+						const href = raw.replace(/^mailto:/i, "");
+
+						if (isEmail(href) === false) {
+							return false;
+						}
+
+						return {
+							href,
+							title: dom.getAttribute("title")
+						};
+					}
 				}
 			],
 			toDOM: (node) => [

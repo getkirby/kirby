@@ -20,6 +20,18 @@ class Html extends Xml
 	public static array|null $entities = null;
 
 	/**
+	 * List of hosts that are allowed as source for embedded
+	 * Gists. Embedding Gists from any other host is blocked to
+	 * prevent loading untrusted scripts. Additional hosts (e.g.
+	 * for GitHub Enterprise) can be allowed via config:
+	 *
+	 * ```php
+	 * Html::$gistDomains[] = 'gist.example.com';
+	 * ```
+	 */
+	public static array $gistDomains = ['gist.github.com'];
+
+	/**
 	 * List of HTML tags that can be used inline
 	 */
 	public static array $inlineList = [
@@ -311,6 +323,12 @@ class Html extends Xml
 		string|null $file = null,
 		array $attr = []
 	): string {
+		// only embed Gists from allowed hosts to prevent
+		// loading untrusted scripts from arbitrary URLs
+		if (in_array((new Uri($url))->host(), static::$gistDomains, true) === false) {
+			return '';
+		}
+
 		$src = $url . '.js';
 
 		if ($file !== null) {

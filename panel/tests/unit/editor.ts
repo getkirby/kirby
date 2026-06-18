@@ -162,6 +162,7 @@ export function hasMark(schema: Schema, html: string, mark: MarkType): boolean {
 
 export function mockEditor(overrides = {}): Editor {
 	return {
+		activeMarks: [],
 		removeMark: vi.fn(),
 		toggleMark: vi.fn(),
 		updateMark: vi.fn(),

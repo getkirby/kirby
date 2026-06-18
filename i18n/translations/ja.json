@@ -204,6 +204,8 @@
 	"error.page.undefined": "ページが見つかりません",
 	"error.page.update.permission": "\"{slug}\"を更新する権限がありません",
 
+	"error.role.notFound": "The role \"{name}\" cannot be found",
+
 	"error.section.files.max.plural": "\"{section}\"セクションに{max}個を超えるファイルを追加することはできません",
 	"error.section.files.max.singular": "\"{section}\"セクションにはファイルを1つまでしか追加できません",
 	"error.section.files.min.plural": "\"{section}\"セクションには少なくとも{min}個のファイルが必要です",
@@ -219,6 +221,7 @@
 
 	"error.site.changeTitle.empty": "タイトルを空にすることはできません",
 	"error.site.changeTitle.permission": "サイトのタイトルを変更する権限がありません",
+	"error.site.notAccessible": "The site is not accessible",
 	"error.site.update.permission": "サイトを更新する権限がありません",
 
 	"error.structure.validation": "行{index}の\"{field}\"フィールドにエラーがあります",
@@ -748,7 +751,7 @@
 	"toolbar.button.underline": "下線",
 	"toolbar.button.ul": "箇条書きリスト",
 
-	"translation.author": "Kosuke Okahara",
+	"translation.author": "Kirbyチーム",
 	"translation.direction": "ltr",
 	"translation.name": "Japanese",
 	"translation.locale": "ja_JP",

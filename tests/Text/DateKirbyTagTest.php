@@ -13,4 +13,12 @@ class DateKirbyTagTest extends TestCase
 		$this->assertSame(date('d.m.Y'), $app->kirbytags('(date: d.m.Y)'));
 		$this->assertSame(date('Y'), $app->kirbytags('(date: year)'));
 	}
+
+	public function testDateWithHtml(): void
+	{
+		$app = App::instance();
+
+		// HTML special characters in the format must be escaped
+		$this->assertSame('&lt;b&gt;', $app->kirbytags('(date: <b>)'));
+	}
 }
