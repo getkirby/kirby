@@ -14,7 +14,7 @@ class ChallengeTimeoutExceptionTest extends TestCase
 
 		$this->assertSame('Authentication challenge timeout', $exception->getMessage());
 		$this->assertSame('error.permission', $exception->getKey());
-		$this->assertSame(['challengeDestroyed' => true], $exception->getDetails());
+		$this->assertSame([], $exception->getDetails());
 		$this->assertSame(403, $exception->getHttpCode());
 	}
 }

@@ -37,10 +37,10 @@ class Challenges
 
 	public function available(User $user, string $mode): array
 	{
-		return A::filter(
+		return array_values(A::filter(
 			$this->enabled(),
 			fn ($type) => $this->class($type)::isAvailable($user, $mode)
-		);
+		));
 	}
 
 	/**
@@ -114,10 +114,10 @@ class Challenges
 	{
 		$config = $this->kirby->option('auth.challenges', ['totp', 'email']);
 
-		return A::filter(
+		return array_values(A::filter(
 			A::wrap($config),
 			fn ($type) => $this->class($type)::isEnabled($this->auth)
-		);
+		));
 	}
 
 	/**
@@ -131,14 +131,8 @@ class Challenges
 		$email = $session->get('kirby.challenge.email');
 		$type  = $session->get('kirby.challenge.type');
 
-		// if the challenge timed out on the previous request, the
-		// challenge data was already deleted from the session, so we can
-		// set `challengeDestroyed` to `true` in this response as well;
-		// however we must only base this on the email, not the type
-		// (otherwise "faked" challenges would be leaked)
 		if (is_string($email) !== true || is_string($type) !== true) {
 			throw new InvalidArgumentException(
-				details: ['challengeDestroyed' => is_string($email) !== true],
 				fallback: 'No authentication challenge is active'
 			);
 		}

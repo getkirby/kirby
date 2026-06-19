@@ -15,9 +15,6 @@ import LoginPasswordMethodForm from "./LoginPasswordMethodForm.vue";
 import LoginEmailChallengeForm from "./LoginEmailChallengeForm.vue";
 import LoginTotpChallengeForm from "./LoginTotpChallengeForm.vue";
 
-import LoginCodeForm from "./LoginCodeForm.vue";
-import LoginForm from "./LoginForm.vue";
-
 export default {
 	install(app) {
 		app.component("k-login-alert", LoginAlert);
@@ -38,9 +35,5 @@ export default {
 		);
 		app.component("k-login-email-challenge-form", LoginEmailChallengeForm);
 		app.component("k-login-totp-challenge-form", LoginTotpChallengeForm);
-
-		/** deprecated */
-		app.component("k-login-form", LoginForm);
-		app.component("k-login-code-form", LoginCodeForm);
 	}
 };
