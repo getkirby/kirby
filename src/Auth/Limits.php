@@ -22,6 +22,35 @@ class Limits
 	) {
 	}
 
+	/**
+	 * Normalizes the log structure and removes
+	 * entries whose timeout has expired
+	 */
+	protected function clean(array $log): array
+	{
+		// ensure that the category arrays are defined
+		$log['by-ip']    ??= [];
+		$log['by-email'] ??= [];
+
+		// remove all elements on the top level
+		// with different keys (old structure)
+		$log = array_intersect_key(
+			$log,
+			array_flip(['by-ip', 'by-email'])
+		);
+
+		// remove entries that are no longer needed
+		$time = time() - $this->kirby->option('auth.timeout', 3600);
+
+		return A::map(
+			$log,
+			fn ($category) => A::filter(
+				$category,
+				fn ($entry) => $entry['time'] > $time
+			)
+		);
+	}
+
 	public function ensure(string $email): void
 	{
 		if ($this->isBlocked($email) === true) {
@@ -57,25 +86,8 @@ class Limits
 
 	public function log(): array
 	{
-		$log  = Data::read($this->file(), 'json', fail: false);
-
-		// ensure that the category arrays are defined
-		$log['by-ip']    ??= [];
-		$log['by-email'] ??= [];
-
-		// remove all elements on the top level
-		// with different keys (old structure)
-		$log = array_intersect_key($log, array_flip(['by-ip', 'by-email']));
-
-		// remove entries that are no longer needed
-		$time    = time() - $this->kirby->option('auth.timeout', 3600);
-		$updated = A::map(
-			$log,
-			fn ($category) => A::filter(
-				$category,
-				fn ($entry) => $entry['time'] > $time
-			)
-		);
+		$log     = Data::read($this->file(), 'json', fail: false);
+		$updated = $this->clean($log);
 
 		// write new log to the file system if it changed
 		if ($updated['by-ip'] === [] && $updated['by-email'] === []) {
@@ -87,26 +99,39 @@ class Limits
 		return $updated;
 	}
 
-	public function track(string|null $email, bool $triggerHook = true): bool
-	{
+	public function track(
+		string|null $email,
+		bool $triggerHook = true
+	): bool {
 		if ($triggerHook === true) {
 			$this->kirby->trigger('user.login:failed', ['email' => $email]);
 		}
 
-		$log  = $this->log();
-		$ip   = $this->kirby->visitor()->ip(hash: true);
-		$time = time();
+		$ip      = $this->kirby->visitor()->ip(hash: true);
+		$time    = time();
+		$byEmail = $email !== null && $this->kirby->users()->find($email) !== null;
 
-		$log['by-ip'][$ip]          ??= ['trials' => 0];
-		$log['by-ip'][$ip]['time']    = $time;
-		$log['by-ip'][$ip]['trials'] += 1;
+		// serialize the whole read-modify-write under an exclusive
+		// lock so that concurrent failed logins cannot lose each
+		// other's increments (which would soften the rate limit)
+		return F::update(
+			$this->file(),
+			function (string $contents) use ($ip, $email, $time, $byEmail): string {
+				$data = Data::decode($contents, 'json', fail: false);
+				$log  = $this->clean($data);
 
-		if ($email !== null && $this->kirby->users()->find($email)) {
-			$log['by-email'][$email]          ??= ['trials' => 0];
-			$log['by-email'][$email]['time']    = $time;
-			$log['by-email'][$email]['trials'] += 1;
-		}
+				$log['by-ip'][$ip]          ??= ['trials' => 0];
+				$log['by-ip'][$ip]['time']    = $time;
+				$log['by-ip'][$ip]['trials'] += 1;
 
-		return Data::write($this->file(), $log, 'json');
+				if ($byEmail === true) {
+					$log['by-email'][$email]          ??= ['trials' => 0];
+					$log['by-email'][$email]['time']    = $time;
+					$log['by-email'][$email]['trials'] += 1;
+				}
+
+				return Data::encode($log, 'json');
+			}
+		);
 	}
 }

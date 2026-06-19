@@ -44,10 +44,32 @@ class LimitsTest extends TestCase
 			static::TMP . '/site/accounts/.logins'
 		);
 
-		$this->expectException(RateLimitException::class);
-
 		$this->app->visitor()->ip('10.1.123.234');
-		$this->limits->ensure('homer@simpsons.com');
+
+		try {
+			$this->limits->ensure('homer@simpsons.com');
+			$this->fail('Expected a RateLimitException');
+		} catch (RateLimitException) {
+			// expected
+		}
+
+		// the user.login:failed hook must fire before the exception
+		$this->assertSame('homer@simpsons.com', $this->failedEmail);
+	}
+
+	public function testEnsurePasses(): void
+	{
+		copy(
+			static::FIXTURES . '/logins.json',
+			static::TMP . '/site/accounts/.logins'
+		);
+
+		// IP 10.1 (87084f, 9 trials) and marge are both below
+		// the limit, so ensure() must not throw or fire the hook
+		$this->app->visitor()->ip('10.1.123.234');
+		$this->limits->ensure('marge@simpsons.com');
+
+		$this->assertNull($this->failedEmail);
 	}
 
 	public function testFile(): void
@@ -56,6 +78,70 @@ class LimitsTest extends TestCase
 			static::TMP . '/site/accounts/.logins',
 			$this->limits->file()
 		);
+	}
+
+	public function testIsBlocked(): void
+	{
+		copy(
+			static::FIXTURES . '/logins.json',
+			static::TMP . '/site/accounts/.logins'
+		);
+
+		$this->app->visitor()->ip('10.1.123.234');
+		$this->assertFalse($this->limits->isBlocked('marge@simpsons.com'));
+		$this->assertTrue($this->limits->isBlocked('homer@simpsons.com'));
+		$this->assertFalse($this->limits->isBlocked('lisa@simpsons.com'));
+
+		$this->app->visitor()->ip('10.2.123.234');
+		$this->assertTrue($this->limits->isBlocked('marge@simpsons.com'));
+		$this->assertTrue($this->limits->isBlocked('homer@simpsons.com'));
+		$this->assertTrue($this->limits->isBlocked('lisa@simpsons.com'));
+	}
+
+	public function testIsBlockedWithCustomTrialsOption(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth' => ['trials' => 5]
+			]
+		]);
+		$this->limits = new Limits($this->app);
+
+		file_put_contents($this->limits->file(), json_encode([
+			'by-ip' => [
+				'87084f11690867b977a611dd2c943a918c3197f4c02b25ab59' => [
+					'time'   => 9999999999,
+					'trials' => 5
+				]
+			],
+			'by-email' => []
+		]));
+
+		$this->app->visitor()->ip('10.1.123.234');
+
+		// 5 trials reaches the custom limit of 5
+		$this->assertTrue($this->limits->isBlocked('marge@simpsons.com'));
+	}
+
+	public function testIsBlockedByEmailForUnknownUser(): void
+	{
+		// IP 10.1 (87084f) is not present, so the only possible
+		// block comes from the email-based limit
+		file_put_contents($this->limits->file(), json_encode([
+			'by-ip' => [],
+			'by-email' => [
+				'ghost@simpsons.com' => [
+					'time'   => 9999999999,
+					'trials' => 10
+				]
+			]
+		]));
+
+		$this->app->visitor()->ip('10.1.123.234');
+
+		// ghost is not a registered user, but the email-based limit
+		// still applies because isBlocked() does no user lookup
+		$this->assertTrue($this->limits->isBlocked('ghost@simpsons.com'));
 	}
 
 	public function testLog(): void
@@ -103,22 +189,39 @@ class LimitsTest extends TestCase
 		$this->assertFileDoesNotExist(static::TMP . '/site/accounts/.logins');
 	}
 
-	public function testIsBlocked(): void
+	public function testLogRemovesLegacyKeysWithoutExpiredEntries(): void
 	{
-		copy(
-			static::FIXTURES . '/logins.json',
-			static::TMP . '/site/accounts/.logins'
-		);
+		$file = $this->limits->file();
 
-		$this->app->visitor()->ip('10.1.123.234');
-		$this->assertFalse($this->limits->isBlocked('marge@simpsons.com'));
-		$this->assertTrue($this->limits->isBlocked('homer@simpsons.com'));
-		$this->assertFalse($this->limits->isBlocked('lisa@simpsons.com'));
+		// a fresh (non-expired) entry plus an unknown top-level
+		// key from old log structure
+		file_put_contents($file, json_encode([
+			'by-ip' => [
+				'87084f11690867b977a611dd2c943a918c3197f4c02b25ab59' => [
+					'time'   => 9999999999,
+					'trials' => 5
+				]
+			],
+			'legacy' => [
+				'foo' => 'bar'
+			]
+		]));
 
-		$this->app->visitor()->ip('10.2.123.234');
-		$this->assertTrue($this->limits->isBlocked('marge@simpsons.com'));
-		$this->assertTrue($this->limits->isBlocked('homer@simpsons.com'));
-		$this->assertTrue($this->limits->isBlocked('lisa@simpsons.com'));
+		$expected = [
+			'by-ip' => [
+				'87084f11690867b977a611dd2c943a918c3197f4c02b25ab59' => [
+					'time'   => 9999999999,
+					'trials' => 5
+				]
+			],
+			'by-email' => []
+		];
+
+		// the legacy key is stripped from the return value ...
+		$this->assertSame($expected, $this->limits->log());
+
+		// ... and rewritten to disk even though nothing expired
+		$this->assertSame(json_encode($expected), file_get_contents($file));
 	}
 
 	public function testTrack(): void
@@ -180,5 +283,40 @@ class LimitsTest extends TestCase
 			json_encode($expected),
 			file_get_contents(static::TMP . '/site/accounts/.logins')
 		);
+	}
+
+	public function testTrackCreatesFile(): void
+	{
+		$file = $this->limits->file();
+		$this->assertFileDoesNotExist($file);
+
+		$this->app->visitor()->ip('10.1.123.234');
+		$this->assertTrue($this->limits->track('homer@simpsons.com'));
+
+		$this->assertFileExists($file);
+
+		$log = $this->limits->log();
+		$this->assertSame(
+			1,
+			$log['by-ip']['87084f11690867b977a611dd2c943a918c3197f4c02b25ab59']['trials']
+		);
+		$this->assertSame(1, $log['by-email']['homer@simpsons.com']['trials']);
+	}
+
+	public function testTrackWithCorruptedFile(): void
+	{
+		file_put_contents($this->limits->file(), 'some gibberish');
+
+		$this->app->visitor()->ip('10.1.123.234');
+		$this->assertTrue($this->limits->track('homer@simpsons.com'));
+
+		// the unreadable contents are discarded and a fresh log
+		// is written instead of throwing
+		$log = $this->limits->log();
+		$this->assertSame(
+			1,
+			$log['by-ip']['87084f11690867b977a611dd2c943a918c3197f4c02b25ab59']['trials']
+		);
+		$this->assertSame(1, $log['by-email']['homer@simpsons.com']['trials']);
 	}
 }
