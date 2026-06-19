@@ -9,6 +9,7 @@ import focus from "@/helpers/focus";
 import { uuid } from "@/helpers/string";
 import { wrap } from "@/helpers/array";
 import { type Listener } from "./listeners";
+import Panel from "./panel";
 
 export type ModalState = FeatureState & {
 	id: string | null;
@@ -20,7 +21,7 @@ type ModalSubmitResponse = {
 	event?: string | string[];
 	message?: string;
 	redirect?: string | { url: string; options?: Record<string, unknown> };
-	reload?: unknown;
+	reload?: Parameters<Panel["reload"]>[0];
 	route?: string | { url: string; options?: Record<string, unknown> };
 };
 
@@ -42,7 +43,7 @@ export function defaults(): ModalState {
  * @since 4.0.0
  */
 export default function Modal<T extends ModalState>(
-	panel: TODO,
+	panel: Panel,
 	key: string,
 	defaults: T
 ) {
@@ -236,7 +237,7 @@ export default function Modal<T extends ModalState>(
 		 * if there's no submit listener or backend route.
 		 */
 		async submit(
-			value: Record<string, unknown>,
+			value: Record<string, unknown> = {},
 			options: Partial<Prettify<T>> = {}
 		): Promise<unknown> {
 			if (this.isLoading === true) {

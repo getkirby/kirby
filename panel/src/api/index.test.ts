@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import Api from "./index";
+import type Panel from "@/panel/panel";
 
 function makePanel(overrides: Record<string, unknown> = {}) {
 	return {
@@ -10,7 +11,7 @@ function makePanel(overrides: Record<string, unknown> = {}) {
 		isOffline: false,
 		isLoading: false,
 		...overrides
-	};
+	} as unknown as Panel;
 }
 
 function mockFetch(json: Record<string, unknown> = { result: "ok" }) {

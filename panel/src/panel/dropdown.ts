@@ -1,13 +1,14 @@
 import { reactive } from "vue";
 import Feature, { defaults, type FeatureState } from "./feature";
 import { type Listener } from "./listeners";
+import type Panel from "./panel";
 
 export type DropdownState = FeatureState & {};
 
 /**
  * @since 4.0.0
  */
-export default function Dropdown(panel: TODO) {
+export default function Dropdown(panel: Panel) {
 	const parent = Feature(panel, "dropdown", defaults() as DropdownState);
 
 	return reactive({

@@ -1,20 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
 import Upload, { defaults } from "./upload";
+import Panel from "./panel";
 
 // URL.createObjectURL is not implemented in happy-dom
 URL.createObjectURL = vi.fn(() => "blob:mock-url");
-
-// Minimal panel stub
-const Panel = () => ({
-	config: { upload: {} },
-	dialog: { close: vi.fn(), isLoading: false, open: vi.fn() },
-	error: vi.fn(),
-	events: { emit: vi.fn() },
-	notification: { success: vi.fn() },
-	system: { csrf: "test-csrf" },
-	t: vi.fn((key: string) => key),
-	urls: { api: "https://example.com/api" }
-});
 
 function makeFile(name = "test.jpg", type = "image/jpeg", size = 100): File {
 	return new File([new ArrayBuffer(size)], name, { type });
@@ -49,7 +38,7 @@ describe("panel.upload", () => {
 
 	describe("cancel()", () => {
 		it("should emit a cancel event", async () => {
-			const panel = Panel();
+			const panel = Panel.create(app);
 			const upload = Upload(panel);
 			const onCancel = vi.fn();
 			upload.addEventListener("cancel", onCancel);
@@ -58,7 +47,7 @@ describe("panel.upload", () => {
 		});
 
 		it("should not emit complete when no files have been uploaded", async () => {
-			const panel = Panel();
+			const panel = Panel.create(app);
 			const upload = Upload(panel);
 			const onComplete = vi.fn();
 			upload.addEventListener("complete", onComplete);
@@ -67,7 +56,7 @@ describe("panel.upload", () => {
 		});
 
 		it("should emit complete with uploaded file models when some files are done", async () => {
-			const panel = Panel();
+			const panel = Panel.create(app);
 			const upload = Upload(panel);
 			const file = upload.file(makeFile("a.jpg"));
 			file.completed = true;
@@ -80,7 +69,7 @@ describe("panel.upload", () => {
 		});
 
 		it("should abort any ongoing request", async () => {
-			const panel = Panel();
+			const panel = Panel.create(app);
 			const upload = Upload(panel);
 			const controller = new AbortController();
 			const spy = vi.spyOn(controller, "abort");
@@ -90,7 +79,7 @@ describe("panel.upload", () => {
 		});
 
 		it("should reset state after cancelling", async () => {
-			const panel = Panel();
+			const panel = Panel.create(app);
 			const upload = Upload(panel);
 			upload.files = [upload.file(makeFile("a.jpg"))];
 			await upload.cancel();
@@ -100,20 +89,20 @@ describe("panel.upload", () => {
 
 	describe("completed", () => {
 		it("should return an empty array when no files exist", async () => {
-			const panel = Panel();
+			const panel = Panel.create(app);
 			const upload = Upload(panel);
 			expect(upload.completed).toStrictEqual([]);
 		});
 
 		it("should return an empty array when no files are completed", async () => {
-			const panel = Panel();
+			const panel = Panel.create(app);
 			const upload = Upload(panel);
 			upload.files = [upload.file(makeFile("a.jpg"))];
 			expect(upload.completed).toStrictEqual([]);
 		});
 
 		it("should only include completed files", async () => {
-			const panel = Panel();
+			const panel = Panel.create(app);
 			const upload = Upload(panel);
 			const done = upload.file(makeFile("a.jpg"));
 			const pending = upload.file(makeFile("b.jpg"));
@@ -126,14 +115,14 @@ describe("panel.upload", () => {
 
 	describe("findDuplicate()", () => {
 		it("should return -1 when the files list is empty", async () => {
-			const panel = Panel();
+			const panel = Panel.create(app);
 			const upload = Upload(panel);
 			const file = upload.file(makeFile("a.jpg"));
 			expect(upload.findDuplicate(file)).toStrictEqual(-1);
 		});
 
 		it("should return -1 when no duplicate exists", async () => {
-			const panel = Panel();
+			const panel = Panel.create(app);
 			const upload = Upload(panel);
 			upload.files = [upload.file(makeFile("a.jpg"))];
 			expect(
@@ -142,7 +131,7 @@ describe("panel.upload", () => {
 		});
 
 		it("should return the index of a matching file", async () => {
-			const panel = Panel();
+			const panel = Panel.create(app);
 			const upload = Upload(panel);
 			const src = makeFile("a.jpg");
 			upload.files = [upload.file(src)];
@@ -150,7 +139,7 @@ describe("panel.upload", () => {
 		});
 
 		it("should return the last index when multiple matches exist", async () => {
-			const panel = Panel();
+			const panel = Panel.create(app);
 			const upload = Upload(panel);
 			const src = makeFile("a.jpg");
 			upload.files = [upload.file(src), upload.file(src)];
@@ -160,7 +149,7 @@ describe("panel.upload", () => {
 
 	describe("hasUniqueName()", () => {
 		it("should return true when only one file has that name", async () => {
-			const panel = Panel();
+			const panel = Panel.create(app);
 			const upload = Upload(panel);
 			const file = upload.file(makeFile("test.jpg"));
 			upload.files = [file];
@@ -168,7 +157,7 @@ describe("panel.upload", () => {
 		});
 
 		it("should return false when two files share the same name and extension", async () => {
-			const panel = Panel();
+			const panel = Panel.create(app);
 			const upload = Upload(panel);
 			const a = upload.file(makeFile("test.jpg"));
 			const b = upload.file(makeFile("test.jpg"));
@@ -177,7 +166,7 @@ describe("panel.upload", () => {
 		});
 
 		it("should return true when name matches but extension differs", async () => {
-			const panel = Panel();
+			const panel = Panel.create(app);
 			const upload = Upload(panel);
 			const jpg = upload.file(makeFile("test.jpg", "image/jpeg"));
 			const png = upload.file(makeFile("test.png", "image/png"));
@@ -188,7 +177,7 @@ describe("panel.upload", () => {
 
 	describe("select()", () => {
 		it("should add selected files to the list", async () => {
-			const panel = Panel();
+			const panel = Panel.create(app);
 			const upload = Upload(panel);
 			expect(upload.files).toHaveLength(0);
 			upload.select(makeFileList(makeFile("a.jpg")));
@@ -196,7 +185,7 @@ describe("panel.upload", () => {
 		});
 
 		it("should merge with already selected files", async () => {
-			const panel = Panel();
+			const panel = Panel.create(app);
 			const upload = Upload(panel);
 			upload.select(makeFileList(makeFile("a.jpg")));
 			upload.select(makeFileList(makeFile("b.jpg")));
@@ -204,7 +193,7 @@ describe("panel.upload", () => {
 		});
 
 		it("should deduplicate files within a single selection", async () => {
-			const panel = Panel();
+			const panel = Panel.create(app);
 			const upload = Upload(panel);
 			const file = makeFile("a.jpg");
 			upload.select(makeFileList(file, file));
@@ -212,7 +201,7 @@ describe("panel.upload", () => {
 		});
 
 		it("should deduplicate across multiple selections, keeping the newer file", async () => {
-			const panel = Panel();
+			const panel = Panel.create(app);
 			const upload = Upload(panel);
 			const file = makeFile("a.jpg");
 			upload.select(makeFileList(file));
@@ -223,7 +212,7 @@ describe("panel.upload", () => {
 		});
 
 		it("should apply the max limit, keeping the latest files", async () => {
-			const panel = Panel();
+			const panel = Panel.create(app);
 			const upload = Upload(panel);
 			upload.set({ max: 2 });
 			upload.select(
@@ -235,7 +224,7 @@ describe("panel.upload", () => {
 		});
 
 		it("should accept an InputEvent and read files from its target", async () => {
-			const panel = Panel();
+			const panel = Panel.create(app);
 			const upload = Upload(panel);
 			const file = makeFile("a.jpg");
 			const input = document.createElement("input");
@@ -247,13 +236,13 @@ describe("panel.upload", () => {
 		});
 
 		it("should throw when no FileList is provided", async () => {
-			const panel = Panel();
+			const panel = Panel.create(app);
 			const upload = Upload(panel);
 			expect(() => upload.select(null)).toThrow("Please provide a FileList");
 		});
 
 		it("should emit a select event with the current file list", async () => {
-			const panel = Panel();
+			const panel = Panel.create(app);
 			const upload = Upload(panel);
 			const onSelect = vi.fn();
 			upload.addEventListener("select", onSelect);
@@ -264,27 +253,27 @@ describe("panel.upload", () => {
 
 	describe("set()", () => {
 		it("should return undefined when called without state", async () => {
-			const panel = Panel();
+			const panel = Panel.create(app);
 			const upload = Upload(panel);
 			expect(upload.set()).toStrictEqual(undefined);
 		});
 
 		it("should force multiple to false when max is 1", async () => {
-			const panel = Panel();
+			const panel = Panel.create(app);
 			const upload = Upload(panel);
 			upload.set({ max: 1 });
 			expect(upload.multiple).toStrictEqual(false);
 		});
 
 		it("should force max to 1 when multiple is false", async () => {
-			const panel = Panel();
+			const panel = Panel.create(app);
 			const upload = Upload(panel);
 			upload.set({ multiple: false });
 			expect(upload.max).toStrictEqual(1);
 		});
 
 		it("should apply the multiple rule even when max is greater than 1", async () => {
-			const panel = Panel();
+			const panel = Panel.create(app);
 			const upload = Upload(panel);
 			upload.set({ max: 3, multiple: false });
 			expect(upload.max).toStrictEqual(1);

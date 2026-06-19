@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import Dialog from "./dialog";
-import Panel from "./panel.js";
+import Panel from "./panel";
 
 describe("panel.dialog", () => {
 	describe("state", () => {
@@ -128,7 +128,6 @@ describe("panel.dialog", () => {
 			const event = { preventDefault: vi.fn() };
 			let submitted = false;
 
-			// @ts-expect-error panel.js is not typed
 			await panel.dialog.open({
 				component: "k-test",
 				on: {
@@ -138,7 +137,6 @@ describe("panel.dialog", () => {
 				}
 			});
 
-			// @ts-expect-error panel.js is not typed
 			panel.events.emit("dialog.save", event);
 
 			expect(submitted).toStrictEqual(true);

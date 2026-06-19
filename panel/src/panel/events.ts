@@ -1,6 +1,7 @@
 import clipboard from "@/helpers/clipboard";
 import { lcfirst } from "@/helpers/string";
 import mitt from "mitt";
+import type Panel from "./panel";
 
 /**
  * Global event delegation and event bus
@@ -8,7 +9,7 @@ import mitt from "mitt";
  * to start and stop listening to events
  * @since 4.0.0
  */
-export default function (panel: TODO) {
+export default function (panel: Panel) {
 	const emitter = mitt();
 
 	/**
@@ -260,9 +261,9 @@ export default function (panel: TODO) {
 		/**
 		 * Proxy for mitt's off method
 		 */
-		off: emitter.off as (
+		off: emitter.off as <E = unknown>(
 			type: string,
-			handler?: (event?: unknown) => void
+			handler?: (event?: E) => void
 		) => void,
 
 		/**
@@ -275,9 +276,9 @@ export default function (panel: TODO) {
 		/**
 		 * Proxy for mitt's on method
 		 */
-		on: emitter.on as (
+		on: emitter.on as <E = unknown>(
 			type: string,
-			handler?: (event?: unknown) => void
+			handler?: (event?: E) => void
 		) => void,
 
 		/**

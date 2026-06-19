@@ -1,6 +1,7 @@
 import { describe, it, expect } from "@test/unit";
 import { vi } from "vitest";
 import { mount } from "@vue/test-utils";
+import type Panel from "@/panel/panel";
 import Icons from "./Icons.vue";
 
 vi.hoisted(() => {
@@ -12,7 +13,7 @@ vi.hoisted(() => {
 					'<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>'
 			}
 		}
-	};
+	} as unknown as Panel;
 });
 
 describe("Icons.vue", () => {

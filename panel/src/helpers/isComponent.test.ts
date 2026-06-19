@@ -16,12 +16,12 @@ describe("$helper.isComponent()", () => {
 	});
 
 	it("should fall back to the global panel app", () => {
-		window.panel = { app };
+		window.panel = { app } as unknown as typeof window.panel;
 		expect(isComponent("k-foo")).toBe(true);
 	});
 
 	it("should return false when no app is available", () => {
-		window.panel = {};
+		window.panel = {} as unknown as typeof window.panel;
 		expect(isComponent("k-foo")).toBe(false);
 	});
 });

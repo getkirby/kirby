@@ -2,6 +2,7 @@ import { reactive } from "vue";
 import { isUrl } from "@/helpers/url";
 import listeners, { type Listener } from "./listeners";
 import State from "./state";
+import Panel from "./panel";
 
 export type FeatureState = {
 	// the feature component
@@ -47,7 +48,7 @@ export function defaults(): FeatureState {
  * @param defaults - Initial values; also defines which keys are tracked
  */
 export default function Feature<T extends FeatureState>(
-	panel: TODO,
+	panel: Panel,
 	key: string,
 	defaults: T
 ) {
@@ -270,7 +271,7 @@ export default function Feature<T extends FeatureState>(
 		 * Creates a full URL object for the current path
 		 */
 		url(): URL {
-			return panel.url(this.path, this.query);
+			return panel.url(this.path ?? undefined, this.query);
 		}
 	});
 }

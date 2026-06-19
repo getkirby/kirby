@@ -1,3 +1,5 @@
+import { type App } from "vue";
+
 /**
  * This is the graveyard for all deprecated
  * aliases. We can remove them step by step
@@ -7,8 +9,9 @@
  * @deprecated 4.0.0
  */
 export default {
-	install(app) {
+	install(app: App) {
 		const panel = window.panel;
+
 		/**
 		 * Some more shortcuts to the Panel's features
 		 */

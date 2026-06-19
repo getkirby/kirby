@@ -1,10 +1,12 @@
 import { reactive } from "vue";
 import { uuid } from "@/helpers/string";
+import type { DialogState } from "./dialog";
 import State from "./state";
 import listeners, { type Listener } from "./listeners";
 import queue from "@/helpers/queue";
 import { uploadAsChunks } from "@/helpers/upload";
 import { extension, name, niceSize } from "@/helpers/file";
+import Panel from "./panel";
 
 type UploadFileData = {
 	completed: boolean;
@@ -60,7 +62,7 @@ export function defaults(): UploadState {
  *
  * @since 4.0.0
  */
-export default function Upload(panel: TODO) {
+export default function Upload(panel: Panel) {
 	const parent = State("upload", defaults());
 
 	return reactive({
@@ -179,7 +181,7 @@ export default function Upload(panel: TODO) {
 					original: this.replacing
 				},
 				on: {
-					open: (dialog: TODO) => this.emit("open", dialog),
+					open: (dialog: Partial<DialogState>) => this.emit("open", dialog),
 					cancel: () => this.cancel(),
 					submit: async () => {
 						panel.dialog.isLoading = true;
