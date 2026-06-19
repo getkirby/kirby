@@ -158,7 +158,7 @@ class SystemViewController extends ViewController
 			];
 		}
 
-		if (Cookie::$key === 'KirbyHttpCookieKey') {
+		if (($this->kirby->option('cookie.key') ?? Cookie::$key) === 'KirbyHttpCookieKey') {
 			$security[] = [
 				'id'    => 'cookie-key',
 				'link'  => 'https://getkirby.com/security/cookie-key',

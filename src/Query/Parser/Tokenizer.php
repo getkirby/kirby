@@ -42,7 +42,7 @@ class Tokenizer
 	public function __construct(
 		private readonly string $query,
 	) {
-		$this->length = mb_strlen($query);
+		$this->length = strlen($query);
 	}
 
 	/**
@@ -245,7 +245,7 @@ class Tokenizer
 				yield $token;
 			}
 
-			$current += mb_strlen($token->lexeme);
+			$current += strlen($token->lexeme);
 		}
 
 		yield new Token(TokenType::T_EOF, '', null);

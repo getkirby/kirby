@@ -423,6 +423,21 @@ class SystemViewControllerTest extends TestCase
 		$this->assertNotContains(SystemMock::cookieKeyWarning(), $security);
 	}
 
+	public function testSecurityWithCustomCookieKeyInConfig(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'cookie' => [
+					'key' => 'custom-cookie-key'
+				]
+			]
+		]);
+
+		$controller = new SystemViewController();
+		$security   = $controller->security();
+		$this->assertNotContains(SystemMock::cookieKeyWarning(), $security);
+	}
+
 	public function testStats(): void
 	{
 		$controller = new SystemViewController();
