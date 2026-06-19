@@ -130,6 +130,15 @@ class Snippet extends Tpl
 	}
 
 	/**
+	 * Returns whether the snippet has any closed slots
+	 * @since 5.5.0
+	 */
+	public function hasSlots(): bool
+	{
+		return $this->slots !== [];
+	}
+
+	/**
 	 * Loads the code of the given snippet.
 	 *
 	 * @param string $file Path to the snippet file
@@ -171,7 +180,7 @@ class Snippet extends Tpl
 				Snippet::$current->parent() !== $outside
 			) {
 				$output = $snippet;
-			} elseif (Snippet::$current->slots()->count() === 0) {
+			} elseif (Snippet::$current->hasSlots() === false) {
 				// no slots have been defined, but the snippet code
 				// should be used as default slot
 				$output = Snippet::$current->render($data, [

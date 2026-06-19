@@ -5,6 +5,7 @@ use Kirby\Cms\Url;
 use Kirby\Exception\NotFoundException;
 use Kirby\Text\KirbyTag;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\Str;
 use Kirby\Uuid\Uuid;
 
@@ -23,7 +24,9 @@ return [
 				return date('Y');
 			}
 
-			return date($tag->date);
+			// escape the formatted date to prevent injecting HTML
+			// through special characters in the tag value
+			return Escape::html(date($tag->date));
 		}
 	],
 

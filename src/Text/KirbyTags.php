@@ -3,6 +3,7 @@
 namespace Kirby\Text;
 
 use Exception;
+use Kirby\Cms\Helpers;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Str;
 
@@ -20,10 +21,18 @@ class KirbyTags
 	public static function parse(
 		string|null $text = null,
 		array $data = [],
-		array $options = []
+		array $options = [],
+		bool $debug = false
 	): string {
 		// make sure $text is a string
 		$text ??= '';
+
+		// @deprecated 5.5.0 the `$options` argument only ever carried the
+		// `debug` flag; derive it from there for backward compatibility
+		if ($options !== []) {
+			Helpers::deprecated('The `$options` argument of `KirbyTags::parse()` has been deprecated. Use the `$debug` argument instead.', 'kirbytags-parse-options');
+			$debug = $options['debug'] ?? $debug;
+		}
 
 		$regex = '!
             (?=[^\]])               # positive lookahead that matches a group after the main expression without including ] in the result
@@ -33,11 +42,9 @@ class KirbyTags
             \))                     # end of capturing group 1
         !isx';
 
-		return preg_replace_callback($regex, function ($match) use ($data, $options) {
-			$debug = $options['debug'] ?? false;
-
+		return preg_replace_callback($regex, function ($match) use ($data, $debug) {
 			try {
-				return KirbyTag::parse($match[0], $data, $options)->render();
+				return KirbyTag::parse($match[0], $data)->render();
 			} catch (InvalidArgumentException $e) {
 				// stay silent in production and ignore non-existing tags
 				if (

@@ -3,6 +3,7 @@ import Feature, {
 	defaults as featureDefaults,
 	type FeatureState
 } from "./feature";
+import type Panel from "./panel";
 
 export type ViewState = FeatureState & {
 	breadcrumb: {
@@ -34,7 +35,7 @@ export function defaults(): ViewState {
 /**
  * @since 4.0.0
  */
-export default function View(panel: TODO) {
+export default function View(panel: Panel) {
 	const parent = Feature(panel, "view", defaults());
 
 	return reactive({

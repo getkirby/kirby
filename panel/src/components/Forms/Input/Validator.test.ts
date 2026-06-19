@@ -23,8 +23,9 @@ beforeAll(() => {
 	customElements.define(TAG, InputValidator);
 
 	// Minimal panel.t shim used by validate()
-	window.panel ??= {};
-	window.panel.t = (key: string) => key;
+	window.panel = {
+		t: (value: string) => value
+	} as unknown as typeof window.panel;
 });
 
 afterEach(() => {

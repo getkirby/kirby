@@ -72,9 +72,9 @@ class FileSessionStore extends SessionStore
 
 		// ensure that no other thread already wrote to the same file,
 		// otherwise try again (very unlikely scenario!)
-		$contents = $this->get($expiryTime, $id);
+		$stat = fstat($this->handle($name));
 
-		if ($contents !== '') {
+		if ($stat === false || $stat['size'] !== 0) {
 			// @codeCoverageIgnoreStart
 			$this->unlock($expiryTime, $id);
 			return $this->createId($expiryTime);
@@ -350,7 +350,10 @@ class FileSessionStore extends SessionStore
 	 */
 	public function collectGarbage(): void
 	{
-		$iterator = new FilesystemIterator($this->path);
+		$iterator = new FilesystemIterator(
+			$this->path,
+			FilesystemIterator::SKIP_DOTS
+		);
 
 		$currentTime = time();
 		foreach ($iterator as $file) {

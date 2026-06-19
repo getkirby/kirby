@@ -126,10 +126,7 @@ return [
 			]);
 		},
 		'toItems' => function (array $models) {
-			return A::map(
-				$models,
-				fn ($model) => $this->toItem($model)
-			);
+			return A::map($models, $this->toItem(...));
 		},
 		'toModel' => function (string $id) {
 			throw new Exception(message: 'toModel() is not implemented on ' . $this->type() . ' field');

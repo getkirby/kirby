@@ -2,6 +2,7 @@ import Modal, { defaults as modalDefaults, type ModalState } from "./modal";
 import { isObject } from "@/helpers/object";
 import { reactive } from "vue";
 import { type Listener } from "./listeners";
+import type Panel from "./panel";
 
 export type DrawerState = ModalState & {};
 
@@ -21,12 +22,12 @@ export type DrawerOptions = DrawerState & {
 /**
  * @since 4.0.0
  */
-export default function Drawer(panel: TODO) {
+export default function Drawer(panel: Panel) {
 	const parent = Modal(panel, "drawer", defaults());
 
 	// shortcut to submit drawers
-	panel.events.on("drawer.save", (e: Event) => {
-		e.preventDefault();
+	panel.events.on("drawer.save", (e?: Event) => {
+		e?.preventDefault();
 		panel.drawer.submit();
 	});
 

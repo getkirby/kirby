@@ -161,6 +161,12 @@ class MimeTest extends TestCase
 		$this->assertSame('css', $extensions);
 	}
 
+	public function testToExtensionNotFound(): void
+	{
+		$this->assertFalse(Mime::toExtension('nonexistent/type'));
+		$this->assertFalse(Mime::toExtension(null));
+	}
+
 	public function testToExtensions(): void
 	{
 		$extensions = Mime::toExtensions('image/jpeg');
@@ -192,6 +198,11 @@ class MimeTest extends TestCase
 		foreach (['js', 'pdf', 'zip', 'docx'] as $ext) {
 			$this->assertNotContains($ext, $extensions);
 		}
+	}
+
+	public function testToExtensionsNull(): void
+	{
+		$this->assertSame([], Mime::toExtensions(null));
 	}
 
 	public function testTypeWithOptimizedSvg(): void

@@ -25,6 +25,19 @@ class LocationTest extends TestCase
 		$this->assertSame(-0.016666666666666666, $camera->lng());
 	}
 
+	public function testNumZeroDenominator(): void
+	{
+		$location = new Location([
+			'GPSLatitudeRef'  => 'N',
+			'GPSLatitude'     => ['1/0', '0/1', '0/1'],
+			'GPSLongitudeRef' => 'E',
+			'GPSLongitude'    => ['1/1', '0/1', '0/1']
+		]);
+
+		$this->assertSame(0.0, $location->lat());
+		$this->assertSame(1.0, $location->lng());
+	}
+
 	public function testToArray(): void
 	{
 		$camera = new Location($this->_exif());

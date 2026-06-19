@@ -1,6 +1,7 @@
 import type { ConcreteComponent } from "vue";
 import { describe, expect, it } from "vitest";
 import { defaultValue, form, isVisible, subfields } from "./field";
+import type Panel from "@/panel/panel";
 
 // mock the Panel app with the component definitions used by defaultValue()
 window.panel = {
@@ -21,7 +22,7 @@ window.panel = {
 			return components[name];
 		}
 	}
-};
+} as unknown as Panel;
 
 describe("$helper.field", () => {
 	describe("defaultValue()", () => {

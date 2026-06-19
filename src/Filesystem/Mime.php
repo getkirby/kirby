@@ -134,6 +134,11 @@ class Mime
 	];
 
 	/**
+	 * Lazy-built reverse map of $types (MIME type → extensions[])
+	 */
+	protected static array|null $mimes = null;
+
+	/**
 	 * Fixes an invalid MIME type guess for the given file
 	 */
 	public static function fix(
@@ -291,20 +296,13 @@ class Mime
 	 */
 	public static function toExtension(string|null $mime = null): string|false
 	{
-		foreach (static::$types as $key => $value) {
-			if (
-				is_array($value) === true &&
-				in_array($mime, $value, true) === true
-			) {
-				return $key;
-			}
-
-			if ($value === $mime) {
-				return $key;
-			}
+		if ($mime === null) {
+			return false;
 		}
 
-		return false;
+		static::$mimes ??= A::flip(static::$types);
+
+		return static::$mimes[$mime][0] ?? false;
 	}
 
 	/**
@@ -314,31 +312,25 @@ class Mime
 		string|null $mime = null,
 		bool $matchWildcards = false
 	): array {
-		// get all extensions
-		$extensions = array_keys(static::$types);
+		if ($mime === null) {
+			return [];
+		}
 
-		// filter extensions for given MIME type
-		$extensions = A::filter(
-			$extensions,
-			function ($extension) use ($mime, $matchWildcards) {
-				// get corresponding MIME types as array
-				$mimes = A::wrap(static::$types[$extension]);
+		static::$mimes ??= A::flip(static::$types);
 
-				if ($matchWildcards === true) {
-					// check if at least one MIME type with wildcards matches
-					return A::some(
-						$mimes,
-						fn (string $v): bool => static::matches($v, $mime)
-					);
-				}
+		if ($matchWildcards === false) {
+			return static::$mimes[$mime] ?? [];
+		}
 
-				// check if at least one MIME type matches exactly
-				return in_array($mime, $mimes, true);
+		$extensions = [];
+
+		foreach (static::$mimes as $registered => $exts) {
+			if (static::matches($registered, $mime) === true) {
+				array_push($extensions, ...$exts);
 			}
-		);
+		}
 
-		// renumber array with consecutive keys
-		return array_values($extensions);
+		return array_values(array_unique($extensions));
 	}
 
 	/**

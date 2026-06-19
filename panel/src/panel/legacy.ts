@@ -1,3 +1,5 @@
+import { type App } from "vue";
+
 /**
  * This is the graveyard for all deprecated
  * aliases. We can remove them step by step
@@ -7,8 +9,9 @@
  * @deprecated 4.0.0
  */
 export default {
-	install(app) {
+	install(app: App) {
 		const panel = window.panel;
+
 		/**
 		 * Some more shortcuts to the Panel's features
 		 */
@@ -20,6 +23,7 @@ export default {
 		);
 		app.config.globalProperties.$events = panel.events;
 		app.config.globalProperties.$go = panel.view.open.bind(panel.view);
+		app.config.globalProperties.$html = panel.html;
 		app.config.globalProperties.$reload = panel.reload;
 		app.config.globalProperties.$t = panel.$t = panel.t;
 		app.config.globalProperties.$url = panel.url;

@@ -602,6 +602,7 @@ return array(
     'Kirby\\Toolkit\\HasI18n' => $baseDir . '/src/Toolkit/HasI18n.php',
     'Kirby\\Toolkit\\HasStringTemplate' => $baseDir . '/src/Toolkit/HasStringTemplate.php',
     'Kirby\\Toolkit\\Html' => $baseDir . '/src/Toolkit/Html.php',
+    'Kirby\\Toolkit\\HtmlString' => $baseDir . '/src/Toolkit/HtmlString.php',
     'Kirby\\Toolkit\\I18n' => $baseDir . '/src/Toolkit/I18n.php',
     'Kirby\\Toolkit\\Iterator' => $baseDir . '/src/Toolkit/Iterator.php',
     'Kirby\\Toolkit\\LazyValue' => $baseDir . '/src/Toolkit/LazyValue.php',

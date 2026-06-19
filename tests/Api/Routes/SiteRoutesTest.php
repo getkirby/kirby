@@ -260,6 +260,77 @@ class SiteRoutesTest extends TestCase
 		$this->assertSame('b', $result['data'][2]['id']);
 	}
 
+	public function testFindOnlyAccessible(): void
+	{
+		$app = $this->app->clone([
+			'blueprints' => [
+				'pages/secret' => [
+					'options' => ['access' => false],
+				],
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'a',
+						'children' => [
+							[
+								'slug' => 'aa'
+							],
+							[
+								'slug'     => 'ab',
+								'template' => 'secret'
+							]
+						],
+					],
+					[
+						'slug' => 'b'
+					],
+					[
+						'slug'     => 'c',
+						'template' => 'secret'
+					],
+				]
+			],
+			'users' => [
+				['email' => 'admin@getkirby.com', 'role' => 'admin']
+			],
+		]);
+
+		$app->impersonate('admin@getkirby.com');
+
+		// find single
+		$result = $app->api()->call('site/find', 'POST', [
+			'body' => [
+				'c',
+			]
+		]);
+
+		$this->assertCount(0, $result['data']);
+
+		$result = $app->api()->call('site/find', 'POST', [
+			'body' => [
+				'a/ab',
+			]
+		]);
+
+		$this->assertCount(0, $result['data']);
+
+		// find multiple
+		$result = $app->api()->call('site/find', 'POST', [
+			'body' => [
+				'a',
+				'a/aa',
+				'a/ab',
+				'b',
+				'c'
+			]
+		]);
+
+		$this->assertCount(3, $result['data']);
+		$this->assertSame('a', $result['data'][0]['id']);
+		$this->assertSame('a/aa', $result['data'][1]['id']);
+		$this->assertSame('b', $result['data'][2]['id']);
+	}
 
 	public function testSearchWithGetRequest(): void
 	{

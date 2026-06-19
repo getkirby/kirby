@@ -446,6 +446,43 @@ class BlueprintTest extends TestCase
 		$this->assertSame($fields['test'], $blueprint->field('test'));
 	}
 
+	public function testFieldWithNormalizedName(): void
+	{
+		$blueprint = new Blueprint([
+			'model' => $this->model,
+			'fields' => $fields = [
+				'mixedCasing' => [
+					'type'  => 'text',
+					'name'  => 'mixedCasing',
+					'label' => 'Mixed Casing',
+					'width' => '1/1'
+				]
+			]
+		]);
+
+		$this->assertSame($fields['mixedCasing'], $blueprint->field('mixedCasing'));
+		$this->assertSame($fields['mixedCasing'], $blueprint->field('mixedcasing'));
+	}
+
+	public function testFieldWithDuplicateNormalizedName(): void
+	{
+		$blueprint = new Blueprint([
+			'model' => $this->model,
+			'fields' => [
+				'mixedCasing' => [
+					'type'  => 'text',
+					'label' => 'First'
+				],
+				'MixedCasing' => [
+					'type'  => 'textarea',
+					'label' => 'Last'
+				]
+			]
+		]);
+
+		$this->assertSame('Last', $blueprint->field('MIXEDCASING')['label']);
+	}
+
 	public function testNestedFields(): void
 	{
 		$blueprint = new Blueprint([

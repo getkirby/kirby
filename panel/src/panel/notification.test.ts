@@ -4,7 +4,7 @@ import AuthError from "@/errors/AuthError";
 import JsonRequestError from "@/errors/JsonRequestError";
 import RequestError from "@/errors/RequestError";
 import Notification from "./notification";
-import Panel from "./panel.js";
+import Panel from "./panel";
 
 function makeRequestOptions(
 	json: Record<string, unknown> = {},
@@ -30,7 +30,8 @@ function makeRequestOptions(
 describe("panel.notification", () => {
 	describe("state", () => {
 		it("should have a default state", async () => {
-			const notification = Notification({});
+			const panel = Panel.create(app);
+			const notification = Notification(panel);
 
 			const state = {
 				context: null,
@@ -87,7 +88,6 @@ describe("panel.notification", () => {
 			const panel = Panel.create(app);
 			const notification = Notification(panel);
 
-			// @ts-expect-error panel.js is not typed
 			await panel.drawer.open({
 				component: "k-drawer"
 			});
@@ -101,7 +101,6 @@ describe("panel.notification", () => {
 			const panel = Panel.create(app);
 			const notification = Notification(panel);
 
-			// @ts-expect-error panel.js is not typed
 			await panel.dialog.open({
 				component: "k-dialog"
 			});
@@ -114,7 +113,8 @@ describe("panel.notification", () => {
 
 	describe("deprecated()", () => {
 		it("should log deprecation warnings", async () => {
-			const notification = Notification({});
+			const panel = Panel.create(app);
+			const notification = Notification(panel);
 			const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
 
 			notification.deprecated("OldMethod");
@@ -200,7 +200,6 @@ describe("panel.notification", () => {
 		it("should open a request error dialog for RequestError in view context", async () => {
 			const panel = Panel.create(app);
 			const notification = Notification(panel);
-			// @ts-expect-error panel.js is not typed
 			const open = vi.spyOn(panel.dialog, "open");
 
 			notification.error(
@@ -216,7 +215,6 @@ describe("panel.notification", () => {
 		it("should open a generic error dialog for plain errors in view context", async () => {
 			const panel = Panel.create(app);
 			const notification = Notification(panel);
-			// @ts-expect-error panel.js is not typed
 			const open = vi.spyOn(panel.dialog, "open");
 
 			notification.error(new Error("Something failed"));
@@ -339,7 +337,8 @@ describe("panel.notification", () => {
 
 	describe("open()", () => {
 		it("should open & close", async () => {
-			const notification = Notification({});
+			const panel = Panel.create(app);
+			const notification = Notification(panel);
 
 			notification.open({
 				message: "Hello world"

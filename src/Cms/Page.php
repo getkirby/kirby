@@ -255,7 +255,7 @@ class Page extends ModelWithContent
 			}
 		}
 
-		return $this->blueprints = array_values($blueprints);
+		return $this->blueprints = $blueprints;
 	}
 
 	/**

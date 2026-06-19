@@ -18,9 +18,14 @@ class ExistingVersion extends Version
 
 class LockedVersion extends Version
 {
-	public function isLocked(Language|string $language = 'default'): bool
+	public function lock(Language|string $language = 'default'): Lock
 	{
-		return true;
+		return new class () extends Lock {
+			public function isLocked(): bool
+			{
+				return true;
+			}
+		};
 	}
 }
 

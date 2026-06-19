@@ -80,6 +80,26 @@ class SnippetTest extends TestCase
 		$this->assertSame('bar.php', Snippet::file('foo'));
 	}
 
+	public function testHasSlots(): void
+	{
+		// all output must be captured
+		$this->expectOutputString('');
+
+		$snippet = new Snippet('test.php');
+
+		// a fresh snippet has no closed slots
+		$this->assertFalse($snippet->hasSlots());
+
+		$snippet->open();
+		$snippet->slot('header');
+		echo 'Header';
+		$snippet->endslot();
+		$snippet->close();
+
+		// after closing a slot, the snippet has slots
+		$this->assertTrue($snippet->hasSlots());
+	}
+
 	public function testHelpers(): void
 	{
 		ob_start();

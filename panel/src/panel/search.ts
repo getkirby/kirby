@@ -1,4 +1,5 @@
 import { isAbortError } from "@/helpers/error";
+import type Panel from "./panel";
 
 export type SearchResponse = {
 	results: unknown[] | null;
@@ -14,7 +15,7 @@ export type SearchType = {
 /**
  * @since 4.4.0
  */
-export default function Search(panel: TODO) {
+export default function Search(panel: Panel) {
 	return {
 		controller: undefined as AbortController | undefined,
 		requests: 0,

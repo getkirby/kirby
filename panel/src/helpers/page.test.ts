@@ -3,7 +3,7 @@ import { status } from "./page";
 
 window.panel = {
 	t: (value: string) => value
-};
+} as unknown as typeof window.panel;
 
 describe("$helper.page.status()", () => {
 	it("returns correct props for draft", () => {

@@ -56,8 +56,12 @@ class Lock
 				}
 			}
 
-			// return the last lock if no lock was found
-			return $lock;
+			// no language has an active lock:
+			// fall back to the lock for the current language,
+			// so that the user and modification timestamp
+			// reflect the current version and not the
+			// arbitrary last-iterated language
+			return static::for($version, Language::ensure());
 		}
 
 		$language = Language::ensure($language);

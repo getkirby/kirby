@@ -142,6 +142,46 @@ class LockTest extends TestCase
 		$this->assertSame('admin', $lock->user()->id());
 	}
 
+	public function testForWithLanguageWildcardNoActiveLocked(): void
+	{
+		$this->app = $this->app->clone([
+			'languages' => [
+				[
+					'code'    => 'en',
+					'default' => true
+				],
+				[
+					'code' => 'de'
+				]
+			]
+		]);
+
+		$this->app->impersonate('admin');
+
+		// admin has an unsaved draft in the current (en) language only;
+		// the de version intentionally does not exist
+		$this->createLatestVersion('en');
+		$this->createChangesVersion('en');
+
+		$changes = $this->app->page('test')->version('changes');
+		$lock    = $changes->lock('*');
+
+		// nothing is locked (admin is the current user), so the wildcard
+		// must fall back to the current language's lock and not to an
+		// arbitrary last-iterated language (de) without a version
+		$this->assertFalse($lock->isLocked());
+		$this->assertSame('admin', $lock->user()->id());
+		$this->assertNotNull($lock->modified());
+
+		// switching the current language to de (no draft there) must be
+		// reflected in the fallback as well
+		$this->app->setCurrentLanguage('de');
+		$lock = $changes->lock('*');
+
+		$this->assertFalse($lock->isLocked());
+		$this->assertNull($lock->modified());
+	}
+
 	public function testForWithLegacyLock(): void
 	{
 		$page = $this->app->page('test');

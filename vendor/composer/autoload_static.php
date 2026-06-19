@@ -723,6 +723,7 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
         'Kirby\\Toolkit\\HasI18n' => __DIR__ . '/../..' . '/src/Toolkit/HasI18n.php',
         'Kirby\\Toolkit\\HasStringTemplate' => __DIR__ . '/../..' . '/src/Toolkit/HasStringTemplate.php',
         'Kirby\\Toolkit\\Html' => __DIR__ . '/../..' . '/src/Toolkit/Html.php',
+        'Kirby\\Toolkit\\HtmlString' => __DIR__ . '/../..' . '/src/Toolkit/HtmlString.php',
         'Kirby\\Toolkit\\I18n' => __DIR__ . '/../..' . '/src/Toolkit/I18n.php',
         'Kirby\\Toolkit\\Iterator' => __DIR__ . '/../..' . '/src/Toolkit/Iterator.php',
         'Kirby\\Toolkit\\LazyValue' => __DIR__ . '/../..' . '/src/Toolkit/LazyValue.php',

@@ -286,7 +286,7 @@ class Plugin
 			);
 
 			// sort the matches by key length (with longest key first)
-			$keys = array_map('strlen', array_keys($option));
+			$keys = array_map(strlen(...), array_keys($option));
 			array_multisort($keys, SORT_DESC, $option);
 
 			if ($option !== []) {

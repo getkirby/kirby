@@ -1864,6 +1864,23 @@ class DomTest extends TestCase
 		]);
 	}
 
+	public function testSanitizeElementsEvenWhenUnwrapped(): void
+	{
+		$html = '<body><wrapper><script>alert(1)</script><img src="x" onerror="alert(2)"></wrapper></body>';
+		$dom  = new Dom($html, 'HTML');
+
+		$dom->sanitize([
+			'allowedTags' => [
+				'body' => true,
+				'img'  => ['src'],
+			],
+			'allowedAttrs'   => ['src'],
+			'disallowedTags' => ['script'],
+		]);
+
+		$this->assertSame('<body><img src="x"></body>', $dom->toString());
+	}
+
 	public function testUnwrap(): void
 	{
 		$dom = new Dom('<body><p>This is a test</p><invalid>And this is <p>Awesome<strong>!</strong></p> but contains text</invalid></body>', 'HTML');

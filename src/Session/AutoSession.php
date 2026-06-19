@@ -85,10 +85,11 @@ class AutoSession
 
 		// create a new session
 		if ($session === null) {
+			$now     = time();
 			$session = $this->createdSession ?? $this->sessions->create([
 				'mode'       => $options['createMode'],
-				'startTime'  => time(),
-				'expiryTime' => time() + $duration,
+				'startTime'  => $now,
+				'expiryTime' => $now + $duration,
 				'timeout'    => $timeout,
 				'renewable'  => true,
 			]);
