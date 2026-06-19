@@ -15,8 +15,7 @@ export default class Paragraph extends Node {
 	commands({ utils, schema, type }: NodeContext) {
 		return {
 			paragraph: () => {
-				// TODO: Remove type cast once Editor.js migrated to TS
-				const activeNodes = this.editor.activeNodes as string[];
+				const activeNodes = this.editor.activeNodes;
 
 				if (activeNodes.includes("bulletList")) {
 					return utils.toggleList(

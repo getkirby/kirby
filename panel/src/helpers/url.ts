@@ -46,6 +46,25 @@ export function buildUrl(
 }
 
 /**
+ * Checks if a URL starts with a dangerous URI scheme (e.g. javascript:).
+ * Mirrors `Kirby\Http\Url::hasDangerousScheme()`.
+ *
+ * @since 5.4.4
+ */
+export function hasDangerousScheme(url: unknown): boolean {
+	if (url === null || url === undefined) {
+		return false;
+	}
+
+	// strip any characters the browser would ignore when evaluating
+	// the URL (whitespace, control chars, etc.) to prevent bypasses
+	// like `java\nscript:alert(1)`
+	const stripped = String(url).replaceAll(/[^a-z:]/gi, "");
+
+	return /^(?:javascript|vbscript|livescript|mocha|jar|data):/i.test(stripped);
+}
+
+/**
  * Checks if the url string is absolute
  * @since 4.0.0
  */
@@ -131,6 +150,7 @@ export default {
 	base,
 	buildQuery,
 	buildUrl,
+	hasDangerousScheme,
 	isAbsolute,
 	isSameOrigin,
 	isUrl,

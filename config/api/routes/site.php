@@ -58,7 +58,7 @@ return [
 		'pattern' => 'site/find',
 		'method'  => 'POST',
 		'action'  => function () {
-			return $this->site()->find(false, ...$this->requestBody());
+			return $this->site()->find(false, ...$this->requestBody())->filter('isAccessible', true);
 		}
 	],
 	[
