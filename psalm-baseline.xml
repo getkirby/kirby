@@ -250,11 +250,9 @@
       <code><![CDATA[string]]></code>
     </InvalidNullableReturnType>
     <NullableReturnStatement>
-      <code><![CDATA[preg_replace_callback($regex, function ($match) use ($data, $options) {
-			$debug = $options['debug'] ?? false;
-
+      <code><![CDATA[preg_replace_callback($regex, function ($match) use ($data, $debug) {
 			try {
-				return KirbyTag::parse($match[0], $data, $options)->render();
+				return KirbyTag::parse($match[0], $data)->render();
 			} catch (InvalidArgumentException $e) {
 				// stay silent in production and ignore non-existing tags
 				if (
