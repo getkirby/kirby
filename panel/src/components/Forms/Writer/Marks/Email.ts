@@ -4,6 +4,11 @@ import type { EditorView } from "prosemirror-view";
 import { isEmail } from "@/helpers/string";
 import Mark, { type MarkContext } from "../Mark";
 
+interface EmailAttrs {
+	href: string;
+	title?: string;
+}
+
 export default class Email extends Mark {
 	get button() {
 		return {
@@ -81,8 +86,7 @@ export default class Email extends Mark {
 			{
 				props: {
 					handleClick: (_view: EditorView, _pos: number, event: MouseEvent) => {
-						// @ts-expect-error fixed once Editor.js is migrated to TS
-						const attrs = this.editor.getMarkAttrs("email");
+						const attrs = this.editor.getMarkAttrs<EmailAttrs>("email")!;
 
 						if (
 							attrs.href &&
@@ -103,10 +107,10 @@ export default class Email extends Mark {
 		return {
 			attrs: {
 				href: {
-					default: null
+					default: ""
 				},
 				title: {
-					default: null
+					default: undefined
 				}
 			},
 			inclusive: false,

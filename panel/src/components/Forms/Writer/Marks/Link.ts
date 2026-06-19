@@ -4,7 +4,13 @@ import type { EditorView } from "prosemirror-view";
 import { hasDangerousScheme } from "@/helpers/url.js";
 import Mark, { type MarkContext } from "../Mark";
 
-export default class Link extends Mark<{ target: string | null }> {
+interface LinkAttrs {
+	href: string;
+	target?: string;
+	title?: string;
+}
+
+export default class Link extends Mark<{ target?: string }> {
 	get button() {
 		return {
 			icon: "url",
@@ -64,7 +70,7 @@ export default class Link extends Mark<{ target: string | null }> {
 
 	get defaults() {
 		return {
-			target: null
+			target: undefined
 		};
 	}
 
@@ -87,8 +93,7 @@ export default class Link extends Mark<{ target: string | null }> {
 			{
 				props: {
 					handleClick: (_view: EditorView, _pos: number, event: MouseEvent) => {
-						// @ts-expect-error fixed once Editor.js is migrated to TS
-						const attrs = this.editor.getMarkAttrs("link");
+						const attrs = this.editor.getMarkAttrs<LinkAttrs>("link")!;
 
 						if (
 							attrs.href &&
@@ -109,13 +114,13 @@ export default class Link extends Mark<{ target: string | null }> {
 		return {
 			attrs: {
 				href: {
-					default: null
+					default: ""
 				},
 				target: {
 					default: this.options.target
 				},
 				title: {
-					default: null
+					default: undefined
 				}
 			},
 			inclusive: false,
