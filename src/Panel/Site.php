@@ -94,6 +94,8 @@ class Site extends Model
 			'title'       => $model['title'],
 			'permissions' => [
 				...$props['permissions'],
+				// the home page check is kept for backward compatibility
+				// @todo Remove the home page check in 6.0.0
 				'preview' =>
 					$this->model->permissions()->can('preview') === true &&
 					$this->model->homePage()?->permissions()->can('preview') === true,

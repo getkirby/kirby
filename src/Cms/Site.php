@@ -382,13 +382,14 @@ class Site extends ModelWithContent
 	#[BlockCollectionAccess]
 	public function previewUrl(VersionId|string $versionId = 'latest'): string|null
 	{
-		// the site needs its own preview permission…
+		// the site needs its own preview permission
 		if ($this->permissions()->can('preview') !== true) {
 			return null;
 		}
 
-		// …and, since the site previews the home page,
-		// also the home page's preview permission
+		// the site preview defaults to the home page, so for backward
+		// compatibility we also check the home page's preview permission
+		// @todo Remove in 6.0.0, only check `site.preview`
 		if ($this->homePage()?->permissions()->can('preview') !== true) {
 			return null;
 		}
