@@ -66,7 +66,7 @@ export default function focus(element, field) {
  * @param {HTMLElement} element
  */
 export function focusIsInModal(element) {
-	return element.closest?.(".k-dialog") || element.closest?.(".k-drawer");
+	return !!(element.closest?.(".k-dialog") || element.closest?.(".k-drawer"));
 }
 
 /**
