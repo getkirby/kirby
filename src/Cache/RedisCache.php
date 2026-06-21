@@ -119,6 +119,10 @@ class RedisCache extends Cache
 		// (so we don't have to duplicate the rtrim + '/' normalization here)
 		$prefix = $this->connection->getOption(Redis::OPT_PREFIX);
 
+		// remember the current SCAN flags so we can restore them afterwards;
+		// getOption() returns them as a bitmask (bit 0 = retry, bit 1 = prefix)
+		$scan = $this->connection->getOption(Redis::OPT_SCAN);
+
 		// ->scan() returns full key names with prefix already included.
 		// Clear OPT_PREFIX so ->del() doesn't double-prefix them.
 		$this->connection->setOption(Redis::OPT_PREFIX, '');
@@ -136,6 +140,21 @@ class RedisCache extends Cache
 		} finally {
 			// restore the prefix to OPT_PREFIX
 			$this->connection->setOption(Redis::OPT_PREFIX, $prefix);
+
+			// restore the SCAN flags: setOption() takes a single toggle
+			// command, not the combined bitmask getOption() returns (e.g.
+			// passing 3 means SCAN_NOPREFIX, not "retry + prefix"). So turn
+			// both flags off first, then re-enable only those set before.
+			$this->connection->setOption(Redis::OPT_SCAN, Redis::SCAN_NORETRY);
+			$this->connection->setOption(Redis::OPT_SCAN, Redis::SCAN_NOPREFIX);
+
+			if (($scan & Redis::SCAN_RETRY) !== 0) {
+				$this->connection->setOption(Redis::OPT_SCAN, Redis::SCAN_RETRY);
+			}
+
+			if (($scan & Redis::SCAN_PREFIX) !== 0) {
+				$this->connection->setOption(Redis::OPT_SCAN, Redis::SCAN_PREFIX);
+			}
 		}
 
 		return true;
