@@ -6,7 +6,7 @@
 
 		<!-- installation complete -->
 		<k-stack v-if="isComplete">
-			<k-headline>{{ $t("installation.completed") }}</k-headline>
+			<p>{{ $t("installation.completed") }}.</p>
 
 			<k-button
 				:text="$t('login')"
@@ -159,9 +159,20 @@ export default {
 .k-installation-view > .k-stack {
 	max-width: 25rem;
 	margin: 0 auto;
-	gap: var(--spacing-8);
+	gap: var(--spacing-6);
 	padding: var(--spacing-6);
 	background: light-dark(var(--color-white), var(--color-gray-950));
+	border-radius: var(--rounded);
+}
+
+.k-installation-issues {
+	gap: var(--spacing-2);
+}
+
+.k-installation-issues li {
+	padding: var(--spacing-3) var(--spacing-2);
+	background-color: var(--theme-color-back);
+	color: var(--theme-color-text-highlight);
 	border-radius: var(--rounded);
 }
 
