@@ -49,6 +49,29 @@ class VersionRulesTest extends TestCase
 		VersionRules::create($version, [], Language::ensure());
 	}
 
+	public function testCreateWhenTheVersionIsLocked(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$version = new LockedVersion(
+			model: $this->model,
+			id: VersionId::changes(),
+		);
+
+		// create the version in the default language first
+		$existingVersion = new Version(
+			model: $this->model,
+			id: VersionId::changes()
+		);
+
+		$existingVersion->save([], Language::ensure('en'));
+
+		$this->expectException(LockedContentException::class);
+		$this->expectExceptionCode('error.content.lock.create');
+
+		VersionRules::create($version, [], Language::ensure('de'));
+	}
+
 	public function testDeleteWhenTheVersionIsLocked(): void
 	{
 		$this->setUpSingleLanguage();
@@ -152,7 +175,8 @@ class VersionRulesTest extends TestCase
 			id: VersionId::changes(),
 		);
 
-		$source->save([]);
+		// use a regular version to create in storage, bypassing the lock check
+		(new Version(model: $this->model, id: VersionId::changes()))->save([]);
 		$target->save([]);
 
 		$this->expectException(LockedContentException::class);
@@ -209,7 +233,8 @@ class VersionRulesTest extends TestCase
 			id: VersionId::changes(),
 		);
 
-		$version->save([]);
+		// use a regular version to create in storage, bypassing the lock check
+		(new Version(model: $this->model, id: VersionId::changes()))->save([]);
 
 		$this->expectException(LockedContentException::class);
 		$this->expectExceptionCode('error.content.lock.publish');
@@ -245,7 +270,8 @@ class VersionRulesTest extends TestCase
 			id: VersionId::changes(),
 		);
 
-		$version->save([]);
+		// use a regular version to create in storage, bypassing the lock check
+		(new Version(model: $this->model, id: VersionId::changes()))->save([]);
 
 		$this->expectException(LockedContentException::class);
 		$this->expectExceptionCode('error.content.lock.replace');
@@ -281,7 +307,8 @@ class VersionRulesTest extends TestCase
 			id: VersionId::changes(),
 		);
 
-		$version->save([]);
+		// use a regular version to create in storage, bypassing the lock check
+		(new Version(model: $this->model, id: VersionId::changes()))->save([]);
 
 		$this->expectException(LockedContentException::class);
 		$this->expectExceptionCode('error.content.lock.update');
