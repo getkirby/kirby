@@ -31,6 +31,12 @@ class VersionRules
 			);
 		}
 
+		// a version can only be locked if it already exists
+		// in at least one language
+		if ($version->exists('*') === false) {
+			return;
+		}
+
 		$lock = $version->lock('*');
 
 		if ($lock->isLocked() === true) {
