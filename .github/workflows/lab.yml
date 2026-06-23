@@ -1,0 +1,69 @@
+name: Panel Lab docs
+
+on:
+  release:
+    types: [published]
+
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release to attach the Panel Lab docs to (e.g. 6.1.0)"
+        required: true
+      dry_run:
+        description: "Skip uploading to the release (for testing)"
+        type: boolean
+        default: false
+
+jobs:
+  build-and-upload:
+    name: "Build & upload Lab docs and examples"
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+
+    permissions:
+      contents: write # required to upload release assets
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          ref: ${{ github.event.release.tag_name || inputs.tag }}
+
+      - name: Set up Node.js and cache npm dependencies
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          cache: "npm"
+          cache-dependency-path: panel/package-lock.json
+
+      - name: Install npm dependencies
+        run: npm ci
+        working-directory: panel
+
+      - name: Build Lab JSON docs
+        run: npm run build:docs
+        working-directory: panel
+
+      - name: Create ZIP archive
+        run: |
+          VERSION="${{ github.event.release.tag_name || inputs.tag }}"
+          # The archive holds two top-level folders that map 1:1 to their
+          # install targets, so users can place them without touching the
+          # existing panel/dist build:
+          #   ui/  → kirby/panel/dist/ui  (component docs, the "Docs" tab)
+          #   lab/ → kirby/panel/lab      (interactive examples)
+          # dist/ui is renamed to ui so that no "dist/" path ends up in the
+          # archive and the panel/dist build can never be overwritten.
+          cp -R dist/ui ui
+          zip -r "lab-${VERSION}.zip" ui lab -x "*.DS_Store"
+          rm -rf ui
+        working-directory: panel
+
+      - name: Upload Lab ZIP to release
+        if: ${{ !inputs.dry_run }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION="${{ github.event.release.tag_name || inputs.tag }}"
+          gh release upload "${VERSION}" \
+            "panel/lab-${VERSION}.zip" \
+            --clobber
