@@ -9,7 +9,6 @@ use Kirby\Auth\Method\BasicAuthMethod;
 use Kirby\Auth\User as AuthUser;
 use Kirby\Cms\App;
 use Kirby\Cms\User;
-use Kirby\Exception\Exception;
 use Kirby\Exception\PermissionException;
 use Kirby\Exception\UserNotFoundException;
 use Kirby\Http\Idn;
@@ -408,12 +407,12 @@ class Auth
 		Session|array|null $session = null,
 		bool $allowImpersonation = true
 	): Status {
+		// only the status for the auto-detected session with
+		// impersonation allowed should be cached
+		$isDefault = $session === null && $allowImpersonation === true;
+
 		// try to return from cache
-		if (
-			$this->status !== null &&
-			$session === null &&
-			$allowImpersonation === true
-		) {
+		if ($this->status !== null && $isDefault === true) {
 			return $this->status;
 		}
 
@@ -428,7 +427,7 @@ class Auth
 		);
 
 		// only cache the default object
-		if ($session === null && $allowImpersonation === true) {
+		if ($isDefault === true) {
 			$this->status = $status;
 		}
 
