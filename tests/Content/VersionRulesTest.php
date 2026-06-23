@@ -51,17 +51,25 @@ class VersionRulesTest extends TestCase
 
 	public function testCreateWhenTheVersionIsLocked(): void
 	{
-		$this->setUpSingleLanguage();
+		$this->setUpMultiLanguage();
 
 		$version = new LockedVersion(
 			model: $this->model,
 			id: VersionId::changes(),
 		);
 
+		// create the version in the default language first
+		$existingVersion = new Version(
+			model: $this->model,
+			id: VersionId::changes()
+		);
+
+		$existingVersion->save([], Language::ensure('en'));
+
 		$this->expectException(LockedContentException::class);
 		$this->expectExceptionCode('error.content.lock.create');
 
-		VersionRules::create($version, [], Language::ensure());
+		VersionRules::create($version, [], Language::ensure('de'));
 	}
 
 	public function testDeleteWhenTheVersionIsLocked(): void
