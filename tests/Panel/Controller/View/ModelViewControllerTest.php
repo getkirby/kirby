@@ -124,6 +124,70 @@ class ModelViewControllerTest extends TestCase
 		$this->assertSame('main', $tabs[0]['name']);
 	}
 
+	public function testTabSectionsToFields(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => [
+					'columns' => [
+						[
+							'width'    => '1/1',
+							'sections' => [
+								'mytext' => [
+									'type'   => 'fields',
+									'fields' => [
+										'intro' => ['type' => 'text']
+									]
+								],
+								'myinfo' => [
+									'type' => 'info',
+									'text' => 'Some **info** text'
+								],
+								'mylegacy' => [
+									'type'     => 'info',
+									'headline' => 'Legacy headline'
+								],
+								'mystats' => [
+									'type'    => 'stats',
+									'reports' => []
+								],
+								'mypages' => [
+									'type' => 'pages'
+								]
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$this->model = $this->app->page('test');
+		$this->app->impersonate('kirby');
+
+		$controller = new TestModelViewController($this->model);
+		$tab        = $controller->tab();
+		$fields     = $tab['columns'][0]['fields'];
+
+		// the `fields` section is unwrapped into its own fields
+		$this->assertSame('text', $fields['intro']['type']);
+
+		// info & stats sections resolve to their native fields
+		$this->assertSame('info', $fields['myinfo']['type']);
+		$this->assertStringContainsString('<strong>info</strong>', $fields['myinfo']['text']);
+		$this->assertSame('stats', $fields['mystats']['type']);
+
+		// the deprecated `headline` section prop
+		// maps to the field `label` prop
+		$this->assertSame('Legacy headline', $fields['mylegacy']['label']);
+
+		// any other section is wrapped in a generic section field
+		$this->assertSame('section', $fields['mypages']['type']);
+		$this->assertSame('pages', $fields['mypages']['section']);
+
+		// sections are removed from the column
+		$this->assertNull($tab['columns'][0]['sections']);
+	}
+
 	public function testTitle(): void
 	{
 		$controller = new TestModelViewController($this->model);

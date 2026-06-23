@@ -4,6 +4,8 @@ namespace Kirby\Panel\Controller\View;
 
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Form\Field;
+use Kirby\Form\Field\BaseField;
 use Kirby\Form\Field\SectionField;
 use Kirby\Form\Fields;
 use Kirby\Http\Uri;
@@ -145,6 +147,32 @@ abstract class ModelViewController extends ViewController
 		return $props;
 	}
 
+	/**
+	 * Turns a single section definition into a field
+	 */
+	protected function sectionField(array $section): BaseField
+	{
+		$type  = $section['type'];
+		$props = $section;
+		unset($props['type']);
+
+		// map the deprecated `headline` section prop
+		// to the field `label` prop
+		if (isset($props['headline']) === true) {
+			$props['label'] ??= $props['headline'];
+			unset($props['headline']);
+		}
+
+		$field = match ($type) {
+			'info', 'stats' => Field::factory($type, $props),
+			default         => new SectionField($type, ...$props)
+		};
+
+		$field->setModel($this->model);
+
+		return $field;
+	}
+
 	public function tab(): array|null
 	{
 		$tab   = $this->request->get('tab');
@@ -182,16 +210,10 @@ abstract class ModelViewController extends ViewController
 					continue;
 				}
 
-				// wrap any other section type as a section field,
-				// keyed + named by the section's blueprint name so its
-				// own `parent/sections/{name}` endpoint keeps resolving
-				$props = $section;
-				unset($props['type']);
-
-				$field = new SectionField($section['type'], ...$props);
-				$field->setModel($this->model);
-
-				$fields[$sectionName] = $field->props();
+				// turn any other section into a field, keyed + named
+				// by the section's blueprint name so its own
+				// `parent/sections/{name}` endpoint keeps resolving
+				$fields[$sectionName] = $this->sectionField($section)->props();
 			}
 
 			$tab['columns'][$columnKey] = [

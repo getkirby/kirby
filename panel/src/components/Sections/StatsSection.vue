@@ -11,6 +11,9 @@
 <script>
 import SectionMixin from "@/mixins/section.js";
 
+/**
+ * @deprecated 6.0.0 Use `k-stats-field` instead
+ */
 export default {
 	mixins: [SectionMixin],
 	data() {

@@ -33,6 +33,7 @@ trait Model
 
 	/**
 	 * Sets the parent model
+	 * @return $this
 	 */
 	public function setModel(ModelWithContent|null $model): static
 	{

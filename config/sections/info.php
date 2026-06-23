@@ -2,6 +2,9 @@
 
 use Kirby\Toolkit\I18n;
 
+/**
+ * @deprecated 6.0.0 Use `Kirby\Form\Field\InfoField` instead
+ */
 return [
 	'mixins' => [
 		'headline',

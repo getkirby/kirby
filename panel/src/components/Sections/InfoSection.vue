@@ -10,6 +10,10 @@
 
 <script>
 import SectionMixin from "@/mixins/section.js";
+
+/**
+ * @deprecated 6.0.0 Use `k-info-field` instead
+ */
 export default {
 	mixins: [SectionMixin],
 	inheritAttrs: false,

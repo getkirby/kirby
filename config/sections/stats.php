@@ -2,6 +2,9 @@
 
 use Kirby\Panel\Ui\Stats;
 
+/**
+ * @deprecated 6.0.0 Use `Kirby\Form\Field\StatsField` instead
+ */
 return [
 	'mixins' => [
 		'headline',
