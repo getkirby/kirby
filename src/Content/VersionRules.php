@@ -30,6 +30,21 @@ class VersionRules
 				message: 'The version already exists'
 			);
 		}
+
+		// a version can only be locked if it already exists
+		// in at least one language
+		if ($version->exists('*') === false) {
+			return;
+		}
+
+		$lock = $version->lock('*');
+
+		if ($lock->isLocked() === true) {
+			throw new LockedContentException(
+				lock: $lock,
+				key: 'content.lock.create'
+			);
+		}
 	}
 
 	/**
