@@ -237,10 +237,10 @@ class Auth
 	/**
 	 * Become any existing user or disable the current user
 	 *
-	 * @param 'string'|null $who User ID or email address,
-	 *                           `null` to use the actual user again,
-	 *                           `'kirby'` for a virtual admin user or
-	 *                           `'nobody'` to disable the actual user
+	 * @param string|null $who User ID or email address,
+	 *                         `null` to use the actual user again,
+	 *                         `'kirby'` for a virtual admin user or
+	 *                         `'nobody'` to disable the actual user
 	 * @throws \Kirby\Exception\NotFoundException if the given user cannot be found
 	 */
 	public function impersonate(string|null $who = null): User|null
