@@ -20,7 +20,7 @@ use Kirby\Toolkit\Html;
 
   <title>Kirby Panel</title>
 
-	<script type="importmap">
+	<script type="importmap" nonce="<?= $nonce ?>">
 	{
 	  "imports": <?= json_encode($assets['import-maps'] ?? []) ?>
 	}
