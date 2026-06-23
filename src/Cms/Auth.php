@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Auth\Passwords;
 use Kirby\Cms\Auth\Challenge;
 use Kirby\Cms\Auth\Status;
 use Kirby\Data\Data;
@@ -339,6 +340,16 @@ class Auth
 		return A::wrap(
 			$this->kirby->option('auth.challenges', ['totp', 'email'])
 		);
+	}
+
+	/**
+	 * Returns the password policy defined via the
+	 * `auth.passwords` option
+	 * @since 6.0.0
+	 */
+	public function passwords(): Passwords
+	{
+		return Passwords::factory($this->kirby);
 	}
 
 	/**

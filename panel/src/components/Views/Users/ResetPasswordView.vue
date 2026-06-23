@@ -31,6 +31,14 @@
 export default {
 	props: {
 		/**
+		 * Hint for the configured password policy
+		 * @since 6.0.0
+		 */
+		hint: {
+			type: String,
+			default: null
+		},
+		/**
 		 * Enable the field for the current password of the acting user
 		 */
 		requirePassword: {
@@ -72,6 +80,7 @@ export default {
 				...fields,
 				password: {
 					autofocus: this.requirePassword === false,
+					help: this.hint,
 					label: this.$t("user.changePassword.new"),
 					icon: "key",
 					type: "password",

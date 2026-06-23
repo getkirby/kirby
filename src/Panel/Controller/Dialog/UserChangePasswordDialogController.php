@@ -46,6 +46,7 @@ class UserChangePasswordDialogController extends UserDialogController
 				'label'        => $this->i18n('user.changePassword.new'),
 				'autocomplete' => 'new-password',
 				'help'         => $this->i18n('account') . ': ' . $this->user->email(),
+				'minlength'    => $this->kirby->auth()->passwords()->minlength()
 			]),
 			'passwordConfirmation' => Field::password([
 				'label'        => $this->i18n('user.changePassword.new.confirm'),
