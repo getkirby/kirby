@@ -6,6 +6,7 @@ use Kirby\Auth\Auth;
 use Kirby\Auth\Status;
 use Kirby\Cms\User;
 use Kirby\Panel\Ui\Component;
+use SensitiveParameter;
 
 /**
  * Password-reset flow that triggers a challenge
@@ -18,6 +19,7 @@ class PasswordResetMethod extends CodeMethod
 {
 	public function authenticate(
 		string|null $email,
+		#[SensitiveParameter]
 		string|null $password = null,
 		bool $long = false
 	): Status {

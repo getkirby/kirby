@@ -9,6 +9,7 @@ use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\Ui\Button;
 use Kirby\Panel\Ui\Component;
+use SensitiveParameter;
 
 /**
  * Passwordless login via one-time code
@@ -22,6 +23,7 @@ class CodeMethod extends Method
 {
 	public function authenticate(
 		string|null $email,
+		#[SensitiveParameter]
 		string|null $password = null,
 		bool $long = false
 	): Status {
