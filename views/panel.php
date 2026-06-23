@@ -14,66 +14,66 @@ use Kirby\Toolkit\Html;
 <html>
 <head>
 
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <meta name="referrer" content="same-origin">
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
+	<meta name="referrer" content="same-origin">
 
-  <title>Kirby Panel</title>
+	<title>Kirby Panel</title>
 
-  <script type="importmap">
+	<script type="importmap" nonce="<?= $nonce ?>">
 	{
-	  "imports": <?= json_encode($assets['import-maps'] ?? []) ?>
+		"imports": <?= json_encode($assets['import-maps'] ?? []) ?>
 	}
 	</script>
 
-  <script nonce="<?= $nonce ?>">
-    if (
-        !window.CSS ||
-        window.CSS.supports("display", "grid") === false ||
-        !window.fetch
-    ) {
-      window.location.href = "<?= $panelUrl ?>browser";
-    }
-  </script>
+	<script nonce="<?= $nonce ?>">
+	if (
+			!window.CSS ||
+			window.CSS.supports("display", "grid") === false ||
+			!window.fetch
+	) {
+		window.location.href = "<?= $panelUrl ?>browser";
+	}
+	</script>
 
-  <?php foreach ($assets['css'] as $css): ?>
-  <link nonce="<?= $nonce ?>" rel="stylesheet" href="<?= $css ?>">
-  <?php endforeach ?>
+	<?php foreach ($assets['css'] as $css): ?>
+	<link nonce="<?= $nonce ?>" rel="stylesheet" href="<?= $css ?>">
+	<?php endforeach ?>
 
-  <?php foreach ($assets['icons'] as $icon): ?>
-  <?= Html::tag('link', null, $icon) ?>
-  <?php endforeach ?>
+	<?php foreach ($assets['icons'] as $icon): ?>
+	<?= Html::tag('link', null, $icon) ?>
+	<?php endforeach ?>
 
-  <?php foreach ($assets['js'] as $js): ?>
-  <?php if (($js['defer'] ?? null) !== true): ?>
-  <link rel="modulepreload" href="<?= $js['src'] ?>">
-  <?php endif ?>
-  <?php endforeach ?>
+	<?php foreach ($assets['js'] as $js): ?>
+	<?php if (($js['defer'] ?? null) !== true): ?>
+	<link rel="modulepreload" href="<?= $js['src'] ?>">
+	<?php endif ?>
+	<?php endforeach ?>
 
-  <base href="<?= $panelUrl ?>">
+	<base href="<?= $panelUrl ?>">
 </head>
 <body>
-  <div id="app"></div>
+	<div id="app"></div>
 
-  <noscript>
-    Please enable JavaScript in your browser
-  </noscript>
+	<noscript>
+		Please enable JavaScript in your browser
+	</noscript>
 
-  <?= $icons ?>
+	<?= $icons ?>
 
-  <script nonce="<?= $nonce ?>">
-    // Panel state setup
-    window.panelState = <?= json_encode($state) ?>;
-  </script>
+	<script nonce="<?= $nonce ?>">
+	// Panel state setup
+	window.panelState = <?= json_encode($state) ?>;
+	</script>
 
 	<?php foreach ($assets['js'] as $key => $js): ?>
 		<?php if ($key === 'index'): ?>
 			<script type="module" nonce="<?= $nonce ?>" defer>
-				try {
-					await import("<?= $js['plugins'] ?>")
-				} finally {
-					import("<?= $js['src'] ?>")
-				}
+			try {
+				await import("<?= $js['plugins'] ?>")
+			} finally {
+				import("<?= $js['src'] ?>")
+			}
 			</script>
 		<?php else: ?>
 			<?= Html::tag('script', '', $js) . PHP_EOL ?>
