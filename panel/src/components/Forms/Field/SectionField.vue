@@ -1,6 +1,6 @@
 <template>
 	<component
-		:is="'k-' + sectionType + '-section'"
+		:is="'k-' + section + '-section'"
 		:content="$panel.view.props.versions.changes"
 		:name="name"
 		:lock="$panel.view.props.lock"
@@ -16,7 +16,7 @@
 export default {
 	props: {
 		name: String,
-		sectionType: String
+		section: String
 	},
 	emits: ["input", "submit"]
 };

@@ -19,13 +19,13 @@ class SectionFieldTest extends TestCase
 		ksort($props);
 
 		$expected = [
-			'hidden'      => false,
-			'name'        => 'section',
-			'saveable'    => false,
-			'sectionType' => 'pages',
-			'type'        => 'section',
-			'when'        => null,
-			'width'       => '1/1'
+			'hidden'   => false,
+			'name'     => 'section',
+			'saveable' => false,
+			'section'  => 'pages',
+			'type'     => 'section',
+			'when'     => null,
+			'width'    => '1/1'
 		];
 
 		$this->assertSame($expected, $props);
