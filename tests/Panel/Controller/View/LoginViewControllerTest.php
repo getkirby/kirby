@@ -89,6 +89,34 @@ class TestNullFormChallenge extends TestChallenge2
 	}
 }
 
+class TestSecretChallenge extends Challenge
+{
+	// only available once the user has set it up
+	public static function isAvailable(User $user, string $mode): bool
+	{
+		return $user->secret('foo') !== null;
+	}
+
+	public function create(): Pending|null
+	{
+		return null;
+	}
+
+	public function form(Pending $pending): Component
+	{
+		return new Component(
+			component: 'k-login-test-secret-challenge-form',
+			submit:    $this->submit(),
+			user:      $this->user->email(),
+		);
+	}
+
+	public function verify(mixed $input, Pending $data): bool
+	{
+		return true;
+	}
+}
+
 #[CoversClass(LoginViewController::class)]
 class LoginViewControllerTest extends TestCase
 {
@@ -100,6 +128,7 @@ class LoginViewControllerTest extends TestCase
 		Challenges::$challenges['test']           = TestChallenge::class;
 		Challenges::$challenges['test2']          = TestChallenge2::class;
 		Challenges::$challenges['test-null-form'] = TestNullFormChallenge::class;
+		Challenges::$challenges['test-secret']    = TestSecretChallenge::class;
 	}
 
 	public function tearDown(): void
@@ -109,7 +138,8 @@ class LoginViewControllerTest extends TestCase
 		unset(
 			Challenges::$challenges['test'],
 			Challenges::$challenges['test2'],
-			Challenges::$challenges['test-null-form']
+			Challenges::$challenges['test-null-form'],
+			Challenges::$challenges['test-secret']
 		);
 	}
 
@@ -327,6 +357,62 @@ class LoginViewControllerTest extends TestCase
 		$this->assertCount(2, $props['challenges']);
 		$this->assertTrue($props['challenges'][0]['active']);
 		$this->assertFalse($props['challenges'][1]['active']);
+	}
+
+	public function testLoadWithChallengeForNonExistentUser(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'challenges' => ['test', 'test2']
+				]
+			],
+			'users' => [] // no users at all
+		]);
+
+		$this->app->session()->set('kirby.challenge.email', 'ghost@example.com');
+		$this->app->session()->set('kirby.challenge.type', 'test');
+		$this->app->session()->set('kirby.challenge.mode', 'login');
+
+		$props = (new LoginViewController('challenge', 'test'))->load()->props();
+
+		$this->assertSame('pending', $props['state']);
+
+		// the form renders from a virtual user carrying the submitted email
+		$this->assertSame('k-login-test-challenge-form', $props['form']['component']);
+		$this->assertSame('ghost@example.com', $props['form']['props']['user']);
+
+		$this->assertCount(2, $props['challenges']);
+		$this->assertSame('test', $props['challenges'][0]['type']);
+		$this->assertTrue($props['challenges'][0]['active']);
+		$this->assertSame('test2', $props['challenges'][1]['type']);
+		$this->assertFalse($props['challenges'][1]['active']);
+	}
+
+	public function testLoadExcludesUserSpecificChallengeForNonExistentUser(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'challenges' => ['test-secret', 'test2']
+				]
+			],
+			'users' => []
+		]);
+
+		$session = $this->app->session();
+		$session->set('kirby.challenge.email', 'ghost@example.com');
+		$session->set('kirby.challenge.mode', 'login');
+		// note: no kirby.challenge.type, fallback to last enabled ('test2')
+
+		$props = (new LoginViewController('challenge', 'test2'))->load()->props();
+
+		$this->assertSame('k-login-test-challenge2-form', $props['form']['component']);
+		$this->assertSame('ghost@example.com', $props['form']['props']['user']);
+
+		$types = array_column($props['challenges'], 'type');
+		$this->assertSame(['test2'], $types);
+		$this->assertNotContains('test-secret', $types);
 	}
 
 	public function testLoadAppliesValueToForm(): void

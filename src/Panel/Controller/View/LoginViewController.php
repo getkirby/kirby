@@ -7,6 +7,7 @@ use Kirby\Auth\Method;
 use Kirby\Auth\Pending;
 use Kirby\Auth\State;
 use Kirby\Auth\Status;
+use Kirby\Cms\User;
 use Kirby\Exception\LogicException;
 use Kirby\Panel\Controller\ViewController;
 use Kirby\Panel\Panel;
@@ -62,9 +63,8 @@ class LoginViewController extends ViewController
 		}
 
 		$challenges = $this->kirby->auth()->challenges();
-		$email      = $this->status->email();
-		$user       = $this->kirby->user($email);
 		$mode       = $this->status->mode();
+		$user       = $this->user();
 
 		return $challenges->get($type, $user, $mode);
 	}
@@ -75,9 +75,8 @@ class LoginViewController extends ViewController
 			return [];
 		}
 
-		$email       = $this->status->email();
-		$user        = $this->kirby->user($email);
 		$mode        = $this->status->mode();
+		$user        = $this->user();
 		$challenges  = $this->kirby->auth()->challenges();
 		$available   = $challenges->available($user, $mode);
 		$currentType = $this->status->challenge();
@@ -171,5 +170,23 @@ class LoginViewController extends ViewController
 	protected function value(): array
 	{
 		return [];
+	}
+
+	/**
+	 * Returns the user the pending challenge belongs to.
+	 *
+	 * The challenge email may not belong to an existing user:
+	 * the account could have been deleted after the challenge
+	 * was created, or it never existed and the pending state
+	 * was only created to avoid leaking whether
+	 * the user exists (see `Auth::createChallenge()`).
+	 *
+	 * A virtual user lets the view render the form and
+	 * resolve challenge availability identically in that case.
+	 */
+	protected function user(): User
+	{
+		$email = $this->status->email();
+		return $this->kirby->user($email) ?? new User(['email' => $email]);
 	}
 }

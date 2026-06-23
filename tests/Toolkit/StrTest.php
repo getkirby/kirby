@@ -8,6 +8,7 @@ use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Query\TestUser as QueryTestUser;
 use Kirby\TestCase;
+use Kirby\Tests\MockTime;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use TypeError;
