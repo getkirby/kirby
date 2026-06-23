@@ -30,7 +30,7 @@ class SectionField extends BaseField
 	{
 		return [
 			...parent::props(),
-			'sectionType' => $this->section,
+			'section' => $this->section,
 		];
 	}
 

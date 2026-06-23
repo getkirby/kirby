@@ -158,33 +158,47 @@ abstract class ModelViewController extends ViewController
 		return $this->tabSimplified($tab);
 	}
 
+	/**
+	 * Flattens a tab's sections into fields, so the model
+	 * view can be rendered through a unified form/field pipeline.
+	 */
 	protected function tabSimplified(array $tab): array
 	{
 		$form = $this->fields();
 
-		foreach ($tab['columns'] as $columnIndex => $column) {
+		foreach ($tab['columns'] as $columnKey => $column) {
 			$fields = [];
 
-			foreach ($column['sections'] as $sectionIndex => $section) {
+			foreach ($column['sections'] ?? [] as $sectionName => $section) {
+				// unwrap a `fields` section into its own fields,
+				// pulled from the form so values/translations are correct
 				if ($section['type'] === 'fields') {
-					foreach ($section['fields'] as $name => $field) {
-						if ($formField = $form->get($name)) {
-							$fields[$formField->name()] = $formField->props();
+					foreach (array_keys($section['fields'] ?? []) as $name) {
+						if ($field = $form->get($name)) {
+							$fields[$field->name()] = $field->props();
 						}
 					}
-				} else {
-					$field = new SectionField($section['type'], ...$section);
-					$field->setModel($this->model());
 
-					$fields[$sectionIndex] = $field->props();
+					continue;
 				}
+
+				// wrap any other section type as a section field,
+				// keyed + named by the section's blueprint name so its
+				// own `parent/sections/{name}` endpoint keeps resolving
+				$props = $section;
+				unset($props['type']);
+
+				$field = new SectionField($section['type'], ...$props);
+				$field->setModel($this->model);
+
+				$fields[$sectionName] = $field->props();
 			}
 
-			$column['fields'] = $fields;
-
-			unset($column['sections']);
-
-			$tab['columns'][$columnIndex] = $column;
+			$tab['columns'][$columnKey] = [
+				...$column,
+				'fields'   => $fields,
+				'sections' => null,
+			];
 		}
 
 		return $tab;
