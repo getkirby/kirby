@@ -134,7 +134,7 @@ trait FileActions
 					$file->version('changes')->update(['sort' => $sort]);
 				}
 
-				return $file->save(['sort' => $sort]);
+				return $file->save(['sort' => $sort], 'default');
 			}
 		);
 	}
