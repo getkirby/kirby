@@ -39,6 +39,11 @@ class Auth
 	protected User|null $impersonate = null;
 
 	/**
+	 * Cache of the password policy object
+	 */
+	protected Passwords|null $passwords = null;
+
+	/**
 	 * Cache of the auth status object
 	 */
 	protected Status|null $status = null;
@@ -349,7 +354,7 @@ class Auth
 	 */
 	public function passwords(): Passwords
 	{
-		return Passwords::factory($this->kirby);
+		return $this->passwords ??= Passwords::factory($this->kirby);
 	}
 
 	/**

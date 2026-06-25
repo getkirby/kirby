@@ -159,7 +159,7 @@ class Passwords
 		if (isset($this->rules['minlength']) === true) {
 			$requirements[] = I18n::template(
 				'user.password.hint.minlength',
-				['min' => $this->rules['minlength']]
+				['min' => $this->minlength()]
 			);
 		}
 
@@ -252,7 +252,7 @@ class Passwords
 			);
 		}
 
-		if ($rules($password) === false) {
+		if ($result === false) {
 			$this->fail();
 		}
 	}

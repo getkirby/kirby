@@ -815,7 +815,7 @@
 	"user.delete": "Delete this user",
 	"user.delete.confirm": "Do you really want to delete <br><strong>{email}</strong>?",
 	"user.password.hint.digits": "at least { count } digit(s)",
-	"user.password.hint.intro": "Your password must contain: { requirements }",
+	"user.password.hint.intro": "Password must contain: { requirements }",
 	"user.password.hint.lowercase": "at least { count } lowercase letter(s)",
 	"user.password.hint.minlength": "at least { min } characters",
 	"user.password.hint.symbols": "at least { count } symbol(s)",
