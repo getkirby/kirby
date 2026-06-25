@@ -169,6 +169,19 @@ export default {
 </script>
 
 <style>
+.k-models-dialog :where(.k-dialog-body, .k-collection) {
+	display: flex;
+	flex-direction: column;
+	min-height: 0;
+}
+.k-models-dialog .k-dialog-body {
+	overflow: hidden;
+}
+.k-models-dialog .k-items {
+	min-height: 0;
+	overflow-y: auto;
+	overscroll-behavior: contain;
+}
 .k-models-dialog .k-list-item {
 	cursor: pointer;
 }
