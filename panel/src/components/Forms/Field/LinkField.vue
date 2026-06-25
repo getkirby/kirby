@@ -319,7 +319,6 @@ export default {
 
 .k-link-input-body {
 	display: grid;
-	overflow: hidden;
 	border-top: 1px solid var(--color-border);
 	background: var(--input-color-back);
 	--tree-color-back: var(--input-color-back);
@@ -327,12 +326,18 @@ export default {
 	--tree-branch-hover-color-back: var(--panel-color-back);
 }
 
+.k-link-input-body .k-page-browser,
+.k-link-input-body .k-file-browser {
+	max-height: 50dvh;
+	overflow-y: auto;
+	overscroll-behavior: contain;
+}
+
 .k-link-input-body[data-type="page"] .k-page-browser {
 	padding: var(--spacing-2);
 	padding-bottom: calc(var(--spacing-2) - 1px);
 	width: 100%;
 	container-type: inline-size;
-	overflow: auto;
 }
 .k-link-field .k-tags-field-preview {
 	--tag-rounded: var(--rounded-sm);
