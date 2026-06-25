@@ -117,6 +117,26 @@ class RedisCacheTest extends TestCase
 		$this->assertTrue($cache2->exists('c/a'));
 	}
 
+	public function testFlushWithGlobPrefix(): void
+	{
+		$cache1 = new RedisCache([
+			'prefix' => 'test[1]:'
+		]);
+		$cache2 = new RedisCache([
+			'prefix' => 'test1:'
+		]);
+
+		$cache1->set('a', 'A basic value');
+		$cache2->set('a', 'A basic value');
+
+		// without escaping, the pattern test[1]:* is read as a
+		// character class and would also match test1: keys
+		$this->assertTrue($cache1->flush());
+
+		$this->assertFalse($cache1->exists('a'));
+		$this->assertTrue($cache2->exists('a'));
+	}
+
 	public function testFlushRestoresScanOption(): void
 	{
 		$cache = new RedisCache([

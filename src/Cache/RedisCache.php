@@ -131,10 +131,14 @@ class RedisCache extends Cache
 		// when the iteration is genuinely done.
 		$this->connection->setOption(Redis::OPT_SCAN, Redis::SCAN_RETRY);
 
+		// escape glob metacharacters so a prefix containing *, ?, [ or \
+		// is matched literally and can't bleed into other prefixes
+		$pattern = addcslashes($prefix, '\\*?[]') . '*';
+
 		try {
 			$it = null;
 
-			while ($keys = $this->connection->scan($it, $prefix . '*')) {
+			while ($keys = $this->connection->scan($it, $pattern)) {
 				$this->connection->del($keys);
 			}
 		} finally {
