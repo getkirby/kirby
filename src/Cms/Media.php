@@ -115,12 +115,25 @@ class Media
 			// prevent path traversal
 			$root = Dir::realpath($root, $media);
 
+			// $filename is appended unmodified to the validated root
+			// to build the thumbnail and job file paths;
+			// it must be a plain filename without any path information
+			if (
+				$filename === '' ||
+				$filename === '.' ||
+				$filename === '..' ||
+				basename($filename) !== $filename
+			) {
+				throw new InvalidArgumentException();
+			}
+
 			$thumb = $root . '/' . $filename;
 			$job   = $root . '/.jobs/' . $filename . '.json';
 
 			$options = Data::read($job);
 		} catch (Throwable) {
-			// send a customized error message to make clearer what happened here
+			// send a customized error message
+			// to make clearer what happened here
 			throw new NotFoundException(
 				message: 'The thumbnail configuration could not be found'
 			);
