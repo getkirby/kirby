@@ -547,7 +547,16 @@ class Dir
 				throw new Exception(sprintf('The parent directory does not exist: "%s"', $in));
 			}
 
-			if (substr($realpath, 0, strlen($parent)) !== $parent) {
+			// require a path separator boundary so that
+			// a sibling directory sharing the same name prefix
+			// (e.g. `/site2` for the parent `/site`)
+			// cannot pass the containment check
+			$parent = rtrim($parent, '/\\');
+
+			if (
+				$realpath !== $parent &&
+				str_starts_with($realpath, $parent . DIRECTORY_SEPARATOR) === false
+			) {
 				throw new Exception('The directory is not within the parent directory');
 			}
 		}
