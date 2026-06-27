@@ -300,7 +300,6 @@ return [
 			'playsinline',
 			'poster',
 			'preload',
-			'style',
 			'width',
 		],
 		'html' => function (KirbyTag $tag): string {
@@ -371,8 +370,7 @@ return [
 			}
 
 			return Html::figure([$video ?? ''], $tag->caption, [
-				'class' => $tag->class ?? 'video',
-				'style' => $tag->style
+				'class' => $tag->class ?? 'video'
 			]);
 		}
 	],

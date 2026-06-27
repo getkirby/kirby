@@ -72,7 +72,6 @@ class VideoKirbyTagTest extends TestCase
                                 playsinline: true
                                 poster: sample.jpg
                                 preload: auto
-                                style: border: none
                                 width: 500)'
 						],
 						'files' => [
@@ -89,7 +88,7 @@ class VideoKirbyTagTest extends TestCase
 		$image = $page->file('sample.jpg');
 		$video = $page->file('sample.mp4');
 
-		$expected = '<figure class="video-class" style="border: none"><video autoplay disablepictureinpicture height="350" loop muted playsinline poster="' . $image->url() . '" preload="auto" width="500"><source src="' . $video->url() . '" type="video/mp4"></video><figcaption>Lorem ipsum</figcaption></figure>';
+		$expected = '<figure class="video-class"><video autoplay disablepictureinpicture height="350" loop muted playsinline poster="' . $image->url() . '" preload="auto" width="500"><source src="' . $video->url() . '" type="video/mp4"></video><figcaption>Lorem ipsum</figcaption></figure>';
 		$this->assertSame($expected, $page->text()->kt()->value());
 	}
 
@@ -109,7 +108,6 @@ class VideoKirbyTagTest extends TestCase
 						'playsinline' => true,
 						'poster'      => 'sample.jpg',
 						'preload'     => 'auto',
-						'style'       => 'border: none',
 						'width'       => 500
 					]
 				]
@@ -135,7 +133,7 @@ class VideoKirbyTagTest extends TestCase
 		$image = $page->file('sample.jpg');
 		$video = $page->file('sample.mp4');
 
-		$expected = '<figure class="video-class" style="border: none"><video autoplay height="350" loop muted playsinline poster="' . $image->url() . '" preload="auto" width="500"><source src="' . $video->url() . '" type="video/mp4"></video><figcaption>Lorem ipsum</figcaption></figure>';
+		$expected = '<figure class="video-class"><video autoplay height="350" loop muted playsinline poster="' . $image->url() . '" preload="auto" width="500"><source src="' . $video->url() . '" type="video/mp4"></video><figcaption>Lorem ipsum</figcaption></figure>';
 		$this->assertSame($expected, $page->text()->kt()->value());
 	}
 
