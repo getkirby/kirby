@@ -82,7 +82,6 @@ export default function (panel: Panel) {
 		window: {
 			beforeunload: false,
 			dragenter: false,
-			dragexit: false,
 			dragleave: false,
 			dragover: false,
 			drop: false,
@@ -147,16 +146,6 @@ export default function (panel: Panel) {
 			this.entered = e.target;
 			this.prevent(e);
 			this.emit("dragenter", e);
-		},
-
-		/**
-		 * Global dragexit event, which
-		 * prevents the default
-		 */
-		dragexit(e: DragEvent): void {
-			this.prevent(e);
-			this.entered = null;
-			this.emit("dragexit", e);
 		},
 
 		/**
