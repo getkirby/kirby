@@ -431,7 +431,7 @@ class ApiTest extends TestCase
 					'pattern' => 'test',
 					'method'  => 'POST',
 					'action'  => function () {
-						throw new \Exception('nope');
+						throw new \Exception('nope at ' . __FILE__);
 					}
 				]
 			]
@@ -441,7 +441,7 @@ class ApiTest extends TestCase
 
 		$expected = [
 			'status'   => 'error',
-			'message'  => 'nope',
+			'message'  => 'An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug',
 			'code'     => 500,
 			'key'      => null,
 			'details'  => []

@@ -536,10 +536,32 @@ class Api
 			$docRoot = $_SERVER['DOCUMENT_ROOT'] ?? null;
 		}
 
+		// determine which message to expose to avoid leaking
+		// internal details (e.g. file paths) from PHP errors
+		if ($e instanceof ExceptionException) {
+			// Kirby exceptions carry safe, intentional messages
+			// that can be returned as-is whether debugging or not
+			$message = $e->getMessage();
+
+		} elseif ($this->debug === true) {
+			// in debug mode, expose the actual message
+			// but disguise absolute file paths in it
+			$message = $e->getMessage();
+
+			if (isset($this->kirby) === true) {
+				$message = $this->kirby->disguiseFilePath($message);
+			}
+
+		} else {
+			// any other (PHP) error could leak internal details,
+			// so only a generic message is returned
+			$message = I18n::translate('error.unexpected');
+		}
+
 		// prepare the result array for all exception types
 		$result = [
 			'status'    => 'error',
-			'message'   => $e->getMessage(),
+			'message'   => $message,
 			'code'      => empty($e->getCode()) === true ? 500 : $e->getCode(),
 			'exception' => get_class($e),
 			'key'       => null,
