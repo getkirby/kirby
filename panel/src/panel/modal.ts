@@ -237,7 +237,7 @@ export default function Modal<T extends ModalState>(
 		 * if there's no submit listener or backend route.
 		 */
 		async submit(
-			value: Record<string, unknown> = {},
+			value?: Record<string, unknown>,
 			options: Partial<Prettify<T>> = {}
 		): Promise<unknown> {
 			if (this.isLoading === true) {

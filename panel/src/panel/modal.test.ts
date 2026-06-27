@@ -266,6 +266,26 @@ describe("panel.modal", () => {
 			expect(submitted).toStrictEqual(true);
 		});
 
+		it("should fall back to the current value when called without arguments", async () => {
+			const panel = Panel.create(app);
+			const modal = Modal(panel, "test", defaults());
+			let submitted: unknown;
+
+			await modal.open({
+				component: "k-test",
+				props: { value: { title: "hello" } },
+				on: {
+					submit(value) {
+						submitted = value;
+					}
+				}
+			});
+
+			await modal.submit();
+
+			expect(submitted).toStrictEqual({ title: "hello" });
+		});
+
 		it("should close when no submit handler and no path", async () => {
 			const panel = Panel.create(app);
 			const modal = Modal(panel, "test", defaults());
