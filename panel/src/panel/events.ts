@@ -95,6 +95,13 @@ export default function (panel: Panel) {
 	};
 
 	/**
+	 * Stores the bound listeners registered by `subscribe()`
+	 * so the exact same references can be handed to
+	 * `removeEventListener` in `unsubscribe()`
+	 */
+	const listeners = new Map<string, EventListener>();
+
+	/**
 	 * Each globally delegated event
 	 * has its own method. This helps
 	 * to add and remove the event listeners
@@ -331,19 +338,15 @@ export default function (panel: Panel) {
 			const self = this as unknown as Record<string, EventListener>;
 
 			for (const event in events.document) {
-				document.addEventListener(
-					event,
-					self[event].bind(this),
-					events.document[event]
-				);
+				const listener = self[event].bind(this);
+				listeners.set(event, listener);
+				document.addEventListener(event, listener, events.document[event]);
 			}
 
 			for (const event in events.window) {
-				window.addEventListener(
-					event,
-					self[event].bind(this),
-					events.window[event]
-				);
+				const listener = self[event].bind(this);
+				listeners.set(event, listener);
+				window.addEventListener(event, listener, events.window[event]);
 			}
 		},
 
@@ -353,15 +356,12 @@ export default function (panel: Panel) {
 		 * used in the unmounted hook of the app
 		 */
 		unsubscribe(): void {
-			const self = this as unknown as Record<string, EventListener>;
-
-			for (const event in events.document) {
-				document.removeEventListener(event, self[event]);
+			for (const [event, listener] of listeners) {
+				document.removeEventListener(event, listener);
+				window.removeEventListener(event, listener);
 			}
 
-			for (const event in events.window) {
-				window.removeEventListener(event, self[event]);
-			}
+			listeners.clear();
 		}
 	};
 }
