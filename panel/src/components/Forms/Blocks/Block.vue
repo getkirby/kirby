@@ -55,6 +55,10 @@
 import { props as BlockProps } from "./Types/Default.vue";
 import { props as BlockOptionsProps } from "./BlockOptions.vue";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	mixins: [BlockProps, BlockOptionsProps],
 	inheritAttrs: false,

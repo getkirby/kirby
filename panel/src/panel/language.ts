@@ -25,7 +25,9 @@ export function defaults(): LanguageState {
  * Represents the currently active content language
  * in a multi-language setup
  *
- * @since 4.0.0
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default function Language() {
 	const parent = State("language", defaults());

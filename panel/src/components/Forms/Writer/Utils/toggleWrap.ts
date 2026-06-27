@@ -3,6 +3,10 @@ import type { Attrs, NodeType } from "prosemirror-model";
 import type { Command } from "prosemirror-state";
 import nodeIsActive from "./nodeIsActive";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
 export default function toggleWrap(type: NodeType, attrs: Attrs = {}): Command {
 	return (state, dispatch, view): boolean => {
 		if (nodeIsActive(state, type, attrs) === true) {

@@ -9,6 +9,10 @@ interface EmailAttrs {
 	title?: string;
 }
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
 export default class Email extends Mark {
 	get button() {
 		return {

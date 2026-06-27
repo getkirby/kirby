@@ -87,6 +87,9 @@ type EditorSelectPayload = EditorTransactionPayload & {
  * ProseMirror-based rich text editor used by the Writer field.
  * Manages the schema, extensions, state, and view lifecycle,
  * and emits typed events for selection, focus, content changes, and more.
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default class Editor extends Emitter<EditorEvents> {
 	active!: EditorActiveState;

@@ -30,6 +30,9 @@ import Block from "./Default.vue";
 
 /**
  * @displayName BlockTypeQuote
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	extends: Block,
@@ -52,7 +55,8 @@ export default {
 <style>
 .k-block-type-quote-editor {
 	padding-inline-start: var(--spacing-3);
-	border-inline-start: 2px solid light-dark(var(--color-black), var(--color-border));
+	border-inline-start: 2px solid
+		light-dark(var(--color-black), var(--color-border));
 }
 .k-block-type-quote-text {
 	font-size: var(--text-xl);

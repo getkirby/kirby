@@ -12,6 +12,10 @@
 <script>
 import TextDialog from "./TextDialog.vue";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	mixins: [TextDialog],
 	props: {

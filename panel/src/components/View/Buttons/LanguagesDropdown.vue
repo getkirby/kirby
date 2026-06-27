@@ -41,8 +41,12 @@ import { props as ButtonProps } from "@/components/Navigation/Button.vue";
 
 /**
  * View header button to switch between content languages
+ *
  * @displayName LanguagesViewButton
- * @since 4.0.0
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  * @unstable
  */
 export default {

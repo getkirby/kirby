@@ -7,6 +7,9 @@
  * @example
  * const throttled = throttle(myFunction, 100)
  * throttled() // myFunction() is called at most once every 100ms
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
  */
 export default function <T extends unknown[]>(
 	callback: (this: unknown, ...args: T) => void,

@@ -47,6 +47,10 @@
 <script>
 import { Preview } from "./PreviewView.vue";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	mixins: [Preview],
 	mounted() {

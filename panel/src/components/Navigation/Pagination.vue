@@ -69,11 +69,16 @@
 
 <script>
 /**
- * @example <k-pagination
+ * @example
+ * <k-pagination
  *   :details="true"
  *   :page="5"
  *   :total="125"
- *   :limit="10" />
+ *   :limit="10"
+ * />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	props: {

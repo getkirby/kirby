@@ -19,7 +19,9 @@ export type DialogOptions = DialogState & {
 };
 
 /**
- * @since 4.0.0
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default function Dialog(panel: Panel) {
 	// shortcut to submit dialogs

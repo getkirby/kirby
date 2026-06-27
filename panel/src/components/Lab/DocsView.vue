@@ -19,6 +19,10 @@
 <script>
 import Docs from "./Docs.vue";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	components: {
 		"k-lab-docs": Docs

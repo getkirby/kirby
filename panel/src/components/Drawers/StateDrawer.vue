@@ -14,6 +14,10 @@
 </template>
 
 <script>
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	methods: {
 		isCurrent(id) {

@@ -1,6 +1,10 @@
 <script>
 import ModelsSection from "@/components/Sections/ModelsSection.vue";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	extends: ModelsSection,
 	computed: {

@@ -1,3 +1,8 @@
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
+
 import { isRef, isReactive, isProxy, toRaw } from "vue";
 
 /**

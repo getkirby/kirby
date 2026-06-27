@@ -1,5 +1,9 @@
 import { MarkType, ResolvedPos } from "prosemirror-model";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
 export default function getMarkRange(
 	$pos: ResolvedPos | null = null,
 	type: MarkType | null = null

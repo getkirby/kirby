@@ -22,7 +22,12 @@ import { props as TelInput } from "../Input/TelInput.vue";
 /**
  * Have a look at `<k-field>`, `<k-input>` and `<k-tel-input>`
  * for additional information.
- * @example <k-tel-field :value="tel" @input="tel = $event" name="tel" label="Phone number" />
+ *
+ * @example
+ * <k-tel-field :value="tel" @input="tel = $event" name="tel" label="Phone number" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [Field, Input, TelInput],

@@ -36,6 +36,10 @@ import DocWarning from "./DocsWarning.vue";
 import DocParams from "./DocsParams.vue";
 import DocTypes from "./DocsTypes.vue";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	components: {
 		"k-lab-docs-warning": Warning,

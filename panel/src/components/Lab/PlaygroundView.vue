@@ -30,6 +30,10 @@ import Form from "./Form.vue";
 import OutputDialog from "./OutputDialog.vue";
 import TableCell from "./TableCell.vue";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	props: {
 		buttons: Array,

@@ -41,7 +41,14 @@
 let OpenDropdown = null;
 
 /**
- * Dropdowns are constructed with two elements: `<k-dropdown>` holds any content shown when opening the dropdown: any number of `<k-dropdown-item>` elements or any other HTML; typically a `<k-button>` then is used to call the `toggle()` method on `<k-dropdown>`.
+ * Dropdowns are constructed with two elements:
+ * `<k-dropdown>` holds any content shown when opening the dropdown:
+ * any number of `<k-dropdown-item>` elements or any other HTML;
+ * typically a `<k-button>` then is used to call the `toggle()`
+ * method on `<k-dropdown>`.
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	props: {

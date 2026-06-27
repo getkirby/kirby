@@ -32,6 +32,9 @@ export const props = {
 
 /**
  * @displayName BlockTypeDefault
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [props],

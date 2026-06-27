@@ -3,6 +3,9 @@
 import ModelsField from "./LegacyModelsField.vue";
 
 /**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ *
  * @deprecated 6.0.0 Use `k-pages-field` instead
  */
 export default {

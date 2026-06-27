@@ -6,7 +6,11 @@
 /**
  * A simple progress bar that we mostly use it in the upload dialog
  *
- * @example <k-progress :value="10" />
+ * @example
+ * <k-progress :value="10" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	props: {
@@ -26,7 +30,10 @@ export default {
 <style>
 :root {
 	--progress-height: var(--spacing-2);
-	--progress-color-back: light-dark(var(--color-gray-300), var(--color-gray-850));
+	--progress-color-back: light-dark(
+		var(--color-gray-300),
+		var(--color-gray-850)
+	);
 	--progress-color-value: var(--color-focus);
 }
 

@@ -57,6 +57,9 @@ import { props as ItemsProps } from "./Items.vue";
 /**
  * The `k-collection` component is a wrapper around `k-items`
  * that adds sortabilty and pagination to the items.
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [ItemsProps],

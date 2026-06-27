@@ -3,6 +3,9 @@ import ModelPickerField from "./ModelPickerField.vue";
 
 /**
  * @displayName PagesField
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	extends: ModelPickerField,

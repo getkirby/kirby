@@ -178,6 +178,9 @@
 <script>
 /**
  * A simple table component with columns and rows
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	inheritAttrs: false,

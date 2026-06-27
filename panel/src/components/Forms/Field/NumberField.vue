@@ -20,8 +20,14 @@ import { props as Input } from "../Input.vue";
 import { props as NumberInput } from "../Input/NumberInput.vue";
 
 /**
- * Have a look at `<k-field>`, `<k-input>` and `<k-number-input>` for additional information.
- * @example <k-number-field :value="number" @input="number = $event" name="number" label="Number" />
+ * Have a look at `<k-field>`, `<k-input>` and `<k-number-input>`
+ * for additional information.
+ *
+ * @example
+ * <k-number-field :value="number" @input="number = $event" name="number" label="Number" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [Field, Input, NumberInput],

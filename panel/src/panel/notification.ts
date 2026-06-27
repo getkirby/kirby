@@ -51,7 +51,10 @@ function toError(error: unknown): Error & { details?: unknown } {
 
 /**
  * Manages the Panel's notifications
- * @since 4.0.0
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default function Notification(panel: Panel) {
 	const parent = State("notification", defaults());

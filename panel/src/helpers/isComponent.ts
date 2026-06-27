@@ -6,6 +6,9 @@ import type { App } from "vue";
  * @example
  * isComponent("k-button") // => true
  * isComponent("k-unknown") // => false
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
  */
 export default function (name: string, app?: App): boolean {
 	app ??= window.panel?.app;

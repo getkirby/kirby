@@ -118,6 +118,10 @@
 import { props as Field } from "@/components/Forms/Field.vue";
 import batchEditing from "@/mixins/batchEditing";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	mixins: [Field, batchEditing],
 	inheritAttrs: false,

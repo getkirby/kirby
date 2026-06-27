@@ -5,6 +5,10 @@ import { length } from "@/helpers/object";
 import findParentNode from "./findParentNode";
 import findSelectedNodeOfType from "./findSelectedNodeOfType";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
 export default function nodeIsActive(
 	state: EditorState,
 	type: NodeType,

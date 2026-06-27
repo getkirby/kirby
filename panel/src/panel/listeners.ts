@@ -7,7 +7,9 @@ export type Listener = (...args: any[]) => unknown;
  * Provides an event-listener system for Panel modules.
  * Each event can have at most one registered callback.
  *
- * @since 4.0.0
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default function Listeners() {
 	return {

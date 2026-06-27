@@ -38,7 +38,16 @@ import { getCurrentInstance } from "vue";
 import Dialog from "@/mixins/dialog.js";
 
 /**
- * Modal dialogs are used in Kirby's Panel in many places for quick actions like adding new pages, changing titles, etc. that don't necessarily need a full new view. You can create your own modals for your fields and other plugins or reuse our existing modals to invoke typical Panel actions.
+ * Modal dialogs are used in Kirby's Panel in many places
+ * for quick actions like adding new pages, changing titles, etc.
+ * that don't necessarily need a full new view.
+ *
+ * You can create your own modals for your fields and
+ * other plugins or reuse our existing modals to
+ * invoke typical Panel actions.
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [Dialog],

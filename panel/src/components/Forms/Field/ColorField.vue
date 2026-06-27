@@ -65,7 +65,9 @@ import { props as Input } from "../Input.vue";
 import { props as ColornameInput } from "../Input/ColornameInput.vue";
 
 /**
- * @since 4.0.0
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default {
 	mixins: [Field, Input, ColornameInput],

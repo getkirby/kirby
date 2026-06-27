@@ -61,7 +61,11 @@ export const props = {
  * Extends `k-date-input` and makes sure that values
  * get parsed and emitted as time-only ISO string `HH:mm:ss`
  *
- * @example <k-input :value="time" @input="time = $event" name="time" type="time" />
+ * @example
+ * <k-input :value="time" @input="time = $event" name="time" type="time" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [DateInput, props],

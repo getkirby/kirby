@@ -34,7 +34,11 @@ export const props = {
 };
 
 /**
- * @example <k-input :value="toggle" @input="toggle = $event" name="toggle" type="toggle" />
+ * @example
+ * <k-input :value="toggle" @input="toggle = $event" name="toggle" type="toggle" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [Input, props],

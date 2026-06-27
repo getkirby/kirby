@@ -7,6 +7,10 @@ import {
 } from "prosemirror-model";
 import type { Command } from "prosemirror-state";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
 export default function insertNode(
 	type: NodeType,
 	attrs?: Attrs | null,

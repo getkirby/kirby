@@ -97,10 +97,15 @@ import { IsoDateProps } from "./DateInput.vue";
 const days = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
 
 /**
- * The Calendar component is mainly used for our `DateInput` component, but it could be used as stand-alone calendar as well with a little CSS love.
- * @since 4.0.0
+ * The Calendar component is mainly used for our `DateInput` component,
+ * but it could be used as stand-alone calendar as well with a little CSS love.
  *
- * @example <k-calendar-input :value="value" @input="value = $event" />
+ * @example
+ * <k-calendar-input :value="value" @input="value = $event" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default {
 	mixins: [InputProps, IsoDateProps],

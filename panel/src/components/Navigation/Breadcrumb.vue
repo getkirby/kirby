@@ -31,9 +31,13 @@
 /**
  * Displays a breadcrumb trail
  *
- * @example <k-breadcrumb
+ * @example
+ * <k-breadcrumb
  * 	:crumbs="[{ link: '/a', label: 'A' }, { link: '/b', label: 'B' }]"
  * />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	props: {

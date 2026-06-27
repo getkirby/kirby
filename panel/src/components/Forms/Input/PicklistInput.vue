@@ -128,13 +128,17 @@ export const props = {
 /**
  * A filterable list of checkbox/radio options
  * with an optional create button
- * @since 4.0.0
  *
- * @example <k-picklist-input
+ * @example
+ * <k-picklist-input
  * 		:create="create"
  * 		:options="options"
  * 		:value="value"
  *	/>
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default {
 	mixins: [Input, props],

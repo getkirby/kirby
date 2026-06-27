@@ -12,6 +12,9 @@
 <script>
 /**
  * @displayName LabForm
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	methods: {

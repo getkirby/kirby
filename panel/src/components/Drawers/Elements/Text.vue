@@ -26,6 +26,9 @@ export const props = {
 
 /**
  * @displayName DrawerText
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [props]

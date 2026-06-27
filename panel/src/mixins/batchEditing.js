@@ -3,6 +3,9 @@
  * that want to introduce batch editing capabilities. It provides the
  * necessary methods and computed properties to handle item selection,
  * batch mode buttons and delete action.
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	data: () => ({

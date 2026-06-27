@@ -83,6 +83,9 @@ import { props as ItemImageProps } from "./ItemImage.vue";
 import { layout } from "@/mixins/props.js";
 /**
  * A collection item that can be displayed in various layouts
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [ItemImageProps, layout],

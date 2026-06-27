@@ -16,7 +16,9 @@ export function defaults(): ActivationState {
  * The initial state is read from sessionStorage so it
  * persists across page reloads.
  *
- * @since 4.0.0
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default function Activation() {
 	const parent = State("activation", defaults());

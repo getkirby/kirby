@@ -5,7 +5,10 @@ import { type App } from "vue";
  * aliases. We can remove them step by step
  * in future major releases to clean up.
  *
- * @since 4.0.0
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
+ *
  * @deprecated 4.0.0
  */
 export default {

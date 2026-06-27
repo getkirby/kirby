@@ -15,7 +15,9 @@ Prism.languages.javascript=Prism.languages.extend("clike",{"class-name":[Prism.l
 Prism.manual = true;
 
 /**
- * @since 4.0.0
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ * @since     4.0.0
  * @unstable
  */
 export default {

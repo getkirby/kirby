@@ -53,10 +53,14 @@ export const props = {
 };
 
 /**
- * Wapper around a native HTML `<a>` element that ensures the
+ * Wrapper around a native HTML `<a>` element that ensures the
  * correct routing behavior for Panel as well as external links.
  *
- * @example <k-link to="https://getkirby.com">Kirby Website</k-link>
+ * @example
+ * <k-link to="https://getkirby.com">Kirby Website</k-link>
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [props],

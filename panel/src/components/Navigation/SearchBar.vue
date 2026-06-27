@@ -66,7 +66,9 @@
 import Search from "@/mixins/search.js";
 
 /**
- * @since 4.4.0
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default {
 	mixins: [Search],

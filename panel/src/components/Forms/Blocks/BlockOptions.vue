@@ -34,7 +34,11 @@ export const props = {
  * Floating options menu for a block that
  * appears when the block is focused/selected.
  *
- * @example <k-block-options :is-editable="true" />
+ * @example
+ * <k-block-options :is-editable="true" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [props],

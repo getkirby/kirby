@@ -32,8 +32,14 @@ import { props as Input } from "../Input.vue";
 import { props as EmailInput } from "../Input/EmailInput.vue";
 
 /**
- * Have a look at `<k-field>`, `<k-input>` and `<k-email-input>` for additional information.
- * @example <k-email-field :value="email" @input="email = $event" name="email" label="Email" />
+ * Have a look at `<k-field>`, `<k-input>` and `<k-email-input>`
+ * for additional information.
+ *
+ * @example
+ * <k-email-field :value="email" @input="email = $event" name="email" label="Email" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [Field, Input, EmailInput],

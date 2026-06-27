@@ -25,7 +25,11 @@ export const props = {
 };
 
 /**
- * @example <k-email-input :value="email" @input="email = $event" name="email" />
+ * @example
+ * <k-email-input :value="email" @input="email = $event" name="email" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [StringInput, props],

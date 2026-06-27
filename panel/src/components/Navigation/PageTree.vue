@@ -2,8 +2,9 @@
 import Tree from "./Tree.vue";
 
 /**
- * @displayName PageTree
- * @since 4.0.0
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default {
 	name: "k-page-tree",

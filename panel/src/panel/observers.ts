@@ -1,7 +1,9 @@
 import { reactive } from "vue";
 
 /**
- * @since 6.0.0
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     6.0.0
  */
 export default function Observers() {
 	return reactive({

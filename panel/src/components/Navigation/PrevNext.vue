@@ -12,7 +12,12 @@
 /**
  * Group of buttons with left- and right-pointing arrows
  * used for navigation between previous and next items
- * @example <k-prev-next :prev="{ link: 'a' }" :next="false" />
+ *
+ * @example
+ * <k-prev-next :prev="{ link: 'a' }" :next="false" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	props: {

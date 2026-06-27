@@ -23,6 +23,9 @@
  *   <li>Or me.</li>
  *   <li>Drop it!</li>
  * </k-draggable>
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	props: {

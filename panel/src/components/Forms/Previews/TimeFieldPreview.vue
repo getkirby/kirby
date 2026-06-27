@@ -1,6 +1,10 @@
 <script>
 import DateFieldPreview from "./DateFieldPreview.vue";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	extends: DateFieldPreview,
 	class: "k-time-field-preview",

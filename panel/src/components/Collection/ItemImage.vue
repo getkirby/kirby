@@ -30,6 +30,9 @@ export const props = {
 
 /**
  * Displays a preview image or icon for a collection `<k-item>`
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [props],

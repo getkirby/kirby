@@ -1,3 +1,8 @@
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
+
 type LinkType = {
 	detect: (value: string) => boolean;
 	icon: string;

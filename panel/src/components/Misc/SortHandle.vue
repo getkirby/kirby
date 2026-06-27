@@ -9,9 +9,14 @@
 
 <script>
 /**
- * Icon used as handle to drag elements inside the sortable context of `<k-draggable>` with corresponding hover styles.
+ * Icon used as handle to drag elements inside the sortable context
+ * of `<k-draggable>` with corresponding hover styles.
  *
- * @example <k-sort-handle />
+ * @example
+ * <k-sort-handle />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {};
 </script>

@@ -1,6 +1,10 @@
 import type { MarkType } from "prosemirror-model";
 import type { EditorState } from "prosemirror-state";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
 export default function markIsActive(
 	state: EditorState,
 	type: MarkType

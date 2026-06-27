@@ -58,6 +58,10 @@
 import { props as FieldProps } from "../Field.vue";
 import { props as BlocksProps } from "@/components/Forms/Blocks/Blocks.vue";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	mixins: [FieldProps, BlocksProps],
 	inheritAttrs: false,

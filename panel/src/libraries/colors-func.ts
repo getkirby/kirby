@@ -1,3 +1,8 @@
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
+
 import type { HexColor, HslColor, HsvColor, RgbColor } from "./colors";
 import { RE_HEX, RE_HEXA } from "./colors-checks";
 

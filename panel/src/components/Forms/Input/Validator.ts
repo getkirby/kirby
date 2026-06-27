@@ -1,6 +1,9 @@
 /**
  * Helper input element taking care of adding native validation for
  * required, min and/or max to groups of inputs or complex inputs
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default class InputValidator extends HTMLElement {
 	static formAssociated = true;

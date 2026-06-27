@@ -36,6 +36,10 @@
 <script>
 import { props as ModelPickerDialog } from "./ModelPickerDialog.vue";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	mixins: [ModelPickerDialog],
 	props: {

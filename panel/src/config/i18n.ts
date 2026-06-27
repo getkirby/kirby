@@ -1,5 +1,9 @@
 import type { App, DirectiveBinding } from "vue";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	install(app: App) {
 		const dir = (el: HTMLElement, binding: DirectiveBinding) => {

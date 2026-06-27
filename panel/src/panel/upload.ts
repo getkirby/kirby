@@ -60,7 +60,9 @@ export function defaults(): UploadState {
  *          -- (open) -- submit --
  * select  _/                     \_ cancel
  *
- * @since 4.0.0
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default function Upload(panel: Panel) {
 	const parent = State("upload", defaults());

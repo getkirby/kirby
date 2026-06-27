@@ -2,6 +2,10 @@ import type { Attrs, MarkType } from "prosemirror-model";
 import type { Command } from "prosemirror-state";
 import getMarkRange from "./getMarkRange";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
 export default function updateMark(type: MarkType, attrs: Attrs): Command {
 	return (state, dispatch): boolean => {
 		const { tr, selection } = state;

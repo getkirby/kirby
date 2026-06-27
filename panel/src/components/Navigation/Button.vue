@@ -136,8 +136,12 @@ export const props = {
 };
 
 /**
- * @example <k-button icon="check">Save</k-button>
- * @example <k-button icon="check" size="sm" variant="filled">Save</k-button>
+ * @example
+ * <k-button icon="check">Save</k-button>
+ * <k-button icon="check" size="sm" variant="filled">Save</k-button>
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [props],

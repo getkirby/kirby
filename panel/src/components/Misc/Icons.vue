@@ -21,6 +21,9 @@
 <script>
 /**
  * Component to load all icons from plugins
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  * @internal
  */
 export default {

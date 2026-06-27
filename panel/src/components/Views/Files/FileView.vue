@@ -63,6 +63,10 @@
 <script>
 import ModelView from "../ModelView.vue";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	extends: ModelView,
 	props: {

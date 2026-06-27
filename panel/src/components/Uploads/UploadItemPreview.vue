@@ -47,9 +47,11 @@ export const props = {
 };
 
 /**
- * Preview an upload with its image or
- * a representative icon
- * @since 4.3.0
+ * Preview an upload with its image or a representative icon
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.3.0
  */
 export default {
 	mixins: [props],

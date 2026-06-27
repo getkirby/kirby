@@ -16,7 +16,11 @@
 import { help, label } from "@/mixins/props.js";
 
 /**
- * @example <k-info-field label="Info" text="This is a nice info text" />
+ * @example
+ * <k-info-field label="Info" text="This is a nice info text" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [help, label],

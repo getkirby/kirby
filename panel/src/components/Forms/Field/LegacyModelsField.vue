@@ -46,6 +46,9 @@ import { props as FieldProps } from "@/components/Forms/Field.vue";
 import { autofocus, layout } from "@/mixins/props.js";
 
 /**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ *
  * @deprecated 6.0.0 Use `k-models-field` instead
  */
 export default {

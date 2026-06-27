@@ -1,6 +1,10 @@
 import { InputRule } from "prosemirror-inputrules";
 import type { Attrs, NodeType } from "prosemirror-model";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
 export default function nodeInputRule(
 	regexp: RegExp,
 	type: NodeType,
