@@ -28,6 +28,12 @@ class License
 		'5' => '2025-06-24'
 	];
 
+	/**
+	 * Backoff intervals (in minutes) that need to pass before
+	 * the next hub reissue attempt for an expired license is made.
+	 * @since 5.5.0
+	 */
+	protected const REISSUE_BACKOFF = [5, 60, 180, 720, 1440];
 	protected const SALT = 'kwAHMLyLPBnHEskzH9pPbJsBxQhKXZnX';
 
 	protected App $kirby;
@@ -44,7 +50,9 @@ class License
 		protected string|null $order = null,
 		protected string|null $date = null,
 		protected string|null $signature = null,
-		protected string|null $expires = null
+		protected string|null $expires = null,
+		protected int $failures = 0,
+		protected string|null $checked = null
 	) {
 		if ($code !== null) {
 			$this->code = trim($code);
@@ -92,7 +100,7 @@ class License
 	 */
 	public function content(): array
 	{
-		return [
+		$content = [
 			'activation' => $this->activation,
 			'code'       => $this->code,
 			'date'       => $this->date,
@@ -102,6 +110,15 @@ class License
 			'expires'    => $this->expires,
 			'signature'  => $this->signature,
 		];
+
+		// only persist the reissue bookkeeping while a
+		// retry cycle is actually running
+		if ($this->failures > 0) {
+			$content['failures'] = $this->failures;
+			$content['checked']  = $this->checked;
+		}
+
+		return $content;
 	}
 
 	/**
@@ -394,7 +411,11 @@ class License
 			return new static();
 		}
 
-		return new static(...static::polyfill($license));
+		return new static(
+			...static::polyfill($license),
+			failures: (int)($license['failures'] ?? 0),
+			checked: $license['checked'] ?? null
+		);
 	}
 
 	/**
@@ -441,6 +462,54 @@ class License
 
 		return $this->update($response);
 		// @codeCoverageIgnoreEnd
+	}
+
+	/**
+	 * Tries to reissue an expired license via the license hub.
+	 *
+	 * Uses an exponential backoff (see `::REISSUE_BACKOFF`) so
+	 * that a temporarily unreachable hub neither triggers a
+	 * request on every single Panel request nor wipes a
+	 * potentially re-issuable license. Once all retires have been
+	 * made unsuccessfully, the expired license file is deleted.
+	 *
+	 * @since 5.5.0
+	 */
+	public function reissue(): void
+	{
+		// only expired licenses need to be reissued
+		if ($this->isExpired() === false) {
+			return;
+		}
+
+		// give up once all backoff intervals have been used up
+		if ($this->failures > count(static::REISSUE_BACKOFF)) {
+			$this->delete();
+			return;
+		}
+
+		// after a previous failure, wait for its backoff window
+		// (in minutes) to pass before contacting the hub again
+		if (
+			$this->failures > 0 &&
+			$this->checked !== null &&
+			time() - strtotime($this->checked) < static::REISSUE_BACKOFF[$this->failures - 1] * 60
+		) {
+			return;
+		}
+
+		try {
+			$this->register(reissue: true);
+		} catch (Throwable) {
+			// a transient hub or network problem must not
+			// immediately delete a license: record the failed
+			// attempt so following requests back off
+			$this->failures++;
+			$this->checked = date('Y-m-d H:i:s');
+
+			// persist the backoff state directly
+			Json::write($this->root(), $this->content());
+		}
 	}
 
 	/**
@@ -606,6 +675,10 @@ class License
 		$this->order      = $data['order'];
 		$this->expires    = $data['expires'];
 		$this->signature  = $data['signature'];
+
+		// a successful (re)issue clears the backoff
+		$this->failures = 0;
+		$this->checked  = null;
 
 		// clear the caches
 		unset($this->status, $this->type);
