@@ -5,6 +5,7 @@ namespace Kirby\Cache;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Redis;
+use ReflectionProperty;
 use Throwable;
 
 #[CoversClass(RedisCache::class)]
@@ -81,6 +82,106 @@ class RedisCacheTest extends TestCase
 		$this->assertFalse($cache->exists('a'));
 		$this->assertFalse($cache->exists('b'));
 		$this->assertFalse($cache->exists('c'));
+	}
+
+	public function testFlushWithPrefix(): void
+	{
+		$cache1 = new RedisCache([
+			'prefix' => 'test1:'
+		]);
+		$cache2 = new RedisCache([
+			'prefix' => 'test2:'
+		]);
+
+		$cache1->set('a', 'A basic value');
+		$cache1->set('b', 'A basic value');
+		$cache2->set('a', 'A basic value');
+		$cache2->set('b', 'A basic value');
+		$cache1->set('c/a', 'A basic value');
+		$cache2->set('c/a', 'A basic value');
+
+		$this->assertTrue($cache1->exists('a'));
+		$this->assertTrue($cache1->exists('b'));
+		$this->assertTrue($cache1->exists('c/a'));
+		$this->assertTrue($cache2->exists('a'));
+		$this->assertTrue($cache2->exists('b'));
+		$this->assertTrue($cache2->exists('c/a'));
+
+		$this->assertTrue($cache1->flush());
+
+		$this->assertFalse($cache1->exists('a'));
+		$this->assertFalse($cache1->exists('b'));
+		$this->assertFalse($cache1->exists('c/a'));
+		$this->assertTrue($cache2->exists('a'));
+		$this->assertTrue($cache2->exists('b'));
+		$this->assertTrue($cache2->exists('c/a'));
+	}
+
+	public function testFlushWithGlobPrefix(): void
+	{
+		$cache1 = new RedisCache([
+			'prefix' => 'test[1]:'
+		]);
+		$cache2 = new RedisCache([
+			'prefix' => 'test1:'
+		]);
+
+		$cache1->set('a', 'A basic value');
+		$cache2->set('a', 'A basic value');
+
+		// without escaping, the pattern test[1]:* is read as a
+		// character class and would also match test1: keys
+		$this->assertTrue($cache1->flush());
+
+		$this->assertFalse($cache1->exists('a'));
+		$this->assertTrue($cache2->exists('a'));
+	}
+
+	public function testFlushRestoresScanOption(): void
+	{
+		$cache = new RedisCache([
+			'prefix' => 'test1:'
+		]);
+
+		$cache->set('a', 'A basic value');
+
+		$connection = (new ReflectionProperty(RedisCache::class, 'connection'))->getValue($cache);
+
+		// default state before flushing
+		$this->assertSame(Redis::SCAN_NORETRY, $connection->getOption(Redis::OPT_SCAN));
+
+		$cache->flush();
+
+		// flush must not leak its temporary SCAN_RETRY flag
+		$this->assertSame(Redis::SCAN_NORETRY, $connection->getOption(Redis::OPT_SCAN));
+	}
+
+	public function testFlushRestoresCombinedScanOption(): void
+	{
+		$cache = new RedisCache([
+			'prefix' => 'test1:'
+		]);
+
+		$cache->set('a', 'A basic value');
+
+		$connection = (new ReflectionProperty(RedisCache::class, 'connection'))->getValue($cache);
+
+		// enable both the retry and prefix flags (combined bitmask = 3)
+		$connection->setOption(Redis::OPT_SCAN, Redis::SCAN_RETRY);
+		$connection->setOption(Redis::OPT_SCAN, Redis::SCAN_PREFIX);
+		$this->assertSame(
+			Redis::SCAN_RETRY | Redis::SCAN_PREFIX,
+			$connection->getOption(Redis::OPT_SCAN)
+		);
+
+		$cache->flush();
+
+		// both flags must be restored,
+		// not collapsed by a naive setOption(3)
+		$this->assertSame(
+			Redis::SCAN_RETRY | Redis::SCAN_PREFIX,
+			$connection->getOption(Redis::OPT_SCAN)
+		);
 	}
 
 	public function testOperations(): void

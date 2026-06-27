@@ -103,11 +103,65 @@ class RedisCache extends Cache
 
 	/**
 	 * Removes keys from the database
-	 * and returns whether the operation was successful
+	 * and returns whether the operation was successful;
+	 * scoped to the configured prefix
 	 */
 	public function flush(): bool
 	{
-		return $this->connection->flushDB();
+		$prefix = $this->options['prefix'] ?? null;
+
+		// no prefix means this driver owns the whole DB anyway
+		if ($prefix === null || $prefix === '') {
+			return $this->connection->flushDB();
+		}
+
+		// fetch the normalized prefix the constructor set on the connection
+		// (so we don't have to duplicate the rtrim + '/' normalization here)
+		$prefix = $this->connection->getOption(Redis::OPT_PREFIX);
+
+		// remember the current SCAN flags so we can restore them afterwards;
+		// getOption() returns them as a bitmask (bit 0 = retry, bit 1 = prefix)
+		$scan = $this->connection->getOption(Redis::OPT_SCAN);
+
+		// ->scan() returns full key names with prefix already included.
+		// Clear OPT_PREFIX so ->del() doesn't double-prefix them.
+		$this->connection->setOption(Redis::OPT_PREFIX, '');
+
+		// SCAN_RETRY skips empty batches so the while-loop only exits
+		// when the iteration is genuinely done.
+		$this->connection->setOption(Redis::OPT_SCAN, Redis::SCAN_RETRY);
+
+		// escape glob metacharacters so a prefix containing *, ?, [ or \
+		// is matched literally and can't bleed into other prefixes
+		$pattern = addcslashes($prefix, '\\*?[]') . '*';
+
+		try {
+			$it = null;
+
+			while ($keys = $this->connection->scan($it, $pattern)) {
+				$this->connection->del($keys);
+			}
+		} finally {
+			// restore the prefix to OPT_PREFIX
+			$this->connection->setOption(Redis::OPT_PREFIX, $prefix);
+
+			// restore the SCAN flags: setOption() takes a single toggle
+			// command, not the combined bitmask getOption() returns (e.g.
+			// passing 3 means SCAN_NOPREFIX, not "retry + prefix"). So turn
+			// both flags off first, then re-enable only those set before.
+			$this->connection->setOption(Redis::OPT_SCAN, Redis::SCAN_NORETRY);
+			$this->connection->setOption(Redis::OPT_SCAN, Redis::SCAN_NOPREFIX);
+
+			if (($scan & Redis::SCAN_RETRY) !== 0) {
+				$this->connection->setOption(Redis::OPT_SCAN, Redis::SCAN_RETRY);
+			}
+
+			if (($scan & Redis::SCAN_PREFIX) !== 0) {
+				$this->connection->setOption(Redis::OPT_SCAN, Redis::SCAN_PREFIX);
+			}
+		}
+
+		return true;
 	}
 
 	/**
