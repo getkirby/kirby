@@ -4,7 +4,7 @@ import { reactive } from "vue";
 import { type Listener } from "./listeners";
 import type Panel from "./panel";
 
-export type DrawerState = ModalState & {};
+export type DrawerState = ModalState;
 
 export function defaults(): DrawerState {
 	return {
