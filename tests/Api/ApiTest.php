@@ -1074,7 +1074,7 @@ class ApiTest extends TestCase
 					'pattern' => 'test',
 					'method'  => 'POST',
 					'action'  => function () {
-						throw new Exception('nope');
+						throw new Exception('nope at ' . __FILE__);
 					}
 				]
 			]
@@ -1084,7 +1084,7 @@ class ApiTest extends TestCase
 
 		$expected = [
 			'status'   => 'error',
-			'message'  => 'nope',
+			'message'  => 'An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug',
 			'code'     => 500,
 			'key'      => null,
 			'details'  => []
@@ -1171,6 +1171,76 @@ class ApiTest extends TestCase
 
 		$this->assertInstanceOf(HttpResponse::class, $result);
 		$this->assertSame(json_encode($expected), $result->body());
+	}
+
+	public function testRenderExceptionWithoutDebugging(): void
+	{
+		$api = new Api([
+			'kirby' => $this->app,
+			'routes' => [
+				[
+					'pattern' => 'test',
+					'method'  => 'POST',
+					'action'  => function () {
+						// the exception message leaks an absolute path
+						throw new Exception('Could not open ' . __FILE__);
+					}
+				]
+			]
+		]);
+
+		$result = $api->render('test', 'POST');
+
+		// without debugging, the actual message
+		// (and the leaked path) is replaced by a generic message
+		$expected = [
+			'status'  => 'error',
+			'message' => 'An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug',
+			'code'    => 500,
+			'key'     => null,
+			'details' => []
+		];
+
+		$this->assertInstanceOf(HttpResponse::class, $result);
+		$this->assertSame(json_encode($expected), $result->body());
+	}
+
+	public function testRenderExceptionWithDebuggingDisguisesFilePath(): void
+	{
+		$app = $this->app->clone([
+			'server' => [
+				'DOCUMENT_ROOT' => __DIR__
+			]
+		]);
+
+		$path = $app->root('index') . '/secret/config.php';
+
+		$api = new Api([
+			'debug' => true,
+			'kirby' => $app,
+			'routes' => [
+				[
+					'pattern' => 'test',
+					'method'  => 'POST',
+					'action'  => function () use ($path) {
+						throw new Exception('Could not open ' . $path);
+					}
+				]
+			]
+		]);
+
+		$result = $api->render('test', 'POST');
+		$body   = json_decode($result->body(), true);
+
+		// in debug mode the message is exposed,
+		// but absolute file paths within it are
+		// disguised to avoid path disclosure
+		$this->assertSame(
+			'Could not open ' . $app->disguiseFilePath($path),
+			$body['message']
+		);
+		$this->assertStringNotContainsString($app->root('index'), $body['message']);
+		$this->assertStringContainsString('{kirby}', $body['message']);
 	}
 
 	public function testRenderKirbyException(): void
