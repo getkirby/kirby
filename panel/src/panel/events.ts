@@ -4,6 +4,24 @@ import mitt from "mitt";
 import type Panel from "./panel";
 
 /**
+ * Friendly replacement names for special keys,
+ * used to build event names like `keydown.esc`
+ */
+const aliases: Record<string, string> = {
+	escape: "esc",
+	arrowUp: "up",
+	arrowDown: "down",
+	arrowLeft: "left",
+	arrowRight: "right"
+};
+
+/**
+ * Modifier keys that must not be added to a
+ * keychain as a standalone key part
+ */
+const modifiers = ["alt", "control", "shift", "meta"];
+
+/**
  * Global event delegation and event bus
  * which can be used by any component in the app
  * to start and stop listening to events
@@ -218,20 +236,12 @@ export default function (panel: Panel) {
 
 			let key = event.key ? lcfirst(event.key) : null;
 
-			// key replacements
-			const keys: Record<string, string> = {
-				escape: "esc",
-				arrowUp: "up",
-				arrowDown: "down",
-				arrowLeft: "left",
-				arrowRight: "right"
-			};
-
-			if (key && keys[key]) {
-				key = keys[key];
+			// apply friendly replacements for special keys
+			if (key && aliases[key]) {
+				key = aliases[key];
 			}
 
-			if (key && ["alt", "control", "shift", "meta"].includes(key) === false) {
+			if (key && modifiers.includes(key) === false) {
 				parts.push(key);
 			}
 
