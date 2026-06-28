@@ -5,8 +5,6 @@ namespace Kirby\Session;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
-use Kirby\Http\Request;
-use Kirby\Toolkit\Str;
 use Throwable;
 
 /**
@@ -19,6 +17,7 @@ class Sessions
 {
 	protected array $cache = [];
 	protected Cookie $cookie;
+	protected Header $header;
 	protected string $mode;
 	protected SessionStore $store;
 
@@ -43,6 +42,7 @@ class Sessions
 
 		$gcInterval   = $options['gcInterval'] ?? 100;
 		$this->mode   = $options['mode'] ?? 'cookie';
+		$this->header = new Header();
 		$this->cookie = new Cookie(
 			name:   $options['cookieName']   ?? 'kirby_session',
 			domain: $options['cookieDomain'] ?? null
@@ -152,7 +152,7 @@ class Sessions
 	{
 		$token = match ($this->mode) {
 			'cookie' => $this->cookie()->get(),
-			'header' => $this->tokenFromHeader(),
+			'header' => $this->header()->get(),
 			'manual' => throw new LogicException(
 				key: 'session.sessions.manualMode',
 				fallback: 'Cannot automatically get current session in manual mode',
@@ -186,8 +186,8 @@ class Sessions
 	 */
 	public function currentDetected(): Session|null
 	{
-		$header = $this->tokenFromHeader();
-		$cookie = $this->cookie()->get()();
+		$header = $this->header()->get();
+		$cookie = $this->cookie()->get();
 
 		// prefer header token over cookie token
 		$token = $header ?? $cookie;
@@ -224,33 +224,20 @@ class Sessions
 	}
 
 	/**
+	 * Returns the session header instance
+	 * @since 6.0.0
+	 */
+	public function header(): Header
+	{
+		return $this->header;
+	}
+
+	/**
 	 * Getter for the session store instance
 	 */
 	public function store(): SessionStore
 	{
 		return $this->store;
-	}
-
-	/**
-	 * Returns the auth token from the Authorization header
-	 */
-	protected function tokenFromHeader(): string|null
-	{
-		$request = new Request();
-		$headers = $request->headers();
-
-		// check if the header exists at all
-		if ($header = $headers['Authorization'] ?? null) {
-			// check if the header uses the "Session" scheme
-			if (Str::startsWith($header, 'Session ', true) !== true) {
-				return null;
-			}
-
-			// return the part after the scheme
-			return substr($header, 8);
-		}
-
-		return null;
 	}
 
 	/**

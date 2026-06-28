@@ -260,20 +260,6 @@ class SessionsTest extends TestCase
 		$this->assertSame($session, $cache->getValue($sessions)['9999999999.valid.new-key']);
 	}
 
-	public function testTokenFromHeader(): void
-	{
-		$reflector = new ReflectionClass(Sessions::class);
-		$tokenFromHeader = $reflector->getMethod('tokenFromHeader');
-
-		$this->assertNull($tokenFromHeader->invoke($this->sessions));
-
-		$this->setAuthorization('Session amazingSessionIdFromHeader');
-		$this->assertSame('amazingSessionIdFromHeader', $tokenFromHeader->invoke($this->sessions));
-
-		$this->setAuthorization('Bearer amazingSessionIdFromHeader');
-		$this->assertNull($tokenFromHeader->invoke($this->sessions));
-	}
-
 	protected function setAuthorization(string $value): void
 	{
 		new App([
