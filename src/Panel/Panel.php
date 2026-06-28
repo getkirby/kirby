@@ -193,7 +193,7 @@ class Panel
 
 		// removes base path if relative path contains it
 		if (
-			empty($basePath) === false &&
+			$basePath !== '' &&
 			Str::startsWith($path, $basePath) === true
 		) {
 			$path = Str::after($path, $basePath);

@@ -162,7 +162,7 @@ class Assets extends Collection
 
 			// @codeCoverageIgnoreStart
 			// TODO: deprecated media URL without hash
-			if (empty($hash) === true) {
+			if ($hash === '') {
 				$asset = $plugin->asset($path);
 				$asset->publishAt($path);
 				return Response::file($asset->root());

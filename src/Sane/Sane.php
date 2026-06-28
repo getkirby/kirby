@@ -61,7 +61,7 @@ class Sane
 			$handler ??= static::$handlers[$alias] ?? null;
 		}
 
-		if (empty($handler) === false && class_exists($handler) === true) {
+		if ($handler !== null && class_exists($handler) === true) {
 			return new $handler();
 		}
 

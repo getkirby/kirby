@@ -79,7 +79,7 @@ return [
 
 			$options = $options->render($this->model());
 
-			if (empty($options) === true) {
+			if ($options === []) {
 				return [];
 			}
 

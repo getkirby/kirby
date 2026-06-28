@@ -439,7 +439,7 @@ class Language implements Stringable
 	{
 		$path = $this->path();
 
-		if (empty($path) === true) {
+		if ($path === '') {
 			return '(:all)';
 		}
 

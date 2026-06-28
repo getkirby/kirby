@@ -839,7 +839,7 @@ class F
 		$basename  = static::safeBasename($string);
 		$extension =  static::safeExtension($string);
 
-		if (empty($extension) === false) {
+		if ($extension !== '') {
 			$extension = '.' . $extension;
 		}
 

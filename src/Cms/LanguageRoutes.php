@@ -74,7 +74,7 @@ class LanguageRoutes
 
 				// try to redirect prefixed pages
 				if (
-					empty($extension) === true &&
+					$extension === '' &&
 					$page = $kirby->page($path)
 				) {
 					$url = $kirby->request()->url([

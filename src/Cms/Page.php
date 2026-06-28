@@ -571,7 +571,7 @@ class Page extends ModelWithContent
 		}
 
 		// disable the pages cache when there's request data
-		if (empty($request->data()) === false) {
+		if ($request->data() !== []) {
 			return false;
 		}
 

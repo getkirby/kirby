@@ -55,7 +55,7 @@ return [
 		'value' => function () {
 			$data = Data::decode($this->value, 'yaml');
 
-			if (empty($data) === true) {
+			if ($data === []) {
 				return '';
 			}
 

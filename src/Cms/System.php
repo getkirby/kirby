@@ -73,15 +73,15 @@ class System
 				$root  = $this->app->root('site');
 				$files = glob($root . '/blueprints/*.yml');
 
-				if (empty($files) === true) {
+				if ($files === []) {
 					$files = glob($root . '/templates/*.*');
 				}
 
-				if (empty($files) === true) {
+				if ($files === []) {
 					$files = glob($root . '/snippets/*.*');
 				}
 
-				if (empty($files) === true || empty($files[0]) === true) {
+				if ($files === [] || $files[0] === '') {
 					return $url;
 				}
 

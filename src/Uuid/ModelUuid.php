@@ -79,7 +79,7 @@ abstract class ModelUuid extends Uuid
 		// check for an empty content array
 		// and read content from file again,
 		// just to be sure we don't lose content
-		if (empty($data) === true) {
+		if ($data === []) {
 			usleep(1000);
 			$data = $this->model->version()->read('default');
 		}

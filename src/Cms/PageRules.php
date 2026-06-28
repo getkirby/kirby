@@ -385,7 +385,7 @@ class PageRules
 			);
 		}
 
-		if ($page->isDraft() === true && empty($page->errors()) === false) {
+		if ($page->isDraft() === true && $page->errors() !== []) {
 			throw new PermissionException(
 				key:  'page.changeStatus.incomplete',
 				details: $page->errors()

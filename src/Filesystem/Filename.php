@@ -118,7 +118,7 @@ class Filename implements Stringable
 		$result     = array_filter($result);
 		$attributes = implode('-', $result);
 
-		if (empty($attributes) === true) {
+		if ($attributes === '') {
 			return '';
 		}
 
@@ -155,19 +155,21 @@ class Filename implements Stringable
 	}
 
 	/**
-	 * Returns a normalized array
-	 * with width and height values
-	 * if available
+	 * Returns a normalized array with
+	 * width and height values, if available
 	 */
 	public function dimensions(): array
 	{
-		if (empty($this->attributes['width']) === true && empty($this->attributes['height']) === true) {
+		$width  = $this->attributes['width']  ?? null;
+		$height = $this->attributes['height'] ?? null;
+
+		if ((int)$width === 0 && (int)$height === 0) {
 			return [];
 		}
 
 		return [
-			'width'  => $this->attributes['width']  ?? null,
-			'height' => $this->attributes['height'] ?? null
+			'width'  => $width,
+			'height' => $height
 		];
 	}
 

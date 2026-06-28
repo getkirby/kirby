@@ -505,7 +505,7 @@ class Core
 			'current' => function (array $urls) {
 				$path = trim($this->kirby->path(), '/');
 
-				if (empty($path) === true) {
+				if ($path === '') {
 					return $urls['index'];
 				}
 

@@ -176,7 +176,7 @@ class Email
 	 */
 	public function isHtml(): bool
 	{
-		return empty($this->body()->html()) === false;
+		return $this->body()->html() !== '';
 	}
 
 	/**

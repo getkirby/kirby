@@ -211,7 +211,7 @@ class FileRules
 		// make it easier to compare the extension
 		$extension = strtolower($extension);
 
-		if (empty($extension) === true) {
+		if ($extension === '') {
 			throw new InvalidArgumentException(
 				key: 'file.extension.missing',
 				data: ['filename' => $file->filename()]
@@ -275,7 +275,7 @@ class FileRules
 		$filename = strtolower($filename);
 
 		// check for missing filenames
-		if (empty($filename)) {
+		if ($filename === '') {
 			throw new InvalidArgumentException(
 				key: 'file.name.missing'
 			);
@@ -308,7 +308,7 @@ class FileRules
 		// make it easier to compare the mime
 		$mime = strtolower($mime ?? '');
 
-		if (empty($mime)) {
+		if ($mime === '') {
 			throw new InvalidArgumentException(
 				key: 'file.mime.missing',
 				data: ['filename' => $file->filename()]
