@@ -18,7 +18,7 @@ class AutoSession
 	/**
 	 * Creates a new AutoSession instance
 	 *
-	 * @param \Kirby\Session\SessionStore|string $store SessionStore object or a path to the storage directory (uses the FileSessionStore)
+	 * @param \Kirby\Session\Store|string $store Store object or a path to the storage directory (uses the FileStore)
 	 * @param array $options Optional additional options:
 	 *                       - `durationNormal`: Duration of normal sessions in seconds; defaults to 2 hours
 	 *                       - `durationLong`: Duration of "remember me" sessions in seconds; defaults to 2 weeks
@@ -28,7 +28,7 @@ class AutoSession
 	 *                       - `gcInterval`: How often should the garbage collector be run?; integer or `false` for never; defaults to `100`
 	 */
 	public function __construct(
-		SessionStore|string $store,
+		Store|string $store,
 		array $options = []
 	) {
 		// merge options with defaults

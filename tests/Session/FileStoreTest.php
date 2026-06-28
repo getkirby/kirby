@@ -12,22 +12,22 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use ReflectionClass;
 use ReflectionProperty;
 
-#[CoversClass(FileSessionStore::class)]
-class FileSessionStoreTest extends TestCase
+#[CoversClass(FileStore::class)]
+class FileStoreTest extends TestCase
 {
-	public const string TMP = KIRBY_TMP_DIR . '/Session.FileSessionStore';
+	public const string TMP = KIRBY_TMP_DIR . '/Session.FileStore';
 
-	protected SessionStore$store;
+	protected Store$store;
 	protected ReflectionProperty $storeHandles;
 	protected ReflectionProperty $storeIsLocked;
 
 	protected function setUp(): void
 	{
-		$this->store = new FileSessionStore(static::TMP);
+		$this->store = new FileStore(static::TMP);
 		$this->assertDirectoryExists(static::TMP);
 
 		// make internal data accessible
-		$reflector = new ReflectionClass(FileSessionStore::class);
+		$reflector = new ReflectionClass(FileStore::class);
 		$this->storeHandles = $reflector->getProperty('handles');
 		$this->storeIsLocked = $reflector->getProperty('isLocked');
 
@@ -65,7 +65,7 @@ class FileSessionStoreTest extends TestCase
 		Dir::make(static::TMP, true);
 		chmod(static::TMP, 0o555);
 
-		new FileSessionStore(static::TMP);
+		new FileStore(static::TMP);
 	}
 
 	public function testCreateId(): void

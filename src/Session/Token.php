@@ -53,7 +53,7 @@ class Token implements Stringable
 	 * @param int $expiry Timestamp the token expires at
 	 */
 	public static function generate(
-		SessionStore $store,
+		Store $store,
 		int $expiry
 	): static {
 		return new static(

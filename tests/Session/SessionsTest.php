@@ -18,12 +18,12 @@ class SessionsTest extends TestCase
 {
 	public const string FIXTURES = __DIR__ . '/fixtures/store';
 
-	protected SessionStore $store;
+	protected Store $store;
 	protected Sessions $sessions;
 
 	protected function setUp(): void
 	{
-		$this->store    = new TestSessionStore();
+		$this->store    = new TestStore();
 		$this->sessions = new Sessions($this->store);
 
 		MockTime::$time = 1337000000;
@@ -41,7 +41,7 @@ class SessionsTest extends TestCase
 		$this->assertSame($this->store, $this->sessions->store());
 
 		// custom store
-		$store    = new FileSessionStore(static::FIXTURES);
+		$store    = new FileStore(static::FIXTURES);
 		$sessions = new Sessions($store);
 		$this->assertSame($store, $sessions->store());
 
@@ -49,7 +49,7 @@ class SessionsTest extends TestCase
 		$path     = static::FIXTURES;
 		$sessions = new Sessions($path);
 
-		$reflector = new ReflectionClass(FileSessionStore::class);
+		$reflector = new ReflectionClass(FileStore::class);
 		$pathProperty = $reflector->getProperty('path');
 		$this->assertSame($path, $pathProperty->getValue($sessions->store()));
 	}
@@ -57,7 +57,7 @@ class SessionsTest extends TestCase
 	public function testConstructorInvalidStore(): void
 	{
 		$this->expectException(TypeError::class);
-		new Sessions(new InvalidSessionStore());
+		new Sessions(new InvalidStore());
 	}
 
 	public function testConstructorOptions(): void

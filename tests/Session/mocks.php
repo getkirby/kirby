@@ -7,11 +7,11 @@ use Kirby\Tests\MockTime;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\SymmetricCrypto;
 
-class InvalidSessionStore
+class InvalidStore
 {
 }
 
-class TestSessionStore extends SessionStore
+class TestStore extends Store
 {
 	public string $validKey   = '74686973206973207468652076616c6964206b657920696e2068657821203a29';
 	public string $invalidKey = '616e64207965702c2074686174277320616e2065617374657220656767e280a6';

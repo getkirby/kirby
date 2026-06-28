@@ -19,7 +19,7 @@ use Kirby\Filesystem\Filename;
 use Kirby\Http\Uri;
 use Kirby\Http\Url;
 use Kirby\Image\Darkroom;
-use Kirby\Session\SessionStore;
+use Kirby\Session\Store;
 use Kirby\Template\Snippet;
 use Kirby\Template\Template;
 use Kirby\Text\Markdown;
@@ -303,7 +303,7 @@ return [
 	/**
 	 * Add your own session store
 	 */
-	'session::store' => function (App $kirby): string|SessionStore {
+	'session::store' => function (App $kirby): string|Store {
 		/** @var string $root */
 		$root = $kirby->root('sessions');
 		return $root;

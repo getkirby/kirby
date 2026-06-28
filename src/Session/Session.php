@@ -27,7 +27,7 @@ class Session
 	protected int|false $timeout = false;
 	protected int|null $lastActivity = null;
 	protected bool $renewable;
-	protected SessionData $data;
+	protected Data $data;
 	protected array|null $newSession = null;
 
 	// temporary state flags
@@ -84,7 +84,7 @@ class Session
 		$this->duration   = $this->expiryTime - $this->startTime;
 		$this->timeout    = $options['timeout'] ?? 1800;
 		$this->renewable  = $options['renewable'] ?? true;
-		$this->data       = new SessionData($this, []);
+		$this->data       = new Data($this, []);
 
 		// validate persistent data
 		if ($now > $this->expiryTime) {
@@ -146,7 +146,7 @@ class Session
 	}
 
 	/**
-	 * @see \Kirby\Session\SessionData::clear()
+	 * @see \Kirby\Session\Data::clear()
 	 * @since 6.0.0
 	 */
 	public function clear(): void
@@ -219,13 +219,13 @@ class Session
 	/**
 	 * Returns the session data object
 	 */
-	public function data(): SessionData
+	public function data(): Data
 	{
 		return $this->data;
 	}
 
 	/**
-	 * @see \Kirby\Session\SessionData::decrement()
+	 * @see \Kirby\Session\Data::decrement()
 	 * @since 6.0.0
 	 */
 	public function decrement(
@@ -336,7 +336,7 @@ class Session
 	}
 
 	/**
-	 * @see \Kirby\Session\SessionData::get()
+	 * @see \Kirby\Session\Data::get()
 	 * @since 6.0.0
 	 */
 	public function get(string|null $key = null, mixed $default = null): mixed
@@ -345,7 +345,7 @@ class Session
 	}
 
 	/**
-	 * @see \Kirby\Session\SessionData::increment()
+	 * @see \Kirby\Session\Data::increment()
 	 * @since 6.0.0
 	 */
 	public function increment(
@@ -478,7 +478,7 @@ class Session
 		if (isset($this->data) === true) {
 			$this->data()->reload($data['data']);
 		} else {
-			$this->data = new SessionData($this, $data['data']);
+			$this->data = new Data($this, $data['data']);
 		}
 	}
 
@@ -566,7 +566,7 @@ class Session
 	}
 
 	/**
-	 * @see \Kirby\Session\SessionData::pull()
+	 * @see \Kirby\Session\Data::pull()
 	 * @since 6.0.0
 	 */
 	public function pull(string $key, mixed $default = null): mixed
@@ -627,7 +627,7 @@ class Session
 	}
 
 	/**
-	 * @see \Kirby\Session\SessionData::remove()
+	 * @see \Kirby\Session\Data::remove()
 	 * @since 6.0.0
 	 */
 	public function remove(string|array $key): void
@@ -672,7 +672,7 @@ class Session
 	}
 
 	/**
-	 * @see \Kirby\Session\SessionData::set()
+	 * @see \Kirby\Session\Data::set()
 	 * @since 6.0.0
 	 */
 	public function set(string|array $key, mixed $value = null): void

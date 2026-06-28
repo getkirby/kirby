@@ -19,12 +19,12 @@ class Sessions
 	protected Cookie $cookie;
 	protected Header $header;
 	protected string $mode;
-	protected SessionStore $store;
+	protected Store $store;
 
 	/**
 	 * Creates a new Sessions instance
 	 *
-	 * @param \Kirby\Session\SessionStore|string $store SessionStore object or a path to the storage directory (uses the FileSessionStore)
+	 * @param \Kirby\Session\Store|string $store Store object or a path to the storage directory (uses the FileStore)
 	 * @param array $options Optional additional options:
 	 *                       - `mode`: Default token transmission mode (cookie, header or manual); defaults to `cookie`
 	 *                       - `cookieDomain`: Domain to set the cookie to (this disables the cookie path restriction); defaults to none (default browser behavior)
@@ -32,12 +32,12 @@ class Sessions
 	 *                       - `gcInterval`: How often should the garbage collector be run?; integer or `false` for never; defaults to `100`
 	 */
 	public function __construct(
-		SessionStore|string $store,
+		Store|string $store,
 		array $options = []
 	) {
 		$this->store = match (true) {
-			$store instanceof SessionStore => $store,
-			default                        => new FileSessionStore($store),
+			$store instanceof Store => $store,
+			default                 => new FileStore($store),
 		};
 
 		$gcInterval   = $options['gcInterval'] ?? 100;
@@ -235,7 +235,7 @@ class Sessions
 	/**
 	 * Getter for the session store instance
 	 */
-	public function store(): SessionStore
+	public function store(): Store
 	{
 		return $this->store;
 	}

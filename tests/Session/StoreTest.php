@@ -6,13 +6,13 @@ use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use ReflectionClass;
 
-#[CoversClass(SessionStore::class)]
-class SessionStoreTest extends TestCase
+#[CoversClass(Store::class)]
+class StoreTest extends TestCase
 {
 	public function testGenerateId(): void
 	{
 		// get a reference to the protected method
-		$reflector = new ReflectionClass(SessionStore::class);
+		$reflector = new ReflectionClass(Store::class);
 		$generateId = $reflector->getMethod('generateId');
 
 		$id1 = $generateId->invoke(null);
