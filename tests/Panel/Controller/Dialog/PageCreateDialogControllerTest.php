@@ -5,6 +5,7 @@ namespace Kirby\Panel\Controller\Dialog;
 use Kirby\Cms\Page;
 use Kirby\Content\MemoryStorage;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Panel\Redirect;
 use Kirby\Panel\TestCase;
 use Kirby\Uuid\PageUuid;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -333,6 +334,42 @@ class PageCreateDialogControllerTest extends TestCase
 
 		$this->assertArrayHasKey('foo', $props['fields']);
 		$this->assertSame('1/1', $props['fields']['foo']['width']);
+	}
+
+	public function testLoadImmediatelySubmitsWithoutEditableFields(): void
+	{
+		// title and slug come from the blueprint, so no editable field
+		// remains and there is only the single default blueprint
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'create' => [
+						'title' => 'Auto title',
+						'slug'  => 'auto-slug'
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$this->assertNull($this->app->page('auto-slug'));
+
+		$controller = new PageCreateDialogController();
+
+		// the dialog is submitted right away and redirects
+		// to the newly created page
+		try {
+			$controller->load();
+			$this->fail('Expected Redirect exception was not thrown');
+
+		} catch (Redirect $e) {
+			$this->assertStringContainsString('pages/auto-slug', $e->location());
+		}
+
+		$page = $this->app->page('auto-slug');
+		$this->assertSame('auto-slug', $page->slug());
+		$this->assertSame('Auto title', $page->title()->value());
 	}
 
 	public function testModel(): void
