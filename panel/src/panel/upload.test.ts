@@ -2,8 +2,10 @@ import { describe, expect, it, vi } from "vitest";
 import Upload, { defaults } from "./upload";
 import Panel from "./panel";
 
-// URL.createObjectURL is not implemented in happy-dom
+// URL.createObjectURL/.revokeObjectURL
+// are not implemented in happy-dom
 URL.createObjectURL = vi.fn(() => "blob:mock-url");
+URL.revokeObjectURL = vi.fn();
 
 function makeFile(name = "test.jpg", type = "image/jpeg", size = 100): File {
 	return new File([new ArrayBuffer(size)], name, { type });
@@ -175,6 +177,37 @@ describe("panel.upload", () => {
 		});
 	});
 
+	describe("remove()", () => {
+		it("should revoke the object URL of the removed file", () => {
+			const panel = Panel.create(app);
+			const upload = Upload(panel);
+			vi.mocked(URL.revokeObjectURL).mockClear();
+
+			upload.files = [upload.file(makeFile("a.jpg"))];
+			const { id, url } = upload.files[0];
+			upload.remove(id);
+
+			expect(URL.revokeObjectURL).toHaveBeenCalledWith(url);
+		});
+	});
+
+	describe("reset()", () => {
+		it("should revoke the object URLs of all files", () => {
+			const panel = Panel.create(app);
+			const upload = Upload(panel);
+			vi.mocked(URL.revokeObjectURL).mockClear();
+
+			upload.files = [
+				upload.file(makeFile("a.jpg")),
+				upload.file(makeFile("b.jpg"))
+			];
+			upload.reset();
+
+			expect(URL.revokeObjectURL).toHaveBeenCalledTimes(2);
+			expect(upload.files).toHaveLength(0);
+		});
+	});
+
 	describe("select()", () => {
 		it("should add selected files to the list", async () => {
 			const panel = Panel.create(app);
@@ -211,16 +244,34 @@ describe("panel.upload", () => {
 			expect(upload.files[0]).not.toBe(first);
 		});
 
+		it("should revoke the dropped duplicate's object URL when re-selecting", () => {
+			const panel = Panel.create(app);
+			const upload = Upload(panel);
+			const file = makeFile("a.jpg");
+
+			upload.select(makeFileList(file));
+			vi.mocked(URL.revokeObjectURL).mockClear();
+			upload.select(makeFileList(file));
+
+			// the older duplicate is dropped and its object URL revoked
+			expect(URL.revokeObjectURL).toHaveBeenCalledTimes(1);
+			expect(upload.files).toHaveLength(1);
+		});
+
 		it("should apply the max limit, keeping the latest files", async () => {
 			const panel = Panel.create(app);
 			const upload = Upload(panel);
 			upload.set({ max: 2 });
+			vi.mocked(URL.revokeObjectURL).mockClear();
 			upload.select(
 				makeFileList(makeFile("a.jpg"), makeFile("b.jpg"), makeFile("c.jpg"))
 			);
 			expect(upload.files).toHaveLength(2);
 			expect(upload.files[0].filename).toStrictEqual("b.jpg");
 			expect(upload.files[1].filename).toStrictEqual("c.jpg");
+
+			// the file that exceeded the max limit had its object URL revoked
+			expect(URL.revokeObjectURL).toHaveBeenCalledTimes(1);
 		});
 
 		it("should accept an InputEvent and read files from its target", async () => {
