@@ -125,6 +125,7 @@ class Menu
 			return null;
 		}
 
+		/** @var array $menu */
 		$menu = match ($menu) {
 			'disabled' => ['disabled' => true],
 			true       => [],

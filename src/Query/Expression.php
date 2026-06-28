@@ -16,6 +16,9 @@ use Kirby\Toolkit\A;
  */
 class Expression
 {
+	/**
+	 * @param list<string|Argument> $parts
+	 */
 	public function __construct(
 		public array $parts
 	) {
@@ -38,6 +41,7 @@ class Expression
 		// turn all non-operator parts into an Argument
 		// which takes care of converting string, arrays booleans etc.
 		// into actual types and treats all other parts as their own queries
+		/** @var list<string|Argument> $parts */
 		$parts = A::map(
 			$parts,
 			fn ($part) => match ($part) {

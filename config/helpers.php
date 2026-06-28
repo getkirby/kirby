@@ -273,7 +273,7 @@ if (Helpers::hasOverride('js') === false) { // @codeCoverageIgnore
 	 */
 	function js(
 		string|array|Plugin|PluginAssets $url,
-		string|array|bool|null $options = null
+		array|bool|null $options = null
 	): string|null {
 		return Html::js($url, $options);
 	}

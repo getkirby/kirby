@@ -77,6 +77,7 @@ return [
 					continue;
 				}
 
+				/** @var array $column */
 				// fallback for labels
 				$column['label'] ??= Str::ucfirst($columnName);
 

@@ -89,8 +89,10 @@ return [
 			[
 				'pattern' => 'files',
 				'action' => function () {
+					$files = $this->field()->files();
+
 					return $this->field()->filepicker([
-						...$this->field()->files(),
+						...(array)$files,
 						'page'   => $this->requestQuery('page'),
 						'search' => $this->requestQuery('search')
 					]);

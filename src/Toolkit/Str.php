@@ -757,6 +757,8 @@ class Str
 
 	/**
 	 * Get a character pool with various possible combinations
+	 *
+	 * @return ($array is true ? list<int|string> : string)
 	 */
 	public static function pool(
 		string|array $type,
@@ -1349,11 +1351,7 @@ class Str
 			return $string;
 		}
 
-		// make sure $string is string (the param is nullable)
-		/** @psalm-suppress RedundantCondition */
-		$string ??= '';
-
-		$parts = explode($separator, $string);
+		$parts = explode($separator, (string)$string);
 		$out   = [];
 
 		foreach ($parts as $p) {

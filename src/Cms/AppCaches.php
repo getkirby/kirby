@@ -66,6 +66,7 @@ trait AppCaches
 	{
 		$options   = $this->option($this->cacheOptionsKey($key), null);
 		$options ??= $this->core()->caches()[$key] ?? false;
+		/** @var array|bool $options */
 
 		if ($options === false) {
 			return [
@@ -119,7 +120,9 @@ trait AppCaches
 		$cacheName    = implode('.', array_slice($parts, 2));
 
 		// check if such a plugin exists
-		if ($this->plugin($pluginName)) {
+		$plugin = $this->plugin($pluginName);
+
+		if ($plugin !== null) {
 			return empty($cacheName) === true ? $pluginPrefix . '.cache' : $pluginPrefix . '.cache.' . $cacheName;
 		}
 

@@ -2,9 +2,9 @@
 
 namespace Kirby\Panel\Ui;
 
+use Kirby\Cms\HasStringTemplate;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Toolkit\HasStringTemplate;
 
 /**
  * @copyright Bastian Allgeier
@@ -78,6 +78,14 @@ class Stat extends Component
 	public function link(): string|null
 	{
 		return $this->stringTemplate($this->link, safe: false);
+	}
+
+	/**
+	 * @since 6.0.0
+	 */
+	public function model(): ModelWithContent|null
+	{
+		return $this->model;
 	}
 
 	public function props(): array

@@ -87,7 +87,7 @@ class ColorField extends OptionField
 		$options = FieldOptions::factory([
 			'text'  => '{{ item.value }}',
 			'value' => '{{ item.key }}',
-			...$props['options']
+			...$props['options'] ?? []
 		]);
 
 		$options = $options->render($this->model());

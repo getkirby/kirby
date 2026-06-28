@@ -26,6 +26,9 @@ class Fieldsets extends Items
 	 */
 	public static array $methods = [];
 
+	/**
+	 * @return array{fieldsets: array, groups: array}
+	 */
 	protected static function createFieldsets(array $params): array
 	{
 		$fieldsets = [];

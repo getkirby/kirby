@@ -46,7 +46,7 @@ class SiteViewController extends ModelViewController
 			'blueprint'   => 'site',
 			'id'          => '/',
 			'permissions' => [
-				...$props['permissions'],
+				...$this->model->permissions()->toArray(),
 				'preview' => $this->model->homePage()?->permissions()->can('preview') === true,
 			],
 		];

@@ -842,6 +842,8 @@ class Blueprint
 
 	/**
 	 * Returns all sections
+	 *
+	 * @return array<string, Section>
 	 */
 	public function sections(): array
 	{

@@ -174,8 +174,8 @@ class Media
 
 		// get both old and new versions (pre and post Kirby 3.4.0)
 		$versions = [
-			...glob($directory . '/' . crc32($file->filename()) . '-*', GLOB_ONLYDIR),
-			...glob($directory . '/' . $file->mediaToken() . '-*', GLOB_ONLYDIR)
+			...glob($directory . '/' . crc32($file->filename()) . '-*', GLOB_ONLYDIR) ?: [],
+			...glob($directory . '/' . $file->mediaToken() . '-*', GLOB_ONLYDIR) ?: []
 		];
 
 		// delete all versions of the file

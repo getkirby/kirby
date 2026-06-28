@@ -2,10 +2,10 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Cms\HasStringTemplate;
 use Kirby\Form\Fields;
 use Kirby\Form\Mixin;
 use Kirby\Reflection\Constructor;
-use Kirby\Toolkit\HasStringTemplate;
 use Stringable;
 
 /**

@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="6.16.1@f1f5de594dc76faf8784e02d3dc4716c91c6f6ac">
+  <file src="config/fields/color.php">
+    <InvalidOperand>
+      <code><![CDATA[$props['options'] ?? []]]></code>
+    </InvalidOperand>
+  </file>
+  <file src="config/fields/structure.php">
+    <InvalidOperand>
+      <code><![CDATA[$index]]></code>
+    </InvalidOperand>
+  </file>
   <file src="src/Auth/Passwords.php">
     <InvalidReturnStatement>
       <code><![CDATA[I18n::translate($this->hint, $this->hint)]]></code>
@@ -16,6 +26,14 @@
     </UndefinedThisPropertyFetch>
   </file>
   <file src="src/Cms/App.php">
+    <InvalidOperand>
+      <code><![CDATA[$extensions['collections'] ?? []]]></code>
+      <code><![CDATA[$extensions['models'] ?? []]]></code>
+      <code><![CDATA[$extensions['routes'] ?? []]]></code>
+      <code><![CDATA[$routes]]></code>
+      <code><![CDATA[$system['after']]]></code>
+      <code><![CDATA[$system['before']]]></code>
+    </InvalidOperand>
     <InvalidReturnStatement>
       <code><![CDATA[match ($code ?? 'current') {
 			'default' => $this->defaultLanguage(),
@@ -36,7 +54,26 @@
 		]]]></code>
     </InvalidArrayOffset>
   </file>
+  <file src="src/Cms/AppPlugins.php">
+    <InvalidOperand>
+      <code><![CDATA[$this->extensions['blueprints']]]></code>
+      <code><![CDATA[$this->extensions['cacheTypes']]]></code>
+      <code><![CDATA[$this->extensions['collections']]]></code>
+      <code><![CDATA[$this->extensions['commands']]]></code>
+      <code><![CDATA[$this->extensions['components']]]></code>
+      <code><![CDATA[$this->extensions['controllers']]]></code>
+      <code><![CDATA[$this->extensions['filePreviews']]]></code>
+      <code><![CDATA[$this->extensions['pages']]]></code>
+      <code><![CDATA[$this->extensions['routes']]]></code>
+      <code><![CDATA[$this->extensions['snippets']]]></code>
+      <code><![CDATA[$this->extensions['templates']]]></code>
+    </InvalidOperand>
+  </file>
   <file src="src/Cms/AppTranslations.php">
+    <InvalidOperand>
+      <code><![CDATA[$inject]]></code>
+      <code><![CDATA[$translations[$languageCode] ?? []]]></code>
+    </InvalidOperand>
     <InvalidReturnType>
       <code><![CDATA[Translation]]></code>
     </InvalidReturnType>
@@ -53,7 +90,20 @@
       <code><![CDATA[[...$this->data, ...$object->data]]]></code>
     </InvalidPropertyAssignmentValue>
   </file>
+  <file src="src/Cms/Fieldsets.php">
+    <InvalidOperand>
+      <code><![CDATA[$fieldsets]]></code>
+    </InvalidOperand>
+  </file>
+  <file src="src/Cms/FileActions.php">
+    <InvalidOperand>
+      <code><![CDATA[$props['content']]]></code>
+    </InvalidOperand>
+  </file>
   <file src="src/Cms/Files.php">
+    <ImplementedParamTypeMismatch>
+      <code><![CDATA[$object]]></code>
+    </ImplementedParamTypeMismatch>
     <InvalidArgument>
       <code><![CDATA[$file]]></code>
     </InvalidArgument>
@@ -96,7 +146,30 @@
 		}]]></code>
     </NullableReturnStatement>
   </file>
+  <file src="src/Cms/ModelPermissions.php">
+    <InvalidScalarArgument>
+      <code><![CDATA[$role]]></code>
+      <code><![CDATA[$role]]></code>
+    </InvalidScalarArgument>
+    <TooManyArguments>
+      <code><![CDATA[can]]></code>
+    </TooManyArguments>
+  </file>
+  <file src="src/Cms/PageActions.php">
+    <InvalidOperand>
+      <code><![CDATA[$props['content']]]></code>
+    </InvalidOperand>
+  </file>
+  <file src="src/Cms/PageRules.php">
+    <RedundantCondition>
+      <code><![CDATA[$allowed !== []]]></code>
+      <code><![CDATA[$allowed !== []]]></code>
+    </RedundantCondition>
+  </file>
   <file src="src/Cms/Pages.php">
+    <ImplementedParamTypeMismatch>
+      <code><![CDATA[$object]]></code>
+    </ImplementedParamTypeMismatch>
     <InvalidArgument>
       <code><![CDATA[$args[0]]]></code>
       <code><![CDATA[$page]]></code>
@@ -119,7 +192,15 @@
       <code><![CDATA[$this->homePage ??= $this->find($this->homePageId())]]></code>
     </InvalidReturnStatement>
   </file>
+  <file src="src/Cms/UserActions.php">
+    <InvalidOperand>
+      <code><![CDATA[$props['content']]]></code>
+    </InvalidOperand>
+  </file>
   <file src="src/Cms/Users.php">
+    <ImplementedParamTypeMismatch>
+      <code><![CDATA[$object]]></code>
+    </ImplementedParamTypeMismatch>
     <InvalidArgument>
       <code><![CDATA[$user]]></code>
     </InvalidArgument>
@@ -153,6 +234,16 @@
       <code><![CDATA[false]]></code>
     </InvalidArgument>
   </file>
+  <file src="src/Database/Query.php">
+    <InvalidOperand>
+      <code><![CDATA[$bindings]]></code>
+    </InvalidOperand>
+  </file>
+  <file src="src/Database/Sql.php">
+    <InvalidOperand>
+      <code><![CDATA[$input['bindings']]]></code>
+    </InvalidOperand>
+  </file>
   <file src="src/Exception/Exception.php">
     <InvalidPropertyAssignmentValue>
       <code><![CDATA[self::$prefix . '.' . $this->code]]></code>
@@ -173,6 +264,11 @@
       <code><![CDATA[$this->label]]></code>
       <code><![CDATA[$this->placeholder]]></code>
     </UndefinedThisPropertyFetch>
+  </file>
+  <file src="src/Form/Field/ColorField.php">
+    <InvalidOperand>
+      <code><![CDATA[$props['options'] ?? []]]></code>
+    </InvalidOperand>
   </file>
   <file src="src/Form/Field/TextareaField.php">
     <UndefinedMethod>
@@ -203,6 +299,16 @@
       <code><![CDATA[false]]></code>
     </InvalidArgument>
   </file>
+  <file src="src/Http/Range.php">
+    <InvalidOperand>
+      <code><![CDATA[$props['headers'] ?? []]]></code>
+    </InvalidOperand>
+  </file>
+  <file src="src/Http/Response.php">
+    <InvalidOperand>
+      <code><![CDATA[$props['headers'] ?? []]]></code>
+    </InvalidOperand>
+  </file>
   <file src="src/Panel/Area.php">
     <InvalidNullableReturnType>
       <code><![CDATA[string]]></code>
@@ -229,6 +335,33 @@
     <MoreSpecificImplementedParamType>
       <code><![CDATA[$model]]></code>
     </MoreSpecificImplementedParamType>
+  </file>
+  <file src="src/Panel/Lab/Docs.php">
+    <InvalidOperand>
+      <code><![CDATA[$files]]></code>
+      <code><![CDATA[Dir::inventory($tmp)['files']]]></code>
+    </InvalidOperand>
+  </file>
+  <file src="src/Panel/Panel.php">
+    <RedundantCondition>
+      <code><![CDATA[$this->kirby->user()?->role()->permissions()->toArray()]]></code>
+    </RedundantCondition>
+    <TypeDoesNotContainNull>
+      <code><![CDATA[[]]]></code>
+    </TypeDoesNotContainNull>
+  </file>
+  <file src="src/Panel/State.php">
+    <RedundantCondition>
+      <code><![CDATA[$this->user?->role()->permissions()->toArray()]]></code>
+    </RedundantCondition>
+    <TypeDoesNotContainNull>
+      <code><![CDATA[[]]]></code>
+    </TypeDoesNotContainNull>
+  </file>
+  <file src="src/Panel/Ui/Button/ViewButton.php">
+    <InvalidOperand>
+      <code><![CDATA[$data]]></code>
+    </InvalidOperand>
   </file>
   <file src="src/Panel/Ui/Component.php">
     <FalsableReturnStatement>
@@ -297,6 +430,11 @@
       <code><![CDATA[$this->data]]></code>
       <code><![CDATA[$this->data]]></code>
     </InvalidPropertyAssignmentValue>
+  </file>
+  <file src="src/Toolkit/Dom.php">
+    <TypeDoesNotContainNull>
+      <code><![CDATA[$childNode->prefix === null]]></code>
+    </TypeDoesNotContainNull>
   </file>
   <file src="src/Toolkit/Iterator.php">
     <FalsableReturnStatement>

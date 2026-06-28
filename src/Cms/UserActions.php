@@ -391,7 +391,7 @@ trait UserActions
 		// never directly be supplied by the caller
 		unset($props['blueprint']);
 
-		$content = $props['content'] ?? [];
+		$content = (array)($props['content'] ?? []);
 		$role    = $props['role']    ?? 'default';
 
 		if (isset($props['email']) === true) {

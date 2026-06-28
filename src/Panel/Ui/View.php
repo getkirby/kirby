@@ -52,7 +52,7 @@ class View extends Component
 	public function render(): array
 	{
 		$view = [
-			...parent::render(),
+			...parent::render() ?? [],
 			'breadcrumb' => $this->breadcrumb
 		];
 

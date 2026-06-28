@@ -150,7 +150,7 @@ class Database
 			'user'     => null,
 			'password' => null,
 			'id'       => uniqid(),
-			...$params
+			...$params ?? []
 		];
 
 		// store the database information
@@ -327,6 +327,7 @@ class Database
 			$this->lastError = null;
 
 			if (Str::startsWith($query, 'insert ', true) === true) {
+				/** @var string|false $lastId */
 				$lastId = $this->connection->lastInsertId();
 
 				if ($lastId === false) {

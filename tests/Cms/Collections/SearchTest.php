@@ -2,6 +2,9 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
+
 class SearchTest extends TestCase
 {
 	public function testCollection(): void
@@ -45,6 +48,33 @@ class SearchTest extends TestCase
 
 		$search = Search::collection($collection);
 		$this->assertCount(0, $search);
+	}
+
+	public static function invalidOptionProvider(): array
+	{
+		return [
+			['minlength', 'The "minlength" search option must be an integer'],
+			['stopwords', 'The "stopwords" search option must be an array'],
+			['words', 'The "words" search option must be a boolean'],
+			['score', 'The "score" search option must be an array'],
+			['fields', 'The "fields" search option must be an array'],
+		];
+	}
+
+	#[DataProvider('invalidOptionProvider')]
+	public function testCollectionInvalid(
+		string $option,
+		string $message
+	): void {
+		$collection = Pages::factory([
+			['slug' => 'homer', 'content' => ['name' => 'Homer']]
+		]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage($message);
+
+		// a string is the wrong type for every typed option
+		Search::collection($collection, 'homer', [$option => 'invalid']);
 	}
 
 

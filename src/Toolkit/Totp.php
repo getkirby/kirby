@@ -36,14 +36,13 @@ class Totp
 		string|null $secret = null,
 		bool $force = false
 	) {
-		// if provided, decode the existing secret into binary
+		// if provided, decode the existing secret into binary;
+		// otherwise generate a new one (20 bytes = length of the SHA1 HMAC)
 		if ($secret !== null) {
 			$this->secret = Base32::decode($secret);
+		} else {
+			$this->secret = random_bytes(20);
 		}
-
-		// otherwise generate a new one;
-		// 20 bytes are the length of the SHA1 HMAC
-		$this->secret ??= random_bytes(20);
 
 		// safety check to avoid accidental insecure secrets
 		if ($force === false && strlen($this->secret) !== 20) {

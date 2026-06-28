@@ -972,11 +972,13 @@ class App
 	/**
 	 * Parses Markdown
 	 */
-	public function markdown(string|null $text = null, array|null $options = null): string
-	{
+	public function markdown(
+		string|null $text = null,
+		array|null $options = null
+	): string {
 		// merge global options with local options
 		$options = [
-			...$this->options['markdown'] ?? [],
+			...(array)($this->options['markdown'] ?? []),
 			...$options ?? []
 		];
 

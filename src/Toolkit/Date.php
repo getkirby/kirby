@@ -117,14 +117,17 @@ class Date extends DateTime implements Stringable
 		// @codeCoverageIgnoreEnd
 
 		$calendar = IntlCalendar::createInstance(null, $locale);
-		$day      = $calendar->getFirstDayOfWeek();
 
-		return match ($day) {
-			// if any error occurs, return Monday
-			false   => 1, // @codeCoverageIgnore
-			// convert to 0-6 index numbering
-			default => $day - 1
-		};
+		/** @var int|false $day */
+		$day = $calendar->getFirstDayOfWeek();
+
+		// if any error occurs, return Monday
+		if ($day === false) {
+			return 1; // @codeCoverageIgnore
+		}
+
+		// convert to 0-6 index numbering
+		return $day - 1;
 	}
 
 	/**

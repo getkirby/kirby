@@ -245,6 +245,8 @@ class Api
 	 * Returns the injected data array
 	 * or certain parts of it by key
 	 *
+	 * @psalm-return ($key is null ? array : mixed)
+	 *
 	 * @throws \Kirby\Exception\NotFoundException If no data for `$key` exists
 	 */
 	public function data(string|null $key = null, ...$args): mixed

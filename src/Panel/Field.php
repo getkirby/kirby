@@ -129,7 +129,7 @@ class Field
 	): array {
 		return (new TemplateField(...[
 			'blueprints' => $blueprints,
-			...$props,
+			...$props ?? [],
 		]))->toArray();
 	}
 

@@ -403,7 +403,7 @@ trait FileActions
 			);
 		}
 
-		$content  = $props['content']  ?? [];
+		$content  = (array)($props['content']  ?? []);
 		$template = $props['template'] ?? 'default';
 
 		// prefer the filename from the props
