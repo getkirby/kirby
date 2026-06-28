@@ -391,26 +391,14 @@ class Session
 			$token->key !== null &&
 			hash_equals(hash_hmac('sha256', $data, $token->key), $hmac) !== true
 		) {
-			throw new LogicException(
-				key: 'session.invalid',
-				data: ['token' => $this->token()],
-				fallback: 'Session "' . $this->token() . '" is invalid',
-				translate: false,
-				httpCode: 500
-			);
+			$this->throwInvalid();
 		}
 
 		// decode the serialized data
 		$data = @unserialize($data, ['allowed_classes' => false]);
 
 		if ($data === false) {
-			throw new LogicException(
-				key: 'session.invalid',
-				data: ['token' => $this->token()],
-				fallback: 'Session "' . $this->token() . '" is invalid',
-				translate: false,
-				httpCode: 500
-			);
+			$this->throwInvalid();
 		}
 
 		// verify start and expiry time
@@ -420,13 +408,7 @@ class Session
 			$now < $data['startTime'] ||
 			$now > $data['expiryTime']
 		) {
-			throw new LogicException(
-				key: 'session.invalid',
-				data: ['token' => $this->token()],
-				fallback: 'Session "' . $this->token() . '" is invalid',
-				translate: false,
-				httpCode: 500
-			);
+			$this->throwInvalid();
 		}
 
 		// follow to the new session if there is one
@@ -453,13 +435,7 @@ class Session
 		// verify timeout
 		if (is_int($data['timeout']) === true) {
 			if ($now - $data['lastActivity'] > $data['timeout']) {
-				throw new LogicException(
-					key: 'session.invalid',
-					data: ['token' => $this->token()],
-					fallback: 'Session "' . $this->token() . '" is invalid',
-					translate: false,
-					httpCode: 500
-				);
+				$this->throwInvalid();
 			}
 
 			// set a new activity timestamp, but only every few minutes for
@@ -686,6 +662,23 @@ class Session
 	public function startTime(): int
 	{
 		return $this->startTime;
+	}
+
+	/**
+	 * Throws an exception for an invalid session
+	 * @since 6.0.0
+	 *
+	 * @throws \Kirby\Exception\LogicException
+	 */
+	protected function throwInvalid(): never
+	{
+		throw new LogicException(
+			key: 'session.invalid',
+			data: ['token' => $this->token()],
+			fallback: 'Session "' . $this->token() . '" is invalid',
+			translate: false,
+			httpCode: 500
+		);
 	}
 
 	/**
