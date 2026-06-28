@@ -260,20 +260,6 @@ class SessionsTest extends TestCase
 		$this->assertSame($session, $cache->getValue($sessions)['9999999999.valid.new-key']);
 	}
 
-	public function testTokenFromCookie(): void
-	{
-		$reflector = new ReflectionClass(Sessions::class);
-		$tokenFromCookie = $reflector->getMethod('tokenFromCookie');
-
-		Cookie::remove('kirby_session');
-		$this->assertNull($tokenFromCookie->invoke($this->sessions));
-
-		Cookie::set('kirby_session', 'amazingSessionIdFromCookie');
-		$this->assertSame('amazingSessionIdFromCookie', $tokenFromCookie->invoke($this->sessions));
-
-		Cookie::remove('kirby_session');
-	}
-
 	public function testTokenFromHeader(): void
 	{
 		$reflector = new ReflectionClass(Sessions::class);
