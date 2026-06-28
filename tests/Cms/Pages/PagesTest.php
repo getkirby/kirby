@@ -998,6 +998,197 @@ class PagesTest extends TestCase
 		$this->assertSame($expectedIndexWithDrafts, $pages->index(true)->keys());
 	}
 
+	public function testMergePage(): void
+	{
+		$a = new Page(['slug' => 'a']);
+		$b = new Page(['slug' => 'b']);
+
+		$pages  = new Pages([$a]);
+		$merged = $pages->merge($b);
+
+		$this->assertSame(['a', 'b'], $merged->keys());
+
+		// merging is immutable and returns a clone
+		$this->assertNotSame($pages, $merged);
+		$this->assertSame(['a'], $pages->keys());
+	}
+
+	public function testMergePageDoesNotDuplicate(): void
+	{
+		$a = new Page(['slug' => 'a']);
+		$b = new Page(['slug' => 'b']);
+
+		$pages  = new Pages([$a, $b]);
+		$merged = $pages->merge($a);
+
+		$this->assertCount(2, $merged);
+		$this->assertSame(['a', 'b'], $merged->keys());
+	}
+
+	public function testMergePages(): void
+	{
+		$a = new Pages([
+			new Page(['slug' => 'a']),
+			new Page(['slug' => 'b'])
+		]);
+
+		$b = new Pages([
+			new Page(['slug' => 'c']),
+			new Page(['slug' => 'd'])
+		]);
+
+		$merged = $a->merge($b);
+
+		$this->assertSame(['a', 'b', 'c', 'd'], $merged->keys());
+
+		// merging is immutable and returns a clone
+		$this->assertNotSame($a, $merged);
+		$this->assertSame(['a', 'b'], $a->keys());
+	}
+
+	public function testMergePagesDoesNotDuplicate(): void
+	{
+		$a = new Pages([
+			new Page(['slug' => 'a']),
+			new Page(['slug' => 'b'])
+		]);
+
+		$b = new Pages([
+			new Page(['slug' => 'b']),
+			new Page(['slug' => 'c'])
+		]);
+
+		$merged = $a->merge($b);
+
+		$this->assertSame(['a', 'b', 'c'], $merged->keys());
+	}
+
+	public function testMergeArray(): void
+	{
+		$a = new Page(['slug' => 'a']);
+		$b = new Page(['slug' => 'b']);
+		$c = new Page(['slug' => 'c']);
+
+		$pages  = new Pages([$a]);
+		$merged = $pages->merge([$b, $c]);
+
+		$this->assertSame(['a', 'b', 'c'], $merged->keys());
+	}
+
+	public function testMergeEmptyArray(): void
+	{
+		$pages  = new Pages([new Page(['slug' => 'a'])]);
+		$merged = $pages->merge([]);
+
+		$this->assertSame(['a'], $merged->keys());
+		$this->assertNotSame($pages, $merged);
+	}
+
+	public function testMergeMultipleArguments(): void
+	{
+		$a = new Page(['slug' => 'a']);
+		$b = new Page(['slug' => 'b']);
+		$c = new Page(['slug' => 'c']);
+
+		$pages  = new Pages([$a]);
+		$merged = $pages->merge($b, $c);
+
+		$this->assertSame(['a', 'b', 'c'], $merged->keys());
+
+		// merging is immutable and returns a clone
+		$this->assertNotSame($pages, $merged);
+		$this->assertSame(['a'], $pages->keys());
+	}
+
+	public function testMergeById(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'a'],
+					['slug' => 'b'],
+					['slug' => 'c']
+				]
+			]
+		]);
+
+		$pages  = new Pages([$app->page('a')]);
+		$merged = $pages->merge('b');
+
+		$this->assertSame(['a', 'b'], $merged->keys());
+	}
+
+	public function testMergeByMultipleIds(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'a'],
+					['slug' => 'b'],
+					['slug' => 'c']
+				]
+			]
+		]);
+
+		$pages  = new Pages([$app->page('a')]);
+		$merged = $pages->merge('b', 'c');
+
+		$this->assertSame(['a', 'b', 'c'], $merged->keys());
+	}
+
+	public function testMergeDrafts(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'parent',
+						'children' => [
+							['slug' => 'a'],
+							['slug' => 'b']
+						],
+						'drafts' => [
+							['slug' => 'c'],
+							['slug' => 'd']
+						]
+					]
+				]
+			]
+		]);
+
+		$children = $app->page('parent')->children();
+		$merged   = $children->merge('drafts');
+
+		$this->assertSame(['parent/a', 'parent/b'], $children->keys());
+		$this->assertSame(
+			['parent/a', 'parent/b', 'parent/c', 'parent/d'],
+			$merged->keys()
+		);
+	}
+
+	public function testMergeDraftsWithoutParent(): void
+	{
+		$pages = new Pages([
+			new Page(['slug' => 'a']),
+			new Page(['slug' => 'b'])
+		]);
+
+		$merged = $pages->merge('drafts');
+
+		// without a parent the same collection is returned unchanged
+		$this->assertSame($pages, $merged);
+		$this->assertSame(['a', 'b'], $merged->keys());
+	}
+
 	public function testNotTemplate(): void
 	{
 		$pages = Pages::factory([
