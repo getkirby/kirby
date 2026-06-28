@@ -678,26 +678,6 @@ class SessionTest extends TestCase
 		$session->data()->set('someId', 1);
 	}
 
-	public function testParseToken(): void
-	{
-		$reflector = new ReflectionClass(Session::class);
-		$parseToken = $reflector->getMethod('parseToken');
-		$tokenKey = $reflector->getProperty('tokenKey');
-
-		$session = new Session($this->sessions, null, []);
-		$this->assertNull($session->token());
-
-		// full token
-		$parseToken->invoke($session, '1234567890.thisIsMyAwesomeId.' . $this->store->validKey);
-		$this->assertSame('1234567890.thisIsMyAwesomeId.' . $this->store->validKey, $session->token());
-		$this->assertSame($this->store->validKey, $tokenKey->getValue($session));
-
-		// token without key
-		$parseToken->invoke($session, '1234567890.thisIsMyAwesomeId', true);
-		$this->assertSame('1234567890.thisIsMyAwesomeId', $session->token());
-		$this->assertNull($tokenKey->getValue($session));
-	}
-
 	public function testParseTokenInvalidToken1(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -712,19 +692,6 @@ class SessionTest extends TestCase
 
 		$token = 'something.thisIsNotAValidToken.abcdefabcdef';
 		$session = new Session($this->sessions, $token, []);
-	}
-
-	public function testParseTokenInvalidToken3(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-
-		$reflector = new ReflectionClass(Session::class);
-		$parseToken = $reflector->getMethod('parseToken');
-
-		$session = new Session($this->sessions, null, []);
-		$this->assertNull($session->token());
-
-		$parseToken->invoke($session, '1234567890.thisIsMyAwesomeId.' . $this->store->validKey, true);
 	}
 
 	public function testTimeToTimestamp(): void
@@ -795,7 +762,7 @@ class SessionTest extends TestCase
 	public function testInitMissingKey(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid argument "$token" in method "Session::parseToken"');
+		$this->expectExceptionMessage('Invalid argument "$token" in method "Token::parse"');
 
 		$token = '9999999999.valid';
 		new Session($this->sessions, $token, []);

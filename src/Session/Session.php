@@ -10,7 +10,6 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Http\Cookie;
 use Kirby\Http\Url;
 use Kirby\Toolkit\Str;
-use Kirby\Toolkit\SymmetricCrypto;
 
 /**
  * @copyright Bastian Allgeier
@@ -21,10 +20,8 @@ class Session
 	// parent data
 	protected string $mode;
 
-	// parts of the token
-	protected int|null $tokenExpiry = null;
-	protected string|null $tokenId = null;
-	protected string|null $tokenKey = null;
+	// session token
+	protected Token|null $token = null;
 
 	// persistent data
 	protected int $startTime;
@@ -67,14 +64,14 @@ class Session
 		if (is_string($token) === true) {
 			// existing session
 
-			// set the token as instance vars
-			$this->parseToken($token);
+			// set the token
+			$this->token = Token::parse($token);
 
 			// initialize, but only try to write to the session if not read-only
 			// (only the case for moved sessions)
 			$this->init();
 
-			if ($this->tokenKey !== null) {
+			if ($this->token?->isReadonly() === false) {
 				$this->autoRenew();
 			}
 
@@ -189,11 +186,13 @@ class Session
 		// has been just created or destroyed
 		if (
 			$this->writeMode !== true ||
-			$this->tokenExpiry === null ||
+			$this->token === null ||
 			$this->destroyed === true
 		) {
 			return;
 		}
+
+		$token = $this->token;
 
 		// collect all data
 		if ($this->newSession !== null) {
@@ -212,7 +211,7 @@ class Session
 			// otherwise (if no encryption is possible), the token key
 			// is omitted, which makes the new session read-only
 			// when accessed through the old session
-			if ($crypto = $this->crypto()) {
+			if ($crypto = $token->crypto()) {
 				// encrypt the new token key with the old token key
 				// so that attackers with read access to the session file
 				// (e.g. via directory traversal) cannot impersonate the new session
@@ -232,28 +231,12 @@ class Session
 
 		// encode the data and attach an HMAC
 		$data = serialize($data);
-		$data = hash_hmac('sha256', $data, $this->tokenKey) . "\n" . $data;
+		$data = hash_hmac('sha256', $data, $token->key) . "\n" . $data;
 
 		// store the data
-		$this->sessions->store()->set($this->tokenExpiry, $this->tokenId, $data);
-		$this->sessions->store()->unlock($this->tokenExpiry, $this->tokenId);
+		$this->sessions->store()->set($token->expiry, $token->id, $data);
+		$this->sessions->store()->unlock($token->expiry, $token->id);
 		$this->writeMode = false;
-	}
-
-	/**
-	 * Returns a symmetric crypto instance based on the
-	 * token key of the session
-	 */
-	protected function crypto(): SymmetricCrypto|null
-	{
-		if (
-			$this->tokenKey === null ||
-			SymmetricCrypto::isAvailable() === false
-		) {
-			return null; // @codeCoverageIgnore
-		}
-
-		return new SymmetricCrypto(secretKey: hex2bin($this->tokenKey));
 	}
 
 	/**
@@ -272,12 +255,14 @@ class Session
 	public function destroy(): void
 	{
 		// no need to destroy new or destroyed sessions
-		if ($this->tokenExpiry === null || $this->destroyed === true) {
+		if ($this->token === null || $this->destroyed === true) {
 			return;
 		}
 
+		$token = $this->token;
+
 		// remove session file
-		$this->sessions->store()->destroy($this->tokenExpiry, $this->tokenId);
+		$this->sessions->store()->destroy($token->expiry, $token->id);
 		$this->destroyed           = true;
 		$this->writeMode           = false;
 		$this->needsRetransmission = false;
@@ -324,7 +309,7 @@ class Session
 	 */
 	public function ensureToken(): void
 	{
-		if ($this->tokenExpiry === null) {
+		if ($this->token === null) {
 			$this->regenerateToken();
 		}
 	}
@@ -370,7 +355,7 @@ class Session
 	{
 		// sessions that are new, written to or that have been destroyed should never be initialized
 		if (
-			$this->tokenExpiry === null ||
+			$this->token === null ||
 			$this->writeMode === true ||
 			$this->destroyed === true
 		) {
@@ -378,8 +363,10 @@ class Session
 			throw new Exception(translate: false); // @codeCoverageIgnore
 		}
 
+		$token = $this->token;
+
 		// make sure that the session exists
-		if ($this->sessions->store()->exists($this->tokenExpiry, $this->tokenId) !== true) {
+		if ($this->sessions->store()->exists($token->expiry, $token->id) !== true) {
 			throw new NotFoundException(
 				key: 'session.notFound',
 				data: ['token' => $this->token()],
@@ -391,8 +378,8 @@ class Session
 
 		// get the session data from the store
 		$data = $this->sessions->store()->get(
-			$this->tokenExpiry,
-			$this->tokenId
+			$token->expiry,
+			$token->id
 		);
 
 		// verify HMAC
@@ -401,8 +388,8 @@ class Session
 		$data = trim(Str::after($data, "\n"));
 
 		if (
-			$this->tokenKey !== null &&
-			hash_equals(hash_hmac('sha256', $data, $this->tokenKey), $hmac) !== true
+			$token->key !== null &&
+			hash_equals(hash_hmac('sha256', $data, $token->key), $hmac) !== true
 		) {
 			throw new LogicException(
 				key: 'session.invalid',
@@ -448,17 +435,17 @@ class Session
 			// the PHP `sodium` extension for decryption
 			if (
 				isset($data['newSessionKey']) === true &&
-				$crypto = $this->crypto()
+				$crypto = $token->crypto()
 			) {
 				$tokenKey = $crypto->decrypt($data['newSessionKey']);
 
-				$this->parseToken($data['newSession'] . '.' . $tokenKey);
+				$this->token = Token::parse($data['newSession'] . '.' . $tokenKey);
 				$this->init();
 				return;
 			}
 
 			// otherwise initialize without the token key (read-only mode)
-			$this->parseToken($data['newSession'], true);
+			$this->token = Token::parse($data['newSession'], key: false);
 			$this->init();
 			return;
 		}
@@ -481,7 +468,7 @@ class Session
 			// also don't do this for read-only sessions
 			if (
 				$this->updatingLastActivity === false &&
-				$this->tokenKey !== null &&
+				$token->key !== null &&
 				$now - $data['lastActivity'] > $data['timeout'] / 15
 			) {
 				$this->updatingLastActivity = true;
@@ -557,56 +544,6 @@ class Session
 	}
 
 	/**
-	 * Parses a token string into its parts and sets them as instance vars
-	 *
-	 * @param string $token Session token
-	 * @param bool $withoutKey If true, $token is passed without key
-	 */
-	protected function parseToken(string $token, bool $withoutKey = false): void
-	{
-		// split the token into its parts
-		$parts = explode('.', $token);
-
-		// only continue if the token has exactly the right amount of parts
-		$expectedParts = ($withoutKey === true) ? 2 : 3;
-
-		if (count($parts) !== $expectedParts) {
-			throw new InvalidArgumentException(
-				data: [
-					'method'   => 'Session::parseToken',
-					'argument' => '$token'
-				],
-				translate: false
-			);
-		}
-
-		$tokenExpiry = (int)$parts[0];
-		$tokenId     = $parts[1];
-		$tokenKey    = ($withoutKey === true) ? null : $parts[2];
-
-		// verify that all parts were parsed correctly using reassembly
-		$expectedToken = $tokenExpiry . '.' . $tokenId;
-
-		if ($withoutKey === false) {
-			$expectedToken .= '.' . $tokenKey;
-		}
-
-		if ($expectedToken !== $token) {
-			throw new InvalidArgumentException(
-				data: [
-					'method'   => 'Session::parseToken',
-					'argument' => '$token'
-				],
-				translate: false
-			);
-		}
-
-		$this->tokenExpiry = $tokenExpiry;
-		$this->tokenId     = $tokenId;
-		$this->tokenKey    = $tokenKey;
-	}
-
-	/**
 	 * Puts the session into write mode by acquiring a lock
 	 * and reloading the data
 	 * @unstable
@@ -619,16 +556,18 @@ class Session
 		// - destroyed sessions are never written to
 		// - no need to lock and re-init if we are already in write mode
 		if (
-			$this->tokenExpiry === null ||
+			$this->token === null ||
 			$this->destroyed === true ||
 			$this->writeMode === true
 		) {
 			return;
 		}
 
+		$token = $this->token;
+
 		// don't allow writing for read-only sessions
 		// (only the case for moved sessions when the PHP `sodium` extension is not available)
-		if ($this->tokenKey === null) {
+		if ($token->key === null) {
 			throw new LogicException(
 				key: 'session.readonly',
 				data: ['token' => $this->token()],
@@ -637,7 +576,7 @@ class Session
 			);
 		}
 
-		$this->sessions->store()->lock($this->tokenExpiry, $this->tokenId);
+		$this->sessions->store()->lock($token->expiry, $token->id);
 		$this->init();
 		$this->writeMode = true;
 	}
@@ -655,24 +594,20 @@ class Session
 
 		$this->prepareForWriting();
 
-		// generate new token
-		$tokenExpiry = $this->expiryTime;
-		$tokenId     = $this->sessions->store()->createId($tokenExpiry);
-		$tokenKey    = bin2hex(random_bytes(32));
+		// generate a new token
+		$token = Token::generate($this->sessions->store(), $this->expiryTime);
 
 		// mark the old session as moved if there is one
-		if ($this->tokenExpiry !== null) {
-			$this->newSession = [$tokenExpiry . '.' . $tokenId, $tokenKey];
+		if ($this->token !== null) {
+			$this->newSession = [$token->toString(key: false), $token->key];
 			$this->commit();
 
 			// we are now in the context of the new session
 			$this->newSession = null;
 		}
 
-		// set new data as instance vars
-		$this->tokenExpiry = $tokenExpiry;
-		$this->tokenId     = $tokenId;
-		$this->tokenKey    = $tokenKey;
+		// set the new token
+		$this->token = $token;
 
 		// the new session needs to be written for the first time
 		$this->writeMode = true;
@@ -682,7 +617,7 @@ class Session
 			$cookieDomain = $this->sessions->cookieDomain();
 
 			Cookie::set($this->sessions->cookieName(), $this->token(), [
-				'lifetime' => $this->tokenExpiry,
+				'lifetime' => $token->expiry,
 				'path'     => $cookieDomain ? '/' : Url::index(['host' => null, 'trailingSlash' => true]),
 				'domain'   => $cookieDomain,
 				'secure'   => Url::scheme() === 'https',
@@ -702,7 +637,7 @@ class Session
 	 */
 	protected function regenerateTokenIfNotNew(): void
 	{
-		if ($this->tokenExpiry !== null) {
+		if ($this->token !== null) {
 			$this->regenerateToken();
 		}
 	}
@@ -817,16 +752,6 @@ class Session
 	 */
 	public function token(): string|null
 	{
-		if ($this->tokenExpiry !== null) {
-			$token = $this->tokenExpiry . '.' . $this->tokenId;
-
-			if (is_string($this->tokenKey) === true) {
-				$token .= '.' . $this->tokenKey;
-			}
-
-			return $token;
-		}
-
-		return null;
+		return $this->token?->toString();
 	}
 }
