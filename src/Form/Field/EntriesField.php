@@ -218,7 +218,7 @@ class EntriesField extends InputField
 							throw new InvalidArgumentException(
 								key: 'entries.validation',
 								data: [
-									'field' => $this->label() ?? Str::ucfirst($this->name()),
+									'field' => $this->label(),
 									'index' => $index + 1
 								]
 							);

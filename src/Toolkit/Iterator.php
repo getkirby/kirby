@@ -110,7 +110,7 @@ class Iterator implements Countable, IteratorAggregate
 	 */
 	public function valid(): bool
 	{
-		return $this->current() !== false;
+		return key($this->data) !== null;
 	}
 
 	/**

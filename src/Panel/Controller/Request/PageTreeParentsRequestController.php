@@ -28,11 +28,14 @@ class PageTreeParentsRequestController extends RequestController
 
 	public function load(): array
 	{
-		$parents   = $this->page?->parents()->flip()->filter('isListable', true);
-		$parents   = $parents?->values(
-			fn ($parent) => $parent->uuid()?->toString() ?? $parent->id()
-		);
-		$parents ??= [];
+		$parents = [];
+
+		if ($this->page !== null) {
+			$parents = $this->page->parents()->flip()->filter('isListable', true);
+			$parents = $parents->values(
+				fn ($parent) => $parent->uuid()?->toString() ?? $parent->id()
+			);
+		}
 
 		if ($this->root === true) {
 			array_unshift($parents, $this->kirby->site()->uuid()?->toString() ?? '/');

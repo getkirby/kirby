@@ -164,7 +164,7 @@ class Api
 		$this->setTranslation();
 
 		$this->route = $this->router->find($path, $method);
-		$auth = $this->route?->attributes()['auth'] ?? true;
+		$auth = $this->route->attributes()['auth'] ?? true;
 
 		if ($auth !== false) {
 			if (($user = $this->authenticate()) instanceof User) {
@@ -177,7 +177,7 @@ class Api
 		$validate = Pagination::$validate;
 		Pagination::$validate = false;
 
-		$output = $this->route?->action()->call(
+		$output = $this->route->action()->call(
 			$this,
 			...$this->route->arguments()
 		);
@@ -721,7 +721,9 @@ class Api
 		string $name,
 		string|null $path = null
 	): mixed {
-		if (!$section = $model->blueprint()?->section($name)) {
+		$section = $model->blueprint()->section($name);
+
+		if ($section === null) {
 			throw new NotFoundException(
 				message: 'The section "' . $name . '" could not be found'
 			);

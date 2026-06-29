@@ -31,7 +31,7 @@ class Element
 		string|null $fallback = null
 	): string|null {
 		if ($this->node->hasAttribute($attr) === true) {
-			return $this->node->getAttribute($attr) ?? $fallback;
+			return $this->node->getAttribute($attr);
 		}
 
 		return $fallback;

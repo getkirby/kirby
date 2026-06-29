@@ -331,6 +331,7 @@ class Xml
 			}
 		}
 
+		/** @psalm-suppress RedundantCondition */
 		if ($attributeArray !== []) {
 			$array['@attributes'] = $attributeArray;
 		}

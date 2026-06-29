@@ -24,14 +24,12 @@ class Plain extends Schema
 	{
 		if ($element instanceof Element) {
 			$text = $element->innerText();
-		} elseif (is_string($element) === true) {
+		} else {
 			$text = trim($element);
 
 			if (Str::length($text) === 0) {
 				return null;
 			}
-		} else {
-			return null;
 		}
 
 		return [
