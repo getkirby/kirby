@@ -635,6 +635,18 @@ class DirTest extends TestCase
 		Dir::realpath($dir, $parent);
 	}
 
+	public function testRealpathToItself(): void
+	{
+		// the parent directory itself is not considered
+		// to be *within* the parent directory
+		Dir::make($dir = static::TMP . '/site');
+
+		$this->expectException('Exception');
+		$this->expectExceptionMessage('The directory is not within the parent directory');
+
+		Dir::realpath($dir, $dir);
+	}
+
 	public function testRealpathToSiblingWithSharedPrefix(): void
 	{
 		// a sibling directory whose name starts with
