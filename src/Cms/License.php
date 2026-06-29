@@ -513,8 +513,8 @@ class License
 			$message = $response->json()['message'] ?? 'The request failed';
 
 			throw new LogicException(
-				key: $response->code(),
-				message: $message,
+				message:  $message,
+				httpCode: $response->code(),
 			);
 		}
 

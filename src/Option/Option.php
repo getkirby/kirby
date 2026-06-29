@@ -65,9 +65,9 @@ class Option
 		return new static(...$props, resolve: $resolve);
 	}
 
-	public function id(): string|int|float
+	public function id(): string
 	{
-		return $this->value ?? '';
+		return (string)($this->value ?? '');
 	}
 
 	/**
