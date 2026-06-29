@@ -295,19 +295,12 @@ class System
 			return $this->license; // @codeCoverageIgnore
 		}
 
+		// load the license
 		$this->license = License::read();
 
-		// if license has expired, try to get it reissued
-		if ($this->license->isExpired() === true) {
-			try {
-				$this->license->register(reissue: true);
-
-				// @codeCoverageIgnoreStart
-			} catch (Throwable) {
-				$this->license->delete();
-			}
-			// @codeCoverageIgnoreEnd
-		}
+		// if the license has expired,
+		// try to get it reissued by the hub
+		$this->license->reissue();
 
 		return $this->license;
 	}

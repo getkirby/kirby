@@ -100,6 +100,33 @@ class LicenseTest extends TestCase
 			'expires'    => null,
 			'signature'  => null,
 		], $license->content());
+
+		// the reissue backoff is not persisted
+		// while no retry cycle is running
+		$this->assertArrayNotHasKey('failures', $license->content());
+		$this->assertArrayNotHasKey('checked', $license->content());
+	}
+
+	public function testContentWithReissueBackoff(): void
+	{
+		$license = new License(
+			code: $code = $this->code(LicenseType::Enterprise),
+			failures: 2,
+			checked: '2024-01-01 00:00:00'
+		);
+
+		$this->assertSame([
+			'activation' => null,
+			'code'       => $code,
+			'date'       => null,
+			'domain'     => null,
+			'email'      => null,
+			'order'      => null,
+			'expires'    => null,
+			'signature'  => null,
+			'failures'   => 2,
+			'checked'    => '2024-01-01 00:00:00',
+		], $license->content());
 	}
 
 	public function testDate(): void
@@ -391,7 +418,6 @@ class LicenseTest extends TestCase
 			'order'      => null,
 			'expires'    => null,
 			'signature'  => null,
-
 		], License::polyfill([
 			'license' => 'abc',
 		]));
@@ -419,6 +445,23 @@ class LicenseTest extends TestCase
 
 		$license = License::read();
 		$this->assertNull($license->code());
+
+		// reads the reissue backoff bookkeeping from the file
+		$this->app = new App([
+			'roots' => [
+				'license' => $root = static::TMP . '/.license'
+			]
+		]);
+
+		F::write($root, json_encode([
+			'code'     => $this->code(LicenseType::Enterprise),
+			'failures' => 3,
+			'checked'  => '2024-01-01 00:00:00',
+		]));
+
+		$content = License::read()->content();
+		$this->assertSame(3, $content['failures']);
+		$this->assertSame('2024-01-01 00:00:00', $content['checked']);
 	}
 
 	public function testRegisterFreeAndLocal(): void
@@ -482,6 +525,117 @@ class LicenseTest extends TestCase
 		$this->expectExceptionMessage('Please enter a valid license code');
 
 		$license->register();
+	}
+
+	public function testReissue(): void
+	{
+		$this->app = new App([
+			'roots' => [
+				'index'   => static::TMP,
+				'license' => static::TMP . '/.license'
+			]
+		]);
+
+		// a valid (non-expired) license is left untouched
+		$license = new License();
+		$this->assertFalse($license->isExpired());
+		$license->reissue();
+		$this->assertFalse($license->isExpired());
+
+		// a failed reissue keeps the expired license alive and
+		// records the failure so the next requests can back off
+		// (here the reissue fails on the missing email address)
+		$license = new License(
+			code: $this->code(LicenseType::Enterprise),
+			domain: 'getkirby.com',
+			expires: '2000-01-01 00:00:00'
+		);
+
+		$license->reissue();
+		$this->assertTrue($license->isExpired());
+		$this->assertSame(1, $license->content()['failures']);
+		$this->assertSame(1, License::read()->content()['failures']);
+
+		// an expired license that has exhausted all reissue attempts
+		// drops its license file so the activation banner reappears
+		$license = new License(
+			code: $this->code(LicenseType::Enterprise),
+			domain: 'getkirby.com',
+			expires: '2000-01-01 00:00:00',
+			failures: 6,
+			checked: '2000-01-01 00:00:00'
+		);
+
+		F::write($license->root(), 'test');
+		$license->reissue();
+		$this->assertFileDoesNotExist($license->root());
+
+		// an expired free + local license is reissued by self-signing,
+		// which also clears the backoff state on success
+		$this->app->clone([
+			'options' => [
+				'url' => 'https://sandbox.test',
+			],
+			'server' => [
+				'REMOTE_ADDR' => '127.0.0.1',
+			]
+		]);
+
+		$license = new License(
+			code: LicenseType::Free->prefix(),
+			domain: 'sandbox.test',
+			expires: '2000-01-01 00:00:00',
+			failures: 2,
+			checked: '2000-01-01 00:00:00'
+		);
+
+		$license->reissue();
+
+		$this->assertFalse($license->isExpired());
+		$this->assertArrayNotHasKey('failures', $license->content());
+	}
+
+	public function testReissueBackoff(): void
+	{
+		$now = MockTime::$time;
+
+		$this->app = new App([
+			'roots' => [
+				'license' => static::TMP . '/.license'
+			]
+		]);
+
+		// a license whose reissue always fails (missing email), so
+		// that each actual hub attempt is observable as an incremented
+		// failure counter, while a skipped attempt leaves it untouched
+		$attempt = function (int $failures, string|null $checked) {
+			$license = new License(
+				code: $this->code(LicenseType::Enterprise),
+				domain: 'getkirby.com',
+				expires: '2000-01-01 00:00:00',
+				failures: $failures,
+				checked: $checked
+			);
+
+			$license->reissue();
+
+			return $license->content()['failures'] ?? 0;
+		};
+
+		// first attempt after expiry: check immediately → attempt
+		$this->assertSame(1, $attempt(0, null));
+
+		// within the backoff window of the first failure (5 min) → skip
+		$this->assertSame(1, $attempt(1, date('Y-m-d H:i:s', $now - 4 * 60)));
+
+		// backoff window of the first failure has passed → attempt
+		$this->assertSame(2, $attempt(1, date('Y-m-d H:i:s', $now - 5 * 60)));
+
+		// within the backoff window of the fifth failure (24 h) → skip
+		$this->assertSame(5, $attempt(5, date('Y-m-d H:i:s', $now - 1439 * 60)));
+
+		// backoff window of the fifth failure has passed → attempt
+		$this->assertSame(6, $attempt(5, date('Y-m-d H:i:s', $now - 1440 * 60)));
 	}
 
 	public function testRenewal(): void
