@@ -339,6 +339,14 @@ export type StringTemplateValues = {
 		| null;
 };
 
+// Regexes used by template() for `{ value }` / `{{ value }}` placeholders
+// (optionally with surrounding whitespace).
+//
+// `placeholder` matches and resolves each placeholder. `leftover`
+// then scrubs any brace syntax that survived substitution.
+const placeholder = /[{]{1,2}[\s]?(.*?)[\s]?[}]{1,2}/gi;
+const leftover = /[{]{1,2}[\s]?.*[\s]?[}]{1,2}/gi;
+
 /**
  * Replaces template placeholders in string with provided values
  *
@@ -351,6 +359,13 @@ export function template(
 	string: unknown,
 	values: StringTemplateValues = {}
 ): string {
+	const source = String(string);
+
+	// nothing to resolve if the string has no placeholders
+	if (source.includes("{") === false) {
+		return source;
+	}
+
 	const resolve = (parts: string[], data: StringTemplateValues = {}) => {
 		const part = escapeHTML(parts.shift());
 		const value = data[part] ?? "…";
@@ -362,15 +377,9 @@ export function template(
 		return resolve(parts, value as StringTemplateValues);
 	};
 
-	const opening = "[{]{1,2}[\\s]?";
-	const closing = "[\\s]?[}]{1,2}";
-
-	const str = String(string).replace(
-		new RegExp(`${opening}(.*?)${closing}`, "gi"),
-		($0, $1) => String(resolve($1.split("."), values))
-	);
-
-	return str.replace(new RegExp(`${opening}.*${closing}`, "gi"), "…");
+	return source
+		.replace(placeholder, ($0, $1) => String(resolve($1.split("."), values)))
+		.replace(leftover, "…");
 }
 
 /**
