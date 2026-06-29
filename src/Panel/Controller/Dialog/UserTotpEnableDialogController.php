@@ -19,7 +19,7 @@ use Kirby\Toolkit\Totp;
  */
 class UserTotpEnableDialogController extends DialogController
 {
-	public Totp $totp;
+	public Totp|null $totp = null;
 	public User $user;
 
 	public function __construct()

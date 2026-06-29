@@ -24,7 +24,7 @@ class SystemViewController extends ViewController
 {
 	protected array $exceptions;
 	protected License $license;
-	protected array $plugins;
+	protected array|null $plugins = null;
 	protected System $system;
 	protected UpdateStatus|null $update;
 

@@ -20,7 +20,7 @@ trait Fields
 	/**
 	 * Cache for the form instance
 	 */
-	protected Form $form;
+	protected Form|null $form = null;
 
 	/**
 	 * Returns the props for all fields in the form

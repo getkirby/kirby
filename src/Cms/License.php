@@ -37,8 +37,8 @@ class License
 	protected App $kirby;
 
 	// cache
-	protected LicenseStatus $status;
-	protected LicenseType $type;
+	protected LicenseStatus|null $status = null;
+	protected LicenseType|null $type = null;
 
 	public function __construct(
 		protected string|null $activation = null,

@@ -71,7 +71,7 @@ class Site extends ModelWithContent
 	/**
 	 * The absolute path to the site directory
 	 */
-	protected string $root;
+	protected string|null $root = null;
 
 	/**
 	 * The page url

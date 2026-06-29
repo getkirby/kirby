@@ -18,7 +18,7 @@ use Kirby\Panel\Ui\Item\UserItem;
  */
 class UserPickerDialogController extends ModelPickerDialogController
 {
-	protected UsersCollector $collector;
+	protected UsersCollector|null $collector = null;
 
 	public function __construct(
 		ModelWithContent $model,

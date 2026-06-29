@@ -79,7 +79,7 @@ class App
 	protected bool|null $multilang = null;
 	protected string|null $nonce = null;
 	protected array $options;
-	protected Panel $panel;
+	protected Panel|null $panel = null;
 	protected string|null $path = null;
 	protected Request|null $request = null;
 	protected Responder|null $response = null;

@@ -23,7 +23,7 @@ use Kirby\Panel\Ui\Item\PageItem;
  */
 class PagePickerDialogController extends ModelPickerDialogController
 {
-	protected PagesCollector $collector;
+	protected PagesCollector|null $collector = null;
 
 	public function __construct(
 		ModelWithContent $model,

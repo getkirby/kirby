@@ -34,7 +34,7 @@ class EntriesField extends InputField
 	 */
 	protected array|string|null $field;
 
-	protected Form $form;
+	protected Form|null $form = null;
 	protected array $value = [];
 
 	public function __construct(

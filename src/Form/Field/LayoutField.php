@@ -36,7 +36,7 @@ class LayoutField extends BlocksField
 	/**
 	 * Define tabs and fields for the layout settings. Layout settings are defined globally. Each layout will then get a "Settings" button in its dropdown and open a settings drawer with the configured fields.
 	 */
-	protected array|string|null $settings;
+	protected array|string|null $settings = null;
 
 	/**
 	 * Cache for the settings Fieldset instance
@@ -311,7 +311,7 @@ class LayoutField extends BlocksField
 			return $this->settingsFieldset = null;
 		}
 
-		$settings = Blueprint::extend($this->settings ?? []);
+		$settings = Blueprint::extend($this->settings);
 
 		$settings['icon']   = 'dashboard';
 		$settings['type']   = 'layout';

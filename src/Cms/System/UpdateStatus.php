@@ -43,10 +43,10 @@ class UpdateStatus
 	protected bool|null $noVulns = null;
 
 	// caches
-	protected array $messages;
-	protected array $targetData;
-	protected array|false $versionEntry;
-	protected array $vulnerabilities;
+	protected array|null $messages = null;
+	protected array|null $targetData = null;
+	protected array|false|null $versionEntry = null;
+	protected array|null $vulnerabilities = null;
 
 	/**
 	 * @param array|null $data Custom override for the getkirby.com update data

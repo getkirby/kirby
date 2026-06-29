@@ -18,7 +18,7 @@ trait TableColumns
 	/**
 	 * Cache for the columns definition
 	 */
-	protected array $columnsCache;
+	protected array|null $columnsCache = null;
 
 	public function columns(): array
 	{

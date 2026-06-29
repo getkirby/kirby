@@ -47,9 +47,9 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	 */
 	public array|null $blueprints = null;
 
-	public static App $kirby;
+	public static App|null $kirby = null;
 	protected Site|null $site;
-	protected Storage $storage;
+	protected Storage|null $storage = null;
 
 	/**
 	 * Store values used to initilaize object

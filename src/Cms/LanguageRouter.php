@@ -18,7 +18,7 @@ use Kirby\Uuid\Permalink;
  */
 class LanguageRouter
 {
-	protected Router $router;
+	protected Router|null $router = null;
 
 	/**
 	 * Creates a new language router instance
