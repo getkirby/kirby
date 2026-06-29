@@ -732,6 +732,23 @@ class DirTest extends TestCase
 	}
 
 	/**
+	 * @covers ::realpath
+	 */
+	public function testRealpathToSiblingWithSharedPrefix()
+	{
+		// a sibling directory whose name starts with
+		// the parent's name (`site2` vs `site`) must not
+		// pass the containment check
+		Dir::make(static::TMP . '/site');
+		Dir::make($dir = static::TMP . '/site2');
+
+		$this->expectException('Exception');
+		$this->expectExceptionMessage('The directory is not within the parent directory');
+
+		Dir::realpath($dir, static::TMP . '/site');
+	}
+
+	/**
 	 * @covers ::remove
 	 */
 	public function testRemove()
