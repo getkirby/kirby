@@ -80,7 +80,11 @@ import { props as DateInput } from "../Input/DateInput.vue";
  * Have a look at `<k-field>`, `<k-input>`
  * and `<k-datetime-input>` for additional information.
  *
- * @example <k-date-field :value="date" name="date" label="Date" @input="$emit('input', $event)" />
+ * @example
+ * <k-date-field :value="date" name="date" label="Date" @input="$emit('input', $event)" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [Field, Input, DateInput],

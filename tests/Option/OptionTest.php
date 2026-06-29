@@ -14,20 +14,20 @@ class OptionTest extends TestCase
 		// string
 		$option = new Option('test');
 		$this->assertSame('test', $option->value);
-		$this->assertSame('test', $option->id());
 		$this->assertSame('test', $option->text['en']);
+		$this->assertSame('test', $option->id());
 
 		// int
 		$option = new Option(1);
 		$this->assertSame(1, $option->value);
-		$this->assertSame(1, $option->id());
 		$this->assertSame(1, $option->text['en']);
+		$this->assertSame('1', $option->id());
 
 		// float
 		$option = new Option(1.1);
 		$this->assertSame(1.1, $option->value);
-		$this->assertSame(1.1, $option->id());
 		$this->assertSame(1.1, $option->text['en']);
+		$this->assertSame('1.1', $option->id());
 	}
 
 	public function testFactoryWithJustValue(): void

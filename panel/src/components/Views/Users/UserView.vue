@@ -6,7 +6,11 @@
 		class="k-user-view"
 	>
 		<template #topbar>
-			<k-prev-next v-if="$options.prevnext !== false" :prev="prev" :next="next" />
+			<k-prev-next
+				v-if="$options.prevnext !== false"
+				:prev="prev"
+				:next="next"
+			/>
 		</template>
 
 		<k-header
@@ -77,6 +81,10 @@
 <script>
 import ModelView from "../ModelView.vue";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	extends: ModelView,
 	props: {

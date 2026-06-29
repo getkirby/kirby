@@ -97,7 +97,7 @@ class Pages extends Collection
 
 	/**
 	 * Returns all children for each page in the array
-	 * @return \Kirby\Cms\Pages<TValue>
+	 * @return static<TValue>
 	 */
 	public function children(): static
 	{
@@ -175,7 +175,7 @@ class Pages extends Collection
 
 	/**
 	 * Fetch all drafts for all pages in the collection
-	 * @return \Kirby\Cms\Pages<TValue>
+	 * @return static<TValue>
 	 */
 	public function drafts(): static
 	{
@@ -374,6 +374,7 @@ class Pages extends Collection
 	/**
 	 * Create a recursive flat index of all
 	 * pages and subpages, etc.
+	 * @return static<TValue>
 	 */
 	public function index(bool $drafts = false): static
 	{
@@ -388,12 +389,9 @@ class Pages extends Collection
 
 		foreach ($this->data as $pageKey => $page) {
 			$index->data[$pageKey] = $page;
-			$pageIndex = $page->index($drafts);
 
-			if ($pageIndex) {
-				foreach ($pageIndex as $childKey => $child) {
-					$index->data[$childKey] = $child;
-				}
+			foreach ($page->index($drafts) as $childKey => $child) {
+				$index->data[$childKey] = $child;
 			}
 		}
 
@@ -406,7 +404,7 @@ class Pages extends Collection
 
 	/**
 	 * Returns all listed pages in the collection
-	 * @return \Kirby\Cms\Pages<TValue>
+	 * @return static<TValue>
 	 */
 	public function listed(): static
 	{
@@ -415,7 +413,7 @@ class Pages extends Collection
 
 	/**
 	 * Returns all unlisted pages in the collection
-	 * @return \Kirby\Cms\Pages<TValue>
+	 * @return static<TValue>
 	 */
 	public function unlisted(): static
 	{
@@ -463,17 +461,15 @@ class Pages extends Collection
 		// merge an array
 		if (is_array($args[0]) === true) {
 			$collection = clone $this;
+
 			foreach ($args[0] as $arg) {
 				$collection = $collection->merge($arg);
 			}
+
 			return $collection;
 		}
 
-		if (is_string($args[0]) === true) {
-			return $this->merge(App::instance()->site()->find($args[0]));
-		}
-
-		return $this;
+		return $this->merge(App::instance()->site()->find($args[0]));
 	}
 
 	/**
@@ -507,7 +503,7 @@ class Pages extends Collection
 
 	/**
 	 * Returns all listed and unlisted pages in the collection
-	 * @return \Kirby\Cms\Pages<TValue>
+	 * @return static<TValue>
 	 */
 	public function published(): static
 	{

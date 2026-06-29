@@ -18,6 +18,10 @@ function getMarksBetween(start: number, end: number, state: EditorState) {
 	return marks;
 }
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
 export default function markInputRule(
 	regexp: RegExp,
 	markType: MarkType,

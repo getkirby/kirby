@@ -42,7 +42,7 @@ class BlocksField extends InputField
 	/**
 	 * Cache for the Fieldsets collection
 	 */
-	protected Fieldsets $fieldsetsCollection;
+	protected Fieldsets|null $fieldsetsCollection = null;
 
 	/**
 	 * Cache for all Form instances for each fieldset
@@ -387,7 +387,7 @@ class BlocksField extends InputField
 					if (isset($forms[$type]) === false) {
 						try {
 							$fieldset     = $this->fieldset($type);
-							$fields       = $fieldset->fields() ?? [];
+							$fields       = $fieldset->fields();
 							$forms[$type] = $this->form($fields);
 						} catch (Throwable) {
 							// skip invalid blocks

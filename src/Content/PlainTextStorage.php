@@ -292,7 +292,6 @@ class PlainTextStorage extends Storage
 
 		if (
 			$currentPage !== null &&
-			$currentPage->root() !== null &&
 			$currentPage->root() !== $staleRoot
 		) {
 			throw new LogicException(

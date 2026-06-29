@@ -21,10 +21,10 @@ use Kirby\Toolkit\Str;
  */
 class Panel
 {
-	protected Access $access;
-	protected Areas $areas;
-	protected Home $home;
-	protected Router $router;
+	protected Access|null $access = null;
+	protected Areas|null $areas = null;
+	protected Home|null $home = null;
+	protected Router|null $router = null;
 
 	public function __construct(
 		protected App $kirby
@@ -122,6 +122,7 @@ class Panel
 	 */
 	public function menu(string|null $current = null): Menu
 	{
+		/** @psalm-suppress RedundantCondition */
 		return new Menu(
 			areas: $this->areas(),
 			permissions: $this->kirby->user()?->role()->permissions()->toArray() ?? [],
@@ -193,7 +194,7 @@ class Panel
 
 		// removes base path if relative path contains it
 		if (
-			empty($basePath) === false &&
+			$basePath !== '' &&
 			Str::startsWith($path, $basePath) === true
 		) {
 			$path = Str::after($path, $basePath);

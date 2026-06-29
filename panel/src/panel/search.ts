@@ -13,7 +13,9 @@ export type SearchType = {
 };
 
 /**
- * @since 4.4.0
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.4.0
  */
 export default function Search(panel: Panel) {
 	return {

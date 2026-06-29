@@ -4,7 +4,7 @@ import { reactive } from "vue";
 import { type Listener } from "./listeners";
 import type Panel from "./panel";
 
-export type DrawerState = ModalState & {};
+export type DrawerState = ModalState;
 
 export function defaults(): DrawerState {
 	return {
@@ -20,7 +20,9 @@ export type DrawerOptions = DrawerState & {
 };
 
 /**
- * @since 4.0.0
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default function Drawer(panel: Panel) {
 	const parent = Modal(panel, "drawer", defaults());

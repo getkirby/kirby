@@ -74,12 +74,12 @@ class Request
 	 *
 	 * `$request->query()->get('foo')`
 	 */
-	protected Query $query;
+	protected Query|null $query = null;
 
 	/**
 	 * Request URL object
 	 */
-	protected Uri $url;
+	protected Uri|null $url = null;
 
 	/**
 	 * Creates a new Request object

@@ -138,7 +138,7 @@ class Block extends Item implements Stringable
 	 */
 	public function isEmpty(): bool
 	{
-		return empty($this->content()->toArray());
+		return $this->content()->toArray() === [];
 	}
 
 	/**

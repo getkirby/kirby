@@ -73,6 +73,9 @@ export const props = {
 /**
  * The license dialog is an internal dialog to show
  * the current state of the activated license.
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [props],

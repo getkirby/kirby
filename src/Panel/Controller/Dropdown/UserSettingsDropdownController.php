@@ -20,7 +20,7 @@ class UserSettingsDropdownController extends ModelSettingsDropdownController
 	public function __construct(
 		protected ModelWithContent $model
 	) {
-		parent::__construct($model);
+		parent::__construct();
 		$this->permissions = $this->model->panel()->options(['preview']);
 	}
 

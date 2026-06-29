@@ -41,11 +41,14 @@ export function defaults(): FeatureState {
 /**
  * Feature objects isolate functionality and state of Panel features
  * like drawers, dialogs, notifications and views
- * @since 4.0.0
  *
  * @param panel - The Panel singleton
  * @param key - Identifies this state in backend responses
  * @param defaults - Initial values; also defines which keys are tracked
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default function Feature<T extends FeatureState>(
 	panel: Panel,

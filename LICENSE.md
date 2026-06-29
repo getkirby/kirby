@@ -1,7 +1,7 @@
 # Kirby License Agreement
 
-Published: March 26, 2026  
-Source: https://getkirby.com/license/2026-03-26
+Published: July 2, 2026  
+Source: https://getkirby.com/license/2026-07-02
 
 ## About this Agreement
 
@@ -102,6 +102,10 @@ We believe that it should be possible to test and evaluate software before havin
 
 Therefore, installing and using Kirby on a personal computer (like a desktop PC, notebook or tablet) or server for a Development Installation is **free** for as long as You need. If You have already purchased a license, You do *not* need to activate it to the development domain(s) of the project.
 
+You can activate a Development Installation with a free development license via the Panel system view. Unlike a paid license, which is only activated once, a development license is renewed regularly and automatically - for remote Development Installations through Our [license hub](https://hub.getkirby.com) - for as long as the installation remains a Development Installation. This renewal is part of the licensing features and You may *not* alter or circumvent it.
+
+Because a Development Installation must only be accessible by a restricted number of users, We may verify during the renewal whether the installation is publicly accessible. If We determine that the installation is publicly accessible, it does not qualify as a Development Installation and requires a [paid license](https://getkirby.com/buy).
+
 > [!NOTE]
 > The usage of Kirby in production (with the intention to handle production data or content) is _never_ considered a Development Installation, even in internal apps or systems.
 
@@ -159,7 +163,7 @@ You may **alter, modify or extend the Source Code** for Your own use or with the
 
 However You may _not_:
 
-- **alter or circumvent the licensing features**, including (but not limited to) the license validation and payment prompts,
+- **alter or circumvent the licensing features**, including (but not limited to) the license validation, the development license activation and renewal, and payment prompts,
 - **remove or alter any proprietary notices** on Kirby or
 - **resell, redistribute or transfer** the modified or derivative version.
 

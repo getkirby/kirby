@@ -1,6 +1,10 @@
 import { type Attrs, Node, NodeType } from "prosemirror-model";
 import { EditorState } from "prosemirror-state";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
 export default function getNodeAttrs(
 	state: EditorState,
 	type: NodeType

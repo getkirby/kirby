@@ -21,7 +21,11 @@ export const props = {
 };
 
 /**
- * @example <k-input :value="password" @input="password = $event" name="password" type="password" />
+ * @example
+ * <k-input :value="password" @input="password = $event" name="password" type="password" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [StringInput, props],

@@ -6,6 +6,10 @@ import Extension, { type BaseContext, type Commands } from "./Extension";
 
 export type NodeContext = BaseContext & { type: NodeType };
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
 export default abstract class Node<
 	TOptions extends Record<string, unknown> = Record<string, unknown>
 > extends Extension<TOptions> {

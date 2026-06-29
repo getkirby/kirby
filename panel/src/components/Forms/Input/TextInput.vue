@@ -15,7 +15,11 @@ export const props = {
 };
 
 /**
- * @example <k-text-input :value="text" @input="text = $event" name="text" />
+ * @example
+ * <k-text-input :value="text" @input="text = $event" name="text" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [StringInput, props],

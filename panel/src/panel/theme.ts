@@ -18,7 +18,9 @@ export function defaults(media?: MediaQueryList): ThemeState {
  * Tracks the active color theme (light, dark, or system)
  * resolved from user setting, Panel config, or OS preference
  *
- * @since 5.0.0
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     5.0.0
  */
 export default function Theme(panel: Panel) {
 	const media = window.matchMedia("(prefers-color-scheme: dark)");

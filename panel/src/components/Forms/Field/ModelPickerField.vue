@@ -46,6 +46,9 @@ import { autofocus, layout } from "@/mixins/props.js";
 
 /**
  * @displayName ModelsField
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	type: "model",

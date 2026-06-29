@@ -3,7 +3,6 @@
 namespace Kirby\Api;
 
 use Closure;
-use Exception;
 use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Files;
@@ -164,7 +163,7 @@ class Api
 		$this->setTranslation();
 
 		$this->route = $this->router->find($path, $method);
-		$auth = $this->route?->attributes()['auth'] ?? true;
+		$auth = $this->route->attributes()['auth'] ?? true;
 
 		if ($auth !== false) {
 			if (($user = $this->authenticate()) instanceof User) {
@@ -177,7 +176,7 @@ class Api
 		$validate = Pagination::$validate;
 		Pagination::$validate = false;
 
-		$output = $this->route?->action()->call(
+		$output = $this->route->action()->call(
 			$this,
 			...$this->route->arguments()
 		);
@@ -651,11 +650,7 @@ class Api
 	 */
 	public function responseForException(Throwable $e): array
 	{
-		if (isset($this->kirby) === true) {
-			$docRoot = $this->kirby->environment()->get('DOCUMENT_ROOT');
-		} else {
-			$docRoot = $_SERVER['DOCUMENT_ROOT'] ?? null;
-		}
+		$root = $this->kirby->environment()->get('DOCUMENT_ROOT');
 
 		// prepare the result array for all exception types
 		$result = [
@@ -664,7 +659,7 @@ class Api
 			'code'      => empty($e->getCode()) === true ? 500 : $e->getCode(),
 			'exception' => $e::class,
 			'key'       => null,
-			'file'      => F::relativepath($e->getFile(), $docRoot),
+			'file'      => F::relativepath($e->getFile(), $root),
 			'line'      => $e->getLine(),
 			'details'   => [],
 			'route'     => $this->route?->pattern()
@@ -721,7 +716,9 @@ class Api
 		string $name,
 		string|null $path = null
 	): mixed {
-		if (!$section = $model->blueprint()?->section($name)) {
+		$section = $model->blueprint()->section($name);
+
+		if ($section === null) {
 			throw new NotFoundException(
 				message: 'The section "' . $name . '" could not be found'
 			);

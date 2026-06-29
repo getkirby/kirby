@@ -26,7 +26,7 @@ class StatsField extends DisplayField
 	/**
 	 * Cache for the Stats UI component
 	 */
-	protected Stats $stats;
+	protected Stats|null $stats = null;
 
 	public function __construct(
 		array|string|null $label = null,

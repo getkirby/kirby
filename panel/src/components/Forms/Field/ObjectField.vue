@@ -68,6 +68,10 @@
 import { props as Field } from "../Field.vue";
 import { props as Input } from "../Input.vue";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	mixins: [Field, Input],
 	props: {

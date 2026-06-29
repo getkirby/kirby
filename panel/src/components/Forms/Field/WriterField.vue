@@ -24,6 +24,10 @@ import { props as Input } from "../Input.vue";
 import { props as WriterInput } from "@/components/Forms/Input/WriterInput.vue";
 import counter from "@/mixins/forms/counter.js";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	mixins: [Field, Input, WriterInput, counter],
 	inheritAttrs: false,

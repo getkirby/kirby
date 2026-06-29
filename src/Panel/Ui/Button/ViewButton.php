@@ -67,7 +67,7 @@ class ViewButton extends ModelButton
 		// if referenced by name (`name: true`),
 		// try to get button definition from areas or config
 		if ($button === true) {
-			$button = static::find($name, $view);
+			$button = static::find((string)$name, $view);
 		}
 
 		// resolve Closure to button object or array

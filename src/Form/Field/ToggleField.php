@@ -115,7 +115,7 @@ class ToggleField extends InputField
 	{
 		return [
 			'boolean',
-			'required' => fn ($value) => $this->validateRequired($value)
+			'required' => fn () => $this->validateRequired()
 		];
 	}
 
@@ -125,7 +125,10 @@ class ToggleField extends InputField
 			return;
 		}
 
-		if ($this->value === false || $this->isEmptyValue($this->value)) {
+		if (
+			$this->value === false ||
+			$this->isEmptyValue($this->value) === true
+		) {
 			throw new InvalidArgumentException(
 				message: $this->i18n('field.required')
 			);

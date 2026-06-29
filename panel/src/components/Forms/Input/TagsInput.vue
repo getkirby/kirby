@@ -74,6 +74,10 @@ export const props = {
 	}
 };
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	extends: Multiselect,
 	mixins: [props],
@@ -140,7 +144,10 @@ export default {
 				return { placeholder: this.$t("filter"), ...this.search };
 			}
 
-			return this.search;
+			return {
+				placeholder: this.$t("field.tags.placeholder") + "…",
+				...this.search
+			};
 		}
 	},
 	methods: {

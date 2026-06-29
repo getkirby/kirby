@@ -1,5 +1,9 @@
 import type Api from ".";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default (api: Api) => ({
 	async create(values: Record<string, unknown>) {
 		return api.post("languages", values);

@@ -18,6 +18,11 @@
 </template>
 
 <script>
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     6.0.0
+ */
 export default {
 	props: {
 		submit: Object

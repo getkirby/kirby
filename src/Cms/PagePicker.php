@@ -229,7 +229,7 @@ class PagePicker extends Picker
 	public function start(): Page|Site
 	{
 		if (empty($this->options['query']) === false) {
-			return $this->itemsForQuery()?->parent() ?? $this->site;
+			return $this->itemsForQuery()->parent() ?? $this->site;
 		}
 
 		return $this->site;

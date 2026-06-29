@@ -17,7 +17,9 @@
  * concatenation, `JSON.stringify`), and `instanceof` survives Vue's
  * `reactive()` proxy and prop type validation.
  *
- * @since 6.0.0
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     6.0.0
  */
 export class HtmlString extends String {
 	constructor(value: string) {

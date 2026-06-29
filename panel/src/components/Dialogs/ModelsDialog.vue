@@ -72,6 +72,9 @@ export const props = {
 };
 
 /**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ *
  * @deprecated 6.0.0 Use `k-model-picker-dialog` instead
  */
 export default {

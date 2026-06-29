@@ -39,7 +39,7 @@ class LanguageVariable
 			);
 		}
 
-		if (empty($key) === true) {
+		if ($key === '') {
 			throw new InvalidArgumentException(
 				message: 'The variable needs a valid key'
 			);

@@ -320,8 +320,12 @@ class A
 			return $array[$key];
 		}
 
-		// extract data from nested array structures using the dot notation
-		if (str_contains($key, '.') === true) {
+		// extract data from nested array structures
+		// using the dot notation
+		if (
+			is_string($key) === true &&
+			str_contains($key, '.') === true
+		) {
 			$keys     = explode('.', $key);
 			$firstKey = array_shift($keys);
 
@@ -691,6 +695,10 @@ class A
 
 	/**
 	 * Move an array item to a new index
+	 *
+	 * @template T
+	 * @param list<T> $array
+	 * @return list<T>
 	 */
 	public static function move(array $array, int $from, int $to): array
 	{
@@ -723,8 +731,10 @@ class A
 	 */
 	public static function nest(array $array, array $ignore = []): array
 	{
-		// convert a simple ignore list to a nested $key => true array
+		// convert a simple ignore list
+		// to a nested $key => true array
 		if (isset($ignore[0]) === true) {
+			/** @psalm-suppress TooManyArguments */
 			$ignore = array_map(fn () => true, array_flip($ignore));
 			$ignore = A::nest($ignore);
 		}

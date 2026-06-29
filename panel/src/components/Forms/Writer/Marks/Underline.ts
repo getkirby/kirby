@@ -1,6 +1,10 @@
 import type { MarkSpec } from "prosemirror-model";
 import Mark from "../Mark";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
 export default class Underline extends Mark {
 	get button() {
 		return {

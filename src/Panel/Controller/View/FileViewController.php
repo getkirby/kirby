@@ -19,7 +19,7 @@ use Kirby\Panel\Ui\FilePreview;
  */
 class FileViewController extends ModelViewController
 {
-	protected Files $siblings;
+	protected Files|null $siblings = null;
 
 	public function __construct(
 		File $model

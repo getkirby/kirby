@@ -18,7 +18,7 @@ use Kirby\Panel\Ui\Item\FileItem;
  */
 class FilePickerDialogController extends ModelPickerDialogController
 {
-	protected FilesCollector $collector;
+	protected FilesCollector|null $collector = null;
 
 	public function __construct(
 		ModelWithContent $model,

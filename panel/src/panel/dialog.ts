@@ -4,7 +4,7 @@ import { reactive } from "vue";
 import { type Listener } from "./listeners";
 import type Panel from "./panel";
 
-export type DialogState = ModalState & {};
+export type DialogState = ModalState;
 
 export function defaults(): DialogState {
 	return {
@@ -19,7 +19,9 @@ export type DialogOptions = DialogState & {
 };
 
 /**
- * @since 4.0.0
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default function Dialog(panel: Panel) {
 	// shortcut to submit dialogs

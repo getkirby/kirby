@@ -36,9 +36,15 @@ export const props = {
 };
 
 /**
- * Display any icon from the Panel's icon set. To combine it with an aspect ratio, background etc. use `<k-icon-frame>`
+ * Display any icon from the Panel's icon set.
+ * To combine it with an aspect ratio, background etc.
+ * use `<k-icon-frame>`
  *
- * @example <k-icon type="edit" />
+ * @example
+ * <k-icon type="edit" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [props],

@@ -1,6 +1,10 @@
 <script>
 import LinkDialog from "@/components/Dialogs/LinkDialog.vue";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	extends: LinkDialog,
 	props: {

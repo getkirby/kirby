@@ -22,7 +22,9 @@ export function defaults(): MenuState {
  * Manages the Panel sidebar navigation menu, including open/close state,
  * mobile vs. desktop behavior, and state persistence via localStorage
  *
- * @since 4.0.0
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default function Menu(panel: Panel) {
 	const parent = State("menu", defaults());

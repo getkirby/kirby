@@ -46,6 +46,9 @@ class BlockConverter
 		return static::editorCustom($params);
 	}
 
+	/**
+	 * @param list<array> $blocks
+	 */
 	public static function editorBlocks(array $blocks = []): array
 	{
 		if ($blocks === []) {

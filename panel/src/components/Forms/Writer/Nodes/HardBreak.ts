@@ -3,6 +3,10 @@ import type { Command } from "prosemirror-state";
 import type { Utils } from "../Utils";
 import Node, { type NodeContext } from "../Node";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
 export default class HardBreak extends Node<{
 	enter: boolean;
 }> {

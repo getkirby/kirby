@@ -4,6 +4,9 @@ import { history, undo, redo, undoDepth, redoDepth } from "prosemirror-history";
 /**
  * Adds undo/redo history to the Editor.
  * Binds Mod-z / Mod-y / Shift-Mod-z.
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
  */
 export default class History extends Extension<{
 	depth?: number;

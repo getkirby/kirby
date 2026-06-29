@@ -1,5 +1,9 @@
 import type Api from ".";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default (api: Api) => ({
 	async login(user: { email: string; password: string; remember?: boolean }) {
 		const data = {

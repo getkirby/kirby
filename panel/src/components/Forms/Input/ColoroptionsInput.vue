@@ -48,8 +48,12 @@ export const props = {
 };
 
 /**
- * @since 4.0.0
- * @example <k-coloroptions-input :options="options" :value="value" @input="value = $event" />
+ * @example
+ * <k-coloroptions-input :options="options" :value="value" @input="value = $event" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default {
 	mixins: [RadioInput, props],

@@ -117,7 +117,9 @@ export type PanelOptions = Partial<{
  * Always initialize via Panel.create() to ensure
  * full reactivity of the Panel object.
  *
- * @since 4.0.0
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default class Panel {
 	app: App;
@@ -169,8 +171,8 @@ export default class Panel {
 	reload: ReturnType<typeof View>["reload"];
 	t: ReturnType<typeof Translation>["translate"];
 
-	// deprecated
-	$t: ReturnType<typeof Translation>["translate"];
+	// deprecated: assigned by the legacy plugin, not the core
+	$t!: ReturnType<typeof Translation>["translate"];
 
 	constructor(
 		app: App,
@@ -215,7 +217,7 @@ export default class Panel {
 		this.reload = this.view.reload.bind(this.view);
 
 		// translator
-		this.t = this.$t = this.translation.translate.bind(this.translation);
+		this.t = this.translation.translate.bind(this.translation);
 
 		// register all plugins
 		this.plugins = Plugins(this.app, plugins);

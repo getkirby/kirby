@@ -34,7 +34,7 @@ class EntriesField extends InputField
 	 */
 	protected array|string|null $field;
 
-	protected Form $form;
+	protected Form|null $form = null;
 	protected array $value = [];
 
 	public function __construct(
@@ -218,7 +218,7 @@ class EntriesField extends InputField
 							throw new InvalidArgumentException(
 								key: 'entries.validation',
 								data: [
-									'field' => $this->label() ?? Str::ucfirst($this->name()),
+									'field' => $this->label(),
 									'index' => $index + 1
 								]
 							);

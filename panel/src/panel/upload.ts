@@ -60,7 +60,9 @@ export function defaults(): UploadState {
  *          -- (open) -- submit --
  * select  _/                     \_ cancel
  *
- * @since 4.0.0
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default function Upload(panel: Panel) {
 	const parent = State("upload", defaults());
@@ -230,6 +232,13 @@ export default function Upload(panel: Panel) {
 			});
 		},
 		remove(id: string): void {
+			// release the object URL of the removed file
+			const file = this.files.find((file) => file.id === id);
+
+			if (file !== undefined) {
+				URL.revokeObjectURL(file.url);
+			}
+
 			this.files = this.files.filter((file) => file.id !== id);
 		},
 		replace(file: UploadFileData, options: Partial<UploadState>): void {
@@ -242,6 +251,11 @@ export default function Upload(panel: Panel) {
 			});
 		},
 		reset(): void {
+			// release the object URLs of all files
+			for (const file of this.files) {
+				URL.revokeObjectURL(file.url);
+			}
+
 			parent.reset.call(this);
 			this.files.splice(0);
 		},
@@ -269,6 +283,10 @@ export default function Upload(panel: Panel) {
 			// merge the new files with already selected files
 			this.files = [...this.files, ...data];
 
+			// keep a reference to the merged list so the object URLs
+			// of any files dropped below can be released afterwards
+			const merged = this.files;
+
 			// remove duplicates by comparing crucial src attributes,
 			// preserving the newer file
 			this.files = this.files.filter(
@@ -279,6 +297,13 @@ export default function Upload(panel: Panel) {
 			if (this.max !== null) {
 				// slice from the end to keep the latest files
 				this.files = this.files.slice(-this.max);
+			}
+
+			// release the object URLs of files that didn't make the cut
+			for (const file of merged) {
+				if (this.files.includes(file) === false) {
+					URL.revokeObjectURL(file.url);
+				}
 			}
 
 			this.emit("select", this.files);

@@ -12,6 +12,9 @@ import Dialog from "@/mixins/dialog.js";
 import { props as ModelsDialogProps } from "./ModelsDialog.vue";
 
 /**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ *
  * @deprecated 6.0.0 Use `k-user-picker-dialog` instead
  */
 export default {

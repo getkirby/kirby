@@ -25,6 +25,10 @@ export type Button = {
 export type ExtensionCommand = (...args: any[]) => unknown;
 export type Commands = ExtensionCommand | Record<string, ExtensionCommand>;
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
 export default abstract class Extension<
 	TOptions extends Record<string, unknown> = Record<string, unknown>
 > {

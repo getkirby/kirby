@@ -24,7 +24,7 @@ class SystemViewController extends ViewController
 {
 	protected array $exceptions;
 	protected License $license;
-	protected array $plugins;
+	protected array|null $plugins = null;
 	protected System $system;
 	protected UpdateStatus|null $update;
 
@@ -96,7 +96,7 @@ class SystemViewController extends ViewController
 				'author'  => $authors === '' ? '–' : $authors,
 				'license' => $plugin->license()->toArray(),
 				'name'    => [
-					'text' => $plugin->name() ?? '–',
+					'text' => $plugin->name(),
 					'href' => $plugin->link(),
 				],
 				'status'  => $plugin->license()->status()->toArray(),
@@ -195,7 +195,7 @@ class SystemViewController extends ViewController
 			),
 			new Stat(
 				label: $this->i18n('server'),
-				value: $this->system->serverSoftwareShort() ?? '?',
+				value: $this->system->serverSoftwareShort(),
 				icon: 'server'
 			)
 		]);

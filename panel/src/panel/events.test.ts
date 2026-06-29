@@ -232,4 +232,54 @@ describe("panel.events", () => {
 			expect(search).toHaveBeenCalled();
 		});
 	});
+
+	describe("subscribe / unsubscribe", () => {
+		const panel = Panel.create(app);
+		const events = Events(panel);
+
+		it("should remove every listener it registered", () => {
+			const added: Array<[string, unknown]> = [];
+			const removed: Array<[string, unknown]> = [];
+
+			const spies = [
+				vi
+					.spyOn(document, "addEventListener")
+					.mockImplementation((type, listener) => {
+						added.push([type, listener]);
+					}),
+				vi
+					.spyOn(window, "addEventListener")
+					.mockImplementation((type, listener) => {
+						added.push([type, listener]);
+					}),
+				vi
+					.spyOn(document, "removeEventListener")
+					.mockImplementation((type, listener) => {
+						removed.push([type, listener]);
+					}),
+				vi
+					.spyOn(window, "removeEventListener")
+					.mockImplementation((type, listener) => {
+						removed.push([type, listener]);
+					})
+			];
+
+			events.subscribe();
+			events.unsubscribe();
+
+			// every listener must be removed with the SAME
+			// function reference it was added with
+			const leaked = added.filter(
+				([type, listener]) =>
+					removed.some(([t, l]) => t === type && l === listener) === false
+			);
+
+			expect(added.length).toBeGreaterThan(0);
+			expect(leaked).toStrictEqual([]);
+
+			for (const spy of spies) {
+				spy.mockRestore();
+			}
+		});
+	});
 });

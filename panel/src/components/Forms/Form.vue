@@ -33,7 +33,12 @@
 
 <script>
 /**
- * The Form component takes a fields definition and a value to create a full featured form with grid and everything. If you "just" need the fields, go for the `<k-fieldset>` component instead.
+ * The Form component takes a fields definition and a value to create
+ * a full featured form with grid and everything. If you "just" need
+ * the fields, go for the `<k-fieldset>` component instead.
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	props: {

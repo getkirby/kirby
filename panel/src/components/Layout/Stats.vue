@@ -27,9 +27,15 @@ export const props = {
 };
 
 /**
- * Grid of reports which can be used to display multiple stats in a row  (e.g. as dashboard for a shop, analytics, etc.)
+ * Grid of reports which can be used to display multiple stats
+ * in a row  (e.g. as dashboard for a shop, analytics, etc.)
  *
- * @example <k-stats :reports="[{ value: 50, label: 'days' }, { value: 10, label: 'hours'}]" />
+ * @example
+ * <k-stats :reports="[{ value: 50, label: 'days' }, { value: 10, label: 'hours'}]" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default {
 	mixins: [props]

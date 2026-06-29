@@ -394,9 +394,11 @@ class Dir
 	 * @return bool True: the dir has been created, false: creating failed
 	 * @throws \Exception If a file with the provided path already exists or the parent directory is not writable
 	 */
-	public static function make(string $dir, bool $recursive = true): bool
-	{
-		if (empty($dir) === true) {
+	public static function make(
+		string $dir,
+		bool $recursive = true
+	): bool {
+		if ($dir === '') {
 			return false;
 		}
 

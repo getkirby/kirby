@@ -2,6 +2,8 @@
 import { h } from "vue";
 
 /**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  * @internal
  */
 export default {

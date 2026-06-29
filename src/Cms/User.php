@@ -38,7 +38,7 @@ class User extends ModelWithContent
 	public const string CLASS_ALIAS = 'user';
 
 	protected UserBlueprint|null $blueprint = null;
-	protected array $credentials;
+	protected array|null $credentials = null;
 	protected string|null $email;
 	protected string $hash;
 	protected string $id;

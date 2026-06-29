@@ -5,6 +5,9 @@ import { wrap } from "@/helpers/array";
  * Ensures that even when a component prohibits to
  * inherit non-prop attributes, applied listeners
  * are still preserved and attached to the root element
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	data() {

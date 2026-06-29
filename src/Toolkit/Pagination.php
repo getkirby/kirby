@@ -44,14 +44,11 @@ class Pagination
 		$this->setPage($props['page'] ?? null);
 		$this->setTotal($props['total'] ?? 0);
 
-		// ensure that page is set to something, otherwise
-		// generate "default page" based on other params
-		$this->page ??= $this->firstPage();
-
 		// allow a page value of 1 even if there are no pages;
 		// otherwise the exception will get thrown for this pretty common case
 		$min = $this->firstPage();
 		$max = $this->pages();
+
 		if ($this->page === 1 && $max === 0) {
 			$this->page = 0;
 		}
@@ -372,7 +369,6 @@ class Pagination
 	 */
 	protected function setPage(int|string|null $page = null): static
 	{
-		// if $page is null, it is set to a default in the setProperties() method
 		if ($page !== null) {
 			if (is_numeric($page) !== true || $page < 0) {
 				throw new Exception(

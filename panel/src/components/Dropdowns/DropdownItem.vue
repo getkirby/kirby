@@ -16,7 +16,12 @@ import { props as Button } from "@/components/Navigation/Button.vue";
 
 /**
  * Item to be used within `<k-dropdown>`
- * @example <k-dropdown-item>Option A</k-dropdown-item>
+ *
+ * @example
+ * <k-dropdown-item>Option A</k-dropdown-item>
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  * @unstable
  */
 export default {

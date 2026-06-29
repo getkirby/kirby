@@ -22,6 +22,9 @@ import TagsField from "./TagsField.vue";
 
 /**
  * Have a look at `<k-tags-field>`.
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	extends: TagsField,

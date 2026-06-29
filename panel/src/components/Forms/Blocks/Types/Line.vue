@@ -5,6 +5,9 @@
 <script>
 /**
  * @displayName BlockTypeLine
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {};
 </script>

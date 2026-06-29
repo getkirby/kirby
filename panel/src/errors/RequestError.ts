@@ -3,7 +3,10 @@ import type { PanelResponse } from "@/panel/request";
 /**
  * Stores the request and response in the error
  * object to allow for more detailed error inspection
- * @since 4.0.0
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default class RequestError extends Error {
 	key: string | undefined;

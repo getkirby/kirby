@@ -111,7 +111,7 @@ class Txt extends Handler
 				$key = str_replace(['-', ' '], '_', $key);
 
 				// Don't add fields with empty keys
-				if (empty($key) === true) {
+				if ($key === '') {
 					continue;
 				}
 

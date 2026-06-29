@@ -25,7 +25,11 @@ export const props = {
 };
 
 /**
- * @example <k-input :value="url" @input="url = $event" name="url" type="url" />
+ * @example
+ * <k-input :value="url" @input="url = $event" name="url" type="url" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [StringInput, props],

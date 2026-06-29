@@ -66,7 +66,7 @@ class Blocks extends Plain
 			if (Str::contains($html, '<p>') === false) {
 				$html = '<p>' . $html . '</p>';
 			}
-		} elseif (is_string($element) === true) {
+		} else {
 			$html = trim($element);
 
 			if (Str::length($html) === 0) {
@@ -74,8 +74,6 @@ class Blocks extends Plain
 			}
 
 			$html = '<p>' . $html . '</p>';
-		} else {
-			return null;
 		}
 
 		return [

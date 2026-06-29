@@ -44,6 +44,8 @@ export const props = {
 };
 
 /**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  * @unstable
  */
 export default {

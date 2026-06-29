@@ -26,6 +26,10 @@ import { props as Field } from "../Field.vue";
 import { props as Input } from "../Input.vue";
 import { props as TogglesInput } from "../Input/TogglesInput.vue";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	mixins: [Field, Input, TogglesInput],
 	inheritAttrs: false,

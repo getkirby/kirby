@@ -4,6 +4,9 @@ import type { ComponentOptions } from "vue";
  * Ensures that even when a component prohibits to
  * inherit non-prop attributes, all `data-` attributes
  * are still applied
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mounted() {

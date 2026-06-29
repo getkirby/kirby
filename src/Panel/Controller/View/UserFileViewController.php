@@ -27,7 +27,7 @@ class UserFileViewController extends FileViewController
 		}
 
 		return [
-			...$breadcrumb ?? [],
+			...$breadcrumb,
 			...parent::breadcrumb(),
 		];
 	}

@@ -3,6 +3,10 @@ import type { Attrs, NodeType } from "prosemirror-model";
 import type { Command } from "prosemirror-state";
 import nodeIsActive from "./nodeIsActive";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
 export default function toggleBlockType(
 	type: NodeType,
 	toggleType: NodeType,

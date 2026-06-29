@@ -90,7 +90,11 @@ export const props = {
  * (altering value by arrow up/down, selecting of
  * input parts via tab key).
  *
- * @example <k-input :value="date" @input="date = $event" type="date" name="date" />
+ * @example
+ * <k-input :value="date" @input="date = $event" type="date" name="date" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [Input, props],

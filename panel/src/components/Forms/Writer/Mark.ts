@@ -6,6 +6,10 @@ import Extension, { type BaseContext, type Commands } from "./Extension";
 
 export type MarkContext = BaseContext & { type: MarkType };
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
 export default abstract class Mark<
 	TOptions extends Record<string, unknown> = Record<string, unknown>
 > extends Extension<TOptions> {

@@ -33,7 +33,10 @@
 							label: $t('login.totp.enable.qr.label'),
 							type: 'info',
 							text: qr,
-							help: $t('login.totp.enable.qr.help', { secret: value.secret, uri }),
+							help: $t('login.totp.enable.qr.help', {
+								secret: value.secret,
+								uri
+							}),
 							theme: 'passive',
 							class: 'k-totp-qrcode'
 						},
@@ -104,6 +107,11 @@
 <script>
 import Drawer from "@/mixins/drawer.js";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     6.0.0
+ */
 export default {
 	mixins: [Drawer],
 	props: {

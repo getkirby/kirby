@@ -234,6 +234,7 @@ class Users extends LazyCollection
 
 	/**
 	 * Shortcut for `$users->filter('role', 'admin')`
+	 * @return static<TValue>
 	 */
 	public function role(string $role): static
 	{

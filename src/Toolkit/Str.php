@@ -1349,7 +1349,8 @@ class Str
 			return $string;
 		}
 
-		// make sure $string is string
+		// make sure $string is string (the param is nullable)
+		/** @psalm-suppress RedundantCondition */
 		$string ??= '';
 
 		$parts = explode($separator, $string);

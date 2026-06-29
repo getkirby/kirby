@@ -37,10 +37,12 @@ export function defaults(): ModalState {
 }
 
 /**
- * A modal is a feature that can be opened and
- * closed and will be placed in the Panel by the matching
- * Modal component
- * @since 4.0.0
+ * A modal is a feature that can be opened and closed
+ * and will be placed in the Panel by the matching Modal component.
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default function Modal<T extends ModalState>(
 	panel: Panel,
@@ -237,7 +239,7 @@ export default function Modal<T extends ModalState>(
 		 * if there's no submit listener or backend route.
 		 */
 		async submit(
-			value: Record<string, unknown> = {},
+			value?: Record<string, unknown>,
 			options: Partial<Prettify<T>> = {}
 		): Promise<unknown> {
 			if (this.isLoading === true) {

@@ -6,7 +6,9 @@ import type Panel from "./panel";
 export type DropdownState = FeatureState & {};
 
 /**
- * @since 4.0.0
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default function Dropdown(panel: Panel) {
 	const parent = Feature(panel, "dropdown", defaults() as DropdownState);

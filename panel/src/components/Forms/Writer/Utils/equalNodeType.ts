@@ -1,9 +1,9 @@
 import { Node, NodeType } from "prosemirror-model";
 
 /**
- * Taken from: https://github.com/atlassian/prosemirror-utils
- *
  * Checks if the type a given `node` equals to a given `nodeType`.
+ *
+ * Taken from: https://github.com/atlassian/prosemirror-utils
  */
 export default function equalNodeType(
 	nodeType: NodeType | NodeType[],

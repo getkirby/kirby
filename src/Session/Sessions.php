@@ -84,6 +84,33 @@ class Sessions
 	}
 
 	/**
+	 * Deletes all expired sessions
+	 *
+	 * If the `gcInterval` is configured, this is done automatically
+	 * on init of the Sessions object.
+	 */
+	public function collectGarbage(): void
+	{
+		$this->store()->collectGarbage();
+	}
+
+	/**
+	 * Getter for the cookie domain
+	 */
+	public function cookieDomain(): string|null
+	{
+		return $this->cookieDomain;
+	}
+
+	/**
+	 * Getter for the cookie name
+	 */
+	public function cookieName(): string
+	{
+		return $this->cookieName;
+	}
+
+	/**
 	 * Creates a new empty session
 	 *
 	 * @param array $options Optional additional options:
@@ -99,21 +126,6 @@ class Sessions
 		$options['mode'] ??= $this->mode;
 
 		return new Session($this, null, $options);
-	}
-
-	/**
-	 * Returns the specified Session object
-	 *
-	 * @param string $token Session token, either including or without the key
-	 * @param string|null $mode Optional transmission mode override
-	 */
-	public function get(string $token, string|null $mode = null): Session
-	{
-		return $this->cache[$token] ??= new Session(
-			$this,
-			$token,
-			['mode' => $mode ?? $this->mode]
-		);
 	}
 
 	/**
@@ -187,50 +199,26 @@ class Sessions
 	}
 
 	/**
+	 * Returns the specified Session object
+	 *
+	 * @param string $token Session token, either including or without the key
+	 * @param string|null $mode Optional transmission mode override
+	 */
+	public function get(string $token, string|null $mode = null): Session
+	{
+		return $this->cache[$token] ??= new Session(
+			$this,
+			$token,
+			['mode' => $mode ?? $this->mode]
+		);
+	}
+
+	/**
 	 * Getter for the session store instance
 	 */
 	public function store(): SessionStore
 	{
 		return $this->store;
-	}
-
-	/**
-	 * Getter for the cookie domain
-	 */
-	public function cookieDomain(): string|null
-	{
-		return $this->cookieDomain;
-	}
-
-	/**
-	 * Getter for the cookie name
-	 */
-	public function cookieName(): string
-	{
-		return $this->cookieName;
-	}
-
-	/**
-	 * Deletes all expired sessions
-	 *
-	 * If the `gcInterval` is configured, this is done automatically
-	 * on init of the Sessions object.
-	 */
-	public function collectGarbage(): void
-	{
-		$this->store()->collectGarbage();
-	}
-
-	/**
-	 * Updates the instance cache with a newly created
-	 * session or a session with a regenerated token
-	 *
-	 * @internal
-	 * @param \Kirby\Session\Session $session Session instance to push to the cache
-	 */
-	public function updateCache(Session $session): void
-	{
-		$this->cache[$session->token()] = $session;
 	}
 
 	/**
@@ -267,5 +255,17 @@ class Sessions
 		}
 
 		return null;
+	}
+
+	/**
+	 * Updates the instance cache with a newly created
+	 * session or a session with a regenerated token
+	 *
+	 * @internal
+	 * @param \Kirby\Session\Session $session Session instance to push to the cache
+	 */
+	public function updateCache(Session $session): void
+	{
+		$this->cache[$session->token()] = $session;
 	}
 }

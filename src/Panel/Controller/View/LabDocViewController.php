@@ -65,26 +65,26 @@ class LabDocViewController extends ViewController
 		// @codeCoverageIgnoreStart
 		if (Docs::isInstalled() === false) {
 			return new ErrorView(
-				access: 'inside',
+				access:  true,
 				message: 'The UI docs are not installed.'
 			);
 		}
 
 		if ($this->doc === null) {
 			return new ErrorView(
-				access: 'inside',
+				access:  true,
 				message: 'No UI docs found for ' . $this->component . '.'
 			);
 		}
 		// @codeCoverageIgnoreEnd
 
 		return new View(
-			component: 'k-lab-docs-view',
+			component:  'k-lab-docs-view',
 			breadcrumb: $this->breadcrumb(),
-			buttons: $this->buttons(),
-			docs: $this->doc->toArray(),
-			lab: $this->doc->lab(),
-			title: $this->component,
+			buttons:    $this->buttons(),
+			docs:       $this->doc->toArray(),
+			lab:        $this->doc->lab(),
+			title:      $this->component,
 		);
 	}
 }

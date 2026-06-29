@@ -54,6 +54,10 @@ import { props as FieldProps } from "../Field.vue";
 import { props as LayoutsProps } from "@/components/Forms/Layouts/Layouts.vue";
 import { autofocus } from "@/mixins/props.js";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	mixins: [FieldProps, LayoutsProps, autofocus],
 	inheritAttrs: false,

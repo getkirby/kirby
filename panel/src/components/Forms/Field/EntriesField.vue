@@ -123,6 +123,11 @@
 import { props as Field } from "../Field.vue";
 import { props as Input } from "../Input.vue";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     5.0.0
+ */
 export default {
 	mixins: [Field, Input],
 	inheritAttrs: false,

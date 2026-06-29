@@ -1,5 +1,9 @@
 import type Api from ".";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default (api: Api) => ({
 	async get(options: Record<string, unknown> = { view: "panel" }) {
 		return api.get("system", options);

@@ -20,7 +20,7 @@ class FileSettingsDropdownController extends ModelSettingsDropdownController
 	public function __construct(
 		protected ModelWithContent $model
 	) {
-		parent::__construct($model);
+		parent::__construct();
 		$this->context     = $this->request->get(['view', 'sort', 'delete']);
 		$this->permissions = $this->model->panel()->options(['preview']);
 	}

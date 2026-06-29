@@ -18,7 +18,7 @@ use Kirby\Panel\Ui\Button\ViewButtons;
  */
 class UserViewController extends ModelViewController
 {
-	protected Users $siblings;
+	protected Users|null $siblings = null;
 
 	public function __construct(
 		User $model

@@ -71,7 +71,11 @@ export const props = {
 /**
  * A simple tag button with optional image/icon and remove button
  *
- * @example <k-tag>Design</k-tag>
+ * @example
+ * <k-tag>Design</k-tag>
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [props],

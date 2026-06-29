@@ -24,6 +24,10 @@ type FeatureReturnMap = {
 	plugins: (Plugin | PluginSpec<unknown>)[];
 };
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
 export default class Extensions {
 	editor: Editor;
 	extensions: Extension[];

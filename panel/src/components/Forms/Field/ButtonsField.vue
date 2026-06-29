@@ -26,8 +26,12 @@
 import { help, id, label, name } from "@/mixins/props.js";
 
 /**
- * @since 6.0.0
- * @example <k-buttons-field label="Buttons" :buttons="buttons" />
+ * @example
+ * <k-buttons-field label="Buttons" :buttons="buttons" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     6.0.0
  */
 export default {
 	mixins: [help, id, label, name],

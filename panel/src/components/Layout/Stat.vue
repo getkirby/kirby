@@ -13,9 +13,13 @@
 <script>
 /**
  * Single stat report used in `k-stats`
- * @since 4.0.0
  *
- * @example <k-stat label="Pages" value="123" info="Last week" theme="info" />
+ * @example
+ * <k-stat label="Pages" value="123" info="Last week" theme="info" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default {
 	props: {

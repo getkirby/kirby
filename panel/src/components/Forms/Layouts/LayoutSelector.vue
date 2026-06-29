@@ -38,6 +38,8 @@
 import Dialog from "@/mixins/dialog.js";
 
 /**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  * @unstable
  */
 export default {

@@ -44,6 +44,7 @@ class Iterator implements Countable, IteratorAggregate
 	 * Returns the current key
 	 * @deprecated
 	 * @todo Remove in v6
+	 * @return TKey|null
 	 */
 	public function key(): int|string|null
 	{
@@ -110,7 +111,7 @@ class Iterator implements Countable, IteratorAggregate
 	 */
 	public function valid(): bool
 	{
-		return $this->current() !== false;
+		return key($this->data) !== null;
 	}
 
 	/**

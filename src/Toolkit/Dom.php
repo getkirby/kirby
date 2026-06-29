@@ -266,7 +266,7 @@ class Dom
 		$url     = Str::lower($url);
 
 		// allow empty URL values
-		if (empty($url) === true) {
+		if ($url === '') {
 			return true;
 		}
 
@@ -368,7 +368,10 @@ class Dom
 		if (Str::startsWith($url, 'mailto:') === true) {
 			$address = Str::after($url, 'mailto:');
 
-			if (empty($address) === true || V::email($address) === true) {
+			if (
+				$address === '' ||
+				V::email($address) === true
+			) {
 				return true;
 			}
 
@@ -380,7 +383,7 @@ class Dom
 			$address = Str::after($url, 'tel:');
 
 			if (
-				empty($address) === true ||
+				$address === '' ||
 				preg_match('!^[+]?[0-9]+$!', $address) === 1
 			) {
 				return true;

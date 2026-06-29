@@ -72,15 +72,15 @@ class System
 				$root  = $this->app->root('site');
 				$files = glob($root . '/blueprints/*.yml');
 
-				if (empty($files) === true) {
+				if ($files === []) {
 					$files = glob($root . '/templates/*.*');
 				}
 
-				if (empty($files) === true) {
+				if ($files === []) {
 					$files = glob($root . '/snippets/*.*');
 				}
 
-				if (empty($files) === true || empty($files[0]) === true) {
+				if ($files === [] || $files[0] === '') {
 					return $url;
 				}
 
@@ -294,19 +294,12 @@ class System
 			return $this->license; // @codeCoverageIgnore
 		}
 
+		// load the license
 		$this->license = License::read();
 
-		// if license has expired, try to get it reissued
-		if ($this->license->isExpired() === true) {
-			try {
-				$this->license->register(reissue: true);
-
-				// @codeCoverageIgnoreStart
-			} catch (Throwable) {
-				$this->license->delete();
-			}
-			// @codeCoverageIgnoreEnd
-		}
+		// if the license has expired,
+		// try to get it reissued by the hub
+		$this->license->reissue();
 
 		return $this->license;
 	}

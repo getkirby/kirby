@@ -58,7 +58,7 @@ class PageCreateDialogController extends ModelCreateDialogController
 	/**
 	 * @var \Kirby\Cms\Page
 	 */
-	public ModelWithContent $model;
+	public ModelWithContent|null $model = null;
 
 	/**
 	 * @var \Kirby\Cms\Page|\Kirby\Cms\Site
@@ -190,7 +190,7 @@ class PageCreateDialogController extends ModelCreateDialogController
 
 		// immediately submit the dialog if there is no editable field
 		if ($visible === [] && count($blueprints) < 2) {
-			$response = $this->submit($value);
+			$response = $this->submit();
 
 			Panel::go(
 				url: $response['redirect'] ?? $this->parent->panel()->url(true)

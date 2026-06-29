@@ -19,6 +19,10 @@ export const props = {
 	mixins: [Dialog, TextProps]
 };
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	mixins: [props],
 	emits: ["cancel", "submit"]

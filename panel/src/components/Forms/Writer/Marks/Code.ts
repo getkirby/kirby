@@ -3,6 +3,10 @@ import type { MarkSpec } from "prosemirror-model";
 import type { Plugin } from "prosemirror-state";
 import Mark, { type MarkContext } from "../Mark";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
 export default class Code extends Mark {
 	get button() {
 		return {

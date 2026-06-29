@@ -27,6 +27,9 @@
 <script>
 /**
  * Used to label form fields and sections
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	props: {

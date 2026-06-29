@@ -43,7 +43,11 @@ export const props = {
 };
 
 /**
- * @example <k-input :value="slug" @input="slug = $event" name="slug" type="slug" />
+ * @example
+ * <k-input :value="slug" @input="slug = $event" name="slug" type="slug" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	extends: StringInput,
