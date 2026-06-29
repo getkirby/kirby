@@ -391,6 +391,8 @@
 	"field.structure.delete.confirm.selected": "Do you really want to delete the selected entries?",
 	"field.structure.empty": "No entries yet",
 
+	"field.tags.placeholder": "Add tag",
+
 	"field.users.empty": "No users selected yet",
 	"field.users.empty.single": "No user selected yet",
 
