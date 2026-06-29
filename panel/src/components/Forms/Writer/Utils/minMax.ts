@@ -1,3 +1,7 @@
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
 export default function minMax(
 	value: number = 0,
 	min: number = 0,

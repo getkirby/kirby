@@ -1,3 +1,8 @@
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
+
 import { DOMParser, DOMSerializer, Schema } from "prosemirror-model";
 
 import "./regex";

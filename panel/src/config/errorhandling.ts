@@ -1,5 +1,9 @@
 import type { App } from "vue";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	install(app: App) {
 		/**

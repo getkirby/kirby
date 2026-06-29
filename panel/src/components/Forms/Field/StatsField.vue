@@ -17,6 +17,9 @@ import { props as statsProps } from "@/components/Layout/Stats.vue";
 
 /**
  * @example <k-stats-field label="Stats" :reports="reports" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [help, id, label, name, statsProps]

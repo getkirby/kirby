@@ -51,8 +51,12 @@ export const props = {
  * Use <k-video-frame> to display a video from an external URL
  * or internal file UUID in a fixed ratio with background etc.
  *
- * @since 6.0.0
- * @example <k-video-frame src="file://my-video" ratio="16/9" />
+ * @example
+ * <k-video-frame src="file://my-video" ratio="16/9" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     6.0.0
  */
 export default {
 	mixins: [props],

@@ -117,7 +117,9 @@ export type PanelOptions = Partial<{
  * Always initialize via Panel.create() to ensure
  * full reactivity of the Panel object.
  *
- * @since 4.0.0
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default class Panel {
 	app: App;

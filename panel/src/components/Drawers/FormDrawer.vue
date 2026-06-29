@@ -29,6 +29,9 @@ import { props as FieldsProps } from "./Elements/Fields.vue";
 /**
  * The form drawer can be used to display longer, more complex
  * forms than a form dialog.
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [Drawer, FieldsProps],

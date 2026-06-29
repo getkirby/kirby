@@ -20,8 +20,14 @@ import { props as Input } from "../Input.vue";
 import { props as RangeInput } from "../Input/RangeInput.vue";
 
 /**
- * Have a look at `<k-field>`, `<k-input>` and `<k-range-input>` for additional information.
- * @example <k-range-field :value="range" @input="range = $event" name="range" label="Slider" />
+ * Have a look at `<k-field>`, `<k-input>` and `<k-range-input>`
+ * for additional information.
+ *
+ * @example
+ * <k-range-field :value="range" @input="range = $event" name="range" label="Slider" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [Input, Field, RangeInput],

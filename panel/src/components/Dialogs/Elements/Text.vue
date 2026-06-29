@@ -5,7 +5,6 @@
 
 <script>
 /**
- * @displayName DialogText
  * @since 4.0.0
  */
 export const props = {
@@ -25,6 +24,9 @@ export const props = {
 
 /**
  * @displayName DialogText
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [props]

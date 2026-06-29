@@ -232,6 +232,10 @@ export const Preview = {
 	}
 };
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	extends: ModelView,
 	mixins: [Preview],

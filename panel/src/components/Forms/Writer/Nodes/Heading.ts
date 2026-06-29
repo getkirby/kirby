@@ -4,6 +4,10 @@ import type { Command } from "prosemirror-state";
 import type { Button, ExtensionCommand } from "../Extension";
 import Node, { type NodeContext } from "../Node";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
 export default class Heading extends Node<{ levels: number[] }> {
 	get button() {
 		const buttons: Button[] = this.options.levels.map((level) => ({

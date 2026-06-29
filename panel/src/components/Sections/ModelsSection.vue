@@ -53,6 +53,10 @@ import debounce from "@/helpers/debounce";
 import section from "@/mixins/section";
 import batchEditing from "@/mixins/batchEditing";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	mixins: [section, batchEditing],
 	inheritAttrs: false,

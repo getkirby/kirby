@@ -1,4 +1,9 @@
 /**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
+
+/**
  * Helper to set the focus inside an HTML element
  * @since 4.0.0
  *

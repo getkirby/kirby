@@ -1,5 +1,9 @@
 import type Api from ".";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default (api: Api) => ({
 	async changeName(parent: string | null, filename: string, to: string) {
 		return api.patch(this.url(parent, filename, "name"), {

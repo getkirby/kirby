@@ -83,7 +83,11 @@ export const props = {
 };
 
 /**
- * @example <k-input :value="text" @input="text = $event" name="text" type="textarea" />
+ * @example
+ * <k-input :value="text" @input="text = $event" name="text" type="textarea" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [Input, props],

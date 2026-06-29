@@ -11,6 +11,10 @@ type InputRuleHandler = (
 	end: number
 ) => Transaction | null;
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
 export default class HorizontalRule extends Node {
 	commands({ type, utils }: NodeContext): ExtensionCommand {
 		return () => utils.insertNode(type);
@@ -30,8 +34,7 @@ export default class HorizontalRule extends Node {
 					match: RegExpMatchArray,
 					start: number,
 					end: number
-				) =>
-					handler(state, match, start, end)?.delete(start - 1, start)
+				) => handler(state, match, start, end)?.delete(start - 1, start)
 			})
 		];
 	}

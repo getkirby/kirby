@@ -50,7 +50,11 @@
 				/>
 			</template>
 			<template v-else>
-				<k-empty :disabled="!canUpdate" icon="translate" @click="createTranslation">
+				<k-empty
+					:disabled="!canUpdate"
+					icon="translate"
+					@click="createTranslation"
+				>
 					{{ $t("language.variables.empty") }}
 				</k-empty>
 			</template>
@@ -60,8 +64,10 @@
 
 <script>
 /**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  * @internal
- * @since 4.0.0
  */
 export default {
 	props: {

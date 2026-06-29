@@ -34,13 +34,17 @@
 
 <script>
 /**
- * @example <k-tabs
+ * @example
+ * <k-tabs
  * 	tab="content"
  * 	tabs="[
  * 		{ name: 'content', label: 'Content', link: '/content' },
  * 		{ name: 'settings', label: 'Settings', link: '/settings', badge: 3 }
  * 	]"
  * />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	props: {

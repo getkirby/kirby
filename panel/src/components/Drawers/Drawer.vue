@@ -56,6 +56,10 @@
 import { getCurrentInstance } from "vue";
 import Drawer from "@/mixins/drawer.js";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	mixins: [Drawer],
 	emits: ["cancel", "crumb", "drop", "submit", "tab"],

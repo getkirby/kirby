@@ -60,7 +60,10 @@ export const props = {
 
 /**
  * Dialog to set up one-time time-based passwords for a user
- * @since 4.0.0
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default {
 	mixins: [props],

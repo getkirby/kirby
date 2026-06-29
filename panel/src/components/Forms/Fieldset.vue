@@ -42,7 +42,14 @@
 
 <script>
 /**
- * The Fieldset component is a wrapper around manual field component creation. You simply pass it an fields object and all field components will automatically be created including a nice field grid. This is the ideal starting point if you want an easy way to create fields without having to deal with a full form element.
+ * The Fieldset component is a wrapper around manual field component creation.
+ * You simply pass it an fields object and all field components will
+ * automatically be created including a nice field grid. This is the ideal
+ * starting point if you want an easy way to create fields without having
+ * to deal with a full form element.
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	props: {

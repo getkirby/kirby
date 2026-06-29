@@ -2,6 +2,10 @@ import type { NodeSpec } from "prosemirror-model";
 import type { Command } from "prosemirror-state";
 import Node, { type NodeContext } from "../Node";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
 export default class ListItem extends Node {
 	keys({ type, utils }: NodeContext): Record<string, Command> {
 		return {

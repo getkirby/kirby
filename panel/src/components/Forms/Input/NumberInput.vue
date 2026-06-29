@@ -47,7 +47,11 @@ export const props = {
 };
 
 /**
- * @example <k-input :value="number" @input="number = $event" name="number" type="number" />
+ * @example
+ * <k-input :value="number" @input="number = $event" name="number" type="number" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [Input, props],

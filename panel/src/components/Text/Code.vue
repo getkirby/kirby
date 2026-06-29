@@ -14,8 +14,13 @@ import { defineAsyncComponent } from "vue";
 
 /**
  * A code block with syntax highlighting
- * @since 4.0.0
- * @example <k-code language="html"><p>Hello World</p></k-code>
+ *
+ * @example
+ * <k-code language="html"><p>Hello World</p></k-code>
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default {
 	components: {

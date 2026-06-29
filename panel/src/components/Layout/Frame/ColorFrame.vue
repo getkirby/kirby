@@ -20,9 +20,13 @@ export const props = {
 
 /**
  * Use <k-color-frame> to display a color preview.
- * @since 4.0.0
  *
- * @example <k-color-frame color="#efefef" ratio="1/1" />
+ * @example
+ * <k-color-frame color="#efefef" ratio="1/1" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default {
 	mixins: [props],

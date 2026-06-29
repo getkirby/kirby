@@ -7,6 +7,10 @@ import {
 	type Node
 } from "prosemirror-model";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
 export default function markPasteRule(
 	regexp: RegExp,
 	type: MarkType,

@@ -8,7 +8,10 @@ import { cloneVNode, h } from "vue";
  * Exposes `offset` (visible count) and `total` to slots.
  * When items overflow and a fallback slot exists,
  * the fallback is rendered and items are hidden.
- * @since 6.0.0
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     6.0.0
  */
 export default {
 	inheritAttrs: false,

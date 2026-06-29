@@ -15,8 +15,14 @@
 
 <script>
 /**
- * The dropzone component helps to simplify creating areas, where files can be dropped and uploaded or displayed. You simply wrap it around any other element to create the zone. The dropzone will also create a focus ring around the area when the user drags files over it.
-
+ * The dropzone component helps to simplify creating areas,
+ * where files can be dropped and uploaded or displayed.
+ * You simply wrap it around any other element to create the zone.
+ * The dropzone will also create a focus ring around the area
+ * when the user drags files over it.
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	props: {

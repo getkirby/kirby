@@ -1,5 +1,9 @@
 <template>
-	<span :data-invalid="!valid" :data-theme="valid ? 'positive' : 'negative'" class="k-counter">
+	<span
+		:data-invalid="!valid"
+		:data-theme="valid ? 'positive' : 'negative'"
+		class="k-counter"
+	>
 		<span>{{ count }}</span>
 
 		<span v-if="min || max" class="k-counter-rules">
@@ -12,9 +16,16 @@
 
 <script>
 /**
- * We use the counter in many fields to show the character count of an input or the accepted min/max length of items. You can use the counter yourself very easily:
- * @example <k-counter :count="text.length" :min="2" :max="10" />
-<input :value="text" @input="text = $event.target.value">
+ * We use the counter in many fields to show the character count
+ * of an input or the accepted min/max length of items.
+ * You can use the counter yourself very easily:
+ *
+ * @example
+ * <k-counter :count="text.length" :min="2" :max="10" />
+ * <input :value="text" @input="text = $event.target.value">
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	props: {

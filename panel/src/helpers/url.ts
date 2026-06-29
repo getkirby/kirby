@@ -1,4 +1,9 @@
 /**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
+
+/**
  * Returns the base URL from the <base> element
  * @since 4.0.0
  */

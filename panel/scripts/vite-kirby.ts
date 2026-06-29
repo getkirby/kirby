@@ -1,3 +1,8 @@
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
+
 /* eslint-env node */
 import fs from "fs";
 import generateDocs from "./docs";

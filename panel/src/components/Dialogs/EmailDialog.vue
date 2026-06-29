@@ -12,6 +12,10 @@
 import Dialog from "@/mixins/dialog.js";
 import { props as FieldsProps } from "./Elements/Fields.vue";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	mixins: [Dialog, FieldsProps],
 	props: {

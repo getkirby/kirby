@@ -15,6 +15,9 @@
  * const emitter = new Emitter<Events>();
  * emitter.on("change", ({ from, to }) => console.log(from, to));
  * emitter.emit("change", { from: "a", to: "b" });
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default class Emitter<
 	TEvents extends Record<string, unknown> = Record<string, unknown>

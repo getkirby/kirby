@@ -1,8 +1,6 @@
 import { Node, ResolvedPos } from "prosemirror-model";
 
 /**
- * Taken from: https://github.com/atlassian/prosemirror-utils
- *
  * Iterates over parent nodes starting from the given `$pos`, returning the
  * closest node and its start position `predicate` returns truthy for. `start`
  * points to the start position of the node, `pos` points directly before the
@@ -11,6 +9,8 @@ import { Node, ResolvedPos } from "prosemirror-model";
  * @example
  * const predicate = node => node.type === schema.nodes.blockquote;
  * const parent = findParentNodeClosestToPos(state.doc.resolve(5), predicate);
+ *
+ * Taken from: https://github.com/atlassian/prosemirror-utils
  */
 export default function findParentNodeClosestToPos(
 	$pos: ResolvedPos,

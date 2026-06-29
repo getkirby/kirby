@@ -1,3 +1,7 @@
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
 import sort from "./sort";
 import "./regex";
 

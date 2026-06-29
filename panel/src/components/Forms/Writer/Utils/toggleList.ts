@@ -11,6 +11,10 @@ function isList(node: Node, schema: Schema): boolean {
 	);
 }
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
 export default function toggleList(
 	listType: NodeType,
 	itemType: NodeType

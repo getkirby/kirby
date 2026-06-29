@@ -5,6 +5,9 @@ import Extension from "../Extension";
 /**
  * Provides the `insertHtml` command, which parses an HTML string
  * and replaces the current selection with the resulting document nodes.
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
  */
 export default class Insert extends Extension {
 	commands() {

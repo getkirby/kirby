@@ -1,6 +1,10 @@
 <script>
 import TagsFieldPreview from "./TagsFieldPreview.vue";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	extends: TagsFieldPreview,
 	inheritAttrs: false,

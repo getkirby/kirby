@@ -10,6 +10,10 @@
 <script>
 import FieldPreview from "@/mixins/forms/fieldPreview.js";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	mixins: [FieldPreview],
 	props: {

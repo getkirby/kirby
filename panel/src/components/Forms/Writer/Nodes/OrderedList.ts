@@ -4,6 +4,10 @@ import type { Command } from "prosemirror-state";
 import type { ExtensionCommand } from "../Extension";
 import Node, { type NodeContext } from "../Node";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
 export default class OrderedList extends Node {
 	get button() {
 		return {

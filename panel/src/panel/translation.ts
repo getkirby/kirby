@@ -25,7 +25,9 @@ export function defaults(): TranslationState {
 /**
  * Represents the interface language for the current user
  *
- * @since 4.0.0
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default function Translation() {
 	const parent = State("translation", defaults());

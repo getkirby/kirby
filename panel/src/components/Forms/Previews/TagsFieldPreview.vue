@@ -8,7 +8,7 @@
 			:key="tag.id ?? tag.value ?? tag.text ?? tagIndex"
 		>
 			<k-tag
-			  :element="!removable ? 'div' : undefined"
+				:element="!removable ? 'div' : undefined"
 				:html="html"
 				:image="tag.image"
 				:link="!removable ? tag.link : undefined"
@@ -24,6 +24,10 @@
 <script>
 import FieldPreview from "@/mixins/forms/fieldPreview.js";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	mixins: [FieldPreview],
 	props: {

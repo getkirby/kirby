@@ -1,3 +1,8 @@
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
+
 import { isObject } from "@/helpers/object";
 import { HexColor, HslColor, HsvColor, RgbColor } from "./colors";
 

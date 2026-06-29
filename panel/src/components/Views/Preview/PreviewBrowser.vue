@@ -66,6 +66,10 @@
 <script>
 import { props } from "@/components/Forms/FormControls.vue";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	mixins: [props],
 	props: {

@@ -10,13 +10,17 @@
 
 <script>
 /**
- * The `k-bar` can be used to create  all sorts of toolbars aligning its items accordingly.
+ * The `k-bar` can be used to create  all sorts of toolbars
+ * aligning its items accordingly.
  *
  * @example
  * <k-bar>
  *   <div></div>
  *   <div></div>
  * </k-bar>
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	props: {

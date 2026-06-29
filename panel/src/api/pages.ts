@@ -1,5 +1,9 @@
 import type Api from ".";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default (api: Api) => ({
 	async blueprint(parent: string) {
 		return api.get("pages/" + this.id(parent) + "/blueprint");

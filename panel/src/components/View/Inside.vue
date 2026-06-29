@@ -28,7 +28,11 @@
 <script>
 /**
  * Wrapper for views that are available only for signed-in users.
+ *
  * @displayName PanelInside
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {};
 </script>

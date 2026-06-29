@@ -10,6 +10,10 @@ interface LinkAttrs {
 	title?: string;
 }
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
 export default class Link extends Mark<{ target?: string }> {
 	get button() {
 		return {

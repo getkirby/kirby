@@ -8,6 +8,8 @@ import {
 import { Plugin } from "prosemirror-state";
 
 /**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
  * @deprecate 6.0.0 Use `markPasteRule` instead
  */
 export default function pasteRule(

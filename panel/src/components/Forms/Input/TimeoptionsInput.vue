@@ -63,9 +63,14 @@ export const props = {
 };
 
 /**
- * The Times component displayes available times to choose from
- * @since 4.0.0
- * @example <k-timeoptions-input value="12:12" @input="onInput" />
+ * The timeoptions input component displays available times to choose from
+ *
+ * @example
+ * <k-timeoptions-input value="12:12" @input="onInput" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default {
 	mixins: [Input, props],

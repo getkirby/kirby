@@ -1,3 +1,8 @@
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
+
 // TODO: Use Button.vue props type once in place
 type StatusButton = {
 	disabled: boolean;

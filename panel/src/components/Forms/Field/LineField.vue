@@ -4,7 +4,11 @@
 
 <script>
 /**
- * @example <k-line-field />
+ * @example
+ * <k-line-field />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {};
 </script>

@@ -33,7 +33,9 @@ export function defaults(): ViewState {
 }
 
 /**
- * @since 4.0.0
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default function View(panel: Panel) {
 	const parent = Feature(panel, "view", defaults());

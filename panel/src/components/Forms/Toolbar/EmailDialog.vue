@@ -1,6 +1,10 @@
 <script>
 import EmailDialog from "@/components/Dialogs/EmailDialog.vue";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	extends: EmailDialog,
 	props: {

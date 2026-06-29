@@ -1,6 +1,9 @@
 <script>
 /* v8 ignore file */
 /**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ *
  * @deprecated 5.0.0 Use `k-writer-input` instead.
  */
 export default {

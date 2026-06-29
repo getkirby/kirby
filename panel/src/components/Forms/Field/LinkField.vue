@@ -105,8 +105,12 @@ export const props = {
 };
 
 /**
- * @since 4.0.0
- * @example <k-link-field :value="link" @input="link = $event" name="link" label="Link" />
+ * @example
+ * <k-link-field :value="link" @input="link = $event" name="link" label="Link" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default {
 	mixins: [props],

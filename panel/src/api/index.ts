@@ -1,3 +1,8 @@
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
+
 import Auth from "./auth";
 import Files from "./files";
 import Languages from "./languages";

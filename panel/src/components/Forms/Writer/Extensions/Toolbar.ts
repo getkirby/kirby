@@ -6,6 +6,9 @@ import Extension from "../Extension";
  * the toolbar when the selection changes
  *
  * All the major logic is handled by <k-writer-toolbar> directly
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default class Toolbar extends Extension {
 	private readonly writer: ComponentPublicInstance;

@@ -1,3 +1,8 @@
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
+
 import Mark from "@/components/Forms/Writer/Mark";
 import Node from "@/components/Forms/Writer/Node";
 import { isObject } from "./object";

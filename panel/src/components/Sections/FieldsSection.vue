@@ -26,6 +26,10 @@
 <script>
 import SectionMixin from "@/mixins/section.js";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	mixins: [SectionMixin],
 	inheritAttrs: false,

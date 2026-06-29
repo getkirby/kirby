@@ -34,8 +34,10 @@
  * Sticky header containing headline (with optional edit button)
  * and optional buttons
  *
- * @example <k-header :editable="true">Headline</k-header>
- * @example <k-header>
+ * @example
+ * <k-header :editable="true">Headline</k-header>
+ *
+ * <k-header>
  * 	Headline
  *
  * 	<template #buttons>
@@ -45,6 +47,9 @@
  * 		</k-button-group>
  * 	</template>
  * </k-header>
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	props: {

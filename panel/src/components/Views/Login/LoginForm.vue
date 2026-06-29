@@ -35,6 +35,10 @@
 <script>
 import { props as LoginProps } from "./LoginView.vue";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	mixins: [LoginProps],
 	emits: ["error"],

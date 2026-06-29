@@ -20,7 +20,10 @@ import Button from "@/components/Navigation/Button.vue";
 
 /**
  * @displayName ViewButton
- * @since 5.0.0
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     5.0.0
  */
 export default {
 	extends: Button,

@@ -28,7 +28,9 @@ const isLockRequestError = (
 };
 
 /**
- * @since 5.0.0
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     5.0.0
  */
 export default function Content(panel: Panel) {
 	const content = reactive({
