@@ -925,7 +925,7 @@ class Dom
 				// custom check (if the attribute is still in the document)
 				if ($attr->ownerElement !== null && $options['attrCallback']) {
 					$attrErrors = (array)($options['attrCallback']($attr, $options) ?? []);
-					array_push($errors, ...$attrErrors);
+					array_push($errors, ...array_values($attrErrors));
 				}
 			}
 		}
@@ -933,7 +933,7 @@ class Dom
 		// custom check
 		if ($options['elementCallback']) {
 			$elementErrors = (array)($options['elementCallback']($element, $options) ?? []);
-			array_push($errors, ...$elementErrors);
+			array_push($errors, ...array_values($elementErrors));
 		}
 	}
 
