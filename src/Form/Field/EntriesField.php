@@ -11,7 +11,6 @@ use Kirby\Form\Mixin\Min;
 use Kirby\Form\Mixin\Sortable;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\BlockCollectionAccess;
-use Kirby\Toolkit\Str;
 
 /**
  * Main class file of the entries field

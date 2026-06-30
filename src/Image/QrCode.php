@@ -93,7 +93,7 @@ class QrCode implements Stringable
 		// get code and size measurements
 		$code   = $this->encode($border);
 		[$width, $height] = $this->measure($code);
-		$size ??= (int) ceil($width * 4);
+		$size ??= (int)ceil($width * 4);
 		$ws     = $size / $width;
 		$hs     = $size / $height;
 
@@ -125,10 +125,10 @@ class QrCode implements Stringable
 			$code,
 			fn ($x, $y, $width, $height) => imagefilledrectangle(
 				$image,
-				(int) floor($x * $ws),
-				(int) floor($y * $hs),
-				(int) floor($x * $ws + $ws * $width) - 1,
-				(int) floor($y * $hs + $hs * $height) - 1,
+				(int)floor($x * $ws),
+				(int)floor($y * $hs),
+				(int)floor($x * $ws + $ws * $width) - 1,
+				(int)floor($y * $hs + $hs * $height) - 1,
 				$color
 			)
 		);
