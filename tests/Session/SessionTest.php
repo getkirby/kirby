@@ -8,6 +8,7 @@ use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Http\Cookie;
 use Kirby\TestCase;
+use Kirby\Tests\MockTime;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\SymmetricCrypto;
 use PHPUnit\Framework\Attributes\CoversClass;

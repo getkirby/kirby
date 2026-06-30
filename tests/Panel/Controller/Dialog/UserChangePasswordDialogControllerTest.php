@@ -51,7 +51,7 @@ class UserChangePasswordDialogControllerTest extends TestCase
 		$this->assertSame('Your own password', $props['fields']['currentPassword']['label']);
 		$this->assertSame('New password', $props['fields']['password']['label']);
 		$this->assertSame('Confirm the new password…', $props['fields']['passwordConfirmation']['label']);
-		$this->assertSame('Change', $props['submitButton']);
+		$this->assertSame('Change password', $props['submitButton']);
 	}
 
 	public function testLoadWithoutPasswordForCurrentUser(): void
@@ -78,6 +78,8 @@ class UserChangePasswordDialogControllerTest extends TestCase
 		// without providing the current (non-existing) password
 		$this->assertArrayNotHasKey('currentPassword', $props['fields']);
 		$this->assertArrayNotHasKey('line', $props['fields']);
+
+		$this->assertSame('Set password', $props['submitButton']);
 	}
 
 	public function testLoadWithoutPasswordForAnotherUser(): void

@@ -229,7 +229,6 @@ export default function Plugins(app: App, plugins: PanelPlugins = {}) {
 		// defaults
 		created: [],
 		icons: {},
-		login: undefined,
 		textareaButtons: {},
 		thirdParty: {},
 		writerMarks: {},

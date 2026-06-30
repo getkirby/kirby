@@ -5,6 +5,9 @@ namespace Kirby\Cms;
 use Kirby\Filesystem\F;
 use PHPUnit\Framework\Attributes\CoversClass;
 
+/**
+ * @deprecated 6.0.0
+ */
 #[CoversClass(User::class)]
 class UserChangeTotpTest extends ModelTestCase
 {

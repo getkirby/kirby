@@ -78,11 +78,11 @@ class RedirectTest extends AreaTestCase
 	public function testLogoutChallenge(): void
 	{
 		$this->install();
-		$this->app->session()->set('kirby.challenge.code', '123456');
+		$this->app->session()->set('kirby.challenge.data', ['secret' => '123456']);
 
 		$this->assertRedirect('logout', 'login');
 
-		$this->assertNull($this->app->session()->get('kirby.challenge.code'));
+		$this->assertNull($this->app->session()->get('kirby.challenge.data'));
 	}
 
 	public function testPageWithoutAuthentication(): void

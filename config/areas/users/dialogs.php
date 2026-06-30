@@ -13,7 +13,6 @@ use Kirby\Panel\Controller\Dialog\UserChangePasswordDialogController;
 use Kirby\Panel\Controller\Dialog\UserChangeRoleDialogController;
 use Kirby\Panel\Controller\Dialog\UserCreateDialogController;
 use Kirby\Panel\Controller\Dialog\UserDeleteDialogController;
-use Kirby\Panel\Controller\Dialog\UserTotpDisableDialogController;
 
 return [
 	'user.create' => [
@@ -43,10 +42,6 @@ return [
 	'user.delete' => [
 		'pattern' => 'users/(:any)/delete',
 		'action'  => UserDeleteDialogController::class
-	],
-	'user.totp.disable' => [
-		'pattern' => 'users/(:any)/totp/disable',
-		'action'  => UserTotpDisableDialogController::class
 	],
 
 	'user.fields' => [

@@ -16,7 +16,7 @@ trait HasI18n
 	 * Translates a key or template string
 	 * @return ($key is string|array ? string : string|null)
 	 */
-	protected function i18n(
+	protected static function i18n(
 		Closure|string|array|null $key,
 		array|null $data = null
 	): string|null {

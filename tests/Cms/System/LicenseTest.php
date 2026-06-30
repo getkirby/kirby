@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
+use Kirby\Tests\MockTime;
 use Kirby\Toolkit\Str;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;

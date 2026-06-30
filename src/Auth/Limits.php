@@ -1,0 +1,137 @@
+<?php
+
+namespace Kirby\Auth;
+
+use Kirby\Auth\Exception\RateLimitException;
+use Kirby\Cms\App;
+use Kirby\Data\Data;
+use Kirby\Filesystem\F;
+use Kirby\Toolkit\A;
+
+/**
+ * Handler to enforce the auth rate limits
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     6.0.0
+ */
+class Limits
+{
+	public function __construct(
+		protected App $kirby
+	) {
+	}
+
+	/**
+	 * Normalizes the log structure and removes
+	 * entries whose timeout has expired
+	 */
+	protected function clean(array $log): array
+	{
+		// ensure that the category arrays are defined
+		$log['by-ip']    ??= [];
+		$log['by-email'] ??= [];
+
+		// remove all elements on the top level
+		// with different keys (old structure)
+		$log = array_intersect_key(
+			$log,
+			array_flip(['by-ip', 'by-email'])
+		);
+
+		// remove entries that are no longer needed
+		$time = time() - $this->kirby->option('auth.timeout', 3600);
+
+		return A::map(
+			$log,
+			fn ($category) => A::filter(
+				$category,
+				fn ($entry) => $entry['time'] > $time
+			)
+		);
+	}
+
+	public function ensure(string $email): void
+	{
+		if ($this->isBlocked($email) === true) {
+			$this->kirby->trigger('user.login:failed', ['email' => $email]);
+			throw new RateLimitException();
+		}
+	}
+
+	public function file(): string
+	{
+		return $this->kirby->root('accounts') . '/.logins';
+	}
+
+	public function isBlocked(string $email): bool
+	{
+		$log    = $this->log();
+		$ip     = $this->kirby->visitor()->ip(hash: true);
+		$trials = $this->kirby->option('auth.trials', 10);
+
+		if (($log['by-ip'][$ip]['trials'] ?? 0) >= $trials) {
+			return true;
+		}
+
+		// check the email-based rate limit without a prior
+		// user lookup so that the timing difference of the lookup
+		// does not leak whether an email address actually exists
+		if (($log['by-email'][$email]['trials'] ?? 0) >= $trials) {
+			return true;
+		}
+
+		return false;
+	}
+
+	public function log(): array
+	{
+		$log     = Data::read($this->file(), 'json', fail: false);
+		$updated = $this->clean($log);
+
+		// write new log to the file system if it changed
+		if ($updated['by-ip'] === [] && $updated['by-email'] === []) {
+			F::remove($this->file());
+		} elseif ($updated !== $log) {
+			Data::write($this->file(), $updated, 'json');
+		}
+
+		return $updated;
+	}
+
+	public function track(
+		string|null $email,
+		bool $triggerHook = true
+	): bool {
+		if ($triggerHook === true) {
+			$this->kirby->trigger('user.login:failed', ['email' => $email]);
+		}
+
+		$ip      = $this->kirby->visitor()->ip(hash: true);
+		$time    = time();
+		$byEmail = $email !== null && $this->kirby->users()->find($email) !== null;
+
+		// serialize the whole read-modify-write under an exclusive
+		// lock so that concurrent failed logins cannot lose each
+		// other's increments (which would soften the rate limit)
+		return F::update(
+			$this->file(),
+			function (string $contents) use ($ip, $email, $time, $byEmail): string {
+				$data = Data::decode($contents, 'json', fail: false);
+				$log  = $this->clean($data);
+
+				$log['by-ip'][$ip]          ??= ['trials' => 0];
+				$log['by-ip'][$ip]['time']    = $time;
+				$log['by-ip'][$ip]['trials'] += 1;
+
+				if ($byEmail === true) {
+					$log['by-email'][$email]          ??= ['trials' => 0];
+					$log['by-email'][$email]['time']    = $time;
+					$log['by-email'][$email]['trials'] += 1;
+				}
+
+				return Data::encode($log, 'json');
+			}
+		);
+	}
+}

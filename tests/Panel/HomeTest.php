@@ -419,6 +419,21 @@ class HomeTest extends TestCase
 		$this->assertSame('/panel/account', $home->url());
 	}
 
+	public function testUrlWithPasswordReset(): void
+	{
+		$this->app = $this->app->clone([
+			'users' => [
+				['email' => 'test@getkirby.com', 'role' => 'admin']
+			]
+		]);
+
+		$this->app->impersonate('test@getkirby.com');
+		$this->app->session()->set('kirby.resetPassword', true);
+
+		$home = $this->app->panel()->home();
+		$this->assertSame('/panel/reset-password', $home->url());
+	}
+
 	public function testUrlWithoutUser(): void
 	{
 		$home = $this->app->panel()->home();

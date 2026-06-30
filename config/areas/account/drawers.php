@@ -3,6 +3,18 @@
 $drawers = require __DIR__ . '/../users/drawers.php';
 
 return [
+	'account.security' => [
+		...$drawers['user.security'],
+		'pattern' => '(account)/security',
+	],
+	'account.security.method.code' => [
+		...$drawers['user.security.method.code'],
+		'pattern' => '(account)/security/method/code',
+	],
+	'account.security.challenge.totp' => [
+		...$drawers['user.security.challenge.totp'],
+		'pattern' => '(account)/security/challenge/totp',
+	],
 	'account.fields' => [
 		...$drawers['user.fields'],
 		'pattern' => '(account)/fields/(:any)/(:all?)',
