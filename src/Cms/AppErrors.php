@@ -41,6 +41,26 @@ trait AppErrors
 	protected Whoops $whoops;
 
 	/**
+	 * Replaces absolute file paths with placeholders such as
+	 * {kirby}, {site} or {index} to avoid exposing too many
+	 * details about the filesystem and keeping error responses
+	 * short and readable in debug mode.
+	 *
+	 * @since 4.9.5
+	 * @internal
+	 */
+	public function disguiseFilePath(string $file): string
+	{
+		$disguise = [
+			$this->root('kirby') => '{kirby}',
+			$this->root('site')  => '{site}',
+			$this->root('index') => '{index}'
+		];
+
+		return str_replace(array_keys($disguise), array_values($disguise), $file);
+	}
+
+	/**
 	 * Registers the PHP error handler for CLI usage
 	 */
 	protected function handleCliErrors(): void
