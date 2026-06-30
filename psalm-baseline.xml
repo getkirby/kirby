@@ -386,6 +386,11 @@
 		)]]></code>
     </FalsableReturnStatement>
   </file>
+  <file src="src/Session/Session.php">
+    <RedundantPropertyInitializationCheck>
+      <code><![CDATA[isset($this->data) === true]]></code>
+    </RedundantPropertyInitializationCheck>
+  </file>
   <file src="src/Text/KirbyTags.php">
     <InvalidNullableReturnType>
       <code><![CDATA[string]]></code>
