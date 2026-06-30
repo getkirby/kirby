@@ -159,7 +159,7 @@ class PasswordsTest extends TestCase
 		]);
 
 		$this->assertSame(
-			'Your password must contain: at least 12 characters, at least 1 uppercase letter(s), at least 1 digit(s)',
+			'Password must contain: at least 12 characters, at least 1 uppercase letter(s), at least 1 digit(s)',
 			$policy->hint()
 		);
 
@@ -167,7 +167,7 @@ class PasswordsTest extends TestCase
 		$policy = new Passwords(rules: ['digits' => 3]);
 
 		$this->assertSame(
-			'Your password must contain: at least 3 digit(s)',
+			'Password must contain: at least 3 digit(s)',
 			$policy->hint()
 		);
 	}
