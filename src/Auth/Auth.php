@@ -29,6 +29,7 @@ class Auth
 	protected Csrf $csrf;
 	protected Limits $limits;
 	protected Methods $methods;
+	protected Passwords|null $passwords = null;
 	protected Status|null $status = null;
 	protected AuthUser $user;
 
@@ -365,6 +366,16 @@ class Auth
 	public function methods(): Methods
 	{
 		return $this->methods;
+	}
+
+	/**
+	 * Returns the password policy defined via the
+	 * `auth.passwords` option
+	 * @since 6.0.0
+	 */
+	public function passwords(): Passwords
+	{
+		return $this->passwords ??= Passwords::factory($this->kirby);
 	}
 
 	/**

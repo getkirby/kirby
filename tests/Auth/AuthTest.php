@@ -302,6 +302,18 @@ class AuthTest extends TestCase
 		$this->assertInstanceOf(Methods::class, $this->auth->methods());
 	}
 
+	public function testPasswords(): void
+	{
+		$this->assertInstanceOf(Passwords::class, $this->auth->passwords());
+
+		// reads the `auth.passwords` option
+		$app = $this->app->clone([
+			'options' => ['auth' => ['passwords' => ['minlength' => 12]]]
+		]);
+
+		$this->assertSame(12, $app->auth()->passwords()->minlength());
+	}
+
 	public function testSessionHelperWithOptions(): void
 	{
 		$session = $this->auth->session(['detect' => true]);

@@ -453,18 +453,8 @@ class UserRules
 		#[SensitiveParameter]
 		string $password
 	): void {
-		// too short passwords are ineffective
-		if (Str::length($password) < 8) {
-			throw new InvalidArgumentException(key: 'user.password.invalid');
-		}
-
-		// too long passwords can cause DoS attacks
-		// and are therefore blocked in the auth system
-		// (blocked here as well to avoid passwords
-		// that cannot be used to log in)
-		if (Str::length($password) > 1000) {
-			throw new InvalidArgumentException(key: 'user.password.excessive');
-		}
+		// validate against the configured policy (`auth.passwords`)
+		$user->kirby()->auth()->passwords()->validate($password);
 	}
 
 	/**

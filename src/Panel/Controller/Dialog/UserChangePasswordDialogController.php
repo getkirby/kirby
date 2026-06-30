@@ -33,6 +33,9 @@ class UserChangePasswordDialogController extends UserDialogController
 
 	protected function fields(): array
 	{
+		$policy = $this->kirby->auth()->passwords();
+		$hint   = $policy->hint();
+
 		$fields = [
 			'currentPassword' => Field::password([
 				'label'        => $this->i18n('user.changePassword.' . ($this->isCurrentUser() ? 'current' : 'own')),
@@ -45,7 +48,8 @@ class UserChangePasswordDialogController extends UserDialogController
 			'password' => Field::password([
 				'label'        => $this->i18n('user.changePassword.new'),
 				'autocomplete' => 'new-password',
-				'help'         => $this->i18n('account') . ': ' . $this->user->email(),
+				'help'         => $this->i18n('account') . ': ' . $this->user->email() . ($hint ? '<br>' . $hint : ''),
+				'minlength'    => $policy->minlength()
 			]),
 			'passwordConfirmation' => Field::password([
 				'label'        => $this->i18n('user.changePassword.new.confirm'),

@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="6.16.1@f1f5de594dc76faf8784e02d3dc4716c91c6f6ac">
+  <file src="src/Auth/Passwords.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[I18n::translate($this->hint, $this->hint)]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[string|null]]></code>
+    </InvalidReturnType>
+  </file>
   <file src="src/Blueprint/Section.php">
     <UndefinedThisPropertyFetch>
       <code><![CDATA[$this->errors]]></code>
