@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Auth\Passwords;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
@@ -248,6 +249,17 @@ class AuthTest extends TestCase
 			'mode'      => null,
 			'status'    => 'inactive'
 		], $this->auth->status()->toArray());
+	}
+
+	public function testPasswords(): void
+	{
+		$this->assertInstanceOf(Passwords::class, $this->auth->passwords());
+
+		// reads the `auth.passwords` option
+		$app = $this->app->clone([
+			'options' => ['auth' => ['passwords' => ['minlength' => 12]]]
+		]);
+		$this->assertSame(12, $app->auth()->passwords()->minlength());
 	}
 
 	public function testTypeBasic1(): void

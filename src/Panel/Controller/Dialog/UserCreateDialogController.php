@@ -33,6 +33,8 @@ class UserCreateDialogController extends DialogController
 			props: ['required' => true]
 		);
 
+		$policy = $this->kirby->auth()->passwords();
+
 		return new FormDialog(
 			fields: [
 				'name'  => Field::username(),
@@ -41,7 +43,9 @@ class UserCreateDialogController extends DialogController
 					'required' => true
 				]),
 				'password'     => Field::password([
-					'autocomplete' => 'new-password'
+					'autocomplete' => 'new-password',
+					'help'         => $policy->hint(),
+					'minlength'    => $policy->minlength()
 				]),
 				'translation'  => Field::translation([
 					'required' => true
