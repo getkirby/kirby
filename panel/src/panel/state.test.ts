@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { HtmlString } from "./html";
 import State from "./state";
 
 describe("panel.state", () => {
@@ -59,6 +60,24 @@ describe("panel.state", () => {
 			state.set({ message: null });
 
 			expect(state.message).toStrictEqual("default");
+		});
+
+		it("rewraps <key> payloads into HtmlString instances", () => {
+			const state = State("test", {
+				title: null as string | null,
+				body: null as string | HtmlString | null
+			});
+
+			state.set({
+				title: "untrusted <script>",
+				"<body>": "<p>trusted</p>"
+			} as never);
+
+			expect(state.title).toStrictEqual("untrusted <script>");
+			expect(state.body).toBeInstanceOf(HtmlString);
+			expect((state.body as HtmlString).toString()).toStrictEqual(
+				"<p>trusted</p>"
+			);
 		});
 
 		it("throws when state is not a plain object", () => {
