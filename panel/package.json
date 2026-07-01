@@ -28,7 +28,7 @@
 		"vue": "^2.7.16"
 	},
 	"devDependencies": {
-		"@csstools/postcss-light-dark-function": "^3.0.1",
+		"@csstools/postcss-light-dark-function": "^3.0.2",
 		"@eslint/js": "^9.39.3",
 		"@types/autosize": "^4.0.3",
 		"@vitejs/plugin-vue2": "^2.3.4",
@@ -37,15 +37,15 @@
 		"eslint-plugin-vue": "^9.33.0",
 		"glob": "^13.0.6",
 		"happy-dom": "^17.6.3",
-		"prettier": "^3.8.4",
+		"prettier": "^3.9.4",
 		"terser": "^5.48.0",
 		"typescript": "^5.9.3",
-		"typescript-eslint": "^8.61.1",
-		"vite": "^7.3.5",
+		"typescript-eslint": "^8.62.1",
+		"vite": "^7.3.6",
 		"vite-plugin-static-copy": "^3.4.0",
 		"vitest": "^4.1.9",
 		"vue-docgen-api": "^4.79.2",
-		"vue-tsc": "^3.3.5"
+		"vue-tsc": "^3.3.6"
 	},
 	"browserslist": [
 		"last 2 Android versions",
