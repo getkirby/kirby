@@ -1,0 +1,104 @@
+<?php
+
+namespace Kirby\Text\Markdown;
+
+use Kirby\TestCase;
+use Kirby\Text\Markdown\AST\Element;
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(Blocks::class)]
+class BlocksTest extends TestCase
+{
+	protected Blocks $blocks;
+
+	public function setUp(): void
+	{
+		$this->blocks = new Blocks(new Parser());
+	}
+
+	public function testParseParagraph(): void
+	{
+		$nodes = $this->blocks->parse('Hello world');
+
+		$this->assertCount(1, $nodes);
+		$this->assertInstanceOf(Element::class, $nodes[0]);
+		$this->assertSame('p', $nodes[0]->name);
+
+		// content is left deferred for the resolver
+		$this->assertSame('Hello world', $nodes[0]->content);
+	}
+
+	public function testParseMultipleParagraphs(): void
+	{
+		$nodes = $this->blocks->parse("One\n\nTwo");
+
+		$this->assertCount(2, $nodes);
+		$this->assertSame('One', $nodes[0]->content);
+		$this->assertSame('Two', $nodes[1]->content);
+	}
+
+	public function testParseLazyContinuation(): void
+	{
+		// consecutive non-blank lines join one paragraph
+		$nodes = $this->blocks->parse("One\nTwo");
+
+		$this->assertCount(1, $nodes);
+		$this->assertSame("One\nTwo", $nodes[0]->content);
+	}
+
+	public function testParseBlock(): void
+	{
+		$nodes = $this->blocks->parse('# Title');
+
+		$this->assertSame('h1', $nodes[0]->name);
+		$this->assertSame('Title', $nodes[0]->content);
+	}
+
+	public function testParseBlockAfterParagraph(): void
+	{
+		// a fresh block flushes the open paragraph before its own node
+		$nodes = $this->blocks->parse("Hello\n# Title");
+
+		$this->assertCount(2, $nodes);
+		$this->assertSame('p', $nodes[0]->name);
+		$this->assertSame('Hello', $nodes[0]->content);
+		$this->assertSame('h1', $nodes[1]->name);
+		$this->assertSame('Title', $nodes[1]->content);
+	}
+
+	public function testParseIndentedCode(): void
+	{
+		// a 4-space indent dispatches to the indented code block
+		$nodes = $this->blocks->parse('    $foo = 1;');
+
+		$this->assertCount(1, $nodes);
+		$this->assertSame('pre', $nodes[0]->name);
+	}
+
+	public function testParseIndentedContinuation(): void
+	{
+		// an indented line must not interrupt a running paragraph:
+		// the indented code block declines and the text joins the paragraph
+		$nodes = $this->blocks->parse("Hello\n    world");
+
+		$this->assertCount(1, $nodes);
+		$this->assertSame('p', $nodes[0]->name);
+		$this->assertSame("Hello\nworld", $nodes[0]->content);
+	}
+
+	public function testParseUnwrap(): void
+	{
+		// a tight list item drops the wrapping paragraph tag
+		$nodes = $this->blocks->parse(['text'], unwrap: true);
+
+		$this->assertNull($nodes[0]->name);
+	}
+
+	public function testParseUnwrapSkippedWhenBlank(): void
+	{
+		// a loose item keeps its paragraph wrapper
+		$nodes = $this->blocks->parse(['text', ''], unwrap: true);
+
+		$this->assertSame('p', $nodes[0]->name);
+	}
+}

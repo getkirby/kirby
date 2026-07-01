@@ -211,31 +211,7 @@ class KirbyTagsTest extends TestCase
 		string $kirbytext,
 		string $expected
 	): void {
-		$kirby = $this->app->clone([
-			'options' => [
-				'markdown' => [
-					'extra' => false
-				]
-			]
-		]);
-
-		$this->assertSame($expected, $kirby->kirbytext($kirbytext));
-	}
-
-	#[DataProvider('dataProvider')]
-	public function testWithMarkdownExtra(
-		string $kirbytext,
-		string $expected
-	): void {
-		$kirby = $this->app->clone([
-			'options' => [
-				'markdown' => [
-					'extra' => true
-				]
-			]
-		]);
-
-		$this->assertSame($expected, $kirby->kirbytext($kirbytext));
+		$this->assertSame($expected, $this->app->kirbytext($kirbytext));
 	}
 
 	public function testHooks(): void

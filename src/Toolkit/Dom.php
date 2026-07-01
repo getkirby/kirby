@@ -26,6 +26,14 @@ use Kirby\Exception\InvalidArgumentException;
 class Dom
 {
 	/**
+	 * Marker on the `<?xml>` declaration that is injected to force UTF-8
+	 * parsing of HTML input. It is always the document's first node, so the
+	 * cleanup loop matches it first and stops — a fixed id is therefore
+	 * sufficient and avoids a random-string (crypto RNG) call per construction.
+	 */
+	protected const ENCODING_DECLARATION = 'encoding="UTF-8" id="kirby-dom-encoding"';
+
+	/**
 	 * Cache for the HTML body
 	 */
 	protected DOMElement|null $body;
@@ -59,9 +67,9 @@ class Dom
 
 			// DOMDocument::loadHTML() historically assumes ISO-8859-1 input.
 			// To force UTF-8 parsing, Kirby injects an XML declaration.
-			// The random ID allows us to reliably identify *our* injected node
-			// later and remove it again.
-			$xml  = 'encoding="UTF-8" id="' . Str::random(10) . '"';
+			// The fixed marker id lets us reliably identify *our* injected node
+			// later and remove it again (see ENCODING_DECLARATION).
+			$xml  = static::ENCODING_DECLARATION;
 			$load = $this->doc->loadHTML('<?xml ' . $xml . '>' . $code);
 
 

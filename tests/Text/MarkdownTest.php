@@ -19,22 +19,19 @@ class MarkdownTest extends TestCase
 	 * and the $inline argument passed to parse()
 	 */
 	public const array PROFILES = [
-		// name       => [[breaks, extra, safe], inline]
-		'default'    => [['breaks' => true,  'extra' => false, 'safe' => false], false],
-		'nobreaks'   => [['breaks' => false, 'extra' => false, 'safe' => false], false],
-		'safe'       => [['breaks' => true,  'extra' => false, 'safe' => true ], false],
-		'inline'     => [['breaks' => true,  'extra' => false, 'safe' => false], true],
-		'extra'      => [['breaks' => true,  'extra' => true,  'safe' => false], false],
-		'extra-safe' => [['breaks' => true,  'extra' => true,  'safe' => true ], false],
+		// name     => [[breaks, safe], inline]
+		'default'  => [['breaks' => true,  'safe' => false], false],
+		'nobreaks' => [['breaks' => false, 'safe' => false], false],
+		'safe'     => [['breaks' => true,  'safe' => true], false],
+		'inline'   => [['breaks' => true,  'safe' => false], true],
 	];
 
 	/**
-	 * Checks where the CURRENT pipeline throws a fatal error
-	 * instead of producing HTML, so there is nothing to snapshot.
+	 * Inputs where the pipeline throws a fatal error instead of producing
+	 * HTML, so there is nothing to snapshot. Raw HTML blocks now pass through
+	 * verbatim unless they carry `markdown="1"`, so none remain.
 	 */
-	public const array KNOWN_CRASHES = [
-		'commonmark/raw-html-0620.md' => ['extra'],
-	];
+	public const array KNOWN_CRASHES = [];
 
 	public function testDefaults(): void
 	{
@@ -42,7 +39,6 @@ class MarkdownTest extends TestCase
 
 		$this->assertSame([
 			'breaks' => true,
-			'extra'  => false,
 			'safe'   => false,
 		], $markdown->defaults());
 	}
@@ -50,7 +46,6 @@ class MarkdownTest extends TestCase
 	public function testWithOptions(): void
 	{
 		$markdown = new Markdown([
-			'extra'  => true,
 			'breaks' => false
 		]);
 
@@ -73,6 +68,21 @@ class MarkdownTest extends TestCase
 		]);
 
 		$this->assertSame('<p>&lt;div&gt;Custom HTML&lt;/div&gt;</p>', $markdown->parse('<div>Custom HTML</div>'));
+	}
+
+	public function testReusedInstanceDoesNotLeakFootnoteState(): void
+	{
+		// a single instance is reused across fields in a request, so parsing
+		// must not carry footnote numbering (or any per-document state) over
+		$markdown = new Markdown();
+		$input    = "A ref.[^1]\n\n[^1]: note one";
+
+		$first  = $markdown->parse($input);
+		$second = $markdown->parse($input);
+
+		$this->assertSame($first, $second);
+		$this->assertSame($first, (new Markdown())->parse($input));
+		$this->assertStringContainsString('class="footnote-ref">1</a>', $second);
 	}
 
 	public static function snapshotsProvider(): array

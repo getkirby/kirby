@@ -2,15 +2,11 @@
 
 namespace Kirby\Text;
 
-use Parsedown;
-use ParsedownExtra;
+use Kirby\Text\Markdown\Parser;
 
 /**
- * The Markdown class is a wrapper around all sorts of Markdown
- * parser libraries and is meant to standardize the Markdown parser
- * API for all Kirby packages.
- *
- * It uses Parsedown and ParsedownExtra by default.
+ * The Markdown class is the public facade for Kirby's Markdown parsing and
+ * standardizes the parser API for all Kirby packages.
  *
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
@@ -22,6 +18,7 @@ class Markdown
 	 * for the parser
 	 */
 	protected array $options = [];
+	protected Parser|null $parser = null;
 
 	/**
 	 * Returns default values for all
@@ -31,7 +28,6 @@ class Markdown
 	{
 		return [
 			'breaks' => true,
-			'extra'  => false,
 			'safe'   => false
 		];
 	}
@@ -52,18 +48,11 @@ class Markdown
 		string|null $text = null,
 		bool $inline = false
 	): string {
-		$parser = match ($this->options['extra']) {
-			true    => new ParsedownExtra(),
-			default => new Parsedown()
-		};
+		$this->parser ??= new Parser(
+			breaks: $this->options['breaks'],
+			safe:   $this->options['safe']
+		);
 
-		$parser->setBreaksEnabled($this->options['breaks']);
-		$parser->setSafeMode($this->options['safe']);
-
-		if ($inline === true) {
-			return @$parser->line($text);
-		}
-
-		return @$parser->text($text);
+		return $this->parser->parse($text, inline: $inline);
 	}
 }
