@@ -27,6 +27,25 @@ export default function Dialog(panel: Panel) {
 	// shortcut to submit dialogs
 	panel.events.on("dialog.save", (e?: Event) => {
 		e?.preventDefault();
+
+		const target = e?.target as HTMLElement | null | undefined;
+		const form = target?.closest?.("form.k-dialog");
+
+		if (form) {
+			if (typeof form.requestSubmit === "function") {
+				form.requestSubmit();
+			} else {
+				form.dispatchEvent(
+					new Event("submit", {
+						bubbles: true,
+						cancelable: true
+					})
+				);
+			}
+
+			return;
+		}
+
 		panel.dialog.submit();
 	});
 

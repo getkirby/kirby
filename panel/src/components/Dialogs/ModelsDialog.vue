@@ -30,6 +30,7 @@
 			<template #options="{ item: row }">
 				<k-choice-input
 					:checked="isSelected(row)"
+					:disabled="isDisabled(row)"
 					:type="multiple && max !== 1 ? 'checkbox' : 'radio'"
 					:title="isSelected(row) ? $t('remove') : $t('select')"
 					@click.stop="toggle(row)"
@@ -92,6 +93,9 @@ export default {
 		};
 	},
 	computed: {
+		isMaxReached() {
+			return this.max && this.max <= this.$helper.object.length(this.selected);
+		},
 		items() {
 			return this.models.map(this.item);
 		}
@@ -131,6 +135,14 @@ export default {
 		isSelected(item) {
 			return this.selected[item.id] !== undefined;
 		},
+		isDisabled(item) {
+			return (
+				this.multiple &&
+				this.max !== 1 &&
+				this.isSelected(item) === false &&
+				this.isMaxReached
+			);
+		},
 		paginate(pagination) {
 			this.pagination.page = pagination.page;
 			this.pagination.limit = pagination.limit;
@@ -152,7 +164,7 @@ export default {
 				return delete this.selected[item.id];
 			}
 
-			if (this.max && this.max <= this.$helper.object.length(this.selected)) {
+			if (this.isMaxReached) {
 				return;
 			}
 
