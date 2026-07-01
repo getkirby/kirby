@@ -57,7 +57,7 @@ return [
 		'parent'     => function (File $file) {
 			$parent = $file->parent();
 
-			if ($parent === null || $parent->isListable() === false) {
+			if ($parent->isListable() === false) {
 				return null;
 			}
 

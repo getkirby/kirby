@@ -560,22 +560,23 @@ class QrCode implements Stringable
 		}
 		for ($i = 0; $i < $length; $i += 3) {
 			$group = substr($data, $i, 3);
+
 			switch (strlen($group)) {
 				case 3:
-					$code[] = $group & 0x200;
-					$code[] = $group & 0x100;
-					$code[] = $group & 0x080;
+					$code[] = (int)$group & 0x200;
+					$code[] = (int)$group & 0x100;
+					$code[] = (int)$group & 0x080;
 					// no break
 				case 2:
-					$code[] = $group & 0x040;
-					$code[] = $group & 0x020;
-					$code[] = $group & 0x010;
+					$code[] = (int)$group & 0x040;
+					$code[] = (int)$group & 0x020;
+					$code[] = (int)$group & 0x010;
 					// no break
 				case 1:
-					$code[] = $group & 0x008;
-					$code[] = $group & 0x004;
-					$code[] = $group & 0x002;
-					$code[] = $group & 0x001;
+					$code[] = (int)$group & 0x008;
+					$code[] = (int)$group & 0x004;
+					$code[] = (int)$group & 0x002;
+					$code[] = (int)$group & 0x001;
 			}
 		}
 		return $code;

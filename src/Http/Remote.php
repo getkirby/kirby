@@ -66,7 +66,9 @@ class Remote
 		// update the defaults with App config if set;
 		// request the App instance lazily
 		if ($app = App::instance(lazy: true)) {
-			$defaults = [...$defaults, ...$app->option('remote', [])];
+			/** @var array $remote */
+			$remote   = $app->option('remote', []);
+			$defaults = [...$defaults, ...$remote];
 		}
 
 		// set all options, incl. url
@@ -89,12 +91,15 @@ class Remote
 		string $method,
 		array $arguments = []
 	): static {
+		/** @var string $url */
+		$url = $arguments[0];
+
+		/** @var array $options */
+		$options = $arguments[1] ?? [];
+
 		return new static(
-			url:     $arguments[0],
-			options: [
-				'method' => strtoupper($method),
-				...$arguments[1] ?? []
-			]
+			url: $url,
+			options: [ 'method' => strtoupper($method), ...$options]
 		);
 	}
 

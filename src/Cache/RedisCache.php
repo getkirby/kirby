@@ -133,7 +133,7 @@ class RedisCache extends Cache
 
 		// escape glob metacharacters so a prefix containing *, ?, [ or \
 		// is matched literally and can't bleed into other prefixes
-		$pattern = addcslashes($prefix, '\\*?[]') . '*';
+		$pattern = addcslashes((string)$prefix, '\\*?[]') . '*';
 
 		try {
 			$it = null;

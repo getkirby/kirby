@@ -491,7 +491,6 @@ abstract class LazyCollection extends Collection
 	 * @param int $offset The optional index to start the slice from
 	 * @param int|null $limit The optional number of elements to return
 	 * @return $this|static
-	 * @psalm-return ($offset is 0 && $limit is null ? $this : static)
 	 */
 	public function slice(
 		int $offset = 0,

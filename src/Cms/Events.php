@@ -52,8 +52,9 @@ class Events
 	public function hooks(Event $event): array
 	{
 		// get all hooks for the event name
-		$name   = $event->name();
+		/** @var array<string, array> $hooks */
 		$hooks  = $this->app->extensions('hooks');
+		$name   = $event->name();
 		$result = $hooks[$name] ?? [];
 
 		// get all hooks for the event name wildcards

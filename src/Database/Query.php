@@ -317,7 +317,7 @@ class Query
 	 * by not passing an argument.
 	 *
 	 * @return array|$this
-	 * @psalm-return ($bindings is array ? $this : array)
+	 * @psalm-return ($bindings is array ? static : array)
 	 */
 	public function bindings(array|null $bindings = null): array|static
 	{

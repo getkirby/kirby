@@ -154,7 +154,7 @@ class Assets
 			// normalize options
 			return array_values(A::map(
 				$icons,
-				fn ($icon) => [
+				fn (array $icon): array => [
 					...$icon,
 					'href'  => Url::to($icon['href']),
 					'nonce' => $this->nonce

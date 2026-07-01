@@ -1,10 +1,9 @@
 <?php
 
-namespace Kirby\Toolkit;
+namespace Kirby\Cms;
 
-use Kirby\Cms\ModelWithContent;
-use Kirby\Cms\Page;
 use Kirby\TestCase;
+use Kirby\Toolkit\I18n;
 
 class HasStringTemplateMock
 {

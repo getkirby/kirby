@@ -800,7 +800,7 @@ trait PageActions
 		// never directly be supplied by the caller
 		unset($props['blueprint']);
 
-		$content  = $props['content']  ?? [];
+		$content  = (array)($props['content'] ?? []);
 		$template = $props['template'] ?? 'default';
 
 		return [

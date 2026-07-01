@@ -1,6 +1,8 @@
 <?php
 
-namespace Kirby\Toolkit;
+namespace Kirby\Cms;
+
+use Kirby\Toolkit\HasI18n;
 
 /**
  * Adds stringTemplate helper methods
@@ -12,6 +14,11 @@ namespace Kirby\Toolkit;
 trait HasStringTemplate
 {
 	use HasI18n;
+
+	/**
+	 * Returns the parent model the template is resolved against
+	 */
+	abstract public function model(): ModelWithContent|null;
 
 	/**
 	 * Parses a string template in the given value
@@ -27,6 +34,7 @@ trait HasStringTemplate
 
 		$model = $this->model();
 
+		/** @psalm-suppress TypeDoesNotContainNull */
 		if ($model === null) {
 			return $string;
 		}

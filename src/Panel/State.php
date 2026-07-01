@@ -37,7 +37,6 @@ class State
 		$this->multilang   = $this->panel->multilang();
 		$this->language    = $this->kirby->language();
 		$this->user        = $this->kirby->user();
-		/** @psalm-suppress RedundantCondition */
 		$this->permissions = $this->user?->role()->permissions()->toArray() ?? [];
 	}
 

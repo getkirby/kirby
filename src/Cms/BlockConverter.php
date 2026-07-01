@@ -133,7 +133,7 @@ class BlockConverter
 	{
 		return [
 			'content' => [
-				...$params['attrs'] ?? [],
+				...(array)($params['attrs'] ?? []),
 				'body' => $params['content'] ?? null
 			],
 			'type' => $params['type'] ?? 'unknown'

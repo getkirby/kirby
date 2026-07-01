@@ -22,6 +22,8 @@ class VolatileHeaders
 
 	/**
 	 * Adds (parts of) a header to the volatile list
+	 *
+	 * @param array<string, list<string>|null> $target
 	 */
 	protected function append(
 		string $name,
@@ -33,7 +35,10 @@ class VolatileHeaders
 			return;
 		}
 
-		if (array_key_exists($name, $target) === true && $target[$name] === null) {
+		if (
+			array_key_exists($name, $target) === true &&
+			$target[$name] === null
+		) {
 			return;
 		}
 

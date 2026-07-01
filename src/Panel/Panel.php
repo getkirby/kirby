@@ -122,7 +122,6 @@ class Panel
 	 */
 	public function menu(string|null $current = null): Menu
 	{
-		/** @psalm-suppress RedundantCondition */
 		return new Menu(
 			areas: $this->areas(),
 			permissions: $this->kirby->user()?->role()->permissions()->toArray() ?? [],

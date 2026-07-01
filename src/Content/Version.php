@@ -645,7 +645,7 @@ class Version
 		// merge the previous state with the new state to always
 		// update to a complete version
 		$fields = [
-			...$this->read($language),
+			...$this->read($language) ?? [],
 			...$fields
 		];
 

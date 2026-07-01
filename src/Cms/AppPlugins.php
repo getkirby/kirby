@@ -15,7 +15,6 @@ use Kirby\Filesystem\F;
 use Kirby\Filesystem\Mime;
 use Kirby\Form\Field as FormField;
 use Kirby\Image\Image;
-use Kirby\Plugin\License;
 use Kirby\Plugin\Plugin;
 use Kirby\Text\KirbyTag;
 use Kirby\Toolkit\A;
@@ -564,7 +563,7 @@ trait AppPlugins
 	protected function extendRoutes(array|Closure $routes): array
 	{
 		if ($routes instanceof Closure) {
-			$routes = $routes($this);
+			$routes = (array)$routes($this);
 		}
 
 		return $this->extensions['routes'] = [

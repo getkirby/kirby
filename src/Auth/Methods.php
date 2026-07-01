@@ -24,7 +24,7 @@ class Methods
 	 */
 	public static array $methods = [];
 
-	protected array $enabled;
+	protected array|null $enabled = null;
 
 	public function __construct(
 		protected Auth $auth,
@@ -101,7 +101,7 @@ class Methods
 	 */
 	public function enabled(): array
 	{
-		if (isset($this->enabled) === true) {
+		if ($this->enabled !== null) {
 			return $this->enabled; // @codeCoverageIgnore
 		}
 

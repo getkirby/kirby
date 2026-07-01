@@ -155,6 +155,7 @@ abstract class Model
 		}
 
 		// merge with defaults and blueprint option
+		/** @var array|null $blueprint */
 		$settings = [
 			...$this->imageDefaults(),
 			...$settings ?? [],
@@ -273,7 +274,7 @@ abstract class Model
 		// for all other provide crops based on the card ratio
 		if (is_numeric($ratio) === false) {
 			$ratio = explode('/', $ratio);
-			$ratio = $ratio[0] / $ratio[1];
+			$ratio = (float)$ratio[0] / (float)$ratio[1];
 		}
 
 		$srcset = [];

@@ -2,9 +2,9 @@
 
 namespace Kirby\Panel\Ui\Button;
 
+use Kirby\Cms\HasStringTemplate;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Panel\Ui\Button;
-use Kirby\Toolkit\HasStringTemplate;
 
 /**
  * UI button that belongs to a model

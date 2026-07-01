@@ -109,7 +109,7 @@ class ViewButton extends ModelButton
 		// collect all buttons from areas and config
 		$buttons = [
 			...$kirby->panel()->areas()->buttons(),
-			...$kirby->option('panel.viewButtons.' . $view, [])
+			...(array)$kirby->option('panel.viewButtons.' . $view, [])
 		];
 
 		// try to find by full name (view-prefixed)
@@ -144,6 +144,7 @@ class ViewButton extends ModelButton
 
 		// flatten array
 		if ($props = $button['props'] ?? null) {
+			/** @var array $props */
 			$button = [...$props, ...$button];
 			unset($button['props']);
 		}

@@ -90,10 +90,10 @@ class Uri implements Stringable
 			// colon in the string but the string is a relative URL
 			if (Url::isAbsolute($props) === false) {
 				$props = 'https://getkirby.com/' . $props;
-				$props = parse_url($props);
+				$props = parse_url($props) ?: [];
 				unset($props['scheme'], $props['host']);
 			} else {
-				$props = parse_url($props);
+				$props = parse_url($props) ?: [];
 			}
 
 			$props['username'] = $props['user'] ?? null;
