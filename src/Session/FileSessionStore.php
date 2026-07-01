@@ -84,14 +84,7 @@ class FileSessionStore extends SessionStore
 		$result = fclose($handle);
 
 		if ($result !== true) {
-			// @codeCoverageIgnoreStart
-			throw new Exception(
-				key: 'session.filestore.unexpectedFilesystemError',
-				fallback: 'Unexpected file system error',
-				translate: false,
-				httpCode: 500
-			);
-			// @codeCoverageIgnoreEnd
+			$this->fail(); // @codeCoverageIgnore
 		}
 	}
 
@@ -191,14 +184,7 @@ class FileSessionStore extends SessionStore
 
 		// file still exists, delete it
 		if (@F::unlink($path) !== true) {
-			// @codeCoverageIgnoreStart
-			throw new Exception(
-				key: 'session.filestore.unexpectedFilesystemError',
-				fallback: 'Unexpected file system error',
-				translate: false,
-				httpCode: 500
-			);
-			// @codeCoverageIgnoreEnd
+			$this->fail(); // @codeCoverageIgnore
 		}
 	}
 
@@ -217,6 +203,23 @@ class FileSessionStore extends SessionStore
 
 		clearstatcache();
 		return is_file($path) === true;
+	}
+
+	/**
+	 * Throws an exception for an unexpected file system error
+	 * @since 6.0.0
+	 *
+	 * @throws \Kirby\Exception\Exception
+	 * @codeCoverageIgnore
+	 */
+	protected function fail(): never
+	{
+		throw new Exception(
+			key: 'session.filestore.unexpectedFilesystemError',
+			fallback: 'Unexpected file system error',
+			translate: false,
+			httpCode: 500
+		);
 	}
 
 	/**
@@ -240,14 +243,7 @@ class FileSessionStore extends SessionStore
 			$result = flock($handle, LOCK_SH);
 
 			if ($result !== true) {
-				// @codeCoverageIgnoreStart
-				throw new Exception(
-					key: 'session.filestore.unexpectedFilesystemError',
-					fallback: 'Unexpected file system error',
-					translate: false,
-					httpCode: 500
-				);
-				// @codeCoverageIgnoreEnd
+				$this->fail(); // @codeCoverageIgnore
 			}
 		}
 
@@ -260,14 +256,7 @@ class FileSessionStore extends SessionStore
 			$string = fread($handle, $filesize);
 
 			if ($string === false) {
-				// @codeCoverageIgnoreStart
-				throw new Exception(
-					key: 'session.filestore.unexpectedFilesystemError',
-					fallback: 'Unexpected file system error',
-					translate: false,
-					httpCode: 500
-				);
-				// @codeCoverageIgnoreEnd
+				$this->fail(); // @codeCoverageIgnore
 			}
 		} else {
 			// we don't need to read empty files
@@ -279,14 +268,7 @@ class FileSessionStore extends SessionStore
 			$result = flock($handle, LOCK_UN);
 
 			if ($result !== true) {
-				// @codeCoverageIgnoreStart
-				throw new Exception(
-					key: 'session.filestore.unexpectedFilesystemError',
-					fallback: 'Unexpected file system error',
-					translate: false,
-					httpCode: 500
-				);
-				// @codeCoverageIgnoreEnd
+				$this->fail(); // @codeCoverageIgnore
 			}
 		}
 
@@ -359,16 +341,9 @@ class FileSessionStore extends SessionStore
 		$handle = $this->handle($name);
 		$result = flock($handle, LOCK_EX);
 
-		// @codeCoverageIgnoreStart
 		if ($result !== true) {
-			throw new Exception(
-				key: 'session.filestore.unexpectedFilesystemError',
-				fallback: 'Unexpected file system error',
-				translate: false,
-				httpCode: 500
-			);
+			$this->fail(); // @codeCoverageIgnore
 		}
-		// @codeCoverageIgnoreEnd
 
 		// make a note that the file is now locked
 		$this->isLocked[$name] = true;
@@ -424,28 +399,14 @@ class FileSessionStore extends SessionStore
 
 		// delete all file contents first
 		if (rewind($handle) !== true || ftruncate($handle, 0) !== true) {
-			// @codeCoverageIgnoreStart
-			throw new Exception(
-				key: 'session.filestore.unexpectedFilesystemError',
-				fallback: 'Unexpected file system error',
-				translate: false,
-				httpCode: 500
-			);
-			// @codeCoverageIgnoreEnd
+			$this->fail(); // @codeCoverageIgnore
 		}
 
 		// write the new contents
 		$result = fwrite($handle, $data);
 
 		if (is_int($result) === false || $result === 0) {
-			// @codeCoverageIgnoreStart
-			throw new Exception(
-				key: 'session.filestore.unexpectedFilesystemError',
-				fallback: 'Unexpected file system error',
-				translate: false,
-				httpCode: 500
-			);
-			// @codeCoverageIgnoreEnd
+			$this->fail(); // @codeCoverageIgnore
 		}
 	}
 
@@ -475,16 +436,9 @@ class FileSessionStore extends SessionStore
 		$handle = $this->handle($name);
 		$result = flock($handle, LOCK_UN);
 
-		// @codeCoverageIgnoreStart
 		if ($result !== true) {
-			throw new Exception(
-				key: 'session.filestore.unexpectedFilesystemError',
-				fallback: 'Unexpected file system error',
-				translate: false,
-				httpCode: 500
-			);
+			$this->fail(); // @codeCoverageIgnore
 		}
-		// @codeCoverageIgnoreEnd
 
 		// make a note that the file is no longer locked
 		unset($this->isLocked[$name]);

@@ -248,11 +248,11 @@ class SessionsTest extends TestCase
 		$cache = $sessionsReflector->getProperty('cache');
 
 		$sessionReflector = new ReflectionClass(Session::class);
-		$tokenKey = $sessionReflector->getProperty('tokenKey');
+		$token = $sessionReflector->getProperty('token');
 
 		$sessions = new Sessions($this->store, ['mode' => 'header']);
 		$session = $sessions->get('9999999999.valid.' . $this->store->validKey);
-		$tokenKey->setValue($session, 'new-key');
+		$token->setValue($session, new Token(9999999999, 'valid', 'new-key'));
 
 		$this->assertArrayNotHasKey('9999999999.valid.new-key', $cache->getValue($sessions));
 		$sessions->updateCache($session);
