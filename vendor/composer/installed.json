@@ -770,23 +770,23 @@
         },
         {
             "name": "symfony/deprecation-contracts",
-            "version": "v3.7.0",
-            "version_normalized": "3.7.0.0",
+            "version": "v3.7.1",
+            "version_normalized": "3.7.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/deprecation-contracts.git",
-                "reference": "50f59d1f3ca46d41ac911f97a78626b6756af35b"
+                "reference": "f3202fa1b5097b0af062dc978b32ecf63404e31d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/50f59d1f3ca46d41ac911f97a78626b6756af35b",
-                "reference": "50f59d1f3ca46d41ac911f97a78626b6756af35b",
+                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/f3202fa1b5097b0af062dc978b32ecf63404e31d",
+                "reference": "f3202fa1b5097b0af062dc978b32ecf63404e31d",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.1"
             },
-            "time": "2026-04-13T15:52:40+00:00",
+            "time": "2026-06-05T06:23:12+00:00",
             "type": "library",
             "extra": {
                 "thanks": {
@@ -820,7 +820,7 @@
             "description": "A generic function and convention to trigger deprecation notices",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/deprecation-contracts/tree/v3.7.0"
+                "source": "https://github.com/symfony/deprecation-contracts/tree/v3.7.1"
             },
             "funding": [
                 {
@@ -1196,17 +1196,17 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v7.4.13",
-            "version_normalized": "7.4.13.0",
+            "version": "v7.4.14",
+            "version_normalized": "7.4.14.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "a7ec3b1156faf8815db7683ec7c1e7338e6f977c"
+                "reference": "f8f328665ace2370d1e10645b807ba1646dc7dcc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/a7ec3b1156faf8815db7683ec7c1e7338e6f977c",
-                "reference": "a7ec3b1156faf8815db7683ec7c1e7338e6f977c",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/f8f328665ace2370d1e10645b807ba1646dc7dcc",
+                "reference": "f8f328665ace2370d1e10645b807ba1646dc7dcc",
                 "shasum": ""
             },
             "require": {
@@ -1220,7 +1220,7 @@
             "require-dev": {
                 "symfony/console": "^6.4|^7.0|^8.0"
             },
-            "time": "2026-05-25T06:06:12+00:00",
+            "time": "2026-06-08T20:24:16+00:00",
             "bin": [
                 "Resources/bin/yaml-lint"
             ],
@@ -1251,7 +1251,7 @@
             "description": "Loads and dumps YAML files",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/yaml/tree/v7.4.13"
+                "source": "https://github.com/symfony/yaml/tree/v7.4.14"
             },
             "funding": [
                 {
