@@ -49,11 +49,14 @@ class KirbyTags
 			try {
 				return KirbyTag::parse($match[0], $data)->render();
 			} catch (InvalidArgumentException $e) {
+				if (Str::startsWith($e->getMessage(), 'Undefined tag type:') === true) {
+					return $match[0];
+				}
+
 				// stay silent in production and ignore non-existing tags
-				if (
-					$debug !== true ||
-					Str::startsWith($e->getMessage(), 'Undefined tag type:') === true
-				) {
+				if ($debug !== true) {
+					error_log($e);
+
 					return $match[0];
 				}
 
@@ -62,6 +65,8 @@ class KirbyTags
 				if ($debug === true) {
 					throw $e;
 				}
+
+				error_log($e);
 
 				return $match[0];
 			}
