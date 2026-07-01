@@ -539,12 +539,19 @@ class SystemTest extends AreaTestCase
 		];
 
 		$this->assertSame($expected, $view['props']['plugins']);
+
+		// curl's wording for a missing local file differs between
+		// versions ("Couldn't open file" vs. "Could not open file")
 		$this->assertSame([
 			'Could not load update data for plugin getkirby/private: Couldn\'t open file ' .
 			static::FIXTURES . '/plugins/getkirby/private.json',
 			'Could not load update data for plugin getkirby/unknown: Couldn\'t open file ' .
 			static::FIXTURES . '/plugins/getkirby/unknown.json',
-		], $view['props']['exceptions']);
+		], str_replace(
+			'Could not open file',
+			'Couldn\'t open file',
+			$view['props']['exceptions']
+		));
 	}
 
 	public function testViewWithoutUpdateCheck(): void
