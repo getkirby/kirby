@@ -28,6 +28,7 @@ require_once __DIR__ . '/Filesystem/mocks.php';
 require_once __DIR__ . '/Http/mocks.php';
 require_once __DIR__ . '/Sane/mocks.php';
 require_once __DIR__ . '/Session/mocks.php';
+require_once __DIR__ . '/Text/mocks.php';
 require_once __DIR__ . '/Toolkit/mocks.php';
 
 PhpUnitExtension::init();

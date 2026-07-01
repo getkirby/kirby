@@ -108,9 +108,17 @@ class KirbyTagsTest extends TestCase
 			]
 		];
 
+		ErrorLog::$log = '';
 		$this->assertSame('(test: foo)', KirbyTags::parse('(test: foo)'));
+		$this->assertStringContainsString('Exception: Just for fun', ErrorLog::$log);
+
+		ErrorLog::$log = '';
 		$this->assertSame('(invalidargument: foo)', KirbyTags::parse('(invalidargument: foo)'));
+		$this->assertStringContainsString('Kirby\Exception\InvalidArgumentException: Just for fun', ErrorLog::$log);
+
+		ErrorLog::$log = '';
 		$this->assertSame('(undefined: foo)', KirbyTags::parse('(undefined: foo)'));
+		$this->assertSame('', ErrorLog::$log);
 	}
 
 	public function testParseWithExceptionDebug1(): void

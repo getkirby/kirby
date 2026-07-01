@@ -50,9 +50,7 @@
 				</k-definition>
 			</k-definitions>
 
-			<k-text class="k-help">
-				Manage your licenses on our <a href="">license hub</a>
-			</k-text>
+			<k-text class="k-help" :html="licenseHubText" />
 		</k-stack>
 	</k-dialog>
 </template>
@@ -79,7 +77,14 @@ export const props = {
  */
 export default {
 	mixins: [props],
-	emits: ["cancel", "submit"]
+	emits: ["cancel", "submit"],
+	computed: {
+		licenseHubText() {
+			return this.$t("license.manage.hub", {
+				url: "https://hub.getkirby.com/"
+			});
+		}
+	}
 };
 </script>
 

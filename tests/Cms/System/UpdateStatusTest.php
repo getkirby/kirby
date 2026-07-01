@@ -286,17 +286,26 @@ class UpdateStatusTest extends TestCase
 			]
 		]);
 
+		// curl's wording for a missing local file differs between
+		// versions ("Couldn't open file" vs. "Could not open file"),
+		// so normalize it before comparing the full message
+		$normalize = fn ($messages) => str_replace(
+			'Could not open file',
+			'Couldn\'t open file',
+			$messages
+		);
+
 		$updateStatus = new UpdateStatus($plugin);
 		$this->assertNull($updateStatus->targetVersion());
 		$this->assertSame([
 			'Could not load update data for plugin getkirby/test: Couldn\'t open file ' .
 			static::FIXTURES . '/getkirby.com/plugins/getkirby/test.json'
-		], $updateStatus->exceptionMessages());
+		], $normalize($updateStatus->exceptionMessages()));
 
 		$this->assertSame(
 			'Could not load update data for plugin getkirby/test: Couldn\'t open file ' .
 			static::FIXTURES . '/getkirby.com/plugins/getkirby/test.json',
-			$app->cache('updates')->get('plugins/getkirby/test')
+			$normalize($app->cache('updates')->get('plugins/getkirby/test'))
 		);
 
 		// cached error should be used on subsequent requests
@@ -305,7 +314,7 @@ class UpdateStatusTest extends TestCase
 		$this->assertSame([
 			'Could not load update data for plugin getkirby/test: Couldn\'t open file ' .
 			static::FIXTURES . '/getkirby.com/plugins/getkirby/test.json'
-		], $updateStatus->exceptionMessages());
+		], $normalize($updateStatus->exceptionMessages()));
 	}
 
 	public function testLoadDataNotJson(): void
@@ -348,7 +357,19 @@ class UpdateStatusTest extends TestCase
 		$updateStatus = new UpdateStatus($package, $securityOnly, $data);
 
 		foreach ($expected as $method => $value) {
-			$this->assertSame($value, $updateStatus->$method());
+			$actual = $updateStatus->$method();
+
+			// curl's wording for a missing local file differs between
+			// versions ("Couldn't open file" vs. "Could not open file")
+			if ($method === 'exceptionMessages') {
+				$actual = str_replace(
+					'Could not open file',
+					'Couldn\'t open file',
+					$actual
+				);
+			}
+
+			$this->assertSame($value, $actual);
 		}
 	}
 

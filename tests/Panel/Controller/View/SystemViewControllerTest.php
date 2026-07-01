@@ -164,8 +164,17 @@ class SystemViewControllerTest extends TestCase
 			]
 		]);
 
+		// curl's wording for a missing local file differs between
+		// versions ("Couldn't open file" vs. "Could not open file"),
+		// so normalize it before comparing the full message
+		$normalize = fn ($messages) => str_replace(
+			'Could not open file',
+			'Couldn\'t open file',
+			$messages
+		);
+
 		$controller = new SystemViewController();
-		$exceptions = $controller->exceptions();
+		$exceptions = $normalize($controller->exceptions());
 		$this->assertSame([
 			'Could not load update data for plugin getkirby/private: Couldn\'t open file ' .
 			static::FIXTURES . '/plugins/getkirby/private.json',

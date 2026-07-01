@@ -369,6 +369,58 @@ class LicenseTest extends TestCase
 		$this->assertTrue($license->isOnCorrectDomain());
 	}
 
+	public function testIsSignedFreeLicenseOnlyLocally(): void
+	{
+		// a free license self-signs and validates while local
+		$this->app->clone([
+			'roots' => [
+				'index'   => static::TMP,
+				'license' => static::TMP . '/.license'
+			],
+			'options' => [
+				'url' => 'https://sandbox.test',
+			],
+			'server' => [
+				'REMOTE_ADDR' => '127.0.0.1',
+			]
+		]);
+
+		$license = new License(
+			code:   LicenseType::Free->prefix(),
+			domain: 'sandbox.test'
+		);
+		$license->register();
+
+		$content = $license->content();
+
+		$this->assertTrue($license->isFreeAndLocal());
+		$this->assertTrue($license->isSigned());
+		$this->assertSame(LicenseStatus::Acknowledged, $license->status());
+
+		// the very same self-signed license file must NOT
+		// validate once the site is publicly accessible
+		$this->app->clone([
+			'roots' => [
+				'index'   => static::TMP,
+				'license' => static::TMP . '/.license'
+			],
+			'options' => [
+				'url' => 'https://sandbox.com',
+			],
+			'server' => [
+				'HTTP_HOST'   => 'sandbox.com',
+				'REMOTE_ADDR' => '1.2.3.4',
+			]
+		]);
+
+		$public = new License(...License::polyfill($content));
+
+		$this->assertFalse($public->isFreeAndLocal());
+		$this->assertFalse($public->isSigned());
+		$this->assertTrue($public->isMissing());
+		$this->assertSame(LicenseStatus::Missing, $public->status());
+	}
+
 	public function testLabel(): void
 	{
 		$license = new License();
