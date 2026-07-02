@@ -81,7 +81,7 @@ export function isPageUUID(value: string): boolean {
  */
 export async function preview(
 	{ type, link }: { type: string; link: string },
-	fields: string[] = []
+	fields?: string[]
 ): Promise<LinkPreview> {
 	if (type === "page" && link) {
 		return await previewForPage(link, fields);
