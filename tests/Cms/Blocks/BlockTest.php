@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Error;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
 
@@ -12,7 +13,7 @@ class BlockTest extends TestCase
 
 	protected Page $page;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
@@ -201,6 +202,8 @@ class BlockTest extends TestCase
 			]
 		]);
 
+		ErrorLog::$log = '';
+
 		$block = new Block([
 			'content' => [
 				'text' => 'Test'
@@ -209,10 +212,14 @@ class BlockTest extends TestCase
 		]);
 
 		$this->assertSame('', $block->toHtml());
+		$this->assertStringContainsString('Error: Call to undefined function shouldThrowException()', ErrorLog::$log);
 	}
 
 	public function testToHtmlInvalidWithDebugMode(): void
 	{
+		$this->expectException(Error::class);
+		$this->expectExceptionMessage('Call to undefined function shouldThrowException()');
+
 		new App([
 			'roots' => [
 				'index' => '/dev/null',
@@ -230,8 +237,7 @@ class BlockTest extends TestCase
 			'type' => 'debug'
 		]);
 
-		$expected = '<p>Block error: "Call to undefined function shouldThrowException()" in block type: "debug"</p>';
-		$this->assertSame($expected, $block->toHtml());
+		$block->toHtml();
 	}
 
 	public function testToHtmlWithCustomSnippets(): void

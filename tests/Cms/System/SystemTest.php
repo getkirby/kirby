@@ -30,7 +30,7 @@ class SystemTest extends TestCase
 		UpdateStatus::$host = static::$updateStatusHost;
 	}
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
@@ -39,7 +39,7 @@ class SystemTest extends TestCase
 		]);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		if ($this->subTmp !== null) {
 			chmod($this->subTmp, 0o755);
@@ -481,6 +481,41 @@ class SystemTest extends TestCase
 	{
 		$system = new System($this->app);
 		$this->assertInstanceOf(License::class, $system->license());
+	}
+
+	public function testLicenseTriggersReissue(): void
+	{
+		$root = static::TMP . '/license/.license';
+
+		Dir::make(dirname($root));
+		F::write($root, json_encode([
+			'code'    => LicenseType::Free->prefix(),
+			'domain'  => 'sandbox.test',
+			'expires' => '2000-01-01 00:00:00',
+		]));
+
+		$app = $this->app->clone([
+			'options' => [
+				'url' => 'https://sandbox.test',
+			],
+			'server' => [
+				'REMOTE_ADDR' => '127.0.0.1',
+			],
+			'roots' => [
+				'index'   => static::TMP,
+				'license' => $root
+			]
+		]);
+
+		$this->subTmp = dirname($root);
+
+		// the stored license is expired before it is loaded
+		$this->assertTrue(License::read()->isExpired());
+
+		// loading it triggers the reissue (here a free + local
+		// self-sign), so it is no longer expired afterwards
+		$license = (new System($app))->license();
+		$this->assertFalse($license->isExpired());
 	}
 
 	public function testLoginMethods(): void

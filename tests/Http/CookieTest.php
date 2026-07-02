@@ -12,13 +12,13 @@ class CookieTest extends TestCase
 	protected string $cookieKey;
 	protected array $cookies;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->cookieKey = Cookie::$key;
 		$this->cookies   = $_COOKIE;
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		Cookie::$key = $this->cookieKey;
 		$_COOKIE     = $this->cookies;

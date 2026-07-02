@@ -1,9 +1,9 @@
 import { reactive } from "vue";
 import { uuid } from "@/helpers/string";
-import State from "./state.js";
-import listeners from "./listeners.js";
-import queue from "@/helpers/queue.js";
-import { uploadAsChunks } from "@/helpers/upload.js";
+import State from "./state";
+import listeners from "./listeners";
+import queue from "@/helpers/queue";
+import { uploadAsChunks } from "@/helpers/upload";
 import { extension, name, niceSize } from "@/helpers/file.js";
 
 export const defaults = () => {
@@ -260,7 +260,7 @@ export default (panel) => {
 			parent.set.call(this, state);
 
 			// reset the event listeners
-			this.on = {};
+			this.removeEventListeners();
 
 			// register new listeners
 			this.addEventListeners(state.on ?? {});

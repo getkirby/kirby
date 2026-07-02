@@ -72,7 +72,7 @@
 <script>
 import { set } from "vue";
 import { autofocus, disabled, id } from "@/mixins/props.js";
-import { focusIsInModal } from "@/helpers/focus.js";
+import { focusIsInModal } from "@/helpers/focus";
 
 export const props = {
 	mixins: [autofocus, disabled, id],
@@ -550,8 +550,14 @@ export default {
 				return;
 			}
 
-			// if focus moves to an element outside blocks, deselect blocks
-			if (this.$el.contains(event.target) === false) {
+			const overlay = document.querySelector(".k-overlay:last-of-type");
+
+			// if focus moves to an element outside blocks AND outside any overlay,
+			// deselect blocks
+			if (
+				this.$el.contains(event.target) === false &&
+				overlay?.contains(event.target) === false
+			) {
 				this.deselectAll();
 			}
 		},

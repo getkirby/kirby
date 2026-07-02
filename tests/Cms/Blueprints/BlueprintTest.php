@@ -18,7 +18,7 @@ class BlueprintTest extends TestCase
 
 	protected ModelWithContent $model;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
@@ -31,7 +31,7 @@ class BlueprintTest extends TestCase
 		Dir::make(static::TMP);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		Dir::remove(static::TMP);
 	}
@@ -738,6 +738,19 @@ class BlueprintTest extends TestCase
 		$this->assertCount(1, $blueprint->fields());
 		$this->assertArrayHasKey('test', $blueprint->fields());
 		$this->assertArrayNotHasKey('child-field', $blueprint->fields());
+	}
+
+	public function testNormalizeOptionsFalse(): void
+	{
+		$blueprint = new PageBlueprint([
+			'model'   => $this->model,
+			'options' => false,
+		]);
+
+		// all keys from defaults are present and every value is false, not null
+		foreach ($blueprint->options() as $key => $value) {
+			$this->assertFalse($value, "Option '$key' should be false");
+		}
 	}
 
 	public function testInvalidSectionType(): void

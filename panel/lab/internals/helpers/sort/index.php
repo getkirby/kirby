@@ -1,5 +1,5 @@
 <?php
 
 return [
-	'source' => 'panel/src/helpers/sort.js'
+	'source' => 'panel/src/helpers/sort.ts'
 ];

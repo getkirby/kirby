@@ -17,7 +17,7 @@ class HomeTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Home';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		Blueprint::$loaded = [];
 
@@ -38,7 +38,7 @@ class HomeTest extends TestCase
 		Dir::make(static::TMP);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		$this->app->session()->destroy();
 		unset($_SERVER['SERVER_SOFTWARE']);

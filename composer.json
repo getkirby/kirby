@@ -3,7 +3,7 @@
 	"description": "The Kirby core",
 	"license": "proprietary",
 	"type": "kirby-cms",
-	"version": "5.4.4",
+	"version": "5.5.0",
 	"keywords": [
 		"kirby",
 		"cms",
@@ -39,6 +39,8 @@
 		"christian-riesen/base32": "1.6.0",
 		"claviska/simpleimage": "4.4.0",
 		"composer/semver": "3.4.4",
+		"erusev/parsedown": "1.8.0",
+		"erusev/parsedown-extra": "0.9.0",
 		"filp/whoops": "2.18.4",
 		"getkirby/composer-installer": "^1.2.1",
 		"laminas/laminas-escaper": "2.18.0",
@@ -46,7 +48,7 @@
 		"phpmailer/phpmailer": "7.1.1",
 		"symfony/polyfill-intl-idn": "1.38.1",
 		"symfony/polyfill-mbstring": "1.38.2",
-		"symfony/yaml": "7.4.13"
+		"symfony/yaml": "7.4.14"
 	},
 	"replace": {
 		"symfony/polyfill-php72": "*"
@@ -90,21 +92,24 @@
 		"post-update-cmd": "curl -o cacert.pem https://curl.se/ca/cacert.pem",
 		"analyze": [
 			"@analyze:composer",
-			"@analyze:psalm",
-			"@analyze:phpmd"
+			"@analyze:composer:unused",
+			"@analyze:psalm"
 		],
 		"analyze:composer": "composer validate --strict --no-check-version --no-check-all",
-		"analyze:phpmd": "phpmd . ansi phpmd.xml.dist --exclude 'dependencies/*,tests/*,vendor/*'",
-		"analyze:psalm": "psalm",
+		"analyze:composer:unused": "cpx icanhazstring/composer-unused:0.9.6 --no-progress",
+		"analyze:psalm": "cpx vimeo/psalm:6.16.1",
 		"build": "./scripts/build",
 		"ci": [
 			"@fix",
 			"@analyze",
 			"@test"
 		],
-		"fix": "php-cs-fixer fix",
-		"test": "phpunit",
-		"test:coverage": "XDEBUG_MODE=coverage phpunit --coverage-html=tests/coverage",
+		"fix": "cpx friendsofphp/php-cs-fixer:3.95.1 fix",
+		"test": "cpx phpunit/phpunit:11.5.55",
+		"test:coverage": [
+			"@putenv XDEBUG_MODE=coverage",
+			"@test --coverage-html=tests/coverage"
+		],
 		"zip": "composer archive --format=zip --file=dist"
 	}
 }

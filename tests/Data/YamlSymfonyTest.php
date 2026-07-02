@@ -12,12 +12,12 @@ use stdClass;
 #[CoversClass(YamlSymfony::class)]
 class YamlSymfonyTest extends TestCase
 {
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		new App(['options' => ['yaml.handler' => 'symfony']]);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		new App([]);
 	}

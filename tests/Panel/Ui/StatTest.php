@@ -13,7 +13,7 @@ class StatTest extends TestCase
 {
 	protected ModelWithContent $model;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->model = new class (['slug' => 'test']) extends Page {
 			public function report(): array

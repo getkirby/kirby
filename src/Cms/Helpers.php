@@ -32,6 +32,9 @@ class Helpers
 		// The internal `$model->contentFile*()` methods have been deprecated
 		'model-content-file' => true,
 
+		// Passing `$category = null` to `Permissions::for()` is not supported
+		'permissions-for-category-null' => true,
+
 		// Passing an `info` array inside the `extends` array
 		// has been deprecated. Pass the individual entries (e.g. root, version)
 		// directly as named arguments.

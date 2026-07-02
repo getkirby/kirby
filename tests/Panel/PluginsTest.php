@@ -23,7 +23,7 @@ class PluginsTest extends TestCase
 	protected string $mjsB;
 	protected string $mjsC;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
@@ -68,7 +68,7 @@ class PluginsTest extends TestCase
 		return $time;
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		Dir::remove(static::TMP);
 	}

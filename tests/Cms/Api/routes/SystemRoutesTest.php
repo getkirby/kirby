@@ -51,7 +51,7 @@ class SystemRoutesTest extends TestCase
 		$this->app->system();
 	}
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		static::setUpTmp();
 

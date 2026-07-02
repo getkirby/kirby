@@ -66,6 +66,11 @@ jobs:
         run: npm run test:unit
         working-directory: panel
 
+      - name: Check for TypeScript type errors
+        if: always() && steps.finishPrepare.outcome == 'success'
+        run: npm run types
+        working-directory: panel
+
   coding-style:
     name: "Coding Style"
 

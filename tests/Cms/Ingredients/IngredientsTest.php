@@ -8,7 +8,7 @@ class IngredientsTest extends TestCase
 {
 	protected Ingredients $ingredients;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->ingredients = Ingredients::bake([
 			'a' => 'A',

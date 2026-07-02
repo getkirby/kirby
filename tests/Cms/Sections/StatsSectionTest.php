@@ -44,7 +44,7 @@ class StatsSectionTest extends TestCase
 {
 	protected ModelWithContent $model;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		App::destroy();
 

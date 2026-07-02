@@ -15,14 +15,14 @@ class AutoSessionTest extends TestCase
 
 	protected SessionStore $store;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->store = new TestSessionStore();
 
 		MockTime::$time = 1337000000;
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		unset($this->store);
 		App::destroy();

@@ -8,12 +8,12 @@ use Kirby\Toolkit\Obj;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Helpers::class)]
-class HelpersTest extends HelpersTestCase
+class HelpersTest extends TestCase
 {
 	protected array $deprecations = [];
 	protected string $locale;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 
@@ -21,7 +21,7 @@ class HelpersTest extends HelpersTestCase
 		$this->locale       = setlocale(LC_MESSAGES, 0);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		parent::tearDown();
 

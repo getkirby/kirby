@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 
 class PaginationTest extends TestCase
 {
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		Pagination::$validate = true;
 	}

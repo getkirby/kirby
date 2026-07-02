@@ -7,3 +7,7 @@
 		v-on="$panel.dialog.listeners()"
 	/>
 </template>
+
+<script>
+export default {};
+</script>

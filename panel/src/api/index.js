@@ -6,7 +6,7 @@ import Languages from "./languages.js";
 import Pages from "./pages.js";
 import Patch from "./patch.js";
 import Post from "./post.js";
-import Request from "./request.js";
+import Request from "./request";
 import Roles from "./roles.js";
 import System from "./system.js";
 import Site from "./site.js";

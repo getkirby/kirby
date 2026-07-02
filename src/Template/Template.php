@@ -180,7 +180,7 @@ class Template implements Stringable
 
 		// no slots have been defined, but the template code
 		// should be used as default slot
-		if (Snippet::$current->slots()->count() === 0) {
+		if (Snippet::$current->hasSlots() === false) {
 			return Snippet::$current->render($data, [
 				'default' => $template
 			]);

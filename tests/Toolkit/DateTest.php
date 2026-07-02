@@ -13,7 +13,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(Date::class)]
 class DateTest extends TestCase
 {
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		App::destroy();
 	}
@@ -448,6 +448,27 @@ class DateTest extends TestCase
 			'size' => 5,
 			'unit' => 'hour'
 		], $config);
+	}
+
+	public function testStepConfigWithPartialArray(): void
+	{
+		// array with only size must fall back to default unit
+		$this->assertSame(
+			['size' => 5, 'unit' => 'day'],
+			Date::stepConfig(['size' => 5])
+		);
+
+		// array with only unit must fall back to default size
+		$this->assertSame(
+			['size' => 1, 'unit' => 'month'],
+			Date::stepConfig(['unit' => 'Month'])
+		);
+
+		// empty array = full defaults
+		$this->assertSame(
+			['size' => 1, 'unit' => 'day'],
+			Date::stepConfig([])
+		);
 	}
 
 	public function testStepConfigWithInt(): void

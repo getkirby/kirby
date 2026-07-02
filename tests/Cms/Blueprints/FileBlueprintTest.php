@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(FileBlueprint::class)]
 class FileBlueprintTest extends TestCase
 {
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		Blueprint::$loaded = [];
 	}
@@ -393,7 +393,8 @@ class FileBlueprintTest extends TestCase
 		]);
 		$this->assertSame(
 			'application/x-gzip, application/x-tar, application/x-zip, ' .
-			'audio/x-aiff, audio/mp4, audio/midi, audio/mpeg, audio/wav',
+			'audio/x-aiff, audio/flac, audio/mp4, audio/midi, audio/mpeg, ' .
+			'audio/ogg, audio/opus, audio/wav',
 			$blueprint->acceptMime()
 		);
 

@@ -4,7 +4,7 @@ namespace Kirby\Cms;
 
 class BlueprintPresetsTest extends TestCase
 {
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [

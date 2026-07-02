@@ -1,5 +1,5 @@
 import Modal, { defaults as modalDefaults } from "./modal.js";
-import { isObject } from "@/helpers/object.js";
+import { isObject } from "@/helpers/object";
 import { reactive, set } from "vue";
 
 export const defaults = () => {

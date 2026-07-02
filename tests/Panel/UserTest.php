@@ -30,7 +30,7 @@ class UserTest extends TestCase
 	public const FIXTURES = __DIR__ . '/fixtures';
 	public const TMP = KIRBY_TMP_DIR . '/Panel.User';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		Blueprint::$loaded = [];
 
@@ -43,7 +43,7 @@ class UserTest extends TestCase
 		Dir::make(static::TMP);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		$this->app->session()->destroy();
 		Dir::remove(static::TMP);

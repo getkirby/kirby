@@ -71,6 +71,22 @@ class SlotTest extends TestCase
 		$slot->close();
 	}
 
+	public function testOpenWhenAlreadyOpen(): void
+	{
+		$slot = new Slot('test');
+		$slot->open();
+
+		try {
+			$this->expectException(LogicException::class);
+			$this->expectExceptionMessage('The slot has already been opened');
+
+			$slot->open();
+		} finally {
+			// clean up the orphan output buffer started by the first open()
+			$slot->close();
+		}
+	}
+
 	public function testRender(): void
 	{
 		// all output must be captured

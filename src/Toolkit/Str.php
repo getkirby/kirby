@@ -33,83 +33,83 @@ class Str
 	 * Ascii translation table
 	 */
 	public static array $ascii = [
-		'/°|₀/' => '0',
-		'/¹|₁/' => '1',
-		'/²|₂/' => '2',
-		'/³|₃/' => '3',
-		'/⁴|₄/' => '4',
-		'/⁵|₅/' => '5',
-		'/⁶|₆/' => '6',
-		'/⁷|₇/' => '7',
-		'/⁸|₈/' => '8',
-		'/⁹|₉/' => '9',
-		'/À|Á|Â|Ã|Å|Ǻ|Ā|Ă|Ą|Ǎ|Ä|A/' => 'A',
-		'/à|á|â|ã|å|ǻ|ā|ă|ą|ǎ|ª|æ|ǽ|ä|a|а/' => 'a',
-		'/Б/' => 'B',
-		'/б/' => 'b',
-		'/Ç|Ć|Ĉ|Ċ|Č|Ц/' => 'C',
-		'/ç|ć|ĉ|ċ|č|ц/' => 'c',
-		'/Ð|Ď|Đ/' => 'Dj',
-		'/ð|ď|đ/' => 'dj',
-		'/Д/' => 'D',
-		'/д/' => 'd',
-		'/È|É|Ê|Ë|Ē|Ĕ|Ė|Ę|Ě|Е|Ё|Э/' => 'E',
-		'/è|é|ê|ë|ē|ĕ|ė|ę|ě|е|ё|э/' => 'e',
-		'/Ф/' => 'F',
-		'/ƒ|ф/' => 'f',
-		'/Ĝ|Ğ|Ġ|Ģ|Г/' => 'G',
-		'/ĝ|ğ|ġ|ģ|г/' => 'g',
-		'/Ĥ|Ħ|Х/' => 'H',
-		'/ĥ|ħ|х/' => 'h',
-		'/Ì|Í|Î|Ï|Ĩ|Ī|Ĭ|Ǐ|Į|İ|И/' => 'I',
-		'/ì|í|î|ï|ĩ|ī|ĭ|ǐ|į|ı|и|i̇/' => 'i',
-		'/Ĵ|Й/' => 'J',
-		'/ĵ|й/' => 'j',
-		'/Ķ|К/' => 'K',
-		'/ķ|к/' => 'k',
-		'/Ĺ|Ļ|Ľ|Ŀ|Ł|Л/' => 'L',
-		'/ĺ|ļ|ľ|ŀ|ł|л/' => 'l',
-		'/М/' => 'M',
-		'/м/' => 'm',
-		'/Ñ|Ń|Ņ|Ň|Н/' => 'N',
-		'/ñ|ń|ņ|ň|ŉ|н/' => 'n',
-		'/Ò|Ó|Ô|Õ|Ō|Ŏ|Ǒ|Ő|Ơ|Ø|Ǿ|Ö|O/' => 'O',
-		'/ò|ó|ô|õ|ō|ŏ|ǒ|ő|ơ|ø|ǿ|º|ö|o|о/' => 'o',
-		'/П/' => 'P',
-		'/п/' => 'p',
-		'/Ŕ|Ŗ|Ř|Р/' => 'R',
-		'/ŕ|ŗ|ř|р/' => 'r',
-		'/Ś|Ŝ|Ş|Ș|Š|С/' => 'S',
-		'/ś|ŝ|ş|ș|š|ſ|с/' => 's',
-		'/Ţ|Ț|Ť|Ŧ|Т/' => 'T',
-		'/ţ|ț|ť|ŧ|т/' => 't',
-		'/Ù|Ú|Û|Ũ|Ū|Ŭ|Ů|Ű|Ų|Ư|Ǔ|Ǖ|Ǘ|Ǚ|Ǜ|У|Ü|U/' => 'U',
-		'/ù|ú|û|ũ|ū|ŭ|ů|ű|ų|ư|ǔ|ǖ|ǘ|ǚ|ǜ|у|ü|u/' => 'u',
-		'/В/' => 'V',
-		'/в/' => 'v',
-		'/Ý|Ÿ|Ŷ|Ы/' => 'Y',
-		'/ý|ÿ|ŷ|ы/' => 'y',
-		'/Ŵ/' => 'W',
-		'/ŵ/' => 'w',
-		'/Ź|Ż|Ž|З/' => 'Z',
-		'/ź|ż|ž|з/' => 'z',
-		'/Æ|Ǽ/' => 'AE',
-		'/ß/' => 'ss',
-		'/Ĳ/' => 'IJ',
-		'/ĳ/' => 'ij',
-		'/Œ/' => 'OE',
-		'/Ч/' => 'Ch',
-		'/ч/' => 'ch',
-		'/Ю/' => 'Ju',
-		'/ю/' => 'ju',
-		'/Я/' => 'Ja',
-		'/я/' => 'ja',
-		'/Ш/' => 'Sh',
-		'/ш/' => 'sh',
-		'/Щ/' => 'Shch',
-		'/щ/' => 'shch',
-		'/Ж/' => 'Zh',
-		'/ж/' => 'zh',
+		'°|₀' => '0',
+		'¹|₁' => '1',
+		'²|₂' => '2',
+		'³|₃' => '3',
+		'⁴|₄' => '4',
+		'⁵|₅' => '5',
+		'⁶|₆' => '6',
+		'⁷|₇' => '7',
+		'⁸|₈' => '8',
+		'⁹|₉' => '9',
+		'À|Á|Â|Ã|Å|Ǻ|Ā|Ă|Ą|Ǎ|Ä|A' => 'A',
+		'à|á|â|ã|å|ǻ|ā|ă|ą|ǎ|ª|æ|ǽ|ä|a|а' => 'a',
+		'Б' => 'B',
+		'б' => 'b',
+		'Ç|Ć|Ĉ|Ċ|Č|Ц' => 'C',
+		'ç|ć|ĉ|ċ|č|ц' => 'c',
+		'Ð|Ď|Đ' => 'Dj',
+		'ð|ď|đ' => 'dj',
+		'Д' => 'D',
+		'д' => 'd',
+		'È|É|Ê|Ë|Ē|Ĕ|Ė|Ę|Ě|Е|Ё|Э' => 'E',
+		'è|é|ê|ë|ē|ĕ|ė|ę|ě|е|ё|э' => 'e',
+		'Ф' => 'F',
+		'ƒ|ф' => 'f',
+		'Ĝ|Ğ|Ġ|Ģ|Г' => 'G',
+		'ĝ|ğ|ġ|ģ|г' => 'g',
+		'Ĥ|Ħ|Х' => 'H',
+		'ĥ|ħ|х' => 'h',
+		'Ì|Í|Î|Ï|Ĩ|Ī|Ĭ|Ǐ|Į|İ|И' => 'I',
+		'ì|í|î|ï|ĩ|ī|ĭ|ǐ|į|ı|и|i̇' => 'i',
+		'Ĵ|Й' => 'J',
+		'ĵ|й' => 'j',
+		'Ķ|К' => 'K',
+		'ķ|к' => 'k',
+		'Ĺ|Ļ|Ľ|Ŀ|Ł|Л' => 'L',
+		'ĺ|ļ|ľ|ŀ|ł|л' => 'l',
+		'М' => 'M',
+		'м' => 'm',
+		'Ñ|Ń|Ņ|Ň|Н' => 'N',
+		'ñ|ń|ņ|ň|ŉ|н' => 'n',
+		'Ò|Ó|Ô|Õ|Ō|Ŏ|Ǒ|Ő|Ơ|Ø|Ǿ|Ö|O' => 'O',
+		'ò|ó|ô|õ|ō|ŏ|ǒ|ő|ơ|ø|ǿ|º|ö|o|о' => 'o',
+		'П' => 'P',
+		'п' => 'p',
+		'Ŕ|Ŗ|Ř|Р' => 'R',
+		'ŕ|ŗ|ř|р' => 'r',
+		'Ś|Ŝ|Ş|Ș|Š|С' => 'S',
+		'ś|ŝ|ş|ș|š|ſ|с' => 's',
+		'Ţ|Ț|Ť|Ŧ|Т' => 'T',
+		'ţ|ț|ť|ŧ|т' => 't',
+		'Ù|Ú|Û|Ũ|Ū|Ŭ|Ů|Ű|Ų|Ư|Ǔ|Ǖ|Ǘ|Ǚ|Ǜ|У|Ü|U' => 'U',
+		'ù|ú|û|ũ|ū|ŭ|ů|ű|ų|ư|ǔ|ǖ|ǘ|ǚ|ǜ|у|ü|u' => 'u',
+		'В' => 'V',
+		'в' => 'v',
+		'Ý|Ÿ|Ŷ|Ы' => 'Y',
+		'ý|ÿ|ŷ|ы' => 'y',
+		'Ŵ' => 'W',
+		'ŵ' => 'w',
+		'Ź|Ż|Ž|З' => 'Z',
+		'ź|ż|ž|з' => 'z',
+		'Æ|Ǽ' => 'AE',
+		'ß' => 'ss',
+		'Ĳ' => 'IJ',
+		'ĳ' => 'ij',
+		'Œ' => 'OE',
+		'Ч' => 'Ch',
+		'ч' => 'ch',
+		'Ю' => 'Ju',
+		'ю' => 'ju',
+		'Я' => 'Ja',
+		'я' => 'ja',
+		'Ш' => 'Sh',
+		'ш' => 'sh',
+		'Щ' => 'Shch',
+		'щ' => 'shch',
+		'Ж' => 'Zh',
+		'ж' => 'zh',
 	];
 
 	/**
@@ -208,17 +208,39 @@ class Str
 	 */
 	public static function ascii(string $string): string
 	{
-		$string  = str_replace(
+		static $ascii = null;
+		static $strtr = [];
+
+		$string = str_replace(
 			array_keys(static::$language),
 			array_values(static::$language),
 			$string
 		);
 
-		$string  = preg_replace(
-			array_keys(static::$ascii),
-			array_values(static::$ascii),
-			$string
-		);
+		// fast-path: nothing to change if string is already 7-bit ASCII
+		if (preg_match('/[^\x09\x0A\x0D\x20-\x7E]/', $string) === 0) {
+			return $string;
+		}
+
+		// (re)build the flat strtr lookup map when static::$ascii changed
+		if ($ascii !== static::$ascii) {
+			$ascii = static::$ascii;
+			$strtr = [];
+
+			foreach ($ascii as $group => $replacement) {
+				// remove legacy '/.../' delimiters
+				$group = trim($group, '/');
+
+				foreach (explode('|', $group) as $char) {
+					if ($char !== '') {
+						$strtr[$char] = $replacement;
+					}
+				}
+			}
+		}
+
+		// single-pass per-character replacement via the flat map
+		$string = strtr($string, $strtr);
 
 		return preg_replace('/[^\x09\x0A\x0D\x20-\x7E]/', '', $string);
 	}
@@ -264,7 +286,7 @@ class Str
 	 * Returns everything between two strings from the first occurrence of a given string
 	 */
 	public static function between(
-		string|null $string,
+		string $string,
 		string $start,
 		string $end
 	): string {
@@ -305,12 +327,11 @@ class Str
 			return true;
 		}
 
-		$method = match ($caseInsensitive) {
-			true  => 'stripos',
-			false => 'strpos'
-		};
+		$string ??= '';
 
-		return call_user_func($method, $string ?? '', $needle) !== false;
+		return $caseInsensitive === true
+			? stripos($string, $needle) !== false
+			: strpos($string, $needle) !== false;
 	}
 
 	/**
@@ -391,8 +412,8 @@ class Str
 	{
 		$encoded = '';
 
-		for ($i = 0; $i < static::length($string); $i++) {
-			$char     = static::substr($string, $i, 1);
+		// pre-split into characters once
+		foreach (mb_str_split($string, 1, 'UTF-8') as $char) {
 			$char     = mb_convert_encoding($char, 'UCS-4BE', 'UTF-8');
 			[, $code] = unpack('N', $char);
 			$encoded .= match (random_int(1, 2)) {
@@ -428,12 +449,13 @@ class Str
 			return true;
 		}
 
-		$probe = static::substr($string, -static::length($needle));
-
-		if ($caseInsensitive === true) {
-			$needle = static::lower($needle);
-			$probe  = static::lower($probe);
+		if ($caseInsensitive === false) {
+			return str_ends_with($string ?? '', $needle);
 		}
+
+		$probe  = static::substr($string, -static::length($needle));
+		$probe  = static::lower($probe);
+		$needle = static::lower($needle);
 
 		return $needle === $probe;
 	}
@@ -1127,30 +1149,69 @@ class Str
 		string $second,
 		bool $caseInsensitive = false
 	): array {
-		$matches = 0;
-		$percent = 0.0;
-
 		if ($caseInsensitive === true) {
 			$first  = static::lower($first);
 			$second = static::lower($second);
 		}
 
-		if (static::length($first) + static::length($second) > 0) {
-			$pos1 = $pos2 = $max = 0;
-			$len1 = static::length($first);
-			$len2 = static::length($second);
+		// identical inputs always score 100 %
+		if ($first === $second) {
+			$length = static::length($first);
 
+			return [
+				'matches' => $length,
+				'percent' => $length > 0 ? 100.0 : 0.0,
+			];
+		}
+
+		// ASCII fast path: native similar_text() is bit-identical to the
+		// recursive scan below for inputs without multibyte characters
+		if (
+			mb_check_encoding($first, 'ASCII') === true &&
+			mb_check_encoding($second, 'ASCII') === true
+		) {
+			$matches = similar_text($first, $second, $percent);
+			return compact('matches', 'percent');
+		}
+
+		// split once up front so we can recursively compare characters
+		return static::similarityFromChars(
+			first:  mb_str_split($first, 1, 'UTF-8'),
+			second: mb_str_split($second, 1, 'UTF-8')
+		);
+	}
+
+	/**
+	 * Calculates the similarity between two character arrays
+	 * @since 5.5.0
+	 */
+	protected static function similarityFromChars(
+		array $first,
+		array $second
+	): array {
+		$matches = 0;
+		$percent = 0.0;
+		$len1 = count($first);
+		$len2 = count($second);
+
+		if ($len1 + $len2 > 0) {
+			$pos1 = $pos2 = $max = 0;
+
+			// find the longest common substring by checking every
+			// (p, q) start pair and extending forward while chars match
 			for ($p = 0; $p < $len1; ++$p) {
 				for ($q = 0; $q < $len2; ++$q) {
 					for (
 						$l = 0;
 						($p + $l < $len1) && ($q + $l < $len2) &&
-						static::substr($first, $p + $l, 1) === static::substr($second, $q + $l, 1);
+						$first[$p + $l] === $second[$q + $l];
 						++$l
 					) {
 						// nothing to do
 					}
 
+					// record the longest match seen so far and its
+					// starting positions in both inputs
 					if ($l > $max) {
 						$max  = $l;
 						$pos1 = $p;
@@ -1162,19 +1223,23 @@ class Str
 			$matches = $max;
 
 			if ($matches) {
+				// recurse on the segments left of the longest match
 				if ($pos1 && $pos2) {
-					$similarity = static::similarity(
-						static::substr($first, 0, $pos1),
-						static::substr($second, 0, $pos2)
+					$similarity = static::similarityFromChars(
+						first:  array_slice($first, 0, $pos1),
+						second: array_slice($second, 0, $pos2)
 					);
+
 					$matches += $similarity['matches'];
 				}
 
+				// recurse on the segments right of the longest match
 				if (($pos1 + $max < $len1) && ($pos2 + $max < $len2)) {
-					$similarity = static::similarity(
-						static::substr($first, $pos1 + $max, $len1 - $pos1 - $max),
-						static::substr($second, $pos2 + $max, $len2 - $pos2 - $max)
+					$similarity = static::similarityFromChars(
+						first:  array_slice($first, $pos1 + $max),
+						second: array_slice($second, $pos2 + $max)
 					);
+
 					$matches += $similarity['matches'];
 				}
 			}
@@ -1281,11 +1346,10 @@ class Str
 		$out   = [];
 
 		foreach ($parts as $p) {
-			$p = trim($p);
-			if (
-				static::length($p) > 0 &&
-				static::length($p) >= $length
-			) {
+			$p   = trim($p);
+			$len = static::length($p);
+
+			if ($len > 0 && $len >= $length) {
 				$out[] = $p;
 			}
 		}
@@ -1305,7 +1369,15 @@ class Str
 			return true;
 		}
 
-		return static::position($string, $needle, $caseInsensitive) === 0;
+		if ($caseInsensitive === false) {
+			return str_starts_with($string ?? '', $needle);
+		}
+
+		$probe  = static::substr($string, 0, static::length($needle));
+		$probe  = static::lower($probe);
+		$needle = static::lower($needle);
+
+		return $needle === $probe;
 	}
 
 	/**
@@ -1393,7 +1465,7 @@ class Str
 					}
 				}
 
-				// wihtout a result, keep the original placeholder
+				// without a result, keep the original placeholder
 				return $result ?? $match[0];
 			},
 			$string
@@ -1402,13 +1474,14 @@ class Str
 
 	/**
 	 * Converts a filesize string with shortcuts
-	 * like M, G or K to an integer value
+	 * like M, G or K to an integer value.
+	 * Fractional sizes are supported (e.g. `1.5G` returns 1.5 GiB).
 	 */
 	public static function toBytes(string $size): int
 	{
 		$size = trim($size);
 		$last = strtolower($size[strlen($size) - 1] ?? '');
-		$size = (int)$size;
+		$size = (float)$size;
 
 		$size *= match ($last) {
 			'g'     => 1024 * 1024 * 1024,
@@ -1417,7 +1490,7 @@ class Str
 			default => 1
 		};
 
-		return $size;
+		return (int)$size;
 	}
 
 	/**

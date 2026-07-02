@@ -49,7 +49,7 @@ export default class InputValidator extends HTMLElement {
 		return (
 			this.querySelector(this.getAttribute("anchor")) ??
 			this.querySelector("input, textarea, select, button") ??
-			this.querySelector(":scope > *")
+			this.firstElementChild
 		);
 	}
 

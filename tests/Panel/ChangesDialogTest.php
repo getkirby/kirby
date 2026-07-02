@@ -13,7 +13,7 @@ class ChangesDialogTest extends AreaTestCase
 {
 	protected Changes $changes;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 		$this->install();

@@ -12,7 +12,7 @@ class HtmlTest extends TestCase
 	public const FIXTURES = __DIR__ . '/fixtures';
 	public const TMP      = KIRBY_TMP_DIR . '/Cms.Html';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		Dir::copy(static::FIXTURES, static::TMP);
 

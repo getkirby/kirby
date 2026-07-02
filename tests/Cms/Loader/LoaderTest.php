@@ -12,7 +12,7 @@ class LoaderTest extends TestCase
 
 	public Loader $loader;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 		$this->loader = new Loader($this->app);

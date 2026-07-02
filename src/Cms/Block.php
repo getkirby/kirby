@@ -218,8 +218,10 @@ class Block extends Item implements Stringable
 			);
 		} catch (Throwable $e) {
 			if ($kirby->option('debug') === true) {
-				return '<p>Block error: "' . $e->getMessage() . '" in block type: "' . $this->type() . '"</p>';
+				throw $e;
 			}
+
+			error_log($e);
 
 			return '';
 		}

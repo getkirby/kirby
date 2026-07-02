@@ -36,9 +36,12 @@ class F
 		'audio' => [
 			'aif',
 			'aiff',
+			'flac',
 			'm4a',
 			'midi',
 			'mp3',
+			'ogg',
+			'opus',
 			'wav',
 		],
 		'code' => [
@@ -48,6 +51,7 @@ class F
 			'java',
 			'htm',
 			'html',
+			'mjs',
 			'php',
 			'rb',
 			'py',
@@ -61,9 +65,13 @@ class F
 			'doc',
 			'docx',
 			'dotx',
+			'ics',
 			'indd',
 			'md',
 			'mdown',
+			'odc',
+			'odp',
+			'odt',
 			'pdf',
 			'ppt',
 			'pptx',
@@ -80,12 +88,15 @@ class F
 			'bmp',
 			'gif',
 			'eps',
+			'heic',
+			'heif',
 			'ico',
 			'j2k',
 			'jp2',
 			'jpeg',
 			'jpg',
 			'jpe',
+			'jxl',
 			'png',
 			'ps',
 			'psd',
@@ -98,6 +109,7 @@ class F
 			'avi',
 			'flv',
 			'm4v',
+			'mkv',
 			'mov',
 			'movie',
 			'mpe',
@@ -982,6 +994,72 @@ class F
 		}
 
 		return false;
+	}
+
+	/**
+	 * Serializes concurrent read-update-writes of a file by
+	 * holding an exclusive `flock` for the whole operation, so
+	 * that other writers (that lock the same way) cannot lose
+	 * each other's updates. The `$modifier` callback receives
+	 * the current file contents.
+	 *
+	 * @since 5.5.0
+	 */
+	public static function update(
+		string $file,
+		callable $modifier
+	): bool {
+		// ensure the parent directory exists so `fopen('c+')`
+		// can create the file if it does not yet exist
+		$dir = dirname($file);
+		if (is_dir($dir) === false) {
+			if (Dir::make($dir) === false) {
+				return false; // @codeCoverageIgnore
+			}
+		}
+
+		// `c+` opens read/write, creates the file if missing,
+		// and does NOT truncate. So we can read existing
+		// contents under the lock before rewriting.
+		$handle = @fopen($file, 'c+');
+
+		if ($handle === false) {
+			return false;
+		}
+
+		try {
+			if (flock($handle, LOCK_EX) === false) {
+				return false; // @codeCoverageIgnore
+			}
+
+			$contents = stream_get_contents($handle);
+
+			// treat an unreadable stream as empty so the
+			// modifier is always handed a string
+			if ($contents === false) {
+				$contents = ''; // @codeCoverageIgnore
+			}
+
+			$new = $modifier($contents);
+
+			// the modifier must return the new contents as a
+			// string; `null` or any other type aborts the write
+			if (is_string($new) === false) {
+				return false;
+			}
+
+			rewind($handle);
+			ftruncate($handle, 0);
+
+			if (fwrite($handle, $new) === false) {
+				return false; // @codeCoverageIgnore
+			}
+
+			return fflush($handle);
+		} finally {
+			// `fclose()` releases the `flock()` automatically
+			fclose($handle);
+		}
 	}
 
 	/**

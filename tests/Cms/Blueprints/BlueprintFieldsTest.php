@@ -6,7 +6,7 @@ use Kirby\TestCase;
 
 class BlueprintFieldsTest extends TestCase
 {
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [

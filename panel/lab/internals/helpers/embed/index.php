@@ -1,5 +1,5 @@
 <?php
 
 return [
-	'source' => 'panel/src/helpers/embed.js'
+	'source' => 'panel/src/helpers/embed.ts'
 ];

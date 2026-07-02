@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Response::class)]
 class ResponseTest extends TestCase
 {
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->kirby([
 			'urls' => [

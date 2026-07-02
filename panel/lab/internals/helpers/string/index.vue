@@ -207,6 +207,27 @@
 			<!-- @code-end -->
 		</k-lab-example>
 
+		<k-lab-example label="$helper.string.sanitizeHTML()" script="html">
+			<k-text>
+				<p>Sanitizes HTML:</p>
+				<!-- prettier-ignore -->
+				<k-code language="javascript">this.$helper.string.sanitizeHTML(html): string</k-code>
+			</k-text>
+			<!-- @code -->
+			<k-grid variant="fields">
+				<k-column width="1/2">
+					<h2>Input</h2>
+					<k-input type="text" :value="html" @input="html = $event" />
+				</k-column>
+				<k-column width="1/2">
+					<h2>Result</h2>
+					<k-code language="html">{{ $helper.string.sanitizeHTML(html) }}</k-code>
+				</k-column>
+			</k-grid>
+			<!-- @code-end -->
+		</k-lab-example>
+
+
 		<k-lab-example label="$helper.string.slug()" script="slug">
 			<k-text>
 				<p>Convert string to ASCII slug:</p>

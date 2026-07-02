@@ -33,7 +33,7 @@
 		<k-icons />
 
 		<k-overlay
-			:nested="$panel.drawer.history.milestones.length > 1"
+			:nested="$panel.drawer.history.hasPrevious()"
 			:visible="$panel.drawer.isOpen"
 			type="drawer"
 			@close="$panel.drawer.close()"
@@ -42,7 +42,7 @@
 		</k-overlay>
 
 		<k-overlay
-			:nested="$panel.dialog.history.milestones.length > 1"
+			:nested="$panel.dialog.history.hasPrevious()"
 			:visible="$panel.dialog.isOpen"
 			type="dialog"
 			@close="$panel.dialog.close()"

@@ -12,7 +12,7 @@ class PagePermissionsTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.PagePermissions';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 
@@ -28,7 +28,7 @@ class PagePermissionsTest extends ModelTestCase
 		]);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		$prop = new ReflectionProperty(PagePermissions::class, 'cache');
 		$prop->setValue(null, []);

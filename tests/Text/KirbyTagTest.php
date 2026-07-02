@@ -14,7 +14,7 @@ class KirbyTagTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Text.KirbyTag';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		KirbyTag::$types = [
 			'test' => [
@@ -35,7 +35,7 @@ class KirbyTagTest extends TestCase
 		];
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		KirbyTag::$aliases = [];
 		KirbyTag::$types = [];
@@ -265,25 +265,18 @@ class KirbyTagTest extends TestCase
 
 	public function testOption(): void
 	{
-		$attr = [
-			'a' => 'attrA',
-			'b' => 'attrB'
-		];
+		new App([
+			'roots'   => ['index' => '/dev/null'],
+			'options' => [
+				'a'      => 'optionA',
+				'nested' => ['b' => 'optionB']
+			]
+		]);
 
-		$data = [
-			'a' => 'dataA',
-			'b' => 'dataB'
-		];
-
-		$options = [
-			'a' => 'optionA',
-			'b' => 'optionB'
-		];
-
-		$tag = new KirbyTag('test', 'test value', $attr, $data, $options);
+		$tag = new KirbyTag('test', 'test value');
 
 		$this->assertSame('optionA', $tag->option('a'));
-		$this->assertSame('optionB', $tag->option('b'));
+		$this->assertSame('optionB', $tag->option('nested.b'));
 		$this->assertSame('optionC', $tag->option('c', 'optionC'));
 	}
 

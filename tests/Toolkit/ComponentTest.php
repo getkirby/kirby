@@ -16,7 +16,7 @@ class TestComponentWithCustomProperty extends Component
 #[CoversClass(Component::class)]
 class ComponentTest extends TestCase
 {
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		Component::$types  = [];
 		Component::$mixins = [];

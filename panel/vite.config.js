@@ -106,8 +106,10 @@ function createPlugins(mode) {
  */
 function createTest() {
 	return {
-		environment: "node",
-		include: ["**/*.test.js"],
+		css: false,
+		environment: "happy-dom",
+		include: ["**/*.test.{js,ts}"],
+		reporter: "dot",
 		setupFiles: ["vitest.setup.js"]
 	};
 }
@@ -162,7 +164,7 @@ export default defineConfig(async ({ mode }) => {
 			}
 		},
 		optimizeDeps: {
-			entries: "src/**/*.{js,vue}",
+			entries: "src/**/*.{js,ts,vue}",
 			exclude: ["vitest", "vue"],
 			holdUntilCrawlEnd: false
 		},

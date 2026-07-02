@@ -13,7 +13,7 @@ class FileItemTest extends TestCase
 
 	protected File $model;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 		$this->model = new File(['filename' => 'test.jpg', 'parent' => $this->app->site()]);

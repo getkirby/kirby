@@ -1,0 +1,20 @@
+import { describe, expect, it } from "vitest";
+import url from "./url";
+
+describe("$helper.url.base", () => {
+	it("should return the origin", () => {
+		const result = url.base();
+		expect(result).toStrictEqual(new URL(window.location.origin));
+	});
+
+	it("should return the base href", () => {
+		const base = document.createElement("base");
+		base.href = "http://localhost:3000";
+		document.head.appendChild(base);
+
+		const result = url.base();
+
+		base.remove();
+		expect(result).toStrictEqual(new URL("http://localhost:3000"));
+	});
+});

@@ -1051,7 +1051,7 @@ class AppPluginsTest extends TestCase
 
 		$this->assertContains('heif', F::$types['image']);
 		$this->assertArrayHasKey('heif', Mime::$types);
-		$this->assertSame(['image/heic', 'image/heif'], Mime::$types['heif']);
+		$this->assertSame(['image/heif', 'image/heic'], Mime::$types['heif']);
 		$this->assertContains('heif', Image::$resizableTypes);
 		$this->assertContains('heif', Image::$viewableTypes);
 

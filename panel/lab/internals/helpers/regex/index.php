@@ -1,5 +1,5 @@
 <?php
 
 return [
-	'source' => 'panel/src/helpers/regex.js'
+	'source' => 'panel/src/helpers/regex.ts'
 ];

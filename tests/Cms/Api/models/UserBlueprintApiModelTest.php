@@ -8,7 +8,7 @@ class UserBlueprintApiModelTest extends ApiModelTestCase
 {
 	protected User $user;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 		$this->user = new User(['email' => 'test@getkirby.com']);

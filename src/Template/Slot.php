@@ -102,11 +102,16 @@ class Slot implements Stringable
 	}
 
 	/**
-	 * Opens the slot and starts
-	 * output buffering
+	 * Opens the slot and starts output buffering
 	 */
 	public function open(): void
 	{
+		if ($this->open === true) {
+			throw new LogicException(
+				message: 'The slot has already been opened'
+			);
+		}
+
 		$this->open = true;
 
 		// capture the output

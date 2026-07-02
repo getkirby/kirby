@@ -12,7 +12,7 @@ class ImmutableMemoryStorageTest extends TestCase
 {
 	protected $storage;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 		parent::setUpSingleLanguage();

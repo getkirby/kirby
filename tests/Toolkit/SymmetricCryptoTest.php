@@ -11,7 +11,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(SymmetricCrypto::class)]
 class SymmetricCryptoTest extends TestCase
 {
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		if (defined('SODIUM_LIBRARY_VERSION') !== true) {
 			$this->markTestSkipped('PHP sodium extension is not available');

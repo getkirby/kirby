@@ -10,7 +10,7 @@ class FilePickerTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.FilePicker';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 

@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(UserBlueprint::class)]
 class UserBlueprintTest extends TestCase
 {
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		Blueprint::$loaded = [];
 	}

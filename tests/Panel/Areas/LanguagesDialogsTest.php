@@ -4,7 +4,7 @@ namespace Kirby\Panel\Areas;
 
 class LanguagesDialogsTest extends AreaTestCase
 {
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 		$this->install();
@@ -147,19 +147,5 @@ class LanguagesDialogsTest extends AreaTestCase
 		$this->assertSame('Englisch', $this->app->language('en')->name());
 		$this->assertSame('rtl', $this->app->language('en')->direction());
 		$this->assertSame('en_US', $this->app->language('en')->locale(LC_ALL));
-	}
-
-	public function testRegistration(): void
-	{
-		$dialog = $this->dialog('registration');
-		$props  = $dialog['props'];
-
-		$this->assertFormDialog($dialog);
-
-		$this->assertSame('Please enter your license code', $props['fields']['license']['label']);
-		$this->assertSame('Email', $props['fields']['email']['label']);
-		$this->assertSame('Activate', $props['submitButton']['text']);
-		$this->assertNull($props['value']['license']);
-		$this->assertNull($props['value']['email']);
 	}
 }

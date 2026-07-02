@@ -10,7 +10,7 @@ use Kirby\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
 {
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		// start with a fresh set of fields
 		Field::$types = [];
@@ -27,7 +27,7 @@ class TestCase extends BaseTestCase
 		]);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		$this->tearDownTmp();
 	}

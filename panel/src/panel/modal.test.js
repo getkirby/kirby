@@ -1,13 +1,9 @@
-/**
- * @vitest-environment jsdom
- */
-
 import { describe, expect, it } from "vitest";
 import Modal, { defaults } from "./modal.js";
 import Panel from "./panel.js";
 import Vue from "vue";
 
-describe.concurrent("panel/modal.js", () => {
+describe("panel/modal.js", () => {
 	window.Vue = Vue;
 
 	it("should have a default state", async () => {
@@ -15,7 +11,6 @@ describe.concurrent("panel/modal.js", () => {
 		const modal = Modal(panel, "test", defaults());
 
 		const state = {
-			abortController: null,
 			component: null,
 			id: null,
 			isLoading: false,

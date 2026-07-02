@@ -18,7 +18,7 @@ class FormTest extends TestCase
 
 	protected ModelWithContent $model;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->setUpSingleLanguage([
 			'children' => [
@@ -32,7 +32,7 @@ class FormTest extends TestCase
 		$this->setUpTmp();
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		App::destroy();
 		$this->tearDownTmp();

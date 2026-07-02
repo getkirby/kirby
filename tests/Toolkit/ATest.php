@@ -319,6 +319,18 @@ class ATest extends TestCase
 
 		$array = ['a' => 'A', 'b' => 'B', 'c' => ['C', 'D']];
 		$this->assertSame('ABCD', A::implode($array));
+
+		// '0' as first element must not swallow the next separator
+		$this->assertSame('0-b-c', A::implode(['0', 'b', 'c'], '-'));
+		$this->assertSame('a-0-b', A::implode(['a', '0', 'b'], '-'));
+
+		// leading empty strings should produce leading separators
+		$this->assertSame('-b-c', A::implode(['', 'b', 'c'], '-'));
+		$this->assertSame('a--c', A::implode(['a', '', 'c'], '-'));
+
+		// '0' inside nested arrays must round-trip
+		$this->assertSame('x-0-b', A::implode([['x'], '0', 'b'], '-'));
+		$this->assertSame('0-x-y', A::implode([['0'], 'x', 'y'], '-'));
 	}
 
 	public function testMap(): void
@@ -627,6 +639,38 @@ class ATest extends TestCase
 	public function testFirst(): void
 	{
 		$this->assertSame('miao', A::first($this->_array()));
+	}
+
+	public function testFlip(): void
+	{
+		// scalar values
+		$this->assertSame(
+			['miao' => ['cat'], 'wuff' => ['dog'], 'tweet' => ['bird']],
+			A::flip(['cat' => 'miao', 'dog' => 'wuff', 'bird' => 'tweet'])
+		);
+
+		// array values: each element becomes its own key in the result
+		$this->assertSame(
+			[
+				'image/jpeg'  => ['jpg', 'jpeg'],
+				'image/pjpeg' => ['jpg', 'jpeg'],
+				'image/png'   => ['png'],
+			],
+			A::flip([
+				'jpg'  => ['image/jpeg', 'image/pjpeg'],
+				'jpeg' => ['image/jpeg', 'image/pjpeg'],
+				'png'  => 'image/png',
+			])
+		);
+
+		// duplicate scalar values: both keys preserved (unlike array_flip)
+		$this->assertSame(
+			['x' => ['a', 'b']],
+			A::flip(['a' => 'x', 'b' => 'x'])
+		);
+
+		// empty array
+		$this->assertSame([], A::flip([]));
 	}
 
 	public function testLast(): void
@@ -1168,5 +1212,15 @@ class ATest extends TestCase
 		$this->assertSame([0 => 'cat', 4 => 'dog', 5 => 'bird'], A::without($indexedArray, range(1, 3)));
 		$this->assertSame([1 => 'dog', 2 => 'bird', 3 => 'cat', 4 => 'dog', 5 => 'bird'], A::without($indexedArray, 0));
 		$this->assertSame(['cat', 'dog', 'bird', 'cat', 'dog', 'bird'], A::without($indexedArray, -1));
+	}
+
+	public function testWithoutNumericStringKeys(): void
+	{
+		// PHP normalizes integer-like string keys to integers,
+		// so '1' and 1 refer to the same slot when used as keys
+		$array = [1 => 'a', 2 => 'b'];
+
+		$this->assertSame([2 => 'b'], A::without($array, [1]));
+		$this->assertSame([2 => 'b'], A::without($array, ['1']));
 	}
 }

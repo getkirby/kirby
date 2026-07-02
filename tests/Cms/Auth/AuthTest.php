@@ -17,7 +17,7 @@ class AuthTest extends TestCase
 
 	protected Auth $auth;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
@@ -57,7 +57,7 @@ class AuthTest extends TestCase
 		$this->auth = $this->app->auth();
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		$this->app->session()->destroy();
 		Dir::remove(static::TMP);

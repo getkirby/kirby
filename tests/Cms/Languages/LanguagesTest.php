@@ -13,7 +13,7 @@ class LanguagesTest extends TestCase
 
 	protected Languages $languages;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
@@ -39,7 +39,7 @@ class LanguagesTest extends TestCase
 		$this->languages = $this->app->languages();
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		Dir::remove(static::TMP);
 	}

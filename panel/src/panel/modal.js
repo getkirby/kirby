@@ -1,13 +1,10 @@
-// @ts-check
-
-import { isObject } from "@/helpers/object.js";
-import Feature, { defaults as featureDefaults } from "./feature.js";
-import History from "./history.js";
-import focus from "@/helpers/focus.js";
-import "@/helpers/array.js";
+import { isObject } from "@/helpers/object";
+import Feature, { defaults as featureDefaults } from "./feature";
+import History from "@/helpers/history";
+import focus from "@/helpers/focus";
 import { reactive, set } from "vue";
-import { uuid } from "@/helpers/string.js";
-import { wrap } from "@/helpers/array.js";
+import { uuid } from "@/helpers/string";
+import { wrap } from "@/helpers/array";
 
 /**
  * Additional default values for modals
@@ -114,7 +111,7 @@ export default (panel, key, defaults) => {
 			}
 		},
 
-		history: History(),
+		history: new History(),
 
 		/**
 		 * Form drawers and dialogs can use this

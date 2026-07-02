@@ -11,7 +11,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Query::class)]
 class QueryTest extends TestCase
 {
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->database = new Database([
 			'database' => ':memory:',

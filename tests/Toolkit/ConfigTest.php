@@ -9,7 +9,7 @@ class ConfigTest extends TestCase
 		Config::set('testvar', 'testvalue');
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		Config::$data = [];
 	}

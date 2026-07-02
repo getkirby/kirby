@@ -12,7 +12,7 @@ class CorsTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.Cors';
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		unset($_COOKIE['foo']);
 

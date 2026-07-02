@@ -9,7 +9,7 @@ class SiteRoutesTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.SiteRoutes';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->app = new App([
 			'options' => [
@@ -29,7 +29,7 @@ class SiteRoutesTest extends TestCase
 		Dir::make(static::TMP);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		Dir::remove(static::TMP);
 		App::destroy();

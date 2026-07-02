@@ -15,7 +15,7 @@ class PanelTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Panel';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		Blueprint::$loaded = [];
 
@@ -36,7 +36,7 @@ class PanelTest extends TestCase
 		$_SERVER['SERVER_SOFTWARE'] = 'php';
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		// clear session file first
 		$this->app->session()->destroy();

@@ -19,7 +19,7 @@ class WillFail
 #[CoversClass(Exception::class)]
 class ExceptionTest extends TestCase
 {
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		App::destroy();
 	}

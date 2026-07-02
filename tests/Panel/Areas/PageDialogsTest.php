@@ -17,7 +17,7 @@ class PageWithErrors extends Page
 
 class PageDialogsTest extends AreaTestCase
 {
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 		$this->install();

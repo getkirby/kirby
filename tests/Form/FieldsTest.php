@@ -21,7 +21,7 @@ class FieldsTest extends TestCase
 	protected App $app;
 	protected Page $model;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [

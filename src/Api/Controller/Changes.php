@@ -153,4 +153,22 @@ class Changes
 			'status' => 'ok'
 		];
 	}
+
+	/**
+	 * Releases the content lock without discarding changes
+	 */
+	public static function unlock(ModelWithContent $model): array
+	{
+		if ($model->permissions()->can('update') === false) {
+			throw new PermissionException(
+				key: 'version.unlock.permission',
+			);
+		}
+
+		$model->version('changes')->unlock('current');
+
+		return [
+			'status' => 'ok'
+		];
+	}
 }

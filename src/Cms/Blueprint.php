@@ -681,7 +681,7 @@ class Blueprint
 
 		// set all options to false
 		if ($options === false) {
-			return array_map(fn () => false, $defaults);
+			return array_fill_keys(array_keys($defaults), false);
 		}
 
 		// extend options if possible

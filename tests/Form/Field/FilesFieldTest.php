@@ -49,7 +49,7 @@ class FilesFieldTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Form.Fields.Languages';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 

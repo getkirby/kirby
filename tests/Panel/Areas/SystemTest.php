@@ -23,13 +23,7 @@ class SystemTest extends AreaTestCase
 		UpdateStatus::$host = static::$host;
 	}
 
-	public function tearDown(): void
-	{
-		Cookie::$key = 'KirbyHttpCookieKey';
-		parent::tearDown();
-	}
-
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 
@@ -39,6 +33,12 @@ class SystemTest extends AreaTestCase
 			]
 		]);
 		$this->install();
+	}
+
+	protected function tearDown(): void
+	{
+		Cookie::$key = 'KirbyHttpCookieKey';
+		parent::tearDown();
 	}
 
 	protected function compilerWarning(): array
@@ -310,6 +310,24 @@ class SystemTest extends AreaTestCase
 		$this->assertArrayNotHasKey(3, $props['security']);
 	}
 
+	public function testViewWithCustomCookieKeyInConfig(): void
+	{
+		$this->app([
+			'options' => [
+				'cookie' => [
+					'key' => 'custom-cookie-key'
+				]
+			]
+		]);
+
+		$this->login();
+
+		$view  = $this->view('system');
+		$props = $view['props'];
+
+		$this->assertArrayNotHasKey(3, $props['security']);
+	}
+
 	public function testViewHttps(): void
 	{
 		$this->app([
@@ -521,12 +539,19 @@ class SystemTest extends AreaTestCase
 		];
 
 		$this->assertSame($expected, $view['props']['plugins']);
+
+		// curl's wording for a missing local file differs between
+		// versions ("Couldn't open file" vs. "Could not open file")
 		$this->assertSame([
 			'Could not load update data for plugin getkirby/private: Couldn\'t open file ' .
 			static::FIXTURES . '/plugins/getkirby/private.json',
 			'Could not load update data for plugin getkirby/unknown: Couldn\'t open file ' .
 			static::FIXTURES . '/plugins/getkirby/unknown.json',
-		], $view['props']['exceptions']);
+		], str_replace(
+			'Could not open file',
+			'Couldn\'t open file',
+			$view['props']['exceptions']
+		));
 	}
 
 	public function testViewWithoutUpdateCheck(): void

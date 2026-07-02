@@ -13,7 +13,7 @@ class PlainTest extends TestCase
 	/** @var \Kirby\Parsley\Schema\Plain */
 	protected Schema $schema;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->schema = new Plain();
 	}

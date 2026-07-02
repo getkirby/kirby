@@ -14,7 +14,7 @@ class FieldTest extends TestCase
 {
 	protected array $originalMixins;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		new App([
 			'roots' => [
@@ -28,7 +28,7 @@ class FieldTest extends TestCase
 		$this->originalMixins = Field::$mixins;
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		Field::$types = [];
 

@@ -12,7 +12,7 @@ class ChangesTest extends TestCase
 	public const TMP = KIRBY_TMP_DIR . '/Api.Controller.Changes';
 	public Page $page;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->setUpTmp();
 		$this->setUpSingleLanguage(site: [
@@ -37,7 +37,7 @@ class ChangesTest extends TestCase
 		$this->page = $this->app->page('article');
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		$this->tearDownTmp();
 	}
@@ -205,5 +205,35 @@ class ChangesTest extends TestCase
 		$this->expectExceptionMessage('You are not allowed to change this version');
 
 		Changes::save($this->page, []);
+	}
+
+	public function testUnlock(): void
+	{
+		$this->app->impersonate('kirby');
+
+		Data::write($file = $this->page->root() . '/_changes/article.txt', [
+			'title' => 'Test',
+			'uuid'  => 'test',
+			'lock'  => 'kirby'
+		]);
+
+		$response = Changes::unlock($this->page);
+
+		$this->assertSame(['status' => 'ok'], $response);
+
+		$changes = Data::read($file);
+
+		$this->assertSame([
+			'title' => 'Test',
+			'uuid'  => 'test',
+		], $changes);
+	}
+
+	public function testUnlockWithoutPermissions(): void
+	{
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to unlock this version');
+
+		Changes::unlock($this->page);
 	}
 }

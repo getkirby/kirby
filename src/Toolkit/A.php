@@ -61,7 +61,7 @@ class A
 			return null;
 		}
 
-		return round((array_sum($array) / sizeof($array)), $decimals);
+		return round((array_sum($array) / count($array)), $decimals);
 	}
 
 	/**
@@ -236,6 +236,45 @@ class A
 	}
 
 	/**
+	 * Inverts the given array into a multimap of value → keys.
+	 * Values may be scalar (a single key) or arrays (each element
+	 * becomes its own key in the result). Unlike PHP's array_flip(),
+	 * duplicate values are preserved: every original key that maps
+	 * to the same value ends up in the resulting list.
+	 *
+	 * ```php
+	 * $array = [
+	 *   'apple'      => ['red', 'green'],
+	 *   'strawberry' => 'red',
+	 *   'banana'     => 'yellow',
+	 *   'kiwi'       => 'green',
+	 * ];
+	 *
+	 * A::flip($array);
+	 *
+	 * // result: [
+	 * //   'red'    => ['apple', 'strawberry'],
+	 * //   'green'  => ['apple', 'kiwi'],
+	 * //   'yellow' => ['banana'],
+	 * // ]
+	 * ```
+	 *
+	 * @since 5.5.0
+	 */
+	public static function flip(array $array): array
+	{
+		$result = [];
+
+		foreach ($array as $key => $value) {
+			foreach (static::wrap($value) as $v) {
+				$result[$v][] = $key;
+			}
+		}
+
+		return $result;
+	}
+
+	/**
 	 * Gets an element of an array by key
 	 *
 	 * ```php
@@ -372,21 +411,15 @@ class A
 		array $array,
 		string $separator = ''
 	): string {
-		$result = '';
+		$parts = [];
 
 		foreach ($array as $value) {
-			if (empty($result) === false) {
-				$result .= $separator;
-			}
-
-			if (is_array($value) === true) {
-				$value = static::implode($value, $separator);
-			}
-
-			$result .= $value;
+			$parts[] = is_array($value) === true
+				? static::implode($value, $separator)
+				: $value;
 		}
 
-		return $result;
+		return implode($separator, $parts);
 	}
 
 	/**
@@ -457,7 +490,7 @@ class A
 	/**
 	 * Returns the last element of an array
 	 *
-	 * ```php
+	 * @example
 	 * $array = [
 	 *   'cat'  => 'miao',
 	 *   'dog'  => 'wuff',
@@ -466,14 +499,10 @@ class A
 	 *
 	 * $last = A::last($array);
 	 * // last: 'tweet'
-	 * ```
-	 *
-	 * @param array $array The source array
-	 * @return mixed The last element
 	 */
 	public static function last(array $array): mixed
 	{
-		return array_pop($array);
+		return $array[array_key_last($array)] ?? null;
 	}
 
 	/**
@@ -980,6 +1009,11 @@ class A
 
 	/**
 	 * Remove key(s) from an array
+	 *
+	 * Keys are matched using PHP's array-key semantics, so integer-like
+	 * string keys (e.g. `'1'`) and their integer counterparts (`1`) are
+	 * treated as equivalent.
+	 *
 	 * @since 3.6.5
 	 */
 	public static function without(array $array, int|string|array $keys): array
@@ -988,9 +1022,11 @@ class A
 			$keys = static::wrap($keys);
 		}
 
+		$exclude = array_flip($keys);
+
 		return static::filter(
 			$array,
-			fn ($value, $key) => in_array($key, $keys, true) === false
+			fn ($value, $key) => isset($exclude[$key]) === false
 		);
 	}
 

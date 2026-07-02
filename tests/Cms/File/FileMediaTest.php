@@ -10,7 +10,7 @@ class FileMediaTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.FileMedia';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 

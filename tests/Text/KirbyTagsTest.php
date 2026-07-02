@@ -4,6 +4,7 @@ namespace Kirby\Text;
 
 use Exception;
 use Kirby\Cms\App;
+use Kirby\Cms\Helpers;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
@@ -17,7 +18,7 @@ class KirbyTagsTest extends TestCase
 	public const FIXTURES = __DIR__ . '/fixtures';
 	public const TMP      = KIRBY_TMP_DIR . '/Text.KirbyTags';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
@@ -28,8 +29,9 @@ class KirbyTagsTest extends TestCase
 		Dir::make(static::TMP);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
+		Helpers::$deprecations['kirbytags-parse-options'] = true;
 		Dir::remove(static::TMP);
 	}
 
@@ -106,9 +108,17 @@ class KirbyTagsTest extends TestCase
 			]
 		];
 
+		ErrorLog::$log = '';
 		$this->assertSame('(test: foo)', KirbyTags::parse('(test: foo)'));
+		$this->assertStringContainsString('Exception: Just for fun', ErrorLog::$log);
+
+		ErrorLog::$log = '';
 		$this->assertSame('(invalidargument: foo)', KirbyTags::parse('(invalidargument: foo)'));
+		$this->assertStringContainsString('Kirby\Exception\InvalidArgumentException: Just for fun', ErrorLog::$log);
+
+		ErrorLog::$log = '';
 		$this->assertSame('(undefined: foo)', KirbyTags::parse('(undefined: foo)'));
+		$this->assertSame('', ErrorLog::$log);
 	}
 
 	public function testParseWithExceptionDebug1(): void
@@ -122,7 +132,7 @@ class KirbyTagsTest extends TestCase
 			]
 		];
 
-		KirbyTags::parse('(test: foo)', [], ['debug' => true]);
+		KirbyTags::parse('(test: foo)', [], debug: true);
 	}
 
 	public function testParseWithExceptionDebug2(): void
@@ -136,7 +146,7 @@ class KirbyTagsTest extends TestCase
 			]
 		];
 
-		KirbyTags::parse('(invalidargument: foo)', [], ['debug' => true]);
+		KirbyTags::parse('(invalidargument: foo)', [], debug: true);
 	}
 
 	public function testParseWithExceptionDebug3(): void
@@ -149,7 +159,24 @@ class KirbyTagsTest extends TestCase
 			]
 		];
 
-		$this->assertSame('(undefined: foo)', KirbyTags::parse('(undefined: foo)', [], ['debug' => true]));
+		$this->assertSame('(undefined: foo)', KirbyTags::parse('(undefined: foo)', [], debug: true));
+	}
+
+	public function testParseWithDeprecatedOptions(): void
+	{
+		// `$options` is a deprecated alias that only ever carried `debug`
+		Helpers::$deprecations['kirbytags-parse-options'] = false;
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Just for fun');
+
+		KirbyTag::$types = [
+			'test' => [
+				'html' => fn () => throw new Exception('Just for fun')
+			]
+		];
+
+		KirbyTags::parse('(test: foo)', [], ['debug' => true]);
 	}
 
 	public function testParseWithBrackets(): void

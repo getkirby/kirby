@@ -10,7 +10,7 @@ use ReflectionProperty;
 #[CoversClass(Db::class)]
 class DbTest extends TestCase
 {
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->database = Db::connect([
 			'database' => ':memory:',

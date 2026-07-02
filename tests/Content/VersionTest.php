@@ -1390,6 +1390,69 @@ class VersionTest extends TestCase
 		$this->assertGreaterThanOrEqual($minTime, filemtime($root));
 	}
 
+	public function testUnlockSingleLanguage(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$this->app->impersonate('kirby');
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::changes()
+		);
+
+		$file = $this->contentFile(versionId: VersionId::changes());
+		Data::write($file, [
+			'title' => 'Test',
+			'lock'  => 'kirby'
+		]);
+
+		$version->unlock();
+
+		$this->assertSame(['title' => 'Test'], Data::read($file));
+	}
+
+	public function testUnlockWhenLockedByAnotherUser(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$this->app->impersonate('kirby');
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::changes()
+		);
+
+		$file = $this->contentFile(versionId: VersionId::changes());
+		Data::write($file, [
+			'title' => 'Test',
+			'lock'  => 'another-user'
+		]);
+
+		$version->unlock();
+
+		// lock must remain because the current user doesn't hold it
+		$this->assertSame([
+			'title' => 'Test',
+			'lock'  => 'another-user'
+		], Data::read($file));
+	}
+
+	public function testUnlockWhenNotExists(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::changes()
+		);
+
+		// should not throw, just return early
+		$version->unlock();
+
+		$this->assertContentFileDoesNotExist(versionId: VersionId::changes());
+	}
+
 	public function testUpdateMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();

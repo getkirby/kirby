@@ -1,5 +1,5 @@
 <?php
 
 return [
-	'source' => 'panel/src/helpers/debounce.js'
+	'source' => 'panel/src/helpers/debounce.ts'
 ];

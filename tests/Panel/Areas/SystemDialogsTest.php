@@ -7,7 +7,7 @@ use Kirby\Toolkit\Str;
 
 class SystemDialogsTest extends AreaTestCase
 {
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 		$this->install();
@@ -42,7 +42,7 @@ class SystemDialogsTest extends AreaTestCase
 
 		$this->assertFormDialog($dialog);
 
-		$this->assertSame('Please enter your license code', $props['fields']['license']['label']);
+		$this->assertSame('License code', $props['fields']['license']['label']);
 		$this->assertSame('Email', $props['fields']['email']['label']);
 		$this->assertSame('Activate', $props['submitButton']['text']);
 		$this->assertNull($props['value']['license']);

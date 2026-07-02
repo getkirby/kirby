@@ -1,7 +1,3 @@
-/**
- * @vitest-environment jsdom
- */
-
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import InputValidator from "./Validator.js";
 
@@ -12,19 +8,26 @@ import InputValidator from "./Validator.js";
 const TAG = "k-input-validator-test";
 
 beforeAll(() => {
-	customElements.define(TAG, InputValidator);
+	// happy-dom does not implement ElementInternals or attachInternals.
+	// Stub attachInternals to return a fresh per-instance fake so each
+	// element gets its own setValidity spy target.
+	HTMLElement.prototype.attachInternals ??= function () {
+		return {
+			setValidity: () => {},
+			checkValidity: () => true,
+			reportValidity: () => true,
+			form: null,
+			validity: {},
+			validationMessage: "",
+			willValidate: true
+		};
+	};
 
-	// jsdom does not implement ElementInternals.setValidity. Stub it on the
-	// prototype so validate() can run end-to-end and we can spy on calls.
-	const proto = window.ElementInternals.prototype;
-	proto.setValidity ??= () => {};
-	proto.checkValidity ??= () => true;
-	proto.reportValidity ??= () => true;
+	customElements.define(TAG, InputValidator);
 
 	// Minimal panel.t shim used by validate()
 	window.panel ??= {};
-	window.panel.t = (key, params) =>
-		params ? `${key}:${JSON.stringify(params)}` : key;
+	window.panel.t = (key) => key;
 });
 
 afterEach(() => {

@@ -35,7 +35,7 @@ class PluginTest extends TestCase
 		static::$classLoader->unregister();
 	}
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		App::destroy();
 
@@ -48,7 +48,7 @@ class PluginTest extends TestCase
 		]);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		App::destroy();
 		Dir::remove(static::TMP);
@@ -500,10 +500,17 @@ class PluginTest extends TestCase
 		$this->assertSame('error', $updateStatus->status());
 		$this->assertSame('1.0.0', $updateStatus->currentVersion());
 		$this->assertNull($updateStatus->targetVersion());
+
+		// curl's wording for a missing local file differs between
+		// versions ("Couldn't open file" vs. "Could not open file")
 		$this->assertSame([
 			'Could not load update data for plugin getkirby/unknown: Couldn\'t open file ' .
 			static::FIXTURES . '/updateStatus/plugins/getkirby/unknown.json'
-		], $updateStatus->exceptionMessages());
+		], str_replace(
+			'Could not open file',
+			'Couldn\'t open file',
+			$updateStatus->exceptionMessages()
+		));
 	}
 
 	public function testUpdateStatusDisabled1(): void

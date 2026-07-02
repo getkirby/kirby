@@ -9,7 +9,7 @@ use Kirby\TestCase;
 
 class ValidationsTest extends TestCase
 {
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		new App([
 			'roots' => [
@@ -26,7 +26,7 @@ class ValidationsTest extends TestCase
 		];
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		Field::$types = [];
 	}

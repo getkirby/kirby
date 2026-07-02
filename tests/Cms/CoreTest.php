@@ -9,7 +9,7 @@ class CoreTest extends TestCase
 {
 	protected Core $core;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 		$this->core = new Core($this->app);

@@ -5,14 +5,14 @@
 		:data-type="type"
 		:style="$attrs.style"
 	>
-		<span
+		<div
 			v-if="$slots.before || before"
 			class="k-input-description k-input-before"
 			@click="focus"
 		>
 			<slot name="before">{{ before }}</slot>
-		</span>
-		<span class="k-input-element" @click.stop="focus">
+		</div>
+		<div class="k-input-element" @click.stop="focus">
 			<slot>
 				<component
 					:is="'k-' + type + '-input'"
@@ -23,19 +23,19 @@
 					@submit="$emit('submit', $event)"
 				/>
 			</slot>
-		</span>
-		<span
+		</div>
+		<div
 			v-if="$slots.after || after"
 			class="k-input-description k-input-after"
 			@click="focus"
 		>
 			<slot name="after">{{ after }}</slot>
-		</span>
-		<span v-if="$slots.icon || icon" class="k-input-icon" @click="focus">
+		</div>
+		<div v-if="$slots.icon || icon" class="k-input-icon" @click="focus">
 			<slot name="icon">
 				<k-icon :type="icon" />
 			</slot>
-		</span>
+		</div>
 	</div>
 </template>
 

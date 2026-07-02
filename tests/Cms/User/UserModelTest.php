@@ -13,13 +13,13 @@ class UserModelTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.UserModel';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 		User::$models = [];
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		parent::tearDown();
 		User::$models = [];

@@ -8,12 +8,12 @@ class RootsTest extends TestCase
 {
 	protected string|null $indexRoot;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->indexRoot = Core::$indexRoot;
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		// ensure that the index root used for testing is reset
 		Core::$indexRoot = $this->indexRoot;

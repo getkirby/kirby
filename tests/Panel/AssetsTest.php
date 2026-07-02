@@ -18,7 +18,7 @@ class AssetsTest extends TestCase
 
 	protected bool $hadViteRunning;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
@@ -33,7 +33,7 @@ class AssetsTest extends TestCase
 		Dir::make(static::TMP);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		// clear session file first
 		$this->app->session()->destroy();
