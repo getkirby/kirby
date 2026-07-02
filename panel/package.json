@@ -24,7 +24,7 @@
 		"prosemirror-keymap": "^1.2.3",
 		"prosemirror-model": "^1.25.9",
 		"prosemirror-schema-list": "^1.5.1",
-		"prosemirror-view": "^1.41.9",
+		"prosemirror-view": "^1.42.0",
 		"sortablejs": "^1.15.7",
 		"vue": "^3.5.35"
 	},
