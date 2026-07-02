@@ -304,7 +304,7 @@
 	"error.version.discard.permission": "Du darfst diese Version nicht verwerfen",
 	"error.version.publish.permission": "Du darfst diese Version nicht veröffentlichen",
 	"error.version.save.permission": "Du darfst diese Version nicht ändern",
-	"error.version.unlock.permission": "Du darfst diese Version nicht entsperren. ",
+	"error.version.unlock.permission": "Du darfst diese Version nicht entsperren",
 
 	"expand": "Aufklappen",
 	"expand.all": "Alle aufklappen",
