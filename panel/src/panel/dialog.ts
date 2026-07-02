@@ -29,7 +29,7 @@ export default function Dialog(panel: Panel) {
 		e?.preventDefault();
 
 		const target = e?.target as HTMLElement | null | undefined;
-		const form = target?.closest?.("form.k-dialog");
+		const form = target?.closest?.("form.k-dialog") as HTMLFormElement | null;
 
 		if (form) {
 			if (typeof form.requestSubmit === "function") {
