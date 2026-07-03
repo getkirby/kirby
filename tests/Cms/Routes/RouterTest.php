@@ -3,7 +3,7 @@
 namespace Kirby\Cms;
 
 use InvalidArgumentException;
-use Kirby\Exception\NotFoundException;
+use Kirby\Exception\LogicException;
 use Kirby\Filesystem\F;
 use Kirby\Http\Response;
 use Kirby\Toolkit\I18n;
@@ -71,7 +71,7 @@ class RouterTest extends TestCase
 			]
 		]);
 
-		$this->expectException(NotFoundException::class);
+		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('The home page does not exist');
 
 		$app->call('/');
@@ -628,7 +628,7 @@ class RouterTest extends TestCase
 			]
 		]);
 
-		$this->expectException(NotFoundException::class);
+		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('The home page does not exist');
 
 		$app->call('/');

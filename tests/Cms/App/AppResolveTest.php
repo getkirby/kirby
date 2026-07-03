@@ -308,6 +308,84 @@ class AppResolveTest extends TestCase
 
 	}
 
+	protected function negotiationApp(string|null $accept, array $props = []): App
+	{
+		$app = new App([
+			...$props,
+			'roots' => [
+				'index'     => '/dev/null',
+				'templates' => static::TMP
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'template' => 'test'
+					]
+				]
+			]
+		]);
+
+		if ($accept !== null) {
+			$app->visitor()->acceptedMimeType($accept);
+		}
+
+		return $app;
+	}
+
+	public function testResolvePageContentNegotiation(): void
+	{
+		F::write(static::TMP . '/test.php', 'html');
+		F::write(static::TMP . '/test.md.php', '# Markdown');
+
+		// the visitor prefers markdown and a representation exists
+		$app    = $this->negotiationApp('text/markdown');
+		$result = $app->resolve('test');
+		$this->assertInstanceOf(Responder::class, $result);
+		$this->assertSame('text/markdown', $result->type());
+		$this->assertSame('# Markdown', $result->body());
+		$this->assertSame('Accept', $app->response()->header('Vary'));
+
+		// the visitor prefers HTML: render the page as usual,
+		// but the response still varies by the Accept header
+		$app    = $this->negotiationApp('text/html');
+		$result = $app->resolve('test');
+		$this->assertIsPage($result);
+		$this->assertSame('Accept', $app->response()->header('Vary'));
+
+		// a wildcard Accept header resolves to HTML
+		$app    = $this->negotiationApp('*/*');
+		$this->assertIsPage($app->resolve('test'));
+
+		// a preferred type without a representation falls back
+		// to the next accepted type (HTML)
+		$app    = $this->negotiationApp('application/xml, text/html');
+		$this->assertIsPage($app->resolve('test'));
+
+		// a preferred type without a representation and without
+		// HTML acceptance still renders the page as HTML
+		$app    = $this->negotiationApp('application/json');
+		$this->assertIsPage($app->resolve('test'));
+	}
+
+	public function testResolvePageContentNegotiationDisabled(): void
+	{
+		F::write(static::TMP . '/test.php', 'html');
+		F::write(static::TMP . '/test.md.php', '# Markdown');
+
+		$app = $this->negotiationApp('text/markdown', [
+			'options' => [
+				'content' => [
+					'negotiation' => false
+				]
+			]
+		]);
+
+		$result = $app->resolve('test');
+		$this->assertIsPage($result);
+		$this->assertNull($app->response()->header('Vary'));
+	}
+
 	public function testResolveFileDefault(): void
 	{
 		$app = new App([

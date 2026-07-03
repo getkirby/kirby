@@ -6,6 +6,7 @@ use Closure;
 use Exception as GlobalException;
 use Generator;
 use Kirby\Api\Api;
+use Kirby\Cms\App\Resolver;
 use Kirby\Content\Storage;
 use Kirby\Content\VersionCache;
 use Kirby\Data\Data;
@@ -1255,7 +1256,7 @@ class App
 	 * Path resolver for the router
 	 *
 	 * @unstable
-	 * @throws \Kirby\Exception\NotFoundException if the home page cannot be found
+	 * @throws \Kirby\Exception\LogicException if the home page cannot be found
 	 */
 	public function resolve(
 		string|null $path = null,
@@ -1267,97 +1268,14 @@ class App
 		// set the current locale
 		$this->setCurrentLanguage($language);
 
-		// directly prevent path with incomplete content representation
-		if (Str::endsWith($path, '.') === true) {
+		try {
+			return (new Resolver($this))->resolve($path);
+		} catch (NotFoundException) {
+			// an unresolvable path resolves to null, so the router falls
+			// through to the error page (the old resolver behavior);
+			// a missing home page throws a LogicException and bubbles up
 			return null;
 		}
-
-		// the site is needed a couple times here
-		$site = $this->site();
-
-		// use the home page
-		if ($path === null) {
-			if ($homePage = $site->homePage()) {
-				return $homePage;
-			}
-
-			throw new NotFoundException(
-				message: 'The home page does not exist'
-			);
-		}
-
-		// search for the page by path
-		$page = $site->find($path);
-
-		// search for a draft if the page cannot be found
-		if (!$page && $draft = $site->draft($path)) {
-			if (
-				($this->user() && $draft->isAccessible()) ||
-				$draft->renderVersionFromRequest() !== null
-			) {
-				$page = $draft;
-			}
-		}
-
-		// try to resolve content representations if the path has an extension
-		$extension = F::extension($path);
-
-		// no content representation? then return the page
-		if (empty($extension) === true) {
-			return $page;
-		}
-
-		// only try to return a representation
-		// when the page has been found
-		if ($page) {
-			// if extension is the default content type,
-			// redirect to page URL without extension
-			if ($extension === 'html') {
-				return Response::redirect($page->url(), 301);
-			}
-
-			try {
-				$response = $this->response();
-				$output   = $page->render([], $extension);
-
-				// attach a MIME type based on the representation
-				// only if no custom MIME type was set
-				if ($response->type() === null) {
-					$response->type($extension);
-				}
-
-				return $response->body($output);
-			} catch (NotFoundException) {
-				return null;
-			}
-		}
-
-		// try to resolve clean URLs to site files
-		if (str_contains($path, '/') === false) {
-			return $this->resolveFile($site->file($path));
-		}
-
-		$id       = dirname($path);
-		$filename = basename($path);
-
-		// try to resolve clean URLs to files for pages and drafts
-		if ($page = $site->findPageOrDraft($id)) {
-			// don't leak files on draft pages through clean URLs:
-			// only serve them to an authenticated user with access
-			// permission or a request with a valid preview token
-			if (
-				$page->isDraft() === true &&
-				($this->user() && $page->isAccessible()) === false &&
-				$page->renderVersionFromRequest() === null
-			) {
-				return null;
-			}
-
-			return $this->resolveFile($page->file($filename));
-		}
-
-		// none of our resolvers were successful
-		return null;
 	}
 
 	/**
@@ -1371,17 +1289,11 @@ class App
 			return null;
 		}
 
-		$option = $this->option('content.fileRedirects', false);
-
-		if ($option === true) {
+		// the file redirect logic is owned by the resolver
+		if ((new Resolver($this))->isResolvableFile($file) === true) {
 			return $file;
 		}
 
-		if ($option instanceof Closure) {
-			return $option($file) === true ? $file : null;
-		}
-
-		// option was set to `false` or an invalid value
 		return null;
 	}
 
