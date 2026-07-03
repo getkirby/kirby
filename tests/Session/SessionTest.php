@@ -2,7 +2,6 @@
 
 namespace Kirby\Session;
 
-use Kirby\Exception\BadMethodCallException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
@@ -406,14 +405,6 @@ class SessionTest extends TestCase
 		$this->assertSame(['someString' => 'someValue'], $session->get());
 		$session->clear();
 		$this->assertSame([], $session->get());
-	}
-
-	public function testInvalidMethod(): void
-	{
-		$this->expectException(BadMethodCallException::class);
-
-		$session = new Session($this->sessions, null, []);
-		$session->someGibberish();
 	}
 
 	public function testCommit(): void

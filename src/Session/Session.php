@@ -2,7 +2,6 @@
 
 namespace Kirby\Session;
 
-use Kirby\Exception\BadMethodCallException;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
@@ -119,35 +118,6 @@ class Session
 	}
 
 	/**
-	 * Magic call method that proxies all calls to session data methods
-	 *
-	 * @param string $name Method name (one of set, increment, decrement, get, pull, remove, clear)
-	 * @param array $arguments Method arguments
-	 */
-	public function __call(string $name, array $arguments): mixed
-	{
-		// validate that we can handle the called method
-		$methods = [
-			'clear',
-			'decrement',
-			'get',
-			'increment',
-			'pull',
-			'remove',
-			'set'
-		];
-
-		if (in_array($name, $methods, true) === false) {
-			throw new BadMethodCallException(
-				data: ['method' => 'Session::' . $name],
-				translate: false
-			);
-		}
-
-		return $this->data()->$name(...$arguments);
-	}
-
-	/**
 	 * Ensures that all pending changes are written
 	 * to disk before the object is destructed
 	 *
@@ -175,6 +145,15 @@ class Session
 		if ($this->needsRenewal() === true) {
 			$this->renew();
 		}
+	}
+
+	/**
+	 * @see \Kirby\Session\SessionData::clear()
+	 * @since 6.0.0
+	 */
+	public function clear(): void
+	{
+		$this->data()->clear();
 	}
 
 	/**
@@ -245,6 +224,18 @@ class Session
 	public function data(): SessionData
 	{
 		return $this->data;
+	}
+
+	/**
+	 * @see \Kirby\Session\SessionData::decrement()
+	 * @since 6.0.0
+	 */
+	public function decrement(
+		string|array $key,
+		int $by = 1,
+		int|null $min = null
+	): void {
+		$this->data()->decrement($key, $by, $min);
 	}
 
 	/**
@@ -344,6 +335,27 @@ class Session
 		}
 
 		return $this->expiryTime;
+	}
+
+	/**
+	 * @see \Kirby\Session\SessionData::get()
+	 * @since 6.0.0
+	 */
+	public function get(string|null $key = null, mixed $default = null): mixed
+	{
+		return $this->data()->get($key, $default);
+	}
+
+	/**
+	 * @see \Kirby\Session\SessionData::increment()
+	 * @since 6.0.0
+	 */
+	public function increment(
+		string|array $key,
+		int $by = 1,
+		int|null $max = null
+	): void {
+		$this->data()->increment($key, $by, $max);
 	}
 
 	/**
@@ -556,6 +568,15 @@ class Session
 	}
 
 	/**
+	 * @see \Kirby\Session\SessionData::pull()
+	 * @since 6.0.0
+	 */
+	public function pull(string $key, mixed $default = null): mixed
+	{
+		return $this->data()->pull($key, $default);
+	}
+
+	/**
 	 * Regenerates the session token
 	 * The old token will keep its validity for a 30 second grace period
 	 */
@@ -617,6 +638,15 @@ class Session
 	}
 
 	/**
+	 * @see \Kirby\Session\SessionData::remove()
+	 * @since 6.0.0
+	 */
+	public function remove(string|array $key): void
+	{
+		$this->data()->remove($key);
+	}
+
+	/**
 	 * Renews the session with the same session duration
 	 * Renewing also regenerates the session token
 	 */
@@ -650,6 +680,15 @@ class Session
 		}
 
 		return $this->renewable;
+	}
+
+	/**
+	 * @see \Kirby\Session\SessionData::set()
+	 * @since 6.0.0
+	 */
+	public function set(string|array $key, mixed $value = null): void
+	{
+		$this->data()->set($key, $value);
 	}
 
 	/**
