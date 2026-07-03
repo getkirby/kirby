@@ -8,6 +8,7 @@ use Kirby\Content\VersionId;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Filesystem\Dir;
 use Kirby\Http\Response;
 use Kirby\Panel\Page as Panel;
 use Kirby\Template\Template;
@@ -371,7 +372,7 @@ class Page extends ModelWithContent
 		}
 
 		if ($this->num() !== null) {
-			return $this->dirname = $this->num() . Inventory::$numSeparator . $this->uid();
+			return $this->dirname = $this->num() . Dir::$numSeparator . $this->uid();
 		}
 
 		return $this->dirname = $this->uid();

@@ -15,12 +15,6 @@ use Kirby\Filesystem\Dir;
 class Inventory
 {
 	/**
-	 * Separator between num and slug in page directory names
-	 * (e.g. `1_about` → num: 1, slug: 'about')
-	 */
-	public static string $numSeparator = '_';
-
-	/**
 	 * Scans the directory and analyzes files,
 	 * content, meta info and children
 	 */
