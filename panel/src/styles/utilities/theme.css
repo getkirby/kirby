@@ -48,7 +48,7 @@
 	);
 	--theme-color-back: light-dark(
 		var(--theme-color-400),
-		var(--theme-color-500)
+		var(--theme-color-450)
 	);
 	--theme-color-hover: var(--theme-color-600);
 	--theme-color-icon: var(--theme-color-600);
