@@ -3,7 +3,7 @@
 		<k-lab-example label="Default">
 			<k-lab-table-cell>
 				<!-- @code -->
-				<k-html-field-preview value="<b>This</b> is some <code>HTML</code>" />
+				<k-writer-field-preview value="<b>This</b> is some <code>HTML</code>" />
 				<!-- @code-end -->
 			</k-lab-table-cell>
 		</k-lab-example>
@@ -11,7 +11,7 @@
 		<k-lab-example label="Multiline">
 			<k-lab-table-cell>
 				<!-- @code -->
-				<k-html-field-preview :value="html" />
+				<k-writer-field-preview :value="html" />
 				<!-- @code-end -->
 			</k-lab-table-cell>
 		</k-lab-example>
@@ -19,7 +19,7 @@
 		<k-lab-example label="Empty">
 			<k-lab-table-cell>
 				<!-- @code -->
-				<k-html-field-preview />
+				<k-writer-field-preview />
 				<!-- @code-end -->
 			</k-lab-table-cell>
 		</k-lab-example>
@@ -33,7 +33,6 @@ export default {
 			return `
 				<p>First <strong>paragraph</strong> with some more <code>HTML</code> to fill the space</p>
 				<p>One more paragraph with <a href="">a link</a></p>
-				<div style="background: palegreen">A little div</div>
 			`;
 		}
 	}
