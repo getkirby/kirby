@@ -5,9 +5,6 @@ namespace Kirby\Session;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
-use Kirby\Http\Cookie;
-use Kirby\Http\Request;
-use Kirby\Toolkit\Str;
 use Throwable;
 
 /**
@@ -18,12 +15,11 @@ use Throwable;
  */
 class Sessions
 {
-	protected SessionStore $store;
-	protected string $mode;
-	protected string|null $cookieDomain;
-	protected string $cookieName;
-
 	protected array $cache = [];
+	protected Cookie $cookie;
+	protected Header $header;
+	protected string $mode;
+	protected SessionStore $store;
 
 	/**
 	 * Creates a new Sessions instance
@@ -44,10 +40,13 @@ class Sessions
 			default                        => new FileSessionStore($store),
 		};
 
-		$this->mode         = $options['mode']         ?? 'cookie';
-		$this->cookieDomain = $options['cookieDomain'] ?? null;
-		$this->cookieName   = $options['cookieName']   ?? 'kirby_session';
-		$gcInterval         = $options['gcInterval']   ?? 100;
+		$gcInterval   = $options['gcInterval'] ?? 100;
+		$this->mode   = $options['mode'] ?? 'cookie';
+		$this->header = new Header();
+		$this->cookie = new Cookie(
+			name:   $options['cookieName']   ?? 'kirby_session',
+			domain: $options['cookieDomain'] ?? null
+		);
 
 		// validate options
 		if (in_array($this->mode, ['cookie', 'header', 'manual'], true) === false) {
@@ -95,19 +94,30 @@ class Sessions
 	}
 
 	/**
+	 * Returns the session cookie instance
+	 * @since 6.0.0
+	 */
+	public function cookie(): Cookie
+	{
+		return $this->cookie;
+	}
+
+	/**
 	 * Getter for the cookie domain
+	 * @deprecated 6.0.0 Use `::cookie()->domain()` instead.
 	 */
 	public function cookieDomain(): string|null
 	{
-		return $this->cookieDomain;
+		return $this->cookie->domain();
 	}
 
 	/**
 	 * Getter for the cookie name
+	 * @deprecated 6.0.0 Use `::cookie()->name()` instead.
 	 */
 	public function cookieName(): string
 	{
-		return $this->cookieName;
+		return $this->cookie->name();
 	}
 
 	/**
@@ -141,8 +151,8 @@ class Sessions
 	public function current(): Session|null
 	{
 		$token = match ($this->mode) {
-			'cookie' => $this->tokenFromCookie(),
-			'header' => $this->tokenFromHeader(),
+			'cookie' => $this->cookie()->get(),
+			'header' => $this->header()->get(),
 			'manual' => throw new LogicException(
 				key: 'session.sessions.manualMode',
 				fallback: 'Cannot automatically get current session in manual mode',
@@ -176,8 +186,8 @@ class Sessions
 	 */
 	public function currentDetected(): Session|null
 	{
-		$header = $this->tokenFromHeader();
-		$cookie = $this->tokenFromCookie();
+		$header = $this->header()->get();
+		$cookie = $this->cookie()->get();
 
 		// prefer header token over cookie token
 		$token = $header ?? $cookie;
@@ -214,47 +224,20 @@ class Sessions
 	}
 
 	/**
+	 * Returns the session header instance
+	 * @since 6.0.0
+	 */
+	public function header(): Header
+	{
+		return $this->header;
+	}
+
+	/**
 	 * Getter for the session store instance
 	 */
 	public function store(): SessionStore
 	{
 		return $this->store;
-	}
-
-	/**
-	 * Returns the auth token from the cookie
-	 */
-	protected function tokenFromCookie(): string|null
-	{
-		$value = Cookie::get($this->cookieName());
-
-		if (is_string($value) === false) {
-			return null;
-		}
-
-		return $value;
-	}
-
-	/**
-	 * Returns the auth token from the Authorization header
-	 */
-	protected function tokenFromHeader(): string|null
-	{
-		$request = new Request();
-		$headers = $request->headers();
-
-		// check if the header exists at all
-		if ($header = $headers['Authorization'] ?? null) {
-			// check if the header uses the "Session" scheme
-			if (Str::startsWith($header, 'Session ', true) !== true) {
-				return null;
-			}
-
-			// return the part after the scheme
-			return substr($header, 8);
-		}
-
-		return null;
 	}
 
 	/**

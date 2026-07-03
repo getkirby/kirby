@@ -6,8 +6,6 @@ use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
-use Kirby\Http\Cookie;
-use Kirby\Http\Url;
 use Kirby\Toolkit\Str;
 
 /**
@@ -258,7 +256,7 @@ class Session
 
 		// remove cookie
 		if ($this->mode === 'cookie') {
-			Cookie::remove($this->sessions->cookieName());
+			$this->sessions->cookie()->remove();
 		}
 	}
 
@@ -609,16 +607,7 @@ class Session
 
 		// (re)transmit session token
 		if ($this->mode === 'cookie') {
-			$cookieDomain = $this->sessions->cookieDomain();
-
-			Cookie::set($this->sessions->cookieName(), $this->token(), [
-				'lifetime' => $token->expiry,
-				'path'     => $cookieDomain ? '/' : Url::index(['host' => null, 'trailingSlash' => true]),
-				'domain'   => $cookieDomain,
-				'secure'   => Url::scheme() === 'https',
-				'httpOnly' => true,
-				'sameSite' => 'Lax'
-			]);
+			$this->sessions->cookie()->set($this->token(), $token->expiry);
 		} else {
 			$this->needsRetransmission = true;
 		}
