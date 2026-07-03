@@ -19,7 +19,10 @@ class SessionAuth extends Auth
 	 */
 	public function session(): Session
 	{
-		return App::instance()->sessionHandler()->getManually($this->data);
+		return App::instance()->sessions()->find(
+			token: $this->token(),
+			mode:  'manual'
+		);
 	}
 
 	/**

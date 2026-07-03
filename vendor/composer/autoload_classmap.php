@@ -597,7 +597,6 @@ return array(
     'Kirby\\Sane\\Svg' => $baseDir . '/src/Sane/Svg.php',
     'Kirby\\Sane\\Svgz' => $baseDir . '/src/Sane/Svgz.php',
     'Kirby\\Sane\\Xml' => $baseDir . '/src/Sane/Xml.php',
-    'Kirby\\Session\\AutoSession' => $baseDir . '/src/Session/AutoSession.php',
     'Kirby\\Session\\Cookie' => $baseDir . '/src/Session/Cookie.php',
     'Kirby\\Session\\Data' => $baseDir . '/src/Session/Data.php',
     'Kirby\\Session\\FileStore' => $baseDir . '/src/Session/FileStore.php',

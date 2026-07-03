@@ -491,20 +491,20 @@ class Session
 	 */
 	public function mode(string|null $mode = null): string
 	{
-		if ($mode !== null) {
-			// only allow this if this is a new session, otherwise the change
-			// might not be applied correctly to the current request
-			if ($this->token() !== null) {
-				throw new InvalidArgumentException(
-					data: ['method' => 'Session::mode', 'argument' => '$mode'],
-					translate: false
-				);
-			}
-
-			$this->mode = $mode;
+		if ($mode === null) {
+			return $this->mode;
 		}
 
-		return $this->mode;
+		// only allow this if this is a new session, otherwise the change
+		// might not be applied correctly to the current request
+		if ($this->token() !== null) {
+			throw new InvalidArgumentException(
+				data: ['method' => 'Session::mode', 'argument' => '$mode'],
+				translate: false
+			);
+		}
+
+		return $this->mode = $mode;
 	}
 
 	/**
@@ -612,8 +612,8 @@ class Session
 			$this->needsRetransmission = true;
 		}
 
-		// update cache of the Sessions instance with the new token
-		$this->sessions->updateCache($this);
+		// update the session in the Sessions instance's cache
+		$this->sessions->update($this);
 	}
 
 	/**
