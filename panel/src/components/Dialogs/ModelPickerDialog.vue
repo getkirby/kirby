@@ -127,7 +127,11 @@ export default {
 						: this.empty.text
 				},
 				help: this.help,
-				items: this.items,
+				items: this.items.map((item) => ({
+					...item,
+					selectable:
+						item.selectable !== false && this.isDisabled(item) === false
+				})),
 				layout: this.layout,
 				link: false,
 				pagination: {
@@ -143,6 +147,9 @@ export default {
 				onPaginate: this.paginate,
 				onSelect: this.select
 			};
+		},
+		isMaxReached() {
+			return this.max && this.max <= this.selected.length;
 		}
 	},
 	watch: {
@@ -151,6 +158,21 @@ export default {
 		}
 	},
 	methods: {
+		/**
+		 * Whether an unselected option should be disabled
+		 * because the `max` limit has been reached
+		 */
+		isDisabled(item) {
+			return (
+				this.multiple &&
+				this.max !== 1 &&
+				this.isSelected(item) === false &&
+				this.isMaxReached
+			);
+		},
+		isSelected(item) {
+			return this.selected.includes(item._id ?? item.uuid ?? item.id);
+		},
 		paginate({ page }) {
 			this.refresh({ page });
 		},
