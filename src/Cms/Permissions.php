@@ -225,7 +225,8 @@ class Permissions
 		foreach ($categories as $category => $actions) {
 			if (isset($defaults[$category]) === false) {
 				Helpers::deprecated(
-					'Setting undefined permission category "' . $category . '" is deprecated and will be ignored in a future version. Please use https://getkirby.com/docs/reference/plugins/extensions/permissions to register custom permissions.'
+					'Setting undefined permission category "' . $category . '" is deprecated and will be ignored in a future version. Please use https://getkirby.com/docs/reference/plugins/extensions/permissions to register custom permissions.',
+					'permissions-undefined'
 				);
 				$defaults[$category] = [];
 			}
@@ -241,7 +242,8 @@ class Permissions
 
 				if (isset($defaults[$category][$key]) === false) {
 					Helpers::deprecated(
-						'Setting undefined permission "' . $category . '.' . $key . '" is deprecated and will be ignored in a future version. Please use https://getkirby.com/docs/reference/plugins/extensions/permissions to register custom permissions.'
+						'Setting undefined permission "' . $category . '.' . $key . '" is deprecated and will be ignored in a future version. Please use https://getkirby.com/docs/reference/plugins/extensions/permissions to register custom permissions.',
+						'permissions-undefined'
 					);
 				}
 

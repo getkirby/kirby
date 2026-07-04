@@ -35,6 +35,11 @@ class Helpers
 		// Passing `$category = null` to `Permissions::for()` is not supported
 		'permissions-for-category-null' => true,
 
+		// Setting undefined permission categories or actions is deprecated
+		// and will be ignored in a future version. Custom permissions should
+		// be registered via the `permissions` extension instead.
+		'permissions-undefined' => true,
+
 		// Passing an `info` array inside the `extends` array
 		// has been deprecated. Pass the individual entries (e.g. root, version)
 		// directly as named arguments.
@@ -51,7 +56,7 @@ class Helpers
 
 	/**
 	 * Triggers a deprecation warning if debug mode is active
-	 * and warning has not been surpressed via `Helpers::$deprecations`
+	 * and warning has not been suppressed via `Helpers::$deprecations`
 	 *
 	 * @param string|null $key If given, the key will be checked against the static array
 	 * @return bool Whether the warning was triggered
