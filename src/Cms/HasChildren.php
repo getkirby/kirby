@@ -169,6 +169,20 @@ trait HasChildren
 	}
 
 	/**
+	 * Returns the result of a registered folder handler
+	 */
+	public function folder(string $name): mixed
+	{
+		$handler = $this->kirby()->folder($name);
+
+		if ($handler === null) {
+			return null;
+		}
+
+		return $handler($this);
+	}
+
+	/**
 	 * Sets the published children collection
 	 *
 	 * @return $this

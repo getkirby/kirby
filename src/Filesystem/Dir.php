@@ -224,6 +224,7 @@ class Dir
 			'children' => [],
 			'files'    => [],
 			'template' => 'default',
+			'folders'  => [],
 		];
 
 		$dir = realpath($dir);
@@ -241,15 +242,21 @@ class Dir
 
 		// loop through all directory items and collect all relevant information
 		foreach ($items as $item) {
-			// ignore all items with a leading dot or underscore
-			if (
-				str_starts_with($item, '.') ||
-				str_starts_with($item, '_')
-			) {
+			// ignore all items with a leading dot
+			if (str_starts_with($item, '.') === true) {
 				continue;
 			}
 
 			$root = $dir . '/' . $item;
+
+			// collect underscore-prefixed folders
+			if (str_starts_with($item, '_') === true) {
+				if (is_dir($root) === true) {
+					$name = substr($item, 1);
+					$inventory['folders'][$name] = $root;
+				}
+				continue;
+			}
 
 			// collect all directories as children
 			if (is_dir($root) === true) {
