@@ -51,7 +51,7 @@ class Limits
 		);
 	}
 
-	public function ensure(string $email): void
+	public function ensure(string|null $email = null): void
 	{
 		if ($this->isBlocked($email) === true) {
 			$this->kirby->trigger('user.login:failed', ['email' => $email]);
@@ -64,7 +64,13 @@ class Limits
 		return $this->kirby->root('accounts') . '/.logins';
 	}
 
-	public function isBlocked(string $email): bool
+	/**
+	 * Checks whether the current visitor's IP or the given email
+	 * has exceeded the allowed number of trials. The email is
+	 * optional so that identity-unknown flows (e.g. passwordless
+	 * passkey login) can still enforce the IP-based limit.
+	 */
+	public function isBlocked(string|null $email = null): bool
 	{
 		$log    = $this->log();
 		$ip     = $this->kirby->visitor()->ip(hash: true);
@@ -77,7 +83,10 @@ class Limits
 		// check the email-based rate limit without a prior
 		// user lookup so that the timing difference of the lookup
 		// does not leak whether an email address actually exists
-		if (($log['by-email'][$email]['trials'] ?? 0) >= $trials) {
+		if (
+			$email !== null &&
+			($log['by-email'][$email]['trials'] ?? 0) >= $trials
+		) {
 			return true;
 		}
 

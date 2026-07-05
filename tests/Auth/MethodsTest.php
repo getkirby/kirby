@@ -2,11 +2,13 @@
 
 namespace Kirby\Auth;
 
+use Kirby\Auth\Exception\RateLimitException;
 use Kirby\Auth\Method\CodeMethod;
 use Kirby\Auth\Method\PasswordMethod;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Methods::class)]
@@ -62,6 +64,39 @@ class MethodsTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Auth method "foo" is not enabled');
 		$methods->authenticate('foo', 'marge@simpsons.com', 'secret123');
+	}
+
+	public function testAuthenticateBlockedIp(): void
+	{
+		$accounts = static::TMP . '/site/accounts';
+		Dir::make($accounts);
+		copy(static::FIXTURES . '/logins.json', $accounts . '/.logins');
+
+		// IP 10.2 (38f0a0, 10 trials) is blocked at the IP level, so the
+		// backstop rejects even a valid password before the method runs
+		$this->app->visitor()->ip('10.2.123.234');
+
+		$methods = $this->app->auth()->methods();
+
+		$this->expectException(RateLimitException::class);
+		$methods->authenticate('password', 'marge@simpsons.com', 'secret123');
+	}
+
+	public function testAuthenticateNotBlockedBelowLimit(): void
+	{
+		$accounts = static::TMP . '/site/accounts';
+		Dir::make($accounts);
+		copy(static::FIXTURES . '/logins.json', $accounts . '/.logins');
+
+		// IP 10.1 (87084f, 9 trials) is below the limit, so the backstop
+		// lets the attempt through and authentication still succeeds
+		$this->app->visitor()->ip('10.1.123.234');
+
+		$methods = $this->app->auth()->methods();
+		$result  = $methods->authenticate('password', 'marge@simpsons.com', 'secret123');
+
+		$this->assertInstanceOf(User::class, $result);
+		$this->assertSame('marge', $result->id());
 	}
 
 	public function testConfigDefaults(): void
