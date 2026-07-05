@@ -211,6 +211,12 @@ class EmailChallengeTest extends TestCase
 		$this->assertTrue(EmailChallenge::isEnabled($this->app->auth()));
 	}
 
+	public function testIsSingleUse(): void
+	{
+		$challenge = new EmailChallenge($this->user, 'login', 600);
+		$this->assertFalse($challenge->isSingleUse());
+	}
+
 	public function testMode(): void
 	{
 		$challenge = new EmailChallenge($this->user, 'password-reset', 900);

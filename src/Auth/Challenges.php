@@ -13,6 +13,7 @@ use Kirby\Exception\UserNotFoundException;
 use Kirby\Session\Session;
 use Kirby\Toolkit\A;
 use SensitiveParameter;
+use Throwable;
 
 /**
  * Handler for all auth challenges
@@ -287,7 +288,6 @@ class Challenges
 			throw new UserNotFoundException(name: $email);
 		}
 
-		// rate-limiting
 		$this->auth->limits()->ensure($email);
 
 		$type      = $session->get('kirby.challenge.type');
@@ -296,8 +296,18 @@ class Challenges
 		$data      = Pending::from($data ?? []);
 		$challenge = $this->get($type, $user, $mode, $timeout);
 
-		if ($challenge->verify($input, $data) !== true) {
-			throw new PermissionException(key: 'access.code');
+		try {
+			if ($challenge->verify($input, $data) !== true) {
+				throw new PermissionException(key: 'access.code');
+			}
+		} catch (Throwable $e) {
+			// a single-use challenge signs a one-time
+			// nonce that must not survive a failed attempt
+			if ($challenge->isSingleUse() === true) {
+				$this->clear($session);
+			}
+
+			throw $e;
 		}
 
 		return $challenge;

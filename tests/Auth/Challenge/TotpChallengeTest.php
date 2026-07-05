@@ -72,6 +72,12 @@ class TotpChallengeTest extends TestCase
 		$this->assertFalse(TotpChallenge::isAvailable($this->user, 'login'));
 	}
 
+	public function testIsSingleUse(): void
+	{
+		$challenge = new TotpChallenge($this->user, 'login', 600);
+		$this->assertFalse($challenge->isSingleUse());
+	}
+
 	public function testMode(): void
 	{
 		$challenge = new TotpChallenge($this->user, '2fa', 300);
