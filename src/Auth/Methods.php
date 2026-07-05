@@ -49,6 +49,11 @@ class Methods
 			);
 		}
 
+		// Reject blocked IPs before running any method.
+		// This covers the pre-identification phase of passwordless
+		// methods (e.g. passkeys, where no email is known upfront).
+		$this->auth->limits()->ensure();
+
 		return $this->get($type)->authenticate($email, $password, $long);
 	}
 

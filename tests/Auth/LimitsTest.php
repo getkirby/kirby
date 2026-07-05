@@ -64,12 +64,56 @@ class LimitsTest extends TestCase
 			static::TMP . '/site/accounts/.logins'
 		);
 
-		// IP 10.1 (87084f, 9 trials) and marge are both below
+		// IP 10.1 (9 trials) and marge are both below
 		// the limit, so ensure() must not throw or fire the hook
 		$this->app->visitor()->ip('10.1.123.234');
 		$this->limits->ensure('marge@simpsons.com');
 
 		$this->assertNull($this->failedEmail);
+	}
+
+	public function testEnsureWithoutEmail(): void
+	{
+		copy(
+			static::FIXTURES . '/logins.json',
+			static::TMP . '/site/accounts/.logins'
+		);
+
+		// IP 10.2 (10 trials) is blocked at the IP level,
+		// so ensure() throttles even without a known identity
+		$this->app->visitor()->ip('10.2.123.234');
+
+		// prime to prove the hook actually fires
+		$this->failedEmail = 'foo';
+
+		try {
+			$this->limits->ensure();
+			$this->fail('Expected a RateLimitException');
+		} catch (RateLimitException) {
+			// expected
+		}
+
+		// the user.login:failed hook fires with a null email
+		// because no identity is known in a passwordless flow
+		$this->assertNull($this->failedEmail);
+	}
+
+	public function testEnsureWithoutEmailPasses(): void
+	{
+		copy(
+			static::FIXTURES . '/logins.json',
+			static::TMP . '/site/accounts/.logins'
+		);
+
+		// IP 10.1 (9 trials) is below the limit and no email
+		// is given, so there is nothing that could trip the limiter
+		$this->app->visitor()->ip('10.1.123.234');
+
+		$this->failedEmail = 'foz';
+		$this->limits->ensure();
+
+		// the hook must not fire, so the sentinel survives
+		$this->assertSame('foz', $this->failedEmail);
 	}
 
 	public function testFile(): void
@@ -125,7 +169,7 @@ class LimitsTest extends TestCase
 
 	public function testIsBlockedByEmailForUnknownUser(): void
 	{
-		// IP 10.1 (87084f) is not present, so the only possible
+		// IP 10.1 is not present, so the only possible
 		// block comes from the email-based limit
 		file_put_contents($this->limits->file(), json_encode([
 			'by-ip' => [],
@@ -142,6 +186,23 @@ class LimitsTest extends TestCase
 		// ghost is not a registered user, but the email-based limit
 		// still applies because isBlocked() does no user lookup
 		$this->assertTrue($this->limits->isBlocked('ghost@simpsons.com'));
+	}
+
+	public function testIsBlockedWithoutEmail(): void
+	{
+		copy(
+			static::FIXTURES . '/logins.json',
+			static::TMP . '/site/accounts/.logins'
+		);
+
+		// IP 10.1 (9 trials) is below the limit; with no
+		// email the email branch is skipped without a lookup
+		$this->app->visitor()->ip('10.1.123.234');
+		$this->assertFalse($this->limits->isBlocked());
+
+		// IP 10.2 (10 trials) is blocked at the IP level
+		$this->app->visitor()->ip('10.2.123.234');
+		$this->assertTrue($this->limits->isBlocked());
 	}
 
 	public function testLog(): void
