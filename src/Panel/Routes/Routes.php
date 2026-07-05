@@ -6,6 +6,7 @@ use Closure;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\Area;
 use Kirby\Panel\Controller\Controller;
+use Kirby\Toolkit\A;
 
 /**
  * @copyright Bastian Allgeier
@@ -114,12 +115,15 @@ abstract class Routes
 	}
 
 	/**
-	 * Builds the full routing pattern with the
-	 * given prefix
+	 * Builds the full routing pattern with the given prefix
 	 */
 	public function pattern(
-		string $pattern
-	) {
+		string|array $pattern
+	): string|array {
+		if (is_array($pattern) === true) {
+			return A::map($pattern, $this->pattern(...));
+		}
+
 		return trim(static::$prefix . '/' . $pattern, '/');
 	}
 

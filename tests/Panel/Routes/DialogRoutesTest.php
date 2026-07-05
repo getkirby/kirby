@@ -96,6 +96,28 @@ class DialogRoutesTest extends TestCase
 		$this->assertSame('dialogs/foo/(:any)', $routes[1]['pattern']);
 	}
 
+	public function testToArrayWithPatternArray(): void
+	{
+		$routes = new DialogRoutes($this->area, [
+			'foo' => [
+				'pattern' => ['foo/(:any)', 'bar/(:any)'],
+				'load'    => fn () => null,
+				'submit'  => fn () => null
+			]
+		]);
+
+		$routes = $routes->toArray();
+		$this->assertCount(2, $routes);
+		$this->assertSame(
+			['dialogs/foo/(:any)', 'dialogs/bar/(:any)'],
+			$routes[0]['pattern']
+		);
+		$this->assertSame(
+			['dialogs/foo/(:any)', 'dialogs/bar/(:any)'],
+			$routes[1]['pattern']
+		);
+	}
+
 	public function testToArrayMissingCallbacks(): void
 	{
 		$routes = new DialogRoutes($this->area, [

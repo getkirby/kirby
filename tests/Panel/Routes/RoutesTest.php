@@ -157,9 +157,14 @@ class RoutesTest extends TestCase
 	{
 		$routes = new TestRoutes($this->area, []);
 		$this->assertSame('foo', $routes->pattern('foo/'));
+		$this->assertSame(['foo', 'bar'], $routes->pattern(['foo/', 'bar/']));
 
 		$routes = new TestRoutesWithPrefix($this->area, []);
 		$this->assertSame('test/foo', $routes->pattern('foo/'));
+		$this->assertSame(
+			['test/foo', 'test/bar'],
+			$routes->pattern(['foo/', 'bar/'])
+		);
 	}
 
 	public function testRoute(): void
