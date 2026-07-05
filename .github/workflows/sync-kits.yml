@@ -1,0 +1,43 @@
+# To upgrade pinned actions: Use https://github.com/mheap/pin-github-action
+
+name: Sync Kits
+on:
+  # Triggered automatically when a Kirby release is published
+  release:
+    types: [published]
+
+  # Allow manual re-runs for a specific version
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Kirby version/tag to sync (e.g. 5.5.0)"
+        required: true
+
+jobs:
+  dispatch:
+    name: "Dispatch: ${{ matrix.kit }}"
+
+    # only run for the main getkirby/kirby repo and skip
+    # pre-releases (RCs, betas) on the automatic trigger
+    if: >
+      github.repository == 'getkirby/kirby' &&
+      (
+        github.event_name == 'workflow_dispatch' ||
+        github.event.release.prerelease == false
+      )
+
+    runs-on: ubuntu-22.04
+    timeout-minutes: 5
+    strategy:
+      matrix:
+        kit: [starterkit, plainkit, demokit]
+
+    steps:
+      - name: Trigger ${{ matrix.kit }} sync
+        env:
+          GH_TOKEN: ${{ secrets.KITS_SYNC_TOKEN }}
+          VERSION: ${{ inputs.version || github.event.release.tag_name }}
+        run: |
+          gh api "repos/getkirby/${{ matrix.kit }}/dispatches" \
+            -f "event_type=kirby-release" \
+            -f "client_payload[version]=${VERSION}"
