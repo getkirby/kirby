@@ -2,6 +2,7 @@
 
 namespace Kirby\Auth;
 
+use Closure;
 use Kirby\Auth\Exception\ChallengeTimeoutException;
 use Kirby\Auth\Exception\LoginNotPermittedException;
 use Kirby\Auth\Exception\RateLimitException;
@@ -232,6 +233,51 @@ class Auth
 	{
 		$this->user->flush();
 		$this->status = null;
+	}
+
+	/**
+	 * Runs some auth attempt inside the shared rate-limit envelope:
+	 * enforces the limit up front and, on any failure, tracks the
+	 * attempt, adds timing jitter and hides the real reason behind a
+	 * generic fallback error.
+	 *
+	 * @since 6.0.0
+	 * @internal
+	 *
+	 * @throws \Throwable Fallback or the original error in debug mode
+	 */
+	public function guard(
+		string|null $email,
+		Closure $attempt,
+		Throwable|null $fallback = null
+	): mixed {
+		try {
+			$this->limits->ensure($email);
+			return $attempt();
+
+		} catch (Throwable $e) {
+			// a hit that already is the rate limit was tracked
+			// when the limit fired, so don't count it twice here
+			if ($e instanceof RateLimitException === false) {
+				try {
+					$this->limits->track($email);
+				} catch (Throwable $tracked) {
+					// keep the tracking error (e.g. limit exceeded)
+					$e = $tracked;
+				}
+			}
+
+			// sleep for a random amount of milliseconds to make
+			// automated attacks harder and to avoid leaking whether
+			// the email/user exists
+			usleep(random_int(10000, 2000000));
+
+			// keep throwing the original error in debug mode,
+			// otherwise hide it to avoid leaking security-relevant info
+			$this->fail($e, $fallback);
+
+			return null;
+		}
 	}
 
 	/**
@@ -513,51 +559,31 @@ class Auth
 	): User|null {
 		$email = Idn::decodeEmail($email);
 
-		try {
-			$this->limits->ensure($email);
-			$user = $this->kirby->users()->find($email);
+		return $this->guard(
+			email:    $email,
+			attempt: function () use ($email, $password) {
+				$user = $this->kirby->users()->find($email);
 
-			// validate the user and its password
-			if (
-				$user instanceof User &&
-				$user->validatePassword($password) === true
-			) {
-				return $user;
-			}
-
-			// run a dummy password_verify() when the user is not found so
-			// that the timing is indistinguishable from a regular failure;
-			// without this, the absence of a bcrypt computation
-			// could leak whether the email address is registered
-			if ($user instanceof User === false) {
-				password_verify($password, '$2y$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW');
-			}
-
-			throw new UserNotFoundException($email);
-
-		} catch (Throwable $e) {
-			$error = $e;
-
-			// log invalid login trial unless the rate limit is already active
-			if ($error instanceof RateLimitException === false) {
-				try {
-					$this->limits->track($email);
-				} catch (Throwable $e) {
-					// $error is overwritten with the exception
-					// from the track method if there's one
-					$error = $e;
+				// validate the user and its password
+				if (
+					$user instanceof User &&
+					$user->validatePassword($password) === true
+				) {
+					return $user;
 				}
-			}
 
-			// sleep for a random amount of milliseconds
-			// to make automated attacks harder
-			usleep(random_int(10000, 2000000));
+				// run a dummy password_verify() when the user is not found
+				// so that the timing is indistinguishable from a regular
+				// failure; without this, the absence of a bcrypt computation
+				// could leak whether the email address is registered
+				if ($user instanceof User === false) {
+					password_verify($password, '$2y$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW');
+				}
 
-			// keep throwing the original error in debug mode,
-			// otherwise hide it to avoid leaking security-relevant information
-			$this->fail($error, new LoginNotPermittedException());
-			return null;
-		}
+				throw new UserNotFoundException($email);
+			},
+			fallback: new LoginNotPermittedException()
+		);
 	}
 
 	/**
@@ -582,46 +608,36 @@ class Auth
 		$session = $this->kirby->session();
 		$email   = $session->get('kirby.challenge.email');
 
-		try {
-			$challenge = $this->challenges->verify($session, $input);
-			$user      = $challenge->user();
+		return $this->guard(
+			email:   $email,
+			attempt: function () use ($session, $input) {
+				try {
+					$challenge = $this->challenges->verify($session, $input);
 
-			$this->logout();
-			$user->loginPasswordless();
+				} catch (ChallengeTimeoutException $e) {
+					// a timed-out challenge already cleared its own session
+					// state; additionally drop any active login so the
+					// pending session cannot be reused
+					$this->logout();
+					throw $e;
+				}
 
-			// allow the user to set a new password
-			// without knowing the previous one
-			if ($challenge->mode() === 'password-reset') {
-				$session->set('kirby.resetPassword', true);
-			}
+				$user = $challenge->user();
 
-			$this->setUser($user);
-			return $user;
-
-		} catch (Throwable $e) {
-			if ($e instanceof ChallengeTimeoutException) {
 				$this->logout();
-			}
+				$user->loginPasswordless();
 
-			// hook was already fired for RateLimitException
-			if (
-				empty($email) === false &&
-				$e instanceof RateLimitException === false
-			) {
-				$this->limits->track($email);
-			}
+				// allow the user to set a new password
+				// without knowing the previous one
+				if ($challenge->mode() === 'password-reset') {
+					$session->set('kirby.resetPassword', true);
+				}
 
-			// sleep for a random amount of milliseconds
-			// to make automated attacks harder and to
-			// avoid leaking whether the user exists
-			usleep(random_int(10000, 2000000));
+				$this->setUser($user);
 
-			$fallback = new PermissionException(key: 'access.code');
-
-			// keep throwing the original error in debug mode,
-			// otherwise hide it to avoid leaking security-relevant information
-			$this->fail($e, $fallback);
-			return null;
-		}
+				return $user;
+			},
+			fallback: new PermissionException(key: 'access.code')
+		);
 	}
 }
