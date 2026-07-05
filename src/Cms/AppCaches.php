@@ -67,7 +67,6 @@ trait AppCaches
 		$options   = $this->option($this->cacheOptionsKey($key), null);
 		$options ??= $this->core()->caches()[$key] ?? false;
 		/** @var array|bool $options */
-
 		if ($options === false) {
 			return [
 				'active' => false

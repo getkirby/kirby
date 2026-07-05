@@ -99,7 +99,7 @@ class Remote
 
 		return new static(
 			url: $url,
-			options: [ 'method' => strtoupper($method), ...$options]
+			options: ['method' => strtoupper($method), ...$options]
 		);
 	}
 
