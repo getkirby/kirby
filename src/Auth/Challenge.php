@@ -80,6 +80,15 @@ abstract class Challenge
 	}
 
 	/**
+	 * Whether the challenge relies on a single-use nonce
+	 * that must be invalidated after every verification attempt
+	 */
+	public function isSingleUse(): bool
+	{
+		return false;
+	}
+
+	/**
 	 * Returns the purpose of the challenge
 	 * @return 'login'|'password-reset'|'2fa'
 	 */

@@ -18,6 +18,7 @@ class DummyChallenge extends Challenge
 {
 	public static bool $available = true;
 	public static bool $enabled = true;
+	public static bool $singleUse = false;
 	public static array $created  = [];
 	public static array $verified = [];
 	public static Pending|null $pending = null;
@@ -25,6 +26,11 @@ class DummyChallenge extends Challenge
 	public static function isEnabled(Auth $auth): bool
 	{
 		return static::$enabled;
+	}
+
+	public function isSingleUse(): bool
+	{
+		return static::$singleUse;
 	}
 
 	public function create(): Pending|null
@@ -83,6 +89,7 @@ class ChallengesTest extends TestCase
 
 		DummyChallenge::$available  = true;
 		DummyChallenge::$enabled    = true;
+		DummyChallenge::$singleUse  = false;
 		DummyChallenge::$created    = [];
 		DummyChallenge::$verified   = [];
 		DummyChallenge::$pending    = null;
@@ -380,6 +387,53 @@ class ChallengesTest extends TestCase
 		$this->expectException(PermissionException::class);
 
 		$this->challenges->verify($session, 'nope');
+	}
+
+	public function testVerifyInvalidClearsSingleUseChallenge(): void
+	{
+		DummyChallenge::$singleUse = true;
+
+		$session = $this->session();
+		$session->set('kirby.challenge.type', 'dummy');
+		$session->set('kirby.challenge.email', 'marge@simpsons.com');
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.timeout', time() + 1000);
+		$session->set('kirby.challenge.data', ['public' => 'x', 'secret' => 'secret']);
+
+		try {
+			$this->challenges->verify($session, 'nope');
+			$this->fail('Expected PermissionException');
+		} catch (PermissionException) {
+			// expected
+		}
+
+		// the data for a single-use challenge must
+		// not survive a failed attempt
+		$this->assertNull($session->get('kirby.challenge.type'));
+		$this->assertNull($session->get('kirby.challenge.email'));
+		$this->assertNull($session->get('kirby.challenge.data'));
+	}
+
+	public function testVerifyInvalidKeepsReusableChallenge(): void
+	{
+		$session = $this->session();
+		$session->set('kirby.challenge.type', 'dummy');
+		$session->set('kirby.challenge.email', 'marge@simpsons.com');
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.timeout', time() + 1000);
+		$session->set('kirby.challenge.data', ['public' => 'x', 'secret' => 'secret']);
+
+		try {
+			$this->challenges->verify($session, 'nope');
+			$this->fail('Expected PermissionException');
+		} catch (PermissionException) {
+			// expected
+		}
+
+		// code-based challenges (not single-use) stay valid
+		// so the user can retry a mistyped code
+		$this->assertSame('dummy', $session->get('kirby.challenge.type'));
+		$this->assertSame(['public' => 'x', 'secret' => 'secret'], $session->get('kirby.challenge.data'));
 	}
 
 	public function testVerifyTimeout(): void
