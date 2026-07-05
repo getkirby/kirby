@@ -149,7 +149,7 @@ export default {
 			};
 		},
 		isMaxReached() {
-			return this.max && this.max <= this.selected.length;
+			return this.max !== null && this.max !== undefined && this.max <= this.selected.length;
 		}
 	},
 	watch: {
