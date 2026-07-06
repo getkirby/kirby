@@ -16,6 +16,7 @@
 			}"
 			:items="items"
 			:link="false"
+			:scrollable="true"
 			:pagination="{
 				details: true,
 				dropdown: false,
@@ -169,18 +170,12 @@ export default {
 </script>
 
 <style>
-.k-models-dialog :where(.k-dialog-body, .k-collection) {
+.k-models-dialog .k-dialog-body {
 	display: flex;
 	flex-direction: column;
-	min-height: 0;
 }
-.k-models-dialog .k-dialog-body {
-	overflow: hidden;
-}
-.k-models-dialog .k-items {
-	min-height: 0;
-	overflow-y: auto;
-	overscroll-behavior: contain;
+.k-models-dialog .k-collection {
+	flex: 1;
 }
 .k-models-dialog .k-list-item {
 	cursor: pointer;
