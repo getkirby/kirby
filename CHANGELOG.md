@@ -332,6 +332,10 @@ Custom glue
 
 - New global helper functions: `push()`, `endpush()` and `stack()`. [#7867](https://github.com/getkirby/kirby/pull/7867)
 
+#### KirbyTags
+
+- `video` KirbyTag: Removed `style` option to protect against style injections. If you need to define a custom `style` attribute, please extend as a custom KirbyTag. Thanks to Peter Levashov (@petersevera) for his responsible disclosure and suggestion.
+
 #### Field methods
 
 - Calling non-existing field methods is throwing a `Kirby\Exception\BadMethodCallException`. [#7082](https://github.com/getkirby/kirby/pull/7082)
