@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { isReactive, reactive, watch } from "vue";
 import History from "./history";
 
 describe("History", () => {
@@ -35,6 +36,27 @@ describe("History", () => {
 			const history = new History();
 
 			expect(() => history.add({ id: "" })).toThrow("The state needs an ID");
+		});
+
+		it("should reactively replace the last item", () => {
+			// when nested in a reactive object, replacing a milestone
+			// must trigger Vue reactivity so watchers/renderers update
+			// (regression: https://github.com/getkirby/kirby/issues/8264)
+			const store = reactive({ history: new History() });
+			expect(isReactive(store.history.milestones)).toBe(true);
+
+			store.history.add({ id: "a" });
+
+			let ids: string[] = [];
+			watch(
+				() => store.history.milestones.map((milestone) => milestone.id),
+				(value) => (ids = value),
+				{ flush: "sync" }
+			);
+
+			store.history.add({ id: "b" }, true);
+
+			expect(ids).toStrictEqual(["b"]);
 		});
 	});
 

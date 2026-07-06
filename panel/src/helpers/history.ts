@@ -102,6 +102,8 @@ export default class History<T extends { id: string }> {
 			index = this.milestones.length - 1;
 		}
 
-		this.milestones[index] = state;
+		// use splice instead of index assignment so that Vue 2 can
+		// detect the change and re-render (e.g. the drawer history)
+		this.milestones.splice(index, 1, state);
 	}
 }

@@ -3,7 +3,6 @@
 namespace Kirby\Text;
 
 use Kirby\Cms\App;
-use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 
@@ -104,14 +103,16 @@ class LinkKirbyTagTest extends TestCase
 		$result = $app->kirbytags('(link: page://page-uuid)');
 		$this->assertSame('<a href="https://getkirby.com/a">getkirby.com/a</a>', $result);
 
+		// broken link without text: dropped entirely
 		$result = $app->kirbytags('(link: page://not-exists)');
-		$this->assertSame('<a href="https://getkirby.com/error">getkirby.com/error</a>', $result);
+		$this->assertSame('', $result);
 
 		$result = $app->kirbytags('(link: file://file-uuid text: file)');
 		$this->assertSame('<a href="' . $app->file('a/foo.jpg')->url() . '">file</a>', $result);
 
+		// broken link with text: link dropped, text kept
 		$result = $app->kirbytags('(link: file://not-exists text: file)');
-		$this->assertSame('<a href="https://getkirby.com/error">file</a>', $result);
+		$this->assertSame('<span>file</span>', $result);
 	}
 
 	public function testWithUuidDebug(): void
@@ -139,10 +140,12 @@ class LinkKirbyTagTest extends TestCase
 			]
 		]);
 
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The linked page cannot be found');
+		$result = $app->kirbytags('(link: page://not-exists)');
+		$this->assertSame('<span class="kirby-broken-link">🚨 The link &quot;page://not-exists&quot; cannot be found</span>', $result);
 
-		$app->kirbytags('(link: page://not-exists)');
+		// a custom class is merged with the broken-link class
+		$result = $app->kirbytags('(link: page://not-exists class: my-link)');
+		$this->assertSame('<span class="kirby-broken-link my-link">🚨 The link &quot;page://not-exists&quot; cannot be found</span>', $result);
 	}
 
 	public function testWithUuidDebugText(): void
@@ -170,10 +173,8 @@ class LinkKirbyTagTest extends TestCase
 			]
 		]);
 
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The linked page cannot be found for the link text "click here"');
-
-		$app->kirbytags('(link: page://not-exists text: click here)');
+		$result = $app->kirbytags('(link: page://not-exists text: click here)');
+		$this->assertSame('<span class="kirby-broken-link">🚨 The link &quot;page://not-exists&quot; cannot be found for the link text &quot;click here&quot;</span>', $result);
 	}
 
 	public function testWithUuidAndLang(): void
