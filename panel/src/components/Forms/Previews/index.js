@@ -16,6 +16,7 @@ import TimeFieldPreview from "./TimeFieldPreview.vue";
 import ToggleFieldPreview from "./ToggleFieldPreview.vue";
 import UrlFieldPreview from "./UrlFieldPreview.vue";
 import UsersFieldPreview from "./UsersFieldPreview.vue";
+import WriterFieldPreview from "./WriterFieldPreview.vue";
 
 export default {
 	install(app) {
@@ -37,10 +38,10 @@ export default {
 		app.component("k-time-field-preview", TimeFieldPreview);
 		app.component("k-url-field-preview", UrlFieldPreview);
 		app.component("k-users-field-preview", UsersFieldPreview);
+		app.component("k-writer-field-preview", WriterFieldPreview);
 
 		/** Extensions **/
-		app.component("k-list-field-preview", HtmlFieldPreview);
-		app.component("k-writer-field-preview", HtmlFieldPreview);
+		app.component("k-list-field-preview", WriterFieldPreview);
 
 		app.component("k-checkboxes-field-preview", TagsFieldPreview);
 		app.component("k-multiselect-field-preview", TagsFieldPreview);

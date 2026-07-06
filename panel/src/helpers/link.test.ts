@@ -112,6 +112,19 @@ describe("$helper.link", () => {
 			});
 		});
 
+		it("should request default page preview fields", async () => {
+			vi.mocked(window.panel.api.pages.get).mockResolvedValue({
+				title: "Page"
+			});
+
+			await preview({ type: "page", link: "page://324hjk24" });
+
+			expect(window.panel.api.pages.get).toHaveBeenCalledWith(
+				"page://324hjk24",
+				{ select: "title,panelImage" }
+			);
+		});
+
 		it("should return the site label for site://", async () => {
 			const result = await preview({ type: "page", link: "site://" });
 
@@ -144,6 +157,20 @@ describe("$helper.link", () => {
 				{
 					select: "filename,panelImage"
 				}
+			);
+		});
+
+		it("should request default file preview fields", async () => {
+			vi.mocked(window.panel.api.files.get).mockResolvedValue({
+				filename: "image.jpg"
+			});
+
+			await preview({ type: "file", link: "file://324hjk24" });
+
+			expect(window.panel.api.files.get).toHaveBeenCalledWith(
+				null,
+				"file://324hjk24",
+				{ select: "filename,panelImage" }
 			);
 		});
 

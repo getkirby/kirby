@@ -4,7 +4,7 @@
 	"type": "module",
 	"scripts": {
 		"build": "vite build",
-		"build:docs": "node scripts/docs.mjs",
+		"build:docs": "node scripts/docs.js",
 		"dev": "vite --host",
 		"format": "prettier --write \"src/**/*.{js,vue}\"",
 		"lint": "eslint \"src/**/*.{js,ts,vue}\"",

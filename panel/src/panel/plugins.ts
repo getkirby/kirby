@@ -18,9 +18,15 @@ import { isObject } from "@/helpers/object";
  * Allows string references for `mixins` and `extends`, which are resolved
  * at install time by resolveComponentMixins and resolveComponentExtension.
  */
-export type Component = Omit<ComponentOptions, "mixins" | "extends"> & {
+export type Component = Omit<
+	ComponentOptions,
+	"extends" | "mixins" | "render"
+> & {
 	mixins?: (string | ComponentOptions | ConcreteComponent)[];
 	extends?: string | ComponentOptions | ConcreteComponent;
+	// `null` explicitly clears an inherited render method so the component's
+	// own template is used instead (see resolveComponentRender)
+	render?: ComponentOptions["render"] | null;
 };
 
 // mixins
@@ -198,7 +204,9 @@ export function resolveComponentMixins(component: Component): Component {
  */
 export function resolveComponentRender(component: Component): Component {
 	if (component.template) {
-		delete component.render;
+		// set to `null` instead of deleting, so an inherited render method
+		// is overridden and Vue compiles the component's own template
+		component.render = null;
 	}
 
 	return component;

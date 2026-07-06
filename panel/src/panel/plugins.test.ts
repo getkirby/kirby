@@ -14,13 +14,13 @@ import Plugins, {
 
 describe("panel.plugins", () => {
 	describe("resolveComponentRender()", () => {
-		it("removes render when template is present", () => {
+		it("sets render to null when template is present", () => {
 			const render = () => null;
 			const component = { template: "<p>test</p>", render };
 
 			const result = resolveComponentRender(component);
 
-			expect(result.render).toBeUndefined();
+			expect(result.render).toBeNull();
 			expect(result.template).toBe("<p>test</p>");
 		});
 
