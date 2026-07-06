@@ -2,7 +2,7 @@
 
 namespace Kirby\Auth;
 
-use Kirby\Auth\Exception\RateLimitException;
+use Exception;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
@@ -162,6 +162,214 @@ class AuthTest extends TestCase
 		$auth = new BasicAuth($data);
 		$user = $this->auth->currentUserFromBasicAuth($auth);
 		$this->assertSame('marge@simpsons.com', $user->email());
+	}
+
+	public function testGuard(): void
+	{
+		// a successful attempt returns its result untouched
+		// and records no failure
+		$result = $this->auth->guard(
+			'marge@simpsons.com',
+			fn () => 'success'
+		);
+
+		$this->assertSame('success', $result);
+		$this->assertNull($this->failedEmail);
+		$this->assertFileDoesNotExist(static::TMP . '/site/accounts/.logins');
+	}
+
+	public function testGuardEnforcesRateLimit(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth' => ['debug' => false]
+			]
+		]);
+		$this->auth = $this->app->auth();
+
+		copy(
+			static::FIXTURES . '/logins.json',
+			static::TMP . '/site/accounts/.logins'
+		);
+
+		// IP 10.2 (10 trials) is already blocked
+		$this->app->visitor()->ip('10.2.123.234');
+
+		$ran    = false;
+		$thrown = false;
+
+		try {
+			$this->auth->guard(
+				'marge@simpsons.com',
+				function () use (&$ran) {
+					$ran = true;
+					return 'should never run';
+				},
+				new PermissionException(message: 'hidden fallback')
+			);
+
+		} catch (PermissionException $e) {
+			$this->assertSame('hidden fallback', $e->getMessage());
+			$thrown = true;
+		}
+
+		$this->assertTrue($thrown);
+
+		// the attempt is short-circuited before it can run
+		$this->assertFalse($ran);
+
+		// the pre-existing rate-limit hit is not tracked twice
+		$log = $this->auth->limits()->log();
+		$this->assertSame(10, $log['by-ip']['38f0a08519792a17e18a251008f3a116977907f921b0b287c8']['trials']);
+	}
+
+	public function testGuardKeepsTrackingError(): void
+	{
+		// if tracking the failed attempt fails itself (here via a
+		// throwing user.login:failed hook) `::guard()` surfaces that
+		// tracking error instead of the original failure
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'user.login:failed' => function () {
+					throw new Exception('tracking failed');
+				}
+			]
+		]);
+		$this->auth = $this->app->auth();
+
+		$this->app->visitor()->ip('10.3.123.234');
+
+		// debug mode (default) rethrows whatever error guard keeps
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('tracking failed');
+
+		$this->auth->guard(
+			'marge@simpsons.com',
+			fn () => throw new InvalidArgumentException(message: 'real reason')
+		);
+	}
+
+	public function testGuardRethrowsInDebugMode(): void
+	{
+		// auth.debug defaults to true in the test setup, so the
+		// real error is surfaced instead of the generic fallback
+		$this->app->visitor()->ip('10.3.123.234');
+
+		$thrown = false;
+
+		try {
+			$this->auth->guard(
+				'marge@simpsons.com',
+				fn () => throw new InvalidArgumentException(message: 'real reason'),
+				new PermissionException(message: 'hidden fallback')
+			);
+		} catch (InvalidArgumentException $e) {
+			$this->assertSame('real reason', $e->getMessage());
+			$thrown = true;
+		}
+
+		$this->assertTrue($thrown);
+	}
+
+	public function testGuardReturnsNullWithoutFallback(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth' => ['debug' => false]
+			]
+		]);
+		$this->auth = $this->app->auth();
+
+		$this->app->visitor()->ip('10.3.123.234');
+
+		// without a fallback the hidden failure is swallowed
+		// and guard() resolves to null
+		$result = $this->auth->guard(
+			'marge@simpsons.com',
+			fn () => throw new InvalidArgumentException(message: 'real reason')
+		);
+
+		$this->assertNull($result);
+
+		// the failed attempt is still tracked
+		$this->assertSame('marge@simpsons.com', $this->failedEmail);
+	}
+
+	public function testGuardTracksAndHidesFailure(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth' => ['debug' => false]
+			]
+		]);
+		$this->auth = $this->app->auth();
+
+		$this->app->visitor()->ip('10.3.123.234');
+
+		$thrown = false;
+
+		try {
+			$this->auth->guard(
+				'marge@simpsons.com',
+				fn () => throw new InvalidArgumentException(message: 'real reason'),
+				new PermissionException(message: 'hidden fallback')
+			);
+		} catch (PermissionException $e) {
+			// the real reason is hidden behind the generic fallback
+			$this->assertSame('hidden fallback', $e->getMessage());
+			$thrown = true;
+		}
+
+		$this->assertTrue($thrown);
+
+		// the failed attempt is tracked by IP and email
+		// and the user.login:failed hook has fired
+		$log = $this->auth->limits()->log();
+		$this->assertSame(1, $log['by-ip']['85a06e36d926cb901f05d1167913ebd7ec3d8f5bce4551f5da']['trials']);
+		$this->assertSame(1, $log['by-email']['marge@simpsons.com']['trials']);
+		$this->assertSame('marge@simpsons.com', $this->failedEmail);
+	}
+
+	public function testGuardWithoutEmail(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth' => ['debug' => false]
+			]
+		]);
+		$this->auth = $this->app->auth();
+
+		copy(
+			static::FIXTURES . '/logins.json',
+			static::TMP . '/site/accounts/.logins'
+		);
+
+		// IP 10.2 (10 trials) is blocked, so an
+		// identity-unknown attempt is throttled by IP alone
+		$this->app->visitor()->ip('10.2.123.234');
+
+		// prime to prove the hook fires with a null email
+		$this->failedEmail = 'foo';
+
+		$ran    = false;
+		$thrown = false;
+
+		try {
+			$this->auth->guard(
+				null,
+				function () use (&$ran) {
+					$ran = true;
+					return 'should never run';
+				},
+				new PermissionException(message: 'hidden fallback')
+			);
+		} catch (PermissionException) {
+			$thrown = true;
+		}
+
+		$this->assertTrue($thrown);
+		$this->assertFalse($ran);
+		$this->assertNull($this->failedEmail);
 	}
 
 	public function testImpersonate(): void
@@ -451,49 +659,37 @@ class AuthTest extends TestCase
 		$this->assertNull($this->failedEmail);
 	}
 
-	public function testValidatePasswordInvalidUser(): void
-	{
-		$this->app = $this->app->clone([
-			'options' => [
-				'auth' => ['debug' => false]
-			]
-		]);
-		$this->auth = $this->app->auth();
-
-		copy(
-			static::FIXTURES . '/logins.json',
-			static::TMP . '/site/accounts/.logins'
-		);
-
-		$this->app->visitor()->ip('10.3.123.234');
-
-		$thrown = false;
-
-		try {
-			$this->auth->validatePassword('invalid@example.com', 'springfield123');
-		} catch (PermissionException $e) {
-			$this->assertSame('Invalid login', $e->getMessage());
-			$thrown = true;
-		}
-
-		$this->assertTrue($thrown);
-		$this->assertSame(1, $this->auth->limits()->log()['by-ip']['85a06e36d926cb901f05d1167913ebd7ec3d8f5bce4551f5da']['trials']);
-		$this->assertSame('invalid@example.com', $this->failedEmail);
-	}
-
 	public function testValidatePasswordInvalidPassword(): void
 	{
+		$this->app->visitor()->ip('10.3.123.234');
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Wrong password');
+
+		$this->auth->validatePassword('marge@simpsons.com', 'invalid-password');
+	}
+
+	public function testValidatePasswordInvalidUser(): void
+	{
+		$this->app->visitor()->ip('10.3.123.234');
+
+		$this->expectException(UserNotFoundException::class);
+		$this->expectExceptionMessage('The user "lisa@simpsons.com" cannot be found');
+
+		$this->auth->validatePassword('lisa@simpsons.com', 'springfield123');
+	}
+
+	public function testValidatePasswordIsGuarded(): void
+	{
+		// validatePassword() routes failures through Auth::guard(),
+		// so in production the real error is hidden and the attempt
+		// is tracked
 		$this->app = $this->app->clone([
 			'options' => [
 				'auth' => ['debug' => false]
 			]
 		]);
 		$this->auth = $this->app->auth();
-
-		copy(
-			static::FIXTURES . '/logins.json',
-			static::TMP . '/site/accounts/.logins'
-		);
 
 		$this->app->visitor()->ip('10.3.123.234');
 
@@ -507,106 +703,8 @@ class AuthTest extends TestCase
 		}
 
 		$this->assertTrue($thrown);
-		$this->assertSame(1, $this->auth->limits()->log()['by-ip']['85a06e36d926cb901f05d1167913ebd7ec3d8f5bce4551f5da']['trials']);
 		$this->assertSame(1, $this->auth->limits()->log()['by-email']['marge@simpsons.com']['trials']);
 		$this->assertSame('marge@simpsons.com', $this->failedEmail);
-	}
-
-	public function testValidatePasswordBlocked(): void
-	{
-		$this->app = $this->app->clone([
-			'options' => [
-				'auth' => ['debug' => false]
-			]
-		]);
-		$this->auth = $this->app->auth();
-
-		copy(
-			static::FIXTURES . '/logins.json',
-			static::TMP . '/site/accounts/.logins'
-		);
-
-		$this->app->visitor()->ip('10.2.123.234');
-
-		$thrown = false;
-
-		try {
-			$this->auth->validatePassword('marge@simpsons.com', 'springfield123');
-		} catch (PermissionException $e) {
-			$this->assertSame('Invalid login', $e->getMessage());
-			$thrown = true;
-		}
-
-		$this->assertTrue($thrown);
-		$this->assertSame('marge@simpsons.com', $this->failedEmail);
-	}
-
-	public function testValidatePasswordDebugInvalidUser(): void
-	{
-		copy(
-			static::FIXTURES . '/logins.json',
-			static::TMP . '/site/accounts/.logins'
-		);
-
-		$this->app->visitor()->ip('10.3.123.234');
-
-		$thrown = false;
-
-		try {
-			$this->auth->validatePassword('lisa@simpsons.com', 'springfield123');
-		} catch (UserNotFoundException $e) {
-			$this->assertSame('The user "lisa@simpsons.com" cannot be found', $e->getMessage());
-			$thrown = true;
-		}
-
-		$this->assertTrue($thrown);
-		$this->assertSame(1, $this->auth->limits()->log()['by-ip']['85a06e36d926cb901f05d1167913ebd7ec3d8f5bce4551f5da']['trials']);
-		$this->assertSame('lisa@simpsons.com', $this->failedEmail);
-	}
-
-	public function testValidatePasswordDebugInvalidPassword(): void
-	{
-		copy(
-			static::FIXTURES . '/logins.json',
-			static::TMP . '/site/accounts/.logins'
-		);
-
-		$this->app->visitor()->ip('10.3.123.234');
-
-		$thrown = false;
-
-		try {
-			$this->auth->validatePassword('marge@simpsons.com', 'invalid-password');
-		} catch (InvalidArgumentException $e) {
-			$this->assertSame('Wrong password', $e->getMessage());
-			$thrown = true;
-		}
-
-		$this->assertTrue($thrown);
-		$this->assertSame(1, $this->auth->limits()->log()['by-ip']['85a06e36d926cb901f05d1167913ebd7ec3d8f5bce4551f5da']['trials']);
-		$this->assertSame(1, $this->auth->limits()->log()['by-email']['marge@simpsons.com']['trials']);
-		$this->assertSame('marge@simpsons.com', $this->failedEmail);
-	}
-
-	public function testValidatePasswordDebugBlocked(): void
-	{
-		copy(
-			static::FIXTURES . '/logins.json',
-			static::TMP . '/site/accounts/.logins'
-		);
-
-		$this->app->visitor()->ip('10.2.123.234');
-
-		$thrown = false;
-
-		try {
-			$this->auth->validatePassword('homer@simpsons.com', 'springfield123');
-		} catch (RateLimitException $e) {
-			$thrown = true;
-		}
-
-		$this->assertTrue($thrown);
-		$this->assertSame('homer@simpsons.com', $this->failedEmail);
 	}
 
 	public function testValidatePasswordWithUnicodeEmail(): void

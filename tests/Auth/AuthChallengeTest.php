@@ -166,10 +166,59 @@ class AuthChallengeTest extends TestCase
 		$this->assertSame('marge', $data['kirby.userId'] ?? null);
 	}
 
+	public function testVerifyChallengePasswordReset(): void
+	{
+		$session = $this->app->session();
+
+		$session->set('kirby.challenge.email', 'marge@simpsons.com');
+		$session->set('kirby.challenge.data', ['secret' => self::$password]);
+		$session->set('kirby.challenge.mode', 'password-reset');
+		$session->set('kirby.challenge.type', 'email');
+		$session->set('kirby.challenge.timeout', time() + 60);
+
+		$this->assertSame(
+			$this->app->user('marge@simpsons.com'),
+			$this->auth->verifyChallenge('12345678')
+		);
+
+		// a password-reset challenge flags the session so the user
+		// may set a new password without knowing the previous one
+		$data = $session->data()->get();
+		$this->assertTrue($data['kirby.resetPassword'] ?? false);
+	}
+
 	public function testVerifyChallengeNoChallenge(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->auth->verifyChallenge('123456');
+	}
+
+	public function testVerifyChallengeNoChallengeDoesNotTrack(): void
+	{
+		// a code submission without an active challenge is not an
+		// authentication attempt: it must neither consume the IP
+		// rate-limit budget nor fire the user.login:failed hook
+		F::remove(static::TMP . '/site/accounts/.logins');
+
+		$count = 0;
+
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'user.login:failed' => function () use (&$count) {
+					$count++;
+				}
+			]
+		]);
+		$this->auth = $this->app->auth();
+
+		try {
+			$this->auth->verifyChallenge('123456');
+			$this->fail('The challenge verification should have failed');
+		} catch (InvalidArgumentException) {
+			$this->assertSame(0, $count);
+			$this->assertSame([], $this->auth->limits()->log()['by-ip']);
+			$this->assertFileDoesNotExist(static::TMP . '/site/accounts/.logins');
+		}
 	}
 
 	public function testVerifyChallengeRateLimited(): void
