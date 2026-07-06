@@ -639,13 +639,15 @@ class Api
 		Closure $callback,
 		bool $single = false,
 		bool $debug = false,
-		string|null $template = null
+		string|null $template = null,
+		Closure|null $preflight = null
 	): array {
 		$upload = new Upload(
 			api: $this,
 			single: $single,
 			debug: $debug,
-			template: $template
+			template: $template,
+			preflight: $preflight
 		);
 
 		return $upload->process($callback);
