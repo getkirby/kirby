@@ -83,6 +83,13 @@ return [
 		$thumbName = basename($thumbRoot);
 		$job       = $mediaRoot . '/.jobs/' . $thumbName . '.json';
 
+		// additional protection against path traversal
+		// e.g. from dynamic user-controlled file or asset objects
+		// or malicious data in the `$options`; we check both for `../` and `..\` (Windows)
+		if (Str::contains(Str::replace($thumbRoot, '\\', '/'), '../') === true) {
+			throw new InvalidArgumentException('Received unexpected generated thumb root');
+		}
+
 		// check if the thumb or job file already exists
 		if (
 			file_exists($thumbRoot) === false &&
