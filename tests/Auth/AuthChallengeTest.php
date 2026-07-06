@@ -193,6 +193,34 @@ class AuthChallengeTest extends TestCase
 		$this->auth->verifyChallenge('123456');
 	}
 
+	public function testVerifyChallengeNoChallengeDoesNotTrack(): void
+	{
+		// a code submission without an active challenge is not an
+		// authentication attempt: it must neither consume the IP
+		// rate-limit budget nor fire the user.login:failed hook
+		F::remove(static::TMP . '/site/accounts/.logins');
+
+		$count = 0;
+
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'user.login:failed' => function () use (&$count) {
+					$count++;
+				}
+			]
+		]);
+		$this->auth = $this->app->auth();
+
+		try {
+			$this->auth->verifyChallenge('123456');
+			$this->fail('The challenge verification should have failed');
+		} catch (InvalidArgumentException) {
+			$this->assertSame(0, $count);
+			$this->assertSame([], $this->auth->limits()->log()['by-ip']);
+			$this->assertFileDoesNotExist(static::TMP . '/site/accounts/.logins');
+		}
+	}
+
 	public function testVerifyChallengeRateLimited(): void
 	{
 		$session = $this->app->session();

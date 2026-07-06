@@ -10,6 +10,7 @@ use Kirby\Auth\Method\BasicAuthMethod;
 use Kirby\Auth\User as AuthUser;
 use Kirby\Cms\App;
 use Kirby\Cms\User;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\Exception\UserNotFoundException;
 use Kirby\Http\Idn;
@@ -607,6 +608,23 @@ class Auth
 	): User|null {
 		$session = $this->kirby->session();
 		$email   = $session->get('kirby.challenge.email');
+
+		// `::guard()` tracks every non-rate-limit failure as an attempt.
+		// This method can be reached with a missing/expired challenge
+		// in the session. In that case, unlike `::login()`, there is
+		// nothing to really attempt at all here. Reject it, so that
+		// this will not consume the rate-limit budget
+		if (
+			is_string($email) !== true ||
+			is_string($session->get('kirby.challenge.type')) !== true
+		) {
+			$this->fail(
+				new InvalidArgumentException(
+					message: 'No authentication challenge is active'
+				),
+				 new PermissionException(key: 'access.code')
+			);
+		}
 
 		return $this->guard(
 			email:   $email,
