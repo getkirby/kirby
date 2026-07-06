@@ -2,7 +2,7 @@
 
 Kirby 6 and this document are work in progress. The changelog will be updated with every pre-release for Kirby 6.
 
-> [!IMPORTANT]  
+> [!IMPORTANT]
 > Don't use Kirby 6 in production yet.
 
 ## 🎉 Features
@@ -199,8 +199,8 @@ Custom glue
   <img width="543" height="463" alt="image" src="https://github.com/user-attachments/assets/aa54de2e-d011-44a6-9d0e-e2facd52accb" />
 - New `<k-validation-issues>` component to list various issues in fields after a form has been submitted. This will be used in our new error dialogs, but can also be used as a stand-alone component in other parts of the panel. [#7775](https://github.com/getkirby/kirby/pull/7775)
   <img width="594" height="395" alt="image" src="https://github.com/user-attachments/assets/94122230-af87-4404-a5bd-dc896d892446" />
-- New `<k-request-error-dialog>` component [#7782](https://github.com/getkirby/kirby/pull/7782)  
-   <img width="686" height="829" alt="image" src="https://github.com/user-attachments/assets/20b390a4-feb1-4a1e-9fc4-c7cbd04ed3a5" />
+- New `<k-request-error-dialog>` component [#7782](https://github.com/getkirby/kirby/pull/7782)
+  <img width="686" height="829" alt="image" src="https://github.com/user-attachments/assets/20b390a4-feb1-4a1e-9fc4-c7cbd04ed3a5" />
 - New `<k-validation-error-dialog>` to improve the readability of field validation problems. [#7785](https://github.com/getkirby/kirby/pull/7785)
   <img width="695" height="336" alt="image" src="https://github.com/user-attachments/assets/65404617-6957-4c6e-a30e-4fe1e2575786" />
 
@@ -273,6 +273,7 @@ Custom glue
 - Error responses from the backend now include the `editor` URL if the editor is set up in the config.php and debug mode is one. [#7782](https://github.com/getkirby/kirby/pull/7782)
 - New protected `AppErrors::trace()` method to return a stack trace for PHP errors in JSON responses when debug mode is enabled. [#7782](https://github.com/getkirby/kirby/pull/7782)
 - Auth methods can authenticate without an email, enabling token/SSO-style plugin methods that don't key on email. [#7848](https://github.com/getkirby/kirby/pull/7848)
+- New `Kirby\Auth\Auth::guard()` helper to wrap an auth attempt with rate-limiting and error handling [#8260]https://github.com/getkirby/kirby/pull/8260
 
 ### More
 
