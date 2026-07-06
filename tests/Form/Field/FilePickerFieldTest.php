@@ -18,7 +18,8 @@ class FilePickerFieldTestApi extends Api
 		Closure $callback,
 		bool $single = false,
 		bool $debug = false,
-		string|null $template = null
+		string|null $template = null,
+		Closure|null $preflight = null
 	): array {
 		$this->template = $template;
 
