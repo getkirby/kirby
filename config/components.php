@@ -8,6 +8,7 @@ use Kirby\Cms\Page;
 use Kirby\Cms\User;
 use Kirby\Data\Data;
 use Kirby\Email\PHPMailer as Emailer;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\Filename;
@@ -78,6 +79,13 @@ return [
 		$template  = $mediaRoot . '/{{ name }}{{ attributes }}.{{ extension }}';
 		$thumbRoot = (new Filename($file->root(), $template, $options))->toString();
 		$thumbName = basename($thumbRoot);
+
+		// additional protection against path traversal
+		// e.g. from dynamic user-controlled file or asset objects
+		// or malicious data in the `$options`; we check both for `../` and `..\` (Windows)
+		if (Str::contains(Str::replace($thumbRoot, '\\', '/'), '../') === true) {
+			throw new InvalidArgumentException('Received unexpected generated thumb root');
+		}
 
 		// check if the thumb already exists
 		if (file_exists($thumbRoot) === false) {

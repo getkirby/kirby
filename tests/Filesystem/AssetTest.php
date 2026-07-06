@@ -4,6 +4,7 @@ namespace Kirby\Filesystem;
 
 use Kirby\Cms\App;
 use Kirby\Exception\BadMethodCallException;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase as TestCase;
 
 /**
@@ -63,6 +64,28 @@ class AssetTest extends TestCase
 		$this->assertSame('/dev/null/' . $file, $asset->id());
 		$this->assertSame('/' . $file, $asset->url());
 		$this->assertSame('images', $asset->path());
+	}
+
+	/**
+	 * @covers ::__construct
+	 */
+	public function testConstructPathTraversal()
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Received unexpected asset path');
+
+		$this->_asset('images/../../logo.svg');
+	}
+
+	/**
+	 * @covers ::__construct
+	 */
+	public function testConstructPathTraversalWindows()
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Received unexpected asset path');
+
+		$this->_asset('images\..\..\logo.svg');
 	}
 
 	/**
