@@ -8,7 +8,6 @@ use Kirby\Content\Field;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
-use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Panel\User as Panel;
 use Kirby\Session\Session;
@@ -274,7 +273,7 @@ class User extends ModelWithContent
 
 		$kirby = $this->kirby();
 
-		return $this->inventory = Dir::inventory(
+		return $this->inventory = Inventory::for(
 			$this->root(),
 			$kirby->contentExtension(),
 			$kirby->contentIgnore(),
