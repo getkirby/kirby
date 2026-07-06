@@ -2,7 +2,6 @@
 
 use Kirby\Cms\Html;
 use Kirby\Cms\Url;
-use Kirby\Exception\NotFoundException;
 use Kirby\Text\KirbyTag;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Escape;
@@ -203,34 +202,46 @@ return [
 			'text',
 		],
 		'html' => function (KirbyTag $tag): string {
+			// keep $tag->value as the original value (e.g. UUID) for errors
+			$link = $tag->value;
+
 			if (empty($tag->lang) === false) {
-				$tag->value = Url::to($tag->value, $tag->lang);
+				$link = Url::to($link, $tag->lang);
 			}
 
 			// if value is a UUID, resolve to page/file model
 			// and use the URL as value
-			if (Uuid::is($tag->value, ['page', 'file']) === true) {
-				$tag->value = Uuid::for($tag->value)?->toUrl();
+			if (Uuid::is($link, ['page', 'file']) === true) {
+				$link = Uuid::for($link)?->toUrl();
 			}
 
-			// if url is empty, throw exception or link to the error page
-			if ($tag->value === null) {
+			// broken link: handle inline instead of turning the
+			// whole page into the error page
+			if ($link === null) {
+				// debug: visible inline error, no styles to avoid clashes
 				if ($tag->kirby()->option('debug', false) === true) {
-					$error = 'The linked page cannot be found';
+					$error = 'The link "' . $tag->value . '" cannot be found';
 
-					if (empty($tag->text) === false) {
+					if ($tag->text !== null && $tag->text !== '') {
 						$error .= ' for the link text "' . $tag->text . '"';
 					}
 
-					throw new NotFoundException(
-						message: $error
-					);
+					return Html::tag('span', '🚨 ' . $error, [
+						'class' => Str::trim('kirby-broken-link ' . $tag->class)
+					]);
 				}
 
-				$tag->value = Url::to($tag->kirby()->site()->errorPageId());
+				// otherwise drop the link, keep its text (if any)
+				if ($tag->text !== null && $tag->text !== '') {
+					return Html::tag('span', $tag->text, [
+						'class' => $tag->class
+					]);
+				}
+
+				return '';
 			}
 
-			return Html::a($tag->value, $tag->text, [
+			return Html::a($link, $tag->text, [
 				'rel'    => $tag->rel,
 				'class'  => $tag->class,
 				'role'   => $tag->role,
