@@ -6,6 +6,7 @@ import {
 	getPageUUID,
 	isFileUUID,
 	isPageUUID,
+	preview,
 	types
 } from "./link";
 
@@ -71,6 +72,56 @@ describe("$helper.link.isPageUUID()", () => {
 		expect(isPageUUID("/@/page/324hjk24")).toBeTruthy();
 		expect(isPageUUID("/en/@/page/324hjk24")).toBeTruthy();
 		expect(isPageUUID("site://")).toBeTruthy();
+	});
+});
+
+describe("$helper.link.preview()", () => {
+	it("should request default page preview fields", async () => {
+		const calls: Array<{ id: string; query: { select: string } }> = [];
+
+		// @ts-expect-error - window.panel has no type yet
+		window.panel.api = {
+			pages: {
+				get(id: string, query: { select: string }) {
+					calls.push({ id, query });
+					return {
+						panelImage: { icon: "page" },
+						title: "Page"
+					};
+				}
+			}
+		};
+
+		await preview({ type: "page", link: "page://324hjk24" });
+
+		expect(calls[0]).toStrictEqual({
+			id: "page://324hjk24",
+			query: { select: "title,panelImage" }
+		});
+	});
+
+	it("should request default file preview fields", async () => {
+		const calls: Array<{ id: string; query: { select: string } }> = [];
+
+		// @ts-expect-error - window.panel has no type yet
+		window.panel.api = {
+			files: {
+				get(parent: string | null, id: string, query: { select: string }) {
+					calls.push({ id, query });
+					return {
+						filename: "image.jpg",
+						panelImage: { icon: "image" }
+					};
+				}
+			}
+		};
+
+		await preview({ type: "file", link: "file://324hjk24" });
+
+		expect(calls[0]).toStrictEqual({
+			id: "file://324hjk24",
+			query: { select: "filename,panelImage" }
+		});
 	});
 });
 

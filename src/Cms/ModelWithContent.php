@@ -435,7 +435,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	 */
 	public function readContent(string|null $languageCode = null): array
 	{
-		Helpers::deprecated('$model->readContent() is deprecated. Use $model->version()->read() instead.'); // @codeCoverageIgnore
+		Helpers::deprecated('$model->readContent() is deprecated. Use $model->version()->read() instead.', 'model-content-file'); // @codeCoverageIgnore
 		return $this->version()->read($languageCode ?? 'default') ?? [];
 	}
 
@@ -489,7 +489,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 		array|null $data = null,
 		bool $overwrite = false
 	): static {
-		Helpers::deprecated('$model->saveContent() is deprecated. Use $model->save() instead.');
+		Helpers::deprecated('$model->saveContent() is deprecated. Use $model->save() instead.', 'model-content-file');
 		return $this->save($data, 'default', $overwrite);
 	}
 
@@ -501,7 +501,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 		string|null $languageCode = null,
 		bool $overwrite = false
 	): static {
-		Helpers::deprecated('$model->saveTranslation() is deprecated. Use $model->save() instead.');
+		Helpers::deprecated('$model->saveTranslation() is deprecated. Use $model->save() instead.', 'model-content-file');
 		return $this->save($data, $languageCode ?? 'default', $overwrite);
 	}
 
@@ -734,7 +734,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	#[BlockCollectionAccess]
 	public function writeContent(array $data, string|null $languageCode = null): bool
 	{
-		Helpers::deprecated('$model->writeContent() is deprecated. Use $model->version()->save() instead.'); // @codeCoverageIgnore
+		Helpers::deprecated('$model->writeContent() is deprecated. Use $model->version()->save() instead.', 'model-content-file'); // @codeCoverageIgnore
 		$this->version()->save($data, $languageCode ?? 'default', true);
 		return true;
 	}

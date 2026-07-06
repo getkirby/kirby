@@ -14,6 +14,12 @@ describe("$helper.string.sanitizeHTML", () => {
 		expect(sanitizeHTML("<span>hello</span>")).toBe("hello");
 	});
 
+	it("should strip class and style attributes", () => {
+		expect(
+			sanitizeHTML('<span class="k-tag" style="background: red">hello</span>')
+		).toBe("hello");
+	});
+
 	it("should preserve bold with strong tag", () => {
 		expect(sanitizeHTML("<strong>bold</strong>")).toBe("<strong>bold</strong>");
 	});
