@@ -511,6 +511,7 @@
 	"license.status.unknown.info": "Status licence je nepoznat",
 	"license.status.unknown.label": "Nepoznato",
 	"license.manage": "Upravljajte svojom licencom",
+	"license.manage.hub": "Manage your licenses on our <a href=\"{url}\" target=\"_blank\">license hub</a>",
 	"license.purchased": "Kupljeno",
 	"license.success": "Hvala vam što podržavate Kirby",
 	"license.success.free": "Activated as development site",
