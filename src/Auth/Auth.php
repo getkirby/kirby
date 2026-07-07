@@ -622,7 +622,7 @@ class Auth
 				new InvalidArgumentException(
 					message: 'No authentication challenge is active'
 				),
-				 new PermissionException(key: 'access.code')
+				new PermissionException(key: 'access.code')
 			);
 		}
 
