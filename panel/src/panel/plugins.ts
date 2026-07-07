@@ -218,7 +218,7 @@ export function resolveComponentRender(component: Component): Component {
  * @since 4.0.0
  */
 export type PanelPlugins = Partial<{
-	components: Record<string, ComponentOptions>;
+	components: Record<string, Component>;
 	created: ((instance: ComponentPublicInstance) => void)[];
 	icons: Record<string, string>;
 	login: ComponentOptions;
