@@ -59,6 +59,8 @@ icons:
 - Auth methods extension: plugins can ship their own login method, just like custom challenges. [#7848](https://github.com/getkirby/kirby/pull/7848)
 - Custom forms for auth methods and challenges: each method/challenge can declare its own Panel form via `::form()`, which is what makes the login UI fully extensible end-to-end. [#7848](https://github.com/getkirby/kirby/pull/7848)
 
+<img width="948" height="1120" alt="image" src="https://github.com/user-attachments/assets/d2f96a7d-5bc7-4902-8ffb-68589511cbda" />
+
 ### Simplified blueprint definition
 
 We know that our blueprints can be very complex to understand. One problem is the deeply nested structure, when defining tabs, columns and sections. In Kirby 6, blueprint definition gets a lot easier. Fields can now be defined on the root level, globally and referenced anywhere in your layout afterwards. This will reduce nesting and makes it easier to change layouts later. The old way of defining fields inline in a nested structure still works for perfect backward compatibility. [#7899](https://github.com/getkirby/kirby/pull/7899)
@@ -224,6 +226,8 @@ Custom glue
 - Files field: upload files by drag'n'drop onto the dialog https://feedback.getkirby.com/729 [#7888](https://github.com/getkirby/kirby/pull/7888)
 - New Panel login UI/UX: the login view has been refactored to be more driven by the backend. It now features a method picker, a challenge switcher and centralized loading/error handling. [#7848](https://github.com/getkirby/kirby/pull/7848)
 - TOTP management in one drawer: enable/disable TOTP in a single drawer with QR code, a clickable `otpauth://` setup-key link and password confirmation. [#7848](https://github.com/getkirby/kirby/pull/7848)
+
+<img width="854" height="1378" alt="image" src="https://github.com/user-attachments/assets/d61cd122-df21-4828-8b0d-dd18320ea4df" />
 
 ### For site developers
 
