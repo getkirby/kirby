@@ -511,6 +511,7 @@
 	"license.status.unknown.info": "Status licencji jest nieznany",
 	"license.status.unknown.label": "Unknown",
 	"license.manage": "Zarządzaj swoimi licencjami",
+	"license.manage.hub": "Manage your licenses on our <a href=\"{url}\" target=\"_blank\">license hub</a>",
 	"license.purchased": "Zakupiona",
 	"license.success": "Dziękujemy za wspieranie Kirby",
 	"license.success.free": "Activated as development site",

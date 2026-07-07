@@ -511,6 +511,7 @@
 	"license.status.unknown.info": "ライセンスの状態が不明です",
 	"license.status.unknown.label": "不明",
 	"license.manage": "ライセンスを管理",
+	"license.manage.hub": "Manage your licenses on our <a href=\"{url}\" target=\"_blank\">license hub</a>",
 	"license.purchased": "購入済み",
 	"license.success": "Kirbyをサポートしていただきありがとうございます",
 	"license.success.free": "Activated as development site",
