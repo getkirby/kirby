@@ -1,1 +1,1 @@
-{"displayName":"StateDrawer","description":"","tags":{},"component":"k-state-drawer","sourceFile":"src/components/Drawers/StateDrawer.vue"}
+{"description":"","tags":{"copyright":[{"description":"Bastian Allgeier","title":"copyright"}],"license":[{"description":"https://getkirby.com/license","title":"license"}]},"displayName":"StateDrawer","component":"k-state-drawer","sourceFile":"src/components/Drawers/StateDrawer.vue"}

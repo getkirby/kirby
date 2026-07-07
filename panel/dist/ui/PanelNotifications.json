@@ -1,1 +1,1 @@
-{"description":"","displayName":"PanelNotifications","tags":{"since":[{"description":"6.0.0","title":"since"}]},"component":"k-panel-notifications","sourceFile":"src/components/View/Notifications.vue"}
+{"description":"","displayName":"PanelNotifications","tags":{"copyright":[{"description":"Bastian Allgeier","title":"copyright"}],"license":[{"description":"https://getkirby.com/license","title":"license"}],"since":[{"description":"6.0.0","title":"since"}]},"component":"k-panel-notifications","sourceFile":"src/components/View/Notifications.vue"}

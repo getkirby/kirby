@@ -1,1 +1,1 @@
-{"displayName":"StateDialog","description":"","tags":{},"component":"k-state-dialog","sourceFile":"src/components/Dialogs/StateDialog.vue"}
+{"description":"","tags":{"copyright":[{"description":"Bastian Allgeier","title":"copyright"}],"license":[{"description":"https://getkirby.com/license","title":"license"}]},"displayName":"StateDialog","component":"k-state-dialog","sourceFile":"src/components/Dialogs/StateDialog.vue"}
