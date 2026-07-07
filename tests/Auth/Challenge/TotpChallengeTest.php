@@ -90,6 +90,27 @@ class TotpChallengeTest extends TestCase
 		$this->assertCount(1, $settings);
 	}
 
+	public function testSettingsForAccountOwnerWithoutTotp(): void
+	{
+		// the account owner can always set up TOTP, even before it exists
+		$this->app->impersonate('marge');
+		F::write(static::TMP . '/site/accounts/marge/.htpasswd', '');
+
+		$settings = TotpChallenge::settings($this->app->user('marge'));
+		$this->assertCount(1, $settings);
+	}
+
+	public function testSettingsForOtherUserWithoutTotp(): void
+	{
+		// an admin viewing a user who has not set up TOTP sees no entry:
+		// they cannot enable it, and there is nothing to remove
+		$this->app->impersonate('kirby');
+		F::write(static::TMP . '/site/accounts/marge/.htpasswd', '');
+
+		$settings = TotpChallenge::settings($this->app->user('marge'));
+		$this->assertCount(0, $settings);
+	}
+
 	public function testTimeout(): void
 	{
 		$challenge = new TotpChallenge($this->user, '2fa', 300);

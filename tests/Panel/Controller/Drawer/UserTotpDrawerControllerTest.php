@@ -4,6 +4,7 @@ namespace Kirby\Panel\Controller\Drawer;
 
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\PermissionException;
 use Kirby\Panel\TestCase;
 use Kirby\Panel\Ui\Drawer;
 use Kirby\Toolkit\Totp;
@@ -101,7 +102,7 @@ class UserTotpDrawerControllerTest extends TestCase
 			'secret'  => $secret,
 			'confirm' => $confirm,
 		]);
-		$this->app->impersonate('kirby');
+		$this->app->impersonate('test');
 
 		$controller = new UserTotpDrawerController($this->app->user('test'));
 		$result     = $controller->submit();
@@ -110,13 +111,38 @@ class UserTotpDrawerControllerTest extends TestCase
 		$this->assertSame($secret, $this->app->user('test')->secret('totp'));
 	}
 
+	public function testSubmitCreateForOtherUser(): void
+	{
+		// an admin must not enable TOTP for another user: the factor would
+		// live on the admin's device and lock the user out at next login
+		$secret  = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+		$confirm = (new Totp($secret))->generate();
+
+		$this->setRequest([
+			'action'  => 'create',
+			'secret'  => $secret,
+			'confirm' => $confirm,
+		]);
+		$this->app->impersonate('admin');
+
+		$controller = new UserTotpDrawerController($this->app->user('test'));
+
+		try {
+			$controller->submit();
+			$this->fail('Expected PermissionException was not thrown');
+		} catch (PermissionException) {
+			// the target user's account must be left untouched
+			$this->assertNull($this->app->user('test')->secret('totp'));
+		}
+	}
+
 	public function testSubmitCreateWithMissingConfirm(): void
 	{
 		$this->setRequest([
 			'action' => 'create',
 			'secret' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'
 		]);
-		$this->app->impersonate('kirby');
+		$this->app->impersonate('test');
 
 		$this->expectException(InvalidArgumentException::class);
 
@@ -131,7 +157,7 @@ class UserTotpDrawerControllerTest extends TestCase
 			'secret'  => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567',
 			'confirm' => (new Totp('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))->generate()
 		]);
-		$this->app->impersonate('kirby');
+		$this->app->impersonate('test');
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionCode('error.login.totp.confirm.invalid');

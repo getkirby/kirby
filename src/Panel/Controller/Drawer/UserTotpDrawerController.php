@@ -5,6 +5,7 @@ namespace Kirby\Panel\Controller\Drawer;
 use Kirby\Cms\User;
 use Kirby\Cms\UserRules;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\PermissionException;
 use Kirby\Image\QrCode;
 use Kirby\Panel\Ui\Drawer;
 use Kirby\Toolkit\Escape;
@@ -30,6 +31,15 @@ class UserTotpDrawerController extends UserCredentialDrawerController
 
 	protected function create(): User
 	{
+		// only the account owner may enable a factor; an admin must not
+		// plant a TOTP secret they control onto someone else's account,
+		// which would lock that user out at their next login
+		if ($this->isCurrentUser() === false) {
+			throw new PermissionException(
+				message: 'You cannot enable TOTP for ' . $this->user->email()
+			);
+		}
+
 		$secret  = $this->request->get('secret');
 		$confirm = $this->request->get('confirm');
 

@@ -54,6 +54,9 @@ class UserSecurityDrawerControllerTest extends TestCase
 			]
 		]);
 
+		// the account owner sees the TOTP setup entry for their own account
+		$this->app->impersonate('test');
+
 		$user       = $this->app->user('test');
 		$controller = new UserSecurityDrawerController($user);
 		$challenges = $controller->challenges();

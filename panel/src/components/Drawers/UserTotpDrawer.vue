@@ -10,8 +10,8 @@
 		<form ref="form" class="k-stack" style="gap: var(--spacing-8)">
 			<k-drawer-text :text="$t('login.totp.enable.intro')" />
 
-			<!-- Enable -->
-			<template v-if="!isEnabled">
+			<!-- Enable (only the account owner may set up their own factor) -->
+			<template v-if="isAccount && !isEnabled">
 				<k-dialog-fields
 					:fields="{
 						qr: {
