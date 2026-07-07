@@ -11,6 +11,13 @@ import Drawer from "@/mixins/drawer.js";
  */
 export default {
 	mixins: [Drawer],
+	props: {
+		/**
+		 * Whether the drawer relates to the current user's own account.
+		 */
+		isAccount: Boolean,
+		user: Object
+	},
 	data() {
 		return {
 			isLoading: false
@@ -48,13 +55,17 @@ export default {
 			});
 		},
 		async request(action, data = {}) {
+			this.isLoading = true;
+
 			try {
-				this.isLoading = true;
-				await this.$panel.drawer.post({ action, ...data });
+				const response = await this.$panel.drawer.post({ action, ...data });
+
+				if (response === false) {
+					return;
+				}
+
 				this.$panel.dialog.close();
 				await this.$panel.drawer.refresh();
-			} catch (error) {
-				this.$panel.notification.error(error?.message ?? error);
 			} finally {
 				this.isLoading = false;
 			}

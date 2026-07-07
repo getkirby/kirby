@@ -81,6 +81,20 @@ class User extends Model
 	}
 
 	/**
+	 * Returns the minimal data to represent a user in the UI
+	 * (e.g. used for the `k-user-info` component)
+	 * @since 6.0.0
+	 */
+	public function info(): array
+	{
+		return [
+			'avatar' => $this->model->avatar()?->url(),
+			'email'  => $this->model->email(),
+			'name'   => $this->model->name()->value()
+		];
+	}
+
+	/**
 	 * Returns the full path without leading slash
 	 */
 	public function path(): string

@@ -55,16 +55,6 @@ class TotpChallenge extends Challenge
 
 	public static function settings(User $user): array
 	{
-		// an admin managing another user can only remove an existing
-		// secret; hide the entry entirely if the user is neither the
-		// account owner nor has TOTP set up, as there is nothing to do
-		if (
-			$user->kirby()->user()?->is($user) !== true &&
-			static::isAvailable($user) === false
-		) {
-			return [];
-		}
-
 		return [
 			new Button(
 				icon:   static::icon(),

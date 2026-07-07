@@ -76,7 +76,10 @@ class UserTotpDrawerControllerTest extends TestCase
 		$props = $drawer->props();
 		$this->assertFalse($props['isEnabled']);
 		$this->assertStringContainsString('data:image/png;base64,', $props['qr']);
-		$this->assertSame('Test User', $props['user']);
+		$this->assertSame(
+			['avatar' => null, 'email' => 'test@getkirby.com', 'name' => 'Test User'],
+			$props['user']
+		);
 		$this->assertSame(32, strlen($props['value']['secret']));
 
 		// the account owner confirms removal by re-entering a code

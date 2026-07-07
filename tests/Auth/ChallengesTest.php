@@ -211,7 +211,7 @@ class ChallengesTest extends TestCase
 		$app        = new App(['roots' => ['index' => static::TMP]]);
 		$challenges = new Challenges($app->auth(), $app);
 
-		$this->assertSame(['totp', 'email'], $challenges->enabled());
+		$this->assertSame(['webauthn', 'totp', 'email'], $challenges->enabled());
 	}
 
 	public function testEnabledConfig(): void

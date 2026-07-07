@@ -4,10 +4,12 @@ namespace Kirby\Cms;
 
 use Kirby\Auth\Challenge\EmailChallenge;
 use Kirby\Auth\Challenge\TotpChallenge;
+use Kirby\Auth\Challenge\WebauthnChallenge;
 use Kirby\Auth\Method\BasicAuthMethod;
 use Kirby\Auth\Method\CodeMethod;
 use Kirby\Auth\Method\PasswordMethod;
 use Kirby\Auth\Method\PasswordResetMethod;
+use Kirby\Auth\Method\WebauthnMethod;
 use Kirby\Cache\ApcuCache;
 use Kirby\Cache\FileCache;
 use Kirby\Cache\MemCached;
@@ -122,8 +124,9 @@ class Core
 	public function authChallenges(): array
 	{
 		return [
-			'email' => EmailChallenge::class,
-			'totp'  => TotpChallenge::class,
+			'email'    => EmailChallenge::class,
+			'totp'     => TotpChallenge::class,
+			'webauthn' => WebauthnChallenge::class,
 		];
 	}
 
@@ -137,7 +140,8 @@ class Core
 			'basic-auth'     => BasicAuthMethod::class,
 			'code'           => CodeMethod::class,
 			'password'       => PasswordMethod::class,
-			'password-reset' => PasswordResetMethod::class
+			'password-reset' => PasswordResetMethod::class,
+			'webauthn'       => WebauthnMethod::class,
 		];
 	}
 

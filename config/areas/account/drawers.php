@@ -15,6 +15,11 @@ return [
 		...$drawers['user.security.challenge.totp'],
 		'pattern' => '(account)/security/challenge/totp',
 	],
+	'account.security.method.webauthn' => [
+		...$drawers['user.security.method.webauthn'],
+		'pattern' => '(account)/security/method/webauthn',
+	],
+
 	'account.fields' => [
 		...$drawers['user.fields'],
 		'pattern' => '(account)/fields/(:any)/(:all?)',

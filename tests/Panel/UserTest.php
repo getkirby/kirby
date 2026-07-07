@@ -202,6 +202,45 @@ class UserTest extends TestCase
 		], $panel->image(['cover' => true]));
 	}
 
+	public function testInfo(): void
+	{
+		$user = new ModelUser([
+			'email' => 'test@getkirby.com',
+		]);
+
+		// no avatar → the url is null; no name → falls back in the UI
+		$this->assertSame(
+			['avatar' => null, 'email' => 'test@getkirby.com', 'name' => null],
+			(new User($user))->info()
+		);
+	}
+
+	public function testInfoWithAvatar(): void
+	{
+		$app = $this->app->clone([
+			'users' => [
+				[
+					'email' => 'test@getkirby.com',
+					'files' => [
+						[
+							'filename' => 'test.jpg',
+							'template' => 'avatar'
+						]
+					]
+				]
+			]
+		]);
+
+		$user = $app->user('test@getkirby.com');
+
+		F::copy(static::FIXTURES . '/image/test.jpg', $user->root() . '/test.jpg');
+
+		$info = (new User($user))->info();
+		$this->assertSame($user->avatar()->url(), $info['avatar']);
+		$this->assertSame('test@getkirby.com', $info['email']);
+		$this->assertNull($info['name']);
+	}
+
 	public function testOptions(): void
 	{
 		$user = new ModelUser([

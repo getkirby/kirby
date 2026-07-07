@@ -3,7 +3,7 @@
 		<k-image-frame
 			v-if="user.avatar"
 			:cover="true"
-			:src="user.avatar.url"
+			:src="user.avatar"
 			ratio="1/1"
 		/>
 		<k-icon-frame v-else color="white" back="black" icon="user" />

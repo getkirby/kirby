@@ -6,6 +6,7 @@ use Kirby\Auth\Challenge;
 use Kirby\Auth\Pending;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\PermissionException;
 
 /**
  * Shared base for drawers that manage a removable login credential
@@ -112,6 +113,17 @@ abstract class UserCredentialDrawerController extends UserDrawerController
 			user: $this->user,
 			mode: '2fa'
 		);
+	}
+
+	protected function create(): User
+	{
+		if ($this->isCurrentUser() === false) {
+			throw new PermissionException(
+				message: 'You cannot add a login credential for ' . $this->user->email()
+			);
+		}
+
+		return $this->user;
 	}
 
 	protected function isCurrentUser(): bool

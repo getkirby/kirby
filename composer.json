@@ -44,6 +44,7 @@
 		"filp/whoops": "2.18.4",
 		"getkirby/composer-installer": "^1.2.1",
 		"laminas/laminas-escaper": "2.18.0",
+		"lbuchs/webauthn": "^2.2",
 		"michelf/php-smartypants": "1.8.1",
 		"phpmailer/phpmailer": "7.1.1",
 		"symfony/polyfill-intl-idn": "1.38.1",

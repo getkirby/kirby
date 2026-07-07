@@ -1,12 +1,13 @@
 <template>
 	<k-button
-		:disabled="$panel.isLoading"
-		:icon="$panel.isLoading ? 'loader' : icon"
+		:disabled="isLoading"
+		:icon="isLoading ? 'loader' : icon"
 		:text="label"
 		size="lg"
 		theme="positive"
 		type="submit"
 		variant="filled"
+		class="k-login-submit"
 	/>
 </template>
 
@@ -18,13 +19,22 @@
  */
 export default {
 	props: {
+		icon: {
+			type: String,
+			default: "check"
+		},
 		label: {
 			type: String,
 			default: () => window.panel.t("login")
 		},
-		icon: {
-			type: String,
-			default: "check"
+		loading: {
+			type: Boolean,
+			default: false
+		}
+	},
+	computed: {
+		isLoading() {
+			return this.loading === true || this.$panel.isLoading === true;
 		}
 	}
 };
