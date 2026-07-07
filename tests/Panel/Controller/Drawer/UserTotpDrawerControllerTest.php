@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel\Controller\Drawer;
 
+use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\TestCase;
 use Kirby\Panel\Ui\Drawer;
@@ -9,6 +10,7 @@ use Kirby\Toolkit\Totp;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(UserTotpDrawerController::class)]
+#[CoversClass(UserCredentialDrawerController::class)]
 class UserTotpDrawerControllerTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Drawer.UserTotpDrawerController';
@@ -24,13 +26,13 @@ class UserTotpDrawerControllerTest extends TestCase
 					'name'     => 'Test User',
 					'email'    => 'test@getkirby.com',
 					'role'     => 'admin',
-					'password' => 'password123'
+					'password' => User::hashPassword('password123')
 				],
 				[
-					'id'       => 'other',
-					'email'    => 'other@getkirby.com',
+					'id'       => 'admin',
+					'email'    => 'admin@getkirby.com',
 					'role'     => 'admin',
-					'password' => 'password123'
+					'password' => User::hashPassword('adminpass123')
 				]
 			],
 			'site' => [
@@ -39,6 +41,16 @@ class UserTotpDrawerControllerTest extends TestCase
 		]);
 
 		$this->app->impersonate('kirby');
+	}
+
+	/**
+	 * Enables TOTP for the test user and returns a currently valid code
+	 */
+	protected function enableTotp(): string
+	{
+		$secret = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+		$this->app->user('test')->changeSecret('totp', $secret);
+		return (new Totp($secret))->generate();
 	}
 
 	public function testFactory(): void
@@ -61,11 +73,22 @@ class UserTotpDrawerControllerTest extends TestCase
 		$this->assertNotNull($drawer->title);
 
 		$props = $drawer->props();
-		$this->assertTrue($props['isAccount']);
 		$this->assertFalse($props['isEnabled']);
 		$this->assertStringContainsString('data:image/png;base64,', $props['qr']);
 		$this->assertSame('Test User', $props['user']);
 		$this->assertSame(32, strlen($props['value']['secret']));
+
+		// the account owner confirms removal by re-entering a code
+		$this->assertTrue($props['isAccount']);
+	}
+
+	public function testLoadForOtherUser(): void
+	{
+		// an admin managing another user only confirms the action
+		$this->app->impersonate('admin');
+
+		$props = (new UserTotpDrawerController($this->app->user('test')))->load()->props();
+		$this->assertFalse($props['isAccount']);
 	}
 
 	public function testSubmitCreate(): void
@@ -117,40 +140,71 @@ class UserTotpDrawerControllerTest extends TestCase
 		$controller->submit();
 	}
 
-	public function testSubmitRemove(): void
+	public function testSubmitRemoveAsAccount(): void
 	{
-		$secret = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
-		$this->app->user('test')->changeSecret('totp', $secret);
+		// the account owner disables TOTP by entering a current code,
+		// proving they still control the factor
+		$code = $this->enableTotp();
 
 		$this->setRequest([
-			'action' => 'remove'
+			'action'        => 'remove',
+			'authorization' => $code
 		]);
-		$this->app->impersonate('kirby');
+		$this->app->impersonate('test');
 
-		$user       = $this->app->user('test');
-		$controller = new UserTotpDrawerController($user);
-		$result     = $controller->submit();
+		$result = (new UserTotpDrawerController($this->app->user('test')))->submit();
 
 		$this->assertTrue($result);
 		$this->assertNull($this->app->user('test')->secret('totp'));
 	}
 
-	public function testSubmitRemoveWithWrongPassword(): void
+	public function testSubmitRemoveAsAccountWithWrongCode(): void
 	{
-		$secret = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
-		$this->app->user('test')->changeSecret('totp', $secret);
+		$this->enableTotp();
+
+		$this->setRequest([
+			'action'        => 'remove',
+			'authorization' => '000000'
+		]);
+		$this->app->impersonate('test');
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.access.code');
+
+		(new UserTotpDrawerController($this->app->user('test')))->submit();
+	}
+
+	public function testSubmitRemoveAsAdmin(): void
+	{
+		// an admin disables TOTP for another user with their own password
+		$this->enableTotp();
+
+		$this->setRequest([
+			'action'   => 'remove',
+			'password' => 'adminpass123'
+		]);
+		$this->app->impersonate('admin');
+
+		$result = (new UserTotpDrawerController($this->app->user('test')))->submit();
+
+		$this->assertTrue($result);
+		$this->assertNull($this->app->user('test')->secret('totp'));
+	}
+
+	public function testSubmitRemoveAsAdminWithWrongPassword(): void
+	{
+		$this->enableTotp();
 
 		$this->setRequest([
 			'action'   => 'remove',
 			'password' => 'wrongpass'
 		]);
-		$this->app->impersonate('test');
+		$this->app->impersonate('admin');
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionCode('error.user.password.wrong');
 
-		$controller = new UserTotpDrawerController($this->app->user('test'));
-		$controller->submit();
+		(new UserTotpDrawerController($this->app->user('test')))->submit();
 	}
 
 	public function testSubmitWithInvalidAction(): void

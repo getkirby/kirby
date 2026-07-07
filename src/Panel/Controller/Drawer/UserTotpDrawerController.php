@@ -11,21 +11,18 @@ use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\Totp;
 
 /**
- * @package   Kirby Panel
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
  * @unstable
  */
-class UserTotpDrawerController extends UserDrawerController
+class UserTotpDrawerController extends UserCredentialDrawerController
 {
 	protected string|null $secret;
 
 	public function __construct(User $user)
 	{
-		parent::__construct($user);
+		parent::__construct($user, 'totp');
 
 		// ensure user has the necessary permissions
 		UserRules::changeSecret($user, 'totp', null);
@@ -49,11 +46,6 @@ class UserTotpDrawerController extends UserDrawerController
 		}
 
 		return $this->user->changeSecret('totp', $secret);
-	}
-
-	protected function isCurrentUser(): bool
-	{
-		return $this->kirby->user()->is($this->user);
 	}
 
 	protected function isEnabled(): bool
@@ -95,27 +87,8 @@ class UserTotpDrawerController extends UserDrawerController
 
 	protected function remove(): User
 	{
-		$password = $this->request->get('password');
-
-		try {
-			if ($this->isCurrentUser() === true) {
-				$this->user->validatePassword($password);
-			}
-
-			// Remove the TOTP secret from the account
-			return $this->user->changeSecret('totp', null);
-
-		} catch (InvalidArgumentException $e) {
-			// Catch and re-throw exception so that any
-			// Unauthenticated exception for incorrect passwords
-			// does not trigger a logout
-			throw new InvalidArgumentException(
-				key:     $e->getKey(),
-				data:     $e->getData(),
-				fallback: $e->getMessage(),
-				previous: $e
-			);
-		}
+		$this->authorize();
+		return $this->user->changeSecret('totp', null);
 	}
 
 	public function submit(): bool
