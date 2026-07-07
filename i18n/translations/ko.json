@@ -511,6 +511,7 @@
 	"license.status.unknown.info": "라이선스 상태를 알 수 없습니다.",
 	"license.status.unknown.label": "알 수 없음",
 	"license.manage": "라이선스 관리",
+	"license.manage.hub": "Manage your licenses on our <a href=\"{url}\" target=\"_blank\">license hub</a>",
 	"license.purchased": "구입했습니다.",
 	"license.success": "Kirby와 함께해주셔서 감사합니다.",
 	"license.success.free": "Activated as development site",

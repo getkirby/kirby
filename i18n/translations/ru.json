@@ -511,6 +511,7 @@
 	"license.status.unknown.info": "Статус лицензии неизвестен",
 	"license.status.unknown.label": "Неизвестно",
 	"license.manage": "Управление лицензиями",
+	"license.manage.hub": "Manage your licenses on our <a href=\"{url}\" target=\"_blank\">license hub</a>",
 	"license.purchased": "Приобретено",
 	"license.success": "Спасибо за поддержку Kirby",
 	"license.success.free": "Activated as development site",

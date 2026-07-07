@@ -511,6 +511,7 @@
 	"license.status.unknown.info": "De licentiestatus is onbekend",
 	"license.status.unknown.label": "Onbekend",
 	"license.manage": "Beheer je licenties",
+	"license.manage.hub": "Manage your licenses on our <a href=\"{url}\" target=\"_blank\">license hub</a>",
 	"license.purchased": "Gekocht",
 	"license.success": "Bedankt dat je Kirby ondersteunt",
 	"license.success.free": "Activated as development site",

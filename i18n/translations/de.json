@@ -511,6 +511,7 @@
 	"license.status.unknown.info": "Der Lizenzstatus ist unbekannt",
 	"license.status.unknown.label": "Unbekannt",
 	"license.manage": "Verwalte deine Lizenzen",
+	"license.manage.hub": "Verwalte deine Lizenzen in unserem <a href=\"{url}\" target=\"_blank\">Lizenz Hub</a>",
 	"license.purchased": "Gekauft",
 	"license.success": "Vielen Dank für deine Unterstützung",
 	"license.success.free": "Aktiviert als Entwicklungsinstallation",

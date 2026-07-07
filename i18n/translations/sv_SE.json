@@ -511,6 +511,7 @@
 	"license.status.unknown.info": "Licensstatusen är okänd",
 	"license.status.unknown.label": "Okänd",
 	"license.manage": "Hantera dina licenser",
+	"license.manage.hub": "Manage your licenses on our <a href=\"{url}\" target=\"_blank\">license hub</a>",
 	"license.purchased": "Köpt",
 	"license.success": "Tack för att du stödjer Kirby",
 	"license.success.free": "Activated as development site",
