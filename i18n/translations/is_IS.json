@@ -511,6 +511,7 @@
 	"license.status.unknown.info": "Staða leyfis fyrir hugbúnaðinn er óþekkt",
 	"license.status.unknown.label": "Óþekkt",
 	"license.manage": "Sýslaðu með leyfin þín",
+	"license.manage.hub": "Manage your licenses on our <a href=\"{url}\" target=\"_blank\">license hub</a>",
 	"license.purchased": "Verslað",
 	"license.success": "Þakka þér fyrir að velja Kirby",
 	"license.success.free": "Activated as development site",

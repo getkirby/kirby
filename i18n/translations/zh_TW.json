@@ -511,6 +511,7 @@
 	"license.status.unknown.info": "無法確認授權狀態，請檢查您的網路連線",
 	"license.status.unknown.label": "未知狀態",
 	"license.manage": "管理授權",
+	"license.manage.hub": "Manage your licenses on our <a href=\"{url}\" target=\"_blank\">license hub</a>",
 	"license.purchased": "您已購買授權",
 	"license.success": "授權啟用成功",
 	"license.success.free": "Activated as development site",

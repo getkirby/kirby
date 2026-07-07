@@ -511,6 +511,7 @@
 	"license.status.unknown.info": "The license status is unknown",
 	"license.status.unknown.label": "Unknown",
 	"license.manage": "Hallinnoi lisenssejäsi",
+	"license.manage.hub": "Manage your licenses on our <a href=\"{url}\" target=\"_blank\">license hub</a>",
 	"license.purchased": "Purchased",
 	"license.success": "Kiitos kun tuet Kirbyä",
 	"license.success.free": "Activated as development site",

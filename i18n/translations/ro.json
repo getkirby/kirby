@@ -511,6 +511,7 @@
 	"license.status.unknown.info": "Statutul licenței este necunoscut",
 	"license.status.unknown.label": "Necunoscut",
 	"license.manage": "Gestionează-ți licențele",
+	"license.manage.hub": "Manage your licenses on our <a href=\"{url}\" target=\"_blank\">license hub</a>",
 	"license.purchased": "Achiziționat",
 	"license.success": "Mulțumim că susții Kirby",
 	"license.success.free": "Activated as development site",
