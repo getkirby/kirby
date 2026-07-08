@@ -17,6 +17,8 @@ class Inventory
 	/**
 	 * Scans the directory and analyzes files,
 	 * content, meta info and children
+	 *
+	 * @return array{children: list<array>, files: array<string, array>, template: string}
 	 */
 	public static function for(
 		string $dir,

@@ -336,12 +336,6 @@
       <code><![CDATA[$model]]></code>
     </MoreSpecificImplementedParamType>
   </file>
-  <file src="src/Panel/Lab/Docs.php">
-    <InvalidOperand>
-      <code><![CDATA[$files]]></code>
-      <code><![CDATA[Dir::inventory($tmp)['files']]]></code>
-    </InvalidOperand>
-  </file>
   <file src="src/Panel/Panel.php">
     <RedundantCondition>
       <code><![CDATA[$this->kirby->user()?->role()->permissions()->toArray()]]></code>
