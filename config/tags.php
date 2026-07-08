@@ -17,10 +17,24 @@ return [
 	 * Date
 	 */
 	'date' => [
-		'attr' => [],
+		'attr' => [
+			'expiry'
+		],
 		'html' => function (KirbyTag $tag): string {
 			if (strtolower($tag->date) === 'year') {
+				// make sure cached pages reset the year at New Year,
+				// unless a custom expiry point has been requested
+				$tag->kirby()->response()->expires(
+					$tag->expiry ?? 'first day of January next year'
+				);
+
 				return date('Y');
+			}
+
+			// let authors control the cache expiry for custom formats,
+			// e.g. `(date: Y-m-d expiry: tomorrow)`
+			if ($tag->expiry !== null) {
+				$tag->kirby()->response()->expires($tag->expiry);
 			}
 
 			// escape the formatted date to prevent injecting HTML
