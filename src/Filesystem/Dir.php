@@ -217,7 +217,7 @@ class Dir
 	 *
 	 * Don't use outside the Cms context.
 	 *
-	 * @deprecated 5.5.0 Use `Kirby\Cms\Inventory::for()` instead. Will be removed in Kirby 6.
+	 * @deprecated 5.6.0 Use `Kirby\Cms\Inventory::for()` instead. Will be removed in Kirby 6.
 	 */
 	public static function inventory(
 		string $dir,
