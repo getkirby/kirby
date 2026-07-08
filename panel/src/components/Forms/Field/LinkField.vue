@@ -64,28 +64,24 @@
 					data-type="page"
 					class="k-link-input-body"
 				>
-					<k-scrollable class="k-page-browser">
-						<k-page-tree
-							:current="$helper.link.getPageUUID(value)"
-							:root="false"
-							@select="selectModel($event)"
-						/>
-					</k-scrollable>
+					<k-page-tree
+						:current="$helper.link.getPageUUID(value)"
+						:root="false"
+						class="k-page-browser"
+						scrollable
+						@select="selectModel($event)"
+					/>
 				</div>
 				<div
 					v-else-if="currentType.id === 'file'"
 					data-type="file"
 					class="k-link-input-body"
 				>
-					<k-scrollable>
-						<k-file-browser
-							:opened="
-								$panel.view.props.model.uuid ?? $panel.view.props.model.id
-							"
-							:selected="$helper.link.getFileUUID(value)"
-							@select="selectModel($event)"
-						/>
-					</k-scrollable>
+					<k-file-browser
+						:opened="$panel.view.props.model.uuid ?? $panel.view.props.model.id"
+						:selected="$helper.link.getFileUUID(value)"
+						@select="selectModel($event)"
+					/>
 				</div>
 			</template>
 		</k-input>
@@ -330,7 +326,7 @@ export default {
 	--tree-branch-hover-color-back: var(--panel-color-back);
 }
 
-.k-link-input-body > .k-scrollable {
+.k-link-input-body > :where(.k-page-browser, .k-file-browser) {
 	max-height: 50dvh;
 }
 

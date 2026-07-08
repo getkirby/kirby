@@ -1,7 +1,12 @@
 <template>
-	<div :data-axis="axis" :data-fade="fade" class="k-scrollable">
+	<component
+		:is="element"
+		:data-axis="axis"
+		:data-fade="fade"
+		class="k-scrollable"
+	>
 		<slot />
-	</div>
+	</component>
 </template>
 
 <script>
@@ -26,6 +31,13 @@ export default {
 		axis: {
 			type: String,
 			default: "block"
+		},
+		/**
+		 * The rendered HTML element
+		 */
+		element: {
+			type: String,
+			default: "div"
 		},
 		/**
 		 * Which scrollable edges to fade to hint at hidden content.
