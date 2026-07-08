@@ -14,11 +14,11 @@ class AutoSessionTest extends TestCase
 {
 	public const string FIXTURES = __DIR__ . '/fixtures/store';
 
-	protected SessionStore $store;
+	protected Store $store;
 
 	protected function setUp(): void
 	{
-		$this->store = new TestSessionStore();
+		$this->store = new TestStore();
 
 		MockTime::$time = 1337000000;
 	}
@@ -33,8 +33,8 @@ class AutoSessionTest extends TestCase
 	{
 		$autoSessionReflector = new ReflectionClass(AutoSession::class);
 		$sessionsProperty = $autoSessionReflector->getProperty('sessions');
-		$fileSessionStoreReflector = new ReflectionClass(FileSessionStore::class);
-		$pathProperty = $fileSessionStoreReflector->getProperty('path');
+		$fileStoreReflector = new ReflectionClass(FileStore::class);
+		$pathProperty = $fileStoreReflector->getProperty('path');
 
 		// store object as store
 		$autoSession = new AutoSession($this->store);

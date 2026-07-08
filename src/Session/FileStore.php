@@ -14,7 +14,7 @@ use Kirby\Toolkit\Str;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
-class FileSessionStore extends SessionStore
+class FileStore extends Store
 {
 	protected string $path;
 
@@ -133,7 +133,7 @@ class FileSessionStore extends SessionStore
 	{
 		clearstatcache();
 		do {
-			// use helper from the abstract SessionStore class
+			// use helper from the abstract Store class
 			$id   = static::generateId();
 			$name = $this->name($expiryTime, $id);
 			$path = $this->path($name);

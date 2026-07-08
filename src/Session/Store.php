@@ -6,7 +6,7 @@ namespace Kirby\Session;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
-abstract class SessionStore
+abstract class Store
 {
 	/**
 	 * Deletes all expired sessions

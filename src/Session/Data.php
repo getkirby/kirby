@@ -14,10 +14,10 @@ use Kirby\Toolkit\A;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
-class SessionData
+class Data
 {
 	/**
-	 * Creates a new SessionData instance
+	 * Creates a new Data instance
 	 *
 	 * @codeCoverageIgnore
 	 * @param \Kirby\Session\Session $session Session object this data belongs to
@@ -100,7 +100,7 @@ class SessionData
 	): void {
 		if ($by < 0) {
 			throw new InvalidArgumentException(
-				data: ['method' => 'SessionData::decrement', 'argument' => '$by'],
+				data: ['method' => 'Data::decrement', 'argument' => '$by'],
 				translate: false
 			);
 		}
@@ -139,7 +139,7 @@ class SessionData
 	): void {
 		if ($by < 0) {
 			throw new InvalidArgumentException(
-				data: ['method' => 'SessionData::increment', 'argument' => '$by'],
+				data: ['method' => 'Data::increment', 'argument' => '$by'],
 				translate: false
 			);
 		}

@@ -17,12 +17,12 @@ use TypeError;
 #[CoversClass(Session::class)]
 class SessionTest extends TestCase
 {
-	protected SessionStore $store;
+	protected Store $store;
 	protected Sessions $sessions;
 
 	protected function setUp(): void
 	{
-		$this->store    = new TestSessionStore();
+		$this->store    = new TestStore();
 		$this->sessions = new Sessions($this->store);
 
 		MockTime::$time = 1337000000;

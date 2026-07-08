@@ -10,11 +10,11 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Token::class)]
 class TokenTest extends TestCase
 {
-	protected TestSessionStore $store;
+	protected TestStore $store;
 
 	protected function setUp(): void
 	{
-		$this->store = new TestSessionStore();
+		$this->store = new TestStore();
 	}
 
 	protected function tearDown(): void
