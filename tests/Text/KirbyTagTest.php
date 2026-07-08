@@ -3,6 +3,7 @@
 namespace Kirby\Text;
 
 use Kirby\Cms\App;
+use Kirby\Cms\Helpers;
 use Kirby\Exception\BadMethodCallException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
@@ -37,6 +38,7 @@ class KirbyTagTest extends TestCase
 
 	protected function tearDown(): void
 	{
+		Helpers::$deprecations['kirbytag-option'] = true;
 		KirbyTag::$aliases = [];
 		KirbyTag::$types = [];
 		App::destroy();
@@ -265,6 +267,10 @@ class KirbyTagTest extends TestCase
 
 	public function testOption(): void
 	{
+		// intentionally covers the deprecated `$tag->option()` method,
+		// which still needs to work
+		Helpers::$deprecations['kirbytag-option'] = false;
+
 		new App([
 			'roots'   => ['index' => '/dev/null'],
 			'options' => [
