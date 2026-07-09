@@ -64,13 +64,13 @@
 					data-type="page"
 					class="k-link-input-body"
 				>
-					<div class="k-page-browser">
-						<k-page-tree
-							:current="$helper.link.getPageUUID(value)"
-							:root="false"
-							@select="selectModel($event)"
-						/>
-					</div>
+					<k-page-tree
+						:current="$helper.link.getPageUUID(value)"
+						:root="false"
+						:scrollable="true"
+						class="k-page-browser"
+						@select="selectModel($event)"
+					/>
 				</div>
 				<div
 					v-else-if="currentType.id === 'file'"
@@ -319,7 +319,6 @@ export default {
 
 .k-link-input-body {
 	display: grid;
-	overflow: hidden;
 	border-top: 1px solid var(--color-border);
 	background: var(--input-color-back);
 	--tree-color-back: var(--input-color-back);
@@ -327,12 +326,15 @@ export default {
 	--tree-branch-hover-color-back: var(--panel-color-back);
 }
 
+.k-link-input-body > :where(.k-page-browser, .k-file-browser) {
+	max-height: 50dvh;
+}
+
 .k-link-input-body[data-type="page"] .k-page-browser {
 	padding: var(--spacing-2);
 	padding-bottom: calc(var(--spacing-2) - 1px);
 	width: 100%;
 	container-type: inline-size;
-	overflow: auto;
 }
 .k-link-field .k-tags-field-preview {
 	--tag-rounded: var(--rounded-sm);
