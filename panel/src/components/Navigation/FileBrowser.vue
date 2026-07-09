@@ -4,7 +4,7 @@
 			<aside ref="tree" class="k-file-browser-tree">
 				<k-page-tree
 					:current="page?.value ?? opened"
-					scrollable
+					:scrollable="true"
 					@select="selectPage"
 					@toggleBranch="togglePage"
 				/>

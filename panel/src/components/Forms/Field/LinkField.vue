@@ -67,8 +67,8 @@
 					<k-page-tree
 						:current="$helper.link.getPageUUID(value)"
 						:root="false"
+						:scrollable="true"
 						class="k-page-browser"
-						scrollable
 						@select="selectModel($event)"
 					/>
 				</div>
