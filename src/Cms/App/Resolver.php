@@ -46,7 +46,7 @@ class Resolver
 	}
 
 	/**
-	 * Checks whether a draft can be accessed by the current user 
+	 * Checks whether a draft can be accessed by the current user
 	 * or through a token-authenticated request.
 	 */
 	protected function isAccessibleDraft(Page $page): bool
@@ -117,7 +117,7 @@ class Resolver
 
 		// resolve filenames without path to site files
 		if (str_contains($path, '/') === false) {
-			return $this->resolveFile($this->site->file($path));
+			return $this->resolveSiteFile($path);
 		}
 
 		return $this->resolvePageFile($path);
@@ -268,5 +268,13 @@ class Resolver
 
 		// nothing matched -> render the page as HTML
 		return null;
+	}
+
+	/**
+	 * @throws \Kirby\Exception\NotFoundException if the file cannot be found or accessed
+	 */
+	protected function resolveSiteFile(string $path): File
+	{
+		return $this->resolveFile($this->site->file($path));
 	}
 }
