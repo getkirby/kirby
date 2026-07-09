@@ -355,35 +355,6 @@ class ResolverTest extends TestCase
 		$this->assertIsPage($this->resolve($app, 'test'));
 	}
 
-	public function testResolvePageContentNegotiationDisabled(): void
-	{
-		F::write(static::TMP . '/test.php', 'html');
-		F::write(static::TMP . '/test.md.php', '# Markdown');
-
-		$app = $this->app->clone([
-			'roots' => [
-				'templates' => static::TMP
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug'     => 'test',
-						'template' => 'test'
-					]
-				]
-			],
-			'options' => [
-				'content' => [
-					'negotiation' => false
-				]
-			],
-		]);
-
-		$result = $this->resolve($app, 'test');
-		$this->assertIsPage($result);
-		$this->assertNull($app->response()->header('Vary'));
-	}
-
 	public function testResolveFileDefault(): void
 	{
 		$app = $this->app->clone([

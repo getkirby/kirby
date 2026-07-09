@@ -236,11 +236,6 @@ class Resolver
 	 */
 	protected function resolvePreferredRepresentation(Page $page): Responder|null
 	{
-		// content negotiation can be disabled via config
-		if ($this->kirby->option('content.negotiation', true) === false) {
-			return null;
-		}
-
 		// the response depends on the Accept header from now on;
 		// let caches/proxies know so they don't mix up variants
 		$response = $this->kirby->response();
