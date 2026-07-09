@@ -19,6 +19,7 @@ use Kirby\Filesystem\Mime;
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     6.0.0
  */
 class Resolver
 {
@@ -31,7 +32,7 @@ class Resolver
 	}
 
 	/**
-	 * Returns a potential content representation or file extension
+	 * Returns the content representation/file extension from a path
 	 */
 	protected function detectExtension(string $path): string|null
 	{
@@ -45,8 +46,8 @@ class Resolver
 	}
 
 	/**
-	 * Checks whether a draft can be access by the current user or through a
-	 * token-authenticated request.
+	 * Checks whether a draft can be accessed by the current user 
+	 * or through a token-authenticated request.
 	 */
 	protected function isAccessibleDraft(Page $page): bool
 	{
@@ -179,7 +180,7 @@ class Resolver
 			return $this->resolvePreferredRepresentation($page) ?? $page;
 		}
 
-		// a content representation was requested through the URL
+		// a content representation was requested through the URL;
 		// if extension is the default content type,
 		// redirect to the page URL without extension
 		if ($extension === 'html') {
