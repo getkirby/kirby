@@ -130,7 +130,7 @@ export default {
 		disable() {
 			// the account owner proves control with a current code
 			if (this.isAccount === true) {
-				this.remove({ authorization: this.code });
+				this.request("remove", { authorization: this.code });
 				return;
 			}
 
