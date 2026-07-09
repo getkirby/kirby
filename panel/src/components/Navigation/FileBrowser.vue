@@ -144,22 +144,27 @@ export default {
 	grid-area: tree;
 	display: flex;
 	min-height: 0;
-	padding: var(--spacing-2);
 	border-right: 1px solid var(--color-border);
 }
 .k-file-browser-tree > .k-tree {
 	flex: 1;
 }
+.k-file-browser-tree .k-scrollable {
+	padding: var(--spacing-2);
+}
+
 .k-file-browser-items {
 	grid-area: items;
 	display: flex;
 	flex-direction: column;
 	min-height: 0;
-	padding: var(--spacing-2);
 	background: var(--file-browser-items-color-back);
 }
 .k-file-browser-items > .k-browser {
 	flex: 1;
+}
+.k-file-browser-items > .k-browser {
+	padding: var(--spacing-2);
 }
 .k-file-browser-back-button {
 	display: none;
