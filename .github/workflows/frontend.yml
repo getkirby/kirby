@@ -71,7 +71,7 @@ jobs:
           flags: frontend
 
       - name: Check for TypeScript type errors
-        run: npm run types
+        run: npm run test:types
 
       - name: "ESLint: JavaScript coding style violations"
         run: npm run lint -- --max-warnings 0 --format stylish --no-fix

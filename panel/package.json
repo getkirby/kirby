@@ -4,15 +4,16 @@
 	"type": "module",
 	"scripts": {
 		"build": "vite build",
+		"ci": "npm run test && npm run lint",
 		"build:docs": "node scripts/docs.js",
 		"dev": "vite --host",
 		"format": "prettier --write \"src/**/*.{js,vue}\"",
 		"lint": "eslint \"src/**/*.{js,ts,vue}\"",
 		"lint:fix": "npm run lint -- --fix",
-		"test": "npm run test:unit",
+		"test": "npm run test:unit && npm run test:types",
 		"test:unit": "vitest run --no-isolate",
 		"test:coverage": "npm run test:unit -- --coverage",
-		"types": "vue-tsc --noEmit"
+		"test:types": "vue-tsc --noEmit"
 	},
 	"dependencies": {
 		"autosize": "^6.0.1",
