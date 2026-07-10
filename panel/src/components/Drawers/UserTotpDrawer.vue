@@ -7,8 +7,10 @@
 		@cancel="$emit('cancel')"
 		@submit="$emit('cancel')"
 	>
-		<form ref="form" class="k-stack" style="gap: var(--spacing-8)">
-			<k-drawer-text :text="$t('login.totp.enable.intro')" />
+		<form ref="form" class="k-stack" style="gap: var(--spacing-6)">
+			<k-user-info :label="$t('account')" :user="user" />
+
+			<k-drawer-text :text="$t('login.totp.description')" />
 
 			<!-- Enable (only the account owner may set up their own factor) -->
 			<template v-if="isAccount && !isEnabled">
@@ -58,7 +60,7 @@
 			</template>
 
 			<!-- Disable -->
-			<template v-else>
+			<template v-else-if="isEnabled">
 				<!-- the account owner enters a current code to confirm -->
 				<k-text-field
 					v-if="isAccount"
@@ -81,6 +83,10 @@
 					@click="disable"
 				/>
 			</template>
+
+			<k-empty v-else icon="qr-code">
+				{{ $t("login.totp.empty") }}
+			</k-empty>
 		</form>
 	</k-drawer>
 </template>
@@ -98,7 +104,6 @@ import UserCredentialDrawer from "./UserCredentialDrawer.vue";
 export default {
 	extends: UserCredentialDrawer,
 	props: {
-		isAccount: Boolean,
 		isEnabled: Boolean,
 		/**
 		 * SVG element for QR code containing TOTP secret
@@ -108,7 +113,6 @@ export default {
 			required: true
 		},
 		uri: String,
-		user: String,
 		value: {
 			type: Object,
 			default: () => ({})
@@ -127,16 +131,18 @@ export default {
 				await this.request("create", this.totp);
 			}
 		},
-		disable() {
+		async disable() {
 			// the account owner proves control with a current code
 			if (this.isAccount === true) {
-				this.request("remove", { authorization: this.code });
+				await this.request("remove", { authorization: this.code });
 				return;
 			}
 
 			// an admin managing another user re-enters their own password
 			this.confirmPassword({
-				text: this.$t("login.totp.disable.admin", { user: this.user }),
+				text: this.$t("login.totp.disable.confirm", {
+					user: this.$helper.string.escapeHTML(this.user.email)
+				}),
 				button: {
 					text: this.$t("disable"),
 					icon: "unlock"

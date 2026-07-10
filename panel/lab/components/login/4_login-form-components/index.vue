@@ -30,6 +30,7 @@
 		<k-lab-example label="k-login-submit" :flex="true">
 			<k-login-submit />
 			<k-login-submit label="Sign me in" icon="heart" />
+			<k-login-submit :loading="true" label="Loading" icon="heart" />
 		</k-lab-example>
 	</k-lab-examples>
 </template>

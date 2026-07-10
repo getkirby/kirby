@@ -326,6 +326,7 @@ class State
 	{
 		if ($this->user) {
 			return [
+				'avatar'   => $this->user->avatar()?->url(),
 				'email'    => $this->user->email(),
 				'id'       => $this->user->id(),
 				'language' => $this->user->language(),

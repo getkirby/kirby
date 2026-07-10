@@ -5,6 +5,7 @@ use Kirby\Panel\Controller\Drawer\SectionDrawerController;
 use Kirby\Panel\Controller\Drawer\UserSecurityCodeMethodDrawerController;
 use Kirby\Panel\Controller\Drawer\UserSecurityDrawerController;
 use Kirby\Panel\Controller\Drawer\UserTotpDrawerController;
+use Kirby\Panel\Controller\Drawer\UserWebauthnDrawerController;
 
 return [
 	'user.security' => [
@@ -18,6 +19,10 @@ return [
 	'user.security.challenge.totp' => [
 		'pattern' => 'users/(:any)/security/challenge/totp',
 		'action'  => UserTotpDrawerController::class
+	],
+	'user.security.method.webauthn' => [
+		'pattern' => 'users/(:any)/security/method/webauthn',
+		'action'  => UserWebauthnDrawerController::class
 	],
 	'user.fields' => [
 		'pattern' => '(users/[^/]+)/fields/(:any)/(:all?)',

@@ -17,6 +17,10 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
     );
 
     public static $prefixLengthsPsr4 = array (
+        'l' =>
+        array (
+            'lbuchs\\WebAuthn\\' => 16,
+        ),
         'W' =>
         array (
             'Whoops\\' => 7,
@@ -54,6 +58,10 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
     );
 
     public static $prefixDirsPsr4 = array (
+        'lbuchs\\WebAuthn\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/lbuchs/webauthn/src',
+        ),
         'Whoops\\' =>
         array (
             0 => __DIR__ . '/..' . '/filp/whoops/src/Whoops',
@@ -162,6 +170,7 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
         'Kirby\\Auth\\Challenge' => __DIR__ . '/../..' . '/src/Auth/Challenge.php',
         'Kirby\\Auth\\Challenge\\EmailChallenge' => __DIR__ . '/../..' . '/src/Auth/Challenge/EmailChallenge.php',
         'Kirby\\Auth\\Challenge\\TotpChallenge' => __DIR__ . '/../..' . '/src/Auth/Challenge/TotpChallenge.php',
+        'Kirby\\Auth\\Challenge\\WebauthnChallenge' => __DIR__ . '/../..' . '/src/Auth/Challenge/WebauthnChallenge.php',
         'Kirby\\Auth\\Challenges' => __DIR__ . '/../..' . '/src/Auth/Challenges.php',
         'Kirby\\Auth\\Csrf' => __DIR__ . '/../..' . '/src/Auth/Csrf.php',
         'Kirby\\Auth\\Exception\\ChallengeTimeoutException' => __DIR__ . '/../..' . '/src/Auth/Exception/ChallengeTimeoutException.php',
@@ -173,9 +182,11 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
         'Kirby\\Auth\\Method\\CodeMethod' => __DIR__ . '/../..' . '/src/Auth/Method/CodeMethod.php',
         'Kirby\\Auth\\Method\\PasswordMethod' => __DIR__ . '/../..' . '/src/Auth/Method/PasswordMethod.php',
         'Kirby\\Auth\\Method\\PasswordResetMethod' => __DIR__ . '/../..' . '/src/Auth/Method/PasswordResetMethod.php',
+        'Kirby\\Auth\\Method\\WebauthnMethod' => __DIR__ . '/../..' . '/src/Auth/Method/WebauthnMethod.php',
         'Kirby\\Auth\\Methods' => __DIR__ . '/../..' . '/src/Auth/Methods.php',
         'Kirby\\Auth\\Passwords' => __DIR__ . '/../..' . '/src/Auth/Passwords.php',
         'Kirby\\Auth\\Pending' => __DIR__ . '/../..' . '/src/Auth/Pending.php',
+        'Kirby\\Auth\\Service\\Webauthn' => __DIR__ . '/../..' . '/src/Auth/Service/Webauthn.php',
         'Kirby\\Auth\\State' => __DIR__ . '/../..' . '/src/Auth/State.php',
         'Kirby\\Auth\\Status' => __DIR__ . '/../..' . '/src/Auth/Status.php',
         'Kirby\\Auth\\User' => __DIR__ . '/../..' . '/src/Auth/User.php',
@@ -549,6 +560,7 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
         'Kirby\\Panel\\Controller\\Drawer\\UserSecurityCodeMethodDrawerController' => __DIR__ . '/../..' . '/src/Panel/Controller/Drawer/UserSecurityCodeMethodDrawerController.php',
         'Kirby\\Panel\\Controller\\Drawer\\UserSecurityDrawerController' => __DIR__ . '/../..' . '/src/Panel/Controller/Drawer/UserSecurityDrawerController.php',
         'Kirby\\Panel\\Controller\\Drawer\\UserTotpDrawerController' => __DIR__ . '/../..' . '/src/Panel/Controller/Drawer/UserTotpDrawerController.php',
+        'Kirby\\Panel\\Controller\\Drawer\\UserWebauthnDrawerController' => __DIR__ . '/../..' . '/src/Panel/Controller/Drawer/UserWebauthnDrawerController.php',
         'Kirby\\Panel\\Controller\\DropdownController' => __DIR__ . '/../..' . '/src/Panel/Controller/DropdownController.php',
         'Kirby\\Panel\\Controller\\Dropdown\\FileSettingsDropdownController' => __DIR__ . '/../..' . '/src/Panel/Controller/Dropdown/FileSettingsDropdownController.php',
         'Kirby\\Panel\\Controller\\Dropdown\\LanguagesDropdownController' => __DIR__ . '/../..' . '/src/Panel/Controller/Dropdown/LanguagesDropdownController.php',
@@ -858,6 +870,20 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
         'Whoops\\Util\\SystemFacade' => __DIR__ . '/..' . '/filp/whoops/src/Whoops/Util/SystemFacade.php',
         'Whoops\\Util\\TemplateHelper' => __DIR__ . '/..' . '/filp/whoops/src/Whoops/Util/TemplateHelper.php',
         'claviska\\SimpleImage' => __DIR__ . '/..' . '/claviska/simpleimage/src/claviska/SimpleImage.php',
+        'lbuchs\\WebAuthn\\Attestation\\AttestationObject' => __DIR__ . '/..' . '/lbuchs/webauthn/src/Attestation/AttestationObject.php',
+        'lbuchs\\WebAuthn\\Attestation\\AuthenticatorData' => __DIR__ . '/..' . '/lbuchs/webauthn/src/Attestation/AuthenticatorData.php',
+        'lbuchs\\WebAuthn\\Attestation\\Format\\AndroidKey' => __DIR__ . '/..' . '/lbuchs/webauthn/src/Attestation/Format/AndroidKey.php',
+        'lbuchs\\WebAuthn\\Attestation\\Format\\AndroidSafetyNet' => __DIR__ . '/..' . '/lbuchs/webauthn/src/Attestation/Format/AndroidSafetyNet.php',
+        'lbuchs\\WebAuthn\\Attestation\\Format\\Apple' => __DIR__ . '/..' . '/lbuchs/webauthn/src/Attestation/Format/Apple.php',
+        'lbuchs\\WebAuthn\\Attestation\\Format\\FormatBase' => __DIR__ . '/..' . '/lbuchs/webauthn/src/Attestation/Format/FormatBase.php',
+        'lbuchs\\WebAuthn\\Attestation\\Format\\None' => __DIR__ . '/..' . '/lbuchs/webauthn/src/Attestation/Format/None.php',
+        'lbuchs\\WebAuthn\\Attestation\\Format\\Packed' => __DIR__ . '/..' . '/lbuchs/webauthn/src/Attestation/Format/Packed.php',
+        'lbuchs\\WebAuthn\\Attestation\\Format\\Tpm' => __DIR__ . '/..' . '/lbuchs/webauthn/src/Attestation/Format/Tpm.php',
+        'lbuchs\\WebAuthn\\Attestation\\Format\\U2f' => __DIR__ . '/..' . '/lbuchs/webauthn/src/Attestation/Format/U2f.php',
+        'lbuchs\\WebAuthn\\Binary\\ByteBuffer' => __DIR__ . '/..' . '/lbuchs/webauthn/src/Binary/ByteBuffer.php',
+        'lbuchs\\WebAuthn\\CBOR\\CborDecoder' => __DIR__ . '/..' . '/lbuchs/webauthn/src/CBOR/CborDecoder.php',
+        'lbuchs\\WebAuthn\\WebAuthn' => __DIR__ . '/..' . '/lbuchs/webauthn/src/WebAuthn.php',
+        'lbuchs\\WebAuthn\\WebAuthnException' => __DIR__ . '/..' . '/lbuchs/webauthn/src/WebAuthnException.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

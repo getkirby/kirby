@@ -54,7 +54,8 @@ class UserSecurityDrawerController extends UserDrawerController
 			component:  'k-user-security-drawer',
 			title:      $this->i18n('security'),
 			challenges: $this->challenges(),
-			methods:    $this->methods()
+			methods:    $this->methods(),
+			user:       $this->user->panel()->info()
 		);
 	}
 

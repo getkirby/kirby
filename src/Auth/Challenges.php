@@ -113,7 +113,7 @@ class Challenges
 	 */
 	public function enabled(): array
 	{
-		$config = $this->kirby->option('auth.challenges', ['totp', 'email']);
+		$config = $this->kirby->option('auth.challenges', ['webauthn', 'totp', 'email']);
 
 		return array_values(A::filter(
 			A::wrap($config),

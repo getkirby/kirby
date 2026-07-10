@@ -9,6 +9,7 @@ import StructureDrawer from "./StructureDrawer.vue";
 import TextDrawer from "./TextDrawer.vue";
 import UserSecurityDrawer from "./UserSecurityDrawer.vue";
 import UserTotpDrawer from "./UserTotpDrawer.vue";
+import UserWebauthnDrawer from "./UserWebauthnDrawer.vue";
 
 export default {
 	install(app) {
@@ -23,5 +24,6 @@ export default {
 		app.component("k-text-drawer", TextDrawer);
 		app.component("k-user-security-drawer", UserSecurityDrawer);
 		app.component("k-user-totp-drawer", UserTotpDrawer);
+		app.component("k-user-webauthn-drawer", UserWebauthnDrawer);
 	}
 };

@@ -561,6 +561,7 @@ class StateTest extends TestCase
 		$user = A::apply($user);
 
 		$expected = [
+			'avatar'   => null,
 			'email'    => 'kirby@getkirby.com',
 			'id'       => 'kirby',
 			'language' => 'en',

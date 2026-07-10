@@ -8,6 +8,8 @@
 		@submit="$emit('submit')"
 	>
 		<k-stack gap="var(--spacing-6)">
+			<k-user-info :label="$t('account')" :user="user" />
+
 			<k-buttons-field
 				v-if="methods.length > 0"
 				:buttons="methods"
@@ -35,7 +37,8 @@ export default {
 	mixins: [Drawer],
 	props: {
 		challenges: Array,
-		methods: Array
+		methods: Array,
+		user: Object
 	},
 	emits: ["cancel", "submit"]
 };
