@@ -8,7 +8,7 @@
 		@submit="$emit('submit')"
 	>
 		<k-stack gap="var(--spacing-6)">
-			<k-user-info :user="user" />
+			<k-user-info :label="$t('account')" :user="user" />
 
 			<k-buttons-field
 				v-if="methods.length > 0"

@@ -7,8 +7,8 @@
 		@cancel="$emit('cancel')"
 		@submit="$emit('cancel')"
 	>
-		<form ref="form" class="k-stack" style="gap: var(--spacing-8)">
-			<k-user-info :user="user" />
+		<form ref="form" class="k-stack" style="gap: var(--spacing-6)">
+			<k-user-info :label="$t('account')" :user="user" />
 
 			<k-box
 				v-if="!isSupported"
