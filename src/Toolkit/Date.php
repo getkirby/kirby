@@ -23,10 +23,8 @@ use Stringable;
 class Date extends DateTime implements Stringable
 {
 	/**
-	 * Class constructor
-	 *
-	 * @param string|int|\DateTimeInterface $datetime Datetime string, UNIX timestamp or object
-	 * @param \DateTimeZone|null $timezone Optional default timezone if `$datetime` is string
+	 * @param $datetime Datetime string, UNIX timestamp or object
+	 * @param $timezone Optional default timezone if `$datetime` is string
 	 */
 	public function __construct(
 		string|int|DateTimeInterface $datetime = 'now',
@@ -54,7 +52,7 @@ class Date extends DateTime implements Stringable
 	/**
 	 * Rounds the datetime value up to next value of the specified unit
 	 *
-	 * @param string $unit `year`, `month`, `day`, `hour`, `minute` or `second`
+	 * @param $unit `year`, `month`, `day`, `hour`, `minute` or `second`
 	 * @return $this
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the unit name is invalid
@@ -71,7 +69,7 @@ class Date extends DateTime implements Stringable
 	/**
 	 * Returns the interval between the provided and the object's datetime
 	 *
-	 * @param \DateTimeZone|null $timezone Optional default timezone if `$datetime` is string
+	 * @param $timezone Optional default timezone if `$datetime` is string
 	 */
 	public function compare(
 		string|int|DateTimeInterface $datetime = 'now',
@@ -133,7 +131,7 @@ class Date extends DateTime implements Stringable
 	/**
 	 * Rounds the datetime value down to the specified unit
 	 *
-	 * @param string $unit `year`, `month`, `day`, `hour`, `minute` or `second`
+	 * @param $unit `year`, `month`, `day`, `hour`, `minute` or `second`
 	 * @return $this
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the unit name is invalid
@@ -186,7 +184,7 @@ class Date extends DateTime implements Stringable
 	/**
 	 * Checks if the object's datetime is the same as the given datetime
 	 *
-	 * @param \DateTimeZone|null $timezone Optional default timezone if `$datetime` is string
+	 * @param $timezone Optional default timezone if `$datetime` is string
 	 */
 	public function is(
 		string|int|DateTimeInterface $datetime = 'now',
@@ -198,7 +196,7 @@ class Date extends DateTime implements Stringable
 	/**
 	 * Checks if the object's datetime is after the given datetime
 	 *
-	 * @param \DateTimeZone|null $timezone Optional default timezone if `$datetime` is string
+	 * @param $timezone Optional default timezone if `$datetime` is string
 	 */
 	public function isAfter(
 		string|int|DateTimeInterface $datetime = 'now',
@@ -210,7 +208,7 @@ class Date extends DateTime implements Stringable
 	/**
 	 * Checks if the object's datetime is before the given datetime
 	 *
-	 * @param \DateTimeZone|null $timezone Optional default timezone if `$datetime` is string
+	 * @param $timezone Optional default timezone if `$datetime` is string
 	 */
 	public function isBefore(
 		string|int|DateTimeInterface $datetime = 'now',
@@ -232,7 +230,7 @@ class Date extends DateTime implements Stringable
 	/**
 	 * Checks if the object's datetime is at or before the given datetime
 	 *
-	 * @param \DateTimeZone|null $timezone Optional default timezone if `$datetime` is string
+	 * @param $timezone Optional default timezone if `$datetime` is string
 	 */
 	public function isMax(
 		string|int|DateTimeInterface $datetime = 'now',
@@ -244,7 +242,7 @@ class Date extends DateTime implements Stringable
 	/**
 	 * Checks if the object's datetime is at or after the given datetime
 	 *
-	 * @param \DateTimeZone|null $timezone Optional default timezone if `$datetime` is string
+	 * @param $timezone Optional default timezone if `$datetime` is string
 	 */
 	public function isMin(
 		string|int|DateTimeInterface $datetime = 'now',
@@ -298,7 +296,7 @@ class Date extends DateTime implements Stringable
 	/**
 	 * Returns the datetime which is nearest to the object's datetime
 	 *
-	 * @param string|int|\DateTimeInterface ...$datetime Datetime strings, UNIX timestamps or objects
+	 * @param ...$datetime Datetime strings, UNIX timestamps or objects
 	 */
 	public function nearest(
 		string|int|DateTimeInterface ...$datetime
@@ -357,8 +355,8 @@ class Date extends DateTime implements Stringable
 	/**
 	 * Rounds the date to the nearest value of the given unit
 	 *
-	 * @param string $unit `year`, `month`, `day`, `hour`, `minute` or `second`
-	 * @param int $size Rounding step starting at `0` of the specified unit
+	 * @param $unit `year`, `month`, `day`, `hour`, `minute` or `second`
+	 * @param $size Rounding step starting at `0` of the specified unit
 	 * @return $this
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the unit name or size is invalid
@@ -402,7 +400,7 @@ class Date extends DateTime implements Stringable
 	 * by the defined step
 	 * @since 3.7.0
 	 *
-	 * @param int|array|null $step array of `unit` and `size` to round to nearest
+	 * @param $step array of `unit` and `size` to round to nearest
 	 */
 	public static function roundedTimestamp(
 		string|null $date = null,
@@ -439,8 +437,8 @@ class Date extends DateTime implements Stringable
 	/**
 	 * Overwrites the datetime value with a different one
 	 *
-	 * @param string|int|\DateTimeInterface $datetime Datetime string, UNIX timestamp or object
-	 * @param \DateTimeZone|null $timezone Optional default timezone if `$datetime` is string
+	 * @param $datetime Datetime string, UNIX timestamp or object
+	 * @param $timezone Optional default timezone if `$datetime` is string
 	 */
 	public function set(
 		string|int|DateTimeInterface $datetime,
@@ -455,7 +453,7 @@ class Date extends DateTime implements Stringable
 	 *
 	 * @param array|string|int|null $input Full array with `size` and/or `unit` keys, `unit`
 	 *                                     string, `size` int or `null` for the default
-	 * @param array $default Default values to use if one or both values are not provided
+	 * @param $default Default values to use if one or both values are not provided
 	 */
 	public static function stepConfig(
 		// no type hint to use InvalidArgumentException at the end
@@ -519,8 +517,8 @@ class Date extends DateTime implements Stringable
 	 * Returns the date, time or datetime in `YYYY-MM-DD hh:mm:ss` format
 	 * with optional timezone
 	 *
-	 * @param string $mode `date`, `time` or `datetime`
-	 * @param bool $timezone Whether the timezone is printed as well
+	 * @param $mode `date`, `time` or `datetime`
+	 * @param $timezone Whether the timezone is printed as well
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the mode is invalid
 	 */

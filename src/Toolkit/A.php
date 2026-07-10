@@ -32,7 +32,7 @@ class A
 	 * applying the passed parameters
 	 * @since 3.5.6
 	 *
-	 * @param mixed ...$args Parameters to pass to the closures
+	 * @param ...$args Parameters to pass to the closures
 	 */
 	public static function apply(array $array, mixed ...$args): array
 	{
@@ -48,9 +48,8 @@ class A
 	/**
 	 * Returns the average value of an array
 	 *
-	 * @param array $array The source array
-	 * @param int $decimals The number of decimals to return
-	 * @return float|null The average value
+	 * @param $array The source array
+	 * @param $decimals The number of decimals to return
 	 */
 	public static function average(array $array, int $decimals = 0): float|null
 	{
@@ -142,13 +141,12 @@ class A
 	 * // ];
 	 * ```
 	 *
-	 * @param array $array The source array
-	 * @param int $limit The number of elements the array should
-	 *                   contain after filling it up.
-	 * @param mixed $fill The element, which should be used to
-	 *                    fill the array. If it's a callable, it
-	 *                    will be called with the current index
-	 * @return array The filled-up result array
+	 * @param $array The source array
+	 * @param $limit The number of elements the array should
+	 *              contain after filling it up.
+	 * @param $fill The element, which should be used to
+	 *             fill the array. If it's a callable, it
+	 *             will be called with the current index
 	 */
 	public static function fill(
 		array $array,
@@ -174,6 +172,7 @@ class A
 
 	/**
 	 * Finds the first element matching the given callback
+	 * @since 3.9.8
 	 *
 	 * ```php
 	 * $array = [1, 30, 39, 29, 10, 13];
@@ -196,7 +195,6 @@ class A
 	 * // output: 'wuff'
 	 * ```
 	 *
-	 * @since 3.9.8
 	 * @param callable(mixed $value, int|string $key, array $array):bool $callback
 	 */
 	public static function find(array $array, callable $callback): mixed
@@ -223,9 +221,6 @@ class A
 	 * $first = A::first($array);
 	 * // first: 'miao'
 	 * ```
-	 *
-	 * @param array $array The source array
-	 * @return mixed The first element
 	 */
 	public static function first(array $array): mixed
 	{
@@ -291,11 +286,11 @@ class A
 	 * // result: ['cat' => 'miao', 'dog' => 'wuff'];
 	 * ```
 	 *
-	 * @param array $array The source array
-	 * @param string|int|array|null $key The key to look for
-	 * @param mixed $default Optional default value, which
-	 *                       should be returned if no element
-	 *                       has been found
+	 * @param $array The source array
+	 * @param $key The key to look for
+	 * @param $default Optional default value, which
+	 *                should be returned if no element
+	 *                has been found
 	 */
 	public static function get(
 		array $array,
@@ -437,9 +432,6 @@ class A
 	 * A::isAssociative($array);
 	 * // returns: true
 	 * ```
-	 *
-	 * @param array $array The array to analyze
-	 * @return bool true: The array is associative false: It's not
 	 */
 	public static function isAssociative(array $array): bool
 	{
@@ -625,10 +617,8 @@ class A
 	 * // result: ['homer', 'marge', 'lisa'];
 	 * ```
 	 *
-	 * @param array $array The source array
-	 * @param string $key The key name of the column to extract
-	 * @return array The result array with all values
-	 *               from that column.
+	 * @param $array The source array
+	 * @param $key The key name of the column to extract
 	 */
 	public static function pluck(array $array, string $key): array
 	{
@@ -663,7 +653,7 @@ class A
 	}
 
 	/**
-	 * Checks for missing elements in an array
+	 * Returns an array of missing elements in an array
 	 *
 	 * This is very handy to check for missing
 	 * user values in a request for example.
@@ -683,10 +673,8 @@ class A
 	 * // ];
 	 * ```
 	 *
-	 * @param array $array The source array
-	 * @param array $required An array of required keys
-	 * @return array An array of missing fields. If this
-	 *               is empty, nothing is missing.
+	 * @param $array The source array
+	 * @param $required An array of required keys
 	 */
 	public static function missing(array $array, array $required = []): array
 	{
@@ -726,8 +714,8 @@ class A
 	 * Normalizes an array into a nested form by converting
 	 * dot notation in keys to nested structures
 	 *
-	 * @param array $ignore List of keys in dot notation that should
-	 *                      not be converted to a nested structure
+	 * @param $ignore List of keys in dot notation that should
+	 *               not be converted to a nested structure
 	 */
 	public static function nest(array $array, array $ignore = []): array
 	{
@@ -781,8 +769,8 @@ class A
 	 * Recursively creates a nested array from a set of keys
 	 * with a key on each level
 	 *
-	 * @param mixed $value Arbitrary value that will end up at the bottom of the tree
-	 * @param array $keys List of keys to use sorted from the topmost level
+	 * @param $value Arbitrary value that will end up at the bottom of the tree
+	 * @param $keys List of keys to use sorted from the topmost level
 	 * @return array|mixed Nested array or (if `$keys` is empty) the input `$value`
 	 */
 	public static function nestByKeys($value, array $keys)
@@ -847,9 +835,6 @@ class A
 	 * //    'bird' => 'tweet'
 	 * // ];
 	 * ```
-	 *
-	 * @param array $array The source array
-	 * @return array The shuffled result array
 	 */
 	public static function shuffle(array $array): array
 	{
@@ -948,13 +933,10 @@ class A
 	 * // )
 	 * ```
 	 *
-	 * @param array $array The source array
-	 * @param string $field The name of the column
-	 * @param string $direction desc (descending) or asc (ascending)
-	 * @param int $method A PHP sort method flag or 'natural' for
-	 *                    natural sorting, which is not supported in
-	 *                    PHP by sort flags
-	 * @return array The sorted array
+	 * @param $array The source array
+	 * @param $field The name of the column
+	 * @param $direction desc (descending) or asc (ascending)
+	 * @param $method A PHP sort method flag
 	 */
 	public static function sort(
 		array $array,

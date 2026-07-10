@@ -50,7 +50,7 @@ class Token implements Stringable
 	 * Generates a brand new token by reserving a session ID
 	 * in the store and creating a random secret key
 	 *
-	 * @param int $expiry Timestamp the token expires at
+	 * @param $expiry Timestamp the token expires at
 	 */
 	public static function generate(
 		Store $store,
@@ -76,8 +76,8 @@ class Token implements Stringable
 	/**
 	 * Parses a token string into a Token object
 	 *
-	 * @param string $token Session token
-	 * @param bool $key Whether the token string includes the secret key
+	 * @param $token Session token
+	 * @param $key Whether the token string includes the secret key
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
 	public static function parse(
@@ -119,7 +119,7 @@ class Token implements Stringable
 	 * Returns the token as a string in the format
 	 * `<expiry>.<id>` or `<expiry>.<id>.<key>`
 	 *
-	 * @param bool $key Whether to include the secret key (if there is one)
+	 * @param $key Whether to include the secret key (if there is one)
 	 */
 	public function toString(bool $key = true): string
 	{

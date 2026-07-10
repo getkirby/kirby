@@ -25,7 +25,7 @@ class FileStore extends Store
 	/**
 	 * Creates a new instance of the file session store
 	 *
-	 * @param string $path Path to the storage directory
+	 * @param $path Path to the storage directory
 	 */
 	public function __construct(string $path)
 	{
@@ -71,7 +71,7 @@ class FileStore extends Store
 	/**
 	 * Closes an open file handle
 	 *
-	 * @param string $name Combined name
+	 * @param $name Combined name
 	 */
 	protected function closeHandle(string $name): void
 	{
@@ -89,8 +89,7 @@ class FileStore extends Store
 	}
 
 	/**
-	 * Deletes all expired sessions
-	 *
+	 * Deletes all expired sessions.
 	 * Needs to throw an Exception on error.
 	 */
 	public function collectGarbage(): void
@@ -121,13 +120,9 @@ class FileStore extends Store
 	}
 
 	/**
-	 * Creates a new session ID with the given expiry time
-	 *
+	 * Creates a new session ID with the given expiry time.
 	 * Needs to make sure that the session does not already exist
 	 * and needs to reserve it by locking it exclusively.
-	 *
-	 * @param int $expiryTime Timestamp
-	 * @return string Randomly generated session ID (without timestamp)
 	 */
 	public function createId(int $expiryTime): string
 	{
@@ -158,12 +153,8 @@ class FileStore extends Store
 	}
 
 	/**
-	 * Deletes the given session
-	 *
+	 * Deletes the given session.
 	 * Needs to throw an Exception on error.
-	 *
-	 * @param int $expiryTime Timestamp
-	 * @param string $id Session ID
 	 */
 	public function destroy(int $expiryTime, string $id): void
 	{
@@ -190,11 +181,6 @@ class FileStore extends Store
 
 	/**
 	 * Checks if the given session exists
-	 *
-	 * @param int $expiryTime Timestamp
-	 * @param string $id Session ID
-	 * @return bool true:  session exists,
-	 *              false: session doesn't exist
 	 */
 	public function exists(int $expiryTime, string $id): bool
 	{
@@ -223,12 +209,8 @@ class FileStore extends Store
 	}
 
 	/**
-	 * Returns the stored session data of the given session
-	 *
+	 * Returns the stored session data of the given session.
 	 * Needs to throw an Exception on error.
-	 *
-	 * @param int $expiryTime Timestamp
-	 * @param string $id Session ID
 	 */
 	public function get(int $expiryTime, string $id): string
 	{
@@ -276,9 +258,9 @@ class FileStore extends Store
 	}
 
 	/**
-	 * Returns a PHP file handle for a session
+	 * Returns a PHP file handle for a session.
 	 *
-	 * @param string $name Combined name
+	 * @param $name Combined name
 	 * @return resource File handle
 	 */
 	protected function handle(string $name)
@@ -321,12 +303,8 @@ class FileStore extends Store
 	}
 
 	/**
-	 * Locks the given session exclusively
-	 *
+	 * Locks the given session exclusively.
 	 * Needs to throw an Exception on error.
-	 *
-	 * @param int $expiryTime Timestamp
-	 * @param string $id Session ID
 	 */
 	public function lock(int $expiryTime, string $id): void
 	{
@@ -351,9 +329,6 @@ class FileStore extends Store
 
 	/**
 	 * Returns the combined name based on expiry time and ID
-	 *
-	 * @param int $expiryTime Timestamp
-	 * @param string $id Session ID
 	 */
 	protected function name(int $expiryTime, string $id): string
 	{
@@ -364,7 +339,7 @@ class FileStore extends Store
 	/**
 	 * Returns the full path to the session file
 	 *
-	 * @param string $name Combined name
+	 * @param $name Combined name
 	 */
 	protected function path(string $name): string
 	{
@@ -372,14 +347,9 @@ class FileStore extends Store
 	}
 
 	/**
-	 * Stores data to the given session
-	 *
+	 * Stores data to the given session.
 	 * Needs to make sure that the session exists.
 	 * Needs to throw an Exception on error.
-	 *
-	 * @param int $expiryTime Timestamp
-	 * @param string $id Session ID
-	 * @param string $data Session data to write
 	 */
 	public function set(int $expiryTime, string $id, string $data): void
 	{
@@ -414,9 +384,6 @@ class FileStore extends Store
 	 * Removes all locks on the given session
 	 *
 	 * Needs to throw an Exception on error.
-	 *
-	 * @param int $expiryTime Timestamp
-	 * @param string $id Session ID
 	 */
 	public function unlock(int $expiryTime, string $id): void
 	{

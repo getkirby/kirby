@@ -90,12 +90,12 @@ class Sessions
 	/**
 	 * Creates a new empty session
 	 *
-	 * @param array $options Optional additional options:
-	 *                       - `mode`: Token transmission mode (cookie or manual); defaults to default mode of the Sessions instance
-	 *                       - `startTime`:  Time the session starts being valid (date string or timestamp); defaults to `now`
-	 *                       - `expiryTime`: Time the session expires (date string or timestamp); defaults to `+ 2 hours`
-	 *                       - `timeout`: Activity timeout in seconds (integer or false for none); defaults to `1800` (half an hour)
-	 *                       - `renewable`: Should it be possible to extend the expiry date?; defaults to `true`
+	 * @param $options Optional additional options:
+	 *                - `mode`: Token transmission mode (cookie or manual); defaults to default mode of the Sessions instance
+	 *                - `startTime`:  Time the session starts being valid (date string or timestamp); defaults to `now`
+	 *                - `expiryTime`: Time the session expires (date string or timestamp); defaults to `+ 2 hours`
+	 *                - `timeout`: Activity timeout in seconds (integer or false for none); defaults to `1800` (half an hour)
+	 *                - `renewable`: Should it be possible to extend the expiry date?; defaults to `true`
 	 */
 	public function create(array $options = []): Session
 	{
@@ -189,15 +189,15 @@ class Sessions
 	/**
 	 * Creates a new Sessions instance from a loose options array
 	 *
-	 * @param \Kirby\Session\Store|string $store Store object or a path to the storage directory (uses the FileStore)
-	 * @param array $options Optional additional options:
-	 *                       - `mode`: Default token transmission mode (cookie, header or manual); defaults to `cookie`
-	 *                       - `cookieDomain`: Domain to set the cookie to (this disables the cookie path restriction); defaults to none (default browser behavior)
-	 *                       - `cookieName`: Name to use for the session cookie; defaults to `kirby_session`
-	 *                       - `gcInterval`: How often should the garbage collector be run?; integer or `false` for never; defaults to `100`
-	 *                       - `durationNormal`: Duration of normal sessions in seconds; defaults to 2 hours
-	 *                       - `durationLong`: Duration of "remember me" sessions in seconds; defaults to 2 weeks
-	 *                       - `timeout`: Activity timeout in seconds (integer or false for none); *only* used for normal sessions; defaults to `1800` (half an hour)
+	 * @param $store Store object or a path to the storage directory (uses the FileStore)
+	 * @param $options Optional additional options:
+	 *                - `mode`: Default token transmission mode (cookie, header or manual); defaults to `cookie`
+	 *                - `cookieDomain`: Domain to set the cookie to (this disables the cookie path restriction); defaults to none (default browser behavior)
+	 *                - `cookieName`: Name to use for the session cookie; defaults to `kirby_session`
+	 *                - `gcInterval`: How often should the garbage collector be run?; integer or `false` for never; defaults to `100`
+	 *                - `durationNormal`: Duration of normal sessions in seconds; defaults to 2 hours
+	 *                - `durationLong`: Duration of "remember me" sessions in seconds; defaults to 2 weeks
+	 *                - `timeout`: Activity timeout in seconds (integer or false for none); *only* used for normal sessions; defaults to `1800` (half an hour)
 	 */
 	public static function factory(
 		Store|string $store,
@@ -246,8 +246,8 @@ class Sessions
 	/**
 	 * Returns the session for the given token
 	 *
-	 * @param string $token Session token, either including or without the key
-	 * @param string|null $mode Optional transmission mode override
+	 * @param $token Session token, either including or without the key
+	 * @param $mode Optional transmission mode override
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the token is malformed
 	 * @throws \Kirby\Exception\NotFoundException If no matching session exists
@@ -266,10 +266,10 @@ class Sessions
 	 * Returns the automatic session for the current request,
 	 * creating a new one on demand if none exists yet
 	 *
-	 * @param array $options Optional additional options:
-	 *                       - `detect`: Whether to allow sessions in the `Authorization` HTTP header (`true`) or only in the session cookie (`false`); defaults to `false`
-	 *                       - `createMode`: When creating a new session, should it be set as a cookie or is it going to be transmitted manually to be used in a header?; defaults to `cookie`
-	 *                       - `long`: Whether the session is a long "remember me" session or a normal session; defaults to `false`
+	 * @param $options Optional additional options:
+	 *                - `detect`: Whether to allow sessions in the `Authorization` HTTP header (`true`) or only in the session cookie (`false`); defaults to `false`
+	 *                - `createMode`: When creating a new session, should it be set as a cookie or is it going to be transmitted manually to be used in a header?; defaults to `cookie`
+	 *                - `long`: Whether the session is a long "remember me" session or a normal session; defaults to `false`
 	 */
 	public function get(array $options = []): Session
 	{

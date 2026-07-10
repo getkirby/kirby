@@ -20,36 +20,22 @@ abstract class Store
 	 *
 	 * Needs to make sure that the session does not already exist
 	 * and needs to reserve it by locking it exclusively.
-	 *
-	 * @param int $expiryTime Timestamp
-	 * @return string Randomly generated session ID (without timestamp)
 	 */
 	abstract public function createId(int $expiryTime): string;
 
 	/**
-	 * Deletes the given session
-	 *
+	 * Deletes the given session.
 	 * Needs to throw an Exception on error.
-	 *
-	 * @param int $expiryTime Timestamp
-	 * @param string $id Session ID
 	 */
 	abstract public function destroy(int $expiryTime, string $id): void;
 
 	/**
 	 * Checks if the given session exists
-	 *
-	 * @param int $expiryTime Timestamp
-	 * @param string $id Session ID
-	 * @return bool true:  session exists,
-	 *              false: session doesn't exist
 	 */
 	abstract public function exists(int $expiryTime, string $id): bool;
 
 	/**
-	 * Securely generates a random session ID
-	 *
-	 * @return string Random hex string with 20 bytes
+	 * Securely generates a random session ID (hex string with 20 bytes)
 	 */
 	protected static function generateId(): string
 	{
@@ -57,44 +43,27 @@ abstract class Store
 	}
 
 	/**
-	 * Returns the stored session data of the given session
-	 *
+	 * Returns the stored session data of the given session.
 	 * Needs to throw an Exception on error.
-	 *
-	 * @param int $expiryTime Timestamp
-	 * @param string $id Session ID
 	 */
 	abstract public function get(int $expiryTime, string $id): string;
 
 	/**
 	 * Locks the given session exclusively
-	 *
 	 * Needs to throw an Exception on error.
-	 *
-	 * @param int $expiryTime Timestamp
-	 * @param string $id Session ID
 	 */
 	abstract public function lock(int $expiryTime, string $id): void;
 
 	/**
-	 * Stores data to the given session
-	 *
+	 * Stores data to the given session.
 	 * Needs to make sure that the session exists.
 	 * Needs to throw an Exception on error.
-	 *
-	 * @param int $expiryTime Timestamp
-	 * @param string $id Session ID
-	 * @param string $data Session data to write
 	 */
 	abstract public function set(int $expiryTime, string $id, string $data): void;
 
 	/**
-	 * Removes all locks on the given session
-	 *
+	 * Removes all locks on the given session.
 	 * Needs to throw an Exception on error.
-	 *
-	 * @param int $expiryTime Timestamp
-	 * @param string $id Session ID
 	 */
 	abstract public function unlock(int $expiryTime, string $id): void;
 }

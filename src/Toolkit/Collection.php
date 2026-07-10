@@ -147,12 +147,11 @@ class Collection extends Iterator implements Stringable
 	}
 
 	/**
-	 * Creates chunks of the same size.
-	 * The last chunk may be smaller
+	 * Splits the collection into chunks of the same size.
+	 * Returns a new collection with an element for each chunk
+	 * and a sub collection in each chunk. The last chunk may be smaller.
 	 *
-	 * @param int $size Number of elements per chunk
-	 * @return static A new collection with an element for each chunk and
-	 *                a sub collection in each chunk
+	 * @param $size Number of elements per chunk
 	 */
 	public function chunk(int $size): static
 	{
@@ -534,12 +533,11 @@ class Collection extends Iterator implements Stringable
 	}
 
 	/**
-	 * Groups the elements by a given field or callback function
+	 * Groups the elements by a given field or callback function.
+	 * Returns a new collection with an element for each group
+	 * and a subcollection in each group
 	 *
 	 * @param string|\Closure $field
-	 * @return self A new collection with an element for
-	 *              each group and a subcollection in
-	 *              each group
 	 * @throws \Exception if $field is not a string nor a callback function
 	 */
 	public function group(
@@ -627,7 +625,8 @@ class Collection extends Iterator implements Stringable
 	}
 
 	/**
-	 * Checks if there is an intersection between the given collection and this collection
+	 * Checks if there is an intersection between
+	 * the given collection and this collection
 	 * @since 3.3.0
 	 */
 	public function intersects(Collection $other): bool
@@ -699,7 +698,7 @@ class Collection extends Iterator implements Stringable
 	/**
 	 * Returns a new object with a limited number of elements
 	 *
-	 * @param int $limit The number of elements to return
+	 * @param $limit The number of elements to return
 	 */
 	public function limit(int $limit): static
 	{
@@ -730,7 +729,7 @@ class Collection extends Iterator implements Stringable
 	/**
 	 * Returns a Collection without the given element(s)
 	 *
-	 * @param string ...$keys any number of keys, passed as individual arguments
+	 * @param ...$keys any number of keys, passed as individual arguments
 	 */
 	public function not(string ...$keys): static
 	{
@@ -746,7 +745,7 @@ class Collection extends Iterator implements Stringable
 	/**
 	 * Returns a new object starting from the given offset
 	 *
-	 * @param int $offset The index to start from
+	 * @param $offset The index to start from
 	 * @return static|$this
 	 */
 	public function offset(int $offset): static
@@ -779,8 +778,8 @@ class Collection extends Iterator implements Stringable
 	}
 
 	/**
-	 * Extracts all values for a single field into
-	 * a new array
+	 * Extracts all values for a single field
+	 * into a new array
 	 */
 	public function pluck(
 		string $field,
@@ -907,7 +906,7 @@ class Collection extends Iterator implements Stringable
 	/**
 	 * Removes an element from the array by key
 	 *
-	 * @param string $key the name of the key
+	 * @param $key the name of the key
 	 * @return $this
 	 */
 	public function remove(string $key): static
@@ -957,8 +956,8 @@ class Collection extends Iterator implements Stringable
 	/**
 	 * Returns a slice of the object
 	 *
-	 * @param int $offset The optional index to start the slice from
-	 * @param int|null $limit The optional number of elements to return
+	 * @param $offset The optional index to start the slice from
+	 * @param $limit The optional number of elements to return
 	 * @return $this|static
 	 */
 	public function slice(

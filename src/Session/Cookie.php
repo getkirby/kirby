@@ -29,8 +29,8 @@ class Cookie
 	}
 
 	/**
-	 * Returns the session token from the cookie or null
-	 * if no cookie is set
+	 * Returns the session token from the cookie
+	 * or null if no cookie is set
 	 */
 	public function get(): string|null
 	{

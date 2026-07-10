@@ -66,8 +66,10 @@ class Controller
 		return $this->function->call($bind, ...$args);
 	}
 
-	public static function load(string $file, string|null $in = null): static|null
-	{
+	public static function load(
+		string $file,
+		string|null $in = null
+	): static|null {
 		if (is_file($file) === false) {
 			return null;
 		}
