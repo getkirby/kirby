@@ -122,8 +122,8 @@ trait FieldMethods
 	 */
 	public function inline(): static
 	{
-		// List of valid inline elements taken from:
-		// https://developer.mozilla.org/de/docs/Web/HTML/Inline_elemente
+		// List of valid inline elements based on the WHATWG text-level
+		// semantics: https://html.spec.whatwg.org/multipage/text-level-semantics.html
 		// Obsolete elements, script tags, image maps and form elements have
 		// been excluded for safety reasons and as they are most likely not
 		// needed in most cases.
