@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# Stopgap for laravel/cpx#27: `cpx` always exits 0 and discards the wrapped
+# tool's real exit code, which lets CI (and local runs) report success even when
+# PHPUnit/Paratest, Psalm, PHP-CS-Fixer or composer-unused actually fail.
+#
+# This is a drop-in replacement for `cpx <vendor/package[:version]> [args…]`:
+# it installs the package through cpx (populating the cpx cache) and then
+# executes the cached binary directly, so its real exit status propagates.
+#
+# Remove this wrapper and call `cpx` directly again once cpx#27 is fixed.
+
+set -euo pipefail
+
+spec="$1"
+shift
+
+# ensure the pinned package version is present in the cpx cache
+cpx "$spec" --version > /dev/null 2>&1 || true
+
+package="${spec%%:*}"
+version="${spec#*:}"
+
+# fall back to cpx's "latest" cache slot when no version is pinned
+if [ "$version" = "$spec" ]; then
+	version="latest"
+fi
+
+binary="$HOME/.cpx/${package}/${version}/vendor/bin/${package##*/}"
+
+if [ ! -x "$binary" ]; then
+	echo "cpx-strict: could not locate binary at ${binary}" >&2
+	exit 1
+fi
+
+exec "$binary" "$@"

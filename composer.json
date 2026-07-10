@@ -96,16 +96,16 @@
 			"@analyze:psalm"
 		],
 		"analyze:composer": "composer validate --strict --no-check-version --no-check-all",
-		"analyze:composer:unused": "cpx icanhazstring/composer-unused:0.9.6 --no-progress",
-		"analyze:psalm": "cpx vimeo/psalm:6.16.1",
+		"analyze:composer:unused": "./scripts/cpx icanhazstring/composer-unused:0.9.6 --no-progress",
+		"analyze:psalm": "./scripts/cpx vimeo/psalm:6.16.1",
 		"build": "./scripts/build",
 		"ci": [
 			"@fix",
 			"@analyze",
 			"@test"
 		],
-		"fix": "cpx friendsofphp/php-cs-fixer:3.95.1 fix",
-		"test": "cpx phpunit/phpunit:11.5.55",
+		"fix": "./scripts/cpx friendsofphp/php-cs-fixer:3.95.1 fix",
+		"test": "./scripts/cpx phpunit/phpunit:11.5.55",
 		"test:coverage": [
 			"@putenv XDEBUG_MODE=coverage",
 			"@test --coverage-html=tests/coverage"
