@@ -5,27 +5,25 @@ namespace Kirby\Panel\Controller\Drawer;
 use Kirby\Cms\User;
 use Kirby\Cms\UserRules;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\PermissionException;
 use Kirby\Image\QrCode;
 use Kirby\Panel\Ui\Drawer;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\Totp;
 
 /**
- * @package   Kirby Panel
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
  * @unstable
  */
-class UserTotpDrawerController extends UserDrawerController
+class UserTotpDrawerController extends UserCredentialDrawerController
 {
 	protected string|null $secret;
 
 	public function __construct(User $user)
 	{
-		parent::__construct($user);
+		parent::__construct($user, 'totp');
 
 		// ensure user has the necessary permissions
 		UserRules::changeSecret($user, 'totp', null);
@@ -33,6 +31,15 @@ class UserTotpDrawerController extends UserDrawerController
 
 	protected function create(): User
 	{
+		// only the account owner may enable a factor; an admin must not
+		// plant a TOTP secret they control onto someone else's account,
+		// which would lock that user out at their next login
+		if ($this->isCurrentUser() === false) {
+			throw new PermissionException(
+				message: 'You cannot enable TOTP for ' . $this->user->email()
+			);
+		}
+
 		$secret  = $this->request->get('secret');
 		$confirm = $this->request->get('confirm');
 
@@ -49,11 +56,6 @@ class UserTotpDrawerController extends UserDrawerController
 		}
 
 		return $this->user->changeSecret('totp', $secret);
-	}
-
-	protected function isCurrentUser(): bool
-	{
-		return $this->kirby->user()->is($this->user);
 	}
 
 	protected function isEnabled(): bool
@@ -95,27 +97,8 @@ class UserTotpDrawerController extends UserDrawerController
 
 	protected function remove(): User
 	{
-		$password = $this->request->get('password');
-
-		try {
-			if ($this->isCurrentUser() === true) {
-				$this->user->validatePassword($password);
-			}
-
-			// Remove the TOTP secret from the account
-			return $this->user->changeSecret('totp', null);
-
-		} catch (InvalidArgumentException $e) {
-			// Catch and re-throw exception so that any
-			// Unauthenticated exception for incorrect passwords
-			// does not trigger a logout
-			throw new InvalidArgumentException(
-				key:     $e->getKey(),
-				data:     $e->getData(),
-				fallback: $e->getMessage(),
-				previous: $e
-			);
-		}
+		$this->authorize();
+		return $this->user->changeSecret('totp', null);
 	}
 
 	public function submit(): bool

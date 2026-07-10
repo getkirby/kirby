@@ -8,25 +8,10 @@
 		@submit="$emit('cancel')"
 	>
 		<form ref="form" class="k-stack" style="gap: var(--spacing-8)">
-			<k-definitions>
-				<k-definition
-					:data-theme="isEnabled ? 'positive' : 'passive'"
-					:term="$t('status')"
-					class="k-user-totp-status"
-				>
-					<k-icon :type="isEnabled ? 'check' : 'cancel'" />
-					{{
-						isEnabled
-							? $t("login.totp.enable.success")
-							: $t("login.totp.disable.success")
-					}}
-				</k-definition>
-			</k-definitions>
-
 			<k-drawer-text :text="$t('login.totp.enable.intro')" />
 
-			<!-- Enable -->
-			<template v-if="!isEnabled">
+			<!-- Enable (only the account owner may set up their own factor) -->
+			<template v-if="isAccount && !isEnabled">
 				<k-dialog-fields
 					:fields="{
 						qr: {
@@ -72,32 +57,28 @@
 				/>
 			</template>
 
-			<!-- Disable user -->
+			<!-- Disable -->
 			<template v-else>
-				<k-section
+				<!-- the account owner enters a current code to confirm -->
+				<k-text-field
 					v-if="isAccount"
+					:counter="false"
 					:label="$t('login.totp.disable.label')"
-					class="k-stack"
-				>
-					<k-password-field
-						:counter="false"
-						:help="$t('login.totp.disable.help')"
-						:required="true"
-						@input="totp.password = $event"
-					/>
-				</k-section>
-
-				<k-dialog-text
-					v-else
-					:text="$t('login.totp.disable.admin', { user })"
+					:placeholder="$t('login.code.placeholder.totp')"
+					:required="true"
+					:value="code"
+					autocomplete="one-time-code"
+					font="monospace"
+					@input="code = $event"
 				/>
 
 				<k-button
-					:text="$t('disable')"
+					:disabled="isLoading"
 					:icon="isLoading ? 'loader' : 'unlock'"
+					:text="$t('disable')"
 					theme="negative"
 					variant="filled"
-					@click="remove"
+					@click="disable"
 				/>
 			</template>
 		</form>
@@ -105,15 +86,17 @@
 </template>
 
 <script>
-import Drawer from "@/mixins/drawer.js";
+import UserCredentialDrawer from "./UserCredentialDrawer.vue";
 
 /**
+ * Drawer to enable/disable auth TOTP
+ *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
  */
 export default {
-	mixins: [Drawer],
+	extends: UserCredentialDrawer,
 	props: {
 		isAccount: Boolean,
 		isEnabled: Boolean,
@@ -134,40 +117,38 @@ export default {
 	emits: ["cancel", "submit"],
 	data() {
 		return {
-			isLoading: false,
+			code: "",
 			totp: {}
 		};
 	},
 	methods: {
 		async create() {
-			await this.request("create", this.totp);
-		},
-		async remove() {
-			await this.request("remove", { password: this.totp.password });
-		},
-		async request(action, payload = {}) {
 			if (this.$refs.form.reportValidity()) {
-				try {
-					this.isLoading = true;
-					await this.$panel.drawer.post({ action, ...payload });
-					await this.$panel.drawer.refresh();
-				} catch (error) {
-					this.$panel.notification.error(error?.message ?? error);
-				} finally {
-					this.isLoading = false;
-				}
+				await this.request("create", this.totp);
 			}
+		},
+		disable() {
+			// the account owner proves control with a current code
+			if (this.isAccount === true) {
+				this.request("remove", { authorization: this.code });
+				return;
+			}
+
+			// an admin managing another user re-enters their own password
+			this.confirmPassword({
+				text: this.$t("login.totp.disable.admin", { user: this.user }),
+				button: {
+					text: this.$t("disable"),
+					icon: "unlock"
+				},
+				onSubmit: (password) => this.request("remove", { password })
+			});
 		}
 	}
 };
 </script>
 
 <style>
-.k-user-totp-status dd {
-	--icon-color: var(--theme-color-icon);
-	color: var(--theme-color-text);
-}
-
 .k-totp-qrcode {
 	display: grid;
 	grid-template-columns: auto 1fr;
