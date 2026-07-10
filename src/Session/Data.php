@@ -7,9 +7,8 @@ use Kirby\Exception\LogicException;
 use Kirby\Toolkit\A;
 
 /**
- * The session object can be used to
- * store visitor preferences for your
- * site throughout various requests.
+ * The session object can be used to store visitor preferences
+ * for your site throughout various requests.
  *
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
@@ -18,10 +17,6 @@ class Data
 {
 	/**
 	 * Creates a new Data instance
-	 *
-	 * @codeCoverageIgnore
-	 * @param \Kirby\Session\Session $session Session object this data belongs to
-	 * @param array $data Currently stored session data
 	 */
 	public function __construct(
 		protected Session $session,
@@ -32,9 +27,9 @@ class Data
 	/**
 	 * Alters one or multiple numeric session values by a specified amount
 	 *
-	 * @param string|array $key The key to adjust or an array with multiple keys
-	 * @param int $by Adjustment amount
-	 * @param int|null $bound Maximum (when incrementing) or minimum (when decrementing); skipped if null
+	 * @param $key The key to adjust or an array with multiple keys
+	 * @param $by Adjustment amount
+	 * @param $bound Maximum (when incrementing) or minimum (when decrementing); skipped if null
 	 */
 	protected function adjust(
 		string|array $key,
@@ -78,6 +73,20 @@ class Data
 	}
 
 	/**
+	 * Ensures that the caller-facing amount for
+	 * increment/decrement is not negative
+	 */
+	protected function assertNotNegative(int $by, string $method): void
+	{
+		if ($by < 0) {
+			throw new InvalidArgumentException(
+				data: ['method' => $method, 'argument' => '$by'],
+				translate: false
+			);
+		}
+	}
+
+	/**
 	 * Clears all session data
 	 */
 	public function clear(): void
@@ -89,30 +98,24 @@ class Data
 	/**
 	 * Decrements one or multiple session values by a specified amount
 	 *
-	 * @param string|array $key The key to decrement or an array with multiple keys
-	 * @param int $by Decrement by which amount?
-	 * @param int|null $min Minimum amount (value is not decremented further)
+	 * @param $key The key to decrement or an array with multiple keys
+	 * @param $by Amount to decrement by
+	 * @param $min Minimum amount (value is not decremented further)
 	 */
 	public function decrement(
 		string|array $key,
 		int $by = 1,
 		int|null $min = null
 	): void {
-		if ($by < 0) {
-			throw new InvalidArgumentException(
-				data: ['method' => 'Data::decrement', 'argument' => '$by'],
-				translate: false
-			);
-		}
-
+		$this->assertNotNegative($by, 'Data::decrement');
 		$this->adjust($key, $by * -1, $min);
 	}
 
 	/**
 	 * Returns one or all session values by key
 	 *
-	 * @param string|null $key The key to get or null for the entire data array
-	 * @param mixed $default Optional default value to return if the key is not defined
+	 * @param $key The key to get or null for the entire data array
+	 * @param $default Optional default value to return if the key is not defined
 	 */
 	public function get(
 		string|null $key = null,
@@ -128,30 +131,24 @@ class Data
 	/**
 	 * Increments one or multiple session values by a specified amount
 	 *
-	 * @param string|array $key The key to increment or an array with multiple keys
-	 * @param int $by Increment by which amount?
-	 * @param int|null $max Maximum amount (value is not incremented further)
+	 * @param $key The key to increment or an array with multiple keys
+	 * @param $by Amount to increment by
+	 * @param $max Maximum amount (value is not incremented further)
 	 */
 	public function increment(
 		string|array $key,
 		int $by = 1,
 		int|null $max = null
 	): void {
-		if ($by < 0) {
-			throw new InvalidArgumentException(
-				data: ['method' => 'Data::increment', 'argument' => '$by'],
-				translate: false
-			);
-		}
-
+		$this->assertNotNegative($by, 'Data::increment');
 		$this->adjust($key, $by, $max);
 	}
 
 	/**
 	 * Retrieves a value and removes it afterwards
 	 *
-	 * @param string $key The key to get
-	 * @param mixed $default Optional default value to return if the key is not defined
+	 * @param $key The key to get
+	 * @param $default Optional default value to return if the key is not defined
 	 */
 	public function pull(string $key, mixed $default = null): mixed
 	{
@@ -161,6 +158,7 @@ class Data
 
 		$value = $this->get($key, $default);
 		$this->remove($key);
+
 		return $value;
 	}
 
@@ -168,7 +166,7 @@ class Data
 	 * Reloads the data array with the current session data
 	 * Only used internally
 	 *
-	 * @param array $data Currently stored session data
+	 * @param $data Currently stored session data
 	 */
 	public function reload(array $data): void
 	{
@@ -178,7 +176,7 @@ class Data
 	/**
 	 * Removes one or multiple session values by key
 	 *
-	 * @param string|array $key The key to remove or an array with multiple keys
+	 * @param $key The key to remove or an array with multiple keys
 	 */
 	public function remove(string|array $key): void
 	{
@@ -192,8 +190,8 @@ class Data
 	/**
 	 * Sets one or multiple session values by key
 	 *
-	 * @param string|array $key The key to define or a key-value array with multiple values
-	 * @param mixed $value The value for the passed key (only if one $key is passed)
+	 * @param $key The key to define or a key-value array with multiple values
+	 * @param $value The value for the passed key (only if one $key is passed)
 	 */
 	public function set(
 		string|array $key,
