@@ -87,7 +87,7 @@ jobs:
         run: composer check-platform-reqs
 
       - name: Cache PHPUnit results
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5
         with:
           path: ./.phpunit.cache
           key: phpunit-${{ matrix.php }}-${{ hashFiles('composer.lock') }}
@@ -145,7 +145,7 @@ jobs:
           echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
       - name: Cache Psalm analysis data
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5
         with:
           path: ~/.cache/psalm
           key: psalm-${{ env.php }}-${{ hashFiles('composer.lock') }}
@@ -170,12 +170,12 @@ jobs:
 
       - name: Upload code scanning results to GitHub
         if: github.repository == 'getkirby/kirby' && steps.psalm.outcome == 'success'
-        uses: github/codeql-action/upload-sarif@8aad20d150bbac5944a9f9d289da16a4b0d87c1e # v4
+        uses: github/codeql-action/upload-sarif@99df26d4f13ea111d4ec1a7dddef6063f76b97e9 # v4
         with:
           sarif_file: sarif
 
       - name: Cache PHP-CS-Fixer data
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5
         with:
           path: ./.php-cs-fixer.cache
           key: php-cs-fixer-${{ hashFiles('.php-cs-fixer.dist.php') }}
