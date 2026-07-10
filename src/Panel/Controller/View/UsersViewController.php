@@ -83,7 +83,7 @@ class UsersViewController extends ViewController
 		return [
 			'pagination' => $users->pagination()->toArray(),
 			'data'       => $users->values(
-				fn (User $user) => (new UserItem($user))->props()
+				fn (User $user) => (new UserItem($user, image: ['cover' => true]))->props()
 			),
 		];
 	}
