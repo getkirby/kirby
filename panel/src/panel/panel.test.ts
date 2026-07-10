@@ -1,9 +1,16 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import Panel from "./panel";
 
-vi.stubGlobal("location", new URL("https://getkirby.com"));
-
 describe("panel", () => {
+	beforeEach(() => {
+		vi.stubGlobal("location", new URL("https://getkirby.com"));
+	});
+
+	afterEach(() => {
+		vi.unstubAllGlobals();
+		document.title = "";
+	});
+
 	describe("state", () => {
 		it("should have a default state", async () => {
 			const panel = Panel.create(app);
