@@ -56,7 +56,7 @@ class Mime
 		'indd'        => 'application/x-indesign',
 		'java'        => 'text/x-java-source',
 		'js'          => ['text/javascript', 'application/javascript', 'application/x-javascript'],
-		'json'        => 'application/json',
+		'json'        => ['application/json', 'text/json'],
 		'j2k'         => ['image/jp2'],
 		'jp2'         => ['image/jp2'],
 		'jpg'         => ['image/jpeg', 'image/pjpeg'],
