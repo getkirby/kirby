@@ -416,6 +416,37 @@ describe("panel.content", () => {
 				expect.objectContaining({ values: { title: "Draft" } })
 			);
 		});
+
+		it("waits for the API request before emitting the save event", async () => {
+			const panel = createPanel();
+			const content = Content(panel);
+
+			// keep the request pending so we can observe the state in between
+			let resolveRequest: () => void;
+			(panel.api.post as ReturnType<typeof vi.fn>).mockReturnValue(
+				new Promise<void>((resolve) => (resolveRequest = resolve))
+			);
+
+			const promise = content.save({ title: "Draft" });
+
+			// flush pending microtasks
+			await new Promise((resolve) => setTimeout(resolve, 0));
+
+			// the event must not be emitted while the request is still pending
+			expect(panel.events.emit).not.toHaveBeenCalledWith(
+				"content.save",
+				expect.anything()
+			);
+
+			resolveRequest!();
+			await promise;
+
+			// once the request is done, the event is emitted
+			expect(panel.events.emit).toHaveBeenCalledWith(
+				"content.save",
+				expect.objectContaining({ values: { title: "Draft" } })
+			);
+		});
 	});
 
 	describe("saveLazy()", () => {
