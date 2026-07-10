@@ -236,11 +236,6 @@ class Resolver
 	 */
 	protected function resolvePreferredRepresentation(Page $page): Responder|null
 	{
-		// the response depends on the Accept header from now on;
-		// let caches/proxies know so they don't mix up variants
-		$response = $this->kirby->response();
-		$response->header('Vary', 'Accept');
-
 		// walk the accepted MIME types in quality order (highest first)
 		foreach ($this->kirby->visitor()->acceptedMimeTypes() as $accepted) {
 			$mime = $accepted->type();
@@ -261,6 +256,11 @@ class Resolver
 					// no representation for this type, try the next
 					continue;
 				}
+
+				// the response depends on the Accept header from now on;
+				// let caches/proxies know so they don't mix up variants
+				$response = $this->kirby->response();
+				$response->header('Vary', 'Accept');
 
 				return $this->resolvePageResponse($page, $extension);
 			}

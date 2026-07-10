@@ -355,6 +355,32 @@ class ResolverTest extends TestCase
 		$this->assertIsPage($this->resolve($app, 'test'));
 	}
 
+	public function testResolvePageWithoutRepresentations(): void
+	{
+		F::write(static::TMP . '/test.php', 'html');
+
+		$app = $this->app->clone([
+			'roots' => [
+				'templates' => static::TMP
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'template' => 'test'
+					]
+				]
+			]
+		]);
+
+		// the page has no content representations, so the response
+		// never depends on the Accept header and must not vary by it
+		$app->visitor()->acceptedMimeType('application/json');
+		$result = $this->resolve($app, 'test');
+		$this->assertIsPage($result);
+		$this->assertNull($app->response()->header('Vary'));
+	}
+
 	public function testResolveFileDefault(): void
 	{
 		$app = $this->app->clone([
