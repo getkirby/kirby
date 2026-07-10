@@ -33,28 +33,40 @@ class Html extends Xml
 
 	/**
 	 * List of HTML tags that can be used inline
+	 * (text-level semantics as defined by the WHATWG HTML standard,
+	 * plus `img`: https://html.spec.whatwg.org/multipage/text-level-semantics.html)
 	 */
 	public static array $inlineList = [
-		'b',
-		'i',
-		'small',
-		'abbr',
-		'cite',
-		'code',
-		'dfn',
-		'em',
-		'kbd',
-		'strong',
-		'samp',
-		'var',
 		'a',
+		'abbr',
+		'b',
+		'bdi',
 		'bdo',
 		'br',
+		'cite',
+		'code',
+		'data',
+		'dfn',
+		'em',
+		'i',
 		'img',
+		'kbd',
+		'mark',
 		'q',
+		'rp',
+		'rt',
+		'ruby',
+		's',
+		'samp',
+		'small',
 		'span',
+		'strong',
 		'sub',
-		'sup'
+		'sup',
+		'time',
+		'u',
+		'var',
+		'wbr'
 	];
 
 	/**
@@ -69,21 +81,20 @@ class Html extends Xml
 
 	/**
 	 * List of HTML tags that are considered to be self-closing
+	 * (void elements as defined by the WHATWG HTML standard:
+	 * https://html.spec.whatwg.org/multipage/syntax.html#void-elements)
 	 */
 	public static array $voidList = [
 		'area',
 		'base',
 		'br',
 		'col',
-		'command',
 		'embed',
 		'hr',
 		'img',
 		'input',
-		'keygen',
 		'link',
 		'meta',
-		'param',
 		'source',
 		'track',
 		'wbr'
