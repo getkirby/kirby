@@ -276,7 +276,7 @@ class AppResolveTest extends TestCase
 		// xml representation
 		$result = $app->clone()->resolve('test.xml');
 		$this->assertInstanceOf(Responder::class, $result);
-		$this->assertSame('text/xml', $result->type());
+		$this->assertSame('application/xml', $result->type());
 		$this->assertSame('xml', $result->body());
 
 		// representation with custom MIME type
