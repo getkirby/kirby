@@ -187,7 +187,7 @@ class Webauthn extends BaseWebauthn
 			requireUserVerification: true,
 			excludeCredentialIds:    A::map(
 				$credentials,
-				fn($credential) => $this->bufferId($credential)
+				fn ($credential) => $this->bufferId($credential)
 			)
 		));
 	}
@@ -201,7 +201,7 @@ class Webauthn extends BaseWebauthn
 	{
 		$remaining = A::filter(
 			$credentials,
-			fn($credential) => ($credential['id'] ?? null) !== $id
+			fn ($credential) => ($credential['id'] ?? null) !== $id
 		);
 
 		if (count($remaining) === count($credentials)) {

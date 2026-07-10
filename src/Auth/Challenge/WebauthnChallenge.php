@@ -24,7 +24,6 @@ use SensitiveParameter;
  */
 class WebauthnChallenge extends Challenge
 {
-
 	/**
 	 * Generates WebAuthn login options for the user's registered passkeys
 	 * and stores the challenge for later verification

@@ -147,8 +147,8 @@ class WebauthnTest extends TestCase
 		// attestationObject: {fmt:'none', attStmt:{}, authData:<bytes>}
 		$attestation =
 			chr((5 << 5) | 3) .
-			static::cbor(3, 'fmt')      . static::cbor(3, 'none') .
-			static::cbor(3, 'attStmt')  . chr((5 << 5) | 0) .
+			static::cbor(3, 'fmt') . static::cbor(3, 'none') .
+			static::cbor(3, 'attStmt') . chr((5 << 5) | 0) .
 			static::cbor(3, 'authData') . static::cbor(2, $authData);
 
 		$challenge = $webauthn->encode(str_repeat("\x2a", 32));
