@@ -428,8 +428,9 @@ class Fields extends Collection
 
 		if ($errors !==	[]) {
 			throw new InvalidArgumentException(
-				fallback: 'Invalid form with errors',
-				details: $errors
+				key: 'form.incomplete',
+				details: $errors,
+				fallback: 'Invalid form with errors'
 			);
 		}
 	}
