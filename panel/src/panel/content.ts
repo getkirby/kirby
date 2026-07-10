@@ -308,7 +308,9 @@ export default function Content(panel: Panel) {
 				options.silent = true;
 			}
 
-			panel.api.post(
+			// await the response so the request method call isn't
+			// resolved before the content is actually persisted
+			await panel.api.post(
 				api + "/changes/" + method,
 				values,
 				options as Record<string, unknown>
