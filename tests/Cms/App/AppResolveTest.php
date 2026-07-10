@@ -2,16 +2,16 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\LogicException;
 use Kirby\Filesystem\F;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(App::class)]
 class AppResolveTest extends TestCase
 {
-	public const string FIXTURES = __DIR__ . '/fixtures';
-	public const string TMP      = KIRBY_TMP_DIR . '/Cms.AppResolve';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.AppResolve';
 
-	public function testResolveHomePage(): void
+	public function testResolve(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -19,41 +19,37 @@ class AppResolveTest extends TestCase
 			],
 			'site' => [
 				'children' => [
-					[
-						'slug' => 'home'
-					]
+					['slug' => 'test']
 				]
 			]
 		]);
 
-		$result = $app->resolve(null);
-
-		$this->assertIsPage($result);
-		$this->assertTrue($result->isHomePage());
-	}
-
-	public function testResolveMainPage(): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'test'
-					]
-				]
-			]
-		]);
-
+		// the resolver result is passed through
 		$result = $app->resolve('test');
 
 		$this->assertIsPage($result);
 		$this->assertSame('test', $result->id());
 	}
 
-	public function testResolveSubPage(): void
+	public function testResolveMissingPageReturnsNull(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'test']
+				]
+			]
+		]);
+
+		// a NotFoundException from the resolver is turned into null
+		// so the router can fall through to the error page
+		$this->assertNull($app->resolve('does-not-exist'));
+	}
+
+	public function testResolveInaccessibleFileReturnsNull(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -62,614 +58,42 @@ class AppResolveTest extends TestCase
 			'site' => [
 				'children' => [
 					[
-						'slug' => 'test',
-						'children' => [
-							['slug' => 'subpage']
+						'slug'  => 'test',
+						'files' => [
+							['filename' => 'test.jpg']
 						]
 					]
 				]
 			]
 		]);
 
-		$result = $app->resolve('test/subpage');
-
-		$this->assertIsPage($result);
-		$this->assertSame('test/subpage', $result->id());
+		// file redirects are disabled by default, so the file
+		// is not resolvable and null is returned
+		$this->assertNull($app->resolve('test/test.jpg'));
 	}
 
-	public function testResolveDraft(): void
+	public function testResolveMissingHomePageThrows(): void
 	{
 		$app = new App([
 			'roots' => [
 				'index' => '/dev/null'
 			],
 			'site' => [
-				'children' => [
-					[
-						'slug' => 'test',
-						'drafts' => [
-							[
-								'slug'  => 'a-draft',
-							]
-						]
-					]
-				]
+				'children' => []
 			]
 		]);
 
-		$result = $app->resolve('test/a-draft');
-		$this->assertNull($result);
+		// a missing home page is a hard error that is not caught
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('The home page does not exist');
+
+		$app->resolve(null);
 	}
 
-	public function testResolveDraftWithUser(): void
+	public function testResolveWithLanguage(): void
 	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug'   => 'test',
-						'drafts' => [
-							['slug' => 'a-draft']
-						]
-					]
-				]
-			],
-			'users' => [
-				['email' => 'admin@getkirby.com', 'role' => 'admin']
-			]
-		]);
-
-		$app->impersonate('admin@getkirby.com');
-
-		$result = $app->resolve('test/a-draft');
-
-		$this->assertIsPage($result);
-		$this->assertSame('test/a-draft', $result->id());
-	}
-
-	public function testResolveDraftWithUserDeniedByPermission(): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug'   => 'test',
-						'drafts' => [
-							['slug' => 'a-draft']
-						]
-					]
-				]
-			],
-			'roles' => [
-				[
-					'name'        => 'editor',
-					'permissions' => [
-						'pages' => ['access' => false]
-					]
-				]
-			],
-			'users' => [
-				['email' => 'editor@getkirby.com', 'role' => 'editor']
-			]
-		]);
-
-		$app->impersonate('editor@getkirby.com');
-
-		$result = $app->resolve('test/a-draft');
-
-		$this->assertNull($result);
-	}
-
-	public function testResolveDraftWithToken(): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'test',
-						'drafts' => [
-							[
-								'slug'  => 'a-draft',
-							]
-						]
-					]
-				]
-			]
-		]);
-
-		$token = $app->page('test/a-draft')->version()->previewToken();
-		$app   = $app->clone([
-			'request' => [
-				'query' => ['_token' => $token]
-			]
-		]);
-
-		$result = $app->resolve('test/a-draft');
-
-		$this->assertIsPage($result);
-		$this->assertSame('test/a-draft', $result->id());
-	}
-
-	public function testResolveDraftWithTokenBypassesPermission(): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug'   => 'test',
-						'drafts' => [
-							['slug' => 'a-draft']
-						]
-					]
-				]
-			],
-			'roles' => [
-				[
-					'name'        => 'editor',
-					'permissions' => [
-						'pages' => ['access' => false]
-					]
-				]
-			],
-			'users' => [
-				['email' => 'editor@getkirby.com', 'role' => 'editor']
-			]
-		]);
-
-		$token = $app->page('test/a-draft')->version()->previewToken();
-		$app   = $app->clone([
-			'request' => [
-				'query' => ['_token' => $token]
-			]
-		]);
-
-		$app->impersonate('editor@getkirby.com');
-
-		$result = $app->resolve('test/a-draft');
-
-		$this->assertIsPage($result);
-		$this->assertSame('test/a-draft', $result->id());
-	}
-
-	public function testResolvePageRepresentation(): void
-	{
-		F::write($template = static::TMP . '/test.php', 'html');
-		F::write($template = static::TMP . '/test.xml.php', 'xml');
-		F::write(
-			$template = static::TMP . '/test.png.php',
-			'<?php $kirby->response()->type("image/jpeg"); ?>png'
-		);
-
-		$app = new App([
-			'roots' => [
-				'index'     => '/dev/null',
-				'templates' => static::TMP
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug'     => 'test',
-						'template' => 'test'
-					]
-				],
-			]
-		]);
-
-		// missing representation
-		$result = $app->resolve('test.json');
-		$this->assertNull($result);
-		$result = $app->resolve('test.');
-		$this->assertNull($result);
-
-		// xml representation
-		$result = $app->clone()->resolve('test.xml');
-		$this->assertInstanceOf(Responder::class, $result);
-		$this->assertSame('application/xml', $result->type());
-		$this->assertSame('xml', $result->body());
-
-		// representation with custom MIME type
-		$result = $app->clone()->resolve('test.png');
-		$this->assertInstanceOf(Responder::class, $result);
-		$this->assertSame('image/jpeg', $result->type());
-		$this->assertSame('png', $result->body());
-	}
-
-	public function testResolvePageHtmlRepresentation(): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null',
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug'     => 'test',
-						'template' => 'test'
-					]
-				],
-			]
-		]);
-
-		$response = $app->resolve('test.html');
-		$this->assertSame(301, $response->code());
-		$this->assertSame('/test', $response->header('Location'));
-
-	}
-
-	public function testResolveFileDefault(): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null',
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'test',
-						'files' => [
-							['filename' => 'test.jpg']
-						],
-					]
-				]
-			]
-		]);
-
-		// missing file
-		$result = $app->resolve('test/test.png');
-		$this->assertNull($result);
-
-		// existing file
-		$result = $app->resolve('test/test.jpg');
-		$this->assertNull($result);
-	}
-
-	public function testResolveSiteFile(): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null',
-			],
-			'site' => [
-				'files' => [
-					['filename' => 'test.jpg']
-				],
-			],
-			'options' => [
-				'content' => [
-					'fileRedirects' => true
-				]
-			]
-		]);
-
-		// missing file
-		$result = $app->resolve('test.png');
-		$this->assertNull($result);
-
-		// existing file
-		$result = $app->resolve('test.jpg');
-
-		$this->assertIsFile($result);
-		$this->assertSame('test.jpg', $result->id());
-	}
-
-	public function testResolvePageFile(): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null',
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'test',
-						'files' => [
-							['filename' => 'test.jpg']
-						],
-					]
-				],
-				'files' => [
-					['filename' => 'test-site.jpg']
-				]
-			],
-			'options' => [
-				'content' => [
-					'fileRedirects' => true
-				]
-			]
-		]);
-
-		// missing file
-		$result = $app->resolve('test/test.png');
-		$this->assertNull($result);
-
-		// file that only exists on the site
-		$result = $app->resolve('another-page/test-site.jpg');
-		$this->assertNull($result);
-
-		// existing file
-		$result = $app->resolve('test/test.jpg');
-
-		$this->assertIsFile($result);
-		$this->assertSame('test/test.jpg', $result->id());
-	}
-
-	public function testResolveDraftFileWithoutAccess(): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null',
-			],
-			'site' => [
-				'drafts' => [
-					[
-						'slug'  => 'a-draft',
-						'files' => [
-							['filename' => 'test.jpg']
-						],
-					]
-				]
-			],
-			'options' => [
-				'content' => [
-					'fileRedirects' => true
-				]
-			]
-		]);
-
-		// a file on a draft page must not be exposed to
-		// anonymous visitors through clean file URLs
-		$result = $app->resolve('a-draft/test.jpg');
-		$this->assertNull($result);
-	}
-
-	public function testResolveDraftFileWithUser(): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null',
-			],
-			'site' => [
-				'drafts' => [
-					[
-						'slug'  => 'a-draft',
-						'files' => [
-							['filename' => 'test.jpg']
-						],
-					]
-				]
-			],
-			'users' => [
-				['email' => 'admin@getkirby.com', 'role' => 'admin']
-			],
-			'options' => [
-				'content' => [
-					'fileRedirects' => true
-				]
-			]
-		]);
-
-		$app->impersonate('admin@getkirby.com');
-
-		$result = $app->resolve('a-draft/test.jpg');
-
-		$this->assertIsFile($result);
-		$this->assertSame('a-draft/test.jpg', $result->id());
-	}
-
-	public function testResolveDraftFileWithUserDeniedByPermission(): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null',
-			],
-			'site' => [
-				'drafts' => [
-					[
-						'slug'  => 'a-draft',
-						'files' => [
-							['filename' => 'test.jpg']
-						],
-					]
-				]
-			],
-			'roles' => [
-				[
-					'name'        => 'editor',
-					'permissions' => [
-						'pages' => ['access' => false]
-					]
-				]
-			],
-			'users' => [
-				['email' => 'editor@getkirby.com', 'role' => 'editor']
-			],
-			'options' => [
-				'content' => [
-					'fileRedirects' => true
-				]
-			]
-		]);
-
-		$app->impersonate('editor@getkirby.com');
-
-		$result = $app->resolve('a-draft/test.jpg');
-		$this->assertNull($result);
-	}
-
-	public function testResolveDraftFileWithToken(): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null',
-			],
-			'site' => [
-				'drafts' => [
-					[
-						'slug'  => 'a-draft',
-						'files' => [
-							['filename' => 'test.jpg']
-						],
-					]
-				]
-			],
-			'options' => [
-				'content' => [
-					'fileRedirects' => true
-				]
-			]
-		]);
-
-		$token = $app->page('a-draft')->version()->previewToken();
-		$app   = $app->clone([
-			'request' => [
-				'query' => ['_token' => $token]
-			]
-		]);
-
-		$result = $app->resolve('a-draft/test.jpg');
-
-		$this->assertIsFile($result);
-		$this->assertSame('a-draft/test.jpg', $result->id());
-	}
-
-	public function testResolveFileEnabled(): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null',
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'test',
-						'files' => [
-							['filename' => 'test.jpg']
-						],
-					]
-				]
-			],
-			'options' => [
-				'content' => [
-					'fileRedirects' => true
-				]
-			]
-		]);
-
-		// missing file
-		$result1 = $app->resolve('test/test.png');
-		$result2 = $app->resolveFile($app->page('test')->file('test.png'));
-		$this->assertNull($result1);
-		$this->assertNull($result2);
-
-		// existing file
-		$result1 = $app->resolve('test/test.jpg');
-		$result2 = $app->resolveFile($app->page('test')->file('test.jpg'));
-		$this->assertSame($result1, $result2);
-		$this->assertIsFile($result1);
-		$this->assertSame('test/test.jpg', $result1->id());
-	}
-
-	public function testResolveFileDisabled(): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null',
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'test',
-						'files' => [
-							['filename' => 'test.jpg']
-						],
-					]
-				]
-			],
-		]);
-
-		// missing file
-		$result1 = $app->resolve('test/test.png');
-		$result2 = $app->resolveFile($app->page('test')->file('test.png'));
-		$this->assertNull($result1);
-		$this->assertNull($result2);
-
-		// existing file
-		$result1 = $app->resolve('test/test.jpg');
-		$result2 = $app->resolveFile($app->page('test')->file('test.jpg'));
-		$this->assertNull($result1);
-		$this->assertNull($result2);
-	}
-
-	public function testResolveFileClosure(): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null',
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'test',
-						'files' => [
-							[
-								'content'  => [
-									'public' => 'true'
-								],
-								'filename' => 'test-public.jpg'
-							],
-							[
-								'content'  => [
-									'public' => 'false'
-								],
-								'filename' => 'test-private.jpg'
-							]
-						],
-					]
-				]
-			],
-			'options' => [
-				'content' => [
-					'fileRedirects' => fn (File $file): bool => $file->public()->toBool()
-				]
-			]
-		]);
-
-		// missing file
-		$result1 = $app->resolve('test/test.png');
-		$result2 = $app->resolveFile($app->page('test')->file('test.png'));
-		$this->assertNull($result1);
-		$this->assertNull($result2);
-
-		// existing file (allowed)
-		$result1 = $app->resolve('test/test-public.jpg');
-		$result2 = $app->resolveFile($app->page('test')->file('test-public.jpg'));
-		$this->assertSame($result1, $result2);
-		$this->assertIsFile($result1);
-		$this->assertSame('test/test-public.jpg', $result1->id());
-
-		// existing file (not allowed)
-		$result1 = $app->resolve('test/test-private.jpg');
-		$result2 = $app->resolveFile($app->page('test')->file('test-private.jpg'));
-		$this->assertNull($result1);
-		$this->assertNull($result2);
-	}
-
-	public function testResolveMultilangPageRepresentation(): void
-	{
-		F::write($template = static::TMP . '/test.php', 'html');
-		F::write($template = static::TMP . '/test.xml.php', 'xml');
+		F::write(static::TMP . '/test.php', 'html');
+		F::write(static::TMP . '/test.xml.php', 'xml');
 
 		$app = new App([
 			'roots' => [
@@ -699,75 +123,54 @@ class AppResolveTest extends TestCase
 			]
 		]);
 
-		/**
-		 * Default language (DE)
-		 */
-
-		// finding the page
-		$result = $app->resolve('test');
-
-		$this->assertIsPage($result);
-		$this->assertSame('test', $result->id());
-		$this->assertSame('de', $app->language()->code());
-
-		// missing representation
-		$result = $app->resolve('test.json');
-
-		$this->assertNull($result);
-		$this->assertSame('de', $app->language()->code());
-
-		// xml presentation
+		// resolving sets the current language (default)
 		$result = $app->resolve('test.xml');
-
 		$this->assertInstanceOf(Responder::class, $result);
 		$this->assertSame('xml', $result->body());
 		$this->assertSame('de', $app->language()->code());
 
-		/**
-		 * Secondary language (EN)
-		 */
-
-		// finding the page
-		$result = $app->resolve('test', 'en');
-
-		$this->assertIsPage($result);
-		$this->assertSame('test', $result->id());
-		$this->assertSame('en', $app->language()->code());
-
-		// missing representation
-		$result = $app->resolve('test.json', 'en');
-
-		$this->assertNull($result);
-		$this->assertSame('en', $app->language()->code());
-
-		// xml presentation
+		// the language argument switches the current language
 		$result = $app->resolve('test.xml', 'en');
-
 		$this->assertInstanceOf(Responder::class, $result);
 		$this->assertSame('xml', $result->body());
+		$this->assertSame('en', $app->language()->code());
+
+		// a missing representation still returns null in the given language
+		$this->assertNull($app->resolve('test.json', 'en'));
 		$this->assertSame('en', $app->language()->code());
 	}
 
-	public function testRepresentationErrorType(): void
+	public function testResolveFile(): void
 	{
-		$this->app = new App([
-			'templates' => [
-				'blog' => static::FIXTURES . '/templates/test.php',
+		$props = [
+			'roots' => [
+				'index' => '/dev/null'
 			],
 			'site' => [
 				'children' => [
 					[
-						'slug' => 'blog',
-						'template' => 'blog'
+						'slug'  => 'test',
+						'files' => [
+							['filename' => 'test.jpg']
+						]
 					]
 				]
 			]
+		];
+
+		// disabled by default
+		$app = new App($props);
+		$this->assertNull($app->resolveFile($app->page('test')->file('test.jpg')));
+
+		// enabled
+		$app = new App([
+			...$props,
+			'options' => ['content' => ['fileRedirects' => true]]
 		]);
+		$file = $app->page('test')->file('test.jpg');
+		$this->assertSame($file, $app->resolveFile($file));
 
-		$this->assertNull($this->app->resolve('blog.php'));
-
-		// there must be no forced php response type if the
-		// representation cannot be found
-		$this->assertNull($this->app->response()->type());
+		// non-existing file
+		$this->assertNull($app->resolveFile(null));
 	}
 }
