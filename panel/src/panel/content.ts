@@ -308,8 +308,8 @@ export default function Content(panel: Panel) {
 				options.silent = true;
 			}
 
-			// await the response so the save event isn't emitted
-			// before the content is actually persisted
+			// await the response so the request method call isn't
+			// resolved before the content is actually persisted
 			await panel.api.post(
 				api + "/changes/" + method,
 				values,
