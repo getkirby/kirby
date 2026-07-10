@@ -12,6 +12,7 @@ use Kirby\Data\Data;
 use Kirby\Filesystem\Dir;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Locale;
+use Kirby\Toolkit\Str;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
@@ -46,6 +47,8 @@ abstract class TestCase extends BaseTestCase
 			return Data::read($file, fail: false);
 		};
 		I18n::$translations = [];
+
+		Str::$language = [];
 	}
 
 	protected function tearDown(): void

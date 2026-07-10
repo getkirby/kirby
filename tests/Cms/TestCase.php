@@ -6,7 +6,6 @@ use Closure;
 use Kirby\Blueprint\Blueprint;
 use Kirby\TestCase as BaseTestCase;
 use Kirby\Toolkit\I18n;
-use Kirby\Toolkit\Str;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -14,7 +13,7 @@ abstract class TestCase extends BaseTestCase
 
 	protected function setUp(): void
 	{
-		App::destroy();
+		parent::setUp();
 
 		$this->app = new App([
 			'roots' => [
@@ -24,10 +23,7 @@ abstract class TestCase extends BaseTestCase
 
 		Blueprint::$loaded = [];
 
-		I18n::$locale       = null;
-		I18n::$fallback     = 'en';
-		I18n::$translations = [];
-		Str::$language      = [];
+		I18n::$locale = null;
 	}
 
 	protected function tearDown(): void
