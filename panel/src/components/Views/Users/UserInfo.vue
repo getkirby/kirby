@@ -48,6 +48,7 @@ export default {
 	padding-inline: var(--spacing-2);
 	background: var(--item-color-back);
 	box-shadow: var(--shadow);
+	border-radius: var(--rounded);
 }
 .k-user-info-body :where(.k-image-frame, .k-icon-frame) {
 	width: 1.5rem;
