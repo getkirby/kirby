@@ -1,5 +1,5 @@
 <template>
-	<nav class="k-browser">
+	<k-scrollable element="nav" class="k-browser">
 		<div class="k-browser-items">
 			<label
 				v-for="item in items"
@@ -23,7 +23,7 @@
 				</span>
 			</label>
 		</div>
-	</nav>
+	</k-scrollable>
 </template>
 
 <script>

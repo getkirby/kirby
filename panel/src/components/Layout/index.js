@@ -11,6 +11,7 @@ import Header from "./Header.vue";
 import IconFrame from "./Frame/IconFrame.vue";
 import ImageFrame from "./Frame/ImageFrame.vue";
 import Overlay from "./Overlay.vue";
+import Scrollable from "./Scrollable.vue";
 import Stack from "./Stack.vue";
 import Stat from "./Stat.vue";
 import Stats from "./Stats.vue";
@@ -35,6 +36,7 @@ export default {
 		app.component("k-image-frame", ImageFrame);
 		app.component("k-image", ImageFrame);
 		app.component("k-overlay", Overlay);
+		app.component("k-scrollable", Scrollable);
 		app.component("k-stack", Stack);
 		app.component("k-stat", Stat);
 		app.component("k-stats", Stats);

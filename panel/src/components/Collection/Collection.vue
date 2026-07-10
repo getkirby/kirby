@@ -1,38 +1,43 @@
 <template>
-	<div class="k-collection">
-		<k-empty
-			v-if="items.length === 0"
-			v-bind="empty"
-			:layout="layout"
-			v-on="listeners"
-		/>
-
-		<k-items
-			v-else
-			v-bind="{
-				columns,
-				fields,
-				index: resolvedIndex,
-				items,
-				layout,
-				link,
-				selecting,
-				selectmode,
-				selected,
-				size,
-				sortable,
-				theme
-			}"
-			@change="$emit('change', $event)"
-			@item="$emit('item', $event)"
-			@option="onOption"
-			@select="onSelect"
-			@sort="$emit('sort', $event)"
+	<div :data-scrollable="scrollable" class="k-collection">
+		<component
+			:is="scrollable ? 'k-scrollable' : 'div'"
+			class="k-collection-body"
 		>
-			<template v-if="$slots.options" #options="{ item, index }">
-				<slot name="options" v-bind="{ item, index }" />
-			</template>
-		</k-items>
+			<k-empty
+				v-if="items.length === 0"
+				v-bind="empty"
+				:layout="layout"
+				v-on="listeners"
+			/>
+
+			<k-items
+				v-else
+				v-bind="{
+					columns,
+					fields,
+					index: resolvedIndex,
+					items,
+					layout,
+					link,
+					selecting,
+					selectmode,
+					selected,
+					size,
+					sortable,
+					theme
+				}"
+				@change="$emit('change', $event)"
+				@item="$emit('item', $event)"
+				@option="onOption"
+				@select="onSelect"
+				@sort="$emit('sort', $event)"
+			>
+				<template v-if="$slots.options" #options="{ item, index }">
+					<slot name="options" v-bind="{ item, index }" />
+				</template>
+			</k-items>
+		</component>
 
 		<footer v-if="help || hasPagination" class="k-collection-footer">
 			<k-text class="k-help k-collection-help" :html="help" />
@@ -82,7 +87,12 @@ export default {
 		pagination: {
 			type: [Boolean, Object],
 			default: false
-		}
+		},
+		/**
+		 * Whether the items should scroll within the available space
+		 * @since 5.6.0
+		 */
+		scrollable: Boolean
 	},
 	emits: [
 		"action",
@@ -159,6 +169,20 @@ export default {
 </script>
 
 <style>
+.k-collection[data-scrollable="true"] {
+	display: flex;
+	flex-direction: column;
+	min-height: 0;
+}
+.k-collection[data-scrollable="true"] .k-collection-body {
+	flex: 1;
+	min-height: 0;
+}
+/* if body isn't scrollable, render-less wrapper  */
+.k-collection-body:not(.k-scrollable) {
+	display: contents;
+}
+
 .k-collection-footer {
 	display: flex;
 	justify-content: space-between;

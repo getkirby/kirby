@@ -16,6 +16,7 @@
 			}"
 			:items="items"
 			:link="false"
+			:scrollable="true"
 			:pagination="{
 				details: true,
 				dropdown: false,
@@ -175,6 +176,13 @@ export default {
 </script>
 
 <style>
+.k-models-dialog .k-dialog-body {
+	display: flex;
+	flex-direction: column;
+}
+.k-models-dialog .k-collection {
+	flex: 1;
+}
 .k-models-dialog .k-list-item {
 	cursor: pointer;
 }

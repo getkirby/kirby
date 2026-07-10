@@ -1059,7 +1059,7 @@ class FieldsTest extends TestCase
 		);
 
 		$this->expectException(FormValidationException::class);
-		$this->expectExceptionMessage('Form validation failed');
+		$this->expectExceptionMessage('Please fix all form errors');
 
 		$fields->validate();
 	}

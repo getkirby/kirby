@@ -81,6 +81,7 @@ export default {
 	background: var(--dialog-color-back);
 	color: var(--dialog-color-text);
 	width: clamp(10rem, 100%, var(--dialog-width));
+	max-height: calc(100dvh - var(--dialog-margin) - var(--dialog-margin));
 	box-shadow: var(--dialog-shadow);
 	border-radius: var(--dialog-rounded);
 	line-height: 1;

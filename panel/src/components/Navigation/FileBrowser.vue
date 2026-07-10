@@ -4,6 +4,7 @@
 			<aside ref="tree" class="k-file-browser-tree">
 				<k-page-tree
 					:current="page?.value ?? opened"
+					:scrollable="true"
 					@select="selectPage"
 					@toggle-branch="togglePage"
 				/>
@@ -22,9 +23,8 @@
 					@select="selectFile"
 				/>
 			</div>
-			<div class="k-file-browser-pagination" @click.stop>
+			<div v-if="hasPagination" class="k-file-browser-pagination" @click.stop>
 				<k-pagination
-					v-if="pagination"
 					v-bind="pagination"
 					:details="true"
 					@paginate="paginate"
@@ -64,6 +64,11 @@ export default {
 			pagination: null,
 			view: this.opened ? "files" : "tree"
 		};
+	},
+	computed: {
+		hasPagination() {
+			return this.pagination?.total > this.pagination?.limit;
+		}
 	},
 	methods: {
 		paginate(pagination) {
@@ -133,17 +138,35 @@ export default {
 	grid-template-areas:
 		"tree items"
 		"tree pagination";
+	max-height: inherit;
+	min-height: 0;
 }
 
 .k-file-browser-tree {
 	grid-area: tree;
-	padding: var(--spacing-2);
+	display: flex;
+	min-height: 0;
 	border-right: 1px solid var(--color-border);
 }
+.k-file-browser-tree > .k-tree {
+	flex: 1;
+}
+.k-file-browser-tree .k-scrollable {
+	padding: var(--spacing-2);
+}
+
 .k-file-browser-items {
 	grid-area: items;
-	padding: var(--spacing-2);
+	display: flex;
+	flex-direction: column;
+	min-height: 0;
 	background: var(--file-browser-items-color-back);
+}
+.k-file-browser-items > .k-browser {
+	flex: 1;
+}
+.k-file-browser-items > .k-browser {
+	padding: var(--spacing-2);
 }
 .k-file-browser-back-button {
 	display: none;

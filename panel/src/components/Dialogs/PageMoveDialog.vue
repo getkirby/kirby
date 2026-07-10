@@ -51,13 +51,23 @@ export default {
 </script>
 
 <style>
+.k-page-move-dialog .k-dialog-body {
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
 .k-page-move-dialog .k-headline {
+	flex-shrink: 0;
 	margin-bottom: var(--spacing-2);
 }
 .k-page-move-parent {
 	--tree-color-back: var(--input-color-back);
 	--tree-branch-color-back: var(--input-color-back);
 	--tree-branch-hover-color-back: var(--panel-color-back);
+	flex: 1 1 auto;
+	min-height: 0;
+	overflow-y: auto;
+	overscroll-behavior: contain;
 	padding: var(--spacing-3);
 	background: var(--tree-color-back);
 	border-radius: var(--rounded);
