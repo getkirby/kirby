@@ -24,7 +24,7 @@ class SessionsTest extends TestCase
 	protected function setUp(): void
 	{
 		$this->store    = new TestStore();
-		$this->sessions = new Sessions($this->store);
+		$this->sessions = Sessions::factory($this->store);
 
 		MockTime::$time = 1337000000;
 	}
@@ -42,12 +42,12 @@ class SessionsTest extends TestCase
 
 		// custom store
 		$store    = new FileStore(static::FIXTURES);
-		$sessions = new Sessions($store);
+		$sessions = Sessions::factory($store);
 		$this->assertSame($store, $sessions->store());
 
 		// custom path
 		$path     = static::FIXTURES;
-		$sessions = new Sessions($path);
+		$sessions = Sessions::factory($path);
 
 		$reflector = new ReflectionClass(FileStore::class);
 		$pathProperty = $reflector->getProperty('path');
@@ -57,12 +57,12 @@ class SessionsTest extends TestCase
 	public function testConstructorInvalidStore(): void
 	{
 		$this->expectException(TypeError::class);
-		new Sessions(new InvalidStore());
+		Sessions::factory(new InvalidStore());
 	}
 
 	public function testConstructorOptions(): void
 	{
-		$sessions = new Sessions(static::FIXTURES, [
+		$sessions = Sessions::factory(static::FIXTURES, [
 			'mode'         => 'header',
 			'cookieDomain' => 'getkirby.com',
 			'cookieName'   => 'my_cookie_name'
@@ -80,33 +80,33 @@ class SessionsTest extends TestCase
 	{
 		$this->expectException(InvalidArgumentException::class);
 
-		new Sessions(static::FIXTURES, ['mode' => 'invalid']);
+		Sessions::factory(static::FIXTURES, ['mode' => 'invalid']);
 	}
 
 	public function testConstructorInvalidCookieDomain(): void
 	{
 		$this->expectException(TypeError::class);
 
-		new Sessions(static::FIXTURES, ['cookieDomain' => ['foo']]);
+		Sessions::factory(static::FIXTURES, ['cookieDomain' => ['foo']]);
 	}
 
 	public function testConstructorInvalidCookieName(): void
 	{
 		$this->expectException(TypeError::class);
 
-		new Sessions(static::FIXTURES, ['cookieName' => ['foo']]);
+		Sessions::factory(static::FIXTURES, ['cookieName' => ['foo']]);
 	}
 
 	public function testConstructorGarbageCollector(): void
 	{
 		// collect garbage every time
 		$this->store->collectedGarbage = false;
-		$sessions = new Sessions($this->store, ['gcInterval' => 1]);
+		$sessions = Sessions::factory($this->store, ['gcInterval' => 1]);
 		$this->assertTrue($this->store->collectedGarbage);
 
 		// never collect garbage
 		$this->store->collectedGarbage = false;
-		$sessions = new Sessions($this->store, ['gcInterval' => false]);
+		$sessions = Sessions::factory($this->store, ['gcInterval' => false]);
 		$this->assertFalse($this->store->collectedGarbage);
 	}
 
@@ -114,12 +114,12 @@ class SessionsTest extends TestCase
 	{
 		$this->expectException(InvalidArgumentException::class);
 
-		new Sessions(static::FIXTURES, ['gcInterval' => 0]);
+		Sessions::factory(static::FIXTURES, ['gcInterval' => 0]);
 	}
 
 	public function testCreate(): void
 	{
-		$sessions = new Sessions($this->store, ['mode' => 'header']);
+		$sessions = Sessions::factory($this->store, ['mode' => 'header']);
 		$session = $sessions->create();
 		$this->assertSame('header', $session->mode());
 		$this->assertNull($session->token());
@@ -145,29 +145,187 @@ class SessionsTest extends TestCase
 		$this->assertFalse($session->renewable());
 	}
 
-	public function testGet(): void
+	public function testFind(): void
 	{
-		$sessions = new Sessions($this->store, ['mode' => 'header']);
-		$session = $sessions->get('9999999999.valid.' . $this->store->validKey);
+		$sessions = Sessions::factory($this->store, ['mode' => 'header']);
+		$session = $sessions->find('9999999999.valid.' . $this->store->validKey);
 		$this->assertSame('header', $session->mode());
 		$this->assertSame('9999999999.valid.' . $this->store->validKey, $session->token());
 
-		$session1 = $sessions->get('9999999999.valid2.' . $this->store->validKey, 'manual');
+		$session1 = $sessions->find('9999999999.valid2.' . $this->store->validKey, 'manual');
 		$this->assertSame('manual', $session1->mode());
 		$this->assertSame('9999999999.valid2.' . $this->store->validKey, $session1->token());
 
-		$session2 = $sessions->get('9999999999.valid2.' . $this->store->validKey, 'header');
+		$session2 = $sessions->find('9999999999.valid2.' . $this->store->validKey, 'header');
 		$this->assertSame($session1, $session2);
 		$session1->data()->set('someKey', 'someValue');
 		$this->assertSame('someValue', $session2->data()->get('someKey'));
 	}
 
-	public function testGetInvalid(): void
+	public function testFindInvalid(): void
 	{
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionCode('error.session.notFound');
 
-		$this->sessions->get('9999999999.doesNotExist.' . $this->store->validKey);
+		$this->sessions->find('9999999999.doesNotExist.' . $this->store->validKey);
+	}
+
+	public function testGet(): void
+	{
+		Cookie::set('kirby_session', '9999999999.valid.' . $this->store->validKey);
+		$this->setAuthorization('Session 9999999999.valid2.' . $this->store->validKey);
+		$sessions = Sessions::factory($this->store);
+
+		// default: no detection
+		$session = $sessions->get();
+		$this->assertSame('9999999999.valid.' . $this->store->validKey, $session->token());
+
+		// use detection
+		$session = $sessions->get(['detect' => true]);
+		$this->assertSame('9999999999.valid2.' . $this->store->validKey, $session->token());
+
+		// newly created session
+		Cookie::remove('kirby_session');
+		$this->setAuthorization('');
+		$session = $sessions->get();
+		$this->assertNull($session->token());
+		$this->assertSame('cookie', $session->mode());
+		$this->assertSame(1337000000, $session->startTime()); // timestamp is from mock
+		$this->assertSame(7200, $session->duration());
+		$this->assertSame(1337000000 + 7200, $session->expiryTime()); // timestamp is from mock
+		$this->assertSame(1800, $session->timeout());
+		$this->assertTrue($session->renewable());
+
+		// session needs to be the same one each time
+		$this->assertTrue($session === $sessions->get());
+
+		// custom create mode
+		$sessions = Sessions::factory($this->store);
+		$session = $sessions->get(['createMode' => 'manual']);
+		$this->assertNull($session->token());
+		$this->assertSame('manual', $session->mode());
+
+		// getting a session with the default createMode shouldn't change the mode
+		$session = $sessions->get();
+		$this->assertNull($session->token());
+		$this->assertSame('manual', $session->mode());
+
+		// but in the other direction it should
+		$sessions = Sessions::factory($this->store);
+		$session = $sessions->get();
+		$this->assertNull($session->token());
+		$this->assertSame('cookie', $session->mode());
+		$session = $sessions->get(['createMode' => 'manual']);
+		$this->assertNull($session->token());
+		$this->assertSame('manual', $session->mode());
+
+		// but not if the session has already been initialized
+		$sessions = Sessions::factory($this->store);
+		$session = $sessions->get();
+		$this->assertNull($session->token());
+		$this->assertSame('cookie', $session->mode());
+		$session->data()->set('someKey', 'someValue');
+		$this->assertNotNull($session->token());
+		$session = $sessions->get(['createMode' => 'manual']);
+		$this->assertNotNull($session->token());
+		$this->assertSame('cookie', $session->mode());
+
+		// long session defaults
+		$sessions = Sessions::factory($this->store);
+		$session = $sessions->get(['long' => true]);
+		$this->assertNull($session->token());
+		$this->assertSame('cookie', $session->mode());
+		$this->assertSame(1337000000, $session->startTime()); // timestamp is from mock
+		$this->assertSame(1209600, $session->duration());
+		$this->assertSame(1337000000 + 1209600, $session->expiryTime()); // timestamp is from mock
+		$this->assertFalse($session->timeout());
+		$this->assertTrue($session->renewable());
+
+		// session config update when switching to long session
+		$sessions = Sessions::factory($this->store);
+		$session = $sessions->get();
+		$this->assertSame(7200, $session->duration());
+		$this->assertSame(1800, $session->timeout());
+		$session->data()->set('id', 'awesome session');
+		$session->commit();
+		Cookie::set('kirby_session', $session->token());
+		$session = $sessions->get(['long' => true]);
+		$this->assertSame('awesome session', $session->data()->get('id'));
+		$this->assertSame(1209600, $session->duration());
+		$this->assertFalse($session->timeout());
+		Cookie::remove('kirby_session');
+
+		// custom duration and timeout (normal session)
+		$sessions = Sessions::factory($this->store, [
+			'durationNormal' => 1,
+			'durationLong'   => 5,
+			'timeout'        => 1234
+		]);
+		$session = $sessions->get();
+		$this->assertNull($session->token());
+		$this->assertSame('cookie', $session->mode());
+		$this->assertSame(1337000000, $session->startTime()); // timestamp is from mock
+		$this->assertSame(1, $session->duration());
+		$this->assertSame(1337000000 + 1, $session->expiryTime()); // timestamp is from mock
+		$this->assertSame(1234, $session->timeout());
+		$this->assertTrue($session->renewable());
+
+		// custom duration and timeout (long session)
+		$session = $sessions->get(['long' => true]);
+		$this->assertNull($session->token());
+		$this->assertSame('cookie', $session->mode());
+		$this->assertSame(1337000000, $session->startTime()); // timestamp is from mock
+		$this->assertSame(5, $session->duration());
+		$this->assertSame(1337000000 + 5, $session->expiryTime()); // timestamp is from mock
+		$this->assertFalse($session->timeout());
+		$this->assertTrue($session->renewable());
+
+		// session config update when the configuration changed
+		$sessions = Sessions::factory($this->store);
+		$session = $sessions->get();
+		$this->assertSame(7200, $session->duration());
+		$this->assertSame(1800, $session->timeout());
+		$session->data()->set('id', 'awesome session');
+		$session->commit();
+		Cookie::set('kirby_session', $session->token());
+
+		// lower values: shouldn't change anything
+		$sessions = Sessions::factory($this->store, ['durationNormal' => 7100, 'timeout' => 1000]);
+		$session = $sessions->get();
+		$this->assertSame('awesome session', $session->data()->get('id'));
+		$this->assertSame(7200, $session->duration());
+		$this->assertSame(1800, $session->timeout());
+		$session->commit();
+
+		// higher values: should update
+		$sessions = Sessions::factory($this->store, ['durationNormal' => 7300, 'timeout' => 1900]);
+		$session = $sessions->get();
+		$this->assertSame('awesome session', $session->data()->get('id'));
+		$this->assertSame(7300, $session->duration());
+		$this->assertSame(1900, $session->timeout());
+		$session->commit();
+
+		// remove timeout: should update
+		$sessions = Sessions::factory($this->store, ['timeout' => false]);
+		$session = $sessions->get();
+		$this->assertSame('awesome session', $session->data()->get('id'));
+		$this->assertSame(7300, $session->duration());
+		$this->assertFalse($session->timeout());
+		Cookie::remove('kirby_session');
+
+		// timeout for the first time: shouldn't change anything
+		$sessions = Sessions::factory($this->store);
+		$session = $sessions->get(['long' => true]);
+		$this->assertSame(1209600, $session->duration());
+		$this->assertFalse($session->timeout());
+		$session->data()->set('id', 'awesome session');
+		$session->commit();
+		Cookie::set('kirby_session', $session->token());
+		$session = $sessions->get();
+		$this->assertSame('awesome session', $session->data()->get('id'));
+		$this->assertSame(1209600, $session->duration());
+		$this->assertFalse($session->timeout());
+		$session->commit();
 	}
 
 	public function testCurrent(): void
@@ -175,12 +333,12 @@ class SessionsTest extends TestCase
 		Cookie::set('kirby_session', '9999999999.valid.' . $this->store->validKey);
 		$this->setAuthorization('Session 9999999999.valid2.' . $this->store->validKey);
 
-		$sessions = new Sessions($this->store, ['mode' => 'cookie']);
+		$sessions = Sessions::factory($this->store, ['mode' => 'cookie']);
 		$session = $sessions->current();
 		$this->assertSame('cookie', $session->mode());
 		$this->assertSame('9999999999.valid.' . $this->store->validKey, $session->token());
 
-		$sessions = new Sessions($this->store, ['mode' => 'header']);
+		$sessions = Sessions::factory($this->store, ['mode' => 'header']);
 		$session = $sessions->current();
 		$this->assertSame('header', $session->mode());
 		$this->assertSame('9999999999.valid2.' . $this->store->validKey, $session->token());
@@ -203,7 +361,7 @@ class SessionsTest extends TestCase
 		$this->expectException(LogicException::class);
 		$this->expectExceptionCode('error.session.sessions.manualMode');
 
-		$sessions = new Sessions($this->store, ['mode' => 'manual']);
+		$sessions = Sessions::factory($this->store, ['mode' => 'manual']);
 		$sessions->current();
 	}
 
@@ -242,7 +400,7 @@ class SessionsTest extends TestCase
 		$this->assertTrue($this->store->collectedGarbage);
 	}
 
-	public function testUpdateCache(): void
+	public function testUpdate(): void
 	{
 		$sessionsReflector = new ReflectionClass(Sessions::class);
 		$cache = $sessionsReflector->getProperty('cache');
@@ -250,12 +408,12 @@ class SessionsTest extends TestCase
 		$sessionReflector = new ReflectionClass(Session::class);
 		$token = $sessionReflector->getProperty('token');
 
-		$sessions = new Sessions($this->store, ['mode' => 'header']);
-		$session = $sessions->get('9999999999.valid.' . $this->store->validKey);
+		$sessions = Sessions::factory($this->store, ['mode' => 'header']);
+		$session = $sessions->find('9999999999.valid.' . $this->store->validKey);
 		$token->setValue($session, new Token(9999999999, 'valid', 'new-key'));
 
 		$this->assertArrayNotHasKey('9999999999.valid.new-key', $cache->getValue($sessions));
-		$sessions->updateCache($session);
+		$sessions->update($session);
 		$this->assertArrayHasKey('9999999999.valid.new-key', $cache->getValue($sessions));
 		$this->assertSame($session, $cache->getValue($sessions)['9999999999.valid.new-key']);
 	}

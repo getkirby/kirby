@@ -729,7 +729,6 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
         'Kirby\\Sane\\Svg' => __DIR__ . '/../..' . '/src/Sane/Svg.php',
         'Kirby\\Sane\\Svgz' => __DIR__ . '/../..' . '/src/Sane/Svgz.php',
         'Kirby\\Sane\\Xml' => __DIR__ . '/../..' . '/src/Sane/Xml.php',
-        'Kirby\\Session\\AutoSession' => __DIR__ . '/../..' . '/src/Session/AutoSession.php',
         'Kirby\\Session\\Cookie' => __DIR__ . '/../..' . '/src/Session/Cookie.php',
         'Kirby\\Session\\Data' => __DIR__ . '/../..' . '/src/Session/Data.php',
         'Kirby\\Session\\FileStore' => __DIR__ . '/../..' . '/src/Session/FileStore.php',

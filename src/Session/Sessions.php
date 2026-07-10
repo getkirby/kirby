@@ -2,80 +2,46 @@
 
 namespace Kirby\Session;
 
-use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Throwable;
 
 /**
- * Sessions - Base class for all session fiddling
+ * The main session handler for automatic and manual sessions
  *
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
 class Sessions
 {
-	protected array $cache = [];
-	protected Cookie $cookie;
-	protected Header $header;
-	protected string $mode;
-	protected Store $store;
+	public const MODES = ['cookie', 'header', 'manual'];
+	public const DURATION_NORMAL = 7200;
+	public const DURATION_LONG = 1209600;
+	public const TIMEOUT = 1800;
 
 	/**
-	 * Creates a new Sessions instance
-	 *
-	 * @param \Kirby\Session\Store|string $store Store object or a path to the storage directory (uses the FileStore)
-	 * @param array $options Optional additional options:
-	 *                       - `mode`: Default token transmission mode (cookie, header or manual); defaults to `cookie`
-	 *                       - `cookieDomain`: Domain to set the cookie to (this disables the cookie path restriction); defaults to none (default browser behavior)
-	 *                       - `cookieName`: Name to use for the session cookie; defaults to `kirby_session`
-	 *                       - `gcInterval`: How often should the garbage collector be run?; integer or `false` for never; defaults to `100`
+	 * @var array<string, \Kirby\Session\Session>
+	 */
+	protected array $cache = [];
+	protected Session|null $autoSession = null;
+	protected Header|null $header = null;
+
+	/**
+	 * @param 'cookie'|'header'|'manual' $mode
 	 */
 	public function __construct(
-		Store|string $store,
-		array $options = []
+		protected Store $store,
+		protected string $mode = 'cookie',
+		protected Cookie|null $cookie = null,
+		protected int $durationNormal = self::DURATION_NORMAL,
+		protected int $durationLong = self::DURATION_LONG,
+		protected int|false $timeout = self::TIMEOUT,
 	) {
-		$this->store = match (true) {
-			$store instanceof Store => $store,
-			default                 => new FileStore($store),
-		};
-
-		$gcInterval   = $options['gcInterval'] ?? 100;
-		$this->mode   = $options['mode'] ?? 'cookie';
-		$this->header = new Header();
-		$this->cookie = new Cookie(
-			name:   $options['cookieName']   ?? 'kirby_session',
-			domain: $options['cookieDomain'] ?? null
-		);
-
-		// validate options
-		if (in_array($this->mode, ['cookie', 'header', 'manual'], true) === false) {
+		if (in_array($mode, self::MODES, true) === false) {
 			throw new InvalidArgumentException(
 				data: [
 					'method'   => 'Sessions::__construct',
-					'argument' => '$options[\'mode\']'
-				],
-				translate: false
-			);
-		}
-
-		// trigger automatic garbage collection with the given probability
-		if (is_int($gcInterval) === true && $gcInterval > 0) {
-			// convert the interval into a probability between 0 and 1
-			$gcProbability = 1 / $gcInterval;
-
-			// generate a random number
-			$random = mt_rand(1, 10000);
-
-			// $random will be below or equal $gcProbability * 10000 with a probability of $gcProbability
-			if ($random <= $gcProbability * 10000) {
-				$this->collectGarbage();
-			}
-		} elseif ($gcInterval !== false) {
-			throw new InvalidArgumentException(
-				data: [
-					'method'   => 'Sessions::__construct',
-					'argument' => '$options[\'gcInterval\']'
+					'argument' => '$mode'
 				],
 				translate: false
 			);
@@ -86,7 +52,8 @@ class Sessions
 	 * Deletes all expired sessions
 	 *
 	 * If the `gcInterval` is configured, this is done automatically
-	 * on init of the Sessions object.
+	 * with the configured probability when the Sessions object is
+	 * created via `::factory()`.
 	 */
 	public function collectGarbage(): void
 	{
@@ -99,7 +66,7 @@ class Sessions
 	 */
 	public function cookie(): Cookie
 	{
-		return $this->cookie;
+		return $this->cookie ??= new Cookie();
 	}
 
 	/**
@@ -108,7 +75,7 @@ class Sessions
 	 */
 	public function cookieDomain(): string|null
 	{
-		return $this->cookie->domain();
+		return $this->cookie()->domain();
 	}
 
 	/**
@@ -117,7 +84,7 @@ class Sessions
 	 */
 	public function cookieName(): string
 	{
-		return $this->cookie->name();
+		return $this->cookie()->name();
 	}
 
 	/**
@@ -139,14 +106,22 @@ class Sessions
 	}
 
 	/**
-	 * Returns the current session based on the configured token transmission mode:
-	 * - In `cookie` mode: Gets the session from the cookie
-	 * - In `header` mode: Gets the session from the `Authorization` request header
-	 * - In `manual` mode: Fails and throws an Exception
+	 * Creates a new empty session that is transmitted manually
+	 * @since 3.3.1
+	 * @deprecated 6.0.0 Use `::create()` with `['mode' => 'manual']` instead.
+	 */
+	public function createManually(array $options = []): Session
+	{
+		$options['mode'] = 'manual';
+
+		return $this->create($options);
+	}
+
+	/**
+	 * Returns the current session based on the
+	 * configured token transmission $mode
 	 *
-	 * @return \Kirby\Session\Session|null Either the current session or null in case there isn't one
-	 * @throws \Kirby\Exception\Exception
-	 * @throws \Kirby\Exception\LogicException
+	 * @throws \Kirby\Exception\LogicException In `manual` mode
 	 */
 	public function current(): Session|null
 	{
@@ -158,63 +133,127 @@ class Sessions
 				fallback: 'Cannot automatically get current session in manual mode',
 				translate: false,
 				httpCode: 500
-			),
-			// unexpected error that shouldn't occur
-			default => throw new Exception(translate: false) // @codeCoverageIgnore
+			)
 		};
 
-		// no token was found, no session
-		if (is_string($token) === false) {
-			return null;
-		}
-
-		// token was found, try to get the session
 		try {
-			return $this->get($token);
+			if ($token !== null) {
+				return $this->find($token);
+			}
+
+			return null;
+
 		} catch (Throwable) {
 			return null;
 		}
 	}
 
 	/**
-	 * Returns the current session using the following detection order without using the configured mode:
-	 * - Tries to get the session from the `Authorization` request header
-	 * - Tries to get the session from the cookie
-	 * - Otherwise returns null
-	 *
-	 * @return \Kirby\Session\Session|null Either the current session or null in case there isn't one
+	 * Returns the current session by auto-detecting the transmission mode
+	 * @deprecated 6.0.0 Use `::detect()` instead.
 	 */
 	public function currentDetected(): Session|null
 	{
-		$header = $this->header()->get();
-		$cookie = $this->cookie()->get();
+		return $this->detect();
+	}
 
-		// prefer header token over cookie token
-		$token = $header ?? $cookie;
-
-		// no token was found, no session
-		if (is_string($token) === false) {
-			return null;
-		}
-
-		// token was found, try to get the session
+	/**
+	 * Detects the current session from the request, ignoring the
+	 * configured mode: prefers a token from the `Authorization` header
+	 * and otherwise falls back to the cookie.
+	 *
+	 * @since 6.0.0
+	 */
+	public function detect(): Session|null
+	{
 		try {
-			return $this->get($token, match (true) {
-				$header !== null => 'header',
-				$cookie !== null => 'cookie'
-			});
+			$token = $this->header()->get();
+
+			if ($token !== null) {
+				return $this->find($token, 'header');
+			}
+
+			$token = $this->cookie()->get();
+
+			if ($token !== null) {
+				return $this->find($token, 'cookie');
+			}
+
+			return null;
+
 		} catch (Throwable) {
 			return null;
 		}
 	}
 
 	/**
-	 * Returns the specified Session object
+	 * Creates a new Sessions instance from a loose options array
+	 *
+	 * @param \Kirby\Session\Store|string $store Store object or a path to the storage directory (uses the FileStore)
+	 * @param array $options Optional additional options:
+	 *                       - `mode`: Default token transmission mode (cookie, header or manual); defaults to `cookie`
+	 *                       - `cookieDomain`: Domain to set the cookie to (this disables the cookie path restriction); defaults to none (default browser behavior)
+	 *                       - `cookieName`: Name to use for the session cookie; defaults to `kirby_session`
+	 *                       - `gcInterval`: How often should the garbage collector be run?; integer or `false` for never; defaults to `100`
+	 *                       - `durationNormal`: Duration of normal sessions in seconds; defaults to 2 hours
+	 *                       - `durationLong`: Duration of "remember me" sessions in seconds; defaults to 2 weeks
+	 *                       - `timeout`: Activity timeout in seconds (integer or false for none); *only* used for normal sessions; defaults to `1800` (half an hour)
+	 */
+	public static function factory(
+		Store|string $store,
+		array $options = []
+	): static {
+		$cookie = new Cookie(
+			name:   $options['cookieName']   ?? 'kirby_session',
+			domain: $options['cookieDomain'] ?? null
+		);
+
+		if ($store instanceof Store === false) {
+			$store = new FileStore($store);
+		}
+
+		$sessions = new static(
+			store:          $store,
+			mode:           $options['mode'] ?? 'cookie',
+			cookie:         $cookie,
+			durationNormal: $options['durationNormal'] ?? self::DURATION_NORMAL,
+			durationLong:   $options['durationLong']   ?? self::DURATION_LONG,
+			timeout:        $options['timeout']        ?? self::TIMEOUT,
+		);
+
+		// run garbage collection on average once every $gcInterval requests
+		$gcInterval = $options['gcInterval'] ?? 100;
+
+		if ($gcInterval !== false) {
+			if (is_int($gcInterval) === false || $gcInterval < 1) {
+				throw new InvalidArgumentException(
+					data: [
+						'method'   => 'Sessions::factory',
+						'argument' => '$options[\'gcInterval\']'
+					],
+					translate: false
+				);
+			}
+
+			if (mt_rand(1, $gcInterval) === 1) {
+				$sessions->collectGarbage();
+			}
+		}
+
+		return $sessions;
+	}
+
+	/**
+	 * Returns the session for the given token
 	 *
 	 * @param string $token Session token, either including or without the key
 	 * @param string|null $mode Optional transmission mode override
+	 *
+	 * @throws \Kirby\Exception\InvalidArgumentException If the token is malformed
+	 * @throws \Kirby\Exception\NotFoundException If no matching session exists
+	 * @throws \Kirby\Exception\LogicException If the session data is invalid or expired
 	 */
-	public function get(string $token, string|null $mode = null): Session
+	public function find(string $token, string|null $mode = null): Session
 	{
 		return $this->cache[$token] ??= new Session(
 			$this,
@@ -224,12 +263,104 @@ class Sessions
 	}
 
 	/**
+	 * Returns the automatic session for the current request,
+	 * creating a new one on demand if none exists yet
+	 *
+	 * @param array $options Optional additional options:
+	 *                       - `detect`: Whether to allow sessions in the `Authorization` HTTP header (`true`) or only in the session cookie (`false`); defaults to `false`
+	 *                       - `createMode`: When creating a new session, should it be set as a cookie or is it going to be transmitted manually to be used in a header?; defaults to `cookie`
+	 *                       - `long`: Whether the session is a long "remember me" session or a normal session; defaults to `false`
+	 */
+	public function get(array $options = []): Session
+	{
+		// merge options with defaults
+		$options = [
+			'detect'     => false,
+			'createMode' => 'cookie',
+			'long'       => false,
+			...$options
+		];
+
+		// determine expiry options based on the session type
+		if ($options['long'] === true) {
+			$duration = $this->durationLong;
+			$timeout  = false;
+		} else {
+			$duration = $this->durationNormal;
+			$timeout  = $this->timeout;
+		}
+
+		// get the current session
+		$session = match ($options['detect']) {
+			true    => $this->detect(),
+			default => $this->current()
+		};
+
+		// create a new session
+		if ($session === null) {
+			$now = time();
+
+			// memoize the created session so that repeated calls
+			// within the same request don't create multiple
+			$session = $this->autoSession ??= $this->create([
+				'mode'       => $options['createMode'],
+				'startTime'  => $now,
+				'expiryTime' => $now + $duration,
+				'timeout'    => $timeout,
+				'renewable'  => true,
+			]);
+		}
+
+		// update the session configuration if the $options changed
+		// always use the less strict value for compatibility with features
+		// that depend on the less strict behavior
+		if ($duration > $session->duration()) {
+			// the duration needs to be extended
+			$session->duration($duration);
+		}
+
+		if ($session->timeout() !== false) {
+			// a timeout exists
+			if ($timeout === false) {
+				// it needs to be completely disabled
+				$session->timeout(false);
+			} elseif ($timeout > $session->timeout()) {
+				// it needs to be extended
+				$session->timeout($timeout);
+			}
+		}
+
+		// if the session has been created and was not yet initialized,
+		// update the mode to a custom mode;
+		// don't update back to cookie mode because the
+		// "special" behavior always wins
+		if (
+			$session->token() === null &&
+			$options['createMode'] !== 'cookie'
+		) {
+			$session->mode($options['createMode']);
+		}
+
+		return $session;
+	}
+
+	/**
+	 * Returns the session for the given token in manual transmission mode
+	 * @since 3.3.1
+	 * @deprecated 6.0.0 Use `::find()` instead.
+	 */
+	public function getManually(string $token): Session
+	{
+		return $this->find($token, 'manual');
+	}
+
+	/**
 	 * Returns the session header instance
 	 * @since 6.0.0
 	 */
 	public function header(): Header
 	{
-		return $this->header;
+		return $this->header ??= new Header();
 	}
 
 	/**
@@ -241,14 +372,27 @@ class Sessions
 	}
 
 	/**
+	 * Tracks a newly created session or a session with a
+	 * regenerated token in the instance cache (keyed by its
+	 * current token) so that `::find()` keeps returning the
+	 * same instance after the token changed
+	 *
+	 * @since 6.0.0
+	 * @internal
+	 */
+	public function update(Session $session): void
+	{
+		$this->cache[$session->token()] = $session;
+	}
+
+	/**
 	 * Updates the instance cache with a newly created
 	 * session or a session with a regenerated token
 	 *
-	 * @internal
-	 * @param \Kirby\Session\Session $session Session instance to push to the cache
+	 * @deprecated 6.0.0 Use `::update()` instead.
 	 */
 	public function updateCache(Session $session): void
 	{
-		$this->cache[$session->token()] = $session;
+		$this->update($session);
 	}
 }

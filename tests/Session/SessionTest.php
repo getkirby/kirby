@@ -23,7 +23,7 @@ class SessionTest extends TestCase
 	protected function setUp(): void
 	{
 		$this->store    = new TestStore();
-		$this->sessions = new Sessions($this->store);
+		$this->sessions = Sessions::factory($this->store);
 
 		MockTime::$time = 1337000000;
 	}

@@ -26,8 +26,8 @@ use Kirby\Http\Uri;
 use Kirby\Http\Visitor;
 use Kirby\Panel\Panel;
 use Kirby\Query\Query;
-use Kirby\Session\AutoSession;
 use Kirby\Session\Session;
+use Kirby\Session\Sessions;
 use Kirby\Template\Snippet;
 use Kirby\Template\Stack;
 use Kirby\Template\Template;
@@ -87,7 +87,7 @@ class App
 	protected Ingredients $roots;
 	protected array|null $routes = null;
 	protected Router|null $router = null;
-	protected AutoSession|null $sessionHandler = null;
+	protected Sessions|null $sessions = null;
 	protected Site|null $site = null;
 	protected System|null $system = null;
 	protected Ingredients $urls;
@@ -1471,7 +1471,7 @@ class App
 	 */
 	public function session(array $options = []): Session
 	{
-		$session = $this->sessionHandler()->get($options);
+		$session = $this->sessions()->get($options);
 
 		// disable caching for sessions that use the `Authorization` header;
 		// cookie sessions are already covered by the `Cookie` class
@@ -1485,10 +1485,20 @@ class App
 
 	/**
 	 * Returns the session handler
+	 * @deprecated 6.0.0 Use ::sessions() instead.
 	 */
-	public function sessionHandler(): AutoSession
+	public function sessionHandler(): Sessions
 	{
-		return $this->sessionHandler ??= new AutoSession(
+		return $this->sessions();
+	}
+
+	/**
+	 * Returns the sessions handler
+	 * @since 6.0.0
+	 */
+	public function sessions(): Sessions
+	{
+		return $this->sessions ??= Sessions::factory(
 			($this->component('session::store'))($this),
 			$this->option('session', [])
 		);
