@@ -4,19 +4,10 @@ namespace Kirby\Text\Markdown\Block;
 
 use Kirby\Text\Markdown\AST\Element;
 use Kirby\Text\Markdown\AST\Node;
-use Kirby\Text\Markdown\Block;
 use Kirby\Text\Markdown\Parser\Line;
 
 /**
  * Table
- *
- * First line contains column headers; second line contains
- * a mandatory separator line between the headers and the content;
- * each following line is a row in the table. Columns are always
- * separated by the pipe (|) character.
- *
- * You can apply span-level formatting to the content
- * of each cell using regular Markdown syntax.
  *
  * @example
  * First Header  | Second Header
@@ -28,11 +19,61 @@ use Kirby\Text\Markdown\Parser\Line;
  * @license   https://opensource.org/licenses/MIT
  * @since     6.0.0
  */
-class Table extends Block
+class Table extends LeafBlock
 {
 	public static function markers(): array
 	{
 		return ['-', ':', '|'];
+	}
+
+	/**
+	 * Parses the delimiter row into an alignment per column.
+	 *
+	 * @return list<string|null>|false
+	 */
+	protected function alignments(string $text): array|false
+	{
+		$alignments = [];
+		$divider    = trim(trim($text), '|');
+
+		foreach (explode('|', $divider) as $cell) {
+			$cell = trim($cell);
+
+			if ($cell === '') {
+				return false;
+			}
+
+			$alignment = null;
+
+			if ($cell[0] === ':') {
+				$alignment = 'left';
+			}
+
+			if (substr($cell, -1) === ':') {
+				$alignment = $alignment === 'left' ? 'center' : 'right';
+			}
+
+			$alignments[] = $alignment;
+		}
+
+		return $alignments;
+	}
+
+	/**
+	 * Builds a single header or body cell (`<th>` / `<td>`),
+	 * applying the column's text-alignment style when set.
+	 */
+	protected function cell(
+		string $name,
+		string $content,
+		string|null $alignment
+	): Element {
+		return new Element(
+			name:       $name,
+			attributes: $alignment !== null ? ['style' => 'text-align: ' . $alignment . ';'] : [],
+			multiline:  true,
+			content:    trim($content)
+		);
 	}
 
 	public function consume(
@@ -131,41 +172,6 @@ class Table extends Block
 	}
 
 	/**
-	 * Parses the delimiter row into one alignment per column
-	 * (`left`, `center`, `right` or `null`),
-	 * or `false` if a cell is empty.
-	 *
-	 * @return list<string|null>|false
-	 */
-	protected function alignments(string $text): array|false
-	{
-		$alignments = [];
-		$divider    = trim(trim($text), '|');
-
-		foreach (explode('|', $divider) as $cell) {
-			$cell = trim($cell);
-
-			if ($cell === '') {
-				return false;
-			}
-
-			$alignment = null;
-
-			if ($cell[0] === ':') {
-				$alignment = 'left';
-			}
-
-			if (substr($cell, -1) === ':') {
-				$alignment = $alignment === 'left' ? 'center' : 'right';
-			}
-
-			$alignments[] = $alignment;
-		}
-
-		return $alignments;
-	}
-
-	/**
 	 * Builds a body row (`<tr>`) from a line,
 	 * splitting it into `<td>` cells.
 	 *
@@ -185,22 +191,5 @@ class Table extends Block
 		}
 
 		return new Element(name: 'tr', children: $elements, multiline: true);
-	}
-
-	/**
-	 * Builds a single header or body cell (`<th>` / `<td>`),
-	 * applying the column's text-alignment style when set.
-	 */
-	protected function cell(
-		string $name,
-		string $content,
-		string|null $alignment
-	): Element {
-		return new Element(
-			name:       $name,
-			attributes: $alignment !== null ? ['style' => 'text-align: ' . $alignment . ';'] : [],
-			multiline:  true,
-			content:    trim($content)
-		);
 	}
 }

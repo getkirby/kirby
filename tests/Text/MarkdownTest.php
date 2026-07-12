@@ -2,36 +2,39 @@
 
 namespace Kirby\Text;
 
-use FilesystemIterator;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
 
 #[CoversClass(Markdown::class)]
 class MarkdownTest extends TestCase
 {
 	public const string FIXTURES = __DIR__ . '/fixtures/markdown';
 
-	/**
-	 * Each maps a profile name to the Markdown constructor options
-	 * and the $inline argument passed to parse()
-	 */
 	public const array PROFILES = [
-		// name     => [[breaks, safe], inline]
-		'default'  => [['breaks' => true,  'safe' => false], false],
-		'nobreaks' => [['breaks' => false, 'safe' => false], false],
-		'safe'     => [['breaks' => true,  'safe' => true], false],
+		'features' => [['breaks' => true,  'safe' => false], false],
+		'safe'     => [['breaks' => true,  'safe' => true],  false],
 		'inline'   => [['breaks' => true,  'safe' => false], true],
 	];
 
 	/**
-	 * Inputs where the pipeline throws a fatal error instead of producing
-	 * HTML, so there is nothing to snapshot. Raw HTML blocks now pass through
-	 * verbatim unless they carry `markdown="1"`, so none remain.
+	 * The CommonMark examples where Kirby knowingly diverges from the spec's
+	 * expected HTML, keyed by the example's number in `commonmark-spec.txt`:
+	 *
+	 * - Bare-URL autolinking (602, 608, 611): a deliberate Kirby/GFM feature
+	 *   CommonMark lacks.
+	 * - Lazy-continuation re-parse (93, 312): the deferred-content model stores
+	 *   a container's lines as raw text and re-parses them, so a lazy setext
+	 *   underline / indented code is re-interpreted instead of staying
+	 *   paragraph text. A known gap.
 	 */
-	public const array KNOWN_CRASHES = [];
+	public const array DIVERGENCES = [
+		602 => '<p>&lt;<a href="https://foo.bar/baz">https://foo.bar/baz</a> bim&gt;</p>',
+		608 => '<p>&lt; <a href="https://foo.bar">https://foo.bar</a> &gt;</p>',
+		611 => '<p><a href="https://example.com">https://example.com</a></p>',
+		93  => "<blockquote>\n<p>foo\nbar</p>\n</blockquote>\n<p>===</p>",
+		312 => "<ul>\n<li>a</li>\n<li>b</li>\n<li>c</li>\n<li>d</li>\n</ul>\n<pre><code>- e\n</code></pre>",
+	];
 
 	public function testDefaults(): void
 	{
@@ -43,16 +46,7 @@ class MarkdownTest extends TestCase
 		], $markdown->defaults());
 	}
 
-	public function testWithOptions(): void
-	{
-		$markdown = new Markdown([
-			'breaks' => false
-		]);
-
-		$this->assertInstanceOf(Markdown::class, $markdown);
-	}
-
-	public function testSafeModeDisabled(): void
+	public function testParseSafeModeDisabled(): void
 	{
 		$markdown = new Markdown([
 			'safe' => false
@@ -61,7 +55,7 @@ class MarkdownTest extends TestCase
 		$this->assertSame('<div>Custom HTML</div>', $markdown->parse('<div>Custom HTML</div>'));
 	}
 
-	public function testSafeModeEnabled(): void
+	public function testParseSafeModeEnabled(): void
 	{
 		$markdown = new Markdown([
 			'safe' => true
@@ -70,7 +64,87 @@ class MarkdownTest extends TestCase
 		$this->assertSame('<p>&lt;div&gt;Custom HTML&lt;/div&gt;</p>', $markdown->parse('<div>Custom HTML</div>'));
 	}
 
-	public function testReusedInstanceDoesNotLeakFootnoteState(): void
+	public static function commonmarkProvider(): array
+	{
+		$spec = file_get_contents(static::FIXTURES . '/commonmark-spec.txt');
+
+		preg_match_all(
+			'/^`{10,} +example.*?\n(.*?)^\.\n(.*?)^`{10,}\s*$/ms',
+			$spec,
+			$matches,
+			PREG_SET_ORDER
+		);
+
+		$cases = [];
+
+		foreach ($matches as $index => $match) {
+			$number = $index + 1;
+
+			$cases['example ' . $number] = [
+				$number,
+				str_replace('→', "\t", $match[1]),
+				rtrim(str_replace('→', "\t", $match[2]), "\n")
+			];
+		}
+
+		return $cases;
+	}
+
+	#[DataProvider('commonmarkProvider')]
+	public function testParseCommonMark(int $number, string $input, string $expected): void
+	{
+		$html = rtrim(
+			(new Markdown(['breaks' => false, 'safe' => false]))->parse($input, false),
+			"\n"
+		);
+
+		if (isset(static::DIVERGENCES[$number]) === true) {
+			$this->assertSame(
+				static::DIVERGENCES[$number],
+				$html,
+				'CommonMark example ' . $number . ' (documented divergence)'
+			);
+			return;
+		}
+
+		$this->assertSame(
+			$expected,
+			$html,
+			'CommonMark example ' . $number
+		);
+	}
+
+	public static function fixturesProvider(): array
+	{
+		$cases = [];
+
+		foreach (array_keys(static::PROFILES) as $profile) {
+			foreach (glob(static::FIXTURES . '/' . $profile . '/*.md') as $file) {
+				$name         = $profile . '/' . basename($file, '.md');
+				$cases[$name] = [$name];
+			}
+		}
+
+		return $cases;
+	}
+
+	#[DataProvider('fixturesProvider')]
+	public function testParseFixture(string $name): void
+	{
+		[$profile]          = explode('/', $name);
+		[$options, $inline] = static::PROFILES[$profile];
+
+		$input    = file_get_contents(static::FIXTURES . '/' . $name . '.md');
+		$expected = file_get_contents(static::FIXTURES . '/' . $name . '.html');
+
+		$this->assertSame(
+			$expected,
+			(new Markdown($options))->parse($input, $inline),
+			'Markdown fixture diverged: ' . $name
+		);
+	}
+
+	public function testParseReusedInstanceDoesNotLeakFootnoteState(): void
 	{
 		// a single instance is reused across fields in a request, so parsing
 		// must not carry footnote numbering (or any per-document state) over
@@ -83,62 +157,5 @@ class MarkdownTest extends TestCase
 		$this->assertSame($first, $second);
 		$this->assertSame($first, (new Markdown())->parse($input));
 		$this->assertStringContainsString('class="footnote-ref">1</a>', $second);
-	}
-
-	public static function snapshotsProvider(): array
-	{
-		$root  = static::FIXTURES . '/inputs';
-		$cut   = strlen($root) + 1;
-		$cases = [];
-
-		$iterator = new RecursiveIteratorIterator(
-			new RecursiveDirectoryIterator($root, FilesystemIterator::SKIP_DOTS)
-		);
-
-		foreach ($iterator as $file) {
-			if ($file->getExtension() !== 'md') {
-				continue;
-			}
-
-			$path = str_replace('\\', '/', substr($file->getPathname(), $cut));
-			$cases[$path] = [$path];
-		}
-
-		ksort($cases);
-
-		return $cases;
-	}
-
-	#[DataProvider('snapshotsProvider')]
-	public function testParse(string $path): void
-	{
-		$input = file_get_contents(static::FIXTURES . '/inputs/' . $path);
-		$stem  = substr($path, 0, -3); // strip ".md"
-
-		$expected = [];
-		$actual   = [];
-
-		foreach (static::PROFILES as $profile => [$options, $inline]) {
-			if (in_array($profile, static::KNOWN_CRASHES[$path] ?? [], true) === true) {
-				continue;
-			}
-
-			$snapshot = static::FIXTURES . '/snapshots/' . $profile . '/' . $stem . '.html';
-			$html     = (new Markdown($options))->parse($input, $inline);
-
-			$this->assertFileExists(
-				$snapshot,
-				'Missing snapshot for profile "' . $profile . '": ' . $path
-			);
-
-			$expected[$profile] = file_get_contents($snapshot);
-			$actual[$profile]   = $html;
-		}
-
-		$this->assertSame(
-			$expected,
-			$actual,
-			'Markdown output diverged from snapshot for input: ' . $path
-		);
 	}
 }

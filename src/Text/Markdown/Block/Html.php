@@ -7,16 +7,12 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Text\Markdown\AST\Element;
 use Kirby\Text\Markdown\AST\Html as HtmlNode;
 use Kirby\Text\Markdown\AST\Node;
-use Kirby\Text\Markdown\Block;
-use Kirby\Text\Markdown\Parser\HtmlElements;
 use Kirby\Text\Markdown\Parser\Line;
 use Kirby\Toolkit\Dom;
-use Kirby\Toolkit\Html as ToolkitHtml;
 
 /**
  * Raw HTML block
  *
- * A line that opens with a non-text-level HTML tag.
  * Re-parses the content of any element marked `markdown="1"`.
  *
  * @example
@@ -27,15 +23,32 @@ use Kirby\Toolkit\Html as ToolkitHtml;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  * @since     6.0.0
- *
- * @todo `HtmlElements::TEXT_LEVEL` and `::ATTRIBUTE_REGEX` still live in the
- *       parser: `Toolkit\Html::$inlineList` omits inline tags (`del`, `ins`,
- *       `big`, `font`, …) the parser needs for CommonMark parity, and there is
- *       no `Toolkit\Html` attribute pattern to reuse.
  */
-class Html extends Block
+class Html extends LeafBlock
 {
-	protected const PATTERN = '/^<(\w[\w-]*)(?:[ ]*' . HtmlElements::ATTRIBUTE_REGEX . ')*[ ]*(\/)?>/';
+	/**
+	 * Pattern matching a single HTML attribute,
+	 * used to recognize complete tags and `markdown=` elements.
+	 */
+	protected const string ATTRIBUTE = '[a-zA-Z_:][\w:.-]*+(?:\s*+=\s*+(?:[^"\'=<>`\s]+|"[^"]*+"|\'[^\']*+\'))?+';
+
+	/**
+	 * Tags whose content is verbatim; the block ends on their
+	 * closing tag (CommonMark HTML block type 1).
+	 */
+	protected const string RAW = '/^<(?:script|pre|style|textarea)(?:\s|>|$)/i';
+
+	/**
+	 * Block-level tag names that open an HTML block ending at the
+	 * next blank line (CommonMark HTML block type 6).
+	 */
+	protected const string BLOCK = '/^<\/?(?:address|article|aside|base|basefont|blockquote|body|caption|center|col|colgroup|dd|details|dialog|dir|div|dl|dt|fieldset|figcaption|figure|footer|form|frame|frameset|h[1-6]|head|header|hr|html|iframe|legend|li|link|main|menu|menuitem|nav|noframes|ol|optgroup|option|p|param|section|summary|table|tbody|td|tfoot|th|thead|title|tr|track|ul)(?:\s|\/?>|$)/i';
+
+	/**
+	 * A complete open or closing tag filling the whole line
+	 * (CommonMark HTML block type 7).
+	 */
+	protected const string TAG = '/^(?:<[a-zA-Z][a-zA-Z0-9-]*+(?:\s+' . self::ATTRIBUTE . ')*+\s*+\/?>|<\/[a-zA-Z][a-zA-Z0-9-]*+\s*+>)\s*+$/';
 
 	public static function markers(): array
 	{
@@ -46,46 +59,82 @@ class Html extends Block
 		Line $line,
 		Element|null $paragraph = null
 	): Node|false {
-		if ($this->parser->safe === true) {
+		// raw HTML is not emitted in safe mode; an HTML block may be
+		// indented up to three spaces (four would be indented code)
+		if ($this->parser->safe === true || $line->indent() >= 4) {
 			return false;
 		}
 
-		$matches = $line->match(self::PATTERN);
+		// may not interrupt a paragraph that is still being
+		// continued; a preceding blank line has already ended it
+		$continuation = $paragraph !== null && $line->isBlank(offset: -1) === false;
 
-		if ($matches === null) {
+		[$end, $type] = $this->start($line->text(), $continuation);
+
+		if ($type === 0) {
 			return false;
 		}
 
-		$name = $matches[1];
-
-		if (in_array(strtolower($name), HtmlElements::TEXT_LEVEL) === true) {
-			return false;
+		// Kirby/ParsedownExtra extension: an element carrying a
+		// `markdown=` attribute captures its whole content across blank
+		// lines so `markdown="1"` can re-parse it
+		if (
+			($type === 6 || $type === 7) &&
+			preg_match('/^<(\w[\w-]*)[^>]*markdown=/i', $line->text(), $tag) === 1
+		) {
+			$element = $this->element($line, $tag[1]);
+			$tag     = $this->tag($element);
+			return new HtmlNode($tag, break: true);
 		}
 
-		$html      = $line->text();
-		$closed    = false;
-		$void      = false;
-		$remainder = $line->slice(strlen($matches[0]));
+		// the opening line is kept with its original indentation
+		$html = $line->body();
 
-		if (trim($remainder) === '') {
-			if (
-				isset($matches[2]) === true ||
-				in_array($name, ToolkitHtml::$voidList) === true
-			) {
-				$closed = true;
-				$void   = true;
-			}
-		} else {
-			if (
-				isset($matches[2]) === true ||
-				in_array($name, ToolkitHtml::$voidList) === true
-			) {
-				return false;
+		// types 1–5 may already close on their opening line
+		if ($end !== null && preg_match($end, $line->text()) === 1) {
+			$line->next();
+			return new HtmlNode($this->tag($html), break: true);
+		}
+
+		$line->next();
+
+		while ($line->valid() === true) {
+			// types 6–7 end at a blank line, which is not consumed
+			if ($end === null && $line->isBlank() === true) {
+				break;
 			}
 
-			if (preg_match('/<\/' . $name . '>[ ]*$/i', $remainder) === 1) {
-				$closed = true;
+			$html .= "\n" . $line->body();
+
+			// types 1–5 end at (and include) the line with the closer
+			if ($end !== null && preg_match($end, $line->text()) === 1) {
+				$line->next();
+				break;
 			}
+
+			$line->next();
+		}
+
+		$tag = $this->tag($html);
+
+		return new HtmlNode($tag, break: true);
+	}
+
+	/**
+	 * Captures a full HTML element by matching its closing tag at
+	 * depth zero, keeping interior blank lines. Used only for the
+	 * `markdown=` extension, where the whole element is re-parsed.
+	 */
+	protected function element(Line $line, string $tag): string
+	{
+		$html  = $line->body();
+		$open  = '/^<' . $tag . '(?:[ ]*' . self::ATTRIBUTE . ')*+[ ]*>/i';
+		$close = '/<\/' . $tag . '>[ ]*$/i';
+
+		// the element may already close on its opening line
+		if (preg_match($close, $line->text()) === 1) {
+			$line->next();
+			return $html;
 		}
 
 		$line->next();
@@ -93,13 +142,7 @@ class Html extends Block
 		$depth       = 0;
 		$interrupted = 0;
 
-		// $name is fixed for the whole block, so build the open/close tag
-		// patterns once instead of rebuilding them on every line read
-		$open  = '/^<' . $name . '(?:[ ]*' . HtmlElements::ATTRIBUTE_REGEX . ')*[ ]*>/i';
-		$close = '/<\/' . $name . '>[ ]*$/i';
-
-		// read until the matching closing tag at depth 0 (not a blank line)
-		while ($closed === false && $line->valid() === true) {
+		while ($line->valid() === true) {
 			if ($line->isBlank() === true) {
 				$interrupted++;
 				$line->next();
@@ -110,6 +153,8 @@ class Html extends Block
 				$depth++;
 			}
 
+			$closed = false;
+
 			if ($line->matches($close) === true) {
 				if ($depth > 0) {
 					$depth--;
@@ -119,32 +164,51 @@ class Html extends Block
 			}
 
 			if ($interrupted > 0) {
-				$html       .= "\n";
+				$html       .= str_repeat("\n", $interrupted);
 				$interrupted = 0;
 			}
 
 			$html .= "\n" . $line->body();
 			$line->next();
+
+			if ($closed === true) {
+				break;
+			}
 		}
 
-		// resolve any `markdown="1"` content
-		if ($void === false) {
-			$html = $this->tag($html);
-		}
-
-		return new HtmlNode($html, break: true);
+		return $html;
 	}
 
 	/**
-	 * Recursively walks the block's HTML and re-parses
-	 * the content of any element carrying `markdown="1"`
-	 * as Markdown, leaving the rest untouched.
+	 * Classifies the HTML block opened by the given line, returning
+	 * `[end, type]`: the end-condition pattern and the CommonMark
+	 * block type, `0` when the line opens none.
+	 *
+	 * @return array{string|null, int}
+	 */
+	protected function start(string $text, bool $continuation): array
+	{
+		return match (true) {
+			preg_match(self::RAW, $text) === 1       => ['/<\/(?:script|pre|style|textarea)>/i', 1],
+			str_starts_with($text, '<!--')           => ['/-->/', 2],
+			str_starts_with($text, '<?')             => ['/\?>/', 3],
+			preg_match('/^<![a-zA-Z]/', $text) === 1 => ['/>/', 4],
+			str_starts_with($text, '<![CDATA[')      => ['/\]\]>/', 5],
+			preg_match(self::BLOCK, $text) === 1     => [null, 6],
+			// type 7 may not interrupt a paragraph continuation
+			$continuation === false &&
+				preg_match(self::TAG, $text) === 1   => [null, 7],
+			default                                  => [null, 0]
+		};
+	}
+
+	/**
+	 * Re-parses the content of every element carrying `markdown="1"`
+	 * as Markdown (via a DOM round-trip), leaving the rest of the
+	 * HTML untouched.
 	 */
 	protected function tag(string $html): string
 	{
-		// the DOM round-trip exists only to re-parse `markdown="1"` content;
-		// a block without a `markdown=` attribute is passed through verbatim
-		// instead of being normalized (and possibly mangled) by DOMDocument
 		if (str_contains($html, 'markdown=') === false) {
 			return $html;
 		}
@@ -165,34 +229,25 @@ class Html extends Block
 			return $html; // @codeCoverageIgnore
 		}
 
-		$text = '';
+		// re-parse the content of every outermost `markdown="1"` element (a
+		// nested one is swallowed by its ancestor's re-parse). The parsed
+		// markup is swapped back in through a placeholder so the DOM
+		// serializer does not HTML-encode it.
+		$swaps = [];
+		$nonce = bin2hex(random_bytes(8));
 
-		if ($root->getAttribute('markdown') === '1') {
-			$text = "\n" . $this->parser->parse($dom->innerMarkup($root)) . "\n";
-
-			$root->removeAttribute('markdown');
-		} else {
-			foreach ($root->childNodes as $node) {
-				$nodeMarkup = $document->saveHTML($node);
-
-				if (
-					$node instanceof DOMElement &&
-					in_array($node->nodeName, HtmlElements::TEXT_LEVEL, true) === false
-				) {
-					$text .= $this->tag($nodeMarkup);
-				} else {
-					$text .= $nodeMarkup;
-				}
+		foreach ($dom->query('//*[@markdown="1"][not(ancestor::*[@markdown="1"])]') as $element) {
+			if ($element instanceof DOMElement === false) {
+				continue; // @codeCoverageIgnore
 			}
+
+			$placeholder         = '{{' . $nonce . count($swaps) . '}}';
+			$swaps[$placeholder] = "\n" . $this->parser->parse($dom->innerMarkup($element)) . "\n";
+
+			$element->removeAttribute('markdown');
+			$element->nodeValue = $placeholder;
 		}
 
-		// serialize the wrapper with a placeholder, then swap the
-		// processed markup back in so it does not get HTML-encoded
-		$root->nodeValue = 'placeholder\x1A';
-
-		$html = $document->saveHTML($root);
-		$html = str_replace('placeholder\x1A', $text, $html);
-
-		return $html;
+		return strtr($document->saveHTML($root), $swaps);
 	}
 }

@@ -10,7 +10,7 @@ abstract class TestCase extends BaseTestCase
 	 * Asserts that the given marker character dispatches to the
 	 * given block or span component.
 	 *
-	 * @param class-string<Block|Span> $component
+	 * @param class-string<Block|Inline> $component
 	 */
 	public function assertMarkerDispatchesComponent(
 		string $component,
@@ -20,7 +20,7 @@ abstract class TestCase extends BaseTestCase
 
 		$candidates = is_subclass_of($component, Block::class) === true
 			? $grammar->blocks($marker)
-			: $grammar->spans($marker);
+			: $grammar->inlines($marker);
 
 		$classes = array_map(
 			fn ($candidate) => $candidate::class,
@@ -38,7 +38,7 @@ abstract class TestCase extends BaseTestCase
 	 * Asserts that every marker the component declares dispatches
 	 * back to it. Driven by `::markers()`.
 	 *
-	 * @param class-string<Block|Span> $component
+	 * @param class-string<Block|Inline> $component
 	 */
 	public function assertMarkersDispatchComponent(string $component): void
 	{

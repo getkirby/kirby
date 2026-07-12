@@ -30,34 +30,6 @@ class PhraseTest extends TestCase
 		$this->assertSame('', $phrase->at(10));
 	}
 
-	public function testConsumed(): void
-	{
-		$phrase = new Phrase('a**b');
-		$phrase->seek('*');
-		$phrase->take(2);
-
-		$this->assertSame(2, $phrase->consumed());
-	}
-
-	public function testContext(): void
-	{
-		$phrase = new Phrase('abcdef');
-
-		// the whole text before anything is emitted
-		$this->assertSame('abcdef', $phrase->context());
-	}
-
-	public function testContextAfterFlush(): void
-	{
-		$phrase = new Phrase('lead*rest');
-		$phrase->seek('*');
-		$phrase->take(1);
-		$phrase->flush();
-
-		// the emit position moved past the match
-		$this->assertSame('rest', $phrase->context());
-	}
-
 	public function testExtend(): void
 	{
 		$phrase = new Phrase('a**b');
@@ -65,7 +37,8 @@ class PhraseTest extends TestCase
 		$phrase->take(1);
 		$phrase->extend(1);
 
-		$this->assertSame(2, $phrase->consumed());
+		// the match now spans both `*`, so only `b` follows it
+		$this->assertSame('b', $phrase->after());
 	}
 
 	public function testFlush(): void
@@ -141,8 +114,27 @@ class PhraseTest extends TestCase
 
 		// records a match one byte after the emit position, two bytes long
 		$phrase->reach(1, 2);
-		$this->assertSame(2, $phrase->consumed());
+		$this->assertSame('*xyz', $phrase->after());
 		$this->assertSame('a', $phrase->lead());
+	}
+
+	public function testRemaining(): void
+	{
+		$phrase = new Phrase('abcdef');
+
+		// the whole text before anything is emitted
+		$this->assertSame('abcdef', $phrase->remaining());
+	}
+
+	public function testRemainingAfterFlush(): void
+	{
+		$phrase = new Phrase('lead*rest');
+		$phrase->seek('*');
+		$phrase->take(1);
+		$phrase->flush();
+
+		// the emit position moved past the match
+		$this->assertSame('rest', $phrase->remaining());
 	}
 
 	public function testSeek(): void
@@ -168,16 +160,7 @@ class PhraseTest extends TestCase
 
 		// returns the text up to and including the unclaimed marker
 		$this->assertSame('ab*', $phrase->skip());
-		$this->assertSame('cd', $phrase->context());
-	}
-
-	public function testSlice(): void
-	{
-		$phrase = new Phrase('abc*defgh');
-		$phrase->seek('*');
-
-		$this->assertSame('def', $phrase->slice(1, 3));
-		$this->assertSame('*defgh', $phrase->slice(0));
+		$this->assertSame('cd', $phrase->remaining());
 	}
 
 	public function testTake(): void
@@ -186,14 +169,13 @@ class PhraseTest extends TestCase
 		$phrase->seek('*');
 		$phrase->take(2);
 
-		$this->assertSame(2, $phrase->consumed());
 		$this->assertSame('b', $phrase->after());
 
 		// a string argument is measured by its byte length
 		$phrase = new Phrase('foo**bar');
 		$phrase->seek('*');
 		$phrase->take('**');
-		$this->assertSame(2, $phrase->consumed());
+		$this->assertSame('bar', $phrase->after());
 	}
 
 	public function testText(): void
@@ -203,6 +185,15 @@ class PhraseTest extends TestCase
 
 		// the marker's rest: from the marker to the end
 		$this->assertSame('*world', $phrase->text());
+	}
+
+	public function testTextSlice(): void
+	{
+		$phrase = new Phrase('abc*defgh');
+		$phrase->seek('*');
+
+		$this->assertSame('def', $phrase->text(1, 3));
+		$this->assertSame('*defgh', $phrase->text(0));
 	}
 
 	public function testTextTracksMarker(): void
@@ -216,5 +207,37 @@ class PhraseTest extends TestCase
 		$phrase->flush();
 		$phrase->seek('*');
 		$this->assertSame('*c', $phrase->text());
+	}
+
+	public function testBefore(): void
+	{
+		// the character right before the marker
+		$phrase = new Phrase('a*b');
+		$phrase->seek('*');
+		$this->assertSame('a', $phrase->before());
+
+		// a marker at the very start has no preceding character
+		$phrase = new Phrase('*a');
+		$phrase->seek('*');
+		$this->assertSame('', $phrase->before());
+
+		// a multi-byte character before the marker is returned whole
+		$phrase = new Phrase('é*b');
+		$phrase->seek('*');
+		$this->assertSame('é', $phrase->before());
+	}
+
+	public function testOffset(): void
+	{
+		$phrase = new Phrase('ab*c');
+		$phrase->seek('*');
+		$this->assertSame(2, $phrase->offset());
+	}
+
+	public function testSource(): void
+	{
+		// a slice of the whole source, independent of the marker
+		$phrase = new Phrase('hello');
+		$this->assertSame('ell', $phrase->source(1, 3));
 	}
 }

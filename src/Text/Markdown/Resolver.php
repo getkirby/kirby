@@ -6,7 +6,7 @@ use Kirby\Text\Markdown\AST\Element;
 use Kirby\Text\Markdown\AST\Node;
 
 /**
- * Resolves the deferred `content` that Blocks and Spans
+ * Resolves the deferred `content` that Blocks and Inlines
  * have left on each element into the final AST.
  *
  * @copyright Bastian Allgeier
@@ -21,27 +21,6 @@ class Resolver
 	}
 
 	/**
-	 * Parses an element's deferred `content` into
-	 * its child nodes, at block or inline level.
-	 *
-	 * @return list<\Kirby\Text\Markdown\AST\Node>
-	 */
-	protected function content(Element $element): array
-	{
-		if ($element->block === true) {
-			return $this->parser->blocks()->parse(
-				source: $element->content,
-				unwrap: $element->omit === true
-			);
-		}
-
-		return $this->parser->spans()->parse(
-			text:     $element->content,
-			disabled: $element->omit ?: []
-		);
-	}
-
-	/**
 	 * Resolves a single node:
 	 * its deferred `content` into child nodes,
 	 * then its child nodes recursively.
@@ -49,9 +28,12 @@ class Resolver
 	public function node(Node $element): Node
 	{
 		if ($element instanceof Element) {
-			// resolve any deferred content into child nodes
+			// resolve any deferred content into child nodes: block-level
+			// source is re-parsed as blocks, everything else as inlines
 			if ($element->content !== null) {
-				$element->children = $this->content($element);
+				$element->children = $element->block === true
+					? $this->parser->blocks()->parse($element->content)
+					: $this->parser->inlines()->parse($element->content);
 				$element->content  = null;
 			}
 
@@ -73,8 +55,15 @@ class Resolver
 	 */
 	public function nodes(array $nodes): array
 	{
-		foreach ($nodes as $index => $node) {
-			$nodes[$index] = $this->node($node);
+		// `node()` resolves each Element in place and returns the same
+		// instance, so there is nothing to write back: iterating read-only
+		// keeps `$nodes` from being copied (it is still held by the caller,
+		// so any element write would separate the whole array). Non-Element
+		// nodes carry no deferred content, so they are skipped outright.
+		foreach ($nodes as $node) {
+			if ($node instanceof Element) {
+				$this->node($node);
+			}
 		}
 
 		return $nodes;

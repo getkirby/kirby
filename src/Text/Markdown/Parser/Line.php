@@ -13,6 +13,7 @@ namespace Kirby\Text\Markdown\Parser;
 class Line extends Cursor
 {
 	protected string $body = '';
+	protected int $count = 0;
 	protected int $indent = 0;
 	protected int $index = 0;
 
@@ -22,15 +23,66 @@ class Line extends Cursor
 	public function __construct(
 		protected array $lines
 	) {
+		$this->count = count($lines);
 		$this->load();
 	}
 
 	/**
-	 * The current line with tabs expanded to spaces.
+	 * Steps back to a previous line, e.g. to hand back
+	 * blank lines that a nested block over-read.
+	 */
+	public function back(int $count = 1): void
+	{
+		$this->index -= $count;
+		$this->load();
+	}
+
+	/**
+	 * The raw current line, with its tabs and indentation intact.
 	 */
 	public function body(): string
 	{
 		return $this->body;
+	}
+
+	/**
+	 * The current line's content with up to `$columns` columns of
+	 * leading whitespace removed (the line's own indentation by default).
+	 * Leading whitespace is measured in columns (a tab is a four-column
+	 * stop) and the surplus is emitted as spaces, but the content past
+	 * the indentation keeps its raw tabs — unlike `text()`, which expands
+	 * them. Use it for content (code, paragraph text); use `text()` for
+	 * block-structure decisions.
+	 */
+	public function content(int|null $columns = null): string
+	{
+		$columns ??= $this->indent;
+
+		// a zero indent means no leading spaces or tabs (a leading tab would
+		// expand to columns and lift the indent above zero), so there is
+		// nothing to strip: the body is returned verbatim, no copy
+		if ($this->indent === 0) {
+			return $this->body;
+		}
+
+		$column = 0;
+		$length = strlen($this->body);
+
+		for ($i = 0; $i < $length; $i++) {
+			$char = $this->body[$i];
+
+			if ($char === ' ') {
+				$column++;
+			} elseif ($char === "\t") {
+				$column += 4 - ($column % 4);
+			} else {
+				break;
+			}
+		}
+
+		return
+			str_repeat(' ', max(0, $column - $columns)) .
+			substr($this->body, $i);
 	}
 
 	/**
@@ -53,7 +105,11 @@ class Line extends Cursor
 	}
 
 	/**
-	 * Expands tabs and de-indents the line at the current position.
+	 * De-indents the line at the current position. `body()` keeps the
+	 * raw line so tabs survive verbatim into code content (CommonMark
+	 * does not expand them); `text()` and `indent()` are measured on the
+	 * tab-expanded line (four-column tab stop), where block structure —
+	 * markers, thematic breaks, setext underlines — is decided.
 	 */
 	protected function load(): void
 	{
@@ -61,17 +117,12 @@ class Line extends Cursor
 			return;
 		}
 
-		$body = $this->lines[$this->index];
-
-		// expand tabs to spaces on a four-column tab stop
-		while (($before = strstr($body, "\t", true)) !== false) {
-			$short = 4 - mb_strlen($before, 'utf-8') % 4;
-			$body  = $before . str_repeat(' ', $short) . substr($body, strlen($before) + 1);
-		}
+		$body     = $this->lines[$this->index];
+		$expanded = self::normalizeTabs($body);
 
 		$this->body   = $body;
-		$this->indent = strspn($body, ' ');
-		$this->text   = $this->indent > 0 ? substr($body, $this->indent) : $body;
+		$this->indent = strspn($expanded, ' ');
+		$this->text   = $this->indent > 0 ? substr($expanded, $this->indent) : $expanded;
 	}
 
 	/**
@@ -92,20 +143,46 @@ class Line extends Cursor
 	}
 
 	/**
-	 * Advances to the next line.
+	 * Advances by `$count` lines.
 	 */
-	public function next(): void
+	public function next(int $count = 1): void
 	{
-		$this->index++;
+		$this->index += $count;
 		$this->load();
 	}
 
 	/**
-	 * A slice of the de-indented current line.
+	 * Normalizes tab characters to spaces
+	 * on a four-column tab stop
 	 */
-	public function slice(int $offset, int|null $length = null): string
+	protected static function normalizeTabs(string $line): string
 	{
-		return substr($this->text, $offset, $length);
+		while (($before = strstr($line, "\t", true)) !== false) {
+			$size   = 4 - mb_strlen($before, 'utf-8') % 4;
+			$spaces = str_repeat(' ', $size);
+			$after  = substr($line, strlen($before) + 1);
+			$line   = $before . $spaces . $after;
+		}
+
+		return $line;
+	}
+
+	/**
+	 * The tab-expanded, de-indented text of the line at `$offset`
+	 * from the current position, or `null` past the ends. Used for
+	 * lookahead without advancing the cursor.
+	 */
+	public function peek(int $offset): string|null
+	{
+		$line = $this->lines[$this->index + $offset] ?? null;
+
+		if ($line === null) {
+			return null;
+		}
+
+		$line = self::normalizeTabs($line);
+
+		return ltrim($line, ' ');
 	}
 
 	/**
@@ -119,9 +196,11 @@ class Line extends Cursor
 
 	/**
 	 * Whether a line remains at the current position.
+	 *
+	 * @rename ::isValid()
 	 */
 	public function valid(): bool
 	{
-		return $this->index < count($this->lines);
+		return $this->index < $this->count;
 	}
 }

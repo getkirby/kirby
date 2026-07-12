@@ -4,8 +4,10 @@ namespace Kirby\Text\Markdown;
 
 use Kirby\Text\Markdown\AST\Document;
 use Kirby\Text\Markdown\AST\Element;
+use Kirby\Text\Markdown\AST\HardBreak;
 use Kirby\Text\Markdown\AST\Html;
 use Kirby\Text\Markdown\AST\Node;
+use Kirby\Text\Markdown\AST\SoftBreak;
 use Kirby\Text\Markdown\AST\Text;
 
 /**
@@ -46,28 +48,28 @@ class Renderer
 
 	protected static function escape(
 		string $text,
-		bool $allowQuotes = false
+		bool $quotes = false
 	): string {
-		return htmlspecialchars($text, $allowQuotes ? ENT_NOQUOTES : ENT_QUOTES, 'UTF-8');
+		return htmlspecialchars($text, $quotes ? ENT_COMPAT : ENT_QUOTES, 'UTF-8');
 	}
 
 	/**
-	 * @param array<string, string|null> $attributes
+	 * @param array<string, string|null> $attrs
 	 * @return array<string, string|null>
 	 */
 	protected function filterUnsafeUrlInAttribute(
-		array $attributes,
-		string $attribute
+		array $attrs,
+		string $attr
 	): array {
 		foreach (static::SAFE_URL_SCHEMES as $scheme) {
-			if (static::stringAtStart($attributes[$attribute], $scheme) === true) {
-				return $attributes;
+			if (static::stringAtStart($attrs[$attr], $scheme) === true) {
+				return $attrs;
 			}
 		}
 
-		$attributes[$attribute] = str_replace(':', '%3A', $attributes[$attribute]);
+		$attrs[$attr] = str_replace(':', '%3A', $attrs[$attr]);
 
-		return $attributes;
+		return $attrs;
 	}
 
 	/**
@@ -75,23 +77,25 @@ class Renderer
 	 */
 	public function render(Node $node): string
 	{
-		// ordered by frequency: leaf and element nodes make up the bulk of
-		// the tree, the single Document root is matched last
+		// ordered by frequency: text and element nodes make up
+		// the bulk, the single Document root is last
 		return match (true) {
-			$node instanceof Element  => $this->renderElement($node),
-			$node instanceof Text     => static::escape($node->text, true),
-			$node instanceof Html     => $this->renderHtml($node),
-			$node instanceof Document => $this->renderNodes($node->children)
+			$node instanceof Text      => static::escape($node->text, true),
+			$node instanceof Element   => $this->renderElement($node),
+			$node instanceof SoftBreak => "\n",
+			$node instanceof HardBreak => "<br />\n",
+			$node instanceof Html      => $this->renderHtml($node),
+			$node instanceof Document  => $this->renderNodes($node->children)
 		};
 	}
 
 	protected function renderElement(Element $element): string
 	{
-		$name       = $element->name;
-		$attributes = $element->attributes;
+		$name  = $element->name;
+		$attrs = $element->attributes;
 
 		if ($this->safe === true) {
-			$attributes = $this->sanitizeAttributes($name, $attributes);
+			$attrs = $this->sanitizeAttributes($name, $attrs);
 		}
 
 		$hasName = $name !== null;
@@ -100,7 +104,7 @@ class Renderer
 		if ($hasName === true) {
 			$markup .= '<' . $name;
 
-			foreach ($attributes as $attribute => $value) {
+			foreach ($attrs as $attribute => $value) {
 				if ($value === null) {
 					continue;
 				}
@@ -111,14 +115,21 @@ class Renderer
 
 		$hasContent = $element->children !== null;
 
+		// an empty list item renders without an inner break: `<li></li>`
+		if ($name === 'li' && $element->children === []) {
+			return $markup . '></li>';
+		}
+
 		if ($hasContent === true) {
 			$markup .= $hasName ? '>' : '';
 
 			if ($element->multiline === true) {
-				$markup .= $this->renderNodes($element->children);
+				$markup .= $this->renderNodes($element->children, $element->block);
 			} else {
 				foreach ($element->children as $child) {
-					$markup .= $this->render($child);
+					$markup .= $child instanceof Text
+						? static::escape($child->text, true)
+						: $this->render($child);
 				}
 			}
 
@@ -142,35 +153,50 @@ class Renderer
 	/**
 	 * Renders a list of sibling nodes.
 	 *
-	 * @param list<Node> $nodes
+	 * @param list<\Kirby\Text\Markdown\AST\Node> $nodes
 	 */
-	public function renderNodes(array $nodes): string
+	public function renderNodes(array $nodes, bool $block = false): string
 	{
-		$markup = '';
-		$break  = true;
+		$markup   = '';
+		$previous = null; // the previous node's break flag, `null` before the first
 
 		foreach ($nodes as $node) {
-			$breakNext = $node->hasBreak();
+			$break = $node->hasBreak();
 
-			// insert line break between two nodes
-			// only when both break
-			$break   = !$break ? $break : $breakNext;
-			$markup .= ($break ? "\n" : '') . $this->render($node);
-			$break   = $breakNext;
+			// the first node breaks off the parent tag when it is block-level;
+			// block-level siblings always sit on their own line (a tight list
+			// item's unwrapped text still precedes a child block on its own
+			// line); inline siblings break only when both do
+			$lead = match (true) {
+				$previous === null => $break,
+				$block === true    => true,
+				default            => $previous && $break
+			};
+
+			if ($lead === true) {
+				$markup .= "\n";
+			}
+
+			// text is the node plurality; escape it inline to skip a render()
+			// frame on the hot per-node path, delegate the rest
+			$markup  .= $node instanceof Text
+				? static::escape($node->text, true)
+				: $this->render($node);
+			$previous = $break;
 		}
 
-		$markup .= $break ? "\n" : '';
-
-		return $markup;
+		// a trailing break when the last node breaks; an empty container
+		// (e.g. `<blockquote></blockquote>`) keeps its single inner break
+		return $markup . (($previous ?? true) ? "\n" : '');
 	}
 
 	/**
-	 * @param array<string, string|null> $attributes
+	 * @param array<string, string|null> $attrs
 	 * @return array<string, string|null>
 	 */
 	protected function sanitizeAttributes(
 		string|null $name,
-		array $attributes
+		array $attrs
 	): array {
 		static $safe     = '/^[a-zA-Z0-9][a-zA-Z0-9-_]*+$/';
 		static $tag2Attr = [
@@ -183,20 +209,20 @@ class Renderer
 		}
 
 		if (isset($tag2Attr[$name]) === true) {
-			$attributes = $this->filterUnsafeUrlInAttribute($attributes, $tag2Attr[$name]);
+			$attrs = $this->filterUnsafeUrlInAttribute($attrs, $tag2Attr[$name]);
 		}
 
-		if ($attributes !== []) {
-			foreach (array_keys($attributes) as $attr) {
+		if ($attrs !== []) {
+			foreach (array_keys($attrs) as $attr) {
 				if (!preg_match($safe, $attr)) {
-					unset($attributes[$attr]);
+					unset($attrs[$attr]);
 				} elseif (static::stringAtStart($attr, 'on') === true) {
-					unset($attributes[$attr]);
+					unset($attrs[$attr]);
 				}
 			}
 		}
 
-		return $attributes;
+		return $attrs;
 	}
 
 	protected static function stringAtStart(

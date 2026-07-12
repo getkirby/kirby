@@ -36,7 +36,8 @@ class FencedCodeTest extends TestCase
 		$this->assertSame('code', $code->name);
 		$this->assertSame([], $code->attributes);
 		$this->assertInstanceOf(Text::class, $code->children[0]);
-		$this->assertSame('code here', $code->children[0]->text);
+		// the content keeps its terminating newline (CommonMark)
+		$this->assertSame("code here\n", $code->children[0]->text);
 
 		$this->assertFalse($line->valid());
 	}
@@ -46,7 +47,7 @@ class FencedCodeTest extends TestCase
 		$line = new Line(['~~~', 'code', '~~~']);
 		$node = $this->block->consume($line);
 
-		$this->assertSame('code', $node->children[0]->children[0]->text);
+		$this->assertSame("code\n", $node->children[0]->children[0]->text);
 	}
 
 	public function testConsumeInfoString(): void
@@ -59,7 +60,25 @@ class FencedCodeTest extends TestCase
 			['class' => 'language-php'],
 			$node->children[0]->attributes
 		);
-		$this->assertSame("echo 'hi';", $node->children[0]->children[0]->text);
+		$this->assertSame("echo 'hi';\n", $node->children[0]->children[0]->text);
+	}
+
+	public function testConsumeInfoStringEscaped(): void
+	{
+		// a backslash escape in the info string is unescaped
+		$line = new Line(['```foo\\!bar', 'x', '```']);
+		$node = $this->block->consume($line);
+
+		$this->assertSame(['class' => 'language-foo!bar'], $node->children[0]->attributes);
+	}
+
+	public function testConsumeInfoStringEntity(): void
+	{
+		// an HTML entity in the info string is decoded
+		$line = new Line(['```a&amp;b', 'x', '```']);
+		$node = $this->block->consume($line);
+
+		$this->assertSame(['class' => 'language-a&b'], $node->children[0]->attributes);
 	}
 
 	public function testConsumeMultiLine(): void
@@ -67,7 +86,7 @@ class FencedCodeTest extends TestCase
 		$line = new Line(['```', 'a', 'b', '```']);
 		$node = $this->block->consume($line);
 
-		$this->assertSame("a\nb", $node->children[0]->children[0]->text);
+		$this->assertSame("a\nb\n", $node->children[0]->children[0]->text);
 	}
 
 	public function testConsumeTooFewMarkers(): void

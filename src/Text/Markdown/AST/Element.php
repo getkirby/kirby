@@ -15,11 +15,15 @@ class Element extends Node
 {
 	/**
 	 * @param array<string, string|null> $attributes
-	 * @param list<Node>|null $children resolved child nodes
+	 * @param list<\Kirby\Text\Markdown\AST\Node>|null $children resolved child nodes
 	 * @param string|list<string>|null $content unparsed source, resolved into $children
-	 * @param $block parse $content as block-level source, not inline spans
-	 * @param list<class-string>|bool $omit mark types to skip in inline $content, or true to drop a tight block's wrapping `<p>`
-	 * @param $multiline render $children each on their own line (block layout)
+	 * @param $block the deferred $content is block-level source (parsed as
+	 *              blocks, not inlines); its children each render on their
+	 *              own line
+	 * @param $multiline render $children with the line-break layout rules,
+	 *                  rather than concatenated inline
+	 * @param $break whether this node sits on its own line among its siblings
+	 *              (defaults to true for named elements)
 	 */
 	public function __construct(
 		public string|null $name,
@@ -27,7 +31,6 @@ class Element extends Node
 		public array|null $children = null,
 		public string|array|null $content = null,
 		public bool $block = false,
-		public array|bool $omit = [],
 		public bool $multiline = false,
 		bool|null $break = null
 	) {

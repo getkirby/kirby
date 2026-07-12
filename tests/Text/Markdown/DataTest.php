@@ -13,15 +13,15 @@ class DataTest extends TestCase
 		$data = new Data();
 
 		// unknown type
-		$this->assertNull($data->get('Reference', 'id'));
+		$this->assertNull($data->get('LinkDefinition', 'id'));
 
 		// known type, unknown id
 		$value = ['url' => 'https://getkirby.com'];
-		$data->set('Reference', 'id', $value);
-		$this->assertNull($data->get('Reference', 'other'));
+		$data->set('LinkDefinition', 'id', $value);
+		$this->assertNull($data->get('LinkDefinition', 'other'));
 
 		// known type, known id
-		$result = $data->get('Reference', 'id');
+		$result = $data->get('LinkDefinition', 'id');
 		$this->assertSame($value, $result);
 	}
 
@@ -40,41 +40,41 @@ class DataTest extends TestCase
 	public function testReset(): void
 	{
 		$data = new Data();
-		$data->set('Reference', 'id', 'value');
+		$data->set('LinkDefinition', 'id', 'value');
 		$data->set('Footnote', 'a', 1);
 
 		$data->reset();
 
-		$this->assertNull($data->get('Reference', 'id'));
+		$this->assertNull($data->get('LinkDefinition', 'id'));
 		$this->assertSame([], $data->get('Footnote'));
 	}
 
 	public function testSet(): void
 	{
 		$data = new Data();
-		$data->set('Abbreviation', 'HTML', 'HyperText Markup Language');
+		$data->set('Abbreviation', 'HTML', 'HyperText RawHtml Language');
 
-		$this->assertSame('HyperText Markup Language', $data->get('Abbreviation', 'HTML'));
+		$this->assertSame('HyperText RawHtml Language', $data->get('Abbreviation', 'HTML'));
 	}
 
 	public function testSetOverwrite(): void
 	{
 		$data = new Data();
-		$data->set('Reference', 'id', 'first');
-		$data->set('Reference', 'id', 'second');
+		$data->set('LinkDefinition', 'id', 'first');
+		$data->set('LinkDefinition', 'id', 'second');
 
 		// the latest definition under a type and id wins
-		$this->assertSame('second', $data->get('Reference', 'id'));
+		$this->assertSame('second', $data->get('LinkDefinition', 'id'));
 	}
 
 	public function testSetGroupsByType(): void
 	{
 		$data = new Data();
-		$data->set('Reference', 'id', 'reference');
+		$data->set('LinkDefinition', 'id', 'reference');
 		$data->set('Footnote', 'id', 'footnote');
 
 		// the same id under different types stays independent
-		$this->assertSame('reference', $data->get('Reference', 'id'));
+		$this->assertSame('reference', $data->get('LinkDefinition', 'id'));
 		$this->assertSame('footnote', $data->get('Footnote', 'id'));
 	}
 }

@@ -4,15 +4,11 @@ namespace Kirby\Text\Markdown\Block;
 
 use Kirby\Text\Markdown\AST\Element;
 use Kirby\Text\Markdown\AST\Node;
-use Kirby\Text\Markdown\Block;
+use Kirby\Text\Markdown\Parser\Attributes;
 use Kirby\Text\Markdown\Parser\Line;
 
 /**
  * ATX heading
- *
- * Atx-style headers use 1-6 hash characters at the start
- * of the line, corresponding to header levels 1-6. Optionally,
- * you may “close” atx-style headers. This is purely cosmetic .
  *
  * @example
  * # This is an H1
@@ -23,7 +19,7 @@ use Kirby\Text\Markdown\Parser\Line;
  * @license   https://opensource.org/licenses/MIT
  * @since     6.0.0
  */
-class AtxHeading extends Block
+class AtxHeading extends LeafBlock
 {
 	public static function markers(): array
 	{
@@ -34,23 +30,52 @@ class AtxHeading extends Block
 		Line $line,
 		Element|null $paragraph = null
 	): Node|false {
-		$level = strspn($line->text(), '#');
+		$text  = $line->text();
+		$level = strspn($text, '#');
 
 		if ($level > 6) {
 			return false;
 		}
 
-		$text = trim($line->text(), '#');
-		$text = trim($text, ' ');
+		$rest = substr($text, $level);
+
+		// the opening # must be followed by a space,
+		// a tab or the end of the line
+		if (
+			$rest !== '' &&
+			$rest[0] !== ' ' &&
+			$rest[0] !== "\t"
+		) {
+			return false;
+		}
 
 		$element = new Element(
 			name:      'h' . $level,
 			multiline: true,
-			content:   $text
+			content:   $rest
 		);
 
 		$line->next();
 
-		return $this->attributes($element, '[ #]*', '[ ]*');
+		$element = Attributes::apply($element, '[ #]*', '[ ]*');
+
+		return $this->strip($element);
+	}
+
+	/**
+	 * Drop the optional closing sequence of #s
+	 * as well as surrounding whitespace
+	 */
+	protected function strip(Element $element): Element
+	{
+		$element->content = rtrim($element->content, " \t");
+
+		if (str_contains($element->content, '#') === true) {
+			$element->content = preg_replace('/(?:^|[ \t])#+$/', '', $element->content);
+		}
+
+		$element->content = trim($element->content, " \t");
+
+		return $element;
 	}
 }

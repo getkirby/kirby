@@ -36,14 +36,15 @@ class IndentedCodeTest extends TestCase
 		$code = $node->children[0];
 		$this->assertSame('code', $code->name);
 		$this->assertInstanceOf(Text::class, $code->children[0]);
-		$this->assertSame('$foo = 1;', $code->children[0]->text);
+		// the content keeps its terminating newline (CommonMark)
+		$this->assertSame("\$foo = 1;\n", $code->children[0]->text);
 	}
 
 	public function testConsumeMultiLine(): void
 	{
 		$line = new Line(['    a', '    b']);
 		$node = $this->block->consume($line);
-		$this->assertSame("a\nb", $node->children[0]->children[0]->text);
+		$this->assertSame("a\nb\n", $node->children[0]->children[0]->text);
 	}
 
 	public function testConsumeBlankLineBetween(): void
@@ -51,7 +52,7 @@ class IndentedCodeTest extends TestCase
 		// a blank line inside the block is preserved
 		$line = new Line(['    a', '', '    b']);
 		$node = $this->block->consume($line);
-		$this->assertSame("a\n\nb", $node->children[0]->children[0]->text);
+		$this->assertSame("a\n\nb\n", $node->children[0]->children[0]->text);
 	}
 
 	public function testConsumeDedentEnds(): void
@@ -60,7 +61,7 @@ class IndentedCodeTest extends TestCase
 		// is left for the next parser
 		$line = new Line(['    a', 'b']);
 		$node = $this->block->consume($line);
-		$this->assertSame('a', $node->children[0]->children[0]->text);
+		$this->assertSame("a\n", $node->children[0]->children[0]->text);
 		$this->assertSame('b', $line->text());
 	}
 

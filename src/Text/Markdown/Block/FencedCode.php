@@ -5,15 +5,10 @@ namespace Kirby\Text\Markdown\Block;
 use Kirby\Text\Markdown\AST\Element;
 use Kirby\Text\Markdown\AST\Node;
 use Kirby\Text\Markdown\AST\Text;
-use Kirby\Text\Markdown\Block;
 use Kirby\Text\Markdown\Parser\Line;
 
 /**
  * Fenced code block
- *
- * Fenced code blocks are not indented but instead start
- * with a line containing three or more tilde ~ or backtick `
- * characters, and end with a line with the same number of characters.
  *
  * @example
  * ~~~~~~~~~~~~~~~~~~~~~
@@ -33,11 +28,33 @@ use Kirby\Text\Markdown\Parser\Line;
  * @license   https://opensource.org/licenses/MIT
  * @since     6.0.0
  */
-class FencedCode extends Block
+class FencedCode extends LeafBlock
 {
 	public static function markers(): array
 	{
 		return ['`', '~'];
+	}
+
+	/**
+	 * Derives the `<code>` attributes from a fence's info string.
+	 */
+	protected function attributes(string $info): array
+	{
+		if ($info === '') {
+			return [];
+		}
+
+		$language = substr($info, 0, strcspn($info, " \t\n\f\r"));
+
+		if (str_contains($language, '\\') === true) {
+			$language = preg_replace('/\\\\([!-\/:-@\[-`{-~])/', '$1', $language);
+		}
+
+		if (str_contains($language, '&') === true) {
+			$language = html_entity_decode($language, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+		}
+
+		return ['class' => 'language-' . $language];
 	}
 
 	public function consume(
@@ -51,42 +68,47 @@ class FencedCode extends Block
 			return false;
 		}
 
-		$info = trim($line->slice($length), "\t ");
+		$info = trim($line->text($length), "\t ");
 
-		if (str_contains($info, '`') === true) {
+		// a backtick fence's info string may not contain a backtick
+		if ($marker === '`' && str_contains($info, '`') === true) {
 			return false;
 		}
 
-		$attributes = [];
-
-		if ($info !== '') {
-			$language   = substr($info, 0, strcspn($info, " \t\n\f\r"));
-			$attributes = ['class' => 'language-' . $language];
-		}
+		$indent     = $line->indent();
+		$attributes = $this->attributes($info);
 
 		// take the opening fence line, then read until the closing one
 		$line->next();
 
-		$code   = '';
-		$closed = false;
+		$code = [];
 
 		while ($line->valid() === true) {
 			if (
+				// a closing fence begins with the fence marker;
+				// cheapest gate first
+				$line->marker() === $marker &&
 				$line->isBlank() === false &&
+				$line->indent() < 4 &&
 				($end = strspn($line->text(), $marker)) >= $length &&
-				rtrim($line->slice($end), ' ') === ''
+				rtrim($line->text($end), ' ') === ''
 			) {
-				$closed = true;
 				$line->next();
 				break;
 			}
 
-			$code .= "\n" . ($line->isBlank() === true ? '' : $line->body());
+			// each content line keeps its terminating newline (so the block
+			// content ends with one), with up to the fence's indentation
+			// removed; whitespace-only lines keep their remaining spaces
+			$code[] = $line->content(columns: $indent);
+
 			$line->next();
 		}
 
-		if ($closed === true) {
-			$code = substr($code, 1);
+		$code = implode("\n", $code);
+
+		if ($code !== '') {
+			$code .= "\n";
 		}
 
 		return new Element(

@@ -18,8 +18,8 @@ interface Transform
 	/**
 	 * Transforms the resolved top-level node list and returns it.
 	 *
-	 * @param list<Node> $nodes
-	 * @return list<Node>
+	 * @param list<\Kirby\Text\Markdown\AST\Node> $nodes
+	 * @return list<\Kirby\Text\Markdown\AST\Node>
 	 */
 	public function transform(array $nodes): array;
 }

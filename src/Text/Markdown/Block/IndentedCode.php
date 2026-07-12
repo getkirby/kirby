@@ -5,7 +5,6 @@ namespace Kirby\Text\Markdown\Block;
 use Kirby\Text\Markdown\AST\Element;
 use Kirby\Text\Markdown\AST\Node;
 use Kirby\Text\Markdown\AST\Text;
-use Kirby\Text\Markdown\Block;
 use Kirby\Text\Markdown\Parser\Line;
 
 /**
@@ -18,11 +17,11 @@ use Kirby\Text\Markdown\Parser\Line;
  * @license   https://opensource.org/licenses/MIT
  * @since     6.0.0
  */
-class IndentedCode extends Block
+class IndentedCode extends LeafBlock
 {
 	public static function markers(): array
 	{
-		return [Block::INDENT];
+		return [self::INDENT];
 	}
 
 	public function consume(
@@ -37,39 +36,40 @@ class IndentedCode extends Block
 			return false;
 		}
 
-		$code        = substr($line->body(), 4);
-		$interrupted = 0;
+		$code   = $line->content(columns: 4);
+		$blanks = [];
 		$line->next();
 
 		while ($line->valid() === true) {
 			if ($line->isBlank() === true) {
-				$interrupted++;
+				$blanks[] = $line->content(4);
 				$line->next();
 				continue;
 			}
 
-			// a dedented non-blank line ends the block
 			if ($line->indent() < 4) {
 				break;
 			}
 
-			if ($interrupted > 0) {
-				$code       .= str_repeat("\n", $interrupted);
-				$interrupted = 0;
+			foreach ($blanks as $blank) {
+				$code .= "\n" . $blank;
 			}
 
-			$code .= "\n" . substr($line->body(), 4);
+			$blanks = [];
+			$code  .= "\n" . $line->content(columns: 4);
+
 			$line->next();
 		}
+
+		// the content keeps the terminating newline of its last line
+		$code .= "\n";
 
 		return new Element(
 			name:     'pre',
 			children: [
 				new Element(
-					name: 'code',
-					children: [
-						new Text($code)
-					]
+					name:     'code',
+					children: [new Text($code)]
 				)
 			]
 		);

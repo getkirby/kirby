@@ -8,29 +8,33 @@ use Kirby\Text\Markdown\AST\Element;
  * Parses a trailing `{#id .class}` attribute block
  * and applies it to an element.
  *
- * Block-level components carry the block in their content;
- * inline components carry it in the phrase after the match.
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ * @since     6.0.0
  */
-trait Attributes
+class Attributes
 {
-	/**
-	 * Pattern matching the `#id .class` body of an attribute block.
-	 */
-	protected static string $regex = '(?:[#.][-\w]+[ ]*)+';
+	public const string PATTERN = '(?:[#.][-\w]+[ ]*)+';
 
 	/**
-	 * Strips a trailing `{#id .class}` block off the element's content
-	 * and sets it as the element's attributes.
+	 * Strips a trailing `{#id .class}` block
+	 * off the element's content and sets it
+	 * as the element's attributes.
 	 */
-	protected function attributes(
+	public static function apply(
 		Element $element,
 		string $before,
 		string $after = ''
 	): Element {
-		$regex = '/' . $before . '{(' . static::$regex . ')}' . $after . '$/';
+		if (str_contains($element->content, '{') === false) {
+			return $element;
+		}
 
-		if (preg_match($regex, $element->content, $matches, PREG_OFFSET_CAPTURE) === 1) {
-			$element->attributes = $this->parseAttributes($matches[1][0]);
+		$pattern = '{(' . self::PATTERN . ')}';
+		$pattern = '/' . $before . $pattern . $after . '$/';
+
+		if (preg_match($pattern, $element->content, $matches, PREG_OFFSET_CAPTURE) === 1) {
+			$element->attributes = self::parse($matches[1][0]);
 			$element->content    = substr($element->content, 0, $matches[0][1]);
 		}
 
@@ -38,29 +42,12 @@ trait Attributes
 	}
 
 	/**
-	 * Reads a trailing `{#id .class}` block from the phrase
-	 * after the match, merges it into the element's attributes.
-	 */
-	protected function attributesFromPhrase(
-		Element $element,
-		Phrase $phrase
-	): Element {
-		$regex = '/^[ ]*{(' . static::$regex . ')}/';
-
-		if (preg_match($regex, $phrase->after(), $matches) === 1) {
-			$element->attributes += $this->parseAttributes($matches[1]);
-			$phrase->extend(strlen($matches[0]));
-		}
-
-		return $element;
-	}
-
-	/**
-	 * Parses a `#id .class` block body into `id` / `class` attributes.
+	 * Parses a `#id .class` block body into
+	 * `id`/`class` attributes.
 	 *
 	 * @return array<string, string>
 	 */
-	protected function parseAttributes(string $block): array
+	public static function parse(string $block): array
 	{
 		$attributes = [];
 		$classes    = [];

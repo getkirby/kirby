@@ -2,6 +2,7 @@
 
 namespace Kirby\Text\Markdown\Block;
 
+use Kirby\Text\Markdown\AST\Element;
 use Kirby\Text\Markdown\AST\Html as HtmlNode;
 use Kirby\Text\Markdown\Parser;
 use Kirby\Text\Markdown\Parser\Line;
@@ -77,44 +78,86 @@ class HtmlTest extends TestCase
 		$this->assertFalse($line->valid());
 	}
 
-	public function testConsumeVoidElementWithContent(): void
+	public function testConsumeTrailingContent(): void
 	{
-		// a void or self-closing tag followed by content is not a block
+		// a block-level tag (type 6) keeps any trailing text on its line
 		$line = new Line(['<hr> trailing text']);
-		$this->assertFalse($this->block->consume($line));
+		$node = $this->block->consume($line);
+
+		$this->assertSame('<hr> trailing text', $node->html);
 	}
 
-	public function testConsumeClosedInline(): void
+	public function testConsumeEndsAtBlankLine(): void
 	{
-		// a tag that opens and closes on the same line ends the block there
-		$line = new Line(['<div>content</div>', 'after']);
+		// a type 6 block ends at a blank line, not at a closing tag, so
+		// the closing tag and following text stay in the same block
+		$line = new Line(['<div>content</div>', 'after', '', 'para']);
 		$node = $this->block->consume($line);
 
 		$this->assertInstanceOf(HtmlNode::class, $node);
-		$this->assertSame('<div>content</div>', $node->html);
-		$this->assertTrue($line->valid());
+		$this->assertSame("<div>content</div>\nafter", $node->html);
+		$this->assertTrue($line->isBlank());
 	}
 
-	public function testConsumeBlankLine(): void
+	public function testConsumeBlankLineEndsBlock(): void
 	{
-		// a blank line within the block is preserved as an empty line
+		// a blank line ends a type 6 block and is left unconsumed
 		$line = new Line(['<div>', 'content', '', 'more', '</div>']);
 		$node = $this->block->consume($line);
 
 		$this->assertInstanceOf(HtmlNode::class, $node);
-		$this->assertSame("<div>\ncontent\n\nmore\n</div>", $node->html);
+		$this->assertSame("<div>\ncontent", $node->html);
+		$this->assertTrue($line->isBlank());
 	}
 
 	public function testConsumeNestedElement(): void
 	{
-		// a nested tag of the same name is tracked by depth
-		// so the block  closes only at the matching outer
-		// closing tag
+		// without a blank line the block runs to the end of input,
+		// keeping any nested tags verbatim
 		$line = new Line(['<div>', '<div>', 'nested', '</div>', '</div>']);
 		$node = $this->block->consume($line);
 
 		$this->assertInstanceOf(HtmlNode::class, $node);
 		$this->assertSame("<div>\n<div>\nnested\n</div>\n</div>", $node->html);
+	}
+
+	public function testConsumeRawText(): void
+	{
+		// type 1 (script/pre/style/textarea) ends at its closing tag,
+		// even across blank lines; the closing line is included
+		$line = new Line(['<pre>', 'a', '', 'b', '</pre>', 'after']);
+		$node = $this->block->consume($line);
+
+		$this->assertSame("<pre>\na\n\nb\n</pre>", $node->html);
+		$this->assertSame('after', $line->text());
+	}
+
+	public function testConsumeDeclaration(): void
+	{
+		// type 4 (a declaration like <!DOCTYPE>) ends at the first `>`
+		$line = new Line(['<!DOCTYPE html>']);
+		$node = $this->block->consume($line);
+
+		$this->assertSame('<!DOCTYPE html>', $node->html);
+	}
+
+	public function testConsumeCompleteTag(): void
+	{
+		// type 7: a complete tag (even an inline one) alone on the line
+		// opens a block that ends at the next blank line
+		$line = new Line(['<a href="foo">', '*bar*', '</a>']);
+		$node = $this->block->consume($line);
+
+		$this->assertSame("<a href=\"foo\">\n*bar*\n</a>", $node->html);
+	}
+
+	public function testConsumeCompleteTagCannotInterruptParagraph(): void
+	{
+		// type 7 may not interrupt a paragraph that is still continuing
+		$line = new Line(['<a href="foo">']);
+		$paragraph = new Element(name: 'p', content: 'text');
+
+		$this->assertFalse($this->block->consume($line, $paragraph));
 	}
 
 	public function testConsumeReparsesMarkdown(): void
@@ -140,4 +183,43 @@ class HtmlTest extends TestCase
 		$this->assertStringNotContainsString('markdown=', $node->html);
 	}
 
+	public function testConsumeReparsesSingleLineElement(): void
+	{
+		// a `markdown="1"` element closing on its opening line
+		$line = new Line(['<div markdown="1">*x*</div>']);
+		$node = $this->block->consume($line);
+
+		$this->assertStringContainsString('<em>x</em>', $node->html);
+		$this->assertStringNotContainsString('markdown=', $node->html);
+	}
+
+	public function testConsumeReparsesWithBlankLines(): void
+	{
+		// interior blank lines are captured and preserved for the re-parse
+		$line = new Line(['<div markdown="1">', '', '*a*', '', '*b*', '</div>']);
+		$node = $this->block->consume($line);
+
+		$this->assertStringContainsString('<em>a</em>', $node->html);
+		$this->assertStringContainsString('<em>b</em>', $node->html);
+	}
+
+	public function testConsumeCapturesNestedSameTag(): void
+	{
+		// a nested element of the same tag increments the depth, so the
+		// first `</div>` does not end the outer element early — the whole
+		// element (both divs) is captured and its `markdown=` removed
+		$line = new Line([
+			'<div markdown="1">',
+			'<div>',
+			'inner',
+			'</div>',
+			'outer',
+			'</div>'
+		]);
+		$node = $this->block->consume($line);
+
+		$this->assertSame(2, substr_count($node->html, '<div>'));
+		$this->assertStringContainsString('outer', $node->html);
+		$this->assertStringNotContainsString('markdown=', $node->html);
+	}
 }

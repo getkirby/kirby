@@ -3,12 +3,12 @@
 namespace Kirby\Text\Markdown\Parser;
 
 use Kirby\Text\Markdown\Block;
+use Kirby\Text\Markdown\Inline;
 use Kirby\Text\Markdown\Parser;
-use Kirby\Text\Markdown\Span;
 
 /**
  * The Markdown grammar represents the block
- * and span components that make up the parser.
+ * and inline components that make up the parser.
  *
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
@@ -17,7 +17,7 @@ use Kirby\Text\Markdown\Span;
 class Grammar
 {
 	/**
-	 * @var array<class-string, \Kirby\Text\Markdown\Block|\Kirby\Text\Markdown\Span>
+	 * @var array<class-string, \Kirby\Text\Markdown\Block|\Kirby\Text\Markdown\Inline>
 	 */
 	protected array $components = [];
 
@@ -40,47 +40,46 @@ class Grammar
 	protected array|null $transforms = null;
 
 	/**
-	 * All span markers as a string
+	 * @var array<string, list<\Kirby\Text\Markdown\Inline>>
 	 */
-	protected string $markers = '';
+	protected array $inlines = [];
 
 	/**
-	 * @var array<string, list<\Kirby\Text\Markdown\Span>>
+	 * @var array<string, list<class-string<\Kirby\Text\Markdown\Inline>>>
 	 */
-	protected array $spans = [];
-
-	/**
-	 * @var array<string, list<class-string<\Kirby\Text\Markdown\Span>>>
-	 */
-	protected array $spanMarkers = [];
+	protected array $inlineMarkers = [];
 
 	public function __construct(
 		protected Parser $parser
 	) {
 		// build the marker dispatch maps from the live component
-		// registry, so plugin-registered blocks and spans are picked up
+		// registry, so plugin-registered blocks and inlines are picked up
 		foreach (Parser::$components['blocks'] as $class) {
 			foreach ($class::markers() as $marker) {
 				$this->blockMarkers[$marker][] = $class;
 			}
 		}
 
-		foreach (Parser::$components['spans'] as $class) {
+		foreach (Parser::$components['inlines'] as $class) {
 			foreach ($class::markers() as $marker) {
-				$this->spanMarkers[$marker][] = $class;
+				$this->inlineMarkers[$marker][] = $class;
 			}
 		}
-
-		$this->markers = implode('', array_keys($this->spanMarkers));
 	}
 
+	/**
+	 * @template T of \Kirby\Text\Markdown\Block
+	 * @param class-string<T> $class
+	 * @return T|null
+	 */
 	public function block(string $class): Block|null
 	{
+		/** @var T|null */
 		return $this->get(Parser::$components['blocks'], $class);
 	}
 
 	/**
-	 * @return list<Block>
+	 * @return list<\Kirby\Text\Markdown\Block>
 	 */
 	public function blocks(string $marker): array
 	{
@@ -90,23 +89,18 @@ class Grammar
 	}
 
 	/**
-	 * @template T of \Kirby\Text\Markdown\Block|\Kirby\Text\Markdown\Span
-	 * @param list<class-string<T>> $classes
-	 * @return T|null
+	 * @param list<class-string> $classes
+	 * @param class-string $sought
 	 */
-	protected function get(array $classes, string $sought): Block|Span|null
+	protected function get(array $classes, string $sought): Block|Inline|null
 	{
 		if (isset($this->components[$sought]) === true) {
-			/** @var T $component */
-			$component = $this->components[$sought];
-			return $component;
+			return $this->components[$sought];
 		}
 
 		foreach ($classes as $class) {
 			if (is_a($class, $sought, true) === true) {
-				/** @var T $component */
-				$component = $this->components[$class] ??= new $class($this->parser);
-				return $component;
+				return $this->components[$class] ??= new $class($this->parser);
 			}
 		}
 
@@ -114,38 +108,31 @@ class Grammar
 	}
 
 	/**
-	 * The registered components that transform the fully resolved
-	 * document, e.g. appending the footnotes section or merging
-	 * adjacent definition lists.
-	 *
-	 * @return list<Transform>
+	 * @template T of \Kirby\Text\Markdown\Inline
+	 * @param class-string<T> $class
+	 * @return T|null
 	 */
-	public function transforms(): array
+	public function inline(string $class): Inline|null
 	{
-		if ($this->transforms !== null) {
-			return $this->transforms;
-		}
+		/** @var T|null */
+		return $this->get(Parser::$components['inlines'], $class);
+	}
 
-		$transforms = [];
-		$classes    = [
-			...Parser::$components['blocks'],
-			...Parser::$components['spans']
-		];
-
-		foreach ($this->instances($classes) as $component) {
-			if ($component instanceof Transform) {
-				$transforms[] = $component;
-			}
-		}
-
-		return $this->transforms = $transforms;
+	/**
+	 * @return list<\Kirby\Text\Markdown\Inline>
+	 */
+	public function inlines(string $marker): array
+	{
+		return $this->inlines[$marker] ??= $this->instances(
+			$this->inlineMarkers[$marker] ?? []
+		);
 	}
 
 	/**
 	 * Resolves a list of component class names to
 	 * their shared instances, creating each one on first use.
 	 *
-	 * @template T of Block|Span
+	 * @template T of Block|Inline
 	 * @param iterable<class-string<T>> $classes
 	 * @return list<T>
 	 */
@@ -163,25 +150,38 @@ class Grammar
 	}
 
 	/**
-	 * All span markers characters as a string for `strpbrk()`.
+	 * All inline marker characters as a string for `strpbrk()`.
 	 */
 	public function markers(): string
 	{
-		return $this->markers;
-	}
-
-	public function span(string $class): Span|null
-	{
-		return $this->get(Parser::$components['spans'], $class);
+		return implode('', array_keys($this->inlineMarkers));
 	}
 
 	/**
-	 * @return list<\Kirby\Text\Markdown\Span>
+	 * The registered components that transform the fully resolved
+	 * document, e.g. appending the footnotes section or merging
+	 * adjacent definition lists.
+	 *
+	 * @return list<\Kirby\Text\Markdown\Parser\Transform>
 	 */
-	public function spans(string $marker): array
+	public function transforms(): array
 	{
-		return $this->spans[$marker] ??= $this->instances(
-			$this->spanMarkers[$marker] ?? []
-		);
+		if ($this->transforms !== null) {
+			return $this->transforms;
+		}
+
+		$transforms = [];
+		$classes    = [
+			...Parser::$components['blocks'],
+			...Parser::$components['inlines']
+		];
+
+		foreach ($this->instances($classes) as $component) {
+			if ($component instanceof Transform) {
+				$transforms[] = $component;
+			}
+		}
+
+		return $this->transforms = $transforms;
 	}
 }

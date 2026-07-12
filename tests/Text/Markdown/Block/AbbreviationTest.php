@@ -29,12 +29,12 @@ class AbbreviationTest extends TestCase
 
 	public function testConsume(): void
 	{
-		$line = new Line(['*[HTML]: Hyper Text Markup Language']);
+		$line = new Line(['*[HTML]: Hyper Text RawHtml Language']);
 
 		// the definition is stored and produces no output
 		$this->assertNull($this->block->consume($line));
 		$this->assertSame(
-			'Hyper Text Markup Language',
+			'Hyper Text RawHtml Language',
 			$this->parser->data()->get('Abbreviation', 'HTML')
 		);
 
@@ -57,7 +57,7 @@ class AbbreviationTest extends TestCase
 
 	public function testTransform(): void
 	{
-		$this->parser->data()->set('Abbreviation', 'HTML', 'Hyper Text Markup Language');
+		$this->parser->data()->set('Abbreviation', 'HTML', 'Hyper Text RawHtml Language');
 
 		$nodes  = [new Text('I like HTML')];
 		$result = $this->block->transform($nodes);
@@ -70,13 +70,13 @@ class AbbreviationTest extends TestCase
 		$abbr = $result[0]->children[1];
 		$this->assertInstanceOf(Element::class, $abbr);
 		$this->assertSame('abbr', $abbr->name);
-		$this->assertSame(['title' => 'Hyper Text Markup Language'], $abbr->attributes);
+		$this->assertSame(['title' => 'Hyper Text RawHtml Language'], $abbr->attributes);
 		$this->assertSame('HTML', $abbr->children[0]->text);
 	}
 
 	public function testTransformDescendsIntoChildren(): void
 	{
-		$this->parser->data()->set('Abbreviation', 'HTML', 'Hyper Text Markup Language');
+		$this->parser->data()->set('Abbreviation', 'HTML', 'Hyper Text RawHtml Language');
 
 		// the transform recurses into an element's children
 		$element = new Element(name: 'p', children: [new Text('I like HTML')]);
@@ -92,13 +92,13 @@ class AbbreviationTest extends TestCase
 		$abbr = $fragment->children[1];
 		$this->assertInstanceOf(Element::class, $abbr);
 		$this->assertSame('abbr', $abbr->name);
-		$this->assertSame(['title' => 'Hyper Text Markup Language'], $abbr->attributes);
+		$this->assertSame(['title' => 'Hyper Text RawHtml Language'], $abbr->attributes);
 		$this->assertSame('HTML', $abbr->children[0]->text);
 	}
 
 	public function testTransformLeavesCodeUntouched(): void
 	{
-		$this->parser->data()->set('Abbreviation', 'HTML', 'Hyper Text Markup Language');
+		$this->parser->data()->set('Abbreviation', 'HTML', 'Hyper Text RawHtml Language');
 
 		// code is never rewritten
 		$code   = new Element(name: 'code', children: [new Text('HTML')]);
@@ -109,7 +109,7 @@ class AbbreviationTest extends TestCase
 
 	public function testTransformLeavesOtherNodesUntouched(): void
 	{
-		$this->parser->data()->set('Abbreviation', 'HTML', 'Hyper Text Markup Language');
+		$this->parser->data()->set('Abbreviation', 'HTML', 'Hyper Text RawHtml Language');
 
 		// a non-element, non-text node is returned as-is
 		$html   = new Html('<span>HTML</span>');

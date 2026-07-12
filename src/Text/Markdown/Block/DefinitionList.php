@@ -4,15 +4,11 @@ namespace Kirby\Text\Markdown\Block;
 
 use Kirby\Text\Markdown\AST\Element;
 use Kirby\Text\Markdown\AST\Node;
-use Kirby\Text\Markdown\Block;
 use Kirby\Text\Markdown\Parser\Line;
 use Kirby\Text\Markdown\Parser\Transform;
 
 /**
  * Definition list
- *
- * A simple definition list is made of a single-line term
- * followed by a colon and the definition for that term.
  *
  * @example
  * Orange
@@ -23,7 +19,7 @@ use Kirby\Text\Markdown\Parser\Transform;
  * @license   https://opensource.org/licenses/MIT
  * @since     6.0.0
  */
-class DefinitionList extends Block implements Transform
+class DefinitionList extends LeafBlock implements Transform
 {
 	public static function markers(): array
 	{
@@ -87,12 +83,12 @@ class DefinitionList extends Block implements Transform
 				$interrupted    = false;
 			}
 
-			$item->content .= "\n" . substr($line->body(), min($line->indent(), 4));
+			$item->content .= "\n" . $line->content(columns: min($line->indent(), 4));
 			$line->next();
 		}
 
-		// register the emitted list so transform() can skip the sibling-merge
-		// walk unless at least two lists exist to merge
+		// register the emitted list so transform() can skip
+		// the sibling-merge walk unless at least two lists exist
 		$this->data()->set('DefinitionList', (string)spl_object_id($paragraph), true);
 
 		return $paragraph;
@@ -107,7 +103,7 @@ class DefinitionList extends Block implements Transform
 		Element $dl,
 		bool $interrupted
 	): Element {
-		$text = trim($line->slice(1));
+		$text = trim($line->text(offset: 1));
 
 		$dd = new Element(
 			name:      'dd',
@@ -127,8 +123,8 @@ class DefinitionList extends Block implements Transform
 	/**
 	 * Merges adjacent `<dl>` siblings into a single list.
 	 *
-	 * @param list<Node> $nodes
-	 * @return list<Node>
+	 * @param list<\Kirby\Text\Markdown\AST\Node> $nodes
+	 * @return list<\Kirby\Text\Markdown\AST\Node>
 	 */
 	public function transform(array $nodes): array
 	{

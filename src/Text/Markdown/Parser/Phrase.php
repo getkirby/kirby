@@ -3,8 +3,10 @@
 namespace Kirby\Text\Markdown\Parser;
 
 /**
- * Represents current Markdown source phrase (inline text)
- * and a cursor that advances through the text line.
+ * Inline cursor: scans a line of inline text marker to marker, records
+ * the byte span each inline claims (the "match"), and emits the plain text
+ * between claims. Custom inline components receive it in `consume()` to
+ * inspect the marker, claim their span and read the surrounding text.
  *
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
@@ -13,61 +15,69 @@ namespace Kirby\Text\Markdown\Parser;
 class Phrase extends Cursor
 {
 	/**
-	 * Offset of the marker character currently examined
+	 * Offset up to which text has already been emitted as nodes.
 	 */
-	protected int $marker = 0;
+	protected int $emitted = 0;
 
 	/**
-	 * Start of the text not yet turned into elements
+	 * Byte length of the source text, cached on first use
+	 * ($text never changes for a Phrase).
 	 */
-	protected int $position = 0;
+	protected int $length = -1;
 
 	/**
-	 * Start of the match the current mark recorded
+	 * Byte span of the match the current inline claimed.
 	 */
-	protected int $start = 0;
+	protected int $matchStart = 0;
+	protected int $matchEnd = 0;
 
 	/**
-	 * End of the match the current mark recorded
+	 * Byte offset of the marker character currently examined.
 	 */
-	protected int $end = 0;
+	protected int $offset = 0;
 
-	protected int $restMarker = -1;
+	/**
+	 * Cache for `text()`: the marker offset the rest was sliced for.
+	 */
+	protected int $restOffset = -1;
 	protected string $rest = '';
 
 	/**
-	 * The text after the recorded match.
-	 * Used to read what follows a sub-match
-	 * (e.g. trailing `{#id}` block).
+	 * Returns the text after the recorded match. Used to read what
+	 * follows a sub-match (e.g. a trailing `{#id}` block).
 	 */
 	public function after(): string
 	{
-		return substr($this->text, $this->end);
+		return substr($this->text, $this->matchEnd);
 	}
 
 	/**
-	 * The character at the given offset
-	 * after the marker, or '' past the end.
+	 * Returns the byte at $distance from the marker
 	 */
-	public function at(int $offset): string
+	public function at(int $distance = 0): string
 	{
-		return $this->text[$this->marker + $offset] ?? '';
+		return $this->text[$this->offset + $distance] ?? '';
 	}
 
 	/**
-	 * The number of bytes the recorded match/mark spans.
+	 * Returns the character immediately before the marker.
 	 */
-	public function consumed(): int
+	public function before(): string
 	{
-		return $this->end - $this->start;
-	}
+		if ($this->offset === 0) {
+			return '';
+		}
 
-	/**
-	 * The remaining text from the emit position onward.
-	 */
-	public function context(): string
-	{
-		return substr($this->text, $this->position);
+		// the preceding character is the last one before the marker; walk
+		// back over UTF-8 continuation bytes (0b10xxxxxx) to its lead byte
+		// and return that whole code point
+		$start = $this->offset - 1;
+
+		while ($start > 0 && (ord($this->text[$start]) & 0xC0) === 0x80) {
+			$start--;
+		}
+
+		return substr($this->text, $start, $this->offset - $start);
 	}
 
 	/**
@@ -75,7 +85,7 @@ class Phrase extends Cursor
 	 */
 	public function extend(int $length): void
 	{
-		$this->end += $length;
+		$this->matchEnd += $length;
 	}
 
 	/**
@@ -83,61 +93,78 @@ class Phrase extends Cursor
 	 */
 	public function flush(): void
 	{
-		$this->position = $this->end;
+		$this->emitted = $this->matchEnd;
 	}
 
 	/**
-	 * The unmarked text between the emit position
+	 * Returns the unmarked text between the emit position
 	 * and the start of the match.
 	 */
 	public function lead(): string
 	{
-		return substr($this->text, $this->position, $this->start - $this->position);
+		return substr($this->text, $this->emitted, $this->matchStart - $this->emitted);
 	}
 
 	/**
-	 * The marker character currently examined.
+	 * Returns marker character currently examined.
 	 */
 	public function marker(): string
 	{
-		return $this->text[$this->marker];
+		return $this->text[$this->offset];
 	}
 
 	/**
-	 * Whether the recorded match actually starts at or
-	 * before the marker. A reach-back mark can match
-	 * something that begins after the marker itself.
+	 * Whether the recorded match actually starts at or before the marker.
+	 * A reach-back match can begin after the marker itself.
 	 */
 	public function matched(): bool
 	{
-		return $this->start <= $this->marker;
+		return $this->matchStart <= $this->offset;
 	}
 
 	/**
-	 * Records a match of $length bytes that begins
-	 * $offset bytes after the emit position.
-	 * A mark reaching back before its marker matches
-	 * against `::context()`.
+	 * Returns the byte offset of the marker currently examined.
+	 */
+	public function offset(): int
+	{
+		return $this->offset;
+	}
+
+	/**
+	 * Records a match of $length bytes that begins $offset bytes
+	 * after the emit position.
 	 */
 	public function reach(int $offset, int $length): void
 	{
-		$this->start = $this->position + $offset;
-		$this->end   = $this->start + $length;
+		$this->matchStart = $this->emitted + $offset;
+		$this->matchEnd   = $this->matchStart + $length;
 	}
 
 	/**
-	 * Moves the marker to the next marker character
-	 * at or after the emit position; `false` when none remain.
+	 * Returns still-unconsumed text, from the emit position onward.
+	 */
+	public function remaining(): string
+	{
+		return substr($this->text, $this->emitted);
+	}
+
+	/**
+	 * Moves the marker to the next marker character at or
+	 * after the emit position; `false` when none remain.
 	 */
 	public function seek(string $markers): bool
 	{
-		$next = $this->position + strcspn($this->text, $markers, $this->position);
+		if ($this->length === -1) {
+			$this->length = strlen($this->text);
+		}
 
-		if ($next >= strlen($this->text)) {
+		$next = $this->emitted + strcspn($this->text, $markers, $this->emitted);
+
+		if ($next >= $this->length) {
 			return false;
 		}
 
-		$this->marker = $next;
+		$this->offset = $next;
 
 		return true;
 	}
@@ -148,21 +175,18 @@ class Phrase extends Cursor
 	 */
 	public function skip(): string
 	{
-		$text           = substr($this->text, $this->position, $this->marker + 1 - $this->position);
-		$this->position = $this->marker + 1;
+		$text          = substr($this->text, $this->emitted, $this->offset + 1 - $this->emitted);
+		$this->emitted = $this->offset + 1;
 
 		return $text;
 	}
 
 	/**
-	 * The marker's rest, optionally sliced:
-	 * $offset bytes after the marker, at most $length bytes.
+	 * Returns a slice of the whole source text (not relative to the marker).
 	 */
-	public function slice(
-		int $offset,
-		int|null $length = null
-	): string {
-		return substr($this->text, $this->marker + $offset, $length);
+	public function source(int $start, int $length): string
+	{
+		return substr($this->text, $start, $length);
 	}
 
 	/**
@@ -175,20 +199,23 @@ class Phrase extends Cursor
 			$length = strlen($length);
 		}
 
-		$this->start = $this->marker;
-		$this->end   = $this->marker + $length;
+		$this->matchStart = $this->offset;
+		$this->matchEnd   = $this->offset + $length;
 	}
 
 	/**
-	 * The marker's rest: the text from the marker to the end.
+	 * Returns the text from the marker to the end,
+	 * optionally sliced: `$offset` bytes past the marker.
 	 */
-	public function text(): string
+	public function text(int $offset = 0, int|null $length = null): string
 	{
-		if ($this->restMarker !== $this->marker) {
-			$this->rest       = substr(parent::text(), $this->marker);
-			$this->restMarker = $this->marker;
+		if ($this->restOffset !== $this->offset) {
+			$this->rest       = substr($this->text, $this->offset);
+			$this->restOffset = $this->offset;
 		}
 
-		return $this->rest;
+		return $offset === 0 && $length === null
+			? $this->rest
+			: substr($this->rest, $offset, $length);
 	}
 }

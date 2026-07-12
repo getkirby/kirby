@@ -63,6 +63,22 @@ class AtxHeadingTest extends TestCase
 		$this->assertFalse($this->block->consume($line));
 	}
 
+	public function testConsumeRequiresSpaceAfterHashes(): void
+	{
+		// the opening #s must be followed by a space (or end of line)
+		$this->assertFalse($this->block->consume(new Line(['#5 bolt'])));
+		$this->assertFalse($this->block->consume(new Line(['#hashtag'])));
+	}
+
+	public function testConsumeClosingHashesNeedSpace(): void
+	{
+		// a trailing # not preceded by whitespace is part of the content
+		$line = new Line(['# foo#']);
+		$node = $this->block->consume($line);
+
+		$this->assertSame('foo#', $node->content);
+	}
+
 	public function testConsumeAttributes(): void
 	{
 		// a trailing block sets id and class and is stripped

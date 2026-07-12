@@ -36,8 +36,16 @@ abstract class Cursor
 		return preg_match($regex, $this->text(), $matches) === 1 ? $matches : null;
 	}
 
-	public function text(): string
+	/**
+	 * The text the cursor currently faces, optionally sliced: `$offset`
+	 * bytes in, at most `$length` bytes.
+	 */
+	public function text(int $offset = 0, int|null $length = null): string
 	{
-		return $this->text;
+		if ($offset === 0 && $length === null) {
+			return $this->text;
+		}
+
+		return substr($this->text, $offset, $length);
 	}
 }

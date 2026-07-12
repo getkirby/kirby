@@ -5,7 +5,9 @@ namespace Kirby\Text\Markdown;
 use Kirby\TestCase;
 use Kirby\Text\Markdown\AST\Document;
 use Kirby\Text\Markdown\AST\Element;
+use Kirby\Text\Markdown\AST\HardBreak;
 use Kirby\Text\Markdown\AST\Html;
+use Kirby\Text\Markdown\AST\SoftBreak;
 use Kirby\Text\Markdown\AST\Text;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -21,10 +23,23 @@ class RendererTest extends TestCase
 
 	public function testRenderText(): void
 	{
-		// text is HTML-escaped, but quotes are left alone
-		$node = new Text('<b> & "q"');
+		// text is HTML-escaped, including double quotes (CommonMark);
+		// single quotes are left alone
+		$node = new Text('<b> & "q" \'s\'');
 
-		$this->assertSame('&lt;b&gt; &amp; "q"', $this->renderer->render($node));
+		$this->assertSame('&lt;b&gt; &amp; &quot;q&quot; \'s\'', $this->renderer->render($node));
+	}
+
+	public function testRenderHardBreak(): void
+	{
+		// a hard break renders as a `<br />` and a newline
+		$this->assertSame("<br />\n", $this->renderer->render(new HardBreak()));
+	}
+
+	public function testRenderSoftBreak(): void
+	{
+		// a soft break renders as a single newline
+		$this->assertSame("\n", $this->renderer->render(new SoftBreak()));
 	}
 
 	public function testRenderElement(): void
@@ -110,6 +125,28 @@ class RendererTest extends TestCase
 		$this->assertSame("\n<hr />\n<hr />\n", $markup);
 	}
 
+	public function testRenderNodesBlockLevelSiblings(): void
+	{
+		// block-level siblings always sit on their own line, even when the
+		// leading node is a non-breaking tight paragraph fragment
+		$markup = $this->renderer->renderNodes([
+			new Element(name: null, children: [new Text('foo')]),
+			new Element(name: 'ul', multiline: true, children: [
+				new Element(name: 'li', children: [])
+			])
+		], block: true);
+
+		$this->assertSame("foo\n<ul>\n<li></li>\n</ul>\n", $markup);
+	}
+
+	public function testRenderEmptyListItem(): void
+	{
+		// an empty list item renders without an inner break
+		$node = new Element(name: 'li', multiline: true, children: []);
+
+		$this->assertSame('<li></li>', $this->renderer->render($node));
+	}
+
 	public function testRenderSafeFiltersUnsafeUrl(): void
 	{
 		$renderer = new Renderer(safe: true);
@@ -171,5 +208,20 @@ class RendererTest extends TestCase
 		);
 
 		$this->assertSame('y', $renderer->render($node));
+	}
+
+	public function testRenderInlineElementWithChildren(): void
+	{
+		// a non-multiline element renders its children inline: text is
+		// escaped, a nested element is rendered recursively
+		$node = new Element(
+			name: 'span',
+			children: [
+				new Text('<a>'),
+				new Element(name: 'em', children: [new Text('x')], multiline: true)
+			]
+		);
+
+		$this->assertSame('<span>&lt;a&gt;<em>x</em></span>', $this->renderer->render($node));
 	}
 }

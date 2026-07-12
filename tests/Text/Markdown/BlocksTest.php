@@ -86,19 +86,59 @@ class BlocksTest extends TestCase
 		$this->assertSame("Hello\nworld", $nodes[0]->content);
 	}
 
-	public function testParseUnwrap(): void
+	public function testParseIndentedMarkerIsCode(): void
 	{
-		// a tight list item drops the wrapping paragraph tag
-		$nodes = $this->blocks->parse(['text'], unwrap: true);
+		// at four spaces of indent only indented code can start, never a
+		// marker-based block (here `#` is code, not a heading)
+		$nodes = $this->blocks->parse('    # not a heading');
 
-		$this->assertNull($nodes[0]->name);
+		$this->assertCount(1, $nodes);
+		$this->assertSame('pre', $nodes[0]->name);
 	}
 
-	public function testParseUnwrapSkippedWhenBlank(): void
+	public function testParseIndentedMarkerContinuesParagraph(): void
 	{
-		// a loose item keeps its paragraph wrapper
-		$nodes = $this->blocks->parse(['text', ''], unwrap: true);
+		// and with a paragraph open, that same line is a lazy continuation
+		$nodes = $this->blocks->parse("foo\n    # not a heading");
+
+		$this->assertCount(1, $nodes);
+		$this->assertSame('p', $nodes[0]->name);
+		$this->assertSame("foo\n# not a heading", $nodes[0]->content);
+	}
+
+	public function testItem(): void
+	{
+		// a list item's blocks are parsed and reported as tight when no
+		// blank line separates them
+		[$nodes, $loose] = $this->blocks->item(['text']);
 
 		$this->assertSame('p', $nodes[0]->name);
+		$this->assertFalse($loose);
+	}
+
+	public function testItemLoose(): void
+	{
+		// a blank line between two top-level blocks makes the item loose
+		[$nodes, $loose] = $this->blocks->item(['a', '', 'b']);
+
+		$this->assertCount(2, $nodes);
+		$this->assertTrue($loose);
+	}
+
+	public function testItemNestedBlankIsNotLoose(): void
+	{
+		// a blank line consumed by a nested block (here a fenced code
+		// block) does not reach the top level, so the item stays tight
+		[, $loose] = $this->blocks->item(['```', 'a', '', 'b', '```']);
+
+		$this->assertFalse($loose);
+	}
+
+	public function testParseArraySource(): void
+	{
+		// the source may be given as an array of lines instead of a string
+		$nodes = $this->blocks->parse(['One', '', 'Two']);
+
+		$this->assertCount(2, $nodes);
 	}
 }

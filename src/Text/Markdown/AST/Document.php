@@ -12,7 +12,7 @@ namespace Kirby\Text\Markdown\AST;
 class Document extends Node
 {
 	/**
-	 * @param list<Node> $children
+	 * @param list<\Kirby\Text\Markdown\AST\Node> $children
 	 */
 	public function __construct(
 		public readonly array $children

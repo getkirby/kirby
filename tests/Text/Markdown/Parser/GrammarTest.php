@@ -4,8 +4,8 @@ namespace Kirby\Text\Markdown\Parser;
 
 use Kirby\TestCase;
 use Kirby\Text\Markdown\Block;
+use Kirby\Text\Markdown\Inline;
 use Kirby\Text\Markdown\Parser;
-use Kirby\Text\Markdown\Span;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Grammar::class)]
@@ -28,7 +28,7 @@ class GrammarTest extends TestCase
 		$this->assertSame($block, $this->grammar->block(Block\AtxHeading::class));
 
 		// a class that is not a registered block yields null
-		$block = $this->grammar->block(Span\Code::class);
+		$block = $this->grammar->block(Inline\CodeSpan::class);
 		$this->assertNull($block);
 	}
 
@@ -44,6 +44,27 @@ class GrammarTest extends TestCase
 		$this->assertSame([], $this->grammar->blocks('§'));
 	}
 
+	public function testInline(): void
+	{
+		$inline = $this->grammar->inline(Inline\CodeSpan::class);
+		$this->assertInstanceOf(Inline\CodeSpan::class, $inline);
+
+		$inline = $this->grammar->inline(Block\AtxHeading::class);
+		$this->assertNull($this->grammar->inline(Block\AtxHeading::class));
+	}
+
+	public function testSpans(): void
+	{
+		$inlines = $this->grammar->inlines('`');
+
+		// the backtick marker dispatches to the code span
+		$this->assertContainsOnlyInstancesOf(Inline::class, $inlines);
+		$this->assertSame(Inline\CodeSpan::class, $inlines[0]::class);
+
+		// unknown marker
+		$this->assertSame([], $this->grammar->inlines('§'));
+	}
+
 	public function testMarkers(): void
 	{
 		$markers = $this->grammar->markers();
@@ -52,27 +73,6 @@ class GrammarTest extends TestCase
 		$this->assertStringContainsString('*', $markers);
 		$this->assertStringContainsString('_', $markers);
 		$this->assertStringContainsString('`', $markers);
-	}
-
-	public function testSpan(): void
-	{
-		$span = $this->grammar->span(Span\Code::class);
-		$this->assertInstanceOf(Span\Code::class, $span);
-
-		$span = $this->grammar->span(Block\AtxHeading::class);
-		$this->assertNull($this->grammar->span(Block\AtxHeading::class));
-	}
-
-	public function testSpans(): void
-	{
-		$spans = $this->grammar->spans('`');
-
-		// the backtick marker dispatches to the code span
-		$this->assertContainsOnlyInstancesOf(Span::class, $spans);
-		$this->assertSame(Span\Code::class, $spans[0]::class);
-
-		// unknown marker
-		$this->assertSame([], $this->grammar->spans('§'));
 	}
 
 	public function testTransforms(): void

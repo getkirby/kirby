@@ -2,8 +2,6 @@
 
 namespace Kirby\Text\Markdown;
 
-use Kirby\Text\Markdown\Parser\Attributes;
-
 /**
  * Base for a single Markdown component,
  * block- or inline/span-level.
@@ -14,16 +12,9 @@ use Kirby\Text\Markdown\Parser\Attributes;
  */
 abstract class Component
 {
-	use Attributes;
-
 	public function __construct(
 		protected Parser $parser
 	) {
-	}
-
-	protected function data(): Data
-	{
-		return $this->parser->data();
 	}
 
 	/**
@@ -33,4 +24,9 @@ abstract class Component
 	 * @return list<string>
 	 */
 	abstract public static function markers(): array;
+
+	protected function data(): Data
+	{
+		return $this->parser->data();
+	}
 }

@@ -4,9 +4,7 @@ namespace Kirby\Text\Markdown\Block;
 
 use Kirby\Text\Markdown\AST\Element;
 use Kirby\Text\Markdown\AST\Html;
-use Kirby\Text\Markdown\AST\Node;
 use Kirby\Text\Markdown\AST\Text;
-use Kirby\Text\Markdown\Block;
 use Kirby\Text\Markdown\Parser\Line;
 use Kirby\Text\Markdown\Parser\Transform;
 
@@ -16,10 +14,10 @@ use Kirby\Text\Markdown\Parser\Transform;
  * A footnote definition that will be placed
  * in a list of footnotes at the end of the document.
  * The definition produces no output itself. A matching
- * `Kirby\Text\Markdown\Span\Footnote` references it.
+ * `Kirby\Text\Markdown\Inline\Footnote` references it.
  *
  * Each footnote must have a distinct name. That name will
- * be used to link footnote spans to footnote definitions,
+ * be used to link footnote inlines to footnote definitions,
  * but has no effect on the numbering of the footnotes.
  *
  * Footnote definitions can be found anywhere in the document,
@@ -33,21 +31,51 @@ use Kirby\Text\Markdown\Parser\Transform;
  * @license   https://opensource.org/licenses/MIT
  * @since     6.0.0
  */
-class Footnotes extends Block implements Transform
+class Footnotes extends LeafBlock implements Transform
 {
-	protected const PATTERN = '/^\[\^(.+?)\]:[ ]?(.*)$/';
+	protected const string PATTERN = '/^\[\^(.+?)\]:[ ]?(.*)$/';
 
 	public static function markers(): array
 	{
 		return ['['];
 	}
 
+	/**
+	 * The back-reference links for a footnote
+	 * per reference, separated by spaces.
+	 *
+	 * @return list<\Kirby\Text\Markdown\AST\Node>
+	 */
+	protected function backlinks(int|string $id, int $count): array
+	{
+		$links = [];
+
+		for ($i = 1; $i <= $count; $i++) {
+			if ($i > 1) {
+				$links[] = new Text(' ');
+			}
+
+			$links[] = new Element(
+				name:       'a',
+				attributes: [
+					'href'  => '#fnref' . $i . ':' . $id,
+					'rev'   => 'footnote',
+					'class' => 'footnote-backref'
+				],
+				children:   [new Html('&#8617;', trusted: true)],
+				break:      false
+			);
+		}
+
+		return $links;
+	}
+
 	public function consume(
 		Line $line,
 		Element|null $paragraph = null
 	): false|null {
-		// the definition needs `[^`; skip the regex for the common `[link]`
-		// and other bracketed lines that share the `[` marker
+		// the definition needs `[^`; skip for the common `[link]`
+		// and other lines that share the `[` marker
 		if ($line->startsWith('[^') === false) {
 			return false;
 		}
@@ -58,8 +86,7 @@ class Footnotes extends Block implements Transform
 			return false;
 		}
 
-		$label = $matches[1];
-		$text  = $matches[2];
+		$text = $matches[2];
 		$line->next();
 
 		$interrupted = 0;
@@ -95,7 +122,7 @@ class Footnotes extends Block implements Transform
 		}
 
 		// register the definition (produces no output itself)
-		$this->data()->set('Footnote', $label, [
+		$this->data()->set('Footnote', $matches[1], [
 			'text'   => $text,
 			'count'  => 0,
 			'number' => null
@@ -105,12 +132,47 @@ class Footnotes extends Block implements Transform
 	}
 
 	/**
+	 * Builds a single footnote `<li>`: the definition's content
+	 * with the back-reference links.
+	 */
+	protected function item(int|string $id, array $data): Element
+	{
+		$texts = $this->parser->blocks()->parse($data['text']);
+		$links = $this->backlinks($id, $data['count']);
+
+		$n    = count($texts) - 1;
+		$last = $texts[$n] ?? null;
+
+		if ($last instanceof Element && $last->name === 'p') {
+			// fold the back-links into the last paragraph: unwrap it
+			// (a name-less element renders without a surrounding tag)
+			$last->name = null;
+			$texts[$n]  = new Element(
+				name:      'p',
+				children:  [$last, new Html('&#160;', trusted: true), ...$links],
+				multiline: true
+			);
+		} else {
+			$texts[] = new Element(
+				name:      'p',
+				children:  $links,
+				multiline: true
+			);
+		}
+
+		return new Element(
+			name:       'li',
+			attributes: ['id' => 'fn:' . $id],
+			children:   $texts,
+			multiline:  true
+		);
+	}
+
+	/**
 	 * Appends the `<div class="footnotes">` section to the document.
-	 * An ordered list of the referenced footnote definitions
-	 * (sorted by reference number), each with its back-reference links.
 	 *
-	 * @param list<Node> $nodes
-	 * @return list<Node>
+	 * @param list<\Kirby\Text\Markdown\AST\Node> $nodes
+	 * @return list<\Kirby\Text\Markdown\AST\Node>
 	 */
 	public function transform(array $nodes): array
 	{
@@ -147,74 +209,5 @@ class Footnotes extends Block implements Transform
 		$nodes[] = $this->parser->resolver()->node($section);
 
 		return $nodes;
-	}
-
-	/**
-	 * Builds a single footnote `<li>`: the definition's content with the
-	 * back-reference links folded into its last paragraph, or appended as a
-	 * new one if the content does not end in a paragraph.
-	 */
-	protected function item(int|string $id, array $data): Element
-	{
-		$texts = $this->parser->blocks()->parse($data['text']);
-		$links = $this->backlinks($id, $data['count']);
-
-		$n    = count($texts) - 1;
-		$last = $texts[$n] ?? null;
-
-		if ($last instanceof Element && $last->name === 'p') {
-			// fold the back-links into the last paragraph: unwrap it
-			// (a name-less element renders without a surrounding tag)
-			$last->name = null;
-			$texts[$n]  = new Element(
-				name:      'p',
-				children:  [$last, new Html('&#160;', trusted: true), ...$links],
-				multiline: true
-			);
-		} else {
-			$texts[] = new Element(
-				name:      'p',
-				children:  $links,
-				multiline: true
-			);
-		}
-
-		return new Element(
-			name:       'li',
-			attributes: ['id' => 'fn:' . $id],
-			children:   $texts,
-			multiline:  true
-		);
-	}
-
-	/**
-	 * The back-reference links for a footnote: one
-	 * `<a class="footnote-backref">` per reference, separated by spaces.
-	 *
-	 * @return list<Node>
-	 */
-	protected function backlinks(int|string $id, int $count): array
-	{
-		$links = [];
-
-		for ($number = 1; $number <= $count; $number++) {
-			// separator between links only, not before the first
-			if ($number > 1) {
-				$links[] = new Text(' ');
-			}
-
-			$links[] = new Element(
-				name:       'a',
-				attributes: [
-					'href'  => '#fnref' . $number . ':' . $id,
-					'rev'   => 'footnote',
-					'class' => 'footnote-backref'
-				],
-				children:   [new Html('&#8617;', trusted: true)],
-				break:      false
-			);
-		}
-
-		return $links;
 	}
 }

@@ -1,12 +1,22 @@
 # Kirby Markdown — attribution & licenses
 
-Kirby's Markdown parser (`Kirby\Text\Markdown`) is a from-scratch, dependency-free reimplementation that deliberately reproduces the HTML output of **Parsedown** and **ParsedownExtra**. It does not bundle their code, but its behaviour and in places specific data is derived from them.
+Kirby's Markdown parser (`Kirby\Text\Markdown`) is a from-scratch, dependency-free implementation of the **CommonMark** specification, extended with the Markdown features Kirby has long supported via Parsedown Extra, e.g. footnotes, definition lists, abbreviations, tables, `{#id .class}` attributes, strikethrough and bare-URL autolinking. It began as a reimplementation of **Parsedown** and **ParsedownExtra**, the libraries Kirby previously bundled, and some behaviour and specific data still derive from them; where they diverge from CommonMark, the parser follows the spec. It bundles no third-party code.
 
-Both are licensed under the MIT license and are credited below. The parser itself is © Bastian Allgeier and released under the MIT license (see each source file's header).
+The parser itself is © Bastian Allgeier and released under the MIT license (see each source file's header). The work it builds on is credited below.
 
 > The markdown **input fixtures** used by the test suite have their own,
 > separate attribution in
 > [`tests/Text/fixtures/markdown/ATTRIBUTION.md`](../../../tests/Text/fixtures/markdown/ATTRIBUTION.md).
+
+---
+
+## CommonMark specification
+
+<https://spec.commonmark.org/>
+
+The parser targets **CommonMark 0.31.2** and follows the two-phase parsing strategy the spec documents. It implements the specification only; no CommonMark reference-implementation code (`cmark`, `commonmark.js`) is used.
+
+The CommonMark spec is authored by John MacFarlane et al. and released under CC BY-SA 4.0. Kirby implements the spec but does not redistribute its text here; the spec's `spec.txt`, reused verbatim as a test fixture, is attributed under that license in [`tests/Text/fixtures/markdown/ATTRIBUTION.md`](../../../tests/Text/fixtures/markdown/ATTRIBUTION.md).
 
 ---
 

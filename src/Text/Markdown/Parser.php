@@ -9,8 +9,9 @@ use Kirby\Text\Markdown\Parser\Grammar;
 /**
  * Parses and renders Markdown text to HTML.
  *
- * Behaviour and output are derived from Parsedown and ParsedownExtra by
- * Emanuil Rusev (MIT); see `ATTRIBUTION.md`.
+ * Strives to implement the CommonMark 0.31.2 specification,
+ * extended with the ParsedownExtra features Kirby supports.
+ * Inspired by the ground work or Parsedown and Parsedown Extra.
  *
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
@@ -21,7 +22,7 @@ class Parser
 	/**
 	 * @var array{
 	 *     blocks: list<class-string<\Kirby\Text\Markdown\Block>>,
-	 *     spans: list<class-string<\Kirby\Text\Markdown\Span>>
+	 *     inlines: list<class-string<\Kirby\Text\Markdown\Inline>>
 	 * }
 	 */
 	public static array $components = [
@@ -30,30 +31,30 @@ class Parser
 			Block\SetextHeading::class,
 			Block\Table::class,
 			Block\DefinitionList::class,
-			Block\Comment::class,
 			Block\Html::class,
-			Block\Quote::class,
+			Block\BlockQuote::class,
 			Block\Footnotes::class,
-			Block\Reference::class,
+			Block\LinkDefinition::class,
 			Block\FencedCode::class,
-			Block\HorizontalRule::class,
+			Block\ThematicBreak::class,
 			Block\Lists::class,
 			Block\Abbreviation::class,
 			Block\IndentedCode::class,
 		],
-		'spans' => [
-			Span\Image::class,
-			Span\SpecialCharacter::class,
-			Span\Emphasis::class,
-			Span\Url::class,
-			Span\UrlTag::class,
-			Span\Email::class,
-			Span\Markup::class,
-			Span\Footnote::class,
-			Span\Link::class,
-			Span\Code::class,
-			Span\Strikethrough::class,
-			Span\EscapedChar::class,
+		'inlines' => [
+			Inline\Image::class,
+			Inline\CharacterReference::class,
+			Inline\Emphasis::class,
+			Inline\Underscore::class,
+			Inline\Url::class,
+			Inline\Autolink::class,
+			Inline\Email::class,
+			Inline\RawHtml::class,
+			Inline\Footnote::class,
+			Inline\Link::class,
+			Inline\CodeSpan::class,
+			Inline\Strikethrough::class,
+			Inline\BackslashEscape::class,
 		]
 	];
 
@@ -61,7 +62,7 @@ class Parser
 	protected Data|null $data = null;
 	protected Grammar|null $grammar = null;
 	protected Resolver|null $resolver = null;
-	protected Spans|null $spans = null;
+	protected Inlines|null $inlines = null;
 
 	public function __construct(
 		public readonly bool $breaks = false,
@@ -84,6 +85,11 @@ class Parser
 		return $this->grammar ??= new Grammar($this);
 	}
 
+	public function inlines(): Inlines
+	{
+		return $this->inlines ??= new Inlines($this);
+	}
+
 	/**
 	 * Parses Markdown to HTML
 	 */
@@ -97,7 +103,7 @@ class Parser
 		$this->data()->reset();
 
 		$nodes = match ($inline) {
-			true  => $this->spans()->parse($text),
+			true  => $this->inlines()->parse($text),
 			false => $this->blocks()->parse($text)
 		};
 
@@ -125,10 +131,5 @@ class Parser
 	public function resolver(): Resolver
 	{
 		return $this->resolver ??= new Resolver($this);
-	}
-
-	public function spans(): Spans
-	{
-		return $this->spans ??= new Spans($this);
 	}
 }

@@ -4,14 +4,11 @@ namespace Kirby\Text\Markdown\Block;
 
 use Kirby\Text\Markdown\AST\Element;
 use Kirby\Text\Markdown\AST\Node;
-use Kirby\Text\Markdown\Block;
+use Kirby\Text\Markdown\Parser\Attributes;
 use Kirby\Text\Markdown\Parser\Line;
 
 /**
  * Setext heading
- *
- * Setext-style headers are “underlined” using equal signs
- * (for first-level headers) and dashes (for second-level headers).
  *
  * @example
  * This is an H1
@@ -24,7 +21,7 @@ use Kirby\Text\Markdown\Parser\Line;
  * @license   https://opensource.org/licenses/MIT
  * @since     6.0.0
  */
-class SetextHeading extends Block
+class SetextHeading extends LeafBlock
 {
 	public static function markers(): array
 	{
@@ -49,11 +46,12 @@ class SetextHeading extends Block
 			return false;
 		}
 
-		$paragraph->name = $line->marker() === '=' ? 'h1' : 'h2';
+		$paragraph->name    = $line->marker() === '=' ? 'h1' : 'h2';
+		$paragraph->content = rtrim($paragraph->content, " \t");
 
 		// take the underline line
 		$line->next();
 
-		return $this->attributes($paragraph, '[ ]*', '[ ]*');
+		return Attributes::apply($paragraph, '[ ]*', '[ ]*');
 	}
 }
