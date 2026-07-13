@@ -7,6 +7,20 @@ use Kirby\Exception\LogicException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
+class PermissionsWithStringAlias extends Permissions
+{
+	public function __construct(array|bool|null $settings = [])
+	{
+		$this->actions = $this->normalize(
+			settings: $settings,
+			defaults: $this->defaults,
+			aliases: [
+				'pages' => ['update' => 'edit'],
+			]
+		);
+	}
+}
+
 #[CoversClass(Permissions::class)]
 class PermissionsTest extends TestCase
 {
@@ -90,6 +104,72 @@ class PermissionsTest extends TestCase
 		$this->assertFalse($p->for('pages', 'read'));
 		$this->assertTrue($p->for('files', 'read'));
 		$this->assertTrue($p->for('site', 'update'));
+	}
+
+	public static function updateAliasProvider(): array
+	{
+		return [
+			['files'],
+			['pages'],
+			['site'],
+			['user'],
+			['users'],
+		];
+	}
+
+	#[DataProvider('updateAliasProvider')]
+	public function testUpdateAlias(string $category): void
+	{
+		// the `update` alias sets both `edit` and `save`
+		$p = new Permissions([$category => ['update' => false]]);
+
+		$this->assertFalse($p->for($category, 'edit'));
+		$this->assertFalse($p->for($category, 'save'));
+
+		$p = new Permissions([$category => ['update' => true]]);
+
+		$this->assertTrue($p->for($category, 'edit'));
+		$this->assertTrue($p->for($category, 'save'));
+	}
+
+	#[DataProvider('updateAliasProvider')]
+	public function testUpdateAliasWithExplicitAction(string $category): void
+	{
+		// the explicit action wins over the `update` alias
+		$p = new Permissions([
+			$category => [
+				'edit'   => true,
+				'update' => false
+			]
+		]);
+
+		$this->assertTrue($p->for($category, 'edit'));
+		$this->assertFalse($p->for($category, 'save'));
+
+		$p = new Permissions([
+			$category => [
+				'save'   => false,
+				'update' => true
+			]
+		]);
+
+		$this->assertTrue($p->for($category, 'edit'));
+		$this->assertFalse($p->for($category, 'save'));
+	}
+
+	public function testUpdateAliasLeavesOtherActionsIntact(): void
+	{
+		$p = new Permissions(['pages' => ['update' => false]]);
+
+		$this->assertFalse($p->for('pages', 'edit'));
+		$this->assertFalse($p->for('pages', 'save'));
+		$this->assertTrue($p->for('pages', 'read'));
+		$this->assertTrue($p->for('pages', 'create'));
+		$this->assertTrue($p->for('pages', 'delete'));
+
+		// other categories stay untouched
+		$this->assertTrue($p->for('files', 'edit'));
+		$this->assertTrue($p->for('files', 'save'));
 	}
 
 	#[DataProvider('actionsProvider')]
@@ -319,6 +399,38 @@ class PermissionsTest extends TestCase
 		$this->assertTrue($p->for('files', 'update'));
 		$this->assertTrue($p->for('site', 'changeTitle'));
 		$this->assertTrue($p->for('users', 'create'));
+	}
+
+	public function testStringAlias(): void
+	{
+		// a string alias maps the action to a single other action
+		$p = new PermissionsWithStringAlias(['pages' => ['update' => false]]);
+
+		$this->assertFalse($p->for('pages', 'update'));
+		$this->assertFalse($p->for('pages', 'edit'));
+
+		// actions that are not part of the alias stay untouched
+		$this->assertTrue($p->for('pages', 'save'));
+		$this->assertTrue($p->for('pages', 'read'));
+
+		$p = new PermissionsWithStringAlias(['pages' => ['update' => true]]);
+
+		$this->assertTrue($p->for('pages', 'update'));
+		$this->assertTrue($p->for('pages', 'edit'));
+	}
+
+	public function testStringAliasWithExplicitAction(): void
+	{
+		// the explicit action wins over the string alias
+		$p = new PermissionsWithStringAlias([
+			'pages' => [
+				'edit'   => true,
+				'update' => false
+			]
+		]);
+
+		$this->assertFalse($p->for('pages', 'update'));
+		$this->assertTrue($p->for('pages', 'edit'));
 	}
 
 	public function testToArray(): void

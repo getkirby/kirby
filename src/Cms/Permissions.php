@@ -36,9 +36,11 @@ class Permissions
 			'changeTemplate' => true,
 			'create'         => true,
 			'delete'         => true,
+			'edit'           => true,
 			'list'           => true,
 			'read'           => true,
 			'replace'        => true,
+			'save'           => true,
 			'sort'           => true,
 			'update'         => true
 		],
@@ -56,16 +58,20 @@ class Permissions
 			'create'         => true,
 			'delete'         => true,
 			'duplicate'      => true,
+			'edit'           => true,
 			'list'           => true,
 			'move'           => true,
 			'preview'        => true,
 			'read'           => true,
+			'save'           => true,
 			'sort'           => true,
 			'update'         => true
 		],
 		'site' => [
 			'access'      => true,
 			'changeTitle' => true,
+			'edit'        => true,
+			'save'        => true,
 			'update'      => true
 		],
 		'users' => [
@@ -77,7 +83,9 @@ class Permissions
 			'changeRole'     => true,
 			'create'         => true,
 			'delete'         => true,
+			'edit'           => true,
 			'list'           => true,
+			'save'           => true,
 			'update'         => true
 		],
 		'user' => [
@@ -88,7 +96,9 @@ class Permissions
 			'changePassword' => true,
 			'changeRole'     => true,
 			'delete'         => true,
+			'edit'           => true,
 			'list'           => true,
+			'save'           => true,
 			'update'         => true
 		]
 	];
@@ -120,10 +130,52 @@ class Permissions
 			$defaults[$key] = $actions;
 		}
 
+		$update = static fn ($value) => [
+			'edit' => $value,
+			'save' => $value,
+		];
+
 		$this->actions = $this->normalize(
 			settings: $settings,
-			defaults: $defaults
+			defaults: $defaults,
+			aliases: [
+				'files' => ['update' => $update],
+				'pages' => ['update' => $update],
+				'site'  => ['update' => $update],
+				'users' => ['update' => $update],
+				'user'  => ['update' => $update],
+			]
 		);
+	}
+
+	protected function alias(
+		array $actions,
+		array $aliases,
+		array|bool|null $defaults = []
+	): array {
+		foreach ($actions as $action => $value) {
+			$alias = $aliases[$action] ?? null;
+
+			if ($alias === null) {
+				continue;
+			}
+
+			if (is_callable($alias) === true) {
+				$alias = $alias($value);
+			}
+
+			if (is_array($alias) === false) {
+				$alias = [$alias => $value];
+			}
+
+			foreach ($alias as $key => $value) {
+				if (isset($defaults[$key]) === false) {
+					$actions[$key] = (bool)$value;
+				}
+			}
+		}
+
+		return $actions;
 	}
 
 	/**
@@ -213,12 +265,10 @@ class Permissions
 		return isset($this->actions[$category]);
 	}
 
-	/**
-	 * Normalizes the permission settings against the defaults
-	 */
 	protected function normalize(
 		array|bool|null $settings,
-		array $defaults = []
+		array $defaults = [],
+		array $aliases = []
 	): array {
 		$categories = $this->expand($settings, $defaults);
 
@@ -232,6 +282,14 @@ class Permissions
 			}
 
 			$actions = $this->expand($actions, $defaults[$category]);
+
+			if (isset($aliases[$category]) === true) {
+				$actions = $this->alias(
+					$actions,
+					$aliases[$category],
+					$settings[$category] ?? []
+				);
+			}
 
 			foreach ($actions as $key => $value) {
 				if (is_bool($value) === false) {
@@ -254,9 +312,6 @@ class Permissions
 		return $defaults;
 	}
 
-	/**
-	 * Returns all permissions as an array
-	 */
 	public function toArray(): array
 	{
 		return $this->actions;
