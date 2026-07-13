@@ -151,6 +151,13 @@ export default {
 			},
 			events: {
 				link: (editor) => {
+					// clear the DOM selection first, otherwise Chromium crashes
+					// when the scrollable modal dialog opens on top of the live
+					// editor selection (the mark uses the editor state selection,
+					// so the link still lands on the right range)
+					// TODO: remove once Chromium fixes the underlying crash
+					window.getSelection()?.removeAllRanges();
+
 					this.$panel.dialog.open({
 						component: "k-link-dialog",
 						props: {
@@ -166,6 +173,10 @@ export default {
 					});
 				},
 				email: (editor) => {
+					// same as in the link handler above
+					// TODO: remove once Chromium fixes the underlying crash
+					window.getSelection()?.removeAllRanges();
+
 					this.$panel.dialog.open({
 						component: "k-email-dialog",
 						props: {
