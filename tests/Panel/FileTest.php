@@ -529,11 +529,12 @@ class FileTest extends TestCase
 			'changeTemplate' => false,
 			'create'         => true,
 			'delete'         => true,
+			'edit'           => true,
 			'list'         	 => true,
 			'read'           => true,
 			'replace'        => true,
+			'save'           => true,
 			'sort'           => true,
-			'update'         => true,
 		];
 
 		$panel = new File($file);
@@ -560,11 +561,12 @@ class FileTest extends TestCase
 			'changeTemplate' => false,
 			'create'         => false,
 			'delete'         => false,
+			'edit'           => false,
 			'list'           => false,
 			'read'           => false,
 			'replace'        => false,
+			'save'           => false,
 			'sort'           => false,
-			'update'         => false,
 		];
 
 		$panel = new File($file);
@@ -577,11 +579,12 @@ class FileTest extends TestCase
 			'changeTemplate' => false,
 			'create'         => false,
 			'delete'         => true,
+			'edit'           => false,
 			'list'           => false,
 			'read'           => false,
 			'replace'        => false,
+			'save'           => false,
 			'sort'           => false,
-			'update'         => false,
 		];
 
 		$this->assertSame($expected, $panel->options(['delete']));
@@ -605,11 +608,12 @@ class FileTest extends TestCase
 			'changeTemplate' => false,
 			'create'         => true,
 			'delete'         => true,
+			'edit'         => true,
 			'list'           => true,
 			'read'           => true,
 			'replace'        => false,
+			'save'           => true,
 			'sort'           => true,
-			'update'         => true,
 		];
 
 		$panel = new File($file);
@@ -645,11 +649,12 @@ class FileTest extends TestCase
 			'changeTemplate' => false,
 			'create'         => true,
 			'delete'         => true,
+			'edit'           => true,
 			'list'           => true,
 			'read'           => true,
 			'replace'        => true,
+			'save'           => true,
 			'sort'           => true,
-			'update'         => true,
 		];
 
 		$panel = new File($file);
@@ -687,11 +692,12 @@ class FileTest extends TestCase
 			'changeTemplate' => false,
 			'create'         => true,
 			'delete'         => true,
+			'edit'           => true,
 			'list'           => true,
 			'read'           => true,
 			'replace'        => false,
+			'save'           => true,
 			'sort'           => true,
-			'update'         => true,
 		];
 
 		$panel = new File($file);

@@ -30,19 +30,25 @@ class FileBlueprint extends Blueprint
 
 		// normalize all available page options
 		$this->props['options'] = $this->normalizeOptions(
-			$this->props['options'] ?? true,
-			// defaults
-			[
+			options: $this->props['options'] ?? true,
+			defaults: [
 				'access'         => null,
 				'changeName'     => null,
 				'changeTemplate' => null,
 				'create'     	 => null,
 				'delete'     	 => null,
+				'edit'           => null,
 				'list'     	     => null,
 				'read'       	 => null,
 				'replace'    	 => null,
+				'save'           => null,
 				'sort'           => null,
-				'update'     	 => null,
+			],
+			aliases: [
+				'update' => static fn ($value) => [
+					'edit' => $value,
+					'save' => $value,
+				],
 			]
 		);
 
