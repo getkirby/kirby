@@ -34,6 +34,52 @@ class PageErrorsTest extends ModelTestCase
 		$this->assertSame([], $page->errors());
 	}
 
+	public function testErrorsWithInfoField(): void
+	{
+		$page = new Page([
+			'slug' => 'test',
+			'blueprint' => [
+				'name'   => 'test',
+				'fields' => [
+					'info' => [
+						'type' => 'info',
+						'text' => 'info'
+					]
+				]
+			]
+		]);
+
+		// fields without a value don't have errors
+		$this->assertSame([], $page->errors());
+	}
+
+	public function testErrorsWithPagesSectionField(): void
+	{
+		$page = new Page([
+			'slug' => 'test',
+			'blueprint' => [
+				'name' => 'test',
+				'fields' => [
+					'drafts' => [
+						'type'    => 'section',
+						'section' => 'pages',
+						'status'  => 'drafts',
+						'min'     => 1
+					]
+				]
+			]
+		]);
+
+		$this->assertSame([
+			'drafts' => [
+				'label'   => 'Drafts',
+				'message' => [
+					'min' => 'The "Drafts" section requires at least one page'
+				]
+			]
+		], $page->errors());
+	}
+
 	public function testErrorsWithRequiredField(): void
 	{
 		$page = new Page([

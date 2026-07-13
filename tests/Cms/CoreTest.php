@@ -149,6 +149,7 @@ class CoreTest extends TestCase
 		$this->assertArrayHasKey('pages', $fields);
 		$this->assertArrayHasKey('radio', $fields);
 		$this->assertArrayHasKey('range', $fields);
+		$this->assertArrayHasKey('section', $fields);
 		$this->assertArrayHasKey('select', $fields);
 		$this->assertArrayHasKey('slug', $fields);
 		$this->assertArrayHasKey('structure', $fields);
