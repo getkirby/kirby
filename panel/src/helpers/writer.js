@@ -55,14 +55,23 @@ export const allowedExtensions = (available, allowed) => {
 	return Object.keys(available);
 };
 
+/**
+ * Returns all available marks.
+ *
+ * The order  determines the ProseMirror schema mark rank, which
+ * decides the nesting priority: marks listed first wrap the ones listed
+ * later. Interactive marks (link, email) come first so that they are not
+ * split up by decorative marks like bold or italic.
+ * @see https://github.com/getkirby/kirby/issues/5481
+ */
 export const availableMarks = (options = {}) => {
 	return {
+		link: new Link(options.link ?? {}),
+		email: new Email(options.email ?? {}),
 		bold: new Bold(options.bold ?? {}),
 		clear: new Clear(options.clear ?? {}),
 		code: new Code(options.code ?? {}),
-		email: new Email(options.email ?? {}),
 		italic: new Italic(options.italic ?? {}),
-		link: new Link(options.link ?? {}),
 		strike: new Strike(options.strike ?? {}),
 		sup: new Sup(options.sup ?? {}),
 		sub: new Sub(options.sub ?? {}),
@@ -172,8 +181,11 @@ export const filterExtensions = (available, allowed) => {
 
 	let installed = {};
 
-	for (const extension in available) {
-		if (allowed.includes(extension)) {
+	// iterate over `allowed` (not `available`) so that the order defined
+	// in the blueprint is preserved; this order becomes the ProseMirror
+	// schema mark rank and thus determines the nesting priority of marks
+	for (const extension of allowed) {
+		if (available[extension]) {
 			installed[extension] = available[extension];
 		}
 	}

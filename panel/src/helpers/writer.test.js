@@ -134,6 +134,14 @@ describe("availableMarks", () => {
 		}
 	});
 
+	it("should rank interactive marks first for nesting priority", () => {
+		// link and email must come before decorative marks so that they
+		// are not split up by them (see #5481)
+		const keys = Object.keys(availableMarks());
+		expect(keys[0]).toBe("link");
+		expect(keys[1]).toBe("email");
+	});
+
 	it("should pass options to constructors", () => {
 		const marks = availableMarks({ bold: { custom: "value" } });
 		expect(marks.bold.options.custom).toBe("value");
@@ -280,6 +288,11 @@ describe("filterExtensions", () => {
 		expect(Object.keys(result)).toEqual(["a", "c"]);
 	});
 
+	it("should preserve the allowed order for arrays", () => {
+		const result = filterExtensions(available, ["c", "a"]);
+		expect(Object.keys(result)).toEqual(["c", "a"]);
+	});
+
 	it("should filter by object", () => {
 		const result = filterExtensions(available, {
 			a: true,
@@ -287,6 +300,14 @@ describe("filterExtensions", () => {
 			c: { option: 1 }
 		});
 		expect(Object.keys(result)).toEqual(["a", "c"]);
+	});
+
+	it("should preserve the allowed order for objects", () => {
+		const result = filterExtensions(available, {
+			c: true,
+			a: true
+		});
+		expect(Object.keys(result)).toEqual(["c", "a"]);
 	});
 
 	it("should ignore unknown extensions in array", () => {
