@@ -5,6 +5,7 @@ namespace Kirby\Blueprint;
 use Exception;
 use Kirby\Cms\App;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Cms\User;
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
@@ -762,6 +763,35 @@ class Blueprint
 		}
 
 		return $this->tabs = $tabs;
+	}
+
+	/**
+	 * Return the option settings depending on the user role
+	 */
+	public function optionForUser(User $user, string $action): bool|null
+	{
+		$rules = $this->options()[$action] ?? null;
+
+		if ($rules === true || $rules === false) {
+			return $rules;
+		}
+
+		if (
+			is_array($rules) === true &&
+			A::isAssociative($rules) === true
+		) {
+			$roleId = $user->role()->id();
+
+			if (isset($rules[$roleId]) === true) {
+				return $rules[$roleId];
+			}
+
+			if (isset($rules['*']) === true) {
+				return $rules['*'];
+			}
+		}
+
+		return null;
 	}
 
 	/**
