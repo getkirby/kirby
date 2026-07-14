@@ -13,9 +13,4 @@ namespace Kirby\Cms;
 class LanguagePermissions extends ModelPermissions
 {
 	protected const string CATEGORY = 'languages';
-
-	protected function canDelete(): bool
-	{
-		return $this->model->isDeletable() === true;
-	}
 }

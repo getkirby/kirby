@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\LogicException;
-use Kirby\Toolkit\A;
 
 /**
  * ModelPermissions
@@ -74,64 +73,26 @@ abstract class ModelPermissions
 		string $action,
 		bool $default = false
 	): bool {
-		$user   = static::user();
-		$userId = $user->id();
-		$role   = $user->role()->id();
+		$user = static::user();
 
 		// users with the `nobody` role can do nothing
 		// that needs a permission check
-		if ($role === 'nobody') {
+		if ($user->canExecuteNothing() === true) {
 			return false;
 		}
 
-		// check for a custom `can` method
-		// which would take priority over any other
-		// role-based permission rules
-		if (
-			method_exists($this, 'can' . $action) === true &&
-			$this->{'can' . $action}() === false
-		) {
+		// check if the model has the ability to execute this action
+		// which would take priority over any other role-based permission rules
+		if ($this->model->abilities()->$action() === false) {
 			return false;
 		}
 
 		// the almighty `kirby` user can do anything
-		if ($userId === 'kirby' && $role === 'admin') {
+		if ($user->canExecuteAnything() === true) {
 			return true;
 		}
 
-		// evaluate the blueprint options block
-		if (isset($this->options[$action]) === true) {
-			$options = $this->options[$action];
-
-			if ($options === false) {
-				return false;
-			}
-
-			if ($options === true) {
-				return true;
-			}
-
-			if (
-				is_array($options) === true &&
-				A::isAssociative($options) === true
-			) {
-				if (isset($options[$role]) === true) {
-					return $options[$role];
-				}
-
-				if (isset($options['*']) === true) {
-					return $options['*'];
-				}
-			}
-		}
-
-		$permissions = $user->role()->permissions();
-
-		return $permissions->for(
-			category: static::category($this->model),
-			action:   $action,
-			default:  $default
-		);
+		return $user->canExecuteModelAction($this->model, $action, $default);
 	}
 
 	/**
@@ -151,7 +112,7 @@ abstract class ModelPermissions
 			return static::$cache[$cacheKey];
 		}
 
-		if (method_exists(static::class, 'can' . $action) === true) {
+		if (method_exists($model->abilities(), $action) === true) {
 			throw new LogicException('Cannot use permission cache for dynamically-determined permission');
 		}
 
@@ -198,4 +159,5 @@ abstract class ModelPermissions
 	{
 		return App::instance()->user() ?? User::nobody();
 	}
+
 }

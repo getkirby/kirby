@@ -25,13 +25,4 @@ class FilePermissions extends ModelPermissions
 	): string {
 		return $model->template() ?? '__none__';
 	}
-
-	protected function canChangeTemplate(): bool
-	{
-		if (count($this->model->blueprints()) <= 1) {
-			return false;
-		}
-
-		return true;
-	}
 }
