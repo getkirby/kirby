@@ -175,7 +175,7 @@ abstract class ModelPermissions
 	 * Can be overridden by specific child classes
 	 * if the permission category needs to be dynamic
 	 */
-	protected static function category(ModelWithContent|Language $model): string
+	public static function category(ModelWithContent|Language $model): string
 	{
 		return static::CATEGORY;
 	}

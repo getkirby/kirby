@@ -48,6 +48,14 @@ class Role implements Stringable
 		return $this->name();
 	}
 
+	public function canExecuteModelAction(ModelWithContent|Language $model, string $action, bool $default = false): bool
+	{
+		$permissions = $this->permissions();
+		$category    = $model->permissions()::category($model);
+
+		return $permissions->for($category, $action, $default);
+	}
+
 	public static function defaultAdmin(array $inject = []): static
 	{
 		return static::factory(static::defaults()['admin'], $inject);

@@ -66,7 +66,7 @@ class UserPermissions extends ModelPermissions
 	 * @param \Kirby\Cms\User $model
 	 * @psalm-suppress MoreSpecificImplementedParamType
 	 */
-	protected static function category(ModelWithContent|Language $model): string
+	public static function category(ModelWithContent|Language $model): string
 	{
 		// change the scope of the permissions,
 		// when the current user is this user
