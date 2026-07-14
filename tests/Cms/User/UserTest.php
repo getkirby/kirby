@@ -9,6 +9,13 @@ class UserTest extends ModelTestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Cms.User';
 
+	public function testAbilities(): void
+	{
+		$user = new User(['email' => 'user@domain.com']);
+
+		$this->assertInstanceOf(UserAbilities::class, $user->abilities());
+	}
+
 	public function testAvatar(): void
 	{
 		$user = new User([

@@ -15,8 +15,17 @@ use Kirby\Uuid\SiteUuid;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
+class ExtendedModelWithContentAbilities extends ModelAbilities
+{
+}
+
 class ExtendedModelWithContent extends ModelWithContent
 {
+	public function abilities(): ModelAbilities
+	{
+		return new ExtendedModelWithContentAbilities();
+	}
+
 	public function apiUrl(bool $relative = false): string
 	{
 		return 'test';

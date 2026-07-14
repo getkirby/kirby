@@ -33,6 +33,13 @@ class LanguageTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
+	public function testAbilities(): void
+	{
+		$language = new Language(['code' => 'en']);
+
+		$this->assertInstanceOf(LanguageAbilities::class, $language->abilities());
+	}
+
 	public function testConstructNoCode(): void
 	{
 		$this->expectException(InvalidArgumentException::class);

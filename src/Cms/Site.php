@@ -145,6 +145,11 @@ class Site extends ModelWithContent
 		return $this->url();
 	}
 
+	public function abilities(): SiteAbilities
+	{
+		return new SiteAbilities($this);
+	}
+
 	/**
 	 * Returns the url to the api endpoint
 	 * @internal
