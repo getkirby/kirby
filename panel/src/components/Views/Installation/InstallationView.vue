@@ -33,16 +33,18 @@
 
 		<!-- not meeting requirements -->
 		<k-stack v-else>
-			<k-headline>
-				{{ $t("installation.issues.headline") }}
-			</k-headline>
+			<k-stack gap="var(--spacing-3)">
+				<k-headline>
+					{{ $t("installation.issues.headline") }}
+				</k-headline>
 
-			<k-checklist theme="negative" class="k-installation-issues">
-				<li v-for="issue in issues" :key="issue">
-					<!-- eslint-disable-next-line vue/no-v-html -->
-					<span v-html="issue" />
-				</li>
-			</k-checklist>
+				<k-checklist theme="negative" class="k-installation-issues">
+					<li v-for="issue in issues" :key="issue">
+						<!-- eslint-disable-next-line vue/no-v-html -->
+						<span v-html="issue" />
+					</li>
+				</k-checklist>
+			</k-stack>
 
 			<k-button
 				:text="$t('retry')"
@@ -165,19 +167,18 @@ export default {
 	border-radius: var(--rounded);
 }
 
-.k-installation-issues {
-	gap: var(--spacing-2);
-}
-
 .k-installation-issues li {
-	padding: var(--spacing-3) var(--spacing-2);
-	background-color: var(--theme-color-back);
+	--checklist-marker: "⚠";
+	padding: var(--spacing-2);
 	color: var(--theme-color-text-highlight);
+	background: var(--theme-color-back);
 	border-radius: var(--rounded);
 }
-
+.k-checklist li::before {
+	color: inherit;
+}
 .k-installation-issues li code {
 	font: inherit;
-	color: var(--theme-color-icon-highlight);
+	font-weight: var(--font-bold);
 }
 </style>
