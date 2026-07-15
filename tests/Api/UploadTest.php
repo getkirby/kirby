@@ -2,12 +2,14 @@
 
 namespace Kirby\Api;
 
+use Closure;
 use Exception;
 use Kirby\Cms\App;
 use Kirby\Cms\Blueprint;
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\TestCase;
@@ -50,13 +52,15 @@ class UploadTest extends TestCase
 		array $api = [],
 		bool $single = true,
 		bool $debug = false,
-		string|null $template = null
+		string|null $template = null,
+		Closure|null $preflight = null
 	): Upload {
 		return new Upload(
-			api:      $this->api($api),
-			single:   $single,
-			debug:    $debug,
-			template: $template
+			api:       $this->api($api),
+			single:    $single,
+			debug:     $debug,
+			template:  $template,
+			preflight: $preflight
 		);
 	}
 
@@ -322,6 +326,52 @@ class UploadTest extends TestCase
 		$this->assertFileExists($dir . '/abcd-test.md');
 	}
 
+	public function testProcessWithChunkPreflightDenied(): void
+	{
+		$source = static::TMP . '/test.md';
+		F::write($source, 'abcdef');
+
+		$upload = $this->upload(
+			api: [
+				'requestMethod' => 'POST',
+				'requestData' => [
+					'headers' => [
+						'Upload-Length' => 3000,
+						'Upload-Offset' => 0,
+						'Upload-Id'     => 'abcd'
+					],
+					'files' => [
+						[
+							'name'     => 'test.md',
+							'tmp_name' => $source,
+							'size'     => F::size($source),
+							'error'    => 0
+						]
+					]
+				]
+			],
+			single: false,
+			debug: true,
+			preflight: function () {
+				throw new PermissionException(message: 'The file cannot be created');
+			}
+		);
+
+		$dir = static::TMP . '/site/cache/.uploads';
+
+		// the preflight denial must abort before any chunk
+		// bytes are written to the cache dir
+		$response = $upload->process(function () {
+		});
+
+		$this->assertSame([
+			'status'  => 'error',
+			'message' => 'The file cannot be created'
+		], $response);
+
+		$this->assertFileDoesNotExist($dir . '/abcd-test.md');
+	}
+
 	public function testProcessChunkFirstChunkFullLength(): void
 	{
 		$source = static::TMP . '/test.md';
@@ -337,12 +387,15 @@ class UploadTest extends TestCase
 			]
 		]);
 
+		// a first chunk that already completes the file is used
+		// directly and never buffered in the tmp upload directory
 		$this->assertSame(
-			$file = static::TMP . '/site/cache/.uploads/test.md',
+			$source,
 			$upload->processChunk($source, basename($source))
 		);
-		$this->assertFileExists($file);
-		$this->assertFileDoesNotExist('abcd-' . $file);
+		$this->assertFileExists($source);
+		$this->assertFileDoesNotExist(static::TMP . '/site/cache/.uploads/test.md');
+		$this->assertFileDoesNotExist(static::TMP . '/site/cache/.uploads/abcd-test.md');
 	}
 
 	public function testProcessChunkFirstChunkPartialLength(): void
@@ -541,6 +594,92 @@ class UploadTest extends TestCase
 
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('Chunk offset 10 for non-existing tmp file: abcd-a.md');
+		$upload->processChunk($source, basename($source));
+	}
+
+	public function testValidateChunkTemplateMustNotChangeBetweenChunks(): void
+	{
+		$this->app->clone([
+			'blueprints' => [
+				'files/small' => [
+					'name'   => 'small',
+					'accept' => ['maxsize' => 5]
+				],
+				'files/large' => [
+					'name'   => 'large',
+					'accept' => ['maxsize' => 500]
+				]
+			]
+		]);
+
+		// the upload is established with the restrictive `small` template
+		F::write($source = static::TMP . '/test.md', 'abc');
+
+		$upload = $this->upload([
+			'requestData' => [
+				'body'    => ['template' => 'small'],
+				'headers' => [
+					'Upload-Length' => 5,
+					'Upload-Offset' => 0,
+					'Upload-Id'     => 'abcd'
+				]
+			]
+		]);
+
+		$this->assertNull($upload->processChunk($source, basename($source)));
+
+		// a later chunk must not escape the `small` maxsize by switching
+		// to the more permissive `large` template mid-upload
+		F::write($source = static::TMP . '/test.md', 'defghijkl');
+
+		$upload = $this->upload([
+			'requestData' => [
+				'body'    => ['template' => 'large'],
+				'headers' => [
+					'Upload-Length' => 12,
+					'Upload-Offset' => 3,
+					'Upload-Id'     => 'abcd'
+				]
+			]
+		]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The file template and upload length must not change between chunks');
+
+		$upload->processChunk($source, basename($source));
+	}
+
+	public function testValidateChunkTotalMustNotChangeBetweenChunks(): void
+	{
+		// first chunk announces a total length of 6
+		$source = static::TMP . '/test.md';
+		F::write($source, 'abc');
+		$upload = $this->upload([
+			'requestData' => [
+				'headers' => [
+					'Upload-Length' => 6,
+					'Upload-Offset' => 0,
+					'Upload-Id'     => 'abcd'
+				]
+			]
+		]);
+		$this->assertNull($upload->processChunk($source, basename($source)));
+
+		// a later chunk must not change the announced total length
+		$source = static::TMP . '/test.md';
+		F::write($source, 'def');
+		$upload = $this->upload([
+			'requestData' => [
+				'headers' => [
+					'Upload-Length' => 9,
+					'Upload-Offset' => 3,
+					'Upload-Id'     => 'abcd'
+				]
+			]
+		]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The file template and upload length must not change between chunks');
 		$upload->processChunk($source, basename($source));
 	}
 

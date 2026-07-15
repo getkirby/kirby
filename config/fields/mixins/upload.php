@@ -4,6 +4,7 @@ use Kirby\Cms\Api;
 use Kirby\Cms\File;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\PermissionException;
 
 return [
 	'props' => [
@@ -62,24 +63,40 @@ return [
 			$parent   = $this->uploadParent($params['parent'] ?? null);
 			$template = $params['template'] ?? null;
 
-			return $api->upload(function ($source, $filename, $template) use ($parent, $map) {
-				$props = [
-					'source'   => $source,
-					'template' => $template,
-					'filename' => $filename,
-				];
+			return $api->upload(
+				template: $template,
+				callback: function ($source, $filename, $template) use ($parent, $map) {
+					$props = [
+						'source'   => $source,
+						'template' => $template,
+						'filename' => $filename,
+					];
 
-				// move the source file from the temp dir
-				$file = $parent->createFile($props, true);
+					// move the source file from the temp dir
+					$file = $parent->createFile($props, move: true);
 
-				if ($file instanceof File === false) {
-					throw new Exception(
-						message: 'The file could not be uploaded'
-					);
+					if ($file instanceof File === false) {
+						throw new Exception(
+							message: 'The file could not be uploaded'
+						);
+					}
+
+					return $map($file, $parent);
+				},
+				preflight: function (string $filename, string|null $template) use ($parent) {
+					$file = new File([
+						'filename' => $filename,
+						'parent'   => $parent,
+						'template' => $template
+					]);
+
+					if ($file->permissions()->can('create') !== true) {
+						throw new PermissionException(
+							message: 'The file cannot be created'
+						);
+					}
 				}
-
-				return $map($file, $parent);
-			}, template: $template);
+			);
 		},
 		'uploadParent' => function (string|null $parentQuery = null) {
 			$parent = $this->model();

@@ -749,7 +749,13 @@ class F
 				throw new Exception(sprintf('The parent directory does not exist: "%s"', $in));
 			}
 
-			if (str_starts_with($realpath, $parent) === false) {
+			// require a path separator boundary so that a
+			// sibling file or directory sharing the same
+			// name prefix (e.g. `/site2` for the parent `/site`)
+			// cannot pass the containment check
+			$parent = rtrim($parent, '/\\');
+
+			if (str_starts_with($realpath, $parent . DIRECTORY_SEPARATOR) === false) {
 				throw new Exception('The file is not within the parent directory');
 			}
 		}

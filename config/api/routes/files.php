@@ -1,5 +1,8 @@
 <?php
 
+use Kirby\Cms\File;
+use Kirby\Exception\PermissionException;
+
 // routing pattern to match all models with files
 $filePattern   = '(account/|pages/[^/]+/|site/|users/[^/]+/|)files/(:any)';
 $parentPattern = '(account|pages/[^/]+|site|users/[^/]+)/files';
@@ -46,17 +49,33 @@ return [
 		'action'  => function (string $path) {
 			// move_uploaded_file() not working with unit test
 			// @codeCoverageIgnoreStart
-			return $this->upload(function ($source, $filename) use ($path) {
-				// move the source file to the content folder
-				return $this->parent($path)->createFile([
-					'content' => [
-						'sort' => $this->requestBody('sort')
-					],
-					'source'   => $source,
-					'template' => $this->requestBody('template'),
-					'filename' => $filename
-				], true);
-			});
+			$parent = $this->parent($path);
+
+			return $this->upload(
+				callback: function ($source, $filename) use ($parent) {
+					return $parent->createFile([
+						'content' => [
+							'sort' => $this->requestBody('sort')
+						],
+						'source'   => $source,
+						'template' => $this->requestBody('template'),
+						'filename' => $filename
+					], move: true);
+				},
+				preflight: function (string $filename, string|null $template) use ($parent) {
+					$file = new File([
+						'parent'   => $parent,
+						'filename' => $filename,
+						'template' => $template
+					]);
+
+					if ($file->permissions()->can('create') !== true) {
+						throw new PermissionException(
+							message: 'The file cannot be created'
+						);
+					}
+				}
+			);
 			// @codeCoverageIgnoreEnd
 		}
 	],
@@ -110,9 +129,17 @@ return [
 		'pattern' => $filePattern,
 		'method'  => 'POST',
 		'action'  => function (string $path, string $filename) {
-			// move the source file from the temp dir
+			$file = $this->file($path, $filename);
+
 			return $this->upload(
-				fn ($source) => $this->file($path, $filename)->replace($source, true)
+				callback: fn ($source) => $file->replace($source, move: true),
+				preflight: function () use ($file) {
+					if ($file->permissions()->can('replace') !== true) {
+						throw new PermissionException(
+							message: 'The file cannot be replaced'
+						);
+					}
+				}
 			);
 		}
 	],
