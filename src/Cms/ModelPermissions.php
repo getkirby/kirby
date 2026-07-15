@@ -145,7 +145,7 @@ abstract class ModelPermissions
 	): bool {
 		$role     = $model->kirby()->role()?->id() ?? '__none__';
 		$category = static::category($model);
-		$cacheKey = $category . '.' . $action . '/' . static::cacheKey($model) . '/' . $role;
+		$cacheKey = $category . '.' . $action . '/' . static::cacheKey($model) . '/' . $role . '/' . ($default === true ? 'true' : 'false');
 
 		if (isset(static::$cache[$cacheKey]) === true) {
 			return static::$cache[$cacheKey];
@@ -155,7 +155,7 @@ abstract class ModelPermissions
 			throw new LogicException('Cannot use permission cache for dynamically-determined permission');
 		}
 
-		return static::$cache[$cacheKey] = $model->permissions()->can($action, $role, $default);
+		return static::$cache[$cacheKey] = $model->permissions()->can($action, $default);
 	}
 
 	/**

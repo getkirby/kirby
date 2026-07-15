@@ -148,4 +148,41 @@ class SiteTest extends TestCase
 
 		$this->assertTrue($props['permissions']['preview']);
 	}
+
+	public function testPreviewPermissionsWithoutSitePermission(): void
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					['slug' => 'home']
+				]
+			],
+			'users' => [
+				[
+					'id'    => 'test',
+					'email' => 'test@getkirby.com',
+					'role'  => 'editor'
+				]
+			],
+			'roles' => [
+				[
+					'id'          => 'editor',
+					'name'        => 'editor',
+					'permissions' => [
+						'site' => [
+							'preview' => false
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('test@getkirby.com');
+
+		// the home page still allows `pages.preview`,
+		// but the site's own `site.preview` is disabled
+		$props = $this->app->site()->panel()->props();
+
+		$this->assertFalse($props['permissions']['preview']);
+	}
 }
