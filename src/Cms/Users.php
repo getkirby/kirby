@@ -162,7 +162,7 @@ class Users extends LazyCollection
 
 		// ensure the user ID only contains safe characters
 		// to prevent path traversal into subfolders
-		if (V::match($key, '/^([a-z0-9_-])+$/i') !== true) {
+		if (V::match($key, UserRules::ID_PATTERN) !== true) {
 			return null;
 		}
 
