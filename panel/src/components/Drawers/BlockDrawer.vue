@@ -39,15 +39,9 @@ import { props as FieldsProps } from "./Elements/Fields.vue";
 
 export const props = {
 	props: {
-		hidden: {
-			type: Boolean
-		},
-		next: {
-			type: Object
-		},
-		prev: {
-			type: Object
-		}
+		hidden: Boolean,
+		next: Boolean,
+		prev: Boolean
 	}
 };
 

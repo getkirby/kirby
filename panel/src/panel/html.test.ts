@@ -106,6 +106,39 @@ describe("HtmlString class", () => {
 			warn.mockRestore();
 		});
 
+		it("passes class instances through untouched", () => {
+			class Component {
+				name = "block";
+			}
+
+			const instance = new Component();
+			const result = HtmlString.resolve({ next: instance }) as {
+				next: Component;
+			};
+
+			expect(result.next).toBe(instance);
+		});
+
+		it("keeps already resolved HtmlString values intact", () => {
+			const safe = new HtmlString("<b>x</b>");
+			const result = HtmlString.resolve({ help: safe }) as { help: HtmlString };
+
+			expect(result.help).toBe(safe);
+		});
+
+		it("does not recurse into cyclic values", () => {
+			const parent: Record<string, unknown> = { name: "parent" };
+			const child = { name: "child", parent };
+			parent.child = child;
+
+			// a component instance holding cyclic references must not be walked
+			class Component {
+				tree = parent;
+			}
+
+			expect(() => HtmlString.resolve({ next: new Component() })).not.toThrow();
+		});
+
 		it("wraps non-string values under <key> by recursing", () => {
 			// Pragmatic edge case: if backend wraps an array under <key>,
 			// don't blindly stringify - recurse into it.
