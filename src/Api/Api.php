@@ -665,33 +665,7 @@ class Api
 		} elseif ($this->debug === true) {
 			// in debug mode, expose the actual message
 			// but disguise absolute file paths in it
-			$message = $e->getMessage();
-
-			if (isset($this->kirby) === true) {
-				$message = $this->kirby->disguiseFilePath($message);
-			}
-
-		} else {
-			// any other (PHP) error could leak internal details,
-			// so only a generic message is returned
-			$message = I18n::translate('error.unexpected');
-		}
-
-		// determine which message to expose to avoid leaking
-		// internal details (e.g. file paths) from PHP errors
-		if ($e instanceof ExceptionException) {
-			// Kirby exceptions carry safe, intentional messages
-			// that can be returned as-is whether debugging or not
-			$message = $e->getMessage();
-
-		} elseif ($this->debug === true) {
-			// in debug mode, expose the actual message
-			// but disguise absolute file paths in it
-			$message = $e->getMessage();
-
-			if (isset($this->kirby) === true) {
-				$message = $this->kirby->disguiseFilePath($message);
-			}
+			$message = $this->kirby->disguiseFilePath($e->getMessage());
 
 		} else {
 			// any other (PHP) error could leak internal details,

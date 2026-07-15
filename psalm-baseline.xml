@@ -146,15 +146,6 @@
 		}]]></code>
     </NullableReturnStatement>
   </file>
-  <file src="src/Cms/ModelPermissions.php">
-    <InvalidScalarArgument>
-      <code><![CDATA[$role]]></code>
-      <code><![CDATA[$role]]></code>
-    </InvalidScalarArgument>
-    <TooManyArguments>
-      <code><![CDATA[can]]></code>
-    </TooManyArguments>
-  </file>
   <file src="src/Cms/PageActions.php">
     <InvalidOperand>
       <code><![CDATA[$props['content']]]></code>
