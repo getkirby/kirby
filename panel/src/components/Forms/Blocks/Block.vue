@@ -337,8 +337,8 @@ export default {
 				props: {
 					hidden: this.isHidden,
 					icon: this.fieldset.icon ?? "box",
-					next: this.next,
-					prev: this.prev,
+					next: Boolean(this.next),
+					prev: Boolean(this.prev),
 					tabs: this.tabs,
 					title: this.fieldset.name,
 					value: this.content
