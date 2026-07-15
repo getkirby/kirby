@@ -44,8 +44,9 @@ trait AppErrors
 	 * error responses short and readable in debug mode.
 	 *
 	 * @since 5.3.0
+	 * @internal
 	 */
-	protected function disguiseFilePath(string $file): string
+	public function disguiseFilePath(string $file): string
 	{
 		$disguise = [
 			$this->root('kirby') => '{kirby}',

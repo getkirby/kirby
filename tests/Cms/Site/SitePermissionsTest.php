@@ -69,4 +69,34 @@ class SitePermissionsTest extends ModelTestCase
 		$this->assertFalse(SitePermissions::canFromCache($site, 'access'));
 		$this->assertFalse(SitePermissions::canFromCache($site, 'access'));
 	}
+
+	public function testCanFromCacheWithDefault()
+	{
+		// reset the process-wide in-memory permission cache
+		ModelPermissions::$cache = [];
+
+		$app = new App([
+			'roles' => [
+				['name' => 'editor']
+			],
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'users' => [
+				['id' => 'bastian', 'role' => 'editor'],
+			]
+		]);
+
+		$app->impersonate('bastian');
+
+		$site = $app->site();
+
+		// an action that is not defined in the permissions map
+		// falls back to the passed default…
+		$this->assertTrue(SitePermissions::canFromCache($site, 'undefined', true));
+
+		// …and a different default for the same action
+		// must not be served from the cache
+		$this->assertFalse(SitePermissions::canFromCache($site, 'undefined', false));
+	}
 }

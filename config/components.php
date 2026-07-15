@@ -11,6 +11,7 @@ use Kirby\Content\PlainTextStorage;
 use Kirby\Content\Storage;
 use Kirby\Data\Data;
 use Kirby\Email\PHPMailer as Emailer;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Asset;
 use Kirby\Filesystem\F;
@@ -81,6 +82,13 @@ return [
 		$thumbRoot = (new Filename($file->root(), $template, $options))->toString();
 		$thumbName = basename($thumbRoot);
 		$job       = $mediaRoot . '/.jobs/' . $thumbName . '.json';
+
+		// additional protection against path traversal
+		// e.g. from dynamic user-controlled file or asset objects
+		// or malicious data in the `$options`; we check both for `../` and `..\` (Windows)
+		if (Str::contains(Str::replace($thumbRoot, '\\', '/'), '../') === true) {
+			throw new InvalidArgumentException('Received unexpected generated thumb root');
+		}
 
 		// check if the thumb or job file already exists
 		if (

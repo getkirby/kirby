@@ -51,6 +51,7 @@ class PermissionsTest extends TestCase
 
 			['site', 'access'],
 			['site', 'changeTitle'],
+			['site', 'preview'],
 			['site', 'update'],
 
 			['users', 'access'],

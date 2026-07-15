@@ -193,6 +193,20 @@ class FTest extends TestCase
 		F::realpath($file, $parent);
 	}
 
+	public function testRealpathToSiblingWithSharedPrefix(): void
+	{
+		// a sibling directory whose name starts with
+		// the parent's name (`site2` vs `site`) must not
+		// pass the containment check
+		Dir::make(static::TMP . '/site');
+		F::write($file = static::TMP . '/site2/secret.txt', 'secret');
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('The file is not within the parent directory');
+
+		F::realpath($file, static::TMP . '/site');
+	}
+
 	public function testRelativePath(): void
 	{
 		$path = F::relativepath(__FILE__, __DIR__);

@@ -362,6 +362,32 @@ class MediaTest extends TestCase
 		$this->assertFileDoesNotExist($processedFile);
 	}
 
+	public function testThumbWithTraversalFilename(): void
+	{
+		$hash = 'test-1234';
+		$root = static::TMP . '/media/assets/content/' . $hash;
+		Dir::make($jobs = $root . '/.jobs');
+
+		// a valid JSON file outside the media root
+		// that an unguarded `$job` path would resolve
+		//  to and read as configuration
+		$traversal = '../../../../../evil';
+		F::write($jobs . '/' . $traversal . '.json', '{"x":1}');
+
+		// confirm the marker really escaped the media root
+		$outside = realpath($jobs . '/' . $traversal . '.json');
+		$this->assertIsString($outside);
+		$this->assertFalse(str_starts_with($outside, realpath(static::TMP) . '/media/'));
+
+		// the traversal filename must be rejected
+		// before it is appended to the job/thumb path,
+		// so it never reaches `$outside`
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The thumbnail configuration could not be found');
+
+		Media::thumb('content', $hash, $traversal);
+	}
+
 	public function testThumbStringModel(): void
 	{
 		Dir::make(static::TMP . '/content');

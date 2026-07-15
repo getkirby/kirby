@@ -980,7 +980,7 @@ class FieldsTest extends TestCase
 		);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid form with errors');
+		$this->expectExceptionMessage('Please fix all form errors');
 
 		$fields->validate();
 	}
