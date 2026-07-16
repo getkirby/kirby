@@ -104,6 +104,32 @@ class LanguagePermissionsTest extends TestCase
 		$this->assertFalse($perms->can($action));
 	}
 
+	public function testRuleForUser(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'roles' => [
+				['name' => 'admin']
+			],
+			'users' => [
+				['email' => 'admin@getkirby.com', 'role' => 'admin']
+			]
+		]);
+
+		$app->impersonate('admin@getkirby.com');
+
+		$language = new Language(['code' => 'en']);
+
+		// languages have no model blueprint, so there is
+		// never a user-specific rule for them
+		$this->assertNull($language->permissions()->ruleForUser(
+			$app->user('admin@getkirby.com'),
+			'update'
+		));
+	}
+
 	public function testCanDeleteWhenNotDeletable(): void
 	{
 		$app = new App([

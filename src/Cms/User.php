@@ -172,39 +172,6 @@ class User extends ModelWithContent
 		}
 	}
 
-	public function canExecuteAnything(): bool
-	{
-		// the almighty `kirby` user can do anything
-		if ($this->isKirby() === true) {
-			return true;
-		}
-
-		return false;
-	}
-
-	public function canExecuteModelAction(ModelWithContent|Language $model, string $action, bool $default = false): bool
-	{
-		$rule = match (true) {
-			$model instanceof ModelWithContent => $model->blueprint()->optionForUser($this, $action),
-			$model instanceof Language         => null
-		};
-
-		if ($rule !== null) {
-			return $rule;
-		}
-
-		return $this->role()->canExecuteModelAction($model, $action, $default);
-	}
-
-	public function canExecuteNothing(): bool
-	{
-		if ($this->role()->isNobody() === true) {
-			return true;
-		}
-
-		return false;
-	}
-
 	/**
 	 * Prepares the content for the write method
 	 * @internal

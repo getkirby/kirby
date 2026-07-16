@@ -74,25 +74,26 @@ abstract class ModelPermissions
 		bool $default = false
 	): bool {
 		$user = static::user();
+		$role = $user->role();
 
-		// users with the `nobody` role can do nothing
-		// that needs a permission check
-		if ($user->canExecuteNothing() === true) {
+		// users with the `nobody` role can't execute anything
+		if ($role->isNobody() === true) {
 			return false;
 		}
 
 		// check if the model has the ability to execute this action
-		// which would take priority over any other role-based permission rules
+		// without breaking system logic. This always takes priority over
+		// any other role-based permission rules
 		if ($this->model->abilities()->$action() === false) {
 			return false;
 		}
 
-		// the almighty `kirby` user can do anything
-		if ($user->canExecuteAnything() === true) {
+		// the almighty `kirby` user can execute anything
+		if ($user->isKirby() === true) {
 			return true;
 		}
 
-		return $user->canExecuteModelAction($this->model, $action, $default);
+		return $this->ruleForUser($user, $action) ?? $this->ruleForRole($role, $action) ?? $default;
 	}
 
 	/**
@@ -139,6 +140,31 @@ abstract class ModelPermissions
 	public static function category(ModelWithContent|Language $model): string
 	{
 		return static::CATEGORY;
+	}
+
+	/**
+	 * Tries to find the permission rule by role and action.
+	 * Returns null if no specific rule is set in the role blueprint.
+	 */
+	public function ruleForRole(Role $role, string $action): bool|null
+	{
+		return $role->permissions()->for(
+			category: static::category($this->model),
+			action: $action,
+			default: null
+		);
+	}
+
+	/**
+	 * Tries to find the permission rule by user, model and action.
+	 * Returns null if no specific rule is set in the model blueprint.
+	 */
+	public function ruleForUser(User $user, string $action): bool|null
+	{
+		return match (true) {
+			$this->model instanceof ModelWithContent => $this->model->blueprint()->optionForUser($user, $action),
+			$this->model instanceof Language         => null
+		};
 	}
 
 	public function toArray(): array

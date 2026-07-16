@@ -245,6 +245,20 @@ class PermissionsTest extends TestCase
 		$this->assertTrue($p->for('access', 'foo', default:true));
 	}
 
+	public function testForNullDefault(): void
+	{
+		$p = new Permissions();
+
+		// existing permissions still return their bool value
+		$this->assertTrue($p->for('access', 'site', default: null));
+
+		// a null default is returned when the category does not exist
+		$this->assertNull($p->for('foo', default: null));
+
+		// a null default is returned when the action does not exist
+		$this->assertNull($p->for('access', 'foo', default: null));
+	}
+
 	public function testForNullCategory(): void
 	{
 		$p       = new Permissions();
