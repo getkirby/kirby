@@ -409,15 +409,26 @@ class ChallengesTest extends TestCase
 
 	public function testSwitchUserNotFound(): void
 	{
+		// a missing user must not be observable here;
+		// instead it keeps the session generically pending
 		$session = $this->session();
 		$session->set('kirby.challenge.email', 'unknown@example.com');
 		$session->set('kirby.challenge.mode', 'login');
 		$session->set('kirby.challenge.type', 'dummy');
 		$session->set('kirby.challenge.timeout', time() + 1000);
+		$session->set('kirby.challenge.data', ['public' => 'x', 'secret' => 'y']);
 
-		$this->expectException(UserNotFoundException::class);
+		$challenge = $this->challenges->switch($session, 'dummy2');
 
-		$this->challenges->switch($session, 'dummy');
+		// no challenge is created, but the session stays pending
+		$this->assertNull($challenge);
+		$this->assertSame('unknown@example.com', $session->get('kirby.challenge.email'));
+		$this->assertSame('login', $session->get('kirby.challenge.mode'));
+		$this->assertSame(MockTime::$time + $this->challenges->timeout(), $session->get('kirby.challenge.timeout'));
+
+		// stale challenge type and data are cleared so nothing leaks
+		$this->assertNull($session->get('kirby.challenge.type'));
+		$this->assertNull($session->get('kirby.challenge.data'));
 	}
 
 	public function testVerify(): void

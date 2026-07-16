@@ -221,7 +221,7 @@ class Challenges
 	/**
 	 * Switches the active challenge within an existing pending session
 	 */
-	public function switch(Session $session, string $type): Challenge
+	public function switch(Session $session, string $type): Challenge|null
 	{
 		$this->ensureNotTimeout($session);
 
@@ -236,12 +236,8 @@ class Challenges
 
 		$user = $this->kirby->user($email);
 
-		if ($user === null) {
-			throw new UserNotFoundException(name: $email);
-		}
-
 		// keep existing challenge if the requested type is same
-		if ($session->get('kirby.challenge.type') === $type) {
+		if ($user !== null && $session->get('kirby.challenge.type') === $type) {
 			return $this->get($type, $user, $mode);
 		}
 
@@ -250,6 +246,16 @@ class Challenges
 		// so it must consume budget just like ::create()
 		$this->auth->limits()->ensure($email);
 		$this->auth->limits()->track($email, triggerHook: false);
+
+		// a missing user must not be observable;
+		// instead keep the session generically pending
+		if ($user === null) {
+			$this->clear($session);
+			$session->set('kirby.challenge.email', $email);
+			$session->set('kirby.challenge.mode', $mode);
+			$session->set('kirby.challenge.timeout', time() + $this->timeout());
+			return null;
+		}
 
 		// check if new challenge is available for the user and mode
 		$available = $this->available($user, $mode);
