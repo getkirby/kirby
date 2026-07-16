@@ -3,6 +3,7 @@
 namespace Kirby\Auth;
 
 use Kirby\Auth\Exception\ChallengeTimeoutException;
+use Kirby\Auth\Exception\RateLimitException;
 use Kirby\Cms\App;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
@@ -429,6 +430,51 @@ class ChallengesTest extends TestCase
 		// stale challenge type and data are cleared so nothing leaks
 		$this->assertNull($session->get('kirby.challenge.type'));
 		$this->assertNull($session->get('kirby.challenge.data'));
+	}
+
+	public function testSwitchUserNotFoundSameType(): void
+	{
+		// even when the requested type matches the active one,
+		// a missing user must not short-circuit into an existing
+		// challenge but end up in the generic pending state
+		$session = $this->session();
+		$session->set('kirby.challenge.email', 'unknown@example.com');
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.type', 'dummy');
+		$session->set('kirby.challenge.timeout', time() + 1000);
+		$session->set('kirby.challenge.data', ['public' => 'x', 'secret' => 'y']);
+
+		$challenge = $this->challenges->switch($session, 'dummy');
+
+		$this->assertNull($challenge);
+		$this->assertSame('unknown@example.com', $session->get('kirby.challenge.email'));
+		$this->assertSame('login', $session->get('kirby.challenge.mode'));
+		$this->assertNull($session->get('kirby.challenge.type'));
+		$this->assertNull($session->get('kirby.challenge.data'));
+	}
+
+	public function testSwitchRateLimited(): void
+	{
+		// switching consumes rate-limit budget even for a missing
+		// user, so that the endpoint cannot be used for enumeration
+		$this->app = $this->app->clone([
+			'options' => ['auth' => ['trials' => 1]]
+		]);
+
+		$this->challenges = new Challenges($this->app->auth(), $this->app);
+
+		$session = $this->app->session();
+		$session->set('kirby.challenge.email', 'unknown@example.com');
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.type', 'dummy');
+		$session->set('kirby.challenge.timeout', time() + 1000);
+
+		// first attempt tracks the trial and keeps the session pending
+		$this->assertNull($this->challenges->switch($session, 'dummy2'));
+
+		// second attempt is blocked by the rate limit
+		$this->expectException(RateLimitException::class);
+		$this->challenges->switch($session, 'dummy2');
 	}
 
 	public function testVerify(): void

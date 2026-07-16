@@ -197,6 +197,23 @@ class Challenges
 	}
 
 	/**
+	 * Puts the session into a generic pending state that is not
+	 * bound to a specific user or challenge type. This is used as the
+	 * anti-enumeration path so that a missing user cannot be observed,
+	 * both when creating and when switching a challenge.
+	 */
+	public function keepPending(
+		Session $session,
+		string $email,
+		string $mode
+	): void {
+		$this->clear($session);
+		$session->set('kirby.challenge.email', $email);
+		$session->set('kirby.challenge.mode', $mode);
+		$session->set('kirby.challenge.timeout', time() + $this->timeout());
+	}
+
+	/**
 	 * Writes challenge state into the session
 	 */
 	protected function store(
@@ -223,57 +240,65 @@ class Challenges
 	 */
 	public function switch(Session $session, string $type): Challenge|null
 	{
-		$this->ensureNotTimeout($session);
+		// wrap the whole method so that the response time cannot
+		// reveal whether the user exists or whether the switch
+		// triggered side effects (e.g. an email send in ::store());
+		// mirrors the timing jitter in `Auth::createChallenge()`
+		try {
+			$this->ensureNotTimeout($session);
 
-		$email = $session->get('kirby.challenge.email');
-		$mode  = $session->get('kirby.challenge.mode');
+			$email = $session->get('kirby.challenge.email');
+			$mode  = $session->get('kirby.challenge.mode');
 
-		if (is_string($email) !== true || is_string($mode) !== true) {
-			throw new InvalidArgumentException(
-				fallback: 'No authentication challenge is active'
-			);
-		}
+			if (is_string($email) !== true || is_string($mode) !== true) {
+				throw new InvalidArgumentException(
+					fallback: 'No authentication challenge is active'
+				);
+			}
 
-		$user = $this->kirby->user($email);
+			$user = $this->kirby->user($email);
 
-		// keep existing challenge if the requested type is same
-		if ($user !== null && $session->get('kirby.challenge.type') === $type) {
-			return $this->get($type, $user, $mode);
-		}
+			// keep existing challenge if the requested type is same
+			if ($user !== null && $session->get('kirby.challenge.type') === $type) {
+				return $this->get($type, $user, $mode);
+			}
 
-		// rate-limiting:
-		// each switch can trigger side effects (e.g. email sends),
-		// so it must consume budget just like ::create()
-		$this->auth->limits()->ensure($email);
-		$this->auth->limits()->track($email, triggerHook: false);
+			// rate-limiting:
+			// each switch can trigger side effects (e.g. email sends),
+			// so it must consume budget just like ::create()
+			$this->auth->limits()->ensure($email);
+			$this->auth->limits()->track($email, triggerHook: false);
 
-		// a missing user must not be observable;
-		// instead keep the session generically pending
-		if ($user === null) {
+			// a missing user must not be observable;
+			// instead keep the session generically pending
+			if ($user === null) {
+				$this->keepPending($session, $email, $mode);
+				return null;
+			}
+
+			// check if new challenge is available for the user and mode
+			$available = $this->available($user, $mode);
+
+			if (in_array($type, $available) === false) {
+				throw new InvalidArgumentException(
+					fallback: 'The requested challenge is not available'
+				);
+			}
+
+			// clear existing challenge
 			$this->clear($session);
-			$session->set('kirby.challenge.email', $email);
-			$session->set('kirby.challenge.mode', $mode);
-			$session->set('kirby.challenge.timeout', time() + $this->timeout());
-			return null;
+
+			// create new challenge and store in session
+			$challenge = $this->get($type, $user, $mode);
+			$this->store($session, $challenge, $email, $mode);
+
+			return $challenge;
+		} finally {
+			// sleep for a random amount of milliseconds
+			// to make automated attacks harder and to
+			// avoid leaking whether the user exists
+			usleep(random_int(50000, 300000));
 		}
-
-		// check if new challenge is available for the user and mode
-		$available = $this->available($user, $mode);
-
-		if (in_array($type, $available) === false) {
-			throw new InvalidArgumentException(
-				fallback: 'The requested challenge is not available'
-			);
-		}
-
-		// clear existing challenge
-		$this->clear($session);
-
-		// create new challenge and store in session
-		$challenge = $this->get($type, $user, $mode);
-		$this->store($session, $challenge, $email, $mode);
-
-		return $challenge;
 	}
 
 	public function timeout(): int|null
