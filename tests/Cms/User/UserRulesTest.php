@@ -618,11 +618,23 @@ class UserRulesTest extends ModelTestCase
 		UserRules::validAvatar($user, $source, 'jpg');
 	}
 
-	public function testValidIdWhenValid(): void
+	public static function validIdProvider(): array
+	{
+		return [
+			['homer'],
+			// uppercase characters are allowed
+			['Homer'],
+			// underscores and dashes are allowed
+			['foo_bar-1']
+		];
+	}
+
+	#[DataProvider('validIdProvider')]
+	public function testValidIdWhenValid(string $id): void
 	{
 		$this->expectNotToPerformAssertions();
 		$user = new User(['email' => 'test@getkirby.com']);
-		UserRules::validId($user, 'homer');
+		UserRules::validId($user, $id);
 	}
 
 	public static function invalidIdProvider(): array
