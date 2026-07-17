@@ -5,6 +5,7 @@ namespace Kirby\Template;
 use Exception;
 use Kirby\Cms\App;
 use Kirby\Filesystem\F;
+use Kirby\Toolkit\Str;
 use Kirby\Toolkit\Tpl;
 use Stringable;
 
@@ -196,6 +197,16 @@ class Template implements Stringable
 	public function root(): string
 	{
 		return App::instance()->root($this->store());
+	}
+
+	/**
+	 * Sanitizes a template name to prevent path traversal,
+	 * as the name is used to build the content file name;
+	 * dots are kept for representations, but slashes are removed
+	 */
+	public static function sanitizeName(string|null $name): string
+	{
+		return Str::slug($name, allowed: 'a-z0-9._-') ?: 'default';
 	}
 
 	/**
