@@ -625,15 +625,6 @@ class UserRulesTest extends ModelTestCase
 		UserRules::delete($user);
 	}
 
-	public static function validIdProvider(): array
-	{
-		return [
-			['account'],
-			['kirby'],
-			['nobody']
-		];
-	}
-
 	public function testValidAvatar(): void
 	{
 		$this->expectNotToPerformAssertions();
@@ -666,13 +657,57 @@ class UserRulesTest extends ModelTestCase
 		UserRules::validAvatar($user, $source, 'jpg');
 	}
 
+	public static function validIdProvider(): array
+	{
+		return [
+			['homer'],
+			// uppercase characters are allowed
+			['Homer'],
+			// underscores and dashes are allowed
+			['foo_bar-1']
+		];
+	}
+
 	#[DataProvider('validIdProvider')]
-	public function testValidId(string $id): void
+	public function testValidIdWhenValid(string $id): void
+	{
+		$this->expectNotToPerformAssertions();
+		$user = new User(['email' => 'test@getkirby.com']);
+		UserRules::validId($user, $id);
+	}
+
+	public static function invalidIdProvider(): array
+	{
+		return [
+			// reserved words
+			['account', 'a reserved word and cannot be used as user id'],
+			['kirby', 'a reserved word and cannot be used as user id'],
+			['nobody', 'a reserved word and cannot be used as user id'],
+			// unsafe characters
+			['homer%1', 'not a valid user id'],
+			['../../site/config', 'not a valid user id'],
+			['../foo', 'not a valid user id'],
+			['foo/bar', 'not a valid user id'],
+			['foo\\bar', 'not a valid user id'],
+			['foo.bar', 'not a valid user id'],
+			['.', 'not a valid user id'],
+			['..', 'not a valid user id'],
+			['foo bar', 'not a valid user id'],
+			["\nhomer", 'not a valid user id'],
+			["homer\nfoo", 'not a valid user id'],
+			["homer\r\n", 'not a valid user id'],
+			["homer\n", 'not a valid user id'],
+			['', 'not a valid user id']
+		];
+	}
+
+	#[DataProvider('invalidIdProvider')]
+	public function testValidIdWhenInvalid(string $id, string $error): void
 	{
 		$user = new User(['email' => 'test@getkirby.com']);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('"' . $id . '" is a reserved word and cannot be used as user id');
+		$this->expectExceptionMessage('"' . $id . '" is ' . $error);
 
 		UserRules::validId($user, $id);
 	}
