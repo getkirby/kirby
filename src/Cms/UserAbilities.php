@@ -33,6 +33,20 @@ class UserAbilities extends ModelAbilities
 		return true;
 	}
 
+	public function changeSecret(): bool
+	{
+		$currentUser = App::instance()->user();
+
+		if (
+			$currentUser->is($this->user) === false &&
+			$currentUser->isAdmin() === false
+		) {
+			return false;
+		}
+
+		return true;
+	}
+
 	public function create(): bool
 	{
 		// the admin can always create new users
@@ -50,6 +64,14 @@ class UserAbilities extends ModelAbilities
 
 	public function delete(): bool
 	{
-		return $this->user->isLastAdmin() !== true;
+		if ($this->user->isLastAdmin() === true) {
+			return false;
+		}
+
+		if ($this->user->isLastUser() === true) {
+			return false;
+		}
+
+		return true;
 	}
 }

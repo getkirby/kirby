@@ -66,6 +66,35 @@ class UserAbilitiesTest extends ModelTestCase
 		$this->assertFalse($this->abilities('admin@getkirby.com')->changeRole());
 	}
 
+	public function testChangeSecretForSelf(): void
+	{
+		$this->app->impersonate('editor@getkirby.com');
+
+		$this->assertTrue($this->abilities('editor@getkirby.com')->changeSecret());
+	}
+
+	public function testChangeSecretForOtherUserAsAdmin(): void
+	{
+		$this->app->impersonate('admin@getkirby.com');
+
+		$this->assertTrue($this->abilities('editor@getkirby.com')->changeSecret());
+	}
+
+	public function testChangeSecretForOtherUserAsEditor(): void
+	{
+		$this->app = $this->app->clone([
+			'users' => [
+				['email' => 'admin@getkirby.com', 'role' => 'admin'],
+				['email' => 'editor@getkirby.com', 'role' => 'editor'],
+				['email' => 'another-editor@getkirby.com', 'role' => 'editor']
+			]
+		]);
+
+		$this->app->impersonate('editor@getkirby.com');
+
+		$this->assertFalse($this->abilities('another-editor@getkirby.com')->changeSecret());
+	}
+
 	public function testCreateAdminAsAdmin(): void
 	{
 		$this->app->impersonate('admin@getkirby.com');
@@ -113,6 +142,25 @@ class UserAbilitiesTest extends ModelTestCase
 		$this->app->impersonate('admin@getkirby.com');
 
 		$this->assertFalse($this->abilities('admin@getkirby.com')->delete());
+	}
+
+	public function testDeleteLastUser(): void
+	{
+		$this->app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'roles' => [
+				['name' => 'editor']
+			],
+			'users' => [
+				['email' => 'editor@getkirby.com', 'role' => 'editor']
+			]
+		]);
+
+		$this->app->impersonate('editor@getkirby.com');
+
+		$this->assertFalse($this->abilities('editor@getkirby.com')->delete());
 	}
 
 	public function testInheritedAbilities(): void

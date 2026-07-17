@@ -145,12 +145,7 @@ class UserRules
 		#[SensitiveParameter]
 		mixed $content
 	): void {
-		$currentUser = $user->kirby()->user();
-
-		if (
-			$currentUser->is($user) === false &&
-			$currentUser->isAdmin() === false
-		) {
+		if ($user->abilities()->changeSecret() === false) {
 			throw new PermissionException(
 				message: 'You cannot change user secrets for ' . $user->email()
 			);
@@ -169,12 +164,7 @@ class UserRules
 		#[SensitiveParameter]
 		string|null $secret
 	): void {
-		$currentUser = $user->kirby()->user();
-
-		if (
-			$currentUser->is($user) === false &&
-			$currentUser->isAdmin() === false
-		) {
+		if ($user->abilities()->changeSecret() === false) {
 			throw new PermissionException(
 				message: 'You cannot change the time-based code for ' . $user->email()
 			);
