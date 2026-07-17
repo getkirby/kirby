@@ -247,15 +247,10 @@ class BlocksTest extends TestCase
 			<iframe src="https://getkirby.com"></iframe>
 			HTML;
 
-		$element  = $this->element($html, '//iframe');
-		$expected = [
-			'content' => [
-				'text' => '<iframe src="https://getkirby.com"></iframe>'
-			],
-			'type' => 'markdown',
-		];
+		$element = $this->element($html, '//iframe');
 
-		$this->assertSame($expected, $this->schema->iframe($element));
+		// non-video iframes cannot be stored safely and are dropped
+		$this->assertNull($this->schema->iframe($element));
 	}
 
 	public function testIframeWithVimeoVideo(): void
