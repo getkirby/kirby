@@ -477,6 +477,32 @@ class DomTest extends TestCase
 				"ur\0l\0\0(\0'test://te\0st'\0)\0",
 				['test://test']
 			],
+
+			// @import string form
+			[
+				'@import "https://getkirby.com/style.css"',
+				['https://getkirby.com/style.css']
+			],
+			[
+				'@import \'https://getkirby.com/style.css\'',
+				['https://getkirby.com/style.css']
+			],
+			[
+				'@import   "  https://getkirby.com/style.css  "',
+				['https://getkirby.com/style.css']
+			],
+
+			// @import url() form
+			[
+				'@import url("https://getkirby.com/style.css")',
+				['https://getkirby.com/style.css']
+			],
+
+			// mixed url() and @import string form
+			[
+				'@import "https://getkirby.com/a.css"; text { background: url(https://getkirby.com/b.png); }',
+				['https://getkirby.com/b.png', 'https://getkirby.com/a.css']
+			],
 		];
 	}
 
