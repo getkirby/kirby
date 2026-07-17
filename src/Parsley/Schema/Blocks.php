@@ -6,6 +6,8 @@ use DOMElement;
 use DOMText;
 use Kirby\Http\Url;
 use Kirby\Parsley\Element;
+use Kirby\Sane\Html;
+use Kirby\Toolkit\Dom;
 use Kirby\Toolkit\Str;
 
 /**
@@ -341,6 +343,38 @@ class Blocks extends Plain
 		];
 	}
 
+	/**
+	 * Sanitizes raw HTML that is stored verbatim in a block
+	 * (e.g. the markdown block created from a table) with a
+	 * strict allowlist to prevent stored XSS
+	 */
+	public function sanitize(string $html): string
+	{
+		$dom = new Dom($html);
+		$dom->sanitize([
+			'allowedAttrPrefixes' => Html::$allowedAttrPrefixes,
+			'allowedAttrs'        => Html::$allowedAttrs,
+			'allowedTags'         => [
+				...Html::$allowedTags,
+				'caption'  => true,
+				'col'      => ['span'],
+				'colgroup' => ['span'],
+				'img'      => ['alt', 'height', 'src', 'width'],
+				'table'    => true,
+				'tbody'    => true,
+				'td'       => ['colspan', 'headers', 'rowspan'],
+				'tfoot'    => true,
+				'th'       => ['abbr', 'colspan', 'headers', 'rowspan', 'scope'],
+				'thead'    => true,
+				'tr'       => true,
+			],
+			'disallowedTags' => Html::$disallowedTags,
+			'urlAttrs'       => Html::$urlAttrs,
+		]);
+
+		return $dom->toString();
+	}
+
 	public function pre(Element $node): array
 	{
 		$language = 'text';
@@ -367,7 +401,7 @@ class Blocks extends Plain
 	{
 		return [
 			'content' => [
-				'text' => $node->outerHTML(),
+				'text' => $this->sanitize($node->outerHTML()),
 			],
 			'type' => 'markdown',
 		];
