@@ -654,6 +654,10 @@ class UserRulesTest extends ModelTestCase
 			['.', 'not a valid user id'],
 			['..', 'not a valid user id'],
 			['foo bar', 'not a valid user id'],
+			["\nhomer", 'not a valid user id'],
+			["homer\nfoo", 'not a valid user id'],
+			["homer\r\n", 'not a valid user id'],
+			["homer\n", 'not a valid user id'],
 			['', 'not a valid user id']
 		];
 	}

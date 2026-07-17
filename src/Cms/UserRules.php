@@ -30,7 +30,7 @@ class UserRules
 	 * Restricting ids this way prevents path traversal
 	 * into subfolders of the accounts root.
 	 */
-	public const ID_PATTERN = '/^([a-z0-9_-])+$/i';
+	public const ID_PATTERN = '/^[a-z0-9_-]+\z/i';
 
 	/**
 	 * Validates if the email address can be changed
