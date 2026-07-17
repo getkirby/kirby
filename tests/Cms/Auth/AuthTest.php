@@ -250,6 +250,20 @@ class AuthTest extends TestCase
 		], $this->auth->status()->toArray());
 	}
 
+	public function testLogoutResetPassword(): void
+	{
+		$session = $this->app->session();
+
+		$this->app->user('marge@simpsons.com')->loginPasswordless();
+		$session->set('kirby.resetPassword', true);
+
+		$this->assertTrue($session->get('kirby.resetPassword'));
+
+		$this->auth->logout();
+
+		$this->assertNull($session->get('kirby.resetPassword'));
+	}
+
 	public function testTypeBasic1(): void
 	{
 		$app = $this->app->clone([

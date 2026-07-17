@@ -643,6 +643,9 @@ class Auth
 		$session->remove('kirby.challenge.timeout');
 		$session->remove('kirby.challenge.type');
 
+		// clear the password reset flag
+		$session->remove('kirby.resetPassword');
+
 		// clear the status cache
 		$this->status = null;
 	}
