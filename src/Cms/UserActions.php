@@ -161,6 +161,7 @@ trait UserActions
 	 * Stores secrets for the user
 	 * @since 6.0.0
 	 */
+	#[BlockCollectionAccess]
 	public function changeSecret(
 		string $secret,
 		#[SensitiveParameter]
