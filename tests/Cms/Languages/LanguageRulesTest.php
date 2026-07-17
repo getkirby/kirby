@@ -74,6 +74,32 @@ class LanguageRulesTest extends TestCase
 		LanguageRules::create($language);
 	}
 
+	public function testCreateWhenDefaultExists(): void
+	{
+		$this->app = $this->app->clone([
+			'languages' => [
+				'en' => [
+					'code'    => 'en',
+					'name'    => 'English',
+					'default' => true
+				]
+			]
+		]);
+
+		$this->app->impersonate('admin@getkirby.com');
+
+		$language = new Language([
+			'code'    => 'de',
+			'name'    => 'Deutsch',
+			'default' => true
+		]);
+
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('"English" (en) is already set as the default language');
+
+		LanguageRules::create($language);
+	}
+
 	public function testCreateWhenExists(): void
 	{
 		$language = $this->createStub(Language::class);

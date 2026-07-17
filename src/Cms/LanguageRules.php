@@ -27,6 +27,18 @@ class LanguageRules
 		static::validLanguageCode($language);
 		static::validLanguageName($language);
 
+		$default = App::instance()->defaultLanguage();
+
+		if ($language->isDefault() === true && $default !== null) {
+			throw new LogicException(
+				key: 'language.create.default',
+				data: [
+					'code' => $default->code(),
+					'name' => $default->name()
+				]
+			);
+		}
+
 		if ($language->exists() === true) {
 			throw new DuplicateException(
 				key: 'language.duplicate',
