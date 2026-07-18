@@ -632,9 +632,6 @@ class Auth
 		// ensures that we log out the actually logged in user
 		$this->impersonate = null;
 
-		// logout the current user if it exists
-		$this->user()?->logout();
-
 		// clear the pending challenge
 		$session = $this->kirby->session();
 		$session->remove('kirby.challenge.code');
@@ -645,6 +642,11 @@ class Auth
 
 		// clear the password reset flag
 		$session->remove('kirby.resetPassword');
+
+		// logout the current user if it exists;
+		// run after clearing the session so `::logout()`
+		// can destroy a fully empty session
+		$this->user()?->logout();
 
 		// clear the status cache
 		$this->status = null;

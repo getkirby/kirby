@@ -252,6 +252,17 @@ class AuthTest extends TestCase
 
 	public function testLogoutResetPassword(): void
 	{
+		// the hook receives `null` for the session if it was destroyed
+		$sessionAfterLogout = false;
+
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'user.logout:after' => function ($session) use (&$sessionAfterLogout) {
+					$sessionAfterLogout = $session;
+				}
+			]
+		]);
+
 		$session = $this->app->session();
 
 		$this->app->user('marge@simpsons.com')->loginPasswordless();
@@ -259,9 +270,13 @@ class AuthTest extends TestCase
 
 		$this->assertTrue($session->get('kirby.resetPassword'));
 
-		$this->auth->logout();
+		$this->app->auth()->logout();
 
 		$this->assertNull($session->get('kirby.resetPassword'));
+
+		// the flag must be cleared before the user is logged out,
+		// otherwise the session cannot be destroyed
+		$this->assertNull($sessionAfterLogout);
 	}
 
 	public function testTypeBasic1(): void
