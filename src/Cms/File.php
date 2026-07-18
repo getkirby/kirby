@@ -328,7 +328,7 @@ class File extends ModelWithContent
 			return false;
 		}
 
-		return FilePermissions::canFromCache($this, 'access');
+		return $this->permissions()->can('access');
 	}
 
 	/**
@@ -347,7 +347,7 @@ class File extends ModelWithContent
 			return false;
 		}
 
-		return FilePermissions::canFromCache($this, 'list');
+		return $this->permissions()->can('list');
 	}
 
 	/**
@@ -357,12 +357,7 @@ class File extends ModelWithContent
 	 */
 	public function isReadable(): bool
 	{
-		static $readable   = [];
-		$role              = $this->kirby()->role()?->id() ?? '__none__';
-		$template          = $this->template() ?? '__none__';
-		$readable[$role] ??= [];
-
-		return $readable[$role][$template] ??= $this->permissions()->can('read');
+		return $this->permissions()->can('read');
 	}
 
 	/**

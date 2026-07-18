@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Exception\LogicException;
 use Kirby\Toolkit\A;
 
 /**
@@ -16,9 +15,8 @@ use Kirby\Toolkit\A;
 abstract class ModelPermissions
 {
 	protected const string CATEGORY = 'model';
-	protected array $options;
 
-	public static array $cache = [];
+	protected array|null $options = null;
 
 	/**
 	 * @var TModel
@@ -30,11 +28,7 @@ abstract class ModelPermissions
 	 */
 	public function __construct(ModelWithContent|Language $model)
 	{
-		$this->model   = $model;
-		$this->options = match (true) {
-			$model instanceof ModelWithContent => $model->blueprint()->options(),
-			default                            => []
-		};
+		$this->model = $model;
 	}
 
 	public function __call(string $method, array $arguments = []): bool
@@ -49,19 +43,6 @@ abstract class ModelPermissions
 	public function __debugInfo(): array
 	{
 		return $this->toArray();
-	}
-
-	/**
-	 * Can be overridden by specific child classes
-	 * to return a model-specific value used to
-	 * cache a once determined permission in memory
-	 *
-	 * @codeCoverageIgnore
-	 */
-	protected static function cacheKey(
-		ModelWithContent|Language $model
-	): string {
-		return '';
 	}
 
 	/**
@@ -100,9 +81,9 @@ abstract class ModelPermissions
 		}
 
 		// evaluate the blueprint options block
-		if (isset($this->options[$action]) === true) {
-			$options = $this->options[$action];
+		$options = $this->options()[$action] ?? null;
 
+		if ($options !== null) {
 			if ($options === false) {
 				return false;
 			}
@@ -135,30 +116,6 @@ abstract class ModelPermissions
 	}
 
 	/**
-	 * Quickly determines a permission for the current user role
-	 * and model blueprint unless dynamic checking is required
-	 */
-	public static function canFromCache(
-		ModelWithContent|Language $model,
-		string $action,
-		bool $default = false
-	): bool {
-		$role     = $model->kirby()->role()?->id() ?? '__none__';
-		$category = static::category($model);
-		$cacheKey = $category . '.' . $action . '/' . static::cacheKey($model) . '/' . $role . '/' . ($default === true ? 'true' : 'false');
-
-		if (isset(static::$cache[$cacheKey]) === true) {
-			return static::$cache[$cacheKey];
-		}
-
-		if (method_exists(static::class, 'can' . $action) === true) {
-			throw new LogicException('Cannot use permission cache for dynamically-determined permission');
-		}
-
-		return static::$cache[$cacheKey] = $model->permissions()->can($action, $default);
-	}
-
-	/**
 	 * Returns whether the current user is not allowed to do
 	 * a certain action on the model
 	 *
@@ -180,11 +137,23 @@ abstract class ModelPermissions
 		return static::CATEGORY;
 	}
 
+	/**
+	 * The normalized options block of the model's blueprint
+	 * @since 6.0.0
+	 */
+	public function options(): array
+	{
+		return $this->options ??= match (true) {
+			$this->model instanceof ModelWithContent => $this->model->blueprint()->options(),
+			default                                  => []
+		};
+	}
+
 	public function toArray(): array
 	{
 		$array = [];
 
-		foreach ($this->options as $key => $value) {
+		foreach ($this->options() as $key => $value) {
 			$array[$key] = $this->can($key);
 		}
 

@@ -522,7 +522,7 @@ class Page extends ModelWithContent
 			return false;
 		}
 
-		return PagePermissions::canFromCache($this, 'access');
+		return $this->permissions()->can('access');
 	}
 
 	/**
@@ -689,7 +689,7 @@ class Page extends ModelWithContent
 			return false;
 		}
 
-		return PagePermissions::canFromCache($this, 'list');
+		return $this->permissions()->can('list');
 	}
 
 	/**
@@ -742,12 +742,7 @@ class Page extends ModelWithContent
 	 */
 	public function isReadable(): bool
 	{
-		static $readable   = [];
-		$role              = $this->kirby()->role()?->id() ?? '__none__';
-		$template          = $this->intendedTemplate()->name();
-		$readable[$role] ??= [];
-
-		return $readable[$role][$template] ??= $this->permissions()->can('read');
+		return $this->permissions()->can('read');
 	}
 
 	/**

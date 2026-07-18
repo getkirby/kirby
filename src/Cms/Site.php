@@ -277,7 +277,7 @@ class Site extends ModelWithContent
 	 */
 	public function isAccessible(): bool
 	{
-		return SitePermissions::canFromCache($this, 'access');
+		return $this->permissions()->can('access');
 	}
 
 	/**

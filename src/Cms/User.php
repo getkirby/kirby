@@ -292,7 +292,7 @@ class User extends ModelWithContent
 	 */
 	public function isAccessible(): bool
 	{
-		return UserPermissions::canFromCache($this, 'access');
+		return $this->permissions()->can('access');
 	}
 
 	/**
@@ -323,7 +323,7 @@ class User extends ModelWithContent
 			return false;
 		}
 
-		return UserPermissions::canFromCache($this, 'list');
+		return $this->permissions()->can('list');
 	}
 
 	/**

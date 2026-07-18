@@ -2,7 +2,6 @@
 
 namespace Kirby\Panel\Controller\Dialog;
 
-use Kirby\Cms\ModelPermissions;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Exception\PermissionException;
@@ -209,8 +208,6 @@ class PagePickerDialogControllerTest extends TestCase
 
 	public function testParentAccessibleButNotListable(): void
 	{
-		ModelPermissions::$cache = [];
-
 		$this->app = $this->app->clone([
 			'blueprints' => [
 				'pages/limited' => [
@@ -268,8 +265,6 @@ class PagePickerDialogControllerTest extends TestCase
 
 	public function testParentNotAccessibleFallsBackToRoot(): void
 	{
-		ModelPermissions::$cache = [];
-
 		$this->app = $this->app->clone([
 			'blueprints' => [
 				'pages/forbidden' => [
@@ -325,8 +320,6 @@ class PagePickerDialogControllerTest extends TestCase
 
 	public function testParentAndRootNotAccessibleThrows(): void
 	{
-		ModelPermissions::$cache = [];
-
 		$this->app = $this->app->clone([
 			'blueprints' => [
 				'pages/forbidden' => [

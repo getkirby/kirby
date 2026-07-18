@@ -112,7 +112,6 @@ class App
 		Snippet::$cache = [];
 		Stack::reset();
 		VersionCache::reset();
-		ModelPermissions::$cache = [];
 
 		// start with a fresh Query runner option
 		Query::$runner = null;
