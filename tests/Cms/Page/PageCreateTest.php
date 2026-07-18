@@ -518,6 +518,22 @@ class PageCreateTest extends ModelTestCase
 		]);
 	}
 
+	public function testCreateStripInjectedRootAndDirname(): void
+	{
+		$page = Page::create([
+			'slug'    => 'new-page',
+			// would escape the content directory if respected
+			'dirname' => '../escaped',
+			'root'    => '/tmp/escaped'
+		]);
+
+		$this->assertSame('new-page', $page->dirname());
+		$this->assertSame(
+			static::TMP . '/content/_drafts/new-page',
+			$page->root()
+		);
+	}
+
 	/**
 	 * Changing status in page.create:after should not recreate the draft.
 	 */
