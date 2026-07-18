@@ -91,6 +91,10 @@ class Auth
 
 		$timeout = $this->kirby->option('auth.challenge.timeout', 10 * 60);
 
+		// discard any previously issued challenge before starting a new one
+		$session->remove('kirby.challenge.type');
+		$session->remove('kirby.challenge.code');
+
 		// catch every exception to hide them from attackers
 		// unless auth debugging is enabled
 		try {
