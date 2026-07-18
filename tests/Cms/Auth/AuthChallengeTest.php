@@ -183,7 +183,52 @@ class AuthChallengeTest extends TestCase
 	 * @covers ::createChallenge
 	 * @covers ::fail
 	 */
-	public function testCreateChallengeDebugError()
+	public function testCreateChallengeClearsPreviousChallenge(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'debug' => false
+				]
+			]
+		]);
+		$auth    = $this->app->auth();
+		$session = $this->app->session();
+
+		// a valid challenge is created for the first user
+		$auth->createChallenge('marge@simpsons.com');
+		preg_match('/^[0-9]{3} [0-9]{3}$/m', Email::$emails[0]->body()->text(), $codeMatches);
+		$code = str_replace(' ', '', $codeMatches[0]);
+		$this->assertSame('email', $session->get('kirby.challenge.type'));
+		$this->assertTrue(password_verify($code, $session->get('kirby.challenge.code')));
+
+		// a second challenge for a different user fails to be created,
+		// but still rebinds the email; the previous type/code must not
+		// survive and get paired with the new email
+		$auth->createChallenge('error@getkirby.com');
+		$this->assertSame('error@getkirby.com', $session->get('kirby.challenge.email'));
+		$this->assertNull($session->get('kirby.challenge.type'));
+		$this->assertNull($session->get('kirby.challenge.code'));
+
+		// the leftover code of the first user must not authenticate
+		// as the rebound second user (cross-user login)
+		try {
+			$auth->verifyChallenge($code);
+
+			$this->fail('No PermissionException was thrown');
+		} catch (Throwable $e) {
+			$this->assertInstanceOf(PermissionException::class, $e);
+			$this->assertSame('Invalid code', $e->getMessage());
+		}
+
+		$this->assertNull($session->get('kirby.userId'));
+	}
+
+	/**
+	 * @covers ::createChallenge
+	 * @covers ::fail
+	 */
+	public function testCreateChallengeDebugError(): void
 	{
 		$auth = $this->app->auth();
 
