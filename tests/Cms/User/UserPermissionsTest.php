@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Exception\LogicException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -31,7 +30,6 @@ class UserPermissionsTest extends ModelTestCase
 	public function testWithAdmin(string $action): void
 	{
 		$this->app = $this->app->clone([
-
 			'roles' => [
 				['name' => 'admin'],
 				['name' => 'editor']
@@ -44,6 +42,35 @@ class UserPermissionsTest extends ModelTestCase
 		$perms = $user->permissions();
 
 		$this->assertTrue($perms->can($action));
+	}
+
+	#[DataProvider('actionProvider')]
+	public function testWithAdminButDisabledOption(string $action): void
+	{
+		$this->app = $this->app->clone([
+			'roles' => [
+				['name' => 'admin'],
+				['name' => 'editor']
+			],
+			'users' => [
+				['id' => 'admin', 'role' => 'admin']
+			]
+		]);
+
+		$this->app->impersonate('admin');
+
+		$user = new User([
+			'email'     => 'test@getkirby.com',
+			'role'      => 'editor',
+			'blueprint' => [
+				'name'    => 'users/editor',
+				'options' => [
+					$action => false
+				]
+			]
+		]);
+
+		$this->assertFalse($user->permissions()->can($action));
 	}
 
 	#[DataProvider('actionProvider')]
@@ -116,46 +143,6 @@ class UserPermissionsTest extends ModelTestCase
 		$this->assertTrue($perms2->can($action));
 
 		$user1->logout();
-	}
-
-	public function testCanFromCache()
-	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'users' => [
-				['id' => 'bastian', 'role' => 'admin'],
-			]
-		]);
-
-		$app->impersonate('bastian');
-
-		$user = new User([
-			'role'      => 'editor',
-			'blueprint' => [
-				'name' => 'users/editor',
-				'options' => [
-					'access' => false,
-					'list'   => false
-				]
-			]
-		]);
-
-		$this->assertFalse(UserPermissions::canFromCache($user, 'access'));
-		$this->assertFalse(UserPermissions::canFromCache($user, 'access'));
-		$this->assertFalse(UserPermissions::canFromCache($user, 'list'));
-		$this->assertFalse(UserPermissions::canFromCache($user, 'list'));
-	}
-
-	public function testCanFromCacheDynamic()
-	{
-		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Cannot use permission cache for dynamically-determined permission');
-
-		$user = new User(['role' => 'admin']);
-
-		UserPermissions::canFromCache($user, 'delete');
 	}
 
 	public function testChangeSingleRole(): void
