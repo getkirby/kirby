@@ -258,13 +258,8 @@ class Challenges
 
 			$user = $this->kirby->user($email);
 
-			// keep existing challenge if the requested type is same
-			if ($user !== null && $session->get('kirby.challenge.type') === $type) {
-				return $this->get($type, $user, $mode);
-			}
-
-			// rate-limiting:
-			// each switch can trigger side effects (e.g. email sends),
+			// Rate-limiting:
+			// Each switch can trigger side effects (e.g. email sends),
 			// so it must consume budget just like ::create()
 			$this->auth->limits()->ensure($email);
 			$this->auth->limits()->track($email, triggerHook: false);
@@ -274,6 +269,11 @@ class Challenges
 			if ($user === null) {
 				$this->keepPending($session, $email, $mode);
 				return null;
+			}
+
+			// keep existing challenge if the requested type is same
+			if ($session->get('kirby.challenge.type') === $type) {
+				return $this->get($type, $user, $mode);
 			}
 
 			// check if new challenge is available for the user and mode

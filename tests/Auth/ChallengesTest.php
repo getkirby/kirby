@@ -361,6 +361,36 @@ class ChallengesTest extends TestCase
 		$this->assertSame(['public' => 'x', 'secret' => 'y'], $session->get('kirby.challenge.data'));
 	}
 
+	public function testSwitchSameTypeRateLimited(): void
+	{
+		// the same-type shortcut must consume rate-limit budget just
+		// like every other exit path; otherwise an existing user could
+		// switch indefinitely while a missing user gets blocked, which
+		// would be an enumeration oracle that needs no timing analysis
+		$this->app = $this->app->clone([
+			'options' => ['auth' => ['trials' => 1]]
+		]);
+
+		$this->challenges = new Challenges($this->app->auth(), $this->app);
+
+		$session = $this->app->session();
+		$session->set('kirby.challenge.email', 'marge@simpsons.com');
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.type', 'dummy');
+		$session->set('kirby.challenge.timeout', time() + 1000);
+
+		// first attempt keeps the existing challenge, but tracks the trial
+		$this->assertInstanceOf(
+			DummyChallenge::class,
+			$this->challenges->switch($session, 'dummy')
+		);
+
+		// second attempt is blocked by the rate limit, exactly like
+		// the missing user in `::testSwitchRateLimited()`
+		$this->expectException(RateLimitException::class);
+		$this->challenges->switch($session, 'dummy');
+	}
+
 	public function testSwitchTimeout(): void
 	{
 		$session = $this->session();
