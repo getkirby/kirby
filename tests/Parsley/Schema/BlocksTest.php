@@ -593,6 +593,16 @@ class BlocksTest extends TestCase
 		$this->assertSame($expected, $this->schema->pre($element));
 	}
 
+	public function testSanitize(): void
+	{
+		$html = '<table><tr><td onclick="alert(1)">A</td></tr></table>';
+
+		$this->assertStringNotContainsString(
+			'onclick',
+			$this->schema->sanitize($html)
+		);
+	}
+
 	public function testSkip(): void
 	{
 		$this->assertSame([
@@ -648,15 +658,5 @@ class BlocksTest extends TestCase
 		$this->assertStringNotContainsString('<script>', $block['content']['text']);
 		$this->assertStringNotContainsString('onmouseover', $block['content']['text']);
 		$this->assertStringContainsString('Hello', $block['content']['text']);
-	}
-
-	public function testSanitize(): void
-	{
-		$html = '<table><tr><td onclick="alert(1)">A</td></tr></table>';
-
-		$this->assertStringNotContainsString(
-			'onclick',
-			$this->schema->sanitize($html)
-		);
 	}
 }

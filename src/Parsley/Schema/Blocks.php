@@ -339,6 +339,28 @@ class Blocks extends Plain
 		];
 	}
 
+	public function pre(Element $node): array
+	{
+		$language = 'text';
+
+		if ($code = $node->find('//code')) {
+			foreach ($code->classList() as $className) {
+				if (preg_match('!language-(.*?)!', $className)) {
+					$language = str_replace('language-', '', $className);
+					break;
+				}
+			}
+		}
+
+		return [
+			'content' => [
+				'code'     => $node->innerText(),
+				'language' => $language
+			],
+			'type' => 'code',
+		];
+	}
+
 	/**
 	 * Sanitizes raw HTML that is stored verbatim in a block
 	 * (e.g. the markdown block created from a table) with a
@@ -369,28 +391,6 @@ class Blocks extends Plain
 		]);
 
 		return $dom->toString();
-	}
-
-	public function pre(Element $node): array
-	{
-		$language = 'text';
-
-		if ($code = $node->find('//code')) {
-			foreach ($code->classList() as $className) {
-				if (preg_match('!language-(.*?)!', $className)) {
-					$language = str_replace('language-', '', $className);
-					break;
-				}
-			}
-		}
-
-		return [
-			'content' => [
-				'code'     => $node->innerText(),
-				'language' => $language
-			],
-			'type' => 'code',
-		];
 	}
 
 	public function table(Element $node): array
