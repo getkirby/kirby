@@ -22,6 +22,7 @@ class DummyChallenge extends Challenge
 	public static array $created  = [];
 	public static array $verified = [];
 	public static Pending|null $pending = null;
+	public static \Throwable|null $throw = null;
 
 	public static function isEnabled(Auth $auth): bool
 	{
@@ -36,6 +37,10 @@ class DummyChallenge extends Challenge
 	public function create(): Pending|null
 	{
 		static::$created[] = func_get_args();
+
+		if (static::$throw !== null) {
+			throw static::$throw;
+		}
 
 		return static::$pending ?? new Pending(
 			public: ['foo' => 'bar'],
@@ -93,6 +98,7 @@ class ChallengesTest extends TestCase
 		DummyChallenge::$created    = [];
 		DummyChallenge::$verified   = [];
 		DummyChallenge::$pending    = null;
+		DummyChallenge::$throw      = null;
 		DummyChallenge2::$available = true;
 
 		Challenges::$challenges['dummy'] = DummyChallenge::class;
@@ -204,6 +210,60 @@ class ChallengesTest extends TestCase
 
 		$this->expectException(UserNotFoundException::class);
 		$this->challenges->create($session, 'invalid@example.com', 'login');
+	}
+
+	public function testCreateClearsPreviousChallengeOnFailure(): void
+	{
+		$session = $this->session();
+
+		// a previous, fully issued challenge for another identity
+		$session->set('kirby.challenge.type', 'dummy');
+		$session->set('kirby.challenge.email', 'other@simpsons.com');
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.timeout', time() + 1000);
+		$session->set('kirby.challenge.data', ['public' => 'x', 'secret' => 'y']);
+
+		// re-issuing fails while creating the challenge (e.g. the
+		// email transport throwing before the state is stored)
+		DummyChallenge::$throw = new \Exception('mail transport failed');
+
+		try {
+			$this->challenges->create($session, 'marge@simpsons.com', 'login');
+			$this->fail('Expected the challenge creation to throw');
+		} catch (\Exception) {
+			// expected
+		}
+
+		// the previous secret must not survive a failed re-issuance,
+		// otherwise it could be verified against the new identity
+		$this->assertNull($session->get('kirby.challenge.type'));
+		$this->assertNull($session->get('kirby.challenge.data'));
+		$this->assertNull($session->get('kirby.challenge.email'));
+		$this->assertNull($session->get('kirby.challenge.mode'));
+	}
+
+	public function testCreateClearsStaleDataOnReissue(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'challenges' => ['dummy2']
+				]
+			]
+		]);
+
+		$this->challenges = new Challenges($this->app->auth(), $this->app);
+		$session          = $this->app->session();
+
+		// stale data from a previous challenge that stored a secret
+		$session->set('kirby.challenge.data', ['public' => 'x', 'secret' => 'y']);
+
+		// dummy2::create() returns null, so it writes no data of its own;
+		// the stale data must still be gone after a successful re-issuance
+		$this->challenges->create($session, 'marge@simpsons.com', 'login');
+
+		$this->assertSame('dummy2', $session->get('kirby.challenge.type'));
+		$this->assertNull($session->get('kirby.challenge.data'));
 	}
 
 	public function testEnabledDefaults(): void

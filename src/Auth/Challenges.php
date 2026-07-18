@@ -80,6 +80,10 @@ class Challenges
 		string $email,
 		string $mode,
 	): Challenge {
+		// ensure that we never inherit (partial) state
+		// from a previous challenge
+		$this->clear($session);
+
 		// rate-limit the number of challenges for DoS/DDoS protection
 		$this->auth->limits()->ensure($email);
 
