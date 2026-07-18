@@ -73,8 +73,20 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Install system locales
-        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends locales-all imagemagick
+      - name: Install system locales and imagemagick
+        uses: awalsh128/cache-apt-pkgs-action@553a35bb8ebd9fcabcb1c9451aa4c98e1b4ca8a9 # v1.6.3
+        with:
+          packages: locales-all imagemagick
+          version: 1
+          execute_install_scripts: true
+
+      - name: Ensure ImageMagick aliases exist
+        run: |
+          if ! command -v convert > /dev/null; then
+            sudo ln -sf /usr/bin/convert-im6.q16 /usr/bin/convert
+            sudo ln -sf /usr/bin/identify-im6.q16 /usr/bin/identify
+          fi
+          convert -version | head -1
 
       - name: Setup PHP environment
         uses: ./.github/actions/setup-php
