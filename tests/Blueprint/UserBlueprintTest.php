@@ -9,11 +9,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(UserBlueprint::class)]
 class UserBlueprintTest extends TestCase
 {
-	protected function tearDown(): void
-	{
-		Blueprint::$loaded = [];
-	}
-
 	public function testTranslatedDescription(): void
 	{
 		$blueprint = new UserBlueprint([
@@ -47,6 +42,47 @@ class UserBlueprintTest extends TestCase
 		];
 
 		$this->assertSame($expected, $blueprint->options());
+	}
+
+	public function testDescriptionI18nAcrossModels(): void
+	{
+		$app = new App([
+			'blueprints' => [
+				'users/editor' => [
+					'name'        => 'editor',
+					'description' => 'role.editor'
+				]
+			],
+			'languages' => [
+				[
+					'code'         => 'en',
+					'default'      => true,
+					'translations' => ['role.editor' => 'Editor role']
+				],
+				[
+					'code'         => 'de',
+					'translations' => ['role.editor' => 'Editor-Rolle']
+				]
+			],
+			'users' => [
+				['email' => 'a@getkirby.com', 'role' => 'editor'],
+				['email' => 'b@getkirby.com', 'role' => 'editor']
+			]
+		]);
+
+		$app->setCurrentTranslation('en');
+		$this->assertSame(
+			'Editor role',
+			$app->user('a@getkirby.com')->blueprint()->description()
+		);
+
+		// the second user reuses the normalized props of the first one,
+		// which must not freeze the description to the first language
+		$app->setCurrentTranslation('de');
+		$this->assertSame(
+			'Editor-Rolle',
+			$app->user('b@getkirby.com')->blueprint()->description()
+		);
 	}
 
 	public function testTitleI18n(): void

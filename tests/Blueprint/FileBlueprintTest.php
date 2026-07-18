@@ -11,11 +11,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(FileBlueprint::class)]
 class FileBlueprintTest extends TestCase
 {
-	protected function tearDown(): void
-	{
-		Blueprint::$loaded = [];
-	}
-
 	public static function acceptAttributeProvider()
 	{
 		return [
@@ -84,6 +79,26 @@ class FileBlueprintTest extends TestCase
 
 		foreach ($notExpected as $extension) {
 			$this->assertStringNotContainsString($extension, $acceptAttribute);
+		}
+	}
+
+	public function testAcceptAttributeFromNormalizedProps(): void
+	{
+		Blueprint::$loaded['files/plain'] = [];
+
+		$page = new Page(['slug' => 'test']);
+
+		// the second file reuses the normalized props of the first one,
+		// which must not disclose the default types
+		foreach (['a.jpg', 'b.jpg'] as $filename) {
+			$file = new File([
+				'filename' => $filename,
+				'parent'   => $page,
+				'template' => 'plain'
+			]);
+
+			$this->assertSame('*', $file->blueprint()->acceptAttribute());
+			$this->assertSame('*', $file->blueprint()->acceptMime());
 		}
 	}
 

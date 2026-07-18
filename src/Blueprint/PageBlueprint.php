@@ -87,16 +87,16 @@ class PageBlueprint extends Blueprint
 	{
 		$defaults = [
 			'draft'    => [
-				'label' => $this->i18n('page.status.draft'),
-				'text'  => $this->i18n('page.status.draft.description'),
+				'label' => 'page.status.draft',
+				'text'  => 'page.status.draft.description',
 			],
 			'unlisted' => [
-				'label' => $this->i18n('page.status.unlisted'),
-				'text'  => $this->i18n('page.status.unlisted.description'),
+				'label' => 'page.status.unlisted',
+				'text'  => 'page.status.unlisted.description',
 			],
 			'listed' => [
-				'label' => $this->i18n('page.status.listed'),
-				'text'  => $this->i18n('page.status.listed.description'),
+				'label' => 'page.status.listed',
+				'text'  => 'page.status.listed.description',
 			]
 		];
 
@@ -136,20 +136,11 @@ class PageBlueprint extends Blueprint
 
 			// also make sure to have the text field set
 			$status[$key]['text'] ??= null;
-
-			// translate text and label if necessary
-			$status[$key]['label'] = $this->i18n($status[$key]['label'], $status[$key]['label']);
-			$status[$key]['text']  = $this->i18n($status[$key]['text'], $status[$key]['text']);
 		}
 
 		// the draft status is required
 		if (isset($status['draft']) === false) {
 			$status = ['draft' => $defaults['draft']] + $status;
-		}
-
-		// remove the draft status for the home and error pages
-		if ($this->model->isHomeOrErrorPage() === true) {
-			unset($status['draft']);
 		}
 
 		return $status;
@@ -186,6 +177,19 @@ class PageBlueprint extends Blueprint
 	 */
 	public function status(): array
 	{
-		return $this->props['status'];
+		$status = $this->props['status'];
+
+		// the home and error page cannot be drafts
+		if ($this->model->isHomeOrErrorPage() === true) {
+			unset($status['draft']);
+		}
+
+		// translate the labels and description texts
+		foreach ($status as $key => $options) {
+			$status[$key]['label'] = $this->i18n($options['label'], $options['label']);
+			$status[$key]['text']  = $this->i18n($options['text'], $options['text']);
+		}
+
+		return $status;
 	}
 }

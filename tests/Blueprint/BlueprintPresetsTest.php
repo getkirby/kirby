@@ -40,13 +40,13 @@ class BlueprintPresetsTest extends TestCase
 					'width' => '1/3',
 					'sections' => [
 						'pages' => [
-							'label'  => 'Pages',
+							'label'  => 'pages',
 							'type'   => 'pages',
 							'status' => 'all',
 							'layout' => 'list'
 						],
 						'files' => [
-							'label' => 'Files',
+							'label' => 'files',
 							'type'  => 'files',
 							'layout' => 'list'
 						]
@@ -77,7 +77,7 @@ class BlueprintPresetsTest extends TestCase
 					'width' => '1/3',
 					'sections' => [
 						'pages' => [
-							'label'  => 'Pages',
+							'label'  => 'pages',
 							'type'   => 'pages',
 							'status' => 'all',
 							'layout' => 'list'
@@ -109,7 +109,7 @@ class BlueprintPresetsTest extends TestCase
 					'width' => '1/3',
 					'sections' => [
 						'files' => [
-							'label'  => 'Files',
+							'label'  => 'files',
 							'type'   => 'files',
 							'layout' => 'list'
 						]
@@ -186,13 +186,13 @@ class BlueprintPresetsTest extends TestCase
 		$expected = [
 			'sections' => [
 				'drafts' => [
-					'label'  => 'Drafts',
+					'label'  => 'pages.status.draft',
 					'type'   => 'pages',
 					'layout' => 'list',
 					'status' => 'drafts',
 				],
 				'listed' => [
-					'label'  => 'Published',
+					'label'  => 'pages.status.listed',
 					'type'   => 'pages',
 					'layout' => 'list',
 					'status' => 'listed',
@@ -215,19 +215,19 @@ class BlueprintPresetsTest extends TestCase
 		$expected = [
 			'sections' => [
 				'drafts' => [
-					'label'  => 'Drafts',
+					'label'  => 'pages.status.draft',
 					'type'   => 'pages',
 					'layout' => 'list',
 					'status' => 'drafts',
 				],
 				'unlisted' => [
-					'label'  => 'Unlisted',
+					'label'  => 'pages.status.unlisted',
 					'type'   => 'pages',
 					'layout' => 'list',
 					'status' => 'unlisted',
 				],
 				'listed' => [
-					'label'  => 'Published',
+					'label'  => 'pages.status.listed',
 					'type'   => 'pages',
 					'layout' => 'list',
 					'status' => 'listed',
@@ -251,7 +251,7 @@ class BlueprintPresetsTest extends TestCase
 		$expected = [
 			'sections' => [
 				'files' => [
-					'label'    => 'Files',
+					'label'    => 'files',
 					'type'     => 'files',
 					'layout'   => 'cards',
 					'info'     => '{{ file.dimensions }}',
@@ -301,7 +301,7 @@ class BlueprintPresetsTest extends TestCase
 		$expected = [
 			'sections' => [
 				'files' => [
-					'label'    => 'Files',
+					'label'    => 'files',
 					'type'     => 'files',
 					'layout'   => 'list',
 					'info'     => '{{ file.dimensions }}',
@@ -326,7 +326,7 @@ class BlueprintPresetsTest extends TestCase
 		$expected = [
 			'sections' => [
 				'files' => [
-					'label'    => 'Files',
+					'label'    => 'files',
 					'type'     => 'files',
 					'layout'   => 'cards',
 					'info'     => '{{ file.dimensions }}',
@@ -351,7 +351,7 @@ class BlueprintPresetsTest extends TestCase
 		$expected = [
 			'sections' => [
 				'files' => [
-					'label'    => 'Files',
+					'label'    => 'files',
 					'type'     => 'files',
 					'layout'   => 'cards',
 					'info'     => '{{ file.dimensions }}',

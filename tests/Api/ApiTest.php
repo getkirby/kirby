@@ -5,7 +5,6 @@ namespace Kirby\Api;
 use Exception;
 use Kirby\Auth\Auth;
 use Kirby\Cms\App;
-use Kirby\Cms\Blueprint;
 use Kirby\Cms\Response;
 use Kirby\Cms\User;
 use Kirby\Exception\AuthException;
@@ -84,7 +83,6 @@ class ApiTest extends TestCase
 
 	protected function tearDown(): void
 	{
-		Blueprint::$loaded = [];
 		setlocale(LC_ALL, 'C');
 		Dir::remove(static::TMP);
 	}

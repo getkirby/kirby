@@ -7,7 +7,6 @@ use Kirby\Blueprint\Blueprint;
 use Kirby\Blueprint\PageBlueprint;
 use Kirby\Content\Field;
 use Kirby\Content\VersionId;
-use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
@@ -205,9 +204,9 @@ class Page extends ModelWithContent
 	{
 		/** @var \Kirby\Blueprint\PageBlueprint */
 		return $this->blueprint ??= PageBlueprint::factory(
+			$this,
 			'pages/' . $this->intendedTemplate(),
-			'pages/default',
-			$this
+			'pages/default'
 		);
 	}
 
@@ -243,16 +242,19 @@ class Page extends ModelWithContent
 		$templates = array_unique($templates);
 
 		foreach ($templates as $template) {
-			try {
-				$props = Blueprint::load('pages/' . $template);
+			// the full blueprint, so that a title inherited
+			// through an `extends` is taken into account
+			$props = PageBlueprint::factory($this, 'pages/' . $template);
 
-				$blueprints[] = [
-					'name'  => basename($props['name']),
-					'title' => $props['title'],
-				];
-			} catch (Exception) {
+			if ($props === null) {
 				// skip invalid blueprints
+				continue;
 			}
+
+			$blueprints[] = [
+				'name'  => basename($props->name()),
+				'title' => $props->title(),
+			];
 		}
 
 		return $this->blueprints = $blueprints;

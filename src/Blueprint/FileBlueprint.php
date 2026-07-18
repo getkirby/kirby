@@ -188,6 +188,18 @@ class FileBlueprint extends Blueprint
 		return implode(',', array_map(fn ($ext) => ".$ext", $list));
 	}
 
+	protected static function from(
+		ModelWithContent $model,
+		array $normalized
+	): static {
+		$blueprint = parent::from($model, $normalized);
+
+		/** @psalm-suppress UndefinedPropertyAssignment `parent::from()` returns `static` */
+		$blueprint->defaultTypes = $normalized['defaultTypes'];
+
+		return $blueprint;
+	}
+
 	protected function normalizeAccept(mixed $accept = null): array
 	{
 		$accept = match (true) {
@@ -251,5 +263,16 @@ class FileBlueprint extends Blueprint
 		}
 
 		return $accept;
+	}
+
+	/**
+	 * @since 6.0.0
+	 */
+	protected function toNormalized(): array
+	{
+		return [
+			...parent::toNormalized(),
+			'defaultTypes' => $this->defaultTypes
+		];
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 
-use Kirby\Blueprint\Blueprint;
+use Kirby\Blueprint\PageBlueprint;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Exception\InvalidArgumentException;
@@ -186,12 +186,8 @@ return [
 			$statuses = [];
 
 			foreach ($this->blueprintNames() as $blueprint) {
-				try {
-					$props      = Blueprint::load('pages/' . $blueprint);
-					$statuses[] = $props['create']['status'] ?? 'draft';
-				} catch (Throwable) {
-					$statuses[] = 'draft'; // @codeCoverageIgnore
-				}
+				$blueprint  = PageBlueprint::factory($this->model(), 'pages/' . $blueprint);
+				$statuses[] = $blueprint?->toArray()['create']['status'] ?? 'draft';
 			}
 
 			$statuses = array_unique($statuses);
@@ -215,20 +211,19 @@ return [
 
 			// convert every template to a usable option array
 			// for the template select box
-			foreach ($this->blueprintNames() as $blueprint) {
-				try {
-					$props = Blueprint::load('pages/' . $blueprint);
+			foreach ($this->blueprintNames() as $name) {
+				$blueprint = PageBlueprint::factory($this->model(), 'pages/' . $name);
 
-					$blueprints[] = [
-						'name'  => basename($props['name']),
-						'title' => $props['title'],
-					];
-				} catch (Throwable) {
-					$blueprints[] = [
-						'name'  => basename($blueprint),
-						'title' => ucfirst($blueprint),
-					];
-				}
+				$blueprints[] = match ($blueprint) {
+					null    => [
+						'name'  => basename($name),
+						'title' => ucfirst($name),
+					],
+					default => [
+						'name'  => basename($blueprint->name()),
+						'title' => $blueprint->title(),
+					]
+				};
 			}
 
 			return $blueprints;

@@ -4,7 +4,6 @@ namespace Kirby\Api;
 
 use Closure;
 use Exception;
-use Kirby\Blueprint\Blueprint;
 use Kirby\Cms\App;
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
@@ -35,7 +34,6 @@ class UploadTest extends TestCase
 
 	protected function tearDown(): void
 	{
-		Blueprint::$loaded = [];
 		ini_restore('upload_max_filesize');
 		ini_restore('post_max_size');
 		unset($_SERVER['HTTP_CF_CONNECTING_IP']);
