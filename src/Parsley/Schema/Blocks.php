@@ -369,10 +369,11 @@ class Blocks extends Plain
 	public function sanitize(string $html): string
 	{
 		$dom = new Dom($html);
+
+		// reuse the options of the HTML sane handler
 		$dom->sanitize([
-			'allowedAttrPrefixes' => Html::$allowedAttrPrefixes,
-			'allowedAttrs'        => Html::$allowedAttrs,
-			'allowedTags'         => [
+			...Html::options(isExternal: false),
+			'allowedTags' => [
 				...Html::$allowedTags,
 				'caption'  => true,
 				'col'      => ['span'],
@@ -386,8 +387,6 @@ class Blocks extends Plain
 				'thead'    => true,
 				'tr'       => true,
 			],
-			'disallowedTags' => Html::$disallowedTags,
-			'urlAttrs'       => Html::$urlAttrs,
 		]);
 
 		return $dom->toString();
