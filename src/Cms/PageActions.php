@@ -800,6 +800,11 @@ trait PageActions
 		// never directly be supplied by the caller
 		unset($props['blueprint']);
 
+		// Prevent injecting the root and dirname as those must always be
+		// derived from the parent and slug. Otherwise the caller could
+		// place the page's content at an arbitrary path on disk.
+		unset($props['dirname'], $props['root']);
+
 		$content  = (array)($props['content'] ?? []);
 		$template = $props['template'] ?? 'default';
 
