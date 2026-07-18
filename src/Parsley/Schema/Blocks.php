@@ -115,7 +115,7 @@ class Blocks extends Plain
 
 	public function iframe(Element $node): array|null
 	{
-		$src        = $node->attr('src');
+		$src        = $node->attr('src') ?? '';
 		$figcaption = $node->find('ancestor::figure[1]//figcaption');
 		$caption    = $figcaption?->innerHTML($this->marks());
 
@@ -135,7 +135,7 @@ class Blocks extends Plain
 
 		// only convert iframes with a known video URL; any other
 		// iframe is dropped as it can't be stored safely
-		if ($src) {
+		if ($src !== false) {
 			return [
 				'content' => [
 					'caption' => $caption,
