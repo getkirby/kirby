@@ -110,13 +110,18 @@ class BlueprintTest extends TestCase
 				],
 				'icon'    => null,
 				'label'   => 'Main',
-				'link'    => '/pages/a/?tab=main',
 				'name'    => 'main'
 			]
 		];
 
+		// the raw props stay free of model-specific data ...
 		$this->assertSame($expected, $blueprint->toArray()['tabs']);
-		$this->assertSame($expected['main'], $blueprint->tab());
+
+		// ... while reading a tab resolves the model link
+		$this->assertSame(
+			[...$expected['main'], 'link' => '/pages/a/?tab=main'],
+			$blueprint->tab()
+		);
 	}
 
 	public function testButtons(): void
@@ -185,8 +190,7 @@ class BlueprintTest extends TestCase
 						'sections' => $sections
 					]
 				],
-				'icon'    => null,
-				'link'    => '/pages/a/?tab=main'
+				'icon'    => null
 			]
 		];
 
@@ -225,8 +229,7 @@ class BlueprintTest extends TestCase
 						]
 					]
 				],
-				'icon'    => null,
-				'link'    => '/pages/a/?tab=main'
+				'icon'    => null
 			]
 		];
 
@@ -318,6 +321,64 @@ class BlueprintTest extends TestCase
 		$this->assertSame('Extension Test', $blueprint->title());
 	}
 
+	public function testTitleInheritedThroughExtends(): void
+	{
+		new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'blueprints' => [
+				'pages/base'    => ['title' => 'Inherited Title'],
+				'pages/derived' => ['extends' => 'pages/base']
+			]
+		]);
+
+		// the title fallback must not mask a title that is
+		// inherited through `extends`
+		$blueprint = PageBlueprint::factory(
+			new Page(['slug' => 'test']),
+			'pages/derived'
+		);
+
+		$this->assertSame('Inherited Title', $blueprint->title());
+	}
+
+	public function testPresetLabelsI18nAcrossModels(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'blueprints' => [
+				'pages/album' => ['preset' => 'pages']
+			],
+			'languages' => [
+				[
+					'code'         => 'en',
+					'default'      => true,
+					'translations' => ['pages.status.draft' => 'Drafts']
+				],
+				[
+					'code'         => 'de',
+					'translations' => ['pages.status.draft' => 'Entwürfe']
+				]
+			]
+		]);
+
+		$headline = function (string $slug) {
+			$page = new Page(['slug' => $slug, 'template' => 'album']);
+			return $page->blueprint()->section('drafts')->headline();
+		};
+
+		$app->setCurrentTranslation('en');
+		$this->assertSame('Drafts', $headline('a'));
+
+		// the second page reuses the normalized props of the first one,
+		// which must not freeze the labels to the first language
+		$app->setCurrentTranslation('de');
+		$this->assertSame('Entwürfe', $headline('b'));
+	}
+
 	public function testExtendWithInvalidSnippet(): void
 	{
 		$blueprint = new Blueprint([
@@ -370,15 +431,13 @@ class BlueprintTest extends TestCase
 
 	public function testFactory(): void
 	{
-		Blueprint::$loaded = [];
-
 		$this->app = $this->app->clone([
 			'blueprints' => [
 				'pages/test' => ['title' => 'Test']
 			]
 		]);
 
-		$blueprint = Blueprint::factory('pages/test', null, new Page(['slug' => 'test']));
+		$blueprint = Blueprint::factory(new Page(['slug' => 'test']), 'pages/test');
 
 		$this->assertSame('Test', $blueprint->title());
 		$this->assertSame('pages/test', $blueprint->name());
@@ -386,15 +445,13 @@ class BlueprintTest extends TestCase
 
 	public function testFactoryWithCallbackArray(): void
 	{
-		Blueprint::$loaded = [];
-
 		$this->app = $this->app->clone([
 			'blueprints' => [
 				'pages/test' => fn () => ['title' => 'Test']
 			]
 		]);
 
-		$blueprint = Blueprint::factory('pages/test', null, new Page(['slug' => 'test']));
+		$blueprint = Blueprint::factory(new Page(['slug' => 'test']), 'pages/test');
 
 		$this->assertSame('Test', $blueprint->title());
 		$this->assertSame('pages/test', $blueprint->name());
@@ -402,8 +459,6 @@ class BlueprintTest extends TestCase
 
 	public function testFactoryWithCallbackString(): void
 	{
-		Blueprint::$loaded = [];
-
 		$this->app = $this->app->clone([
 			'roots' => [
 				'index' => '/dev/null',
@@ -416,7 +471,7 @@ class BlueprintTest extends TestCase
 
 		Data::write(static::TMP . '/custom/test.yml', ['title' => 'Test']);
 
-		$blueprint = Blueprint::factory('pages/test', null, new Page(['slug' => 'test']));
+		$blueprint = Blueprint::factory(new Page(['slug' => 'test']), 'pages/test');
 
 		$this->assertSame('Test', $blueprint->title());
 		$this->assertSame('pages/test', $blueprint->name());
@@ -424,7 +479,7 @@ class BlueprintTest extends TestCase
 
 	public function testFactoryForMissingBlueprint(): void
 	{
-		$blueprint = Blueprint::factory('notFound', null, new Page(['slug' => 'test']));
+		$blueprint = Blueprint::factory(new Page(['slug' => 'test']), 'notFound');
 		$this->assertNull($blueprint);
 	}
 
@@ -599,8 +654,27 @@ class BlueprintTest extends TestCase
 		$this->assertNull($preset['tabs']['main']['icon']);
 		$this->assertArrayHasKey('columns', $preset['tabs']['main']);
 		$this->assertSame('Main', $preset['tabs']['main']['label']);
-		$this->assertSame('/pages/a/?tab=main', $preset['tabs']['main']['link']);
 		$this->assertSame('main', $preset['tabs']['main']['name']);
+	}
+
+	public function testTabsAddTheModelLinkAndTranslateTheLabel(): void
+	{
+		$blueprint = new Blueprint([
+			'model' => $this->model,
+			'tabs'  => [
+				'main' => ['label' => 'Main', 'fields' => []]
+			]
+		]);
+
+		// the raw props stay free of model- and language-specific data
+		$this->assertArrayNotHasKey('link', $blueprint->toArray()['tabs']['main']);
+
+		// reading a tab resolves both
+		$this->assertSame('/pages/a/?tab=main', $blueprint->tabs()[0]['link']);
+		$this->assertSame('Main', $blueprint->tabs()[0]['label']);
+		$this->assertSame('/pages/a/?tab=main', $blueprint->tab('main')['link']);
+		$this->assertSame('/pages/a/?tab=main', $blueprint->tab()['link']);
+		$this->assertNull($blueprint->tab('does-not-exist'));
 	}
 
 	public function testAutomaticLabelForFields()

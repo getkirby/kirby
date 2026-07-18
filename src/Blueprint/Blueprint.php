@@ -13,6 +13,7 @@ use Kirby\Form\Field;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
+use ReflectionClass;
 use Throwable;
 
 /**
@@ -25,8 +26,9 @@ use Throwable;
  */
 class Blueprint
 {
-	public static array $presets = [];
 	public static array $loaded = [];
+	public static array $normalized = [];
+	public static array $presets = [];
 
 	protected AcceptRules|null $acceptRules = null;
 
@@ -85,9 +87,8 @@ class Blueprint
 		// normalize the name
 		$props['name'] ??= 'default';
 
-		// normalize and translate the title
+		// normalize the title
 		$props['title'] ??= Str::label($props['name']);
-		$props['title']   = $this->i18n($props['title']);
 
 		// extract global field definitions before normalization
 		$props = $this->extractFieldReferences($props);
@@ -219,6 +220,20 @@ class Blueprint
 	}
 
 	/**
+	 * Adds model- and i18n-specific parts of a tab.
+	 *
+	 * @since 6.0.0
+	 */
+	protected function decorateTab(array $tab): array
+	{
+		return [
+			...$tab,
+			'label' => $this->i18n($tab['label']),
+			'link'  => $this->model->panel()->url(true) . '/?tab=' . $tab['name'],
+		];
+	}
+
+	/**
 	 * Extends the props with props from a given
 	 * mixin, when an extends key is set or the
 	 * props is just a string
@@ -285,10 +300,16 @@ class Blueprint
 	 * Create a new blueprint for a model
 	 */
 	public static function factory(
+		ModelWithContent $model,
 		string $name,
-		string|null $fallback,
-		ModelWithContent $model
+		string|null $fallback = null
 	): static|null {
+		$key = static::class . '/' . $name . '/' . $fallback;
+
+		if (isset(static::$normalized[$key]) === true) {
+			return static::from($model, static::$normalized[$key]);
+		}
+
 		try {
 			$props = static::load($name);
 		} catch (Exception) {
@@ -302,7 +323,11 @@ class Blueprint
 		// inject the parent model
 		$props['model'] = $model;
 
-		return new static($props);
+		$blueprint = new static($props);
+
+		static::$normalized[$key] = $blueprint->toNormalized();
+
+		return $blueprint;
 	}
 
 	/**
@@ -505,6 +530,24 @@ class Blueprint
 		);
 	}
 
+	/**
+	 * @since 6.0.0
+	 */
+	protected static function from(
+		ModelWithContent $model,
+		array $normalized
+	): static {
+		$blueprint = (new ReflectionClass(static::class))->newInstanceWithoutConstructor();
+
+		$blueprint->model    = $model;
+		$blueprint->fields   = $normalized['fields'];
+		$blueprint->props    = $normalized['props'];
+		$blueprint->sections = $normalized['sections'];
+		$blueprint->tabs     = $normalized['props']['tabs'] ?? [];
+
+		return $blueprint;
+	}
+
 	public static function helpList(array $items): string
 	{
 		$md = [];
@@ -541,12 +584,6 @@ class Blueprint
 
 		// inject the filename as name if no name is set
 		$props['name'] ??= $name;
-
-		// normalize the title
-		$title = $props['title'] ?? Str::label($props['name']);
-
-		// translate the title
-		$props['title'] = I18n::translate($title) ?? $title;
 
 		return $props;
 	}
@@ -754,8 +791,7 @@ class Blueprint
 				...$tabProps,
 				'columns' => $this->normalizeColumns($tabName, $tabProps['columns'] ?? []),
 				'icon'    => $tabProps['icon']  ?? null,
-				'label'   => $this->i18n($tabProps['label'] ?? Str::label($tabName)),
-				'link'    => $this->model->panel()->url(true) . '/?tab=' . $tabName,
+				'label'   => $tabProps['label'] ?? Str::label($tabName),
 				'name'    => $tabName,
 			];
 		}
@@ -783,6 +819,16 @@ class Blueprint
 		}
 
 		return $preset($props);
+	}
+
+	/**
+	 * Clears all blueprint caches.
+	 * @since 6.0.0
+	 */
+	public static function reset(): void
+	{
+		static::$loaded     = [];
+		static::$normalized = [];
 	}
 
 	/**
@@ -861,11 +907,16 @@ class Blueprint
 	 */
 	public function tab(string|null $name = null): array|null
 	{
-		if ($name === null) {
-			return A::first($this->tabs);
+		$tab = match ($name) {
+			null    => A::first($this->tabs),
+			default => $this->tabs[$name] ?? null
+		};
+
+		if ($tab === null) {
+			return null;
 		}
 
-		return $this->tabs[$name] ?? null;
+		return $this->decorateTab($tab);
 	}
 
 	/**
@@ -873,7 +924,10 @@ class Blueprint
 	 */
 	public function tabs(): array
 	{
-		return array_values($this->tabs);
+		return array_map(
+			$this->decorateTab(...),
+			array_values($this->tabs)
+		);
 	}
 
 	/**
@@ -881,7 +935,7 @@ class Blueprint
 	 */
 	public function title(): string
 	{
-		return $this->props['title'];
+		return $this->i18n($this->props['title']);
 	}
 
 	/**
@@ -890,5 +944,17 @@ class Blueprint
 	public function toArray(): array
 	{
 		return $this->props;
+	}
+
+	/**
+	 * @since 6.0.0
+	 */
+	protected function toNormalized(): array
+	{
+		return [
+			'fields'   => $this->fields,
+			'props'    => $this->props,
+			'sections' => $this->sections
+		];
 	}
 }

@@ -1,7 +1,5 @@
 <?php
 
-use Kirby\Toolkit\I18n;
-
 return function (array $props) {
 	// load the general templates setting for all sections
 	$templates = $props['templates'] ?? null;
@@ -41,7 +39,7 @@ return function (array $props) {
 
 	if ($drafts !== false) {
 		$sections['drafts'] = $section(
-			I18n::translate('pages.status.draft'),
+			'pages.status.draft',
 			'drafts',
 			$drafts
 		);
@@ -49,7 +47,7 @@ return function (array $props) {
 
 	if ($unlisted !== false) {
 		$sections['unlisted'] = $section(
-			I18n::translate('pages.status.unlisted'),
+			'pages.status.unlisted',
 			'unlisted',
 			$unlisted
 		);
@@ -57,7 +55,7 @@ return function (array $props) {
 
 	if ($listed !== false) {
 		$sections['listed'] = $section(
-			I18n::translate('pages.status.listed'),
+			'pages.status.listed',
 			'listed',
 			$listed
 		);

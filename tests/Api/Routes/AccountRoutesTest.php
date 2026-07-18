@@ -2,7 +2,6 @@
 
 namespace Kirby\Api;
 
-use Kirby\Blueprint\Blueprint;
 use Kirby\Blueprint\Section;
 use Kirby\Cms\App;
 use Kirby\Cms\User;
@@ -25,8 +24,6 @@ class AccountRoutesTest extends TestCase
 
 	protected function setUp(): void
 	{
-		Blueprint::$loaded = [];
-
 		$this->app = new App([
 			'options' => [
 				'api.allowImpersonation' => true
