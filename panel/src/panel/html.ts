@@ -1,3 +1,5 @@
+import { isObject } from "@/helpers/object";
+
 /**
  * Wraps and marks a string as trusted, pre-escaped HTML.
  *
@@ -29,7 +31,9 @@ export class HtmlString extends String {
 	/**
 	 * Recursively walks `data` and rewraps any value whose parent key
 	 * matches `<key>` into an `HtmlString`, stripping the brackets. Plain
-	 * keys are kept as-is. Arrays are walked element by element.
+	 * keys are kept as-is. Arrays are walked element by element.Class
+	 * instances (e.g. component  instances passed as props) are passed
+	 * through untouched.
 	 *
 	 * Returns a new object/array; does not mutate the input.
 	 */
@@ -38,7 +42,7 @@ export class HtmlString extends String {
 			return data.map((value) => HtmlString.resolve(value)) as T;
 		}
 
-		if (data !== null && typeof data === "object") {
+		if (isObject(data) === true) {
 			const result: Record<string, unknown> = {};
 			const rawData = data as Record<string, unknown>;
 

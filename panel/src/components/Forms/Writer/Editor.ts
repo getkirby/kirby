@@ -26,7 +26,7 @@ import {
 	type MarkViewConstructor,
 	type NodeViewConstructor
 } from "prosemirror-view";
-import { reactive, toRaw } from "vue";
+import { markRaw, reactive } from "vue";
 
 import Emitter from "./Emitter";
 import type { Button, ExtensionCommand } from "./Extension";
@@ -170,6 +170,10 @@ export default class Editor extends Emitter<EditorEvents> {
 		});
 
 		this.setContent(this.options.content);
+
+		// Editor manages its own reactivity through `this.active`.
+		// It must never be wrapped in a reactive proxy.
+		markRaw(this);
 	}
 
 	/**
@@ -634,7 +638,7 @@ export default class Editor extends Emitter<EditorEvents> {
 		emitUpdate = false,
 		parseOptions?: ParseOptions
 	): void {
-		const { doc, tr } = toRaw(this.state!);
+		const { doc, tr } = this.state!;
 		const node = this.createDocument(content, parseOptions);
 		const transaction = tr
 			.replaceWith(0, doc.content.size, node)
@@ -644,7 +648,7 @@ export default class Editor extends Emitter<EditorEvents> {
 	}
 
 	setSelection(from = 0, to = 0): void {
-		const { doc, tr } = toRaw(this.state!);
+		const { doc, tr } = this.state!;
 		const resolvedFrom = utils.minMax(from, 0, doc.content.size);
 		const resolvedEnd = utils.minMax(to, 0, doc.content.size);
 		const selection = TextSelection.create(doc, resolvedFrom, resolvedEnd);

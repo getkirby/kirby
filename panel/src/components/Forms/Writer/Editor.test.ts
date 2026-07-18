@@ -7,6 +7,7 @@ import {
 	it,
 	vi
 } from "vitest";
+import { reactive } from "vue";
 import Editor from "./Editor";
 import { Bold, Link } from "./Marks";
 import { Heading } from "./Nodes";
@@ -579,6 +580,13 @@ describe("Editor", () => {
 			editor.on("update", onUpdate);
 			editor.setContent("<p>hello</p>", true);
 			expect(onUpdate).toHaveBeenCalledOnce();
+		});
+
+		it("preserves content when the editor is wrapped in a reactive proxy", () => {
+			const proxied = reactive(createEditor({ content: "<p>hello</p>" }));
+			proxied.setContent("<p>world</p>");
+			expect(proxied.getHTML()).toBe("<p>world</p>");
+			proxied.destroy();
 		});
 	});
 
