@@ -74,7 +74,7 @@ jobs:
           fetch-depth: 2
 
       - name: Install system locales
-        run: sudo apt-get update && sudo apt-get install -y locales-all imagemagick
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends locales-all imagemagick
 
       - name: Setup PHP environment
         uses: ./.github/actions/setup-php
