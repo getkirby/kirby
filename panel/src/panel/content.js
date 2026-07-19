@@ -327,7 +327,7 @@ export default (panel) => {
 		 * Releases the content lock without discarding changes.
 		 * Called when the editor navigates away from the view.
 		 */
-		unlock(env = {}) {
+		async unlock(env = {}) {
 			// Cancel any pending saves first to avoid race conditions
 			this.cancelSaving();
 
@@ -348,7 +348,7 @@ export default (panel) => {
 			}
 
 			// Fall back to a regular request if sendBeacon wasn't queued
-			panel.api
+			await panel.api
 				.post(
 					api + "/changes/unlock",
 					{},
