@@ -564,6 +564,18 @@ class PageRulesTest extends ModelTestCase
 		PageRules::duplicate($page, 'something');
 	}
 
+	public function testDuplicateReservedPath(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.page.changeSlug.reserved');
+
+		$page = new Page([
+			'slug' => 'test',
+		]);
+
+		PageRules::duplicate($page, 'panel');
+	}
+
 	public function testUpdate(): void
 	{
 		$page = new Page([

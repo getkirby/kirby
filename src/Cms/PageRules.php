@@ -287,6 +287,7 @@ class PageRules
 		}
 
 		self::validateSlugLength($slug);
+		self::validateSlugProtectedPaths($page, $slug);
 	}
 
 	/**
