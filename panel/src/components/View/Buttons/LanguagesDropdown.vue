@@ -75,7 +75,18 @@ export default {
 		}
 	},
 	methods: {
-		change(language) {
+		async change(language) {
+			if (language.current === true) {
+				return;
+			}
+
+			try {
+				await this.$panel.content.unlock();
+			} catch (error) {
+				this.$panel.error(error);
+				return;
+			}
+
 			this.$reload({
 				query: {
 					language: language.code
