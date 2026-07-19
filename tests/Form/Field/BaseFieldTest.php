@@ -31,6 +31,27 @@ class BaseFieldTest extends TestCase
 		$this->assertSame([], $field->drawers());
 	}
 
+	public function testErrors(): void
+	{
+		// fields without a value cannot have errors
+		$field = new MockBaseField();
+		$this->assertSame([], $field->errors());
+	}
+
+	public function testErrorsWithValidation(): void
+	{
+		// `Kirby\Form\Mixin\Validation` overwrites the default
+		// for all fields that can hold a value
+		$field = $this->field('text', [
+			'name'     => 'test',
+			'required' => true
+		]);
+
+		$this->assertSame([
+			'required' => 'Please enter something'
+		], $field->errors());
+	}
+
 	public function testFactory(): void
 	{
 		$field = MockBaseField::factory(['name' => 'test']);
