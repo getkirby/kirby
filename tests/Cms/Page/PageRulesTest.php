@@ -719,6 +719,33 @@ class PageRulesTest extends ModelTestCase
 		PageRules::move($page, new Page(['slug' => 'test']));
 	}
 
+	public function testMoveToReservedPath(): void
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'parent-a',
+						'children' => [
+							[
+								'slug' => 'panel'
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$child = $this->app->page('parent-a/panel');
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.page.changeSlug.reserved');
+
+		PageRules::move($child, $this->app->site());
+	}
+
 	public function testMoveWithDuplicate(): void
 	{
 		$this->app = $this->app->clone([

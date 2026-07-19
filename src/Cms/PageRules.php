@@ -319,6 +319,8 @@ class PageRules
 			throw new LogicException(key: 'page.move.ancestor');
 		}
 
+		self::validateSlugProtectedPaths($page, $page->slug(), $parent);
+
 		// check for duplicates
 		if ($parent->childrenAndDrafts()->find($page->slug())) {
 			throw new DuplicateException(
@@ -447,9 +449,12 @@ class PageRules
 	 */
 	protected static function validateSlugProtectedPaths(
 		Page $page,
-		string $slug
+		string $slug,
+		Site|Page|null $parent = null
 	): void {
-		if ($page->parent() === null) {
+		$parent ??= $page->parent();
+
+		if ($parent instanceof Page === false) {
 			$paths = A::map(
 				['api', 'assets', 'media', 'panel'],
 				fn ($url) => $page->kirby()->url($url, true)->path()->toString()
