@@ -31,6 +31,9 @@ class ObjectFieldTest extends TestCase
 	{
 		$field = $this->field('object', [
 			'fields' => [
+				'notice' => [
+					'type' => 'info'
+				],
 				'url' => [
 					'type' => 'url',
 					'minlength' => 20

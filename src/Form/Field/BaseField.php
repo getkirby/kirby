@@ -59,6 +59,16 @@ abstract class BaseField implements Stringable
 	}
 
 	/**
+	 * Fields without a value never have errors.
+	 * `Kirby\Form\Mixin\Validation` overwrites this
+	 * for all fields that can actually be validated.
+	 */
+	public function errors(): array
+	{
+		return [];
+	}
+
+	/**
 	 * Creates a new field instance from a $props array
 	 * @since 6.0.0
 	 */
