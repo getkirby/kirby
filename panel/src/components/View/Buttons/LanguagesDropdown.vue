@@ -80,6 +80,18 @@ export default {
 				return;
 			}
 
+			// persist any pending changes before releasing the lock, so that
+			// switching the language cannot drop them or leave the lock behind
+			// due to a save that finishes after the unlock request
+			if (this.$panel.content.hasDiff() === true) {
+				try {
+					await this.$panel.content.update();
+				} catch (error) {
+					this.$panel.error(error);
+					return;
+				}
+			}
+
 			await this.$panel.content.unlock();
 
 			this.$reload({
