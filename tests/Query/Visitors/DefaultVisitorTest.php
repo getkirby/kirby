@@ -209,6 +209,22 @@ class DefaultVisitorTest extends TestCase
 		$this->assertSame('baz', $visitor->memberAccess($obj, 'foo'));
 	}
 
+	public function testNot(): void
+	{
+		$visitor = new DefaultVisitor();
+		$this->assertFalse($visitor->not(true));
+		$this->assertTrue($visitor->not(false));
+
+		$this->assertTrue($visitor->not(null));
+		$this->assertTrue($visitor->not(0));
+		$this->assertTrue($visitor->not(''));
+		$this->assertTrue($visitor->not([]));
+
+		$this->assertFalse($visitor->not('foo'));
+		$this->assertFalse($visitor->not(1));
+		$this->assertFalse($visitor->not(['foo']));
+	}
+
 	public function testTernary(): void
 	{
 		$visitor = new DefaultVisitor();

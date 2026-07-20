@@ -45,6 +45,7 @@ enum TokenType
 	// Logical operators
 	case T_AND; // AND or &&
 	case T_OR;  // OR or ||
+	case T_NOT; // !
 
 	// Literals
 	case T_STRING;

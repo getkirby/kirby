@@ -56,7 +56,9 @@ export default {
 	data() {
 		return {
 			slug: this.sluggify(this.value),
-			slugs: this.$panel.language.rules ?? this.$panel.system.slugs,
+			slugs: this.$helper.object.isEmpty(this.$panel.language.rules)
+				? this.$panel.system.slugs
+				: this.$panel.language.rules,
 			syncValue: null
 		};
 	},

@@ -61,6 +61,11 @@ abstract class Visitor
 		bool $nullSafe = false
 	): mixed;
 
+	/**
+	 * @since 6.0.0
+	 */
+	abstract public function not(mixed $value): bool;
+
 	abstract public function ternary(
 		mixed $condition,
 		mixed $true,

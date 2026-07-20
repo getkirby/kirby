@@ -139,6 +139,14 @@ class FieldsTest extends TestCase
 			'b' => [
 				'type'  => 'text',
 			],
+			// fields without validation logic
+			'buttons'  => ['type' => 'buttons'],
+			'gap'      => ['type' => 'gap'],
+			'headline' => ['type' => 'headline'],
+			'hidden'   => ['type' => 'hidden'],
+			'info'     => ['type' => 'info'],
+			'line'     => ['type' => 'line'],
+			'stats'    => ['type' => 'stats'],
 		], $this->model);
 
 		$this->assertSame([], $fields->errors());

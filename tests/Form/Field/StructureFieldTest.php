@@ -196,6 +196,9 @@ class StructureFieldTest extends TestCase
 	{
 		$field = $this->field('structure', [
 			'fields' => [
+				'notice' => [
+					'type' => 'info'
+				],
 				'title' => [
 					'type' => 'text'
 				]
@@ -206,6 +209,9 @@ class StructureFieldTest extends TestCase
 
 		$field = $this->field('structure', [
 			'fields' => [
+				'notice' => [
+					'type' => 'info'
+				],
 				'title' => [
 					'type' => 'text'
 				]

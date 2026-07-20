@@ -510,6 +510,21 @@ class BlocksFieldTest extends TestCase
 	public function testValidations(): void
 	{
 		$field = $this->field('blocks', [
+			'fieldsets' => [
+				'heading' => true,
+				'video'   => true,
+				'note'    => [
+					'label'  => 'Note',
+					'fields' => [
+						'notice' => [
+							'type' => 'info'
+						],
+						'text' => [
+							'type' => 'text'
+						]
+					]
+				]
+			],
 			'value' => [
 				[
 					'type'    => 'heading',
@@ -521,6 +536,12 @@ class BlocksFieldTest extends TestCase
 					'type'    => 'video',
 					'content' => [
 						'url' => 'https://www.youtube.com/watch?v=EDVYjxWMecc',
+					]
+				],
+				[
+					'type'    => 'note',
+					'content' => [
+						'text' => 'A nice note',
 					]
 				]
 			],

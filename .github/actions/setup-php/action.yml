@@ -65,5 +65,5 @@ runs:
       uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
       with:
         path: ~/.cpx
-        key: cpx-${{ runner.os }}-${{ hashFiles('composer.json') }}
-        restore-keys: cpx-${{ runner.os }}-
+        key: cpx-${{ runner.os }}-php${{ inputs.php }}-${{ hashFiles('composer.json') }}
+        restore-keys: cpx-${{ runner.os }}-php${{ inputs.php }}-

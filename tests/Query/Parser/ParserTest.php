@@ -11,7 +11,9 @@ use Kirby\Query\AST\CoalesceNode;
 use Kirby\Query\AST\ComparisonNode;
 use Kirby\Query\AST\GlobalFunctionNode;
 use Kirby\Query\AST\LiteralNode;
+use Kirby\Query\AST\LogicalNode;
 use Kirby\Query\AST\MemberAccessNode;
+use Kirby\Query\AST\NotNode;
 use Kirby\Query\AST\TernaryNode;
 use Kirby\Query\AST\VariableNode;
 use Kirby\TestCase;
@@ -554,6 +556,97 @@ class ParserTest extends TestCase
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Expect property name after "."');
 		$parser->parse();
+	}
+
+	public function testNot(): void
+	{
+		$parser = new Parser('!user');
+		$ast    = $parser->parse();
+
+		$this->assertEquals(
+			new NotNode(
+				new VariableNode('user')
+			),
+			$ast
+		);
+	}
+
+	public function testNotNested(): void
+	{
+		$parser = new Parser('!!user');
+		$ast    = $parser->parse();
+
+		$this->assertEquals(
+			new NotNode(
+				new NotNode(
+					new VariableNode('user')
+				)
+			),
+			$ast
+		);
+	}
+
+	public function testNotWithMemberAccess(): void
+	{
+		// member access binds tighter than the not operator
+		$parser = new Parser('!user.isAdmin');
+		$ast    = $parser->parse();
+
+		$this->assertEquals(
+			new NotNode(
+				new MemberAccessNode(
+					new VariableNode('user'),
+					new LiteralNode('isAdmin')
+				)
+			),
+			$ast
+		);
+	}
+
+	public function testNotWithGrouping(): void
+	{
+		$parser = new Parser('!(a && b)');
+		$ast    = $parser->parse();
+
+		$this->assertEquals(
+			new NotNode(
+				new LogicalNode(
+					new VariableNode('a'),
+					'&&',
+					new VariableNode('b')
+				)
+			),
+			$ast
+		);
+	}
+
+	public function testNotPrecedence(): void
+	{
+		// the not operator binds tighter than comparison,
+		// but looser than arithmetic terms
+		$parser = new Parser('!a == b');
+		$ast    = $parser->parse();
+
+		$this->assertEquals(
+			new ComparisonNode(
+				new NotNode(new VariableNode('a')),
+				'==',
+				new VariableNode('b')
+			),
+			$ast
+		);
+
+		$parser = new Parser('!a * b');
+		$ast    = $parser->parse();
+
+		$this->assertEquals(
+			new ArithmeticNode(
+				new NotNode(new VariableNode('a')),
+				'*',
+				new VariableNode('b')
+			),
+			$ast
+		);
 	}
 
 	public function testParse(): void

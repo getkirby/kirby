@@ -15,7 +15,6 @@
 				<li v-for="(choice, index) in choices" :key="index">
 					<k-choice-input
 						v-bind="choice"
-						@click="toggle(choice.value)"
 						@input="$emit('input', choice.value)"
 					/>
 				</li>

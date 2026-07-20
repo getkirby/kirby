@@ -211,6 +211,7 @@ class Tokenizer
 			'/'     => new Token(TokenType::T_DIVIDE, '/'),
 			'%'     => new Token(TokenType::T_MODULO, '%'),
 			'?'     => new Token(TokenType::T_QUESTION_MARK, '?'),
+			'!'     => new Token(TokenType::T_NOT, '!'),
 			'<'     => new Token(TokenType::T_LESS_THAN, '<'),
 			'>'     => new Token(TokenType::T_GREATER_THAN, '>'),
 			default => null
