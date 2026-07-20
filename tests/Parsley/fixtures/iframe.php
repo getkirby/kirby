@@ -1,10 +1,4 @@
 <?php
 
-return [
-	[
-		'content' => [
-			'text' => '<iframe src="https://whatever.com"></iframe>'
-		],
-		'type' => 'markdown'
-	],
-];
+// non-video iframes cannot be stored safely and are dropped
+return [];
