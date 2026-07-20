@@ -83,7 +83,7 @@ abstract class ModelPermissions
 
 		// check if the model has the ability to execute this action
 		// without breaking system logic. This always takes priority over
-		// any other role-based permission rules
+		// any other role-based permission rules.
 		if ($this->model->abilities()->$action() === false) {
 			return false;
 		}
@@ -185,5 +185,4 @@ abstract class ModelPermissions
 	{
 		return App::instance()->user() ?? User::nobody();
 	}
-
 }
