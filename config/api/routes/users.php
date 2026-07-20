@@ -185,7 +185,10 @@ return [
 
 			// validate password of acting user unless they have logged in to reset it;
 			// always validate password of acting user when changing password of other users
-			if ($this->session()->get('kirby.resetPassword') !== true || $user->is($currentUser) !== true) {
+			if (
+				$this->kirby()->auth()->isResettingPassword($this->session()) !== true ||
+				$user->is($currentUser) !== true
+			) {
 				$currentUser->validatePassword($this->requestBody('currentPassword'));
 			}
 
