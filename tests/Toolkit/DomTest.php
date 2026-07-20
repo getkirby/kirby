@@ -492,6 +492,24 @@ class DomTest extends TestCase
 				['https://getkirby.com/style.css']
 			],
 
+			// @import without whitespace before the string
+			[
+				'@import"https://getkirby.com/style.css"',
+				['https://getkirby.com/style.css']
+			],
+
+			// @import with a CSS comment instead of whitespace
+			[
+				'@import/**/"https://getkirby.com/style.css"',
+				['https://getkirby.com/style.css']
+			],
+
+			// @import with a tab (stripped by the ASCII filter → becomes no-space)
+			[
+				"@import\t\"https://getkirby.com/style.css\"",
+				['https://getkirby.com/style.css']
+			],
+
 			// @import url() form
 			[
 				'@import url("https://getkirby.com/style.css")',
