@@ -7,27 +7,24 @@ env:
   TIMEOUT: &timeout 5
   COVERAGE_PHP: "8.4"
 
-  # run job only under the following conditions:
-  # - can be triggered manually from any repository
-  # - can be triggered as workflow call by another workflow
-  # - if on pull request, only run if from a fork
-  #   (our own repo is covered by the push event)
-  # - if on push, only run CI automatically for the
-  #   main getkirby/kirby repo and for forks
   SHOULD_RUN: &should-run >-
     github.event_name == 'workflow_dispatch' ||
     github.event_name == 'workflow_call' ||
-    (github.event_name == 'pull_request' &&
-    github.event.pull_request.head.repo.full_name != github.repository) ||
-    (github.event_name == 'push' &&
-    (github.repository == 'getkirby/kirby' || github.repository_owner != 'getkirby'))
+    github.repository == 'getkirby/kirby' ||
+    github.repository_owner != 'getkirby'
 
 on:
-  push: &backend-triggers
-    branches-ignore:
+  # only the long-lived base branches run on push, so that their caches
+  # are seeded for the pull requests targeting them; feature/fix branches
+  # are covered by the pull_request event instead, which can restore caches
+  # from its base branch and keeps the same commit from running twice
+  push:
+    branches:
       - "main"
-      - "release/**"
-    paths:
+      - "develop-patch"
+      - "develop-minor"
+      - "v*/develop"
+    paths: &backend-paths
       - "**"
       - "!.github/**"
       - ".github/actions/setup-php/**"
@@ -37,7 +34,8 @@ on:
       - "!assets/**"
       - "!panel/**"
       - "!scripts/**"
-  pull_request: *backend-triggers
+  pull_request:
+    paths: *backend-paths
   workflow_call:
   workflow_dispatch:
 
@@ -73,8 +71,20 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Install system locales
-        run: sudo apt-get update && sudo apt-get install -y locales-all imagemagick
+      - name: Install system locales and imagemagick
+        uses: awalsh128/cache-apt-pkgs-action@553a35bb8ebd9fcabcb1c9451aa4c98e1b4ca8a9 # v1.6.3
+        with:
+          packages: locales-all imagemagick
+          version: 1
+          execute_install_scripts: true
+
+      - name: Ensure ImageMagick aliases exist
+        run: |
+          if ! command -v convert > /dev/null; then
+            sudo ln -sf /usr/bin/convert-im6.q16 /usr/bin/convert
+            sudo ln -sf /usr/bin/identify-im6.q16 /usr/bin/identify
+          fi
+          convert -version | head -1
 
       - name: Setup PHP environment
         uses: ./.github/actions/setup-php
