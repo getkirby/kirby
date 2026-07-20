@@ -44,6 +44,11 @@ class PluginTest extends TestCase
 		$this->app = new App([
 			'roots' => [
 				'index' => static::TMP
+			],
+			'options' => [
+				// the fixtures are served from the local filesystem,
+				// which the default protocol allowlist blocks
+				'remote' => ['protocols' => CURLPROTO_FILE]
 			]
 		]);
 	}

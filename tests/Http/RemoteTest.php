@@ -2,6 +2,7 @@
 
 namespace Kirby\Http;
 
+use Exception;
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
@@ -19,6 +20,8 @@ class RemoteTest extends TestCase
 
 	protected function setUp(): void
 	{
+		parent::setUp();
+
 		$this->cwd = getcwd();
 
 		$this->defaults = Remote::$defaults;
@@ -41,6 +44,8 @@ class RemoteTest extends TestCase
 		unset(IniStore::$data['curl.cainfo']);
 
 		Dir::remove(static::TMP);
+
+		parent::tearDown();
 	}
 
 	public function testOptionsHeaders(): void
@@ -165,13 +170,39 @@ class RemoteTest extends TestCase
 		]);
 	}
 
+	public function testOptionsProtocols(): void
+	{
+		// default: only HTTP and HTTPS
+		$request = Remote::get('https://getkirby.com');
+		$this->assertSame(CURLPROTO_HTTP | CURLPROTO_HTTPS, $request->curlopt[CURLOPT_PROTOCOLS]);
+		$this->assertSame(CURLPROTO_HTTP | CURLPROTO_HTTPS, $request->curlopt[CURLOPT_REDIR_PROTOCOLS]);
+
+		// custom protocols are applied to redirects as well
+		$request = Remote::get('https://getkirby.com', [
+			'protocols' => CURLPROTO_HTTPS
+		]);
+		$this->assertSame(CURLPROTO_HTTPS, $request->curlopt[CURLOPT_PROTOCOLS]);
+		$this->assertSame(CURLPROTO_HTTPS, $request->curlopt[CURLOPT_REDIR_PROTOCOLS]);
+	}
+
+	public function testOptionsProtocolsDisallowedScheme(): void
+	{
+		$this->expectException(Exception::class);
+		$this->expectExceptionCode(CURLE_UNSUPPORTED_PROTOCOL);
+
+		// `file://` is supported by cURL,
+		// but default Remote protocols do not allow it
+		Remote::get('file://' . __FILE__, ['test' => false]);
+	}
+
 	public function testOptionsFromApp(): void
 	{
 		new App([
 			'options' => [
 				'remote' => [
-					'key'  => 'different-value',
-					'body' => false
+					'key'       => 'different-value',
+					'body'      => false,
+					'protocols' => CURLPROTO_FILE
 				]
 			]
 		]);
@@ -181,6 +212,8 @@ class RemoteTest extends TestCase
 		$options = $request->options();
 		$this->assertSame('different-value', $options['key']);
 		$this->assertFalse($options['body']);
+		$this->assertSame(CURLPROTO_FILE, $request->curlopt[CURLOPT_PROTOCOLS]);
+		$this->assertSame(CURLPROTO_FILE, $request->curlopt[CURLOPT_REDIR_PROTOCOLS]);
 
 		// reset app options
 		new App(

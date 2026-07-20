@@ -93,7 +93,10 @@ class SystemViewControllerTest extends TestCase
 
 		$this->app = $this->app->clone([
 			'options' => [
-				'url' => 'https://example.com'
+				'url' => 'https://example.com',
+				// the fixtures are served from the local filesystem,
+				// which the default protocol allowlist blocks
+				'remote' => ['protocols' => CURLPROTO_FILE]
 			]
 		]);
 	}

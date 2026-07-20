@@ -33,6 +33,7 @@ class Remote
 		'headers'   => [],
 		'method'    => 'GET',
 		'progress'  => null,
+		'protocols' => CURLPROTO_HTTP | CURLPROTO_HTTPS,
 		'test'      => false,
 		'timeout'   => 10,
 	];
@@ -137,6 +138,8 @@ class Remote
 			CURLOPT_RETURNTRANSFER   => $this->options['body'],
 			CURLOPT_FOLLOWLOCATION   => true,
 			CURLOPT_MAXREDIRS        => 10,
+			CURLOPT_PROTOCOLS        => $this->options['protocols'],
+			CURLOPT_REDIR_PROTOCOLS  => $this->options['protocols'],
 			CURLOPT_HEADER           => false,
 			CURLOPT_HEADERFUNCTION   => function ($curl, $header): int {
 				$parts = Str::split($header, ':');
