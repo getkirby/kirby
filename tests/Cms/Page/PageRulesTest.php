@@ -564,6 +564,44 @@ class PageRulesTest extends ModelTestCase
 		PageRules::duplicate($page, 'something');
 	}
 
+	public function testDuplicateReservedPath(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.page.changeSlug.reserved');
+
+		$page = new Page([
+			'slug' => 'test',
+		]);
+
+		PageRules::duplicate($page, 'panel');
+	}
+
+	public function testDuplicateReservedPathInSubpage(): void
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'parent-a',
+						'children' => [
+							[
+								'slug' => 'child'
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$this->expectNotToPerformAssertions();
+
+		$child = $this->app->page('parent-a/child');
+
+		PageRules::duplicate($child, 'panel');
+	}
+
 	public function testUpdate(): void
 	{
 		$page = new Page([
@@ -705,6 +743,76 @@ class PageRulesTest extends ModelTestCase
 		$this->expectExceptionMessage('You are not allowed to move "test"');
 
 		PageRules::move($page, new Page(['slug' => 'test']));
+	}
+
+	public function testMoveToReservedPath(): void
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'parent-a',
+						'children' => [
+							[
+								'slug' => 'panel'
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$child = $this->app->page('parent-a/panel');
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.page.changeSlug.reserved');
+
+		PageRules::move($child, $this->app->site());
+	}
+
+	public function testMoveToReservedPathInSubpage(): void
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'parent-a',
+						'template' => 'parent',
+						'children' => [
+							[
+								'slug'     => 'panel',
+								'template' => 'child'
+							]
+						]
+					],
+					[
+						'slug'     => 'parent-b',
+						'template' => 'parent',
+					]
+				]
+			],
+			'blueprints' => [
+				'pages/parent' => [
+					'sections' => [
+						'subpages' => [
+							'type'     => 'pages',
+							'template' => 'child'
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$this->expectNotToPerformAssertions();
+
+		$parentB = $this->app->page('parent-b');
+		$child   = $this->app->page('parent-a/panel');
+
+		PageRules::move($child, $parentB);
 	}
 
 	public function testMoveWithDuplicate(): void
