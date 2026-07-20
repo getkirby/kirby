@@ -41,62 +41,52 @@ class SitePermissionsTest extends ModelTestCase
 		$this->assertFalse($permissions->can($action));
 	}
 
-	public function testCanFromCache()
+	#[DataProvider('actionProvider')]
+	public function testWithEditorAndDisabledPermission(string $action): void
 	{
-		$app = new App([
+		$this->app = $this->app->clone([
 			'roles' => [
 				[
 					'name' => 'editor',
 					'permissions' => [
 						'site' => [
-							'access' => false
-						],
+							$action => false
+						]
 					]
 				]
 			],
-			'roots' => [
-				'index' => '/dev/null'
-			],
 			'users' => [
-				['id' => 'bastian', 'role' => 'editor'],
+				['id' => 'bastian', 'role' => 'editor']
 			]
 		]);
 
-		$app->impersonate('bastian');
+		$this->app->impersonate('bastian');
 
-		$site = $app->site();
+		$permissions = $this->app->site()->permissions();
 
-		$this->assertFalse(SitePermissions::canFromCache($site, 'access'));
-		$this->assertFalse(SitePermissions::canFromCache($site, 'access'));
+		$this->assertFalse($permissions->can($action));
 	}
 
-	public function testCanFromCacheWithDefault()
+	public function testCanWithDefault(): void
 	{
-		// reset the process-wide in-memory permission cache
-		ModelPermissions::$cache = [];
-
-		$app = new App([
+		$this->app = $this->app->clone([
 			'roles' => [
 				['name' => 'editor']
 			],
-			'roots' => [
-				'index' => '/dev/null'
-			],
 			'users' => [
-				['id' => 'bastian', 'role' => 'editor'],
+				['id' => 'bastian', 'role' => 'editor']
 			]
 		]);
 
-		$app->impersonate('bastian');
+		$this->app->impersonate('bastian');
 
-		$site = $app->site();
+		$permissions = $this->app->site()->permissions();
 
 		// an action that is not defined in the permissions map
 		// falls back to the passed default…
-		$this->assertTrue(SitePermissions::canFromCache($site, 'undefined', true));
+		$this->assertTrue($permissions->can('undefined', true));
 
-		// …and a different default for the same action
-		// must not be served from the cache
-		$this->assertFalse(SitePermissions::canFromCache($site, 'undefined', false));
+		// …as well as a different default for the same action
+		$this->assertFalse($permissions->can('undefined', false));
 	}
 }

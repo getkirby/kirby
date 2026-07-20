@@ -68,8 +68,6 @@ class PagePickerTest extends ModelTestCase
 
 	public function testParentAccessibleButNotListable(): void
 	{
-		ModelPermissions::$cache = [];
-
 		$this->app = $this->app->clone([
 			'blueprints' => [
 				'pages/limited' => [
@@ -109,8 +107,6 @@ class PagePickerTest extends ModelTestCase
 
 	public function testParentNotAccessibleFallsBackToSite(): void
 	{
-		ModelPermissions::$cache = [];
-
 		$this->app = $this->app->clone([
 			'blueprints' => [
 				'pages/forbidden' => [
@@ -150,8 +146,6 @@ class PagePickerTest extends ModelTestCase
 
 	public function testParentAndSiteNotAccessibleThrows(): void
 	{
-		ModelPermissions::$cache = [];
-
 		$this->app = $this->app->clone([
 			'blueprints' => [
 				'pages/forbidden' => [

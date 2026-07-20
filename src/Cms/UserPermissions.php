@@ -12,18 +12,6 @@ namespace Kirby\Cms;
  */
 class UserPermissions extends ModelPermissions
 {
-	/**
-	 * Used to cache once determined permissions in memory
-	 *
-	 * @param \Kirby\Cms\User $model
-	 * @psalm-suppress MoreSpecificImplementedParamType
-	 */
-	protected static function cacheKey(
-		ModelWithContent|Language $model
-	): string {
-		return $model->role()->id();
-	}
-
 	protected function canChangeRole(): bool
 	{
 		// protect admin from role changes by non-admin

@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Exception\LogicException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -53,16 +52,7 @@ class FilePermissionsTest extends ModelTestCase
 	}
 
 	#[DataProvider('actionProvider')]
-	public function testWithNobody(string $action): void
-	{
-		$page  = new Page(['slug' => 'test']);
-		$file  = new File(['filename' => 'test.jpg', 'parent' => $page]);
-		$perms = $file->permissions();
-
-		$this->assertFalse($perms->can($action));
-	}
-
-	public function testCanFromCache(): void
+	public function testWithAdminButDisabledOption(string $action): void
 	{
 		$this->app->impersonate('admin');
 
@@ -72,33 +62,24 @@ class FilePermissionsTest extends ModelTestCase
 			'parent'    => $page,
 			'template'  => 'some-template',
 			'blueprint' => [
-				'name' => 'files/some-template',
+				'name'    => 'files/some-template',
 				'options' => [
-					'access' => false,
-					'list'   => false
+					$action => false
 				]
 			]
 		]);
 
-		$this->assertFalse(FilePermissions::canFromCache($file, 'access'));
-		$this->assertFalse(FilePermissions::canFromCache($file, 'access'));
-		$this->assertFalse(FilePermissions::canFromCache($file, 'list'));
-		$this->assertFalse(FilePermissions::canFromCache($file, 'list'));
+		$this->assertFalse($file->permissions()->can($action));
 	}
 
-	public function testCanFromCacheDynamic(): void
+	#[DataProvider('actionProvider')]
+	public function testWithNobody(string $action): void
 	{
-		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Cannot use permission cache for dynamically-determined permission');
+		$page  = new Page(['slug' => 'test']);
+		$file  = new File(['filename' => 'test.jpg', 'parent' => $page]);
+		$perms = $file->permissions();
 
-		$page = new Page(['slug' => 'test']);
-		$file = new File([
-			'filename' => 'test.jpg',
-			'parent'   => $page,
-			'template' => 'some-template',
-		]);
-
-		FilePermissions::canFromCache($file, 'changeTemplate');
+		$this->assertFalse($perms->can($action));
 	}
 
 	public function testCannotChangeTemplate(): void

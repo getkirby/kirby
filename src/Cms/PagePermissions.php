@@ -14,18 +14,6 @@ class PagePermissions extends ModelPermissions
 {
 	protected const string CATEGORY = 'pages';
 
-	/**
-	 * Used to cache once determined permissions in memory
-	 *
-	 * @param \Kirby\Cms\Page $model
-	 * @psalm-suppress MoreSpecificImplementedParamType
-	 */
-	protected static function cacheKey(
-		ModelWithContent|Language $model
-	): string {
-		return $model->intendedTemplate()->name();
-	}
-
 	protected function canChangeSlug(): bool
 	{
 		return $this->model->isHomeOrErrorPage() !== true;
