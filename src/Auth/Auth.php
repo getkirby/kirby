@@ -118,13 +118,10 @@ class Auth
 			// only re-throw the exception in auth debug mode
 			$this->fail($e);
 
-			// always make sure to still set the email, mode and timeout,
-			// even if the challenge wasn't created;
+			// always make sure to still keep the session generically
+			// pending, even if the challenge wasn't created;
 			// this avoids leaking whether the user exists
-			$timeout = $this->challenges()->timeout();
-			$session->set('kirby.challenge.email', $email);
-			$session->set('kirby.challenge.mode', $mode);
-			$session->set('kirby.challenge.timeout', time() + $timeout);
+			$this->challenges()->keepPending($session, $email, $mode);
 		}
 
 		// sleep for a random amount of milliseconds
