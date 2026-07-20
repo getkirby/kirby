@@ -3,7 +3,7 @@
 namespace Kirby\Cms;
 
 /**
- * Model Abilities
+ * Abilities for a model object
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license

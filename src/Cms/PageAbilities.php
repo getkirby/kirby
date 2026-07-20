@@ -3,7 +3,7 @@
 namespace Kirby\Cms;
 
 /**
- * Page Abilities
+ * Abilities for a `$page` object
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license

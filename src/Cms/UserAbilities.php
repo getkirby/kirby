@@ -3,7 +3,7 @@
 namespace Kirby\Cms;
 
 /**
- * User Abilities
+ * Abilities for a `$user` object
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license

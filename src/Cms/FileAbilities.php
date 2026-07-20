@@ -3,7 +3,7 @@
 namespace Kirby\Cms;
 
 /**
- * File Abilities
+ * Abilities for a `$file` object
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
