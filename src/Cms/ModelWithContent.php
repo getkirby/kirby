@@ -297,6 +297,13 @@ abstract class ModelWithContent implements Identifiable, Stringable
 		$errors = [];
 
 		foreach ($this->blueprint()->sections() as $section) {
+			// sections that are wrapped in a `section` field are
+			// validated as part of the form, where `when` conditions
+			// can be evaluated against the other fields
+			if ($section->field() !== null) {
+				continue;
+			}
+
 			$errors = [...$errors, ...$section->errors()];
 		}
 

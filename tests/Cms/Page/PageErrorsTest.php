@@ -80,6 +80,33 @@ class PageErrorsTest extends ModelTestCase
 		], $page->errors());
 	}
 
+	public function testErrorsWithPagesSectionFieldWhenInactive(): void
+	{
+		$page = new Page([
+			'slug' => 'test',
+			'blueprint' => [
+				'name' => 'test',
+				'fields' => [
+					'toggle' => [
+						'type'    => 'toggle',
+						'default' => false
+					],
+					'drafts' => [
+						'type'    => 'section',
+						'section' => 'pages',
+						'status'  => 'drafts',
+						'min'     => 1,
+						'when'    => ['toggle' => true]
+					]
+				]
+			]
+		]);
+
+		// the section is hidden by the `when` condition
+		// and must not block changing the page status
+		$this->assertSame([], $page->errors());
+	}
+
 	public function testErrorsWithRequiredField(): void
 	{
 		$page = new Page([
