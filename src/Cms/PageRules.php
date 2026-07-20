@@ -454,20 +454,22 @@ class PageRules
 	): void {
 		$parent ??= $page->parent();
 
-		if ($parent instanceof Page === false) {
-			$paths = A::map(
-				['api', 'assets', 'media', 'panel'],
-				fn ($url) => $page->kirby()->url($url, true)->path()->toString()
+		if ($parent instanceof Page === true) {
+			return;
+		}
+
+		$paths = A::map(
+			['api', 'assets', 'media', 'panel'],
+			fn ($url) => $page->kirby()->url($url, true)->path()->toString()
+		);
+
+		$index = array_search($slug, $paths);
+
+		if ($index !== false) {
+			throw new InvalidArgumentException(
+				key: 'page.changeSlug.reserved',
+				data: ['path' => $paths[$index]]
 			);
-
-			$index = array_search($slug, $paths);
-
-			if ($index !== false) {
-				throw new InvalidArgumentException(
-					key: 'page.changeSlug.reserved',
-					data: ['path' => $paths[$index]]
-				);
-			}
 		}
 	}
 
