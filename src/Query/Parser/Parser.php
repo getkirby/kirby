@@ -15,6 +15,7 @@ use Kirby\Query\AST\LiteralNode;
 use Kirby\Query\AST\LogicalNode;
 use Kirby\Query\AST\MemberAccessNode;
 use Kirby\Query\AST\Node;
+use Kirby\Query\AST\NotNode;
 use Kirby\Query\AST\TernaryNode;
 use Kirby\Query\AST\VariableNode;
 
@@ -371,7 +372,7 @@ class Parser
 	 */
 	private function term(): Node
 	{
-		$left = $this->memberAccess();
+		$left = $this->unary();
 
 		while ($token = $this->consumeAny([
 			TokenType::T_MULTIPLY,
@@ -381,7 +382,7 @@ class Parser
 			$left = new ArithmeticNode(
 				left: $left,
 				operator: $token->lexeme,
-				right: $this->memberAccess()
+				right: $this->unary()
 			);
 		}
 
@@ -469,5 +470,18 @@ class Parser
 		}
 
 		return $condition;
+	}
+
+	/**
+	 * Parses a unary expression (logical negation)
+	 * @since 6.0.0
+	 */
+	private function unary(): Node
+	{
+		if ($this->consume(TokenType::T_NOT) !== false) {
+			return new NotNode(value: $this->unary());
+		}
+
+		return $this->memberAccess();
 	}
 }

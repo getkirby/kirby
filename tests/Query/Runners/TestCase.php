@@ -154,6 +154,42 @@ abstract class TestCase extends BaseTestCase
 				['user' => ['isAdmin' => true, 'hasPermission' => true]], // context
 				true, // result
 			],
+
+			'logical NOT' => [
+				'!false', // query
+				[], // context
+				true, // result
+			],
+
+			'logical NOT with truthy value' => [
+				'!"foo"', // query
+				[], // context
+				false, // result
+			],
+
+			'logical NOT with member access' => [
+				'!user.isAdmin', // query
+				['user' => ['isAdmin' => false]], // context
+				true, // result
+			],
+
+			'logical NOT with grouping' => [
+				'!(a && b)', // query
+				['a' => true, 'b' => false], // context
+				true, // result
+			],
+
+			'logical NOT combined with AND' => [
+				'a && !b', // query
+				['a' => true, 'b' => false], // context
+				true, // result
+			],
+
+			'logical NOT with ternary' => [
+				'!user.isAdmin ? "guest" : "admin"', // query
+				['user' => ['isAdmin' => true]], // context
+				'admin', // result
+			],
 			// Arithmetic operations
 			'basic addition' => [
 				'2 + 3', // query

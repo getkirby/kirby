@@ -161,6 +161,15 @@ class DefaultVisitor extends Visitor
 	}
 
 	/**
+	 * Processes logical negation
+	 * @since 6.0.0
+	 */
+	public function not(mixed $value): bool
+	{
+		return !$value;
+	}
+
+	/**
 	 * Processes ternary operator
 	 */
 	public function ternary(

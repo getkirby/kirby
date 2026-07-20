@@ -178,6 +178,42 @@ class TokenizerTest extends TestCase
 		$this->assertSame($expected, array_map(fn ($t) => $t->type, $tokens));
 	}
 
+	public function testTokensWithNotOperator(): void
+	{
+		$query 	   = '!user.isAdmin';
+		$tokenizer = new Tokenizer($query);
+		$tokens    = iterator_to_array($tokenizer->tokens());
+
+		$expected = [
+			TokenType::T_NOT,
+			TokenType::T_IDENTIFIER,
+			TokenType::T_DOT,
+			TokenType::T_IDENTIFIER,
+			TokenType::T_EOF,
+		];
+
+		$this->assertSame($expected, array_map(fn ($t) => $t->type, $tokens));
+		$this->assertSame('!', $tokens[0]->lexeme);
+	}
+
+	public function testTokensWithNotOperatorPrecedence(): void
+	{
+		$query = 'a != b';
+		$token = Tokenizer::token($query, 2);
+		$this->assertSame(TokenType::T_NOT_EQUAL, $token->type);
+		$this->assertSame('!=', $token->lexeme);
+
+		$query = 'a !== b';
+		$token = Tokenizer::token($query, 2);
+		$this->assertSame(TokenType::T_NOT_IDENTICAL, $token->type);
+		$this->assertSame('!==', $token->lexeme);
+
+		$query = 'a && !b';
+		$token = Tokenizer::token($query, 5);
+		$this->assertSame(TokenType::T_NOT, $token->type);
+		$this->assertSame('!', $token->lexeme);
+	}
+
 	public function testTokensWithComparisonOperatorsPrecedence(): void
 	{
 		// Test that longer operators are matched before shorter ones
