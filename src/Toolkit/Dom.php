@@ -137,7 +137,9 @@ class Dom
 	}
 
 	/**
-	 * Extracts all URLs wrapped in a url() wrapper. E.g. for style attributes.
+	 * Extracts all URLs wrapped in a url() wrapper or referenced by a CSS
+	 * `@import` rule (both the `url()` and the plain string form). E.g. for
+	 * style attributes and `<style>` elements.
 	 * @internal
 	 */
 	public static function extractUrls(string $value): array
@@ -145,6 +147,9 @@ class Dom
 		// remove invisible ASCII characters from the value
 		$value = trim(preg_replace('/[^ -~]/u', '', $value));
 
+		$urls = [];
+
+		// URLs inside a `url()` wrapper, including `@import url(...)`
 		$count = preg_match_all(
 			'!url\(\s*[\'"]?(.*?)[\'"]?\s*\)!i',
 			$value,
@@ -153,10 +158,26 @@ class Dom
 		);
 
 		if (is_int($count) === true && $count > 0) {
-			return $matches[1];
+			$urls = [...$urls, ...$matches[1]];
 		}
 
-		return [];
+		// URLs referenced by the string form of `@import`,
+		// e.g. `@import "https://example.com/style.css"`;
+		// the rule name can be separated from the string by whitespace
+		// and/or CSS comments, but comments must only be skipped in that
+		// position as `/* */` inside the string is part of the URL
+		$count = preg_match_all(
+			'!@import(?:\s|/\*.*?\*/)*[\'"]\s*(.*?)\s*[\'"]!i',
+			$value,
+			$matches,
+			PREG_PATTERN_ORDER
+		);
+
+		if (is_int($count) === true && $count > 0) {
+			$urls = [...$urls, ...$matches[1]];
+		}
+
+		return $urls;
 	}
 
 	/**

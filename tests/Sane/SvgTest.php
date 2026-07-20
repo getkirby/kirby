@@ -361,6 +361,18 @@ class SvgTest extends TestCase
 		Svg::validate($fixture);
 	}
 
+	public function testDisallowedStyleImportExternal()
+	{
+		$fixture   = $this->fixture('disallowed/style-import-external.svg');
+		$sanitized = $this->fixture('sanitized/style-import-external.svg');
+
+		$this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The URL is not allowed in the "style" element (around line 3)');
+		Svg::validateFile($fixture);
+	}
+
 	public function testDisallowedStyleUrlExternal()
 	{
 		$fixture   = $this->fixture('disallowed/style-url-external.svg');
