@@ -521,6 +521,24 @@ class DomTest extends TestCase
 				'@import "https://getkirby.com/a.css"; text { background: url(https://getkirby.com/b.png); }',
 				['https://getkirby.com/b.png', 'https://getkirby.com/a.css']
 			],
+
+			// `/*` inside a quoted string is not a CSS comment, but part of
+			// the URL; it must not swallow the closing quote of the string
+			// when a real comment follows later in the value
+			[
+				'@import "https://getkirby.com/style.css/*"; text {} /* comment */',
+				['https://getkirby.com/style.css/*']
+			],
+
+			// URLs that legitimately contain `/*...*/` must not be rewritten
+			[
+				'@import "https://getkirby.com/a/*b*/c.css"',
+				['https://getkirby.com/a/*b*/c.css']
+			],
+			[
+				'text { background: url("https://getkirby.com/a/*b*/c.png") }',
+				['https://getkirby.com/a/*b*/c.png']
+			],
 		];
 	}
 

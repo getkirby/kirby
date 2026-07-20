@@ -151,10 +151,6 @@ class Dom
 		// remove invisible ASCII characters from the value
 		$value = trim(preg_replace('/[^ -~]/u', '', $value));
 
-		// remove CSS comments, which can be used instead of whitespace,
-		// e.g. `@import/**/"https://example.com/style.css"`
-		$value = preg_replace('!/\*.*?\*/!s', '', $value);
-
 		$urls = [];
 
 		// URLs inside a `url()` wrapper, including `@import url(...)`
@@ -170,9 +166,12 @@ class Dom
 		}
 
 		// URLs referenced by the string form of `@import`,
-		// e.g. `@import "https://example.com/style.css"`
+		// e.g. `@import "https://example.com/style.css"`;
+		// the rule name can be separated from the string by whitespace
+		// and/or CSS comments, but comments must only be skipped in that
+		// position as `/* */` inside the string is part of the URL
 		$count = preg_match_all(
-			'!@import\s*[\'"]\s*(.*?)\s*[\'"]!i',
+			'!@import(?:\s|/\*.*?\*/)*[\'"]\s*(.*?)\s*[\'"]!i',
 			$value,
 			$matches,
 			PREG_PATTERN_ORDER
