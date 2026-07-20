@@ -253,6 +253,22 @@ class PageCreateTest extends TestCase
 		]);
 	}
 
+		public function testCreateStripInjectedRootAndDirname(): void
+	{
+		$page = Page::create([
+			'slug'    => 'new-page',
+			// would escape the content directory if respected
+			'dirname' => '../escaped',
+			'root'    => '/tmp/escaped'
+		]);
+
+		$this->assertSame('new-page', $page->dirname());
+		$this->assertSame(
+			static::TMP . '/content/_drafts/new-page',
+			$page->root()
+		);
+	}
+
 	public function testCreateFile()
 	{
 		F::write($source = static::TMP . '/source.md', '');
