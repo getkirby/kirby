@@ -738,7 +738,7 @@ trait PageActions
 		unset($props['blueprint']);
 
 		$content  = $props['content']  ?? [];
-		$template = Template::sanitizeName($props['template'] ?? null);
+		$template = Template::sanitizeName($props['template'] ?? null) ?: 'default';
 
 		return [
 			...$props,

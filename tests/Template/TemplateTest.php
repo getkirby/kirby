@@ -32,10 +32,10 @@ class TemplateTest extends TestCase
 		$this->assertSame('other-default', Template::sanitizeName('../../other/default'));
 		$this->assertSame('foo-bar', Template::sanitizeName('foo/bar'));
 
-		// empty or invalid names fall back to the default template
-		$this->assertSame('default', Template::sanitizeName(null));
-		$this->assertSame('default', Template::sanitizeName(''));
-		$this->assertSame('default', Template::sanitizeName('..'));
+		// empty or invalid names result in an empty string
+		$this->assertSame('', Template::sanitizeName(null));
+		$this->assertSame('', Template::sanitizeName(''));
+		$this->assertSame('', Template::sanitizeName('..'));
 	}
 
 	public function testExists(): void
