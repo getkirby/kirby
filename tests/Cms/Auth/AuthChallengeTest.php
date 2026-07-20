@@ -446,7 +446,7 @@ class AuthChallengeTest extends TestCase
 		);
 		$this->assertSame([
 			'kirby.userId'        => 'marge',
-			'kirby.resetPassword' => true,
+			'kirby.resetPassword' => 'marge',
 		], $session->data()->get());
 	}
 

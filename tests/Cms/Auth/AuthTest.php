@@ -148,6 +148,40 @@ class AuthTest extends TestCase
 		$this->auth->impersonate('lisa@simpsons.com');
 	}
 
+	public function testIsResettingPassword(): void
+	{
+		$session = $this->app->session();
+
+		$this->app->user('marge@simpsons.com')->loginPasswordless();
+		$this->assertFalse($this->auth->isResettingPassword());
+
+		$session->set('kirby.resetPassword', 'marge');
+		$this->assertTrue($this->auth->isResettingPassword());
+	}
+
+	public function testIsResettingPasswordForOtherUser(): void
+	{
+		$session = $this->app->session();
+
+		// marge logged in via a password reset challenge, but homer
+		// took over the same session without a logout in between
+		$this->app->user('marge@simpsons.com')->loginPasswordless();
+		$session->set('kirby.resetPassword', 'marge');
+
+		$this->auth->login('homer@simpsons.com', 'springfield123');
+
+		$this->assertSame('marge', $session->get('kirby.resetPassword'));
+		$this->assertFalse($this->auth->isResettingPassword());
+	}
+
+	public function testIsResettingPasswordWithoutUser(): void
+	{
+		$this->app->session()->set('kirby.resetPassword', 'marge');
+
+		$this->assertNull($this->app->user());
+		$this->assertFalse($this->auth->isResettingPassword());
+	}
+
 	public function testLogin(): void
 	{
 		// set the status cache
@@ -248,6 +282,35 @@ class AuthTest extends TestCase
 			'mode'      => null,
 			'status'    => 'inactive'
 		], $this->auth->status()->toArray());
+	}
+
+	public function testLogoutResetPassword(): void
+	{
+		// the hook receives `null` for the session if it was destroyed
+		$sessionAfterLogout = false;
+
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'user.logout:after' => function ($session) use (&$sessionAfterLogout) {
+					$sessionAfterLogout = $session;
+				}
+			]
+		]);
+
+		$session = $this->app->session();
+
+		$this->app->user('marge@simpsons.com')->loginPasswordless();
+		$session->set('kirby.resetPassword', 'marge');
+
+		$this->assertSame('marge', $session->get('kirby.resetPassword'));
+
+		$this->app->auth()->logout();
+
+		$this->assertNull($session->get('kirby.resetPassword'));
+
+		// the flag must be cleared before the user is logged out,
+		// otherwise the session cannot be destroyed
+		$this->assertNull($sessionAfterLogout);
 	}
 
 	public function testTypeBasic1(): void

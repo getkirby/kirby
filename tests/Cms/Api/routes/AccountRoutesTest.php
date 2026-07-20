@@ -215,7 +215,10 @@ class AccountRoutesTest extends TestCase
 
 	public function testChangePasswordReset(): void
 	{
-		$this->app->session()->set('kirby.resetPassword', true);
+		$this->app->session()->set(
+			'kirby.resetPassword',
+			$this->app->user()->id()
+		);
 
 		$response = $this->app->api()->call('account/password', 'PATCH', [
 			'body' => [
@@ -226,6 +229,25 @@ class AccountRoutesTest extends TestCase
 		$this->assertSame('ok', $response['status']);
 		$this->assertTrue($this->app->user()->validatePassword('super-secure-new-password'));
 		$this->assertNull($this->app->session()->get('kirby.resetPassword'));
+	}
+
+	public function testChangePasswordResetForOtherUser(): void
+	{
+		// a reset flag that was issued for a different user must not
+		// take effect for the user that is logged in now
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Please enter a valid password. Passwords must be at least 8 characters long.');
+
+		$this->app->session()->set(
+			'kirby.resetPassword',
+			$this->app->user('editor@getkirby.com')->id()
+		);
+
+		$this->app->api()->call('account/password', 'PATCH', [
+			'body' => [
+				'password' => 'super-secure-new-password'
+			]
+		]);
 	}
 
 	public function testChangeRole(): void
