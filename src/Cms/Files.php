@@ -104,12 +104,17 @@ class Files extends Collection
 	{
 		$exceptions = [];
 
-		// delete all pages and collect errors
+		// delete all files and collect errors
 		foreach ($ids as $id) {
 			try {
-				$model = $this->get($id);
+				// resolve the id or UUID and make sure
+				// the file is part of this collection
+				$model = $this->get($id) ?? $this->find($id);
 
-				if ($model instanceof File === false) {
+				if (
+					$model instanceof File === false ||
+					$this->has($model) === false
+				) {
 					throw new NotFoundException(
 						key: 'file.undefined'
 					);

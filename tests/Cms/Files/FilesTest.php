@@ -158,6 +158,87 @@ class FilesTest extends TestCase
 		$this->assertFileDoesNotExist($b);
 	}
 
+	public function testDeleteWithUuids(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'site' => [
+				'files' => [
+					['filename' => 'a.jpg', 'content' => ['uuid' => 'test-a']],
+					['filename' => 'b.jpg', 'content' => ['uuid' => 'test-b']]
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$files = $app->site()->files();
+
+		$a = $files->get('a.jpg')->root();
+		$b = $files->get('b.jpg')->root();
+
+		// pretend the files exist
+		F::write($a, '');
+		F::write($b, '');
+
+		// the Panel sends the selection as UUIDs
+		$files->delete([
+			'file://test-a',
+			'file://test-b',
+		]);
+
+		$this->assertCount(0, $files);
+		$this->assertFileDoesNotExist($a);
+		$this->assertFileDoesNotExist($b);
+
+		Uuids::cache()->flush();
+	}
+
+	public function testDeleteWithForeignUuid(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'a',
+						'files' => [
+							['filename' => 'a.jpg', 'content' => ['uuid' => 'test-a']]
+						]
+					],
+					[
+						'slug'  => 'b',
+						'files' => [
+							['filename' => 'b.jpg', 'content' => ['uuid' => 'test-b']]
+						]
+					]
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$files = $app->page('a')->files();
+		$b     = $app->page('b')->file('b.jpg')->root();
+		F::write($b, '');
+
+		// deleting a file that is not part of the collection must fail,
+		// even if the UUID resolves to a valid file elsewhere
+		try {
+			$files->delete(['file://test-b']);
+		} catch (Exception $e) {
+			$this->assertSame('Not all files could be deleted. Try each remaining file individually to see the specific error that prevents deletion.', $e->getMessage());
+		}
+
+		$this->assertFileExists($b);
+
+		Uuids::cache()->flush();
+	}
+
 	public function testDeleteWithInvalidIds(): void
 	{
 		$app = new App([
