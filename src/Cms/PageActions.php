@@ -9,6 +9,7 @@ use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Form\Form;
+use Kirby\Template\Template;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\I18n;
@@ -518,7 +519,7 @@ trait PageActions
 
 		// clean up the slug
 		$props['slug']      = Url::slug($props['slug'] ?? $props['content']['title'] ?? null);
-		$props['template']  = $props['model'] = strtolower($props['template'] ?? 'default');
+		$props['template']  = $props['model'] = Template::sanitizeName($props['template'] ?? null) ?: 'default';
 		$props['isDraft'] ??= $props['draft'] ?? true;
 
 		// make sure that a UUID gets generated and

@@ -204,6 +204,44 @@ class PageCreateTest extends TestCase
 		$this->assertTrue($mother->drafts()->has($child->id()));
 	}
 
+	public function testCreateChildWithPathTraversalTemplate()
+	{
+		Dir::make($this->app->root('content'));
+
+		$mother = Page::create([
+			'slug' => 'mother'
+		]);
+
+		// a malicious template name must not escape the page folder
+		$child = $mother->createChild([
+			'slug'     => 'child',
+			'template' => '../../other/default'
+		]);
+
+		$this->assertSame('other-default', $child->intendedTemplate()->name());
+		$this->assertSame(
+			$child->root() . '/other-default.txt',
+			$child->storage()->contentFile('changes', 'default')
+		);
+	}
+
+	public function testCreateChildWithTemplateWithDot()
+	{
+		Dir::make($this->app->root('content'));
+
+		// single dots are still allowed in template names
+		$mother = Page::create([
+			'slug' => 'mother'
+		]);
+
+		$child = $mother->createChild([
+			'slug'     => 'child',
+			'template' => 'foo.bar'
+		]);
+
+		$this->assertSame('foo.bar', $child->intendedTemplate()->name());
+	}
+
 	public function testCreateChildCustomModel()
 	{
 		$mother = Page::create([
@@ -253,7 +291,7 @@ class PageCreateTest extends TestCase
 		]);
 	}
 
-		public function testCreateStripInjectedRootAndDirname(): void
+	public function testCreateStripInjectedRootAndDirname(): void
 	{
 		$page = Page::create([
 			'slug'    => 'new-page',
