@@ -3,7 +3,7 @@
 namespace Kirby\Cms;
 
 /**
- *Abilities for a `$language` object
+ * Abilities for a `$language` object
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
