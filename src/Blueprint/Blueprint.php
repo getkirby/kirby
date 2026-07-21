@@ -776,6 +776,9 @@ class Blueprint
 			return $rules;
 		}
 
+		// only associative arrays hold role-based rules.
+		// Lists are used for other option settings,
+		// e.g. `changeTemplate` with a list of template names
 		if (
 			is_array($rules) === true &&
 			A::isAssociative($rules) === true
