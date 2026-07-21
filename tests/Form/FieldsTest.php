@@ -130,6 +130,33 @@ class FieldsTest extends TestCase
 		], $fields->errors());
 	}
 
+	public function testErrorsWithFieldsWithoutValue(): void
+	{
+		$fields = new Fields([
+			'a' => [
+				'type'     => 'text',
+				'required' => true
+			],
+			'b' => [
+				'type' => 'info',
+				'text' => 'Some info'
+			],
+			'c' => [
+				'type' => 'line'
+			],
+		], $this->model);
+
+		// fields without a value are skipped
+		$this->assertSame([
+			'a' => [
+				'label'   => 'A',
+				'message' => [
+					'required' => 'Please enter something'
+				]
+			]
+		], $fields->errors());
+	}
+
 	public function testErrorsWithoutErrors(): void
 	{
 		$fields = new Fields([

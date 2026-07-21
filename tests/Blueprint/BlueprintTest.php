@@ -582,6 +582,234 @@ class BlueprintTest extends TestCase
 		$this->assertSame('info', $blueprint->sections()['info']->type());
 	}
 
+	public function testSectionFromField(): void
+	{
+		// with options
+		$blueprint = new Blueprint([
+			'model' => $this->model,
+			'fields' => [
+				'info' => [
+					'type'    => 'section',
+					'section' => 'info'
+				]
+			]
+		]);
+
+		$this->assertSame('info', $blueprint->section('info')->type());
+	}
+
+	public function testSectionFromFieldWithDifferentName(): void
+	{
+		$blueprint = new Blueprint([
+			'model'  => $this->model,
+			'fields' => [
+				'notes' => [
+					'type'    => 'section',
+					'section' => 'info'
+				]
+			]
+		]);
+
+		$section = $blueprint->section('notes');
+
+		$this->assertSame('info', $section->type());
+		$this->assertSame('notes', $section->name());
+	}
+
+	public function testSectionFromFieldWithLowercaseName(): void
+	{
+		$blueprint = new Blueprint([
+			'model'  => $this->model,
+			'fields' => [
+				'infoBox' => [
+					'type'    => 'section',
+					'section' => 'info'
+				]
+			]
+		]);
+
+		$section = $blueprint->section('infobox');
+
+		$this->assertSame('info', $section->type());
+		$this->assertSame('infobox', $section->name());
+	}
+
+	public function testSectionFromFieldWithMissingSectionType(): void
+	{
+		$blueprint = new Blueprint([
+			'model'  => $this->model,
+			'fields' => [
+				'info' => [
+					'type' => 'section'
+				]
+			]
+		]);
+
+		// the field name is used as fallback for the section type
+		$this->assertSame('info', $blueprint->section('info')->type());
+	}
+
+	public function testSectionFromFieldWithMissingField(): void
+	{
+		$blueprint = new Blueprint([
+			'model' => $this->model,
+		]);
+
+		$this->assertNull($blueprint->section('info'));
+	}
+
+	public function testSectionFromFieldWithModel(): void
+	{
+		$blueprint = new Blueprint([
+			'model'  => $this->model,
+			'fields' => [
+				'info' => [
+					'type'    => 'section',
+					'section' => 'info'
+				]
+			]
+		]);
+
+		$this->assertSame($this->model, $blueprint->section('info')->model());
+	}
+
+	public function testSectionFromFieldWithNonSectionField(): void
+	{
+		$blueprint = new Blueprint([
+			'model'  => $this->model,
+			'fields' => [
+				'info' => [
+					'type' => 'text'
+				]
+			]
+		]);
+
+		$this->assertNull($blueprint->section('info'));
+	}
+
+	public function testSectionFromFieldWithProps(): void
+	{
+		$blueprint = new Blueprint([
+			'model'  => $this->model,
+			'fields' => [
+				'info' => [
+					'type'    => 'section',
+					'section' => 'info',
+					'label'   => 'Notes',
+					'text'    => 'Some info',
+					'theme'   => 'negative'
+				]
+			]
+		]);
+
+		$section = $blueprint->section('info')->toArray();
+
+		$this->assertSame('Notes', $section['label']);
+		$this->assertSame('<p>Some info</p>', trim($section['text']));
+		$this->assertSame('negative', $section['theme']);
+	}
+
+	public function testSectionFromFieldWithAutomaticLabel(): void
+	{
+		$blueprint = new Blueprint([
+			'model'  => $this->model,
+			'fields' => [
+				'infoBox' => [
+					'type'    => 'section',
+					'section' => 'info'
+				]
+			]
+		]);
+
+		// the automatic field label is passed on to the section
+		$this->assertSame(
+			'Info box',
+			$blueprint->section('infoBox')->toArray()['label']
+		);
+	}
+
+	public function testSectionFromFieldWithSectionOfSameName(): void
+	{
+		$blueprint = new Blueprint([
+			'model'    => $this->model,
+			'fields'   => [
+				'info' => [
+					'type'    => 'section',
+					'section' => 'info',
+					'text'    => 'From the field'
+				]
+			],
+			'sections' => [
+				'info' => [
+					'type' => 'info',
+					'text' => 'From the section'
+				]
+			]
+		]);
+
+		// the section definition takes precedence over the field
+		$this->assertSame(
+			'<p>From the section</p>',
+			trim($blueprint->section('info')->toArray()['text'])
+		);
+	}
+
+	public function testSectionsFromFields(): void
+	{
+		$blueprint = new Blueprint([
+			'model'  => $this->model,
+			'fields' => [
+				'text'   => [
+					'type' => 'text'
+				],
+				'drafts' => [
+					'type'    => 'section',
+					'section' => 'pages',
+					'status'  => 'drafts'
+				],
+				'listed' => [
+					'type'    => 'section',
+					'section' => 'pages',
+					'status'  => 'listed'
+				]
+			]
+		]);
+
+		$sections = $blueprint->sections();
+
+		// the fields section and both section fields
+		$this->assertSame(
+			['main-fields', 'drafts', 'listed'],
+			array_keys($sections)
+		);
+
+		// each section keeps its own field name
+		$this->assertSame('drafts', $sections['drafts']->name());
+		$this->assertSame('listed', $sections['listed']->name());
+		$this->assertSame('pages', $sections['drafts']->type());
+		$this->assertSame('pages', $sections['listed']->type());
+	}
+
+	public function testSectionsFromFieldsInGroup(): void
+	{
+		$blueprint = new Blueprint([
+			'model'  => $this->model,
+			'fields' => [
+				'group' => [
+					'type'   => 'group',
+					'fields' => [
+						'drafts' => [
+							'type'    => 'section',
+							'section' => 'pages'
+						]
+					]
+				]
+			]
+		]);
+
+		$this->assertArrayHasKey('drafts', $blueprint->sections());
+	}
+
 	public function testPreset(): void
 	{
 		$blueprint = new Blueprint([

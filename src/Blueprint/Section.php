@@ -6,6 +6,7 @@ use Closure;
 use Kirby\Cms\App;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Form\Field\SectionField;
 use Kirby\Toolkit\Component;
 
 /**
@@ -25,6 +26,13 @@ class Section extends Component
 	 * Registry for all component types
 	 */
 	public static array $types = [];
+
+	/**
+	 * The field that wraps this section, if the section
+	 * has been defined as a `section` field
+	 * @since 6.0.0
+	 */
+	protected SectionField|null $field = null;
 
 	/**
 	 * @throws \Kirby\Exception\InvalidArgumentException
@@ -112,6 +120,16 @@ class Section extends Component
 		return $this->errors ?? [];
 	}
 
+	/**
+	 * Returns the wrapping field, if the section has been
+	 * defined as a `section` field
+	 * @since 6.0.0
+	 */
+	public function field(): SectionField|null
+	{
+		return $this->field;
+	}
+
 	public function kirby(): App
 	{
 		return $this->model()->kirby();
@@ -126,7 +144,7 @@ class Section extends Component
 	{
 		$array = parent::toArray();
 
-		unset($array['model']);
+		unset($array['field'], $array['model']);
 
 		return $array;
 	}
