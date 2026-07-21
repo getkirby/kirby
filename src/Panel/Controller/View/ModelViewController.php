@@ -4,6 +4,7 @@ namespace Kirby\Panel\Controller\View;
 
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Form\Field\SectionField;
 use Kirby\Form\Fields;
 use Kirby\Http\Uri;
 use Kirby\Panel\Controller\ViewController;
@@ -23,6 +24,8 @@ use Kirby\Panel\Ui\View;
  */
 abstract class ModelViewController extends ViewController
 {
+	protected Fields $fields;
+
 	/** @var TModel */
 	protected ModelWithContent $model;
 
@@ -53,6 +56,11 @@ abstract class ModelViewController extends ViewController
 	public function component(): string
 	{
 		return 'k-' . ($this->model::CLASS_ALIAS ?? 'model') . '-view';
+	}
+
+	public function fields(): Fields
+	{
+		return $this->fields ??= Fields::for($this->model, 'current');
 	}
 
 	public function load(): View
@@ -142,6 +150,57 @@ abstract class ModelViewController extends ViewController
 		$tab   = $this->request->get('tab');
 		$tab   = $this->model->blueprint()->tab($tab);
 		$tab ??= $this->tabs()[0] ?? null;
+
+		if ($tab === null) {
+			return $tab;
+		}
+
+		return $this->tabSimplified($tab);
+	}
+
+	/**
+	 * Flattens a tab's sections into fields, so the model
+	 * view can be rendered through a unified form/field pipeline.
+	 */
+	protected function tabSimplified(array $tab): array
+	{
+		$form = $this->fields();
+
+		foreach ($tab['columns'] as $columnKey => $column) {
+			$fields = [];
+
+			foreach ($column['sections'] ?? [] as $sectionName => $section) {
+				// unwrap a `fields` section into its own fields,
+				// pulled from the form so values/translations are correct
+				if ($section['type'] === 'fields') {
+					foreach (array_keys($section['fields'] ?? []) as $name) {
+						if ($field = $form->get($name)) {
+							$fields[$field->name()] = $field->props();
+						}
+					}
+
+					continue;
+				}
+
+				// wrap any other section type as a section field,
+				// keyed + named by the section's blueprint name so its
+				// own `parent/sections/{name}` endpoint keeps resolving
+				$props = $section;
+				unset($props['type']);
+
+				$field = new SectionField($section['type'], ...$props);
+				$field->setModel($this->model);
+
+				$fields[$sectionName] = $field->props();
+			}
+
+			$tab['columns'][$columnKey] = [
+				...$column,
+				'fields'   => $fields,
+				'sections' => null,
+			];
+		}
+
 		return $tab;
 	}
 
@@ -164,7 +223,7 @@ abstract class ModelViewController extends ViewController
 	public function versions(): array
 	{
 		$language = Language::ensure('current');
-		$fields   = Fields::for($this->model, $language);
+		$fields   = $this->fields();
 
 		$latestVersion  = $this->model->version('latest');
 		$changesVersion = $this->model->version('changes');
