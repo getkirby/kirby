@@ -39,6 +39,24 @@ class FileCreateTest extends ModelTestCase
 		$this->assertIsString($result->content()->get('uuid')->value());
 	}
 
+	public function testCreateWithoutFilename(): void
+	{
+		$parent = new Page(['slug' => 'test']);
+		$source = static::TMP . '/source.md';
+
+		// create the dummy source
+		F::write($source, '# Test');
+
+		// no filename prop, must be derived from the source basename
+		$result = File::create([
+			'source' => $source,
+			'parent' => $parent
+		]);
+
+		$this->assertSame('source.md', $result->filename());
+		$this->assertFileExists($parent->root() . '/source.md');
+	}
+
 	public function testCreateDuplicate(): void
 	{
 		$parent = new Page(['slug' => 'test']);
