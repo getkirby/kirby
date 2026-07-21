@@ -382,6 +382,40 @@ class AuthTest extends TestCase
 		$this->assertTrue($this->auth->status()->is(State::Impersonated));
 	}
 
+	public function testIsResettingPassword(): void
+	{
+		$session = $this->app->session();
+
+		$this->app->user('marge@simpsons.com')->loginPasswordless();
+		$this->assertFalse($this->auth->isResettingPassword());
+
+		$session->set('kirby.resetPassword', 'marge');
+		$this->assertTrue($this->auth->isResettingPassword());
+	}
+
+	public function testIsResettingPasswordForOtherUser(): void
+	{
+		$session = $this->app->session();
+
+		// marge logged in via a password reset challenge, but homer
+		// took over the same session without a logout in between
+		$this->app->user('marge@simpsons.com')->loginPasswordless();
+		$session->set('kirby.resetPassword', 'marge');
+
+		$this->auth->login('homer@simpsons.com', 'springfield123');
+
+		$this->assertSame('marge', $session->get('kirby.resetPassword'));
+		$this->assertFalse($this->auth->isResettingPassword());
+	}
+
+	public function testIsResettingPasswordWithoutUser(): void
+	{
+		$this->app->session()->set('kirby.resetPassword', 'marge');
+
+		$this->assertNull($this->app->user());
+		$this->assertFalse($this->auth->isResettingPassword());
+	}
+
 	public function testKirby(): void
 	{
 		$this->assertSame($this->app, $this->auth->kirby());
@@ -479,6 +513,21 @@ class AuthTest extends TestCase
 			'mode'      => null,
 			'status'    => 'inactive'
 		], $this->auth->status()->toArray());
+	}
+
+	public function testLogoutResetPassword(): void
+	{
+		$session = $this->app->session();
+
+		$this->app->user('marge@simpsons.com')->loginPasswordless();
+		$session->set('kirby.resetPassword', 'marge');
+
+		$this->assertSame('marge', $session->get('kirby.resetPassword'));
+
+		$this->auth->logout();
+
+		$this->assertNull($session->get('kirby.userId'));
+		$this->assertNull($session->get('kirby.resetPassword'));
 	}
 
 	public function testLogoutPending(): void

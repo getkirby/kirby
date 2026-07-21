@@ -29,7 +29,14 @@ class ResetPasswordViewControllerTest extends TestCase
 
 	public function testLoadWithResetMode(): void
 	{
-		$this->app->session()->set('kirby.resetPassword', true);
+		$this->app = $this->app->clone([
+			'users' => [
+				['email' => 'test@getkirby.com', 'role' => 'admin']
+			]
+		]);
+
+		$this->app->impersonate('test@getkirby.com');
+		$this->app->session()->set('kirby.resetPassword', $this->app->user()->id());
 
 		$controller = new ResetPasswordViewController();
 		$props      = $controller->load()->props();

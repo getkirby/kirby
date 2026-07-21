@@ -188,7 +188,7 @@ class Home
 
 		// if a password reset is required, redirect there
 		// regardless of any remembered path or blueprint home setting
-		if ($this->kirby->session()->get('kirby.resetPassword') === true) {
+		if ($this->kirby->auth()->isResettingPassword() === true) {
 			return $this->panel->url('reset-password');
 		}
 

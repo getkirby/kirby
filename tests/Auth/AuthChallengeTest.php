@@ -182,9 +182,10 @@ class AuthChallengeTest extends TestCase
 		);
 
 		// a password-reset challenge flags the session so the user
-		// may set a new password without knowing the previous one
+		// may set a new password without knowing the previous one;
+		// the flag is bound to the user the challenge was issued for
 		$data = $session->data()->get();
-		$this->assertTrue($data['kirby.resetPassword'] ?? false);
+		$this->assertSame('marge', $data['kirby.resetPassword'] ?? false);
 	}
 
 	public function testVerifyChallengeNoChallenge(): void

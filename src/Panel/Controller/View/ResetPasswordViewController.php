@@ -24,7 +24,7 @@ class ResetPasswordViewController extends ViewController
 				]
 			],
 			hint: $this->kirby->auth()->passwords()->hint(),
-			requirePassword: $this->kirby->session()->get('kirby.resetPassword') !== true
+			requirePassword: $this->kirby->auth()->isResettingPassword() === false
 		);
 	}
 }

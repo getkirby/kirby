@@ -305,6 +305,24 @@ class Auth
 	}
 
 	/**
+	 * Checks if the currently logged in user was authenticated
+	 * by a password reset challenge and may therefore set a new
+	 * password without knowing the previous one
+	 * @since 6.0.0
+	 */
+	public function isResettingPassword(
+		Session|array|null $session = null
+	): bool {
+		$user = $this->user($session);
+
+		if ($user === null) {
+			return false;
+		}
+
+		return $this->session($session)->get('kirby.resetPassword') === $user->id();
+	}
+
+	/**
 	 * @since 6.0.0
 	 */
 	public function kirby(): App
@@ -398,6 +416,10 @@ class Auth
 
 		// clear the pending challenge
 		$this->challenges->clear($this->kirby->session());
+
+		// clear the password reset flag so that the next
+		// user on this device is not forced into the reset screen
+		$this->kirby->session()->remove('kirby.resetPassword');
 
 		// clear the status cache
 		$this->status = null;
@@ -642,10 +664,12 @@ class Auth
 				$this->logout();
 				$user->loginPasswordless();
 
-				// allow the user to set a new password
-				// without knowing the previous one
+				// allow the user to set a new password without knowing the
+				// previous one; bound to the user the challenge was issued
+				// for, so that no other user of the same session can make
+				// use of the flag
 				if ($challenge->mode() === 'password-reset') {
-					$session->set('kirby.resetPassword', true);
+					$session->set('kirby.resetPassword', $user->id());
 				}
 
 				$this->setUser($user);

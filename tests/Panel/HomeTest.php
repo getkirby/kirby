@@ -428,7 +428,7 @@ class HomeTest extends TestCase
 		]);
 
 		$this->app->impersonate('test@getkirby.com');
-		$this->app->session()->set('kirby.resetPassword', true);
+		$this->app->session()->set('kirby.resetPassword', $this->app->user()->id());
 
 		$home = $this->app->panel()->home();
 		$this->assertSame('/panel/reset-password', $home->url());
