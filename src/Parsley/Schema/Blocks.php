@@ -6,6 +6,8 @@ use DOMElement;
 use DOMText;
 use Kirby\Http\Url;
 use Kirby\Parsley\Element;
+use Kirby\Sane\Html;
+use Kirby\Toolkit\Dom;
 use Kirby\Toolkit\Str;
 
 /**
@@ -112,9 +114,9 @@ class Blocks extends Plain
 		];
 	}
 
-	public function iframe(Element $node): array
+	public function iframe(Element $node): array|null
 	{
-		$src        = $node->attr('src');
+		$src        = $node->attr('src') ?? '';
 		$figcaption = $node->find('ancestor::figure[1]//figcaption');
 		$caption    = $figcaption?->innerHTML($this->marks());
 
@@ -132,8 +134,9 @@ class Blocks extends Plain
 			$src = false;
 		}
 
-		// correct video URL
-		if ($src) {
+		// only convert iframes with a known video URL; any other
+		// iframe is dropped as it can't be stored safely
+		if ($src !== false) {
 			return [
 				'content' => [
 					'caption' => $caption,
@@ -143,12 +146,7 @@ class Blocks extends Plain
 			];
 		}
 
-		return [
-			'content' => [
-				'text' => $node->outerHTML()
-			],
-			'type' => 'markdown',
-		];
+		return null;
 	}
 
 	public function img(Element $node): array
@@ -364,11 +362,42 @@ class Blocks extends Plain
 		];
 	}
 
+	/**
+	 * Sanitizes raw HTML that is stored verbatim in a block
+	 * (e.g. the markdown block created from a table) with a
+	 * strict allowlist to prevent stored XSS
+	 */
+	public function sanitize(string $html): string
+	{
+		$dom = new Dom($html);
+
+		// reuse the options of the HTML sane handler
+		$dom->sanitize([
+			...Html::options(isExternal: false),
+			'allowedTags' => [
+				...Html::$allowedTags,
+				'caption'  => true,
+				'col'      => ['span'],
+				'colgroup' => ['span'],
+				'img'      => ['alt', 'height', 'src', 'width'],
+				'table'    => true,
+				'tbody'    => true,
+				'td'       => ['colspan', 'headers', 'rowspan'],
+				'tfoot'    => true,
+				'th'       => ['abbr', 'colspan', 'headers', 'rowspan', 'scope'],
+				'thead'    => true,
+				'tr'       => true,
+			],
+		]);
+
+		return $dom->toString();
+	}
+
 	public function table(Element $node): array
 	{
 		return [
 			'content' => [
-				'text' => $node->outerHTML(),
+				'text' => $this->sanitize($node->outerHTML()),
 			],
 			'type' => 'markdown',
 		];

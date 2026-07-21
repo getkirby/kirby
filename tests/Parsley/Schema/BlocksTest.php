@@ -263,15 +263,10 @@ class BlocksTest extends TestCase
             <iframe src="https://getkirby.com"></iframe>
         HTML;
 
-		$element  = $this->element($html, '//iframe');
-		$expected = [
-			'content' => [
-				'text' => '<iframe src="https://getkirby.com"></iframe>'
-			],
-			'type' => 'markdown',
-		];
+		$element = $this->element($html, '//iframe');
 
-		return $this->assertSame($expected, $this->schema->iframe($element));
+		// non-video iframes cannot be stored safely and are dropped
+		$this->assertNull($this->schema->iframe($element));
 	}
 
 	public function testIframeWithVimeoVideo()
@@ -614,6 +609,16 @@ class BlocksTest extends TestCase
 		return $this->assertSame($expected, $this->schema->pre($element));
 	}
 
+	public function testSanitize()
+	{
+		$html = '<table><tr><td onclick="alert(1)">A</td></tr></table>';
+
+		$this->assertStringNotContainsString(
+			'onclick',
+			$this->schema->sanitize($html)
+		);
+	}
+
 	/**
 	 * @covers ::skip
 	 */
@@ -644,5 +649,33 @@ class BlocksTest extends TestCase
 		];
 
 		return $this->assertSame($expected, $this->schema->table($element));
+	}
+
+	public function testTableWithContent()
+	{
+		$html = <<<HTML
+			<table><thead><tr><th>A</th></tr></thead><tbody><tr><td>B</td></tr></tbody></table>
+			HTML;
+
+		$element = $this->element($html, '//table');
+		$block   = $this->schema->table($element);
+
+		$this->assertSame('markdown', $block['type']);
+		$this->assertStringContainsString('<th>A</th>', $block['content']['text']);
+		$this->assertStringContainsString('<td>B</td>', $block['content']['text']);
+	}
+
+	public function testTableSanitizesDangerousContent()
+	{
+		$html = <<<HTML
+			<table><tr><td onmouseover="alert(1)"><script>alert(1)</script>Hello</td></tr></table>
+			HTML;
+
+		$element = $this->element($html, '//table');
+		$block   = $this->schema->table($element);
+
+		$this->assertStringNotContainsString('<script>', $block['content']['text']);
+		$this->assertStringNotContainsString('onmouseover', $block['content']['text']);
+		$this->assertStringContainsString('Hello', $block['content']['text']);
 	}
 }
