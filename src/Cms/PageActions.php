@@ -12,6 +12,7 @@ use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\Dir;
+use Kirby\Template\Template;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\I18n;
@@ -806,7 +807,7 @@ trait PageActions
 		unset($props['dirname'], $props['root']);
 
 		$content  = (array)($props['content'] ?? []);
-		$template = $props['template'] ?? 'default';
+		$template = Template::sanitizeName($props['template'] ?? null) ?: 'default';
 
 		return [
 			...$props,

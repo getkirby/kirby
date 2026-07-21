@@ -6,6 +6,7 @@ use Exception;
 use Kirby\Cms\App;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\F;
+use Kirby\Toolkit\Str;
 use Stringable;
 
 /**
@@ -171,6 +172,18 @@ class Template implements Stringable
 		}
 
 		return $root;
+	}
+
+	/**
+	 * Sanitizes a template name to prevent path traversal,
+	 * as the name is used to build the content file name;
+	 * dots are kept for representations, but slashes are removed;
+	 * can return an empty string, it's up to the caller to decide
+	 * whether to fall back to a default template name
+	 */
+	public static function sanitizeName(string|null $name): string
+	{
+		return Str::slug($name, allowed: 'a-z0-9._-');
 	}
 
 	/**
