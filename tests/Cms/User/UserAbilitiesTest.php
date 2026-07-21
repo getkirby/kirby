@@ -95,6 +95,11 @@ class UserAbilitiesTest extends ModelTestCase
 		$this->assertFalse($this->abilities('another-editor@getkirby.com')->changeSecret());
 	}
 
+	public function testChangeSecretWithoutUser(): void
+	{
+		$this->assertFalse($this->abilities('editor@getkirby.com')->changeSecret());
+	}
+
 	public function testCreateAdminAsAdmin(): void
 	{
 		$this->app->impersonate('admin@getkirby.com');
@@ -163,13 +168,13 @@ class UserAbilitiesTest extends ModelTestCase
 		$this->assertFalse($this->abilities('editor@getkirby.com')->delete());
 	}
 
-	public function testInheritedAbilities(): void
+	public function testHasWithoutCheckMethod(): void
 	{
 		$this->app->impersonate('admin@getkirby.com');
 
 		$abilities = $this->abilities('editor@getkirby.com');
 
-		$this->assertTrue($abilities->changeEmail());
-		$this->assertTrue($abilities->update());
+		$this->assertFalse($abilities->has('changeEmail'));
+		$this->assertFalse($abilities->has('update'));
 	}
 }

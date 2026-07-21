@@ -65,7 +65,7 @@ class FileAbilitiesTest extends ModelTestCase
 		$this->assertFalse($abilities->changeTemplate());
 	}
 
-	public function testInheritedAbilities(): void
+	public function testHasWithoutCheckMethod(): void
 	{
 		$page = new Page(['slug' => 'test']);
 
@@ -76,7 +76,7 @@ class FileAbilitiesTest extends ModelTestCase
 
 		$abilities = new FileAbilities($file);
 
-		$this->assertTrue($abilities->delete());
-		$this->assertTrue($abilities->update());
+		$this->assertFalse($abilities->has('delete'));
+		$this->assertFalse($abilities->has('update'));
 	}
 }

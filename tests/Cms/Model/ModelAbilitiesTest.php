@@ -6,6 +6,10 @@ use PHPUnit\Framework\Attributes\CoversClass;
 
 class ExtendedModelAbilities extends ModelAbilities
 {
+	public function delete(): bool
+	{
+		return false;
+	}
 }
 
 #[CoversClass(ModelAbilities::class)]
@@ -13,19 +17,25 @@ class ModelAbilitiesTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.ModelAbilities';
 
-	public function testCallWithoutArguments(): void
+	public function testHas(): void
 	{
 		$abilities = new ExtendedModelAbilities();
 
-		$this->assertTrue($abilities->delete());
-		$this->assertTrue($abilities->update());
-		$this->assertTrue($abilities->somethingCompletelyUnknown());
+		$this->assertTrue($abilities->has('delete'));
 	}
 
-	public function testCallWithArguments(): void
+	public function testHasWithoutCheckMethod(): void
 	{
 		$abilities = new ExtendedModelAbilities();
 
-		$this->assertTrue($abilities->changeTemplate('article'));
+		$this->assertFalse($abilities->has('update'));
+		$this->assertFalse($abilities->has('somethingCompletelyUnknown'));
+	}
+
+	public function testHasWithOwnMethods(): void
+	{
+		$abilities = new ExtendedModelAbilities();
+
+		$this->assertFalse($abilities->has('has'));
 	}
 }

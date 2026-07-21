@@ -10,8 +10,15 @@ namespace Kirby\Cms;
  */
 abstract class ModelAbilities
 {
-	public function __call(string $name, array $args = []): bool
+	/**
+	 * Checks if there's a dedicated check method
+	 * for the given action
+	 */
+	public function has(string $action): bool
 	{
-		return true;
+		return match ($action) {
+			'has'   => false,
+			default => method_exists($this, $action)
+		};
 	}
 }

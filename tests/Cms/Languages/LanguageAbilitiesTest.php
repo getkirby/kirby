@@ -50,13 +50,13 @@ class LanguageAbilitiesTest extends ModelTestCase
 		$this->assertTrue($abilities->delete());
 	}
 
-	public function testInheritedAbilities(): void
+	public function testHasWithoutCheckMethod(): void
 	{
 		$this->setUpMultiLanguage();
 
 		$abilities = new LanguageAbilities($this->app->language('en'));
 
-		$this->assertTrue($abilities->create());
-		$this->assertTrue($abilities->update());
+		$this->assertFalse($abilities->has('create'));
+		$this->assertFalse($abilities->has('update'));
 	}
 }

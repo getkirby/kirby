@@ -95,12 +95,12 @@ class PageAbilitiesTest extends ModelTestCase
 		$this->assertFalse($this->abilities('error')->delete());
 	}
 
-	public function testInheritedAbilities(): void
+	public function testHasWithoutCheckMethod(): void
 	{
 		$abilities = $this->abilities('test');
 
-		$this->assertTrue($abilities->changeTitle());
-		$this->assertTrue($abilities->update());
+		$this->assertFalse($abilities->has('changeTitle'));
+		$this->assertFalse($abilities->has('update'));
 	}
 
 	public function testMove(): void

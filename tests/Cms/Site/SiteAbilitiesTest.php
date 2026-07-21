@@ -9,11 +9,11 @@ class SiteAbilitiesTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.SiteAbilities';
 
-	public function testInheritedAbilities(): void
+	public function testHasWithoutCheckMethod(): void
 	{
 		$abilities = new SiteAbilities($this->app->site());
 
-		$this->assertTrue($abilities->changeTitle());
-		$this->assertTrue($abilities->update());
+		$this->assertFalse($abilities->has('changeTitle'));
+		$this->assertFalse($abilities->has('update'));
 	}
 }

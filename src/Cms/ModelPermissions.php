@@ -84,7 +84,12 @@ abstract class ModelPermissions
 		// check if the model has the ability to execute this action
 		// without breaking system logic. This always takes priority over
 		// any other role-based permission rules.
-		if ($this->model->abilities()->$action() === false) {
+		$abilities = $this->model->abilities();
+
+		if (
+			$abilities->has($action) === true &&
+			$abilities->$action() === false
+		) {
 			return false;
 		}
 
@@ -113,7 +118,7 @@ abstract class ModelPermissions
 			return static::$cache[$cacheKey];
 		}
 
-		if (method_exists($model->abilities(), $action) === true) {
+		if ($model->abilities()->has($action) === true) {
 			throw new LogicException('Cannot use permission cache for dynamically-determined permission');
 		}
 
