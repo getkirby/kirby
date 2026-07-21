@@ -8,17 +8,18 @@ const { change } = LanguagesDropdown.methods;
  *
  * @param {Object} options
  * @param {Boolean} options.hasDiff - whether the view has unsaved changes
+ * @param {Boolean} options.updated - what `update` resolves with
  * @param {Error|null} options.updateError - error to reject `update` with
  */
-function context({ hasDiff = false, updateError = null } = {}) {
+function context({ hasDiff = false, updated = true, updateError = null } = {}) {
 	return {
 		$panel: {
 			content: {
 				hasDiff: vi.fn(() => hasDiff),
+				unlock: vi.fn(() => Promise.resolve()),
 				update: vi.fn(() =>
-					updateError ? Promise.reject(updateError) : Promise.resolve()
-				),
-				unlock: vi.fn(() => Promise.resolve())
+					updateError ? Promise.reject(updateError) : Promise.resolve(updated)
+				)
 			},
 			error: vi.fn()
 		},
@@ -65,6 +66,18 @@ describe("LanguagesDropdown.change()", () => {
 
 		expect(update).toBeLessThan(unlock);
 		expect(unlock).toBeLessThan(reload);
+	});
+
+	it("aborts the switch when the changes were not written", async () => {
+		// `update` resolves without throwing when the view got locked or
+		// when a newer save request took over, so the falsy result is the
+		// only signal that the content did not make it to the server
+		const ctx = context({ hasDiff: true, updated: false });
+		await change.call(ctx, { code: "de", current: false });
+
+		expect(ctx.$panel.content.unlock).not.toHaveBeenCalled();
+		expect(ctx.$reload).not.toHaveBeenCalled();
+		expect(ctx.$panel.error).not.toHaveBeenCalled();
 	});
 
 	it("aborts the switch when saving fails", async () => {

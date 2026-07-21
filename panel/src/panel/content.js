@@ -275,6 +275,13 @@ export default (panel) => {
 
 		/**
 		 * Saves any changes
+		 *
+		 * Locked and aborted requests are handled here instead of being
+		 * thrown, as most callers save in the background and cannot react
+		 * to them. The return value tells callers that need to know
+		 * whether the changes actually made it to the server.
+		 *
+		 * @returns {Boolean} Whether the changes have been written
 		 */
 		async save(values = {}, env = {}) {
 			// ensure to abort unfinished previous save request
@@ -296,10 +303,13 @@ export default (panel) => {
 				}
 
 				this.emit("save", { values }, env);
+
+				return true;
 			} catch (error) {
-				// handle aborted requests silently
+				// handle aborted requests silently. A newer save request
+				// has taken over and will write the latest state instead.
 				if (error.name === "AbortError") {
-					return;
+					return false;
 				}
 
 				// processing must not be interrupted for aborted
@@ -310,7 +320,8 @@ export default (panel) => {
 
 				// handle locked states
 				if (error.key?.startsWith("error.content.lock")) {
-					return this.lockDialog(error.details);
+					this.lockDialog(error.details);
+					return false;
 				}
 
 				throw error;
@@ -364,6 +375,8 @@ export default (panel) => {
 
 		/**
 		 * Updates the form values of the current view
+		 *
+		 * @returns {Boolean} Whether the changes have been written
 		 */
 		async update(values = {}, env = {}) {
 			return await this.save(this.merge(values, env), env);
