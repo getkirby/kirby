@@ -37,6 +37,12 @@ class UserAbilities extends ModelAbilities
 	{
 		$currentUser = App::instance()->user();
 
+		if ($currentUser === null) {
+			return false;
+		}
+
+		// only the user themselves and admins
+		// can change the secrets of a user
 		if (
 			$currentUser->is($this->user) === false &&
 			$currentUser->isAdmin() === false
