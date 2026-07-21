@@ -6,6 +6,7 @@ use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
+use Kirby\Uuid\Uuids;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Pages::class)]
@@ -232,6 +233,79 @@ class PagesTest extends TestCase
 		$this->assertDirectoryDoesNotExist($a->root());
 		$this->assertDirectoryDoesNotExist($b->root());
 		$this->assertDirectoryExists($c->root());
+	}
+
+	public function testDeleteWithUuids(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$a = Page::create([
+			'slug'    => 'a',
+			'draft'   => false,
+			'content' => ['uuid' => 'test-a']
+		]);
+
+		$b = Page::create([
+			'slug'    => 'b',
+			'draft'   => false,
+			'content' => ['uuid' => 'test-b']
+		]);
+
+		$c = Page::create([
+			'slug'    => 'c',
+			'draft'   => false,
+			'content' => ['uuid' => 'test-c']
+		]);
+
+		$pages = $this->app->site()->children();
+
+		$this->assertCount(3, $pages);
+
+		// the Panel sends the selection as UUIDs
+		$pages->delete([
+			'page://test-a',
+			'page://test-b',
+		]);
+
+		$this->assertCount(1, $pages);
+
+		$this->assertDirectoryDoesNotExist($a->root());
+		$this->assertDirectoryDoesNotExist($b->root());
+		$this->assertDirectoryExists($c->root());
+
+		Uuids::cache()->flush();
+	}
+
+	public function testDeleteWithForeignUuid(): void
+	{
+		$this->app->impersonate('kirby');
+
+		Page::create([
+			'slug'    => 'a',
+			'draft'   => false,
+			'content' => ['uuid' => 'test-a']
+		]);
+
+		$b = Page::create([
+			'slug'    => 'b',
+			'draft'   => false,
+			'content' => ['uuid' => 'test-b']
+		]);
+
+		// a collection that only contains page a
+		$pages = $this->app->site()->children()->filterBy('slug', 'a');
+
+		// deleting a page that is not part of the collection must fail,
+		// even if the UUID resolves to a valid page elsewhere
+		try {
+			$pages->delete(['page://test-b']);
+		} catch (Exception $e) {
+			$this->assertSame('Not all pages could be deleted. Try each remaining page individually to see the specific error that prevents deletion.', $e->getMessage());
+		}
+
+		$this->assertDirectoryExists($b->root());
+
+		Uuids::cache()->flush();
 	}
 
 	public function testDeleteSortedAndFiltered(): void
