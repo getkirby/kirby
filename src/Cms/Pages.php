@@ -144,14 +144,14 @@ class Pages extends Collection
 				// as we move away from our immutable object architecture.
 				$page = $kirby->page($id);
 
-				if ($page === null || $this->get($id) instanceof Page === false) {
+				if ($page === null || $this->has($page) === false) {
 					throw new NotFoundException(
 						key: 'page.undefined',
 					);
 				}
 
 				$page->delete();
-				$this->remove($id);
+				$this->remove($page->id());
 			} catch (Throwable $e) {
 				$exceptions[$id] = $e;
 			}

@@ -5,6 +5,7 @@ namespace Kirby\Blueprint;
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Form\Field\SectionField;
 use Kirby\TestCase;
 
 class SectionTest extends TestCase
@@ -169,6 +170,52 @@ class SectionTest extends TestCase
 		$model = new Page(['slug' => 'test']);
 		$section = new Section('test', ['model' => $model]);
 		$section->drawers();
+	}
+
+	public function testErrors(): void
+	{
+		// no errors method defined as default
+		Section::$types['test'] = [];
+
+		$section = new Section('test', [
+			'model' => new Page(['slug' => 'test'])
+		]);
+
+		$this->assertSame([], $section->errors());
+
+		// return errors from the defined method
+		Section::$types['test'] = [
+			'methods' => [
+				'errors' => fn () => ['min' => 'Not enough']
+			]
+		];
+
+		$section = new Section('test', [
+			'model' => new Page(['slug' => 'test'])
+		]);
+
+		$this->assertSame(['min' => 'Not enough'], $section->errors());
+	}
+
+	public function testField(): void
+	{
+		Section::$types['test'] = [];
+
+		$model = new Page(['slug' => 'test']);
+
+		// no wrapping field as default
+		$section = new Section('test', ['model' => $model]);
+
+		$this->assertNull($section->field());
+
+		// return the wrapping field
+		$field   = new SectionField(section: 'pages', name: 'drafts');
+		$section = new Section('test', [
+			'model' => $model,
+			'field' => $field
+		]);
+
+		$this->assertSame($field, $section->field());
 	}
 
 	public function testMissingModel(): void

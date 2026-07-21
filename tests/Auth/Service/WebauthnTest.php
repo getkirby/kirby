@@ -122,14 +122,20 @@ class WebauthnTest extends TestCase
 		]);
 		$ec = openssl_pkey_get_details($key)['ec'];
 
+		// OpenSSL strips leading zero bytes from the coordinates, so
+		// roughly 1 in 128 keys would yield a short x or y; COSE requires
+		// both to be exactly 32 bytes for P-256
+		$x = str_pad($ec['x'], 32, "\x00", STR_PAD_LEFT);
+		$y = str_pad($ec['y'], 32, "\x00", STR_PAD_LEFT);
+
 		// COSE_Key: {1:2 (EC2), 3:-7 (ES256), -1:1 (P-256), -2:x, -3:y}
 		$cose =
 			chr((5 << 5) | 5) .
 			static::cbor(0, 1) . static::cbor(0, 2) .
 			static::cbor(0, 3) . static::cbor(1, 6) .
 			static::cbor(1, 0) . static::cbor(0, 1) .
-			static::cbor(1, 1) . static::cbor(2, $ec['x']) .
-			static::cbor(1, 2) . static::cbor(2, $ec['y']);
+			static::cbor(1, 1) . static::cbor(2, $x) .
+			static::cbor(1, 2) . static::cbor(2, $y);
 
 		$credentialId = "\x01\x02\x03\x04";
 

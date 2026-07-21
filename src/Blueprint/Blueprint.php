@@ -10,6 +10,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
 use Kirby\Form\Field;
+use Kirby\Form\Field\SectionField;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
@@ -823,7 +824,7 @@ class Blueprint
 	public function section(string $name): Section|null
 	{
 		if (empty($this->sections[$name]) === true) {
-			return null;
+			return $this->sectionFromField($name);
 		}
 
 		if ($this->sections[$name] instanceof Section) {
@@ -841,19 +842,50 @@ class Blueprint
 	}
 
 	/**
+	 * Creates a section from a field with the `section` type
+	 * @since 6.0.0
+	 */
+	protected function sectionFromField(string $name): Section|null
+	{
+		$props = $this->field($name);
+
+		if ($props === null || $props['type'] !== 'section') {
+			return null;
+		}
+
+		unset($props['type']);
+
+		$field = new SectionField(...$props);
+		$field->setModel($this->model());
+
+		// cache the section under the original field name
+		return $this->sections[$props['name']] = $field->section();
+	}
+
+	/**
 	 * Returns all sections
 	 *
 	 * @return array<string, Section>
 	 */
 	public function sections(): array
 	{
-		return A::map(
+		$sections = A::map(
 			$this->sections,
 			fn ($section) => match (true) {
 				$section instanceof Section => $section,
 				default                     => $this->section($section['name'])
 			}
 		);
+
+		// sections that are defined as fields are not part of the
+		// section definitions and need to be collected separately
+		foreach ($this->fields as $name => $field) {
+			if ($field['type'] === 'section') {
+				$sections[$name] ??= $this->section($name);
+			}
+		}
+
+		return $sections;
 	}
 
 	/**
