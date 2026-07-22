@@ -339,10 +339,35 @@ export default (panel) => {
 		 * Called when the editor navigates away from the view.
 		 */
 		async unlock(env = {}) {
-			// Cancel any pending saves first to avoid race conditions
-			this.cancelSaving();
+			// persist any pending changes before releasing the lock, so that
+			// the changes cannot be dropped or the lock left behind
+			// due to a save that finishes after the unlock request.
+			// changes can only be detected for the current view
+			if (this.isCurrent(env) === true && this.hasDiff(env) === true) {
+				// abort the unlock when the changes could not be written:
+				// the view got locked in the meantime or a newer save
+				// request took over. Staying on the current view keeps
+				// both the changes and the lock, so nothing is lost and
+				// the call can simply be repeated
+				if ((await this.update({}, env)) !== true) {
+					throw new Error("The changes could not be saved before unlocking");
+				}
+			}
 
+			// fail silently because the lock will be released after
+			// 10 minutes anyway
+			return this.unlockPostRequest(env).catch(() => {});
+		},
+
+		/**
+		 * Sends the unlock request for the given view.
+		 * Use sendBeacon for reliability during page unload. Browsers
+		 * guarantee delivery even when the page is being closed.
+		 */
+		unlockBeaconRequest(env = {}) {
 			const { api, language } = this.env(env);
+
+			this.cancelSaving();
 
 			// Build the URL with csrf and language as query params.
 			// sendBeacon cannot set custom headers.
@@ -351,26 +376,33 @@ export default (panel) => {
 				language: language
 			});
 
-			// Use sendBeacon for reliability during page unload. Browsers
-			// guarantee delivery even when the page is being closed.
-			// Returns true if the request was successfully queued.
+			// sendBeacon returns true if the request was successfully queued.
 			if (navigator.sendBeacon(url) === true) {
 				return;
 			}
 
-			// Fall back to a regular request if sendBeacon wasn't queued
-			await panel.api
-				.post(
-					api + "/changes/unlock",
-					{},
-					{
-						headers: { "x-language": language },
-						silent: true
-					}
-				)
-				.catch(() => {
-					// Silently ignore errors. The lock will expire after 10 minutes anyway.
-				});
+			// Fall back to a regular request if sendBeacon wasn't queued.
+			// Fail silently to avoid blocking the unload event
+			this.unlockPostRequest(env).catch(() => {});
+		},
+
+		/**
+		 * Sends the unlock request for the given view
+		 * as a regular API request
+		 */
+		async unlockPostRequest(env = {}) {
+			const { api, language } = this.env(env);
+
+			this.cancelSaving();
+
+			return panel.api.post(
+				api + "/changes/unlock",
+				{},
+				{
+					headers: { "x-language": language },
+					silent: true
+				}
+			);
 		},
 
 		/**

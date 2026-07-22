@@ -80,26 +80,12 @@ export default {
 				return;
 			}
 
-			// persist any pending changes before releasing the lock, so that
-			// switching the language cannot drop them or leave the lock behind
-			// due to a save that finishes after the unlock request
-			if (this.$panel.content.hasDiff() === true) {
-				try {
-					// abort the switch when the changes could not be written:
-					// the view got locked in the meantime or a newer save
-					// request took over. Staying on the current language keeps
-					// both the changes and the lock, so nothing is lost and
-					// the switch can simply be repeated
-					if ((await this.$panel.content.update()) !== true) {
-						return;
-					}
-				} catch (error) {
-					this.$panel.error(error);
-					return;
-				}
+			try {
+				await this.$panel.content.unlock();
+			} catch (error) {
+				this.$panel.error(error);
+				return;
 			}
-
-			await this.$panel.content.unlock();
 
 			this.$reload({
 				query: {
