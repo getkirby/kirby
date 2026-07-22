@@ -658,6 +658,45 @@ class PageRenderTest extends ModelTestCase
 		$this->assertSame('changes', $page->renderVersionFromRequest()->value());
 	}
 
+	public function testRenderVersionFromRequestCustomPreviewUrl(): void
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'custom-preview',
+						'template' => 'custom-preview'
+					]
+				]
+			],
+			'blueprints' => [
+				'pages/custom-preview' => [
+					'options' => [
+						'preview' => '{{ page.url }}.json'
+					]
+				]
+			]
+		]);
+
+		$page = $app->page('custom-preview');
+
+		// the token the panel embeds in the custom preview link
+		$url   = $page->version('changes')->url();
+		$query = [];
+		parse_str(parse_url($url, PHP_URL_QUERY), $query);
+
+		$app->clone([
+			'request' => [
+				'query' => [
+					'_token'   => $query['_token'],
+					'_version' => 'changes'
+				]
+			]
+		]);
+
+		$this->assertSame('changes', $page->renderVersionFromRequest()->value());
+	}
+
 	public function testRenderVersionFromRequestAuthenticatedDraft(): void
 	{
 		$page = $this->app->page('version-draft');
