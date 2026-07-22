@@ -80,7 +80,12 @@ export default {
 				return;
 			}
 
-			await this.$panel.content.unlock();
+			try {
+				await this.$panel.content.unlock();
+			} catch (error) {
+				this.$panel.error(error);
+				return;
+			}
 
 			this.$reload({
 				query: {
