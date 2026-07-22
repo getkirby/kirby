@@ -28,6 +28,13 @@ class PageAbilitiesTest extends ModelTestCase
 		$this->assertFalse($this->abilities('error')->changeStatus());
 	}
 
+	public function testChangeStatusToDraft(): void
+	{
+		$this->assertTrue($this->abilities('test')->changeStatusToDraft());
+		$this->assertFalse($this->abilities('home')->changeStatusToDraft());
+		$this->assertFalse($this->abilities('error')->changeStatusToDraft());
+	}
+
 	public function testChangeTemplateWithErrorPage(): void
 	{
 		$this->app = $this->app->clone([

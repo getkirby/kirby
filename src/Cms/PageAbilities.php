@@ -25,6 +25,11 @@ class PageAbilities extends ModelAbilities
 		return $this->page->isErrorPage() !== true;
 	}
 
+	public function changeStatusToDraft(): bool
+	{
+		return $this->page->isHomeOrErrorPage() !== true;
+	}
+
 	public function changeTemplate(): bool
 	{
 		if ($this->page->isErrorPage() === true) {
