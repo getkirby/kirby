@@ -11,8 +11,11 @@ use PHPUnit\Framework\Attributes\DataProvider;
 
 class TestKirbyTag extends KirbyTag
 {
-	public string|null $a = null;
-	public string|null $b = null;
+	public function __construct(
+		public string|null $a = null,
+		public string|null $b = null
+	) {
+	}
 
 	public function render(): string
 	{
@@ -88,7 +91,7 @@ class KirbyTagTest extends TestCase
 			'c' => 'dataC'
 		];
 
-		$tag = new TestKirbyTag('test', 'test value', $attr, $data);
+		$tag = KirbyTag::factory('test', 'test value', $attr, $data);
 
 		// data takes precedence over the property
 		$this->assertSame('dataA', $tag->a());
@@ -109,7 +112,7 @@ class KirbyTagTest extends TestCase
 
 	public function testAttr(): void
 	{
-		$tag = new TestKirbyTag('test', 'test value', [
+		$tag = KirbyTag::factory('test', 'test value', [
 			'a' => 'attrA',
 			'b' => 'attrB'
 		]);
@@ -126,7 +129,7 @@ class KirbyTagTest extends TestCase
 
 	public function testAttrFallback(): void
 	{
-		$tag = new TestKirbyTag('test', 'test value', [
+		$tag = KirbyTag::factory('test', 'test value', [
 			'a' => 'attrA'
 		]);
 
@@ -176,7 +179,7 @@ class KirbyTagTest extends TestCase
 
 		$page = $app->page('a');
 		$file = $page->file('a.jpg');
-		$tag  = new TestKirbyTag('test', 'foo');
+		$tag  = KirbyTag::factory('test', 'foo');
 		$this->assertSame($file, $tag->file('a/a.jpg'));
 	}
 
@@ -202,7 +205,7 @@ class KirbyTagTest extends TestCase
 
 		$page = $app->page('a');
 		$file = $page->file('a.jpg');
-		$tag  = new TestKirbyTag('test', 'foo', [], [
+		$tag  = KirbyTag::factory('test', 'foo', [], [
 			'parent' => $page,
 		]);
 		$this->assertSame($file, $tag->file('a.jpg'));
@@ -230,7 +233,7 @@ class KirbyTagTest extends TestCase
 
 		$page = $app->page('a');
 		$file = $page->file('a.jpg');
-		$tag  = new TestKirbyTag('test', 'foo', [], [
+		$tag  = KirbyTag::factory('test', 'foo', [], [
 			'parent' => $file,
 		]);
 		$this->assertSame($file, $tag->file('a.jpg'));
@@ -259,11 +262,11 @@ class KirbyTagTest extends TestCase
 
 		$page = $app->page('a');
 		$file = $page->file('a.jpg');
-		$tag  = new TestKirbyTag('test', 'foo');
+		$tag  = KirbyTag::factory('test', 'foo');
 		$this->assertSame($file, $tag->file('file://image-uuid'));
 
 		// with parent
-		$tag = new TestKirbyTag('test', 'foo', [], [
+		$tag = KirbyTag::factory('test', 'foo', [], [
 			'parent' => $page,
 		]);
 		$this->assertSame($file, $tag->file('file://image-uuid'));
@@ -277,7 +280,7 @@ class KirbyTagTest extends TestCase
 			]
 		]);
 
-		$tag = new TestKirbyTag('test', 'b.jpg');
+		$tag = KirbyTag::factory('test', 'b.jpg');
 		$this->assertSame($app, $tag->kirby());
 	}
 
@@ -302,7 +305,7 @@ class KirbyTagTest extends TestCase
 		]);
 
 		$page = $app->page('a');
-		$tag  = new TestKirbyTag('test', 'b.jpg', [], [
+		$tag  = KirbyTag::factory('test', 'b.jpg', [], [
 			'parent' => $page,
 		]);
 
@@ -462,13 +465,13 @@ class KirbyTagTest extends TestCase
 
 	public function testRender(): void
 	{
-		$tag = new TestKirbyTag('test', 'test value', [
+		$tag = KirbyTag::factory('test', 'test value', [
 			'a' => 'attrA',
 			'b' => 'attrB'
 		]);
 		$this->assertSame('test: test value-attrA-attrB', $tag->render());
 
-		$tag = new TestKirbyTag('test', '', [
+		$tag = KirbyTag::factory('test', '', [
 			'a' => 'attrA'
 		]);
 		$this->assertSame('test: -attrA-', $tag->render());
@@ -476,7 +479,7 @@ class KirbyTagTest extends TestCase
 
 	public function testType(): void
 	{
-		$tag = new TestKirbyTag('test', 'test value');
+		$tag = KirbyTag::factory('test', 'test value');
 		$this->assertSame('test', $tag->type());
 	}
 }

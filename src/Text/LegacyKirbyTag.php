@@ -17,16 +17,8 @@ final class LegacyKirbyTag extends KirbyTag
 	protected array $props = [];
 
 	public function __construct(
-		protected array $definition,
-		string $type,
-		string|null $value = null,
-		array $attrs = [],
-		array $data = []
+		protected array $definition
 	) {
-		parent::__construct($type, $value, $attrs, $data);
-
-		// make the tag value available under its type name (e.g. $tag->test)
-		$this->{strtolower($type)} = $this->value;
 	}
 
 	public function __get(string $name): mixed
@@ -49,9 +41,34 @@ final class LegacyKirbyTag extends KirbyTag
 		unset($this->props[strtolower($name)]);
 	}
 
-	protected function definedAttrs(): array
-	{
-		return $this->definition['attr'] ?? [];
+	/**
+	 * Injects the shared state and, as legacy tags cannot receive
+	 * their attributes as constructor arguments, applies the
+	 * attributes the array definition declares
+	 */
+	protected function bind(
+		string $type,
+		string|null $value,
+		array $data,
+		array $attrs
+	): static {
+		parent::bind($type, $value, $data, $attrs);
+
+		// only keep attributes that the definition actually declares
+		$defined = $this->definition['attr'] ?? [];
+
+		foreach ($attrs as $name => $attrValue) {
+			$name = strtolower($name);
+
+			if (in_array($name, $defined, true) === true) {
+				$this->$name = $attrValue;
+			}
+		}
+
+		// make the tag value available under its type name (e.g. $tag->test)
+		$this->{strtolower($type)} = $this->value;
+
+		return $this;
 	}
 
 	public function render(): string
