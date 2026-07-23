@@ -125,6 +125,13 @@ export default (panel) => {
 		},
 
 		/**
+		 * Runs any scheduled save request immediately
+		 */
+		async flushSaving() {
+			await this.saveLazy.flush();
+		},
+
+		/**
 		 * Whether there are any changes
 		 */
 		hasDiff(env = {}) {
@@ -325,11 +332,14 @@ export default (panel) => {
 
 		/**
 		 * Releases the content lock without discarding changes.
-		 * Called when the editor navigates away from the view.
+		 * Called when the editor navigates away from the view
+		 * or switches the content language.
 		 */
-		unlock(env = {}) {
-			// Cancel any pending saves first to avoid race conditions
-			this.cancelSaving();
+		async unlock(env = {}) {
+			// Write any scheduled changes before releasing the lock.
+			// Cancelling here instead would silently drop the
+			// throttle's pending trailing save.
+			await this.flushSaving();
 
 			const { api, language } = this.env(env);
 
@@ -348,7 +358,7 @@ export default (panel) => {
 			}
 
 			// Fall back to a regular request if sendBeacon wasn't queued
-			panel.api
+			await panel.api
 				.post(
 					api + "/changes/unlock",
 					{},

@@ -173,4 +173,44 @@ describe("$helper.throttle()", () => {
 		vi.advanceTimersByTime(1000);
 		expect(callback).not.toHaveBeenCalled();
 	});
+
+	it("should run a pending trailing call on flush", () => {
+		const callback = vi.fn();
+		const throttled = throttle(callback, 1000, {
+			leading: true,
+			trailing: true
+		});
+
+		throttled("first");
+		throttled("second");
+		expect(callback).toHaveBeenCalledTimes(1);
+
+		throttled.flush();
+		expect(callback).toHaveBeenCalledTimes(2);
+		expect(callback).toHaveBeenLastCalledWith("second");
+
+		// the flushed call must not fire a second time
+		vi.advanceTimersByTime(1000);
+		expect(callback).toHaveBeenCalledTimes(2);
+	});
+
+	it("should return the result of the flushed call", () => {
+		const callback = vi.fn(() => "result");
+		const throttled = throttle(callback, 1000, {
+			leading: false,
+			trailing: true
+		});
+
+		throttled();
+
+		expect(throttled.flush()).toBe("result");
+	});
+
+	it("should not throw when flush is called with no pending call", () => {
+		const callback = vi.fn();
+		const throttled = throttle(callback, 1000);
+
+		expect(() => throttled.flush()).not.toThrow();
+		expect(callback).not.toHaveBeenCalled();
+	});
 });
