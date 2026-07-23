@@ -66,6 +66,8 @@ abstract class ModelWithContent implements Identifiable, Stringable
 		$this->propertyData = $props;
 	}
 
+	abstract public function abilities(): ModelAbilities;
+
 	/**
 	 * Returns the url to the api endpoint
 	 */

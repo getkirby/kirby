@@ -124,6 +124,11 @@ class User extends ModelWithContent
 		];
 	}
 
+	public function abilities(): UserAbilities
+	{
+		return new UserAbilities($this);
+	}
+
 	/**
 	 * Returns the url to the api endpoint
 	 * @internal

@@ -12,6 +12,16 @@ class FileTest extends ModelTestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Cms.File';
 
+	public function testAbilities(): void
+	{
+		$file = new File([
+			'filename' => 'test.jpg',
+			'parent'   => new Page(['slug' => 'test'])
+		]);
+
+		$this->assertInstanceOf(FileAbilities::class, $file->abilities());
+	}
+
 	public function testApiUrl(): void
 	{
 		$this->app = $this->app->clone([

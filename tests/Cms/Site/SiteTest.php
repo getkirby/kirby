@@ -10,6 +10,13 @@ class SiteTest extends ModelTestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Cms.Site';
 
+	public function testAbilities(): void
+	{
+		$site = new Site();
+
+		$this->assertInstanceOf(SiteAbilities::class, $site->abilities());
+	}
+
 	public function testApiUrl(): void
 	{
 		$site = new Site();

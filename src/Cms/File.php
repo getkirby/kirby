@@ -134,6 +134,11 @@ class File extends ModelWithContent
 		];
 	}
 
+	public function abilities(): FileAbilities
+	{
+		return new FileAbilities($this);
+	}
+
 	/**
 	 * Returns the url to api endpoint
 	 * @internal

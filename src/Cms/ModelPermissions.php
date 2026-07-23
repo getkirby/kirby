@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\LogicException;
-use Kirby\Toolkit\A;
 
 /**
  * ModelPermissions
@@ -74,64 +73,32 @@ abstract class ModelPermissions
 		string $action,
 		bool $default = false
 	): bool {
-		$user   = static::user();
-		$userId = $user->id();
-		$role   = $user->role()->id();
+		$user = static::user();
+		$role = $user->role();
 
-		// users with the `nobody` role can do nothing
-		// that needs a permission check
-		if ($role === 'nobody') {
+		// users with the `nobody` role can't execute anything
+		if ($role->isNobody() === true) {
 			return false;
 		}
 
-		// check for a custom `can` method
-		// which would take priority over any other
-		// role-based permission rules
+		// check if the model has the ability to execute this action
+		// without breaking system logic. This always takes priority over
+		// any other role-based permission rules.
+		$abilities = $this->model->abilities();
+
 		if (
-			method_exists($this, 'can' . $action) === true &&
-			$this->{'can' . $action}() === false
+			$abilities->has($action) === true &&
+			$abilities->$action() === false
 		) {
 			return false;
 		}
 
-		// the almighty `kirby` user can do anything
-		if ($userId === 'kirby' && $role === 'admin') {
+		// the almighty `kirby` user can execute anything
+		if ($user->isKirby() === true) {
 			return true;
 		}
 
-		// evaluate the blueprint options block
-		if (isset($this->options[$action]) === true) {
-			$options = $this->options[$action];
-
-			if ($options === false) {
-				return false;
-			}
-
-			if ($options === true) {
-				return true;
-			}
-
-			if (
-				is_array($options) === true &&
-				A::isAssociative($options) === true
-			) {
-				if (isset($options[$role]) === true) {
-					return $options[$role];
-				}
-
-				if (isset($options['*']) === true) {
-					return $options['*'];
-				}
-			}
-		}
-
-		$permissions = $user->role()->permissions();
-
-		return $permissions->for(
-			category: static::category($this->model),
-			action:   $action,
-			default:  $default
-		);
+		return $this->ruleForUser($user, $action) ?? $this->ruleForRole($role, $action) ?? $default;
 	}
 
 	/**
@@ -151,7 +118,7 @@ abstract class ModelPermissions
 			return static::$cache[$cacheKey];
 		}
 
-		if (method_exists(static::class, 'can' . $action) === true) {
+		if ($model->abilities()->has($action) === true) {
 			throw new LogicException('Cannot use permission cache for dynamically-determined permission');
 		}
 
@@ -175,9 +142,34 @@ abstract class ModelPermissions
 	 * Can be overridden by specific child classes
 	 * if the permission category needs to be dynamic
 	 */
-	protected static function category(ModelWithContent|Language $model): string
+	public static function category(ModelWithContent|Language $model): string
 	{
 		return static::CATEGORY;
+	}
+
+	/**
+	 * Tries to find the permission rule by role and action.
+	 * Returns null if no specific rule is set in the role blueprint.
+	 */
+	public function ruleForRole(Role $role, string $action): bool|null
+	{
+		return $role->permissions()->for(
+			category: static::category($this->model),
+			action: $action,
+			default: null
+		);
+	}
+
+	/**
+	 * Tries to find the permission rule by user, model and action.
+	 * Returns null if no specific rule is set in the model blueprint.
+	 */
+	public function ruleForUser(User $user, string $action): bool|null
+	{
+		return match (true) {
+			$this->model instanceof ModelWithContent => $this->model->blueprint()->optionForUser($user, $action),
+			$this->model instanceof Language         => null
+		};
 	}
 
 	public function toArray(): array

@@ -7,6 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use ReflectionProperty;
 
+#[CoversClass(ModelPermissions::class)]
 #[CoversClass(PagePermissions::class)]
 class PagePermissionsTest extends ModelTestCase
 {
@@ -453,5 +454,67 @@ class PagePermissionsTest extends ModelTestCase
 
 		$this->assertTrue($page->permissions()->cannot('foo'));
 		$this->assertFalse($page->permissions()->cannot('foo', false));
+	}
+
+	public function testRuleForRole(): void
+	{
+		$this->app->impersonate('admin');
+
+		$page = new Page(['slug' => 'test']);
+		$role = new Role([
+			'name'        => 'editor',
+			'permissions' => [
+				'pages' => ['update' => false]
+			]
+		]);
+
+		// the rule is taken from the role permissions
+		// for the model's permission category
+		$this->assertFalse($page->permissions()->ruleForRole($role, 'update'));
+		$this->assertTrue($page->permissions()->ruleForRole($role, 'delete'));
+	}
+
+	public function testRuleForRoleWithUnknownAction(): void
+	{
+		$this->app->impersonate('admin');
+
+		$page = new Page(['slug' => 'test']);
+		$role = new Role(['name' => 'editor']);
+
+		// null is returned for actions that are
+		// not part of the permission category
+		$this->assertNull($page->permissions()->ruleForRole($role, 'does-not-exist'));
+	}
+
+	public function testRuleForUser(): void
+	{
+		$this->app->impersonate('editor');
+
+		$page = new Page([
+			'slug'      => 'test',
+			'blueprint' => [
+				'name'    => 'test',
+				'options' => [
+					'update' => ['editor' => false]
+				]
+			]
+		]);
+
+		$user = $this->app->user('editor');
+
+		// the rule is taken from the blueprint option for the user
+		$this->assertFalse($page->permissions()->ruleForUser($user, 'update'));
+	}
+
+	public function testRuleForUserWithoutBlueprintOption(): void
+	{
+		$this->app->impersonate('editor');
+
+		$page = new Page(['slug' => 'test']);
+		$user = $this->app->user('editor');
+
+		// null is returned when the blueprint has
+		// no option defined for the action
+		$this->assertNull($page->permissions()->ruleForUser($user, 'update'));
 	}
 }

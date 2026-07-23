@@ -173,4 +173,39 @@ class UserPermissionsTest extends ModelTestCase
 
 		$this->assertFalse($perms->can('changeRole'));
 	}
+
+	public function testRuleForRoleWithDynamicCategory(): void
+	{
+		$this->app = $this->app->clone([
+			'users' => [
+				['email' => 'editor@getkirby.com', 'role' => 'editor'],
+				['email' => 'another@getkirby.com', 'role' => 'editor']
+			]
+		]);
+
+		$this->app->impersonate('editor@getkirby.com');
+
+		$role = new Role([
+			'name'        => 'editor',
+			'permissions' => [
+				'user'  => ['changeEmail' => true],
+				'users' => ['changeEmail' => false]
+			]
+		]);
+
+		// `UserPermissions::category()` switches the category between
+		// `user` and `users` depending on whether the model is the
+		// current user, which changes the resolved rule
+		$this->assertTrue(
+			$this->app->user('editor@getkirby.com')
+				->permissions()
+				->ruleForRole($role, 'changeEmail')
+		);
+
+		$this->assertFalse(
+			$this->app->user('another@getkirby.com')
+				->permissions()
+				->ruleForRole($role, 'changeEmail')
+		);
+	}
 }

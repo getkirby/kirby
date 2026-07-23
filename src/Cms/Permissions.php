@@ -157,8 +157,8 @@ class Permissions
 	public function for(
 		string|null $category = null,
 		string|null $action = null,
-		bool $default = false
-	): bool {
+		bool|null $default = false
+	): bool|null {
 		if (is_null($category) === true) {
 			Helpers::deprecated(
 				'Passing `$category = null` to `Permissions::for()` is not supported',

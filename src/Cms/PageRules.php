@@ -37,6 +37,7 @@ class PageRules
 	 */
 	public static function changeSlug(Page $page, string $slug): void
 	{
+
 		if ($page->permissions()->can('changeSlug') !== true) {
 			throw new PermissionException(
 				key: 'page.changeSlug.permission',
@@ -103,7 +104,7 @@ class PageRules
 			);
 		}
 
-		if ($page->isHomeOrErrorPage() === true) {
+		if ($page->abilities()->changeStatusToDraft() === false) {
 			throw new PermissionException(
 				key: 'page.changeStatus.toDraft.invalid',
 				data: ['slug' => $page->slug()]

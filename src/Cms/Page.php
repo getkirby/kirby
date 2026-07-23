@@ -184,6 +184,11 @@ class Page extends ModelWithContent
 		];
 	}
 
+	public function abilities(): PageAbilities
+	{
+		return new PageAbilities($this);
+	}
+
 	/**
 	 * Returns the url to the api endpoint
 	 * @internal

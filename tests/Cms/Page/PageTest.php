@@ -11,6 +11,13 @@ class PageTest extends ModelTestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Cms.Page';
 
+	public function testAbilities(): void
+	{
+		$page = new Page(['slug' => 'test']);
+
+		$this->assertInstanceOf(PageAbilities::class, $page->abilities());
+	}
+
 	public function testApiUrl(): void
 	{
 		$this->app = $this->app->clone([

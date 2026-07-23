@@ -99,6 +99,11 @@ class Language implements Stringable
 		return $this->code();
 	}
 
+	public function abilities(): LanguageAbilities
+	{
+		return new LanguageAbilities($this);
+	}
+
 	/**
 	 * Returns the base Url for the language
 	 * without the path or other cruft
@@ -334,17 +339,7 @@ class Language implements Stringable
 	 */
 	public function isDeletable(): bool
 	{
-		// a single-language object cannot be deleted
-		if ($this->isSingle() === true) {
-			return false;
-		}
-
-		// the default language can only be deleted if it's the last
-		if ($this->isDefault() === true && $this->isLast() === false) {
-			return false;
-		}
-
-		return true;
+		return $this->abilities()->delete();
 	}
 
 	/**
