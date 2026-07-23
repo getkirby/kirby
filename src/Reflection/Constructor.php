@@ -2,6 +2,7 @@
 
 namespace Kirby\Reflection;
 
+use ReflectionClass;
 use ReflectionMethod;
 use ReflectionParameter;
 
@@ -42,6 +43,21 @@ class Constructor extends ReflectionMethod
 			'accepted' => $accepted,
 			'ignored'  => $ignored
 		];
+	}
+
+	/**
+	 * Returns the constructor for the given class
+	 * or `null` if the class has no constructor
+	 *
+	 * @since 6.0.0
+	 */
+	public static function for(object|string $objectOrClass): static|null
+	{
+		if ((new ReflectionClass($objectOrClass))->getConstructor() === null) {
+			return null;
+		}
+
+		return new static($objectOrClass);
 	}
 
 	/**
