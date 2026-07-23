@@ -165,7 +165,7 @@ class Site extends ModelWithContent
 	public function blueprint(): SiteBlueprint
 	{
 		/** @var \Kirby\Blueprint\SiteBlueprint */
-		return $this->blueprint ??= SiteBlueprint::factory('site', null, $this);
+		return $this->blueprint ??= SiteBlueprint::factory($this, 'site');
 	}
 
 	/**

@@ -10,11 +10,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(PageBlueprint::class)]
 class PageBlueprintTest extends TestCase
 {
-	protected function tearDown(): void
-	{
-		Blueprint::$loaded = [];
-	}
-
 	public function testOptions(): void
 	{
 		$blueprint = new PageBlueprint([

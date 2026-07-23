@@ -272,7 +272,6 @@ class PagesSectionTest extends TestCase
 		]);
 
 		$this->assertSame($expected, $section->add());
-		Blueprint::$loaded = [];
 	}
 
 	public function testAddWhenMultipleStatusCreated(): void

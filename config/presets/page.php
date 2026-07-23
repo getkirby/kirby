@@ -1,7 +1,5 @@
 <?php
 
-use Kirby\Toolkit\I18n;
-
 return function ($props) {
 	$section = function ($defaults, $props) {
 		if ($props === true) {
@@ -27,7 +25,7 @@ return function ($props) {
 
 		if ($pages !== false) {
 			$sidebar['pages'] = $section([
-				'label'  => I18n::translate('pages'),
+				'label'  => 'pages',
 				'type'   => 'pages',
 				'status' => 'all',
 				'layout' => 'list',
@@ -36,7 +34,7 @@ return function ($props) {
 
 		if ($files !== false) {
 			$sidebar['files'] = $section([
-				'label'  => I18n::translate('files'),
+				'label'  => 'files',
 				'type'   => 'files',
 				'layout' => 'list'
 			], $files);

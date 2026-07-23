@@ -6,6 +6,7 @@ use Closure;
 use Exception as GlobalException;
 use Generator;
 use Kirby\Api\Api;
+use Kirby\Blueprint\Blueprint;
 use Kirby\Cms\App\Resolver;
 use Kirby\Content\Storage;
 use Kirby\Content\VersionCache;
@@ -107,6 +108,7 @@ class App
 		$this->events = new Events($this);
 
 		// start with fresh caches
+		Blueprint::reset();
 		Snippet::$cache = [];
 		Stack::reset();
 		VersionCache::reset();
