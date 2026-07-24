@@ -7,7 +7,12 @@
 		@cancel="$emit('cancel')"
 		@submit="$emit('cancel')"
 	>
-		<form ref="form" class="k-stack" style="gap: var(--spacing-6)">
+		<form
+			ref="form"
+			class="k-stack"
+			style="gap: var(--spacing-6)"
+			@submit.prevent="onSubmit"
+		>
 			<k-user-info :label="$t('account')" :user="user" />
 
 			<k-box
@@ -149,6 +154,11 @@ export default {
 				(authorization) => this.request("remove", { id, authorization }),
 				(error) => this.$panel.notification.error(error)
 			);
+		},
+		onSubmit() {
+			if (this.isAccount === true) {
+				this.create();
+			}
 		}
 	}
 };
