@@ -275,6 +275,35 @@ class App
 			}
 		}
 
+		// merge nested config arrays into the flat plugin option keys;
+		// when a user configures options like `'vendor' => ['plugin' => [...]]`
+		// but the plugin registered defaults as `'vendor.plugin' => [...]`,
+		// A::get() would prefer the flat key and miss the user's nested values
+		foreach (array_keys(static::$plugins) as $pluginId) {
+			if (str_contains($pluginId, '/') !== true) {
+				continue;
+			}
+
+			[$vendor, $name] = explode('/', $pluginId, 2);
+			$nestedOptions   = $this->options[$vendor][$name] ?? null;
+
+			if (is_array($nestedOptions) !== true) {
+				continue;
+			}
+
+			$flatId      = $vendor . '.' . $name;
+			$flatOptions = $this->options[$flatId] ?? [];
+
+			if (is_array($flatOptions) !== true) {
+				$flatOptions = [];
+			}
+
+			$this->options[$flatId] = array_replace_recursive(
+				$flatOptions,
+				$nestedOptions
+			);
+		}
+
 		Config::$data = $this->options;
 		return $this;
 	}
