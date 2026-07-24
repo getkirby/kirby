@@ -7,6 +7,7 @@ use Kirby\Auth\Pending;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
+use Throwable;
 
 /**
  * Shared base for drawers that manage a removable login credential
@@ -42,7 +43,12 @@ abstract class UserCredentialDrawerController extends UserDrawerController
 
 		$this->kirby->session()->set(
 			'kirby.security.authorize.' . $this->user->id(),
-			$pending->toArray()
+			[
+				...$pending->toArray(),
+				// the stored code is only valid for the challenge's
+				// lifetime, so a leaked session cannot reuse it forever
+				'expires' => time() + $challenge->timeout()
+			]
 		);
 
 		return $pending->public();
@@ -91,15 +97,50 @@ abstract class UserCredentialDrawerController extends UserDrawerController
 	 */
 	protected function authorizeCurrentUser(): void
 	{
+		$key       = 'kirby.security.authorize.' . $this->user->id();
+		$session   = $this->kirby->session();
+		$limits    = $this->kirby->auth()->limits();
+		$email     = $this->user->email();
+
+		// block once the shared auth rate limit is exhausted, so that the
+		// secret/code cannot be brute-forced from a hijacked session
+		$limits->ensure($email);
+
 		$challenge = $this->challenge();
-		$pending   = $this->kirby->session()->pull('kirby.security.authorize.' . $this->user->id()) ?? [];
-		$pending   = Pending::from($pending);
+		$stored    = $session->get($key) ?? [];
+		$input     = $this->request->get('authorization');
 
-		$input = $this->request->get('authorization');
+		// a stored code is only valid for the challenge's lifetime
+		$expires = $stored['expires'] ?? null;
 
-		if ($challenge->verify($input, $pending) !== true) {
+		if (is_int($expires) === true && $expires < time()) {
+			$session->remove($key);
 			throw new InvalidArgumentException(key: 'access.code');
 		}
+
+		try {
+			if ($challenge->verify($input, Pending::from($stored)) !== true) {
+				throw new InvalidArgumentException(key: 'access.code');
+			}
+		} catch (Throwable $e) {
+			// count the failed attempt against the rate limit
+			$limits->track($email, triggerHook: false);
+
+			// a single-use challenge signs a one-time nonce that must be
+			// invalidated even after a failed attempt (e.g. WebAuthn); a
+			// reusable code is kept so the account owner can retry
+			// with the correct code within its lifetime
+			// instead of being locked out by a single typo
+			if ($challenge->isSingleUse() === true) {
+				$session->remove($key);
+			}
+
+			throw $e;
+		}
+
+		// the action is authorized: consume the pending so the same
+		// code or nonce cannot be replayed for another change
+		$session->remove($key);
 	}
 
 	/**

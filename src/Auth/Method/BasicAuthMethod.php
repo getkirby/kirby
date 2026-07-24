@@ -47,7 +47,7 @@ class BasicAuthMethod extends Method
 			?? throw new PermissionException(message: 'Invalid password'); // @codeCoverageIgnore
 
 		/**
-		 * @var \Kirby\Auth\Method\PasswordMethod $method
+		 * @var PasswordMethod $method
 		 */
 		$method = $this->auth->methods()->get('password');
 

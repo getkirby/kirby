@@ -4,9 +4,11 @@ namespace Kirby\Panel\Controller\Drawer;
 
 use Kirby\Auth\Challenge;
 use Kirby\Auth\Challenge\TotpChallenge;
+use Kirby\Auth\Exception\RateLimitException;
 use Kirby\Auth\Pending;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\PermissionException;
 use Kirby\Panel\TestCase;
 use Kirby\Toolkit\Totp;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -31,6 +33,14 @@ class DummyCredentialChallenge extends Challenge
 	}
 }
 
+class DummySingleUseCredentialChallenge extends DummyCredentialChallenge
+{
+	public function isSingleUse(): bool
+	{
+		return true;
+	}
+}
+
 class DummyUserCredentialDrawerController extends UserCredentialDrawerController
 {
 	public function __construct(User $user, string $type = 'totp')
@@ -46,6 +56,11 @@ class DummyUserCredentialDrawerController extends UserCredentialDrawerController
 	public function authorize(): void
 	{
 		parent::authorize();
+	}
+
+	public function create(): User
+	{
+		return parent::create();
 	}
 
 	public function challenge(): Challenge
@@ -75,7 +90,8 @@ class UserCredentialDrawerControllerTest extends TestCase
 
 		$this->app = $this->app->clone([
 			'authChallenges' => [
-				'dummy' => DummyCredentialChallenge::class
+				'dummy'            => DummyCredentialChallenge::class,
+				'dummy-single-use' => DummySingleUseCredentialChallenge::class
 			],
 			'users' => [
 				[
@@ -117,10 +133,13 @@ class UserCredentialDrawerControllerTest extends TestCase
 		$result     = $controller->authorization();
 
 		$this->assertNull($result);
-		$this->assertSame(
-			['public' => null, 'secret' => null],
-			$this->app->session()->get('kirby.security.authorize.test')
-		);
+
+		// the pending is stored with an expiry so a leaked session
+		// cannot reuse the code indefinitely
+		$stored = $this->app->session()->get('kirby.security.authorize.test');
+		$this->assertNull($stored['public']);
+		$this->assertNull($stored['secret']);
+		$this->assertGreaterThan(time(), $stored['expires']);
 	}
 
 	public function testAuthorizationForOtherUser(): void
@@ -144,13 +163,11 @@ class UserCredentialDrawerControllerTest extends TestCase
 		$result     = $controller->authorization();
 
 		$this->assertSame(['id' => 'pending-public'], $result);
-		$this->assertSame(
-			[
-				'public' => ['id' => 'pending-public'],
-				'secret' => 'pending-secret'
-			],
-			$this->app->session()->get('kirby.security.authorize.test')
-		);
+
+		$stored = $this->app->session()->get('kirby.security.authorize.test');
+		$this->assertSame(['id' => 'pending-public'], $stored['public']);
+		$this->assertSame('pending-secret', $stored['secret']);
+		$this->assertGreaterThan(time(), $stored['expires']);
 	}
 
 	public function testAuthorizeAsAdmin(): void
@@ -214,6 +231,112 @@ class UserCredentialDrawerControllerTest extends TestCase
 		$controller->authorize();
 	}
 
+	public function testAuthorizeAsCurrentUserKeepsReusableCodeOnFailure(): void
+	{
+		// a reusable code (challenge is not single-use) must survive a
+		// failed attempt, so the account owner can retry with the correct
+		// one instead of being locked out after a single typo
+		$this->setRequest(['authorization' => 'wrong-secret']);
+		$this->app->impersonate('test');
+
+		$this->app->session()->set('kirby.security.authorize.test', [
+			'public' => null,
+			'secret' => 'pending-secret'
+		]);
+
+		$controller = new DummyUserCredentialDrawerController($this->app->user('test'), 'dummy');
+
+		try {
+			$controller->authorize();
+			$this->fail('Expected InvalidArgumentException was not thrown');
+		} catch (InvalidArgumentException $e) {
+			$this->assertSame('error.access.code', $e->getCode());
+		}
+
+		// the stored pending is untouched and ready for the next attempt
+		$this->assertSame(
+			['public' => null, 'secret' => 'pending-secret'],
+			$this->app->session()->get('kirby.security.authorize.test')
+		);
+	}
+
+	public function testAuthorizeAsCurrentUserClearsSingleUseCodeOnFailure(): void
+	{
+		// a single-use nonce must be invalidated even after a failed
+		// attempt so that it cannot be replayed within its lifetime
+		$this->setRequest(['authorization' => 'wrong-secret']);
+		$this->app->impersonate('test');
+
+		$this->app->session()->set('kirby.security.authorize.test', [
+			'public' => null,
+			'secret' => 'pending-secret'
+		]);
+
+		$controller = new DummyUserCredentialDrawerController($this->app->user('test'), 'dummy-single-use');
+
+		try {
+			$controller->authorize();
+			$this->fail('Expected InvalidArgumentException was not thrown');
+		} catch (InvalidArgumentException) {
+			// expected
+		}
+
+		$this->assertNull(
+			$this->app->session()->get('kirby.security.authorize.test')
+		);
+	}
+
+	public function testAuthorizeAsCurrentUserWithExpiredCode(): void
+	{
+		// a stored code past its lifetime is rejected and cleared,
+		// even if the input itself would have matched
+		$this->setRequest(['authorization' => 'pending-secret']);
+		$this->app->impersonate('test');
+
+		$this->app->session()->set('kirby.security.authorize.test', [
+			'public'  => null,
+			'secret'  => 'pending-secret',
+			'expires' => 1
+		]);
+
+		$controller = new DummyUserCredentialDrawerController($this->app->user('test'), 'dummy');
+
+		try {
+			$controller->authorize();
+			$this->fail('Expected InvalidArgumentException was not thrown');
+		} catch (InvalidArgumentException $e) {
+			$this->assertSame('error.access.code', $e->getCode());
+		}
+
+		$this->assertNull(
+			$this->app->session()->get('kirby.security.authorize.test')
+		);
+	}
+
+	public function testAuthorizeAsCurrentUserRateLimited(): void
+	{
+		// once the shared auth rate limit is hit, no further code
+		// can be tried until the limit resets
+		$this->app = $this->app->clone([
+			'options' => ['auth' => ['trials' => 1]]
+		]);
+		$this->setRequest(['authorization' => 'pending-secret']);
+		$this->app->impersonate('test');
+
+		// exhaust the limit for this visitor
+		$this->app->auth()->limits()->track('test@getkirby.com');
+
+		$this->app->session()->set('kirby.security.authorize.test', [
+			'public' => null,
+			'secret' => 'pending-secret'
+		]);
+
+		$controller = new DummyUserCredentialDrawerController($this->app->user('test'), 'dummy');
+
+		$this->expectException(RateLimitException::class);
+		$controller->authorize();
+	}
+
 	public function testChallenge(): void
 	{
 		$controller = new DummyUserCredentialDrawerController($this->app->user('test'), 'totp');
@@ -222,6 +345,19 @@ class UserCredentialDrawerControllerTest extends TestCase
 		$this->assertInstanceOf(TotpChallenge::class, $challenge);
 		$this->assertSame('2fa', $challenge->mode());
 		$this->assertTrue($challenge->user()->is($this->app->user('test')));
+	}
+
+	public function testCreateForOtherUser(): void
+	{
+		// adding a login credential is only ever allowed for one's own
+		// account: an admin managing another user is rejected here, before
+		// any challenge verification (`authorizeCurrentUser()`) can run
+		$this->app->impersonate('admin');
+
+		$controller = new DummyUserCredentialDrawerController($this->app->user('test'));
+
+		$this->expectException(PermissionException::class);
+		$controller->create();
 	}
 
 	public function testIsCurrentUser(): void
