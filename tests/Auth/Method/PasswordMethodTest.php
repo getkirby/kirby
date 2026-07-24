@@ -4,6 +4,7 @@ namespace Kirby\Auth\Method;
 
 use InvalidArgumentException;
 use Kirby\Auth\Auth;
+use Kirby\Auth\Challenges;
 use Kirby\Auth\Method;
 use Kirby\Auth\Status;
 use Kirby\Cms\User;
@@ -89,6 +90,75 @@ class PasswordMethodTest extends TestCase
 		$this->assertSame(['marge@simpsons.com', false, '2fa'], $challenge);
 	}
 
+	public function testAuthenticateWithoutSecondFactor(): void
+	{
+		$login = [];
+		$user  = $this->createStub(User::class);
+		$user->method('loginPasswordless')
+			->willReturnCallback(function ($options) use (&$login) {
+				$login[] = $options;
+			});
+
+		$validate   = null;
+		$challenges = $this->createStub(Challenges::class);
+		$challenges->method('hasAvailable')->willReturn(false);
+
+		$auth = $this->createStub(Auth::class);
+		$auth->method('validatePassword')
+			->willReturnCallback(function (...$args) use (&$validate, $user) {
+				$validate = $args;
+				return $user;
+			});
+		$auth->method('challenges')->willReturn($challenges);
+		$auth->method('createChallenge')
+			->willReturnCallback(function () {
+				throw new RuntimeException('createChallenge should not be called');
+			});
+
+		// 2FA is not enforced and the user has no second factor
+		$method = new PasswordMethod(auth: $auth);
+		$result = $method->authenticate('marge@simpsons.com', 'springfield123', true);
+
+		$this->assertInstanceOf(User::class, $result);
+		$this->assertSame($user, $result);
+		$this->assertSame(['marge@simpsons.com', 'springfield123'], $validate);
+		$this->assertSame([[
+			'createMode' => 'cookie',
+			'long'       => true
+		]], $login);
+	}
+
+	public function testAuthenticateWithSecondFactor(): void
+	{
+		$status       = $this->createStub(Status::class);
+		$user         = $this->createStub(User::class);
+		$validate     = null;
+		$challenge    = null;
+		$challenges   = $this->createStub(Challenges::class);
+		$challenges->method('hasAvailable')->willReturn(true);
+
+		$auth = $this->createStub(Auth::class);
+		$auth->method('validatePassword')
+			->willReturnCallback(function (...$args) use (&$validate, $user) {
+				$validate = $args;
+				return $user;
+			});
+		$auth->method('challenges')->willReturn($challenges);
+		$auth->method('createChallenge')
+			->willReturnCallback(function (...$args) use (&$challenge, $status) {
+				$challenge = $args;
+				return $status;
+			});
+
+		// 2FA is not enforced, but the user opted into a second factor
+		$method = new PasswordMethod(auth: $auth);
+		$result = $method->authenticate('marge@simpsons.com', 'springfield123');
+
+		$this->assertSame($status, $result);
+		$this->assertSame(['marge@simpsons.com', 'springfield123'], $validate);
+		$this->assertSame(['marge@simpsons.com', false, '2fa'], $challenge);
+	}
+
 	public function testAuthenticateWithoutPassword(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -109,14 +179,6 @@ class PasswordMethodTest extends TestCase
 	{
 		$auth = $this->createStub(Auth::class);
 		$this->assertTrue(PasswordMethod::isEnabled($auth));
-	}
-
-	public function testIsUsingChallenges(): void
-	{
-		$auth = $this->createStub(Auth::class);
-
-		$this->assertFalse(PasswordMethod::isUsingChallenges($auth));
-		$this->assertTrue(PasswordMethod::isUsingChallenges($auth, ['2fa' => true]));
 	}
 
 	public function testOptions(): void

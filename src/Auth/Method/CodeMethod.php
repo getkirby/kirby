@@ -62,19 +62,12 @@ class CodeMethod extends Method
 		return true;
 	}
 
-	public static function isUsingChallenges(
-		Auth $auth,
-		array $options = []
-	): bool {
-		return true;
-	}
-
 	/**
 	 * Don't allow to circumvent 2FA by 1FA code method
 	 */
 	protected static function isWithoutAny2FA(Auth $auth): bool
 	{
-		if (in_array(true, array_column($auth->methods()->config(), '2fa'), true) === true) {
+		if ($auth->methods()->hasAnyRequiring2FA() === true) {
 			throw new InvalidArgumentException(
 				message: 'The "' . static::type() . '" login method cannot be enabled when 2FA is required'
 			);

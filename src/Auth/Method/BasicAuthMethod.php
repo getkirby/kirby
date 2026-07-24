@@ -13,6 +13,11 @@ use SensitiveParameter;
 /**
  * HTTP basic authentication
  *
+ * Validates the same email + password credentials as `PasswordMethod`.
+ * As it cannot run a challenge, it defers the 2FA policy
+ * to `PasswordMethod::has2FA()` and rejects users that would be
+ * challenged there instead of skipping their second factor.
+ *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
@@ -24,6 +29,7 @@ class BasicAuthMethod extends Method
 	 * so `$long` isn't relevant here
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the password is missing
+	 * @throws \Kirby\Exception\PermissionException If the user has a second factor set up
 	 */
 	public function authenticate(
 		string|null $email,
@@ -37,8 +43,23 @@ class BasicAuthMethod extends Method
 			);
 		}
 
-		return $this->auth->validatePassword($email, $password)
+		$user = $this->auth->validatePassword($email, $password)
 			?? throw new PermissionException(message: 'Invalid password'); // @codeCoverageIgnore
+
+		/**
+		 * @var \Kirby\Auth\Method\PasswordMethod $method
+		 */
+		$method = $this->auth->methods()->get('password');
+
+		// users without a second factor (e.g. dedicated
+		// API accounts) can keep using basic auth
+		if ($method->has2FA($user) === true) {
+			throw new PermissionException(
+				message: 'Basic authentication cannot be used with 2FA'
+			);
+		}
+
+		return $user;
 	}
 
 	/**
@@ -114,7 +135,11 @@ class BasicAuthMethod extends Method
 
 		// if any login method requires 2FA,
 		// basic auth without 2FA would be a weakness
-		if (in_array(true, array_column($methods, '2fa'), true) === true) {
+		//
+		// without enforced 2FA this general gate stays open, as it
+		// cannot know which user is authenticating; users who set
+		// up a second factor are rejected in `::authenticate()`
+		if ($auth->methods()->hasAnyRequiring2FA() === true) {
 			if ($fail === true) {
 				throw new PermissionException(
 					message: 'Basic authentication cannot be used with 2FA'

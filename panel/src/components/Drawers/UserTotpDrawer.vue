@@ -7,7 +7,12 @@
 		@cancel="$emit('cancel')"
 		@submit="$emit('cancel')"
 	>
-		<form ref="form" class="k-stack" style="gap: var(--spacing-6)">
+		<form
+			ref="form"
+			class="k-stack"
+			style="gap: var(--spacing-6)"
+			@submit.prevent="onSubmit"
+		>
 			<k-user-info :label="$t('account')" :user="user" />
 
 			<k-drawer-text :text="$t('login.totp.description')" />
@@ -149,6 +154,13 @@ export default {
 				},
 				onSubmit: (password) => this.request("remove", { password })
 			});
+		},
+		onSubmit() {
+			if (this.isAccount === false) {
+				return;
+			}
+
+			this.isEnabled ? this.disable() : this.create();
 		}
 	}
 };

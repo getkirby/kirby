@@ -26,12 +26,6 @@ class BasicAuthMethodTest extends TestCase
 				protected bool $ssl,
 				protected object|null $header
 			) {
-				parent::__construct(options: [
-					'url' => [
-						'scheme' => $ssl ? 'https' : 'http',
-						'host'   => 'example.com'
-					]
-				]);
 			}
 
 			public function ssl(): bool
@@ -52,46 +46,50 @@ class BasicAuthMethodTest extends TestCase
 		bool $allowInsecure = false,
 		bool $hasPassword = true,
 		bool $hasAnyWith2FA = false,
+		bool $userHas2FA = false,
 		object|null $header = null
 	): Auth&Stub {
-		$kirby   = $this->createStub(App::class);
-		$request = $this->request($isSsl, $header);
-		$kirby->method('request')->willReturn($request);
+		$kirby = $this->createConfiguredStub(App::class, [
+			'request' => $this->request($isSsl, $header),
+		]);
 		$kirby->method('option')->willReturnCallback(
-			function (string $key) use ($auth, $allowInsecure) {
-				return match ($key) {
-					'api.basicAuth'     => $auth,
-					'api.allowInsecure' => $allowInsecure,
-					default              => null
-				};
+			fn (string $key) => match ($key) {
+				'api.basicAuth'     => $auth,
+				'api.allowInsecure' => $allowInsecure,
+				default             => null
 			}
 		);
 
-		$methods = $this->createStub(Methods::class);
-		$config = $hasPassword === true ? ['password' => []] : [];
+		$config = $hasPassword ? ['password' => []] : [];
 
-		if ($hasAnyWith2FA === true && $hasPassword === true) {
+		if ($hasAnyWith2FA && $hasPassword) {
 			$config['password']['2fa'] = true;
 		}
 
-		$methods->method('config')->willReturn($config);
+		$password = $this->createConfiguredStub(PasswordMethod::class, [
+			'has2FA' => $userHas2FA,
+		]);
 
-		$auth = $this->createStub(Auth::class);
-		$auth->method('kirby')->willReturn($kirby);
-		$auth->method('methods')->willReturn($methods);
+		$methods = $this->createConfiguredStub(Methods::class, [
+			'config'             => $config,
+			'get'                => $password,
+			'hasAnyRequiring2FA' => $hasAnyWith2FA,
+		]);
 
-		return $auth;
+		return $this->createConfiguredStub(Auth::class, [
+			'kirby'   => $kirby,
+			'methods' => $methods,
+		]);
 	}
 
 	protected function header(
 		string $user = 'kirby',
 		string $password = 'secret'
 	): BasicAuth {
-		$header = $this->createStub(BasicAuth::class);
-		$header->method('username')->willReturn($user);
-		$header->method('password')->willReturn($password);
-
-		return $header;
+		return $this->createConfiguredStub(BasicAuth::class, [
+			'username' => $user,
+			'password' => $password,
+		]);
 	}
 
 	public function testAuthenticate(): void
@@ -107,6 +105,36 @@ class BasicAuthMethodTest extends TestCase
 		$method = new BasicAuthMethod(auth: $auth);
 		$result = $method->authenticate('kirby@getkirby.com', 'topsecret');
 		$this->assertSame($user, $result);
+	}
+
+	public function testAuthenticateWithUser2FA(): void
+	{
+		// the user would be challenged on regular password login,
+		// so basic auth must not let them skip the second factor
+		$auth = $this->auth(userHas2FA: true, header: $this->header());
+		$auth->method('validatePassword')
+			->willReturn($this->createStub(User::class));
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('Basic authentication cannot be used with 2FA');
+
+		$method = new BasicAuthMethod(auth: $auth);
+		$method->authenticate('kirby@getkirby.com', 'topsecret');
+	}
+
+	public function testAuthenticateWithoutUser2FA(): void
+	{
+		// dedicated API accounts without a second factor
+		// can still use basic auth when 2FA is not enforced
+		$user = $this->createStub(User::class);
+		$auth = $this->auth(userHas2FA: false, header: $this->header());
+		$auth->method('validatePassword')->willReturn($user);
+
+		$method = new BasicAuthMethod(auth: $auth);
+		$this->assertSame(
+			$user,
+			$method->authenticate('kirby@getkirby.com', 'topsecret')
+		);
 	}
 
 	public function testAuthenticateWithoutPassword(): void
