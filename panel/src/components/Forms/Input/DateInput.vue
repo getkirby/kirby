@@ -211,7 +211,7 @@ export default {
 		 * @param {Object} dt dayjs object
 		 */
 		emit(dt) {
-			this.$emit("input", this.toISO(dt));
+			this.$emit("input", this.toISO(dt) ?? "");
 		},
 		/**
 		 * Decrement the currently
@@ -232,7 +232,27 @@ export default {
 		 * data from parsed value and emit
 		 */
 		onBlur() {
+			const value = this.$el.value;
+
+			// the input still shows the untouched rendering of the current
+			// value: re-parsing it would only be able to lose information
+			// that the `display` pattern doesn't cover
+			if (value === (this.formatted ?? "")) {
+				return;
+			}
+
 			const dt = this.parse();
+
+			// input that cannot be parsed is not the same as no input:
+			// keep the text as it was typed and flag the input as invalid
+			// instead of silently wiping the field
+			if (dt === null && value !== "") {
+				this.$el.setCustomValidity(
+					this.$t("error.validation." + this.inputType)
+				);
+				return;
+			}
+
 			this.commit(dt);
 			this.emit(dt);
 		},
@@ -353,24 +373,19 @@ export default {
 			event.preventDefault();
 		},
 		/**
-		 * Takes current input value and
-		 * tries to interpret it as datetime object
-		 * based on the `display` pattern
+		 * Takes current input value and tries to read it
+		 * as datetime object based on the pattern
 		 * @return {Object|null}
 		 */
 		parse() {
-			// interpret the input value
-			const value = this.$library.dayjs.interpret(
-				this.$el.value,
-				this.inputType
-			);
+			const dt = this.$library.dayjs.parse(this.$el.value, {
+				pattern: this.display
+			});
 
-			// and round to nearest step
-			return this.round(value);
+			return this.round(dt) ?? null;
 		},
 		/**
-		 * Rounds the provided dayjs object to
-		 * the nearest step
+		 * Rounds the provided dayjs object to the nearest step
 		 * @param {Object} dt dayjs object
 		 * @returns {Object|null}
 		 */
@@ -441,30 +456,25 @@ export default {
 			return dt?.toISO(this.inputType);
 		},
 		validate() {
+			const type = this.inputType;
 			const errors = [];
 
 			if (this.required && !this.dt) {
 				errors.push(this.$t("error.validation.required"));
 			}
 
-			if (
-				this.min &&
-				this.dt?.validate(this.min, "min", this.rounding.unit) === false
-			) {
+			if (this.min && this.dt?.validate(this.min, "min") === false) {
 				errors.push(
-					this.$t("error.validation.date.after", {
-						date: this.min
+					this.$t(`error.validation.${type}.after`, {
+						[type]: this.min
 					})
 				);
 			}
 
-			if (
-				this.max &&
-				this.dt?.validate(this.max, "max", this.rounding.unit) === false
-			) {
+			if (this.max && this.dt?.validate(this.max, "max") === false) {
 				errors.push(
-					this.$t("error.validation.date.before", {
-						date: this.max
+					this.$t(`error.validation.${type}.before`, {
+						[type]: this.max
 					})
 				);
 			}
