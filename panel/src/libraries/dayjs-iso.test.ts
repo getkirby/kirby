@@ -1,13 +1,12 @@
 import { describe, expect, it } from "vitest";
 import type { UnitType } from "dayjs";
-import dayjs from "./dayjs";
-import type { ISOFormat } from "./dayjs-iso";
+import dayjs, { type DatetimeType } from "./dayjs";
 
 describe("dayjs.iso()", () => {
 	const data: {
 		input: string;
 		units: Record<string, number>;
-		format?: ISOFormat;
+		format?: DatetimeType;
 	}[] = [
 		{
 			input: "2020-02-29 16:05:15",
@@ -51,7 +50,7 @@ describe("dayjs.iso()", () => {
 	});
 
 	// parsing is strict: out-of-range values must not silently roll over
-	const invalid: [string, ISOFormat | undefined][] = [
+	const invalid: [string, DatetimeType | undefined][] = [
 		["2020-02-30", "date"],
 		["2020-02-30", undefined],
 		["2020-13-05", "date"],
@@ -70,7 +69,7 @@ describe("dayjs.iso()", () => {
 	});
 
 	it("should fall back to datetime for an unknown format", () => {
-		const format = "nope" as ISOFormat;
+		const format = "nope" as DatetimeType;
 
 		expect(dayjs.iso("2020-02-29 16:05:15", format)!.get("date")).toStrictEqual(
 			29
@@ -83,7 +82,7 @@ describe("dayjs.toISO()", () => {
 	const data: {
 		date: Date;
 		expected: string;
-		format?: ISOFormat;
+		format?: DatetimeType;
 	}[] = [
 		{
 			date: new Date(2020, 6, 3, 17, 24, 11),
@@ -107,7 +106,7 @@ describe("dayjs.toISO()", () => {
 
 	it("should fall back to datetime for an unknown format", () => {
 		const date = new Date(2020, 6, 3, 17, 24, 11);
-		const format = "nope" as ISOFormat;
+		const format = "nope" as DatetimeType;
 		expect(dayjs(date).toISO(format)).toStrictEqual("2020-07-03 17:24:11");
 	});
 });
