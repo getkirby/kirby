@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import type { UnitType } from "dayjs";
 import dayjs from "./dayjs";
 
 describe("dayjs.validate()", () => {
@@ -8,11 +7,10 @@ describe("dayjs.validate()", () => {
 		{
 			boundary: string;
 			type: "min" | "max";
-			unit?: UnitType;
 			inputs: Record<string, boolean>;
 		}
 	> = {
-		"min by day": {
+		min: {
 			boundary: "2020-01-05",
 			type: "min",
 			inputs: {
@@ -21,7 +19,7 @@ describe("dayjs.validate()", () => {
 				"2020-01-04": false
 			}
 		},
-		"max by day": {
+		max: {
 			boundary: "2020-01-05",
 			type: "max",
 			inputs: {
@@ -30,32 +28,41 @@ describe("dayjs.validate()", () => {
 				"2020-01-04": true
 			}
 		},
-		"min by month": {
-			boundary: "2020-01-05",
-			type: "min",
-			unit: "month",
-			inputs: {
-				"2020-01-05": true,
-				"2020-01-06": true,
-				"2020-01-04": true,
-				"2019-12-12": false
-			}
-		},
-		"max by month": {
+		// a date boundary starts at midnight, so every later
+		// time on the same day is past a `max`
+		"max with a date boundary": {
 			boundary: "2020-01-05",
 			type: "max",
-			unit: "month",
 			inputs: {
-				"2020-01-05": true,
-				"2020-01-06": true,
-				"2020-01-04": true,
-				"2020-02-12": false
+				"2020-01-05 00:00:00": true,
+				"2020-01-05 00:00:01": false,
+				"2020-01-04 23:59:59": true
+			}
+		},
+		// the time of a boundary is never ignored
+		"min with a datetime boundary": {
+			boundary: "2020-01-05 09:30:00",
+			type: "min",
+			inputs: {
+				"2020-01-05 09:30:00": true,
+				"2020-01-05 09:30:01": true,
+				"2020-01-05 09:29:59": false,
+				"2020-01-05 00:00:00": false
+			}
+		},
+		"max with a datetime boundary": {
+			boundary: "2020-01-05 09:00:00",
+			type: "max",
+			inputs: {
+				"2020-01-05 09:00:00": true,
+				"2020-01-05 08:59:59": true,
+				"2020-01-05 23:59:59": false,
+				"2020-01-04 09:00:00": true
 			}
 		},
 		"time-only": {
 			boundary: "15:05:00",
 			type: "max",
-			unit: "second",
 			inputs: {
 				"15:05:00": true,
 				"15:00:00": true,
@@ -64,19 +71,15 @@ describe("dayjs.validate()", () => {
 		}
 	};
 
-	it.each(Object.entries(data))(
-		"%s",
-		(_name, { boundary, type, unit, inputs }) => {
-			for (const input in inputs) {
-				const result = (dayjs.iso(input) ?? dayjs(input)).validate(
-					boundary,
-					type,
-					unit
-				);
-				expect(result).toBe(inputs[input]);
-			}
+	it.each(Object.entries(data))("%s", (_name, { boundary, type, inputs }) => {
+		for (const input in inputs) {
+			const result = (dayjs.iso(input) ?? dayjs(input)).validate(
+				boundary,
+				type
+			);
+			expect(result).toBe(inputs[input]);
 		}
-	);
+	});
 
 	it("no parameters", () => {
 		expect(dayjs().validate()).toBe(true);
