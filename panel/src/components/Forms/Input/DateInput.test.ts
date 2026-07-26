@@ -52,6 +52,47 @@ describe("DateInput.vue", () => {
 		it.inheritsNoAttrs(mount);
 	});
 
+	describe("placeholder", () => {
+		it("shows an example value", () => {
+			const input = mount({ display: "MMMM D, YYYY" }).find("input");
+			expect(input.attributes("placeholder")).toBe("January 15, 2022");
+		});
+
+		it("follows the display pattern", () => {
+			expect(
+				mount({ display: "DD.MM.YYYY" }).find("input").attributes("placeholder")
+			).toBe("15.01.2022");
+		});
+
+		it("uses `min` when now is before it", () => {
+			const input = mount({
+				display: "DD.MM.YYYY",
+				min: "2024-06-23"
+			}).find("input");
+
+			expect(input.attributes("placeholder")).toBe("23.06.2024");
+		});
+
+		it("uses `max` when now is after it", () => {
+			const input = mount({
+				display: "DD.MM.YYYY",
+				max: "2020-02-29"
+			}).find("input");
+
+			expect(input.attributes("placeholder")).toBe("29.02.2020");
+		});
+
+		it("stays on now when it is inside the boundaries", () => {
+			const input = mount({
+				display: "DD.MM.YYYY",
+				min: "2020-01-01",
+				max: "2024-12-31"
+			}).find("input");
+
+			expect(input.attributes("placeholder")).toBe("15.01.2022");
+		});
+	});
+
 	describe("parse()", () => {
 		it("reads input in the display pattern, not day-first", async () => {
 			// https://github.com/getkirby/kirby/issues/7342

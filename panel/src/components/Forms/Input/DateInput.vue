@@ -5,7 +5,7 @@
 		:autofocus="autofocus"
 		:class="['k-string-input', `k-${type}-input`, $attrs.class]"
 		:disabled="disabled"
-		:placeholder="display"
+		:placeholder="placeholder"
 		:required="required"
 		:style="$attrs.style"
 		:value="formatted"
@@ -119,6 +119,27 @@ export default {
 		 */
 		pattern() {
 			return this.$library.dayjs.pattern(this.display);
+		},
+		/**
+		 * Example value that shows what the `display` pattern produces
+		 * @since 6.0.0
+		 */
+		placeholder() {
+			const min = this.$library.dayjs.iso(this.min, this.inputType);
+			const max = this.$library.dayjs.iso(this.max, this.inputType);
+
+			let dt = this.$library.dayjs.iso(
+				this.$library.dayjs().toISO(this.inputType),
+				this.inputType
+			);
+
+			if (min !== null && dt.isBefore(min) === true) {
+				dt = min;
+			} else if (max !== null && dt.isAfter(max) === true) {
+				dt = max;
+			}
+
+			return this.pattern.format(dt);
 		},
 		/**
 		 * Merges step donfiguration with defaults

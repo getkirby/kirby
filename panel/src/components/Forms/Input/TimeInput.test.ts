@@ -52,6 +52,24 @@ describe("TimeInput.vue", () => {
 		it.inheritsNoAttrs(mount);
 	});
 
+	describe("placeholder", () => {
+		it("shows an example time", () => {
+			const input = mount({ display: "h:mm a" }).find("input");
+			expect(input.attributes("placeholder")).toBe("12:00 am");
+		});
+
+		it("follows the display pattern", () => {
+			expect(
+				mount({ display: "HH:mm" }).find("input").attributes("placeholder")
+			).toBe("00:00");
+		});
+
+		it("uses `min` when now is before it", () => {
+			const input = mount({ display: "h:mm a", min: "13:00:00" }).find("input");
+			expect(input.attributes("placeholder")).toBe("1:00 pm");
+		});
+	});
+
 	describe("parse()", () => {
 		it("reads input in the display pattern", async () => {
 			const wrapper = mount({ display: "HH:mm" });
