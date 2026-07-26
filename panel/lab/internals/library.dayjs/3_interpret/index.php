@@ -1,5 +1,5 @@
 <?php
 
 return [
-	'source' => 'panel/src/libraries/dayjs-interpret.js'
+	'source' => 'panel/src/libraries/dayjs-interpret.ts'
 ];
