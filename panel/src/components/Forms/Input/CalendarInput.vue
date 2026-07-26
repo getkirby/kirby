@@ -206,21 +206,17 @@ export default {
 	watch: {
 		max: {
 			handler(newValue, oldValue) {
-				if (newValue === oldValue) {
-					return;
+				if (newValue !== oldValue) {
+					this.maxdate = this.$library.dayjs.iso(newValue);
 				}
-
-				this.maxdate = this.$library.dayjs.interpret(newValue, "date");
 			},
 			immediate: true
 		},
 		min: {
 			handler(newValue, oldValue) {
-				if (newValue === oldValue) {
-					return;
+				if (newValue !== oldValue) {
+					this.mindate = this.$library.dayjs.iso(newValue);
 				}
-
-				this.mindate = this.$library.dayjs.interpret(newValue, "date");
 			},
 			immediate: true
 		},
@@ -231,7 +227,7 @@ export default {
 				}
 
 				// set the selected date
-				this.selected = this.$library.dayjs.interpret(newValue, "date");
+				this.selected = this.$library.dayjs.iso(newValue, "date");
 				this.show(this.selected);
 			},
 			immediate: true
