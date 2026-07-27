@@ -354,8 +354,7 @@ export default (panel) => {
 				}
 			}
 
-			// fail silently because the lock will be released after
-			// 10 minutes anyway
+			// fail silently because the lock will be released after the configured timeout
 			return this.unlockPostRequest(env).catch(() => {});
 		},
 
