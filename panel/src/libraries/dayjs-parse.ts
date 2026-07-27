@@ -193,7 +193,7 @@ function match(
 	tokens: string[],
 	pattern: DayjsPattern
 ): Dayjs | null {
-	const parts = pattern.parts;
+	const parts = pattern.parts();
 
 	// a token count that misses the pattern is not wrong yet:
 	// too few means digits were typed without any separator,
@@ -375,10 +375,10 @@ function toNumber(token: string, min: number, max: number): number | null {
  * Builds regex that splits input against a pattern into tokens.
  */
 function toSeparators(pattern: DayjsPattern): RegExp {
-	const { parts, source } = pattern;
+	const source = pattern.source;
 	const covered = new Set<number>();
 
-	for (const part of parts) {
+	for (const part of pattern.parts()) {
 		for (let index = part.start; index <= part.end; index++) {
 			covered.add(index);
 		}
@@ -525,7 +525,7 @@ const plugin: PluginFunc = (option, Dayjs, dayjs) => {
 
 			// what the source pattern prescribes is what was
 			// most likely typed, so matching it first against the input
-			if (pattern.parts.length > 0) {
+			if (pattern.parts().length > 0) {
 				const dt = match(dayjs, split(input, toSeparators(pattern)), pattern);
 
 				if (dt !== null) {

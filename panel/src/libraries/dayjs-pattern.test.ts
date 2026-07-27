@@ -72,6 +72,24 @@ describe("dayjs.pattern().at()", () => {
 	});
 });
 
+describe("dayjs.pattern().at(start, end, dt)", () => {
+	// the cursor sits in the rendered string, not in the pattern
+	const dt = dayjs("2020-09-04");
+
+	const cursors: { start: number; end?: number; unit: string }[] = [
+		{ start: 0, unit: "day" },
+		{ start: 2, unit: "month" },
+		{ start: 10, unit: "month" },
+		{ start: 12, unit: "year" },
+		{ start: 2, end: 11, unit: "month" }
+	];
+
+	it.each(cursors)("$start - $end: $unit", ({ start, end, unit }) => {
+		const part = dayjs.pattern("D MMMM YYYY").at(start, end, dt);
+		expect(part!.unit).toBe(unit);
+	});
+});
+
 describe("dayjs.pattern().format()", () => {
 	it("no value", () => {
 		const pattern = dayjs.pattern("YYYY-MM-DD");
@@ -96,7 +114,7 @@ describe("dayjs.pattern().format()", () => {
 	});
 });
 
-describe("dayjs.pattern().parts", () => {
+describe("dayjs.pattern().parts()", () => {
 	const data: Record<
 		string,
 		{ index: number; unit?: string; start: number; end: number }[]
@@ -139,18 +157,59 @@ describe("dayjs.pattern().parts", () => {
 	};
 
 	it.each(Object.entries(data))("%s", (source, parts) => {
-		expect(dayjs.pattern(source).parts).toEqual(parts);
+		expect(dayjs.pattern(source).parts()).toEqual(parts);
 	});
 
 	it("leaves the unit of an unsupported marker undefined", () => {
-		expect(dayjs.pattern("QQ").parts).toEqual([
+		expect(dayjs.pattern("QQ").parts()).toEqual([
 			{ index: 0, unit: undefined, start: 0, end: 1 }
 		]);
 	});
 
 	it("returns no parts for a pattern without letters", () => {
-		expect(dayjs.pattern("").parts).toEqual([]);
-		expect(dayjs.pattern("--.--").parts).toEqual([]);
+		expect(dayjs.pattern("").parts()).toEqual([]);
+		expect(dayjs.pattern("--.--").parts()).toEqual([]);
+	});
+
+	it("falls back to the pattern for an invalid datetime", () => {
+		expect(dayjs.pattern("D MMMM YYYY").parts(dayjs("nope"))).toEqual(
+			dayjs.pattern("D MMMM YYYY").parts()
+		);
+	});
+});
+
+describe("dayjs.pattern().parts(dt)", () => {
+	// a marker and what it prints can differ in width,
+	// e.g. `D` printing `13` or `MMMM` printing `September`
+	const dt = dayjs("2020-09-04 13:14:03");
+
+	const data: Record<string, string[]> = {
+		// what each part covers in the rendered string
+		"D MMMM YYYY": ["4", "September", "2020"],
+		"MMMM D, YYYY": ["September", "4", "2020"],
+		"DD.MM.YYYY": ["04", "09", "2020"],
+		"YYYY-MM-DD": ["2020", "09", "04"],
+		"M/D/YY h:m a": ["9", "4", "20", "1", "14", "pm"],
+		"D. MMM YYYY, H:m:s": ["4", "Sep", "2020", "13", "14", "3"]
+	};
+
+	it.each(Object.entries(data))("%s", (source, expected) => {
+		const pattern = dayjs.pattern(source);
+		const formatted = pattern.format(dt)!;
+
+		const covered = pattern
+			.parts(dt)
+			.map((part) => formatted.slice(part.start, part.end + 1));
+
+		expect(covered).toEqual(expected);
+	});
+
+	it("positions the parts in the rendered string", () => {
+		expect(dayjs.pattern("D MMMM YYYY").parts(dt)).toEqual([
+			{ index: 0, unit: "day", start: 0, end: 0 },
+			{ index: 1, unit: "month", start: 2, end: 10 },
+			{ index: 2, unit: "year", start: 12, end: 15 }
+		]);
 	});
 });
 
@@ -161,6 +220,13 @@ describe("dayjs.pattern().source", () => {
 			expect(dayjs.pattern(source).source).toBe(source);
 		}
 	);
+
+	it.each([undefined, null])("reads %s as an empty pattern", (source) => {
+		const pattern = dayjs.pattern(source);
+		expect(pattern.source).toBe("");
+		expect(pattern.parts()).toEqual([]);
+		expect(pattern.units).toEqual([]);
+	});
 });
 
 describe("dayjs.pattern().type", () => {

@@ -16,9 +16,6 @@ function mount(props: Record<string, unknown> = {}) {
 	});
 }
 
-/**
- * Types into the input and blurs it, like a user would
- */
 async function type(wrapper: ReturnType<typeof mount>, value: string) {
 	const input = wrapper.find("input");
 	await input.setValue(value);
@@ -26,12 +23,24 @@ async function type(wrapper: ReturnType<typeof mount>, value: string) {
 	return input.element as HTMLInputElement;
 }
 
-/**
- * Last value the input emitted
- */
 function emitted(wrapper: ReturnType<typeof mount>) {
 	const events = wrapper.emitted("input");
 	return events?.[events.length - 1]?.[0];
+}
+
+async function press(
+	wrapper: ReturnType<typeof mount>,
+	key: string,
+	options: Record<string, unknown> = {}
+) {
+	await wrapper.find("input").trigger("keydown", { key, ...options });
+	await wrapper.vm.$nextTick();
+	await wrapper.vm.$nextTick();
+}
+
+function selected(wrapper: ReturnType<typeof mount>) {
+	const input = wrapper.find("input").element as HTMLInputElement;
+	return input.value.slice(input.selectionStart!, input.selectionEnd!);
 }
 
 describe("DateInput.vue", () => {
@@ -131,6 +140,33 @@ describe("DateInput.vue", () => {
 		});
 	});
 
+	describe("onArrowUp()", () => {
+		it("alters the selected part", async () => {
+			const wrapper = mount({ display: "D MMMM YYYY", value: "2026-07-13" });
+			const input = wrapper.find("input").element as HTMLInputElement;
+
+			// select the day
+			input.setSelectionRange(0, 2);
+			await press(wrapper, "ArrowUp");
+
+			expect(input.value).toBe("14 July 2026");
+			expect(selected(wrapper)).toBe("14");
+		});
+
+		it("keeps the part selected when the rendering grows", async () => {
+			const wrapper = mount({ display: "D MMMM YYYY", value: "2026-07-13" });
+			const input = wrapper.find("input").element as HTMLInputElement;
+
+			// select the month
+			input.setSelectionRange(3, 7);
+			await press(wrapper, "ArrowUp");
+
+			// the longer month name moves everything behind it
+			expect(input.value).toBe("13 August 2026");
+			expect(selected(wrapper)).toBe("August");
+		});
+	});
+
 	describe("onBlur()", () => {
 		it("does not re-parse an untouched rendering of the value", async () => {
 			// https://github.com/getkirby/kirby/issues/7342: a calendar-picked
@@ -176,6 +212,66 @@ describe("DateInput.vue", () => {
 			await type(wrapper, "05.03.2021");
 			expect(emitted(wrapper)).toBe("2021-03-05");
 			expect(input.validationMessage).toBe("");
+		});
+
+		it("shows what the parsed value renders into", async () => {
+			// even when the rendering itself did not change and the
+			// input therefore does not re-render
+			const wrapper = mount({ display: "DD.MM.YYYY", value: "2021-03-05" });
+			const input = await type(wrapper, "5.3.2021");
+			expect(input.value).toBe("05.03.2021");
+		});
+	});
+
+	describe("onTab()", () => {
+		it("selects the parts of the rendered value", async () => {
+			const wrapper = mount({ display: "D MMMM YYYY", value: "2026-07-13" });
+			const input = wrapper.find("input").element as HTMLInputElement;
+
+			expect(input.value).toBe("13 July 2026");
+
+			// place the cursor in the first part
+			input.setSelectionRange(0, 0);
+
+			for (const part of ["13", "July", "2026"]) {
+				await press(wrapper, "Tab");
+				expect(selected(wrapper)).toBe(part);
+			}
+		});
+
+		it("selects the parts backwards on shift + tab", async () => {
+			const wrapper = mount({ display: "D MMMM YYYY", value: "2026-07-13" });
+			const input = wrapper.find("input").element as HTMLInputElement;
+
+			// select the last part
+			input.setSelectionRange(8, 12);
+
+			for (const part of ["July", "13"]) {
+				await press(wrapper, "Tab", { shiftKey: true });
+				expect(selected(wrapper)).toBe(part);
+			}
+		});
+
+		it("selects the part the cursor sits in", async () => {
+			const wrapper = mount({ display: "D MMMM YYYY", value: "2026-07-13" });
+			const input = wrapper.find("input").element as HTMLInputElement;
+
+			// place the cursor inside the month name
+			input.setSelectionRange(5, 5);
+			await press(wrapper, "Tab");
+
+			expect(selected(wrapper)).toBe("July");
+		});
+
+		it("keeps the last part selected", async () => {
+			const wrapper = mount({ display: "D MMMM YYYY", value: "2026-07-13" });
+			const input = wrapper.find("input").element as HTMLInputElement;
+
+			// select the last part, tab moves the focus out of the input
+			input.setSelectionRange(8, 12);
+			await press(wrapper, "Tab");
+
+			expect(selected(wrapper)).toBe("2026");
 		});
 	});
 });

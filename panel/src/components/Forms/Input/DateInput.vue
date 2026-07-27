@@ -114,6 +114,14 @@ export default {
 			return "date";
 		},
 		/**
+		 * Parts of the `display` pattern, positioned in the
+		 * string the current value renders into
+		 * @returns {Array}
+		 */
+		parts() {
+			return this.pattern.parts(this.dt);
+		},
+		/**
 		 * dayjs pattern class for `display` pattern
 		 * @returns {Object}
 		 */
@@ -184,7 +192,7 @@ export default {
 			// manipulate that part
 			const selected = this.selection();
 
-			if (selected !== null) {
+			if (selected !== undefined) {
 				// handle  meridiem to toggle between am/pm
 				// instead of e.g. skipping to next day
 				if (selected.unit === "meridiem") {
@@ -214,7 +222,13 @@ export default {
 			this.emit(dt);
 
 			await this.$nextTick();
-			this.select(selected);
+
+			// the new value can render into a different string, e.g. a
+			// longer month name: re-select the part by its index, not
+			// by the position it had before
+			if (selected !== undefined) {
+				this.select(this.parts[selected.index]);
+			}
 		},
 		/**
 		 * Updates the in data stored dayjs object
@@ -224,6 +238,15 @@ export default {
 		commit(dt) {
 			this.dt = dt;
 			this.formatted = this.pattern.format(dt);
+
+			// the input can still show what was typed, e.g. `3.7.2026`
+			// for `03.07.2026`, which the re-render only corrects when
+			// the rendering changed as well: the parts are positioned
+			// in the rendering, so it has to be what the input shows
+			if (this.$el && this.$el.value !== (this.formatted ?? "")) {
+				this.$el.value = this.formatted ?? "";
+			}
+
 			this.validate();
 		},
 		/**
@@ -282,7 +305,7 @@ export default {
 		 * but also emit additional submit event
 		 */
 		async onEnter() {
-			// ensure inout gets parsed and emitted as new value
+			// ensure input gets parsed and emitted as new value
 			this.onBlur();
 			await this.$nextTick();
 			// only thereafter emit submit so the content gets saved
@@ -357,7 +380,7 @@ export default {
 					// move forward on tab
 				} else {
 					// if the last part is selected, jump out
-					if (selection.index === this.pattern.parts.length - 1) {
+					if (selection.index === this.parts.length - 1) {
 						return;
 					}
 
@@ -369,7 +392,7 @@ export default {
 				if (
 					this.$el &&
 					this.$el.selectionStart == selection.end + 1 &&
-					selection.index == this.pattern.parts.length - 1
+					selection.index == this.parts.length - 1
 				) {
 					// cursor at the end of the pattern, jump out
 					return;
@@ -379,15 +402,16 @@ export default {
 				else if (this.$el && this.$el.selectionEnd - 1 > selection.end) {
 					const last = this.pattern.at(
 						this.$el.selectionEnd,
-						this.$el.selectionEnd
+						this.$el.selectionEnd,
+						this.dt
 					);
 
-					this.select(this.pattern.parts[last.index]);
+					this.select(this.parts[last.index]);
 				}
 
 				// select part where the cursor is located
 				else {
-					this.select(this.pattern.parts[selection.index]);
+					this.select(this.parts[selection.index]);
 				}
 			}
 
@@ -428,14 +452,14 @@ export default {
 		 * @public
 		 */
 		selectFirst() {
-			this.select(this.pattern.parts[0]);
+			this.select(this.parts[0]);
 		},
 		/**
 		 * Selects the last pattern if available
 		 * @public
 		 */
 		selectLast() {
-			this.select(this.pattern.parts[this.pattern.parts.length - 1]);
+			this.select(this.parts[this.parts.length - 1]);
 		},
 		/**
 		 * Selects the next pattern if available
@@ -443,7 +467,7 @@ export default {
 		 * @public
 		 */
 		selectNext(index) {
-			this.select(this.pattern.parts[index + 1]);
+			this.select(this.parts[index + 1]);
 		},
 		/**
 		 * Selects the previous pattern if available
@@ -451,14 +475,18 @@ export default {
 		 * @public
 		 */
 		selectPrev(index) {
-			this.select(this.pattern.parts[index - 1]);
+			this.select(this.parts[index - 1]);
 		},
 		/**
 		 * Get pattern part for current cursor selection
 		 * @returns {Object}
 		 */
 		selection() {
-			return this.pattern.at(this.$el.selectionStart, this.$el.selectionEnd);
+			return this.pattern.at(
+				this.$el.selectionStart,
+				this.$el.selectionEnd,
+				this.dt
+			);
 		},
 		/**
 		 * Converts ISO string to dayjs object

@@ -12,6 +12,8 @@ import type { DatetimeType } from "./dayjs";
 /**
  * A single span in the pattern with its position,
  * e.g. the `MM` of `YYYY-MM-DD` as `{ index: 1, start: 5, end: 6 }`.
+ * With a datetime, the position is the one in the string that
+ * datetime renders into instead.
  */
 export interface PatternPart {
 	index: number;
@@ -64,18 +66,29 @@ const markers = new RegExp(
 export class DayjsPattern {
 	source: string;
 
-	constructor(source: string) {
-		this.source = source;
+	/**
+	 * A missing pattern is treated like an empty one,
+	 * so that a display option that isn't set describes
+	 * nothing instead of throwing
+	 */
+	constructor(source?: string | null) {
+		this.source = source ?? "";
 	}
 
-	at(start: number, end: number = start): PatternPart | undefined {
+	at(
+		start: number,
+		end: number = start,
+		dt?: Dayjs | null
+	): PatternPart | undefined {
+		const parts = this.parts(dt);
+
 		// exact selection found
-		const match = this.parts.find(
+		const match = parts.find(
 			(part) => part.start <= start && part.end >= end - 1
 		);
 
 		// fallback to part where selection starts
-		return match ?? this.parts.findLast((part) => part.start <= start);
+		return match ?? parts.findLast((part) => part.start <= start);
 	}
 
 	format(dt?: Dayjs | null): string | null {
@@ -86,24 +99,49 @@ export class DayjsPattern {
 		return dt.format(this.source);
 	}
 
-	static from(source: string): DayjsPattern {
+	static from(source?: string | null): DayjsPattern {
 		return new DayjsPattern(source);
 	}
 
 	/**
-	 * The parts of the pattern, scanned by letter sequences
+	 * The parts of the pattern, scanned by letter sequences.
+	 *
+	 * Without a datetime, the parts are positioned in the pattern
+	 * itself. With one, they are positioned in the string that
+	 * datetime renders into, as a marker and what it prints can
+	 * differ in width, e.g. `D` printing `13` or `MMMM` printing
+	 * `September`.
 	 */
-	get parts(): PatternPart[] {
-		return [...this.source.matchAll(/[a-zA-Z]+/g)].map((match, index) => {
-			const marker = match[0];
+	parts(dt?: Dayjs | null): PatternPart[] {
+		const value = dt?.isValid() === true ? dt : null;
+		const parts: PatternPart[] = [];
 
-			return {
+		// where the scan stands in the pattern and in the rendering
+		let offset = 0;
+		let position = 0;
+
+		for (const [index, match] of [
+			...this.source.matchAll(/[a-zA-Z]+/g)
+		].entries()) {
+			const marker = match[0];
+			const length =
+				value === null ? marker.length : value.format(marker).length;
+
+			// whatever sits between the markers prints as it is
+			position += match.index - offset;
+
+			parts.push({
 				index,
 				unit: units[marker],
-				start: match.index,
-				end: match.index + (marker.length - 1)
-			};
-		});
+				start: position,
+				end: position + (length - 1)
+			});
+
+			offset = match.index + marker.length;
+			position += length;
+		}
+
+		return parts;
 	}
 
 	/**
@@ -135,12 +173,12 @@ declare module "dayjs" {
 	 * Reads a display pattern such as `DD.MM.YYYY`
 	 * and formats and inspects datetimes against it
 	 */
-	function pattern(pattern: string): DayjsPattern;
+	function pattern(pattern?: string | null): DayjsPattern;
 }
 
 const plugin: PluginFunc = (option, Dayjs, dayjs) => {
 	Object.assign(dayjs, {
-		pattern(source: string): DayjsPattern {
+		pattern(source?: string | null): DayjsPattern {
 			return new DayjsPattern(source);
 		}
 	});
