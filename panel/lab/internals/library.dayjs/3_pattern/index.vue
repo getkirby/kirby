@@ -22,7 +22,7 @@
 
 		<k-lab-example label="dayjs.pattern() getters" :code="false">
 			<!-- prettier-ignore -->
-			<k-code language="javascript">this.$library.dayjs.pattern("{{ pattern }}")</k-code>
+			<k-code language="javascript">this.$library.dayjs.pattern("{{ format }}")</k-code>
 
 			<k-grid variant="fields">
 				<k-column width="1/2">
@@ -50,7 +50,7 @@
 			</k-text>
 
 			<!-- prettier-ignore -->
-			<k-code language="javascript">this.$library.dayjs.pattern("{{ pattern }}").at(start, end, dt): object|undefined</k-code>
+			<k-code language="javascript">this.$library.dayjs.pattern("{{ format }}").at(start, end, dt): object|undefined</k-code>
 
 			<k-grid variant="fields">
 				<k-column width="1/2">
@@ -80,7 +80,7 @@
 			</k-text>
 
 			<!-- prettier-ignore -->
-			<k-code language="javascript">this.$library.dayjs.pattern("{{ pattern }}").format(dt): string|null</k-code>
+			<k-code language="javascript">this.$library.dayjs.pattern("{{ format }}").format(dt): string|null</k-code>
 
 			<k-grid variant="fields">
 				<k-column width="1/2">
@@ -104,7 +104,7 @@
 			</k-text>
 
 			<!-- prettier-ignore -->
-			<k-code language="javascript">this.$library.dayjs.pattern("{{ pattern }}").parts(dt): array</k-code>
+			<k-code language="javascript">this.$library.dayjs.pattern("{{ format }}").parts(dt): array</k-code>
 
 			<k-grid variant="fields">
 				<k-column width="1/2">

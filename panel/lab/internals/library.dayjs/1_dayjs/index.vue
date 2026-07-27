@@ -16,18 +16,23 @@
 
 				<ul>
 					<li>
-						<k-link to="/lab/internals/library.dayjs/2_pattern">
-							<code>dayjs.pattern()</code>
+						<k-link to="/lab/internals/library.dayjs/2_parse">
+							<code>dayjs.parse()</code>
 						</k-link>
-						reads, formats and inspects a date or time against a display pattern
-						like <code>DD.MM.YYYY</code>.
+						reads what a user typed as a <code>dayjs</code> object
 					</li>
 					<li>
-						<k-link to="/lab/internals/library.dayjs/4_iso">
-							<code>dayjs.iso()</code> and <code>dayjs().toISO()</code>
+						<k-link to="/lab/internals/library.dayjs/3_pattern">
+							<code>dayjs.pattern()</code>
 						</k-link>
-						convert between the ISO strings values are stored as and
-						<code>dayjs</code> objects
+						reads a display pattern like <code>DD.MM.YYYY</code>, formats and
+						inspects datetimes against it
+					</li>
+					<li>
+						<k-link to="/lab/internals/library.dayjs/4_locale">
+							<code>dayjs.locale()</code>
+						</k-link>
+						activates a dayjs locale
 					</li>
 					<li>
 						<k-link to="/lab/internals/library.dayjs/5_round">
@@ -36,17 +41,18 @@
 						rounds to the nearest step of a unit, e.g. to the nearest 15 minutes
 					</li>
 					<li>
-						<k-link to="/lab/internals/library.dayjs/6_validate">
+						<k-link to="/lab/internals/library.dayjs/6_iso">
+							<code>dayjs.iso()</code> and <code>dayjs().toISO()</code>
+						</k-link>
+						convert between the ISO strings values are stored as and
+						<code>dayjs</code> objects
+					</li>
+					<li>
+						<k-link to="/lab/internals/library.dayjs/7_validate">
 							<code>dayjs().validate()</code>
 						</k-link>
 						checks a datetime against a <code>min</code>/<code>max</code>
 						boundary
-					</li>
-					<li>
-						<k-link to="/lab/internals/library.dayjs/7_locale">
-							<code>dayjs.load()</code>
-						</k-link>
-						activates the dayjs locale matching the Panel language
 					</li>
 				</ul>
 			</k-text>
