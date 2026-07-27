@@ -1,20 +1,38 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import Content from "./content.js";
+import {
+	afterEach,
+	beforeEach,
+	describe,
+	expect,
+	it,
+	vi,
+	type Mock
+} from "vitest";
+import Content from "./content";
+
+type ApiPost = (
+	url: string,
+	values?: Record<string, unknown>,
+	options?: Record<string, unknown>
+) => Promise<unknown>;
+
+type Options = {
+	/** values of the changes version */
+	changes?: Record<string, unknown>;
+	/** values of the latest version */
+	latest?: Record<string, unknown>;
+	/** mock for `panel.api.post` */
+	post?: Mock<ApiPost>;
+};
 
 /**
  * Creates a content module with a minimal panel mock
- *
- * @param {Object} options
- * @param {Object} options.changes - values of the changes version
- * @param {Object} options.latest - values of the latest version
- * @param {Function} options.post - mock for `panel.api.post`
  */
-function factory({ changes = {}, latest = {}, post } = {}) {
+function factory({ changes = {}, latest = {}, post }: Options = {}) {
 	const panel = {
 		api: {
 			csrf: "csrf-token",
 			endpoint: "/api",
-			post: post ?? vi.fn(() => Promise.resolve())
+			post: post ?? vi.fn<ApiPost>(() => Promise.resolve())
 		},
 		dialog: {
 			open: vi.fn()
@@ -25,7 +43,8 @@ function factory({ changes = {}, latest = {}, post } = {}) {
 		language: {
 			code: "en"
 		},
-		url: (url, query) => `${url}?${new URLSearchParams(query)}`,
+		url: (url: string, query: Record<string, string>) =>
+			`${url}?${new URLSearchParams(query)}`,
 		view: {
 			props: {
 				api: "/pages/test",
@@ -50,7 +69,7 @@ function factory({ changes = {}, latest = {}, post } = {}) {
 /**
  * Returns all API endpoints that have been posted to
  */
-function endpoints(panel) {
+function endpoints(panel: ReturnType<typeof factory>["panel"]) {
 	return panel.api.post.mock.calls.map((call) => call[0]);
 }
 
@@ -98,14 +117,15 @@ describe("panel.content.unlock()", () => {
 	});
 
 	it("does not release the lock when the view got locked in the meantime", async () => {
-		const error = new Error("The view is locked");
-		error.key = "error.content.lock.notAllowed";
-		error.details = {};
+		const error = Object.assign(new Error("The view is locked"), {
+			details: {},
+			key: "error.content.lock.notAllowed"
+		});
 
 		const { content, panel } = factory({
 			changes: { title: "New title" },
 			latest: { title: "Test" },
-			post: vi.fn(() => Promise.reject(error))
+			post: vi.fn<ApiPost>(() => Promise.reject(error))
 		});
 
 		await expect(content.unlock()).rejects.toThrowError(
@@ -125,7 +145,7 @@ describe("panel.content.unlock()", () => {
 		const { content, panel } = factory({
 			changes: { title: "New title" },
 			latest: { title: "Test" },
-			post: vi.fn(() => Promise.reject(error))
+			post: vi.fn<ApiPost>(() => Promise.reject(error))
 		});
 
 		await expect(content.unlock()).rejects.toThrowError(
@@ -138,7 +158,7 @@ describe("panel.content.unlock()", () => {
 	it("ignores failed unlock requests", async () => {
 		// the lock will be released after 10 minutes anyway
 		const { content } = factory({
-			post: vi.fn(() => Promise.reject(new Error("Offline")))
+			post: vi.fn<ApiPost>(() => Promise.reject(new Error("Offline")))
 		});
 
 		await expect(content.unlock()).resolves.toBeUndefined();
@@ -158,10 +178,10 @@ describe("panel.content.unlock()", () => {
 });
 
 describe("panel.content.unlockBeaconRequest()", () => {
-	let sendBeacon;
+	let sendBeacon: Mock<typeof navigator.sendBeacon>;
 
 	beforeEach(() => {
-		sendBeacon = vi.fn(() => true);
+		sendBeacon = vi.fn<typeof navigator.sendBeacon>(() => true);
 
 		Object.defineProperty(navigator, "sendBeacon", {
 			configurable: true,
@@ -171,7 +191,7 @@ describe("panel.content.unlockBeaconRequest()", () => {
 	});
 
 	afterEach(() => {
-		delete navigator.sendBeacon;
+		delete (navigator as Partial<Navigator>).sendBeacon;
 	});
 
 	it("sends a beacon for the given view", () => {
@@ -208,7 +228,7 @@ describe("panel.content.unlockBeaconRequest()", () => {
 		sendBeacon.mockReturnValue(false);
 
 		const { content, panel } = factory({
-			post: vi.fn(() => Promise.reject(new Error("Offline")))
+			post: vi.fn<ApiPost>(() => Promise.reject(new Error("Offline")))
 		});
 
 		// the unload event must not be blocked, so the request cannot be

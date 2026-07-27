@@ -1,16 +1,55 @@
 import { isObject, length } from "@/helpers/object";
 import { reactive } from "vue";
 import throttle from "@/helpers/throttle";
+import type Dialog from "./dialog.js";
+
+type Env = {
+	api: string;
+	language: string | null;
+};
+
+type Lock = {
+	isLocked: boolean;
+	modified: Date | null;
+};
+
+type LockError = Error & {
+	details: Lock;
+	key: string;
+};
+
+type RequestMethod = "discard" | "publish" | "save";
+
+type RequestOptions = {
+	// null headers are removed again in `api.request`
+	headers: Record<string, string | null>;
+	signal?: AbortSignal;
+	silent?: boolean;
+};
+
+type Values = Record<string, unknown>;
+
+type VersionId = "changes" | "latest";
+
+/**
+ * Whether the error has been caused by a lock from another user
+ *
+ * TODO: narrow this down to `RequestError` as soon as the class
+ * exposes the error key from the response
+ */
+const isLockError = (error: unknown): error is LockError =>
+	typeof (error as LockError)?.key === "string" &&
+	(error as LockError).key.startsWith("error.content.lock");
 
 /**
  * @since 5.0.0
  */
-export default (panel) => {
+export default function Content(panel: TODO) {
 	const content = reactive({
 		/**
 		 * Cancel any scheduled or ongoing save requests
 		 */
-		cancelSaving() {
+		cancelSaving(): void {
 			// cancel any scheduled save requests
 			this.saveLazy.cancel();
 
@@ -19,21 +58,19 @@ export default (panel) => {
 			this.saveAbortController?.abort();
 		},
 
-		dialog: null,
+		dialog: null as ReturnType<typeof Dialog> | null,
 
 		/**
 		 * Returns an object with all changed fields
-		 * @param {Object} env
-		 * @returns {Object}
 		 */
-		diff(env = {}) {
+		diff(env?: Partial<Env>): Values {
 			// changes can only be computed for the current view
 			if (this.isCurrent(env) === false) {
 				throw new Error("Cannot get changes for another view");
 			}
 
 			const versions = this.versions();
-			const diff = {};
+			const diff: Values = {};
 
 			for (const field in versions.changes) {
 				const changed = JSON.stringify(versions.changes[field]);
@@ -58,7 +95,7 @@ export default (panel) => {
 		/**
 		 * Removes all unpublished changes
 		 */
-		async discard(env = {}) {
+		async discard(env?: Partial<Env>): Promise<void> {
 			if (this.isProcessing === true) {
 				return;
 			}
@@ -85,12 +122,12 @@ export default (panel) => {
 				await this.request("discard", {}, env);
 
 				// update the props for the current view
-				panel.view.props.versions.changes = this.version("latest");
+				this.versions().changes = this.version("latest");
 
 				this.emit("discard", {}, env);
 			} catch (error) {
 				// handle locked states
-				if (error.key?.startsWith("error.content.lock")) {
+				if (isLockError(error) === true) {
 					return this.lockDialog(error.details);
 				}
 
@@ -105,7 +142,7 @@ export default (panel) => {
 		 * Emit a custom content event
 		 * and add the api and language properties
 		 */
-		emit(event, options = {}, env = {}) {
+		emit(event: string, options: Values = {}, env?: Partial<Env>): void {
 			panel.events.emit("content." + event, {
 				...options,
 				...this.env(env)
@@ -116,7 +153,7 @@ export default (panel) => {
 		 * Ensure a consistent environment object
 		 * with api and language properties
 		 */
-		env(env = {}) {
+		env(env: Partial<Env> = {}): Env {
 			return {
 				api: panel.view.props.api,
 				language: panel.language.code,
@@ -127,15 +164,14 @@ export default (panel) => {
 		/**
 		 * Whether there are any changes
 		 */
-		hasDiff(env = {}) {
+		hasDiff(env?: Partial<Env>): boolean {
 			return length(this.diff(env)) > 0;
 		},
 
 		/**
 		 * Whether the api endpoint belongs to the current view
-		 * @var {String} api
 		 */
-		isCurrent(env = {}) {
+		isCurrent(env?: Partial<Env>): boolean {
 			const given = this.env(env);
 			const current = this.env();
 			return current.api === given.api && current.language === given.language;
@@ -143,23 +179,20 @@ export default (panel) => {
 
 		/**
 		 * Whether the current view is locked
-		 * @param {String} api
 		 */
-		isLocked(env = {}) {
+		isLocked(env?: Partial<Env>): boolean {
 			return this.lock(env)?.isLocked ?? false;
 		},
 
 		/**
 		 * Whether content is currently being discarded, saved or published
-		 * @var {Boolean}
 		 */
 		isProcessing: false,
 
 		/**
 		 * Get the lock state for the current view
-		 * @param {String} api
 		 */
-		lock(env = {}) {
+		lock(env?: Partial<Env>): Lock {
 			if (this.isCurrent(env) === false) {
 				throw new Error(
 					"The lock state cannot be detected for content from another view"
@@ -173,9 +206,9 @@ export default (panel) => {
 		 * Opens the lock dialog to inform the current editor
 		 * about edits from another user
 		 */
-		lockDialog(lock) {
+		lockDialog(lock: Lock): void {
 			this.dialog = panel.dialog;
-			this.dialog.open({
+			this.dialog!.open({
 				component: "k-lock-alert-dialog",
 				props: {
 					lock: lock
@@ -193,7 +226,7 @@ export default (panel) => {
 		 * Merge new content changes with the
 		 * original values and update the view props
 		 */
-		merge(values = {}, env = {}) {
+		merge(values: Values = {}, env?: Partial<Env>): Values {
 			if (this.isCurrent(env) === false) {
 				throw new Error("The content in another view cannot be merged");
 			}
@@ -202,18 +235,16 @@ export default (panel) => {
 				values = {};
 			}
 
-			panel.view.props.versions.changes = {
+			return (this.versions().changes = {
 				...this.version("changes"),
 				...values
-			};
-
-			return panel.view.props.versions.changes;
+			});
 		},
 
 		/**
 		 * Publishes any changes
 		 */
-		async publish(values = {}, env = {}) {
+		async publish(values: Values = {}, env?: Partial<Env>): Promise<void> {
 			if (this.isProcessing === true) {
 				return;
 			}
@@ -238,12 +269,12 @@ export default (panel) => {
 				this.dialog?.close();
 
 				// update the props for the current view
-				panel.view.props.versions.latest = this.version("changes");
+				this.versions().latest = this.version("changes");
 
 				this.emit("publish", { values }, env);
 			} catch (error) {
 				// handle locked states
-				if (error.key?.startsWith("error.content.lock")) {
+				if (isLockError(error) === true) {
 					return this.lockDialog(error.details);
 				}
 
@@ -256,17 +287,21 @@ export default (panel) => {
 		/**
 		 * Simplified request handler for all content API requests
 		 */
-		async request(method = "save", values = {}, env = {}) {
+		async request(
+			method: RequestMethod = "save",
+			values: Values = {},
+			env?: Partial<Env>
+		): Promise<void> {
 			const { api, language } = this.env(env);
 
-			const options = {
+			const options: RequestOptions = {
 				headers: {
 					"x-language": language
 				}
 			};
 
 			if (method === "save") {
-				options.signal = this.saveAbortController.signal;
+				options.signal = this.saveAbortController?.signal;
 				options.silent = true;
 			}
 
@@ -276,9 +311,9 @@ export default (panel) => {
 		/**
 		 * Saves any changes
 		 *
-		 * @returns {Boolean} Whether the changes have been written
+		 * @returns Whether the changes have been written
 		 */
-		async save(values = {}, env = {}) {
+		async save(values: Values = {}, env?: Partial<Env>): Promise<boolean> {
 			// ensure to abort unfinished previous save request
 			// to avoid race conditions with older content
 			this.cancelSaving();
@@ -303,7 +338,7 @@ export default (panel) => {
 			} catch (error) {
 				// handle aborted requests silently. A newer save request
 				// has taken over and will write the latest state instead.
-				if (error.name === "AbortError") {
+				if (error instanceof Error && error.name === "AbortError") {
 					return false;
 				}
 
@@ -314,7 +349,7 @@ export default (panel) => {
 				this.isProcessing = false;
 
 				// handle locked states
-				if (error.key?.startsWith("error.content.lock")) {
+				if (isLockError(error) === true) {
 					this.lockDialog(error.details);
 					return false;
 				}
@@ -325,15 +360,22 @@ export default (panel) => {
 
 		/**
 		 * @internal
-		 * @var {AbortController}
 		 */
-		saveAbortController: null,
+		saveAbortController: null as AbortController | null,
+
+		/**
+		 * Placeholder for the throttled save method
+		 * that gets added at the end of the file
+		 */
+		saveLazy: undefined! as ReturnType<
+			typeof throttle<[Values?, Partial<Env>?]>
+		>,
 
 		/**
 		 * Releases the content lock without discarding changes.
 		 * Called when the editor navigates away from the view.
 		 */
-		async unlock(env = {}) {
+		async unlock(env?: Partial<Env>): Promise<void> {
 			// persist any pending changes before releasing the lock, so that
 			// the changes cannot be dropped or the lock left behind
 			// due to a save that finishes after the unlock request.
@@ -358,7 +400,7 @@ export default (panel) => {
 		 * Use sendBeacon for reliability during page unload. Browsers
 		 * guarantee delivery even when the page is being closed.
 		 */
-		unlockBeaconRequest(env = {}) {
+		unlockBeaconRequest(env?: Partial<Env>): void {
 			const { api, language } = this.env(env);
 
 			this.cancelSaving();
@@ -384,7 +426,7 @@ export default (panel) => {
 		 * Sends the unlock request for the given view
 		 * as a regular API request
 		 */
-		async unlockPostRequest(env = {}) {
+		async unlockPostRequest(env?: Partial<Env>): Promise<void> {
 			const { api, language } = this.env(env);
 
 			this.cancelSaving();
@@ -402,33 +444,30 @@ export default (panel) => {
 		/**
 		 * Updates the form values of the current view
 		 *
-		 * @returns {Boolean} Whether the changes have been written
+		 * @returns Whether the changes have been written
 		 */
-		async update(values = {}, env = {}) {
+		async update(values: Values = {}, env?: Partial<Env>): Promise<boolean> {
 			return await this.save(this.merge(values, env), env);
 		},
 
 		/**
 		 * Updates the form values of the current view with a delay
 		 */
-		updateLazy(values = {}, env = {}) {
+		updateLazy(values: Values = {}, env?: Partial<Env>): void {
 			this.saveLazy(this.merge(values, env), env);
 		},
 
 		/**
 		 * Returns a specific version of the content
-		 * @param {String} versionId
-		 * @returns {Object|undefined}
 		 */
-		version(versionId) {
+		version(versionId: VersionId): Values {
 			return this.versions()[versionId];
 		},
 
 		/**
 		 * Returns all versions of the content
-		 * @returns {Object}
 		 */
-		versions() {
+		versions(): Record<VersionId, Values> {
 			return panel.view.props.versions;
 		}
 	});
@@ -437,9 +476,8 @@ export default (panel) => {
 	// that we can use in the input event
 	content.saveLazy = throttle(content.save, 1000, {
 		leading: true,
-		trailing: true,
-		timer: content.timer
+		trailing: true
 	});
 
 	return content;
-};
+}

@@ -1,6 +1,6 @@
 import Activation from "./activation";
 import Api from "@/api/index.js";
-import Content from "./content.js";
+import Content from "./content";
 import Dialog from "./dialog.js";
 import Drag from "./drag";
 import Drawer from "./drawer.js";
