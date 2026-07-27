@@ -11,7 +11,7 @@ import {
 	extensionOptions,
 	filterExtensions,
 	keepInlineNodes
-} from "./writer.js";
+} from "./writer";
 import Mark from "@/components/Forms/Writer/Mark";
 import Node from "@/components/Forms/Writer/Node";
 
@@ -327,6 +327,26 @@ describe("filterExtensions", () => {
 		const result = filterExtensions(available, ["a"]);
 		expect(result.a).toBe(available.a);
 	});
+
+	it("should return instances keyed by their name", () => {
+		const custom = { name: "custom" };
+		const result = filterExtensions(available, [custom]);
+		expect(Object.keys(result)).toEqual(["custom"]);
+		expect(result.custom).toBe(custom);
+	});
+
+	it("should preserve the allowed order for instances", () => {
+		const custom = { name: "custom" };
+		const result = filterExtensions(available, ["c", custom, "a"]);
+		expect(Object.keys(result)).toEqual(["c", "custom", "a"]);
+	});
+
+	it("should prefer instances over available extensions of the same name", () => {
+		const custom = { name: "a" };
+		const result = filterExtensions(available, [custom]);
+		expect(result.a).toBe(custom);
+		expect(result.a).not.toBe(available.a);
+	});
 });
 
 describe("createMarks", () => {
@@ -383,6 +403,23 @@ describe("createMarks", () => {
 		const marks = createMarks(["bold", "italic"]);
 		expect(marks.bold.name).toBe("bold");
 		expect(marks.italic.name).toBe("italic");
+	});
+
+	it("should accept ready-made mark instances", () => {
+		const { highlight } = createExtensionsFromPlugins(
+			{
+				highlight: {
+					get schema() {
+						return { parseDOM: [{ tag: "mark" }], toDOM: () => ["mark", 0] };
+					}
+				}
+			},
+			Mark.prototype
+		);
+
+		const marks = createMarks(["bold", highlight]);
+		expect(Object.keys(marks)).toEqual(["bold", "highlight"]);
+		expect(marks.highlight).toBe(highlight);
 	});
 });
 
@@ -484,6 +521,28 @@ describe("createNodes", () => {
 		expect(nodes.text.name).toBe("text");
 		expect(nodes.paragraph.name).toBe("paragraph");
 	});
+
+	it("should accept ready-made node instances", () => {
+		const { callout } = createExtensionsFromPlugins(
+			{
+				callout: {
+					get schema() {
+						return {
+							content: "inline*",
+							group: "block",
+							parseDOM: [{ tag: "div.callout" }],
+							toDOM: () => ["div", { class: "callout" }, 0]
+						};
+					}
+				}
+			},
+			Node.prototype
+		);
+
+		const nodes = createNodes(["doc", "text", callout]);
+		expect(Object.keys(nodes)).toEqual(["doc", "text", "callout"]);
+		expect(nodes.callout).toBe(callout);
+	});
 });
 
 describe("keepInlineNodes", () => {
@@ -493,7 +552,7 @@ describe("keepInlineNodes", () => {
 			{ schema: { inline: false } },
 			{ schema: { inline: true } },
 			{ schema: {} }
-		];
+		] as unknown as Node[];
 
 		const result = keepInlineNodes(nodes);
 		expect(result).toHaveLength(2);
@@ -502,7 +561,10 @@ describe("keepInlineNodes", () => {
 	});
 
 	it("should return empty array when no inline nodes exist", () => {
-		const nodes = [{ schema: { group: "block" } }, { schema: {} }];
+		const nodes = [
+			{ schema: { group: "block" } },
+			{ schema: {} }
+		] as unknown as Node[];
 		expect(keepInlineNodes(nodes)).toEqual([]);
 	});
 
