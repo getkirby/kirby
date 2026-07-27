@@ -276,11 +276,6 @@ export default (panel) => {
 		/**
 		 * Saves any changes
 		 *
-		 * Locked and aborted requests are handled here instead of being
-		 * thrown, as most callers save in the background and cannot react
-		 * to them. The return value tells callers that need to know
-		 * whether the changes actually made it to the server.
-		 *
 		 * @returns {Boolean} Whether the changes have been written
 		 */
 		async save(values = {}, env = {}) {
