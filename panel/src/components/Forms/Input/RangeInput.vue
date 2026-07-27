@@ -5,22 +5,28 @@
 		:style="$attrs.style"
 	>
 		<input
+			:id="id"
 			ref="range"
 			v-bind="{
 				autofocus,
 				disabled,
-				id,
 				max,
 				min,
 				name,
 				required,
 				step
 			}"
+			:aria-valuetext="valuetext"
 			:value="position"
 			type="range"
 			@input="$emit('input', $event.target.valueAsNumber)"
 		/>
-		<output v-if="tooltip" :for="id" class="k-range-input-tooltip">
+		<output
+			v-if="tooltip"
+			:for="id"
+			aria-hidden="true"
+			class="k-range-input-tooltip"
+		>
 			<span v-if="tooltip.before" class="k-range-input-tooltip-before">{{
 				tooltip.before
 			}}</span>
@@ -117,6 +123,19 @@ export default {
 			return this.value || this.value === 0
 				? this.value
 				: (this.default ?? this.baseline);
+		},
+		/**
+		 * aria-valuetext that can be announced while
+		 * hiding <output> from a11n tree
+		 */
+		valuetext() {
+			if (!this.tooltip) {
+				return null;
+			}
+
+			return [this.tooltip.before, this.label, this.tooltip.after]
+				.filter(Boolean)
+				.join(" ");
 		}
 	},
 	watch: {

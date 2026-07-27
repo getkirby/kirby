@@ -9,7 +9,8 @@ function mount(props = {}, attrs = {}, close = vi.fn()) {
 		attachTo: document.body,
 		global: {
 			mocks: {
-				$panel: { notification: { close } }
+				$panel: { notification: { close } },
+				$t: (key: string) => key
 			}
 		}
 	});

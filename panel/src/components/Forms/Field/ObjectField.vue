@@ -59,7 +59,9 @@
 			type="checkbox"
 			:checked="!isEmpty"
 			:required="required"
+			aria-hidden="true"
 			class="input-hidden"
+			tabindex="-1"
 		/>
 	</k-field>
 </template>

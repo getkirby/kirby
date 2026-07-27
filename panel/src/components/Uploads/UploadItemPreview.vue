@@ -1,5 +1,10 @@
 <template>
-	<a :href="url" class="k-upload-item-preview" target="_blank">
+	<a
+		:aria-label="$t('open.newWindow')"
+		:href="url"
+		class="k-upload-item-preview"
+		target="_blank"
+	>
 		<k-image
 			v-if="isPreviewable"
 			:cover="cover"

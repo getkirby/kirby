@@ -1,5 +1,8 @@
 <template>
-	<progress :value="value" max="100" class="k-progress">{{ value }}%</progress>
+	<label class="k-progress">
+		<span class="sr-only">{{ label ?? $t("progress") }}</span>
+		<progress :value="value" max="100">{{ value }}%</progress>
+	</label>
 </template>
 
 <script>
@@ -14,6 +17,10 @@
  */
 export default {
 	props: {
+		/**
+		 * @since 6.0.0
+		 */
+		label: String,
 		/**
 		 * Current value of the the progress bar
 		 * @values 0-100
