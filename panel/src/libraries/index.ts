@@ -1,8 +1,3 @@
-/**
- * @copyright Bastian Allgeier
- * @license   https://opensource.org/licenses/MIT
- */
-
 import type { App } from "vue";
 import autosize from "autosize";
 import colors from "./colors";

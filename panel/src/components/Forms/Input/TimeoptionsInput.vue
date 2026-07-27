@@ -114,10 +114,12 @@ export default {
 					return time;
 				}
 
-				const dt = this.$library.dayjs(time + ":00", "H:mm");
+				// the full hour as the ISO string a time is stored as
+				const select = String(time).padStart(2, "0") + ":00:00";
+
 				return {
-					display: dt.format(this.display),
-					select: dt.toISO("time")
+					display: this.$library.dayjs.iso(select, "time").format(this.display),
+					select
 				};
 			});
 		},
