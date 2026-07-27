@@ -33,12 +33,19 @@ const formats: Record<ISOFormat, string> = {
 	datetime: "YYYY-MM-DD HH:mm:ss"
 };
 
+/**
+ * Returns the dayjs pattern for an ISO format
+ */
+function pattern(format: ISOFormat): string {
+	return formats[format] ?? formats.datetime;
+}
+
 const plugin: PluginFunc = (option, Dayjs, dayjs) => {
 	Dayjs.prototype.toISO = function (
 		this: Dayjs,
 		format: ISOFormat = "datetime"
 	): string {
-		return this.format(formats[format]);
+		return this.format(pattern(format));
 	};
 
 	Object.assign(dayjs, {
@@ -47,7 +54,7 @@ const plugin: PluginFunc = (option, Dayjs, dayjs) => {
 			// requires an exact round-trip, so at most one of them can
 			// match and the order they are tried in does not matter
 			const fmt =
-				format !== undefined ? formats[format] : Object.values(formats);
+				format !== undefined ? pattern(format) : Object.values(formats);
 
 			// parse strictly: ISO strings are machine-generated, so anything
 			// that doesn't match exactly is corrupt and must fail loudly

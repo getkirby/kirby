@@ -68,6 +68,15 @@ describe("dayjs.iso()", () => {
 	it.each(invalid)("%s (%s) should be null", (input, format) => {
 		expect(dayjs.iso(input, format)).toBeNull();
 	});
+
+	it("should fall back to datetime for an unknown format", () => {
+		const format = "nope" as ISOFormat;
+
+		expect(dayjs.iso("2020-02-29 16:05:15", format)!.get("date")).toStrictEqual(
+			29
+		);
+		expect(dayjs.iso("2020-02-30 16:05:15", format)).toBeNull();
+	});
 });
 
 describe("dayjs.toISO()", () => {
@@ -94,5 +103,11 @@ describe("dayjs.toISO()", () => {
 
 	it.each(data)("$expected", ({ date, expected, format }) => {
 		expect(dayjs(date).toISO(format)).toStrictEqual(expected);
+	});
+
+	it("should fall back to datetime for an unknown format", () => {
+		const date = new Date(2020, 6, 3, 17, 24, 11);
+		const format = "nope" as ISOFormat;
+		expect(dayjs(date).toISO(format)).toStrictEqual("2020-07-03 17:24:11");
 	});
 });
