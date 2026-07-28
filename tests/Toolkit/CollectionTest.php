@@ -891,6 +891,19 @@ class CollectionTest extends TestCase
 		$this->assertIsUntouched();
 	}
 
+	public function testSliceKeepsIntegerLikeKeys(): void
+	{
+		$collection = new Collection([
+			'2023' => 'a',
+			'2024' => 'b',
+			'2025' => 'c'
+		]);
+
+		// PHP canonicalizes integer-like array keys to integers
+		$this->assertSame([2024, 2025], $collection->slice(1)->keys());
+		$this->assertSame([2023], $collection->slice(0, 1)->keys());
+	}
+
 	public function testToArray(): void
 	{
 		// associative

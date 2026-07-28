@@ -975,7 +975,11 @@ class Collection extends Iterator implements Stringable
 		}
 
 		$collection = clone $this;
-		$collection->data = array_slice($this->data, $offset, $limit);
+
+		// keys need to be preserved, otherwise integer-like
+		// keys (e.g. a page with the slug `2024`) get reindexed
+		$collection->data = array_slice($this->data, $offset, $limit, preserve_keys: true);
+
 		return $collection;
 	}
 
