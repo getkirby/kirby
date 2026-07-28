@@ -24,6 +24,8 @@ use Kirby\Toolkit\Obj;
  */
 class OptionsQuery extends OptionsProvider
 {
+	protected array $defaults = [];
+
 	public function __construct(
 		public string $query,
 		public string|null $text = null,
@@ -71,7 +73,21 @@ class OptionsQuery extends OptionsProvider
 	 */
 	protected function itemToDefaults(array|object $item): array
 	{
-		return match (true) {
+		// all items of a query result usually share the same type,
+		// so the matching below only needs to run once per type;
+		// `Obj` is excluded, as its defaults also depend on the
+		// `hasStringKey` property of the individual item
+		$type = match (true) {
+			$item instanceof Obj => null,
+			is_object($item)     => $item::class,
+			default              => 'array'
+		};
+
+		if ($type !== null && isset($this->defaults[$type]) === true) {
+			return $this->defaults[$type];
+		}
+
+		$defaults = match (true) {
 			$item instanceof Obj && $item->hasStringKey === true => [
 				'arrayItem',
 				'{{ item.value }}',
@@ -121,6 +137,12 @@ class OptionsQuery extends OptionsProvider
 				'{{ item.value }}'
 			]
 		};
+
+		if ($type !== null) {
+			$this->defaults[$type] = $defaults;
+		}
+
+		return $defaults;
 	}
 
 	public static function polyfill(array|string $props = []): array
@@ -176,8 +198,12 @@ class OptionsQuery extends OptionsProvider
 			);
 		}
 
+		// text is only a raw string when using {< >}
+		// or when the safe mode is explicitly disabled (select field)
+		$safeMethod = $safeMode === true ? 'toSafeString' : 'toString';
+
 		// create options array
-		$options = $result->toArray(function ($item) use ($model, $safeMode) {
+		$options = $result->toArray(function ($item) use ($model, $safeMethod) {
 			// get defaults based on item type
 			[$alias, $text, $value] = $this->itemToDefaults($item);
 			$data = ['item' => $item, $alias => $item];
@@ -185,9 +211,6 @@ class OptionsQuery extends OptionsProvider
 			// value is always a raw string
 			$value = $model->toString($this->value ?? $value, $data);
 
-			// text is only a raw string when using {< >}
-			// or when the safe mode is explicitly disabled (select field)
-			$safeMethod = $safeMode === true ? 'toSafeString' : 'toString';
 			$text = $model->$safeMethod($this->text ?? $text, $data);
 
 			// additional data
