@@ -4,12 +4,15 @@ namespace Kirby\Panel\Controller\View;
 
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Exception\Exception;
 use Kirby\Form\Fields;
 use Kirby\Http\Uri;
 use Kirby\Panel\Controller\ViewController;
 use Kirby\Panel\Model;
 use Kirby\Panel\Ui\Button\ViewButtons;
 use Kirby\Panel\Ui\View;
+use Kirby\Toolkit\I18n;
+use Throwable;
 
 /**
  * Controls a model view
@@ -71,6 +74,40 @@ abstract class ModelViewController extends ViewController
 	public function next(): array|null
 	{
 		return null;
+	}
+
+	/**
+	 * Replaces the raw field definitions of each fields section
+	 * in the tab with their computed field props
+	 */
+	protected function preload(array $tab): array
+	{
+		foreach ($tab['columns'] ?? [] as $columnIndex => $column) {
+			foreach ($column['sections'] ?? [] as $name => $section) {
+				if (($section['type'] ?? null) !== 'fields') {
+					continue;
+				}
+
+				unset($tab['columns'][$columnIndex]['sections'][$name]['fields']);
+
+				try {
+					$fields = $this->model->blueprint()->section($name)?->toArray()['fields'] ?? null;
+				} catch (Throwable $e) {
+					$tab['columns'][$columnIndex]['sections'][$name]['error'] = match (true) {
+						$e instanceof Exception => $e->getMessage(),
+						$this->kirby->option('debug') === true => $this->kirby->disguiseFilePath($e->getMessage()),
+						default => I18n::translate('error.unexpected')
+					};
+					continue;
+				}
+
+				if ($fields !== null) {
+					$tab['columns'][$columnIndex]['sections'][$name]['fields'] = $fields;
+				}
+			}
+		}
+
+		return $tab;
 	}
 
 	public function prev(): array|null
@@ -142,7 +179,12 @@ abstract class ModelViewController extends ViewController
 		$tab   = $this->request->get('tab');
 		$tab   = $this->model->blueprint()->tab($tab);
 		$tab ??= $this->tabs()[0] ?? null;
-		return $tab;
+
+		if ($tab === null) {
+			return null;
+		}
+
+		return $this->preload($tab);
 	}
 
 	public function tabs(): array

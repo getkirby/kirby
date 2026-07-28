@@ -92,6 +92,80 @@ class ModelViewControllerTest extends TestCase
 		$this->assertNull($next);
 	}
 
+	public function testPreload(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => [
+					'sections' => [
+						'content' => [
+							'type'   => 'fields',
+							'fields' => [
+								'text' => [
+									'type' => 'textarea'
+								]
+							]
+						],
+						'subpages' => [
+							'type' => 'pages'
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+		$this->model = $this->app->page('test');
+
+		$controller = new TestModelViewController($this->model);
+		$sections   = $controller->tab()['columns'][0]['sections'];
+
+		// the raw field definitions have been replaced
+		// with the computed field props
+		$fields = $sections['content']['fields'];
+		$this->assertSame('textarea', $fields['text']['type']);
+		$this->assertArrayHasKey('hidden', $fields['text']);
+		$this->assertArrayHasKey('saveable', $fields['text']);
+
+		// other section types are not touched
+		$this->assertArrayNotHasKey('fields', $sections['subpages']);
+	}
+
+	public function testPreloadWithInvalidField(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => [
+					'sections' => [
+						'content' => [
+							'type'   => 'fields',
+							'fields' => [
+								'category' => [
+									'type'    => 'select',
+									'options' => [
+										'type'  => 'query',
+										'query' => 'kirby.doesNotExist'
+									]
+								]
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+		$this->model = $this->app->page('test');
+
+		$controller = new TestModelViewController($this->model);
+		$sections   = $controller->tab()['columns'][0]['sections'];
+
+		// when the field props cannot be computed, the raw definitions
+		// are removed and the error is passed to the section instead
+		$this->assertArrayNotHasKey('fields', $sections['content']);
+		$this->assertArrayHasKey('error', $sections['content']);
+	}
+
 	public function testPrev(): void
 	{
 		$controller = new TestModelViewController($this->model);
