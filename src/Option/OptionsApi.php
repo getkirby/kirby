@@ -125,6 +125,10 @@ class OptionsApi extends OptionsProvider
 		$data    = Query::factory($this->query)->resolve($data);
 		$options = [];
 
+		// text is only a raw string when using {< >}
+		// or when the safe mode is explicitly disabled (select field)
+		$safeMethod = $safeMode === true ? 'toSafeString' : 'toString';
+
 		// create options by resolving text and value query strings
 		// for each item from the data
 		foreach ($data as $key => $item) {
@@ -132,8 +136,6 @@ class OptionsApi extends OptionsProvider
 			if (is_string($item) === true) {
 				$item = new Field(null, $key, $item);
 			}
-
-			$safeMethod = $safeMode === true ? 'toSafeString' : 'toString';
 
 			$options[] = [
 				// value is always a raw string
