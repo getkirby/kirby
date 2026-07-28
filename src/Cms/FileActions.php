@@ -379,9 +379,8 @@ trait FileActions
 		$template = $props['template'] ?? 'default';
 
 		// prefer the filename from the props
-		$filename   = $props['filename'] ?? null;
-		$filename ??= basename($props['source']);
-		$filename   = F::safeName($props['filename']);
+		$filename = $props['filename'] ?? basename($props['source']);
+		$filename = F::safeName($filename);
 
 		return [
 			...$props,

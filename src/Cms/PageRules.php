@@ -287,6 +287,7 @@ class PageRules
 		}
 
 		self::validateSlugLength($slug);
+		self::validateSlugProtectedPaths($page, $slug);
 	}
 
 	/**
@@ -317,6 +318,8 @@ class PageRules
 		) {
 			throw new LogicException(key: 'page.move.ancestor');
 		}
+
+		self::validateSlugProtectedPaths($page, $page->slug(), $parent);
 
 		// check for duplicates
 		if ($parent->childrenAndDrafts()->find($page->slug())) {
@@ -446,22 +449,27 @@ class PageRules
 	 */
 	protected static function validateSlugProtectedPaths(
 		Page $page,
-		string $slug
+		string $slug,
+		Site|Page|null $parent = null
 	): void {
-		if ($page->parent() === null) {
-			$paths = A::map(
-				['api', 'assets', 'media', 'panel'],
-				fn ($url) => $page->kirby()->url($url, true)->path()->toString()
+		$parent ??= $page->parent();
+
+		if ($parent instanceof Page === true) {
+			return;
+		}
+
+		$paths = A::map(
+			['api', 'assets', 'media', 'panel'],
+			fn ($url) => $page->kirby()->url($url, true)->path()->toString()
+		);
+
+		$index = array_search($slug, $paths);
+
+		if ($index !== false) {
+			throw new InvalidArgumentException(
+				key: 'page.changeSlug.reserved',
+				data: ['path' => $paths[$index]]
 			);
-
-			$index = array_search($slug, $paths);
-
-			if ($index !== false) {
-				throw new InvalidArgumentException(
-					key: 'page.changeSlug.reserved',
-					data: ['path' => $paths[$index]]
-				);
-			}
 		}
 	}
 
