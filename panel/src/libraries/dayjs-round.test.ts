@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import type { UnitType } from "dayjs";
+import type { UnitTypeLong } from "dayjs";
 import dayjs from "./dayjs";
 
 describe("dayjs.round()", () => {
-	const data: Record<string, [UnitType, number, string, string]> = {
+	const data: Record<string, [UnitTypeLong, number, string, string]> = {
 		"1s: no change": [
 			"second",
 			1,
@@ -64,6 +64,77 @@ describe("dayjs.round()", () => {
 		}
 	);
 
+	const milliseconds: Record<string, [UnitTypeLong, number, string, string]> = {
+		"1ms: no change": [
+			"millisecond",
+			1,
+			"2020-02-29 16:05:15.499",
+			"2020-02-29 16:05:15.499"
+		],
+		"100ms: floor": [
+			"millisecond",
+			100,
+			"2020-02-29 16:05:15.440",
+			"2020-02-29 16:05:15.400"
+		],
+		"100ms: ceil": [
+			"millisecond",
+			100,
+			"2020-02-29 16:05:15.460",
+			"2020-02-29 16:05:15.500"
+		],
+		"500ms: carry": [
+			"millisecond",
+			500,
+			"2020-02-29 16:05:15.900",
+			"2020-02-29 16:05:16.000"
+		],
+		"1s: floor ms": [
+			"second",
+			1,
+			"2020-02-29 16:05:15.499",
+			"2020-02-29 16:05:15.000"
+		],
+		"1s: ceil ms": [
+			"second",
+			1,
+			"2020-02-29 16:05:15.500",
+			"2020-02-29 16:05:16.000"
+		],
+		"1s: ceil ms carry": [
+			"second",
+			1,
+			"2020-02-29 23:59:59.900",
+			"2020-03-01 00:00:00.000"
+		],
+		"5s: ceil ms": [
+			"second",
+			5,
+			"2020-02-29 16:05:12.500",
+			"2020-02-29 16:05:15.000"
+		],
+		"1m: clear ms": [
+			"minute",
+			1,
+			"2020-02-29 16:05:15.500",
+			"2020-02-29 16:05:00.000"
+		],
+		"1D: clear ms": [
+			"day",
+			1,
+			"2020-02-29 09:05:15.500",
+			"2020-02-29 00:00:00.000"
+		]
+	};
+
+	it.each(Object.entries(milliseconds))(
+		"%s",
+		(_name, [unit, size, input, expected]) => {
+			const result = dayjs(input).round(unit, size);
+			expect(result.format("YYYY-MM-DD HH:mm:ss.SSS")).toBe(expected);
+		}
+	);
+
 	it("Unsupported unit", () => {
 		expect(() => {
 			// @ts-expect-error - testing invalid input
@@ -82,7 +153,24 @@ describe("dayjs.round()", () => {
 
 	it.each(sizes)("Unsupported size: $unit", ({ unit, size }) => {
 		expect(() => {
-			dayjs("2020-01-01").round(unit as UnitType, size);
+			dayjs("2020-01-01").round(unit as UnitTypeLong, size);
+		}).toThrow("Invalid rounding size");
+	});
+
+	const invalidSizes = [
+		{ unit: "millisecond", size: 300 },
+		{ unit: "second", size: 0 },
+		{ unit: "minute", size: -15 },
+		{ unit: "hour", size: -4 },
+		{ unit: "date", size: -1 },
+		{ unit: "minute", size: 2.5 },
+		{ unit: "hour", size: 1.5 },
+		{ unit: "year", size: Number.NaN }
+	];
+
+	it.each(invalidSizes)("Invalid size: $size $unit", ({ unit, size }) => {
+		expect(() => {
+			dayjs("2020-01-01").round(unit as UnitTypeLong, size);
 		}).toThrow("Invalid rounding size");
 	});
 
