@@ -669,6 +669,7 @@ class LazyCollectionTest extends TestCase
 		$this->assertSame('b', $collection->nth(1)->id);
 		$this->assertSame('hydrated', $collection->nth(1)->type);
 		$this->assertNull($collection->nth(3));
+		$this->assertNull($collection->nth(-1));
 
 		$this->assertSame(['b'], $collection->hydratedElements);
 		$this->assertFalse($collection->hydrated);

@@ -412,19 +412,25 @@ abstract class LazyCollection extends Collection
 		// returning a specific offset requires the collection structure
 		$this->initialize();
 
-		$nth = parent::nth($n);
-
-		// `$nth === null` could mean "empty collection"
-		// or "element found but not hydrated"
-		if ($nth === null) {
-			$key = array_keys($this->data)[$n] ?? null;
-
-			if (is_string($key) === true) {
-				return $this->hydrateElement($key);
-			}
+		if ($n < 0) {
+			return null;
 		}
 
-		return $nth;
+		// a keyed slice provides key and value in a single scan
+		// without copying the entire data array
+		$slice = array_slice($this->data, $n, 1, preserve_keys: true);
+		$key   = array_key_first($slice);
+
+		if ($key === null) {
+			return null;
+		}
+
+		// `null` value means "element found but not hydrated"
+		if ($slice[$key] === null) {
+			return $this->hydrateElement((string)$key);
+		}
+
+		return $slice[$key];
 	}
 
 	/**
