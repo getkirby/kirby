@@ -88,6 +88,16 @@ class DateField extends DateTimeField
 		$this->time     = $time;
 	}
 
+	/**
+	 * Cuts a boundary down to the precision of the field, so that it
+	 * can never carry more information than the field is able to produce.
+	 */
+	protected function boundary(string|null $boundary): string|null
+	{
+		$format = $this->time() === false ? 'Y-m-d' : static::ISO;
+		return Date::optional($boundary)?->format($format);
+	}
+
 	public function calendar(): bool
 	{
 		return $this->calendar ?? true;
@@ -114,6 +124,16 @@ class DateField extends DateTimeField
 	public function icon(): string
 	{
 		return $this->icon ?? 'calendar';
+	}
+
+	public function max(): string|null
+	{
+		return $this->boundary($this->max);
+	}
+
+	public function min(): string|null
+	{
+		return $this->boundary($this->min);
 	}
 
 	public function props(): array

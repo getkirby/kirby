@@ -27,6 +27,36 @@ class TimeFieldTest extends TestCase
 		$this->assertSame('HH:mm:ss', $field->display());
 	}
 
+	public function testMax(): void
+	{
+		// a plain ISO time without a date or timezone offset
+		$field = $this->field('time', [
+			'max' => '11:30:15'
+		]);
+
+		$this->assertSame('11:30:15', $field->max());
+
+		// without a boundary
+		$field = $this->field('time');
+
+		$this->assertNull($field->max());
+	}
+
+	public function testMin(): void
+	{
+		// a plain ISO time without a date or timezone offset
+		$field = $this->field('time', [
+			'min' => '09:00'
+		]);
+
+		$this->assertSame('09:00:00', $field->min());
+
+		// without a boundary
+		$field = $this->field('time');
+
+		$this->assertNull($field->min());
+	}
+
 	public function testMinMax(): void
 	{
 		// no value
