@@ -126,7 +126,7 @@ export default {
 		},
 		/**
 		 * aria-valuetext that can be announced while
-		 * hiding <output> from a11n tree
+		 * hiding <output> from a11y tree
 		 */
 		valuetext() {
 			if (!this.tooltip) {
