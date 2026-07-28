@@ -619,6 +619,13 @@ class Dom
 			$this->sanitizeElement($element, $options, $errors);
 		}
 
+		// validate all character data (comments and CDATA sections)
+		$characterData = $this->query('//comment() | //text()');
+
+		foreach (iterator_to_array($characterData, false) as $node) {
+			$this->sanitizeCharacterData($node, $errors);
+		}
+
 		return $errors;
 	}
 
@@ -843,6 +850,90 @@ class Dom
 				}
 			}
 		}
+	}
+
+	/**
+	 * Sanitizes a comment or CDATA section node
+	 *
+	 * @param array $errors Array to store additional errors in by reference
+	 */
+	protected function sanitizeCharacterData(
+		DOMNode $node,
+		array &$errors
+	): void {
+		$isComment = $node->nodeType === XML_COMMENT_NODE;
+		$isCdata   = $node->nodeType === XML_CDATA_SECTION_NODE;
+
+		// only comments and CDATA sections are serialized verbatim;
+		// regular text nodes are entity-escaped on export and stay safe
+		if ($isComment === false && $isCdata === false) {
+			return;
+		}
+
+		$data = $node->data;
+
+		// find the nearest ancestor that changes the HTML parsing mode;
+		// a top-level node (no element parent) is already in HTML context
+		$rawText   = null;
+		$dangerous = $node->parentNode instanceof DOMElement === false;
+
+		for (
+			$parent = $node->parentNode;
+			$parent instanceof DOMElement;
+			$parent = $parent->parentNode
+		) {
+			$name = Str::lower($parent->localName);
+
+			if ($name === 'style' || $name === 'script') {
+				$rawText = $name;
+				break;
+			}
+
+			if (
+				$name === 'title' ||
+				$name === 'desc' ||
+				$name === 'foreignobject'
+			) {
+				$dangerous = true;
+				break;
+			}
+		}
+
+		if ($rawText !== null) {
+			// inside a raw text element only a literal closing tag breaks
+			// out; legitimate CSS/JS (e.g. `a > b`) is kept untouched
+			$dangerous = preg_match('#</' . $rawText . '\b#i', $data) === 1;
+		} elseif ($dangerous === true) {
+			// inside an HTML integration point (or at top level) any `<`
+			// can open a live element once re-parsed as HTML
+			$dangerous = Str::contains($data, '<') === true;
+		}
+
+		if ($dangerous === false) {
+			return;
+		}
+
+		if ($isComment === true) {
+			$errors[] = new InvalidArgumentException(
+				'The comment (line ' . $node->getLineNo() . ') is not allowed'
+			);
+
+			// comments carry no rendered content, so remove them entirely
+			static::remove($node);
+			return;
+		}
+
+		$errors[] = new InvalidArgumentException(
+			'The CDATA section (line ' . $node->getLineNo() . ') is not allowed'
+		);
+
+		// replace the CDATA section with an escaped text node so its
+		// content is entity-encoded on export and can no longer re-open as
+		// markup under an HTML parser
+		$node->parentNode->replaceChild(
+			$this->doc->createTextNode($data),
+			$node
+		);
 	}
 
 	/**

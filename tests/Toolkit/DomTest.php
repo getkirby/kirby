@@ -1901,6 +1901,54 @@ class DomTest extends TestCase
 		$this->assertSame($expectedCode, $dom->toString());
 	}
 
+	public function testSanitizeCharacterData(): void
+	{
+		// helper that sanitizes with an allow-everything configuration so
+		// only the character-data handling can alter the document
+		$sanitize = function (string $code): array {
+			$dom    = new Dom($code, 'XML');
+			$errors = $dom->sanitize([]);
+
+			return [
+				$dom->toString(),
+				array_map(fn ($error) => $error->getMessage(), $errors)
+			];
+		};
+
+		// comment inside an HTML integration point is removed
+		$this->assertSame(
+			['<root><title/></root>', ['The comment (line 1) is not allowed']],
+			$sanitize('<root><title><!--><img src=x onerror=alert(1)>--></title></root>')
+		);
+
+		// CDATA breaking out of a raw text element is escaped into text
+		$this->assertSame(
+			[
+				'<root><style>&lt;/style&gt;&lt;img src=x&gt;</style></root>',
+				['The CDATA section (line 1) is not allowed']
+			],
+			$sanitize('<root><style><![CDATA[</style><img src=x>]]></style></root>')
+		);
+
+		// top-level comment holding markup is removed
+		$this->assertSame(
+			['<root/>', ['The comment (line 1) is not allowed']],
+			$sanitize('<!--><img src=x>--><root/>')
+		);
+
+		// comment in foreign content is kept even when it holds markup
+		$this->assertSame(
+			['<root><g><!--<rect/>--></g></root>', []],
+			$sanitize('<root><g><!--<rect/>--></g></root>')
+		);
+
+		// CDATA-wrapped content without a closing tag is kept in raw text
+		$this->assertSame(
+			['<root><style><![CDATA[.a > .b {}]]></style></root>', []],
+			$sanitize('<root><style><![CDATA[.a > .b {}]]></style></root>')
+		);
+	}
+
 	public function testSanitizeDoctypeCallbackException(): void
 	{
 		$this->expectException(Exception::class);

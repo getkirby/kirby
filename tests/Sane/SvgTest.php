@@ -48,6 +48,25 @@ class SvgTest extends TestCase
 		$this->assertSame($cleaned, Svg::sanitize($fixture));
 	}
 
+	public function testAllowedCharacterData(): void
+	{
+		// comments and CDATA sections in foreign content (or holding no
+		// markup) cannot re-parse as live HTML and are kept untouched
+		$fixtures = [
+			// generator comment at the root
+			'<svg><!-- Generator: Sketch --><rect/></svg>',
+			// commented-out element inside foreign content
+			'<svg><defs><!--<linearGradient id="x"></linearGradient>--></defs></svg>',
+			// CDATA-wrapped CSS, including a child combinator `>`
+			'<svg><style><![CDATA[.a > .b { fill: red }]]></style></svg>',
+		];
+
+		foreach ($fixtures as $fixture) {
+			Svg::validate($fixture);
+			$this->assertSame($fixture, Svg::sanitize($fixture));
+		}
+	}
+
 	#[DataProvider('invalidProvider')]
 	public function testInvalid(string $file): void
 	{
@@ -391,6 +410,62 @@ class SvgTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The "xml-stylesheet" processing instruction (line 6) is not allowed');
 		Svg::validateFile($fixture);
+	}
+
+	public function testDisallowedMutationXssTitleComment(): void
+	{
+		// markup hidden in a comment inside the `<title>` integration
+		// point re-parses as a live `<img onerror>` under an HTML parser
+		$fixture   = '<svg><title><!--><img src=x onerror=alert(1)>--></title></svg>';
+		$sanitized = '<svg><title/></svg>';
+
+		$this->assertSame($sanitized, Svg::sanitize($fixture));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The comment (line 1) is not allowed');
+		Svg::validate($fixture);
+	}
+
+	public function testDisallowedMutationXssDescCdata(): void
+	{
+		// markup hidden in a CDATA section inside the `<desc>` integration
+		// point re-parses as a live `<img onerror>` under an HTML parser
+		$fixture   = '<svg><desc><![CDATA[><img src=x onerror=alert(1)>]]></desc></svg>';
+		$sanitized = '<svg><desc>&gt;&lt;img src=x onerror=alert(1)&gt;</desc></svg>';
+
+		$this->assertSame($sanitized, Svg::sanitize($fixture));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The CDATA section (line 1) is not allowed');
+		Svg::validate($fixture);
+	}
+
+	public function testDisallowedMutationXssStyleCdata(): void
+	{
+		// a smuggled `</style>` inside a CDATA section breaks out of the
+		// raw text `<style>` element when re-parsed as HTML
+		$fixture   = '<svg><style><![CDATA[</style><img src=x onerror=alert(1)>]]></style></svg>';
+		$sanitized = '<svg><style>&lt;/style&gt;&lt;img src=x onerror=alert(1)&gt;</style></svg>';
+
+		$this->assertSame($sanitized, Svg::sanitize($fixture));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The CDATA section (line 1) is not allowed');
+		Svg::validate($fixture);
+	}
+
+	public function testDisallowedMutationXssTopLevelComment(): void
+	{
+		// a top-level comment is parsed as HTML (not foreign content) when
+		// the SVG is embedded inline, exposing the hidden `<img onerror>`
+		$fixture   = '<!--><img src=x onerror=alert(1)>--><svg></svg>';
+		$sanitized = '<svg/>';
+
+		$this->assertSame($sanitized, Svg::sanitize($fixture));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The comment (line 1) is not allowed');
+		Svg::validate($fixture);
 	}
 
 	public function testParseNonSvg(): void
