@@ -175,6 +175,34 @@ class BlocksFieldTest extends TestCase
 		$this->assertSame(['image', 'video'], $groups['media']['sets']);
 	}
 
+	public function testFormSharesCacheWithSiblings(): void
+	{
+		$fields = new Fields([
+			'blocks' => [
+				'type'      => 'blocks',
+				'fieldsets' => [
+					'text' => [
+						'fields' => [
+							'text' => ['type' => 'text']
+						]
+					]
+				]
+			]
+		], new Page(['slug' => 'test']));
+
+		$field = $fields->get('blocks');
+		$cache = $fields->cache();
+
+		// the block forms and all fieldsets must resolve their
+		// options through the cache of the surrounding form
+		$this->assertSame($cache, $field->form([])->fields()->cache());
+		$this->assertSame($cache, $field->fieldsets()->cache());
+		$this->assertSame(
+			$cache,
+			$field->fieldset('text')->form([])->fields()->cache()
+		);
+	}
+
 	public function testMax(): void
 	{
 		$field = $this->field('blocks', [

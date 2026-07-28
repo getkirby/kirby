@@ -40,9 +40,10 @@ trait Fields
 	public function form(): Form
 	{
 		$this->form ??= new Form(
-			fields: $this->fields ?? [],
-			model: $this->model(),
-			language: 'current'
+			fields:   $this->fields ?? [],
+			model:    $this->model(),
+			language: 'current',
+			cache:    $this->siblings()->cache()
 		);
 
 		return $this->form->reset();

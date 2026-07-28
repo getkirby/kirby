@@ -4,6 +4,7 @@ namespace Kirby\Form\Field;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
+use Kirby\Form\Fields;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(StructureField::class)]
@@ -190,6 +191,25 @@ class StructureFieldTest extends TestCase
 			'empty' => ['en' => 'Test', 'de' => 'Töst']
 		]);
 		$this->assertSame('Test', $field->empty());
+	}
+
+	public function testFormSharesCacheWithSiblings(): void
+	{
+		$fields = new Fields([
+			'structure' => [
+				'type'   => 'structure',
+				'fields' => [
+					'a' => ['type' => 'text']
+				]
+			]
+		], new Page(['slug' => 'test']));
+
+		// the nested form must resolve its options through the
+		// same cache as the form the structure field belongs to
+		$this->assertSame(
+			$fields->cache(),
+			$fields->get('structure')->form()->fields()->cache()
+		);
 	}
 
 	public function testIsValid(): void

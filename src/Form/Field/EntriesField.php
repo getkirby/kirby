@@ -117,7 +117,8 @@ class EntriesField extends InputField
 	{
 		return $this->form ??= new Form(
 			fields: [$this->field()],
-			model:  $this->model()
+			model:  $this->model(),
+			cache:  $this->siblings()->cache()
 		);
 	}
 
