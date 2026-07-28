@@ -816,6 +816,44 @@ class VersionTest extends TestCase
 		$this->assertSame($expected, $version->previewToken());
 	}
 
+	public function testPreviewTokenCustomPreviewUrl(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$this->app = $this->app->clone([
+			'options' => [
+				'content' => [
+					'salt' => 'testsalt'
+				]
+			]
+		]);
+
+		$page = new Page([
+			'slug' => 'test',
+			'blueprint' => [
+				'name'    => 'test',
+				'options' => [
+					'preview' => '{{ page.url }}.json'
+				]
+			]
+		]);
+
+		$version = new Version(
+			model: $page,
+			id: VersionId::changes()
+		);
+
+		// the token must be bound to the custom preview URL, so it still
+		// matches when the changed version is rendered
+		$expected = substr(
+			hash_hmac('sha1', '{"url":"' . $page->url() . '.json","versionId":"changes"}', 'testsalt'),
+			0,
+			10
+		);
+
+		$this->assertSame($expected, $version->previewToken());
+	}
+
 	public function testPreviewTokenCustomSalt(): void
 	{
 		$this->setUpSingleLanguage();

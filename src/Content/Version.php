@@ -420,7 +420,12 @@ class Version
 			throw new LogicException('Invalid model type');
 		}
 
-		return $this->previewTokenFromUrl($this->model->url());
+		// bind the token to the custom preview URL so it still matches
+		// when the version is rendered, otherwise use the page URL
+		$preview = $this->model->blueprint()->preview();
+		$url     = is_string($preview) === true ? $preview : $this->model->url();
+
+		return $this->previewTokenFromUrl($url);
 	}
 
 	/**
