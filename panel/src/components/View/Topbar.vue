@@ -25,6 +25,11 @@ export default {
 		breadcrumb: Array,
 		view: Object
 	},
+	data() {
+		return {
+			isLoading: false
+		};
+	},
 	computed: {
 		crumbs() {
 			return [
@@ -32,11 +37,28 @@ export default {
 					link: this.view.link,
 					label: this.view.label ?? this.view.breadcrumbLabel,
 					icon: this.view.icon,
-					loading: this.$panel.isLoading
+					loading: this.isLoading
 				},
 				...this.breadcrumb
 			];
 		}
+	},
+	watch: {
+		// only show the loader once loading takes a noticeable
+		// moment, to avoid a flicker on fast responses
+		"$panel.isLoading"(isLoading) {
+			clearTimeout(this.timer);
+
+			if (isLoading === false) {
+				this.isLoading = false;
+				return;
+			}
+
+			this.timer = setTimeout(() => (this.isLoading = true), 300);
+		}
+	},
+	unmounted() {
+		clearTimeout(this.timer);
 	}
 };
 </script>
