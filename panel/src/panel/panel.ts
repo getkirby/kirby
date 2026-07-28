@@ -236,13 +236,23 @@ export default class Panel {
 		// Register as the single source of truth for all Vue components
 		window.panel = app.config.globalProperties.$panel = panel;
 
-		// Bind all methods to the reactive proxy so that
-		// `this` inside methods always refers to the reactive object
+		// Bind all methods to the reactive proxy so that `this` inside
+		// methods always refers to the reactive object, even when they
+		// are called on the raw instance, e.g. from the module closures
+		// that captured it in the constructor. Class methods are not
+		// enumerable and live on the prototype, so both sources need
+		// to be collected; accessors are skipped as they cannot be bound
 		const p = panel as Record<string, unknown>;
+		const members = {
+			...Object.getOwnPropertyDescriptors(Panel.prototype),
+			...Object.getOwnPropertyDescriptors(panel)
+		};
 
-		for (const key in panel) {
-			if (typeof p[key] === "function") {
-				p[key] = (p[key] as (...args: unknown[]) => unknown).bind(panel);
+		for (const [key, descriptor] of Object.entries(members)) {
+			if (key !== "constructor" && typeof descriptor.value === "function") {
+				p[key] = (descriptor.value as (...args: unknown[]) => unknown).bind(
+					panel
+				);
 			}
 		}
 
