@@ -35,5 +35,7 @@ class CollectionNavigatorTest extends TestCase
 		$this->assertSame('zwei', $collection->nth(1));
 		$this->assertSame('drei', $collection->nth(2));
 		$this->assertSame('vier', $collection->nth(3));
+		$this->assertNull($collection->nth(4));
+		$this->assertNull($collection->nth(-1));
 	}
 }

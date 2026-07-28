@@ -723,7 +723,13 @@ class Collection extends Iterator implements Stringable
 	 */
 	public function nth(int $n)
 	{
-		return array_values($this->data)[$n] ?? null;
+		if ($n < 0) {
+			return null;
+		}
+
+		// `array_slice()` preserves string keys,
+		// so the single element needs to be re-indexed
+		return array_values(array_slice($this->data, $n, 1))[0] ?? null;
 	}
 
 	/**
