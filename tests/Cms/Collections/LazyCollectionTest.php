@@ -138,6 +138,8 @@ class LazyCollectionTest extends TestCase
 
 		$newCollection = $collection->empty();
 
+		$this->assertTrue($newCollection->hydrated);
+		$this->assertTrue($newCollection->initialized);
 		$this->assertSame([], $newCollection->toArray());
 	}
 
@@ -151,6 +153,8 @@ class LazyCollectionTest extends TestCase
 
 		$newCollection = $collection->empty();
 
+		$this->assertTrue($newCollection->hydrated);
+		$this->assertTrue($newCollection->initialized);
 		$this->assertSame([], $newCollection->toArray());
 	}
 
@@ -188,6 +192,9 @@ class LazyCollectionTest extends TestCase
 
 		$this->assertSame('a', $objectResult->id);
 		$this->assertSame('hydrated', $objectResult->type);
+
+		// the collection result contains only hydrated elements
+		$this->assertTrue($collectionResult->hydrated);
 
 		$this->assertSame([
 			'a' => ['id' => 'a', 'type' => 'hydrated'],
@@ -254,6 +261,28 @@ class LazyCollectionTest extends TestCase
 
 		$this->assertSame(3, $i);
 		$this->assertSame(['b', 'c'], $collection->hydratedElements);
+
+		// a fully consumed iterator is equivalent to `hydrate()`
+		$this->assertTrue($collection->hydrated);
+	}
+
+	public function testIteratePartial(): void
+	{
+		$collection = new MockLazyCollection();
+		$collection->data = [
+			'a' => new Obj(['id' => 'a', 'type' => 'static']),
+			'b' => null,
+			'c' => null
+		];
+
+		foreach ($collection as $value) {
+			$this->assertSame('a', $value->id);
+			break;
+		}
+
+		// a partially consumed iterator must not
+		// mark the collection as hydrated
+		$this->assertSame([], $collection->hydratedElements);
 		$this->assertFalse($collection->hydrated);
 	}
 
@@ -276,7 +305,7 @@ class LazyCollectionTest extends TestCase
 
 		$this->assertSame(3, $i);
 		$this->assertSame(['b', 'c'], $collection->hydratedElements);
-		$this->assertFalse($collection->hydrated);
+		$this->assertTrue($collection->hydrated);
 		$this->assertTrue($collection->initialized);
 	}
 
@@ -297,6 +326,10 @@ class LazyCollectionTest extends TestCase
 		}
 
 		$this->assertSame(['a', 'c'], $keys);
+
+		// hydration was attempted for every element,
+		// even if some of them could not be hydrated
+		$this->assertTrue($collection->hydrated);
 	}
 
 	public function testUnset(): void
