@@ -149,8 +149,10 @@ abstract class LazyCollection extends Collection
 		// prevent new collection from initializing its
 		// elements into the now empty collection
 		// (relevant when emptying a collection that
-		// has not been (fully) initialized yet)
+		// has not been (fully) initialized yet);
+		// an empty collection has nothing left to hydrate
 		$empty->initialized = true;
+		$empty->hydrated    = true;
 
 		return $empty;
 	}
@@ -242,6 +244,12 @@ abstract class LazyCollection extends Collection
 
 			yield $key => $value;
 		}
+
+		// a completed loop has attempted hydration for every
+		// element and is therefore equivalent to `hydrate()`;
+		// this line is only reached when the iterator
+		// has been fully consumed
+		$this->hydrated = true;
 	}
 
 	/**
