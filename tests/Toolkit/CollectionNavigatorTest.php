@@ -15,6 +15,11 @@ class CollectionNavigatorTest extends TestCase
 
 		$this->assertSame('eins', $collection->first());
 		$this->assertSame('vier', $collection->last());
+
+		$empty = new Collection();
+
+		$this->assertNull($empty->first());
+		$this->assertNull($empty->last());
 	}
 
 	public function testNth(): void

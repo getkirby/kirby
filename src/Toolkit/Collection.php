@@ -418,8 +418,8 @@ class Collection extends Iterator implements Stringable
 	 */
 	public function first()
 	{
-		$array = $this->data;
-		return array_shift($array);
+		$key = array_key_first($this->data);
+		return $key === null ? null : $this->data[$key];
 	}
 
 	/**
@@ -691,8 +691,8 @@ class Collection extends Iterator implements Stringable
 	 */
 	public function last()
 	{
-		$array = $this->data;
-		return array_pop($array);
+		$key = array_key_last($this->data);
+		return $key === null ? null : $this->data[$key];
 	}
 
 	/**
