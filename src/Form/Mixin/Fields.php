@@ -23,6 +23,11 @@ trait Fields
 	protected Form|null $form = null;
 
 	/**
+	 * Cache for the props of all fields
+	 */
+	protected array|null $fieldsProps = null;
+
+	/**
 	 * Returns the props for all fields in the form
 	 */
 	public function fields(): array
@@ -31,7 +36,7 @@ trait Fields
 			return [];
 		}
 
-		return $this->form()->fields()->toProps(defaults: true);
+		return $this->fieldsProps ??= $this->form()->fields()->toProps(defaults: true);
 	}
 
 	/**
