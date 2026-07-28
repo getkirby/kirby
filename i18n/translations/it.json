@@ -221,7 +221,7 @@
 
 	"error.site.changeTitle.empty": "Il titolo non può essere vuoto",
 	"error.site.changeTitle.permission": "Non ti è permesso modificare il titolo del sito",
-	"error.site.notAccessible": "The site is not accessible",
+	"error.site.notAccessible": "Il sito non è accessibile",
 	"error.site.update.permission": "Non ti è permesso modificare i contenuti globali del sito",
 
 	"error.structure.validation": "C'è un errore nel campo \"{field}\" nella riga {index}",
@@ -301,10 +301,10 @@
 	"error.validation.uuid": "Please enter a valid UUID",
 	"error.validation.url": "Inserisci un URL valido",
 
-	"error.version.discard.permission": "You are not allowed to discard this version",
-	"error.version.publish.permission": "You are not allowed to publish this version",
-	"error.version.save.permission": "You are not allowed to change this version",
-	"error.version.unlock.permission": "You are not allowed to unlock this version",
+	"error.version.discard.permission": "Non hai il permesso di scartare questa versione",
+	"error.version.publish.permission": "Non hai il permesso di pubblicare questa versione",
+	"error.version.save.permission": "Non hai il permesso di modificare questa versione",
+	"error.version.unlock.permission": "Non hai il permesso di sbloccare questa versione",
 
 	"expand": "Espandi",
 	"expand.all": "Expand all",
@@ -464,7 +464,7 @@
 	"language.variables.empty": "No translations yet",
 
 	"language.variable.delete.confirm": "Do you really want to delete the variable for {key}?",
-	"language.variable.entries": "Values",
+	"language.variable.entries": "Valori",
 	"language.variable.entries.help": "Each string will be used for its matching count, e.g. three strings will match in order to counts <code>0</code>, <code>1</code>, <code>2 and more</code>. Use the <code>{count}</code> placeholder to insert the actual count.",
 	"language.variable.key": "Key",
 	"language.variable.multiple": "Countable?",
