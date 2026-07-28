@@ -156,6 +156,19 @@ abstract class LazyCollection extends Collection
 	}
 
 	/**
+	 * Filters elements by one of the
+	 * predefined filter methods, by a
+	 * custom filter function or an array of filters
+	 */
+	public function filter(string|array|Closure $field, ...$args): static
+	{
+		// to filter through values, we need all values present
+		$this->hydrate();
+
+		return parent::filter($field, ...$args);
+	}
+
+	/**
 	 * Find one or multiple elements by id
 	 *
 	 * @param string|list<string> ...$keys
@@ -178,30 +191,6 @@ abstract class LazyCollection extends Collection
 	}
 
 	/**
-	 * Returns the elements in reverse order
-	 */
-	public function flip(): static
-	{
-		// flipping at least requires the collection structure
-		$this->initialize();
-
-		return parent::flip();
-	}
-
-	/**
-	 * Filters elements by one of the
-	 * predefined filter methods, by a
-	 * custom filter function or an array of filters
-	 */
-	public function filter(string|array|Closure $field, ...$args): static
-	{
-		// to filter through values, we need all values present
-		$this->hydrate();
-
-		return parent::filter($field, ...$args);
-	}
-
-	/**
 	 * Returns the first element
 	 *
 	 * @return TValue|null
@@ -220,6 +209,17 @@ abstract class LazyCollection extends Collection
 		}
 
 		return $first;
+	}
+
+	/**
+	 * Returns the elements in reverse order
+	 */
+	public function flip(): static
+	{
+		// flipping at least requires the collection structure
+		$this->initialize();
+
+		return parent::flip();
 	}
 
 	/**
@@ -306,17 +306,6 @@ abstract class LazyCollection extends Collection
 	}
 
 	/**
-	 * Returns an array of all keys
-	 */
-	public function keys(): array
-	{
-		// ensure we are returning all possible keys
-		$this->initialize();
-
-		return parent::keys();
-	}
-
-	/**
 	 * Tries to find the key for the given element
 	 *
 	 * @param TValue $needle the element to search for
@@ -335,6 +324,17 @@ abstract class LazyCollection extends Collection
 
 		$this->hydrate();
 		return parent::keyOf($needle);
+	}
+
+	/**
+	 * Returns an array of all keys
+	 */
+	public function keys(): array
+	{
+		// ensure we are returning all possible keys
+		$this->initialize();
+
+		return parent::keys();
 	}
 
 	/**
