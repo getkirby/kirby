@@ -217,7 +217,8 @@ class LayoutField extends BlocksField
 	{
 		return new Form(
 			fields: $this->settings()?->fields() ?? [],
-			model:  $this->model()
+			model:  $this->model(),
+			cache:  $this->siblings()->cache()
 		);
 	}
 

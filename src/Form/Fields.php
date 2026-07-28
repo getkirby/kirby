@@ -23,6 +23,7 @@ use Kirby\Toolkit\Str;
  */
 class Fields extends Collection
 {
+	protected FieldsCache $cache;
 	protected Language $language;
 	protected ModelWithContent $model;
 	protected array $passthrough = [];
@@ -30,10 +31,12 @@ class Fields extends Collection
 	public function __construct(
 		array $fields = [],
 		ModelWithContent|null $model = null,
-		Language|string|null $language = null
+		Language|string|null $language = null,
+		FieldsCache|null $cache = null
 	) {
 		$this->model    = $model ?? App::instance()->site();
 		$this->language = Language::ensure($language ?? 'current');
+		$this->cache    = $cache ?? new FieldsCache();
 
 		foreach ($fields as $name => $field) {
 			$this->__set($name, $field);
@@ -67,6 +70,14 @@ class Fields extends Collection
 		}
 
 		parent::__set($field->name(), $field);
+	}
+
+	/**
+	 * @since 6.0.0
+	 */
+	public function cache(): FieldsCache
+	{
+		return $this->cache;
 	}
 
 	/**
@@ -217,12 +228,14 @@ class Fields extends Collection
 	 */
 	public static function for(
 		ModelWithContent $model,
-		Language|string|null $language = null
+		Language|string|null $language = null,
+		FieldsCache|null $cache = null
 	): static {
 		return new static(
-			fields: $model->blueprint()->fields(),
-			model: $model,
+			fields:   $model->blueprint()->fields(),
+			model:    $model,
 			language: $language,
+			cache:    $cache,
 		);
 	}
 

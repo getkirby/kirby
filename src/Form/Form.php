@@ -33,7 +33,8 @@ class Form
 		array $props = [],
 		array $fields = [],
 		ModelWithContent|null $model = null,
-		Language|string|null $language = null
+		Language|string|null $language = null,
+		FieldsCache|null $cache = null
 	) {
 		if ($props !== []) {
 			$this->legacyConstruct(...$props);
@@ -41,9 +42,10 @@ class Form
 		}
 
 		$this->fields = new Fields(
-			fields: $fields,
-			model: $model,
-			language: $language
+			fields:   $fields,
+			model:    $model,
+			language: $language,
+			cache:    $cache
 		);
 	}
 

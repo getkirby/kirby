@@ -69,6 +69,20 @@ class FieldsTest extends TestCase
 		$this->assertSame($this->app->site(), $fields->last()->model());
 	}
 
+	public function testCache(): void
+	{
+		$fields = new Fields(model: $this->model);
+		$this->assertInstanceOf(FieldsCache::class, $fields->cache());
+	}
+
+	public function testCacheWithPassedCache(): void
+	{
+		$cache  = new FieldsCache();
+		$fields = new Fields(model: $this->model, cache: $cache);
+
+		$this->assertSame($cache, $fields->cache());
+	}
+
 	public function testDefaults(): void
 	{
 		$fields = new Fields([

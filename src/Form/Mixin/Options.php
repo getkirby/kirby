@@ -27,6 +27,16 @@ trait Options
 
 	public function options(): array
 	{
-		return $this->optionsCache ??= $this->fetchOptions();
+		return $this->optionsCache ??= $this->siblings()->cache()->getOrSet(
+			key: implode('/', [
+				'options',
+				static::class,
+				$this->model()::class,
+				$this->model()->id(),
+				$this->kirby()->languageCode() ?? '',
+				json_encode($this->options)
+			]),
+			result: $this->fetchOptions(...)
+		);
 	}
 }

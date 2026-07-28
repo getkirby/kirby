@@ -159,7 +159,8 @@ class Fieldset extends Item
 	{
 		$form = new Form(
 			fields: $fields,
-			model: $this->parent,
+			model:  $this->parent,
+			cache:  $this->siblings()->cache(),
 		);
 
 		$form->fill(

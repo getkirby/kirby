@@ -267,7 +267,10 @@ class BlocksField extends InputField
 	{
 		return $this->fieldsetsCollection ??= Fieldsets::factory(
 			$this->fieldsets,
-			['parent' => $this->model()]
+			[
+				'cache'  => $this->siblings()->cache(),
+				'parent' => $this->model()
+			]
 		);
 	}
 
@@ -292,9 +295,10 @@ class BlocksField extends InputField
 	public function form(array $fields): Form
 	{
 		return new Form(
-			fields: $fields,
-			model: $this->model,
-			language: 'current'
+			fields:   $fields,
+			model:    $this->model,
+			language: 'current',
+			cache:    $this->siblings()->cache()
 		);
 	}
 
