@@ -180,13 +180,20 @@ abstract class LazyCollection extends Collection
 	{
 		$result = parent::find(...$keys);
 
-		// when the result is a cloned collection (multiple keys),
-		// mark it as initialized to prevent it from initializing
-		// all of its elements again after we filtered it above
+		// a single key returns the element itself, which must not be
+		// touched as it can be a collection of the same class
+		// (e.g. a chunk that still contains unhydrated elements)
+		$single = count($keys) === 1 && is_array($keys[0]) === false;
+
+		// the cloned result collection only contains elements that
+		// `findByKey()` has already hydrated; marking it as initialized
+		// prevents a later initialization from bringing back the
+		// elements that were filtered out above
 		// (relevant when finding elements in a collection that
 		// has not been (fully) initialized yet)
-		if ($result instanceof static && $result !== $this) {
+		if ($single === false && $result instanceof static) {
 			$result->initialized = true;
+			$result->hydrated    = true;
 		}
 
 		return $result;

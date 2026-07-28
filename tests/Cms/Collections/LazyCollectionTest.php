@@ -202,6 +202,24 @@ class LazyCollectionTest extends TestCase
 		], $collectionResult->toArray());
 	}
 
+	public function testFindNested(): void
+	{
+		$collection = new MockLazyCollection();
+		$collection->data = [
+			'a' => new Obj(['id' => 'a', 'type' => 'static']),
+			'b' => null,
+			'c' => null,
+			'd' => null
+		];
+
+		$chunk = $collection->chunk(2)->find('0');
+
+		// a single key returns the element itself, which can be a
+		// collection with unhydrated elements of its own
+		$this->assertFalse($chunk->hydrated);
+		$this->assertSame(['b'], $chunk->filter('type', 'hydrated')->pluck('id'));
+	}
+
 	public function testGet(): void
 	{
 		$collection = new MockLazyCollection();
