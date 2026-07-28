@@ -995,10 +995,21 @@ class StrTest extends TestCase
 			]
 		));
 
-		// prevent arbitrary code execution attacks from query placeholders in the untrusted data
+		// prevent arbitrary code execution attacks
+		// from query placeholders in the untrusted data
 		$this->assertSame(
 			'{{ dangerous }},{&lt; dangerous &gt;};{{ dangerous }},{< dangerous >}',
 			Str::safeTemplate('{{ malicious1 }},{{ malicious2 }};{< malicious1 >},{< malicious2 >}', [
+				'malicious1' => '{{ dangerous }}',
+				'malicious2' => '{< dangerous >}',
+				'dangerous' => '*deleting all of the content or something*'
+			])
+		);
+
+		// … also when the template itself has no unescaped placeholders
+		$this->assertSame(
+			'{{ dangerous }},{&lt; dangerous &gt;}',
+			Str::safeTemplate('{{ malicious1 }},{{ malicious2 }}', [
 				'malicious1' => '{{ dangerous }}',
 				'malicious2' => '{< dangerous >}',
 				'dangerous' => '*deleting all of the content or something*'
