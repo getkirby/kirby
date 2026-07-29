@@ -98,7 +98,7 @@ export default {
 .k-block-type-gallery-figure ul {
 	display: grid;
 	grid-gap: 0.75rem;
-	grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
+	grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
 	line-height: 0;
 	align-items: center;
 	justify-content: center;
