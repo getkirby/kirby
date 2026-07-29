@@ -3,8 +3,6 @@
  * @license   https://opensource.org/licenses/MIT
  */
 
-import { DOMParser, DOMSerializer, Schema } from "prosemirror-model";
-
 import "./regex";
 import { createMarks, createNodes } from "./writer";
 import type WriterMark from "@/components/Forms/Writer/Mark";
@@ -208,19 +206,22 @@ export function rtrim(string: unknown = "", replace: string = ""): string {
  * (bold, italic, underline, links)
  *
  * @example
- * sanitizeHTML("<b>bold</b> <script>alert(1)</script>") // "<strong>bold</strong> "
- * sanitizeHTML("<b>bold</b>", { marks: ["italic"] }) // "bold"
+ * await sanitizeHTML("<b>bold</b> <script>alert(1)</script>") // "<strong>bold</strong> "
+ * await sanitizeHTML("<b>bold</b>", { marks: ["italic"] }) // "bold"
  */
-export function sanitizeHTML(
+export async function sanitizeHTML(
 	html: unknown,
 	options: {
 		marks?: (string | WriterMark)[];
 		nodes?: (string | WriterNode)[];
 	} = {}
-): string {
+): Promise<string> {
 	if (!html) {
 		return "";
 	}
+
+	const { DOMParser, DOMSerializer, Schema } =
+		await import("prosemirror-model");
 
 	const marks = createMarks(
 		options.marks ?? [

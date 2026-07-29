@@ -1,3 +1,4 @@
+import { defineAsyncComponent } from "vue";
 import AlphaInput from "./AlphaInput.vue";
 import CalendarInput from "./CalendarInput.vue";
 import CheckboxInput from "./CheckboxInput.vue";
@@ -30,9 +31,15 @@ import TimeoptionsInput from "./TimeoptionsInput.vue";
 import ToggleInput from "./ToggleInput.vue";
 import TogglesInput from "./TogglesInput.vue";
 import UrlInput from "./UrlInput.vue";
-import WriterInput from "./WriterInput.vue";
 
 import Validator from "./Validator.js";
+
+/**
+ * Writer carries ProseMirror, which is the heaviest dependency
+ * of the Panel and is only needed once an editor is actually rendered.
+ * Loading it on demand keeps it out of the initial bundle.
+ */
+const WriterInput = defineAsyncComponent(() => import("./WriterInput.vue"));
 
 /** @deprecated */
 import Writer from "../Writer/Writer.vue";

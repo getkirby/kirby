@@ -38,60 +38,13 @@ import Keys from "../Writer/Extensions/Keys.js";
 import Toolbar from "../Writer/Extensions/Toolbar.js";
 
 // Input
-import Input, { props as InputProps } from "@/mixins/input.js";
-import {
-	maxlength,
-	minlength,
-	placeholder,
-	spellcheck
-} from "@/mixins/props.js";
+import Input from "@/mixins/input.js";
 
-export const props = {
-	mixins: [InputProps, maxlength, minlength, placeholder, spellcheck],
-	props: {
-		breaks: Boolean,
-		code: Boolean,
-		emptyDocument: {
-			type: Object,
-			default: () => ({
-				type: "doc",
-				content: []
-			})
-		},
-		extensions: Array,
-		headings: {
-			default: () => [1, 2, 3, 4, 5, 6],
-			type: [Array, Boolean]
-		},
-		inline: Boolean,
-		keys: Object,
-		marks: {
-			type: [Array, Boolean],
-			default: true
-		},
-		nodes: {
-			type: [Array, Boolean],
-			default: () => ["heading", "bulletList", "orderedList"]
-		},
-		paste: {
-			type: Function,
-			default: () => () => false
-		},
-		/**
-		 * See `k-writer-toolbar` for available options
-		 */
-		toolbar: {
-			type: Object,
-			default: () => ({
-				inline: true
-			})
-		},
-		value: {
-			type: String,
-			default: ""
-		}
-	}
-};
+// The prop definitions live in their own file so that components which
+// only need them don't have to import this one and with it ProseMirror.
+// Re-exported here to keep the established import path working for now.
+export { props } from "./WriterInput.props.js";
+import { props } from "./WriterInput.props.js";
 
 /**
  * @copyright Bastian Allgeier
