@@ -320,6 +320,36 @@ describe("panel.content", () => {
 				content.merge({ title: "New" }, { api: "/pages/other" })
 			).toThrow("The content in another view cannot be merged");
 		});
+
+		it("keeps the identity of the changes object", () => {
+			const panel = createPanel();
+			const content = Content(panel);
+			const before = content.version("changes");
+			content.merge({ title: "New Title" });
+			expect(content.version("changes")).toBe(before);
+		});
+
+		it("does not touch the latest version after a discard", async () => {
+			const panel = createPanel({
+				latest: { title: "Published" },
+				changes: { title: "Draft" }
+			});
+			const content = Content(panel);
+			await content.discard();
+			content.merge({ title: "Typed after discarding" });
+			expect(content.version("latest")).toStrictEqual({ title: "Published" });
+		});
+
+		it("does not touch the latest version after a publish", async () => {
+			const panel = createPanel({
+				latest: { title: "Published" },
+				changes: { title: "Draft" }
+			});
+			const content = Content(panel);
+			await content.publish();
+			content.merge({ title: "Typed after publishing" });
+			expect(content.version("latest")).toStrictEqual({ title: "Draft" });
+		});
 	});
 
 	describe("publish()", () => {
