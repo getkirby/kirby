@@ -66,7 +66,7 @@ export default {
 :root {
 	--header-color-back: var(--panel-color-back);
 	--header-padding-block: var(--spacing-4);
-	--header-sticky-offset: var(--scroll-top);
+	--header-sticky-offset: 0rem;
 }
 
 .k-header {
@@ -144,11 +144,11 @@ export default {
 }
 .k-header:has(.k-header-buttons) {
 	position: sticky;
-	top: var(--scroll-top);
+	top: 0;
 	z-index: var(--z-toolbar);
 }
 :root:has(.k-header .k-header-buttons) {
-	--header-sticky-offset: calc(var(--scroll-top) + 4rem);
+	--header-sticky-offset: 4rem;
 }
 
 .k-header .k-header-title-placeholder {

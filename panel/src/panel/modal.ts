@@ -108,12 +108,6 @@ export default function Modal<T extends ModalState>(
 			this.emit("close");
 			this.reset();
 			closed();
-
-			if (panel.overlays().length === 0) {
-				// unblock the overflow until we can use :has for this.
-				document.documentElement.removeAttribute("data-overlay");
-				document.documentElement.style.removeProperty("--scroll-top");
-			}
 		},
 
 		/**
@@ -187,14 +181,6 @@ export default function Modal<T extends ModalState>(
 
 			// only mark this as open if a component has been defined
 			if (this.component) {
-				// block the overflow until we can use :has for this.
-				document.documentElement.setAttribute("data-overlay", "true");
-				document.documentElement.style.setProperty(
-					"--scroll-top",
-					window.scrollY + "px"
-				);
-
-				// mark the modal as open
 				this.isOpen = true;
 			}
 
