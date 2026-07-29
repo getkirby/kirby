@@ -130,6 +130,11 @@ export default {
 }
 
 /* Dropzone */
+.k-dialog > .k-dropzone {
+	display: flex;
+	flex-direction: column;
+	min-height: 0;
+}
 .k-dialog > .k-dropzone::after {
 	border-radius: var(--dialog-rounded);
 	outline-offset: -2px;
