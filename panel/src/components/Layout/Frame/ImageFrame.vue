@@ -11,6 +11,8 @@
 			:src="src ?? resolvedSrc"
 			:srcset="srcset ?? resolvedSrcset"
 			:sizes="sizes"
+			decoding="async"
+			loading="lazy"
 			@dragstart.prevent
 		/>
 	</k-frame>
@@ -81,20 +83,17 @@ export default {
 
 			// if internal file, load data for file UUID from request endpoint
 			if (this.file) {
-				const data = await this.$panel.get("items/files", {
-					query: {
-						items: this.file,
-						layout: "auto",
-						image: JSON.stringify({
-							ratio: this.ratio,
-							cover: this.cover
-						})
-					}
+				const item = await this.$helper.items("items/files", this.file, {
+					layout: "auto",
+					image: JSON.stringify({
+						ratio: this.ratio,
+						cover: this.cover
+					})
 				});
 
-				alt = data.items[0]?.alt;
-				src = data.items[0]?.image.src;
-				srcset = data.items[0]?.image.srcset;
+				alt = item?.alt;
+				src = item?.image?.src;
+				srcset = item?.image?.srcset;
 			}
 
 			this.resolvedAlt = alt;

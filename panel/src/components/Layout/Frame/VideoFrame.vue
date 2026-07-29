@@ -78,11 +78,7 @@ export default {
 
 			// if internal file, load data for file UUID from request endpoint
 			if (this.file) {
-				const data = await await this.$panel.get("items/files", {
-					query: { items: this.file }
-				});
-
-				url = data.items[0]?.url;
+				url = (await this.$helper.items("items/files", this.file))?.url;
 			}
 
 			this.resolvedUrl = url;

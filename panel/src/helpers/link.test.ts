@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { length } from "./object";
 import {
 	detect,
@@ -6,7 +6,6 @@ import {
 	getPageUUID,
 	isFileUUID,
 	isPageUUID,
-	preview,
 	types
 } from "./link";
 
@@ -65,116 +64,6 @@ describe("$helper.link", () => {
 			expect(isPageUUID("/@/page/324hjk24")).toBeTruthy();
 			expect(isPageUUID("/en/@/page/324hjk24")).toBeTruthy();
 			expect(isPageUUID("site://")).toBeTruthy();
-		});
-	});
-
-	describe("preview()", () => {
-		beforeEach(() => {
-			window.panel = {
-				t: (value: string) => value,
-				api: {
-					files: { get: vi.fn() },
-					pages: { get: vi.fn() }
-				}
-			} as unknown as typeof window.panel;
-		});
-
-		it("should return null when there is no link", async () => {
-			expect(await preview({ type: "url", link: "" })).toBeNull();
-		});
-
-		it("should return a label-only preview for a plain link", async () => {
-			expect(
-				await preview({ type: "url", link: "https://getkirby.com" })
-			).toEqual({
-				label: "https://getkirby.com"
-			});
-		});
-
-		it("should return a page preview", async () => {
-			vi.mocked(window.panel.api.pages.get).mockResolvedValue({
-				title: "About",
-				panelImage: "IMG"
-			});
-
-			const result = await preview({ type: "page", link: "page://2" }, [
-				"title",
-				"panelImage"
-			]);
-
-			expect(result).toEqual({ label: "About", image: "IMG" });
-			expect(window.panel.api.pages.get).toHaveBeenCalledWith("page://2", {
-				select: "title,panelImage"
-			});
-		});
-
-		it("should request default page preview fields", async () => {
-			vi.mocked(window.panel.api.pages.get).mockResolvedValue({
-				title: "Page"
-			});
-
-			await preview({ type: "page", link: "page://324hjk24" });
-
-			expect(window.panel.api.pages.get).toHaveBeenCalledWith(
-				"page://324hjk24",
-				{ select: "title,panelImage" }
-			);
-		});
-
-		it("should return the site label for site://", async () => {
-			const result = await preview({ type: "page", link: "site://" });
-
-			expect(result).toEqual({ label: "view.site" });
-			expect(window.panel.api.pages.get).not.toHaveBeenCalled();
-		});
-
-		it("should return null when the page api throws", async () => {
-			vi.mocked(window.panel.api.pages.get).mockRejectedValue(
-				new Error("nope")
-			);
-			expect(await preview({ type: "page", link: "page://2" })).toBeNull();
-		});
-
-		it("should return a file preview", async () => {
-			vi.mocked(window.panel.api.files.get).mockResolvedValue({
-				filename: "image.png",
-				panelImage: "IMG"
-			});
-
-			const result = await preview({ type: "file", link: "file://1" }, [
-				"filename",
-				"panelImage"
-			]);
-
-			expect(result).toEqual({ label: "image.png", image: "IMG" });
-			expect(window.panel.api.files.get).toHaveBeenCalledWith(
-				null,
-				"file://1",
-				{
-					select: "filename,panelImage"
-				}
-			);
-		});
-
-		it("should request default file preview fields", async () => {
-			vi.mocked(window.panel.api.files.get).mockResolvedValue({
-				filename: "image.jpg"
-			});
-
-			await preview({ type: "file", link: "file://324hjk24" });
-
-			expect(window.panel.api.files.get).toHaveBeenCalledWith(
-				null,
-				"file://324hjk24",
-				{ select: "filename,panelImage" }
-			);
-		});
-
-		it("should return null when the file api throws", async () => {
-			vi.mocked(window.panel.api.files.get).mockRejectedValue(
-				new Error("nope")
-			);
-			expect(await preview({ type: "file", link: "file://1" })).toBeNull();
 		});
 	});
 

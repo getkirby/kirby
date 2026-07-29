@@ -9,7 +9,7 @@
 				:value="focus"
 				@input="setFocus($event)"
 			>
-				<img alt="" v-bind="image" @dragstart.prevent />
+				<img alt="" v-bind="image" decoding="async" @dragstart.prevent />
 			</k-coords-input>
 		</k-file-preview-frame>
 
