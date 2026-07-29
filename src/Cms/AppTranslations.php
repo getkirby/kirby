@@ -20,13 +20,16 @@ trait AppTranslations
 	 */
 	protected function i18n(): void
 	{
-		I18n::$load = function ($locale): array {
-			$data = $this->translation($locale)->data();
+		// These closures are stored statically on `I18n` and therefore outlive
+		// the app that installed them. They must not capture `$this`.
+		I18n::$load = static function ($locale): array {
+			$kirby = App::instance();
+			$data  = $kirby->translation($locale)->data();
 
 			// inject translations from the current language
 			if (
-				$this->multilang() === true &&
-				$language = $this->languages()->find($locale)
+				$kirby->multilang() === true &&
+				$language = $kirby->languages()->find($locale)
 			) {
 				$data = [...$data, ...$language->translations()];
 			}
@@ -36,18 +39,22 @@ trait AppTranslations
 		};
 
 		// the actual locale is set using $app->setCurrentTranslation()
-		I18n::$locale = function (): string {
-			if ($this->multilang() === true) {
-				return $this->defaultLanguage()->code();
+		I18n::$locale = static function (): string {
+			$kirby = App::instance();
+
+			if ($kirby->multilang() === true) {
+				return $kirby->defaultLanguage()->code();
 			}
 
 			return 'en';
 		};
 
-		I18n::$fallback = function (): array {
-			if ($this->multilang() === true) {
+		I18n::$fallback = static function (): array {
+			$kirby = App::instance();
+
+			if ($kirby->multilang() === true) {
 				// first try to fall back to the configured default language
-				$defaultCode = $this->defaultLanguage()->code();
+				$defaultCode = $kirby->defaultLanguage()->code();
 				$fallback    = [$defaultCode];
 
 				// if the default language is specified with a country code
