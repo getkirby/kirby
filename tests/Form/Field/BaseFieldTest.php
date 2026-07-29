@@ -2,6 +2,7 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Cms\Language;
 use Kirby\Cms\Page;
 use Kirby\Form\Fields;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -87,6 +88,17 @@ class BaseFieldTest extends TestCase
 	{
 		$field = new MockBaseField();
 		$this->assertFalse($field->isHidden());
+	}
+
+	public function testIsSubmittable(): void
+	{
+		// fields without a value are never submitted
+		$field = new MockBaseField();
+		$this->assertFalse($field->isSubmittable(Language::ensure()));
+
+		// `Kirby\Form\Mixin\Value` overwrites the default
+		$field = $this->field('text', ['name' => 'test']);
+		$this->assertTrue($field->isSubmittable(Language::ensure()));
 	}
 
 	public function testLabel(): void
