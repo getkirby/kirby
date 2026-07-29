@@ -67,18 +67,18 @@
 		<UnusedFunctionCall errorLevel="suppress" />
 		<UnusedVariable errorLevel="suppress" />
 
-		<!-- Don't warn about the classes of optional PHP extensions -->
-		<UndefinedClass>
-			<errorLevel type="suppress">
-				<file name="src/Cache/ApcuCache.php" />
-			</errorLevel>
-		</UndefinedClass>
-
 		<!-- Don't warn about undefined magic methods/properties as Kirby resolves much of its API dynamically through __call/__callStatic/__get/__set, which Psalm cannot follow statically -->
 		<UndefinedMagicMethod errorLevel="suppress" />
 		<UndefinedMagicPropertyFetch errorLevel="suppress" />
 		<UndefinedMagicPropertyAssignment errorLevel="suppress" />
 	</issueHandlers>
+
+	<!-- Load Psalm's bundled stubs for optional extensions Kirby uses, so that analysis does not depend on which extensions the local PHP happens to have -->
+	<enableExtensions>
+		<extension name="apcu" />
+		<extension name="pdo" />
+		<extension name="redis" />
+	</enableExtensions>
 
 	<plugins>
 		<plugin filename="etc/psalm-plugins/HelperFunctionUsePlugin.php" />
