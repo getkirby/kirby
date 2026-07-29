@@ -75,7 +75,7 @@ export default {
 			// get all missing items from API
 			// and replace in tags array
 			if (missing.length > 0) {
-				const data = await await this.$panel.get(this.$options.endpoint, {
+				const data = await this.$panel.get(this.$options.endpoint, {
 					query: {
 						items: missing.join(",")
 					}
