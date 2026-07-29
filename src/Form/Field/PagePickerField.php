@@ -14,7 +14,7 @@ use Kirby\Panel\Ui\Item\PageItem;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  *
- * @extends \Kirby\Form\Field\ModelPickerField<\Kirby\Cms\Page>
+ * @extends ModelPickerField<Page>
  */
 class PagePickerField extends ModelPickerField
 {
@@ -112,7 +112,7 @@ class PagePickerField extends ModelPickerField
 	}
 
 	/**
-	 * @param \Kirby\Cms\Page $model
+	 * @param Page $model
 	 */
 	public function toItem(ModelWithContent $model): array
 	{

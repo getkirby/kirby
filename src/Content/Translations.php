@@ -11,7 +11,7 @@ use Kirby\Cms\ModelWithContent;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @extends \Kirby\Cms\Collection<\Kirby\Content\Translation>
+ * @extends Collection<Translation>
  */
 class Translations extends Collection
 {

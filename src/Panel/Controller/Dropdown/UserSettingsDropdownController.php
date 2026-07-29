@@ -4,6 +4,7 @@ namespace Kirby\Panel\Controller\Dropdown;
 
 use Kirby\Cms\Find;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Cms\User;
 
 /**
  * @copyright Bastian Allgeier
@@ -15,7 +16,7 @@ use Kirby\Cms\ModelWithContent;
 class UserSettingsDropdownController extends ModelSettingsDropdownController
 {
 	/**
-	 * @param \Kirby\Cms\User $model
+	 * @param User $model
 	 */
 	public function __construct(
 		protected ModelWithContent $model

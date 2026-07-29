@@ -39,7 +39,7 @@ class BasicAuthMethodTest extends TestCase
 				return $this->ssl;
 			}
 
-			public function auth(): \Kirby\Http\Request\Auth|false|null
+			public function auth(): Request\Auth|false|null
 			{
 				return $this->header;
 			}

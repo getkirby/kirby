@@ -102,7 +102,12 @@
 			"@analyze",
 			"@test"
 		],
-		"fix": "cpx friendsofphp/php-cs-fixer:3.95.3 fix",
+		"fix": [
+			"@fix:style",
+			"@fix:types"
+		],
+		"fix:style": "cpx friendsofphp/php-cs-fixer:3.95.3 fix",
+		"fix:types": "cpx friendsofphp/php-cs-fixer:3.95.3 fix --config=.php-cs-fixer.types.php",
 		"test": "cpx brianium/paratest:7.20.0",
 		"test:coverage": [
 			"@putenv XDEBUG_MODE=coverage",

@@ -13,7 +13,7 @@ use Kirby\Panel\Ui\Button\ViewButtons;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  *
- * @extends \Kirby\Panel\Controller\View\ModelViewController<\Kirby\Cms\Site, \Kirby\Panel\Site>
+ * @extends ModelViewController<Site, \Kirby\Panel\Site>
  */
 class SiteViewController extends ModelViewController
 {

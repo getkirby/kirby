@@ -143,7 +143,7 @@ class Snippet extends Tpl
 	 *
 	 * @param string $file Path to the snippet file
 	 * @param array $data Data available inside the snippet
-	 * @param \Kirby\Template\Slots|null Slots available in the snippet
+	 * @param Slots|null Slots available in the snippet
 	 * @return string The rendered content of the given snippet file
 	 */
 	public static function load(
@@ -371,7 +371,7 @@ class Snippet extends Tpl
 	/**
 	 * Returns the data variables that get passed to a snippet
 	 *
-	 * @param \Kirby\Template\Slots|null $slots If null, an empty dummy object is used
+	 * @param Slots|null $slots If null, an empty dummy object is used
 	 */
 	protected static function scope(
 		array $data = [],

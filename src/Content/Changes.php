@@ -54,7 +54,7 @@ class Changes
 	 * Verify that the tracked model still really has changes.
 	 * If not, untrack and remove from collection.
 	 *
-	 * @template T of \Kirby\Cms\Files|\Kirby\Cms\Pages|\Kirby\Cms\Users
+	 * @template T of Files|Pages|Users
 	 * @param T $tracked
 	 * @return T
 	 */

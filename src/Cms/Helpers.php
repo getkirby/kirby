@@ -111,10 +111,10 @@ class Helpers
 	 * for all PHP errors and warnings
 	 * @since 3.7.4
 	 *
-	 * @param \Closure $action Any action that may cause an error or warning
-	 * @param \Closure $condition Closure that returns bool to determine if to
-	 *                            suppress an error, receives arguments for
-	 *                            `set_error_handler()`
+	 * @param Closure $action Any action that may cause an error or warning
+	 * @param Closure $condition Closure that returns bool to determine if to
+	 *                           suppress an error, receives arguments for
+	 *                           `set_error_handler()`
 	 * @param mixed $fallback Value to return when error is suppressed
 	 * @return mixed Return value of the `$action` closure,
 	 *               possibly overridden by `$fallback`
@@ -200,7 +200,7 @@ class Helpers
 	 * Determines the size/length of numbers,
 	 * strings, arrays and countable objects
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public static function size(mixed $value): int
 	{

@@ -30,7 +30,7 @@ class UserPicker extends Picker
 	/**
 	 * Search all users for the picker
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public function items(): Users|null
 	{

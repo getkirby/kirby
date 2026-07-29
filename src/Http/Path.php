@@ -12,7 +12,7 @@ use Kirby\Toolkit\Str;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  *
- * @extends \Kirby\Toolkit\Collection<string>
+ * @extends Collection<string>
  */
 class Path extends Collection
 {

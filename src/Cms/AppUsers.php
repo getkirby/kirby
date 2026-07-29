@@ -38,7 +38,7 @@ trait AppUsers
 	 *                               impersonation will be reset afterwards
 	 * @return mixed If called without callback: User that was impersonated;
 	 *               if called with callback: Return value from the callback
-	 * @throws \Throwable
+	 * @throws Throwable
 	 */
 	public function impersonate(
 		string|null $who = null,

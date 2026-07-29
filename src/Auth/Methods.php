@@ -35,7 +35,7 @@ class Methods
 	/**
 	 * Authenticates via the specific auth method
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException If auth method type does not exists or is not available
+	 * @throws InvalidArgumentException If auth method type does not exists or is not available
 	 */
 	public function authenticate(
 		string $type,
@@ -66,7 +66,7 @@ class Methods
 			($class = static::$methods[$type] ?? null) &&
 			is_subclass_of($class, Method::class) === true
 		) {
-			/** @var class-string<\Kirby\Auth\Method> $class */
+			/** @var class-string<Method> $class */
 			return $class;
 		}
 
@@ -139,7 +139,7 @@ class Methods
 	 * Returns the first enabled auth method
 	 * for the current context
 	 *
-	 * @throws \Kirby\Exception\NotFoundException If no auth method is enabled
+	 * @throws NotFoundException If no auth method is enabled
 	 */
 	public function firstEnabled(): Method
 	{

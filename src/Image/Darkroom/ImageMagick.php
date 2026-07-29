@@ -110,7 +110,7 @@ class ImageMagick extends Darkroom
 	 * Creates and runs the full imagemagick command
 	 * to process the image
 	 *
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function process(string $file, array $options = []): array
 	{

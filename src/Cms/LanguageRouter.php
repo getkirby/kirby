@@ -33,7 +33,7 @@ class LanguageRouter
 	 * Fetches all scoped routes for the
 	 * current language from the Kirby instance
 	 *
-	 * @throws \Kirby\Exception\NotFoundException
+	 * @throws NotFoundException
 	 */
 	public function routes(): array
 	{

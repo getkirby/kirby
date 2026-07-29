@@ -441,7 +441,7 @@ class Query
 	 *
 	 * @param string $type (select, update, insert, delete)
 	 * @return array The final query
-	 * @throws \InvalidArgumentException If the query type is invalid
+	 * @throws InvalidArgumentException If the query type is invalid
 	 */
 	public function build(string $type): array
 	{

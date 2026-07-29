@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel\Controller\Search;
 
+use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
 use Kirby\Panel\Ui\Item\PageItem;
 
@@ -15,7 +16,7 @@ use Kirby\Panel\Ui\Item\PageItem;
 class PagesSearchController extends ModelsSearchController
 {
 	/**
-	 * @param \Kirby\Cms\Page $model
+	 * @param Page $model
 	 */
 	public function item($model): PageItem
 	{

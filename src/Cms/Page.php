@@ -18,6 +18,7 @@ use Kirby\Toolkit\A;
 use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\LazyValue;
 use Kirby\Toolkit\Str;
+use Kirby\Uuid\PageUuid;
 use Throwable;
 
 /**
@@ -29,8 +30,8 @@ use Throwable;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Pages>
- * @method \Kirby\Uuid\PageUuid uuid()
+ * @use HasSiblings<Pages>
+ * @method PageUuid uuid()
  */
 class Page extends ModelWithContent
 {
@@ -203,7 +204,7 @@ class Page extends ModelWithContent
 	 */
 	public function blueprint(): PageBlueprint
 	{
-		/** @var \Kirby\Blueprint\PageBlueprint */
+		/** @var PageBlueprint */
 		return $this->blueprint ??= PageBlueprint::factory(
 			'pages/' . $this->intendedTemplate(),
 			'pages/default',
@@ -292,7 +293,7 @@ class Page extends ModelWithContent
 	/**
 	 * Call the page controller
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException If the controller returns invalid objects for `kirby`, `site`, `pages` or `page`
+	 * @throws InvalidArgumentException If the controller returns invalid objects for `kirby`, `site`, `pages` or `page`
 	 */
 	#[BlockCollectionAccess]
 	public function controller(
@@ -490,7 +491,7 @@ class Page extends ModelWithContent
 	/**
 	 * Compares the current object with the given page object
 	 *
-	 * @param \Kirby\Cms\Page|string $page
+	 * @param Page|string $page
 	 */
 	public function is($page): bool
 	{
@@ -600,7 +601,7 @@ class Page extends ModelWithContent
 	/**
 	 * Checks if the page is a child of the given page
 	 *
-	 * @param \Kirby\Cms\Page|string $parent
+	 * @param Page|string $parent
 	 */
 	public function isChildOf($parent): bool
 	{
@@ -610,7 +611,7 @@ class Page extends ModelWithContent
 	/**
 	 * Checks if the page is a descendant of the given page
 	 *
-	 * @param \Kirby\Cms\Page|string $parent
+	 * @param Page|string $parent
 	 */
 	public function isDescendantOf($parent): bool
 	{
@@ -906,8 +907,8 @@ class Page extends ModelWithContent
 	 * the default template.
 	 *
 	 * @param string $contentType
-	 * @param \Kirby\Content\VersionId|string|null $versionId Optional override for the auto-detected version to render
-	 * @throws \Kirby\Exception\NotFoundException If the default template cannot be found
+	 * @param VersionId|string|null $versionId Optional override for the auto-detected version to render
+	 * @throws NotFoundException If the default template cannot be found
 	 */
 	#[BlockCollectionAccess]
 	public function render(
@@ -1042,7 +1043,7 @@ class Page extends ModelWithContent
 	}
 
 	/**
-	 * @throws \Kirby\Exception\NotFoundException If the content representation cannot be found
+	 * @throws NotFoundException If the content representation cannot be found
 	 */
 	#[BlockCollectionAccess]
 	public function representation(mixed $type): Template

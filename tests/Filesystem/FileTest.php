@@ -19,7 +19,7 @@ class InvalidFileModel
 	public string $foo = 'bar';
 }
 
-#[CoversClass(\Kirby\Filesystem\File::class)]
+#[CoversClass(File::class)]
 class FileTest extends TestCase
 {
 	public const string FIXTURES = __DIR__ . '/fixtures/files';

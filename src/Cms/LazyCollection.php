@@ -27,7 +27,7 @@ use Kirby\Exception\LogicException;
  * @license   https://getkirby.com/license
  *
  * @template TValue
- * @extends \Kirby\Cms\Collection<TValue>
+ * @extends Collection<TValue>
  */
 abstract class LazyCollection extends Collection
 {
@@ -224,7 +224,7 @@ abstract class LazyCollection extends Collection
 
 	/**
 	 * Returns an iterator for the elements
-	 * @return \Iterator<string, TValue>
+	 * @return Iterator<string, TValue>
 	 */
 	public function getIterator(): Iterator
 	{

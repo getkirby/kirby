@@ -231,7 +231,7 @@ class Event implements Stringable
 	 * Updates a given argument with a new value
 	 *
 	 * @unstable
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public function updateArgument(string $name, $value): void
 	{

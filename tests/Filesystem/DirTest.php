@@ -29,7 +29,7 @@ class DirRemoveRecursiveThrows extends Dir
 {
 	protected static function removeRecursive(string $dir): void
 	{
-		throw new \Exception('test: cleanup failure');
+		throw new Exception('test: cleanup failure');
 	}
 }
 

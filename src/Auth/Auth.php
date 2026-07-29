@@ -11,6 +11,8 @@ use Kirby\Auth\User as AuthUser;
 use Kirby\Cms\App;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\LogicException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Exception\UserNotFoundException;
 use Kirby\Http\Idn;
@@ -52,9 +54,9 @@ class Auth
 	 * Login a user with email and (maybe optional) password
 	 * as well as an auth challenge, if required by the auth method
 	 *
-	 * @throws \Kirby\Exception\PermissionException If the rate limit was exceeded if any other error occurred with debug mode off
-	 * @throws \Kirby\Exception\NotFoundException If the email was invalid
-	 * @throws \Kirby\Exception\InvalidArgumentException If the password is not valid (via `$user->login()`)
+	 * @throws PermissionException If the rate limit was exceeded if any other error occurred with debug mode off
+	 * @throws NotFoundException If the email was invalid
+	 * @throws InvalidArgumentException If the password is not valid (via `$user->login()`)
 	 */
 	public function authenticate(
 		string $method,
@@ -94,9 +96,9 @@ class Auth
 	 * @param bool $long If `true`, a long session will be created
 	 * @param 'login'|'password-reset'|'2fa' $mode Purpose of the code
 	 *
-	 * @throws \Kirby\Exception\LogicException If there is no suitable authentication challenge (only in debug mode)
-	 * @throws \Kirby\Exception\NotFoundException If the user does not exist (only in debug mode)
-	 * @throws \Kirby\Exception\PermissionException If the rate limit is exceeded
+	 * @throws LogicException If there is no suitable authentication challenge (only in debug mode)
+	 * @throws NotFoundException If the user does not exist (only in debug mode)
+	 * @throws PermissionException If the rate limit is exceeded
 	 */
 	public function createChallenge(
 		string $email,
@@ -159,8 +161,8 @@ class Auth
 	 * Returns the logged in user by checking for a
 	 * basic authentication header with valid credentials
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException if the authorization header is invalid
-	 * @throws \Kirby\Exception\PermissionException if basic authentication is not allowed
+	 * @throws InvalidArgumentException if the authorization header is invalid
+	 * @throws PermissionException if basic authentication is not allowed
 	 */
 	public function currentUserFromBasicAuth(
 		BasicAuth|null $auth = null
@@ -201,8 +203,8 @@ class Auth
 	 * Throws an exception only in debug mode, otherwise falls back
 	 * to a public error without sensitive information
 	 *
-	 * @throws \Throwable Either the passed `$exception` or the `$fallback`
-	 *                    (no exception if debugging is disabled and no fallback was passed)
+	 * @throws Throwable Either the passed `$exception` or the `$fallback`
+	 *                   (no exception if debugging is disabled and no fallback was passed)
 	 */
 	protected function fail(
 		Throwable $exception,
@@ -245,7 +247,7 @@ class Auth
 	 * @since 6.0.0
 	 * @internal
 	 *
-	 * @throws \Throwable Fallback or the original error in debug mode
+	 * @throws Throwable Fallback or the original error in debug mode
 	 */
 	public function guard(
 		string|null $email,
@@ -288,7 +290,7 @@ class Auth
 	 *                         `null` to use the actual user again,
 	 *                         `'kirby'` for a virtual admin user or
 	 *                         `'nobody'` to disable the actual user
-	 * @throws \Kirby\Exception\NotFoundException if the given user cannot be found
+	 * @throws NotFoundException if the given user cannot be found
 	 */
 	public function impersonate(string|null $who = null): User|null
 	{
@@ -345,9 +347,9 @@ class Auth
 	/**
 	 * Login a user by email and password
 	 *
-	 * @throws \Kirby\Exception\PermissionException If the rate limit was exceeded or if any other error occurred with debug mode off
-	 * @throws \Kirby\Exception\NotFoundException If the email was invalid
-	 * @throws \Kirby\Exception\InvalidArgumentException If the password is not valid (via `$user->login()`)
+	 * @throws PermissionException If the rate limit was exceeded or if any other error occurred with debug mode off
+	 * @throws NotFoundException If the email was invalid
+	 * @throws InvalidArgumentException If the password is not valid (via `$user->login()`)
 	 */
 	public function login(
 		string $email,
@@ -371,9 +373,9 @@ class Auth
 	 * Login a user by email, password and auth challenge
 	 * @since 3.5.0
 	 *
-	 * @throws \Kirby\Exception\PermissionException If the rate limit was exceeded or if any other error occurred with debug mode off
-	 * @throws \Kirby\Exception\NotFoundException If the email was invalid
-	 * @throws \Kirby\Exception\InvalidArgumentException If the password is not valid (via `$user->login()`)
+	 * @throws PermissionException If the rate limit was exceeded or if any other error occurred with debug mode off
+	 * @throws NotFoundException If the email was invalid
+	 * @throws InvalidArgumentException If the password is not valid (via `$user->login()`)
 	 *
 	 * @deprecated 6.0.0 Use `self::authenticate()` instead
 	 */
@@ -536,7 +538,7 @@ class Auth
 	 * @param bool $allowImpersonation If set to false, only the actually
 	 *                                 logged in user will be returned
 	 *
-	 * @throws \Throwable If an authentication error occurred
+	 * @throws Throwable If an authentication error occurred
 	 */
 	public function user(
 		Session|array|null $session = null,
@@ -549,9 +551,9 @@ class Auth
 	 * Validates the user credentials and returns the user object on success;
 	 * otherwise logs the failed attempt
 	 *
-	 * @throws \Kirby\Exception\PermissionException If the rate limit was exceeded or if any other error occurred with debug mode off
-	 * @throws \Kirby\Exception\NotFoundException If the email was invalid
-	 * @throws \Kirby\Exception\InvalidArgumentException If the password is not valid (via `$user->login()`)
+	 * @throws PermissionException If the rate limit was exceeded or if any other error occurred with debug mode off
+	 * @throws NotFoundException If the email was invalid
+	 * @throws InvalidArgumentException If the password is not valid (via `$user->login()`)
 	 */
 	public function validatePassword(
 		string $email,
@@ -594,13 +596,13 @@ class Auth
 	 * @since 3.5.0
 	 *
 	 * @param mixed $input User-provided auth code/input to verify
-	 * @return \Kirby\Cms\User User object of the logged-in user
+	 * @return User User object of the logged-in user
 	 *
-	 * @throws \Kirby\Exception\PermissionException If the rate limit was exceeded, the challenge timed out, the code
-	 *                                              is incorrect or if any other error occurred with debug mode off
-	 * @throws \Kirby\Exception\NotFoundException If the user from the challenge doesn't exist
-	 * @throws \Kirby\Exception\InvalidArgumentException If no authentication challenge is active
-	 * @throws \Kirby\Exception\LogicException If the authentication challenge is invalid
+	 * @throws PermissionException If the rate limit was exceeded, the challenge timed out, the code
+	 *                             is incorrect or if any other error occurred with debug mode off
+	 * @throws NotFoundException If the user from the challenge doesn't exist
+	 * @throws InvalidArgumentException If no authentication challenge is active
+	 * @throws LogicException If the authentication challenge is invalid
 	 */
 	public function verifyChallenge(
 		#[SensitiveParameter]

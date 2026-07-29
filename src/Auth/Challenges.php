@@ -53,7 +53,7 @@ class Challenges
 			($class = static::$challenges[$type] ?? null) &&
 			is_subclass_of($class, Challenge::class) === true
 		) {
-			/** @var class-string<\Kirby\Auth\Challenge> $class */
+			/** @var class-string<Challenge> $class */
 			return $class;
 		}
 
@@ -124,7 +124,7 @@ class Challenges
 	/**
 	 * Checks if an active challenge exists or fails otherwise
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	protected function ensureActiveChallenge(Session $session): string
 	{

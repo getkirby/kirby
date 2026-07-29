@@ -311,7 +311,7 @@ class Version
 	/**
 	 * Moves the version to a new language and/or version
 	 *
-	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
+	 * @throws NotFoundException If the version does not exist
 	 */
 	#[BlockCollectionAccess]
 	public function move(
@@ -529,7 +529,7 @@ class Version
 	 *
 	 * @param array<string, mixed> $fields Content fields; null removes a field
 	 *
-	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
+	 * @throws NotFoundException If the version does not exist
 	 */
 	#[BlockCollectionAccess]
 	public function replace(
@@ -588,7 +588,7 @@ class Version
 	/**
 	 * Updates the modification timestamp of an existing version
 	 *
-	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
+	 * @throws NotFoundException If the version does not exist
 	 */
 	#[BlockCollectionAccess]
 	public function touch(Language|string $language = 'default'): void
@@ -635,7 +635,7 @@ class Version
 	 *
 	 * @param array<string, mixed> $fields Content fields; null removes a field
 	 *
-	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
+	 * @throws NotFoundException If the version does not exist
 	 */
 	#[BlockCollectionAccess]
 	public function update(

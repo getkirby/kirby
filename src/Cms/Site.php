@@ -10,6 +10,7 @@ use Kirby\Filesystem\Dir;
 use Kirby\Panel\Site as Panel;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\BlockCollectionAccess;
+use Kirby\Uuid\SiteUuid;
 
 /**
  * The `$site` object is the root element
@@ -20,7 +21,7 @@ use Kirby\Toolkit\BlockCollectionAccess;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @method \Kirby\Uuid\SiteUuid uuid()
+ * @method SiteUuid uuid()
  */
 class Site extends ModelWithContent
 {
@@ -164,7 +165,7 @@ class Site extends ModelWithContent
 	 */
 	public function blueprint(): SiteBlueprint
 	{
-		/** @var \Kirby\Blueprint\SiteBlueprint */
+		/** @var SiteBlueprint */
 		return $this->blueprint ??= SiteBlueprint::factory('site', null, $this);
 	}
 

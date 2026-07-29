@@ -19,7 +19,7 @@ use Throwable;
  * @license   https://getkirby.com/license
  * @since     3.5.0
  *
- * @extends \Kirby\Cms\Item<\Kirby\Cms\Blocks>
+ * @extends Item<Blocks>
  */
 class Block extends Item implements Stringable
 {
@@ -48,7 +48,7 @@ class Block extends Item implements Stringable
 	/**
 	 * Creates a new block object
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public function __construct(array $params)
 	{
@@ -126,7 +126,7 @@ class Block extends Item implements Stringable
 	/**
 	 * Constructs a block object with registering blocks models
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public static function factory(array $params): static
 	{

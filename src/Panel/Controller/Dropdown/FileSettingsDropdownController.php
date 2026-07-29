@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel\Controller\Dropdown;
 
+use Kirby\Cms\File;
 use Kirby\Cms\Find;
 use Kirby\Cms\ModelWithContent;
 
@@ -15,7 +16,7 @@ use Kirby\Cms\ModelWithContent;
 class FileSettingsDropdownController extends ModelSettingsDropdownController
 {
 	/**
-	 * @param \Kirby\Cms\File $model
+	 * @param File $model
 	 */
 	public function __construct(
 		protected ModelWithContent $model

@@ -3,6 +3,7 @@
 namespace Kirby\Blueprint;
 
 use Kirby\Cms\ModelWithContent;
+use Kirby\Cms\Page;
 
 /**
  * PageBlueprint
@@ -12,7 +13,7 @@ use Kirby\Cms\ModelWithContent;
  */
 class PageBlueprint extends Blueprint
 {
-	/** @var \Kirby\Cms\Page */
+	/** @var Page */
 	protected ModelWithContent $model;
 
 	/**

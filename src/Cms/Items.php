@@ -13,8 +13,8 @@ use Kirby\Exception\InvalidArgumentException;
  * @license   https://getkirby.com/license
  * @since     3.5.0
  *
- * @template TValue of \Kirby\Cms\Item
- * @extends \Kirby\Cms\Collection<TValue>
+ * @template TValue of Item
+ * @extends Collection<TValue>
  */
 class Items extends Collection
 {
@@ -30,7 +30,7 @@ class Items extends Collection
 	protected array $options;
 
 	/**
-	 * @var \Kirby\Cms\ModelWithContent
+	 * @var ModelWithContent
 	 */
 	protected object|null $parent = null;
 

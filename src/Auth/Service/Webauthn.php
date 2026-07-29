@@ -43,7 +43,7 @@ class Webauthn extends BaseWebauthn
 	/**
 	 * Ensures the stored challenge is present and not empty
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	protected function challenge(mixed $challenge): string
 	{
@@ -59,7 +59,7 @@ class Webauthn extends BaseWebauthn
 	/**
 	 * Finds a stored credential by its id
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	protected function credential(array $credentials, string $id): array
 	{
@@ -147,7 +147,7 @@ class Webauthn extends BaseWebauthn
 	 * Turns the client payload (JSON string, object or array)
 	 * into an array
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	protected function payload(mixed $payload): array
 	{
@@ -195,7 +195,7 @@ class Webauthn extends BaseWebauthn
 	/**
 	 * Removes a credential by id and returns the remaining list
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public function removeCredential(array $credentials, string $id): array
 	{
@@ -250,7 +250,7 @@ class Webauthn extends BaseWebauthn
 	 * returns the new signature counter. Every failure reports the
 	 * same generic error so it cannot be used as an oracle.
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	protected function verifyAssertion(
 		array $payload,
@@ -302,7 +302,7 @@ class Webauthn extends BaseWebauthn
 	 * Verifies a login and updates the matching credential's
 	 * signature counter
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public function verifyLogin(
 		array $credentials,
@@ -341,7 +341,7 @@ class Webauthn extends BaseWebauthn
 	 * Verifies the registration of a new passkey and
 	 * returns the credential to store
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public function verifyRegister(mixed $payload, string $challenge): array
 	{

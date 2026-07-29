@@ -16,7 +16,7 @@ use Kirby\Uuid\Uuids;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  *
- * @template TModel of \Kirby\Cms\ModelWithContent
+ * @template TModel of ModelWithContent
  */
 abstract class ModelPickerField extends InputField
 {

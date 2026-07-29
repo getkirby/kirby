@@ -2,6 +2,8 @@
 
 namespace Kirby\Uuid;
 
+use Kirby\Cms\ModelWithContent;
+
 /**
  * Base for UUIDs for models where id string
  * is stored in the content, such as pages and files
@@ -10,12 +12,12 @@ namespace Kirby\Uuid;
  * @license   https://getkirby.com/license
  * @since     3.8.0
  *
- * @method \Kirby\Cms\ModelWithContent|null model(bool $lazy = false)
+ * @method ModelWithContent|null model(bool $lazy = false)
  */
 abstract class ModelUuid extends Uuid
 {
 	/**
-	 * @var \Kirby\Cms\ModelWithContent|null
+	 * @var ModelWithContent|null
 	 */
 	public Identifiable|null $model = null;
 
@@ -60,7 +62,7 @@ abstract class ModelUuid extends Uuid
 	 * Retrieves the ID string (UUID without scheme) for the model
 	 * from the content file, if it is already stored there
 	 *
-	 * @param \Kirby\Cms\ModelWithContent $model
+	 * @param ModelWithContent $model
 	 */
 	public static function retrieveId(Identifiable $model): string|null
 	{

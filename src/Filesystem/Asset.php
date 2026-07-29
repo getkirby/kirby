@@ -58,7 +58,7 @@ class Asset
 	/**
 	 * Magic caller for asset methods
 	 *
-	 * @throws \Kirby\Exception\BadMethodCallException
+	 * @throws BadMethodCallException
 	 */
 	public function __call(string $method, array $arguments = []): mixed
 	{

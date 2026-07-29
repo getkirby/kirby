@@ -39,7 +39,7 @@ class Session
 	/**
 	 * Creates a new Session instance
 	 *
-	 * @param \Kirby\Session\Sessions $sessions Parent sessions object
+	 * @param Sessions $sessions Parent sessions object
 	 * @param $token Session token or null for a new session
 	 * @param $options Optional additional options:
 	 *                - `mode`: Token transmission mode (cookie or manual); defaults to `cookie`
@@ -146,7 +146,7 @@ class Session
 	}
 
 	/**
-	 * @see \Kirby\Session\Data::clear()
+	 * @see Data::clear()
 	 * @since 6.0.0
 	 */
 	public function clear(): void
@@ -225,7 +225,7 @@ class Session
 	}
 
 	/**
-	 * @see \Kirby\Session\Data::decrement()
+	 * @see Data::decrement()
 	 * @since 6.0.0
 	 */
 	public function decrement(
@@ -334,7 +334,7 @@ class Session
 	}
 
 	/**
-	 * @see \Kirby\Session\Data::get()
+	 * @see Data::get()
 	 * @since 6.0.0
 	 */
 	public function get(string|null $key = null, mixed $default = null): mixed
@@ -343,7 +343,7 @@ class Session
 	}
 
 	/**
-	 * @see \Kirby\Session\Data::increment()
+	 * @see Data::increment()
 	 * @since 6.0.0
 	 */
 	public function increment(
@@ -562,7 +562,7 @@ class Session
 	}
 
 	/**
-	 * @see \Kirby\Session\Data::pull()
+	 * @see Data::pull()
 	 * @since 6.0.0
 	 */
 	public function pull(string $key, mixed $default = null): mixed
@@ -623,7 +623,7 @@ class Session
 	}
 
 	/**
-	 * @see \Kirby\Session\Data::remove()
+	 * @see Data::remove()
 	 * @since 6.0.0
 	 */
 	public function remove(string|array $key): void
@@ -666,7 +666,7 @@ class Session
 	}
 
 	/**
-	 * @see \Kirby\Session\Data::set()
+	 * @see Data::set()
 	 * @since 6.0.0
 	 */
 	public function set(string|array $key, mixed $value = null): void
@@ -686,7 +686,7 @@ class Session
 	 * Throws an exception for an invalid session
 	 * @since 6.0.0
 	 *
-	 * @throws \Kirby\Exception\LogicException
+	 * @throws LogicException
 	 */
 	protected function throwInvalid(): never
 	{

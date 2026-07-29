@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel\Controller\Search;
 
+use Kirby\Cms\File;
 use Kirby\Cms\Files;
 use Kirby\Panel\Ui\Item\FileItem;
 
@@ -15,7 +16,7 @@ use Kirby\Panel\Ui\Item\FileItem;
 class FilesSearchController extends ModelsSearchController
 {
 	/**
-	 * @param \Kirby\Cms\File $model
+	 * @param File $model
 	 */
 	public function item($model): FileItem
 	{

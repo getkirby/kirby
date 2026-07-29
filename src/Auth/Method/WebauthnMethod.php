@@ -83,7 +83,7 @@ class WebauthnMethod extends Method
 	/**
 	 * Identifies the user behind the assertion
 	 *
-	 * @throws \Kirby\Exception\UserNotFoundException
+	 * @throws UserNotFoundException
 	 */
 	protected function findUser(mixed $payload): User
 	{

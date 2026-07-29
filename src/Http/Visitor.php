@@ -51,7 +51,7 @@ class Visitor
 	 * provided or returns the user's
 	 * accepted language otherwise
 	 *
-	 * @return $this|\Kirby\Toolkit\Obj|null
+	 * @return $this|Obj|null
 	 */
 	public function acceptedLanguage(
 		string|null $acceptedLanguage = null
@@ -68,7 +68,7 @@ class Visitor
 	 * Returns an array of all accepted languages
 	 * including their quality and locale
 	 *
-	 * @return \Kirby\Toolkit\Collection<\Kirby\Toolkit\Obj>
+	 * @return Collection<Obj>
 	 */
 	public function acceptedLanguages(): Collection
 	{
@@ -115,7 +115,7 @@ class Visitor
 	 * provided or returns the user's
 	 * accepted mime type otherwise
 	 *
-	 * @return $this|\Kirby\Toolkit\Obj|null
+	 * @return $this|Obj|null
 	 */
 	public function acceptedMimeType(
 		string|null $acceptedMimeType = null

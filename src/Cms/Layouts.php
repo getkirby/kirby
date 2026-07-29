@@ -13,7 +13,7 @@ use Throwable;
  * @license   https://getkirby.com/license
  * @since     3.5.0
  *
- * @extends \Kirby\Cms\Items<\Kirby\Cms\Layout>
+ * @extends Items<Layout>
  */
 class Layouts extends Items
 {

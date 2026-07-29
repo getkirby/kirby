@@ -15,7 +15,7 @@ use Kirby\Panel\Ui\Item\PageItem;
  * @license   https://getkirby.com/license
  * @since     3.6.0
  *
- * @extends \Kirby\Panel\Model<\Kirby\Cms\Page>
+ * @extends Model<\Kirby\Cms\Page>
  */
 class Page extends Model
 {

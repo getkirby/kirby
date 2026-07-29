@@ -20,8 +20,8 @@ use Throwable;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @template TValue of \Kirby\Cms\File
- * @extends \Kirby\Cms\Collection<TValue>
+ * @template TValue of File
+ * @extends Collection<TValue>
  */
 class Files extends Collection
 {
@@ -33,7 +33,7 @@ class Files extends Collection
 	public static array $methods = [];
 
 	/**
-	 * @var \Kirby\Cms\Page|\Kirby\Cms\Site|\Kirby\Cms\User
+	 * @var Page|Site|User
 	 */
 	protected object|null $parent = null;
 
@@ -42,9 +42,9 @@ class Files extends Collection
 	 * an entire second collection to the
 	 * current collection
 	 *
-	 * @param \Kirby\Cms\Files<TValue>|TValue|string $object
+	 * @param Files<TValue>|TValue|string $object
 	 * @return $this
-	 * @throws \Kirby\Exception\InvalidArgumentException When no `File` or `Files` object or an ID of an existing file is passed
+	 * @throws InvalidArgumentException When no `File` or `Files` object or an ID of an existing file is passed
 	 */
 	public function add($object): static
 	{
@@ -98,7 +98,7 @@ class Files extends Collection
 	 * Deletes the files with the given IDs
 	 * if they exist in the collection
 	 *
-	 * @throws \Kirby\Exception\Exception If not all files could be deleted
+	 * @throws Exception If not all files could be deleted
 	 */
 	public function delete(array $ids): void
 	{

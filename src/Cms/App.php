@@ -35,6 +35,7 @@ use Kirby\Template\Template;
 use Kirby\Text\KirbyTag;
 use Kirby\Text\KirbyTags;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Config;
 use Kirby\Toolkit\Controller;
 use Kirby\Toolkit\LazyValue;
@@ -376,7 +377,7 @@ class App
 	 * by name. All relevant dependencies are
 	 * automatically injected
 	 *
-	 * @return \Kirby\Toolkit\Collection|null
+	 * @return Collection|null
 	 * @todo 6.0 Add return type declaration
 	 */
 	public function collection(string $name, array $options = [])
@@ -990,7 +991,7 @@ class App
 	 * Yields all models (site, pages, files and users) of this site
 	 * @since 4.0.0
 	 *
-	 * @return \Generator<string, \Kirby\Cms\ModelWithContent>
+	 * @return Generator<string, ModelWithContent>
 	 */
 	public function models(): Generator
 	{
@@ -1182,7 +1183,7 @@ class App
 		if ($page = $parent->find($id)) {
 			/**
 			 * We passed a single $id, we can be sure that the result is
-			 * @var \Kirby\Cms\Page $page
+			 * @var Page $page
 			 */
 			return $page;
 		}
@@ -1256,7 +1257,7 @@ class App
 	 * Path resolver for the router
 	 *
 	 * @unstable
-	 * @throws \Kirby\Exception\LogicException if the home page cannot be found
+	 * @throws LogicException if the home page cannot be found
 	 */
 	public function resolve(
 		string|null $path = null,
@@ -1639,7 +1640,7 @@ class App
 	 * Returns a system url
 	 *
 	 * @param bool $object If set to `true`, the URL is converted to an object
-	 * @psalm-return ($object is false ? string|null : \Kirby\Http\Uri)
+	 * @psalm-return ($object is false ? string|null : Uri)
 	 */
 	public function url(
 		string $type = 'index',
@@ -1674,7 +1675,7 @@ class App
 	 * Returns the current version number from
 	 * the composer.json (Keep that up to date! :))
 	 *
-	 * @throws \Kirby\Exception\LogicException if the Kirby version cannot be detected
+	 * @throws LogicException if the Kirby version cannot be detected
 	 */
 	public static function version(): string|null
 	{

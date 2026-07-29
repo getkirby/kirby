@@ -4,6 +4,7 @@ namespace Kirby\Panel\Controller\Dropdown;
 
 use Kirby\Cms\Find;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Cms\Page;
 
 /**
  * @copyright Bastian Allgeier
@@ -15,7 +16,7 @@ use Kirby\Cms\ModelWithContent;
 class PageSettingsDropdownController extends ModelSettingsDropdownController
 {
 	/**
-	 * @param \Kirby\Cms\Page $model
+	 * @param Page $model
 	 */
 	public function __construct(
 		protected ModelWithContent $model

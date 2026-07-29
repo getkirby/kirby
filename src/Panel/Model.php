@@ -17,7 +17,7 @@ use Kirby\Toolkit\A;
  * @license   https://getkirby.com/license
  * @since     3.6.0
  *
- * @template TModel of \Kirby\Cms\ModelWithContent
+ * @template TModel of ModelWithContent
  */
 abstract class Model
 {

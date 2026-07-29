@@ -14,7 +14,7 @@ use Kirby\Cms\Users;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @extends \Kirby\Panel\Collector\ModelsCollector<\Kirby\Cms\Users>
+ * @extends ModelsCollector<Users>
  */
 class UsersCollector extends ModelsCollector
 {

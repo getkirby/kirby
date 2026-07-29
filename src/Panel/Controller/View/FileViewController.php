@@ -15,7 +15,7 @@ use Kirby\Panel\Ui\FilePreview;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  *
- * @extends \Kirby\Panel\Controller\View\ModelViewController<\Kirby\Cms\File, \Kirby\Panel\File>
+ * @extends ModelViewController<File, \Kirby\Panel\File>
  */
 class FileViewController extends ModelViewController
 {

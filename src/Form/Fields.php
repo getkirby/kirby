@@ -19,7 +19,7 @@ use Kirby\Toolkit\Str;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  *
- * @extends \Kirby\Cms\Collection<\Kirby\Form\Field|\Kirby\Form\Field\BaseField>
+ * @extends Collection<Field|BaseField>
  */
 class Fields extends Collection
 {
@@ -55,7 +55,7 @@ class Fields extends Collection
 	 * This takes care of validation and of setting
 	 * the collection prop on each object correctly.
 	 *
-	 * @param \Kirby\Form\Field|\Kirby\Form\Field\BaseField|array $field
+	 * @param Field|BaseField|array $field
 	 */
 	public function __set(string $name, $field): void
 	{
@@ -105,7 +105,7 @@ class Fields extends Collection
 	 * and handle nested fields correctly
 	 *
 	 * @since 5.0.0
-	 * @throws \Kirby\Exception\NotFoundException
+	 * @throws NotFoundException
 	 */
 	public function field(string $name): Field|BaseField
 	{
@@ -446,7 +446,7 @@ class Fields extends Collection
 	 * exception if there are any
 	 *
 	 * @since 5.0.0
-	 * @throws \Kirby\Exception\FormValidationException
+	 * @throws FormValidationException
 	 */
 	public function validate(): void
 	{

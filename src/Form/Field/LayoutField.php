@@ -3,6 +3,7 @@
 namespace Kirby\Form\Field;
 
 use Kirby\Blueprint\Blueprint;
+use Kirby\Cms\Api;
 use Kirby\Cms\App;
 use Kirby\Cms\Fieldset;
 use Kirby\Cms\Layout;
@@ -136,7 +137,7 @@ class LayoutField extends BlocksField
 				string|null $path = null
 			) use ($field): array {
 				/**
-				 * @var \Kirby\Cms\Api $api
+				 * @var Api $api
 				 */
 				$api   = $this;
 				$form  = $field->attrsForm();

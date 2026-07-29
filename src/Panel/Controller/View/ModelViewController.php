@@ -18,8 +18,8 @@ use Kirby\Panel\Ui\View;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  *
- * @template TModel of \Kirby\Cms\ModelWithContent
- * @template TPanel of \Kirby\Panel\Model
+ * @template TModel of ModelWithContent
+ * @template TPanel of Model
  */
 abstract class ModelViewController extends ViewController
 {

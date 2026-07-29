@@ -108,7 +108,7 @@ class PagePickerDialogController extends ModelPickerDialogController
 
 	/**
 	 * Returns the item data for a page
-	 * @param \Kirby\Cms\Page $model
+	 * @param Page $model
 	 */
 	public function item(ModelWithContent $model): array
 	{
@@ -134,8 +134,8 @@ class PagePickerDialogController extends ModelPickerDialogController
 	 * requested parent is missing or not accessible
 	 * for the current user.
 	 *
-	 * @throws \Kirby\Exception\PermissionException if neither
-	 *                                              the requested parent nor the root are accessible
+	 * @throws PermissionException if neither
+	 *                             the requested parent nor the root are accessible
 	 */
 	public function parent(): Page|Site|null
 	{

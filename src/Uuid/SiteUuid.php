@@ -18,7 +18,7 @@ class SiteUuid extends Uuid
 	protected const string TYPE = 'site';
 
 	/**
-	 * @var \Kirby\Cms\Site|null
+	 * @var Site|null
 	 */
 	public Identifiable|null $model = null;
 
@@ -34,7 +34,7 @@ class SiteUuid extends Uuid
 	/**
 	 * Generator for the one and only site object
 	 *
-	 * @return \Generator<string, \Kirby\Cms\Site>
+	 * @return Generator<string, Site>
 	 */
 	public static function index(): Generator
 	{
