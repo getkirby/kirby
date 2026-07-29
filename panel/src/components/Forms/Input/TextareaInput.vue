@@ -16,11 +16,11 @@
 				@command="onCommand"
 			/>
 			<textarea
+				:id="id"
 				ref="input"
 				v-bind="{
 					autofocus,
 					disabled,
-					id,
 					minlength,
 					name,
 					placeholder,

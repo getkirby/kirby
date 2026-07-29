@@ -3,6 +3,7 @@
 		<iframe
 			v-if="url"
 			:src="$helper.embed.video(url, true)"
+			:title="$t('video')"
 			class="k-video"
 			referrerpolicy="strict-origin-when-cross-origin"
 		/>

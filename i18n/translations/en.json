@@ -681,6 +681,8 @@
 	"preview.browser.pin": "Toggle whether preview navigation should be in sync or independent",
 	"preview.browser.scroll": "Sync scroll",
 
+	"progress": "Progress",
+
 	"publish": "Publish",
 	"published": "Published",
 
@@ -848,6 +850,7 @@
 	"version.form": "Live editor",
 	"version.latest": "Latest version",
 	"versionInformation": "Version information",
+	"video": "Video",
 
 	"view": "View",
 	"view.account": "Your account",

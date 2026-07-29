@@ -21,6 +21,7 @@
 			:name="name"
 			:required="required"
 			:value="value"
+			aria-hidden="true"
 			class="input-hidden"
 			tabindex="-1"
 		/>
