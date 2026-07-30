@@ -119,6 +119,7 @@ export default function Content(panel: Panel) {
 			try {
 				await this.request("discard", {}, env);
 
+				// update the props for the current view
 				this.versions().changes = { ...this.version("latest") };
 
 				this.emit("discard", {}, env);
@@ -279,6 +280,7 @@ export default function Content(panel: Panel) {
 				// close the dialog if it is still open
 				this.dialog?.close();
 
+				// update the props for the current view
 				this.versions().latest = { ...this.version("changes") };
 
 				this.emit("publish", { values }, env);
