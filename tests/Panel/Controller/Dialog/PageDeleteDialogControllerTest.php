@@ -50,7 +50,7 @@ class PageDeleteDialogControllerTest extends TestCase
 		$this->assertInstanceOf(RemoveDialog::class, $dialog);
 
 		$props = $dialog->props();
-		$this->assertSame('Do you really want to delete <strong>test</strong>?', $props['text']);
+		$this->assertSame('Do you really want to delete <strong>test</strong>?', (string)$props['text']);
 	}
 
 	public function testLoadWithChildren(): void
@@ -63,7 +63,7 @@ class PageDeleteDialogControllerTest extends TestCase
 		$props = $dialog->props();
 		$this->assertSame('info', $props['fields']['info']['type']);
 		$this->assertSame('text', $props['fields']['check']['type']);
-		$this->assertSame('Do you really want to delete <strong>test-with-children</strong>?', $props['text']);
+		$this->assertSame('Do you really want to delete <strong>test-with-children</strong>?', (string)$props['text']);
 		$this->assertSame('Delete', $props['submitButton']['text']);
 		$this->assertSame('negative', $props['submitButton']['theme']);
 		$this->assertSame('medium', $props['size']);

@@ -124,7 +124,6 @@ class SystemViewController extends ViewController
 					// @codeCoverageIgnoreStart
 					$security[] = [
 						'id'   => 'extension-' . $extension,
-						// the translation contains authored markup
 						'text' => new HtmlString(
 							$this->i18n('installation.issues.extension', ['extension' => $extension])
 						)

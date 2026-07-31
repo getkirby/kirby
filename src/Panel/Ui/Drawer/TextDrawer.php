@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Ui\Drawer;
 
 use Kirby\Panel\Ui\Drawer;
+use Kirby\Toolkit\HtmlString;
 
 /**
  * Drawer that displays some text
@@ -23,7 +24,7 @@ class TextDrawer extends Drawer
 		array|null $options = null,
 		string|null $style = null,
 		string|null $title = null,
-		public string|null $text = null,
+		public string|HtmlString|null $text = null,
 		...$attrs
 	) {
 		parent::__construct(...[

@@ -5,6 +5,7 @@ namespace Kirby\Panel\Controller\Dialog;
 use Kirby\Panel\Controller\DialogController;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\RemoveDialog;
+use Kirby\Toolkit\HtmlString;
 
 /**
  * Dialog to remove the site's license
@@ -20,7 +21,7 @@ class SystemLicenseRemoveDialogController extends DialogController
 	public function load(): Dialog
 	{
 		return new RemoveDialog(
-			text: $this->i18n('license.remove.text'),
+			text: new HtmlString($this->i18n('license.remove.text')),
 			size: 'medium',
 			submitButton: [
 				'icon'  => 'trash',

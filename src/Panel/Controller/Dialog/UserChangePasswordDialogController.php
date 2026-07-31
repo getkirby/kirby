@@ -7,6 +7,8 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\Field;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
+use Kirby\Toolkit\Escape;
+use Kirby\Toolkit\HtmlString;
 
 /**
  * Controls the Panel dialog for changing the password of a user
@@ -47,7 +49,9 @@ class UserChangePasswordDialogController extends UserDialogController
 			'password' => Field::password([
 				'label'        => $this->i18n('user.changePassword.new'),
 				'autocomplete' => 'new-password',
-				'help'         => $this->i18n('account') . ': ' . $this->user->email() . ($hint ? '<br>' . $hint : ''),
+				'help'         => new HtmlString(
+					$this->i18n('account') . ': ' . Escape::html($this->user->email()) . ($hint ? '<br>' . $hint : '')
+				),
 				'minlength'    => $policy->minlength()
 			]),
 			'passwordConfirmation' => Field::password([

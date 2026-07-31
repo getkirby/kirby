@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Ui\Dialog;
 
 use Kirby\Panel\Ui\Dialog;
+use Kirby\Toolkit\HtmlString;
 
 /**
  * Dialog that contains a set of fields
@@ -21,7 +22,7 @@ class FormDialog extends TextDialog
 		public array $fields = [],
 		string|null $size = 'medium',
 		string|array|bool|null $submitButton = null,
-		string|null $text = null,
+		string|HtmlString|null $text = null,
 		public array $value = [],
 		...$attrs
 	) {

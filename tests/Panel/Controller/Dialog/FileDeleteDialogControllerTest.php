@@ -23,7 +23,7 @@ class FileDeleteDialogControllerTest extends FileDialogControllerTestCase
 		$this->assertInstanceOf(RemoveDialog::class, $dialog);
 
 		$props = $dialog->props();
-		$this->assertSame('Do you really want to delete <br><strong>a.jpg</strong>?', $props['text']);
+		$this->assertSame('Do you really want to delete <br><strong>a.jpg</strong>?', (string)$props['text']);
 	}
 
 	protected function assertSubmit(
