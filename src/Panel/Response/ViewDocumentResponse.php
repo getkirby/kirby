@@ -60,7 +60,7 @@ class ViewDocumentResponse extends ViewResponse
 			'assets'     => $this->assets->external(),
 			'icons'      => $this->assets->icons(),
 			'nonce'      => $this->kirby->nonce(),
-			'state'      => $this->data(),
+			'state'      => $this->payload(),
 			'panelUrl'   => $this->url(),
 		]);
 	}
