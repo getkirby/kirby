@@ -11,18 +11,16 @@
 		<!--
 			@slot Box content, replaces content from `text` prop
 			@binding {string} text
-			@binding {boolean} html
 		-->
-		<slot v-bind="{ html, text }">
-			<k-text v-if="html" :text="text" />
-			<k-text v-else>
-				{{ text }}
-			</k-text>
+		<slot v-bind="{ text: content }">
+			<k-text :text="content" />
 		</slot>
 	</component>
 </template>
 
 <script>
+import html from "@/panel/html";
+
 /**
  * The `<k-box>` component is a multi-purpose box with text.
  * You can use it as a foundation for empty state displays
@@ -63,22 +61,36 @@ export default {
 			type: String
 		},
 		/**
-		 * Text to display inside the box
+		 * Text to display inside the box.
+		 * A plain string is escaped, trusted HTML is rendered as-is.
 		 */
 		text: String,
 		/**
 		 * If set to `true`, the `text` is rendered as HTML code, otherwise as plain text
+		 * @deprecated 6.0.0 Pass trusted HTML as `text` instead
 		 */
 		html: {
 			type: Boolean
 		}
 	},
 	computed: {
+		content() {
+			// the deprecated `html` flag rendered the text raw,
+			// so it stays trusted
+			return this.html === true ? html(this.text) : this.text;
+		},
 		element() {
 			return this.button ? "button" : "div";
 		},
 		type() {
 			return this.button ? "button" : null;
+		}
+	},
+	created() {
+		if (this.html === true) {
+			window.panel.deprecated(
+				"`k-box`: the `html` prop has been deprecated. Pass trusted HTML as `text` instead."
+			);
 		}
 	}
 };

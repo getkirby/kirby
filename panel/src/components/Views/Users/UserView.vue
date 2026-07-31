@@ -66,7 +66,7 @@
 			:content="content"
 			:empty="
 				$panel.config.debug
-					? $t('user.blueprint', { blueprint: $esc(blueprint) })
+					? $panel.html($t('user.blueprint', { blueprint: $esc(blueprint) }))
 					: null
 			"
 			:lock="lock"

@@ -20,9 +20,7 @@
 		</slot>
 
 		<template v-if="text">
-			<!-- eslint-disable-next-line vue/no-v-html -->
-			<span v-if="html" class="k-tag-text" v-html="text" />
-			<span v-else class="k-tag-text">{{ text }}</span>
+			<span v-safe-html="content" class="k-tag-text" />
 		</template>
 		<template v-else-if="$slots.default">
 			<span class="k-tag-text">
@@ -41,6 +39,8 @@
 </template>
 
 <script>
+import html from "@/panel/html";
+
 export const props = {
 	props: {
 		/**
@@ -50,6 +50,7 @@ export const props = {
 		/**
 		 * If set to `true`, the `text` is rendered as HTML code,
 		 * otherwise as plain text
+		 * @deprecated 6.0.0 Pass trusted HTML as `text` instead
 		 */
 		html: {
 			type: Boolean
@@ -100,12 +101,18 @@ export default {
 		 */
 		link: String,
 		/**
-		 * Text to display in the bubble
+		 * Text to display in the bubble.
+		 * A plain string is escaped, trusted HTML is rendered as-is.
 		 */
 		text: String
 	},
 	emits: ["remove"],
 	computed: {
+		content() {
+			// the deprecated `html` flag rendered the text raw,
+			// so it stays trusted
+			return this.html === true ? html(this.text) : this.text;
+		},
 		isRemovable() {
 			return this.removable && !this.disabled;
 		},
@@ -113,6 +120,13 @@ export default {
 			// removable tags need to be focusable, no matter which
 			// element they render as, to be removed by keyboard
 			return this.isRemovable === true ? 0 : null;
+		}
+	},
+	created() {
+		if (this.html === true) {
+			window.panel.deprecated(
+				"`k-tag`: the `html` prop has been deprecated. Pass trusted HTML as `text` instead."
+			);
 		}
 	},
 	methods: {

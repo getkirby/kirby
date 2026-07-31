@@ -9,7 +9,6 @@
 		>
 			<k-tag
 				:element="!removable ? 'div' : undefined"
-				:html="html"
 				:image="tag.image"
 				:link="!removable ? tag.link : undefined"
 				:text="tag.text"
@@ -23,6 +22,7 @@
 
 <script>
 import FieldPreview from "@/mixins/forms/fieldPreview.js";
+import html from "@/panel/html";
 
 /**
  * @copyright Bastian Allgeier
@@ -34,6 +34,7 @@ export default {
 		/**
 		 * If set to `true`, the `text` is rendered as HTML code,
 		 * otherwise as plain text
+		 * @deprecated 6.0.0 Trusted HTML in the value is rendered as-is
 		 */
 		html: {
 			type: Boolean
@@ -63,12 +64,25 @@ export default {
 
 				for (const option of options) {
 					if (option.value === tag.value) {
+						// an option's text is already trusted HTML
 						tag.text = option.text;
 					}
 				}
 
+				// the deprecated `html` flag rendered every tag raw
+				if (this.html === true) {
+					tag.text = html(tag.text);
+				}
+
 				return tag;
 			});
+		}
+	},
+	created() {
+		if (this.html === true) {
+			window.panel.deprecated(
+				"`k-tags-field-preview`: the `html` prop has been deprecated. Trusted HTML in the value is rendered as-is."
+			);
 		}
 	}
 };

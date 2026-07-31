@@ -1,10 +1,5 @@
 <template>
-	<k-box
-		v-if="tab.columns.length === 0 && empty"
-		:html="true"
-		:text="empty"
-		theme="info"
-	/>
+	<k-box v-if="tab.columns.length === 0 && empty" :text="empty" theme="info" />
 
 	<k-grid v-else class="k-sections" variant="columns">
 		<k-column

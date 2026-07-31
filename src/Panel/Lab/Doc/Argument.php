@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Lab\Doc;
 
 use Kirby\Panel\Lab\Doc;
+use Kirby\Toolkit\HtmlString;
 
 /**
  * Documentation for a single argument for an event, slot or method
@@ -19,7 +20,7 @@ class Argument
 	public function __construct(
 		public string $name,
 		public string|null $type = null,
-		public string|null $description = null,
+		public string|HtmlString|null $description = null,
 	) {
 		$this->description = Doc::kt($this->description ?? '', true);
 	}
