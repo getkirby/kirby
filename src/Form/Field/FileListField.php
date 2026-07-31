@@ -19,6 +19,8 @@ use Kirby\Panel\Ui\Upload;
  */
 class FileListField extends ModelListField
 {
+	public const string TYPE = 'files';
+
 	/**
 	 * Option to switch off the upload button
 	 */
@@ -104,11 +106,6 @@ class FileListField extends ModelListField
 	public function create(): bool
 	{
 		return $this->create ?? true;
-	}
-
-	protected function errorKey(): string
-	{
-		return 'error.section.files';
 	}
 
 	public function props(): array

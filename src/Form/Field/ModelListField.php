@@ -32,6 +32,12 @@ abstract class ModelListField extends DisplayField
 	use Mixin\Sortable;
 	use Mixin\SortBy;
 
+	/**
+	 * Each list must define the type of models it lists.
+	 * It names the entries in the props and the error messages.
+	 */
+	public const string|null TYPE = null;
+
 	protected ModelsCollector|null $collector = null;
 
 	/**
@@ -317,7 +323,7 @@ abstract class ModelListField extends DisplayField
 
 		if ($this->total() - count($ids) < $min) {
 			throw new Exception(
-				message: I18n::template($this->errorKey() . '.min.' . I18n::form($min), [
+				message: $this->i18n('error.section.' . static::TYPE . '.min.' . I18n::form($min), [
 					'min'     => $min,
 					'section' => $this->label()
 				])
@@ -351,15 +357,10 @@ abstract class ModelListField extends DisplayField
 	}
 
 	/**
-	 * i18n key prefix for the min/max error messages
-	 *
-	 * @todo switch to dedicated field keys once the sections are gone
-	 */
-	abstract protected function errorKey(): string;
-
-	/**
 	 * Errors are only reported for the publish gate. The entries
 	 * themselves are not stored in the content of the model.
+	 *
+	 * @todo switch to dedicated field keys once the sections are gone
 	 */
 	public function errors(): array
 	{
@@ -368,16 +369,17 @@ abstract class ModelListField extends DisplayField
 		}
 
 		$errors = [];
+		$key    = 'error.section.' . static::TYPE;
 
 		if ($this->validateMax() === false) {
-			$errors['max'] = I18n::template($this->errorKey() . '.max.' . I18n::form($this->max), [
+			$errors['max'] = $this->i18n($key . '.max.' . I18n::form($this->max), [
 				'max'     => $this->max,
 				'section' => $this->label()
 			]);
 		}
 
 		if ($this->validateMin() === false) {
-			$errors['min'] = I18n::template($this->errorKey() . '.min.' . I18n::form($this->min), [
+			$errors['min'] = $this->i18n($key . '.min.' . I18n::form($this->min), [
 				'min'     => $this->min,
 				'section' => $this->label()
 			]);
