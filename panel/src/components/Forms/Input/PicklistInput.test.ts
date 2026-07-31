@@ -2,6 +2,7 @@ import { describe, it, expect } from "@test/unit";
 import { mount as vueMount } from "@vue/test-utils";
 import PicklistInput from "./PicklistInput.vue";
 import string from "@/helpers/string";
+import html, { HtmlString } from "@/panel/html";
 
 function mount(props = {}, attrs = {}) {
 	return vueMount(PicklistInput, { props, attrs, shallow: true });
@@ -78,7 +79,7 @@ describe("PicklistInput.vue", () => {
 	// methods
 	describe("highlight()", () => {
 		// the method only needs `query` and the string helpers
-		function highlight(text: unknown, query = ""): string {
+		function highlight(text: unknown, query = ""): HtmlString {
 			return PicklistInput.methods!.highlight.call(
 				{ query, $helper: { string } },
 				text
@@ -101,16 +102,39 @@ describe("PicklistInput.vue", () => {
 			expect(String(highlight("Kirby"))).toBe("Kirby");
 		});
 
-		it("strips tags so a match cannot land inside one", () => {
-			expect(String(highlight("<b>Kirby</b>", "b"))).toBe("Kir<b>b</b>y");
-		});
-
-		it("does not double-escape entities", () => {
-			expect(String(highlight("Tom &amp; Jerry"))).toBe("Tom &amp; Jerry");
-		});
-
 		it("treats the query literally, not as a pattern", () => {
 			expect(String(highlight("a.b", "."))).toBe("a<b>.</b>b");
+		});
+
+		it("returns trusted HTML so the match markup survives rendering", () => {
+			const result = highlight(html("Kirby"), "ir");
+
+			expect(result).toBeInstanceOf(HtmlString);
+			expect(result.toString()).toBe("K<b>ir</b>by");
+		});
+
+		it("escapes untrusted text before adding the match markup", () => {
+			const result = highlight("<script>x</script>", "script");
+
+			expect(result.toString()).not.toContain("<script>");
+			expect(result.toString()).toContain("<b>script</b>");
+		});
+
+		it("neutralises untrusted markup that stripHTML would miss", () => {
+			// an unclosed tag never matches stripHTML's `<…>` regex,
+			// so escaping — not stripping — is what makes this safe
+			const result = highlight("<img src=x onerror=alert(1)");
+
+			expect(result.toString()).not.toContain("<img");
+			expect(result.toString()).toContain("&lt;img");
+		});
+
+		it("strips tags from trusted HTML so a match cannot land inside one", () => {
+			expect(String(highlight(html("<b>Kirby</b>"), "b"))).toBe("Kir<b>b</b>y");
+		});
+
+		it("does not double-escape entities in trusted HTML", () => {
+			expect(String(highlight(html("Tom &amp; Jerry")))).toBe("Tom &amp; Jerry");
 		});
 	});
 });
