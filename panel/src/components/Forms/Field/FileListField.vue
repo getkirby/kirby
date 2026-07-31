@@ -288,7 +288,9 @@ export default {
 			this.reload({ page: pagination.page });
 		},
 		/**
-		 * The event payload must not be passed on as a query
+		 * `reload()` cannot be used as the listener itself: the event
+		 * payload would end up as its query, and a bound arrow function
+		 * could not be removed again in `unmounted()`
 		 */
 		onRefresh() {
 			this.reload();
@@ -332,8 +334,8 @@ export default {
 			this.$panel.upload.replace(file, this.uploadOptions);
 		},
 		/**
-		 * Runs a write request and refreshes every list on the page,
-		 * as they can show the same files
+		 * Runs the given callback and afterwards refreshes every list
+		 * on the page, as they can show the same files
 		 */
 		async request(callback) {
 			this.isProcessing = true;
