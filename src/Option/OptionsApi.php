@@ -133,7 +133,7 @@ class OptionsApi extends OptionsProvider
 				$item = new Field(null, $key, $item);
 			}
 
-			$safeMethod = $safeMode === true ? 'toSafeString' : 'toString';
+			$safeMethod = $safeMode === true ? 'toSafeHtmlString' : 'toString';
 
 			$options[] = [
 				// value is always a raw string

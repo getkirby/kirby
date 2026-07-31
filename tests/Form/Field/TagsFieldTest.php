@@ -2,6 +2,7 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Toolkit\HtmlString;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(TagsField::class)]
@@ -114,28 +115,28 @@ class TagsFieldTest extends TestCase
 				'disabled' => false,
 				'icon' => null,
 				'info' => null,
-				'text' => 'design',
+				'text' => new HtmlString('design'),
 				'value' => 'design'
 			],
 			[
 				'disabled' => false,
 				'icon' => null,
 				'info' => null,
-				'text' => 'photography',
+				'text' => new HtmlString('photography'),
 				'value' => 'photography'
 			],
 			[
 				'disabled' => false,
 				'icon' => null,
 				'info' => null,
-				'text' => '&lt;script&gt;alert(&quot;XSS&quot;)&lt;/script&gt;',
+				'text' => new HtmlString('&lt;script&gt;alert(&quot;XSS&quot;)&lt;/script&gt;'),
 				'value' => '<script>alert("XSS")</script>'
 			],
 			[
 				'disabled' => false,
 				'icon' => null,
 				'info' => null,
-				'text' => 'architecture',
+				'text' => new HtmlString('architecture'),
 				'value' => 'architecture'
 			]
 		];
@@ -148,7 +149,7 @@ class TagsFieldTest extends TestCase
 			]
 		]);
 
-		$this->assertSame($expected, $field->options());
+		$this->assertEquals($expected, $field->options());
 
 		$field = $this->field('tags', [
 			'model'   => $app->file('a/b.jpg'),
@@ -158,7 +159,7 @@ class TagsFieldTest extends TestCase
 			],
 		]);
 
-		$this->assertSame($expected, $field->options());
+		$this->assertEquals($expected, $field->options());
 	}
 
 	public function testProps(): void

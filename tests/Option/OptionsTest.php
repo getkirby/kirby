@@ -4,6 +4,7 @@ namespace Kirby\Option;
 
 use Kirby\Cms\Page;
 use Kirby\TestCase;
+use Kirby\Toolkit\HtmlString;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Options::class)]
@@ -89,8 +90,8 @@ class OptionsTest extends TestCase
 
 		$result = $options->render($model);
 
-		$this->assertSame('test', $result[0]['text']);
-		$this->assertSame('test', $result[1]['text']);
+		$this->assertSame('test', (string)$result[0]['text']);
+		$this->assertSame('test', (string)$result[1]['text']);
 
 		// disabled resolving
 		$options = Options::factory([
@@ -100,8 +101,8 @@ class OptionsTest extends TestCase
 
 		$result = $options->render($model);
 
-		$this->assertSame('{{ page.slug }}', $result[0]['text']);
-		$this->assertSame('{{ page.slug }}', $result[1]['text']);
+		$this->assertSame('{{ page.slug }}', (string)$result[0]['text']);
+		$this->assertSame('{{ page.slug }}', (string)$result[1]['text']);
 	}
 
 	public function testRender(): void
@@ -113,19 +114,19 @@ class OptionsTest extends TestCase
 			new Option('b')
 		]);
 
-		$this->assertSame([
+		$this->assertEquals([ // @phpstan-ignore-line
 			[
 				'disabled' => false,
 				'icon'     => null,
 				'info'     => null,
-				'text'     => 'a',
+				'text'     => new HtmlString('a'),
 				'value'    => 'a',
 			],
 			[
 				'disabled' => false,
 				'icon'     => null,
 				'info'     => null,
-				'text'     => 'b',
+				'text'     => new HtmlString('b'),
 				'value'    => 'b',
 			]
 		], $options->render($model));
