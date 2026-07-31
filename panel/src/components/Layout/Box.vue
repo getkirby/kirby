@@ -14,7 +14,7 @@
 			@binding {boolean} html
 		-->
 		<slot v-bind="{ html, text }">
-			<k-text v-if="html" :html="text" />
+			<k-text v-if="html" :text="text" />
 			<k-text v-else>
 				{{ text }}
 			</k-text>

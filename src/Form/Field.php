@@ -8,6 +8,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Field\BaseField;
 use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Component;
+use Kirby\Toolkit\HtmlString;
 use Kirby\Toolkit\I18n;
 
 /**
@@ -208,7 +209,7 @@ class Field extends Component
 					if ($this->help) {
 						$help = $this->model()->toSafeString($this->help);
 						$help = $this->kirby()->kirbytext($help);
-						return $help;
+						return new HtmlString($help);
 					}
 				},
 				'label' => function () {

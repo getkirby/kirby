@@ -489,8 +489,8 @@ class FieldTest extends TestCase
 			'help' => 'test'
 		]);
 
-		$this->assertSame('<p>test</p>', $field->help());
-		$this->assertSame('<p>test</p>', $field->help);
+		$this->assertSame('<p>test</p>', (string)$field->help());
+		$this->assertSame('<p>test</p>', (string)$field->help);
 
 		// translated
 		$field = new Field('test', [
@@ -501,8 +501,8 @@ class FieldTest extends TestCase
 			]
 		]);
 
-		$this->assertSame('<p>en</p>', $field->help());
-		$this->assertSame('<p>en</p>', $field->help);
+		$this->assertSame('<p>en</p>', (string)$field->help());
+		$this->assertSame('<p>en</p>', (string)$field->help);
 	}
 
 	public function testIcon(): void

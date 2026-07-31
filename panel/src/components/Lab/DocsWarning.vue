@@ -5,11 +5,13 @@
 		theme="warning"
 		class="k-lab-docs-warning"
 	>
-		<k-text :html="'<strong>' + title + ':</strong> ' + text" />
+		<k-text :text="content" />
 	</k-box>
 </template>
 
 <script>
+import html from "@/panel/html";
+
 /**
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
@@ -22,6 +24,13 @@ export default {
 		},
 		title: String,
 		text: String
+	},
+	computed: {
+		content() {
+			// both parts were already rendered raw before and the
+			// text is kirbytext output, so they stay trusted
+			return html("<strong>" + this.title + ":</strong> " + this.text);
+		}
 	}
 };
 </script>

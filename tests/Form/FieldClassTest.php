@@ -7,6 +7,7 @@ use Kirby\Cms\Language;
 use Kirby\Cms\Page;
 use Kirby\Exception\NotFoundException;
 use Kirby\TestCase;
+use Kirby\Toolkit\HtmlString;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 class TestField extends FieldClass
@@ -440,11 +441,11 @@ class FieldClassTest extends TestCase
 
 		// regular help
 		$field = new TestField(help: 'Test');
-		$this->assertSame('<p>Test</p>', $field->help());
+		$this->assertSame('<p>Test</p>', (string)$field->help());
 
 		// translated help
 		$field = new TestField(help: ['en' => 'Test']);
-		$this->assertSame('<p>Test</p>', $field->help());
+		$this->assertSame('<p>Test</p>', (string)$field->help());
 
 		// help from string template
 		$field = new TestField(
@@ -458,7 +459,7 @@ class FieldClassTest extends TestCase
 			]
 		]));
 
-		$this->assertSame('<p>A field for Test title</p>', $field->help());
+		$this->assertSame('<p>A field for Test title</p>', (string)$field->help());
 	}
 
 	public function testIcon(): void
@@ -574,13 +575,13 @@ class FieldClassTest extends TestCase
 
 		$array = $field->toArray();
 
-		$this->assertSame([
+		$this->assertEquals([ // @phpstan-ignore-line
 			'after'       => $after,
 			'autofocus'   => true,
 			'before'      => $before,
 			'default'     => $default,
 			'disabled'    => false,
-			'help'        => '<p>Help value</p>',
+			'help'        => new HtmlString('<p>Help value</p>'),
 			'hidden'      => false,
 			'icon'        => $icon,
 			'label'       => $label,

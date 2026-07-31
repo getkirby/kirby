@@ -4,6 +4,7 @@ namespace Kirby\Panel\Lab\Doc;
 
 use Kirby\Panel\Lab\Doc;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\HtmlString;
 
 /**
  * Documentation for a single Vue component method
@@ -19,8 +20,8 @@ class Method
 {
 	public function __construct(
 		public string $name,
-		public string|null $description = null,
-		public string|null $deprecated = null,
+		public string|HtmlString|null $description = null,
+		public string|HtmlString|null $deprecated = null,
 		public string|null $since = null,
 		public string|null $returns = null,
 		public array $params = [],

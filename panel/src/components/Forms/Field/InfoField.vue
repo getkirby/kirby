@@ -3,11 +3,11 @@
 		<k-headline v-if="label">{{ label }}</k-headline>
 
 		<k-box :icon="icon" :theme="theme">
-			<k-text :html="text" />
+			<k-text :text="text" />
 		</k-box>
 
 		<footer v-if="help" class="k-field-footer">
-			<k-text class="k-help k-field-help" :html="help" />
+			<k-text class="k-help k-field-help" :text="help" />
 		</footer>
 	</div>
 </template>
