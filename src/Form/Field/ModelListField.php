@@ -206,7 +206,8 @@ abstract class ModelListField extends DisplayField
 			];
 		}
 
-		if (empty($this->text()) === false) {
+		// an empty text or info disables the column
+		if (($text = $this->text()) !== null && $text !== '') {
 			$columns['title'] = [
 				'label'  => I18n::translate('title'),
 				'mobile' => true,
@@ -214,7 +215,7 @@ abstract class ModelListField extends DisplayField
 			];
 		}
 
-		if (empty($this->info()) === false) {
+		if (($info = $this->info()) !== null && $info !== '') {
 			$columns['info'] = [
 				'label' => I18n::translate('info'),
 				'type'  => 'text',

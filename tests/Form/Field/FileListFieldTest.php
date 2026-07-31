@@ -168,6 +168,16 @@ class FileListFieldTest extends TestCase
 		$this->assertSame(['image'], array_keys($field->columns()));
 	}
 
+	public function testColumnsWithZeroAsText(): void
+	{
+		$field = $this->filelist([
+			'layout' => 'table',
+			'text'   => '0'
+		]);
+
+		$this->assertSame(['image', 'title'], array_keys($field->columns()));
+	}
+
 	public function testColumnsWithInfo(): void
 	{
 		$field = $this->filelist([
