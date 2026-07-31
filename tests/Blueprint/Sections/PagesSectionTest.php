@@ -335,9 +335,9 @@ class PagesSectionTest extends TestCase
 			'name'  => 'test',
 			'model' => $page
 		]);
-		$this->assertSame('Z', $section->data()[0]['text']);
-		$this->assertSame('Ä', $section->data()[1]['text']);
-		$this->assertSame('B', $section->data()[2]['text']);
+		$this->assertSame('Z', (string)$section->data()[0]['text']);
+		$this->assertSame('Ä', (string)$section->data()[1]['text']);
+		$this->assertSame('B', (string)$section->data()[2]['text']);
 
 		// sort by field
 		$section = new Section('pages', [
@@ -345,9 +345,9 @@ class PagesSectionTest extends TestCase
 			'model'  => $page,
 			'sortBy' => 'title'
 		]);
-		$this->assertSame('B', $section->data()[0]['text']);
-		$this->assertSame('Z', $section->data()[1]['text']);
-		$this->assertSame('Ä', $section->data()[2]['text']);
+		$this->assertSame('B', (string)$section->data()[0]['text']);
+		$this->assertSame('Z', (string)$section->data()[1]['text']);
+		$this->assertSame('Ä', (string)$section->data()[2]['text']);
 
 		// custom sorting direction
 		$section = new Section('pages', [
@@ -355,9 +355,9 @@ class PagesSectionTest extends TestCase
 			'model'  => $page,
 			'sortBy' => 'title desc'
 		]);
-		$this->assertSame('Ä', $section->data()[0]['text']);
-		$this->assertSame('Z', $section->data()[1]['text']);
-		$this->assertSame('B', $section->data()[2]['text']);
+		$this->assertSame('Ä', (string)$section->data()[0]['text']);
+		$this->assertSame('Z', (string)$section->data()[1]['text']);
+		$this->assertSame('B', (string)$section->data()[2]['text']);
 
 		// custom flag
 		$section = new Section('pages', [
@@ -365,9 +365,9 @@ class PagesSectionTest extends TestCase
 			'model'  => $page,
 			'sortBy' => 'title SORT_LOCALE_STRING'
 		]);
-		$this->assertSame('Ä', $section->data()[0]['text']);
-		$this->assertSame('B', $section->data()[1]['text']);
-		$this->assertSame('Z', $section->data()[2]['text']);
+		$this->assertSame('Ä', (string)$section->data()[0]['text']);
+		$this->assertSame('B', (string)$section->data()[1]['text']);
+		$this->assertSame('Z', (string)$section->data()[2]['text']);
 
 		// flag & sorting direction
 		$section = new Section('pages', [
@@ -375,9 +375,9 @@ class PagesSectionTest extends TestCase
 			'model'  => $page,
 			'sortBy' => 'title desc SORT_LOCALE_STRING'
 		]);
-		$this->assertSame('Z', $section->data()[0]['text']);
-		$this->assertSame('B', $section->data()[1]['text']);
-		$this->assertSame('Ä', $section->data()[2]['text']);
+		$this->assertSame('Z', (string)$section->data()[0]['text']);
+		$this->assertSame('B', (string)$section->data()[1]['text']);
+		$this->assertSame('Ä', (string)$section->data()[2]['text']);
 
 		Locale::set($locale);
 	}
@@ -457,9 +457,9 @@ class PagesSectionTest extends TestCase
 			'flip'  => true
 		]);
 
-		$this->assertSame('B', $section->data()[0]['text']);
-		$this->assertSame('A', $section->data()[1]['text']);
-		$this->assertSame('C', $section->data()[2]['text']);
+		$this->assertSame('B', (string)$section->data()[0]['text']);
+		$this->assertSame('A', (string)$section->data()[1]['text']);
+		$this->assertSame('C', (string)$section->data()[2]['text']);
 	}
 
 	public static function sortableStatusProvider(): array
@@ -624,9 +624,9 @@ class PagesSectionTest extends TestCase
 		]);
 
 		$this->assertSame('en: {{ page.slug }}', $section->info());
-		$this->assertSame('en: subpage-1', $section->data()[0]['info']);
-		$this->assertSame('en: subpage-2', $section->data()[1]['info']);
-		$this->assertSame('en: subpage-3', $section->data()[2]['info']);
+		$this->assertSame('en: subpage-1', (string)$section->data()[0]['info']);
+		$this->assertSame('en: subpage-2', (string)$section->data()[1]['info']);
+		$this->assertSame('en: subpage-3', (string)$section->data()[2]['info']);
 	}
 
 	public function testTranslatedText(): void
@@ -650,9 +650,9 @@ class PagesSectionTest extends TestCase
 		]);
 
 		$this->assertSame('en: {{ page.title }}', $section->text());
-		$this->assertSame('en: C', $section->data()[0]['text']);
-		$this->assertSame('en: A', $section->data()[1]['text']);
-		$this->assertSame('en: B', $section->data()[2]['text']);
+		$this->assertSame('en: C', (string)$section->data()[0]['text']);
+		$this->assertSame('en: A', (string)$section->data()[1]['text']);
+		$this->assertSame('en: B', (string)$section->data()[2]['text']);
 	}
 
 	public function testUnreadable(): void
@@ -746,8 +746,8 @@ class PagesSectionTest extends TestCase
 		]);
 
 		$this->assertCount(2, $section->data());
-		$this->assertSame('Bike', $section->data()[0]['text']);
-		$this->assertSame('Mount Bike', $section->data()[1]['text']);
+		$this->assertSame('Bike', (string)$section->data()[0]['text']);
+		$this->assertSame('Mount Bike', (string)$section->data()[1]['text']);
 
 		$_GET = [];
 	}
@@ -772,8 +772,8 @@ class PagesSectionTest extends TestCase
 		]);
 
 		$this->assertCount(2, $section->data());
-		$this->assertSame('Mount Bike', $section->data()[0]['text']);
-		$this->assertSame('Mountain', $section->data()[1]['text']);
+		$this->assertSame('Mount Bike', (string)$section->data()[0]['text']);
+		$this->assertSame('Mountain', (string)$section->data()[1]['text']);
 
 		$_GET = [];
 	}
@@ -799,7 +799,7 @@ class PagesSectionTest extends TestCase
 		]);
 
 		$this->assertCount(1, $section->data());
-		$this->assertSame('Mountain', $section->data()[0]['text']);
+		$this->assertSame('Mountain', (string)$section->data()[0]['text']);
 
 		$_GET = [];
 	}
@@ -825,8 +825,8 @@ class PagesSectionTest extends TestCase
 		]);
 
 		$this->assertCount(2, $section->data());
-		$this->assertSame('Bike', $section->data()[0]['text']);
-		$this->assertSame('Mount Bike', $section->data()[1]['text']);
+		$this->assertSame('Bike', (string)$section->data()[0]['text']);
+		$this->assertSame('Mount Bike', (string)$section->data()[1]['text']);
 
 		$_GET = [];
 	}
@@ -852,8 +852,8 @@ class PagesSectionTest extends TestCase
 		]);
 
 		$this->assertCount(2, $section->data());
-		$this->assertSame('Bike', $section->data()[0]['text']);
-		$this->assertSame('Mount Bike', $section->data()[1]['text']);
+		$this->assertSame('Bike', (string)$section->data()[0]['text']);
+		$this->assertSame('Mount Bike', (string)$section->data()[1]['text']);
 
 		$_GET = [];
 	}
@@ -878,7 +878,7 @@ class PagesSectionTest extends TestCase
 		$data = $section->data();
 		$item = $data[0];
 
-		$this->assertSame('', $item['info']);
+		$this->assertSame('', (string)$item['info']);
 		$this->assertSame([
 			'text' => 'test',
 			'href' => '/pages/test+test'

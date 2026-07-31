@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "@test/unit";
 import { mount as vueMount } from "@vue/test-utils";
+import html from "@/panel/html";
 import Item from "./Item.vue";
 
 function mount(props = {}, attrs = {}) {
@@ -85,8 +86,15 @@ describe("Item.vue", () => {
 	});
 
 	describe("text prop", () => {
-		it("renders the text as HTML", () => {
+		it("escapes a plain string", () => {
 			const wrapper = mount({ text: "<b>Hello</b>" });
+			expect(wrapper.find(".k-item-title span").html()).toBe(
+				"<span>&lt;b&gt;Hello&lt;/b&gt;</span>"
+			);
+		});
+
+		it("renders trusted HTML as-is", () => {
+			const wrapper = mount({ text: html("<b>Hello</b>") });
 			expect(wrapper.find(".k-item-title span").html()).toBe(
 				"<span><b>Hello</b></span>"
 			);
@@ -177,15 +185,24 @@ describe("Item.vue", () => {
 			);
 		});
 
-		it("strips tags", () => {
+		it("keeps markup a plain string renders as visible text", () => {
 			const wrapper = mount({ text: "<b>Hello</b>" });
-			expect(wrapper.find(".k-item-title").attributes("title")).toBe("Hello");
+			expect(wrapper.find(".k-item-title").attributes("title")).toBe(
+				"<b>Hello</b>"
+			);
 		});
 
-		it("unescapes entities", () => {
-			const wrapper = mount({ text: "Tom &amp; Jerry" });
+		it("strips authored tags from trusted HTML", () => {
+			const wrapper = mount({ text: html("<b>Tom &amp; Jerry</b>") });
 			expect(wrapper.find(".k-item-title").attributes("title")).toBe(
 				"Tom & Jerry"
+			);
+		});
+
+		it("keeps escaped tags, which render as visible text", () => {
+			const wrapper = mount({ text: html("Using &lt;div&gt; tags") });
+			expect(wrapper.find(".k-item-title").attributes("title")).toBe(
+				"Using <div> tags"
 			);
 		});
 

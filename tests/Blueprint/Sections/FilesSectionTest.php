@@ -477,8 +477,8 @@ class FilesSectionTest extends TestCase
 		]);
 
 		$this->assertSame('en: {{ file.page.title }}', $section->info());
-		$this->assertSame('en: test', $section->data()[0]['info']);
-		$this->assertSame('en: test', $section->data()[1]['info']);
+		$this->assertSame('en: test', (string)$section->data()[0]['info']);
+		$this->assertSame('en: test', (string)$section->data()[1]['info']);
 	}
 
 	public function testTranslatedText(): void
@@ -501,8 +501,8 @@ class FilesSectionTest extends TestCase
 		]);
 
 		$this->assertSame('en: {{ file.filename }}', $section->text());
-		$this->assertSame('en: a.jpg', $section->data()[0]['text']);
-		$this->assertSame('en: b.jpg', $section->data()[1]['text']);
+		$this->assertSame('en: a.jpg', (string)$section->data()[0]['text']);
+		$this->assertSame('en: b.jpg', (string)$section->data()[1]['text']);
 	}
 
 	public function testSearchDefault(): void
@@ -711,7 +711,7 @@ class FilesSectionTest extends TestCase
 		$data = $section->data();
 		$item = $data[0];
 
-		$this->assertSame('', $item['info']);
+		$this->assertSame('', (string)$item['info']);
 		$this->assertSame([
 			'text' => 'mount-bike.jpg',
 			'href' => '/pages/test/files/mount-bike.jpg'

@@ -12,6 +12,7 @@ use Kirby\Panel\Ui\Stat;
 use Kirby\Panel\Ui\Stats;
 use Kirby\Panel\Ui\View;
 use Kirby\Plugin\Plugin;
+use Kirby\Toolkit\HtmlString;
 
 /**
  * Controls the system view
@@ -123,7 +124,10 @@ class SystemViewController extends ViewController
 					// @codeCoverageIgnoreStart
 					$security[] = [
 						'id'   => 'extension-' . $extension,
-						'text' => $this->i18n('installation.issues.extension', ['extension' => $extension])
+						// the translation contains authored markup
+						'text' => new HtmlString(
+							$this->i18n('installation.issues.extension', ['extension' => $extension])
+						)
 					];
 					// @codeCoverageIgnoreEnd
 				}

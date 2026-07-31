@@ -87,6 +87,10 @@ export default [
 	},
 	{
 		rules: {
+			"vuejs-accessibility/heading-has-content": [
+				"error",
+				{ accessibleDirectives: ["safe-html"], accessibleChildren: ["span"] }
+			],
 			"vue/attributes-order": "error",
 			"vue/component-definition-name-casing": "off",
 			"vue/html-closing-bracket-newline": [

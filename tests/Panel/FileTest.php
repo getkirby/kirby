@@ -230,7 +230,7 @@ class FileTest extends TestCase
 		$option = $panel->dropdownOption();
 
 		$this->assertSame('image', $option['icon']);
-		$this->assertSame('test.jpg', $option['text']);
+		$this->assertSame('test.jpg', (string)$option['text']);
 		$this->assertSame('/pages/test/files/test.jpg', $option['link']);
 	}
 
@@ -648,7 +648,7 @@ class FileTest extends TestCase
 		$this->assertSame('test/test.jpg', $data['id']);
 		$this->assertSame('image', $data['image']['icon']);
 		$this->assertSame('/pages/test/files/test.jpg', $data['link']);
-		$this->assertSame('test.jpg', $data['text']);
+		$this->assertSame('test.jpg', (string)$data['text']);
 	}
 
 	public function testPickerDataWithParams(): void
@@ -675,7 +675,7 @@ class FileTest extends TestCase
 
 		$this->assertSame('test/test.jpg', $data['id']);
 		$this->assertSame('1/1', $data['image']['ratio']);
-		$this->assertSame('From foo to the bar', $data['text']);
+		$this->assertSame('From foo to the bar', (string)$data['text']);
 	}
 
 	public function testPickerDataSameModel(): void

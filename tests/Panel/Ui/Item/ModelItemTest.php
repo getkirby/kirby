@@ -4,6 +4,7 @@ namespace Kirby\Panel\Ui\Item;
 
 use Kirby\Cms\Page;
 use Kirby\Cms\TestCase;
+use Kirby\Toolkit\HtmlString;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(ModelItem::class)]
@@ -54,7 +55,7 @@ class ModelItemTest extends TestCase
 			info: 'Test'
 		);
 
-		$this->assertSame('Test', $item->props()['info']);
+		$this->assertSame('Test', (string)$item->props()['info']);
 	}
 
 	public function testInfoDynamic(): void
@@ -64,7 +65,7 @@ class ModelItemTest extends TestCase
 			info: '{{ page.title }}'
 		);
 
-		$this->assertSame('test', $item->props()['info']);
+		$this->assertSame('test', (string)$item->props()['info']);
 	}
 
 	public function testProps(): void
@@ -78,16 +79,16 @@ class ModelItemTest extends TestCase
 				'cover' => false,
 				'icon'  => 'page',
 			],
-			'info'        => '',
+			'info'        => new HtmlString(''),
 			'layout'      => 'list',
-			'text'        => 'test',
+			'text'        => new HtmlString('test'),
 			'id'          => 'test',
 			'link'        => '/pages/test',
 			'permissions' => $this->model->permissions()->toArray(),
 			'uuid'        => $this->model->uuid()?->toString()
 		];
 
-		$this->assertSame($expected, $item->props());
+		$this->assertEquals($expected, $item->props()); // -ignore-line
 	}
 
 	public function testText(): void
@@ -97,7 +98,7 @@ class ModelItemTest extends TestCase
 			text: 'Test'
 		);
 
-		$this->assertSame('Test', $item->props()['text']);
+		$this->assertSame('Test', (string)$item->props()['text']);
 	}
 
 	public function testTextDynamic(): void
@@ -107,7 +108,7 @@ class ModelItemTest extends TestCase
 			info: '{{ page.title }}'
 		);
 
-		$this->assertSame('test', $item->props()['text']);
+		$this->assertSame('test', (string)$item->props()['text']);
 	}
 
 }
