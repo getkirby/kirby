@@ -92,6 +92,7 @@ export default [
 				{ accessibleDirectives: ["safe-html"], accessibleChildren: ["span"] }
 			],
 			"vue/attributes-order": "error",
+			"vue/no-v-html": "error",
 			"vue/component-definition-name-casing": "off",
 			"vue/html-closing-bracket-newline": [
 				"error",
