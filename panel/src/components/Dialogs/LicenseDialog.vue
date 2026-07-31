@@ -80,9 +80,11 @@ export default {
 	emits: ["cancel", "submit"],
 	computed: {
 		licenseHubText() {
-			return this.$t("license.manage.hub", {
-				url: "https://hub.getkirby.com/"
-			});
+			return this.$panel.html(
+				this.$t("license.manage.hub", {
+					url: "https://hub.getkirby.com/"
+				})
+			);
 		}
 	}
 };

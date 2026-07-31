@@ -7,6 +7,7 @@ use Kirby\Panel\Controller\DialogController;
 use Kirby\Panel\Field;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
+use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\HtmlString;
 
 /**
@@ -31,9 +32,11 @@ class SystemLicenseActivateDialogController extends DialogController
 				'theme' => 'white',
 				'type'  => 'info',
 				'icon'  => 'info',
-				'text'  => $this->i18n('license.activate.domain', [
-					'host' => $system->indexUrl()
-				]),
+				'text'  => new HtmlString(
+					$this->i18n('license.activate.domain', [
+						'host' => Escape::html($system->indexUrl())
+					])
+				),
 			],
 			'type' => [
 				'label'    =>  $this->i18n('license.activate.label'),
@@ -57,9 +60,11 @@ class SystemLicenseActivateDialogController extends DialogController
 			'warning' => [
 				'type'  => 'info',
 				'theme' => 'warning',
-				'text'  =>  $this->i18n('license.activate.' . ($local ? 'local' : 'public'), [
-					'host' => $system->indexUrl()
-				]),
+				'text'  => new HtmlString(
+					$this->i18n('license.activate.' . ($local ? 'local' : 'public'), [
+						'host' => Escape::html($system->indexUrl())
+					])
+				),
 				'when'  => ['type' => $local ? 'regular' : 'free'],
 			],
 			'acknowledge' => [

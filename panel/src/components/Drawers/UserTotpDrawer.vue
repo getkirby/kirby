@@ -22,8 +22,8 @@
 							text: qr,
 							help: $panel.html(
 								$t('login.totp.enable.qr.help', {
-									secret: value.secret,
-									uri
+									secret: $esc(value.secret),
+									uri: $esc(uri)
 								})
 							),
 							theme: 'passive',

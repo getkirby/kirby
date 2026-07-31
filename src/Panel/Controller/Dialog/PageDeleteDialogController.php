@@ -37,7 +37,9 @@ class PageDeleteDialogController extends PageDialogController
 				'info' => [
 					'type'  => 'info',
 					'theme' => 'negative',
-					'text'  => $this->i18n('page.delete.confirm.subpages')
+					'text'  => new HtmlString(
+						$this->i18n('page.delete.confirm.subpages')
+					)
 				],
 				'check' => [
 					'label'   => $this->i18n('page.delete.confirm.title'),
