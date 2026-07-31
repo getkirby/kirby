@@ -16,6 +16,7 @@ use Kirby\Filesystem\Dir;
 use Kirby\Http\Response as HttpResponse;
 use Kirby\TestCase;
 use Kirby\Toolkit\Collection;
+use Kirby\Toolkit\HtmlString;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Obj;
 use stdClass;
@@ -992,6 +993,55 @@ class ApiTest extends TestCase
 
 		$this->assertInstanceOf(HttpResponse::class, $result);
 		$this->assertSame(json_encode(['a' => 'A']), $result->body());
+	}
+
+	public function testRenderArrayWithHtmlString(): void
+	{
+		$api = new Api([
+			'routes' => [
+				[
+					'pattern' => 'test',
+					'method'  => 'POST',
+					'action'  => fn () => [
+						'text' => new HtmlString('<b>trusted</b>'),
+						'info' => 'plain'
+					]
+				]
+			]
+		]);
+
+		$result = $api->render('test', 'POST', [
+			'headers' => ['x-panel' => 'true']
+		]);
+
+		$this->assertSame(
+			json_encode(['<text>' => '<b>trusted</b>', 'info' => 'plain']),
+			$result->body()
+		);
+	}
+
+	public function testRenderArrayWithHtmlStringOutsideThePanel(): void
+	{
+		$api = new Api([
+			'routes' => [
+				[
+					'pattern' => 'test',
+					'method'  => 'POST',
+					'action'  => fn () => [
+						'text' => new HtmlString('<b>trusted</b>'),
+						'info' => 'plain'
+					]
+				]
+			]
+		]);
+
+		$result = $api->render('test', 'POST');
+
+		// without the Panel header, keys must stay untouched
+		$this->assertSame(
+			json_encode(['text' => '<b>trusted</b>', 'info' => 'plain']),
+			$result->body()
+		);
 	}
 
 	public function testRenderTrue(): void
