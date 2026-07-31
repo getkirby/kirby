@@ -598,13 +598,15 @@ describe("Editor", () => {
 			expect(editor.selection.to).toBe(4);
 		});
 
-		it("clamps out-of-bounds positions to valid document positions", () => {
+		it("clamps out-of-bounds positions to valid text positions", () => {
 			editor.setContent("<p>hello</p>");
 			editor.setSelection(-5, 9999);
-			expect(editor.selection.from).toBeGreaterThanOrEqual(0);
-			expect(editor.selection.to).toBeLessThanOrEqual(
-				editor.state!.doc.content.size
-			);
+
+			// inside the paragraph, not at the document boundaries
+			expect(editor.selection.from).toBe(1);
+			expect(editor.selection.to).toBe(6);
+			expect(editor.selection.$from.parent.inlineContent).toBe(true);
+			expect(editor.selection.$to.parent.inlineContent).toBe(true);
 		});
 	});
 
