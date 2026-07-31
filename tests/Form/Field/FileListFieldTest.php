@@ -340,7 +340,7 @@ class FileListFieldTest extends TestCase
 	{
 		$_GET['searchterm'] = 'a.jpg';
 
-		$field = $this->filelist(['search' => true]);
+		$field = $this->filelist(['searchable' => true]);
 
 		$this->assertSame('a.jpg', $field->searchterm());
 		$this->assertCount(1, $field->data());
@@ -379,7 +379,7 @@ class FileListFieldTest extends TestCase
 	{
 		$_GET['searchterm'] = 'a';
 
-		$field = $this->filelist(['search' => true]);
+		$field = $this->filelist(['searchable' => true]);
 		$this->assertFalse($field->sortable());
 	}
 
@@ -504,7 +504,7 @@ class FileListFieldTest extends TestCase
 
 		$this->assertSame(2, $props['pagination']['page']);
 		$this->assertSame(3, $props['pagination']['total']);
-		$this->assertCount(1, $props['data']);
+		$this->assertCount(1, $props['files']);
 	}
 
 	public function testDeleteSelected(): void

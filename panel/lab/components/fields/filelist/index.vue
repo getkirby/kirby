@@ -10,7 +10,7 @@
 
 			<k-lab-example label="Default">
 				<k-filelist-field
-					:data="files"
+					:files="files"
 					:pagination="pagination"
 					label="Files"
 				/>
@@ -18,7 +18,7 @@
 
 			<k-lab-example label="Help">
 				<k-filelist-field
-					:data="files"
+					:files="files"
 					:pagination="pagination"
 					help="Every file of this page"
 					label="Files"
@@ -26,12 +26,12 @@
 			</k-lab-example>
 
 			<k-lab-example label="Empty">
-				<k-filelist-field :data="[]" :pagination="empty" label="Files" />
+				<k-filelist-field :files="[]" :pagination="empty" label="Files" />
 			</k-lab-example>
 
 			<k-lab-example label="Empty with custom text">
 				<k-filelist-field
-					:data="[]"
+					:files="[]"
 					:pagination="empty"
 					empty="No images have been added yet"
 					label="Files"
@@ -40,7 +40,7 @@
 
 			<k-lab-example label="Layout: cardlets">
 				<k-filelist-field
-					:data="files"
+					:files="files"
 					:pagination="pagination"
 					label="Files"
 					layout="cardlets"
@@ -49,7 +49,7 @@
 
 			<k-lab-example label="Layout: cards">
 				<k-filelist-field
-					:data="files"
+					:files="files"
 					:pagination="pagination"
 					label="Files"
 					layout="cards"
@@ -58,7 +58,7 @@
 
 			<k-lab-example label="Layout: cards, size small">
 				<k-filelist-field
-					:data="files"
+					:files="files"
 					:pagination="pagination"
 					label="Files"
 					layout="cards"
@@ -69,7 +69,7 @@
 			<k-lab-example label="Layout: table">
 				<k-filelist-field
 					:columns="columns"
-					:data="tableRows"
+					:files="tableRows"
 					:pagination="pagination"
 					label="Files"
 					layout="table"
@@ -79,7 +79,7 @@
 			<k-lab-example label="Layout: table with columns">
 				<k-filelist-field
 					:columns="customColumns"
-					:data="tableRows"
+					:files="tableRows"
 					:pagination="pagination"
 					label="Files"
 					layout="table"
@@ -88,7 +88,7 @@
 
 			<k-lab-example label="Pagination">
 				<k-filelist-field
-					:data="files.slice(0, 3)"
+					:files="files.slice(0, 3)"
 					:endpoints="endpoints"
 					:pagination="paginated"
 					label="Files"
@@ -97,10 +97,10 @@
 
 			<k-lab-example label="Search">
 				<k-filelist-field
-					:data="files"
+					:files="files"
 					:endpoints="endpoints"
 					:pagination="pagination"
-					:search="true"
+					:searchable="true"
 					label="Files"
 				/>
 			</k-lab-example>
@@ -108,7 +108,7 @@
 			<k-lab-example label="Batch">
 				<k-filelist-field
 					:batch="true"
-					:data="files"
+					:files="files"
 					:endpoints="endpoints"
 					:pagination="pagination"
 					label="Files"
@@ -117,7 +117,7 @@
 
 			<k-lab-example label="Upload">
 				<k-filelist-field
-					:data="files"
+					:files="files"
 					:endpoints="endpoints"
 					:pagination="pagination"
 					:upload="upload"
@@ -128,10 +128,10 @@
 			<k-lab-example label="All options">
 				<k-filelist-field
 					:batch="true"
-					:data="files.slice(0, 3)"
+					:files="files.slice(0, 3)"
 					:endpoints="endpoints"
 					:pagination="paginated"
-					:search="true"
+					:searchable="true"
 					:sortable="true"
 					:upload="upload"
 					help="Search, batch select, sorting and uploads at once"

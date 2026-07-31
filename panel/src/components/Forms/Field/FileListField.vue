@@ -70,17 +70,17 @@ export default {
 		 */
 		columns: Object,
 		/**
-		 * Props for each file of the current page
-		 */
-		data: {
-			type: Array,
-			default: () => []
-		},
-		/**
 		 * Text for the empty state box
 		 */
 		empty: String,
 		endpoints: Object,
+		/**
+		 * Props for each file of the current page
+		 */
+		files: {
+			type: Array,
+			default: () => []
+		},
 		/**
 		 * Layout of the collection
 		 * @values list, cardlets, cards, table
@@ -100,7 +100,7 @@ export default {
 		/**
 		 * Shows the search button
 		 */
-		search: Boolean,
+		searchable: Boolean,
 		/**
 		 * Card size for `layout: cards`
 		 */
@@ -134,7 +134,7 @@ export default {
 
 			const buttons = [];
 
-			if (this.search === true) {
+			if (this.searchable === true) {
 				buttons.push({
 					icon: "filter",
 					text: this.$t("filter"),
@@ -192,7 +192,7 @@ export default {
 			);
 		},
 		items() {
-			return this.state.data.map((file) => {
+			return this.state.files.map((file) => {
 				const sortable = file.permissions.sort && this.isSortable;
 				const deletable =
 					file.permissions.delete &&
@@ -232,7 +232,7 @@ export default {
 	watch: {
 		// a new view always brings unfiltered props for the first page,
 		// so an active search or page has to be restored through the endpoint
-		data() {
+		files() {
 			if (this.searchterm || this.state.pagination.page > 1) {
 				this.reload();
 			} else {
@@ -355,7 +355,7 @@ export default {
 		stateFromProps() {
 			return {
 				columns: this.columns,
-				data: this.data,
+				files: this.files,
 				pagination: this.pagination,
 				sortable: this.sortable,
 				upload: this.upload

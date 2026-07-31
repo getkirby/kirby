@@ -86,9 +86,9 @@ abstract class ModelListField extends DisplayField
 	protected string|null $query;
 
 	/**
-	 * Enables/disables the search field
+	 * Enables/disables the search
 	 */
-	protected bool|null $search;
+	protected bool|null $searchable;
 
 	/**
 	 * The size of the cards for `layout: cards`
@@ -117,7 +117,7 @@ abstract class ModelListField extends DisplayField
 		int|null $page = null,
 		string|null $parent = null,
 		string|null $query = null,
-		bool|null $search = null,
+		bool|null $searchable = null,
 		string|null $size = null,
 		bool|null $sortable = null,
 		string|null $sortBy = null,
@@ -145,9 +145,9 @@ abstract class ModelListField extends DisplayField
 		$this->min      = $min;
 		$this->page     = $page;
 		$this->parent   = $parent;
-		$this->query    = $query;
-		$this->search   = $search;
-		$this->size     = $size;
+		$this->query      = $query;
+		$this->searchable = $searchable;
+		$this->size       = $size;
 		$this->sortable = $sortable;
 		$this->sortBy   = $sortBy;
 		$this->text     = $text;
@@ -510,14 +510,15 @@ abstract class ModelListField extends DisplayField
 			...parent::props(),
 			'batch'      => $this->batch(),
 			'columns'    => $this->columnsWithTypes(),
-			'data'       => $this->data(),
 			'empty'      => $this->empty(),
 			'layout'     => $this->layout(),
 			'min'        => $this->min(),
 			'pagination' => $this->pagination(),
-			'search'     => $this->search(),
+			'searchable' => $this->searchable(),
 			'size'       => $this->size(),
 			'sortable'   => $this->sortable(),
+			// the entries are named after the models they list
+			static::TYPE => $this->data(),
 		];
 	}
 
@@ -526,9 +527,9 @@ abstract class ModelListField extends DisplayField
 		return $this->query;
 	}
 
-	public function search(): bool
+	public function searchable(): bool
 	{
-		return $this->search ?? false;
+		return $this->searchable ?? false;
 	}
 
 	/**
@@ -536,7 +537,7 @@ abstract class ModelListField extends DisplayField
 	 */
 	public function searchterm(): string|null
 	{
-		if ($this->search() === false) {
+		if ($this->searchable() === false) {
 			return null;
 		}
 
