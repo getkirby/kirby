@@ -29,6 +29,7 @@ abstract class ModelListField extends DisplayField
 	use Mixin\Layout;
 	use Mixin\Limit;
 	use Mixin\Max;
+	use Mixin\Request;
 	use Mixin\Sortable;
 	use Mixin\SortBy;
 
@@ -154,20 +155,14 @@ abstract class ModelListField extends DisplayField
 	}
 
 	/**
-	 * The list is not part of the form values, so it has to
-	 * refresh itself through its own endpoint whenever the
-	 * page, the search or the entries change
+	 * The list only needs write routes. It refreshes itself by
+	 * reloading the view with its own scoped request parameters.
 	 */
 	public function api(): array
 	{
 		$field = $this;
 
 		return [
-			[
-				'pattern' => '',
-				'method'  => 'GET',
-				'action'  => fn (): array => $field->props()
-			],
 			[
 				'pattern' => 'delete',
 				'method'  => 'DELETE',
@@ -459,11 +454,12 @@ abstract class ModelListField extends DisplayField
 	}
 
 	/**
-	 * The page from the request, with the `page` prop as fallback
+	 * The page from the field's own request scope,
+	 * with the `page` prop as fallback
 	 */
 	public function page(): int|string|null
 	{
-		return $this->kirby()->request()->get('page', $this->page);
+		return $this->request('page', $this->page);
 	}
 
 	public function pagination(): array
@@ -515,6 +511,7 @@ abstract class ModelListField extends DisplayField
 			'min'        => $this->min(),
 			'pagination' => $this->pagination(),
 			'searchable' => $this->searchable(),
+			'searchterm' => $this->searchterm(),
 			'size'       => $this->size(),
 			'sortable'   => $this->sortable(),
 			// the entries are named after the models they list
@@ -533,7 +530,8 @@ abstract class ModelListField extends DisplayField
 	}
 
 	/**
-	 * The search term from the request, if the search is enabled
+	 * The search term from the field's own request scope,
+	 * if the search is enabled
 	 */
 	public function searchterm(): string|null
 	{
@@ -541,7 +539,7 @@ abstract class ModelListField extends DisplayField
 			return null;
 		}
 
-		return $this->kirby()->request()->get('searchterm');
+		return $this->request('searchterm');
 	}
 
 	public function size(): string

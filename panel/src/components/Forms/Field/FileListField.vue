@@ -17,21 +17,21 @@
 				v-if="isSearching"
 				:autofocus="true"
 				:placeholder="$t('filter') + ' …'"
-				:value="searchterm"
+				:value="search"
 				class="k-filelist-field-search"
 				icon="search"
 				type="text"
-				@input="searchterm = $event"
+				@input="search = $event"
 				@keydown.esc="onSearchToggle"
 			/>
 
 			<k-collection
-				:columns="state.columns"
+				:columns="columns"
 				:empty="emptyProps"
 				:fields="fields"
 				:items="items"
 				:layout="layout"
-				:pagination="state.pagination"
+				:pagination="pagination"
 				:selected="selected"
 				:selecting="isSelecting"
 				:size="size"
@@ -102,6 +102,10 @@ export default {
 		 */
 		searchable: Boolean,
 		/**
+		 * The search term the list is currently filtered by
+		 */
+		searchterm: String,
+		/**
 		 * Card size for `layout: cards`
 		 */
 		size: String,
@@ -121,9 +125,11 @@ export default {
 	data() {
 		return {
 			isProcessing: false,
-			isSearching: false,
-			searchterm: null,
-			state: this.stateFromProps()
+			// the search input is uncommitted state and must not lag
+			// behind while typing, so it is kept locally and synced
+			// back from the prop whenever the view brings a new one
+			isSearching: Boolean(this.searchterm),
+			search: this.searchterm
 		};
 	},
 	computed: {
@@ -159,7 +165,7 @@ export default {
 			return buttons;
 		},
 		canAdd() {
-			return Boolean(this.state.upload) && this.$panel.permissions.files.create;
+			return Boolean(this.upload) && this.$panel.permissions.files.create;
 		},
 		canSelect() {
 			return this.batch === true && this.items.length > 0;
@@ -178,25 +184,24 @@ export default {
 		fields() {
 			const fields = {};
 
-			for (const name in this.state.columns ?? {}) {
-				fields[name] = { ...this.state.columns[name], disabled: true };
+			for (const name in this.columns ?? {}) {
+				fields[name] = { ...this.columns[name], disabled: true };
 			}
 
 			return fields;
 		},
 		isSortable() {
 			return (
-				this.state.sortable === true &&
+				this.sortable === true &&
 				this.isSelecting === false &&
 				this.isProcessing === false
 			);
 		},
 		items() {
-			return this.state.files.map((file) => {
+			return this.files.map((file) => {
 				const sortable = file.permissions.sort && this.isSortable;
 				const deletable =
-					file.permissions.delete &&
-					this.state.pagination.total > (this.min ?? 0);
+					file.permissions.delete && this.pagination.total > (this.min ?? 0);
 
 				return {
 					...file,
@@ -224,23 +229,18 @@ export default {
 		},
 		uploadOptions() {
 			return {
-				...this.state.upload,
-				url: this.$panel.urls.api + "/" + this.state.upload.api
+				...this.upload,
+				url: this.$panel.urls.api + "/" + this.upload.api
 			};
 		}
 	},
 	watch: {
-		// a new view always brings unfiltered props for the first page,
-		// so an active search or page has to be restored through the endpoint
-		files() {
-			if (this.searchterm || this.state.pagination.page > 1) {
-				this.reload();
-			} else {
-				this.state = this.stateFromProps();
-			}
-		},
-		searchterm() {
+		search() {
 			this.filter();
+		},
+		// the view can bring a different term, e.g. on back navigation
+		searchterm(searchterm) {
+			this.search = searchterm;
 		}
 	},
 	created() {
@@ -260,7 +260,8 @@ export default {
 		 * fire a request on every keystroke
 		 */
 		filter() {
-			this.reload({ page: 1 });
+			// a new term starts over, so the page drops out of the URL again
+			this.reload({ page: null });
 		},
 		onAction(action, file) {
 			if (action === "replace") {
@@ -290,14 +291,18 @@ export default {
 		/**
 		 * `reload()` cannot be used as the listener itself: the event
 		 * payload would end up as its query, and a bound arrow function
-		 * could not be removed again in `unmounted()`
+		 * could not be removed again in `unmounted()`.
+		 *
+		 * Concurrent reloads from sibling lists are harmless, as
+		 * `view.load()` aborts the previous request. Announcing the
+		 * change should still move to the emitters at some point.
 		 */
 		onRefresh() {
 			this.reload();
 		},
 		onSearchToggle() {
 			this.isSearching = !this.isSearching;
-			this.searchterm = null;
+			this.search = null;
 		},
 		async onSort(items) {
 			if (this.isSortable === false) {
@@ -307,25 +312,31 @@ export default {
 			await this.request(() =>
 				this.$api.patch(this.endpoints.field + "/sort", {
 					files: items.map((item) => item.id),
-					index: this.state.pagination.offset
+					index: this.pagination.offset
 				})
 			);
 		},
 		/**
-		 * Fetches a fresh set of props from the field endpoint,
-		 * so the list can update without reloading the whole view
+		 * Reloads the view with request parameters scoped to this field,
+		 * so that other lists on the same view keep their own page
+		 * and search term and only this field gets new props
 		 */
 		async reload(query = {}) {
 			this.isProcessing = true;
 
 			try {
-				this.state = await this.$api.get(this.endpoints.field, {
-					page: this.state.pagination.page,
-					searchterm: this.searchterm,
-					...query
+				await this.$panel.view.reload({
+					query: {
+						fields: {
+							[this.name]: {
+								page: this.pagination.page,
+								// null removes the parameter from the URL
+								searchterm: this.search || null,
+								...query
+							}
+						}
+					}
 				});
-			} catch (error) {
-				this.$panel.error(error);
 			} finally {
 				this.isProcessing = false;
 			}
@@ -334,8 +345,9 @@ export default {
 			this.$panel.upload.replace(file, this.uploadOptions);
 		},
 		/**
-		 * Runs the given callback and afterwards refreshes every list
-		 * on the page, as they can show the same files
+		 * Runs the given callback and afterwards announces the change,
+		 * which reloads the view and with it every list that shows
+		 * the same files
 		 */
 		async request(callback) {
 			this.isProcessing = true;
@@ -350,18 +362,6 @@ export default {
 				this.$panel.events.emit("model.update");
 				this.isProcessing = false;
 			}
-		},
-		/**
-		 * Everything that the endpoint can replace on a refresh
-		 */
-		stateFromProps() {
-			return {
-				columns: this.columns,
-				files: this.files,
-				pagination: this.pagination,
-				sortable: this.sortable,
-				upload: this.upload
-			};
 		}
 	}
 };

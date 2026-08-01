@@ -65,7 +65,7 @@ class FileListFieldTest extends TestCase
 
 	protected function tearDown(): void
 	{
-		unset($_GET['page'], $_GET['searchterm']);
+		unset($_GET['fields'], $_GET['page'], $_GET['searchterm']);
 		parent::tearDown();
 		App::destroy();
 	}
@@ -279,12 +279,39 @@ class FileListFieldTest extends TestCase
 
 	public function testPaginationFromRequest(): void
 	{
-		$_GET['page'] = '2';
+		$_GET['fields']['gallery']['page'] = '2';
 
 		$field = $this->filelist(['limit' => 2]);
 
 		$this->assertSame(2, $field->pagination()['page']);
 		$this->assertCount(1, $field->data());
+	}
+
+	/**
+	 * The page of another field must never leak into this one
+	 */
+	public function testPaginationFromRequestOfOtherField(): void
+	{
+		$_GET['fields']['cover']['page'] = '2';
+
+		$field = $this->filelist(['limit' => 2]);
+
+		$this->assertSame(1, $field->pagination()['page']);
+		$this->assertCount(2, $field->data());
+	}
+
+	/**
+	 * Unscoped parameters are ignored, so that the view can use
+	 * `?page=` for its own pagination
+	 */
+	public function testPaginationFromUnscopedRequest(): void
+	{
+		$_GET['page'] = '2';
+
+		$field = $this->filelist(['limit' => 2]);
+
+		$this->assertSame(1, $field->pagination()['page']);
+		$this->assertCount(2, $field->data());
 	}
 
 	public function testParentModelDefault(): void
@@ -328,7 +355,7 @@ class FileListFieldTest extends TestCase
 
 	public function testSearchDisabled(): void
 	{
-		$_GET['searchterm'] = 'a';
+		$_GET['fields']['gallery']['searchterm'] = 'a';
 
 		$field = $this->filelist();
 
@@ -338,7 +365,7 @@ class FileListFieldTest extends TestCase
 
 	public function testSearchEnabled(): void
 	{
-		$_GET['searchterm'] = 'a.jpg';
+		$_GET['fields']['gallery']['searchterm'] = 'a.jpg';
 
 		$field = $this->filelist(['searchable' => true]);
 
@@ -377,7 +404,7 @@ class FileListFieldTest extends TestCase
 
 	public function testSortableWhileSearching(): void
 	{
-		$_GET['searchterm'] = 'a';
+		$_GET['fields']['gallery']['searchterm'] = 'a';
 
 		$field = $this->filelist(['searchable' => true]);
 		$this->assertFalse($field->sortable());
@@ -491,19 +518,35 @@ class FileListFieldTest extends TestCase
 	public function testApi(): void
 	{
 		$patterns = array_column($this->filelist()->api(), 'pattern');
-		$this->assertSame(['', 'delete', 'sort'], $patterns);
+		$this->assertSame(['delete', 'sort'], $patterns);
 	}
 
-	public function testApiProps(): void
+	/**
+	 * The props come from the view, so they have to reflect
+	 * the field's own scope
+	 */
+	public function testPropsFromRequest(): void
 	{
-		$_GET['page'] = '2';
+		$_GET['fields']['gallery']['page'] = '2';
 
-		$field  = $this->filelist(['limit' => 2]);
-		$routes = array_column($field->api(), null, 'pattern');
-		$props  = $routes['']['action']();
+		$props = $this->filelist(['limit' => 2])->props();
 
 		$this->assertSame(2, $props['pagination']['page']);
 		$this->assertSame(3, $props['pagination']['total']);
+		$this->assertCount(1, $props['files']);
+	}
+
+	/**
+	 * The search term is a prop, so the Panel can restore
+	 * the search input after a view reload
+	 */
+	public function testPropsSearchterm(): void
+	{
+		$_GET['fields']['gallery']['searchterm'] = 'a.jpg';
+
+		$props = $this->filelist(['searchable' => true])->props();
+
+		$this->assertSame('a.jpg', $props['searchterm']);
 		$this->assertCount(1, $props['files']);
 	}
 
