@@ -21,6 +21,11 @@ use ReflectionProperty;
 trait Value
 {
 	/**
+	 * Cache for the empty value per field class
+	 */
+	protected static array $emptyValues = [];
+
+	/**
 	 * @deprecated 5.0.0 Use `::toStoredValue()` instead to receive
 	 * the value in the format that will be needed for content files.
 	 *
@@ -44,7 +49,13 @@ trait Value
 	 */
 	public function emptyValue(): mixed
 	{
-		return (new ReflectionProperty($this, 'value'))->getDefaultValue();
+		if (array_key_exists(static::class, static::$emptyValues) === false) {
+			$prop    = new ReflectionProperty($this, 'value');
+			$default = $prop->getDefaultValue();
+			static::$emptyValues[static::class] = $default;
+		}
+
+		return static::$emptyValues[static::class];
 	}
 
 	/**

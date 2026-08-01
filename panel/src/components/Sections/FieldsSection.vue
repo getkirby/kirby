@@ -1,18 +1,18 @@
 <template>
 	<k-section
-		v-if="!isLoading"
 		:class="['k-fields-section', $attrs.class]"
-		:headline="issue ? $t('error') : null"
+		:headline="error ? $t('error') : null"
 		:style="$attrs.style"
 	>
 		<k-box
-			v-if="issue"
-			:text="issue.message"
+			v-if="error"
+			:text="error"
 			:html="false"
 			icon="alert"
 			theme="negative"
 		/>
 		<k-form
+			v-else
 			:fields="fieldsWithAdditionalData"
 			:validate="true"
 			:value="content"
@@ -34,16 +34,14 @@ export default {
 	mixins: [SectionMixin],
 	inheritAttrs: false,
 	props: {
-		content: Object
+		content: Object,
+		error: String,
+		fields: {
+			type: Object,
+			default: () => ({})
+		}
 	},
 	emits: ["input", "submit"],
-	data() {
-		return {
-			fields: {},
-			isLoading: true,
-			issue: null
-		};
-	},
 	computed: {
 		fieldsWithAdditionalData() {
 			const fields = {};
@@ -65,29 +63,9 @@ export default {
 			return fields;
 		}
 	},
-	watch: {
-		// Reload values and field definitions
-		// when the view has changed in the backend
-		timestamp() {
-			this.fetch();
-		}
-	},
-	mounted() {
-		this.fetch();
-	},
-	methods: {
-		async fetch() {
-			try {
-				const response = await this.load();
-				this.fields = response.fields;
-			} catch (error) {
-				this.issue = error;
-			} finally {
-				this.isLoading = false;
-				await this.$nextTick();
-				this.$events.emit("section.loaded", this);
-			}
-		}
+	async mounted() {
+		await this.$nextTick();
+		this.$events.emit("section.loaded", this);
 	}
 };
 </script>

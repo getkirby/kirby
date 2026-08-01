@@ -27,6 +27,9 @@ trait Options
 
 	public function options(): array
 	{
-		return $this->optionsCache ??= $this->fetchOptions();
+		return $this->optionsCache ??= $this->siblings()->options(
+			static::class . ':' . json_encode($this->options),
+			$this->fetchOptions(...)
+		);
 	}
 }

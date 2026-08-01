@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Closure;
 use Kirby\Blueprint\Blueprint;
+use Kirby\Form\FieldsCache;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
@@ -104,6 +105,14 @@ class Fieldsets extends Items
 	public function groups(): array
 	{
 		return $this->options['groups'] ?? [];
+	}
+
+	/**
+	 * @since 6.0.0
+	 */
+	public function cache(): FieldsCache|null
+	{
+		return $this->options['cache'] ?? null;
 	}
 
 	public function toArray(Closure|null $map = null): array

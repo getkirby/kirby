@@ -1080,6 +1080,9 @@ class Str
 			$callback = null;
 		}
 
+		// whether the string contains any unescaped placeholders
+		$hasUnescaped = str_contains($string ?? '', '{<');
+
 		// replace and escape
 		$string = static::template($string, $data, [
 			'start'    => '{{',
@@ -1095,12 +1098,14 @@ class Str
 		]);
 
 		// replace unescaped (specifically marked placeholders)
-		$string = static::template($string, $data, [
-			'start'    => '{<',
-			'end'      => '>}',
-			'callback' => $callback,
-			'fallback' => $fallback
-		]);
+		if ($hasUnescaped === true) {
+			$string = static::template($string, $data, [
+				'start'    => '{<',
+				'end'      => '>}',
+				'callback' => $callback,
+				'fallback' => $fallback
+			]);
+		}
 
 		return $string;
 	}

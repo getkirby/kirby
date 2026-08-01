@@ -69,6 +69,20 @@ class FieldsTest extends TestCase
 		$this->assertSame($this->app->site(), $fields->last()->model());
 	}
 
+	public function testCache(): void
+	{
+		$fields = new Fields(model: $this->model);
+		$this->assertInstanceOf(FieldsCache::class, $fields->cache());
+	}
+
+	public function testCacheWithPassedCache(): void
+	{
+		$cache  = new FieldsCache();
+		$fields = new Fields(model: $this->model, cache: $cache);
+
+		$this->assertSame($cache, $fields->cache());
+	}
+
 	public function testDefaults(): void
 	{
 		$fields = new Fields([
@@ -440,6 +454,49 @@ class FieldsTest extends TestCase
 		// language code passed
 		$fields = new Fields(fields: [], language: 'en');
 		$this->assertSame('en', $fields->language()->code());
+	}
+
+	public function testOptions(): void
+	{
+		$fields = new Fields(model: $this->model);
+
+		$this->assertSame(['a'], $fields->options('a', fn () => ['a']));
+
+		// the stored result is returned for the same key
+		$this->assertSame(['a'], $fields->options('a', fn () => ['b']));
+
+		// a different key gets its own result
+		$this->assertSame(['b'], $fields->options('b', fn () => ['b']));
+	}
+
+	public function testOptionsWithSharedCacheAndDifferentLanguages(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$cache = new FieldsCache();
+		$model = new Page(['slug' => 'test']);
+
+		$en = new Fields(model: $model, language: 'en', cache: $cache);
+		$de = new Fields(model: $model, language: 'de', cache: $cache);
+
+		// options can be translated, so each language keeps its own result
+		$this->assertSame(['en'], $en->options('a', fn () => ['en']));
+		$this->assertSame(['de'], $de->options('a', fn () => ['de']));
+		$this->assertSame(['en'], $en->options('a', fn () => ['other']));
+	}
+
+	public function testOptionsWithSharedCacheAndDifferentModels(): void
+	{
+		$cache = new FieldsCache();
+
+		$a = new Fields(model: new Page(['slug' => 'a']), cache: $cache);
+		$b = new Fields(model: new Page(['slug' => 'b']), cache: $cache);
+
+		// options are resolved against the model, so each model
+		// keeps its own result even with a shared cache
+		$this->assertSame(['a'], $a->options('key', fn () => ['a']));
+		$this->assertSame(['b'], $b->options('key', fn () => ['b']));
+		$this->assertSame(['a'], $a->options('key', fn () => ['other']));
 	}
 
 	public function testPassthrough(): void
