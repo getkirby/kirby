@@ -40,8 +40,7 @@
 
 				<k-checklist theme="negative" class="k-installation-issues">
 					<li v-for="issue in issues" :key="issue">
-						<!-- eslint-disable-next-line vue/no-v-html -->
-						<span v-html="issue" />
+						<span v-safe-html="issue" />
 					</li>
 				</k-checklist>
 			</k-stack>
@@ -59,6 +58,8 @@
 </template>
 
 <script>
+import html from "@/panel/html";
+
 /**
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
@@ -119,18 +120,24 @@ export default {
 			const issues = [];
 
 			if (this.isInstallable === false) {
-				issues.push(this.$t("installation.disabled"));
+				issues.push(html(this.$t("installation.disabled")));
 			}
 
 			for (const extension in this.requirements.extensions) {
 				if (this.requirements.extensions[extension] === false) {
-					issues.push(this.$t("installation.issues.extension", { extension }));
+					issues.push(
+						html(
+							this.$t("installation.issues.extension", {
+								extension: this.$esc(extension)
+							})
+						)
+					);
 				}
 			}
 
 			for (const type of ["accounts", "content", "media", "sessions"]) {
 				if (this.requirements[type] === false) {
-					issues.push(this.$t("installation.issues." + type));
+					issues.push(html(this.$t("installation.issues." + type)));
 				}
 			}
 

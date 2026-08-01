@@ -32,12 +32,12 @@
 				/>
 			</k-navigate>
 		</details>
-		<!-- eslint-disable vue/no-v-html -->
 		<p
+			v-safe-html="
+				$panel.html($t('field.blocks.fieldsets.paste', { shortcut: $esc(shortcut) }))
+			"
 			class="k-clipboard-hint"
-			v-html="$t('field.blocks.fieldsets.paste', { shortcut })"
 		/>
-		<!-- eslint-enable -->
 	</k-dialog>
 </template>
 
