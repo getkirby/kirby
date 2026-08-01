@@ -10,10 +10,6 @@ import {
 	types
 } from "./link";
 
-window.panel = {
-	t: (value: string) => value
-} as unknown as typeof window.panel;
-
 describe("$helper.link", () => {
 	describe("detect()", () => {
 		it.each([

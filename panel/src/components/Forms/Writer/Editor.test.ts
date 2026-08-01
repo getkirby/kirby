@@ -1,12 +1,4 @@
-import {
-	afterEach,
-	beforeAll,
-	beforeEach,
-	describe,
-	expect,
-	it,
-	vi
-} from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { reactive } from "vue";
 import Editor from "./Editor";
 import { Bold, Link } from "./Marks";
@@ -19,10 +11,6 @@ function createEditor(options: Record<string, unknown> = {}): Editor {
 }
 
 describe("Editor", () => {
-	beforeAll(() => {
-		vi.stubGlobal("panel", { t: (key: string) => key });
-	});
-
 	let editor: Editor;
 
 	beforeEach(() => {

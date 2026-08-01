@@ -3,14 +3,7 @@ import { mount as vueMount } from "@vue/test-utils";
 import Progress from "./Progress.vue";
 
 function mount(props: Record<string, unknown> = {}) {
-	return vueMount(Progress, {
-		props: props as never,
-		global: {
-			mocks: {
-				$t: (key: string) => key
-			}
-		}
-	});
+	return vueMount(Progress, { props: props as never });
 }
 
 function bar(wrapper: ReturnType<typeof mount>) {

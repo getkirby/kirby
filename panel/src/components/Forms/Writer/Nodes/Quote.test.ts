@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import type { EditorState } from "prosemirror-state";
 import {
 	applyInputRule,
@@ -14,14 +14,6 @@ const schema = createSchemaWithNodes({ quote: node.schema });
 const context = { type: schema.nodes.quote, schema, utils };
 
 describe("Quote node", () => {
-	beforeEach(() => {
-		vi.stubGlobal("panel", { t: (key: string) => key });
-	});
-
-	afterEach(() => {
-		vi.unstubAllGlobals();
-	});
-
 	describe("button", () => {
 		it("returns the button config", () => {
 			const button = node.button;

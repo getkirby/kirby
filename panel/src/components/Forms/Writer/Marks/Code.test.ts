@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import {
 	applyInputRule,
 	applyPasteRule,
@@ -15,14 +15,6 @@ const schema = createSchemaWithMarks({ code: mark.schema });
 const context = { type: schema.marks.code, schema, utils };
 
 describe("Code mark", () => {
-	beforeEach(() => {
-		vi.stubGlobal("panel", { t: (key: string) => key });
-	});
-
-	afterEach(() => {
-		vi.unstubAllGlobals();
-	});
-
 	describe("button", () => {
 		it("returns the button config", () => {
 			const button = mark.button;

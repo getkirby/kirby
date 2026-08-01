@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { mount } from "@vue/test-utils";
 import { HtmlString } from "@/panel/html";
-import safeHtml from "./safeHtml";
 
 const TestComponent = {
 	props: ["value"],
@@ -9,10 +8,7 @@ const TestComponent = {
 };
 
 function mountWithDirective(value: unknown) {
-	return mount(TestComponent, {
-		props: { value },
-		global: { plugins: [safeHtml] }
-	});
+	return mount(TestComponent, { props: { value } });
 }
 
 describe("config.safeHtml", () => {

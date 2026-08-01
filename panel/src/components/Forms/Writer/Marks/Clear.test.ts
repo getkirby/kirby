@@ -1,18 +1,10 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { mockEditor } from "@test/unit/editor";
 import Clear from "./Clear";
 
 const mark = new Clear();
 
 describe("Clear mark", () => {
-	beforeEach(() => {
-		vi.stubGlobal("panel", { t: (key: string) => key });
-	});
-
-	afterEach(() => {
-		vi.unstubAllGlobals();
-	});
-
 	describe("button", () => {
 		it("returns the button config", () => {
 			const button = mark.button;
