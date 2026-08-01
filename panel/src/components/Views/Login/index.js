@@ -37,7 +37,10 @@ export default {
 		);
 		app.component("k-login-email-challenge-form", LoginEmailChallengeForm);
 		app.component("k-login-totp-challenge-form", LoginTotpChallengeForm);
-		app.component("k-login-webauthn-challenge-form", LoginWebauthnChallengeForm);
+		app.component(
+			"k-login-webauthn-challenge-form",
+			LoginWebauthnChallengeForm
+		);
 		app.component("k-login-webauthn-method-form", LoginWebauthnMethodForm);
 	}
 };
