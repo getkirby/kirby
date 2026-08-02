@@ -6,14 +6,16 @@ import type WriterMark from "@/components/Forms/Writer/Mark";
 import type WriterNode from "@/components/Forms/Writer/Node";
 
 const escapingMap: Record<string, string> = {
-	"&": "&amp;",
 	"<": "&lt;",
 	">": "&gt;",
 	'"': "&quot;",
 	"'": "&#039;",
 	"/": "&#x2F;",
 	"`": "&#x60;",
-	"=": "&#x3D;"
+	"=": "&#x3D;",
+	// `&` has to stay last: `unescapeHTML()` walks this map in order
+	// and would otherwise turn `&amp;lt;` into `&lt;` and then into `<`
+	"&": "&amp;"
 };
 
 /**
