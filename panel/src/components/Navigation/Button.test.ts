@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "@test/unit";
-import { mount } from "@vue/test-utils";
+import { flushPromises, mount } from "@vue/test-utils";
 import Button from "./Button.vue";
 
 describe("Button.vue", () => {
@@ -215,6 +215,92 @@ describe("Button.vue", () => {
 			});
 			await wrapper.trigger("click");
 			expect(open).toHaveBeenCalledWith("my-drawer");
+		});
+
+		it("sends request when request prop is set", async () => {
+			const request = vi.fn().mockResolvedValue({
+				response: { json: { code: 200 } }
+			});
+			const wrapper = mount(Button, {
+				props: { request: "my/endpoint" },
+				global: { mocks: { $panel: { request } } }
+			});
+
+			await wrapper.trigger("click");
+			await flushPromises();
+
+			expect(request).toHaveBeenCalledWith("my/endpoint", { method: "POST" });
+			expect(wrapper.emitted("success")).toStrictEqual([[{ code: 200 }]]);
+			expect(wrapper.emitted("click")).toBeUndefined();
+		});
+
+		it("passes request options when request prop is an object", async () => {
+			const request = vi.fn().mockResolvedValue({ response: { json: {} } });
+			const wrapper = mount(Button, {
+				props: {
+					request: {
+						url: "my/endpoint",
+						method: "DELETE",
+						query: { id: "test" }
+					}
+				},
+				global: { mocks: { $panel: { request } } }
+			});
+
+			await wrapper.trigger("click");
+			await flushPromises();
+
+			expect(request).toHaveBeenCalledWith("my/endpoint", {
+				method: "DELETE",
+				query: { id: "test" }
+			});
+		});
+
+		it("disables the button and shows a loader while requesting", async () => {
+			let resolve: (value: unknown) => void;
+			const request = vi.fn(() => new Promise((r) => (resolve = r)));
+			const wrapper = mount(Button, {
+				props: { icon: "trash", request: "my/endpoint" },
+				global: { mocks: { $panel: { request } } }
+			});
+
+			await wrapper.trigger("click");
+
+			expect(wrapper.attributes("aria-busy")).toBe("true");
+			expect(wrapper.attributes("aria-disabled")).toBe("true");
+			expect(wrapper.find(".k-button-icon k-icon").attributes("type")).toBe(
+				"loader"
+			);
+
+			// a second click is ignored while the request is running
+			await wrapper.trigger("click");
+			expect(request).toHaveBeenCalledTimes(1);
+
+			resolve!({ response: { json: {} } });
+			await flushPromises();
+
+			expect(wrapper.attributes("aria-busy")).toBeUndefined();
+			expect(wrapper.attributes("aria-disabled")).toBeUndefined();
+			expect(wrapper.find(".k-button-icon k-icon").attributes("type")).toBe(
+				"trash"
+			);
+		});
+
+		it("resets and reports the error when the request fails", async () => {
+			const error = new Error("Request failed");
+			const request = vi.fn().mockRejectedValue(error);
+			const onError = vi.fn();
+			const wrapper = mount(Button, {
+				props: { icon: "trash", request: "my/endpoint" },
+				global: { mocks: { $panel: { error: onError, request } } }
+			});
+
+			await wrapper.trigger("click");
+			await flushPromises();
+
+			expect(onError).toHaveBeenCalledWith(error);
+			expect(wrapper.emitted("success")).toBeUndefined();
+			expect(wrapper.attributes("aria-disabled")).toBeUndefined();
 		});
 	});
 });

@@ -7,4 +7,9 @@ return [
 		'pattern' => 'requests/lab/errors/(:any?)',
 		'action'  => fn (string|null $type = null) => Responses::errorResponseByType($type)
 	],
+	'lab.request' => [
+		'pattern' => 'requests/lab/request',
+		'method'  => 'GET|POST|DELETE',
+		'action'  => fn () => Responses::slowResponse()
+	],
 ];

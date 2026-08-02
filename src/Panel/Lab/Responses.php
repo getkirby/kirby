@@ -69,4 +69,16 @@ class Responses
 			default        => new Exception('This is a custom backend error'),
 		};
 	}
+
+	/**
+	 * Successful response that takes a moment,
+	 * so that loading states become visible
+	 * @since 6.0.0
+	 */
+	public static function slowResponse(): array
+	{
+		usleep(1500000);
+
+		return ['status' => 'ok'];
+	}
 }
