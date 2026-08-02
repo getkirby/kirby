@@ -134,10 +134,12 @@ class Menu
 
 		$props = [...$area, ...$menu, ...$props];
 
-		// if neither link, dialog or drawer are set, use id as fallback
+		// if neither link, dialog, drawer or request are set,
+		// use id as fallback
 		if (
 			($props['dialog'] ?? null) === null &&
-			($props['drawer'] ?? null) === null
+			($props['drawer'] ?? null) === null &&
+			($props['request'] ?? null) === null
 		) {
 			$props['link'] ??= $id;
 		}
@@ -153,6 +155,7 @@ class Menu
 			drawer: $props['drawer'] ?? null,
 			icon: $props['icon'] ?? null,
 			link: $props['link'] ?? null,
+			request: $props['request'] ?? null,
 			target: $props['target'] ?? null,
 			text: $text = $props['text'] ?? $props['label'] ?? null,
 			title: $props['title'] ?? $text,

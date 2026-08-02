@@ -179,6 +179,17 @@ class MenuTest extends TestCase
 		$this->assertNull($item);
 	}
 
+	public function testItemWithRequest(): void
+	{
+		$menu = new Menu();
+		$item = $menu->item('users', ['request' => 'users/sync']);
+		$this->assertInstanceOf(Button::class, $item);
+		$this->assertSame('users/sync', $item->props()['request']);
+
+		// the id must not be used as link fallback
+		$this->assertNull($item->props()['link']);
+	}
+
 	public function testItemCurrent(): void
 	{
 		$menu = new Menu();

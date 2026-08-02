@@ -61,10 +61,27 @@ class ModelButton extends Button
 			'drawer'  => $this->drawer(),
 			'icon'    => $this->icon(),
 			'link'    => $this->link(),
+			'request' => $this->request(),
 			'text'    => $this->text(),
 			'theme'   => $this->theme(),
 			'title'   => $this->title(),
 		];
+	}
+
+	public function request(): array|string|null
+	{
+		if (is_array($this->request) === true) {
+			if (isset($this->request['url']) === true) {
+				return [
+					...$this->request,
+					'url' => $this->stringTemplate($this->request['url'])
+				];
+			}
+
+			return $this->request;
+		}
+
+		return $this->stringTemplate($this->request);
 	}
 
 	public function text(): string|null
