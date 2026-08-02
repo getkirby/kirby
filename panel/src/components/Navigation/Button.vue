@@ -34,6 +34,8 @@
 
 <script>
 import { props as LinkProps } from "@/components/Navigation/Link.vue";
+import { body } from "@/panel/request";
+import { buildUrl, isAbsolute } from "@/helpers/url";
 
 export const props = {
 	mixins: [LinkProps],
@@ -91,14 +93,17 @@ export const props = {
 		 */
 		link: String,
 		/**
-		 * Path of an endpoint to send a request to on click. Pass an object
-		 * to control the request further, e.g. `{ url, method, body, query }`
+		 * Path of a Panel route to send a request to on click.
+		 * Pass an object to control the request further,
+		 * e.g. `{ url, method, body, query }`.
+		 * Absolute URLs are sent as plain requests.
+		 * Pass an (async) function for full control.
 		 * @since 6.0.0
 		 */
-		request: [String, Object],
+		request: [String, Object, Function],
 		/**
-		 * A responsive button will hide the button text on smaller screens
-		 * automatically and only keep the icon. An icon must be set in this case.
+		 * A responsive button will hide the button text
+		 * on smaller screens automatically and only keep the icon. An icon must be set in this case.
 		 * If set to `text`, the icon will be hidden instead.
 		 */
 		responsive: [Boolean, String],
@@ -267,11 +272,67 @@ export default {
 			this.$emit("click", e);
 		},
 		/**
+		 * Sends a request to an absolute URL without any
+		 * Panel headers and returns the parsed response
+		 */
+		async external(url, options) {
+			const { body: data, headers, query, ...init } = options;
+			const response = await fetch(buildUrl(url, query), {
+				...init,
+				body: body(data),
+				// only send a content type for actual payloads,
+				// so that simple requests don't need a CORS preflight
+				headers:
+					data === undefined
+						? headers
+						: { "content-type": "application/json", ...headers }
+			});
+
+			if (response.ok === false) {
+				throw new Error(
+					`The request to ${url} failed with status ${response.status}`
+				);
+			}
+
+			if (response.headers.get("content-type")?.includes("json") === true) {
+				return await response.json();
+			}
+
+			return await response.text();
+		},
+		/**
 		 * Sends the request from the `request` prop. The button
 		 * is disabled and shows a loader until the request is done.
 		 * @public
 		 */
 		async send() {
+			this.isLoading = true;
+
+			try {
+				const response = await this.sender();
+
+				/**
+				 * The request has been sent successfully
+				 * @property {Object} response the parsed response body
+				 */
+				this.$emit("success", response);
+
+				return response;
+			} catch (error) {
+				this.$panel.error(error);
+			} finally {
+				this.isLoading = false;
+			}
+		},
+		/**
+		 * Runs the matching request handler for
+		 * the value of the `request` prop
+		 */
+		async sender() {
+			if (typeof this.request === "function") {
+				return await this.request();
+			}
+
 			const {
 				url,
 				method = "POST",
@@ -280,26 +341,16 @@ export default {
 				? { url: this.request }
 				: this.request;
 
-			this.isLoading = true;
-
-			try {
-				const { response } = await this.$panel.request(url, {
-					method,
-					...options
-				});
-
-				/**
-				 * The request has been sent successfully
-				 * @property {Object} json the parsed response body
-				 */
-				this.$emit("success", response.json);
-
-				return response.json;
-			} catch (error) {
-				this.$panel.error(error);
-			} finally {
-				this.isLoading = false;
+			if (isAbsolute(url) === true) {
+				return await this.external(url, { method, ...options });
 			}
+
+			const { response } = await this.$panel.request(url, {
+				method,
+				...options
+			});
+
+			return response.json;
 		}
 	}
 };

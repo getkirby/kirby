@@ -256,6 +256,99 @@ describe("Button.vue", () => {
 			});
 		});
 
+		it("calls the request prop when it is a function", async () => {
+			const request = vi.fn().mockResolvedValue({ code: 200 });
+			const wrapper = mount(Button, {
+				props: { request },
+				global: { mocks: { $panel: {} } }
+			});
+
+			await wrapper.trigger("click");
+			await flushPromises();
+
+			expect(request).toHaveBeenCalled();
+			expect(wrapper.emitted("success")).toStrictEqual([[{ code: 200 }]]);
+		});
+
+		it("sends absolute urls without Panel headers", async () => {
+			const fetch = vi.fn().mockResolvedValue({
+				headers: new Headers({ "content-type": "application/json" }),
+				json: () => Promise.resolve({ code: 200 }),
+				ok: true
+			});
+			vi.stubGlobal("fetch", fetch);
+
+			const request = vi.fn();
+			const wrapper = mount(Button, {
+				props: { request: "https://getkirby.com/hook" },
+				global: { mocks: { $panel: { request } } }
+			});
+
+			await wrapper.trigger("click");
+			await flushPromises();
+
+			expect(request).not.toHaveBeenCalled();
+			expect(fetch.mock.calls[0][0].toString()).toBe(
+				"https://getkirby.com/hook"
+			);
+			expect(fetch.mock.calls[0][1].method).toBe("POST");
+			expect(wrapper.emitted("success")).toStrictEqual([[{ code: 200 }]]);
+
+			vi.unstubAllGlobals();
+		});
+
+		it("sends a json body to absolute urls", async () => {
+			const fetch = vi.fn().mockResolvedValue({
+				headers: new Headers(),
+				ok: true,
+				text: () => Promise.resolve("OK")
+			});
+			vi.stubGlobal("fetch", fetch);
+
+			const wrapper = mount(Button, {
+				props: {
+					request: {
+						url: "https://getkirby.com/hook",
+						body: { title: "Test" }
+					}
+				},
+				global: { mocks: { $panel: {} } }
+			});
+
+			await wrapper.trigger("click");
+			await flushPromises();
+
+			expect(fetch.mock.calls[0][1]).toStrictEqual({
+				method: "POST",
+				body: '{"title":"Test"}',
+				headers: { "content-type": "application/json" }
+			});
+			expect(wrapper.emitted("success")).toStrictEqual([["OK"]]);
+
+			vi.unstubAllGlobals();
+		});
+
+		it("reports failed requests to absolute urls", async () => {
+			vi.stubGlobal(
+				"fetch",
+				vi.fn().mockResolvedValue({ ok: false, status: 500 })
+			);
+
+			const onError = vi.fn();
+			const wrapper = mount(Button, {
+				props: { request: "https://getkirby.com/hook" },
+				global: { mocks: { $panel: { error: onError } } }
+			});
+
+			await wrapper.trigger("click");
+			await flushPromises();
+
+			expect(onError.mock.calls[0][0].message).toContain("status 500");
+			expect(wrapper.emitted("success")).toBeUndefined();
+
+			vi.unstubAllGlobals();
+		});
+
 		it("disables the button and shows a loader while requesting", async () => {
 			let resolve: (value: unknown) => void;
 			const request = vi.fn(() => new Promise((r) => (resolve = r)));
