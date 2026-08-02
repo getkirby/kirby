@@ -328,7 +328,7 @@ export default {
 			};
 		},
 		select() {
-			this.$refs.select();
+			this.$refs.input.select();
 		},
 		selection() {
 			if (!this.selectionRange) {
