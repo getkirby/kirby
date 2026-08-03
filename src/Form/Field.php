@@ -321,8 +321,11 @@ class Field extends Component
 	#[BlockCollectionAccess]
 	public function fillWithEmptyValue(): static
 	{
-		$this->value = $this->emptyValue();
-		return $this;
+		// go through `::fill()` to reevaluate the computed props;
+		// otherwise a field that has never been filled could end up
+		// with a different form value than the same field filled with
+		// its own empty value
+		return $this->fill($this->emptyValue());
 	}
 
 	/**
