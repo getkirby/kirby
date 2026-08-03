@@ -7,14 +7,15 @@ const { change } = LanguagesDropdown.methods;
  * Builds a mocked component context for the `change` method
  *
  * @param {Object} options
+ * @param {Boolean} options.unlocked - what `unlock` resolves with
  * @param {Error|null} options.unlockError - error to reject `unlock` with
  */
-function context({ unlockError = null } = {}) {
+function context({ unlocked = true, unlockError = null } = {}) {
 	return {
 		$panel: {
 			content: {
 				unlock: vi.fn(() =>
-					unlockError ? Promise.reject(unlockError) : Promise.resolve()
+					unlockError ? Promise.reject(unlockError) : Promise.resolve(unlocked)
 				)
 			},
 			error: vi.fn()
@@ -47,11 +48,22 @@ describe("LanguagesDropdown.change()", () => {
 		expect(unlock).toBeLessThan(reload);
 	});
 
-	it("aborts the switch when the lock could not be released", async () => {
-		// `unlock` throws when pending changes could not be written first.
+	it("aborts the switch when the lock was not released", async () => {
+		// `unlock` resolves with false when the pending changes could not be
+		// written first, because the view got locked or a newer save took
+		// over. Both are already reported, so no second error must be shown.
 		// Staying on the current language keeps both the changes and the
 		// lock, so nothing is lost and the switch can simply be repeated
-		const error = new Error("The changes could not be saved before unlocking");
+		const ctx = context({ unlocked: false });
+		await change.call(ctx, { code: "de", current: false });
+
+		expect(ctx.$panel.error).not.toHaveBeenCalled();
+		expect(ctx.$reload).not.toHaveBeenCalled();
+	});
+
+	it("aborts the switch and reports when unlocking throws", async () => {
+		// genuine failures still reach the regular error handler
+		const error = new Error("Offline");
 		const ctx = context({ unlockError: error });
 		await change.call(ctx, { code: "de", current: false });
 

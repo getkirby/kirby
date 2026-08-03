@@ -1,3 +1,4 @@
+import { isAbortError } from "@/helpers/error";
 import { isObject, length } from "@/helpers/object";
 import { reactive } from "vue";
 import throttle from "@/helpers/throttle";
@@ -303,7 +304,7 @@ export default (panel) => {
 			} catch (error) {
 				// handle aborted requests silently. A newer save request
 				// has taken over and will write the latest state instead.
-				if (error.name === "AbortError") {
+				if (isAbortError(error) === true) {
 					return false;
 				}
 
@@ -332,6 +333,8 @@ export default (panel) => {
 		/**
 		 * Releases the content lock without discarding changes.
 		 * Called when the editor navigates away from the view.
+		 *
+		 * @returns {Boolean} Whether the lock has been released
 		 */
 		async unlock(env = {}) {
 			// persist any pending changes before releasing the lock, so that
@@ -341,16 +344,17 @@ export default (panel) => {
 			if (this.isCurrent(env) === true && this.hasDiff(env) === true) {
 				// abort the unlock when the changes could not be written:
 				// the view got locked in the meantime or a newer save
-				// request took over. Staying on the current view keeps
-				// both the changes and the lock, so nothing is lost and
-				// the call can simply be repeated
+				// request took over. Both cases are already reported by
+				// `save`, so they must not be raised again here.
 				if ((await this.update({}, env)) !== true) {
-					throw new Error("The changes could not be saved before unlocking");
+					return false;
 				}
 			}
 
 			// fail silently because the lock will be released after the configured timeout
-			return this.unlockPostRequest(env).catch(() => {});
+			await this.unlockPostRequest(env).catch(() => {});
+
+			return true;
 		},
 
 		/**
@@ -437,8 +441,7 @@ export default (panel) => {
 	// that we can use in the input event
 	content.saveLazy = throttle(content.save, 1000, {
 		leading: true,
-		trailing: true,
-		timer: content.timer
+		trailing: true
 	});
 
 	return content;
