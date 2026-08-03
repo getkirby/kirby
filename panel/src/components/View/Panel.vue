@@ -66,7 +66,6 @@ export default {
 <style>
 :root {
 	--panel-color-back: light-dark(var(--color-gray-200), var(--color-gray-900));
-	--scroll-top: 0rem;
 }
 
 html {
