@@ -34,6 +34,11 @@ function locale(name: string, data: Record<string, unknown>): void {
 	dayjs.locale(name);
 }
 
+function toMeridiem(token: string): number | null {
+	const dt = dayjs.parse("6 " + token, { pattern: "h a", strict: true });
+	return dt === null ? null : dt.hour();
+}
+
 function toMonth(token: string): number | null {
 	const dt = dayjs.parse(token, { pattern: "MMMM", strict: true });
 	return dt === null ? null : dt.month() + 1;
@@ -406,7 +411,8 @@ describe("dayjs.parse() with strict", () => {
 			["h:mm a", "5:12 pm", "17:12:00"],
 			["h:mm a", "12:00 am", "00:00:00"],
 			["h:mm a", "12:00 pm", "12:00:00"],
-			// only a/am and p/pm are a meridiem
+			// what counts as a meridiem is up to the locale,
+			// english knows a/am and p/pm
 			["h:mm a", "5:12 xx", null],
 			["h:mm a", "5:12 4", null],
 			// hours are limited to 1-12 with a meridiem
@@ -421,7 +427,7 @@ describe("dayjs.parse() with strict", () => {
 	});
 });
 
-describe("month names", () => {
+describe("dayjs.parse() with month names", () => {
 	afterEach(() => {
 		dayjs.locale("en");
 	});
@@ -473,6 +479,56 @@ describe("month names", () => {
 		});
 	});
 
+	describe("localized", () => {
+		const data: [string, string, number][] = [
+			["de", "März", 3],
+			["de", "Dezember", 12],
+			["de", "Sept.", 9],
+			["de", "Okt.", 10],
+			["de", "Okt", 10],
+			["fr", "février", 2],
+			["fr", "Février", 2],
+			["el", "Ιούνιος", 6]
+		];
+
+		it.each(data)("%s: %s", (code, token, month) => {
+			dayjs.locale(code);
+			expect(toMonth(token)).toBe(month);
+		});
+	});
+
+	describe("declined names", () => {
+		// these locales provide their month names as a function
+		// carrying the nominative forms on `s` and the forms used
+		// next to a day number on `f`; either may be typed
+		const data: [string, string, string, number][] = [
+			["uk", "червень", "червня", 6],
+			["ru", "июнь", "июня", 6],
+			["pl", "czerwiec", "czerwca", 6],
+			["lt", "birželis", "birželio", 6]
+		];
+
+		it.each(data)("%s: %s and %s", (code, nominative, declined, month) => {
+			dayjs.locale(code);
+			expect(toMonth(nominative)).toBe(month);
+			expect(toMonth(declined)).toBe(month);
+		});
+	});
+
+	describe("guessed", () => {
+		const data: [string, string, string | null][] = [
+			["uk", "23 червень 2024", "2024-06-23"],
+			["uk", "23 червня 2024", "2024-06-23"],
+			["de", "2. März 2024", "2024-03-02"],
+			["de", "2. Fooo 2024", null]
+		];
+
+		it.each(data)("%s: %s", (code, input, expected) => {
+			dayjs.locale(code);
+			expect(parse(input)?.toISO("date") ?? null).toBe(expected);
+		});
+	});
+
 	describe("casing", () => {
 		// dayjs matches `MMM` and `MMMM` case-sensitively,
 		// `parse()` must not: the names come from user input
@@ -510,11 +566,14 @@ describe("month names", () => {
 	});
 
 	describe("locale precedence", () => {
+		it("falls back to english", () => {
+			dayjs.locale("de");
+			expect(toMonth("Mar")).toBe(3);
+			expect(toMonth("March")).toBe(3);
+		});
+
 		it("prefers the active locale over english", () => {
 			locale("precedence", { months: [...nato.slice(1), "January"] });
-
-			// the active locale reads `January` as the twelfth month,
-			// which has to win over the english first month
 			expect(toMonth("January")).toBe(12);
 		});
 	});
@@ -579,5 +638,176 @@ describe("month names", () => {
 
 			expect(toMonth("Same")).toBe(1);
 		});
+	});
+});
+
+describe("dayjs.parse() with day periods", () => {
+	afterEach(() => {
+		dayjs.locale("en");
+	});
+
+	describe("english", () => {
+		const data: [string, number][] = [
+			["a", 6],
+			["A", 6],
+			["am", 6],
+			["AM", 6],
+			["p", 18],
+			["P", 18],
+			["pm", 18],
+			["PM", 18]
+		];
+
+		it.each(data)("%s", (token, hour) => {
+			expect(toMeridiem(token)).toBe(hour);
+		});
+	});
+
+	describe("localized", () => {
+		const codes = [
+			"cs",
+			"el",
+			"es_ES",
+			"is_IS",
+			"ja",
+			"ko",
+			"lt",
+			"nb",
+			"sv_SE",
+			"tr",
+			"uk",
+			"zh_TW"
+		];
+
+		it.each(codes)("%s", (code) => {
+			dayjs.locale(code);
+
+			expect(toMeridiem(dayjs("2024-06-23 09:00").format("A"))).toBe(6);
+			expect(toMeridiem(dayjs("2024-06-23 15:00").format("A"))).toBe(18);
+		});
+
+		it("reads them in any case", () => {
+			dayjs.locale("tr");
+
+			const pm = dayjs("2024-06-23 15:00").format("A");
+
+			expect(toMeridiem(pm.toLowerCase())).toBe(18);
+			expect(toMeridiem(pm.toUpperCase())).toBe(18);
+		});
+	});
+
+	describe("multiple tokens", () => {
+		it("joins a day period written with separators", () => {
+			locale("separated", {
+				meridiem: (hour: number) => (hour < 12 ? "v.m." : "n.m.")
+			});
+
+			expect(toMeridiem("v.m.")).toBe(6);
+			expect(toMeridiem("n.m.")).toBe(18);
+		});
+
+		it("joins them for english as well", () => {
+			expect(toMeridiem("a. m.")).toBe(6);
+			expect(toMeridiem("p. m.")).toBe(18);
+		});
+
+		it("only joins tokens into a meridiem", () => {
+			// without a meridiem to absorb them the extra tokens
+			// stay extra, so the count never matches the pattern
+			expect(dayjs.parse("5 12 30", { pattern: "HH:mm", strict: true })).toBe(
+				null
+			);
+		});
+	});
+
+	describe("locale precedence", () => {
+		it("keeps reading english in another locale", () => {
+			dayjs.locale("ja");
+
+			expect(toMeridiem("午後")).toBe(18);
+			expect(toMeridiem("pm")).toBe(18);
+		});
+	});
+
+	describe("invalid input", () => {
+		const tokens = ["", "xx", "4", "-", "午"];
+
+		it.each(tokens)("returns null for %s", (token) => {
+			expect(toMeridiem(token)).toBe(null);
+		});
+	});
+
+	describe("locale data", () => {
+		it("falls back to english without day periods", () => {
+			locale("noperiods", { months: nato });
+
+			expect(toMeridiem("pm")).toBe(18);
+			expect(toMeridiem("午後")).toBe(null);
+		});
+	});
+});
+
+describe("dayjs.parse() in every locale", () => {
+	const codes = [
+		"bg",
+		"bs",
+		"ca",
+		"cs",
+		"da",
+		"de",
+		"el",
+		"en",
+		"eo",
+		"es_419",
+		"es_ES",
+		"fa",
+		"fi",
+		"fr",
+		"hu",
+		"id",
+		"is_IS",
+		"it",
+		"ja",
+		"ko",
+		"lt",
+		"nb",
+		"nl",
+		"pl",
+		"pt_BR",
+		"pt_PT",
+		"ro",
+		"ru",
+		"sk",
+		"sr@latin",
+		"sv_SE",
+		"tr",
+		"uk",
+		"zh_TW"
+	];
+
+	afterAll(() => {
+		dayjs.locale("en");
+	});
+
+	it.each(codes)("%s", (code) => {
+		dayjs.locale(code);
+
+		const dt = dayjs("2024-06-23 15:30");
+
+		for (const [pattern, unit, expected] of [
+			["D. MMMM YYYY", "date", "2024-06-23"],
+			["D. MMM YYYY", "date", "2024-06-23"],
+			// the day period is written in every imaginable
+			// way, e.g. `odp.`, `μ.μ.`, `午後` or `ös`
+			["hh:mm a", "time", "15:30:00"],
+			["hh:mm A", "time", "15:30:00"]
+		] as [string, "date" | "time", string][]) {
+			const text = dayjs.pattern(pattern).format(dt) as string;
+			const parsed = dayjs.parse(text, { pattern, strict: true });
+
+			expect(parsed?.toISO(unit), `${pattern} (${text})`).toStrictEqual(
+				expected
+			);
+		}
 	});
 });

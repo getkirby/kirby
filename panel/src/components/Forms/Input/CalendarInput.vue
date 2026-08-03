@@ -34,7 +34,7 @@
 			<thead>
 				<tr>
 					<th v-for="day in weekdays" :key="'weekday_' + day">
-						{{ $t("days." + day) }}
+						{{ day }}
 					</th>
 				</tr>
 			</thead>
@@ -94,8 +94,6 @@
 import { props as InputProps } from "@/mixins/input.js";
 import { IsoDateProps } from "./DateInput.vue";
 
-const days = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
-
 /**
  * The Calendar component is mainly used for our `DateInput` component,
  * but it could be used as stand-alone calendar as well with a little CSS love.
@@ -136,16 +134,21 @@ export default {
 		 * @returns {number}
 		 */
 		firstWeekday() {
-			const day = days[this.toDate().day()];
-			return this.weekdays.indexOf(day);
+			const first = this.$panel.translation.weekday;
+			return (this.toDate().day() - first + 7) % 7;
 		},
 		/**
-		 * Ordered weekday names abbreviations
+		 * Localized weekday abbreviations in the order they are
+		 * displayed in, starting with the first weekday of the
+		 * translation.
 		 * @returns {array}
 		 */
 		weekdays() {
 			const first = this.$panel.translation.weekday;
-			return [...days.slice(first), ...days.slice(0, first)];
+
+			return [...Array(7).keys()].map((day) =>
+				this.today.day((first + day) % 7).format("ddd")
+			);
 		},
 		/**
 		 * Weeks in the currently viewed month
@@ -157,24 +160,13 @@ export default {
 			return Math.ceil((this.numberOfDays + this.firstWeekday) / 7);
 		},
 		/**
-		 * Translated month names
+		 * Localized month names
 		 * @returns {array}
 		 */
 		monthnames() {
-			return [
-				"january",
-				"february",
-				"march",
-				"april",
-				"may",
-				"june",
-				"july",
-				"august",
-				"september",
-				"october",
-				"november",
-				"december"
-			].map((day) => this.$t("months." + day));
+			return [...Array(12).keys()].map((month) =>
+				this.toDate(1, month).format("MMMM")
+			);
 		},
 		/**
 		 * Select options for all months

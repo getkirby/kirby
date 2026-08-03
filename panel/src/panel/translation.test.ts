@@ -1,7 +1,12 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
+import dayjs from "@/libraries/dayjs";
 import Translation from "./translation";
 
 describe("panel.translation", () => {
+	afterEach(() => {
+		dayjs.locale("en");
+	});
+
 	describe("reset()", () => {
 		it("restores all default values", () => {
 			const translation = Translation();
@@ -40,6 +45,23 @@ describe("panel.translation", () => {
 
 			translation.set({ code: "ar", direction: "rtl" });
 			expect(document.body.dir).toStrictEqual("rtl");
+		});
+
+		it("activates the dayjs locale of the new translation", () => {
+			const translation = Translation();
+
+			translation.set({ code: "de" });
+
+			expect(dayjs.locale()).toStrictEqual("de");
+		});
+
+		it("falls back to English without a code", () => {
+			const translation = Translation();
+
+			translation.set({ code: "de" });
+			translation.set({ code: null });
+
+			expect(dayjs.locale()).toStrictEqual("en");
 		});
 	});
 
