@@ -130,7 +130,7 @@ trait AppErrors
 			$app = WeakReference::create($this);
 
 			$handler = new CallbackHandler(static function ($exception, $inspector, $run) use ($app) {
-				/** @var \Kirby\Cms\App $kirby */
+				/** @var App $kirby */
 				$kirby = $app->get() ?? App::instance();
 				$fatal = $kirby->option('fatal');
 
@@ -175,7 +175,7 @@ trait AppErrors
 				$details  = null;
 			}
 
-			/** @var \Kirby\Cms\App $kirby */
+			/** @var App $kirby */
 			$kirby  = $app->get() ?? App::instance();
 			$editor = $kirby->option('editor', false);
 
@@ -250,7 +250,7 @@ trait AppErrors
 		$app = WeakReference::create($this);
 
 		return new CallbackHandler(static function ($exception, $inspector, $run) use ($app) {
-			/** @var \Kirby\Cms\App $kirby */
+			/** @var App $kirby */
 			$kirby    = $app->get() ?? App::instance();
 			$isLogged = true;
 
