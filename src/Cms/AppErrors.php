@@ -8,6 +8,7 @@ use Kirby\Http\Response;
 use Kirby\Http\Url;
 use Kirby\Toolkit\I18n;
 use Throwable;
+use WeakReference;
 use Whoops\Handler\CallbackHandler;
 use Whoops\Handler\Handler;
 use Whoops\Handler\HandlerInterface;
@@ -124,13 +125,19 @@ trait AppErrors
 				}
 			}
 		} else {
-			$handler = new CallbackHandler(function ($exception, $inspector, $run) {
-				$fatal = $this->option('fatal');
+			// the app must only be referenced weakly,
+			// see `::getAdditionalWhoopsHandler()`
+			$app = WeakReference::create($this);
+
+			$handler = new CallbackHandler(static function ($exception, $inspector, $run) use ($app) {
+				/** @var \Kirby\Cms\App $kirby */
+				$kirby = $app->get() ?? App::instance();
+				$fatal = $kirby->option('fatal');
 
 				if ($fatal instanceof Closure) {
-					echo $fatal($this, $exception);
+					echo $fatal($kirby, $exception);
 				} else {
-					include $this->root('kirby') . '/views/fatal.php';
+					include $kirby->root('kirby') . '/views/fatal.php';
 				}
 
 				return Handler::QUIT;
@@ -149,7 +156,11 @@ trait AppErrors
 	 */
 	protected function handleJsonErrors(): void
 	{
-		$handler = new CallbackHandler(function ($exception, $inspector, $run) {
+		// the app must only be referenced weakly,
+		// see `getAdditionalWhoopsHandler()`
+		$app = WeakReference::create($this);
+
+		$handler = new CallbackHandler(static function ($exception, $inspector, $run) use ($app) {
 			if ($exception instanceof Exception) {
 				$httpCode = $exception->getHttpCode();
 				$code     = $exception->getCode();
@@ -164,19 +175,21 @@ trait AppErrors
 				$details  = null;
 			}
 
-			$editor = $this->option('editor', false);
+			/** @var \Kirby\Cms\App $kirby */
+			$kirby  = $app->get() ?? App::instance();
+			$editor = $kirby->option('editor', false);
 
-			if ($this->option('debug') === true) {
+			if ($kirby->option('debug') === true) {
 				echo Response::json([
 					'status'    => 'error',
 					'exception' => $exception::class,
 					'code'      => $code,
 					'message'   => $exception->getMessage(),
 					'details'   => $details,
-					'file'      => $this->disguiseFilePath($file = $exception->getFile()),
+					'file'      => $kirby->disguiseFilePath($file = $exception->getFile()),
 					'line'      => $line = $exception->getLine(),
 					'editor'    => Url::editor($editor, $file, $line),
-					'trace'     => $this->trace($exception, $editor),
+					'trace'     => $kirby->trace($exception, $editor),
 				], $httpCode);
 			} else {
 				echo Response::json([
@@ -230,11 +243,19 @@ trait AppErrors
 	 */
 	protected function getAdditionalWhoopsHandler(): CallbackHandler
 	{
-		return new CallbackHandler(function ($exception, $inspector, $run) {
+		// Whoops keeps every `Run` instance alive for the rest of the process
+		// via `register_shutdown_function()`. A handler closure that captured
+		// `$this` strongly would pin $app, potentially incl. site tree forever.
+		// Referencing the app weakly allows it to be garbage collected.
+		$app = WeakReference::create($this);
+
+		return new CallbackHandler(static function ($exception, $inspector, $run) use ($app) {
+			/** @var \Kirby\Cms\App $kirby */
+			$kirby    = $app->get() ?? App::instance();
 			$isLogged = true;
 
 			// allow hook to modify whether the exception should be logged
-			$isLogged = $this->apply(
+			$isLogged = $kirby->apply(
 				'system.exception',
 				compact('exception', 'isLogged'),
 				'isLogged'

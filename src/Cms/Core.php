@@ -15,6 +15,7 @@ use Kirby\Cache\FileCache;
 use Kirby\Cache\MemCached;
 use Kirby\Cache\MemoryCache;
 use Kirby\Cache\RedisCache;
+use Kirby\Filesystem\F;
 use Kirby\Form\Field\BlocksField;
 use Kirby\Form\Field\ButtonsField;
 use Kirby\Form\Field\CheckboxesField;
@@ -239,7 +240,7 @@ class Core
 	 */
 	public function components(): array
 	{
-		return $this->cache['components'] ??= include $this->root . '/components.php';
+		return $this->cache['components'] ??= F::load($this->root . '/components.php');
 	}
 
 	/**
@@ -377,7 +378,7 @@ class Core
 	 */
 	public function kirbyTags(): array
 	{
-		return $this->cache['kirbytags'] ??= include $this->root . '/tags.php';
+		return $this->cache['kirbytags'] ??= F::load($this->root . '/tags.php');
 	}
 
 	/**
@@ -439,7 +440,7 @@ class Core
 	 */
 	public function routes(): array
 	{
-		return $this->cache['routes'] ??= (include $this->root . '/routes.php')($this->kirby);
+		return $this->cache['routes'] ??= F::load($this->root . '/routes.php')($this->kirby);
 	}
 
 	/**
