@@ -200,7 +200,7 @@ class Query
 	 * Sets the name of the table, which should be queried
 	 *
 	 * @return $this
-	 * @throws \Kirby\Exception\InvalidArgumentException if the table does not exist
+	 * @throws InvalidArgumentException if the table does not exist
 	 */
 	public function table(string $table): static
 	{
