@@ -139,7 +139,7 @@ class Database
 	 * Connects to a database
 	 *
 	 * @param array|null $params This can either be a config key or an array of parameters for the connection
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public function connect(array|null $params = null): PDO|null
 	{
@@ -327,7 +327,6 @@ class Database
 			$this->lastError = null;
 
 			if (Str::startsWith($query, 'insert ', true) === true) {
-				/** @var string|false $lastId */
 				$lastId = $this->connection->lastInsertId();
 
 				if ($lastId === false) {

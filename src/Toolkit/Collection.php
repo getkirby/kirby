@@ -19,7 +19,7 @@ use Stringable;
  * @license   https://opensource.org/licenses/MIT
  *
  * @template TValue
- * @extends \Kirby\Toolkit\Iterator<string, TValue>
+ * @extends Iterator<string, TValue>
  */
 class Collection extends Iterator implements Stringable
 {
@@ -38,7 +38,7 @@ class Collection extends Iterator implements Stringable
 	protected bool $caseSensitive = false;
 
 	/**
-	 * @var \Kirby\Toolkit\Pagination|null
+	 * @var Pagination|null
 	 */
 	protected $pagination;
 
@@ -537,8 +537,8 @@ class Collection extends Iterator implements Stringable
 	 * Returns a new collection with an element for each group
 	 * and a subcollection in each group
 	 *
-	 * @param string|\Closure $field
-	 * @throws \Exception if $field is not a string nor a callback function
+	 * @param string|Closure $field
+	 * @throws Exception if $field is not a string nor a callback function
 	 */
 	public function group(
 		$field,

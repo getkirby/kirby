@@ -53,8 +53,8 @@ class Locale
 	 * @param int|string $category Locale category constant or constant name
 	 * @return array|string Associative array if `LC_ALL` was passed (default), otherwise string
 	 *
-	 * @throws \Kirby\Exception\Exception If the locale cannot be determined
-	 * @throws \Kirby\Exception\InvalidArgumentException If the provided locale category is invalid
+	 * @throws Exception If the locale cannot be determined
+	 * @throws InvalidArgumentException If the provided locale category is invalid
 	 */
 	public static function get(int|string $category = LC_ALL): array|string
 	{

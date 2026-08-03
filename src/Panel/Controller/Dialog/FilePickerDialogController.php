@@ -72,7 +72,7 @@ class FilePickerDialogController extends ModelPickerDialogController
 
 	/**
 	 * Returns the item data for a file
-	 * @param \Kirby\Cms\File $model
+	 * @param File $model
 	 */
 	public function item(ModelWithContent $model): array
 	{

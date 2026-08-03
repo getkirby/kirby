@@ -34,7 +34,7 @@ class Segment
 	 * @param string $name Name of the method/property that was accessed
 	 * @param string $label Type of the name (`method`, `property` or `method/property`)
 	 *
-	 * @throws \Kirby\Exception\BadMethodCallException
+	 * @throws BadMethodCallException
 	 */
 	#[BlockCollectionAccess]
 	public static function error(

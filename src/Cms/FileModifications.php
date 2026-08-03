@@ -95,7 +95,7 @@ trait FileModifications
 	 * Resizes the file with the given width and height
 	 * while keeping the aspect ratio.
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	#[BlockCollectionAccess]
 	public function resize(
@@ -173,7 +173,7 @@ trait FileModifications
 	 * could potentially also be a CDN or any other
 	 * place.
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	#[BlockCollectionAccess]
 	public function thumb(

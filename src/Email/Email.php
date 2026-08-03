@@ -206,7 +206,7 @@ class Email
 	/**
 	 * Converts single or multiple email addresses to a sanitized format
 	 *
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	protected function resolveEmail(
 		string|array|null $email = null,

@@ -200,7 +200,7 @@ class Query
 	 * Sets the name of the table, which should be queried
 	 *
 	 * @return $this
-	 * @throws \Kirby\Exception\InvalidArgumentException if the table does not exist
+	 * @throws InvalidArgumentException if the table does not exist
 	 */
 	public function table(string $table): static
 	{
@@ -441,7 +441,7 @@ class Query
 	 *
 	 * @param string $type (select, update, insert, delete)
 	 * @return array The final query
-	 * @throws \InvalidArgumentException If the query type is invalid
+	 * @throws InvalidArgumentException If the query type is invalid
 	 */
 	public function build(string $type): array
 	{

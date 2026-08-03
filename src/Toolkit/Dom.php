@@ -511,7 +511,7 @@ class Dom
 	 * Executes an XPath query in the document
 	 *
 	 * @param $node Optional context node for relative queries
-	 * @throws \Kirby\Exception\InvalidArgumentException for invalid XPath queries
+	 * @throws InvalidArgumentException for invalid XPath queries
 	 */
 	public function query(
 		string $query,
@@ -570,7 +570,7 @@ class Dom
 	 *                objects for each modification
 	 *                - `urlAttrs`: List of attributes that may contain URLs
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException If the doctype is not valid
+	 * @throws InvalidArgumentException If the doctype is not valid
 	 */
 	public function sanitize(array $options): array
 	{
@@ -962,7 +962,7 @@ class Dom
 	 *
 	 * @param $options See `Dom::sanitize()`
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException If the doctype is not valid
+	 * @throws InvalidArgumentException If the doctype is not valid
 	 */
 	protected function validateDoctype(
 		DOMDocumentType $doctype,

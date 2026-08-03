@@ -79,7 +79,7 @@ class Resolver
 	/**
 	 * Used in routes to resolve request paths
 	 *
-	 * @throws \Kirby\Exception\NotFoundException if the page does not exist
+	 * @throws NotFoundException if the page does not exist
 	 */
 	public function resolve(string|null $path = null): File|Page|Responder|Response
 	{
@@ -124,7 +124,7 @@ class Resolver
 	}
 
 	/**
-	 * @throws \Kirby\Exception\NotFoundException if the draft cannot be accessed
+	 * @throws NotFoundException if the draft cannot be accessed
 	 */
 	protected function resolveDraft(Page $draft, string|null $extension = null): Page|Responder|Response
 	{
@@ -138,7 +138,7 @@ class Resolver
 	}
 
 	/**
-	 * @throws \Kirby\Exception\NotFoundException if the file cannot be found or accessed
+	 * @throws NotFoundException if the file cannot be found or accessed
 	 */
 	protected function resolveFile(File|null $file): File
 	{
@@ -152,7 +152,7 @@ class Resolver
 	}
 
 	/**
-	 * @throws \Kirby\Exception\LogicException if the home page does not exist
+	 * @throws LogicException if the home page does not exist
 	 */
 	protected function resolveHomePage(): Page|Responder|Response
 	{
@@ -169,7 +169,7 @@ class Resolver
 	}
 
 	/**
-	 * @throws \Kirby\Exception\NotFoundException if the page cannot be found
+	 * @throws NotFoundException if the page cannot be found
 	 */
 	protected function resolvePage(Page $page, string|null $extension = null): Page|Responder|Response
 	{
@@ -191,7 +191,7 @@ class Resolver
 	}
 
 	/**
-	 * @throws \Kirby\Exception\NotFoundException if the file cannot be found or accessed
+	 * @throws NotFoundException if the file cannot be found or accessed
 	 */
 	protected function resolvePageFile(string $path): File
 	{
@@ -271,7 +271,7 @@ class Resolver
 	}
 
 	/**
-	 * @throws \Kirby\Exception\NotFoundException if the file cannot be found or accessed
+	 * @throws NotFoundException if the file cannot be found or accessed
 	 */
 	protected function resolveSiteFile(string $path): File
 	{

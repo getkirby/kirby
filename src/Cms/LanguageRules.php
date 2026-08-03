@@ -19,8 +19,8 @@ class LanguageRules
 	/**
 	 * Validates if the language can be created
 	 *
-	 * @throws \Kirby\Exception\DuplicateException If the language already exists
-	 * @throws \Kirby\Exception\PermissionException If current user has not sufficient permissions
+	 * @throws DuplicateException If the language already exists
+	 * @throws PermissionException If current user has not sufficient permissions
 	 */
 	public static function create(Language $language): void
 	{
@@ -44,8 +44,8 @@ class LanguageRules
 	/**
 	 * Validates if the language can be deleted
 	 *
-	 * @throws \Kirby\Exception\LogicException If the language cannot be deleted
-	 * @throws \Kirby\Exception\PermissionException If current user has not sufficient permissions
+	 * @throws LogicException If the language cannot be deleted
+	 * @throws PermissionException If current user has not sufficient permissions
 	 */
 	public static function delete(Language $language): void
 	{
@@ -91,7 +91,7 @@ class LanguageRules
 	/**
 	 * Validates if the language code is formatted correctly
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException If the language code is not valid
+	 * @throws InvalidArgumentException If the language code is not valid
 	 */
 	public static function validLanguageCode(Language $language): void
 	{
@@ -109,7 +109,7 @@ class LanguageRules
 	/**
 	 * Validates if the language name is formatted correctly
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException If the language name is invalid
+	 * @throws InvalidArgumentException If the language name is invalid
 	 */
 	public static function validLanguageName(Language $language): void
 	{

@@ -23,7 +23,7 @@ class BasicAuthMethod extends Method
 	 * Basic auth authenticates on every request,
 	 * so `$long` isn't relevant here
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException If the password is missing
+	 * @throws InvalidArgumentException If the password is missing
 	 */
 	public function authenticate(
 		string|null $email,
@@ -65,8 +65,8 @@ class BasicAuthMethod extends Method
 	 * Checks whether the current request attempts
 	 * to use HTTP basic authentication
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException if the authorization header is invalid
-	 * @throws \Kirby\Exception\PermissionException if basic authentication is not allowed
+	 * @throws InvalidArgumentException if the authorization header is invalid
+	 * @throws PermissionException if basic authentication is not allowed
 	 */
 	public static function isEnabled(
 		Auth $auth,
@@ -154,7 +154,7 @@ class BasicAuthMethod extends Method
 		// with the provided config
 		if (static::isEnabled($this->auth, $config, true) === true) {
 			/**
-			 * @var \Kirby\Http\Request\Auth\BasicAuth $auth
+			 * @var BasicAuth $auth
 			 */
 			$auth ??= $this->auth->kirby()->request()->auth();
 

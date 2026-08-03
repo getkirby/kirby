@@ -5,6 +5,7 @@ namespace Kirby\Content;
 use Kirby\Cache\MemoryCache;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Exception\NotFoundException;
 
 /**
  * @copyright Bastian Allgeier
@@ -82,7 +83,7 @@ class MemoryStorage extends Storage
 	/**
 	 * Updates the modification timestamp of an existing version
 	 *
-	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
+	 * @throws NotFoundException If the version does not exist
 	 */
 	public function touch(VersionId $versionId, Language $language): void
 	{

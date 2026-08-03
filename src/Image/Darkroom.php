@@ -32,7 +32,7 @@ class Darkroom
 	 * Creates a new Darkroom instance
 	 * for the given type/driver
 	 *
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function factory(string $type, array $settings = []): static
 	{

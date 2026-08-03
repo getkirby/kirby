@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Plain::class)]
 class PlainTest extends TestCase
 {
-	/** @var \Kirby\Parsley\Schema\Plain */
+	/** @var Plain */
 	protected Schema $schema;
 
 	protected function setUp(): void

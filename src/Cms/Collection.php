@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Collection as BaseCollection;
 use Kirby\Toolkit\Str;
@@ -22,14 +23,14 @@ use Throwable;
  * @license   https://getkirby.com/license
  *
  * @template TValue
- * @extends \Kirby\Toolkit\Collection<TValue>
+ * @extends BaseCollection<TValue>
  */
 class Collection extends BaseCollection
 {
 	use HasMethods;
 
 	/**
-	 * @var \Kirby\Cms\Pagination|null
+	 * @var Pagination|null
 	 */
 	protected $pagination;
 
@@ -87,7 +88,7 @@ class Collection extends BaseCollection
 	 * an entire second collection to the
 	 * current collection
 	 *
-	 * @param \Kirby\Cms\Collection<TValue>|array<TValue>|TValue $object
+	 * @param Collection<TValue>|array<TValue>|TValue $object
 	 * @return $this
 	 */
 	public function add($object): static
@@ -160,9 +161,9 @@ class Collection extends BaseCollection
 	 * Groups the items by a given field or callback. Returns a collection
 	 * with an item for each group and a collection for each group.
 	 *
-	 * @param string|\Closure $field
+	 * @param string|Closure $field
 	 * @param bool $caseInsensitive Ignore upper/lowercase for group names
-	 * @throws \Kirby\Exception\Exception
+	 * @throws Exception
 	 */
 	public function group(
 		$field,

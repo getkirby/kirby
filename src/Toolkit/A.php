@@ -793,7 +793,7 @@ class A
 	 * Returns a number of random elements from an array,
 	 * either in original or shuffled order
 	 *
-	 * @throws \Exception When $count is larger than array length
+	 * @throws Exception When $count is larger than array length
 	 */
 	public static function random(
 		array $array,

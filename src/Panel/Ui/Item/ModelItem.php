@@ -11,8 +11,8 @@ use Kirby\Panel\Ui\Item;
  * @license   https://getkirby.com/license
  * @since     5.1.0
  *
- * @template TModel of \Kirby\Cms\ModelWithContent
- * @template TPanel of \Kirby\Panel\Model
+ * @template TModel of ModelWithContent
+ * @template TPanel of panel
  */
 class ModelItem extends Item
 {

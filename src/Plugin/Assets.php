@@ -19,7 +19,7 @@ use Kirby\Toolkit\Str;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @extends \Kirby\Cms\Collection<\Kirby\Plugin\Asset>
+ * @extends Collection<Asset>
  */
 class Assets extends Collection
 {

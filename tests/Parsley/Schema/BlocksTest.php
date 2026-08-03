@@ -11,7 +11,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(Blocks::class)]
 class BlocksTest extends TestCase
 {
-	/** @var \Kirby\Parsley\Schema\Blocks */
+	/** @var Blocks */
 	protected Schema $schema;
 
 	protected function setUp(): void

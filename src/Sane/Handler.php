@@ -3,6 +3,7 @@
 namespace Kirby\Sane;
 
 use Kirby\Exception\Exception;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
 
 /**
@@ -31,8 +32,8 @@ abstract class Handler
 	 * Sanitizes the contents of a file by overwriting
 	 * the file with the sanitized version
 	 *
-	 * @throws \Kirby\Exception\Exception If the file does not exist
-	 * @throws \Kirby\Exception\Exception On other errors
+	 * @throws Exception If the file does not exist
+	 * @throws Exception On other errors
 	 */
 	public static function sanitizeFile(string $file): void
 	{
@@ -47,8 +48,8 @@ abstract class Handler
 	 * @param bool $isExternal Whether the string is from an external file
 	 *                         that may be accessed directly
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException If the file didn't pass validation
-	 * @throws \Kirby\Exception\Exception On other errors
+	 * @throws InvalidArgumentException If the file didn't pass validation
+	 * @throws Exception On other errors
 	 */
 	abstract public static function validate(
 		string $string,
@@ -58,9 +59,9 @@ abstract class Handler
 	/**
 	 * Validates the contents of a file
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException If the file didn't pass validation
-	 * @throws \Kirby\Exception\Exception If the file does not exist
-	 * @throws \Kirby\Exception\Exception On other errors
+	 * @throws InvalidArgumentException If the file didn't pass validation
+	 * @throws Exception If the file does not exist
+	 * @throws Exception On other errors
 	 */
 	public static function validateFile(string $file): void
 	{
@@ -72,7 +73,7 @@ abstract class Handler
 	 * Reads the contents of a file
 	 * for sanitization or validation
 	 *
-	 * @throws \Kirby\Exception\Exception If the file does not exist
+	 * @throws Exception If the file does not exist
 	 */
 	protected static function readFile(string $file): string
 	{

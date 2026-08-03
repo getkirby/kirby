@@ -15,7 +15,7 @@ use Kirby\Cms\Users;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @template TModels of \Kirby\Cms\Files|\Kirby\Cms\Pages|\Kirby\Cms\Users
+ * @template TModels of Files|Pages|Users
  */
 abstract class ModelsCollector
 {
@@ -135,7 +135,7 @@ abstract class ModelsCollector
 
 	public function pagination(): Pagination
 	{
-		/** @var \Kirby\Cms\Pagination */
+		/** @var Pagination */
 		return $this->models(paginated: true)->pagination();
 	}
 

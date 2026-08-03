@@ -56,12 +56,12 @@ class PageCreateDialogController extends ModelCreateDialogController
 	public array $blueprints;
 
 	/**
-	 * @var \Kirby\Cms\Page
+	 * @var Page
 	 */
 	public ModelWithContent|null $model = null;
 
 	/**
-	 * @var \Kirby\Cms\Page|\Kirby\Cms\Site
+	 * @var Page|Site
 	 */
 	public Page|Site|User $parent;
 

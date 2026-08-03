@@ -2,6 +2,7 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Api\Api;
 use Kirby\Cms\File;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Form\Mixin;
@@ -100,7 +101,7 @@ class TextareaField extends InputField
 				'action'  => function () use ($field) {
 					// @codeCoverageIgnoreStart
 					/**
-					 * @var \Kirby\Api\Api
+					 * @var Api
 					 */
 					$api = $this;
 

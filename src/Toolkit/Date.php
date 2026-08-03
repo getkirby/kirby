@@ -55,7 +55,7 @@ class Date extends DateTime implements Stringable
 	 * @param $unit `year`, `month`, `day`, `hour`, `minute` or `second`
 	 * @return $this
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException If the unit name is invalid
+	 * @throws InvalidArgumentException If the unit name is invalid
 	 */
 	public function ceil(string $unit): static
 	{
@@ -134,7 +134,7 @@ class Date extends DateTime implements Stringable
 	 * @param $unit `year`, `month`, `day`, `hour`, `minute` or `second`
 	 * @return $this
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException If the unit name is invalid
+	 * @throws InvalidArgumentException If the unit name is invalid
 	 */
 	public function floor(string $unit): static
 	{
@@ -359,7 +359,7 @@ class Date extends DateTime implements Stringable
 	 * @param $size Rounding step starting at `0` of the specified unit
 	 * @return $this
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException If the unit name or size is invalid
+	 * @throws InvalidArgumentException If the unit name or size is invalid
 	 */
 	public function round(string $unit, int $size = 1): static
 	{
@@ -520,7 +520,7 @@ class Date extends DateTime implements Stringable
 	 * @param $mode `date`, `time` or `datetime`
 	 * @param $timezone Whether the timezone is printed as well
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException If the mode is invalid
+	 * @throws InvalidArgumentException If the mode is invalid
 	 */
 	public function toString(
 		string $mode = 'datetime',
@@ -558,7 +558,7 @@ class Date extends DateTime implements Stringable
 	/**
 	 * Ensures that the provided string is a valid unit name
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	protected static function validateUnit(string $unit): void
 	{

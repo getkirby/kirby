@@ -14,6 +14,7 @@ use Kirby\Cms\Html;
 use Kirby\Cms\Layouts;
 use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
+use Kirby\Cms\Site;
 use Kirby\Cms\Structure;
 use Kirby\Cms\Url;
 use Kirby\Cms\User;
@@ -46,7 +47,7 @@ use Throwable;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @mixin \Kirby\Content\Field
+ * @mixin Field
  */
 trait FieldMethods
 {
@@ -295,7 +296,7 @@ trait FieldMethods
 	 */
 	public function permalinksToUrls(): static
 	{
-		/** @var \Kirby\Content\Field $field */
+		/** @var Field $field */
 		$field = clone $this;
 
 		if ($field->isNotEmpty() === true) {
@@ -468,7 +469,7 @@ trait FieldMethods
 	/**
 	 * Converts the field value to a timestamp or a formatted date
 	 *
-	 * @param string|\IntlDateFormatter|null $format PHP date formatting string
+	 * @param string|IntlDateFormatter|null $format PHP date formatting string
 	 * @param string|null $fallback Fallback string for `strtotime`
 	 */
 	public function toDate(
@@ -578,7 +579,7 @@ trait FieldMethods
 		array|null $attr2 = null
 	): string {
 		/**
-		 * @var \Kirby\Cms\Page|\Kirby\Cms\Site $parent
+		 * @var Page|Site $parent
 		 */
 		$parent   = $this->parent();
 		$parent ??= $this->kirby()->site();

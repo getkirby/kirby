@@ -51,7 +51,7 @@ class Router
 	 * Creates a new router object and
 	 * registers all the given routes
 	 *
-	 * @param array<string, \Closure> $hooks Optional `beforeEach` and `afterEach` hooks
+	 * @param array<string, Closure> $hooks Optional `beforeEach` and `afterEach` hooks
 	 */
 	public function __construct(array $routes = [], array $hooks = [])
 	{

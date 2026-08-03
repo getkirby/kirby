@@ -18,7 +18,7 @@ use Kirby\Toolkit\I18n;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  *
- * @use \Kirby\Cms\HasSiblings<\Kirby\Form\Fields>
+ * @use HasSiblings<Fields>
  */
 class Field extends Component
 {
@@ -52,7 +52,7 @@ class Field extends Component
 	protected mixed $value = null;
 
 	/**
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public function __construct(
 		string $type,
@@ -180,19 +180,19 @@ class Field extends Component
 			],
 			'computed' => [
 				'after' => function () {
-					/** @var \Kirby\Form\Field $this */
+					/** @var Field $this */
 					if ($this->after !== null) {
 						return $this->model()->toString($this->after);
 					}
 				},
 				'before' => function () {
-					/** @var \Kirby\Form\Field $this */
+					/** @var Field $this */
 					if ($this->before !== null) {
 						return $this->model()->toString($this->before);
 					}
 				},
 				'default' => function () {
-					/** @var \Kirby\Form\Field $this */
+					/** @var Field $this */
 					if (isset($this->default) === false) {
 						return;
 					}
@@ -204,7 +204,7 @@ class Field extends Component
 					return $this->model()->toString($this->default);
 				},
 				'help' => function () {
-					/** @var \Kirby\Form\Field $this */
+					/** @var Field $this */
 					if ($this->help) {
 						$help = $this->model()->toSafeString($this->help);
 						$help = $this->kirby()->kirbytext($help);
@@ -212,13 +212,13 @@ class Field extends Component
 					}
 				},
 				'label' => function () {
-					/** @var \Kirby\Form\Field $this */
+					/** @var Field $this */
 					if ($this->label !== null) {
 						return $this->model()->toString($this->label);
 					}
 				},
 				'placeholder' => function () {
-					/** @var \Kirby\Form\Field $this */
+					/** @var Field $this */
 					if ($this->placeholder !== null) {
 						return $this->model()->toString($this->placeholder);
 					}

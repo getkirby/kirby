@@ -77,7 +77,7 @@ class PreviewViewController extends ViewController
 
 	/**
 	 * Resolves the provided URL to an existing site/page.
-	 * @throws \Kirby\Panel\Redirect When no model can be found for the URL
+	 * @throws Redirect When no model can be found for the URL
 	 */
 	protected function modelFromUri(Uri $url): Site|Page
 	{

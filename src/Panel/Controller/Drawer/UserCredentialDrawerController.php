@@ -51,7 +51,7 @@ abstract class UserCredentialDrawerController extends UserDrawerController
 	/**
 	 * Ensures the removal is authorized before the credential is deleted
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	protected function authorize(): void
 	{

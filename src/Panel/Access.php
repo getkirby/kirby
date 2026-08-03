@@ -21,7 +21,7 @@ class Access
 	 * Check if the given user has access to a given area.
 	 * Use `*` to check for general Panel access.
 	 *
-	 * @throws \Kirby\Exception\PermissionException when has no access
+	 * @throws PermissionException when has no access
 	 */
 	public function area(
 		string|null $area = null,

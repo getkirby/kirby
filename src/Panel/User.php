@@ -17,7 +17,7 @@ use Kirby\Panel\Ui\Item\UserItem;
  * @license   https://getkirby.com/license
  * @since     3.6.0
  *
- * @extends \Kirby\Panel\Model<\Kirby\Cms\User>
+ * @extends Model<\Kirby\Cms\User>
  */
 class User extends Model
 {

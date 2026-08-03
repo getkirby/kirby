@@ -4,6 +4,7 @@ namespace Kirby\Api;
 
 use Closure;
 use Exception;
+use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\Str;
 
 /**
@@ -26,7 +27,7 @@ class Model
 	/**
 	 * Model constructor
 	 *
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function __construct(
 		protected Api $api,
@@ -66,7 +67,7 @@ class Model
 
 	/**
 	 * @return $this
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function select($keys = null): static
 	{
@@ -87,7 +88,7 @@ class Model
 	}
 
 	/**
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function selection(): array
 	{
@@ -129,8 +130,8 @@ class Model
 	}
 
 	/**
-	 * @throws \Kirby\Exception\NotFoundException
-	 * @throws \Exception
+	 * @throws NotFoundException
+	 * @throws Exception
 	 */
 	public function toArray(): array
 	{
@@ -177,8 +178,8 @@ class Model
 	}
 
 	/**
-	 * @throws \Kirby\Exception\NotFoundException
-	 * @throws \Exception
+	 * @throws NotFoundException
+	 * @throws Exception
 	 */
 	public function toResponse(): array
 	{
@@ -202,7 +203,7 @@ class Model
 
 	/**
 	 * @return $this
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function view(string $name): static
 	{
