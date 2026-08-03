@@ -1,4 +1,4 @@
-import { reactive } from "vue";
+import { computed, reactive } from "vue";
 import RequestError from "@/errors/RequestError";
 import { isAbortError } from "@/helpers/error";
 import { isObject, length } from "@/helpers/object";
@@ -33,6 +33,36 @@ const isLockRequestError = (
  * @since     5.0.0
  */
 export default function Content(panel: Panel) {
+	/**
+	 * Cached diff between the latest and the changes version
+	 */
+	const diff = computed(() => {
+		const versions = panel.view.props.versions as Record<
+			VersionId,
+			Record<string, unknown>
+		>;
+		const diff: Record<string, unknown> = {};
+
+		for (const field in versions.changes) {
+			const changed = JSON.stringify(versions.changes[field]);
+			const original = JSON.stringify(versions.latest[field]);
+
+			if (changed !== original) {
+				diff[field] = versions.changes[field];
+			}
+		}
+
+		// find all fields that have been present in the original content
+		// but have been removed from the current content
+		for (const field in versions.latest) {
+			if (versions.changes[field] === undefined) {
+				diff[field] = null;
+			}
+		}
+
+		return diff;
+	});
+
 	const content = reactive({
 		/**
 		 * Cancel any scheduled or ongoing save requests
@@ -57,27 +87,7 @@ export default function Content(panel: Panel) {
 				throw new Error("Cannot get changes for another view");
 			}
 
-			const versions = this.versions();
-			const diff: Record<string, unknown> = {};
-
-			for (const field in versions.changes) {
-				const changed = JSON.stringify(versions.changes[field]);
-				const original = JSON.stringify(versions.latest[field]);
-
-				if (changed !== original) {
-					diff[field] = versions.changes[field];
-				}
-			}
-
-			// find all fields that have been present in the original content
-			// but have been removed from the current content
-			for (const field in versions.latest) {
-				if (versions.changes[field] === undefined) {
-					diff[field] = null;
-				}
-			}
-
-			return diff;
+			return diff.value;
 		},
 
 		/**
@@ -110,7 +120,7 @@ export default function Content(panel: Panel) {
 				await this.request("discard", {}, env);
 
 				// update the props for the current view
-				this.versions().changes = this.version("latest");
+				this.versions().changes = { ...this.version("latest") };
 
 				this.emit("discard", {}, env);
 			} catch (error) {
@@ -237,10 +247,7 @@ export default function Content(panel: Panel) {
 				values = {};
 			}
 
-			return (this.versions().changes = {
-				...this.version("changes"),
-				...values
-			});
+			return Object.assign(this.versions().changes, values);
 		},
 
 		/**
@@ -274,7 +281,7 @@ export default function Content(panel: Panel) {
 				this.dialog?.close();
 
 				// update the props for the current view
-				this.versions().latest = this.version("changes");
+				this.versions().latest = { ...this.version("changes") };
 
 				this.emit("publish", { values }, env);
 			} catch (error) {
