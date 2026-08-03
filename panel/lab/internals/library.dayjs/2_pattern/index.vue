@@ -16,7 +16,7 @@
 			<k-text-field
 				label="Format pattern"
 				:value="format"
-				@input="format = $format"
+				@input="format = $event"
 			/>
 		</div>
 
