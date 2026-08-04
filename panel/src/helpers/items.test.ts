@@ -9,7 +9,7 @@ function mockPanel(
 			responder(options.query)
 	);
 
-	window.panel = { get } as unknown as typeof window.panel;
+	window.panel = { get, error: vi.fn() } as unknown as typeof window.panel;
 
 	return get;
 }
@@ -105,6 +105,18 @@ describe("$helper.items()", () => {
 		]);
 
 		expect(results).toStrictEqual([undefined, undefined]);
+	});
+
+	it("should hand the error of a failed batch to the Panel", async () => {
+		const error = new Error("nope");
+
+		mockPanel(() => {
+			throw error;
+		});
+
+		await items("items/files", "a");
+
+		expect(window.panel.error).toHaveBeenCalledWith(error);
 	});
 
 	it("should resolve a list of ids in order", async () => {

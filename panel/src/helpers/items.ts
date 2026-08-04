@@ -129,7 +129,11 @@ async function request(batch: Batch, ids: string[]): Promise<void> {
 		for (const [index, id] of ids.entries()) {
 			settle(batch, id, response.items?.[index] ?? undefined);
 		}
-	} catch {
+	} catch (error) {
+		// hand the error to the Panel, so that an expired session,
+		// a redirect or a lost connection is still acted upon
+		window.panel.error(error);
+
 		// a failed lookup resolves to nothing, just like an unknown id
 		for (const id of ids) {
 			settle(batch, id, undefined);
