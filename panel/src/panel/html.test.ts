@@ -66,6 +66,19 @@ describe("HtmlString class", () => {
 			expect(result.options[1].text).toBe("Plain");
 		});
 
+		it("rewraps every entry of a marked list", () => {
+			const result = HtmlString.resolve({
+				"<issues>": ["<b>a</b>", "<b>b</b>"]
+			}) as unknown as { issues: HtmlString[] };
+
+			expect(Array.isArray(result.issues)).toBe(true);
+			expect(result.issues).toHaveLength(2);
+			expect(result.issues[0]).toBeInstanceOf(HtmlString);
+			expect(result.issues[0].toString()).toBe("<b>a</b>");
+			expect(result.issues[1]).toBeInstanceOf(HtmlString);
+			expect(result.issues[1].toString()).toBe("<b>b</b>");
+		});
+
 		it("does not touch plain objects/arrays", () => {
 			const input = { a: 1, b: [{ c: 2 }] };
 			const result = HtmlString.resolve(input);
