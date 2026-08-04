@@ -136,6 +136,20 @@ describe("$helper.items()", () => {
 		expect(get).not.toHaveBeenCalled();
 	});
 
+	it("should never send a blank id, as it would shift the response", async () => {
+		const get = mockPanel(echo);
+
+		const results = await items("items/files", ["a", "", "  ", "b"]);
+
+		expect(get.mock.calls[0][1].query.items).toBe("a,b");
+		expect(results).toStrictEqual([
+			{ id: "a" },
+			undefined,
+			undefined,
+			{ id: "b" }
+		]);
+	});
+
 	it("should only send an id once, no matter how many callers wait", async () => {
 		const get = mockPanel(echo);
 

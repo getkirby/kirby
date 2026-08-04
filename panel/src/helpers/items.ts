@@ -70,6 +70,12 @@ function item(
 	id: string,
 	query: Query
 ): Promise<Item | undefined> {
+	// the backend drops blank ids when it splits the query string,
+	// which would shift the response for every id after them
+	if (id?.trim() === "" || id === null || id === undefined) {
+		return Promise.resolve(undefined);
+	}
+
 	const key = endpoint + "/" + normalize(query);
 	const lookup = key + "/" + id;
 	const existing = pending.get(lookup);
