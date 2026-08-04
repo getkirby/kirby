@@ -1,6 +1,27 @@
 import { describe, expect, it, vi, afterEach, beforeEach } from "vitest";
+import RequestError from "@/errors/RequestError";
 import type Panel from "./panel";
+import type { PanelResponse } from "./request";
 import Content from "./content";
+
+/**
+ * Returns all API endpoints that have been posted to
+ */
+function endpoints(panel: Panel) {
+	return vi.mocked(panel.api.post).mock.calls.map((call) => call[0]);
+}
+
+/**
+ * Builds the error that is thrown when another user holds the lock
+ */
+function lockError() {
+	return new RequestError("The view is locked", {
+		request: {} as Request,
+		response: {
+			json: { details: {}, key: "error.content.lock.notAllowed" }
+		} as unknown as PanelResponse
+	});
+}
 
 function createPanel({ latest = {}, changes = {}, lock = {} } = {}) {
 	return {
@@ -437,6 +458,42 @@ describe("panel.content", () => {
 			expect(content.lock().modified).not.toBe(before);
 		});
 
+		it("returns true when the changes have been written", async () => {
+			const panel = createPanel();
+			const content = Content(panel);
+			await expect(content.save({ title: "Draft" })).resolves.toBe(true);
+		});
+
+		it("returns false and opens the lock dialog when the view got locked", async () => {
+			const panel = createPanel();
+			const content = Content(panel);
+			vi.mocked(panel.api.post).mockRejectedValue(lockError());
+
+			await expect(content.save({ title: "Draft" })).resolves.toBe(false);
+			expect(panel.dialog.open).toHaveBeenCalledOnce();
+		});
+
+		it("returns false when a newer save request took over", async () => {
+			const error = new Error("The request was aborted");
+			error.name = "AbortError";
+
+			const panel = createPanel();
+			const content = Content(panel);
+			vi.mocked(panel.api.post).mockRejectedValue(error);
+
+			await expect(content.save({ title: "Draft" })).resolves.toBe(false);
+		});
+
+		it("rethrows any other error", async () => {
+			const panel = createPanel();
+			const content = Content(panel);
+			vi.mocked(panel.api.post).mockRejectedValue(new Error("Offline"));
+
+			await expect(content.save({ title: "Draft" })).rejects.toThrowError(
+				"Offline"
+			);
+		});
+
 		it("emits save event with values", async () => {
 			const panel = createPanel();
 			const content = Content(panel);
@@ -515,6 +572,86 @@ describe("panel.content", () => {
 	});
 
 	describe("unlock()", () => {
+		it("sends the unlock request for the current view", async () => {
+			const panel = createPanel();
+			const content = Content(panel);
+			await expect(content.unlock()).resolves.toBe(true);
+			expect(panel.api.post).toHaveBeenCalledWith(
+				"/pages/test/changes/unlock",
+				{},
+				expect.objectContaining({ silent: true })
+			);
+		});
+
+		it("does not save when there are no pending changes", async () => {
+			const panel = createPanel();
+			const content = Content(panel);
+			await content.unlock();
+			expect(endpoints(panel)).toStrictEqual(["/pages/test/changes/unlock"]);
+		});
+
+		it("persists pending changes before releasing the lock", async () => {
+			const panel = createPanel({ changes: { title: "Updated" } });
+			const content = Content(panel);
+			await expect(content.unlock()).resolves.toBe(true);
+
+			// the changes must be written before the lock is released,
+			// otherwise a late save would rewrite the lock we just released
+			expect(endpoints(panel)).toStrictEqual([
+				"/pages/test/changes/save",
+				"/pages/test/changes/unlock"
+			]);
+		});
+
+		it("does not release the lock when the view got locked in the meantime", async () => {
+			const panel = createPanel({ changes: { title: "Updated" } });
+			const content = Content(panel);
+			vi.mocked(panel.api.post).mockRejectedValue(lockError());
+
+			await expect(content.unlock()).resolves.toBe(false);
+
+			// staying on the current view keeps both the changes and the lock,
+			// so nothing is lost and the call can simply be repeated
+			expect(endpoints(panel)).toStrictEqual(["/pages/test/changes/save"]);
+
+			// the lock dialog already reports the case, so `unlock` must not
+			// raise a second error on top of it
+			expect(panel.dialog.open).toHaveBeenCalledOnce();
+		});
+
+		it("does not release the lock when a newer save request took over", async () => {
+			const error = new Error("The request was aborted");
+			error.name = "AbortError";
+
+			const panel = createPanel({ changes: { title: "Updated" } });
+			const content = Content(panel);
+			vi.mocked(panel.api.post).mockRejectedValue(error);
+
+			// an aborted save is an internal condition that must not be
+			// reported to the editor, so it aborts the unlock silently
+			await expect(content.unlock()).resolves.toBe(false);
+			expect(endpoints(panel)).toStrictEqual(["/pages/test/changes/save"]);
+		});
+
+		it("ignores failed unlock requests", async () => {
+			// the lock will be released after the configured timeout anyway
+			const panel = createPanel();
+			const content = Content(panel);
+			vi.mocked(panel.api.post).mockRejectedValue(new Error("Offline"));
+
+			await expect(content.unlock()).resolves.toBe(true);
+		});
+
+		it("skips the diff check for another view", async () => {
+			// changes can only be detected for the current view
+			const panel = createPanel({ changes: { title: "Updated" } });
+			const content = Content(panel);
+			await content.unlock({ api: "/pages/other" });
+			expect(endpoints(panel)).toStrictEqual(["/pages/other/changes/unlock"]);
+		});
+	});
+
+	describe("unlockBeaconRequest()", () => {
 		afterEach(() => {
 			vi.unstubAllGlobals();
 		});
@@ -524,12 +661,13 @@ describe("panel.content", () => {
 			const content = Content(panel);
 			const sendBeacon = vi.fn().mockReturnValue(true);
 			vi.stubGlobal("navigator", { sendBeacon });
-			content.unlock();
+			content.unlockBeaconRequest();
 			expect(panel.url).toHaveBeenCalledWith("/api/pages/test/changes/unlock", {
 				csrf: "csrf-token",
 				language: "en"
 			});
 			expect(sendBeacon).toHaveBeenCalledOnce();
+			expect(panel.api.post).not.toHaveBeenCalled();
 		});
 
 		it("falls back to regular request when sendBeacon is not queued", () => {
@@ -538,7 +676,7 @@ describe("panel.content", () => {
 			vi.stubGlobal("navigator", {
 				sendBeacon: vi.fn().mockReturnValue(false)
 			});
-			content.unlock();
+			content.unlockBeaconRequest();
 			expect(panel.api.post).toHaveBeenCalledWith(
 				"/pages/test/changes/unlock",
 				{},
@@ -551,7 +689,7 @@ describe("panel.content", () => {
 		it("merges values and saves", async () => {
 			const panel = createPanel();
 			const content = Content(panel);
-			await content.update({ title: "New Title" });
+			await expect(content.update({ title: "New Title" })).resolves.toBe(true);
 			expect(panel.api.post).toHaveBeenCalledWith(
 				"/pages/test/changes/save",
 				expect.objectContaining({ title: "New Title" }),
