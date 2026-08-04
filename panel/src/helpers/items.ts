@@ -15,10 +15,10 @@ type Batch = {
 };
 
 /**
- * Max number of ids per request.
- * The ids travel in the query string,
- * so a large batch needs to be split
- * before the url gets too long.
+ * Max number of ids per request. The ids travel in the query
+ * string, so a large batch needs to be split before the url gets
+ * too long. A plain count is a rough stand-in for the actual
+ * length, which is fine as long as ids stay reasonably short.
  */
 const LIMIT = 100;
 
