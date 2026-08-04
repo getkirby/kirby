@@ -5,6 +5,7 @@
 
 import type { Dayjs, PluginFunc } from "dayjs";
 import type { DatetimeType, DayjsFactory } from "./dayjs";
+import type { Locale } from "./dayjs-locale";
 import {
 	DayjsPattern,
 	type PatternPart,
@@ -114,6 +115,31 @@ function candidates(type: DatetimeType, target: PatternUnit[]): DayjsPattern[] {
 }
 
 /**
+ * Joins the tokens a day period was split into, so that the
+ * spaces and dots many locales do not count as
+ * separators, e.g. turn `p. m.` back into a single token
+ */
+function collapse(tokens: string[], parts: PatternPart[]): string[] {
+	const excess = tokens.length - parts.length;
+
+	if (excess <= 0) {
+		return tokens;
+	}
+
+	const index = parts.findIndex((part) => part.unit === "meridiem");
+
+	if (index === -1) {
+		return tokens;
+	}
+
+	return [
+		...tokens.slice(0, index),
+		tokens.slice(index, index + excess + 1).join(""),
+		...tokens.slice(index + excess + 1)
+	];
+}
+
+/**
  * Splits digit runs that were typed without any separator at all,
  * e.g. `02032024` for a `DD.MM.YYYY` source pattern
  */
@@ -169,7 +195,13 @@ function match(
 ): Dayjs | null {
 	const parts = pattern.parts;
 
-	tokens = expand(tokens, parts);
+	// a token count that misses the pattern is not wrong yet:
+	// too few means digits were typed without any separator,
+	// too many that a day period carries spaces or dots
+	tokens =
+		tokens.length < parts.length
+			? expand(tokens, parts)
+			: collapse(tokens, parts);
 
 	// only complete input matches,
 	// partial input is the job of the guess
@@ -189,12 +221,11 @@ function match(
 /**
  * All month names of a locale
  */
-function months(data?: ILocale): string[] {
-	const [full, short] = [data?.months, data?.monthsShort].map(
-		(names?: string[] | { f?: string[]; s?: string[] }) =>
-			Array.isArray(names) === true
-				? names
-				: [...(names?.s ?? []), ...(names?.f ?? [])]
+function months(data?: Locale): string[] {
+	const [full, short] = [data?.months, data?.monthsShort].map((names) =>
+		Array.isArray(names) === true
+			? names
+			: [...(names?.s ?? []), ...(names?.f ?? [])]
 	);
 
 	if (full.length === 0) {
@@ -215,7 +246,7 @@ function months(data?: ILocale): string[] {
  * dot (`Okt.`, `Sept.`) still match a dot-less input token
  */
 function normalize(value: string): string {
-	return value.toLowerCase().replace(separators, "");
+	return value.normalize("NFC").toLowerCase().replace(separators, "");
 }
 
 /**
@@ -268,6 +299,38 @@ function toDatetime(
 	}
 
 	return dt;
+}
+
+/**
+ * Resolves a day period to `0` (am) or `1` (pm)
+ */
+function toMeridiem(dayjs: DayjsFactory, token: string): number | null {
+	const needle = normalize(token);
+	const locale = dayjs.Ls[dayjs.locale()] as Locale;
+	const meridiem = locale?.meridiem;
+
+	if (typeof meridiem === "function") {
+		for (const index of [0, 1]) {
+			const periods = [
+				meridiem(index * 12, 0, true),
+				meridiem(index * 12, 0, false)
+			];
+
+			if (periods.some((period) => normalize(period) === needle) === true) {
+				return index;
+			}
+		}
+	}
+
+	if (/^(a|am)$/.test(needle) === true) {
+		return 0;
+	}
+
+	if (/^(p|pm)$/.test(needle) === true) {
+		return 1;
+	}
+
+	return null;
 }
 
 /**
@@ -364,15 +427,7 @@ function toValue(
 		case "second":
 			return toNumber(token, 0, 59);
 		case "meridiem":
-			if (/^(a|am)$/i.test(token) === true) {
-				return 0;
-			}
-
-			if (/^(p|pm)$/i.test(token) === true) {
-				return 1;
-			}
-
-			return null;
+			return toMeridiem(dayjs, token);
 	}
 }
 

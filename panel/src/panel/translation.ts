@@ -1,4 +1,5 @@
 import { reactive } from "vue";
+import dayjs from "@/libraries/dayjs";
 import { StringTemplateValues, template } from "@/helpers/string";
 import State from "./state";
 
@@ -79,6 +80,7 @@ export default function Translation() {
 		 * reading direction so the DOM reflects the active translation.
 		 * Direction is also set on <body> since some elements (e.g. drag
 		 * ghosts) are injected outside the Panel root.
+		 * The matching dayjs locale is activated as well.
 		 */
 		set(state: Partial<TranslationState>): TranslationState {
 			parent.set.call(this, state);
@@ -88,6 +90,8 @@ export default function Translation() {
 			}
 
 			document.body.dir = this.direction;
+
+			dayjs.locale(this.code ?? "en");
 
 			return this.state();
 		},
