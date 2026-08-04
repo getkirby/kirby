@@ -86,19 +86,25 @@ export default {
 	},
 	methods: {
 		async fetch() {
+			const file = this.file;
 			let alt,
 				src,
 				srcset = null;
 
 			// if internal file, load data for file UUID from request endpoint
-			if (this.file) {
-				const item = await this.$helper.items("items/files", this.file, {
+			if (file) {
+				const item = await this.$helper.items("items/files", file, {
 					layout: "auto",
 					image: JSON.stringify({
 						ratio: this.ratio,
 						cover: this.cover
 					})
 				});
+
+				// the file might have changed while the request was in flight
+				if (this.file !== file) {
+					return;
+				}
 
 				alt = item?.alt;
 				src = item?.image?.src;
