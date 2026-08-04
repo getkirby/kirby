@@ -170,7 +170,7 @@ export default {
 			}
 		},
 		unlock(api) {
-			this.$panel.content.unlock({
+			this.$panel.content.unlockBeaconRequest({
 				api: api,
 				language: this.$panel.language.code
 			});

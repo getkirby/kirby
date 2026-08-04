@@ -55,6 +55,9 @@ return [
 		}
 	],
 	'methods' => [
+		'emptyValue' => function () {
+			return false;
+		},
 		'toBool' => function ($value) {
 			return in_array($value, [true, 'true', 1, '1', 'on'], true) === true;
 		}
