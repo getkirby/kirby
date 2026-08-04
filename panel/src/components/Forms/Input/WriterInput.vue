@@ -39,11 +39,6 @@ import Toolbar from "../Writer/Extensions/Toolbar.js";
 
 // Input
 import Input from "@/mixins/input.js";
-
-// The prop definitions live in their own file so that components which
-// only need them don't have to import this one and with it ProseMirror.
-// Re-exported here to keep the established import path working for now.
-export { props } from "./WriterInput.props.js";
 import { props } from "./WriterInput.props.js";
 
 /**
