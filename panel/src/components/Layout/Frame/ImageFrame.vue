@@ -11,8 +11,8 @@
 			:src="src ?? resolvedSrc"
 			:srcset="srcset ?? resolvedSrcset"
 			:sizes="sizes"
+			:loading="lazy === true ? 'lazy' : 'eager'"
 			decoding="async"
-			loading="lazy"
 			@dragstart.prevent
 		/>
 	</k-frame>
@@ -33,6 +33,15 @@ export const props = {
 		 * @since 6.0.0
 		 */
 		file: String,
+		/**
+		 * Whether the image is only loaded once it comes into view.
+		 * Disable for images that are visible right away.
+		 * @since 6.0.0
+		 */
+		lazy: {
+			type: Boolean,
+			default: true
+		},
 		/**
 		 * For responsive images, pass the `sizes` attribute
 		 */
