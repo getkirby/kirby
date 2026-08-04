@@ -3,7 +3,6 @@
 namespace Kirby\Panel\Response;
 
 use Kirby\Cms\App;
-use Kirby\Data\Json;
 use Kirby\Http\Response;
 use Kirby\Panel\Redirect;
 use Kirby\Panel\State;
@@ -32,15 +31,6 @@ class ViewResponse extends JsonResponse
 			code: $code,
 			pretty: $pretty
 		);
-	}
-
-	/**
-	 * Returns the data as JSON
-	 * Request responses are not wrapped in a custom namespace
-	 */
-	public function body(): string
-	{
-		return Json::encode($this->data(), $this->pretty());
 	}
 
 	/**
@@ -126,5 +116,13 @@ class ViewResponse extends JsonResponse
 	public function view(): array
 	{
 		return $this->view;
+	}
+
+	/**
+	 * View responses are not wrapped in a key namespace
+	 */
+	protected function wrap(): array
+	{
+		return $this->data();
 	}
 }

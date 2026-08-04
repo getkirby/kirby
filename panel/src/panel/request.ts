@@ -8,6 +8,7 @@ import JsonRequestError from "@/errors/JsonRequestError.js";
 import OfflineError from "@/errors/OfflineError.js";
 import RedirectError from "@/errors/RedirectError.js";
 import RequestError from "@/errors/RequestError.js";
+import { HtmlString } from "@/panel/html";
 import { isAbortError } from "@/helpers/error";
 import { toLowerKeys } from "@/helpers/object";
 import { buildUrl, isSameOrigin, makeAbsolute } from "@/helpers/url";
@@ -179,7 +180,10 @@ export async function responder(
 
 	try {
 		response.text = await raw.text();
-		response.json = JSON.parse(response.text);
+
+		// rewrap any `<key>` payloads into HtmlString instances, so that
+		// the backend can flag trusted HTML through the same JSON shape
+		response.json = HtmlString.resolve(JSON.parse(response.text));
 	} catch (error) {
 		if (isAbortError(error) === true) {
 			throw error;

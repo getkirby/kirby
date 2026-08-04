@@ -10,6 +10,7 @@ use Kirby\Http\Response;
 use Kirby\Panel\Area;
 use Kirby\Panel\Redirect;
 use Kirby\Panel\Ui\Component;
+use Kirby\Toolkit\HtmlString;
 use Throwable;
 
 /**
@@ -44,7 +45,7 @@ class JsonResponse extends Response
 	 */
 	public function body(): string
 	{
-		return Json::encode([static::$key => $this->data()], $this->pretty());
+		return Json::encode($this->payload(), $this->pretty());
 	}
 
 	/**
@@ -170,6 +171,15 @@ class JsonResponse extends Response
 	}
 
 	/**
+	 * Returns the full body data with all trusted HTML
+	 * marked for the frontend.
+	 */
+	protected function payload(): array
+	{
+		return HtmlString::resolve($this->wrap());
+	}
+
+	/**
 	 * Should the JSON in the body be pretty-printed?
 	 */
 	public function pretty(): bool
@@ -196,5 +206,13 @@ class JsonResponse extends Response
 	public function type(): string
 	{
 		return 'application/json';
+	}
+
+	/**
+	 * Wraps the data in the response key namespace
+	 */
+	protected function wrap(): array
+	{
+		return [static::$key => $this->data()];
 	}
 }

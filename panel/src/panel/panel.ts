@@ -7,7 +7,7 @@ import Drag from "./drag";
 import Drawer, { type DrawerState } from "./drawer";
 import Dropdown, { type DropdownState } from "./dropdown.js";
 import Events from "./events";
-import html from "./html";
+import html, { HtmlString } from "./html";
 import Language, { type LanguageState } from "./language";
 import { type Listener } from "./listeners";
 import Menu, { type MenuState } from "./menu";
@@ -231,7 +231,8 @@ export default class Panel {
 	}
 
 	static create(app: App, plugins: Prettify<PanelPlugins> = {}): Panel {
-		const panel = reactive(new Panel(app, window.panelState, plugins));
+		const state = HtmlString.resolve(window.panelState);
+		const panel = reactive(new Panel(app, state, plugins));
 
 		// Register as the single source of truth for all Vue components
 		window.panel = app.config.globalProperties.$panel = panel;

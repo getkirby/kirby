@@ -24,6 +24,7 @@ use Kirby\Http\Route;
 use Kirby\Http\Router;
 use Kirby\Session\Session;
 use Kirby\Toolkit\Collection as BaseCollection;
+use Kirby\Toolkit\HtmlString;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Pagination;
 use Throwable;
@@ -592,6 +593,7 @@ class Api
 
 		// pretty print json data
 		$pretty = (bool)($requestData['query']['pretty'] ?? false) === true;
+		$code   = 200;
 
 		if (($result['status'] ?? 'ok') === 'error') {
 			$code = $result['code'] ?? 400;
@@ -600,11 +602,15 @@ class Api
 			if ($code < 400 || $code > 599) {
 				$code = 500;
 			}
-
-			return Response::json($result, $code, $pretty);
 		}
 
-		return Response::json($result, 200, $pretty);
+		// mark trusted HTML for the Panel, but never for the public
+		// API, where the marked keys would be a breaking change
+		if ((bool)$this->requestHeaders('x-panel') === true) {
+			$result = HtmlString::resolve($result);
+		}
+
+		return Response::json($result, $code, $pretty);
 	}
 
 	/**
