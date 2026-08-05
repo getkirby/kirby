@@ -24,7 +24,7 @@ afterEach(() => {
 });
 
 describe("$helper.items()", () => {
-	it("should collect lookups from the same tick into one request", async () => {
+	it("should collect calls from the same tick into one request", async () => {
 		const get = mockPanel(echo);
 
 		const results = await Promise.all([
@@ -38,7 +38,7 @@ describe("$helper.items()", () => {
 		expect(results).toStrictEqual([{ id: "a" }, { id: "b" }, { id: "c" }]);
 	});
 
-	it("should keep lookups with different options apart", async () => {
+	it("should keep calls with different options apart", async () => {
 		const get = mockPanel(echo);
 
 		await Promise.all([
@@ -53,7 +53,7 @@ describe("$helper.items()", () => {
 		expect(batched).toStrictEqual(["a,c", "b"]);
 	});
 
-	it("should keep lookups for different endpoints apart", async () => {
+	it("should keep calls for different endpoints apart", async () => {
 		const get = mockPanel(echo);
 
 		await Promise.all([items("items/files", "a"), items("items/pages", "b")]);
@@ -61,13 +61,30 @@ describe("$helper.items()", () => {
 		expect(get).toHaveBeenCalledTimes(2);
 	});
 
-	it("should start a new batch for lookups after the flush", async () => {
+	it("should start a new queue after the previous request resolved", async () => {
 		const get = mockPanel(echo);
 
 		await items("items/files", "a");
 		await items("items/files", "b");
 
 		expect(get).toHaveBeenCalledTimes(2);
+	});
+
+	it("should send a new request for an id queued while one is in flight", async () => {
+		const get = mockPanel(echo);
+
+		const first = items("items/files", "a");
+
+		// let the queue send, so that the request is on its way
+		await Promise.resolve();
+
+		const second = items("items/files", "b");
+
+		expect(await first).toStrictEqual({ id: "a" });
+		expect(await second).toStrictEqual({ id: "b" });
+		expect(get).toHaveBeenCalledTimes(2);
+		expect(get.mock.calls[0][1].query.items).toBe("a");
+		expect(get.mock.calls[1][1].query.items).toBe("b");
 	});
 
 	it("should pass the query along to the endpoint", async () => {
@@ -94,7 +111,7 @@ describe("$helper.items()", () => {
 		expect(missing).toBeUndefined();
 	});
 
-	it("should resolve every lookup of a failed batch to undefined", async () => {
+	it("should resolve every id of a failed batch to undefined", async () => {
 		mockPanel(() => {
 			throw new Error("nope");
 		});
@@ -195,7 +212,7 @@ describe("$helper.items()", () => {
 		expect(results).toStrictEqual([{ id: "a" }, { id: "b" }]);
 	});
 
-	it("should join a lookup that is already in flight", async () => {
+	it("should join a call that is already in flight", async () => {
 		const { promise, resolve } = Promise.withResolvers<unknown>();
 		const get = vi.fn(async () => await promise);
 
@@ -203,7 +220,7 @@ describe("$helper.items()", () => {
 
 		const first = items("items/files", "a");
 
-		// let the batch flush, so that the request is on its way
+		// let the queue send, so that the request is on its way
 		await Promise.resolve();
 
 		const second = items("items/files", "a");

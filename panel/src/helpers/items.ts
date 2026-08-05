@@ -1,71 +1,68 @@
 /**
+ * Item props request from the same tick are collected
+ * into a batch and sent as one request:
+ *
+ * 1. items() calls queueItem() for each id
+ * 2. queueItem() adds the id to the queue for its endpoint
+ *    and options
+ * 3. Queue waits via queueMicrotask() for the end of tick
+ * 4. sendQueue() takes the queued ids and splits them
+ *    into chunks (if needed)
+ * 5. sendChunk() gets called for each chunk, sends
+ *    request to endpoint
+ * 6. resolveItem() gets called for each id individually,
+ *    hands over item props to the initial caller
+ *
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  * @since     6.0.0
  */
 
+/** Item props from the response */
 type Item = Record<string, unknown>;
+/** Request options passed on to the endpoint */
 type Query = Record<string, unknown>;
-type Batch = {
+
+/**
+ * Collects ids by endpoint and options,
+ * in the two states they can be in:
+ * ids waiting to be sent and items waiting to come back.
+ */
+type Queue = {
 	endpoint: string;
 	ids: string[];
+	items: Map<string, PromiseWithResolvers<Item | undefined>>;
 	key: string;
 	query: Query;
-	resolvers: Map<string, (item: Item | undefined) => void>;
 };
 
 /**
- * Max number of ids per request. The ids travel in the query
- * string, so a large batch needs to be split before the url gets
- * too long. A plain count is a rough stand-in for the actual
- * length, which is fine as long as ids stay reasonably short.
+ * One queue per endpoint and options
  */
-const LIMIT = 100;
+const queues = new Map<string, Queue>();
 
 /**
- * Pending batches, keyed by endpoint and options.
- * Calls can only share a request when they ask
- * the backend for the same representation.
+ * Returns the queue for an endpoint and its options
+ * and creates it, if it does not exist yet
  */
-const batches = new Map<string, Batch>();
+function getQueue(endpoint: string, query: Query): Queue {
+	// sort query, so that same options share a queue, no matter the order
+	const key = endpoint + "/" + JSON.stringify(query, Object.keys(query).sort());
+	let queue = queues.get(key);
 
-/**
- * Lookups that are already on their way,
- * keyed by representation and id. They are
- * dropped as soon as the request resolved,
- * so that no item is kept around.
- */
-const pending = new Map<string, Promise<Item | undefined>>();
-
-/**
- * Sends the collected batch and hands
- * each caller the item for its own id
- */
-async function flush(key: string): Promise<void> {
-	const batch = batches.get(key);
-
-	if (batch === undefined) {
-		return;
+	if (queue === undefined) {
+		queue = { endpoint, ids: [], items: new Map(), key, query };
+		queues.set(key, queue);
 	}
 
-	// drop the batch right away, so that new calls added while this
-	// request is in flight will start their own new batch
-	batches.delete(key);
-
-	const chunks = [];
-
-	for (let index = 0; index < batch.ids.length; index += LIMIT) {
-		chunks.push(request(batch, batch.ids.slice(index, index + LIMIT)));
-	}
-
-	await Promise.all(chunks);
+	return queue;
 }
 
 /**
- * Adds a single id to its batch and returns the promise
- * that resolves once the batch has been flushed
+ * Adds a single id to its matching queue and
+ * returns the item props once the promise resolves
  */
-function item(
+function queueItem(
 	endpoint: string,
 	id: string,
 	query: Query
@@ -76,90 +73,104 @@ function item(
 		return Promise.resolve(undefined);
 	}
 
-	const key = endpoint + "/" + normalize(query);
-	const lookup = key + "/" + id;
-	const existing = pending.get(lookup);
+	// get the right queue for the item and check
+	// if a response for the same item is already pending;
+	// so that it can join the request and not create its redundant own
+	const queue = getQueue(endpoint, query);
+	const existing = queue.items.get(id);
 
-	// join a request for the same item that is already on its way,
-	// no matter if it is still collecting or already in flight
 	if (existing !== undefined) {
-		return existing;
+		return existing.promise;
 	}
 
-	let batch = batches.get(key);
+	// create and track the promise in the queue:
+	// we return the promise here, but resolve it with the
+	// props data later in `resolveItem()`
+	const item = Promise.withResolvers<Item | undefined>();
 
-	if (batch === undefined) {
-		batch = { endpoint, ids: [], key, query, resolvers: new Map() };
-		batches.set(key, batch);
+	queue.items.set(id, item);
+	queue.ids.push(id);
 
-		// flush once the current tick has queued all its lookups
-		queueMicrotask(() => flush(key));
+	// for a newly created queue start the timer to send
+	// the request once the current tick has passed;
+	// in the meantime more ids can join the queue
+	if (queue.ids.length === 1) {
+		queueMicrotask(() => sendQueue(queue));
 	}
 
-	const { promise, resolve } = Promise.withResolvers<Item | undefined>();
-
-	batch.ids.push(id);
-	batch.resolvers.set(id, resolve);
-	pending.set(lookup, promise);
-
-	return promise;
+	return item.promise;
 }
 
 /**
- * Sorts the query, so that the same options
- * share a batch, no matter in which order
- * the caller passed them
+ * Hands the item to the caller and drops it from the queue,
+ * so that the next call starts a fresh request
  */
-function normalize(query: Query): string {
-	const sorted: Query = {};
+function resolveItem(queue: Queue, id: string, item: Item | undefined): void {
+	queue.items.get(id)?.resolve(item);
+	queue.items.delete(id);
 
-	for (const name of Object.keys(query).sort()) {
-		sorted[name] = query[name];
+	if (queue.ids.length === 0 && queue.items.size === 0) {
+		queues.delete(queue.key);
 	}
-
-	return JSON.stringify(sorted);
 }
 
 /**
- * Requests a single chunk of ids from the endpoint
+ * Sends one chunk of ids to the endpoint. The queue supplies
+ * the endpoint, the options and the waiting callers.
  */
-async function request(batch: Batch, ids: string[]): Promise<void> {
+async function sendChunk(queue: Queue, chunk: string[]): Promise<void> {
 	try {
-		const response = (await window.panel.get(batch.endpoint, {
+		const response = (await window.panel.get(queue.endpoint, {
 			query: {
-				...batch.query,
-				items: ids.join(",")
+				...queue.query,
+				items: chunk.join(",")
 			}
 		})) as { items?: (Item | null)[] };
 
-		for (const [index, id] of ids.entries()) {
-			settle(batch, id, response.items?.[index] ?? undefined);
+		for (const [index, id] of chunk.entries()) {
+			resolveItem(queue, id, response.items?.[index] ?? undefined);
 		}
 	} catch (error) {
 		// hand the error to the Panel, so that an expired session,
 		// a redirect or a lost connection is still acted upon
 		window.panel.error(error);
 
-		// a failed lookup resolves to nothing, just like an unknown id
-		for (const id of ids) {
-			settle(batch, id, undefined);
+		// a failed request resolves to nothing, just like an unknown id
+		for (const id of chunk) {
+			resolveItem(queue, id, undefined);
 		}
 	}
 }
 
 /**
- * Hands the item to the caller and clears the lookup,
- * so that the next call starts a fresh request
+ * Sends the queued ids as one or more requests/chunks and
+ * hands each caller the item for its own id
  */
-function settle(batch: Batch, id: string, item: Item | undefined): void {
-	pending.delete(batch.key + "/" + id);
-	batch.resolvers.get(id)?.(item);
+async function sendQueue(queue: Queue): Promise<void> {
+	// take the queued ids right away, so that new calls added while
+	// this request is in flight will collect their own new batch
+	const batch = queue.ids;
+	queue.ids = [];
+
+	const requests = [];
+
+	// max number of ids per request:
+	// ids are added to the query string,
+	// we must ensure the URL does not get too long
+	const limit = 100;
+
+	for (let index = 0; index < batch.length; index += limit) {
+		const chunk = batch.slice(index, index + limit);
+		requests.push(sendChunk(queue, chunk));
+	}
+
+	await Promise.all(requests);
 }
 
 /**
  * Request props for items by model id. Calls from the same tick
- * share a request and a lookup that is already on its way is
- * joined instead of being requested again.
+ * share a request and a call for an item that is already on its
+ * way is joined instead of being requested again.
  *
  * @example
  * const item = await items("items/files", "file://abc");
@@ -181,8 +192,8 @@ export default function items(
 	query: Query = {}
 ): Promise<Item | undefined> | Promise<(Item | undefined)[]> {
 	if (Array.isArray(ids) === true) {
-		return Promise.all(ids.map((id) => item(endpoint, id, query)));
+		return Promise.all(ids.map((id) => queueItem(endpoint, id, query)));
 	}
 
-	return item(endpoint, ids, query);
+	return queueItem(endpoint, ids, query);
 }
