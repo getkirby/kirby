@@ -12,7 +12,6 @@ class MemCachedTest extends TestCase
 	{
 		if (class_exists('Memcached') === false) {
 			$this->markTestSkipped('The Memcached extension is not available.');
-			return;
 		}
 
 		$connection = new \Memcached();
@@ -24,6 +23,10 @@ class MemCachedTest extends TestCase
 
 	protected function tearDown(): void
 	{
+		if (class_exists('Memcached') === false) {
+			return;
+		}
+
 		$connection = new \Memcached();
 		$connection->addServer('localhost', 11211);
 		$connection->flush();
