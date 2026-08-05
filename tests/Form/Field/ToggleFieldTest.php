@@ -25,6 +25,26 @@ class ToggleFieldTest extends TestCase
 		$this->assertTrue($field->default() === false);
 	}
 
+	public function testEmptyValue(): void
+	{
+		$field = $this->field('toggle');
+
+		$this->assertNull($field->emptyValue());
+
+		// an untouched field, a reset field and a field filled with its
+		// own stored value must all produce the same form value
+		$this->assertFalse($field->toFormValue());
+
+		$field->reset();
+
+		$this->assertFalse($field->toFormValue());
+		$this->assertFalse($field->toStoredValue());
+
+		$field->fill($field->toStoredValue());
+
+		$this->assertFalse($field->toFormValue());
+	}
+
 	public function testFill(): void
 	{
 		$field = $this->field('toggle');
@@ -92,24 +112,6 @@ class ToggleFieldTest extends TestCase
 		$this->assertFalse($field->toFormValue());
 		$this->assertTrue($field->isInvalid());
 		$this->assertSame(['required' => 'The field is required'], $field->errors());
-	}
-
-	public function testEmptyValue(): void
-	{
-		$field = $this->field('toggle');
-
-		$this->assertFalse($field->emptyValue());
-
-		// an untouched field and a field filled with its own stored
-		// value must produce the same form value
-		$field->fillWithEmptyValue();
-
-		$this->assertFalse($field->toFormValue());
-		$this->assertSame('false', $field->toStoredValue());
-
-		$field->fill($field->toStoredValue());
-
-		$this->assertFalse($field->toFormValue());
 	}
 
 	public function testText(): void

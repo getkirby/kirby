@@ -37,18 +37,20 @@ class ObjectFieldTest extends TestCase
 			]
 		]);
 
-		$this->assertSame('', $field->emptyValue());
+		$this->assertSame([], $field->emptyValue());
 
-		// an untouched field and a field filled with its own stored
-		// value must produce the same form value
-		$field->fillWithEmptyValue();
+		// an untouched field, a reset field and a field filled with its
+		// own stored value must all produce the same form value
+		$this->assertSame([], $field->toFormValue());
 
-		$this->assertSame('', $field->toFormValue());
-		$this->assertSame('', $field->toStoredValue());
+		$field->reset();
+
+		$this->assertSame([], $field->toFormValue());
+		$this->assertSame([], $field->toStoredValue());
 
 		$field->fill($field->toStoredValue());
 
-		$this->assertSame('', $field->toFormValue());
+		$this->assertSame([], $field->toFormValue());
 	}
 
 	public function testErrors(): void
