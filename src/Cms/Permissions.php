@@ -73,9 +73,13 @@ class Permissions
 			'changeName'     => true,
 			'changePassword' => true,
 			'changeRole'     => true,
+			'changeSecret'   => true,
 			'create'         => true,
+			'createAvatar'   => true,
 			'delete'         => true,
+			'deleteAvatar'   => true,
 			'list'           => true,
+			'replaceAvatar'  => true,
 			'update'         => true
 		],
 		'user' => [
@@ -85,8 +89,12 @@ class Permissions
 			'changeName'     => true,
 			'changePassword' => true,
 			'changeRole'     => true,
+			'changeSecret'   => true,
+			'createAvatar'   => true,
 			'delete'         => true,
+			'deleteAvatar'   => true,
 			'list'           => true,
+			'replaceAvatar'  => true,
 			'update'         => true
 		]
 	];

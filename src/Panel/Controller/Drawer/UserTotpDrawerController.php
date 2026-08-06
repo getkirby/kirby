@@ -3,7 +3,6 @@
 namespace Kirby\Panel\Controller\Drawer;
 
 use Kirby\Cms\User;
-use Kirby\Cms\UserRules;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Image\QrCode;
 use Kirby\Panel\Ui\Drawer;
@@ -24,7 +23,7 @@ class UserTotpDrawerController extends UserCredentialDrawerController
 		parent::__construct($user, 'totp');
 
 		// ensure user has the necessary permissions
-		UserRules::changeSecret($user, 'totp', null);
+		$user->guards()->ensureExecutable('changeSecret', 'totp', null);
 	}
 
 	protected function create(): User
