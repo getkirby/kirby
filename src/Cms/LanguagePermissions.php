@@ -9,13 +9,8 @@ namespace Kirby\Cms;
  * @license   https://getkirby.com/license
  *
  * @extends ModelPermissions<Language>
+ * @deprecated 6.0.0 Use `$language->guards()` instead
  */
 class LanguagePermissions extends ModelPermissions
 {
-	protected const string CATEGORY = 'languages';
-
-	protected function canDelete(): bool
-	{
-		return $this->model->isDeletable() === true;
-	}
 }
