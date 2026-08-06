@@ -16,6 +16,7 @@ use Kirby\Exception\PermissionException;
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     6.0.0
  */
 abstract class ModelGuards
 {
@@ -36,15 +37,16 @@ abstract class ModelGuards
 	}
 
 	/**
-	 * Runs every check that does not need the arguments of the
-	 * action: the ability check first and the permission check
-	 * second. The layers are fetched on demand, so that a
-	 * replaced object is always taken into account.
+	 * Checks if a method is available to be executed. In comparison to
+	 * `ensureExecutable`, this does not validate any input for the action yet.
+	 * It will only check the ability and the permissions to execute this action.
+	 * This is typically used to check if UI elements in the Panel should be
+	 * availabel or not.
 	 *
 	 * @param bool $default Used if the action has no permission rule
 	 * @throws AbilityException|PermissionException
 	 */
-	public function ensureAvailable(string $action, bool $default = true): void
+	public function ensureAvailable(string $action, bool $default = false): void
 	{
 		// the model must be able to execute the action without
 		// breaking system logic. This always takes priority over
@@ -79,7 +81,7 @@ abstract class ModelGuards
 	 *
 	 * @param bool $default Used if the action has no permission rule
 	 */
-	public function isAvailable(string $action, bool $default = true): bool
+	public function isAvailable(string $action, bool $default = false): bool
 	{
 		try {
 			$this->ensureAvailable($action, $default);

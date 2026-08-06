@@ -809,33 +809,7 @@ class User extends ModelWithContent
 		#[SensitiveParameter]
 		string|null $password = null
 	): bool {
-		if ($this->hasPassword() === false) {
-			throw new NotFoundException(
-				key: 'user.password.undefined'
-			);
-		}
-
-		// `UserValidators` enforces a minimum length of 8 characters,
-		// so everything below that is a typo
-		if (Str::length($password) < 8) {
-			throw new InvalidArgumentException(
-				key: 'user.password.invalid'
-			);
-		}
-
-		// too long passwords can cause DoS attacks
-		if (Str::length($password) > 1000) {
-			throw new InvalidArgumentException(
-				key: 'user.password.excessive'
-			);
-		}
-
-		if (password_verify($password, $this->password()) !== true) {
-			throw new InvalidArgumentException(
-				key: 'user.password.wrong',
-				httpCode: 401
-			);
-		}
+		$this->guards()->validators()->validatePassword($password);
 
 		return true;
 	}

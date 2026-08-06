@@ -15,6 +15,7 @@ use Kirby\Toolkit\V;
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     6.0.0
  */
 class FileValidators extends ModelValidators
 {

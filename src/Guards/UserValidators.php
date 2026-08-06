@@ -2,12 +2,16 @@
 
 namespace Kirby\Guards;
 
+use Kirby\Auth\Passwords;
 use Kirby\Cms\Model;
 use Kirby\Cms\Role;
 use Kirby\Cms\User;
 use Kirby\Exception\DuplicateException;
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\Str;
+use Kirby\Toolkit\Totp;
 use Kirby\Toolkit\V;
 use SensitiveParameter;
 
@@ -16,6 +20,7 @@ use SensitiveParameter;
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     6.0.0
  */
 class UserValidators extends ModelValidators
 {
@@ -47,7 +52,7 @@ class UserValidators extends ModelValidators
 		#[SensitiveParameter]
 		string $password
 	): void {
-		$this->validatePassword($password);
+		$this->validateNewPassword($password);
 	}
 
 	/**
@@ -59,6 +64,19 @@ class UserValidators extends ModelValidators
 	}
 
 	/**
+	 * Validates the input of the `changeSecret` action
+	 */
+	protected function ensureToChangeSecret(
+		string $secret,
+		#[SensitiveParameter]
+		mixed $content
+	): void {
+		if ($secret === 'totp') {
+			$this->validateTotp($content);
+		}
+	}
+
+	/**
 	 * Validates the user that is about to be created
 	 */
 	protected function ensureToCreate(array $props = []): void
@@ -66,7 +84,7 @@ class UserValidators extends ModelValidators
 		$this->validateId($this->model->id());
 		$this->validateEmail($this->model->email(), strict: true);
 		$this->validateLanguage($this->model->language());
-		$this->validatePassword($props['password'] ?? '', allowEmpty: true);
+		$this->validateNewPassword($props['password'] ?? '', allowEmpty: true);
 		$this->validateCreatableRole($props['role'] ?? 'default');
 	}
 
@@ -87,7 +105,8 @@ class UserValidators extends ModelValidators
 		$this->validateId($this->model->id());
 		$this->validateEmail($this->model->email(), strict: true);
 		$this->validateLanguage($this->model->language());
-		$this->validatePassword($props['password'] ?? '');
+		$this->validateNewPassword($props['password'] ?? '');
+		$this->validateCreatableRole($this->model->role()->id());
 	}
 
 	/**
@@ -241,14 +260,14 @@ class UserValidators extends ModelValidators
 	}
 
 	/**
-	 * Validates the password against the password policy
+	 * Validates a new password against the password policy
 	 * configured in the `auth.passwords` option
 	 *
 	 * @param bool $allowEmpty If `true`, an empty password is accepted,
 	 *                         which is needed for users that are created
 	 *                         without a password
 	 */
-	public function validatePassword(
+	public function validateNewPassword(
 		#[SensitiveParameter]
 		string $password,
 		bool $allowEmpty = false
@@ -262,6 +281,47 @@ class UserValidators extends ModelValidators
 	}
 
 	/**
+	 * Validates that the given password matches the password
+	 * that is currently stored for the user
+	 *
+	 * @throws NotFoundException If the user has no password
+	 * @throws InvalidArgumentException If the password is out of bounds
+	 *                                  or does not match the stored one
+	 */
+	public function validatePassword(
+		#[SensitiveParameter]
+		string|null $password = null
+	): void {
+		if ($this->model->hasPassword() === false) {
+			throw new NotFoundException(
+				key: 'user.password.undefined'
+			);
+		}
+
+		// the password policy enforces the same minimum length,
+		// so everything below that is a typo
+		if (Str::length($password) < Passwords::MINLENGTH) {
+			$this->error(
+				key: 'user.password.invalid'
+			);
+		}
+
+		// too long passwords can cause DoS attacks
+		if (Str::length($password) > Passwords::MAXLENGTH) {
+			$this->error(
+				key: 'user.password.excessive'
+			);
+		}
+
+		if (password_verify($password, $this->model->password()) !== true) {
+			throw new InvalidArgumentException(
+				key: 'user.password.wrong',
+				httpCode: 401
+			);
+		}
+	}
+
+	/**
 	 * Validates that the role exists at all. This does not
 	 * check if the currently authenticated user is allowed to
 	 * give it to someone. Use `::validateAssignableRole()` for that.
@@ -272,6 +332,22 @@ class UserValidators extends ModelValidators
 			$this->error(
 				key: 'user.role.invalid'
 			);
+		}
+	}
+
+	/**
+	 * Validates that a TOTP secret has the correct length
+	 *
+	 * @throws InvalidArgumentException If the secret is too short or too long
+	 */
+	public function validateTotp(
+		#[SensitiveParameter]
+		string|null $secret = null
+	): void {
+		// safety check to avoid accidental insecure secrets;
+		// throws an exception for secrets of the wrong length
+		if ($secret !== null) {
+			new Totp($secret);
 		}
 	}
 }

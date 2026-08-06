@@ -193,7 +193,7 @@ class FileIsTest extends ModelTestCase
 		$this->assertFalse($file->isListable());
 	}
 
-	public function testIsSameAs(): void
+	public function testIsIdentical(): void
 	{
 		$page   = $this->pageWithFile(template: 'test');
 		$upload = new BaseFile(static::FIXTURES . '/test.jpg');
@@ -204,10 +204,10 @@ class FileIsTest extends ModelTestCase
 			'content'  => ['template' => 'test']
 		]);
 
-		$this->assertTrue($file->isSameAs($upload));
+		$this->assertTrue($file->isIdentical($upload));
 	}
 
-	public function testIsSameAsWithDifferentTemplate(): void
+	public function testIsIdenticalWithDifferentTemplate(): void
 	{
 		$page   = $this->pageWithFile(template: 'test');
 		$upload = new BaseFile(static::FIXTURES . '/test.jpg');
@@ -218,10 +218,10 @@ class FileIsTest extends ModelTestCase
 			'content'  => ['template' => 'cover']
 		]);
 
-		$this->assertFalse($file->isSameAs($upload));
+		$this->assertFalse($file->isIdentical($upload));
 	}
 
-	public function testIsSameAsWithMissingFile(): void
+	public function testIsIdenticalWithMissingFile(): void
 	{
 		$upload = new BaseFile(static::FIXTURES . '/test.jpg');
 
@@ -230,6 +230,6 @@ class FileIsTest extends ModelTestCase
 			'parent'   => $this->app->site()
 		]);
 
-		$this->assertFalse($file->isSameAs($upload));
+		$this->assertFalse($file->isIdentical($upload));
 	}
 }

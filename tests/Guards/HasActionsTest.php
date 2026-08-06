@@ -91,6 +91,18 @@ class HasActionsTest extends ModelTestCase
 	}
 
 	#[DataProvider('classProvider')]
+	public function testHasWithDifferentCase(string $class): void
+	{
+		$object = $this->object($class);
+
+		// permission rules are matched case-sensitively and a case
+		// variant must therefore never resolve to an action method
+		$this->assertTrue($object->has('archive'));
+		$this->assertFalse($object->has('Archive'));
+		$this->assertFalse($object->has('ARCHIVE'));
+	}
+
+	#[DataProvider('classProvider')]
 	public function testHasWithPrivateMethod(string $class): void
 	{
 		// a private method cannot be called from the base class
@@ -122,6 +134,8 @@ class HasActionsTest extends ModelTestCase
 		$abilities = $this->object(HasActionsCustomAbilities::class);
 
 		$this->assertTrue($abilities->has('changeSlug'));
+		$this->assertFalse($abilities->has('changeslug'));
+		$this->assertFalse($abilities->has('ChangeSlug'));
 		$this->assertFalse($abilities->has('error'));
 	}
 }

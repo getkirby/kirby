@@ -728,10 +728,10 @@ class ModelCommitTest extends TestCase
 
 	public function testValidateWithUndefinedAction(): void
 	{
-		// a role that is not allowed to do anything that
-		// has a permission rule
+		// a role that is allowed to do everything
+		// that has a permission rule
 		$this->app = $this->app->clone([
-			'roles' => [['name' => 'editor', 'permissions' => false]],
+			'roles' => [['name' => 'editor', 'permissions' => true]],
 			'users' => [['email' => 'editor@getkirby.com', 'role' => 'editor']]
 		]);
 
@@ -743,7 +743,26 @@ class ModelCommitTest extends TestCase
 			action: 'test'
 		);
 
-		// actions without a permission rule have no checks to run
+		// actions without a permission rule are denied,
+		// as no role can grant a permission that doesn't exist
+		$this->expectException(PermissionException::class);
+
+		$commit->validate(arguments: [
+			'page' => $page
+		]);
+	}
+
+	public function testValidateWithUndefinedActionAndKirbyUser(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$page   = new Page(['slug' => 'test']);
+		$commit = new ModelCommit(
+			model: $page,
+			action: 'test'
+		);
+
+		// the almighty `kirby` user overrules the default
 		$commit->validate(arguments: [
 			'page' => $page
 		]);
@@ -759,8 +778,6 @@ class ModelCommitTest extends TestCase
 			action: 'test'
 		);
 
-		// the `nobody` role overrules the default, so even
-		// an action without a permission rule is denied
 		$this->expectException(PermissionException::class);
 
 		$commit->validate(arguments: [

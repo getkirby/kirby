@@ -13,6 +13,7 @@ use Kirby\Toolkit\Str;
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     6.0.0
  */
 class LanguageValidators extends ModelValidators
 {

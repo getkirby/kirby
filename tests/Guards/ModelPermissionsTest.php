@@ -82,18 +82,18 @@ class ModelPermissionsTest extends ModelTestCase
 
 	public function testEnsureWithUndefinedAction(): void
 	{
-		// actions without any rule are not covered by this layer
-		$this->assertNull($this->permissions()->ensure('does-not-exist'));
-	}
-
-	public function testEnsureWithUndefinedActionAndDefault(): void
-	{
 		$permissions = $this->permissions();
 
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionCode('error.does-not-exist');
 
-		$permissions->ensure('does-not-exist', default: false);
+		// actions without any rule are denied by default
+		$permissions->ensure('does-not-exist');
+	}
+
+	public function testEnsureWithUndefinedActionAndDefault(): void
+	{
+		$this->assertNull($this->permissions()->ensure('does-not-exist', default: true));
 	}
 
 	public function testMay(): void

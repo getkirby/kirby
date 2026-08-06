@@ -346,6 +346,27 @@ class File extends ModelWithContent
 	}
 
 	/**
+	 * Checks if the given file is the exact same file as the
+	 * one that already exists under the same name, template
+	 * included
+	 */
+	public function isIdentical(BaseFile $file): bool
+	{
+		if ($this->exists() === false) {
+			return false;
+		}
+
+		// the model is based on the props of the new file,
+		// to compare templates, we need to get the props of
+		// the already existing file from meta content file
+		$existing = $this->parent()->file($this->filename());
+
+		return
+			$this->sha1() === $file->sha1() &&
+			$this->template() === $existing->template();
+	}
+
+	/**
 	 * Check if the file can be listable by the current user
 	 * This permission depends on the `read` option until v6
 	 */
@@ -377,27 +398,6 @@ class File extends ModelWithContent
 		$readable[$role] ??= [];
 
 		return $readable[$role][$template] ??= $this->permissions()->can('read');
-	}
-
-	/**
-	 * Checks if the given file is the exact same file as the
-	 * one that already exists under the same name, template
-	 * included
-	 */
-	public function isSameAs(BaseFile $file): bool
-	{
-		if ($this->exists() === false) {
-			return false;
-		}
-
-		// the model is based on the props of the new file,
-		// to compare templates, we need to get the props of
-		// the already existing file from meta content file
-		$existing = $this->parent()->file($this->filename());
-
-		return
-			$this->sha1() === $file->sha1() &&
-			$this->template() === $existing->template();
 	}
 
 	/**

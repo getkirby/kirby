@@ -194,7 +194,7 @@ class UsersTest extends TestCase
 
 		$app->impersonate('kirby');
 
-		$app->users()->create(['id' => 'homer', 'email' => 'a@getkirby.com', 'password' => '12345678']);
+		$app->users()->create(['id' => 'homer', 'email' => 'a@getkirby.com', 'password' => '12345678', 'role' => 'admin']);
 		$app->users()->create(['id' => 'foo', 'email' => 'B@getKirby.com']);
 
 		// initialize a new fresh app instance to start with an empty collection
@@ -237,7 +237,7 @@ class UsersTest extends TestCase
 
 		$app->impersonate('kirby');
 
-		$app->users()->create(['id' => 'homer', 'email' => 'a@getkirby.com', 'password' => '12345678']);
+		$app->users()->create(['id' => 'homer', 'email' => 'a@getkirby.com', 'password' => '12345678', 'role' => 'admin']);
 
 		$contents = '<?php throw new PHPUnit\Framework\AssertionFailedError("File was accessible via path traversal");';
 		F::write(static::TMP . '/index.php', $contents);

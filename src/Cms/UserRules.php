@@ -2,8 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Exception\Exception;
-use Kirby\Toolkit\Totp;
 use SensitiveParameter;
 
 /**
@@ -59,12 +57,6 @@ class UserRules
 		string|null $secret
 	): void {
 		$user->guards()->ensureExecutable('changeSecret', 'totp', $secret);
-
-		// safety check to avoid accidental insecure secrets;
-		// throws an exception for secrets of the wrong length
-		if ($secret !== null) {
-			new Totp($secret);
-		}
 	}
 
 	public static function create(User $user, array $props = []): void
@@ -128,7 +120,7 @@ class UserRules
 		#[SensitiveParameter]
 		string $password
 	): void {
-		$user->guards()->validators()->validatePassword($password);
+		$user->guards()->validators()->validateNewPassword($password);
 	}
 
 	public static function validRole(User $user, string $role): void

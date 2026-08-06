@@ -246,6 +246,35 @@ class UserValidatorsTest extends ModelTestCase
 		$validators->validateEmail('admin@getkirby.com');
 	}
 
+	public function testEnsureChangeSecret(): void
+	{
+		$validators = $this->validators();
+
+		$this->assertNull(
+			$validators->ensure('changeSecret', 'totp', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567')
+		);
+	}
+
+	public function testEnsureChangeSecretWithInvalidTotpSecret(): void
+	{
+		$validators = $this->validators();
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('TOTP secrets should be 32 Base32 digits (= 20 bytes)');
+
+		$validators->ensure('changeSecret', 'totp', 'foo');
+	}
+
+	public function testEnsureChangeSecretWithOtherSecret(): void
+	{
+		$validators = $this->validators();
+
+		// only TOTP secrets have a length to validate
+		$this->assertNull(
+			$validators->ensure('changeSecret', 'webauthn', ['credential'])
+		);
+	}
+
 	public function testEnsureCreateAvatar(): void
 	{
 		$validators = $this->validators();
@@ -263,6 +292,26 @@ class UserValidatorsTest extends ModelTestCase
 		$this->expectExceptionCode('error.file.type.invalid');
 
 		$validators->ensure('createAvatar', static::FIXTURES . '/avatar.jpg', 'pdf');
+	}
+
+	public function testEnsureCreateFirstUserWithInvalidRole(): void
+	{
+		$this->appWithoutUsers();
+
+		$validators = new UserValidators(
+			model: new User([
+				'email' => 'new@getkirby.com',
+				'role'  => 'editor'
+			]),
+			user: User::nobody()
+		);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.user.role.invalid');
+
+		$validators->ensure('createFirstUser', [
+			'password' => 'super-secure-password'
+		]);
 	}
 
 	public function testEnsureReplaceAvatar(): void
@@ -328,38 +377,38 @@ class UserValidatorsTest extends ModelTestCase
 		$validators->validateLanguage('english');
 	}
 
-	public function testPassword(): void
+	public function testNewPassword(): void
 	{
 		$validators = $this->validators();
 
-		$this->assertNull($validators->validatePassword('12345678'));
+		$this->assertNull($validators->validateNewPassword('12345678'));
 	}
 
-	public function testPasswordWithAllowedEmptyPassword(): void
+	public function testNewPasswordWithAllowedEmptyPassword(): void
 	{
 		$validators = $this->validators();
 
-		$this->assertNull($validators->validatePassword('', allowEmpty: true));
+		$this->assertNull($validators->validateNewPassword('', allowEmpty: true));
 	}
 
-	public function testPasswordWithEmptyPassword(): void
+	public function testNewPasswordWithEmptyPassword(): void
 	{
 		$validators = $this->validators();
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionCode('error.user.password.invalid');
 
-		$validators->validatePassword('');
+		$validators->validateNewPassword('');
 	}
 
-	public function testPasswordWithInvalidPassword(): void
+	public function testNewPasswordWithInvalidPassword(): void
 	{
 		$validators = $this->validators();
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionCode('error.user.password.invalid');
 
-		$validators->validatePassword('1234');
+		$validators->validateNewPassword('1234');
 	}
 
 	public function testRole(): void
@@ -377,6 +426,32 @@ class UserValidatorsTest extends ModelTestCase
 		$this->expectExceptionCode('error.user.role.invalid');
 
 		$validators->validateRole('rockstar');
+	}
+
+	public function testTotp(): void
+	{
+		$validators = $this->validators();
+
+		$this->assertNull(
+			$validators->validateTotp('ABCDEFGHIJKLMNOPQRSTUVWXYZ234567')
+		);
+	}
+
+	public function testTotpWithNull(): void
+	{
+		$validators = $this->validators();
+
+		$this->assertNull($validators->validateTotp(null));
+	}
+
+	public function testTotpWithInvalidSecret(): void
+	{
+		$validators = $this->validators();
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('TOTP secrets should be 32 Base32 digits (= 20 bytes)');
+
+		$validators->validateTotp('foo');
 	}
 
 	protected function user(): User

@@ -10,6 +10,7 @@ use Kirby\Cms\User;
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     6.0.0
  */
 class UserPermissions extends ModelPermissions
 {
@@ -47,10 +48,22 @@ class UserPermissions extends ModelPermissions
 		$this->ensureSetting('changeRole');
 	}
 
+	/**
+	 * Secrets don't have their own permission.
+	 * They are covered by the `changePassword` rule.
+	 */
+	protected function ensureToChangeSecret(): void
+	{
+		$this->ensureSetting('changePassword');
+	}
+
+	/**
+	 * Avatars don't have their own permission.
+	 * They are covered by the `update` rule.
+	 */
 	protected function ensureToCreateAvatar(): void
 	{
 		$this->ensureSetting('update');
-		$this->ensureSetting('createAvatar');
 	}
 
 	protected function ensureToCreateFirstUser(): void
@@ -58,15 +71,21 @@ class UserPermissions extends ModelPermissions
 		// there's no role yet that could grant this permission
 	}
 
+	/**
+	 * Avatars don't have their own permission.
+	 * They are covered by the `update` rule.
+	 */
 	protected function ensureToDeleteAvatar(): void
 	{
 		$this->ensureSetting('update');
-		$this->ensureSetting('deleteAvatar');
 	}
 
+	/**
+	 * Avatars don't have their own permission.
+	 * They are covered by the `update` rule.
+	 */
 	protected function ensureToReplaceAvatar(): void
 	{
 		$this->ensureSetting('update');
-		$this->ensureSetting('replaceAvatar');
 	}
 }

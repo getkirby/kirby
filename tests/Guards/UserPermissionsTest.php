@@ -160,14 +160,14 @@ class UserPermissionsTest extends ModelTestCase
 		$this->assertNull($this->permissions()->ensure('changeSecret'));
 	}
 
-	public function testChangeSecretWithoutPermission(): void
+	public function testChangeSecretWithoutChangePasswordPermission(): void
 	{
 		$permissions = $this->permissions(
-			permissions: ['changeSecret' => false]
+			permissions: ['changePassword' => false]
 		);
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionCode('error.user.changeSecret.permission');
+		$this->expectExceptionCode('error.user.changePassword.permission');
 
 		$permissions->ensure('changeSecret');
 	}
@@ -180,18 +180,6 @@ class UserPermissionsTest extends ModelTestCase
 	public function testCreateAvatar(): void
 	{
 		$this->assertNull($this->permissions()->ensure('createAvatar'));
-	}
-
-	public function testCreateAvatarWithoutPermission(): void
-	{
-		$permissions = $this->permissions(
-			permissions: ['createAvatar' => false]
-		);
-
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionCode('error.user.createAvatar.permission');
-
-		$permissions->ensure('createAvatar');
 	}
 
 	public function testCreateAvatarWithoutUpdatePermission(): void
@@ -233,18 +221,6 @@ class UserPermissionsTest extends ModelTestCase
 		$this->assertNull($this->permissions()->ensure('deleteAvatar'));
 	}
 
-	public function testDeleteAvatarWithoutPermission(): void
-	{
-		$permissions = $this->permissions(
-			permissions: ['deleteAvatar' => false]
-		);
-
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionCode('error.user.deleteAvatar.permission');
-
-		$permissions->ensure('deleteAvatar');
-	}
-
 	public function testDeleteAvatarWithoutUpdatePermission(): void
 	{
 		$permissions = $this->permissions(
@@ -282,18 +258,6 @@ class UserPermissionsTest extends ModelTestCase
 	public function testReplaceAvatar(): void
 	{
 		$this->assertNull($this->permissions()->ensure('replaceAvatar'));
-	}
-
-	public function testReplaceAvatarWithoutPermission(): void
-	{
-		$permissions = $this->permissions(
-			permissions: ['replaceAvatar' => false]
-		);
-
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionCode('error.user.replaceAvatar.permission');
-
-		$permissions->ensure('replaceAvatar');
 	}
 
 	public function testReplaceAvatarWithoutUpdatePermission(): void

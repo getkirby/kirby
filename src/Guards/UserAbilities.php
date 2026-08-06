@@ -10,6 +10,7 @@ use Kirby\Cms\User;
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     6.0.0
  */
 class UserAbilities extends ModelAbilities
 {

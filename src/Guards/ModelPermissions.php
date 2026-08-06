@@ -16,6 +16,7 @@ use Kirby\Exception\PermissionException;
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     6.0.0
  */
 abstract class ModelPermissions
 {
@@ -28,8 +29,8 @@ abstract class ModelPermissions
 	}
 
 	/**
-	 * Can be overridden by specific child classes
-	 * if the permission category needs to be dynamic
+	 * Corresponds with the permissions category in
+	 * the Kirby\Cms\Permissions class. E.g. `pages`, `files`, etc.
 	 */
 	abstract public function category(): string;
 
@@ -43,13 +44,15 @@ abstract class ModelPermissions
 	 * defaults, so a registered action always resolves to a
 	 * bool. The default is therefore only ever used for an
 	 * action that has no rule at all, e.g. one that a plugin
-	 * added without registering a permission for it. The
-	 * `nobody` role and the `kirby` user still overrule it.
+	 * added without registering a permission for it. Such an
+	 * action is denied, unless the caller opts into allowing
+	 * it. The `nobody` role and the `kirby` user still
+	 * overrule the default.
 	 *
 	 * @param bool $default Used if the action has no permission rule
 	 * @throws PermissionException
 	 */
-	public function ensure(string $action, bool $default = true): void
+	public function ensure(string $action, bool $default = false): void
 	{
 		if ($this->has($action) === true) {
 			$this->{$this->method($action)}();

@@ -96,7 +96,7 @@ class UserChangePasswordDialogController extends UserDialogController
 		}
 
 		// validate the new password
-		$this->user->guards()->validators()->validatePassword($password ?? '');
+		$this->user->guards()->validators()->validateNewPassword($password ?? '');
 
 		// compare passwords
 		if ($password !== $passwordConfirmation) {

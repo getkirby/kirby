@@ -101,10 +101,13 @@ class ModelGuardsTest extends ModelTestCase
 
 		$this->app->impersonate('editor@getkirby.com');
 
-		$this->assertNull($this->guards()->ensureAvailable('does-not-exist'));
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionCode('error.page.does-not-exist.permission');
+
+		$this->guards()->ensureAvailable('does-not-exist');
 	}
 
-	public function testEnsureAvailableWithUndefinedActionAndFailingPermission(): void
+	public function testEnsureAvailableWithUndefinedActionAndAllowingDefault(): void
 	{
 		$this->app = $this->app->clone([
 			'roles' => [['name' => 'editor']],
@@ -113,10 +116,7 @@ class ModelGuardsTest extends ModelTestCase
 
 		$this->app->impersonate('editor@getkirby.com');
 
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionCode('error.page.does-not-exist.permission');
-
-		$this->guards()->ensureAvailable('does-not-exist', default: false);
+		$this->assertNull($this->guards()->ensureAvailable('does-not-exist', default: true));
 	}
 
 	public function testEnsureExecutable(): void
@@ -197,9 +197,9 @@ class ModelGuardsTest extends ModelTestCase
 
 		$this->app->impersonate('editor@getkirby.com');
 
-		// undefined actions pass, even if the role
-		// is not allowed to do anything else
-		$this->assertNull($this->guards()->ensureExecutable('does-not-exist'));
+		// undefined actions are denied, just like every
+		// other action the role is not allowed to do
+		$this->assertFalse($this->guards()->isExecutable('does-not-exist'));
 		$this->assertFalse($this->guards()->isExecutable('update'));
 	}
 
@@ -250,8 +250,8 @@ class ModelGuardsTest extends ModelTestCase
 
 		$guards = $this->guards();
 
-		$this->assertTrue($guards->isAvailable('does-not-exist'));
-		$this->assertFalse($guards->isAvailable('does-not-exist', default: false));
+		$this->assertFalse($guards->isAvailable('does-not-exist'));
+		$this->assertTrue($guards->isAvailable('does-not-exist', default: true));
 	}
 
 	public function testIsExecutable(): void

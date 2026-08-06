@@ -16,6 +16,7 @@ use Kirby\Exception\PermissionException;
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     6.0.0
  *
  * @method PageAbilities abilities()
  * @method PagePermissions permissions()

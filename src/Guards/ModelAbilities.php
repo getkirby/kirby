@@ -11,6 +11,7 @@ use Kirby\Exception\AbilityException;
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     6.0.0
  */
 abstract class ModelAbilities
 {

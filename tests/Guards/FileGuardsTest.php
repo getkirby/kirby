@@ -111,7 +111,7 @@ class FileGuardsTest extends ModelTestCase
 		$file   = $this->fileOnDisk('test.jpg');
 		$upload = new Upload(static::FIXTURES . '/test.jpg');
 
-		$this->assertTrue($file->isSameAs($upload));
+		$this->assertTrue($file->isIdentical($upload));
 		$this->assertNull($this->guards($file)->ensureExecutable('create', $upload));
 	}
 }

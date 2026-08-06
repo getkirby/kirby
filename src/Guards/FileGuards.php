@@ -14,6 +14,7 @@ use Kirby\Filesystem\File as BaseFile;
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     6.0.0
  *
  * @method FileAbilities abilities()
  * @method FilePermissions permissions()
@@ -83,7 +84,7 @@ class FileGuards extends ModelGuards
 	{
 		// uploading the exact same file again changes nothing
 		// and therefore needs no checks at all
-		if ($this->model->isSameAs($upload) === true) {
+		if ($this->model->isIdentical($upload) === true) {
 			return;
 		}
 

@@ -41,8 +41,14 @@ class SystemRoutesTest extends TestCase
 
 	protected function createUser(string $role = 'admin'): User
 	{
+		// the first user of an installation must be an admin,
+		// who can then create users with any other role
+		if ($role !== 'admin') {
+			$this->app->impersonate($this->createUser());
+		}
+
 		return $this->app->users()->create([
-			'email'    => 'test@getkirby.com',
+			'email'    => $role . '@getkirby.com',
 			'role'     => $role,
 			'password' => '12345678'
 		]);

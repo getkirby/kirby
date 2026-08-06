@@ -432,7 +432,9 @@ class UserRulesTest extends ModelTestCase
 			'kirby'    => $app
 		]);
 
-		$this->expectNotToPerformAssertions();
+		// the first user must be an admin
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.user.role.invalid');
 
 		UserRules::create($user, $props);
 	}
