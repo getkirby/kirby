@@ -58,11 +58,23 @@ export default {
 	},
 	methods: {
 		onLoad() {
-			const document = this.$refs.browser.contentDocument;
-			document.addEventListener("scroll", (e) => this.$emit("scroll", e));
+			// cross-origin previews, e.g. another domain or a PDF in Firefox,
+			// don't expose their document and thus cannot be synced
+			this.$refs.browser.contentDocument?.addEventListener("scroll", (e) =>
+				this.$emit("scroll", e)
+			);
 		},
 		reload() {
-			this.$refs.browser.contentWindow.location.reload();
+			const browser = this.$refs.browser;
+
+			// cross-origin frames don't allow to reload their location,
+			// but they can be navigated to the same URL again
+			if (browser.contentDocument === null) {
+				browser.contentWindow.location.replace(this.srcWithPreviewParam);
+				return;
+			}
+
+			browser.contentWindow.location.reload();
 		}
 	}
 };
