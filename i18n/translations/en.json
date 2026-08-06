@@ -158,7 +158,9 @@
 
 	"error.language.code": "Please enter a valid code for the language",
 	"error.language.create.permission": "You are not allowed to create a language",
+	"error.language.delete.default": "The default language can only be deleted if no other languages exist",
 	"error.language.delete.permission": "You are not allowed to delete the language",
+	"error.language.delete.single": "The main language in a single-language installation cannot be deleted",
 	"error.language.duplicate": "The language already exists",
 	"error.language.name": "Please enter a valid name for the language",
 	"error.language.notFound": "The language could not be found",
