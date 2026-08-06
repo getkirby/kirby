@@ -60,7 +60,7 @@ abstract class KirbyTag
 
 	public function attr(string $name, $default = null)
 	{
-		$name = strtolower($name);
+		$name = static::normalizeAttr($name, $this->declaredAttrs());
 		return $this->$name ?? $default;
 	}
 
@@ -113,6 +113,15 @@ abstract class KirbyTag
 	}
 
 	/**
+	 * Returns the attribute names this tag instance supports
+	 * @since 6.0.0
+	 */
+	protected function declaredAttrs(): array
+	{
+		return static::attrs();
+	}
+
+	/**
 	 * Creates a new tag instance for the given type
 	 * @since 6.0.0
 	 */
@@ -135,12 +144,15 @@ abstract class KirbyTag
 
 		$tag = static::$types[$type];
 
-		// merge the per-type option defaults and normalize the
-		// attribute keys, so they can be matched against the
-		// (lowercase) constructor argument names
+		// merge the per-type option defaults and map the attribute keys
+		// onto the names the type declares, so they can be passed on
+		// as named constructor arguments
 		$kirby    = $data['kirby'] ?? App::instance();
 		$defaults = $kirby->option('kirbytext.' . $type, []);
-		$attrs    = array_change_key_case(array_replace($defaults, $attrs));
+		$attrs    = static::normalizeAttrs(
+			array_replace($defaults, $attrs),
+			static::attrsFor($type)
+		);
 
 		// legacy array definitions are wrapped, class-based definitions
 		// receive their attributes as named constructor arguments;
@@ -198,6 +210,39 @@ abstract class KirbyTag
 	public function kirby(): App
 	{
 		return $this->data['kirby'] ?? App::instance();
+	}
+
+	/**
+	 * Maps an attribute name onto the name the tag type declares
+	 * @since 6.0.0
+	 */
+	protected static function normalizeAttr(string $name, array $names): string
+	{
+		$name = strtolower($name);
+
+		foreach ($names as $declared) {
+			if (strtolower($declared) === $name) {
+				return $declared;
+			}
+		}
+
+		return $name;
+	}
+
+	/**
+	 * Maps all parsed attribute keys onto the names
+	 * the tag type declares
+	 * @since 6.0.0
+	 */
+	protected static function normalizeAttrs(array $attrs, array $names): array
+	{
+		$normalized = [];
+
+		foreach ($attrs as $name => $value) {
+			$normalized[static::normalizeAttr($name, $names)] = $value;
+		}
+
+		return $normalized;
 	}
 
 	/**

@@ -23,6 +23,19 @@ class TestKirbyTag extends KirbyTag
 	}
 }
 
+class CamelKirbyTag extends KirbyTag
+{
+	public function __construct(
+		public string|null $linkClass = null
+	) {
+	}
+
+	public function render(): string
+	{
+		return 'camel: ' . $this->value . '-' . $this->linkClass;
+	}
+}
+
 #[CoversClass(KirbyTag::class)]
 class KirbyTagTest extends TestCase
 {
@@ -32,6 +45,7 @@ class KirbyTagTest extends TestCase
 	{
 		KirbyTag::$types = [
 			'test'   => TestKirbyTag::class,
+			'camel'  => CamelKirbyTag::class,
 			'legacy' => [
 				'attr' => ['a'],
 				'html' => fn ($tag) => 'legacy'
@@ -127,6 +141,18 @@ class KirbyTagTest extends TestCase
 		$this->assertSame('attrB', $tag->attr('b', 'fallback'));
 	}
 
+	public function testAttrCamelCase(): void
+	{
+		$tag = KirbyTag::factory('camel', 'test value', [
+			'linkclass' => 'red'
+		]);
+
+		// the declared spelling is resolved from any casing
+		$this->assertSame('red', $tag->attr('linkClass', 'fallback'));
+		$this->assertSame('red', $tag->attr('linkclass', 'fallback'));
+		$this->assertSame('red', $tag->attr('LINKCLASS', 'fallback'));
+	}
+
 	public function testAttrFallback(): void
 	{
 		$tag = KirbyTag::factory('test', 'test value', [
@@ -155,6 +181,20 @@ class KirbyTagTest extends TestCase
 		// legacy array type is wrapped in LegacyKirbyTag
 		$tag = KirbyTag::factory('legacy', 'test value');
 		$this->assertInstanceOf(LegacyKirbyTag::class, $tag);
+	}
+
+	public function testFactoryCamelCaseAttr(): void
+	{
+		// a camel-cased constructor argument is filled from any casing
+		foreach (['linkClass', 'linkclass', 'LINKCLASS'] as $name) {
+			$tag = KirbyTag::factory('camel', 'test value', [$name => 'red']);
+
+			$this->assertSame('red', $tag->linkClass);
+			$this->assertSame('camel: test value-red', $tag->render());
+
+			// the attrs array carries the declared spelling
+			$this->assertSame(['linkClass' => 'red'], $tag->attrs);
+		}
 	}
 
 	public function testFile(): void
@@ -460,6 +500,18 @@ class KirbyTagTest extends TestCase
 
 		foreach ($expected as $key => $value) {
 			$this->assertSame($value, $tag->$key);
+		}
+	}
+
+	public function testParseCamelCaseAttr(): void
+	{
+		// the attribute regex is case-insensitive, so a camel-cased
+		// constructor argument must be filled whatever the user types
+		foreach (['linkClass', 'linkclass', 'LinkClass'] as $name) {
+			$tag = KirbyTag::parse('camel: test value ' . $name . ': red');
+
+			$this->assertSame('red', $tag->linkClass);
+			$this->assertSame(['linkClass' => 'red'], $tag->attrs);
 		}
 	}
 

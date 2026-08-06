@@ -11,6 +11,7 @@ use Kirby\Exception\BadMethodCallException;
  *
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
+ * @since     6.0.0
  */
 final class LegacyKirbyTag extends KirbyTag
 {
@@ -55,11 +56,9 @@ final class LegacyKirbyTag extends KirbyTag
 		parent::bind($type, $value, $data, $attrs);
 
 		// only keep attributes that the definition actually declares
-		$defined = $this->definition['attr'] ?? [];
+		$defined = $this->declaredAttrs();
 
 		foreach ($attrs as $name => $attrValue) {
-			$name = strtolower($name);
-
 			if (in_array($name, $defined, true) === true) {
 				$this->$name = $attrValue;
 			}
@@ -69,6 +68,11 @@ final class LegacyKirbyTag extends KirbyTag
 		$this->{strtolower($type)} = $this->value;
 
 		return $this;
+	}
+
+	protected function declaredAttrs(): array
+	{
+		return $this->definition['attr'] ?? [];
 	}
 
 	public function render(): string

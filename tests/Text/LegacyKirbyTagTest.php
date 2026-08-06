@@ -24,6 +24,10 @@ class LegacyKirbyTagTest extends TestCase
 				'attr' => ['a', 'b'],
 				'html' => 'some string'
 			],
+			'camel' => [
+				'attr' => ['linkClass'],
+				'html' => fn ($tag) => 'camel: ' . $tag->linkClass
+			],
 		];
 	}
 
@@ -157,6 +161,20 @@ class LegacyKirbyTagTest extends TestCase
 		$this->assertSame('attrA', $tag->attr('a'));
 		$this->assertSame('attrA', $tag->attr('A'));
 		$this->assertSame('fallback', $tag->attr('b', 'fallback'));
+	}
+
+	public function testAttrCamelCase(): void
+	{
+		// a camel-cased `attr` entry is filled from any casing and
+		// stays reachable through the lowercasing magic getter
+		foreach (['linkClass', 'linkclass', 'LINKCLASS'] as $name) {
+			$tag = KirbyTag::factory('camel', 'test value', [$name => 'red']);
+
+			$this->assertSame('red', $tag->linkClass);
+			$this->assertSame('red', $tag->linkclass);
+			$this->assertSame('red', $tag->attr('linkClass'));
+			$this->assertSame('camel: red', $tag->render());
+		}
 	}
 
 	public function testRender(): void
