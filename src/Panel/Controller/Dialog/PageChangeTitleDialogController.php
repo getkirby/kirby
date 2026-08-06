@@ -2,7 +2,6 @@
 
 namespace Kirby\Panel\Controller\Dialog;
 
-use Kirby\Cms\PageRules;
 use Kirby\Panel\Field;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
@@ -76,8 +75,9 @@ class PageChangeTitleDialogController extends PageDialogController
 		$slug    = trim($this->request->get('slug', ''));
 
 		// basic input validation before we move on
-		PageRules::validateTitleLength($title);
-		PageRules::validateSlugLength($slug);
+		$validators = $this->page->guards()->validators();
+		$validators->validateTitle($title);
+		$validators->validateSlugLength($slug);
 
 		// prepare the response
 		$response = [

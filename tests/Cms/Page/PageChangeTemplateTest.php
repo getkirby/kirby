@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Exception\PermissionException;
+use Kirby\Exception\AbilityException;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Page::class)]
@@ -204,8 +204,8 @@ class PageChangeTemplateTest extends ModelTestCase
 			'slug' => 'error',
 		]);
 
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to change the template for "error"');
+		$this->expectException(AbilityException::class);
+		$this->expectExceptionMessage('The template for the error page cannot be changed');
 
 		$page->changeTemplate('article');
 	}
