@@ -2,12 +2,15 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Filesystem\F;
+use Kirby\Filesystem\File as BaseFile;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(File::class)]
 class FileIsTest extends ModelTestCase
 {
-	public const string TMP = KIRBY_TMP_DIR . '/Cms.FileIs';
+	public const string FIXTURES = __DIR__ . '/fixtures/files';
+	public const string TMP      = KIRBY_TMP_DIR . '/Cms.FileIs';
 
 	protected function setUp(): void
 	{
@@ -22,6 +25,36 @@ class FileIsTest extends ModelTestCase
 			],
 			'user' => 'admin@getkirby.com'
 		]);
+	}
+
+	/**
+	 * Creates a page with a real file on disk,
+	 * so that the file can be compared with an upload
+	 */
+	protected function pageWithFile(string $template): Page
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'test',
+						'files' => [
+							[
+								'filename' => 'test.jpg',
+								'content'  => ['template' => $template]
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$page = $this->app->page('test');
+
+		F::copy(static::FIXTURES . '/test.jpg', $page->root() . '/test.jpg');
+		F::write($page->root() . '/test.jpg.txt', 'Template: ' . $template);
+
+		return $page;
 	}
 
 	public function testIsReadable(): void
@@ -158,5 +191,45 @@ class FileIsTest extends ModelTestCase
 		$this->assertFalse($file->isReadable());
 		$this->assertFalse($file->isAccessible());
 		$this->assertFalse($file->isListable());
+	}
+
+	public function testIsSameAs(): void
+	{
+		$page   = $this->pageWithFile(template: 'test');
+		$upload = new BaseFile(static::FIXTURES . '/test.jpg');
+
+		$file = new File([
+			'filename' => 'test.jpg',
+			'parent'   => $page,
+			'content'  => ['template' => 'test']
+		]);
+
+		$this->assertTrue($file->isSameAs($upload));
+	}
+
+	public function testIsSameAsWithDifferentTemplate(): void
+	{
+		$page   = $this->pageWithFile(template: 'test');
+		$upload = new BaseFile(static::FIXTURES . '/test.jpg');
+
+		$file = new File([
+			'filename' => 'test.jpg',
+			'parent'   => $page,
+			'content'  => ['template' => 'cover']
+		]);
+
+		$this->assertFalse($file->isSameAs($upload));
+	}
+
+	public function testIsSameAsWithMissingFile(): void
+	{
+		$upload = new BaseFile(static::FIXTURES . '/test.jpg');
+
+		$file = new File([
+			'filename' => 'test.jpg',
+			'parent'   => $this->app->site()
+		]);
+
+		$this->assertFalse($file->isSameAs($upload));
 	}
 }

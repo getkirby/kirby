@@ -3,7 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Content\PlainTextStorage;
-use Kirby\Exception\LogicException;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -358,7 +358,7 @@ class FileChangeTemplateTest extends ModelTestCase
 			'content'  => ['template' => 'for-default-a']
 		]);
 
-		$this->expectException(LogicException::class);
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The template for the file "test/test.pdf" cannot be changed to "for-default-b" (valid: "for-default-c, for-default-d")');
 
 		$file->changeTemplate('for-default-b');

@@ -6,7 +6,6 @@ use Closure;
 use Exception;
 use Kirby\Cms\App;
 use Kirby\Cms\File;
-use Kirby\Cms\FileRules;
 use Kirby\Cms\Page;
 use Kirby\Data\Json;
 use Kirby\Exception\DuplicateException;
@@ -429,7 +428,7 @@ readonly class Upload
 			// validate file (extension, name) for first chunk;
 			// will also be validate again by `$model->createFile()`
 			// when completely uploaded
-			FileRules::validFile($file, false);
+			$file->guards()->validators()->validateFile(false);
 
 			// first chunk is valid
 			return;
