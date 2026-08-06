@@ -11,6 +11,8 @@
 			:src="src ?? resolvedSrc"
 			:srcset="srcset ?? resolvedSrcset"
 			:sizes="sizes"
+			:loading="lazy === true ? 'lazy' : 'eager'"
+			decoding="async"
 			@dragstart.prevent
 		/>
 	</k-frame>
@@ -31,6 +33,15 @@ export const props = {
 		 * @since 6.0.0
 		 */
 		file: String,
+		/**
+		 * Whether the image is only loaded once it comes into view.
+		 * Disable for images that are visible right away.
+		 * @since 6.0.0
+		 */
+		lazy: {
+			type: Boolean,
+			default: true
+		},
 		/**
 		 * For responsive images, pass the `sizes` attribute
 		 */
@@ -75,26 +86,29 @@ export default {
 	},
 	methods: {
 		async fetch() {
+			const file = this.file;
 			let alt,
 				src,
 				srcset = null;
 
 			// if internal file, load data for file UUID from request endpoint
-			if (this.file) {
-				const data = await this.$panel.get("items/files", {
-					query: {
-						items: this.file,
-						layout: "auto",
-						image: JSON.stringify({
-							ratio: this.ratio,
-							cover: this.cover
-						})
-					}
+			if (file) {
+				const item = await this.$helper.items("items/files", file, {
+					layout: "auto",
+					image: JSON.stringify({
+						ratio: this.ratio,
+						cover: this.cover
+					})
 				});
 
-				alt = data.items[0]?.alt;
-				src = data.items[0]?.image.src;
-				srcset = data.items[0]?.image.srcset;
+				// the file might have changed while the request was in flight
+				if (this.file !== file) {
+					return;
+				}
+
+				alt = item?.alt;
+				src = item?.image?.src;
+				srcset = item?.image?.srcset;
 			}
 
 			this.resolvedAlt = alt;

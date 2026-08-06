@@ -74,15 +74,17 @@ export default {
 	},
 	methods: {
 		async fetch() {
+			const file = this.file;
 			let url = null;
 
 			// if internal file, load data for file UUID from request endpoint
-			if (this.file) {
-				const data = await await this.$panel.get("items/files", {
-					query: { items: this.file }
-				});
+			if (file) {
+				url = (await this.$helper.items("items/files", file))?.url;
 
-				url = data.items[0]?.url;
+				// the file might have changed while the request was in flight
+				if (this.file !== file) {
+					return;
+				}
 			}
 
 			this.resolvedUrl = url;

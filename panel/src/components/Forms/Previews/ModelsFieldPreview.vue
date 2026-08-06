@@ -75,17 +75,18 @@ export default {
 			// get all missing items from API
 			// and replace in tags array
 			if (missing.length > 0) {
-				const data = await this.$panel.get(this.$options.endpoint, {
-					query: {
-						items: missing.join(",")
-					}
-				});
+				const loaded = await this.$helper.items(
+					this.$options.endpoint,
+					missing
+				);
 
-				for (let index = 0; index < missing.length; index++) {
-					const id = missing[index];
-					const tag = data.items[index];
+				for (const [index, id] of missing.entries()) {
 					const key = this.tags.findIndex((tag) => tag.id === id);
-					this.tags[key] = { ...tag, id };
+
+					// the value might have changed while the request was in flight
+					if (key !== -1) {
+						this.tags[key] = { ...loaded[index], id };
+					}
 				}
 			}
 		},
