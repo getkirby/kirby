@@ -109,13 +109,14 @@ class RoutesTest extends TestCase
 	public function testControllerWithInvalidClassname(): void
 	{
 		$routes = new TestRoutes($this->area, []);
+		$params = $routes->controller([
+			'action' => Closure::class
+		]);
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid controller class "Closure" expected child of"Kirby\Panel\Controller\Controller"');
 
-		$routes->controller([
-			'action' => Closure::class
-		]);
+		$params['load']();
 	}
 
 	public function testControllerWithControllerObject(): void
