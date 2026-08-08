@@ -72,21 +72,25 @@ abstract class Routes
 	 */
 	protected function controllerFromClass(string $class): Closure
 	{
-		// Ensure controller uses the correct interface
-		$expect = 'Kirby\Panel\Controller\\' . ucfirst(static::$type) . 'Controller';
+		// resolve the class lazily to not autoload
+		// every controller of every area
+		return function (...$args) use ($class) {
+			// Ensure controller uses the correct interface
+			$expect = 'Kirby\Panel\Controller\\' . ucfirst(static::$type) . 'Controller';
 
-		if (is_subclass_of($class, $expect) === false) {
-			throw new InvalidArgumentException(
-				message: 'Invalid controller class "' . $class . '" expected child of"' . $expect . '"'
-			);
-		}
+			if (is_subclass_of($class, $expect) === false) {
+				throw new InvalidArgumentException(
+					message: 'Invalid controller class "' . $class . '" expected child of"' . $expect . '"'
+				);
+			}
 
-		// Use factory method if available
-		if (method_exists($class, 'factory') === true) {
-			return $class::factory(...);
-		}
+			// Use factory method if available
+			if (method_exists($class, 'factory') === true) {
+				return $class::factory(...$args);
+			}
 
-		return fn (...$args) => new $class(...$args);
+			return new $class(...$args);
+		};
 	}
 
 	public function params(
