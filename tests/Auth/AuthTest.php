@@ -3,6 +3,7 @@
 namespace Kirby\Auth;
 
 use Exception;
+use Kirby\Cms\App;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
@@ -90,17 +91,13 @@ class AuthTest extends TestCase
 				};
 			});
 
-		$auth = new class ($methods) extends Auth {
+		$auth = new class ($this->app, $methods) extends Auth {
 			public bool $didResetUser = false;
 
-			public function __construct(
-				protected Methods $methods
-			) {
-			}
-
-			public function methods(): Methods
+			public function __construct(App $kirby, Methods $methods)
 			{
-				return $this->methods;
+				parent::__construct($kirby);
+				$this->methods = $methods;
 			}
 
 			public function setUser(User $user): void
@@ -116,6 +113,27 @@ class AuthTest extends TestCase
 		$result = $auth->authenticate('password', 'lisa@simpson.de');
 		$this->assertSame($user, $result);
 		$this->assertTrue($auth->didResetUser);
+	}
+
+	public function testAuthenticateClearsPendingState(): void
+	{
+		$session = $this->app->session();
+
+		// a started challenge and a passkey nonce from the login
+		// form are stale once another method completed the login
+		$this->auth->createChallenge('marge@simpsons.com');
+		$session->set('kirby.method.data', 'nonce');
+
+		$this->auth->authenticate(
+			'password',
+			'marge@simpsons.com',
+			'springfield123'
+		);
+
+		$this->assertNull($session->get('kirby.method.data'));
+		$this->assertNull($session->get('kirby.challenge.email'));
+		$this->assertNull($session->get('kirby.challenge.data'));
+		$this->assertNull($session->get('kirby.challenge.timeout'));
 	}
 
 	public function testChallenges(): void
@@ -503,6 +521,16 @@ class AuthTest extends TestCase
 			'mode'      => null,
 			'status'    => 'inactive'
 		], $this->auth->status()->toArray());
+	}
+
+	public function testLogoutClearsMethodState(): void
+	{
+		$session = $this->app->session();
+		$session->set('kirby.method.data', 'nonce');
+
+		$this->auth->logout();
+
+		$this->assertNull($session->get('kirby.method.data'));
 	}
 
 	public function testMethods(): void
