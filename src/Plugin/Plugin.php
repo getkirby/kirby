@@ -34,7 +34,7 @@ class Plugin
 	 * @param string $name Plugin name within Kirby (`vendor/plugin`)
 	 * @param array $extends Associative array of plugin extensions
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException If the plugin name has an invalid format
+	 * @throws InvalidArgumentException If the plugin name has an invalid format
 	 */
 	public function __construct(
 		protected string $name,
@@ -311,7 +311,7 @@ class Plugin
 	 * Checks if the name follows the required pattern
 	 * and throws an exception if not
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public static function validateName(string $name): void
 	{

@@ -50,12 +50,12 @@ runs:
       uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
       with:
         path: ~/.composer/vendor
-        key: composer-global-cpx-1.0.4-${{ runner.os }}
+        key: composer-global-cpx-2.0.0-${{ runner.os }}
 
     - name: Install cpx
       if: steps.composer-global-cache.outputs.cache-hit != 'true'
       shell: bash
-      run: composer global require cpx/cpx:1.0.4
+      run: composer global require cpx/cpx:2.0.0
 
     - name: Ensure cpx cache dir exists
       shell: bash

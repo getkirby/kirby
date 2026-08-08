@@ -206,9 +206,11 @@ class RedisCache extends Cache
 		$value = (new Value($value, $minutes))->toJson();
 
 		if ($minutes > 0) {
-			return $this->connection->setex($key, $minutes * 60, $value);
+			$result = $this->connection->setex($key, $minutes * 60, $value);
+		} else {
+			$result = $this->connection->set($key, $value);
 		}
 
-		return $this->connection->set($key, $value);
+		return $result === true;
 	}
 }

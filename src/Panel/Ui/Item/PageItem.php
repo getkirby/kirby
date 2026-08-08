@@ -9,7 +9,7 @@ use Kirby\Cms\Page;
  * @license   https://getkirby.com/license
  * @since     5.1.0
  *
- * @extends \Kirby\Panel\Ui\Item\ModelItem<\Kirby\Cms\Page, \Kirby\Panel\Page>
+ * @extends ModelItem<Page, \Kirby\Panel\Page>
  */
 class PageItem extends ModelItem
 {

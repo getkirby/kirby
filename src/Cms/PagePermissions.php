@@ -8,7 +8,7 @@ namespace Kirby\Cms;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @extends \Kirby\Cms\ModelPermissions<\Kirby\Cms\Page>
+ * @extends ModelPermissions<Page>
  */
 class PagePermissions extends ModelPermissions
 {
@@ -17,7 +17,7 @@ class PagePermissions extends ModelPermissions
 	/**
 	 * Used to cache once determined permissions in memory
 	 *
-	 * @param \Kirby\Cms\Page $model
+	 * @param Page $model
 	 * @psalm-suppress MoreSpecificImplementedParamType
 	 */
 	protected static function cacheKey(

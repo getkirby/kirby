@@ -9,7 +9,7 @@ use Kirby\Cms\ModelWithContent;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @extends \Kirby\Cms\Collection<\Kirby\Content\Version>
+ * @extends Collection<Version>
  */
 class Versions extends Collection
 {

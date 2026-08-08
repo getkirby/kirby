@@ -125,7 +125,7 @@ class Parser
 	/**
 	 * Collect the next token of a type
 	 *
-	 * @throws \Exception when next token is not of specified type
+	 * @throws Exception when next token is not of specified type
 	 */
 	protected function consume(
 		TokenType $type,

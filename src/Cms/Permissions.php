@@ -96,7 +96,7 @@ class Permissions
 	/**
 	 * Permissions constructor
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public function __construct(array|bool|null $settings = [])
 	{

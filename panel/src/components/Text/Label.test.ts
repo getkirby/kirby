@@ -5,8 +5,7 @@ import Label from "./Label.vue";
 function mount(props = {}, attrs = {}) {
 	return vueMount(Label, {
 		props,
-		attrs,
-		global: { mocks: { $t: (key: string) => key } }
+		attrs
 	});
 }
 
@@ -85,8 +84,7 @@ describe("Label.vue", () => {
 	describe("default slot", () => {
 		it("renders slotted content", () => {
 			const wrapper = vueMount(Label, {
-				slots: { default: "My Label" },
-				global: { mocks: { $t: (key: string) => key } }
+				slots: { default: "My Label" }
 			});
 			expect(wrapper.text()).toContain("My Label");
 		});

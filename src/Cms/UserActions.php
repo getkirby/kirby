@@ -7,6 +7,7 @@ use Kirby\Content\ImmutableMemoryStorage;
 use Kirby\Content\MemoryStorage;
 use Kirby\Data\Data;
 use Kirby\Data\Json;
+use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
@@ -23,7 +24,7 @@ use Throwable;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @mixin \Kirby\Cms\User
+ * @mixin User
  */
 trait UserActions
 {
@@ -201,7 +202,7 @@ trait UserActions
 	 * 4. applies the `after` hook
 	 * 5. returns the result
 	 *
-	 * @throws \Kirby\Exception\PermissionException
+	 * @throws PermissionException
 	 */
 	protected function commit(
 		string $action,
@@ -336,7 +337,7 @@ trait UserActions
 	/**
 	 * Deletes the user
 	 *
-	 * @throws \Kirby\Exception\LogicException
+	 * @throws LogicException
 	 */
 	#[BlockCollectionAccess]
 	public function delete(): bool
@@ -526,7 +527,7 @@ trait UserActions
 		string|null $languageCode = null,
 		bool $validate = false
 	): static {
-		/** @var \Kirby\Cms\User $user */
+		/** @var User $user */
 		$user = parent::update($input, $languageCode, $validate);
 
 		// set auth user data only if the current user is this user

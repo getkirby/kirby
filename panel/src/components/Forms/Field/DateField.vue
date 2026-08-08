@@ -10,6 +10,7 @@
 			<k-input
 				ref="dateInput"
 				v-bind="$props"
+				:value="iso.date"
 				type="date"
 				@input="onDateInput"
 				@submit="$emit('submit')"
@@ -219,7 +220,7 @@ export default {
 		 */
 		onTimesInput(value) {
 			this.$refs.times?.close();
-			this.onTimeInput(value + ":00");
+			this.onTimeInput(value);
 		},
 		/**
 		 * Convert an ISO string into an object

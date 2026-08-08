@@ -118,6 +118,8 @@ export default {
 	},
 	methods: {
 		discard() {
+			const isCurrentUser = this.editor === this.$panel.user.email;
+
 			this.$panel.dialog.open({
 				component: "k-remove-dialog",
 				props: {
@@ -127,7 +129,11 @@ export default {
 						icon: "undo",
 						text: this.$t("form.discard")
 					},
-					text: this.$t("form.discard.confirm")
+					text: isCurrentUser
+						? this.$t("form.discard.confirm")
+						: this.$t("form.discard.confirm.editor", {
+								editor: this.$helper.string.stripHTML(this.editor)
+							})
 				},
 				on: {
 					submit: () => {

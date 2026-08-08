@@ -37,7 +37,7 @@ class VersionId implements Stringable
 	public static self|null $render = null;
 
 	/**
-	 * @throws \Kirby\Exception\InvalidArgumentException If the version ID is not valid
+	 * @throws InvalidArgumentException If the version ID is not valid
 	 */
 	public function __construct(
 		public string $value

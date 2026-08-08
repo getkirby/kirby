@@ -18,8 +18,8 @@ use Kirby\Toolkit\Str;
  * @license   https://getkirby.com/license
  * @since     3.5.0
  *
- * @template TCollection of \Kirby\Cms\Items
- * @use \Kirby\Cms\HasSiblings<TCollection>
+ * @template TCollection of Items
+ * @use HasSiblings<TCollection>
  */
 class Item
 {

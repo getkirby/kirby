@@ -2,9 +2,12 @@
 
 namespace Kirby\Auth;
 
+use Kirby\Auth\Method\BasicAuthMethod;
 use Kirby\Cms\App;
 use Kirby\Cms\User as CmsUser;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Exception\PermissionException;
 use Kirby\Http\Request\Auth\BasicAuth;
 use Kirby\Session\Session;
 use Throwable;
@@ -52,14 +55,14 @@ class User
 	 * Returns the logged in user by checking for a
 	 * basic authentication header with valid credentials
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException if the authorization header is invalid
-	 * @throws \Kirby\Exception\PermissionException if basic authentication is not allowed
+	 * @throws InvalidArgumentException if the authorization header is invalid
+	 * @throws PermissionException if basic authentication is not allowed
 	 */
 	public function fromBasicAuth(
 		BasicAuth|null $auth = null
 	): CmsUser|null {
 		/**
-		 * @var \Kirby\Auth\Method\BasicAuthMethod
+		 * @var BasicAuthMethod
 		 */
 		$basic = $this->auth->methods()->get('basic-auth');
 		return $basic->user($auth);
@@ -119,7 +122,7 @@ class User
 	 * @param bool $allowImpersonation If set to false, only the actually
 	 *                                 logged in user will be returned
 	 *
-	 * @throws \Throwable If an authentication error occurred
+	 * @throws Throwable If an authentication error occurred
 	 */
 	public function get(
 		Session|array|null $session = null,
@@ -162,7 +165,7 @@ class User
 	/**
 	 * Impersonates a user
 	 *
-	 * @throws \Kirby\Exception\NotFoundException if the given user cannot be found
+	 * @throws NotFoundException if the given user cannot be found
 	 */
 	public function impersonate(string|null $who = null): CmsUser|null
 	{

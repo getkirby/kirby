@@ -6,6 +6,8 @@ use IntlDateFormatter;
 use Kirby\Cms\App;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\LogicException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Http\Response;
 use Kirby\Sane\Sane;
 use Kirby\Toolkit\Escape;
@@ -53,7 +55,7 @@ class File implements Stringable
 	 * @param array|string|null $props Properties or deprecated `$root` string
 	 * @param string|null $url Deprecated argument, use `$props['url']` instead
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException When the model does not use the `Kirby\Filesystem\IsFile` trait
+	 * @throws InvalidArgumentException When the model does not use the `Kirby\Filesystem\IsFile` trait
 	 */
 	public function __construct(
 		array|string|null $props = null,
@@ -273,7 +275,7 @@ class File implements Stringable
 	 * Runs a set of validations on the file object
 	 * (mainly for images).
 	 *
-	 * @throws \Kirby\Exception\Exception
+	 * @throws Exception
 	 */
 	public function match(array $rules): bool
 	{
@@ -478,10 +480,10 @@ class File implements Stringable
 	 *                              `true` for lazy autodetection or
 	 *                              `false` for normal autodetection
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException If the file didn't pass validation
-	 * @throws \Kirby\Exception\LogicException If more than one handler applies
-	 * @throws \Kirby\Exception\NotFoundException If the handler was not found
-	 * @throws \Kirby\Exception\Exception On other errors
+	 * @throws InvalidArgumentException If the file didn't pass validation
+	 * @throws LogicException If more than one handler applies
+	 * @throws NotFoundException If the handler was not found
+	 * @throws Exception On other errors
 	 */
 	public function sanitizeContents(string|bool $typeLazy = false): void
 	{
@@ -492,7 +494,7 @@ class File implements Stringable
 	 * Returns the sha1 hash of the file
 	 * @since 3.6.0
 	 *
-	 * @throws \Kirby\Exception\Exception If the file cannot be read
+	 * @throws Exception If the file cannot be read
 	 */
 	public function sha1(): string
 	{
@@ -574,9 +576,9 @@ class File implements Stringable
 	 *                              `true` for lazy autodetection or
 	 *                              `false` for normal autodetection
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException If the file didn't pass validation
-	 * @throws \Kirby\Exception\NotFoundException If the handler was not found
-	 * @throws \Kirby\Exception\Exception On other errors
+	 * @throws InvalidArgumentException If the file didn't pass validation
+	 * @throws NotFoundException If the handler was not found
+	 * @throws Exception On other errors
 	 */
 	public function validateContents(string|bool $typeLazy = false): void
 	{

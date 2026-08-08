@@ -4,12 +4,13 @@
 		:data-supported="supported"
 	>
 		<object
+			:aria-label="$t('preview')"
 			:data="url"
 			type="application/pdf"
 			class="k-pdf-file-preview-object"
 		>
 			<k-file-preview-frame>
-				<a :href="url">
+				<a :aria-label="$t('open')" :href="url">
 					<k-icon
 						:color="$helper.color(image.color)"
 						:type="image.icon"

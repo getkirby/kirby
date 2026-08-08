@@ -3,6 +3,8 @@
  * @license   https://opensource.org/licenses/MIT
  */
 
+import { isObject } from "@/helpers/object";
+
 /**
  * Returns the base URL from the <base> element
  * @since 4.0.0
@@ -25,14 +27,33 @@ export function buildQuery(
 	const search = origin instanceof URL ? origin.search : origin;
 	const params = new URLSearchParams(search);
 
-	// add all data params unless they are null or undefined
-	for (const [key, value] of Object.entries(query)) {
-		if (value != null) {
-			params.set(key, String(value));
-		}
-	}
+	addParams(params, query);
 
 	return params;
+}
+
+/**
+ * Adds all entries of the given object to the params.
+ * Nested objects turn into `parent[child]` keys, `null` removes
+ * a param, `undefined` keeps it.
+ * @since 6.0.0
+ */
+function addParams(
+	params: URLSearchParams,
+	query: Record<string, unknown>,
+	prefix?: string
+): void {
+	for (const [key, value] of Object.entries(query)) {
+		const name = prefix ? `${prefix}[${key}]` : key;
+
+		if (value === null) {
+			params.delete(name);
+		} else if (isObject(value) === true) {
+			addParams(params, value, name);
+		} else if (value !== undefined) {
+			params.set(name, String(value));
+		}
+	}
 }
 
 /**

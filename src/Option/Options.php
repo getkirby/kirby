@@ -13,7 +13,7 @@ use Kirby\Toolkit\A;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  *
- * @extends \Kirby\Cms\Collection<\Kirby\Option\Option>
+ * @extends Collection<Option>
  */
 class Options extends Collection
 {

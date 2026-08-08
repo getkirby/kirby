@@ -25,6 +25,7 @@
 			:name="name"
 			:required="required"
 			:value="value ? [value.x, value.y] : null"
+			aria-hidden="true"
 			class="input-hidden"
 			tabindex="-1"
 			type="text"

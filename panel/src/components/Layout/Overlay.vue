@@ -184,11 +184,8 @@ export default {
 	justify-content: flex-end;
 }
 
-/* Scroll lock */
-html[data-overlay="true"] {
+html:has(.k-overlay[open]) {
 	overflow: hidden;
-}
-html[data-overlay="true"] body {
-	overflow: scroll;
+	scrollbar-gutter: stable;
 }
 </style>

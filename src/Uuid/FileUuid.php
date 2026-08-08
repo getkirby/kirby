@@ -4,6 +4,9 @@ namespace Kirby\Uuid;
 
 use Generator;
 use Kirby\Cms\File;
+use Kirby\Cms\Page;
+use Kirby\Cms\Site;
+use Kirby\Cms\User;
 
 /**
  * UUID for \Kirby\Cms\File
@@ -17,7 +20,7 @@ class FileUuid extends ModelUuid
 	protected const string TYPE = 'file';
 
 	/**
-	 * @var \Kirby\Cms\File|null
+	 * @var File|null
 	 */
 	public Identifiable|null $model = null;
 
@@ -34,7 +37,7 @@ class FileUuid extends ModelUuid
 			if ($value = Uuids::cache()->get($key)) {
 				// value is an array containing
 				// the UUID for the parent and the filename
-				/** @var \Kirby\Cms\Site|\Kirby\Cms\Page|\Kirby\Cms\User $parent */
+				/** @var Site|Page|User $parent */
 				$parent = Uuid::from($value['parent'])->model();
 				return $parent?->file($value['filename']);
 			}
@@ -47,7 +50,7 @@ class FileUuid extends ModelUuid
 	 * Generator for all files in the site
 	 * (of all pages, users and site)
 	 *
-	 * @return \Generator<string, \Kirby\Cms\File>
+	 * @return Generator<string, File>
 	 */
 	public static function index(): Generator
 	{

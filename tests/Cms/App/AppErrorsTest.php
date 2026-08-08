@@ -6,6 +6,7 @@ use Kirby\Exception\Exception;
 use Kirby\Filesystem\F;
 use PHPUnit\Framework\Attributes\CoversClass;
 use ReflectionMethod;
+use WeakReference;
 use Whoops\Handler\CallbackHandler;
 use Whoops\Handler\PlainTextHandler;
 
@@ -181,6 +182,40 @@ class AppErrorsTest extends TestCase
 		$this->assertCount(2, $handlers);
 		$this->assertInstanceOf('Whoops\Handler\PrettyPageHandler', $handlers[0]);
 		$this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
+	}
+
+	public function testHandleErrorsDoesNotRetainReplacedApp(): void
+	{
+		$whoopsMethod = new ReflectionMethod(App::class, 'whoops');
+		$testMethod   = new ReflectionMethod(App::class, 'handleErrors');
+
+		$app       = new App(['options' => ['whoops' => true]]);
+		$reference = WeakReference::create($app);
+
+		// keep the `Run` instance around, exactly like the shutdown
+		// function does in production, and install the handlers
+		$whoops = $whoopsMethod->invoke($app);
+		$testMethod->invoke($app);
+		unset($app);
+
+		// replacing the app is what a long-running server, the Kirby CLI
+		// and this test suite do over and over again; it also releases the
+		// static closures from `AppTranslations::i18n()`, which always keep
+		// the most recent app alive on purpose
+		$next = new App(['options' => ['whoops' => true]]);
+		$testMethod->invoke($next);
+
+		gc_collect_cycles();
+
+		// Whoops registers every `Run` instance via `register_shutdown_function()`
+		// and never releases it again, not even on `unregister()`. A handler that
+		// referenced its app strongly would therefore keep it – and its entire
+		// page tree – alive for the rest of the process.
+		$this->assertNull($reference->get());
+
+		// the handlers had to stay installed for the assertion above,
+		// so unregister them now to not leak them into other tests
+		$whoops->unregister();
 	}
 
 	public function testHandleErrorsGlobalSetting(): void

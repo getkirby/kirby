@@ -18,7 +18,7 @@ class PageUuid extends ModelUuid
 	protected const string TYPE = 'page';
 
 	/**
-	 * @var \Kirby\Cms\Page|null
+	 * @var Page|null
 	 */
 	public Identifiable|null $model = null;
 
@@ -56,7 +56,7 @@ class PageUuid extends ModelUuid
 	/**
 	 * Generator for all pages and drafts in the site
 	 *
-	 * @return \Generator<string, \Kirby\Cms\Page>
+	 * @return Generator<string, Page>
 	 */
 	public static function index(Page|null $entry = null): Generator
 	{

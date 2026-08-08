@@ -98,7 +98,7 @@ trait AppPlugins
 	/**
 	 * Register all given extensions
 	 *
-	 * @param \Kirby\Plugin\Plugin|null $plugin The plugin which defined those extensions
+	 * @param Plugin|null $plugin The plugin which defined those extensions
 	 */
 	public function extend(
 		array $extensions,
@@ -868,7 +868,7 @@ trait AppPlugins
 	 * Kirby plugin factory and getter
 	 *
 	 * @param array|null $extends If null is passed it will be used as getter. Otherwise as factory.
-	 * @throws \Kirby\Exception\DuplicateException
+	 * @throws DuplicateException
 	 */
 	public static function plugin(
 		string $name,

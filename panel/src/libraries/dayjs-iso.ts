@@ -1,54 +1,92 @@
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
+
 import type { Dayjs, PluginFunc } from "dayjs";
+import type { DatetimeType } from "./dayjs";
 
-export type ISOFormat = "date" | "time" | "datetime";
+type ISOFormat = { regex: RegExp; pattern: string };
 
-const dayjsISOformat = (format: string): string => {
-	if (format === "date") {
-		return "YYYY-MM-DD";
+const formats: Record<DatetimeType, ISOFormat> = {
+	date: {
+		pattern: "YYYY-MM-DD",
+		regex: /^(\d{4})-(\d{2})-(\d{2})$/
+	},
+	time: {
+		pattern: "HH:mm:ss",
+		regex: /^(\d{2}):(\d{2}):(\d{2})$/
+	},
+	datetime: {
+		pattern: "YYYY-MM-DD HH:mm:ss",
+		regex: /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/
 	}
-
-	if (format === "time") {
-		return "HH:mm:ss";
-	}
-
-	return "YYYY-MM-DD HH:mm:ss";
 };
+
+/**
+ * Returns the dayjs pattern for an ISO format
+ */
+function format(format: DatetimeType): ISOFormat {
+	return formats[format] ?? formats.datetime;
+}
 
 declare module "dayjs" {
 	interface Dayjs {
-		toISO(format?: ISOFormat): string;
+		/**
+		 * Formats the datetime as the ISO string that values
+		 * are stored as, e.g. `2024-06-23 14:30:00`
+		 *
+		 * @param type which part of the datetime to write
+		 */
+		toISO(type?: DatetimeType): string;
 	}
-	function iso(string: string, format?: ISOFormat): Dayjs | null;
+
+	/**
+	 * Parses from an ISO string
+	 *
+	 * @param string ISO string to parse
+	 * @param type which part of the datetime to expect
+	 */
+	function iso(string: string, type?: DatetimeType): Dayjs | null;
 }
 
 const plugin: PluginFunc = (option, Dayjs, dayjs) => {
 	Dayjs.prototype.toISO = function (
 		this: Dayjs,
-		format: ISOFormat = "datetime"
+		type: DatetimeType = "datetime"
 	): string {
-		return this.format(dayjsISOformat(format));
+		return this.format(format(type).pattern);
 	};
 
 	Object.assign(dayjs, {
-		iso(string: string, format?: ISOFormat): Dayjs | null {
-			let fmt: string | string[] | undefined = format
-				? dayjsISOformat(format)
-				: undefined;
+		iso(string: string, type?: DatetimeType): Dayjs | null {
+			const types = type ? [type] : (Object.keys(formats) as DatetimeType[]);
 
-			// if no format is provided, try to parse any of the three ISO formats
-			fmt ??= [
-				dayjsISOformat("datetime"),
-				dayjsISOformat("date"),
-				dayjsISOformat("time")
-			];
+			for (const dttype of types) {
+				const { regex, pattern } = format(dttype);
+				const match = regex.exec(string);
 
-			const dt = dayjs(string, fmt);
+				if (match === null) {
+					continue;
+				}
 
-			if (!dt || dt.isValid() === false) {
-				return null;
+				const values = match.slice(1).map(Number);
+
+				// a time carries no date of its own
+				const [year, month, day, hour = 0, minute = 0, second = 0] =
+					dttype === "time" ? [1970, 1, 1, ...values] : values;
+
+				const dt = dayjs(new Date(year, month - 1, day, hour, minute, second));
+
+				// out-of-range values rolled over into another unit,
+				// which writing them back out gives away:
+				// `2020-02-30` returns as `2020-03-01`
+				if (dt.format(pattern) === string) {
+					return dt;
+				}
 			}
 
-			return dt;
+			return null;
 		}
 	});
 };

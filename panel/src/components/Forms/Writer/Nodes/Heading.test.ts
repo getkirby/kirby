@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
 	applyInputRule,
 	createSchemaWithNodes,
@@ -22,14 +22,6 @@ const customContext = {
 };
 
 describe("Heading node", () => {
-	beforeEach(() => {
-		vi.stubGlobal("panel", { t: (key: string) => key });
-	});
-
-	afterEach(() => {
-		vi.unstubAllGlobals();
-	});
-
 	describe("button", () => {
 		it("returns one button per level", () => {
 			const buttons = node.button;

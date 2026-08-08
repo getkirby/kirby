@@ -11,7 +11,7 @@ use Kirby\Toolkit\A;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @template TModel of \Kirby\Cms\ModelWithContent|\Kirby\Cms\Language
+ * @template TModel of ModelWithContent|Language
  */
 abstract class ModelPermissions
 {

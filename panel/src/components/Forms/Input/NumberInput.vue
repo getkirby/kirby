@@ -1,10 +1,10 @@
 <template>
 	<input
+		:id="id"
 		ref="input"
 		v-bind="{
 			autofocus,
 			disabled,
-			id,
 			max,
 			min,
 			name,

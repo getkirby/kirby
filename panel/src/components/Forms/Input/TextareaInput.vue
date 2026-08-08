@@ -16,11 +16,11 @@
 				@command="onCommand"
 			/>
 			<textarea
+				:id="id"
 				ref="input"
 				v-bind="{
 					autofocus,
 					disabled,
-					id,
 					minlength,
 					name,
 					placeholder,
@@ -328,7 +328,7 @@ export default {
 			};
 		},
 		select() {
-			this.$refs.select();
+			this.$refs.input.select();
 		},
 		selection() {
 			if (!this.selectionRange) {

@@ -13,7 +13,7 @@ use Kirby\Form\Field\InputField;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @use \Kirby\Cms\HasSiblings<\Kirby\Form\Fields>
+ * @use \Kirby\Cms\HasSiblings<Fields>
  */
 abstract class FieldClass extends InputField
 {

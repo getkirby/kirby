@@ -9,6 +9,7 @@ import file from "./file.js";
 import focus from "./focus";
 import isComponent from "./isComponent";
 import isUploadEvent from "./isUploadEvent";
+import items from "./items";
 import keyboard from "./keyboard";
 import link from "./link";
 import object from "./object";
@@ -35,6 +36,7 @@ export const helper = {
 	debounce,
 	field,
 	file,
+	items,
 	keyboard,
 	link,
 	object,

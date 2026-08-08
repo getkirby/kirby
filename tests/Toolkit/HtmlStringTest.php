@@ -79,6 +79,46 @@ class HtmlStringTest extends TestCase
 		$this->assertArrayNotHasKey('<text>', $resolved['options'][1]);
 	}
 
+	public function testResolveMarksListOfHtmlStrings(): void
+	{
+		$resolved = HtmlString::resolve([
+			'issues' => [new HtmlString('<b>a</b>'), new HtmlString('<b>b</b>')]
+		]);
+
+		$this->assertArrayHasKey('<issues>', $resolved);
+		$this->assertArrayNotHasKey('issues', $resolved);
+		$this->assertSame(
+			'{"<issues>":["<b>a</b>","<b>b</b>"]}',
+			Json::encode($resolved)
+		);
+	}
+
+	public function testResolveDoesNotMarkMixedList(): void
+	{
+		$resolved = HtmlString::resolve([
+			'issues' => [new HtmlString('<b>a</b>'), 'plain']
+		]);
+
+		// a single plain string must never end up marked as trusted
+		$this->assertArrayNotHasKey('<issues>', $resolved);
+	}
+
+	public function testResolveIsIdempotent(): void
+	{
+		$data = [
+			'help'   => new HtmlString('<b>trusted</b>'),
+			'issues' => [new HtmlString('<b>a</b>')],
+			'text'   => 'plain'
+		];
+
+		$once  = HtmlString::resolve($data);
+		$twice = HtmlString::resolve($once);
+
+		// a second pass must not turn `<key>` into `<<key>>`
+		$this->assertSame(array_keys($once), array_keys($twice));
+		$this->assertSame(Json::encode($once), Json::encode($twice));
+	}
+
 	public function testResolveLeavesPlainArraysUnchanged(): void
 	{
 		$data = ['a' => 1, 'b' => ['c' => 2]];

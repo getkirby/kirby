@@ -11,7 +11,7 @@ use Kirby\Toolkit\BlockCollectionAccess;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @mixin \Kirby\Cms\Site
+ * @mixin Site
  */
 trait SiteActions
 {

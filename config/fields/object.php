@@ -63,6 +63,9 @@ return [
 		}
 	],
 	'methods' => [
+		'emptyValue' => function () {
+			return '';
+		},
 		'form' => function (array $values = []) {
 			return new Form([
 				'fields' => $this->attrs['fields'],

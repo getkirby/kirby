@@ -94,7 +94,7 @@ class Db
 	 * redirected to either a predefined query or
 	 * the respective method of the Database object
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public static function __callStatic(string $method, $arguments)
 	{

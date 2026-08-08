@@ -2,6 +2,8 @@
 
 namespace Kirby\Panel\Controller\View;
 
+use Kirby\Cms\User;
+
 /**
  * Controls the view for a user file
  *
@@ -13,7 +15,7 @@ class UserFileViewController extends FileViewController
 {
 	public function breadcrumb(): array
 	{
-		/** @var \Kirby\Cms\User $parent */
+		/** @var User $parent */
 		$parent     = $this->model->parent();
 		$breadcrumb = [];
 

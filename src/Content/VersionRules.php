@@ -49,7 +49,7 @@ class VersionRules
 	 * Checks if a version/language combination exists and otherwise
 	 * will throw a `NotFoundException`
 	 *
-	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
+	 * @throws NotFoundException If the version does not exist
 	 */
 	public static function ensure(Version $version, Language $language): void
 	{

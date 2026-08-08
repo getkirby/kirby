@@ -14,6 +14,7 @@ use Kirby\Panel\User as Panel;
 use Kirby\Session\Session;
 use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Str;
+use Kirby\Uuid\UserUuid;
 use SensitiveParameter;
 
 /**
@@ -23,8 +24,8 @@ use SensitiveParameter;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Users>
- * @method \Kirby\Uuid\UserUuid uuid()
+ * @use HasSiblings<Users>
+ * @method UserUuid uuid()
  */
 class User extends ModelWithContent
 {
@@ -152,7 +153,7 @@ class User extends ModelWithContent
 	public function blueprint(): UserBlueprint
 	{
 		try {
-			/** @var \Kirby\Blueprint\UserBlueprint */
+			/** @var UserBlueprint */
 			return $this->blueprint ??= UserBlueprint::factory(
 				'users/' . $this->role(),
 				'users/default',
@@ -375,7 +376,7 @@ class User extends ModelWithContent
 	/**
 	 * Logs the user in
 	 *
-	 * @param \Kirby\Session\Session|array|null $session Session options or session object to set the user in
+	 * @param Session|array|null $session Session options or session object to set the user in
 	 */
 	#[BlockCollectionAccess]
 	public function login(
@@ -392,7 +393,7 @@ class User extends ModelWithContent
 	/**
 	 * Logs the user in without checking the password
 	 *
-	 * @param \Kirby\Session\Session|array|null $session Session options or session object to set the user in
+	 * @param Session|array|null $session Session options or session object to set the user in
 	 */
 	#[BlockCollectionAccess]
 	public function loginPasswordless(
@@ -430,7 +431,7 @@ class User extends ModelWithContent
 	/**
 	 * Logs the user out
 	 *
-	 * @param \Kirby\Session\Session|array|null $session Session options or session object to unset the user in
+	 * @param Session|array|null $session Session options or session object to unset the user in
 	 */
 	#[BlockCollectionAccess]
 	public function logout(Session|array|null $session = null): void
@@ -706,7 +707,7 @@ class User extends ModelWithContent
 	/**
 	 * Converts session options into a session object
 	 *
-	 * @param \Kirby\Session\Session|array $session Session options or session object to unset the user in
+	 * @param Session|array $session Session options or session object to unset the user in
 	 */
 	protected function sessionFromOptions(Session|array|null $session): Session
 	{
@@ -779,9 +780,9 @@ class User extends ModelWithContent
 	/**
 	 * Compares the given password with the stored one
 	 *
-	 * @throws \Kirby\Exception\NotFoundException If the user has no password
-	 * @throws \Kirby\Exception\InvalidArgumentException If the entered password is not valid
-	 *                                                   or does not match the user password
+	 * @throws NotFoundException If the user has no password
+	 * @throws InvalidArgumentException If the entered password is not valid
+	 *                                  or does not match the user password
 	 */
 	#[BlockCollectionAccess]
 	public function validatePassword(

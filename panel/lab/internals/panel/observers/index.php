@@ -1,5 +1,5 @@
 <?php
 
 return [
-	'source' => 'panel/src/panel/observers.js'
+	'source' => 'panel/src/panel/observers.ts'
 ];

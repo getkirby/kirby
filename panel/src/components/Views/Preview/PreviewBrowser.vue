@@ -50,13 +50,17 @@
 			<iframe
 				ref="browserA"
 				:class="['k-preview-browser-iframe', active === 0 ? 'is-active' : null]"
+				:inert="active !== 0"
 				:src="srcs[0]"
+				:title="label ?? $t('preview')"
 				@load="onLoad(0)"
 			/>
 			<iframe
 				ref="browserB"
 				:class="['k-preview-browser-iframe', active === 1 ? 'is-active' : null]"
+				:inert="active !== 1"
 				:src="srcs[1]"
+				:title="label ?? $t('preview')"
 				@load="onLoad(1)"
 			/>
 		</div>

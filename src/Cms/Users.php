@@ -19,8 +19,8 @@ use Kirby\Uuid\HasUuids;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @template TValue of \Kirby\Cms\User
- * @extends \Kirby\Cms\LazyCollection<TValue>
+ * @template TValue of User
+ * @extends LazyCollection<TValue>
  */
 class Users extends LazyCollection
 {
@@ -58,9 +58,9 @@ class Users extends LazyCollection
 	 * an entire second collection to the
 	 * current collection
 	 *
-	 * @param \Kirby\Cms\Users<TValue>|TValue|string $object
+	 * @param Users<TValue>|TValue|string $object
 	 * @return $this
-	 * @throws \Kirby\Exception\InvalidArgumentException When no `User` or `Users` object or an ID of an existing user is passed
+	 * @throws InvalidArgumentException When no `User` or `Users` object or an ID of an existing user is passed
 	 */
 	public function add($object): static
 	{

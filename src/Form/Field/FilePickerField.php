@@ -2,6 +2,7 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Api\Api;
 use Kirby\Cms\File;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Form\Mixin;
@@ -15,7 +16,7 @@ use Kirby\Panel\Ui\Item\FileItem;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  *
- * @extends \Kirby\Form\Field\ModelPickerField<\Kirby\Cms\File>
+ * @extends ModelPickerField<File>
  */
 class FilePickerField extends ModelPickerField
 {
@@ -94,7 +95,7 @@ class FilePickerField extends ModelPickerField
 				'action'  => function () use ($field) {
 					// @codeCoverageIgnoreStart
 					/**
-					 * @var \Kirby\Api\Api
+					 * @var Api
 					 */
 					$api = $this;
 
@@ -158,7 +159,7 @@ class FilePickerField extends ModelPickerField
 	}
 
 	/**
-	 * @param \Kirby\Cms\File $model
+	 * @param File $model
 	 */
 	public function store(ModelWithContent|null $model = null): string
 	{
@@ -171,7 +172,7 @@ class FilePickerField extends ModelPickerField
 	}
 
 	/**
-	 * @param \Kirby\Cms\File $model
+	 * @param File $model
 	 */
 	public function toItem(ModelWithContent $model): array
 	{

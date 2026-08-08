@@ -456,6 +456,30 @@ class StateTest extends TestCase
 		$this->assertArrayHasKey('test', $searches);
 	}
 
+	public function testSearchesWithDisabledSearch(): void
+	{
+		$this->app = $this->app->clone([
+			'areas' => [
+				'site' => [
+					'searches' => [
+						'pages' => false
+					]
+				]
+			],
+			'users' => [
+				['email' => 'test@getkirby.com', 'role' => 'admin']
+			]
+		]);
+
+		$this->app->impersonate('test@getkirby.com');
+
+		$state    = new State();
+		$searches = $state->searches();
+
+		$this->assertArrayNotHasKey('pages', $searches);
+		$this->assertArrayHasKey('files', $searches);
+	}
+
 	public function testSystem(): void
 	{
 		// without custom data

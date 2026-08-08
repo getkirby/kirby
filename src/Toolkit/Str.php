@@ -385,7 +385,7 @@ class Str
 	/**
 	 * Converts a string to a different encoding
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException when conversion failed
+	 * @throws InvalidArgumentException when conversion failed
 	 */
 	public static function convert(
 		string $string,
@@ -790,7 +790,7 @@ class Str
 	 * Returns the position of a needle in a string
 	 * if it can be found
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException for empty $needle
+	 * @throws InvalidArgumentException for empty $needle
 	 */
 	public static function position(
 		string|null $string,

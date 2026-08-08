@@ -435,6 +435,7 @@
 
 	"form.discard": "Discard changes",
 	"form.discard.confirm": "Do you really want to <strong>discard all your changes</strong>?",
+	"form.discard.confirm.editor": "Do you really want to <strong>discard the unsaved changes</strong> made by <strong>{editor}</strong>?",
 	"form.locked": "This content is disabled for you as it is currently edited by another user",
 	"form.unsaved": "The current changes have not yet been saved",
 	"form.preview": "Preview changes",
@@ -682,6 +683,8 @@
 	"preview.browser.pin": "Toggle whether preview navigation should be in sync or independent",
 	"preview.browser.scroll": "Sync scroll",
 
+	"progress": "Progress",
+
 	"publish": "Publish",
 	"published": "Published",
 
@@ -849,6 +852,7 @@
 	"version.form": "Live editor",
 	"version.latest": "Latest version",
 	"versionInformation": "Version information",
+	"video": "Video",
 
 	"view": "View",
 	"view.account": "Your account",

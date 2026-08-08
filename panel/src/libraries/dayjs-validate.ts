@@ -1,20 +1,27 @@
-import type { PluginFunc, UnitType } from "dayjs";
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
+
+import type { PluginFunc } from "dayjs";
 
 declare module "dayjs" {
 	interface Dayjs {
-		validate(boundary?: string, type?: "min" | "max", unit?: UnitType): boolean;
+		/**
+		 * Validates the datetime against an upper or lower
+		 * (min/max) boundary
+		 *
+		 * @param boundary ISO string to check against
+		 * @param type whether the boundary is the lower or upper end
+		 */
+		validate(boundary?: string, type?: "min" | "max"): boolean;
 	}
 }
 
 const plugin: PluginFunc = (option, Dayjs, dayjs) => {
-	/**
-	 * Validates datetime against an
-	 * upper or lower (min/max) boundary
-	 */
 	Dayjs.prototype.validate = function (
 		boundary?: string,
-		type: "min" | "max" = "min",
-		unit: UnitType = "day"
+		type: "min" | "max" = "min"
 	): boolean {
 		if (this.isValid() === false) {
 			return false;
@@ -29,14 +36,13 @@ const plugin: PluginFunc = (option, Dayjs, dayjs) => {
 		// generate dayjs object for boundary
 		const dt = dayjs.iso(boundary);
 
-		if (!dt) {
+		if (dt === null) {
 			return false;
 		}
 
-		return (
-			this.isSame(dt, unit) ||
-			(type === "min" ? this.isAfter(dt, unit) : this.isBefore(dt, unit))
-		);
+		return type === "min"
+			? this.isBefore(dt) === false
+			: this.isAfter(dt) === false;
 	};
 };
 

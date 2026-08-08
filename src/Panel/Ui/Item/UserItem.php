@@ -9,7 +9,7 @@ use Kirby\Cms\User;
  * @license   https://getkirby.com/license
  * @since     5.1.0
  *
- * @extends \Kirby\Panel\Ui\Item\ModelItem<\Kirby\Cms\User, \Kirby\Panel\User>
+ * @extends ModelItem<User, \Kirby\Panel\User>
  */
 class UserItem extends ModelItem
 {

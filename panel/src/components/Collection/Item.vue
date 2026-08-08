@@ -312,7 +312,7 @@ export default {
 	top: var(--spacing-2);
 	inset-inline-start: var(--spacing-2);
 	color: light-dark(var(--color-black), var(--color-white));
-	background: hsla(0, 0%, light-dark(100%, 7%), 50%);
+	background: light-dark(hsla(0, 0%, 100%, 50%), hsla(0, 0%, 7%, 50%));
 	backdrop-filter: blur(5px);
 	box-shadow: 0 2px 5px hsla(0, 0%, 0%, 20%);
 	--button-width: 1.5rem;
@@ -329,7 +329,7 @@ export default {
 }
 .k-item:is([data-layout="cardlets"], [data-layout="cards"])
 	.k-item-sort-handle:hover {
-	background: hsla(0, 0%, light-dark(100%, 7%), 95%);
+	background: light-dark(hsla(0, 0%, 100%, 95%), hsla(0, 0%, 7%, 95%));
 }
 
 /** Cardlet */

@@ -13,7 +13,7 @@ use Kirby\Panel\Controller\View\SiteViewController;
  * @license   https://getkirby.com/license
  * @since     3.6.0
  *
- * @extends \Kirby\Panel\Model<\Kirby\Cms\Site>
+ * @extends Model<\Kirby\Cms\Site>
  */
 class Site extends Model
 {

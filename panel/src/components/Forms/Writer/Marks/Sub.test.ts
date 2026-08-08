@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import {
 	createSchemaWithMarks,
 	hasMark,
@@ -11,14 +11,6 @@ const mark = new Sub();
 const schema = createSchemaWithMarks({ sub: mark.schema });
 
 describe("Sub mark", () => {
-	beforeEach(() => {
-		vi.stubGlobal("panel", { t: (key: string) => key });
-	});
-
-	afterEach(() => {
-		vi.unstubAllGlobals();
-	});
-
 	describe("button", () => {
 		it("returns the button config", () => {
 			const button = mark.button;

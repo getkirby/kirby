@@ -15,14 +15,6 @@ const schema = createSchemaWithMarks({ email: mark.schema });
 const context = { type: schema.marks.email, schema, utils };
 
 describe("Email mark", () => {
-	beforeEach(() => {
-		vi.stubGlobal("panel", { t: (key: string) => key });
-	});
-
-	afterEach(() => {
-		vi.unstubAllGlobals();
-	});
-
 	describe("button", () => {
 		it("returns the button config", () => {
 			const button = mark.button;
@@ -213,6 +205,17 @@ describe("Email mark", () => {
 	});
 
 	describe("plugins", () => {
+		let open: ReturnType<typeof vi.fn>;
+
+		beforeEach(() => {
+			open = vi.fn();
+			vi.stubGlobal("open", open);
+		});
+
+		afterEach(() => {
+			vi.unstubAllGlobals();
+		});
+
 		const handleClick = (mark: Email) =>
 			mark.plugins()[0].props?.handleClick as unknown as (
 				view: unknown,
@@ -226,9 +229,6 @@ describe("Email mark", () => {
 				getMarkAttrs: vi.fn(() => ({ href: "test@example.com" }))
 			});
 			mark.bindEditor(editor);
-
-			const open = vi.fn();
-			vi.stubGlobal("open", open);
 
 			handleClick(mark)(null, 0, {
 				altKey: true,
@@ -245,9 +245,6 @@ describe("Email mark", () => {
 				getMarkAttrs: vi.fn(() => ({ href: "test@example.com" }))
 			});
 			mark.bindEditor(editor);
-
-			const open = vi.fn();
-			vi.stubGlobal("open", open);
 
 			handleClick(mark)(null, 0, {
 				altKey: false,

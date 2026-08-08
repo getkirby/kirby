@@ -6,9 +6,6 @@ function mount(attrs = {}) {
 	return vueMount(SortHandle, {
 		attrs,
 		shallow: true,
-		global: {
-			mocks: { $t: (key: string) => key }
-		}
 	});
 }
 

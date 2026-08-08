@@ -123,7 +123,7 @@ class Passwords
 	 * Throws the configured custom error or a generic
 	 * policy error for the regex and callback modes
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	protected function fail(): never
 	{
@@ -203,7 +203,7 @@ class Passwords
 	/**
 	 * Validates a password against the policy
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public function validate(
 		#[SensitiveParameter]
@@ -237,7 +237,7 @@ class Passwords
 	 * throw its own exception, while a `false` return value
 	 * triggers the generic policy error
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	protected function validateCallback(
 		Closure $rules,
@@ -261,7 +261,7 @@ class Passwords
 	 * Validates against the preset rules in a fixed order.
 	 * The first unmet rule throws its specific error.
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	protected function validatePresets(
 		array $rules,
@@ -313,7 +313,7 @@ class Passwords
 	/**
 	 * Validates against a regular expression
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	protected function validateRegex(
 		string $regex,

@@ -21,7 +21,7 @@ class Html extends \Kirby\Toolkit\Html
 	 * Creates one or multiple CSS link tags
 	 * @since 3.7.0
 	 *
-	 * @param string|array|\Kirby\Plugin\Plugin|\Kirby\Plugin\Assets $url Relative or absolute URLs, an array of URLs or `@auto` for automatic template css loading
+	 * @param string|array|Plugin|Assets $url Relative or absolute URLs, an array of URLs or `@auto` for automatic template css loading
 	 * @param string|array|null $options Pass an array of attributes for the link tag or a media attribute string
 	 */
 	public static function css(

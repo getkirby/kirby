@@ -109,4 +109,12 @@ export default {
 .k-lab-example-inspector .k-button:where([data-theme]) {
 	--button-color-icon: var(--color-gray-800);
 }
+
+.k-lab-example-meta {
+	padding: var(--spacing-4);
+	margin-bottom: var(--spacing-6);
+	border: 1px solid var(--theme-color-border);
+	background: var(--theme-color-back);
+	border-radius: var(--rounded);
+}
 </style>

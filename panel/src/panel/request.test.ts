@@ -4,6 +4,7 @@ import JsonRequestError from "@/errors/JsonRequestError";
 import OfflineError from "@/errors/OfflineError";
 import RedirectError from "@/errors/RedirectError";
 import RequestError from "@/errors/RequestError";
+import { HtmlString } from "./html";
 import {
 	body,
 	globals,
@@ -133,6 +134,27 @@ describe("panel.request", () => {
 			expect(response.status).toBe(200);
 			expect(response.json).toStrictEqual({ message: "ok" });
 			expect(response.text).toStrictEqual(JSON.stringify({ message: "ok" }));
+		});
+
+		it("should rewrap <key> payloads into HtmlString instances", async () => {
+			const { response } = await responder(
+				req,
+				jsonResponse({
+					dialog: {
+						props: {
+							"<help>": "<b>trusted</b>",
+							text: "plain"
+						}
+					}
+				})
+			);
+
+			const props = (response.json.dialog as Record<string, unknown>)
+				.props as { help: HtmlString; text: string };
+
+			expect(props.help).toBeInstanceOf(HtmlString);
+			expect(props.help.toString()).toBe("<b>trusted</b>");
+			expect(props.text).toBe("plain");
 		});
 
 		it("should throw JsonRequestError for invalid JSON", async () => {

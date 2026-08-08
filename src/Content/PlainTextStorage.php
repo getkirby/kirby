@@ -160,7 +160,7 @@ class PlainTextStorage extends Storage
 	/**
 	 * Helper to delete empty _changes directories
 	 *
-	 * @throws \Kirby\Exception\Exception if the directory cannot be deleted
+	 * @throws Exception if the directory cannot be deleted
 	 */
 	protected function deleteEmptyDirectory(string $directory): void
 	{
@@ -323,7 +323,7 @@ class PlainTextStorage extends Storage
 	/**
 	 * Updates the modification timestamp of an existing version
 	 *
-	 * @throws \Kirby\Exception\Exception If the file cannot be touched
+	 * @throws Exception If the file cannot be touched
 	 */
 	public function touch(VersionId $versionId, Language $language): void
 	{
@@ -343,7 +343,7 @@ class PlainTextStorage extends Storage
 	 *
 	 * @param array<string, string> $fields Content fields
 	 *
-	 * @throws \Kirby\Exception\Exception If the content cannot be written
+	 * @throws Exception If the content cannot be written
 	 */
 	protected function write(VersionId $versionId, Language $language, array $fields): void
 	{

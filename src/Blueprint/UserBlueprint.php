@@ -3,6 +3,8 @@
 namespace Kirby\Blueprint;
 
 use Kirby\Cms\ModelWithContent;
+use Kirby\Cms\User;
+use Kirby\Exception\InvalidArgumentException;
 
 /**
  * Extension of the basic blueprint class
@@ -13,13 +15,13 @@ use Kirby\Cms\ModelWithContent;
  */
 class UserBlueprint extends Blueprint
 {
-	/** @var \Kirby\Cms\User */
+	/** @var User */
 	protected ModelWithContent $model;
 
 	/**
 	 * UserBlueprint constructor.
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public function __construct(array $props)
 	{

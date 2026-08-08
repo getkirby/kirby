@@ -195,7 +195,7 @@ class FileStore extends Store
 	 * Throws an exception for an unexpected file system error
 	 * @since 6.0.0
 	 *
-	 * @throws \Kirby\Exception\Exception
+	 * @throws Exception
 	 * @codeCoverageIgnore
 	 */
 	protected function fail(): never

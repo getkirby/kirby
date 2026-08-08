@@ -21,8 +21,8 @@ use Throwable;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @template TValue of \Kirby\Cms\Page
- * @extends \Kirby\Cms\Collection<TValue>
+ * @template TValue of Page
+ * @extends Collection<TValue>
  */
 class Pages extends Collection
 {
@@ -44,7 +44,7 @@ class Pages extends Collection
 	public static array $methods = [];
 
 	/**
-	 * @var \Kirby\Cms\Page|\Kirby\Cms\Site|null
+	 * @var Page|Site|null
 	 */
 	protected object|null $parent = null;
 
@@ -53,9 +53,9 @@ class Pages extends Collection
 	 * an entire second collection to the
 	 * current collection
 	 *
-	 * @param \Kirby\Cms\Pages<TValue>|TValue|string $object
+	 * @param Pages<TValue>|TValue|string $object
 	 * @return $this
-	 * @throws \Kirby\Exception\InvalidArgumentException When no `Page` or `Pages` object or an ID of an existing page is passed
+	 * @throws InvalidArgumentException When no `Page` or `Pages` object or an ID of an existing page is passed
 	 */
 	public function add($object): static
 	{
@@ -124,7 +124,7 @@ class Pages extends Collection
 	 * Deletes the pages with the given IDs
 	 * if they exist in the collection
 	 *
-	 * @throws \Kirby\Exception\Exception If not all pages could be deleted
+	 * @throws Exception If not all pages could be deleted
 	 */
 	public function delete(array $ids): void
 	{

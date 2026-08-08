@@ -162,16 +162,20 @@ export default defineConfig(({ mode }) => {
 					codeSplitting: {
 						groups: [
 							{
-								name: "Lab",
-								test: /src\/components\/Lab\//
-							},
-							{
 								name: "Sortable",
 								test: /node_modules\/sortablejs\//
 							},
 							{
+								name: "ProsemirrorModel",
+								test: /node_modules\/prosemirror-model\//
+							},
+							{
+								name: "Prosemirror",
+								test: /node_modules\/prosemirror-/
+							},
+							{
 								name: "vendor",
-								test: /node_modules\/(?!sortablejs\/)|plugin-vue:export-helper|vite\/preload-helper/
+								test: /node_modules\/(?!sortablejs\/|prosemirror-)|plugin-vue:export-helper|vite\/preload-helper/
 							}
 						]
 					}

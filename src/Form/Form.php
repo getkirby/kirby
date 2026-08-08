@@ -5,6 +5,8 @@ namespace Kirby\Form;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Data\Data;
+use Kirby\Exception\FormValidationException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Form\Field\BaseField;
 use Kirby\Toolkit\A;
 
@@ -116,7 +118,7 @@ class Form
 	 * Get the field object by name
 	 * and handle nested fields correctly
 	 *
-	 * @throws \Kirby\Exception\NotFoundException
+	 * @throws NotFoundException
 	 */
 	public function field(string $name): Field|BaseField
 	{
@@ -383,7 +385,7 @@ class Form
 	/**
 	 * Validates the form and throws an exception if there are any errors
 	 *
-	 * @throws \Kirby\Exception\FormValidationException
+	 * @throws FormValidationException
 	 */
 	public function validate(): void
 	{

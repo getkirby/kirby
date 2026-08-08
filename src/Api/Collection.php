@@ -4,6 +4,7 @@ namespace Kirby\Api;
 
 use Closure;
 use Exception;
+use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\Collection as BaseCollection;
 use Kirby\Toolkit\Str;
 
@@ -25,7 +26,7 @@ class Collection
 	/**
 	 * Collection constructor
 	 *
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function __construct(
 		protected Api $api,
@@ -53,7 +54,7 @@ class Collection
 
 	/**
 	 * @return $this
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function select($keys = null): static
 	{
@@ -74,8 +75,8 @@ class Collection
 	}
 
 	/**
-	 * @throws \Kirby\Exception\NotFoundException
-	 * @throws \Exception
+	 * @throws NotFoundException
+	 * @throws Exception
 	 */
 	public function toArray(): array
 	{
@@ -99,8 +100,8 @@ class Collection
 	}
 
 	/**
-	 * @throws \Kirby\Exception\NotFoundException
-	 * @throws \Exception
+	 * @throws NotFoundException
+	 * @throws Exception
 	 */
 	public function toResponse(): array
 	{

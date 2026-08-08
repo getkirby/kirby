@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
 	applyInputRule,
 	createSchemaWithNodes,
@@ -13,14 +13,6 @@ const schema = createSchemaWithNodes({ horizontalRule: node.schema });
 const context = { type: schema.nodes.horizontalRule, schema, utils };
 
 describe("HorizontalRule node", () => {
-	beforeEach(() => {
-		vi.stubGlobal("panel", { t: (key: string) => key });
-	});
-
-	afterEach(() => {
-		vi.unstubAllGlobals();
-	});
-
 	describe("commands", () => {
 		it("returns a command that inserts the node", () => {
 			const insertNode = vi.fn();

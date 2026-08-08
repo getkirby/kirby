@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { toRaw, watch } from "vue";
 import Panel from "./panel";
 
 describe("panel", () => {
@@ -39,6 +40,26 @@ describe("panel", () => {
 			expect(state.translation).toStrictEqual(panel.translation.state());
 			expect(state.urls).toStrictEqual(panel.urls);
 			expect(state.user).toStrictEqual(panel.user.state());
+		});
+	});
+
+	describe("create", () => {
+		it("should keep methods reactive when called on the raw instance", async () => {
+			const panel = Panel.create(app);
+
+			// modules capture the raw instance in the constructor;
+			// methods called on it must still update the reactive proxy
+			const raw = toRaw(panel);
+			panel.get = vi.fn().mockResolvedValue({});
+
+			const states: boolean[] = [];
+			watch(() => panel.isLoading, (state) => states.push(state), {
+				flush: "sync"
+			});
+
+			await raw.open("https://getkirby.com/panel/pages/test");
+
+			expect(states).toStrictEqual([true, false]);
 		});
 	});
 

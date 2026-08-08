@@ -47,7 +47,7 @@ class Remote
 	public array $info = [];
 
 	/**
-	 * @throws \Exception when the curl request failed
+	 * @throws Exception when the curl request failed
 	 */
 	public function __construct(
 		string $url,
@@ -124,7 +124,7 @@ class Remote
 	 * Sets up all curl options and sends the request
 	 *
 	 * @return $this
-	 * @throws \Exception when the curl request failed
+	 * @throws Exception when the curl request failed
 	 */
 	public function fetch(): static
 	{
@@ -268,7 +268,7 @@ class Remote
 	/**
 	 * Static method to send a GET request
 	 *
-	 * @throws \Exception when the curl request failed
+	 * @throws Exception when the curl request failed
 	 */
 	public static function get(string $url, array $params = []): static
 	{
@@ -363,7 +363,7 @@ class Remote
 	/**
 	 * Static method to init this class and send a request
 	 *
-	 * @throws \Exception when the curl request failed
+	 * @throws Exception when the curl request failed
 	 */
 	public static function request(string $url, array $params = []): static
 	{

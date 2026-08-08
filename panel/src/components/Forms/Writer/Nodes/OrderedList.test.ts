@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
 	applyInputRule,
 	createSchemaWithNodes,
@@ -18,14 +18,6 @@ const schema = createSchemaWithNodes({
 const context = { type: schema.nodes.orderedList, schema, utils };
 
 describe("OrderedList node", () => {
-	beforeEach(() => {
-		vi.stubGlobal("panel", { t: (key: string) => key });
-	});
-
-	afterEach(() => {
-		vi.unstubAllGlobals();
-	});
-
 	describe("button", () => {
 		it("returns the button config", () => {
 			const button = node.button;

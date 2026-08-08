@@ -13,7 +13,7 @@ use Kirby\Toolkit\Collection;
  * @license   https://opensource.org/licenses/MIT
  *
  * @deprecated 6.0.0 Will be removed in Kirby 7
- * @extends \Kirby\Toolkit\Collection<\Kirby\Query\Argument>
+ * @extends Collection<Argument>
  */
 class Arguments extends Collection
 {

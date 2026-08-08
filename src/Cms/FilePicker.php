@@ -30,7 +30,7 @@ class FilePicker extends Picker
 	/**
 	 * Search all files for the picker
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public function items(): Files|null
 	{

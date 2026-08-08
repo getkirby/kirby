@@ -17,8 +17,8 @@ class SiteRules
 	/**
 	 * Validates if the site title can be changed
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException If the title is empty
-	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the title
+	 * @throws InvalidArgumentException If the title is empty
+	 * @throws PermissionException If the user is not allowed to change the title
 	 */
 	public static function changeTitle(Site $site, string $title): void
 	{
@@ -38,7 +38,7 @@ class SiteRules
 	/**
 	 * Validates if the site can be updated
 	 *
-	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to update the site
+	 * @throws PermissionException If the user is not allowed to update the site
 	 */
 	public static function update(Site $site, array $content = []): void
 	{

@@ -4,6 +4,7 @@ namespace Kirby\Session;
 
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
+use Kirby\Exception\NotFoundException;
 use Throwable;
 
 /**
@@ -20,7 +21,7 @@ class Sessions
 	public const TIMEOUT = 1800;
 
 	/**
-	 * @var array<string, \Kirby\Session\Session>
+	 * @var array<string, Session>
 	 */
 	protected array $cache = [];
 	protected Session|null $autoSession = null;
@@ -121,7 +122,7 @@ class Sessions
 	 * Returns the current session based on the
 	 * configured token transmission $mode
 	 *
-	 * @throws \Kirby\Exception\LogicException In `manual` mode
+	 * @throws LogicException In `manual` mode
 	 */
 	public function current(): Session|null
 	{
@@ -249,9 +250,9 @@ class Sessions
 	 * @param $token Session token, either including or without the key
 	 * @param $mode Optional transmission mode override
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException If the token is malformed
-	 * @throws \Kirby\Exception\NotFoundException If no matching session exists
-	 * @throws \Kirby\Exception\LogicException If the session data is invalid or expired
+	 * @throws InvalidArgumentException If the token is malformed
+	 * @throws NotFoundException If no matching session exists
+	 * @throws LogicException If the session data is invalid or expired
 	 */
 	public function find(string $token, string|null $mode = null): Session
 	{

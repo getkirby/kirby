@@ -1,4 +1,5 @@
 import globals from "globals";
+import a11y from "eslint-plugin-vuejs-accessibility";
 import js from "@eslint/js";
 import prettier from "eslint-config-prettier";
 import vitest from "@vitest/eslint-plugin";
@@ -12,6 +13,25 @@ export default [
 		files: ["**/*.ts"]
 	})),
 	...vue.configs["flat/recommended"],
+	...a11y.configs["flat/recommended"],
+
+	{
+		files: ["**/*.vue"],
+		rules: {
+			//`:autofocus="autofocus"` not understood by static rule
+			"vuejs-accessibility/no-autofocus": "off",
+
+			// Panel previews uploaded files: there is no caption
+			// track it can currently provide for them
+			"vuejs-accessibility/media-has-caption": "off",
+
+			// TODO:
+			"vuejs-accessibility/click-events-have-key-events": "off",
+			"vuejs-accessibility/label-has-for": "off",
+			"vuejs-accessibility/mouse-events-have-key-events": "off",
+			"vuejs-accessibility/no-static-element-interactions": "off"
+		}
+	},
 
 	// Vitest rules for test files
 	{

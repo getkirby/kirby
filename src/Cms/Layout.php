@@ -12,7 +12,7 @@ use Kirby\Content\Content;
  * @license   https://getkirby.com/license
  * @since     3.5.0
  *
- * @extends \Kirby\Cms\Item<\Kirby\Cms\Layouts>
+ * @extends Item<Layouts>
  */
 class Layout extends Item
 {

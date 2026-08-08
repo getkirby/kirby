@@ -3,6 +3,7 @@
 namespace Kirby\Blueprint;
 
 use Kirby\Cms\ModelWithContent;
+use Kirby\Cms\Site;
 
 /**
  * Extension of the basic blueprint class
@@ -13,7 +14,7 @@ use Kirby\Cms\ModelWithContent;
  */
 class SiteBlueprint extends Blueprint
 {
-	/** @var \Kirby\Cms\Site */
+	/** @var Site */
 	protected ModelWithContent $model;
 
 	/**

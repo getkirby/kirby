@@ -124,7 +124,10 @@ export default {
 
 /* Dropzone */
 .k-drawer > .k-dropzone {
-	min-height: 100%;
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+	min-height: 0;
 }
 .k-drawer > .k-dropzone::after {
 	border-radius: 0;

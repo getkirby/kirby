@@ -71,7 +71,24 @@ export default {
 		}
 	},
 	methods: {
-		change(language) {
+		async change(language) {
+			if (language.current === true) {
+				return;
+			}
+
+			try {
+				// abort the switch when the lock could not be released,
+				// because the pending changes could not be written first.
+				// `unlock` already reports those cases, so staying on the
+				// current language is all that is left to do here
+				if ((await this.$panel.content.unlock()) !== true) {
+					return;
+				}
+			} catch (error) {
+				this.$panel.error(error);
+				return;
+			}
+
 			this.$panel.reload({
 				query: {
 					language: language.code

@@ -16,7 +16,7 @@ use Throwable;
  * @license   https://getkirby.com/license
  * @since     3.6.0
  *
- * @extends \Kirby\Panel\Model<\Kirby\Cms\File>
+ * @extends Model<cmsfile>
  */
 class File extends Model
 {

@@ -11,6 +11,7 @@ use Kirby\Filesystem\IsFile;
 use Kirby\Panel\File as Panel;
 use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Str;
+use Kirby\Uuid\FileUuid;
 
 /**
  * The `$file` object provides a set
@@ -29,8 +30,8 @@ use Kirby\Toolkit\Str;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Files>
- * @method \Kirby\Uuid\FileUuid uuid()
+ * @use HasSiblings<Files>
+ * @method FileUuid uuid()
  */
 class File extends ModelWithContent
 {
@@ -149,7 +150,7 @@ class File extends ModelWithContent
 	 */
 	public function blueprint(): FileBlueprint
 	{
-		/** @var \Kirby\Blueprint\FileBlueprint */
+		/** @var FileBlueprint */
 		return $this->blueprint ??= FileBlueprint::factory(
 			'files/' . $this->template(),
 			'files/default',

@@ -10,6 +10,7 @@ use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Cms\User;
 use Kirby\Cms\Users;
+use Kirby\Exception\BadMethodCallException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Image\QrCode;
 use Kirby\Query\Runners\DefaultRunner;
@@ -73,8 +74,8 @@ class Query
 	 * Returns the query result if anything
 	 * can be found, otherwise returns null
 	 *
-	 * @throws \Kirby\Exception\BadMethodCallException If an invalid method is accessed by the query
-	 * @throws \Kirby\Exception\InvalidArgumentException If an invalid query runner is set in the config option
+	 * @throws BadMethodCallException If an invalid method is accessed by the query
+	 * @throws InvalidArgumentException If an invalid query runner is set in the config option
 	 */
 	public function resolve(array|object $data = []): mixed
 	{

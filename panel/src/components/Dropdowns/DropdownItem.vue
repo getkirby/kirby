@@ -49,6 +49,7 @@ export default {
 	display: flex;
 }
 .k-dropdown-item.k-button:focus {
+	z-index: 1;
 	outline: var(--outline);
 }
 .k-dropdown-item.k-button[aria-current="true"] {

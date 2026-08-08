@@ -116,7 +116,7 @@ class Assets
 	/**
 	 * Returns array of favicon icons based on config option
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public function favicons(): array
 	{
@@ -258,7 +258,7 @@ class Assets
 	 * Links all dist files in the media folder
 	 * and returns the link to the requested asset
 	 *
-	 * @throws \Kirby\Exception\Exception If Panel assets could not be moved to the public directory
+	 * @throws Exception If Panel assets could not be moved to the public directory
 	 */
 	public function link(): bool
 	{

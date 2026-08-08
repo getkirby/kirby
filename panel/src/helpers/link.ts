@@ -15,9 +15,6 @@ type LinkType = {
 	value: (value: string) => string;
 };
 
-// TODO: better type once we have Vue components as types
-type LinkPreview = { label: string; image?: unknown } | null;
-
 /**
  * Detects the type of a link
  * @param _types - Custom types, otherwise default types are used
@@ -79,70 +76,6 @@ export function isPageUUID(value: string): boolean {
 		value.startsWith("page://") === true ||
 		value.match(/^\/(.*\/)?@\/page\//) !== null
 	);
-}
-
-/**
- * Returns preview data for the link
- */
-export async function preview(
-	{ type, link }: { type: string; link: string },
-	fields?: string[]
-): Promise<LinkPreview> {
-	if (type === "page" && link) {
-		return await previewForPage(link, fields);
-	}
-
-	if (type === "file" && link) {
-		return await previewForFile(link, fields);
-	}
-
-	if (link) {
-		return {
-			label: link
-		};
-	}
-
-	return null;
-}
-
-async function previewForFile(
-	id: string,
-	fields = ["filename", "panelImage"]
-): Promise<LinkPreview> {
-	try {
-		const file = (await window.panel.api.files.get(null, id, {
-			select: fields.join(",")
-		})) as { filename: string; panelImage: unknown };
-
-		return {
-			label: file.filename,
-			image: file.panelImage
-		};
-	} catch {
-		return null;
-	}
-}
-
-async function previewForPage(
-	id: string,
-	fields = ["title", "panelImage"]
-): Promise<LinkPreview> {
-	if (id === "site://") {
-		return { label: window.panel.t("view.site") };
-	}
-
-	try {
-		const page = (await window.panel.api.pages.get(id, {
-			select: fields.join(",")
-		})) as { title: string; panelImage: unknown };
-
-		return {
-			label: page.title,
-			image: page.panelImage
-		};
-	} catch {
-		return null;
-	}
 }
 
 export function types(keys: string[] = []): Record<string, LinkType> {

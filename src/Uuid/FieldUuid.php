@@ -4,6 +4,7 @@ namespace Kirby\Uuid;
 
 use Generator;
 use Kirby\Cms\Collection;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Content\Field;
 use Kirby\Toolkit\A;
 
@@ -42,7 +43,7 @@ abstract class FieldUuid extends Uuid
 				/**
 				 * $value is an array containing the UUID for the parent,
 				 * the field name and the specific ID
-				 * @var \Kirby\Cms\ModelWithContent|null $parent
+				 * @var ModelWithContent|null $parent
 				 */
 				$parent = Uuid::from($value['parent'])->model();
 
@@ -84,7 +85,7 @@ abstract class FieldUuid extends Uuid
 	 * Generator function that returns collections for all fields globally
 	 * (in any page's, file's, user's or site's content file)
 	 *
-	 * @return \Generator<string, \Kirby\Cms\Collection>
+	 * @return Generator<string, Collection>
 	 */
 	public static function index(): Generator
 	{
@@ -116,7 +117,7 @@ abstract class FieldUuid extends Uuid
 	public function value(): array
 	{
 		/**
-		 * @var \Kirby\Cms\ModelWithContent $model
+		 * @var ModelWithContent $model
 		 */
 		$model  = $this->model();
 		$parent = Uuid::for($model->parent());

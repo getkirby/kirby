@@ -30,6 +30,7 @@
 			</p>
 			<k-progress
 				v-else-if="progress"
+				:label="$t('upload')"
 				:value="progress"
 				class="k-upload-item-progress"
 			/>

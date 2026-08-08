@@ -9,10 +9,10 @@ import { isObject } from "@/helpers/object";
  * `v-safe-html` without further escaping.
  *
  * The backend signals safety by emitting JSON with the parent key wrapped
- * in `<…>`, e.g. `"<help>": "<b>html</b>"`. `HtmlString.resolve()` walks
- * incoming state, finds those keys, rewraps their values, and strips the
- * brackets. `Kirby\Toolkit\HtmlString::resolve()` does the inverse on the
- * PHP side.
+ * in `<…>`, e.g. `"<help>": "<b>html</b>"`. A marked key can also hold a
+ * list, in which case every entry is trusted: `"<issues>": ["<b>a</b>"]`.
+ * `HtmlString.resolve()` walks incoming state, finds those keys, rewraps
+ * their values, and strips the brackets.
  *
  * Since the class extends `String`, instances behave like strings in
  * almost every context (template interpolation, attribute binding,
@@ -31,7 +31,7 @@ export class HtmlString extends String {
 	/**
 	 * Recursively walks `data` and rewraps any value whose parent key
 	 * matches `<key>` into an `HtmlString`, stripping the brackets. Plain
-	 * keys are kept as-is. Arrays are walked element by element.Class
+	 * keys are kept as-is. Arrays are walked element by element. Class
 	 * instances (e.g. component  instances passed as props) are passed
 	 * through untouched.
 	 *
@@ -56,16 +56,13 @@ export class HtmlString extends String {
 				) {
 					const key = rawKey.slice(1, -1);
 
-					if (Object.prototype.hasOwnProperty.call(result, key) === true) {
+					if (Object.hasOwn(result, key) === true) {
 						console.warn(
-							`HtmlString.fromJSON: both "${key}" and "${rawKey}" present — the bracketed version wins`
+							`HtmlString.resolve: both "${key}" and "${rawKey}" present, using "${rawKey}"`
 						);
 					}
 
-					result[key] =
-						typeof value === "string"
-							? new HtmlString(value)
-							: HtmlString.resolve(value);
+					result[key] = HtmlString.wrap(value);
 					continue;
 				}
 
@@ -76,6 +73,25 @@ export class HtmlString extends String {
 		}
 
 		return data;
+	}
+
+	/**
+	 * Turns the value of a marked `<key>` into trusted HTML:
+	 * a string becomes an `HtmlString`, a list becomes a list
+	 * of `HtmlString` values
+	 */
+	protected static wrap(value: unknown): unknown {
+		if (typeof value === "string") {
+			return new HtmlString(value);
+		}
+
+		if (Array.isArray(value) === true) {
+			return value.map((item) => HtmlString.wrap(item));
+		}
+
+		// an object cannot be trusted as a whole, but it may
+		// carry marked keys of its own further down
+		return HtmlString.resolve(value);
 	}
 }
 

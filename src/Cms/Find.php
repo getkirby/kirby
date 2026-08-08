@@ -22,7 +22,7 @@ class Find
 	 * parent path and filename
 	 *
 	 * @param string $path Path to file's parent model
-	 * @throws \Kirby\Exception\NotFoundException if the file cannot be found
+	 * @throws NotFoundException if the file cannot be found
 	 */
 	public static function file(
 		string $path,
@@ -46,7 +46,7 @@ class Find
 	 * Returns the language object for the given code
 	 *
 	 * @param string $code Language code
-	 * @throws \Kirby\Exception\NotFoundException if the language cannot be found
+	 * @throws NotFoundException if the language cannot be found
 	 */
 	public static function language(string $code): Language|null
 	{
@@ -64,7 +64,7 @@ class Find
 	 * Returns the page object for the given id
 	 *
 	 * @param string $id Page's id
-	 * @throws \Kirby\Exception\NotFoundException if the page cannot be found
+	 * @throws NotFoundException if the page cannot be found
 	 */
 	public static function page(string $id): Page|null
 	{
@@ -87,8 +87,8 @@ class Find
 	 * Returns the model's object for the given path
 	 *
 	 * @param string $path Path to parent model
-	 * @throws \Kirby\Exception\InvalidArgumentException if the model type is invalid
-	 * @throws \Kirby\Exception\NotFoundException if the model cannot be found
+	 * @throws InvalidArgumentException if the model type is invalid
+	 * @throws NotFoundException if the model cannot be found
 	 */
 	public static function parent(string $path): ModelWithContent
 	{
@@ -135,7 +135,7 @@ class Find
 	 * Returns the role object for the given name
 	 *
 	 * @param string $name Role name/id
-	 * @throws \Kirby\Exception\NotFoundException if the role cannot be found
+	 * @throws NotFoundException if the role cannot be found
 	 */
 	public static function role(string $name): Role
 	{
@@ -164,7 +164,7 @@ class Find
 	/**
 	 * Returns the site object if the site is accessible
 	 *
-	 * @throws \Kirby\Exception\NotFoundException if the site cannot be accessed
+	 * @throws NotFoundException if the site cannot be accessed
 	 * @since 5.4.0
 	 */
 	public static function site(): Site
@@ -186,7 +186,7 @@ class Find
 	 * id is passed
 	 *
 	 * @param string|null $id User's id
-	 * @throws \Kirby\Exception\NotFoundException if the user for the given id cannot be found
+	 * @throws NotFoundException if the user for the given id cannot be found
 	 */
 	public static function user(string|null $id = null): User
 	{

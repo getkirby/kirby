@@ -23,7 +23,7 @@ trait HasMethods
 	 * Calls a registered method class with the
 	 * passed arguments
 	 *
-	 * @throws \Kirby\Exception\BadMethodCallException
+	 * @throws BadMethodCallException
 	 */
 	#[BlockCollectionAccess]
 	protected function callMethod(string $method, array $args = []): mixed

@@ -18,6 +18,28 @@ class AreaTest extends TestCase
 		$this->assertSame('Better', $area->breadcrumbLabel());
 	}
 
+	public function testDisabledDefinitions(): void
+	{
+		$area = new Area(
+			id: 'test',
+			buttons:   ['todos' => [], 'archived' => false],
+			dialogs:   ['todos' => [], 'archived' => false],
+			drawers:   ['todos' => [], 'archived' => false],
+			dropdowns: ['todos' => [], 'archived' => false],
+			requests:  ['todos' => [], 'archived' => false],
+			searches:  ['todos' => [], 'archived' => false],
+			views:     ['todos' => [], 'archived' => false]
+		);
+
+		$this->assertSame(['todos'], array_keys($area->buttons()));
+		$this->assertSame(['todos'], array_keys($area->dialogs()));
+		$this->assertSame(['todos'], array_keys($area->drawers()));
+		$this->assertSame(['todos'], array_keys($area->dropdowns()));
+		$this->assertSame(['todos'], array_keys($area->requests()));
+		$this->assertSame(['todos'], array_keys($area->searches()));
+		$this->assertSame(['todos'], array_keys($area->views()));
+	}
+
 	public function testLabel(): void
 	{
 		$area = new Area(id: 'test', label: 'Test');
@@ -44,6 +66,27 @@ class AreaTest extends TestCase
 	{
 		$area = new Area(id: 'test');
 		$this->assertSame([], $area->routes());
+	}
+
+	public function testRoutesForDisabledDefinitions(): void
+	{
+		$area = new Area(
+			id: 'test',
+			dialogs:  [
+				'todos'    => ['load' => fn () => []],
+				'archived' => false
+			],
+			searches: [
+				'todos'    => ['query' => fn () => []],
+				'archived' => false
+			]
+		);
+
+		$this->assertSame([
+			'search/todos',
+			'dialogs/todos',
+			'dialogs/todos'
+		], array_column($area->routes(), 'pattern'));
 	}
 
 	public function testRoutesForViews(): void

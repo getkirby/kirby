@@ -8,7 +8,7 @@ namespace Kirby\Cms;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @extends \Kirby\Cms\ModelPermissions<\Kirby\Cms\Language>
+ * @extends ModelPermissions<Language>
  */
 class LanguagePermissions extends ModelPermissions
 {

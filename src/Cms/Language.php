@@ -25,7 +25,7 @@ use Stringable;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Languages>
+ * @use HasSiblings<Languages>
  */
 class Language implements Stringable
 {
@@ -214,7 +214,7 @@ class Language implements Stringable
 	 * Delete the current language and
 	 * all its translation files
 	 *
-	 * @throws \Kirby\Exception\Exception
+	 * @throws Exception
 	 */
 	#[BlockCollectionAccess]
 	public function delete(): bool
@@ -269,7 +269,7 @@ class Language implements Stringable
 	/**
 	 * Converts a "user-facing" language code to a `Language` object
 	 *
-	 * @throws \Kirby\Exception\NotFoundException If the language does not exist
+	 * @throws NotFoundException If the language does not exist
 	 * @unstable
 	 */
 	public static function ensure(self|string|null $code = null): static

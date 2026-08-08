@@ -78,7 +78,7 @@ class Token implements Stringable
 	 *
 	 * @param $token Session token
 	 * @param $key Whether the token string includes the secret key
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public static function parse(
 		string $token,

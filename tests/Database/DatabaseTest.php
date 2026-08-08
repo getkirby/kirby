@@ -2,6 +2,7 @@
 
 namespace Kirby\Database;
 
+use Kirby\Database\Sql\Sqlite;
 use Kirby\Exception\InvalidArgumentException;
 use PDO;
 use PDOException;
@@ -255,7 +256,7 @@ class DatabaseTest extends TestCase
 		$database->execute('CREATE TABLE "kirby_users" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE)');
 
 		$this->assertSame('kirby_', $database->prefix());
-		$this->assertInstanceOf(\Kirby\Database\Sql\Sqlite::class, $database->sql());
+		$this->assertInstanceOf(Sqlite::class, $database->sql());
 		$this->assertSame(
 			'SELECT * FROM "kirby_users"',
 			$database->table('users')->build('select')['query']

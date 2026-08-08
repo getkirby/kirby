@@ -51,7 +51,7 @@ class Panel
 	/**
 	 * Redirect to a Panel url
 	 *
-	 * @throws \Kirby\Panel\Redirect
+	 * @throws Redirect
 	 * @codeCoverageIgnore
 	 */
 	public static function go(string|null $url = null, int $code = 302, int|false $refresh = false): void

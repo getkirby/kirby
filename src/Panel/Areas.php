@@ -11,7 +11,7 @@ use Kirby\Toolkit\A;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  *
- * @extends \Kirby\Cms\Collection<\Kirby\Panel\Area>
+ * @extends Collection<Area>
  */
 class Areas extends Collection
 {

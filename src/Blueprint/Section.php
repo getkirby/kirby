@@ -35,7 +35,7 @@ class Section extends Component
 	protected SectionField|null $field = null;
 
 	/**
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public function __construct(string $type, array $attrs = [])
 	{

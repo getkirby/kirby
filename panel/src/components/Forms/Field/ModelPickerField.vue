@@ -84,9 +84,10 @@ export default {
 			return [
 				{
 					autofocus: this.autofocus,
-					text: this.$t("select"),
+					class: "input-focus",
 					icon: "checklist",
 					responsive: true,
+					text: this.$t("select"),
 					click: () => this.open()
 				}
 			];

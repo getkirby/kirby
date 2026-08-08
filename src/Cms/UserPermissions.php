@@ -8,14 +8,14 @@ namespace Kirby\Cms;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @extends \Kirby\Cms\ModelPermissions<\Kirby\Cms\User>
+ * @extends ModelPermissions<User>
  */
 class UserPermissions extends ModelPermissions
 {
 	/**
 	 * Used to cache once determined permissions in memory
 	 *
-	 * @param \Kirby\Cms\User $model
+	 * @param User $model
 	 * @psalm-suppress MoreSpecificImplementedParamType
 	 */
 	protected static function cacheKey(
@@ -63,7 +63,7 @@ class UserPermissions extends ModelPermissions
 	}
 
 	/**
-	 * @param \Kirby\Cms\User $model
+	 * @param User $model
 	 * @psalm-suppress MoreSpecificImplementedParamType
 	 */
 	protected static function category(ModelWithContent|Language $model): string

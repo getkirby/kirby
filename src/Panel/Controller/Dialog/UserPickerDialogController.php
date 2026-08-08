@@ -73,7 +73,7 @@ class UserPickerDialogController extends ModelPickerDialogController
 
 	/**
 	 * Returns the item data for a user
-	 * @param \Kirby\Cms\User $model
+	 * @param User $model
 	 */
 	public function item(ModelWithContent $model): array
 	{

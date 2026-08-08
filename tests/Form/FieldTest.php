@@ -417,6 +417,31 @@ class FieldTest extends TestCase
 		$this->assertSame('foo', $field->toFormValue());
 	}
 
+	public function testFillWithEmptyValueRunsComputed(): void
+	{
+		Field::$types = [
+			'test' => [
+				'computed' => [
+					'value' => fn () => $this->value ?? 'normalized'
+				]
+			]
+		];
+
+		$page = new Page(['slug' => 'test']);
+
+		$field = new Field('test', [
+			'model' => $page
+		]);
+
+		// a field that has never been filled must end up with the same
+		// form value as a field filled with its own empty value;
+		// otherwise untouched fields show up as changes
+		$field->fillWithEmptyValue();
+
+		$this->assertSame('normalized', $field->toFormValue());
+		$this->assertSame($field->fill($field->emptyValue())->toFormValue(), $field->toFormValue());
+	}
+
 	public function testFillWithRestoredState(): void
 	{
 		Field::$types = [

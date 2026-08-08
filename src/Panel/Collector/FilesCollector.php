@@ -13,7 +13,7 @@ use Kirby\Cms\Users;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @extends \Kirby\Panel\Collector\ModelsCollector<\Kirby\Cms\Files>
+ * @extends ModelsCollector<Files>
  */
 class FilesCollector extends ModelsCollector
 {

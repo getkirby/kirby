@@ -7,6 +7,7 @@ use Kirby\Filesystem\F;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Locale;
 use Kirby\Toolkit\Str;
+use WeakReference;
 
 class AppTranslationsTest extends TestCase
 {
@@ -90,6 +91,41 @@ class AppTranslationsTest extends TestCase
 		}
 
 		$this->assertCount($i, $translations);
+	}
+
+	public function testTranslationsAlwaysReferToCurrentInstance(): void
+	{
+		$props = ['roots' => ['index' => '/dev/null']];
+
+		$main = new App([
+			...$props,
+			'translations' => ['en' => ['test.probe' => 'from main app']]
+		]);
+
+		I18n::$translations = [];
+		$this->assertSame('from main app', I18n::translate('test.probe'));
+
+		// an app that explicitly does not become the current instance
+		// must not take over the global translation loader either
+		$side      = new App([
+			...$props,
+			'translations' => ['en' => ['test.probe' => 'from side app']]
+		], false);
+		$reference = WeakReference::create($side);
+
+		I18n::$translations = [];
+		$this->assertSame($main, App::instance());
+		$this->assertSame('from main app', I18n::translate('test.probe'));
+
+		// and it must not be kept alive by the loader closures either,
+		// which would otherwise pin its whole page tree for the process
+		unset($side);
+		gc_collect_cycles();
+
+		$this->assertNull($reference->get());
+
+		I18n::$translations = [];
+		$this->assertSame('from main app', I18n::translate('test.probe'));
 	}
 
 	public function testTranslationFromCurrentLanguage(): void

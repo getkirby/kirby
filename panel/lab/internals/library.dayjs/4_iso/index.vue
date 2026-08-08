@@ -2,117 +2,80 @@
 	<k-lab-examples>
 		<k-box theme="text">
 			<k-text>
-				Parse an ISO datetime, date or time string as a
-				<code>dayjs</code> object. Or convert a <code>dayjs</code> object to an
-				ISO string.
+				<p>
+					<code>dayjs.iso()</code> parses an ISO datetime, date or time string
+					as a <code>dayjs</code> object, <code>dayjs().toISO()</code> converts
+					a <code>dayjs</code> object back to an ISO string. The three supported
+					formats are datetime (<code>YYYY-MM-DD HH:mm:ss</code>), date
+					(<code>YYYY-MM-DD</code>) and time (<code>HH:mm:ss</code>).
+				</p>
 			</k-text>
 		</k-box>
 
 		<k-lab-example label="dayjs.iso()" :code="false">
-			<k-code language="javascript">this.$library.dayjs.iso("2023-09-12", "date"): dayjs</k-code>
+			<!-- prettier-ignore -->
+			<k-code language="javascript">this.$library.dayjs.iso(input{{ format ? ', "' + format + '"' : null }}): dayjs|null</k-code>
 
 			<k-grid variant="fields">
-				<k-column width="1/4">
+				<k-column width="1/3">
+					<k-label>Input</k-label>
 					<k-input
 						type="text"
-						:placeholder="stringPlaceholder"
+						:placeholder="placeholder"
+						:value="string"
 						style="min-width: 12rem"
-						@input="parse"
+						@input="string = $event"
 					/>
 				</k-column>
-				<k-column width="1/4">
+				<k-column width="1/3">
+					<k-label>Format</k-label>
 					<k-input
 						type="select"
-						:options="[
-							{ text: 'datetime', value: 'full' },
-							{ text: 'date', value: 'date' },
-							{ text: 'time', value: 'time' }
-						]"
+						:options="inputFormats"
+						:required="true"
 						:empty="false"
-						:value="mode"
-						@input="mode = $event"
+						:value="format"
+						@input="format = $event"
 					/>
 				</k-column>
-				<k-column width="1/2">
-					<k-box theme="code">{{ string ?? "-" }}</k-box>
+				<k-column width="1/3">
+					<k-label>Result</k-label>
+					<k-box theme="code">{{ parsed?.toISO(selected) ?? "null" }}</k-box>
 				</k-column>
 			</k-grid>
 		</k-lab-example>
 
-		<k-lab-example label="dayjs.toISO()" :code="false">
-			<k-code language="javascript">myDayjsObject.toIso("date"): string</k-code>
+		<k-lab-example label="dayjs().toISO()" :code="false">
+			<!-- prettier-ignore -->
+			<k-code language="javascript">myDayjsObject.toISO("date"): string</k-code>
 
-			<k-input
-				type="number"
-				placeholder="Year"
-				:value="year"
-				@input="
-					year = $event;
-					generate();
-				"
-			/>
-			<k-input
-				type="number"
-				placeholder="Month"
-				:value="month"
-				@input="
-					month = $event;
-					generate();
-				"
-			/>
-			<k-input
-				type="number"
-				placeholder="Day"
-				:value="day"
-				@input="
-					day = $event;
-					generate();
-				"
-			/>
-			<k-input
-				type="number"
-				placeholder="Hour"
-				:value="hour"
-				@input="
-					hour = $event;
-					generate();
-				"
-			/>
-			<k-input
-				type="number"
-				placeholder="Minute"
-				:value="minute"
-				@input="
-					minute = $event;
-					generate();
-				"
-			/>
-			<k-input
-				type="number"
-				placeholder="Second"
-				:value="second"
-				@input="
-					second = $event;
-					generate();
-				"
-			/>
-
-			<k-input
-				type="select"
-				:options="[
-					{ text: 'datetime', value: 'full' },
-					{ text: 'date', value: 'date' },
-					{ text: 'time', value: 'time' }
-				]"
-				:empty="false"
-				:value="mode"
-				@input="
-					mode = $event;
-					generate();
-				"
-			/>
-
-			<k-box theme="code">{{ iso ?? "-" }}</k-box>
+			<k-grid variant="fields">
+				<k-column v-for="unit in units" :key="unit.name" width="1/6">
+					<k-label>{{ unit.label }}</k-label>
+					<k-input
+						type="number"
+						:min="unit.min"
+						:max="unit.max"
+						:value="datetime[unit.name]"
+						@input="datetime[unit.name] = $event"
+					/>
+				</k-column>
+				<k-column width="1/2">
+					<k-label>Format</k-label>
+					<k-input
+						type="select"
+						:options="formats"
+						:required="true"
+						:empty="false"
+						:value="output"
+						@input="output = $event"
+					/>
+				</k-column>
+				<k-column width="1/2">
+					<k-label>Result</k-label>
+					<k-box theme="code">{{ iso }}</k-box>
+				</k-column>
+			</k-grid>
 		</k-lab-example>
 	</k-lab-examples>
 </template>
@@ -121,50 +84,69 @@
 export default {
 	data() {
 		return {
-			mode: "full",
-			string: null,
-			year: 2023,
-			month: 1,
-			day: 1,
-			hour: 0,
-			minute: 0,
-			second: 0,
-			iso: null
+			datetime: {
+				year: 2023,
+				month: 1,
+				day: 1,
+				hour: 0,
+				minute: 0,
+				second: 0
+			},
+			format: "datetime",
+			formats: [
+				{ text: "datetime", value: "datetime" },
+				{ text: "date", value: "date" },
+				{ text: "time", value: "time" }
+			],
+			output: "datetime",
+			string: "",
+			units: [
+				{ name: "year", label: "Year", min: 1000, max: 9999 },
+				{ name: "month", label: "Month", min: 1, max: 12 },
+				{ name: "day", label: "Day", min: 1, max: 31 },
+				{ name: "hour", label: "Hour", min: 0, max: 23 },
+				{ name: "minute", label: "Minute", min: 0, max: 59 },
+				{ name: "second", label: "Second", min: 0, max: 59 }
+			]
 		};
 	},
 	computed: {
-		stringPlaceholder() {
-			if (this.mode === "full") {
-				return "2023-01-01 00:00:00";
-			}
-
-			if (this.mode === "date") {
-				return "2023-01-01";
-			}
-
-			return "00:00:00";
-		}
-	},
-	mounted() {
-		this.generate();
-	},
-	methods: {
-		parse(input) {
-			this.string = this.$library.dayjs.iso(input, this.mode);
+		inputFormats() {
+			return [{ text: "any", value: "" }, ...this.formats];
 		},
-		generate() {
-			this.iso = this.$library
+		iso() {
+			const { year, month, day, hour, minute, second } = this.datetime;
+
+			return this.$library
 				.dayjs(
+					// the month of `Date` is zero-based
 					new Date(
-						this.year,
-						this.month,
-						this.day,
-						this.hour,
-						this.minute,
-						this.second
+						Number(year),
+						Number(month) - 1,
+						Number(day),
+						Number(hour),
+						Number(minute),
+						Number(second)
 					)
 				)
-				.toISO(this.mode);
+				.toISO(this.output);
+		},
+		parsed() {
+			return this.$library.dayjs.iso(this.string, this.selected);
+		},
+		selected() {
+			return this.format === "" ? undefined : this.format;
+		},
+		placeholder() {
+			if (this.format === "date") {
+				return "2027-01-01";
+			}
+
+			if (this.format === "time") {
+				return "00:00:00";
+			}
+
+			return "2027-01-01 00:00:00";
 		}
 	}
 };

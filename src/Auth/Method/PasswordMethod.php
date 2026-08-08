@@ -22,7 +22,7 @@ use SensitiveParameter;
 class PasswordMethod extends Method
 {
 	/**
-	 * @throws \Kirby\Exception\InvalidArgumentException If the password is missing
+	 * @throws InvalidArgumentException If the password is missing
 	 */
 	public function authenticate(
 		string|null $email,

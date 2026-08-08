@@ -258,7 +258,7 @@ abstract class Uuid implements Stringable
 	 * into one iterator
 	 * @internal
 	 *
-	 * @return \Generator<string, \Kirby\Uuid\Identifiable>
+	 * @return Generator<string, Identifiable>
 	 */
 	final public function indexes(): Generator
 	{

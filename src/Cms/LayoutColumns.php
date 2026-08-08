@@ -9,7 +9,7 @@ namespace Kirby\Cms;
  * @license   https://getkirby.com/license
  * @since     3.5.0
  *
- * @extends \Kirby\Cms\Items<\Kirby\Cms\LayoutColumn>
+ * @extends Items<LayoutColumn>
  */
 class LayoutColumns extends Items
 {

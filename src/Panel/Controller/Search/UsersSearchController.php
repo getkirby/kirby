@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel\Controller\Search;
 
+use Kirby\Cms\User;
 use Kirby\Cms\Users;
 use Kirby\Panel\Ui\Item\UserItem;
 
@@ -15,7 +16,7 @@ use Kirby\Panel\Ui\Item\UserItem;
 class UsersSearchController extends ModelsSearchController
 {
 	/**
-	 * @param \Kirby\Cms\User $model
+	 * @param User $model
 	 */
 	public function item($model): UserItem
 	{

@@ -162,7 +162,7 @@ class PagePicker extends Picker
 	/**
 	 * Search for pages by query string
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public function itemsForQuery(): Pages
 	{
@@ -197,8 +197,8 @@ class PagePicker extends Picker
 	 * site root when the requested parent is missing or not
 	 * accessible for the current user.
 	 *
-	 * @throws \Kirby\Exception\PermissionException if neither the requested parent
-	 *                                              nor the site are accessible
+	 * @throws PermissionException if neither the requested parent
+	 *                             nor the site are accessible
 	 */
 	public function parent(): Page|Site
 	{

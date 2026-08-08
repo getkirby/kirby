@@ -36,13 +36,14 @@ class DialogRoutesTest extends TestCase
 	public function testControllerWithInvalidClass(): void
 	{
 		$routes = new DialogRoutes($this->area, []);
+		$params = $routes->params([
+			'action' => Closure::class
+		]);
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid controller class "Closure" expected child of"Kirby\Panel\Controller\DialogController"');
 
-		$routes->params([
-			'action' => Closure::class
-		]);
+		$params['load']();
 	}
 
 	public function testParamsWithController(): void

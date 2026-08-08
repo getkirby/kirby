@@ -402,7 +402,7 @@ class StructureFieldTest extends TestCase
 		]);
 
 		/**
-		 * @var \Kirby\Form\Field\StructureField $field
+		 * @var StructureField $field
 		 */
 		$field = $this->field('structure', [
 			'name'   => 'mothers',
@@ -465,7 +465,7 @@ class StructureFieldTest extends TestCase
 		$this->assertEquals($expected, $motherForm->toStoredValues()); // cannot use strict assertion (array order)
 
 		/**
-		 * @var \Kirby\Form\Field\StructureField $childrenField
+		 * @var StructureField $childrenField
 		 */
 		$childrenField = $motherForm->field('children');
 		$this->assertSame('structure', $childrenField->type());
@@ -481,7 +481,7 @@ class StructureFieldTest extends TestCase
 		$this->assertSame('Test', $childrenForm->toStoredValues()['name']);
 
 		/**
-		 * @var \Kirby\Form\Field\StructureField $childrenNameField
+		 * @var StructureField $childrenNameField
 		 */
 		$childrenNameField = $childrenField->form()->fields()->name();
 		$this->assertSame('text', $childrenNameField->type());

@@ -14,7 +14,7 @@ use Kirby\Panel\Ui\Button\ViewButtons;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  *
- * @extends \Kirby\Panel\Controller\View\ModelViewController<\Kirby\Cms\User, \Kirby\Panel\User>
+ * @extends ModelViewController<User, \Kirby\Panel\User>
  */
 class UserViewController extends ModelViewController
 {

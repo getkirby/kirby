@@ -14,7 +14,7 @@ use Kirby\Panel\Ui\Item\UserItem;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  *
- * @extends \Kirby\Form\Field\ModelPickerField<\Kirby\Cms\User>
+ * @extends ModelPickerField<User>
  */
 class UserPickerField extends ModelPickerField
 {
@@ -48,7 +48,7 @@ class UserPickerField extends ModelPickerField
 	}
 
 	/**
-	 * @param \Kirby\Cms\User $model
+	 * @param User $model
 	 */
 	public function toItem(ModelWithContent $model): array
 	{

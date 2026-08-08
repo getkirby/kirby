@@ -10,6 +10,7 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Panel\Redirect;
 use Kirby\Panel\TestCase;
 use Kirby\Panel\Ui\Button;
+use Kirby\Toolkit\HtmlString;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(JsonResponse::class)]
@@ -53,6 +54,19 @@ class JsonResponseTest extends TestCase
 		];
 
 		$this->assertSame(Json::encode(['response' => $expected], true), $response->body());
+	}
+
+	public function testBodyWithHtmlString(): void
+	{
+		$response = new JsonResponse([
+			'help' => new HtmlString('<b>trusted</b>'),
+			'text' => 'plain'
+		]);
+
+		$body = Json::decode($response->body());
+
+		$this->assertSame('<b>trusted</b>', $body['response']['<help>']);
+		$this->assertSame('plain', $body['response']['text']);
 	}
 
 	public function testData(): void
@@ -194,6 +208,15 @@ class JsonResponseTest extends TestCase
 	{
 		$response = new JsonResponse();
 		$this->assertSame('response', $response->key());
+	}
+
+	public function testPayload(): void
+	{
+		$response = new JsonResponse(['foo' => 'bar']);
+		$payload  = Json::decode($response->body());
+
+		$this->assertSame(['response'], array_keys($payload));
+		$this->assertSame('bar', $payload['response']['foo']);
 	}
 
 	public function testPretty(): void

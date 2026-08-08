@@ -16,7 +16,7 @@ class ModelState
 	/**
 	 * Updates the state of the given model.
 	 *
-	 * @template TModel of \Kirby\Cms\ModelWithContent
+	 * @template TModel of ModelWithContent
 	 * @param TModel $current
 	 * @param TModel|bool|null $next
 	 */

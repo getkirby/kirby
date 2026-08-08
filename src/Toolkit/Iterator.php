@@ -33,7 +33,7 @@ class Iterator implements Countable, IteratorAggregate
 
 	/**
 	 * Returns an iterator for the elements
-	 * @return \Iterator<TKey, TValue>
+	 * @return PhpIterator<TKey, TValue>
 	 */
 	public function getIterator(): PhpIterator
 	{

@@ -11,7 +11,7 @@ use Kirby\Filesystem\F;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @extends \Kirby\Cms\Collection<\Kirby\Cms\Language>
+ * @extends Collection<Language>
  */
 class Languages extends Collection
 {
@@ -24,7 +24,7 @@ class Languages extends Collection
 	 * Creates a new collection with the given language objects
 	 *
 	 * @param null $parent
-	 * @throws \Kirby\Exception\DuplicateException
+	 * @throws DuplicateException
 	 */
 	public function __construct(
 		array $objects = [],

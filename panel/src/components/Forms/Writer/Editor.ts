@@ -649,8 +649,14 @@ export default class Editor extends Emitter<EditorEvents> {
 
 	setSelection(from = 0, to = 0): void {
 		const { doc, tr } = this.state!;
-		const resolvedFrom = utils.minMax(from, 0, doc.content.size);
-		const resolvedEnd = utils.minMax(to, 0, doc.content.size);
+
+		// the document boundaries hold block content, so clamping to
+		// `0…doc.content.size` would place the selection outside of any
+		// textblock. The first and last valid text positions sit inside.
+		const min = Selection.atStart(doc).from;
+		const max = Selection.atEnd(doc).to;
+		const resolvedFrom = utils.minMax(from, min, max);
+		const resolvedEnd = utils.minMax(to, min, max);
 		const selection = TextSelection.create(doc, resolvedFrom, resolvedEnd);
 		const transaction = tr.setSelection(selection);
 

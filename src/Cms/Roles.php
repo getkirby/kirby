@@ -13,7 +13,7 @@ namespace Kirby\Cms;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @extends \Kirby\Cms\Collection<\Kirby\Cms\Role>
+ * @extends Collection<Role>
  */
 class Roles extends Collection
 {

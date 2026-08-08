@@ -97,12 +97,12 @@ abstract class DateTimeField extends InputField
 
 	public function max(): string|null
 	{
-		return Date::optional($this->max);
+		return Date::optional($this->max)?->format(static::ISO);
 	}
 
 	public function min(): string|null
 	{
-		return Date::optional($this->min);
+		return Date::optional($this->min)?->format(static::ISO);
 	}
 
 	public function props(): array

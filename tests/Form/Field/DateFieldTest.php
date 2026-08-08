@@ -10,6 +10,52 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(DateTimeField::class)]
 class DateFieldTest extends TestCase
 {
+	public function testMax(): void
+	{
+		// a date-only field cuts it down to its own precision
+		$field = $this->field('date', [
+			'max' => '2020-10-31 08:15'
+		]);
+
+		$this->assertSame('2020-10-31', $field->max());
+
+		// with a time part, the full precision is kept
+		$field = $this->field('date', [
+			'time' => true,
+			'max'  => '2020-10-31 08:15'
+		]);
+
+		$this->assertSame('2020-10-31 08:15:00', $field->max());
+
+		// without a boundary
+		$field = $this->field('date');
+
+		$this->assertNull($field->max());
+	}
+
+	public function testMin(): void
+	{
+		// a date-only field cuts it down to its own precision
+		$field = $this->field('date', [
+			'min' => '2020-10-01 09:00'
+		]);
+
+		$this->assertSame('2020-10-01', $field->min());
+
+		// with a time part, the full precision is kept
+		$field = $this->field('date', [
+			'time' => true,
+			'min'  => '2020-10-01 09:00'
+		]);
+
+		$this->assertSame('2020-10-01 09:00:00', $field->min());
+
+		// without a boundary
+		$field = $this->field('date');
+
+		$this->assertNull($field->min());
+	}
+
 	public function testMinMax(): void
 	{
 		// empty

@@ -240,7 +240,7 @@ export default {
 			// reset to the alignment defaults
 			// before running position calculation
 			this.align = {
-				x: this.alignX ?? this.align,
+				x: this.alignX,
 				y: this.alignY
 			};
 

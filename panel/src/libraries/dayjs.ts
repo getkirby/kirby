@@ -1,16 +1,17 @@
 import dayjs from "dayjs";
-import customParseFormat from "dayjs/plugin/customParseFormat";
-import interpret from "./dayjs-interpret";
 import iso from "./dayjs-iso";
-import merge from "./dayjs-merge";
+import locale from "./dayjs-locale";
+import parse from "./dayjs-parse";
 import pattern from "./dayjs-pattern";
 import round from "./dayjs-round";
 import validate from "./dayjs-validate";
 
-dayjs.extend(customParseFormat);
-dayjs.extend(interpret);
+export type DayjsFactory = typeof dayjs;
+export type DatetimeType = "date" | "time" | "datetime";
+
 dayjs.extend(iso);
-dayjs.extend(merge);
+dayjs.extend(locale);
+dayjs.extend(parse);
 dayjs.extend(pattern);
 dayjs.extend(round);
 dayjs.extend(validate);

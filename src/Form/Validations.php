@@ -17,8 +17,8 @@ class Validations
 	/**
 	 * Validates if the field value is boolean
 	 *
-	 * @param \Kirby\Form\Field|\Kirby\Form\Field\BaseField $field
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @param Field|BaseField $field
+	 * @throws InvalidArgumentException
 	 */
 	public static function boolean($field, $value): bool
 	{
@@ -36,7 +36,7 @@ class Validations
 	/**
 	 * Validates if the field value is valid date
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public static function date(Field|BaseField $field, mixed $value): bool
 	{
@@ -54,7 +54,7 @@ class Validations
 	/**
 	 * Validates if the field value is valid email
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public static function email(Field|BaseField $field, mixed $value): bool
 	{
@@ -72,7 +72,7 @@ class Validations
 	/**
 	 * Validates if the field value is maximum
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public static function max(Field|BaseField $field, mixed $value): bool
 	{
@@ -93,7 +93,7 @@ class Validations
 	/**
 	 * Validates if the field value is max length
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public static function maxlength(Field|BaseField $field, mixed $value): bool
 	{
@@ -114,7 +114,7 @@ class Validations
 	/**
 	 * Validates if the field value is minimum
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public static function min(Field|BaseField $field, mixed $value): bool
 	{
@@ -135,7 +135,7 @@ class Validations
 	/**
 	 * Validates if the field value is min length
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public static function minlength(Field|BaseField $field, mixed $value): bool
 	{
@@ -156,7 +156,7 @@ class Validations
 	/**
 	 * Validates if the field value matches defined pattern
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public static function pattern(Field|BaseField $field, mixed $value): bool
 	{
@@ -181,7 +181,7 @@ class Validations
 	/**
 	 * Validates if the field value is required
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public static function required(Field|BaseField $field, mixed $value): bool
 	{
@@ -201,7 +201,7 @@ class Validations
 	/**
 	 * Validates if the field value is in defined options
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public static function option(Field|BaseField $field, mixed $value): bool
 	{
@@ -221,7 +221,7 @@ class Validations
 	/**
 	 * Validates if the field values is in defined options
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public static function options(Field|BaseField $field, mixed $value): bool
 	{
@@ -242,7 +242,7 @@ class Validations
 	/**
 	 * Validates if the field value is valid time
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public static function time(Field|BaseField $field, mixed $value): bool
 	{
@@ -260,7 +260,7 @@ class Validations
 	/**
 	 * Validates if the field value is valid url
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public static function url(Field|BaseField $field, mixed $value): bool
 	{

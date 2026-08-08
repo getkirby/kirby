@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Filesystem\F;
+use Kirby\Http\Route;
 
 /**
  * Generates multi-language routes for the Kirby router
@@ -46,7 +47,7 @@ class LanguageRoutes
 
 					// jump through to the fallback if nothing
 					// can be found for this language
-					/** @var \Kirby\Http\Route $this */
+					/** @var Route $this */
 					$this->next();
 				}
 			];

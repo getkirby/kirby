@@ -10,8 +10,7 @@ const reports = [
 function mount(props = {}, attrs = {}) {
 	return vueMount(Stats, {
 		props: { reports, ...props },
-		attrs,
-		global: { mocks: { $t: (key: string) => key } }
+		attrs
 	}).find(".k-stats");
 }
 
@@ -25,16 +24,14 @@ describe("Stats.vue", () => {
 	describe("reports prop", () => {
 		it("renders a k-stat for each report", () => {
 			const wrapper = vueMount(Stats, {
-				props: { reports },
-				global: { mocks: { $t: (key: string) => key } }
+				props: { reports }
 			});
 			expect(wrapper.findAll("k-stat")).toHaveLength(2);
 		});
 
 		it("renders k-empty when no reports passed", () => {
 			const wrapper = vueMount(Stats, {
-				props: { reports: [] },
-				global: { mocks: { $t: (key: string) => key } }
+				props: { reports: [] }
 			});
 			expect(wrapper.find("k-empty").exists()).toBe(true);
 			expect(wrapper.find(".k-stats").exists()).toBe(false);

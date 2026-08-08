@@ -11,6 +11,7 @@ use Kirby\Content\VersionId;
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Template\Template;
 use Kirby\Toolkit\A;
@@ -26,7 +27,7 @@ use Kirby\Uuid\Uuids;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @mixin \Kirby\Cms\Page
+ * @mixin Page
  */
 trait PageActions
 {
@@ -39,7 +40,7 @@ trait PageActions
 	 * @internal
 	 *
 	 * @return $this|static
-	 * @throws \Kirby\Exception\LogicException If a draft is being sorted or the directory cannot be moved
+	 * @throws LogicException If a draft is being sorted or the directory cannot be moved
 	 */
 	#[BlockCollectionAccess]
 	public function changeNum(int|null $num = null): static
@@ -92,7 +93,7 @@ trait PageActions
 	 * Changes the slug/uid of the page
 	 *
 	 * @return $this|static
-	 * @throws \Kirby\Exception\LogicException If the directory cannot be moved
+	 * @throws LogicException If the directory cannot be moved
 	 */
 	#[BlockCollectionAccess]
 	public function changeSlug(
@@ -171,8 +172,8 @@ trait PageActions
 	/**
 	 * Change the slug for a specific language
 	 *
-	 * @throws \Kirby\Exception\NotFoundException If the language for the given language code cannot be found
-	 * @throws \Kirby\Exception\InvalidArgumentException If the slug for the default language is being changed
+	 * @throws NotFoundException If the language for the given language code cannot be found
+	 * @throws InvalidArgumentException If the slug for the default language is being changed
 	 */
 	protected function changeSlugForLanguage(
 		string $slug,
@@ -225,7 +226,7 @@ trait PageActions
 	 *
 	 * @param string $status "draft", "listed" or "unlisted"
 	 * @param int|null $position Optional sorting number
-	 * @throws \Kirby\Exception\InvalidArgumentException If an invalid status is being passed
+	 * @throws InvalidArgumentException If an invalid status is being passed
 	 */
 	#[BlockCollectionAccess]
 	public function changeStatus(
@@ -334,7 +335,7 @@ trait PageActions
 	 * Changes the page template
 	 *
 	 * @return $this|static
-	 * @throws \Kirby\Exception\LogicException If the textfile cannot be renamed/moved
+	 * @throws LogicException If the textfile cannot be renamed/moved
 	 */
 	#[BlockCollectionAccess]
 	public function changeTemplate(string $template): static
@@ -417,7 +418,7 @@ trait PageActions
 	 * (e.g. permissions) before calling it.
 	 * @internal
 	 *
-	 * @throws \Kirby\Exception\DuplicateException If the page already exists
+	 * @throws DuplicateException If the page already exists
 	 */
 	#[BlockCollectionAccess]
 	public function copy(array $options = []): static
@@ -821,7 +822,7 @@ trait PageActions
 
 	/**
 	 * @return $this|static
-	 * @throws \Kirby\Exception\LogicException If the folder cannot be moved
+	 * @throws LogicException If the folder cannot be moved
 	 */
 	#[BlockCollectionAccess]
 	public function publish(): static
@@ -887,7 +888,7 @@ trait PageActions
 	}
 
 	/**
-	 * @throws \Kirby\Exception\LogicException If the page is not included in the siblings collection
+	 * @throws LogicException If the page is not included in the siblings collection
 	 */
 	protected function resortSiblingsAfterListing(int|null $position = null): bool
 	{
@@ -976,7 +977,7 @@ trait PageActions
 	 * Convert a page from listed or unlisted to draft
 	 *
 	 * @return $this|static
-	 * @throws \Kirby\Exception\LogicException If the folder cannot be moved
+	 * @throws LogicException If the folder cannot be moved
 	 */
 	#[BlockCollectionAccess]
 	public function unpublish(): static

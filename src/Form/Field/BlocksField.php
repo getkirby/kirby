@@ -2,6 +2,7 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Cms\Api;
 use Kirby\Cms\App;
 use Kirby\Cms\Block;
 use Kirby\Cms\Blocks as BlocksCollection;
@@ -141,7 +142,7 @@ class BlocksField extends InputField
 					string|null $path = null
 				) use ($field) {
 					/**
-					 * @var \Kirby\Cms\Api $api
+					 * @var Api $api
 					 */
 					$api    = $this;
 					$fields = $field->fields($fieldsetType);

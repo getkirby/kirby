@@ -260,7 +260,7 @@ class Dir
 	 * @param string $dir The path for the new directory
 	 * @param bool $recursive Create all parent directories, which don't exist
 	 * @return bool True: the dir has been created, false: creating failed
-	 * @throws \Exception If a file with the provided path already exists or the parent directory is not writable
+	 * @throws Exception If a file with the provided path already exists or the parent directory is not writable
 	 */
 	public static function make(
 		string $dir,

@@ -9,7 +9,7 @@ namespace Kirby\Cms;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @template TCollection of \Kirby\Cms\Collection
+ * @template TCollection of Collection
  */
 trait HasSiblings
 {

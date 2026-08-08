@@ -55,6 +55,50 @@ class Area
 	}
 
 	/**
+	 * All view buttons of the area that have not been disabled
+	 */
+	public function buttons(): array
+	{
+		return $this->filterEnabled($this->buttons);
+	}
+
+	/**
+	 * All dialogs of the area that have not been disabled
+	 */
+	public function dialogs(): array
+	{
+		return $this->filterEnabled($this->dialogs);
+	}
+
+	/**
+	 * All drawers of the area that have not been disabled
+	 */
+	public function drawers(): array
+	{
+		return $this->filterEnabled($this->drawers);
+	}
+
+	/**
+	 * All dropdowns of the area that have not been disabled
+	 */
+	public function dropdowns(): array
+	{
+		return $this->filterEnabled($this->dropdowns);
+	}
+
+	/**
+	 * Removes all definitions that have been disabled
+	 * by setting them to `false`, e.g. by a plugin
+	 */
+	protected function filterEnabled(array $definitions): array
+	{
+		return array_filter(
+			$definitions,
+			fn ($definition) => $definition !== false
+		);
+	}
+
+	/**
 	 * The label is used for the menu item and the breadcrumb
 	 * unless a custom breadcrumb label is defined
 	 */
@@ -80,6 +124,14 @@ class Area
 	}
 
 	/**
+	 * All requests of the area that have not been disabled
+	 */
+	public function requests(): array
+	{
+		return $this->filterEnabled($this->requests);
+	}
+
+	/**
 	 * Extract all routes for searches
 	 */
 	public function routes(): array
@@ -99,6 +151,14 @@ class Area
 			...$dropdownRoutes->toArray(),
 			...$requestRoutes->toArray(),
 		];
+	}
+
+	/**
+	 * All searches of the area that have not been disabled
+	 */
+	public function searches(): array
+	{
+		return $this->filterEnabled($this->searches);
 	}
 
 	/**
@@ -127,5 +187,13 @@ class Area
 			'search'          => $this->search(),
 			'title'           => $this->title(),
 		];
+	}
+
+	/**
+	 * All views of the area that have not been disabled
+	 */
+	public function views(): array
+	{
+		return $this->filterEnabled($this->views);
 	}
 }
