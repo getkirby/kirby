@@ -53,6 +53,12 @@ const units: Record<string, PatternUnit> = {
 };
 
 /**
+ * Matches what a pattern escapes and prints as it is,
+ * e.g. the `[um]` of `DD.MM.YYYY [um] HH:mm`
+ */
+const escapes = /\[([^\]]*)\]/g;
+
+/**
  * Matches the supported markers in a format string,
  * longest first, so that scanning always reads the widest marker.
  */
@@ -62,6 +68,12 @@ const markers = new RegExp(
 		.join("|"),
 	"g"
 );
+
+/**
+ * Matches what the pattern is scanned by: an escaped literal,
+ * which carries no unit, or a sequence of letters, which is a marker
+ */
+const tokens = /\[[^\]]*\]|[a-zA-Z]+/g;
 
 export class DayjsPattern {
 	source: string;
@@ -104,6 +116,14 @@ export class DayjsPattern {
 	}
 
 	/**
+	 * The strings the pattern escapes and prints as they are,
+	 * e.g. `["um"]` for `DD.MM.YYYY [um] HH:mm`
+	 */
+	get literals(): string[] {
+		return [...this.source.matchAll(escapes)].map((match) => match[1]);
+	}
+
+	/**
 	 * The parts of the pattern, scanned by letter sequences.
 	 *
 	 * Without a datetime, the parts are positioned in the pattern
@@ -116,28 +136,31 @@ export class DayjsPattern {
 		const value = dt?.isValid() === true ? dt : null;
 		const parts: PatternPart[] = [];
 
-		// where the scan stands in the pattern and in the rendering
 		let offset = 0;
 		let position = 0;
+		let index = 0;
 
-		for (const [index, match] of [
-			...this.source.matchAll(/[a-zA-Z]+/g)
-		].entries()) {
-			const marker = match[0];
-			const length =
-				value === null ? marker.length : value.format(marker).length;
+		for (const match of this.source.matchAll(tokens)) {
+			const token = match[0];
 
-			// whatever sits between the markers prints as it is
+			// whatever sits between the tokens prints as it is
 			position += match.index - offset;
+			offset = match.index + token.length;
+
+			if (token.startsWith("[") === true) {
+				position += value === null ? token.length : token.length - 2;
+				continue;
+			}
+
+			const length = value === null ? token.length : value.format(token).length;
 
 			parts.push({
-				index,
-				unit: units[marker],
+				index: index++,
+				unit: units[token],
 				start: position,
 				end: position + (length - 1)
 			});
 
-			offset = match.index + marker.length;
 			position += length;
 		}
 
@@ -164,7 +187,8 @@ export class DayjsPattern {
 	 * appear in it, e.g. `MM/DD/YYYY` as `["month", "day", "year"]`.
 	 */
 	get units(): PatternUnit[] {
-		return [...this.source.matchAll(markers)].map((match) => units[match[0]]);
+		const source = this.source.replace(escapes, "");
+		return [...source.matchAll(markers)].map((match) => units[match[0]]);
 	}
 }
 

@@ -114,6 +114,20 @@ describe("dayjs.pattern().format()", () => {
 	});
 });
 
+describe("dayjs.pattern().literals", () => {
+	const data: Record<string, string[]> = {
+		"DD.MM.YYYY": [],
+		"DD.MM.YYYY [um] HH:mm": ["um"],
+		"D [de] MMMM [de] YYYY": ["de", "de"],
+		"HH[h]mm": ["h"],
+		"DD.MM.YYYY[]": [""]
+	};
+
+	it.each(Object.entries(data))("%s", (source, expected) => {
+		expect(dayjs.pattern(source).literals).toEqual(expected);
+	});
+});
+
 describe("dayjs.pattern().parts()", () => {
 	const data: Record<
 		string,
@@ -176,6 +190,16 @@ describe("dayjs.pattern().parts()", () => {
 			dayjs.pattern("D MMMM YYYY").parts()
 		);
 	});
+
+	it("reads no part from what the pattern escapes", () => {
+		expect(dayjs.pattern("DD.MM.YYYY [um] HH:mm").parts()).toEqual([
+			{ index: 0, unit: "day", start: 0, end: 1 },
+			{ index: 1, unit: "month", start: 3, end: 4 },
+			{ index: 2, unit: "year", start: 6, end: 9 },
+			{ index: 3, unit: "hour", start: 16, end: 17 },
+			{ index: 4, unit: "minute", start: 19, end: 20 }
+		]);
+	});
 });
 
 describe("dayjs.pattern().parts(dt)", () => {
@@ -190,7 +214,10 @@ describe("dayjs.pattern().parts(dt)", () => {
 		"DD.MM.YYYY": ["04", "09", "2020"],
 		"YYYY-MM-DD": ["2020", "09", "04"],
 		"M/D/YY h:m a": ["9", "4", "20", "1", "14", "pm"],
-		"D. MMM YYYY, H:m:s": ["4", "Sep", "2020", "13", "14", "3"]
+		"D. MMM YYYY, H:m:s": ["4", "Sep", "2020", "13", "14", "3"],
+		"DD.MM.YYYY [um] HH:mm": ["04", "09", "2020", "13", "14"],
+		"D [de] MMMM [de] YYYY": ["4", "September", "2020"],
+		"HH[h]mm": ["13", "14"]
 	};
 
 	it.each(Object.entries(data))("%s", (source, expected) => {
@@ -239,8 +266,8 @@ describe("dayjs.pattern().type", () => {
 		["HH:mm", "time"],
 		["hh:mm A", "time"],
 		["mm:ss", "time"],
-		// a pattern without any usable marker says nothing about
-		// what it reads, so it falls back to the default
+		["HH[h]mm", "time"],
+		["HH:mm [Uhr]", "time"],
 		["foo", "date"],
 		["", "date"]
 	];
@@ -256,11 +283,12 @@ describe("dayjs.pattern().units", () => {
 		["MM/DD/YYYY", ["month", "day", "year"]],
 		["MMMM D, YYYY", ["month", "day", "year"]],
 		["hh:mm:ss a", ["hour", "minute", "second", "meridiem"]],
-		// markers written without a separator are read as well
 		["YYYYMMDD", ["year", "month", "day"]],
 		["DDMMYY", ["day", "month", "year"]],
 		["HHmm", ["hour", "minute"]],
-		// a trailing separator adds no unit
+		["DD.MM.YYYY [um] HH:mm", ["day", "month", "year", "hour", "minute"]],
+		["HH[h]mm", ["hour", "minute"]],
+		["[Am] D. MMMM", ["day", "month"]],
 		["YYYY-MM-", ["year", "month"]],
 		["", []],
 		["--.--", []]

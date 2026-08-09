@@ -100,6 +100,15 @@ describe("DateInput.vue", () => {
 
 			expect(input.attributes("placeholder")).toBe("15.01.2022");
 		});
+
+		it("uses a boundary that carries a time part", () => {
+			const input = mount({
+				display: "DD.MM.YYYY",
+				min: "2024-06-23 08:30:00"
+			}).find("input");
+
+			expect(input.attributes("placeholder")).toBe("23.06.2024");
+		});
 	});
 
 	describe("parse()", () => {
@@ -137,6 +146,14 @@ describe("DateInput.vue", () => {
 			const wrapper = mount({ display: "DD.MM.YYYY" });
 			await type(wrapper, "5");
 			expect(emitted(wrapper)).toBe("2022-01-05");
+		});
+
+		it("reads a display pattern that escapes a literal", async () => {
+			const wrapper = mount({ display: "[Am] D. MMMM YYYY" });
+			const input = await type(wrapper, "Am 5. March 2021");
+
+			expect(emitted(wrapper)).toBe("2021-03-05");
+			expect(input.value).toBe("Am 5. March 2021");
 		});
 	});
 
@@ -223,6 +240,32 @@ describe("DateInput.vue", () => {
 		});
 	});
 
+	describe("onEnter()", () => {
+		it("commits and submits parseable input", async () => {
+			const wrapper = mount({ display: "DD.MM.YYYY" });
+			const input = wrapper.find("input");
+
+			await input.setValue("5.3.2021");
+			await input.trigger("keydown", { key: "Enter" });
+			await wrapper.vm.$nextTick();
+
+			expect(emitted(wrapper)).toBe("2021-03-05");
+			expect(wrapper.emitted("submit")).toHaveLength(1);
+		});
+
+		it("does not submit what could not be parsed", async () => {
+			const wrapper = mount({ display: "DD.MM.YYYY", value: "2021-03-05" });
+			const input = wrapper.find("input");
+
+			await input.setValue("not a date");
+			await input.trigger("keydown", { key: "Enter" });
+			await wrapper.vm.$nextTick();
+
+			expect(wrapper.emitted("input")).toBeUndefined();
+			expect(wrapper.emitted("submit")).toBeUndefined();
+		});
+	});
+
 	describe("onTab()", () => {
 		it("selects the parts of the rendered value", async () => {
 			const wrapper = mount({ display: "D MMMM YYYY", value: "2026-07-13" });
@@ -261,6 +304,18 @@ describe("DateInput.vue", () => {
 			await press(wrapper, "Tab");
 
 			expect(selected(wrapper)).toBe("July");
+		});
+
+		it("selects no part while the input cannot be parsed", async () => {
+			const wrapper = mount({ display: "D MMMM YYYY", value: "2026-07-13" });
+			const input = wrapper.find("input");
+			const el = input.element as HTMLInputElement;
+
+			await input.setValue("not a date");
+			el.setSelectionRange(0, 0);
+			await press(wrapper, "Tab");
+
+			expect(selected(wrapper)).toBe("");
 		});
 
 		it("keeps the last part selected", async () => {

@@ -92,6 +92,20 @@ describe("TimeInput.vue", () => {
 			expect(emitted(wrapper)).toBe("09:00:00");
 		});
 
+		it("reads a display pattern that escapes a literal", async () => {
+			const wrapper = mount({ display: "HH[h]mm" });
+			const input = await type(wrapper, "5h12");
+
+			expect(emitted(wrapper)).toBe("05:12:00");
+			expect(input.value).toBe("05h12");
+		});
+
+		it("reads input as a time even without a usable pattern", async () => {
+			const wrapper = mount({ display: "foo" });
+			await type(wrapper, "9");
+			expect(emitted(wrapper)).toBe("09:00:00");
+		});
+
 		it("rounds to the nearest step", async () => {
 			const wrapper = mount({
 				display: "HH:mm",

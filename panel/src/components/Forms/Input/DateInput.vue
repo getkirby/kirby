@@ -133,8 +133,8 @@ export default {
 		 * @since 6.0.0
 		 */
 		placeholder() {
-			const min = this.$library.dayjs.iso(this.min, this.inputType);
-			const max = this.$library.dayjs.iso(this.max, this.inputType);
+			const min = this.$library.dayjs.iso(this.min);
+			const max = this.$library.dayjs.iso(this.max);
 
 			let dt = this.$library.dayjs.iso(
 				this.$library.dayjs().toISO(this.inputType),
@@ -272,8 +272,9 @@ export default {
 			this.alter("add");
 		},
 		/**
-		 * When blurring the input, update
-		 * data from parsed value and emit
+		 * When blurring the input, update data from parsed value and emit
+		 *
+		 * @returns {boolean} whether the input shows the current value
 		 */
 		onBlur() {
 			const value = this.$el.value;
@@ -282,7 +283,7 @@ export default {
 			// value: re-parsing it would only be able to lose information
 			// that the `display` pattern doesn't cover
 			if (value === (this.formatted ?? "")) {
-				return;
+				return true;
 			}
 
 			const dt = this.parse();
@@ -294,11 +295,12 @@ export default {
 				this.$el.setCustomValidity(
 					this.$t("error.validation." + this.inputType)
 				);
-				return;
+				return false;
 			}
 
 			this.commit(dt);
 			this.emit(dt);
+			return true;
 		},
 		/**
 		 * When hitting enter, blur the input
@@ -306,7 +308,10 @@ export default {
 		 */
 		async onEnter() {
 			// ensure input gets parsed and emitted as new value
-			this.onBlur();
+			if (this.onBlur() === false) {
+				return;
+			}
+
 			await this.$nextTick();
 			// only thereafter emit submit so the content gets saved
 			this.$emit("submit");
@@ -356,8 +361,13 @@ export default {
 				return;
 			}
 
-			// make sure to confirm any current input
-			this.onBlur();
+			// make sure to confirm any current input; while it shows text
+			// that could not be read, the parts describe a rendering the
+			// input isn't showing, so let tab move the focus out instead
+			if (this.onBlur() === false) {
+				return;
+			}
+
 			await this.$nextTick();
 			const selection = this.selection();
 
@@ -424,7 +434,8 @@ export default {
 		 */
 		parse() {
 			const dt = this.$library.dayjs.parse(this.$el.value, {
-				pattern: this.display
+				pattern: this.display,
+				type: this.inputType
 			});
 
 			return this.round(dt) ?? null;

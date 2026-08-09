@@ -102,6 +102,9 @@ export default {
 		},
 		night() {
 			return this.formatTimes([18, 19, 20, 21, 22, 23, "-", 0, 1, 2, 3, 4, 5]);
+		},
+		pattern() {
+			return this.$library.dayjs.pattern(this.display);
 		}
 	},
 	methods: {
@@ -116,9 +119,10 @@ export default {
 
 				// the full hour as the ISO string a time is stored as
 				const select = String(time).padStart(2, "0") + ":00:00";
+				const dt = this.$library.dayjs.iso(select, "time");
 
 				return {
-					display: this.$library.dayjs.iso(select, "time").format(this.display),
+					display: this.pattern.format(dt) ?? select,
 					select
 				};
 			});
