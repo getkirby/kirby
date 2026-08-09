@@ -7,23 +7,20 @@ use Kirby\Cms\App;
 use Kirby\Cms\Page;
 
 /**
- * UUID for \Kirby\Cms\Page
- * @since 3.8.0
+ * UUID for $page
  *
  * @package   Kirby Uuid
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     3.8.0
+ *
+ * @extends \Kirby\Uuid\ModelUuid<\Kirby\Cms\Page>
  */
 class PageUuid extends ModelUuid
 {
 	protected const TYPE = 'page';
-
-	/**
-	 * @var \Kirby\Cms\Page|null
-	 */
-	public Identifiable|null $model = null;
 
 	/**
 	 * Removes the current UUID from cache,

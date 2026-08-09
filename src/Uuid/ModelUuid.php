@@ -5,24 +5,24 @@ namespace Kirby\Uuid;
 /**
  * Base for UUIDs for models where id string
  * is stored in the content, such as pages and files
- * @since 3.8.0
  *
  * @package   Kirby Uuid
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     3.8.0
+ *
+ * @template TModel of \Kirby\Cms\ModelWithContent
+ * @extends \Kirby\Uuid\Uuid<TModel>
  */
 abstract class ModelUuid extends Uuid
 {
 	/**
-	 * @var \Kirby\Cms\ModelWithContent|null
-	 */
-	public Identifiable|null $model = null;
-
-	/**
 	 * Looks up UUID in local and global index
 	 * and returns the identifiable model object
+	 *
+	 * @return TModel|null
 	 */
 	protected function findByIndex(): Identifiable|null
 	{
