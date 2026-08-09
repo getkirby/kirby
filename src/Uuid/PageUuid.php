@@ -7,20 +7,17 @@ use Kirby\Cms\App;
 use Kirby\Cms\Page;
 
 /**
- * UUID for \Kirby\Cms\Page
+ * UUID for $page
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     3.8.0
+ *
+ * @extends ModelUuid<Page>
  */
 class PageUuid extends ModelUuid
 {
 	protected const string TYPE = 'page';
-
-	/**
-	 * @var Page|null
-	 */
-	public Identifiable|null $model = null;
 
 	/**
 	 * Removes the current UUID from cache,
@@ -30,7 +27,7 @@ class PageUuid extends ModelUuid
 	{
 		// if $recursive, also clear UUIDs from cache for all children
 		if ($recursive === true && $model = $this->model()) {
-			foreach ($model->children() as $child) {
+			foreach ($model->childrenAndDrafts() as $child) {
 				$child->uuid()->clear(true);
 			}
 		}
@@ -46,7 +43,13 @@ class PageUuid extends ModelUuid
 	{
 		if ($key = $this->key()) {
 			if ($value = Uuids::cache()->get($key)) {
-				return App::instance()->page($value);
+				$page = App::instance()->page($value);
+
+				// the cached path can be stale,
+				// e.g. when the page has been moved or copied
+				if ($this->isFor($page) === true) {
+					return $page;
+				}
 			}
 		}
 
@@ -86,7 +89,7 @@ class PageUuid extends ModelUuid
 	): bool {
 		// if $recursive, also populate UUIDs for all children
 		if ($recursive === true && $model = $this->model()) {
-			foreach ($model->children() as $child) {
+			foreach ($model->childrenAndDrafts() as $child) {
 				$child->uuid()->populate($force, true);
 			}
 		}

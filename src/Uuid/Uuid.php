@@ -29,7 +29,7 @@ use Stringable;
  * $model->uuid()->toString();
  *
  * // get model from an UUID string
- * Uuid::for('page://HhX1YtRR2ImG6h4')->model();
+ * Uuid::from('page://HhX1YtRR2ImG6h4')->model();
  *
  * // cache actions
  * $model->uuid()->populate();
@@ -39,6 +39,8 @@ use Stringable;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     3.8.0
+ *
+ * @template TModel of Identifiable
  */
 abstract class Uuid implements Stringable
 {
@@ -53,12 +55,21 @@ abstract class Uuid implements Stringable
 	/**
 	 * Collection that is likely to contain the model and
 	 * that will be checked first to speed up the lookup
+	 *
+	 * @var Collection<TModel>|null
 	 */
 	public Collection|null $context;
 
+	/**
+	 * @var TModel|null
+	 */
 	public Identifiable|null $model;
 	public Uri $uri;
 
+	/**
+	 * @param TModel|null $model
+	 * @param Collection<TModel>|null $context
+	 */
 	public function __construct(
 		string|null $uuid = null,
 		Identifiable|null $model = null,
@@ -111,6 +122,8 @@ abstract class Uuid implements Stringable
 	 * collection, which takes priority when looking
 	 * up the UUID/model from index
 	 * @internal
+	 *
+	 * @return Generator<TModel>
 	 */
 	final public function context(): Generator
 	{
@@ -121,6 +134,8 @@ abstract class Uuid implements Stringable
 	 * Looks up UUID in cache and resolves
 	 * to identifiable model object;
 	 * implemented on child classes
+	 *
+	 * @return TModel|null
 	 *
 	 * @codeCoverageIgnore
 	 */
@@ -135,6 +150,8 @@ abstract class Uuid implements Stringable
 	 * Looks up UUID in local and global index
 	 * and returns the identifiable model object;
 	 * implemented on child classes
+	 *
+	 * @return TModel|null
 	 *
 	 * @codeCoverageIgnore
 	 */
@@ -258,7 +275,7 @@ abstract class Uuid implements Stringable
 	 * into one iterator
 	 * @internal
 	 *
-	 * @return Generator<string, Identifiable>
+	 * @return Generator<string, TModel>
 	 */
 	final public function indexes(): Generator
 	{
@@ -333,6 +350,7 @@ abstract class Uuid implements Stringable
 	 * or index and returns the object
 	 *
 	 * @param bool $lazy If `true`, only lookup from cache
+	 * @return TModel|null
 	 */
 	public function model(bool $lazy = false): Identifiable|null
 	{

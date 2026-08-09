@@ -2,7 +2,6 @@
 
 namespace Kirby\Uuid;
 
-use Kirby\Cms\Block;
 use Kirby\Cms\Blocks;
 use Kirby\Content\Field;
 
@@ -21,11 +20,6 @@ class BlockUuid extends FieldUuid
 {
 	protected const string TYPE  = 'block';
 	protected const string FIELD = 'blocks';
-
-	/**
-	 * @var Block|null
-	 */
-	public Identifiable|null $model = null;
 
 	/**
 	 * Converts content field to a Blocks collection

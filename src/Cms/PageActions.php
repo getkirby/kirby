@@ -774,6 +774,9 @@ trait PageActions
 					throw new LogicException(key: 'page.move.directory');
 				}
 
+				// media folder is bound to the page id, which just changed
+				Dir::remove($page->mediaRoot());
+
 				// flush all collection caches to be sure that
 				// the new child is included afterwards
 				$parent->purge();

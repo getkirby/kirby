@@ -20,7 +20,8 @@ class LanguageRouterTest extends TestCase
 			],
 			'languages' => [
 				[
-					'code' => 'en'
+					'code'    => 'en',
+					'default' => true
 				]
 			]
 		]);
