@@ -52,6 +52,30 @@ describe("TimeInput.vue", () => {
 		it.inheritsNoAttrs(mount);
 	});
 
+	describe("alter()", () => {
+		beforeAll(() => {
+			vi.setSystemTime(new Date(2022, 0, 15, 14, 32));
+		});
+
+		afterAll(() => {
+			vi.setSystemTime(new Date(2022, 0, 15));
+		});
+
+		it("fills in now rounded to the step for an empty field", async () => {
+			const wrapper = mount({
+				display: "HH:mm",
+				step: { size: 15, unit: "minute" }
+			});
+			const input = wrapper.find("input");
+
+			await input.trigger("keydown", { key: "ArrowUp" });
+			await wrapper.vm.$nextTick();
+
+			expect((input.element as HTMLInputElement).value).toBe("14:30");
+			expect(emitted(wrapper)).toBe("14:30:00");
+		});
+	});
+
 	describe("placeholder", () => {
 		it("shows an example time", () => {
 			const input = mount({ display: "h:mm a" }).find("input");

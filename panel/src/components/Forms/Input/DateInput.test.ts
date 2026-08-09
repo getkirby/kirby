@@ -157,6 +157,55 @@ describe("DateInput.vue", () => {
 		});
 	});
 
+	describe("alter()", () => {
+		// in the afternoon, where rounding the time of day to the
+		// nearest day would land on tomorrow
+		beforeAll(() => {
+			vi.setSystemTime(new Date(2022, 0, 15, 14, 30));
+		});
+
+		afterAll(() => {
+			vi.setSystemTime(new Date(2022, 0, 15));
+		});
+
+		it("fills in now for an empty field without stepping it", async () => {
+			const wrapper = mount({ display: "MM/DD/YYYY" });
+			const input = wrapper.find("input").element as HTMLInputElement;
+
+			await press(wrapper, "ArrowUp");
+
+			expect(input.value).toBe("01/15/2022");
+			expect(emitted(wrapper)).toBe("2022-01-15");
+			expect(selected(wrapper)).toBe("01");
+		});
+
+		it("fills in now on arrow down as well", async () => {
+			const wrapper = mount({ display: "MM/DD/YYYY" });
+			await press(wrapper, "ArrowDown");
+			expect(emitted(wrapper)).toBe("2022-01-15");
+		});
+
+		it("steps the selected part once the field has a value", async () => {
+			const wrapper = mount({ display: "MM/DD/YYYY" });
+
+			await press(wrapper, "ArrowUp");
+			await press(wrapper, "ArrowUp");
+
+			expect(emitted(wrapper)).toBe("2022-02-15");
+		});
+
+		it("keeps text that could not be read", async () => {
+			const wrapper = mount({ display: "DD.MM.YYYY", value: "2021-03-05" });
+			const input = wrapper.find("input");
+
+			await input.setValue("not a date");
+			await press(wrapper, "ArrowUp");
+
+			expect((input.element as HTMLInputElement).value).toBe("not a date");
+			expect(wrapper.emitted("input")).toBeUndefined();
+		});
+	});
+
 	describe("onArrowUp()", () => {
 		it("alters the selected part", async () => {
 			const wrapper = mount({ display: "D MMMM YYYY", value: "2026-07-13" });

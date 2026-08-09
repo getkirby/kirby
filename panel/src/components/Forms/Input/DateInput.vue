@@ -181,7 +181,23 @@ export default {
 			// since manipulation command can occur while
 			// typing new value, make sure to first update
 			// datetime object from current input value
-			let dt = this.parse() ?? this.round(this.$library.dayjs());
+			let dt = this.parse();
+
+			if (dt === null) {
+				if (this.$el.value !== "") {
+					return;
+				}
+
+				// an empty field has no part to step yet: the first key press
+				// only fills in now and selects the part the caret sits in
+				dt = this.toDatetime(this.$library.dayjs().toISO(this.inputType));
+
+				this.commit(dt);
+				this.emit(dt);
+
+				await this.$nextTick();
+				return this.selectFirst();
+			}
 
 			// what unit to alter and by how much:
 			// as default use the step unit and size
