@@ -2,6 +2,9 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Filesystem\F;
+use Kirby\Uuid\Uuid;
+use Kirby\Uuid\Uuids;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(PageCopy::class)]
@@ -252,6 +255,39 @@ class PageCopyTest extends ModelTestCase
 		$this->assertNotSame('page://a', $normalized->uuid()->toString());
 		$this->assertNotSame('page://aa', $normalized->find('test-a')->uuid()->toString());
 		$this->assertNotSame('file://file-aa', $normalized->find('test-a')->file()->uuid()->toString());
+	}
+
+	public function testProcessKeepsUuidOfOriginal(): void
+	{
+		$this->app->impersonate('kirby');
+
+		F::write($source = static::TMP . '/source.md', '');
+
+		$page = Page::create([
+			'slug'    => 'test',
+			'content' => ['uuid' => 'a']
+		]);
+
+		$file = $page->createFile([
+			'filename' => 'test.md',
+			'source'   => $source,
+			'content'  => ['uuid' => 'file-a']
+		]);
+
+		$pageKey = $page->uuid()->key();
+		$fileKey = $file->uuid()->key();
+
+		// pretend the UUIDs of the original have not been looked up yet
+		Uuids::cache()->remove($pageKey);
+		Uuids::cache()->remove($fileKey);
+
+		// the copy still holds the UUIDs of the original while it is
+		// being processed and must not claim their cache entries
+		$page->duplicate('test-copy', ['files' => true]);
+
+		$this->assertNotSame('test-copy', Uuids::cache()->get($pageKey));
+		$this->assertSame('test', Uuid::from('page://a')->model()->id());
+		$this->assertSame('test/test.md', Uuid::from('file://file-a')->model()->id());
 	}
 
 	public function testRemoveSlug(): void

@@ -12,6 +12,38 @@ class PageUuidTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Uuid.PageUuid';
 
+	public function testClearRecursiveIncludesDrafts(): void
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'    => 'parent',
+						'content' => ['uuid' => 'my-parent'],
+						'drafts'  => [
+							[
+								'slug'    => 'draft',
+								'content' => ['uuid' => 'my-draft']
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$parent = $app->page('parent');
+		$draft  = $parent->drafts()->first();
+
+		$parent->uuid()->populate();
+		$draft->uuid()->populate();
+		$this->assertTrue($draft->uuid()->isCached());
+
+		$parent->uuid()->clear(recursive: true);
+
+		$this->assertFalse($parent->uuid()->isCached());
+		$this->assertFalse($draft->uuid()->isCached());
+	}
+
 	public function testFindByCache(): void
 	{
 		$page = $this->app->page('page-a');
@@ -27,6 +59,39 @@ class PageUuidTest extends TestCase
 		// retrieve from cache
 		$this->assertTrue($uuid->isCached());
 		$this->assertIsPage($page, $uuid->model(true));
+	}
+
+	public function testFindByCacheRejectsForeignPage(): void
+	{
+		$page = $this->app->page('page-a');
+		$page->uuid()->populate();
+
+		// point the cache entry to a page
+		// that does not hold this UUID
+		Uuids::cache()->set($page->uuid()->key(), 'page-b');
+
+		$uuid = new PageUuid('page://my-page');
+		$this->assertNull($uuid->model(true));
+
+		// the stale entry gets corrected from the index
+		$this->assertIsPage($page, $uuid->model());
+		$this->assertSame('page-a', Uuids::cache()->get($uuid->key()));
+	}
+
+	public function testFindByCacheRejectsMissingPage(): void
+	{
+		$page = $this->app->page('page-a');
+		$page->uuid()->populate();
+
+		// point the cache entry to a page that no longer exists
+		Uuids::cache()->set($page->uuid()->key(), 'deleted-page');
+
+		$uuid = new PageUuid('page://my-page');
+		$this->assertNull($uuid->model(true));
+
+		// the stale entry gets corrected from the index
+		$this->assertIsPage($page, $uuid->model());
+		$this->assertSame('page-a', Uuids::cache()->get($uuid->key()));
 	}
 
 	public function testFindByIndex(): void
@@ -74,6 +139,36 @@ class PageUuidTest extends TestCase
 		$this->assertInstanceOf(Generator::class, $index);
 		$this->assertIsPage($index->current());
 		$this->assertSame(3, iterator_count($index));
+	}
+
+	public function testPopulateRecursiveIncludesDrafts(): void
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'    => 'parent',
+						'content' => ['uuid' => 'my-parent'],
+						'drafts'  => [
+							[
+								'slug'    => 'draft',
+								'content' => ['uuid' => 'my-draft']
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$parent = $app->page('parent');
+		$draft  = $parent->drafts()->first();
+
+		$this->assertFalse($draft->uuid()->isCached());
+
+		$parent->uuid()->populate(recursive: true);
+
+		$this->assertTrue($parent->uuid()->isCached());
+		$this->assertTrue($draft->uuid()->isCached());
 	}
 
 	public function testRetrieveId(): void

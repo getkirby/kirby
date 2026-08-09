@@ -12,18 +12,16 @@ use Kirby\Cms\ModelWithContent;
  * @license   https://getkirby.com/license
  * @since     3.8.0
  *
- * @method ModelWithContent|null model(bool $lazy = false)
+ * @template TModel of ModelWithContent
+ * @extends Uuid<TModel>
  */
 abstract class ModelUuid extends Uuid
 {
 	/**
-	 * @var ModelWithContent|null
-	 */
-	public Identifiable|null $model = null;
-
-	/**
 	 * Looks up UUID in local and global index
 	 * and returns the identifiable model object
+	 *
+	 * @return TModel|null
 	 */
 	protected function findByIndex(): Identifiable|null
 	{
@@ -56,6 +54,21 @@ abstract class ModelUuid extends Uuid
 		$this->uri->host($id);
 
 		return $id;
+	}
+
+	/**
+	 * Checks whether the model actually still holds the
+	 * UUID identifier that was looked up
+	 *
+	 * @param TModel|null $model
+	 */
+	protected function isFor(Identifiable|null $model): bool
+	{
+		if ($model === null) {
+			return false;
+		}
+
+		return static::retrieveId($model) === $this->uri->host();
 	}
 
 	/**

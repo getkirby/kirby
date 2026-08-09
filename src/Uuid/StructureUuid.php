@@ -3,7 +3,6 @@
 namespace Kirby\Uuid;
 
 use Kirby\Cms\Structure;
-use Kirby\Cms\StructureObject;
 use Kirby\Content\Field;
 
 /**
@@ -21,11 +20,6 @@ class StructureUuid extends FieldUuid
 {
 	protected const string TYPE  = 'struct';
 	protected const string FIELD = 'structure';
-
-	/**
-	 * @var StructureObject|null
-	 */
-	public Identifiable|null $model = null;
 
 	/**
 	 * Converts content field to a Structure collection

@@ -84,7 +84,7 @@ class WebauthnMethodTest extends TestCase
 		);
 
 		// persist the challenge for the login verification
-		$this->app->session()->set('kirby.webauthn.login', $assert['challenge']);
+		$this->app->session()->set('kirby.method.data', $assert['challenge']);
 
 		$payload = $assert['payload'];
 
@@ -137,7 +137,7 @@ class WebauthnMethodTest extends TestCase
 		// the challenge is persisted for the follow-up verification
 		$this->assertSame(
 			$rendered['props']['publicKey']['challenge'],
-			$this->app->session()->get('kirby.webauthn.login')
+			$this->app->session()->get('kirby.method.data')
 		);
 	}
 
@@ -176,7 +176,7 @@ class WebauthnMethodTest extends TestCase
 	public function testAuthenticateFailsVerification(): void
 	{
 		$payload = $this->register('marge');
-		$this->app->session()->set('kirby.webauthn.login', 'wrong-challenge');
+		$this->app->session()->set('kirby.method.data', 'wrong-challenge');
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The passkey could not be verified');
