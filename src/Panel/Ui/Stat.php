@@ -5,6 +5,7 @@ namespace Kirby\Panel\Ui;
 use Kirby\Cms\HasStringTemplate;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Http\Url;
 
 /**
  * @copyright Bastian Allgeier
@@ -77,7 +78,13 @@ class Stat extends Component
 
 	public function link(): string|null
 	{
-		return $this->stringTemplate($this->link, safe: false);
+		$link = $this->stringTemplate($this->link, safe: false);
+
+		if (Url::hasDangerousScheme($link) === true) {
+			return null;
+		}
+
+		return $link;
 	}
 
 	/**

@@ -232,6 +232,23 @@ class StatTest extends TestCase
 		);
 	}
 
+	public function testLinkRejectsDangerousScheme(): void
+	{
+		$model = new Page([
+			'slug'    => 'test',
+			'content' => ['cta' => 'javascript://%0aalert(document.domain)']
+		]);
+
+		$stat = new Stat(
+			model: $model,
+			label: 'Test Label',
+			value: 'Test Value',
+			link: '{{ page.cta }}'
+		);
+
+		$this->assertNull($stat->link());
+	}
+
 	public function testTheme(): void
 	{
 		$this->assertProp(

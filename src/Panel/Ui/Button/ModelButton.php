@@ -4,6 +4,7 @@ namespace Kirby\Panel\Ui\Button;
 
 use Kirby\Cms\HasStringTemplate;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Http\Url;
 use Kirby\Panel\Ui\Button;
 
 /**
@@ -44,7 +45,13 @@ class ModelButton extends Button
 
 	public function link(): string|null
 	{
-		return $this->stringTemplate($this->link);
+		$link = $this->stringTemplate($this->link);
+
+		if (Url::hasDangerousScheme($link) === true) {
+			return null;
+		}
+
+		return $link;
 	}
 
 
