@@ -5,25 +5,23 @@ namespace Kirby\Uuid;
 use Generator;
 use Kirby\Cms\App;
 use Kirby\Cms\File;
+use Kirby\Cms\HasFiles;
 
 /**
- * UUID for \Kirby\Cms\File
- * @since 3.8.0
+ * UUID for $file
  *
  * @package   Kirby Uuid
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     3.8.0
+ *
+ * @extends \Kirby\Uuid\ModelUuid<\Kirby\Cms\File>
  */
 class FileUuid extends ModelUuid
 {
 	protected const TYPE = 'file';
-
-	/**
-	 * @var \Kirby\Cms\File|null
-	 */
-	public Identifiable|null $model = null;
 
 	/**
 	 * Looks up UUID in cache and resolves to file object;
@@ -38,8 +36,15 @@ class FileUuid extends ModelUuid
 			if ($value = Uuids::cache()->get($key)) {
 				// value is an array containing
 				// the UUID for the parent and the filename
+				/** @var HasFiles $parent */
 				$parent = Uuid::for($value['parent'])->model();
-				return $parent?->file($value['filename']);
+				$file   = $parent?->file($value['filename']);
+
+				// the cached parent/filename pair can be stale,
+				// e.g. when the file has been renamed or copied
+				if ($this->isFor($file) === true) {
+					return $file;
+				}
 			}
 		}
 
