@@ -29,6 +29,52 @@ class UserTest extends ModelTestCase
 		$this->assertSame($credentials, $user->credentials());
 	}
 
+	public function testEnsure(): void
+	{
+		$this->app = $this->app->clone([
+			'users' => [
+				['email' => 'editor@getkirby.com', 'role' => 'editor']
+			]
+		]);
+
+		$this->app->impersonate('editor@getkirby.com');
+
+		$this->assertSame($this->app->user(), User::ensure());
+	}
+
+	public function testEnsureWithKirbyUser(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$user = User::ensure();
+
+		$this->assertTrue($user->isKirby());
+		$this->assertSame('kirby', $user->id());
+	}
+
+	public function testEnsureWithoutAuthenticatedUser(): void
+	{
+		$this->app->impersonate(null);
+
+		$this->assertNull($this->app->user());
+
+		$user = User::ensure();
+
+		$this->assertTrue($user->isNobody());
+		$this->assertSame('nobody', $user->id());
+		$this->assertSame('nobody', $user->role()->id());
+		$this->assertSame('nobody@getkirby.com', $user->email());
+	}
+
+	public function testEnsureWithoutAuthenticatedUserReturnsNewInstance(): void
+	{
+		$this->app->impersonate(null);
+
+		// the virtual nobody user is not stored anywhere,
+		// so every call has to create it from scratch
+		$this->assertNotSame(User::ensure(), User::ensure());
+	}
+
 	public function testId(): void
 	{
 		$user = new User([
