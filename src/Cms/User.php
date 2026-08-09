@@ -203,6 +203,11 @@ class User extends ModelWithContent
 		return $this->email ??= $this->credentials()['email'] ?? null;
 	}
 
+	public static function ensure(): self
+	{
+		return App::instance()->user() ?? static::nobody();
+	}
+
 	/**
 	 * Checks if the user exists
 	 */
@@ -530,6 +535,7 @@ class User extends ModelWithContent
 	{
 		return new static([
 			'email' => 'nobody@getkirby.com',
+			'id'    => 'nobody',
 			'role'  => 'nobody'
 		]);
 	}
