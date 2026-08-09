@@ -36,8 +36,15 @@ class FileUuid extends ModelUuid
 			if ($value = Uuids::cache()->get($key)) {
 				// value is an array containing
 				// the UUID for the parent and the filename
+				/** @var HasFiles $parent */
 				$parent = Uuid::for($value['parent'])->model();
-				return $parent?->file($value['filename']);
+				$file   = $parent?->file($value['filename']);
+
+				// the cached parent/filename pair can be stale,
+				// e.g. when the file has been renamed or copied
+				if ($this->isFor($file) === true) {
+					return $file;
+				}
 			}
 		}
 

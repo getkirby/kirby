@@ -49,7 +49,13 @@ class PageUuid extends ModelUuid
 	{
 		if ($key = $this->key()) {
 			if ($value = Uuids::cache()->get($key)) {
-				return App::instance()->page($value);
+				$page = App::instance()->page($value);
+
+				// the cached path can be stale,
+				// e.g. when the page has been moved or copied
+				if ($this->isFor($page) === true) {
+					return $page;
+				}
 			}
 		}
 

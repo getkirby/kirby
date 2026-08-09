@@ -58,6 +58,21 @@ abstract class ModelUuid extends Uuid
 	}
 
 	/**
+	 * Checks whether the model actually still holds the
+	 * UUID identifier that was looked up
+	 *
+	 * @param TModel|null $model
+	 */
+	protected function isFor(Identifiable|null $model): bool
+	{
+		if ($model === null) {
+			return false;
+		}
+
+		return static::retrieveId($model) === $this->uri->host();
+	}
+
+	/**
 	 * Retrieves the ID string (UUID without scheme) for the model
 	 * from the content file, if it is already stored there
 	 *

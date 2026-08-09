@@ -61,6 +61,39 @@ class PageUuidTest extends TestCase
 		$this->assertIsPage($page, $uuid->model(true));
 	}
 
+	public function testFindByCacheRejectsForeignPage(): void
+	{
+		$page = $this->app->page('page-a');
+		$page->uuid()->populate();
+
+		// point the cache entry to a page
+		// that does not hold this UUID
+		Uuids::cache()->set($page->uuid()->key(), 'page-b');
+
+		$uuid = new PageUuid('page://my-page');
+		$this->assertNull($uuid->model(true));
+
+		// the stale entry gets corrected from the index
+		$this->assertIsPage($page, $uuid->model());
+		$this->assertSame('page-a', Uuids::cache()->get($uuid->key()));
+	}
+
+	public function testFindByCacheRejectsMissingPage(): void
+	{
+		$page = $this->app->page('page-a');
+		$page->uuid()->populate();
+
+		// point the cache entry to a page that no longer exists
+		Uuids::cache()->set($page->uuid()->key(), 'deleted-page');
+
+		$uuid = new PageUuid('page://my-page');
+		$this->assertNull($uuid->model(true));
+
+		// the stale entry gets corrected from the index
+		$this->assertIsPage($page, $uuid->model());
+		$this->assertSame('page-a', Uuids::cache()->get($uuid->key()));
+	}
+
 	public function testFindByIndex(): void
 	{
 		$page = $this->app->page('page-a');
