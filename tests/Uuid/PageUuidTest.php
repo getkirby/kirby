@@ -12,6 +12,38 @@ class PageUuidTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Uuid.PageUuid';
 
+	public function testClearRecursiveIncludesDrafts(): void
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'    => 'parent',
+						'content' => ['uuid' => 'my-parent'],
+						'drafts'  => [
+							[
+								'slug'    => 'draft',
+								'content' => ['uuid' => 'my-draft']
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$parent = $app->page('parent');
+		$draft  = $parent->drafts()->first();
+
+		$parent->uuid()->populate();
+		$draft->uuid()->populate();
+		$this->assertTrue($draft->uuid()->isCached());
+
+		$parent->uuid()->clear(recursive: true);
+
+		$this->assertFalse($parent->uuid()->isCached());
+		$this->assertFalse($draft->uuid()->isCached());
+	}
+
 	public function testFindByCache(): void
 	{
 		$page = $this->app->page('page-a');
@@ -74,6 +106,36 @@ class PageUuidTest extends TestCase
 		$this->assertInstanceOf(Generator::class, $index);
 		$this->assertIsPage($index->current());
 		$this->assertSame(3, iterator_count($index));
+	}
+
+	public function testPopulateRecursiveIncludesDrafts(): void
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'    => 'parent',
+						'content' => ['uuid' => 'my-parent'],
+						'drafts'  => [
+							[
+								'slug'    => 'draft',
+								'content' => ['uuid' => 'my-draft']
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$parent = $app->page('parent');
+		$draft  = $parent->drafts()->first();
+
+		$this->assertFalse($draft->uuid()->isCached());
+
+		$parent->uuid()->populate(recursive: true);
+
+		$this->assertTrue($parent->uuid()->isCached());
+		$this->assertTrue($draft->uuid()->isCached());
 	}
 
 	public function testRetrieveId(): void

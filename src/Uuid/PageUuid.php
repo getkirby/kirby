@@ -36,7 +36,7 @@ class PageUuid extends ModelUuid
 		 * @var \Kirby\Cms\Page $model
 		 */
 		if ($recursive === true && $model = $this->model()) {
-			foreach ($model->children() as $child) {
+			foreach ($model->childrenAndDrafts() as $child) {
 				$child->uuid()->clear(true);
 			}
 		}
@@ -87,7 +87,7 @@ class PageUuid extends ModelUuid
 		 * @var \Kirby\Cms\Page $model
 		 */
 		if ($recursive === true && $model = $this->model()) {
-			foreach ($model->children() as $child) {
+			foreach ($model->childrenAndDrafts() as $child) {
 				$child->uuid()->populate($force, true);
 			}
 		}
