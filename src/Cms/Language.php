@@ -10,7 +10,6 @@ use Kirby\Filesystem\F;
 use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Locale;
 use Kirby\Toolkit\Str;
-use Stringable;
 
 /**
  * The `$language` object represents
@@ -27,7 +26,7 @@ use Stringable;
  *
  * @use HasSiblings<Languages>
  */
-class Language implements Stringable
+class Language extends Model
 {
 	use HasSiblings;
 

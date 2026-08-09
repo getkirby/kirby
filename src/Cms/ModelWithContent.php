@@ -18,12 +18,11 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Form\Fields;
 use Kirby\Form\Form;
-use Kirby\Panel\Model;
+use Kirby\Panel\Model as PanelModel;
 use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Str;
 use Kirby\Uuid\Identifiable;
 use Kirby\Uuid\Uuid;
-use Stringable;
 use Throwable;
 
 /**
@@ -32,7 +31,7 @@ use Throwable;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-abstract class ModelWithContent implements Identifiable, Stringable
+abstract class ModelWithContent extends Model implements Identifiable
 {
 	/**
 	 * Each model must define a CLASS_ALIAS
@@ -392,7 +391,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	 * Returns the panel info of the model
 	 * @since 3.6.0
 	 */
-	abstract public function panel(): Model;
+	abstract public function panel(): PanelModel;
 
 	/**
 	 * Must return the permissions object for the model
