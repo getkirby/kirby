@@ -7,6 +7,7 @@ use Kirby\Cms\User;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Session\Session;
 use Kirby\Toolkit\A;
 
 /**
@@ -73,6 +74,14 @@ class Methods
 		throw new NotFoundException(
 			message: 'No auth method class for: ' . $type
 		);
+	}
+
+	/**
+	 * Removes the pending login state of the auth methods
+	 */
+	public function clear(Session $session): void
+	{
+		$session->remove('kirby.method.data');
 	}
 
 	/**

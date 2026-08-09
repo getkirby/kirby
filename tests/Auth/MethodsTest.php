@@ -143,6 +143,16 @@ class MethodsTest extends TestCase
 		$methods->class('unknown');
 	}
 
+	public function testClear(): void
+	{
+		$session = $this->app->session();
+		$session->set('kirby.method.data', 'nonce');
+
+		$this->app->auth()->methods()->clear($session);
+
+		$this->assertNull($session->get('kirby.method.data'));
+	}
+
 	public function testEnabledWith2FA(): void
 	{
 		$this->app = $this->app->clone([

@@ -74,6 +74,10 @@ class Auth
 
 		if ($result instanceof User === true) {
 			$this->setUser($result);
+
+			$session = $this->kirby->session();
+			$this->challenges->clear($session);
+			$this->methods->clear($session);
 		}
 
 		return $result;
@@ -394,17 +398,16 @@ class Auth
 	 */
 	public function logout(): void
 	{
-		// stop impersonating;
 		// ensures that we log out the actually logged in user
 		$this->user->impersonate(null);
 
-		// logout the current user if it exists
 		$this->user()?->logout();
 
-		// clear the pending challenge
-		$this->challenges->clear($this->kirby->session());
+		$session = $this->kirby->session();
 
-		// clear the status cache
+		$this->challenges->clear($session);
+		$this->methods->clear($session);
+
 		$this->status = null;
 	}
 

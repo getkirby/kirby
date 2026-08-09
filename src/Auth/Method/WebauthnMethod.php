@@ -29,11 +29,6 @@ use SensitiveParameter;
 class WebauthnMethod extends Method
 {
 	/**
-	 * Session key for the pending login challenge
-	 */
-	protected string $sessionKey = 'kirby.webauthn.login';
-
-	/**
 	 * Verifies the WebAuthn assertion, identifies the user
 	 * via the user handle and logs them in
 	 */
@@ -47,7 +42,7 @@ class WebauthnMethod extends Method
 
 		// consume the single-use challenge up front so a failed attempt
 		// cannot be retried against the same challenge
-		$challenge = $kirby->session()->pull($this->sessionKey);
+		$challenge = $kirby->session()->pull('kirby.method.data');
 
 		// run identification and verification inside the shared rate-limit
 		// envelope. The user is only known from the credential, so the
@@ -112,7 +107,7 @@ class WebauthnMethod extends Method
 		$kirby   = $this->auth->kirby();
 		$options = Webauthn::site($kirby)->loginOptions([]);
 
-		$kirby->session()->set($this->sessionKey, $options['challenge']);
+		$kirby->session()->set('kirby.method.data', $options['challenge']);
 
 		return new Component(
 			component: 'k-login-webauthn-method-form',
