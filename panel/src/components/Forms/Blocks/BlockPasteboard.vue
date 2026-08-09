@@ -11,11 +11,7 @@
 		@submit="$emit('submit')"
 	>
 		<label
-			v-safe-html="
-				$panel.html(
-					$t('field.blocks.fieldsets.paste', { shortcut: $esc(shortcut) })
-				)
-			"
+			v-safe-html="$th('field.blocks.fieldsets.paste', { shortcut })"
 			for="pasteboard"
 		/>
 		<textarea id="pasteboard" @paste.prevent="paste" />

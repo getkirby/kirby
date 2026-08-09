@@ -33,9 +33,7 @@
 			</k-navigate>
 		</details>
 		<p
-			v-safe-html="
-				$panel.html($t('field.blocks.fieldsets.paste', { shortcut: $esc(shortcut) }))
-			"
+			v-safe-html="$th('field.blocks.fieldsets.paste', { shortcut })"
 			class="k-clipboard-hint"
 		/>
 	</k-dialog>

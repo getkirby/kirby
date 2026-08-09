@@ -58,8 +58,6 @@
 </template>
 
 <script>
-import html from "@/panel/html";
-
 /**
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
@@ -120,24 +118,18 @@ export default {
 			const issues = [];
 
 			if (this.isInstallable === false) {
-				issues.push(html(this.$t("installation.disabled")));
+				issues.push(this.$th("installation.disabled"));
 			}
 
 			for (const extension in this.requirements.extensions) {
 				if (this.requirements.extensions[extension] === false) {
-					issues.push(
-						html(
-							this.$t("installation.issues.extension", {
-								extension: this.$esc(extension)
-							})
-						)
-					);
+					issues.push(this.$th("installation.issues.extension", { extension }));
 				}
 			}
 
 			for (const type of ["accounts", "content", "media", "sessions"]) {
 				if (this.requirements[type] === false) {
-					issues.push(html(this.$t("installation.issues." + type)));
+					issues.push(this.$th("installation.issues." + type));
 				}
 			}
 
