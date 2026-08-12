@@ -196,10 +196,8 @@
   <file src="src/Cms/Users.php">
     <ImplementedParamTypeMismatch>
       <code><![CDATA[$object]]></code>
+      <code><![CDATA[$object]]></code>
     </ImplementedParamTypeMismatch>
-    <InvalidArgument>
-      <code><![CDATA[$user]]></code>
-    </InvalidArgument>
     <InvalidPropertyAssignmentValue>
       <code><![CDATA[$files->data]]></code>
       <code><![CDATA[$this->data]]></code>

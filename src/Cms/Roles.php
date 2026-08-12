@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Filesystem\F;
+
 /**
  * Extension of the Collection class that
  * introduces `Roles::factory()` to convert an
@@ -13,14 +15,28 @@ namespace Kirby\Cms;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @extends Collection<Role>
+ * @extends LazyCollection<Role>
  */
-class Roles extends Collection
+class Roles extends LazyCollection
 {
 	/**
 	 * All registered roles methods
 	 */
 	public static array $methods = [];
+
+	/**
+	 * Creates a new Collection with the given objects
+	 *
+	 * @param iterable<Role> $objects
+	 * @param array $inject Props to inject into hydrated role objects
+	 */
+	public function __construct(
+		iterable $objects = [],
+		protected object|null $parent = null,
+		protected array $inject = []
+	) {
+		parent::__construct($objects, $parent);
+	}
 
 	/**
 	 * Returns a filtered list of all
@@ -95,12 +111,40 @@ class Roles extends Collection
 		return $collection->sort('name', 'asc');
 	}
 
-	public static function load(string|null $root = null, array $inject = []): static
+	/**
+	 * Loads the role from the blueprint file
+	 * that was collected for the given key
+	 */
+	protected function hydrateElement(string $key): Role|null
 	{
-		$kirby = App::instance();
-		$roles = new static();
+		$file = $this->hydration[$key] ?? null;
 
-		// load roles from plugins
+		if ($file === null) {
+			return null;
+		}
+
+		return $this->data[$key] = Role::load($file, $this->inject);
+	}
+
+	/**
+	 * The blueprint file is kept for each role individually,
+	 * so only the injected props are shared by the collection
+	 */
+	protected function hydrationSource(): array
+	{
+		return $this->inject;
+	}
+
+	public static function load(
+		string|null $root = null,
+		array $inject = []
+	): static {
+		$kirby = App::instance();
+		$roles = new static(inject: $inject);
+
+		// load roles from plugins; their name (and therefore the
+		// collection key) is only known once the blueprint has been
+		// resolved, so they cannot be loaded lazily
 		foreach ($kirby->extensions('blueprints') as $name => $blueprint) {
 			if (str_starts_with($name, 'users/') === false) {
 				continue;
@@ -119,7 +163,9 @@ class Roles extends Collection
 			$roles->set($role->id(), $role);
 		}
 
-		// load roles from directory
+		// load roles from directory; `Role::load()` always takes the
+		// name from the filename, so the collection key is known
+		// without having to read and extend the blueprint
 		if ($root !== null) {
 			foreach (glob($root . '/*.yml') as $file) {
 				$filename = basename($file);
@@ -128,17 +174,22 @@ class Roles extends Collection
 					continue;
 				}
 
-				$role = Role::load($file, $inject);
-				$roles->set($role->id(), $role);
+				$roles->deferHydration(
+					key:       F::name($file),
+					hydration: $file
+				);
 			}
 		}
 
 		// always include the admin role
-		if ($roles->find('admin') === null) {
+		if ($roles->has('admin') === false) {
 			$roles->set('admin', Role::defaultAdmin($inject));
 		}
 
-		// return the collection sorted by name
-		return $roles->sort('name', 'asc');
+		// the collection key is the role name, so the roles can
+		// be sorted by name without having to load a single one
+		ksort($roles->data, SORT_NATURAL | SORT_FLAG_CASE);
+
+		return $roles;
 	}
 }

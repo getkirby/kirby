@@ -133,6 +133,32 @@ abstract class LazyCollection extends Collection
 	}
 
 	/**
+	 * Adds a single object or an entire second
+	 * collection to the current collection
+	 *
+	 * @param Collection<TValue>|array<TValue>|TValue $object
+	 * @return $this
+	 */
+	public function add($object): static
+	{
+		// merging a collection of the same class has to
+		// keep its unhydrated elements intact
+		if ($object instanceof static) {
+			$this->absorb($object);
+			return $this;
+		}
+
+		// a collection of a different class cannot hydrate
+		// its elements in this collection, so it has to
+		// take care of them before they are merged
+		if ($object instanceof self) {
+			$object->hydrate();
+		}
+
+		return parent::add($object);
+	}
+
+	/**
 	 * Creates chunks of the same size.
 	 * The last chunk may be smaller
 	 *

@@ -64,30 +64,31 @@ class Users extends LazyCollection
 	 */
 	public function add($object): static
 	{
-		// add a users collection
-		if ($object instanceof self) {
-			$this->absorb($object);
-
-		// add a user by id
-		} elseif (
+		// resolve a user by id; an id that does not
+		// match a user is left as-is, so that it ends
+		// up in the error message below
+		if (
 			is_string($object) === true &&
 			$user = App::instance()->user($object)
 		) {
-			$this->__set($user->id(), $user);
-
-		// add a user object
-		} elseif ($object instanceof User) {
-			$this->__set($object->id(), $object);
-
-		// give a useful error message on invalid input;
-		// silently ignore "empty" values for compatibility with existing setups
-		} elseif (in_array($object, [null, false, true], true) !== true) {
-			throw new InvalidArgumentException(
-				message: 'You must pass a Users or User object or an ID of an existing user to the Users collection'
-			);
+			$object = $user;
 		}
 
-		return $this;
+		// a users collection is merged, a single user object
+		// is set by its id; both is handled further up
+		if ($object instanceof self || $object instanceof User) {
+			return parent::add($object);
+		}
+
+		// silently ignore "empty" values for
+		// compatibility with existing setups
+		if (in_array($object, [null, false, true], true) === true) {
+			return $this;
+		}
+
+		throw new InvalidArgumentException(
+			message: 'You must pass a Users or User object or an ID of an existing user to the Users collection'
+		);
 	}
 
 	/**

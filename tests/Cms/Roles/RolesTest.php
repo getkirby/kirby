@@ -39,6 +39,27 @@ class RolesTest extends TestCase
 		$this->assertSame('editor', $roles->last()->name());
 	}
 
+	public function testLoadIsLazy(): void
+	{
+		$roles = Roles::load(static::FIXTURES . '/blueprints/users');
+
+		// the structure and the order are known
+		// without reading a single blueprint
+		$this->assertSame(['admin', 'base', 'editor'], $roles->keys());
+		$this->assertSame(3, $roles->count());
+		$this->assertTrue($roles->has('editor'));
+
+		// a single lookup only loads the requested role
+		$editor = $roles->find('editor');
+		$this->assertSame('editor', $editor->name());
+		$this->assertNull($roles->data['base']);
+
+		// the loaded role is cached, so every following
+		// access returns the very same object
+		$this->assertSame($editor, $roles->find('editor'));
+		$this->assertSame($editor, $roles->last());
+	}
+
 	public function testLoadFromPlugins(): void
 	{
 		$app = new App([
