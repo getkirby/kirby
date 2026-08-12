@@ -81,13 +81,13 @@
   <file src="src/Cms/Collection.php">
     <InvalidPropertyAssignmentValue>
       <code><![CDATA[$this->data]]></code>
-      <code><![CDATA[[...$this->data, ...$object->data]]]></code>
-      <code><![CDATA[[...$this->data, ...$object->data]]]></code>
-      <code><![CDATA[[...$this->data, ...$object->data]]]></code>
-      <code><![CDATA[[...$this->data, ...$object->data]]]></code>
-      <code><![CDATA[[...$this->data, ...$object->data]]]></code>
-      <code><![CDATA[[...$this->data, ...$object->data]]]></code>
-      <code><![CDATA[[...$this->data, ...$object->data]]]></code>
+      <code><![CDATA[array_replace($this->data, $object->data)]]></code>
+      <code><![CDATA[array_replace($this->data, $object->data)]]></code>
+      <code><![CDATA[array_replace($this->data, $object->data)]]></code>
+      <code><![CDATA[array_replace($this->data, $object->data)]]></code>
+      <code><![CDATA[array_replace($this->data, $object->data)]]></code>
+      <code><![CDATA[array_replace($this->data, $object->data)]]></code>
+      <code><![CDATA[array_replace($this->data, $object->data)]]></code>
     </InvalidPropertyAssignmentValue>
   </file>
   <file src="src/Cms/Fieldsets.php">
@@ -109,7 +109,12 @@
     </InvalidArgument>
     <InvalidPropertyAssignmentValue>
       <code><![CDATA[$collection->data]]></code>
-      <code><![CDATA[[...$this->data, ...$object->data]]]></code>
+      <code><![CDATA[array_replace($this->data, $object->data)]]></code>
+    </InvalidPropertyAssignmentValue>
+  </file>
+  <file src="src/Cms/LazyCollection.php">
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[array_replace($this->data, $collection->data)]]></code>
     </InvalidPropertyAssignmentValue>
   </file>
   <file src="src/Cms/LicenseStatus.php">
@@ -172,8 +177,8 @@
       <code><![CDATA[$files->data]]></code>
       <code><![CDATA[$index->data]]></code>
       <code><![CDATA[$index->data]]></code>
-      <code><![CDATA[[...$collection->data, ...$args[0]->data]]]></code>
-      <code><![CDATA[[...$this->data, ...$object->data]]]></code>
+      <code><![CDATA[array_replace($collection->data, $args[0]->data)]]></code>
+      <code><![CDATA[array_replace($this->data, $object->data)]]></code>
     </InvalidPropertyAssignmentValue>
   </file>
   <file src="src/Cms/Site.php">
@@ -198,8 +203,7 @@
     <InvalidPropertyAssignmentValue>
       <code><![CDATA[$files->data]]></code>
       <code><![CDATA[$this->data]]></code>
-      <code><![CDATA[[...$this->data, ...$existing]]]></code>
-      <code><![CDATA[[...$this->data, ...$object->data]]]></code>
+      <code><![CDATA[array_replace($this->data, $existing)]]></code>
     </InvalidPropertyAssignmentValue>
   </file>
   <file src="src/Content/FieldMethods.php">

@@ -50,7 +50,7 @@ class Files extends Collection
 	{
 		// add a files collection
 		if ($object instanceof self) {
-			$this->data = [...$this->data, ...$object->data];
+			$this->data = array_replace($this->data, $object->data);
 
 		// add a file by id
 		} elseif (

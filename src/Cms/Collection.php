@@ -94,7 +94,7 @@ class Collection extends BaseCollection
 	public function add($object): static
 	{
 		if ($object instanceof self) {
-			$this->data = [...$this->data, ...$object->data];
+			$this->data = array_replace($this->data, $object->data);
 		} elseif (
 			is_object($object) === true &&
 			method_exists($object, 'id') === true

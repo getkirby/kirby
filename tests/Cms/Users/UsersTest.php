@@ -45,6 +45,23 @@ class UsersTest extends TestCase
 		$this->assertSame('c@getkirby.com', $c->nth(2)->email());
 	}
 
+	public function testAddCollectionWithIntLikeIds(): void
+	{
+		$a = Users::factory([
+			['id' => 'homer', 'email' => 'a@getkirby.com']
+		]);
+
+		$b = Users::factory([
+			['id' => '123', 'email' => 'b@getkirby.com']
+		]);
+
+		$users = $a->add($b);
+
+		// int-like IDs must not be renumbered by the merge
+		$this->assertSame('123', $users->find('123')?->id());
+		$this->assertSame('b@getkirby.com', $users->find('123')?->email());
+	}
+
 	public function testAddById(): void
 	{
 		$app = new App([

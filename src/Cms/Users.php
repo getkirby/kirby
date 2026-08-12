@@ -66,7 +66,7 @@ class Users extends LazyCollection
 	{
 		// add a users collection
 		if ($object instanceof self) {
-			$this->data = [...$this->data, ...$object->data];
+			$this->data = array_replace($this->data, $object->data);
 
 		// add a user by id
 		} elseif (
@@ -216,7 +216,7 @@ class Users extends LazyCollection
 			$this->data[$userDirectory] = null;
 		}
 
-		$this->data = [...$this->data, ...$existing];
+		$this->data = array_replace($this->data, $existing);
 
 		$this->initialized = true;
 	}

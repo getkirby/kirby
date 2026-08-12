@@ -63,7 +63,7 @@ class Pages extends Collection
 
 		// add a pages collection
 		if ($object instanceof self) {
-			$this->data = [...$this->data, ...$object->data];
+			$this->data = array_replace($this->data, $object->data);
 
 		// add a page by id
 		} elseif (
@@ -444,7 +444,7 @@ class Pages extends Collection
 		// merge an entire collection
 		if ($args[0] instanceof Pages) {
 			$collection       = clone $this;
-			$collection->data = [...$collection->data, ...$args[0]->data];
+			$collection->data = array_replace($collection->data, $args[0]->data);
 			return $collection;
 		}
 
