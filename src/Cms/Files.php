@@ -21,9 +21,9 @@ use Throwable;
  * @license   https://getkirby.com/license
  *
  * @template TValue of File
- * @extends Collection<TValue>
+ * @extends LazyCollection<TValue>
  */
-class Files extends Collection
+class Files extends LazyCollection
 {
 	use HasUuids;
 
@@ -50,7 +50,7 @@ class Files extends Collection
 	{
 		// add a files collection
 		if ($object instanceof self) {
-			$this->data = array_replace($this->data, $object->data);
+			$this->absorb($object);
 
 		// add a file by id
 		} elseif (
@@ -135,7 +135,8 @@ class Files extends Collection
 	}
 
 	/**
-	 * Creates a files collection from an array of props
+	 * Creates a files collection from an array of props;
+	 * the file objects are only created once they are accessed
 	 */
 	public static function factory(
 		array $files,
@@ -144,15 +145,41 @@ class Files extends Collection
 		$collection = new static([], $parent);
 
 		foreach ($files as $props) {
-			$props['collection'] = $collection;
-			$props['parent']     = $parent;
-
-			$file = File::factory($props);
-
-			$collection->data[$file->id()] = $file;
+			$collection->deferHydration(
+				key:       File::createId($props['filename'], $parent),
+				hydration: $props
+			);
 		}
 
 		return $collection;
+	}
+
+	/**
+	 * Creates the file object from the props that
+	 * were collected for the given key
+	 */
+	protected function hydrateElement(string $key): File|null
+	{
+		$props = $this->hydration[$key] ?? null;
+
+		if (is_array($props) === false) {
+			return null;
+		}
+
+		/** @var TValue $file */
+		$file = File::factory([...$props, 'parent' => $this->parent]);
+
+		return $file;
+	}
+
+	/**
+	 * The props of a file do not carry its parent, which the
+	 * collection adds during hydration; only collections with
+	 * the same parent can therefore exchange unhydrated files
+	 */
+	protected function hydrationSource(): object|null
+	{
+		return $this->parent;
 	}
 
 	/**

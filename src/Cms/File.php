@@ -263,6 +263,23 @@ class File extends ModelWithContent
 	/**
 	 * Constructs a File object
 	 */
+	/**
+	 * Builds the file id from the filename and the parent;
+	 * this is also the key that file collections use, so it
+	 * needs to be derivable without an existing file object
+	 * @since 6.0.0
+	 */
+	public static function createId(
+		string $filename,
+		Page|Site|User $parent
+	): string {
+		if ($parent instanceof Site) {
+			return $filename;
+		}
+
+		return $parent->id() . '/' . $filename;
+	}
+
 	public static function factory(array $props): static
 	{
 		return new static($props);
@@ -300,14 +317,10 @@ class File extends ModelWithContent
 	 */
 	public function id(): string
 	{
-		if (
-			$this->parent() instanceof Page ||
-			$this->parent() instanceof User
-		) {
-			return $this->id ??= $this->parent()->id() . '/' . $this->filename();
-		}
-
-		return $this->id ??= $this->filename();
+		return $this->id ??= static::createId(
+			$this->filename(),
+			$this->parent()
+		);
 	}
 
 	/**

@@ -108,14 +108,11 @@
   <file src="src/Cms/Files.php">
     <ImplementedParamTypeMismatch>
       <code><![CDATA[$object]]></code>
+      <code><![CDATA[$object]]></code>
     </ImplementedParamTypeMismatch>
     <InvalidArgument>
       <code><![CDATA[$file]]></code>
     </InvalidArgument>
-    <InvalidPropertyAssignmentValue>
-      <code><![CDATA[$collection->data]]></code>
-      <code><![CDATA[array_replace($this->data, $object->data)]]></code>
-    </InvalidPropertyAssignmentValue>
   </file>
   <file src="src/Cms/LazyCollection.php">
     <InvalidPropertyAssignmentValue>

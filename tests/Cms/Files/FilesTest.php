@@ -13,6 +13,66 @@ class FilesTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Cms.Files';
 
+	public function testLazyHydration(): void
+	{
+		$parent = new Page(['slug' => 'test']);
+
+		$files = Files::factory([
+			['filename' => 'a.jpg'],
+			['filename' => 'b.jpg'],
+			['filename' => 'c.jpg']
+		], $parent);
+
+		// the structure is known without creating any file object
+		$this->assertSame(3, $files->count());
+		$this->assertSame(['test/a.jpg', 'test/b.jpg', 'test/c.jpg'], $files->keys());
+		$this->assertTrue($files->has('test/b.jpg'));
+		$this->assertSame([null, null, null], array_values($files->data));
+
+		// a single lookup only creates the requested file
+		$file = $files->find('b.jpg');
+		$this->assertSame('b.jpg', $file->filename());
+		$this->assertNull($files->data['test/a.jpg']);
+
+		// the created file is cached, so every following
+		// access returns the very same object
+		$this->assertSame($file, $files->find('b.jpg'));
+		$this->assertSame($file, $files->nth(1));
+	}
+
+	public function testLazyHydrationSharesObjectsWithClones(): void
+	{
+		$parent = new Page(['slug' => 'test']);
+
+		$files = Files::factory([
+			['filename' => 'a.jpg'],
+			['filename' => 'b.jpg'],
+			['filename' => 'c.jpg']
+		], $parent);
+
+		// a derived collection must not create its own file objects,
+		// otherwise changes to a file would not be visible everywhere
+		$this->assertSame($files->nth(1), $files->slice(1)->first());
+		$this->assertSame($files->last(), $files->flip()->first());
+	}
+
+	public function testLazyHydrationWithDifferentParents(): void
+	{
+		$a = Files::factory([['filename' => 'a.jpg']], new Page(['slug' => 'one']));
+		$b = Files::factory([['filename' => 'b.jpg']], new Page(['slug' => 'two']));
+
+		// the parent is added during hydration, so files of another
+		// parent have to be created before they can be merged
+		$merged = $a->add($b);
+
+		$this->assertSame(['one/a.jpg', 'two/b.jpg'], $merged->keys());
+
+		// the merged file must keep its own parent, not inherit
+		// the one of the collection it was merged into
+		$this->assertSame('two', $merged->nth(1)->parent()->slug());
+		$this->assertSame('one', $merged->nth(0)->parent()->slug());
+	}
+
 	public function testAddFile(): void
 	{
 		$parent = new Page(['slug' => 'test']);
