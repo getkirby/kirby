@@ -41,77 +41,11 @@ class Iterator implements Countable, IteratorAggregate
 	}
 
 	/**
-	 * Returns the current key
-	 * @deprecated
-	 * @todo Remove in v6
-	 * @return TKey|null
-	 */
-	public function key(): int|string|null
-	{
-		return key($this->data);
-	}
-
-	/**
 	 * Returns an array of all keys
 	 */
 	public function keys(): array
 	{
 		return array_keys($this->data);
-	}
-
-	/**
-	 * Returns the current element
-	 * @deprecated
-	 * @todo Remove in v6
-	 * @return TValue
-	 */
-	public function current(): mixed
-	{
-		return current($this->data);
-	}
-
-	/**
-	 * Moves the cursor to the previous element
-	 * and returns it
-	 * @deprecated
-	 * @todo Remove in v6
-	 * @return TValue
-	 */
-	public function prev(): mixed
-	{
-		return prev($this->data);
-	}
-
-	/**
-	 * Moves the cursor to the next element
-	 * and returns it
-	 * @deprecated
-	 * @todo Remove in v6
-	 * @return TValue
-	 */
-	public function next(): mixed
-	{
-		return next($this->data);
-	}
-
-	/**
-	 * Moves the cursor to the first element
-	 * @deprecated
-	 * @todo Remove in v6
-	 */
-	public function rewind(): void
-	{
-		reset($this->data);
-	}
-
-	/**
-	 * Checks if the current element is valid
-	 * @deprecated
-	 * @todo Remove in v6
-	 */
-	public function valid(): bool
-	{
-		return key($this->data) !== null;
 	}
 
 	/**

@@ -65,9 +65,7 @@ abstract class LazyCollection extends Collection
 		iterable $objects = [],
 		object|null $parent = null
 	) {
-		// the cache has to exist before any element can be created
 		$this->cache = new ArrayObject();
-
 		parent::__construct($objects, $parent);
 	}
 
@@ -164,9 +162,7 @@ abstract class LazyCollection extends Collection
 	 */
 	public function chunk(int $size): static
 	{
-		// chunking at least requires the collection structure
 		$this->initialize();
-
 		return parent::chunk($size);
 	}
 
@@ -176,31 +172,7 @@ abstract class LazyCollection extends Collection
 	public function count(): int
 	{
 		$this->initialize();
-
 		return parent::count();
-	}
-
-	/**
-	 * Returns the current element
-	 * @deprecated
-	 * @todo Remove in v6
-	 *
-	 * @return TValue
-	 */
-	public function current(): mixed
-	{
-		$current = parent::current();
-
-		// `$current === null` could mean "empty collection"
-		// or "element found but not hydrated"
-		$key = $this->key();
-
-		// `$key` can be `0`, so it must not be checked for truthiness
-		if ($current === null && $key !== null) {
-			return $this->element((string)$key);
-		}
-
-		return $current;
 	}
 
 	/**
@@ -265,9 +237,7 @@ abstract class LazyCollection extends Collection
 	 */
 	public function filter(string|array|Closure $field, ...$args): static
 	{
-		// to filter through values, we need all values present
 		$this->hydrate();
-
 		return parent::filter($field, ...$args);
 	}
 
@@ -306,7 +276,6 @@ abstract class LazyCollection extends Collection
 	 */
 	public function first()
 	{
-		// returning a specific offset requires the collection structure
 		$this->initialize();
 
 		$first = parent::first();
@@ -328,9 +297,7 @@ abstract class LazyCollection extends Collection
 	 */
 	public function flip(): static
 	{
-		// flipping at least requires the collection structure
 		$this->initialize();
-
 		return parent::flip();
 	}
 
@@ -340,7 +307,6 @@ abstract class LazyCollection extends Collection
 	 */
 	public function getIterator(): Iterator
 	{
-		// ensure we are looping over all possible elements
 		$this->initialize();
 
 		foreach ($this->data as $key => $value) {
@@ -363,7 +329,6 @@ abstract class LazyCollection extends Collection
 	public function has(mixed $key): bool
 	{
 		$this->initialize();
-
 		return parent::has($key);
 	}
 
@@ -374,7 +339,6 @@ abstract class LazyCollection extends Collection
 	 */
 	public function hydrate(): void
 	{
-		// first ensure all keys are initialized
 		$this->initialize();
 
 		foreach ($this->data as $key => $value) {
@@ -420,7 +384,11 @@ abstract class LazyCollection extends Collection
 			return;
 		}
 
-		throw new LogicException(static::class . ' class does not implement `initialize()` method that is required for lazy initialization'); // @codeCoverageIgnore
+		// @codeCoverageIgnoreStart
+		throw new LogicException(
+			message: static::class . ' class does not implement `initialize()` method that is required for lazy initialization'
+		);
+		// @codeCoverageIgnoreEnd
 	}
 
 	/**
@@ -457,9 +425,7 @@ abstract class LazyCollection extends Collection
 	 */
 	public function keys(): array
 	{
-		// ensure we are returning all possible keys
 		$this->initialize();
-
 		return parent::keys();
 	}
 
@@ -494,36 +460,8 @@ abstract class LazyCollection extends Collection
 	 */
 	public function map(callable $callback): static
 	{
-		// to map a function, we need all values present
 		$this->hydrate();
-
 		return parent::map($callback);
-	}
-
-	/**
-	 * Moves the cursor to the next element
-	 * and returns it
-	 * @deprecated
-	 * @todo Remove in v6
-	 *
-	 * @return TValue
-	 */
-	public function next(): mixed
-	{
-		$this->initialize();
-
-		$next = parent::next();
-
-		// `$next === null` could mean "empty collection"
-		// or "element found but not hydrated"
-		$key = $this->key();
-
-		// `$key` can be `0`, so it must not be checked for truthiness
-		if ($next === null && $key !== null) {
-			return $this->element((string)$key);
-		}
-
-		return $next;
 	}
 
 	/**
@@ -570,37 +508,8 @@ abstract class LazyCollection extends Collection
 	 */
 	public function prepend(...$args): static
 	{
-		// prepending to an uninitialized collection would
-		// destroy the order on later initialization
 		$this->initialize();
-
 		return parent::prepend(...$args);
-	}
-
-	/**
-	 * Moves the cursor to the previous element
-	 * and returns it
-	 * @deprecated
-	 * @todo Remove in v6
-	 *
-	 * @return TValue
-	 */
-	public function prev(): mixed
-	{
-		$this->initialize();
-
-		$prev = parent::prev();
-
-		// `$prev === null` could mean "empty collection"
-		// or "element found but not hydrated"
-		$key = $this->key();
-
-		// `$key` can be `0`, so it must not be checked for truthiness
-		if ($prev === null && $key !== null) {
-			return $this->element((string)$key);
-		}
-
-		return $prev;
 	}
 
 	/**
@@ -609,9 +518,7 @@ abstract class LazyCollection extends Collection
 	 */
 	public function random(int $count = 1, bool $shuffle = false): static
 	{
-		// picking random elements at least requires the collection structure
 		$this->initialize();
-
 		return parent::random($count, $shuffle);
 	}
 
@@ -620,9 +527,7 @@ abstract class LazyCollection extends Collection
 	 */
 	public function shuffle(): static
 	{
-		// shuffling at least requires the collection structure
 		$this->initialize();
-
 		return parent::shuffle();
 	}
 
@@ -637,21 +542,18 @@ abstract class LazyCollection extends Collection
 		int $offset = 0,
 		int|null $limit = null
 	): static {
-		// returning a specific subset requires the collection structure
 		$this->initialize();
-
 		return parent::slice($offset, $limit);
 	}
 
 	/**
 	 * Sorts the elements by any number of fields
 	 *
-	 * ```php
+	 * @example
 	 * $collection->sort('fieldName');
 	 * $collection->sort('fieldName', 'desc');
 	 * $collection->sort('fieldName', 'asc', SORT_REGULAR);
 	 * $collection->sort(fn ($a) => ...);
-	 * ```
 	 *
 	 * @param string|callable $field Field name or value callback to sort by
 	 * @param string|null $direction asc or desc
@@ -660,9 +562,7 @@ abstract class LazyCollection extends Collection
 	 */
 	public function sort(...$args): static
 	{
-		// to sort through values, we need all values present
 		$this->hydrate();
-
 		return parent::sort(...$args);
 	}
 
@@ -673,9 +573,7 @@ abstract class LazyCollection extends Collection
 	 */
 	public function toArray(Closure|null $map = null): array
 	{
-		// to export an array, we need all values present
 		$this->hydrate();
-
 		return parent::toArray($map);
 	}
 
@@ -686,9 +584,7 @@ abstract class LazyCollection extends Collection
 	 */
 	public function values(Closure|null $map = null): array
 	{
-		// to export an array, we need all values present
 		$this->hydrate();
-
 		return parent::values($map);
 	}
 }

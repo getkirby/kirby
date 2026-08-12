@@ -440,13 +440,6 @@
       <code><![CDATA[$childNode->prefix === null]]></code>
     </TypeDoesNotContainNull>
   </file>
-  <file src="src/Toolkit/Iterator.php">
-    <FalsableReturnStatement>
-      <code><![CDATA[current($this->data)]]></code>
-      <code><![CDATA[next($this->data)]]></code>
-      <code><![CDATA[prev($this->data)]]></code>
-    </FalsableReturnStatement>
-  </file>
   <file src="src/Toolkit/Str.php">
     <InvalidNullableReturnType>
       <code><![CDATA[string]]></code>
