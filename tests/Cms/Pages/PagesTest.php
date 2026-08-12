@@ -9,6 +9,19 @@ use Kirby\Filesystem\F;
 use Kirby\Uuid\Uuids;
 use PHPUnit\Framework\Attributes\CoversClass;
 
+class PagesTestArticlePage extends Page
+{
+}
+
+class PagesTestAutoSlugPage extends Page
+{
+	public function __construct(array $props)
+	{
+		$props['slug'] ??= 'auto-slug';
+		parent::__construct($props);
+	}
+}
+
 #[CoversClass(Pages::class)]
 class PagesTest extends TestCase
 {
@@ -21,6 +34,119 @@ class PagesTest extends TestCase
 			new Page(['slug' => 'b', 'num' => 2]),
 			new Page(['slug' => 'c'])
 		]);
+	}
+
+	public function testLazyHydration(): void
+	{
+		$parent = new Page(['slug' => 'parent']);
+
+		$pages = Pages::factory([
+			['slug' => 'a'],
+			['slug' => 'b'],
+			['slug' => 'c']
+		], $parent);
+
+		// the structure is known without creating any page object
+		$this->assertSame(3, $pages->count());
+		$this->assertSame(['parent/a', 'parent/b', 'parent/c'], $pages->keys());
+		$this->assertTrue($pages->has('parent/b'));
+		$this->assertSame([null, null, null], array_values($pages->data));
+
+		// a single lookup only creates the requested page
+		$page = $pages->find('parent/b');
+		$this->assertSame('b', $page->slug());
+		$this->assertNull($pages->data['parent/a']);
+
+		// the created page is cached, so every following
+		// access returns the very same object
+		$this->assertSame($page, $pages->find('parent/b'));
+		$this->assertSame($page, $pages->nth(1));
+	}
+
+	public function testLazyHydrationSharesObjectsWithClones(): void
+	{
+		$parent = new Page(['slug' => 'parent']);
+
+		$pages = Pages::factory([
+			['slug' => 'a', 'num' => 1],
+			['slug' => 'b', 'num' => 2],
+			['slug' => 'c']
+		], $parent);
+
+		// a derived collection must not create its own page objects,
+		// otherwise changes to a page would not be visible everywhere
+		$this->assertSame($pages->nth(1), $pages->slice(1)->first());
+		$this->assertSame($pages->first(), $pages->listed()->first());
+		$this->assertSame($pages->last(), $pages->flip()->first());
+	}
+
+	public function testLazyHydrationWithIntLikeSlugs(): void
+	{
+		$pages = Pages::factory([
+			['slug' => '2024'],
+			['slug' => 'about']
+		]);
+
+		// array unpacking would renumber the int-like key and
+		// the page could no longer be created from its props
+		$merged = $pages->merge(new Pages([]));
+
+		$this->assertSame([2024, 'about'], $merged->keys());
+		$this->assertSame(2, $merged->count());
+		$this->assertSame(['2024', 'about'], $merged->pluck('slug'));
+	}
+
+	public function testLazyHydrationWithZeroSlug(): void
+	{
+		$pages = Pages::factory([
+			['slug' => '0'],
+			['slug' => 'about']
+		]);
+
+		// the key `0` must not be treated as "no key"
+		$this->assertSame('0', $pages->first()->slug());
+		$this->assertSame('0', $pages->flip()->last()->slug());
+	}
+
+	public function testLazyHydrationResolvesPageModel(): void
+	{
+		Page::$models = ['article' => PagesTestArticlePage::class];
+
+		Dir::make(static::TMP . '/content/blog/post');
+		F::write(static::TMP . '/content/blog/post/article.txt', 'Title: Post');
+		F::write(static::TMP . '/content/blog/blog.txt', 'Title: Blog');
+
+		$app = new App([
+			'roots' => [
+				'index'   => '/dev/null',
+				'content' => static::TMP . '/content'
+			]
+		]);
+
+		// the model is no longer part of the inventory, but the
+		// created page still has to use the right model class
+		$children = $app->page('blog')->children();
+
+		$this->assertInstanceOf(PagesTestArticlePage::class, $children->first());
+
+		Page::$models = [];
+	}
+
+	public function testFactoryWithMissingSlug(): void
+	{
+		// a page model can set its own slug, so the page has to be
+		// created right away to know the collection key
+		Page::$models = ['autoslug' => PagesTestAutoSlugPage::class];
+
+		$pages = Pages::factory(
+			[['model' => 'autoslug']],
+			new Page(['slug' => 'parent'])
+		);
+
+		$this->assertSame(['parent/auto-slug'], $pages->keys());
+		$this->assertSame('auto-slug', $pages->first()->slug());
+
+		Page::$models = [];
 	}
 
 	public function testAddPage(): void

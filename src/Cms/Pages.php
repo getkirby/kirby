@@ -22,9 +22,9 @@ use Throwable;
  * @license   https://getkirby.com/license
  *
  * @template TValue of Page
- * @extends Collection<TValue>
+ * @extends LazyCollection<TValue>
  */
-class Pages extends Collection
+class Pages extends LazyCollection
 {
 	use HasUuids;
 
@@ -49,6 +49,16 @@ class Pages extends Collection
 	protected object|null $parent = null;
 
 	/**
+	 * Resets the index caches for cloned collections,
+	 * as a clone can contain a different set of pages
+	 */
+	public function __clone()
+	{
+		$this->index           = null;
+		$this->indexWithDrafts = null;
+	}
+
+	/**
 	 * Adds a single page or
 	 * an entire second collection to the
 	 * current collection
@@ -63,7 +73,7 @@ class Pages extends Collection
 
 		// add a pages collection
 		if ($object instanceof self) {
-			$this->data = array_replace($this->data, $object->data);
+			$this->absorb($object);
 
 		// add a page by id
 		} elseif (
@@ -103,7 +113,7 @@ class Pages extends Collection
 	{
 		$children = new static([]);
 
-		foreach ($this->data as $page) {
+		foreach ($this as $page) {
 			foreach ($page->children() as $childKey => $child) {
 				$children->data[$childKey] = $child;
 			}
@@ -181,7 +191,7 @@ class Pages extends Collection
 	{
 		$drafts = new static([]);
 
-		foreach ($this->data as $page) {
+		foreach ($this as $page) {
 			foreach ($page->drafts() as $draftKey => $draft) {
 				$drafts->data[$draftKey] = $draft;
 			}
@@ -191,7 +201,8 @@ class Pages extends Collection
 	}
 
 	/**
-	 * Creates a pages collection from an array of props
+	 * Creates a pages collection from an array of props;
+	 * the page objects are only created once they are accessed
 	 */
 	public static function factory(
 		array $pages,
@@ -214,12 +225,66 @@ class Pages extends Collection
 			$props['site']    = $site;
 			$props['isDraft'] = $draft ?? $props['isDraft'] ?? $props['draft'] ?? false;
 
-			$page = Page::factory($props);
+			// without a slug the collection key cannot be derived from
+			// the props, e.g. when a page model sets its own slug;
+			// such pages need to be created right away
+			if (($props['slug'] ?? '') === '') {
+				$page = Page::factory($props);
 
-			$children->data[$page->id()] = $page;
+				$children->data[$page->id()] = $page;
+				continue;
+			}
+
+			$children->deferHydration(
+				key:       Page::createId($props['slug'], $parent),
+				hydration: $props
+			);
 		}
 
 		return $children;
+	}
+
+	/**
+	 * Every page carries all props it needs to be created,
+	 * so unhydrated pages can be passed on to any collection
+	 */
+	protected function hydrationSource(): array
+	{
+		return [];
+	}
+
+	/**
+	 * Creates the page object from the props that
+	 * were collected for the given key
+	 */
+	protected function hydrateElement(string $key): Page|null
+	{
+		$props = $this->hydration[$key] ?? null;
+
+		if (is_array($props) === false) {
+			return null;
+		}
+
+		// the page model is not part of the inventory, as resolving
+		// it costs a file check per registered model; it is only
+		// needed once the page is actually created
+		if (
+			isset($props['model']) === false &&
+			isset($props['root']) === true
+		) {
+			$kirby = App::instance();
+
+			$props['model'] = Inventory::model(
+				$props['root'],
+				$kirby->contentExtension(),
+				$kirby->multilang()
+			);
+		}
+
+		/** @var TValue $page */
+		$page = Page::factory($props);
+
+		return $page;
 	}
 
 	/**
@@ -229,7 +294,7 @@ class Pages extends Collection
 	{
 		$files = new Files([], $this->parent);
 
-		foreach ($this->data as $page) {
+		foreach ($this as $page) {
 			foreach ($page->files() as $fileKey => $file) {
 				$files->data[$fileKey] = $file;
 			}
@@ -383,7 +448,7 @@ class Pages extends Collection
 
 		$index = new static([]);
 
-		foreach ($this->data as $pageKey => $page) {
+		foreach ($this as $pageKey => $page) {
 			$index->data[$pageKey] = $page;
 
 			foreach ($page->index($drafts) as $childKey => $child) {
@@ -443,8 +508,8 @@ class Pages extends Collection
 
 		// merge an entire collection
 		if ($args[0] instanceof Pages) {
-			$collection       = clone $this;
-			$collection->data = array_replace($collection->data, $args[0]->data);
+			$collection = clone $this;
+			$collection->absorb($args[0]);
 			return $collection;
 		}
 

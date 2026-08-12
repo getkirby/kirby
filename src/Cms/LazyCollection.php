@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use ArrayObject;
 use Closure;
 use Iterator;
 use Kirby\Exception\LogicException;
@@ -33,6 +34,14 @@ use Kirby\Exception\LogicException;
 abstract class LazyCollection extends Collection
 {
 	/**
+	 * Elements that have already been created, shared with
+	 * every clone of the collection; derived collections
+	 * (e.g. from `slice()` or `flip()`) would otherwise
+	 * create their own objects for the same elements
+	 */
+	protected ArrayObject $cache;
+
+	/**
 	 * Flag that tells whether hydration has been
 	 * completed for all collection elements;
 	 * this is used to increase performance
@@ -53,6 +62,21 @@ abstract class LazyCollection extends Collection
 	 * initialization mode)
 	 */
 	protected bool $initialized = true;
+
+	/**
+	 * Creates a new lazy collection
+	 *
+	 * @param iterable<TValue> $objects
+	 */
+	public function __construct(
+		iterable $objects = [],
+		object|null $parent = null
+	) {
+		// the cache has to exist before any element can be created
+		$this->cache = new ArrayObject();
+
+		parent::__construct($objects, $parent);
+	}
 
 	/**
 	 * Temporary auto-hydration whenever a collection
@@ -84,7 +108,7 @@ abstract class LazyCollection extends Collection
 			$element === null &&
 			(array_key_exists($key, $this->data) || $this->initialized === false)
 		) {
-			return $this->hydrateElement($key);
+			return $this->element($key);
 		}
 
 		return $element;
@@ -197,8 +221,11 @@ abstract class LazyCollection extends Collection
 
 		// `$current === null` could mean "empty collection"
 		// or "element found but not hydrated"
-		if ($current === null && $key = $this->key()) {
-			return $this->hydrateElement($key);
+		$key = $this->key();
+
+		// `$key` can be `0`, so it must not be checked for truthiness
+		if ($current === null && $key !== null) {
+			return $this->element((string)$key);
 		}
 
 		return $current;
@@ -214,6 +241,32 @@ abstract class LazyCollection extends Collection
 		$this->hydration[$key] = $hydration;
 		$this->data[$key]      = null;
 		$this->hydrated        = false;
+	}
+
+	/**
+	 * Returns the element for the given key and creates
+	 * it first if that has not happened yet
+	 *
+	 * @return TValue|null
+	 */
+	protected function element(string $key): object|null
+	{
+		// an element that has been created by any collection
+		// of this family is reused, so that derived collections
+		// share the very same objects
+		if ($element = $this->cache[$key] ?? null) {
+			return $this->data[$key] = $element;
+		}
+
+		$element = $this->hydrateElement($key);
+
+		// a key without an element must not be cached, as it
+		// can still be added to the collection later on
+		if ($element === null) {
+			return null;
+		}
+
+		return $this->data[$key] = $this->cache[$key] = $element;
 	}
 
 	/**
@@ -291,8 +344,11 @@ abstract class LazyCollection extends Collection
 
 		// `$first === null` could mean "empty collection"
 		// or "element found but not hydrated"
-		if ($first === null && $key = array_key_first($this->data)) {
-			return $this->hydrateElement($key);
+		$key = array_key_first($this->data);
+
+		// `$key` can be `0`, so it must not be checked for truthiness
+		if ($first === null && $key !== null) {
+			return $this->element((string)$key);
 		}
 
 		return $first;
@@ -320,7 +376,7 @@ abstract class LazyCollection extends Collection
 
 		foreach ($this->data as $key => $value) {
 			if ($value === null) {
-				$value = $this->hydrateElement($key);
+				$value = $this->element($key);
 			}
 
 			if ($value === null) {
@@ -365,7 +421,7 @@ abstract class LazyCollection extends Collection
 
 		foreach ($this->data as $key => $value) {
 			if ($value === null) {
-				$this->hydrateElement($key);
+				$this->element($key);
 			}
 		}
 
@@ -373,10 +429,13 @@ abstract class LazyCollection extends Collection
 	}
 
 	/**
-	 * Loads a collection element, sets it in `$this->data[$key]`
-	 * and returns the hydrated object value (or `null` if the
-	 * element does not exist in the collection); to be
+	 * Creates a collection element and returns it (or `null` if
+	 * the element does not exist in the collection); to be
 	 * implemented in each specific collection
+	 *
+	 * Only ever call this via `element()`, which takes care of
+	 * storing the result; an implementation that writes to
+	 * `$this->data` itself would bypass the shared cache
 	 *
 	 * @return TValue|null
 	 */
@@ -462,8 +521,11 @@ abstract class LazyCollection extends Collection
 
 		// `$last === null` could mean "empty collection"
 		// or "element found but not hydrated"
-		if ($last === null && $key = array_key_last($this->data)) {
-			return $this->hydrateElement($key);
+		$key = array_key_last($this->data);
+
+		// `$key` can be `0`, so it must not be checked for truthiness
+		if ($last === null && $key !== null) {
+			return $this->element((string)$key);
 		}
 
 		return $last;
@@ -498,8 +560,11 @@ abstract class LazyCollection extends Collection
 
 		// `$next === null` could mean "empty collection"
 		// or "element found but not hydrated"
-		if ($next === null && $key = $this->key()) {
-			return $this->hydrateElement($key);
+		$key = $this->key();
+
+		// `$key` can be `0`, so it must not be checked for truthiness
+		if ($next === null && $key !== null) {
+			return $this->element((string)$key);
 		}
 
 		return $next;
@@ -530,7 +595,7 @@ abstract class LazyCollection extends Collection
 
 		// `null` value means "element found but not hydrated"
 		if ($slice[$key] === null) {
-			return $this->hydrateElement((string)$key);
+			return $this->element((string)$key);
 		}
 
 		return $slice[$key];
@@ -572,8 +637,11 @@ abstract class LazyCollection extends Collection
 
 		// `$prev === null` could mean "empty collection"
 		// or "element found but not hydrated"
-		if ($prev === null && $key = $this->key()) {
-			return $this->hydrateElement($key);
+		$key = $this->key();
+
+		// `$key` can be `0`, so it must not be checked for truthiness
+		if ($prev === null && $key !== null) {
+			return $this->element((string)$key);
 		}
 
 		return $prev;

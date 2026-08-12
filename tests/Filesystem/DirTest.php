@@ -3,9 +3,7 @@
 namespace Kirby\Filesystem;
 
 use Exception;
-use Kirby\Cms\App;
 use Kirby\Cms\Helpers;
-use Kirby\Cms\Page;
 use Kirby\TestCase;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
@@ -419,66 +417,6 @@ class DirTest extends TestCase
 
 		$this->assertSame('cover.jpg', $inventory['files']['cover.jpg']['filename']);
 		$this->assertSame('article', $inventory['template']);
-	}
-
-	public function testInventoryChildModels(): void
-	{
-		Page::$models = [
-			'a' => 'A',
-			'b' => 'A'
-		];
-
-		$inventory = $this->create([
-			'child-with-model-a/a.txt',
-			'child-with-model-b/b.txt',
-			'child-without-model-c/c.txt'
-		]);
-
-		$this->assertSame('a', $inventory['children'][0]['model']);
-		$this->assertSame('b', $inventory['children'][1]['model']);
-		$this->assertNull($inventory['children'][2]['model']);
-
-		Page::$models = [];
-	}
-
-	public function testInventoryChildMultilangModels(): void
-	{
-		new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'languages' => [
-				[
-					'code'    => 'en',
-					'name'    => 'English',
-					'default' => true
-				],
-				[
-					'code'    => 'de',
-					'name'    => 'Deutsch',
-				]
-			]
-		]);
-
-		Page::$models = [
-			'a' => 'A',
-			'b' => 'A'
-		];
-
-		$inventory = $this->create([
-			'child-with-model-a/a.de.txt',
-			'child-with-model-a/a.en.txt',
-			'child-with-model-b/b.de.txt',
-			'child-with-model-b/b.en.txt',
-			'child-without-model-c/c.de.txt',
-			'child-without-model-c/c.en.txt'
-		], 'txt', null, true);
-
-		$this->assertSame('a', $inventory['children'][0]['model']);
-		$this->assertSame('b', $inventory['children'][1]['model']);
-		$this->assertNull($inventory['children'][2]['model']);
-
-		Page::$models = [];
 	}
 
 	public function testMake(): void

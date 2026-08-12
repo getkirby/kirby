@@ -81,6 +81,11 @@
   <file src="src/Cms/Collection.php">
     <InvalidPropertyAssignmentValue>
       <code><![CDATA[$this->data]]></code>
+      <code><![CDATA[$this->data]]></code>
+      <code><![CDATA[$this->data]]></code>
+      <code><![CDATA[array_replace($this->data, $object->data)]]></code>
+      <code><![CDATA[array_replace($this->data, $object->data)]]></code>
+      <code><![CDATA[array_replace($this->data, $object->data)]]></code>
       <code><![CDATA[array_replace($this->data, $object->data)]]></code>
       <code><![CDATA[array_replace($this->data, $object->data)]]></code>
       <code><![CDATA[array_replace($this->data, $object->data)]]></code>
@@ -114,6 +119,9 @@
   </file>
   <file src="src/Cms/LazyCollection.php">
     <InvalidPropertyAssignmentValue>
+      <code><![CDATA[array_replace($this->data, $collection->data)]]></code>
+      <code><![CDATA[array_replace($this->data, $collection->data)]]></code>
+      <code><![CDATA[array_replace($this->data, $collection->data)]]></code>
       <code><![CDATA[array_replace($this->data, $collection->data)]]></code>
     </InvalidPropertyAssignmentValue>
   </file>
@@ -165,6 +173,7 @@
   <file src="src/Cms/Pages.php">
     <ImplementedParamTypeMismatch>
       <code><![CDATA[$object]]></code>
+      <code><![CDATA[$object]]></code>
     </ImplementedParamTypeMismatch>
     <InvalidArgument>
       <code><![CDATA[$args[0]]]></code>
@@ -177,8 +186,6 @@
       <code><![CDATA[$files->data]]></code>
       <code><![CDATA[$index->data]]></code>
       <code><![CDATA[$index->data]]></code>
-      <code><![CDATA[array_replace($collection->data, $args[0]->data)]]></code>
-      <code><![CDATA[array_replace($this->data, $object->data)]]></code>
     </InvalidPropertyAssignmentValue>
   </file>
   <file src="src/Cms/Site.php">
@@ -418,6 +425,9 @@
     </InvalidArgument>
     <InvalidPropertyAssignmentValue>
       <code><![CDATA[$collection]]></code>
+      <code><![CDATA[$this->data]]></code>
+      <code><![CDATA[$this->data]]></code>
+      <code><![CDATA[$this->data]]></code>
       <code><![CDATA[$this->data]]></code>
       <code><![CDATA[$this->data]]></code>
       <code><![CDATA[$this->data]]></code>

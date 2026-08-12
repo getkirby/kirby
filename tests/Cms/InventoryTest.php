@@ -200,26 +200,6 @@ class InventoryTest extends TestCase
 		$this->assertSame('article', $inventory['template']);
 	}
 
-	public function testForChildModels(): void
-	{
-		Page::$models = [
-			'a' => 'A',
-			'b' => 'A'
-		];
-
-		$this->create([
-			'child-with-model-a/a.txt',
-			'child-with-model-b/b.txt',
-			'child-without-model-c/c.txt'
-		]);
-
-		$inventory = Inventory::for(static::TMP);
-
-		$this->assertSame('a', $inventory['children'][0]['model']);
-		$this->assertSame('b', $inventory['children'][1]['model']);
-		$this->assertNull($inventory['children'][2]['model']);
-	}
-
 	public function testForNonExistingDir(): void
 	{
 		$inventory = Inventory::for('/does-not-exist-' . uniqid());
@@ -258,7 +238,7 @@ class InventoryTest extends TestCase
 		$this->assertSame('note', $inventory['template']);
 	}
 
-	public function testForChildMultilangModels(): void
+	public function testModelMultilang(): void
 	{
 		new App([
 			'roots' => [
@@ -291,10 +271,31 @@ class InventoryTest extends TestCase
 			'child-without-model-c/c.en.txt'
 		]);
 
-		$inventory = Inventory::for(static::TMP, 'txt', null, true);
+		$this->assertSame('a', Inventory::model(static::TMP . '/child-with-model-a', 'txt', true));
+		$this->assertSame('b', Inventory::model(static::TMP . '/child-with-model-b', 'txt', true));
+		$this->assertNull(Inventory::model(static::TMP . '/child-without-model-c', 'txt', true));
+	}
 
-		$this->assertSame('a', $inventory['children'][0]['model']);
-		$this->assertSame('b', $inventory['children'][1]['model']);
-		$this->assertNull($inventory['children'][2]['model']);
+	public function testModel(): void
+	{
+		Page::$models = [
+			'a' => 'A',
+			'b' => 'A'
+		];
+
+		$this->create([
+			'child-with-model-a/a.txt',
+			'child-with-model-b/b.txt',
+			'child-without-model-c/c.txt'
+		]);
+
+		$this->assertSame('a', Inventory::model(static::TMP . '/child-with-model-a'));
+		$this->assertSame('b', Inventory::model(static::TMP . '/child-with-model-b'));
+		$this->assertNull(Inventory::model(static::TMP . '/child-without-model-c'));
+
+		// without registered models there is nothing to resolve
+		Page::$models = [];
+
+		$this->assertNull(Inventory::model(static::TMP . '/child-with-model-a'));
 	}
 }

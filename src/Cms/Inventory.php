@@ -6,7 +6,8 @@ use Kirby\Filesystem\Dir;
 
 /**
  * Scans a directory for the contents of a page, site or user:
- * children, files, content files and the resolved template/model
+ * children, files, content files and the resolved template;
+ * the page model of a child is resolved separately in `::model()`
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
@@ -59,12 +60,7 @@ class Inventory
 
 			// collect all directories as children
 			if (is_dir($root) === true) {
-				$inventory['children'][] = static::child(
-					$item,
-					$root,
-					$extension,
-					$multilang
-				);
+				$inventory['children'][] = static::child($item, $root);
 				continue;
 			}
 
@@ -112,9 +108,7 @@ class Inventory
 	 */
 	protected static function child(
 		string $item,
-		string $root,
-		string $extension = 'txt',
-		bool $multilang = false
+		string $root
 	): array {
 		// extract the slug and num of the directory
 		// TODO: Switch to static::$numSeparator in v6
@@ -123,30 +117,46 @@ class Inventory
 			$slug = substr($item, $separator + 1);
 		}
 
-		// determine the model
-		if (Page::$models !== []) {
-			if ($multilang === true) {
-				$code = App::instance()->defaultLanguage()->code();
-				$extension = $code . '.' . $extension;
-			}
-
-			// look if a content file can be found
-			// for any of the available models
-			foreach (Page::$models as $name => $class) {
-				if (is_file($root . '/' . $name . '.' . $extension) === true) {
-					$model = $name;
-					break;
-				}
-			}
-		}
-
 		return [
 			'dirname' => $item,
-			'model'   => $model ?? null,
 			'num'     => $num ?? null,
 			'root'    => $root,
 			'slug'    => $slug ?? $item,
 		];
+	}
+
+	/**
+	 * Determines the page model of a child directory by looking
+	 * for a content file of one of the registered page models
+	 *
+	 * This is deliberately not part of the directory scan: it
+	 * costs a file check per registered model, which would be
+	 * paid for every child even if the page is never created
+	 * @since 6.0.0
+	 */
+	public static function model(
+		string $root,
+		string $extension = 'txt',
+		bool $multilang = false
+	): string|null {
+		if (Page::$models === []) {
+			return null;
+		}
+
+		if ($multilang === true) {
+			$code      = App::instance()->defaultLanguage()->code();
+			$extension = $code . '.' . $extension;
+		}
+
+		// look if a content file can be found
+		// for any of the available models
+		foreach (Page::$models as $name => $class) {
+			if (is_file($root . '/' . $name . '.' . $extension) === true) {
+				return $name;
+			}
+		}
+
+		return null;
 	}
 
 	/**

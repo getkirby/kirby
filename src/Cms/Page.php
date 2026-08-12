@@ -404,6 +404,23 @@ class Page extends ModelWithContent
 	}
 
 	/**
+	 * Builds the page id from the slug and the parent page;
+	 * this is also the key that page collections use, so it
+	 * needs to be derivable without an existing page object
+	 * @since 6.0.0
+	 */
+	public static function createId(
+		string $slug,
+		Page|null $parent = null
+	): string {
+		if ($parent === null) {
+			return $slug;
+		}
+
+		return $parent->id() . '/' . $slug;
+	}
+
+	/**
 	 * Constructs a Page object and also
 	 * takes page models into account.
 	 */
@@ -441,16 +458,7 @@ class Page extends ModelWithContent
 	 */
 	public function id(): string
 	{
-		if ($this->id !== null) {
-			return $this->id;
-		}
-
-		// set the id, depending on the parent
-		if ($parent = $this->parent()) {
-			return $this->id = $parent->id() . '/' . $this->uid();
-		}
-
-		return $this->id = $this->uid();
+		return $this->id ??= static::createId($this->uid(), $this->parent());
 	}
 
 	/**

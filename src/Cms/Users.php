@@ -191,7 +191,7 @@ class Users extends LazyCollection
 			'credentials' => is_array($credentials ?? null) ? $credentials : null
 		] + $this->inject);
 
-		return $this->data[$key] = $user;
+		return $user;
 	}
 	protected function hydrationSource(): array
 	{

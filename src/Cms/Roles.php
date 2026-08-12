@@ -123,7 +123,7 @@ class Roles extends LazyCollection
 			return null;
 		}
 
-		return $this->data[$key] = Role::load($file, $this->inject);
+		return Role::load($file, $this->inject);
 	}
 
 	/**
