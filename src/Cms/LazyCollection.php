@@ -42,13 +42,6 @@ abstract class LazyCollection extends Collection
 	protected ArrayObject $cache;
 
 	/**
-	 * Flag that tells whether hydration has been
-	 * completed for all collection elements;
-	 * this is used to increase performance
-	 */
-	protected bool $hydrated = false;
-
-	/**
 	 * Data that is needed to create each element that has
 	 * not been hydrated yet, kept by collection key; the
 	 * shape is defined by the `hydrateElement()` method
@@ -76,21 +69,6 @@ abstract class LazyCollection extends Collection
 		$this->cache = new ArrayObject();
 
 		parent::__construct($objects, $parent);
-	}
-
-	/**
-	 * Temporary auto-hydration whenever a collection
-	 * method is called; some methods may not need raw
-	 * access to all collection data, so performance
-	 * will be improved if methods call initialization
-	 * or hydration themselves only if they need it
-	 * @deprecated
-	 * @todo Remove this in v6
-	 */
-	public function __call(string $key, $arguments)
-	{
-		$this->hydrate();
-		return parent::__call($key, $arguments);
 	}
 
 	/**
@@ -148,12 +126,6 @@ abstract class LazyCollection extends Collection
 		// otherwise they could no longer be created
 		$this->hydration = array_replace($this->hydration, $collection->hydration);
 		$this->data      = array_replace($this->data, $collection->data);
-
-		// the merged collection can still contribute unhydrated
-		// elements, which need to be hydrated later on
-		if ($collection->hydrated === false) {
-			$this->hydrated = false;
-		}
 	}
 
 	/**
@@ -240,7 +212,6 @@ abstract class LazyCollection extends Collection
 	{
 		$this->hydration[$key] = $hydration;
 		$this->data[$key]      = null;
-		$this->hydrated        = false;
 	}
 
 	/**
@@ -282,7 +253,6 @@ abstract class LazyCollection extends Collection
 		// has not been (fully) initialized yet);
 		// an empty collection has nothing left to hydrate
 		$empty->initialized = true;
-		$empty->hydrated    = true;
 		$empty->hydration   = [];
 
 		return $empty;
@@ -324,7 +294,6 @@ abstract class LazyCollection extends Collection
 		// has not been (fully) initialized yet)
 		if ($single === false && $result instanceof static) {
 			$result->initialized = true;
-			$result->hydrated    = true;
 		}
 
 		return $result;
@@ -385,12 +354,6 @@ abstract class LazyCollection extends Collection
 
 			yield $key => $value;
 		}
-
-		// a completed loop has attempted hydration for every
-		// element and is therefore equivalent to `hydrate()`;
-		// this line is only reached when the iterator
-		// has been fully consumed
-		$this->hydrated = true;
 	}
 
 	/**
@@ -414,18 +377,11 @@ abstract class LazyCollection extends Collection
 		// first ensure all keys are initialized
 		$this->initialize();
 
-		// skip another hydration loop if no longer needed
-		if ($this->hydrated === true) {
-			return;
-		}
-
 		foreach ($this->data as $key => $value) {
 			if ($value === null) {
 				$this->element($key);
 			}
 		}
-
-		$this->hydrated = true;
 	}
 
 	/**

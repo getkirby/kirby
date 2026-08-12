@@ -8,7 +8,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 
 class MockLazyCollection extends LazyCollection
 {
-	public bool $hydrated = false;
 	public bool $iterated = false;
 	public array $hydration = [];
 	public array $hydratedElements = [];
@@ -112,7 +111,6 @@ class LazyCollectionTest extends TestCase
 			'c' => ['id' => 'c', 'type' => 'hydrated']
 		], array_map(fn ($element) => $element->toArray(), $collection->data));
 		$this->assertSame(['b', 'c'], $collection->hydratedElements);
-		$this->assertTrue($collection->hydrated);
 
 		// another invocation should not hydrate again
 		$collection->iterated = false;
@@ -143,7 +141,6 @@ class LazyCollectionTest extends TestCase
 
 		$this->assertSame($collection2->targetData, $collection2->data);
 		$this->assertSame([], $collection2->hydratedElements);
-		$this->assertFalse($collection2->hydrated);
 		$this->assertTrue($collection2->initialized);
 
 		// another invocation should not initialize again
@@ -162,7 +159,6 @@ class LazyCollectionTest extends TestCase
 
 		$newCollection = $collection->empty();
 
-		$this->assertTrue($newCollection->hydrated);
 		$this->assertTrue($newCollection->initialized);
 		$this->assertSame([], $newCollection->toArray());
 	}
@@ -177,7 +173,6 @@ class LazyCollectionTest extends TestCase
 
 		$newCollection = $collection->empty();
 
-		$this->assertTrue($newCollection->hydrated);
 		$this->assertTrue($newCollection->initialized);
 		$this->assertSame([], $newCollection->toArray());
 	}
@@ -218,7 +213,6 @@ class LazyCollectionTest extends TestCase
 		$this->assertSame('hydrated', $objectResult->type);
 
 		// the collection result contains only hydrated elements
-		$this->assertTrue($collectionResult->hydrated);
 
 		$this->assertSame([
 			'a' => ['id' => 'a', 'type' => 'hydrated'],
@@ -240,7 +234,6 @@ class LazyCollectionTest extends TestCase
 
 		// a single key returns the element itself, which can be a
 		// collection with unhydrated elements of its own
-		$this->assertFalse($chunk->hydrated);
 		$this->assertSame(['b'], $chunk->filter('type', 'hydrated')->pluck('id'));
 	}
 
@@ -260,7 +253,6 @@ class LazyCollectionTest extends TestCase
 		$this->assertNull($collection->get('d'));
 
 		$this->assertSame(['b'], $collection->hydratedElements);
-		$this->assertFalse($collection->hydrated);
 	}
 
 	public function testGetUnitialized(): void
@@ -281,7 +273,6 @@ class LazyCollectionTest extends TestCase
 
 		$this->assertFalse($collection->initialized);
 		$this->assertSame(['a', 'd'], $collection->hydratedElements);
-		$this->assertFalse($collection->hydrated);
 	}
 
 	public function testIterate(): void
@@ -305,7 +296,6 @@ class LazyCollectionTest extends TestCase
 		$this->assertSame(['b', 'c'], $collection->hydratedElements);
 
 		// a fully consumed iterator is equivalent to `hydrate()`
-		$this->assertTrue($collection->hydrated);
 	}
 
 	public function testIteratePartial(): void
@@ -325,7 +315,6 @@ class LazyCollectionTest extends TestCase
 		// a partially consumed iterator must not
 		// mark the collection as hydrated
 		$this->assertSame([], $collection->hydratedElements);
-		$this->assertFalse($collection->hydrated);
 	}
 
 	public function testIterateUnitialized(): void
@@ -347,7 +336,6 @@ class LazyCollectionTest extends TestCase
 
 		$this->assertSame(3, $i);
 		$this->assertSame(['b', 'c'], $collection->hydratedElements);
-		$this->assertTrue($collection->hydrated);
 		$this->assertTrue($collection->initialized);
 	}
 
@@ -371,7 +359,6 @@ class LazyCollectionTest extends TestCase
 
 		// hydration was attempted for every element,
 		// even if some of them could not be hydrated
-		$this->assertTrue($collection->hydrated);
 	}
 
 	public function testUnset(): void
@@ -386,7 +373,6 @@ class LazyCollectionTest extends TestCase
 		unset($collection->a, $collection->b);
 
 		$this->assertSame([], $collection->hydratedElements);
-		$this->assertFalse($collection->hydrated);
 
 		$this->assertSame([
 			'c' => ['id' => 'c', 'type' => 'hydrated']
@@ -405,7 +391,6 @@ class LazyCollectionTest extends TestCase
 		unset($collection->a, $collection->b);
 
 		$this->assertSame([], $collection->hydratedElements);
-		$this->assertFalse($collection->hydrated);
 		$this->assertTrue($collection->initialized);
 
 		$this->assertSame([
@@ -417,7 +402,6 @@ class LazyCollectionTest extends TestCase
 	{
 		$collection = new MockLazyCollectionWithSource();
 		$collection->data = ['a' => null];
-		$collection->hydrated = true;
 
 		$absorbed = new MockLazyCollectionWithSource();
 		$absorbed->data = ['b' => null];
@@ -429,7 +413,6 @@ class LazyCollectionTest extends TestCase
 		$this->assertSame(['a' => null, 'b' => null], $collection->data);
 
 		// the merged elements still need to be hydrated later on
-		$this->assertFalse($collection->hydrated);
 	}
 
 	public function testAbsorbCarriesHydrationData(): void
@@ -465,7 +448,6 @@ class LazyCollectionTest extends TestCase
 
 		// a foreign source needs to hydrate its own elements
 		$this->assertSame(['b'], $absorbed->hydratedElements);
-		$this->assertTrue($absorbed->hydrated);
 		$this->assertSame('hydrated', $collection->data['b']->type);
 	}
 
@@ -481,7 +463,6 @@ class LazyCollectionTest extends TestCase
 
 		// an unknown source must never pass on unhydrated elements
 		$this->assertSame(['b'], $absorbed->hydratedElements);
-		$this->assertTrue($absorbed->hydrated);
 		$this->assertSame('hydrated', $collection->data['b']->type);
 	}
 
@@ -497,7 +478,6 @@ class LazyCollectionTest extends TestCase
 		$result = $collection->chunk(2);
 
 		$this->assertSame([], $result->hydratedElements);
-		$this->assertFalse($result->hydrated);
 		$this->assertTrue($result->initialized);
 
 		$this->assertSame(2, $result->count());
@@ -517,14 +497,12 @@ class LazyCollectionTest extends TestCase
 		$this->assertSame(3, $collection->count());
 
 		$this->assertSame([], $collection->hydratedElements);
-		$this->assertFalse($collection->hydrated);
 		$this->assertTrue($collection->initialized);
 	}
 
 	public function testDeferHydration(): void
 	{
 		$collection = new MockLazyCollection();
-		$collection->hydrated = true;
 
 		$collection->deferHydration('a', 'deferred');
 
@@ -534,7 +512,6 @@ class LazyCollectionTest extends TestCase
 		$this->assertSame([], $collection->hydratedElements);
 
 		// a deferred element invalidates a completed hydration
-		$this->assertFalse($collection->hydrated);
 
 		// the collected data is handed to `hydrateElement()`
 		$this->assertSame('deferred', $collection->find('a')->type);
@@ -566,7 +543,6 @@ class LazyCollectionTest extends TestCase
 		$this->assertSame(['a'], $result1->pluck('id'));
 
 		$this->assertSame(['b', 'c'], $collection->hydratedElements);
-		$this->assertTrue($collection->hydrated);
 
 		// another operation should still work but no longer needs to hydrate
 		$result2 = $collection->filter('type', 'hydrated');
@@ -589,7 +565,6 @@ class LazyCollectionTest extends TestCase
 		$this->assertSame('static', $collection->first()->type);
 
 		$this->assertSame([], $collection->hydratedElements);
-		$this->assertFalse($collection->hydrated);
 
 		$collection->data = [
 			'a' => null,
@@ -601,7 +576,6 @@ class LazyCollectionTest extends TestCase
 		$this->assertSame('hydrated', $collection->first()->type);
 
 		$this->assertSame(['a'], $collection->hydratedElements);
-		$this->assertFalse($collection->hydrated);
 	}
 
 	public function testFirstUnitialized(): void
@@ -622,7 +596,6 @@ class LazyCollectionTest extends TestCase
 		$this->assertSame('static', $collection->first()->type);
 
 		$this->assertSame([], $collection->hydratedElements);
-		$this->assertFalse($collection->hydrated);
 		$this->assertTrue($collection->initialized);
 	}
 
@@ -638,7 +611,6 @@ class LazyCollectionTest extends TestCase
 		$result = $collection->flip();
 
 		$this->assertSame([], $result->hydratedElements);
-		$this->assertFalse($result->hydrated);
 		$this->assertTrue($result->initialized);
 
 		$this->assertSame(3, $result->count());
@@ -659,7 +631,6 @@ class LazyCollectionTest extends TestCase
 		$this->assertFalse($collection->has('d'));
 
 		$this->assertSame([], $collection->hydratedElements);
-		$this->assertFalse($collection->hydrated);
 		$this->assertTrue($collection->initialized);
 	}
 
@@ -697,7 +668,6 @@ class LazyCollectionTest extends TestCase
 
 		// objects with ID can be looked up directly
 		$this->assertSame([], $collection->hydratedElements);
-		$this->assertFalse($collection->hydrated);
 
 		$collection->data = [
 			$obj = new Obj(['type' => 'no-id'])
@@ -706,7 +676,6 @@ class LazyCollectionTest extends TestCase
 		$this->assertSame(0, $collection->keyOf($obj));
 
 		$this->assertSame([], $collection->hydratedElements);
-		$this->assertTrue($collection->hydrated);
 	}
 
 	public function testKeyOfUnitialized(): void
@@ -738,7 +707,6 @@ class LazyCollectionTest extends TestCase
 
 		// the lookup needs the collection structure but no hydration
 		$this->assertSame([], $collection->hydratedElements);
-		$this->assertFalse($collection->hydrated);
 		$this->assertTrue($collection->initialized);
 	}
 
@@ -754,7 +722,6 @@ class LazyCollectionTest extends TestCase
 		$this->assertSame(['a', 'b', 'c'], $collection->keys());
 
 		$this->assertSame([], $collection->hydratedElements);
-		$this->assertFalse($collection->hydrated);
 		$this->assertTrue($collection->initialized);
 	}
 
@@ -774,7 +741,6 @@ class LazyCollectionTest extends TestCase
 		$this->assertSame('static', $collection->last()->type);
 
 		$this->assertSame([], $collection->hydratedElements);
-		$this->assertFalse($collection->hydrated);
 
 		$collection->data = [
 			'a' => new Obj(['id' => 'a', 'type' => 'static']),
@@ -786,7 +752,6 @@ class LazyCollectionTest extends TestCase
 		$this->assertSame('hydrated', $collection->last()->type);
 
 		$this->assertSame(['c'], $collection->hydratedElements);
-		$this->assertFalse($collection->hydrated);
 	}
 
 	public function testLastUnitialized(): void
@@ -807,7 +772,6 @@ class LazyCollectionTest extends TestCase
 		$this->assertSame('static', $collection->last()->type);
 
 		$this->assertSame([], $collection->hydratedElements);
-		$this->assertFalse($collection->hydrated);
 		$this->assertTrue($collection->initialized);
 	}
 
@@ -827,7 +791,6 @@ class LazyCollectionTest extends TestCase
 		$this->assertSame(['a mapped', 'b mapped', 'c mapped'], $result1->pluck('mapped'));
 
 		$this->assertSame(['b', 'c'], $collection->hydratedElements);
-		$this->assertTrue($collection->hydrated);
 
 		// another operation should still work but no longer needs to hydrate
 		$result2 = $collection->map(function ($obj) {
@@ -854,7 +817,6 @@ class LazyCollectionTest extends TestCase
 		$this->assertNull($collection->nth(-1));
 
 		$this->assertSame(['b'], $collection->hydratedElements);
-		$this->assertFalse($collection->hydrated);
 	}
 
 	public function testNthUnitialized(): void
@@ -878,7 +840,6 @@ class LazyCollectionTest extends TestCase
 		$this->assertNull($collection->nth(3));
 
 		$this->assertSame(['b'], $collection->hydratedElements);
-		$this->assertFalse($collection->hydrated);
 		$this->assertTrue($collection->initialized);
 	}
 
@@ -928,7 +889,6 @@ class LazyCollectionTest extends TestCase
 		$result = $collection->random(2);
 
 		$this->assertSame([], $result->hydratedElements);
-		$this->assertFalse($result->hydrated);
 		$this->assertTrue($result->initialized);
 
 		$this->assertSame(2, $result->count());
@@ -948,7 +908,6 @@ class LazyCollectionTest extends TestCase
 		$result = $collection->shuffle();
 
 		$this->assertSame([], $result->hydratedElements);
-		$this->assertFalse($result->hydrated);
 		$this->assertTrue($result->initialized);
 
 		$this->assertSame(3, $result->count());
@@ -968,7 +927,6 @@ class LazyCollectionTest extends TestCase
 		$result1 = $collection->slice(1, 1);
 
 		$this->assertSame([], $result1->hydratedElements);
-		$this->assertFalse($result1->hydrated);
 		$this->assertTrue($result1->initialized);
 
 		$this->assertSame(1, $result1->count());
@@ -977,7 +935,6 @@ class LazyCollectionTest extends TestCase
 		$result2 = $collection->slice(0, 2);
 
 		$this->assertSame([], $result2->hydratedElements);
-		$this->assertFalse($result2->hydrated);
 		$this->assertTrue($result2->initialized);
 
 		$this->assertSame(2, $result2->count());
@@ -997,7 +954,6 @@ class LazyCollectionTest extends TestCase
 		$this->assertSame(['a', 'b', 'c'], $result1->pluck('id'));
 
 		$this->assertSame(['c', 'b'], $collection->hydratedElements);
-		$this->assertTrue($collection->hydrated);
 
 		// another operation should still work but no longer needs to hydrate
 		$result2 = $collection->sort('id', 'desc');
@@ -1021,7 +977,6 @@ class LazyCollectionTest extends TestCase
 		], $result);
 
 		$this->assertSame(['b', 'c'], $collection->hydratedElements);
-		$this->assertTrue($collection->hydrated);
 
 		// another operation should still work but no longer needs to hydrate
 		$result = $collection->toArray(fn ($obj) => $obj->type);
@@ -1046,7 +1001,6 @@ class LazyCollectionTest extends TestCase
 		$this->assertSame($a, $result[0]);
 
 		$this->assertSame(['b', 'c'], $collection->hydratedElements);
-		$this->assertTrue($collection->hydrated);
 
 		// another operation should still work but no longer needs to hydrate
 		$result = $collection->values(fn ($obj) => $obj->type);
