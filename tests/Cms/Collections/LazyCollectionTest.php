@@ -692,6 +692,9 @@ class LazyCollectionTest extends TestCase
 		$this->assertSame('a', $collection->keyOf($a));
 		$this->assertSame('b', $collection->keyOf($b));
 
+		// elements that are not in the collection are detected by key
+		$this->assertFalse($collection->keyOf((clone $objClass)->setId('d')));
+
 		// objects with ID can be looked up directly
 		$this->assertSame([], $collection->hydratedElements);
 		$this->assertFalse($collection->hydrated);
@@ -704,6 +707,39 @@ class LazyCollectionTest extends TestCase
 
 		$this->assertSame([], $collection->hydratedElements);
 		$this->assertTrue($collection->hydrated);
+	}
+
+	public function testKeyOfUnitialized(): void
+	{
+		$objClass = new class () {
+			public string $id;
+
+			public function id(): string
+			{
+				return $this->id;
+			}
+
+			public function setId(string $id): static
+			{
+				$this->id = $id;
+				return $this;
+			}
+		};
+
+		$collection = new MockLazyCollectionWithInitialization();
+		$collection->targetData = [
+			'a' => new Obj(['id' => 'a', 'type' => 'static']),
+			'b' => null
+		];
+
+		$this->assertSame('a', $collection->keyOf((clone $objClass)->setId('a')));
+		$this->assertSame('b', $collection->keyOf((clone $objClass)->setId('b')));
+		$this->assertFalse($collection->keyOf((clone $objClass)->setId('d')));
+
+		// the lookup needs the collection structure but no hydration
+		$this->assertSame([], $collection->hydratedElements);
+		$this->assertFalse($collection->hydrated);
+		$this->assertTrue($collection->initialized);
 	}
 
 	public function testKeys(): void

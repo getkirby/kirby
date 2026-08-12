@@ -396,7 +396,15 @@ abstract class LazyCollection extends Collection
 			is_object($needle) === true &&
 			method_exists($needle, 'id') === true
 		) {
-			return $needle->id();
+			$this->initialize();
+
+			$key = $needle->id();
+
+			if (array_key_exists($key, $this->data) === true) {
+				return $key;
+			}
+
+			return false;
 		}
 
 		$this->hydrate();
