@@ -45,6 +45,40 @@ class UsersTest extends TestCase
 		$this->assertSame('c@getkirby.com', $c->nth(2)->email());
 	}
 
+	public function testAddCollectionUnhydrated(): void
+	{
+		$app = new App([
+			'roots' => [
+				'accounts' => static::TMP . '/accounts',
+				'index'    => '/dev/null'
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$app->users()->create(['id' => 'homer', 'email' => 'a@getkirby.com', 'password' => '12345678']);
+		$app->users()->create(['id' => 'foo', 'email' => 'b@getkirby.com']);
+
+		// initialize fresh app instances to start with lazy collections
+		$users = $app->clone()->users();
+		$more  = $app->clone()->users();
+
+		// a completed loop marks the collection as hydrated
+		foreach ($users as $user) {
+		}
+
+		// the second collection is initialized, but its values are still `null`
+		$more->count();
+
+		$users->add($more);
+
+		// the merged elements still need to be hydrated on demand
+		$this->assertSame(
+			['foo' => 'b@getkirby.com', 'homer' => 'a@getkirby.com'],
+			$users->toArray(fn ($user) => $user->email())
+		);
+	}
+
 	public function testAddCollectionWithIntLikeIds(): void
 	{
 		$a = Users::factory([

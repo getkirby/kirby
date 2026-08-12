@@ -10,7 +10,18 @@ class MockLazyCollection extends LazyCollection
 {
 	public bool $hydrated = false;
 	public bool $iterated = false;
+	public array $hydration = [];
 	public array $hydratedElements = [];
+
+	public function absorb(LazyCollection $collection): void
+	{
+		parent::absorb($collection);
+	}
+
+	public function deferHydration(string $key, mixed $hydration): void
+	{
+		parent::deferHydration($key, $hydration);
+	}
 
 	public function getIterator(): Iterator
 	{
@@ -23,7 +34,10 @@ class MockLazyCollection extends LazyCollection
 		// log for test assertions
 		$this->hydratedElements[] = $key;
 
-		return $this->data[$key] = new Obj(['id' => $key, 'type' => 'hydrated']);
+		return $this->data[$key] = new Obj([
+			'id'   => $key,
+			'type' => $this->hydration[$key] ?? 'hydrated'
+		]);
 	}
 }
 
@@ -63,6 +77,16 @@ class MockLazyCollectionWithInitialization extends MockLazyCollection
 		}
 
 		$this->initialized = true;
+	}
+}
+
+class MockLazyCollectionWithSource extends MockLazyCollection
+{
+	public mixed $source = 'source';
+
+	protected function hydrationSource(): mixed
+	{
+		return $this->source;
 	}
 }
 
@@ -389,6 +413,78 @@ class LazyCollectionTest extends TestCase
 		], $collection->toArray());
 	}
 
+	public function testAbsorb(): void
+	{
+		$collection = new MockLazyCollectionWithSource();
+		$collection->data = ['a' => null];
+		$collection->hydrated = true;
+
+		$absorbed = new MockLazyCollectionWithSource();
+		$absorbed->data = ['b' => null];
+
+		$collection->absorb($absorbed);
+
+		// the same source can pass on its elements unhydrated
+		$this->assertSame([], $absorbed->hydratedElements);
+		$this->assertSame(['a' => null, 'b' => null], $collection->data);
+
+		// the merged elements still need to be hydrated later on
+		$this->assertFalse($collection->hydrated);
+	}
+
+	public function testAbsorbCarriesHydrationData(): void
+	{
+		$collection = new MockLazyCollectionWithSource();
+		$collection->deferHydration('a', 'from-a');
+
+		$absorbed = new MockLazyCollectionWithSource();
+		$absorbed->deferHydration('b', 'from-b');
+
+		$collection->absorb($absorbed);
+
+		// the hydration data travels with the unhydrated elements,
+		// so they can still be created in their new collection
+		$this->assertSame([], $absorbed->hydratedElements);
+		$this->assertSame(['a' => 'from-a', 'b' => 'from-b'], $collection->hydration);
+
+		$collection->hydrate();
+
+		$this->assertSame('from-b', $collection->data['b']->type);
+	}
+
+	public function testAbsorbWithDifferentSource(): void
+	{
+		$collection = new MockLazyCollectionWithSource();
+		$collection->data = ['a' => null];
+
+		$absorbed = new MockLazyCollectionWithSource();
+		$absorbed->source = 'different';
+		$absorbed->data = ['b' => null];
+
+		$collection->absorb($absorbed);
+
+		// a foreign source needs to hydrate its own elements
+		$this->assertSame(['b'], $absorbed->hydratedElements);
+		$this->assertTrue($absorbed->hydrated);
+		$this->assertSame('hydrated', $collection->data['b']->type);
+	}
+
+	public function testAbsorbWithoutSource(): void
+	{
+		$collection = new MockLazyCollection();
+		$collection->data = ['a' => null];
+
+		$absorbed = new MockLazyCollection();
+		$absorbed->data = ['b' => null];
+
+		$collection->absorb($absorbed);
+
+		// an unknown source must never pass on unhydrated elements
+		$this->assertSame(['b'], $absorbed->hydratedElements);
+		$this->assertTrue($absorbed->hydrated);
+		$this->assertSame('hydrated', $collection->data['b']->type);
+	}
+
 	public function testChunk(): void
 	{
 		$collection = new MockLazyCollectionWithInitialization();
@@ -423,6 +519,38 @@ class LazyCollectionTest extends TestCase
 		$this->assertSame([], $collection->hydratedElements);
 		$this->assertFalse($collection->hydrated);
 		$this->assertTrue($collection->initialized);
+	}
+
+	public function testDeferHydration(): void
+	{
+		$collection = new MockLazyCollection();
+		$collection->hydrated = true;
+
+		$collection->deferHydration('a', 'deferred');
+
+		// the key is known, but the element is not created yet
+		$this->assertSame(['a' => null], $collection->data);
+		$this->assertSame(['a' => 'deferred'], $collection->hydration);
+		$this->assertSame([], $collection->hydratedElements);
+
+		// a deferred element invalidates a completed hydration
+		$this->assertFalse($collection->hydrated);
+
+		// the collected data is handed to `hydrateElement()`
+		$this->assertSame('deferred', $collection->find('a')->type);
+		$this->assertSame(['a'], $collection->hydratedElements);
+	}
+
+	public function testDeferHydrationAndUnset(): void
+	{
+		$collection = new MockLazyCollection();
+		$collection->deferHydration('a', 'deferred');
+
+		unset($collection->a);
+
+		// a removed element must not be created again
+		$this->assertSame([], $collection->data);
+		$this->assertSame([], $collection->hydration);
 	}
 
 	public function testFilter(): void

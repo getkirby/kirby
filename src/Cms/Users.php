@@ -66,7 +66,7 @@ class Users extends LazyCollection
 	{
 		// add a users collection
 		if ($object instanceof self) {
-			$this->data = array_replace($this->data, $object->data);
+			$this->absorb($object);
 
 		// add a user by id
 		} elseif (
@@ -167,12 +167,17 @@ class Users extends LazyCollection
 		// populated in the collection, otherwise we can assume that
 		// this method will only be called on "unhydrated" user IDs
 		$root = $this->root . '/' . $key;
-		if ($this->initialized === false && Dir::exists($root, $this->root) === false) {
+
+		if (
+			$this->initialized === false &&
+			Dir::exists($root, $this->root) === false
+		) {
 			return null;
 		}
 
 		// get role information
 		$path = $root . '/index.php';
+
 		if (is_file($path) === true) {
 			$credentials = F::load($path, allowOutput: false);
 		}
@@ -186,6 +191,10 @@ class Users extends LazyCollection
 		] + $this->inject);
 
 		return $this->data[$key] = $user;
+	}
+	protected function hydrationSource(): array
+	{
+		return [$this->root, $this->inject];
 	}
 
 	/**

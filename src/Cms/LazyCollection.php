@@ -17,7 +17,8 @@ use Kirby\Exception\LogicException;
  * You can use LazyCollection in two ways:
  * 1. Initialize with keys only (values are `null`),
  *    define `hydrateElement` method that initializes
- *    an element dynamically.
+ *    an element dynamically (use `deferHydration()` to
+ *    collect the data that is needed to create it).
  * 2. Option 1, but also don't initialize any keys,
  *    set `$initialized` prop to `false` and define
  *    `initialize` method that defines which keys
@@ -37,6 +38,14 @@ abstract class LazyCollection extends Collection
 	 * this is used to increase performance
 	 */
 	protected bool $hydrated = false;
+
+	/**
+	 * Data that is needed to create each element that has
+	 * not been hydrated yet, kept by collection key; the
+	 * shape is defined by the `hydrateElement()` method
+	 * of each collection
+	 */
+	protected array $hydration = [];
 
 	/**
 	 * Flag that tells whether all possible collection
@@ -90,7 +99,37 @@ abstract class LazyCollection extends Collection
 		// might bring back the element that was unset
 		$this->initialize();
 
+		// a removed element must not be created again
+		unset($this->hydration[$key]);
+
 		return parent::__unset($key);
+	}
+
+	/**
+	 * Merges the elements of another collection into
+	 * this one, keeping them unhydrated where possible
+	 */
+	protected function absorb(self $collection): void
+	{
+		$source = $this->hydrationSource();
+
+		if (
+			$source === null ||
+			$source !== $collection->hydrationSource()
+		) {
+			$collection->hydrate();
+		}
+
+		// the hydration data has to travel with the elements,
+		// otherwise they could no longer be created
+		$this->hydration = array_replace($this->hydration, $collection->hydration);
+		$this->data      = array_replace($this->data, $collection->data);
+
+		// the merged collection can still contribute unhydrated
+		// elements, which need to be hydrated later on
+		if ($collection->hydrated === false) {
+			$this->hydrated = false;
+		}
 	}
 
 	/**
@@ -140,6 +179,18 @@ abstract class LazyCollection extends Collection
 	}
 
 	/**
+	 * Adds an element to the collection that is only
+	 * created once it is accessed; the passed data is
+	 * handed to `hydrateElement()` for the given key
+	 */
+	protected function deferHydration(string $key, mixed $hydration): void
+	{
+		$this->hydration[$key] = $hydration;
+		$this->data[$key]      = null;
+		$this->hydrated        = false;
+	}
+
+	/**
 	 * Clone and remove all elements from the collection
 	 */
 	public function empty(): static
@@ -153,6 +204,7 @@ abstract class LazyCollection extends Collection
 		// an empty collection has nothing left to hydrate
 		$empty->initialized = true;
 		$empty->hydrated    = true;
+		$empty->hydration   = [];
 
 		return $empty;
 	}
@@ -303,6 +355,16 @@ abstract class LazyCollection extends Collection
 	 * @return TValue|null
 	 */
 	abstract protected function hydrateElement(string $key): object|null;
+
+	/**
+	 * Identifies where the collection hydrates its elements
+	 * from; unhydrated elements can only be passed on to
+	 * another collection with an identical source
+	 */
+	protected function hydrationSource(): mixed
+	{
+		return null;
+	}
 
 	/**
 	 * Ensures that the keys for all valid collection elements
