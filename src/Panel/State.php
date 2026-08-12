@@ -248,17 +248,10 @@ class State
 
 	public function system(): array
 	{
-		$locales = [];
-
-		foreach ($this->kirby->translations() as $translation) {
-			$locales[$translation->code()] = $translation->locale();
-		}
-
 		return [
 			'ascii'   => Str::$ascii,
 			'csrf'    => $this->kirby->auth()->csrfFromSession(),
 			'isLocal' => $this->kirby->system()->isLocal(),
-			'locales' => $locales,
 			'slugs'   => Str::$language,
 			'title'   => $this->kirby->site()->title()->or('Kirby Panel')->toString()
 		];

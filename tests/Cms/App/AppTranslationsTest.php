@@ -70,6 +70,17 @@ class AppTranslationsTest extends TestCase
 		return $this->app;
 	}
 
+	public function testLocales(): void
+	{
+		$locales = $this->app->locales();
+
+		$this->assertSame('en_US', $locales['en']);
+		$this->assertSame('ja_JP', $locales['ja']);
+		$this->assertSame('de_DE', $locales['de']);
+
+		$this->assertSame($this->app->translations()->keys(), array_keys($locales));
+	}
+
 	public function testTranslations(): void
 	{
 		$app = new App([

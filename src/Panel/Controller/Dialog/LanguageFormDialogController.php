@@ -90,6 +90,7 @@ class LanguageFormDialogController extends DialogController
 		return new FormDialog(
 			component: 'k-language-dialog',
 			fields: $this->fields(),
+			locales: $this->kirby->locales(),
 			submitButton: $this->i18n(
 				$this->language ? 'save' : 'language.create'
 			),

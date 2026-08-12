@@ -7,6 +7,15 @@ import FormDialog from "./FormDialog.vue";
  */
 export default {
 	extends: FormDialog,
+	props: {
+		/**
+		 * @since 6.0.0
+		 */
+		locales: {
+			type: Object,
+			default: () => ({})
+		}
+	},
 	watch: {
 		"value.name"(name) {
 			if (this.fields.code.disabled) {
@@ -41,8 +50,7 @@ export default {
 				} else {
 					// if the entered language code exists
 					// matches the locale values in the languages defined in the system
-					let locales = this.$panel.system.locales ?? [];
-					this.value.locale = locales?.[code];
+					this.value.locale = this.locales[code];
 				}
 			}
 		},

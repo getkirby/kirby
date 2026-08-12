@@ -111,6 +111,9 @@ class LanguageFormDialogControllerTest extends TestCase
 			],
 			$props['value']
 		);
+
+		$this->assertSame('en_US', $props['locales']['en']);
+		$this->assertSame('de_DE', $props['locales']['de']);
 	}
 
 	public function testLoadForUpdate(): void
@@ -132,6 +135,8 @@ class LanguageFormDialogControllerTest extends TestCase
 			],
 			$props['value']
 		);
+
+		$this->assertSame('en_US', $props['locales']['en']);
 	}
 
 	public function testSubmitForCreate(): void

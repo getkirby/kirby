@@ -153,6 +153,22 @@ trait AppTranslations
 	}
 
 	/**
+	 * Returns the locale for each available translation
+	 *
+	 * @since 6.0.0
+	 */
+	public function locales(): array
+	{
+		$locales = [];
+
+		foreach ($this->translations() as $translation) {
+			$locales[$translation->code()] = $translation->locale();
+		}
+
+		return $locales;
+	}
+
+	/**
 	 * Returns all available translations
 	 */
 	public function translations(): Translations

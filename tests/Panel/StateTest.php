@@ -270,10 +270,6 @@ class StateTest extends TestCase
 		$this->assertSame(Str::$ascii, $system['ascii']);
 		$this->assertSame(csrf(), $system['csrf']);
 		$this->assertFalse($system['isLocal']);
-		$this->assertArrayHasKey('de', $system['locales']);
-		$this->assertArrayHasKey('en', $system['locales']);
-		$this->assertSame('en_US', $system['locales']['en']);
-		$this->assertSame('de_DE', $system['locales']['de']);
 
 		// $translation
 		$this->assertSame('en', $translation['code']);
@@ -490,7 +486,6 @@ class StateTest extends TestCase
 		$this->assertArrayHasKey('ascii', $system);
 		$this->assertArrayHasKey('csrf', $system);
 		$this->assertArrayHasKey('isLocal', $system);
-		$this->assertArrayHasKey('locales', $system);
 		$this->assertArrayHasKey('slugs', $system);
 		$this->assertArrayHasKey('title', $system);
 	}
