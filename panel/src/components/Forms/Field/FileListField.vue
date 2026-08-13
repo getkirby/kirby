@@ -12,13 +12,6 @@ export default {
 	extends: ModelListField,
 	props: {
 		/**
-		 * Props for each file of the current page
-		 */
-		files: {
-			type: Array,
-			default: () => []
-		},
-		/**
 		 * Upload settings or `false` if uploads are disabled
 		 */
 		upload: {
@@ -43,9 +36,6 @@ export default {
 		},
 		icon() {
 			return "image";
-		},
-		models() {
-			return this.files;
 		},
 		type() {
 			return "files";

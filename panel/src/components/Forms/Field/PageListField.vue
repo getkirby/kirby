@@ -14,14 +14,7 @@ export default {
 		/**
 		 * Whether new pages can be added to the list
 		 */
-		add: Boolean,
-		/**
-		 * Props for each page of the current page
-		 */
-		pages: {
-			type: Array,
-			default: () => []
-		}
+		add: Boolean
 	},
 	computed: {
 		canAdd() {
@@ -69,9 +62,6 @@ export default {
 					sortable: sortable
 				};
 			});
-		},
-		models() {
-			return this.pages;
 		},
 		type() {
 			return "pages";
