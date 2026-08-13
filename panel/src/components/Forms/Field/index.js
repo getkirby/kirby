@@ -17,6 +17,7 @@ import ListField from "./ListField.vue";
 import MultiselectField from "./MultiselectField.vue";
 import NumberField from "./NumberField.vue";
 import ObjectField from "./ObjectField.vue";
+import PageListField from "./PageListField.vue";
 import PagePickerField from "./PagePickerField.vue";
 import PasswordField from "./PasswordField.vue";
 import RadioField from "./RadioField.vue";
@@ -64,6 +65,7 @@ export default {
 		app.component("k-multiselect-field", MultiselectField);
 		app.component("k-number-field", NumberField);
 		app.component("k-object-field", ObjectField);
+		app.component("k-pagelist-field", PageListField);
 		app.component("k-pages-field", PagePickerField);
 		app.component("k-password-field", PasswordField);
 		app.component("k-radio-field", RadioField);
