@@ -10,12 +10,6 @@ import ModelListField from "@/components/Forms/Field/ModelListField.vue";
  */
 export default {
 	extends: ModelListField,
-	props: {
-		/**
-		 * Whether new pages can be added to the list
-		 */
-		add: Boolean
-	},
 	computed: {
 		canAdd() {
 			return this.state.add && this.$panel.permissions.pages.create;
