@@ -159,7 +159,14 @@ class FileListField extends ModelListField
 	{
 		return [
 			...parent::props(),
-			'accept' => $this->accept(),
+			'accept' => $this->accept()
+		];
+	}
+
+	public function state(): array
+	{
+		return [
+			...parent::state(),
 			'upload' => $this->upload()
 		];
 	}

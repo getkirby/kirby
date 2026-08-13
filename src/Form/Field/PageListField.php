@@ -261,14 +261,6 @@ class PageListField extends ModelListField
 		return $parent;
 	}
 
-	public function props(): array
-	{
-		return [
-			...parent::props(),
-			'add' => $this->add()
-		];
-	}
-
 	public function sortable(): bool
 	{
 		// only listed pages carry a sort number
@@ -277,6 +269,14 @@ class PageListField extends ModelListField
 		}
 
 		return parent::sortable();
+	}
+
+	public function state(): array
+	{
+		return [
+			...parent::state(),
+			'add' => $this->add()
+		];
 	}
 
 	public function status(): string

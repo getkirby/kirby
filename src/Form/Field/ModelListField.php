@@ -162,7 +162,7 @@ abstract class ModelListField extends DisplayField
 			[
 				'pattern' => '',
 				'method'  => 'GET',
-				'action'  => fn (): array => $field->props()
+				'action'  => fn (): array => $field->state()
 			],
 			[
 				'pattern' => 'delete',
@@ -489,16 +489,13 @@ abstract class ModelListField extends DisplayField
 		return [
 			...parent::props(),
 			'batch'      => $this->batch(),
-			'columns'    => $this->columnsWithTypes(),
 			'empty'      => $this->empty(),
+			'initial'    => $this->state(),
 			'layout'     => $this->layout(),
 			'max'        => $this->max(),
 			'min'        => $this->min(),
-			'models'     => $this->data(),
-			'pagination' => $this->pagination(),
 			'searchable' => $this->searchable(),
 			'size'       => $this->size(),
-			'sortable'   => $this->sortable(),
 		];
 	}
 
@@ -543,6 +540,16 @@ abstract class ModelListField extends DisplayField
 		return $this->query() === null &&
 			$this->sortBy() === null &&
 			$this->flip() === false;
+	}
+
+	public function state(): array
+	{
+		return [
+			'columns'    => $this->columnsWithTypes(),
+			'models'     => $this->data(),
+			'pagination' => $this->pagination(),
+			'sortable'   => $this->sortable(),
+		];
 	}
 
 	public function text(): string|null
