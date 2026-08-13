@@ -9,6 +9,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\Exception\UserNotFoundException;
 use Kirby\Filesystem\F;
+use Kirby\Http\Cookie;
 use Kirby\Http\Request\Auth\BasicAuth;
 use Kirby\Session\Session;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -521,6 +522,23 @@ class AuthTest extends TestCase
 			'mode'      => null,
 			'status'    => 'inactive'
 		], $this->auth->status()->toArray());
+	}
+
+	public function testLogoutDestroysSession(): void
+	{
+		$session = $this->app->session();
+
+		$this->app->user('marge@simpsons.com')->loginPasswordless();
+
+		// the Panel stores a CSRF token in the session on every request
+		$this->app->csrf();
+
+		$this->assertTrue(Cookie::exists('kirby_session'));
+
+		$this->auth->logout();
+
+		$this->assertSame([], $session->data()->get());
+		$this->assertFalse(Cookie::exists('kirby_session'));
 	}
 
 	public function testLogoutClearsMethodState(): void

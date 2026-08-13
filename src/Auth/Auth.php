@@ -401,12 +401,16 @@ class Auth
 		// ensures that we log out the actually logged in user
 		$this->user->impersonate(null);
 
-		$this->user()?->logout();
-
+		// clear our own session data before the user is logged out;
+		// otherwise this leftover data would keep the session alive
+		// and its cookie would block the pages cache
 		$session = $this->kirby->session();
 
 		$this->challenges->clear($session);
+		$this->csrf->clear($session);
 		$this->methods->clear($session);
+
+		$this->user()?->logout();
 
 		$this->status = null;
 	}
