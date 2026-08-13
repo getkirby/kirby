@@ -5,6 +5,7 @@ import ColorField from "./ColorField.vue";
 import DateField from "./DateField.vue";
 import EmailField from "./EmailField.vue";
 import EntriesField from "./EntriesField.vue";
+import FileListField from "./FileListField.vue";
 import FilePickerField from "./FilePickerField.vue";
 import GapField from "./GapField.vue";
 import HeadlineField from "./HeadlineField.vue";
@@ -51,6 +52,7 @@ export default {
 		app.component("k-date-field", DateField);
 		app.component("k-email-field", EmailField);
 		app.component("k-entries-field", EntriesField);
+		app.component("k-filelist-field", FileListField);
 		app.component("k-files-field", FilePickerField);
 		app.component("k-gap-field", GapField);
 		app.component("k-headline-field", HeadlineField);
