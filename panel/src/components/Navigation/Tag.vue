@@ -3,6 +3,7 @@
 		:is="element ?? (link ? 'k-link' : 'button')"
 		:aria-disabled="disabled"
 		:data-theme="theme"
+		:tabindex="tabindex"
 		:to="link"
 		class="k-tag"
 		type="button"
@@ -103,6 +104,11 @@ export default {
 	computed: {
 		isRemovable() {
 			return this.removable && !this.disabled;
+		},
+		tabindex() {
+			// removable tags need to be focusable, no matter which
+			// element they render as, to be removed by keyboard
+			return this.isRemovable === true ? 0 : null;
 		}
 	},
 	methods: {
