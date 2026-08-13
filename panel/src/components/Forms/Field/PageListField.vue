@@ -2,10 +2,11 @@
 import ModelListField from "@/components/Forms/Field/ModelListField.vue";
 
 /**
- * Lists the children of a model
+ * Displays a list of pages
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     6.0.0
  */
 export default {
 	extends: ModelListField,

@@ -3,9 +3,9 @@
 		<k-lab-examples class="k-lab-field-examples">
 			<k-box theme="notice" icon="alert">
 				The examples below are rendered from static props. There is no model
-				behind them, so everything that talks to the field endpoint – search,
-				pagination, sorting and batch deletion – answers with a 404 here and
-				only works in a real model view.
+				behind them, so everything that talks to the field endpoint (search,
+				pagination, sorting and batch deletion) answers with a 404 here and only
+				works in a real model view.
 			</k-box>
 
 			<k-lab-example label="Default">
