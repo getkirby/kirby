@@ -1,23 +1,14 @@
+import { escapeHTML, StringTemplateValues } from "@/helpers/string";
 import { isObject } from "@/helpers/object";
+
+export type HtmlData = {
+	[key: string]:
+		StringTemplateValues[string] | HtmlString | HtmlData | undefined;
+};
 
 /**
  * Wraps and marks a string as trusted, pre-escaped HTML.
- *
- * A plain string flowing through Panel state is treated as untrusted and
- * should get escaped at the render site. An `HtmlString` instance can be
- *  passed through unchanged, so it can be rendered via `v-html`/
- * `v-safe-html` without further escaping.
- *
- * The backend signals safety by emitting JSON with the parent key wrapped
- * in `<…>`, e.g. `"<help>": "<b>html</b>"`. A marked key can also hold a
- * list, in which case every entry is trusted: `"<issues>": ["<b>a</b>"]`.
- * `HtmlString.resolve()` walks incoming state, finds those keys, rewraps
- * their values, and strips the brackets.
- *
- * Since the class extends `String`, instances behave like strings in
- * almost every context (template interpolation, attribute binding,
- * concatenation, `JSON.stringify`), and `instanceof` survives Vue's
- * `reactive()` proxy and prop type validation.
+ * Used by `v-safe-html` to render as actual HTML.
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
@@ -29,13 +20,8 @@ export class HtmlString extends String {
 	}
 
 	/**
-	 * Recursively walks `data` and rewraps any value whose parent key
-	 * matches `<key>` into an `HtmlString`, stripping the brackets. Plain
-	 * keys are kept as-is. Arrays are walked element by element. Class
-	 * instances (e.g. component  instances passed as props) are passed
-	 * through untouched.
-	 *
-	 * Returns a new object/array; does not mutate the input.
+	 * Recursively walks `data` and rewraps any value
+	 * whose parent key matches `<key>` into an `HtmlString`.
 	 */
 	static resolve<T>(data: T): T {
 		if (Array.isArray(data) === true) {
@@ -76,9 +62,7 @@ export class HtmlString extends String {
 	}
 
 	/**
-	 * Turns the value of a marked `<key>` into trusted HTML:
-	 * a string becomes an `HtmlString`, a list becomes a list
-	 * of `HtmlString` values
+	 * Turns the value of a marked `<key>` into trusted HTML
 	 */
 	protected static wrap(value: unknown): unknown {
 		if (typeof value === "string") {
@@ -93,6 +77,31 @@ export class HtmlString extends String {
 		// carry marked keys of its own further down
 		return HtmlString.resolve(value);
 	}
+}
+
+/**
+ * Escapes all values that get interpolated into a trusted string.
+ *
+ * @since 6.0.0
+ */
+export function escape(values: HtmlData): StringTemplateValues {
+	const escaped: StringTemplateValues = {};
+
+	for (const key in values) {
+		const value = values[key];
+
+		if (value instanceof HtmlString) {
+			escaped[key] = String(value);
+		} else if (isObject(value) === true) {
+			escaped[key] = escape(value as HtmlData);
+		} else if (value === null || value === undefined) {
+			escaped[key] = null;
+		} else {
+			escaped[key] = escapeHTML(value);
+		}
+	}
+
+	return escaped;
 }
 
 /**

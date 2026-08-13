@@ -375,7 +375,7 @@ export function template(
 	}
 
 	const resolve = (parts: string[], data: StringTemplateValues = {}) => {
-		const part = escapeHTML(parts.shift());
+		const part = parts.shift() as string;
 		const value = data[part] ?? "…";
 
 		if (value === "…" || parts.length === 0) {

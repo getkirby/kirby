@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it } from "vitest";
 import dayjs from "@/libraries/dayjs";
+import html, { HtmlString } from "./html";
 import Translation from "./translation";
 
 describe("panel.translation", () => {
@@ -116,6 +117,89 @@ describe("panel.translation", () => {
 		it("returns undefined for non-string keys", () => {
 			const translation = Translation();
 			expect(translation.translate(123)).toBeUndefined();
+		});
+	});
+
+	describe("translateHtml()", () => {
+		it("marks the translation as trusted HTML", () => {
+			const translation = Translation();
+			translation.set({ data: { confirm: "Delete <b>the page</b>?" } });
+
+			const result = translation.translateHtml("confirm");
+
+			expect(result).toBeInstanceOf(HtmlString);
+			expect(result.toString()).toStrictEqual("Delete <b>the page</b>?");
+		});
+
+		it("escapes interpolated values", () => {
+			const translation = Translation();
+			translation.set({ data: { greeting: "Hello <b>{{ name }}</b>" } });
+
+			expect(
+				translation.translateHtml("greeting", { name: "<script>" }).toString()
+			).toStrictEqual("Hello <b>&lt;script&gt;</b>");
+		});
+
+		it("escapes nested values", () => {
+			const translation = Translation();
+			translation.set({ data: { greeting: "Hello {{ user.name }}" } });
+
+			expect(
+				translation
+					.translateHtml("greeting", { user: { name: "<script>" } })
+					.toString()
+			).toStrictEqual("Hello &lt;script&gt;");
+		});
+
+		it("passes trusted values through unescaped", () => {
+			const translation = Translation();
+			translation.set({ data: { greeting: "Hello {{ name }}" } });
+
+			expect(
+				translation
+					.translateHtml("greeting", { name: html("<b>Peter</b>") })
+					.toString()
+			).toStrictEqual("Hello <b>Peter</b>");
+		});
+
+		it("keeps the placeholder fallback for empty values", () => {
+			const translation = Translation();
+			translation.set({ data: { greeting: "Hello {{ name }}" } });
+
+			expect(
+				translation.translateHtml("greeting", { name: null }).toString()
+			).toStrictEqual("Hello …");
+		});
+
+		it("uses the key as fallback when key does not exist", () => {
+			const translation = Translation();
+			expect(translation.translateHtml("missing.key").toString()).toStrictEqual(
+				"missing.key"
+			);
+		});
+
+		it("accepts fallback as second argument", () => {
+			const translation = Translation();
+			expect(
+				translation.translateHtml("missing.key", "<b>Fallback</b>").toString()
+			).toStrictEqual("<b>Fallback</b>");
+		});
+
+		it("accepts fallback as third argument alongside data", () => {
+			const translation = Translation();
+			expect(
+				translation
+					.translateHtml("missing.key", { name: "Peter" }, "Fallback")
+					.toString()
+			).toStrictEqual("Fallback");
+		});
+
+		it("returns an empty HtmlString for non-string keys", () => {
+			const translation = Translation();
+			const result = translation.translateHtml(123 as unknown as string);
+
+			expect(result).toBeInstanceOf(HtmlString);
+			expect(result.toString()).toStrictEqual("");
 		});
 	});
 });

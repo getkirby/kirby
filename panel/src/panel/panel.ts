@@ -170,6 +170,7 @@ export default class Panel {
 	redirect: typeof redirect;
 	reload: ReturnType<typeof View>["reload"];
 	t: ReturnType<typeof Translation>["translate"];
+	th: ReturnType<typeof Translation>["translateHtml"];
 
 	// deprecated: assigned by the legacy plugin, not the core
 	$t!: ReturnType<typeof Translation>["translate"];
@@ -218,6 +219,7 @@ export default class Panel {
 
 		// translator
 		this.t = this.translation.translate.bind(this.translation);
+		this.th = this.translation.translateHtml.bind(this.translation);
 
 		// register all plugins
 		this.plugins = Plugins(this.app, plugins);

@@ -26,9 +26,11 @@ export default {
 		);
 		app.config.globalProperties.$events = panel.events;
 		app.config.globalProperties.$go = panel.view.open.bind(panel.view);
+		app.config.globalProperties.$h = panel.html;
 		app.config.globalProperties.$html = panel.html;
 		app.config.globalProperties.$reload = panel.reload;
 		app.config.globalProperties.$t = panel.$t = panel.t;
+		app.config.globalProperties.$th = panel.th;
 		app.config.globalProperties.$url = panel.url;
 	}
 };

@@ -1,6 +1,7 @@
 import { reactive } from "vue";
 import dayjs from "@/libraries/dayjs";
 import { StringTemplateValues, template } from "@/helpers/string";
+import html, { escape, HtmlData, HtmlString } from "./html";
 import State from "./state";
 
 export type TranslationState = {
@@ -72,6 +73,37 @@ export default function Translation() {
 		return template(value, data);
 	}
 
+	/**
+	 * Same as `translate()`, but marks the result as trusted HTML
+	 * and escapes every filled placeholder.
+	 *
+	 * @example
+	 * th("page.delete.confirm", { title: page.title })
+	 * th("<b>{title}</b>", { title: "<script>" }) // "<b>&lt;script&gt;</b>"
+	 * th("key", { link: html("<a href='#'>Link</a>") }) // passed through
+	 *
+	 * @since 6.0.0
+	 */
+	function translateHtml(key: string, fallback: string): HtmlString;
+	function translateHtml(
+		key: string,
+		data?: HtmlData,
+		fallback?: string
+	): HtmlString;
+	function translateHtml(
+		this: { data: Data },
+		key: string,
+		data?: HtmlData | string,
+		fallback?: string
+	): HtmlString {
+		if (typeof data === "string") {
+			fallback = data;
+			data = undefined;
+		}
+
+		return html(translate.call(this, key, escape(data ?? {}), fallback));
+	}
+
 	return reactive({
 		...parent,
 
@@ -96,6 +128,7 @@ export default function Translation() {
 			return this.state();
 		},
 
-		translate
+		translate,
+		translateHtml
 	});
 }
