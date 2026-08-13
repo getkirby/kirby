@@ -128,6 +128,7 @@ class CoreTest extends TestCase
 		$this->assertArrayHasKey('checkboxes', $fields);
 		$this->assertArrayHasKey('date', $fields);
 		$this->assertArrayHasKey('email', $fields);
+		$this->assertArrayHasKey('filelist', $fields);
 		$this->assertArrayHasKey('files', $fields);
 		$this->assertArrayHasKey('gap', $fields);
 		$this->assertArrayHasKey('headline', $fields);
