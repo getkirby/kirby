@@ -4,7 +4,6 @@ namespace Kirby\Panel\Controller\Drawer;
 
 use Kirby\Auth\Service\Webauthn;
 use Kirby\Cms\User;
-use Kirby\Cms\UserRules;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\Ui\Drawer;
 
@@ -27,7 +26,7 @@ class UserWebauthnDrawerController extends UserCredentialDrawerController
 		parent::__construct($user, 'webauthn');
 
 		// ensure user has the necessary permissions
-		UserRules::changeSecret($user, 'webauthn', null);
+		$user->guards()->ensureExecutable('changeSecret', 'webauthn', null);
 
 		$this->webauthn = Webauthn::for($user);
 	}

@@ -9,11 +9,10 @@ namespace Kirby\Cms;
  * @license   https://getkirby.com/license
  *
  * @extends ModelPermissions<File>
+ * @deprecated 6.0.0 Use `$file->guards()` instead
  */
 class FilePermissions extends ModelPermissions
 {
-	protected const string CATEGORY = 'files';
-
 	/**
 	 * Used to cache once determined permissions in memory
 	 *
@@ -24,14 +23,5 @@ class FilePermissions extends ModelPermissions
 		ModelWithContent|Language $model
 	): string {
 		return $model->template() ?? '__none__';
-	}
-
-	protected function canChangeTemplate(): bool
-	{
-		if (count($this->model->blueprints()) <= 1) {
-			return false;
-		}
-
-		return true;
 	}
 }

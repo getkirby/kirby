@@ -440,7 +440,8 @@ class SystemTest extends TestCase
 
 		$this->app->users()->create([
 			'email'    => 'test@getkirby.com',
-			'password' => 'test123456'
+			'password' => 'test123456',
+			'role'     => 'admin'
 		]);
 
 		$this->assertTrue($system->isInstalled());

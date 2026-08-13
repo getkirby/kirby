@@ -7,6 +7,7 @@ use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
+use Kirby\Guards\LanguageGuards;
 use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Locale;
 use Kirby\Toolkit\Str;
@@ -166,7 +167,7 @@ class Language extends Model
 		$language = new static($props);
 
 		// validate the new language
-		LanguageRules::create($language);
+		$language->guards()->ensureExecutable('create');
 
 		// apply before hook
 		$language = $kirby->apply(
@@ -179,7 +180,7 @@ class Language extends Model
 		);
 
 		// re-validate the language after before hook was applied
-		LanguageRules::create($language);
+		$language->guards()->ensureExecutable('create');
 
 		$language->save();
 
@@ -222,7 +223,7 @@ class Language extends Model
 		$code  = $this->code();
 
 		// validate the language rules
-		LanguageRules::delete($this);
+		$this->guards()->ensureExecutable('delete');
 
 		// apply before hook
 		$language = $kirby->apply(
@@ -231,7 +232,7 @@ class Language extends Model
 		);
 
 		// re-validate the language rules after before hook was applied
-		LanguageRules::delete($language);
+		$language->guards()->ensureExecutable('delete');
 
 		if (F::remove($language->root()) !== true) {
 			throw new Exception(message: 'The language could not be deleted');
@@ -302,6 +303,17 @@ class Language extends Model
 	}
 
 	/**
+	 * Returns the guards object for this language
+	 */
+	public function guards(): LanguageGuards
+	{
+		return new LanguageGuards(
+			model: $this,
+			user: User::ensure()
+		);
+	}
+
+	/**
 	 * Check if the language url is custom domain
 	 */
 	public function hasCustomDomain(): bool
@@ -333,17 +345,7 @@ class Language extends Model
 	 */
 	public function isDeletable(): bool
 	{
-		// a single-language object cannot be deleted
-		if ($this->isSingle() === true) {
-			return false;
-		}
-
-		// the default language can only be deleted if it's the last
-		if ($this->isDefault() === true && $this->isLast() === false) {
-			return false;
-		}
-
-		return true;
+		return $this->guards()->abilities()->may('delete');
 	}
 
 	/**
@@ -617,7 +619,7 @@ class Language extends Model
 		}
 
 		// validate the language rules after before hook was applied
-		LanguageRules::update($language, $this);
+		$language->guards()->ensureExecutable('update', $this);
 
 		// if language just got promoted to be the new default language…
 		if ($this->isDefault() === false && $language->isDefault() === true) {

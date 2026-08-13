@@ -151,12 +151,6 @@
       <code><![CDATA[$props['content']]]></code>
     </InvalidOperand>
   </file>
-  <file src="src/Cms/PageRules.php">
-    <RedundantCondition>
-      <code><![CDATA[$allowed !== []]]></code>
-      <code><![CDATA[$allowed !== []]]></code>
-    </RedundantCondition>
-  </file>
   <file src="src/Cms/Pages.php">
     <ImplementedParamTypeMismatch>
       <code><![CDATA[$object]]></code>
@@ -284,6 +278,12 @@
       <code><![CDATA[options]]></code>
       <code><![CDATA[pattern]]></code>
     </UndefinedMethod>
+  </file>
+  <file src="src/Guards/PageValidators.php">
+    <RedundantCondition>
+      <code><![CDATA[$allowed !== []]]></code>
+      <code><![CDATA[$allowed !== []]]></code>
+    </RedundantCondition>
   </file>
   <file src="src/Http/Cookie.php">
     <InvalidArgument>

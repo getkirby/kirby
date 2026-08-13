@@ -2,16 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Exception\DuplicateException;
-use Kirby\Exception\Exception;
-use Kirby\Exception\InvalidArgumentException;
-use Kirby\Exception\LogicException;
-use Kirby\Exception\NotFoundException;
-use Kirby\Exception\PermissionException;
-use Kirby\Filesystem\F;
-use Kirby\Toolkit\Str;
-use Kirby\Toolkit\Totp;
-use Kirby\Toolkit\V;
 use SensitiveParameter;
 
 /**
@@ -19,456 +9,122 @@ use SensitiveParameter;
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @deprecated 6.0.0 Use `$user->guards()` instead
  */
 class UserRules
 {
-	/**
-	 * Validates if the email address can be changed
-	 *
-	 * @throws PermissionException If the user is not allowed to change the address
-	 */
 	public static function changeEmail(User $user, string $email): void
 	{
-		if ($user->permissions()->can('changeEmail') !== true) {
-			throw new PermissionException(
-				key: 'user.changeEmail.permission',
-				data: ['name' => $user->username()]
-			);
-		}
-
-		static::validEmail($user, $email);
+		$user->guards()->ensureExecutable('changeEmail', $email);
 	}
 
-	/**
-	 * Validates if the language can be changed
-	 *
-	 * @throws PermissionException If the user is not allowed to change the language
-	 */
 	public static function changeLanguage(User $user, string $language): void
 	{
-		if ($user->permissions()->can('changeLanguage') !== true) {
-			throw new PermissionException(
-				key: 'user.changeLanguage.permission',
-				data: ['name' => $user->username()]
-			);
-		}
-
-		static::validLanguage($user, $language);
+		$user->guards()->ensureExecutable('changeLanguage', $language);
 	}
 
-	/**
-	 * Validates if the name can be changed
-	 *
-	 * @throws PermissionException If the user is not allowed to change the name
-	 */
 	public static function changeName(User $user, string $name): void
 	{
-		if ($user->permissions()->can('changeName') !== true) {
-			throw new PermissionException(
-				key: 'user.changeName.permission',
-				data: ['name' => $user->username()]
-			);
-		}
+		$user->guards()->ensureExecutable('changeName', $name);
 	}
 
-	/**
-	 * Validates if the password can be changed
-	 *
-	 * @throws PermissionException If the user is not allowed to change the password
-	 */
 	public static function changePassword(
 		User $user,
 		#[SensitiveParameter]
 		string $password
 	): void {
-		if ($user->permissions()->can('changePassword') !== true) {
-			throw new PermissionException(
-				key: 'user.changePassword.permission',
-				data: ['name' => $user->username()]
-			);
-		}
-
-		static::validPassword($user, $password);
+		$user->guards()->ensureExecutable('changePassword', $password);
 	}
 
-	/**
-	 * Validates if the role can be changed
-	 *
-	 * @throws LogicException If the user is the last admin
-	 * @throws PermissionException If the user is not allowed to change the role
-	 */
 	public static function changeRole(User $user, string $role): void
 	{
-		// prevent non-admins making a user to admin
-		if (
-			$user->kirby()->user()->isAdmin() === false &&
-			$role === 'admin'
-		) {
-			throw new PermissionException(
-				key: 'user.changeRole.toAdmin'
-			);
-		}
-
-		// prevent demoting the last admin
-		if ($role !== 'admin' && $user->isLastAdmin() === true) {
-			throw new LogicException(
-				key: 'user.changeRole.lastAdmin',
-				data: ['name' => $user->username()]
-			);
-		}
-
-		// check permissions
-		if ($user->permissions()->can('changeRole') !== true) {
-			throw new PermissionException(
-				key: 'user.changeRole.permission',
-				data: ['name' => $user->username()]
-			);
-		}
-
-		// prevent changing to role that is not available for user
-		if ($user->roles()->find($role) instanceof Role === false) {
-			throw new InvalidArgumentException(
-				key: 'user.role.invalid',
-			);
-		}
+		$user->guards()->ensureExecutable('changeRole', $role);
 	}
 
-	/**
-	 * Validates if the user secret can be changed
-	 * @since 6.0.0
-	 *
-	 * @throws PermissionException If the user is not allowed to change the secret
-	 */
 	public static function changeSecret(
 		User $user,
 		string $secret,
 		#[SensitiveParameter]
 		mixed $content
 	): void {
-		$currentUser = $user->kirby()->user();
-
-		if (
-			$currentUser->is($user) === false &&
-			$currentUser->isAdmin() === false
-		) {
-			throw new PermissionException(
-				message: 'You cannot change user secrets for ' . $user->email()
-			);
-		}
+		$user->guards()->ensureExecutable('changeSecret', $secret, $content);
 	}
 
-	/**
-	 * Validates if the TOTP can be changed
-	 * @since 4.0.0
-	 * @deprecated 6.0.0
-	 *
-	 * @throws PermissionException If the user is not allowed to change the password
-	 */
 	public static function changeTotp(
 		User $user,
 		#[SensitiveParameter]
 		string|null $secret
 	): void {
-		$currentUser = $user->kirby()->user();
-
-		if (
-			$currentUser->is($user) === false &&
-			$currentUser->isAdmin() === false
-		) {
-			throw new PermissionException(
-				message: 'You cannot change the time-based code for ' . $user->email()
-			);
-		}
-
-		// safety check to avoid accidental insecure secrets;
-		// throws an exception for secrets of the wrong length
-		if ($secret !== null) {
-			new Totp($secret);
-		}
+		$user->guards()->ensureExecutable('changeSecret', 'totp', $secret);
 	}
 
-	/**
-	 * Validates if the user can be created
-	 *
-	 * @throws PermissionException If the user is not allowed to create a new user
-	 */
 	public static function create(User $user, array $props = []): void
 	{
-		static::validId($user, $user->id());
-		static::validEmail($user, $user->email(), true);
-		static::validLanguage($user, $user->language());
-
-		// the first user must have a password
-		if (
-			$user->kirby()->users()->count() === 0 &&
-			empty($props['password'])
-		) {
-			// trigger invalid password error
-			static::validPassword($user, ' ');
-		}
-
-		if (empty($props['password']) === false) {
-			static::validPassword($user, $props['password']);
-		}
-
-		// get the current user if it exists
-		$currentUser = $user->kirby()->user();
-
-		// admins are allowed everything
-		if ($currentUser?->isAdmin() === true) {
-			return;
-		}
-
-		// allow to create the first user
-		if ($user->kirby()->users()->count() === 0) {
-			return;
-		}
-
-		// check user permissions
-		if ($user->permissions()->can('create') !== true) {
-			throw new PermissionException([
-				'key' => 'user.create.permission'
-			]);
-		}
-
-		$role = $props['role'] ?? null;
-
-		// prevent creating a role that is not available for user
-		if (
-			in_array($role, [null, 'default', 'nobody'], true) === false &&
-			$user->kirby()->roles()->canBeCreated()->find($role) instanceof Role === false
-		) {
-			throw new InvalidArgumentException([
-				'key' => 'user.role.invalid',
-			]);
-		}
+		$user->guards()->ensureExecutable('create', $props);
 	}
 
-	/**
-	 * Validates if a new avatar can be created
-	 *
-	 * @throws PermissionException If the user is not allowed to create a new avatar
-	 */
 	public static function createAvatar(User $user, string $source, string $extension): void
 	{
-		if ($user->permissions()->can('update') !== true) {
-			throw new PermissionException(
-				key: 'user.update.permission',
-				data: ['name' => $user->username()]
-			);
-		}
-
-		if ($user->avatar() !== null) {
-			throw new DuplicateException(
-				key: 'file.duplicate',
-				data: ['filename' => $user->avatar()->filename()]
-			);
-		}
-
-		static::validAvatar($user, $source, $extension);
+		$user->guards()->ensureExecutable('createAvatar', $source, $extension);
 	}
 
-	/**
-	 * Validates if the user can be deleted
-	 *
-	 * @throws LogicException If this is the last user or last admin, which cannot be deleted
-	 * @throws PermissionException If the user is not allowed to delete this user
-	 */
 	public static function delete(User $user): void
 	{
-		if ($user->isLastAdmin() === true) {
-			throw new LogicException(
-				key: 'user.delete.lastAdmin'
-			);
-		}
-
-		if ($user->isLastUser() === true) {
-			throw new LogicException(
-				key: 'user.delete.lastUser'
-			);
-		}
-
-		if ($user->permissions()->can('delete') !== true) {
-			throw new PermissionException(
-				key: 'user.delete.permission',
-				data: ['name' => $user->username()]
-			);
-		}
+		$user->guards()->ensureExecutable('delete');
 	}
 
-	/**
-	 * Validates if the avatar for the user can be deleted
-	 *
-	 * @throws PermissionException If the user is not allowed to delete this user's avatar
-	 */
 	public static function deleteAvatar(User $user): void
 	{
-		if ($user->permissions()->can('update') !== true) {
-			throw new PermissionException(
-				key: 'user.update.permission',
-				data: ['name' => $user->username()]
-			);
-		}
-
-		if ($user->avatar() === null) {
-			throw new NotFoundException(
-				key: 'file.notFound',
-				data: ['filename' => 'avatar']
-			);
-		}
+		$user->guards()->ensureExecutable('deleteAvatar');
 	}
 
-	/**
-	 * Validates if the avatar can be replaced
-	 *
-	 * @throws PermissionException If the user is not allowed to change the avatar
-	 */
 	public static function replaceAvatar(User $user, string $source, string $extension): void
 	{
-		if ($user->permissions()->can('update') !== true) {
-			throw new PermissionException(
-				key: 'user.update.permission',
-				data: ['name' => $user->username()]
-			);
-		}
-
-		if ($user->avatar() === null) {
-			throw new NotFoundException(
-				key: 'file.notFound',
-				data: ['filename' => 'avatar']
-			);
-		}
-
-		static::validAvatar($user, $source, $extension);
+		$user->guards()->ensureExecutable('replaceAvatar', $source, $extension);
 	}
 
-	/**
-	 * Validates if the user can be updated
-	 *
-	 * @throws PermissionException If the user it not allowed to update this user
-	 */
 	public static function update(
 		User $user,
 		array $values = [],
 		array $strings = []
 	): void {
-		if ($user->permissions()->can('update') !== true) {
-			throw new PermissionException(
-				key: 'user.update.permission',
-				data: ['name' => $user->username()]
-			);
-		}
+		$user->guards()->ensureExecutable('update', $values, $strings);
 	}
 
-	/**
-	 * Validates an email address
-	 *
-	 * @throws DuplicateException If the email address already exists
-	 * @throws InvalidArgumentException If the email address is invalid
-	 */
 	public static function validEmail(
 		User $user,
 		string $email,
 		bool $strict = false
 	): void {
-		if (V::email($email) === false) {
-			throw new InvalidArgumentException(
-				key: 'user.email.invalid'
-			);
-		}
-
-		$duplicate = match ($strict) {
-			true  => $user->kirby()->users()->find($email),
-			false => $user->kirby()->users()->not($user)->find($email)
-		};
-
-		if ($duplicate) {
-			throw new DuplicateException(
-				key: 'user.duplicate',
-				data: ['email' => $email]
-			);
-		}
+		$user->guards()->validators()->validateEmail($email, $strict);
 	}
 
 	public static function validAvatar(User $user, string $source, string $extension): void
 	{
-		$type = F::extensionToType($extension);
-
-		if ($type !== 'image') {
-			throw new Exception(
-				key: 'file.type.invalid',
-				data: compact('type')
-			);
-		}
-
-		$mime = F::mime($source);
-
-		if (Str::startsWith($mime, 'image/') !== true) {
-			throw new Exception(
-				key: 'file.mime.invalid',
-				data: compact('mime')
-			);
-		}
+		$user->guards()->validators()->validateAvatar($source, $extension);
 	}
 
-	/**
-	 * Validates a user id
-	 *
-	 * @throws DuplicateException If the user already exists
-	 */
 	public static function validId(User $user, string $id): void
 	{
-		if (in_array($id, ['account', 'kirby', 'nobody'], true) === true) {
-			throw new InvalidArgumentException(
-				message: '"' . $id . '" is a reserved word and cannot be used as user id'
-			);
-		}
-
-		if ($user->kirby()->users()->find($id)) {
-			throw new DuplicateException(
-				message: 'A user with this id exists'
-			);
-		}
+		$user->guards()->validators()->validateId($id);
 	}
 
-	/**
-	 * Validates a user language code
-	 *
-	 * @throws InvalidArgumentException If the language does not exist
-	 */
 	public static function validLanguage(User $user, string $language): void
 	{
-		if (in_array($language, $user->kirby()->translations()->keys(), true) === false) {
-			throw new InvalidArgumentException(key: 'user.language.invalid');
-		}
+		$user->guards()->validators()->validateLanguage($language);
 	}
 
-	/**
-	 * Validates a password
-	 *
-	 * @throws InvalidArgumentException If the password is too short
-	 */
 	public static function validPassword(
 		User $user,
 		#[SensitiveParameter]
 		string $password
 	): void {
-		// validate against the configured policy (`auth.passwords`)
-		$user->kirby()->auth()->passwords()->validate($password);
+		$user->guards()->validators()->validateNewPassword($password);
 	}
 
-	/**
-	 * Validates a user role
-	 *
-	 * @throws InvalidArgumentException If the user role does not exist
-	 * @deprecated 4.5.0
-	 */
 	public static function validRole(User $user, string $role): void
 	{
-		if ($user->kirby()->roles()->find($role) instanceof Role === false) {
-			throw new InvalidArgumentException(
-				key: 'user.role.invalid',
-			);
-		}
+		$user->guards()->validators()->validateRole($role);
 	}
 }

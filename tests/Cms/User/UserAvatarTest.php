@@ -137,9 +137,6 @@ class UserAvatarTest extends ModelTestCase
 
 	public function testDeleteAvatarWithoutPermission(): void
 	{
-		$user = $this->app->user('admin@getkirby.com');
-		$user->createAvatar($this->avatarSource(), 'jpg');
-
 		$this->app = $this->app->clone([
 			'roles' => [
 				['name' => 'admin'],
@@ -150,11 +147,25 @@ class UserAvatarTest extends ModelTestCase
 					]
 				]
 			],
-			'user'  => 'editor@getkirby.com',
 			'users' => [
-				['email' => 'admin@getkirby.com', 'role' => 'admin'],
-				['email' => 'editor@getkirby.com', 'role' => 'editor']
+				[
+					'id'    => 'admin',
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin'
+				],
+				[
+					'id'    => 'editor',
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor'
+				]
 			]
+		]);
+
+		// the avatar has to exist to get past the ability check
+		$this->app->user('editor@getkirby.com')->createAvatar($this->avatarSource(), 'jpg');
+
+		$this->app = $this->app->clone([
+			'user' => 'editor@getkirby.com'
 		]);
 
 		$this->expectException(PermissionException::class);
@@ -195,9 +206,6 @@ class UserAvatarTest extends ModelTestCase
 
 	public function testReplaceAvatarWithoutPermission(): void
 	{
-		$user = $this->app->user('admin@getkirby.com');
-		$user->createAvatar($this->avatarSource(), 'jpg');
-
 		$this->app = $this->app->clone([
 			'roles' => [
 				['name' => 'admin'],
@@ -208,11 +216,25 @@ class UserAvatarTest extends ModelTestCase
 					]
 				]
 			],
-			'user'  => 'editor@getkirby.com',
 			'users' => [
-				['email' => 'admin@getkirby.com', 'role' => 'admin'],
-				['email' => 'editor@getkirby.com', 'role' => 'editor']
+				[
+					'id'    => 'admin',
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin'
+				],
+				[
+					'id'    => 'editor',
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor'
+				]
 			]
+		]);
+
+		// the avatar has to exist to get past the ability check
+		$this->app->user('editor@getkirby.com')->createAvatar($this->avatarSource(), 'jpg');
+
+		$this->app = $this->app->clone([
+			'user' => 'editor@getkirby.com'
 		]);
 
 		$this->expectException(PermissionException::class);

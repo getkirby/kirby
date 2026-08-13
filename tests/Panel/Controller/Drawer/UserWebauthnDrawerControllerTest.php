@@ -5,6 +5,7 @@ namespace Kirby\Panel\Controller\Drawer;
 use Kirby\Auth\Service\Webauthn;
 use Kirby\Auth\Service\WebauthnTest;
 use Kirby\Cms\User;
+use Kirby\Exception\AbilityException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\Panel\TestCase;
@@ -90,8 +91,8 @@ class UserWebauthnDrawerControllerTest extends TestCase
 		// an editor may not manage another user's passkeys
 		$this->app->impersonate('editor@getkirby.com');
 
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You cannot change user secrets for test@getkirby.com');
+		$this->expectException(AbilityException::class);
+		$this->expectExceptionCode('error.user.changeSecret');
 
 		new UserWebauthnDrawerController($this->app->user('test'));
 	}

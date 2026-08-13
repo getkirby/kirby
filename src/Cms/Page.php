@@ -11,6 +11,7 @@ use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
+use Kirby\Guards\PageGuards;
 use Kirby\Http\Response;
 use Kirby\Panel\Page as Panel;
 use Kirby\Template\Template;
@@ -428,6 +429,17 @@ class Page extends ModelWithContent
 	}
 
 	/**
+	 * Returns the guards object for this page
+	 */
+	public function guards(): PageGuards
+	{
+		return new PageGuards(
+			model: $this,
+			user: User::ensure()
+		);
+	}
+
+	/**
 	 * Checks if the intended template
 	 * for the page exists.
 	 */
@@ -702,7 +714,7 @@ class Page extends ModelWithContent
 	public function isMovableTo(Page|Site $parent): bool
 	{
 		try {
-			PageRules::move($this, $parent);
+			$this->guards()->ensureExecutable('move', $parent);
 			return true;
 		} catch (Throwable) {
 			return false;
@@ -1075,6 +1087,8 @@ class Page extends ModelWithContent
 	 * Returns the PageRules class instance
 	 * which is being used in various methods
 	 * to check for valid actions and input.
+	 *
+	 * @deprecated 6.0.0 Use `$page->guards()` instead
 	 */
 	protected function rules(): PageRules
 	{

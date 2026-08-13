@@ -2,7 +2,6 @@
 
 namespace Kirby\Panel\Controller\Dialog;
 
-use Kirby\Cms\UserRules;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\Field;
@@ -97,7 +96,7 @@ class UserChangePasswordDialogController extends UserDialogController
 		}
 
 		// validate the new password
-		UserRules::validPassword($this->user, $password ?? '');
+		$this->user->guards()->validators()->validateNewPassword($password ?? '');
 
 		// compare passwords
 		if ($password !== $passwordConfirmation) {

@@ -154,7 +154,7 @@ trait UserActions
 		#[SensitiveParameter]
 		string|null $secret
 	): static {
-		UserRules::changeTotp($this, $secret);
+		$this->guards()->ensureExecutable('changeSecret', 'totp', $secret);
 		return $this->changeSecret('totp', $secret);
 	}
 
@@ -321,7 +321,7 @@ trait UserActions
 		do {
 			try {
 				$id = Str::random($length);
-				UserRules::validId($this, $id);
+				$this->guards()->validators()->validateId($id);
 				return $id;
 
 				// we can't really test for a random match
@@ -496,7 +496,7 @@ trait UserActions
 				// check if the user can delete the old avatar,
 				// but don't delete it yet. If creating the new one fails
 				// we can still keep the old one around
-				FileRules::delete($oldAvatar);
+				$oldAvatar->guards()->ensureExecutable('delete');
 
 				// try to create the new avatar
 				$user->createFile(
