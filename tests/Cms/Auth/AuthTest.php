@@ -6,6 +6,7 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
+use Kirby\Http\Cookie;
 use Kirby\Session\AutoSession;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Throwable;
@@ -226,6 +227,23 @@ class AuthTest extends TestCase
 			'mode'      => null,
 			'status'    => 'inactive'
 		], $this->auth->status()->toArray());
+	}
+
+	public function testLogoutDestroysSession(): void
+	{
+		$session = $this->app->session();
+
+		$this->app->user('marge@simpsons.com')->loginPasswordless();
+
+		// the Panel stores a CSRF token in the session on every request
+		$this->app->csrf();
+
+		$this->assertTrue(Cookie::exists('kirby_session'));
+
+		$this->auth->logout();
+
+		$this->assertSame([], $session->data()->get());
+		$this->assertFalse(Cookie::exists('kirby_session'));
 	}
 
 	public function testLogoutPending(): void

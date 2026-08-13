@@ -632,16 +632,20 @@ class Auth
 		// ensures that we log out the actually logged in user
 		$this->impersonate = null;
 
-		// logout the current user if it exists
-		$this->user()?->logout();
-
-		// clear the pending challenge
+		// clear the pending challenge and the CSRF token before the user
+		// is logged out; otherwise this leftover data would keep the session
+		// alive and its cookie would block the pages cache;
+		// a new CSRF token is generated on next use
 		$session = $this->kirby->session();
 		$session->remove('kirby.challenge.code');
 		$session->remove('kirby.challenge.email');
 		$session->remove('kirby.challenge.mode');
 		$session->remove('kirby.challenge.timeout');
 		$session->remove('kirby.challenge.type');
+		$session->remove('kirby.csrf');
+
+		// logout the current user if it exists
+		$this->user()?->logout();
 
 		// clear the status cache
 		$this->status = null;
