@@ -71,20 +71,23 @@ jobs:
         with:
           fetch-depth: 2
 
+      # never cache these: a failed install would be cached as an empty result
       - name: Install system locales and imagemagick
-        uses: awalsh128/cache-apt-pkgs-action@553a35bb8ebd9fcabcb1c9451aa4c98e1b4ca8a9 # v1.6.3
-        with:
-          packages: locales-all imagemagick
-          version: 1
-          execute_install_scripts: true
+        shell: bash
+        run: sudo apt-get update && sudo apt-get install -y locales-all imagemagick
 
-      - name: Ensure ImageMagick aliases exist
+      - name: Verify test dependencies
+        shell: bash
         run: |
-          if ! command -v convert > /dev/null; then
-            sudo ln -sf /usr/bin/convert-im6.q16 /usr/bin/convert
-            sudo ln -sf /usr/bin/identify-im6.q16 /usr/bin/identify
-          fi
-          convert -version | head -1
+          convert -version
+          identify -version
+          locales=$(locale -a)
+          for locale in de_AT.utf8 de_DE.utf8 pt_BR.utf8; do
+            grep -qx "$locale" <<< "$locales" || {
+              echo "::error::Missing locale $locale"
+              exit 1
+            }
+          done
 
       - name: Setup PHP environment
         uses: ./.github/actions/setup-php
