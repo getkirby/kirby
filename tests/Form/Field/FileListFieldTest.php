@@ -504,7 +504,7 @@ class FileListFieldTest extends TestCase
 
 		$this->assertSame(2, $props['pagination']['page']);
 		$this->assertSame(3, $props['pagination']['total']);
-		$this->assertCount(1, $props['files']);
+		$this->assertCount(1, $props['models']);
 	}
 
 	public function testDeleteSelected(): void

@@ -95,6 +95,13 @@ export default {
 		 */
 		min: Number,
 		/**
+		 * Props for each model
+		 */
+		models: {
+			type: Array,
+			default: () => []
+		},
+		/**
 		 * Pagination info for the current page
 		 */
 		pagination: Object,
@@ -245,12 +252,6 @@ export default {
 			});
 		},
 		/**
-		 * Each list names its entries after the models it lists
-		 */
-		models() {
-			return [];
-		},
-		/**
 		 * The batch buttons and the empty state build i18n keys from this
 		 */
 		type() {
@@ -335,7 +336,7 @@ export default {
 					...query
 				});
 
-				this.state = { ...props, models: props[this.type] };
+				this.state = props;
 			} catch (error) {
 				this.$panel.error(error);
 			} finally {
@@ -364,10 +365,7 @@ export default {
 		 * The initial state, in the same shape the endpoint returns
 		 */
 		stateFromProps() {
-			return {
-				...this.$props,
-				models: this.models
-			};
+			return { ...this.$props };
 		}
 	}
 };

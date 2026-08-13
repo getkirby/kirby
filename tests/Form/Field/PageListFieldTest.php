@@ -287,8 +287,8 @@ class PageListFieldTest extends TestCase
 	{
 		$props = $this->pagelist()->props();
 
-		$this->assertArrayHasKey('pages', $props);
+		$this->assertArrayHasKey('models', $props);
 		$this->assertArrayHasKey('add', $props);
-		$this->assertCount(4, $props['pages']);
+		$this->assertCount(4, $props['models']);
 	}
 }

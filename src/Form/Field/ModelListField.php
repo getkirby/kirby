@@ -34,7 +34,7 @@ abstract class ModelListField extends DisplayField
 	use Mixin\SortBy;
 
 	/**
-	 * Names the entries in the props and the error messages
+	 * Names the entries in the error messages
 	 */
 	public const string|null TYPE = null;
 
@@ -494,12 +494,11 @@ abstract class ModelListField extends DisplayField
 			'layout'     => $this->layout(),
 			'max'        => $this->max(),
 			'min'        => $this->min(),
+			'models'     => $this->data(),
 			'pagination' => $this->pagination(),
 			'searchable' => $this->searchable(),
 			'size'       => $this->size(),
 			'sortable'   => $this->sortable(),
-			// the entries are named after the models they list
-			static::TYPE => $this->data(),
 		];
 	}
 
