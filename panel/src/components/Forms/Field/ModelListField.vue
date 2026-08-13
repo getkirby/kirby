@@ -55,10 +55,11 @@ import debounce from "@/helpers/debounce";
 import { help, id, label, name } from "@/mixins/props.js";
 
 /**
- * Base component for fields that list models
+ * Base for a field that displays list of models
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     6.0.0
  */
 export default {
 	mixins: [help, id, label, name, batchEditing],
