@@ -36,6 +36,7 @@ use Kirby\Form\Field\ListField;
 use Kirby\Form\Field\MultiselectField;
 use Kirby\Form\Field\NumberField;
 use Kirby\Form\Field\ObjectField;
+use Kirby\Form\Field\PageListField;
 use Kirby\Form\Field\PagePickerField;
 use Kirby\Form\Field\PasswordField;
 use Kirby\Form\Field\RadioField;
@@ -295,6 +296,7 @@ class Core
 			'multiselect' => MultiselectField::class,
 			'number'      => NumberField::class,
 			'object'      => ObjectField::class,
+			'pagelist'    => PageListField::class,
 			'pages'       => PagePickerField::class,
 			'password'    => PasswordField::class,
 			'radio'       => RadioField::class,
