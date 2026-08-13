@@ -23,6 +23,7 @@ use Kirby\Form\Field\ColorField;
 use Kirby\Form\Field\DateField;
 use Kirby\Form\Field\EmailField;
 use Kirby\Form\Field\EntriesField;
+use Kirby\Form\Field\FileListField;
 use Kirby\Form\Field\FilePickerField;
 use Kirby\Form\Field\GapField;
 use Kirby\Form\Field\HeadlineField;
@@ -281,6 +282,7 @@ class Core
 			'date'        => DateField::class,
 			'email'       => EmailField::class,
 			'entries'     => EntriesField::class,
+			'filelist'    => FileListField::class,
 			'files'       => FilePickerField::class,
 			'gap'         => GapField::class,
 			'headline'    => HeadlineField::class,
