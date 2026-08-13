@@ -283,12 +283,14 @@ class PageListFieldTest extends TestCase
 		$this->assertSame(['', 'delete'], $patterns);
 	}
 
-	public function testProps(): void
+	public function testState(): void
 	{
-		$props = $this->pagelist()->props();
+		$state = $this->pagelist()->state();
 
-		$this->assertArrayHasKey('models', $props);
-		$this->assertArrayHasKey('add', $props);
-		$this->assertCount(4, $props['models']);
+		$this->assertArrayHasKey('add', $state);
+		$this->assertArrayHasKey('columns', $state);
+		$this->assertArrayHasKey('pagination', $state);
+		$this->assertArrayHasKey('sortable', $state);
+		$this->assertCount(4, $state['models']);
 	}
 }

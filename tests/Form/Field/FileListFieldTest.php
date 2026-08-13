@@ -494,17 +494,18 @@ class FileListFieldTest extends TestCase
 		$this->assertSame(['', 'delete', 'sort'], $patterns);
 	}
 
-	public function testApiProps(): void
+	public function testApiState(): void
 	{
 		$_GET['page'] = '2';
 
 		$field  = $this->filelist(['limit' => 2]);
 		$routes = array_column($field->api(), null, 'pattern');
-		$props  = $routes['']['action']();
+		$state  = $routes['']['action']();
 
-		$this->assertSame(2, $props['pagination']['page']);
-		$this->assertSame(3, $props['pagination']['total']);
-		$this->assertCount(1, $props['models']);
+		$this->assertSame(2, $state['pagination']['page']);
+		$this->assertSame(3, $state['pagination']['total']);
+		$this->assertCount(1, $state['models']);
+		$this->assertArrayHasKey('upload', $state);
 	}
 
 	public function testDeleteSelected(): void

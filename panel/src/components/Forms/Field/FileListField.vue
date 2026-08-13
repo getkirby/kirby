@@ -10,15 +10,6 @@ import ModelListField from "@/components/Forms/Field/ModelListField.vue";
  */
 export default {
 	extends: ModelListField,
-	props: {
-		/**
-		 * Upload settings or `false` if uploads are disabled
-		 */
-		upload: {
-			type: [Boolean, Object],
-			default: false
-		}
-	},
 	computed: {
 		addButton() {
 			return {
