@@ -70,14 +70,11 @@ export default {
 		 */
 		batch: Boolean,
 		/**
-		 * Column definitions for `layout: table`
-		 */
-		columns: Object,
-		/**
 		 * Text for the empty state box
 		 */
 		empty: String,
 		endpoints: Object,
+		initial: Object,
 		/**
 		 * Layout of the collection
 		 * @values list, cardlets, cards, table
@@ -95,38 +92,21 @@ export default {
 		 */
 		min: Number,
 		/**
-		 * Props for each model
-		 */
-		models: {
-			type: Array,
-			default: () => []
-		},
-		/**
-		 * Pagination info for the current page
-		 */
-		pagination: Object,
-		/**
 		 * Shows the search button
 		 */
 		searchable: Boolean,
 		/**
 		 * Card size for `layout: cards`
 		 */
-		size: String,
-		/**
-		 * Whether the entries can be sorted manually
-		 */
-		sortable: Boolean
+		size: String
 	},
 	emits: ["input"],
 	data() {
 		return {
+			fetched: null,
 			isProcessing: false,
 			isSearching: false,
-			searchterm: null,
-			// filled in `created()`, as the initial state is built
-			// from computed properties that do not exist yet
-			state: {}
+			searchterm: null
 		};
 	},
 	computed: {
@@ -251,6 +231,9 @@ export default {
 				};
 			});
 		},
+		state() {
+			return this.fetched ?? this.initial;
+		},
 		/**
 		 * The batch buttons and the empty state build i18n keys from this
 		 */
@@ -259,13 +242,13 @@ export default {
 		}
 	},
 	watch: {
-		// a new view always brings unfiltered props for the first page,
+		// a new view always brings unfiltered state for the first page,
 		// so an active search or page has to be restored through the endpoint
-		models() {
+		initial() {
 			if (this.searchterm || this.state.pagination.page > 1) {
 				this.reload();
 			} else {
-				this.state = this.stateFromProps();
+				this.fetched = null;
 			}
 		},
 		searchterm() {
@@ -273,7 +256,6 @@ export default {
 		}
 	},
 	created() {
-		this.state = this.stateFromProps();
 		this.filter = debounce(this.filter, 200);
 
 		for (const event of this.refreshEvents()) {
@@ -323,20 +305,18 @@ export default {
 			return ["model.update"];
 		},
 		/**
-		 * Fetches fresh props from the field endpoint, so the list
-		 * can update without reloading the whole view
+		 * Fetches a fresh state from the field endpoint,
+		 * so the list can update without reloading the whole view
 		 */
 		async reload(query = {}) {
 			this.isProcessing = true;
 
 			try {
-				const props = await this.$api.get(this.endpoints.field, {
+				this.fetched = await this.$api.get(this.endpoints.field, {
 					page: this.state.pagination.page,
 					searchterm: this.searchterm,
 					...query
 				});
-
-				this.state = props;
 			} catch (error) {
 				this.$panel.error(error);
 			} finally {
@@ -360,12 +340,6 @@ export default {
 				this.$panel.events.emit("model.update");
 				this.isProcessing = false;
 			}
-		},
-		/**
-		 * The initial state, in the same shape the endpoint returns
-		 */
-		stateFromProps() {
-			return { ...this.$props };
 		}
 	}
 };
