@@ -3,6 +3,7 @@
 namespace Kirby\Auth;
 
 use Kirby\Cms\App;
+use Kirby\Session\Session;
 
 /**
  * Handler for the auth CSRF token
@@ -16,6 +17,15 @@ class Csrf
 	public function __construct(
 		protected App $kirby
 	) {
+	}
+
+	/**
+	 * Removes the token from the session;
+	 * a new token is generated on next use
+	 */
+	public function clear(Session $session): void
+	{
+		$session->remove('kirby.csrf');
 	}
 
 	/**
