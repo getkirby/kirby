@@ -147,6 +147,7 @@ class CoreTest extends TestCase
 		$this->assertArrayHasKey('list', $fields);
 		$this->assertArrayHasKey('multiselect', $fields);
 		$this->assertArrayHasKey('number', $fields);
+		$this->assertArrayHasKey('pagelist', $fields);
 		$this->assertArrayHasKey('pages', $fields);
 		$this->assertArrayHasKey('radio', $fields);
 		$this->assertArrayHasKey('range', $fields);
