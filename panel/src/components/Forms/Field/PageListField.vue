@@ -10,6 +10,7 @@ import ModelListField from "@/components/Forms/Field/ModelListField.vue";
  */
 export default {
 	extends: ModelListField,
+	type: "pages",
 	computed: {
 		canAdd() {
 			return this.state.add && this.$panel.permissions.pages.create;
@@ -56,9 +57,6 @@ export default {
 					sortable: sortable
 				};
 			});
-		},
-		type() {
-			return "pages";
 		}
 	},
 	methods: {

@@ -10,6 +10,7 @@ import ModelListField from "@/components/Forms/Field/ModelListField.vue";
  */
 export default {
 	extends: ModelListField,
+	type: "files",
 	computed: {
 		addButton() {
 			return {
@@ -27,9 +28,6 @@ export default {
 		},
 		icon() {
 			return "image";
-		},
-		type() {
-			return "files";
 		},
 		uploadOptions() {
 			return {
