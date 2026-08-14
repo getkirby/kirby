@@ -36,19 +36,6 @@ export default {
 				...this.state.upload,
 				url: this.$panel.urls.api + "/" + this.state.upload.api
 			};
-		},
-		/**
-		 * The list is only validated while it shows everything,
-		 * as a search narrows it down to a part of the collection
-		 */
-		validator() {
-			const count = this.state.pagination.total;
-
-			if (this.searchterm) {
-				return { count };
-			}
-
-			return { count, max: this.max, min: this.min };
 		}
 	},
 	methods: {
