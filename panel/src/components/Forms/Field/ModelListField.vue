@@ -3,7 +3,6 @@
 		:id="id"
 		:help="help"
 		:input="false"
-		:invalid="isInvalid"
 		:label="label"
 		:name="name"
 		:required="Boolean(min)"
@@ -27,24 +26,26 @@
 				@keydown.esc="onSearchToggle"
 			/>
 
-			<k-collection
-				:columns="state.columns"
-				:empty="emptyProps"
-				:fields="fields"
-				:items="items"
-				:layout="layout"
-				:pagination="state.pagination"
-				:selected="selected"
-				:selecting="isSelecting"
-				:size="size"
-				:sortable="isSortable"
-				v-on="canAdd ? { empty: onAdd } : {}"
-				@action="onAction"
-				@change="onChange"
-				@paginate="onPaginate"
-				@select="onSelect"
-				@sort="onSort"
-			/>
+			<k-validator v-bind="validator">
+				<k-collection
+					:columns="state.columns"
+					:empty="emptyProps"
+					:fields="fields"
+					:items="items"
+					:layout="layout"
+					:pagination="state.pagination"
+					:selected="selected"
+					:selecting="isSelecting"
+					:size="size"
+					:sortable="isSortable"
+					v-on="canAdd ? { empty: onAdd } : {}"
+					@action="onAction"
+					@change="onChange"
+					@paginate="onPaginate"
+					@select="onSelect"
+					@sort="onSort"
+				/>
+			</k-validator>
 		</k-dropzone>
 	</k-field>
 </template>
@@ -186,19 +187,6 @@ export default {
 		 * The list is not validated while it is filtered,
 		 * as the search only shows a part of it
 		 */
-		isInvalid() {
-			if (this.searchterm) {
-				return false;
-			}
-
-			const total = this.state.pagination.total;
-
-			if (this.min && total < this.min) {
-				return true;
-			}
-
-			return Boolean(this.max) && total > this.max;
-		},
 		isSortable() {
 			return (
 				this.state.sortable === true &&
@@ -239,6 +227,19 @@ export default {
 		 */
 		type() {
 			return "models";
+		},
+		/**
+		 * The list is only validated while it shows everything,
+		 * as a search narrows it down to a part of the collection
+		 */
+		validator() {
+			const count = this.state.pagination.total;
+
+			if (this.searchterm) {
+				return { count };
+			}
+
+			return { count, max: this.max, min: this.min };
 		}
 	},
 	watch: {
