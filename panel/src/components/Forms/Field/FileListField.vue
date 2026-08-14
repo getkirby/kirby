@@ -30,6 +30,10 @@ export default {
 			return "image";
 		},
 		uploadOptions() {
+			if (this.state.upload === false) {
+				return null;
+			}
+
 			return {
 				...this.state.upload,
 				url: this.$panel.urls.api + "/" + this.state.upload.api
@@ -38,7 +42,7 @@ export default {
 	},
 	methods: {
 		onAction(action, file) {
-			if (action === "replace") {
+			if (action === "replace" && this.uploadOptions !== null) {
 				this.$panel.upload.replace(file, this.uploadOptions);
 			}
 		},
