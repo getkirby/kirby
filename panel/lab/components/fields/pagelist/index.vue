@@ -9,39 +9,44 @@
 			</k-box>
 
 			<k-lab-example label="Default">
-				<k-pagelist-field
-					:pages="pages"
-					:pagination="pagination"
-					label="Pages"
-				/>
+				<k-pagelist-field :initial="state(pages)" label="Pages" />
 			</k-lab-example>
 
 			<k-lab-example label="Help">
 				<k-pagelist-field
-					:pages="pages"
-					:pagination="pagination"
+					:initial="state(pages)"
 					help="Every child of this page"
 					label="Pages"
 				/>
 			</k-lab-example>
 
 			<k-lab-example label="Empty">
-				<k-pagelist-field :pages="[]" :pagination="empty" label="Pages" />
+				<k-pagelist-field
+					:initial="state([], { pagination: empty })"
+					label="Pages"
+				/>
 			</k-lab-example>
 
 			<k-lab-example label="Empty with custom text">
 				<k-pagelist-field
-					:pages="[]"
-					:pagination="empty"
+					:initial="state([], { pagination: empty })"
 					empty="No pages have been added yet"
+					label="Pages"
+				/>
+			</k-lab-example>
+
+			<k-lab-example label="Invalid: fewer than min">
+				<k-pagelist-field
+					:initial="state(pages.slice(0, 1), { pagination: single })"
+					:min="2"
+					help="The label marks the field as invalid until a second page is added"
 					label="Pages"
 				/>
 			</k-lab-example>
 
 			<k-lab-example label="Layout: cardlets">
 				<k-pagelist-field
-					:pages="pages"
-					:pagination="pagination"
+					:initial="state(pages)"
 					label="Pages"
 					layout="cardlets"
 				/>
@@ -49,8 +54,7 @@
 
 			<k-lab-example label="Layout: cards">
 				<k-pagelist-field
-					:pages="pages"
-					:pagination="pagination"
+					:initial="state(pages)"
 					label="Pages"
 					layout="cards"
 				/>
@@ -58,8 +62,7 @@
 
 			<k-lab-example label="Layout: cards, size small">
 				<k-pagelist-field
-					:pages="pages"
-					:pagination="pagination"
+					:initial="state(pages)"
 					label="Pages"
 					layout="cards"
 					size="small"
@@ -68,9 +71,7 @@
 
 			<k-lab-example label="Layout: table">
 				<k-pagelist-field
-					:columns="columns"
-					:pages="tableRows"
-					:pagination="pagination"
+					:initial="state(tableRows, { columns })"
 					label="Pages"
 					layout="table"
 				/>
@@ -78,19 +79,24 @@
 
 			<k-lab-example label="Layout: table with columns">
 				<k-pagelist-field
-					:columns="customColumns"
-					:pages="tableRows"
-					:pagination="pagination"
+					:initial="state(tableRows, { columns: customColumns })"
 					label="Pages"
 					layout="table"
+				/>
+			</k-lab-example>
+
+			<k-lab-example label="Link to another parent">
+				<k-pagelist-field
+					:initial="state(pages)"
+					label="Pages"
+					link="/pages/photography"
 				/>
 			</k-lab-example>
 
 			<k-lab-example label="Pagination">
 				<k-pagelist-field
 					:endpoints="endpoints"
-					:pages="pages.slice(0, 2)"
-					:pagination="paginated"
+					:initial="state(pages.slice(0, 2), { pagination: paginated })"
 					label="Pages"
 				/>
 			</k-lab-example>
@@ -98,8 +104,7 @@
 			<k-lab-example label="Search">
 				<k-pagelist-field
 					:endpoints="endpoints"
-					:pages="pages"
-					:pagination="pagination"
+					:initial="state(pages)"
 					:searchable="true"
 					label="Pages"
 				/>
@@ -109,31 +114,31 @@
 				<k-pagelist-field
 					:batch="true"
 					:endpoints="endpoints"
-					:pages="pages"
-					:pagination="pagination"
+					:initial="state(pages)"
 					label="Pages"
 				/>
 			</k-lab-example>
 
 			<k-lab-example label="Add">
 				<k-pagelist-field
-					:add="true"
 					:endpoints="endpoints"
-					:pages="pages"
-					:pagination="pagination"
+					:initial="state(pages, { add: true })"
 					label="Pages"
 				/>
 			</k-lab-example>
 
 			<k-lab-example label="All options">
 				<k-pagelist-field
-					:add="true"
 					:batch="true"
 					:endpoints="endpoints"
-					:pages="pages.slice(0, 2)"
-					:pagination="paginated"
+					:initial="
+						state(pages.slice(0, 2), {
+							add: true,
+							pagination: paginated,
+							sortable: true
+						})
+					"
 					:searchable="true"
-					:sortable="true"
 					help="Search, batch select, sorting and adding at once"
 					label="Pages"
 				/>
@@ -156,6 +161,9 @@ export default {
 		empty() {
 			return { limit: 20, offset: 0, page: 1, total: 0 };
 		},
+		single() {
+			return { limit: 20, offset: 0, page: 1, total: 1 };
+		},
 		/**
 		 * `ModelListField::columnsValues()` adds the cell values
 		 * for the table layout to every entry
@@ -168,6 +176,22 @@ export default {
 					href: page.link
 				}
 			}));
+		}
+	},
+	methods: {
+		/**
+		 * `PageListField::state()` sends the entries together with
+		 * the columns, pagination, sorting and the add button
+		 */
+		state(models, state = {}) {
+			return {
+				add: false,
+				columns: {},
+				models,
+				pagination: this.pagination,
+				sortable: false,
+				...state
+			};
 		}
 	}
 };
