@@ -53,7 +53,7 @@
 <script>
 import batchEditing from "@/mixins/batchEditing";
 import debounce from "@/helpers/debounce";
-import { help, id, label, name } from "@/mixins/props.js";
+import { help, id, label, name, type } from "@/mixins/props.js";
 
 /**
  * Base for a field that displays list of models
@@ -63,8 +63,9 @@ import { help, id, label, name } from "@/mixins/props.js";
  * @since     6.0.0
  */
 export default {
-	mixins: [help, id, label, name, batchEditing],
+	mixins: [help, id, label, name, type, batchEditing],
 	inheritAttrs: false,
+	type: "models",
 	props: {
 		/**
 		 * Shows the batch select interface
@@ -104,7 +105,6 @@ export default {
 	data() {
 		return {
 			fetched: null,
-			isProcessing: false,
 			isSearching: false,
 			searchterm: null
 		};
@@ -147,9 +147,6 @@ export default {
 		canAdd() {
 			return false;
 		},
-		/**
-		 * Only lists that accept file uploads react to a drop
-		 */
 		canDrop() {
 			return false;
 		},
@@ -161,7 +158,7 @@ export default {
 				icon: this.icon,
 				text: this.isSearching
 					? this.$t("search.results.none")
-					: (this.empty ?? this.$t(this.type + ".empty"))
+					: (this.empty ?? this.$t(this.$options.type + ".empty"))
 			};
 		},
 		/**
@@ -170,22 +167,16 @@ export default {
 		icon() {
 			return "box";
 		},
-		/**
-		 * Table cells must never be editable
-		 */
 		fields() {
 			const fields = {};
 
 			for (const name in this.state.columns ?? {}) {
+				// table cells must never be editable
 				fields[name] = { ...this.state.columns[name], disabled: true };
 			}
 
 			return fields;
 		},
-		/**
-		 * The list is not validated while it is filtered,
-		 * as the search only shows a part of it
-		 */
 		isSortable() {
 			return (
 				this.state.sortable === true &&
@@ -220,12 +211,6 @@ export default {
 		},
 		state() {
 			return this.fetched ?? this.initial;
-		},
-		/**
-		 * The batch buttons and the empty state build i18n keys from this
-		 */
-		type() {
-			return "models";
 		},
 		/**
 		 * The list is only validated while it shows everything,
@@ -268,9 +253,6 @@ export default {
 		}
 	},
 	methods: {
-		/**
-		 * Debounced in `created()`, so typing does not fire a request per key
-		 */
 		filter() {
 			this.reload({ page: 1 });
 		},
@@ -288,11 +270,6 @@ export default {
 		onPaginate(pagination) {
 			this.reload({ page: pagination.page });
 		},
-		/**
-		 * `reload()` cannot be used as the listener itself: the event
-		 * payload would end up as its query, and a bound arrow function
-		 * could not be removed again in `unmounted()`
-		 */
 		onRefresh() {
 			this.reload();
 		},
