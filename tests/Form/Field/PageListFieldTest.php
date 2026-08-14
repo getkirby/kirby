@@ -123,6 +123,17 @@ class PageListFieldTest extends TestCase
 		$this->assertCount(3, $this->pagelist(['status' => 'published'])->data());
 	}
 
+	public function testTemplate(): void
+	{
+		$this->assertNull($this->pagelist()->template());
+
+		$field = $this->pagelist(['template' => 'album']);
+		$this->assertSame('album', $field->template());
+
+		$field = $this->pagelist(['template' => ['album', 'note']]);
+		$this->assertSame(['album', 'note'], $field->template());
+	}
+
 	public function testTemplates(): void
 	{
 		// falls back to the single template
@@ -168,12 +179,31 @@ class PageListFieldTest extends TestCase
 		$this->assertSame(['album'], $field->blueprintNames());
 	}
 
+	public function testBlueprintNamesWithoutTemplates(): void
+	{
+		// without any template, every blueprint can be created
+		$field = $this->pagelist();
+
+		$this->assertSame(['album', 'default', 'note'], $field->blueprintNames());
+	}
+
 	public function testBlueprints(): void
 	{
 		$field = $this->pagelist(['templates' => ['album']]);
 
 		$this->assertSame([
 			['name' => 'album', 'title' => 'Album']
+		], $field->blueprints());
+	}
+
+	public function testBlueprintsWithMissingBlueprint(): void
+	{
+		// a blueprint that cannot be loaded still needs
+		// an entry for the create dialog
+		$field = $this->pagelist(['templates' => ['does-not-exist']]);
+
+		$this->assertSame([
+			['name' => 'does-not-exist', 'title' => 'Does-not-exist']
 		], $field->blueprints());
 	}
 
@@ -219,6 +249,24 @@ class PageListFieldTest extends TestCase
 		$field = $this->pagelist([
 			'status'    => 'listed',
 			'templates' => ['album', 'note']
+		]);
+
+		$this->assertFalse($field->add());
+	}
+
+	public function testAddWithMissingBlueprint(): void
+	{
+		// a blueprint that cannot be loaded creates a draft
+		$field = $this->pagelist([
+			'status'    => 'draft',
+			'templates' => ['does-not-exist']
+		]);
+
+		$this->assertTrue($field->add());
+
+		$field = $this->pagelist([
+			'status'    => 'listed',
+			'templates' => ['does-not-exist']
 		]);
 
 		$this->assertFalse($field->add());
