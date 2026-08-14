@@ -38,10 +38,23 @@ class Challenges
 
 	public function available(User $user, string $mode): array
 	{
-		return array_values(A::filter(
+		$available = array_values(A::filter(
 			$this->enabled(),
 			fn ($type) => $this->class($type)::isAvailable($user, $mode)
 		));
+
+		// a single-factor flow (e.g. the `code` login method or a
+		// password reset) must not be weaker than the second factor
+		// the user has set up, so it is limited to those challenges
+		if ($mode !== '2fa') {
+			$factors = $this->available($user, '2fa');
+
+			if ($factors !== []) {
+				return array_values(array_intersect($available, $factors));
+			}
+		}
+
+		return $available;
 	}
 
 	/**

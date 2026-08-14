@@ -10,6 +10,7 @@ use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Exception\UserNotFoundException;
+use Kirby\Filesystem\F;
 use Kirby\Session\Session;
 use Kirby\Tests\MockTime;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -138,6 +139,53 @@ class ChallengesTest extends TestCase
 		DummyChallenge::$available = false;
 		$available = $this->challenges->available($user, 'login');
 		$this->assertSame([], $available);
+	}
+
+	public function testAvailableLimitedToSecondFactor(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'challenges' => ['totp', 'email']
+				]
+			]
+		]);
+
+		// the user has set up TOTP as their second factor
+		F::write(
+			static::TMP . '/site/accounts/marge/.htpasswd',
+			User::hashPassword('12345678') . "\n" . '{"totp":"JBSWY3DPEHPK3PXP"}'
+		);
+
+		$challenges = new Challenges($this->app->auth(), $this->app);
+		$user       = $this->app->user('marge');
+
+		$this->assertSame(['totp'], $challenges->available($user, '2fa'));
+
+		// the single-factor flows must not offer the weaker email
+		// code to a user who has set up a second factor
+		$this->assertSame(['totp'], $challenges->available($user, 'login'));
+		$this->assertSame(['totp'], $challenges->available($user, 'password-reset'));
+	}
+
+	public function testAvailableWithoutSecondFactor(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'challenges' => ['totp', 'email']
+				]
+			]
+		]);
+
+		$challenges = new Challenges($this->app->auth(), $this->app);
+		$user       = $this->app->user('marge');
+
+		$this->assertSame([], $challenges->available($user, '2fa'));
+
+		// without a second factor the single-factor flows are unrestricted
+		$this->assertSame(['email'], $challenges->available($user, 'login'));
+		$this->assertSame(['email'], $challenges->available($user, 'password-reset'));
 	}
 
 	public function testClass(): void

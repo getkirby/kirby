@@ -68,8 +68,8 @@ class EmailChallenge extends Challenge
 			return true;
 		}
 
-		// enforced 2FA needs a factor for every user, so email stays
-		// the baseline for those who have not set up anything else
+		// enforced 2FA must not lock out users, so email stays
+		// available for everybody as long as it is required
 		return $user->kirby()->auth()->methods()->hasAnyRequiring2FA();
 	}
 
