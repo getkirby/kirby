@@ -4,6 +4,7 @@
 		:help="help"
 		:input="false"
 		:label="label"
+		:link="link"
 		:name="name"
 		:required="Boolean(min)"
 		:type="type"
@@ -85,6 +86,11 @@ export default {
 			type: String,
 			default: "list"
 		},
+		/**
+		 * Link to the parent the model entries come from,
+		 * unless that is the view's model itself
+		 */
+		link: String,
 		/**
 		 * Maximum number of entries the list may hold
 		 */
