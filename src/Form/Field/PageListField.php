@@ -136,7 +136,7 @@ class PageListField extends ModelListField
 				$props      = Blueprint::load('pages/' . $blueprint);
 				$statuses[] = $props['create']['status'] ?? 'draft';
 			} catch (Throwable) {
-				$statuses[] = 'draft'; // @codeCoverageIgnore
+				$statuses[] = 'draft';
 			}
 		}
 
