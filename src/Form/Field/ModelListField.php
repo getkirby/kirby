@@ -492,6 +492,7 @@ abstract class ModelListField extends DisplayField
 			'empty'      => $this->empty(),
 			'initial'    => $this->state(),
 			'layout'     => $this->layout(),
+			'link'       => $this->link(),
 			'max'        => $this->max(),
 			'min'        => $this->min(),
 			'searchable' => $this->searchable(),
