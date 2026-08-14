@@ -326,6 +326,15 @@ class FileListFieldTest extends TestCase
 		$this->assertSame('/pages/photography+trees', $field->link());
 	}
 
+	public function testLinkProp(): void
+	{
+		// the label only links to a parent that is not the model itself
+		$this->assertNull($this->filelist()->props()['link']);
+
+		$field = $this->filelist(['parent' => 'page.children.first']);
+		$this->assertSame('/pages/photography+trees', $field->props()['link']);
+	}
+
 	public function testSearchDisabled(): void
 	{
 		$_GET['searchterm'] = 'a';
