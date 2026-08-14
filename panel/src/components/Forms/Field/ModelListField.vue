@@ -101,7 +101,6 @@ export default {
 		 */
 		size: String
 	},
-	emits: ["input"],
 	data() {
 		return {
 			fetched: null,
