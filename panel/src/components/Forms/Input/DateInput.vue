@@ -362,8 +362,9 @@ export default {
 		 *    => select the part where the cursor is located
 		 * b. cursor selection already covers a part fully
 		 *    => select the next part
-		 * c. cursor selection covers more than one part
-		 *    => select the last affected part
+		 * c. cursor selection covers more than one part, e.g. the whole
+		 *    value when focus enters the input
+		 *    => select the first affected part, the last one on shift + tab
 		 * d. cursor selection cover last part
 		 *    => tab should blur the input, focus on next tabable element
 		 * e. cursor is at the end of the pattern
@@ -387,6 +388,13 @@ export default {
 			await this.$nextTick();
 			const selection = this.selection();
 
+			// a pattern without any part has nothing to step through
+			if (selection === undefined) {
+				return;
+			}
+
+			const backward = event.shiftKey === true;
+
 			// if an exact part is selected
 			if (
 				this.$el &&
@@ -394,7 +402,7 @@ export default {
 				selection.end === this.$el.selectionEnd - 1
 			) {
 				// move backward on shift + tab
-				if (event.shiftKey) {
+				if (backward === true) {
 					// if the first part is selected, jump out
 					if (selection.index === 0) {
 						return;
@@ -414,31 +422,27 @@ export default {
 					this.selectNext(selection.index);
 				}
 			} else {
-				// nothing or no part fully selected
+				// nothing or no part fully selected: the selection starts in
+				// the part to step to, but backwards it is the one it ends in
+				const part =
+					backward === true
+						? this.pattern.at(
+								this.$el.selectionEnd,
+								this.$el.selectionEnd,
+								this.dt
+							)
+						: selection;
+
+				// cursor behind the last part, jump out
 				if (
-					this.$el &&
-					this.$el.selectionStart == selection.end + 1 &&
-					selection.index == this.parts.length - 1
+					backward === false &&
+					this.$el.selectionStart === part.end + 1 &&
+					part.index === this.parts.length - 1
 				) {
-					// cursor at the end of the pattern, jump out
 					return;
 				}
 
-				// more than one part selected, select last affected part
-				else if (this.$el && this.$el.selectionEnd - 1 > selection.end) {
-					const last = this.pattern.at(
-						this.$el.selectionEnd,
-						this.$el.selectionEnd,
-						this.dt
-					);
-
-					this.select(this.parts[last.index]);
-				}
-
-				// select part where the cursor is located
-				else {
-					this.select(this.parts[selection.index]);
-				}
+				this.select(this.parts[part.index]);
 			}
 
 			event.preventDefault();
@@ -472,6 +476,11 @@ export default {
 		 */
 		select(part) {
 			part ??= this.selection();
+
+			if (part === undefined) {
+				return;
+			}
+
 			this.$el?.setSelectionRange(part.start, part.end + 1);
 		},
 		/**

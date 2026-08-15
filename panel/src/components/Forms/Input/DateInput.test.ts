@@ -367,6 +367,67 @@ describe("DateInput.vue", () => {
 			expect(selected(wrapper)).toBe("");
 		});
 
+		it("selects the part behind a leading literal", async () => {
+			const wrapper = mount({
+				display: "[Am] D. MMMM YYYY",
+				value: "2026-07-13"
+			});
+			const input = wrapper.find("input").element as HTMLInputElement;
+
+			expect(input.value).toBe("Am 13. July 2026");
+
+			// place the cursor inside the literal, before any part
+			input.setSelectionRange(1, 1);
+			await press(wrapper, "Tab");
+
+			expect(selected(wrapper)).toBe("13");
+		});
+
+		it("selects the first part when the whole value is selected", async () => {
+			// focus entering the input selects all of it
+			const wrapper = mount({ display: "D MMMM YYYY", value: "2026-07-13" });
+			const input = wrapper.find("input").element as HTMLInputElement;
+
+			input.setSelectionRange(0, 12);
+			await press(wrapper, "Tab");
+
+			expect(selected(wrapper)).toBe("13");
+		});
+
+		it("selects the last part when tabbing in backwards", async () => {
+			const wrapper = mount({ display: "D MMMM YYYY", value: "2026-07-13" });
+			const input = wrapper.find("input").element as HTMLInputElement;
+
+			input.setSelectionRange(0, 12);
+			await press(wrapper, "Tab", { shiftKey: true });
+
+			expect(selected(wrapper)).toBe("2026");
+		});
+
+		it("selects the first part behind a leading literal", async () => {
+			const wrapper = mount({
+				display: "[Am] D. MMMM YYYY",
+				value: "2026-07-13"
+			});
+			const input = wrapper.find("input").element as HTMLInputElement;
+
+			input.setSelectionRange(0, 16);
+			await press(wrapper, "Tab");
+
+			expect(selected(wrapper)).toBe("13");
+		});
+
+		it("selects the part a multi-part selection starts in", async () => {
+			const wrapper = mount({ display: "D MMMM YYYY", value: "2026-07-13" });
+			const input = wrapper.find("input").element as HTMLInputElement;
+
+			// from the month into the year
+			input.setSelectionRange(4, 10);
+			await press(wrapper, "Tab");
+
+			expect(selected(wrapper)).toBe("July");
+		});
+
 		it("keeps the last part selected", async () => {
 			const wrapper = mount({ display: "D MMMM YYYY", value: "2026-07-13" });
 			const input = wrapper.find("input").element as HTMLInputElement;
