@@ -85,6 +85,7 @@ export default {
 			}
 
 			if (
+				typeof this.to === "string" &&
 				this.to.includes("@") === true &&
 				this.to.includes("/") === false &&
 				this.to.startsWith("mailto:") === false
