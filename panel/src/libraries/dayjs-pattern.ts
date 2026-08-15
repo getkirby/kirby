@@ -100,7 +100,7 @@ export class DayjsPattern {
 		);
 
 		// fallback to part where selection starts
-		return match ?? parts.findLast((part) => part.start <= start);
+		return match ?? parts.findLast((part) => part.start <= start) ?? parts[0];
 	}
 
 	format(dt?: Dayjs | null): string | null {

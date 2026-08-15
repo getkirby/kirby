@@ -53,6 +53,18 @@ describe("dayjs.pattern().at()", () => {
 			]
 		},
 		{
+			// a cursor inside the leading literal belongs to the first part
+			source: "[Am] D. MMMM YYYY",
+			cursors: [
+				{ start: 0, unit: "day" },
+				{ start: 2, unit: "day" },
+				{ start: 5, unit: "day" },
+				{ start: 8, unit: "month" },
+				{ start: 13, unit: "year" },
+				{ start: 0, end: 17, unit: "day" }
+			]
+		},
+		{
 			source: "h:mm A",
 			cursors: [
 				{ start: 0, unit: "hour" },
