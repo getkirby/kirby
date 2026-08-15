@@ -6,7 +6,7 @@ import ModelsField from "./LegacyModelsField.vue";
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @deprecated 6.0.0 Use `k-users-field` instead
+ * @deprecated 6.0.0 Use `k-userpicker-field` instead
  */
 export default {
 	extends: ModelsField,
