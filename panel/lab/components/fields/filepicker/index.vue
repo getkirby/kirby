@@ -6,7 +6,7 @@
 			</k-box>
 
 			<k-lab-example label="Default">
-				<k-files-field
+				<k-filepicker-field
 					name="files"
 					label="files"
 					:value="value"
@@ -15,7 +15,7 @@
 			</k-lab-example>
 
 			<k-lab-example label="Autofocus">
-				<k-files-field
+				<k-filepicker-field
 					:autofocus="true"
 					label="files"
 					:value="value"
@@ -24,7 +24,7 @@
 			</k-lab-example>
 
 			<k-lab-example label="Required">
-				<k-files-field
+				<k-filepicker-field
 					label="files"
 					:required="true"
 					:value="value"
@@ -33,7 +33,7 @@
 			</k-lab-example>
 
 			<k-lab-example label="Placeholder">
-				<k-files-field
+				<k-filepicker-field
 					label="files"
 					:value="value"
 					placeholder="Placeholder text …"
@@ -42,7 +42,7 @@
 			</k-lab-example>
 
 			<k-lab-example label="Help">
-				<k-files-field
+				<k-filepicker-field
 					label="files"
 					:value="value"
 					help="This is some help text"
@@ -51,7 +51,7 @@
 			</k-lab-example>
 
 			<k-lab-example label="Before & After">
-				<k-files-field
+				<k-filepicker-field
 					label="files"
 					:value="value"
 					after="After"
@@ -61,7 +61,7 @@
 			</k-lab-example>
 
 			<k-lab-example label="Icon">
-				<k-files-field
+				<k-filepicker-field
 					label="files"
 					:value="value"
 					icon="edit"
@@ -70,7 +70,7 @@
 			</k-lab-example>
 
 			<k-lab-example label="Disabled">
-				<k-files-field
+				<k-filepicker-field
 					:disabled="true"
 					label="files"
 					:value="value"
