@@ -252,6 +252,20 @@ class Core
 	}
 
 	/**
+	 * Returns the field classes for the `files`, `pages` and `users`
+	 * type names. They referred to the picker fields in v5.
+	 * @since 6.0.0
+	 */
+	public function fieldAliases(): array
+	{
+		return [
+			'files' => FilePickerField::class,
+			'pages' => PagePickerField::class,
+			'users' => UserPickerField::class,
+		];
+	}
+
+	/**
 	 * Returns an array of all paths and class names of panel fields
 	 *
 	 * Traditional panel fields are located in `/kirby/config/fields`
@@ -270,7 +284,7 @@ class Core
 			'email'       => EmailField::class,
 			'entries'     => EntriesField::class,
 			'filelist'    => FileListField::class,
-			'files'       => FilePickerField::class,
+			'filepicker'  => FilePickerField::class,
 			'gap'         => GapField::class,
 			'headline'    => HeadlineField::class,
 			'hidden'      => HiddenField::class,
@@ -283,7 +297,7 @@ class Core
 			'number'      => NumberField::class,
 			'object'      => ObjectField::class,
 			'pagelist'    => PageListField::class,
-			'pages'       => PagePickerField::class,
+			'pagepicker'  => PagePickerField::class,
 			'password'    => PasswordField::class,
 			'radio'       => RadioField::class,
 			'range'       => RangeField::class,
@@ -300,8 +314,12 @@ class Core
 			'toggle'      => ToggleField::class,
 			'toggles'     => TogglesField::class,
 			'url'         => UrlField::class,
-			'users'       => UserPickerField::class,
+			'userpicker'  => UserPickerField::class,
 			'writer'      => WriterField::class,
+
+			// `files`, `pages` and `users` point at the
+			// picker fields.
+			...$this->fieldAliases(),
 
 			'legacy-checkboxes'  => $this->root . '/fields/checkboxes.php',
 			'legacy-color'       => $this->root . '/fields/color.php',

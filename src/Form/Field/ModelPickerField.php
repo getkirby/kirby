@@ -314,11 +314,6 @@ abstract class ModelPickerField extends InputField
 		return $ids;
 	}
 
-	public function type(): string
-	{
-		return str_replace('picker', '', parent::type()) . 's';
-	}
-
 	public function validations(): array
 	{
 		return [
