@@ -103,12 +103,13 @@ enum LicenseStatus: string
 	/**
 	 * The info text is shown in the license dialog
 	 * in the status row. The core translations carry
-	 * authored markup, the date is formatted by us.
+	 * authored markup.
 	 */
 	public function info(string|null $end = null): HtmlString
 	{
-		return new HtmlString(
-			I18n::template('license.status.' . $this->value . '.info', ['date' => $end])
+		return HtmlString::translate(
+			'license.status.' . $this->value . '.info',
+			['date' => $end]
 		);
 	}
 

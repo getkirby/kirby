@@ -7,7 +7,6 @@ use Kirby\Panel\Controller\DialogController;
 use Kirby\Panel\Field;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
-use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\HtmlString;
 
 /**
@@ -32,11 +31,9 @@ class SystemLicenseActivateDialogController extends DialogController
 				'theme' => 'white',
 				'type'  => 'info',
 				'icon'  => 'info',
-				'text'  => new HtmlString(
-					$this->i18n('license.activate.domain', [
-						'host' => Escape::html($system->indexUrl())
-					])
-				),
+				'text'  => $this->i18nHtml('license.activate.domain', [
+					'host' => $system->indexUrl()
+				]),
 			],
 			'type' => [
 				'label'    =>  $this->i18n('license.activate.label'),
@@ -60,11 +57,9 @@ class SystemLicenseActivateDialogController extends DialogController
 			'warning' => [
 				'type'  => 'info',
 				'theme' => 'warning',
-				'text'  => new HtmlString(
-					$this->i18n('license.activate.' . ($local ? 'local' : 'public'), [
-						'host' => Escape::html($system->indexUrl())
-					])
-				),
+				'text'  => $this->i18nHtml('license.activate.' . ($local ? 'local' : 'public'), [
+					'host' => $system->indexUrl()
+				]),
 				'when'  => ['type' => $local ? 'regular' : 'free'],
 			],
 			'acknowledge' => [
@@ -73,11 +68,9 @@ class SystemLicenseActivateDialogController extends DialogController
 				'type'     => 'toggle',
 				'text'     =>  $this->i18n('license.activate.acknowledge.text'),
 				'required' => true,
-				'help'     => new HtmlString(
-					$this->i18n('license.activate.acknowledge.help', [
-						'url' => 'https://getkirby.com/license/free-licenses'
-					])
-				),
+				'help'     => $this->i18nHtml('license.activate.acknowledge.help', [
+					'url' => 'https://getkirby.com/license/free-licenses'
+				]),
 			],
 			'license' => [
 				'when'        => ['type' => 'regular'],

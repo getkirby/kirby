@@ -9,7 +9,6 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Panel\Controller\DialogController;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
-use Kirby\Toolkit\HtmlString;
 
 /**
  * Dialog controller for creating a new language variable
@@ -74,9 +73,7 @@ class LanguageVariableFormDialogController extends DialogController
 			'entries' => [
 				'field'     => ['type' => 'text'],
 				'label'     => $this->i18n('language.variable.entries'),
-				'help'      => new HtmlString(
-					$this->i18n('language.variable.entries.help')
-				),
+				'help'      => $this->i18nHtml('language.variable.entries.help'),
 				'type'      => 'entries',
 				'min'       => 1,
 				'when'      => ['multiple' => true],

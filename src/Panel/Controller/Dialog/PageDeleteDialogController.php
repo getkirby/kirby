@@ -6,8 +6,6 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
 use Kirby\Panel\Ui\Dialog\RemoveDialog;
-use Kirby\Toolkit\Escape;
-use Kirby\Toolkit\HtmlString;
 
 /**
  * Controls the Panel dialog for deleting a page
@@ -22,11 +20,9 @@ class PageDeleteDialogController extends PageDialogController
 {
 	public function load(): Dialog
 	{
-		$text = new HtmlString(
-			$this->i18n('page.delete.confirm', [
-				'title' => Escape::html($this->page->title()->value())
-			])
-		);
+		$text = $this->i18nHtml('page.delete.confirm', [
+			'title' => $this->page->title()->value()
+		]);
 
 		if ($this->page->childrenAndDrafts()->count() === 0) {
 			return new RemoveDialog(text: $text);
@@ -37,9 +33,7 @@ class PageDeleteDialogController extends PageDialogController
 				'info' => [
 					'type'  => 'info',
 					'theme' => 'negative',
-					'text'  => new HtmlString(
-						$this->i18n('page.delete.confirm.subpages')
-					)
+					'text'  => $this->i18nHtml('page.delete.confirm.subpages')
 				],
 				'check' => [
 					'label'   => $this->i18n('page.delete.confirm.title'),

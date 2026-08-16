@@ -38,4 +38,29 @@ trait HasI18n
 
 		return I18n::template($key, $key, $data);
 	}
+
+	/**
+	 * Translates a key or template string and marks the result as
+	 * trusted HTML, escaping every filled-in placeholder.
+	 *
+	 * @since 6.0.0
+	 */
+	protected static function i18nHtml(
+		Closure|string|array|HtmlString|null $key,
+		array $data = []
+	): HtmlString|null {
+		if ($key instanceof Closure) {
+			$key = $key();
+		}
+
+		if ($key === null) {
+			return null;
+		}
+
+		if ($key instanceof HtmlString) {
+			return $key;
+		}
+
+		return HtmlString::translate($key, $data);
+	}
 }

@@ -11,6 +11,7 @@ use Kirby\TestCase;
 use Kirby\Tests\MockTime;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Stringable;
 use TypeError;
 
 #[CoversClass(Str::class)]
@@ -949,6 +950,26 @@ class StrTest extends TestCase
 				}
 			]
 		));
+
+		// callback receives the raw result on top of the string
+		$object = new class () implements Stringable {
+			public function __toString(): string
+			{
+				return 'object';
+			}
+		};
+
+		Str::safeTemplate(
+			'{{ object }}',
+			['object' => $object],
+			[
+				'callback' => function ($result, $query, $data, $value) use ($object) {
+					$this->assertSame('object', $result);
+					$this->assertSame($object, $value);
+					return $result;
+				}
+			]
+		);
 
 		// callback with fallback
 		$this->assertSame('This is a FALLBACK with <HTML>', Str::safeTemplate(
