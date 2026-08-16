@@ -115,26 +115,18 @@ abstract class UserCredentialDrawerController extends UserDrawerController
 
 		if (is_int($expires) === true && $expires < time()) {
 			$session->remove($key);
-			throw new InvalidArgumentException(key: 'access.code');
+			throw new PermissionException(key: 'access.code');
 		}
 
 		try {
-			if ($challenge->verify($input, Pending::from($stored)) !== true) {
-				throw new InvalidArgumentException(key: 'access.code');
-			}
+			$challenge->attempt(
+				input:      $input,
+				pending:    Pending::from($stored),
+				invalidate: fn () => $session->remove($key)
+			);
 		} catch (Throwable $e) {
 			// count the failed attempt against the rate limit
 			$limits->track($email, triggerHook: false);
-
-			// a single-use challenge signs a one-time nonce that must be
-			// invalidated even after a failed attempt (e.g. WebAuthn); a
-			// reusable code is kept so the account owner can retry
-			// with the correct code within its lifetime
-			// instead of being locked out by a single typo
-			if ($challenge->isSingleUse() === true) {
-				$session->remove($key);
-			}
-
 			throw $e;
 		}
 

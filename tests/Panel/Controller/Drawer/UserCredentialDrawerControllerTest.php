@@ -225,7 +225,7 @@ class UserCredentialDrawerControllerTest extends TestCase
 
 		$controller = new DummyUserCredentialDrawerController($this->app->user('test'), 'totp');
 
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(PermissionException::class);
 		$this->expectExceptionCode('error.access.code');
 
 		$controller->authorize();
@@ -248,8 +248,8 @@ class UserCredentialDrawerControllerTest extends TestCase
 
 		try {
 			$controller->authorize();
-			$this->fail('Expected InvalidArgumentException was not thrown');
-		} catch (InvalidArgumentException $e) {
+			$this->fail('Expected PermissionException was not thrown');
+		} catch (PermissionException $e) {
 			$this->assertSame('error.access.code', $e->getCode());
 		}
 
@@ -276,8 +276,8 @@ class UserCredentialDrawerControllerTest extends TestCase
 
 		try {
 			$controller->authorize();
-			$this->fail('Expected InvalidArgumentException was not thrown');
-		} catch (InvalidArgumentException) {
+			$this->fail('Expected PermissionException was not thrown');
+		} catch (PermissionException) {
 			// expected
 		}
 
@@ -303,8 +303,8 @@ class UserCredentialDrawerControllerTest extends TestCase
 
 		try {
 			$controller->authorize();
-			$this->fail('Expected InvalidArgumentException was not thrown');
-		} catch (InvalidArgumentException $e) {
+			$this->fail('Expected PermissionException was not thrown');
+		} catch (PermissionException $e) {
 			$this->assertSame('error.access.code', $e->getCode());
 		}
 

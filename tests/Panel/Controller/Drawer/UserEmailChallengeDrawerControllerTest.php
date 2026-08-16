@@ -202,7 +202,7 @@ class UserEmailChallengeDrawerControllerTest extends TestCase
 		$this->app->impersonate('test');
 		$this->storeCode();
 
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(PermissionException::class);
 		$this->expectExceptionCode('error.access.code');
 
 		(new UserEmailChallengeDrawerController($this->app->user('test')))->submit();
@@ -218,7 +218,7 @@ class UserEmailChallengeDrawerControllerTest extends TestCase
 		]);
 		$this->app->impersonate('test');
 
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(PermissionException::class);
 		$this->expectExceptionCode('error.access.code');
 
 		(new UserEmailChallengeDrawerController($this->app->user('test')))->submit();
@@ -254,7 +254,7 @@ class UserEmailChallengeDrawerControllerTest extends TestCase
 		$this->app->impersonate('test');
 		$this->storeCode();
 
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(PermissionException::class);
 		$this->expectExceptionCode('error.access.code');
 
 		(new UserEmailChallengeDrawerController($this->app->user('test')))->submit();

@@ -8,12 +8,10 @@ use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
-use Kirby\Exception\PermissionException;
 use Kirby\Exception\UserNotFoundException;
 use Kirby\Session\Session;
 use Kirby\Toolkit\A;
 use SensitiveParameter;
-use Throwable;
 
 /**
  * Handler for all auth challenges
@@ -318,19 +316,11 @@ class Challenges
 		$data      = Pending::from($data ?? []);
 		$challenge = $this->get($type, $user, $mode, $timeout);
 
-		try {
-			if ($challenge->verify($input, $data) !== true) {
-				throw new PermissionException(key: 'access.code');
-			}
-		} catch (Throwable $e) {
-			// a single-use challenge signs a one-time
-			// nonce that must not survive a failed attempt
-			if ($challenge->isSingleUse() === true) {
-				$this->clear($session);
-			}
-
-			throw $e;
-		}
+		$challenge->attempt(
+			input:      $input,
+			pending:    $data,
+			invalidate: fn () => $this->clear($session)
+		);
 
 		return $challenge;
 	}

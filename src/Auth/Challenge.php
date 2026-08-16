@@ -2,8 +2,10 @@
 
 namespace Kirby\Auth;
 
+use Closure;
 use Kirby\Cms\App;
 use Kirby\Cms\User;
+use Kirby\Exception\PermissionException;
 use Kirby\Panel\Ui\Component;
 use Kirby\Toolkit\HasI18n;
 use Kirby\Toolkit\Str;
@@ -29,6 +31,35 @@ abstract class Challenge
 		protected int $timeout
 	) {
 		$this->kirby = $user->kirby();
+	}
+
+	/**
+	 * Verifies the input and invalidates a single-use nonce on failure
+	 *
+	 * @throws PermissionException If the input could not be verified
+	 */
+	public function attempt(
+		#[SensitiveParameter]
+		mixed $input,
+		Pending $pending,
+		Closure $invalidate
+	): void {
+		$success = false;
+
+		try {
+			$success = $this->verify($input, $pending) === true;
+
+			if ($success === false) {
+				throw new PermissionException(key: 'access.code');
+			}
+		} finally {
+			// a single-use challenge signs a one-time nonce that must be
+			// invalidated even after a failed attempt (e.g. WebAuthn); a
+			// reusable code is kept so it can be retried within its lifetime
+			if ($success === false && $this->isSingleUse() === true) {
+				$invalidate();
+			}
+		}
 	}
 
 	/**

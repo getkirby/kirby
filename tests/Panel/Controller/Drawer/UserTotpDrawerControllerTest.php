@@ -197,7 +197,7 @@ class UserTotpDrawerControllerTest extends TestCase
 		]);
 		$this->app->impersonate('test');
 
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(PermissionException::class);
 		$this->expectExceptionCode('error.access.code');
 
 		(new UserTotpDrawerController($this->app->user('test')))->submit();
