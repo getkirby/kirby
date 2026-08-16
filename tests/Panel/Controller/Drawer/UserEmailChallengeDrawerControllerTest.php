@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel\Controller\Drawer;
 
+use Kirby\Auth\Exception\RateLimitException;
 use Kirby\Cms\User;
 use Kirby\Email\Email;
 use Kirby\Exception\InvalidArgumentException;
@@ -147,6 +148,19 @@ class UserEmailChallengeDrawerControllerTest extends TestCase
 		);
 	}
 
+	public function testSubmitCodeConsumesRateLimit(): void
+	{
+		$this->setRequest(['action' => 'code']);
+		$this->app->impersonate('test');
+
+		(new UserEmailChallengeDrawerController($this->app->user('test')))->submit();
+
+		// sending the code is a metered side effect, so it has to
+		// consume budget like any other challenge creation
+		$log = $this->app->auth()->limits()->log();
+		$this->assertSame(1, $log['by-email']['test@getkirby.com']['trials']);
+	}
+
 	public function testSubmitCodeForOtherUser(): void
 	{
 		// an admin authorizes with their own password instead,
@@ -158,6 +172,32 @@ class UserEmailChallengeDrawerControllerTest extends TestCase
 
 		$this->assertTrue($controller->submit());
 		$this->assertSame([], Email::$emails);
+
+		// nothing was sent, so the other user's budget must stay untouched
+		$this->assertSame([], $this->app->auth()->limits()->log()['by-email']);
+	}
+
+	public function testSubmitCodeRateLimited(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => ['auth' => ['trials' => 1]]
+		]);
+
+		$this->setRequest(['action' => 'code']);
+		$this->app->impersonate('test');
+
+		$user = $this->app->user('test');
+		(new UserEmailChallengeDrawerController($user))->submit();
+
+		try {
+			(new UserEmailChallengeDrawerController($user))->submit();
+			$this->fail('Expected RateLimitException');
+		} catch (RateLimitException) {
+			// expected
+		}
+
+		// the limit has to fire before the mail goes out
+		$this->assertCount(1, Email::$emails);
 	}
 
 	public function testSubmitCreate(): void

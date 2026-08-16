@@ -66,7 +66,18 @@ class UserEmailChallengeDrawerController extends UserCredentialDrawerController
 	 */
 	protected function send(): User
 	{
+		if ($this->isCurrentUser() === false) {
+			return $this->user;
+		}
+
+		$limits = $this->kirby->auth()->limits();
+		$email  = $this->user->email();
+
+		$limits->ensure($email);
+		$limits->track($email, triggerHook: false);
+
 		$this->authorization();
+
 		return $this->user;
 	}
 
