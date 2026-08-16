@@ -15,6 +15,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use stdClass;
 
 #[CoversClass(Blueprint::class)]
+#[CoversClass(Normalizer::class)]
 class BlueprintTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Cms.Blueprint';
