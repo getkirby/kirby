@@ -5,7 +5,6 @@ namespace Kirby\Cms;
 use Closure;
 use Kirby\Auth\Challenges;
 use Kirby\Auth\Methods;
-use Kirby\Blueprint\PageBlueprint;
 use Kirby\Blueprint\Section;
 use Kirby\Content\Field;
 use Kirby\Exception\DuplicateException;
@@ -829,9 +828,6 @@ trait AppPlugins
 
 		// aliases
 		KirbyTag::$aliases = $this->core->kirbyTagAliases();
-
-		// blueprint presets
-		PageBlueprint::$presets = $this->core->blueprintPresets();
 
 		$this->extendAuthChallenges($this->core->authChallenges());
 		$this->extendAuthMethods($this->core->authMethods());

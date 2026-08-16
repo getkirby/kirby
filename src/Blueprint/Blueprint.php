@@ -27,7 +27,6 @@ use Throwable;
  */
 class Blueprint
 {
-	public static array $presets = [];
 	public static array $loaded = [];
 
 	protected AcceptRules|null $acceptRules = null;
@@ -80,9 +79,6 @@ class Blueprint
 
 		// extend the blueprint in general
 		$props = static::extend($props);
-
-		// apply any blueprint preset
-		$props = $this->preset($props);
 
 		// normalize the name
 		$props['name'] ??= 'default';
@@ -746,9 +742,6 @@ class Blueprint
 			// inject all tab extensions
 			$tabProps = static::extend($tabProps);
 
-			// inject a preset if available
-			$tabProps = $this->preset($tabProps);
-
 			$tabProps = $this->convertFieldsToSections($tabName, $tabProps);
 			$tabProps = $this->convertSectionsToColumns($tabName, $tabProps);
 
@@ -795,28 +788,6 @@ class Blueprint
 		}
 
 		return null;
-	}
-
-	/**
-	 * Injects a blueprint preset
-	 */
-	protected function preset(array $props): array
-	{
-		if (isset($props['preset']) === false) {
-			return $props;
-		}
-
-		if (isset(static::$presets[$props['preset']]) === false) {
-			return $props;
-		}
-
-		$preset = static::$presets[$props['preset']];
-
-		if (is_string($preset) === true) {
-			$preset = F::load($preset, allowOutput: false);
-		}
-
-		return $preset($props);
 	}
 
 	/**

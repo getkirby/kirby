@@ -49,14 +49,6 @@ class CoreTest extends TestCase
 		$this->assertArrayHasKey('password-reset', $authMethods);
 	}
 
-	public function testBlueprintPresets(): void
-	{
-		$blueprintPresets = $this->core->blueprintPresets();
-		$this->assertArrayHasKey('pages', $blueprintPresets);
-		$this->assertArrayHasKey('page', $blueprintPresets);
-		$this->assertArrayHasKey('files', $blueprintPresets);
-	}
-
 	public function testBlueprints(): void
 	{
 		$blueprints = $this->core->blueprints();
