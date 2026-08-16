@@ -53,7 +53,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: ["8.3", "8.4", "8.5"]
+        php: ["8.4", "8.5"]
 
     services:
       redis:
@@ -137,7 +137,7 @@ jobs:
     runs-on: *os
     timeout-minutes: *timeout
     env:
-      php: 8.3
+      php: 8.4
 
     steps:
       - name: Checkout repository
@@ -179,7 +179,7 @@ jobs:
 
       - name: Statically analyze using Psalm
         id: psalm
-        run: composer run analyze:psalm -- --output-format=github --php-version=${{ env.php }} --report=sarif/psalm.sarif --report-show-info=false --force-jit
+        run: composer run analyze:psalm -- --output-format=github --report=sarif/psalm.sarif --report-show-info=false --force-jit
 
       - name: Upload code scanning results to GitHub
         if: github.repository == 'getkirby/kirby' && steps.psalm.outcome == 'success'
