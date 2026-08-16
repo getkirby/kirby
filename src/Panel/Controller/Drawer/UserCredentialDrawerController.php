@@ -74,11 +74,21 @@ abstract class UserCredentialDrawerController extends UserDrawerController
 	 */
 	protected function authorizeAdmin(): void
 	{
+		$admin    = $this->kirby->user();
+		$limits   = $this->kirby->auth()->limits();
+		$email    = $admin->email();
 		$password = $this->request->get('password');
 
+		// throttle like any other credential check, so that a hijacked
+		// session cannot brute-force the admin's own password
+		$limits->ensure($email);
+
 		try {
-			$this->kirby->user()->validatePassword($password);
+			$admin->validatePassword($password);
 		} catch (InvalidArgumentException $e) {
+			// count the failed attempt against the rate limit
+			$limits->track($email, triggerHook: false);
+
 			// re-throw without the 401 http code: a wrong password here
 			// is a validation error to show inline, not an authentication
 			// failure that would log the current admin out

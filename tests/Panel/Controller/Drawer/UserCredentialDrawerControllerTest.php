@@ -183,6 +183,45 @@ class UserCredentialDrawerControllerTest extends TestCase
 		$this->assertTrue($this->app->user()->is($this->app->user('admin')));
 	}
 
+	public function testAuthorizeAsAdminConsumesRateLimit(): void
+	{
+		$this->setRequest(['password' => 'wrongpass']);
+		$this->app->impersonate('admin');
+
+		$controller = new DummyUserCredentialDrawerController($this->app->user('test'));
+
+		try {
+			$controller->authorize();
+			$this->fail('Expected InvalidArgumentException');
+		} catch (InvalidArgumentException) {
+			// expected
+		}
+
+		// the guess counts against the admin's own budget, never
+		// against the user they are managing
+		$log = $this->app->auth()->limits()->log();
+		$this->assertSame(1, $log['by-email']['admin@getkirby.com']['trials']);
+		$this->assertArrayNotHasKey('test@getkirby.com', $log['by-email']);
+	}
+
+	public function testAuthorizeAsAdminRateLimited(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => ['auth' => ['trials' => 1]]
+		]);
+		$this->setRequest(['password' => 'adminpass123']);
+		$this->app->impersonate('admin');
+
+		// exhaust the limit for this visitor
+		$this->app->auth()->limits()->track('admin@getkirby.com');
+
+		$controller = new DummyUserCredentialDrawerController($this->app->user('test'));
+
+		// even the correct password must not be checked any more
+		$this->expectException(RateLimitException::class);
+		$controller->authorize();
+	}
+
 	public function testAuthorizeAsAdminWithWrongPassword(): void
 	{
 		$this->setRequest(['password' => 'wrongpass']);
