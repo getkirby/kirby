@@ -152,7 +152,7 @@ class Challenges
 		return $email;
 	}
 
-	protected function ensureNotTimeout(Session $session): int|null
+	protected function ensureNotTimeout(Session $session): void
 	{
 		// time-limiting; check this early so that we can
 		// destroy the session no matter if the user exists
@@ -167,8 +167,6 @@ class Challenges
 			$this->clear($session);
 			throw new ChallengeTimeoutException();
 		}
-
-		return $timeout;
 	}
 
 	/**
@@ -186,6 +184,8 @@ class Challenges
 	 * Returns an instance of the requested auth challenge.
 	 * (This is based on the config. You might need to check
 	 * yourself if the method should be available in your context)
+	 *
+	 * @param int|null $timeout Lifetime in seconds, not an expiry timestamp
 	 */
 	public function get(
 		string $type,
@@ -300,9 +300,9 @@ class Challenges
 		mixed $input
 	): Challenge {
 		// ensure we have an active challenge for a valid user
-		$timeout = $this->ensureNotTimeout($session);
-		$email   = $this->ensureActiveChallenge($session);
-		$user    = $this->kirby->user($email);
+		$this->ensureNotTimeout($session);
+		$email = $this->ensureActiveChallenge($session);
+		$user  = $this->kirby->user($email);
 
 		if ($user === null) {
 			throw new UserNotFoundException(name: $email);
@@ -314,7 +314,7 @@ class Challenges
 		$mode      = $session->get('kirby.challenge.mode');
 		$data      = $session->get('kirby.challenge.data');
 		$data      = Pending::from($data ?? []);
-		$challenge = $this->get($type, $user, $mode, $timeout);
+		$challenge = $this->get($type, $user, $mode);
 
 		$challenge->attempt(
 			input:      $input,

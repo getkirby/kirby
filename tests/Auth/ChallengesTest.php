@@ -433,6 +433,22 @@ class ChallengesTest extends TestCase
 		$this->assertSame([['input' => 'ok', 'data' => ['public' => 'x', 'secret' => 'secret']]], DummyChallenge::$verified);
 	}
 
+	public function testVerifyLifetime(): void
+	{
+		$session = $this->session();
+		$session->set('kirby.challenge.type', 'dummy');
+		$session->set('kirby.challenge.email', 'marge@simpsons.com');
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.timeout', time() + 1000);
+		$session->set('kirby.challenge.data', ['public' => 'x', 'secret' => 'secret']);
+
+		$result = $this->challenges->verify($session, 'ok');
+
+		// the challenge gets its lifetime in seconds, not the
+		// absolute expiry timestamp stored in the session
+		$this->assertSame($this->challenges->timeout(), $result->timeout());
+	}
+
 	public function testVerifyInvalid(): void
 	{
 		$session = $this->session();
