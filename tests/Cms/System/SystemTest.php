@@ -540,7 +540,7 @@ class SystemTest extends TestCase
 
 		// loading it triggers the reissue (here a free + local
 		// self-sign), so it is no longer expired afterwards
-		$license = (new System($app))->license();
+		$license = new System($app)->license();
 		$this->assertFalse($license->isExpired());
 	}
 

@@ -127,10 +127,10 @@ class Field
 		array|null $blueprints = [],
 		array|null $props = []
 	): array {
-		return (new TemplateField(...[
+		return new TemplateField(...[
 			'blueprints' => $blueprints,
 			...$props ?? [],
-		]))->toArray();
+		])->toArray();
 	}
 
 	public static function title(array $props = []): array

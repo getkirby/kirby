@@ -118,7 +118,7 @@ class StateTest extends TestCase
 		];
 
 		// default (no special request)
-		$result = (new State())->filter($data);
+		$result = new State()->filter($data);
 
 		$this->assertSame($data, $result);
 	}
@@ -127,7 +127,7 @@ class StateTest extends TestCase
 	{
 		// empty only
 		$data   = ['foo' => 'bar'];
-		$result = (new State())->filter($data);
+		$result = new State()->filter($data);
 		$this->assertSame($data, $result);
 
 		// via get
@@ -138,7 +138,7 @@ class StateTest extends TestCase
 			'b' => 'B'
 		];
 
-		$result = (new State())->filter($data);
+		$result = new State()->filter($data);
 		$this->assertSame(['a' => 'A'], $result);
 
 		// via headers
@@ -155,7 +155,7 @@ class StateTest extends TestCase
 			'b' => 'B'
 		];
 
-		$result = (new State())->filter($data);
+		$result = new State()->filter($data);
 		$this->assertSame(['a' => 'A'], $result);
 	}
 
@@ -169,7 +169,7 @@ class StateTest extends TestCase
 			'b' => 'B'
 		];
 
-		$result = (new State())->filter($data);
+		$result = new State()->filter($data);
 
 		$expected = [
 			'a' => 'A',
@@ -196,7 +196,7 @@ class StateTest extends TestCase
 			]
 		];
 
-		$result = (new State())->filter($data);
+		$result = new State()->filter($data);
 
 		$expected = [
 			'b' => [
@@ -217,7 +217,7 @@ class StateTest extends TestCase
 			'b' => 'B'
 		];
 
-		$result = (new State())->filter($data);
+		$result = new State()->filter($data);
 
 		$expected = [
 			'a' => 'A',
@@ -232,18 +232,18 @@ class StateTest extends TestCase
 	public function testFilterGlobalsRequest(): void
 	{
 		// not included
-		$data = (new State())->filter([]);
+		$data = new State()->filter([]);
 		$this->assertArrayNotHasKey('translation', $data);
 
 		// empty globals
 		$data = ['foo' => 'bar'];
-		$result = (new State())->filter($data);
+		$result = new State()->filter($data);
 		$this->assertSame($data, $result);
 
 		// via query
 		$this->setRequest(['_globals' => 'translation']);
 
-		$data = (new State())->filter([]);
+		$data = new State()->filter([]);
 		$this->assertArrayHasKey('translation', $data);
 
 		// via header
@@ -255,7 +255,7 @@ class StateTest extends TestCase
 			]
 		]);
 
-		$data = (new State())->filter([]);
+		$data = new State()->filter([]);
 		$this->assertArrayHasKey('translation', $data);
 	}
 

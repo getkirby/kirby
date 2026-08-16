@@ -40,7 +40,7 @@ class UserTotpDrawerController extends UserCredentialDrawerController
 			);
 		}
 
-		if ((new Totp($secret))->verify($confirm) === false) {
+		if (new Totp($secret)->verify($confirm) === false) {
 			throw new InvalidArgumentException(
 				key: 'login.totp.confirm.invalid'
 			);

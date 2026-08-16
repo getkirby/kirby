@@ -216,8 +216,8 @@ class PasswordsTest extends TestCase
 		$this->assertSame(8, $policy->minlength());
 
 		// regex and callback rules fall back to the absolute minimum
-		$this->assertSame(8, (new Passwords(rules: '/^x/'))->minlength());
-		$this->assertSame(8, (new Passwords(rules: fn () => true))->minlength());
+		$this->assertSame(8, new Passwords(rules: '/^x/')->minlength());
+		$this->assertSame(8, new Passwords(rules: fn () => true)->minlength());
 	}
 
 	public function testValidate(): void

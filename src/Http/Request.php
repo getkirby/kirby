@@ -186,7 +186,7 @@ class Request
 	 */
 	public function cli(): bool
 	{
-		return $this->options['cli'] ?? (new Environment())->cli();
+		return $this->options['cli'] ?? new Environment()->cli();
 	}
 
 	/**

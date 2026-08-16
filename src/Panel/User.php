@@ -27,7 +27,7 @@ class User extends Model
 	 */
 	public function dropdown(): array
 	{
-		return (new UserSettingsDropdownController($this->model))->load();
+		return new UserSettingsDropdownController($this->model)->load();
 	}
 
 	/**
@@ -39,7 +39,7 @@ class User extends Model
 	 */
 	public function dropdownOption(): array
 	{
-		return (new UserItem(user: $this->model))->props() + [
+		return new UserItem(user: $this->model)->props() + [
 			'icon' => 'user'
 		];
 	}

@@ -70,7 +70,7 @@ class File extends Model
 	 */
 	public function dropdown(): array
 	{
-		return (new FileSettingsDropdownController($this->model))->load();
+		return new FileSettingsDropdownController($this->model)->load();
 	}
 
 	/**
@@ -82,7 +82,7 @@ class File extends Model
 	 */
 	public function dropdownOption(): array
 	{
-		return (new FileItem(file: $this->model))->props() + [
+		return new FileItem(file: $this->model)->props() + [
 			'icon' => 'image'
 		];
 	}

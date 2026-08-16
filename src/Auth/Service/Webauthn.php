@@ -88,7 +88,7 @@ class Webauthn extends BaseWebauthn
 	 */
 	public function encode(string $data): string
 	{
-		return (new ByteBuffer($data))->jsonSerialize();
+		return new ByteBuffer($data)->jsonSerialize();
 	}
 
 	/**

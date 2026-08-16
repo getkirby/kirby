@@ -114,13 +114,13 @@ class PagePickerDialogController extends ModelPickerDialogController
 	public function item(ModelWithContent $model): array
 	{
 		return [
-			...(new PageItem(
+			...new PageItem(
 				page: $model,
 				image: $this->image,
 				info: $this->info,
 				layout: $this->layout,
 				text: $this->text
-			))->props(),
+			)->props(),
 			'hasChildren'      => $model->hasChildren(),
 			'selectedChildren' => count(array_filter(
 				$this->selected(),

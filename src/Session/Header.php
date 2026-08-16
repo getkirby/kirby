@@ -26,7 +26,7 @@ class Header
 	 */
 	public function get(): string|null
 	{
-		$header = (new Request())->headers()['Authorization'] ?? null;
+		$header = new Request()->headers()['Authorization'] ?? null;
 
 		// check if the header exists and uses the "Session" scheme
 		if (

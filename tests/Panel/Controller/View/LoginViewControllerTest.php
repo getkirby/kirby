@@ -251,7 +251,7 @@ class LoginViewControllerTest extends TestCase
 		$this->app->session()->set('kirby.challenge.type', 'test');
 		$this->app->session()->set('kirby.challenge.mode', 'login');
 
-		$challenges = (new LoginViewController('challenge', 'test'))->load()->props()['challenges'];
+		$challenges = new LoginViewController('challenge', 'test')->load()->props()['challenges'];
 
 		$this->assertCount(2, $challenges);
 
@@ -267,7 +267,7 @@ class LoginViewControllerTest extends TestCase
 
 	public function testChallengesEmptyWhenNotPending(): void
 	{
-		$challenges = (new LoginViewController())->load()->props()['challenges'];
+		$challenges = new LoginViewController()->load()->props()['challenges'];
 		$this->assertSame([], $challenges);
 	}
 
@@ -295,7 +295,7 @@ class LoginViewControllerTest extends TestCase
 		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('The login form could not be rendered');
 
-		(new LoginViewController('challenge', 'test-null-form'))->load();
+		new LoginViewController('challenge', 'test-null-form')->load();
 	}
 
 	public function testLoad(): void
@@ -374,7 +374,7 @@ class LoginViewControllerTest extends TestCase
 		$this->app->session()->set('kirby.challenge.type', 'test');
 		$this->app->session()->set('kirby.challenge.mode', 'login');
 
-		$props = (new LoginViewController('challenge', 'test'))->load()->props();
+		$props = new LoginViewController('challenge', 'test')->load()->props();
 
 		$this->assertSame('pending', $props['state']);
 
@@ -405,7 +405,7 @@ class LoginViewControllerTest extends TestCase
 		$session->set('kirby.challenge.mode', 'login');
 		// note: no kirby.challenge.type, fallback to last enabled ('test2')
 
-		$props = (new LoginViewController('challenge', 'test2'))->load()->props();
+		$props = new LoginViewController('challenge', 'test2')->load()->props();
 
 		$this->assertSame('k-login-test-challenge2-form', $props['form']['component']);
 		$this->assertSame('ghost@example.com', $props['form']['props']['user']);

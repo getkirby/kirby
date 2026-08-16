@@ -52,7 +52,7 @@ class UserTotpDrawerControllerTest extends TestCase
 	{
 		$secret = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
 		$this->app->user('test')->changeSecret('totp', $secret);
-		return (new Totp($secret))->generate();
+		return new Totp($secret)->generate();
 	}
 
 	public function testFactory(): void
@@ -93,14 +93,14 @@ class UserTotpDrawerControllerTest extends TestCase
 		// an admin managing another user only confirms the action
 		$this->app->impersonate('admin');
 
-		$props = (new UserTotpDrawerController($this->app->user('test')))->load()->props();
+		$props = new UserTotpDrawerController($this->app->user('test'))->load()->props();
 		$this->assertFalse($props['isAccount']);
 	}
 
 	public function testSubmitCreate(): void
 	{
 		$secret  = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
-		$confirm = (new Totp($secret))->generate();
+		$confirm = new Totp($secret)->generate();
 
 		$this->setRequest([
 			'action'  => 'create',
@@ -121,7 +121,7 @@ class UserTotpDrawerControllerTest extends TestCase
 		// an admin must not enable TOTP for another user: the factor would
 		// live on the admin's device and lock the user out at next login
 		$secret  = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
-		$confirm = (new Totp($secret))->generate();
+		$confirm = new Totp($secret)->generate();
 
 		$this->setRequest([
 			'action'  => 'create',
@@ -160,7 +160,7 @@ class UserTotpDrawerControllerTest extends TestCase
 		$this->setRequest([
 			'action'  => 'create',
 			'secret'  => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567',
-			'confirm' => (new Totp('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))->generate()
+			'confirm' => new Totp('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')->generate()
 		]);
 		$this->app->impersonate('test');
 
@@ -183,7 +183,7 @@ class UserTotpDrawerControllerTest extends TestCase
 		]);
 		$this->app->impersonate('test');
 
-		$result = (new UserTotpDrawerController($this->app->user('test')))->submit();
+		$result = new UserTotpDrawerController($this->app->user('test'))->submit();
 
 		$this->assertTrue($result);
 		$this->assertNull($this->app->user('test')->secret('totp'));
@@ -202,7 +202,7 @@ class UserTotpDrawerControllerTest extends TestCase
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionCode('error.access.code');
 
-		(new UserTotpDrawerController($this->app->user('test')))->submit();
+		new UserTotpDrawerController($this->app->user('test'))->submit();
 	}
 
 	public function testSubmitRemoveAsAdmin(): void
@@ -216,7 +216,7 @@ class UserTotpDrawerControllerTest extends TestCase
 		]);
 		$this->app->impersonate('admin');
 
-		$result = (new UserTotpDrawerController($this->app->user('test')))->submit();
+		$result = new UserTotpDrawerController($this->app->user('test'))->submit();
 
 		$this->assertTrue($result);
 		$this->assertNull($this->app->user('test')->secret('totp'));
@@ -235,7 +235,7 @@ class UserTotpDrawerControllerTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionCode('error.user.password.wrong');
 
-		(new UserTotpDrawerController($this->app->user('test')))->submit();
+		new UserTotpDrawerController($this->app->user('test'))->submit();
 	}
 
 	public function testSubmitWithInvalidAction(): void

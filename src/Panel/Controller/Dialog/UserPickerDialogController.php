@@ -77,13 +77,13 @@ class UserPickerDialogController extends ModelPickerDialogController
 	 */
 	public function item(ModelWithContent $model): array
 	{
-		return (new UserItem(
+		return new UserItem(
 			user:   $model,
 			image:  $this->image,
 			info:   $this->info,
 			layout: $this->layout,
 			text:   $this->text
-		))->props();
+		)->props();
 	}
 
 	public function query(): string

@@ -31,10 +31,10 @@ class ButtonsField extends DisplayField
 
 		return A::map(
 			$buttons,
-			fn (array $button) => (new ModelButton(
+			fn (array $button) => new ModelButton(
 				...$button,
 				model: $this->model()
-			))->props()
+			)->props()
 		);
 	}
 }

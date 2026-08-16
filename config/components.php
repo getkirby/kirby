@@ -79,7 +79,7 @@ return [
 		// create url and root
 		$mediaRoot = $file->mediaDir();
 		$template  = $mediaRoot . '/{{ name }}{{ attributes }}.{{ extension }}';
-		$thumbRoot = (new Filename($file->root(), $template, $options))->toString();
+		$thumbRoot = new Filename($file->root(), $template, $options)->toString();
 		$thumbName = basename($thumbRoot);
 		$job       = $mediaRoot . '/.jobs/' . $thumbName . '.json';
 
@@ -400,7 +400,7 @@ return [
 			$kirby->option('thumbs', [])
 		);
 		$options   = $darkroom->preprocess($src, $options);
-		$root      = (new Filename($src, $dst, $options))->toString();
+		$root      = new Filename($src, $dst, $options)->toString();
 		$extension = F::extension($root);
 
 		// generate the thumb in a hidden temp file so broken output never appears
@@ -515,7 +515,7 @@ return [
 			return $url;
 		}
 
-		return (new Uri($url, $options))->toString();
+		return new Uri($url, $options)->toString();
 	},
 
 ];

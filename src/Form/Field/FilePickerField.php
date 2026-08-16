@@ -120,14 +120,14 @@ class FilePickerField extends ModelPickerField
 	 */
 	public function toItem(ModelWithContent $model): array
 	{
-		return (new FileItem(
+		return new FileItem(
 			file:               $model,
 			dragTextIsAbsolute: $model->parent()->is($this->model()) === false,
 			image:              $this->image(),
 			info:               $this->info(),
 			layout:             $this->layout(),
 			text:               $this->text()
-		))->props();
+		)->props();
 	}
 
 	public function toModel(string $id): File|null

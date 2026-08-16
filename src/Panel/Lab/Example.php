@@ -164,7 +164,7 @@ class Example
 		}
 
 		$data = $this->props();
-		return (new Template($file))->render($data);
+		return new Template($file)->render($data);
 	}
 
 	public function title(): string

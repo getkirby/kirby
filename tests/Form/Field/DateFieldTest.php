@@ -242,7 +242,7 @@ class DateFieldTest extends TestCase
 			'default' => 'now',
 		]);
 
-		$now = (new Date())->round('minute', 5)->toString(timezone: false);
+		$now = new Date()->round('minute', 5)->toString(timezone: false);
 		$this->assertSame($now, $field->default());
 	}
 

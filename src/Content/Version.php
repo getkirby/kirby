@@ -114,7 +114,7 @@ class Version
 
 		// track the changes
 		if ($this->id->is('changes') === true) {
-			(new Changes())->track($this->model);
+			new Changes()->track($this->model);
 		}
 
 		$this->model->storage()->create(
@@ -161,7 +161,7 @@ class Version
 			$this->id->is('changes') === true &&
 			$this->exists('*') === false
 		) {
-			(new Changes())->untrack($this->model);
+			new Changes()->untrack($this->model);
 		}
 
 		// Remove the version from the cache

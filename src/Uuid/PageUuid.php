@@ -102,6 +102,6 @@ class PageUuid extends ModelUuid
 	 */
 	public function toPermalink(): string
 	{
-		return (new Permalink($this))->url();
+		return new Permalink($this)->url();
 	}
 }

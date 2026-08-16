@@ -59,7 +59,7 @@ class UserTest extends TestCase
 			'email' => 'test@getkirby.com',
 		]);
 
-		$option = (new User($model))->dropdownOption();
+		$option = new User($model)->dropdownOption();
 		$this->assertSame('user', $option['icon']);
 		$this->assertSame('test@getkirby.com', (string)$option['text']);
 		$this->assertSame('/users/test', $option['link']);
@@ -132,7 +132,7 @@ class UserTest extends TestCase
 			'email' => 'test@getkirby.com',
 		]);
 
-		$image = (new User($user))->image();
+		$image = new User($user)->image();
 		$this->assertSame('user', $image['icon']);
 		$this->assertFalse(isset($image['url']));
 	}
@@ -144,7 +144,7 @@ class UserTest extends TestCase
 		]);
 
 		// fallback to model itself
-		$image = (new User($user))->image('foo.bar');
+		$image = new User($user)->image('foo.bar');
 		$this->assertNotEmpty($image);
 	}
 
@@ -208,7 +208,7 @@ class UserTest extends TestCase
 		// no avatar → the url is null; no name → falls back in the UI
 		$this->assertSame(
 			['avatar' => null, 'email' => 'test@getkirby.com', 'name' => null],
-			(new User($user))->info()
+			new User($user)->info()
 		);
 	}
 
@@ -232,7 +232,7 @@ class UserTest extends TestCase
 
 		F::copy(static::FIXTURES . '/image/test.jpg', $user->root() . '/test.jpg');
 
-		$info = (new User($user))->info();
+		$info = new User($user)->info();
 		$this->assertSame($user->avatar()->url(), $info['avatar']);
 		$this->assertSame('test@getkirby.com', $info['email']);
 		$this->assertNull($info['name']);

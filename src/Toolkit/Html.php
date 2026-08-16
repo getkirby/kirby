@@ -331,7 +331,7 @@ class Html extends Xml
 	): string {
 		// only embed Gists from allowed hosts to prevent
 		// loading untrusted scripts from arbitrary URLs
-		if (in_array((new Uri($url))->host(), static::$gistDomains, true) === false) {
+		if (in_array(new Uri($url)->host(), static::$gistDomains, true) === false) {
 			return '';
 		}
 

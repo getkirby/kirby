@@ -401,7 +401,7 @@ class InputFieldTest extends BaseTestCase
 		$language = Language::ensure('current');
 
 		$siblings = new Fields([
-			(new TestField(name: 'a'))->fill('b'),
+			new TestField(name: 'a')->fill('b'),
 		]);
 
 		$field = new TestField(
@@ -417,7 +417,7 @@ class InputFieldTest extends BaseTestCase
 		$language = Language::ensure('current');
 
 		$siblings = new Fields([
-			(new TestField(name: 'a'))->fill('something else'),
+			new TestField(name: 'a')->fill('something else'),
 		]);
 
 		$field = new TestField(

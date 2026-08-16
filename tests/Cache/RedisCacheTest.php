@@ -145,7 +145,7 @@ class RedisCacheTest extends TestCase
 
 		$cache->set('a', 'A basic value');
 
-		$connection = (new ReflectionProperty(RedisCache::class, 'connection'))->getValue($cache);
+		$connection = new ReflectionProperty(RedisCache::class, 'connection')->getValue($cache);
 
 		// default state before flushing
 		$this->assertSame(Redis::SCAN_NORETRY, $connection->getOption(Redis::OPT_SCAN));
@@ -164,7 +164,7 @@ class RedisCacheTest extends TestCase
 
 		$cache->set('a', 'A basic value');
 
-		$connection = (new ReflectionProperty(RedisCache::class, 'connection'))->getValue($cache);
+		$connection = new ReflectionProperty(RedisCache::class, 'connection')->getValue($cache);
 
 		// enable both the retry and prefix flags (combined bitmask = 3)
 		$connection->setOption(Redis::OPT_SCAN, Redis::SCAN_RETRY);

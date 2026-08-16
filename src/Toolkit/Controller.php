@@ -30,7 +30,7 @@ class Controller
 
 	public function arguments(array $data = []): array
 	{
-		$this->params ??= (new ReflectionFunction($this->function))->getParameters();
+		$this->params ??= new ReflectionFunction($this->function)->getParameters();
 
 		$args = [];
 

@@ -25,7 +25,7 @@ class LanguagesViewController extends ViewController
 	public function languages(): array
 	{
 		return $this->kirby->languages()->values(
-			fn (Language $language) => (new LanguageItem($language))->props()
+			fn (Language $language) => new LanguageItem($language)->props()
 		);
 	}
 
