@@ -2,6 +2,7 @@
 
 namespace Kirby\Api;
 
+use Kirby\Auth\Exception\RateLimitException;
 use Kirby\Blueprint\Blueprint;
 use Kirby\Blueprint\Section;
 use Kirby\Cms\App;
@@ -219,6 +220,48 @@ class AccountRoutesTest extends TestCase
 		$this->app->api()->call('account/password', 'PATCH', [
 			'body' => [
 				'currentPassword' => 'definitely-not-correct',
+				'password'        => 'super-secure-new-password'
+			]
+		]);
+	}
+
+	public function testChangePasswordWrongCurrentPasswordConsumesRateLimit(): void
+	{
+		try {
+			$this->app->api()->call('account/password', 'PATCH', [
+				'body' => [
+					'currentPassword' => 'definitely-not-correct',
+					'password'        => 'super-secure-new-password'
+				]
+			]);
+
+			$this->fail('Expected InvalidArgumentException');
+		} catch (InvalidArgumentException) {
+			// expected
+		}
+
+		// the guess must count against the shared auth budget, so that a
+		// hijacked session cannot brute-force the current password here
+		$log = $this->app->auth()->limits()->log();
+		$this->assertSame(1, $log['by-email'][$this->app->user()->email()]['trials']);
+	}
+
+	public function testChangePasswordRateLimited(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => ['auth' => ['trials' => 1]]
+		]);
+		$this->app->impersonate('test@getkirby.com');
+
+		// exhaust the limit for this visitor
+		$this->app->auth()->limits()->track('test@getkirby.com', triggerHook: false);
+
+		// even the correct password must not be checked any more
+		$this->expectException(RateLimitException::class);
+
+		$this->app->api()->call('account/password', 'PATCH', [
+			'body' => [
+				'currentPassword' => '12345678',
 				'password'        => 'super-secure-new-password'
 			]
 		]);
