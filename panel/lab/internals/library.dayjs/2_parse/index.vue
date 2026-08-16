@@ -67,7 +67,13 @@
 			<k-grid variant="fields">
 				<k-column width="1/3">
 					<k-label>Input</k-label>
-					<k-box theme="passive">{{ input }}</k-box>
+					<k-input
+						type="text"
+						:value="input"
+						placeholder="Type a date …"
+						style="min-width: 12rem"
+						@input="input = $event"
+					/>
 				</k-column>
 				<k-column width="1/3">
 					<k-label>Strict</k-label>

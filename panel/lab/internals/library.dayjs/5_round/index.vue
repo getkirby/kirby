@@ -68,9 +68,6 @@ export default {
 	data() {
 		return {
 			datetime: "2023-09-12 13:45:32.600",
-			// the milliseconds are optional, but they have to be
-			// written in full, since `SSS` does not match `.4`
-			formats: ["YYYY-MM-DD HH:mm:ss.SSS", "YYYY-MM-DD HH:mm:ss", "YYYY-MM-DD"],
 			size: 15,
 			unit: "minute",
 			units: [
@@ -87,8 +84,8 @@ export default {
 	computed: {
 		result() {
 			// parsed here rather than with `dayjs.iso()`, which has no
-			// millisecond format — and they are the point of this page
-			const dt = this.$library.dayjs(this.datetime, this.formats, true);
+			// millisecond format and the milliseconds are the point here
+			const dt = this.$library.dayjs(this.datetime);
 
 			if (dt.isValid() === false) {
 				return { error: "Not a valid datetime" };

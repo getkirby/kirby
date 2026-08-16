@@ -5,7 +5,7 @@
 		:autofocus="autofocus"
 		:class="['k-string-input', `k-${type}-input`, $attrs.class]"
 		:disabled="disabled"
-		:placeholder="display"
+		:placeholder="placeholder"
 		:required="required"
 		:style="$attrs.style"
 		:value="formatted"
@@ -114,11 +114,40 @@ export default {
 			return "date";
 		},
 		/**
+		 * Parts of the `display` pattern, positioned in the
+		 * string the current value renders into
+		 * @returns {Array}
+		 */
+		parts() {
+			return this.pattern.parts(this.dt);
+		},
+		/**
 		 * dayjs pattern class for `display` pattern
 		 * @returns {Object}
 		 */
 		pattern() {
 			return this.$library.dayjs.pattern(this.display);
+		},
+		/**
+		 * Example value that shows what the `display` pattern produces
+		 * @since 6.0.0
+		 */
+		placeholder() {
+			const min = this.$library.dayjs.iso(this.min);
+			const max = this.$library.dayjs.iso(this.max);
+
+			let dt = this.$library.dayjs.iso(
+				this.$library.dayjs().toISO(this.inputType),
+				this.inputType
+			);
+
+			if (min !== null && dt.isBefore(min) === true) {
+				dt = min;
+			} else if (max !== null && dt.isAfter(max) === true) {
+				dt = max;
+			}
+
+			return this.pattern.format(dt);
 		},
 		/**
 		 * Merges step donfiguration with defaults
@@ -152,7 +181,23 @@ export default {
 			// since manipulation command can occur while
 			// typing new value, make sure to first update
 			// datetime object from current input value
-			let dt = this.parse() ?? this.round(this.$library.dayjs());
+			let dt = this.parse();
+
+			if (dt === null) {
+				if (this.$el.value !== "") {
+					return;
+				}
+
+				// an empty field has no part to step yet: the first key press
+				// only fills in now and selects the part the caret sits in
+				dt = this.toDatetime(this.$library.dayjs().toISO(this.inputType));
+
+				this.commit(dt);
+				this.emit(dt);
+
+				await this.$nextTick();
+				return this.selectFirst();
+			}
 
 			// what unit to alter and by how much:
 			// as default use the step unit and size
@@ -163,7 +208,7 @@ export default {
 			// manipulate that part
 			const selected = this.selection();
 
-			if (selected !== null) {
+			if (selected !== undefined) {
 				// handle  meridiem to toggle between am/pm
 				// instead of e.g. skipping to next day
 				if (selected.unit === "meridiem") {
@@ -193,7 +238,13 @@ export default {
 			this.emit(dt);
 
 			await this.$nextTick();
-			this.select(selected);
+
+			// the new value can render into a different string, e.g. a
+			// longer month name: re-select the part by its index, not
+			// by the position it had before
+			if (selected !== undefined) {
+				this.select(this.parts[selected.index]);
+			}
 		},
 		/**
 		 * Updates the in data stored dayjs object
@@ -203,6 +254,15 @@ export default {
 		commit(dt) {
 			this.dt = dt;
 			this.formatted = this.pattern.format(dt);
+
+			// the input can still show what was typed, e.g. `3.7.2026`
+			// for `03.07.2026`, which the re-render only corrects when
+			// the rendering changed as well: the parts are positioned
+			// in the rendering, so it has to be what the input shows
+			if (this.$el && this.$el.value !== (this.formatted ?? "")) {
+				this.$el.value = this.formatted ?? "";
+			}
+
 			this.validate();
 		},
 		/**
@@ -211,7 +271,7 @@ export default {
 		 * @param {Object} dt dayjs object
 		 */
 		emit(dt) {
-			this.$emit("input", this.toISO(dt));
+			this.$emit("input", this.toISO(dt) ?? "");
 		},
 		/**
 		 * Decrement the currently
@@ -228,21 +288,46 @@ export default {
 			this.alter("add");
 		},
 		/**
-		 * When blurring the input, update
-		 * data from parsed value and emit
+		 * When blurring the input, update data from parsed value and emit
+		 *
+		 * @returns {boolean} whether the input shows the current value
 		 */
 		onBlur() {
+			const value = this.$el.value;
+
+			// the input still shows the untouched rendering of the current
+			// value: re-parsing it would only be able to lose information
+			// that the `display` pattern doesn't cover
+			if (value === (this.formatted ?? "")) {
+				return true;
+			}
+
 			const dt = this.parse();
+
+			// input that cannot be parsed is not the same as no input:
+			// keep the text as it was typed and flag the input as invalid
+			// instead of silently wiping the field
+			if (dt === null && value !== "") {
+				this.$el.setCustomValidity(
+					this.$t("error.validation." + this.inputType)
+				);
+				return false;
+			}
+
 			this.commit(dt);
 			this.emit(dt);
+			return true;
 		},
 		/**
 		 * When hitting enter, blur the input
 		 * but also emit additional submit event
 		 */
 		async onEnter() {
-			// ensure inout gets parsed and emitted as new value
-			this.onBlur();
+			// ensure input gets parsed and emitted as new value
+			if (this.onBlur() === false) {
+				return;
+			}
+
 			await this.$nextTick();
 			// only thereafter emit submit so the content gets saved
 			this.$emit("submit");
@@ -277,8 +362,9 @@ export default {
 		 *    => select the part where the cursor is located
 		 * b. cursor selection already covers a part fully
 		 *    => select the next part
-		 * c. cursor selection covers more than one part
-		 *    => select the last affected part
+		 * c. cursor selection covers more than one part, e.g. the whole
+		 *    value when focus enters the input
+		 *    => select the first affected part, the last one on shift + tab
 		 * d. cursor selection cover last part
 		 *    => tab should blur the input, focus on next tabable element
 		 * e. cursor is at the end of the pattern
@@ -292,10 +378,22 @@ export default {
 				return;
 			}
 
-			// make sure to confirm any current input
-			this.onBlur();
+			// make sure to confirm any current input; while it shows text
+			// that could not be read, the parts describe a rendering the
+			// input isn't showing, so let tab move the focus out instead
+			if (this.onBlur() === false) {
+				return;
+			}
+
 			await this.$nextTick();
 			const selection = this.selection();
+
+			// a pattern without any part has nothing to step through
+			if (selection === undefined) {
+				return;
+			}
+
+			const backward = event.shiftKey === true;
 
 			// if an exact part is selected
 			if (
@@ -304,7 +402,7 @@ export default {
 				selection.end === this.$el.selectionEnd - 1
 			) {
 				// move backward on shift + tab
-				if (event.shiftKey) {
+				if (backward === true) {
 					// if the first part is selected, jump out
 					if (selection.index === 0) {
 						return;
@@ -316,7 +414,7 @@ export default {
 					// move forward on tab
 				} else {
 					// if the last part is selected, jump out
-					if (selection.index === this.pattern.parts.length - 1) {
+					if (selection.index === this.parts.length - 1) {
 						return;
 					}
 
@@ -324,53 +422,46 @@ export default {
 					this.selectNext(selection.index);
 				}
 			} else {
-				// nothing or no part fully selected
+				// nothing or no part fully selected: the selection starts in
+				// the part to step to, but backwards it is the one it ends in
+				const part =
+					backward === true
+						? this.pattern.at(
+								this.$el.selectionEnd,
+								this.$el.selectionEnd,
+								this.dt
+							)
+						: selection;
+
+				// cursor behind the last part, jump out
 				if (
-					this.$el &&
-					this.$el.selectionStart == selection.end + 1 &&
-					selection.index == this.pattern.parts.length - 1
+					backward === false &&
+					this.$el.selectionStart === part.end + 1 &&
+					part.index === this.parts.length - 1
 				) {
-					// cursor at the end of the pattern, jump out
 					return;
 				}
 
-				// more than one part selected, select last affected part
-				else if (this.$el && this.$el.selectionEnd - 1 > selection.end) {
-					const last = this.pattern.at(
-						this.$el.selectionEnd,
-						this.$el.selectionEnd
-					);
-
-					this.select(this.pattern.parts[last.index]);
-				}
-
-				// select part where the cursor is located
-				else {
-					this.select(this.pattern.parts[selection.index]);
-				}
+				this.select(this.parts[part.index]);
 			}
 
 			event.preventDefault();
 		},
 		/**
-		 * Takes current input value and
-		 * tries to interpret it as datetime object
-		 * based on the `display` pattern
+		 * Takes current input value and tries to read it
+		 * as datetime object based on the pattern
 		 * @return {Object|null}
 		 */
 		parse() {
-			// interpret the input value
-			const value = this.$library.dayjs.interpret(
-				this.$el.value,
-				this.inputType
-			);
+			const dt = this.$library.dayjs.parse(this.$el.value, {
+				pattern: this.display,
+				type: this.inputType
+			});
 
-			// and round to nearest step
-			return this.round(value);
+			return this.round(dt) ?? null;
 		},
 		/**
-		 * Rounds the provided dayjs object to
-		 * the nearest step
+		 * Rounds the provided dayjs object to the nearest step
 		 * @param {Object} dt dayjs object
 		 * @returns {Object|null}
 		 */
@@ -385,6 +476,11 @@ export default {
 		 */
 		select(part) {
 			part ??= this.selection();
+
+			if (part === undefined) {
+				return;
+			}
+
 			this.$el?.setSelectionRange(part.start, part.end + 1);
 		},
 		/**
@@ -392,14 +488,14 @@ export default {
 		 * @public
 		 */
 		selectFirst() {
-			this.select(this.pattern.parts[0]);
+			this.select(this.parts[0]);
 		},
 		/**
 		 * Selects the last pattern if available
 		 * @public
 		 */
 		selectLast() {
-			this.select(this.pattern.parts[this.pattern.parts.length - 1]);
+			this.select(this.parts[this.parts.length - 1]);
 		},
 		/**
 		 * Selects the next pattern if available
@@ -407,7 +503,7 @@ export default {
 		 * @public
 		 */
 		selectNext(index) {
-			this.select(this.pattern.parts[index + 1]);
+			this.select(this.parts[index + 1]);
 		},
 		/**
 		 * Selects the previous pattern if available
@@ -415,14 +511,18 @@ export default {
 		 * @public
 		 */
 		selectPrev(index) {
-			this.select(this.pattern.parts[index - 1]);
+			this.select(this.parts[index - 1]);
 		},
 		/**
 		 * Get pattern part for current cursor selection
 		 * @returns {Object}
 		 */
 		selection() {
-			return this.pattern.at(this.$el.selectionStart, this.$el.selectionEnd);
+			return this.pattern.at(
+				this.$el.selectionStart,
+				this.$el.selectionEnd,
+				this.dt
+			);
 		},
 		/**
 		 * Converts ISO string to dayjs object
@@ -441,30 +541,25 @@ export default {
 			return dt?.toISO(this.inputType);
 		},
 		validate() {
+			const type = this.inputType;
 			const errors = [];
 
 			if (this.required && !this.dt) {
 				errors.push(this.$t("error.validation.required"));
 			}
 
-			if (
-				this.min &&
-				this.dt?.validate(this.min, "min", this.rounding.unit) === false
-			) {
+			if (this.min && this.dt?.validate(this.min, "min") === false) {
 				errors.push(
-					this.$t("error.validation.date.after", {
-						date: this.min
+					this.$t(`error.validation.${type}.after`, {
+						[type]: this.min
 					})
 				);
 			}
 
-			if (
-				this.max &&
-				this.dt?.validate(this.max, "max", this.rounding.unit) === false
-			) {
+			if (this.max && this.dt?.validate(this.max, "max") === false) {
 				errors.push(
-					this.$t("error.validation.date.before", {
-						date: this.max
+					this.$t(`error.validation.${type}.before`, {
+						[type]: this.max
 					})
 				);
 			}

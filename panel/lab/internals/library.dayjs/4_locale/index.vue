@@ -1,6 +1,6 @@
 <template>
 	<k-lab-examples>
-		<k-lab-example label="dayjs.load()" :code="false">
+		<k-lab-example label="dayjs.locale()" :code="false">
 			<!-- prettier-ignore -->
 			<k-code language="javascript">this.$library.dayjs.locale("{{ code }}"): string</k-code>
 

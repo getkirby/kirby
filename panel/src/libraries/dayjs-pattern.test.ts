@@ -53,6 +53,18 @@ describe("dayjs.pattern().at()", () => {
 			]
 		},
 		{
+			// a cursor inside the leading literal belongs to the first part
+			source: "[Am] D. MMMM YYYY",
+			cursors: [
+				{ start: 0, unit: "day" },
+				{ start: 2, unit: "day" },
+				{ start: 5, unit: "day" },
+				{ start: 8, unit: "month" },
+				{ start: 13, unit: "year" },
+				{ start: 0, end: 17, unit: "day" }
+			]
+		},
+		{
 			source: "h:mm A",
 			cursors: [
 				{ start: 0, unit: "hour" },
@@ -69,6 +81,24 @@ describe("dayjs.pattern().at()", () => {
 			const part = pattern.at(start, end);
 			expect(part!.unit).toBe(unit);
 		});
+	});
+});
+
+describe("dayjs.pattern().at(start, end, dt)", () => {
+	// the cursor sits in the rendered string, not in the pattern
+	const dt = dayjs("2020-09-04");
+
+	const cursors: { start: number; end?: number; unit: string }[] = [
+		{ start: 0, unit: "day" },
+		{ start: 2, unit: "month" },
+		{ start: 10, unit: "month" },
+		{ start: 12, unit: "year" },
+		{ start: 2, end: 11, unit: "month" }
+	];
+
+	it.each(cursors)("$start - $end: $unit", ({ start, end, unit }) => {
+		const part = dayjs.pattern("D MMMM YYYY").at(start, end, dt);
+		expect(part!.unit).toBe(unit);
 	});
 });
 
@@ -96,7 +126,21 @@ describe("dayjs.pattern().format()", () => {
 	});
 });
 
-describe("dayjs.pattern().parts", () => {
+describe("dayjs.pattern().literals", () => {
+	const data: Record<string, string[]> = {
+		"DD.MM.YYYY": [],
+		"DD.MM.YYYY [um] HH:mm": ["um"],
+		"D [de] MMMM [de] YYYY": ["de", "de"],
+		"HH[h]mm": ["h"],
+		"DD.MM.YYYY[]": [""]
+	};
+
+	it.each(Object.entries(data))("%s", (source, expected) => {
+		expect(dayjs.pattern(source).literals).toEqual(expected);
+	});
+});
+
+describe("dayjs.pattern().parts()", () => {
 	const data: Record<
 		string,
 		{ index: number; unit?: string; start: number; end: number }[]
@@ -139,18 +183,72 @@ describe("dayjs.pattern().parts", () => {
 	};
 
 	it.each(Object.entries(data))("%s", (source, parts) => {
-		expect(dayjs.pattern(source).parts).toEqual(parts);
+		expect(dayjs.pattern(source).parts()).toEqual(parts);
 	});
 
 	it("leaves the unit of an unsupported marker undefined", () => {
-		expect(dayjs.pattern("QQ").parts).toEqual([
+		expect(dayjs.pattern("QQ").parts()).toEqual([
 			{ index: 0, unit: undefined, start: 0, end: 1 }
 		]);
 	});
 
 	it("returns no parts for a pattern without letters", () => {
-		expect(dayjs.pattern("").parts).toEqual([]);
-		expect(dayjs.pattern("--.--").parts).toEqual([]);
+		expect(dayjs.pattern("").parts()).toEqual([]);
+		expect(dayjs.pattern("--.--").parts()).toEqual([]);
+	});
+
+	it("falls back to the pattern for an invalid datetime", () => {
+		expect(dayjs.pattern("D MMMM YYYY").parts(dayjs("nope"))).toEqual(
+			dayjs.pattern("D MMMM YYYY").parts()
+		);
+	});
+
+	it("reads no part from what the pattern escapes", () => {
+		expect(dayjs.pattern("DD.MM.YYYY [um] HH:mm").parts()).toEqual([
+			{ index: 0, unit: "day", start: 0, end: 1 },
+			{ index: 1, unit: "month", start: 3, end: 4 },
+			{ index: 2, unit: "year", start: 6, end: 9 },
+			{ index: 3, unit: "hour", start: 16, end: 17 },
+			{ index: 4, unit: "minute", start: 19, end: 20 }
+		]);
+	});
+});
+
+describe("dayjs.pattern().parts(dt)", () => {
+	// a marker and what it prints can differ in width,
+	// e.g. `D` printing `13` or `MMMM` printing `September`
+	const dt = dayjs("2020-09-04 13:14:03");
+
+	const data: Record<string, string[]> = {
+		// what each part covers in the rendered string
+		"D MMMM YYYY": ["4", "September", "2020"],
+		"MMMM D, YYYY": ["September", "4", "2020"],
+		"DD.MM.YYYY": ["04", "09", "2020"],
+		"YYYY-MM-DD": ["2020", "09", "04"],
+		"M/D/YY h:m a": ["9", "4", "20", "1", "14", "pm"],
+		"D. MMM YYYY, H:m:s": ["4", "Sep", "2020", "13", "14", "3"],
+		"DD.MM.YYYY [um] HH:mm": ["04", "09", "2020", "13", "14"],
+		"D [de] MMMM [de] YYYY": ["4", "September", "2020"],
+		"HH[h]mm": ["13", "14"]
+	};
+
+	it.each(Object.entries(data))("%s", (source, expected) => {
+		const pattern = dayjs.pattern(source);
+		const formatted = pattern.format(dt)!;
+
+		const covered = pattern
+			.parts(dt)
+			.map((part) => formatted.slice(part.start, part.end + 1));
+
+		expect(covered).toEqual(expected);
+	});
+
+	it("positions the parts in the rendered string", () => {
+		expect(dayjs.pattern("D MMMM YYYY").parts(dt)).toEqual([
+			{ index: 0, unit: "day", start: 0, end: 0 },
+			{ index: 1, unit: "month", start: 2, end: 10 },
+			{ index: 2, unit: "year", start: 12, end: 15 }
+		]);
 	});
 });
 
@@ -161,6 +259,13 @@ describe("dayjs.pattern().source", () => {
 			expect(dayjs.pattern(source).source).toBe(source);
 		}
 	);
+
+	it.each([undefined, null])("reads %s as an empty pattern", (source) => {
+		const pattern = dayjs.pattern(source);
+		expect(pattern.source).toBe("");
+		expect(pattern.parts()).toEqual([]);
+		expect(pattern.units).toEqual([]);
+	});
 });
 
 describe("dayjs.pattern().type", () => {
@@ -173,8 +278,8 @@ describe("dayjs.pattern().type", () => {
 		["HH:mm", "time"],
 		["hh:mm A", "time"],
 		["mm:ss", "time"],
-		// a pattern without any usable marker says nothing about
-		// what it reads, so it falls back to the default
+		["HH[h]mm", "time"],
+		["HH:mm [Uhr]", "time"],
 		["foo", "date"],
 		["", "date"]
 	];
@@ -190,11 +295,12 @@ describe("dayjs.pattern().units", () => {
 		["MM/DD/YYYY", ["month", "day", "year"]],
 		["MMMM D, YYYY", ["month", "day", "year"]],
 		["hh:mm:ss a", ["hour", "minute", "second", "meridiem"]],
-		// markers written without a separator are read as well
 		["YYYYMMDD", ["year", "month", "day"]],
 		["DDMMYY", ["day", "month", "year"]],
 		["HHmm", ["hour", "minute"]],
-		// a trailing separator adds no unit
+		["DD.MM.YYYY [um] HH:mm", ["day", "month", "year", "hour", "minute"]],
+		["HH[h]mm", ["hour", "minute"]],
+		["[Am] D. MMMM", ["day", "month"]],
 		["YYYY-MM-", ["year", "month"]],
 		["", []],
 		["--.--", []]

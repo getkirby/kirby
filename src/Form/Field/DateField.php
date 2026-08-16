@@ -105,7 +105,17 @@ class DateField extends DateTimeField
 
 	public function display(): string
 	{
-		return Str::upper($this->i18n($this->display) ?? 'YYYY-MM-DD');
+		$display = $this->i18n($this->display) ?? 'YYYY-MM-DD';
+
+		// a date marker is uppercase, whatever case it was written in,
+		// but what the pattern escapes is printed as it is
+		return preg_replace_callback(
+			'!\[[^\]]*\]|[^\[]+!',
+			fn (array $match): string => str_starts_with($match[0], '[')
+				? $match[0]
+				: Str::upper($match[0]),
+			$display
+		) ?? $display;
 	}
 
 	public function format(): string
