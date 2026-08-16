@@ -223,7 +223,7 @@ class BasicAuthMethodTest extends TestCase
 		$this->assertFalse(BasicAuthMethod::isEnabled($auth));
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('Basic authentication cannot be used with 2FA');
+		$this->expectExceptionMessage('Basic authentication cannot be used with required 2FA');
 		BasicAuthMethod::isEnabled($auth, fail: true);
 	}
 

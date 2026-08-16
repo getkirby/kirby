@@ -142,7 +142,7 @@ class BasicAuthMethod extends Method
 		if ($auth->methods()->hasAnyRequiring2FA() === true) {
 			if ($fail === true) {
 				throw new PermissionException(
-					message: 'Basic authentication cannot be used with 2FA'
+					message: 'Basic authentication cannot be used with required 2FA'
 				);
 			}
 
