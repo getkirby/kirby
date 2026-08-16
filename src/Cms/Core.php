@@ -148,20 +148,6 @@ class Core
 	}
 
 	/**
-	 * Returns a list of all paths to blueprint presets
-	 *
-	 * They are located in `/kirby/config/presets`
-	 */
-	public function blueprintPresets(): array
-	{
-		return [
-			'pages' => $this->root . '/presets/pages.php',
-			'page'  => $this->root . '/presets/page.php',
-			'files' => $this->root . '/presets/files.php',
-		];
-	}
-
-	/**
 	 * Returns a list of paths to core blueprints or
 	 * the blueprint in array form
 	 *
