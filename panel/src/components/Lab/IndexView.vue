@@ -26,7 +26,7 @@
 			]"
 		/>
 
-		<k-box v-if="info" icon="question" theme="info" :text="info" :html="true" />
+		<k-box v-if="info" icon="question" theme="info" :text="info" />
 
 		<k-section
 			v-for="category in filteredCategories"

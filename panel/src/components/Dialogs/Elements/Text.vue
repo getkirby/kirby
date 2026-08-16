@@ -1,5 +1,5 @@
 <template>
-	<k-text v-if="text" :html="text" />
+	<k-text v-if="text" :text="text" />
 	<k-box v-else theme="info">{{ empty }}</k-box>
 </template>
 

@@ -70,6 +70,7 @@
 <script>
 import Input, { props as InputProps } from "@/mixins/input.js";
 import { autofocus, disabled, options, required } from "@/mixins/props.js";
+import html, { HtmlString } from "@/panel/html";
 
 export const picklist = {
 	mixins: [autofocus, disabled, options, required],
@@ -278,17 +279,21 @@ export default {
 				this.$refs.options?.focus();
 			}
 		},
-		highlight(string) {
-			// make sure that no HTML exists before in the string
-			// to avoid XSS when displaying via `v-html`
-			string = this.$helper.string.stripHTML(string);
+		highlight(text) {
+			// trusted HTML gets its tags dropped, so that a match can
+			// never land inside one; untrusted text has to be escaped,
+			// as the result is rendered as HTML either way
+			const string =
+				text instanceof HtmlString
+					? this.$helper.string.stripHTML(text)
+					: this.$helper.string.escapeHTML(text);
 
 			if (this.query.length > 0) {
 				const regex = new RegExp(`(${RegExp.escape(this.query)})`, "ig");
-				return string.replace(regex, "<b>$1</b>");
+				return html(string.replace(regex, "<b>$1</b>"));
 			}
 
-			return string;
+			return html(string);
 		},
 		input(values) {
 			/**

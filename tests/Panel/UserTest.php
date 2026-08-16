@@ -64,7 +64,7 @@ class UserTest extends TestCase
 
 		$option = (new User($model))->dropdownOption();
 		$this->assertSame('user', $option['icon']);
-		$this->assertSame('test@getkirby.com', $option['text']);
+		$this->assertSame('test@getkirby.com', (string)$option['text']);
 		$this->assertSame('/users/test', $option['link']);
 	}
 
@@ -329,7 +329,7 @@ class UserTest extends TestCase
 
 		$this->assertSame('test@getkirby.com', $data['email']);
 		$this->assertTrue(Str::startsWith($data['link'], '/users/'));
-		$this->assertSame('test@getkirby.com', $data['text']);
+		$this->assertSame('test@getkirby.com', (string)$data['text']);
 	}
 
 	public function testTranslation(): void

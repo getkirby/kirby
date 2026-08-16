@@ -20,6 +20,7 @@ use Kirby\Form\Fields;
 use Kirby\Form\Form;
 use Kirby\Panel\Model as PanelModel;
 use Kirby\Toolkit\BlockCollectionAccess;
+use Kirby\Toolkit\HtmlString;
 use Kirby\Toolkit\Str;
 use Kirby\Uuid\Identifiable;
 use Kirby\Uuid\Uuid;
@@ -579,6 +580,27 @@ abstract class ModelWithContent extends Model implements Identifiable
 			'content'      => $this->content()->toArray(),
 			'translations' => $this->translations()->toArray()
 		];
+	}
+
+	/**
+	 * String template builder with automatic HTML escaping,
+	 * marking the result as trusted HTML for the Panel.
+	 * Use this over `toSafeString()` whenever the result is
+	 * rendered as HTML rather than used as plain text.
+	 * @since 6.0.0
+	 *
+	 * @param $template Template string or `null` to use the model ID
+	 * @param $fallback Fallback for tokens in the template that cannot be replaced
+	 *                 (`null` to keep the original token)
+	 */
+	public function toSafeHtmlString(
+		string|null $template = null,
+		array $data = [],
+		string|null $fallback = ''
+	): HtmlString {
+		return new HtmlString(
+			$this->toSafeString($template, $data, $fallback)
+		);
 	}
 
 	/**

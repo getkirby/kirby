@@ -19,7 +19,7 @@ class SystemLicenseRemoveDialogControllerTest extends TestCase
 		$this->assertInstanceOf(RemoveDialog::class, $dialog);
 
 		$props = $dialog->props();
-		$this->assertSame(I18n::translate('license.remove.text'), $props['text']);
+		$this->assertSame(I18n::translate('license.remove.text'), (string)$props['text']);
 		$this->assertSame('medium', $props['size']);
 		$this->assertSame('trash', $props['submitButton']['icon']);
 		$this->assertSame(I18n::translate('remove'), $props['submitButton']['text']);

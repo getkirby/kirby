@@ -45,7 +45,7 @@ class InfoFieldTest extends TestCase
 			'text' => 'test'
 		]);
 
-		$this->assertSame('<p>test</p>', $field->text());
+		$this->assertSame('<p>test</p>', (string)$field->text());
 
 		// translated text
 		$field = $this->field('info', [
@@ -55,7 +55,7 @@ class InfoFieldTest extends TestCase
 			]
 		]);
 
-		$this->assertSame('<p>en</p>', $field->text());
+		$this->assertSame('<p>en</p>', (string)$field->text());
 
 		// text template
 		$field = $this->field('info', [
@@ -68,7 +68,7 @@ class InfoFieldTest extends TestCase
 			])
 		]);
 
-		$this->assertSame('<p>Test</p>', $field->text());
+		$this->assertSame('<p>Test</p>', (string)$field->text());
 	}
 
 	public function testTheme(): void

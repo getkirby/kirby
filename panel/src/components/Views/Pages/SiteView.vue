@@ -43,7 +43,7 @@
 		<k-sections
 			:blueprint="blueprint"
 			:content="content"
-			:empty="$panel.config.debug ? $t('site.blueprint') : null"
+			:empty="$panel.config.debug ? $panel.html($t('site.blueprint')) : null"
 			:lock="lock"
 			:tab="tab"
 			parent="site"

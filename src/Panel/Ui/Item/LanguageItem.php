@@ -4,7 +4,6 @@ namespace Kirby\Panel\Ui\Item;
 
 use Kirby\Cms\Language;
 use Kirby\Panel\Ui\Item;
-use Kirby\Toolkit\Escape;
 
 /**
  * @copyright Bastian Allgeier
@@ -17,8 +16,8 @@ class LanguageItem extends Item
 		protected Language $language
 	) {
 		parent::__construct(
-			info: Escape::html($language->code()),
-			text: Escape::html($language->name()),
+			info: $language->code(),
+			text: $language->name(),
 			image: [
 				'back'  => 'black',
 				'color' => 'gray',

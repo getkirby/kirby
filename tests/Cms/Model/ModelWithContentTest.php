@@ -10,6 +10,7 @@ use Kirby\Content\VersionId;
 use Kirby\Content\Versions;
 use Kirby\Exception\NotFoundException;
 use Kirby\Panel\Page as PanelPage;
+use Kirby\Toolkit\HtmlString;
 use Kirby\Uuid\PageUuid;
 use Kirby\Uuid\SiteUuid;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -405,6 +406,16 @@ class ModelWithContentTest extends TestCase
 			'site' => $site
 		]);
 		$this->assertIsSite($site, $model->site());
+	}
+
+	public function testToSafeHtmlString(): void
+	{
+		$model  = new Page(['slug' => 'foo', 'content' => ['title' => 'value &']]);
+		$result = $model->toSafeHtmlString('Hello {{ model.title }} {{ model.slug }}');
+
+		// same escaping as toSafeString, but marked as trusted HTML
+		$this->assertInstanceOf(HtmlString::class, $result);
+		$this->assertSame('Hello value &amp; foo', (string)$result);
 	}
 
 	public function testToSafeString(): void

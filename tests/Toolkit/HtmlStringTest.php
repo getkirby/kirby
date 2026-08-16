@@ -9,6 +9,19 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(HtmlString::class)]
 class HtmlStringTest extends TestCase
 {
+	protected function setUp(): void
+	{
+		I18n::$locale       = 'en';
+		I18n::$load         = null;
+		I18n::$fallback     = 'en';
+		I18n::$translations = [];
+	}
+
+	protected function tearDown(): void
+	{
+		I18n::$translations = [];
+	}
+
 	public function testJsonSerialize(): void
 	{
 		$html = new HtmlString('<b>safe</b>');
@@ -137,6 +150,113 @@ class HtmlStringTest extends TestCase
 	{
 		$html = new HtmlString('<b>safe</b>');
 		$this->assertSame('<b>safe</b>', (string)$html);
+	}
+
+	public function testTranslate(): void
+	{
+		I18n::$translations = [
+			'en' => ['confirm' => 'Delete <b>the page</b>?']
+		];
+
+		$result = HtmlString::translate('confirm');
+
+		$this->assertInstanceOf(HtmlString::class, $result);
+		$this->assertSame('Delete <b>the page</b>?', (string)$result);
+	}
+
+	public function testTranslateEscapesValues(): void
+	{
+		I18n::$translations = [
+			'en' => ['greeting' => 'Hello <b>{name}</b>']
+		];
+
+		$result = HtmlString::translate('greeting', [
+			'name' => '<script>alert(1)</script>'
+		]);
+
+		$this->assertSame(
+			'Hello <b>&lt;script&gt;alert(1)&lt;/script&gt;</b>',
+			(string)$result
+		);
+	}
+
+	public function testTranslateEscapesQueryResults(): void
+	{
+		I18n::$translations = [
+			'en' => ['greeting' => 'Hello {user.name}']
+		];
+
+		// the value is only reachable through the query,
+		// so it has to be escaped after it was resolved
+		$result = HtmlString::translate('greeting', [
+			'user' => ['name' => '<script>alert(1)</script>']
+		]);
+
+		$this->assertSame(
+			'Hello &lt;script&gt;alert(1)&lt;/script&gt;',
+			(string)$result
+		);
+	}
+
+	public function testTranslateKeepsTrustedValues(): void
+	{
+		I18n::$translations = [
+			'en' => ['greeting' => 'Hello {name}']
+		];
+
+		$result = HtmlString::translate('greeting', [
+			'name' => new HtmlString('<b>Peter</b>')
+		]);
+
+		$this->assertSame('Hello <b>Peter</b>', (string)$result);
+	}
+
+	public function testTranslateWithArrayOfTranslations(): void
+	{
+		$result = HtmlString::translate(
+			['en' => 'Hello <b>{name}</b>'],
+			['name' => 'Peter']
+		);
+
+		$this->assertSame('Hello <b>Peter</b>', (string)$result);
+	}
+
+	public function testTranslateWithFallback(): void
+	{
+		$result = HtmlString::translate(
+			'does.not.exist',
+			[],
+			'<b>Fallback</b>'
+		);
+
+		$this->assertSame('<b>Fallback</b>', (string)$result);
+	}
+
+	public function testTranslateWithMissingKey(): void
+	{
+		// the key itself is the last resort, just like in `I18n::template()`
+		$this->assertSame(
+			'does.not.exist',
+			(string)HtmlString::translate('does.not.exist')
+		);
+	}
+
+	public function testTranslateWithMissingValue(): void
+	{
+		I18n::$translations = [
+			'en' => ['greeting' => 'Hello {name}']
+		];
+
+		$this->assertSame('Hello -', (string)HtmlString::translate('greeting'));
+	}
+
+	public function testTranslateWithTemplateString(): void
+	{
+		$result = HtmlString::translate('Hello <b>{name}</b>', [
+			'name' => '<script>'
+		]);
+
+		$this->assertSame('Hello <b>&lt;script&gt;</b>', (string)$result);
 	}
 
 	public function testValue(): void

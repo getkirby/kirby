@@ -469,9 +469,11 @@
 				// if we don't have a result, use the fallback if given
 				$result ??= $fallback;
 
-				// callback on result if given
+				// callback on result if given, with the raw result
+				// on top, so that values that look the same once
+				// cast to a string can still be told apart
 				if ($callback !== null) {
-					$callback = $callback((string)$result, $query, $data);
+					$callback = $callback((string)$result, $query, $data, $result);
 
 					if ($result !== null || $callback !== '') {
 						// the empty string came just from string casting,

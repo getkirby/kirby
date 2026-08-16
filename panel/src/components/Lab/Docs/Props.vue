@@ -35,7 +35,7 @@
 
 							<k-text
 								v-if="prop.description?.length"
-								:html="prop.description"
+								:text="prop.description"
 							/>
 
 							<k-text

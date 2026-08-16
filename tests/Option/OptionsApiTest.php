@@ -83,9 +83,9 @@ class OptionsApiTest extends TestCase
 		$options = new OptionsApi(static::FIXTURES . '/data.json');
 		$result  = $options->render($model);
 
-		$this->assertSame('A', $result[0]['text']);
+		$this->assertSame('A', (string)$result[0]['text']);
 		$this->assertSame('a', $result[0]['value']);
-		$this->assertSame('B', $result[1]['text']);
+		$this->assertSame('B', (string)$result[1]['text']);
 		$this->assertSame('b', $result[1]['value']);
 	}
 
@@ -95,9 +95,9 @@ class OptionsApiTest extends TestCase
 		$options = new OptionsApi(static::FIXTURES . '/data-simple.json');
 		$result  = $options->render($model);
 
-		$this->assertSame('A', $result[0]['text']);
+		$this->assertSame('A', (string)$result[0]['text']);
 		$this->assertSame('a', $result[0]['value']);
-		$this->assertSame('B', $result[1]['text']);
+		$this->assertSame('B', (string)$result[1]['text']);
 		$this->assertSame('b', $result[1]['value']);
 	}
 
@@ -111,9 +111,9 @@ class OptionsApiTest extends TestCase
 		);
 		$result  = $options->render($model);
 
-		$this->assertSame('Company A', $result[0]['text']);
+		$this->assertSame('Company A', (string)$result[0]['text']);
 		$this->assertSame('info@company-a.com', $result[0]['value']);
-		$this->assertSame('Company B', $result[1]['text']);
+		$this->assertSame('Company B', (string)$result[1]['text']);
 		$this->assertSame('info@company-b.com', $result[1]['value']);
 	}
 
@@ -126,9 +126,9 @@ class OptionsApiTest extends TestCase
 		);
 		$result  = $options->render($model);
 
-		$this->assertSame('A', $result[0]['text']);
+		$this->assertSame('A', (string)$result[0]['text']);
 		$this->assertSame('a', $result[0]['value']);
-		$this->assertSame('B', $result[1]['text']);
+		$this->assertSame('B', (string)$result[1]['text']);
 		$this->assertSame('b', $result[1]['value']);
 	}
 
@@ -143,9 +143,9 @@ class OptionsApiTest extends TestCase
 		);
 		$result  = $options->render($model);
 
-		$this->assertSame('Company A', $result[0]['text']);
+		$this->assertSame('Company A', (string)$result[0]['text']);
 		$this->assertSame('info@company-a.com', $result[0]['value']);
-		$this->assertSame('Company B', $result[1]['text']);
+		$this->assertSame('Company B', (string)$result[1]['text']);
 		$this->assertSame('info@company-b.com', $result[1]['value']);
 	}
 
@@ -161,18 +161,18 @@ class OptionsApiTest extends TestCase
 		);
 		$result = $options->render($model);
 
-		$this->assertSame('We are &lt;b&gt;great&lt;/b&gt;', $result[0]['text']);
+		$this->assertSame('We are &lt;b&gt;great&lt;/b&gt;', (string)$result[0]['text']);
 		$this->assertSame('We are <b>great</b>', $result[0]['value']);
-		$this->assertSame('We are &lt;b&gt;better&lt;/b&gt;', $result[1]['text']);
+		$this->assertSame('We are &lt;b&gt;better&lt;/b&gt;', (string)$result[1]['text']);
 		$this->assertSame('We are <b>better</b>', $result[1]['value']);
 
 		// with simple array
 		$options = new OptionsApi(static::FIXTURES . '/data-simple-html.json');
 		$result = $options->render($model);
 
-		$this->assertSame('We are &lt;b&gt;great&lt;/b&gt;', $result[0]['text']);
+		$this->assertSame('We are &lt;b&gt;great&lt;/b&gt;', (string)$result[0]['text']);
 		$this->assertSame('a', $result[0]['value']);
-		$this->assertSame('We are &lt;b&gt;better&lt;/b&gt;', $result[1]['text']);
+		$this->assertSame('We are &lt;b&gt;better&lt;/b&gt;', (string)$result[1]['text']);
 		$this->assertSame('b', $result[1]['value']);
 
 		// with query
@@ -184,9 +184,9 @@ class OptionsApiTest extends TestCase
 		);
 		$result = $options->render($model);
 
-		$this->assertSame('We are &lt;b&gt;great&lt;/b&gt;', $result[0]['text']);
+		$this->assertSame('We are &lt;b&gt;great&lt;/b&gt;', (string)$result[0]['text']);
 		$this->assertSame('We are <b>great</b>', $result[0]['value']);
-		$this->assertSame('We are &lt;b&gt;better&lt;/b&gt;', $result[1]['text']);
+		$this->assertSame('We are &lt;b&gt;better&lt;/b&gt;', (string)$result[1]['text']);
 		$this->assertSame('We are <b>better</b>', $result[1]['value']);
 
 		// text unescaped using {< >}
@@ -196,9 +196,9 @@ class OptionsApiTest extends TestCase
 			value: '{{ item.slogan }}'
 		);
 		$result = $options->render($model);
-		$this->assertSame('We are <b>great</b>', $result[0]['text']);
+		$this->assertSame('We are <b>great</b>', (string)$result[0]['text']);
 		$this->assertSame('We are <b>great</b>', $result[0]['value']);
-		$this->assertSame('We are <b>better</b>', $result[1]['text']);
+		$this->assertSame('We are <b>better</b>', (string)$result[1]['text']);
 		$this->assertSame('We are <b>better</b>', $result[1]['value']);
 
 		// text unescaped using {< >} (simple array)
@@ -208,9 +208,9 @@ class OptionsApiTest extends TestCase
 			value: '{{ item.value }}'
 		);
 		$result = $options->render($model);
-		$this->assertSame('We are <b>great</b>', $result[0]['text']);
+		$this->assertSame('We are <b>great</b>', (string)$result[0]['text']);
 		$this->assertSame('We are <b>great</b>', $result[0]['value']);
-		$this->assertSame('We are <b>better</b>', $result[1]['text']);
+		$this->assertSame('We are <b>better</b>', (string)$result[1]['text']);
 		$this->assertSame('We are <b>better</b>', $result[1]['value']);
 
 		// test unescaped with disabled safe mode
@@ -220,9 +220,9 @@ class OptionsApiTest extends TestCase
 			value: '{{ item.slogan }}'
 		);
 		$result = $options->resolve($model, false)->render($model);
-		$this->assertSame('We are <b>great</b>', $result[0]['text']);
+		$this->assertSame('We are <b>great</b>', (string)$result[0]['text']);
 		$this->assertSame('We are <b>great</b>', $result[0]['value']);
-		$this->assertSame('We are <b>better</b>', $result[1]['text']);
+		$this->assertSame('We are <b>better</b>', (string)$result[1]['text']);
 		$this->assertSame('We are <b>better</b>', $result[1]['value']);
 	}
 
@@ -240,7 +240,7 @@ class OptionsApiTest extends TestCase
 		);
 		$result = $options->render($model);
 
-		$this->assertSame('{{ page.slug }}', $result[0]['text']);
+		$this->assertSame('{{ page.slug }}', (string)$result[0]['text']);
 	}
 
 	public function testResolveApplyFieldMethods(): void
@@ -253,9 +253,9 @@ class OptionsApiTest extends TestCase
 		);
 		$result  = $options->render($model);
 
-		$this->assertSame('Company A', $result[0]['text']);
+		$this->assertSame('Company A', (string)$result[0]['text']);
 		$this->assertSame('company-a', $result[0]['value']);
-		$this->assertSame('Company B', $result[1]['text']);
+		$this->assertSame('Company B', (string)$result[1]['text']);
 		$this->assertSame('company-b', $result[1]['value']);
 	}
 
@@ -270,7 +270,7 @@ class OptionsApiTest extends TestCase
 		);
 		$result  = $options->render($model);
 
-		$this->assertSame('Company A', $result[0]['text']);
+		$this->assertSame('Company A', (string)$result[0]['text']);
 		$this->assertSame('company-a', $result[0]['value']);
 	}
 }

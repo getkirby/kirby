@@ -33,4 +33,39 @@ class HasI18nTest extends TestCase
 		$this->assertSame('My translation', $class->translate('my.key'));
 		$this->assertSame('All 3 things', $class->translate('my.count', ['count' => 3]));
 	}
+
+	public function testI18nHtml(): void
+	{
+		$class = new class () {
+			use HasI18n;
+
+			public function translate($key, $data = [])
+			{
+				return $this->i18nHtml($key, $data);
+			}
+		};
+
+		I18n::$translations['en'] = [
+			'my.key'  => 'My <b>translation</b>',
+			'my.name' => 'Hello {name}'
+		];
+
+		$this->assertNull($class->translate(null));
+
+		$trusted = new HtmlString('<b>Trusted</b>');
+		$this->assertSame($trusted, $class->translate($trusted));
+
+		$this->assertSame(
+			'My <b>translation</b>',
+			(string)$class->translate('my.key')
+		);
+		$this->assertSame(
+			'My <b>translation</b>',
+			(string)$class->translate(fn () => 'my.key')
+		);
+		$this->assertSame(
+			'Hello &lt;script&gt;',
+			(string)$class->translate('my.name', ['name' => '<script>'])
+		);
+	}
 }

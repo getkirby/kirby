@@ -5,6 +5,7 @@ namespace Kirby\Form\Field;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Mixin;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\HtmlString;
 
 /**
  * Toggle Field
@@ -86,7 +87,7 @@ class ToggleField extends InputField
 		];
 	}
 
-	public function text(): array|string|null
+	public function text(): array|HtmlString|null
 	{
 		$text = $this->text;
 
@@ -94,11 +95,17 @@ class ToggleField extends InputField
 			return null;
 		}
 
-		if (is_string($text) === true || A::isAssociative($text) === true) {
-			return $this->stringTemplateI18n($text);
+		if (
+			is_string($text) === true ||
+			A::isAssociative($text) === true
+		) {
+			return new HtmlString($this->stringTemplateI18n($text));
 		}
 
-		return A::map($text, fn ($value) => $this->stringTemplateI18n($value));
+		return A::map(
+			$text,
+			fn ($value) => new HtmlString($this->stringTemplateI18n($value))
+		);
 	}
 
 	public function toFormValue(): bool

@@ -136,7 +136,7 @@ class UsersViewControllerTest extends TestCase
 		$controller = new UsersViewController();
 		$users      = $controller->users();
 		$this->assertCount(1, $users['data']);
-		$this->assertSame('test@getkirby.com', $users['data'][0]['text']);
+		$this->assertSame('test@getkirby.com', (string)$users['data'][0]['text']);
 		$this->assertSame([
 			'page'      => 1,
 			'firstPage' => 1,

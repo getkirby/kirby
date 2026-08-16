@@ -26,13 +26,11 @@
 					/>
 					<label :for="id + '-' + index" :title="option.text">
 						<k-icon v-if="option.icon" :type="option.icon" />
-						<!-- eslint-disable vue/no-v-html -->
 						<span
 							v-if="labels || !option.icon"
+							v-safe-html="option.text"
 							class="k-toggles-text"
-							v-html="option.text"
 						/>
-						<!-- eslint-enable vue/no-v-html -->
 					</label>
 				</li>
 			</ul>

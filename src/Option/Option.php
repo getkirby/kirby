@@ -4,6 +4,7 @@ namespace Kirby\Option;
 
 use Kirby\Cms\ModelWithContent;
 use Kirby\Toolkit\HasI18n;
+use Kirby\Toolkit\HtmlString;
 
 /**
  * Option for select fields, radio fields, etc.
@@ -15,7 +16,7 @@ class Option
 {
 	use HasI18n;
 
-	public string|array $text;
+	public HtmlString|string|array $text;
 
 	/**
 	 * @param bool $resolve Deprecated, will be removed in v6
@@ -24,8 +25,8 @@ class Option
 		public string|int|float|null $value,
 		public bool $disabled = false,
 		public string|null $icon = null,
-		public string|array|null $info = null,
-		string|array|null $text = null,
+		public HtmlString|string|array|null $info = null,
+		HtmlString|string|array|null $text = null,
 		public bool $resolve = true
 	) {
 		$this->text = $text ?? ['en' => $this->value];
@@ -42,20 +43,26 @@ class Option
 			$props = ['value' => $props];
 		}
 
-		// Normalize info to be an array
+		// Normalize info to be an array, unless it is trusted HTML:
+		// that is already resolved and `I18n::translate()` would
+		// cast it back to an untrusted string
 		if (isset($props['info']) === true) {
 			$props['info'] = match (true) {
-				is_array($props['info']) => $props['info'],
+				is_array($props['info']),
+				$props['info'] instanceof HtmlString => $props['info'],
 				$props['info'] === null,
 				$props['info'] === false => null,
 				default                  => ['en' => $props['info']]
 			};
 		}
 
-		// Normalize text to be an array
+		// Normalize text to be an array, unless it is trusted HTML:
+		// that is already resolved and `I18n::translate()` would
+		// cast it back to an untrusted string
 		if (isset($props['text']) === true) {
 			$props['text'] = match (true) {
-				is_array($props['text']) => $props['text'],
+				is_array($props['text']),
+				$props['text'] instanceof HtmlString => $props['text'],
 				$props['text'] === null,
 				$props['text'] === false => null,
 				default                  => ['en' => $props['text']]
@@ -79,7 +86,7 @@ class Option
 	): array {
 		$info = $this->i18n($this->info);
 		$text = $this->i18n($this->text);
-		$method = $safeMode === true ? 'toSafeString' : 'toString';
+		$method = $safeMode === true ? 'toSafeHtmlString' : 'toString';
 
 		return [
 			'disabled' => $this->disabled,

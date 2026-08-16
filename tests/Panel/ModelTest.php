@@ -12,6 +12,7 @@ use Kirby\Filesystem\F;
 use Kirby\Panel\Controller\View\ModelViewController;
 use Kirby\Panel\Controller\View\PageViewController;
 use Kirby\TestCase;
+use Kirby\Toolkit\HtmlString;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 class CustomPanelModel extends Model
@@ -416,27 +417,27 @@ class ModelTest extends TestCase
 		$panel = $this->panel();
 		$data = $panel->pickerData();
 
-		$this->assertSame([
+		$this->assertEquals([ // @phpstan-ignore-line
 			'image' => [
 				'back' => 'pattern',
 				'color' => 'gray-500',
 				'cover' => false,
 				'icon' => 'page',
 			],
-			'info' => '',
+			'info'   => new HtmlString(''),
 			'layout' => 'list',
-			'text' => '',
-			'id' => null,
-			'link' => '/site',
+			'text'   => new HtmlString(''),
+			'id'     => null,
+			'link'   => '/site',
 			'permissions' => [
-				'access' => false,
+				'access'      => false,
 				'changeTitle' => false,
-				'preview' => false,
-				'update' => false,
+				'preview'     => false,
+				'update'      => false,
 			],
-			'uuid' => 'site://',
+			'uuid'     => 'site://',
 			'sortable' => true,
-			'url' => '/custom',
+			'url'      => '/custom',
 		], $data);
 	}
 

@@ -177,7 +177,7 @@ class PageTest extends TestCase
 		$option = $panel->dropdownOption();
 
 		$this->assertSame('page', $option['icon']);
-		$this->assertSame('Test page', $option['text']);
+		$this->assertSame('Test page', (string)$option['text']);
 		$this->assertSame('/pages/test', $option['link']);
 	}
 
@@ -392,7 +392,7 @@ class PageTest extends TestCase
 		$this->assertSame('(link: page://test-page text: Test Title)', $data['dragText']);
 		$this->assertSame('test', $data['id']);
 		$this->assertSame('/pages/test', $data['link']);
-		$this->assertSame('Test Title', $data['text']);
+		$this->assertSame('Test Title', (string)$data['text']);
 	}
 
 	public function testPosition(): void

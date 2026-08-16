@@ -44,7 +44,7 @@
 		<slot name="footer">
 			<footer v-if="help || $slots.help" class="k-field-footer">
 				<slot name="help">
-					<k-text v-if="help" class="k-help k-field-help" :html="help" />
+					<k-text v-if="help" class="k-help k-field-help" :text="help" />
 				</slot>
 			</footer>
 		</slot>

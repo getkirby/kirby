@@ -65,7 +65,7 @@ class PickerMixinTest extends TestCase
 		$this->assertIsArray($item);
 		$this->assertArrayHasKey('image', $item);
 		$this->assertSame('test', $item['id']);
-		$this->assertSame('Test Title', $item['text']);
+		$this->assertSame('Test Title', (string)$item['text']);
 	}
 
 	public function testToItems(): void

@@ -44,8 +44,8 @@ class LanguageItemTest extends TestCase
 		$item = new LanguageItem($this->language);
 		$props = $item->props();
 		$this->assertSame('en', $props['id']);
-		$this->assertSame('English', $props['text']);
-		$this->assertSame('en', $props['info']);
+		$this->assertSame('English', (string)$props['text']);
+		$this->assertSame('en', (string)$props['info']);
 		$this->assertSame('black', $props['image']['back']);
 		$this->assertSame(false, $props['default']);
 		$this->assertSame(true, $props['deletable']);

@@ -52,9 +52,9 @@ class UserItemsRequestControllerTest extends TestCase
 
 		$controller = new UserItemsRequestController();
 		$data       = $controller->load();
-		$this->assertSame('homer@getkirby.com', $data['items'][0]['text']);
+		$this->assertSame('homer@getkirby.com', (string)$data['items'][0]['text']);
 		$this->assertNull($data['items'][1]);
-		$this->assertSame('bart@getkirby.com', $data['items'][2]['text']);
+		$this->assertSame('bart@getkirby.com', (string)$data['items'][2]['text']);
 	}
 
 	public function testLoadNotListable(): void
@@ -93,6 +93,6 @@ class UserItemsRequestControllerTest extends TestCase
 		$controller = new UserItemsRequestController();
 		$data       = $controller->load();
 		$this->assertNull($data['items'][0]);
-		$this->assertSame('bart@getkirby.com', $data['items'][1]['text']);
+		$this->assertSame('bart@getkirby.com', (string)$data['items'][1]['text']);
 	}
 }

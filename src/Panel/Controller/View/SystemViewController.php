@@ -123,7 +123,9 @@ class SystemViewController extends ViewController
 					// @codeCoverageIgnoreStart
 					$security[] = [
 						'id'   => 'extension-' . $extension,
-						'text' => $this->i18n('installation.issues.extension', ['extension' => $extension])
+						'text' => $this->i18nHtml('installation.issues.extension', [
+							'extension' => $extension
+						])
 					];
 					// @codeCoverageIgnoreEnd
 				}

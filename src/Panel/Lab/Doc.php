@@ -9,6 +9,7 @@ use Kirby\Panel\Lab\Doc\Method;
 use Kirby\Panel\Lab\Doc\Prop;
 use Kirby\Panel\Lab\Doc\Slot;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\HtmlString;
 use Kirby\Toolkit\Str;
 use Throwable;
 
@@ -29,9 +30,9 @@ class Doc
 	public function __construct(
 		public string $name,
 		public string $source,
-		public string|null $description = null,
-		public string|null $deprecated = null,
-		public string|null $docBlock = null,
+		public string|HtmlString|null $description = null,
+		public string|HtmlString|null $deprecated = null,
+		public string|HtmlString|null $docBlock = null,
 		public array $events = [],
 		public array $examples = [],
 		public bool $isUnstable = false,
@@ -126,14 +127,14 @@ class Doc
 	/**
 	 * Helper to resolve KirbyText
 	 */
-	public static function kt(string $text, bool $inline = false): string
+	public static function kt(string $text, bool $inline = false): HtmlString
 	{
-		return App::instance()->kirbytext($text, [
+		return new HtmlString(App::instance()->kirbytext($text, [
 			'markdown' => [
 				'breaks' => false,
 				'inline' => $inline,
 			]
-		]);
+		]));
 	}
 
 	/**

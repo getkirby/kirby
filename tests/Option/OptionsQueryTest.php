@@ -99,7 +99,7 @@ class OptionsQueryTest extends TestCase
 		// since we didn't define a text query template,
 		// the default `{{ arrayItem.value }}` is used
 		// but our array doesn't have a a value key
-		$this->assertSame('', $options[0]['text']);
+		$this->assertSame('', (string)$options[0]['text']);
 
 		// with shorter alias
 		$options = (new OptionsQuery(
@@ -120,7 +120,7 @@ class OptionsQueryTest extends TestCase
 		$this->assertSame('tag1', $options[0]['value']);
 		$this->assertSame('tag2', $options[1]['value']);
 		$this->assertSame('tag3', $options[2]['value']);
-		$this->assertSame('tag3', $options[2]['text']);
+		$this->assertSame('tag3', (string)$options[2]['text']);
 
 		// associative array uses the array key as value by default
 		$options = (new OptionsQuery(
@@ -128,9 +128,9 @@ class OptionsQueryTest extends TestCase
 		))->render($model);
 
 		$this->assertSame('myValue', $options[0]['value']);
-		$this->assertSame('My text', $options[0]['text']);
+		$this->assertSame('My text', (string)$options[0]['text']);
 		$this->assertSame('otherValue', $options[1]['value']);
-		$this->assertSame('Other text', $options[1]['text']);
+		$this->assertSame('Other text', (string)$options[1]['text']);
 	}
 
 	public function testResolveForStructure(): void
@@ -182,9 +182,9 @@ class OptionsQueryTest extends TestCase
 			value: '{{ block.headline }}',
 		))->render($model);
 
-		$this->assertSame('image', $options[0]['text']);
+		$this->assertSame('image', (string)$options[0]['text']);
 		$this->assertSame('foo', $options[0]['value']);
-		$this->assertSame('test', $options[1]['text']);
+		$this->assertSame('test', (string)$options[1]['text']);
 		$this->assertSame('bar', $options[1]['value']);
 	}
 
@@ -207,10 +207,10 @@ class OptionsQueryTest extends TestCase
 		$options = $options->render($app->site());
 
 
-		$this->assertSame('a', $options[0]['text']);
+		$this->assertSame('a', (string)$options[0]['text']);
 		$this->assertSame('a', $options[0]['value']);
-		$this->assertSame('b', $options[1]['text']);
-		$this->assertSame('c', $options[2]['text']);
+		$this->assertSame('b', (string)$options[1]['text']);
+		$this->assertSame('c', (string)$options[2]['text']);
 	}
 
 	public function testResolveForFile(): void
@@ -230,8 +230,8 @@ class OptionsQueryTest extends TestCase
 		$options = $options->render($app->site());
 
 
-		$this->assertSame('a.jpg', $options[0]['text']);
-		$this->assertSame('b.pdf', $options[1]['text']);
+		$this->assertSame('a.jpg', (string)$options[0]['text']);
+		$this->assertSame('b.pdf', (string)$options[1]['text']);
 	}
 
 	public function testResolveForUser(): void
@@ -249,7 +249,7 @@ class OptionsQueryTest extends TestCase
 
 
 		$this->assertSame('homer@simpson.com', $options[0]['value']);
-		$this->assertSame('homer', $options[0]['text']);
+		$this->assertSame('homer', (string)$options[0]['text']);
 	}
 
 	public function testResolveForOptions(): void
@@ -258,9 +258,9 @@ class OptionsQueryTest extends TestCase
 		$options = new OptionsQuery('page.myOptions');
 		$options = $options->render($model);
 
-		$this->assertSame('foo', $options[0]['text']);
+		$this->assertSame('foo', (string)$options[0]['text']);
 		$this->assertSame('foo', $options[0]['value']);
-		$this->assertSame('bar', $options[1]['text']);
+		$this->assertSame('bar', (string)$options[1]['text']);
 		$this->assertSame('bar', $options[1]['value']);
 	}
 
@@ -284,7 +284,7 @@ class OptionsQueryTest extends TestCase
 
 		$options = (new OptionsQuery('site.children'))->render($app->site());
 
-		$this->assertSame('{{ page.slug }}', $options[0]['text']);
+		$this->assertSame('{{ page.slug }}', (string)$options[0]['text']);
 	}
 
 	public function testResolveInvalid(): void
@@ -314,9 +314,9 @@ class OptionsQueryTest extends TestCase
 			value: '{{ item.slogan }}',
 		))->render($model);
 
-		$this->assertSame('We are &lt;b&gt;great&lt;/b&gt;', $options[0]['text']);
+		$this->assertSame('We are &lt;b&gt;great&lt;/b&gt;', (string)$options[0]['text']);
 		$this->assertSame('We are <b>great</b>', $options[0]['value']);
-		$this->assertSame('We are &lt;b&gt;better&lt;/b&gt;', $options[1]['text']);
+		$this->assertSame('We are &lt;b&gt;better&lt;/b&gt;', (string)$options[1]['text']);
 		$this->assertSame('We are <b>better</b>', $options[1]['value']);
 
 		// text unescaped via {< >}
@@ -325,9 +325,9 @@ class OptionsQueryTest extends TestCase
 			text: '{< item.slogan >}',
 			value: '{{ item.slogan }}'
 		))->render($model);
-		$this->assertSame('We are <b>great</b>', $options[0]['text']);
+		$this->assertSame('We are <b>great</b>', (string)$options[0]['text']);
 		$this->assertSame('We are <b>great</b>', $options[0]['value']);
-		$this->assertSame('We are <b>better</b>', $options[1]['text']);
+		$this->assertSame('We are <b>better</b>', (string)$options[1]['text']);
 		$this->assertSame('We are <b>better</b>', $options[1]['value']);
 
 		// test unescaped with disabled safe mode
@@ -336,9 +336,9 @@ class OptionsQueryTest extends TestCase
 			text: '{{ item.slogan }}',
 			value: '{{ item.slogan }}'
 		))->resolve($model, false)->render($model);
-		$this->assertSame('We are <b>great</b>', $options[0]['text']);
+		$this->assertSame('We are <b>great</b>', (string)$options[0]['text']);
 		$this->assertSame('We are <b>great</b>', $options[0]['value']);
-		$this->assertSame('We are <b>better</b>', $options[1]['text']);
+		$this->assertSame('We are <b>better</b>', (string)$options[1]['text']);
 		$this->assertSame('We are <b>better</b>', $options[1]['value']);
 	}
 }

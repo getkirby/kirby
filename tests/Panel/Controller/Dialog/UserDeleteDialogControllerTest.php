@@ -57,7 +57,7 @@ class UserDeleteDialogControllerTest extends TestCase
 		$this->assertInstanceOf(RemoveDialog::class, $dialog);
 
 		$props = $dialog->props();
-		$this->assertSame('Do you really want to delete <br><strong>test@getkirby.com</strong>?', $props['text']);
+		$this->assertSame('Do you really want to delete <br><strong>test@getkirby.com</strong>?', (string)$props['text']);
 	}
 
 	public function testSubmit(): void
