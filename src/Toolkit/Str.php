@@ -1065,7 +1065,7 @@ class Str
 	 * @param array $options An options array that contains:
 	 *                       - fallback: if a token does not have any matches
 	 *                       - callback: to be able to handle each matching result (escaping is applied after the callback);
-	 *                                   receives the result as a string, the query, the data and the raw result
+	 *                       receives the result as a string, the query, the data and the raw result
 	 *
 	 * @return string The filled-in and partially escaped string
 	 */
@@ -1429,7 +1429,7 @@ class Str
 	 * @param array $options An options array that contains:
 	 *                       - fallback: if a token does not have any matches
 	 *                       - callback: to be able to handle each matching result;
-	 *                                   receives the result as a string, the query, the data and the raw result
+	 *                       receives the result as a string, the query, the data and the raw result
 	 *                       - start: start placeholder
 	 *                       - end: end placeholder
 	 * @return string The filled-in string

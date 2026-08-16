@@ -43,8 +43,9 @@ class Option
 			$props = ['value' => $props];
 		}
 
-		// Normalize info to be an array
-		// (trusted HTML is already resolved and passes through)
+		// Normalize info to be an array, unless it is trusted HTML:
+		// that is already resolved and `I18n::translate()` would
+		// cast it back to an untrusted string
 		if (isset($props['info']) === true) {
 			$props['info'] = match (true) {
 				is_array($props['info']),
@@ -55,8 +56,9 @@ class Option
 			};
 		}
 
-		// Normalize text to be an array
-		// (trusted HTML is already resolved and passes through)
+		// Normalize text to be an array, unless it is trusted HTML:
+		// that is already resolved and `I18n::translate()` would
+		// cast it back to an untrusted string
 		if (isset($props['text']) === true) {
 			$props['text'] = match (true) {
 				is_array($props['text']),
