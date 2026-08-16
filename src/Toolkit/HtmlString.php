@@ -129,8 +129,6 @@ class HtmlString implements JsonSerializable, Stringable
 	 * Translates a key or template string and marks the result as
 	 * trusted HTML. Every filled-in placeholder is escaped, unless
 	 * its value is already trusted HTML.
-	 *
-	 * @since 6.0.0
 	 */
 	public static function translate(
 		string|array $key,
