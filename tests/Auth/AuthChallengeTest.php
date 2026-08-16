@@ -74,6 +74,27 @@ class AuthChallengeTest extends TestCase
 		$this->assertSame('email', $session->get('kirby.challenge.type'));
 	}
 
+	public function testCreateChallengeClearsStaleState(): void
+	{
+		$session = $this->app->session();
+
+		// a first challenge stores its type and data
+		$this->auth->createChallenge('marge@simpsons.com');
+		$this->assertSame('email', $session->get('kirby.challenge.type'));
+		$this->assertNotNull($session->get('kirby.challenge.data'));
+
+		try {
+			$this->auth->createChallenge('lisa@simpsons.com');
+		} catch (Throwable) {
+			// expected in debug mode
+		}
+
+		// nothing of the first challenge may survive, otherwise its code
+		// could be verified against the new email
+		$this->assertNull($session->get('kirby.challenge.type'));
+		$this->assertNull($session->get('kirby.challenge.data'));
+	}
+
 	public function testCreateChallengeInvalidUser(): void
 	{
 		$this->app  = $this->app->clone(['options' => ['auth' => ['debug' => false]]]);

@@ -121,12 +121,16 @@ class Auth
 			$this->challenges->create($session, $email, $mode);
 
 		} catch (Throwable $e) {
+			// drop the previous challenge; its type and data must not
+			// survive, or its code could be verified against the email below
+			$this->challenges->clear($session);
+
 			// only re-throw the exception in auth debug mode
 			$this->fail($e);
 
-			// always make sure to still set the email, mode and timeout,
-			// even if the challenge wasn't created;
-			// this avoids leaking whether the user exists
+			// restore only email, mode and timeout (deliberately no type or
+			// data), so the failure still looks like a pending challenge
+			// and does not leak whether the user exists
 			$timeout = $this->challenges()->timeout();
 			$session->set('kirby.challenge.email', $email);
 			$session->set('kirby.challenge.mode', $mode);
