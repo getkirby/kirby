@@ -38,7 +38,7 @@ return [
 		'pattern' => 'pages/(:any)/blueprints',
 		'method'  => 'GET',
 		'action'  => function (string $id) {
-			return $this->page($id)->blueprints($this->requestQuery('section'));
+			return $this->page($id)->blueprints($this->requestQuery('field'));
 		}
 	],
 	[

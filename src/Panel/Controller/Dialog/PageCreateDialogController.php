@@ -2,7 +2,6 @@
 
 namespace Kirby\Panel\Controller\Dialog;
 
-use Kirby\Blueprint\Section;
 use Kirby\Cms\App;
 use Kirby\Cms\Find;
 use Kirby\Cms\ModelWithContent;
@@ -66,20 +65,15 @@ class PageCreateDialogController extends ModelCreateDialogController
 
 	public function __construct(
 		Page|Site|null $parent = null,
-		Section|string|null $section = null,
+		string|null $field = null,
 		array|null $blueprints = null
 	) {
 		parent::__construct(parent: $parent);
 
-		// convert section name to section object
-		if (is_string($section) === true) {
-			$section = $parent->blueprint()->section($section);
-		}
-
 		// gather all available blueprints from the given list,
-		// the section or the parent
+		// the field or the parent
 		$this->blueprints = A::map(
-			$blueprints ?? $section?->blueprints() ?? $this->parent->blueprints(),
+			$blueprints ?? $this->parent->blueprints($field),
 			function ($blueprint) {
 				$blueprint['name'] ??= $blueprint['value'] ?? null;
 				return $blueprint;
@@ -142,7 +136,6 @@ class PageCreateDialogController extends ModelCreateDialogController
 		return [
 			...$fields,
 			'parent'   => Field::hidden(), // @deprecated
-			'section'  => Field::hidden(), // @deprecated
 			'template' => Field::hidden(),
 			'view'     => Field::hidden(), // @deprecated
 		];
@@ -162,11 +155,10 @@ class PageCreateDialogController extends ModelCreateDialogController
 		$request = $kirby->request();
 		$view    = $request->get('view');
 		$parent  = $view ? Find::parent($view) : Find::site();
-		$section = $request->get('section');
 
 		return new static(
-			parent:  $parent,
-			section: $section
+			parent: $parent,
+			field:  $request->get('field')
 		);
 	}
 	/**
@@ -338,7 +330,6 @@ class PageCreateDialogController extends ModelCreateDialogController
 		return [
 			...parent::value(),
 			'parent'   => $this->request->get('parent', ''), // @deprecated
-			'section'  => $this->request->get('section', ''), // @deprecated
 			'slug'     => $this->request->get('slug', ''),
 			'template' => $this->template(),
 			'title'    => $this->request->get('title', ''),

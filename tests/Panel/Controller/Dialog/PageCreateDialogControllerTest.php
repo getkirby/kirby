@@ -29,7 +29,7 @@ class PageCreateDialogControllerTest extends TestCase
 		$controller = new PageCreateDialogController();
 		$fields     = $controller->coreFields();
 
-		$this->assertCount(7, $fields);
+		$this->assertCount(6, $fields);
 		$this->assertSame('Title', $fields['title']['label']);
 		$this->assertSame('/', $fields['slug']['path']);
 		$this->assertTrue($fields['uuid']['hidden']);
@@ -53,7 +53,7 @@ class PageCreateDialogControllerTest extends TestCase
 		$controller = new PageCreateDialogController();
 		$fields     = $controller->coreFields();
 
-		$this->assertCount(6, $fields);
+		$this->assertCount(5, $fields);
 		$this->assertSame('Title', $fields['title']['label']);
 		$this->assertSame('/', $fields['slug']['path']);
 	}
