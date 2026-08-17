@@ -120,7 +120,7 @@ class Form
 	 *
 	 * @throws NotFoundException
 	 */
-	public function field(string $name): Field|BaseField
+	public function field(string $name): BaseField
 	{
 		return $this->fields->field($name);
 	}

@@ -4,7 +4,6 @@ namespace Kirby\Form\Field;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
-use Kirby\Form\Field;
 use Kirby\Form\Fields;
 use Kirby\TestCase as BaseTestCase;
 
@@ -13,7 +12,7 @@ abstract class TestCase extends BaseTestCase
 	protected function setUp(): void
 	{
 		// start with a fresh set of fields
-		Field::$types = [];
+		BaseField::$types = [];
 
 		$this->setUpTmp();
 
@@ -41,8 +40,10 @@ abstract class TestCase extends BaseTestCase
 		string $type,
 		array $attr = [],
 		Fields|null $formFields = null
-	): Field|BaseField {
-		$page = new Page(['slug' => 'test']);
-		return Field::factory($type, ['model' => $page, ...$attr], $formFields);
+	): BaseField {
+		$page  = new Page(['slug' => 'test']);
+		$class = BaseField::resolve($type);
+
+		return $class::factory(['model' => $page, ...$attr], $formFields);
 	}
 }

@@ -12,6 +12,7 @@ use Kirby\Cms\User;
 use Kirby\Exception\FormValidationException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Form\Field\BaseField;
+use Kirby\Form\Field\InputField;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Fields::class)]
@@ -323,34 +324,6 @@ class FieldsTest extends TestCase
 
 	public function testFind(): void
 	{
-		Field::$types['test'] = [
-			'methods' => [
-				'form' => function () {
-					return new Form([
-						'fields' => [
-							'child' => [
-								'type'  => 'text',
-							],
-						],
-						'model' => $this->model
-					]);
-				}
-			]
-		];
-
-		$fields = new Fields([
-			'mother' => [
-				'type'  => 'test',
-			],
-		], $this->model);
-
-		$this->assertSame('mother', $fields->find('mother')->name());
-		$this->assertSame('child', $fields->find('mother+child')->name());
-		$this->assertNull($fields->find('mother+missing-child'));
-	}
-
-	public function testFindInFieldClass(): void
-	{
 		$motherClass = new class () extends BaseField {
 			public function form(): Form
 			{
@@ -374,6 +347,7 @@ class FieldsTest extends TestCase
 
 		$this->assertSame('mother', $fields->find('mother')->name());
 		$this->assertSame('child', $fields->find('mother+child')->name());
+		$this->assertNull($fields->find('mother+missing-child'));
 	}
 
 	public function testFindWhenFieldHasNoForm(): void
@@ -1039,11 +1013,16 @@ class FieldsTest extends TestCase
 
 	public function testToStoredValues(): void
 	{
-		Field::$types['test'] = [
-			'save' => function ($value) {
-				return $value . ' stored';
+		$field = new class () extends InputField {
+			protected mixed $value = null;
+
+			public function toStoredValue(): mixed
+			{
+				return parent::toStoredValue() . ' stored';
 			}
-		];
+		};
+
+		BaseField::$types['test'] = $field::class;
 
 		$fields = new Fields([
 			'a' => [

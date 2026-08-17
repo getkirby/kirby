@@ -14,12 +14,12 @@ use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 
 /**
- * A collection of Field objects
+ * A collection of BaseField objects
  *
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  *
- * @extends Collection<Field|BaseField>
+ * @extends Collection<BaseField>
  */
 class Fields extends Collection
 {
@@ -55,7 +55,7 @@ class Fields extends Collection
 	 * This takes care of validation and of setting
 	 * the collection prop on each object correctly.
 	 *
-	 * @param Field|BaseField|array $field
+	 * @param BaseField|array $field
 	 */
 	public function __set(string $name, $field): void
 	{
@@ -63,7 +63,8 @@ class Fields extends Collection
 			// use the array key as name if the name is not set
 			$field['model'] ??= $this->model;
 			$field['name']  ??= $name;
-			$field = Field::factory($field['type'], $field, $this);
+			$class = BaseField::resolve($field['type'], $field['name']);
+			$field = $class::factory($field, $this);
 		}
 
 		parent::__set($field->name(), $field);
@@ -107,7 +108,7 @@ class Fields extends Collection
 	 * @since 5.0.0
 	 * @throws NotFoundException
 	 */
-	public function field(string $name): Field|BaseField
+	public function field(string $name): BaseField
 	{
 		if ($field = $this->findByKey($name)) {
 			return $field;
@@ -155,7 +156,7 @@ class Fields extends Collection
 	/**
 	 * Find a field by key/name
 	 */
-	public function findByKey(string $key): Field|BaseField|null
+	public function findByKey(string $key): BaseField|null
 	{
 		if (str_contains($key, '+')) {
 			return $this->findByKeyRecursive($key);
@@ -167,7 +168,7 @@ class Fields extends Collection
 	/**
 	 * Find fields in nested forms recursively
 	 */
-	public function findByKeyRecursive(string $key): Field|BaseField|null
+	public function findByKeyRecursive(string $key): BaseField|null
 	{
 		$fields = $this;
 		$names  = Str::split($key, '+');
@@ -190,10 +191,7 @@ class Fields extends Collection
 			// there are more parts in the key
 			if ($index < $count) {
 				$form = match (true) {
-					$field instanceof BaseField && method_exists($field, 'form') === true
-						=> $field->form(),
-					$field instanceof Field
-						=> $field->form(),
+					method_exists($field, 'form') === true => $field->form(),
 					default => null
 				};
 
@@ -284,12 +282,11 @@ class Fields extends Collection
 
 		// reset the values of each field
 		foreach ($this->data as $field) {
-			if ($field->hasValue() === true) {
-				if ($field instanceof Field) {
-					$field->fillWithEmptyValue(); // @codeCoverageIgnore
-				} elseif (method_exists($field, 'reset')) {
-					$field->reset();
-				}
+			if (
+				$field->hasValue() === true &&
+				method_exists($field, 'reset') === true
+			) {
+				$field->reset();
 			}
 		}
 

@@ -9,7 +9,7 @@ use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
-use Kirby\Form\Field;
+use Kirby\Form\Field\BaseField;
 use Kirby\Form\Field\InputField;
 use Kirby\TestCase;
 
@@ -69,7 +69,7 @@ class UsersRoutesTest extends TestCase
 	{
 		$this->app->session()->destroy();
 		App::destroy();
-		Field::$types = [];
+		BaseField::$types = [];
 		Section::$types = [];
 		Dir::remove(static::TMP);
 	}

@@ -13,7 +13,7 @@ use Kirby\Filesystem\Asset;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\Mime;
-use Kirby\Form\Field as FormField;
+use Kirby\Form\Field\BaseField as FormField;
 use Kirby\Image\Image;
 use Kirby\Plugin\Plugin;
 use Kirby\Text\KirbyTag;

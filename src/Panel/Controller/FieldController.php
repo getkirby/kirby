@@ -3,7 +3,6 @@
 namespace Kirby\Panel\Controller;
 
 use Kirby\Cms\Find;
-use Kirby\Form\Field;
 use Kirby\Form\Field\BaseField;
 use Kirby\Form\Form;
 use Kirby\Http\Router;
@@ -19,7 +18,7 @@ use Kirby\Panel\Area;
 trait FieldController
 {
 	public function __construct(
-		public Field|BaseField $field,
+		public BaseField $field,
 		public string|null $path = null
 	) {
 	}

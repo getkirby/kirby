@@ -3,6 +3,7 @@
 namespace Kirby\Form\Field;
 
 use Kirby\Cms\HasStringTemplate;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Fields;
 use Kirby\Form\Mixin;
 use Kirby\Reflection\Constructor;
@@ -26,6 +27,11 @@ abstract class BaseField implements Stringable
 	use Mixin\Translatable;
 	use Mixin\When;
 	use Mixin\Width;
+
+	/**
+	 * Registry for all field types
+	 */
+	public static array $types = [];
 
 	public function __construct(
 		string|null $name = null,
@@ -139,6 +145,48 @@ abstract class BaseField implements Stringable
 			'when'     => $this->when(),
 			'width'    => $this->width()
 		];
+	}
+
+	/**
+	 * Resolves a field type to its class name
+	 * @since 6.0.0
+	 *
+	 * @return class-string<static>
+	 * @throws InvalidArgumentException if the type is unknown or not a field class
+	 */
+	public static function resolve(
+		string $type,
+		string|null $name = null
+	): string {
+		$class = static::$types[$type] ?? null;
+
+		if ($class === null) {
+			throw new InvalidArgumentException(
+				key: 'field.type.missing',
+				data: [
+					'name' => $name ?? '-',
+					'type' => $type
+				]
+			);
+		}
+
+		if (is_string($class) === false) {
+			throw new InvalidArgumentException(
+				message: 'The field type "' . $type . '" is registered as ' .
+				get_debug_type($class) . '. Array-based field definitions ' .
+				'have been removed in Kirby 6. Please register the name of ' .
+				'a class that extends ' . self::class . ' instead.'
+			);
+		}
+
+		if (is_subclass_of($class, self::class) === false) {
+			throw new InvalidArgumentException(
+				message: 'The field type "' . $type . '" is registered as "' .
+				$class . '", which does not extend ' . self::class
+			);
+		}
+
+		return $class;
 	}
 
 	/**

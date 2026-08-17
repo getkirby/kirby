@@ -12,7 +12,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\Mime;
-use Kirby\Form\Field as FormField;
+use Kirby\Form\Field\BaseField as FormField;
 use Kirby\Image\Image;
 use Kirby\Plugin\Plugin;
 use Kirby\Tests\MockTime;
@@ -434,7 +434,8 @@ class AppPluginsTest extends TestCase
 		]);
 
 		$page  = new Page(['slug' => 'test']);
-		$field = FormField::factory('dummy', [
+		$class = FormField::resolve('dummy');
+		$field = $class::factory([
 			'name'  => 'dummy',
 			'peter' => 'shaw',
 			'model' => $page
@@ -451,7 +452,7 @@ class AppPluginsTest extends TestCase
 		$this->expectExceptionMessage(
 			'The field type "dummy" is registered as array. Array-based field ' .
 			'definitions have been removed in Kirby 6. Please register the name ' .
-			'of a class that extends Kirby\Form\Field instead.'
+			'of a class that extends Kirby\Form\Field\BaseField instead.'
 		);
 
 		new App([
