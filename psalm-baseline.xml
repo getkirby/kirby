@@ -249,14 +249,6 @@
       <code><![CDATA[toFormValue]]></code>
     </UndefinedMethod>
   </file>
-  <file src="src/Form/Form.php">
-    <UndefinedMethod>
-      <code><![CDATA[fill]]></code>
-      <code><![CDATA[isEmpty]]></code>
-      <code><![CDATA[isStorable]]></code>
-      <code><![CDATA[toStoredValue]]></code>
-    </UndefinedMethod>
-  </file>
   <file src="src/Form/Validations.php">
     <UndefinedMethod>
       <code><![CDATA[max]]></code>

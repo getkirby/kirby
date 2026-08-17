@@ -257,10 +257,11 @@ class PageCreateDialogController extends ModelCreateDialogController
 
 		// create temporary form to sanitize the input
 		// and add default values
-		$form = Form::for($this->model())->fill(input: $content);
+		$form = Form::for($this->model());
+		$form->fill(input: $content, defaults: true);
 
 		return [
-			'content'  => $form->strings(true),
+			'content'  => $form->toStoredValues(),
 			'slug'     => $input['slug'],
 			'template' => $this->template()
 		];

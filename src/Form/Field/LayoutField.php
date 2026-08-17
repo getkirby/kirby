@@ -103,7 +103,7 @@ class LayoutField extends BlocksField
 				$columns = $request->get('columns') ?? ['1/1'];
 				$form    = $field->attrsForm();
 
-				$form->fill(input: $form->defaults());
+				$form->fill(defaults: true);
 				$form->submit(input: $request->get('attrs') ?? []);
 
 				return Layout::factory([
@@ -339,7 +339,7 @@ class LayoutField extends BlocksField
 			}
 
 			foreach ($layout['columns'] as $columnIndex => $column) {
-				$value[$layoutIndex]['columns'][$columnIndex]['blocks'] = $this->blocksToValues($column['blocks'] ?? [], 'content');
+				$value[$layoutIndex]['columns'][$columnIndex]['blocks'] = $this->blocksToValues($column['blocks'] ?? [], 'toStoredValues');
 			}
 		}
 

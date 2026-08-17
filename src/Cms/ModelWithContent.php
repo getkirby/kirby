@@ -268,8 +268,9 @@ abstract class ModelWithContent extends Model implements Identifiable
 	 */
 	public function createDefaultContent(): array
 	{
-		$fields = Fields::for($this, 'default');
-		return $fields->fill($fields->defaults())->toStoredValues();
+		return Fields::for($this, 'default')
+			->fill(defaults: true)
+			->toStoredValues();
 	}
 
 	/**

@@ -20,23 +20,6 @@ use ReflectionProperty;
  */
 trait Value
 {
-	/**
-	 * @deprecated 5.0.0 Use `::toStoredValue()` instead to receive
-	 * the value in the format that will be needed for content files.
-	 *
-	 * If you need to get the value with the default as fallback,
-	 * you should use the fill method first
-	 * `$field->fill($field->default())->toStoredValue()`
-	 */
-	public function data(bool $default = false): mixed
-	{
-		if ($default === true && $this->isEmpty() === true) {
-			$this->fill($this->default());
-		}
-
-		return $this->toStoredValue();
-	}
-
 	abstract public function default(): mixed;
 
 	/**
@@ -126,15 +109,6 @@ trait Value
 		/** @psalm-suppress UndefinedThisPropertyAssignment using classes declare `$value` */
 		$this->value = $this->emptyValue();
 		return $this;
-	}
-
-	/**
-	 * Checks if the field is saveable
-	 * @deprecated 5.0.0 Use `::hasValue()` instead
-	 */
-	public function save(): bool
-	{
-		return $this->hasValue();
 	}
 
 	/**

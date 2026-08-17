@@ -151,25 +151,6 @@ class InputFieldTest extends BaseTestCase
 		$this->assertSame('Test', $field->before());
 	}
 
-	public function testData(): void
-	{
-		$field = new TestField();
-		$this->assertNull($field->data());
-
-		// use default value
-		$field = new TestField(default: 'default value');
-		$this->assertSame('default value', $field->data(true));
-
-		// don't use default value
-		$field = new TestField(default: 'default value');
-		$this->assertNull($field->data());
-
-		// use existing value
-		$field = new TestField();
-		$field->fill('test');
-		$this->assertSame('test', $field->data());
-	}
-
 	public function testDefault(): void
 	{
 		$field = new TestField();
@@ -629,12 +610,6 @@ class InputFieldTest extends BaseTestCase
 			'when'        => $when,
 			'width'       => $width
 		], $field->props());
-	}
-
-	public function testSave(): void
-	{
-		$field = new TestField();
-		$this->assertTrue($field->save());
 	}
 
 	public function testSiblings(): void

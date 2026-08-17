@@ -4,10 +4,8 @@ namespace Kirby\Form;
 
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
-use Kirby\Data\Data;
 use Kirby\Exception\FormValidationException;
 use Kirby\Exception\NotFoundException;
-use Kirby\Toolkit\A;
 
 /**
  * The main form class, that is being
@@ -29,70 +27,15 @@ class Form
 	 * Form constructor
 	 */
 	public function __construct(
-		array $props = [],
 		array $fields = [],
 		ModelWithContent|null $model = null,
 		Language|string|null $language = null
 	) {
-		if ($props !== []) {
-			$this->legacyConstruct(...$props);
-			return;
-		}
-
 		$this->fields = new Fields(
 			fields: $fields,
 			model: $model,
 			language: $language
 		);
-	}
-
-	/**
-	 * Returns the data required to write to the content file
-	 * Doesn't include default and null values
-	 *
-	 * @deprecated 5.0.0 Use `::toStoredValues()` instead
-	 */
-	public function content(): array
-	{
-		return $this->data(false, false);
-	}
-
-	/**
-	 * Returns data for all fields in the form
-	 *
-	 * @deprecated 5.0.0 Use `::toStoredValues()` instead
-	 */
-	public function data($defaults = false, bool $includeNulls = true): array
-	{
-		$data     = [];
-		$language = $this->fields->language();
-
-		foreach ($this->fields as $field) {
-			if (
-				$field->hasValue() === false ||
-				$field->isStorable($language) === false
-			) {
-				if ($includeNulls === true) {
-					$data[$field->name()] = null;
-				}
-
-				continue;
-			}
-
-			if ($defaults === true && $field->isEmpty() === true) {
-				$field->fill($field->default());
-			}
-
-			$data[$field->name()] = $field->toStoredValue();
-		}
-
-		foreach ($this->fields->passthrough() as $key => $value) {
-			if (isset($data[$key]) === false) {
-				$data[$key] = $value;
-			}
-		}
-
-		return $data;
 	}
 
 	/**
@@ -138,12 +81,14 @@ class Form
 	 * @since 5.0.0
 	 */
 	public function fill(
-		array $input,
-		bool $passthrough = true
+		array $input = [],
+		bool $passthrough = true,
+		bool $defaults = false
 	): static {
 		$this->fields->fill(
 			input:       $input,
-			passthrough: $passthrough
+			passthrough: $passthrough,
+			defaults:    $defaults
 		);
 		return $this;
 	}
@@ -154,16 +99,8 @@ class Form
 	 */
 	public static function for(
 		ModelWithContent $model,
-		array $props = [],
 		Language|string|null $language = null,
 	): static {
-		if ($props !== []) {
-			return static::legacyFor(
-				$model,
-				...$props
-			);
-		}
-
 		$form = new static(
 			fields: $model->blueprint()->fields(),
 			model: $model,
@@ -203,67 +140,6 @@ class Form
 	}
 
 	/**
-	 * Legacy constructor to support the old props array
-	 *
-	 * @deprecated 5.0.0 Use the new constructor with named parameters instead
-	 */
-	protected function legacyConstruct(
-		array $fields = [],
-		ModelWithContent|null $model = null,
-		Language|string|null $language = null,
-		array $values = [],
-		array $input = [],
-		bool $strict = false
-	): void {
-		$this->__construct(
-			fields: $fields,
-			model: $model,
-			language: $language
-		);
-
-		$this->fill(
-			input: $values,
-			passthrough: $strict === false
-		);
-
-		$this->submit(
-			input: $input,
-			passthrough: $strict === false
-		);
-	}
-
-	/**
-	 * Legacy for method to support the old props array
-	 *
-	 * @deprecated 5.0.0 Use `::for()` with named parameters instead
-	 */
-	protected static function legacyFor(
-		ModelWithContent $model,
-		Language|string|null $language = null,
-		bool $strict = false,
-		array|null $input = [],
-		array|null $values = [],
-		bool $ignoreDisabled = false
-	): static {
-		$form = static::for(
-			model: $model,
-			language: $language,
-		);
-
-		$form->fill(
-			input: $values ?? [],
-			passthrough: $strict === false
-		);
-
-		$form->submit(
-			input: $input ?? [],
-			passthrough: $strict === false
-		);
-
-		return $form;
-	}
-
-	/**
 	 * Adds values to the passthrough array
 	 * which will be added to the form data
 	 * if the field does not exist
@@ -295,22 +171,6 @@ class Form
 	{
 		$this->fields->reset();
 		return $this;
-	}
-
-	/**
-	 * Converts the data of fields to strings
-	 *
-	 * @deprecated 5.0.0 Use `::toStoredValues()` instead
-	 */
-	public function strings($defaults = false): array
-	{
-		return A::map(
-			$this->data($defaults),
-			fn ($value) => match (true) {
-				is_array($value) => Data::encode($value, 'yaml'),
-				default		     => $value
-			}
-		);
 	}
 
 	/**
@@ -391,13 +251,4 @@ class Form
 		$this->fields->validate();
 	}
 
-	/**
-	 * Returns form values
-	 *
-	 * @deprecated 5.0.0 Use `::toFormValues()` instead
-	 */
-	public function values(): array
-	{
-		return $this->fields->toFormValues();
-	}
 }
