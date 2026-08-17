@@ -1,20 +1,73 @@
 <?php
 
-namespace Kirby\Form;
+namespace Kirby\Form\Field;
 
 use Exception;
 use Kirby\Cms\Language;
 use Kirby\Cms\Page;
-use Kirby\Exception\NotFoundException;
-use Kirby\TestCase;
+use Kirby\Form\Fields;
+use Kirby\Form\Mixin;
+use Kirby\TestCase as BaseTestCase;
 use Kirby\Toolkit\HtmlString;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-class TestField extends FieldClass
+class TestField extends InputField
 {
+	use Mixin\After;
+	use Mixin\Before;
+	use Mixin\Icon;
+	use Mixin\Placeholder;
+
+	protected mixed $value = null;
+
+	public function __construct(
+		array|string|null $after = null,
+		bool|null $autofocus = null,
+		array|string|null $before = null,
+		mixed $default = null,
+		bool|null $disabled = null,
+		array|string|null $help = null,
+		string|null $icon = null,
+		array|string|null $label = null,
+		string|null $name = null,
+		array|string|null $placeholder = null,
+		bool|null $required = null,
+		bool|null $translate = null,
+		array|null $when = null,
+		string|null $width = null
+	) {
+		parent::__construct(
+			autofocus: $autofocus,
+			default: $default,
+			disabled: $disabled,
+			help: $help,
+			label: $label,
+			name: $name,
+			required: $required,
+			translate: $translate,
+			when: $when,
+			width: $width
+		);
+
+		$this->after       = $after;
+		$this->before      = $before;
+		$this->icon        = $icon;
+		$this->placeholder = $placeholder;
+	}
+
+	public function props(): array
+	{
+		return [
+			...parent::props(),
+			'after'       => $this->after(),
+			'before'      => $this->before(),
+			'icon'        => $this->icon(),
+			'placeholder' => $this->placeholder()
+		];
+	}
 }
 
-class HiddenField extends FieldClass
+class HiddenTestField extends TestField
 {
 	public function isHidden(): bool
 	{
@@ -22,7 +75,7 @@ class HiddenField extends FieldClass
 	}
 }
 
-class NoValueField extends FieldClass
+class NoValueField extends TestField
 {
 	public function hasValue(): bool
 	{
@@ -30,13 +83,17 @@ class NoValueField extends FieldClass
 	}
 }
 
-class ValidatedField extends FieldClass
+class ValidatedField extends TestField
 {
+	use Mixin\Minlength;
+
 	public function __construct(
-		protected int|null $minlength = null,
+		int|null $minlength = null,
 		...$props
 	) {
 		parent::__construct(...$props);
+
+		$this->minlength = $minlength;
 	}
 
 	public function validations(): array
@@ -52,28 +109,9 @@ class ValidatedField extends FieldClass
 	}
 }
 
-class AdditionalPropertyField extends FieldClass
+#[CoversClass(InputField::class)]
+class InputFieldTest extends BaseTestCase
 {
-	public function __construct(
-		protected string $foo
-	) {
-		parent::__construct();
-	}
-}
-
-#[CoversClass(FieldClass::class)]
-class FieldClassTest extends TestCase
-{
-	public function test__call(): void
-	{
-		$field = new AdditionalPropertyField(foo: 'bar');
-		$this->assertSame('bar', $field->foo());
-
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Method or option "bar" does not exist for field type "additionalproperty"');
-		$field->bar();
-	}
-
 	public function testAfter(): void
 	{
 		$field = new TestField();
@@ -214,6 +252,61 @@ class FieldClassTest extends TestCase
 		$this->assertSame('Test value', $field->value());
 	}
 
+	public function testHasValue(): void
+	{
+		$field = new TestField();
+		$this->assertTrue($field->hasValue());
+
+		$field = new NoValueField();
+		$this->assertFalse($field->hasValue());
+	}
+
+	public function testHelp(): void
+	{
+		$field = new TestField();
+		$this->assertNull($field->help());
+
+		// regular help
+		$field = new TestField(help: 'Test');
+		$this->assertSame('<p>Test</p>', (string)$field->help());
+
+		// translated help
+		$field = new TestField(help: ['en' => 'Test']);
+		$this->assertSame('<p>Test</p>', (string)$field->help());
+
+		// help from string template
+		$field = new TestField(
+			help: 'A field for {{ page.title }}'
+		);
+
+		$field->setModel(new Page([
+			'slug'    => 'test',
+			'content' => [
+				'title' => 'Test title'
+			]
+		]));
+
+		$this->assertSame('<p>A field for Test title</p>', (string)$field->help());
+	}
+
+	public function testIcon(): void
+	{
+		$field = new TestField();
+		$this->assertNull($field->icon());
+
+		$field = new TestField(icon: 'Test');
+		$this->assertSame('Test', $field->icon());
+	}
+
+	public function testId(): void
+	{
+		$field = new TestField();
+		$this->assertSame('test', $field->id());
+
+		$field = new TestField(name: 'test-id');
+		$this->assertSame('test-id', $field->id());
+	}
+
 	public function testIsEmpty(): void
 	{
 		$field = new TestField();
@@ -243,33 +336,11 @@ class FieldClassTest extends TestCase
 		$field = new TestField();
 		$this->assertFalse($field->isHidden());
 
-		$field = new HiddenField();
+		$field = new HiddenTestField();
 		$this->assertTrue($field->isHidden());
 	}
 
-	public function testIsTranslatable(): void
-	{
-		$language = Language::ensure('current');
-
-		$field = new TestField();
-		$this->assertTrue($field->isTranslatable($language));
-	}
-
-	public function testIsTranslatableWithNonDefaultLanguage(): void
-	{
-		$language = new Language([
-			'code'    => 'de',
-			'default' => false
-		]);
-
-		$field = new TestField(translate: true);
-		$this->assertTrue($field->isTranslatable($language));
-
-		$field = new TestField(translate: false);
-		$this->assertFalse($field->isTranslatable($language));
-	}
-
-	public function testInvalid(): void
+	public function testIsInvalid(): void
 	{
 		$field = new TestField();
 		$this->assertFalse($field->isInvalid());
@@ -425,59 +496,26 @@ class FieldClassTest extends TestCase
 		], $fields->toFormValues());
 	}
 
-	public function testHasValue(): void
+	public function testIsTranslatable(): void
 	{
-		$field = new TestField();
-		$this->assertTrue($field->hasValue());
+		$language = Language::ensure('current');
 
-		$field = new NoValueField();
-		$this->assertFalse($field->hasValue());
+		$field = new TestField();
+		$this->assertTrue($field->isTranslatable($language));
 	}
 
-	public function testHelp(): void
+	public function testIsTranslatableWithNonDefaultLanguage(): void
 	{
-		$field = new TestField();
-		$this->assertNull($field->help());
+		$language = new Language([
+			'code'    => 'de',
+			'default' => false
+		]);
 
-		// regular help
-		$field = new TestField(help: 'Test');
-		$this->assertSame('<p>Test</p>', (string)$field->help());
+		$field = new TestField(translate: true);
+		$this->assertTrue($field->isTranslatable($language));
 
-		// translated help
-		$field = new TestField(help: ['en' => 'Test']);
-		$this->assertSame('<p>Test</p>', (string)$field->help());
-
-		// help from string template
-		$field = new TestField(
-			help: 'A field for {{ page.title }}'
-		);
-
-		$field->setModel(new Page([
-			'slug'    => 'test',
-			'content' => [
-				'title' => 'Test title'
-			]
-		]));
-
-		$this->assertSame('<p>A field for Test title</p>', (string)$field->help());
-	}
-
-	public function testIcon(): void
-	{
-		$field = new TestField();
-		$this->assertNull($field->icon());
-
-		$field = new TestField(icon: 'Test');
-		$this->assertSame('Test', $field->icon());
-	}
-
-	public function testId(): void
-	{
-		$field = new TestField();
-		$this->assertSame('test', $field->id());
-
-		$field = new TestField(name: 'test-id');
-		$this->assertSame('test-id', $field->id());
+		$field = new TestField(translate: false);
+		$this->assertFalse($field->isTranslatable($language));
 	}
 
 	public function testKirby(): void
@@ -560,7 +598,7 @@ class FieldClassTest extends TestCase
 			after:       $after = 'After value',
 			autofocus:   true,
 			before:      $before = 'Before value',
-			default:     $default = 'Default value',
+			default:     'Default value',
 			disabled:    false,
 			help:        'Help value',
 			icon:        $icon = 'Icon value',
@@ -573,13 +611,10 @@ class FieldClassTest extends TestCase
 			width:       $width = '1/2'
 		);
 
-		$array = $field->toArray();
-
 		$this->assertEquals([ // @phpstan-ignore-line
 			'after'       => $after,
 			'autofocus'   => true,
 			'before'      => $before,
-			'default'     => $default,
 			'disabled'    => false,
 			'help'        => new HtmlString('<p>Help value</p>'),
 			'hidden'      => false,
