@@ -70,7 +70,7 @@ export function form(fields: Record<string, Field>): Record<string, unknown> {
 
 /**
  * Checks if a form field is visible based on its "when" conditions
- * and the current form values. Also works for sections.
+ * and the current form values.
  * @unstable
  *
  * @example
@@ -115,7 +115,7 @@ export function isVisible(
 }
 
 /**
- * Adds proper endpoint and section definitions
+ * Adds proper endpoint definitions
  * to subfields for a form field.
  * @unstable
  */
@@ -128,18 +128,14 @@ export function subfields(
 	for (const name in fields) {
 		const subfield = fields[name];
 
-		subfield.section = field.name;
-
 		if (field.endpoints) {
 			const endpoints = field.endpoints as {
 				field: string;
-				section: string;
 				model: string;
 			};
 
 			subfield.endpoints = {
 				field: endpoints.field + "+" + name,
-				section: endpoints.section,
 				model: endpoints.model
 			};
 		}
