@@ -240,12 +240,6 @@
       <code><![CDATA[is]]></code>
     </UndefinedMethod>
   </file>
-  <file src="src/Guards/PageValidators.php">
-    <RedundantCondition>
-      <code><![CDATA[$allowed !== []]]></code>
-      <code><![CDATA[$allowed !== []]]></code>
-    </RedundantCondition>
-  </file>
   <file src="src/Http/Cookie.php">
     <InvalidArgument>
       <code><![CDATA[false]]></code>
