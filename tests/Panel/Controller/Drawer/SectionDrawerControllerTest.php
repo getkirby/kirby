@@ -47,9 +47,12 @@ class SectionDrawerControllerTest extends TestCase
 			'blueprints' => [
 				'pages/default' => [
 					'sections' => [
-						'test' => 'info'
+						'test' => ['type' => 'test']
 					]
 				]
+			],
+			'sections' => [
+				'test' => []
 			]
 		]);
 
@@ -85,9 +88,12 @@ class SectionDrawerControllerTest extends TestCase
 			'blueprints' => [
 				'files/default' => [
 					'sections' => [
-						'test' => 'info'
+						'test' => ['type' => 'test']
 					]
 				]
+			],
+			'sections' => [
+				'test' => []
 			]
 		]);
 

@@ -48,9 +48,12 @@ class SectionDialogControllerTest extends TestCase
 			'blueprints' => [
 				'pages/default' => [
 					'sections' => [
-						'test' => 'info'
+						'test' => ['type' => 'test']
 					]
 				]
+			],
+			'sections' => [
+				'test' => []
 			]
 		]);
 
@@ -86,9 +89,12 @@ class SectionDialogControllerTest extends TestCase
 			'blueprints' => [
 				'files/default' => [
 					'sections' => [
-						'test' => 'info'
+						'test' => ['type' => 'test']
 					]
 				]
+			],
+			'sections' => [
+				'test' => []
 			]
 		]);
 

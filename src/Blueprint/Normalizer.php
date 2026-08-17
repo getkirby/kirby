@@ -2,19 +2,19 @@
 
 namespace Kirby\Blueprint;
 
-use Kirby\Cms\ModelWithContent;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Field;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 use Throwable;
 
 /**
  * The Normalizer takes the raw props of a blueprint and
- * converts them into a proper tab layout. Loose fields are
- * wrapped in a section, loose sections in a column and loose
- * columns in a tab. On the way, it collects the props of all
- * sections and fields in the blueprint.
+ * converts them into a proper tab layout. Sections are
+ * converted to fields, loose fields are wrapped in a column
+ * and loose columns in a tab. On the way, it collects the
+ * props of all fields in the blueprint.
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
@@ -35,13 +35,8 @@ class Normalizer
 	// Collected blueprint props
 	protected array $props;
 
-	// Collected props of all sections in the blueprint
-	protected array $sections = [];
-
-	public function __construct(
-		protected ModelWithContent $model,
-		array $props
-	) {
+	public function __construct(array $props)
+	{
 		$this->props = $this->normalize($props);
 	}
 
@@ -70,26 +65,20 @@ class Normalizer
 	}
 
 	/**
-	 * Converts all field definitions, that are not
-	 * wrapped in a fields section into a generic
-	 * fields section.
+	 * Converts all field definitions, that are not wrapped
+	 * in columns, into a single generic column.
 	 */
-	protected function convertFieldsToSections(
-		string $tabName,
-		array $props
-	): array {
+	protected function convertFieldsToColumns(array $props): array
+	{
 		if (isset($props['fields']) === false) {
 			return $props;
 		}
 
-		// Resolve field references and extract inline definitions
-		$fields = $this->resolveFieldReferences($props['fields']);
-
-		// wrap all fields in a section
-		$props['sections'] = [
-			$tabName . '-fields' => [
-				'type'   => 'fields',
-				'fields' => $fields
+		// wrap everything in one big column
+		$props['columns'] = [
+			[
+				'width'  => '1/1',
+				'fields' => $props['fields']
 			]
 		];
 
@@ -99,28 +88,77 @@ class Normalizer
 	}
 
 	/**
-	 * Converts all sections that are not wrapped in
-	 * columns, into a single generic column.
+	 * Converts all section definitions into field definitions.
+	 * Sections only exist as a legacy concept in blueprints and
+	 * are either mapped onto their field equivalent or wrapped
+	 * in the `section` field adapter.
 	 */
-	protected function convertSectionsToColumns(
-		string $tabName,
-		array $props
-	): array {
+	protected function convertSectionsToFields(array $props): array
+	{
 		if (isset($props['sections']) === false) {
 			return $props;
 		}
 
-		// wrap everything in one big column
-		$props['columns'] = [
-			[
-				'width'    => '1/1',
-				'sections' => $props['sections']
-			]
-		];
+		$fields = $props['fields'] ?? [];
+
+		// sections and fields share a single namespace
+		$add = static function (array $fields, $name, $props): array {
+			if (isset($fields[$name]) === true) {
+				$fields[$name] = static::duplicateFieldError($name, $props);
+				return $fields;
+			}
+
+			$fields[$name] = $props;
+			return $fields;
+		};
+
+		foreach ($props['sections'] as $name => $section) {
+			// unset / remove section if its property is false
+			if ($section === false) {
+				continue;
+			}
+
+			// fallback to default props when true is passed
+			if ($section === true) {
+				$section = [];
+			}
+
+			// inject all section extensions
+			$section = Blueprint::extend($section);
+
+			// a fields section is unwrapped into the parent's own fields
+			if (($section['type'] ?? $name) === 'fields') {
+				foreach (static::unwrapFieldsSection($section) as $key => $field) {
+					$fields = $add($fields, $key, $field);
+				}
+
+				continue;
+			}
+
+			$fields = $add($fields, $name, static::sectionToField($name, $section));
+		}
+
+		$props['fields'] = $fields;
 
 		unset($props['sections']);
 
 		return $props;
+	}
+
+	/**
+	 * Creates an error field for a field name that is already taken
+	 */
+	protected static function duplicateFieldError(
+		string|int $name,
+		array|string|bool|null $props = null
+	): array {
+		return [
+			'label' => (is_array($props) === true ? $props['label'] ?? null : null) ?? 'Error',
+			'name'  => $name,
+			'text'  => 'The field <strong>"' . $name . '"</strong> already exists in your blueprint',
+			'theme' => 'negative',
+			'type'  => 'info',
+		];
 	}
 
 	/**
@@ -188,8 +226,8 @@ class Normalizer
 		$props = $this->extractFieldReferences($props);
 
 		// convert all shortcuts
-		$props = $this->convertFieldsToSections('main', $props);
-		$props = $this->convertSectionsToColumns('main', $props);
+		$props = $this->convertSectionsToFields($props);
+		$props = $this->convertFieldsToColumns($props);
 		$props = $this->convertColumnsToTabs('main', $props);
 
 		// normalize all tabs
@@ -212,29 +250,23 @@ class Normalizer
 				continue;
 			}
 
-			$columnProps = $this->convertFieldsToSections(
-				$tabName . '-col-' . $columnKey,
-				$columnProps
-			);
+			$columnProps = $this->convertSectionsToFields($columnProps);
 
-			// inject getting started info, if the sections are empty
-			if (empty($columnProps['sections']) === true) {
-				$columnProps['sections'] = [
+			// inject getting started info, if the fields are empty
+			if (empty($columnProps['fields']) === true) {
+				$columnProps['fields'] = [
 					$tabName . '-info-' . $columnKey => [
 						'label' => 'Column (' . ($columnProps['width'] ?? '1/1') . ')',
 						'type'  => 'info',
-						'text'  => 'No sections yet'
+						'text'  => 'No fields yet'
 					]
 				];
 			}
 
 			$columns[$columnKey] = [
 				...$columnProps,
-				'width'    => $columnProps['width'] ?? '1/1',
-				'sections' => $this->normalizeSections(
-					$tabName,
-					$columnProps['sections'] ?? []
-				)
+				'width'  => $columnProps['width'] ?? '1/1',
+				'fields' => $this->normalizeFields($columnProps['fields'])
 			];
 		}
 
@@ -296,6 +328,32 @@ class Normalizer
 			'type'  => $type,
 			'width' => $props['width'] ?? '1/1',
 		];
+	}
+
+	/**
+	 * Normalizes all fields of a column and registers
+	 * them in the global field collection
+	 *
+	 * @return array<string, array>
+	 */
+	protected function normalizeFields(array $fields): array
+	{
+		// resolve field references before normalizing
+		$fields = $this->resolveFieldReferences($fields);
+		$fields = static::normalizeFieldsProps($fields);
+
+		foreach ($fields as $name => $props) {
+			if (isset($this->fields[$name]) === true) {
+				$this->fields[$name] = $fields[$name] =
+					static::duplicateFieldError($name, $props);
+
+				continue;
+			}
+
+			$this->fields[$name] = $props;
+		}
+
+		return $fields;
 	}
 
 	/**
@@ -399,91 +457,6 @@ class Normalizer
 	}
 
 	/**
-	 * Normalizes all required keys in sections
-	 *
-	 * @return array<string, array>
-	 */
-	protected function normalizeSections(
-		string $tabName,
-		array $sections
-	): array {
-		foreach ($sections as $sectionName => $sectionProps) {
-			// unset / remove section if its property is false
-			if ($sectionProps === false) {
-				unset($sections[$sectionName]);
-				continue;
-			}
-
-			// fallback to default props when true is passed
-			if ($sectionProps === true) {
-				$sectionProps = [];
-			}
-
-			// inject all section extensions
-			$sectionProps = Blueprint::extend($sectionProps);
-
-			$sections[$sectionName] = $sectionProps = [
-				...$sectionProps,
-				'name' => $sectionName,
-				'type' => $type = $sectionProps['type'] ?? $sectionName
-			];
-
-			if (empty($type) === true || is_string($type) === false) {
-				$sections[$sectionName] = [
-					'name'  => $sectionName,
-					'label' => 'Invalid section type for section "' . $sectionName . '"',
-					'type'  => 'info',
-					'text'  => 'The following section types are available: ' . Blueprint::helpList(array_keys(Section::$types))
-				];
-			} elseif (isset(Section::$types[$type]) === false) {
-				$sections[$sectionName] = [
-					'name'  => $sectionName,
-					'label' => 'Invalid section type ("' . $type . '")',
-					'type'  => 'info',
-					'text'  => 'The following section types are available: ' . Blueprint::helpList(array_keys(Section::$types))
-				];
-			}
-
-			if ($sectionProps['type'] === 'fields') {
-				// Resolve field references before normalizing
-				$sectionFields = $this->resolveFieldReferences($sectionProps['fields'] ?? []);
-				$fields = static::normalizeFieldsProps($sectionFields);
-
-				// inject guide fields guide
-				if ($fields === []) {
-					$fields = [
-						$tabName . '-info' => [
-							'label' => 'Fields',
-							'text'  => 'No fields yet',
-							'type'  => 'info'
-						]
-					];
-				} else {
-					foreach ($fields as $fieldName => $fieldProps) {
-						if (isset($this->fields[$fieldName]) === true) {
-							$this->fields[$fieldName] = $fields[$fieldName] = [
-								'type'  => 'info',
-								'label' => $fieldProps['label'] ?? 'Error',
-								'text'  => 'The field <strong>"' . $fieldName . '"</strong> already exists in your blueprint',
-								'theme' => 'negative'
-							];
-						} else {
-							$this->fields[$fieldName] = $fieldProps;
-						}
-					}
-				}
-
-				$sections[$sectionName]['fields'] = $fields;
-			}
-		}
-
-		// store all normalized sections
-		$this->sections = [...$this->sections, ...$sections];
-
-		return $sections;
-	}
-
-	/**
 	 * Normalizes all required keys in tabs
 	 *
 	 * @return array<string, array>
@@ -504,8 +477,8 @@ class Normalizer
 			// inject all tab extensions
 			$tabProps = Blueprint::extend($tabProps);
 
-			$tabProps = $this->convertFieldsToSections($tabName, $tabProps);
-			$tabProps = $this->convertSectionsToColumns($tabName, $tabProps);
+			$tabProps = $this->convertSectionsToFields($tabProps);
+			$tabProps = $this->convertFieldsToColumns($tabProps);
 
 			$tabs[$tabName] = [
 				...$tabProps,
@@ -558,13 +531,66 @@ class Normalizer
 	}
 
 	/**
-	 * Returns the props of all sections in the blueprint
-	 *
-	 * @return array<string, array>
+	 * Creates an error field for an invalid section type
 	 */
-	public function sections(): array
+	protected static function sectionError(string $name, string $label): array
 	{
-		return $this->sections;
+		return [
+			'label' => $label,
+			'name'  => $name,
+			'text'  => 'The following section types are available: ' . Blueprint::helpList(array_keys(Section::$types)),
+			'theme' => 'negative',
+			'type'  => 'info',
+		];
+	}
+
+	/**
+	 * Converts a single section definition into a field definition.
+	 * Section types with a field equivalent are mapped onto that
+	 * field, all others are wrapped in the `section` field adapter.
+	 */
+	protected static function sectionToField(string $name, array $props): array
+	{
+		$type = $props['type'] ?? $name;
+
+		// `headline` is the deprecated version of `label`
+		if (isset($props['headline']) === true) {
+			$props['label'] ??= $props['headline'];
+			unset($props['headline']);
+		}
+
+		unset($props['type']);
+
+		if (empty($type) === true || is_string($type) === false) {
+			return static::sectionError(
+				$name,
+				'Invalid section type for section "' . $name . '"'
+			);
+		}
+
+		// section type with a field equivalent
+		if ($field = Blueprint::$sectionFields[$type] ?? null) {
+			return [
+				...$props,
+				'name' => $name,
+				'type' => $field
+			];
+		}
+
+		// section type without a field equivalent
+		if (isset(Section::$types[$type]) === true) {
+			return [
+				...$props,
+				'name'    => $name,
+				'section' => $type,
+				'type'    => 'section'
+			];
+		}
+
+		return static::sectionError(
+			$name,
+			'Invalid section type ("' . $type . '")'
+		);
 	}
 
 	/**
@@ -575,5 +601,30 @@ class Normalizer
 	public function tabs(): array
 	{
 		return $this->props['tabs'] ?? [];
+	}
+
+	/**
+	 * Unwraps a `fields` section into its own fields. A `when`
+	 * condition on the section is pushed down onto every field,
+	 * the same way it works for field groups.
+	 */
+	protected static function unwrapFieldsSection(array $props): array
+	{
+		$fields = $props['fields'] ?? [];
+
+		if (is_array($fields) === false) {
+			return [];
+		}
+
+		if (isset($props['when']) === true) {
+			$fields = A::map(
+				$fields,
+				fn ($field) => is_array($field) === true
+					? array_replace_recursive(['when' => $props['when']], $field)
+					: $field
+			);
+		}
+
+		return $fields;
 	}
 }

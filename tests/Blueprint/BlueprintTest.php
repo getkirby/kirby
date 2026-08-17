@@ -88,23 +88,25 @@ class BlueprintTest extends TestCase
 				'columns' => [
 					[
 						'width' => '1/3',
-						'sections' => [
+						'fields' => [
 							'main-info-0' => [
 								'label' => 'Column (1/3)',
 								'type'  => 'info',
-								'text'  => 'No sections yet',
-								'name'  => 'main-info-0'
+								'text'  => 'No fields yet',
+								'name'  => 'main-info-0',
+								'width' => '1/1'
 							]
 						]
 					],
 					[
 						'width' => '2/3',
-						'sections' => [
+						'fields' => [
 							'main-info-1' => [
 								'label' => 'Column (2/3)',
 								'type'  => 'info',
-								'text'  => 'No sections yet',
-								'name'  => 'main-info-1'
+								'text'  => 'No fields yet',
+								'name'  => 'main-info-1',
+								'width' => '1/1'
 							]
 						]
 					]
@@ -158,22 +160,18 @@ class BlueprintTest extends TestCase
 		$this->assertSame($expected, $blueprint->__debugInfo());
 	}
 
-	public function testSectionsToColumns(): void
+	public function testSectionsToFields(): void
 	{
-		$sections = [
-			'pages' => [
-				'name' => 'pages',
-				'type' => 'pages'
-			],
-			'files' => [
-				'name' => 'files',
-				'type' => 'files'
-			]
-		];
-
 		$blueprint = new Blueprint([
 			'model'    => $this->model,
-			'sections' => $sections
+			'sections' => [
+				'pages' => [
+					'type' => 'pages'
+				],
+				'files' => [
+					'type' => 'files'
+				]
+			]
 		]);
 
 		$expected = [
@@ -182,8 +180,21 @@ class BlueprintTest extends TestCase
 				'label'   => 'Main',
 				'columns' => [
 					[
-						'width'    => '1/1',
-						'sections' => $sections
+						'width'  => '1/1',
+						'fields' => [
+							'pages' => [
+								'label' => 'Pages',
+								'name'  => 'pages',
+								'type'  => 'pagelist',
+								'width' => '1/1'
+							],
+							'files' => [
+								'label' => 'Files',
+								'name'  => 'files',
+								'type'  => 'filelist',
+								'width' => '1/1'
+							]
+						]
 					]
 				],
 				'icon'    => null,
@@ -194,7 +205,122 @@ class BlueprintTest extends TestCase
 		$this->assertEquals($expected, $blueprint->toArray()['tabs']); // cannot use strict assertion (array order)
 	}
 
-	public function testFieldsToSections(): void
+	public function testSectionsToFieldsWithHeadline(): void
+	{
+		$blueprint = new Blueprint([
+			'model'    => $this->model,
+			'sections' => [
+				'pages' => [
+					'headline' => 'My pages',
+					'type'     => 'pages'
+				]
+			]
+		]);
+
+		$field = $blueprint->field('pages');
+
+		$this->assertSame('pagelist', $field['type']);
+		$this->assertSame('My pages', $field['label']);
+		$this->assertArrayNotHasKey('headline', $field);
+	}
+
+	public function testSectionsToFieldsWithCustomType(): void
+	{
+		$this->app = $this->app->clone([
+			'sections' => [
+				'test' => []
+			]
+		]);
+
+		$blueprint = new Blueprint([
+			'model'    => $this->model,
+			'sections' => [
+				'mysection' => [
+					'type' => 'test'
+				]
+			]
+		]);
+
+		$field = $blueprint->field('mysection');
+
+		$this->assertSame('section', $field['type']);
+		$this->assertSame('test', $field['section']);
+	}
+
+	public function testSectionsToFieldsWithUnknownType(): void
+	{
+		$blueprint = new Blueprint([
+			'model'    => $this->model,
+			'sections' => [
+				'mysection' => [
+					'type' => 'does-not-exist'
+				]
+			]
+		]);
+
+		$field = $blueprint->field('mysection');
+
+		$this->assertSame('info', $field['type']);
+		$this->assertSame('negative', $field['theme']);
+		$this->assertSame('Invalid section type ("does-not-exist")', $field['label']);
+		$this->assertStringStartsWith(
+			'The following section types are available:',
+			$field['text']
+		);
+	}
+
+	public function testFieldsSectionWithWhen(): void
+	{
+		$blueprint = new Blueprint([
+			'model'    => $this->model,
+			'sections' => [
+				'mysection' => [
+					'type'   => 'fields',
+					'when'   => ['toggle' => true],
+					'fields' => [
+						'a' => [
+							'type' => 'text'
+						],
+						'b' => [
+							'type' => 'text',
+							'when' => ['other' => true]
+						]
+					]
+				]
+			]
+		]);
+
+		// the condition of the section is pushed down onto its fields
+		$this->assertSame(['toggle' => true], $blueprint->field('a')['when']);
+
+		// while an own condition of a field wins
+		$this->assertSame(
+			['toggle' => true, 'other' => true],
+			$blueprint->field('b')['when']
+		);
+	}
+
+	public function testFieldsSectionWithInvalidFields(): void
+	{
+		$blueprint = new Blueprint([
+			'model'    => $this->model,
+			'sections' => [
+				'mysection' => [
+					'type'   => 'fields',
+					'fields' => 'nonsense'
+				]
+			]
+		]);
+
+		$fields = $blueprint->tab('main')->columns()[0]['fields'];
+
+		// the section is unwrapped into no fields at all,
+		// which leaves the column with the guide field
+		$this->assertSame(['main-info-0'], array_keys($fields));
+		$this->assertSame('No fields yet', $fields['main-info-0']['text']);
+	}
+
+	public function testFieldsToColumns(): void
 	{
 		$fields = [
 			'headline' => [
@@ -216,14 +342,8 @@ class BlueprintTest extends TestCase
 				'label'   => 'Main',
 				'columns' => [
 					[
-						'width'    => '1/1',
-						'sections' => [
-							'main-fields' => [
-								'name'   => 'main-fields',
-								'type'   => 'fields',
-								'fields' => $fields
-							]
-						]
+						'width'  => '1/1',
+						'fields' => $fields
 					]
 				],
 				'icon'    => null,
@@ -537,16 +657,16 @@ class BlueprintTest extends TestCase
 		]);
 
 		try {
-			$sections = $blueprint->tab('main')['columns'][0]['sections'];
+			$fields = $blueprint->tab('main')->columns()[0]['fields'];
 		} catch (Exception $e) {
-			$this->assertNull($e->getMessage(), 'Failed to get sections.');
+			$this->assertNull($e->getMessage(), 'Failed to get fields.');
 		}
 
-		$this->assertIsArray($sections);
-		$this->assertCount(1, $sections);
-		$this->assertArrayHasKey('main', $sections);
-		$this->assertArrayHasKey('label', $sections['main']);
-		$this->assertSame('Invalid section type for section "main"', $sections['main']['label']);
+		$this->assertIsArray($fields);
+		$this->assertCount(1, $fields);
+		$this->assertArrayHasKey('main', $fields);
+		$this->assertSame('info', $fields['main']['type']);
+		$this->assertSame('Invalid section type for section "main"', $fields['main']['label']);
 	}
 
 	public function testIsDefault(): void
@@ -570,7 +690,7 @@ class BlueprintTest extends TestCase
 			]
 		]);
 
-		$this->assertSame('info', $blueprint->sections()['info']->type());
+		$this->assertSame('info', $blueprint->field('info')['type']);
 
 		// by just passing true
 		$blueprint = new Blueprint([
@@ -580,7 +700,7 @@ class BlueprintTest extends TestCase
 			]
 		]);
 
-		$this->assertSame('info', $blueprint->sections()['info']->type());
+		$this->assertSame('info', $blueprint->field('info')['type']);
 	}
 
 	public function testSectionFromField(): void
@@ -597,6 +717,26 @@ class BlueprintTest extends TestCase
 		]);
 
 		$this->assertSame('info', $blueprint->section('info')->type());
+	}
+
+	public function testSectionIsCached(): void
+	{
+		$blueprint = new Blueprint([
+			'model'  => $this->model,
+			'fields' => [
+				'info' => [
+					'type'    => 'section',
+					'section' => 'info'
+				]
+			]
+		]);
+
+		// the section object is only created once
+		$this->assertSame($blueprint->section('info'), $blueprint->section('info'));
+
+		// the same applies to sections that cannot be found
+		$this->assertNull($blueprint->section('does-not-exist'));
+		$this->assertNull($blueprint->section('does-not-exist'));
 	}
 
 	public function testSectionFromFieldWithDifferentName(): void
@@ -729,18 +869,19 @@ class BlueprintTest extends TestCase
 		);
 	}
 
-	public function testSectionFromFieldWithSectionOfSameName(): void
+	public function testSectionAndFieldOfSameName(): void
 	{
 		$blueprint = new Blueprint([
 			'model'    => $this->model,
-			'fields'   => [
-				'info' => [
-					'type'    => 'section',
-					'section' => 'info',
-					'text'    => 'From the field'
-				]
-			],
 			'sections' => [
+				'fields' => [
+					'type'   => 'fields',
+					'fields' => [
+						'info' => [
+							'type' => 'text'
+						]
+					]
+				],
 				'info' => [
 					'type' => 'info',
 					'text' => 'From the section'
@@ -748,10 +889,15 @@ class BlueprintTest extends TestCase
 			]
 		]);
 
-		// the section definition takes precedence over the field
+		// sections and fields share a single namespace, so the
+		// second definition is replaced by a duplicate name error
+		$field = $blueprint->field('info');
+
+		$this->assertSame('info', $field['type']);
+		$this->assertSame('negative', $field['theme']);
 		$this->assertSame(
-			'<p>From the section</p>',
-			trim($blueprint->section('info')->toArray()['text'])
+			'The field <strong>"info"</strong> already exists in your blueprint',
+			$field['text']
 		);
 	}
 
@@ -778,9 +924,9 @@ class BlueprintTest extends TestCase
 
 		$sections = $blueprint->sections();
 
-		// the fields section and both section fields
+		// only the section fields, the regular field is not a section
 		$this->assertSame(
-			['main-fields', 'drafts', 'listed'],
+			['drafts', 'listed'],
 			array_keys($sections)
 		);
 
