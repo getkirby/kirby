@@ -41,7 +41,6 @@ use Kirby\Form\Field\PagePickerField;
 use Kirby\Form\Field\PasswordField;
 use Kirby\Form\Field\RadioField;
 use Kirby\Form\Field\RangeField;
-use Kirby\Form\Field\SectionField;
 use Kirby\Form\Field\SelectField;
 use Kirby\Form\Field\SlugField;
 use Kirby\Form\Field\StatsField;
@@ -278,7 +277,6 @@ class Core
 			'password'    => PasswordField::class,
 			'radio'       => RadioField::class,
 			'range'       => RangeField::class,
-			'section'     => SectionField::class,
 			'select'      => SelectField::class,
 			'slug'        => SlugField::class,
 			'stats'       => StatsField::class,
@@ -415,45 +413,6 @@ class Core
 			'blocks/table'    => $this->root . '/blocks/table/table.php',
 			'blocks/text'     => $this->root . '/blocks/text/text.php',
 			'blocks/video'    => $this->root . '/blocks/video/video.php',
-		];
-	}
-
-	/**
-	 * Returns a list of paths to section mixins
-	 *
-	 * They are located in `/kirby/config/sections/mixins`
-	 */
-	public function sectionMixins(): array
-	{
-		return [
-			'batch'      => $this->root . '/sections/mixins/batch.php',
-			'details'    => $this->root . '/sections/mixins/details.php',
-			'empty'      => $this->root . '/sections/mixins/empty.php',
-			'headline'   => $this->root . '/sections/mixins/headline.php',
-			'help'       => $this->root . '/sections/mixins/help.php',
-			'layout'     => $this->root . '/sections/mixins/layout.php',
-			'max'        => $this->root . '/sections/mixins/max.php',
-			'min'        => $this->root . '/sections/mixins/min.php',
-			'pagination' => $this->root . '/sections/mixins/pagination.php',
-			'parent'     => $this->root . '/sections/mixins/parent.php',
-			'search'     => $this->root . '/sections/mixins/search.php',
-			'sort'        => $this->root . '/sections/mixins/sort.php',
-		];
-	}
-
-	/**
-	 * Returns a list of all section definitions
-	 *
-	 * They are located in `/kirby/config/sections`
-	 */
-	public function sections(): array
-	{
-		return [
-			'fields' => $this->root . '/sections/fields.php',
-			'files'  => $this->root . '/sections/files.php',
-			'info'   => $this->root . '/sections/info.php',
-			'pages'  => $this->root . '/sections/pages.php',
-			'stats'  => $this->root . '/sections/stats.php',
 		];
 	}
 

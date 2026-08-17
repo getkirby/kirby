@@ -142,7 +142,6 @@ class CoreTest extends TestCase
 		$this->assertArrayHasKey('pages', $fields);
 		$this->assertArrayHasKey('radio', $fields);
 		$this->assertArrayHasKey('range', $fields);
-		$this->assertArrayHasKey('section', $fields);
 		$this->assertArrayHasKey('select', $fields);
 		$this->assertArrayHasKey('slug', $fields);
 		$this->assertArrayHasKey('structure', $fields);
@@ -256,29 +255,7 @@ class CoreTest extends TestCase
 		$this->assertArrayHasKey('video', $tags);
 	}
 
-	public function testSectionMixins(): void
-	{
-		$mixins = $this->core->sectionMixins();
 
-		$this->assertArrayHasKey('empty', $mixins);
-		$this->assertArrayHasKey('headline', $mixins);
-		$this->assertArrayHasKey('help', $mixins);
-		$this->assertArrayHasKey('layout', $mixins);
-		$this->assertArrayHasKey('max', $mixins);
-		$this->assertArrayHasKey('min', $mixins);
-		$this->assertArrayHasKey('pagination', $mixins);
-		$this->assertArrayHasKey('parent', $mixins);
-	}
-
-	public function testSections(): void
-	{
-		$sections = $this->core->sections();
-
-		$this->assertArrayHasKey('fields', $sections);
-		$this->assertArrayHasKey('files', $sections);
-		$this->assertArrayHasKey('info', $sections);
-		$this->assertArrayHasKey('pages', $sections);
-	}
 
 	public function testTemplates(): void
 	{
