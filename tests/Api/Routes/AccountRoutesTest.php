@@ -9,6 +9,7 @@ use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Form\Field;
+use Kirby\Form\Field\InputField;
 use Kirby\TestCase;
 
 class AccountRoutesTest extends TestCase
@@ -259,6 +260,24 @@ class AccountRoutesTest extends TestCase
 
 	public function testFields(): void
 	{
+		$field = new class () extends InputField {
+			protected mixed $value = null;
+
+			public function api(): array
+			{
+				return [
+					[
+						'pattern' => '/',
+						'action'  => fn () => 'Test home route'
+					],
+					[
+						'pattern' => 'nested',
+						'action'  => fn () => 'Test nested route'
+					],
+				];
+			}
+		};
+
 		$app = $this->app->clone([
 			'blueprints' => [
 				'users/admin' => [
@@ -270,18 +289,7 @@ class AccountRoutesTest extends TestCase
 				]
 			],
 			'fields' => [
-				'test' => [
-					'api' => fn () => [
-						[
-							'pattern' => '/',
-							'action'  => fn () => 'Test home route'
-						],
-						[
-							'pattern' => 'nested',
-							'action'  => fn () => 'Test nested route'
-						],
-					]
-				]
+				'test' => $field::class
 			]
 		]);
 
