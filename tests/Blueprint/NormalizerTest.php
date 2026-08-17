@@ -681,7 +681,6 @@ class NormalizerTest extends TestCase
 		$this->assertSame('content', $tab['name']);
 		$this->assertSame('Content', $tab['label']);
 		$this->assertSame('text', $tab['icon']);
-		$this->assertSame('/pages/a/?tab=content', $tab['link']);
 		$this->assertSame([], $tab['columns']);
 	}
 

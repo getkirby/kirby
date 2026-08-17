@@ -512,7 +512,6 @@ class Normalizer
 				'columns' => $this->normalizeColumns($tabName, $tabProps['columns'] ?? []),
 				'icon'    => $tabProps['icon']  ?? null,
 				'label'   => $this->i18n($tabProps['label'] ?? Str::label($tabName)),
-				'link'    => $this->model->panel()->url(true) . '/?tab=' . $tabName,
 				'name'    => $tabName,
 			];
 		}

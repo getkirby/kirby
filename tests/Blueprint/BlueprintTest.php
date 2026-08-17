@@ -117,7 +117,7 @@ class BlueprintTest extends TestCase
 		];
 
 		$this->assertSame($expected, $blueprint->toArray()['tabs']);
-		$this->assertSame($expected['main'], $blueprint->tab());
+		$this->assertSame($expected['main'], $blueprint->tab()->toViewProps());
 	}
 
 	public function testButtons(): void
@@ -836,6 +836,41 @@ class BlueprintTest extends TestCase
 			]
 		]);
 
-		$this->assertSame('Content tab', $blueprint->tabs()[0]['label']);
+		$this->assertSame('Content tab', $blueprint->tabs()->first()->label());
+	}
+
+	public function testTabs(): void
+	{
+		$blueprint = new Blueprint([
+			'model' => $this->model,
+			'tabs'  => [
+				'content'  => [],
+				'settings' => []
+			]
+		]);
+
+		$this->assertInstanceOf(Tabs::class, $blueprint->tabs());
+		$this->assertCount(2, $blueprint->tabs());
+
+		// the collection is only created once
+		$this->assertSame($blueprint->tabs(), $blueprint->tabs());
+
+		// the first tab is returned without a name
+		$this->assertSame($blueprint->tab('content'), $blueprint->tab());
+
+		// tabs are matched case-insensitively
+		$this->assertSame($blueprint->tab('content'), $blueprint->tab('Content'));
+
+		$this->assertNull($blueprint->tab('does-not-exist'));
+	}
+
+	public function testTabsEmpty(): void
+	{
+		$blueprint = new Blueprint([
+			'model' => $this->model
+		]);
+
+		$this->assertCount(0, $blueprint->tabs());
+		$this->assertNull($blueprint->tab());
 	}
 }

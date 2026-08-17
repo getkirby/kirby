@@ -83,8 +83,8 @@ class BlueprintExtendAndUnsetTest extends TestCase
 
 		$this->assertSame('extended', $blueprint->title());
 		$this->assertCount(2, $blueprint->tabs());
-		$this->assertIsArray($blueprint->tab('content'));
-		$this->assertIsNotArray($blueprint->tab('seo'));
+		$this->assertInstanceOf(Tab::class, $blueprint->tab('content'));
+		$this->assertNull($blueprint->tab('seo'));
 	}
 
 	public function testExtendAndUnsetSection(): void

@@ -35,7 +35,9 @@ class Blueprint
 	protected ModelWithContent $model;
 	protected array $props;
 	protected array $sections = [];
-	protected array $tabs = [];
+
+	// Collected tabs, see `tabs()`
+	protected Tabs|null $tabs = null;
 
 	/**
 	 * Magic getter/caller for any blueprint prop
@@ -78,7 +80,6 @@ class Blueprint
 		$this->fields   = $normalizer->fields();
 		$this->props    = $normalizer->props();
 		$this->sections = $normalizer->sections();
-		$this->tabs     = $normalizer->tabs();
 	}
 
 	/**
@@ -460,23 +461,30 @@ class Blueprint
 	}
 
 	/**
-	 * Returns a single tab by name
+	 * Returns a single tab by name or the
+	 * first tab if no name is given
 	 */
-	public function tab(string|null $name = null): array|null
+	public function tab(string|null $name = null): Tab|null
 	{
+		$tabs = $this->tabs();
+
 		if ($name === null) {
-			return A::first($this->tabs);
+			return $tabs->first();
 		}
 
-		return $this->tabs[$name] ?? null;
+		return $tabs->get($name);
 	}
 
 	/**
-	 * Returns all tabs
+	 * Creates and caches the collection of all tabs
+	 * from the normalized tab props
 	 */
-	public function tabs(): array
+	public function tabs(): Tabs
 	{
-		return array_values($this->tabs);
+		return $this->tabs ??= new Tabs(
+			tabs: $this->props['tabs'] ?? [],
+			model: $this->model
+		);
 	}
 
 	/**
@@ -492,6 +500,9 @@ class Blueprint
 	 */
 	public function toArray(): array
 	{
-		return $this->props;
+		return [
+			...$this->props,
+			'tabs' => $this->tabs()->toArray()
+		];
 	}
 }
