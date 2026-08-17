@@ -230,32 +230,9 @@ class Core
 	}
 
 	/**
-	 * Returns an array of paths for field mixins
+	 * Returns an array of all class names of panel fields
 	 *
-	 * They are located in `/kirby/config/fields/mixins`
-	 */
-	public function fieldMixins(): array
-	{
-		return [
-			'datetime'   => $this->root . '/fields/mixins/datetime.php',
-			'filepicker' => $this->root . '/fields/mixins/filepicker.php',
-			'layout'     => $this->root . '/fields/mixins/layout.php',
-			'min'        => $this->root . '/fields/mixins/min.php',
-			'options'    => $this->root . '/fields/mixins/options.php',
-			'pagepicker' => $this->root . '/fields/mixins/pagepicker.php',
-			'picker'     => $this->root . '/fields/mixins/picker.php',
-			'upload'     => $this->root . '/fields/mixins/upload.php',
-			'userpicker' => $this->root . '/fields/mixins/userpicker.php',
-		];
-	}
-
-	/**
-	 * Returns an array of all paths and class names of panel fields
-	 *
-	 * Traditional panel fields are located in `/kirby/config/fields`
-	 *
-	 * The more complex field classes can be found in
-	 * `/kirby/src/Form/Fields`
+	 * The field classes can be found in `/kirby/src/Form/Field`
 	 */
 	public function fields(): array
 	{
@@ -298,38 +275,6 @@ class Core
 			'url'         => UrlField::class,
 			'users'       => UserPickerField::class,
 			'writer'      => WriterField::class,
-
-			'legacy-checkboxes'  => $this->root . '/fields/checkboxes.php',
-			'legacy-color'       => $this->root . '/fields/color.php',
-			'legacy-date'        => $this->root . '/fields/date.php',
-			'legacy-email'       => $this->root . '/fields/email.php',
-			'legacy-files'       => $this->root . '/fields/files.php',
-			'legacy-gap'         => $this->root . '/fields/gap.php',
-			'legacy-headline'    => $this->root . '/fields/headline.php',
-			'legacy-hidden'      => $this->root . '/fields/hidden.php',
-			'legacy-info'        => $this->root . '/fields/info.php',
-			'legacy-line'        => $this->root . '/fields/line.php',
-			'legacy-link'        => $this->root . '/fields/link.php',
-			'legacy-list'        => $this->root . '/fields/list.php',
-			'legacy-multiselect' => $this->root . '/fields/multiselect.php',
-			'legacy-number'      => $this->root . '/fields/number.php',
-			'legacy-object'      => $this->root . '/fields/object.php',
-			'legacy-pages'       => $this->root . '/fields/pages.php',
-			'legacy-radio'       => $this->root . '/fields/radio.php',
-			'legacy-range'       => $this->root . '/fields/range.php',
-			'legacy-select'      => $this->root . '/fields/select.php',
-			'legacy-slug'        => $this->root . '/fields/slug.php',
-			'legacy-structure'   => $this->root . '/fields/structure.php',
-			'legacy-tags'        => $this->root . '/fields/tags.php',
-			'legacy-tel'         => $this->root . '/fields/tel.php',
-			'legacy-text'        => $this->root . '/fields/text.php',
-			'legacy-textarea'    => $this->root . '/fields/textarea.php',
-			'legacy-time'        => $this->root . '/fields/time.php',
-			'legacy-toggle'      => $this->root . '/fields/toggle.php',
-			'legacy-toggles'     => $this->root . '/fields/toggles.php',
-			'legacy-url'         => $this->root . '/fields/url.php',
-			'legacy-users'       => $this->root . '/fields/users.php',
-			'legacy-writer'      => $this->root . '/fields/writer.php',
 		];
 	}
 
