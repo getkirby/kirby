@@ -4,7 +4,6 @@ namespace Kirby\Api;
 
 use Kirby\Auth\Exception\RateLimitException;
 use Kirby\Blueprint\Blueprint;
-use Kirby\Blueprint\Section;
 use Kirby\Cms\App;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
@@ -65,7 +64,6 @@ class AccountRoutesTest extends TestCase
 	{
 		$this->app->session()->destroy();
 		Field::$types = [];
-		Section::$types = [];
 		Dir::remove(static::TMP);
 		App::destroy();
 	}
@@ -453,41 +451,6 @@ class AccountRoutesTest extends TestCase
 		$this->assertCount(2, $response['data']);
 		$this->assertSame('admin', $response['data'][0]['name']);
 		$this->assertSame('editor', $response['data'][1]['name']);
-	}
-
-	public function testSections(): void
-	{
-		$app = $this->app->clone([
-			'blueprints' => [
-				'users/admin' => [
-					'sections' => [
-						'test' => [
-							'type' => 'test'
-						]
-					]
-				]
-			],
-			'sections' => [
-				'test' => [
-					'toArray' => fn () => [
-						'foo' => 'bar'
-					]
-				]
-			]
-		]);
-
-		$app->impersonate('test@getkirby.com');
-
-		$response = $app->api()->call('account/sections/test');
-		$expected = [
-			'status' => 'ok',
-			'code'   => 200,
-			'name'   => 'test',
-			'type'   => 'test',
-			'foo'    => 'bar'
-		];
-
-		$this->assertSame($expected, $response);
 	}
 
 	public function testUpdate(): void
