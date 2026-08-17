@@ -18,6 +18,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Form\Fields;
 use Kirby\Form\Form;
+use Kirby\Form\Interface\ProvidesAcceptedBlueprints;
 use Kirby\Panel\Model as PanelModel;
 use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\HtmlString;
@@ -80,18 +81,14 @@ abstract class ModelWithContent extends Model implements Identifiable
 	/**
 	 * Returns an array with all blueprints that are available
 	 */
-	public function blueprints(string|null $inSection = null): array
+	public function blueprints(string|null $inField = null): array
 	{
 		// helper function
-		$toBlueprints = static function (array $sections): array {
+		$toBlueprints = static function (iterable $fields): array {
 			$blueprints = [];
 
-			foreach ($sections as $section) {
-				if ($section === null) {
-					continue;
-				}
-
-				foreach ((array)$section->blueprints() as $blueprint) {
+			foreach ($fields as $field) {
+				foreach ($field->blueprints() as $blueprint) {
 					$blueprints[$blueprint['name']] = $blueprint;
 				}
 			}
@@ -99,14 +96,20 @@ abstract class ModelWithContent extends Model implements Identifiable
 			return array_values($blueprints);
 		};
 
-		$blueprint = $this->blueprint();
+		$fields = Fields::for($this);
 
-		// no caching for when collecting for specific section
-		if ($inSection !== null) {
-			return $toBlueprints([$blueprint->section($inSection)]);
+		// no caching for when collecting for a specific field
+		if ($inField !== null) {
+			$field = $fields->get($inField);
+
+			return $toBlueprints(
+				$field instanceof ProvidesAcceptedBlueprints ? [$field] : []
+			);
 		}
 
-		return $this->blueprints ??= $toBlueprints($blueprint->sections());
+		return $this->blueprints ??= $toBlueprints(
+			$fields->filter(fn ($field) => $field instanceof ProvidesAcceptedBlueprints)
+		);
 	}
 
 	/**
