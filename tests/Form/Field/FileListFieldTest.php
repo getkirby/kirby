@@ -7,6 +7,7 @@ use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\Form\Field;
+use Kirby\Toolkit\HtmlString;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -98,7 +99,8 @@ class FileListFieldTest extends TestCase
 
 		$this->assertCount(3, $data);
 		$this->assertSame('photography/a.jpg', $data[0]['id']);
-		$this->assertSame('a.jpg', $data[0]['text']);
+		$this->assertInstanceOf(HtmlString::class, $data[0]['text']);
+		$this->assertSame('a.jpg', (string)$data[0]['text']);
 	}
 
 	public function testTotal(): void
