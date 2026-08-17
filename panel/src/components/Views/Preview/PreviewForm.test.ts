@@ -33,7 +33,7 @@ type Link = HTMLAnchorElement & {
 };
 
 /**
- * Creates a fake field or section instance with links
+ * Creates a fake field instance with links
  * for the given urls, wrapped in item titles
  */
 function loaded(...urls: (string | undefined)[]) {
@@ -65,15 +65,11 @@ describe("PreviewForm.vue", () => {
 	});
 
 	describe("events", () => {
-		it("listens to loaded fields and sections while mounted", () => {
+		it("listens to loaded fields while mounted", () => {
 			const wrapper = factory();
 
 			expect(events.on).toHaveBeenCalledWith(
 				"field.loaded",
-				wrapper.vm.fixLinks
-			);
-			expect(events.on).toHaveBeenCalledWith(
-				"section.loaded",
 				wrapper.vm.fixLinks
 			);
 
@@ -81,7 +77,6 @@ describe("PreviewForm.vue", () => {
 			wrapper.unmount();
 
 			expect(events.off).toHaveBeenCalledWith("field.loaded", fixLinks);
-			expect(events.off).toHaveBeenCalledWith("section.loaded", fixLinks);
 		});
 	});
 
