@@ -9,6 +9,8 @@ use Kirby\Cms\Site;
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
+use Kirby\Form\Field\PageListField;
+use Kirby\Form\Fields;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 
@@ -210,31 +212,34 @@ class PageValidators extends ModelValidators
 	{
 		$allowed = [];
 
-		// collect all allowed subpage templates
-		// from all pages sections in the blueprint
-		// (only consider page sections that list pages
-		// of the targeted new parent page)
-		$sections = array_filter(
-			$parent->blueprint()->sections(),
-			fn ($section) =>
-				$section->type() === 'pages' &&
-				$section->parent()->is($parent)
-		);
+		// collect all allowed subpage templates from all page list
+		// fields in the blueprint (only consider fields that list
+		// pages of the targeted new parent page)
+		$hasPageList = false;
 
-		// check if the parent has at least one pages section
-		if ($sections === []) {
+		foreach (Fields::for($parent) as $field) {
+			if (
+				$field instanceof PageListField === false ||
+				$field->parentModel()->is($parent) === false
+			) {
+				continue;
+			}
+
+			$hasPageList = true;
+
+			// go through all allowed templates and
+			// add the name to the allowlist
+			foreach ($field->templates() as $template) {
+				$allowed[] = $template;
+			}
+		}
+
+		// check if the parent has at least one page list field
+		if ($hasPageList === false) {
 			throw new LogicException(
 				key: 'page.move.noSections',
 				data: ['parent' => $parent->id() ?? '/']
 			);
-		}
-
-		// go through all allowed templates and
-		// add the name to the allowlist
-		foreach ($sections as $section) {
-			foreach ($section->templates() as $template) {
-				$allowed[] = $template;
-			}
 		}
 
 		// check if the template of this page is allowed as subpage type
