@@ -106,18 +106,6 @@ describe("ModelForm.fieldsWithAdditionalData()", () => {
 		});
 	});
 
-	it("points section fields at the section endpoint", () => {
-		const ctx = context();
-		const fields = ctx.fieldsWithAdditionalData({
-			mysection: { type: "section" }
-		});
-
-		expect(fields.mysection.endpoints).toStrictEqual({
-			model: "pages/test",
-			section: "pages/test/sections/mysection"
-		});
-	});
-
 	it("flags fields with unsaved changes", () => {
 		const ctx = context({ diff: { headline: "changed" } });
 		const fields = ctx.fieldsWithAdditionalData({

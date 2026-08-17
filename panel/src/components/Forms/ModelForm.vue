@@ -31,9 +31,6 @@
 /**
  * Renders all columns of a model view tab as a single form.
  *
- * Sections are converted to fields on the blueprint level,
- * so a model view is nothing but a form.
- *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
@@ -76,19 +73,12 @@ export default {
 			const result = {};
 
 			for (const name in fields) {
-				const field = fields[name];
-
-				// section fields talk to the section endpoint,
-				// all other fields to the field endpoint
-				// TODO: drop this once we use field endpoints
-				const endpoints =
-					field.type === "section"
-						? { model: this.api, section: this.api + "/sections/" + name }
-						: { model: this.api, field: this.api + "/fields/" + name };
-
 				result[name] = {
-					...field,
-					endpoints,
+					...fields[name],
+					endpoints: {
+						model: this.api,
+						field: this.api + "/fields/" + name
+					},
 					hasDiff: Object.hasOwn(this.diff ?? {}, name)
 				};
 			}
