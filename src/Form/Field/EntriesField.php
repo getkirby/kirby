@@ -156,12 +156,9 @@ class EntriesField extends InputField
 
 		return A::map(
 			$value,
-			fn ($value) => $form
-				->reset()
-				->fill(input: [$value])
-				->fields()
-				->first()
-				->toFormValue()
+			fn ($value) => A::first(
+				$form->reset()->fill(input: [$value])->toFormValues()
+			)
 		);
 	}
 
@@ -172,12 +169,9 @@ class EntriesField extends InputField
 
 		return A::map(
 			$value,
-			fn ($value) => $form
-				->reset()
-				->submit(input: [$value])
-				->fields()
-				->first()
-				->toStoredValue()
+			fn ($value) => A::first(
+				$form->reset()->submit(input: [$value])->toStoredValues()
+			)
 		);
 	}
 
