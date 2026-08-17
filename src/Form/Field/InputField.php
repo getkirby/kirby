@@ -3,7 +3,6 @@
 namespace Kirby\Form\Field;
 
 use Kirby\Form\Mixin;
-use Kirby\Toolkit\BlockCollectionAccess;
 
 /**
  * Input class for fields that have a value
