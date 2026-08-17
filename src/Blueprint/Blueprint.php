@@ -10,7 +10,6 @@ use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
-use Kirby\Form\Field\SectionField;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
@@ -27,28 +26,12 @@ class Blueprint
 {
 	public static array $loaded = [];
 
-	/**
-	 * Maps section types onto their field equivalent.
-	 * Section types without an entry here are automatically
-	 * wrapped in a `section` field.
-	 *
-	 * @since 6.0.0
-	 * @unstable
-	 */
-	public static array $sectionFields = [
-		'files' => 'filelist',
-		'info'  => 'info',
-		'pages' => 'pagelist',
-		'stats' => 'stats',
-	];
-
 	protected AcceptRules|null $acceptRules = null;
 
 	protected array $fields = [];
 	protected array|null $fieldsLower = null;
 	protected ModelWithContent $model;
 	protected array $props;
-	protected array $sections = [];
 	protected Tabs|null $tabs = null;
 
 	/**
@@ -398,61 +381,6 @@ class Blueprint
 		}
 
 		return null;
-	}
-
-	/**
-	 * Returns a single section by name. Sections only exist
-	 * as fields with the `section` type after normalization.
-	 */
-	public function section(string $name): Section|null
-	{
-		if (array_key_exists($name, $this->sections) === true) {
-			return $this->sections[$name];
-		}
-
-		return $this->sections[$name] = $this->sectionFromField($name);
-	}
-
-	/**
-	 * Creates a section from a field with the `section` type
-	 * @since 6.0.0
-	 */
-	protected function sectionFromField(string $name): Section|null
-	{
-		$props = $this->field($name);
-
-		if ($props === null || $props['type'] !== 'section') {
-			return null;
-		}
-
-		unset($props['type']);
-
-		$field = new SectionField(...$props);
-		$field->setModel($this->model());
-
-		return $field->section();
-	}
-
-	/**
-	 * Returns all sections
-	 *
-	 * @return array<string, Section>
-	 */
-	public function sections(): array
-	{
-		$sections = [];
-
-		foreach ($this->fields as $name => $field) {
-			if ($field['type'] !== 'section') {
-				continue;
-			}
-
-			if ($section = $this->section((string)$name)) {
-				$sections[$name] = $section;
-			}
-		}
-
-		return $sections;
 	}
 
 	/**

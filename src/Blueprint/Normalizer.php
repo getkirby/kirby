@@ -24,8 +24,22 @@ use Throwable;
 class Normalizer
 {
 	/**
+	 * Maps the legacy section types onto their field
+	 * equivalent. The `fields` section is not part of this
+	 * map, because it is unwrapped into its own fields.
+	 *
+	 * @unstable
+	 */
+	public static array $sectionFields = [
+		'files' => 'filelist',
+		'info'  => 'info',
+		'pages' => 'pagelist',
+		'stats' => 'stats',
+	];
+
+	/**
 	 * Global field definitions that can be referenced
-	 * in tabs, columns and sections.
+	 * in tabs, columns and fields.
 	 */
 	protected array $fieldDefinitions = [];
 
@@ -89,9 +103,8 @@ class Normalizer
 
 	/**
 	 * Converts all section definitions into field definitions.
-	 * Sections only exist as a legacy concept in blueprints and
-	 * are either mapped onto their field equivalent or wrapped
-	 * in the `section` field adapter.
+	 * Sections only exist as a legacy shortcut in blueprints and
+	 * are mapped onto their field equivalent.
 	 */
 	protected function convertSectionsToFields(array $props): array
 	{
@@ -535,19 +548,20 @@ class Normalizer
 	 */
 	protected static function sectionError(string $name, string $label): array
 	{
+		$types = ['fields', ...array_keys(static::$sectionFields)];
+
 		return [
 			'label' => $label,
 			'name'  => $name,
-			'text'  => 'The following section types are available: ' . Blueprint::helpList(array_keys(Section::$types)),
+			'text'  => 'The following section types are available: ' . Blueprint::helpList($types),
 			'theme' => 'negative',
 			'type'  => 'info',
 		];
 	}
 
 	/**
-	 * Converts a single section definition into a field definition.
-	 * Section types with a field equivalent are mapped onto that
-	 * field, all others are wrapped in the `section` field adapter.
+	 * Converts a single section definition into a field definition
+	 * by mapping the section type onto its field equivalent
 	 */
 	protected static function sectionToField(string $name, array $props): array
 	{
@@ -568,22 +582,11 @@ class Normalizer
 			);
 		}
 
-		// section type with a field equivalent
-		if ($field = Blueprint::$sectionFields[$type] ?? null) {
+		if ($field = static::$sectionFields[$type] ?? null) {
 			return [
 				...$props,
 				'name' => $name,
 				'type' => $field
-			];
-		}
-
-		// section type without a field equivalent
-		if (isset(Section::$types[$type]) === true) {
-			return [
-				...$props,
-				'name'    => $name,
-				'section' => $type,
-				'type'    => 'section'
 			];
 		}
 

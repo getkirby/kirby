@@ -8,7 +8,7 @@ use Kirby\Form\Mixin\Upload;
 
 /**
  * The AcceptRules class goes through all blueprint settings for
- * sections and fields and collects rules for accepted files
+ * fields and collects rules for accepted files
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
