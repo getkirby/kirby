@@ -83,8 +83,8 @@ class BlueprintExtendAndUnsetTest extends TestCase
 
 		$this->assertSame('extended', $blueprint->title());
 		$this->assertCount(2, $blueprint->tabs());
-		$this->assertIsArray($blueprint->tab('content'));
-		$this->assertIsNotArray($blueprint->tab('seo'));
+		$this->assertInstanceOf(Tab::class, $blueprint->tab('content'));
+		$this->assertNull($blueprint->tab('seo'));
 	}
 
 	public function testExtendAndUnsetSection(): void
@@ -103,16 +103,16 @@ class BlueprintExtendAndUnsetTest extends TestCase
 		]);
 
 		try {
-			$sections = $blueprint->tab('content')['columns'][0]['sections'];
+			$fields = $blueprint->tab('content')->columns()[0]['fields'];
 		} catch (Exception $e) {
-			$this->assertNull($e->getMessage(), 'Failed to getg sections.');
+			$this->assertNull($e->getMessage(), 'Failed to get fields.');
 		}
 
 		$this->assertSame('extended', $blueprint->title());
-		$this->assertIsArray($sections);
-		$this->assertCount(1, $sections);
-		$this->assertArrayHasKey('pages', $sections);
-		$this->assertArrayNotHasKey('files', $sections);
+		$this->assertIsArray($fields);
+		$this->assertCount(1, $fields);
+		$this->assertArrayHasKey('pages', $fields);
+		$this->assertArrayNotHasKey('files', $fields);
 	}
 
 	public function testExtendAndUnsetFields(): void
@@ -131,7 +131,7 @@ class BlueprintExtendAndUnsetTest extends TestCase
 		]);
 
 		try {
-			$fields = $blueprint->tab('seo')['columns'][0]['sections']['seo-fields']['fields'];
+			$fields = $blueprint->tab('seo')->columns()[0]['fields'];
 		} catch (Exception $e) {
 			$this->assertNull($e->getMessage(), 'Failed to get fields.');
 		}
@@ -161,12 +161,11 @@ class BlueprintExtendAndUnsetTest extends TestCase
 			]
 		]);
 
-		$tab = $blueprint->tab('additional');
+		$columns = $blueprint->tab('additional')->columns();
 
-		$this->assertIsArray($tab);
-		$this->assertCount(1, $tab['columns']);
-		$this->assertArrayHasKey('left', $tab['columns']);
-		$this->assertArrayNotHasKey('right', $tab['columns']);
-		$this->assertSame('1/1', $tab['columns']['left']['width']);
+		$this->assertCount(1, $columns);
+		$this->assertArrayHasKey('left', $columns);
+		$this->assertArrayNotHasKey('right', $columns);
+		$this->assertSame('1/1', $columns['left']['width']);
 	}
 }

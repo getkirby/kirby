@@ -184,10 +184,10 @@ class Core
 			// site blueprints
 			'site' => [
 				'title' => 'Site',
-				'sections' => [
+				'fields' => [
 					'pages' => [
-						'headline' => ['*' => 'pages'],
-						'type'	   => 'pages'
+						'label' => ['*' => 'pages'],
+						'type'	=> 'pagelist'
 					]
 				]
 			]

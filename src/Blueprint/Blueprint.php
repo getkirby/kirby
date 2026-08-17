@@ -27,6 +27,21 @@ class Blueprint
 {
 	public static array $loaded = [];
 
+	/**
+	 * Maps section types onto their field equivalent.
+	 * Section types without an entry here are automatically
+	 * wrapped in a `section` field.
+	 *
+	 * @since 6.0.0
+	 * @unstable
+	 */
+	public static array $sectionFields = [
+		'files' => 'filelist',
+		'info'  => 'info',
+		'pages' => 'pagelist',
+		'stats' => 'stats',
+	];
+
 	protected AcceptRules|null $acceptRules = null;
 
 	// Props of all fields in the blueprint
@@ -34,8 +49,12 @@ class Blueprint
 	protected array|null $fieldsLower = null;
 	protected ModelWithContent $model;
 	protected array $props;
+
+	// Cache for sections created from `section` fields
 	protected array $sections = [];
-	protected array $tabs = [];
+
+	// Collected tabs, see `tabs()`
+	protected Tabs|null $tabs = null;
 
 	/**
 	 * Magic getter/caller for any blueprint prop
@@ -71,14 +90,11 @@ class Blueprint
 
 		// convert all shortcuts and normalize the props
 		$normalizer = new Normalizer(
-			model: $this->model,
 			props: $props
 		);
 
-		$this->fields   = $normalizer->fields();
-		$this->props    = $normalizer->props();
-		$this->sections = $normalizer->sections();
-		$this->tabs     = $normalizer->tabs();
+		$this->fields = $normalizer->fields();
+		$this->props  = $normalizer->props();
 	}
 
 	/**
@@ -105,9 +121,9 @@ class Blueprint
 	 * Gathers what file templates are allowed in
 	 * this model based on the blueprint
 	 */
-	public function acceptedFileTemplates(string|null $inSection = null): array
+	public function acceptedFileTemplates(string|null $inField = null): array
 	{
-		return $this->acceptRules()->fileTemplates($inSection);
+		return $this->acceptRules()->fileTemplates($inField);
 	}
 
 	/**
@@ -390,26 +406,16 @@ class Blueprint
 	}
 
 	/**
-	 * Returns a single section by name
+	 * Returns a single section by name. Sections only exist
+	 * as fields with the `section` type after normalization.
 	 */
 	public function section(string $name): Section|null
 	{
-		if (empty($this->sections[$name]) === true) {
-			return $this->sectionFromField($name);
+		if (array_key_exists($name, $this->sections) === true) {
+			return $this->sections[$name];
 		}
 
-		if ($this->sections[$name] instanceof Section) {
-			return $this->sections[$name]; //@codeCoverageIgnore
-		}
-
-		// get all props
-		$props = $this->sections[$name];
-
-		// inject the blueprint model
-		$props['model'] = $this->model();
-
-		// create a new section object
-		return $this->sections[$name] = new Section($props['type'], $props);
+		return $this->sections[$name] = $this->sectionFromField($name);
 	}
 
 	/**
@@ -429,8 +435,7 @@ class Blueprint
 		$field = new SectionField(...$props);
 		$field->setModel($this->model());
 
-		// cache the section under the original field name
-		return $this->sections[$props['name']] = $field->section();
+		return $field->section();
 	}
 
 	/**
@@ -440,19 +445,15 @@ class Blueprint
 	 */
 	public function sections(): array
 	{
-		$sections = A::map(
-			$this->sections,
-			fn ($section) => match (true) {
-				$section instanceof Section => $section,
-				default                     => $this->section($section['name'])
-			}
-		);
+		$sections = [];
 
-		// sections that are defined as fields are not part of the
-		// section definitions and need to be collected separately
 		foreach ($this->fields as $name => $field) {
-			if ($field['type'] === 'section') {
-				$sections[$name] ??= $this->section($name);
+			if ($field['type'] !== 'section') {
+				continue;
+			}
+
+			if ($section = $this->section((string)$name)) {
+				$sections[$name] = $section;
 			}
 		}
 
@@ -460,23 +461,30 @@ class Blueprint
 	}
 
 	/**
-	 * Returns a single tab by name
+	 * Returns a single tab by name or the
+	 * first tab if no name is given
 	 */
-	public function tab(string|null $name = null): array|null
+	public function tab(string|null $name = null): Tab|null
 	{
+		$tabs = $this->tabs();
+
 		if ($name === null) {
-			return A::first($this->tabs);
+			return $tabs->first();
 		}
 
-		return $this->tabs[$name] ?? null;
+		return $tabs->get($name);
 	}
 
 	/**
-	 * Returns all tabs
+	 * Creates and caches the collection of all tabs
+	 * from the normalized tab props
 	 */
-	public function tabs(): array
+	public function tabs(): Tabs
 	{
-		return array_values($this->tabs);
+		return $this->tabs ??= new Tabs(
+			tabs: $this->props['tabs'] ?? [],
+			model: $this->model
+		);
 	}
 
 	/**
@@ -492,6 +500,9 @@ class Blueprint
 	 */
 	public function toArray(): array
 	{
-		return $this->props;
+		return [
+			...$this->props,
+			'tabs' => $this->tabs()->toArray()
+		];
 	}
 }

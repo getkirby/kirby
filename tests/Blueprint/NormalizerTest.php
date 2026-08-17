@@ -3,7 +3,6 @@
 namespace Kirby\Blueprint;
 
 use Kirby\Cms\App;
-use Kirby\Cms\ModelWithContent;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
 use Kirby\Toolkit\I18n;
@@ -13,8 +12,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 class NormalizerTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Blueprint.Normalizer';
-
-	protected ModelWithContent $model;
 
 	protected function setUp(): void
 	{
@@ -26,7 +23,6 @@ class NormalizerTest extends TestCase
 			]
 		]);
 
-		$this->model = $this->app->page('a');
 		$this->setUpTmp();
 	}
 
@@ -41,13 +37,10 @@ class NormalizerTest extends TestCase
 
 	protected function normalizer(array $props = []): Normalizer
 	{
-		return new Normalizer(
-			model: $this->model,
-			props: $props
-		);
+		return new Normalizer(props: $props);
 	}
 
-	public function testColumnsWithEmptySections(): void
+	public function testColumnsWithEmptyFields(): void
 	{
 		$normalizer = $this->normalizer([
 			'columns' => [
@@ -61,16 +54,18 @@ class NormalizerTest extends TestCase
 		$this->assertSame([
 			'label' => 'Column (1/3)',
 			'type'  => 'info',
-			'text'  => 'No sections yet',
-			'name'  => 'main-info-0'
-		], $columns[0]['sections']['main-info-0']);
+			'text'  => 'No fields yet',
+			'name'  => 'main-info-0',
+			'width' => '1/1'
+		], $columns[0]['fields']['main-info-0']);
 
 		$this->assertSame([
 			'label' => 'Column (2/3)',
 			'type'  => 'info',
-			'text'  => 'No sections yet',
-			'name'  => 'main-info-1'
-		], $columns[1]['sections']['main-info-1']);
+			'text'  => 'No fields yet',
+			'name'  => 'main-info-1',
+			'width' => '1/1'
+		], $columns[1]['fields']['main-info-1']);
 	}
 
 	public function testColumnsWithFields(): void
@@ -86,11 +81,10 @@ class NormalizerTest extends TestCase
 			]
 		]);
 
-		$sections = $normalizer->tabs()['main']['columns'][0]['sections'];
+		$fields = $normalizer->tabs()['main']['columns'][0]['fields'];
 
-		$this->assertArrayHasKey('main-col-0-fields', $sections);
-		$this->assertSame('fields', $sections['main-col-0-fields']['type']);
-		$this->assertArrayHasKey('title', $sections['main-col-0-fields']['fields']);
+		$this->assertArrayHasKey('title', $fields);
+		$this->assertSame('text', $fields['title']['type']);
 	}
 
 	public function testColumnsWithInvalidColumn(): void
@@ -111,7 +105,7 @@ class NormalizerTest extends TestCase
 	{
 		$normalizer = $this->normalizer([
 			'columns' => [
-				['sections' => ['info' => ['type' => 'info']]]
+				['fields' => ['info' => ['type' => 'info']]]
 			]
 		]);
 
@@ -133,7 +127,7 @@ class NormalizerTest extends TestCase
 		$this->assertSame(['main'], array_keys($normalizer->tabs()));
 	}
 
-	public function testConvertFieldsToSections(): void
+	public function testConvertFieldsToColumns(): void
 	{
 		$normalizer = $this->normalizer([
 			'fields' => [
@@ -143,13 +137,14 @@ class NormalizerTest extends TestCase
 
 		$this->assertArrayNotHasKey('fields', $normalizer->props());
 
-		$sections = $normalizer->sections();
+		$columns = $normalizer->tabs()['main']['columns'];
 
-		$this->assertSame(['main-fields'], array_keys($sections));
-		$this->assertSame('fields', $sections['main-fields']['type']);
+		$this->assertCount(1, $columns);
+		$this->assertSame('1/1', $columns[0]['width']);
+		$this->assertSame(['title'], array_keys($columns[0]['fields']));
 	}
 
-	public function testConvertSectionsToColumns(): void
+	public function testConvertSectionsToFields(): void
 	{
 		$normalizer = $this->normalizer([
 			'sections' => [
@@ -163,7 +158,7 @@ class NormalizerTest extends TestCase
 
 		$this->assertCount(1, $columns);
 		$this->assertSame('1/1', $columns[0]['width']);
-		$this->assertSame(['pages'], array_keys($columns[0]['sections']));
+		$this->assertSame(['pages'], array_keys($columns[0]['fields']));
 	}
 
 	public function testFieldReference(): void
@@ -572,16 +567,19 @@ class NormalizerTest extends TestCase
 		$normalizer = $this->normalizer([
 			'sections' => [
 				'pages' => ['type' => 'pages'],
-				'files' => ['type' => 'files']
+				'files' => ['type' => 'files'],
+				'notes' => ['type' => 'pages', 'status' => 'listed']
 			]
 		]);
 
-		$this->assertSame(['pages', 'files'], array_keys($normalizer->sections()));
-	}
+		$fields = $normalizer->fields();
 
-	public function testSectionsEmpty(): void
-	{
-		$this->assertSame([], $this->normalizer()->sections());
+		$this->assertSame(['pages', 'files', 'notes'], array_keys($fields));
+
+		// section types with a field equivalent are mapped onto that field
+		$this->assertSame('pagelist', $fields['pages']['type']);
+		$this->assertSame('filelist', $fields['files']['type']);
+		$this->assertSame('listed', $fields['notes']['status']);
 	}
 
 	public function testSectionsWithFalse(): void
@@ -593,7 +591,22 @@ class NormalizerTest extends TestCase
 			]
 		]);
 
-		$this->assertSame(['pages'], array_keys($normalizer->sections()));
+		$this->assertSame(['pages'], array_keys($normalizer->fields()));
+	}
+
+	public function testSectionsWithFieldsType(): void
+	{
+		$normalizer = $this->normalizer([
+			'sections' => [
+				'content' => [
+					'type'   => 'fields',
+					'fields' => ['title' => ['type' => 'text']]
+				]
+			]
+		]);
+
+		// a fields section is unwrapped into the parent's own fields
+		$this->assertSame(['title'], array_keys($normalizer->fields()));
 	}
 
 	public function testSectionsWithInvalidType(): void
@@ -604,12 +617,12 @@ class NormalizerTest extends TestCase
 			]
 		]);
 
-		$section = $normalizer->sections()['test'];
+		$field = $normalizer->fields()['test'];
 
-		$this->assertSame('info', $section['type']);
+		$this->assertSame('info', $field['type']);
 		$this->assertSame(
 			'Invalid section type for section "test"',
-			$section['label']
+			$field['label']
 		);
 	}
 
@@ -621,7 +634,7 @@ class NormalizerTest extends TestCase
 			]
 		]);
 
-		$this->assertSame('pages', $normalizer->sections()['pages']['type']);
+		$this->assertSame('pagelist', $normalizer->fields()['pages']['type']);
 	}
 
 	public function testSectionsWithTypeFromName(): void
@@ -632,7 +645,7 @@ class NormalizerTest extends TestCase
 			]
 		]);
 
-		$this->assertSame('pages', $normalizer->sections()['pages']['type']);
+		$this->assertSame('pagelist', $normalizer->fields()['pages']['type']);
 	}
 
 	public function testSectionsWithUnknownType(): void
@@ -643,10 +656,10 @@ class NormalizerTest extends TestCase
 			]
 		]);
 
-		$section = $normalizer->sections()['test'];
+		$field = $normalizer->fields()['test'];
 
-		$this->assertSame('info', $section['type']);
-		$this->assertSame('Invalid section type ("nonsense")', $section['label']);
+		$this->assertSame('info', $field['type']);
+		$this->assertSame('Invalid section type ("nonsense")', $field['label']);
 	}
 
 	public function testSectionsWithoutFields(): void
@@ -658,12 +671,12 @@ class NormalizerTest extends TestCase
 		]);
 
 		$this->assertSame([
-			'main-info' => [
-				'label' => 'Fields',
-				'text'  => 'No fields yet',
-				'type'  => 'info'
-			]
-		], $normalizer->sections()['content']['fields']);
+			'label' => 'Column (1/1)',
+			'type'  => 'info',
+			'text'  => 'No fields yet',
+			'name'  => 'main-info-0',
+			'width' => '1/1'
+		], $normalizer->fields()['main-info-0']);
 	}
 
 	public function testTabs(): void
@@ -681,7 +694,6 @@ class NormalizerTest extends TestCase
 		$this->assertSame('content', $tab['name']);
 		$this->assertSame('Content', $tab['label']);
 		$this->assertSame('text', $tab['icon']);
-		$this->assertSame('/pages/a/?tab=content', $tab['link']);
 		$this->assertSame([], $tab['columns']);
 	}
 
