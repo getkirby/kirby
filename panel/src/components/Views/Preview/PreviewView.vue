@@ -199,7 +199,7 @@ export const Preview = {
 		 * Opens a new preview view
 		 */
 		async onViewNavigate(url) {
-			// when the view changes via a link in the preview form (e.g. a section),
+			// when the view changes via a link in the preview form (e.g. a field),
 			// store the current browser src and scroll position, open the view
 			// then offer the browser to restore src and scroll position
 			// (which the browser will decide based on whether it's pinned or not)

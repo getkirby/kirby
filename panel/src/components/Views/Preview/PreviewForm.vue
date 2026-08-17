@@ -74,15 +74,13 @@ export default {
 	},
 	created() {
 		this.$events.on("field.loaded", this.fixLinks);
-		this.$events.on("section.loaded", this.fixLinks);
 	},
 	unmounted() {
 		this.$events.off("field.loaded", this.fixLinks);
-		this.$events.off("section.loaded", this.fixLinks);
 	},
 	methods: {
 		/**
-		 * Overwrites all links to page views in the field or section
+		 * Overwrites all links to page views in the field
 		 * to open the corresponding page preview view instead
 		 */
 		fixLinks(element) {
