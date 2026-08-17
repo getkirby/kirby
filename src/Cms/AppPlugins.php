@@ -5,7 +5,6 @@ namespace Kirby\Cms;
 use Closure;
 use Kirby\Auth\Challenges;
 use Kirby\Auth\Methods;
-use Kirby\Blueprint\Section;
 use Kirby\Content\Field;
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
@@ -74,7 +73,6 @@ trait AppPlugins
 		'pageModels' => [],
 		'permissions' => [],
 		'routes' => [],
-		'sections' => [],
 		'siteMethods' => [],
 		'snippets' => [],
 		'structureMethods' => [],
@@ -588,17 +586,6 @@ trait AppPlugins
 	}
 
 	/**
-	 * Registers Panel sections
-	 */
-	protected function extendSections(array $sections): array
-	{
-		return $this->extensions['sections'] = Section::$types = [
-			...Section::$types,
-			...$sections
-		];
-	}
-
-	/**
 	 * Registers additional site methods
 	 */
 	protected function extendSiteMethods(array $methods): array
@@ -833,13 +820,9 @@ trait AppPlugins
 	 */
 	protected function extensionsFromSystem(): void
 	{
-		// Always start with fresh fields and sections
+		// Always start with fresh fields
 		// from the core and add plugins on top of that
 		FormField::$types = [];
-		Section::$types   = [];
-
-		// mixins
-		Section::$mixins = $this->core->sectionMixins();
 
 		// aliases
 		KirbyTag::$aliases = $this->core->kirbyTagAliases();
@@ -851,7 +834,6 @@ trait AppPlugins
 		$this->extendBlueprints($this->core->blueprints());
 		$this->extendFields($this->core->fields());
 		$this->extendFilePreviews($this->core->filePreviews());
-		$this->extendSections($this->core->sections());
 		$this->extendSnippets($this->core->snippets());
 		$this->extendTags($this->core->kirbyTags());
 		$this->extendTemplates($this->core->templates());
