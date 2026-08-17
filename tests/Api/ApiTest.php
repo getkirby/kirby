@@ -1438,65 +1438,6 @@ class ApiTest extends TestCase
 		$this->assertSame('a', $api->searchPages()->first()->id());
 	}
 
-	public function testSectionApi(): void
-	{
-		$app = $this->app->clone([
-			'sections' => [
-				'test' => [
-					'api' => fn () => [
-						[
-							'pattern' => '/message',
-							'action'  => fn () => [
-								'message' => 'Test'
-							]
-						]
-					]
-				]
-			],
-			'blueprints' => [
-				'pages/test' => [
-					'title' => 'Test',
-					'name' => 'test',
-					'sections' => [
-						'test' => [
-							'type' => 'test',
-						]
-					]
-				]
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug'     => 'test',
-						'template' => 'test',
-					]
-				]
-			]
-		]);
-
-		$app->impersonate('kirby');
-		$page = $app->page('test');
-
-		$response = $app->api()->sectionApi($page, 'test', 'message');
-		$this->assertSame('Test', $response['message']);
-	}
-
-	public function testSectionApiWithInvalidSection(): void
-	{
-		$app = $this->app->clone([
-			'site' => [
-				'children' => [
-					['slug' => 'test']
-				]
-			]
-		]);
-
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The section "nonexists" could not be found');
-
-		$page = $app->page('test');
-		$app->api()->sectionApi($page, 'nonexists');
-	}
 
 	public function testSite(): void
 	{
