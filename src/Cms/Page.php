@@ -216,10 +216,10 @@ class Page extends ModelWithContent
 	/**
 	 * Returns an array with all blueprints that are available for the page
 	 */
-	public function blueprints(string|null $inSection = null): array
+	public function blueprints(string|null $inField = null): array
 	{
-		if ($inSection !== null) {
-			return $this->blueprint()->section($inSection)->blueprints();
+		if ($inField !== null) {
+			return parent::blueprints($inField);
 		}
 
 		if ($this->blueprints !== null) {
