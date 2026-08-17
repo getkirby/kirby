@@ -14,8 +14,9 @@ function factory() {
 			api: "pages/test",
 			blueprint: "default",
 			content: {},
-			tab: { name: "main" },
-			tabs: [{ name: "main" }]
+			diff: {},
+			tab: { name: "main", columns: {} },
+			tabs: [{ name: "main" }, { name: "meta" }]
 		},
 		shallow: true,
 		global: {
@@ -63,83 +64,104 @@ describe("PreviewForm.vue", () => {
 		original.mockClear();
 	});
 
-	it("listens to loaded fields and sections while mounted", () => {
-		const wrapper = factory();
+	describe("events", () => {
+		it("listens to loaded fields and sections while mounted", () => {
+			const wrapper = factory();
 
-		expect(events.on).toHaveBeenCalledWith("field.loaded", wrapper.vm.fixLinks);
-		expect(events.on).toHaveBeenCalledWith(
-			"section.loaded",
-			wrapper.vm.fixLinks
-		);
+			expect(events.on).toHaveBeenCalledWith(
+				"field.loaded",
+				wrapper.vm.fixLinks
+			);
+			expect(events.on).toHaveBeenCalledWith(
+				"section.loaded",
+				wrapper.vm.fixLinks
+			);
 
-		const fixLinks = wrapper.vm.fixLinks;
-		wrapper.unmount();
+			const fixLinks = wrapper.vm.fixLinks;
+			wrapper.unmount();
 
-		expect(events.off).toHaveBeenCalledWith("field.loaded", fixLinks);
-		expect(events.off).toHaveBeenCalledWith("section.loaded", fixLinks);
+			expect(events.off).toHaveBeenCalledWith("field.loaded", fixLinks);
+			expect(events.off).toHaveBeenCalledWith("section.loaded", fixLinks);
+		});
 	});
 
-	it("redirects page links to the preview form", () => {
-		const wrapper = factory();
-		const { $el, links } = loaded("/pages/test+child");
+	describe("form", () => {
+		it("passes on the events of the form and its controls", async () => {
+			const wrapper = factory();
 
-		wrapper.vm.fixLinks({ $el });
+			await wrapper.find("k-model-form").trigger("input");
+			await wrapper.find("k-model-form").trigger("submit");
+			await wrapper.find("k-form-controls").trigger("discard");
 
-		const event = { preventDefault: vi.fn() };
-		links[0].__vue__.onClick(event as unknown as Event);
-
-		expect(event.preventDefault).toHaveBeenCalled();
-		expect(original).not.toHaveBeenCalled();
-		expect(wrapper.emitted("navigate")).toStrictEqual([
-			["/pages/test+child/preview/form"]
-		]);
+			expect(wrapper.emitted("input")).toHaveLength(1);
+			expect(wrapper.emitted("submit")).toHaveLength(1);
+			expect(wrapper.emitted("discard")).toHaveLength(1);
+		});
 	});
 
-	it("redirects all page links of the element", () => {
-		const wrapper = factory();
-		const { $el, links } = loaded("/pages/a", "/pages/b");
+	describe("fixLinks", () => {
+		it("redirects page links to the preview form", () => {
+			const wrapper = factory();
+			const { $el, links } = loaded("/pages/test+child");
 
-		wrapper.vm.fixLinks({ $el });
+			wrapper.vm.fixLinks({ $el });
 
-		for (const link of links) {
-			link.__vue__.onClick({ preventDefault: vi.fn() } as unknown as Event);
-		}
+			const event = { preventDefault: vi.fn() };
+			links[0].__vue__.onClick(event as unknown as Event);
 
-		expect(wrapper.emitted("navigate")).toStrictEqual([
-			["/pages/a/preview/form"],
-			["/pages/b/preview/form"]
-		]);
-	});
+			expect(event.preventDefault).toHaveBeenCalled();
+			expect(original).not.toHaveBeenCalled();
+			expect(wrapper.emitted("navigate")).toStrictEqual([
+				["/pages/test+child/preview/form"]
+			]);
+		});
 
-	it("keeps links that don't point to a page view", () => {
-		const wrapper = factory();
-		const { $el, links } = loaded(
-			"/pages/test+child/files/test.jpg",
-			"/users/test",
-			undefined
-		);
+		it("redirects all page links of the element", () => {
+			const wrapper = factory();
+			const { $el, links } = loaded("/pages/a", "/pages/b");
 
-		wrapper.vm.fixLinks({ $el });
+			wrapper.vm.fixLinks({ $el });
 
-		for (const link of links) {
-			expect(link.__vue__.onClick).toBe(original);
+			for (const link of links) {
+				link.__vue__.onClick({ preventDefault: vi.fn() } as unknown as Event);
+			}
 
-			link.__vue__.onClick({ preventDefault: vi.fn() } as unknown as Event);
-		}
+			expect(wrapper.emitted("navigate")).toStrictEqual([
+				["/pages/a/preview/form"],
+				["/pages/b/preview/form"]
+			]);
+		});
 
-		expect(original).toHaveBeenCalledTimes(3);
-		expect(wrapper.emitted("navigate")).toBeUndefined();
-	});
+		it("keeps links that don't point to a page view", () => {
+			const wrapper = factory();
+			const { $el, links } = loaded(
+				"/pages/test+child/files/test.jpg",
+				"/users/test",
+				undefined
+			);
 
-	it("ignores links outside of item titles", () => {
-		const wrapper = factory();
-		const { $el, links } = loaded("/pages/test+child");
+			wrapper.vm.fixLinks({ $el });
 
-		// move the link out of the item title
-		$el.append(links[0]);
+			for (const link of links) {
+				expect(link.__vue__.onClick).toBe(original);
 
-		wrapper.vm.fixLinks({ $el });
+				link.__vue__.onClick({ preventDefault: vi.fn() } as unknown as Event);
+			}
 
-		expect(links[0].__vue__.onClick).toBe(original);
+			expect(original).toHaveBeenCalledTimes(3);
+			expect(wrapper.emitted("navigate")).toBeUndefined();
+		});
+
+		it("ignores links outside of item titles", () => {
+			const wrapper = factory();
+			const { $el, links } = loaded("/pages/test+child");
+
+			// move the link out of the item title
+			$el.append(links[0]);
+
+			wrapper.vm.fixLinks({ $el });
+
+			expect(links[0].__vue__.onClick).toBe(original);
+		});
 	});
 });

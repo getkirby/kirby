@@ -51,6 +51,10 @@
 
 <script>
 /**
+ * Sections are converted to fields on the blueprint level.
+ * Model views render `k-model-form` instead.
+ *
+ * @deprecated 6.0.0
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
