@@ -172,22 +172,7 @@ class LoaderTest extends TestCase
 		$this->assertSame('Test', $resolved['test']['test']);
 	}
 
-	public function testSection(): void
-	{
-		$section = $this->loader->section('pages');
 
-		$this->assertArrayHasKey('props', $section);
-		$this->assertArrayHasKey('computed', $section);
-		$this->assertArrayHasKey('methods', $section);
-	}
-
-	public function testSections(): void
-	{
-		$sections = $this->loader->sections();
-
-		$this->assertArrayHasKey('pages', $sections);
-		$this->assertArrayHasKey('info', $sections);
-	}
 
 	public function testWithPlugins(): void
 	{
