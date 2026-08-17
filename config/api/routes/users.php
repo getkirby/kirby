@@ -140,7 +140,7 @@ return [
 		],
 		'method'  => 'GET',
 		'action'  => function (string $id) {
-			return Find::user($id)->blueprints($this->requestQuery('section'));
+			return Find::user($id)->blueprints($this->requestQuery('field'));
 		}
 	],
 	[
