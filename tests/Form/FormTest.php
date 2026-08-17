@@ -8,7 +8,6 @@ use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Form\Field\BaseField;
 use Kirby\Form\Field\InputField;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -575,7 +574,7 @@ class FormTest extends TestCase
 			}
 		};
 
-		BaseField::$types['test'] = $field::class;
+		Field::$types['test'] = $field::class;
 
 		$form = new Form([
 			'fields' => [

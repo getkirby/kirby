@@ -4,7 +4,7 @@ namespace Kirby\Blueprint;
 
 use Kirby\Cms\ModelWithContent;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Form\Field\BaseField;
+use Kirby\Form\Field;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 use Throwable;
@@ -259,7 +259,7 @@ class Normalizer
 		$name = $props['name'];
 		$type = $props['type'] ?? $name;
 
-		if ($type !== 'group' && isset(BaseField::$types[$type]) === false) {
+		if ($type !== 'group' && isset(Field::$types[$type]) === false) {
 			throw new InvalidArgumentException(
 				message: 'Invalid field type ("' . $type . '")'
 			);

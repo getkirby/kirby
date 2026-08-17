@@ -2,6 +2,7 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Form\Field;
 use Kirby\Form\Mixin;
 
 /**
@@ -11,7 +12,7 @@ use Kirby\Form\Mixin;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  */
-abstract class DisplayField extends BaseField
+abstract class DisplayField extends Field
 {
 	use Mixin\Help;
 	use Mixin\Label;

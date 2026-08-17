@@ -11,7 +11,6 @@ use Kirby\Cms\TestCase;
 use Kirby\Cms\User;
 use Kirby\Exception\FormValidationException;
 use Kirby\Exception\NotFoundException;
-use Kirby\Form\Field\BaseField;
 use Kirby\Form\Field\InputField;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -324,7 +323,7 @@ class FieldsTest extends TestCase
 
 	public function testFind(): void
 	{
-		$motherClass = new class () extends BaseField {
+		$motherClass = new class () extends Field {
 			public function form(): Form
 			{
 				return new Form([
@@ -1022,7 +1021,7 @@ class FieldsTest extends TestCase
 			}
 		};
 
-		BaseField::$types['test'] = $field::class;
+		Field::$types['test'] = $field::class;
 
 		$fields = new Fields([
 			'a' => [

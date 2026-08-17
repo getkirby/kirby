@@ -1,18 +1,18 @@
 <?php
 
-namespace Kirby\Form\Field;
+namespace Kirby\Form;
 
 use Kirby\Cms\Page;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Form\Fields;
+use Kirby\Form\Field\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-class MockField extends BaseField
+class MockField extends Field
 {
 }
 
-#[CoversClass(BaseField::class)]
-class BaseFieldTest extends TestCase
+#[CoversClass(Field::class)]
+class FieldTest extends TestCase
 {
 	public function test__toString(): void
 	{
@@ -129,36 +129,36 @@ class BaseFieldTest extends TestCase
 
 	public function testResolve(): void
 	{
-		BaseField::$types['mock'] = MockField::class;
+		Field::$types['mock'] = MockField::class;
 
-		$this->assertSame(MockField::class, BaseField::resolve('mock'));
+		$this->assertSame(MockField::class, Field::resolve('mock'));
 	}
 
 	public function testResolveWithArrayDefinition(): void
 	{
-		BaseField::$types['mock'] = ['props' => []];
+		Field::$types['mock'] = ['props' => []];
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage(
 			'The field type "mock" is registered as array. Array-based field ' .
 			'definitions have been removed in Kirby 6. Please register the name ' .
-			'of a class that extends Kirby\Form\Field\BaseField instead.'
+			'of a class that extends Kirby\Form\Field instead.'
 		);
 
-		BaseField::resolve('mock');
+		Field::resolve('mock');
 	}
 
 	public function testResolveWithForeignClass(): void
 	{
-		BaseField::$types['mock'] = Page::class;
+		Field::$types['mock'] = Page::class;
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage(
 			'The field type "mock" is registered as "Kirby\Cms\Page", ' .
-			'which does not extend Kirby\Form\Field\BaseField'
+			'which does not extend Kirby\Form\Field'
 		);
 
-		BaseField::resolve('mock');
+		Field::resolve('mock');
 	}
 
 	public function testResolveWithMissingType(): void
@@ -166,7 +166,7 @@ class BaseFieldTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Field "test": The field type "mock" does not exist');
 
-		BaseField::resolve('mock', 'test');
+		Field::resolve('mock', 'test');
 	}
 
 	public function testStringTemplateWithEmptyValue(): void

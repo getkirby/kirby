@@ -1,11 +1,9 @@
 <?php
 
-namespace Kirby\Form\Field;
+namespace Kirby\Form;
 
 use Kirby\Cms\HasStringTemplate;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Form\Fields;
-use Kirby\Form\Mixin;
 use Kirby\Reflection\Constructor;
 use Stringable;
 
@@ -16,7 +14,7 @@ use Stringable;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  */
-abstract class BaseField implements Stringable
+abstract class Field implements Stringable
 {
 	use HasStringTemplate;
 	use Mixin\Api;
