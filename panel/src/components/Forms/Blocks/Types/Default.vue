@@ -17,7 +17,7 @@ export const props = {
 	props: {
 		/**
 		 * API endpoints
-		 * @value { field, model, section }
+		 * @value { field, model }
 		 */
 		endpoints: {
 			default: () => ({}),
