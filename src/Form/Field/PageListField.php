@@ -7,6 +7,7 @@ use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Form\Interface\BlueprintsDefinition;
 use Kirby\Panel\Collector\PagesCollector;
 use Kirby\Panel\Controller\Dialog\PageCreateDialogController;
 use Kirby\Panel\Ui\Item\PageItem;
@@ -22,7 +23,7 @@ use Throwable;
  *
  * @extends ModelListField<Page>
  */
-class PageListField extends ModelListField
+class PageListField extends ModelListField implements BlueprintsDefinition
 {
 	public const string TYPE = 'pages';
 
@@ -209,7 +210,6 @@ class PageListField extends ModelListField
 
 	public function collector(): PagesCollector
 	{
-		/** @var Page|Site $parent */
 		$parent = $this->parentModel();
 
 		return $this->collector ??= new PagesCollector(
@@ -248,7 +248,7 @@ class PageListField extends ModelListField
 	/**
 	 * @throws InvalidArgumentException
 	 */
-	public function parentModel(): ModelWithContent
+	public function parentModel(): Page|Site
 	{
 		$parent = parent::parentModel();
 
