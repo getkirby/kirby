@@ -26,7 +26,7 @@
 
 <script>
 /**
- * Used to label form fields and sections
+ * Used to label form fields and sections of a view
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license

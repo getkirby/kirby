@@ -2,7 +2,6 @@ import { describe, expect, it, vi } from "vitest";
 import isComponent from "@/helpers/isComponent";
 import dialog from "@/mixins/dialog.js";
 import drawer from "@/mixins/drawer.js";
-import section from "@/mixins/section.js";
 import Plugins, {
 	installComponent,
 	installComponents,
@@ -52,12 +51,6 @@ describe("panel.plugins", () => {
 			expect(result.mixins).toContain(drawer);
 		});
 
-		it("resolves the section mixin by name", () => {
-			const component = { template: "<p>test</p>", mixins: ["section"] };
-			const result = resolveComponentMixins(component);
-			expect(result.mixins).toContain(section);
-		});
-
 		it("warns and removes unknown string mixins", () => {
 			const warn = vi
 				.spyOn(window.console, "warn")
@@ -91,11 +84,11 @@ describe("panel.plugins", () => {
 			const objectMixin = { methods: { foo: () => {} } };
 			const component = {
 				template: "<p>test</p>",
-				mixins: ["dialog", "section", objectMixin]
+				mixins: ["dialog", "drawer", objectMixin]
 			};
 			const result = resolveComponentMixins(component);
 			expect(result.mixins).toContain(dialog);
-			expect(result.mixins).toContain(section);
+			expect(result.mixins).toContain(drawer);
 			expect(result.mixins).toContain(objectMixin);
 		});
 	});
