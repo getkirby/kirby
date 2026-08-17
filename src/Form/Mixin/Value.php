@@ -117,6 +117,18 @@ trait Value
 	}
 
 	/**
+	 * Resets the value back to the empty value
+	 * @since 5.2.0
+	 */
+	#[BlockCollectionAccess]
+	public function reset(): static
+	{
+		/** @psalm-suppress UndefinedThisPropertyAssignment using classes declare `$value` */
+		$this->value = $this->emptyValue();
+		return $this;
+	}
+
+	/**
 	 * Checks if the field is saveable
 	 * @deprecated 5.0.0 Use `::hasValue()` instead
 	 */

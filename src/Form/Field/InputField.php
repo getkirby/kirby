@@ -66,16 +66,4 @@ abstract class InputField extends BaseField
 			'width'     => $this->width(),
 		];
 	}
-
-	/**
-	 * @since 5.2.0
-	 * @todo Move to `Value` mixin once array-based fields are unsupported
-	 */
-	#[BlockCollectionAccess]
-	public function reset(): static
-	{
-		/** @psalm-suppress UndefinedThisPropertyAssignment concrete subclasses declare `$value` */
-		$this->value = $this->emptyValue();
-		return $this;
-	}
 }
