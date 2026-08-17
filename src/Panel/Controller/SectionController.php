@@ -4,6 +4,8 @@ namespace Kirby\Panel\Controller;
 
 use Kirby\Blueprint\Section;
 use Kirby\Cms\Find;
+use Kirby\Cms\ModelWithContent;
+use Kirby\Exception\NotFoundException;
 use Kirby\Http\Router;
 use Kirby\Panel\Area;
 
@@ -36,16 +38,34 @@ trait SectionController
 		// for page/user/site section dialogs
 		if ($path === null) {
 			return new static(
-				section: Find::parent($model)->blueprint()->section($filename),
+				section: static::findSection(Find::parent($model), $filename),
 				path: $section
 			);
 		}
 
 		// for file section dialogs
 		return new static(
-			section: Find::file($model, $filename)->blueprint()->section($section),
+			section: static::findSection(Find::file($model, $filename), $section),
 			path: $path
 		);
+	}
+
+	/**
+	 * @throws NotFoundException If the section cannot be found
+	 */
+	protected static function findSection(
+		ModelWithContent $model,
+		string $name
+	): Section {
+		$section = $model->blueprint()->section($name);
+
+		if ($section === null) {
+			throw new NotFoundException(
+				message: 'The section "' . $name . '" could not be found'
+			);
+		}
+
+		return $section;
 	}
 
 	public function load(): mixed
