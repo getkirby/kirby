@@ -26,6 +26,10 @@
 import SectionMixin from "@/mixins/section.js";
 
 /**
+ * A `fields` section is unwrapped into its fields on the
+ * blueprint level and never reaches the Panel anymore.
+ *
+ * @deprecated 6.0.0
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */

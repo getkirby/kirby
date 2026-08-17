@@ -21,17 +21,17 @@
 		</header>
 
 		<div class="k-preview-form-body">
-			<k-sections
-				:blueprint="blueprint"
+			<k-model-form
+				:api="api"
+				:columns="tab.columns"
 				:content="content"
+				:diff="diff"
 				:empty="
 					$panel.config.debug
 						? $panel.html($t('page.blueprint', { blueprint: $esc(blueprint) }))
 						: null
 				"
 				:lock="lock"
-				:parent="api"
-				:tab="tab"
 				@input="$emit('input', $event)"
 				@submit="$emit('submit', $event)"
 			/>
