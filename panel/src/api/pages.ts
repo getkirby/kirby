@@ -8,9 +8,9 @@ export default (api: Api) => ({
 	async blueprint(parent: string) {
 		return api.get("pages/" + this.id(parent) + "/blueprint");
 	},
-	async blueprints(parent: string, section: string) {
+	async blueprints(parent: string, field: string) {
 		return api.get("pages/" + this.id(parent) + "/blueprints", {
-			section: section
+			field: field
 		});
 	},
 	async changeSlug(id: string, slug: string) {
