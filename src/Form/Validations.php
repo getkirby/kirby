@@ -3,6 +3,7 @@
 namespace Kirby\Form;
 
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Form\Field\InputField;
 use Kirby\Toolkit\V;
 
 /**
@@ -18,7 +19,7 @@ class Validations
 	 *
 	 * @throws InvalidArgumentException
 	 */
-	public static function boolean(Field $field, mixed $value): bool
+	public static function boolean(InputField $field, mixed $value): bool
 	{
 		if ($field->isEmptyValue($value) === false) {
 			if (is_bool($value) === false) {
@@ -36,7 +37,7 @@ class Validations
 	 *
 	 * @throws InvalidArgumentException
 	 */
-	public static function date(Field $field, mixed $value): bool
+	public static function date(InputField $field, mixed $value): bool
 	{
 		if ($field->isEmptyValue($value) === false) {
 			if (V::date($value) !== true) {
@@ -54,7 +55,7 @@ class Validations
 	 *
 	 * @throws InvalidArgumentException
 	 */
-	public static function email(Field $field, mixed $value): bool
+	public static function email(InputField $field, mixed $value): bool
 	{
 		if ($field->isEmptyValue($value) === false) {
 			if (V::email($value) === false) {
@@ -72,7 +73,7 @@ class Validations
 	 *
 	 * @throws InvalidArgumentException
 	 */
-	public static function max(Field $field, mixed $value): bool
+	public static function max(InputField $field, mixed $value): bool
 	{
 		if (
 			$field->isEmptyValue($value) === false &&
@@ -93,7 +94,7 @@ class Validations
 	 *
 	 * @throws InvalidArgumentException
 	 */
-	public static function maxlength(Field $field, mixed $value): bool
+	public static function maxlength(InputField $field, mixed $value): bool
 	{
 		if (
 			$field->isEmptyValue($value) === false &&
@@ -114,7 +115,7 @@ class Validations
 	 *
 	 * @throws InvalidArgumentException
 	 */
-	public static function min(Field $field, mixed $value): bool
+	public static function min(InputField $field, mixed $value): bool
 	{
 		if (
 			$field->isEmptyValue($value) === false &&
@@ -135,7 +136,7 @@ class Validations
 	 *
 	 * @throws InvalidArgumentException
 	 */
-	public static function minlength(Field $field, mixed $value): bool
+	public static function minlength(InputField $field, mixed $value): bool
 	{
 		if (
 			$field->isEmptyValue($value) === false &&
@@ -156,7 +157,7 @@ class Validations
 	 *
 	 * @throws InvalidArgumentException
 	 */
-	public static function pattern(Field $field, mixed $value): bool
+	public static function pattern(InputField $field, mixed $value): bool
 	{
 		if ($field->isEmptyValue($value) === false) {
 			if ($pattern = $field->pattern()) {
@@ -181,7 +182,7 @@ class Validations
 	 *
 	 * @throws InvalidArgumentException
 	 */
-	public static function required(Field $field, mixed $value): bool
+	public static function required(InputField $field, mixed $value): bool
 	{
 		if (
 			$field->hasValue() === true &&
@@ -201,7 +202,7 @@ class Validations
 	 *
 	 * @throws InvalidArgumentException
 	 */
-	public static function option(Field $field, mixed $value): bool
+	public static function option(InputField $field, mixed $value): bool
 	{
 		if ($field->isEmptyValue($value) === false) {
 			$values = array_column($field->options(), 'value');
@@ -221,7 +222,7 @@ class Validations
 	 *
 	 * @throws InvalidArgumentException
 	 */
-	public static function options(Field $field, mixed $value): bool
+	public static function options(InputField $field, mixed $value): bool
 	{
 		if ($field->isEmptyValue($value) === false) {
 			$values = array_column($field->options(), 'value');
@@ -242,7 +243,7 @@ class Validations
 	 *
 	 * @throws InvalidArgumentException
 	 */
-	public static function time(Field $field, mixed $value): bool
+	public static function time(InputField $field, mixed $value): bool
 	{
 		if ($field->isEmptyValue($value) === false) {
 			if (V::time($value) !== true) {
@@ -260,7 +261,7 @@ class Validations
 	 *
 	 * @throws InvalidArgumentException
 	 */
-	public static function url(Field $field, mixed $value): bool
+	public static function url(InputField $field, mixed $value): bool
 	{
 		if ($field->isEmptyValue($value) === false) {
 			if (V::url($value) === false) {

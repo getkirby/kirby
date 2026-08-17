@@ -230,16 +230,6 @@
       <code><![CDATA[string]]></code>
     </InvalidReturnType>
   </file>
-  <file src="src/Form/Field.php">
-    <UndefinedThisPropertyFetch>
-      <code><![CDATA[$this->after]]></code>
-      <code><![CDATA[$this->before]]></code>
-      <code><![CDATA[$this->disabled]]></code>
-      <code><![CDATA[$this->help]]></code>
-      <code><![CDATA[$this->label]]></code>
-      <code><![CDATA[$this->placeholder]]></code>
-    </UndefinedThisPropertyFetch>
-  </file>
   <file src="src/Form/Field/ColorField.php">
     <InvalidOperand>
       <code><![CDATA[$props['options'] ?? []]]></code>
@@ -248,6 +238,23 @@
   <file src="src/Form/Field/TextareaField.php">
     <UndefinedMethod>
       <code><![CDATA[is]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Form/Fields.php">
+    <UndefinedMethod>
+      <code><![CDATA[fill]]></code>
+      <code><![CDATA[isSubmittable]]></code>
+      <code><![CDATA[submit]]></code>
+      <code><![CDATA[toFormValue]]></code>
+      <code><![CDATA[toFormValue]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Form/Form.php">
+    <UndefinedMethod>
+      <code><![CDATA[fill]]></code>
+      <code><![CDATA[isEmpty]]></code>
+      <code><![CDATA[isStorable]]></code>
+      <code><![CDATA[toStoredValue]]></code>
     </UndefinedMethod>
   </file>
   <file src="src/Form/Validations.php">
