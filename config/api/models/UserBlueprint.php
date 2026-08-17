@@ -9,7 +9,7 @@ return [
 	'fields' => [
 		'name'    => fn (UserBlueprint $blueprint) => $blueprint->name(),
 		'options' => fn (UserBlueprint $blueprint) => $blueprint->options(),
-		'tabs'    => fn (UserBlueprint $blueprint) => $blueprint->tabs(),
+		'tabs'    => fn (UserBlueprint $blueprint) => array_values($blueprint->tabs()->toArray()),
 		'title'   => fn (UserBlueprint $blueprint) => $blueprint->title(),
 	],
 	'type'  => UserBlueprint::class,
