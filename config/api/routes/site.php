@@ -51,7 +51,7 @@ return [
 		'pattern' => 'site/blueprints',
 		'method'  => 'GET',
 		'action'  => function () {
-			return $this->site()->blueprints($this->requestQuery('section'));
+			return $this->site()->blueprints($this->requestQuery('field'));
 		}
 	],
 	[
