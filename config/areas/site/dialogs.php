@@ -14,7 +14,6 @@ use Kirby\Panel\Controller\Dialog\PageCreateDialogController;
 use Kirby\Panel\Controller\Dialog\PageDeleteDialogController;
 use Kirby\Panel\Controller\Dialog\PageDuplicateDialogController;
 use Kirby\Panel\Controller\Dialog\PageMoveDialogController;
-use Kirby\Panel\Controller\Dialog\SectionDialogController;
 use Kirby\Panel\Controller\Dialog\SiteChangeTitleDialogController;
 
 return [
@@ -55,10 +54,6 @@ return [
 		'pattern' => '(pages/[^/]+)/fields/(:any)/(:all?)',
 		'action'  => FieldDialogController::class
 	],
-	'page.sections' => [
-		'pattern' => '(pages/[^/]+)/sections/(:any)/(:all?)',
-		'action'  => SectionDialogController::class
-	],
 	'page.file.changeName' => [
 		'pattern' => '(pages/[^/]+)/files/(:any)/changeName',
 		'action' => FileChangeNameDialogController::class
@@ -79,10 +74,6 @@ return [
 		'pattern' => '(pages/[^/]+)/files/(:any)/fields/(:any)/(:all?)',
 		'action'  => FieldDialogController::class
 	],
-	'page.file.sections' => [
-		'pattern' => '(pages/[^/]+)/files/(:any)/sections/(:any)/(:all?)',
-		'action'  => SectionDialogController::class
-	],
 
 	'site.changeTitle' => [
 		'pattern' => 'site/changeTitle',
@@ -92,10 +83,6 @@ return [
 	'site.fields' => [
 		'pattern' => '(site)/fields/(:any)/(:all?)',
 		'action'  => FieldDialogController::class
-	],
-	'site.sections' => [
-		'pattern' => '(site)/sections/(:any)/(:all?)',
-		'action'  => SectionDialogController::class
 	],
 	'site.file.changeName' => [
 		'pattern' => '(site)/files/(:any)/changeName',
@@ -116,10 +103,6 @@ return [
 	'site.file.fields' => [
 		'pattern' => '(site)/files/(:any)/fields/(:any)/(:all?)',
 		'action'  => FieldDialogController::class
-	],
-	'site.file.sections' => [
-		'pattern' => '(site)/files/(:any)/sections/(:any)/(:all?)',
-		'action'  => SectionDialogController::class
 	],
 
 	'changes' => [
