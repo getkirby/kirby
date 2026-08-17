@@ -162,20 +162,20 @@ class File extends ModelWithContent
 
 	/**
 	 * Returns an array with all blueprints that are available for the file
-	 * by comparing files sections and files fields of the parent model
+	 * by comparing the file list fields of the parent model
 	 */
-	public function blueprints(string|null $inSection = null): array
+	public function blueprints(string|null $inField = null): array
 	{
 		// get cached results for the current file model
-		// (except when collecting for a specific section)
-		if ($inSection === null && $this->blueprints !== null) {
+		// (except when collecting for a specific field)
+		if ($inField === null && $this->blueprints !== null) {
 			return $this->blueprints; // @codeCoverageIgnore
 		}
 
 		// always include the current template as option
 		$templates = [
 			$this->template() ?? 'default',
-			...$this->parent()->blueprint()->acceptedFileTemplates($inSection)
+			...$this->parent()->blueprint()->acceptedFileTemplates($inField)
 		];
 
 		// make sure every template is only included once
@@ -221,8 +221,8 @@ class File extends ModelWithContent
 			default => strnatcmp($a['title'], $b['title'])
 		});
 
-		// no caching for when collecting for specific section
-		if ($inSection !== null) {
+		// no caching for when collecting for a specific field
+		if ($inField !== null) {
 			return $blueprints; // @codeCoverageIgnore
 		}
 
