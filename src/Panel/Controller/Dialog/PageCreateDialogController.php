@@ -66,7 +66,8 @@ class PageCreateDialogController extends ModelCreateDialogController
 
 	public function __construct(
 		Page|Site|null $parent = null,
-		Section|string|null $section = null
+		Section|string|null $section = null,
+		array|null $blueprints = null
 	) {
 		parent::__construct(parent: $parent);
 
@@ -75,9 +76,10 @@ class PageCreateDialogController extends ModelCreateDialogController
 			$section = $parent->blueprint()->section($section);
 		}
 
-		// gather all available blueprints from section or parent
+		// gather all available blueprints from the given list,
+		// the section or the parent
 		$this->blueprints = A::map(
-			$section?->blueprints() ?? $this->parent->blueprints(),
+			$blueprints ?? $section?->blueprints() ?? $this->parent->blueprints(),
 			function ($blueprint) {
 				$blueprint['name'] ??= $blueprint['value'] ?? null;
 				return $blueprint;
