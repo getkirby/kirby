@@ -2,30 +2,30 @@
 	<k-lab-form>
 		<k-lab-examples class="k-lab-field-examples">
 			<k-box theme="notice" icon="alert">
-				The pages field does not work without the backend yet
+				The users field does not work without the backend yet
 			</k-box>
 
 			<k-lab-example label="Default">
-				<k-pages-field
-					name="pages"
-					label="pages"
+				<k-userpicker-field
+					name="users"
+					label="users"
 					:value="value"
 					@input="value = $event"
 				/>
 			</k-lab-example>
 
 			<k-lab-example label="Autofocus">
-				<k-pages-field
+				<k-userpicker-field
 					:autofocus="true"
-					label="pages"
+					label="users"
 					:value="value"
 					@input="value = $event"
 				/>
 			</k-lab-example>
 
 			<k-lab-example label="Required">
-				<k-pages-field
-					label="pages"
+				<k-userpicker-field
+					label="users"
 					:required="true"
 					:value="value"
 					@input="value = $event"
@@ -33,8 +33,8 @@
 			</k-lab-example>
 
 			<k-lab-example label="Placeholder">
-				<k-pages-field
-					label="pages"
+				<k-userpicker-field
+					label="users"
 					:value="value"
 					placeholder="Placeholder text …"
 					@input="value = $event"
@@ -42,8 +42,8 @@
 			</k-lab-example>
 
 			<k-lab-example label="Help">
-				<k-pages-field
-					label="pages"
+				<k-userpicker-field
+					label="users"
 					:value="value"
 					help="This is some help text"
 					@input="value = $event"
@@ -51,8 +51,8 @@
 			</k-lab-example>
 
 			<k-lab-example label="Before & After">
-				<k-pages-field
-					label="pages"
+				<k-userpicker-field
+					label="users"
 					:value="value"
 					after="After"
 					before="Before"
@@ -61,8 +61,8 @@
 			</k-lab-example>
 
 			<k-lab-example label="Icon">
-				<k-pages-field
-					label="pages"
+				<k-userpicker-field
+					label="users"
 					:value="value"
 					icon="edit"
 					@input="value = $event"
@@ -70,9 +70,9 @@
 			</k-lab-example>
 
 			<k-lab-example label="Disabled">
-				<k-pages-field
+				<k-userpicker-field
 					:disabled="true"
-					label="pages"
+					label="users"
 					:value="value"
 					@input="value = $event"
 				/>

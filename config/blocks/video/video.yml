@@ -18,7 +18,7 @@ fields:
       location: web
   video:
     label: field.blocks.video.name
-    type: files
+    type: filepicker
     query: model.videos
     multiple: false
     # you might want to add a template for videos here
@@ -26,7 +26,7 @@ fields:
       location: kirby
   poster:
     label: field.blocks.video.poster
-    type: files
+    type: filepicker
     query: model.images
     multiple: false
     image:

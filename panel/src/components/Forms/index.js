@@ -14,6 +14,8 @@ import Layouts from "./Layouts/index.js";
 import Previews from "./Previews/index.js";
 import Toolbar from "./Toolbar/index.js";
 
+import Validator from "./Validator";
+
 export default {
 	install(app) {
 		app.component("k-counter", Counter);
@@ -29,5 +31,7 @@ export default {
 		app.use(Layouts);
 		app.use(Previews);
 		app.use(Toolbar);
+
+		customElements.define("k-validator", Validator);
 	}
 };

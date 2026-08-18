@@ -23,6 +23,7 @@ use Kirby\Form\Field\ColorField;
 use Kirby\Form\Field\DateField;
 use Kirby\Form\Field\EmailField;
 use Kirby\Form\Field\EntriesField;
+use Kirby\Form\Field\FileListField;
 use Kirby\Form\Field\FilePickerField;
 use Kirby\Form\Field\GapField;
 use Kirby\Form\Field\HeadlineField;
@@ -35,6 +36,7 @@ use Kirby\Form\Field\ListField;
 use Kirby\Form\Field\MultiselectField;
 use Kirby\Form\Field\NumberField;
 use Kirby\Form\Field\ObjectField;
+use Kirby\Form\Field\PageListField;
 use Kirby\Form\Field\PagePickerField;
 use Kirby\Form\Field\PasswordField;
 use Kirby\Form\Field\RadioField;
@@ -230,6 +232,20 @@ class Core
 	}
 
 	/**
+	 * Returns the field classes for the `files`, `pages` and `users`
+	 * type names. They referred to the picker fields in v5.
+	 * @since 6.0.0
+	 */
+	public function fieldAliases(): array
+	{
+		return [
+			'files' => FilePickerField::class,
+			'pages' => PagePickerField::class,
+			'users' => UserPickerField::class,
+		];
+	}
+
+	/**
 	 * Returns an array of all class names of panel fields
 	 *
 	 * The field classes can be found in `/kirby/src/Form/Field`
@@ -244,7 +260,8 @@ class Core
 			'date'        => DateField::class,
 			'email'       => EmailField::class,
 			'entries'     => EntriesField::class,
-			'files'       => FilePickerField::class,
+			'filelist'    => FileListField::class,
+			'filepicker'  => FilePickerField::class,
 			'gap'         => GapField::class,
 			'headline'    => HeadlineField::class,
 			'hidden'      => HiddenField::class,
@@ -256,7 +273,8 @@ class Core
 			'multiselect' => MultiselectField::class,
 			'number'      => NumberField::class,
 			'object'      => ObjectField::class,
-			'pages'       => PagePickerField::class,
+			'pagelist'    => PageListField::class,
+			'pagepicker'  => PagePickerField::class,
 			'password'    => PasswordField::class,
 			'radio'       => RadioField::class,
 			'range'       => RangeField::class,
@@ -273,8 +291,12 @@ class Core
 			'toggle'      => ToggleField::class,
 			'toggles'     => TogglesField::class,
 			'url'         => UrlField::class,
-			'users'       => UserPickerField::class,
+			'userpicker'  => UserPickerField::class,
 			'writer'      => WriterField::class,
+
+			// `files`, `pages` and `users` point at the
+			// picker fields.
+			...$this->fieldAliases(),
 		];
 	}
 

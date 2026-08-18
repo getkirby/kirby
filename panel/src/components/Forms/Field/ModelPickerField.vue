@@ -51,7 +51,7 @@ import { autofocus, layout } from "@/mixins/props.js";
  * @license   https://getkirby.com/license
  */
 export default {
-	type: "model",
+	type: "modelpicker",
 	mixins: [FieldProps, autofocus, layout],
 	inheritAttrs: false,
 	props: {
