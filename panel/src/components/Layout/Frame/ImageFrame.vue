@@ -10,7 +10,7 @@
 			:alt="alt ?? resolvedAlt ?? ''"
 			:src="src ?? resolvedSrc"
 			:srcset="srcset ?? resolvedSrcset"
-			:sizes="sizes"
+			:sizes="resolvedSizes"
 			:loading="lazy === true ? 'lazy' : 'eager'"
 			decoding="async"
 			@dragstart.prevent
@@ -43,7 +43,8 @@ export const props = {
 			default: true
 		},
 		/**
-		 * For responsive images, pass the `sizes` attribute
+		 * For responsive images, pass the `sizes` attribute.
+		 * Lazy images default to `auto`.
 		 */
 		sizes: String,
 		/**
@@ -77,6 +78,11 @@ export default {
 			resolvedSrc: null,
 			resolvedSrcset: null
 		};
+	},
+	computed: {
+		resolvedSizes() {
+			return this.sizes ?? (this.lazy === true ? "auto" : undefined);
+		}
 	},
 	watch: {
 		file: {
