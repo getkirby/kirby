@@ -89,8 +89,10 @@ abstract class ModelWithContent extends Model implements Identifiable
 			$blueprints = [];
 
 			foreach ($fields as $field) {
-				foreach ($field->blueprints() as $blueprint) {
-					$blueprints[$blueprint['name']] = $blueprint;
+				if ($field instanceof ProvidesAcceptedBlueprints) {
+					foreach ($field->blueprints() as $blueprint) {
+						$blueprints[$blueprint['name']] = $blueprint;
+					}
 				}
 			}
 
@@ -101,16 +103,10 @@ abstract class ModelWithContent extends Model implements Identifiable
 
 		// no caching for when collecting for a specific field
 		if ($inField !== null) {
-			$field = $fields->get($inField);
-
-			return $toBlueprints(
-				$field instanceof ProvidesAcceptedBlueprints ? [$field] : []
-			);
+			return $toBlueprints([$fields->get($inField)]);
 		}
 
-		return $this->blueprints ??= $toBlueprints(
-			$fields->filter(fn ($field) => $field instanceof ProvidesAcceptedBlueprints)
-		);
+		return $this->blueprints ??= $toBlueprints($fields);
 	}
 
 	/**
