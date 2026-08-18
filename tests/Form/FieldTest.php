@@ -781,49 +781,6 @@ class FieldTest extends TestCase
 		$this->assertSame('blog', $field->label);
 	}
 
-	public function testMixinMin(): void
-	{
-		Field::$mixins['min'] = include kirby()->root('kirby') . '/config/fields/mixins/min.php';
-
-		Field::$types = [
-			'test' => ['mixins' => ['min']]
-		];
-
-		$page = new Page(['slug' => 'test']);
-
-		$field = new Field('test', [
-			'model' => $page,
-		]);
-
-		$this->assertFalse($field->isRequired());
-		$this->assertNull($field->min());
-
-		$field = new Field('test', [
-			'model' => $page,
-			'min'   => 5
-		]);
-
-		$this->assertTrue($field->isRequired());
-		$this->assertSame(5, $field->min());
-
-		$field = new Field('test', [
-			'model' => $page,
-			'required' => true
-		]);
-
-		$this->assertTrue($field->isRequired());
-		$this->assertSame(1, $field->min());
-
-		$field = new Field('test', [
-			'model'    => $page,
-			'required' => true,
-			'min'      => 5
-		]);
-
-		$this->assertTrue($field->isRequired());
-		$this->assertSame(5, $field->min());
-	}
-
 	public function testModel(): void
 	{
 		Field::$types = [

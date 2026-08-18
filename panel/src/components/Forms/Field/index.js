@@ -36,12 +36,6 @@ import UrlField from "./UrlField.vue";
 import UserPickerField from "./UserPickerField.vue";
 import WriterField from "./WriterField.vue";
 
-// @deprecated
-import LegacyFilesField from "./LegacyFilesField.vue";
-import LegacyModelsField from "./LegacyModelsField.vue";
-import LegacyPagesField from "./LegacyPagesField.vue";
-import LegacyUsersField from "./LegacyUsersField.vue";
-
 export default {
 	install(app) {
 		app.component("k-blocks-field", BlocksField);
@@ -81,38 +75,5 @@ export default {
 		app.component("k-url-field", UrlField);
 		app.component("k-users-field", UserPickerField);
 		app.component("k-writer-field", WriterField);
-
-		// Legacy fields components
-		// @deprecated
-		app.component("k-legacy-checkboxes-field", CheckboxesField);
-		app.component("k-legacy-color-field", ColorField);
-		app.component("k-legacy-date-field", DateField);
-		app.component("k-legacy-email-field", EmailField);
-		app.component("k-legacy-files-field", LegacyFilesField);
-		app.component("k-legacy-gap-field", GapField);
-		app.component("k-legacy-headline-field", HeadlineField);
-		app.component("k-legacy-info-field", InfoField);
-		app.component("k-legacy-line-field", LineField);
-		app.component("k-legacy-link-field", LinkField);
-		app.component("k-legacy-list-field", ListField);
-		app.component("k-legacy-object-field", ObjectField);
-		app.component("k-legacy-models-field", LegacyModelsField);
-		app.component("k-legacy-multiselect-field", MultiselectField);
-		app.component("k-legacy-number-field", NumberField);
-		app.component("k-legacy-pages-field", LegacyPagesField);
-		app.component("k-legacy-radio-field", RadioField);
-		app.component("k-legacy-select-field", SelectField);
-		app.component("k-legacy-slug-field", SlugField);
-		app.component("k-legacy-structure-field", StructureField);
-		app.component("k-legacy-tags-field", TagsField);
-		app.component("k-legacy-tel-field", TelField);
-		app.component("k-legacy-text-field", TextField);
-		app.component("k-legacy-textarea-field", TextareaField);
-		app.component("k-legacy-time-field", TimeField);
-		app.component("k-legacy-toggle-field", ToggleField);
-		app.component("k-legacy-toggles-field", TogglesField);
-		app.component("k-legacy-url-field", UrlField);
-		app.component("k-legacy-users-field", LegacyUsersField);
-		app.component("k-legacy-writer-field", WriterField);
 	}
 };

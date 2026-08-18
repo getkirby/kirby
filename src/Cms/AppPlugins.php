@@ -823,8 +823,7 @@ trait AppPlugins
 		Section::$types   = [];
 
 		// mixins
-		FormField::$mixins = $this->core->fieldMixins();
-		Section::$mixins   = $this->core->sectionMixins();
+		Section::$mixins = $this->core->sectionMixins();
 
 		// aliases
 		KirbyTag::$aliases = $this->core->kirbyTagAliases();
