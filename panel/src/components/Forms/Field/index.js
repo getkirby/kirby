@@ -5,6 +5,7 @@ import ColorField from "./ColorField.vue";
 import DateField from "./DateField.vue";
 import EmailField from "./EmailField.vue";
 import EntriesField from "./EntriesField.vue";
+import FileListField from "./FileListField.vue";
 import FilePickerField from "./FilePickerField.vue";
 import GapField from "./GapField.vue";
 import HeadlineField from "./HeadlineField.vue";
@@ -16,6 +17,7 @@ import ListField from "./ListField.vue";
 import MultiselectField from "./MultiselectField.vue";
 import NumberField from "./NumberField.vue";
 import ObjectField from "./ObjectField.vue";
+import PageListField from "./PageListField.vue";
 import PagePickerField from "./PagePickerField.vue";
 import PasswordField from "./PasswordField.vue";
 import RadioField from "./RadioField.vue";
@@ -45,7 +47,8 @@ export default {
 		app.component("k-date-field", DateField);
 		app.component("k-email-field", EmailField);
 		app.component("k-entries-field", EntriesField);
-		app.component("k-files-field", FilePickerField);
+		app.component("k-filelist-field", FileListField);
+		app.component("k-filepicker-field", FilePickerField);
 		app.component("k-gap-field", GapField);
 		app.component("k-headline-field", HeadlineField);
 		app.component("k-info-field", InfoField);
@@ -56,7 +59,8 @@ export default {
 		app.component("k-multiselect-field", MultiselectField);
 		app.component("k-number-field", NumberField);
 		app.component("k-object-field", ObjectField);
-		app.component("k-pages-field", PagePickerField);
+		app.component("k-pagelist-field", PageListField);
+		app.component("k-pagepicker-field", PagePickerField);
 		app.component("k-password-field", PasswordField);
 		app.component("k-radio-field", RadioField);
 		app.component("k-range-field", RangeField);
@@ -73,7 +77,7 @@ export default {
 		app.component("k-toggle-field", ToggleField);
 		app.component("k-toggles-field", TogglesField);
 		app.component("k-url-field", UrlField);
-		app.component("k-users-field", UserPickerField);
+		app.component("k-userpicker-field", UserPickerField);
 		app.component("k-writer-field", WriterField);
 	}
 };

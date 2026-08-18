@@ -3,6 +3,7 @@
 namespace Kirby\Form;
 
 use Kirby\Cms\HasStringTemplate;
+use Kirby\Cms\Language;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Field\ValueField;
 use Kirby\Reflection\Constructor;
@@ -120,6 +121,16 @@ abstract class Field implements Stringable
 	}
 
 	public function isHidden(): bool
+	{
+		return false;
+	}
+
+	/**
+	 * Fields without a value are never submitted.
+	 * `Kirby\Form\Mixin\Value` overwrites this for all
+	 * fields that can actually hold a value.
+	 */
+	public function isSubmittable(Language $language): bool
 	{
 		return false;
 	}
