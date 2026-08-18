@@ -253,6 +253,9 @@ export default {
 			this.$events.on(event, this.onRefresh);
 		}
 	},
+	mounted() {
+		this.$events.emit("field.loaded", this);
+	},
 	unmounted() {
 		for (const event of this.refreshEvents()) {
 			this.$events.off(event, this.onRefresh);
@@ -305,6 +308,9 @@ export default {
 			} finally {
 				this.isProcessing = false;
 			}
+
+			await this.$nextTick();
+			this.$events.emit("field.loaded", this);
 		},
 		/**
 		 * Runs the callback and announces the change afterwards,
