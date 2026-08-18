@@ -5,8 +5,40 @@ namespace Kirby\Form;
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Form\Field\InputField;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
+
+class ValidationsField extends InputField
+{
+	use Mixin\Max;
+	use Mixin\Maxlength;
+	use Mixin\Min;
+	use Mixin\Minlength;
+	use Mixin\Options;
+	use Mixin\Pattern;
+
+	protected mixed $value = null;
+
+	public function __construct(
+		int|null $max = null,
+		int|null $maxlength = null,
+		int|null $min = null,
+		int|null $minlength = null,
+		array|string|null $options = null,
+		string|null $pattern = null,
+		bool|null $required = null
+	) {
+		parent::__construct(required: $required);
+
+		$this->max       = $max;
+		$this->maxlength = $maxlength;
+		$this->min       = $min;
+		$this->minlength = $minlength;
+		$this->options   = $options;
+		$this->pattern   = $pattern;
+	}
+}
 
 #[CoversClass(Validations::class)]
 class ValidationsTest extends TestCase
@@ -18,25 +50,12 @@ class ValidationsTest extends TestCase
 				'index' => '/dev/null'
 			]
 		]);
-
-		Field::$types = [
-			'test' => [
-				'props' => [
-					'options' => fn (array $options = []) => $options
-				]
-			]
-		];
-	}
-
-	protected function tearDown(): void
-	{
-		Field::$types = [];
 	}
 
 	public function testBooleanValid(): void
 	{
 		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', ['model' => $page]);
+		$field = ValidationsField::factory(['model' => $page]);
 		$this->assertTrue(Validations::boolean($field, true));
 	}
 
@@ -46,14 +65,14 @@ class ValidationsTest extends TestCase
 		$this->expectExceptionMessage('Please confirm or deny');
 
 		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', ['model' => $page]);
+		$field = ValidationsField::factory(['model' => $page]);
 		Validations::boolean($field, 'nope');
 	}
 
 	public function testDateValid(): void
 	{
 		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', ['model' => $page]);
+		$field = ValidationsField::factory(['model' => $page]);
 		$this->assertTrue(Validations::date($field, '2012-12-12'));
 	}
 
@@ -63,14 +82,14 @@ class ValidationsTest extends TestCase
 		$this->expectExceptionMessage('Please enter a valid date');
 
 		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', ['model' => $page]);
+		$field = ValidationsField::factory(['model' => $page]);
 		Validations::date($field, 'somewhen');
 	}
 
 	public function testEmailValid(): void
 	{
 		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', ['model' => $page]);
+		$field = ValidationsField::factory(['model' => $page]);
 		$this->assertTrue(Validations::email($field, 'test@getkirby.com'));
 	}
 
@@ -80,14 +99,14 @@ class ValidationsTest extends TestCase
 		$this->expectExceptionMessage('Please enter a valid email address');
 
 		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', ['model' => $page]);
+		$field = ValidationsField::factory(['model' => $page]);
 		Validations::email($field, 'test[at]getkirby.com');
 	}
 
 	public function testMaxValid(): void
 	{
 		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', [
+		$field = ValidationsField::factory([
 			'model' => $page,
 			'max' => 5
 		]);
@@ -101,7 +120,7 @@ class ValidationsTest extends TestCase
 		$this->expectExceptionMessage('Please enter a value equal to or lower than 5');
 
 		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', [
+		$field = ValidationsField::factory([
 			'max' => 5,
 			'model' => $page
 		]);
@@ -112,7 +131,7 @@ class ValidationsTest extends TestCase
 	public function testMaxLengthValid(): void
 	{
 		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', [
+		$field = ValidationsField::factory([
 			'maxlength' => 5,
 			'model' => $page
 		]);
@@ -126,7 +145,7 @@ class ValidationsTest extends TestCase
 		$this->expectExceptionMessage('Please enter a shorter value. (max. 5 characters)');
 
 		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', [
+		$field = ValidationsField::factory([
 			'maxlength' => 5,
 			'model' => $page
 		]);
@@ -137,7 +156,7 @@ class ValidationsTest extends TestCase
 	public function testMinValid(): void
 	{
 		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', [
+		$field = ValidationsField::factory([
 			'min' => 5,
 			'model' => $page
 		]);
@@ -151,7 +170,7 @@ class ValidationsTest extends TestCase
 		$this->expectExceptionMessage('Please enter a value equal to or greater than 5');
 
 		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', [
+		$field = ValidationsField::factory([
 			'min' => 5,
 			'model' => $page
 		]);
@@ -162,7 +181,7 @@ class ValidationsTest extends TestCase
 	public function testMinLengthValid(): void
 	{
 		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', [
+		$field = ValidationsField::factory([
 			'minlength' => 5,
 			'model' => $page
 		]);
@@ -176,7 +195,7 @@ class ValidationsTest extends TestCase
 		$this->expectExceptionMessage('Please enter a longer value. (min. 5 characters)');
 
 		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', [
+		$field = ValidationsField::factory([
 			'minlength' => 5,
 			'model' => $page
 		]);
@@ -187,7 +206,7 @@ class ValidationsTest extends TestCase
 	public function testPatternValid(): void
 	{
 		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', [
+		$field = ValidationsField::factory([
 			'pattern' => '^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$',
 			'model' => $page
 		]);
@@ -204,7 +223,7 @@ class ValidationsTest extends TestCase
 		$this->expectExceptionMessage('The value does not match the expected pattern');
 
 		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', [
+		$field = ValidationsField::factory([
 			'pattern' => '^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$',
 			'model' => $page
 		]);
@@ -215,7 +234,7 @@ class ValidationsTest extends TestCase
 	public function testPatternInvalidMatchButMore(): void
 	{
 		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', [
+		$field = ValidationsField::factory([
 			'pattern' => '\d{3,4}',
 			'model'   => $page
 		]);
@@ -232,7 +251,7 @@ class ValidationsTest extends TestCase
 	public function testRequiredValid(): void
 	{
 		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', [
+		$field = ValidationsField::factory([
 			'required' => true,
 			'model' => $page
 		]);
@@ -246,7 +265,7 @@ class ValidationsTest extends TestCase
 		$this->expectExceptionMessage('Please enter something');
 
 		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', [
+		$field = ValidationsField::factory([
 			'required' => true,
 			'model' => $page
 		]);
@@ -257,7 +276,7 @@ class ValidationsTest extends TestCase
 	public function testOptionValid(): void
 	{
 		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', [
+		$field = ValidationsField::factory([
 			'options' => [
 				['value' => 'a'],
 				['value' => 'b']
@@ -274,7 +293,7 @@ class ValidationsTest extends TestCase
 		$this->expectExceptionMessage('Please select a valid option');
 
 		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', [
+		$field = ValidationsField::factory([
 			'options' => [
 				['value' => 'a'],
 				['value' => 'b']
@@ -288,7 +307,7 @@ class ValidationsTest extends TestCase
 	public function testOptionsValid(): void
 	{
 		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', [
+		$field = ValidationsField::factory([
 			'options' => [
 				['value' => 'a'],
 				['value' => 'b']
@@ -305,7 +324,7 @@ class ValidationsTest extends TestCase
 		$this->expectExceptionMessage('Please select a valid option');
 
 		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', [
+		$field = ValidationsField::factory([
 			'options' => [
 				['value' => 'a'],
 				['value' => 'b']
@@ -319,7 +338,7 @@ class ValidationsTest extends TestCase
 	public function testTimeValid(): void
 	{
 		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', ['model' => $page]);
+		$field = ValidationsField::factory(['model' => $page]);
 		$this->assertTrue(Validations::time($field, '10:12'));
 	}
 
@@ -329,7 +348,7 @@ class ValidationsTest extends TestCase
 		$this->expectExceptionMessage('Please enter a valid time');
 
 		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', ['model' => $page]);
+		$field = ValidationsField::factory(['model' => $page]);
 		Validations::time($field, '99:99');
 	}
 }

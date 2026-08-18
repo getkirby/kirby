@@ -8,6 +8,7 @@ use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Form\Field\InputField;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -564,11 +565,16 @@ class FormTest extends TestCase
 
 	public function testToStoredValues(): void
 	{
-		Field::$types['test'] = [
-			'save' => function ($value) {
-				return $value . ' stored';
+		$field = new class () extends InputField {
+			protected mixed $value = null;
+
+			public function toStoredValue(): mixed
+			{
+				return parent::toStoredValue() . ' stored';
 			}
-		];
+		};
+
+		Field::$types['test'] = $field::class;
 
 		$form = new Form([
 			'fields' => [

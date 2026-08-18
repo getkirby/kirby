@@ -2,230 +2,48 @@
 
 namespace Kirby\Form;
 
-use Closure;
-use Kirby\Cms\HasSiblings;
+use Kirby\Cms\HasStringTemplate;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Form\Field\BaseField;
-use Kirby\Toolkit\BlockCollectionAccess;
-use Kirby\Toolkit\Component;
-use Kirby\Toolkit\HtmlString;
-use Kirby\Toolkit\I18n;
+use Kirby\Reflection\Constructor;
+use Stringable;
 
 /**
- * Form Field object that takes a Vue component style
- * array of properties and methods and converts them
- * to a usable field option array for the API.
+ * Base class for any field type
  *
  * @copyright Bastian Allgeier
- * @license   https://opensource.org/licenses/MIT
- *
- * @use HasSiblings<Fields>
+ * @license   https://getkirby.com/license
+ * @since     6.0.0
  */
-class Field extends Component
+abstract class Field implements Stringable
 {
-	use HasSiblings;
+	use HasStringTemplate;
 	use Mixin\Api;
 	use Mixin\DefaultValue;
 	use Mixin\Model;
-	use Mixin\Required;
+	use Mixin\Name;
+	use Mixin\Siblings;
 	use Mixin\Translatable;
-	use Mixin\Validation;
 	use Mixin\When;
-	use Mixin\Value {
-		isEmptyValue as protected isEmptyValueFromMixin;
-	}
+	use Mixin\Width;
 
 	/**
-	 * Parent collection with all fields of the current form
-	 */
-	protected Fields $siblings;
-
-	/**
-	 * Registry for all component mixins
-	 */
-	public static array $mixins = [];
-
-	/**
-	 * Registry for all component types
+	 * Registry for all field types
 	 */
 	public static array $types = [];
 
-	protected mixed $value = null;
-
-	/**
-	 * @throws InvalidArgumentException
-	 */
 	public function __construct(
-		string $type,
-		array $attrs = [],
-		Fields|null $siblings = null
+		string|null $name = null,
+		array|null $when = null,
+		string|null $width = null
 	) {
-		if (isset(static::$types[$type]) === false) {
-			throw new InvalidArgumentException(
-				key: 'field.type.missing',
-				data: [
-					'name' => $attrs['name'] ?? '-',
-					'type' => $type
-				]
-			);
-		}
-
-		// use the type as fallback for the name
-		$attrs['name'] ??= $type;
-		$attrs['type']   = $type;
-
-		// set the name to lowercase
-		$attrs['name'] = strtolower($attrs['name']);
-
-		$this->setModel($attrs['model'] ?? null);
-
-		parent::__construct($type, $attrs);
-
-		// set the siblings collection
-		$this->siblings = $siblings ?? new Fields([$this]);
+		$this->name  = $name;
+		$this->when  = $when;
+		$this->width = $width;
 	}
 
-	public function api(): array
+	public function __toString(): string
 	{
-		return $this->routes();
-	}
-
-	/**
-	 * Default props and computed of the field
-	 */
-	public static function defaults(): array
-	{
-		return [
-			'props' => [
-				/**
-				 * Optional text that will be shown after the input
-				 */
-				'after' => function ($after = null) {
-					return I18n::translate($after, $after);
-				},
-				/**
-				 * Sets the focus on this field when the form loads. Only the first field with this label gets
-				 */
-				'autofocus' => function (bool|null $autofocus = null): bool {
-					return $autofocus ?? false;
-				},
-				/**
-				 * Optional text that will be shown before the input
-				 */
-				'before' => function ($before = null) {
-					return I18n::translate($before, $before);
-				},
-				/**
-				 * Default value for the field, which will be used when a page/file/user is created
-				 */
-				'default' => function ($default = null) {
-					return $default;
-				},
-				/**
-				 * If `true`, the field is no longer editable and will not be saved
-				 */
-				'disabled' => function (bool|null $disabled = null): bool {
-					return $disabled ?? false;
-				},
-				/**
-				 * Optional help text below the field
-				 */
-				'help' => function ($help = null) {
-					return I18n::translate($help, $help);
-				},
-				/**
-				 * Optional icon that will be shown at the end of the field
-				 */
-				'icon' => function (string|null $icon = null) {
-					return $icon;
-				},
-				/**
-				 * The field label can be set as string or associative array with translations
-				 */
-				'label' => function ($label = null) {
-					return I18n::translate($label, $label);
-				},
-				/**
-				 * Optional placeholder value that will be shown when the field is empty
-				 */
-				'placeholder' => function ($placeholder = null) {
-					return I18n::translate($placeholder, $placeholder);
-				},
-				/**
-				 * If `true`, the field has to be filled in correctly to be saved.
-				 */
-				'required' => function (bool|null $required = null): bool {
-					return $required ?? false;
-				},
-				/**
-				 * If `false`, the field will be disabled in non-default languages and cannot be translated. This is only relevant in multi-language setups.
-				 */
-				'translate' => function (bool $translate = true): bool {
-					return $translate;
-				},
-				/**
-				 * Conditions when the field will be shown (since 3.1.0)
-				 */
-				'when' => function ($when = null) {
-					return $when;
-				},
-				/**
-				 * The width of the field in the field grid, e.g. `1/1`, `1/2`, `1/3`, `1/4`, `2/3`, `3/4`
-				 */
-				'width' => function (string $width = '1/1') {
-					return $width;
-				},
-				'value' => function ($value = null) {
-					return $value;
-				}
-			],
-			'computed' => [
-				'after' => function () {
-					/** @var Field $this */
-					if ($this->after !== null) {
-						return $this->model()->toString($this->after);
-					}
-				},
-				'before' => function () {
-					/** @var Field $this */
-					if ($this->before !== null) {
-						return $this->model()->toString($this->before);
-					}
-				},
-				'default' => function () {
-					/** @var Field $this */
-					if (isset($this->default) === false) {
-						return;
-					}
-
-					if (is_string($this->default) === false) {
-						return $this->default;
-					}
-
-					return $this->model()->toString($this->default);
-				},
-				'help' => function () {
-					/** @var Field $this */
-					if ($this->help) {
-						$help = $this->model()->toSafeString($this->help);
-						$help = $this->kirby()->kirbytext($help);
-						return new HtmlString($help);
-					}
-				},
-				'label' => function () {
-					/** @var Field $this */
-					if ($this->label !== null) {
-						return $this->model()->toString($this->label);
-					}
-				},
-				'placeholder' => function () {
-					/** @var Field $this */
-					if ($this->placeholder !== null) {
-						return $this->model()->toString($this->placeholder);
-					}
-				}
-			]
-		];
+		return $this->name();
 	}
 
 	/**
@@ -233,17 +51,7 @@ class Field extends Component
 	 */
 	public function dialogs(): array
 	{
-		if (isset($this->options['dialogs']) === false) {
-			return [];
-		}
-
-		if ($this->options['dialogs'] instanceof Closure) {
-			return $this->options['dialogs']->call($this);
-		}
-
-		throw new InvalidArgumentException(
-			message: 'Dialogs of field "' . $this->name() . '" must be defined as a closure'
-		);
+		return [];
 	}
 
 	/**
@@ -251,105 +59,45 @@ class Field extends Component
 	 */
 	public function drawers(): array
 	{
-		if (isset($this->options['drawers']) === false) {
-			return [];
-		}
-
-		if ($this->options['drawers'] instanceof Closure) {
-			return $this->options['drawers']->call($this);
-		}
-
-		throw new InvalidArgumentException(
-			message: 'Drawers of field "' . $this->name() . '" must be defined as a closure'
-		);
+		return [];
 	}
 
 	/**
-	 * Returns the preferred empty state for the field
-	 *
-	 * @since 5.2.0
+	 * Fields without a value never have errors.
+	 * `Kirby\Form\Mixin\Validation` overwrites this
+	 * for all fields that can actually be validated.
 	 */
-	public function emptyValue(): mixed
+	public function errors(): array
 	{
-		if (isset($this->methods['emptyValue']) === true) {
-			return $this->methods['emptyValue']->call($this);
-		}
-
-		return null;
+		return [];
 	}
 
 	/**
-	 * Creates a new field instance
+	 * Creates a new field instance from a $props array
+	 * @since 6.0.0
 	 */
 	public static function factory(
-		string $type,
-		array $attrs = [],
+		array $props,
 		Fields|null $siblings = null
-	): static|BaseField {
-		$field = static::$types[$type] ?? null;
+	): static {
+		$constructor = new Constructor(static::class);
+		$args        = $constructor->getAcceptedArguments($props);
 
-		if (
-			is_string($field) &&
-			is_subclass_of($field, BaseField::class) === true
-		) {
-			return $field::factory($attrs, $siblings);
+		$field = new static(...$args);
+		$field->setSiblings($siblings);
+
+		if (array_key_exists('model', $props) === true) {
+			$field->setModel($props['model']);
 		}
 
-		return new static($type, $attrs, $siblings);
-	}
+		if (
+			array_key_exists('value', $props) === true &&
+			method_exists($field, 'fill') === true
+		) {
+			$field->fill($props['value']);
+		}
 
-	/**
-	 * Sets a new value for the field
-	 */
-	#[BlockCollectionAccess]
-	public function fill(mixed $value): static
-	{
-		// remember the current state to restore it afterwards
-		$attrs   = $this->attrs;
-		$methods = $this->methods;
-		$options = $this->options;
-		$type    = $this->type;
-
-		// overwrite the attribute value
-		$this->value = $this->attrs['value'] = $value;
-
-		// reevaluate the value prop
-		$this->applyProp('value', $this->options['props']['value'] ?? $value);
-
-		// reevaluate the computed props
-		$this->applyComputed($this->options['computed'] ?? []);
-
-		// restore the original state
-		$this->attrs   = $attrs;
-		$this->methods = $methods;
-		$this->options = $options;
-		$this->type    = $type;
-
-		return $this;
-	}
-
-	/**
-	 * Preferred name would be `::reset` but this is
-	 * taken by options in other fields.
-	 *
-	 * @since 5.2.0
-	 */
-	#[BlockCollectionAccess]
-	public function fillWithEmptyValue(): static
-	{
-		// go through `::fill()` to reevaluate the computed props;
-		// otherwise a field that has never been filled could end up
-		// with a different form value than the same field filled with
-		// its own empty value
-		return $this->fill($this->emptyValue());
-	}
-
-	/**
-	 * @deprecated 5.0.0 Use `::siblings() instead
-	 */
-	public function formFields(): Fields
-	{
-		return $this->siblings;
+		return $field;
 	}
 
 	/**
@@ -357,79 +105,86 @@ class Field extends Component
 	 */
 	public function hasValue(): bool
 	{
-		return ($this->options['save'] ?? true) !== false;
+		return property_exists($this, 'value') === true;
 	}
 
 	/**
-	 * The field's unique id is the same as its name
-	 * @see self::name()
-	 * @since 6.0.0
+	 * @see `self::name()`
 	 */
 	public function id(): string
 	{
 		return $this->name();
 	}
 
-	/**
-	 * Checks if the field is disabled
-	 */
-	public function isDisabled(): bool
-	{
-		return $this->disabled === true;
-	}
-
-	/**
-	 * Checks if the given value is considered empty
-	 */
-	public function isEmptyValue(mixed $value = null): bool
-	{
-		if (
-			isset($this->options['isEmpty']) === true &&
-			$this->options['isEmpty'] instanceof Closure
-		) {
-			return $this->options['isEmpty']->call($this, $value);
-		}
-
-		return $this->isEmptyValueFromMixin($value);
-	}
-
-	/**
-	 * Checks if the field is hidden
-	 */
 	public function isHidden(): bool
 	{
-		return ($this->options['hidden'] ?? false) === true;
+		return false;
 	}
 
 	/**
-	 * Returns field API routes
+	 * Returns the field's label, if it has one
 	 */
-	public function routes(): array
+	public function label(): string|null
 	{
-		if (
-			isset($this->options['api']) === true &&
-			$this->options['api'] instanceof Closure
-		) {
-			return $this->options['api']->call($this);
+		return null;
+	}
+
+	/**
+	 * Define the props that will be sent to
+	 * the Vue component
+	 */
+	public function props(): array
+	{
+		return [
+			'hidden'   => $this->isHidden(),
+			'name'     => $this->name(),
+			'saveable' => $this->hasValue(),
+			'type'     => $this->type(),
+			'when'     => $this->when(),
+			'width'    => $this->width()
+		];
+	}
+
+	/**
+	 * Resolves a field type to its class name
+	 * @since 6.0.0
+	 *
+	 * @return class-string<static>
+	 * @throws InvalidArgumentException if the type is unknown or not a field class
+	 */
+	public static function resolve(
+		string $type,
+		string|null $name = null
+	): string {
+		$class = static::$types[$type] ?? null;
+
+		if ($class === null) {
+			throw new InvalidArgumentException(
+				key: 'field.type.missing',
+				data: [
+					'name' => $name ?? '-',
+					'type' => $type
+				]
+			);
 		}
 
-		return [];
-	}
+		if (is_string($class) === false) {
+			throw new InvalidArgumentException(
+				message: 'The field type "' . $type . '" is registered as ' .
+				get_debug_type($class) . '. Array-based field definitions ' .
+				'have been removed in Kirby 6. Please register the name of ' .
+				'a class that extends ' . self::class . ' instead.'
+			);
+		}
 
-	/**
-	 * Parent collection with all fields of the current form
-	 */
-	public function siblings(): Fields
-	{
-		return $this->siblings;
-	}
+		if (is_subclass_of($class, self::class) === false) {
+			throw new InvalidArgumentException(
+				message: 'The field type "' . $type . '" is registered as "' .
+				$class . '", which does not extend ' . self::class
+			);
+		}
 
-	/**
-	 * Returns all sibling fields for the HasSiblings trait
-	 */
-	protected function siblingsCollection(): Fields
-	{
-		return $this->siblings;
+		return $class;
 	}
 
 	/**
@@ -437,45 +192,18 @@ class Field extends Component
 	 */
 	public function toArray(): array
 	{
-		$array = parent::toArray();
+		$props = $this->props();
 
-		unset($array['model']);
+		ksort($props);
 
-		$array['hidden']   = $this->isHidden();
-		$array['saveable'] = $this->hasValue();
-
-		ksort($array);
-
-		return array_filter(
-			$array,
-			fn ($item) => $item !== null && is_object($item) === false
-		);
+		return array_filter($props, fn ($item) => $item !== null);
 	}
 
 	/**
-	 * Returns the value of the field in a format to be stored by our storage classes
+	 * Returns the field type
 	 */
-	public function toStoredValue(): mixed
+	public function type(): string
 	{
-		$value = $this->toFormValue();
-		$store = $this->options['save'] ?? true;
-
-		if ($store === false) {
-			return null;
-		}
-
-		if ($store instanceof Closure) {
-			return $store->call($this, $value);
-		}
-
-		return $value;
-	}
-
-	/**
-	 * Defines all validation rules
-	 */
-	protected function validations(): array
-	{
-		return $this->options['validations'] ?? [];
+		return strtolower(basename(str_replace(['\\', 'Field'], ['/', ''], static::class)));
 	}
 }

@@ -434,7 +434,8 @@ class AppPluginsTest extends TestCase
 		]);
 
 		$page  = new Page(['slug' => 'test']);
-		$field = FormField::factory('dummy', [
+		$class = FormField::resolve('dummy');
+		$field = $class::factory([
 			'name'  => 'dummy',
 			'peter' => 'shaw',
 			'model' => $page

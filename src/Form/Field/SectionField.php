@@ -3,6 +3,7 @@
 namespace Kirby\Form\Field;
 
 use Kirby\Blueprint\Section;
+use Kirby\Form\Field;
 use Kirby\Form\Fields;
 
 /**
@@ -12,7 +13,7 @@ use Kirby\Form\Fields;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  */
-class SectionField extends BaseField
+class SectionField extends Field
 {
 	protected Section|null $instance = null;
 	protected array $props;

@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Form\Field;
+
 /**
  * Gap field
  *
@@ -9,6 +11,6 @@ namespace Kirby\Form\Field;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  */
-class GapField extends BaseField
+class GapField extends Field
 {
 }

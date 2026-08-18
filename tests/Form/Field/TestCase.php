@@ -41,8 +41,10 @@ abstract class TestCase extends BaseTestCase
 		string $type,
 		array $attr = [],
 		Fields|null $formFields = null
-	): Field|BaseField {
-		$page = new Page(['slug' => 'test']);
-		return Field::factory($type, ['model' => $page, ...$attr], $formFields);
+	): Field {
+		$page  = new Page(['slug' => 'test']);
+		$class = Field::resolve($type);
+
+		return $class::factory(['model' => $page, ...$attr], $formFields);
 	}
 }

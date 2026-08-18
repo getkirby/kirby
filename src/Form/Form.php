@@ -7,7 +7,6 @@ use Kirby\Cms\ModelWithContent;
 use Kirby\Data\Data;
 use Kirby\Exception\FormValidationException;
 use Kirby\Exception\NotFoundException;
-use Kirby\Form\Field\BaseField;
 use Kirby\Toolkit\A;
 
 /**
@@ -120,7 +119,7 @@ class Form
 	 *
 	 * @throws NotFoundException
 	 */
-	public function field(string $name): Field|BaseField
+	public function field(string $name): Field
 	{
 		return $this->fields->field($name);
 	}
