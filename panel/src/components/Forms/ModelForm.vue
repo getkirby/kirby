@@ -1,5 +1,5 @@
 <template>
-	<k-box v-if="isEmpty" :html="true" :text="empty" theme="info" />
+	<k-box v-if="isEmpty" :text="empty" theme="info" />
 
 	<form
 		v-else
