@@ -243,7 +243,6 @@
   <file src="src/Form/Fields.php">
     <UndefinedMethod>
       <code><![CDATA[fill]]></code>
-      <code><![CDATA[isSubmittable]]></code>
       <code><![CDATA[submit]]></code>
       <code><![CDATA[toFormValue]]></code>
       <code><![CDATA[toFormValue]]></code>
