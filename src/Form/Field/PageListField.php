@@ -2,7 +2,7 @@
 
 namespace Kirby\Form\Field;
 
-use Kirby\Blueprint\Blueprint;
+use Kirby\Blueprint\PageBlueprint;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
@@ -132,13 +132,9 @@ class PageListField extends ModelListField implements ProvidesAcceptedBlueprints
 
 		$statuses = [];
 
-		foreach ($this->blueprintNames() as $blueprint) {
-			try {
-				$props      = Blueprint::load('pages/' . $blueprint);
-				$statuses[] = $props['create']['status'] ?? 'draft';
-			} catch (Throwable) {
-				$statuses[] = 'draft';
-			}
+		foreach ($this->blueprintNames() as $name) {
+			$blueprint  = $this->blueprint($name);
+			$statuses[] = $blueprint?->create()['status'] ?? 'draft';
 		}
 
 		$statuses = array_unique($statuses);
@@ -148,26 +144,40 @@ class PageListField extends ModelListField implements ProvidesAcceptedBlueprints
 	}
 
 	/**
+	 * The blueprint for the given name or null, if the
+	 * blueprint cannot be loaded or is invalid
+	 */
+	protected function blueprint(string $name): PageBlueprint|null
+	{
+		try {
+			return PageBlueprint::factory($this->model(), 'pages/' . $name);
+		} catch (Throwable) {
+			return null;
+		}
+	}
+
+	/**
 	 * The blueprint options for the create dialog
 	 */
 	public function blueprints(): array
 	{
 		$blueprints = [];
 
-		foreach ($this->blueprintNames() as $blueprint) {
-			try {
-				$props = Blueprint::load('pages/' . $blueprint);
+		foreach ($this->blueprintNames() as $name) {
+			// the full blueprint, so that a title inherited
+			// through `extends` is taken into account
+			$blueprint = $this->blueprint($name);
 
-				$blueprints[] = [
-					'name'  => basename($props['name']),
-					'title' => $props['title'],
-				];
-			} catch (Throwable) {
-				$blueprints[] = [
-					'name'  => basename($blueprint),
-					'title' => ucfirst($blueprint),
-				];
-			}
+			$blueprints[] = match ($blueprint) {
+				null    => [
+					'name'  => basename($name),
+					'title' => ucfirst($name),
+				],
+				default => [
+					'name'  => basename($blueprint->name()),
+					'title' => $blueprint->title(),
+				]
+			};
 		}
 
 		return $blueprints;

@@ -5,7 +5,6 @@ namespace Kirby\Blueprint;
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
-use Kirby\Toolkit\I18n;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Normalizer::class)]
@@ -815,18 +814,15 @@ class NormalizerTest extends TestCase
 		$this->assertSame('Blog post', $props['title']);
 	}
 
-	public function testPropsWithTranslatedTitle(): void
+	public function testPropsWithTranslatableTitle(): void
 	{
-		I18n::$locale       = 'de';
-		I18n::$translations = [
-			'de' => ['blueprint.title' => 'Artikel']
-		];
-
+		// the title is kept untranslated, so that the normalized
+		// props can be cached across languages
 		$props = $this->normalizer([
 			'title' => 'blueprint.title'
 		])->props();
 
-		$this->assertSame('Artikel', $props['title']);
+		$this->assertSame('blueprint.title', $props['title']);
 	}
 
 	public function testSections(): void
@@ -975,7 +971,8 @@ class NormalizerTest extends TestCase
 		$tab = $normalizer->tabs()['content'];
 
 		$this->assertSame('content', $tab['name']);
-		$this->assertSame('Content', $tab['label']);
+		// the label is resolved by `Tab::label()`
+		$this->assertNull($tab['label']);
 		$this->assertSame('text', $tab['icon']);
 		$this->assertSame([], $tab['columns']);
 	}
