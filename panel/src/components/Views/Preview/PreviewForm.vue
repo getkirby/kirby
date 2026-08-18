@@ -72,7 +72,7 @@ export default {
 			});
 		}
 	},
-	mounted() {
+	created() {
 		this.$events.on("field.loaded", this.fixLinks);
 		this.$events.on("section.loaded", this.fixLinks);
 	},
