@@ -272,7 +272,7 @@ abstract class ModelListField extends DisplayField
 			$item['info'] = $model->toString($info);
 		}
 
-		$values = Form::for($model)->values();
+		$values = Form::for($model)->toFormValues();
 
 		foreach ($this->columns() as $name => $column) {
 			$item[$name] = match (empty($column['value'])) {
