@@ -48,5 +48,11 @@ export default {
 		app.component("k-radio-field-preview", TagsFieldPreview);
 		app.component("k-select-field-preview", TagsFieldPreview);
 		app.component("k-toggles-field-preview", TagsFieldPreview);
+
+		// the picker fields are previewed by their blueprint type,
+		// which the `fields.names` option can switch
+		app.component("k-filepicker-field-preview", FilesFieldPreview);
+		app.component("k-pagepicker-field-preview", PagesFieldPreview);
+		app.component("k-userpicker-field-preview", UsersFieldPreview);
 	}
 };
