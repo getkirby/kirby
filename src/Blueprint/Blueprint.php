@@ -44,16 +44,11 @@ class Blueprint
 
 	protected AcceptRules|null $acceptRules = null;
 
-	// Props of all fields in the blueprint
 	protected array $fields = [];
 	protected array|null $fieldsLower = null;
 	protected ModelWithContent $model;
 	protected array $props;
-
-	// Cache for sections created from `section` fields
 	protected array $sections = [];
-
-	// Collected tabs, see `tabs()`
 	protected Tabs|null $tabs = null;
 
 	/**
