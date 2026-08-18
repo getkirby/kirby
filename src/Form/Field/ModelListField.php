@@ -562,7 +562,10 @@ abstract class ModelListField extends DisplayField
 
 			// otherwise fall back to the form value,
 			// without overwriting what the item already provides
-			$item[$name] ??= ($values ??= $this->columnValues($model))[$column['id'] ?? $name] ?? null;
+			if (isset($item[$name]) === false) {
+				$values ??= $this->columnValues($model);
+				$item[$name] = $values[$column['id'] ?? $name] ?? null;
+			}
 		}
 
 		return $item;
