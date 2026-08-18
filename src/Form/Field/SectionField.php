@@ -5,6 +5,7 @@ namespace Kirby\Form\Field;
 use Kirby\Blueprint\Section;
 use Kirby\Form\Field;
 use Kirby\Form\Fields;
+use Kirby\Form\Interface\ProvidesAcceptedBlueprints;
 
 /**
  * Section Field
@@ -13,7 +14,7 @@ use Kirby\Form\Fields;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  */
-class SectionField extends Field
+class SectionField extends Field implements ProvidesAcceptedBlueprints
 {
 	protected Section|null $instance = null;
 	protected array $props;
@@ -36,6 +37,15 @@ class SectionField extends Field
 
 		// fall back to the field name as section type
 		$this->section = $section ?? $this->name();
+	}
+
+	/**
+	 * Returns the blueprints of the wrapped section,
+	 * if it supports them
+	 */
+	public function blueprints(): array
+	{
+		return (array)($this->section()->blueprints() ?? []);
 	}
 
 	/**
