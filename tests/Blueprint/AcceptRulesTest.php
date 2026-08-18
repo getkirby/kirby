@@ -107,6 +107,38 @@ class AcceptRulesTest extends BlueprintTest
 		$this->assertSame(['a', 'b', 'c', 'd', 'e'], $rules->fileTemplates());
 	}
 
+	public function testFileTemplatesFromFieldsWithUnknownType(): void
+	{
+		$blueprint = new Blueprint([
+			'model'  => $this->model,
+			'name'   => 'default',
+			'fields' => [
+				'blocks' => [
+					'type'      => 'blocks',
+					'fieldsets' => [
+						'text' => [
+							'fields' => [
+								// fieldsets are not normalized, so the field
+								// type can be anything at this point
+								'text' => [
+									'type'    => 'does-not-exist',
+									'uploads' => [
+										'template' => 'a'
+									]
+								]
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$rules = new AcceptRules($blueprint);
+
+		// a field type that cannot be resolved does not support uploads
+		$this->assertSame([], $rules->fileTemplates());
+	}
+
 	public function testFileTemplatesFromFieldsWithDifferentParent(): void
 	{
 		$this->app = $this->app->clone([
