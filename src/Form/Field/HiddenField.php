@@ -3,7 +3,6 @@
 namespace Kirby\Form\Field;
 
 use Kirby\Form\Mixin;
-use Kirby\Toolkit\BlockCollectionAccess;
 
 /**
  * Hidden field
@@ -44,16 +43,5 @@ class HiddenField extends BaseField
 			'saveable' => $this->hasValue(),
 			'type'     => $this->type(),
 		];
-	}
-
-	/**
-	 * @since 5.2.0
-	 * @todo Move to `Value` mixin once array-based fields are unsupported
-	 */
-	#[BlockCollectionAccess]
-	public function reset(): static
-	{
-		$this->value = $this->emptyValue();
-		return $this;
 	}
 }
