@@ -7,6 +7,8 @@ use Kirby\Auth\Method;
 use Kirby\Auth\Pending;
 use Kirby\Auth\Status;
 use Kirby\Cache\FileCache;
+use Kirby\Cms\Fixtures\DummyField;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\Mime;
@@ -420,25 +422,65 @@ class AppPluginsTest extends TestCase
 
 	public function testField(): void
 	{
-		$app = new App([
+		require_once static::FIXTURES . '/fields/DummyField.php';
+
+		new App([
 			'roots' => [
 				'index' => '/dev/null'
 			],
 			'fields' => [
-				'dummy' => static::FIXTURES . '/fields/DummyField.php'
+				'dummy' => DummyField::class
 			]
 		]);
 
 		$page  = new Page(['slug' => 'test']);
-		$field = new FormField('dummy', [
+		$field = FormField::factory('dummy', [
 			'name'  => 'dummy',
 			'peter' => 'shaw',
 			'model' => $page
 		]);
 
-		$this->assertInstanceOf(FormField::class, $field);
+		$this->assertInstanceOf(DummyField::class, $field);
 		$this->assertSame('simpson', $field->homer());
 		$this->assertSame('shaw', $field->peter());
+	}
+
+	public function testFieldWithArrayDefinition(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage(
+			'The field type "dummy" is registered as array. Array-based field ' .
+			'definitions have been removed in Kirby 6. Please register the name ' .
+			'of a class that extends Kirby\Form\Field instead.'
+		);
+
+		new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'fields' => [
+				'dummy' => [
+					'props' => [
+						'foo' => fn ($foo = null) => $foo
+					]
+				]
+			]
+		]);
+	}
+
+	public function testFieldWithClosureDefinition(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The field type "dummy" is registered as Closure.');
+
+		new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'fields' => [
+				'dummy' => fn () => 'dummy'
+			]
+		]);
 	}
 
 	public function testFilePreviews(): void

@@ -8,6 +8,7 @@ use Kirby\Auth\Methods;
 use Kirby\Blueprint\Section;
 use Kirby\Content\Field;
 use Kirby\Exception\DuplicateException;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Asset;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
@@ -410,9 +411,24 @@ trait AppPlugins
 
 	/**
 	 * Registers Panel fields
+	 *
+	 * @throws InvalidArgumentException if a field is not registered with a class name
 	 */
 	protected function extendFields(array $fields): array
 	{
+		foreach ($fields as $type => $field) {
+			// only check for a class name here, not for a valid field class:
+			// `is_subclass_of()` would autoload every registered field on boot
+			if (is_string($field) === false) {
+				throw new InvalidArgumentException(
+					message: 'The field type "' . $type . '" is registered as ' .
+					get_debug_type($field) . '. Array-based field definitions ' .
+					'have been removed in Kirby 6. Please register the name of ' .
+					'a class that extends ' . FormField::class . ' instead.'
+				);
+			}
+		}
+
 		return $this->extensions['fields'] = FormField::$types = [
 			...FormField::$types,
 			...$fields
