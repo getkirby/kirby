@@ -9,7 +9,7 @@ import ModelPickerField from "./ModelPickerField.vue";
  */
 export default {
 	extends: ModelPickerField,
-	type: "files",
+	type: "filepicker",
 	props: {
 		uploads: [Boolean, Object, Array]
 	},
