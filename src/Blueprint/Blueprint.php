@@ -27,16 +27,28 @@ class Blueprint
 {
 	public static array $loaded = [];
 
+	/**
+	 * Maps section types onto their field equivalent.
+	 * Section types without an entry here are automatically
+	 * wrapped in a `section` field.
+	 *
+	 * @since 6.0.0
+	 * @unstable
+	 */
+	public static array $sectionFields = [
+		'files' => 'filelist',
+		'info'  => 'info',
+		'pages' => 'pagelist',
+		'stats' => 'stats',
+	];
+
 	protected AcceptRules|null $acceptRules = null;
 
-	// Props of all fields in the blueprint
 	protected array $fields = [];
 	protected array|null $fieldsLower = null;
 	protected ModelWithContent $model;
 	protected array $props;
 	protected array $sections = [];
-
-	// Collected tabs, see `tabs()`
 	protected Tabs|null $tabs = null;
 
 	/**
@@ -73,13 +85,11 @@ class Blueprint
 
 		// convert all shortcuts and normalize the props
 		$normalizer = new Normalizer(
-			model: $this->model,
 			props: $props
 		);
 
-		$this->fields   = $normalizer->fields();
-		$this->props    = $normalizer->props();
-		$this->sections = $normalizer->sections();
+		$this->fields = $normalizer->fields();
+		$this->props  = $normalizer->props();
 	}
 
 	/**
@@ -391,26 +401,16 @@ class Blueprint
 	}
 
 	/**
-	 * Returns a single section by name
+	 * Returns a single section by name. Sections only exist
+	 * as fields with the `section` type after normalization.
 	 */
 	public function section(string $name): Section|null
 	{
-		if (empty($this->sections[$name]) === true) {
-			return $this->sectionFromField($name);
+		if (array_key_exists($name, $this->sections) === true) {
+			return $this->sections[$name];
 		}
 
-		if ($this->sections[$name] instanceof Section) {
-			return $this->sections[$name]; //@codeCoverageIgnore
-		}
-
-		// get all props
-		$props = $this->sections[$name];
-
-		// inject the blueprint model
-		$props['model'] = $this->model();
-
-		// create a new section object
-		return $this->sections[$name] = new Section($props['type'], $props);
+		return $this->sections[$name] = $this->sectionFromField($name);
 	}
 
 	/**
@@ -430,8 +430,7 @@ class Blueprint
 		$field = new SectionField(...$props);
 		$field->setModel($this->model());
 
-		// cache the section under the original field name
-		return $this->sections[$props['name']] = $field->section();
+		return $field->section();
 	}
 
 	/**
@@ -441,19 +440,15 @@ class Blueprint
 	 */
 	public function sections(): array
 	{
-		$sections = A::map(
-			$this->sections,
-			fn ($section) => match (true) {
-				$section instanceof Section => $section,
-				default                     => $this->section($section['name'])
-			}
-		);
+		$sections = [];
 
-		// sections that are defined as fields are not part of the
-		// section definitions and need to be collected separately
 		foreach ($this->fields as $name => $field) {
-			if ($field['type'] === 'section') {
-				$sections[$name] ??= $this->section($name);
+			if ($field['type'] !== 'section') {
+				continue;
+			}
+
+			if ($section = $this->section((string)$name)) {
+				$sections[$name] = $section;
 			}
 		}
 
