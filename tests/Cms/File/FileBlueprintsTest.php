@@ -138,7 +138,7 @@ class FileBlueprintsTest extends ModelTestCase
 		$this->assertSame('for-section/b', $blueprints[8]['name']);
 	}
 
-	public function testBlueprintsInSection(): void
+	public function testBlueprintsInField(): void
 	{
 		$this->app = $this->app->clone([
 			'blueprints' => [
@@ -155,27 +155,27 @@ class FileBlueprintsTest extends ModelTestCase
 						'section-c' => [
 							'type' => 'fields',
 							'fields' => [
-								[
+								'field-a' => [
 									'type' => 'files'
 								],
-								[
+								'field-b' => [
 									'type'    => 'files',
 									'uploads' => 'for-fields/a'
 								],
-								[
+								'field-c' => [
 									'type'    => 'files',
 									'uploads' => [
 										'template' => 'for-fields/b'
 									]
 								],
-								[
+								'field-d' => [
 									'type'    => 'files',
 									'uploads' => [
 										'parent'   => 'site',
 										'template' => 'for-fields/c'
 									]
 								],
-								[
+								'field-e' => [
 									'type'    => 'files',
 									'uploads' => 'for-fields/c'
 								]
@@ -216,16 +216,32 @@ class FileBlueprintsTest extends ModelTestCase
 			'parent'   => $page
 		]);
 
+		// a files section is converted into a file list field
 		$blueprints = $file->blueprints('section-a');
 		$this->assertCount(2, $blueprints);
 		$this->assertSame('current', $blueprints[0]['name']);
 		$this->assertSame('for-section/a', $blueprints[1]['name']);
 
-		$blueprints = $file->blueprints('section-c');
-		$this->assertCount(4, $blueprints);
+		// a fields section is unwrapped, so its fields
+		// have to be addressed individually
+		$blueprints = $file->blueprints('field-a');
+		$this->assertCount(2, $blueprints);
 		$this->assertSame('default', $blueprints[0]['name']);
-		$this->assertSame('for-fields/a', $blueprints[1]['name']);
-		$this->assertSame('for-fields/b', $blueprints[2]['name']);
-		$this->assertSame('current', $blueprints[3]['name']);
+		$this->assertSame('current', $blueprints[1]['name']);
+
+		$blueprints = $file->blueprints('field-b');
+		$this->assertCount(2, $blueprints);
+		$this->assertSame('for-fields/a', $blueprints[0]['name']);
+		$this->assertSame('current', $blueprints[1]['name']);
+
+		$blueprints = $file->blueprints('field-c');
+		$this->assertCount(2, $blueprints);
+		$this->assertSame('for-fields/b', $blueprints[0]['name']);
+		$this->assertSame('current', $blueprints[1]['name']);
+
+		// the uploads parent is not this model
+		$blueprints = $file->blueprints('field-d');
+		$this->assertCount(1, $blueprints);
+		$this->assertSame('current', $blueprints[0]['name']);
 	}
 }

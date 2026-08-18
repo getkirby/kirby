@@ -116,9 +116,9 @@ class Blueprint
 	 * Gathers what file templates are allowed in
 	 * this model based on the blueprint
 	 */
-	public function acceptedFileTemplates(string|null $inSection = null): array
+	public function acceptedFileTemplates(string|null $inField = null): array
 	{
-		return $this->acceptRules()->fileTemplates($inSection);
+		return $this->acceptRules()->fileTemplates($inField);
 	}
 
 	/**
