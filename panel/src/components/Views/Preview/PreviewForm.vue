@@ -55,7 +55,7 @@ export default {
 		diff: Object,
 		tab: Object,
 		tabs: Array,
-		lock: Boolean
+		lock: [Boolean, Object]
 	},
 	emits: ["discard", "input", "navigate", "submit"],
 	computed: {

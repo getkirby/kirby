@@ -3,6 +3,7 @@
 
 	<form
 		v-else
+		:data-locked="isLocked"
 		class="k-model-form"
 		method="POST"
 		@submit.prevent="$emit('submit', $event)"
@@ -16,7 +17,7 @@
 			>
 				<k-fieldset
 					ref="fieldsets"
-					:disabled="disabled"
+					:disabled="isLocked"
 					:fields="column.fields"
 					:value="content"
 					@input="$emit('input', $event)"
@@ -49,11 +50,11 @@ export default {
 	},
 	emits: ["input", "submit"],
 	computed: {
-		disabled() {
-			return this.lock?.state === "lock";
-		},
 		isEmpty() {
 			return Object.keys(this.columns ?? {}).length === 0 && this.empty;
+		},
+		isLocked() {
+			return this.lock?.isLocked === true;
 		},
 		resolvedColumns() {
 			const columns = {};
@@ -88,3 +89,10 @@ export default {
 	}
 };
 </script>
+
+<style>
+.k-model-form[data-locked="true"] {
+	opacity: 0.2;
+	pointer-events: none;
+}
+</style>
