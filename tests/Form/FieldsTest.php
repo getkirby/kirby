@@ -267,6 +267,45 @@ class FieldsTest extends TestCase
 		], $fields->toFormValues());
 	}
 
+	public function testFillWithDefaults(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'    => 'text',
+					'default' => 'A'
+				],
+				'b' => [
+					'type'    => 'text',
+					'default' => 'B'
+				],
+				'c' => [
+					'type'    => 'text',
+					'default' => 'C'
+				],
+			],
+			model: $this->model
+		);
+
+		$response = $fields->fill(
+			input: [
+				'a' => 'Custom A',
+				'b' => ''
+			],
+			defaults: true
+		);
+
+		$this->assertSame($fields, $response);
+		$this->assertSame([
+			// the submitted value is kept
+			'a' => 'Custom A',
+			// an empty value falls back to the default
+			'b' => 'B',
+			// a missing value falls back to the default
+			'c' => 'C'
+		], $fields->toFormValues());
+	}
+
 	public function testFillWithNoValueField(): void
 	{
 		$fields = new Fields(
@@ -326,14 +365,14 @@ class FieldsTest extends TestCase
 		$motherClass = new class () extends Field {
 			public function form(): Form
 			{
-				return new Form([
-					'fields' => [
+				return new Form(
+					fields: [
 						'child' => [
 							'type' => 'text',
 						],
 					],
-					'model' => $this->model
-				]);
+					model: $this->model
+				);
 			}
 		};
 

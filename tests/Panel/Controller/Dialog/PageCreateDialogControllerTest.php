@@ -589,6 +589,60 @@ class PageCreateDialogControllerTest extends TestCase
 		], $input);
 	}
 
+	public function testSanitizeWithEmptyFields(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'content.uuid' => false
+			],
+			'blueprints' => [
+				'pages/test' => [
+					'create' => [
+						'fields' => ['foo', 'bar']
+					],
+					'fields' => [
+						'foo' => [
+							'type'    => 'text',
+							'default' => 'foo'
+						],
+						'bar' => [
+							'type'    => 'text',
+							'default' => 'bar'
+						]
+					]
+				]
+			],
+			'request' => [
+				'query' => [
+					'template' => 'test'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		// the dialog submits an empty string for each field
+		// that has been left untouched
+		$controller = new PageCreateDialogController();
+		$input      = $controller->sanitize([
+			'slug'  => 'foo',
+			'title' => 'Foo',
+			'foo'   => 'custom',
+			'bar'   => ''
+		]);
+
+		$this->assertSame([
+			'content'  => [
+				'foo'   => 'custom',
+				'bar'   => 'bar',
+				'title' => 'Foo',
+				'uuid'  => null,
+			],
+			'slug'     => 'foo',
+			'template' => 'test',
+		], $input);
+	}
+
 	public function testSubmit(): void
 	{
 		$this->app = $this->app->clone([

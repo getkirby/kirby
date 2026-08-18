@@ -88,13 +88,8 @@ class ObjectField extends InputField
 			return [];
 		}
 
-		$form     = $this->form();
-		$defaults = $form->defaults();
-
-		return $form
-			->fill(
-				input: $defaults,
-			)
+		return $this->form()
+			->fill(defaults: true)
 			->submit(
 				input: $this->value,
 				passthrough: true

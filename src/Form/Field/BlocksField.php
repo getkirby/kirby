@@ -125,7 +125,7 @@ class BlocksField extends InputField
 					$fields = $field->fields($fieldsetType);
 					$form   = $field->form($fields);
 
-					$form->fill(input: $form->defaults());
+					$form->fill(defaults: true);
 
 					return Block::factory([
 						'content' => $form->toFormValues(),

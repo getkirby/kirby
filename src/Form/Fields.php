@@ -124,8 +124,9 @@ class Fields extends Collection
 	 * @since 5.0.0
 	 */
 	public function fill(
-		array $input,
-		bool $passthrough = true
+		array $input = [],
+		bool $passthrough = true,
+		bool $defaults = false
 	): static {
 		if ($passthrough === true) {
 			$this->passthrough($input);
@@ -147,6 +148,17 @@ class Fields extends Collection
 			}
 
 			$field->fill($value);
+		}
+
+		// fall back to the default value for each field
+		// that is still empty after the input has been filled
+		if ($defaults === true) {
+			$this->fill(
+				input: $this
+					->filter(fn ($field) => $field->hasValue() ? $field->isEmpty() : false)
+					->toArray(fn ($field) => $field->default()),
+				passthrough: false
+			);
 		}
 
 		return $this;
