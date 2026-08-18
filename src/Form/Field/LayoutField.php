@@ -187,10 +187,6 @@ class LayoutField extends BlocksField
 		return $default;
 	}
 
-	/**
-	 * @psalm-suppress MethodSignatureMismatch
-	 * @todo Remove psalm suppress after https://github.com/vimeo/psalm/issues/8673 is fixed
-	 */
 	#[BlockCollectionAccess]
 	public function fill(mixed $value): static
 	{

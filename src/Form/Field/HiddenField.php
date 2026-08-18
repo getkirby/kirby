@@ -2,9 +2,6 @@
 
 namespace Kirby\Form\Field;
 
-use Kirby\Form\Field;
-use Kirby\Form\Mixin;
-
 /**
  * Hidden field
  *
@@ -12,10 +9,8 @@ use Kirby\Form\Mixin;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  */
-class HiddenField extends Field
+class HiddenField extends ValueField
 {
-	use Mixin\Value;
-
 	protected mixed $value = null;
 
 	public function __construct(

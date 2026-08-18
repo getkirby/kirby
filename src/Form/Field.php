@@ -4,6 +4,7 @@ namespace Kirby\Form;
 
 use Kirby\Cms\HasStringTemplate;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Form\Field\ValueField;
 use Kirby\Reflection\Constructor;
 use Stringable;
 
@@ -92,7 +93,7 @@ abstract class Field implements Stringable
 
 		if (
 			array_key_exists('value', $props) === true &&
-			method_exists($field, 'fill') === true
+			$field->hasValue() === true
 		) {
 			$field->fill($props['value']);
 		}
@@ -102,10 +103,12 @@ abstract class Field implements Stringable
 
 	/**
 	 * Checks if the field has a value
+	 *
+	 * @psalm-assert-if-true ValueField $this
 	 */
-	public function hasValue(): bool
+	final public function hasValue(): bool
 	{
-		return property_exists($this, 'value') === true;
+		return $this instanceof ValueField;
 	}
 
 	/**

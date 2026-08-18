@@ -240,34 +240,6 @@
       <code><![CDATA[is]]></code>
     </UndefinedMethod>
   </file>
-  <file src="src/Form/Fields.php">
-    <UndefinedMethod>
-      <code><![CDATA[fill]]></code>
-      <code><![CDATA[isSubmittable]]></code>
-      <code><![CDATA[submit]]></code>
-      <code><![CDATA[toFormValue]]></code>
-      <code><![CDATA[toFormValue]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="src/Form/Validations.php">
-    <UndefinedMethod>
-      <code><![CDATA[max]]></code>
-      <code><![CDATA[max]]></code>
-      <code><![CDATA[max]]></code>
-      <code><![CDATA[maxlength]]></code>
-      <code><![CDATA[maxlength]]></code>
-      <code><![CDATA[maxlength]]></code>
-      <code><![CDATA[min]]></code>
-      <code><![CDATA[min]]></code>
-      <code><![CDATA[min]]></code>
-      <code><![CDATA[minlength]]></code>
-      <code><![CDATA[minlength]]></code>
-      <code><![CDATA[minlength]]></code>
-      <code><![CDATA[options]]></code>
-      <code><![CDATA[options]]></code>
-      <code><![CDATA[pattern]]></code>
-    </UndefinedMethod>
-  </file>
   <file src="src/Guards/PageValidators.php">
     <RedundantCondition>
       <code><![CDATA[$allowed !== []]]></code>

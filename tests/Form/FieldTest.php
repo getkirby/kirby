@@ -4,6 +4,7 @@ namespace Kirby\Form;
 
 use Kirby\Cms\Page;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Form\Field\HiddenField;
 use Kirby\Form\Field\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -75,12 +76,17 @@ class FieldTest extends TestCase
 
 	public function testHasValue(): void
 	{
+		// only fields that extend `ValueField` hold a value,
+		// declaring a `$value` property is not enough
 		$field = new MockField();
 		$this->assertFalse($field->hasValue());
 
 		$field = new class () extends MockField {
-			protected string|null $value;
+			protected string|null $value = null;
 		};
+		$this->assertFalse($field->hasValue());
+
+		$field = new HiddenField();
 		$this->assertTrue($field->hasValue());
 	}
 

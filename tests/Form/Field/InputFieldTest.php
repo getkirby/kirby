@@ -75,14 +75,6 @@ class HiddenTestField extends TestField
 	}
 }
 
-class NoValueField extends TestField
-{
-	public function hasValue(): bool
-	{
-		return false;
-	}
-}
-
 class ValidatedField extends TestField
 {
 	use Mixin\Minlength;
@@ -237,9 +229,6 @@ class InputFieldTest extends BaseTestCase
 	{
 		$field = new TestField();
 		$this->assertTrue($field->hasValue());
-
-		$field = new NoValueField();
-		$this->assertFalse($field->hasValue());
 	}
 
 	public function testHelp(): void
@@ -351,9 +340,6 @@ class InputFieldTest extends BaseTestCase
 
 		$field = new TestField();
 		$this->assertTrue($field->isStorable($language));
-
-		$field = new NoValueField();
-		$this->assertFalse($field->isStorable($language));
 	}
 
 	public function testIsStorableWithDisabledField(): void
@@ -384,9 +370,6 @@ class InputFieldTest extends BaseTestCase
 
 		$field = new TestField();
 		$this->assertTrue($field->isSubmittable($language));
-
-		$field = new NoValueField();
-		$this->assertFalse($field->isSubmittable($language));
 	}
 
 	public function testIsSubmittableWithDisabledField(): void
@@ -675,10 +658,6 @@ class InputFieldTest extends BaseTestCase
 
 		$field = new TestField(default: 'Default value');
 		$this->assertSame('Default value', $field->value(true));
-
-		$field = new NoValueField();
-		$field->fill('Test');
-		$this->assertNull($field->value());
 	}
 
 	public function testWhen(): void

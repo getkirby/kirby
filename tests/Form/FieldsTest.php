@@ -12,6 +12,7 @@ use Kirby\Cms\User;
 use Kirby\Exception\FormValidationException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Form\Field\InputField;
+use Kirby\Form\Interface\ProvidesNestedForm;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Fields::class)]
@@ -362,7 +363,7 @@ class FieldsTest extends TestCase
 
 	public function testFind(): void
 	{
-		$motherClass = new class () extends Field {
+		$motherClass = new class () extends Field implements ProvidesNestedForm {
 			public function form(): Form
 			{
 				return new Form(
@@ -393,6 +394,19 @@ class FieldsTest extends TestCase
 		$fields = new Fields([
 			'mother' => [
 				'type'  => 'text',
+			],
+		], $this->model);
+
+		$this->assertNull($fields->find('mother+child'));
+	}
+
+	public function testFindWhenFieldHasFieldsetForms(): void
+	{
+		// blocks have one form per fieldset, not a single nested
+		// form, so the search must not descend into them
+		$fields = new Fields([
+			'mother' => [
+				'type' => 'blocks',
 			],
 		], $this->model);
 
@@ -731,6 +745,32 @@ class FieldsTest extends TestCase
 			'a' => 'A updated',
 			'b' => 'B',
 		], $fields->toStoredValues());
+	}
+
+	public function testSubmitWithANoValueField(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+					'value' => 'A',
+				],
+				'b' => [
+					'type'  => 'info',
+					'value' => 'B',
+				],
+			],
+			model: $this->model
+		);
+
+		$fields->submit(input: [
+			'a' => 'A updated',
+			'b' => 'B updated',
+		]);
+
+		$this->assertSame([
+			'a' => 'A updated',
+		], $fields->toFormValues());
 	}
 
 	public function testSubmitWithForceAndANoValueField(): void
