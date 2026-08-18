@@ -5,6 +5,7 @@ namespace Kirby\Panel\Controller\Dialog;
 use Exception;
 use Kirby\Blueprint\Section;
 use Kirby\Cms\Page;
+use Kirby\Exception\NotFoundException;
 use Kirby\Panel\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -105,6 +106,28 @@ class SectionDialogControllerTest extends TestCase
 		$this->assertSame($file, $controller->section->model());
 		$this->assertSame('test', $controller->section->name());
 		$this->assertSame('test', $controller->path);
+	}
+
+	public function testFactoryForMissingSection(): void
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					['slug' => 'test']
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The section "test" could not be found');
+
+		SectionDialogController::factory(
+			model: 'pages/test',
+			filename: 'test',
+			section: 'test'
+		);
 	}
 
 	public function testLoad(): void
