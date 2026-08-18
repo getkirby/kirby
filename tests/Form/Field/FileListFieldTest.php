@@ -6,7 +6,6 @@ use Kirby\Cms\App;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
-use Kirby\Form\Field;
 use Kirby\Toolkit\HtmlString;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -73,7 +72,7 @@ class FileListFieldTest extends TestCase
 
 	protected function filelist(array $attr = []): FileListField
 	{
-		return Field::factory('filelist', [
+		return FileListField::factory([
 			'model' => $this->app->page('photography'),
 			'name'  => 'gallery',
 			...$attr

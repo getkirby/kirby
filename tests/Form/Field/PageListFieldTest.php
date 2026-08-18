@@ -4,7 +4,6 @@ namespace Kirby\Form\Field;
 
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Form\Field;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -60,7 +59,7 @@ class PageListFieldTest extends TestCase
 
 	protected function pagelist(array $attr = []): PageListField
 	{
-		return Field::factory('pagelist', [
+		return PageListField::factory([
 			'model' => $this->app->page('photography'),
 			'name'  => 'albums',
 			...$attr
