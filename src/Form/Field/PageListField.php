@@ -187,27 +187,6 @@ class PageListField extends ModelListField implements ProvidesAcceptedBlueprints
 		return array_diff($blueprints, $this->templatesIgnore());
 	}
 
-	/**
-	 * The table layout shows the page status in its own column
-	 */
-	public function columns(): array
-	{
-		$columns = parent::columns();
-
-		if ($this->layout() !== 'table') {
-			return $columns;
-		}
-
-		$columns['flag'] = [
-			'label'  => ' ',
-			'mobile' => true,
-			'type'   => 'flag',
-			'width'  => 'var(--table-row-height)',
-		];
-
-		return $columns;
-	}
-
 	public function collector(): PagesCollector
 	{
 		$parent = $this->parentModel();
@@ -229,6 +208,27 @@ class PageListField extends ModelListField implements ProvidesAcceptedBlueprints
 	public function create(): array|string|bool|null
 	{
 		return $this->create;
+	}
+
+	/**
+	 * The table layout shows the page status in its own column
+	 */
+	protected function defineColumns(): array
+	{
+		$columns = parent::defineColumns();
+
+		if ($this->layout() !== 'table') {
+			return $columns;
+		}
+
+		$columns['flag'] = [
+			'label'  => ' ',
+			'mobile' => true,
+			'type'   => 'flag',
+			'width'  => 'var(--table-row-height)',
+		];
+
+		return $columns;
 	}
 
 	// @codeCoverageIgnoreStart

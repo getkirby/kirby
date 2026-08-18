@@ -27,7 +27,8 @@ class FileListFieldTest extends TestCase
 			'blueprints' => [
 				'files/image' => [
 					'fields' => [
-						'alt' => ['type' => 'text']
+						'alt'  => ['type' => 'text'],
+						'tags' => ['type' => 'tags']
 					]
 				]
 			],
@@ -38,17 +39,17 @@ class FileListFieldTest extends TestCase
 						'files' => [
 							[
 								'filename' => 'a.jpg',
-								'content'  => ['alt' => 'Alt A'],
+								'content'  => ['alt' => 'Alt A', 'tags' => 'a, b', 'caption' => 'Caption A'],
 								'template' => 'image'
 							],
 							[
 								'filename' => 'b.jpg',
-								'content'  => ['alt' => 'Alt B'],
+								'content'  => ['alt' => 'Alt B', 'tags' => 'a, b', 'caption' => 'Caption B'],
 								'template' => 'image'
 							],
 							[
 								'filename' => 'c.jpg',
-								'content'  => ['alt' => 'Alt C'],
+								'content'  => ['alt' => 'Alt C', 'tags' => 'a, b', 'caption' => 'Caption C'],
 								'template' => 'image'
 							]
 						],
@@ -248,7 +249,8 @@ class FileListFieldTest extends TestCase
 			'layout'  => 'table'
 		]);
 
-		$this->assertSame('text', $field->columnsWithTypes()['alt']['type']);
+		// the type is resolved from the blueprint of the entries
+		$this->assertSame('text', $field->columns()['alt']['type']);
 	}
 
 	public function testColumnsWithTypesWithoutFiles(): void
@@ -259,7 +261,8 @@ class FileListFieldTest extends TestCase
 			'template' => 'does-not-exist'
 		]);
 
-		$this->assertSame($field->columns(), $field->columnsWithTypes());
+		// without entries there is no blueprint to resolve the type from
+		$this->assertArrayNotHasKey('type', $field->columns()['alt']);
 	}
 
 	public function testDataWithTableLayout(): void
@@ -284,6 +287,41 @@ class FileListFieldTest extends TestCase
 
 		// resolved from the column query
 		$this->assertSame('a.jpg', $item['filename']);
+	}
+
+	public function testDataWithTableLayoutAndFormValues(): void
+	{
+		// only the fields behind the columns are instantiated, but their
+		// values still have to match what the full form would return
+		$field = $this->filelist([
+			'columns' => ['tags' => true],
+			'layout'  => 'table'
+		]);
+
+		$this->assertSame(['a', 'b'], $field->data()[0]['tags']);
+	}
+
+	public function testDataWithTableLayoutAndPassthroughValues(): void
+	{
+		// a column without a matching blueprint field
+		// falls back to the raw content value
+		$field = $this->filelist([
+			'columns' => ['caption' => true],
+			'layout'  => 'table'
+		]);
+
+		$this->assertSame('Caption A', $field->data()[0]['caption']);
+	}
+
+	public function testDataWithTableLayoutAndZeroQuery(): void
+	{
+		// "0" is a valid column query and must not fall back to the field
+		$field = $this->filelist([
+			'columns' => ['alt' => ['value' => '0']],
+			'layout'  => 'table'
+		]);
+
+		$this->assertSame('0', $field->data()[0]['alt']);
 	}
 
 	public function testLimitDefault(): void
