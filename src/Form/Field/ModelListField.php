@@ -46,6 +46,7 @@ abstract class ModelListField extends DisplayField
 	protected array|null $columns;
 
 	protected array|null $columnsCache = null;
+	protected array|null $columnFieldsCache = null;
 
 	/**
 	 * If `true`, the order of the entries is reversed
@@ -182,14 +183,111 @@ abstract class ModelListField extends DisplayField
 
 	abstract public function collector(): ModelsCollector;
 
+	/**
+	 * Column definitions for `layout: table`, with the type of
+	 * each column resolved from the blueprint of the entries
+	 */
 	public function columns(): array
 	{
 		if ($this->columnsCache !== null) {
 			return $this->columnsCache;
 		}
 
-		if ($this->layout() !== 'table') {
+		$columns = $this->defineColumns();
+
+		if ($columns === []) {
 			return $this->columnsCache = [];
+		}
+
+		if ($blueprint = $this->models()->first()?->blueprint()) {
+			foreach ($columns as $name => $column) {
+				if ($id = $column['id'] ?? null) {
+					$columns[$name]['type'] ??= $blueprint->field($id)['type'] ?? null;
+				}
+			}
+		}
+
+		return $this->columnsCache = $columns;
+	}
+
+	/**
+	 * Blueprint field names behind all columns that read their
+	 * value from the model instead of from their own query
+	 */
+	protected function columnFields(): array
+	{
+		if ($this->columnFieldsCache !== null) {
+			return $this->columnFieldsCache;
+		}
+
+		$fields = [];
+
+		foreach ($this->columns() as $column) {
+			// only columns from the `columns` prop carry an id;
+			// the built-in ones are filled by the item itself
+			if (($id = $column['id'] ?? null) === null) {
+				continue;
+			}
+
+			if (($column['value'] ?? '') === '') {
+				$fields[] = $id;
+			}
+		}
+
+		return $this->columnFieldsCache = $fields;
+	}
+
+	/**
+	 * Values of the column fields for a single entry.
+	 *
+	 * Only the blueprint fields the columns actually read are
+	 * instantiated. Building the full form for every row makes the
+	 * table layout scale with the size of the blueprint instead of
+	 * the number of columns.
+	 *
+	 * @param TModel $model
+	 */
+	protected function columnValues(ModelWithContent $model): array
+	{
+		$form = new Form(
+			fields: array_intersect_key(
+				$model->blueprint()->fields(),
+				array_flip($this->columnFields())
+			),
+			model: $model
+		);
+
+		// values for columns without a matching field are passed through
+		$form->fill(input: $model->content($form->language())->toArray());
+
+		return $form->toFormValues();
+	}
+
+	/**
+	 * The props for all entries of the current page
+	 */
+	public function data(): array
+	{
+		$table = $this->layout() === 'table';
+		$data  = [];
+
+		foreach ($this->collector()->models(paginated: true) as $model) {
+			/** @var TModel $model */
+			$data[] = $table === true ? $this->row($model) : $this->toItem($model);
+		}
+
+		return $data;
+	}
+
+	/**
+	 * Builds the column definitions for `layout: table`.
+	 * Subclasses extend this instead of `columns()`,
+	 * so that the cache holds the final set.
+	 */
+	protected function defineColumns(): array
+	{
+		if ($this->layout() !== 'table') {
+			return [];
 		}
 
 		$columns = [];
@@ -236,55 +334,7 @@ abstract class ModelListField extends DisplayField
 			$columns[$name] = [...$columns[$name] ?? [], ...$column];
 		}
 
-		return $this->columnsCache = $columns;
-	}
-
-	public function columnsWithTypes(): array
-	{
-		$columns   = $this->columns();
-		$blueprint = $this->models()->first()?->blueprint();
-
-		if ($blueprint === null) {
-			return $columns;
-		}
-
-		foreach ($columns as $name => $column) {
-			if ($id = $column['id'] ?? null) {
-				$columns[$name]['type'] ??= $blueprint->field($id)['type'] ?? null;
-			}
-		}
-
 		return $columns;
-	}
-
-	/**
-	 * @param TModel $model
-	 */
-	public function columnsValues(array $item, ModelWithContent $model): array
-	{
-		$item['title'] = [
-			// override toSafeString() coming from `$item`
-			// because the table cells don't use v-html
-			'text' => $model->toString($this->text()),
-			'href' => $model->panel()->url(true)
-		];
-
-		if ($info = $this->info()) {
-			$item['info'] = $model->toString($info);
-		}
-
-		$values = Form::for($model)->toFormValues();
-
-		foreach ($this->columns() as $name => $column) {
-			$item[$name] = match (empty($column['value'])) {
-				// if a column value is defined, resolve the query
-				false   => $model->toString($column['value']),
-				// otherwise use the form value, but don't overwrite columns
-				default => $item[$name] ?? $values[$column['id'] ?? $name] ?? null
-			};
-		}
-
-		return $item;
 	}
 
 	/**
@@ -317,27 +367,6 @@ abstract class ModelListField extends DisplayField
 		$this->models()->delete($ids);
 
 		return true;
-	}
-
-	/**
-	 * The props for all entries of the current page
-	 */
-	public function data(): array
-	{
-		$data = [];
-
-		foreach ($this->collector()->models(paginated: true) as $model) {
-			/** @var TModel $model */
-			$item = $this->toItem($model);
-
-			if ($this->layout() === 'table') {
-				$item = $this->columnsValues($item, $model);
-			}
-
-			$data[] = $item;
-		}
-
-		return $data;
 	}
 
 	/**
@@ -508,6 +537,37 @@ abstract class ModelListField extends DisplayField
 		return $this->query;
 	}
 
+	/**
+	 * The props for a single entry in `layout: table`
+	 *
+	 * @param TModel $model
+	 */
+	protected function row(ModelWithContent $model): array
+	{
+		$item   = $this->toItem($model);
+		$values = null;
+
+		// the title cell carries the link to the model
+		$item['title'] = [
+			'text' => $item['text'],
+			'href' => $item['link']
+		];
+
+		foreach ($this->columns() as $name => $column) {
+			// a column query is resolved against the model
+			if (($query = $column['value'] ?? '') !== '') {
+				$item[$name] = $model->toString($query);
+				continue;
+			}
+
+			// otherwise fall back to the form value,
+			// without overwriting what the item already provides
+			$item[$name] ??= ($values ??= $this->columnValues($model))[$column['id'] ?? $name] ?? null;
+		}
+
+		return $item;
+	}
+
 	public function searchable(): bool
 	{
 		return $this->searchable ?? false;
@@ -546,10 +606,11 @@ abstract class ModelListField extends DisplayField
 			$this->flip() === false;
 	}
 
+
 	public function state(): array
 	{
 		return [
-			'columns'    => $this->columnsWithTypes(),
+			'columns'    => $this->columns(),
 			'models'     => $this->data(),
 			'pagination' => $this->pagination(),
 			'sortable'   => $this->sortable(),
