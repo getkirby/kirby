@@ -73,18 +73,20 @@ export default {
 		}
 	},
 	mounted() {
-		this.$events.on("section.loaded", this.fixLinksInSection);
+		this.$events.on("field.loaded", this.fixLinks);
+		this.$events.on("section.loaded", this.fixLinks);
 	},
 	unmounted() {
-		this.$events.off("section.loaded", this.fixLinksInSection);
+		this.$events.off("field.loaded", this.fixLinks);
+		this.$events.off("section.loaded", this.fixLinks);
 	},
 	methods: {
 		/**
-		 * Overwrites all links to page views in the section
+		 * Overwrites all links to page views in the field or section
 		 * to open the corresponding page preview view instead
 		 */
-		fixLinksInSection(section) {
-			const links = section.$el.querySelectorAll(".k-item-title > .k-link");
+		fixLinks(element) {
+			const links = element.$el.querySelectorAll(".k-item-title > .k-link");
 			for (const link of links) {
 				const url = link.__vue__.to;
 
