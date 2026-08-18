@@ -3,7 +3,6 @@
 namespace Kirby\Api;
 
 use Kirby\Auth\Exception\RateLimitException;
-use Kirby\Blueprint\Blueprint;
 use Kirby\Cms\App;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
@@ -26,8 +25,6 @@ class AccountRoutesTest extends TestCase
 
 	protected function setUp(): void
 	{
-		Blueprint::$loaded = [];
-
 		$this->app = new App([
 			'options' => [
 				'api.allowImpersonation' => true

@@ -3,11 +3,9 @@
 namespace Kirby\Cms;
 
 use Closure;
-use Kirby\Blueprint\Blueprint;
 use Kirby\Blueprint\PageBlueprint;
 use Kirby\Content\Field;
 use Kirby\Content\VersionId;
-use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
@@ -207,9 +205,9 @@ class Page extends ModelWithContent
 	{
 		/** @var PageBlueprint */
 		return $this->blueprint ??= PageBlueprint::factory(
+			$this,
 			'pages/' . $this->intendedTemplate(),
-			'pages/default',
-			$this
+			'pages/default'
 		);
 	}
 
@@ -246,15 +244,29 @@ class Page extends ModelWithContent
 
 		foreach ($templates as $template) {
 			try {
-				$props = Blueprint::load('pages/' . $template);
-
+				// the full blueprint, so that a title inherited
+				// through `extends` is taken into account
+				$blueprint = PageBlueprint::factory($this, 'pages/' . $template);
+			} catch (Throwable) {
+				// a blueprint that cannot be created still needs an entry,
+				// based on its name, so the template stays selectable
 				$blueprints[] = [
-					'name'  => basename($props['name']),
-					'title' => $props['title'],
+					'name'  => basename($template),
+					'title' => ucfirst($template),
 				];
-			} catch (Exception) {
-				// skip invalid blueprints
+
+				continue;
 			}
+
+			// skip templates without a blueprint
+			if ($blueprint === null) {
+				continue;
+			}
+
+			$blueprints[] = [
+				'name'  => basename($blueprint->name()),
+				'title' => $blueprint->title(),
+			];
 		}
 
 		return $this->blueprints = $blueprints;

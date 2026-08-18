@@ -26,6 +26,16 @@ class Blueprint
 {
 	public static array $loaded = [];
 
+	/**
+	 * Cache of blueprints with fully normalized props,
+	 * keyed by class, name and fallback. The normalized
+	 * props are model- and language-agnostic, so they can
+	 * be shared between all models of the same blueprint.
+	 *
+	 * @var array<string, static>
+	 */
+	public static array $normalized = [];
+
 	protected AcceptRules|null $acceptRules = null;
 
 	protected FieldsRegistry $fields;
@@ -39,6 +49,17 @@ class Blueprint
 	public function __call(string $key, array|null $arguments = null): mixed
 	{
 		return $this->props[$key] ?? null;
+	}
+
+	/**
+	 * Resets all caches that are bound to a single model
+	 *
+	 * @since 6.0.0
+	 */
+	public function __clone()
+	{
+		$this->acceptRules = null;
+		$this->tabs        = null;
 	}
 
 	/**
@@ -148,24 +169,43 @@ class Blueprint
 	 * Create a new blueprint for a model
 	 */
 	public static function factory(
+		ModelWithContent $model,
 		string $name,
-		string|null $fallback,
-		ModelWithContent $model
+		string|null $fallback = null
 	): static|null {
-		try {
-			$props = static::load($name);
-		} catch (Exception) {
-			$props = $fallback !== null ? static::load($fallback) : null;
+		$shared = static::class . '/' . $name . '/';
+		$key    = $shared;
+
+		// a blueprint that resolves by its own name never consults
+		// the fallback and is shared by all fallback variants
+		if (isset(static::$normalized[$shared]) === false) {
+			$key = $shared . $fallback;
 		}
 
-		if ($props === null) {
-			return null;
+		if (isset(static::$normalized[$key]) === false) {
+			try {
+				$props = static::load($name);
+				$key   = $shared;
+			} catch (Exception) {
+				$props = $fallback !== null ? static::load($fallback) : null;
+			}
+
+			if ($props === null) {
+				return null;
+			}
+
+			// inject the parent model
+			$props['model'] = $model;
+
+			static::$normalized[$key] = new static($props);
 		}
 
-		// inject the parent model
-		$props['model'] = $model;
+		// hand out a copy, so that the cached blueprint
+		// keeps its normalized props untouched
+		$blueprint        = clone static::$normalized[$key];
+		$blueprint->model = $model;
 
-		return new static($props);
+		return $blueprint;
 	}
 
 	/**
@@ -302,12 +342,6 @@ class Blueprint
 		// inject the filename as name if no name is set
 		$props['name'] ??= $name;
 
-		// normalize the title
-		$title = $props['title'] ?? Str::label($props['name']);
-
-		// translate the title
-		$props['title'] = I18n::translate($title) ?? $title;
-
 		return $props;
 	}
 
@@ -377,6 +411,17 @@ class Blueprint
 	}
 
 	/**
+	 * Clears all blueprint caches
+	 *
+	 * @since 6.0.0
+	 */
+	public static function reset(): void
+	{
+		static::$loaded     = [];
+		static::$normalized = [];
+	}
+
+	/**
 	 * Returns a single tab by name or the
 	 * first tab if no name is given
 	 */
@@ -408,7 +453,7 @@ class Blueprint
 	 */
 	public function title(): string
 	{
-		return $this->props['title'];
+		return $this->i18n($this->props['title']);
 	}
 
 	/**
@@ -418,7 +463,8 @@ class Blueprint
 	{
 		return [
 			...$this->props,
-			'tabs' => $this->tabs()->toArray()
+			'tabs'  => $this->tabs()->toArray(),
+			'title' => $this->title()
 		];
 	}
 }

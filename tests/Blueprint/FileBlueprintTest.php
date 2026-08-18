@@ -11,11 +11,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(FileBlueprint::class)]
 class FileBlueprintTest extends TestCase
 {
-	protected function tearDown(): void
-	{
-		Blueprint::$loaded = [];
-	}
-
 	public static function acceptAttributeProvider()
 	{
 		return [

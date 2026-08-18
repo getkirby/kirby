@@ -5,7 +5,6 @@ namespace Kirby\Blueprint;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Field;
 use Kirby\Toolkit\A;
-use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 use Throwable;
 
@@ -219,14 +218,6 @@ class Normalizer
 	}
 
 	/**
-	 * Used to translate any label, heading, etc.
-	 */
-	protected function i18n(mixed $value, mixed $fallback = null): mixed
-	{
-		return I18n::translate($value, $fallback) ?? $value;
-	}
-
-	/**
 	 * Normalizes the raw props of the blueprint
 	 */
 	protected function normalize(array $props): array
@@ -237,9 +228,9 @@ class Normalizer
 		// normalize the name
 		$props['name'] ??= 'default';
 
-		// normalize and translate the title
+		// normalize the title, the translation happens
+		// in `Blueprint::title()`
 		$props['title'] ??= Str::label($props['name']);
-		$props['title']   = $this->i18n($props['title']);
 
 		// extract global field definitions before normalization
 		$props = $this->extractFieldReferences($props);
@@ -438,7 +429,7 @@ class Normalizer
 				...$props,
 				'columns' => $this->normalizeColumns($name, $props['columns'] ?? []),
 				'icon'    => $props['icon'] ?? null,
-				'label'   => $this->i18n($props['label'] ?? Str::label($name)),
+				'label'   => $props['label'] ?? null,
 				'name'    => $name,
 			];
 		}

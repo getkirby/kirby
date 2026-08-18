@@ -156,9 +156,9 @@ class User extends ModelWithContent
 		try {
 			/** @var UserBlueprint */
 			return $this->blueprint ??= UserBlueprint::factory(
+				$this,
 				'users/' . $this->role(),
-				'users/default',
-				$this
+				'users/default'
 			);
 		} catch (Exception) {
 			return $this->blueprint ??= new UserBlueprint([
