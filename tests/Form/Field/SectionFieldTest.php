@@ -10,6 +10,31 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(SectionField::class)]
 class SectionFieldTest extends TestCase
 {
+	public function testBlueprints(): void
+	{
+		$field = $this->field('section', [
+			'name'      => 'drafts',
+			'section'   => 'pages',
+			'templates' => ['album', 'note']
+		]);
+
+		$this->assertSame([
+			['name' => 'album', 'title' => 'Album'],
+			['name' => 'note', 'title' => 'Note']
+		], $field->blueprints());
+	}
+
+	public function testBlueprintsForSectionWithoutBlueprints(): void
+	{
+		$field = $this->field('section', [
+			'name'    => 'notes',
+			'section' => 'info'
+		]);
+
+		// sections that don't know about blueprints have none
+		$this->assertSame([], $field->blueprints());
+	}
+
 	public function testErrors(): void
 	{
 		$field = $this->field('section', [
