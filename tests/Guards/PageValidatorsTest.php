@@ -349,7 +349,7 @@ class PageValidatorsTest extends ModelTestCase
 		$validators = $this->validators($this->app->page('parent-a'));
 
 		$this->expectException(LogicException::class);
-		$this->expectExceptionCode('error.page.move.noSections');
+		$this->expectExceptionCode('error.page.move.noBlueprints');
 
 		$validators->validateMoveToTemplate($this->app->page('parent-b'));
 	}

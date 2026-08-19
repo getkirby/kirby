@@ -891,7 +891,7 @@ class PageRulesTest extends ModelTestCase
 		$child   = $this->app->page('parent-a/child');
 
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('The page "parent-b" cannot be a parent of any page because it lacks any pages sections in its blueprint');
+		$this->expectExceptionMessage('The page "parent-b" cannot be a parent of any page because it lacks any pages fields in its blueprint');
 
 		PageRules::move($child, $parentB);
 	}

@@ -237,7 +237,7 @@ class PageValidators extends ModelValidators
 		// check if the parent has at least one page list field
 		if ($hasPageList === false) {
 			throw new LogicException(
-				key: 'page.move.noSections',
+				key: 'page.move.noBlueprints',
 				data: ['parent' => $parent->id() ?? '/']
 			);
 		}
