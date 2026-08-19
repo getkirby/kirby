@@ -405,7 +405,7 @@ class FileListFieldTest extends TestCase
 
 		$this->assertFalse($field->validateMin());
 		$this->assertSame(
-			'The "Gallery" section requires at least 5 files',
+			'The "Gallery" field requires at least 5 files',
 			$field->errors()['min']
 		);
 	}
@@ -416,7 +416,7 @@ class FileListFieldTest extends TestCase
 
 		$this->assertFalse($field->validateMax());
 		$this->assertSame(
-			'You must not add more than 2 files to the "Gallery" section',
+			'You must not add more than 2 files to the "Gallery" field',
 			$field->errors()['max']
 		);
 	}
@@ -551,7 +551,7 @@ class FileListFieldTest extends TestCase
 		]);
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('The "Gallery" section requires at least 3 files');
+		$this->expectExceptionMessage('The "Gallery" field requires at least 3 files');
 
 		$field->deleteSelected(['photography/a.jpg']);
 	}
