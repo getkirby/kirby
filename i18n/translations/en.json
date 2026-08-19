@@ -240,9 +240,6 @@
 
 	"error.role.notFound": "The role \"{name}\" cannot be found",
 
-	"error.section.notLoaded": "The section \"{name}\" could not be loaded",
-	"error.section.type.invalid": "The section type \"{type}\" is not valid",
-
 	"error.site.changeTitle.empty": "The title must not be empty",
 	"error.site.changeTitle.permission": "You are not allowed to change the title of the site",
 	"error.site.notAccessible": "The site is not accessible",
@@ -737,9 +734,6 @@
 	"search.all": "Show all {count} results",
 	"search.results.none": "No results",
 
-	"section.invalid": "The section is invalid",
-	"section.required": "The section is required",
-
 	"security": "Security",
 	"select": "Select",
 	"select.all": "Select all",
@@ -844,7 +838,7 @@
 	"url.placeholder": "https://example.com",
 
 	"user": "User",
-	"user.blueprint": "You can define additional sections and form fields for this user role in <strong>/site/blueprints/users/{blueprint}.yml</strong>",
+	"user.blueprint": "You can define additional form fields for this user role in <strong>/site/blueprints/users/{blueprint}.yml</strong>",
 	"user.changeEmail": "Change email",
 	"user.changeLanguage": "Change language",
 	"user.changeName": "Rename this user",
