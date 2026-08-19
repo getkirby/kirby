@@ -12,9 +12,9 @@ class AcceptRulesTest extends BlueprintTest
 		$blueprint = new Blueprint([
 			'model' => $this->model,
 			'name'  => 'default',
-			'sections' => [
+			'fields' => [
 				'files' => [
-					'type' => 'files',
+					'type' => 'filelist',
 				],
 			]
 		]);
@@ -168,7 +168,7 @@ class AcceptRulesTest extends BlueprintTest
 		$this->assertSame([], $rules->fileTemplates());
 	}
 
-	public function testFileTemplatesFromFieldsAndSections(): void
+	public function testFileTemplatesFromFieldsAndFileLists(): void
 	{
 		$this->app = $this->app->clone([
 			'blueprints' => [
@@ -187,26 +187,21 @@ class AcceptRulesTest extends BlueprintTest
 		$blueprint = new Blueprint([
 			'model' => $this->model,
 			'name'  => 'default',
-			'sections' => [
-				'fields' => [
-					'type' => 'fields',
-					'fields' => [
-						'a' => [
-							'type' => 'files',
-							'uploads' => [
-								'template' => 'a'
-							]
-						],
-						'b' => [
-							'type' => 'textarea',
-							'uploads' => [
-								'template' => 'b'
-							]
-						],
-					],
+			'fields' => [
+				'a' => [
+					'type' => 'files',
+					'uploads' => [
+						'template' => 'a'
+					]
+				],
+				'b' => [
+					'type' => 'textarea',
+					'uploads' => [
+						'template' => 'b'
+					]
 				],
 				'files' => [
-					'type'     => 'files',
+					'type'     => 'filelist',
 					'template' => 'c'
 				]
 			]
@@ -217,7 +212,7 @@ class AcceptRulesTest extends BlueprintTest
 		$this->assertSame(['a', 'b', 'c'], $rules->fileTemplates());
 	}
 
-	public function testFileTemplatesFromSection(): void
+	public function testFileTemplatesInField(): void
 	{
 		$this->app = $this->app->clone([
 			'blueprints' => [
@@ -230,13 +225,13 @@ class AcceptRulesTest extends BlueprintTest
 		$blueprint = new Blueprint([
 			'model' => $this->model,
 			'name'  => 'default',
-			'sections' => [
+			'fields' => [
 				'a' => [
-					'type'     => 'files',
+					'type'     => 'filelist',
 					'template' => 'a'
 				],
 				'b' => [
-					'type'     => 'files',
+					'type'     => 'filelist',
 					'template' => 'b'
 				],
 			]
@@ -247,7 +242,7 @@ class AcceptRulesTest extends BlueprintTest
 		$this->assertSame(['a'], $rules->fileTemplates('a'));
 	}
 
-	public function testFileTemplatesFromSections(): void
+	public function testFileTemplatesFromFileLists(): void
 	{
 		$this->app = $this->app->clone([
 			'blueprints' => [
@@ -263,13 +258,13 @@ class AcceptRulesTest extends BlueprintTest
 		$blueprint = new Blueprint([
 			'model' => $this->model,
 			'name'  => 'default',
-			'sections' => [
+			'fields' => [
 				'a' => [
-					'type'     => 'files',
+					'type'     => 'filelist',
 					'template' => 'a'
 				],
 				'b' => [
-					'type'     => 'files',
+					'type'     => 'filelist',
 					'template' => 'b'
 				]
 			]
@@ -296,13 +291,13 @@ class AcceptRulesTest extends BlueprintTest
 			]
 		]);
 
-		// Files section without template should include all available templates
+		// a file list without template accepts all available templates
 		$blueprint = new Blueprint([
 			'model' => $this->model,
 			'name'  => 'default',
-			'sections' => [
+			'fields' => [
 				'files' => [
-					'type' => 'files',
+					'type' => 'filelist',
 					// No template specified - should get all available
 				],
 			]

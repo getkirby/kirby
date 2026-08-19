@@ -7,9 +7,9 @@ use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Blueprint::class)]
 #[CoversClass(FilePermissions::class)]
-class FilesSectionTemplateChangeTest extends TestCase
+class FileListTemplateChangeTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.FilesSectionTemplateChange';
+	public const TMP = KIRBY_TMP_DIR . '/Cms.FileListTemplateChange';
 
 	protected function setUp(): void
 	{
@@ -64,9 +64,9 @@ class FilesSectionTemplateChangeTest extends TestCase
 				// User's page blueprint from the forum post
 				'pages/default' => [
 					'title' => 'Default',
-					'sections' => [
+					'fields' => [
 						'sitemedia' => [
-							'type' => 'files',
+							'type' => 'filelist',
 							'layout' => 'cards',
 							'size' => 'medium',
 							'info' => 'Template: {{ file.template }} <br /> {{ file.dimensions.width }} x {{ file.dimensions.height }} px <br /> {{ file.niceSize }}',
@@ -92,7 +92,7 @@ class FilesSectionTemplateChangeTest extends TestCase
 		}
 	}
 
-	public function testFilesSectionWithoutTemplateShowsAllAvailableTemplates(): void
+	public function testFileListWithoutTemplateShowsAllAvailableTemplates(): void
 	{
 		$this->app->impersonate('admin');
 
@@ -101,9 +101,9 @@ class FilesSectionTemplateChangeTest extends TestCase
 		$blueprint = new Blueprint([
 			'model' => $model,
 			'name'  => 'default',
-			'sections' => [
+			'fields' => [
 				'sitemedia' => [
-					'type' => 'files',
+					'type' => 'filelist',
 					'layout' => 'cards',
 					'size' => 'medium',
 					'info' => 'Template: {{ file.template }} <br /> {{ file.dimensions.width }} x {{ file.dimensions.height }} px <br /> {{ file.niceSize }}',

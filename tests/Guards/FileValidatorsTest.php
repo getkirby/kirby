@@ -264,9 +264,9 @@ class FileValidatorsTest extends ModelTestCase
 		$this->app = $this->app->clone([
 			'blueprints' => [
 				'pages/test' => [
-					'sections' => [
+					'fields' => [
 						'files' => [
-							'type'     => 'files',
+							'type'     => 'filelist',
 							'template' => 'a'
 						]
 					]
