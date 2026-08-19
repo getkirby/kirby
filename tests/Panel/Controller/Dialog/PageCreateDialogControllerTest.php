@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Controller\Dialog;
 
 use Kirby\Cms\Page;
+use Kirby\Cms\Site;
 use Kirby\Content\MemoryStorage;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\Redirect;
@@ -29,7 +30,7 @@ class PageCreateDialogControllerTest extends TestCase
 		$controller = new PageCreateDialogController();
 		$fields     = $controller->coreFields();
 
-		$this->assertCount(6, $fields);
+		$this->assertCount(5, $fields);
 		$this->assertSame('Title', $fields['title']['label']);
 		$this->assertSame('/', $fields['slug']['path']);
 		$this->assertTrue($fields['uuid']['hidden']);
@@ -53,7 +54,7 @@ class PageCreateDialogControllerTest extends TestCase
 		$controller = new PageCreateDialogController();
 		$fields     = $controller->coreFields();
 
-		$this->assertCount(5, $fields);
+		$this->assertCount(4, $fields);
 		$this->assertSame('Title', $fields['title']['label']);
 		$this->assertSame('/', $fields['slug']['path']);
 	}
@@ -201,7 +202,7 @@ class PageCreateDialogControllerTest extends TestCase
 			],
 			'request' => [
 				'query' => [
-					'view' => 'pages/test'
+					'parent' => 'pages/test'
 				]
 			]
 		]);
@@ -210,6 +211,14 @@ class PageCreateDialogControllerTest extends TestCase
 
 		$controller = PageCreateDialogController::factory();
 		$this->assertSame('test', $controller->parent->id());
+	}
+
+	public function testFactoryWithoutParent(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$controller = PageCreateDialogController::factory();
+		$this->assertInstanceOf(Site::class, $controller->parent);
 	}
 
 	public function testLoad(): void
