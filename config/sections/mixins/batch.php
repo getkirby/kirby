@@ -30,10 +30,16 @@ return [
 
 			// check if the section has enough items after the deletion
 			if ($this->total() - count($ids) < $min) {
+				$type = match ($this->type()) {
+					'files' => 'filelist',
+					'pages' => 'pagelist',
+					default => $this->type()
+				};
+
 				throw new Exception(
-					message: I18n::template('error.section.' . $this->type() . '.min.' . I18n::form($min), [
-						'min'     => $min,
-						'section' => $this->headline()
+					message: I18n::template('error.field.' . $type . '.min.' . I18n::form($min), [
+						'min'   => $min,
+						'field' => $this->headline()
 					])
 				);
 			}

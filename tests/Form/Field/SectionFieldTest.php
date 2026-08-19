@@ -45,7 +45,7 @@ class SectionFieldTest extends TestCase
 		]);
 
 		$this->assertSame([
-			'min' => 'The "Drafts" section requires at least one page'
+			'min' => 'The "Drafts" field requires at least one page'
 		], $field->errors());
 	}
 

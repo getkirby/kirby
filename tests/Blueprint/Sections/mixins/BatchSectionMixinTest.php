@@ -23,7 +23,7 @@ class BatchSectionMixinTest extends TestCase
 			],
 			'translations' => [
 				'en' => [
-					'error.section.test.min.plural' => 'The section requires at least {min} items',
+					'error.field.test.min.plural' => 'The section requires at least {min} items',
 				]
 			]
 		]);
