@@ -2,11 +2,10 @@
 
 namespace Kirby\Form\Field;
 
-use Kirby\Form\Field;
 use Kirby\Form\Mixin;
 
 /**
- * Input class for fields that have a value
+ * Base class for value fields that can be edited by the user
  *
  * Concrete subclasses must declare a typed `$value` property with a
  * default that defines the empty value.
@@ -15,7 +14,7 @@ use Kirby\Form\Mixin;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  */
-abstract class InputField extends Field
+abstract class InputField extends ValueField
 {
 	use Mixin\Autofocus;
 	use Mixin\Disabled;
@@ -23,7 +22,6 @@ abstract class InputField extends Field
 	use Mixin\Label;
 	use Mixin\Required;
 	use Mixin\Validation;
-	use Mixin\Value;
 	use Mixin\Width;
 
 	public function __construct(

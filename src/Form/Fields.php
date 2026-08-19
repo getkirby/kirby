@@ -9,6 +9,7 @@ use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Exception\FormValidationException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Form\Interface\ProvidesNestedForm;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 
@@ -199,20 +200,14 @@ class Fields extends Collection
 				return null;
 			}
 
-			// there are more parts in the key
+			// there are more parts in the key, but the search
+			// can only continue for fields with a nested form
 			if ($index < $count) {
-				$form = match (true) {
-					method_exists($field, 'form') === true => $field->form(),
-					default => null
-				};
-
-				// the search can only continue for
-				// fields with valid nested forms
-				if ($form instanceof Form === false) {
+				if ($field instanceof ProvidesNestedForm === false) {
 					return null;
 				}
 
-				$fields = $form->fields();
+				$fields = $field->form()->fields();
 			}
 		}
 
@@ -293,10 +288,7 @@ class Fields extends Collection
 
 		// reset the values of each field
 		foreach ($this->data as $field) {
-			if (
-				$field->hasValue() === true &&
-				method_exists($field, 'reset') === true
-			) {
+			if ($field->hasValue() === true) {
 				$field->reset();
 			}
 		}
@@ -329,7 +321,7 @@ class Fields extends Collection
 			}
 
 			// don't submit fields without a value
-			if ($force === true && $field->hasValue() === false) {
+			if ($field->hasValue() === false) {
 				continue;
 			}
 

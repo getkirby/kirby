@@ -1,27 +1,27 @@
 <?php
 
-namespace Kirby\Form\Mixin;
+namespace Kirby\Form\Field;
 
 use Kirby\Cms\Language;
+use Kirby\Form\Field;
 use Kirby\Toolkit\BlockCollectionAccess;
 use ReflectionProperty;
 
 /**
- * Provides value storage, filling, and retrieval for form fields.
+ * Base class for fields that hold a value
+ *
+ * Concrete subclasses must declare a typed `$value` property with a
+ * default that defines the "empty" value used by `self::emptyValue()`
+ * via reflection.
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
- *
- * The using class must declare a `protected $value` property
- * (typed and with a default value that defines the "empty" value
- * used by `Value::emptyValue()` via reflection).
+ * @since     6.0.0
  *
  * @property mixed $value
  */
-trait Value
+abstract class ValueField extends Field
 {
-	abstract public function default(): mixed;
-
 	/**
 	 * Returns the fallback value when the field should be empty
 	 */
@@ -36,7 +36,7 @@ trait Value
 	#[BlockCollectionAccess]
 	public function fill(mixed $value): static
 	{
-		/** @psalm-suppress UndefinedThisPropertyAssignment using classes declare `$value` */
+		/** @psalm-suppress UndefinedThisPropertyAssignment subclasses declare `$value` */
 		$this->value = $value ?? $this->emptyValue();
 		return $this;
 	}
@@ -62,11 +62,6 @@ trait Value
 	 */
 	public function isStorable(Language $language): bool
 	{
-		// the field cannot be stored at all if it has no value
-		if ($this->hasValue() === false) {
-			return false;
-		}
-
 		// the field cannot be translated into the given language
 		if ($this->isTranslatable($language) === false) {
 			return false;
@@ -88,10 +83,6 @@ trait Value
 	 */
 	public function isSubmittable(Language $language): bool
 	{
-		if ($this->hasValue() === false) {
-			return false;
-		}
-
 		if ($this->isTranslatable($language) === false) {
 			return false;
 		}
@@ -101,12 +92,11 @@ trait Value
 
 	/**
 	 * Resets the value back to the empty value
-	 * @since 5.2.0
 	 */
 	#[BlockCollectionAccess]
 	public function reset(): static
 	{
-		/** @psalm-suppress UndefinedThisPropertyAssignment using classes declare `$value` */
+		/** @psalm-suppress UndefinedThisPropertyAssignment subclasses declare `$value` */
 		$this->value = $this->emptyValue();
 		return $this;
 	}
@@ -117,8 +107,6 @@ trait Value
 	 * submit logic. This is useful if the field component
 	 * sends data that needs to be processed before being
 	 * stored.
-	 *
-	 * @since 5.0.0
 	 */
 	#[BlockCollectionAccess]
 	public function submit(mixed $value): static
@@ -132,11 +120,7 @@ trait Value
 	 */
 	public function toFormValue(): mixed
 	{
-		if ($this->hasValue() === false) {
-			return null;
-		}
-
-		/** @psalm-suppress UndefinedThisPropertyFetch using classes declare `$value` */
+		/** @psalm-suppress UndefinedThisPropertyFetch subclasses declare `$value` */
 		return $this->value ?? null;
 	}
 

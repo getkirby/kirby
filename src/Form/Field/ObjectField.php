@@ -4,6 +4,7 @@ namespace Kirby\Form\Field;
 
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Form\Interface\ProvidesNestedForm;
 use Kirby\Form\Mixin;
 
 /**
@@ -12,7 +13,7 @@ use Kirby\Form\Mixin;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class ObjectField extends InputField
+class ObjectField extends InputField implements ProvidesNestedForm
 {
 	use Mixin\EmptyState;
 	use Mixin\Fields;
@@ -57,10 +58,6 @@ class ObjectField extends InputField
 		];
 	}
 
-	/**
-	 * @psalm-suppress MethodSignatureMismatch
-	 * @todo Remove psalm suppress after https://github.com/vimeo/psalm/issues/8673 is fixed
-	 */
 	public function fill(mixed $value): static
 	{
 		return parent::fill(

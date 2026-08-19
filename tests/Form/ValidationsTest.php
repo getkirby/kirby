@@ -351,4 +351,30 @@ class ValidationsTest extends TestCase
 		$field = ValidationsField::factory(['model' => $page]);
 		Validations::time($field, '99:99');
 	}
+
+	public function testUrlValid(): void
+	{
+		$page  = new Page(['slug' => 'test']);
+		$field = ValidationsField::factory(['model' => $page]);
+		$this->assertTrue(Validations::url($field, 'https://getkirby.com'));
+	}
+
+	public function testUrlInvalid(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Please enter a valid URL');
+
+		$page  = new Page(['slug' => 'test']);
+		$field = ValidationsField::factory(['model' => $page]);
+		Validations::url($field, 'getkirby.com');
+	}
+
+	public function testUrlEmpty(): void
+	{
+		$page  = new Page(['slug' => 'test']);
+		$field = ValidationsField::factory(['model' => $page]);
+
+		$this->assertTrue(Validations::url($field, null));
+		$this->assertTrue(Validations::url($field, ''));
+	}
 }
