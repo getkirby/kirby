@@ -109,21 +109,5 @@ return [
 			}
 		}
 	],
-	[
-		'pattern' => 'pages/(:any)/sections/(:any)',
-		'method'  => 'GET',
-		'action'  => function (string $id, string $sectionName) {
-			return $this->page($id)->blueprint()->section($sectionName)?->toResponse();
-		}
-	],
-	[
-		'pattern' => 'pages/(:any)/sections/(:any)/(:all?)',
-		'method'  => 'ALL',
-		'action'  => function (string $id, string $sectionName, string|null $path = null) {
-			if ($page = $this->page($id)) {
-				return $this->sectionApi($page, $sectionName, $path);
-			}
-		}
-	],
 	// @codeCoverageIgnoreEnd
 ];
