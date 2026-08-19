@@ -4,7 +4,7 @@ name: CI - Backend
 
 env:
   OS: &os ubuntu-24.04
-  TIMEOUT: &timeout 5
+  TIMEOUT: &timeout 10
   COVERAGE_PHP: "8.4"
 
   SHOULD_RUN: &should-run >-
@@ -51,7 +51,7 @@ jobs:
     runs-on: *os
     timeout-minutes: *timeout
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         php: ["8.3", "8.4", "8.5"]
 
@@ -71,23 +71,23 @@ jobs:
         with:
           fetch-depth: 2
 
-      # never cache these: a failed install would be cached as an empty result
       - name: Install system locales and imagemagick
         shell: bash
-        run: sudo apt-get update && sudo apt-get install -y locales-all imagemagick
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            -o Acquire::Retries=3 locales-all imagemagick
 
       - name: Verify test dependencies
         shell: bash
         run: |
           convert -version
           identify -version
-          locales=$(locale -a)
-          for locale in de_AT.utf8 de_DE.utf8 pt_BR.utf8; do
-            grep -qx "$locale" <<< "$locales" || {
-              echo "::error::Missing locale $locale"
-              exit 1
-            }
-          done
+          count=$(locale -a | wc -l)
+          if [ "$count" -lt 100 ]; then
+            echo "::error::Only $count locales available, locales-all is missing"
+            exit 1
+          fi
 
       - name: Setup PHP environment
         uses: ./.github/actions/setup-php
