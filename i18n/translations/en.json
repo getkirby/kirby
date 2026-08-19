@@ -116,7 +116,15 @@
 	"error.email.preset.notFound": "The email preset \"{name}\" cannot be found",
 
 	"error.field.converter.invalid": "Invalid converter \"{converter}\"",
+	"error.field.filelist.max.plural": "You must not add more than {max} files to the \"{field}\" field",
+	"error.field.filelist.max.singular": "You must not add more than one file to the \"{field}\" field",
+	"error.field.filelist.min.plural": "The \"{field}\" field requires at least {min} files",
+	"error.field.filelist.min.singular": "The \"{field}\" field requires at least one file",
 	"error.field.link.options": "Invalid options: {options}",
+	"error.field.pagelist.max.plural": "You must not add more than {max} pages to the \"{field}\" field",
+	"error.field.pagelist.max.singular": "You must not add more than one page to the \"{field}\" field",
+	"error.field.pagelist.min.plural": "The \"{field}\" field requires at least {min} pages",
+	"error.field.pagelist.min.singular": "The \"{field}\" field requires at least one page",
 	"error.field.type.missing": "Field \"{ name }\": The field type \"{ type }\" does not exist",
 
 	"error.file.changeName.empty": "The name must not be empty",
@@ -231,16 +239,6 @@
 	"error.page.update.permission": "You are not allowed to update \"{slug}\"",
 
 	"error.role.notFound": "The role \"{name}\" cannot be found",
-
-	"error.section.files.max.plural": "You must not add more than {max} files to the \"{section}\" section",
-	"error.section.files.max.singular": "You must not add more than one file to the \"{section}\" section",
-	"error.section.files.min.plural": "The \"{section}\" section requires at least {min} files",
-	"error.section.files.min.singular": "The \"{section}\" section requires at least one file",
-
-	"error.section.pages.max.plural": "You must not add more than {max} pages to the \"{section}\" section",
-	"error.section.pages.max.singular": "You must not add more than one page to the \"{section}\" section",
-	"error.section.pages.min.plural": "The \"{section}\" section requires at least {min} pages",
-	"error.section.pages.min.singular": "The \"{section}\" section requires at least one page",
 
 	"error.section.notLoaded": "The section \"{name}\" could not be loaded",
 	"error.section.type.invalid": "The section type \"{type}\" is not valid",
