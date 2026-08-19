@@ -320,7 +320,7 @@ class PageListFieldTest extends TestCase
 		$field = $this->pagelist(['min' => 10]);
 
 		$this->assertSame(
-			'The "Albums" section requires at least 10 pages',
+			'The "Albums" field requires at least 10 pages',
 			$field->errors()['min']
 		);
 	}
