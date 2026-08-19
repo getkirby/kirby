@@ -65,15 +65,14 @@ class PageCreateDialogController extends ModelCreateDialogController
 
 	public function __construct(
 		Page|Site|null $parent = null,
-		string|null $field = null,
 		array|null $blueprints = null
 	) {
 		parent::__construct(parent: $parent);
 
-		// gather all available blueprints from the given list,
-		// the field or the parent
+		// gather all available blueprints from the
+		// given list or from the parent
 		$this->blueprints = A::map(
-			$blueprints ?? $this->parent->blueprints($field),
+			$blueprints ?? $this->parent->blueprints(),
 			function ($blueprint) {
 				$blueprint['name'] ??= $blueprint['value'] ?? null;
 				return $blueprint;
@@ -135,9 +134,8 @@ class PageCreateDialogController extends ModelCreateDialogController
 
 		return [
 			...$fields,
-			'parent'   => Field::hidden(), // @deprecated
+			'parent'   => Field::hidden(),
 			'template' => Field::hidden(),
-			'view'     => Field::hidden(), // @deprecated
 		];
 	}
 
@@ -146,19 +144,12 @@ class PageCreateDialogController extends ModelCreateDialogController
 		return [...parent::customFieldsIgnore(), 'title', 'slug'];
 	}
 
-	/**
-	 * @deprecated 6.0.0
-	 */
 	public static function factory(): static
 	{
-		$kirby   = App::instance();
-		$request = $kirby->request();
-		$view    = $request->get('view');
-		$parent  = $view ? Find::parent($view) : Find::site();
+		$parent = App::instance()->request()->get('parent');
 
 		return new static(
-			parent: $parent,
-			field:  $request->get('field')
+			parent: $parent ? Find::parent($parent) : Find::site()
 		);
 	}
 	/**
@@ -329,12 +320,11 @@ class PageCreateDialogController extends ModelCreateDialogController
 	{
 		return [
 			...parent::value(),
-			'parent'   => $this->request->get('parent', ''), // @deprecated
+			'parent'   => $this->request->get('parent', ''),
 			'slug'     => $this->request->get('slug', ''),
 			'template' => $this->template(),
 			'title'    => $this->request->get('title', ''),
 			'uuid'     => $this->model()->uuid()->toString(),
-			'view'     => $this->request->get('view', ''), // @deprecated
 		];
 	}
 }

@@ -266,8 +266,8 @@ return [
 		return [
 			'create' => [
 				'action' => fn () => new PageCreateDialogController(
-					parent:  $this->parentModel(),
-					section: $this
+					parent:     $this->parentModel(),
+					blueprints: $this->blueprints()
 				),
 			]
 		];
