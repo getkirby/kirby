@@ -306,9 +306,9 @@ abstract class ModelListField extends DisplayField
 
 		if ($this->total() - count($ids) < $min) {
 			throw new Exception(
-				message: $this->i18n('error.section.' . static::TYPE . '.min.' . I18n::form($min), [
-					'min'     => $min,
-					'section' => $this->label()
+				message: $this->i18n('error.field.' . $this->type() . '.min.' . I18n::form($min), [
+					'min'   => $min,
+					'field' => $this->label()
 				])
 			);
 		}
@@ -342,8 +342,6 @@ abstract class ModelListField extends DisplayField
 	/**
 	 * Errors are only reported for the publish gate. The entries
 	 * themselves are not stored in the content of the model.
-	 *
-	 * @todo switch to dedicated field keys once the sections are gone
 	 */
 	public function errors(): array
 	{
@@ -352,19 +350,19 @@ abstract class ModelListField extends DisplayField
 		}
 
 		$errors = [];
-		$key    = 'error.section.' . static::TYPE;
+		$key    = 'error.field.' . $this->type();
 
 		if ($this->validateMax() === false) {
 			$errors['max'] = $this->i18n($key . '.max.' . I18n::form($this->max), [
-				'max'     => $this->max,
-				'section' => $this->label()
+				'max'   => $this->max,
+				'field' => $this->label()
 			]);
 		}
 
 		if ($this->validateMin() === false) {
 			$errors['min'] = $this->i18n($key . '.min.' . I18n::form($this->min), [
-				'min'     => $this->min,
-				'section' => $this->label()
+				'min'   => $this->min,
+				'field' => $this->label()
 			]);
 		}
 

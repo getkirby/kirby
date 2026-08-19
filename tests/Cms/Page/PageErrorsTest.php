@@ -53,7 +53,7 @@ class PageErrorsTest extends ModelTestCase
 		$this->assertSame([], $page->errors());
 	}
 
-	public function testErrorsWithPagesSectionField(): void
+	public function testErrorsWithPageListField(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -61,10 +61,9 @@ class PageErrorsTest extends ModelTestCase
 				'name' => 'test',
 				'fields' => [
 					'drafts' => [
-						'type'    => 'section',
-						'section' => 'pages',
-						'status'  => 'drafts',
-						'min'     => 1
+						'type'   => 'pagelist',
+						'status' => 'drafts',
+						'min'    => 1
 					]
 				]
 			]
@@ -74,13 +73,13 @@ class PageErrorsTest extends ModelTestCase
 			'drafts' => [
 				'label'   => 'Drafts',
 				'message' => [
-					'min' => 'The "Drafts" section requires at least one page'
+					'min' => 'The "Drafts" field requires at least one page'
 				]
 			]
 		], $page->errors());
 	}
 
-	public function testErrorsWithPagesSectionFieldWhenInactive(): void
+	public function testErrorsWithPageListFieldWhenInactive(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -92,17 +91,16 @@ class PageErrorsTest extends ModelTestCase
 						'default' => false
 					],
 					'drafts' => [
-						'type'    => 'section',
-						'section' => 'pages',
-						'status'  => 'drafts',
-						'min'     => 1,
-						'when'    => ['toggle' => true]
+						'type'   => 'pagelist',
+						'status' => 'drafts',
+						'min'    => 1,
+						'when'   => ['toggle' => true]
 					]
 				]
 			]
 		]);
 
-		// the section is hidden by the `when` condition
+		// the field is hidden by the `when` condition
 		// and must not block changing the page status
 		$this->assertSame([], $page->errors());
 	}
