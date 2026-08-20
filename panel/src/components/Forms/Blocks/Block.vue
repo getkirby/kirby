@@ -36,7 +36,7 @@
 		</div>
 
 		<k-block-options
-			v-if="!isDisabled"
+			v-if="isLastSelected && !isDisabled"
 			ref="options"
 			v-bind="{
 				isBatched,
@@ -406,14 +406,10 @@ export default {
 }
 
 .k-block-container .k-block-options {
-	display: none;
 	position: absolute;
 	top: 0;
 	inset-inline-end: var(--spacing-3);
 	margin-top: calc(-1.75rem + 2px);
-}
-.k-block-container[data-last-selected="true"] > .k-block-options {
-	display: flex;
 }
 .k-block-container[data-hidden="true"] .k-block {
 	opacity: 0.25;
