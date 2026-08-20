@@ -60,10 +60,7 @@
 			</k-button-group>
 		</template>
 
-		<k-input-validator
-			v-bind="{ min, max, required }"
-			:value="JSON.stringify(items)"
-		>
+		<k-validator v-bind="{ min, max, required }" :count="items.length">
 			<template v-if="hasFields">
 				<!-- Empty State -->
 				<k-empty
@@ -110,7 +107,7 @@
 			<template v-else>
 				<k-empty icon="list-bullet">{{ $t("fields.empty") }}</k-empty>
 			</template>
-		</k-input-validator>
+		</k-validator>
 	</k-field>
 </template>
 

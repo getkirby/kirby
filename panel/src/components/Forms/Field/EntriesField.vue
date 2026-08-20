@@ -30,10 +30,7 @@
 			</k-button-group>
 		</template>
 
-		<k-input-validator
-			v-bind="{ min, max, required }"
-			:value="JSON.stringify(entries)"
-		>
+		<k-validator v-bind="{ min, max, required }" :count="entries.length">
 			<!-- Empty State -->
 			<k-empty
 				v-if="entries.length === 0"
@@ -105,7 +102,7 @@
 					</k-button-group>
 				</div>
 			</k-draggable>
-		</k-input-validator>
+		</k-validator>
 
 		<footer v-if="more" class="k-entries-field-footer">
 			<k-button
