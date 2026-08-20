@@ -6,6 +6,7 @@ use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Content\MemoryStorage;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Panel\Redirect;
 use Kirby\Panel\TestCase;
 use Kirby\Uuid\PageUuid;
@@ -211,6 +212,70 @@ class PageCreateDialogControllerTest extends TestCase
 
 		$controller = PageCreateDialogController::factory();
 		$this->assertSame('test', $controller->parent->id());
+	}
+
+	public function testFactoryWithField(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/parent' => [
+					'fields' => [
+						'kids' => [
+							'type'      => 'pagelist',
+							'templates' => ['child']
+						]
+					]
+				],
+				'pages/child' => ['title' => 'Child']
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'test', 'template' => 'parent']
+				]
+			],
+			'request' => [
+				'query' => [
+					'parent' => 'pages/test',
+					'field'  => 'kids'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = PageCreateDialogController::factory();
+
+		// the templates are narrowed down to those
+		// accepted by the list field
+		$this->assertSame('test', $controller->parent->id());
+		$this->assertSame(
+			['child'],
+			array_column($controller->blueprints(), 'name')
+		);
+	}
+
+	public function testFactoryWithUnknownField(): void
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					['slug' => 'test']
+				]
+			],
+			'request' => [
+				'query' => [
+					'parent' => 'pages/test',
+					'field'  => 'does-not-exist'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The field "does-not-exist" does not accept new pages');
+
+		PageCreateDialogController::factory();
 	}
 
 	public function testFactoryWithoutParent(): void
