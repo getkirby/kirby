@@ -10,6 +10,7 @@ use Kirby\Cms\Site;
 use Kirby\Cms\User;
 use Kirby\Content\MemoryStorage;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Form\Form;
 use Kirby\Panel\Field;
 use Kirby\Panel\Panel;
@@ -146,12 +147,26 @@ class PageCreateDialogController extends ModelCreateDialogController
 
 	public static function factory(): static
 	{
-		$parent = App::instance()->request()->get('parent');
+		$request = App::instance()->request();
+		$parent  = $request->get('parent');
+		$parent  = $parent ? Find::parent($parent) : Find::site();
+
+		if ($field = $request->get('field')) {
+			$blueprints = $parent->blueprints($field);
+
+			if ($blueprints === []) {
+				throw new NotFoundException(
+					message: 'The field "' . $field . '" does not accept new pages'
+				);
+			}
+		}
 
 		return new static(
-			parent: $parent ? Find::parent($parent) : Find::site()
+			parent:     $parent,
+			blueprints: $blueprints ?? null
 		);
 	}
+
 	/**
 	 * Provides all the props for the
 	 * dialog, including the fields and
