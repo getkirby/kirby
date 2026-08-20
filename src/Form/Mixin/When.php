@@ -33,7 +33,11 @@ trait When
 
 		foreach ($when as $field => $value) {
 			$field = $siblings->get($field);
-			$input = $field?->value() ?? '';
+			$input = '';
+
+			if ($field?->hasValue() === true) {
+				$input = $field->value() ?? '';
+			}
 
 			// if the input data doesn't match the requested `when` value,
 			// that means that this field is not required and can be saved
