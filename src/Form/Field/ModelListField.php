@@ -53,9 +53,10 @@ abstract class ModelListField extends DisplayField
 	protected bool|null $flip;
 
 	/**
-	 * Image options for each entry or `false` to disable previews
+	 * Image options for each entry, a query string for the preview
+	 * image or `false` to disable previews
 	 */
-	protected array|false|null $image;
+	protected array|string|false|null $image;
 
 	/**
 	 * Info text shown next to or below the main text of each entry
@@ -103,7 +104,7 @@ abstract class ModelListField extends DisplayField
 		array|string|null $empty = null,
 		bool|null $flip = null,
 		array|string|null $help = null,
-		array|false|null $image = null,
+		array|string|false|null $image = null,
 		array|string|null $info = null,
 		array|string|null $label = null,
 		string|null $layout = null,
@@ -376,6 +377,10 @@ abstract class ModelListField extends DisplayField
 
 	public function image(): array|false
 	{
+		if (is_string($this->image) === true) {
+			return ['query' => $this->image];
+		}
+
 		return $this->image ?? [];
 	}
 
