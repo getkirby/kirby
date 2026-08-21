@@ -112,7 +112,9 @@ class Normalizer
 			return $props;
 		}
 
-		$fields = $props['fields'] ?? [];
+		// field references have to be resolved before the merge,
+		// otherwise their numeric keys collide with each other
+		$fields = $this->resolveFieldReferences($props['fields'] ?? []);
 
 		// sections and fields share a single namespace
 		$add = static function (array $fields, $name, $props): array {
@@ -141,7 +143,7 @@ class Normalizer
 
 			// a fields section is unwrapped into the parent's own fields
 			if (($section['type'] ?? $name) === 'fields') {
-				foreach (static::unwrapFieldsSection($section) as $key => $field) {
+				foreach ($this->unwrapFieldsSection($section) as $key => $field) {
 					$fields = $add($fields, $key, $field);
 				}
 
@@ -611,13 +613,17 @@ class Normalizer
 	 * condition on the section is pushed down onto every field,
 	 * the same way it works for field groups.
 	 */
-	protected static function unwrapFieldsSection(array $props): array
+	protected function unwrapFieldsSection(array $props): array
 	{
 		$fields = $props['fields'] ?? [];
 
 		if (is_array($fields) === false) {
 			return [];
 		}
+
+		// references are resolved first, so that the `when` condition
+		// can be pushed down onto them just like onto inline fields
+		$fields = $this->resolveFieldReferences($fields);
 
 		if (isset($props['when']) === true) {
 			$fields = A::map(
