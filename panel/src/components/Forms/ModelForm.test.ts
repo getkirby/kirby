@@ -2,7 +2,7 @@ import { describe, expect, it } from "@test/unit";
 import { mount } from "@vue/test-utils";
 import ModelForm from "./ModelForm.vue";
 
-const { disabled, isEmpty, resolvedColumns } = ModelForm.computed!;
+const { isEmpty, isLocked, resolvedColumns } = ModelForm.computed!;
 const { fieldsWithAdditionalData } = ModelForm.methods!;
 
 type Field = Record<string, unknown>;
@@ -58,6 +58,38 @@ describe("ModelForm.vue", () => {
 		expect(rendered[0].attributes("width")).toBe("1/2");
 		expect(rendered[1].attributes("sticky")).toBe("true");
 		expect(wrapper.findAll("k-fieldset").length).toBe(2);
+	});
+
+	it("disables the fieldsets of a locked model", () => {
+		const wrapper = mount(ModelForm, {
+			props: {
+				api: "pages/test",
+				columns,
+				lock: { isLegacy: false, isLocked: true, modified: null, user: {} }
+			}
+		});
+
+		expect(wrapper.attributes("data-locked")).toBe("true");
+
+		for (const fieldset of wrapper.findAll("k-fieldset")) {
+			expect(fieldset.attributes("disabled")).toBe("true");
+		}
+	});
+
+	it("keeps the fieldsets of an unlocked model editable", () => {
+		const wrapper = mount(ModelForm, {
+			props: {
+				api: "pages/test",
+				columns,
+				lock: { isLegacy: false, isLocked: false, modified: null, user: {} }
+			}
+		});
+
+		expect(wrapper.attributes("data-locked")).toBe("false");
+
+		for (const fieldset of wrapper.findAll("k-fieldset")) {
+			expect(fieldset.attributes("disabled")).toBe("false");
+		}
 	});
 
 	it("renders the empty state instead of the form", () => {
@@ -144,11 +176,12 @@ describe("ModelForm.resolvedColumns()", () => {
 	});
 });
 
-describe("ModelForm.disabled()", () => {
-	it("is disabled while the model is locked", () => {
-		expect(disabled.call({ lock: { state: "lock" } })).toBe(true);
-		expect(disabled.call({ lock: { state: "unlock" } })).toBe(false);
-		expect(disabled.call({ lock: false })).toBe(false);
+describe("ModelForm.isLocked()", () => {
+	it("reads the lock state from the lock payload", () => {
+		expect(isLocked.call({ lock: { isLocked: true } })).toBe(true);
+		expect(isLocked.call({ lock: { isLocked: false } })).toBe(false);
+		expect(isLocked.call({ lock: false })).toBe(false);
+		expect(isLocked.call({})).toBe(false);
 	});
 });
 
