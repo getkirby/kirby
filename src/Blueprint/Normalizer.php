@@ -359,9 +359,7 @@ class Normalizer
 
 		foreach ($fields as $name => $props) {
 			if (isset($this->fields[$name]) === true) {
-				$this->fields[$name] = $fields[$name] =
-					static::duplicateFieldError($name, $props);
-
+				$fields[$name] = static::duplicateFieldError($name, $props);
 				continue;
 			}
 
