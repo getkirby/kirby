@@ -253,6 +253,43 @@ class NormalizerTest extends TestCase
 		);
 	}
 
+	public function testFieldsWithDuplicateNameAcrossTabs(): void
+	{
+		$normalizer = $this->normalizer([
+			'tabs' => [
+				'images' => [
+					'sections' => [
+						'files' => ['type' => 'files', 'template' => 'image']
+					]
+				],
+				'docs' => [
+					'sections' => [
+						'files' => ['type' => 'files', 'template' => 'document']
+					]
+				]
+			]
+		]);
+
+		// the first occurrence keeps the registry entry, so everything
+		// that reads the blueprint by name still gets a working field
+		$field = $normalizer->fields()['files'];
+
+		$this->assertSame('filelist', $field['type']);
+		$this->assertSame('image', $field['template']);
+
+		// only the duplicate is rendered as an error field
+		$tabs = $normalizer->tabs();
+
+		$this->assertSame(
+			'filelist',
+			$tabs['images']['columns'][0]['fields']['files']['type']
+		);
+		$this->assertSame(
+			'info',
+			$tabs['docs']['columns'][0]['fields']['files']['type']
+		);
+	}
+
 	public function testNormalizeFieldProps(): void
 	{
 		$props = Normalizer::normalizeFieldProps([
