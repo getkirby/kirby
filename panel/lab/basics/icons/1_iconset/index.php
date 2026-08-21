@@ -1,11 +1,10 @@
 <?php
 
-use Kirby\Panel\Assets;
+use Kirby\Filesystem\F;
 
-$assets = new Assets();
-$file   = $assets->icons();
-$svg    = new SimpleXMLElement($file);
-$icons = [];
+$assets = kirby()->panel()->assets();
+$svg    = new SimpleXMLElement(F::read($assets->iconsRoot()));
+$icons  = [];
 
 foreach ($svg->defs->children() as $symbol) {
 	$slug = str_replace('icon-', '', $symbol->attributes()->id);

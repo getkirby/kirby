@@ -305,10 +305,88 @@ class AssetsTest extends TestCase
 	public function testIcons(): void
 	{
 		$assets = new Assets();
-		$icons = $assets->icons();
 
-		$this->assertNotNull($icons);
-		$this->assertTrue(str_contains($icons, '<svg'));
+		$this->assertSame(
+			'/media/panel/' . $this->app->versionHash() . '/img/icons.svg',
+			$assets->icons()
+		);
+	}
+
+	public function testIconsInDevMode(): void
+	{
+		$this->setDevMode();
+
+		$assets = new Assets();
+		$target = $this->app->root('media') . '/panel/' . $this->app->versionHash() . '/img/icons.svg';
+
+		$this->assertFileDoesNotExist($target);
+
+		// the sprite is not served by Vite, but synced to the media folder
+		$this->assertSame(
+			'/media/panel/' . $this->app->versionHash() . '/img/icons.svg',
+			$assets->icons()
+		);
+
+		$this->assertFileEquals(
+			$this->app->root('panel') . '/public/img/icons.svg',
+			$target
+		);
+	}
+
+	public function testIconsInDevModeWithCurrentCopy(): void
+	{
+		$this->setDevMode();
+
+		$assets = new Assets();
+		$source = $this->app->root('panel') . '/public/img/icons.svg';
+		$target = $this->app->root('media') . '/panel/' . $this->app->versionHash() . '/img/icons.svg';
+
+		F::write($target, 'current');
+		touch($target, F::modified($source));
+
+		$assets->icons();
+
+		// the copy is up to date and does not get repeated
+		$this->assertSame('current', F::read($target));
+	}
+
+	public function testIconsInDevModeWithOutdatedCopy(): void
+	{
+		$this->setDevMode();
+
+		$assets = new Assets();
+		$source = $this->app->root('panel') . '/public/img/icons.svg';
+		$target = $this->app->root('media') . '/panel/' . $this->app->versionHash() . '/img/icons.svg';
+
+		F::write($target, 'outdated');
+		touch($target, 1);
+
+		$assets->icons();
+
+		$this->assertFileEquals($source, $target);
+		$this->assertSame(F::modified($source), F::modified($target));
+	}
+
+	public function testIconsRoot(): void
+	{
+		$assets = new Assets();
+
+		$this->assertSame(
+			$this->app->root('panel') . '/dist/img/icons.svg',
+			$assets->iconsRoot()
+		);
+	}
+
+	public function testIconsRootInDevMode(): void
+	{
+		$this->setDevMode();
+
+		$assets = new Assets();
+
+		$this->assertSame(
+			$this->app->root('panel') . '/public/img/icons.svg',
+			$assets->iconsRoot()
+		);
 	}
 
 	public function testImportMaps(): void

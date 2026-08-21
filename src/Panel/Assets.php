@@ -180,17 +180,34 @@ class Assets
 	}
 
 	/**
-	 * Load the SVG icon sprite
-	 * This will be injected in the
-	 * initial HTML document for the Panel
+	 * URL for the SVG icon sprite, which is referenced by
+	 * all `<use>` elements in the Panel.
 	 */
 	public function icons(): string
 	{
-		$dir   = $this->kirby->root('panel') . '/';
-		$dir  .= $this->isDev ? 'public' : 'dist';
-		$icons = F::read($dir . '/img/icons.svg');
-		$icons = preg_replace('/<!--(.|\s)*?-->/', '', $icons) ?? '';
-		return $icons;
+		$path = '/panel/' . $this->kirby->versionHash() . '/img/icons.svg';
+
+		if ($this->isDev === true) {
+			$source   = $this->iconsRoot();
+			$target   = $this->kirby->root('media') . $path;
+			$modified = F::modified($source);
+
+			if (F::modified($target) !== $modified) {
+				F::copy($source, $target, true);
+				touch($target, $modified);
+			}
+		}
+
+		return $this->kirby->url('media') . $path;
+	}
+
+	/**
+	 * Root of the SVG icon sprite file
+	 */
+	public function iconsRoot(): string
+	{
+		$dir = $this->isDev === true ? 'public' : 'dist';
+		return $this->kirby->root('panel') . '/' . $dir . '/img/icons.svg';
 	}
 
 	/**

@@ -33,8 +33,8 @@ class ViewDocumentResponse extends ViewResponse
 			code: $code,
 		);
 
-		$this->assets = new Assets();
 		$this->kirby  = App::instance();
+		$this->assets = $this->kirby->panel()->assets();
 	}
 
 	/**
@@ -58,7 +58,6 @@ class ViewDocumentResponse extends ViewResponse
 
 		return Tpl::load($template, [
 			'assets'     => $this->assets->external(),
-			'icons'      => $this->assets->icons(),
 			'nonce'      => $this->kirby->nonce(),
 			'state'      => $this->payload(),
 			'panelUrl'   => $this->url(),

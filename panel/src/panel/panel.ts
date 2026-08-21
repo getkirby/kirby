@@ -42,7 +42,12 @@ type Config = {
 type Languages = Record<string, LanguageState>[];
 type Permissions = Record<string, Record<string, boolean>>;
 type Searches = Record<string, SearchType>;
-type Urls = { api: string; panel: string; site: string };
+type Urls = {
+	api: string;
+	icons: string;
+	panel: string;
+	site: string;
+};
 
 export type PanelState = {
 	config: Config;
@@ -141,7 +146,7 @@ export default class Panel {
 	multilang: boolean = false;
 	permissions: Permissions = {};
 	searches: Searches = {};
-	urls: Urls = { api: "/", panel: "/", site: "/" };
+	urls: Urls = { api: "/", icons: "", panel: "/", site: "/" };
 
 	// modules
 	activation: ReturnType<typeof Activation>;
