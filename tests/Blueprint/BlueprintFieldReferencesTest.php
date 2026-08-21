@@ -130,6 +130,83 @@ class BlueprintFieldReferencesTest extends TestCase
 		$this->assertSame('date', $columns[1]['fields']['date']['type']);
 	}
 
+	public function testGlobalFieldsInMultipleSections(): void
+	{
+		$blueprint = new Blueprint([
+			'model'  => $this->model,
+			'fields' => [
+				'title' => [
+					'type' => 'text'
+				],
+				'date' => [
+					'type' => 'date'
+				],
+				'tags' => [
+					'type' => 'tags'
+				]
+			],
+			'tabs' => [
+				'main' => [
+					'sections' => [
+						'a' => [
+							'type'   => 'fields',
+							'fields' => ['title']
+						],
+						'b' => [
+							'type'   => 'fields',
+							'fields' => ['date', 'tags']
+						]
+					]
+				]
+			]
+		]);
+
+		// references keep their own name instead of colliding
+		// on the numeric key they are written with
+		$fields = $blueprint->fields();
+		$this->assertSame(['title', 'date', 'tags'], array_keys($fields));
+		$this->assertSame('text', $fields['title']['type']);
+		$this->assertSame('date', $fields['date']['type']);
+		$this->assertSame('tags', $fields['tags']['type']);
+
+		$tabs = $blueprint->toArray()['tabs'];
+		$this->assertSame(
+			['title', 'date', 'tags'],
+			array_keys($tabs['main']['columns'][0]['fields'])
+		);
+	}
+
+	public function testGlobalFieldsInSectionAndLevelFields(): void
+	{
+		$blueprint = new Blueprint([
+			'model'  => $this->model,
+			'fields' => [
+				'title' => [
+					'type' => 'text'
+				],
+				'date' => [
+					'type' => 'date'
+				]
+			],
+			'tabs' => [
+				'main' => [
+					'fields'   => ['title'],
+					'sections' => [
+						's' => [
+							'type'   => 'fields',
+							'fields' => ['date']
+						]
+					]
+				]
+			]
+		]);
+
+		$fields = $blueprint->fields();
+		$this->assertSame(['title', 'date'], array_keys($fields));
+		$this->assertSame('text', $fields['title']['type']);
+		$this->assertSame('date', $fields['date']['type']);
+	}
+
 	public function testGlobalFieldsInSections(): void
 	{
 		$blueprint = new Blueprint([
@@ -335,6 +412,34 @@ class BlueprintFieldReferencesTest extends TestCase
 		$this->assertSame('info', $tab2Fields['sharedField']['type']);
 		$this->assertSame('negative', $tab2Fields['sharedField']['theme']);
 		$this->assertStringContainsString('already exists', $tab2Fields['sharedField']['text']);
+	}
+
+	public function testSectionWhenPushedToReferencedFields(): void
+	{
+		$blueprint = new Blueprint([
+			'model'  => $this->model,
+			'fields' => [
+				'title' => [
+					'type' => 'text'
+				]
+			],
+			'sections' => [
+				'meta' => [
+					'type' => 'fields',
+					'when' => ['category' => 'a'],
+					'fields' => [
+						'title',
+						'inline' => ['type' => 'text']
+					]
+				]
+			]
+		]);
+
+		// the section condition is pushed down onto referenced
+		// fields just like onto inline ones
+		$fields = $blueprint->fields();
+		$this->assertSame(['category' => 'a'], $fields['title']['when']);
+		$this->assertSame(['category' => 'a'], $fields['inline']['when']);
 	}
 
 	public function testUndefinedFieldReference(): void
