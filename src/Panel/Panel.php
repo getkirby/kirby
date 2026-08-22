@@ -59,6 +59,34 @@ class Panel
 	}
 
 	/**
+	 * Minimum supported browser versions, read from
+	 * the browserslist config the Panel is built against
+	 * @since 6.0.0
+	 */
+	public function browsers(): array
+	{
+		$file = $this->kirby->root('panel') . '/.browserslistrc';
+
+		if (is_file($file) === false) {
+			return [];
+		}
+
+		$browsers = [];
+		$lines    = file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+
+		foreach ($lines as $line) {
+			// strip comments, browserslist allows them at the end of a line
+			$line = trim(preg_replace('!#.*$!', '', $line));
+
+			if (preg_match('!^(\w+)\s*>=\s*([\d.]+)$!', $line, $match) === 1) {
+				$browsers[$match[1]] = $match[2];
+			}
+		}
+
+		return $browsers;
+	}
+
+	/**
 	 * Redirect to a Panel url
 	 *
 	 * @throws Redirect

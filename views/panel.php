@@ -27,11 +27,13 @@ use Kirby\Toolkit\Html;
 
 	<script nonce="<?= $nonce ?>">
 	if (
-			!window.CSS ||
-			window.CSS.supports("display", "grid") === false ||
-			!window.fetch
+		!window.CSS ||
+		window.CSS.supports("color", "light-dark(#fff, #000)") === false ||
+		!window.HTMLScriptElement.supports ||
+		window.HTMLScriptElement.supports("importmap") === false ||
+		!window.Promise.withResolvers
 	) {
-		window.location.href = "<?= $panelUrl ?>browser";
+		window.location.replace("<?= $panelUrl ?>browser");
 	}
 	</script>
 
