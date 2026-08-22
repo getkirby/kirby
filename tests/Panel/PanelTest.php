@@ -36,6 +36,13 @@ class PanelTest extends TestCase
 		$this->assertInstanceOf(Areas::class, $panel->areas());
 	}
 
+	public function testAssets(): void
+	{
+		$panel = $this->app->panel();
+		$this->assertInstanceOf(Assets::class, $panel->assets());
+		$this->assertSame($panel->assets(), $panel->assets());
+	}
+
 	public function testGo(): void
 	{
 		$thrown = false;

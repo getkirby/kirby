@@ -4,7 +4,6 @@ use Kirby\Toolkit\Html;
 
 /**
  * @var \Kirby\Cms\App $kirby
- * @var string $icons
  * @var array<string, mixed> $assets
  * @var array<string, mixed> $state
  * @var string $panelUrl
@@ -58,8 +57,6 @@ use Kirby\Toolkit\Html;
 	<noscript>
 		Please enable JavaScript in your browser
 	</noscript>
-
-	<?= $icons ?>
 
 	<script nonce="<?= $nonce ?>">
 	// Panel state setup
