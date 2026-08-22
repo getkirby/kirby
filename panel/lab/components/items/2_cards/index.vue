@@ -15,7 +15,7 @@
 				@select="selected = $event"
 			/>
 			<br />
-			<k-code>Selected: {{ selectedIds }}</k-code>
+			<k-code>Selected: {{ selected.join(", ") }}</k-code>
 		</k-lab-example>
 		<k-lab-example label="Selectable: single">
 			<k-items
