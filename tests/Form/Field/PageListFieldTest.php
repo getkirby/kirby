@@ -35,7 +35,12 @@ class PageListFieldTest extends TestCase
 					[
 						'slug'     => 'photography',
 						'children' => [
-							['slug' => 'trees', 'num' => 1, 'template' => 'album'],
+							[
+								'slug'     => 'trees',
+								'num'      => 1,
+								'template' => 'album',
+								'files'    => [['filename' => 'cover.jpg']]
+							],
 							['slug' => 'sky', 'num' => 2, 'template' => 'album'],
 							['slug' => 'ocean', 'template' => 'note']
 						],
@@ -86,6 +91,33 @@ class PageListFieldTest extends TestCase
 		// all statuses, including the draft
 		$this->assertCount(4, $data);
 		$this->assertSame('photography/trees', $data[0]['id']);
+	}
+
+	public function testImage(): void
+	{
+		$field = $this->pagelist(['image' => ['back' => 'black']]);
+
+		$this->assertSame(['back' => 'black'], $field->image());
+		$this->assertSame('black', $field->data()[0]['image']['back']);
+	}
+
+	public function testImageDisabled(): void
+	{
+		$this->assertFalse($this->pagelist(['image' => false])->image());
+	}
+
+	public function testImageQuery(): void
+	{
+		// a query string is a shortcut for the image source
+		$field = $this->pagelist(['image' => 'page.image("cover.jpg")']);
+
+		$this->assertSame(['query' => 'page.image("cover.jpg")'], $field->image());
+
+		// the query is resolved per entry
+		$this->assertStringContainsString(
+			'cover.jpg',
+			$field->data()[0]['image']['url']
+		);
 	}
 
 	public function testTextDefault(): void
