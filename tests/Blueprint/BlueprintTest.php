@@ -69,12 +69,12 @@ class BlueprintTest extends TestCase
 	{
 		$columns = [
 			[
-				'width'    => '1/3',
-				'sections' => []
+				'width'  => '1/3',
+				'fields' => []
 			],
 			[
-				'width'    => '2/3',
-				'sections' => []
+				'width'  => '2/3',
+				'fields' => []
 			]
 		];
 

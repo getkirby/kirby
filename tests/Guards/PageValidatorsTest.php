@@ -247,9 +247,9 @@ class PageValidatorsTest extends ModelTestCase
 		$this->app = $this->app->clone([
 			'blueprints' => [
 				'pages/parent' => [
-					'sections' => [
+					'fields' => [
 						'subpages' => [
-							'type'     => 'pages',
+							'type'     => 'pagelist',
 							'template' => 'child'
 						]
 					]
@@ -328,12 +328,12 @@ class PageValidatorsTest extends ModelTestCase
 		$validators->validateMoveTo($this->app->page('parent-b'));
 	}
 
-	public function testMoveToTemplateWithoutPagesSections(): void
+	public function testMoveToTemplateWithoutPagesFields(): void
 	{
 		$this->app = $this->app->clone([
 			'blueprints' => [
 				'pages/parent' => [
-					'sections' => [
+					'fields' => [
 						'info' => ['type' => 'info']
 					]
 				]
@@ -359,9 +359,9 @@ class PageValidatorsTest extends ModelTestCase
 		$this->app = $this->app->clone([
 			'blueprints' => [
 				'pages/parent' => [
-					'sections' => [
+					'fields' => [
 						'subpages' => [
-							'type'      => 'pages',
+							'type'      => 'pagelist',
 							'templates' => ['album']
 						]
 					]
