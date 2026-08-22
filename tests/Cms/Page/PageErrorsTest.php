@@ -15,25 +15,6 @@ class PageErrorsTest extends ModelTestCase
 		$this->assertSame([], $page->errors());
 	}
 
-	public function testErrorsWithInfoSection(): void
-	{
-		$page = new Page([
-			'slug' => 'test',
-			'blueprint' => [
-				'name' => 'test',
-				'sections' => [
-					'info' => [
-						'type'     => 'info',
-						'headline' => 'Info',
-						'text'     => 'info'
-					]
-				]
-			]
-		]);
-
-		$this->assertSame([], $page->errors());
-	}
-
 	public function testErrorsWithInfoField(): void
 	{
 		$page = new Page([

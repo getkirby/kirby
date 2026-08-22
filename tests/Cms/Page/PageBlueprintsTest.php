@@ -84,15 +84,15 @@ class PageBlueprintsTest extends ModelTestCase
 		$this->assertSame(['A'], array_column($page->blueprints(), 'title'));
 	}
 
-	public function testBlueprintsInSection(): void
+	public function testBlueprintsInField(): void
 	{
 		$this->app = $this->app->clone([
 			'blueprints' => [
 				'pages/a' => [
-					'title' => 'A',
-					'sections' => [
+					'title'  => 'A',
+					'fields' => [
 						'my-pages' => [
-							'type'   => 'pages',
+							'type'   => 'pagelist',
 							'create' => 'b'
 						]
 					]
