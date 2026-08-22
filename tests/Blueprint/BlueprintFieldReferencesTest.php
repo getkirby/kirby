@@ -84,10 +84,10 @@ class BlueprintFieldReferencesTest extends TestCase
 
 		// Field should be resolved with extended properties
 		$tabs = $blueprint->toArray()['tabs'];
-		$sectionFields = $tabs['content']['columns'][0]['fields'];
-		$this->assertArrayHasKey('myField', $sectionFields);
-		$this->assertSame('text', $sectionFields['myField']['type']);
-		$this->assertSame('Custom Text Field', $sectionFields['myField']['label']);
+		$fields = $tabs['content']['columns'][0]['fields'];
+		$this->assertArrayHasKey('myField', $fields);
+		$this->assertSame('text', $fields['myField']['type']);
+		$this->assertSame('Custom Text Field', $fields['myField']['label']);
 	}
 
 	public function testGlobalFieldsInColumns(): void
@@ -207,32 +207,6 @@ class BlueprintFieldReferencesTest extends TestCase
 		$this->assertSame('date', $fields['date']['type']);
 	}
 
-	public function testGlobalFieldsInSections(): void
-	{
-		$blueprint = new Blueprint([
-			'model'  => $this->model,
-			'fields' => [
-				'myField' => [
-					'type' => 'text'
-				]
-			],
-			'sections' => [
-				'content' => [
-					'type'   => 'fields',
-					'fields' => [
-						'myField'
-					]
-				]
-			]
-		]);
-
-		// Field should be resolved in the section
-		$tabs = $blueprint->toArray()['tabs'];
-		$sectionFields = $tabs['main']['columns'][0]['fields'];
-		$this->assertArrayHasKey('myField', $sectionFields);
-		$this->assertSame('text', $sectionFields['myField']['type']);
-	}
-
 	public function testGlobalFieldsInTabs(): void
 	{
 		$blueprint = new Blueprint([
@@ -333,10 +307,10 @@ class BlueprintFieldReferencesTest extends TestCase
 		$field = $blueprint->field('myField');
 		$this->assertSame('text', $field['type']);
 
-		// Field should be present in section
+		// Field should be present in the column
 		$tabs = $blueprint->toArray()['tabs'];
-		$sectionFields = $tabs['content']['columns'][0]['fields'];
-		$this->assertSame('text', $sectionFields['myField']['type']);
+		$fields = $tabs['content']['columns'][0]['fields'];
+		$this->assertSame('text', $fields['myField']['type']);
 	}
 
 	public function testMixedGlobalAndInlineFields(): void
@@ -369,9 +343,9 @@ class BlueprintFieldReferencesTest extends TestCase
 
 		// Both fields should be in the tab
 		$tabs = $blueprint->toArray()['tabs'];
-		$sectionFields = $tabs['content']['columns'][0]['fields'];
-		$this->assertArrayHasKey('globalField', $sectionFields);
-		$this->assertArrayHasKey('inlineField', $sectionFields);
+		$fields = $tabs['content']['columns'][0]['fields'];
+		$this->assertArrayHasKey('globalField', $fields);
+		$this->assertArrayHasKey('inlineField', $fields);
 	}
 
 	public function testSameFieldReferencedMultipleTimes(): void
@@ -462,12 +436,12 @@ class BlueprintFieldReferencesTest extends TestCase
 
 		// The non-existent field should be converted to an error field
 		$tabs = $blueprint->toArray()['tabs'];
-		$sectionFields = $tabs['content']['columns'][0]['fields'];
+		$fields = $tabs['content']['columns'][0]['fields'];
 
-		$this->assertArrayHasKey('nonExistentField', $sectionFields);
-		$this->assertSame('info', $sectionFields['nonExistentField']['type']);
-		$this->assertSame('negative', $sectionFields['nonExistentField']['theme']);
-		$this->assertStringContainsString('nonExistentField', $sectionFields['nonExistentField']['text']);
+		$this->assertArrayHasKey('nonExistentField', $fields);
+		$this->assertSame('info', $fields['nonExistentField']['type']);
+		$this->assertSame('negative', $fields['nonExistentField']['theme']);
+		$this->assertStringContainsString('nonExistentField', $fields['nonExistentField']['text']);
 	}
 
 }

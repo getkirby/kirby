@@ -121,12 +121,12 @@ class AccountRoutesTest extends TestCase
 		$app = $this->app->clone([
 			'blueprints' => [
 				'users/admin' => [
-					'name'     => 'admin',
-					'title'    => 'Admin',
-					'sections' => [
+					'name'   => 'admin',
+					'title'  => 'Admin',
+					'fields' => [
 						'test' => [
-							'type'   => 'pages',
-							'parent' => 'site',
+							'type'      => 'pagelist',
+							'parent'    => 'site',
 							'templates' => [
 								'foo',
 								'bar'

@@ -665,9 +665,9 @@ class PageRulesTest extends ModelTestCase
 			],
 			'blueprints' => [
 				'pages/parent' => [
-					'sections' => [
+					'fields' => [
 						'subpages' => [
-							'type'     => 'pages',
+							'type'     => 'pagelist',
 							'template' => 'child'
 						]
 					]
@@ -746,9 +746,9 @@ class PageRulesTest extends ModelTestCase
 			],
 			'blueprints' => [
 				'pages/parent' => [
-					'sections' => [
+					'fields' => [
 						'subpages' => [
-							'type'     => 'pages',
+							'type'     => 'pagelist',
 							'template' => 'child'
 						]
 					]
@@ -825,13 +825,13 @@ class PageRulesTest extends ModelTestCase
 			],
 			'blueprints' => [
 				'pages/photography' => [
-					'sections' => [
+					'fields' => [
 						'albums' => [
-							'type'      => 'pages',
+							'type'      => 'pagelist',
 							'templates' => ['album']
 						],
 						'related' => [
-							'type'      => 'pages',
+							'type'      => 'pagelist',
 							'parent'    => 'site.find("parent-a")',
 							'create'    => 'album',
 							'templates' => ['article']
@@ -852,7 +852,7 @@ class PageRulesTest extends ModelTestCase
 		PageRules::move($child, $parentB);
 	}
 
-	public function testMoveWithParentWithNoPagesSections(): void
+	public function testMoveWithParentWithNoPagesFields(): void
 	{
 		$this->app = $this->app->clone([
 			'site' => [
@@ -876,7 +876,7 @@ class PageRulesTest extends ModelTestCase
 			'blueprints' => [
 				'pages/article' => [],
 				'pages/photography' => [
-					'sections' => [
+					'fields' => [
 						'albums' => [
 							'type' => 'info',
 						]
@@ -921,9 +921,9 @@ class PageRulesTest extends ModelTestCase
 			'blueprints' => [
 				'pages/article' => [],
 				'pages/photography' => [
-					'sections' => [
+					'fields' => [
 						'albums' => [
-							'type' => 'pages'
+							'type' => 'pagelist'
 						]
 					]
 				]

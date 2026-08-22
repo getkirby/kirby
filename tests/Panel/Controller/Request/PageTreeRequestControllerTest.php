@@ -54,9 +54,9 @@ class PageTreeRequestControllerTest extends TestCase
 			],
 			'blueprints' => [
 				'pages/note' => [
-					'sections' => [
+					'fields' => [
 						'albums' => [
-							'type' => 'pages',
+							'type' => 'pagelist',
 						],
 					]
 				]
