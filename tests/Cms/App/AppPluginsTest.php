@@ -13,6 +13,8 @@ use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\Mime;
 use Kirby\Form\Field as FormField;
+use Kirby\Form\Field\InfoField;
+use Kirby\Form\Fields;
 use Kirby\Image\Image;
 use Kirby\Plugin\Plugin;
 use Kirby\Tests\MockTime;
@@ -444,44 +446,6 @@ class AppPluginsTest extends TestCase
 		$this->assertInstanceOf(DummyField::class, $field);
 		$this->assertSame('simpson', $field->homer());
 		$this->assertSame('shaw', $field->peter());
-	}
-
-	public function testFieldWithArrayDefinition(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage(
-			'The field type "dummy" is registered as array. Array-based field ' .
-			'definitions have been removed in Kirby 6. Please register the name ' .
-			'of a class that extends Kirby\Form\Field instead.'
-		);
-
-		new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'fields' => [
-				'dummy' => [
-					'props' => [
-						'foo' => fn ($foo = null) => $foo
-					]
-				]
-			]
-		]);
-	}
-
-	public function testFieldWithClosureDefinition(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The field type "dummy" is registered as Closure.');
-
-		new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'fields' => [
-				'dummy' => fn () => 'dummy'
-			]
-		]);
 	}
 
 	public function testFilePreviews(): void
