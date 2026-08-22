@@ -68,6 +68,7 @@
 					:blueprint="blueprint"
 					:content="content"
 					:diff="diff"
+					:lock="lock"
 					:tabs="tabs"
 					:tab="tab"
 					@discard="onDiscard"
