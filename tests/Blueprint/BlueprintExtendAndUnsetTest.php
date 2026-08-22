@@ -21,12 +21,12 @@ class BlueprintExtendAndUnsetTest extends TestCase
 					'model'  => 'page',
 					'tabs'   => [
 						'content' => [
-							'sections' => [
+							'fields' => [
 								'pages' => [
-									'type' => 'pages'
+									'type' => 'pagelist'
 								],
 								'files' => [
-									'type' => 'files'
+									'type' => 'filelist'
 								]
 							]
 						],
@@ -87,15 +87,15 @@ class BlueprintExtendAndUnsetTest extends TestCase
 		$this->assertNull($blueprint->tab('seo'));
 	}
 
-	public function testExtendAndUnsetSection(): void
+	public function testExtendAndUnsetFieldInTab(): void
 	{
 		$blueprint = new Blueprint([
 			'title'  => 'extended',
 			'model'  => new Page(['slug' => 'test']),
 			'extends' => 'pages/base',
 			'tabs'  => [
-				'content'  => [
-					'sections' => [
+				'content' => [
+					'fields' => [
 						'files' => false
 					]
 				]
