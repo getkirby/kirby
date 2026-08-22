@@ -107,6 +107,33 @@ class FileListFieldTest extends TestCase
 		$this->assertSame(3, $this->filelist()->total());
 	}
 
+	public function testImage(): void
+	{
+		$field = $this->filelist(['image' => ['back' => 'black']]);
+
+		$this->assertSame(['back' => 'black'], $field->image());
+		$this->assertSame('black', $field->data()[0]['image']['back']);
+	}
+
+	public function testImageDisabled(): void
+	{
+		$this->assertFalse($this->filelist(['image' => false])->image());
+	}
+
+	public function testImageQuery(): void
+	{
+		// a query string is a shortcut for the image source
+		$field = $this->filelist(['image' => 'file.parent.image("b.jpg")']);
+
+		$this->assertSame(['query' => 'file.parent.image("b.jpg")'], $field->image());
+
+		// the query is resolved per entry
+		$this->assertStringContainsString(
+			'b.jpg',
+			$field->data()[0]['image']['url']
+		);
+	}
+
 	public function testTextDefault(): void
 	{
 		$this->assertSame('{{ file.filename }}', $this->filelist()->text());
@@ -449,6 +476,13 @@ class FileListFieldTest extends TestCase
 			'multiple'   => true,
 			'preview'    => []
 		], $this->filelist()->upload());
+	}
+
+	public function testUploadWithImageQuery(): void
+	{
+		$upload = $this->filelist(['image' => 'file.parent.image("b.jpg")'])->upload();
+
+		$this->assertSame(['query' => 'file.parent.image("b.jpg")'], $upload['preview']);
 	}
 
 	public function testUploadWithMax(): void

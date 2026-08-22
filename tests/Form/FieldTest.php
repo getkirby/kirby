@@ -6,11 +6,20 @@ use Kirby\Cms\Language;
 use Kirby\Cms\Page;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Field\HiddenField;
+use Kirby\Form\Field\InfoField;
 use Kirby\Form\Field\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 class MockField extends Field
 {
+}
+
+class BrokenField extends Field
+{
+	public function props(): array
+	{
+		throw new InvalidArgumentException(message: 'Broken props');
+	}
 }
 
 #[CoversClass(Field::class)]
@@ -32,6 +41,17 @@ class FieldTest extends TestCase
 	{
 		$field = new MockField();
 		$this->assertSame([], $field->drawers());
+	}
+
+	public function testError(): void
+	{
+		$field = Field::error('test', 'Something went wrong');
+
+		$this->assertInstanceOf(InfoField::class, $field);
+		$this->assertSame('test', $field->name());
+		$this->assertSame('Error', $field->label());
+		$this->assertSame('negative', $field->theme());
+		$this->assertSame('<p>Something went wrong</p>', (string)$field->text());
 	}
 
 	public function testErrors(): void
@@ -229,5 +249,19 @@ class FieldTest extends TestCase
 		];
 
 		$this->assertSame($expected, $array);
+	}
+
+	public function testToArrayWithBrokenProps(): void
+	{
+		// a field that cannot resolve its props is replaced
+		// by an info field with the error message
+		$field = new BrokenField(name: 'test');
+		$array = $field->toArray();
+
+		$this->assertSame('info', $array['type']);
+		$this->assertSame('test', $array['name']);
+		$this->assertSame('Error', $array['label']);
+		$this->assertSame('negative', $array['theme']);
+		$this->assertSame('<p>Broken props</p>', (string)$array['text']);
 	}
 }

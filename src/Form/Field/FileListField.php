@@ -42,7 +42,7 @@ class FileListField extends ModelListField
 		array|string|null $empty = null,
 		bool|null $flip = null,
 		array|string|null $help = null,
-		array|false|null $image = null,
+		array|string|false|null $image = null,
 		array|string|null $info = null,
 		array|string|null $label = null,
 		string|null $layout = null,

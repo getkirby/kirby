@@ -12,6 +12,7 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Form\Interface\ProvidesNestedForm;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
+use Throwable;
 
 /**
  * A collection of Field objects
@@ -63,8 +64,20 @@ class Fields extends Collection
 			// use the array key as name if the name is not set
 			$field['model'] ??= $this->model;
 			$field['name']  ??= $name;
-			$class = Field::resolve($field['type'], $field['name']);
-			$field = $class::factory($field, $this);
+
+			// a field that fails to be created must not take down
+			// the entire view. It is replaced by an error field.
+			try {
+				$class = Field::resolve($field['type'], $field['name']);
+				$field = $class::factory($field, $this);
+			} catch (Throwable $e) {
+				$field = Field::error(
+					name:     $field['name'],
+					message:  $e->getMessage(),
+					model:    $field['model'],
+					siblings: $this
+				);
+			}
 		}
 
 		parent::__set($field->name(), $field);

@@ -11,6 +11,7 @@ use Kirby\Cms\TestCase;
 use Kirby\Cms\User;
 use Kirby\Exception\FormValidationException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Form\Field\InfoField;
 use Kirby\Form\Field\InputField;
 use Kirby\Form\Interface\ProvidesNestedForm;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -68,6 +69,53 @@ class FieldsTest extends TestCase
 
 		$this->assertSame($this->app->site(), $fields->first()->model());
 		$this->assertSame($this->app->site(), $fields->last()->model());
+	}
+
+	public function testConstructWithBrokenField(): void
+	{
+		// a field that cannot be created is replaced by
+		// an info field that shows the error message
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type' => 'does-not-exist',
+				],
+				'b' => [
+					'type' => 'text',
+				],
+			],
+			model: $this->model
+		);
+
+		$field = $fields->get('a');
+
+		$this->assertInstanceOf(InfoField::class, $field);
+		$this->assertSame('a', $field->name());
+		$this->assertSame($this->model, $field->model());
+		$this->assertSame($fields, $field->siblings());
+		$this->assertSame(
+			'<p>Field "a": The field type "does-not-exist" does not exist</p>',
+			(string)$field->text()
+		);
+
+		// the other fields are not affected
+		$this->assertSame('text', $fields->get('b')->type());
+	}
+
+	public function testConstructWithBrokenFieldProps(): void
+	{
+		// a valid type with invalid props is caught as well
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'      => 'text',
+					'maxlength' => 'nope',
+				],
+			],
+			model: $this->model
+		);
+
+		$this->assertInstanceOf(InfoField::class, $fields->get('a'));
 	}
 
 	public function testDefaults(): void
