@@ -113,18 +113,13 @@ class Router
 	}
 
 	/**
-	 * Response for the SVG icon sprite, which is referenced
-	 * by all `<use>` elements in the Panel
+	 * Response for the SVG icon sprite
 	 * @since 6.0.0
 	 */
 	public function icons(): Response
 	{
 		$assets = $this->panel->assets();
-
-		// the version hash in the URL only changes with a new release,
-		// so the sprite can be cached forever; the dev mode URL is busted
-		// by the modification time, which is only accurate to the second
-		$cache = $assets->isDev() === true
+		$cache  = $assets->isDev() === true
 			? 'no-store'
 			: 'public, max-age=31536000, immutable';
 

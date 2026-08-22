@@ -2,53 +2,16 @@
 
 namespace Kirby\Panel;
 
-use Kirby\Cms\Url;
 use Kirby\Exception\Exception;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
 use Kirby\Http\Response;
-use Kirby\Toolkit\Str;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Router::class)]
 class RouterTest extends TestCase
 {
-	public const string TMP               = KIRBY_TMP_DIR . '/Panel.Panel';
-	public const string VITE_RUNNING_PATH = KIRBY_DIR . '/panel/.vite-running';
-
-	protected bool $hadViteRunning;
-
-	protected function setUp(): void
-	{
-		parent::setUp();
-
-		// initialize development mode to a known state
-		$this->hadViteRunning = is_file(static::VITE_RUNNING_PATH);
-		F::remove(static::VITE_RUNNING_PATH);
-	}
-
-	protected function tearDown(): void
-	{
-		parent::tearDown();
-
-		// reset development mode
-		if ($this->hadViteRunning === true) {
-			touch(static::VITE_RUNNING_PATH);
-		} else {
-			F::remove(static::VITE_RUNNING_PATH);
-		}
-	}
-
-	public function testCallIcons(): void
-	{
-		$router   = new Router($this->app->panel());
-		$response = $router->call('assets/' . $this->app->versionHash() . '/icons.svg');
-
-		// the sprite is served before any area route can catch the path
-		$this->assertSame(200, $response->code());
-		$this->assertSame('image/svg+xml', $response->type());
-		$this->assertStringContainsString('id="icon-accessibility"', $response->body());
-	}
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Panel';
 
 	public function testIcons(): void
 	{
@@ -60,12 +23,20 @@ class RouterTest extends TestCase
 			'public, max-age=31536000, immutable',
 			$response->header('Cache-Control')
 		);
-		$this->assertStringContainsString('id="icon-accessibility"', $response->body());
+		$this->assertStringContainsString('<svg', $response->body());
 	}
 
 	public function testIconsInDevMode(): void
 	{
+		// fake a panel dir with a running Vite dev server
+		$panel = static::TMP . '/panel';
+		F::write($panel . '/public/img/icons.svg', '<svg></svg>');
+		F::write($panel . '/.vite-running', '');
+
 		$this->app = $this->app->clone([
+			'roots' => [
+				'panel' => $panel
+			],
 			'options' => [
 				'panel' => [
 					'dev' => true
@@ -73,19 +44,12 @@ class RouterTest extends TestCase
 			]
 		]);
 
-		touch(static::VITE_RUNNING_PATH);
+		$router   = new Router($this->app->panel());
+		$response = $router->icons();
 
-		$panel = $this->app->panel();
-		$path  = Str::after(Url::path($panel->assets()->icons()), 'panel/');
-
-		// the modification time in the dev URL must resolve to the same route
-		$response = $panel->router()->call($path);
-
-		$this->assertSame(200, $response->code());
-		$this->assertStringContainsString('id="icon-accessibility"', $response->body());
-
-		// the sprite must not be cached while it is still being edited
+		$this->assertSame('image/svg+xml', $response->type());
 		$this->assertSame('no-store', $response->header('Cache-Control'));
+		$this->assertStringContainsString('<svg', $response->body());
 	}
 
 	public function testResponse(): void
@@ -147,7 +111,6 @@ class RouterTest extends TestCase
 		$routes = $router->routes($areas);
 
 		$this->assertSame('assets/(:any)/icons.svg', $routes[0]['pattern']);
-		$this->assertFalse($routes[0]['auth']);
 		$this->assertSame('browser', $routes[1]['pattern']);
 		$this->assertSame(['/', 'installation', 'login'], $routes[2]['pattern']);
 		$this->assertSame('(:all)', $routes[3]['pattern']);

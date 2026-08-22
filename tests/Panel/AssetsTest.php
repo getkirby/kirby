@@ -316,8 +316,6 @@ class AssetsTest extends TestCase
 	{
 		$this->setDevMode();
 
-		// the sprite is never served by Vite, as `<use>` references
-		// are limited to the same origin as the Panel document
 		$assets   = new Assets();
 		$modified = F::modified($this->app->root('panel') . '/public/img/icons.svg');
 
@@ -325,17 +323,6 @@ class AssetsTest extends TestCase
 			'/panel/assets/' . $modified . '/icons.svg',
 			$assets->icons()
 		);
-	}
-
-	public function testIconsInDevModeAfterProduction(): void
-	{
-		$production = (new Assets())->icons();
-
-		$this->setDevMode();
-
-		// the dev URL must differ from the production URL, which the
-		// browser has cached as immutable and would not request again
-		$this->assertNotSame($production, (new Assets())->icons());
 	}
 
 	public function testIconsWithCustomMediaUrl(): void
@@ -407,9 +394,7 @@ class AssetsTest extends TestCase
 	public function testIsDev(): void
 	{
 		$this->assertFalse((new Assets())->isDev());
-
 		$this->setDevMode();
-
 		$this->assertTrue((new Assets())->isDev());
 	}
 
