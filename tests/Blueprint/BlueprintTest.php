@@ -9,6 +9,7 @@ use Kirby\Cms\Page;
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
+use Kirby\Form\Fields;
 use Kirby\TestCase;
 use Kirby\Toolkit\I18n;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -584,7 +585,18 @@ class BlueprintTest extends TestCase
 			]
 		]);
 
-		$this->assertSame('Last', $blueprint->field('MIXEDCASING')['label']);
+		// names are lowercased further down the line, so both
+		// definitions are the same field and collide with each other
+		$this->assertSame('First', $blueprint->field('MIXEDCASING')['label']);
+		$this->assertSame('text', $blueprint->field('MIXEDCASING')['type']);
+
+		$error = $blueprint->field('MixedCasing-duplicate-1');
+
+		$this->assertSame('info', $error['type']);
+		$this->assertSame(
+			'The field <strong>"MixedCasing"</strong> already exists in your blueprint',
+			$error['text']
+		);
 	}
 
 	public function testNestedFields(): void
@@ -716,19 +728,118 @@ class BlueprintTest extends TestCase
 			]
 		]);
 
-		// sections and fields share a single namespace, so the
-		// second definition is replaced by a duplicate name error
+		// sections and fields share a single namespace, so the first
+		// definition keeps the name and the second one is turned
+		// into a duplicate name error with a name of its own
 		$field = $blueprint->field('info');
 
-		$this->assertSame('info', $field['type']);
-		$this->assertSame('negative', $field['theme']);
+		$this->assertSame('text', $field['type']);
+
+		$error = $blueprint->field('info-duplicate-1');
+
+		$this->assertSame('info', $error['type']);
+		$this->assertSame('negative', $error['theme']);
 		$this->assertSame(
 			'The field <strong>"info"</strong> already exists in your blueprint',
-			$field['text']
+			$error['text']
 		);
 	}
 
+	public function testSectionAndFieldOfSameNameKeepStoredValues(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'blueprints' => [
+				'pages/note' => [
+					'fields' => [
+						'shared' => ['type' => 'text'],
+						'other'  => ['type' => 'text']
+					],
+					'sections' => [
+						'main' => [
+							'type'   => 'fields',
+							'fields' => ['shared', 'other']
+						],
+						'aside' => [
+							'type'   => 'fields',
+							'fields' => ['shared']
+						]
+					]
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'note',
+						'template' => 'note',
+						'content'  => [
+							'shared' => 'keepme',
+							'other'  => 'old'
+						]
+					]
+				]
+			]
+		]);
 
+		$page = $app->page('note');
+
+		// the first reference keeps a storable field, so its value
+		// survives when an unrelated field is submitted
+		$this->assertSame('text', $page->blueprint()->field('shared')['type']);
+		$this->assertSame('info', $page->blueprint()->field('shared-duplicate-1')['type']);
+
+		$fields = Fields::for($page);
+		$fields->fill(input: $page->content()->toArray());
+		$fields->submit(input: ['other' => 'new']);
+
+		$this->assertSame('keepme', $fields->toStoredValues()['shared']);
+	}
+
+	public function testSectionAndFieldOfSameNameRenderInTheTab(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'blueprints' => [
+				'pages/album' => [
+					'tabs' => [
+						'images' => [
+							'sections' => [
+								'files' => ['type' => 'files', 'template' => 'image']
+							]
+						],
+						'docs' => [
+							'sections' => [
+								'files' => ['type' => 'files', 'template' => 'document']
+							]
+						]
+					]
+				]
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'album', 'template' => 'album']
+				]
+			]
+		]);
+
+		$page   = $app->page('album');
+		$fields = Fields::for($page);
+
+		// the Panel resolves each column from the field registry, so
+		// both the surviving field and the error need an entry of their own
+		$images = $page->blueprint()->tab('images')->columns($fields);
+		$docs   = $page->blueprint()->tab('docs')->columns($fields);
+
+		$this->assertSame(['files'], array_keys($images[0]['fields']));
+		$this->assertSame('filelist', $images[0]['fields']['files']['type']);
+
+		$this->assertSame(['files-duplicate-1'], array_keys($docs[0]['fields']));
+		$this->assertSame('info', $docs[0]['fields']['files-duplicate-1']['type']);
+	}
 
 	public function testAutomaticLabelForFields()
 	{
