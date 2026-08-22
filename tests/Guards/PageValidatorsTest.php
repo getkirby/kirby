@@ -354,6 +354,42 @@ class PageValidatorsTest extends ModelTestCase
 		$validators->validateMoveToTemplate($this->app->page('parent-b'));
 	}
 
+	public function testMoveToTemplateWithDuplicateName(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/parent' => [
+					'sections' => [
+						'photos' => [
+							'type'     => 'pages',
+							'template' => 'child'
+						],
+						'details' => [
+							'type'   => 'fields',
+							'fields' => [
+								'photos' => ['type' => 'text']
+							]
+						]
+					]
+				]
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'parent-a', 'template' => 'child'],
+					['slug' => 'parent-b', 'template' => 'parent']
+				]
+			]
+		]);
+
+		$validators = $this->validators($this->app->page('parent-a'));
+
+		// the pages section claimed the name first, so it keeps its
+		// page list field and the parent stays parentable
+		$validators->validateMoveToTemplate($this->app->page('parent-b'));
+
+		$this->assertTrue(true);
+	}
+
 	public function testMoveToTemplateWithInvalidTemplate(): void
 	{
 		$this->app = $this->app->clone([

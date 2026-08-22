@@ -382,10 +382,11 @@ class BlueprintFieldReferencesTest extends TestCase
 
 		// Second tab should show an error because field is already used
 		$tab2Fields = $tabs['tab2']['columns'][0]['fields'];
-		$this->assertArrayHasKey('sharedField', $tab2Fields);
-		$this->assertSame('info', $tab2Fields['sharedField']['type']);
-		$this->assertSame('negative', $tab2Fields['sharedField']['theme']);
-		$this->assertStringContainsString('already exists', $tab2Fields['sharedField']['text']);
+		$this->assertArrayNotHasKey('sharedField', $tab2Fields);
+		$this->assertArrayHasKey('sharedField-duplicate-1', $tab2Fields);
+		$this->assertSame('info', $tab2Fields['sharedField-duplicate-1']['type']);
+		$this->assertSame('negative', $tab2Fields['sharedField-duplicate-1']['theme']);
+		$this->assertStringContainsString('already exists', $tab2Fields['sharedField-duplicate-1']['text']);
 	}
 
 	public function testSectionWhenPushedToReferencedFields(): void

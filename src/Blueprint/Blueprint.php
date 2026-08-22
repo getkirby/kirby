@@ -28,8 +28,7 @@ class Blueprint
 
 	protected AcceptRules|null $acceptRules = null;
 
-	protected array $fields = [];
-	protected array|null $fieldsLower = null;
+	protected FieldsRegistry $fields;
 	protected ModelWithContent $model;
 	protected array $props;
 	protected Tabs|null $tabs = null;
@@ -174,13 +173,7 @@ class Blueprint
 	 */
 	public function field(string $name): array|null
 	{
-		if (isset($this->fields[$name]) === true) {
-			return $this->fields[$name];
-		}
-
-		// field objects use normalized lowercase keys
-		$this->fieldsLower ??= array_change_key_case($this->fields);
-		return $this->fieldsLower[Str::lower($name)] ?? null;
+		return $this->fields->get($name);
 	}
 
 	/**
@@ -213,7 +206,7 @@ class Blueprint
 	 */
 	public function fields(): array
 	{
-		return $this->fields;
+		return $this->fields->toArray();
 	}
 
 	/**
@@ -221,7 +214,7 @@ class Blueprint
 	 * types and widths.
 	 * Facade for `Normalizer::normalizeFieldsProps()`
 	 *
-	 * @return array<string, array>
+	 * @return array<string|int, array>
 	 */
 	public static function fieldsProps(mixed $fields): array
 	{
