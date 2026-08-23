@@ -62,9 +62,13 @@ class OptionsApi extends OptionsProvider
 		// resolve query templates in $this->url string
 		$url = $model->toSafeString($this->url);
 
-		// URL, request via cURL
+		// URL, request via cURL; the host in the blueprint is
+		// trusted (it may well be a local or intranet host), but a
+		// host that was injected by a query template is not
 		if (Url::isAbsolute($url) === true) {
-			return Remote::get($url)->json();
+			$safe = Url::sameHost($url, $this->url) === false;
+
+			return Remote::get($url, ['safe' => $safe])->json();
 		}
 
 		// local file

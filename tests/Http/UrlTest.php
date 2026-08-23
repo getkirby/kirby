@@ -214,6 +214,22 @@ class UrlTest extends TestCase
 		$this->assertSame('a=b', Url::query('https://getkirby.com/?a=b'));
 	}
 
+	public function testSameHost(): void
+	{
+		$this->assertTrue(Url::sameHost('https://getkirby.com/a', 'https://getkirby.com/b'));
+		$this->assertTrue(Url::sameHost('https://getkirby.com', 'http://getkirby.com:8080'));
+		$this->assertTrue(Url::sameHost('https://api.example.test/x', 'https://api.example.test/{{ page.slug }}'));
+
+		$this->assertFalse(Url::sameHost('https://getkirby.com', 'https://example.com'));
+		$this->assertFalse(Url::sameHost('https://getkirby.com@evil.com', 'https://getkirby.com'));
+		$this->assertFalse(Url::sameHost('https://evil.com', 'https://{{ page.host }}'));
+
+		// a missing or unparsable host never counts as a match
+		$this->assertFalse(Url::sameHost('/relative', '/relative'));
+		$this->assertFalse(Url::sameHost(null, null));
+		$this->assertFalse(Url::sameHost('https://getkirby.com', null));
+	}
+
 	public function testShort(): void
 	{
 		$this->assertSame('getkirby.com/docs', Url::short($this->_docs));

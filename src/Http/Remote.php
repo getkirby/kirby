@@ -11,8 +11,7 @@ use Kirby\Toolkit\Str;
 use stdClass;
 
 /**
- * A handy little class to handle
- * all kinds of remote requests
+ * A handy little class to handle all kinds of remote requests
  *
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
@@ -34,6 +33,7 @@ class Remote
 		'method'    => 'GET',
 		'progress'  => null,
 		'protocols' => CURLPROTO_HTTP | CURLPROTO_HTTPS,
+		'safe'      => false,
 		'test'      => false,
 		'timeout'   => 10,
 	];
@@ -244,6 +244,11 @@ class Remote
 				break;
 		}
 
+		// SSRF protection
+		if ($this->options['safe'] === true) {
+			$this->guard();
+		}
+
 		if ($this->options['test'] === true) {
 			return $this;
 		}
@@ -291,6 +296,61 @@ class Remote
 		unset($options['data']);
 
 		return new static($url, $options);
+	}
+
+	/**
+	 * Rejects the request for the `safe` option if the host
+	 * resolves to a private or reserved address
+	 * @since 6.0.0
+	 *
+	 * @throws InvalidArgumentException when the URL is not allowed
+	 */
+	protected function guard(): void
+	{
+		$parts = parse_url($this->options['url']);
+		$host  = $parts['host'] ?? '';
+
+		if ($host === '') {
+			throw new InvalidArgumentException(
+				message: 'The "safe" option can only be used with an absolute URL'
+			);
+		}
+
+		$host      = trim($host, '[]');
+		$host      = Idn::encode($host) ?: $host;
+		$addresses = $this->resolveHost($host);
+
+		foreach ($addresses as $address) {
+			$public = filter_var(
+				$address,
+				FILTER_VALIDATE_IP,
+				FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE
+			);
+
+			if ($public === false) {
+				throw new InvalidArgumentException(
+					message: 'The URL "' . $this->options['url'] . '" is not allowed in safe mode'
+				);
+			}
+		}
+
+		// a redirect target cannot be validated before the request
+		$this->curlopt[CURLOPT_FOLLOWLOCATION] = false;
+
+		// an IP address has nothing to pin
+		if ($addresses === [$host]) {
+			return;
+		}
+
+		$scheme = strtolower($parts['scheme'] ?? 'http');
+		$port   = $parts['port'] ?? match ($scheme) {
+			'https' => 443,
+			default => 80
+		};
+
+		$this->curlopt[CURLOPT_RESOLVE] = [
+			$host . ':' . $port . ':' . implode(',', $addresses)
+		];
 	}
 
 	/**
@@ -368,6 +428,36 @@ class Remote
 	public static function request(string $url, array $params = []): static
 	{
 		return new static($url, $params);
+	}
+
+	/**
+	 * Resolves a hostname to all of its IPv4 and IPv6 addresses
+	 * @since 6.0.0
+	 *
+	 * @throws InvalidArgumentException when the host cannot be resolved
+	 */
+	protected function resolveHost(string $host): array
+	{
+		if (filter_var($host, FILTER_VALIDATE_IP) !== false) {
+			return [$host];
+		}
+
+		// A records; gethostbynamel() ignores AAAA records
+		$addresses = gethostbynamel($host) ?: [];
+
+		foreach (@dns_get_record($host, DNS_AAAA) ?: [] as $record) {
+			if (isset($record['ipv6']) === true) {
+				$addresses[] = $record['ipv6'];
+			}
+		}
+
+		if ($addresses === []) {
+			throw new InvalidArgumentException(
+				message: 'The host "' . $host . '" could not be resolved'
+			);
+		}
+
+		return array_values(array_unique($addresses));
 	}
 
 	/**
