@@ -5,8 +5,35 @@ namespace Kirby\Form\Field;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(WriterField::class)]
+#[CoversClass(ProseMirrorField::class)]
 class WriterFieldTest extends TestCase
 {
+	public function testHeadings(): void
+	{
+		$field = $this->field('writer');
+
+		$this->assertSame([1, 2, 3, 4, 5, 6], $field->headings());
+
+		$field = $this->field('writer', [
+			'headings' => [1, 2]
+		]);
+
+		$this->assertSame([1, 2], $field->headings());
+	}
+
+	public function testInline(): void
+	{
+		$field = $this->field('writer');
+
+		$this->assertFalse($field->inline());
+
+		$field = $this->field('writer', [
+			'inline' => true
+		]);
+
+		$this->assertTrue($field->inline());
+	}
+
 	public function testMarks(): void
 	{
 		$field = $this->field('writer', [
@@ -71,6 +98,15 @@ class WriterFieldTest extends TestCase
 		$this->assertSame('', $field->toFormValue());
 	}
 
+	public function testToFormValueSanitized(): void
+	{
+		$field = $this->field('writer', [
+			'value' => 'This is a <strong>test</strong><script>alert("Hacked")</script> with <em>formatting</em> and a <a href="/@/page/abcde">UUID link</a>'
+		]);
+
+		$this->assertSame('This is a <strong>test</strong> with <em>formatting</em> and a <a href="/@/page/abcde">UUID link</a>', $field->toFormValue());
+	}
+
 	public function testToFormValueTrimmed(): void
 	{
 		$field = $this->field('writer', [
@@ -80,13 +116,17 @@ class WriterFieldTest extends TestCase
 		$this->assertSame('test', $field->toFormValue());
 	}
 
-	public function testToFormValueSanitized(): void
+	public function testToolbar(): void
 	{
+		$field = $this->field('writer');
+
+		$this->assertNull($field->toolbar());
+
 		$field = $this->field('writer', [
-			'value' => 'This is a <strong>test</strong><script>alert("Hacked")</script> with <em>formatting</em> and a <a href="/@/page/abcde">UUID link</a>'
+			'toolbar' => $toolbar = ['marks' => ['bold']]
 		]);
 
-		$this->assertSame('This is a <strong>test</strong> with <em>formatting</em> and a <a href="/@/page/abcde">UUID link</a>', $field->toFormValue());
+		$this->assertSame($toolbar, $field->toolbar());
 	}
 
 	public function testValidateMaxlength(): void
