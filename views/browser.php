@@ -1,3 +1,17 @@
+<?php
+
+use Kirby\Toolkit\Html;
+
+/**
+ * @var array<string, string> $browsers
+ */
+$list = [];
+
+foreach ($browsers as $browser => $version) {
+	$list[] = Html::encode($browser . ' ' . $version);
+}
+
+?>
 <?php include __DIR__ . '/snippets/header.php' ?>
 
   <p class="notice">
@@ -7,14 +21,11 @@
 
   <div class="admin-advice">
     <p>
-        <strong>Fetch</strong><br>
-        We use Javascript's new Fetch API. You can find a list of supported browsers for this feature on
-        <strong><a href="https://caniuse.com/#feat=fetch">caniuse.com</a></strong>
+      The Panel needs one of these browsers or higher:<br>
+      <strong><?= implode(', ', $list) ?></strong>
     </p>
     <p>
-        <strong>CSS Grid</strong><br>
-        We use CSS Grids for all our layouts. You can find a list of supported browsers for this feature on
-        <strong><a href="https://caniuse.com/#feat=css-grid">caniuse.com</a></strong>
+      Please update your browser or switch to a different one.
     </p>
   </div>
 

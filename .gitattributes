@@ -13,12 +13,13 @@ psalm.xml.dist export-ignore
 tests/ export-ignore
 
 # panel
+# .browserslistrc is intentionally not ignored, it is read at runtime
 panel/.env.example export-ignore
+panel/.gitignore export-ignore
 panel/.prettierignore export-ignore
 panel/.prettierrc.json export-ignore
 panel/dist/ui export-ignore
-panel/eslint.config.mjs export-ignore
-panel/jsconfig.json export-ignore
+panel/eslint.config.js export-ignore
 panel/lab export-ignore
 panel/package-lock.json export-ignore
 panel/package.json export-ignore
@@ -27,8 +28,8 @@ panel/README.md export-ignore
 panel/scripts export-ignore
 panel/src export-ignore
 panel/tests export-ignore
-panel/vite.config.mjs export-ignore
-panel/vitest.setup.js export-ignore
+panel/tsconfig.json export-ignore
+panel/vite.config.ts export-ignore
 
 # other
 .tx export-ignore

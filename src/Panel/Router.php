@@ -164,7 +164,10 @@ class Router
 				'pattern' => 'browser',
 				'auth'    => false,
 				'action'  => fn () => new Response(
-					Tpl::load($kirby->root('kirby') . '/views/browser.php')
+					Tpl::load(
+						$kirby->root('kirby') . '/views/browser.php',
+						['browsers' => $panel->browsers()]
+					)
 				),
 			]
 		];
