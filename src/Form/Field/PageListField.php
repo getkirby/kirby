@@ -54,60 +54,14 @@ class PageListField extends ModelListField implements ProvidesAcceptedBlueprints
 	protected array|string|null $templatesIgnore;
 
 	public function __construct(
-		bool|null $batch = null,
-		array|null $columns = null,
 		array|string|bool|null $create = null,
-		array|string|null $empty = null,
-		bool|null $flip = null,
-		array|string|null $help = null,
-		array|string|false|null $image = null,
-		array|string|null $info = null,
-		array|string|null $label = null,
-		string|null $layout = null,
-		int|null $limit = null,
-		int|null $max = null,
-		int|null $min = null,
-		string|null $name = null,
-		int|null $page = null,
-		string|null $parent = null,
-		string|null $query = null,
-		bool|null $search = null,
-		string|null $size = null,
-		bool|null $sortable = null,
-		string|null $sortBy = null,
 		string|null $status = null,
 		string|array|null $template = null,
 		array|string|null $templates = null,
 		array|string|null $templatesIgnore = null,
-		array|string|null $text = null,
-		array|null $when = null,
-		string|null $width = null
+		mixed ...$args
 	) {
-		parent::__construct(
-			batch:    $batch,
-			columns:  $columns,
-			empty:    $empty,
-			flip:     $flip,
-			help:     $help,
-			image:    $image,
-			info:     $info,
-			label:    $label,
-			layout:   $layout,
-			limit:    $limit,
-			max:      $max,
-			min:      $min,
-			name:     $name,
-			page:     $page,
-			parent:   $parent,
-			query:    $query,
-			search:   $search,
-			size:     $size,
-			sortable: $sortable,
-			sortBy:   $sortBy,
-			text:     $text,
-			when:     $when,
-			width:    $width
-		);
+		parent::__construct(...$args);
 
 		$this->create          = $create;
 		$this->status          = $status;
