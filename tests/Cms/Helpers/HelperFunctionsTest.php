@@ -1013,7 +1013,7 @@ class HelperFunctionsTest extends TestCase
 	public function testVideo(): void
 	{
 		$video    = video('https://youtube.com/watch?v=xB3s_f7PzYk');
-		$expected = '<iframe allow="fullscreen" allowfullscreen src="https://youtube.com/embed/xB3s_f7PzYk"></iframe>';
+		$expected = '<iframe allow="fullscreen" allowfullscreen src="https://www.youtube.com/embed/xB3s_f7PzYk"></iframe>';
 
 		$this->assertSame($expected, $video);
 	}
@@ -1026,7 +1026,7 @@ class HelperFunctionsTest extends TestCase
 			]
 		]);
 
-		$expected = '<iframe allow="fullscreen" allowfullscreen src="https://youtube.com/embed/xB3s_f7PzYk?controls=0"></iframe>';
+		$expected = '<iframe allow="fullscreen" allowfullscreen src="https://www.youtube.com/embed/xB3s_f7PzYk?controls=0"></iframe>';
 
 		$this->assertSame($expected, $video);
 	}
@@ -1071,7 +1071,7 @@ class HelperFunctionsTest extends TestCase
 	public function testYoutube(): void
 	{
 		$video    = youtube('https://youtube.com/watch?v=xB3s_f7PzYk');
-		$expected = '<iframe allow="fullscreen" allowfullscreen src="https://youtube.com/embed/xB3s_f7PzYk"></iframe>';
+		$expected = '<iframe allow="fullscreen" allowfullscreen src="https://www.youtube.com/embed/xB3s_f7PzYk"></iframe>';
 
 		$this->assertSame($expected, $video);
 	}
@@ -1079,7 +1079,7 @@ class HelperFunctionsTest extends TestCase
 	public function testYoutubeWithOptions(): void
 	{
 		$video    = youtube('https://youtube.com/watch?v=xB3s_f7PzYk', ['controls' => 0]);
-		$expected = '<iframe allow="fullscreen" allowfullscreen src="https://youtube.com/embed/xB3s_f7PzYk?controls=0"></iframe>';
+		$expected = '<iframe allow="fullscreen" allowfullscreen src="https://www.youtube.com/embed/xB3s_f7PzYk?controls=0"></iframe>';
 
 		$this->assertSame($expected, $video);
 	}
