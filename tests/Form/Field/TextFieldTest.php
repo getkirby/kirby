@@ -7,6 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 #[CoversClass(TextField::class)]
+#[CoversClass(StringField::class)]
 class TextFieldTest extends TestCase
 {
 	public static function converterDataProvider(): array

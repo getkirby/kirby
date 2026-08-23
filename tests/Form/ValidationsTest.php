@@ -27,9 +27,9 @@ class ValidationsField extends InputField
 		int|null $minlength = null,
 		array|string|null $options = null,
 		string|null $pattern = null,
-		bool|null $required = null
+		mixed ...$args
 	) {
-		parent::__construct(required: $required);
+		parent::__construct(...$args);
 
 		$this->max       = $max;
 		$this->maxlength = $maxlength;
