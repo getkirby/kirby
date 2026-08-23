@@ -76,6 +76,7 @@ class ViewDocumentResponseTest extends TestCase
 		$response = new ViewDocumentResponse();
 		$this->assertArrayHasKey('Content-Security-Policy', $response->headers());
 		$this->assertSame($response->cors(), $response->headers()['Content-Security-Policy']);
+		$this->assertSame('noindex, nofollow', $response->headers()['X-Robots-Tag']);
 	}
 
 	public function testType(): void
