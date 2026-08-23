@@ -31,7 +31,7 @@ abstract class StringField extends InputField
 
 		$this->maxlength   = $maxlength;
 		$this->minlength   = $minlength;
-		$this->placeholder = $placeholder;
+		$this->placeholder = $placeholder ?? $this->placeholder;
 		$this->spellcheck  = $spellcheck;
 	}
 

@@ -13,7 +13,7 @@ trait Autocomplete
 	/**
 	 * Sets the HTML5 autocomplete mode for the input
 	 */
-	protected string|null $autocomplete;
+	protected string|null $autocomplete = null;
 
 	public function autocomplete(): string|null
 	{

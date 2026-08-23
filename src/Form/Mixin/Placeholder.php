@@ -13,7 +13,7 @@ trait Placeholder
 	/**
 	 * Optional placeholder value that will be shown when the field is empty
 	 */
-	protected array|string|null $placeholder;
+	protected array|string|null $placeholder = null;
 
 	public function placeholder(): string|null
 	{

@@ -11,18 +11,7 @@ namespace Kirby\Form\Field;
  */
 class TelField extends TextField
 {
-	public function autocomplete(): string
-	{
-		return $this->autocomplete ?? 'tel';
-	}
-
-	public function counter(): bool
-	{
-		return $this->counter ?? false;
-	}
-
-	public function icon(): string
-	{
-		return $this->icon ?? 'phone';
-	}
+	protected string|null $autocomplete = 'tel';
+	protected bool $counter = false;
+	protected string|null $icon = 'phone';
 }

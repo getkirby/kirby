@@ -12,6 +12,7 @@ use Kirby\Data\Data;
 use Kirby\Data\Json;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Form;
+use Kirby\Reflection\Attributes\Derived;
 use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Str;
 use Throwable;
@@ -27,7 +28,8 @@ class LayoutField extends BlocksField
 	/**
 	 * Define available layouts. Each layout is list of column widths. (e.g. 1/2, 1/2 or 1/4, 3/4)
 	 */
-	protected array|null $layouts;
+	#[Derived]
+	protected array|null $layouts = ['1/1'];
 
 	/**
 	 * Customize the `size` and `columns` in the layout selector to account for the number of different layouts you have defined via the layouts property. Available sizes: `small`, `medium` (default), `large`, `huge`. Default columns: `3`
@@ -52,7 +54,7 @@ class LayoutField extends BlocksField
 	) {
 		parent::__construct(...$args);
 
-		$this->layouts  = $layouts;
+		$this->layouts  = $layouts ?? $this->layouts;
 		$this->selector = $selector;
 		$this->settings = $settings;
 	}
@@ -187,7 +189,7 @@ class LayoutField extends BlocksField
 
 	public function layouts(): array
 	{
-		return array_map(Str::split(...), $this->layouts ?? ['1/1']);
+		return array_map(Str::split(...), $this->layouts);
 	}
 
 	/**

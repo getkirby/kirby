@@ -11,8 +11,5 @@ namespace Kirby\Form\Field;
  */
 class PasswordField extends TextField
 {
-	public function icon(): string
-	{
-		return $this->icon ?? 'key';
-	}
+	protected string|null $icon = 'key';
 }

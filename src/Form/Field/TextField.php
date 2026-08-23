@@ -36,12 +36,12 @@ class TextField extends StringField
 		parent::__construct(...$args);
 
 		$this->after        = $after;
-		$this->autocomplete = $autocomplete;
+		$this->autocomplete = $autocomplete ?? $this->autocomplete;
 		$this->before       = $before;
 		$this->converter    = $converter;
-		$this->counter      = $counter;
-		$this->font         = $font;
-		$this->icon         = $icon;
+		$this->counter      = $counter ?? $this->counter;
+		$this->font         = $font ?? $this->font;
+		$this->icon         = $icon ?? $this->icon;
 		$this->pattern      = $pattern;
 	}
 

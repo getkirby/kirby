@@ -13,10 +13,10 @@ trait Duplicate
 	/**
 	 * Allow duplicating items in the field
 	 */
-	protected bool|null $duplicate;
+	protected bool $duplicate = true;
 
 	public function duplicate(): bool
 	{
-		return $this->duplicate ?? true;
+		return $this->duplicate;
 	}
 }

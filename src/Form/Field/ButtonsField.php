@@ -17,7 +17,7 @@ class ButtonsField extends DisplayField
 	/**
 	 * Array or query string for buttons
 	 */
-	protected array|string|null $buttons;
+	protected array|string $buttons = [];
 
 	public function __construct(
 		array|string|null $buttons = null,
@@ -25,12 +25,12 @@ class ButtonsField extends DisplayField
 	) {
 		parent::__construct(...$args);
 
-		$this->buttons = $buttons;
+		$this->buttons = $buttons ?? $this->buttons;
 	}
 
 	public function buttons(): array
 	{
-		$buttons = $this->buttons ?? [];
+		$buttons = $this->buttons;
 
 		if (is_string($buttons) === true) {
 			$buttons = $this->model()->query($buttons);

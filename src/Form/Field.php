@@ -44,7 +44,7 @@ abstract class Field implements Stringable
 	) {
 		$this->name  = $name;
 		$this->when  = $when;
-		$this->width = $width;
+		$this->width = $width ?? $this->width;
 	}
 
 	public function __toString(): string

@@ -11,6 +11,7 @@ use Kirby\Exception\PermissionException;
 use Kirby\Form\Form;
 use Kirby\Form\Mixin;
 use Kirby\Panel\Collector\ModelsCollector;
+use Kirby\Reflection\Attributes\Derived;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
@@ -27,7 +28,6 @@ abstract class ModelListField extends DisplayField
 {
 	use Mixin\Batch;
 	use Mixin\EmptyState;
-	use Mixin\Layout;
 	use Mixin\Limit;
 	use Mixin\Max;
 	use Mixin\Sortable;
@@ -43,7 +43,8 @@ abstract class ModelListField extends DisplayField
 	/**
 	 * Columns config for `layout: table`
 	 */
-	protected array|null $columns;
+	#[Derived]
+	protected array|null $columns = null;
 
 	protected array|null $columnsCache = null;
 	protected array|null $columnFieldsCache = null;
@@ -51,18 +52,23 @@ abstract class ModelListField extends DisplayField
 	/**
 	 * If `true`, the order of the entries is reversed
 	 */
-	protected bool|null $flip;
+	protected bool $flip = false;
 
 	/**
 	 * Image options for each entry, a query string for the preview
 	 * image or `false` to disable previews
 	 */
-	protected array|string|false|null $image;
+	protected array|string|false $image = [];
 
 	/**
 	 * Info text shown next to or below the main text of each entry
 	 */
 	protected array|string|null $info;
+
+	/**
+	 * Switch the layout for the field
+	 */
+	protected string $layout = 'list';
 
 	/**
 	 * Sets the minimum number of required entries
@@ -92,12 +98,12 @@ abstract class ModelListField extends DisplayField
 	/**
 	 * The size of the cards for `layout: cards`
 	 */
-	protected string|null $size;
+	protected string $size = 'auto';
 
 	/**
 	 * Setup for the main text of each entry
 	 */
-	protected array|string|null $text;
+	protected array|string|null $text = null;
 
 	public function __construct(
 		bool|null $batch = null,
@@ -122,24 +128,24 @@ abstract class ModelListField extends DisplayField
 	) {
 		parent::__construct(...$args);
 
-		$this->batch      = $batch;
+		$this->batch      = $batch ?? $this->batch;
 		$this->columns    = $columns;
 		$this->empty      = $empty;
-		$this->flip       = $flip;
-		$this->image      = $image;
+		$this->flip       = $flip ?? $this->flip;
+		$this->image      = $image ?? $this->image;
 		$this->info       = $info;
-		$this->layout     = $layout;
-		$this->limit      = $limit;
+		$this->layout     = $layout ?? $this->layout;
+		$this->limit      = $limit ?? $this->limit;
 		$this->max        = $max;
 		$this->min        = $min;
 		$this->page       = $page;
 		$this->parent     = $parent;
 		$this->query      = $query;
 		$this->searchable = $search;
-		$this->size       = $size;
-		$this->sortable   = $sortable;
+		$this->size       = $size ?? $this->size;
+		$this->sortable   = $sortable ?? $this->sortable;
 		$this->sortBy     = $sortBy;
-		$this->text       = $text;
+		$this->text       = $text ?? $this->text;
 	}
 
 	/**
@@ -391,7 +397,7 @@ abstract class ModelListField extends DisplayField
 
 	public function flip(): bool
 	{
-		return $this->flip ?? false;
+		return $this->flip;
 	}
 
 	public function image(): array|false
@@ -400,7 +406,7 @@ abstract class ModelListField extends DisplayField
 			return ['query' => $this->image];
 		}
 
-		return $this->image ?? [];
+		return $this->image;
 	}
 
 	public function info(): string|null
@@ -420,17 +426,12 @@ abstract class ModelListField extends DisplayField
 	public function layout(): string
 	{
 		return match ($this->layout) {
-			'cardlets' => 'cardlets',
-			'cards'    => 'cards',
-			'table'    => 'table',
-			default    => 'list'
+			'cardlets', 'cards', 'table' => $this->layout,
+			default                      => 'list'
 		};
 	}
 
-	public function limit(): int
-	{
-		return $this->limit ?? 20;
-	}
+
 
 	/**
 	 * Panel link to the parent, unless it is the field's own model
@@ -580,7 +581,7 @@ abstract class ModelListField extends DisplayField
 
 	public function size(): string
 	{
-		return $this->size ?? 'auto';
+		return $this->size;
 	}
 
 	public function sortable(): bool

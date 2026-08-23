@@ -11,25 +11,10 @@ namespace Kirby\Form\Field;
  */
 class UrlField extends TextField
 {
-	public function autocomplete(): string
-	{
-		return $this->autocomplete ?? 'url';
-	}
-
-	public function counter(): bool
-	{
-		return $this->counter ?? false;
-	}
-
-	public function icon(): string
-	{
-		return $this->icon ?? 'url';
-	}
-
-	public function placeholder(): string
-	{
-		return parent::placeholder() ?? 'https://example.com';
-	}
+	protected array|string|null $placeholder = 'https://example.com';
+	protected string|null $autocomplete = 'url';
+	protected bool $counter = false;
+	protected string|null $icon = 'url';
 
 	protected function validations(): array
 	{
