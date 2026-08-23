@@ -170,7 +170,16 @@ class UserEmailChallengeDrawerControllerTest extends TestCase
 
 		$controller = new UserEmailChallengeDrawerController($this->app->user('test'));
 
-		$this->assertTrue($controller->submit());
+		try {
+			$controller->submit();
+			$this->fail('Expected PermissionException was not thrown');
+		} catch (PermissionException $e) {
+			$this->assertSame(
+				'You cannot send a login code for test@getkirby.com',
+				$e->getMessage()
+			);
+		}
+
 		$this->assertSame([], Email::$emails);
 
 		// nothing was sent, so the other user's budget must stay untouched

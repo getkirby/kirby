@@ -6,6 +6,7 @@ use Kirby\Auth\Challenge\EmailChallenge;
 use Kirby\Cms\User;
 use Kirby\Cms\UserRules;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\PermissionException;
 use Kirby\Panel\Ui\Drawer;
 
 /**
@@ -63,11 +64,17 @@ class UserEmailChallengeDrawerController extends UserCredentialDrawerController
 	/**
 	 * Sends a one-time code to the user's email address and
 	 * remembers it for the following create/remove action.
+	 *
+	 * @throws PermissionException If the code is not for the current user
 	 */
 	protected function send(): User
 	{
+		// only the account owner can prove that their own inbox is
+		// reachable; an admin manages the challenge with their password
 		if ($this->isCurrentUser() === false) {
-			return $this->user;
+			throw new PermissionException(
+				message: 'You cannot send a login code for ' . $this->user->email()
+			);
 		}
 
 		$limits = $this->kirby->auth()->limits();
