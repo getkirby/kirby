@@ -23,7 +23,7 @@ class HiddenField extends ValueField
 		);
 
 		$this->default   = $default;
-		$this->translate = $translate;
+		$this->translate = $translate ?? $this->translate;
 	}
 
 	public function isHidden(): bool

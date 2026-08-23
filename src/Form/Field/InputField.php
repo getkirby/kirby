@@ -22,7 +22,6 @@ abstract class InputField extends ValueField
 	use Mixin\Label;
 	use Mixin\Required;
 	use Mixin\Validation;
-	use Mixin\Width;
 
 	public function __construct(
 		bool|null $autofocus = null,
@@ -36,13 +35,13 @@ abstract class InputField extends ValueField
 	) {
 		parent::__construct(...$args);
 
-		$this->autofocus = $autofocus;
+		$this->autofocus = $autofocus ?? $this->autofocus;
 		$this->default   = $default;
-		$this->disabled  = $disabled;
+		$this->disabled  = $disabled ?? $this->disabled;
 		$this->help      = $help;
 		$this->label     = $label;
-		$this->required  = $required;
-		$this->translate = $translate;
+		$this->required  = $required ?? $this->required;
+		$this->translate = $translate ?? $this->translate;
 	}
 
 	public function props(): array

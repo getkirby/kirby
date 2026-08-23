@@ -13,7 +13,7 @@ trait Required
 	/**
 	 * If `true`, the field has to be filled in correctly to be saved.
 	 */
-	protected bool|null $required;
+	protected bool $required = false;
 
 	/**
 	 * Checks if the field is required
@@ -25,6 +25,6 @@ trait Required
 
 	public function required(): bool
 	{
-		return $this->required ?? false;
+		return $this->required;
 	}
 }

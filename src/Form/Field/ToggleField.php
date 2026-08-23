@@ -41,7 +41,7 @@ class ToggleField extends InputField
 
 		$this->after  = $after;
 		$this->before = $before;
-		$this->icon   = $icon;
+		$this->icon   = $icon ?? $this->icon;
 		$this->text   = $text;
 	}
 

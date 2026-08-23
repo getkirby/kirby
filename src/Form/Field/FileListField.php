@@ -25,10 +25,12 @@ class FileListField extends ModelListField
 {
 	public const string TYPE = 'files';
 
+	protected array|string|null $text = '{{ file.filename }}';
+
 	/**
 	 * Option to switch off the upload button
 	 */
-	protected bool|null $create;
+	protected bool $create = true;
 
 	/**
 	 * Filters the files by template and sets the template for all uploads
@@ -42,7 +44,7 @@ class FileListField extends ModelListField
 	) {
 		parent::__construct(...$args);
 
-		$this->create   = $create;
+		$this->create   = $create ?? $this->create;
 		$this->template = $template;
 	}
 
@@ -106,7 +108,7 @@ class FileListField extends ModelListField
 
 	public function create(): bool
 	{
-		return $this->create ?? true;
+		return $this->create;
 	}
 
 	public function props(): array
@@ -128,11 +130,6 @@ class FileListField extends ModelListField
 	public function template(): string|null
 	{
 		return $this->template;
-	}
-
-	public function text(): string
-	{
-		return parent::text() ?? '{{ file.filename }}';
 	}
 
 	/**

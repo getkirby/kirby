@@ -13,10 +13,10 @@ trait Prepend
 	/**
 	 * If activated, new items will be added at the start
 	 */
-	protected bool|null $prepend;
+	protected bool $prepend = false;
 
 	public function prepend(): bool
 	{
-		return $this->prepend ?? false;
+		return $this->prepend;
 	}
 }

@@ -3,6 +3,7 @@
 namespace Kirby\Form\Mixin;
 
 use Kirby\Form\FieldOptions;
+use Kirby\Reflection\Attributes\Derived;
 
 /**
  * Provides options loading and resolution for choice-based fields
@@ -15,7 +16,8 @@ trait Options
 	/**
 	 * An array with options
 	 */
-	protected array|string|null $options;
+	#[Derived]
+	protected array|string|null $options = null;
 	protected array|null $optionsCache = null;
 
 	protected function fetchOptions(): array

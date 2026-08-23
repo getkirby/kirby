@@ -30,7 +30,7 @@ class TextareaField extends InputField
 	 * Available buttons: `headlines`, `italic`, `bold`, `link`, `email`,
 	 * `file`, `code`, `ul`, `ol` (as well as `|` for a divider)
 	 */
-	protected array|bool|null $buttons;
+	protected array|bool $buttons = true;
 
 	/**
 	 * Sets the options for the files picker
@@ -59,10 +59,10 @@ class TextareaField extends InputField
 	) {
 		parent::__construct(...$args);
 
-		$this->buttons    = $buttons;
-		$this->counter    = $counter;
+		$this->buttons    = $buttons ?? $this->buttons;
+		$this->counter    = $counter ?? $this->counter;
 		$this->files      = $files;
-		$this->font       = $font;
+		$this->font       = $font ?? $this->font;
 		$this->maxlength  = $maxlength;
 		$this->minlength  = $minlength;
 		$this->size       = $size;
@@ -103,7 +103,7 @@ class TextareaField extends InputField
 
 	public function buttons(): array|bool
 	{
-		return $this->buttons ?? true;
+		return $this->buttons;
 	}
 
 	public function default(): string|null
