@@ -16,7 +16,6 @@ abstract class DisplayField extends Field
 {
 	use Mixin\Help;
 	use Mixin\Label;
-	use Mixin\Width;
 
 	public function __construct(
 		array|string|null $help = null,

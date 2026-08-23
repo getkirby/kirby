@@ -32,7 +32,7 @@ class EntriesField extends InputField implements ProvidesNestedForm
 	 * Supported field types are `color`, `date`, `email`, `number`, `select`,
 	 * `slug`, `tel`, `text`, `time`, `url`.
 	 */
-	protected array|string|null $field;
+	protected array|string $field = ['type' => 'text'];
 
 	protected Form|null $form = null;
 	protected array $value = [];
@@ -48,10 +48,10 @@ class EntriesField extends InputField implements ProvidesNestedForm
 		parent::__construct(...$args);
 
 		$this->empty    = $empty;
-		$this->field    = $field;
+		$this->field    = $field ?? $this->field;
 		$this->max      = $max;
 		$this->min      = $min;
-		$this->sortable = $sortable;
+		$this->sortable = $sortable ?? $this->sortable;
 	}
 
 	public function field(): array
@@ -61,8 +61,6 @@ class EntriesField extends InputField implements ProvidesNestedForm
 		if (is_string($props) === true) {
 			$props = ['type' => $props];
 		}
-
-		$props ??= ['type' => 'text'];
 
 		if (in_array($props['type'], $this->supports(), true) === false) {
 			throw new InvalidArgumentException(

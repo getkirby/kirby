@@ -16,14 +16,18 @@ use Kirby\Toolkit\Str;
  */
 class TagsField extends OptionsField
 {
-	use Mixin\Icon;
 	use Mixin\Layout;
 	use Mixin\Separator;
 
 	/**
+	 * Optional icon that will be shown at the end of the field
+	 */
+	protected string|null $icon = 'tag';
+
+	/**
 	 * If set to `all`, any type of input is accepted. If set to `options` only the predefined options are accepted as input.
 	 */
-	protected string|null $accept;
+	protected string $accept = 'all';
 
 	/**
 	 * Set to `list` to display each tag with 100% width,
@@ -36,13 +40,13 @@ class TagsField extends OptionsField
 	 * Also limit displayed items (display: 20)
 	 * and set minimum number of characters to search (min: 3)
 	 */
-	protected array|bool|null $search;
+	protected array|bool $search = true;
 
 	/**
 	 * If `true`, selected entries will be sorted
 	 * according to their position in the dropdown
 	 */
-	protected bool|null $sort;
+	protected bool $sort = false;
 
 	public function __construct(
 		string|null $accept = null,
@@ -55,19 +59,19 @@ class TagsField extends OptionsField
 	) {
 		parent::__construct(...$args);
 
-		$this->accept    = $accept;
-		$this->icon      = $icon;
+		$this->accept    = $accept ?? $this->accept;
+		$this->icon      = $icon ?? $this->icon;
 		$this->layout    = $layout;
-		$this->search    = $search;
-		$this->separator = $separator;
-		$this->sort      = $sort;
+		$this->search    = $search ?? $this->search;
+		$this->separator = $separator ?? $this->separator;
+		$this->sort      = $sort ?? $this->sort;
 	}
 
 	public function accept(): string
 	{
-		return match($this->accept) {
-			'options' => 'options',
-			default   => 'all'
+		return match ($this->accept) {
+			'all', 'options' => $this->accept,
+			default          => 'all'
 		};
 	}
 
@@ -83,19 +87,19 @@ class TagsField extends OptionsField
 		);
 	}
 
-	public function icon(): string
+	public function icon(): string|null
 	{
-		return $this->icon ?? 'tag';
+		return $this->icon;
 	}
 
 	public function search(): array|bool
 	{
-		return $this->search ?? true;
+		return $this->search;
 	}
 
 	public function sort(): bool
 	{
-		return $this->sort ?? false;
+		return $this->sort;
 	}
 
 	public function props(): array

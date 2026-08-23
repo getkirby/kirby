@@ -13,7 +13,7 @@ trait Icon
 	/**
 	 * Optional icon that will be shown at the end of the field
 	 */
-	protected string|null $icon;
+	protected string|null $icon = null;
 
 	public function icon(): string|null
 	{

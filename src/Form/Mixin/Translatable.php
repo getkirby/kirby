@@ -15,7 +15,7 @@ trait Translatable
 	/**
 	 * Should the field be translatable?
 	 */
-	protected bool|null $translate;
+	protected bool $translate = true;
 
 	/**
 	 * Should the field be translatable into the given language?
@@ -33,6 +33,6 @@ trait Translatable
 
 	public function translate(): bool
 	{
-		return $this->translate ?? true;
+		return $this->translate;
 	}
 }

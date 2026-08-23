@@ -3,6 +3,7 @@
 namespace Kirby\Form\Field;
 
 use Kirby\Panel\Ui\Stats;
+use Kirby\Reflection\Attributes\Derived;
 
 /**
  * Stats field
@@ -16,12 +17,13 @@ class StatsField extends DisplayField
 	/**
 	 * Array or query string for reports. Each report needs a `label` and `value` and can have additional `info`, `link`, `icon` and `theme` settings.
 	 */
-	protected array|string|null $reports;
+	#[Derived]
+	protected array|string|null $reports = [];
 
 	/**
 	 * The size of the report cards. Available sizes: `tiny`, `small`, `medium`, `large`
 	 */
-	protected string|null $size;
+	protected string $size = 'large';
 
 	/**
 	 * Cache for the Stats UI component
@@ -35,8 +37,8 @@ class StatsField extends DisplayField
 	) {
 		parent::__construct(...$args);
 
-		$this->reports = $reports;
-		$this->size    = $size;
+		$this->reports = $reports ?? $this->reports;
+		$this->size    = $size ?? $this->size;
 	}
 
 	public function reports(): array
@@ -53,8 +55,8 @@ class StatsField extends DisplayField
 	{
 		return $this->stats ??= Stats::from(
 			model:   $this->model,
-			reports: $this->reports ?? [],
-			size:    $this->size ?? 'large'
+			reports: $this->reports,
+			size:    $this->size
 		);
 	}
 

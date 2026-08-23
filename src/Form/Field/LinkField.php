@@ -18,7 +18,7 @@ class LinkField extends InputField
 	/**
 	 * @values 'anchor', 'url, 'page, 'file', 'email', 'tel', 'custom'
 	 */
-	protected array|null $options;
+	protected array $options = ['url', 'page', 'file', 'email', 'tel', 'anchor'];
 
 	protected string $value = '';
 
@@ -28,7 +28,7 @@ class LinkField extends InputField
 	) {
 		parent::__construct(...$args);
 
-		$this->options = $options;
+		$this->options = $options ?? $this->options;
 	}
 
 	public function activeTypes(): array
@@ -127,11 +127,6 @@ class LinkField extends InputField
 
 	public function options(): array
 	{
-		// default options
-		if ($this->options === null) {
-			return ['url', 'page', 'file', 'email', 'tel', 'anchor'];
-		}
-
 		// validate options
 		$available = array_keys($this->availableTypes());
 

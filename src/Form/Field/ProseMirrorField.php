@@ -41,7 +41,7 @@ abstract class ProseMirrorField extends StringField
 	) {
 		parent::__construct(...$args);
 
-		$this->icon    = $icon;
+		$this->icon    = $icon ?? $this->icon;
 		$this->marks   = $marks;
 		$this->nodes   = $nodes;
 		$this->toolbar = $toolbar;
