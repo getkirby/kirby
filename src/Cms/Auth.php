@@ -668,9 +668,6 @@ class Auth
 		$session->remove('kirby.challenge.type');
 		$session->remove('kirby.csrf');
 
-		// logout the current user if it exists
-		$this->user()?->logout();
-
 		// clear the password reset flag
 		$session->remove('kirby.resetPassword');
 
