@@ -14,44 +14,10 @@ class RangeField extends NumberField
 	protected array|bool|null $tooltip;
 
 	public function __construct(
-		array|string|null $after = null,
-		bool|null $autofocus = null,
-		array|string|null $before = null,
-		float|string|null $default = null,
-		bool|null $disabled = null,
-		array|string|null $help = null,
-		string|null $icon = null,
-		array|string|null $label = null,
-		array|string|null $placeholder = null,
-		float|null $max = null,
-		float|null $min = null,
-		string|null $name = null,
-		bool|null $required = null,
-		float|string|null $step = null,
 		array|bool|null $tooltip = null,
-		bool|null $translate = null,
-		array|null $when = null,
-		string|null $width = null
+		mixed ...$args
 	) {
-		parent::__construct(
-			after: $after,
-			autofocus: $autofocus,
-			before: $before,
-			default: $default,
-			disabled: $disabled,
-			help: $help,
-			icon: $icon,
-			label: $label,
-			max: $max,
-			min: $min,
-			name: $name,
-			placeholder: $placeholder,
-			required: $required,
-			step: $step,
-			translate: $translate,
-			when: $when,
-			width: $width,
-		);
+		parent::__construct(...$args);
 
 		$this->tooltip = $tooltip;
 	}

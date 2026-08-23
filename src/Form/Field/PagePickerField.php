@@ -24,58 +24,10 @@ class PagePickerField extends ModelPickerField
 	protected bool|null $subpages;
 
 	public function __construct(
-		bool|null $autofocus = null,
-		mixed $default = null,
-		bool|null $disabled = null,
-		array|string|null $empty = null,
-		array|string|null $help = null,
-		array|null $image = null,
-		string|null $info = null,
-		array|string|null $label = null,
-		string|null $layout = null,
-		bool|null $link = null,
-		int|null $max = null,
-		int|null $min = null,
-		bool|null $multiple = null,
-		string|null $name = null,
-		array|null $picker = null,
-		string|null $query = null,
-		bool|null $required = null,
-		bool|null $search = null,
-		string|null $size = null,
-		string|null $store = null,
 		bool|null $subpages = null,
-		string|null $text = null,
-		bool|null $translate = null,
-		array|null $when = null,
-		string|null $width = null
+		mixed ...$args
 	) {
-		parent::__construct(
-			autofocus: $autofocus,
-			default: $default,
-			disabled: $disabled,
-			empty: $empty,
-			help: $help,
-			image: $image,
-			info: $info,
-			label: $label,
-			layout: $layout,
-			link: $link,
-			max: $max,
-			min: $min,
-			multiple: $multiple,
-			name: $name,
-			picker: $picker,
-			query: $query,
-			required: $required,
-			search: $search,
-			size: $size,
-			store: $store,
-			text: $text,
-			translate: $translate,
-			when: $when,
-			width: $width
-		);
+		parent::__construct(...$args);
 
 		$this->subpages = $subpages;
 	}
