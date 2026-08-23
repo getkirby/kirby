@@ -804,6 +804,57 @@ class Dom
 	}
 
 	/**
+	 * Checks if a node is parsed as foreign content (SVG/MathML) once the
+	 * document is embedded in an HTML page; the HTML parser decides this
+	 * by element name, so namespace declarations are irrelevant here
+	 *
+	 * @since 5.6.0
+	 */
+	protected static function isForeign(DOMNode|null $node): bool
+	{
+		$adjusted = $node;
+
+		for (; $node instanceof DOMElement; $node = $node->parentNode) {
+			$name = Str::lower($node->localName);
+
+			if ($name === 'svg' || $name === 'math') {
+				return true;
+			}
+
+			// the descendants of these re-enter HTML content, while the
+			// elements themselves still belong to the foreign subtree
+			if ($name === 'foreignobject' || $name === 'annotation-xml') {
+				return $node === $adjusted;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Returns the name of the closest raw text element ancestor, whose
+	 * content an HTML parser reads as text instead of markup
+	 *
+	 * @since 5.6.0
+	 */
+	protected static function rawText(DOMNode $node): string|null
+	{
+		for (
+			$parent = $node->parentNode;
+			$parent instanceof DOMElement;
+			$parent = $parent->parentNode
+		) {
+			$name = Str::lower($parent->localName);
+
+			if ($name === 'style' || $name === 'script') {
+				return $name;
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * Sanitizes an attribute
 	 *
 	 * @param array $options See `Dom::sanitize()`
@@ -854,6 +905,7 @@ class Dom
 
 	/**
 	 * Sanitizes a comment or CDATA section node
+	 * @since 5.6.0
 	 *
 	 * @param array $errors Array to store additional errors in by reference
 	 */
@@ -872,41 +924,34 @@ class Dom
 
 		$data = $node->data;
 
-		// find the nearest ancestor that changes the HTML parsing mode;
-		// a top-level node (no element parent) is already in HTML context
-		$rawText   = null;
-		$dangerous = $node->parentNode instanceof DOMElement === false;
-
-		for (
-			$parent = $node->parentNode;
-			$parent instanceof DOMElement;
-			$parent = $parent->parentNode
-		) {
-			$name = Str::lower($parent->localName);
-
-			if ($name === 'style' || $name === 'script') {
-				$rawText = $name;
-				break;
-			}
-
-			if (
-				$name === 'title' ||
-				$name === 'desc' ||
-				$name === 'foreignobject'
-			) {
-				$dangerous = true;
-				break;
-			}
-		}
+		// an HTML parser judges the node by the element it sits in: inside
+		// foreign content `<![CDATA[` stays a CDATA section, while raw text
+		// elements only ever exist in the HTML namespace
+		$foreign = static::isForeign($node->parentNode);
+		$rawText = $foreign === false ? static::rawText($node) : null;
 
 		if ($rawText !== null) {
-			// inside a raw text element only a literal closing tag breaks
-			// out; legitimate CSS/JS (e.g. `a > b`) is kept untouched
+			// a raw text element holds neither comments nor CDATA sections,
+			// just text, so only a literal closing tag breaks out of it;
+			// legitimate CSS/JS (e.g. `a > b`) is kept untouched
 			$dangerous = preg_match('#</' . $rawText . '\b#i', $data) === 1;
-		} elseif ($dangerous === true) {
-			// inside an HTML integration point (or at top level) any `<`
-			// can open a live element once re-parsed as HTML
-			$dangerous = Str::contains($data, '<') === true;
+		} elseif ($isComment === true) {
+			// the HTML tokenizer ends a comment as soon as the data closes
+			// it: `<!-->`/`<!--->` are already complete comments, `-->` and
+			// `--!>` end one mid-data. What follows is then live markup in
+			// every insertion mode, so foreign content is no shelter
+			$dangerous =
+				Str::startsWith($data, '>') === true ||
+				Str::startsWith($data, '->') === true ||
+				Str::contains($data, '-->') === true ||
+				Str::contains($data, '--!>') === true;
+		} else {
+			// outside foreign content `<![CDATA[` degrades to a comment
+			// that already ends at its first `>`, which exposes the rest
+			// of the data as live markup
+			$dangerous =
+				$foreign === false &&
+				Str::contains($data, '<') === true;
 		}
 
 		if ($dangerous === false) {
@@ -1057,17 +1102,28 @@ class Dom
 	): void {
 		$name = $pi->nodeName;
 
+		// an HTML parser reads `<?` as a bogus comment that ends at the
+		// first `>`, so a `>` in the data exposes the rest as live markup
+		$dangerous = Str::contains($pi->data, '>') === true;
+
 		// check for allow-listed processing instructions
 		if (
 			is_array($options['allowedPIs']) === true &&
 			in_array($name, $options['allowedPIs'], true) === false
 		) {
-			$errors[] = new InvalidArgumentException(
-				'The "' . $name . '" processing instruction (line ' .
-				$pi->getLineNo() . ') is not allowed'
-			);
-			static::remove($pi);
+			$dangerous = true;
 		}
+
+		if ($dangerous === false) {
+			return;
+		}
+
+		$errors[] = new InvalidArgumentException(
+			'The "' . $name . '" processing instruction (line ' .
+			$pi->getLineNo() . ') is not allowed'
+		);
+
+		static::remove($pi);
 	}
 
 	/**

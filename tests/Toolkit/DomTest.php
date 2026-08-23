@@ -1707,6 +1707,18 @@ class DomTest extends TestCase
 				['The "invalid-instruction" processing instruction (line 1) is not allowed']
 			],
 
+			// a `>` in the data of an allow-listed PI ends the bogus
+			// comment an HTML parser opens at `<?`, exposing live markup
+			[
+				'<?xml-stylesheet ><img src=x onerror=alert(1)>?><p>This is a test</p>',
+				[
+					'allowedPIs' => ['xml-stylesheet']
+				],
+
+				'<p>This is a test</p>',
+				['The "xml-stylesheet" processing instruction (line 1) is not allowed']
+			],
+
 			// allowedTags
 			[
 				'<xml><a>A</a><b>B</b></xml>',
@@ -1915,10 +1927,53 @@ class DomTest extends TestCase
 			];
 		};
 
-		// comment inside an HTML integration point is removed
+		// a comment whose data closes it early is removed: the tokenizer
+		// ends it there, so the rest would re-parse as live markup
 		$this->assertSame(
 			['<root><title/></root>', ['The comment (line 1) is not allowed']],
 			$sanitize('<root><title><!--><img src=x onerror=alert(1)>--></title></root>')
+		);
+
+		// the `<!--->` spelling closes the comment just the same
+		$this->assertSame(
+			['<root><g/></root>', ['The comment (line 1) is not allowed']],
+			$sanitize('<root><g><!---><img src=x>--></g></root>')
+		);
+
+		// foreign content is no shelter for it either
+		$this->assertSame(
+			['<root><svg/></root>', ['The comment (line 1) is not allowed']],
+			$sanitize('<root><svg><!--><img src=x>--></svg></root>')
+		);
+
+		// top-level comment closing early is removed as well
+		$this->assertSame(
+			['<root/>', ['The comment (line 1) is not allowed']],
+			$sanitize('<!--><img src=x>--><root/>')
+		);
+
+		// a well-formed comment is inert in every context and stays put,
+		// even when it holds markup
+		$this->assertSame(
+			['<root><g><!--<rect/>--></g></root>', []],
+			$sanitize('<root><g><!--<rect/>--></g></root>')
+		);
+
+		// inside a raw text element the comment is never a comment, just
+		// text, so an early close there cannot expose anything
+		$this->assertSame(
+			['<root><style><!--><img src=x>--></style></root>', []],
+			$sanitize('<root><style><!--><img src=x>--></style></root>')
+		);
+
+		// outside foreign content `<![CDATA[` degrades to a comment that
+		// ends at its first `>`, so the section is escaped into text
+		$this->assertSame(
+			[
+				'<root>&gt;&lt;img src=x&gt;</root>',
+				['The CDATA section (line 1) is not allowed']
+			],
+			$sanitize('<root><![CDATA[><img src=x>]]></root>')
 		);
 
 		// CDATA breaking out of a raw text element is escaped into text
@@ -1930,16 +1985,11 @@ class DomTest extends TestCase
 			$sanitize('<root><style><![CDATA[</style><img src=x>]]></style></root>')
 		);
 
-		// top-level comment holding markup is removed
+		// ...but inside foreign content it stays a real CDATA section and
+		// is kept untouched, whatever its data looks like
 		$this->assertSame(
-			['<root/>', ['The comment (line 1) is not allowed']],
-			$sanitize('<!--><img src=x>--><root/>')
-		);
-
-		// comment in foreign content is kept even when it holds markup
-		$this->assertSame(
-			['<root><g><!--<rect/>--></g></root>', []],
-			$sanitize('<root><g><!--<rect/>--></g></root>')
+			['<root><svg><![CDATA[><img src=x>]]></svg></root>', []],
+			$sanitize('<root><svg><![CDATA[><img src=x>]]></svg></root>')
 		);
 
 		// CDATA-wrapped content without a closing tag is kept in raw text
