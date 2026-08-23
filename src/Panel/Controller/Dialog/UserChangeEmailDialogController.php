@@ -16,6 +16,19 @@ use Kirby\Panel\Ui\Dialog\FormDialog;
  */
 class UserChangeEmailDialogController extends UserDialogController
 {
+	/**
+	 * The email challenge opt-in is reset by `$user->changeEmail()`,
+	 * because it only ever proved the old address was reachable
+	 */
+	protected function help(): string|null
+	{
+		if ($this->user->secret('email') !== true) {
+			return null;
+		}
+
+		return $this->i18n('login.challenge.email.reset');
+	}
+
 	public function load(): Dialog
 	{
 		return new FormDialog(
@@ -24,7 +37,8 @@ class UserChangeEmailDialogController extends UserDialogController
 					'label'     => $this->i18n('email'),
 					'required'  => true,
 					'type'      => 'email',
-					'preselect' => true
+					'preselect' => true,
+					'help'      => $this->help()
 				]
 			],
 			submitButton: $this->i18n('change'),

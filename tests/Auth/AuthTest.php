@@ -3,6 +3,7 @@
 namespace Kirby\Auth;
 
 use Exception;
+use Kirby\Auth\Exception\RateLimitException;
 use Kirby\Cms\App;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
@@ -181,6 +182,57 @@ class AuthTest extends TestCase
 		$auth = new BasicAuth($data);
 		$user = $this->auth->currentUserFromBasicAuth($auth);
 		$this->assertSame('marge@simpsons.com', $user->email());
+	}
+
+	public function testEnsurePassword(): void
+	{
+		$this->auth->ensurePassword(
+			$this->app->user('marge'),
+			'springfield123'
+		);
+
+		// a correct password records no failure at all
+		$this->assertNull($this->failedEmail);
+		$this->assertFileDoesNotExist(static::TMP . '/site/accounts/.logins');
+	}
+
+	public function testEnsurePasswordInvalid(): void
+	{
+		try {
+			$this->auth->ensurePassword(
+				$this->app->user('marge'),
+				'wrong-password'
+			);
+
+			$this->fail('Expected InvalidArgumentException');
+		} catch (InvalidArgumentException) {
+			// expected
+		}
+
+		// the guess counts against the shared budget, but confirming a
+		// password is not a login attempt, so no hook is fired
+		$log = $this->auth->limits()->log();
+		$this->assertSame(1, $log['by-email']['marge@simpsons.com']['trials']);
+		$this->assertNull($this->failedEmail);
+	}
+
+	public function testEnsurePasswordRateLimited(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => ['auth' => ['trials' => 1]]
+		]);
+		$this->auth = $this->app->auth();
+
+		// exhaust the limit for this visitor
+		$this->auth->limits()->track('marge@simpsons.com', triggerHook: false);
+
+		// even the correct password must not be checked any more
+		$this->expectException(RateLimitException::class);
+
+		$this->auth->ensurePassword(
+			$this->app->user('marge'),
+			'springfield123'
+		);
 	}
 
 	public function testGuard(): void

@@ -11,6 +11,10 @@ return [
 		...$drawers['user.security.method.code'],
 		'pattern' => '(account)/security/method/code',
 	],
+	'account.security.challenge.email' => [
+		...$drawers['user.security.challenge.email'],
+		'pattern' => '(account)/security/challenge/email',
+	],
 	'account.security.challenge.totp' => [
 		...$drawers['user.security.challenge.totp'],
 		'pattern' => '(account)/security/challenge/totp',

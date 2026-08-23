@@ -32,10 +32,12 @@ class UserSecurityDrawerControllerTest extends TestCase
 
 	public function testChallenges(): void
 	{
+		// no challenge is enabled on this site
 		$this->app = $this->app->clone([
 			'options' => [
 				'auth' => [
-					'methods' => ['password']
+					'methods'    => ['password'],
+					'challenges' => []
 				]
 			]
 		]);
@@ -43,6 +45,25 @@ class UserSecurityDrawerControllerTest extends TestCase
 		$user       = $this->app->user('test');
 		$controller = new UserSecurityDrawerController($user);
 		$this->assertSame([], $controller->challenges());
+
+		// without enforced 2FA users can still opt into a second factor
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'methods'    => ['password'],
+					'challenges' => ['totp']
+				]
+			]
+		]);
+
+		$this->app->impersonate('test');
+
+		$user       = $this->app->user('test');
+		$controller = new UserSecurityDrawerController($user);
+		$challenges = $controller->challenges();
+
+		$this->assertCount(1, $challenges);
+		$this->assertSame('qr-code', $challenges[0]['icon']);
 
 
 		$this->app = $this->app->clone([
@@ -63,7 +84,7 @@ class UserSecurityDrawerControllerTest extends TestCase
 
 		$this->assertCount(2, $challenges);
 		$this->assertSame('email-unread', $challenges[0]['icon']);
-		$this->assertSame($user->panel()->url(true) . '/changeEmail', $challenges[0]['dialog']);
+		$this->assertSame($user->panel()->url(true) . '/security/challenge/email', $challenges[0]['drawer']);
 		$this->assertSame('qr-code', $challenges[1]['icon']);
 		$this->assertSame($user->panel()->url(true) . '/security/challenge/totp', $challenges[1]['drawer']);
 	}

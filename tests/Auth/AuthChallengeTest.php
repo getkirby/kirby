@@ -52,7 +52,12 @@ class AuthChallengeTest extends TestCase
 			]
 		]);
 
-		F::write(static::TMP . '/site/accounts/marge/.htpasswd', self::$password);
+		// the email challenge is opt-in as a second factor,
+		// so enable it for the user that tests the 2FA flow
+		F::write(
+			static::TMP . '/site/accounts/marge/.htpasswd',
+			self::$password . "\n" . '{"email":true}'
+		);
 
 		$this->auth = $this->app->auth();
 	}
@@ -67,6 +72,27 @@ class AuthChallengeTest extends TestCase
 		$this->assertSame('marge@simpsons.com', $session->get('kirby.challenge.email'));
 		$this->assertSame('login', $session->get('kirby.challenge.mode'));
 		$this->assertSame('email', $session->get('kirby.challenge.type'));
+	}
+
+	public function testCreateChallengeClearsStaleState(): void
+	{
+		$session = $this->app->session();
+
+		// a first challenge stores its type and data
+		$this->auth->createChallenge('marge@simpsons.com');
+		$this->assertSame('email', $session->get('kirby.challenge.type'));
+		$this->assertNotNull($session->get('kirby.challenge.data'));
+
+		try {
+			$this->auth->createChallenge('lisa@simpsons.com');
+		} catch (Throwable) {
+			// expected in debug mode
+		}
+
+		// nothing of the first challenge may survive, otherwise its code
+		// could be verified against the new email
+		$this->assertNull($session->get('kirby.challenge.type'));
+		$this->assertNull($session->get('kirby.challenge.data'));
 	}
 
 	public function testCreateChallengeInvalidUser(): void

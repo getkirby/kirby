@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel\Controller\Dialog;
 
+use Kirby\Auth\Exception\RateLimitException;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\Field;
@@ -91,8 +92,15 @@ class UserChangePasswordDialogController extends UserDialogController
 		// validate the current password of the acting user
 		try {
 			if ($this->canSkipConfirmation() === false) {
-				$this->kirby->user()->validatePassword($currentPassword);
+				$this->kirby->auth()->ensurePassword(
+					$this->kirby->user(),
+					$currentPassword
+				);
 			}
+		} catch (RateLimitException $e) {
+			// surface the limit honestly instead of as a wrong password,
+			// otherwise the user keeps retrying against a closed door
+			throw $e;
 		} catch (Exception) {
 			// catching and re-throwing exception to avoid automatic
 			// sign-out of current user from the Panel

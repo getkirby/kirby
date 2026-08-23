@@ -7,6 +7,7 @@ use Kirby\Auth\Pending;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
+use Throwable;
 
 /**
  * Shared base for drawers that manage a removable login credential
@@ -42,7 +43,12 @@ abstract class UserCredentialDrawerController extends UserDrawerController
 
 		$this->kirby->session()->set(
 			'kirby.security.authorize.' . $this->user->id(),
-			$pending->toArray()
+			[
+				...$pending->toArray(),
+				// the stored code is only valid for the challenge's
+				// lifetime, so a leaked session cannot reuse it forever
+				'expires' => time() + $challenge->timeout()
+			]
 		);
 
 		return $pending->public();
@@ -68,10 +74,11 @@ abstract class UserCredentialDrawerController extends UserDrawerController
 	 */
 	protected function authorizeAdmin(): void
 	{
+		$admin    = $this->kirby->user();
 		$password = $this->request->get('password');
 
 		try {
-			$this->kirby->user()->validatePassword($password);
+			$this->kirby->auth()->ensurePassword($admin, $password);
 		} catch (InvalidArgumentException $e) {
 			// re-throw without the 401 http code: a wrong password here
 			// is a validation error to show inline, not an authentication
@@ -91,15 +98,42 @@ abstract class UserCredentialDrawerController extends UserDrawerController
 	 */
 	protected function authorizeCurrentUser(): void
 	{
+		$key       = 'kirby.security.authorize.' . $this->user->id();
+		$session   = $this->kirby->session();
+		$limits    = $this->kirby->auth()->limits();
+		$email     = $this->user->email();
+
+		// block once the shared auth rate limit is exhausted, so that the
+		// secret/code cannot be brute-forced from a hijacked session
+		$limits->ensure($email);
+
 		$challenge = $this->challenge();
-		$pending   = $this->kirby->session()->pull('kirby.security.authorize.' . $this->user->id()) ?? [];
-		$pending   = Pending::from($pending);
+		$stored    = $session->get($key) ?? [];
+		$input     = $this->request->get('authorization');
 
-		$input = $this->request->get('authorization');
+		// a stored code is only valid for the challenge's lifetime
+		$expires = $stored['expires'] ?? null;
 
-		if ($challenge->verify($input, $pending) !== true) {
-			throw new InvalidArgumentException(key: 'access.code');
+		if (is_int($expires) === true && $expires < time()) {
+			$session->remove($key);
+			throw new PermissionException(key: 'access.code');
 		}
+
+		try {
+			$challenge->attempt(
+				input:      $input,
+				pending:    Pending::from($stored),
+				invalidate: fn () => $session->remove($key)
+			);
+		} catch (Throwable $e) {
+			// count the failed attempt against the rate limit
+			$limits->track($email, triggerHook: false);
+			throw $e;
+		}
+
+		// the action is authorized: consume the pending so the same
+		// code or nonce cannot be replayed for another change
+		$session->remove($key);
 	}
 
 	/**

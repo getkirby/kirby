@@ -8,12 +8,10 @@ use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
-use Kirby\Exception\PermissionException;
 use Kirby\Exception\UserNotFoundException;
 use Kirby\Session\Session;
 use Kirby\Toolkit\A;
 use SensitiveParameter;
-use Throwable;
 
 /**
  * Handler for all auth challenges
@@ -38,10 +36,23 @@ class Challenges
 
 	public function available(User $user, string $mode): array
 	{
-		return array_values(A::filter(
+		$available = array_values(A::filter(
 			$this->enabled(),
 			fn ($type) => $this->class($type)::isAvailable($user, $mode)
 		));
+
+		// a single-factor flow (e.g. the `code` login method or a
+		// password reset) must not be weaker than the second factor
+		// the user has set up, so it is limited to those challenges
+		if ($mode !== '2fa') {
+			$factors = $this->available($user, '2fa');
+
+			if ($factors !== []) {
+				return array_values(array_intersect($available, $factors));
+			}
+		}
+
+		return $available;
 	}
 
 	/**
@@ -141,7 +152,7 @@ class Challenges
 		return $email;
 	}
 
-	protected function ensureNotTimeout(Session $session): int|null
+	protected function ensureNotTimeout(Session $session): void
 	{
 		// time-limiting; check this early so that we can
 		// destroy the session no matter if the user exists
@@ -156,8 +167,6 @@ class Challenges
 			$this->clear($session);
 			throw new ChallengeTimeoutException();
 		}
-
-		return $timeout;
 	}
 
 	/**
@@ -175,6 +184,8 @@ class Challenges
 	 * Returns an instance of the requested auth challenge.
 	 * (This is based on the config. You might need to check
 	 * yourself if the method should be available in your context)
+	 *
+	 * @param int|null $timeout Lifetime in seconds, not an expiry timestamp
 	 */
 	public function get(
 		string $type,
@@ -193,6 +204,15 @@ class Challenges
 	}
 
 	/**
+	 * Checks whether at least one challenge is available
+	 * for the user and purpose/mode
+	 */
+	public function hasAvailable(User $user, string $mode): bool
+	{
+		return $this->available($user, $mode) !== [];
+	}
+
+	/**
 	 * Writes challenge state into the session
 	 */
 	protected function store(
@@ -201,13 +221,12 @@ class Challenges
 		string $email,
 		string $mode
 	): void {
-		$data    = $challenge->create();
-		$timeout = $this->timeout();
+		$data = $challenge->create();
 
 		$session->set('kirby.challenge.email', $email);
 		$session->set('kirby.challenge.type', $challenge->type());
 		$session->set('kirby.challenge.mode', $mode);
-		$session->set('kirby.challenge.timeout', time() + $timeout);
+		$session->set('kirby.challenge.timeout', time() + $challenge->timeout());
 
 		if ($data !== null) {
 			$session->set('kirby.challenge.data', $data->toArray());
@@ -280,35 +299,25 @@ class Challenges
 		mixed $input
 	): Challenge {
 		// ensure we have an active challenge for a valid user
-		$timeout = $this->ensureNotTimeout($session);
-		$email   = $this->ensureActiveChallenge($session);
-		$user    = $this->kirby->user($email);
+		$this->ensureNotTimeout($session);
+		$email = $this->ensureActiveChallenge($session);
+		$user  = $this->kirby->user($email);
 
 		if ($user === null) {
 			throw new UserNotFoundException(name: $email);
 		}
 
-		$this->auth->limits()->ensure($email);
-
 		$type      = $session->get('kirby.challenge.type');
 		$mode      = $session->get('kirby.challenge.mode');
 		$data      = $session->get('kirby.challenge.data');
 		$data      = Pending::from($data ?? []);
-		$challenge = $this->get($type, $user, $mode, $timeout);
+		$challenge = $this->get($type, $user, $mode);
 
-		try {
-			if ($challenge->verify($input, $data) !== true) {
-				throw new PermissionException(key: 'access.code');
-			}
-		} catch (Throwable $e) {
-			// a single-use challenge signs a one-time
-			// nonce that must not survive a failed attempt
-			if ($challenge->isSingleUse() === true) {
-				$this->clear($session);
-			}
-
-			throw $e;
-		}
+		$challenge->attempt(
+			input:      $input,
+			pending:    $data,
+			invalidate: fn () => $this->clear($session)
+		);
 
 		return $challenge;
 	}

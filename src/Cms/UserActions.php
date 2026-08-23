@@ -46,6 +46,12 @@ trait UserActions
 				$user = $user->clone(['email' => $email]);
 				$user->updateCredentials(['email' => $email]);
 
+				// the email challenge was confirmed for the old address,
+				// so the opt-in must not carry over to the new one
+				if ($user->secret('email') === true) {
+					$user->writeSecret('email', null);
+				}
+
 				return $user;
 			}
 		);

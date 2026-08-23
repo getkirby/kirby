@@ -15,10 +15,4 @@ class MethodTest extends TestCase
 		$auth = $this->createStub(Auth::class);
 		$this->assertTrue(Method::isEnabled($auth));
 	}
-
-	public function testIsUsingChallenges(): void
-	{
-		$auth = $this->createStub(Auth::class);
-		$this->assertFalse(Method::isUsingChallenges($auth));
-	}
 }

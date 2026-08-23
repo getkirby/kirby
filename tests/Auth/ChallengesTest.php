@@ -10,6 +10,7 @@ use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Exception\UserNotFoundException;
+use Kirby\Filesystem\F;
 use Kirby\Session\Session;
 use Kirby\Tests\MockTime;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -75,6 +76,25 @@ class DummyChallenge2 extends Challenge
 	}
 }
 
+class DummyChallenge3 extends Challenge
+{
+	public function create(): Pending|null
+	{
+		return null;
+	}
+
+	// a plugin challenge may define its own lifetime
+	public function timeout(): int
+	{
+		return 42;
+	}
+
+	public function verify(mixed $input, Pending $data): bool
+	{
+		return true;
+	}
+}
+
 #[CoversClass(Challenges::class)]
 class ChallengesTest extends TestCase
 {
@@ -95,8 +115,9 @@ class ChallengesTest extends TestCase
 		DummyChallenge::$pending    = null;
 		DummyChallenge2::$available = true;
 
-		Challenges::$challenges['dummy'] = DummyChallenge::class;
+		Challenges::$challenges['dummy']  = DummyChallenge::class;
 		Challenges::$challenges['dummy2'] = DummyChallenge2::class;
+		Challenges::$challenges['dummy3'] = DummyChallenge3::class;
 
 		$this->app = $this->app->clone([
 			'options' => [
@@ -119,7 +140,11 @@ class ChallengesTest extends TestCase
 	protected function tearDown(): void
 	{
 		parent::tearDown();
-		unset(Challenges::$challenges['dummy'], Challenges::$challenges['dummy2']);
+		unset(
+			Challenges::$challenges['dummy'],
+			Challenges::$challenges['dummy2'],
+			Challenges::$challenges['dummy3']
+		);
 
 	}
 
@@ -138,6 +163,53 @@ class ChallengesTest extends TestCase
 		DummyChallenge::$available = false;
 		$available = $this->challenges->available($user, 'login');
 		$this->assertSame([], $available);
+	}
+
+	public function testAvailableLimitedToSecondFactor(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'challenges' => ['totp', 'email']
+				]
+			]
+		]);
+
+		// the user has set up TOTP as their second factor
+		F::write(
+			static::TMP . '/site/accounts/marge/.htpasswd',
+			User::hashPassword('12345678') . "\n" . '{"totp":"JBSWY3DPEHPK3PXP"}'
+		);
+
+		$challenges = new Challenges($this->app->auth(), $this->app);
+		$user       = $this->app->user('marge');
+
+		$this->assertSame(['totp'], $challenges->available($user, '2fa'));
+
+		// the single-factor flows must not offer the weaker email
+		// code to a user who has set up a second factor
+		$this->assertSame(['totp'], $challenges->available($user, 'login'));
+		$this->assertSame(['totp'], $challenges->available($user, 'password-reset'));
+	}
+
+	public function testAvailableWithoutSecondFactor(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'challenges' => ['totp', 'email']
+				]
+			]
+		]);
+
+		$challenges = new Challenges($this->app->auth(), $this->app);
+		$user       = $this->app->user('marge');
+
+		$this->assertSame([], $challenges->available($user, '2fa'));
+
+		// without a second factor the single-factor flows are unrestricted
+		$this->assertSame(['email'], $challenges->available($user, 'login'));
+		$this->assertSame(['email'], $challenges->available($user, 'password-reset'));
 	}
 
 	public function testClass(): void
@@ -185,6 +257,30 @@ class ChallengesTest extends TestCase
 		$this->assertSame('marge@simpsons.com', $session->get('kirby.challenge.email'));
 		$this->assertSame('login', $session->get('kirby.challenge.mode'));
 		$this->assertSame(MockTime::$time + $this->challenges->timeout(), $session->get('kirby.challenge.timeout'));
+	}
+
+	public function testCreateChallengeTimeout(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'challenges' => ['dummy3']
+				]
+			]
+		]);
+
+		$this->challenges = new Challenges($this->app->auth(), $this->app);
+
+		$session = $this->app->session();
+		$this->challenges->create($session, 'marge@simpsons.com', 'login');
+
+		// the session expiry follows the challenge's own lifetime,
+		// not the `auth.challenge.timeout` option
+		$this->assertNotSame(42, $this->challenges->timeout());
+		$this->assertSame(
+			MockTime::$time + 42,
+			$session->get('kirby.challenge.timeout')
+		);
 	}
 
 	public function testCreateUnavailable(): void
@@ -247,6 +343,16 @@ class ChallengesTest extends TestCase
 		$this->assertSame($user, $challenge->user());
 		$this->assertSame('login', $challenge->mode());
 		$this->assertSame(123, $challenge->timeout());
+	}
+
+	public function testHasAvailable(): void
+	{
+		$user = $this->app->user('marge');
+
+		$this->assertTrue($this->challenges->hasAvailable($user, 'login'));
+
+		DummyChallenge::$available = false;
+		$this->assertFalse($this->challenges->hasAvailable($user, 'login'));
 	}
 
 	public function testSwitch(): void
@@ -373,6 +479,22 @@ class ChallengesTest extends TestCase
 
 		$this->assertInstanceOf(DummyChallenge::class, $result);
 		$this->assertSame([['input' => 'ok', 'data' => ['public' => 'x', 'secret' => 'secret']]], DummyChallenge::$verified);
+	}
+
+	public function testVerifyLifetime(): void
+	{
+		$session = $this->session();
+		$session->set('kirby.challenge.type', 'dummy');
+		$session->set('kirby.challenge.email', 'marge@simpsons.com');
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.timeout', time() + 1000);
+		$session->set('kirby.challenge.data', ['public' => 'x', 'secret' => 'secret']);
+
+		$result = $this->challenges->verify($session, 'ok');
+
+		// the challenge gets its lifetime in seconds, not the
+		// absolute expiry timestamp stored in the session
+		$this->assertSame($this->challenges->timeout(), $result->timeout());
 	}
 
 	public function testVerifyInvalid(): void

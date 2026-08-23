@@ -70,16 +70,6 @@ abstract class Method
 	}
 
 	/**
-	 * Checks if this method uses challenges
-	 */
-	public static function isUsingChallenges(
-		Auth $auth,
-		array $options = []
-	): bool {
-		return false;
-	}
-
-	/**
 	 * Returns the config options for this method
 	 */
 	public function options(): array
