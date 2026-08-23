@@ -18,6 +18,7 @@ use Kirby\Form\Mixin\Min;
 use Kirby\Form\Mixin\Pretty;
 use Kirby\Panel\Controller\Dialog\FieldDialogController;
 use Kirby\Panel\Controller\Drawer\FieldDrawerController;
+use Kirby\Reflection\Attributes\Computed;
 use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Str;
 use Throwable;
@@ -38,6 +39,7 @@ class BlocksField extends InputField
 	/**
 	 * Defines the allowed block types in the blocks field. See below.
 	 */
+	#[Computed(default: Fieldsets::DEFAULT)]
 	protected array|null $fieldsets;
 
 	/**
