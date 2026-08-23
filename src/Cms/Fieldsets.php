@@ -19,6 +19,23 @@ use Kirby\Toolkit\Str;
  */
 class Fieldsets extends Items
 {
+	/**
+	 * The block types that are available when
+	 * a blocks field doesn't define its own
+	 */
+	public const array DEFAULT = [
+		'code'     => 'blocks/code',
+		'gallery'  => 'blocks/gallery',
+		'heading'  => 'blocks/heading',
+		'image'    => 'blocks/image',
+		'line'     => 'blocks/line',
+		'list'     => 'blocks/list',
+		'markdown' => 'blocks/markdown',
+		'quote'    => 'blocks/quote',
+		'text'     => 'blocks/text',
+		'video'    => 'blocks/video',
+	];
+
 	public const string ITEM_CLASS = Fieldset::class;
 
 	/**
@@ -80,18 +97,7 @@ class Fieldsets extends Items
 		array|null $items = null,
 		array $params = []
 	): static {
-		$items ??= App::instance()->option('blocks.fieldsets', [
-			'code'     => 'blocks/code',
-			'gallery'  => 'blocks/gallery',
-			'heading'  => 'blocks/heading',
-			'image'    => 'blocks/image',
-			'line'     => 'blocks/line',
-			'list'     => 'blocks/list',
-			'markdown' => 'blocks/markdown',
-			'quote'    => 'blocks/quote',
-			'text'     => 'blocks/text',
-			'video'    => 'blocks/video',
-		]);
+		$items ??= App::instance()->option('blocks.fieldsets', static::DEFAULT);
 
 		$result = static::createFieldsets($items);
 

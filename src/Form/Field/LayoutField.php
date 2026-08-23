@@ -12,6 +12,7 @@ use Kirby\Data\Data;
 use Kirby\Data\Json;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Form;
+use Kirby\Reflection\Attributes\Computed;
 use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Str;
 use Throwable;
@@ -27,6 +28,7 @@ class LayoutField extends BlocksField
 	/**
 	 * Define available layouts. Each layout is list of column widths. (e.g. 1/2, 1/2 or 1/4, 3/4)
 	 */
+	#[Computed(default: ['1/1'])]
 	protected array|null $layouts;
 
 	/**
@@ -45,7 +47,7 @@ class LayoutField extends BlocksField
 	protected Fieldset|null $settingsFieldset;
 
 	public function __construct(
-		array|string|null $fieldsets = null,
+		array|null $fieldsets = null,
 		array|null $layouts = null,
 		array|null $selector = null,
 		array|string|null $settings = null,
