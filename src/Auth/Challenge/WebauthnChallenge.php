@@ -15,9 +15,6 @@ use SensitiveParameter;
  * when the user is already identified (e.g. after password).
  * Users first have to register passkeys in their security settings.
  *
- * @package   Kirby Auth
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0

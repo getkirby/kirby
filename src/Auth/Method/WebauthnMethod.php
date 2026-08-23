@@ -18,9 +18,6 @@ use SensitiveParameter;
  * without requiring an email address upfront.
  * The credential id in the assertion identifies the user.
  *
- * @package   Kirby Auth
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
