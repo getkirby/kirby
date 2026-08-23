@@ -26,11 +26,19 @@ class FileValidators extends ModelValidators
 
 	/**
 	 * Validates the input of the `changeName` action
+	 *
+	 * @param string|null $extension If not passed, the current extension is kept
 	 */
-	protected function ensureToChangeName(string $name): void
-	{
+	protected function ensureToChangeName(
+		string $name,
+		string|null $extension = null
+	): void {
+		$extension ??= $this->model->extension();
+
 		$this->validateName($name);
-		$this->validateDuplicate($name);
+		$this->validateExtension($extension);
+		$this->validateFilename($name . '.' . $extension);
+		$this->validateDuplicate($name, $extension);
 	}
 
 	/**
@@ -73,12 +81,17 @@ class FileValidators extends ModelValidators
 
 	/**
 	 * Validates that no other file with the same name exists
+	 *
+	 * @param string|null $extension If not passed, the current extension is kept
 	 */
-	public function validateDuplicate(string $name): void
-	{
-		$duplicate = $this->model->parent()->files()
+	public function validateDuplicate(
+		string $name,
+		string|null $extension = null
+	): void {
+		$extension ??= $this->model->extension();
+		$duplicate   = $this->model->parent()->files()
 			->not($this->model)
-			->findBy('filename', $name . '.' . $this->model->extension());
+			->findBy('filename', $name . '.' . $extension);
 
 		if ($duplicate !== null) {
 			throw new DuplicateException(

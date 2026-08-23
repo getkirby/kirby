@@ -14,9 +14,12 @@ use Kirby\Filesystem\File as BaseFile;
  */
 class FileRules
 {
-	public static function changeName(File $file, string $name): void
-	{
-		$file->guards()->ensureExecutable('changeName', $name);
+	public static function changeName(
+		File $file,
+		string $name,
+		string|null $extension = null
+	): void {
+		$file->guards()->ensureExecutable('changeName', $name, $extension);
 	}
 
 	public static function changeSort(File $file, int $sort): void

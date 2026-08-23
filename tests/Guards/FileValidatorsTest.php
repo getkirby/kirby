@@ -69,6 +69,66 @@ class FileValidatorsTest extends ModelTestCase
 		$validators->validateDuplicate('b');
 	}
 
+	public function testDuplicateWithNewExtension(): void
+	{
+		$page = new Page([
+			'slug'  => 'test',
+			'files' => [
+				['filename' => 'a.jpg'],
+				['filename' => 'b.png']
+			]
+		]);
+
+		$validators = $this->validators($page->file('a.jpg'));
+
+		$this->expectException(DuplicateException::class);
+		$this->expectExceptionCode('error.file.duplicate');
+
+		$validators->validateDuplicate('b', 'png');
+	}
+
+	public function testEnsureChangeName(): void
+	{
+		$page = new Page([
+			'slug'  => 'test',
+			'files' => [['filename' => 'a.jpg']]
+		]);
+
+		$validators = $this->validators($page->file('a.jpg'));
+
+		$this->assertNull($validators->ensure('changeName', 'b'));
+	}
+
+	public function testEnsureChangeNameWithForbiddenExtension(): void
+	{
+		$page = new Page([
+			'slug'  => 'test',
+			'files' => [['filename' => 'a.jpg']]
+		]);
+
+		$validators = $this->validators($page->file('a.jpg'));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.file.type.forbidden');
+
+		$validators->ensure('changeName', 'shell', 'php');
+	}
+
+	public function testEnsureChangeNameWithForbiddenFilename(): void
+	{
+		$page = new Page([
+			'slug'  => 'test',
+			'files' => [['filename' => 'a.jpg']]
+		]);
+
+		$validators = $this->validators($page->file('a.jpg'));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.file.type.forbidden');
+
+		$validators->ensure('changeName', '.hidden');
+	}
+
 	public function testEnsureChangeTemplate(): void
 	{
 		$validators = $this->validators($this->file('test.jpg'));

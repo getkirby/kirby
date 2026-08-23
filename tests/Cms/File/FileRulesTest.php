@@ -118,6 +118,55 @@ class FileRulesTest extends ModelTestCase
 		FileRules::changeName($file, 'b');
 	}
 
+	public function testChangeNameToExistingFileWithNewExtension(): void
+	{
+		$this->expectException(DuplicateException::class);
+		$this->expectExceptionMessage('A file with the name "b.png" already exists');
+
+		$page = new Page([
+			'slug' => 'test',
+			'files' => [
+				['filename' => 'a.jpg'],
+				['filename' => 'b.png']
+			]
+		]);
+
+		$file = $page->file('a.jpg');
+		FileRules::changeName($file, 'b', 'png');
+	}
+
+	public function testChangeNameRejectsForbiddenExtension(): void
+	{
+		$page = new Page([
+			'slug'  => 'test',
+			'files' => [
+				['filename' => 'a.jpg']
+			]
+		]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('You are not allowed to upload PHP files');
+
+		$file = $page->file('a.jpg');
+		FileRules::changeName($file, 'shell', 'php');
+	}
+
+	public function testChangeNameRejectsForbiddenFilename(): void
+	{
+		$page = new Page([
+			'slug'  => 'test',
+			'files' => [
+				['filename' => 'a.jpg']
+			]
+		]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('You are not allowed to upload invisible files');
+
+		$file = $page->file('a.jpg');
+		FileRules::changeName($file, '.hidden');
+	}
+
 	public function testChangeTemplate(): void
 	{
 		$file = $this->fileWithMultipleTemplates();

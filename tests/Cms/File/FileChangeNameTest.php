@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Data\Data;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -118,6 +119,21 @@ class FileChangeNameTest extends ModelTestCase
 		$file->changeName('foo');
 
 		$this->assertSame(2, $calls);
+	}
+
+	public function testChangeNameRejectsForbiddenExtension(): void
+	{
+		$file = new File([
+			'filename' => 'test.pdf',
+			'parent'   => $this->app->site()
+		]);
+
+		F::write($file->root(), '');
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('You are not allowed to upload PHP files');
+
+		$file->changeName('shell', true, 'php');
 	}
 
 	public function testChangeNameWithoutChanges(): void
