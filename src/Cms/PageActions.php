@@ -735,15 +735,18 @@ trait PageActions
 
 	protected static function normalizeProps(array $props): array
 	{
-		// Prevent injecting blueprint as this always must be derived from
-		// the template/model name and blueprint object in the app,
-		// never directly be supplied by the caller
-		unset($props['blueprint']);
+		unset(
+			// Prevent injecting blueprint as this always must be derived from
+			// the template/model name and blueprint object in the app,
+			// never directly be supplied by the caller
+			$props['blueprint'],
 
-		// Prevent injecting the root and dirname as those must always be
-		// derived from the parent and slug. Otherwise the caller could
-		// place the page's content at an arbitrary path on disk.
-		unset($props['dirname'], $props['root']);
+			// Prevent injecting the root and dirname as those must always be
+			// derived from the parent and slug. Otherwise the caller could
+			// place the page's content at an arbitrary path on disk.
+			$props['dirname'],
+			$props['root']
+		);
 
 		$content  = $props['content']  ?? [];
 		$template = Template::sanitizeName($props['template'] ?? null) ?: 'default';
