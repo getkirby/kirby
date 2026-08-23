@@ -42,7 +42,7 @@ class SystemLicenseDialogControllerTest extends TestCase
 		$this->assertTrue($controller->isRenewable());
 
 		$license = $controller->license();
-		$this->assertSame('No valid license', $license['info']);
+		$this->assertSame('No valid license', (string)$license['info']);
 	}
 
 	public function testLicenseNonRenewable(): void
@@ -55,6 +55,9 @@ class SystemLicenseDialogControllerTest extends TestCase
 		$this->assertFalse($controller->isRenewable());
 
 		$license = $controller->license();
-		$this->assertSame('Includes new major versions until 2999-01-01', $license['info']);
+		$this->assertSame(
+			'Includes new major versions until 2999-01-01',
+			(string)$license['info']
+		);
 	}
 }

@@ -7,7 +7,9 @@ use IntlDateFormatter;
 use Kirby\Blueprint\FileBlueprint;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
+use Kirby\Filesystem\File as BaseFile;
 use Kirby\Filesystem\IsFile;
+use Kirby\Guards\FileGuards;
 use Kirby\Panel\File as Panel;
 use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Str;
@@ -285,6 +287,17 @@ class File extends ModelWithContent
 	}
 
 	/**
+	 * Returns the guards object for this file
+	 */
+	public function guards(): FileGuards
+	{
+		return new FileGuards(
+			model: $this,
+			user: User::ensure()
+		);
+	}
+
+	/**
 	 * Converts the file to html
 	 */
 	public function html(array $attr = []): string
@@ -330,6 +343,27 @@ class File extends ModelWithContent
 		}
 
 		return FilePermissions::canFromCache($this, 'access');
+	}
+
+	/**
+	 * Checks if the given file is the exact same file as the
+	 * one that already exists under the same name, template
+	 * included
+	 */
+	public function isIdentical(BaseFile $file): bool
+	{
+		if ($this->exists() === false) {
+			return false;
+		}
+
+		// the model is based on the props of the new file,
+		// to compare templates, we need to get the props of
+		// the already existing file from meta content file
+		$existing = $this->parent()->file($this->filename());
+
+		return
+			$this->sha1() === $file->sha1() &&
+			$this->template() === $existing->template();
 	}
 
 	/**
@@ -539,6 +573,8 @@ class File extends ModelWithContent
 	/**
 	 * Returns the FileRules class to
 	 * validate any important action.
+	 *
+	 * @deprecated 6.0.0 Use `$file->guards()` instead
 	 */
 	protected function rules(): FileRules
 	{

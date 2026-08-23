@@ -8,6 +8,7 @@ use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Blueprint::class)]
+#[CoversClass(Normalizer::class)]
 class BlueprintFieldReferencesTest extends TestCase
 {
 	protected Page $model;

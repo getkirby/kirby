@@ -98,12 +98,13 @@ class ColorField extends OptionField
 
 		if (
 			is_numeric($options[0]['value']) ||
-			$options[0]['value'] === $options[0]['text']
+			$options[0]['value'] === (string)$options[0]['text']
 		) {
 			// simple array of values
-			// or value=text (from Options class)
+			// or value=text (from Options class).
+			// the text is trusted HTML, the value must stay a plain string
 			$options = A::map($options, fn ($option) => [
-				'value' => $option['text']
+				'value' => (string)$option['text']
 			]);
 
 		} else {

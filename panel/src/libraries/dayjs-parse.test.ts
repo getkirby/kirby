@@ -250,6 +250,33 @@ describe("dayjs.parse() with a pattern", () => {
 		expect(parse("pm", "a")).toBe(null);
 	});
 
+	it("reads a pattern that escapes a literal", () => {
+		const pattern = "DD.MM.YYYY [um] HH:mm";
+
+		expect(dayjs.parse("05.03.2021 um 10:15", { pattern })?.toISO()).toBe(
+			"2021-03-05 10:15:00"
+		);
+		expect(dayjs.parse("5.3.2021 10:15", { pattern })?.toISO()).toBe(
+			"2021-03-05 10:15:00"
+		);
+		expect(
+			dayjs.parse("05.03.2021 um 10:15", { pattern, strict: true })
+		).not.toBe(null);
+	});
+
+	it("never splits a month name on a literal", () => {
+		const pattern = "D [de] MMMM [de] YYYY";
+		dayjs.locale("es_ES");
+
+		expect(
+			dayjs
+				.parse("5 de septiembre de 2021", { pattern, strict: true })
+				?.toISO("date")
+		).toBe("2021-09-05");
+
+		dayjs.locale("en");
+	});
+
 	it("returns null for a pattern with an unsupported unit", () => {
 		// units outside the supported ones, a weekday for example,
 		// are not read back into a datetime: rather than guess which

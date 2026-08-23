@@ -4,6 +4,7 @@ namespace Kirby\Panel\Ui\Item;
 
 use Kirby\Cms\TestCase;
 use Kirby\Cms\User;
+use Kirby\Toolkit\HtmlString;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(UserItem::class)]
@@ -37,9 +38,9 @@ class UserItemTest extends TestCase
 				'icon'  => 'user',
 				'ratio' => '1/1'
 			],
-			'info'        => 'Nobody',
+			'info'        => new HtmlString('Nobody'),
 			'layout'      => 'list',
-			'text'        => 'test@getkirby.com',
+			'text'        => new HtmlString('test@getkirby.com'),
 			'id'          => 'test',
 			'link'        => '/users/test',
 			'permissions' => [
@@ -57,6 +58,6 @@ class UserItemTest extends TestCase
 			'uuid'         => 'user://test',
 		];
 
-		$this->assertSame($expected, $item->props());
+		$this->assertEquals($expected, $item->props()); // -ignore-line
 	}
 }

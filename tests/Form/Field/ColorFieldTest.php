@@ -4,6 +4,7 @@ namespace Kirby\Form\Field;
 
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Toolkit\HtmlString;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(ColorField::class)]
@@ -121,10 +122,10 @@ class ColorFieldTest extends TestCase
 			],
 		]);
 
-		$this->assertSame([
-			['value' => '#aaa', 'text' => 'Color a'],
-			['value' => '#bbb', 'text' => 'Color b'],
-			['value' => '#ccc', 'text' => 'Color c']
+		$this->assertEquals([
+			['value' => '#aaa', 'text' => new HtmlString('Color a')],
+			['value' => '#bbb', 'text' => new HtmlString('Color b')],
+			['value' => '#ccc', 'text' => new HtmlString('Color c')]
 		], $field->options());
 	}
 
@@ -162,10 +163,10 @@ class ColorFieldTest extends TestCase
 			'options' => ['type' => 'query', 'query' => 'kirby.option("foo")'],
 		]);
 
-		$this->assertSame([
-			['value' => '#aaa', 'text' => 'Color a'],
-			['value' => '#bbb', 'text' => 'Color b'],
-			['value' => '#ccc', 'text' => 'Color c']
+		$this->assertEquals([
+			['value' => '#aaa', 'text' => new HtmlString('Color a')],
+			['value' => '#bbb', 'text' => new HtmlString('Color b')],
+			['value' => '#ccc', 'text' => new HtmlString('Color c')]
 		], $field->options());
 	}
 

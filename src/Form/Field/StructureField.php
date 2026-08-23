@@ -4,6 +4,7 @@ namespace Kirby\Form\Field;
 
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Form\Interface\ProvidesNestedForm;
 use Kirby\Form\Mixin;
 use Kirby\Toolkit\Str;
 
@@ -13,7 +14,7 @@ use Kirby\Toolkit\Str;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class StructureField extends InputField
+class StructureField extends InputField implements ProvidesNestedForm
 {
 	use Mixin\Batch;
 	use Mixin\Duplicate;
@@ -81,10 +82,6 @@ class StructureField extends InputField
 		return $this->duplicate ?? true;
 	}
 
-	/**
-	 * @psalm-suppress MethodSignatureMismatch
-	 * @todo Remove psalm suppress after https://github.com/vimeo/psalm/issues/8673 is fixed
-	 */
 	public function fill(mixed $value): static
 	{
 		return parent::fill(

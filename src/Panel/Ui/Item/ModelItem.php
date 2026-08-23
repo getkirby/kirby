@@ -5,6 +5,7 @@ namespace Kirby\Panel\Ui\Item;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Panel\Model as Panel;
 use Kirby\Panel\Ui\Item;
+use Kirby\Toolkit\HtmlString;
 
 /**
  * @copyright Bastian Allgeier
@@ -44,9 +45,9 @@ class ModelItem extends Item
 		$this->panel = $model->panel();
 	}
 
-	protected function info(): string|null
+	protected function info(): HtmlString|null
 	{
-		return $this->model->toSafeString($this->info ?? false);
+		return $this->model->toSafeHtmlString($this->info ?? false);
 	}
 
 	protected function image(): array|null
@@ -75,8 +76,8 @@ class ModelItem extends Item
 		];
 	}
 
-	protected function text(): string
+	protected function text(): HtmlString
 	{
-		return $this->model->toSafeString($this->text);
+		return $this->model->toSafeHtmlString($this->text);
 	}
 }

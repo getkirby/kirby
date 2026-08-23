@@ -33,14 +33,16 @@
 						:target="target"
 						:to="link"
 					>
-						<!-- eslint-disable-next-line vue/no-v-html -->
-						<span v-html="text ?? '&nbsp;'" />
+						<span v-safe-html="text ?? '\u00a0'" />
 					</k-link>
-					<!-- eslint-disable-next-line vue/no-v-html -->
-					<span v-else v-html="text ?? '&nbsp;'" />
+					<span v-else v-safe-html="text ?? '\u00a0'" />
 				</h3>
-				<!-- eslint-disable-next-line vue/no-v-html -->
-				<p v-if="info" :title="title(info)" class="k-item-info" v-html="info" />
+				<p
+					v-if="info"
+					v-safe-html="info"
+					:title="title(info)"
+					class="k-item-info"
+				/>
 			</div>
 
 			<div
@@ -81,6 +83,7 @@
 <script>
 import { props as ItemImageProps } from "./ItemImage.vue";
 import { layout } from "@/mixins/props.js";
+import { HtmlString } from "@/panel/html";
 /**
  * A collection item that can be displayed in various layouts
  *
@@ -182,9 +185,16 @@ export default {
 			this.$emit("option", event);
 		},
 		title(text) {
-			return this.$helper.string
-				.stripHTML(this.$helper.string.unescapeHTML(text))
-				.trim();
+			// only trusted HTML carries tags and entities to undo,
+			// a plain string is already the text we want. Tags go
+			// first, so escaped ones survive as visible characters.
+			if (text instanceof HtmlString) {
+				return this.$helper.string
+					.unescapeHTML(this.$helper.string.stripHTML(text))
+					.trim();
+			}
+
+			return String(text ?? "").trim();
 		}
 	}
 };

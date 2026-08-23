@@ -20,7 +20,7 @@ class SystemLicenseRemoveDialogController extends DialogController
 	public function load(): Dialog
 	{
 		return new RemoveDialog(
-			text: $this->i18n('license.remove.text'),
+			text: $this->i18nHtml('license.remove.text'),
 			size: 'medium',
 			submitButton: [
 				'icon'  => 'trash',

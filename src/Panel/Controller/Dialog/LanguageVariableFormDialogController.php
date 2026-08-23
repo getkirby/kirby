@@ -73,7 +73,7 @@ class LanguageVariableFormDialogController extends DialogController
 			'entries' => [
 				'field'     => ['type' => 'text'],
 				'label'     => $this->i18n('language.variable.entries'),
-				'help'      => $this->i18n('language.variable.entries.help'),
+				'help'      => $this->i18nHtml('language.variable.entries.help'),
 				'type'      => 'entries',
 				'min'       => 1,
 				'when'      => ['multiple' => true],

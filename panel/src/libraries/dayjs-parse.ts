@@ -3,6 +3,7 @@
  * @license   https://opensource.org/licenses/MIT
  */
 
+import "@/helpers/regex";
 import type { Dayjs, PluginFunc } from "dayjs";
 import type { DatetimeType, DayjsFactory } from "./dayjs";
 import type { Locale } from "./dayjs-locale";
@@ -193,7 +194,7 @@ function match(
 	tokens: string[],
 	pattern: DayjsPattern
 ): Dayjs | null {
-	const parts = pattern.parts;
+	const parts = pattern.parts();
 
 	// a token count that misses the pattern is not wrong yet:
 	// too few means digits were typed without any separator,
@@ -375,32 +376,47 @@ function toNumber(token: string, min: number, max: number): number | null {
  * Builds regex that splits input against a pattern into tokens.
  */
 function toSeparators(pattern: DayjsPattern): RegExp {
-	const { parts, source } = pattern;
+	const source = pattern.source;
 	const covered = new Set<number>();
 
-	for (const part of parts) {
+	for (const part of pattern.parts()) {
 		for (let index = part.start; index <= part.end; index++) {
 			covered.add(index);
 		}
 	}
 
-	const literals = new Set<string>();
+	// an escaped literal is matched as a whole, so that one carrying
+	// letters never splits what a marker prints, e.g. the `um` of
+	// `DD.MM.YYYY [um] HH:mm` inside a month name
+	const words = [
+		...new Set(pattern.literals.filter((literal) => literal !== ""))
+	];
+
+	// neither its characters nor the brackets
+	// around it are separators of their own
+	const skip = new Set(["[", "]", ...words.join("")]);
+	const chars = new Set<string>();
 
 	for (let index = 0; index < source.length; index++) {
-		if (covered.has(index) === false) {
-			literals.add(source[index]);
+		const char = source[index];
+
+		if (covered.has(index) === false && skip.has(char) === false) {
+			chars.add(char);
 		}
 	}
 
-	if (literals.size === 0) {
+	if (chars.size === 0 && words.length === 0) {
 		return separators;
 	}
 
-	const escaped = [...literals]
-		.map((char) => char.replace(/[\\\]^[-]/g, "\\$&"))
-		.join("");
+	const alternatives = [...words.map(RegExp.escape), "[^\\p{L}\\p{N}]"];
 
-	return new RegExp(`(?:[^\\p{L}\\p{N}]|[${escaped}])+`, "u");
+	if (chars.size > 0) {
+		const escaped = [...chars].map(RegExp.escape).join("");
+		alternatives.push(`[${escaped}]`);
+	}
+
+	return new RegExp(`(?:${alternatives.join("|")})+`, "u");
 }
 
 /**
@@ -525,7 +541,7 @@ const plugin: PluginFunc = (option, Dayjs, dayjs) => {
 
 			// what the source pattern prescribes is what was
 			// most likely typed, so matching it first against the input
-			if (pattern.parts.length > 0) {
+			if (pattern.parts().length > 0) {
 				const dt = match(dayjs, split(input, toSeparators(pattern)), pattern);
 
 				if (dt !== null) {

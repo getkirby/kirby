@@ -7,7 +7,6 @@ use Kirby\Cms\App;
 use Kirby\Cms\Find;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
-use Kirby\Cms\PageRules;
 use Kirby\Cms\Site;
 use Kirby\Cms\User;
 use Kirby\Content\MemoryStorage;
@@ -258,10 +257,11 @@ class PageCreateDialogController extends ModelCreateDialogController
 
 		// create temporary form to sanitize the input
 		// and add default values
-		$form = Form::for($this->model())->fill(input: $content);
+		$form = Form::for($this->model());
+		$form->fill(input: $content, defaults: true);
 
 		return [
-			'content'  => $form->strings(true),
+			'content'  => $form->toStoredValues(),
 			'slug'     => $input['slug'],
 			'template' => $this->template()
 		];
@@ -311,8 +311,9 @@ class PageCreateDialogController extends ModelCreateDialogController
 	public function validate(array $input, string $status = 'draft'): bool
 	{
 		// basic validation
-		PageRules::validateTitleLength($input['content']['title']);
-		PageRules::validateSlugLength($input['slug']);
+		$validators = $this->model()->guards()->validators();
+		$validators->validateTitle($input['content']['title']);
+		$validators->validateSlugLength($input['slug']);
 
 		// if the page is supposed to be published directly,
 		// ensure that all field validations are met

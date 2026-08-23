@@ -11,6 +11,7 @@ use Kirby\TestCase;
 use Kirby\Tests\MockTime;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Stringable;
 use TypeError;
 
 #[CoversClass(Str::class)]
@@ -950,6 +951,26 @@ class StrTest extends TestCase
 			]
 		));
 
+		// callback receives the raw result on top of the string
+		$object = new class () implements Stringable {
+			public function __toString(): string
+			{
+				return 'object';
+			}
+		};
+
+		Str::safeTemplate(
+			'{{ object }}',
+			['object' => $object],
+			[
+				'callback' => function ($result, $query, $data, $value) use ($object) {
+					$this->assertSame('object', $result);
+					$this->assertSame($object, $value);
+					return $result;
+				}
+			]
+		);
+
 		// callback with fallback
 		$this->assertSame('This is a FALLBACK with <HTML>', Str::safeTemplate(
 			'This is a {{ invalid }} with {< html >}',
@@ -974,10 +995,21 @@ class StrTest extends TestCase
 			]
 		));
 
-		// prevent arbitrary code execution attacks from query placeholders in the untrusted data
+		// prevent arbitrary code execution attacks
+		// from query placeholders in the untrusted data
 		$this->assertSame(
 			'{{ dangerous }},{&lt; dangerous &gt;};{{ dangerous }},{< dangerous >}',
 			Str::safeTemplate('{{ malicious1 }},{{ malicious2 }};{< malicious1 >},{< malicious2 >}', [
+				'malicious1' => '{{ dangerous }}',
+				'malicious2' => '{< dangerous >}',
+				'dangerous' => '*deleting all of the content or something*'
+			])
+		);
+
+		// … also when the template itself has no unescaped placeholders
+		$this->assertSame(
+			'{{ dangerous }},{&lt; dangerous &gt;}',
+			Str::safeTemplate('{{ malicious1 }},{{ malicious2 }}', [
 				'malicious1' => '{{ dangerous }}',
 				'malicious2' => '{< dangerous >}',
 				'dangerous' => '*deleting all of the content or something*'

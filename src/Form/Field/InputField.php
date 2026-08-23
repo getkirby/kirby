@@ -3,10 +3,9 @@
 namespace Kirby\Form\Field;
 
 use Kirby\Form\Mixin;
-use Kirby\Toolkit\BlockCollectionAccess;
 
 /**
- * Input class for fields that have a value
+ * Base class for value fields that can be edited by the user
  *
  * Concrete subclasses must declare a typed `$value` property with a
  * default that defines the empty value.
@@ -15,7 +14,7 @@ use Kirby\Toolkit\BlockCollectionAccess;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  */
-abstract class InputField extends BaseField
+abstract class InputField extends ValueField
 {
 	use Mixin\Autofocus;
 	use Mixin\Disabled;
@@ -23,7 +22,6 @@ abstract class InputField extends BaseField
 	use Mixin\Label;
 	use Mixin\Required;
 	use Mixin\Validation;
-	use Mixin\Value;
 	use Mixin\Width;
 
 	public function __construct(
@@ -65,17 +63,5 @@ abstract class InputField extends BaseField
 			'required'  => $this->isRequired(),
 			'width'     => $this->width(),
 		];
-	}
-
-	/**
-	 * @since 5.2.0
-	 * @todo Move to `Value` mixin once array-based fields are unsupported
-	 */
-	#[BlockCollectionAccess]
-	public function reset(): static
-	{
-		/** @psalm-suppress UndefinedThisPropertyAssignment concrete subclasses declare `$value` */
-		$this->value = $this->emptyValue();
-		return $this;
 	}
 }

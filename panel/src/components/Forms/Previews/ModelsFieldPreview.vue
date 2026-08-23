@@ -1,6 +1,5 @@
 <template>
 	<k-tags-field-preview
-		:html="html"
 		:removable="removable"
 		:value="tags"
 		class="k-models-field-preview"
@@ -18,9 +17,11 @@ import FieldPreview from "@/mixins/forms/fieldPreview.js";
 export default {
 	mixins: [FieldPreview],
 	props: {
+		/**
+		 * @deprecated 6.0.0 Model items already carry trusted HTML
+		 */
 		html: {
-			type: Boolean,
-			default: true
+			type: Boolean
 		},
 		removable: Boolean,
 		value: {
@@ -40,6 +41,13 @@ export default {
 			handler() {
 				this.collect();
 			}
+		}
+	},
+	created() {
+		if (this.html === true) {
+			window.panel.deprecated(
+				"`k-models-field-preview`: the `html` prop has been deprecated. Model items already carry trusted HTML."
+			);
 		}
 	},
 	methods: {

@@ -74,7 +74,7 @@ class FilePickerDialogControllerTest extends TestCase
 
 		$item = $controller->item($this->app->file('test.jpg'));
 		$this->assertArrayHasKey('image', $item);
-		$this->assertSame('', $item['info']);
+		$this->assertSame('', (string)$item['info']);
 		$this->assertSame('list', $item['layout']);
 		$this->assertSame('test.jpg', $item['id']);
 		$this->assertSame('/site/files/test.jpg', $item['link']);

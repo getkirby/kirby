@@ -413,6 +413,41 @@ class LanguageTest extends TestCase
 		$this->assertFalse($language->isDefault());
 	}
 
+	public function testIsDeletable(): void
+	{
+		$this->app = $this->app->clone([
+			'languages' => [
+				['code' => 'en', 'name' => 'English', 'default' => true],
+				['code' => 'de', 'name' => 'Deutsch']
+			]
+		]);
+
+		$this->assertTrue($this->app->language('de')->isDeletable());
+	}
+
+	public function testIsDeletableWithDefaultLanguage(): void
+	{
+		$this->app = $this->app->clone([
+			'languages' => [
+				['code' => 'en', 'name' => 'English', 'default' => true],
+				['code' => 'de', 'name' => 'Deutsch']
+			]
+		]);
+
+		// the default language can only be deleted if it is the last one
+		$this->assertFalse($this->app->language('en')->isDeletable());
+	}
+
+	public function testIsDeletableWithSingleLanguage(): void
+	{
+		$language = new Language([
+			'code'   => 'en',
+			'single' => true
+		]);
+
+		$this->assertFalse($language->isDeletable());
+	}
+
 	public function testIsSingle(): void
 	{
 		// default

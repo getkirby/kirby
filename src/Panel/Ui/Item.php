@@ -2,6 +2,8 @@
 
 namespace Kirby\Panel\Ui;
 
+use Kirby\Toolkit\HtmlString;
+
 /**
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
@@ -12,9 +14,9 @@ class Item extends Component
 	protected string $layout;
 
 	public function __construct(
-		public string $text,
+		public string|HtmlString $text,
 		public string|array|false|null $image = [],
-		public string|null $info = null,
+		public string|HtmlString|null $info = null,
 		string|null $layout = null,
 	) {
 		parent::__construct(component: 'k-item');
@@ -22,7 +24,7 @@ class Item extends Component
 		$this->layout = $layout ?? 'list';
 	}
 
-	protected function info(): string|null
+	protected function info(): string|HtmlString|null
 	{
 		return $this->info;
 	}
@@ -42,7 +44,7 @@ class Item extends Component
 		];
 	}
 
-	protected function text(): string
+	protected function text(): string|HtmlString
 	{
 		return $this->text;
 	}

@@ -2,6 +2,8 @@
 
 namespace Kirby\Panel\Ui\Dialog;
 
+use Kirby\Toolkit\HtmlString;
+
 /**
  * Dialog that removes something
  *
@@ -18,7 +20,7 @@ class RemoveDialog extends TextDialog
 		string|array|bool|null $cancelButton = null,
 		string|null $size = 'medium',
 		string|array|bool|null $submitButton = null,
-		string|null $text = null,
+		string|HtmlString|null $text = null,
 		...$attrs
 	) {
 		parent::__construct(...[

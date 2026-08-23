@@ -48,7 +48,7 @@
 			:content="content"
 			:empty="
 				$panel.config.debug
-					? $t('file.blueprint', { blueprint: $esc(blueprint) })
+					? $panel.html($t('file.blueprint', { blueprint: $esc(blueprint) }))
 					: null
 			"
 			:lock="lock"

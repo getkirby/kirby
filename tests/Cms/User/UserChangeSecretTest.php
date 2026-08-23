@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Exception\PermissionException;
+use Kirby\Exception\AbilityException;
 use Kirby\Filesystem\F;
 use Kirby\Tests\MockTime;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -91,8 +91,8 @@ class UserChangeSecretTest extends ModelTestCase
 	{
 		$this->app->impersonate('editor@domain.com');
 
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You cannot change user secrets for admin@domain.com');
+		$this->expectException(AbilityException::class);
+		$this->expectExceptionCode('error.user.changeSecret');
 
 		$this->admin->changeSecret('custom', 'abc123');
 	}

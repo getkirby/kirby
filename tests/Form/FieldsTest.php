@@ -11,7 +11,8 @@ use Kirby\Cms\TestCase;
 use Kirby\Cms\User;
 use Kirby\Exception\FormValidationException;
 use Kirby\Exception\NotFoundException;
-use Kirby\Form\Field\BaseField;
+use Kirby\Form\Field\InputField;
+use Kirby\Form\Interface\ProvidesNestedForm;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Fields::class)]
@@ -267,6 +268,45 @@ class FieldsTest extends TestCase
 		], $fields->toFormValues());
 	}
 
+	public function testFillWithDefaults(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'    => 'text',
+					'default' => 'A'
+				],
+				'b' => [
+					'type'    => 'text',
+					'default' => 'B'
+				],
+				'c' => [
+					'type'    => 'text',
+					'default' => 'C'
+				],
+			],
+			model: $this->model
+		);
+
+		$response = $fields->fill(
+			input: [
+				'a' => 'Custom A',
+				'b' => ''
+			],
+			defaults: true
+		);
+
+		$this->assertSame($fields, $response);
+		$this->assertSame([
+			// the submitted value is kept
+			'a' => 'Custom A',
+			// an empty value falls back to the default
+			'b' => 'B',
+			// a missing value falls back to the default
+			'c' => 'C'
+		], $fields->toFormValues());
+	}
+
 	public function testFillWithNoValueField(): void
 	{
 		$fields = new Fields(
@@ -323,45 +363,17 @@ class FieldsTest extends TestCase
 
 	public function testFind(): void
 	{
-		Field::$types['test'] = [
-			'methods' => [
-				'form' => function () {
-					return new Form([
-						'fields' => [
-							'child' => [
-								'type'  => 'text',
-							],
-						],
-						'model' => $this->model
-					]);
-				}
-			]
-		];
-
-		$fields = new Fields([
-			'mother' => [
-				'type'  => 'test',
-			],
-		], $this->model);
-
-		$this->assertSame('mother', $fields->find('mother')->name());
-		$this->assertSame('child', $fields->find('mother+child')->name());
-		$this->assertNull($fields->find('mother+missing-child'));
-	}
-
-	public function testFindInFieldClass(): void
-	{
-		$motherClass = new class () extends BaseField {
+		$motherClass = new class () extends Field implements ProvidesNestedForm {
 			public function form(): Form
 			{
-				return new Form([
-					'fields' => [
+				return new Form(
+					fields: [
 						'child' => [
 							'type' => 'text',
 						],
 					],
-					'model' => $this->model
-				]);
+					model: $this->model
+				);
 			}
 		};
 
@@ -374,6 +386,7 @@ class FieldsTest extends TestCase
 
 		$this->assertSame('mother', $fields->find('mother')->name());
 		$this->assertSame('child', $fields->find('mother+child')->name());
+		$this->assertNull($fields->find('mother+missing-child'));
 	}
 
 	public function testFindWhenFieldHasNoForm(): void
@@ -381,6 +394,19 @@ class FieldsTest extends TestCase
 		$fields = new Fields([
 			'mother' => [
 				'type'  => 'text',
+			],
+		], $this->model);
+
+		$this->assertNull($fields->find('mother+child'));
+	}
+
+	public function testFindWhenFieldHasFieldsetForms(): void
+	{
+		// blocks have one form per fieldset, not a single nested
+		// form, so the search must not descend into them
+		$fields = new Fields([
+			'mother' => [
+				'type' => 'blocks',
 			],
 		], $this->model);
 
@@ -721,6 +747,32 @@ class FieldsTest extends TestCase
 		], $fields->toStoredValues());
 	}
 
+	public function testSubmitWithANoValueField(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+					'value' => 'A',
+				],
+				'b' => [
+					'type'  => 'info',
+					'value' => 'B',
+				],
+			],
+			model: $this->model
+		);
+
+		$fields->submit(input: [
+			'a' => 'A updated',
+			'b' => 'B updated',
+		]);
+
+		$this->assertSame([
+			'a' => 'A updated',
+		], $fields->toFormValues());
+	}
+
 	public function testSubmitWithForceAndANoValueField(): void
 	{
 		$fields = new Fields(
@@ -1039,11 +1091,16 @@ class FieldsTest extends TestCase
 
 	public function testToStoredValues(): void
 	{
-		Field::$types['test'] = [
-			'save' => function ($value) {
-				return $value . ' stored';
+		$field = new class () extends InputField {
+			protected mixed $value = null;
+
+			public function toStoredValue(): mixed
+			{
+				return parent::toStoredValue() . ' stored';
 			}
-		];
+		};
+
+		Field::$types['test'] = $field::class;
 
 		$fields = new Fields([
 			'a' => [

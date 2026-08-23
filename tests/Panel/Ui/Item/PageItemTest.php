@@ -4,6 +4,7 @@ namespace Kirby\Panel\Ui\Item;
 
 use Kirby\Cms\Page;
 use Kirby\Cms\TestCase;
+use Kirby\Toolkit\HtmlString;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(PageItem::class)]
@@ -36,9 +37,9 @@ class PageItemTest extends TestCase
 				'cover' => false,
 				'icon'  => 'page',
 			],
-			'info'     => '',
+			'info'     => new HtmlString(''),
 			'layout'   => 'list',
-			'text'     => 'test',
+			'text'     => new HtmlString('test'),
 			'id'       => 'test',
 			'link'     => '/pages/test',
 			'permissions' => [
@@ -56,6 +57,6 @@ class PageItemTest extends TestCase
 			'url'      => '/test',
 		];
 
-		$this->assertSame($expected, $item->props());
+		$this->assertEquals($expected, $item->props()); // -ignore-line
 	}
 }

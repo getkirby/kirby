@@ -3,7 +3,7 @@
 use Kirby\Cms\Fieldsets;
 
 $fieldset = Fieldsets::factory()->get('heading');
-$defaults = $fieldset->form($fieldset->fields())->data(true);
+$defaults = $fieldset->form($fieldset->fields())->fill(defaults: true)->toFormValues();
 
 return [
 	'docs'     => 'k-block-type-heading',

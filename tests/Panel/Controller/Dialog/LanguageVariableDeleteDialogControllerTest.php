@@ -59,7 +59,7 @@ class LanguageVariableDeleteDialogControllerTest extends TestCase
 		$this->assertSame('k-remove-dialog', $dialog->component);
 
 		$props = $dialog->props();
-		$this->assertSame('Do you really want to delete the variable for foo?', $props['text']);
+		$this->assertSame('Do you really want to delete the variable for foo?', (string)$props['text']);
 	}
 
 	public function testSubmit(): void

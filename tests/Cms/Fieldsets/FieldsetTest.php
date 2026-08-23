@@ -102,6 +102,20 @@ class FieldsetTest extends TestCase
 		$this->assertSame('text', $fieldset->fields()['text']['type']);
 	}
 
+	public function testFieldsWithDisabledTabs(): void
+	{
+		$fieldset = new Fieldset([
+			'type' => 'test',
+			'tabs' => [
+				'content' => false
+			]
+		]);
+
+		$this->assertSame([], $fieldset->tabs());
+		$this->assertSame([], $fieldset->fields());
+		$this->assertFalse($fieldset->editable());
+	}
+
 	public function testForm(): void
 	{
 		$fieldset = new Fieldset([

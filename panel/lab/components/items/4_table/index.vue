@@ -74,9 +74,6 @@ export default {
 					selectable: true
 				};
 			});
-		},
-		selectedIds() {
-			return this.selected.map((item) => item.id).join(", ");
 		}
 	}
 };

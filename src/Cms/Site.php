@@ -7,6 +7,7 @@ use Kirby\Content\VersionId;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\Dir;
+use Kirby\Guards\SiteGuards;
 use Kirby\Panel\Site as Panel;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\BlockCollectionAccess;
@@ -224,6 +225,17 @@ class Site extends ModelWithContent
 	}
 
 	/**
+	 * Returns the guards object for this site
+	 */
+	public function guards(): SiteGuards
+	{
+		return new SiteGuards(
+			model: $this,
+			user: User::ensure()
+		);
+	}
+
+	/**
 	 * Returns the home page object
 	 */
 	public function homePage(): Page|null
@@ -409,6 +421,8 @@ class Site extends ModelWithContent
 	 * Returns the SiteRules class instance
 	 * which is being used in various methods
 	 * to check for valid actions and input.
+	 *
+	 * @deprecated 6.0.0 Use `$site->guards()` instead
 	 */
 	protected function rules(): SiteRules
 	{

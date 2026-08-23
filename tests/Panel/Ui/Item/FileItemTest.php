@@ -4,6 +4,7 @@ namespace Kirby\Panel\Ui\Item;
 
 use Kirby\Cms\File;
 use Kirby\Cms\TestCase;
+use Kirby\Toolkit\HtmlString;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(FileItem::class)]
@@ -31,9 +32,9 @@ class FileItemTest extends TestCase
 
 		$expected = [
 			'image'    => $this->model->panel()->image(),
-			'info'     => '',
+			'info'     => new HtmlString(''),
 			'layout'   => 'list',
-			'text'     => 'test.jpg',
+			'text'     => new HtmlString('test.jpg'),
 			'id'       => 'test.jpg',
 			'link'     => '/site/files/test.jpg',
 			'permissions' => [
@@ -50,6 +51,6 @@ class FileItemTest extends TestCase
 			'url'       => $this->model->url(),
 		];
 
-		$this->assertSame($expected, $item->props());
+		$this->assertEquals($expected, $item->props()); // -ignore-line
 	}
 }

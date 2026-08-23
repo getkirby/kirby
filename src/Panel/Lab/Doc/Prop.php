@@ -4,6 +4,7 @@ namespace Kirby\Panel\Lab\Doc;
 
 use Kirby\Panel\Lab\Doc;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\HtmlString;
 use Kirby\Toolkit\Str;
 
 /**
@@ -21,9 +22,9 @@ class Prop
 	public function __construct(
 		public string $name,
 		public string|null $type = null,
-		public string|null $description = null,
+		public string|HtmlString|null $description = null,
 		public string|null $default = null,
-		public string|null $deprecated = null,
+		public string|HtmlString|null $deprecated = null,
 		public string|null $example = null,
 		public bool $required = false,
 		public string|null $since = null,

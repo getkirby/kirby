@@ -10,6 +10,24 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(DateTimeField::class)]
 class DateFieldTest extends TestCase
 {
+	public function testDisplay(): void
+	{
+		$field = $this->field('date');
+		$this->assertSame('YYYY-MM-DD', $field->display());
+
+		$field = $this->field('date', ['display' => 'dd.mm.yyyy']);
+		$this->assertSame('DD.MM.YYYY', $field->display());
+
+		$field = $this->field('date', ['display' => 'D. [de] MMMM yyyy']);
+		$this->assertSame('D. [de] MMMM YYYY', $field->display());
+
+		$field = $this->field('date', ['display' => '[Am] dd. MMMM']);
+		$this->assertSame('[Am] DD. MMMM', $field->display());
+
+		$field = $this->field('date', ['display' => 'dd[mm']);
+		$this->assertSame('DD[MM', $field->display());
+	}
+
 	public function testMax(): void
 	{
 		// a date-only field cuts it down to its own precision

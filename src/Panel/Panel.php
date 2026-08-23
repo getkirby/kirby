@@ -23,6 +23,7 @@ class Panel
 {
 	protected Access|null $access = null;
 	protected Areas|null $areas = null;
+	protected Assets|null $assets = null;
 	protected Home|null $home = null;
 	protected Router|null $router = null;
 
@@ -46,6 +47,15 @@ class Panel
 	public function areas(): Areas
 	{
 		return $this->areas ??= Areas::for($this->kirby);
+	}
+
+	/**
+	 * Returns the Panel Assets object
+	 * @since 6.0.0
+	 */
+	public function assets(): Assets
+	{
+		return $this->assets ??= new Assets();
 	}
 
 	/**

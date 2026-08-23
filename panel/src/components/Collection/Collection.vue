@@ -40,7 +40,7 @@
 		</component>
 
 		<footer v-if="help || hasPagination" class="k-collection-footer">
-			<k-text class="k-help k-collection-help" :html="help" />
+			<k-text class="k-help k-collection-help" :text="help" />
 			<!--
 				Emitted when the pagination changes
 				@event paginate

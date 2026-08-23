@@ -2,12 +2,13 @@
 
 namespace Kirby\Panel\Controller\Dialog;
 
-use Kirby\Cms\UserRules;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\Field;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
+use Kirby\Toolkit\Escape;
+use Kirby\Toolkit\HtmlString;
 
 /**
  * Controls the Panel dialog for changing the password of a user
@@ -48,7 +49,9 @@ class UserChangePasswordDialogController extends UserDialogController
 			'password' => Field::password([
 				'label'        => $this->i18n('user.changePassword.new'),
 				'autocomplete' => 'new-password',
-				'help'         => $this->i18n('account') . ': ' . $this->user->email() . ($hint ? '<br>' . $hint : ''),
+				'help'         => new HtmlString(
+					$this->i18n('account') . ': ' . Escape::html($this->user->email()) . ($hint ? '<br>' . $hint : '')
+				),
 				'minlength'    => $policy->minlength()
 			]),
 			'passwordConfirmation' => Field::password([
@@ -97,7 +100,7 @@ class UserChangePasswordDialogController extends UserDialogController
 		}
 
 		// validate the new password
-		UserRules::validPassword($this->user, $password ?? '');
+		$this->user->guards()->validators()->validateNewPassword($password ?? '');
 
 		// compare passwords
 		if ($password !== $passwordConfirmation) {

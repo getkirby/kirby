@@ -2,6 +2,7 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Toolkit\HtmlString;
 use Kirby\Toolkit\I18n;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -120,7 +121,8 @@ class ToggleFieldTest extends TestCase
 			'text' => 'Yay {{ page.slug }}'
 		]);
 
-		$this->assertSame('Yay test', $field->text());
+		$this->assertInstanceOf(HtmlString::class, $field->text());
+		$this->assertSame('Yay test', (string)$field->text());
 	}
 
 	public function testTextWithTranslation(): void
@@ -135,12 +137,12 @@ class ToggleFieldTest extends TestCase
 		I18n::$locale = 'en';
 
 		$field = $this->field('toggle', $props);
-		$this->assertSame('Yay test', $field->text());
+		$this->assertSame('Yay test', (string)$field->text());
 
 		I18n::$locale = 'de';
 
 		$field = $this->field('toggle', $props);
-		$this->assertSame('Ja test', $field->text());
+		$this->assertSame('Ja test', (string)$field->text());
 	}
 
 	public function testTextToggle(): void
@@ -152,7 +154,10 @@ class ToggleFieldTest extends TestCase
 			]
 		]);
 
-		$this->assertSame(['Yes test', 'No test'], $field->text());
+		$text = $field->text();
+
+		$this->assertInstanceOf(HtmlString::class, $text[0]);
+		$this->assertSame(['Yes test', 'No test'], array_map(strval(...), $text));
 	}
 
 	public function testTextToggleWithTranslation(): void
@@ -167,11 +172,17 @@ class ToggleFieldTest extends TestCase
 		I18n::$locale = 'en';
 
 		$field = $this->field('toggle', $props);
-		$this->assertSame(['Yes test', 'No test'], $field->text());
+		$this->assertSame(
+			['Yes test', 'No test'],
+			array_map(strval(...), $field->text())
+		);
 
 		I18n::$locale = 'de';
 
 		$field = $this->field('toggle', $props);
-		$this->assertSame(['Ja test', 'Nein test'], $field->text());
+		$this->assertSame(
+			['Ja test', 'Nein test'],
+			array_map(strval(...), $field->text())
+		);
 	}
 }

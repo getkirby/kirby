@@ -9,7 +9,7 @@ use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Exception\FormValidationException;
 use Kirby\Exception\NotFoundException;
-use Kirby\Form\Field\BaseField;
+use Kirby\Form\Interface\ProvidesNestedForm;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 
@@ -19,7 +19,7 @@ use Kirby\Toolkit\Str;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  *
- * @extends Collection<Field|BaseField>
+ * @extends Collection<Field>
  */
 class Fields extends Collection
 {
@@ -55,7 +55,7 @@ class Fields extends Collection
 	 * This takes care of validation and of setting
 	 * the collection prop on each object correctly.
 	 *
-	 * @param Field|BaseField|array $field
+	 * @param Field|array $field
 	 */
 	public function __set(string $name, $field): void
 	{
@@ -63,7 +63,8 @@ class Fields extends Collection
 			// use the array key as name if the name is not set
 			$field['model'] ??= $this->model;
 			$field['name']  ??= $name;
-			$field = Field::factory($field['type'], $field, $this);
+			$class = Field::resolve($field['type'], $field['name']);
+			$field = $class::factory($field, $this);
 		}
 
 		parent::__set($field->name(), $field);
@@ -107,7 +108,7 @@ class Fields extends Collection
 	 * @since 5.0.0
 	 * @throws NotFoundException
 	 */
-	public function field(string $name): Field|BaseField
+	public function field(string $name): Field
 	{
 		if ($field = $this->findByKey($name)) {
 			return $field;
@@ -124,8 +125,9 @@ class Fields extends Collection
 	 * @since 5.0.0
 	 */
 	public function fill(
-		array $input,
-		bool $passthrough = true
+		array $input = [],
+		bool $passthrough = true,
+		bool $defaults = false
 	): static {
 		if ($passthrough === true) {
 			$this->passthrough($input);
@@ -149,13 +151,24 @@ class Fields extends Collection
 			$field->fill($value);
 		}
 
+		// fall back to the default value for each field
+		// that is still empty after the input has been filled
+		if ($defaults === true) {
+			$this->fill(
+				input: $this
+					->filter(fn ($field) => $field->hasValue() ? $field->isEmpty() : false)
+					->toArray(fn ($field) => $field->default()),
+				passthrough: false
+			);
+		}
+
 		return $this;
 	}
 
 	/**
 	 * Find a field by key/name
 	 */
-	public function findByKey(string $key): Field|BaseField|null
+	public function findByKey(string $key): Field|null
 	{
 		if (str_contains($key, '+')) {
 			return $this->findByKeyRecursive($key);
@@ -167,7 +180,7 @@ class Fields extends Collection
 	/**
 	 * Find fields in nested forms recursively
 	 */
-	public function findByKeyRecursive(string $key): Field|BaseField|null
+	public function findByKeyRecursive(string $key): Field|null
 	{
 		$fields = $this;
 		$names  = Str::split($key, '+');
@@ -187,23 +200,14 @@ class Fields extends Collection
 				return null;
 			}
 
-			// there are more parts in the key
+			// there are more parts in the key, but the search
+			// can only continue for fields with a nested form
 			if ($index < $count) {
-				$form = match (true) {
-					$field instanceof BaseField && method_exists($field, 'form') === true
-						=> $field->form(),
-					$field instanceof Field
-						=> $field->form(),
-					default => null
-				};
-
-				// the search can only continue for
-				// fields with valid nested forms
-				if ($form instanceof Form === false) {
+				if ($field instanceof ProvidesNestedForm === false) {
 					return null;
 				}
 
-				$fields = $form->fields();
+				$fields = $field->form()->fields();
 			}
 		}
 
@@ -285,11 +289,7 @@ class Fields extends Collection
 		// reset the values of each field
 		foreach ($this->data as $field) {
 			if ($field->hasValue() === true) {
-				if ($field instanceof Field) {
-					$field->fillWithEmptyValue(); // @codeCoverageIgnore
-				} elseif (method_exists($field, 'reset')) {
-					$field->reset();
-				}
+				$field->reset();
 			}
 		}
 
@@ -321,7 +321,7 @@ class Fields extends Collection
 			}
 
 			// don't submit fields without a value
-			if ($force === true && $field->hasValue() === false) {
+			if ($field->hasValue() === false) {
 				continue;
 			}
 

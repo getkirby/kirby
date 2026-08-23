@@ -7,6 +7,7 @@ use Kirby\Panel\Controller\DialogController;
 use Kirby\Panel\Field;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
+use Kirby\Toolkit\HtmlString;
 
 /**
  * Dialog to activate/register the site with a license
@@ -30,7 +31,7 @@ class SystemLicenseActivateDialogController extends DialogController
 				'theme' => 'white',
 				'type'  => 'info',
 				'icon'  => 'info',
-				'text'  => $this->i18n('license.activate.domain', [
+				'text'  => $this->i18nHtml('license.activate.domain', [
 					'host' => $system->indexUrl()
 				]),
 			],
@@ -56,7 +57,7 @@ class SystemLicenseActivateDialogController extends DialogController
 			'warning' => [
 				'type'  => 'info',
 				'theme' => 'warning',
-				'text'  =>  $this->i18n('license.activate.' . ($local ? 'local' : 'public'), [
+				'text'  => $this->i18nHtml('license.activate.' . ($local ? 'local' : 'public'), [
 					'host' => $system->indexUrl()
 				]),
 				'when'  => ['type' => $local ? 'regular' : 'free'],
@@ -67,7 +68,7 @@ class SystemLicenseActivateDialogController extends DialogController
 				'type'     => 'toggle',
 				'text'     =>  $this->i18n('license.activate.acknowledge.text'),
 				'required' => true,
-				'help'     => $this->i18n('license.activate.acknowledge.help', [
+				'help'     => $this->i18nHtml('license.activate.acknowledge.help', [
 					'url' => 'https://getkirby.com/license/free-licenses'
 				]),
 			],
@@ -78,7 +79,8 @@ class SystemLicenseActivateDialogController extends DialogController
 				'required'    => true,
 				'counter'     => false,
 				'placeholder' => 'K-',
-				'help'        => $this->i18n('license.code.help') . ' ' . '<a href="https://getkirby.com/buy" target="_blank">' . $this->i18n('license.buy') . ' &rarr;</a>'
+				// the link is appended by us, the translation is plain
+				'help'        => new HtmlString($this->i18n('license.code.help') . ' ' . '<a href="https://getkirby.com/buy" target="_blank">' . $this->i18n('license.buy') . ' &rarr;</a>')
 			],
 			'email' => Field::email([
 				'when'     => ['type' => 'regular'],

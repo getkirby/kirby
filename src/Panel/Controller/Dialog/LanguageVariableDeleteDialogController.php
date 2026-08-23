@@ -8,7 +8,6 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Panel\Controller\DialogController;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\RemoveDialog;
-use Kirby\Toolkit\Escape;
 
 /**
  * Dialog controller for deleting a language variable
@@ -40,8 +39,8 @@ class LanguageVariableDeleteDialogController extends DialogController
 	public function load(): Dialog
 	{
 		return new RemoveDialog(
-			text: $this->i18n('language.variable.delete.confirm', [
-				'key' => Escape::html($this->variable->key())
+			text: $this->i18nHtml('language.variable.delete.confirm', [
+				'key' => $this->variable->key()
 			])
 		);
 	}

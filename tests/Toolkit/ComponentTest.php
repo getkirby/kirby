@@ -294,6 +294,19 @@ class ComponentTest extends TestCase
 		new Component('test');
 	}
 
+	public function testLoadClassDefinition(): void
+	{
+		Component::$types = ['foo' => Component::class];
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage(
+			'The "foo" component is defined by the class ' .
+			Component::class . ' and cannot be extended with the array ' .
+			'syntax. Extend the class instead.'
+		);
+
+		Component::load('foo');
+	}
+
 	public function testLoadInvalidFile(): void
 	{
 		Component::$types = ['foo' => 'bar'];

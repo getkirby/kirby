@@ -86,7 +86,7 @@ class ChangesDialogControllerTest extends TestCase
 		$files      = $controller->files();
 
 		$this->assertCount(1, $files);
-		$this->assertSame('test.jpg', $files[0]['text']);
+		$this->assertSame('test.jpg', (string)$files[0]['text']);
 		$this->assertSame('/pages/test/files/test.jpg', $files[0]['link']);
 	}
 
@@ -150,7 +150,7 @@ class ChangesDialogControllerTest extends TestCase
 		$this->app->impersonate('editor@getkirby.com');
 		$files = (new ChangesDialogController())->files();
 		$this->assertCount(1, $files);
-		$this->assertSame('public.jpg', $files[0]['text']);
+		$this->assertSame('public.jpg', (string)$files[0]['text']);
 	}
 
 	public function testFilesWithoutChanges(): void
@@ -169,7 +169,7 @@ class ChangesDialogControllerTest extends TestCase
 		$controller = new ChangesDialogController();
 		$item       = $controller->item($page);
 
-		$this->assertSame('test', $item['text']);
+		$this->assertSame('test', (string)$item['text']);
 		$this->assertSame('/pages/test', $item['link']);
 	}
 
@@ -186,7 +186,7 @@ class ChangesDialogControllerTest extends TestCase
 
 		$this->assertCount(1, $items);
 
-		$this->assertSame('test', $items[0]['text']);
+		$this->assertSame('test', (string)$items[0]['text']);
 		$this->assertSame('/pages/test', $items[0]['link']);
 	}
 
@@ -215,7 +215,7 @@ class ChangesDialogControllerTest extends TestCase
 		$pages      = $controller->pages();
 
 		$this->assertCount(1, $pages);
-		$this->assertSame('test', $pages[0]['text']);
+		$this->assertSame('test', (string)$pages[0]['text']);
 		$this->assertSame('/pages/test', $pages[0]['link']);
 	}
 
@@ -273,7 +273,7 @@ class ChangesDialogControllerTest extends TestCase
 		$this->app->impersonate('editor@getkirby.com');
 		$pages = (new ChangesDialogController())->pages();
 		$this->assertCount(1, $pages);
-		$this->assertSame('public', $pages[0]['text']);
+		$this->assertSame('public', (string)$pages[0]['text']);
 	}
 
 	public function testPagesWithoutChanges(): void
@@ -293,7 +293,7 @@ class ChangesDialogControllerTest extends TestCase
 		$users      = $controller->users();
 
 		$this->assertCount(1, $users);
-		$this->assertSame('test@getkirby.com', $users[0]['text']);
+		$this->assertSame('test@getkirby.com', (string)$users[0]['text']);
 		$this->assertSame('/users/test', $users[0]['link']);
 	}
 
@@ -346,7 +346,7 @@ class ChangesDialogControllerTest extends TestCase
 		$this->app->impersonate('editor@getkirby.com');
 		$users = (new ChangesDialogController())->users();
 		$this->assertCount(1, $users);
-		$this->assertSame('editor@getkirby.com', $users[0]['text']);
+		$this->assertSame('editor@getkirby.com', (string)$users[0]['text']);
 	}
 
 	public function testUsersWithoutChanges(): void

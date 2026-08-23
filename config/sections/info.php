@@ -1,5 +1,6 @@
 <?php
 
+use Kirby\Toolkit\HtmlString;
 use Kirby\Toolkit\I18n;
 
 return [
@@ -22,7 +23,7 @@ return [
 			if ($this->text) {
 				$text = $this->model()->toSafeString($this->text);
 				$text = $this->kirby()->kirbytext($text);
-				return $text;
+				return new HtmlString($text);
 			}
 		},
 	],

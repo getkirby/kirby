@@ -313,6 +313,7 @@ class State
 	{
 		return [
 			'api'   => $this->kirby->url('api'),
+			'icons' => $this->panel->assets()->icons(),
 			'panel' => $this->kirby->url('panel'),
 			'site'  => $this->kirby->url('index')
 		];

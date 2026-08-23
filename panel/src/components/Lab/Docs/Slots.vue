@@ -22,7 +22,7 @@
 						</td>
 						<td>
 							<k-lab-docs-warning title="Deprecated" :text="slot.deprecated" />
-							<k-text :html="slot.description" />
+							<k-text :text="slot.description" />
 						</td>
 						<td v-if="hasBindings">
 							<k-lab-docs-params :params="slot.bindings" />

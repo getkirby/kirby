@@ -161,7 +161,7 @@ return [
 			// @codeCoverageIgnoreEnd
 
 			// Use form to get the proper values for the columns
-			$form = Form::for($model)->values();
+			$form = Form::for($model)->toFormValues();
 
 			foreach ($this->columns as $columnName => $column) {
 				$item[$columnName] = match (empty($column['value'])) {

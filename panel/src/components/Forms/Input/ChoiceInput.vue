@@ -25,10 +25,8 @@
 		<k-icon v-if="icon" :type="icon" class="k-choice-input-icon" />
 
 		<span v-if="label || info" class="k-choice-input-label">
-			<!-- eslint-disable-next-line vue/no-v-html -->
-			<span class="k-choice-input-label-text" v-html="label" />
-			<!-- eslint-disable-next-line vue/no-v-html -->
-			<span v-if="info" class="k-choice-input-label-info" v-html="info" />
+			<span v-safe-html="label" class="k-choice-input-label-text" />
+			<span v-if="info" v-safe-html="info" class="k-choice-input-label-info" />
 		</span>
 	</label>
 </template>

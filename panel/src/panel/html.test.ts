@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import html, { HtmlString } from "./html";
+import html, { escape, HtmlString } from "./html";
 
 describe("HtmlString class", () => {
 	describe("instance", () => {
@@ -165,7 +165,38 @@ describe("HtmlString class", () => {
 	});
 });
 
-describe("$html()", () => {
+describe("escape()", () => {
+	it("escapes plain string values", () => {
+		expect(escape({ name: "<script>" })).toEqual({
+			name: "&lt;script&gt;"
+		});
+	});
+
+	it("escapes nested values", () => {
+		expect(escape({ user: { name: "<script>" } })).toEqual({
+			user: { name: "&lt;script&gt;" }
+		});
+	});
+
+	it("passes trusted values through unescaped", () => {
+		expect(escape({ name: new HtmlString("<b>Peter</b>") })).toEqual({
+			name: "<b>Peter</b>"
+		});
+	});
+
+	it("keeps null and undefined as null", () => {
+		expect(escape({ a: null, b: undefined })).toEqual({ a: null, b: null });
+	});
+
+	it("escapes non-string primitives", () => {
+		expect(escape({ count: 42, flag: true })).toEqual({
+			count: "42",
+			flag: "true"
+		});
+	});
+});
+
+describe("html()", () => {
 	it("wraps a plain string in HtmlString", () => {
 		const result = html("<b>x</b>");
 		expect(result).toBeInstanceOf(HtmlString);

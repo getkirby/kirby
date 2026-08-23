@@ -4,7 +4,7 @@
 		:style="$attrs.style"
 	>
 		{{ column.before }}
-		<k-text :html="html" />
+		<k-text :text="html" />
 		{{ column.after }}
 	</div>
 </template>

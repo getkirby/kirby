@@ -96,7 +96,7 @@ class PagePickerDialogControllerTest extends TestCase
 
 		$item = $controller->item($this->app->page('alpha'));
 		$this->assertArrayHasKey('image', $item);
-		$this->assertSame('', $item['info']);
+		$this->assertSame('', (string)$item['info']);
 		$this->assertSame('list', $item['layout']);
 		$this->assertSame('alpha', $item['id']);
 		$this->assertSame('/pages/alpha', $item['link']);

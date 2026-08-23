@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Mixin;
 
+use Kirby\Toolkit\HtmlString;
+
 /**
  * Provides the `help` prop for optional help text below the field
  *
@@ -15,12 +17,12 @@ trait Help
 	 */
 	protected array|string|null $help;
 
-	public function help(): string|null
+	public function help(): HtmlString|null
 	{
 		if ($this->help !== null && $this->help !== [] && $this->help !== '') {
 			$help = $this->stringTemplateI18n($this->help);
 			$help = $this->kirby()->kirbytext($help);
-			return $help;
+			return new HtmlString($help);
 		}
 
 		return null;

@@ -32,6 +32,24 @@ class HtmlString implements JsonSerializable, Stringable
 	}
 
 	/**
+	 * Escapes a filled-in placeholder for `translate()`. The raw
+	 * value decides, as a plain string can look exactly like
+	 * trusted HTML once the template has cast it.
+	 */
+	protected static function escape(
+		string $result,
+		string $query,
+		array $data,
+		mixed $value
+	): string {
+		if ($value instanceof HtmlString) {
+			return $result;
+		}
+
+		return Escape::html($result);
+	}
+
+	/**
 	 * Checks whether a key has already been marked, so that
 	 * `resolve()` can run more than once over the same data
 	 * without turning `<key>` into `<<key>>`
@@ -105,6 +123,25 @@ class HtmlString implements JsonSerializable, Stringable
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Translates a key or template string and marks the result as
+	 * trusted HTML. Every filled-in placeholder is escaped, unless
+	 * its value is already trusted HTML.
+	 */
+	public static function translate(
+		string|array $key,
+		array $data = [],
+		string|array|null $fallback = null,
+		string|null $locale = null
+	): static {
+		$template = I18n::translate($key, $fallback ?? $key, $locale);
+
+		return new static(Str::template($template, $data, [
+			'callback' => static::escape(...),
+			'fallback' => '-'
+		]));
 	}
 
 	public function value(): string

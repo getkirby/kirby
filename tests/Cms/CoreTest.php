@@ -49,14 +49,6 @@ class CoreTest extends TestCase
 		$this->assertArrayHasKey('password-reset', $authMethods);
 	}
 
-	public function testBlueprintPresets(): void
-	{
-		$blueprintPresets = $this->core->blueprintPresets();
-		$this->assertArrayHasKey('pages', $blueprintPresets);
-		$this->assertArrayHasKey('page', $blueprintPresets);
-		$this->assertArrayHasKey('files', $blueprintPresets);
-	}
-
 	public function testBlueprints(): void
 	{
 		$blueprints = $this->core->blueprints();
@@ -111,21 +103,6 @@ class CoreTest extends TestCase
 		$this->assertArrayHasKey('template', $components);
 		$this->assertArrayHasKey('thumb', $components);
 		$this->assertArrayHasKey('url', $components);
-	}
-
-	public function testFieldMixins(): void
-	{
-		$mixins = $this->core->fieldMixins();
-
-		$this->assertArrayHasKey('datetime', $mixins);
-		$this->assertArrayHasKey('filepicker', $mixins);
-		$this->assertArrayHasKey('min', $mixins);
-		$this->assertArrayHasKey('layout', $mixins);
-		$this->assertArrayHasKey('options', $mixins);
-		$this->assertArrayHasKey('pagepicker', $mixins);
-		$this->assertArrayHasKey('picker', $mixins);
-		$this->assertArrayHasKey('upload', $mixins);
-		$this->assertArrayHasKey('userpicker', $mixins);
 	}
 
 	public function testFields(): void

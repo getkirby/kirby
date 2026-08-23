@@ -42,7 +42,12 @@ type Config = {
 type Languages = Record<string, LanguageState>[];
 type Permissions = Record<string, Record<string, boolean>>;
 type Searches = Record<string, SearchType>;
-type Urls = { api: string; panel: string; site: string };
+type Urls = {
+	api: string;
+	icons: string;
+	panel: string;
+	site: string;
+};
 
 export type PanelState = {
 	config: Config;
@@ -141,7 +146,7 @@ export default class Panel {
 	multilang: boolean = false;
 	permissions: Permissions = {};
 	searches: Searches = {};
-	urls: Urls = { api: "/", panel: "/", site: "/" };
+	urls: Urls = { api: "/", icons: "", panel: "/", site: "/" };
 
 	// modules
 	activation: ReturnType<typeof Activation>;
@@ -170,6 +175,7 @@ export default class Panel {
 	redirect: typeof redirect;
 	reload: ReturnType<typeof View>["reload"];
 	t: ReturnType<typeof Translation>["translate"];
+	th: ReturnType<typeof Translation>["translateHtml"];
 
 	// deprecated: assigned by the legacy plugin, not the core
 	$t!: ReturnType<typeof Translation>["translate"];
@@ -218,6 +224,7 @@ export default class Panel {
 
 		// translator
 		this.t = this.translation.translate.bind(this.translation);
+		this.th = this.translation.translateHtml.bind(this.translation);
 
 		// register all plugins
 		this.plugins = Plugins(this.app, plugins);

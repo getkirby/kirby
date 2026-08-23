@@ -3,7 +3,7 @@
 namespace Kirby\Panel\Controller\Drawer;
 
 use Exception;
-use Kirby\Form\FieldClass;
+use Kirby\Form\Field\InputField;
 use Kirby\Panel\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -12,9 +12,11 @@ class FieldDrawerControllerTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Drawer.FieldDrawerController';
 
-	protected function field(): FieldClass
+	protected function field(): InputField
 	{
-		return new class ([]) extends FieldClass {
+		return new class () extends InputField {
+			protected mixed $value = null;
+
 			public function drawers(): array
 			{
 				return [

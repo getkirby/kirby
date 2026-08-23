@@ -20,10 +20,12 @@
 							label: $t('login.totp.enable.qr.label'),
 							type: 'info',
 							text: qr,
-							help: $t('login.totp.enable.qr.help', {
-								secret: value.secret,
-								uri
-							}),
+							help: $panel.html(
+								$t('login.totp.enable.qr.help', {
+									secret: $esc(value.secret),
+									uri: $esc(uri)
+								})
+							),
 							theme: 'passive',
 							class: 'k-totp-qrcode'
 						},

@@ -130,10 +130,12 @@ export default {
 						text: this.$t("form.discard")
 					},
 					text: isCurrentUser
-						? this.$t("form.discard.confirm")
-						: this.$t("form.discard.confirm.editor", {
-								editor: this.$helper.string.stripHTML(this.editor)
-							})
+						? this.$panel.html(this.$t("form.discard.confirm"))
+						: this.$panel.html(
+								this.$t("form.discard.confirm.editor", {
+									editor: this.$helper.string.stripHTML(this.editor)
+								})
+							)
 				},
 				on: {
 					submit: () => {

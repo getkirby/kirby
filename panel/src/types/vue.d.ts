@@ -11,11 +11,13 @@ declare module "vue" {
 		$esc: typeof helper.string.escapeHTML;
 		$events: Panel["events"];
 		$go: Panel["view"]["open"];
+		$h: Panel["html"];
 		$helper: typeof helper;
 		$library: typeof library;
 		$panel: Panel;
 		$reload: Panel["reload"];
 		$t: Panel["t"];
+		$th: Panel["th"];
 		$url: Panel["url"];
 	}
 }

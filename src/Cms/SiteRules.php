@@ -2,50 +2,23 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Exception\InvalidArgumentException;
-use Kirby\Exception\PermissionException;
-use Kirby\Toolkit\Str;
-
 /**
  * Validators for all site actions
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @deprecated 6.0.0 Use `$site->guards()` instead
  */
 class SiteRules
 {
-	/**
-	 * Validates if the site title can be changed
-	 *
-	 * @throws InvalidArgumentException If the title is empty
-	 * @throws PermissionException If the user is not allowed to change the title
-	 */
 	public static function changeTitle(Site $site, string $title): void
 	{
-		if ($site->permissions()->can('changeTitle') !== true) {
-			throw new PermissionException(
-				key: 'site.changeTitle.permission'
-			);
-		}
-
-		if (Str::length($title) === 0) {
-			throw new InvalidArgumentException(
-				key: 'site.changeTitle.empty'
-			);
-		}
+		$site->guards()->ensureExecutable('changeTitle', $title);
 	}
 
-	/**
-	 * Validates if the site can be updated
-	 *
-	 * @throws PermissionException If the user is not allowed to update the site
-	 */
 	public static function update(Site $site, array $content = []): void
 	{
-		if ($site->permissions()->can('update') !== true) {
-			throw new PermissionException(
-				key: 'site.update.permission'
-			);
-		}
+		$site->guards()->ensureExecutable('update', $content);
 	}
 }

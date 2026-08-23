@@ -3,10 +3,12 @@ import { mount as vueMount } from "@vue/test-utils";
 import { hasEmoji } from "@/helpers/string.js";
 import Icon from "./Icon.vue";
 
+const sprite = "/media/panel/1234/img/icons.svg";
+
 /**
- * Custom mount which injects a $helper stub
+ * Custom mount which injects $helper and $panel stubs
  */
-function mount(props = {}, attrs = {}) {
+function mount(props = {}, attrs = {}, panel: Record<string, unknown> = {}) {
 	return vueMount(Icon, {
 		props,
 		attrs,
@@ -15,6 +17,11 @@ function mount(props = {}, attrs = {}) {
 				$helper: {
 					color: (c: string) => c ?? null,
 					string: { hasEmoji }
+				},
+				$panel: {
+					plugins: { icons: {} },
+					urls: { icons: sprite },
+					...panel
 				}
 			}
 		}
@@ -39,9 +46,22 @@ describe("Icon.vue", () => {
 			expect(wrapper.attributes("data-type")).toBe("edit");
 		});
 
-		it("sets the use href to the icon id", () => {
+		it("references the icon in the sprite file", () => {
 			const wrapper = mount({ type: "edit" });
-			expect(wrapper.find("use").attributes("href")).toBe("#icon-edit");
+			expect(wrapper.find("use").attributes("href")).toBe(
+				sprite + "#icon-edit"
+			);
+		});
+
+		it("references plugin icons in the document", () => {
+			const wrapper = mount(
+				{ type: "plugin" },
+				{},
+				{
+					plugins: { icons: { plugin: "<path />" } }
+				}
+			);
+			expect(wrapper.find("use").attributes("href")).toBe("#icon-plugin");
 		});
 	});
 

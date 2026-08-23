@@ -17,6 +17,16 @@ class CsrfTest extends TestCase
 		$this->csrf = new Csrf($this->app);
 	}
 
+	public function testClear(): void
+	{
+		$session = $this->app->session();
+		$session->set('kirby.csrf', 'session-csrf');
+
+		$this->csrf->clear($session);
+
+		$this->assertNull($session->get('kirby.csrf'));
+	}
+
 	public function testFromSession1(): void
 	{
 		$this->app->session()->set('kirby.csrf', 'session-csrf');

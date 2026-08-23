@@ -87,7 +87,7 @@ class FieldOptionsTest extends TestCase
 			'text'  => '{{ item.slogan }}'
 		]);
 		$this->assertInstanceOf(Options::class, $options->resolve($model));
-		$this->assertSame('We are &lt;b&gt;great&lt;/b&gt;', $options->render($model)[0]['text']);
+		$this->assertSame('We are &lt;b&gt;great&lt;/b&gt;', (string)$options->render($model)[0]['text']);
 
 		// without safe mode
 		$options = FieldOptions::factory(
@@ -100,7 +100,7 @@ class FieldOptionsTest extends TestCase
 			false
 		);
 		$this->assertInstanceOf(Options::class, $options->resolve($model));
-		$this->assertSame('We are <b>great</b>', $options->render($model)[0]['text']);
+		$this->assertSame('We are <b>great</b>', (string)$options->render($model)[0]['text']);
 
 		$options = FieldOptions::factory([
 			'type'  => 'query',

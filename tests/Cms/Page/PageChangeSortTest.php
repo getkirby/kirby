@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Exception\PermissionException;
+use Kirby\Exception\AbilityException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -102,8 +102,8 @@ class PageChangeSortTest extends ModelTestCase
 			'slug' => 'error',
 		]);
 
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('The status for this page cannot be changed');
+		$this->expectException(AbilityException::class);
+		$this->expectExceptionMessage('The status of the error page cannot be changed');
 
 		$page->changeSort(1);
 	}

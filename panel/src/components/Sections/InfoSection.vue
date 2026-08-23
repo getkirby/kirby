@@ -4,7 +4,7 @@
 		:class="['k-info-section', $attrs.class]"
 		:style="$attrs.style"
 	>
-		<k-box :html="true" :icon="icon" :text="text" :theme="theme" />
+		<k-box :icon="icon" :text="text" :theme="theme" />
 	</k-section>
 </template>
 

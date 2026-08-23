@@ -1,15 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="6.16.1@f1f5de594dc76faf8784e02d3dc4716c91c6f6ac">
-  <file src="config/fields/color.php">
-    <InvalidOperand>
-      <code><![CDATA[$props['options'] ?? []]]></code>
-    </InvalidOperand>
-  </file>
-  <file src="config/fields/structure.php">
-    <InvalidOperand>
-      <code><![CDATA[$index]]></code>
-    </InvalidOperand>
-  </file>
   <file src="src/Auth/Passwords.php">
     <InvalidReturnStatement>
       <code><![CDATA[I18n::translate($this->hint, $this->hint)]]></code>
@@ -151,12 +141,6 @@
       <code><![CDATA[$props['content']]]></code>
     </InvalidOperand>
   </file>
-  <file src="src/Cms/PageRules.php">
-    <RedundantCondition>
-      <code><![CDATA[$allowed !== []]]></code>
-      <code><![CDATA[$allowed !== []]]></code>
-    </RedundantCondition>
-  </file>
   <file src="src/Cms/Pages.php">
     <ImplementedParamTypeMismatch>
       <code><![CDATA[$object]]></code>
@@ -246,16 +230,6 @@
       <code><![CDATA[string]]></code>
     </InvalidReturnType>
   </file>
-  <file src="src/Form/Field.php">
-    <UndefinedThisPropertyFetch>
-      <code><![CDATA[$this->after]]></code>
-      <code><![CDATA[$this->before]]></code>
-      <code><![CDATA[$this->disabled]]></code>
-      <code><![CDATA[$this->help]]></code>
-      <code><![CDATA[$this->label]]></code>
-      <code><![CDATA[$this->placeholder]]></code>
-    </UndefinedThisPropertyFetch>
-  </file>
   <file src="src/Form/Field/ColorField.php">
     <InvalidOperand>
       <code><![CDATA[$props['options'] ?? []]]></code>
@@ -266,24 +240,11 @@
       <code><![CDATA[is]]></code>
     </UndefinedMethod>
   </file>
-  <file src="src/Form/Validations.php">
-    <UndefinedMethod>
-      <code><![CDATA[max]]></code>
-      <code><![CDATA[max]]></code>
-      <code><![CDATA[max]]></code>
-      <code><![CDATA[maxlength]]></code>
-      <code><![CDATA[maxlength]]></code>
-      <code><![CDATA[maxlength]]></code>
-      <code><![CDATA[min]]></code>
-      <code><![CDATA[min]]></code>
-      <code><![CDATA[min]]></code>
-      <code><![CDATA[minlength]]></code>
-      <code><![CDATA[minlength]]></code>
-      <code><![CDATA[minlength]]></code>
-      <code><![CDATA[options]]></code>
-      <code><![CDATA[options]]></code>
-      <code><![CDATA[pattern]]></code>
-    </UndefinedMethod>
+  <file src="src/Guards/PageValidators.php">
+    <RedundantCondition>
+      <code><![CDATA[$allowed !== []]]></code>
+      <code><![CDATA[$allowed !== []]]></code>
+    </RedundantCondition>
   </file>
   <file src="src/Http/Cookie.php">
     <InvalidArgument>
@@ -469,9 +430,11 @@
 				// if we don't have a result, use the fallback if given
 				$result ??= $fallback;
 
-				// callback on result if given
+				// callback on result if given, with the raw result
+				// on top, so that values that look the same once
+				// cast to a string can still be told apart
 				if ($callback !== null) {
-					$callback = $callback((string)$result, $query, $data);
+					$callback = $callback((string)$result, $query, $data, $result);
 
 					if ($result !== null || $callback !== '') {
 						// the empty string came just from string casting,

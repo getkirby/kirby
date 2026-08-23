@@ -30,8 +30,7 @@
 				@dblclick="edit(itemIndex, item, $event)"
 				@remove="remove(itemIndex, item)"
 			>
-				<!-- eslint-disable-next-line vue/no-v-html -->
-				<span v-html="item.text" />
+				<span v-safe-html="item.text" />
 			</k-tag>
 			<template #footer>
 				<!-- @slot Place stuff here in the non-draggable footer -->
@@ -229,17 +228,12 @@ export default {
 			// try to find a matching option
 			const option = this.option(tag);
 
-			// always prefer options as source
-			// as they can be trusted without escaping
 			if (option) {
 				return option;
 			}
 
 			return {
-				// always escape HTML in text for tags that
-				// can't be matched with any defined option
-				// to avoid XSS when displaying via `v-html`
-				text: this.$helper.string.escapeHTML(tag.text ?? tag.value),
+				text: tag.text ?? tag.value,
 				...tag
 			};
 		}

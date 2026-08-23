@@ -14,12 +14,14 @@ function makePanel(overrides: Record<string, unknown> = {}) {
 	} as unknown as Panel;
 }
 
+function response(json: Record<string, unknown> = { result: "ok" }) {
+	return new Response(JSON.stringify(json), {
+		headers: { "Content-Type": "application/json" }
+	});
+}
+
 function mockFetch(json: Record<string, unknown> = { result: "ok" }) {
-	vi.mocked(fetch).mockResolvedValueOnce(
-		new Response(JSON.stringify(json), {
-			headers: { "Content-Type": "application/json" }
-		})
-	);
+	vi.mocked(fetch).mockResolvedValueOnce(response(json));
 }
 
 function lastRequest(): Request {
@@ -240,9 +242,39 @@ describe("api", () => {
 			const panel = makePanel();
 			const api = new Api(panel);
 			const promise = api.get("pages");
-			expect(api.requests).toHaveLength(1);
+			expect(api.requests).toStrictEqual(1);
 			await promise;
-			expect(api.requests).toHaveLength(0);
+			expect(api.requests).toStrictEqual(0);
+		});
+
+		it("should keep loading while an identical request is still running", async () => {
+			const resolvers: Array<(response: Response) => void> = [];
+			const deferred = () =>
+				new Promise<Response>((resolve) => resolvers.push(resolve));
+
+			vi.mocked(fetch)
+				.mockImplementationOnce(deferred)
+				.mockImplementationOnce(deferred);
+
+			const panel = makePanel();
+			const api = new Api(panel);
+
+			// two requests with identical path and options
+			const first = api.get("pages");
+			const second = api.get("pages");
+			expect(api.requests).toStrictEqual(2);
+
+			resolvers[0](response());
+			await first;
+
+			expect(api.requests).toStrictEqual(1);
+			expect(panel.isLoading).toStrictEqual(true);
+
+			resolvers[1](response());
+			await second;
+
+			expect(api.requests).toStrictEqual(0);
+			expect(panel.isLoading).toStrictEqual(false);
 		});
 
 		it("should not override GET even when methodOverride is enabled", async () => {

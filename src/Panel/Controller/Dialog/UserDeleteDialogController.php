@@ -4,7 +4,6 @@ namespace Kirby\Panel\Controller\Dialog;
 
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\RemoveDialog;
-use Kirby\Toolkit\Escape;
 
 /**
  * Controls the Panel dialog for deleting a user
@@ -22,8 +21,8 @@ class UserDeleteDialogController extends UserDialogController
 		$i18nPrefix = $this->user->isLoggedIn() ? 'account' : 'user';
 
 		return new RemoveDialog(
-			text: $this->i18n($i18nPrefix . '.delete.confirm', [
-				'email' => Escape::html($this->user->email())
+			text: $this->i18nHtml($i18nPrefix . '.delete.confirm', [
+				'email' => $this->user->email()
 			])
 		);
 	}

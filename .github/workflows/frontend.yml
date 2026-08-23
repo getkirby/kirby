@@ -4,7 +4,7 @@ name: CI - Frontend
 
 env:
   OS: &os ubuntu-24.04
-  TIMEOUT: &timeout 5
+  TIMEOUT: &timeout 10
 
   SHOULD_RUN: &should-run >-
     github.event_name == 'workflow_dispatch' ||

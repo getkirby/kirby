@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -10,48 +11,51 @@ class SiteRulesTest extends ModelTestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Cms.SiteRules';
 
+	public function testChangeTitle(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$this->expectNotToPerformAssertions();
+
+		SiteRules::changeTitle($this->app->site(), 'test');
+	}
+
+	public function testChangeTitleWithEmptyTitle(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.site.changeTitle.empty');
+
+		SiteRules::changeTitle($this->app->site(), '');
+	}
+
 	public function testChangeTitleWithoutPermissions(): void
 	{
-		$permissions = $this->createMock(SitePermissions::class);
-		$permissions->expects($this->once())
-			->method('can')
-			->with('changeTitle')
-			->willReturn(false);
-
-		$site = $this->createStub(Site::class);
-		$site->method('permissions')->willReturn($permissions);
+		$this->app->impersonate('nobody');
 
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('You are not allowed to change the title');
 
-		SiteRules::changeTitle($site, 'test');
+		SiteRules::changeTitle($this->app->site(), 'test');
 	}
 
 	public function testUpdate(): void
 	{
-		$app = new App();
-		$app->impersonate('kirby');
+		$this->app->impersonate('kirby');
 
 		$this->expectNotToPerformAssertions();
 
-		$site = new Site([]);
-		SiteRules::update($site, ['copyright' => '2018']);
+		SiteRules::update($this->app->site(), ['copyright' => '2018']);
 	}
 
 	public function testUpdateWithoutPermissions(): void
 	{
-		$permissions = $this->createMock(SitePermissions::class);
-		$permissions->expects($this->once())
-			->method('can')
-			->with('update')
-			->willReturn(false);
-
-		$site = $this->createStub(Site::class);
-		$site->method('permissions')->willReturn($permissions);
+		$this->app->impersonate('nobody');
 
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('You are not allowed to update the site');
 
-		SiteRules::update($site, []);
+		SiteRules::update($this->app->site(), []);
 	}
 }

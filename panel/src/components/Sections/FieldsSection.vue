@@ -8,7 +8,6 @@
 		<k-box
 			v-if="issue"
 			:text="issue.message"
-			:html="false"
 			icon="alert"
 			theme="negative"
 		/>

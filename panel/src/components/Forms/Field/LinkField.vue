@@ -303,6 +303,7 @@ export default {
 
 .k-link-field .k-tags-field-preview {
 	--tag-height: var(--height-sm);
+	overflow: visible;
 	padding: 0;
 }
 .k-link-field .k-tags-field-preview .k-tag:focus {

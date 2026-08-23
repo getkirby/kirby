@@ -187,7 +187,7 @@ class OptionsQuery extends OptionsProvider
 
 			// text is only a raw string when using {< >}
 			// or when the safe mode is explicitly disabled (select field)
-			$safeMethod = $safeMode === true ? 'toSafeString' : 'toString';
+			$safeMethod = $safeMode === true ? 'toSafeHtmlString' : 'toString';
 			$text = $model->$safeMethod($this->text ?? $text, $data);
 
 			// additional data

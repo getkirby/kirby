@@ -7,6 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use ReflectionProperty;
 
+#[CoversClass(ModelPermissions::class)]
 #[CoversClass(PagePermissions::class)]
 class PagePermissionsTest extends ModelTestCase
 {
@@ -223,6 +224,43 @@ class PagePermissionsTest extends ModelTestCase
 		$perms = $page->permissions();
 
 		$this->assertFalse($perms->can($action));
+	}
+
+	#[DataProvider('actionProvider')]
+	public function testWithNobodyAndPositiveOption(string $action): void
+	{
+		// a blueprint option must never grant a permission
+		// to a user with the `nobody` role
+		$page = new Page([
+			'slug' => 'test',
+			'num'  => 1,
+			'blueprint' => [
+				'name'    => 'test',
+				'options' => [$action => true]
+			]
+		]);
+
+		$this->assertFalse($page->permissions()->can($action));
+		$this->assertFalse($page->guards()->isAvailable($action, default: false));
+	}
+
+	#[DataProvider('actionProvider')]
+	public function testWithKirbyAndNegativeOption(string $action): void
+	{
+		// the almighty `kirby` user is not affected by any rule
+		$this->app->impersonate('kirby');
+
+		$page = new Page([
+			'slug' => 'test',
+			'num'  => 1,
+			'blueprint' => [
+				'name'    => 'test',
+				'options' => [$action => false]
+			]
+		]);
+
+		$this->assertTrue($page->permissions()->can($action));
+		$this->assertTrue($page->guards()->isAvailable($action, default: false));
 	}
 
 	public function testCanFromCache(): void

@@ -10,12 +10,10 @@
 		@cancel="$emit('cancel')"
 		@submit="$emit('submit')"
 	>
-		<!-- eslint-disable vue/no-v-html -->
 		<label
+			v-safe-html="$th('field.blocks.fieldsets.paste', { shortcut })"
 			for="pasteboard"
-			v-html="$t('field.blocks.fieldsets.paste', { shortcut })"
 		/>
-		<!-- eslint-enable -->
 		<textarea id="pasteboard" @paste.prevent="paste" />
 	</k-dialog>
 </template>

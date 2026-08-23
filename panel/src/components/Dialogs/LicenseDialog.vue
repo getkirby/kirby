@@ -45,12 +45,12 @@
 				<k-definition v-if="license.info" :term="$t('status')">
 					<p :data-theme="license.theme">
 						<k-icon :type="license.icon" />
-						<k-text :html="license.info" />
+						<k-text :text="license.info" />
 					</p>
 				</k-definition>
 			</k-definitions>
 
-			<k-text class="k-help" :html="licenseHubText" />
+			<k-text class="k-help" :text="licenseHubText" />
 		</k-stack>
 	</k-dialog>
 </template>
@@ -80,9 +80,11 @@ export default {
 	emits: ["cancel", "submit"],
 	computed: {
 		licenseHubText() {
-			return this.$t("license.manage.hub", {
-				url: "https://hub.getkirby.com/"
-			});
+			return this.$panel.html(
+				this.$t("license.manage.hub", {
+					url: "https://hub.getkirby.com/"
+				})
+			);
 		}
 	}
 };

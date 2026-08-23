@@ -5,6 +5,7 @@ namespace Kirby\Blueprint;
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
 use Kirby\TestCase;
+use Kirby\Toolkit\HtmlString;
 
 class InfoSectionTest extends TestCase
 {
@@ -63,7 +64,7 @@ class InfoSectionTest extends TestCase
 			'text'     => 'Test'
 		]);
 
-		$this->assertSame('<p>Test</p>', $section->text());
+		$this->assertSame('<p>Test</p>', (string)$section->text());
 
 		// translated text
 		$section = new Section('info', [
@@ -75,7 +76,7 @@ class InfoSectionTest extends TestCase
 			]
 		]);
 
-		$this->assertSame('<p>Information</p>', $section->text());
+		$this->assertSame('<p>Information</p>', (string)$section->text());
 	}
 
 	public function testTheme(): void
@@ -103,10 +104,10 @@ class InfoSectionTest extends TestCase
 		$expected = [
 			'icon'  => 'heart',
 			'label' => 'Test Headline',
-			'text'  => '<p>Test Text</p>',
+			'text'  => new HtmlString('<p>Test Text</p>'),
 			'theme' => 'notice'
 		];
 
-		$this->assertSame($expected, $section->toArray());
+		$this->assertEquals($expected, $section->toArray()); // @phpstan-ignore-line
 	}
 }

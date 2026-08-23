@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Ui\Dialog;
 
 use Kirby\Panel\Ui\Dialog;
+use Kirby\Toolkit\HtmlString;
 
 /**
  * Dialog that displays some text
@@ -20,7 +21,7 @@ class TextDialog extends Dialog
 		string|array|bool|null $cancelButton = null,
 		string|null $size = 'medium',
 		string|array|bool|null $submitButton = null,
-		public string|null $text = null,
+		public string|HtmlString|null $text = null,
 		...$attrs
 	) {
 		parent::__construct(...[

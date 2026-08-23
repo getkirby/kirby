@@ -5,7 +5,7 @@
 		</header>
 
 		<k-box theme="text">
-			<k-text :html="description" />
+			<k-text :text="description" />
 		</k-box>
 	</section>
 </template>

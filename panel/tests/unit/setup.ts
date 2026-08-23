@@ -3,8 +3,10 @@ import { config } from "@vue/test-utils";
 import { vi } from "vitest";
 import Panel from "@/panel/panel";
 import Helpers from "@/helpers";
+import html from "@/panel/html";
 import Libraries from "@/libraries";
 import SafeHtml from "@/config/safeHtml";
+import Translation from "@/panel/translation";
 
 declare global {
 	var app: App;
@@ -12,38 +14,21 @@ declare global {
 }
 
 globalThis.app ??= createApp({});
-
-/**
- * The setup runs once per test file, but tests share one module
- * registry (due to `--no-isolate`), so globals below are assigned
- * rather than appended or defaulted: a test file may replace them
- * for its own purposes, and every following file starts clean again.
- */
-
-/**
- * The same plugins the real app installs, so components get
- * `$helper`, `$esc`, `$library` and `v-safe-html` without every
- * test having to mock them. They are self-contained and don't
- * depend on a running Panel.
- */
 config.global.plugins = [Helpers, Libraries, SafeHtml];
 
-/**
- * Minimal stand-in for the global panel object,
- * so components can emit deprecation warnings and
- * translate without a full Panel instance.
- */
+const translation = Translation();
+
 globalThis.panel = {
 	deprecated: vi.fn(),
-	t: (key: string) => key
+	html,
+	t: translation.translate.bind(translation),
+	th: translation.translateHtml.bind(translation)
 } as unknown as Panel;
 
-/**
- * `$t` is a global property in the real app. It delegates instead of
- * being bound once, so a test that replaces the panel is picked up.
- */
 config.global.mocks = {
-	$t: (...args: Parameters<Panel["t"]>) => window.panel.t(...args)
+	$h: (...args: Parameters<Panel["html"]>) => window.panel.html(...args),
+	$t: (...args: Parameters<Panel["t"]>) => window.panel.t(...args),
+	$th: (...args: Parameters<Panel["th"]>) => window.panel.th(...args)
 };
 
 /**

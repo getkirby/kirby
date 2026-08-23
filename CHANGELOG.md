@@ -240,7 +240,7 @@ Custom glue
 
 #### Core
 
-- Custom fields can now fully be implemented as PHP classes (base on `Kirby\Form\BaseField` or any other from the `Kirby\Form\` field classes). You can learn more about this in the "Refactored" section. Custom fields based on array definitions are still supported for now but deprecated.
+- Custom fields can now fully be implemented as PHP classes (base on `Kirby\Form\Field` or any other from the `Kirby\Form\` field classes). You can learn more about this in the "Refactored" section. Custom fields based on array definitions are still supported for now but deprecated.
 - Hardened security of `Kirby\Session\Session` (thx [@XananasX7](https://github.com/XananasX7))
 
 #### Frontend
@@ -292,7 +292,7 @@ Custom glue
 
 - Fixed auto-closing open snippets at the end of a nested snippet (thx to [@JojOatXGME](https://github.com/JojOatXGME)) [#7567](https://github.com/getkirby/kirby/issues/7567)
 - `Kirby\Filesystem\Exif` now supports arrays for `ISOSpeedRatings` [#7569](https://github.com/getkirby/kirby/issues/7569)
-- `Kirby\Form\Field\BaseField::stringTemplate()` now uses `ModelWithContent::toSafeString()` by default and introduces a new `$safe` argument, which can switch to the unsafe method. [#7687](https://github.com/getkirby/kirby/pull/7687)
+- `Kirby\Form\Field\Field::stringTemplate()` now uses `ModelWithContent::toSafeString()` by default and introduces a new `$safe` argument, which can switch to the unsafe method. [#7687](https://github.com/getkirby/kirby/pull/7687)
 - Login-failed hook is no longer fired twice. [#7848](https://github.com/getkirby/kirby/pull/7848)
 - `Kirby\Text\KirbyTag::__set()` now lowercases the properties, as `::__get()` already did
 - `Kirby\Toolkit\Str::date(null, null)` returns the current timestamp
@@ -523,7 +523,7 @@ fields:
 - `Kirby\Cms\HasSiblings` relies on `Kirby\Cms\Collection`, not `Kirby\Toolkit\Collection`
 - `Kirby\Form\Field` gained a new `::id()` method, overriding `id` properties/methods from array notations.
 - Added abstract `Kirby\Cms\ModelWithContent::apiUrl()` method
-- `Kirby\Form\Field\BaseField` now implements `Stringable`
+- `Kirby\Form\Field\Field` now implements `Stringable`
 - `Kirby\Cms\App::models()` and `Kirby\Uuid\Uuid::index()` generators are now keyed by id
 - `Kirby\Cms\LazyCollection::getIterator()` skips items that failed hydration
 - `Kirby\Session\Session` will not serialize objects anymore
@@ -608,7 +608,7 @@ fields:
 
 Form fields have been fully refactored as PHP classes instead of the previous array definitions:
 
-- All fields are now concrete PHP classes built on shared abstract base classes, e.g. `Kirby\Form\BaseField`
+- All fields are now concrete PHP classes built on shared abstract base classes, e.g. `Kirby\Form\Field`
 - Using named props instead of `$props` arrays in all field classes
   - New `FieldClass::factory()` method, which is used in fields to create instances from `$props` array
 - `Kirby\Form\Field` now also accepts classes extending `Kirby\Form\BaseClass` in the factory method.
@@ -621,7 +621,7 @@ Form fields have been fully refactored as PHP classes instead of the previous ar
 
 All form fields can extends a small set of abstract base classes:
 
-- `Kirby\Form\Field\BaseField` as general foundation for all fields.
+- `Kirby\Form\Field\Field` as general foundation for all fields.
 - `Kirby\Form\Field\DateTimeField` for all date and time fields.
 - `Kirby\Form\Field\InputField` for all fields with a value.
 - `Kirby\Form\Field\OptionField` for fields with a single option value.

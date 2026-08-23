@@ -4,6 +4,7 @@ namespace Kirby\Option;
 
 use Kirby\Cms\Page;
 use Kirby\TestCase;
+use Kirby\Toolkit\HtmlString;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Option::class)]
@@ -79,13 +80,13 @@ class OptionTest extends TestCase
 		$expected = [
 			'disabled' => false,
 			'icon'     => null,
-			'info'     => 'test',
-			'text'     => 'Test Option',
+			'info'     => new HtmlString('test'),
+			'text'     => new HtmlString('Test Option'),
 			'value'    => 'test',
 		];
 
 		$model = new Page(['slug' => 'test']);
-		$this->assertSame($expected, $option->render($model));
+		$this->assertEquals($expected, $option->render($model)); // @phpstan-ignore-line
 	}
 
 	public function testRenderWithoutSafeMode(): void
@@ -119,5 +120,20 @@ class OptionTest extends TestCase
 
 		$this->assertSame('{{ page.slug }}', $result['text']);
 		$this->assertSame('{{ page.slug }}', $result['info']);
+	}
+
+	public function testRenderPreResolvedHtmlString(): void
+	{
+		// OptionsApi/OptionsQuery mark their escaped output as trusted
+		// HTML — the mark has to survive factory() and i18n()
+		$option = Option::factory([
+			'value' => 'test',
+			'text'  => new HtmlString('Tom &amp; Jerry'),
+		], resolve: false);
+
+		$result = $option->render(new Page(['slug' => 'test']));
+
+		$this->assertInstanceOf(HtmlString::class, $result['text']);
+		$this->assertSame('Tom &amp; Jerry', (string)$result['text']);
 	}
 }

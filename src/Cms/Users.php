@@ -6,6 +6,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
+use Kirby\Guards\UserValidators;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 use Kirby\Uuid\HasUuids;
@@ -159,7 +160,7 @@ class Users extends LazyCollection
 
 		// ensure the user ID only contains safe characters
 		// to prevent path traversal into subfolders
-		if (V::match($key, UserRules::ID_PATTERN) !== true) {
+		if (V::match($key, UserValidators::ID_PATTERN) !== true) {
 			return null;
 		}
 

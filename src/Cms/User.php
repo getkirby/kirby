@@ -10,6 +10,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\F;
+use Kirby\Guards\UserGuards;
 use Kirby\Panel\User as Panel;
 use Kirby\Session\Session;
 use Kirby\Toolkit\BlockCollectionAccess;
@@ -223,6 +224,17 @@ class User extends ModelWithContent
 	public static function factory(mixed $props): static
 	{
 		return static::model($props['model'] ?? $props['role'] ?? 'default', $props);
+	}
+
+	/**
+	 * Returns the guards object for this user
+	 */
+	public function guards(): UserGuards
+	{
+		return new UserGuards(
+			model: $this,
+			user: User::ensure()
+		);
 	}
 
 	/**
@@ -677,6 +689,8 @@ class User extends ModelWithContent
 	/**
 	 * Returns the UserRules class to
 	 * validate any important action.
+	 *
+	 * @deprecated 6.0.0 Use `$user->guards()` instead
 	 */
 	protected function rules(): UserRules
 	{
@@ -795,33 +809,7 @@ class User extends ModelWithContent
 		#[SensitiveParameter]
 		string|null $password = null
 	): bool {
-		if ($this->hasPassword() === false) {
-			throw new NotFoundException(
-				key: 'user.password.undefined'
-			);
-		}
-
-		// `UserRules` enforces a minimum length of 8 characters,
-		// so everything below that is a typo
-		if (Str::length($password) < 8) {
-			throw new InvalidArgumentException(
-				key: 'user.password.invalid'
-			);
-		}
-
-		// too long passwords can cause DoS attacks
-		if (Str::length($password) > 1000) {
-			throw new InvalidArgumentException(
-				key: 'user.password.excessive'
-			);
-		}
-
-		if (password_verify($password, $this->password()) !== true) {
-			throw new InvalidArgumentException(
-				key: 'user.password.wrong',
-				httpCode: 401
-			);
-		}
+		$this->guards()->validators()->validatePassword($password);
 
 		return true;
 	}

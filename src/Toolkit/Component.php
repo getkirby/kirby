@@ -229,6 +229,16 @@ class Component
 
 		// load definitions from string
 		if (is_string($definition) === true) {
+			// a type that is registered as a class cannot be loaded
+			// as an array definition and thus not be extended by one
+			if (class_exists($definition) === true) {
+				throw new Exception(
+					'The "' . $type . '" component is defined by the class ' .
+					$definition . ' and cannot be extended with the array ' .
+					'syntax. Extend the class instead.'
+				);
+			}
+
 			if (is_file($definition) !== true) {
 				throw new Exception(
 					'Component definition ' . $definition . ' does not exist'

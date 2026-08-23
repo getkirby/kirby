@@ -22,28 +22,6 @@ class ModelCommitTest extends TestCase
 		$this->tearDownTmp();
 	}
 
-	public static function modelProvider(): array
-	{
-		return [
-			[
-				new File(['parent' => new Site(), 'filename' => 'test.jpg']),
-				FileRules::class
-			],
-			[
-				new Page(['slug' => 'test']),
-				PageRules::class
-			],
-			[
-				new Site(),
-				SiteRules::class
-			],
-			[
-				new User(['email' => 'test@test.com']),
-				UserRules::class
-			],
-		];
-	}
-
 	public function testAfter(): void
 	{
 		$phpunit = $this;
@@ -434,6 +412,10 @@ class ModelCommitTest extends TestCase
 			]
 		]);
 
+		// `::before()` runs the guards, which deny
+		// everything for the logged out user
+		$this->app->impersonate('kirby');
+
 		$page = new Page([
 			'slug' => 'test',
 		]);
@@ -717,6 +699,83 @@ class ModelCommitTest extends TestCase
 		$commit = new ModelCommit(
 			model: $page,
 			action: 'create'
+		);
+
+		$this->expectException(PermissionException::class);
+
+		$commit->validate(arguments: [
+			'page' => $page
+		]);
+	}
+
+	public function testValidateWithModelFromArguments(): void
+	{
+		// the `before` hook can replace the model, which is why
+		// the model from the arguments takes priority over the
+		// model of the commit
+		$commit = new ModelCommit(
+			model: new Page(['slug' => 'a']),
+			action: 'create'
+		);
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to create "b"');
+
+		$commit->validate(arguments: [
+			'page' => new Page(['slug' => 'b'])
+		]);
+	}
+
+	public function testValidateWithUndefinedAction(): void
+	{
+		// a role that is allowed to do everything
+		// that has a permission rule
+		$this->app = $this->app->clone([
+			'roles' => [['name' => 'editor', 'permissions' => true]],
+			'users' => [['email' => 'editor@getkirby.com', 'role' => 'editor']]
+		]);
+
+		$this->app->impersonate('editor@getkirby.com');
+
+		$page   = new Page(['slug' => 'test']);
+		$commit = new ModelCommit(
+			model: $page,
+			action: 'test'
+		);
+
+		// actions without a permission rule are denied,
+		// as no role can grant a permission that doesn't exist
+		$this->expectException(PermissionException::class);
+
+		$commit->validate(arguments: [
+			'page' => $page
+		]);
+	}
+
+	public function testValidateWithUndefinedActionAndKirbyUser(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$page   = new Page(['slug' => 'test']);
+		$commit = new ModelCommit(
+			model: $page,
+			action: 'test'
+		);
+
+		// the almighty `kirby` user overrules the default
+		$commit->validate(arguments: [
+			'page' => $page
+		]);
+
+		$this->assertTrue(true);
+	}
+
+	public function testValidateWithUndefinedActionAndNobodyUser(): void
+	{
+		$page   = new Page(['slug' => 'test']);
+		$commit = new ModelCommit(
+			model: $page,
+			action: 'test'
 		);
 
 		$this->expectException(PermissionException::class);

@@ -159,6 +159,7 @@ class StateTest extends TestCase
 			'a' => 'A',
 			'urls' => [
 				'api'   => '/api',
+				'icons' => '/media/panel/' . $this->app->versionHash() . '/img/icons.svg',
 				'panel' => '/panel',
 				'site'  => '/'
 			]
@@ -569,6 +570,7 @@ class StateTest extends TestCase
 		$state = new State();
 		$urls  = $state->urls();
 		$this->assertArrayHasKey('api', $urls);
+		$this->assertArrayHasKey('icons', $urls);
 		$this->assertArrayHasKey('panel', $urls);
 		$this->assertArrayHasKey('site', $urls);
 	}

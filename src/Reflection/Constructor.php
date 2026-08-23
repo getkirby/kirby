@@ -15,6 +15,8 @@ use ReflectionParameter;
  */
 class Constructor extends ReflectionMethod
 {
+	protected static array $names = [];
+
 	public function __construct(object|string $objectOrClass)
 	{
 		parent::__construct($objectOrClass, '__construct');
@@ -88,7 +90,10 @@ class Constructor extends ReflectionMethod
 	 */
 	public function getParameterNames(): array
 	{
-		return array_values(array_map(fn (ReflectionParameter $param) => $param->name, $this->getAllParameters()));
+		return static::$names[$this->class] ??= array_values(array_map(
+			fn (ReflectionParameter $param) => $param->name,
+			$this->getAllParameters()
+		));
 	}
 
 	/**

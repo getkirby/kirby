@@ -1,4 +1,4 @@
-import { describe, it, expect } from "@test/unit";
+import { beforeEach, describe, expect, it, vi } from "@test/unit";
 import { mount } from "@vue/test-utils";
 import Box from "./Box.vue";
 
@@ -32,6 +32,24 @@ describe("Box.vue", () => {
 		it("sets type attribute to button", () => {
 			const wrapper = mount(Box, { props: { button: true } });
 			expect(wrapper.attributes("type")).toBe("button");
+		});
+	});
+
+	describe("html prop", () => {
+		beforeEach(() => {
+			vi.clearAllMocks();
+		});
+
+		it("does not warn when the deprecated prop is unused", () => {
+			mount(Box);
+			expect(window.panel.deprecated).not.toHaveBeenCalled();
+		});
+
+		it("warns that the prop is deprecated", () => {
+			mount(Box, { props: { html: true } });
+			expect(window.panel.deprecated).toHaveBeenCalledWith(
+				expect.stringContaining("`html` prop has been deprecated")
+			);
 		});
 	});
 

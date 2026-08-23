@@ -10,6 +10,63 @@ class PageMoveTest extends ModelTestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Cms.PageMove';
 
+	public function testIsMovableTo(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/parent' => [
+					'sections' => [
+						'subpages' => [
+							'type'     => 'pages',
+							'template' => 'child'
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$parentA = Page::create([
+			'slug'     => 'parent-a',
+			'template' => 'parent'
+		]);
+
+		$parentB = Page::create([
+			'slug'     => 'parent-b',
+			'template' => 'parent'
+		]);
+
+		$child = Page::create([
+			'parent'   => $parentA,
+			'slug'     => 'child',
+			'template' => 'child'
+		]);
+
+		$this->assertTrue($child->isMovableTo($parentB));
+	}
+
+	public function testIsMovableToWithInvalidParent(): void
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'parent',
+						'children' => [['slug' => 'child']]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$parent = $this->app->page('parent');
+
+		// a page cannot be moved into one of its own children
+		$this->assertFalse($parent->isMovableTo($parent->children()->first()));
+	}
+
 	public function testMove(): void
 	{
 		$this->app = $this->app->clone([

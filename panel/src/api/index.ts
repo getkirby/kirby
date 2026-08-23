@@ -28,7 +28,7 @@ export default class Api {
 	language: string | null;
 	panel: Panel;
 	pingId?: ReturnType<typeof setInterval>;
-	requests: string[] = [];
+	requests: number = 0;
 
 	auth: ReturnType<typeof Auth>;
 	files: ReturnType<typeof Files>;
@@ -144,11 +144,8 @@ export default class Api {
 		options: Record<string, unknown> = {},
 		silent = false
 	): Promise<T> {
-		// create a request id
-		const id = path + "/" + JSON.stringify(options);
-
-		// keep track of the request
-		this.requests.push(id);
+		// keep track of the number of running requests
+		this.requests++;
 
 		// start the loader if it's not a silent request
 		if (silent === false && options.silent !== true) {
@@ -190,11 +187,11 @@ export default class Api {
 			// restart the ping
 			this.ping();
 
-			// remove the request from the running list
-			this.requests = this.requests.filter((value) => value !== id);
+			// the request has ended
+			this.requests--;
 
 			// stop the loader if all requests ended
-			if (this.requests.length === 0) {
+			if (this.requests === 0) {
 				this.panel.isLoading = false;
 			}
 		}

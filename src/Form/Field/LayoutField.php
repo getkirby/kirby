@@ -103,7 +103,7 @@ class LayoutField extends BlocksField
 				$columns = $request->get('columns') ?? ['1/1'];
 				$form    = $field->attrsForm();
 
-				$form->fill(input: $form->defaults());
+				$form->fill(defaults: true);
 				$form->submit(input: $request->get('attrs') ?? []);
 
 				return Layout::factory([
@@ -187,10 +187,6 @@ class LayoutField extends BlocksField
 		return $default;
 	}
 
-	/**
-	 * @psalm-suppress MethodSignatureMismatch
-	 * @todo Remove psalm suppress after https://github.com/vimeo/psalm/issues/8673 is fixed
-	 */
 	#[BlockCollectionAccess]
 	public function fill(mixed $value): static
 	{
@@ -339,7 +335,7 @@ class LayoutField extends BlocksField
 			}
 
 			foreach ($layout['columns'] as $columnIndex => $column) {
-				$value[$layoutIndex]['columns'][$columnIndex]['blocks'] = $this->blocksToValues($column['blocks'] ?? [], 'content');
+				$value[$layoutIndex]['columns'][$columnIndex]['blocks'] = $this->blocksToValues($column['blocks'] ?? [], 'toStoredValues');
 			}
 		}
 
