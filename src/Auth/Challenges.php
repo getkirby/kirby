@@ -308,8 +308,6 @@ class Challenges
 			throw new UserNotFoundException(name: $email);
 		}
 
-		$this->auth->limits()->ensure($email);
-
 		$type      = $session->get('kirby.challenge.type');
 		$mode      = $session->get('kirby.challenge.mode');
 		$data      = $session->get('kirby.challenge.data');
