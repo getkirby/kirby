@@ -39,35 +39,16 @@ class NumberField extends InputField
 
 	public function __construct(
 		array|string|null $after = null,
-		bool|null $autofocus = null,
 		array|string|null $before = null,
 		float|string|null $default = null,
-		bool|null $disabled = null,
-		array|string|null $help = null,
 		string|null $icon = null,
-		array|string|null $label = null,
 		array|string|null $placeholder = null,
 		float|null $max = null,
 		float|null $min = null,
-		string|null $name = null,
-		bool|null $required = null,
 		float|string|null $step = null,
-		bool|null $translate = null,
-		array|null $when = null,
-		string|null $width = null
+		mixed ...$args
 	) {
-		parent::__construct(
-			autofocus: $autofocus,
-			default:   $default,
-			disabled:  $disabled,
-			help:      $help,
-			label:     $label,
-			name:      $name,
-			required:  $required,
-			translate: $translate,
-			when:      $when,
-			width:     $width,
-		);
+		parent::__construct(...$args, default: $default);
 
 		$this->after       = $after;
 		$this->before      = $before;

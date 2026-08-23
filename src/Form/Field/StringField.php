@@ -26,36 +26,16 @@ abstract class StringField extends InputField
 
 	public function __construct(
 		string|null $autocomplete = null,
-		bool|null $autofocus = null,
 		string|null $converter = null,
 		bool|null $counter = null,
-		mixed $default = null,
-		bool|null $disabled = null,
-		array|string|null $help = null,
 		string|null $font = null,
-		array|string|null $label = null,
 		int|null $maxlength = null,
 		int|null $minlength = null,
-		string|null $name = null,
 		array|string|null $placeholder = null,
-		bool|null $required = null,
 		bool|null $spellcheck = null,
-		bool|null $translate = null,
-		array|null $when = null,
-		string|null $width = null
+		mixed ...$args
 	) {
-		parent::__construct(
-			autofocus: $autofocus,
-			default: $default,
-			disabled: $disabled,
-			help: $help,
-			label: $label,
-			name: $name,
-			required: $required,
-			translate: $translate,
-			when: $when,
-			width: $width
-		);
+		parent::__construct(...$args);
 
 		$this->autocomplete = $autocomplete;
 		$this->converter    = $converter;

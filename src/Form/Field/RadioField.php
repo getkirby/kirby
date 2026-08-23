@@ -16,32 +16,10 @@ class RadioField extends OptionField
 	use Mixin\Columns;
 
 	public function __construct(
-		bool|null $autofocus = null,
 		int|null $columns = null,
-		mixed $default = null,
-		bool|null $disabled = null,
-		array|string|null $help = null,
-		array|string|null $label = null,
-		string|null $name = null,
-		array|string|null $options = null,
-		bool|null $required = null,
-		bool|null $translate = null,
-		array|null $when = null,
-		string|null $width = null
+		mixed ...$args
 	) {
-		parent::__construct(
-			autofocus: $autofocus,
-			default: $default,
-			disabled: $disabled,
-			help: $help,
-			label: $label,
-			name: $name,
-			options: $options,
-			required: $required,
-			translate: $translate,
-			when: $when,
-			width: $width
-		);
+		parent::__construct(...$args);
 
 		$this->columns = $columns;
 	}

@@ -22,28 +22,11 @@ class ObjectField extends InputField implements ProvidesNestedForm
 
 	public function __construct(
 		array|null $default = null,
-		bool|null $disabled = null,
 		array|string|null $empty = null,
 		array|null $fields = null,
-		array|string|null $help = null,
-		array|string|null $label = null,
-		string|null $name = null,
-		bool|null $required = null,
-		bool|null $translate = null,
-		array|null $when = null,
-		string|null $width = null,
+		mixed ...$args
 	) {
-		parent::__construct(
-			default:   $default,
-			disabled:  $disabled,
-			help:      $help,
-			label:     $label,
-			name:      $name,
-			required:  $required,
-			translate: $translate,
-			when:      $when,
-			width:     $width
-		);
+		parent::__construct(...$args, default: $default);
 
 		$this->empty  = $empty;
 		$this->fields = $fields;
