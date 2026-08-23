@@ -65,6 +65,11 @@ class SvgTest extends TestCase
 			// SVG `<style>` is a foreign element, not an HTML raw text
 			// element, so a smuggled `</style>` cannot break out of it
 			'<svg><style><![CDATA[</style><img src=x onerror=alert(1)>]]></style></svg>',
+			// `<svg>` re-enters foreign content below an integration point
+			'<svg><desc><svg><![CDATA[><img src=x onerror=alert(1)>]]></svg></desc></svg>',
+			// `<font>` only breaks out of foreign content when it carries
+			// one of the HTML font attributes
+			'<svg><font><![CDATA[><img src=x onerror=alert(1)>]]></font></svg>',
 		];
 
 		foreach ($fixtures as $fixture) {
@@ -493,6 +498,104 @@ class SvgTest extends TestCase
 		// text element, so the abrupt close goes live in there as well
 		$fixture   = '<svg><style><!--><img src=x onerror=alert(1)>--></style></svg>';
 		$sanitized = '<svg><style/></svg>';
+
+		$this->assertSame($sanitized, Svg::sanitize($fixture));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The comment (line 1) is not allowed');
+		Svg::validate($fixture);
+	}
+
+	public function testDisallowedMutationXssIntegrationPointCdata(): void
+	{
+		// `<desc>` is an HTML integration point, so its child elements are
+		// created in the HTML namespace, where `<![CDATA[` is only a bogus
+		// comment that ends at the first `>` and exposes the rest
+		$fixture   = '<svg><desc><g><![CDATA[><img src=x onerror=alert(1)>]]></g></desc></svg>';
+		$sanitized = '<svg><desc><g>&gt;&lt;img src=x onerror=alert(1)&gt;</g></desc></svg>';
+
+		$this->assertSame($sanitized, Svg::sanitize($fixture));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The CDATA section (line 1) is not allowed');
+		Svg::validate($fixture);
+	}
+
+	public function testDisallowedMutationXssIntegrationPointCdataTitle(): void
+	{
+		// `<title>` is an HTML integration point just like `<desc>`,
+		// at any depth below it
+		$fixture   = '<svg><title><g><g><![CDATA[><img src=x onerror=alert(1)>]]></g></g></title></svg>';
+		$sanitized = '<svg><title><g><g>&gt;&lt;img src=x onerror=alert(1)&gt;</g></g></title></svg>';
+
+		$this->assertSame($sanitized, Svg::sanitize($fixture));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The CDATA section (line 1) is not allowed');
+		Svg::validate($fixture);
+	}
+
+	public function testDisallowedMutationXssIntegrationPointStyleCdata(): void
+	{
+		// below an integration point `<style>` is an HTML raw text element
+		// again, which a smuggled `</style>` breaks out of
+		$fixture   = '<svg><desc><style><![CDATA[</style><img src=x onerror=alert(1)>]]></style></desc></svg>';
+		$sanitized = '<svg><desc><style>&lt;/style&gt;&lt;img src=x onerror=alert(1)&gt;</style></desc></svg>';
+
+		$this->assertSame($sanitized, Svg::sanitize($fixture));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The CDATA section (line 1) is not allowed');
+		Svg::validate($fixture);
+	}
+
+	public function testDisallowedMutationXssIntegrationPointStyleComment(): void
+	{
+		// the same raw text element also turns a comment into plain text,
+		// so only the closing tag can break out of it
+		$fixture   = '<svg><desc><style><!--</style><img src=x onerror=alert(1)>--></style></desc></svg>';
+		$sanitized = '<svg><desc><style/></desc></svg>';
+
+		$this->assertSame($sanitized, Svg::sanitize($fixture));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The comment (line 1) is not allowed');
+		Svg::validate($fixture);
+	}
+
+	public function testDisallowedMutationXssBreakoutCdata(): void
+	{
+		// `<font>` with an HTML font attribute makes the parser leave the
+		// foreign subtree entirely and continue in the HTML namespace
+		$fixture   = '<svg><font color="red"><![CDATA[><img src=x onerror=alert(1)>]]></font></svg>';
+		$sanitized = '<svg><font color="red">&gt;&lt;img src=x onerror=alert(1)&gt;</font></svg>';
+
+		$this->assertSame($sanitized, Svg::sanitize($fixture));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The CDATA section (line 1) is not allowed');
+		Svg::validate($fixture);
+	}
+
+	public function testDisallowedMutationXssBreakoutStyleCdata(): void
+	{
+		// after the breakout `<style>` is an HTML raw text element as well
+		$fixture   = '<svg><font color="red"><style><![CDATA[</style><img src=x onerror=alert(1)>]]></style></font></svg>';
+		$sanitized = '<svg><font color="red"><style>&lt;/style&gt;&lt;img src=x onerror=alert(1)&gt;</style></font></svg>';
+
+		$this->assertSame($sanitized, Svg::sanitize($fixture));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The CDATA section (line 1) is not allowed');
+		Svg::validate($fixture);
+	}
+
+	public function testDisallowedMutationXssForeignStyleComment(): void
+	{
+		// a foreign `<style>` is no raw text element, so a comment nested
+		// below it is a real comment that must not close itself early
+		$fixture   = '<svg><style><desc><g><!--><img src=x onerror=alert(1)>--></g></desc></style></svg>';
+		$sanitized = '<svg><style><desc><g/></desc></style></svg>';
 
 		$this->assertSame($sanitized, Svg::sanitize($fixture));
 
