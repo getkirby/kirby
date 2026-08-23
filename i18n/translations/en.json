@@ -585,6 +585,7 @@
 	"login.challenge.email.enable.label": "Enable codes via email",
 	"login.challenge.email.help": "Enter the code just sent to your email inbox.",
 	"login.challenge.email.label": "Code via email",
+	"login.challenge.email.reset": "Codes via email are active as a second factor. Changing the address disables them until the new one has been confirmed.",
 	"login.challenge.totp.label": "Authenticator app",
 	"login.challenges.help": "Two-factor methods can add an additional layer of security by requiring more than just a password to sign in.",
 	"login.challenges.label": "Two-factor methods",
