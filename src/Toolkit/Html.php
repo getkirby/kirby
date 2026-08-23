@@ -661,7 +661,7 @@ class Html extends Xml
 			Str::endsWith($domain, 'youtube-nocookie.com') === true
 				=> 'https://www.youtube-nocookie.com/embed',
 			default
-				=> 'https://www.youtube.com/embed'
+			=> 'https://www.youtube.com/embed'
 		};
 
 		$isYoutubeId = static function (string|null $id = null): bool {
