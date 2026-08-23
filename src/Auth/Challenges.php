@@ -221,13 +221,12 @@ class Challenges
 		string $email,
 		string $mode
 	): void {
-		$data    = $challenge->create();
-		$timeout = $this->timeout();
+		$data = $challenge->create();
 
 		$session->set('kirby.challenge.email', $email);
 		$session->set('kirby.challenge.type', $challenge->type());
 		$session->set('kirby.challenge.mode', $mode);
-		$session->set('kirby.challenge.timeout', time() + $timeout);
+		$session->set('kirby.challenge.timeout', time() + $challenge->timeout());
 
 		if ($data !== null) {
 			$session->set('kirby.challenge.data', $data->toArray());

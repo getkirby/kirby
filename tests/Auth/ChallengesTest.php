@@ -76,6 +76,25 @@ class DummyChallenge2 extends Challenge
 	}
 }
 
+class DummyChallenge3 extends Challenge
+{
+	public function create(): Pending|null
+	{
+		return null;
+	}
+
+	// a plugin challenge may define its own lifetime
+	public function timeout(): int
+	{
+		return 42;
+	}
+
+	public function verify(mixed $input, Pending $data): bool
+	{
+		return true;
+	}
+}
+
 #[CoversClass(Challenges::class)]
 class ChallengesTest extends TestCase
 {
@@ -96,8 +115,9 @@ class ChallengesTest extends TestCase
 		DummyChallenge::$pending    = null;
 		DummyChallenge2::$available = true;
 
-		Challenges::$challenges['dummy'] = DummyChallenge::class;
+		Challenges::$challenges['dummy']  = DummyChallenge::class;
 		Challenges::$challenges['dummy2'] = DummyChallenge2::class;
+		Challenges::$challenges['dummy3'] = DummyChallenge3::class;
 
 		$this->app = $this->app->clone([
 			'options' => [
@@ -120,7 +140,11 @@ class ChallengesTest extends TestCase
 	protected function tearDown(): void
 	{
 		parent::tearDown();
-		unset(Challenges::$challenges['dummy'], Challenges::$challenges['dummy2']);
+		unset(
+			Challenges::$challenges['dummy'],
+			Challenges::$challenges['dummy2'],
+			Challenges::$challenges['dummy3']
+		);
 
 	}
 
@@ -233,6 +257,30 @@ class ChallengesTest extends TestCase
 		$this->assertSame('marge@simpsons.com', $session->get('kirby.challenge.email'));
 		$this->assertSame('login', $session->get('kirby.challenge.mode'));
 		$this->assertSame(MockTime::$time + $this->challenges->timeout(), $session->get('kirby.challenge.timeout'));
+	}
+
+	public function testCreateChallengeTimeout(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'challenges' => ['dummy3']
+				]
+			]
+		]);
+
+		$this->challenges = new Challenges($this->app->auth(), $this->app);
+
+		$session = $this->app->session();
+		$this->challenges->create($session, 'marge@simpsons.com', 'login');
+
+		// the session expiry follows the challenge's own lifetime,
+		// not the `auth.challenge.timeout` option
+		$this->assertNotSame(42, $this->challenges->timeout());
+		$this->assertSame(
+			MockTime::$time + 42,
+			$session->get('kirby.challenge.timeout')
+		);
 	}
 
 	public function testCreateUnavailable(): void
