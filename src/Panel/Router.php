@@ -113,6 +113,28 @@ class Router
 	}
 
 	/**
+	 * Response for the SVG icon sprite, which is referenced
+	 * by all `<use>` elements in the Panel
+	 * @since 6.0.0
+	 */
+	public function icons(): Response
+	{
+		$assets = $this->panel->assets();
+
+		// the version hash in the URL only changes with a new release,
+		// so the sprite can be cached forever; the dev mode URL is busted
+		// by the modification time, which is only accurate to the second
+		$cache = $assets->isDev() === true
+			? 'no-store'
+			: 'public, max-age=31536000, immutable';
+
+		return Response::file(
+			$assets->iconsRoot(),
+			['headers' => ['Cache-Control' => $cache]]
+		);
+	}
+
+	/**
 	 * Creates a Response object from the result of
 	 * a Panel route call
 	 */
@@ -155,11 +177,17 @@ class Router
 	{
 		$kirby   = $this->kirby;
 		$panel   = $this->panel;
+		$router  = $this;
 		$areas ??= $panel->areas();
 
-		// the browser incompatibility
-		// warning is always needed
+		// the icon sprite and the browser incompatibility
+		// warning are always needed, no matter the areas
 		$routes = [
+			[
+				'pattern' => 'assets/(:any)/icons.svg',
+				'auth'    => false,
+				'action'  => fn () => $router->icons(),
+			],
 			[
 				'pattern' => 'browser',
 				'auth'    => false,

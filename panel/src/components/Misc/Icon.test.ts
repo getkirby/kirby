@@ -3,7 +3,7 @@ import { mount as vueMount } from "@vue/test-utils";
 import { hasEmoji } from "@/helpers/string.js";
 import Icon from "./Icon.vue";
 
-const sprite = "/media/panel/1234/img/icons.svg";
+const sprite = "/panel/assets/1234/icons.svg";
 
 /**
  * Custom mount which injects $helper and $panel stubs

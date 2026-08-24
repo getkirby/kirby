@@ -159,7 +159,7 @@ class StateTest extends TestCase
 			'a' => 'A',
 			'urls' => [
 				'api'   => '/api',
-				'icons' => '/media/panel/' . $this->app->versionHash() . '/img/icons.svg',
+				'icons' => '/panel/assets/' . $this->app->versionHash() . '/icons.svg',
 				'panel' => '/panel',
 				'site'  => '/'
 			]

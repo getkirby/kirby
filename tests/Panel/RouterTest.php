@@ -2,15 +2,91 @@
 
 namespace Kirby\Panel;
 
+use Kirby\Cms\Url;
 use Kirby\Exception\Exception;
 use Kirby\Exception\NotFoundException;
+use Kirby\Filesystem\F;
 use Kirby\Http\Response;
+use Kirby\Toolkit\Str;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Router::class)]
 class RouterTest extends TestCase
 {
-	public const string TMP = KIRBY_TMP_DIR . '/Panel.Panel';
+	public const string TMP               = KIRBY_TMP_DIR . '/Panel.Panel';
+	public const string VITE_RUNNING_PATH = KIRBY_DIR . '/panel/.vite-running';
+
+	protected bool $hadViteRunning;
+
+	protected function setUp(): void
+	{
+		parent::setUp();
+
+		// initialize development mode to a known state
+		$this->hadViteRunning = is_file(static::VITE_RUNNING_PATH);
+		F::remove(static::VITE_RUNNING_PATH);
+	}
+
+	protected function tearDown(): void
+	{
+		parent::tearDown();
+
+		// reset development mode
+		if ($this->hadViteRunning === true) {
+			touch(static::VITE_RUNNING_PATH);
+		} else {
+			F::remove(static::VITE_RUNNING_PATH);
+		}
+	}
+
+	public function testCallIcons(): void
+	{
+		$router   = new Router($this->app->panel());
+		$response = $router->call('assets/' . $this->app->versionHash() . '/icons.svg');
+
+		// the sprite is served before any area route can catch the path
+		$this->assertSame(200, $response->code());
+		$this->assertSame('image/svg+xml', $response->type());
+		$this->assertStringContainsString('id="icon-accessibility"', $response->body());
+	}
+
+	public function testIcons(): void
+	{
+		$router   = new Router($this->app->panel());
+		$response = $router->icons();
+
+		$this->assertSame('image/svg+xml', $response->type());
+		$this->assertSame(
+			'public, max-age=31536000, immutable',
+			$response->header('Cache-Control')
+		);
+		$this->assertStringContainsString('id="icon-accessibility"', $response->body());
+	}
+
+	public function testIconsInDevMode(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'panel' => [
+					'dev' => true
+				]
+			]
+		]);
+
+		touch(static::VITE_RUNNING_PATH);
+
+		$panel = $this->app->panel();
+		$path  = Str::after(Url::path($panel->assets()->icons()), 'panel/');
+
+		// the modification time in the dev URL must resolve to the same route
+		$response = $panel->router()->call($path);
+
+		$this->assertSame(200, $response->code());
+		$this->assertStringContainsString('id="icon-accessibility"', $response->body());
+
+		// the sprite must not be cached while it is still being edited
+		$this->assertSame('no-store', $response->header('Cache-Control'));
+	}
 
 	public function testResponse(): void
 	{
@@ -70,14 +146,16 @@ class RouterTest extends TestCase
 		$router = new Router($panel);
 		$routes = $router->routes($areas);
 
-		$this->assertSame('browser', $routes[0]['pattern']);
-		$this->assertSame(['/', 'installation', 'login'], $routes[1]['pattern']);
-		$this->assertSame('(:all)', $routes[2]['pattern']);
+		$this->assertSame('assets/(:any)/icons.svg', $routes[0]['pattern']);
+		$this->assertFalse($routes[0]['auth']);
+		$this->assertSame('browser', $routes[1]['pattern']);
+		$this->assertSame(['/', 'installation', 'login'], $routes[2]['pattern']);
+		$this->assertSame('(:all)', $routes[3]['pattern']);
 
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('Could not find Panel route: foo');
 
-		$routes[2]['action']('foo');
+		$routes[3]['action']('foo');
 	}
 
 	public function testSetLanguageWithoutRequest(): void

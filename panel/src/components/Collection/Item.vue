@@ -21,7 +21,6 @@
 					v-if="hasFigure"
 					:image="image"
 					:layout="layout"
-					:width="width"
 				/>
 			</slot>
 

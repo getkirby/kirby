@@ -307,7 +307,7 @@ class AssetsTest extends TestCase
 		$assets = new Assets();
 
 		$this->assertSame(
-			'/media/panel/' . $this->app->versionHash() . '/img/icons.svg',
+			'/panel/assets/' . $this->app->versionHash() . '/icons.svg',
 			$assets->icons()
 		);
 	}
@@ -316,55 +316,62 @@ class AssetsTest extends TestCase
 	{
 		$this->setDevMode();
 
-		$assets = new Assets();
-		$target = $this->app->root('media') . '/panel/' . $this->app->versionHash() . '/img/icons.svg';
+		// the sprite is never served by Vite, as `<use>` references
+		// are limited to the same origin as the Panel document
+		$assets   = new Assets();
+		$modified = F::modified($this->app->root('panel') . '/public/img/icons.svg');
 
-		$this->assertFileDoesNotExist($target);
-
-		// the sprite is not served by Vite, but synced to the media folder
 		$this->assertSame(
-			'/media/panel/' . $this->app->versionHash() . '/img/icons.svg',
+			'/panel/assets/' . $modified . '/icons.svg',
 			$assets->icons()
 		);
+	}
 
-		$this->assertFileEquals(
-			$this->app->root('panel') . '/public/img/icons.svg',
-			$target
+	public function testIconsInDevModeAfterProduction(): void
+	{
+		$production = (new Assets())->icons();
+
+		$this->setDevMode();
+
+		// the dev URL must differ from the production URL, which the
+		// browser has cached as immutable and would not request again
+		$this->assertNotSame($production, (new Assets())->icons());
+	}
+
+	public function testIconsWithCustomMediaUrl(): void
+	{
+		$this->app = $this->app->clone([
+			'urls' => [
+				'media' => 'https://cdn.getkirby.com/media'
+			]
+		]);
+
+		// the sprite must stay on the Panel origin, even if
+		// the media folder is served from a CDN
+		$assets = new Assets();
+
+		$this->assertSame(
+			'/panel/assets/' . $this->app->versionHash() . '/icons.svg',
+			$assets->icons()
 		);
 	}
 
-	public function testIconsInDevModeWithCurrentCopy(): void
+	public function testIconsWithCustomPanelSlug(): void
 	{
-		$this->setDevMode();
+		$this->app = $this->app->clone([
+			'options' => [
+				'panel' => [
+					'slug' => 'admin'
+				]
+			]
+		]);
 
 		$assets = new Assets();
-		$source = $this->app->root('panel') . '/public/img/icons.svg';
-		$target = $this->app->root('media') . '/panel/' . $this->app->versionHash() . '/img/icons.svg';
 
-		F::write($target, 'current');
-		touch($target, F::modified($source));
-
-		$assets->icons();
-
-		// the copy is up to date and does not get repeated
-		$this->assertSame('current', F::read($target));
-	}
-
-	public function testIconsInDevModeWithOutdatedCopy(): void
-	{
-		$this->setDevMode();
-
-		$assets = new Assets();
-		$source = $this->app->root('panel') . '/public/img/icons.svg';
-		$target = $this->app->root('media') . '/panel/' . $this->app->versionHash() . '/img/icons.svg';
-
-		F::write($target, 'outdated');
-		touch($target, 1);
-
-		$assets->icons();
-
-		$this->assertFileEquals($source, $target);
-		$this->assertSame(F::modified($source), F::modified($target));
+		$this->assertSame(
+			'/admin/assets/' . $this->app->versionHash() . '/icons.svg',
+			$assets->icons()
+		);
 	}
 
 	public function testIconsRoot(): void
@@ -395,6 +402,15 @@ class AssetsTest extends TestCase
 		$importMaps = $assets->importMaps();
 
 		$this->assertSame('/media/panel/' . $this->app->versionHash() . '/js/vue.esm-browser.prod.js', $importMaps['vue']);
+	}
+
+	public function testIsDev(): void
+	{
+		$this->assertFalse((new Assets())->isDev());
+
+		$this->setDevMode();
+
+		$this->assertTrue((new Assets())->isDev());
 	}
 
 	public function testJs(): void
