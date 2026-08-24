@@ -29,10 +29,7 @@
 			</k-button-group>
 		</template>
 
-		<k-input-validator
-			v-bind="{ min, max, required }"
-			:value="JSON.stringify(value)"
-		>
+		<k-validator v-bind="{ min, max, required }" :count="value.length">
 			<k-blocks
 				ref="blocks"
 				v-bind="$props"
@@ -40,7 +37,7 @@
 				@open="opened = $event"
 				@input="$emit('input', $event)"
 			/>
-		</k-input-validator>
+		</k-validator>
 
 		<footer v-if="!disabled && !isEmpty && !isFull && hasFieldsets">
 			<k-button
