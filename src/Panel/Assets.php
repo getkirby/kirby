@@ -190,9 +190,6 @@ class Assets
 	 */
 	public function icons(): string
 	{
-		// the version hash busts the browser cache for every release;
-		// in dev mode, the sprite changes without a release, so the
-		// modification time of the source file is used instead
 		$version = $this->isDev === true
 			? F::modified($this->iconsRoot())
 			: $this->kirby->versionHash();
@@ -221,7 +218,6 @@ class Assets
 
 	/**
 	 * Whether the Panel is running in dev mode
-	 * and the assets are served by the Vite dev server
 	 * @since 6.0.0
 	 */
 	public function isDev(): bool
