@@ -111,6 +111,35 @@ class FieldTest extends TestCase
 		$this->assertTrue($field->hasValue());
 	}
 
+	public function testIsActive(): void
+	{
+		$fields = new Fields([
+			'a' => ['type' => 'text', 'value' => 'b'],
+			'b' => ['type' => 'text', 'when' => ['a' => 'b']],
+		]);
+
+		$this->assertTrue($fields->get('b')->isActive());
+	}
+
+	public function testIsActiveWithFieldWithoutValue(): void
+	{
+		$fields = new Fields([
+			'a' => ['type' => 'info'],
+			'b' => ['type' => 'text', 'when' => ['a' => true]],
+		]);
+
+		$this->assertFalse($fields->get('b')->isActive());
+	}
+
+	public function testIsActiveWithMissingField(): void
+	{
+		$fields = new Fields([
+			'b' => ['type' => 'text', 'when' => ['a' => true]],
+		]);
+
+		$this->assertFalse($fields->get('b')->isActive());
+	}
+
 	public function testisHidden(): void
 	{
 		$field = new MockField();
