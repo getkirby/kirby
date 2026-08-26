@@ -189,7 +189,10 @@ return [
 				$this->kirby()->auth()->isResettingPassword($this->session()) !== true ||
 				$user->is($currentUser) !== true
 			) {
-				$currentUser->validatePassword($this->requestBody('currentPassword'));
+				$this->kirby()->auth()->ensurePassword(
+					$currentUser,
+					$this->requestBody('currentPassword')
+				);
 			}
 
 			$result = $user->changePassword($this->requestBody('password'));

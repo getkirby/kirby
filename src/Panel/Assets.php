@@ -182,23 +182,19 @@ class Assets
 	/**
 	 * URL for the SVG icon sprite, which is referenced by
 	 * all `<use>` elements in the Panel.
+	 *
+	 * The sprite is served by a Panel route to keep it on the same
+	 * origin as the Panel document. External `<use>` references are
+	 * limited to the same origin and CORS cannot open them up, so the
+	 * media URL is no option as it can point to a different origin.
 	 */
 	public function icons(): string
 	{
-		$path = '/panel/' . $this->kirby->versionHash() . '/img/icons.svg';
+		$version = $this->isDev === true
+			? F::modified($this->iconsRoot())
+			: $this->kirby->versionHash();
 
-		if ($this->isDev === true) {
-			$source   = $this->iconsRoot();
-			$target   = $this->kirby->root('media') . $path;
-			$modified = F::modified($source);
-
-			if (F::modified($target) !== $modified) {
-				F::copy($source, $target, true);
-				touch($target, $modified);
-			}
-		}
-
-		return $this->kirby->url('media') . $path;
+		return $this->kirby->url('panel') . '/assets/' . $version . '/icons.svg';
 	}
 
 	/**
@@ -218,6 +214,15 @@ class Assets
 		return array_filter([
 			'vue' => $this->vue()
 		]);
+	}
+
+	/**
+	 * Whether the Panel is running in dev mode
+	 * @since 6.0.0
+	 */
+	public function isDev(): bool
+	{
+		return $this->isDev;
 	}
 
 	/**

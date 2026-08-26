@@ -45,8 +45,23 @@ class UserChangeEmailDialogControllerTest extends TestCase
 
 		$props = $dialog->props();
 		$this->assertSame('Email', $props['fields']['email']['label']);
+		$this->assertNull($props['fields']['email']['help']);
 		$this->assertSame('Change', $props['submitButton']);
 		$this->assertSame('test@getkirby.com', $props['value']['email']);
+	}
+
+	public function testLoadWithEmailChallenge(): void
+	{
+		$user = $this->app->user('test')->changeSecret('email', true);
+
+		$dialog = (new UserChangeEmailDialogController($user))->load();
+		$props  = $dialog->props();
+
+		// changing the address resets the opt-in, so the dialog says so
+		$this->assertSame(
+			'Codes via email are active as a second factor. Changing the address disables them until the new one has been confirmed.',
+			$props['fields']['email']['help']
+		);
 	}
 
 	public function testSubmit(): void

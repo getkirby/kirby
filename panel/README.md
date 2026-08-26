@@ -69,3 +69,9 @@ To upate the dist files
 ```
 npm run build
 ```
+
+## Browser support
+
+`.browserslistrc` is the single source of truth. It feeds the Vite build target (`createTarget()` in `vite.config.ts`) and the "browser too old" page ( `views/browser.php`). Don't repeat the versions anywhere else.
+
+To move the floor for the next major, see the instructions in `.browserslistrc`.

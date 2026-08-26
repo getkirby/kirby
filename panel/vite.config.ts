@@ -1,4 +1,5 @@
 /* eslint-env node */
+import fs from "fs";
 import path from "path";
 
 import {
@@ -103,6 +104,43 @@ function createPlugins(mode: string): Plugin[] {
 }
 
 /**
+ * Returns the build target, based on `.browserslistrc`
+ */
+function createTarget(): string[] {
+	const engines: Record<string, string> = {
+		Chrome: "chrome",
+		Edge: "edge",
+		Firefox: "firefox",
+		iOS: "ios",
+		Opera: "opera",
+		Safari: "safari"
+	};
+
+	const file = fs.readFileSync(
+		path.resolve(__dirname, ".browserslistrc"),
+		"utf-8"
+	);
+
+	const target: string[] = [];
+
+	for (const raw of file.split("\n")) {
+		// strip comments, browserslist allows them at the end of a line
+		const line = raw.replace(/#.*$/, "").trim();
+		const match = line.match(/^(\w+)\s*>=\s*([\d.]+)$/);
+
+		if (match !== null && engines[match[1]] !== undefined) {
+			target.push(engines[match[1]] + match[2]);
+		}
+	}
+
+	if (target.length === 0) {
+		throw new Error("No build target could be read from .browserslistrc");
+	}
+
+	return target;
+}
+
+/**
  * Returns vitest configuration
  */
 function createTest() {
@@ -149,7 +187,7 @@ export default defineConfig(({ mode }) => {
 		plugins,
 		base: "./",
 		build: {
-			target: ["chrome123", "edge123", "firefox120", "safari17.5", "ios17.5"],
+			target: createTarget(),
 			cssCodeSplit: false,
 			rolldownOptions: {
 				checks: { pluginTimings: false },

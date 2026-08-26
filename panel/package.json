@@ -54,16 +54,6 @@
 		"vue-docgen-api": "^4.79.2",
 		"vue-tsc": "^3.3.7"
 	},
-	"browserslist": [
-		"Chrome >= 123",
-		"ChromeAndroid >= 126",
-		"Edge >= 123",
-		"Firefox >= 120",
-		"Opera >= 109",
-		"Safari >= 17.5",
-		"iOS >= 17.5",
-		"Android >= 126"
-	],
 	"allowScripts": {
 		"fsevents@2.3.3": true
 	}

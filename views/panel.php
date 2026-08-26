@@ -16,6 +16,7 @@ use Kirby\Toolkit\Html;
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width,initial-scale=1.0">
 	<meta name="referrer" content="same-origin">
+	<meta name="robots" content="noindex, nofollow">
 
 	<title>Kirby Panel</title>
 
@@ -27,11 +28,13 @@ use Kirby\Toolkit\Html;
 
 	<script nonce="<?= $nonce ?>">
 	if (
-			!window.CSS ||
-			window.CSS.supports("display", "grid") === false ||
-			!window.fetch
+		!window.CSS ||
+		window.CSS.supports("color", "light-dark(#fff, #000)") === false ||
+		!window.HTMLScriptElement.supports ||
+		window.HTMLScriptElement.supports("importmap") === false ||
+		!window.Promise.withResolvers
 	) {
-		window.location.href = "<?= $panelUrl ?>browser";
+		window.location.replace("<?= $panelUrl ?>browser");
 	}
 	</script>
 

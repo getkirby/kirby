@@ -57,6 +57,35 @@ class UserChangeEmailTest extends ModelTestCase
 		$this->assertSame('another@domain.com', $user->email());
 	}
 
+	public function testChangeEmailResetsEmailChallenge(): void
+	{
+		$user = new User(['email' => 'editor@domain.com']);
+		$user = $user->changeSecret('email', true);
+
+		$this->assertTrue($user->secret('email'));
+
+		// the opt-in only proved the *old* address was reachable
+		$user = $user->changeEmail('another@domain.com');
+		$this->assertNull($user->secret('email'));
+
+		// verify the value stored on disk
+		$user = $this->app->clone()->user($user->id());
+		$this->assertNull($user->secret('email'));
+	}
+
+	public function testChangeEmailKeepsOtherSecrets(): void
+	{
+		$user = new User(['email' => 'editor@domain.com']);
+		$user = $user->changeSecret('totp', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567');
+		$user = $user->changeEmail('another@domain.com');
+
+		// only the email challenge is tied to the address
+		$this->assertSame(
+			'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567',
+			$this->app->clone()->user($user->id())->secret('totp')
+		);
+	}
+
 	public function testChangeEmailHooks(): void
 	{
 		$calls = 0;

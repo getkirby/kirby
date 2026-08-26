@@ -203,7 +203,43 @@ class EmailChallengeTest extends TestCase
 	public function testIsAvailable(): void
 	{
 		$this->assertTrue(EmailChallenge::isAvailable($this->user, 'login'));
-		$this->assertTrue(EmailChallenge::isAvailable($this->user, '2fa'));
+		$this->assertTrue(EmailChallenge::isAvailable($this->user, 'password-reset'));
+	}
+
+	public function testIsAvailable2FA(): void
+	{
+		// as a second factor, the challenge is opt-in per user
+		$this->assertFalse(EmailChallenge::isAvailable($this->user, '2fa'));
+
+		$this->app->impersonate('kirby');
+		$user = $this->user->changeSecret('email', true);
+
+		$this->assertTrue(EmailChallenge::isAvailable($user, '2fa'));
+	}
+
+	public function testIsAvailable2FAEnforced(): void
+	{
+		// enforced 2FA needs a factor for every user, so email stays
+		// available for those who have not opted in
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'methods' => ['password' => ['2fa' => true]]
+				]
+			]
+		]);
+
+		$user = $this->app->user('marge');
+		$this->assertTrue(EmailChallenge::isAvailable($user, '2fa'));
+	}
+
+	public function testIsAvailable2FAWithoutOptIn(): void
+	{
+		// the opt-in must not be satisfied by any other truthy value
+		$this->app->impersonate('kirby');
+		$user = $this->user->changeSecret('email', 'yes');
+
+		$this->assertFalse(EmailChallenge::isAvailable($user, '2fa'));
 	}
 
 	public function testIsEnabled(): void
@@ -227,6 +263,13 @@ class EmailChallengeTest extends TestCase
 	{
 		$settings = EmailChallenge::settings($this->user);
 		$this->assertCount(1, $settings);
+
+		$props = $settings[0]->render()['props'];
+		$this->assertSame('email-unread', $props['icon']);
+		$this->assertSame(
+			$this->user->panel()->url(true) . '/security/challenge/email',
+			$props['drawer']
+		);
 	}
 
 	public function testTimeout(): void

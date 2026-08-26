@@ -10,9 +10,6 @@ use Attribute;
  * exposure (e.g. password hashes) or unintended write actions
  * through queries driven by user input.
  *
- * @package   Kirby Toolkit
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */

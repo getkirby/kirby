@@ -4,6 +4,7 @@ namespace Kirby\Panel;
 
 use Kirby\Exception\Exception;
 use Kirby\Exception\NotFoundException;
+use Kirby\Filesystem\F;
 use Kirby\Http\Response;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -11,6 +12,45 @@ use PHPUnit\Framework\Attributes\CoversClass;
 class RouterTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.Panel';
+
+	public function testIcons(): void
+	{
+		$router   = new Router($this->app->panel());
+		$response = $router->icons();
+
+		$this->assertSame('image/svg+xml', $response->type());
+		$this->assertSame(
+			'public, max-age=31536000, immutable',
+			$response->header('Cache-Control')
+		);
+		$this->assertStringContainsString('<svg', $response->body());
+	}
+
+	public function testIconsInDevMode(): void
+	{
+		// fake a panel dir with a running Vite dev server
+		$panel = static::TMP . '/panel';
+		F::write($panel . '/public/img/icons.svg', '<svg></svg>');
+		F::write($panel . '/.vite-running', '');
+
+		$this->app = $this->app->clone([
+			'roots' => [
+				'panel' => $panel
+			],
+			'options' => [
+				'panel' => [
+					'dev' => true
+				]
+			]
+		]);
+
+		$router   = new Router($this->app->panel());
+		$response = $router->icons();
+
+		$this->assertSame('image/svg+xml', $response->type());
+		$this->assertSame('no-store', $response->header('Cache-Control'));
+		$this->assertStringContainsString('<svg', $response->body());
+	}
 
 	public function testResponse(): void
 	{
@@ -70,14 +110,15 @@ class RouterTest extends TestCase
 		$router = new Router($panel);
 		$routes = $router->routes($areas);
 
-		$this->assertSame('browser', $routes[0]['pattern']);
-		$this->assertSame(['/', 'installation', 'login'], $routes[1]['pattern']);
-		$this->assertSame('(:all)', $routes[2]['pattern']);
+		$this->assertSame('assets/(:any)/icons.svg', $routes[0]['pattern']);
+		$this->assertSame('browser', $routes[1]['pattern']);
+		$this->assertSame(['/', 'installation', 'login'], $routes[2]['pattern']);
+		$this->assertSame('(:all)', $routes[3]['pattern']);
 
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('Could not find Panel route: foo');
 
-		$routes[2]['action']('foo');
+		$routes[3]['action']('foo');
 	}
 
 	public function testSetLanguageWithoutRequest(): void

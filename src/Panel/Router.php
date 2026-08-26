@@ -113,6 +113,23 @@ class Router
 	}
 
 	/**
+	 * Response for the SVG icon sprite
+	 * @since 6.0.0
+	 */
+	public function icons(): Response
+	{
+		$assets = $this->panel->assets();
+		$cache  = $assets->isDev() === true
+			? 'no-store'
+			: 'public, max-age=31536000, immutable';
+
+		return Response::file(
+			$assets->iconsRoot(),
+			['headers' => ['Cache-Control' => $cache]]
+		);
+	}
+
+	/**
 	 * Creates a Response object from the result of
 	 * a Panel route call
 	 */
@@ -155,16 +172,25 @@ class Router
 	{
 		$kirby   = $this->kirby;
 		$panel   = $this->panel;
+		$router  = $this;
 		$areas ??= $panel->areas();
 
-		// the browser incompatibility
-		// warning is always needed
+		// the icon sprite and the browser incompatibility
+		// warning are always needed, no matter the areas
 		$routes = [
+			[
+				'pattern' => 'assets/(:any)/icons.svg',
+				'auth'    => false,
+				'action'  => fn () => $router->icons(),
+			],
 			[
 				'pattern' => 'browser',
 				'auth'    => false,
 				'action'  => fn () => new Response(
-					Tpl::load($kirby->root('kirby') . '/views/browser.php')
+					Tpl::load(
+						$kirby->root('kirby') . '/views/browser.php',
+						['browsers' => $panel->browsers()]
+					)
 				),
 			]
 		];

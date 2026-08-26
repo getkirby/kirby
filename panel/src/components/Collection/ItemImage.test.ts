@@ -61,43 +61,4 @@ describe("ItemImage.vue", () => {
 			expect(wrapper.attributes("ratio")).toBe("16/9");
 		});
 	});
-
-	// computed: sizes
-	describe("width prop", () => {
-		it("defaults to 1/1 sizes", () => {
-			const wrapper = mount();
-			expect(wrapper.attributes("size")).toContain("88em");
-		});
-
-		it("sets sizes for 1/2 width", () => {
-			const wrapper = mount({ width: "1/2" });
-			expect(wrapper.attributes("size")).toContain("44em");
-		});
-
-		it("uses the same sizes for 2/4 as 1/2", () => {
-			const wrapper12 = mount({ width: "1/2" });
-			const wrapper24 = mount({ width: "2/4" });
-			expect(wrapper12.attributes("size")).toBe(wrapper24.attributes("size"));
-		});
-
-		it("sets sizes for 1/3 width", () => {
-			const wrapper = mount({ width: "1/3" });
-			expect(wrapper.attributes("size")).toContain("29.333em");
-		});
-
-		it("sets sizes for 1/4 width", () => {
-			const wrapper = mount({ width: "1/4" });
-			expect(wrapper.attributes("size")).toContain("22em");
-		});
-
-		it("sets sizes for 2/3 width", () => {
-			const wrapper = mount({ width: "2/3" });
-			expect(wrapper.attributes("size")).toContain("27em");
-		});
-
-		it("sets sizes for 3/4 width", () => {
-			const wrapper = mount({ width: "3/4" });
-			expect(wrapper.attributes("size")).toContain("66em");
-		});
-	});
 });

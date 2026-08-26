@@ -3,7 +3,9 @@
 namespace Kirby\Panel;
 
 use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 #[CoversClass(Panel::class)]
 class PanelTest extends TestCase
@@ -41,6 +43,42 @@ class PanelTest extends TestCase
 		$panel = $this->app->panel();
 		$this->assertInstanceOf(Assets::class, $panel->assets());
 		$this->assertSame($panel->assets(), $panel->assets());
+	}
+
+	public static function browsersProvider(): array
+	{
+		return [
+			["# a comment\n\nChrome >= 124\n  Safari >= 17.5  ", ['Chrome' => '124', 'Safari' => '17.5']],
+			["last 2 versions\nnot dead\nChrome > 124", []],
+			['Safari >= 17.5 # macOS Monterey', ['Safari' => '17.5']],
+			['', []],
+		];
+	}
+
+	#[DataProvider('browsersProvider')]
+	public function testBrowsers(string $content, array $expected): void
+	{
+		$root = static::TMP . '/browserslist';
+		F::write($root . '/.browserslistrc', $content);
+
+		$app = $this->app->clone(['roots' => ['panel' => $root]]);
+
+		$this->assertSame($expected, $app->panel()->browsers());
+	}
+
+	public function testBrowsersWithDefaultRoot(): void
+	{
+		$browsers = $this->app->panel()->browsers();
+
+		$this->assertNotSame([], $browsers);
+		$this->assertArrayHasKey('Chrome', $browsers);
+	}
+
+	public function testBrowsersWithMissingFile(): void
+	{
+		$app = $this->app->clone(['roots' => ['panel' => static::TMP]]);
+
+		$this->assertSame([], $app->panel()->browsers());
 	}
 
 	public function testGo(): void

@@ -23,6 +23,7 @@ if (
 		version_compare(PHP_VERSION, '8.6.0', '<')  === false
 	)
 ) {
+	http_response_code(503);
 	die(include __DIR__ . '/views/php.php');
 }
 

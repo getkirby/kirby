@@ -2,7 +2,6 @@
 
 namespace Kirby\Auth\Method;
 
-use Kirby\Auth\Auth;
 use Kirby\Auth\Exception\LoginNotPermittedException;
 use Kirby\Auth\Method;
 use Kirby\Auth\Service\Webauthn;
@@ -19,9 +18,6 @@ use SensitiveParameter;
  * without requiring an email address upfront.
  * The credential id in the assertion identifies the user.
  *
- * @package   Kirby Auth
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
@@ -118,13 +114,6 @@ class WebauthnMethod extends Method
 	public static function icon(): string
 	{
 		return 'fingerprint';
-	}
-
-	public static function isUsingChallenges(
-		Auth $auth,
-		array $options = []
-	): bool {
-		return false;
 	}
 
 	public static function settings(User $user): array

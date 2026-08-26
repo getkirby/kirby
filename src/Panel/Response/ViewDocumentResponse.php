@@ -93,6 +93,7 @@ class ViewDocumentResponse extends ViewResponse
 	{
 		return [
 			'Content-Security-Policy' => $this->cors(),
+			'X-Robots-Tag'            => 'noindex, nofollow',
 		];
 	}
 

@@ -8,9 +8,6 @@ use Kirby\Panel\Ui\Drawer;
 use Kirby\Toolkit\A;
 
 /**
- * @package   Kirby Panel
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
@@ -25,12 +22,6 @@ class UserSecurityDrawerController extends UserDrawerController
 
 	public function challenges(): array
 	{
-		$methods = $this->auth()->methods();
-
-		if ($methods->hasAnyUsingChallenges() === false) {
-			return [];
-		}
-
 		$buttons    = [];
 		$challenges = $this->auth()->challenges();
 
@@ -73,7 +64,7 @@ class UserSecurityDrawerController extends UserDrawerController
 
 		$methods = $this->auth()->methods()->enabled();
 
-		foreach ($methods as $type => $options) {
+		foreach (array_keys($methods) as $type) {
 			$method  = $this->auth()->methods()->class($type);
 			$buttons = [
 				...$buttons,

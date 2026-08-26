@@ -11,9 +11,6 @@ use Stringable;
  * Information container for the
  * authentication status
  *
- * @package   Kirby Cms
- * @author    Lukas Bestle <lukas@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     3.5.1

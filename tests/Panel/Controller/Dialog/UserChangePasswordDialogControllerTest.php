@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel\Controller\Dialog;
 
+use Kirby\Auth\Exception\RateLimitException;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\TestCase;
@@ -193,6 +194,60 @@ class UserChangePasswordDialogControllerTest extends TestCase
 
 		$user       = $this->app->user('test');
 		$controller = new UserChangePasswordDialogController($user);
+		$controller->submit();
+	}
+
+	public function testSubmitWithInvalidCurrentPasswordConsumesRateLimit(): void
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'currentPassword'      => '123456',
+					'password'             => 'abcdefgh',
+					'passwordConfirmation' => 'abcdefgh'
+				]
+			]
+		]);
+
+		$this->app->impersonate('test@getkirby.com');
+
+		$controller = new UserChangePasswordDialogController($this->app->user('test'));
+
+		try {
+			$controller->submit();
+			$this->fail('Expected InvalidArgumentException');
+		} catch (InvalidArgumentException) {
+			// expected
+		}
+
+		// the guess must count against the shared auth budget, so that a
+		// hijacked session cannot brute-force the current password here
+		$log = $this->app->auth()->limits()->log();
+		$this->assertSame(1, $log['by-email']['test@getkirby.com']['trials']);
+	}
+
+	public function testSubmitRateLimited(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => ['auth' => ['trials' => 1]],
+			'request' => [
+				'query' => [
+					'currentPassword'      => '12345678',
+					'password'             => 'abcdefgh',
+					'passwordConfirmation' => 'abcdefgh'
+				]
+			]
+		]);
+
+		$this->app->impersonate('test@getkirby.com');
+
+		// exhaust the limit for this visitor
+		$this->app->auth()->limits()->track('test@getkirby.com', triggerHook: false);
+
+		$controller = new UserChangePasswordDialogController($this->app->user('test'));
+
+		// the limit surfaces as itself, not masked as a wrong password
+		$this->expectException(RateLimitException::class);
 		$controller->submit();
 	}
 
