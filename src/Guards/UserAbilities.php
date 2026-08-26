@@ -19,19 +19,36 @@ class UserAbilities extends ModelAbilities
 	 */
 	protected Model $model;
 
-	public function error(
-		string $key,
-		array $data = [],
-		array $details = []
-	): never {
-		parent::error(
-			key: 'user.' . $key,
-			data: [
-				'name' => $this->model->username(),
-				...$data
-			],
-			details: $details
-		);
+	/**
+	 * Only admins are allowed to run actions on other admins
+	 * that could lock them out of their account
+	 */
+	protected function ensureAdmin(string $action): void
+	{
+		if (
+			$this->model->isAdmin() === true &&
+			$this->user->isAdmin() !== true
+		) {
+			$this->error(key: $action . '.admin');
+		}
+	}
+
+	/**
+	 * A new email address would lock the admin out of
+	 * their account and could be used to take it over
+	 */
+	protected function ensureToChangeEmail(): void
+	{
+		$this->ensureAdmin('changeEmail');
+	}
+
+	/**
+	 * A new password would lock the admin out of
+	 * their account and could be used to take it over
+	 */
+	protected function ensureToChangePassword(): void
+	{
+		$this->ensureAdmin('changePassword');
 	}
 
 	protected function ensureToChangeRole(): void
@@ -41,13 +58,7 @@ class UserAbilities extends ModelAbilities
 			$this->error(key: 'changeRole.lastAdmin');
 		}
 
-		// protect admin from role changes by non-admin
-		if (
-			$this->model->isAdmin() === true &&
-			$this->user->isAdmin() !== true
-		) {
-			$this->error(key: 'changeRole.demoteAdmin');
-		}
+		$this->ensureAdmin('changeRole');
 	}
 
 	protected function ensureToChangeRoleToAdmin(): void
@@ -108,6 +119,8 @@ class UserAbilities extends ModelAbilities
 		if ($this->model->isLastUser() === true) {
 			$this->error(key: 'delete.lastUser');
 		}
+
+		$this->ensureAdmin('delete');
 	}
 
 	protected function ensureToDeleteAvatar(): void
@@ -122,5 +135,20 @@ class UserAbilities extends ModelAbilities
 		if ($this->model->avatar() === null) {
 			$this->error(key: 'avatar.notFound');
 		}
+	}
+
+	public function error(
+		string $key,
+		array $data = [],
+		array $details = []
+	): never {
+		parent::error(
+			key: 'user.' . $key,
+			data: [
+				'name' => $this->model->username(),
+				...$data
+			],
+			details: $details
+		);
 	}
 }

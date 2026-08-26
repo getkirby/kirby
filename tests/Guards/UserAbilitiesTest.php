@@ -57,6 +57,98 @@ class UserAbilitiesTest extends ModelTestCase
 		);
 	}
 
+	public function testChangeEmailForAdminAsAdmin(): void
+	{
+		$this->app = $this->app->clone([
+			'users' => [
+				['email' => 'admin@getkirby.com', 'role' => 'admin'],
+				['email' => 'another-admin@getkirby.com', 'role' => 'admin']
+			]
+		]);
+
+		$this->app->impersonate('another-admin@getkirby.com');
+
+		$this->assertNull($this->abilities('admin@getkirby.com')->ensure('changeEmail'));
+	}
+
+	public function testChangeEmailForAdminAsEditor(): void
+	{
+		$this->app->impersonate('editor@getkirby.com');
+
+		$this->expectException(AbilityException::class);
+		$this->expectExceptionCode('error.user.changeEmail.admin');
+
+		$this->abilities('admin@getkirby.com')->ensure('changeEmail');
+	}
+
+	public function testChangeEmailForAdminAsSelf(): void
+	{
+		$this->app->impersonate('admin@getkirby.com');
+
+		$this->assertNull($this->abilities('admin@getkirby.com')->ensure('changeEmail'));
+	}
+
+	public function testChangeEmailForAdminWithoutUser(): void
+	{
+		$this->expectException(AbilityException::class);
+		$this->expectExceptionCode('error.user.changeEmail.admin');
+
+		$this->abilities('admin@getkirby.com')->ensure('changeEmail');
+	}
+
+	public function testChangeEmailForEditor(): void
+	{
+		$this->app->impersonate('editor@getkirby.com');
+
+		$this->assertNull($this->abilities('editor@getkirby.com')->ensure('changeEmail'));
+	}
+
+	public function testChangePasswordForAdminAsAdmin(): void
+	{
+		$this->app = $this->app->clone([
+			'users' => [
+				['email' => 'admin@getkirby.com', 'role' => 'admin'],
+				['email' => 'another-admin@getkirby.com', 'role' => 'admin']
+			]
+		]);
+
+		$this->app->impersonate('another-admin@getkirby.com');
+
+		$this->assertNull($this->abilities('admin@getkirby.com')->ensure('changePassword'));
+	}
+
+	public function testChangePasswordForAdminAsEditor(): void
+	{
+		$this->app->impersonate('editor@getkirby.com');
+
+		$this->expectException(AbilityException::class);
+		$this->expectExceptionCode('error.user.changePassword.admin');
+
+		$this->abilities('admin@getkirby.com')->ensure('changePassword');
+	}
+
+	public function testChangePasswordForAdminAsSelf(): void
+	{
+		$this->app->impersonate('admin@getkirby.com');
+
+		$this->assertNull($this->abilities('admin@getkirby.com')->ensure('changePassword'));
+	}
+
+	public function testChangePasswordForAdminWithoutUser(): void
+	{
+		$this->expectException(AbilityException::class);
+		$this->expectExceptionCode('error.user.changePassword.admin');
+
+		$this->abilities('admin@getkirby.com')->ensure('changePassword');
+	}
+
+	public function testChangePasswordForEditor(): void
+	{
+		$this->app->impersonate('editor@getkirby.com');
+
+		$this->assertNull($this->abilities('editor@getkirby.com')->ensure('changePassword'));
+	}
+
 	public function testChangeRoleForAdminAsAdmin(): void
 	{
 		// add a second admin to make sure the target is not the last admin
@@ -86,7 +178,7 @@ class UserAbilitiesTest extends ModelTestCase
 		$this->app->impersonate('editor@getkirby.com');
 
 		$this->expectException(AbilityException::class);
-		$this->expectExceptionCode('error.user.changeRole.demoteAdmin');
+		$this->expectExceptionCode('error.user.changeRole.admin');
 
 		$this->abilities('admin@getkirby.com')->ensure('changeRole');
 	}
@@ -248,6 +340,39 @@ class UserAbilitiesTest extends ModelTestCase
 		$this->app->impersonate('admin@getkirby.com');
 
 		$this->assertNull($this->abilities('admin@getkirby.com')->ensure('delete'));
+	}
+
+	public function testDeleteAdminAsEditor(): void
+	{
+		$this->app = $this->app->clone([
+			'users' => [
+				['email' => 'admin@getkirby.com', 'role' => 'admin'],
+				['email' => 'another-admin@getkirby.com', 'role' => 'admin'],
+				['email' => 'editor@getkirby.com', 'role' => 'editor']
+			]
+		]);
+
+		$this->app->impersonate('editor@getkirby.com');
+
+		$this->expectException(AbilityException::class);
+		$this->expectExceptionCode('error.user.delete.admin');
+
+		$this->abilities('admin@getkirby.com')->ensure('delete');
+	}
+
+	public function testDeleteAdminWithoutUser(): void
+	{
+		$this->app = $this->app->clone([
+			'users' => [
+				['email' => 'admin@getkirby.com', 'role' => 'admin'],
+				['email' => 'another-admin@getkirby.com', 'role' => 'admin']
+			]
+		]);
+
+		$this->expectException(AbilityException::class);
+		$this->expectExceptionCode('error.user.delete.admin');
+
+		$this->abilities('admin@getkirby.com')->ensure('delete');
 	}
 
 	public function testDeleteAvatar(): void

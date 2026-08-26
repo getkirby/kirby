@@ -160,7 +160,7 @@ class UserRulesTest extends ModelTestCase
 	public function testChangeRoleFromAdminByNonAdmin(): void
 	{
 		$this->expectException(AbilityException::class);
-		$this->expectExceptionCode('error.user.changeRole.demoteAdmin');
+		$this->expectExceptionCode('error.user.changeRole.admin');
 
 		$this->app->impersonate('user@domain.com');
 
