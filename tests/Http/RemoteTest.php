@@ -288,6 +288,19 @@ class RemoteTest extends TestCase
 		};
 	}
 
+	public function testOptionsSafeRejectsNonAsciiHost(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('is not allowed in safe mode');
+
+		new class ('https://faß.example.com', ['safe' => true, 'test' => true]) extends Remote {
+			protected function resolveHost(string $host): array
+			{
+				return ['1.2.3.4'];
+			}
+		};
+	}
+
 	public function testOptionsSafeRequiresHost(): void
 	{
 		$this->expectException(InvalidArgumentException::class);

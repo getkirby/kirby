@@ -299,8 +299,8 @@ class Remote
 	}
 
 	/**
-	 * Rejects the request for the `safe` option if the host
-	 * resolves to a private or reserved address
+	 * Rejects the request for the `safe` option if the host is
+	 * not ASCII or resolves to a private or reserved address
 	 * @since 6.0.0
 	 *
 	 * @throws InvalidArgumentException when the URL is not allowed
@@ -316,7 +316,16 @@ class Remote
 			);
 		}
 
-		$host      = trim($host, '[]');
+		$host = trim($host, '[]');
+
+		// curl converts a non-ASCII host with its own IDN engine, which
+		// can yield a different name than ours
+		if (mb_detect_encoding($host, 'ASCII', true) === false) {
+			throw new InvalidArgumentException(
+				message: 'The non-ASCII URL "' . $this->options['url'] . '" is not allowed in safe mode'
+			);
+		}
+
 		$host      = Idn::encode($host) ?: $host;
 		$addresses = $this->resolveHost($host);
 
