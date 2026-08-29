@@ -455,8 +455,8 @@ class Normalizer
 	}
 
 	/**
-	 * Resolves every field shortcut (an `extends` string, `true`
-	 * or a reference to a field definition) into plain props and
+	 * Resolves every field shortcut (an `extends` string, `true`,
+	 * `null` or a reference to a field definition) into plain props and
 	 * returns them as a list in which each entry carries its own name.
 	 *
 	 * @return array<int, array>
@@ -488,8 +488,9 @@ class Normalizer
 				$props = ['extends' => $props];
 			}
 
-			// use the name as type definition
-			if ($props === true) {
+			// fall back to the default props, which use
+			// the name as type definition
+			if ($props === true || $props === null) {
 				$props = [];
 			}
 
@@ -498,10 +499,15 @@ class Normalizer
 				continue;
 			}
 
-			// inject the name, unless the entry carries it already
-			$props['name'] = match (is_int($key)) {
-				true  => $props['name'] ?? $key,
-				false => $key
+			// inject the key as name, unless the entry carries
+			// a name of its own that can be used as one
+			$name = $props['name'] ?? null;
+
+			$props['name'] = match (true) {
+				is_int($key) === false    => $key,
+				is_string($name) === true => $name,
+				is_int($name) === true    => $name,
+				default                   => $key
 			};
 
 			$list[] = $props;
