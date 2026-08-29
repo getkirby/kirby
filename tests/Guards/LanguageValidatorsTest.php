@@ -233,6 +233,72 @@ class LanguageValidatorsTest extends ModelTestCase
 		$validators->validateName('');
 	}
 
+	public function testVariables(): void
+	{
+		$validators = $this->validators(new Language([
+			'code'         => 'en',
+			'translations' => ['my.custom.variable' => 'Custom']
+		]));
+
+		$this->assertNull($validators->validateVariables());
+	}
+
+	public function testVariablesWithCoreString(): void
+	{
+		$validators = $this->validators(new Language([
+			'code'         => 'en',
+			'translations' => ['delete' => 'Destroy']
+		]));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.language.variable.core');
+
+		$validators->validateVariables();
+	}
+
+	public function testVariablesWithEmptyKey(): void
+	{
+		$validators = $this->validators(new Language([
+			'code'         => 'en',
+			'translations' => ['' => 'Empty']
+		]));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.language.variable.key');
+
+		$validators->validateVariables();
+	}
+
+	public function testVariablesWithNumericKey(): void
+	{
+		$validators = $this->validators(new Language([
+			'code'         => 'en',
+			'translations' => ['5' => 'Numeric']
+		]));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.language.variable.numeric');
+
+		$validators->validateVariables();
+	}
+
+	public function testVariablesWithUnchangedCoreString(): void
+	{
+		// a variable that is already stored must not block
+		// an unrelated update, even if it shadows a core string
+		$old = new Language([
+			'code'         => 'en',
+			'translations' => ['delete' => 'Destroy']
+		]);
+
+		$validators = $this->validators(new Language([
+			'code'         => 'en',
+			'translations' => ['delete' => 'Destroy']
+		]));
+
+		$this->assertNull($validators->validateVariables($old));
+	}
+
 	protected function user(): User
 	{
 		return new User(['id' => 'test']);

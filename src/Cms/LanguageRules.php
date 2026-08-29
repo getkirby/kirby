@@ -38,4 +38,11 @@ class LanguageRules
 	{
 		$language->guards()->validators()->validateName($language->name());
 	}
+
+	public static function validLanguageVariables(
+		Language $newLanguage,
+		Language|null $oldLanguage = null
+	): void {
+		$newLanguage->guards()->validators()->validateVariables($oldLanguage);
+	}
 }

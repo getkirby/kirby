@@ -13,7 +13,44 @@ use Kirby\Toolkit\Str;
  */
 trait AppTranslations
 {
+	protected array $i18nStrings = [];
 	protected Translations|null $translations = null;
+
+	/**
+	 * Returns the translation strings that Kirby itself defines for
+	 * the given code. Every shipped translation is generated from the
+	 * English one, so that is always the complete set, plus whatever
+	 * plugins register for English and for the code itself.
+	 * @since 5.6.0
+	 */
+	public function coreI18nStrings(string $code): array
+	{
+		return $this->i18nStrings[$code] ??= [
+			...Translation::load(
+				'en',
+				$this->root('i18n:translations') . '/en.json',
+				$this->extensions['translations']['en'] ?? []
+			)->data(),
+			...$this->extensions['translations'][$code] ?? []
+		];
+	}
+
+	/**
+	 * Returns the translation strings that the custom variables of a
+	 * language contribute. A variable must never shadow one of Kirby's
+	 * own strings, as the Panel renders some of them as HTML.
+	 */
+	protected function customI18nStrings(Language $language): array
+	{
+		if (($strings = $language->translations()) === []) {
+			return [];
+		}
+
+		return array_diff_key(
+			$strings,
+			$this->coreI18nStrings($language->code())
+		);
+	}
 
 	/**
 	 * Setup internationalization
@@ -22,21 +59,8 @@ trait AppTranslations
 	{
 		// These closures are stored statically on `I18n` and therefore outlive
 		// the app that installed them. They must not capture `$this`.
-		I18n::$load = static function ($locale): array {
-			$kirby = App::instance();
-			$data  = $kirby->translation($locale)->data();
-
-			// inject translations from the current language
-			if (
-				$kirby->multilang() === true &&
-				$language = $kirby->languages()->find($locale)
-			) {
-				$data = [...$data, ...$language->translations()];
-			}
-
-
-			return $data;
-		};
+		I18n::$load = static fn ($locale): array =>
+			App::instance()->translation($locale)->data();
 
 		// the actual locale is set using $app->setCurrentTranslation()
 		I18n::$locale = static function (): string {
@@ -139,9 +163,9 @@ trait AppTranslations
 		// get injected translation data from plugins etc.
 		$inject = $this->extensions['translations'][$locale] ?? [];
 
-		// inject current language translations
+		// inject the strings of the current language's custom variables
 		if ($language = $this->language($locale)) {
-			$inject = [...$inject, ...$language->translations()];
+			$inject = [...$inject, ...$this->customI18nStrings($language)];
 		}
 
 		// load from disk instead
@@ -165,14 +189,14 @@ trait AppTranslations
 
 		// injects languages translations
 		foreach ($this->languages() as $language) {
-			$languageCode         = $language->code();
-			$languageTranslations = $language->translations();
+			$code    = $language->code();
+			$strings = $this->customI18nStrings($language);
 
-			// merges language translations with extensions translations
-			if (empty($languageTranslations) === false) {
-				$translations[$languageCode] = [
-					...$translations[$languageCode] ?? [],
-					...$languageTranslations
+			// merges the custom variables with the extension translations
+			if ($strings !== []) {
+				$translations[$code] = [
+					...$translations[$code] ?? [],
+					...$strings
 				];
 			}
 		}

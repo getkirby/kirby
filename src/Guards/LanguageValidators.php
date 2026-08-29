@@ -29,6 +29,7 @@ class LanguageValidators extends ModelValidators
 	{
 		$this->validateCode($this->model->code());
 		$this->validateName($this->model->name());
+		$this->validateVariables();
 		$this->validateDefault();
 		$this->validateDoesNotExist();
 	}
@@ -42,6 +43,7 @@ class LanguageValidators extends ModelValidators
 	{
 		$this->validateCode($this->model->code());
 		$this->validateName($this->model->name());
+		$this->validateVariables($oldLanguage);
 		$this->validateDemotion($oldLanguage);
 	}
 
@@ -125,6 +127,44 @@ class LanguageValidators extends ModelValidators
 					'name' => $name
 				]
 			);
+		}
+	}
+
+	/**
+	 * Validates the custom variables of the language. A variable must
+	 * never shadow one of Kirby's own strings, as the Panel renders
+	 * some of them as HTML.
+	 */
+	public function validateVariables(Language|null $oldLanguage = null): void
+	{
+		$old     = $oldLanguage?->translations() ?? [];
+		$changed = array_filter(
+			$this->model->translations(),
+			fn ($value, $key) => ($old[$key] ?? null) !== $value,
+			ARRAY_FILTER_USE_BOTH
+		);
+
+		if ($changed === []) {
+			return;
+		}
+
+		$core = $this->model->kirby()->coreI18nStrings($this->model->code());
+
+		foreach (array_keys($changed) as $key) {
+			if (is_numeric($key) === true) {
+				$this->error(key: 'language.variable.numeric');
+			}
+
+			if ($key === '') {
+				$this->error(key: 'language.variable.key');
+			}
+
+			if (isset($core[$key]) === true) {
+				$this->error(
+					key: 'language.variable.core',
+					data: ['key' => $key]
+				);
+			}
 		}
 	}
 }
