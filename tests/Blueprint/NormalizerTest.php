@@ -632,6 +632,17 @@ class NormalizerTest extends TestCase
 		$this->assertSame(['date', 'title'], array_keys($fields));
 	}
 
+	public function testNormalizeFieldsPropsWithInvalidName(): void
+	{
+		$fields = Normalizer::normalizeFieldsProps([
+			['name' => ['nonsense'], 'type' => 'text']
+		]);
+
+		// a name that cannot be used as such falls back to the key
+		$this->assertSame(0, $fields[0]['name']);
+		$this->assertSame('text', $fields[0]['type']);
+	}
+
 	public function testNormalizeFieldsPropsWithInvalidType(): void
 	{
 		$fields = Normalizer::normalizeFieldsProps([
@@ -652,6 +663,15 @@ class NormalizerTest extends TestCase
 		$this->assertSame([], Normalizer::normalizeFieldsProps(false));
 		$this->assertSame([], Normalizer::normalizeFieldsProps(null));
 		$this->assertSame([], Normalizer::normalizeFieldsProps('nonsense'));
+	}
+
+	public function testNormalizeFieldsPropsWithNull(): void
+	{
+		$fields = Normalizer::normalizeFieldsProps([
+			'text' => null
+		]);
+
+		$this->assertSame('text', $fields['text']['type']);
 	}
 
 	public function testNormalizeFieldsPropsWithString(): void
