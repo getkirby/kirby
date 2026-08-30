@@ -602,8 +602,10 @@ class App
 	 */
 	public static function destroy(): void
 	{
-		static::$plugins  = [];
-		static::$instance = null;
+		static::$plugins         = [];
+		static::$instance        = null;
+		ModelWithContent::$kirby = null;
+		Language::$kirby         = null;
 	}
 
 	/**
