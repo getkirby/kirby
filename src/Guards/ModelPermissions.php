@@ -22,6 +22,14 @@ abstract class ModelPermissions
 {
 	use HasActions;
 
+	/**
+	 * Cache for the two user checks that `::setting()` runs for
+	 * every action. The guards are bound to one user, so both are
+	 * constant for the lifetime of the instance.
+	 */
+	protected bool|null $isKirby = null;
+	protected bool|null $isNobody = null;
+
 	public function __construct(
 		protected Model $model,
 		protected User $user
@@ -114,12 +122,16 @@ abstract class ModelPermissions
 		// that needs a permission check. This must be checked
 		// against the role and not against `User::isNobody()`,
 		// which only matches the virtual, logged out user.
-		if ($this->user->role()->isNobody() === true) {
+		$this->isNobody ??= $this->user->role()->isNobody();
+
+		if ($this->isNobody === true) {
 			return false;
 		}
 
 		// the almighty `kirby` user can execute anything
-		if ($this->user->isKirby() === true) {
+		$this->isKirby ??= $this->user->isKirby();
+
+		if ($this->isKirby === true) {
 			return true;
 		}
 
