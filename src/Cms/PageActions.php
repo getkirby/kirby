@@ -507,18 +507,6 @@ trait PageActions
 			'translations' => null
 		]);
 
-		// merge the content with the defaults
-		$props['content'] = [
-			...$page->createDefaultContent(),
-			...$props['content'],
-		];
-
-		// make sure that a UUID gets generated
-		// and added to content right away
-		if (Uuids::enabled() === true) {
-			$props['content']['uuid'] ??= Uuid::generate();
-		}
-
 		// keep the initial storage class
 		$storage = $page->storage()::class;
 
@@ -527,14 +515,27 @@ trait PageActions
 		// an existing page before we can even run the checks.
 		$page->guards()->ensureExecutable('create');
 
+		// merge the content with the defaults and run it through
+		// the fields to apply their save handlers
+		$props['content'] = $page->createContent($props['content']);
+
+		// make sure that a UUID gets generated
+		// and added to content right away
+		if (Uuids::enabled() === true) {
+			$props['content']['uuid'] ??= Uuid::generate();
+		}
+
 		// make sure that the temporary page is stored in memory
 		$page->changeStorage(MemoryStorage::class);
 
 		// inject the content
 		$page->setContent($props['content']);
 
-		// inject the translations
-		$page->setTranslations($props['translations'] ?? null);
+		// inject the translations and run their content through
+		// the fields to apply their save handlers
+		$page->setTranslations(
+			$page->createTranslations($props['translations'] ?? null)
+		);
 
 		// run the hooks and creation action
 		$page = $page->commit(
