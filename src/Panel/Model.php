@@ -310,7 +310,7 @@ abstract class Model
 	 */
 	public function options(array $unlock = []): array
 	{
-		$options = $this->model->permissions()->toArray();
+		$options = $this->model->guards()->toArray();
 
 		if ($this->model->lock()->isLocked() === true) {
 			foreach ($options as $key => $value) {

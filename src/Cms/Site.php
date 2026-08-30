@@ -229,10 +229,7 @@ class Site extends ModelWithContent
 	 */
 	public function guards(): SiteGuards
 	{
-		return new SiteGuards(
-			model: $this,
-			user: User::ensure()
-		);
+		return SiteGuards::for($this);
 	}
 
 	/**
@@ -290,7 +287,7 @@ class Site extends ModelWithContent
 	 */
 	public function isAccessible(): bool
 	{
-		return SitePermissions::canFromCache($this, 'access');
+		return $this->guards()->isAvailable('access');
 	}
 
 	/**
@@ -393,14 +390,14 @@ class Site extends ModelWithContent
 	public function previewUrl(VersionId|string $versionId = 'latest'): string|null
 	{
 		// the site needs its own preview permission
-		if ($this->permissions()->can('preview') !== true) {
+		if ($this->guards()->isAvailable('preview') !== true) {
 			return null;
 		}
 
 		// the site preview defaults to the home page, so for backward
 		// compatibility we also check the home page's preview permission
 		// @todo Remove in 6.0.0, only check `site.preview`
-		if ($this->homePage()?->permissions()->can('preview') !== true) {
+		if ($this->homePage()?->guards()->isAvailable('preview') !== true) {
 			return null;
 		}
 

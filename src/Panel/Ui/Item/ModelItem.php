@@ -69,7 +69,7 @@ class ModelItem extends Item
 
 	protected function permissions(): array
 	{
-		return $this->model->permissions()->toArray();
+		return $this->model->guards()->toArray();
 	}
 
 	public function props(): array

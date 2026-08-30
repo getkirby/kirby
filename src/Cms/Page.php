@@ -445,10 +445,7 @@ class Page extends ModelWithContent
 	 */
 	public function guards(): PageGuards
 	{
-		return new PageGuards(
-			model: $this,
-			user: User::ensure()
-		);
+		return PageGuards::for($this);
 	}
 
 	/**
@@ -545,7 +542,7 @@ class Page extends ModelWithContent
 			return false;
 		}
 
-		return PagePermissions::canFromCache($this, 'access');
+		return $this->guards()->isAvailable('access');
 	}
 
 	/**
@@ -702,17 +699,13 @@ class Page extends ModelWithContent
 	 */
 	public function isListable(): bool
 	{
-		// TODO: remove this check when `read` option deprecated in v6
-		if ($this->isReadable() === false) {
-			return false;
-		}
-
 		// not accessible also means not listable
+		// (which covers the `read` check as well)
 		if ($this->isAccessible() === false) {
 			return false;
 		}
 
-		return PagePermissions::canFromCache($this, 'list');
+		return $this->guards()->isAvailable('list');
 	}
 
 	/**
@@ -765,12 +758,7 @@ class Page extends ModelWithContent
 	 */
 	public function isReadable(): bool
 	{
-		static $readable   = [];
-		$role              = $this->kirby()->role()?->id() ?? '__none__';
-		$template          = $this->intendedTemplate()->name();
-		$readable[$role] ??= [];
-
-		return $readable[$role][$template] ??= $this->permissions()->can('read');
+		return $this->guards()->isAvailable('read');
 	}
 
 	/**
@@ -778,7 +766,7 @@ class Page extends ModelWithContent
 	 */
 	public function isSortable(): bool
 	{
-		return $this->permissions()->can('sort');
+		return $this->guards()->isAvailable('sort');
 	}
 
 	/**
@@ -916,7 +904,7 @@ class Page extends ModelWithContent
 	#[BlockCollectionAccess]
 	public function previewUrl(VersionId|string $versionId = 'latest'): string|null
 	{
-		if ($this->permissions()->can('preview') !== true) {
+		if ($this->guards()->isAvailable('preview') !== true) {
 			return null;
 		}
 

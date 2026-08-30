@@ -9,6 +9,8 @@ use Kirby\Content\Version;
 use Kirby\Content\VersionId;
 use Kirby\Content\Versions;
 use Kirby\Exception\NotFoundException;
+use Kirby\Guards\ModelGuards;
+use Kirby\Guards\PageGuards;
 use Kirby\Panel\Page as PanelPage;
 use Kirby\Toolkit\HtmlString;
 use Kirby\Uuid\PageUuid;
@@ -34,6 +36,11 @@ class ExtendedModelWithContent extends ModelWithContent
 		Closure $callback
 	): mixed {
 		// nothing to commit in the test
+	}
+
+	public function guards(): ModelGuards
+	{
+		return PageGuards::for(new Page(['slug' => 'test']));
 	}
 
 	public function panel(): PanelPage

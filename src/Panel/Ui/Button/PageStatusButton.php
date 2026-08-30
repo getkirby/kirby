@@ -20,7 +20,7 @@ class PageStatusButton extends ViewButton
 	) {
 		$status    = $page->status();
 		$blueprint = $page->blueprint()->status()[$status] ?? null;
-		$disabled  = $page->permissions()->cannot('changeStatus') || $page->lock()->isLocked();
+		$disabled  = $page->guards()->isAvailable('changeStatus') === false || $page->lock()->isLocked();
 
 		$text   = $blueprint['label'] ?? null;
 		$text ??= $this->i18n('page.status.' . $status);

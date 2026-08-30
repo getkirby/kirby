@@ -2,6 +2,7 @@
 
 namespace Kirby\Guards;
 
+use Kirby\Cms\Language;
 use Kirby\Cms\ModelTestCase;
 use Kirby\Cms\Page;
 use Kirby\Cms\User;
@@ -15,6 +16,34 @@ class ModelGuardsTestValidators extends PageValidators
 	public function validateTitle(string $title): void
 	{
 		$this->error(key: 'page.changeTitle.custom');
+	}
+}
+
+class ModelGuardsTestAbilities extends PageAbilities
+{
+	public static bool $consulted = false;
+
+	protected function ensureToDelete(): void
+	{
+		static::$consulted = true;
+	}
+}
+
+class ModelGuardsTestAbilitiesGuards extends PageGuards
+{
+	public function __construct(
+		Page $model,
+		User $user
+	) {
+		parent::__construct(
+			model: $model,
+			user: $user
+		);
+
+		$this->abilities = new ModelGuardsTestAbilities(
+			model: $model,
+			user: $user
+		);
 	}
 }
 
@@ -203,11 +232,147 @@ class ModelGuardsTest extends ModelTestCase
 		$this->assertFalse($this->guards()->isExecutable('update'));
 	}
 
+	public function testFor(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$page   = new Page(['slug' => 'test']);
+		$guards = PageGuards::for($page);
+
+		$this->assertInstanceOf(PageGuards::class, $guards);
+		$this->assertSame($this->app->user(), $guards->user());
+	}
+
+	public function testForIsMemoizedPerModel(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$a = new Page(['slug' => 'a']);
+		$b = new Page(['slug' => 'b']);
+
+		$this->assertSame(PageGuards::for($a), PageGuards::for($a));
+		$this->assertNotSame(PageGuards::for($a), PageGuards::for($b));
+	}
+
+	public function testForIsRebuiltWhenTheUserChanges(): void
+	{
+		$this->app = $this->app->clone([
+			'users' => [
+				['email' => 'a@getkirby.com', 'role' => 'admin'],
+				['email' => 'b@getkirby.com', 'role' => 'admin'],
+			]
+		]);
+
+		$page = new Page(['slug' => 'test']);
+
+		$this->app->impersonate('a@getkirby.com');
+		$first = PageGuards::for($page);
+
+		$this->app->impersonate('b@getkirby.com');
+		$second = PageGuards::for($page);
+
+		$this->assertNotSame($first, $second);
+		$this->assertSame($this->app->user(), $second->user());
+	}
+
 	public function testIsAvailable(): void
 	{
 		$this->app->impersonate('kirby');
 
 		$this->assertTrue($this->guards()->isAvailable('update'));
+	}
+
+	public function testIsAvailableMatchesEnsureAvailable(): void
+	{
+		$this->app = $this->app->clone([
+			'roles' => [['name' => 'editor']],
+			'site'  => ['children' => [['slug' => 'home']]],
+			'users' => [['email' => 'editor@getkirby.com', 'role' => 'editor']]
+		]);
+
+		$actions = [
+			'update',         // resolved from the permission setting
+			'changeTitle',    // dedicated permission action method
+			'delete',         // dedicated ability action method
+			'does-not-exist', // no rule at all
+		];
+
+		foreach (['kirby', 'editor@getkirby.com', 'nobody'] as $id) {
+			$this->app->impersonate($id);
+
+			$guards = $this->guards($this->app->page('home'));
+
+			foreach ($actions as $action) {
+				foreach ([false, true] as $default) {
+					try {
+						$guards->ensureAvailable($action, $default);
+						$expected = true;
+					} catch (AbilityException | PermissionException) {
+						$expected = false;
+					}
+
+					$this->assertSame(
+						$expected,
+						$guards->isAvailable($action, $default),
+						$action . ' as ' . $id . ' (default: ' . ($default === true ? 'true' : 'false') . ')'
+					);
+				}
+			}
+		}
+	}
+
+	public function testIsAvailableSkipsTheAbilityWhenThePermissionDenies(): void
+	{
+		$this->app = $this->app->clone([
+			'roles' => [
+				[
+					'name'        => 'editor',
+					'permissions' => ['pages' => ['delete' => false]]
+				]
+			],
+			'users' => [
+				['email' => 'editor@getkirby.com', 'role' => 'editor']
+			]
+		]);
+
+		$this->app->impersonate('editor@getkirby.com');
+
+		$guards = new ModelGuardsTestAbilitiesGuards(
+			model: new Page(['slug' => 'test']),
+			user: $this->user()
+		);
+
+		ModelGuardsTestAbilities::$consulted = false;
+
+		// the permission rule already settles the question, so the
+		// ability must not be consulted at all
+		$this->assertFalse($guards->isAvailable('delete'));
+		$this->assertFalse(ModelGuardsTestAbilities::$consulted);
+
+		// …while an allowed permission still hands over to the ability
+		$this->assertTrue($guards->isAvailable('update'));
+	}
+
+	public function testIsAvailableForKirbyUserAndAdmin(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/restricted' => ['options' => ['access' => false]]
+			],
+			'site'  => ['children' => [['slug' => 'home', 'template' => 'restricted']]],
+			'users' => [['email' => 'admin@getkirby.com', 'role' => 'admin']]
+		]);
+
+		$page = $this->app->page('home');
+
+		// the almighty `kirby` user overrules the blueprint …
+		$this->app->impersonate('kirby');
+		$this->assertTrue($this->guards($page)->isAvailable('access'));
+
+		// … but a regular admin shares its role and must not
+		// inherit that answer
+		$this->app->impersonate('admin@getkirby.com');
+		$this->assertFalse($this->guards($page)->isAvailable('access'));
 	}
 
 	public function testIsAvailableWithActionMethod(): void
@@ -291,6 +456,51 @@ class ModelGuardsTest extends ModelTestCase
 	public function testPermissions(): void
 	{
 		$this->assertInstanceOf(PagePermissions::class, $this->guards()->permissions());
+	}
+
+	public function testToArray(): void
+	{
+		$this->app = $this->app->clone([
+			'users' => [
+				['email' => 'admin@getkirby.com', 'role' => 'admin']
+			]
+		]);
+
+		$this->app->impersonate('admin@getkirby.com');
+
+		$page = new Page([
+			'slug'      => 'test',
+			'blueprint' => [
+				'name'    => 'pages/test',
+				'options' => [
+					'delete' => false,
+					'update' => true
+				]
+			]
+		]);
+
+		$array = PageGuards::for($page)->toArray();
+
+		// the blueprint options are resolved to their availability
+		$this->assertFalse($array['delete']);
+		$this->assertTrue($array['update']);
+
+		// every option of the blueprint is covered
+		$this->assertSame(
+			array_keys($page->blueprint()->options()),
+			array_keys($array)
+		);
+		$this->assertContainsOnlyBool($array);
+	}
+
+	public function testToArrayWithoutBlueprint(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$language = new Language(['code' => 'en']);
+
+		// languages have no blueprint and therefore no options
+		$this->assertSame([], LanguageGuards::for($language)->toArray());
 	}
 
 	public function testUser(): void

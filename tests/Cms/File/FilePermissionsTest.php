@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Exception\LogicException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -60,45 +59,6 @@ class FilePermissionsTest extends ModelTestCase
 		$perms = $file->permissions();
 
 		$this->assertFalse($perms->can($action));
-	}
-
-	public function testCanFromCache(): void
-	{
-		$this->app->impersonate('admin');
-
-		$page = new Page(['slug' => 'test']);
-		$file = new File([
-			'filename'  => 'test.jpg',
-			'parent'    => $page,
-			'template'  => 'some-template',
-			'blueprint' => [
-				'name' => 'files/some-template',
-				'options' => [
-					'access' => false,
-					'list'   => false
-				]
-			]
-		]);
-
-		$this->assertFalse(FilePermissions::canFromCache($file, 'access'));
-		$this->assertFalse(FilePermissions::canFromCache($file, 'access'));
-		$this->assertFalse(FilePermissions::canFromCache($file, 'list'));
-		$this->assertFalse(FilePermissions::canFromCache($file, 'list'));
-	}
-
-	public function testCanFromCacheDynamic(): void
-	{
-		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Cannot use permission cache for dynamically-determined permission');
-
-		$page = new Page(['slug' => 'test']);
-		$file = new File([
-			'filename' => 'test.jpg',
-			'parent'   => $page,
-			'template' => 'some-template',
-		]);
-
-		FilePermissions::canFromCache($file, 'changeTemplate');
 	}
 
 	public function testCannotChangeTemplate(): void
