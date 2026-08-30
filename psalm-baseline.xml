@@ -85,11 +85,6 @@
       <code><![CDATA[$fieldsets]]></code>
     </InvalidOperand>
   </file>
-  <file src="src/Cms/FileActions.php">
-    <InvalidOperand>
-      <code><![CDATA[$props['content']]]></code>
-    </InvalidOperand>
-  </file>
   <file src="src/Cms/Files.php">
     <ImplementedParamTypeMismatch>
       <code><![CDATA[$object]]></code>
@@ -136,11 +131,6 @@
 		}]]></code>
     </NullableReturnStatement>
   </file>
-  <file src="src/Cms/PageActions.php">
-    <InvalidOperand>
-      <code><![CDATA[$props['content']]]></code>
-    </InvalidOperand>
-  </file>
   <file src="src/Cms/Pages.php">
     <ImplementedParamTypeMismatch>
       <code><![CDATA[$object]]></code>
@@ -166,11 +156,6 @@
       <code><![CDATA[$this->find($path)]]></code>
       <code><![CDATA[$this->homePage ??= $this->find($this->homePageId())]]></code>
     </InvalidReturnStatement>
-  </file>
-  <file src="src/Cms/UserActions.php">
-    <InvalidOperand>
-      <code><![CDATA[$props['content']]]></code>
-    </InvalidOperand>
   </file>
   <file src="src/Cms/Users.php">
     <ImplementedParamTypeMismatch>
