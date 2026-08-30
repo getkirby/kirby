@@ -17,6 +17,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Fields;
 use Kirby\Form\Form;
 use Kirby\Panel\Model;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Str;
 use Kirby\Uuid\Identifiable;
@@ -256,16 +257,62 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	}
 
 	/**
+	 * Creates the content for a new model by merging the given
+	 * values with the defaults from the model's blueprint and
+	 * converting all of them to their storable values
+	 *
+	 * @since 5.6.0
+	 */
+	public function createContent(array $content = []): array
+	{
+		$fields = Fields::for($this, 'default');
+
+		return $fields
+			->fill($fields->defaults())
+			->fill($content)
+			->toStoredValues();
+	}
+
+	/**
 	 * Creates default content for the model, by using our
 	 * Form class to generate the defaults, based on the
 	 * model's blueprint setup.
 	 *
 	 * @since 5.0.0
+	 * @deprecated 5.6.0 Use `::createContent()` instead
 	 */
 	public function createDefaultContent(): array
 	{
-		$fields = Fields::for($this, 'default');
-		return $fields->fill($fields->defaults())->toStoredValues();
+		return $this->createContent();
+	}
+
+	/**
+	 * Converts the content of the given translations to the values
+	 * that will be stored by running each of them through the fields
+	 * of the model's blueprint
+	 *
+	 * @since 5.6.0
+	 */
+	public function createTranslations(array|null $translations = null): array|null
+	{
+		if ($translations === null) {
+			return null;
+		}
+
+		return A::map($translations, function (array $translation): array {
+			$content = array_change_key_case($translation['content'] ?? []);
+			$fields  = Fields::for($this, $translation['code'] ?? 'default');
+
+			// only convert the values that have been passed;
+			// fields that are missing in the translation
+			// must not be added to it
+			$translation['content'] = array_intersect_key(
+				$fields->fill($content)->toStoredValues(),
+				$content
+			);
+
+			return $translation;
+		});
 	}
 
 	/**
