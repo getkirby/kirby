@@ -3,6 +3,7 @@
 namespace Kirby\Guards;
 
 use Kirby\Cms\Model;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\User;
 use Kirby\Exception\AbilityException;
 use Kirby\Exception\Exception;
@@ -145,6 +146,28 @@ abstract class ModelGuards
 		return $this->permissions;
 	}
 
+	/**
+	 * Returns the availability of every action that the
+	 * blueprint of the model defines an option for. This is
+	 * what the Panel and the API hand to the frontend.
+	 */
+	public function toArray(): array
+	{
+		// only models with a blueprint can define options
+		if ($this->model instanceof ModelWithContent === false) {
+			return [];
+		}
+
+		/** @var array<string, mixed> $options */
+		$options = $this->model->blueprint()->options();
+		$array   = [];
+
+		foreach (array_keys($options) as $action) {
+			$array[$action] = $this->isAvailable($action);
+		}
+
+		return $array;
+	}
 
 	public function user(): User
 	{

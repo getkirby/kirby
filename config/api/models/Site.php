@@ -14,7 +14,7 @@ return [
 		'content'    => fn (Site $site) => Form::for($site)->toFormValues(),
 		'drafts'     => fn (Site $site) => $site->drafts()->filter('isListable', true),
 		'files'      => fn (Site $site) => $site->files()->sorted()->filter('isListable', true),
-		'options'    => fn (Site $site) => $site->permissions()->toArray(),
+		'options'    => fn (Site $site) => $site->guards()->toArray(),
 		'previewUrl' => fn (Site $site) => $site->previewUrl(),
 		'title'      => fn (Site $site) => $site->title()->value(),
 		'url'        => fn (Site $site) => $site->url(),

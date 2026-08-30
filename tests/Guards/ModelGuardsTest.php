@@ -2,6 +2,7 @@
 
 namespace Kirby\Guards;
 
+use Kirby\Cms\Language;
 use Kirby\Cms\ModelTestCase;
 use Kirby\Cms\Page;
 use Kirby\Cms\User;
@@ -334,6 +335,51 @@ class ModelGuardsTest extends ModelTestCase
 	public function testPermissions(): void
 	{
 		$this->assertInstanceOf(PagePermissions::class, $this->guards()->permissions());
+	}
+
+	public function testToArray(): void
+	{
+		$this->app = $this->app->clone([
+			'users' => [
+				['email' => 'admin@getkirby.com', 'role' => 'admin']
+			]
+		]);
+
+		$this->app->impersonate('admin@getkirby.com');
+
+		$page = new Page([
+			'slug'      => 'test',
+			'blueprint' => [
+				'name'    => 'pages/test',
+				'options' => [
+					'delete' => false,
+					'update' => true
+				]
+			]
+		]);
+
+		$array = PageGuards::for($page)->toArray();
+
+		// the blueprint options are resolved to their availability
+		$this->assertFalse($array['delete']);
+		$this->assertTrue($array['update']);
+
+		// every option of the blueprint is covered
+		$this->assertSame(
+			array_keys($page->blueprint()->options()),
+			array_keys($array)
+		);
+		$this->assertContainsOnlyBool($array);
+	}
+
+	public function testToArrayWithoutBlueprint(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$language = new Language(['code' => 'en']);
+
+		// languages have no blueprint and therefore no options
+		$this->assertSame([], LanguageGuards::for($language)->toArray());
 	}
 
 	public function testUser(): void

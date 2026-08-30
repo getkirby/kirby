@@ -16,8 +16,6 @@ namespace Kirby\Cms;
  */
 abstract class ModelPermissions
 {
-	protected array $options;
-
 	/**
 	 * @var TModel
 	 */
@@ -28,11 +26,7 @@ abstract class ModelPermissions
 	 */
 	public function __construct(ModelWithContent|Language $model)
 	{
-		$this->model   = $model;
-		$this->options = match (true) {
-			$model instanceof ModelWithContent => $model->blueprint()->options(),
-			default                            => []
-		};
+		$this->model = $model;
 	}
 
 	public function __call(string $method, array $arguments = []): bool
@@ -89,12 +83,6 @@ abstract class ModelPermissions
 
 	public function toArray(): array
 	{
-		$array = [];
-
-		foreach (array_keys($this->options) as $key) {
-			$array[$key] = $this->can($key);
-		}
-
-		return $array;
+		return $this->model->guards()->toArray();
 	}
 }

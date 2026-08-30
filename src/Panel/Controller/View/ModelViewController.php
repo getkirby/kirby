@@ -127,7 +127,7 @@ abstract class ModelViewController extends ViewController
 			'link'        => $this->panel->url(true),
 			'lock'        => $this->model->lock()->toArray(),
 			'next'        => $this->next(...),
-			'permissions' => $this->model->permissions()->toArray(),
+			'permissions' => $this->model->guards()->toArray(),
 			'prev'        => $this->prev(...),
 			'tabs'        => $this->tabs(),
 			'title'       => $this->title(),

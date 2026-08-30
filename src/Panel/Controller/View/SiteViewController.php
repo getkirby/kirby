@@ -46,7 +46,7 @@ class SiteViewController extends ModelViewController
 			'blueprint'   => 'site',
 			'id'          => '/',
 			'permissions' => [
-				...$this->model->permissions()->toArray(),
+				...$this->model->guards()->toArray(),
 				// the home page check is kept for backward compatibility
 				// @todo Remove the home page check in 6.0.0
 				'preview' =>
