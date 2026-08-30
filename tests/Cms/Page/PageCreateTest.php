@@ -118,6 +118,38 @@ class PageCreateTest extends ModelTestCase
 		$this->assertSame('B', $page->b()->value());
 	}
 
+	/**
+	 * @see https://github.com/getkirby/kirby/issues/8411
+	 */
+	public function testCreateDraftWithSaveHandlers(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => [
+					'name'   => 'test',
+					'fields' => [
+						'categories' => [
+							'type'    => 'checkboxes',
+							'options' => ['one', 'two', 'three']
+						]
+					]
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$page = Page::create([
+			'content'  => ['categories' => ['one', 'two']],
+			'slug'     => 'new-page',
+			'template' => 'test',
+		]);
+
+		// the save handler of the field must be applied,
+		// just like it would be in `$page->update()`
+		$this->assertSame('one, two', $page->version()->read()['categories']);
+		$this->assertSame(['one', 'two'], $page->categories()->split());
+	}
+
 	public function testCreateChild(): void
 	{
 		Dir::make($this->app->root('content'));
@@ -454,6 +486,65 @@ class PageCreateTest extends ModelTestCase
 
 		$this->assertSame('Title EN', $page->content('en')->title()->value());
 		$this->assertSame('Title DE', $page->content('de')->title()->value());
+	}
+
+	/**
+	 * @see https://github.com/getkirby/kirby/issues/8411
+	 */
+	public function testCreateWithTranslationsAndSaveHandlers(): void
+	{
+		$this->setupMultiLanguage();
+
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'fields' => [
+						'categories' => [
+							'type'    => 'checkboxes',
+							'options' => ['one', 'two', 'three']
+						]
+					]
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
+		Page::create([
+			'slug' => 'test',
+			'translations' => [
+				[
+					'code' => 'en',
+					'content' => [
+						'title'      => 'Title EN',
+						'categories' => ['one', 'two']
+					]
+				],
+				[
+					'code' => 'de',
+					'content' => [
+						'title'      => 'Title DE',
+						'categories' => ['two', 'three']
+					]
+				],
+			],
+		]);
+
+		$page = $this->app->page('test');
+
+		// the save handler of the field must be applied
+		// for every translation
+		$this->assertSame('one, two', $page->version()->read('en')['categories']);
+		$this->assertSame('two, three', $page->version()->read('de')['categories']);
+
+		$this->assertSame(['one', 'two'], $page->content('en')->categories()->split());
+		$this->assertSame(['two', 'three'], $page->content('de')->categories()->split());
+
+		// fields that are not part of the translation
+		// must not be added to it
+		$this->assertSame(
+			['title', 'categories'],
+			array_keys($page->version()->read('de'))
+		);
 	}
 
 	/**

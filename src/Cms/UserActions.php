@@ -187,11 +187,13 @@ trait UserActions
 			'translations' => null
 		]);
 
-		// merge the content with the defaults
-		$props['content'] = [
-			...$user->createDefaultContent(),
-			...$props['content'],
-		];
+		// check the rules before any user input is passed
+		// through the field classes
+		UserRules::create($user, $input);
+
+		// merge the content with the defaults and run it through
+		// the fields to apply their save handlers
+		$props['content'] = $user->createContent($props['content']);
 
 		// keep the initial storage class
 		$storage = $user->storage()::class;
@@ -202,8 +204,11 @@ trait UserActions
 		// inject the content
 		$user->setContent($props['content']);
 
-		// inject the translations
-		$user->setTranslations($props['translations'] ?? null);
+		// inject the translations and run their content through
+		// the fields to apply their save handlers
+		$user->setTranslations(
+			$user->createTranslations($props['translations'] ?? null)
+		);
 
 		// run the hook
 		return $user->commit('create', ['user' => $user, 'input' => $input], function ($user) use ($storage) {
