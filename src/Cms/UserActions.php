@@ -247,7 +247,7 @@ trait UserActions
 
 		// check the rules before any user input is passed
 		// through the field classes
-		UserRules::create($user, $input);
+		$user->guards()->ensureExecutable('create', $input);
 
 		// merge the content with the defaults and run it through
 		// the fields to apply their save handlers
