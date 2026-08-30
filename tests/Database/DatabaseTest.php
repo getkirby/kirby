@@ -187,6 +187,47 @@ class DatabaseTest extends TestCase
 		]);
 	}
 
+	public function testConnectIncompleteOptions(): void
+	{
+		$db         = new Database(['database' => ':memory:', 'type' => 'sqlite']);
+		$connection = $db->connection();
+
+		try {
+			// incomplete options (here: no database)
+			$db->connect(['type' => 'sqlite']);
+			$this->fail('Expected an exception for incomplete options');
+		} catch (InvalidArgumentException $e) {
+			$this->assertStringContainsString('requires a "database" parameter', $e->getMessage());
+		}
+
+		// the failed connect must not have touched the instance
+		$this->assertSame('sqlite', $db->type());
+		$this->assertSame(':memory:', $db->name());
+		$this->assertSame($connection, $db->connection());
+	}
+
+	public function testConnectFailureKeepsState(): void
+	{
+		$db         = new Database(['database' => ':memory:', 'type' => 'sqlite']);
+		$connection = $db->connection();
+
+		try {
+			// valid options, but PDO itself cannot open this
+			$db->connect([
+				'type'     => 'sqlite',
+				'database' => '/definitely/not/a/directory/test.sqlite',
+				'prefix'   => 'zz_'
+			]);
+			$this->fail('Expected the connection to fail');
+		} catch (PDOException) {
+			// expected
+		}
+
+		$this->assertSame(':memory:', $db->name());
+		$this->assertNull($db->prefix());
+		$this->assertSame($connection, $db->connection());
+	}
+
 	public function testConnectConnection(): void
 	{
 		$this->assertInstanceOf(PDO::class, $this->database->connection());
