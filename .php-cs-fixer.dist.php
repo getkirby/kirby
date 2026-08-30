@@ -5,6 +5,7 @@ use PhpCsFixer\Finder;
 use PhpCsFixer\Runner\Parallel\ParallelConfigFactory;
 
 require_once __DIR__ . '/etc/cs-fixer-plugins/NamespacedFullyQualifiedStrictTypesFixer.php';
+require_once __DIR__ . '/etc/cs-fixer-plugins/PhpdocNoRedundantTypesFixer.php';
 
 $config = new Config();
 $finder = Finder::create()
@@ -16,6 +17,7 @@ return $config
 	->setParallelConfig(ParallelConfigFactory::detect())
 	->registerCustomFixers([
 		new NamespacedFullyQualifiedStrictTypesFixer(),
+		new PhpdocNoRedundantTypesFixer()
 	])
 	->setRules([
 		'@PSR12' => true,
@@ -33,6 +35,7 @@ return $config
 		'function_typehint_space' => true,
 		'include' => true,
 		'Kirby/fully_qualified_strict_types' => ['import_symbols' => true],
+		'Kirby/phpdoc_no_redundant_types' => true,
 		'logical_operators' => true,
 		'magic_constant_casing' => true,
 		'magic_method_casing' => true,
