@@ -24,6 +24,14 @@ use ReflectionMethod;
 trait HasActions
 {
 	/**
+	 * Cache of the resolved action methods per class and action.
+	 * The lookup only depends on the class, never on the model or
+	 * the user, so it can be shared between all instances and
+	 * survives for the whole request.
+	 */
+	protected static array $actions = [];
+
+	/**
 	 * Returns the name of the action for the given
 	 * dedicated action method
 	 */
@@ -37,6 +45,15 @@ trait HasActions
 	 * action method for the given action
 	 */
 	public function has(string $action): bool
+	{
+		return static::$actions[static::class][$action] ??= $this->hasAction($action);
+	}
+
+	/**
+	 * Resolves whether the class defines a dedicated
+	 * action method for the given action
+	 */
+	protected function hasAction(string $action): bool
 	{
 		$method = $this->method($action);
 
