@@ -12,7 +12,6 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
-use Kirby\Toolkit\Str;
 
 /**
  * The Blueprint class gives access to all settings
