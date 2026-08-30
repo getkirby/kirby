@@ -203,6 +203,49 @@ class ModelGuardsTest extends ModelTestCase
 		$this->assertFalse($this->guards()->isExecutable('update'));
 	}
 
+	public function testFor(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$page   = new Page(['slug' => 'test']);
+		$guards = PageGuards::for($page);
+
+		$this->assertInstanceOf(PageGuards::class, $guards);
+		$this->assertSame($this->app->user(), $guards->user());
+	}
+
+	public function testForIsMemoizedPerModel(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$a = new Page(['slug' => 'a']);
+		$b = new Page(['slug' => 'b']);
+
+		$this->assertSame(PageGuards::for($a), PageGuards::for($a));
+		$this->assertNotSame(PageGuards::for($a), PageGuards::for($b));
+	}
+
+	public function testForIsRebuiltWhenTheUserChanges(): void
+	{
+		$this->app = $this->app->clone([
+			'users' => [
+				['email' => 'a@getkirby.com', 'role' => 'admin'],
+				['email' => 'b@getkirby.com', 'role' => 'admin'],
+			]
+		]);
+
+		$page = new Page(['slug' => 'test']);
+
+		$this->app->impersonate('a@getkirby.com');
+		$first = PageGuards::for($page);
+
+		$this->app->impersonate('b@getkirby.com');
+		$second = PageGuards::for($page);
+
+		$this->assertNotSame($first, $second);
+		$this->assertSame($this->app->user(), $second->user());
+	}
+
 	public function testIsAvailable(): void
 	{
 		$this->app->impersonate('kirby');

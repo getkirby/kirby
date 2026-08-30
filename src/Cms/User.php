@@ -231,10 +231,7 @@ class User extends ModelWithContent
 	 */
 	public function guards(): UserGuards
 	{
-		return new UserGuards(
-			model: $this,
-			user: User::ensure()
-		);
+		return UserGuards::for($this);
 	}
 
 	/**

@@ -291,10 +291,7 @@ class File extends ModelWithContent
 	 */
 	public function guards(): FileGuards
 	{
-		return new FileGuards(
-			model: $this,
-			user: User::ensure()
-		);
+		return FileGuards::for($this);
 	}
 
 	/**

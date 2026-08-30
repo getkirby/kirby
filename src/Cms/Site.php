@@ -229,10 +229,7 @@ class Site extends ModelWithContent
 	 */
 	public function guards(): SiteGuards
 	{
-		return new SiteGuards(
-			model: $this,
-			user: User::ensure()
-		);
+		return SiteGuards::for($this);
 	}
 
 	/**
