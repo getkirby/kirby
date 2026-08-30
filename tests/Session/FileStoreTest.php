@@ -262,7 +262,7 @@ class FileStoreTest extends TestCase
 	/**
 	 * Asserts that the given session is currently locked
 	 *
-	 * @param string $name Combined name
+	 * @param $name Combined name
 	 */
 	protected function assertLocked(string $name): void
 	{
@@ -282,7 +282,7 @@ class FileStoreTest extends TestCase
 	/**
 	 * Asserts that the given session is currently not locked
 	 *
-	 * @param string $name Combined name
+	 * @param $name Combined name
 	 */
 	protected function assertNotLocked(string $name): void
 	{
@@ -302,7 +302,7 @@ class FileStoreTest extends TestCase
 	/**
 	 * Asserts that the given session currently has an open handle
 	 *
-	 * @param string $name Combined name
+	 * @param $name Combined name
 	 */
 	protected function assertHandleExists(string $name): void
 	{
@@ -313,7 +313,7 @@ class FileStoreTest extends TestCase
 	/**
 	 * Asserts that the given session currently has no open handle
 	 *
-	 * @param string $name Combined name
+	 * @param $name Combined name
 	 */
 	protected function assertHandleNotExists(string $name): void
 	{

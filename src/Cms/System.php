@@ -55,7 +55,7 @@ class System
 	 * if the file is located in the document
 	 * root. Otherwise it will return null.
 	 *
-	 * @param string $folder 'git', 'content', 'site', 'kirby'
+	 * @param $folder 'git', 'content', 'site', 'kirby'
 	 */
 	public function exposedFileUrl(string $folder): string|null
 	{
@@ -121,7 +121,7 @@ class System
 	 * if the folder is located in the document
 	 * root. Otherwise it will return null.
 	 *
-	 * @param string $folder 'git', 'content', 'site', 'kirby'
+	 * @param $folder 'git', 'content', 'site', 'kirby'
 	 */
 	public function folderUrl(string $folder): string|null
 	{
@@ -433,7 +433,7 @@ class System
 	 * the update check for Kirby has been disabled
 	 * @since 3.8.0
 	 *
-	 * @param array|null $data Custom override for the getkirby.com update data
+	 * @param $data Custom override for the getkirby.com update data
 	 */
 	public function updateStatus(array|null $data = null): UpdateStatus|null
 	{

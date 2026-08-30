@@ -102,7 +102,7 @@ class Query
 	protected bool $debug = false;
 
 	/**
-	 * @param string $table name of the table, which should be queried
+	 * @param $table name of the table, which should be queried
 	 */
 	public function __construct(
 		protected Database $database,
@@ -229,7 +229,7 @@ class Query
 	 * Sets the columns, which should be selected from the table
 	 * By default all columns will be selected
 	 *
-	 * @param array|string|null $select Pass either a string of columns or an array
+	 * @param $select Pass either a string of columns or an array
 	 * @return $this
 	 */
 	public function select(array|string|null $select): static
@@ -241,9 +241,9 @@ class Query
 	/**
 	 * Adds a new join clause to the query
 	 *
-	 * @param string $table Name of the table, which should be joined
-	 * @param string $on The on clause for this join
-	 * @param string $type The join type. Uses an inner join by default
+	 * @param $table Name of the table, which should be joined
+	 * @param $on The on clause for this join
+	 * @param $type The join type. Uses an inner join by default
 	 * @return $this
 	 */
 	public function join(
@@ -264,8 +264,8 @@ class Query
 	/**
 	 * Shortcut for creating a left join clause
 	 *
-	 * @param string $table Name of the table, which should be joined
-	 * @param string $on The on clause for this join
+	 * @param $table Name of the table, which should be joined
+	 * @param $on The on clause for this join
 	 * @return $this
 	 */
 	public function leftJoin(string $table, string $on): static
@@ -276,8 +276,8 @@ class Query
 	/**
 	 * Shortcut for creating a right join clause
 	 *
-	 * @param string $table Name of the table, which should be joined
-	 * @param string $on The on clause for this join
+	 * @param $table Name of the table, which should be joined
+	 * @param $on The on clause for this join
 	 * @return $this
 	 */
 	public function rightJoin(string $table, string $on): static
@@ -300,7 +300,7 @@ class Query
 	/**
 	 * Sets the values which should be used for the update or insert clause
 	 *
-	 * @param mixed $values Can either be a string or an array of values
+	 * @param $values Can either be a string or an array of values
 	 * @return $this
 	 */
 	public function values($values = []): static
@@ -439,7 +439,7 @@ class Query
 	 * Builds the different types of SQL queries
 	 * This uses the SQL class to build stuff.
 	 *
-	 * @param string $type (select, update, insert, delete)
+	 * @param $type (select, update, insert, delete)
 	 * @return array The final query
 	 * @throws InvalidArgumentException If the query type is invalid
 	 */
@@ -527,7 +527,7 @@ class Query
 	 * Builds an aggregation query.
 	 * This is used by all the aggregation methods above
 	 *
-	 * @param int $default An optional default value, which should be returned if the query fails
+	 * @param $default An optional default value, which should be returned if the query fails
 	 */
 	public function aggregate(
 		string $method,
@@ -654,7 +654,7 @@ class Query
 	/**
 	 * Automatically adds pagination to a query
 	 *
-	 * @param int $limit The number of rows, which should be returned for each page
+	 * @param $limit The number of rows, which should be returned for each page
 	 * @return object Collection iterator with attached pagination object
 	 */
 	public function page(int $page, int $limit): object
@@ -761,7 +761,7 @@ class Query
 	/**
 	 * Fires an insert query
 	 *
-	 * @param mixed $values You can pass values here or set them with ->values() before
+	 * @param $values You can pass values here or set them with ->values() before
 	 * @return mixed Returns the last inserted id on success or false.
 	 */
 	public function insert($values = null)
@@ -780,8 +780,8 @@ class Query
 	/**
 	 * Fires an update query
 	 *
-	 * @param mixed $values You can pass values here or set them with ->values() before
-	 * @param mixed $where You can pass a where clause here or set it with ->where() before
+	 * @param $values You can pass values here or set them with ->values() before
+	 * @param $where You can pass a where clause here or set it with ->where() before
 	 */
 	public function update($values = null, $where = null): bool
 	{
@@ -793,7 +793,7 @@ class Query
 	/**
 	 * Fires a delete query
 	 *
-	 * @param mixed $where You can pass a where clause here or set it with ->where() before
+	 * @param $where You can pass a where clause here or set it with ->where() before
 	 */
 	public function delete($where = null): bool
 	{
@@ -821,8 +821,8 @@ class Query
 	/**
 	 * Builder for where and having clauses
 	 *
-	 * @param array $args Arguments, see where() description
-	 * @param mixed $current Current value (like $this->where)
+	 * @param $args Arguments, see where() description
+	 * @param $current Current value (like $this->where)
 	 */
 	protected function filterQuery(
 		array $args,

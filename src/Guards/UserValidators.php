@@ -202,8 +202,8 @@ class UserValidators extends ModelValidators
 	 * Validates that the email address is formatted correctly
 	 * and is not used by another user yet
 	 *
-	 * @param bool $strict If `true`, the user itself is not ignored,
-	 *                     which is needed for users that don't exist yet
+	 * @param $strict If `true`, the user itself is not ignored,
+	 *               which is needed for users that don't exist yet
 	 */
 	public function validateEmail(string $email, bool $strict = false): void
 	{
@@ -263,9 +263,9 @@ class UserValidators extends ModelValidators
 	 * Validates a new password against the password policy
 	 * configured in the `auth.passwords` option
 	 *
-	 * @param bool $allowEmpty If `true`, an empty password is accepted,
-	 *                         which is needed for users that are created
-	 *                         without a password
+	 * @param $allowEmpty If `true`, an empty password is accepted,
+	 *                   which is needed for users that are created
+	 *                   without a password
 	 */
 	public function validateNewPassword(
 		#[SensitiveParameter]

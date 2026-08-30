@@ -29,13 +29,13 @@ trait AppUsers
 	/**
 	 * Become any existing user or disable the current user
 	 *
-	 * @param string|null $who User ID or email address,
-	 *                         `null` to use the actual user again,
-	 *                         `'kirby'` for a virtual admin user or
-	 *                         `'nobody'` to disable the actual user
-	 * @param Closure|null $callback Optional action function that will be run with
-	 *                               the permissions of the impersonated user; the
-	 *                               impersonation will be reset afterwards
+	 * @param $who User ID or email address,
+	 *            `null` to use the actual user again,
+	 *            `'kirby'` for a virtual admin user or
+	 *            `'nobody'` to disable the actual user
+	 * @param $callback Optional action function that will be run with
+	 *                 the permissions of the impersonated user; the
+	 *                 impersonation will be reset afterwards
 	 * @return mixed If called without callback: User that was impersonated;
 	 *               if called with callback: Return value from the callback
 	 * @throws Throwable
@@ -76,9 +76,9 @@ trait AppUsers
 	 * Returns a specific user role by id
 	 * or the role of the current user if no id is given
 	 *
-	 * @param bool $allowImpersonation If set to false, only the role of the
-	 *                                 actually logged in user will be returned
-	 *                                 (when `$id` is passed as `null`)
+	 * @param $allowImpersonation If set to false, only the role of the
+	 *                           actually logged in user will be returned
+	 *                           (when `$id` is passed as `null`)
 	 */
 	public function role(
 		string|null $id = null,
@@ -120,9 +120,9 @@ trait AppUsers
 	 * Returns a specific user by id
 	 * or the current user if no id is given
 	 *
-	 * @param bool $allowImpersonation If set to false, only the actually
-	 *                                 logged in user will be returned
-	 *                                 (when `$id` is passed as `null`)
+	 * @param $allowImpersonation If set to false, only the actually
+	 *                           logged in user will be returned
+	 *                           (when `$id` is passed as `null`)
 	 */
 	public function user(
 		string|null $id = null,

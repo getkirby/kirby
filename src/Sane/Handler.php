@@ -20,8 +20,8 @@ abstract class Handler
 	/**
 	 * Sanitizes the given string
 	 *
-	 * @param bool $isExternal Whether the string is from an external file
-	 *                         that may be accessed directly
+	 * @param $isExternal Whether the string is from an external file
+	 *                   that may be accessed directly
 	 */
 	abstract public static function sanitize(
 		string $string,
@@ -45,8 +45,8 @@ abstract class Handler
 	/**
 	 * Validates file contents
 	 *
-	 * @param bool $isExternal Whether the string is from an external file
-	 *                         that may be accessed directly
+	 * @param $isExternal Whether the string is from an external file
+	 *                   that may be accessed directly
 	 *
 	 * @throws InvalidArgumentException If the file didn't pass validation
 	 * @throws Exception On other errors

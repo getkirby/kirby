@@ -35,7 +35,7 @@ class LanguageValidators extends ModelValidators
 	/**
 	 * Validates the input of the `update` action
 	 *
-	 * @param Language|null $oldLanguage The state before the update
+	 * @param $oldLanguage The state before the update
 	 */
 	protected function ensureToUpdate(Language|null $oldLanguage = null): void
 	{

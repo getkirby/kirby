@@ -25,11 +25,11 @@ class Totp
 	/**
 	 * Class constructor
 	 *
-	 * @param string|null $secret Existing secret in Base32 format
-	 *                            or `null` to generate a new one
-	 * @param bool $force Whether to skip the secret length validation;
-	 *                    WARNING: Only ever set this to `true` when
-	 *                    generating codes for third-party services
+	 * @param $secret Existing secret in Base32 format
+	 *               or `null` to generate a new one
+	 * @param $force Whether to skip the secret length validation;
+	 *              WARNING: Only ever set this to `true` when
+	 *              generating codes for third-party services
 	 */
 	public function __construct(
 		#[SensitiveParameter]
@@ -55,8 +55,8 @@ class Totp
 	/**
 	 * Generates the current TOTP code
 	 *
-	 * @param int $offset Optional counter offset to generate
-	 *                    previous or upcoming codes
+	 * @param $offset Optional counter offset to generate
+	 *               previous or upcoming codes
 	 */
 	public function generate(int $offset = 0): string
 	{
@@ -105,8 +105,8 @@ class Totp
 	/**
 	 * Returns a `otpauth://` URI for use in a setup QR code or link
 	 *
-	 * @param string $issuer Name of the site the code is valid for
-	 * @param string $label Account name the code is valid for
+	 * @param $issuer Name of the site the code is valid for
+	 * @param $label Account name the code is valid for
 	 */
 	public function uri(string $issuer, string $label): string
 	{

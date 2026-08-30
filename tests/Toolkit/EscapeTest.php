@@ -258,7 +258,7 @@ class EscapeTest extends TestCase
 	/**
 	 * Convert a Unicode Codepoint to a literal UTF-8 character.
 	 *
-	 * @param int $codepoint Unicode codepoint in hex notation
+	 * @param $codepoint Unicode codepoint in hex notation
 	 * @return string UTF-8 literal string
 	 */
 	protected function codepointToUtf8(int $codepoint): string

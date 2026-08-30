@@ -341,8 +341,8 @@ class Site extends ModelWithContent
 	 * prop, the home page will be returned if
 	 * it can be found. (see `Site::homePage()`)
 	 *
-	 * @param string|null $path omit for current page,
-	 *                          otherwise e.g. `notes/across-the-ocean`
+	 * @param $path omit for current page,
+	 *             otherwise e.g. `notes/across-the-ocean`
 	 */
 	public function page(string|null $path = null): Page|null
 	{

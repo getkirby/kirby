@@ -54,7 +54,7 @@ class LayoutColumn extends Item
 	/**
 	 * Returns the blocks collection
 	 *
-	 * @param bool $includeHidden Sets whether to include hidden blocks
+	 * @param $includeHidden Sets whether to include hidden blocks
 	 */
 	public function blocks(bool $includeHidden = false): Blocks
 	{

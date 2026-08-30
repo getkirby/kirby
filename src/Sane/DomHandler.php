@@ -60,8 +60,8 @@ class DomHandler extends Handler
 	/**
 	 * Sanitizes the given string
 	 *
-	 * @param bool $isExternal Whether the string is from an external file
-	 *                         that may be accessed directly
+	 * @param $isExternal Whether the string is from an external file
+	 *                   that may be accessed directly
 	 *
 	 * @throws InvalidArgumentException If the file couldn't be parsed
 	 */
@@ -77,8 +77,8 @@ class DomHandler extends Handler
 	/**
 	 * Validates file contents
 	 *
-	 * @param bool $isExternal Whether the string is from an external file
-	 *                         that may be accessed directly
+	 * @param $isExternal Whether the string is from an external file
+	 *                   that may be accessed directly
 	 *
 	 * @throws InvalidArgumentException If the file couldn't be parsed
 	 * @throws InvalidArgumentException If the file didn't pass validation
@@ -139,8 +139,8 @@ class DomHandler extends Handler
 	 * Returns the sanitization options for the handler
 	 * (to be extended in child classes)
 	 *
-	 * @param bool $isExternal Whether the string is from an external file
-	 *                         that may be accessed directly
+	 * @param $isExternal Whether the string is from an external file
+	 *                   that may be accessed directly
 	 */
 	protected static function options(bool $isExternal): array
 	{

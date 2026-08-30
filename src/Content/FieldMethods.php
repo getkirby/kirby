@@ -83,7 +83,7 @@ trait FieldMethods
 	 * Escapes the field value to be safely used in HTML
 	 * templates without the risk of XSS attacks
 	 *
-	 * @param string $context Location of output (`html`, `attr`, `js`, `css`, `url` or `xml`)
+	 * @param $context Location of output (`html`, `attr`, `js`, `css`, `url` or `xml`)
 	 */
 	public function escape(string $context = 'html'): static
 	{
@@ -353,7 +353,7 @@ trait FieldMethods
 	/**
 	 * It parses any queries found in the field value.
 	 *
-	 * @param string|null $fallback Fallback for tokens in the template that cannot be replaced (`null` to keep the original token)
+	 * @param $fallback Fallback for tokens in the template that cannot be replaced (`null` to keep the original token)
 	 */
 	public function replace(
 		array $data = [],
@@ -385,8 +385,8 @@ trait FieldMethods
 	 * Cuts the string after the given length and
 	 * adds "…" if it is longer
 	 *
-	 * @param int $length The number of characters in the string
-	 * @param string $appendix An optional replacement for the missing rest
+	 * @param $length The number of characters in the string
+	 * @param $appendix An optional replacement for the missing rest
 	 */
 	public function short(
 		int $length,
@@ -447,7 +447,7 @@ trait FieldMethods
 	/**
 	 * Converts the field value into a proper boolean
 	 *
-	 * @param bool $default Default value if the field is empty
+	 * @param $default Default value if the field is empty
 	 */
 	public function toBool(bool $default = false): bool
 	{
@@ -458,7 +458,7 @@ trait FieldMethods
 	/**
 	 * Parses the field value with the given method
 	 *
-	 * @param string $method [',', 'yaml', 'json']
+	 * @param $method [',', 'yaml', 'json']
 	 */
 	public function toData(string $method = ','): array
 	{
@@ -471,8 +471,8 @@ trait FieldMethods
 	/**
 	 * Converts the field value to a timestamp or a formatted date
 	 *
-	 * @param string|IntlDateFormatter|null $format PHP date formatting string
-	 * @param string|null $fallback Fallback string for `strtotime`
+	 * @param $format PHP date formatting string
+	 * @param $fallback Fallback string for `strtotime`
 	 */
 	public function toDate(
 		string|IntlDateFormatter|null $format = null,
@@ -538,7 +538,7 @@ trait FieldMethods
 	/**
 	 * Converts the field value into a proper float
 	 *
-	 * @param float $default Default value if the field is empty
+	 * @param $default Default value if the field is empty
 	 */
 	public function toFloat(float $default = 0): float
 	{
@@ -549,7 +549,7 @@ trait FieldMethods
 	/**
 	 * Converts the field value into a proper integer
 	 *
-	 * @param int $default Default value if the field is empty
+	 * @param $default Default value if the field is empty
 	 */
 	public function toInt(int $default = 0): int
 	{
@@ -620,7 +620,7 @@ trait FieldMethods
 	/**
 	 * Returns a pages collection from a yaml list of page ids in the field
 	 *
-	 * @param string $separator Can be any other separator to split the field value by
+	 * @param $separator Can be any other separator to split the field value by
 	 */
 	public function toPages(string $separator = 'yaml'): Pages
 	{

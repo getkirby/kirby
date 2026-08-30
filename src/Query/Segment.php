@@ -30,9 +30,9 @@ class Segment
 	 * Throws an exception for an access to an invalid method
 	 * @unstable
 	 *
-	 * @param mixed $data Variable on which the access was tried
-	 * @param string $name Name of the method/property that was accessed
-	 * @param string $label Type of the name (`method`, `property` or `method/property`)
+	 * @param $data Variable on which the access was tried
+	 * @param $name Name of the method/property that was accessed
+	 * @param $label Type of the name (`method`, `property` or `method/property`)
 	 *
 	 * @throws BadMethodCallException
 	 */
@@ -58,7 +58,7 @@ class Segment
 	/**
 	 * Parses a segment into the property/method name and its arguments
 	 *
-	 * @param int $position String position of the segment inside the full query
+	 * @param $position String position of the segment inside the full query
 	 */
 	public static function factory(
 		string $segment,
@@ -82,7 +82,7 @@ class Segment
 	 * Automatically resolves the segment depending on the
 	 * segment position and the type of the base
 	 *
-	 * @param mixed $base Current value of the query chain
+	 * @param $base Current value of the query chain
 	 */
 	#[BlockCollectionAccess]
 	public function resolve(mixed $base = null, array|object $data = []): mixed

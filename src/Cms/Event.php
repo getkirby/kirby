@@ -40,8 +40,8 @@ class Event implements Stringable
 	/**
 	 * Class constructor
 	 *
-	 * @param string $name Full event name (e.g. `page.create:after`)
-	 * @param array $arguments Associative array of named event arguments
+	 * @param $name Full event name (e.g. `page.create:after`)
+	 * @param $arguments Associative array of named event arguments
 	 */
 	public function __construct(
 		protected string $name,
@@ -115,7 +115,7 @@ class Event implements Stringable
 	 * Calls a hook with the event data and returns
 	 * the hook's return value
 	 *
-	 * @param object|null $bind Optional object to bind to the hook function
+	 * @param $bind Optional object to bind to the hook function
 	 */
 	public function call(object|null $bind, Closure $hook): mixed
 	{

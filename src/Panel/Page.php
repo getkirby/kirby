@@ -25,7 +25,7 @@ class Page extends Model
 	 * used in the panel, when the page
 	 * gets dragged onto a textarea
 	 *
-	 * @param string|null $type (`auto`|`kirbytext`|`markdown`)
+	 * @param $type (`auto`|`kirbytext`|`markdown`)
 	 */
 	public function dragText(string|null $type = null): string
 	{

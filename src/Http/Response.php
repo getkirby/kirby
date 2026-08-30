@@ -125,7 +125,7 @@ class Response implements Stringable
 	 * Creates a response that triggers
 	 * a file download for the given file
 	 *
-	 * @param array $props Custom overrides for response props (e.g. headers)
+	 * @param $props Custom overrides for response props (e.g. headers)
 	 */
 	public static function download(
 		string $file,
@@ -179,7 +179,7 @@ class Response implements Stringable
 	 * Creates a response for a file and
 	 * sends the file content to the browser
 	 *
-	 * @param array $props Custom overrides for response props (e.g. headers)
+	 * @param $props Custom overrides for response props (e.g. headers)
 	 */
 	public static function file(string $file, array $props = []): static
 	{
@@ -238,7 +238,7 @@ class Response implements Stringable
 	/**
 	 * Getter for single headers
 	 *
-	 * @param string $key Name of the header
+	 * @param $key Name of the header
 	 */
 	public function header(string $key): string|null
 	{

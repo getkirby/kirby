@@ -49,7 +49,7 @@ class DefaultRunner extends Runner
 	/**
 	 * Executes a query within a given data context
 	 *
-	 * @param array $context Optional variables to be passed to the query
+	 * @param $context Optional variables to be passed to the query
 	 *
 	 * @throws \Exception when query is invalid or executor not callable
 	 */

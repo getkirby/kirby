@@ -122,7 +122,7 @@ trait AppTranslations
 	/**
 	 * Load a specific translation by locale
 	 *
-	 * @param string|null $locale Locale name or `null` for the current locale
+	 * @param $locale Locale name or `null` for the current locale
 	 */
 	public function translation(string|null $locale = null): Translation
 	{

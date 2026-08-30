@@ -119,8 +119,8 @@ class User
 	/**
 	 * Returns the currently logged in user
 	 *
-	 * @param bool $allowImpersonation If set to false, only the actually
-	 *                                 logged in user will be returned
+	 * @param $allowImpersonation If set to false, only the actually
+	 *                           logged in user will be returned
 	 *
 	 * @throws Throwable If an authentication error occurred
 	 */

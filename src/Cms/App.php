@@ -100,7 +100,7 @@ class App
 	/**
 	 * Creates a new App instance
 	 *
-	 * @param bool $setInstance If false, the instance won't be set globally
+	 * @param $setInstance If false, the instance won't be set globally
 	 */
 	public function __construct(array $props = [], bool $setInstance = true)
 	{
@@ -238,9 +238,9 @@ class App
 	/**
 	 * Applies a hook to the given value
 	 *
-	 * @param string $name Full event name
-	 * @param array $args Associative array of named arguments
-	 * @param string|null $modify Key in $args that is modified by the hooks (default: first argument)
+	 * @param $name Full event name
+	 * @param $args Associative array of named arguments
+	 * @param $modify Key in $args that is modified by the hooks (default: first argument)
 	 * @return mixed Resulting value as modified by the hooks
 	 */
 	public function apply(
@@ -360,7 +360,7 @@ class App
 	 * Creates an instance with the same
 	 * initial properties
 	 *
-	 * @param bool $setInstance If false, the instance won't be set globally
+	 * @param $setInstance If false, the instance won't be set globally
 	 */
 	public function clone(array $props = [], bool $setInstance = true): static
 	{
@@ -428,8 +428,8 @@ class App
 	 * Generates a non-guessable token based on model
 	 * data and a configured salt
 	 *
-	 * @param object|null $model Object to pass to the salt callback if configured
-	 * @param string $value Model data to include in the generated token
+	 * @param $model Object to pass to the salt callback if configured
+	 * @param $value Model data to include in the generated token
 	 */
 	public function contentToken(object|null $model, string $value): string
 	{
@@ -534,7 +534,7 @@ class App
 	 * Checks/returns a CSRF token
 	 * @since 3.7.0
 	 *
-	 * @param string|null $check Pass a token here to compare it to the one in the session
+	 * @param $check Pass a token here to compare it to the one in the session
 	 * @return string|bool Either the token or a boolean check result
 	 */
 	public function csrf(string|null $check = null): string|bool
@@ -734,7 +734,7 @@ class App
 	/**
 	 * Returns the current App instance
 	 *
-	 * @param bool $lazy If `true`, the instance is only returned if already existing
+	 * @param $lazy If `true`, the instance is only returned if already existing
 	 * @psalm-return ($lazy is false ? static : static|null)
 	 */
 	public static function instance(
@@ -848,8 +848,8 @@ class App
 	/**
 	 * Renders a single KirbyTag with the given attributes
 	 *
-	 * @param string|array $type Tag type or array with all tag arguments
-	 *                           (the key of the first element becomes the type)
+	 * @param $type Tag type or array with all tag arguments
+	 *             (the key of the first element becomes the type)
 	 */
 	public function kirbytag(
 		string|array $type,
@@ -1380,7 +1380,7 @@ class App
 	/**
 	 * Returns the current session object
 	 *
-	 * @param array $options Additional options, see the session component
+	 * @param $options Additional options, see the session component
 	 */
 	public function session(array $options = []): Session
 	{
@@ -1558,8 +1558,8 @@ class App
 	 * Uses the snippet component to create
 	 * and return a template snippet
 	 *
-	 * @param array|object $data Variables or an object that becomes `$item`
-	 * @param bool $return On `false`, directly echo the snippet
+	 * @param $data Variables or an object that becomes `$item`
+	 * @param $return On `false`, directly echo the snippet
 	 * @psalm-return ($return is true ? string : null)
 	 */
 	public function snippet(
@@ -1626,8 +1626,8 @@ class App
 	/**
 	 * Trigger a hook by name
 	 *
-	 * @param string $name Full event name
-	 * @param array $args Associative array of named arguments
+	 * @param $name Full event name
+	 * @param $args Associative array of named arguments
 	 */
 	public function trigger(
 		string $name,
@@ -1639,7 +1639,7 @@ class App
 	/**
 	 * Returns a system url
 	 *
-	 * @param bool $object If set to `true`, the URL is converted to an object
+	 * @param $object If set to `true`, the URL is converted to an object
 	 * @psalm-return ($object is false ? string|null : Uri)
 	 */
 	public function url(

@@ -139,8 +139,8 @@ class F
 	/**
 	 * Appends new content to an existing file
 	 *
-	 * @param string $file The path for the file
-	 * @param mixed $content Either a string or an array. Arrays will be converted to JSON.
+	 * @param $file The path for the file
+	 * @param $content Either a string or an array. Arrays will be converted to JSON.
 	 */
 	public static function append(string $file, $content): bool
 	{
@@ -150,7 +150,7 @@ class F
 	/**
 	 * Returns the file content as base64 encoded string
 	 *
-	 * @param string $file The path for the file
+	 * @param $file The path for the file
 	 */
 	public static function base64(string $file): string
 	{
@@ -191,7 +191,7 @@ class F
 	 * // dirname is /var/www
 	 * ```
 	 *
-	 * @param string $file The path
+	 * @param $file The path
 	 */
 	public static function dirname(string $file): string
 	{
@@ -214,8 +214,8 @@ class F
 	/**
 	 * Gets the extension of a file
 	 *
-	 * @param string|null $file The filename or path
-	 * @param string|null $extension Set an optional extension to overwrite the current one
+	 * @param $file The filename or path
+	 * @param $extension Set an optional extension to overwrite the current one
 	 */
 	public static function extension(
 		string|null $file = null,
@@ -272,7 +272,7 @@ class F
 	 * // filename is test.txt
 	 * ```
 	 *
-	 * @param string $name The path
+	 * @param $name The path
 	 */
 	public static function filename(string $name): string
 	{
@@ -282,7 +282,7 @@ class F
 	/**
 	 * Invalidate opcode cache for file.
 	 *
-	 * @param string $file The path of the file
+	 * @param $file The path of the file
 	 */
 	public static function invalidateOpcodeCache(string $file): bool
 	{
@@ -299,8 +299,8 @@ class F
 	/**
 	 * Checks if a file is of a certain type
 	 *
-	 * @param string $file Full path to the file
-	 * @param string $value An extension or mime type
+	 * @param $file Full path to the file
+	 * @param $value An extension or mime type
 	 */
 	public static function is(string $file, string $value): bool
 	{
@@ -366,7 +366,7 @@ class F
 	 * Loads a file and returns the result or `false` if the
 	 * file to load does not exist
 	 *
-	 * @param array $data Optional array of variables to extract in the variable scope
+	 * @param $data Optional array of variables to extract in the variable scope
 	 */
 	public static function load(
 		string $file,
@@ -443,7 +443,7 @@ class F
 	/**
 	 * Loads a file with as little as possible in the variable scope
 	 *
-	 * @param array $data Optional array of variables to extract in the variable scope
+	 * @param $data Optional array of variables to extract in the variable scope
 	 */
 	protected static function loadIsolated(string $file, array $data = [])
 	{
@@ -527,9 +527,9 @@ class F
 	/**
 	 * Moves a file to a new location
 	 *
-	 * @param string $oldRoot The current path for the file
-	 * @param string $newRoot The path to the new location
-	 * @param bool $force Force move if the target file exists
+	 * @param $oldRoot The current path for the file
+	 * @param $newRoot The path to the new location
+	 * @param $force Force move if the target file exists
 	 */
 	public static function move(
 		string $oldRoot,
@@ -582,7 +582,7 @@ class F
 	/**
 	 * Extracts the name from a file path or filename without extension
 	 *
-	 * @param string $name The path or filename
+	 * @param $name The path or filename
 	 */
 	public static function name(string $name): string
 	{
@@ -592,10 +592,10 @@ class F
 	/**
 	 * Converts an integer size into a human readable format
 	 *
-	 * @param int|string|array $size The file size, a file path or array of paths
-	 * @param string|false|null $locale Locale for number formatting,
-	 *                                  `null` for the current locale,
-	 *                                  `false` to disable number formatting
+	 * @param $size The file size, a file path or array of paths
+	 * @param $locale Locale for number formatting,
+	 *               `null` for the current locale,
+	 *               `false` to disable number formatting
 	 */
 	public static function niceSize(
 		int|string|array $size,
@@ -627,9 +627,9 @@ class F
 	 * Reads a specific byte range from a file
 	 * @since 5.3.0
 	 *
-	 * @param string $file The path to the file
-	 * @param int $offset The byte offset to start reading from
-	 * @param int|null $length The number of bytes to read (null = read to end)
+	 * @param $file The path to the file
+	 * @param $offset The byte offset to start reading from
+	 * @param $length The number of bytes to read (null = read to end)
 	 */
 	public static function range(
 		string $file,
@@ -673,7 +673,7 @@ class F
 	 * Reads the content of a file or requests the
 	 * contents of a remote HTTP or HTTPS URL
 	 *
-	 * @param string $file The path for the file or an absolute URL
+	 * @param $file The path for the file or an absolute URL
 	 */
 	public static function read(string $file): string|false
 	{
@@ -700,7 +700,7 @@ class F
 	 * Changes the name of the file without
 	 * touching the extension
 	 *
-	 * @param bool $overwrite Force overwrite existing files
+	 * @param $overwrite Force overwrite existing files
 	 */
 	public static function rename(
 		string $file,
@@ -808,7 +808,7 @@ class F
 	 * if ($remove) echo 'The file has been removed';
 	 * ```
 	 *
-	 * @param string $file The path for the file
+	 * @param $file The path for the file
 	 */
 	public static function remove(string $file): bool
 	{
@@ -838,7 +838,7 @@ class F
 	 * // safe will be ueber-genius.txt
 	 * ```
 	 *
-	 * @param string $string The file name
+	 * @param $string The file name
 	 */
 	public static function safeName(string $string): string
 	{
@@ -900,7 +900,7 @@ class F
 	/**
 	 * Returns the size of a file or an array of files.
 	 *
-	 * @param string|array $file file path or array of paths
+	 * @param $file file path or array of paths
 	 */
 	public static function size(string|array $file): int
 	{
@@ -922,7 +922,7 @@ class F
 	/**
 	 * Categorize the file
 	 *
-	 * @param string $file Either the file path or extension
+	 * @param $file Either the file path or extension
 	 */
 	public static function type(string $file): string|null
 	{
@@ -1065,7 +1065,7 @@ class F
 	/**
 	 * Returns the file as data uri
 	 *
-	 * @param string $file The path for the file
+	 * @param $file The path for the file
 	 */
 	public static function uri(string $file): string|false
 	{
@@ -1079,9 +1079,9 @@ class F
 	/**
 	 * Creates a new file
 	 *
-	 * @param string $file The path for the new file
-	 * @param mixed $content Either a string, an object or an array. Arrays and objects will be serialized.
-	 * @param bool $append true: append the content to an existing file if available. false: overwrite.
+	 * @param $file The path for the new file
+	 * @param $content Either a string, an object or an array. Arrays and objects will be serialized.
+	 * @param $append true: append the content to an existing file if available. false: overwrite.
 	 */
 	public static function write(
 		string $file,

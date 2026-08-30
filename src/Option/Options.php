@@ -37,7 +37,7 @@ class Options extends Collection
 	}
 
 	/**
-	 * @param bool $resolve Deprecated, will be removed in v6
+	 * @param $resolve Deprecated, will be removed in v6
 	 */
 	public static function factory(
 		array $items = [],

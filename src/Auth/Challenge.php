@@ -94,7 +94,7 @@ abstract class Challenge
 	 * Checks whether the challenge is available
 	 * for the specific user and purpose
 	 *
-	 * @param User $user User the code will be generated for
+	 * @param $user User the code will be generated for
 	 * @param 'login'|'password-reset'|'2fa' $mode Purpose of the code
 	 */
 	public static function isAvailable(User $user, string $mode): bool

@@ -305,7 +305,7 @@ class Api
 	 * Returns the file object for the given
 	 * parent path and filename
 	 *
-	 * @param string $path Path to file's parent model
+	 * @param $path Path to file's parent model
 	 * @throws NotFoundException if the file cannot be found
 	 */
 	public function file(
@@ -318,7 +318,7 @@ class Api
 	/**
 	 * Returns the all readable files for the parent
 	 *
-	 * @param string $path Path to file's parent model
+	 * @param $path Path to file's parent model
 	 * @throws NotFoundException if the file cannot be found
 	 */
 	public function files(string $path): Files
@@ -416,7 +416,7 @@ class Api
 	/**
 	 * Returns the page object for the given id
 	 *
-	 * @param string $id Page's id
+	 * @param $id Page's id
 	 * @throws NotFoundException if the page cannot be found
 	 */
 	public function page(string $id): Page|null
@@ -449,7 +449,7 @@ class Api
 	/**
 	 * Returns the model's object for the given path
 	 *
-	 * @param string $path Path to parent model
+	 * @param $path Path to parent model
 	 * @throws InvalidArgumentException if the model type is invalid
 	 * @throws NotFoundException if the model cannot be found
 	 */
@@ -766,7 +766,7 @@ class Api
 	/**
 	 * Returns the current Session instance
 	 *
-	 * @param array $options Additional options, see the session component
+	 * @param $options Additional options, see the session component
 	 */
 	public function session(array $options = []): Session
 	{

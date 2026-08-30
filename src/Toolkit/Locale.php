@@ -50,7 +50,7 @@ class Locale
 	 * a specified or for all locale categories
 	 * @since 3.5.6
 	 *
-	 * @param int|string $category Locale category constant or constant name
+	 * @param $category Locale category constant or constant name
 	 * @return array|string Associative array if `LC_ALL` was passed (default), otherwise string
 	 *
 	 * @throws Exception If the locale cannot be determined
@@ -169,7 +169,7 @@ class Locale
 	 * Builds an associative array with the locales
 	 * that are actually supported on this system
 	 *
-	 * @param bool $withAll If set to `true`, `LC_ALL` is returned as well
+	 * @param $withAll If set to `true`, `LC_ALL` is returned as well
 	 */
 	protected static function supportedConstants(bool $withAll = false): array
 	{

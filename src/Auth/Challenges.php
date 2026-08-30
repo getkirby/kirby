@@ -185,7 +185,7 @@ class Challenges
 	 * (This is based on the config. You might need to check
 	 * yourself if the method should be available in your context)
 	 *
-	 * @param int|null $timeout Lifetime in seconds, not an expiry timestamp
+	 * @param $timeout Lifetime in seconds, not an expiry timestamp
 	 */
 	public function get(
 		string $type,

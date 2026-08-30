@@ -419,8 +419,8 @@ class Page extends ModelWithContent
 	 *
 	 * @since 3.4.0
 	 *
-	 * @param array $options Options for `Kirby\Http\Uri` to create URL parts
-	 * @param int $code HTTP status code
+	 * @param $options Options for `Kirby\Http\Uri` to create URL parts
+	 * @param $code HTTP status code
 	 */
 	#[BlockCollectionAccess]
 	public function go(array $options = [], int $code = 302): void
@@ -919,7 +919,7 @@ class Page extends ModelWithContent
 	 * the default template.
 	 *
 	 * @param string $contentType
-	 * @param VersionId|string|null $versionId Optional override for the auto-detected version to render
+	 * @param $versionId Optional override for the auto-detected version to render
 	 * @throws NotFoundException If the default template cannot be found
 	 */
 	#[BlockCollectionAccess]

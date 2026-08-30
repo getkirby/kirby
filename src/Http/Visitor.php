@@ -184,7 +184,7 @@ class Visitor
 	 * is most accepted (= preferred) by the visitor
 	 * @since 3.3.0
 	 *
-	 * @param string ...$mimeTypes MIME types to query for
+	 * @param ...$mimeTypes MIME types to query for
 	 * @return string|null Preferred MIME type
 	 */
 	public function preferredMimeType(string ...$mimeTypes): string|null

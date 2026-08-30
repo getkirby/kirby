@@ -97,7 +97,7 @@ class Auth
 	 * (one-time auth code)
 	 * @since 3.5.0
 	 *
-	 * @param bool $long If `true`, a long session will be created
+	 * @param $long If `true`, a long session will be created
 	 * @param 'login'|'password-reset'|'2fa' $mode Purpose of the code
 	 *
 	 * @throws LogicException If there is no suitable authentication challenge (only in debug mode)
@@ -324,10 +324,10 @@ class Auth
 	/**
 	 * Become any existing user or disable the current user
 	 *
-	 * @param string|null $who User ID or email address,
-	 *                         `null` to use the actual user again,
-	 *                         `'kirby'` for a virtual admin user or
-	 *                         `'nobody'` to disable the actual user
+	 * @param $who User ID or email address,
+	 *            `null` to use the actual user again,
+	 *            `'kirby'` for a virtual admin user or
+	 *            `'nobody'` to disable the actual user
 	 * @throws NotFoundException if the given user cannot be found
 	 */
 	public function impersonate(string|null $who = null): User|null
@@ -501,8 +501,8 @@ class Auth
 	 * Returns the authentication status object
 	 * @since 3.5.1
 	 *
-	 * @param bool $allowImpersonation If set to false, only the actually
-	 *                                 logged in user will be returned
+	 * @param $allowImpersonation If set to false, only the actually
+	 *                           logged in user will be returned
 	 */
 	public function status(
 		Session|array|null $session = null,
@@ -538,7 +538,7 @@ class Auth
 	/**
 	 * Tracks a login
 	 *
-	 * @param bool $triggerHook If `false`, no user.login:failed hook is triggered
+	 * @param $triggerHook If `false`, no user.login:failed hook is triggered
 	 * @deprecated 6.0.0 Use `self::limits()->track()` instead
 	 */
 	public function track(
@@ -551,9 +551,9 @@ class Auth
 	/**
 	 * Returns the current authentication type
 	 *
-	 * @param bool $allowImpersonation If set to false, 'impersonate' won't
-	 *                                 be returned as authentication type
-	 *                                 even if an impersonation is active
+	 * @param $allowImpersonation If set to false, 'impersonate' won't
+	 *                           be returned as authentication type
+	 *                           even if an impersonation is active
 	 */
 	public function type(bool $allowImpersonation = true): string
 	{
@@ -576,8 +576,8 @@ class Auth
 	/**
 	 * Validates the currently logged in user
 	 *
-	 * @param bool $allowImpersonation If set to false, only the actually
-	 *                                 logged in user will be returned
+	 * @param $allowImpersonation If set to false, only the actually
+	 *                           logged in user will be returned
 	 *
 	 * @throws Throwable If an authentication error occurred
 	 */
@@ -636,7 +636,7 @@ class Auth
 	 * if successful, the user is automatically logged in
 	 * @since 3.5.0
 	 *
-	 * @param mixed $input User-provided auth code/input to verify
+	 * @param $input User-provided auth code/input to verify
 	 * @return User User object of the logged-in user
 	 *
 	 * @throws PermissionException If the rate limit was exceeded, the challenge timed out, the code

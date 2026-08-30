@@ -46,9 +46,9 @@ class Dir
 	/**
 	 * Copy the directory to a new destination
 	 *
-	 * @param array|false $ignore List of full paths to skip during copying
-	 *                            or `false` to copy all files, including
-	 *                            those listed in `Dir::$ignore`
+	 * @param $ignore List of full paths to skip during copying
+	 *               or `false` to copy all files, including
+	 *               those listed in `Dir::$ignore`
 	 */
 	public static function copy(
 		string $dir,
@@ -143,9 +143,9 @@ class Dir
 	 * Read the directory and all subdirectories
 	 *
 	 * @todo Remove support for `$ignore = null` in v6
-	 * @param array|false|null $ignore Array of absolute file paths;
-	 *                                 `false` to disable `Dir::$ignore` list
-	 *                                 (passing null is deprecated)
+	 * @param $ignore Array of absolute file paths;
+	 *               `false` to disable `Dir::$ignore` list
+	 *               (passing null is deprecated)
 	 */
 	public static function index(
 		string $dir,
@@ -257,8 +257,8 @@ class Dir
 	/**
 	 * Creates a new directory
 	 *
-	 * @param string $dir The path for the new directory
-	 * @param bool $recursive Create all parent directories, which don't exist
+	 * @param $dir The path for the new directory
+	 * @param $recursive Create all parent directories, which don't exist
 	 * @return bool True: the dir has been created, false: creating failed
 	 * @throws Exception If a file with the provided path already exists or the parent directory is not writable
 	 */
@@ -301,7 +301,7 @@ class Dir
 	 * Recursively check when the dir and all
 	 * subfolders have been modified for the last time.
 	 *
-	 * @param string $dir The path of the directory
+	 * @param $dir The path of the directory
 	 * @param 'date'|'intl'|'strftime'|null $handler Custom date handler or `null`
 	 *                                               for the globally configured one
 	 * @return ($format is null ? int : string|false)
@@ -331,8 +331,8 @@ class Dir
 	/**
 	 * Moves a directory to a new location
 	 *
-	 * @param string $old The current path of the directory
-	 * @param string $new The desired path where the dir should be moved to
+	 * @param $old The current path of the directory
+	 * @param $new The desired path where the dir should be moved to
 	 * @return bool true: the directory has been moved, false: moving failed
 	 */
 	public static function move(string $old, string $new): bool
@@ -355,10 +355,10 @@ class Dir
 	/**
 	 * Returns a nicely formatted size of all the contents of the folder
 	 *
-	 * @param string $dir The path of the directory
-	 * @param string|false|null $locale Locale for number formatting,
-	 *                                  `null` for the current locale,
-	 *                                  `false` to disable number formatting
+	 * @param $dir The path of the directory
+	 * @param $locale Locale for number formatting,
+	 *               `null` for the current locale,
+	 *               `false` to disable number formatting
 	 */
 	public static function niceSize(
 		string $dir,
@@ -371,9 +371,9 @@ class Dir
 	 * Reads all files from a directory and returns them as an array.
 	 * It skips unwanted invisible stuff.
 	 *
-	 * @param string $dir The path of directory
+	 * @param $dir The path of directory
 	 * @param array $ignore Optional array with filenames, which should be ignored
-	 * @param bool $absolute If true, the full path for each item will be returned
+	 * @param $absolute If true, the full path for each item will be returned
 	 * @return array An array of filenames
 	 */
 	public static function read(
@@ -541,8 +541,8 @@ class Dir
 	/**
 	 * Gets the size of the directory
 	 *
-	 * @param string $dir The path of the directory
-	 * @param bool $recursive Include all subfolders and their files
+	 * @param $dir The path of the directory
+	 * @param $recursive Include all subfolders and their files
 	 */
 	public static function size(string $dir, bool $recursive = true): int|false
 	{

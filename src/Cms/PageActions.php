@@ -223,8 +223,8 @@ trait PageActions
 	 * If changing to `listed`, you can pass a position for the
 	 * page in the siblings collection. Siblings will be resorted.
 	 *
-	 * @param string $status "draft", "listed" or "unlisted"
-	 * @param int|null $position Optional sorting number
+	 * @param $status "draft", "listed" or "unlisted"
+	 * @param $position Optional sorting number
 	 * @throws InvalidArgumentException If an invalid status is being passed
 	 */
 	#[BlockCollectionAccess]

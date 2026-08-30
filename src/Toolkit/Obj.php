@@ -57,8 +57,8 @@ class Obj extends stdClass
 	/**
 	 * Gets one or multiple properties of the object
 	 *
-	 * @param mixed $fallback If multiple properties are requested:
-	 *                        Associative array of fallback values per key
+	 * @param $fallback If multiple properties are requested:
+	 *                 Associative array of fallback values per key
 	 */
 	public function get(string|array $property, $fallback = null)
 	{

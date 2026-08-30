@@ -654,9 +654,9 @@ abstract class ModelWithContent extends Model implements Identifiable
 	 * String template builder with automatic HTML escaping
 	 * @since 3.6.0
 	 *
-	 * @param string|null $template Template string or `null` to use the model ID
-	 * @param string|null $fallback Fallback for tokens in the template that cannot be replaced
-	 *                              (`null` to keep the original token)
+	 * @param $template Template string or `null` to use the model ID
+	 * @param $fallback Fallback for tokens in the template that cannot be replaced
+	 *                 (`null` to keep the original token)
 	 */
 	public function toSafeString(
 		string|null $template = null,
@@ -669,10 +669,10 @@ abstract class ModelWithContent extends Model implements Identifiable
 	/**
 	 * String template builder
 	 *
-	 * @param string|null $template Template string or `null` to use the model ID
-	 * @param string|null $fallback Fallback for tokens in the template that cannot be replaced
-	 *                              (`null` to keep the original token)
-	 * @param string $handler For internal use
+	 * @param $template Template string or `null` to use the model ID
+	 * @param $fallback Fallback for tokens in the template that cannot be replaced
+	 *                 (`null` to keep the original token)
+	 * @param $handler For internal use
 	 */
 	public function toString(
 		string|null $template = null,

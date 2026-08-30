@@ -52,8 +52,8 @@ class File implements Stringable
 	/**
 	 * Constructor sets all file properties
 	 *
-	 * @param array|string|null $props Properties or deprecated `$root` string
-	 * @param string|null $url Deprecated argument, use `$props['url']` instead
+	 * @param $props Properties or deprecated `$root` string
+	 * @param $url Deprecated argument, use `$props['url']` instead
 	 *
 	 * @throws InvalidArgumentException When the model does not use the `Kirby\Filesystem\IsFile` trait
 	 */
@@ -126,7 +126,7 @@ class File implements Stringable
 	/**
 	 * Returns the file as data uri
 	 *
-	 * @param bool $base64 Whether the data should be base64 encoded or not
+	 * @param $base64 Whether the data should be base64 encoded or not
 	 */
 	public function dataUri(bool $base64 = true): string
 	{
@@ -223,7 +223,7 @@ class File implements Stringable
 	/**
 	 * Checks if a file is of a certain type
 	 *
-	 * @param string $value An extension or mime type
+	 * @param $value An extension or mime type
 	 */
 	public function is(string $value): bool
 	{
@@ -381,7 +381,7 @@ class File implements Stringable
 	/**
 	 * Move the file to a new location
 	 *
-	 * @param bool $overwrite Force overwriting any existing files
+	 * @param $overwrite Force overwriting any existing files
 	 */
 	public function move(string $newRoot, bool $overwrite = false): static
 	{
@@ -407,9 +407,9 @@ class File implements Stringable
 	 * Returns the file size in a
 	 * human-readable format
 	 *
-	 * @param string|false|null $locale Locale for number formatting,
-	 *                                  `null` for the current locale,
-	 *                                  `false` to disable number formatting
+	 * @param $locale Locale for number formatting,
+	 *               `null` for the current locale,
+	 *               `false` to disable number formatting
 	 */
 	public function niceSize(string|false|null $locale = null): string
 	{
@@ -437,7 +437,7 @@ class File implements Stringable
 	 * Changes the name of the file without
 	 * touching the extension
 	 *
-	 * @param bool $overwrite Force overwrite existing files
+	 * @param $overwrite Force overwrite existing files
 	 */
 	public function rename(string $newName, bool $overwrite = false): static
 	{
@@ -476,9 +476,9 @@ class File implements Stringable
 	 * by overwriting the file with the sanitized version
 	 * @since 3.6.0
 	 *
-	 * @param string|bool $typeLazy Explicit sane handler type string,
-	 *                              `true` for lazy autodetection or
-	 *                              `false` for normal autodetection
+	 * @param $typeLazy Explicit sane handler type string,
+	 *                 `true` for lazy autodetection or
+	 *                 `false` for normal autodetection
 	 *
 	 * @throws InvalidArgumentException If the file didn't pass validation
 	 * @throws LogicException If more than one handler applies
@@ -572,9 +572,9 @@ class File implements Stringable
 	/**
 	 * Validates the file contents depending on the file type
 	 *
-	 * @param string|bool $typeLazy Explicit sane handler type string,
-	 *                              `true` for lazy autodetection or
-	 *                              `false` for normal autodetection
+	 * @param $typeLazy Explicit sane handler type string,
+	 *                 `true` for lazy autodetection or
+	 *                 `false` for normal autodetection
 	 *
 	 * @throws InvalidArgumentException If the file didn't pass validation
 	 * @throws NotFoundException If the handler was not found

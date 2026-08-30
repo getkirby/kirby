@@ -64,7 +64,7 @@ abstract class Model
 	 * if the callback is defined in the config
 	 * @internal
 	 *
-	 * @param string $type markdown or kirbytext
+	 * @param $type markdown or kirbytext
 	 */
 	public function dragTextFromCallback(string $type, ...$args): string|null
 	{
@@ -85,7 +85,7 @@ abstract class Model
 	 *
 	 * @internal
 	 *
-	 * @param string|null $type (`auto`|`kirbytext`|`markdown`)
+	 * @param $type (`auto`|`kirbytext`|`markdown`)
 	 */
 	public function dragTextType(string|null $type = 'auto'): string
 	{
@@ -306,7 +306,7 @@ abstract class Model
 	 * that can be performed in the Panel
 	 * This also checks for the lock status
 	 *
-	 * @param array $unlock An array of options that will be force-unlocked
+	 * @param $unlock An array of options that will be force-unlocked
 	 */
 	public function options(array $unlock = []): array
 	{

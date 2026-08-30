@@ -138,7 +138,7 @@ class Database
 	/**
 	 * Connects to a database
 	 *
-	 * @param array|null $params This can either be a config key or an array of parameters for the connection
+	 * @param $params This can either be a config key or an array of parameters for the connection
 	 * @throws InvalidArgumentException
 	 */
 	public function connect(array|null $params = null): PDO|null

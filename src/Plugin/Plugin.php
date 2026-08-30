@@ -31,8 +31,8 @@ class Plugin
 	protected UpdateStatus|null $updateStatus = null;
 
 	/**
-	 * @param string $name Plugin name within Kirby (`vendor/plugin`)
-	 * @param array $extends Associative array of plugin extensions
+	 * @param $name Plugin name within Kirby (`vendor/plugin`)
+	 * @param $extends Associative array of plugin extensions
 	 *
 	 * @throws InvalidArgumentException If the plugin name has an invalid format
 	 */
@@ -266,7 +266,7 @@ class Plugin
 	 * update check has been disabled for the plugin
 	 * @since 3.8.0
 	 *
-	 * @param array|null $data Custom override for the getkirby.com update data
+	 * @param $data Custom override for the getkirby.com update data
 	 */
 	public function updateStatus(array|null $data = null): UpdateStatus|null
 	{

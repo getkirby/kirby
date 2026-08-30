@@ -61,7 +61,7 @@ class I18n
 	/**
 	 * Returns singular or plural depending on the given number
 	 *
-	 * @param bool $none If true, 'none' will be returned if the count is 0
+	 * @param $none If true, 'none' will be returned if the count is 0
 	 */
 	public static function form(int $count, bool $none = false): string
 	{
@@ -303,7 +303,7 @@ class I18n
 	 *   defined, the template that is defined last in the translation array is used
 	 * - Translation is a callback with a `$count` argument: Returns the callback return value
 	 *
-	 * @param bool $formatNumber If set to `false`, the count is not formatted
+	 * @param $formatNumber If set to `false`, the count is not formatted
 	 */
 	public static function translateCount(
 		string $key,

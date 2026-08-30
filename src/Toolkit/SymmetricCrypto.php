@@ -27,8 +27,8 @@ class SymmetricCrypto
 	/**
 	 * Initializes the keys used for crypto, both optional
 	 *
-	 * @param string|null $password Password to be derived into a `$secretKey`
-	 * @param string|null $secretKey 256-bit key, alternatively a `$password` can be used
+	 * @param $password Password to be derived into a `$secretKey`
+	 * @param $secretKey 256-bit key, alternatively a `$password` can be used
 	 */
 	public function __construct(
 		#[SensitiveParameter]
@@ -172,8 +172,8 @@ class SymmetricCrypto
 	 * Returns the binary secret key, optionally derived from the password
 	 * or randomly generated
 	 *
-	 * @param string|null $salt Salt for password-based key derivation
-	 * @param array|null $limits Processing limits for password-based key derivation
+	 * @param $salt Salt for password-based key derivation
+	 * @param $limits Processing limits for password-based key derivation
 	 */
 	public function secretKey(
 		#[SensitiveParameter]

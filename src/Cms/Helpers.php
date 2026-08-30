@@ -59,7 +59,7 @@ class Helpers
 	 * Triggers a deprecation warning if debug mode is active
 	 * and warning has not been suppressed via `Helpers::$deprecations`
 	 *
-	 * @param string|null $key If given, the key will be checked against the static array
+	 * @param $key If given, the key will be checked against the static array
 	 * @return bool Whether the warning was triggered
 	 */
 	public static function deprecated(
@@ -111,11 +111,11 @@ class Helpers
 	 * for all PHP errors and warnings
 	 * @since 3.7.4
 	 *
-	 * @param Closure $action Any action that may cause an error or warning
-	 * @param Closure $condition Closure that returns bool to determine if to
-	 *                           suppress an error, receives arguments for
-	 *                           `set_error_handler()`
-	 * @param mixed $fallback Value to return when error is suppressed
+	 * @param $action Any action that may cause an error or warning
+	 * @param $condition Closure that returns bool to determine if to
+	 *                  suppress an error, receives arguments for
+	 *                  `set_error_handler()`
+	 * @param $fallback Value to return when error is suppressed
 	 * @return mixed Return value of the `$action` closure,
 	 *               possibly overridden by `$fallback`
 	 */
@@ -188,7 +188,7 @@ class Helpers
 	 * Checks if a helper was overridden by the user
 	 * by setting the `KIRBY_HELPER_*` constant
 	 *
-	 * @param string $name Name of the helper
+	 * @param $name Name of the helper
 	 */
 	public static function hasOverride(string $name): bool
 	{

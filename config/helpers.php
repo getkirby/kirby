@@ -37,9 +37,9 @@ if (Helpers::hasOverride('attr') === false) { // @codeCoverageIgnore
 	/**
 	 * Generates a list of HTML attributes
 	 *
-	 * @param array|null $attr A list of attributes as key/value array
-	 * @param string|null $before An optional string that will be prepended if the result is not empty
-	 * @param string|null $after An optional string that will be appended if the result is not empty
+	 * @param $attr A list of attributes as key/value array
+	 * @param $before An optional string that will be prepended if the result is not empty
+	 * @param $after An optional string that will be appended if the result is not empty
 	 */
 	function attr(
 		array|null $attr = null,
@@ -67,7 +67,7 @@ if (Helpers::hasOverride('csrf') === false) { // @codeCoverageIgnore
 	/**
 	 * Checks / returns a CSRF token
 	 *
-	 * @param string|null $check Pass a token here to compare it to the one in the session
+	 * @param $check Pass a token here to compare it to the one in the session
 	 * @return string|bool Either the token or a boolean check result
 	 */
 	function csrf(string|null $check = null): string|bool
@@ -88,7 +88,7 @@ if (Helpers::hasOverride('css') === false) { // @codeCoverageIgnore
 	 * Creates one or multiple CSS link tags
 	 *
 	 * @param string|array $url Relative or absolute URLs, an array of URLs or `@auto` for automatic template css loading
-	 * @param string|array|null $options Pass an array of attributes for the link tag or a media attribute string
+	 * @param $options Pass an array of attributes for the link tag or a media attribute string
 	 */
 	function css(
 		string|array|Plugin|PluginAssets $url,
@@ -126,8 +126,8 @@ if (Helpers::hasOverride('e') === false) { // @codeCoverageIgnore
 	/**
 	 * Smart version of echo with an if condition as first argument
 	 *
-	 * @param mixed $value The string to be echoed if the condition is true
-	 * @param mixed $alternative An alternative string which should be echoed when the condition is false
+	 * @param $value The string to be echoed if the condition is true
+	 * @param $alternative An alternative string which should be echoed when the condition is false
 	 */
 	function e(mixed $condition, mixed $value, mixed $alternative = null): void
 	{
@@ -169,8 +169,8 @@ if (Helpers::hasOverride('esc') === false) { // @codeCoverageIgnore
 	/**
 	 * Escape context specific output
 	 *
-	 * @param string $string Untrusted data
-	 * @param string $context Location of output (`html`, `attr`, `js`, `css`, `url` or `xml`)
+	 * @param $string Untrusted data
+	 * @param $context Location of output (`html`, `attr`, `js`, `css`, `url` or `xml`)
 	 * @return string Escaped data
 	 */
 	function esc(string $string, string $context = 'html'): string
@@ -183,8 +183,8 @@ if (Helpers::hasOverride('get') === false) { // @codeCoverageIgnore
 	/**
 	 * Shortcut for $kirby->request()->get()
 	 *
-	 * @param mixed $key The key to look for. Pass false or null to return the entire request array.
-	 * @param mixed $default Optional default value, which should be returned if no element has been found
+	 * @param $key The key to look for. Pass false or null to return the entire request array.
+	 * @param $default Optional default value, which should be returned if no element has been found
 	 */
 	function get(mixed $key = null, mixed $default = null): mixed
 	{
@@ -220,7 +220,7 @@ if (Helpers::hasOverride('h') === false) { // @codeCoverageIgnore
 	/**
 	 * Shortcut for html()
 	 *
-	 * @param string|null $string unencoded text
+	 * @param $string unencoded text
 	 */
 	function h(string|null $string, bool $keepTags = false): string
 	{
@@ -232,7 +232,7 @@ if (Helpers::hasOverride('html') === false) { // @codeCoverageIgnore
 	/**
 	 * Creates safe html by encoding special characters
 	 *
-	 * @param string|null $string unencoded text
+	 * @param $string unencoded text
 	 */
 	function html(string|null $string, bool $keepTags = false): string
 	{
@@ -484,8 +484,8 @@ if (Helpers::hasOverride('r') === false) { // @codeCoverageIgnore
 	/**
 	 * Smart version of return with an if condition as first argument
 	 *
-	 * @param mixed $value The string to be returned if the condition is true
-	 * @param mixed $alternative An alternative string which should be returned when the condition is false
+	 * @param $value The string to be returned if the condition is true
+	 * @param $alternative An alternative string which should be returned when the condition is false
 	 */
 	function r(mixed $condition, mixed $value, mixed $alternative = null): mixed
 	{
@@ -616,7 +616,7 @@ if (Helpers::hasOverride('tc') === false) { // @codeCoverageIgnore
 	/**
 	 * Translates a count
 	 *
-	 * @param bool $formatNumber If set to `false`, the count is not formatted
+	 * @param $formatNumber If set to `false`, the count is not formatted
 	 */
 	function tc(
 		string $key,
@@ -633,7 +633,7 @@ if (Helpers::hasOverride('timestamp') === false) { // @codeCoverageIgnore
 	 * Rounds the minutes of the given date
 	 * by the defined step
 	 *
-	 * @param int|array|null $step array of `unit` and `size` to round to nearest
+	 * @param $step array of `unit` and `size` to round to nearest
 	 */
 	function timestamp(
 		string|null $date = null,

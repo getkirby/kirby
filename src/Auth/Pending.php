@@ -14,8 +14,8 @@ use SensitiveParameter;
 class Pending
 {
 	/**
-	 * @param mixed|null $public Will be shared with the frontend
-	 * @param mixed|null $secret Will be kept secret
+	 * @param $public Will be shared with the frontend
+	 * @param $secret Will be kept secret
 	 */
 	public function __construct(
 		protected mixed $public = null,

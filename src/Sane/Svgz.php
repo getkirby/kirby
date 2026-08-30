@@ -16,8 +16,8 @@ class Svgz extends Svg
 	/**
 	 * Sanitizes the given string
 	 *
-	 * @param bool $isExternal Whether the string is from an external file
-	 *                         that may be accessed directly
+	 * @param $isExternal Whether the string is from an external file
+	 *                   that may be accessed directly
 	 *
 	 * @throws InvalidArgumentException If the file couldn't be parsed or recompressed
 	 */
@@ -39,8 +39,8 @@ class Svgz extends Svg
 	/**
 	 * Validates file contents
 	 *
-	 * @param bool $isExternal Whether the string is from an external file
-	 *                         that may be accessed directly
+	 * @param $isExternal Whether the string is from an external file
+	 *                   that may be accessed directly
 	 *
 	 * @throws InvalidArgumentException If the file couldn't be parsed
 	 * @throws InvalidArgumentException If the file didn't pass validation

@@ -78,8 +78,8 @@ class Files extends Collection
 	 * Sort all given files by the
 	 * order in the array
 	 *
-	 * @param array $files List of file ids
-	 * @param int $offset Sorting offset
+	 * @param $files List of file ids
+	 * @param $offset Sorting offset
 	 * @return $this
 	 */
 	public function changeSort(array $files, int $offset = 0): static
@@ -175,9 +175,9 @@ class Files extends Collection
 	 * human-readable format
 	 * @since 3.6.0
 	 *
-	 * @param string|null|false $locale Locale for number formatting,
-	 *                                  `null` for the current locale,
-	 *                                  `false` to disable number formatting
+	 * @param $locale Locale for number formatting,
+	 *               `null` for the current locale,
+	 *               `false` to disable number formatting
 	 */
 	public function niceSize(string|false|null $locale = null): string
 	{

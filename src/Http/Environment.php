@@ -98,7 +98,7 @@ class Environment
 	/**
 	 * Class constructor
 	 *
-	 * @param array|null $info Optional override for `$_SERVER`
+	 * @param $info Optional override for `$_SERVER`
 	 */
 	public function __construct(
 		array|null $options = null,
@@ -147,7 +147,7 @@ class Environment
 	 * the stored information and re-detect the
 	 * environment if necessary.
 	 *
-	 * @param array|null $info Optional override for `$_SERVER`
+	 * @param $info Optional override for `$_SERVER`
 	 */
 	public function detect(
 		array|null $options = null,
@@ -255,7 +255,7 @@ class Environment
 	/**
 	 * Sets the host name, port and protocol without configuration
 	 *
-	 * @param bool $insecure Include the `Host`, `Forwarded` and `X-Forwarded-*` headers in the search
+	 * @param $insecure Include the `Host`, `Forwarded` and `X-Forwarded-*` headers in the search
 	 */
 	protected function detectAuto(bool $insecure = false): void
 	{
@@ -310,7 +310,7 @@ class Environment
 	/**
 	 * Detects if the request is served by the CLI
 	 *
-	 * @param bool|null $override Set to a boolean to override detection (for testing)
+	 * @param $override Set to a boolean to override detection (for testing)
 	 */
 	protected function detectCli(bool|null $override = null): bool
 	{
@@ -447,7 +447,7 @@ class Environment
 	 * Detects the port of the reverse proxy from the
 	 * `X-Forwarded-Host` or `X-Forwarded-Port` header
 	 *
-	 * @param bool $https Whether HTTPS was detected
+	 * @param $https Whether HTTPS was detected
 	 */
 	protected function detectForwardedPort(bool $https): int|null
 	{
@@ -474,7 +474,7 @@ class Environment
 	/**
 	 * Detects the host name from various headers
 	 *
-	 * @param bool $insecure Include the `Host` header in the search
+	 * @param $insecure Include the `Host` header in the search
 	 */
 	protected function detectHost(bool $insecure = false): string|null
 	{
@@ -645,10 +645,10 @@ class Environment
 	 * $server->get();
 	 * ```
 	 *
-	 * @param string|false|null $key The key to look for. Pass `false` or `null`
-	 *                               to return the entire server array.
-	 * @param mixed $default Optional default value, which should be
-	 *                       returned if no element has been found
+	 * @param $key The key to look for. Pass `false` or `null`
+	 *            to return the entire server array.
+	 * @param $default Optional default value, which should be
+	 *                returned if no element has been found
 	 */
 	public function get(string|false|null $key = null, $default = null)
 	{
@@ -668,10 +668,10 @@ class Environment
 	 * of the current app instance; falls back to `$_SERVER` if
 	 * no app instance is running
 	 *
-	 * @param string|false|null $key The key to look for. Pass `false` or `null`
-	 *                               to return the entire server array.
-	 * @param mixed $default Optional default value, which should be
-	 *                       returned if no element has been found
+	 * @param $key The key to look for. Pass `false` or `null`
+	 *            to return the entire server array.
+	 * @param $default Optional default value, which should be
+	 *                returned if no element has been found
 	 */
 	public static function getGlobally(
 		string|false|null $key = null,
@@ -794,7 +794,7 @@ class Environment
 	 * Loads and returns options from environment-specific
 	 * PHP files (by host name and server IP address or CLI)
 	 *
-	 * @param string $root Root directory to load configs from
+	 * @param $root Root directory to load configs from
 	 */
 	public function options(string $root): array
 	{

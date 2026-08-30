@@ -349,7 +349,7 @@ abstract class Uuid implements Stringable
 	 * Tries to find the identifiable model in cache
 	 * or index and returns the object
 	 *
-	 * @param bool $lazy If `true`, only lookup from cache
+	 * @param $lazy If `true`, only lookup from cache
 	 * @return TModel|null
 	 */
 	public function model(bool $lazy = false): Identifiable|null

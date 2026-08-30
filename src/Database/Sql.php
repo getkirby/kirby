@@ -37,8 +37,8 @@ abstract class Sql
 	/**
 	 * Returns a randomly generated binding name
 	 *
-	 * @param string $label String that only contains alphanumeric chars and
-	 *                      underscores to use as a human-readable identifier
+	 * @param $label String that only contains alphanumeric chars and
+	 *              underscores to use as a human-readable identifier
 	 * @return string Binding name that is guaranteed to be unique for this connection
 	 */
 	public function bindingName(string $label): string
@@ -63,15 +63,15 @@ abstract class Sql
 	 * Returns a query to list the columns of a specified table;
 	 * the query needs to return rows with a column `name`
 	 *
-	 * @param string $table Table name
+	 * @param $table Table name
 	 */
 	abstract public function columns(string $table): array;
 
 	/**
 	 * Returns a query snippet for a column default value
 	 *
-	 * @param string $name Column name
-	 * @param array $column Column definition array with an optional `default` key
+	 * @param $name Column name
+	 * @param $column Column definition array with an optional `default` key
 	 * @return array Array with a `query` string and a `bindings` array
 	 */
 	public function columnDefault(string $name, array $column): array
@@ -96,9 +96,9 @@ abstract class Sql
 	/**
 	 * Returns the cleaned identifier based on the table and column name
 	 *
-	 * @param string $table Table name
-	 * @param string $column Column name
-	 * @param bool $enforceQualified If true, a qualified identifier is returned in all cases
+	 * @param $table Table name
+	 * @param $column Column name
+	 * @param $enforceQualified If true, a qualified identifier is returned in all cases
 	 * @return string|null Identifier or null if the table or column is invalid
 	 */
 	public function columnName(
@@ -145,8 +145,8 @@ abstract class Sql
 	/**
 	 * Combines an identifier (table and column)
 	 *
-	 * @param bool $values Whether the identifier is going to be used for a VALUES clause;
-	 *                     only relevant for SQLite
+	 * @param $values Whether the identifier is going to be used for a VALUES clause;
+	 *               only relevant for SQLite
 	 */
 	public function combineIdentifier(
 		string $table,
@@ -159,17 +159,17 @@ abstract class Sql
 	/**
 	 * Creates the CREATE TABLE syntax for a single column
 	 *
-	 * @param string $name Column name
-	 * @param array $column Column definition array; valid keys:
-	 *                      - `type` (required): Column template to use
-	 *                      - `unsigned`: Whether an int column is signed or unsigned (boolean)
-	 *                      - `size`: The size of varchar (int)
-	 *                      - `precision`: The precision of a decimal type
-	 *                      - `decimalPlaces`: The number of decimal places for a decimal type
-	 *                      - `null`: Whether the column may be NULL (boolean)
-	 *                      - `key`: Index this column is part of; special values `'primary'` for PRIMARY KEY and `true` for automatic naming
-	 *                      - `unique`: Whether the index (or if not set the column itself) has a UNIQUE constraint
-	 *                      - `default`: Default value of this column
+	 * @param $name Column name
+	 * @param $column Column definition array; valid keys:
+	 *               - `type` (required): Column template to use
+	 *               - `unsigned`: Whether an int column is signed or unsigned (boolean)
+	 *               - `size`: The size of varchar (int)
+	 *               - `precision`: The precision of a decimal type
+	 *               - `decimalPlaces`: The number of decimal places for a decimal type
+	 *               - `null`: Whether the column may be NULL (boolean)
+	 *               - `key`: Index this column is part of; special values `'primary'` for PRIMARY KEY and `true` for automatic naming
+	 *               - `unique`: Whether the index (or if not set the column itself) has a UNIQUE constraint
+	 *               - `default`: Default value of this column
 	 * @return array Array with `query` and `key` strings, a `unique` boolean and a `bindings` array
 	 * @throws InvalidArgumentException if no column type is given or the column type is not supported.
 	 */
@@ -258,7 +258,7 @@ abstract class Sql
 	/**
 	 * Creates the inner query for the columns in a CREATE TABLE query
 	 *
-	 * @param array $columns Array of column definition arrays, see `Kirby\Database\Sql::createColumn()`
+	 * @param $columns Array of column definition arrays, see `Kirby\Database\Sql::createColumn()`
 	 * @return array Array with a `query` string and `bindings`, `keys` and `unique` arrays
 	 */
 	public function createTableInner(array $columns): array
@@ -300,8 +300,8 @@ abstract class Sql
 	/**
 	 * Creates a CREATE TABLE query
 	 *
-	 * @param string $table Table name
-	 * @param array $columns Array of column definition arrays, see `Kirby\Database\Sql::createColumn()`
+	 * @param $table Table name
+	 * @param $columns Array of column definition arrays, see `Kirby\Database\Sql::createColumn()`
 	 * @return array Array with a `query` string and a `bindings` array
 	 */
 	public function createTable(string $table, array $columns = []): array
@@ -335,7 +335,7 @@ abstract class Sql
 	/**
 	 * Builds a DELETE clause
 	 *
-	 * @param array $params List of parameters for the DELETE clause. See defaults for more info.
+	 * @param $params List of parameters for the DELETE clause. See defaults for more info.
 	 */
 	public function delete(array $params = []): array
 	{
@@ -584,7 +584,7 @@ abstract class Sql
 	/**
 	 * Builds a select clause
 	 *
-	 * @param array $params List of parameters for the select clause. Check out the defaults for more info.
+	 * @param $params List of parameters for the select clause. Check out the defaults for more info.
 	 * @return array An array with the query and the bindings
 	 */
 	public function select(array $params = []): array
@@ -674,7 +674,7 @@ abstract class Sql
 	/**
 	 * Splits a (qualified) identifier into table and column
 	 *
-	 * @param string $table Default table if the identifier is not qualified
+	 * @param $table Default table if the identifier is not qualified
 	 * @throws InvalidArgumentException if an invalid identifier is given
 	 */
 	public function splitIdentifier(string $table, string $identifier): array
@@ -749,7 +749,7 @@ abstract class Sql
 	/**
 	 * Builds an update clause
 	 *
-	 * @param array $params List of parameters for the update clause. See defaults for more info.
+	 * @param $params List of parameters for the update clause. See defaults for more info.
 	 */
 	public function update(array $params = []): array
 	{
@@ -805,11 +805,11 @@ abstract class Sql
 	/**
 	 * Builds a safe list of values for insert, select or update queries
 	 *
-	 * @param string $table Table name
-	 * @param mixed $values A value string or array of values
-	 * @param string $separator A separator which should be used to join values
-	 * @param bool $set If true builds a set list of values for update clauses
-	 * @param bool $enforceQualified Always use fully qualified column names
+	 * @param $table Table name
+	 * @param $values A value string or array of values
+	 * @param $separator A separator which should be used to join values
+	 * @param $set If true builds a set list of values for update clauses
+	 * @param $enforceQualified Always use fully qualified column names
 	 */
 	public function values(
 		string $table,

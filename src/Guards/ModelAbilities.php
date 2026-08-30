@@ -38,8 +38,8 @@ abstract class ModelAbilities
 	}
 
 	/**
-	 * @param array $details Additional context for the failure,
-	 *                       e.g. the field errors of an incomplete page
+	 * @param $details Additional context for the failure,
+	 *                e.g. the field errors of an incomplete page
 	 * @throws AbilityException
 	 */
 	public function error(

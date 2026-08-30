@@ -156,7 +156,7 @@ class Router
 	 * find matches and return all the found
 	 * arguments in the path.
 	 *
-	 * @param array|null $ignore (Passing null has been deprecated)
+	 * @param $ignore (Passing null has been deprecated)
 	 * @todo Remove support for `$ignore = null` in v6
 	 */
 	public function find(

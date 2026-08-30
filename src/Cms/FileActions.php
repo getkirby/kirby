@@ -223,7 +223,7 @@ trait FileActions
 	 * writing, so it can be replaced by any other
 	 * way of generating files.
 	 *
-	 * @param bool $move If set to `true`, the source will be deleted
+	 * @param $move If set to `true`, the source will be deleted
 	 * @throws InvalidArgumentException
 	 * @throws LogicException
 	 */
@@ -444,7 +444,7 @@ trait FileActions
 	 * finally decides what it will support as
 	 * source.
 	 *
-	 * @param bool $move If set to `true`, the source will be deleted
+	 * @param $move If set to `true`, the source will be deleted
 	 * @throws LogicException
 	 */
 	#[BlockCollectionAccess]

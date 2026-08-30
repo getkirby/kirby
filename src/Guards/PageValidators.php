@@ -90,7 +90,7 @@ class PageValidators extends ModelValidators
 	/**
 	 * Validates the input of the `delete` action
 	 *
-	 * @param bool $force Allows deleting a page that still has children
+	 * @param $force Allows deleting a page that still has children
 	 */
 	protected function ensureToDelete(bool $force = false): void
 	{
@@ -131,8 +131,8 @@ class PageValidators extends ModelValidators
 	/**
 	 * Validates that no other page or draft with the same slug exists
 	 *
-	 * @param bool $strict If `true`, the page itself is not ignored,
-	 *                     which is needed for pages that don't exist yet
+	 * @param $strict If `true`, the page itself is not ignored,
+	 *               which is needed for pages that don't exist yet
 	 */
 	public function validateDuplicate(
 		string $slug,

@@ -98,7 +98,7 @@ trait AppPlugins
 	/**
 	 * Register all given extensions
 	 *
-	 * @param Plugin|null $plugin The plugin which defined those extensions
+	 * @param $plugin The plugin which defined those extensions
 	 */
 	public function extend(
 		array $extensions,
@@ -740,8 +740,8 @@ trait AppPlugins
 	/**
 	 * Returns a given extension by type and name
 	 *
-	 * @param string $type i.e. `'hooks'`
-	 * @param string $name i.e. `'page.delete:before'`
+	 * @param $type i.e. `'hooks'`
+	 * @param $name i.e. `'page.delete:before'`
 	 */
 	public function extension(
 		string $type,
@@ -878,7 +878,7 @@ trait AppPlugins
 	/**
 	 * Kirby plugin factory and getter
 	 *
-	 * @param array|null $extends If null is passed it will be used as getter. Otherwise as factory.
+	 * @param $extends If null is passed it will be used as getter. Otherwise as factory.
 	 * @throws DuplicateException
 	 */
 	public static function plugin(
@@ -918,7 +918,7 @@ trait AppPlugins
 	 * Loads and returns all plugins in the site/plugins directory
 	 * Loading only happens on the first call.
 	 *
-	 * @param array|null $plugins Can be used to overwrite the plugins registry
+	 * @param $plugins Can be used to overwrite the plugins registry
 	 */
 	public function plugins(array|null $plugins = null): array
 	{

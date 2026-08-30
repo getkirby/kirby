@@ -309,7 +309,7 @@ class Remote
 	/**
 	 * Decode the response content
 	 *
-	 * @param bool $array decode as array or object
+	 * @param $array decode as array or object
 	 * @psalm-return ($array is true ? array|null : stdClass|null)
 	 */
 	public function json(bool $array = true): array|stdClass|null

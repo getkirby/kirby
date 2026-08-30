@@ -132,8 +132,8 @@ class FileValidators extends ModelValidators
 	/**
 	 * Validates the extension, MIME type and filename
 	 *
-	 * @param string|false|null $mime If not passed, the MIME type is detected from the file,
-	 *                                if `false`, the MIME type is not validated for performance reasons
+	 * @param $mime If not passed, the MIME type is detected from the file,
+	 *             if `false`, the MIME type is not validated for performance reasons
 	 */
 	public function validateFile(string|false|null $mime = null): void
 	{

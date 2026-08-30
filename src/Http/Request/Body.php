@@ -29,7 +29,7 @@ class Body implements Stringable
 	 * fetch the body either from the $_POST global
 	 * or from php://input.
 	 *
-	 * @param array|string|null $contents The raw body content
+	 * @param $contents The raw body content
 	 */
 	public function __construct(
 		protected array|string|null $contents = null

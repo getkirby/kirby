@@ -16,7 +16,7 @@ class Sqlite extends Sql
 	 * Returns a query to list the columns of a specified table;
 	 * the query needs to return rows with a column `name`
 	 *
-	 * @param string $table Table name
+	 * @param $table Table name
 	 */
 	public function columns(string $table): array
 	{
@@ -48,9 +48,9 @@ class Sqlite extends Sql
 	/**
 	 * Combines an identifier (table and column)
 	 *
-	 * @param bool $values Whether the identifier is going to be
-	 *                     used for a VALUES clause; only relevant
-	 *                     for SQLite
+	 * @param $values Whether the identifier is going to be
+	 *               used for a VALUES clause; only relevant
+	 *               for SQLite
 	 */
 	public function combineIdentifier(
 		string $table,
@@ -68,8 +68,8 @@ class Sqlite extends Sql
 	/**
 	 * Creates a CREATE TABLE query
 	 *
-	 * @param string $table Table name
-	 * @param array $columns Array of column definition arrays, see `Kirby\Database\Sql::createColumn()`
+	 * @param $table Table name
+	 * @param $columns Array of column definition arrays, see `Kirby\Database\Sql::createColumn()`
 	 * @return array Array with a `query` string and a `bindings` array
 	 */
 	public function createTable(

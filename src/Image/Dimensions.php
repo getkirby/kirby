@@ -78,9 +78,9 @@ class Dimensions implements Stringable
 	 * // output: 320
 	 * ```
 	 *
-	 * @param int $box the max width and/or height
-	 * @param bool $force If true, the dimensions will be
-	 *                    upscaled to fit the box if smaller
+	 * @param $box the max width and/or height
+	 * @param $force If true, the dimensions will be
+	 *              upscaled to fit the box if smaller
 	 * @return $this object with recalculated dimensions
 	 */
 	public function fit(int $box, bool $force = false): static
@@ -128,9 +128,9 @@ class Dimensions implements Stringable
 	 * // output: 500
 	 * ```
 	 *
-	 * @param int|null $fit the max height
-	 * @param bool $force If true, the dimensions will be
-	 *                    upscaled to fit the box if smaller
+	 * @param $fit the max height
+	 * @param $force If true, the dimensions will be
+	 *              upscaled to fit the box if smaller
 	 * @return $this object with recalculated dimensions
 	 */
 	public function fitHeight(
@@ -143,10 +143,10 @@ class Dimensions implements Stringable
 	/**
 	 * Helper for fitWidth and fitHeight methods
 	 *
-	 * @param string $ref reference (width or height)
-	 * @param int|null $fit the max width
-	 * @param bool $force If true, the dimensions will be
-	 *                    upscaled to fit the box if smaller
+	 * @param $ref reference (width or height)
+	 * @param $fit the max width
+	 * @param $force If true, the dimensions will be
+	 *              upscaled to fit the box if smaller
 	 * @return $this object with recalculated dimensions
 	 */
 	protected function fitSize(
@@ -184,9 +184,9 @@ class Dimensions implements Stringable
 	 * // output: 320
 	 * ```
 	 *
-	 * @param int|null $fit the max width
-	 * @param bool $force If true, the dimensions will be
-	 *                    upscaled to fit the box if smaller
+	 * @param $fit the max width
+	 * @param $force If true, the dimensions will be
+	 *              upscaled to fit the box if smaller
 	 * @return $this object with recalculated dimensions
 	 */
 	public function fitWidth(
@@ -199,8 +199,8 @@ class Dimensions implements Stringable
 	/**
 	 * Recalculates the dimensions by the width and height
 	 *
-	 * @param int|null $width the max height
-	 * @param int|null $height the max width
+	 * @param $width the max height
+	 * @param $height the max width
 	 * @return $this
 	 */
 	public function fitWidthAndHeight(

@@ -97,7 +97,7 @@ abstract class LazyCollection extends Collection
 	 * Creates chunks of the same size.
 	 * The last chunk may be smaller
 	 *
-	 * @param int $size Number of elements per chunk
+	 * @param $size Number of elements per chunk
 	 * @return static A new collection with an element for each chunk and
 	 *                a sub collection in each chunk
 	 */
@@ -488,8 +488,8 @@ abstract class LazyCollection extends Collection
 	/**
 	 * Returns a slice of the object
 	 *
-	 * @param int $offset The optional index to start the slice from
-	 * @param int|null $limit The optional number of elements to return
+	 * @param $offset The optional index to start the slice from
+	 * @param $limit The optional number of elements to return
 	 * @return $this|static
 	 */
 	public function slice(

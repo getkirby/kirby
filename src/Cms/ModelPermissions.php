@@ -70,7 +70,7 @@ abstract class ModelPermissions
 	 * Returns whether the current user is allowed to do
 	 * a certain action on the model
 	 *
-	 * @param bool $default Will be returned if $action does not exist
+	 * @param $default Will be returned if $action does not exist
 	 * @deprecated 6.0.0 Use `$model->guards()->isAvailable()` instead
 	 */
 	public function can(
@@ -110,7 +110,7 @@ abstract class ModelPermissions
 	 * Returns whether the current user is not allowed to do
 	 * a certain action on the model
 	 *
-	 * @param bool $default Will be returned if $action does not exist
+	 * @param $default Will be returned if $action does not exist
 	 * @deprecated 6.0.0 Use `$model->guards()->isAvailable()` instead
 	 */
 	public function cannot(
