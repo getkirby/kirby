@@ -4,6 +4,8 @@ use PhpCsFixer\Config;
 use PhpCsFixer\Finder;
 use PhpCsFixer\Runner\Parallel\ParallelConfigFactory;
 
+require_once __DIR__ . '/etc/cs-fixer-plugins/NamespacedFullyQualifiedStrictTypesFixer.php';
+
 $config = new Config();
 $finder = Finder::create()
 	->exclude('dependencies')
@@ -12,6 +14,9 @@ $finder = Finder::create()
 
 return $config
 	->setParallelConfig(ParallelConfigFactory::detect())
+	->registerCustomFixers([
+		new NamespacedFullyQualifiedStrictTypesFixer(),
+	])
 	->setRules([
 		'@PSR12' => true,
 		'align_multiline_comment' => ['comment_type' => 'all_multiline'],
@@ -27,6 +32,7 @@ return $config
 		'dir_constant' => true,
 		'function_typehint_space' => true,
 		'include' => true,
+		'Kirby/fully_qualified_strict_types' => ['import_symbols' => true],
 		'logical_operators' => true,
 		'magic_constant_casing' => true,
 		'magic_method_casing' => true,
