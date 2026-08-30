@@ -19,6 +19,34 @@ class ModelGuardsTestValidators extends PageValidators
 	}
 }
 
+class ModelGuardsTestAbilities extends PageAbilities
+{
+	public static bool $consulted = false;
+
+	protected function ensureToDelete(): void
+	{
+		static::$consulted = true;
+	}
+}
+
+class ModelGuardsTestAbilitiesGuards extends PageGuards
+{
+	public function __construct(
+		Page $model,
+		User $user
+	) {
+		parent::__construct(
+			model: $model,
+			user: $user
+		);
+
+		$this->abilities = new ModelGuardsTestAbilities(
+			model: $model,
+			user: $user
+		);
+	}
+}
+
 class ModelGuardsTestGuards extends PageGuards
 {
 	public function __construct(
@@ -252,6 +280,99 @@ class ModelGuardsTest extends ModelTestCase
 		$this->app->impersonate('kirby');
 
 		$this->assertTrue($this->guards()->isAvailable('update'));
+	}
+
+	public function testIsAvailableMatchesEnsureAvailable(): void
+	{
+		$this->app = $this->app->clone([
+			'roles' => [['name' => 'editor']],
+			'site'  => ['children' => [['slug' => 'home']]],
+			'users' => [['email' => 'editor@getkirby.com', 'role' => 'editor']]
+		]);
+
+		$actions = [
+			'update',         // resolved from the permission setting
+			'changeTitle',    // dedicated permission action method
+			'delete',         // dedicated ability action method
+			'does-not-exist', // no rule at all
+		];
+
+		foreach (['kirby', 'editor@getkirby.com', 'nobody'] as $id) {
+			$this->app->impersonate($id);
+
+			$guards = $this->guards($this->app->page('home'));
+
+			foreach ($actions as $action) {
+				foreach ([false, true] as $default) {
+					try {
+						$guards->ensureAvailable($action, $default);
+						$expected = true;
+					} catch (AbilityException | PermissionException) {
+						$expected = false;
+					}
+
+					$this->assertSame(
+						$expected,
+						$guards->isAvailable($action, $default),
+						$action . ' as ' . $id . ' (default: ' . ($default === true ? 'true' : 'false') . ')'
+					);
+				}
+			}
+		}
+	}
+
+	public function testIsAvailableSkipsTheAbilityWhenThePermissionDenies(): void
+	{
+		$this->app = $this->app->clone([
+			'roles' => [
+				[
+					'name'        => 'editor',
+					'permissions' => ['pages' => ['delete' => false]]
+				]
+			],
+			'users' => [
+				['email' => 'editor@getkirby.com', 'role' => 'editor']
+			]
+		]);
+
+		$this->app->impersonate('editor@getkirby.com');
+
+		$guards = new ModelGuardsTestAbilitiesGuards(
+			model: new Page(['slug' => 'test']),
+			user: $this->user()
+		);
+
+		ModelGuardsTestAbilities::$consulted = false;
+
+		// the permission rule already settles the question, so the
+		// ability must not be consulted at all
+		$this->assertFalse($guards->isAvailable('delete'));
+		$this->assertFalse(ModelGuardsTestAbilities::$consulted);
+
+		// …while an allowed permission still hands over to the ability
+		$this->assertTrue($guards->isAvailable('update'));
+	}
+
+	public function testIsAvailableForKirbyUserAndAdmin(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/restricted' => ['options' => ['access' => false]]
+			],
+			'site'  => ['children' => [['slug' => 'home', 'template' => 'restricted']]],
+			'users' => [['email' => 'admin@getkirby.com', 'role' => 'admin']]
+		]);
+
+		$page = $this->app->page('home');
+
+		// the almighty `kirby` user overrules the blueprint …
+		$this->app->impersonate('kirby');
+		$this->assertTrue($this->guards($page)->isAvailable('access'));
+
+		// … but a regular admin shares its role and must not
+		// inherit that answer
+		$this->app->impersonate('admin@getkirby.com');
+		$this->assertFalse($this->guards($page)->isAvailable('access'));
 	}
 
 	public function testIsAvailableWithActionMethod(): void

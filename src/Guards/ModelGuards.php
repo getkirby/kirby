@@ -115,8 +115,28 @@ abstract class ModelGuards
 	 */
 	public function isAvailable(string $action, bool $default = false): bool
 	{
+		// A permission without its own action method comes down to the
+		// plain rule, which is the cheapest check there is. A denial
+		// settles the question on its own, whatever the abilities would
+		// say, so reading it first keeps every denied action off the
+		// throwing path - which the Panel walks for every model in a list.
+		$plain = $this->permissions()->has($action) === false;
+
+		if (
+			$plain === true &&
+			$this->permissions()->setting($action, $default) !== true
+		) {
+			return false;
+		}
+
 		try {
-			$this->ensureAvailable($action, $default);
+			// with the permission settled, only the ability is left;
+			// `::ensure()` is a no-op for an action without a method
+			if ($plain === true) {
+				$this->abilities()->ensure($action);
+			} else {
+				$this->ensureAvailable($action, $default);
+			}
 
 			return true;
 		} catch (AbilityException | PermissionException) {
