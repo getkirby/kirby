@@ -475,15 +475,13 @@ class BlueprintTest extends TestCase
 
 	public function testFactory(): void
 	{
-		Blueprint::$loaded = [];
-
 		$this->app = $this->app->clone([
 			'blueprints' => [
 				'pages/test' => ['title' => 'Test']
 			]
 		]);
 
-		$blueprint = Blueprint::factory('pages/test', null, new Page(['slug' => 'test']));
+		$blueprint = Blueprint::factory(new Page(['slug' => 'test']), 'pages/test');
 
 		$this->assertSame('Test', $blueprint->title());
 		$this->assertSame('pages/test', $blueprint->name());
@@ -491,15 +489,13 @@ class BlueprintTest extends TestCase
 
 	public function testFactoryWithCallbackArray(): void
 	{
-		Blueprint::$loaded = [];
-
 		$this->app = $this->app->clone([
 			'blueprints' => [
 				'pages/test' => fn () => ['title' => 'Test']
 			]
 		]);
 
-		$blueprint = Blueprint::factory('pages/test', null, new Page(['slug' => 'test']));
+		$blueprint = Blueprint::factory(new Page(['slug' => 'test']), 'pages/test');
 
 		$this->assertSame('Test', $blueprint->title());
 		$this->assertSame('pages/test', $blueprint->name());
@@ -507,8 +503,6 @@ class BlueprintTest extends TestCase
 
 	public function testFactoryWithCallbackString(): void
 	{
-		Blueprint::$loaded = [];
-
 		$this->app = $this->app->clone([
 			'roots' => [
 				'index' => '/dev/null',
@@ -521,16 +515,141 @@ class BlueprintTest extends TestCase
 
 		Data::write(static::TMP . '/custom/test.yml', ['title' => 'Test']);
 
-		$blueprint = Blueprint::factory('pages/test', null, new Page(['slug' => 'test']));
+		$blueprint = Blueprint::factory(new Page(['slug' => 'test']), 'pages/test');
 
 		$this->assertSame('Test', $blueprint->title());
 		$this->assertSame('pages/test', $blueprint->name());
 	}
 
+	public function testFactoryWithExtends(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/base'  => ['title' => 'Base'],
+				'pages/child' => ['extends' => 'pages/base']
+			]
+		]);
+
+		// the title must be inherited through `extends`, which only
+		// works as long as `::load()` does not add its own fallback
+		// title before the mixin is merged in
+		$blueprint = Blueprint::factory(new Page(['slug' => 'test']), 'pages/child');
+
+		$this->assertSame('Base', $blueprint->title());
+		$this->assertSame('pages/child', $blueprint->name());
+	}
+
 	public function testFactoryForMissingBlueprint(): void
 	{
-		$blueprint = Blueprint::factory('notFound', null, new Page(['slug' => 'test']));
+		$blueprint = Blueprint::factory(new Page(['slug' => 'test']), 'notFound');
 		$this->assertNull($blueprint);
+	}
+
+	public function testFactoryCache(): void
+	{
+		Blueprint::$loaded['pages/test'] = ['title' => 'Test'];
+
+		$a = Blueprint::factory(new Page(['slug' => 'a']), 'pages/test');
+
+		// the raw props are only normalized once
+		Blueprint::$loaded['pages/test'] = ['title' => 'Changed'];
+
+		$b = Blueprint::factory(new Page(['slug' => 'b']), 'pages/test');
+
+		$this->assertSame('Test', $a->title());
+		$this->assertSame('Test', $b->title());
+
+		// every model still gets its own blueprint object
+		$this->assertNotSame($a, $b);
+	}
+
+	public function testFactoryCacheWithFallback(): void
+	{
+		Blueprint::$loaded['pages/test']    = ['title' => 'Test'];
+		Blueprint::$loaded['pages/default'] = ['title' => 'Default'];
+
+		// a name that resolves ignores the fallback, so both
+		// calls must share a single normalized blueprint
+		Blueprint::factory(new Page(['slug' => 'a']), 'pages/test');
+		Blueprint::factory(new Page(['slug' => 'b']), 'pages/test', 'pages/default');
+
+		$this->assertCount(1, Blueprint::$normalized);
+
+		// a name that does not resolve must not share the
+		// normalized blueprint between different fallbacks
+		$c = Blueprint::factory(new Page(['slug' => 'c']), 'pages/nope', 'pages/test');
+		$d = Blueprint::factory(new Page(['slug' => 'd']), 'pages/nope', 'pages/default');
+
+		$this->assertSame('Test', $c->title());
+		$this->assertSame('Default', $d->title());
+		$this->assertCount(3, Blueprint::$normalized);
+	}
+
+	public function testFactoryCacheWithLanguage(): void
+	{
+		$locale       = I18n::$locale;
+		$translations = I18n::$translations;
+
+		I18n::$translations = [
+			'de' => ['blueprint.title' => 'Artikel'],
+			'en' => ['blueprint.title' => 'Article'],
+		];
+
+		Blueprint::$loaded['pages/test'] = ['title' => 'blueprint.title'];
+
+		I18n::$locale = 'en';
+		$a = Blueprint::factory(new Page(['slug' => 'a']), 'pages/test');
+		$this->assertSame('Article', $a->title());
+
+		// the cached blueprint must not be bound to a language
+		I18n::$locale = 'de';
+		$b = Blueprint::factory(new Page(['slug' => 'b']), 'pages/test');
+		$this->assertSame('Artikel', $b->title());
+
+		// the title of a blueprint that was created before the
+		// language switch follows the current language as well
+		$this->assertSame('Artikel', $a->title());
+
+		I18n::$locale       = $locale;
+		I18n::$translations = $translations;
+	}
+
+	public function testFactoryCacheWithModel(): void
+	{
+		Blueprint::$loaded['pages/test'] = [
+			'title'  => 'Test',
+			'fields' => ['headline' => ['type' => 'text']]
+		];
+
+		$a = Blueprint::factory($pageA = new Page(['slug' => 'a']), 'pages/test');
+		$b = Blueprint::factory($pageB = new Page(['slug' => 'b']), 'pages/test');
+
+		// the normalized fields are shared …
+		$this->assertSame($a->fields(), $b->fields());
+
+		// … but every blueprint is bound to its own model
+		$this->assertSame($pageA, $a->model());
+		$this->assertSame($pageB, $b->model());
+
+		// and the model-specific caches are not shared
+		$this->assertNotSame($a->tabs(), $b->tabs());
+		$this->assertSame('/pages/a/?tab=main', $a->tab()->link());
+		$this->assertSame('/pages/b/?tab=main', $b->tab()->link());
+	}
+
+	public function testReset(): void
+	{
+		Blueprint::$loaded['pages/test'] = ['title' => 'Test'];
+
+		Blueprint::factory(new Page(['slug' => 'a']), 'pages/test');
+
+		$this->assertNotSame([], Blueprint::$loaded);
+		$this->assertNotSame([], Blueprint::$normalized);
+
+		Blueprint::reset();
+
+		$this->assertSame([], Blueprint::$loaded);
+		$this->assertSame([], Blueprint::$normalized);
 	}
 
 	public function testFields(): void

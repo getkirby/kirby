@@ -2,7 +2,6 @@
 
 namespace Kirby\Panel\Areas;
 
-use Kirby\Blueprint\Blueprint;
 use Kirby\Cms\App;
 use Kirby\Cms\User;
 use Kirby\Exception\NotFoundException;
@@ -42,9 +41,6 @@ abstract class AreaTestCase extends TestCase
 		$this->app->session()->destroy();
 
 		Dir::remove(static::TMP);
-
-		// clear blueprint cache
-		Blueprint::$loaded = [];
 
 		// clean up server software fakes
 		unset($_SERVER['SERVER_SOFTWARE']);

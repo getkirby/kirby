@@ -71,6 +71,27 @@ class PageListFieldTest extends TestCase
 		]);
 	}
 
+	protected function pagelistWithInvalidBlueprint(array $attr = []): PageListField
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/broken' => [
+					// title and status would be used
+					// if the blueprint could be created
+					'title'  => 'Not used',
+					'create' => ['status' => 'listed'],
+					// a scalar instead of a list of fields
+					// breaks the blueprint
+					'fields' => 'text'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		return $this->pagelist(['templates' => ['broken'], ...$attr]);
+	}
+
 	public function testType(): void
 	{
 		$this->assertSame('pagelist', $this->pagelist()->type());
@@ -227,6 +248,17 @@ class PageListFieldTest extends TestCase
 		], $field->blueprints());
 	}
 
+	public function testBlueprintsWithInvalidBlueprint(): void
+	{
+		// a blueprint that cannot be created still needs
+		// an entry for the create dialog, based on its name
+		$field = $this->pagelistWithInvalidBlueprint();
+
+		$this->assertSame([
+			['name' => 'broken', 'title' => 'Broken']
+		], $field->blueprints());
+	}
+
 	public function testBlueprintsWithMissingBlueprint(): void
 	{
 		// a blueprint that cannot be loaded still needs
@@ -282,6 +314,17 @@ class PageListFieldTest extends TestCase
 			'templates' => ['album', 'note']
 		]);
 
+		$this->assertFalse($field->add());
+	}
+
+	public function testAddWithInvalidBlueprint(): void
+	{
+		// a blueprint that cannot be created creates a draft,
+		// even though it defines a listed status
+		$field = $this->pagelistWithInvalidBlueprint(['status' => 'draft']);
+		$this->assertTrue($field->add());
+
+		$field = $this->pagelistWithInvalidBlueprint(['status' => 'listed']);
 		$this->assertFalse($field->add());
 	}
 

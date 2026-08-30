@@ -167,7 +167,7 @@ class Site extends ModelWithContent
 	public function blueprint(): SiteBlueprint
 	{
 		/** @var SiteBlueprint */
-		return $this->blueprint ??= SiteBlueprint::factory('site', null, $this);
+		return $this->blueprint ??= SiteBlueprint::factory($this, 'site');
 	}
 
 	/**

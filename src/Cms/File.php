@@ -154,9 +154,9 @@ class File extends ModelWithContent
 	{
 		/** @var FileBlueprint */
 		return $this->blueprint ??= FileBlueprint::factory(
+			$this,
 			'files/' . $this->template(),
-			'files/default',
-			$this
+			'files/default'
 		);
 	}
 
@@ -195,7 +195,7 @@ class File extends ModelWithContent
 				continue;
 			}
 
-			if ($blueprint = FileBlueprint::factory('files/' . $template, null, $this)) {
+			if ($blueprint = FileBlueprint::factory($this, 'files/' . $template)) {
 				try {
 					// ensure that file matches `accept` option,
 					// if not remove template from available list
