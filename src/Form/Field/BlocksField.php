@@ -18,6 +18,7 @@ use Kirby\Form\Mixin\Min;
 use Kirby\Form\Mixin\Pretty;
 use Kirby\Panel\Controller\Dialog\FieldDialogController;
 use Kirby\Panel\Controller\Drawer\FieldDrawerController;
+use Kirby\Reflection\Attributes\Computed;
 use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Str;
 use Throwable;
@@ -38,6 +39,7 @@ class BlocksField extends InputField
 	/**
 	 * Defines the allowed block types in the blocks field. See below.
 	 */
+	#[Computed(default: Fieldsets::DEFAULT)]
 	protected array|null $fieldsets;
 
 	/**
@@ -58,35 +60,16 @@ class BlocksField extends InputField
 	protected array $value = [];
 
 	public function __construct(
-		bool|null $autofocus = null,
 		array|null $default = null,
-		bool|null $disabled = null,
 		array|string|null $empty = null,
 		array|null $fieldsets = null,
-		array|string|null $help = null,
 		string|null $group = null,
-		array|string|null $label = null,
-		string|null $name = null,
 		int|null $max = null,
 		int|null $min = null,
 		bool|null $pretty = null,
-		bool|null $required = null,
-		bool|null $translate = null,
-		array|null $when = null,
-		string|null $width = null,
+		mixed ...$args
 	) {
-		parent::__construct(
-			autofocus: $autofocus,
-			default:   $default,
-			disabled:  $disabled,
-			help:      $help,
-			label:     $label,
-			name:      $name,
-			required:  $required,
-			translate: $translate,
-			when:      $when,
-			width:     $width
-		);
+		parent::__construct(...$args, default: $default);
 
 		$this->empty     = $empty;
 		$this->fieldsets = $fieldsets;

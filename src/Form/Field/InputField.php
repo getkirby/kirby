@@ -30,16 +30,11 @@ abstract class InputField extends ValueField
 		bool|null $disabled = null,
 		array|string|null $help = null,
 		array|string|null $label = null,
-		string|null $name = null,
 		bool|null $required = null,
 		bool|null $translate = null,
-		array|null $when = null,
-		string|null $width = null
+		mixed ...$args
 	) {
-		parent::__construct(
-			name: $name,
-			when: $when
-		);
+		parent::__construct(...$args);
 
 		$this->autofocus = $autofocus;
 		$this->default   = $default;
@@ -48,7 +43,6 @@ abstract class InputField extends ValueField
 		$this->label     = $label;
 		$this->required  = $required;
 		$this->translate = $translate;
-		$this->width     = $width;
 	}
 
 	public function props(): array
