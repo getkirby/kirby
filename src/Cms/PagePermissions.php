@@ -13,15 +13,4 @@ namespace Kirby\Cms;
  */
 class PagePermissions extends ModelPermissions
 {
-	/**
-	 * Used to cache once determined permissions in memory
-	 *
-	 * @param Page $model
-	 * @psalm-suppress MoreSpecificImplementedParamType
-	 */
-	protected static function cacheKey(
-		ModelWithContent|Language $model
-	): string {
-		return $model->intendedTemplate()->name();
-	}
 }

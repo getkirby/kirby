@@ -2,10 +2,8 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Exception\LogicException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
-use ReflectionProperty;
 
 #[CoversClass(ModelPermissions::class)]
 #[CoversClass(PagePermissions::class)]
@@ -27,12 +25,6 @@ class PagePermissionsTest extends ModelTestCase
 				['id' => 'editor', 'role' => 'editor']
 			],
 		]);
-	}
-
-	protected function tearDown(): void
-	{
-		$prop = new ReflectionProperty(PagePermissions::class, 'cache');
-		$prop->setValue(null, []);
 	}
 
 	public static function actionProvider(): array
@@ -261,43 +253,6 @@ class PagePermissionsTest extends ModelTestCase
 
 		$this->assertTrue($page->permissions()->can($action));
 		$this->assertTrue($page->guards()->isAvailable($action, default: false));
-	}
-
-	public function testCanFromCache(): void
-	{
-		$this->app->impersonate('admin');
-
-		$page = new Page([
-			'slug'      => 'test',
-			'num'       => 1,
-			'template'  => 'some-template',
-			'blueprint' => [
-				'name' => 'some-template',
-				'options' => [
-					'access' => false,
-					'list'   => false
-				]
-			]
-		]);
-
-		$this->assertFalse(PagePermissions::canFromCache($page, 'access'));
-		$this->assertFalse(PagePermissions::canFromCache($page, 'access'));
-		$this->assertFalse(PagePermissions::canFromCache($page, 'list'));
-		$this->assertFalse(PagePermissions::canFromCache($page, 'list'));
-	}
-
-	public function testCanFromCacheDynamic(): void
-	{
-		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Cannot use permission cache for dynamically-determined permission');
-
-		$page = new Page([
-			'slug'     => 'test',
-			'num'      => 1,
-			'template' => 'some-template',
-		]);
-
-		PagePermissions::canFromCache($page, 'changeTemplate');
 	}
 
 	public function testCannotChangeTemplate(): void
