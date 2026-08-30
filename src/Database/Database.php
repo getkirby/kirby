@@ -140,10 +140,9 @@ class Database
 	/**
 	 * Connects to a database
 	 *
-	 * @param array|null $params This can either be a config key or an array of parameters for the connection
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
-	public function connect(array|null $params = null): PDO|null
+	public function connect(array $params = []): PDO|null
 	{
 		$options = [
 			'database' => null,
@@ -152,7 +151,7 @@ class Database
 			'user'     => null,
 			'password' => null,
 			'id'       => uniqid(),
-			...$params ?? []
+			...$params
 		];
 
 		if (isset(static::$types[$options['type']]) === false) {
