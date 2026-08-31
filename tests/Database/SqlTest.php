@@ -580,6 +580,23 @@ class SqlTest extends TestCase
 		$this->assertSame(['id' => 1], $delete['bindings']);
 	}
 
+	public function testInsertWithoutBindings(): void
+	{
+		$this->database->createTable('users', [
+			'id'   => ['type' => 'int'],
+			'name' => ['type' => 'varchar']
+		]);
+
+		$insert = $this->sql->insert([
+			'table'  => 'users',
+			'values' => ['name' => 'John Doe']
+		]);
+
+		$this->assertStringStartsWith('INSERT INTO `users` (`users`.`name`) VALUES (', $insert['query']);
+		$this->assertCount(1, $insert['bindings']);
+		$this->assertSame('John Doe', array_values($insert['bindings'])[0]);
+	}
+
 	public function testSelectHelpers(): void
 	{
 		$this->database->createTable('users', [
