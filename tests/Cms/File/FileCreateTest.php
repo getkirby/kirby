@@ -223,6 +223,43 @@ class FileCreateTest extends ModelTestCase
 		$this->assertSame('B', $result->b()->value());
 	}
 
+	/**
+	 * @see https://github.com/getkirby/kirby/issues/8411
+	 */
+	public function testCreateWithSaveHandlers(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'files/test' => [
+					'name'   => 'test',
+					'fields' => [
+						'categories' => [
+							'type'    => 'checkboxes',
+							'options' => ['one', 'two', 'three']
+						]
+					]
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$parent = new Page(['slug' => 'test']);
+		$source = static::TMP . '/source.md';
+
+		F::write($source, '# Test');
+
+		$result = File::create([
+			'content'  => ['categories' => ['one', 'two']],
+			'filename' => 'test.md',
+			'source'   => $source,
+			'parent'   => $parent,
+			'template' => 'test',
+		]);
+
+		$this->assertSame('one, two', $result->version()->read()['categories']);
+		$this->assertSame(['one', 'two'], $result->categories()->split());
+	}
+
 	public function testCreateImage(): void
 	{
 		$parent = new Page(['slug' => 'test']);

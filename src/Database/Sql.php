@@ -433,9 +433,9 @@ abstract class Sql
 	 */
 	public function insert(array $params = []): array
 	{
-		$table    = $params['table']  ?? null;
-		$values   = $params['values'] ?? null;
-		$bindings = $params['bindings'];
+		$table    = $params['table']    ?? null;
+		$values   = $params['values']   ?? null;
+		$bindings = $params['bindings'] ?? [];
 		$query    = ['INSERT INTO ' . $this->tableName($table)];
 
 		// add the values
@@ -510,7 +510,7 @@ abstract class Sql
 
 		return [
 			'query'    => implode(' ', array_filter($query)),
-			'bindings' => [],
+			'bindings' => $bindings,
 		];
 	}
 

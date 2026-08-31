@@ -276,6 +276,159 @@ class ModelWithContentTest extends TestCase
 		$this->assertSame('Original Title', $page->content()->title()->value());
 	}
 
+	public function testCreateContent(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'blueprints' => [
+				'pages/test' => [
+					'fields' => [
+						'categories' => [
+							'type'    => 'checkboxes',
+							'options' => ['a', 'b', 'c']
+						]
+					]
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'foo',
+						'template' => 'test'
+					]
+				],
+			]
+		]);
+
+		$page = $app->page('foo');
+
+		// the array must be converted by the save handler of the field
+		$this->assertSame(
+			['categories' => 'a, b'],
+			$page->createContent(['categories' => ['a', 'b']])
+		);
+
+		// values without a matching field are passed through
+		$this->assertSame(
+			['categories' => 'a', 'custom' => 'value'],
+			$page->createContent(['categories' => ['a'], 'custom' => 'value'])
+		);
+	}
+
+	public function testCreateContentWithDefaults(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'blueprints' => [
+				'pages/test' => [
+					'fields' => [
+						'categories' => [
+							'type'    => 'checkboxes',
+							'default' => 'a, b',
+							'options' => ['a', 'b', 'c']
+						],
+						'text' => [
+							'type' => 'text'
+						]
+					]
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'foo',
+						'template' => 'test'
+					]
+				],
+			]
+		]);
+
+		$page = $app->page('foo');
+
+		$this->assertSame(
+			['categories' => 'a, b', 'text' => ''],
+			$page->createContent()
+		);
+
+		// the given content overwrites the defaults
+		$this->assertSame(
+			['categories' => 'c', 'text' => ''],
+			$page->createContent(['categories' => ['c']])
+		);
+	}
+
+	public function testCreateTranslations(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'blueprints' => [
+				'pages/test' => [
+					'fields' => [
+						'categories' => [
+							'type'    => 'checkboxes',
+							'options' => ['a', 'b', 'c']
+						],
+						'text' => [
+							'type' => 'text'
+						]
+					]
+				]
+			],
+			'languages' => [
+				[
+					'code'    => 'en',
+					'default' => true
+				],
+				[
+					'code' => 'de'
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'foo',
+						'template' => 'test'
+					]
+				],
+			]
+		]);
+
+		$page = $app->page('foo');
+
+		$this->assertNull($page->createTranslations());
+
+		$translations = $page->createTranslations([
+			[
+				'code'    => 'en',
+				'content' => ['categories' => ['a', 'b'], 'custom' => 'value']
+			],
+			[
+				'code'    => 'de',
+				'content' => ['categories' => ['c']]
+			]
+		]);
+
+		// the values must be converted by the save handler of the
+		// field, while values without a matching field are passed
+		// through and missing fields are not added
+		$this->assertSame([
+			[
+				'code'    => 'en',
+				'content' => ['categories' => 'a, b', 'custom' => 'value']
+			],
+			[
+				'code'    => 'de',
+				'content' => ['categories' => 'c']
+			]
+		], $translations);
+	}
+
 	#[DataProvider('modelsProvider')]
 	public function testBlueprints(ModelWithContent $model): void
 	{
