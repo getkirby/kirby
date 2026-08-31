@@ -152,6 +152,38 @@ class UserCreateTest extends ModelTestCase
 		$this->assertSame('B', $user->b()->value());
 	}
 
+	/**
+	 * @see https://github.com/getkirby/kirby/issues/8411
+	 */
+	public function testCreateWithSaveHandlers(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'users/editor' => [
+					'name'   => 'editor',
+					'fields' => [
+						'categories' => [
+							'type'    => 'checkboxes',
+							'options' => ['one', 'two', 'three']
+						]
+					]
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$user = User::create([
+			'content' => ['categories' => ['one', 'two']],
+			'email'   => 'new@domain.com',
+			'role'    => 'editor',
+		]);
+
+		// the save handler of the field must be applied,
+		// just like it would be in `$user->update()`
+		$this->assertSame('one, two', $user->version()->read()['categories']);
+		$this->assertSame(['one', 'two'], $user->categories()->split());
+	}
+
 	public function testCreateWithContentMultilang(): void
 	{
 		$this->app = $this->app->clone([
