@@ -212,7 +212,7 @@ class DatabaseTest extends TestCase
 		// plugins can register a type whose connector
 		// doesn't validate the required params itself
 		Database::$types['memory'] = [
-			'sql' => Sql\Sqlite::class,
+			'sql' => Sqlite::class,
 			'dsn' => fn (array $params): string => 'sqlite::memory:'
 		];
 
