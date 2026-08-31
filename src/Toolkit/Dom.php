@@ -29,6 +29,34 @@ use Kirby\Exception\InvalidArgumentException;
 class Dom
 {
 	/**
+	 * HTML elements that make an HTML parser leave foreign content
+	 * (SVG/MathML) and continue in the HTML namespace,
+	 * `<font>` is conditional and lives in `::isBreakout()`
+	 *
+	 * @link https://html.spec.whatwg.org/multipage/parsing.html#parsing-main-inforeign
+	 */
+	protected const BREAKOUT = [
+		'b', 'big', 'blockquote', 'body', 'br', 'center', 'code', 'dd',
+		'div', 'dl', 'dt', 'em', 'embed', 'h1', 'h2', 'h3', 'h4', 'h5',
+		'h6', 'head', 'hr', 'i', 'img', 'li', 'listing', 'menu', 'meta',
+		'nobr', 'ol', 'p', 'pre', 'ruby', 's', 'small', 'span', 'strike',
+		'strong', 'sub', 'sup', 'table', 'tt', 'u', 'ul', 'var'
+	];
+
+	/**
+	 * Elements inside foreign content whose child elements an HTML parser
+	 * creates in the HTML namespace again, per foreign root: the MathML
+	 * text integration points and the HTML integration points
+	 *
+	 * @link https://html.spec.whatwg.org/multipage/parsing.html#mathml-text-integration-point
+	 * @link https://html.spec.whatwg.org/multipage/parsing.html#html-integration-point
+	 */
+	protected const INTEGRATION = [
+		'math' => ['annotation-xml', 'mi', 'mn', 'mo', 'ms', 'mtext'],
+		'svg'  => ['desc', 'foreignobject', 'title']
+	];
+
+	/**
 	 * Cache for the HTML body
 	 */
 	protected DOMElement|null $body;
@@ -619,6 +647,13 @@ class Dom
 			$this->sanitizeElement($element, $options, $errors);
 		}
 
+		// validate all character data (comments and CDATA sections)
+		$characterData = $this->query('//comment() | //text()');
+
+		foreach (iterator_to_array($characterData, false) as $node) {
+			$this->sanitizeCharacterData($node, $errors);
+		}
+
 		return $errors;
 	}
 
@@ -797,6 +832,123 @@ class Dom
 	}
 
 	/**
+	 * Determines how an HTML parser reads the content of a node once the
+	 * document is embedded in an HTML page: whether the node sits in
+	 * foreign content (SVG/MathML) and which raw text element holds it
+	 *
+	 * @since 5.6.0
+	 *
+	 * @return array{foreign: bool, rawText: string|null}
+	 */
+	protected static function context(DOMNode $node): array
+	{
+		$ancestors = [];
+
+		for (
+			$parent = $node->parentNode;
+			$parent instanceof DOMElement;
+			$parent = $parent->parentNode
+		) {
+			$ancestors[] = $parent;
+		}
+
+		// the foreign root the current element sits in (`math`, `svg` or
+		// `null` in HTML content) and whether it is an integration point
+		$root        = null;
+		$integration = false;
+
+		// walk from the outermost element inwards, the order in which an
+		// HTML parser assigns a namespace to each of them
+		foreach (array_reverse($ancestors) as $ancestor) {
+			$name = Str::lower($ancestor->nodeName);
+
+			// these leave the foreign subtree behind entirely, whatever
+			// the surrounding namespace is
+			if (static::isBreakout($ancestor) === true) {
+				$root        = null;
+				$integration = false;
+			} else {
+				// in HTML content only `<svg>`/`<math>` open foreign
+				// content; inside it everything stays foreign until an
+				// integration point hands the children back to HTML
+				if ($root === null || $integration === true) {
+					$root = match ($name) {
+						'math', 'svg' => $name,
+						default       => null
+					};
+				}
+
+				$integration =
+					$root !== null &&
+					static::isIntegration($ancestor, $root) === true;
+			}
+
+			// a parser enters raw text at the outermost such element and
+			// reads everything below it as text, so nothing deeper is an
+			// element to it at all
+			if (
+				$root === null &&
+				($name === 'style' || $name === 'script')
+			) {
+				return ['foreign' => false, 'rawText' => $name];
+			}
+		}
+
+		return ['foreign' => $root !== null, 'rawText' => null];
+	}
+
+	/**
+	 * Checks if an element makes an HTML parser leave foreign content
+	 * (SVG/MathML) and continue in the HTML namespace
+	 *
+	 * @since 5.6.0
+	 */
+	protected static function isBreakout(DOMElement $node): bool
+	{
+		$name = Str::lower($node->nodeName);
+
+		// the spec lists `<font>` in a rule of its own that only applies
+		// when it carries one of these three attributes
+		if ($name === 'font') {
+			return
+				$node->hasAttribute('color') === true ||
+				$node->hasAttribute('face') === true ||
+				$node->hasAttribute('size') === true;
+		}
+
+		return in_array($name, static::BREAKOUT, true) === true;
+	}
+
+	/**
+	 * Checks if an element hands its children back to HTML content,
+	 * which only elements of its own foreign root can do
+	 *
+	 * @since 5.6.0
+	 */
+	protected static function isIntegration(
+		DOMElement $node,
+		string $root
+	): bool {
+		$name = Str::lower($node->nodeName);
+
+		if (in_array($name, static::INTEGRATION[$root], true) === false) {
+			return false;
+		}
+
+		// `<annotation-xml>` is only an HTML integration point when it
+		// declares one of these two encodings
+		if ($name === 'annotation-xml') {
+			$encoding = Str::lower($node->getAttribute('encoding'));
+
+			return
+				$encoding === 'text/html' ||
+				$encoding === 'application/xhtml+xml';
+		}
+
+		return true;
+	}
+
+	/**
 	 * Sanitizes an attribute
 	 *
 	 * @param array $options See `Dom::sanitize()`
@@ -843,6 +995,83 @@ class Dom
 				}
 			}
 		}
+	}
+
+	/**
+	 * Sanitizes a comment or CDATA section node
+	 * @since 5.6.0
+	 *
+	 * @param array $errors Array to store additional errors in by reference
+	 */
+	protected function sanitizeCharacterData(
+		DOMNode $node,
+		array &$errors
+	): void {
+		$isComment = $node->nodeType === XML_COMMENT_NODE;
+		$isCdata   = $node->nodeType === XML_CDATA_SECTION_NODE;
+
+		// only comments and CDATA sections are serialized verbatim;
+		// regular text nodes are entity-escaped on export and stay safe
+		if ($isComment === false && $isCdata === false) {
+			return;
+		}
+
+		$data = $node->data;
+
+		// an HTML parser judges the node by the element it sits in: inside
+		// foreign content `<![CDATA[` stays a CDATA section, while raw text
+		// elements only ever exist in the HTML namespace
+		['foreign' => $foreign, 'rawText' => $rawText] = static::context($node);
+
+		if ($rawText !== null) {
+			// a raw text element holds neither comments nor CDATA sections,
+			// just text, so only a literal closing tag breaks out of it;
+			// legitimate CSS/JS (e.g. `a > b`) is kept untouched
+			$dangerous = preg_match('#</' . $rawText . '\b#i', $data) === 1;
+		} elseif ($isComment === true) {
+			// the HTML tokenizer ends a comment as soon as the data closes
+			// it: `<!-->`/`<!--->` are already complete comments, `-->` and
+			// `--!>` end one mid-data. What follows is then live markup in
+			// every insertion mode, so foreign content is no shelter
+			$dangerous =
+				Str::startsWith($data, '>') === true ||
+				Str::startsWith($data, '->') === true ||
+				Str::contains($data, '-->') === true ||
+				Str::contains($data, '--!>') === true;
+		} else {
+			// outside foreign content `<![CDATA[` degrades to a comment
+			// that already ends at its first `>`, which exposes the rest
+			// of the data as live markup
+			$dangerous =
+				$foreign === false &&
+				Str::contains($data, '<') === true;
+		}
+
+		if ($dangerous === false) {
+			return;
+		}
+
+		if ($isComment === true) {
+			$errors[] = new InvalidArgumentException(
+				'The comment (line ' . $node->getLineNo() . ') is not allowed'
+			);
+
+			// comments carry no rendered content, so remove them entirely
+			static::remove($node);
+			return;
+		}
+
+		$errors[] = new InvalidArgumentException(
+			'The CDATA section (line ' . $node->getLineNo() . ') is not allowed'
+		);
+
+		// replace the CDATA section with an escaped text node so its
+		// content is entity-encoded on export and can no longer re-open as
+		// markup under an HTML parser
+		$node->parentNode->replaceChild(
+			$this->doc->createTextNode($data),
+			$node
+		);
 	}
 
 	/**
@@ -966,17 +1195,28 @@ class Dom
 	): void {
 		$name = $pi->nodeName;
 
+		// an HTML parser reads `<?` as a bogus comment that ends at the
+		// first `>`, so a `>` in the data exposes the rest as live markup
+		$dangerous = Str::contains($pi->data, '>') === true;
+
 		// check for allow-listed processing instructions
 		if (
 			is_array($options['allowedPIs']) === true &&
 			in_array($name, $options['allowedPIs'], true) === false
 		) {
-			$errors[] = new InvalidArgumentException(
-				'The "' . $name . '" processing instruction (line ' .
-				$pi->getLineNo() . ') is not allowed'
-			);
-			static::remove($pi);
+			$dangerous = true;
 		}
+
+		if ($dangerous === false) {
+			return;
+		}
+
+		$errors[] = new InvalidArgumentException(
+			'The "' . $name . '" processing instruction (line ' .
+			$pi->getLineNo() . ') is not allowed'
+		);
+
+		static::remove($pi);
 	}
 
 	/**

@@ -1707,6 +1707,18 @@ class DomTest extends TestCase
 				['The "invalid-instruction" processing instruction (line 1) is not allowed']
 			],
 
+			// a `>` in the data of an allow-listed PI ends the bogus
+			// comment an HTML parser opens at `<?`, exposing live markup
+			[
+				'<?xml-stylesheet ><img src=x onerror=alert(1)>?><p>This is a test</p>',
+				[
+					'allowedPIs' => ['xml-stylesheet']
+				],
+
+				'<p>This is a test</p>',
+				['The "xml-stylesheet" processing instruction (line 1) is not allowed']
+			],
+
 			// allowedTags
 			[
 				'<xml><a>A</a><b>B</b></xml>',
@@ -1899,6 +1911,175 @@ class DomTest extends TestCase
 			array_map(fn ($error) => $error->getMessage(), $errors)
 		);
 		$this->assertSame($expectedCode, $dom->toString());
+	}
+
+	public function testSanitizeCharacterData(): void
+	{
+		// helper that sanitizes with an allow-everything configuration so
+		// only the character-data handling can alter the document
+		$sanitize = function (string $code): array {
+			$dom    = new Dom($code, 'XML');
+			$errors = $dom->sanitize([]);
+
+			return [
+				$dom->toString(),
+				array_map(fn ($error) => $error->getMessage(), $errors)
+			];
+		};
+
+		// a comment whose data closes it early is removed: the tokenizer
+		// ends it there, so the rest would re-parse as live markup
+		$this->assertSame(
+			['<root><title/></root>', ['The comment (line 1) is not allowed']],
+			$sanitize('<root><title><!--><img src=x onerror=alert(1)>--></title></root>')
+		);
+
+		// the `<!--->` spelling closes the comment just the same
+		$this->assertSame(
+			['<root><g/></root>', ['The comment (line 1) is not allowed']],
+			$sanitize('<root><g><!---><img src=x>--></g></root>')
+		);
+
+		// foreign content is no shelter for it either
+		$this->assertSame(
+			['<root><svg/></root>', ['The comment (line 1) is not allowed']],
+			$sanitize('<root><svg><!--><img src=x>--></svg></root>')
+		);
+
+		// top-level comment closing early is removed as well
+		$this->assertSame(
+			['<root/>', ['The comment (line 1) is not allowed']],
+			$sanitize('<!--><img src=x>--><root/>')
+		);
+
+		// a well-formed comment is inert in every context and stays put,
+		// even when it holds markup
+		$this->assertSame(
+			['<root><g><!--<rect/>--></g></root>', []],
+			$sanitize('<root><g><!--<rect/>--></g></root>')
+		);
+
+		// inside a raw text element the comment is never a comment, just
+		// text, so an early close there cannot expose anything
+		$this->assertSame(
+			['<root><style><!--><img src=x>--></style></root>', []],
+			$sanitize('<root><style><!--><img src=x>--></style></root>')
+		);
+
+		// outside foreign content `<![CDATA[` degrades to a comment that
+		// ends at its first `>`, so the section is escaped into text
+		$this->assertSame(
+			[
+				'<root>&gt;&lt;img src=x&gt;</root>',
+				['The CDATA section (line 1) is not allowed']
+			],
+			$sanitize('<root><![CDATA[><img src=x>]]></root>')
+		);
+
+		// CDATA breaking out of a raw text element is escaped into text
+		$this->assertSame(
+			[
+				'<root><style>&lt;/style&gt;&lt;img src=x&gt;</style></root>',
+				['The CDATA section (line 1) is not allowed']
+			],
+			$sanitize('<root><style><![CDATA[</style><img src=x>]]></style></root>')
+		);
+
+		// ...but inside foreign content it stays a real CDATA section and
+		// is kept untouched, whatever its data looks like
+		$this->assertSame(
+			['<root><svg><![CDATA[><img src=x>]]></svg></root>', []],
+			$sanitize('<root><svg><![CDATA[><img src=x>]]></svg></root>')
+		);
+
+		// CDATA-wrapped content without a closing tag is kept in raw text
+		$this->assertSame(
+			['<root><style><![CDATA[.a > .b {}]]></style></root>', []],
+			$sanitize('<root><style><![CDATA[.a > .b {}]]></style></root>')
+		);
+
+		// child elements of an HTML integration point are created in the
+		// HTML namespace again, where `<![CDATA[` is only a bogus comment
+		$this->assertSame(
+			[
+				'<root><svg><desc><g>&gt;&lt;img src=x&gt;</g></desc></svg></root>',
+				['The CDATA section (line 1) is not allowed']
+			],
+			$sanitize('<root><svg><desc><g><![CDATA[><img src=x>]]></g></desc></svg></root>')
+		);
+
+		// ...but `<svg>` re-enters foreign content below one of them
+		$this->assertSame(
+			['<root><svg><desc><svg><![CDATA[><img src=x>]]></svg></desc></svg></root>', []],
+			$sanitize('<root><svg><desc><svg><![CDATA[><img src=x>]]></svg></desc></svg></root>')
+		);
+
+		// the same for the MathML text integration points
+		$this->assertSame(
+			[
+				'<root><math><mtext><b>&gt;&lt;img src=x&gt;</b></mtext></math></root>',
+				['The CDATA section (line 1) is not allowed']
+			],
+			$sanitize('<root><math><mtext><b><![CDATA[><img src=x>]]></b></mtext></math></root>')
+		);
+
+		// HTML elements that break a parser out of foreign content leave
+		// the whole subtree below them in the HTML namespace
+		$this->assertSame(
+			[
+				'<root><svg><b>&gt;&lt;img src=x&gt;</b></svg></root>',
+				['The CDATA section (line 1) is not allowed']
+			],
+			$sanitize('<root><svg><b><![CDATA[><img src=x>]]></b></svg></root>')
+		);
+
+		// raw text starts at the outermost such element, so this comment
+		// needs the `</script>` and not the `</style>` to break out
+		$this->assertSame(
+			['<root><script><style/></script></root>', ['The comment (line 1) is not allowed']],
+			$sanitize('<root><script><style><!--</script><img src=x>--></style></script></root>')
+		);
+
+		// a foreign `<style>` is no raw text element, so a comment below
+		// it is a real comment that must not close itself early
+		$this->assertSame(
+			['<root><svg><style><desc><g/></desc></style></svg></root>', ['The comment (line 1) is not allowed']],
+			$sanitize('<root><svg><style><desc><g><!--><img src=x>--></g></desc></style></svg></root>')
+		);
+
+		// an HTML `<style>` on the other hand reads everything below it
+		// as text, so the nested `<svg>` never opens foreign content
+		$this->assertSame(
+			['<root><style><svg/></style></root>', ['The comment (line 1) is not allowed']],
+			$sanitize('<root><style><svg><!--</style><img src=x>--></svg></style></root>')
+		);
+
+		// integration points only work inside their own foreign root, so
+		// neither of these hands its children back to HTML content
+		$this->assertSame(
+			['<root><math><desc><style/></desc></math></root>', ['The comment (line 1) is not allowed']],
+			$sanitize('<root><math><desc><style><!--><img src=x>--></style></desc></math></root>')
+		);
+
+		$this->assertSame(
+			['<root><svg><mtext><style/></mtext></svg></root>', ['The comment (line 1) is not allowed']],
+			$sanitize('<root><svg><mtext><style><!--><img src=x>--></style></mtext></svg></root>')
+		);
+
+		// `<annotation-xml>` only hands them back with an HTML encoding,
+		// which turns the `<style>` below it into a raw text element
+		$this->assertSame(
+			[
+				'<root><math><annotation-xml encoding="text/html"><style>&lt;/style&gt;&lt;img src=x&gt;</style></annotation-xml></math></root>',
+				['The CDATA section (line 1) is not allowed']
+			],
+			$sanitize('<root><math><annotation-xml encoding="text/html"><style><![CDATA[</style><img src=x>]]></style></annotation-xml></math></root>')
+		);
+
+		$this->assertSame(
+			['<root><math><annotation-xml><style/></annotation-xml></math></root>', ['The comment (line 1) is not allowed']],
+			$sanitize('<root><math><annotation-xml><style><!--><img src=x>--></style></annotation-xml></math></root>')
+		);
 	}
 
 	public function testSanitizeDoctypeCallbackException(): void
