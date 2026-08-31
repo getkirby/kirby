@@ -37,9 +37,9 @@ class Exception extends \Exception
 	 * The message key, fallback and translation flag
 	 * needed to resolve a translated message form i18n strings
 	 */
-	private string|null $key = null;
-	private string|null $fallback = null;
-	private bool $translate = true;
+	protected string|null $key = null;
+	protected string|null $fallback = null;
+	protected bool $translate = true;
 
 	/**
 	 * Defaults that can be overridden by specific exception classes
@@ -53,7 +53,7 @@ class Exception extends \Exception
 	/**
 	 * Prefix for the exception key (e.g. 'error.general')
 	 */
-	private const PREFIX = 'error.';
+	protected const PREFIX = 'error.';
 
 	public function __construct(
 		string|null $message = null,
@@ -193,7 +193,7 @@ class Exception extends \Exception
 	 * c. the translation for the default key of the class
 	 * d. the default fallback message of the class
 	 */
-	private function message(): string
+	protected function message(): string
 	{
 		$message =
 			$this->translation($this->key) ??
@@ -208,7 +208,7 @@ class Exception extends \Exception
 	/**
 	 * Puts every lazy property in place
 	 */
-	private function resolve(): void
+	protected function resolve(): void
 	{
 		if (isset($this->code) === false) {
 			$this->code = $this->code();
@@ -238,7 +238,7 @@ class Exception extends \Exception
 	/**
 	 * Translates a single message key
 	 */
-	private function translation(string|null $key): string|array|Closure|null
+	protected function translation(string|null $key): string|array|Closure|null
 	{
 		if ($this->translate === false || $key === null) {
 			return null;
