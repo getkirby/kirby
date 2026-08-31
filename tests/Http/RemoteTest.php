@@ -8,6 +8,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use stdClass;
 
 #[CoversClass(Remote::class)]
@@ -168,6 +169,144 @@ class RemoteTest extends TestCase
 		$request = Remote::get('https://getkirby.com', [
 			'ca' => 'does-not-exist'
 		]);
+	}
+
+	public static function addressProvider(): array
+	{
+		return [
+			// private and reserved ranges are rejected
+			['127.0.0.1', false],
+			['127.1.2.3', false],
+			['10.0.0.5', false],
+			['172.16.9.9', false],
+			['192.168.1.1', false],
+			['169.254.169.254', false],
+			['0.0.0.0', false],
+			['0.1.2.3', false],
+			['240.0.0.1', false],
+			['255.255.255.255', false],
+			['[::]', false],
+			['[::1]', false],
+			['[fc00::1]', false],
+			['[fd12:3456::1]', false],
+			['[fe80::1]', false],
+			['[::ffff:127.0.0.1]', false],
+			['[::ffff:169.254.169.254]', false],
+
+			// public addresses are allowed
+			['1.2.3.4', true],
+			['8.8.8.8', true],
+			['99.255.255.255', true],
+			['223.255.255.255', true],
+			['[2606:4700:4700::1111]', true],
+
+			// deliberately out of scope, in line with
+			// what other SSRF guards cover
+			['100.64.0.1', true],      // shared address space (CGNAT)
+			['100.100.100.200', true], // Alibaba Cloud metadata service
+			['198.18.0.1', true],      // benchmarking
+			['192.0.0.1', true],       // IETF protocol assignments
+			['[2001:db8::1]', true],   // documentation
+			['224.0.0.1', true],       // multicast, unreachable over TCP
+			['[ff02::1]', true],       // multicast, unreachable over TCP
+		];
+	}
+
+	#[DataProvider('addressProvider')]
+	public function testOptionsSafeAddresses(string $host, bool $allowed): void
+	{
+		$url = 'http://' . $host . '/metadata';
+
+		if ($allowed === false) {
+			$this->expectException(InvalidArgumentException::class);
+			$this->expectExceptionMessage('The URL "' . $url . '" is not allowed in safe mode');
+		}
+
+		$request = Remote::get($url, ['safe' => true]);
+
+		// an IP address is validated directly, so nothing is pinned
+		$this->assertArrayNotHasKey(CURLOPT_RESOLVE, $request->curlopt);
+		$this->assertFalse($request->curlopt[CURLOPT_FOLLOWLOCATION]);
+	}
+
+	public function testOptionsSafe(): void
+	{
+		// disabled by default: redirects are followed, nothing pinned
+		$request = Remote::get('https://getkirby.com');
+		$this->assertTrue($request->curlopt[CURLOPT_FOLLOWLOCATION]);
+		$this->assertArrayNotHasKey(CURLOPT_RESOLVE, $request->curlopt);
+
+		// enabled: the resolved addresses are pinned to the host
+		// and port, and redirects are refused
+		$request = new class ('https://api.example.com/data', [
+			'safe' => true,
+			'test' => true
+		]) extends Remote {
+			protected function resolveHost(string $host): array
+			{
+				return ['93.184.216.34', '2606:2800:220:1::1'];
+			}
+		};
+
+		$this->assertSame(
+			['api.example.com:443:93.184.216.34,2606:2800:220:1::1'],
+			$request->curlopt[CURLOPT_RESOLVE]
+		);
+		$this->assertFalse($request->curlopt[CURLOPT_FOLLOWLOCATION]);
+	}
+
+	public function testOptionsSafePort(): void
+	{
+		// the port is taken from the URL, and the scheme is
+		// matched case-insensitively for the default port
+		foreach ([
+			'HTTPS://api.example.com/x'      => 'api.example.com:443:1.2.3.4',
+			'http://api.example.com/x'       => 'api.example.com:80:1.2.3.4',
+			'https://api.example.com:8443/x' => 'api.example.com:8443:1.2.3.4',
+		] as $url => $expected) {
+			$request = new class ($url, ['safe' => true, 'test' => true]) extends Remote {
+				protected function resolveHost(string $host): array
+				{
+					return ['1.2.3.4'];
+				}
+			};
+
+			$this->assertSame([$expected], $request->curlopt[CURLOPT_RESOLVE]);
+		}
+	}
+
+	public function testOptionsSafeBlocksResolvedHost(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('is not allowed in safe mode');
+
+		new class ('https://internal.example.com', ['safe' => true, 'test' => true]) extends Remote {
+			protected function resolveHost(string $host): array
+			{
+				return ['10.0.0.5'];
+			}
+		};
+	}
+
+	public function testOptionsSafeRejectsNonAsciiHost(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('is not allowed in safe mode');
+
+		new class ('https://faß.example.com', ['safe' => true, 'test' => true]) extends Remote {
+			protected function resolveHost(string $host): array
+			{
+				return ['1.2.3.4'];
+			}
+		};
+	}
+
+	public function testOptionsSafeRequiresHost(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The "safe" option can only be used with an absolute URL');
+
+		Remote::get('/relative/path', ['safe' => true]);
 	}
 
 	public function testOptionsProtocols(): void

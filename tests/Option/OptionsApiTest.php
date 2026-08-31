@@ -3,7 +3,9 @@
 namespace Kirby\Option;
 
 use Kirby\Cms\Page;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Http\Remote;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -54,6 +56,44 @@ class OptionsApiTest extends TestCase
 		$this->assertNull($options->query);
 		$this->assertNull($options->text);
 		$this->assertNull($options->value);
+	}
+
+	public function testLoadBlocksInjectedHost(): void
+	{
+		$defaults = Remote::$defaults;
+		Remote::$defaults = [...$defaults, 'test' => true];
+
+		$page = new Page([
+			'slug'    => 'test',
+			'content' => ['host' => '127.0.0.1']
+		]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('is not allowed in safe mode');
+
+		try {
+			$options = new OptionsApi(url: 'http://{{ page.host }}/api.json');
+			$options->load($page);
+		} finally {
+			Remote::$defaults = $defaults;
+		}
+	}
+
+	public function testLoadTrustsBlueprintHost(): void
+	{
+		// a local or intranet host in the blueprint must not be
+		// rejected, only a host injected by a query template is
+		$defaults = Remote::$defaults;
+		Remote::$defaults = [...$defaults, 'test' => true];
+
+		$page    = new Page(['slug' => 'test']);
+		$options = new OptionsApi(url: 'http://127.0.0.1:8080/api.json');
+
+		try {
+			$this->assertNull($options->load($page));
+		} finally {
+			Remote::$defaults = $defaults;
+		}
 	}
 
 	public function testLoadNoJson(): void

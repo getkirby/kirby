@@ -216,6 +216,24 @@ class Url
 	}
 
 	/**
+	 * Whether two URLs point to the same host
+	 *
+	 * @since 6.0.0
+	 */
+	public static function sameHost(
+		string|null $a = null,
+		string|null $b = null
+	): bool {
+		$host = parse_url($a ?? '', PHP_URL_HOST);
+
+		if (is_string($host) === false) {
+			return false;
+		}
+
+		return $host === parse_url($b ?? '', PHP_URL_HOST);
+	}
+
+	/**
 	 * Shortens the Url by removing all unnecessary parts
 	 */
 	public static function short(
