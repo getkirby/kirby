@@ -8,9 +8,9 @@ export default (api: Api) => ({
 	async blueprint(id: string) {
 		return api.get("users/" + id + "/blueprint");
 	},
-	async blueprints(id: string, section: string) {
+	async blueprints(id: string, field: string) {
 		return api.get("users/" + id + "/blueprints", {
-			section: section
+			field: field
 		});
 	},
 	async changeEmail(id: string, email: string) {

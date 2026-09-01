@@ -42,12 +42,12 @@ class ModelViewControllerTest extends TestCase
 				'pages/test' => [
 					'columns' => [
 						[
-							'width'    => '1/3',
-							'sections' => []
+							'width'  => '1/3',
+							'fields' => []
 						],
 						[
-							'width'    => '2/3',
-							'sections' => []
+							'width'  => '2/3',
+							'fields' => []
 						]
 					]
 				]
@@ -102,7 +102,12 @@ class ModelViewControllerTest extends TestCase
 	public function testTab(): void
 	{
 		$controller = new TestModelViewController($this->model);
-		$this->assertSame('main', $controller->tab()['name']);
+		$tab        = $controller->tab();
+
+		$this->assertSame('main', $tab['name']);
+
+		// the active tab is sent with all columns
+		$this->assertCount(2, $tab['columns']);
 
 		$this->app = $this->app->clone([
 			'request' => [
@@ -112,6 +117,7 @@ class ModelViewControllerTest extends TestCase
 			]
 		]);
 
+		// fall back to the first tab for an unknown tab name
 		$controller = new TestModelViewController($this->model);
 		$this->assertSame('main', $controller->tab()['name']);
 	}
@@ -120,8 +126,15 @@ class ModelViewControllerTest extends TestCase
 	{
 		$controller = new TestModelViewController($this->model);
 		$tabs       = $controller->tabs();
+
 		$this->assertCount(1, $tabs);
 		$this->assertSame('main', $tabs[0]['name']);
+
+		// the tab bar only needs the reduced props
+		$this->assertSame(
+			['fields', 'icon', 'label', 'link', 'name'],
+			array_keys($tabs[0])
+		);
 	}
 
 	public function testTitle(): void

@@ -8,13 +8,6 @@
       <code><![CDATA[string|null]]></code>
     </InvalidReturnType>
   </file>
-  <file src="src/Blueprint/Section.php">
-    <UndefinedThisPropertyFetch>
-      <code><![CDATA[$this->errors]]></code>
-      <code><![CDATA[$this->model]]></code>
-      <code><![CDATA[$this->name]]></code>
-    </UndefinedThisPropertyFetch>
-  </file>
   <file src="src/Cms/App.php">
     <InvalidOperand>
       <code><![CDATA[$extensions['collections'] ?? []]]></code>
@@ -224,12 +217,6 @@
     <UndefinedMethod>
       <code><![CDATA[is]]></code>
     </UndefinedMethod>
-  </file>
-  <file src="src/Guards/PageValidators.php">
-    <RedundantCondition>
-      <code><![CDATA[$allowed !== []]]></code>
-      <code><![CDATA[$allowed !== []]]></code>
-    </RedundantCondition>
   </file>
   <file src="src/Http/Cookie.php">
     <InvalidArgument>

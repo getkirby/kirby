@@ -149,7 +149,7 @@ export default {
 				this.$events.emit("model.update");
 
 				// the view needs to be refreshed to get an updated set of props
-				// this will also rerender sections if needed
+				// this will also rerender fields if needed
 				await this.$panel.view.refresh();
 			} catch (error) {
 				this.$panel.notification.error(error);

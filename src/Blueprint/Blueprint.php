@@ -10,10 +10,8 @@ use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
-use Kirby\Form\Field\SectionField;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
-use Kirby\Toolkit\Str;
 
 /**
  * The Blueprint class gives access to all settings
@@ -27,15 +25,22 @@ class Blueprint
 {
 	public static array $loaded = [];
 
+	/**
+	 * Cache of blueprints with fully normalized props,
+	 * keyed by class, name and fallback. The normalized
+	 * props are model- and language-agnostic, so they can
+	 * be shared between all models of the same blueprint.
+	 *
+	 * @var array<string, static>
+	 */
+	public static array $normalized = [];
+
 	protected AcceptRules|null $acceptRules = null;
 
-	// Props of all fields in the blueprint
-	protected array $fields = [];
-	protected array|null $fieldsLower = null;
+	protected FieldsRegistry $fields;
 	protected ModelWithContent $model;
 	protected array $props;
-	protected array $sections = [];
-	protected array $tabs = [];
+	protected Tabs|null $tabs = null;
 
 	/**
 	 * Magic getter/caller for any blueprint prop
@@ -43,6 +48,17 @@ class Blueprint
 	public function __call(string $key, array|null $arguments = null): mixed
 	{
 		return $this->props[$key] ?? null;
+	}
+
+	/**
+	 * Resets all caches that are bound to a single model
+	 *
+	 * @since 6.0.0
+	 */
+	public function __clone()
+	{
+		$this->acceptRules = null;
+		$this->tabs        = null;
 	}
 
 	/**
@@ -71,14 +87,11 @@ class Blueprint
 
 		// convert all shortcuts and normalize the props
 		$normalizer = new Normalizer(
-			model: $this->model,
 			props: $props
 		);
 
-		$this->fields   = $normalizer->fields();
-		$this->props    = $normalizer->props();
-		$this->sections = $normalizer->sections();
-		$this->tabs     = $normalizer->tabs();
+		$this->fields = $normalizer->fields();
+		$this->props  = $normalizer->props();
 	}
 
 	/**
@@ -105,9 +118,9 @@ class Blueprint
 	 * Gathers what file templates are allowed in
 	 * this model based on the blueprint
 	 */
-	public function acceptedFileTemplates(string|null $inSection = null): array
+	public function acceptedFileTemplates(string|null $inField = null): array
 	{
-		return $this->acceptRules()->fileTemplates($inSection);
+		return $this->acceptRules()->fileTemplates($inField);
 	}
 
 	/**
@@ -155,24 +168,43 @@ class Blueprint
 	 * Create a new blueprint for a model
 	 */
 	public static function factory(
+		ModelWithContent $model,
 		string $name,
-		string|null $fallback,
-		ModelWithContent $model
+		string|null $fallback = null
 	): static|null {
-		try {
-			$props = static::load($name);
-		} catch (Exception) {
-			$props = $fallback !== null ? static::load($fallback) : null;
+		$shared = static::class . '/' . $name . '/';
+		$key    = $shared;
+
+		// a blueprint that resolves by its own name never consults
+		// the fallback and is shared by all fallback variants
+		if (isset(static::$normalized[$shared]) === false) {
+			$key = $shared . $fallback;
 		}
 
-		if ($props === null) {
-			return null;
+		if (isset(static::$normalized[$key]) === false) {
+			try {
+				$props = static::load($name);
+				$key   = $shared;
+			} catch (Exception) {
+				$props = $fallback !== null ? static::load($fallback) : null;
+			}
+
+			if ($props === null) {
+				return null;
+			}
+
+			// inject the parent model
+			$props['model'] = $model;
+
+			static::$normalized[$key] = new static($props);
 		}
 
-		// inject the parent model
-		$props['model'] = $model;
+		// hand out a copy, so that the cached blueprint
+		// keeps its normalized props untouched
+		$blueprint        = clone static::$normalized[$key];
+		$blueprint->model = $model;
 
-		return new static($props);
+		return $blueprint;
 	}
 
 	/**
@@ -180,13 +212,7 @@ class Blueprint
 	 */
 	public function field(string $name): array|null
 	{
-		if (isset($this->fields[$name]) === true) {
-			return $this->fields[$name];
-		}
-
-		// field objects use normalized lowercase keys
-		$this->fieldsLower ??= array_change_key_case($this->fields);
-		return $this->fieldsLower[Str::lower($name)] ?? null;
+		return $this->fields->get($name);
 	}
 
 	/**
@@ -219,7 +245,7 @@ class Blueprint
 	 */
 	public function fields(): array
 	{
-		return $this->fields;
+		return $this->fields->toArray();
 	}
 
 	/**
@@ -227,7 +253,7 @@ class Blueprint
 	 * types and widths.
 	 * Facade for `Normalizer::normalizeFieldsProps()`
 	 *
-	 * @return array<string, array>
+	 * @return array<string|int, array>
 	 */
 	public static function fieldsProps(mixed $fields): array
 	{
@@ -315,12 +341,6 @@ class Blueprint
 		// inject the filename as name if no name is set
 		$props['name'] ??= $name;
 
-		// normalize the title
-		$title = $props['title'] ?? Str::label($props['name']);
-
-		// translate the title
-		$props['title'] = I18n::translate($title) ?? $title;
-
 		return $props;
 	}
 
@@ -390,93 +410,41 @@ class Blueprint
 	}
 
 	/**
-	 * Returns a single section by name
-	 */
-	public function section(string $name): Section|null
-	{
-		if (empty($this->sections[$name]) === true) {
-			return $this->sectionFromField($name);
-		}
-
-		if ($this->sections[$name] instanceof Section) {
-			return $this->sections[$name]; //@codeCoverageIgnore
-		}
-
-		// get all props
-		$props = $this->sections[$name];
-
-		// inject the blueprint model
-		$props['model'] = $this->model();
-
-		// create a new section object
-		return $this->sections[$name] = new Section($props['type'], $props);
-	}
-
-	/**
-	 * Creates a section from a field with the `section` type
+	 * Clears all blueprint caches
+	 *
 	 * @since 6.0.0
 	 */
-	protected function sectionFromField(string $name): Section|null
+	public static function reset(): void
 	{
-		$props = $this->field($name);
-
-		if ($props === null || $props['type'] !== 'section') {
-			return null;
-		}
-
-		unset($props['type']);
-
-		$field = new SectionField(...$props);
-		$field->setModel($this->model());
-
-		// cache the section under the original field name
-		return $this->sections[$props['name']] = $field->section();
+		static::$loaded     = [];
+		static::$normalized = [];
 	}
 
 	/**
-	 * Returns all sections
-	 *
-	 * @return array<string, Section>
+	 * Returns a single tab by name or the
+	 * first tab if no name is given
 	 */
-	public function sections(): array
+	public function tab(string|null $name = null): Tab|null
 	{
-		$sections = A::map(
-			$this->sections,
-			fn ($section) => match (true) {
-				$section instanceof Section => $section,
-				default                     => $this->section($section['name'])
-			}
-		);
+		$tabs = $this->tabs();
 
-		// sections that are defined as fields are not part of the
-		// section definitions and need to be collected separately
-		foreach ($this->fields as $name => $field) {
-			if ($field['type'] === 'section') {
-				$sections[$name] ??= $this->section($name);
-			}
-		}
-
-		return $sections;
-	}
-
-	/**
-	 * Returns a single tab by name
-	 */
-	public function tab(string|null $name = null): array|null
-	{
 		if ($name === null) {
-			return A::first($this->tabs);
+			return $tabs->first();
 		}
 
-		return $this->tabs[$name] ?? null;
+		return $tabs->get($name);
 	}
 
 	/**
-	 * Returns all tabs
+	 * Creates and caches the collection of all tabs
+	 * from the normalized tab props
 	 */
-	public function tabs(): array
+	public function tabs(): Tabs
 	{
-		return array_values($this->tabs);
+		return $this->tabs ??= new Tabs(
+			tabs: $this->props['tabs'] ?? [],
+			model: $this->model
+		);
 	}
 
 	/**
@@ -484,7 +452,7 @@ class Blueprint
 	 */
 	public function title(): string
 	{
-		return $this->props['title'];
+		return $this->i18n($this->props['title']);
 	}
 
 	/**
@@ -492,6 +460,10 @@ class Blueprint
 	 */
 	public function toArray(): array
 	{
-		return $this->props;
+		return [
+			...$this->props,
+			'tabs'  => $this->tabs()->toArray(),
+			'title' => $this->title()
+		];
 	}
 }

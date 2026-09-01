@@ -2,7 +2,6 @@
 
 namespace Kirby\Panel;
 
-use Kirby\Blueprint\Blueprint;
 use Kirby\Cms\App;
 use Kirby\Cms\User as ModelUser;
 use Kirby\Content\Lock;
@@ -32,8 +31,6 @@ class UserTest extends TestCase
 
 	protected function setUp(): void
 	{
-		Blueprint::$loaded = [];
-
 		$this->app = new App([
 			'roots' => [
 				'index' => static::TMP,

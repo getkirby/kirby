@@ -124,36 +124,32 @@ describe("$helper.field", () => {
 	});
 
 	describe("subfields()", () => {
-		it("should set the section on each subfield", () => {
-			const result = subfields(
-				{ name: "structure" },
-				{ title: { type: "text" }, age: { type: "number" } }
-			);
+		it("should pass all subfields through when the field has no endpoints", () => {
+			const fields = { title: { type: "text" }, age: { type: "number" } };
 
-			expect(result.title.section).toBe("structure");
-			expect(result.age.section).toBe("structure");
-			expect(result.title.endpoints).toBeUndefined();
+			expect(subfields({ name: "structure" }, fields)).toEqual(fields);
 		});
 
-		it("should rewrite endpoints when the field has endpoints", () => {
+		it("should give each subfield its own endpoint", () => {
 			const result = subfields(
 				{
 					name: "structure",
 					endpoints: {
 						field: "pages/x/fields/structure",
-						section: "content",
 						model: "pages/x"
 					}
 				},
-				{ title: { type: "text" } }
+				{ title: { type: "text" }, age: { type: "number" } }
 			);
 
 			expect(result.title.endpoints).toEqual({
 				field: "pages/x/fields/structure+title",
-				section: "content",
 				model: "pages/x"
 			});
-			expect(result.title.section).toBe("structure");
+			expect(result.age.endpoints).toEqual({
+				field: "pages/x/fields/structure+age",
+				model: "pages/x"
+			});
 		});
 
 		it("should return an empty object for empty fields", () => {

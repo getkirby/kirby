@@ -2,14 +2,24 @@
 
 namespace Kirby\Form;
 
+use Kirby\Cms\Language;
 use Kirby\Cms\Page;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Field\HiddenField;
+use Kirby\Form\Field\InfoField;
 use Kirby\Form\Field\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 class MockField extends Field
 {
+}
+
+class BrokenField extends Field
+{
+	public function props(): array
+	{
+		throw new InvalidArgumentException(message: 'Broken props');
+	}
 }
 
 #[CoversClass(Field::class)]
@@ -31,6 +41,17 @@ class FieldTest extends TestCase
 	{
 		$field = new MockField();
 		$this->assertSame([], $field->drawers());
+	}
+
+	public function testError(): void
+	{
+		$field = Field::error('test', 'Something went wrong');
+
+		$this->assertInstanceOf(InfoField::class, $field);
+		$this->assertSame('test', $field->name());
+		$this->assertSame('Error', $field->label());
+		$this->assertSame('negative', $field->theme());
+		$this->assertSame('<p>Something went wrong</p>', (string)$field->text());
 	}
 
 	public function testErrors(): void
@@ -90,10 +111,50 @@ class FieldTest extends TestCase
 		$this->assertTrue($field->hasValue());
 	}
 
+	public function testIsActive(): void
+	{
+		$fields = new Fields([
+			'a' => ['type' => 'text', 'value' => 'b'],
+			'b' => ['type' => 'text', 'when' => ['a' => 'b']],
+		]);
+
+		$this->assertTrue($fields->get('b')->isActive());
+	}
+
+	public function testIsActiveWithFieldWithoutValue(): void
+	{
+		$fields = new Fields([
+			'a' => ['type' => 'info'],
+			'b' => ['type' => 'text', 'when' => ['a' => true]],
+		]);
+
+		$this->assertFalse($fields->get('b')->isActive());
+	}
+
+	public function testIsActiveWithMissingField(): void
+	{
+		$fields = new Fields([
+			'b' => ['type' => 'text', 'when' => ['a' => true]],
+		]);
+
+		$this->assertFalse($fields->get('b')->isActive());
+	}
+
 	public function testisHidden(): void
 	{
 		$field = new MockField();
 		$this->assertFalse($field->isHidden());
+	}
+
+	public function testIsSubmittable(): void
+	{
+		// fields without a value are never submitted
+		$field = new MockField();
+		$this->assertFalse($field->isSubmittable(Language::ensure()));
+
+		// `Kirby\Form\Mixin\Value` overwrites the default
+		$field = $this->field('text', ['name' => 'test']);
+		$this->assertTrue($field->isSubmittable(Language::ensure()));
 	}
 
 	public function testLabel(): void
@@ -217,5 +278,19 @@ class FieldTest extends TestCase
 		];
 
 		$this->assertSame($expected, $array);
+	}
+
+	public function testToArrayWithBrokenProps(): void
+	{
+		// a field that cannot resolve its props is replaced
+		// by an info field with the error message
+		$field = new BrokenField(name: 'test');
+		$array = $field->toArray();
+
+		$this->assertSame('info', $array['type']);
+		$this->assertSame('test', $array['name']);
+		$this->assertSame('Error', $array['label']);
+		$this->assertSame('negative', $array['theme']);
+		$this->assertSame('<p>Broken props</p>', (string)$array['text']);
 	}
 }

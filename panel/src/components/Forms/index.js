@@ -5,6 +5,7 @@ import Fieldset from "./Fieldset.vue";
 import Form from "./Form.vue";
 import FormControls from "./FormControls.vue";
 import Input from "./Input.vue";
+import ModelForm from "./ModelForm.vue";
 
 /* Form parts */
 import Blocks from "./Blocks/index.js";
@@ -14,6 +15,8 @@ import Layouts from "./Layouts/index.js";
 import Previews from "./Previews/index.js";
 import Toolbar from "./Toolbar/index.js";
 
+import Validator from "./Validator";
+
 export default {
 	install(app) {
 		app.component("k-counter", Counter);
@@ -22,6 +25,7 @@ export default {
 		app.component("k-form", Form);
 		app.component("k-form-controls", FormControls);
 		app.component("k-input", Input);
+		app.component("k-model-form", ModelForm);
 
 		app.use(Blocks);
 		app.use(Inputs);
@@ -29,5 +33,7 @@ export default {
 		app.use(Layouts);
 		app.use(Previews);
 		app.use(Toolbar);
+
+		customElements.define("k-validator", Validator);
 	}
 };

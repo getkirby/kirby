@@ -116,21 +116,21 @@ class FilePermissionsTest extends ModelTestCase
 		$this->app = $this->app->clone([
 			'blueprints' => [
 				'pages/test' => [
-					'sections' => [
-						'section-a' => [
-							'type' => 'files',
-							'template' => 'for-section/a'
+					'fields' => [
+						'list-a' => [
+							'type'     => 'filelist',
+							'template' => 'for-list/a'
 						],
-						'section-b' => [
-							'type' => 'files',
-							'template' => 'for-section/b'
+						'list-b' => [
+							'type'     => 'filelist',
+							'template' => 'for-list/b'
 						]
 					]
 				],
-				'files/for-section/a' => [
+				'files/for-list/a' => [
 					'title' => 'Type A'
 				],
-				'files/for-section/b' => [
+				'files/for-list/b' => [
 					'title' => 'Type B'
 				]
 			]
@@ -149,9 +149,9 @@ class FilePermissionsTest extends ModelTestCase
 		$this->app = $this->app->clone([
 			'blueprints' => [
 				'pages/test' => [
-					'sections' => [
+					'fields' => [
 						'files' => [
-							'type' => 'files',
+							'type' => 'filelist',
 							// No template specified - should get all available
 						]
 					]

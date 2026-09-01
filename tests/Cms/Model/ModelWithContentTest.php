@@ -75,10 +75,10 @@ class BlueprintsModelWithContent extends ExtendedModelWithContent
 			'title'  => 'Model',
 			'columns' => [
 				[
-					'sections' => [
+					'fields' => [
 						'pages' => [
 							'name' => 'pages',
-							'type' => 'pages',
+							'type' => 'pagelist',
 							'parent' => 'site',
 							'templates' => [
 								'foo',
@@ -87,7 +87,7 @@ class BlueprintsModelWithContent extends ExtendedModelWithContent
 						],
 						'menu' => [
 							'name' => 'menu',
-							'type' => 'pages',
+							'type' => 'pagelist',
 							'parent' => 'site',
 							'templates' => [
 								'home',
@@ -466,7 +466,7 @@ class ModelWithContentTest extends TestCase
 			]
 		], $model->blueprints('menu'));
 
-		// non-existing section
+		// non-existing field
 		$this->assertSame([], $model->blueprints('foo'));
 	}
 

@@ -2,7 +2,6 @@
 
 namespace Kirby\Panel;
 
-use Kirby\Blueprint\Blueprint;
 use Kirby\Cms\App;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase as BaseTestCase;
@@ -20,8 +19,6 @@ abstract class TestCase extends BaseTestCase
 				'index' => static::TMP,
 			]
 		]);
-
-		Blueprint::$loaded = [];
 	}
 
 	protected function tearDown(): void

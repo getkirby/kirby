@@ -247,9 +247,9 @@ class PageValidatorsTest extends ModelTestCase
 		$this->app = $this->app->clone([
 			'blueprints' => [
 				'pages/parent' => [
-					'sections' => [
+					'fields' => [
 						'subpages' => [
-							'type'     => 'pages',
+							'type'     => 'pagelist',
 							'template' => 'child'
 						]
 					]
@@ -328,12 +328,12 @@ class PageValidatorsTest extends ModelTestCase
 		$validators->validateMoveTo($this->app->page('parent-b'));
 	}
 
-	public function testMoveToTemplateWithoutPagesSections(): void
+	public function testMoveToTemplateWithoutPagesFields(): void
 	{
 		$this->app = $this->app->clone([
 			'blueprints' => [
 				'pages/parent' => [
-					'sections' => [
+					'fields' => [
 						'info' => ['type' => 'info']
 					]
 				]
@@ -349,9 +349,45 @@ class PageValidatorsTest extends ModelTestCase
 		$validators = $this->validators($this->app->page('parent-a'));
 
 		$this->expectException(LogicException::class);
-		$this->expectExceptionCode('error.page.move.noSections');
+		$this->expectExceptionCode('error.page.move.noBlueprints');
 
 		$validators->validateMoveToTemplate($this->app->page('parent-b'));
+	}
+
+	public function testMoveToTemplateWithDuplicateName(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/parent' => [
+					'sections' => [
+						'photos' => [
+							'type'     => 'pages',
+							'template' => 'child'
+						],
+						'details' => [
+							'type'   => 'fields',
+							'fields' => [
+								'photos' => ['type' => 'text']
+							]
+						]
+					]
+				]
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'parent-a', 'template' => 'child'],
+					['slug' => 'parent-b', 'template' => 'parent']
+				]
+			]
+		]);
+
+		$validators = $this->validators($this->app->page('parent-a'));
+
+		// the pages section claimed the name first, so it keeps its
+		// page list field and the parent stays parentable
+		$validators->validateMoveToTemplate($this->app->page('parent-b'));
+
+		$this->assertTrue(true);
 	}
 
 	public function testMoveToTemplateWithInvalidTemplate(): void
@@ -359,9 +395,9 @@ class PageValidatorsTest extends ModelTestCase
 		$this->app = $this->app->clone([
 			'blueprints' => [
 				'pages/parent' => [
-					'sections' => [
+					'fields' => [
 						'subpages' => [
-							'type'      => 'pages',
+							'type'      => 'pagelist',
 							'templates' => ['album']
 						]
 					]

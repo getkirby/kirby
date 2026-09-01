@@ -116,7 +116,15 @@
 	"error.email.preset.notFound": "The email preset \"{name}\" cannot be found",
 
 	"error.field.converter.invalid": "Invalid converter \"{converter}\"",
+	"error.field.filelist.max.plural": "You must not add more than {max} files to the \"{field}\" field",
+	"error.field.filelist.max.singular": "You must not add more than one file to the \"{field}\" field",
+	"error.field.filelist.min.plural": "The \"{field}\" field requires at least {min} files",
+	"error.field.filelist.min.singular": "The \"{field}\" field requires at least one file",
 	"error.field.link.options": "Invalid options: {options}",
+	"error.field.pagelist.max.plural": "You must not add more than {max} pages to the \"{field}\" field",
+	"error.field.pagelist.max.singular": "You must not add more than one page to the \"{field}\" field",
+	"error.field.pagelist.min.plural": "The \"{field}\" field requires at least {min} pages",
+	"error.field.pagelist.min.singular": "The \"{field}\" field requires at least one page",
 	"error.field.type.missing": "Field \"{ name }\": The field type \"{ type }\" does not exist",
 
 	"error.file.changeName.empty": "The name must not be empty",
@@ -214,7 +222,7 @@
 	"error.page.move.duplicate": "A sub page with the URL appendix \"{slug}\" already exists",
 	"error.page.move.errorPage": "The error page cannot be moved",
 	"error.page.move.homePage": "The home page cannot be moved",
-	"error.page.move.noSections": "The page \"{parent}\" cannot be a parent of any page because it lacks any pages sections in its blueprint",
+	"error.page.move.noBlueprints": "The page \"{parent}\" cannot be a parent of any page because it lacks any pages fields in its blueprint",
 	"error.page.move.notFound": "The moved page could not be found",
 	"error.page.move.permission": "You are not allowed to move \"{slug}\"",
 	"error.page.move.template": "The \"{template}\" template is not accepted as a subpage of \"{parent}\"",
@@ -231,19 +239,6 @@
 	"error.page.update.permission": "You are not allowed to update \"{slug}\"",
 
 	"error.role.notFound": "The role \"{name}\" cannot be found",
-
-	"error.section.files.max.plural": "You must not add more than {max} files to the \"{section}\" section",
-	"error.section.files.max.singular": "You must not add more than one file to the \"{section}\" section",
-	"error.section.files.min.plural": "The \"{section}\" section requires at least {min} files",
-	"error.section.files.min.singular": "The \"{section}\" section requires at least one file",
-
-	"error.section.pages.max.plural": "You must not add more than {max} pages to the \"{section}\" section",
-	"error.section.pages.max.singular": "You must not add more than one page to the \"{section}\" section",
-	"error.section.pages.min.plural": "The \"{section}\" section requires at least {min} pages",
-	"error.section.pages.min.singular": "The \"{section}\" section requires at least one page",
-
-	"error.section.notLoaded": "The section \"{name}\" could not be loaded",
-	"error.section.type.invalid": "The section type \"{type}\" is not valid",
 
 	"error.site.changeTitle.empty": "The title must not be empty",
 	"error.site.changeTitle.permission": "You are not allowed to change the title of the site",
@@ -746,9 +741,6 @@
 	"search.all": "Show all {count} results",
 	"search.results.none": "No results",
 
-	"section.invalid": "The section is invalid",
-	"section.required": "The section is required",
-
 	"security": "Security",
 	"select": "Select",
 	"select.all": "Select all",
@@ -853,7 +845,7 @@
 	"url.placeholder": "https://example.com",
 
 	"user": "User",
-	"user.blueprint": "You can define additional sections and form fields for this user role in <strong>/site/blueprints/users/{blueprint}.yml</strong>",
+	"user.blueprint": "You can define additional form fields for this user role in <strong>/site/blueprints/users/{blueprint}.yml</strong>",
 	"user.changeEmail": "Change email",
 	"user.changeLanguage": "Change language",
 	"user.changeName": "Rename this user",
