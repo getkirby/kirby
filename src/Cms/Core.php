@@ -58,6 +58,14 @@ use Kirby\Panel\Ui\FilePreview\AudioFilePreview;
 use Kirby\Panel\Ui\FilePreview\ImageFilePreview;
 use Kirby\Panel\Ui\FilePreview\PdfFilePreview;
 use Kirby\Panel\Ui\FilePreview\VideoFilePreview;
+use Kirby\Text\Tag\DateTag;
+use Kirby\Text\Tag\EmailTag;
+use Kirby\Text\Tag\FileTag;
+use Kirby\Text\Tag\GistTag;
+use Kirby\Text\Tag\ImageTag;
+use Kirby\Text\Tag\LinkTag;
+use Kirby\Text\Tag\TelTag;
+use Kirby\Text\Tag\VideoTag;
 
 /**
  * The Core class lists all parts of Kirby
@@ -304,12 +312,19 @@ class Core
 
 	/**
 	 * Returns an array of all kirbytag definitions
-	 *
-	 * They are located in `/kirby/config/tags.php`
 	 */
 	public function kirbyTags(): array
 	{
-		return $this->cache['kirbytags'] ??= F::load($this->root . '/tags.php');
+		return [
+			'date'  => DateTag::class,
+			'email' => EmailTag::class,
+			'file'  => FileTag::class,
+			'gist'  => GistTag::class,
+			'image' => ImageTag::class,
+			'link'  => LinkTag::class,
+			'tel'   => TelTag::class,
+			'video' => VideoTag::class,
+		];
 	}
 
 	/**

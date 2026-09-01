@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Text\Tag\VideoTag;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Loader::class)]
@@ -104,8 +105,7 @@ class LoaderTest extends TestCase
 	{
 		$extension = $this->loader->extension('tags', 'video');
 
-		$this->assertArrayHasKey('attr', $extension);
-		$this->assertInstanceOf('Closure', $extension['html']);
+		$this->assertSame(VideoTag::class, $extension);
 	}
 
 	public function testExtensions(): void
