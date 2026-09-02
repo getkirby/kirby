@@ -142,6 +142,97 @@ class ChangesTest extends TestCase
 		], $changes);
 	}
 
+	public function testSaveWithEmptyChanges(): void
+	{
+		$this->app->impersonate('kirby');
+
+		Data::write($this->page->root() . '/article.txt', [
+			// title and uuid are only passed through and would be
+			// the first values to get lost
+			'title' => 'Test',
+			'text'  => 'Published text',
+			'uuid'  => 'test'
+		]);
+
+		// a changes version that exists but reads back empty. A parallel
+		// request that discards the version leaves exactly this state
+		// behind between our `exists()` check and the read.
+		Data::write($file = $this->page->root() . '/_changes/article.txt', []);
+
+		$response = Changes::save($this->page, [
+			'text' => 'New text'
+		]);
+
+		$this->assertSame(['status' => 'ok'], $response);
+
+		// the existing content must be taken from the latest version
+		// instead of being overwritten with nothing
+		$this->assertSame([
+			'title' => 'Test',
+			'text'  => 'New text',
+			'uuid'  => 'test',
+			'lock'  => 'kirby'
+		], Data::read($file));
+	}
+
+	public function testSaveWithEmptyChangesMultiLang(): void
+	{
+		$this->setUpMultiLanguage(site: [
+			'children' => [
+				[
+					'slug'      => 'article',
+					'template'  => 'article',
+					'blueprint' => [
+						'fields' => [
+							'text' => [
+								'type' => 'text'
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$page = $this->app->page('article');
+		$this->app->impersonate('kirby');
+
+		Data::write($page->root() . '/article.en.txt', [
+			'title' => 'English title',
+			'text'  => 'English text',
+			'uuid'  => 'test'
+		]);
+
+		Data::write($page->root() . '/article.de.txt', [
+			'title' => 'German title',
+			'text'  => 'German text'
+		]);
+
+		// the English editor has unsaved changes …
+		Data::write($page->root() . '/_changes/article.en.txt', [
+			'title' => 'English title',
+			'text'  => 'English draft',
+			'uuid'  => 'test'
+		]);
+
+		// … while the German changes version reads back empty
+		Data::write($de = $page->root() . '/_changes/article.de.txt', []);
+
+		$this->app->setCurrentLanguage('de');
+
+		Changes::save($page, [
+			'text' => 'German draft'
+		]);
+
+		// `Version::content()` fills missing fields from the default language,
+		// so an empty read must not be mistaken for an untranslated page –
+		// otherwise the English content ends up in the German version
+		$this->assertSame([
+			'title' => 'German title',
+			'text'  => 'German draft',
+			'lock'  => 'kirby'
+		], Data::read($de));
+	}
+
 	public function testSaveWithNoDiff(): void
 	{
 		$this->app->impersonate('kirby');
