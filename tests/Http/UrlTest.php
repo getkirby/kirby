@@ -141,6 +141,43 @@ class UrlTest extends TestCase
 		$this->assertSame('http://getkirby.com', Url::base('http://getkirby.com/docs/cheatsheet'));
 	}
 
+	public static function normalizeProvider(): array
+	{
+		return [
+			// unchanged
+			['', ''],
+			['https://getkirby.com', 'https://getkirby.com'],
+			['#fragment', '#fragment'],
+
+			// leading/trailing C0 control characters and spaces are trimmed
+			[' //test', '//test'],
+			["\x00//test", '//test'],
+			["\x0c//test", '//test'],
+			['//test  ', '//test'],
+			["  //test\x1f", '//test'],
+
+			// ASCII tab and newlines are removed from anywhere
+			["\t//test", '//test'],
+			["\n//test", '//test'],
+			["\r//test", '//test'],
+			["/\t/test", '//test'],
+			["..\t/some/path", '../some/path'],
+			["java\tscript:alert()", 'javascript:alert()'],
+
+			// spaces inside the URL are kept, just like in the browser
+			['tel:+49 (0) 1234 5678', 'tel:+49 (0) 1234 5678'],
+			[' some/pa th ', 'some/pa th'],
+		];
+	}
+
+	/**
+	 * @dataProvider normalizeProvider
+	 */
+	public function testNormalize(string $url, string $expected): void
+	{
+		$this->assertSame($expected, Url::normalize($url));
+	}
+
 	public function testPath()
 	{
 		// stripped

@@ -14,6 +14,7 @@ use DOMText;
 use DOMXPath;
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Http\Url;
 
 /**
  * Helper class for DOM handling using the DOMDocument class
@@ -282,7 +283,7 @@ class Dom
 	): bool|string {
 		$options = static::normalizeSanitizeOptions($options);
 
-		$url = Str::lower($url);
+		$url = Str::lower(Url::normalize($url));
 
 		// allow empty URL values
 		if (empty($url) === true) {

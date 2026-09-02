@@ -193,6 +193,18 @@ class SvgTest extends TestCase
 		Svg::validateFile($fixture);
 	}
 
+	public function testDisallowedProtocolRelativeWhitespace(): void
+	{
+		$fixture   = $this->fixture('disallowed/protocol-relative-whitespace.svg');
+		$sanitized = $this->fixture('sanitized/protocol-relative-whitespace.svg');
+
+		$this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The URL is not allowed in attribute "href" (line 2): Protocol-relative URLs are not allowed');
+		Svg::validateFile($fixture);
+	}
+
 	public function testDisallowedOnclickAttr()
 	{
 		$fixture   = "<svg>\n<path onclick='alert(1)' />\n</svg>";
@@ -250,6 +262,18 @@ class SvgTest extends TestCase
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Nested "use" elements are not allowed (used in line 18)');
+		Svg::validateFile($fixture);
+	}
+
+	public function testDisallowedUseAttackWhitespace(): void
+	{
+		$fixture   = $this->fixture('disallowed/use-attack-whitespace.svg');
+		$sanitized = $this->fixture('sanitized/use-attack-whitespace.svg');
+
+		$this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Nested "use" elements are not allowed (used in line 14)');
 		Svg::validateFile($fixture);
 	}
 
