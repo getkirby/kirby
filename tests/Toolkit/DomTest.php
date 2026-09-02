@@ -994,6 +994,43 @@ class DomTest extends TestCase
 
 			// forbidden URL type
 			['my-amazing-protocol://test', 'Unknown URL type'],
+
+			// forbidden protocol-relative URL with leading whitespace
+			// that the browser strips before it parses the URL
+			[' //test', 'Protocol-relative URLs are not allowed'],
+			["\t//test", 'Protocol-relative URLs are not allowed'],
+			["\n//test", 'Protocol-relative URLs are not allowed'],
+			["\r//test", 'Protocol-relative URLs are not allowed'],
+			["\x00//test", 'Protocol-relative URLs are not allowed'],
+			["\x0c//test", 'Protocol-relative URLs are not allowed'],
+			["/\t/test", 'Protocol-relative URLs are not allowed'],
+
+			// forbidden relative URL with whitespace inside the
+			// `../` sequence that the browser strips
+			["..\t/some/path", 'The ../ sequence is not allowed in relative URLs'],
+			["..\n/some/path", 'The ../ sequence is not allowed in relative URLs'],
+			[".\r./some/path", 'The ../ sequence is not allowed in relative URLs'],
+			["some/..\t/../path", 'The ../ sequence is not allowed in relative URLs'],
+
+			// forbidden URL type with leading whitespace
+			[' javascript:alert()', 'Unknown URL type'],
+			["java\tscript:alert()", 'Unknown URL type'],
+
+			// forbidden URL when no domains are accepted, with leading whitespace
+			[' https://getkirby.com', 'The hostname "getkirby.com" is not allowed', [
+				'allowedDomains' => []
+			]],
+
+			// allowed values are unaffected by the normalization
+			[' #test-fragment', true],
+			[' some/path', true],
+			['  ', true],
+			[' mailto:test@getkirby.com', true],
+			[' data:image/jpeg;base64,test', true, [
+				'allowedDataUris' => [
+					'data:image/jpeg;base64'
+				]
+			]],
 		];
 	}
 
@@ -1038,6 +1075,13 @@ class DomTest extends TestCase
 
 			// disallowed URL with directory traversal
 			['/site', '/site/../some/path', false, 'The ../ sequence is not allowed in relative URLs'],
+
+			// leading whitespace must not skip the site index URL check
+			['https://getkirby.com/site', ' /some/path', false, 'The URL points outside of the site index URL'],
+			['/site', "\t/some/path", false, 'The URL points outside of the site index URL'],
+
+			// whitespace must not skip the directory traversal check
+			['/site', "/site/..\t/some/path", false, 'The ../ sequence is not allowed in relative URLs'],
 		];
 	}
 
