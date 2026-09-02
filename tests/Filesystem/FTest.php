@@ -607,6 +607,60 @@ class FTest extends TestCase
 		$this->assertFalse(F::read('https://example.com/some-file.jpg'));
 	}
 
+	public function testReadLocked(): void
+	{
+		file_put_contents($this->test, $content = 'my content is awesome');
+
+		$this->assertSame($content, F::read($this->test, lock: true));
+	}
+
+	public function testReadLockedEmptyFile(): void
+	{
+		file_put_contents($this->test, '');
+
+		$this->assertSame('', F::read($this->test, lock: true));
+	}
+
+	public function testReadLockedInvalidFile(): void
+	{
+		$this->assertFalse(F::read('invalid file', lock: true));
+	}
+
+	public function testReadLockedRemoteFile(): void
+	{
+		$this->assertFalse(F::read('https://example.com/some-file.jpg', lock: true));
+	}
+
+	public function testReadLockedEmptyPath(): void
+	{
+		$this->assertFalse(F::read('', lock: true));
+	}
+
+	public function testReadLockedLargeFile(): void
+	{
+		// the locked read must return the entire file and
+		// not just the first chunk of the stream
+		file_put_contents($this->test, $content = str_repeat('kirby', 100000));
+
+		$this->assertSame($content, F::read($this->test, lock: true));
+	}
+
+	public function testReadLockedReleasesLock(): void
+	{
+		file_put_contents($this->test, 'my content is awesome');
+
+		F::read($this->test, lock: true);
+
+		// an exclusive, non-blocking lock can only be acquired
+		// if the read released its shared lock again
+		$handle = fopen($this->test, 'r+');
+
+		$this->assertTrue(flock($handle, LOCK_EX | LOCK_NB));
+
+		flock($handle, LOCK_UN);
+		fclose($handle);
+	}
+
 	public function testRemove(): void
 	{
 		F::write($a = static::TMP . '/a.jpg', '');
@@ -891,6 +945,42 @@ class FTest extends TestCase
 
 		// must not contain trailing bytes from the original
 		$this->assertSame('short', file_get_contents($this->test));
+	}
+
+	public function testUpdateDoesNotTruncateEarly(): void
+	{
+		F::write($this->test, 'original');
+
+		$size = null;
+
+		F::update($this->test, function () use (&$size): string {
+			// `file_put_contents()` with `LOCK_EX` opens the stream in
+			// mode `w` and has therefore already emptied the file by the
+			// time it takes the lock. `F::update()` must not, so that a
+			// concurrent reader can never observe the file truncated.
+			clearstatcache();
+			$size = filesize($this->test);
+
+			return 'replacement';
+		});
+
+		$this->assertSame(8, $size);
+		$this->assertSame('replacement', file_get_contents($this->test));
+	}
+
+	public function testUpdateNotWritable(): void
+	{
+		F::write($this->test, 'original');
+		chmod($this->test, 0444);
+
+		try {
+			$this->expectException(Exception::class);
+			$this->expectExceptionMessage('The file "' . $this->test . '" is not writable');
+
+			F::update($this->test, fn () => 'replacement');
+		} finally {
+			chmod($this->test, 0777);
+		}
 	}
 
 	public function testUpdateAbortsWhenModifierReturnsNull(): void

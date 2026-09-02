@@ -678,8 +678,12 @@ class F
 	 * contents of a remote HTTP or HTTPS URL
 	 *
 	 * @param string $file The path for the file or an absolute URL
+	 * @param bool $lock Read the file while holding a shared lock, so that
+	 *                   a file another process is currently writing cannot
+	 *                   be observed in a truncated or half-written state.
+	 *                   Ignored for remote URLs.
 	 */
-	public static function read(string $file): string|false
+	public static function read(string $file, bool $lock = false): string|false
 	{
 		if (str_contains($file, '://') === true) {
 			return false;
@@ -690,6 +694,10 @@ class F
 			return false;
 		}
 
+		if ($lock === true) {
+			return static::readLocked($file);
+		}
+
 		// to increase performance, directly try to load the file
 		// without checking if it exists; fall back to return `false`
 		// if it doesn't exist while letting other warnings through
@@ -698,6 +706,38 @@ class F
 			fn (int $errno, string $errstr): bool => str_contains($errstr, 'No such file'),
 			false
 		);
+	}
+
+	/**
+	 * Reads a local file while holding a shared lock on it, so that
+	 * the read cannot fall into the window in which a writer has already
+	 * truncated the file but has not written the new contents yet
+	 *
+	 * @since 5.6.0
+	 */
+	protected static function readLocked(string $file): string|false
+	{
+		$handle = Helpers::handleErrors(
+			fn () => fopen($file, 'rb'),
+			fn (int $errno, string $errstr): bool => str_contains($errstr, 'No such file'),
+			false
+		);
+
+		if ($handle === false) {
+			return false;
+		}
+
+		try {
+			// wait for a concurrent writer to release its lock; if the
+			// filesystem does not support locking at all, fall through
+			// to the plain read rather than failing the request
+			flock($handle, LOCK_SH);
+
+			return stream_get_contents($handle);
+		} finally {
+			// `fclose()` releases the `flock()` automatically
+			fclose($handle);
+		}
 	}
 
 	/**
@@ -1010,6 +1050,8 @@ class F
 	 * the current file contents.
 	 *
 	 * @since 5.5.0
+	 *
+	 * @throws \Exception If the file is not writable
 	 */
 	public static function update(
 		string $file,
@@ -1022,6 +1064,12 @@ class F
 			if (Dir::make($dir) === false) {
 				return false; // @codeCoverageIgnore
 			}
+		}
+
+		// fail loudly rather than silently returning `false`,
+		// consistently with `F::write()`
+		if (static::isWritable($file) === false) {
+			throw new Exception('The file "' . $file . '" is not writable');
 		}
 
 		// `c+` opens read/write, creates the file if missing,
