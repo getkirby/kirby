@@ -47,10 +47,10 @@
 		"prettier": "^3.9.5",
 		"terser": "^5.49.0",
 		"typescript": "^6.0.3",
-		"typescript-eslint": "^8.64.0",
+		"typescript-eslint": "^8.65.0",
 		"vite": "^8.1.4",
 		"vite-plugin-static-copy": "^4.1.1",
-		"vitest": "^4.1.10",
+		"vitest": "^5.0.0",
 		"vue-docgen-api": "^4.79.2",
 		"vue-tsc": "^3.3.7"
 	},
