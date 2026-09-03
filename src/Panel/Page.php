@@ -29,7 +29,8 @@ class Page extends Model
 	 */
 	public function breadcrumb(): array
 	{
-		$parents = $this->model->parents()->flip()->merge($this->model);
+		$parents = $this->model->parents()->flip()->filter('isListable', true);
+		$parents = $parents->merge($this->model);
 
 		return $parents->values(
 			fn ($parent) => [

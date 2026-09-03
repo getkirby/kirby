@@ -45,8 +45,60 @@ class PageTest extends TestCase
 	/**
 	 * @covers ::breadcrumb
 	 */
+	public function testBreadcrumbWithProtectedParent(): void
+	{
+		// the permission cache is keyed by template and role,
+		// so both need to be unique for this test
+		$uuid = uuid();
+
+		$app = $this->app->clone([
+			'blueprints' => [
+				'pages/secret-' . $uuid => [
+					'options' => ['list' => false]
+				]
+			],
+			'roles' => [
+				['name' => 'editor-' . $uuid]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'a',
+						'template' => 'secret-' . $uuid,
+						'children' => [
+							['slug' => 'b']
+						]
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor-' . $uuid
+				]
+			],
+			'user' => 'editor@getkirby.com'
+		]);
+
+		// the parent must not show up in the breadcrumb
+		// of a page the user is allowed to see
+		$page = new Page($app->page('a/b'));
+
+		$this->assertSame([
+			[
+				'label' => 'b',
+				'link'  => '/pages/a+b'
+			]
+		], $page->breadcrumb());
+	}
+
+	/**
+	 * @covers ::breadcrumb
+	 */
 	public function testBreadcrumb(): void
 	{
+		$this->app->impersonate('kirby');
+
 		$site = new ModelSite([
 			'children' => [
 				[
