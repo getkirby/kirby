@@ -206,7 +206,8 @@
   </file>
   <file src="src/Exception/Exception.php">
     <InvalidPropertyAssignmentValue>
-      <code><![CDATA[self::$prefix . '.' . $this->code]]></code>
+      <code><![CDATA[$this->code()]]></code>
+      <code><![CDATA[$this->code()]]></code>
     </InvalidPropertyAssignmentValue>
     <InvalidReturnStatement>
       <code><![CDATA[$this->getCode()]]></code>
