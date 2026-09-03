@@ -77,6 +77,8 @@ class FileTest extends TestCase
 
 	public function testBreadcrumbForPageFile(): void
 	{
+		$this->app->impersonate('kirby');
+
 		$page = new ModelPage([
 			'slug' => 'test',
 			'content' => [
@@ -96,6 +98,61 @@ class FileTest extends TestCase
 			[
 				'label' => 'test.jpg',
 				'link'  => '/pages/test/files/test.jpg'
+			]
+		], $file->breadcrumb());
+	}
+
+	public function testBreadcrumbForPageFileWithProtectedParent(): void
+	{
+		// the permission cache is keyed by template and role,
+		// so both need to be unique for this test
+		$uuid = uuid();
+
+		$app = $this->app->clone([
+			'blueprints' => [
+				'pages/secret-' . $uuid => [
+					'options' => ['list' => false]
+				]
+			],
+			'roles' => [
+				['name' => 'editor-' . $uuid]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'a',
+						'template' => 'secret-' . $uuid,
+						'children' => [
+							[
+								'slug'  => 'b',
+								'files' => [
+									['filename' => 'test.jpg']
+								]
+							]
+						]
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor-' . $uuid
+				]
+			],
+			'user' => 'editor@getkirby.com'
+		]);
+
+		// the protected ancestor must not show up in the breadcrumb
+		$file = new File($app->page('a/b')->file('test.jpg'));
+
+		$this->assertSame([
+			[
+				'label' => 'b',
+				'link'  => '/pages/a+b'
+			],
+			[
+				'label' => 'test.jpg',
+				'link'  => '/pages/a+b/files/test.jpg'
 			]
 		], $file->breadcrumb());
 	}
@@ -992,6 +1049,8 @@ class FileTest extends TestCase
 
 	public function testView(): void
 	{
+		$this->app->impersonate('kirby');
+
 		$page = new ModelPage([
 			'slug'  => 'test',
 			'files' => [
