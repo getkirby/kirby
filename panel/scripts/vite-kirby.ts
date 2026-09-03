@@ -5,7 +5,7 @@
 
 /* eslint-env node */
 import fs from "fs";
-import generateDocs from "./docs";
+import generateDocs from "./docs.ts";
 import { type Plugin } from "vite";
 
 /**
@@ -34,11 +34,11 @@ function devMode(): Plugin {
 		apply: "serve",
 		config() {
 			// Create the flag file on start
-			const flag = __dirname + "/../.vite-running";
+			const flag = import.meta.dirname + "/../.vite-running";
 			fs.closeSync(fs.openSync(flag, "w"));
 
 			// UI json tmp directory
-			const tmp = __dirname + "/../tmp";
+			const tmp = import.meta.dirname + "/../tmp";
 
 			// Delete the flag file and panel/tmp on any kind of exit
 			onExit(() => {

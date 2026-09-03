@@ -7,12 +7,12 @@ import {
 	defineConfig,
 	loadEnv,
 	type Plugin,
-	ProxyOptions,
+	type ProxyOptions,
 	type ServerOptions
 } from "vite";
 import vue from "@vitejs/plugin-vue";
 import { viteStaticCopy } from "vite-plugin-static-copy";
-import kirby from "./scripts/vite-kirby";
+import kirby from "./scripts/vite-kirby.ts";
 
 type ProxyConfig = ProxyOptions & { target: string };
 
@@ -31,11 +31,11 @@ try {
  */
 function createAliases(proxy: ProxyConfig): AliasOptions {
 	const aliases: Record<string, string> = {
-		"@": path.resolve(__dirname, "src")
+		"@": path.resolve(import.meta.dirname, "src")
 	};
 
 	if (process.env.VITEST) {
-		aliases["@test"] = path.resolve(__dirname, "tests");
+		aliases["@test"] = path.resolve(import.meta.dirname, "tests");
 	} else {
 		// use absolute proxied url to avoid Vue being loaded twice
 		aliases.vue =
@@ -117,7 +117,7 @@ function createTarget(): string[] {
 	};
 
 	const file = fs.readFileSync(
-		path.resolve(__dirname, ".browserslistrc"),
+		path.resolve(import.meta.dirname, ".browserslistrc"),
 		"utf-8"
 	);
 

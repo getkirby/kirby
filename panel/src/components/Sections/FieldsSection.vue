@@ -5,12 +5,7 @@
 		:headline="issue ? $t('error') : null"
 		:style="$attrs.style"
 	>
-		<k-box
-			v-if="issue"
-			:text="issue.message"
-			icon="alert"
-			theme="negative"
-		/>
+		<k-box v-if="issue" :text="issue.message" icon="alert" theme="negative" />
 		<k-form
 			:fields="fieldsWithAdditionalData"
 			:validate="true"
