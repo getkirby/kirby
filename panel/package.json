@@ -43,7 +43,7 @@
 		"typescript-eslint": "^8.65.0",
 		"vite": "^7.3.6",
 		"vite-plugin-static-copy": "^3.4.0",
-		"vitest": "^4.1.10",
+		"vitest": "^5.0.0",
 		"vue-docgen-api": "^4.79.2",
 		"vue-tsc": "^3.3.8"
 	},
