@@ -1,7 +1,7 @@
 <template>
 	<div class="k-view-button">
 		<k-button
-			v-bind="$props"
+			v-bind="{ ...$props, ...$attrs }"
 			:dropdown="dropdown || hasDropdown"
 			@click="onClick"
 		/>
@@ -27,6 +27,7 @@ import Button from "@/components/Navigation/Button.vue";
  */
 export default {
 	extends: Button,
+	inheritAttrs: false,
 	props: {
 		options: [Array, String],
 		// eslint-disable-next-line vue/require-prop-types

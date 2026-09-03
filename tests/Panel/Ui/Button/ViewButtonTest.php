@@ -193,6 +193,7 @@ class ViewButtonTest extends AreaTestCase
 			'dropdown'   => null,
 			'icon'       => 'smile',
 			'link'       => null,
+			'request'    => null,
 			'responsive' => true,
 			'size'       => 'xs',
 			'target'     => null,

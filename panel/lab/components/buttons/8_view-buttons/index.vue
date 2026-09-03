@@ -3,7 +3,7 @@
 		<k-lab-example label="View Buttons: buttons & slot">
 			<k-header>
 				Home
-				<template slot="buttons">
+				<template #buttons>
 					<k-view-buttons :buttons="viewButtons">
 						<template #after>
 							<k-form-controls
@@ -21,7 +21,7 @@
 		<k-lab-example label="View Buttons: no buttons & slot">
 			<k-header>
 				Home
-				<template slot="buttons">
+				<template #buttons>
 					<k-view-buttons :buttons="[]">
 						<template #after>
 							<k-form-controls
@@ -49,6 +49,38 @@ export default {
 					props: {
 						icon: "open",
 						title: "Open"
+					}
+				},
+				{
+					key: "status",
+					props: {
+						icon: "status-listed",
+						responsive: true,
+						text: "Published",
+						theme: "positive-icon"
+					}
+				},
+				"-",
+				{
+					key: "magic",
+					props: {
+						badge: { text: 3, theme: "love" },
+						icon: "wand",
+						request: "requests/lab/request",
+						title: "Do some magic"
+					}
+				},
+				{
+					key: "settings",
+					props: {
+						icon: "cog",
+						options: [
+							{ icon: "edit", text: "Rename" },
+							{ icon: "copy", text: "Duplicate" },
+							"-",
+							{ icon: "trash", text: "Delete" }
+						],
+						title: "Settings"
 					}
 				}
 			]

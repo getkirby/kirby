@@ -74,7 +74,12 @@ export default {
 			return {
 				...crumb,
 				current: isCurrent ? "page" : false,
-				disabled: !crumb.link && !crumb.click && !crumb.dialog && !crumb.drawer,
+				disabled:
+					!crumb.link &&
+					!crumb.click &&
+					!crumb.dialog &&
+					!crumb.drawer &&
+					!crumb.request,
 				icon: crumb.loading ? "loader" : crumb.icon,
 				size: "sm",
 				text: label,

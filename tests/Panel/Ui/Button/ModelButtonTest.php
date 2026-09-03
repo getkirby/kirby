@@ -28,6 +28,7 @@ class ModelButtonTest extends TestCase
 			drawer: '{{ page.slug }}/test',
 			icon: 'icon-{{ page.slug }}',
 			link: '{{ page.slug }}/test',
+			request: '{{ page.slug }}/test',
 			text: ['en' => 'Text {{ page.slug }}'],
 			theme: 'theme-{{ page.slug }}',
 			title: ['en' => 'Title {{ page.slug }}']
@@ -39,6 +40,7 @@ class ModelButtonTest extends TestCase
 		$this->assertSame('test/test', $props['drawer']);
 		$this->assertSame('icon-test', $props['icon']);
 		$this->assertSame('test/test', $props['link']);
+		$this->assertSame('test/test', $props['request']);
 		$this->assertSame('Text test', $props['text']);
 		$this->assertSame('theme-test', $props['theme']);
 		$this->assertSame('Title test', $props['title']);
@@ -65,5 +67,30 @@ class ModelButtonTest extends TestCase
 		$this->assertSame('Text {{ page.slug }}', $props['text']);
 		$this->assertSame('theme-{{ page.slug }}', $props['theme']);
 		$this->assertSame('Title {{ page.slug }}', $props['title']);
+	}
+
+	public function testRequestWithArray(): void
+	{
+		$page   = new Page(['slug' => 'test']);
+		$button = new ModelButton(
+			model: $page,
+			request: [
+				'url'    => '{{ page.slug }}/sync',
+				'method' => 'DELETE'
+			]
+		);
+
+		$this->assertSame([
+			'url'    => 'test/sync',
+			'method' => 'DELETE'
+		], $button->request());
+
+		// an array without url is passed on as is
+		$button = new ModelButton(
+			model: $page,
+			request: ['method' => 'DELETE']
+		);
+
+		$this->assertSame(['method' => 'DELETE'], $button->request());
 	}
 }
