@@ -91,6 +91,7 @@ describe("clipboard.write()", () => {
 
 	afterEach(() => {
 		vi.restoreAllMocks();
+		document.body.innerHTML = "";
 	});
 
 	it("should use clipboardData.setData when a ClipboardEvent is provided", () => {
@@ -140,5 +141,42 @@ describe("clipboard.write()", () => {
 		write({ foo: "bar" });
 
 		expect(copiedValue).toBe('{\n  "foo": "bar"\n}');
+	});
+	it("should add the textarea to an open dialog", () => {
+		const dialog = document.createElement("dialog");
+		dialog.setAttribute("open", "");
+		document.body.append(dialog);
+
+		let parent: Element | null = null;
+		document.execCommand = vi.fn().mockImplementation(() => {
+			parent = document.querySelector("textarea")?.parentElement ?? null;
+			return true;
+		});
+
+		write("hello");
+
+		expect(parent).toBe(dialog);
+	});
+
+	it("should add the textarea to the dialog with the focused element", () => {
+		const dialogs = [0, 1].map(() => {
+			const dialog = document.createElement("dialog");
+			dialog.setAttribute("open", "");
+			dialog.innerHTML = "<button></button>";
+			document.body.append(dialog);
+			return dialog;
+		});
+
+		dialogs[0].querySelector("button")?.focus();
+
+		let parent: Element | null = null;
+		document.execCommand = vi.fn().mockImplementation(() => {
+			parent = document.querySelector("textarea")?.parentElement ?? null;
+			return true;
+		});
+
+		write("hello");
+
+		expect(parent).toBe(dialogs[0]);
 	});
 });
