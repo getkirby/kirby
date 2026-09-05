@@ -333,7 +333,12 @@ class Dom
 			if ($kirby = App::instance(null, true)) {
 				$indexUrl = $kirby->url('index', true)->path()->toString(true);
 
-				if (Str::startsWith($url, $indexUrl) !== true) {
+				// the index URL must match up to a path segment boundary,
+				// so that `/sitemap` does not pass the check for `/site`
+				if (
+					$url !== $indexUrl &&
+					Str::startsWith($url, rtrim($indexUrl, '/') . '/') !== true
+				) {
 					return 'The URL points outside of the site index URL';
 				}
 
@@ -341,10 +346,7 @@ class Dom
 				// TODO: the ../ sequences could be cleaned from the URL
 				//       before the check by normalizing the URL; then the
 				//       check above can also validate URLs with ../ sequences
-				if (
-					Str::contains($url, '../') !== false ||
-					Str::contains($url, '..\\') !== false
-				) {
+				if (static::hasTraversal($url) === true) {
 					return 'The ../ sequence is not allowed in relative URLs';
 				}
 			}
@@ -363,10 +365,7 @@ class Dom
 		) {
 			// disallow directory traversal as we cannot know
 			// in which URL context the URL will be printed
-			if (
-				Str::contains($url, '../') !== false ||
-				Str::contains($url, '..\\') !== false
-			) {
+			if (static::hasTraversal($url) === true) {
 				return 'The ../ sequence is not allowed in relative URLs';
 			}
 
@@ -766,6 +765,22 @@ class Dom
 		$this->doc->encoding ??= 'UTF-8';
 
 		return trim($this->doc->saveXML());
+	}
+
+	/**
+	 * Checks if the URL contains a directory traversal sequence;
+	 * a dot segment may be percent-encoded, which the browser
+	 * decodes before it resolves the path
+	 *
+	 * @since 4.9.6
+	 */
+	protected static function hasTraversal(string $url): bool
+	{
+		$url = str_replace(['%2e', '%2E'], '.', $url);
+
+		return
+			Str::contains($url, '../') !== false ||
+			Str::contains($url, '..\\') !== false;
 	}
 
 	/**
