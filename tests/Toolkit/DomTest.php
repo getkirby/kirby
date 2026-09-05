@@ -539,6 +539,28 @@ class DomTest extends TestCase
 				'text { background: url("https://getkirby.com/a/*b*/c.png") }',
 				['https://getkirby.com/a/*b*/c.png']
 			],
+
+			// CSS escapes are decoded like the browser's tokenizer does
+			[
+				'text { background: url(\\2f\\2f malicious.com/a.png) }',
+				['//malicious.com/a.png']
+			],
+			[
+				'@import "\\2f\\2f malicious.com/a.css"',
+				['//malicious.com/a.css']
+			],
+			[
+				'text { background: url(\\/\\/malicious.com/a.png) }',
+				['//malicious.com/a.png']
+			],
+			[
+				'text { background: \\75rl(//malicious.com/a.png) }',
+				['//malicious.com/a.png']
+			],
+			[
+				'text { background: url(https:\\2f\\2fmalicious.com/a.png) }',
+				['https://malicious.com/a.png']
+			],
 		];
 	}
 
@@ -1005,6 +1027,13 @@ class DomTest extends TestCase
 			["\x0c//test", 'Protocol-relative URLs are not allowed'],
 			["/\t/test", 'Protocol-relative URLs are not allowed'],
 
+			// forbidden protocol-relative URL with backslashes
+			// that the browser treats like forward slashes
+			['/\\test', 'Protocol-relative URLs are not allowed'],
+			['\\/test', 'Protocol-relative URLs are not allowed'],
+			['\\\\test', 'Protocol-relative URLs are not allowed'],
+			["\\\t/test", 'Protocol-relative URLs are not allowed'],
+
 			// forbidden relative URL with whitespace inside the
 			// `../` sequence that the browser strips
 			["..\t/some/path", 'The ../ sequence is not allowed in relative URLs'],
@@ -1019,6 +1048,15 @@ class DomTest extends TestCase
 			// forbidden URL when no domains are accepted, with leading whitespace
 			[' https://getkirby.com', 'The hostname "getkirby.com" is not allowed', [
 				'allowedDomains' => []
+			]],
+
+			// the browser ends the host at a backslash, so the
+			// allowlist must be checked against that same host
+			['https://malicious.com\\@getkirby.com', 'The hostname "malicious.com" is not allowed', [
+				'allowedDomains' => ['getkirby.com']
+			]],
+			['https://getkirby.com\\@malicious.com', true, [
+				'allowedDomains' => ['getkirby.com']
 			]],
 
 			// allowed values are unaffected by the normalization

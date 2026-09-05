@@ -219,6 +219,18 @@ class SvgTest extends TestCase
 		Svg::validateFile($fixture);
 	}
 
+	public function testDisallowedProtocolRelativeBackslash(): void
+	{
+		$fixture   = $this->fixture('disallowed/protocol-relative-backslash.svg');
+		$sanitized = $this->fixture('sanitized/protocol-relative-backslash.svg');
+
+		$this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The URL is not allowed in attribute "href" (line 2): Protocol-relative URLs are not allowed');
+		Svg::validateFile($fixture);
+	}
+
 	public function testDisallowedProtocolRelativeWhitespace(): void
 	{
 		$fixture   = $this->fixture('disallowed/protocol-relative-whitespace.svg');
@@ -409,6 +421,18 @@ class SvgTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The "blockquote" element (line 1) is not allowed');
 		Svg::validate($fixture);
+	}
+
+	public function testDisallowedStyleImportEscaped(): void
+	{
+		$fixture   = $this->fixture('disallowed/style-import-escaped.svg');
+		$sanitized = $this->fixture('sanitized/style-import-escaped.svg');
+
+		$this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The URL is not allowed in the "style" element (around line 3)');
+		Svg::validateFile($fixture);
 	}
 
 	public function testDisallowedStyleImportExternal(): void
