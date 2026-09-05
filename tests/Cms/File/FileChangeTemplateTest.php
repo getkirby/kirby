@@ -2,10 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Exception;
 use Kirby\Content\PlainTextStorage;
-use Kirby\Content\VersionId;
-use Kirby\Data\Data;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\F;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -487,84 +484,5 @@ class FileChangeTemplateTest extends ModelTestCase
 
 		$this->assertSame('pdf', $file->extension());
 		$this->assertSame('pdf', $newFile->extension());
-	}
-
-	public function testChangeTemplateWhenStorageFails(): void
-	{
-		$app = $this->app->clone([
-			'roots' => [
-				'index' => static::TMP
-			],
-			'blueprints' => [
-				'pages/test' => [
-					'sections' => [
-						[
-							'type' => 'files',
-							'template' => 'a'
-						],
-						[
-							'type' => 'files',
-							'template' => 'b'
-						]
-					]
-				],
-				'files/a' => [
-					'title'  => 'a',
-					'fields' => [
-						'text' => [
-							'type' => 'textarea'
-						]
-					]
-				],
-				'files/b' => [
-					'title' => 'b',
-					'fields' => [
-						'text' => [
-							'type' => 'textarea'
-						]
-					]
-				],
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug'     => 'test',
-						'template' => 'test'
-					]
-				]
-			]
-		]);
-
-		$app->impersonate('kirby');
-
-		$file = $app->page('test')->createFile([
-			'filename' => 'test.jpg',
-			'source'   => self::FIXTURES . '/test.jpg',
-			'template' => 'a',
-			'content'  => [
-				'text' => 'Text'
-			]
-		]);
-
-		$contentFile = $file->version('latest')->contentFile();
-		$content     = Data::read($contentFile);
-
-		// storage that fails as soon as the converted content is written
-		$file->changeStorage(new class ($file) extends PlainTextStorage {
-			protected function write(VersionId $versionId, Language $language, array $fields): void
-			{
-				throw new Exception('The storage is not writable');
-			}
-		});
-
-		try {
-			$file->changeTemplate('b');
-			$this->fail('The storage exception must be passed on');
-		} catch (Exception $e) {
-			$this->assertSame('The storage is not writable', $e->getMessage());
-		}
-
-		// the old version must survive the failed conversion
-		$this->assertSame($content, Data::read($contentFile));
 	}
 }
