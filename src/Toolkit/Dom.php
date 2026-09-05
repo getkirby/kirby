@@ -148,6 +148,31 @@ class Dom
 		// remove invisible ASCII characters from the value
 		$value = trim(preg_replace('/[^ -~]/u', '', $value));
 
+		// decode CSS escapes (`\2f`, `\/`) like the browser's tokenizer,
+		// otherwise `url(\2f\2f evil.com)` would hide a protocol-relative URL
+		$value = preg_replace_callback(
+			'/\\\\(?:([0-9a-f]{1,6}) ?|(.))/i',
+			function (array $match): string {
+				if (isset($match[2]) === true) {
+					return $match[2];
+				}
+
+				$code = hexdec($match[1]);
+
+				// NULL, surrogates and out-of-range code points become U+FFFD
+				if (
+					$code === 0 ||
+					$code > 0x10FFFF ||
+					($code >= 0xD800 && $code <= 0xDFFF)
+				) {
+					$code = 0xFFFD;
+				}
+
+				return mb_chr($code);
+			},
+			$value
+		);
+
 		$urls = [];
 
 		// URLs inside a `url()` wrapper, including `@import url(...)`
@@ -357,7 +382,9 @@ class Dom
 				return true;
 			}
 
-			$hostname = parse_url($url, PHP_URL_HOST);
+			// the browser ends the authority at a backslash just like at
+			// a slash, so `https://evil.com\@good.com` must resolve to `evil.com`
+			$hostname = parse_url(str_replace('\\', '/', $url), PHP_URL_HOST);
 
 			if (in_array($hostname, $options['allowedDomains']) === true) {
 				return true;

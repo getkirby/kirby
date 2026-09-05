@@ -164,6 +164,18 @@ class UrlTest extends TestCase
 			["..\t/some/path", '../some/path'],
 			["java\tscript:alert()", 'javascript:alert()'],
 
+			// a leading run of slashes is folded, as the browser
+			// treats a backslash like a forward slash there
+			['/\\test', '//test'],
+			['\\/test', '//test'],
+			['\\\\test', '//test'],
+			["/\t\\test", '//test'],
+			['/\\/test', '///test'],
+
+			// a single leading backslash does not open an authority
+			['\\test', '\\test'],
+			['some\\path', 'some\\path'],
+
 			// spaces inside the URL are kept, just like in the browser
 			['tel:+49 (0) 1234 5678', 'tel:+49 (0) 1234 5678'],
 			[' some/pa th ', 'some/pa th'],

@@ -165,7 +165,7 @@ class Url
 	 * Normalizes a URL the same way a browser does before it parses it:
 	 * ASCII tab and newline characters are removed from anywhere in the
 	 * string, leading and trailing C0 control characters and spaces are
-	 * trimmed
+	 * trimmed and a leading run of slashes is folded to forward slashes
 	 *
 	 * @see https://url.spec.whatwg.org/#url-parsing
 	 * @since 4.9.6
@@ -173,7 +173,15 @@ class Url
 	public static function normalize(string $url): string
 	{
 		$url = preg_replace('/[\x09\x0a\x0d]/', '', $url);
-		return trim($url, "\x00..\x20");
+		$url = trim($url, "\x00..\x20");
+
+		// browsers treat a backslash like a forward slash, so a leading
+		// run of two or more of either opens an authority just like `//`
+		return preg_replace_callback(
+			'!^[/\\\\]{2,}!',
+			fn ($slashes) => str_replace('\\', '/', $slashes[0]),
+			$url
+		);
 	}
 
 	/**
