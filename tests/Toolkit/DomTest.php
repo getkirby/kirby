@@ -1041,6 +1041,17 @@ class DomTest extends TestCase
 			[".\r./some/path", 'The ../ sequence is not allowed in relative URLs'],
 			["some/..\t/../path", 'The ../ sequence is not allowed in relative URLs'],
 
+			// forbidden relative URL with a percent-encoded dot segment
+			// that the browser decodes before it resolves the path
+			['%2e%2e/some/path', 'The ../ sequence is not allowed in relative URLs'],
+			['%2E%2E/some/path', 'The ../ sequence is not allowed in relative URLs'],
+			['.%2e/some/path', 'The ../ sequence is not allowed in relative URLs'],
+			['%2e./some/path', 'The ../ sequence is not allowed in relative URLs'],
+			['some/%2e%2e/path', 'The ../ sequence is not allowed in relative URLs'],
+
+			// a percent-encoded dot that is not a dot segment is allowed
+			['some%2epath/file.jpg', true],
+
 			// forbidden URL type with leading whitespace
 			[' javascript:alert()', 'Unknown URL type'],
 			["java\tscript:alert()", 'Unknown URL type'],
@@ -1107,6 +1118,18 @@ class DomTest extends TestCase
 
 			// generally disallowed URL with site in a subfolder (but allowed)
 			['/site', '/some/path', true, true],
+
+			// the index URL must match up to a path segment boundary
+			['https://getkirby.com/site', '/sitemap.xml', false, 'The URL points outside of the site index URL'],
+			['/site', '/sitemap.xml', false, 'The URL points outside of the site index URL'],
+
+			// the index URL itself is allowed
+			['/site', '/site', false, true],
+			['/site', '/site/', false, true],
+
+			// percent-encoded dot segments must not skip the traversal check
+			['/site', '/site/%2e%2e/some/path', false, 'The ../ sequence is not allowed in relative URLs'],
+			['/site', '/site/.%2e/some/path', false, 'The ../ sequence is not allowed in relative URLs'],
 
 			// disallowed URL with directory traversal
 			['https://getkirby.com/site', '/site/../some/path', false, 'The ../ sequence is not allowed in relative URLs'],
