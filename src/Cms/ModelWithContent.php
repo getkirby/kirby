@@ -6,6 +6,7 @@ use Closure;
 use Kirby\Content\Content;
 use Kirby\Content\ImmutableMemoryStorage;
 use Kirby\Content\Lock;
+use Kirby\Content\LockedContentException;
 use Kirby\Content\MemoryStorage;
 use Kirby\Content\Storage;
 use Kirby\Content\Translation;
@@ -202,6 +203,17 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	 */
 	protected function convertTo(string $blueprint): static
 	{
+		// Make sure that no other user is editing the content
+		// right now before any of the versions get converted
+		$lock = $this->lock();
+
+		if ($lock->isLocked() === true) {
+			throw new LockedContentException(
+				lock: $lock,
+				key: 'content.lock.update'
+			);
+		}
+
 		// Keep a copy of the old model with the original storage handler.
 		// This will be used to delete the old versions.
 		$old = $this->clone();
@@ -230,8 +242,22 @@ abstract class ModelWithContent implements Identifiable, Stringable
 		// Get all languages to loop through
 		$languages = Languages::ensure();
 
-		// Loop through all versions
-		foreach ($old->versions() as $oldVersion) {
+		// Convert the latest version before the changes version.
+		// Creating the changes version tracks the model by its UUID,
+		// which has to be readable from the new latest version by then.
+		$versions = [
+			$old->version('latest'),
+			$old->version('changes')
+		];
+
+		// Keep track of all converted versions
+		$converted = [];
+
+		// Save all converted versions first. The old versions
+		// are only deleted afterwards. This way a failing
+		// storage handler cannot destroy the old content
+		// before the new content has been written.
+		foreach ($versions as $oldVersion) {
 			// Loop through all languages
 			foreach ($languages as $language) {
 				// Skip non-existing versions
@@ -239,18 +265,46 @@ abstract class ModelWithContent implements Identifiable, Stringable
 					continue;
 				}
 
-				// Convert the content to the new blueprint
-				$content = $oldVersion->content($language)->convertTo($blueprint);
+				// Convert the fields of the version to the new blueprint.
+				// The fields are read directly to only convert the fields
+				// of the version itself without the fallback to the
+				// default language.
+				$fields = $oldVersion->read($language) ?? [];
+				unset($fields['lock']);
 
-				// Delete the old versions. This will also remove the
-				// content files from the storage if this is a plain text
-				// storage instance.
-				$oldVersion->delete($language);
+				$content = new Content(
+					parent: $old,
+					data: $fields,
+					normalize: false
+				);
 
-				// Save to re-create the new version
+				// Save to create or update the new version
 				// with the converted/updated content
-				$new->version($oldVersion->id())->save($content, $language);
+				$new->version($oldVersion->id())->save(
+					fields: $content->convertTo($blueprint),
+					language: $language
+				);
+
+				$converted[] = [$oldVersion->id(), $language];
 			}
+		}
+
+		// Delete the old versions. This will also remove the
+		// content files from the storage if this is a plain text
+		// storage instance.
+		foreach ($converted as [$versionId, $language]) {
+			// The old version has already been overwritten if its
+			// storage location does not depend on the template
+			// (e.g. the content files of files)
+			if ($old->storage()->isSameStorageLocation(
+				fromVersionId: $versionId,
+				fromLanguage: $language,
+				toStorage: $new->storage()
+			) === true) {
+				continue;
+			}
+
+			$old->storage()->delete($versionId, $language);
 		}
 
 		return $new;
