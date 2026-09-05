@@ -124,8 +124,15 @@ class Changes
 		$changes = $model->version('changes');
 		$latest  = $model->version('latest');
 
+		// read the raw fields of the changes version to find out whether it
+		// really holds content. A parallel request can discard the version
+		// while this one is running, and `Version::content()` would not tell
+		// us: for a secondary language it quietly falls back to the default
+		// language, which would then be stored as the translation.
+		$stored = $changes->read($language);
+
 		// get the source version for the existing content
-		$source  = $changes->exists($language) === true ? $changes : $latest;
+		$source  = $stored === null || $stored === [] ? $latest : $changes;
 		$content = $source->content($language)->toArray();
 
 		// fill in the form values and pass through any values that are not
