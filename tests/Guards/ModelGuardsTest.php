@@ -2,6 +2,7 @@
 
 namespace Kirby\Guards;
 
+use Kirby\Cms\Language;
 use Kirby\Cms\ModelTestCase;
 use Kirby\Cms\Page;
 use Kirby\Cms\User;
@@ -57,6 +58,51 @@ class ModelGuardsTest extends ModelTestCase
 	public function testAbilities(): void
 	{
 		$this->assertInstanceOf(PageAbilities::class, $this->guards()->abilities());
+	}
+
+	public function testAvailability(): void
+	{
+		$this->app = $this->app->clone([
+			'users' => [
+				['email' => 'admin@getkirby.com', 'role' => 'admin']
+			]
+		]);
+
+		$this->app->impersonate('admin@getkirby.com');
+
+		$page = new Page([
+			'slug'      => 'test',
+			'blueprint' => [
+				'name'    => 'pages/test',
+				'options' => [
+					'delete' => false,
+					'update' => true
+				]
+			]
+		]);
+
+		$array = $page->guards()->availability();
+
+		// the blueprint options are resolved to their availability
+		$this->assertFalse($array['delete']);
+		$this->assertTrue($array['update']);
+
+		// every option of the blueprint is covered
+		$this->assertSame(
+			array_keys($page->blueprint()->options()),
+			array_keys($array)
+		);
+		$this->assertContainsOnlyBool($array);
+	}
+
+	public function testAvailabilityWithoutBlueprint(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$language = new Language(['code' => 'en']);
+
+		// languages have no blueprint and therefore no options
+		$this->assertSame([], $language->guards()->availability());
 	}
 
 	public function testEnsureAvailable(): void
