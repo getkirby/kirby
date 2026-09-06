@@ -102,7 +102,7 @@ return [
 				preflight: function () use ($id) {
 					$user = Find::user($id);
 
-					if ($user->permissions()->can('update') !== true) {
+					if ($user->guards()->isAvailable('update') !== true) {
 						throw new PermissionException(
 							key: 'user.update.permission',
 							data: ['name' => $user->username()]

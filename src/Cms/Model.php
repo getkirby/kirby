@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Guards\ModelGuards;
 use Stringable;
 
 /**
@@ -13,4 +14,5 @@ use Stringable;
  */
 abstract class Model implements Stringable
 {
+	abstract public function guards(): ModelGuards;
 }

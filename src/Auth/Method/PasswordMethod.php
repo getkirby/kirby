@@ -89,7 +89,7 @@ class PasswordMethod extends Method
 				icon:     static::icon(),
 				text:     static::i18n('password'),
 				dialog:   $user->panel()->url(true) . '/changePassword',
-				disabled: !$user->permissions()->can('changePassword'),
+				disabled: $user->guards()->isAvailable('changePassword') === false,
 			)
 		];
 	}

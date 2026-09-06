@@ -191,7 +191,7 @@ class PasswordMethodTest extends TestCase
 
 	public function testSettings(): void
 	{
-		$user     = $this->createStub(User::class);
+		$user     = new User(['id' => 'test', 'email' => 'test@getkirby.com']);
 		$settings = PasswordMethod::settings($user);
 		$this->assertCount(1, $settings);
 	}

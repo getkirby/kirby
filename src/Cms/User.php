@@ -670,7 +670,7 @@ class User extends ModelWithContent
 
 		// if the authenticated user doesn't have the permission to change
 		// the role of this user, only the current role is available
-		if ($this->permissions()->can('changeRole') === false) {
+		if ($this->guards()->isAvailable('changeRole') === false) {
 			return $kirby->roles()->filter('isAccessible', true)->filter('id', $this->role()->id());
 		}
 
