@@ -4,7 +4,6 @@ namespace Kirby\Panel\Controller\Drawer;
 
 use Kirby\Auth\Challenge\EmailChallenge;
 use Kirby\Cms\User;
-use Kirby\Cms\UserRules;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\Panel\Ui\Drawer;
@@ -22,7 +21,7 @@ class UserEmailChallengeDrawerController extends UserCredentialDrawerController
 		parent::__construct($user, 'email');
 
 		// ensure user has the necessary permissions
-		UserRules::changeSecret($user, 'email', null);
+		$user->guards()->ensureExecutable('changeSecret', 'email', null);
 	}
 
 	protected function create(): User
