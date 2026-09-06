@@ -95,6 +95,10 @@ export default {
 	watch: {
 		dragOptions: {
 			handler(newOptions, oldOptions) {
+				if (this.sortable === null) {
+					return;
+				}
+
 				for (const option in newOptions) {
 					if (newOptions[option] !== oldOptions[option]) {
 						this.sortable.option(option, newOptions[option]);

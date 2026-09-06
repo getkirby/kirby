@@ -69,7 +69,13 @@ export default {
 			);
 		},
 		refreshEvents() {
-			return ["file.sort", "model.update"];
+			return [
+				"file.changeName",
+				"file.changeTemplate",
+				"file.delete",
+				"file.sort",
+				"model.update"
+			];
 		}
 	}
 };
