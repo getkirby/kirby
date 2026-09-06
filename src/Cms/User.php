@@ -318,7 +318,7 @@ class User extends ModelWithContent
 	 */
 	public function isAdmin(): bool
 	{
-		return $this->role()->id() === 'admin';
+		return $this->role()->isAdmin() === true;
 	}
 
 	/**
@@ -327,7 +327,9 @@ class User extends ModelWithContent
 	 */
 	public function isKirby(): bool
 	{
-		return $this->isAdmin() && $this->id() === 'kirby';
+		return
+			$this->isAdmin() === true &&
+			$this->id() === 'kirby';
 	}
 
 	/**
@@ -377,7 +379,9 @@ class User extends ModelWithContent
 	 */
 	public function isNobody(): bool
 	{
-		return $this->role()->id() === 'nobody' && $this->id() === 'nobody';
+		return
+			$this->role()->isNobody() === true &&
+			$this->id() === 'nobody';
 	}
 
 	/**
