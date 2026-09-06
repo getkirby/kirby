@@ -342,7 +342,7 @@ class File extends ModelWithContent
 			return false;
 		}
 
-		return FilePermissions::canFromCache($this, 'access');
+		return $this->guards()->isAvailable('access');
 	}
 
 	/**
@@ -372,17 +372,13 @@ class File extends ModelWithContent
 	 */
 	public function isListable(): bool
 	{
-		// TODO: remove this check when `read` option deprecated in v6
-		if ($this->isReadable() === false) {
-			return false;
-		}
-
 		// not accessible also means not listable
+		// (which covers the `read` check as well)
 		if ($this->isAccessible() === false) {
 			return false;
 		}
 
-		return FilePermissions::canFromCache($this, 'list');
+		return $this->guards()->isAvailable('list');
 	}
 
 	/**
@@ -392,12 +388,7 @@ class File extends ModelWithContent
 	 */
 	public function isReadable(): bool
 	{
-		static $readable   = [];
-		$role              = $this->kirby()->role()?->id() ?? '__none__';
-		$template          = $this->template() ?? '__none__';
-		$readable[$role] ??= [];
-
-		return $readable[$role][$template] ??= $this->permissions()->can('read');
+		return $this->guards()->isAvailable('read');
 	}
 
 	/**
