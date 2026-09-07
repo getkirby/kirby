@@ -56,6 +56,6 @@ class SiteBlueprint extends Blueprint
 			return $this->model->toString($preview);
 		}
 
-		return $this->model->guards()->isAvailable('preview', true);
+		return $this->model->guards()->isAvailable('preview', default: true);
 	}
 }
