@@ -140,7 +140,7 @@ return [
 		],
 		'method'  => 'GET',
 		'action'  => function (string $id) {
-			return Find::user($id)->blueprints($this->requestQuery('section'));
+			return Find::user($id)->blueprints($this->requestQuery('field'));
 		}
 	],
 	[
@@ -230,28 +230,6 @@ return [
 		'method'  => 'ALL',
 		'action'  => function (string $id, string $fieldName, string|null $path = null) {
 			return $this->fieldApi(Find::user($id), $fieldName, $path);
-		}
-	],
-	[
-		'pattern' => [
-			'(account)/sections/(:any)',
-			'users/(:any)/sections/(:any)',
-		],
-		'method'  => 'GET',
-		'action'  => function (string $id, string $sectionName) {
-			if ($section = Find::user($id)->blueprint()->section($sectionName)) {
-				return $section->toResponse();
-			}
-		}
-	],
-	[
-		'pattern' => [
-			'(account)/sections/(:any)/(:all?)',
-			'users/(:any)/sections/(:any)/(:all?)',
-		],
-		'method'  => 'ALL',
-		'action'  => function (string $id, string $sectionName, string|null $path = null) {
-			return $this->sectionApi(Find::user($id), $sectionName, $path);
 		}
 	],
 	// @codeCoverageIgnoreEnd

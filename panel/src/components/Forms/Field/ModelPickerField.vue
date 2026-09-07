@@ -17,10 +17,7 @@
 		</template>
 
 		<k-dropzone :disabled="!hasDropzone" @drop="drop">
-			<k-input-validator
-				v-bind="{ min, max, required }"
-				:value="JSON.stringify(value)"
-			>
+			<k-validator v-bind="{ min, max, required }" :count="value.length">
 				<k-collection
 					v-bind="collection"
 					v-on="!disabled ? { empty: open } : {}"
@@ -35,7 +32,7 @@
 						/>
 					</template>
 				</k-collection>
-			</k-input-validator>
+			</k-validator>
 		</k-dropzone>
 	</k-field>
 </template>
@@ -51,7 +48,7 @@ import { autofocus, layout } from "@/mixins/props.js";
  * @license   https://getkirby.com/license
  */
 export default {
-	type: "model",
+	type: "modelpicker",
 	mixins: [FieldProps, autofocus, layout],
 	inheritAttrs: false,
 	props: {

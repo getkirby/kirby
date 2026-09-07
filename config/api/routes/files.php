@@ -21,22 +21,6 @@ return [
 		}
 	],
 	[
-		'pattern' => $filePattern . '/sections/(:any)',
-		'method'  => 'GET',
-		'action'  => function (string $path, string $filename, string $sectionName) {
-			return $this->file($path, $filename)->blueprint()->section($sectionName)?->toResponse();
-		}
-	],
-	[
-		'pattern' => $filePattern . '/sections/(:any)/(:all?)',
-		'method'  => 'ALL',
-		'action'  => function (string $parent, string $filename, string $sectionName, string|null $path = null) {
-			if ($file = $this->file($parent, $filename)) {
-				return $this->sectionApi($file, $sectionName, $path);
-			}
-		}
-	],
-	[
 		'pattern' => $parentPattern,
 		'method'  => 'GET',
 		'action'  => function (string $path) {

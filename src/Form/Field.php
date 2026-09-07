@@ -2,11 +2,16 @@
 
 namespace Kirby\Form;
 
+use Kirby\Blueprint\Blueprint;
 use Kirby\Cms\HasStringTemplate;
+use Kirby\Cms\Language;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Form\Field\InfoField;
 use Kirby\Form\Field\ValueField;
 use Kirby\Reflection\Constructor;
 use Stringable;
+use Throwable;
 
 /**
  * Base class for any field type
@@ -61,6 +66,26 @@ abstract class Field implements Stringable
 	public function drawers(): array
 	{
 		return [];
+	}
+
+	/**
+	 * Creates an info field that shows an error message in place
+	 * of a field that could not be created or rendered
+	 * @since 6.0.0
+	 */
+	public static function error(
+		string $name,
+		string $message,
+		ModelWithContent|null $model = null,
+		Fields|null $siblings = null
+	): InfoField {
+		return InfoField::factory(
+			props: [
+				...Blueprint::fieldError($name, $message),
+				'model' => $model
+			],
+			siblings: $siblings
+		);
 	}
 
 	/**
@@ -120,6 +145,16 @@ abstract class Field implements Stringable
 	}
 
 	public function isHidden(): bool
+	{
+		return false;
+	}
+
+	/**
+	 * Fields without a value are never submitted.
+	 * `Kirby\Form\Mixin\Value` overwrites this for all
+	 * fields that can actually hold a value.
+	 */
+	public function isSubmittable(Language $language): bool
 	{
 		return false;
 	}
@@ -195,7 +230,17 @@ abstract class Field implements Stringable
 	 */
 	public function toArray(): array
 	{
-		$props = $this->props();
+		// a field that fails to resolve its props must not take
+		// down the entire view. It is replaced by an error field.
+		try {
+			$props = $this->props();
+		} catch (Throwable $e) {
+			$props = static::error(
+				name:    $this->name(),
+				message: $e->getMessage(),
+				model:   $this->model()
+			)->props();
+		}
 
 		ksort($props);
 

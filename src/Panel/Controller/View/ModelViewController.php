@@ -23,6 +23,8 @@ use Kirby\Panel\Ui\View;
  */
 abstract class ModelViewController extends ViewController
 {
+	protected Fields|null $fields = null;
+
 	/** @var TModel */
 	protected ModelWithContent $model;
 
@@ -53,6 +55,15 @@ abstract class ModelViewController extends ViewController
 	public function component(): string
 	{
 		return 'k-' . ($this->model::CLASS_ALIAS ?? 'model') . '-view';
+	}
+
+	/**
+	 * All fields of the model, shared between the
+	 * tab props and the content versions
+	 */
+	public function fields(): Fields
+	{
+		return $this->fields ??= Fields::for($this->model, 'current');
 	}
 
 	public function load(): View
@@ -139,15 +150,27 @@ abstract class ModelViewController extends ViewController
 
 	public function tab(): array|null
 	{
-		$tab   = $this->request->get('tab');
-		$tab   = $this->model->blueprint()->tab($tab);
-		$tab ??= $this->tabs()[0] ?? null;
-		return $tab;
+		$blueprint = $this->model->blueprint();
+		$tab       = $blueprint->tab($this->request->get('tab'));
+
+		// fall back to the first tab if the requested tab does not exist
+		$tab ??= $blueprint->tabs()->first();
+
+		if ($tab === null) {
+			return null;
+		}
+
+		return $tab->toViewProps($this->fields());
 	}
 
+	/**
+	 * Returns the reduced props of all tabs for the tab bar.
+	 * The full props of the active tab are sent separately
+	 * via `::tab()`
+	 */
 	public function tabs(): array
 	{
-		return $this->model->blueprint()->tabs();
+		return $this->model->blueprint()->tabs()->toButtonsProps();
 	}
 
 	abstract public function title(): string;
@@ -164,7 +187,7 @@ abstract class ModelViewController extends ViewController
 	public function versions(): array
 	{
 		$language = Language::ensure('current');
-		$fields   = Fields::for($this->model, $language);
+		$fields   = $this->fields();
 
 		$latestVersion  = $this->model->version('latest');
 		$changesVersion = $this->model->version('changes');

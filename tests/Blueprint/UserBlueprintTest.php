@@ -9,11 +9,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(UserBlueprint::class)]
 class UserBlueprintTest extends TestCase
 {
-	protected function tearDown(): void
-	{
-		Blueprint::$loaded = [];
-	}
-
 	public function testTranslatedDescription(): void
 	{
 		$blueprint = new UserBlueprint([
@@ -201,5 +196,19 @@ class UserBlueprintTest extends TestCase
 		$app->setCurrentTranslation('fr');
 		$user = $app->user('editor@getkirby.com');
 		$this->assertSame('Editor role', $user->role()->title());
+	}
+
+	public function testToArray(): void
+	{
+		$blueprint = new UserBlueprint([
+			'model'       => new User(['email' => 'test@getkirby.com']),
+			'description' => [
+				'en' => 'User',
+				'de' => 'Benutzer'
+			]
+		]);
+
+		// the description must be resolved just like in `description()`
+		$this->assertSame('User', $blueprint->toArray()['description']);
 	}
 }

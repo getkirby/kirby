@@ -32,7 +32,7 @@ import ToggleInput from "./ToggleInput.vue";
 import TogglesInput from "./TogglesInput.vue";
 import UrlInput from "./UrlInput.vue";
 
-import Validator from "./Validator.js";
+import InputValidator from "./InputValidator";
 
 /**
  * Writer carries ProseMirror, which is the heaviest dependency
@@ -46,7 +46,7 @@ import Writer from "../Writer/Writer.vue";
 
 export default {
 	install(app) {
-		customElements.define("k-input-validator", Validator);
+		customElements.define("k-input-validator", InputValidator);
 
 		app.component("k-alpha-input", AlphaInput);
 		app.component("k-calendar-input", CalendarInput);

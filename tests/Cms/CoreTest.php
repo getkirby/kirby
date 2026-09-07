@@ -2,6 +2,9 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Form\Field\FilePickerField;
+use Kirby\Form\Field\PagePickerField;
+use Kirby\Form\Field\UserPickerField;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Core::class)]
@@ -105,6 +108,15 @@ class CoreTest extends TestCase
 		$this->assertArrayHasKey('url', $components);
 	}
 
+	public function testFieldAliases(): void
+	{
+		$aliases = $this->core->fieldAliases();
+
+		$this->assertSame(FilePickerField::class, $aliases['files']);
+		$this->assertSame(PagePickerField::class, $aliases['pages']);
+		$this->assertSame(UserPickerField::class, $aliases['users']);
+	}
+
 	public function testFields(): void
 	{
 		$fields = $this->core->fields();
@@ -113,6 +125,8 @@ class CoreTest extends TestCase
 		$this->assertArrayHasKey('checkboxes', $fields);
 		$this->assertArrayHasKey('date', $fields);
 		$this->assertArrayHasKey('email', $fields);
+		$this->assertArrayHasKey('filelist', $fields);
+		$this->assertArrayHasKey('filepicker', $fields);
 		$this->assertArrayHasKey('files', $fields);
 		$this->assertArrayHasKey('gap', $fields);
 		$this->assertArrayHasKey('headline', $fields);
@@ -123,10 +137,11 @@ class CoreTest extends TestCase
 		$this->assertArrayHasKey('list', $fields);
 		$this->assertArrayHasKey('multiselect', $fields);
 		$this->assertArrayHasKey('number', $fields);
+		$this->assertArrayHasKey('pagelist', $fields);
+		$this->assertArrayHasKey('pagepicker', $fields);
 		$this->assertArrayHasKey('pages', $fields);
 		$this->assertArrayHasKey('radio', $fields);
 		$this->assertArrayHasKey('range', $fields);
-		$this->assertArrayHasKey('section', $fields);
 		$this->assertArrayHasKey('select', $fields);
 		$this->assertArrayHasKey('slug', $fields);
 		$this->assertArrayHasKey('structure', $fields);
@@ -137,8 +152,14 @@ class CoreTest extends TestCase
 		$this->assertArrayHasKey('time', $fields);
 		$this->assertArrayHasKey('toggle', $fields);
 		$this->assertArrayHasKey('url', $fields);
+		$this->assertArrayHasKey('userpicker', $fields);
 		$this->assertArrayHasKey('users', $fields);
 		$this->assertArrayHasKey('writer', $fields);
+
+		// the aliases point at the picker fields
+		$this->assertSame(FilePickerField::class, $fields['files']);
+		$this->assertSame(PagePickerField::class, $fields['pages']);
+		$this->assertSame(UserPickerField::class, $fields['users']);
 	}
 
 	public function testFilePreviews(): void
@@ -234,29 +255,7 @@ class CoreTest extends TestCase
 		$this->assertArrayHasKey('video', $tags);
 	}
 
-	public function testSectionMixins(): void
-	{
-		$mixins = $this->core->sectionMixins();
 
-		$this->assertArrayHasKey('empty', $mixins);
-		$this->assertArrayHasKey('headline', $mixins);
-		$this->assertArrayHasKey('help', $mixins);
-		$this->assertArrayHasKey('layout', $mixins);
-		$this->assertArrayHasKey('max', $mixins);
-		$this->assertArrayHasKey('min', $mixins);
-		$this->assertArrayHasKey('pagination', $mixins);
-		$this->assertArrayHasKey('parent', $mixins);
-	}
-
-	public function testSections(): void
-	{
-		$sections = $this->core->sections();
-
-		$this->assertArrayHasKey('fields', $sections);
-		$this->assertArrayHasKey('files', $sections);
-		$this->assertArrayHasKey('info', $sections);
-		$this->assertArrayHasKey('pages', $sections);
-	}
 
 	public function testTemplates(): void
 	{

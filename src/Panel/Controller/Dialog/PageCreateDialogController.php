@@ -2,7 +2,6 @@
 
 namespace Kirby\Panel\Controller\Dialog;
 
-use Kirby\Blueprint\Section;
 use Kirby\Cms\App;
 use Kirby\Cms\Find;
 use Kirby\Cms\ModelWithContent;
@@ -11,6 +10,7 @@ use Kirby\Cms\Site;
 use Kirby\Cms\User;
 use Kirby\Content\MemoryStorage;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Form\Form;
 use Kirby\Panel\Field;
 use Kirby\Panel\Panel;
@@ -66,18 +66,14 @@ class PageCreateDialogController extends ModelCreateDialogController
 
 	public function __construct(
 		Page|Site|null $parent = null,
-		Section|string|null $section = null
+		array|null $blueprints = null
 	) {
 		parent::__construct(parent: $parent);
 
-		// convert section name to section object
-		if (is_string($section) === true) {
-			$section = $parent->blueprint()->section($section);
-		}
-
-		// gather all available blueprints from section or parent
+		// gather all available blueprints from the
+		// given list or from the parent
 		$this->blueprints = A::map(
-			$section?->blueprints() ?? $this->parent->blueprints(),
+			$blueprints ?? $this->parent->blueprints(),
 			function ($blueprint) {
 				$blueprint['name'] ??= $blueprint['value'] ?? null;
 				return $blueprint;
@@ -139,10 +135,8 @@ class PageCreateDialogController extends ModelCreateDialogController
 
 		return [
 			...$fields,
-			'parent'   => Field::hidden(), // @deprecated
-			'section'  => Field::hidden(), // @deprecated
+			'parent'   => Field::hidden(),
 			'template' => Field::hidden(),
-			'view'     => Field::hidden(), // @deprecated
 		];
 	}
 
@@ -151,22 +145,28 @@ class PageCreateDialogController extends ModelCreateDialogController
 		return [...parent::customFieldsIgnore(), 'title', 'slug'];
 	}
 
-	/**
-	 * @deprecated 6.0.0
-	 */
 	public static function factory(): static
 	{
-		$kirby   = App::instance();
-		$request = $kirby->request();
-		$view    = $request->get('view');
-		$parent  = $view ? Find::parent($view) : Find::site();
-		$section = $request->get('section');
+		$request = App::instance()->request();
+		$parent  = $request->get('parent');
+		$parent  = $parent ? Find::parent($parent) : Find::site();
+
+		if ($field = $request->get('field')) {
+			$blueprints = $parent->blueprints($field);
+
+			if ($blueprints === []) {
+				throw new NotFoundException(
+					message: 'The field "' . $field . '" does not accept new pages'
+				);
+			}
+		}
 
 		return new static(
-			parent:  $parent,
-			section: $section
+			parent:     $parent,
+			blueprints: $blueprints ?? null
 		);
 	}
+
 	/**
 	 * Provides all the props for the
 	 * dialog, including the fields and
@@ -335,13 +335,11 @@ class PageCreateDialogController extends ModelCreateDialogController
 	{
 		return [
 			...parent::value(),
-			'parent'   => $this->request->get('parent', ''), // @deprecated
-			'section'  => $this->request->get('section', ''), // @deprecated
+			'parent'   => $this->request->get('parent', ''),
 			'slug'     => $this->request->get('slug', ''),
 			'template' => $this->template(),
 			'title'    => $this->request->get('title', ''),
 			'uuid'     => $this->model()->uuid()->toString(),
-			'view'     => $this->request->get('view', ''), // @deprecated
 		];
 	}
 }

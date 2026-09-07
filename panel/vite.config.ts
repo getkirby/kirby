@@ -72,7 +72,8 @@ function createPlugins(mode: string): Plugin[] {
 		vue({
 			template: {
 				compilerOptions: {
-					isCustomElement: (tag) => ["k-input-validator"].includes(tag)
+					isCustomElement: (tag) =>
+						["k-input-validator", "k-validator"].includes(tag)
 				}
 			}
 		}),

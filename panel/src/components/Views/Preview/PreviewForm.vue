@@ -21,17 +21,17 @@
 		</header>
 
 		<div class="k-preview-form-body">
-			<k-sections
-				:blueprint="blueprint"
+			<k-model-form
+				:api="api"
+				:columns="tab.columns"
 				:content="content"
+				:diff="diff"
 				:empty="
 					$panel.config.debug
 						? $panel.html($t('page.blueprint', { blueprint: $esc(blueprint) }))
 						: null
 				"
 				:lock="lock"
-				:parent="api"
-				:tab="tab"
 				@input="$emit('input', $event)"
 				@submit="$emit('submit', $event)"
 			/>
@@ -55,7 +55,7 @@ export default {
 		diff: Object,
 		tab: Object,
 		tabs: Array,
-		lock: Boolean
+		lock: [Boolean, Object]
 	},
 	emits: ["discard", "input", "navigate", "submit"],
 	computed: {
@@ -72,19 +72,19 @@ export default {
 			});
 		}
 	},
-	mounted() {
-		this.$events.on("section.loaded", this.fixLinksInSection);
+	created() {
+		this.$events.on("field.loaded", this.fixLinks);
 	},
 	unmounted() {
-		this.$events.off("section.loaded", this.fixLinksInSection);
+		this.$events.off("field.loaded", this.fixLinks);
 	},
 	methods: {
 		/**
-		 * Overwrites all links to page views in the section
+		 * Overwrites all links to page views in the field
 		 * to open the corresponding page preview view instead
 		 */
-		fixLinksInSection(section) {
-			const links = section.$el.querySelectorAll(".k-item-title > .k-link");
+		fixLinks(element) {
+			const links = element.$el.querySelectorAll(".k-item-title > .k-link");
 			for (const link of links) {
 				const url = link.__vue__.to;
 
