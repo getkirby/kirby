@@ -24,6 +24,12 @@ use ReflectionMethod;
 trait HasActions
 {
 	/**
+	 * Cache of the resolved action methods per class and action.
+	 * Lookup only depends on the class, never on the model or user.
+	 */
+	protected static array $actions = [];
+
+	/**
 	 * Returns the name of the action for the given
 	 * dedicated action method
 	 */
@@ -38,10 +44,14 @@ trait HasActions
 	 */
 	public function has(string $action): bool
 	{
+		if (isset(static::$actions[static::class][$action]) === true) {
+			return static::$actions[static::class][$action];
+		}
+
 		$method = $this->method($action);
 
 		if (method_exists($this, $method) === false) {
-			return false;
+			return static::$actions[static::class][$action] = false;
 		}
 
 		$reflection = new ReflectionMethod($this, $method);
@@ -53,12 +63,12 @@ trait HasActions
 		// name keeps both in sync, so that a case variant of an action can
 		// never resolve to a real action method while missing its rule.
 		if ($this->action($reflection->getName()) !== $action) {
-			return false;
+			return static::$actions[static::class][$action] = false;
 		}
 
 		// action methods are protected, as they are only ever called
 		// through `::ensure()`.
-		return $reflection->isPrivate() === false;
+		return static::$actions[static::class][$action] = $reflection->isPrivate() === false;
 	}
 
 	/**
