@@ -58,7 +58,7 @@ class UserSecurityDrawerController extends UserDrawerController
 				'text'     => $this->i18n('email'),
 				'icon'     => 'email',
 				'dialog'   => $this->user->panel()->url(true) . '/changeEmail',
-				'disabled' => !$this->user->permissions()->can('changeEmail'),
+				'disabled' => $this->user->guards()->isAvailable('changeEmail') === false,
 			]
 		];
 

@@ -766,7 +766,7 @@ class Page extends ModelWithContent
 	 */
 	public function isSortable(): bool
 	{
-		return $this->permissions()->can('sort');
+		return $this->guards()->isAvailable('sort');
 	}
 
 	/**
@@ -904,7 +904,7 @@ class Page extends ModelWithContent
 	#[BlockCollectionAccess]
 	public function previewUrl(VersionId|string $versionId = 'latest'): string|null
 	{
-		if ($this->permissions()->can('preview') !== true) {
+		if ($this->guards()->isAvailable('preview') !== true) {
 			return null;
 		}
 

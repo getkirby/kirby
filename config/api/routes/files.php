@@ -53,7 +53,7 @@ return [
 						'template' => $template
 					]);
 
-					if ($file->permissions()->can('create') !== true) {
+					if ($file->guards()->isAvailable('create') !== true) {
 						throw new PermissionException(
 							message: 'The file cannot be created'
 						);
@@ -118,7 +118,7 @@ return [
 			return $this->upload(
 				callback: fn ($source) => $file->replace($source, move: true),
 				preflight: function () use ($file) {
-					if ($file->permissions()->can('replace') !== true) {
+					if ($file->guards()->isAvailable('replace') !== true) {
 						throw new PermissionException(
 							message: 'The file cannot be replaced'
 						);

@@ -20,21 +20,21 @@ class PageChangeTitleDialogController extends PageDialogController
 {
 	public function load(): Dialog
 	{
-		$permissions = $this->page->permissions();
-		$select      = $this->request->get('select', 'title');
+		$guards = $this->page->guards();
+		$select = $this->request->get('select', 'title');
 
 		return new FormDialog(
 			fields: [
 				'title' => Field::title([
 					'required'  => true,
 					'preselect' => $select === 'title',
-					'disabled'  => $permissions->can('changeTitle') === false
+					'disabled'  => $guards->isAvailable('changeTitle') === false
 				]),
 				'slug' => Field::slug([
 					'required'  => true,
 					'preselect' => $select === 'slug',
 					'path'      => $this->path(),
-					'disabled'  => $permissions->can('changeSlug') === false,
+					'disabled'  => $guards->isAvailable('changeSlug') === false,
 					'wizard'    => [
 						'text'  => $this->i18n('page.changeSlug.fromTitle'),
 						'field' => 'title'

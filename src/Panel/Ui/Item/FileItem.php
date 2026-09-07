@@ -37,11 +37,11 @@ class FileItem extends ModelItem
 
 	protected function permissions(): array
 	{
-		$permissions = $this->model->permissions();
+		$guards = $this->model->guards();
 
 		return [
-			'delete' => $permissions->can('delete'),
-			'sort'   => $permissions->can('sort'),
+			'delete' => $guards->isAvailable('delete'),
+			'sort'   => $guards->isAvailable('sort'),
 		];
 	}
 
