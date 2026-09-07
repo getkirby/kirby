@@ -2,8 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Exception\LogicException;
-
 /**
  * Boolean facade for the permission and ability guards
  * of a model. All rules live in `\Kirby\Guards\ModelPermissions`
@@ -19,8 +17,6 @@ use Kirby\Exception\LogicException;
 abstract class ModelPermissions
 {
 	protected array $options;
-
-	public static array $cache = [];
 
 	/**
 	 * @var TModel
@@ -54,19 +50,6 @@ abstract class ModelPermissions
 	}
 
 	/**
-	 * Can be overridden by specific child classes
-	 * to return a model-specific value used to
-	 * cache a once determined permission in memory
-	 *
-	 * @codeCoverageIgnore
-	 */
-	protected static function cacheKey(
-		ModelWithContent|Language $model
-	): string {
-		return '';
-	}
-
-	/**
 	 * Returns whether the current user is allowed to do
 	 * a certain action on the model
 	 *
@@ -78,32 +61,6 @@ abstract class ModelPermissions
 		bool $default = false
 	): bool {
 		return $this->model->guards()->isAvailable($action, $default);
-	}
-
-	/**
-	 * Quickly determines a permission for the current user role
-	 * and model blueprint unless dynamic checking is required
-	 *
-	 * @deprecated 6.0.0
-	 */
-	public static function canFromCache(
-		ModelWithContent|Language $model,
-		string $action,
-		bool $default = false
-	): bool {
-		$role     = $model->kirby()->role()?->id() ?? '__none__';
-		$category = static::category($model);
-		$cacheKey = $category . '.' . $action . '/' . static::cacheKey($model) . '/' . $role . '/' . ($default === true ? 'true' : 'false');
-
-		if (isset(static::$cache[$cacheKey]) === true) {
-			return static::$cache[$cacheKey];
-		}
-
-		if ($model->guards()->abilities()->has($action) === true) {
-			throw new LogicException('Cannot use permission cache for dynamically-determined permission');
-		}
-
-		return static::$cache[$cacheKey] = $model->permissions()->can($action, $default);
 	}
 
 	/**
