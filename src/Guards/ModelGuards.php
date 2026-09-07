@@ -7,6 +7,7 @@ use Kirby\Cms\User;
 use Kirby\Exception\AbilityException;
 use Kirby\Exception\Exception;
 use Kirby\Exception\PermissionException;
+use WeakMap;
 
 /**
  * Bundles all guard layers for a model object: the abilities,
@@ -21,6 +22,8 @@ use Kirby\Exception\PermissionException;
 abstract class ModelGuards
 {
 	use HasActions;
+
+	protected static WeakMap|null $cache = null;
 
 	public function __construct(
 		protected ModelAbilities $abilities,
@@ -74,6 +77,32 @@ abstract class ModelGuards
 
 		$this->ensureAvailable($action);
 		$this->validators()->ensure($action, ...$arguments);
+	}
+
+	/**
+	 * Returns the guards for the model,
+	 * bound to the currently authenticated user.
+	 */
+	public static function for(Model $model): static
+	{
+		$user   = User::ensure();
+		$cache  = static::$cache ??= new WeakMap();
+		$cached = $cache[$model] ?? null;
+
+		// the guards are bound to the current user and must
+		// be rebuilt whenever the user changes
+		if (
+			$cached instanceof static === true &&
+			$cached->user() === $user
+		) {
+			return $cached;
+		}
+
+		/** @psalm-suppress TooFewArguments */
+		return $cache[$model] = new static(
+			model: $model,
+			user: $user
+		);
 	}
 
 	/**

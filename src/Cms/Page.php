@@ -433,10 +433,7 @@ class Page extends ModelWithContent
 	 */
 	public function guards(): PageGuards
 	{
-		return new PageGuards(
-			model: $this,
-			user: User::ensure()
-		);
+		return PageGuards::for($this);
 	}
 
 	/**
