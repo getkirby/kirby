@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
@@ -20,6 +21,12 @@ class LanguageVariableTest extends TestCase
 		$this->app = new App([
 			'roots' => [
 				'index' => static::TMP,
+			],
+			'languages' => [
+				[
+					'code'    => 'en',
+					'default' => true,
+				]
 			]
 		]);
 
@@ -34,10 +41,37 @@ class LanguageVariableTest extends TestCase
 	/**
 	 * @covers ::create
 	 */
+	public function testCreateCoreKey()
+	{
+		$this->app->impersonate('kirby');
+
+		$this->expectException(DuplicateException::class);
+		$this->expectExceptionMessage('"date" is one of Kirby\'s own translation strings and cannot be overwritten by a language variable');
+
+		LanguageVariable::create('date', 'bar');
+	}
+
+	/**
+	 * @covers ::create
+	 */
+	public function testCreateDuplicateKey()
+	{
+		$this->app->impersonate('kirby');
+
+		$this->expectException(DuplicateException::class);
+		$this->expectExceptionMessage('A variable for "foo" already exists');
+
+		LanguageVariable::create('foo', 'bar');
+		LanguageVariable::create('foo', 'baz');
+	}
+
+	/**
+	 * @covers ::create
+	 */
 	public function testCreateEmptyKey()
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The variable needs a valid key');
+		$this->expectExceptionMessage('Please enter a valid key for the variable');
 
 		LanguageVariable::create('');
 	}

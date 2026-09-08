@@ -133,6 +133,11 @@
 	"error.language.name": "Please enter a valid name for the language",
 	"error.language.notFound": "The language could not be found",
 	"error.language.update.permission": "You are not allowed to update the language",
+	"error.language.variable.core": "\"{key}\" is one of Kirby's own translation strings and cannot be overwritten by a language variable",
+	"error.language.variable.duplicate": "A variable for \"{key}\" already exists",
+	"error.language.variable.key": "Please enter a valid key for the variable",
+	"error.language.variable.notFound": "The variable could not be found",
+	"error.language.variable.numeric": "The variable key must not be numeric",
 
 	"error.layout.validation.block": "There's an error on the \"{field}\" field in block {blockIndex} using the \"{fieldset}\" block type in layout {layoutIndex}",
 	"error.layout.validation.settings": "There's an error in layout {index} settings",
@@ -424,7 +429,6 @@
 
 	"language.variable.delete.confirm": "Do you really want to delete the variable for {key}?",
 	"language.variable.key": "Key",
-	"language.variable.notFound": "The variable could not be found",
 	"language.variable.value": "Value",
 
 	"languages": "Languages",

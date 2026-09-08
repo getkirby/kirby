@@ -545,7 +545,7 @@ class Language
 		}
 
 		// validate the updated language
-		LanguageRules::update($updated);
+		LanguageRules::update($updated, $this);
 
 		// trigger before hook
 		$kirby->trigger('language.update:before', [
