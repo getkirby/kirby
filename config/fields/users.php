@@ -69,7 +69,12 @@ return [
 				}
 
 				if ($id !== null && ($user = $kirby->user($id))) {
-					$users[] = $this->userResponse($user);
+					// never disclose a user the current user must not list,
+					// but keep its ID to not drop it from the value on save
+					$users[] = match ($user->isListable()) {
+						true  => $this->userResponse($user),
+						false => $this->protectedResponse($id)
+					};
 				}
 			}
 
