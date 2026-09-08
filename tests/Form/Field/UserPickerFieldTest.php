@@ -75,6 +75,76 @@ class UserPickerFieldTest extends TestCase
 		$this->assertSame('user://raphael', $api[1]['uuid']);
 	}
 
+	public function testApiItemsWithProtectedModel(): void
+	{
+		// the permission cache is keyed by role,
+		// so it needs to be unique for this test
+		$uuid = uuid();
+
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'options' => ['api.allowImpersonation' => true],
+			'roles' => [
+				[
+					'name'        => 'editor-' . $uuid,
+					'permissions' => [
+						'users' => ['list' => false]
+					]
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+						'blueprint' => [
+							'title' => 'Test',
+							'name' => 'test',
+							'fields' => [
+								'authors' => [
+									'type' => 'users',
+								]
+							]
+						]
+					]
+				]
+			],
+			'users' => [
+				[
+					'id'    => 'editor',
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor-' . $uuid
+				],
+				[
+					'id'    => 'admin',
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin'
+				]
+			],
+			'request' => [
+				'query' => [
+					'items' => 'editor@getkirby.com,admin@getkirby.com'
+				]
+			]
+		]);
+
+		$app->impersonate('editor@getkirby.com');
+		$api = $app->api()->call('pages/test/fields/authors/items');
+
+		$this->assertCount(2, $api);
+
+		// the editor may list themselves
+		$this->assertSame('editor', $api[0]['id']);
+
+		// the user that must not be listed only echoes back
+		// the ID that is already stored in the content file
+		$this->assertSame('admin@getkirby.com', $api[1]['id']);
+		$this->assertSame('admin@getkirby.com', $api[1]['uuid']);
+		$this->assertSame('–', $api[1]['text']);
+		$this->assertFalse($api[1]['link']);
+	}
+
 	public function testDefaultUser(): void
 	{
 		$this->app->impersonate('raphael@getkirby.com');

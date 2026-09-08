@@ -107,6 +107,81 @@ class PagePickerFieldTest extends TestCase
 		$this->assertSame('page://my-b', $api[2]['uuid']);
 	}
 
+	public function testApiItemsWithProtectedModel(): void
+	{
+		// the permission cache is keyed by template and role,
+		// so both need to be unique for this test
+		$uuid = uuid();
+
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'blueprints' => [
+				'pages/secret-' . $uuid => [
+					'options' => ['list' => false]
+				]
+			],
+			'options' => ['api.allowImpersonation' => true],
+			'roles' => [
+				['name' => 'editor-' . $uuid]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+						'content' => ['uuid' => 'my-test-uuid'],
+						'blueprint' => [
+							'title' => 'Test',
+							'name' => 'test',
+							'fields' => [
+								'related' => [
+									'type' => 'pages',
+								]
+							]
+						]
+					],
+					[
+						'slug' => 'a',
+						'content' => ['uuid'  => 'my-a'],
+					],
+					[
+						'slug' => 'b',
+						'content' => ['uuid'  => 'my-b'],
+						'template' => 'secret-' . $uuid,
+					],
+				]
+			],
+			'users' => [
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor-' . $uuid
+				]
+			],
+			'request' => [
+				'query' => [
+					'items' => 'page://my-a,page://my-b'
+				]
+			]
+		]);
+
+		$app->impersonate('editor@getkirby.com');
+		$api = $app->api()->call('pages/test/fields/related/items');
+
+		$this->assertCount(2, $api);
+
+		// the listable page is resolved as usual
+		$this->assertSame('a', $api[0]['id']);
+		$this->assertSame('page://my-a', $api[0]['uuid']);
+
+		// the page that must not be listed only echoes back
+		// the ID that is already stored in the content file
+		$this->assertSame('page://my-b', $api[1]['id']);
+		$this->assertSame('page://my-b', $api[1]['uuid']);
+		$this->assertSame('–', $api[1]['text']);
+		$this->assertFalse($api[1]['link']);
+	}
+
 	public function testDialogs(): void
 	{
 		$field = $this->field('pages', [

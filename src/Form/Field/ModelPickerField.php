@@ -5,6 +5,7 @@ namespace Kirby\Form\Field;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Data\Data;
 use Kirby\Form\Mixin;
+use Kirby\Panel\Ui\Item\ProtectedItem;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 use Kirby\Uuid\Uuids;
@@ -157,7 +158,20 @@ abstract class ModelPickerField extends InputField
 						$ids,
 						function ($id) use ($field): array|null {
 							$model = $field->toModel($id);
-							return $model ? $field->toItem($model) : null;
+
+							if ($model === null) {
+								return null;
+							}
+
+							// never disclose a model the current user must not
+							// list, but keep its ID to not drop it from the value
+							return match ($model->isListable()) {
+								true  => $field->toItem($model),
+								false => (new ProtectedItem(
+									$id,
+									layout: $field->layout()
+								))->props()
+							};
 						}
 					);
 				}

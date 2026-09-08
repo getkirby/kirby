@@ -160,6 +160,82 @@ class FilePickerFieldTest extends TestCase
 		$this->assertSame('file://my-b', $api[1]['uuid']);
 	}
 
+	public function testApiItemsWithProtectedModel(): void
+	{
+		// the permission cache is keyed by template and role,
+		// so both need to be unique for this test
+		$uuid = uuid();
+
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'blueprints' => [
+				'files/secret-' . $uuid => [
+					'options' => ['list' => false]
+				]
+			],
+			'options' => ['api.allowImpersonation' => true],
+			'roles' => [
+				['name' => 'editor-' . $uuid]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+						'files' => [
+							[
+								'filename' => 'a.jpg',
+								'content' => ['uuid'  => 'my-a'],
+							],
+							[
+								'filename' => 'b.jpg',
+								'content' => ['uuid'  => 'my-b'],
+								'template' => 'secret-' . $uuid,
+							],
+						],
+						'blueprint' => [
+							'title' => 'Test',
+							'name' => 'test',
+							'fields' => [
+								'gallery' => [
+									'type' => 'files',
+								]
+							]
+						]
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor-' . $uuid
+				]
+			],
+			'request' => [
+				'query' => [
+					'items' => 'file://my-a,file://my-b'
+				]
+			]
+		]);
+
+		$app->impersonate('editor@getkirby.com');
+		$api = $app->api()->call('pages/test/fields/gallery/items');
+
+		$this->assertCount(2, $api);
+
+		// the listable file is resolved as usual
+		$this->assertSame('test/a.jpg', $api[0]['id']);
+		$this->assertSame('file://my-a', $api[0]['uuid']);
+
+		// the file that must not be listed only echoes back
+		// the ID that is already stored in the content file
+		$this->assertSame('file://my-b', $api[1]['id']);
+		$this->assertSame('file://my-b', $api[1]['uuid']);
+		$this->assertSame('–', $api[1]['text']);
+		$this->assertFalse($api[1]['link']);
+	}
+
 	public function testDialogs(): void
 	{
 		$field = $this->field('files', [
