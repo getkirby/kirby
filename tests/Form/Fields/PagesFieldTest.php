@@ -36,6 +36,8 @@ class PagesFieldTest extends TestCase
 				]
 			]
 		]);
+
+		$this->app->impersonate('kirby');
 	}
 
 	public function model()
@@ -78,6 +80,67 @@ class PagesFieldTest extends TestCase
 		];
 
 		$this->assertSame($expected, $ids);
+	}
+
+	public function testValueWithProtectedPage(): void
+	{
+		// the permission cache is keyed by template and role,
+		// so both need to be unique for this test
+		$uuid = uuid();
+
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'blueprints' => [
+				'pages/secret-' . $uuid => [
+					'options' => ['list' => false]
+				]
+			],
+			'roles' => [
+				['name' => 'editor-' . $uuid]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'a'
+					],
+					[
+						'slug'     => 'b',
+						'template' => 'secret-' . $uuid
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor-' . $uuid
+				]
+			],
+			'user' => 'editor@getkirby.com'
+		]);
+
+		$field = $this->field('pages', [
+			'model' => $app->site(),
+			'store' => 'id',
+			'value' => ['a', 'b']
+		]);
+
+		$value = $field->value();
+
+		// the listable page is resolved as usual
+		$this->assertSame('a', $value[0]['id']);
+		$this->assertSame('a', $value[0]['text']);
+
+		// the page that must not be listed only echoes back
+		// the ID that is already stored in the content file
+		$this->assertSame(['id', 'uuid', 'image', 'info', 'link', 'permissions', 'sortable', 'text'], array_keys($value[1]));
+		$this->assertSame('b', $value[1]['id']);
+		$this->assertSame('–', $value[1]['text']);
+		$this->assertFalse($value[1]['link']);
+
+		// ... and is still kept when the value is stored again
+		$this->assertSame(['a', 'b'], $field->data());
 	}
 
 	public function testMin()

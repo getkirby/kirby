@@ -17,19 +17,25 @@ class UsersFieldTest extends TestCase
 			],
 			'users' => [
 				[
-					'email' => 'leonardo@getkirby.com'
+					'email' => 'leonardo@getkirby.com',
+					'role'  => 'admin'
 				],
 				[
-					'email' => 'raphael@getkirby.com'
+					'email' => 'raphael@getkirby.com',
+					'role'  => 'admin'
 				],
 				[
-					'email' => 'michelangelo@getkirby.com'
+					'email' => 'michelangelo@getkirby.com',
+					'role'  => 'admin'
 				],
 				[
-					'email' => 'donatello@getkirby.com'
+					'email' => 'donatello@getkirby.com',
+					'role'  => 'admin'
 				]
 			]
 		]);
+
+		$this->app->impersonate('kirby');
 	}
 
 	public function testDefaultProps()
@@ -118,6 +124,62 @@ class UsersFieldTest extends TestCase
 		];
 
 		$this->assertSame($expected, $ids);
+	}
+
+	public function testValueWithProtectedUser(): void
+	{
+		// the permission cache is keyed by role,
+		// so it needs to be unique for this test
+		$uuid = uuid();
+
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'roles' => [
+				[
+					'name'        => 'editor-' . $uuid,
+					'permissions' => [
+						'users' => ['list' => false]
+					]
+				]
+			],
+			'users' => [
+				[
+					'id'    => 'editor',
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor-' . $uuid
+				],
+				[
+					'id'    => 'admin',
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin'
+				]
+			],
+			'user' => 'editor@getkirby.com'
+		]);
+
+		$field = $this->field('users', [
+			'model' => new Page(['slug' => 'test']),
+			'store' => 'id',
+			'value' => ['editor@getkirby.com', 'admin@getkirby.com']
+		]);
+
+		$value = $field->value();
+
+		// the editor may list themselves
+		$this->assertSame('editor', $value[0]['id']);
+		$this->assertSame('editor@getkirby.com', $value[0]['email']);
+
+		// the user that must not be listed only echoes back
+		// the ID that is already stored in the content file
+		$this->assertSame(['id', 'uuid', 'image', 'info', 'link', 'permissions', 'sortable', 'text'], array_keys($value[1]));
+		$this->assertSame('admin@getkirby.com', $value[1]['id']);
+		$this->assertSame('–', $value[1]['text']);
+		$this->assertFalse($value[1]['link']);
+
+		// ... and is still kept when the value is stored again
+		$this->assertSame(['editor', 'admin@getkirby.com'], $field->data());
 	}
 
 	public function testMin()

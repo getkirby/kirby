@@ -54,6 +54,8 @@ class FilesFieldTest extends TestCase
 				]
 			]
 		]);
+
+		$this->app->impersonate('kirby');
 	}
 
 	public function model()
@@ -98,6 +100,73 @@ class FilesFieldTest extends TestCase
 		];
 
 		$this->assertSame($expected, $ids);
+	}
+
+	public function testValueWithProtectedFile(): void
+	{
+		// the permission cache is keyed by template and role,
+		// so both need to be unique for this test
+		$uuid = uuid();
+
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'blueprints' => [
+				'files/secret-' . $uuid => [
+					'options' => ['list' => false]
+				]
+			],
+			'roles' => [
+				['name' => 'editor-' . $uuid]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'test',
+						'files' => [
+							[
+								'filename' => 'a.jpg'
+							],
+							[
+								'filename' => 'b.jpg',
+								'template' => 'secret-' . $uuid
+							]
+						]
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor-' . $uuid
+				]
+			],
+			'user' => 'editor@getkirby.com'
+		]);
+
+		$field = $this->field('files', [
+			'model' => $app->page('test'),
+			'store' => 'id',
+			'value' => ['a.jpg', 'b.jpg']
+		]);
+
+		$value = $field->value();
+
+		// the listable file is resolved as usual
+		$this->assertSame('a.jpg', $value[0]['id']);
+		$this->assertSame('a.jpg', $value[0]['filename']);
+		$this->assertStringContainsString('a.jpg', $value[0]['url']);
+
+		// the file that must not be listed only echoes back
+		// the ID that is already stored in the content file
+		$this->assertSame(['id', 'uuid', 'image', 'info', 'link', 'permissions', 'sortable', 'text'], array_keys($value[1]));
+		$this->assertSame('b.jpg', $value[1]['id']);
+		$this->assertSame('–', $value[1]['text']);
+		$this->assertFalse($value[1]['link']);
+
+		// ... and is still kept when the value is stored again
+		$this->assertSame(['a.jpg', 'b.jpg'], $field->data());
 	}
 
 	public function testMin()
