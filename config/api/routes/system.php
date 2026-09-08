@@ -42,6 +42,8 @@ return [
 		'pattern' => 'system/register',
 		'method'  => 'POST',
 		'action'  => function () {
+			$this->validateAreaAccess('system');
+
 			return $this->kirby()->system()->register($this->requestBody('license'), $this->requestBody('email'));
 		}
 	],

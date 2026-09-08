@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\PermissionException;
 use Kirby\TestCase;
 
 class SystemRoutesTest extends TestCase
@@ -173,5 +174,23 @@ class SystemRoutesTest extends TestCase
 		$this->assertArrayNotHasKey('authStatus', $data);
 		$this->assertArrayNotHasKey('loginMethods', $data);
 		$this->assertArrayNotHasKey('user', $data);
+	}
+
+	public function testRegisterWithoutSystemAccess(): void
+	{
+		$this->createValidInstallation();
+		$user = $this->createUser('editor');
+
+		$this->app->impersonate($user);
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('No access');
+
+		$this->app->api()->call('system/register', 'POST', [
+			'body' => [
+				'license' => 'K-TEST-1234',
+				'email'   => 'test@getkirby.com'
+			]
+		]);
 	}
 }
