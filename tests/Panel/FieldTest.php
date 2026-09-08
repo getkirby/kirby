@@ -38,6 +38,8 @@ class FieldTest extends TestCase
 			]
 		]);
 
+		$this->app->impersonate('kirby');
+
 		$site = $this->app->site();
 		$file = $site->file('b.jpg');
 
@@ -92,6 +94,8 @@ class FieldTest extends TestCase
 				]
 			]
 		]);
+
+		$this->app->impersonate('kirby');
 
 		$site = $this->app->site();
 		$page = $site->find('b');
