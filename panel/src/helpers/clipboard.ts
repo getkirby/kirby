@@ -31,6 +31,24 @@ export function read(
 	return null;
 }
 
+/**
+ * Returns the element that the temporary textarea
+ * for the `execCommand` fallback can be added to.
+ *
+ * An open modal dialog turns the rest of the document
+ * inert, which would keep the textarea from being
+ * selected and thus from being copied.
+ */
+function container(): HTMLElement {
+	const dialogs = document.querySelectorAll<HTMLDialogElement>("dialog[open]");
+
+	return (
+		document.activeElement?.closest<HTMLElement>("dialog[open]") ??
+		dialogs[dialogs.length - 1] ??
+		document.body
+	);
+}
+
 export function write(value: unknown, e?: Event) {
 	// create pretty json of objects and arrays
 	if (typeof value !== "string") {
@@ -50,7 +68,7 @@ export function write(value: unknown, e?: Event) {
 	// fall back to little execCommand hack with a temporary textarea
 	const input = document.createElement("textarea");
 	input.value = string;
-	document.body.append(input);
+	container().append(input);
 
 	// iOS
 	if (navigator.userAgent.match(/ipad|ipod|iphone/i)) {
