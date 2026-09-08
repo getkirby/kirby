@@ -10,11 +10,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(PageBlueprint::class)]
 class PageBlueprintTest extends TestCase
 {
-	protected function tearDown(): void
-	{
-		Blueprint::$loaded = [];
-	}
-
 	public function testOptions(): void
 	{
 		$blueprint = new PageBlueprint([
@@ -174,6 +169,44 @@ class PageBlueprintTest extends TestCase
 		];
 
 		$this->assertSame($expected, $blueprint->status());
+	}
+
+	public function testStatusForHomeAndErrorPage(): void
+	{
+		$app = new App([
+			'roots' => ['index' => '/dev/null'],
+			'site'  => [
+				'children' => [
+					['slug' => 'home'],
+					['slug' => 'error'],
+					['slug' => 'test'],
+				]
+			]
+		]);
+
+		// all three pages share the same cached `pages/default` blueprint
+		$this->assertArrayNotHasKey('draft', $app->page('home')->blueprint()->status());
+		$this->assertArrayNotHasKey('draft', $app->page('error')->blueprint()->status());
+		$this->assertArrayHasKey('draft', $app->page('test')->blueprint()->status());
+	}
+
+	public function testStatusForHomeAndErrorPageFromSharedCache(): void
+	{
+		$app = new App([
+			'roots' => ['index' => '/dev/null'],
+			'site'  => [
+				'children' => [
+					['slug' => 'test'],
+					['slug' => 'home'],
+				]
+			]
+		]);
+
+		// whichever page normalizes `pages/default` first must not bake
+		// its own status into the shared blueprint (the test above
+		// covers the same for the home page normalizing first)
+		$this->assertArrayHasKey('draft', $app->page('test')->blueprint()->status());
+		$this->assertArrayNotHasKey('draft', $app->page('home')->blueprint()->status());
 	}
 
 	public function testStatusWithCustomText(): void
@@ -533,5 +566,43 @@ class PageBlueprintTest extends TestCase
 		$app->setCurrentTranslation('fr');
 		$page = $app->page('test');
 		$this->assertSame('My title', $page->blueprint()->title());
+	}
+
+	public function testToArray(): void
+	{
+		new App([
+			'roots' => ['index' => '/dev/null']
+		]);
+
+		$blueprint = new PageBlueprint([
+			'model'  => new Page(['slug' => 'test']),
+			'status' => [
+				'draft' => [
+					'label' => ['en' => 'Draft Label'],
+					'text'  => ['en' => 'Draft Text']
+				]
+			]
+		]);
+
+		// the status must be resolved just like in `status()`
+		$this->assertSame($blueprint->status(), $blueprint->toArray()['status']);
+		$this->assertSame('Draft Label', $blueprint->toArray()['status']['draft']['label']);
+	}
+
+	public function testToArrayForHomePage(): void
+	{
+		$app = new App([
+			'roots' => ['index' => '/dev/null'],
+			'site'  => [
+				'children' => [
+					['slug' => 'home'],
+					['slug' => 'test'],
+				]
+			]
+		]);
+
+		// the home page can never be a draft
+		$this->assertArrayNotHasKey('draft', $app->page('home')->blueprint()->toArray()['status']);
+		$this->assertArrayHasKey('draft', $app->page('test')->blueprint()->toArray()['status']);
 	}
 }

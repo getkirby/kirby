@@ -9,18 +9,21 @@
  */
 export default {
 	data: () => ({
+		isProcessing: false,
 		isSelecting: false,
 		selected: []
 	}),
 	created() {
 		this.$events.on(this.batchEditingEvent, this.stopSelectingCollision);
 	},
-	destroyed() {
+	unmounted() {
 		this.$events.off(this.batchEditingEvent, this.stopSelectingCollision);
 	},
 	computed: {
 		batchDeleteConfirmMessage() {
-			return this.$t(`${this.type}.delete.confirm.selected`, {
+			const type = this.$options.type ?? this.type;
+
+			return this.$t(`${type}.delete.confirm.selected`, {
 				count: this.selected.length
 			});
 		},
@@ -28,7 +31,7 @@ export default {
 			const buttons = [];
 
 			buttons.push({
-				disabled: this.selected.length === 0,
+				disabled: this.selected.length === 0 || this.isProcessing,
 				icon: "trash",
 				text: this.$t("delete") + ` (${this.selected.length})`,
 				theme: "negative",

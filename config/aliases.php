@@ -90,7 +90,6 @@ return [
 	'kirby\cms\plugin'         => 'Kirby\Plugin\Plugin',
 	'kirby\cms\pluginasset'    => 'Kirby\Plugin\Asset',
 	'kirby\cms\pluginassets'   => 'Kirby\Plugin\Assets',
-	'kirby\cms\section'        => 'Kirby\Blueprint\Section',
 	'kirby\cms\siteblueprint'  => 'Kirby\Blueprint\SiteBlueprint',
 	'kirby\cms\template'       => 'Kirby\Template\Template',
 	'kirby\cms\userblueprint'  => 'Kirby\Blueprint\UserBlueprint',

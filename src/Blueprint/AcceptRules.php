@@ -3,10 +3,12 @@
 namespace Kirby\Blueprint;
 
 use Kirby\Cms\App;
+use Kirby\Form\Field;
+use Kirby\Form\Mixin\Upload;
 
 /**
  * The AcceptRules class goes through all blueprint settings for
- * sections and fields and collects rules for accepted files
+ * fields and collects rules for accepted files
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
@@ -25,41 +27,24 @@ class AcceptRules
 	 * Gathers what file templates are allowed in
 	 * this model based on the blueprint
 	 */
-	public function fileTemplates(string|null $inSection = null): array
+	public function fileTemplates(string|null $inField = null): array
 	{
 		// get cached results for the current file model
-		// (except when collecting for a specific section)
-		if ($inSection === null && $this->fileTemplates !== null) {
+		// (except when collecting for a specific field)
+		if ($inField === null && $this->fileTemplates !== null) {
 			return $this->fileTemplates; // @codeCoverageIgnore
 		}
 
-		$templates = [];
-
 		// collect all allowed file templates from blueprint…
-		foreach ($this->blueprint->sections() as $section) {
-			// if collecting for a specific section, skip all others
-			if ($inSection !== null && $section->name() !== $inSection) {
-				continue;
-			}
+		$fields = match ($inField) {
+			null    => $this->blueprint->fields(),
+			default => array_filter([$this->blueprint->field($inField)])
+		};
 
-			$template  = $section->template();
-			$templates = match ($section->type()) {
-				'files'  => [
-					...$templates,
-					...($template
-						? [$template]
-						: App::instance()->blueprints('files'))
-				],
-				'fields' => [
-					...$templates,
-					...$this->fileTemplatesFromFields($section->fields())
-				],
-				default  => $templates
-			};
-		}
+		$templates = $this->fileTemplatesFromFields($fields);
 
-		// no caching for when collecting for specific section
-		if ($inSection !== null) {
+		// no caching for when collecting for a specific field
+		if ($inField !== null) {
 			return $templates; // @codeCoverageIgnore
 		}
 
@@ -74,11 +59,31 @@ class AcceptRules
 		$templates = [];
 
 		foreach ($fields as $field) {
-			// fields with uploads settings
-			if (isset($field['uploads']) === true && is_array($field['uploads']) === true) {
+			// file lists accept uploads for their own template
+			if (($field['type'] ?? null) === 'filelist') {
+				$template  = $field['template'] ?? null;
 				$templates = [
 					...$templates,
-					...$this->fileTemplatesFromFieldUploads($field['uploads'])
+					...($template
+						? [$template]
+						: App::instance()->blueprints('files'))
+				];
+				continue;
+			}
+
+			// fields that support uploads. The blueprint props are not
+			// normalized yet, so the string shortcut and the default
+			// settings have to be resolved here as well
+			$uploads = $field['uploads'] ?? null;
+
+			if ($uploads !== false && $this->supportsUploads($field['type'] ?? null) === true) {
+				$templates = [
+					...$templates,
+					...$this->fileTemplatesFromFieldUploads(match (true) {
+						is_string($uploads) => ['template' => $uploads],
+						is_array($uploads)  => $uploads,
+						default             => []
+					})
 				];
 				continue;
 			}
@@ -113,7 +118,13 @@ class AcceptRules
 		$templates = [];
 
 		foreach ($fieldsets as $fieldset) {
-			foreach (($fieldset['tabs'] ?? []) as $tab) {
+			// the blueprint props are not normalized yet, so a fieldset
+			// can still use the `fields` shortcut instead of tabs
+			$tabs = $fieldset['tabs'] ?? [
+				['fields' => $fieldset['fields'] ?? []]
+			];
+
+			foreach ($tabs as $tab) {
 				$templates = [
 					...$templates,
 					...$this->fileTemplatesFromFields($tab['fields'] ?? [])
@@ -122,6 +133,27 @@ class AcceptRules
 		}
 
 		return $templates;
+	}
+
+	/**
+	 * Checks if a field type supports file uploads
+	 * @since 6.0.0
+	 */
+	protected function supportsUploads(string|null $type): bool
+	{
+		$class = Field::$types[$type] ?? null;
+
+		if (is_string($class) === false || class_exists($class) === false) {
+			return false;
+		}
+
+		$traits = [];
+
+		for ($parent = $class; $parent !== false; $parent = get_parent_class($parent)) {
+			$traits = [...$traits, ...(class_uses($parent) ?: [])];
+		}
+
+		return isset($traits[Upload::class]);
 	}
 
 	/**

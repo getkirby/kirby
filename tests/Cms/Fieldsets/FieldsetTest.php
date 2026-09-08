@@ -102,6 +102,37 @@ class FieldsetTest extends TestCase
 		$this->assertSame('text', $fieldset->fields()['text']['type']);
 	}
 
+	public function testFieldsInTabsWithDuplicateName(): void
+	{
+		$fieldset = new Fieldset([
+			'type' => 'test',
+			'tabs' => [
+				'one' => [
+					'fields' => [
+						'shared' => ['type' => 'text']
+					]
+				],
+				'two' => [
+					'fields' => [
+						'shared' => ['type' => 'number']
+					]
+				]
+			]
+		]);
+
+		// the fields of all tabs end up in a single flat map, so the
+		// second tab must not overwrite the field of the first one
+		$fields = $fieldset->fields();
+
+		$this->assertSame('text', $fields['shared']['type']);
+		$this->assertSame('info', $fields['shared-duplicate-1']['type']);
+
+		$tabs = $fieldset->tabs();
+
+		$this->assertSame(['shared'], array_keys($tabs['one']['fields']));
+		$this->assertSame(['shared-duplicate-1'], array_keys($tabs['two']['fields']));
+	}
+
 	public function testFieldsWithDisabledTabs(): void
 	{
 		$fieldset = new Fieldset([

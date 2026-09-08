@@ -563,9 +563,9 @@ class FileRulesTest extends ModelTestCase
 		$this->app = $this->app->clone([
 			'blueprints' => [
 				'pages/foo' => [
-					'sections' => [
-						[
-							'type' => 'files',
+					'fields' => [
+						'files' => [
+							'type'     => 'filelist',
 							'template' => 'b'
 						]
 					]

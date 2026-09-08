@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Closure;
-use Kirby\Blueprint\Blueprint;
 use Kirby\TestCase as BaseTestCase;
 use Kirby\Toolkit\I18n;
 
@@ -21,8 +20,6 @@ abstract class TestCase extends BaseTestCase
 			]
 		]);
 
-		Blueprint::$loaded = [];
-
 		I18n::$locale = null;
 	}
 
@@ -30,7 +27,6 @@ abstract class TestCase extends BaseTestCase
 	{
 		parent::tearDown();
 		App::destroy();
-		Blueprint::$loaded = [];
 
 		$this->tearDownTmp();
 

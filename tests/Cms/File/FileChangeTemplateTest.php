@@ -24,13 +24,13 @@ class FileChangeTemplateTest extends ModelTestCase
 			],
 			'blueprints' => [
 				'pages/test' => [
-					'sections' => [
-						[
-							'type' => 'files',
+					'fields' => [
+						'files-a' => [
+							'type'     => 'filelist',
 							'template' => 'a'
 						],
-						[
-							'type' => 'files',
+						'files-b' => [
+							'type'     => 'filelist',
 							'template' => 'b'
 						]
 					]
@@ -118,13 +118,13 @@ class FileChangeTemplateTest extends ModelTestCase
 		$this->app = $this->app->clone([
 			'blueprints' => [
 				'pages/test' => [
-					'sections' => [
-						[
-							'type' => 'files',
+					'fields' => [
+						'files-a' => [
+							'type'     => 'filelist',
 							'template' => 'a'
 						],
-						[
-							'type' => 'files',
+						'files-b' => [
+							'type'     => 'filelist',
 							'template' => 'b'
 						]
 					]
@@ -267,12 +267,12 @@ class FileChangeTemplateTest extends ModelTestCase
 		$this->app = $this->app->clone([
 			'blueprints' => [
 				'pages/test-default' => [
-					'sections' => [
-						[
-							'type' => 'files',
+					'fields' => [
+						'files-a' => [
+							'type' => 'filelist'
 						],
-						[
-							'type' => 'files',
+						'files-b' => [
+							'type'     => 'filelist',
 							'template' => 'for-default-b'
 						]
 					]
@@ -317,17 +317,17 @@ class FileChangeTemplateTest extends ModelTestCase
 		$this->app = $this->app->clone([
 			'blueprints' => [
 				'pages/test-default' => [
-					'sections' => [
-						[
-							'type' => 'files',
+					'fields' => [
+						'files-a' => [
+							'type'     => 'filelist',
 							'template' => 'for-default-b'
 						],
-						[
-							'type' => 'files',
+						'files-b' => [
+							'type'     => 'filelist',
 							'template' => 'for-default-c'
 						],
-						[
-							'type' => 'files',
+						'files-c' => [
+							'type'     => 'filelist',
 							'template' => 'for-default-d'
 						]
 					]
@@ -371,13 +371,13 @@ class FileChangeTemplateTest extends ModelTestCase
 		$this->app = $this->app->clone([
 			'blueprints' => [
 				'pages/test-default' => [
-					'sections' => [
-						[
-							'type' => 'files',
+					'fields' => [
+						'files-a' => [
+							'type'     => 'filelist',
 							'template' => 'manipulate-a'
 						],
-						[
-							'type' => 'files',
+						'files-b' => [
+							'type'     => 'filelist',
 							'template' => 'manipulate-b'
 						]
 					]
@@ -428,13 +428,13 @@ class FileChangeTemplateTest extends ModelTestCase
 		$this->app = $this->app->clone([
 			'blueprints' => [
 				'pages/test-default' => [
-					'sections' => [
-						[
-							'type' => 'files',
+					'fields' => [
+						'files-a' => [
+							'type'     => 'filelist',
 							'template' => 'manipulate-a'
 						],
-						[
-							'type' => 'files',
+						'files-b' => [
+							'type'     => 'filelist',
 							'template' => 'manipulate-b'
 						]
 					]

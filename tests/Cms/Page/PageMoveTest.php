@@ -15,9 +15,9 @@ class PageMoveTest extends ModelTestCase
 		$this->app = $this->app->clone([
 			'blueprints' => [
 				'pages/parent' => [
-					'sections' => [
+					'fields' => [
 						'subpages' => [
-							'type'     => 'pages',
+							'type'     => 'pagelist',
 							'template' => 'child'
 						]
 					]
@@ -72,9 +72,9 @@ class PageMoveTest extends ModelTestCase
 		$this->app = $this->app->clone([
 			'blueprints' => [
 				'pages/parent' => [
-					'sections' => [
+					'fields' => [
 						'subpages' => [
-							'type'     => 'pages',
+							'type'     => 'pagelist',
 							'template' => 'child'
 						]
 					]
@@ -110,9 +110,9 @@ class PageMoveTest extends ModelTestCase
 		$this->app = $this->app->clone([
 			'blueprints' => [
 				'pages/parent' => [
-					'sections' => [
+					'fields' => [
 						'subpages' => [
-							'type'     => 'pages',
+							'type'     => 'pagelist',
 							'template' => 'child'
 						]
 					]
@@ -164,9 +164,9 @@ class PageMoveTest extends ModelTestCase
 		$this->app = $this->app->clone([
 			'blueprints' => [
 				'pages/parent' => [
-					'sections' => [
+					'fields' => [
 						'subpages' => [
-							'type'     => 'pages',
+							'type'     => 'pagelist',
 							'template' => 'child'
 						]
 					]

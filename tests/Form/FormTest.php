@@ -7,7 +7,7 @@ use Kirby\Cms\File;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
-use Kirby\Exception\InvalidArgumentException;
+use Kirby\Form\Field\InfoField;
 use Kirby\Form\Field\InputField;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -98,18 +98,25 @@ class FormTest extends TestCase
 		$this->assertSame($expected, $form->errors());
 	}
 
-	public function testFieldException(): void
+	public function testFieldError(): void
 	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Field "test": The field type "does-not-exist" does not exist');
-
-		new Form(
+		// an invalid field does not take down the whole form,
+		// but is replaced by an info field with the error message
+		$form = new Form(
 			fields: [
 				'test' => [
 					'type'  => 'does-not-exist',
 					'model' => $this->model
 				]
 			]
+		);
+
+		$field = $form->fields()->get('test');
+
+		$this->assertInstanceOf(InfoField::class, $field);
+		$this->assertSame(
+			'<p>Field "test": The field type "does-not-exist" does not exist</p>',
+			(string)$field->text()
 		);
 	}
 

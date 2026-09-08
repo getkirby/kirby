@@ -5,7 +5,6 @@ use Kirby\Panel\Controller\Dialog\FileChangeNameDialogController;
 use Kirby\Panel\Controller\Dialog\FileChangeSortDialogController;
 use Kirby\Panel\Controller\Dialog\FileChangeTemplateDialogController;
 use Kirby\Panel\Controller\Dialog\FileDeleteDialogController;
-use Kirby\Panel\Controller\Dialog\SectionDialogController;
 use Kirby\Panel\Controller\Dialog\UserChangeEmailDialogController;
 use Kirby\Panel\Controller\Dialog\UserChangeLanguageDialogController;
 use Kirby\Panel\Controller\Dialog\UserChangeNameDialogController;
@@ -48,10 +47,6 @@ return [
 		'pattern' => '(users/[^/]+)/fields/(:any)/(:all?)',
 		'action'  => FieldDialogController::class
 	],
-	'user.sections' => [
-		'pattern' => '(users/[^/]+)/sections/(:any)/(:all?)',
-		'action'  => SectionDialogController::class
-	],
 
 	'user.file.changeName' => [
 		'pattern' => '(users/[^/]+)/files/(:any)/changeName',
@@ -73,9 +68,5 @@ return [
 	'user.file.fields' => [
 		'pattern' => '(users/[^/]+)/files/(:any)/fields/(:any)/(:all?)',
 		'action'  => FieldDialogController::class
-	],
-	'user.file.sections' => [
-		'pattern' => '(users/[^/]+)/files/(:any)/sections/(:any)/(:all?)',
-		'action'  => SectionDialogController::class
 	],
 ];

@@ -22,6 +22,7 @@
 						v-if="label"
 						:has-diff="hasDiff"
 						:input="input"
+						:link="link"
 						:required="required"
 						:title="label"
 						type="field"
@@ -64,6 +65,11 @@ export const props = {
 			type: [String, Number, Boolean],
 			default: null
 		},
+		/**
+		 * Turns the label into a link
+		 * @since 6.0.0
+		 */
+		link: String,
 		translate: Boolean,
 		type: String
 	}

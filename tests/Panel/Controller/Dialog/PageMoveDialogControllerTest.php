@@ -37,8 +37,8 @@ class PageMoveDialogControllerTest extends TestCase
 			],
 			'blueprints' => [
 				'pages/test' => [
-					'sections' => [
-						'pages' => ['type' => 'pages']
+					'fields' => [
+						'pages' => ['type' => 'pagelist']
 					]
 				]
 			]

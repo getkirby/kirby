@@ -307,10 +307,7 @@ class Language extends Model
 	 */
 	public function guards(): LanguageGuards
 	{
-		return new LanguageGuards(
-			model: $this,
-			user: User::ensure()
-		);
+		return LanguageGuards::for($this);
 	}
 
 	/**

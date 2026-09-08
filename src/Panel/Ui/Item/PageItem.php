@@ -36,14 +36,14 @@ class PageItem extends ModelItem
 
 	protected function permissions(): array
 	{
-		$permissions = $this->model->permissions();
+		$guards = $this->model->guards();
 
 		return [
-			'changeSlug'   => $permissions->can('changeSlug'),
-			'changeStatus' => $permissions->can('changeStatus'),
-			'changeTitle'  => $permissions->can('changeTitle'),
-			'delete'       => $permissions->can('delete'),
-			'sort'         => $permissions->can('sort'),
+			'changeSlug'   => $guards->isAvailable('changeSlug'),
+			'changeStatus' => $guards->isAvailable('changeStatus'),
+			'changeTitle'  => $guards->isAvailable('changeTitle'),
+			'delete'       => $guards->isAvailable('delete'),
+			'sort'         => $guards->isAvailable('sort'),
 		];
 	}
 

@@ -142,7 +142,6 @@ export default {
 				for (const fieldName in tab.fields) {
 					tabs[tabName].fields[fieldName].endpoints = {
 						field: this.endpoints.field + "/fields/" + fieldName,
-						section: this.endpoints.section,
 						model: this.endpoints.model
 					};
 				}

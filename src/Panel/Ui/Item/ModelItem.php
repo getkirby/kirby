@@ -45,9 +45,16 @@ class ModelItem extends Item
 		$this->panel = $model->panel();
 	}
 
-	protected function info(): HtmlString|null
+	protected function info(): string|HtmlString|null
 	{
-		return $this->model->toSafeHtmlString($this->info ?? false);
+		// an empty template, not null: null would render the model id
+		$info = $this->info ?? '';
+
+		if ($this->layout === 'table') {
+			return $this->model->toString($info);
+		}
+
+		return $this->model->toSafeHtmlString($info);
 	}
 
 	protected function image(): array|null
@@ -76,8 +83,12 @@ class ModelItem extends Item
 		];
 	}
 
-	protected function text(): HtmlString
+	protected function text(): string|HtmlString
 	{
+		if ($this->layout === 'table') {
+			return $this->model->toString($this->text);
+		}
+
 		return $this->model->toSafeHtmlString($this->text);
 	}
 }

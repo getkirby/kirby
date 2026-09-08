@@ -9,6 +9,8 @@ use Kirby\Content\Version;
 use Kirby\Content\VersionId;
 use Kirby\Content\Versions;
 use Kirby\Exception\NotFoundException;
+use Kirby\Guards\ModelGuards;
+use Kirby\Guards\PageGuards;
 use Kirby\Panel\Page as PanelPage;
 use Kirby\Toolkit\HtmlString;
 use Kirby\Uuid\PageUuid;
@@ -34,6 +36,14 @@ class ExtendedModelWithContent extends ModelWithContent
 		Closure $callback
 	): mixed {
 		// nothing to commit in the test
+	}
+
+	public function guards(): ModelGuards
+	{
+		return new PageGuards(
+			model: new Page(['slug' => 'test']),
+			user: User::ensure()
+		);
 	}
 
 	public function panel(): PanelPage
@@ -75,10 +85,10 @@ class BlueprintsModelWithContent extends ExtendedModelWithContent
 			'title'  => 'Model',
 			'columns' => [
 				[
-					'sections' => [
+					'fields' => [
 						'pages' => [
 							'name' => 'pages',
-							'type' => 'pages',
+							'type' => 'pagelist',
 							'parent' => 'site',
 							'templates' => [
 								'foo',
@@ -87,7 +97,7 @@ class BlueprintsModelWithContent extends ExtendedModelWithContent
 						],
 						'menu' => [
 							'name' => 'menu',
-							'type' => 'pages',
+							'type' => 'pagelist',
 							'parent' => 'site',
 							'templates' => [
 								'home',
@@ -466,7 +476,7 @@ class ModelWithContentTest extends TestCase
 			]
 		], $model->blueprints('menu'));
 
-		// non-existing section
+		// non-existing field
 		$this->assertSame([], $model->blueprints('foo'));
 	}
 

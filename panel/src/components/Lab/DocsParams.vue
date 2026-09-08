@@ -4,10 +4,7 @@
 			<k-text>
 				<code>{{ param.name }}</code>
 				<k-lab-docs-types :types="[param.type]" />
-				<span
-					v-if="param.description.length"
-					v-safe-html="param.description"
-				/>
+				<span v-if="param.description.length" v-safe-html="param.description" />
 			</k-text>
 		</li>
 	</ul>

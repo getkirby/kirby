@@ -727,23 +727,23 @@ abstract class Sql
 	 */
 	public function unquoteIdentifier(string $identifier): string
 	{
-		// remove quotes around the identifier
-		if (
-			str_starts_with($identifier, '"') ||
-			str_starts_with($identifier, '`')
-		) {
-			$identifier = Str::substr($identifier, 1);
+		foreach (['`', '"'] as $quote) {
+			if (
+				Str::length($identifier) >= 2 &&
+				str_starts_with($identifier, $quote) === true &&
+				str_ends_with($identifier, $quote) === true
+			) {
+				// only the wrapping quote can be escaped inside
+				return str_replace(
+					$quote . $quote,
+					$quote,
+					Str::substr($identifier, 1, -1)
+				);
+			}
 		}
 
-		if (
-			str_ends_with($identifier, '"') ||
-			str_ends_with($identifier, '`')
-		) {
-			$identifier = Str::substr($identifier, 0, -1);
-		}
-
-		// unescape duplicated quotes
-		return str_replace(['""', '``'], ['"', '`'], $identifier);
+		// not quoted, so nothing to unwrap or unescape
+		return $identifier;
 	}
 
 	/**

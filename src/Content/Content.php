@@ -88,9 +88,9 @@ class Content
 		$old       = $this->parent->blueprint();
 		$subfolder = dirname($old->name());
 		$new       = Blueprint::factory(
+			$this->parent,
 			$subfolder . '/' . $to,
-			$subfolder . '/default',
-			$this->parent
+			$subfolder . '/default'
 		);
 
 		// forms

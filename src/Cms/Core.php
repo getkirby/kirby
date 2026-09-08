@@ -23,6 +23,7 @@ use Kirby\Form\Field\ColorField;
 use Kirby\Form\Field\DateField;
 use Kirby\Form\Field\EmailField;
 use Kirby\Form\Field\EntriesField;
+use Kirby\Form\Field\FileListField;
 use Kirby\Form\Field\FilePickerField;
 use Kirby\Form\Field\GapField;
 use Kirby\Form\Field\HeadlineField;
@@ -35,11 +36,11 @@ use Kirby\Form\Field\ListField;
 use Kirby\Form\Field\MultiselectField;
 use Kirby\Form\Field\NumberField;
 use Kirby\Form\Field\ObjectField;
+use Kirby\Form\Field\PageListField;
 use Kirby\Form\Field\PagePickerField;
 use Kirby\Form\Field\PasswordField;
 use Kirby\Form\Field\RadioField;
 use Kirby\Form\Field\RangeField;
-use Kirby\Form\Field\SectionField;
 use Kirby\Form\Field\SelectField;
 use Kirby\Form\Field\SlugField;
 use Kirby\Form\Field\StatsField;
@@ -182,10 +183,10 @@ class Core
 			// site blueprints
 			'site' => [
 				'title' => 'Site',
-				'sections' => [
+				'fields' => [
 					'pages' => [
-						'headline' => ['*' => 'pages'],
-						'type'	   => 'pages'
+						'label' => ['*' => 'pages'],
+						'type'	=> 'pagelist'
 					]
 				]
 			]
@@ -230,6 +231,20 @@ class Core
 	}
 
 	/**
+	 * Returns the field classes for the `files`, `pages` and `users`
+	 * type names. They referred to the picker fields in v5.
+	 * @since 6.0.0
+	 */
+	public function fieldAliases(): array
+	{
+		return [
+			'files' => FilePickerField::class,
+			'pages' => PagePickerField::class,
+			'users' => UserPickerField::class,
+		];
+	}
+
+	/**
 	 * Returns an array of all class names of panel fields
 	 *
 	 * The field classes can be found in `/kirby/src/Form/Field`
@@ -244,7 +259,8 @@ class Core
 			'date'        => DateField::class,
 			'email'       => EmailField::class,
 			'entries'     => EntriesField::class,
-			'files'       => FilePickerField::class,
+			'filelist'    => FileListField::class,
+			'filepicker'  => FilePickerField::class,
 			'gap'         => GapField::class,
 			'headline'    => HeadlineField::class,
 			'hidden'      => HiddenField::class,
@@ -256,11 +272,11 @@ class Core
 			'multiselect' => MultiselectField::class,
 			'number'      => NumberField::class,
 			'object'      => ObjectField::class,
-			'pages'       => PagePickerField::class,
+			'pagelist'    => PageListField::class,
+			'pagepicker'  => PagePickerField::class,
 			'password'    => PasswordField::class,
 			'radio'       => RadioField::class,
 			'range'       => RangeField::class,
-			'section'     => SectionField::class,
 			'select'      => SelectField::class,
 			'slug'        => SlugField::class,
 			'stats'       => StatsField::class,
@@ -273,8 +289,12 @@ class Core
 			'toggle'      => ToggleField::class,
 			'toggles'     => TogglesField::class,
 			'url'         => UrlField::class,
-			'users'       => UserPickerField::class,
+			'userpicker'  => UserPickerField::class,
 			'writer'      => WriterField::class,
+
+			// `files`, `pages` and `users` point at the
+			// picker fields.
+			...$this->fieldAliases(),
 		];
 	}
 
@@ -393,45 +413,6 @@ class Core
 			'blocks/table'    => $this->root . '/blocks/table/table.php',
 			'blocks/text'     => $this->root . '/blocks/text/text.php',
 			'blocks/video'    => $this->root . '/blocks/video/video.php',
-		];
-	}
-
-	/**
-	 * Returns a list of paths to section mixins
-	 *
-	 * They are located in `/kirby/config/sections/mixins`
-	 */
-	public function sectionMixins(): array
-	{
-		return [
-			'batch'      => $this->root . '/sections/mixins/batch.php',
-			'details'    => $this->root . '/sections/mixins/details.php',
-			'empty'      => $this->root . '/sections/mixins/empty.php',
-			'headline'   => $this->root . '/sections/mixins/headline.php',
-			'help'       => $this->root . '/sections/mixins/help.php',
-			'layout'     => $this->root . '/sections/mixins/layout.php',
-			'max'        => $this->root . '/sections/mixins/max.php',
-			'min'        => $this->root . '/sections/mixins/min.php',
-			'pagination' => $this->root . '/sections/mixins/pagination.php',
-			'parent'     => $this->root . '/sections/mixins/parent.php',
-			'search'     => $this->root . '/sections/mixins/search.php',
-			'sort'        => $this->root . '/sections/mixins/sort.php',
-		];
-	}
-
-	/**
-	 * Returns a list of all section definitions
-	 *
-	 * They are located in `/kirby/config/sections`
-	 */
-	public function sections(): array
-	{
-		return [
-			'fields' => $this->root . '/sections/fields.php',
-			'files'  => $this->root . '/sections/files.php',
-			'info'   => $this->root . '/sections/info.php',
-			'pages'  => $this->root . '/sections/pages.php',
-			'stats'  => $this->root . '/sections/stats.php',
 		];
 	}
 

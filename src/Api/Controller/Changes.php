@@ -38,7 +38,7 @@ class Changes
 	 */
 	public static function discard(ModelWithContent $model): array
 	{
-		if ($model->permissions()->can('update') === false) {
+		if ($model->guards()->isAvailable('update') === false) {
 			throw new PermissionException(
 				key: 'version.discard.permission',
 			);
@@ -60,7 +60,7 @@ class Changes
 	 */
 	public static function publish(ModelWithContent $model, array $input): array
 	{
-		if ($model->permissions()->can('update') === false) {
+		if ($model->guards()->isAvailable('update') === false) {
 			throw new PermissionException(
 				key: 'version.publish.permission',
 			);
@@ -101,7 +101,7 @@ class Changes
 	 */
 	public static function save(ModelWithContent $model, array $input): array
 	{
-		if ($model->permissions()->can('update') === false) {
+		if ($model->guards()->isAvailable('update') === false) {
 			throw new PermissionException(
 				key: 'version.save.permission',
 			);
@@ -156,7 +156,7 @@ class Changes
 	 */
 	public static function unlock(ModelWithContent $model): array
 	{
-		if ($model->permissions()->can('update') === false) {
+		if ($model->guards()->isAvailable('update') === false) {
 			throw new PermissionException(
 				key: 'version.unlock.permission',
 			);

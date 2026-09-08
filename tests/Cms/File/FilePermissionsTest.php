@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Exception\LogicException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -62,45 +61,6 @@ class FilePermissionsTest extends ModelTestCase
 		$this->assertFalse($perms->can($action));
 	}
 
-	public function testCanFromCache(): void
-	{
-		$this->app->impersonate('admin');
-
-		$page = new Page(['slug' => 'test']);
-		$file = new File([
-			'filename'  => 'test.jpg',
-			'parent'    => $page,
-			'template'  => 'some-template',
-			'blueprint' => [
-				'name' => 'files/some-template',
-				'options' => [
-					'access' => false,
-					'list'   => false
-				]
-			]
-		]);
-
-		$this->assertFalse(FilePermissions::canFromCache($file, 'access'));
-		$this->assertFalse(FilePermissions::canFromCache($file, 'access'));
-		$this->assertFalse(FilePermissions::canFromCache($file, 'list'));
-		$this->assertFalse(FilePermissions::canFromCache($file, 'list'));
-	}
-
-	public function testCanFromCacheDynamic(): void
-	{
-		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Cannot use permission cache for dynamically-determined permission');
-
-		$page = new Page(['slug' => 'test']);
-		$file = new File([
-			'filename' => 'test.jpg',
-			'parent'   => $page,
-			'template' => 'some-template',
-		]);
-
-		FilePermissions::canFromCache($file, 'changeTemplate');
-	}
-
 	public function testCannotChangeTemplate(): void
 	{
 		$this->app->impersonate('kirby');
@@ -116,21 +76,21 @@ class FilePermissionsTest extends ModelTestCase
 		$this->app = $this->app->clone([
 			'blueprints' => [
 				'pages/test' => [
-					'sections' => [
-						'section-a' => [
-							'type' => 'files',
-							'template' => 'for-section/a'
+					'fields' => [
+						'list-a' => [
+							'type'     => 'filelist',
+							'template' => 'for-list/a'
 						],
-						'section-b' => [
-							'type' => 'files',
-							'template' => 'for-section/b'
+						'list-b' => [
+							'type'     => 'filelist',
+							'template' => 'for-list/b'
 						]
 					]
 				],
-				'files/for-section/a' => [
+				'files/for-list/a' => [
 					'title' => 'Type A'
 				],
-				'files/for-section/b' => [
+				'files/for-list/b' => [
 					'title' => 'Type B'
 				]
 			]
@@ -149,9 +109,9 @@ class FilePermissionsTest extends ModelTestCase
 		$this->app = $this->app->clone([
 			'blueprints' => [
 				'pages/test' => [
-					'sections' => [
+					'fields' => [
 						'files' => [
-							'type' => 'files',
+							'type' => 'filelist',
 							// No template specified - should get all available
 						]
 					]

@@ -614,8 +614,6 @@ class SqlTest extends TestCase
 			'query'    => null,
 			'bindings' => []
 		], $this->sql->limit());
-		$this->assertSame('table`name', $this->sql->unquoteIdentifier('`table``name`'));
-		$this->assertSame('table"name', $this->sql->unquoteIdentifier('"table""name"'));
 	}
 
 	public function testJoinInvalid(): void
@@ -654,6 +652,29 @@ class SqlTest extends TestCase
 			'JOIN roles ON roles.id = users.id JOIN teams ON teams.id = users.id',
 			$result['query']
 		);
+	}
+
+	public function testUnquoteIdentifierRequiresMatchingQuotes(): void
+	{
+		// matching pairs
+		$this->assertSame('table`name', $this->sql->unquoteIdentifier('`table``name`'));
+		$this->assertSame('table"name', $this->sql->unquoteIdentifier('"table""name"'));
+
+		// mismatched pair
+		$this->assertSame('`foo"', $this->sql->unquoteIdentifier('`foo"'));
+		$this->assertSame('"foo`', $this->sql->unquoteIdentifier('"foo`'));
+
+		// a single stray quote
+		$this->assertSame('"', $this->sql->unquoteIdentifier('"'));
+		$this->assertSame('`', $this->sql->unquoteIdentifier('`'));
+
+		// the non-wrapping quote is not an escape and must survive
+		foreach (['a"b', 'a""b', 'a`b', 'a``b', 'plain'] as $name) {
+			$this->assertSame(
+				$name,
+				$this->sql->unquoteIdentifier($this->sql->quoteIdentifier($name))
+			);
+		}
 	}
 
 	public function testValueSet(): void

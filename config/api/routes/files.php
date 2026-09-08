@@ -21,22 +21,6 @@ return [
 		}
 	],
 	[
-		'pattern' => $filePattern . '/sections/(:any)',
-		'method'  => 'GET',
-		'action'  => function (string $path, string $filename, string $sectionName) {
-			return $this->file($path, $filename)->blueprint()->section($sectionName)?->toResponse();
-		}
-	],
-	[
-		'pattern' => $filePattern . '/sections/(:any)/(:all?)',
-		'method'  => 'ALL',
-		'action'  => function (string $parent, string $filename, string $sectionName, string|null $path = null) {
-			if ($file = $this->file($parent, $filename)) {
-				return $this->sectionApi($file, $sectionName, $path);
-			}
-		}
-	],
-	[
 		'pattern' => $parentPattern,
 		'method'  => 'GET',
 		'action'  => function (string $path) {
@@ -69,7 +53,7 @@ return [
 						'template' => $template
 					]);
 
-					if ($file->permissions()->can('create') !== true) {
+					if ($file->guards()->isAvailable('create') !== true) {
 						throw new PermissionException(
 							message: 'The file cannot be created'
 						);
@@ -134,7 +118,7 @@ return [
 			return $this->upload(
 				callback: fn ($source) => $file->replace($source, move: true),
 				preflight: function () use ($file) {
-					if ($file->permissions()->can('replace') !== true) {
+					if ($file->guards()->isAvailable('replace') !== true) {
 						throw new PermissionException(
 							message: 'The file cannot be replaced'
 						);

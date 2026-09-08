@@ -13,7 +13,7 @@ fields:
       web: "{{ t('field.blocks.image.location.external') }}"
   image:
     label: field.blocks.image.name
-    type: files
+    type: filepicker
     query: model.images
     multiple: false
     image:

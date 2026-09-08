@@ -99,7 +99,7 @@ class Field
 		// is not allowed to change role to admin
 		$roles = $roles->filter(
 			fn ($role) =>
-				$role->name() !== 'admin' ||
+				$role->isAdmin() === false ||
 				$kirby->user()?->isAdmin() === true
 		);
 

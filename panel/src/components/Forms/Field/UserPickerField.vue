@@ -9,7 +9,7 @@ import ModelPickerField from "./ModelPickerField.vue";
  */
 export default {
 	extends: ModelPickerField,
-	type: "users",
+	type: "userpicker",
 	computed: {
 		emptyProps() {
 			return {

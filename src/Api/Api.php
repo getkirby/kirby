@@ -736,34 +736,6 @@ class Api
 	}
 
 	/**
-	 * @throws NotFoundException if the section type cannot be found or the section cannot be loaded
-	 */
-	public function sectionApi(
-		ModelWithContent $model,
-		string $name,
-		string|null $path = null
-	): mixed {
-		$section = $model->blueprint()->section($name);
-
-		if ($section === null) {
-			throw new NotFoundException(
-				message: 'The section "' . $name . '" could not be found'
-			);
-		}
-
-		$sectionApi = $this->clone([
-			'data'   => [...$this->data(), 'section' => $section],
-			'routes' => $section->api(),
-		]);
-
-		return $sectionApi->call(
-			$path,
-			$this->requestMethod(),
-			$this->requestData()
-		);
-	}
-
-	/**
 	 * Returns the current Session instance
 	 *
 	 * @param array $options Additional options, see the session component

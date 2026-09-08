@@ -149,7 +149,7 @@ class Database
 			'user'     => null,
 			'password' => null,
 			'id'       => uniqid(),
-			...$params ?? []
+			...$params
 		];
 
 		if (isset(static::$types[$options['type']]) === false) {

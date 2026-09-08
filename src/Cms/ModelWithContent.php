@@ -18,6 +18,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Form\Fields;
 use Kirby\Form\Form;
+use Kirby\Form\Interface\ProvidesAcceptedBlueprints;
 use Kirby\Panel\Model as PanelModel;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\BlockCollectionAccess;
@@ -81,33 +82,31 @@ abstract class ModelWithContent extends Model implements Identifiable
 	/**
 	 * Returns an array with all blueprints that are available
 	 */
-	public function blueprints(string|null $inSection = null): array
+	public function blueprints(string|null $inField = null): array
 	{
 		// helper function
-		$toBlueprints = static function (array $sections): array {
+		$toBlueprints = static function (iterable $fields): array {
 			$blueprints = [];
 
-			foreach ($sections as $section) {
-				if ($section === null) {
-					continue;
-				}
-
-				foreach ((array)$section->blueprints() as $blueprint) {
-					$blueprints[$blueprint['name']] = $blueprint;
+			foreach ($fields as $field) {
+				if ($field instanceof ProvidesAcceptedBlueprints) {
+					foreach ($field->blueprints() as $blueprint) {
+						$blueprints[$blueprint['name']] = $blueprint;
+					}
 				}
 			}
 
 			return array_values($blueprints);
 		};
 
-		$blueprint = $this->blueprint();
+		$fields = Fields::for($this);
 
-		// no caching for when collecting for specific section
-		if ($inSection !== null) {
-			return $toBlueprints([$blueprint->section($inSection)]);
+		// no caching for when collecting for a specific field
+		if ($inField !== null) {
+			return $toBlueprints([$fields->get($inField)]);
 		}
 
-		return $this->blueprints ??= $toBlueprints($blueprint->sections());
+		return $this->blueprints ??= $toBlueprints($fields);
 	}
 
 	/**
@@ -342,20 +341,7 @@ abstract class ModelWithContent extends Model implements Identifiable
 	 */
 	public function errors(): array
 	{
-		$errors = [];
-
-		foreach ($this->blueprint()->sections() as $section) {
-			// sections that are wrapped in a `section` field are
-			// validated as part of the form, where `when` conditions
-			// can be evaluated against the other fields
-			if ($section->field() !== null) {
-				continue;
-			}
-
-			$errors = [...$errors, ...$section->errors()];
-		}
-
-		return $errors;
+		return Form::for($this)->errors();
 	}
 
 	/**

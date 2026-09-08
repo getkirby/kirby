@@ -32,7 +32,6 @@ export type Component = Omit<
 // mixins
 import dialog from "@/mixins/dialog.js";
 import drawer from "@/mixins/drawer.js";
-import section from "@/mixins/section.js";
 import Mark from "@/components/Forms/Writer/Mark";
 import Node from "@/components/Forms/Writer/Node";
 
@@ -160,8 +159,7 @@ export function resolveComponentMixins(component: Component): Component {
 
 	const mixins: Record<string, ComponentOptions> = {
 		dialog,
-		drawer,
-		section
+		drawer
 	};
 
 	component.mixins = component.mixins

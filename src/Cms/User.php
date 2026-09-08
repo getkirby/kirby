@@ -156,9 +156,9 @@ class User extends ModelWithContent
 		try {
 			/** @var UserBlueprint */
 			return $this->blueprint ??= UserBlueprint::factory(
+				$this,
 				'users/' . $this->role(),
-				'users/default',
-				$this
+				'users/default'
 			);
 		} catch (Exception) {
 			return $this->blueprint ??= new UserBlueprint([
@@ -231,10 +231,7 @@ class User extends ModelWithContent
 	 */
 	public function guards(): UserGuards
 	{
-		return new UserGuards(
-			model: $this,
-			user: User::ensure()
-		);
+		return UserGuards::for($this);
 	}
 
 	/**
@@ -310,7 +307,7 @@ class User extends ModelWithContent
 	 */
 	public function isAccessible(): bool
 	{
-		return UserPermissions::canFromCache($this, 'access');
+		return $this->guards()->isAvailable('access');
 	}
 
 	/**
@@ -318,7 +315,7 @@ class User extends ModelWithContent
 	 */
 	public function isAdmin(): bool
 	{
-		return $this->role()->id() === 'admin';
+		return $this->role()->isAdmin() === true;
 	}
 
 	/**
@@ -327,7 +324,9 @@ class User extends ModelWithContent
 	 */
 	public function isKirby(): bool
 	{
-		return $this->isAdmin() && $this->id() === 'kirby';
+		return
+			$this->isAdmin() === true &&
+			$this->id() === 'kirby';
 	}
 
 	/**
@@ -341,7 +340,7 @@ class User extends ModelWithContent
 			return false;
 		}
 
-		return UserPermissions::canFromCache($this, 'list');
+		return $this->guards()->isAvailable('list');
 	}
 
 	/**
@@ -377,7 +376,9 @@ class User extends ModelWithContent
 	 */
 	public function isNobody(): bool
 	{
-		return $this->role()->id() === 'nobody' && $this->id() === 'nobody';
+		return
+			$this->role()->isNobody() === true &&
+			$this->id() === 'nobody';
 	}
 
 	/**
@@ -670,7 +671,7 @@ class User extends ModelWithContent
 
 		// if the authenticated user doesn't have the permission to change
 		// the role of this user, only the current role is available
-		if ($this->permissions()->can('changeRole') === false) {
+		if ($this->guards()->isAvailable('changeRole') === false) {
 			return $kirby->roles()->filter('isAccessible', true)->filter('id', $this->role()->id());
 		}
 

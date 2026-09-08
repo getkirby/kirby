@@ -17,6 +17,11 @@
 	display: none !important;
 }
 
+/* custom elements default to `inline`, but these only wrap their children */
+:where(k-input-validator, k-validator) {
+	display: contents;
+}
+
 :where(abbr) {
 	text-decoration: none;
 }

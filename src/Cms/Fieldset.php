@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Blueprint\Blueprint;
+use Kirby\Blueprint\FieldsRegistry;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Form;
 use Kirby\Toolkit\I18n;
@@ -28,6 +29,7 @@ class Fieldset extends Item
 	protected string|null $label;
 	protected string $name;
 	protected string|bool|null $preview;
+	protected FieldsRegistry|null $registry = null;
 	protected array|null $tabs = null;
 	protected bool $translate;
 	protected string $type;
@@ -73,8 +75,9 @@ class Fieldset extends Item
 
 	protected function createFields(array $fields = []): array
 	{
-		$fields = Blueprint::fieldsProps($fields);
-		$fields = $this->form($fields)->fields()->toProps(defaults: true);
+		$this->registry ??= new FieldsRegistry();
+		$resolved         = $this->registry->add(Blueprint::fieldsProps($fields));
+		$fields           = $this->form($resolved)->fields()->toProps(defaults: true);
 
 		// collect all fields
 		$this->fields = [...$this->fields ?? [], ...$fields];

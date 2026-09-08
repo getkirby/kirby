@@ -17,11 +17,7 @@
 		<div class="k-item-box">
 			<!-- Image -->
 			<slot name="image">
-				<k-item-image
-					v-if="hasFigure"
-					:image="image"
-					:layout="layout"
-				/>
+				<k-item-image v-if="hasFigure" :image="image" :layout="layout" />
 			</slot>
 
 			<!-- Content -->

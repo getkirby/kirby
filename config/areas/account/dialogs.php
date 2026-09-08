@@ -31,10 +31,6 @@ return [
 		...$dialogs['user.fields'],
 		'pattern' => '(account)/fields/(:any)/(:all?)',
 	],
-	'account.sections' => [
-		...$dialogs['user.sections'],
-		'pattern' => '(account)/sections/(:any)/(:all?)',
-	],
 	'account.file.changeName' => [
 		...$dialogs['user.file.changeName'],
 		'pattern' => '(account)/files/(:any)/changeName',
@@ -54,9 +50,5 @@ return [
 	'account.file.fields' => [
 		...$dialogs['user.file.fields'],
 		'pattern' => '(account)/files/(:any)/fields/(:any)/(:all?)',
-	],
-	'account.file.sections' => [
-		...$dialogs['user.file.sections'],
-		'pattern' => '(account)/files/(:any)/sections/(:any)/(:all?)',
 	],
 ];
