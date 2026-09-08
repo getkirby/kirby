@@ -1,7 +1,7 @@
 # Kirby License Agreement
 
-Published: July 2, 2026  
-Source: https://getkirby.com/license/2026-07-02
+Published: September 8, 2026  
+Source: https://getkirby.com/license/2026-09-08
 
 ## About this Agreement
 
@@ -257,8 +257,31 @@ With each vulnerability, We aim to publish the security advisory and security up
 We reserve the right to **limit technical support for free licenses**.
 
 ## Refund Policy
+Our [free licenses for Development Installations](#usage-for-a-development-installation) and our [instant online demo](https://getkirby.com/try) allow You to evaluate Kirby before making a purchase.
 
-We offer a **14-day**, money back refund policy if Kirby didn't work out for Your project.
+### Right of withdrawal
+
+If You are a consumer under Art. 2 of the directive 2011/83/EU (i.e. if You made Your purchase for purposes that can predominantly be attributed neither to Your commercial nor Your self-employed professional activity), You have the right to withdraw from this license contract within **14 days after purchase** without giving any reason.
+
+To exercise the right of withdrawal, You must inform Us by means of a clear statement (e.g. a letter or email) of Your decision to withdraw from this contract. You may use the attached model withdrawal form, but it is not obligatory. To meet the withdrawal deadline, it is sufficient for You to send Your communication concerning Your exercise of the right of withdrawal before the withdrawal period has expired.
+
+### Effects of withdrawal
+
+If You withdraw from this contract, We shall reimburse to You all payments received from You without undue delay and in any event not later than 14 days from the day on which We are informed about Your decision to withdraw from this contract. We will carry out such reimbursement using the same means of payment as You used for the initial transaction, unless You have expressly agreed otherwise; in any event, You will not incur any fees as a result of such reimbursement.
+
+The license granted by this Agreement terminates with the refund. You will immediately uninstall and cease all use of Kirby that was covered by the terminated license.
+
+### Model withdrawal form
+
+(complete and return this form only if you wish to withdraw from the contract)
+
+- To Content Folder GmbH & Co. KG, Böhmer Weg 22, 69151 Neckargemünd, Germany, email <support@getkirby.com>:
+- I hereby give notice that I withdraw from my contract for the provision of the following service,
+- Ordered on,
+- Name of consumer(s),
+- Address of consumer(s),
+- Signature of consumer(s) (only if this form is notified on paper),
+- Date
 
 > [!NOTE]
 > If you need a refund, please get in touch directly at <support@getkirby.com>.
