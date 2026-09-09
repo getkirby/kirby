@@ -104,15 +104,12 @@ abstract class ModelListField extends DisplayField
 		array|null $columns = null,
 		array|string|null $empty = null,
 		bool|null $flip = null,
-		array|string|null $help = null,
 		array|string|false|null $image = null,
 		array|string|null $info = null,
-		array|string|null $label = null,
 		string|null $layout = null,
 		int|null $limit = null,
 		int|null $max = null,
 		int|null $min = null,
-		string|null $name = null,
 		int|null $page = null,
 		string|null $parent = null,
 		string|null $query = null,
@@ -121,35 +118,28 @@ abstract class ModelListField extends DisplayField
 		bool|null $sortable = null,
 		string|null $sortBy = null,
 		array|string|null $text = null,
-		array|null $when = null,
-		string|null $width = null
+		mixed ...$args
 	) {
-		parent::__construct(
-			help:  $help,
-			label: $label,
-			name:  $name,
-			when:  $when,
-			width: $width
-		);
+		parent::__construct(...$args);
 
-		$this->batch    = $batch;
-		$this->columns  = $columns;
-		$this->empty    = $empty;
-		$this->flip     = $flip;
-		$this->image    = $image;
-		$this->info     = $info;
-		$this->layout   = $layout;
-		$this->limit    = $limit;
-		$this->max      = $max;
-		$this->min      = $min;
-		$this->page     = $page;
-		$this->parent   = $parent;
+		$this->batch      = $batch;
+		$this->columns    = $columns;
+		$this->empty      = $empty;
+		$this->flip       = $flip;
+		$this->image      = $image;
+		$this->info       = $info;
+		$this->layout     = $layout;
+		$this->limit      = $limit;
+		$this->max        = $max;
+		$this->min        = $min;
+		$this->page       = $page;
+		$this->parent     = $parent;
 		$this->query      = $query;
 		$this->searchable = $search;
 		$this->size       = $size;
-		$this->sortable = $sortable;
-		$this->sortBy   = $sortBy;
-		$this->text     = $text;
+		$this->sortable   = $sortable;
+		$this->sortBy     = $sortBy;
+		$this->text       = $text;
 	}
 
 	/**

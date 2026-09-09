@@ -43,42 +43,10 @@ class TimeField extends DateTimeField
 	protected array|int|string|null $step;
 
 	public function __construct(
-		bool|null $autofocus = null,
-		mixed $default = null,
-		string|null $display = null,
-		bool|null $disabled = null,
-		string|null $format = null,
-		array|string|null $help = null,
-		string|null $icon = null,
-		array|string|null $label = null,
-		string|null $max = null,
-		string|null $min = null,
-		string|null $name = null,
 		int|null $notation = null,
-		bool|null $required = null,
-		array|int|string|null $step = null,
-		bool|null $translate = null,
-		array|null $when = null,
-		string|null $width = null
+		mixed ...$args
 	) {
-		parent::__construct(
-			autofocus: $autofocus,
-			default:   $default,
-			display:   $display,
-			disabled:  $disabled,
-			format:    $format,
-			help:      $help,
-			icon:      $icon,
-			label:     $label,
-			max:       $max,
-			min:       $min,
-			name:      $name,
-			required:  $required,
-			step:      $step,
-			translate: $translate,
-			when:      $when,
-			width:     $width
-		);
+		parent::__construct(...$args);
 
 		$this->notation = $notation;
 	}

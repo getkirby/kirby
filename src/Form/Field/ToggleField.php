@@ -32,32 +32,12 @@ class ToggleField extends InputField
 
 	public function __construct(
 		array|string|null $after = null,
-		bool|null $autofocus = null,
 		array|string|null $before = null,
-		mixed $default = null,
-		bool|null $disabled = null,
-		array|string|null $help = null,
 		string|null $icon = null,
-		array|string|null $label = null,
-		string|null $name = null,
-		bool|null $required = null,
 		array|string|null $text = null,
-		bool|null $translate = null,
-		array|null $when = null,
-		string|null $width = null
+		mixed ...$args
 	) {
-		parent::__construct(
-			autofocus: $autofocus,
-			default:   $default,
-			disabled:  $disabled,
-			help:      $help,
-			label:     $label,
-			name:      $name,
-			required:  $required,
-			translate: $translate,
-			when:      $when,
-			width:     $width
-		);
+		parent::__construct(...$args);
 
 		$this->after  = $after;
 		$this->before = $before;

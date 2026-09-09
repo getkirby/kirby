@@ -24,6 +24,25 @@ class ReflectableTestChildClass extends ReflectableTestClass
 	}
 }
 
+class ReflectableTestRefinableClass
+{
+	public function __construct(
+		protected mixed $value = null,
+		protected string|null $name = null
+	) {
+	}
+}
+
+class ReflectableTestRefiningClass extends ReflectableTestRefinableClass
+{
+	public function __construct(
+		array|null $value = null,
+		mixed ...$args
+	) {
+		parent::__construct(...$args, value: $value);
+	}
+}
+
 #[CoversClass(Constructor::class)]
 class ConstructorTest extends TestCase
 {
@@ -123,6 +142,18 @@ class ConstructorTest extends TestCase
 		$this->assertCount(3, $parameters);
 	}
 
+	public function testGetAllParametersWithRefinedParameter(): void
+	{
+		$parameters = $this->reflection(ReflectableTestRefiningClass::class)->getAllParameters();
+
+		// `value` is declared twice, but must only be returned once
+		$this->assertCount(2, $parameters);
+
+		// the own parameter wins, because it narrows the inherited type
+		$this->assertSame('value', $parameters[0]->getName());
+		$this->assertSame('?array', (string)$parameters[0]->getType());
+	}
+
 	public function testGetIgnoredArguments(): void
 	{
 		$accepted = [
@@ -183,6 +214,13 @@ class ConstructorTest extends TestCase
 		$result = $this->reflection(ReflectableTestChildClass::class)->getParameterNames();
 
 		$this->assertSame(['c', 'a', 'b'], $result);
+	}
+
+	public function testGetParameterNamesWithRefinedParameter(): void
+	{
+		$result = $this->reflection(ReflectableTestRefiningClass::class)->getParameterNames();
+
+		$this->assertSame(['value', 'name'], $result);
 	}
 
 	public function testGetParentParameters(): void

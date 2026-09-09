@@ -18,22 +18,12 @@ class InfoField extends DisplayField
 	use Mixin\Theme;
 
 	public function __construct(
-		array|string|null $label = null,
-		array|string|null $help = null,
 		string|null $icon = null,
-		string|null $name = null,
 		array|string|null $text = null,
 		string|null $theme = null,
-		array|null $when = null,
-		string|null $width = null
+		mixed ...$args
 	) {
-		parent::__construct(
-			label: $label,
-			help:  $help,
-			name:  $name,
-			when:  $when,
-			width: $width
-		);
+		parent::__construct(...$args);
 
 		$this->icon  = $icon;
 		$this->text  = $text;

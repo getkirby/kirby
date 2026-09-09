@@ -5,6 +5,7 @@ namespace Kirby\Form\Field;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(ListField::class)]
+#[CoversClass(ProseMirrorField::class)]
 class ListFieldTest extends TestCase
 {
 	public function testProps(): void

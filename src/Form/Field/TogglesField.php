@@ -27,34 +27,12 @@ class TogglesField extends OptionField
 	protected bool|null $resettable = null;
 
 	public function __construct(
-		bool|null $autofocus = null,
-		mixed $default = null,
-		bool|null $disabled = null,
 		bool|null $grow = null,
-		array|string|null $help = null,
-		array|string|null $label = null,
 		bool|null $labels = null,
-		string|null $name = null,
-		array|string|null $options = null,
-		bool|null $required = null,
 		bool|null $resettable = null,
-		bool|null $translate = null,
-		array|null $when = null,
-		string|null $width = null
+		mixed ...$args
 	) {
-		parent::__construct(
-			autofocus: $autofocus,
-			default: $default,
-			disabled: $disabled,
-			help: $help,
-			label: $label,
-			name: $name,
-			options: $options,
-			required: $required,
-			translate: $translate,
-			when: $when,
-			width: $width
-		);
+		parent::__construct(...$args);
 
 		$this->grow       = $grow;
 		$this->labels     = $labels;

@@ -12,6 +12,7 @@ use Kirby\Data\Data;
 use Kirby\Data\Json;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Form;
+use Kirby\Reflection\Attributes\Computed;
 use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Str;
 use Throwable;
@@ -27,6 +28,7 @@ class LayoutField extends BlocksField
 	/**
 	 * Define available layouts. Each layout is list of column widths. (e.g. 1/2, 1/2 or 1/4, 3/4)
 	 */
+	#[Computed(default: ['1/1'])]
 	protected array|null $layouts;
 
 	/**
@@ -45,45 +47,14 @@ class LayoutField extends BlocksField
 	protected Fieldset|null $settingsFieldset;
 
 	public function __construct(
-		bool|null $autofocus = null,
-		array|null $default = null,
-		bool|null $disabled = null,
-		array|string|null $empty = null,
-		array|string|null $fieldsets = null,
-		array|string|null $help = null,
-		string|null $group = null,
-		array|string|null $label = null,
+		array|null $fieldsets = null,
 		array|null $layouts = null,
-		int|null $max = null,
-		int|null $min = null,
-		string|null $name = null,
-		bool|null $pretty = null,
-		bool|null $required = null,
 		array|null $selector = null,
 		array|string|null $settings = null,
-		bool|null $translate = null,
-		array|null $when = null,
-		string|null $width = null,
+		mixed ...$args
 	) {
-		parent::__construct(
-			autofocus: $autofocus,
-			disabled:  $disabled,
-			empty:     $empty,
-			fieldsets: $fieldsets,
-			help:      $help,
-			group:     $group,
-			label:     $label,
-			name:      $name,
-			max:       $max,
-			min:       $min,
-			pretty:    $pretty,
-			required:  $required,
-			translate: $translate,
-			when:      $when,
-			width:     $width
-		);
+		parent::__construct(...$args, fieldsets: $fieldsets);
 
-		$this->default  = $default;
 		$this->layouts  = $layouts;
 		$this->selector = $selector;
 		$this->settings = $settings;

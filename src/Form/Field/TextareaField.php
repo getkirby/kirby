@@ -46,38 +46,18 @@ class TextareaField extends InputField
 	protected string $value = '';
 
 	public function __construct(
-		bool|null $autofocus = null,
 		array|bool|null $buttons = null,
 		bool|null $counter = null,
-		mixed $default = null,
-		bool|null $disabled = null,
 		mixed $files = null,
-		array|string|null $help = null,
 		string|null $font = null,
-		array|string|null $label = null,
 		int|null $maxlength = null,
 		int|null $minlength = null,
-		string|null $name = null,
-		bool|null $required = null,
 		string|null $size = null,
 		bool|null $spellcheck = null,
-		bool|null $translate = null,
 		mixed $uploads = null,
-		array|null $when = null,
-		string|null $width = null
+		mixed ...$args
 	) {
-		parent::__construct(
-			autofocus: $autofocus,
-			default: $default,
-			disabled: $disabled,
-			help: $help,
-			label: $label,
-			name: $name,
-			required: $required,
-			translate: $translate,
-			when: $when,
-			width: $width
-		);
+		parent::__construct(...$args);
 
 		$this->buttons    = $buttons;
 		$this->counter    = $counter;
