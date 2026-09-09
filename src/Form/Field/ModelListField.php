@@ -153,8 +153,8 @@ abstract class ModelListField extends DisplayField
 	}
 
 	/**
-	 * The list is not part of the form values, so it refreshes
-	 * itself through its own endpoint
+	 * The list is not part of the form values, so it loads and
+	 * refreshes itself through its own endpoint
 	 */
 	public function api(): array
 	{
@@ -521,8 +521,8 @@ abstract class ModelListField extends DisplayField
 		return [
 			...parent::props(),
 			'batch'      => $this->batch(),
+			'columns'    => $this->defineColumns(),
 			'empty'      => $this->empty(),
-			'initial'    => $this->state(),
 			'layout'     => $this->layout(),
 			'link'       => $this->link(),
 			'max'        => $this->max(),
