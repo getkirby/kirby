@@ -370,11 +370,15 @@ class Dom
 			if ($kirby = App::instance(null, true)) {
 				$indexUrl = $kirby->url('index', true)->path()->toString(true);
 
+				// only the path is relevant for the comparison, as the
+				// query and fragment end the path instead of extending it
+				$path = preg_split('![?#]!', $url, 2)[0];
+
 				// the index URL must match up to a path segment boundary,
 				// so that `/sitemap` does not pass the check for `/site`
 				if (
-					$url !== $indexUrl &&
-					Str::startsWith($url, rtrim($indexUrl, '/') . '/') !== true
+					$path !== $indexUrl &&
+					Str::startsWith($path, rtrim($indexUrl, '/') . '/') !== true
 				) {
 					return 'The URL points outside of the site index URL';
 				}
