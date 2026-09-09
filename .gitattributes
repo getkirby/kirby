@@ -11,6 +11,7 @@ phpunit.dist.xml export-ignore
 psalm-baseline.xml export-ignore
 psalm.xml.dist export-ignore
 tests/ export-ignore
+_test/ export-ignore
 
 # panel
 # .browserslistrc is intentionally not ignored, it is read at runtime
