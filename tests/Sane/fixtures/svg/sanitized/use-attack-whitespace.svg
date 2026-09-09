@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+  <g id="a0">
+    <circle fill="#000" r="10"/>
+  </g>
+  <g id="a1">
+    <use href="#a0"/>
+    <use href="#a0"/>
+    <use href="#a0"/>
+    <use href="#a0"/>
+    <use href="#a0"/>
+    <use href="#a0"/>
+  </g>
+  <g id="a2">
+    <use/>
+    <use/>
+    <use/>
+    <use/>
+    <use/>
+    <use/>
+  </g>
+</svg>

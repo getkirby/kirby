@@ -9,6 +9,7 @@ use DOMDocumentType;
 use DOMElement;
 use Kirby\AssertionFailedError;
 use Kirby\Cms\App;
+use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 
 /**
@@ -543,6 +544,28 @@ class DomTest extends TestCase
 				'text { background: url("https://getkirby.com/a/*b*/c.png") }',
 				['https://getkirby.com/a/*b*/c.png']
 			],
+
+			// CSS escapes are decoded like the browser's tokenizer does
+			[
+				'text { background: url(\\2f\\2f malicious.com/a.png) }',
+				['//malicious.com/a.png']
+			],
+			[
+				'@import "\\2f\\2f malicious.com/a.css"',
+				['//malicious.com/a.css']
+			],
+			[
+				'text { background: url(\\/\\/malicious.com/a.png) }',
+				['//malicious.com/a.png']
+			],
+			[
+				'text { background: \\75rl(//malicious.com/a.png) }',
+				['//malicious.com/a.png']
+			],
+			[
+				'text { background: url(https:\\2f\\2fmalicious.com/a.png) }',
+				['https://malicious.com/a.png']
+			],
 		];
 	}
 
@@ -999,6 +1022,70 @@ class DomTest extends TestCase
 
 			// forbidden URL type
 			['my-amazing-protocol://test', 'Unknown URL type'],
+
+			// forbidden protocol-relative URL with leading whitespace
+			// that the browser strips before it parses the URL
+			[' //test', 'Protocol-relative URLs are not allowed'],
+			["\t//test", 'Protocol-relative URLs are not allowed'],
+			["\n//test", 'Protocol-relative URLs are not allowed'],
+			["\r//test", 'Protocol-relative URLs are not allowed'],
+			["\x00//test", 'Protocol-relative URLs are not allowed'],
+			["\x0c//test", 'Protocol-relative URLs are not allowed'],
+			["/\t/test", 'Protocol-relative URLs are not allowed'],
+
+			// forbidden protocol-relative URL with backslashes
+			// that the browser treats like forward slashes
+			['/\\test', 'Protocol-relative URLs are not allowed'],
+			['\\/test', 'Protocol-relative URLs are not allowed'],
+			['\\\\test', 'Protocol-relative URLs are not allowed'],
+			["\\\t/test", 'Protocol-relative URLs are not allowed'],
+
+			// forbidden relative URL with whitespace inside the
+			// `../` sequence that the browser strips
+			["..\t/some/path", 'The ../ sequence is not allowed in relative URLs'],
+			["..\n/some/path", 'The ../ sequence is not allowed in relative URLs'],
+			[".\r./some/path", 'The ../ sequence is not allowed in relative URLs'],
+			["some/..\t/../path", 'The ../ sequence is not allowed in relative URLs'],
+
+			// forbidden relative URL with a percent-encoded dot segment
+			// that the browser decodes before it resolves the path
+			['%2e%2e/some/path', 'The ../ sequence is not allowed in relative URLs'],
+			['%2E%2E/some/path', 'The ../ sequence is not allowed in relative URLs'],
+			['.%2e/some/path', 'The ../ sequence is not allowed in relative URLs'],
+			['%2e./some/path', 'The ../ sequence is not allowed in relative URLs'],
+			['some/%2e%2e/path', 'The ../ sequence is not allowed in relative URLs'],
+
+			// a percent-encoded dot that is not a dot segment is allowed
+			['some%2epath/file.jpg', true],
+
+			// forbidden URL type with leading whitespace
+			[' javascript:alert()', 'Unknown URL type'],
+			["java\tscript:alert()", 'Unknown URL type'],
+
+			// forbidden URL when no domains are accepted, with leading whitespace
+			[' https://getkirby.com', 'The hostname "getkirby.com" is not allowed', [
+				'allowedDomains' => []
+			]],
+
+			// the browser ends the host at a backslash, so the
+			// allowlist must be checked against that same host
+			['https://malicious.com\\@getkirby.com', 'The hostname "malicious.com" is not allowed', [
+				'allowedDomains' => ['getkirby.com']
+			]],
+			['https://getkirby.com\\@malicious.com', true, [
+				'allowedDomains' => ['getkirby.com']
+			]],
+
+			// allowed values are unaffected by the normalization
+			[' #test-fragment', true],
+			[' some/path', true],
+			['  ', true],
+			[' mailto:test@getkirby.com', true],
+			[' data:image/jpeg;base64,test', true, [
+				'allowedDataUris' => [
+					'data:image/jpeg;base64'
+				]
+			]],
 		];
 	}
 
@@ -1039,11 +1126,41 @@ class DomTest extends TestCase
 			// generally disallowed URL with site in a subfolder (but allowed)
 			['/site', '/some/path', true, true],
 
+			// the index URL must match up to a path segment boundary
+			['https://getkirby.com/site', '/sitemap.xml', false, 'The URL points outside of the site index URL'],
+			['/site', '/sitemap.xml', false, 'The URL points outside of the site index URL'],
+
+			// the index URL itself is allowed
+			['/site', '/site', false, true],
+			['/site', '/site/', false, true],
+
+			// a query or fragment ends the path and must not
+			// make the index URL itself fail the check
+			['/site', '/site?q=kirby', false, true],
+			['/site', '/site#contact', false, true],
+			['/site', '/site/about?q=kirby', false, true],
+			['/', '/?q=kirby', false, true],
+
+			// but they must not open up the check either
+			['/site', '/sitemap?q=kirby', false, 'The URL points outside of the site index URL'],
+			['/site', '/sitemap#contact', false, 'The URL points outside of the site index URL'],
+
+			// percent-encoded dot segments must not skip the traversal check
+			['/site', '/site/%2e%2e/some/path', false, 'The ../ sequence is not allowed in relative URLs'],
+			['/site', '/site/.%2e/some/path', false, 'The ../ sequence is not allowed in relative URLs'],
+
 			// disallowed URL with directory traversal
 			['https://getkirby.com/site', '/site/../some/path', false, 'The ../ sequence is not allowed in relative URLs'],
 
 			// disallowed URL with directory traversal
 			['/site', '/site/../some/path', false, 'The ../ sequence is not allowed in relative URLs'],
+
+			// leading whitespace must not skip the site index URL check
+			['https://getkirby.com/site', ' /some/path', false, 'The URL points outside of the site index URL'],
+			['/site', "\t/some/path", false, 'The URL points outside of the site index URL'],
+
+			// whitespace must not skip the directory traversal check
+			['/site', "/site/..\t/some/path", false, 'The ../ sequence is not allowed in relative URLs'],
 		];
 	}
 
@@ -1060,6 +1177,42 @@ class DomTest extends TestCase
 		]);
 
 		$this->assertSame($expected, Dom::isAllowedUrl($url, compact('allowHostRelativeUrls')));
+	}
+
+	/**
+	 * Conformance check against the URL test data of the
+	 * web-platform-tests project, the reference corpus for the
+	 * URL parser that every browser is measured against
+	 *
+	 * Whenever a browser resolves a URL to a host other than the one
+	 * the site is served from, the sanitizer must not allow it. The
+	 * opposite direction is deliberately not asserted, as Kirby blocks
+	 * more than the browser on purpose (e.g. `../` sequences), which
+	 * is the safe direction.
+	 *
+	 * @covers ::isAllowedUrl
+	 */
+	public function testIsAllowedUrlConformance(): void
+	{
+		$data = Data::read(__DIR__ . '/fixtures/urltestdata.json');
+
+		foreach ($data['cases'] as $case) {
+			new App([
+				'urls' => [
+					'index' => 'http://' . $case['site']
+				]
+			]);
+
+			$this->assertNotSame(
+				true,
+				Dom::isAllowedUrl(
+					url: $case['input'],
+					options: ['allowedDomains' => [$case['site']]]
+				),
+				'The browser resolves ' . json_encode($case['input']) .
+				' to ' . $case['resolved']
+			);
+		}
 	}
 
 	/**

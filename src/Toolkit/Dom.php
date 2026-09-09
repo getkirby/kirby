@@ -14,6 +14,7 @@ use DOMText;
 use DOMXPath;
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Http\Url;
 
 /**
  * Helper class for DOM handling using the DOMDocument class
@@ -175,6 +176,31 @@ class Dom
 		// remove invisible ASCII characters from the value
 		$value = trim(preg_replace('/[^ -~]/u', '', $value));
 
+		// decode CSS escapes (`\2f`, `\/`) like the browser's tokenizer,
+		// otherwise `url(\2f\2f evil.com)` would hide a protocol-relative URL
+		$value = preg_replace_callback(
+			'/\\\\(?:([0-9a-f]{1,6}) ?|(.))/i',
+			function (array $match): string {
+				if (isset($match[2]) === true) {
+					return $match[2];
+				}
+
+				$code = hexdec($match[1]);
+
+				// NULL, surrogates and out-of-range code points become U+FFFD
+				if (
+					$code === 0 ||
+					$code > 0x10FFFF ||
+					($code >= 0xD800 && $code <= 0xDFFF)
+				) {
+					$code = 0xFFFD;
+				}
+
+				return mb_chr($code);
+			},
+			$value
+		);
+
 		$urls = [];
 
 		// URLs inside a `url()` wrapper, including `@import url(...)`
@@ -310,7 +336,7 @@ class Dom
 	): bool|string {
 		$options = static::normalizeSanitizeOptions($options);
 
-		$url = Str::lower($url);
+		$url = Str::lower(Url::normalize($url));
 
 		// allow empty URL values
 		if (empty($url) === true) {
@@ -335,7 +361,16 @@ class Dom
 			if ($kirby = App::instance(null, true)) {
 				$indexUrl = $kirby->url('index', true)->path()->toString(true);
 
-				if (Str::startsWith($url, $indexUrl) !== true) {
+				// only the path is relevant for the comparison, as the
+				// query and fragment end the path instead of extending it
+				$path = preg_split('![?#]!', $url, 2)[0];
+
+				// the index URL must match up to a path segment boundary,
+				// so that `/sitemap` does not pass the check for `/site`
+				if (
+					$path !== $indexUrl &&
+					Str::startsWith($path, rtrim($indexUrl, '/') . '/') !== true
+				) {
 					return 'The URL points outside of the site index URL';
 				}
 
@@ -343,10 +378,7 @@ class Dom
 				// TODO: the ../ sequences could be cleaned from the URL
 				//       before the check by normalizing the URL; then the
 				//       check above can also validate URLs with ../ sequences
-				if (
-					Str::contains($url, '../') !== false ||
-					Str::contains($url, '..\\') !== false
-				) {
+				if (static::hasTraversal($url) === true) {
 					return 'The ../ sequence is not allowed in relative URLs';
 				}
 			}
@@ -365,10 +397,7 @@ class Dom
 		) {
 			// disallow directory traversal as we cannot know
 			// in which URL context the URL will be printed
-			if (
-				Str::contains($url, '../') !== false ||
-				Str::contains($url, '..\\') !== false
-			) {
+			if (static::hasTraversal($url) === true) {
 				return 'The ../ sequence is not allowed in relative URLs';
 			}
 
@@ -384,7 +413,9 @@ class Dom
 				return true;
 			}
 
-			$hostname = parse_url($url, PHP_URL_HOST);
+			// the browser ends the authority at a backslash just like at
+			// a slash, so `https://evil.com\@good.com` must resolve to `evil.com`
+			$hostname = parse_url(str_replace('\\', '/', $url), PHP_URL_HOST);
 
 			if (in_array($hostname, $options['allowedDomains']) === true) {
 				return true;
@@ -772,6 +803,22 @@ class Dom
 		$this->doc->encoding ??= 'UTF-8';
 
 		return trim($this->doc->saveXML());
+	}
+
+	/**
+	 * Checks if the URL contains a directory traversal sequence;
+	 * a dot segment may be percent-encoded, which the browser
+	 * decodes before it resolves the path
+	 *
+	 * @since 4.9.6
+	 */
+	protected static function hasTraversal(string $url): bool
+	{
+		$url = str_replace(['%2e', '%2E'], '.', $url);
+
+		return
+			Str::contains($url, '../') !== false ||
+			Str::contains($url, '..\\') !== false;
 	}
 
 	/**
