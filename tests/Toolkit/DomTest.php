@@ -9,6 +9,7 @@ use DOMDocumentType;
 use DOMElement;
 use Kirby\AssertionFailedError;
 use Kirby\Cms\App;
+use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 
 /**
@@ -1133,6 +1134,17 @@ class DomTest extends TestCase
 			['/site', '/site', false, true],
 			['/site', '/site/', false, true],
 
+			// a query or fragment ends the path and must not
+			// make the index URL itself fail the check
+			['/site', '/site?q=kirby', false, true],
+			['/site', '/site#contact', false, true],
+			['/site', '/site/about?q=kirby', false, true],
+			['/', '/?q=kirby', false, true],
+
+			// but they must not open up the check either
+			['/site', '/sitemap?q=kirby', false, 'The URL points outside of the site index URL'],
+			['/site', '/sitemap#contact', false, 'The URL points outside of the site index URL'],
+
 			// percent-encoded dot segments must not skip the traversal check
 			['/site', '/site/%2e%2e/some/path', false, 'The ../ sequence is not allowed in relative URLs'],
 			['/site', '/site/.%2e/some/path', false, 'The ../ sequence is not allowed in relative URLs'],
@@ -1165,6 +1177,42 @@ class DomTest extends TestCase
 		]);
 
 		$this->assertSame($expected, Dom::isAllowedUrl($url, compact('allowHostRelativeUrls')));
+	}
+
+	/**
+	 * Conformance check against the URL test data of the
+	 * web-platform-tests project, the reference corpus for the
+	 * URL parser that every browser is measured against
+	 *
+	 * Whenever a browser resolves a URL to a host other than the one
+	 * the site is served from, the sanitizer must not allow it. The
+	 * opposite direction is deliberately not asserted, as Kirby blocks
+	 * more than the browser on purpose (e.g. `../` sequences), which
+	 * is the safe direction.
+	 *
+	 * @covers ::isAllowedUrl
+	 */
+	public function testIsAllowedUrlConformance(): void
+	{
+		$data = Data::read(__DIR__ . '/fixtures/urltestdata.json');
+
+		foreach ($data['cases'] as $case) {
+			new App([
+				'urls' => [
+					'index' => 'http://' . $case['site']
+				]
+			]);
+
+			$this->assertNotSame(
+				true,
+				Dom::isAllowedUrl(
+					url: $case['input'],
+					options: ['allowedDomains' => [$case['site']]]
+				),
+				'The browser resolves ' . json_encode($case['input']) .
+				' to ' . $case['resolved']
+			);
+		}
 	}
 
 	/**
