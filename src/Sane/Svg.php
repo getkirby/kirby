@@ -7,6 +7,7 @@ use DOMDocumentType;
 use DOMElement;
 use DOMXPath;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Http\Url;
 use Kirby\Toolkit\Dom;
 use Kirby\Toolkit\Str;
 
@@ -394,7 +395,7 @@ class Svg extends Xml
 	{
 		$element = $attr->ownerElement;
 		$name    = $attr->name;
-		$value   = $attr->value;
+		$value   = Url::normalize($attr->value);
 		$errors = [];
 
 		// block nested <use> elements ("Billion Laughs" DoS attack)
