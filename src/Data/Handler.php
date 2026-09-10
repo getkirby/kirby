@@ -32,10 +32,6 @@ abstract class Handler
 
 	/**
 	 * Reads data from a file
-	 *
-	 * Data files are rewritten as a whole. The shared lock makes sure that
-	 * a read cannot land in the middle of a write and decode a truncated
-	 * file as if it were the real content.
 	 */
 	public static function read(string $file): array
 	{
