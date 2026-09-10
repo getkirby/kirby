@@ -175,6 +175,33 @@ class ChangesTest extends TestCase
 		], Data::read($file));
 	}
 
+	public function testSaveWithLockOnlyChanges(): void
+	{
+		$this->app->impersonate('kirby');
+
+		Data::write($this->page->root() . '/article.txt', [
+			'title' => 'Test',
+			'text'  => 'Published text',
+			'uuid'  => 'test'
+		]);
+
+		// a changes version that only holds the lock has no content
+		Data::write($file = $this->page->root() . '/_changes/article.txt', [
+			'lock' => 'kirby'
+		]);
+
+		Changes::save($this->page, [
+			'text' => 'New text'
+		]);
+
+		$this->assertSame([
+			'title' => 'Test',
+			'lock'  => 'kirby',
+			'text'  => 'New text',
+			'uuid'  => 'test'
+		], Data::read($file));
+	}
+
 	public function testSaveWithEmptyChangesMultiLang(): void
 	{
 		$this->setUpMultiLanguage(site: [
