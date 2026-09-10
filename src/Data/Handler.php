@@ -52,18 +52,9 @@ abstract class Handler
 
 	/**
 	 * Writes data to a file
-	 *
-	 * The counterpart to the locked read above: `F::update()` takes the
-	 * exclusive lock before it truncates, while `file_put_contents()` with
-	 * `LOCK_EX` opens the stream in mode `w` and has already emptied the
-	 * file by the time it takes the lock.
 	 */
 	public static function write(string $file, $data = []): bool
 	{
-		// encode before the file is opened: if encoding fails, an existing
-		// file has to stay untouched and no empty file may be left behind
-		$contents = static::encode($data);
-
-		return F::update($file, fn (): string => $contents);
+		return F::write($file, static::encode($data));
 	}
 }
