@@ -675,6 +675,60 @@ class RouterTest extends TestCase
 		$this->assertSame('fr', I18n::locale());
 	}
 
+	public static function multiLangNotFoundLanguageProvider(): array
+	{
+		return [
+			// `Languages::load()` sorts languages by code, so the
+			// prefix-less default language can come after the requested one
+			'default language listed last' => [
+				[
+					['code' => 'en'],
+					['code' => 'fr', 'default' => true, 'url' => '/']
+				],
+				'en/does-not-exist',
+				'en'
+			],
+			'default language listed first' => [
+				[
+					['code' => 'de', 'default' => true, 'url' => '/'],
+					['code' => 'en']
+				],
+				'en/does-not-exist',
+				'en'
+			],
+			'default language with URL prefix' => [
+				[
+					['code' => 'en'],
+					['code' => 'fr', 'default' => true]
+				],
+				'en/does-not-exist',
+				'en'
+			],
+			'path of the default language' => [
+				[
+					['code' => 'en'],
+					['code' => 'fr', 'default' => true, 'url' => '/']
+				],
+				'does-not-exist',
+				'fr'
+			],
+		];
+	}
+
+	#[DataProvider('multiLangNotFoundLanguageProvider')]
+	public function testMultiLangNotFoundLanguage(
+		array $languages,
+		string $path,
+		string $expected
+	): void {
+		$app = $this->app->clone([
+			'options'   => ['languages' => true],
+			'languages' => $languages
+		]);
+
+		$this->assertNull($app->call($path));
+		$this->assertSame($expected, $app->language()->code());
+	}
 	public function testMultilangPageRepresentationRoute(): void
 	{
 		F::write($template = static::TMP . '/test.php', 'html');
