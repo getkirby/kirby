@@ -128,10 +128,14 @@ class Changes
 		// holds content. `Version::content()` would not tell us: for a
 		// secondary language it quietly falls back to the default language,
 		// which would then be stored as the translation.
-		$changed = $changes->read($language);
+		$changed = $changes->read($language) ?? [];
+
+		// the lock is not content and is dropped by `Version::content()`
+		// as well, so a version that only holds it has nothing to offer
+		unset($changed['lock']);
 
 		// get the source version for the existing content
-		$source  = $changed === null || $changed === [] ? $latest : $changes;
+		$source  = $changed === [] ? $latest : $changes;
 		$content = $source->content($language)->toArray();
 
 		// fill in the form values and pass through any values that are not
