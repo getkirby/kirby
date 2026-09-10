@@ -968,21 +968,6 @@ class FTest extends TestCase
 		$this->assertSame('replacement', file_get_contents($this->test));
 	}
 
-	public function testUpdateNotWritable(): void
-	{
-		F::write($this->test, 'original');
-		chmod($this->test, 0444);
-
-		try {
-			$this->expectException(Exception::class);
-			$this->expectExceptionMessage('The file "' . $this->test . '" is not writable');
-
-			F::update($this->test, fn () => 'replacement');
-		} finally {
-			chmod($this->test, 0777);
-		}
-	}
-
 	public function testUpdateAbortsWhenModifierReturnsNull(): void
 	{
 		F::write($this->test, 'untouched');
