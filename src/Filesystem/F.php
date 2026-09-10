@@ -1050,8 +1050,6 @@ class F
 	 * the current file contents.
 	 *
 	 * @since 5.5.0
-	 *
-	 * @throws \Exception If the file is not writable
 	 */
 	public static function update(
 		string $file,
@@ -1064,12 +1062,6 @@ class F
 			if (Dir::make($dir) === false) {
 				return false; // @codeCoverageIgnore
 			}
-		}
-
-		// fail loudly rather than silently returning `false`,
-		// consistently with `F::write()`
-		if (static::isWritable($file) === false) {
-			throw new Exception('The file "' . $file . '" is not writable');
 		}
 
 		// `c+` opens read/write, creates the file if missing,
