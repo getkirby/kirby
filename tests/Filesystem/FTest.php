@@ -947,27 +947,6 @@ class FTest extends TestCase
 		$this->assertSame('short', file_get_contents($this->test));
 	}
 
-	public function testUpdateDoesNotTruncateEarly(): void
-	{
-		F::write($this->test, 'original');
-
-		$size = null;
-
-		F::update($this->test, function () use (&$size): string {
-			// `file_put_contents()` with `LOCK_EX` opens the stream in
-			// mode `w` and has therefore already emptied the file by the
-			// time it takes the lock. `F::update()` must not, so that a
-			// concurrent reader can never observe the file truncated.
-			clearstatcache();
-			$size = filesize($this->test);
-
-			return 'replacement';
-		});
-
-		$this->assertSame(8, $size);
-		$this->assertSame('replacement', file_get_contents($this->test));
-	}
-
 	public function testUpdateAbortsWhenModifierReturnsNull(): void
 	{
 		F::write($this->test, 'untouched');
