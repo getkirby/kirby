@@ -712,6 +712,7 @@ class F
 	 * Reads a local file while holding a shared lock on it, so that
 	 * the read cannot fall into the window in which a writer has already
 	 * truncated the file but has not written the new contents yet
+	 * @psalm-suppress UnusedFunctionCall
 	 *
 	 * @since 5.6.0
 	 */
@@ -732,6 +733,10 @@ class F
 			// filesystem does not support locking at all, fall through
 			// to the plain read rather than failing the request
 			flock($handle, LOCK_SH);
+
+			// a buffered stream copies the file through an 8 KB read
+			// buffer, which slows down larger files considerably
+			stream_set_read_buffer($handle, 0);
 
 			return stream_get_contents($handle);
 		} finally {
