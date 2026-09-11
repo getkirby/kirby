@@ -44,7 +44,8 @@ class LanguageRoutes
 					// don't let it override the language that actually matched
 					if (
 						$language->path() === '' &&
-						$matched?->is($language) === false
+						$matched !== null &&
+						$matched->is($language) === false
 					) {
 						$kirby->setCurrentTranslation($matched->code());
 						$kirby->setCurrentLanguage($matched->code());
