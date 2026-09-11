@@ -186,6 +186,8 @@ class FindTest extends TestCase
 		$this->assertSame($a, Find::page('a'));
 		$this->assertSame($aa, Find::page('a/aa'));
 		$this->assertSame($aa, Find::page('a+aa'));
+		$this->assertSame($aa, Find::page('a%2Baa'));
+		$this->assertSame($aa, Find::page('a%2Faa'));
 		$this->assertSame($b, Find::page('page://my-uuid'));
 	}
 
