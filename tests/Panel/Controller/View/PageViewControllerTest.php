@@ -105,11 +105,15 @@ class PageViewControllerTest extends TestCase
 			'user' => 'editor@getkirby.com'
 		]);
 
-		// the parent must not show up in the breadcrumb
+		// the title of the parent must not leak into the breadcrumb
 		// of a page the user is allowed to see
 		$controller = new PageViewController($app->page('a/b'));
 
 		$this->assertSame([
+			[
+				'label' => '–',
+				'title' => 'Protected'
+			],
 			[
 				'label' => 'b',
 				'link'  => '/pages/a+b'

@@ -89,11 +89,15 @@ class PageFileViewControllerTest extends TestCase
 			'user' => 'editor@getkirby.com'
 		]);
 
-		// the protected ancestor must not show up in the breadcrumb
+		// the title of the protected ancestor must not leak into the breadcrumb
 		$file       = $app->page('a/b')->file('test.jpg');
 		$controller = new PageFileViewController($file);
 
 		$this->assertSame([
+			[
+				'label' => '–',
+				'title' => 'Protected'
+			],
 			[
 				'label' => 'b',
 				'link'  => '/pages/a+b',

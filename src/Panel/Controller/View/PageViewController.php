@@ -26,15 +26,18 @@ class PageViewController extends ModelViewController
 
 	public function breadcrumb(): array
 	{
-		$parents = $this->model->parents()->flip()->filter('isListable', true);
-		$parents = $parents->merge($this->model);
-
-		return $parents->values(
-			fn ($parent) => [
-				'label' => $parent->title()->toString(),
-				'link'  => $parent->panel()->url(true),
-			]
+		$breadcrumb = $this->model->parents()->flip()->values(
+			fn ($parent) => $parent->panel()->crumb()
 		);
+
+		// the page itself is never redacted,
+		// as its view is already open
+		$breadcrumb[] = [
+			'label' => $this->model->title()->toString(),
+			'link'  => $this->panel->url(true),
+		];
+
+		return $breadcrumb;
 	}
 
 	public function buttons(): ViewButtons
