@@ -55,6 +55,8 @@ class PageTest extends TestCase
 
 	public function testBreadcrumb(): void
 	{
+		$this->app->impersonate('kirby');
+
 		$site = new ModelSite([
 			'children' => [
 				[
@@ -96,6 +98,57 @@ class PageTest extends TestCase
 		], $page->breadcrumb());
 	}
 
+	public function testBreadcrumbWithProtectedParent(): void
+	{
+		// the permission cache is keyed by template and role,
+		// so both need to be unique for this test
+		$uuid = uuid();
+
+		$app = $this->app->clone([
+			'blueprints' => [
+				'pages/secret-' . $uuid => [
+					'options' => ['list' => false]
+				]
+			],
+			'roles' => [
+				['name' => 'editor-' . $uuid]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'a',
+						'template' => 'secret-' . $uuid,
+						'children' => [
+							['slug' => 'b']
+						]
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor-' . $uuid
+				]
+			],
+			'user' => 'editor@getkirby.com'
+		]);
+
+		// the title of the parent must not leak into the breadcrumb
+		// of a page the user is allowed to see
+		$page = new Page($app->page('a/b'));
+
+		$this->assertSame([
+			[
+				'label' => '–',
+				'title' => 'Protected'
+			],
+			[
+				'label' => 'b',
+				'link'  => '/pages/a+b'
+			]
+		], $page->breadcrumb());
+	}
+
 	public function testButtons(): void
 	{
 		$this->assertSame([
@@ -105,6 +158,51 @@ class PageTest extends TestCase
 			'k-languages-view-button',
 			'k-status-view-button',
 		], array_column($this->panel()->buttons(), 'component'));
+	}
+
+	public function testCrumb(): void
+	{
+		// the permission cache is keyed by template and role,
+		// so both need to be unique for this test
+		$uuid = uuid();
+
+		$app = $this->app->clone([
+			'blueprints' => [
+				'pages/secret-' . $uuid => [
+					'options' => ['list' => false]
+				]
+			],
+			'roles' => [
+				['name' => 'editor-' . $uuid]
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'a'],
+					[
+						'slug'     => 'b',
+						'template' => 'secret-' . $uuid
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor-' . $uuid
+				]
+			],
+			'user' => 'editor@getkirby.com'
+		]);
+
+		$this->assertSame([
+			'label' => 'a',
+			'link'  => '/pages/a'
+		], $app->page('a')->panel()->crumb());
+
+		// the title of a page the user must not see gets redacted
+		$this->assertSame([
+			'label' => '–',
+			'title' => 'Protected'
+		], $app->page('b')->panel()->crumb());
 	}
 
 	public function testDragText(): void
