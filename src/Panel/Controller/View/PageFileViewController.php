@@ -14,10 +14,7 @@ class PageFileViewController extends FileViewController
 	public function breadcrumb(): array
 	{
 		$breadcrumb = $this->model->parents()->flip()->values(
-			fn ($parent) => [
-				'label' => $parent->title()->toString(),
-				'link'  => $parent->panel()->url(true),
-			]
+			fn ($parent) => $parent->panel()->crumb()
 		);
 
 		return [

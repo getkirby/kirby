@@ -52,6 +52,51 @@ class PageTest extends TestCase
 		return new Page($page);
 	}
 
+	public function testCrumb(): void
+	{
+		// the permission cache is keyed by template and role,
+		// so both need to be unique for this test
+		$uuid = uuid();
+
+		$app = $this->app->clone([
+			'blueprints' => [
+				'pages/secret-' . $uuid => [
+					'options' => ['list' => false]
+				]
+			],
+			'roles' => [
+				['name' => 'editor-' . $uuid]
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'a'],
+					[
+						'slug'     => 'b',
+						'template' => 'secret-' . $uuid
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor-' . $uuid
+				]
+			],
+			'user' => 'editor@getkirby.com'
+		]);
+
+		$this->assertSame([
+			'label' => 'a',
+			'link'  => '/pages/a'
+		], $app->page('a')->panel()->crumb());
+
+		// the title of a page the user must not see gets redacted
+		$this->assertSame([
+			'label' => '–',
+			'title' => 'Protected'
+		], $app->page('b')->panel()->crumb());
+	}
+
 	public function testDragText(): void
 	{
 		$page = new ModelPage([

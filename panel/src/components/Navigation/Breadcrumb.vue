@@ -19,7 +19,10 @@
 
 			<!-- Crumbs list -->
 			<template #default="{ offset }">
-				<li v-for="(crumb, index) in visible(offset)" :key="crumb.link">
+				<li
+					v-for="(crumb, index) in visible(offset)"
+					:key="crumb.link ?? index"
+				>
 					<k-button v-bind="button(crumb, index === offset - 1)" />
 				</li>
 			</template>
@@ -74,11 +77,11 @@ export default {
 			return {
 				...crumb,
 				current: isCurrent ? "page" : false,
-				disabled: !crumb.link && !crumb.click && !crumb.dialog && !crumb.drawer,
+				disabled: this.isDisabled(crumb),
 				icon: crumb.loading ? "loader" : crumb.icon,
 				size: "sm",
 				text: label,
-				title: label,
+				title: crumb.title ?? label,
 				variant: "dimmed"
 			};
 		},
@@ -91,8 +94,12 @@ export default {
 				...crumb,
 				text: crumb.text ?? crumb.label,
 				icon: "angle-right",
+				disabled: this.isDisabled(crumb),
 				variant: null // remove dimmed variant in dropdown
 			}));
+		},
+		isDisabled(crumb) {
+			return !crumb.link && !crumb.click && !crumb.dialog && !crumb.drawer;
 		},
 		visible(offset) {
 			if (offset > 0) {

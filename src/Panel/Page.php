@@ -7,6 +7,7 @@ use Kirby\Filesystem\Asset;
 use Kirby\Panel\Controller\Dropdown\PageSettingsDropdownController;
 use Kirby\Panel\Controller\View\PageViewController;
 use Kirby\Panel\Ui\Item\PageItem;
+use Kirby\Toolkit\I18n;
 
 /**
  * Provides information about the page model for the Panel
@@ -19,6 +20,27 @@ use Kirby\Panel\Ui\Item\PageItem;
  */
 class Page extends Model
 {
+	/**
+	 * Single breadcrumb entry for the page. The title of a page
+	 * that the user must not see gets redacted.
+	 *
+	 * @since 5.6.0
+	 */
+	public function crumb(): array
+	{
+		if ($this->model->isListable() === false) {
+			return [
+				'label' => '–',
+				'title' => I18n::translate('protected')
+			];
+		}
+
+		return [
+			'label' => $this->model->title()->toString(),
+			'link'  => $this->url(true),
+		];
+	}
+
 	/**
 	 * Provides a kirbytag or markdown
 	 * tag for the page, which will be
