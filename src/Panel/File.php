@@ -50,14 +50,8 @@ class File extends Model
 				break;
 			case 'page':
 				/** @var \Kirby\Cms\Page $parent */
-				$breadcrumb = $this->model->parents()->flip()->filter(
-					'isListable',
-					true
-				)->values(
-					fn ($parent) => [
-						'label' => $parent->title()->toString(),
-						'link'  => $parent->panel()->url(true),
-					]
+				$breadcrumb = $this->model->parents()->flip()->values(
+					fn ($parent) => $parent->panel()->crumb()
 				);
 		}
 
