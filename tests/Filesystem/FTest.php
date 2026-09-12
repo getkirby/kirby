@@ -607,6 +607,60 @@ class FTest extends TestCase
 		$this->assertFalse(F::read('https://example.com/some-file.jpg'));
 	}
 
+	public function testReadLocked(): void
+	{
+		file_put_contents($this->test, $content = 'my content is awesome');
+
+		$this->assertSame($content, F::read($this->test, lock: true));
+	}
+
+	public function testReadLockedEmptyFile(): void
+	{
+		file_put_contents($this->test, '');
+
+		$this->assertSame('', F::read($this->test, lock: true));
+	}
+
+	public function testReadLockedInvalidFile(): void
+	{
+		$this->assertFalse(F::read('invalid file', lock: true));
+	}
+
+	public function testReadLockedRemoteFile(): void
+	{
+		$this->assertFalse(F::read('https://example.com/some-file.jpg', lock: true));
+	}
+
+	public function testReadLockedEmptyPath(): void
+	{
+		$this->assertFalse(F::read('', lock: true));
+	}
+
+	public function testReadLockedLargeFile(): void
+	{
+		// the locked read must return the entire file and
+		// not just the first chunk of the stream
+		file_put_contents($this->test, $content = str_repeat('kirby', 100000));
+
+		$this->assertSame($content, F::read($this->test, lock: true));
+	}
+
+	public function testReadLockedReleasesLock(): void
+	{
+		file_put_contents($this->test, 'my content is awesome');
+
+		F::read($this->test, lock: true);
+
+		// an exclusive, non-blocking lock can only be acquired
+		// if the read released its shared lock again
+		$handle = fopen($this->test, 'r+');
+
+		$this->assertTrue(flock($handle, LOCK_EX | LOCK_NB));
+
+		flock($handle, LOCK_UN);
+		fclose($handle);
+	}
+
 	public function testRemove(): void
 	{
 		F::write($a = static::TMP . '/a.jpg', '');
