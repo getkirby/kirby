@@ -69,7 +69,7 @@ class Find
 	public static function page(string $id): Page|null
 	{
 		// decode API ID encoding
-		$id    = str_replace(['+', ' '], '/', $id);
+		$id    = str_replace(['+', ' '], '/', rawurldecode($id));
 		$kirby = App::instance();
 		$page  = $kirby->page($id, null, true);
 
