@@ -2,8 +2,21 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Cache\Cache;
 use Kirby\Exception\PermissionException;
 use PHPUnit\Framework\Attributes\CoversClass;
+
+interface CacheInvalidationComponent
+{
+	public function __invoke(
+		App $kirby,
+		string $name,
+		Cache $cache,
+		ModelWithContent $model,
+		string $action,
+		array $arguments
+	): bool;
+}
 
 #[CoversClass(ModelCommit::class)]
 class ModelCommitTest extends TestCase
@@ -105,6 +118,56 @@ class ModelCommitTest extends TestCase
 		$commit->after($page);
 
 		$this->assertSame(null, $this->app->cache('pages')->get('test'));
+	}
+
+	public function testAfterInvalidatesCacheWithCustomComponent(): void
+	{
+		$component = $this->createMock(CacheInvalidationComponent::class);
+
+		$this->app = $this->app->clone([
+			'components' => [
+				'cache::invalidate' => $component
+			],
+			'options' => [
+				'cache' => [
+					'pages' => true
+				]
+			]
+		]);
+
+		$page = new Page([
+			'slug' => 'test',
+		]);
+
+		$cache = $this->app->cache('pages');
+
+		$component
+			->expects($this->once())
+			->method('__invoke')
+			->with(
+				$this->identicalTo($this->app),
+				$this->identicalTo('pages'),
+				$this->identicalTo($cache),
+				$this->identicalTo($page),
+				$this->identicalTo('delete'),
+				$this->identicalTo([
+					'status' => true,
+					'page'   => $page
+				])
+			)
+			->willReturn(true);
+
+		$cache->set('test', 'test');
+		$this->assertSame('test', $cache->get('test'), 'Make sure that the cache is actually set');
+
+		$commit = new ModelCommit(
+			model: $page,
+			action: 'delete'
+		);
+
+		$commit->after(true);
+
+		$this->assertSame('test', $cache->get('test'));
 	}
 
 	public function testAfterHookArgumentsForPageCreate(): void

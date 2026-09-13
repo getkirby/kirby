@@ -1,5 +1,6 @@
 <?php
 
+use Kirby\Cache\Cache;
 use Kirby\Cms\App;
 use Kirby\Cms\Collection;
 use Kirby\Cms\File;
@@ -29,6 +30,20 @@ use Kirby\Toolkit\Str;
 use Kirby\Uuid\Uuid;
 
 return [
+
+	/**
+	 * Invalidates a cache after model changes
+	 */
+	'cache::invalidate' => function (
+		App $kirby,
+		string $name,
+		Cache $cache,
+		ModelWithContent $model,
+		string $action,
+		array $arguments
+	): bool {
+		return $cache->flush();
+	},
 
 	/**
 	 * Used by the `css()` helper

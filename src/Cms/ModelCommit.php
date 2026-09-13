@@ -39,8 +39,15 @@ class ModelCommit
 		$arguments = $this->afterHookArguments($state);
 		$hook      = $this->hook('after', $arguments);
 
-		// flush the page cache after any model action
-		$this->kirby->cache('pages')->flush();
+		// invalidate the page cache after any model action
+		($this->kirby->component('cache::invalidate'))(
+			$this->kirby,
+			'pages',
+			$this->kirby->cache('pages'),
+			$this->model,
+			$this->action,
+			$hook['arguments']
+		);
 
 		return $hook['result'];
 	}
