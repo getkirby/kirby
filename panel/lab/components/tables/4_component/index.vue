@@ -36,6 +36,9 @@
 				:sortable="true"
 			></k-table>
 		</k-lab-example>
+		<k-lab-example label="Theme: skeleton">
+			<k-table :columns="columns" :rows="skeleton"></k-table>
+		</k-lab-example>
 	</k-lab-examples>
 </template>
 
@@ -85,6 +88,12 @@ export default {
 					date: "2020-01-03",
 					selectable: false
 				}
+			];
+		},
+		skeleton() {
+			return [
+				{ id: "skeleton-1", theme: "skeleton" },
+				{ id: "skeleton-2", theme: "skeleton" }
 			];
 		}
 	}
