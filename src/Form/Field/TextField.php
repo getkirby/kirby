@@ -14,60 +14,35 @@ use Kirby\Form\Mixin;
 class TextField extends StringField
 {
 	use Mixin\After;
+	use Mixin\Autocomplete;
 	use Mixin\Before;
 	use Mixin\Converter;
+	use Mixin\Counter;
+	use Mixin\Font;
 	use Mixin\Icon;
 	use Mixin\Pattern;
 
 	public function __construct(
 		array|string|null $after = null,
 		string|null $autocomplete = null,
-		bool|null $autofocus = null,
 		array|string|null $before = null,
 		string|null $converter = null,
 		bool|null $counter = null,
-		mixed $default = null,
-		bool|null $disabled = null,
-		array|string|null $help = null,
 		string|null $font = null,
 		string|null $icon = null,
-		array|string|null $label = null,
-		int|null $maxlength = null,
-		int|null $minlength = null,
-		string|null $name = null,
 		string|null $pattern = null,
-		array|string|null $placeholder = null,
-		bool|null $required = null,
-		bool|null $spellcheck = null,
-		bool|null $translate = null,
-		array|null $when = null,
-		string|null $width = null
+		mixed ...$args
 	) {
-		parent::__construct(
-			autocomplete: $autocomplete,
-			autofocus: $autofocus,
-			counter: $counter,
-			default: $default,
-			disabled: $disabled,
-			font: $font,
-			help: $help,
-			label: $label,
-			name: $name,
-			maxlength: $maxlength,
-			minlength: $minlength,
-			placeholder: $placeholder,
-			required: $required,
-			spellcheck: $spellcheck,
-			translate: $translate,
-			when: $when,
-			width: $width
-		);
+		parent::__construct(...$args);
 
-		$this->after     = $after;
-		$this->before    = $before;
-		$this->converter = $converter;
-		$this->icon      = $icon;
-		$this->pattern   = $pattern;
+		$this->after        = $after;
+		$this->autocomplete = $autocomplete;
+		$this->before       = $before;
+		$this->converter    = $converter;
+		$this->counter      = $counter;
+		$this->font         = $font;
+		$this->icon         = $icon;
+		$this->pattern      = $pattern;
 	}
 
 	public function default(): string
@@ -86,11 +61,14 @@ class TextField extends StringField
 	{
 		return [
 			...parent::props(),
-			'after'     => $this->after(),
-			'before'    => $this->before(),
-			'converter' => $this->converter(),
-			'icon'      => $this->icon(),
-			'pattern'   => $this->pattern()
+			'after'        => $this->after(),
+			'autocomplete' => $this->autocomplete(),
+			'before'       => $this->before(),
+			'converter'    => $this->converter(),
+			'counter'      => $this->counter(),
+			'font'         => $this->font(),
+			'icon'         => $this->icon(),
+			'pattern'      => $this->pattern()
 		];
 	}
 

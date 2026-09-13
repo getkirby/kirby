@@ -10,6 +10,9 @@ namespace Kirby\Form\Mixin;
  */
 trait Name
 {
+	/**
+	 * Unique name of the field, which is used as key in the content file
+	 */
 	protected string|null $name;
 
 	public function name(): string

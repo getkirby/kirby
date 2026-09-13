@@ -46,40 +46,14 @@ class TagsField extends OptionsField
 
 	public function __construct(
 		string|null $accept = null,
-		bool|null $autofocus = null,
-		mixed $default = null,
-		bool|null $disabled = null,
 		string|null $icon = null,
-		array|string|null $help = null,
-		array|string|null $label = null,
 		string|null $layout = null,
-		int|null $max = null,
-		int|null $min = null,
-		string|null $name = null,
-		array|string|null $options = null,
-		bool|null $required = null,
 		array|bool|null $search = null,
 		string|null $separator = null,
 		bool|null $sort = null,
-		bool|null $translate = null,
-		array|null $when = null,
-		string|null $width = null
+		mixed ...$args
 	) {
-		parent::__construct(
-			autofocus: $autofocus,
-			default:   $default,
-			disabled:  $disabled,
-			help:      $help,
-			label:     $label,
-			name:      $name,
-			max:       $max,
-			min:       $min,
-			options:   $options,
-			required:  $required,
-			translate: $translate,
-			when:      $when,
-			width:     $width
-		);
+		parent::__construct(...$args);
 
 		$this->accept    = $accept;
 		$this->icon      = $icon;

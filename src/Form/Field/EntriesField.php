@@ -38,34 +38,14 @@ class EntriesField extends InputField implements ProvidesNestedForm
 	protected array $value = [];
 
 	public function __construct(
-		bool|null $autofocus = null,
-		mixed $default = null,
-		bool|null $disabled = null,
 		array|string|null $empty = null,
 		array|string|null $field = null,
-		array|string|null $help = null,
-		array|string|null $label = null,
 		int|null $max = null,
 		int|null $min = null,
-		string|null $name = null,
-		bool|null $required = null,
 		bool|null $sortable = null,
-		bool|null $translate = null,
-		array|null $when = null,
-		string|null $width = null
+		mixed ...$args
 	) {
-		parent::__construct(
-			autofocus: $autofocus,
-			default:   $default,
-			disabled:  $disabled,
-			help:      $help,
-			label:     $label,
-			name:      $name,
-			required:  $required,
-			translate: $translate,
-			when:      $when,
-			width:     $width
-		);
+		parent::__construct(...$args);
 
 		$this->empty    = $empty;
 		$this->field    = $field;
