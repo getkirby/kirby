@@ -29,10 +29,8 @@ class LanguageRoutes
 				'pattern' => $language->pattern(),
 				'method'  => 'ALL',
 				'env'     => 'site',
-				'action'  => function ($path = null) use ($kirby, $language) {
-					// language set by a previous, more specific route
-					$matched = $kirby->language();
-					$result  = $language->router()->call($path);
+				'action'  => function ($path = null) use ($kirby, $language, $baseurl) {
+					$result = $language->router()->call($path);
 
 					// explicitly test for null as $result can
 					// contain falsy values that should still be returned
@@ -41,14 +39,17 @@ class LanguageRoutes
 					}
 
 					// a language without URL prefix matches any path;
-					// don't let it override the language that actually matched
-					if (
-						$language->path() === '' &&
-						$matched !== null &&
-						$matched->is($language) === false
-					) {
-						$kirby->setCurrentTranslation($matched->code());
-						$kirby->setCurrentLanguage($matched->code());
+					// if the path belongs to the URL prefix of another
+					// language, that language stays the current one
+					if ($language->path() === '') {
+						$matched = $kirby->languages()
+							->filter('baseurl', $baseurl)
+							->findByPath($path);
+
+						if ($matched !== null) {
+							$kirby->setCurrentTranslation($matched->code());
+							$kirby->setCurrentLanguage($matched->code());
+						}
 					}
 
 					// jump through to the fallback if nothing

@@ -729,6 +729,7 @@ class RouterTest extends TestCase
 		$this->assertNull($app->call($path));
 		$this->assertSame($expected, $app->language()->code());
 	}
+
 	public function testMultilangPageRepresentationRoute(): void
 	{
 		F::write($template = static::TMP . '/test.php', 'html');
