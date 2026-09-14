@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\DuplicateException;
 use Kirby\Filesystem\F;
+use Kirby\Toolkit\Str;
 
 /**
  * A collection of all defined site languages
@@ -87,6 +88,30 @@ class Languages extends Collection
 		}
 
 		return new static([Language::single()]);
+	}
+
+	/**
+	 * Returns the language whose URL path prefix
+	 * matches the given path
+	 */
+	public function findByPath(string|null $path): Language|null
+	{
+		foreach ($this->data as $language) {
+			$prefix = $language->path();
+
+			if ($prefix === '') {
+				continue;
+			}
+
+			if (
+				$path === $prefix ||
+				Str::startsWith($path ?? '', $prefix . '/') === true
+			) {
+				return $language;
+			}
+		}
+
+		return null;
 	}
 
 	/**
