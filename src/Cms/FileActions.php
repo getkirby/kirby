@@ -354,6 +354,9 @@ trait FileActions
 			return $this;
 		}
 
+		// preserve the original format regardless of the global `thumbs.format` option
+		$options['format'] ??= null;
+
 		// generate image file and overwrite it in place
 		$this->kirby()->thumb($this->root(), $this->root(), $options);
 
