@@ -73,6 +73,63 @@ class FileManipulateTest extends ModelTestCase
 		$this->assertSame(100, $replacedFile->height());
 	}
 
+	public function testManipulateGlobalFormat(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'thumbs' => [
+					'format' => 'webp'
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$parent       = new Page(['slug' => 'test']);
+		$originalFile = File::create([
+			'filename' => 'test.jpg',
+			'source'   => static::FIXTURES . '/test.jpg',
+			'parent'   => $parent
+		]);
+
+		$replacedFile = $originalFile->manipulate([
+			'width'  => 100,
+			'height' => 100
+		]);
+
+		$this->assertSame('jpg', $replacedFile->extension());
+		$this->assertSame('image/jpeg', $replacedFile->mime());
+		$this->assertSame(100, $replacedFile->width());
+	}
+
+	public function testManipulateGlobalFormatOverride(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'thumbs' => [
+					'format' => 'webp'
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$parent       = new Page(['slug' => 'test']);
+		$originalFile = File::create([
+			'filename' => 'test.jpg',
+			'source'   => static::FIXTURES . '/test.jpg',
+			'parent'   => $parent
+		]);
+
+		$replacedFile = $originalFile->manipulate([
+			'width'  => 100,
+			'height' => 100,
+			'format' => 'webp'
+		]);
+
+		$this->assertSame('webp', $replacedFile->extension());
+		$this->assertSame('image/webp', $replacedFile->mime());
+		$this->assertSame(100, $replacedFile->width());
+	}
+
 	public function testManipulateInvalidValidFormat(): void
 	{
 		$parent       = new Page(['slug' => 'test']);
