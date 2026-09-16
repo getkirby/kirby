@@ -12,7 +12,7 @@
 					:link="crumb.link"
 					:disabled="!crumb.link"
 					:text="crumb.text ?? crumb.label"
-					:title="crumb.text ?? crumb.label"
+					:title="crumb.title ?? crumb.text ?? crumb.label"
 					:current="index === crumbs.length - 1 ? 'page' : false"
 					variant="dimmed"
 					size="sm"
@@ -48,10 +48,11 @@ export default {
 	},
 	computed: {
 		dropdown() {
-			return this.crumbs.map((link) => ({
-				...link,
-				text: link.label,
-				icon: "angle-right"
+			return this.crumbs.map((crumb) => ({
+				...crumb,
+				text: crumb.text ?? crumb.label,
+				icon: "angle-right",
+				disabled: !crumb.link
 			}));
 		}
 	}
@@ -99,6 +100,10 @@ export default {
 	flex-shrink: 1;
 	min-width: 0;
 	justify-content: flex-start;
+}
+.k-button.k-breadcrumb-link:not([data-has-text="true"]) {
+	--button-padding: 0.5rem;
+	aspect-ratio: auto;
 }
 
 .k-breadcrumb-dropdown {

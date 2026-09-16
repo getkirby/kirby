@@ -63,6 +63,8 @@ class FieldTest extends TestCase
 			]
 		]);
 
+		$this->app->impersonate('kirby');
+
 		$site = $this->app->site();
 		$file = $site->file('b.jpg');
 
@@ -107,6 +109,56 @@ class FieldTest extends TestCase
 		$this->assertSame(['hidden' => true], $field);
 	}
 
+	public function testFilePositionWithProtectedSibling(): void
+	{
+		// the permission cache is keyed by template and role,
+		// so both need to be unique for this test
+		$uuid = uuid();
+
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'files/secret-' . $uuid => [
+					'options' => ['list' => false]
+				]
+			],
+			'roles' => [
+				['name' => 'editor-' . $uuid]
+			],
+			'site' => [
+				'files' => [
+					['filename' => 'a.jpg'],
+					['filename' => 'b.jpg'],
+					['filename' => 'c.jpg', 'template' => 'secret-' . $uuid]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor-' . $uuid
+				]
+			],
+			'user' => 'editor@getkirby.com'
+		]);
+
+		$file  = $this->app->site()->file('b.jpg');
+		$field = Field::filePosition($file);
+
+		// the protected sibling keeps its slot, so that
+		// the selectable positions are not shifted
+		$this->assertCount(5, $field['options']);
+
+		$this->assertSame(1, $field['options'][0]['value']);
+		$this->assertSame('a.jpg', $field['options'][1]['text']);
+		$this->assertSame(2, $field['options'][2]['value']);
+
+		// ... but it must not disclose the file
+		$this->assertSame('-2', $field['options'][3]['value']);
+		$this->assertSame('–', $field['options'][3]['text']);
+		$this->assertTrue($field['options'][3]['disabled']);
+
+		$this->assertSame(3, $field['options'][4]['value']);
+	}
+
 	public function testPagePosition(): void
 	{
 		$this->app = $this->app->clone([
@@ -118,6 +170,8 @@ class FieldTest extends TestCase
 				]
 			]
 		]);
+
+		$this->app->impersonate('kirby');
 
 		$site = $this->app->site();
 		$page = $site->find('b');
@@ -155,6 +209,56 @@ class FieldTest extends TestCase
 		]);
 
 		$this->assertTrue($field['required']);
+	}
+
+	public function testPagePositionWithProtectedSibling(): void
+	{
+		// the permission cache is keyed by template and role,
+		// so both need to be unique for this test
+		$uuid = uuid();
+
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/secret-' . $uuid => [
+					'options' => ['list' => false]
+				]
+			],
+			'roles' => [
+				['name' => 'editor-' . $uuid]
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'a', 'num' => 1],
+					['slug' => 'b', 'num' => 2],
+					['slug' => 'c', 'num' => 3, 'template' => 'secret-' . $uuid]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor-' . $uuid
+				]
+			],
+			'user' => 'editor@getkirby.com'
+		]);
+
+		$page  = $this->app->site()->find('b');
+		$field = Field::pagePosition($page);
+
+		// the protected sibling keeps its slot, so that
+		// the selectable positions are not shifted
+		$this->assertCount(5, $field['options']);
+
+		$this->assertSame(1, $field['options'][0]['value']);
+		$this->assertSame('a', $field['options'][1]['text']);
+		$this->assertSame(2, $field['options'][2]['value']);
+
+		// ... but it must not disclose the page
+		$this->assertSame('-2', $field['options'][3]['value']);
+		$this->assertSame('–', $field['options'][3]['text']);
+		$this->assertTrue($field['options'][3]['disabled']);
+
+		$this->assertSame(3, $field['options'][4]['value']);
 	}
 
 	public function testPagePositionWithNotEnoughOptions(): void

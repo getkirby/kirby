@@ -9,6 +9,7 @@ use DOMDocumentType;
 use DOMElement;
 use Exception;
 use Kirby\Cms\App;
+use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -477,6 +478,90 @@ class DomTest extends TestCase
 				"ur\0l\0\0(\0'test://te\0st'\0)\0",
 				['test://test']
 			],
+
+			// @import string form
+			[
+				'@import "https://getkirby.com/style.css"',
+				['https://getkirby.com/style.css']
+			],
+			[
+				'@import \'https://getkirby.com/style.css\'',
+				['https://getkirby.com/style.css']
+			],
+			[
+				'@import   "  https://getkirby.com/style.css  "',
+				['https://getkirby.com/style.css']
+			],
+
+			// @import without whitespace before the string
+			[
+				'@import"https://getkirby.com/style.css"',
+				['https://getkirby.com/style.css']
+			],
+
+			// @import with a CSS comment instead of whitespace
+			[
+				'@import/**/"https://getkirby.com/style.css"',
+				['https://getkirby.com/style.css']
+			],
+
+			// @import with a tab (stripped by the ASCII filter → becomes no-space)
+			[
+				"@import\t\"https://getkirby.com/style.css\"",
+				['https://getkirby.com/style.css']
+			],
+
+			// @import url() form
+			[
+				'@import url("https://getkirby.com/style.css")',
+				['https://getkirby.com/style.css']
+			],
+
+			// mixed url() and @import string form
+			[
+				'@import "https://getkirby.com/a.css"; text { background: url(https://getkirby.com/b.png); }',
+				['https://getkirby.com/b.png', 'https://getkirby.com/a.css']
+			],
+
+			// `/*` inside a quoted string is not a CSS comment, but part of
+			// the URL; it must not swallow the closing quote of the string
+			// when a real comment follows later in the value
+			[
+				'@import "https://getkirby.com/style.css/*"; text {} /* comment */',
+				['https://getkirby.com/style.css/*']
+			],
+
+			// URLs that legitimately contain `/*...*/` must not be rewritten
+			[
+				'@import "https://getkirby.com/a/*b*/c.css"',
+				['https://getkirby.com/a/*b*/c.css']
+			],
+			[
+				'text { background: url("https://getkirby.com/a/*b*/c.png") }',
+				['https://getkirby.com/a/*b*/c.png']
+			],
+
+			// CSS escapes are decoded like the browser's tokenizer does
+			[
+				'text { background: url(\\2f\\2f malicious.com/a.png) }',
+				['//malicious.com/a.png']
+			],
+			[
+				'@import "\\2f\\2f malicious.com/a.css"',
+				['//malicious.com/a.css']
+			],
+			[
+				'text { background: url(\\/\\/malicious.com/a.png) }',
+				['//malicious.com/a.png']
+			],
+			[
+				'text { background: \\75rl(//malicious.com/a.png) }',
+				['//malicious.com/a.png']
+			],
+			[
+				'text { background: url(https:\\2f\\2fmalicious.com/a.png) }',
+				['https://malicious.com/a.png']
+			],
 		];
 	}
 
@@ -932,6 +1017,70 @@ class DomTest extends TestCase
 
 			// forbidden URL type
 			['my-amazing-protocol://test', 'Unknown URL type'],
+
+			// forbidden protocol-relative URL with leading whitespace
+			// that the browser strips before it parses the URL
+			[' //test', 'Protocol-relative URLs are not allowed'],
+			["\t//test", 'Protocol-relative URLs are not allowed'],
+			["\n//test", 'Protocol-relative URLs are not allowed'],
+			["\r//test", 'Protocol-relative URLs are not allowed'],
+			["\x00//test", 'Protocol-relative URLs are not allowed'],
+			["\x0c//test", 'Protocol-relative URLs are not allowed'],
+			["/\t/test", 'Protocol-relative URLs are not allowed'],
+
+			// forbidden protocol-relative URL with backslashes
+			// that the browser treats like forward slashes
+			['/\\test', 'Protocol-relative URLs are not allowed'],
+			['\\/test', 'Protocol-relative URLs are not allowed'],
+			['\\\\test', 'Protocol-relative URLs are not allowed'],
+			["\\\t/test", 'Protocol-relative URLs are not allowed'],
+
+			// forbidden relative URL with whitespace inside the
+			// `../` sequence that the browser strips
+			["..\t/some/path", 'The ../ sequence is not allowed in relative URLs'],
+			["..\n/some/path", 'The ../ sequence is not allowed in relative URLs'],
+			[".\r./some/path", 'The ../ sequence is not allowed in relative URLs'],
+			["some/..\t/../path", 'The ../ sequence is not allowed in relative URLs'],
+
+			// forbidden relative URL with a percent-encoded dot segment
+			// that the browser decodes before it resolves the path
+			['%2e%2e/some/path', 'The ../ sequence is not allowed in relative URLs'],
+			['%2E%2E/some/path', 'The ../ sequence is not allowed in relative URLs'],
+			['.%2e/some/path', 'The ../ sequence is not allowed in relative URLs'],
+			['%2e./some/path', 'The ../ sequence is not allowed in relative URLs'],
+			['some/%2e%2e/path', 'The ../ sequence is not allowed in relative URLs'],
+
+			// a percent-encoded dot that is not a dot segment is allowed
+			['some%2epath/file.jpg', true],
+
+			// forbidden URL type with leading whitespace
+			[' javascript:alert()', 'Unknown URL type'],
+			["java\tscript:alert()", 'Unknown URL type'],
+
+			// forbidden URL when no domains are accepted, with leading whitespace
+			[' https://getkirby.com', 'The hostname "getkirby.com" is not allowed', [
+				'allowedDomains' => []
+			]],
+
+			// the browser ends the host at a backslash, so the
+			// allowlist must be checked against that same host
+			['https://malicious.com\\@getkirby.com', 'The hostname "malicious.com" is not allowed', [
+				'allowedDomains' => ['getkirby.com']
+			]],
+			['https://getkirby.com\\@malicious.com', true, [
+				'allowedDomains' => ['getkirby.com']
+			]],
+
+			// allowed values are unaffected by the normalization
+			[' #test-fragment', true],
+			[' some/path', true],
+			['  ', true],
+			[' mailto:test@getkirby.com', true],
+			[' data:image/jpeg;base64,test', true, [
+				'allowedDataUris' => [
+					'data:image/jpeg;base64'
+				]
+			]],
 		];
 	}
 
@@ -971,11 +1120,41 @@ class DomTest extends TestCase
 			// generally disallowed URL with site in a subfolder (but allowed)
 			['/site', '/some/path', true, true],
 
+			// the index URL must match up to a path segment boundary
+			['https://getkirby.com/site', '/sitemap.xml', false, 'The URL points outside of the site index URL'],
+			['/site', '/sitemap.xml', false, 'The URL points outside of the site index URL'],
+
+			// the index URL itself is allowed
+			['/site', '/site', false, true],
+			['/site', '/site/', false, true],
+
+			// a query or fragment ends the path and must not
+			// make the index URL itself fail the check
+			['/site', '/site?q=kirby', false, true],
+			['/site', '/site#contact', false, true],
+			['/site', '/site/about?q=kirby', false, true],
+			['/', '/?q=kirby', false, true],
+
+			// but they must not open up the check either
+			['/site', '/sitemap?q=kirby', false, 'The URL points outside of the site index URL'],
+			['/site', '/sitemap#contact', false, 'The URL points outside of the site index URL'],
+
+			// percent-encoded dot segments must not skip the traversal check
+			['/site', '/site/%2e%2e/some/path', false, 'The ../ sequence is not allowed in relative URLs'],
+			['/site', '/site/.%2e/some/path', false, 'The ../ sequence is not allowed in relative URLs'],
+
 			// disallowed URL with directory traversal
 			['https://getkirby.com/site', '/site/../some/path', false, 'The ../ sequence is not allowed in relative URLs'],
 
 			// disallowed URL with directory traversal
 			['/site', '/site/../some/path', false, 'The ../ sequence is not allowed in relative URLs'],
+
+			// leading whitespace must not skip the site index URL check
+			['https://getkirby.com/site', ' /some/path', false, 'The URL points outside of the site index URL'],
+			['/site', "\t/some/path", false, 'The URL points outside of the site index URL'],
+
+			// whitespace must not skip the directory traversal check
+			['/site', "/site/..\t/some/path", false, 'The ../ sequence is not allowed in relative URLs'],
 		];
 	}
 
@@ -993,6 +1172,40 @@ class DomTest extends TestCase
 		]);
 
 		$this->assertSame($expected, Dom::isAllowedUrl($url, compact('allowHostRelativeUrls')));
+	}
+
+	/**
+	 * Conformance check against the URL test data of the
+	 * web-platform-tests project, the reference corpus for the
+	 * URL parser that every browser is measured against
+	 *
+	 * Whenever a browser resolves a URL to a host other than the one
+	 * the site is served from, the sanitizer must not allow it. The
+	 * opposite direction is deliberately not asserted, as Kirby blocks
+	 * more than the browser on purpose (e.g. `../` sequences), which
+	 * is the safe direction.
+	 */
+	public function testIsAllowedUrlConformance(): void
+	{
+		$data = Data::read(__DIR__ . '/fixtures/urltestdata.json');
+
+		foreach ($data['cases'] as $case) {
+			new App([
+				'urls' => [
+					'index' => 'http://' . $case['site']
+				]
+			]);
+
+			$this->assertNotSame(
+				true,
+				Dom::isAllowedUrl(
+					url: $case['input'],
+					options: ['allowedDomains' => [$case['site']]]
+				),
+				'The browser resolves ' . json_encode($case['input']) .
+				' to ' . $case['resolved']
+			);
+		}
 	}
 
 	public function testInnerMarkup(): void
@@ -1645,6 +1858,18 @@ class DomTest extends TestCase
 				['The "invalid-instruction" processing instruction (line 1) is not allowed']
 			],
 
+			// a `>` in the data of an allow-listed PI ends the bogus
+			// comment an HTML parser opens at `<?`, exposing live markup
+			[
+				'<?xml-stylesheet ><img src=x onerror=alert(1)>?><p>This is a test</p>',
+				[
+					'allowedPIs' => ['xml-stylesheet']
+				],
+
+				'<p>This is a test</p>',
+				['The "xml-stylesheet" processing instruction (line 1) is not allowed']
+			],
+
 			// allowedTags
 			[
 				'<xml><a>A</a><b>B</b></xml>',
@@ -1837,6 +2062,175 @@ class DomTest extends TestCase
 			array_map(fn ($error) => $error->getMessage(), $errors)
 		);
 		$this->assertSame($expectedCode, $dom->toString());
+	}
+
+	public function testSanitizeCharacterData(): void
+	{
+		// helper that sanitizes with an allow-everything configuration so
+		// only the character-data handling can alter the document
+		$sanitize = function (string $code): array {
+			$dom    = new Dom($code, 'XML');
+			$errors = $dom->sanitize([]);
+
+			return [
+				$dom->toString(),
+				array_map(fn ($error) => $error->getMessage(), $errors)
+			];
+		};
+
+		// a comment whose data closes it early is removed: the tokenizer
+		// ends it there, so the rest would re-parse as live markup
+		$this->assertSame(
+			['<root><title/></root>', ['The comment (line 1) is not allowed']],
+			$sanitize('<root><title><!--><img src=x onerror=alert(1)>--></title></root>')
+		);
+
+		// the `<!--->` spelling closes the comment just the same
+		$this->assertSame(
+			['<root><g/></root>', ['The comment (line 1) is not allowed']],
+			$sanitize('<root><g><!---><img src=x>--></g></root>')
+		);
+
+		// foreign content is no shelter for it either
+		$this->assertSame(
+			['<root><svg/></root>', ['The comment (line 1) is not allowed']],
+			$sanitize('<root><svg><!--><img src=x>--></svg></root>')
+		);
+
+		// top-level comment closing early is removed as well
+		$this->assertSame(
+			['<root/>', ['The comment (line 1) is not allowed']],
+			$sanitize('<!--><img src=x>--><root/>')
+		);
+
+		// a well-formed comment is inert in every context and stays put,
+		// even when it holds markup
+		$this->assertSame(
+			['<root><g><!--<rect/>--></g></root>', []],
+			$sanitize('<root><g><!--<rect/>--></g></root>')
+		);
+
+		// inside a raw text element the comment is never a comment, just
+		// text, so an early close there cannot expose anything
+		$this->assertSame(
+			['<root><style><!--><img src=x>--></style></root>', []],
+			$sanitize('<root><style><!--><img src=x>--></style></root>')
+		);
+
+		// outside foreign content `<![CDATA[` degrades to a comment that
+		// ends at its first `>`, so the section is escaped into text
+		$this->assertSame(
+			[
+				'<root>&gt;&lt;img src=x&gt;</root>',
+				['The CDATA section (line 1) is not allowed']
+			],
+			$sanitize('<root><![CDATA[><img src=x>]]></root>')
+		);
+
+		// CDATA breaking out of a raw text element is escaped into text
+		$this->assertSame(
+			[
+				'<root><style>&lt;/style&gt;&lt;img src=x&gt;</style></root>',
+				['The CDATA section (line 1) is not allowed']
+			],
+			$sanitize('<root><style><![CDATA[</style><img src=x>]]></style></root>')
+		);
+
+		// ...but inside foreign content it stays a real CDATA section and
+		// is kept untouched, whatever its data looks like
+		$this->assertSame(
+			['<root><svg><![CDATA[><img src=x>]]></svg></root>', []],
+			$sanitize('<root><svg><![CDATA[><img src=x>]]></svg></root>')
+		);
+
+		// CDATA-wrapped content without a closing tag is kept in raw text
+		$this->assertSame(
+			['<root><style><![CDATA[.a > .b {}]]></style></root>', []],
+			$sanitize('<root><style><![CDATA[.a > .b {}]]></style></root>')
+		);
+
+		// child elements of an HTML integration point are created in the
+		// HTML namespace again, where `<![CDATA[` is only a bogus comment
+		$this->assertSame(
+			[
+				'<root><svg><desc><g>&gt;&lt;img src=x&gt;</g></desc></svg></root>',
+				['The CDATA section (line 1) is not allowed']
+			],
+			$sanitize('<root><svg><desc><g><![CDATA[><img src=x>]]></g></desc></svg></root>')
+		);
+
+		// ...but `<svg>` re-enters foreign content below one of them
+		$this->assertSame(
+			['<root><svg><desc><svg><![CDATA[><img src=x>]]></svg></desc></svg></root>', []],
+			$sanitize('<root><svg><desc><svg><![CDATA[><img src=x>]]></svg></desc></svg></root>')
+		);
+
+		// the same for the MathML text integration points
+		$this->assertSame(
+			[
+				'<root><math><mtext><b>&gt;&lt;img src=x&gt;</b></mtext></math></root>',
+				['The CDATA section (line 1) is not allowed']
+			],
+			$sanitize('<root><math><mtext><b><![CDATA[><img src=x>]]></b></mtext></math></root>')
+		);
+
+		// HTML elements that break a parser out of foreign content leave
+		// the whole subtree below them in the HTML namespace
+		$this->assertSame(
+			[
+				'<root><svg><b>&gt;&lt;img src=x&gt;</b></svg></root>',
+				['The CDATA section (line 1) is not allowed']
+			],
+			$sanitize('<root><svg><b><![CDATA[><img src=x>]]></b></svg></root>')
+		);
+
+		// raw text starts at the outermost such element, so this comment
+		// needs the `</script>` and not the `</style>` to break out
+		$this->assertSame(
+			['<root><script><style/></script></root>', ['The comment (line 1) is not allowed']],
+			$sanitize('<root><script><style><!--</script><img src=x>--></style></script></root>')
+		);
+
+		// a foreign `<style>` is no raw text element, so a comment below
+		// it is a real comment that must not close itself early
+		$this->assertSame(
+			['<root><svg><style><desc><g/></desc></style></svg></root>', ['The comment (line 1) is not allowed']],
+			$sanitize('<root><svg><style><desc><g><!--><img src=x>--></g></desc></style></svg></root>')
+		);
+
+		// an HTML `<style>` on the other hand reads everything below it
+		// as text, so the nested `<svg>` never opens foreign content
+		$this->assertSame(
+			['<root><style><svg/></style></root>', ['The comment (line 1) is not allowed']],
+			$sanitize('<root><style><svg><!--</style><img src=x>--></svg></style></root>')
+		);
+
+		// integration points only work inside their own foreign root, so
+		// neither of these hands its children back to HTML content
+		$this->assertSame(
+			['<root><math><desc><style/></desc></math></root>', ['The comment (line 1) is not allowed']],
+			$sanitize('<root><math><desc><style><!--><img src=x>--></style></desc></math></root>')
+		);
+
+		$this->assertSame(
+			['<root><svg><mtext><style/></mtext></svg></root>', ['The comment (line 1) is not allowed']],
+			$sanitize('<root><svg><mtext><style><!--><img src=x>--></style></mtext></svg></root>')
+		);
+
+		// `<annotation-xml>` only hands them back with an HTML encoding,
+		// which turns the `<style>` below it into a raw text element
+		$this->assertSame(
+			[
+				'<root><math><annotation-xml encoding="text/html"><style>&lt;/style&gt;&lt;img src=x&gt;</style></annotation-xml></math></root>',
+				['The CDATA section (line 1) is not allowed']
+			],
+			$sanitize('<root><math><annotation-xml encoding="text/html"><style><![CDATA[</style><img src=x>]]></style></annotation-xml></math></root>')
+		);
+
+		$this->assertSame(
+			['<root><math><annotation-xml><style/></annotation-xml></math></root>', ['The comment (line 1) is not allowed']],
+			$sanitize('<root><math><annotation-xml><style><!--><img src=x>--></style></annotation-xml></math></root>')
+		);
 	}
 
 	public function testSanitizeDoctypeCallbackException(): void

@@ -598,7 +598,10 @@ class Html extends Xml
 			default                      => null
 		};
 
-		if (empty($id) === true || preg_match('!^[0-9]*$!', $id) !== 1) {
+		if (
+			$id === null ||
+			preg_match('!^[0-9]*$!', $id) !== 1
+		) {
 			return null;
 		}
 
@@ -626,17 +629,40 @@ class Html extends Xml
 		array $options = [],
 		array $attr = []
 	): string|null {
-		if (preg_match('!youtu!i', $url) !== 1) {
+		$uri    = new Uri($url);
+		$domain = Str::lower((string)$uri->host());
+
+		// Only build embeds for URLs on an official YouTube domain
+		// or one of its subdomains. The domains are matched by
+		// registrable suffix because YouTube serves watch/share
+		// URLs from several subdomains (www, m, …). A leading dot
+		// is required so that look-alikes like `notyoutube.com`
+		// are not matched.
+		$isYoutube =
+			$domain === 'youtu.be' ||
+			$domain === 'youtube.com' ||
+			$domain === 'youtube-nocookie.com' ||
+			Str::endsWith($domain, '.youtu.be') === true ||
+			Str::endsWith($domain, '.youtube.com') === true ||
+			Str::endsWith($domain, '.youtube-nocookie.com') === true;
+
+		if ($isYoutube === false) {
 			return null;
 		}
 
-		$uri    = new Uri($url);
 		$path   = $uri->path();
 		$query  = $uri->query();
 		$first  = $path->first();
 		$second = $path->nth(1);
-		$host   = 'https://' . $uri->host() . '/embed';
 		$src    = null;
+
+		// always build the embed src on the canonical, fixed host
+		$host = match (true) {
+			Str::endsWith($domain, 'youtube-nocookie.com') === true
+				=> 'https://www.youtube-nocookie.com/embed',
+			default
+			=> 'https://www.youtube.com/embed'
+		};
 
 		$isYoutubeId = static function (string|null $id = null): bool {
 			if (empty($id) === true) {

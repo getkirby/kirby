@@ -26,6 +26,13 @@ use SensitiveParameter;
 class UserRules
 {
 	/**
+	 * Pattern of safe characters allowed in a user id.
+	 * Restricting ids this way prevents path traversal
+	 * into subfolders of the accounts root.
+	 */
+	public const ID_PATTERN = '/^[a-z0-9_-]+\z/i';
+
+	/**
 	 * Validates if the email address can be changed
 	 *
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the address
@@ -389,10 +396,17 @@ class UserRules
 	/**
 	 * Validates a user id
 	 *
+	 * @throws \Kirby\Exception\InvalidArgumentException If the id contains unsafe characters
 	 * @throws \Kirby\Exception\DuplicateException If the user already exists
 	 */
 	public static function validId(User $user, string $id): void
 	{
+		if (V::match($id, static::ID_PATTERN) !== true) {
+			throw new InvalidArgumentException(
+				message: '"' . $id . '" is not a valid user id'
+			);
+		}
+
 		if (in_array($id, ['account', 'kirby', 'nobody'], true) === true) {
 			throw new InvalidArgumentException(
 				message: '"' . $id . '" is a reserved word and cannot be used as user id'

@@ -93,6 +93,30 @@ return [
 	'methods' => [
 		'emptyValue' => function () {
 			return [];
+		},
+
+		/**
+		 * Stand-in for a model that exists, but that the current user
+		 * is not allowed to list. It only echoes back the ID that is
+		 * already stored in the content file, so that saving the model
+		 * as a user without access does not drop the entry.
+		 */
+		'protectedResponse' => function (string $id): array {
+			return [
+				'id'          => $id,
+				'uuid'        => $id,
+				'image'       => [
+					'back'  => 'pattern',
+					'color' => 'gray-500',
+					'cover' => false,
+					'icon'  => 'protected'
+				],
+				'info'        => null,
+				'link'        => false,
+				'permissions' => [],
+				'sortable'    => true,
+				'text'        => '–'
+			];
 		}
 	]
 ];

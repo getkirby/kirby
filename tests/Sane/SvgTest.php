@@ -48,6 +48,36 @@ class SvgTest extends TestCase
 		$this->assertSame($cleaned, Svg::sanitize($fixture));
 	}
 
+	public function testAllowedCharacterData(): void
+	{
+		// comments that cannot close themselves early, and CDATA sections
+		// in foreign content, never re-parse as live HTML and are kept
+		$fixtures = [
+			// generator comment at the root
+			'<svg><!-- Generator: Sketch --><rect/></svg>',
+			// commented-out element inside foreign content
+			'<svg><defs><!--<linearGradient id="x"></linearGradient>--></defs></svg>',
+			// CDATA-wrapped CSS, including a child combinator `>`
+			'<svg><style><![CDATA[.a > .b { fill: red }]]></style></svg>',
+			// `<![CDATA[` keys on the namespace of its parent, so it stays
+			// a real CDATA section in `<desc>`/`<title>` just as elsewhere
+			'<svg><desc><![CDATA[><img src=x onerror=alert(1)>]]></desc></svg>',
+			// SVG `<style>` is a foreign element, not an HTML raw text
+			// element, so a smuggled `</style>` cannot break out of it
+			'<svg><style><![CDATA[</style><img src=x onerror=alert(1)>]]></style></svg>',
+			// `<svg>` re-enters foreign content below an integration point
+			'<svg><desc><svg><![CDATA[><img src=x onerror=alert(1)>]]></svg></desc></svg>',
+			// `<font>` only breaks out of foreign content when it carries
+			// one of the HTML font attributes
+			'<svg><font><![CDATA[><img src=x onerror=alert(1)>]]></font></svg>',
+		];
+
+		foreach ($fixtures as $fixture) {
+			Svg::validate($fixture);
+			$this->assertSame($fixture, Svg::sanitize($fixture));
+		}
+	}
+
 	#[DataProvider('invalidProvider')]
 	public function testInvalid(string $file): void
 	{
@@ -189,6 +219,30 @@ class SvgTest extends TestCase
 		Svg::validateFile($fixture);
 	}
 
+	public function testDisallowedProtocolRelativeBackslash(): void
+	{
+		$fixture   = $this->fixture('disallowed/protocol-relative-backslash.svg');
+		$sanitized = $this->fixture('sanitized/protocol-relative-backslash.svg');
+
+		$this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The URL is not allowed in attribute "href" (line 2): Protocol-relative URLs are not allowed');
+		Svg::validateFile($fixture);
+	}
+
+	public function testDisallowedProtocolRelativeWhitespace(): void
+	{
+		$fixture   = $this->fixture('disallowed/protocol-relative-whitespace.svg');
+		$sanitized = $this->fixture('sanitized/protocol-relative-whitespace.svg');
+
+		$this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The URL is not allowed in attribute "href" (line 2): Protocol-relative URLs are not allowed');
+		Svg::validateFile($fixture);
+	}
+
 	public function testDisallowedOnclickAttr(): void
 	{
 		$fixture   = "<svg>\n<path onclick='alert(1)' />\n</svg>";
@@ -246,6 +300,18 @@ class SvgTest extends TestCase
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Nested "use" elements are not allowed (used in line 18)');
+		Svg::validateFile($fixture);
+	}
+
+	public function testDisallowedUseAttackWhitespace(): void
+	{
+		$fixture   = $this->fixture('disallowed/use-attack-whitespace.svg');
+		$sanitized = $this->fixture('sanitized/use-attack-whitespace.svg');
+
+		$this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Nested "use" elements are not allowed (used in line 14)');
 		Svg::validateFile($fixture);
 	}
 
@@ -357,6 +423,30 @@ class SvgTest extends TestCase
 		Svg::validate($fixture);
 	}
 
+	public function testDisallowedStyleImportEscaped(): void
+	{
+		$fixture   = $this->fixture('disallowed/style-import-escaped.svg');
+		$sanitized = $this->fixture('sanitized/style-import-escaped.svg');
+
+		$this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The URL is not allowed in the "style" element (around line 3)');
+		Svg::validateFile($fixture);
+	}
+
+	public function testDisallowedStyleImportExternal(): void
+	{
+		$fixture   = $this->fixture('disallowed/style-import-external.svg');
+		$sanitized = $this->fixture('sanitized/style-import-external.svg');
+
+		$this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The URL is not allowed in the "style" element (around line 3)');
+		Svg::validateFile($fixture);
+	}
+
 	public function testDisallowedStyleUrlExternal(): void
 	{
 		$fixture   = $this->fixture('disallowed/style-url-external.svg');
@@ -379,6 +469,187 @@ class SvgTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The "xml-stylesheet" processing instruction (line 6) is not allowed');
 		Svg::validateFile($fixture);
+	}
+
+	public function testDisallowedMutationXssTitleComment(): void
+	{
+		// `<!-->` is an abrupt closing of an empty comment for the HTML
+		// tokenizer, so the `<img onerror>` behind it re-parses as live
+		$fixture   = '<svg><title><!--><img src=x onerror=alert(1)>--></title></svg>';
+		$sanitized = '<svg><title/></svg>';
+
+		$this->assertSame($sanitized, Svg::sanitize($fixture));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The comment (line 1) is not allowed');
+		Svg::validate($fixture);
+	}
+
+	public function testDisallowedMutationXssTopLevelComment(): void
+	{
+		// the same abrupt close at the top level, where the exposed
+		// `<img onerror>` lands directly in the HTML namespace
+		$fixture   = '<!--><img src=x onerror=alert(1)>--><svg></svg>';
+		$sanitized = '<svg/>';
+
+		$this->assertSame($sanitized, Svg::sanitize($fixture));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The comment (line 1) is not allowed');
+		Svg::validate($fixture);
+	}
+
+	public function testDisallowedMutationXssForeignContentComment(): void
+	{
+		// the abrupt close happens in the tokenizer, before any insertion
+		// mode applies, and `<img>` breaks out of SVG foreign content
+		$fixture   = '<svg><g><!--><img src=x onerror=alert(1)>--></g></svg>';
+		$sanitized = '<svg><g/></svg>';
+
+		$this->assertSame($sanitized, Svg::sanitize($fixture));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The comment (line 1) is not allowed');
+		Svg::validate($fixture);
+	}
+
+	public function testDisallowedMutationXssForeignContentCommentDash(): void
+	{
+		// `<!--->` closes the empty comment just like `<!-->` does
+		$fixture   = '<svg><g><!---><img src=x onerror=alert(1)>--></g></svg>';
+		$sanitized = '<svg><g/></svg>';
+
+		$this->assertSame($sanitized, Svg::sanitize($fixture));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The comment (line 1) is not allowed');
+		Svg::validate($fixture);
+	}
+
+	public function testDisallowedMutationXssRootComment(): void
+	{
+		// the `<svg>` root is foreign content itself, so the breakout
+		// needs no integration point anywhere in the ancestor chain
+		$fixture   = '<svg><!--><img src=x onerror=alert(1)>--></svg>';
+		$sanitized = '<svg/>';
+
+		$this->assertSame($sanitized, Svg::sanitize($fixture));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The comment (line 1) is not allowed');
+		Svg::validate($fixture);
+	}
+
+	public function testDisallowedMutationXssStyleComment(): void
+	{
+		// `<style>` inside `<svg>` is a foreign element, not an HTML raw
+		// text element, so the abrupt close goes live in there as well
+		$fixture   = '<svg><style><!--><img src=x onerror=alert(1)>--></style></svg>';
+		$sanitized = '<svg><style/></svg>';
+
+		$this->assertSame($sanitized, Svg::sanitize($fixture));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The comment (line 1) is not allowed');
+		Svg::validate($fixture);
+	}
+
+	public function testDisallowedMutationXssIntegrationPointCdata(): void
+	{
+		// `<desc>` is an HTML integration point, so its child elements are
+		// created in the HTML namespace, where `<![CDATA[` is only a bogus
+		// comment that ends at the first `>` and exposes the rest
+		$fixture   = '<svg><desc><g><![CDATA[><img src=x onerror=alert(1)>]]></g></desc></svg>';
+		$sanitized = '<svg><desc><g>&gt;&lt;img src=x onerror=alert(1)&gt;</g></desc></svg>';
+
+		$this->assertSame($sanitized, Svg::sanitize($fixture));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The CDATA section (line 1) is not allowed');
+		Svg::validate($fixture);
+	}
+
+	public function testDisallowedMutationXssIntegrationPointCdataTitle(): void
+	{
+		// `<title>` is an HTML integration point just like `<desc>`,
+		// at any depth below it
+		$fixture   = '<svg><title><g><g><![CDATA[><img src=x onerror=alert(1)>]]></g></g></title></svg>';
+		$sanitized = '<svg><title><g><g>&gt;&lt;img src=x onerror=alert(1)&gt;</g></g></title></svg>';
+
+		$this->assertSame($sanitized, Svg::sanitize($fixture));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The CDATA section (line 1) is not allowed');
+		Svg::validate($fixture);
+	}
+
+	public function testDisallowedMutationXssIntegrationPointStyleCdata(): void
+	{
+		// below an integration point `<style>` is an HTML raw text element
+		// again, which a smuggled `</style>` breaks out of
+		$fixture   = '<svg><desc><style><![CDATA[</style><img src=x onerror=alert(1)>]]></style></desc></svg>';
+		$sanitized = '<svg><desc><style>&lt;/style&gt;&lt;img src=x onerror=alert(1)&gt;</style></desc></svg>';
+
+		$this->assertSame($sanitized, Svg::sanitize($fixture));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The CDATA section (line 1) is not allowed');
+		Svg::validate($fixture);
+	}
+
+	public function testDisallowedMutationXssIntegrationPointStyleComment(): void
+	{
+		// the same raw text element also turns a comment into plain text,
+		// so only the closing tag can break out of it
+		$fixture   = '<svg><desc><style><!--</style><img src=x onerror=alert(1)>--></style></desc></svg>';
+		$sanitized = '<svg><desc><style/></desc></svg>';
+
+		$this->assertSame($sanitized, Svg::sanitize($fixture));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The comment (line 1) is not allowed');
+		Svg::validate($fixture);
+	}
+
+	public function testDisallowedMutationXssBreakoutCdata(): void
+	{
+		// `<font>` with an HTML font attribute makes the parser leave the
+		// foreign subtree entirely and continue in the HTML namespace
+		$fixture   = '<svg><font color="red"><![CDATA[><img src=x onerror=alert(1)>]]></font></svg>';
+		$sanitized = '<svg><font color="red">&gt;&lt;img src=x onerror=alert(1)&gt;</font></svg>';
+
+		$this->assertSame($sanitized, Svg::sanitize($fixture));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The CDATA section (line 1) is not allowed');
+		Svg::validate($fixture);
+	}
+
+	public function testDisallowedMutationXssBreakoutStyleCdata(): void
+	{
+		// after the breakout `<style>` is an HTML raw text element as well
+		$fixture   = '<svg><font color="red"><style><![CDATA[</style><img src=x onerror=alert(1)>]]></style></font></svg>';
+		$sanitized = '<svg><font color="red"><style>&lt;/style&gt;&lt;img src=x onerror=alert(1)&gt;</style></font></svg>';
+
+		$this->assertSame($sanitized, Svg::sanitize($fixture));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The CDATA section (line 1) is not allowed');
+		Svg::validate($fixture);
+	}
+
+	public function testDisallowedMutationXssForeignStyleComment(): void
+	{
+		// a foreign `<style>` is no raw text element, so a comment nested
+		// below it is a real comment that must not close itself early
+		$fixture   = '<svg><style><desc><g><!--><img src=x onerror=alert(1)>--></g></desc></style></svg>';
+		$sanitized = '<svg><style><desc><g/></desc></style></svg>';
+
+		$this->assertSame($sanitized, Svg::sanitize($fixture));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The comment (line 1) is not allowed');
+		Svg::validate($fixture);
 	}
 
 	public function testParseNonSvg(): void

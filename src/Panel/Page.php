@@ -31,14 +31,18 @@ class Page extends Model
 	 */
 	public function breadcrumb(): array
 	{
-		$parents = $this->model->parents()->flip()->merge($this->model);
-
-		return $parents->values(
-			fn ($parent) => [
-				'label' => $parent->title()->toString(),
-				'link'  => $parent->panel()->url(true),
-			]
+		$breadcrumb = $this->model->parents()->flip()->values(
+			fn ($parent) => $parent->panel()->crumb()
 		);
+
+		// the page itself is never redacted,
+		// as its view is already open
+		$breadcrumb[] = [
+			'label' => $this->model->title()->toString(),
+			'link'  => $this->url(true),
+		];
+
+		return $breadcrumb;
 	}
 
 	/**
@@ -55,6 +59,27 @@ class Page extends Model
 			'languages',
 			'status'
 		)->render();
+	}
+
+	/**
+	 * Single breadcrumb entry for the page. The title of a page
+	 * that the user must not see gets redacted.
+	 *
+	 * @since 5.6.0
+	 */
+	public function crumb(): array
+	{
+		if ($this->model->isListable() === false) {
+			return [
+				'label' => '–',
+				'title' => I18n::translate('protected')
+			];
+		}
+
+		return [
+			'label' => $this->model->title()->toString(),
+			'link'  => $this->url(true),
+		];
 	}
 
 	/**

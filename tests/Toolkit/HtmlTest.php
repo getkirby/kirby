@@ -653,6 +653,15 @@ class HtmlTest extends TestCase
 				'https://www.youtube.com/embed/d9NF2edxy-M'
 			],
 			[
+				// subdomains are canonicalized to www.youtube.com
+				'https://m.youtube.com/watch?v=d9NF2edxy-M',
+				'https://www.youtube.com/embed/d9NF2edxy-M'
+			],
+			[
+				'https://music.youtube.com/watch?v=d9NF2edxy-M',
+				'https://www.youtube.com/embed/d9NF2edxy-M'
+			],
+			[
 				'https://www.youtu.be/d9NF2edxy-M?t=10',
 				'https://www.youtube.com/embed/d9NF2edxy-M?start=10'
 			],
@@ -718,6 +727,14 @@ class HtmlTest extends TestCase
 			],
 			[
 				'https://www.youtu.be',
+				false
+			],
+			[
+				'https://notyoutube.com/watch?v=d9NF2edxy-M',
+				false
+			],
+			[
+				'https://www.youtube.com.evil.example/watch?v=d9NF2edxy-M',
 				false
 			],
 			[
