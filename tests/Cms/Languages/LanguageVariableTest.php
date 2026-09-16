@@ -58,7 +58,7 @@ class LanguageVariableTest extends TestCase
 	public function testCreateEmptyKey(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The variable needs a valid key');
+		$this->expectExceptionMessage('Please enter a valid key for the variable');
 
 		LanguageVariable::create('');
 	}
@@ -76,7 +76,7 @@ class LanguageVariableTest extends TestCase
 		$this->app->impersonate('kirby');
 
 		$this->expectException(DuplicateException::class);
-		$this->expectExceptionMessage('The variable already exists');
+		$this->expectExceptionMessage('A variable for "foo" already exists');
 
 		LanguageVariable::create('foo', 'bar');
 		LanguageVariable::create('foo', 'baz');
@@ -87,7 +87,7 @@ class LanguageVariableTest extends TestCase
 		$this->app->impersonate('kirby');
 
 		$this->expectException(DuplicateException::class);
-		$this->expectExceptionMessage('The variable is part of the core translation and cannot be overwritten');
+		$this->expectExceptionMessage('"date" is one of Kirby\'s own translation strings and cannot be overwritten by a language variable');
 
 		LanguageVariable::create('date', 'bar');
 	}

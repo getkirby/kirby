@@ -148,12 +148,18 @@
 	"error.form.notSaved": "No se pudo guardar el formulario",
 
 	"error.language.code": "Por favor introduce un código válido para el idioma",
+	"error.language.create.default": "\"{name}\" ({code}) is already set as the default language",
 	"error.language.create.permission": "You are not allowed to create a language",
 	"error.language.delete.permission": "You are not allowed to delete the language",
 	"error.language.duplicate": "El idioma ya existe",
 	"error.language.name": "Por favor introduce un nombre válido para el idioma",
 	"error.language.notFound": "No se pudo encontrar el idioma",
 	"error.language.update.permission": "You are not allowed to update the language",
+	"error.language.variable.core": "\"{key}\" is one of Kirby's own translation strings and cannot be overwritten by a language variable",
+	"error.language.variable.duplicate": "A variable for \"{key}\" already exists",
+	"error.language.variable.key": "Please enter a valid key for the variable",
+	"error.language.variable.notFound": "The variable could not be found",
+	"error.language.variable.numeric": "The variable key must not be numeric",
 
 	"error.layout.validation.block": "Hay un error en el campo \"{field}\" del bloque {blockIndex} que utiliza el tipo de bloque \"{fieldset}\" en el layout {layoutIndex}",
 	"error.layout.validation.settings": "Hay un error en los ajustes del layout {index}",
@@ -416,6 +422,7 @@
 
 	"form.discard": "Discard changes",
 	"form.discard.confirm": "Do you really want to <strong>discard all your changes</strong>?",
+	"form.discard.confirm.editor": "Do you really want to <strong>discard the unsaved changes</strong> made by <strong>{editor}</strong>?",
 	"form.locked": "This content is disabled for you as it is currently edited by another user",
 	"form.unsaved": "The current changes have not yet been saved",
 	"form.preview": "Preview changes",
@@ -470,7 +477,6 @@
 	"language.variable.multiple": "Countable?",
 	"language.variable.multiple.text": "Use different translation strings",
 	"language.variable.multiple.help": "You can use different values depending on a count you pass along with the language variable, allowing you to create dynamic translations, e.g. singular and plural.",
-	"language.variable.notFound": "The variable could not be found",
 	"language.variable.value": "Value",
 
 	"languages": "Idiomas",
@@ -654,6 +660,8 @@
 
 	"preview": "Previsualizar",
 	"preview.browser.scroll": "Sync scroll",
+
+	"protected": "Protected",
 
 	"publish": "Publish",
 	"published": "Publicado",

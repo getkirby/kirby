@@ -84,7 +84,6 @@
 			</k-grid>
 		</k-lab-example>
 
-		<k-lab-example
 		<k-lab-example label="$library.colors.toString()" :code="false">
 			<k-text>
 				<p>Formats color as CSS string.</p>

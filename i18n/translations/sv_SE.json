@@ -148,12 +148,18 @@
 	"error.form.notSaved": "Formuläret kunde inte sparas",
 
 	"error.language.code": "Ange en giltig kod för språket",
+	"error.language.create.default": "\"{name}\" ({code}) is already set as the default language",
 	"error.language.create.permission": "Du saknar behörighet att skapa ett nytt språk",
 	"error.language.delete.permission": "Du saknar behörighet att radera språket",
 	"error.language.duplicate": "Språket finns redan",
 	"error.language.name": "Ange ett giltigt namn för språket",
 	"error.language.notFound": "Språket hittades inte",
 	"error.language.update.permission": "Du saknar behörighet att redigera språket",
+	"error.language.variable.core": "\"{key}\" is one of Kirby's own translation strings and cannot be overwritten by a language variable",
+	"error.language.variable.duplicate": "A variable for \"{key}\" already exists",
+	"error.language.variable.key": "Please enter a valid key for the variable",
+	"error.language.variable.notFound": "Variabeln kunde inte hittas",
+	"error.language.variable.numeric": "The variable key must not be numeric",
 
 	"error.layout.validation.block": "Det finns ett fel i fältet \"{field}\" i blocket {blockIndex} med blocktypen \"{fieldset}\" i layouten {layoutIndex}",
 	"error.layout.validation.settings": "Det finns ett fel i inställningarna för layout {index}",
@@ -416,6 +422,7 @@
 
 	"form.discard": "Kassera ändringar",
 	"form.discard.confirm": "Vill du verkligen <strong>kassera dina ändringar</strong>?",
+	"form.discard.confirm.editor": "Do you really want to <strong>discard the unsaved changes</strong> made by <strong>{editor}</strong>?",
 	"form.locked": "Detta innehåll är inaktiverat för dig eftersom det för närvarande redigeras av en annan användare",
 	"form.unsaved": "De aktuella ändringarna har inte sparats än",
 	"form.preview": "Förhandsgranska ändringar",
@@ -470,7 +477,6 @@
 	"language.variable.multiple": "Räknebar?",
 	"language.variable.multiple.text": "Använd olika översättningssträngar",
 	"language.variable.multiple.help": "Du kan använda olika värden beroende på ett antal som du skickar tillsammans med språkvariabeln, vilket gör att du kan skapa dynamiska översättningar, t.ex. singular och plural.",
-	"language.variable.notFound": "Variabeln kunde inte hittas",
 	"language.variable.value": "Värde",
 
 	"languages": "Språk",
@@ -654,6 +660,8 @@
 
 	"preview": "Förhandsgranska",
 	"preview.browser.scroll": "Synkronisera skrollning",
+
+	"protected": "Protected",
 
 	"publish": "Publicera",
 	"published": "Publicerade",

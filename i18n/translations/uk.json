@@ -148,12 +148,18 @@
 	"error.form.notSaved": "Форму не вдалося зберегти",
 
 	"error.language.code": "Будь ласка, введіть коректний код мови",
+	"error.language.create.default": "\"{name}\" ({code}) is already set as the default language",
 	"error.language.create.permission": "Вам заборонено створювати мову",
 	"error.language.delete.permission": "Вам заборонено видаляти мову",
 	"error.language.duplicate": "Мова вже існує",
 	"error.language.name": "Будь ласка, введіть коректну назву мови",
 	"error.language.notFound": "Мову не знайдено",
 	"error.language.update.permission": "Вам заборонено оновлювати мову",
+	"error.language.variable.core": "\"{key}\" is one of Kirby's own translation strings and cannot be overwritten by a language variable",
+	"error.language.variable.duplicate": "A variable for \"{key}\" already exists",
+	"error.language.variable.key": "Please enter a valid key for the variable",
+	"error.language.variable.notFound": "Змінну не знайдено",
+	"error.language.variable.numeric": "The variable key must not be numeric",
 
 	"error.layout.validation.block": "Помилка у полі \"{field}\" у блоці {blockIndex} типу \"{fieldset}\" у макеті {layoutIndex}",
 	"error.layout.validation.settings": "Помилка у налаштуваннях макета {index}",
@@ -416,6 +422,7 @@
 
 	"form.discard": "Відхилити зміни",
 	"form.discard.confirm": "Ви дійсно бажаєте <strong>відхилити всі свої зміни</strong>?",
+	"form.discard.confirm.editor": "Do you really want to <strong>discard the unsaved changes</strong> made by <strong>{editor}</strong>?",
 	"form.locked": "Цей контент для вас недоступний, оскільки його зараз редагує інший користувач",
 	"form.unsaved": "Поточні зміни ще не збережено",
 	"form.preview": "Попередній перегляд",
@@ -470,7 +477,6 @@
 	"language.variable.multiple": "Countable?",
 	"language.variable.multiple.text": "Use different translation strings",
 	"language.variable.multiple.help": "You can use different values depending on a count you pass along with the language variable, allowing you to create dynamic translations, e.g. singular and plural.",
-	"language.variable.notFound": "Змінну не знайдено",
 	"language.variable.value": "Значення",
 
 	"languages": "Мови",
@@ -654,6 +660,8 @@
 
 	"preview": "Попередній перегляд",
 	"preview.browser.scroll": "Sync scroll",
+
+	"protected": "Protected",
 
 	"publish": "Опублікувати",
 	"published": "Опубліковано",

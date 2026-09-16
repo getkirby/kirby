@@ -209,6 +209,7 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
         'Kirby\\Cms\\Helpers' => __DIR__ . '/../..' . '/src/Cms/Helpers.php',
         'Kirby\\Cms\\Html' => __DIR__ . '/../..' . '/src/Cms/Html.php',
         'Kirby\\Cms\\Ingredients' => __DIR__ . '/../..' . '/src/Cms/Ingredients.php',
+        'Kirby\\Cms\\Inventory' => __DIR__ . '/../..' . '/src/Cms/Inventory.php',
         'Kirby\\Cms\\Item' => __DIR__ . '/../..' . '/src/Cms/Item.php',
         'Kirby\\Cms\\Items' => __DIR__ . '/../..' . '/src/Cms/Items.php',
         'Kirby\\Cms\\Language' => __DIR__ . '/../..' . '/src/Cms/Language.php',

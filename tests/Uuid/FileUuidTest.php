@@ -29,6 +29,45 @@ class FileUuidTest extends TestCase
 		$this->assertIsFile($file, $uuid->model(true));
 	}
 
+	public function testFindByCacheRejectsForeignFile(): void
+	{
+		$file = $this->app->file('page-a/test.pdf');
+		$file->uuid()->populate();
+
+		// point the cache entry to a file
+		// that does not hold this UUID
+		Uuids::cache()->set($file->uuid()->key(), [
+			'parent'   => 'site://',
+			'filename' => 'site.txt'
+		]);
+
+		$uuid = new FileUuid('file://my-file');
+		$this->assertNull($uuid->model(true));
+
+		// the stale entry gets corrected from the index
+		$this->assertIsFile($file, $uuid->model());
+		$this->assertSame('test.pdf', Uuids::cache()->get($uuid->key())['filename']);
+	}
+
+	public function testFindByCacheRejectsMissingFile(): void
+	{
+		$file = $this->app->file('page-a/test.pdf');
+		$file->uuid()->populate();
+
+		// point the cache entry to a file that no longer exists
+		Uuids::cache()->set($file->uuid()->key(), [
+			'parent'   => 'page://my-page',
+			'filename' => 'deleted.pdf'
+		]);
+
+		$uuid = new FileUuid('file://my-file');
+		$this->assertNull($uuid->model(true));
+
+		// the stale entry gets corrected from the index
+		$this->assertIsFile($file, $uuid->model());
+		$this->assertSame('test.pdf', Uuids::cache()->get($uuid->key())['filename']);
+	}
+
 	public function testFindByIndex(): void
 	{
 		$file = $this->app->file('page-a/test.pdf');

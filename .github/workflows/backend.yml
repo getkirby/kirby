@@ -54,7 +54,7 @@ jobs:
       )
 
     runs-on: ubuntu-22.04
-    timeout-minutes: 5
+    timeout-minutes: 10
     strategy:
       matrix:
         php: ["8.2", "8.3", "8.4", "8.5"]
@@ -191,7 +191,7 @@ jobs:
       )
 
     runs-on: ubuntu-22.04
-    timeout-minutes: 5
+    timeout-minutes: 10
     env:
       php: "8.2"
       extensions: mbstring, ctype, curl, gd, apcu, memcached, redis
@@ -295,7 +295,7 @@ jobs:
       )
 
     runs-on: ubuntu-22.04
-    timeout-minutes: 5
+    timeout-minutes: 10
     env:
       php: "8.2"
 

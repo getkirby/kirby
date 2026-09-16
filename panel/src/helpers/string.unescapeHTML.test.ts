@@ -10,4 +10,15 @@ describe("$helper.string.unescapeHTML", () => {
 			'<div class="button">This text includes `&<>"\'/=` characters</div>'
 		);
 	});
+
+	it("should not unescape an escaped entity twice", () => {
+		expect(string.unescapeHTML("&amp;lt;b&amp;gt;")).toBe("&lt;b&gt;");
+		expect(string.unescapeHTML("a &amp;amp; b")).toBe("a &amp; b");
+	});
+
+	it("should reverse escapeHTML", () => {
+		for (const value of ["&lt;b&gt;", "a &amp; b", '<a href="#">x</a>']) {
+			expect(string.unescapeHTML(string.escapeHTML(value))).toBe(value);
+		}
+	});
 });

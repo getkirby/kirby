@@ -66,7 +66,8 @@ class Document
 		};
 
 		return new Response($body, 'text/html', $code, [
-			'Content-Security-Policy' => 'frame-ancestors ' . $frameAncestors
+			'Content-Security-Policy' => 'frame-ancestors ' . $frameAncestors,
+			'X-Robots-Tag'            => 'noindex, nofollow'
 		]);
 	}
 }

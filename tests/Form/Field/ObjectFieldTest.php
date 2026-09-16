@@ -70,6 +70,30 @@ class ObjectFieldTest extends TestCase
 		$this->assertSame($expected, $field->default());
 	}
 
+	public function testEmptyValue(): void
+	{
+		$field = $this->field('object', [
+			'fields' => [
+				'text' => [
+					'type' => 'text'
+				]
+			]
+		]);
+
+		$this->assertSame('', $field->emptyValue());
+
+		// an untouched field and a field filled with its own stored
+		// value must produce the same form value
+		$field->fillWithEmptyValue();
+
+		$this->assertSame('', $field->toFormValue());
+		$this->assertSame('', $field->toStoredValue());
+
+		$field->fill($field->toStoredValue());
+
+		$this->assertSame('', $field->toFormValue());
+	}
+
 	public function testErrors(): void
 	{
 		$field = $this->field('object', [

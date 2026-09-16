@@ -1,0 +1,902 @@
+{
+	"based_on": "https://github.com/web-platform-tests/wpt/blob/c23755a1449cc9c5a9131378c13ecf073c0885c6/url/resources/urltestdata.json",
+	"license": "BSD-3-Clause",
+	"description": "URLs that a browser resolves to a host other than the one the site is served from; the sanitizer must never allow them when the host is not in the allowlist",
+	"cases": [
+		{
+			"input": "http://user:pass@foo:21/bar;par?b#c",
+			"site": "example.org",
+			"resolved": "http://user:pass@foo:21/bar;par?b#c"
+		},
+		{
+			"input": "https://test:@test",
+			"site": "example.org",
+			"resolved": "https://test@test/"
+		},
+		{
+			"input": "https://:@test",
+			"site": "example.org",
+			"resolved": "https://test/"
+		},
+		{
+			"input": "http://f:21/ b ? d # e ",
+			"site": "example.org",
+			"resolved": "http://f:21/%20b%20?%20d%20#%20e"
+		},
+		{
+			"input": "http://f:/c",
+			"site": "example.org",
+			"resolved": "http://f/c"
+		},
+		{
+			"input": "http://f:0/c",
+			"site": "example.org",
+			"resolved": "http://f:0/c"
+		},
+		{
+			"input": "http://f:00000000000000/c",
+			"site": "example.org",
+			"resolved": "http://f:0/c"
+		},
+		{
+			"input": "http://f:00000000000000000000080/c",
+			"site": "example.org",
+			"resolved": "http://f/c"
+		},
+		{
+			"input": "http://f:\n/c",
+			"site": "example.org",
+			"resolved": "http://f/c"
+		},
+		{
+			"input": "\\\\x\\hello",
+			"site": "example.org",
+			"resolved": "http://x/hello"
+		},
+		{
+			"input": "http://a:b@c:29/d",
+			"site": "example.org",
+			"resolved": "http://a:b@c:29/d"
+		},
+		{
+			"input": "http://é@é",
+			"site": "example.org",
+			"resolved": "http://%C3%A9@xn--9ca/"
+		},
+		{
+			"input": "http://é@example.com",
+			"site": "example.org",
+			"resolved": "http://%C3%A9@example.com/"
+		},
+		{
+			"input": "http://&a:foo(b]c@d:2/",
+			"site": "example.org",
+			"resolved": "http://&a:foo(b%5Dc@d:2/"
+		},
+		{
+			"input": "http://::@c@d:2",
+			"site": "example.org",
+			"resolved": "http://:%3A%40c@d:2/"
+		},
+		{
+			"input": "http://foo.com:b@d/",
+			"site": "example.org",
+			"resolved": "http://foo.com:b@d/"
+		},
+		{
+			"input": "http://foo.com/\\@",
+			"site": "example.org",
+			"resolved": "http://foo.com//@"
+		},
+		{
+			"input": "http:\\\\foo.com\\",
+			"site": "example.org",
+			"resolved": "http://foo.com/"
+		},
+		{
+			"input": "http:\\\\a\\b:c\\d@foo.com\\",
+			"site": "example.org",
+			"resolved": "http://a/b:c/d@foo.com/"
+		},
+		{
+			"input": "http://a:b@c\\",
+			"site": "example.org",
+			"resolved": "http://a:b@c/"
+		},
+		{
+			"input": "//foo/bar",
+			"site": "example.org",
+			"resolved": "http://foo/bar"
+		},
+		{
+			"input": "http://foo/path;a??e#f#g",
+			"site": "example.org",
+			"resolved": "http://foo/path;a??e#f#g"
+		},
+		{
+			"input": "http://foo/abcd?efgh?ijkl",
+			"site": "example.org",
+			"resolved": "http://foo/abcd?efgh?ijkl"
+		},
+		{
+			"input": "http://foo/abcd#foo?bar",
+			"site": "example.org",
+			"resolved": "http://foo/abcd#foo?bar"
+		},
+		{
+			"input": "http://[2001::1]",
+			"site": "example.org",
+			"resolved": "http://[2001::1]/"
+		},
+		{
+			"input": "http://[::127.0.0.1]",
+			"site": "example.org",
+			"resolved": "http://[::7f00:1]/"
+		},
+		{
+			"input": "http://[0:0:0:0:0:0:13.1.68.3]",
+			"site": "example.org",
+			"resolved": "http://[::d01:4403]/"
+		},
+		{
+			"input": "http://[2001::1]:80",
+			"site": "example.org",
+			"resolved": "http://[2001::1]/"
+		},
+		{
+			"input": "https:/example.com/",
+			"site": "example.org",
+			"resolved": "https://example.com/"
+		},
+		{
+			"input": "https:example.com/",
+			"site": "example.org",
+			"resolved": "https://example.com/"
+		},
+		{
+			"input": "http://example.com/././foo",
+			"site": "example.org",
+			"resolved": "http://example.com/foo"
+		},
+		{
+			"input": "http://example.com/./.foo",
+			"site": "example.org",
+			"resolved": "http://example.com/.foo"
+		},
+		{
+			"input": "http://example.com/foo/.",
+			"site": "example.org",
+			"resolved": "http://example.com/foo/"
+		},
+		{
+			"input": "http://example.com/foo/./",
+			"site": "example.org",
+			"resolved": "http://example.com/foo/"
+		},
+		{
+			"input": "http://example.com/foo/bar/..",
+			"site": "example.org",
+			"resolved": "http://example.com/foo/"
+		},
+		{
+			"input": "http://example.com/foo/bar/../",
+			"site": "example.org",
+			"resolved": "http://example.com/foo/"
+		},
+		{
+			"input": "http://example.com/foo/..bar",
+			"site": "example.org",
+			"resolved": "http://example.com/foo/..bar"
+		},
+		{
+			"input": "http://example.com/foo/bar/../ton",
+			"site": "example.org",
+			"resolved": "http://example.com/foo/ton"
+		},
+		{
+			"input": "http://example.com/foo/bar/../ton/../../a",
+			"site": "example.org",
+			"resolved": "http://example.com/a"
+		},
+		{
+			"input": "http://example.com/foo/../../..",
+			"site": "example.org",
+			"resolved": "http://example.com/"
+		},
+		{
+			"input": "http://example.com/foo/../../../ton",
+			"site": "example.org",
+			"resolved": "http://example.com/ton"
+		},
+		{
+			"input": "http://example.com/foo/%2e",
+			"site": "example.org",
+			"resolved": "http://example.com/foo/"
+		},
+		{
+			"input": "http://example.com/foo/%2e%2",
+			"site": "example.org",
+			"resolved": "http://example.com/foo/%2e%2"
+		},
+		{
+			"input": "http://example.com/foo/%2e./%2e%2e/.%2e/%2e.bar",
+			"site": "example.org",
+			"resolved": "http://example.com/%2e.bar"
+		},
+		{
+			"input": "http://example.com////../..",
+			"site": "example.org",
+			"resolved": "http://example.com//"
+		},
+		{
+			"input": "http://example.com/foo/bar//../..",
+			"site": "example.org",
+			"resolved": "http://example.com/foo/"
+		},
+		{
+			"input": "http://example.com/foo/bar//..",
+			"site": "example.org",
+			"resolved": "http://example.com/foo/bar/"
+		},
+		{
+			"input": "http://example.com/foo",
+			"site": "example.org",
+			"resolved": "http://example.com/foo"
+		},
+		{
+			"input": "http://example.com/%20foo",
+			"site": "example.org",
+			"resolved": "http://example.com/%20foo"
+		},
+		{
+			"input": "http://example.com/foo%",
+			"site": "example.org",
+			"resolved": "http://example.com/foo%"
+		},
+		{
+			"input": "http://example.com/foo%2",
+			"site": "example.org",
+			"resolved": "http://example.com/foo%2"
+		},
+		{
+			"input": "http://example.com/foo%2zbar",
+			"site": "example.org",
+			"resolved": "http://example.com/foo%2zbar"
+		},
+		{
+			"input": "http://example.com/foo%2Â©zbar",
+			"site": "example.org",
+			"resolved": "http://example.com/foo%2%C3%82%C2%A9zbar"
+		},
+		{
+			"input": "http://example.com/foo%41%7a",
+			"site": "example.org",
+			"resolved": "http://example.com/foo%41%7a"
+		},
+		{
+			"input": "http://example.com/foo\t%91",
+			"site": "example.org",
+			"resolved": "http://example.com/foo%C2%91%91"
+		},
+		{
+			"input": "http://example.com/foo%00%51",
+			"site": "example.org",
+			"resolved": "http://example.com/foo%00%51"
+		},
+		{
+			"input": "http://example.com/(%28:%3A%29)",
+			"site": "example.org",
+			"resolved": "http://example.com/(%28:%3A%29)"
+		},
+		{
+			"input": "http://example.com/%3A%3a%3C%3c",
+			"site": "example.org",
+			"resolved": "http://example.com/%3A%3a%3C%3c"
+		},
+		{
+			"input": "http://example.com/foo\tbar",
+			"site": "example.org",
+			"resolved": "http://example.com/foobar"
+		},
+		{
+			"input": "http://example.com\\\\foo\\\\bar",
+			"site": "example.org",
+			"resolved": "http://example.com//foo//bar"
+		},
+		{
+			"input": "http://example.com/%7Ffp3%3Eju%3Dduvgw%3Dd",
+			"site": "example.org",
+			"resolved": "http://example.com/%7Ffp3%3Eju%3Dduvgw%3Dd"
+		},
+		{
+			"input": "http://example.com/@asdf%40",
+			"site": "example.org",
+			"resolved": "http://example.com/@asdf%40"
+		},
+		{
+			"input": "http://example.com/你好你好",
+			"site": "example.org",
+			"resolved": "http://example.com/%E4%BD%A0%E5%A5%BD%E4%BD%A0%E5%A5%BD"
+		},
+		{
+			"input": "http://example.com/‥/foo",
+			"site": "example.org",
+			"resolved": "http://example.com/%E2%80%A5/foo"
+		},
+		{
+			"input": "http://example.com/﻿/foo",
+			"site": "example.org",
+			"resolved": "http://example.com/%EF%BB%BF/foo"
+		},
+		{
+			"input": "http://example.com/‮/foo/‭/bar",
+			"site": "example.org",
+			"resolved": "http://example.com/%E2%80%AE/foo/%E2%80%AD/bar"
+		},
+		{
+			"input": "http://www.google.com/foo?bar=baz#",
+			"site": "example.org",
+			"resolved": "http://www.google.com/foo?bar=baz#"
+		},
+		{
+			"input": "http://www.google.com/foo?bar=baz# »",
+			"site": "example.org",
+			"resolved": "http://www.google.com/foo?bar=baz#%20%C2%BB"
+		},
+		{
+			"input": "http://www.google.com",
+			"site": "example.org",
+			"resolved": "http://www.google.com/"
+		},
+		{
+			"input": "http://192.0x00A80001",
+			"site": "example.org",
+			"resolved": "http://192.168.0.1/"
+		},
+		{
+			"input": "http://www/foo%2Ehtml",
+			"site": "example.org",
+			"resolved": "http://www/foo%2Ehtml"
+		},
+		{
+			"input": "http://www/foo/%2E/html",
+			"site": "example.org",
+			"resolved": "http://www/foo/html"
+		},
+		{
+			"input": "http://%25DOMAIN:foobar@foodomain.com/",
+			"site": "example.org",
+			"resolved": "http://%25DOMAIN:foobar@foodomain.com/"
+		},
+		{
+			"input": "http:\\\\www.google.com\\foo",
+			"site": "example.org",
+			"resolved": "http://www.google.com/foo"
+		},
+		{
+			"input": "http://foo:80/",
+			"site": "example.org",
+			"resolved": "http://foo/"
+		},
+		{
+			"input": "http://foo:81/",
+			"site": "example.org",
+			"resolved": "http://foo:81/"
+		},
+		{
+			"input": "https://foo:443/",
+			"site": "example.org",
+			"resolved": "https://foo/"
+		},
+		{
+			"input": "https://foo:80/",
+			"site": "example.org",
+			"resolved": "https://foo:80/"
+		},
+		{
+			"input": "http:/example.com/",
+			"site": "example.org",
+			"resolved": "http://example.com/"
+		},
+		{
+			"input": "https:/example.com/",
+			"site": "example.org",
+			"resolved": "https://example.com/"
+		},
+		{
+			"input": "http:example.com/",
+			"site": "example.org",
+			"resolved": "http://example.com/"
+		},
+		{
+			"input": "https:example.com/",
+			"site": "example.org",
+			"resolved": "https://example.com/"
+		},
+		{
+			"input": "https://example.com/aaa/bbb/%2e%2e?query",
+			"site": "example.org",
+			"resolved": "https://example.com/aaa/?query"
+		},
+		{
+			"input": "http:@www.example.com",
+			"site": "example.org",
+			"resolved": "http://www.example.com/"
+		},
+		{
+			"input": "http:/@www.example.com",
+			"site": "example.org",
+			"resolved": "http://www.example.com/"
+		},
+		{
+			"input": "http://@www.example.com",
+			"site": "example.org",
+			"resolved": "http://www.example.com/"
+		},
+		{
+			"input": "http:a:b@www.example.com",
+			"site": "example.org",
+			"resolved": "http://a:b@www.example.com/"
+		},
+		{
+			"input": "http:/a:b@www.example.com",
+			"site": "example.org",
+			"resolved": "http://a:b@www.example.com/"
+		},
+		{
+			"input": "http://a:b@www.example.com",
+			"site": "example.org",
+			"resolved": "http://a:b@www.example.com/"
+		},
+		{
+			"input": "http://@pple.com",
+			"site": "example.org",
+			"resolved": "http://pple.com/"
+		},
+		{
+			"input": "http::b@www.example.com",
+			"site": "example.org",
+			"resolved": "http://:b@www.example.com/"
+		},
+		{
+			"input": "http:/:b@www.example.com",
+			"site": "example.org",
+			"resolved": "http://:b@www.example.com/"
+		},
+		{
+			"input": "http://:b@www.example.com",
+			"site": "example.org",
+			"resolved": "http://:b@www.example.com/"
+		},
+		{
+			"input": "http:a:@www.example.com",
+			"site": "example.org",
+			"resolved": "http://a@www.example.com/"
+		},
+		{
+			"input": "http:/a:@www.example.com",
+			"site": "example.org",
+			"resolved": "http://a@www.example.com/"
+		},
+		{
+			"input": "http://a:@www.example.com",
+			"site": "example.org",
+			"resolved": "http://a@www.example.com/"
+		},
+		{
+			"input": "http://www.@pple.com",
+			"site": "example.org",
+			"resolved": "http://www.@pple.com/"
+		},
+		{
+			"input": "http://:@www.example.com",
+			"site": "example.org",
+			"resolved": "http://www.example.com/"
+		},
+		{
+			"input": "http://www.example2.com",
+			"site": "www.example.com",
+			"resolved": "http://www.example2.com/"
+		},
+		{
+			"input": "//www.example2.com",
+			"site": "www.example.com",
+			"resolved": "http://www.example2.com/"
+		},
+		{
+			"input": "http://ExAmPlE.CoM",
+			"site": "other.com",
+			"resolved": "http://example.com/"
+		},
+		{
+			"input": "http://GOO​⁠﻿goo.com",
+			"site": "other.com",
+			"resolved": "http://googoo.com/"
+		},
+		{
+			"input": "\u0000\u001b\u0004\u0012 http://example.com/\u001f \r ",
+			"site": "example.org",
+			"resolved": "http://example.com/"
+		},
+		{
+			"input": "http://www.foo。bar.com",
+			"site": "other.com",
+			"resolved": "http://www.foo.bar.com/"
+		},
+		{
+			"input": "https://x/�?�#�",
+			"site": "example.org",
+			"resolved": "https://x/%EF%BF%BD?%EF%BF%BD#%EF%BF%BD"
+		},
+		{
+			"input": "http://a.b.c.xn--pokxncvks",
+			"site": "example.org",
+			"resolved": "http://a.b.c.xn--pokxncvks/"
+		},
+		{
+			"input": "http://10.0.0.xn--pokxncvks",
+			"site": "example.org",
+			"resolved": "http://10.0.0.xn--pokxncvks/"
+		},
+		{
+			"input": "http://a.b.c.XN--pokxncvks",
+			"site": "example.org",
+			"resolved": "http://a.b.c.xn--pokxncvks/"
+		},
+		{
+			"input": "http://a.b.c.Xn--pokxncvks",
+			"site": "example.org",
+			"resolved": "http://a.b.c.xn--pokxncvks/"
+		},
+		{
+			"input": "http://10.0.0.XN--pokxncvks",
+			"site": "example.org",
+			"resolved": "http://10.0.0.xn--pokxncvks/"
+		},
+		{
+			"input": "http://10.0.0.xN--pokxncvks",
+			"site": "example.org",
+			"resolved": "http://10.0.0.xn--pokxncvks/"
+		},
+		{
+			"input": "http://Ｇｏ.com",
+			"site": "other.com",
+			"resolved": "http://go.com/"
+		},
+		{
+			"input": "http://你好你好",
+			"site": "other.com",
+			"resolved": "http://xn--6qqa088eba/"
+		},
+		{
+			"input": "https://faß.ExAmPlE/",
+			"site": "example.org",
+			"resolved": "https://xn--fa-hia.example/"
+		},
+		{
+			"input": "http://%30%78%63%30%2e%30%32%35%30.01",
+			"site": "other.com",
+			"resolved": "http://192.168.0.1/"
+		},
+		{
+			"input": "http://%30%78%63%30%2e%30%32%35%30.01%2e",
+			"site": "other.com",
+			"resolved": "http://192.168.0.1/"
+		},
+		{
+			"input": "http://０Ｘｃ０．０２５０．０１",
+			"site": "other.com",
+			"resolved": "http://192.168.0.1/"
+		},
+		{
+			"input": "http://./",
+			"site": "example.org",
+			"resolved": "http://./"
+		},
+		{
+			"input": "http://../",
+			"site": "example.org",
+			"resolved": "http://../"
+		},
+		{
+			"input": "http://foo:💩@example.com/bar",
+			"site": "other.com",
+			"resolved": "http://foo:%F0%9F%92%A9@example.com/bar"
+		},
+		{
+			"input": "http://😀x@host/",
+			"site": "example.org",
+			"resolved": "http://%F0%9F%98%80x@host/"
+		},
+		{
+			"input": "http://a:😀x@host/",
+			"site": "example.org",
+			"resolved": "http://a:%F0%9F%98%80x@host/"
+		},
+		{
+			"input": "http://😀@host/",
+			"site": "example.org",
+			"resolved": "http://%F0%9F%98%80@host/"
+		},
+		{
+			"input": "https://localhost?q=🔥",
+			"site": "example.org",
+			"resolved": "https://localhost/?q=%F0%9F%94%A5"
+		},
+		{
+			"input": "https://localhost#🔥",
+			"site": "example.org",
+			"resolved": "https://localhost/#%F0%9F%94%A5"
+		},
+		{
+			"input": "https://@test@test@example:800/",
+			"site": "doesnotmatter",
+			"resolved": "https://%40test%40test@example:800/"
+		},
+		{
+			"input": "https://@@@example",
+			"site": "doesnotmatter",
+			"resolved": "https://%40%40@example/"
+		},
+		{
+			"input": "http://`{}:`{}@h/`{}?`{}",
+			"site": "doesnotmatter",
+			"resolved": "http://%60%7B%7D:%60%7B%7D@h/%60%7B%7D?`{}"
+		},
+		{
+			"input": "http://host/?'",
+			"site": "example.org",
+			"resolved": "http://host/?%27"
+		},
+		{
+			"input": "http://ho\tst/",
+			"site": "example.org",
+			"resolved": "http://host/"
+		},
+		{
+			"input": "http://ho\nst/",
+			"site": "example.org",
+			"resolved": "http://host/"
+		},
+		{
+			"input": "http://ho\rst/",
+			"site": "example.org",
+			"resolved": "http://host/"
+		},
+		{
+			"input": "http://!\"$&'()*+,-.;=_`{}~/",
+			"site": "example.org",
+			"resolved": "http://!\"$&'()*+,-.;=_`{}~/"
+		},
+		{
+			"input": "https://%e2%98%83",
+			"site": "example.org",
+			"resolved": "https://xn--n3h/"
+		},
+		{
+			"input": "http://127.0.0.1:10100/relative_import.html",
+			"site": "example.org",
+			"resolved": "http://127.0.0.1:10100/relative_import.html"
+		},
+		{
+			"input": "http://facebook.com/?foo=%7B%22abc%22",
+			"site": "example.org",
+			"resolved": "http://facebook.com/?foo=%7B%22abc%22"
+		},
+		{
+			"input": "https://localhost:3000/jqueryui@1.2.3",
+			"site": "example.org",
+			"resolved": "https://localhost:3000/jqueryui@1.2.3"
+		},
+		{
+			"input": "h\tt\nt\rp://h\to\ns\rt:9\t0\n0\r0/p\ta\nt\rh?q\tu\ne\rry#f\tr\na\rg",
+			"site": "example.org",
+			"resolved": "http://host:9000/path?query#frag"
+		},
+		{
+			"input": "http://foo.bar/baz?qux#foo\bbar",
+			"site": "example.org",
+			"resolved": "http://foo.bar/baz?qux#foo%08bar"
+		},
+		{
+			"input": "http://foo.bar/baz?qux#foo\"bar",
+			"site": "example.org",
+			"resolved": "http://foo.bar/baz?qux#foo%22bar"
+		},
+		{
+			"input": "http://foo.bar/baz?qux#foo<bar",
+			"site": "example.org",
+			"resolved": "http://foo.bar/baz?qux#foo%3Cbar"
+		},
+		{
+			"input": "http://foo.bar/baz?qux#foo>bar",
+			"site": "example.org",
+			"resolved": "http://foo.bar/baz?qux#foo%3Ebar"
+		},
+		{
+			"input": "http://foo.bar/baz?qux#foo`bar",
+			"site": "example.org",
+			"resolved": "http://foo.bar/baz?qux#foo%60bar"
+		},
+		{
+			"input": "http://1.2.3.4/",
+			"site": "other.com",
+			"resolved": "http://1.2.3.4/"
+		},
+		{
+			"input": "http://1.2.3.4./",
+			"site": "other.com",
+			"resolved": "http://1.2.3.4/"
+		},
+		{
+			"input": "http://192.168.257",
+			"site": "other.com",
+			"resolved": "http://192.168.1.1/"
+		},
+		{
+			"input": "http://192.168.257.",
+			"site": "other.com",
+			"resolved": "http://192.168.1.1/"
+		},
+		{
+			"input": "http://192.168.257.com",
+			"site": "other.com",
+			"resolved": "http://192.168.257.com/"
+		},
+		{
+			"input": "http://256",
+			"site": "other.com",
+			"resolved": "http://0.0.1.0/"
+		},
+		{
+			"input": "http://256.com",
+			"site": "other.com",
+			"resolved": "http://256.com/"
+		},
+		{
+			"input": "http://999999999",
+			"site": "other.com",
+			"resolved": "http://59.154.201.255/"
+		},
+		{
+			"input": "http://999999999.",
+			"site": "other.com",
+			"resolved": "http://59.154.201.255/"
+		},
+		{
+			"input": "http://999999999.com",
+			"site": "other.com",
+			"resolved": "http://999999999.com/"
+		},
+		{
+			"input": "http://10000000000.com",
+			"site": "other.com",
+			"resolved": "http://10000000000.com/"
+		},
+		{
+			"input": "http://4294967295",
+			"site": "other.com",
+			"resolved": "http://255.255.255.255/"
+		},
+		{
+			"input": "http://0xffffffff",
+			"site": "other.com",
+			"resolved": "http://255.255.255.255/"
+		},
+		{
+			"input": "https://0x.0x.0",
+			"site": "example.org",
+			"resolved": "https://0.0.0.0/"
+		},
+		{
+			"input": "https://0x.0x.0x.0x",
+			"site": "example.org",
+			"resolved": "https://0.0.0.0/"
+		},
+		{
+			"input": "https://00.00.00.00",
+			"site": "example.org",
+			"resolved": "https://0.0.0.0/"
+		},
+		{
+			"input": "https://0000000000000000000000000000000000000000177.0.0.1",
+			"site": "example.org",
+			"resolved": "https://127.0.0.1/"
+		},
+		{
+			"input": "http://[1:0::]",
+			"site": "example.net",
+			"resolved": "http://[1::]/"
+		},
+		{
+			"input": "http://0x7f.0.0.0x7g",
+			"site": "example.org",
+			"resolved": "http://0x7f.0.0.0x7g/"
+		},
+		{
+			"input": "http://0X7F.0.0.0X7G",
+			"site": "example.org",
+			"resolved": "http://0x7f.0.0.0x7g/"
+		},
+		{
+			"input": "http://[0:1:0:1:0:1:0:1]",
+			"site": "example.org",
+			"resolved": "http://[0:1:0:1:0:1:0:1]/"
+		},
+		{
+			"input": "http://[1:0:1:0:1:0:1:0]",
+			"site": "example.org",
+			"resolved": "http://[1:0:1:0:1:0:1:0]/"
+		},
+		{
+			"input": "https://www.example.com/path{path.html?query'=query#fragment<fragment",
+			"site": "example.org",
+			"resolved": "https://www.example.com/path%7B%7Fpath.html?query%27%7F=query#fragment%3C%7Ffragment"
+		},
+		{
+			"input": "https://user:pass[@foo/bar",
+			"site": "example.org",
+			"resolved": "https://user:pass%5B%7F@foo/bar"
+		},
+		{
+			"input": "http://foo.09..",
+			"site": "example.org",
+			"resolved": "http://foo.09../"
+		},
+		{
+			"input": "https://x/\u0000y",
+			"site": "example.org",
+			"resolved": "https://x/%00y"
+		},
+		{
+			"input": "https://x/?\u0000y",
+			"site": "example.org",
+			"resolved": "https://x/?%00y"
+		},
+		{
+			"input": "https://x/?#\u0000y",
+			"site": "example.org",
+			"resolved": "https://x/?#%00y"
+		},
+		{
+			"input": "https://x/￿y",
+			"site": "example.org",
+			"resolved": "https://x/%EF%BF%BFy"
+		},
+		{
+			"input": "https://x/?￿y",
+			"site": "example.org",
+			"resolved": "https://x/?%EF%BF%BFy"
+		},
+		{
+			"input": "https://x/?#￿y",
+			"site": "example.org",
+			"resolved": "https://x/?#%EF%BF%BFy"
+		},
+		{
+			"input": "https://example.com/\"quoted\"",
+			"site": "example.org",
+			"resolved": "https://example.com/%22quoted%22"
+		},
+		{
+			"input": "https://a%C2%ADb/",
+			"site": "example.org",
+			"resolved": "https://ab/"
+		},
+		{
+			"input": "https://xn--/",
+			"site": "example.org",
+			"resolved": "https://xn--/"
+		},
+		{
+			"input": "///test",
+			"site": "example.org",
+			"resolved": "http://test/"
+		},
+		{
+			"input": "///\\//\\//test",
+			"site": "example.org",
+			"resolved": "http://test/"
+		}
+	]
+}

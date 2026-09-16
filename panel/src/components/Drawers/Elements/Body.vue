@@ -1,7 +1,7 @@
 <template>
-	<div class="k-drawer-body scroll-y-auto">
+	<k-scrollable class="k-drawer-body" fade="end">
 		<slot />
-	</div>
+	</k-scrollable>
 </template>
 
 <script>

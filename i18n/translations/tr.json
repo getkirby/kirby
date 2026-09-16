@@ -148,12 +148,18 @@
 	"error.form.notSaved": "Form kaydedilemedi",
 
 	"error.language.code": "Lütfen dil için geçerli bir kod girin",
+	"error.language.create.default": "\"{name}\" ({code}) is already set as the default language",
 	"error.language.create.permission": "Bir dil oluşturmanıza izin verilmiyor",
 	"error.language.delete.permission": "Dili silmenize izin verilmiyor",
 	"error.language.duplicate": "Bu dil zaten var",
 	"error.language.name": "Lütfen dil için geçerli bir isim girin",
 	"error.language.notFound": "Dil bulunamadı",
 	"error.language.update.permission": "Dili güncellemenize izin verilmiyor",
+	"error.language.variable.core": "\"{key}\" is one of Kirby's own translation strings and cannot be overwritten by a language variable",
+	"error.language.variable.duplicate": "A variable for \"{key}\" already exists",
+	"error.language.variable.key": "Please enter a valid key for the variable",
+	"error.language.variable.notFound": "Değişken bulunamadı",
+	"error.language.variable.numeric": "The variable key must not be numeric",
 
 	"error.layout.validation.block": "{layoutIndex}. sıradaki düzende \"{fieldset}\" blok türünü kullanan {blockIndex}. bloktaki \"{field}\" alanında bir hata var",
 	"error.layout.validation.settings": "{index}. düzen ayarlarında bir hata var",
@@ -416,6 +422,7 @@
 
 	"form.discard": "Değişiklikleri iptal et",
 	"form.discard.confirm": "Gerçekten <strong>tüm değişikliklerinizi silmek</strong> istiyor musunuz?",
+	"form.discard.confirm.editor": "Do you really want to <strong>discard the unsaved changes</strong> made by <strong>{editor}</strong>?",
 	"form.locked": "Bu içerik şu anda başka bir kullanıcı tarafından düzenlendiği için sizin için devre dışı bırakıldı",
 	"form.unsaved": "Mevcut değişiklikler henüz kaydedilmedi",
 	"form.preview": "Değişiklikleri önizle",
@@ -470,7 +477,6 @@
 	"language.variable.multiple": "Sayılabilir mi?",
 	"language.variable.multiple.text": "Farklı çeviri dizeleri kullanın",
 	"language.variable.multiple.help": "Dil değişkeniyle birlikte ilettiğiniz sayıma bağlı olarak farklı değerler kullanabilir, böylece tekil ve çoğul gibi dinamik çeviriler oluşturabilirsiniz.",
-	"language.variable.notFound": "Değişken bulunamadı",
 	"language.variable.value": "Değer",
 
 	"languages": "Diller",
@@ -654,6 +660,8 @@
 
 	"preview": "Önizle",
 	"preview.browser.scroll": "Senkronize kaydırma",
+
+	"protected": "Protected",
 
 	"publish": "Yayınla",
 	"published": "Yayınlandı",

@@ -4,6 +4,7 @@ namespace Kirby\Filesystem;
 
 use Exception;
 use Kirby\Cms\App;
+use Kirby\Cms\Helpers;
 use Kirby\Cms\Page;
 use Kirby\TestCase;
 use Kirby\Toolkit\A;
@@ -40,11 +41,16 @@ class DirTest extends TestCase
 
 	protected function tearDown(): void
 	{
+		Helpers::$deprecations['dir-inventory'] = true;
 		Dir::remove(static::TMP);
 	}
 
 	protected function create(array $items, ...$args)
 	{
+		// the tests below intentionally cover the deprecated
+		// `Dir::inventory()` method, which still needs to work
+		Helpers::$deprecations['dir-inventory'] = false;
+
 		foreach ($items as $item) {
 			$root = static::TMP . '/' . $item;
 

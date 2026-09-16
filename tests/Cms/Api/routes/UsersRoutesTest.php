@@ -281,7 +281,10 @@ class UsersRoutesTest extends TestCase
 		$this->expectExceptionMessage('Please enter a valid password. Passwords must be at least 8 characters long.');
 
 		$this->app->impersonate('admin@getkirby.com');
-		$this->app->session()->set('kirby.resetPassword', true);
+		$this->app->session()->set(
+			'kirby.resetPassword',
+			$this->app->user()->id()
+		);
 
 		$this->app->api()->call('users/editor@getkirby.com/password', 'PATCH', [
 			'body' => [

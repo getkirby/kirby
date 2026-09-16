@@ -28,7 +28,7 @@ return [
 				]
 			],
 			'props' => [
-				'requirePassword' => App::instance()->session()->get('kirby.resetPassword') !== true
+				'requirePassword' => App::instance()->auth()->isResettingPassword() === false
 			]
 		]
 	]

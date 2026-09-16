@@ -580,6 +580,23 @@ class SqlTest extends TestCase
 		$this->assertSame(['id' => 1], $delete['bindings']);
 	}
 
+	public function testInsertWithoutBindings(): void
+	{
+		$this->database->createTable('users', [
+			'id'   => ['type' => 'int'],
+			'name' => ['type' => 'varchar']
+		]);
+
+		$insert = $this->sql->insert([
+			'table'  => 'users',
+			'values' => ['name' => 'John Doe']
+		]);
+
+		$this->assertStringStartsWith('INSERT INTO `users` (`users`.`name`) VALUES (', $insert['query']);
+		$this->assertCount(1, $insert['bindings']);
+		$this->assertSame('John Doe', array_values($insert['bindings'])[0]);
+	}
+
 	public function testSelectHelpers(): void
 	{
 		$this->database->createTable('users', [
@@ -597,8 +614,6 @@ class SqlTest extends TestCase
 			'query'    => null,
 			'bindings' => []
 		], $this->sql->limit());
-		$this->assertSame('table`name', $this->sql->unquoteIdentifier('`table``name`'));
-		$this->assertSame('table"name', $this->sql->unquoteIdentifier('"table""name"'));
 	}
 
 	public function testJoinInvalid(): void
@@ -607,6 +622,59 @@ class SqlTest extends TestCase
 		$this->expectExceptionMessage('Invalid join type SIDEWAYS JOIN');
 
 		$this->sql->join('SIDEWAYS JOIN', 'test', 'test.id = another.id');
+	}
+
+	public function testJoinsPropagatesBindings(): void
+	{
+		// Sql::join() never returns bindings, but a driver registered
+		// via Database::$types can parameterise the ON value
+		$sql = new class ($this->database) extends MockSql {
+			public function join(string $type, string $table, string $on): array
+			{
+				return [
+					'query'    => $type . ' ' . $table . ' ON ' . $on,
+					'bindings' => ['join_' . $table => $table]
+				];
+			}
+		};
+
+		$result = $sql->joins([
+			['table' => 'roles', 'on' => 'roles.id = users.id'],
+			['table' => 'teams', 'on' => 'teams.id = users.id']
+		]);
+
+		$this->assertSame([
+			'join_roles' => 'roles',
+			'join_teams' => 'teams'
+		], $result['bindings']);
+
+		$this->assertSame(
+			'JOIN roles ON roles.id = users.id JOIN teams ON teams.id = users.id',
+			$result['query']
+		);
+	}
+
+	public function testUnquoteIdentifierRequiresMatchingQuotes(): void
+	{
+		// matching pairs
+		$this->assertSame('table`name', $this->sql->unquoteIdentifier('`table``name`'));
+		$this->assertSame('table"name', $this->sql->unquoteIdentifier('"table""name"'));
+
+		// mismatched pair
+		$this->assertSame('`foo"', $this->sql->unquoteIdentifier('`foo"'));
+		$this->assertSame('"foo`', $this->sql->unquoteIdentifier('"foo`'));
+
+		// a single stray quote
+		$this->assertSame('"', $this->sql->unquoteIdentifier('"'));
+		$this->assertSame('`', $this->sql->unquoteIdentifier('`'));
+
+		// the non-wrapping quote is not an escape and must survive
+		foreach (['a"b', 'a""b', 'a`b', 'a``b', 'plain'] as $name) {
+			$this->assertSame(
+				$name,
+				$this->sql->unquoteIdentifier($this->sql->quoteIdentifier($name))
+			);
+		}
 	}
 
 	public function testValueSet(): void

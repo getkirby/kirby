@@ -1,5 +1,7 @@
 <template>
-	<ul
+	<component
+		:is="scrollable ? 'k-scrollable' : 'ul'"
+		v-bind="scrollable ? { element: 'ul' } : {}"
 		:class="['k-tree', $options.name, $attrs.class]"
 		:style="{ '--tree-level': level, ...$attrs.style }"
 	>
@@ -36,6 +38,7 @@
 					v-bind="$props"
 					:items="item.children"
 					:level="level + 1"
+					:scrollable="false"
 					@close="$emit('close', $event)"
 					@open="$emit('open', $event)"
 					@select="$emit('select', $event)"
@@ -43,7 +46,7 @@
 				/>
 			</template>
 		</li>
-	</ul>
+	</component>
 </template>
 
 <script>
@@ -68,6 +71,9 @@ export default {
 		level: {
 			default: 0,
 			type: Number
+		},
+		scrollable: {
+			type: Boolean
 		}
 	},
 	emits: ["close", "open", "select", "toggle"],

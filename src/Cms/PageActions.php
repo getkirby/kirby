@@ -11,6 +11,7 @@ use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\Dir;
+use Kirby\Template\Template;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\I18n;
@@ -457,18 +458,6 @@ trait PageActions
 			'translations' => null
 		]);
 
-		// merge the content with the defaults
-		$props['content'] = [
-			...$page->createDefaultContent(),
-			...$props['content'],
-		];
-
-		// make sure that a UUID gets generated
-		// and added to content right away
-		if (Uuids::enabled() === true) {
-			$props['content']['uuid'] ??= Uuid::generate();
-		}
-
 		// keep the initial storage class
 		$storage = $page->storage()::class;
 
@@ -477,14 +466,27 @@ trait PageActions
 		// an existing page before we can even run the checks.
 		PageRules::create($page);
 
+		// merge the content with the defaults and run it through
+		// the fields to apply their save handlers
+		$props['content'] = $page->createContent($props['content']);
+
+		// make sure that a UUID gets generated
+		// and added to content right away
+		if (Uuids::enabled() === true) {
+			$props['content']['uuid'] ??= Uuid::generate();
+		}
+
 		// make sure that the temporary page is stored in memory
 		$page->changeStorage(MemoryStorage::class);
 
 		// inject the content
 		$page->setContent($props['content']);
 
-		// inject the translations
-		$page->setTranslations($props['translations'] ?? null);
+		// inject the translations and run their content through
+		// the fields to apply their save handlers
+		$page->setTranslations(
+			$page->createTranslations($props['translations'] ?? null)
+		);
 
 		// run the hooks and creation action
 		$page = $page->commit(
@@ -712,6 +714,9 @@ trait PageActions
 				);
 			}
 
+			// media folder is bound to the page id, which just changed
+			Dir::remove($page->mediaRoot());
+
 			// flush all collection caches to be sure that
 			// the new child is included afterwards
 			$parent->purge();
@@ -731,13 +736,21 @@ trait PageActions
 
 	protected static function normalizeProps(array $props): array
 	{
-		// Prevent injecting blueprint as this always must be derived from
-		// the template/model name and blueprint object in the app,
-		// never directly be supplied by the caller
-		unset($props['blueprint']);
+		unset(
+			// Prevent injecting blueprint as this always must be derived from
+			// the template/model name and blueprint object in the app,
+			// never directly be supplied by the caller
+			$props['blueprint'],
+
+			// Prevent injecting the root and dirname as those must always be
+			// derived from the parent and slug. Otherwise the caller could
+			// place the page's content at an arbitrary path on disk.
+			$props['dirname'],
+			$props['root']
+		);
 
 		$content  = $props['content']  ?? [];
-		$template = $props['template'] ?? 'default';
+		$template = Template::sanitizeName($props['template'] ?? null) ?: 'default';
 
 		return [
 			...$props,

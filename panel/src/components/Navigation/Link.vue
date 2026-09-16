@@ -20,6 +20,8 @@
 </template>
 
 <script>
+import { hasDangerousScheme } from "@/helpers/url";
+
 export const props = {
 	props: {
 		/**
@@ -73,6 +75,10 @@ export default {
 		},
 		href() {
 			if (typeof this.to === "function") {
+				return "";
+			}
+
+			if (hasDangerousScheme(this.to) === true) {
 				return "";
 			}
 
@@ -132,6 +138,11 @@ export default {
 		},
 		onClick(e) {
 			if (this.disabled === true) {
+				e.preventDefault();
+				return false;
+			}
+
+			if (hasDangerousScheme(this.to) === true) {
 				e.preventDefault();
 				return false;
 			}

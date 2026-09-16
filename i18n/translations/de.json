@@ -148,12 +148,18 @@
 	"error.form.notSaved": "Das Formular konnte nicht gespeichert werden",
 
 	"error.language.code": "Bitte gib einen gültigen Code für die Sprache an",
+	"error.language.create.default": "\"{name}\" ({code}) ist bereits als Standardsprache gesetzt",
 	"error.language.create.permission": "Du darfst keine Sprache anlegen",
 	"error.language.delete.permission": "Du darfst diese Sprache nicht löschen",
 	"error.language.duplicate": "Die Sprache besteht bereits",
 	"error.language.name": "Bitte gib einen gültigen Namen für die Sprache an",
 	"error.language.notFound": "Die Sprache konnte nicht gefunden werden",
 	"error.language.update.permission": "Du darfst diese Sprache nicht bearbeiten",
+	"error.language.variable.core": "\"{key}\" ist einer von Kirbys eigenen Übersetzungs-Strings und kann nicht durch eine Sprachvariable überschrieben werden.",
+	"error.language.variable.duplicate": "Eine Variable für \"{key}\" existiert bereits.",
+	"error.language.variable.key": "Bitte gib einen gültigen Schlüssel für die Variable ein",
+	"error.language.variable.notFound": "Die Variable konnte nicht gefunden werden",
+	"error.language.variable.numeric": "Der Schlüssel für die Variable darf nicht numerisch sein",
 
 	"error.layout.validation.block": "Fehler im \"{field}\" Feld in Block {blockIndex} mit dem Blocktyp \"{fieldset}\" in Layout {layoutIndex}",
 	"error.layout.validation.settings": "Fehler in den Einstellungen von Layout {index}",
@@ -416,6 +422,7 @@
 
 	"form.discard": "Änderungen verwerfen",
 	"form.discard.confirm": "Willst du wirklich <strong>alle ungespeicherten Änderungen verwerfen</strong>? ",
+	"form.discard.confirm.editor": "Möchtest du die von <strong>{editor}</strong> vorgenommenen <strong>Änderungen wirklich verwerfen?</strong>",
 	"form.locked": "Dieser Inhalt ist gesperrt, weil er aktuell von einem anderen Account bearbeitet wird",
 	"form.unsaved": "Die aktuellen Änderungen wurden noch nicht gespeichert",
 	"form.preview": "Änderungsvorschau",
@@ -470,7 +477,6 @@
 	"language.variable.multiple": "Zählbar?",
 	"language.variable.multiple.text": "Benutze unterschiedliche Übersetzungen, abhängig von der Anzahl",
 	"language.variable.multiple.help": "Du kannst verschiedene Werte anlegen, die von einer Anzahl abhängen. Diese übergibst du zusammen mit der Sprachvariablen. So kannst du dynamische Übersetzungen erstellen, zum Beispiel für Singular und Plural.",
-	"language.variable.notFound": "Die Variable konnte nicht gefunden werden",
 	"language.variable.value": "Wert",
 
 	"languages": "Sprachen",
@@ -654,6 +660,8 @@
 
 	"preview": "Vorschau",
 	"preview.browser.scroll": "Scrollen synchronisieren",
+
+	"protected": "Geschützt",
 
 	"publish": "Veröffentlichen",
 	"published": "Veröffentlicht",

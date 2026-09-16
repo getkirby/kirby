@@ -227,11 +227,13 @@ trait FileActions
 		$upload   = $file->assetFactory($props['source']);
 		$existing = null;
 
-		// merge the content with the defaults
-		$props['content'] = [
-			...$file->createDefaultContent(),
-			...$props['content'],
-		];
+		// check the rules before any user input is passed
+		// through the field classes
+		FileRules::create($file, $upload);
+
+		// merge the content with the defaults and run it through
+		// the fields to apply their save handlers
+		$props['content'] = $file->createContent($props['content']);
 
 		// reuse the existing content if the uploaded file
 		// is identical to an existing file
@@ -269,8 +271,11 @@ trait FileActions
 		// inject the content
 		$file->setContent($props['content']);
 
-		// inject the translations
-		$file->setTranslations($props['translations'] ?? null);
+		// inject the translations and run their content through
+		// the fields to apply their save handlers
+		$file->setTranslations(
+			$file->createTranslations($props['translations'] ?? null)
+		);
 
 		// if the format is different from the original,
 		// we need to already rename it so that the correct file rules

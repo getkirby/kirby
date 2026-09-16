@@ -113,11 +113,18 @@ class Field
 				'text'  => $index
 			];
 
-			$options[] = [
-				'value'    => $sibling->id(),
-				'text'     => $sibling->filename(),
-				'disabled' => true
-			];
+			$options[] = match ($sibling->isListable()) {
+				true  => [
+					'value'    => $sibling->id(),
+					'text'     => $sibling->filename(),
+					'disabled' => true
+				],
+				false => [
+					'value'    => '-' . $index,
+					'text'     => '–',
+					'disabled' => true
+				]
+			};
 		}
 
 		$index++;
@@ -159,11 +166,18 @@ class Field
 				'text'  => $index
 			];
 
-			$options[] = [
-				'value'    => $sibling->id(),
-				'text'     => $sibling->title()->value(),
-				'disabled' => true
-			];
+			$options[] = match ($sibling->isListable()) {
+				true  => [
+					'value'    => $sibling->id(),
+					'text'     => $sibling->title()->value(),
+					'disabled' => true
+				],
+				false => [
+					'value'    => '-' . $index,
+					'text'     => '–',
+					'disabled' => true
+				]
+			};
 		}
 
 		$index++;

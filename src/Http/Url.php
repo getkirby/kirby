@@ -126,7 +126,9 @@ class Url
 		// strip any weird characters to prevent bypass attempts,
 		// keeping only the characters we test for below
 		// (especially removes any whitespace that the browser would ignore
-		// when the resulting URL is evaluated)
+		// when the resulting URL is evaluated); this is deliberately more
+		// aggressive than `Url::normalize()` because matching more strings
+		// against this blocklist is the safe direction
 		$url = preg_replace('/[^a-z:]/i', '', $url);
 
 		// try to find a match from the blocklist case-insensitively
@@ -181,6 +183,29 @@ class Url
 		}
 
 		return $home . '/' . $path;
+	}
+
+	/**
+	 * Normalizes a URL the same way a browser does before it parses it:
+	 * ASCII tab and newline characters are removed from anywhere in the
+	 * string, leading and trailing C0 control characters and spaces are
+	 * trimmed and a leading run of slashes is folded to forward slashes
+	 *
+	 * @see https://url.spec.whatwg.org/#url-parsing
+	 * @since 5.6.0
+	 */
+	public static function normalize(string $url): string
+	{
+		$url = preg_replace('/[\x09\x0a\x0d]/', '', $url);
+		$url = trim($url, "\x00..\x20");
+
+		// browsers treat a backslash like a forward slash, so a leading
+		// run of two or more of either opens an authority just like `//`
+		return preg_replace_callback(
+			'!^[/\\\\]{2,}!',
+			fn ($slashes) => str_replace('\\', '/', $slashes[0]),
+			$url
+		);
 	}
 
 	/**

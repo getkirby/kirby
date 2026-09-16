@@ -148,12 +148,18 @@
 	"error.form.notSaved": "Formularul nu a putut fi salvat",
 
 	"error.language.code": "Te rog introdu un cod valid pentru limbă",
+	"error.language.create.default": "\"{name}\" ({code}) is already set as the default language",
 	"error.language.create.permission": "You are not allowed to create a language",
 	"error.language.delete.permission": "You are not allowed to delete the language",
 	"error.language.duplicate": "Limba există deja",
 	"error.language.name": "Te rog introdu un nume valid pentru limbă",
 	"error.language.notFound": "Limba nu a fost găsită",
 	"error.language.update.permission": "You are not allowed to update the language",
+	"error.language.variable.core": "\"{key}\" is one of Kirby's own translation strings and cannot be overwritten by a language variable",
+	"error.language.variable.duplicate": "A variable for \"{key}\" already exists",
+	"error.language.variable.key": "Please enter a valid key for the variable",
+	"error.language.variable.notFound": "Variabila nu a fost găsită",
+	"error.language.variable.numeric": "The variable key must not be numeric",
 
 	"error.layout.validation.block": "Există o eroare la câmpul \"{field}\" în blocul {blockIndex} care utilizează tipul de bloc \"{fieldset}\" în aranjamentul {layoutIndex}",
 	"error.layout.validation.settings": "Există o eroare la setările aranjamentului {index}",
@@ -416,6 +422,7 @@
 
 	"form.discard": "Renunță la schimbări",
 	"form.discard.confirm": "Chiar vrei să <strong>renunți la toate schimbările tale</strong>?",
+	"form.discard.confirm.editor": "Do you really want to <strong>discard the unsaved changes</strong> made by <strong>{editor}</strong>?",
 	"form.locked": "Acest conținut îți este dezactivat fiindcă îl editează alt utilizator momentan",
 	"form.unsaved": "Schimbările curente nu au fost încă salvate",
 	"form.preview": "Previzualizează schimbări",
@@ -470,7 +477,6 @@
 	"language.variable.multiple": "Numărabil?",
 	"language.variable.multiple.text": "Folosește stringuri de traducere diferite",
 	"language.variable.multiple.help": "Poți folosi valori diferite în funcție de numărul pe care îl transmiți împreună cu variabila de limbă, ceea ce îți permite să creezi traduceri dinamice, de ex. pentru singular și plural.",
-	"language.variable.notFound": "Variabila nu a fost găsită",
 	"language.variable.value": "Valoare",
 
 	"languages": "Limbi",
@@ -654,6 +660,8 @@
 
 	"preview": "Previzualizează",
 	"preview.browser.scroll": "Sync scroll",
+
+	"protected": "Protected",
 
 	"publish": "Publică",
 	"published": "Publicate",
