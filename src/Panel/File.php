@@ -51,10 +51,7 @@ class File extends Model
 			case 'page':
 				/** @var \Kirby\Cms\Page $parent */
 				$breadcrumb = $this->model->parents()->flip()->values(
-					fn ($parent) => [
-						'label' => $parent->title()->toString(),
-						'link'  => $parent->panel()->url(true),
-					]
+					fn ($parent) => $parent->panel()->crumb()
 				);
 		}
 

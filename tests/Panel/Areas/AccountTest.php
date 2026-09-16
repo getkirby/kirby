@@ -90,7 +90,7 @@ class AccountTest extends AreaTestCase
 	{
 		$this->install();
 		$this->login();
-		$this->app->session()->set('kirby.resetPassword', true);
+		$this->app->session()->set('kirby.resetPassword', 'test');
 
 		$view = $this->view('reset-password');
 		$this->assertSame('k-reset-password-view', $view['component']);

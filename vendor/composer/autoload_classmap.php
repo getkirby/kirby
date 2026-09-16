@@ -77,6 +77,7 @@ return array(
     'Kirby\\Cms\\Helpers' => $baseDir . '/src/Cms/Helpers.php',
     'Kirby\\Cms\\Html' => $baseDir . '/src/Cms/Html.php',
     'Kirby\\Cms\\Ingredients' => $baseDir . '/src/Cms/Ingredients.php',
+    'Kirby\\Cms\\Inventory' => $baseDir . '/src/Cms/Inventory.php',
     'Kirby\\Cms\\Item' => $baseDir . '/src/Cms/Item.php',
     'Kirby\\Cms\\Items' => $baseDir . '/src/Cms/Items.php',
     'Kirby\\Cms\\Language' => $baseDir . '/src/Cms/Language.php',

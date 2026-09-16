@@ -205,6 +205,22 @@ class ViewButtonTest extends AreaTestCase
 		], $component->props());
 	}
 
+	public function testPropsRejectsDangerousLinkScheme(): void
+	{
+		$model = new Page([
+			'slug'    => 'test',
+			'content' => ['cta' => 'javascript://%0aalert(document.domain)']
+		]);
+
+		$component = new ViewButton(
+			model: $model,
+			text: 'Open',
+			link: '{{ page.cta }}'
+		);
+
+		$this->assertNull($component->props()['link']);
+	}
+
 	public function testPropsWithQueries(): void
 	{
 		$model     = new Page(['slug' => 'test']);

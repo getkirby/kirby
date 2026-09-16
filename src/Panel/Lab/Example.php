@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel\Lab;
 
+use Kirby\Cms\Inventory;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
@@ -59,7 +60,7 @@ class Example
 	{
 		$tabs = [];
 
-		foreach (Dir::inventory($this->root)['children'] as $child) {
+		foreach (Inventory::for($this->root)['children'] as $child) {
 			$tabs[$child['dirname']] = [
 				'name'  => $child['dirname'],
 				'label' => $child['slug'],

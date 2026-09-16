@@ -148,12 +148,18 @@
 	"error.form.notSaved": "フォームを保存できませんでした",
 
 	"error.language.code": "有効な言語コードを入力してください",
+	"error.language.create.default": "\"{name}\" ({code}) is already set as the default language",
 	"error.language.create.permission": "言語を作成する権限がありません",
 	"error.language.delete.permission": "言語を削除する権限がありません",
 	"error.language.duplicate": "その言語はすでに存在します",
 	"error.language.name": "有効な言語名を入力してください",
 	"error.language.notFound": "言語が見つかりません",
 	"error.language.update.permission": "言語を更新する権限がありません",
+	"error.language.variable.core": "\"{key}\" is one of Kirby's own translation strings and cannot be overwritten by a language variable",
+	"error.language.variable.duplicate": "A variable for \"{key}\" already exists",
+	"error.language.variable.key": "Please enter a valid key for the variable",
+	"error.language.variable.notFound": "変数が見つかりませんでした",
+	"error.language.variable.numeric": "The variable key must not be numeric",
 
 	"error.layout.validation.block": "レイアウト{layoutIndex}のブロック{blockIndex}（\"{fieldset}\"タイプ）の\"{field}\"フィールドにエラーがあります",
 	"error.layout.validation.settings": "レイアウト{index}の設定にエラーがあります",
@@ -416,6 +422,7 @@
 
 	"form.discard": "変更を破棄",
 	"form.discard.confirm": "本当に<strong>すべての変更を破棄</strong>しますか？",
+	"form.discard.confirm.editor": "Do you really want to <strong>discard the unsaved changes</strong> made by <strong>{editor}</strong>?",
 	"form.locked": "別のユーザーが編集中のため、このコンテンツは無効になっています",
 	"form.unsaved": "現在の変更はまだ保存されていません",
 	"form.preview": "変更をプレビュー",
@@ -470,7 +477,6 @@
 	"language.variable.multiple": "カウント可能？",
 	"language.variable.multiple.text": "異なる翻訳文字列を使用",
 	"language.variable.multiple.help": "カウントに応じて異なる値を使用できます。単数形と複数形などの動的な翻訳を作成できます。",
-	"language.variable.notFound": "変数が見つかりませんでした",
 	"language.variable.value": "値",
 
 	"languages": "表示言語",
@@ -654,6 +660,8 @@
 
 	"preview": "プレビュー",
 	"preview.browser.scroll": "スクロール同期",
+
+	"protected": "Protected",
 
 	"publish": "公開",
 	"published": "公開済み",

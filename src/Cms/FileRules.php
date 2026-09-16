@@ -24,11 +24,16 @@ class FileRules
 	/**
 	 * Validates if the filename can be changed
 	 *
+	 * @param string|null $extension If not passed, the current extension is kept
 	 * @throws \Kirby\Exception\DuplicateException If a file with this name exists
+	 * @throws \Kirby\Exception\InvalidArgumentException If the new extension or filename is forbidden
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to rename the file
 	 */
-	public static function changeName(File $file, string $name): void
-	{
+	public static function changeName(
+		File $file,
+		string $name,
+		string|null $extension = null
+	): void {
 		if ($file->permissions()->can('changeName') !== true) {
 			throw new PermissionException(
 				key: 'file.changeName.permission',
@@ -42,8 +47,15 @@ class FileRules
 			);
 		}
 
+		// if no extension is passed, the current one is kept
+		$extension ??= $file->extension();
+		$filename    = $name . '.' . $extension;
+
+		static::validExtension($file, $extension);
+		static::validFilename($file, $filename);
+
 		$parent    = $file->parent();
-		$duplicate = $parent->files()->not($file)->findBy('filename', $name . '.' . $file->extension());
+		$duplicate = $parent->files()->not($file)->findBy('filename', $filename);
 
 		if ($duplicate) {
 			throw new DuplicateException(

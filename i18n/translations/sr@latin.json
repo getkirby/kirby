@@ -148,12 +148,18 @@
 	"error.form.notSaved": "Formular nije mogao biti sačuvan",
 
 	"error.language.code": "Molimo ukucajte validan kod za jezik",
+	"error.language.create.default": "\"{name}\" ({code}) is already set as the default language",
 	"error.language.create.permission": "Niste ovlašćeni da kreirate jezik",
 	"error.language.delete.permission": "Niste ovlašćeni da izbrišete jezik",
 	"error.language.duplicate": "Jezik već postoji",
 	"error.language.name": "Molimo upišite validno ime za jezik",
 	"error.language.notFound": "Jezik nije mogao biti pronađen",
 	"error.language.update.permission": "Niste ovlašćeni da ažurirate jezik",
+	"error.language.variable.core": "\"{key}\" is one of Kirby's own translation strings and cannot be overwritten by a language variable",
+	"error.language.variable.duplicate": "A variable for \"{key}\" already exists",
+	"error.language.variable.key": "Please enter a valid key for the variable",
+	"error.language.variable.notFound": "Promenljiva nije pronađena\n \n \n ",
+	"error.language.variable.numeric": "The variable key must not be numeric",
 
 	"error.layout.validation.block": "Postoji greška u \"{field}\" polju u bloku {blockIndex} koji koristi \"{fieldset}\" tip bloka u rasporedu {layoutIndex}",
 	"error.layout.validation.settings": "Došlo je do greške u  {index} podešavanjima ",
@@ -416,6 +422,7 @@
 
 	"form.discard": "Odbaci izmene",
 	"form.discard.confirm": "Da li zaista želite da <strong>odbacite sve vaše promene</strong>?",
+	"form.discard.confirm.editor": "Do you really want to <strong>discard the unsaved changes</strong> made by <strong>{editor}</strong>?",
 	"form.locked": "Ovaj sadržaj je onemogućen za vas jer ga trenutno uređuje drugi korisnik",
 	"form.unsaved": "Trenutne izmene još nisu sačuvane",
 	"form.preview": "Pregled promena",
@@ -470,7 +477,6 @@
 	"language.variable.multiple": "Brojivo?",
 	"language.variable.multiple.text": "Koristite različite prevodilačke stringove",
 	"language.variable.multiple.help": "Možete koristiti različite vrednosti u zavisnosti od broja koji prosleđujete zajedno sa jezičkom promenljivom, što vam omogućava da kreirate dinamičke prevode, npr. jedninu i množinu.",
-	"language.variable.notFound": "Promenljiva nije pronađena\n \n \n ",
 	"language.variable.value": "Vrednost",
 
 	"languages": "Jezici",
@@ -654,6 +660,8 @@
 
 	"preview": "Pregled",
 	"preview.browser.scroll": "Sinhronizacija skrolovanja",
+
+	"protected": "Protected",
 
 	"publish": "Objavi",
 	"published": "Objavljeno",

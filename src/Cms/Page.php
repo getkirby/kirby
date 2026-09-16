@@ -485,7 +485,7 @@ class Page extends ModelWithContent
 
 		$kirby = $this->kirby();
 
-		return $this->inventory = Dir::inventory(
+		return $this->inventory = Inventory::for(
 			$this->root(),
 			$kirby->contentExtension(),
 			$kirby->contentIgnore(),

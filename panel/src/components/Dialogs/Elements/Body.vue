@@ -1,7 +1,7 @@
 <template>
-	<div class="k-dialog-body">
+	<k-scrollable class="k-dialog-body">
 		<slot />
-	</div>
+	</k-scrollable>
 </template>
 
 <script>

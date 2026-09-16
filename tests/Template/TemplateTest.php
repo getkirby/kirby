@@ -21,6 +21,23 @@ class TemplateTest extends TestCase
 		$this->assertSame('php', $template->extension());
 	}
 
+	public function testSanitizeName(): void
+	{
+		// valid names are kept, dots are allowed for representations
+		$this->assertSame('default', Template::sanitizeName('default'));
+		$this->assertSame('the-template', Template::sanitizeName('the-template'));
+		$this->assertSame('foo.bar', Template::sanitizeName('foo.bar'));
+
+		// path traversal characters are removed
+		$this->assertSame('other-default', Template::sanitizeName('../../other/default'));
+		$this->assertSame('foo-bar', Template::sanitizeName('foo/bar'));
+
+		// empty or invalid names result in an empty string
+		$this->assertSame('', Template::sanitizeName(null));
+		$this->assertSame('', Template::sanitizeName(''));
+		$this->assertSame('', Template::sanitizeName('..'));
+	}
+
 	public function testExists(): void
 	{
 		new App([
