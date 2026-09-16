@@ -17,7 +17,7 @@
 	},
 	"dependencies": {
 		"autosize": "^6.0.1",
-		"dayjs": "^1.11.21",
+		"dayjs": "^1.11.23",
 		"mitt": "^3.0.1",
 		"prosemirror-commands": "^1.7.2",
 		"prosemirror-history": "^1.5.0",
@@ -25,6 +25,7 @@
 		"prosemirror-keymap": "^1.2.3",
 		"prosemirror-model": "^1.25.11",
 		"prosemirror-schema-list": "^1.5.1",
+		"prosemirror-state": "^1.4.4",
 		"prosemirror-view": "^1.42.3",
 		"sortablejs": "^1.15.7",
 		"vue": "^3.5.42"
@@ -49,11 +50,12 @@
 		"typescript-eslint": "^8.69.0",
 		"vite": "^8.2.2",
 		"vite-plugin-static-copy": "^4.1.1",
-		"vitest": "^5.0.0",
+		"vitest": "^5.0.1",
 		"vue-docgen-api": "^4.79.2",
 		"vue-tsc": "^3.3.11"
 	},
 	"allowScripts": {
-		"fsevents@2.3.3": true
+		"fsevents@2.3.3": true,
+		"esbuild@0.28.2": true
 	}
 }

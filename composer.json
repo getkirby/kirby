@@ -47,9 +47,9 @@
 		"lbuchs/webauthn": "^2.2",
 		"michelf/php-smartypants": "1.8.1",
 		"phpmailer/phpmailer": "7.1.1",
-		"symfony/polyfill-intl-idn": "1.38.1",
+		"symfony/polyfill-intl-idn": "1.42.0",
 		"symfony/polyfill-mbstring": "1.38.2",
-		"symfony/yaml": "7.4.14"
+		"symfony/yaml": "7.4.18"
 	},
 	"suggest": {
 		"ext-apcu": "Support for the Apcu cache driver",

@@ -148,12 +148,18 @@
 	"error.form.notSaved": "Ekki tókst að vista upplýsingar úr forminu",
 
 	"error.language.code": "Gófúslega settu inn gildan kóða fyrir tungumál",
+	"error.language.create.default": "\"{name}\" ({code}) is already set as the default language",
 	"error.language.create.permission": "You are not allowed to create a language",
 	"error.language.delete.permission": "You are not allowed to delete the language",
 	"error.language.duplicate": "Þetta tungumál er nú þegar skráð",
 	"error.language.name": "Gott og gyllt nafn fyrir tungumálið",
 	"error.language.notFound": "Tungumálið fannst ekkert",
 	"error.language.update.permission": "You are not allowed to update the language",
+	"error.language.variable.core": "\"{key}\" is one of Kirby's own translation strings and cannot be overwritten by a language variable",
+	"error.language.variable.duplicate": "A variable for \"{key}\" already exists",
+	"error.language.variable.key": "Please enter a valid key for the variable",
+	"error.language.variable.notFound": "Breytan fannst hreint ekki",
+	"error.language.variable.numeric": "The variable key must not be numeric",
 
 	"error.layout.validation.block": "Það er villa í {field} sviðinu í bálkinum {blockIndex} sem notar {fieldset} bálkgerðina í rammanum {layoutIndex}",
 	"error.layout.validation.settings": "Hér er villa í sitllingum fyrir ramman {index}",
@@ -416,6 +422,7 @@
 
 	"form.discard": "Hunsa breytingar",
 	"form.discard.confirm": "Ætlarðu virkilega að <strong>hunsa allar breytingar</strong>?",
+	"form.discard.confirm.editor": "Do you really want to <strong>discard the unsaved changes</strong> made by <strong>{editor}</strong>?",
 	"form.locked": "Efnið er þér ekki aðgengilegt þar sem annar notandi er nú þegar að vinna í því",
 	"form.unsaved": "Þessar breytingar hafa ekki verið vistaðar",
 	"form.preview": "Skoða breytingar",
@@ -470,7 +477,6 @@
 	"language.variable.multiple": "Teljanlegt?",
 	"language.variable.multiple.text": "Notaðu annan textastreng fyrir þýðingu",
 	"language.variable.multiple.help": "Þú getur notað mismunandi gildi eftir því hvaða talningu þú sendir með tungumálabreytunni, sem gerir þér kleift að búa til breytilegar þýðingar, t.d. eintölu og fleirtölu.",
-	"language.variable.notFound": "Breytan fannst hreint ekki",
 	"language.variable.value": "Gildi",
 
 	"languages": "Tungumál",
@@ -654,6 +660,8 @@
 
 	"preview": "Forskoða",
 	"preview.browser.scroll": "Skruna í takt",
+
+	"protected": "Protected",
 
 	"publish": "Útgefa",
 	"published": "Útgefnar og listaðar",

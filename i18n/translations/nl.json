@@ -148,12 +148,18 @@
 	"error.form.notSaved": "Het formulier kon niet worden opgeslagen",
 
 	"error.language.code": "Vul een geldige code voor deze taal in",
+	"error.language.create.default": "\"{name}\" ({code}) is already set as the default language",
 	"error.language.create.permission": "Je hebt geen rechten om een taal toe te voegen",
 	"error.language.delete.permission": "Je hebt geen rechten om een taal te verwijderen",
 	"error.language.duplicate": "De taal bestaat al",
 	"error.language.name": "Vul een geldige naam voor deze taal in",
 	"error.language.notFound": "De taal kan niet worden gevonden",
 	"error.language.update.permission": "Je hebt geen rechten om deze taal te updaten",
+	"error.language.variable.core": "\"{key}\" is one of Kirby's own translation strings and cannot be overwritten by a language variable",
+	"error.language.variable.duplicate": "A variable for \"{key}\" already exists",
+	"error.language.variable.key": "Please enter a valid key for the variable",
+	"error.language.variable.notFound": "De variabele kan niet gevonden worden",
+	"error.language.variable.numeric": "The variable key must not be numeric",
 
 	"error.layout.validation.block": "Er is een fout opgetreden bij het \"{field}\" veld in blok {blockIndex} in het \"{fieldset}\" bloktype in layout {layoutIndex}",
 	"error.layout.validation.settings": "Er is een fout gevonden in de instellingen van ontwerp {index} ",
@@ -416,6 +422,7 @@
 
 	"form.discard": "Wijzigingen annuleren",
 	"form.discard.confirm": "Weet je zeker dat je <strong>alle wijzigingen ongedaan wil maken</strong>?",
+	"form.discard.confirm.editor": "Do you really want to <strong>discard the unsaved changes</strong> made by <strong>{editor}</strong>?",
 	"form.locked": "Deze inhoud is uitgeschakeld voor jou omdat deze momenteel door een andere gebruiker wordt bewerkt",
 	"form.unsaved": "De huidige wijzigingen zijn nog niet opgeslagen",
 	"form.preview": "Bekijk wijzigingen",
@@ -470,7 +477,6 @@
 	"language.variable.multiple": "Telbaar?",
 	"language.variable.multiple.text": "Gebruik verschillende vertalingen",
 	"language.variable.multiple.help": "Je kan verschillende waarden gebruiken, afhankelijk van een getal dat je samen met de taalvariabele doorgeeft, waardoor je dynamische vertalingen kan maken, bijvoorbeeld enkelvoud en meervoud.",
-	"language.variable.notFound": "De variabele kan niet gevonden worden",
 	"language.variable.value": "Waarde",
 
 	"languages": "Talen",
@@ -654,6 +660,8 @@
 
 	"preview": "Voorbeeld",
 	"preview.browser.scroll": "Synchroniseer scroll",
+
+	"protected": "Protected",
 
 	"publish": "Publiceren",
 	"published": "Gepubliceerd",

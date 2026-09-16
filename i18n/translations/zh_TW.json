@@ -148,12 +148,18 @@
 	"error.form.notSaved": "表單無法儲存，請檢查是否有錯誤",
 
 	"error.language.code": "語言代碼無效",
+	"error.language.create.default": "\"{name}\" ({code}) is already set as the default language",
 	"error.language.create.permission": "你沒有新增語言的權限",
 	"error.language.delete.permission": "你沒有刪除語言的權限",
 	"error.language.duplicate": "語言已經存在",
 	"error.language.name": "語言名稱無效",
 	"error.language.notFound": "找不到語言",
 	"error.language.update.permission": "你沒有變更語言設定的權限",
+	"error.language.variable.core": "\"{key}\" is one of Kirby's own translation strings and cannot be overwritten by a language variable",
+	"error.language.variable.duplicate": "A variable for \"{key}\" already exists",
+	"error.language.variable.key": "Please enter a valid key for the variable",
+	"error.language.variable.notFound": "找不到指定的語言變數",
+	"error.language.variable.numeric": "The variable key must not be numeric",
 
 	"error.layout.validation.block": "在版面組態第 {layoutIndex} 區塊中，使用「{fieldset}」區塊類型的第 {blockIndex} 區塊內，欄位「{field}」發生錯誤",
 	"error.layout.validation.settings": "第 {index} 個版面組態的設定有誤",
@@ -416,6 +422,7 @@
 
 	"form.discard": "放棄變更",
 	"form.discard.confirm": "你確定要放棄未儲存的變更嗎？",
+	"form.discard.confirm.editor": "Do you really want to <strong>discard the unsaved changes</strong> made by <strong>{editor}</strong>?",
 	"form.locked": "此表單已鎖定，無法編輯",
 	"form.unsaved": "尚有未儲存的變更",
 	"form.preview": "預覽內容",
@@ -470,7 +477,6 @@
 	"language.variable.multiple": "Countable?",
 	"language.variable.multiple.text": "Use different translation strings",
 	"language.variable.multiple.help": "You can use different values depending on a count you pass along with the language variable, allowing you to create dynamic translations, e.g. singular and plural.",
-	"language.variable.notFound": "找不到指定的語言變數",
 	"language.variable.value": "變數內容",
 
 	"languages": "語言清單",
@@ -654,6 +660,8 @@
 
 	"preview": "預覽",
 	"preview.browser.scroll": "Sync scroll",
+
+	"protected": "Protected",
 
 	"publish": "發佈",
 	"published": "已發佈",
