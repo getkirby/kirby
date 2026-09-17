@@ -459,7 +459,15 @@ abstract class Model
 		$latestContent  = $latestVersion->content($language)->toArray();
 		$changesContent = $latestContent;
 
-		if ($changesVersion->exists($language) === true) {
+		// read the raw fields to find out whether the changes version really
+		// holds content. `Version::content()` would not tell us: for a
+		// secondary language it quietly falls back to the default language.
+		$changed = $changesVersion->read($language) ?? [];
+
+		// the lock is not content and is dropped by `Version::content()`
+		unset($changed['lock']);
+
+		if ($changed !== []) {
 			$changesContent = $changesVersion->content($language)->toArray();
 		}
 

@@ -6,6 +6,7 @@ use Kirby\Cms\App;
 use Kirby\Cms\File as ModelFile;
 use Kirby\Cms\Page as ModelPage;
 use Kirby\Cms\Site as ModelSite;
+use Kirby\Data\Data;
 use Kirby\Filesystem\Asset;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
@@ -554,5 +555,41 @@ class ModelTest extends TestCase
 
 		$this->assertSame($latest, $versions['latest']);
 		$this->assertSame($changes, $versions['changes']);
+	}
+
+	public function testVersionsWithEmptyChanges(): void
+	{
+		$panel = $this->panel([]);
+
+		$panel->model()->version('latest')->save($latest = [
+			'foo' => 'bar'
+		]);
+
+		// a changes version that exists but reads back empty must not
+		// be sent to the Panel as if every field had been cleared
+		Data::write($panel->model()->version('changes')->contentFile(), []);
+
+		$versions = $panel->versions();
+
+		$this->assertSame($latest, $versions['latest']);
+		$this->assertSame($latest, $versions['changes']);
+	}
+
+	public function testVersionsWithLockOnlyChanges(): void
+	{
+		$panel = $this->panel([]);
+
+		$panel->model()->version('latest')->save($latest = [
+			'foo' => 'bar'
+		]);
+
+		Data::write($panel->model()->version('changes')->contentFile(), [
+			'lock' => 'kirby'
+		]);
+
+		$versions = $panel->versions();
+
+		$this->assertSame($latest, $versions['latest']);
+		$this->assertSame($latest, $versions['changes']);
 	}
 }
