@@ -20,7 +20,7 @@ trait AppTranslations
 	 * Returns the translation strings that Kirby itself defines for
 	 * the given code. Every shipped translation is generated from the
 	 * English one, so that is always the complete set, plus whatever
-	 * plugins register for English and for the code itself.
+	 * extensions register for English and for the code itself.
 	 * @since 5.6.0
 	 */
 	public function coreI18nStrings(string $code): array
@@ -29,9 +29,9 @@ trait AppTranslations
 			...Translation::load(
 				'en',
 				$this->root('i18n:translations') . '/en.json',
-				$this->extensions['translations']['en'] ?? []
+				$this->extensionI18nStrings('en')
 			)->data(),
-			...$this->extensions['translations'][$code] ?? []
+			...$this->extensionI18nStrings($code)
 		];
 	}
 
@@ -50,6 +50,17 @@ trait AppTranslations
 			$strings,
 			$this->coreI18nStrings($language->code())
 		);
+	}
+
+	/**
+	 * Returns the translation strings that plugins, the config
+	 * or the App props have registered for the given code
+	 *
+	 * @since 6.0.0
+	 */
+	protected function extensionI18nStrings(string $code): array
+	{
+		return $this->extension('translations', $code, []);
 	}
 
 	/**
@@ -160,8 +171,8 @@ trait AppTranslations
 			}
 		}
 
-		// get injected translation data from plugins etc.
-		$inject = $this->extensions['translations'][$locale] ?? [];
+		// get injected translation data from extensions
+		$inject = $this->extensionI18nStrings($locale);
 
 		// inject the strings of the current language's custom variables
 		if ($language = $this->language($locale)) {
@@ -195,7 +206,7 @@ trait AppTranslations
 			// merges the custom variables with the extension translations
 			if ($strings !== []) {
 				$translations[$code] = [
-					...$translations[$code] ?? [],
+					...$this->extensionI18nStrings($code),
 					...$strings
 				];
 			}

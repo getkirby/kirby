@@ -53,10 +53,6 @@
     </InvalidOperand>
   </file>
   <file src="src/Cms/AppTranslations.php">
-    <InvalidOperand>
-      <code><![CDATA[$inject]]></code>
-      <code><![CDATA[$translations[$languageCode] ?? []]]></code>
-    </InvalidOperand>
     <InvalidReturnType>
       <code><![CDATA[Translation]]></code>
     </InvalidReturnType>
