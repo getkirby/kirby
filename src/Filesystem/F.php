@@ -713,7 +713,7 @@ class F
 	 * exclusive lock while it truncates and rewrites the file
 	 * @psalm-suppress UnusedFunctionCall
 	 *
-	 * @since 5.6.0
+	 * @since 5.6.1
 	 */
 	protected static function readLocked(string $file): string|false
 	{
