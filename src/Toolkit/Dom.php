@@ -4,6 +4,7 @@ namespace Kirby\Toolkit;
 
 use Closure;
 use DOMAttr;
+use DOMCdataSection;
 use DOMComment;
 use DOMDocument;
 use DOMDocumentType;
@@ -194,7 +195,9 @@ class Dom
 					$code = 0xFFFD;
 				}
 
-				return mb_chr($code);
+				$char = mb_chr($code, 'UTF-8');
+
+				return $char === false ? "\u{FFFD}" : $char;
 			},
 			$value
 		);
@@ -1057,16 +1060,17 @@ class Dom
 		DOMNode $node,
 		array &$errors
 	): void {
-		$isComment = $node->nodeType === XML_COMMENT_NODE;
-		$isCdata   = $node->nodeType === XML_CDATA_SECTION_NODE;
-
 		// only comments and CDATA sections are serialized verbatim;
 		// regular text nodes are entity-escaped on export and stay safe
-		if ($isComment === false && $isCdata === false) {
+		if (
+			$node instanceof DOMComment === false &&
+			$node instanceof DOMCdataSection === false
+		) {
 			return;
 		}
 
-		$data = $node->data;
+		$isComment = $node instanceof DOMComment;
+		$data      = $node->data;
 
 		// an HTML parser judges the node by the element it sits in: inside
 		// foreign content `<![CDATA[` stays a CDATA section, while raw text
