@@ -2,80 +2,43 @@
 
 namespace Kirby\Text;
 
-use AllowDynamicProperties;
-use Closure;
 use Kirby\Cms\App;
 use Kirby\Cms\File;
-use Kirby\Cms\Helpers;
 use Kirby\Cms\ModelWithContent;
-use Kirby\Exception\BadMethodCallException;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Reflection\Constructor;
 use Kirby\Uuid\Uri as UuidUri;
 use Kirby\Uuid\Uuid;
 
 /**
- * Representation and parse of a single KirbyTag.
+ * Represents and parses a single KirbyTag.
+ *
+ * Each tag type is implemented as a subclass.
+ * Its attributes are declared as named constructor arguments.
+ * Custom tags registered in the legacy array form
+ * are wrapped in a `Kirby\Text\LegacyKirbyTag` instance.
  *
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
-#[AllowDynamicProperties]
-class KirbyTag
+abstract class KirbyTag
 {
+	/**
+	 * @var array<string, string>
+	 */
 	public static array $aliases = [];
+	protected static array $attrsCache = [];
+
+	/**
+	 * Registry of all available tag types
+	 * @var array<string, array|class-string<self>>
+	 */
 	public static array $types = [];
 
 	public array $attrs = [];
 	public array $data = [];
-
-	/**
-	 * @deprecated 5.5.0 Use `$tag->kirby()->option()` instead.
-	 */
-	public array $options = [];
-	public string $type;
+	public string $type = '';
 	public string|null $value = null;
-
-	public function __construct(
-		string $type,
-		string|null $value = null,
-		array $attrs = [],
-		array $data = [],
-		array $options = []
-	) {
-		// type aliases
-		if (isset(static::$types[$type]) === false) {
-			if (isset(static::$aliases[$type]) === false) {
-				throw new InvalidArgumentException(
-					message: 'Undefined tag type: ' . $type
-				);
-			}
-
-			$type = static::$aliases[$type];
-		}
-
-		$kirby    = $data['kirby'] ?? App::instance();
-		$defaults = $kirby->option('kirbytext.' . $type, []);
-		$attrs    = array_replace($defaults, $attrs);
-
-		// all available tag attributes
-		$availableAttrs = static::$types[$type]['attr'] ?? [];
-
-		foreach ($attrs as $attrName => $attrValue) {
-			$attrName = strtolower($attrName);
-
-			// applies only defined attributes to safely update
-			if (in_array($attrName, $availableAttrs, true) === true) {
-				$this->{$attrName} = $attrValue;
-			}
-		}
-
-		$this->attrs   = $attrs;
-		$this->data    = $data;
-		$this->options = $options;
-		$this->$type   = $value;
-		$this->type    = $type;
-		$this->value   = $value;
-	}
 
 	/**
 	 * Magic data and property getter
@@ -88,31 +51,120 @@ class KirbyTag
 	/**
 	 * Magic call `KirbyTag::myType($parameter1, $parameter2)`
 	 */
-	public static function __callStatic(string $type, array $arguments = []): string
-	{
-		return (new static($type, ...$arguments))->render();
-	}
-
-	public function __get(string $attr)
-	{
-		$attr = strtolower($attr);
-		return $this->$attr ?? null;
-	}
-
-	public function __set(string $name, mixed $value): void
-	{
-		$this->{strtolower($name)} = $value;
+	public static function __callStatic(
+		string $type,
+		array $arguments = []
+	): string {
+		return static::factory($type, ...$arguments)->render();
 	}
 
 	public function attr(string $name, $default = null)
 	{
-		$name = strtolower($name);
+		$name = static::normalizeAttr($name, $this->declaredAttrs());
 		return $this->$name ?? $default;
 	}
 
-	public static function factory(...$arguments): string
+	/**
+	 * Returns the list of attribute names this tag type supports.
+	 *
+	 * @since 6.0.0
+	 */
+	public static function attrs(): array
 	{
-		return (new static(...$arguments))->render();
+		// Deriving the list of attributes from
+		// the named constructor arguments
+		return static::$attrsCache[static::class] ??=
+			Constructor::for(static::class)?->getParameterNames() ?? [];
+	}
+
+	/**
+	 * Returns the supported attribute names for a registered type
+	 * before an instance exists (used while parsing the raw tag).
+	 *
+	 * @since 6.0.0
+	 */
+	protected static function attrsFor(string $type): array
+	{
+		$definition = static::$types[$type] ?? null;
+
+		return match (true) {
+			is_string($definition) => $definition::attrs(),
+			is_array($definition)  => $definition['attr'] ?? [],
+			default                => []
+		};
+	}
+
+	/**
+	 * Injects shared, non-attribute state after the tag
+	 * instance has been created from its attribute arguments
+	 * @since 6.0.0
+	 */
+	protected function bind(
+		string $type,
+		string|null $value,
+		array $data,
+		array $attrs
+	): static {
+		$this->type  = $type;
+		$this->value = $value;
+		$this->data  = $data;
+		$this->attrs = $attrs;
+		return $this;
+	}
+
+	/**
+	 * Returns the attribute names this tag instance supports
+	 * @since 6.0.0
+	 */
+	protected function declaredAttrs(): array
+	{
+		return static::attrs();
+	}
+
+	/**
+	 * Creates a new tag instance for the given type
+	 * @since 6.0.0
+	 */
+	final public static function factory(
+		string $type,
+		string|null $value = null,
+		array $attrs = [],
+		array $data = []
+	): static {
+		// resolve type aliases
+		if (isset(static::$types[$type]) === false) {
+			if (isset(static::$aliases[$type]) === false) {
+				throw new InvalidArgumentException(
+					message: 'Undefined tag type: ' . $type
+				);
+			}
+
+			$type = static::$aliases[$type];
+		}
+
+		$tag = static::$types[$type];
+
+		// merge the per-type option defaults and map the attribute keys
+		// onto the names the type declares, so they can be passed on
+		// as named constructor arguments
+		$kirby    = $data['kirby'] ?? App::instance();
+		$defaults = $kirby->option('kirbytext.' . $type, []);
+		$attrs    = static::normalizeAttrs(
+			array_replace($defaults, $attrs),
+			static::attrsFor($type)
+		);
+
+		// legacy array definitions are wrapped, class-based definitions
+		// receive their attributes as named constructor arguments;
+		// the shared state is injected afterwards via `bind()`
+		$tag = match (true) {
+			is_array($tag) => new LegacyKirbyTag($tag),
+			default        => new $tag(
+				...(Constructor::for($tag)?->getAcceptedArguments($attrs) ?? [])
+			)
+		};
+
+		return $tag->bind($type, $value, $data, $attrs);
 	}
 
 	/**
@@ -161,22 +213,52 @@ class KirbyTag
 	}
 
 	/**
-	 * @deprecated 5.5.0 Use `$tag->kirby()->option()` instead.
+	 * Maps an attribute name onto the name the tag type declares
+	 * @since 6.0.0
 	 */
-	public function option(string $key, $default = null)
+	protected static function normalizeAttr(string $name, array $names): string
 	{
-		Helpers::deprecated('`$tag->option()` has been deprecated. Use `$tag->kirby()->option()` instead.', 'kirbytag-option');
+		$name = strtolower($name);
 
-		return $this->kirby()->option($key, $default);
+		foreach ($names as $declared) {
+			if (strtolower($declared) === $name) {
+				return $declared;
+			}
+		}
+
+		return $name;
+	}
+
+	/**
+	 * Maps all parsed attribute keys onto the names
+	 * the tag type declares
+	 * @since 6.0.0
+	 */
+	protected static function normalizeAttrs(array $attrs, array $names): array
+	{
+		$normalized = [];
+
+		foreach ($attrs as $name => $value) {
+			$normalized[static::normalizeAttr($name, $names)] = $value;
+		}
+
+		return $normalized;
+	}
+
+	/**
+	 * Returns the parent model
+	 */
+	public function parent(): ModelWithContent|null
+	{
+		return $this->data['parent'] ?? null;
 	}
 
 	public static function parse(
 		string $string,
-		array $data = [],
-		array $options = []
+		array $data = []
 	): static {
 		// remove the brackets, extract the first attribute (the tag type)
-		$tag  = trim(ltrim($string, '('));
+		$tag = trim(ltrim($string, '('));
 
 		// use substr instead of rtrim to keep non-tagged brackets
 		// (link: file.pdf text: Download (PDF))
@@ -184,20 +266,20 @@ class KirbyTag
 			$tag = substr($tag, 0, -1);
 		}
 
-		$pos  = strpos($tag, ':');
-		$type = trim(substr($tag, 0, $pos ?: null));
-		$type = strtolower($type);
-		$attr = static::$types[$type]['attr'] ?? [];
+		$pos   = strpos($tag, ':');
+		$type  = trim(substr($tag, 0, $pos ?: null));
+		$type  = strtolower($type);
+		$attrs = static::attrsFor($type);
 
 		// the type should be parsed as an attribute, so we add it here
 		// to the list of possible attributes
-		array_unshift($attr, $type);
+		array_unshift($attrs, $type);
 
 		// ensure that UUIDs protocols aren't matched as attributes
 		$uuids = sprintf('(?!(%s):\/\/)', implode('|', UuidUri::$schemes));
 
 		// extract all attributes
-		$regex = sprintf('/%s(%s):/i', $uuids, implode('|', $attr));
+		$regex  = sprintf('/%s(%s):/i', $uuids, implode('|', $attrs));
 		$search = preg_split($regex, $tag, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 
 		// $search is now an array with alternating keys and values
@@ -213,35 +295,16 @@ class KirbyTag
 		}
 
 		// combine the two arrays to an associative array
-		$attributes = array_combine($keys, $values);
+		$attrs = array_combine($keys, $values);
 
 		// the first attribute is the type attribute
 		// extract and pass its value separately
-		$value = array_shift($attributes);
+		$value = array_shift($attrs);
 
-		return new static($type, $value, $attributes, $data, $options);
+		return static::factory($type, $value, $attrs, $data);
 	}
 
-	/**
-	 * Returns the parent model
-	 */
-	public function parent(): ModelWithContent|null
-	{
-		return $this->data['parent'] ?? null;
-	}
-
-	public function render(): string
-	{
-		$callback = static::$types[$this->type]['html'] ?? null;
-
-		if ($callback instanceof Closure) {
-			return (string)$callback($this);
-		}
-
-		throw new BadMethodCallException(
-			message: 'Invalid tag render function in tag: ' . $this->type
-		);
-	}
+	abstract public function render(): string;
 
 	public function type(): string
 	{
