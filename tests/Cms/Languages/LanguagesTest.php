@@ -139,6 +139,15 @@ class LanguagesTest extends TestCase
 		$this->assertSame('en', $this->languages->default()->code());
 	}
 
+	public function testFindByPath(): void
+	{
+		$this->assertSame('de', $this->languages->findByPath('de')->code());
+		$this->assertSame('de', $this->languages->findByPath('de/foo')->code());
+		$this->assertNull($this->languages->findByPath('deutsch'));
+		$this->assertNull($this->languages->findByPath('foo'));
+		$this->assertNull($this->languages->findByPath(null));
+	}
+
 	public function testMultipleDefault(): void
 	{
 		$this->expectException(DuplicateException::class);
