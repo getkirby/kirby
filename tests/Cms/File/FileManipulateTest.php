@@ -130,6 +130,49 @@ class FileManipulateTest extends ModelTestCase
 		$this->assertSame(100, $replacedFile->width());
 	}
 
+	public function testManipulateGlobalQuality(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'thumbs' => [
+					'quality' => 1
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$parent = new Page(['slug' => 'test']);
+
+		$default = File::create([
+			'filename' => 'default.jpg',
+			'source'   => static::FIXTURES . '/test.jpg',
+			'parent'   => $parent
+		])->manipulate([
+			'width' => 100
+		]);
+
+		$explicit = File::create([
+			'filename' => 'explicit.jpg',
+			'source'   => static::FIXTURES . '/test.jpg',
+			'parent'   => $parent
+		])->manipulate([
+			'width'   => 100,
+			'quality' => 90
+		]);
+
+		$lowQuality = File::create([
+			'filename' => 'low-quality.jpg',
+			'source'   => static::FIXTURES . '/test.jpg',
+			'parent'   => $parent
+		])->manipulate([
+			'width'   => 100,
+			'quality' => 1
+		]);
+
+		$this->assertSame($explicit->size(), $default->size());
+		$this->assertNotSame($lowQuality->size(), $default->size());
+	}
+
 	public function testManipulateInvalidValidFormat(): void
 	{
 		$parent       = new Page(['slug' => 'test']);
