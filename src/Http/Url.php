@@ -199,7 +199,7 @@ class Url
 	 */
 	public static function normalize(string $url): string
 	{
-		$url = preg_replace('/[\x09\x0a\x0d]/', '', $url);
+		$url = str_replace(["\t", "\n", "\r"], '', $url);
 		$url = trim($url, "\x00..\x20");
 
 		// browsers treat a backslash like a forward slash, so a leading
@@ -208,7 +208,7 @@ class Url
 			'!^[/\\\\]{2,}!',
 			fn ($slashes) => str_replace('\\', '/', $slashes[0]),
 			$url
-		);
+		) ?? $url;
 	}
 
 	/**
