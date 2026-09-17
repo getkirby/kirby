@@ -34,35 +34,18 @@ class StructureField extends InputField implements ProvidesNestedForm
 		bool|null $batch = null,
 		array|null $columns = null,
 		array|null $default = null,
-		bool|null $disabled = null,
 		bool|null $duplicate = null,
 		array|string|null $empty = null,
 		array|null $fields = null,
-		array|string|null $help = null,
-		array|string|null $label = null,
 		int|null $limit = null,
-		string|null $name = null,
 		int|null $max = null,
 		int|null $min = null,
 		bool|null $prepend = null,
-		bool|null $required = null,
 		bool|null $sortable = null,
 		string|null $sortBy = null,
-		bool|null $translate = null,
-		array|null $when = null,
-		string|null $width = null,
+		mixed ...$args
 	) {
-		parent::__construct(
-			default:   $default,
-			disabled:  $disabled,
-			help:      $help,
-			label:     $label,
-			name:      $name,
-			required:  $required,
-			translate: $translate,
-			when:      $when,
-			width:     $width
-		);
+		parent::__construct(...$args, default: $default);
 
 		$this->batch     = $batch;
 		$this->columns   = $columns;

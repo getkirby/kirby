@@ -33,35 +33,15 @@ abstract class DateTimeField extends InputField
 	protected Date|null $value = null;
 
 	public function __construct(
-		bool|null $autofocus = null,
-		mixed $default = null,
 		string|null $display = null,
-		bool|null $disabled = null,
 		string|null $format = null,
-		array|string|null $help = null,
 		string|null $icon = null,
-		array|string|null $label = null,
 		string|null $max = null,
 		string|null $min = null,
-		string|null $name = null,
-		bool|null $required = null,
-		bool|null $translate = null,
 		array|int|string|null $step = null,
-		array|null $when = null,
-		string|null $width = null
+		mixed ...$args
 	) {
-		parent::__construct(
-			autofocus: $autofocus,
-			default:   $default,
-			disabled:  $disabled,
-			help:      $help,
-			label:     $label,
-			name:      $name,
-			required:  $required,
-			translate: $translate,
-			when:      $when,
-			width:     $width
-		);
+		parent::__construct(...$args);
 
 		$this->display = $display;
 		$this->format  = $format;

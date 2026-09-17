@@ -21,18 +21,12 @@ abstract class DisplayField extends Field
 	public function __construct(
 		array|string|null $help = null,
 		array|string|null $label = null,
-		string|null $name = null,
-		array|null $when = null,
-		string|null $width = null
+		mixed ...$args
 	) {
-		parent::__construct(
-			name: $name,
-			when: $when
-		);
+		parent::__construct(...$args);
 
 		$this->help  = $help;
 		$this->label = $label;
-		$this->width = $width;
 	}
 
 	public function props(): array
