@@ -316,7 +316,12 @@ class Panel
 		$routes = static::routes($areas);
 
 		// create a micro-router for the Panel
-		return Router::execute($path, $method = $kirby->request()->method(), $routes, function ($route) use ($areas, $kirby, $method, $path) {
+		// HEAD requests are answered like GET requests;
+		// the web server takes care of stripping the body
+		$method = $kirby->request()->method();
+		$method = $method === 'HEAD' ? 'GET' : $method;
+
+		return Router::execute($path, $method, $routes, function ($route) use ($areas, $kirby, $method, $path) {
 			// route needs authentication?
 			$auth   = $route->attributes()['auth'] ?? true;
 			$areaId = $route->attributes()['area'] ?? null;
@@ -403,10 +408,18 @@ class Panel
 			'auth' => false
 		];
 
-		// catch all route
+		// catch all route; it is registered for all request
+		// methods, so that unsupported methods are answered
+		// with a proper 404 instead of an uncaught exception.
+		// It doesn't need auth, as it only ever reports that
+		// the route does not exist
 		$routes[] = [
 			'pattern' => '(:all)',
-			'action'  => fn (string $pattern) => 'Could not find Panel view for route: ' . $pattern
+			'method'  => 'ALL',
+			'auth'    => false,
+			'action'  => fn (string $pattern) => new NotFoundException(
+				message: 'Could not find Panel view for route: ' . $pattern
+			)
 		];
 
 		return $routes;
