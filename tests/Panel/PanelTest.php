@@ -475,6 +475,27 @@ class PanelTest extends TestCase
 		$this->assertSame($get->code(), $head->code());
 	}
 
+	public function testRouterWithHeadMethodHooks(): void
+	{
+		$app = $this->app->clone([
+			'request' => [
+				'method' => 'HEAD'
+			],
+			'hooks' => [
+				'panel.route:before' => function ($route, $path, $method) use (&$captured) {
+					$captured = $method;
+					return $route;
+				}
+			]
+		]);
+
+		Panel::router('login');
+
+		// the route is resolved as GET, but the hooks still
+		// receive the request method the client actually sent
+		$this->assertSame('HEAD', $captured);
+	}
+
 	public function testRouterWithUnknownPath(): void
 	{
 		$app = $this->app->clone([
