@@ -317,11 +317,12 @@ class Panel
 
 		// create a micro-router for the Panel
 		// HEAD requests are answered like GET requests;
-		// the web server takes care of stripping the body
-		$method = $kirby->request()->method();
-		$method = $method === 'HEAD' ? 'GET' : $method;
+		// the web server takes care of stripping the body.
+		// The hooks still receive the original request method
+		$method      = $kirby->request()->method();
+		$routeMethod = $method === 'HEAD' ? 'GET' : $method;
 
-		return Router::execute($path, $method, $routes, function ($route) use ($areas, $kirby, $method, $path) {
+		return Router::execute($path, $routeMethod, $routes, function ($route) use ($areas, $kirby, $method, $path) {
 			// route needs authentication?
 			$auth   = $route->attributes()['auth'] ?? true;
 			$areaId = $route->attributes()['area'] ?? null;
