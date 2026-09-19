@@ -186,6 +186,8 @@ class Imagick extends Darkroom
 					$focus['y1']
 				);
 			}
+
+			return $image;
 		}
 
 		$image->resizeImage(
