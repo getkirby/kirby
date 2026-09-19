@@ -8,6 +8,7 @@ use Kirby\Cms\Page;
 use Kirby\Data\Data;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Filesystem\F;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -1064,6 +1065,28 @@ class VersionTest extends TestCase
 		$expected = $this->createContentSingleLanguage();
 
 		$this->assertSame($expected['content'], $version->read());
+	}
+
+	public function testReadFromCacheAfterFileIsGone(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::changes()
+		);
+
+		Data::write($file = $this->contentFile(null, VersionId::changes()), $content = [
+			'title' => 'Test'
+		]);
+
+		$this->assertSame($content, $version->read());
+
+		// a parallel request discards the version
+		F::remove($file);
+
+		$this->assertSame($content, $version->read());
+		$this->assertSame($content, $version->content()->toArray());
 	}
 
 	public function testReadLatestWithoutContentFile(): void
