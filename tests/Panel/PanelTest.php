@@ -4,9 +4,11 @@ namespace Kirby\Panel;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Blueprint;
+use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Response;
+use Kirby\Http\Router;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -450,14 +452,117 @@ class PanelTest extends TestCase
 		$this->assertNull($result);
 	}
 
+	public function testRouterWithHeadMethod(): void
+	{
+		$app = $this->app->clone([
+			'request' => [
+				'method' => 'GET'
+			]
+		]);
+
+		$get = Panel::router('login');
+
+		$app = $this->app->clone([
+			'request' => [
+				'method' => 'HEAD'
+			]
+		]);
+
+		$head = Panel::router('login');
+
+		// HEAD is routed like GET and must not fall through
+		// to the catch-all route
+		$this->assertSame($get->code(), $head->code());
+	}
+
+	public function testRouterWithHeadMethodHooks(): void
+	{
+		$app = $this->app->clone([
+			'request' => [
+				'method' => 'HEAD'
+			],
+			'hooks' => [
+				'panel.route:before' => function ($route, $path, $method) use (&$captured) {
+					$captured = $method;
+					return $route;
+				}
+			]
+		]);
+
+		Panel::router('login');
+
+		// the route is resolved as GET, but the hooks still
+		// receive the request method the client actually sent
+		$this->assertSame('HEAD', $captured);
+	}
+
+	public function testRouterWithUnknownPath(): void
+	{
+		$app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'_json' => true,
+				]
+			],
+			'users' => [
+				[
+					'email' => 'test@getkirby.com',
+					'role'  => 'admin'
+				]
+			],
+			'roles' => [
+				[
+					'name' => 'admin'
+				]
+			]
+		]);
+
+		$app->impersonate('test@getkirby.com');
+
+		$response = Panel::router('does-not-exist');
+		$json     = json_decode($response->body(), true);
+
+		$this->assertSame(404, $response->code());
+		$this->assertSame('k-error-view', $json['$view']['component']);
+		$this->assertSame(
+			'Could not find Panel view for route: does-not-exist',
+			$json['$view']['props']['error']
+		);
+	}
+
 	public function testRoutes(): void
 	{
 		$routes = Panel::routes([]);
 
 		$this->assertSame('browser', $routes[0]['pattern']);
 		$this->assertSame(['/', 'installation', 'login'], $routes[1]['pattern']);
-		$this->assertSame('(:all)', $routes[2]['pattern']);
-		$this->assertSame('Could not find Panel view for route: foo', $routes[2]['action']('foo'));
+
+		// the catch-all routes keep the response type of the path,
+		// so that Panel requests keep receiving JSON
+		$fallbacks = [
+			2 => ['dialogs/(:all)', 'dialog'],
+			3 => ['drawers/(:all)', 'drawer'],
+			4 => ['dropdowns/(:all)', 'dropdown'],
+			5 => ['search/(:all)', 'search'],
+			6 => ['(:all)', 'view'],
+		];
+
+		foreach ($fallbacks as $index => [$pattern, $type]) {
+			$this->assertSame($pattern, $routes[$index]['pattern']);
+			$this->assertSame('ALL', $routes[$index]['method']);
+			$this->assertSame($type, $routes[$index]['type']);
+
+			// the catch-all routes return a not found exception,
+			// so that the Panel responds with a 404 instead of a 500
+			$result = $routes[$index]['action']('foo');
+
+			$this->assertInstanceOf(NotFoundException::class, $result);
+			$this->assertSame(
+				'Could not find Panel ' . $type . ' for route: foo',
+				$result->getMessage()
+			);
+			$this->assertSame(404, $result->getHttpCode());
+		}
 	}
 
 
@@ -623,6 +728,25 @@ class PanelTest extends TestCase
 		];
 
 		$this->assertSame($expected, $routes);
+	}
+
+	public function testRoutesWithAllMethods(): void
+	{
+		$router = new Router(Panel::routes([]));
+
+		// every request method needs to resolve to the catch-all
+		// route; otherwise the router throws and the Panel
+		// responds with a 500 instead of a 404
+		foreach (['GET', 'POST', 'HEAD', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'] as $method) {
+			$route = $router->find('does-not-exist', $method);
+			$this->assertSame('(:all)', $route->attributes()['pattern'], $method);
+
+			// requests for dialogs, drawers, dropdowns and searches
+			// need to keep their response type, so that the Panel
+			// receives JSON instead of a full document
+			$route = $router->find('dialogs/does-not-exist', $method);
+			$this->assertSame('dialog', $route->attributes()['type'], $method);
+		}
 	}
 
 	public function testSetLanguageWithoutRequest(): void
