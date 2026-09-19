@@ -192,8 +192,14 @@ export default {
 				},
 				on: {
 					drop: this.hasDropzone ? this.drop : undefined,
-					submit: ({ ids }) => {
-						this.$emit("input", ids);
+					submit: (selection) => {
+						// the dialog always submits the selected IDs. Anything else,
+						// e.g. a plain array, would clear the field instead of updating it
+						if (Array.isArray(selection?.ids) === false) {
+							return;
+						}
+
+						this.$emit("input", selection.ids);
 						this.$panel.dialog.close();
 					}
 				}
