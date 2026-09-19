@@ -1,4 +1,4 @@
-import Modal, { defaults as modalDefaults } from "./modal.js";
+import Modal, { defaults as modalDefaults, save } from "./modal.js";
 import { isObject } from "@/helpers/object";
 import { reactive } from "vue";
 
@@ -24,25 +24,7 @@ export default (panel) => {
 	// shortcut to submit dialogs
 	panel.events.on("dialog.save", (e) => {
 		e?.preventDefault?.();
-
-		const form = e?.target?.closest?.("form.k-dialog");
-
-		if (form) {
-			if (typeof form.requestSubmit === "function") {
-				form.requestSubmit();
-			} else {
-				form.dispatchEvent(
-					new Event("submit", {
-						bubbles: true,
-						cancelable: true
-					})
-				);
-			}
-
-			return;
-		}
-
-		panel.dialog.submit();
+		save(panel, "dialog");
 	});
 
 	const parent = Modal(panel, "dialog", defaults());
