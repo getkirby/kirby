@@ -408,19 +408,29 @@ class Panel
 			'auth' => false
 		];
 
-		// catch all route; it is registered for all request
-		// methods, so that unsupported methods are answered
-		// with a proper 404 instead of an uncaught exception.
-		// It doesn't need auth, as it only ever reports that
-		// the route does not exist
-		$routes[] = [
-			'pattern' => '(:all)',
-			'method'  => 'ALL',
-			'auth'    => false,
-			'action'  => fn (string $pattern) => new NotFoundException(
-				message: 'Could not find Panel view for route: ' . $pattern
-			)
+		// catch all routes; they are registered for all request
+		// methods, so that unsupported methods are answered with
+		// a proper 404 instead of an uncaught exception. The
+		// response type is taken from the path, so that Panel
+		// requests keep receiving JSON instead of a document
+		$fallbacks = [
+			'dialogs/(:all)'   => 'dialog',
+			'drawers/(:all)'   => 'drawer',
+			'dropdowns/(:all)' => 'dropdown',
+			'search/(:all)'    => 'search',
+			'(:all)'           => 'view'
 		];
+
+		foreach ($fallbacks as $pattern => $type) {
+			$routes[] = [
+				'pattern' => $pattern,
+				'method'  => 'ALL',
+				'type'    => $type,
+				'action'  => fn (string $path) => new NotFoundException(
+					message: 'Could not find Panel ' . $type . ' for route: ' . $path
+				)
+			];
+		}
 
 		return $routes;
 	}

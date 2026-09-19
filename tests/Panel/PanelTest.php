@@ -515,17 +515,33 @@ class PanelTest extends TestCase
 
 		$this->assertSame('browser', $routes[0]['pattern']);
 		$this->assertSame(['/', 'installation', 'login'], $routes[1]['pattern']);
-		$this->assertSame('(:all)', $routes[2]['pattern']);
-		$this->assertSame('ALL', $routes[2]['method']);
-		$this->assertFalse($routes[2]['auth']);
 
-		// the catch-all route returns a not found exception,
-		// so that the Panel responds with a 404 instead of a 500
-		$result = $routes[2]['action']('foo');
+		// the catch-all routes keep the response type of the path,
+		// so that Panel requests keep receiving JSON
+		$fallbacks = [
+			2 => ['dialogs/(:all)', 'dialog'],
+			3 => ['drawers/(:all)', 'drawer'],
+			4 => ['dropdowns/(:all)', 'dropdown'],
+			5 => ['search/(:all)', 'search'],
+			6 => ['(:all)', 'view'],
+		];
 
-		$this->assertInstanceOf(NotFoundException::class, $result);
-		$this->assertSame('Could not find Panel view for route: foo', $result->getMessage());
-		$this->assertSame(404, $result->getHttpCode());
+		foreach ($fallbacks as $index => [$pattern, $type]) {
+			$this->assertSame($pattern, $routes[$index]['pattern']);
+			$this->assertSame('ALL', $routes[$index]['method']);
+			$this->assertSame($type, $routes[$index]['type']);
+
+			// the catch-all routes return a not found exception,
+			// so that the Panel responds with a 404 instead of a 500
+			$result = $routes[$index]['action']('foo');
+
+			$this->assertInstanceOf(NotFoundException::class, $result);
+			$this->assertSame(
+				'Could not find Panel ' . $type . ' for route: foo',
+				$result->getMessage()
+			);
+			$this->assertSame(404, $result->getHttpCode());
+		}
 	}
 
 
@@ -703,6 +719,12 @@ class PanelTest extends TestCase
 		foreach (['GET', 'POST', 'HEAD', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'] as $method) {
 			$route = $router->find('does-not-exist', $method);
 			$this->assertSame('(:all)', $route->attributes()['pattern'], $method);
+
+			// requests for dialogs, drawers, dropdowns and searches
+			// need to keep their response type, so that the Panel
+			// receives JSON instead of a full document
+			$route = $router->find('dialogs/does-not-exist', $method);
+			$this->assertSame('dialog', $route->attributes()['type'], $method);
 		}
 	}
 
