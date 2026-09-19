@@ -997,12 +997,7 @@ class VersionTest extends TestCase
 		// a parallel request is just creating it
 		Data::write($fileChanges = $this->contentFile(null, VersionId::changes()), []);
 
-		try {
-			$version->publish();
-			$this->fail('Expected exception was not thrown');
-		} catch (NotFoundException $e) {
-			$this->assertSame('The changes version has no content to publish', $e->getMessage());
-		}
+		$version->publish();
 
 		// publishing nothing must not wipe the latest version
 		$this->assertSame('Title Latest', Data::read($fileLatest)['title']);

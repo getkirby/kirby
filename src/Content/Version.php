@@ -472,11 +472,10 @@ class Version
 		// the rules above have checked that the version exists, but a
 		// parallel request can still discard it before it is read here,
 		// and a file that is just being created reads back empty. Neither
-		// must be mistaken for "every field was removed" below
+		// must be mistaken for "every field was removed" below, so there
+		// is simply nothing to publish
 		if ($changes === null || $changes === []) {
-			throw new NotFoundException(
-				message: 'The changes version has no content to publish'
-			);
+			return;
 		}
 
 		// overwrite all fields that are not in the `changes` version
