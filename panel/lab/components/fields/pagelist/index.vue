@@ -2,18 +2,26 @@
 	<k-lab-form>
 		<k-lab-examples class="k-lab-field-examples">
 			<k-box theme="notice" icon="alert">
-				The examples below are rendered from static props. There is no model
-				behind them, so everything that talks to the field endpoint (search,
-				pagination, sorting and batch deletion) answers with a 404 here and only
-				works in a real model view.
+				The field loads its entries from its own endpoint. There is no model
+				behind the lab, so the examples answer that request with static state
+				instead. Everything that writes (sorting and batch deletion) still talks
+				to the endpoint and answers with a 404 here.
 			</k-box>
 
 			<k-lab-example label="Default">
-				<k-pagelist-field :initial="state(pages)" label="Pages" />
+				<k-lab-pagelist-field :initial="state(pages)" label="Pages" />
+			</k-lab-example>
+
+			<k-lab-example label="Loading">
+				<k-lab-pagelist-field label="Pages" />
+			</k-lab-example>
+
+			<k-lab-example label="Loading: table">
+				<k-lab-pagelist-field :columns="columns" label="Pages" layout="table" />
 			</k-lab-example>
 
 			<k-lab-example label="Help">
-				<k-pagelist-field
+				<k-lab-pagelist-field
 					:initial="state(pages)"
 					help="Every child of this page"
 					label="Pages"
@@ -21,14 +29,14 @@
 			</k-lab-example>
 
 			<k-lab-example label="Empty">
-				<k-pagelist-field
+				<k-lab-pagelist-field
 					:initial="state([], { pagination: empty })"
 					label="Pages"
 				/>
 			</k-lab-example>
 
 			<k-lab-example label="Empty with custom text">
-				<k-pagelist-field
+				<k-lab-pagelist-field
 					:initial="state([], { pagination: empty })"
 					empty="No pages have been added yet"
 					label="Pages"
@@ -36,7 +44,7 @@
 			</k-lab-example>
 
 			<k-lab-example label="Invalid: fewer than min">
-				<k-pagelist-field
+				<k-lab-pagelist-field
 					:initial="state(pages.slice(0, 1), { pagination: single })"
 					:min="2"
 					help="The label marks the field as invalid until a second page is added"
@@ -45,7 +53,7 @@
 			</k-lab-example>
 
 			<k-lab-example label="Layout: cardlets">
-				<k-pagelist-field
+				<k-lab-pagelist-field
 					:initial="state(pages)"
 					label="Pages"
 					layout="cardlets"
@@ -53,7 +61,7 @@
 			</k-lab-example>
 
 			<k-lab-example label="Layout: cards">
-				<k-pagelist-field
+				<k-lab-pagelist-field
 					:initial="state(pages)"
 					label="Pages"
 					layout="cards"
@@ -61,7 +69,7 @@
 			</k-lab-example>
 
 			<k-lab-example label="Layout: cards, size small">
-				<k-pagelist-field
+				<k-lab-pagelist-field
 					:initial="state(pages)"
 					label="Pages"
 					layout="cards"
@@ -70,7 +78,7 @@
 			</k-lab-example>
 
 			<k-lab-example label="Layout: table">
-				<k-pagelist-field
+				<k-lab-pagelist-field
 					:initial="state(tableRows, { columns })"
 					label="Pages"
 					layout="table"
@@ -78,7 +86,7 @@
 			</k-lab-example>
 
 			<k-lab-example label="Layout: table with columns">
-				<k-pagelist-field
+				<k-lab-pagelist-field
 					:initial="state(tableRows, { columns: customColumns })"
 					label="Pages"
 					layout="table"
@@ -86,7 +94,7 @@
 			</k-lab-example>
 
 			<k-lab-example label="Link to another parent">
-				<k-pagelist-field
+				<k-lab-pagelist-field
 					:initial="state(pages)"
 					label="Pages"
 					link="/pages/photography"
@@ -94,7 +102,7 @@
 			</k-lab-example>
 
 			<k-lab-example label="Pagination">
-				<k-pagelist-field
+				<k-lab-pagelist-field
 					:endpoints="endpoints"
 					:initial="state(pages.slice(0, 2), { pagination: paginated })"
 					label="Pages"
@@ -102,7 +110,7 @@
 			</k-lab-example>
 
 			<k-lab-example label="Search">
-				<k-pagelist-field
+				<k-lab-pagelist-field
 					:endpoints="endpoints"
 					:initial="state(pages)"
 					:searchable="true"
@@ -111,7 +119,7 @@
 			</k-lab-example>
 
 			<k-lab-example label="Batch">
-				<k-pagelist-field
+				<k-lab-pagelist-field
 					:batch="true"
 					:endpoints="endpoints"
 					:initial="state(pages)"
@@ -120,7 +128,7 @@
 			</k-lab-example>
 
 			<k-lab-example label="Add">
-				<k-pagelist-field
+				<k-lab-pagelist-field
 					:endpoints="endpoints"
 					:initial="state(pages, { add: true })"
 					label="Pages"
@@ -128,7 +136,7 @@
 			</k-lab-example>
 
 			<k-lab-example label="All options">
-				<k-pagelist-field
+				<k-lab-pagelist-field
 					:batch="true"
 					:endpoints="endpoints"
 					:initial="
@@ -148,7 +156,27 @@
 </template>
 
 <script>
+const field = {
+	extends: window.panel.app.component("k-pagelist-field"),
+	props: {
+		initial: Object
+	},
+	methods: {
+		async reload() {
+			if (this.initial === undefined) {
+				return;
+			}
+
+			this.state = this.initial;
+			this.isLoading = false;
+		}
+	}
+};
+
 export default {
+	components: {
+		"k-lab-pagelist-field": field
+	},
 	props: {
 		columns: Object,
 		customColumns: Object,
