@@ -45,13 +45,12 @@ class LayoutField extends BlocksField
 	protected Fieldset|null $settingsFieldset;
 
 	public function __construct(
-		array|string|null $fieldsets = null,
 		array|null $layouts = null,
 		array|null $selector = null,
 		array|string|null $settings = null,
 		mixed ...$args
 	) {
-		parent::__construct(...$args, fieldsets: $fieldsets);
+		parent::__construct(...$args);
 
 		$this->layouts  = $layouts;
 		$this->selector = $selector;
