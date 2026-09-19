@@ -66,7 +66,7 @@ class ImageMagickTest extends TestCase
 		]);
 
 		$this->assertSame(
-			'-thumbnail 357x536! -crop 300x536+28+0 -thumbnail 300x536^',
+			'-thumbnail 357x536! -crop 300x536+28+0 +repage',
 			$result
 		);
 	}
@@ -87,7 +87,7 @@ class ImageMagickTest extends TestCase
 		]);
 
 		$this->assertSame(
-			'-thumbnail 434x289! -crop 200x289+117+0 -thumbnail 200x289^',
+			'-thumbnail 434x289! -crop 200x289+117+0 +repage',
 			$result
 		);
 	}

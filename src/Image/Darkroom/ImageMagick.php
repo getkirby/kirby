@@ -171,15 +171,13 @@ class ImageMagick extends Darkroom
 				$options['height']
 			)) {
 				return sprintf(
-					'-thumbnail %sx%s! -crop %sx%s+%s+%s -thumbnail %sx%s^',
+					'-thumbnail %sx%s! -crop %sx%s+%s+%s +repage',
 					$downscale->width(),
 					$downscale->height(),
 					$options['width'],
 					$options['height'],
 					$focus['x1'],
-					$focus['y1'],
-					$options['width'],
-					$options['height']
+					$focus['y1']
 				);
 			}
 		}
