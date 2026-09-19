@@ -406,7 +406,9 @@ class Panel
 		// catch all route
 		$routes[] = [
 			'pattern' => '(:all)',
-			'action'  => fn (string $pattern) => 'Could not find Panel view for route: ' . $pattern
+			'action'  => fn (string $pattern) => new NotFoundException(
+				message: 'Could not find Panel view for route: ' . $pattern
+			)
 		];
 
 		return $routes;
