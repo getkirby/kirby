@@ -102,6 +102,21 @@ class GdLibTest extends TestCase
 		$this->assertSame([200, 150], array_slice(getimagesize($file), 0, 2));
 	}
 
+	public function testResizeWithCropRounding(): void
+	{
+		$gd = new GdLib([
+			'crop'   => true,
+			'width'  => 200,
+			'height' => 289
+		]);
+
+		copy(static::FIXTURES . '/../orientation/Landscape_0.jpg', $file = static::TMP . '/landscape.jpg');
+
+		$gd->process($file);
+
+		$this->assertSame([200, 289], array_slice(getimagesize($file), 0, 2));
+	}
+
 	public function testResizeCropsAfterDownscaling(): void
 	{
 		$gd = new GdLib();

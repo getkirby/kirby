@@ -46,43 +46,28 @@ class GdLib extends Darkroom
 	protected function resize(SimpleImage $image, array $options): SimpleImage
 	{
 		if ($crop = $options['crop'] ?? null) {
-			$image = $this->cover($image, $options);
+			$downscale = $this->downscale($options);
+			$image->resize($downscale->width(), $downscale->height());
 
 			if ($focus = Focus::coords(
 				$crop,
-				$image->getWidth(),
-				$image->getHeight(),
+				$downscale->width(),
+				$downscale->height(),
 				$options['width'],
 				$options['height']
 			)) {
 				$image->crop(
 					$focus['x1'],
 					$focus['y1'],
-					$focus['x2'],
-					$focus['y2']
+					$focus['x1'] + $options['width'],
+					$focus['y1'] + $options['height']
 				);
 			}
 
-			return $image->thumbnail($options['width'], $options['height']);
+			return $image;
 		}
 
 		return $image->resize($options['width'], $options['height']);
-	}
-
-	/**
-	 * Downscales the image to cover the target dimensions
-	 * before cropping to avoid a full-resolution copy
-	 */
-	protected function cover(SimpleImage $image, array $options): SimpleImage
-	{
-		$ratioSource = Focus::ratio($image->getWidth(), $image->getHeight());
-		$ratioThumb  = Focus::ratio($options['width'], $options['height']);
-
-		if ($ratioThumb > $ratioSource) {
-			return $image->resize($options['width']);
-		}
-
-		return $image->resize(null, $options['height']);
 	}
 
 	/**
