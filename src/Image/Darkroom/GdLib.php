@@ -43,24 +43,26 @@ class GdLib extends Darkroom
 	protected function resize(SimpleImage $image, array $options): SimpleImage
 	{
 		if ($crop = $options['crop'] ?? null) {
+			$downscale = $this->downscale($options);
+			$image->resize($downscale->width(), $downscale->height());
+
 			if ($focus = Focus::coords(
 				$crop,
-				$options['sourceWidth'],
-				$options['sourceHeight'],
+				$downscale->width(),
+				$downscale->height(),
 				$options['width'],
 				$options['height']
 			)) {
 				$image->crop(
 					$focus['x1'],
 					$focus['y1'],
-					$focus['x2'],
-					$focus['y2']
+					$focus['x1'] + $options['width'],
+					$focus['y1'] + $options['height']
 				);
 			}
 
-			return $image->thumbnail($options['width'], $options['height']);
+			return $image;
 		}
-
 
 		return $image->resize($options['width'], $options['height']);
 	}

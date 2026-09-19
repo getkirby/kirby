@@ -105,6 +105,27 @@ class Darkroom
 	}
 
 	/**
+	 * Calculates the dimensions to downscale the image to
+	 * before cropping, so that it still covers the thumb size
+	 * without a full-resolution intermediate copy
+	 */
+	protected function downscale(array $options): Dimensions
+	{
+		$dimensions = new Dimensions(
+			$options['sourceWidth'],
+			$options['sourceHeight']
+		);
+
+		$ratioThumb = Focus::ratio($options['width'], $options['height']);
+
+		if ($ratioThumb > $dimensions->ratio()) {
+			return $dimensions->fitWidth($options['width'], true);
+		}
+
+		return $dimensions->fitHeight($options['height'], true);
+	}
+
+	/**
 	 * Calculates the dimensions of the final thumb based
 	 * on the given options and returns a full array with
 	 * all the final options to be used for the image generator

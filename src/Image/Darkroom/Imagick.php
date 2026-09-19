@@ -161,21 +161,30 @@ class Imagick extends Darkroom
 	protected function resize(Image $image, array $options): Image
 	{
 		if ($crop = $options['crop'] ?? null) {
+			$downscale = $this->downscale($options);
+			$image->resizeImage(
+				$downscale->width(),
+				$downscale->height(),
+				Image::FILTER_LANCZOS,
+				1
+			);
+
 			if ($focus = Focus::coords(
 				$crop,
-				$options['sourceWidth'],
-				$options['sourceHeight'],
+				$downscale->width(),
+				$downscale->height(),
 				$options['width'],
 				$options['height']
 			)) {
 				$image->cropImage(
-					$focus['width'],
-					$focus['height'],
+					$options['width'],
+					$options['height'],
 					$focus['x1'],
 					$focus['y1']
 				);
-
 			}
+
+			return $image;
 		}
 
 		$image->resizeImage(

@@ -158,21 +158,23 @@ class ImageMagick extends Darkroom
 	protected function resize(string $file, array $options): string
 	{
 		if ($crop = $options['crop'] ?? null) {
+			$downscale = $this->downscale($options);
+
 			if ($focus = Focus::coords(
 				$crop,
-				$options['sourceWidth'],
-				$options['sourceHeight'],
+				$downscale->width(),
+				$downscale->height(),
 				$options['width'],
 				$options['height']
 			)) {
 				return sprintf(
-					'-crop %sx%s+%s+%s -thumbnail %sx%s^',
-					$focus['width'],
-					$focus['height'],
-					$focus['x1'],
-					$focus['y1'],
+					'-thumbnail %sx%s! -crop %sx%s+%s+%s +repage',
+					$downscale->width(),
+					$downscale->height(),
 					$options['width'],
-					$options['height']
+					$options['height'],
+					$focus['x1'],
+					$focus['y1']
 				);
 			}
 		}

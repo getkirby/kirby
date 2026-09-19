@@ -8,6 +8,7 @@ use Kirby\Image\Darkroom\ImageMagick;
 use Kirby\Image\Darkroom\Imagick;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
+use ReflectionMethod;
 
 #[CoversClass(Darkroom::class)]
 class DarkroomTest extends TestCase
@@ -84,6 +85,34 @@ class DarkroomTest extends TestCase
 		]);
 
 		$this->assertSame(50, $options['sharpen']);
+	}
+
+	public function testDownscale(): void
+	{
+		$darkroom = new Darkroom();
+		$method   = new ReflectionMethod($darkroom::class, 'downscale');
+
+		// landscape thumb from portrait source: fit width
+		$dimensions = $method->invoke($darkroom, [
+			'sourceWidth'  => 4000,
+			'sourceHeight' => 6000,
+			'width'        => 300,
+			'height'       => 536
+		]);
+
+		$this->assertSame(357, $dimensions->width());
+		$this->assertSame(536, $dimensions->height());
+
+		// wide thumb from portrait source: fit height
+		$dimensions = $method->invoke($darkroom, [
+			'sourceWidth'  => 4000,
+			'sourceHeight' => 6000,
+			'width'        => 800,
+			'height'       => 200
+		]);
+
+		$this->assertSame(800, $dimensions->width());
+		$this->assertSame(1200, $dimensions->height());
 	}
 
 	public function testDefaults(): void
