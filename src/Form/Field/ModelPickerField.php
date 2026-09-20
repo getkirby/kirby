@@ -22,6 +22,7 @@ use Kirby\Uuid\Uuids;
  */
 abstract class ModelPickerField extends InputField
 {
+	use Mixin\ItemLayout;
 	use Mixin\Max;
 	use Mixin\Min;
 
@@ -39,12 +40,6 @@ abstract class ModelPickerField extends InputField
 	 * Info text for each item
 	 */
 	protected string|null $info;
-
-	/**
-	 * Changes the layout of the selected entries.
-	 * Available layouts: `list`, `cardlets`, `cards`
-	 */
-	protected string $layout = 'list';
 
 	/**
 	 * Whether each item should be clickable

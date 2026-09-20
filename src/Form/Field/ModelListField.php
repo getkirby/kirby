@@ -28,6 +28,7 @@ abstract class ModelListField extends DisplayField
 {
 	use Mixin\Batch;
 	use Mixin\EmptyState;
+	use Mixin\ItemLayout;
 	use Mixin\Limit;
 	use Mixin\Max;
 	use Mixin\Sortable;
@@ -64,11 +65,6 @@ abstract class ModelListField extends DisplayField
 	 * Info text shown next to or below the main text of each entry
 	 */
 	protected array|string|null $info;
-
-	/**
-	 * Switch the layout for the field
-	 */
-	protected string $layout = 'list';
 
 	/**
 	 * Sets the minimum number of required entries
