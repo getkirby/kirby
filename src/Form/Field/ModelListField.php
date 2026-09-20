@@ -29,6 +29,7 @@ abstract class ModelListField extends DisplayField
 	use Mixin\Batch;
 	use Mixin\EmptyState;
 	use Mixin\ItemLayout;
+	use Mixin\ItemSize;
 	use Mixin\Limit;
 	use Mixin\Max;
 	use Mixin\Sortable;
@@ -90,11 +91,6 @@ abstract class ModelListField extends DisplayField
 	 * Enables/disables the search
 	 */
 	protected bool|null $searchable;
-
-	/**
-	 * The size of the cards for `layout: cards`
-	 */
-	protected string $size = 'auto';
 
 	/**
 	 * Setup for the main text of each entry
@@ -573,11 +569,6 @@ abstract class ModelListField extends DisplayField
 		}
 
 		return $this->kirby()->request()->get('searchterm');
-	}
-
-	public function size(): string
-	{
-		return $this->size;
 	}
 
 	public function sortable(): bool
