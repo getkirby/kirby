@@ -16,7 +16,6 @@ use Kirby\Toolkit\Str;
  */
 class TagsField extends OptionsField
 {
-	use Mixin\Layout;
 	use Mixin\Separator;
 
 	/**
@@ -90,6 +89,11 @@ class TagsField extends OptionsField
 	public function icon(): string|null
 	{
 		return $this->icon;
+	}
+
+	public function layout(): string|null
+	{
+		return $this->layout;
 	}
 
 	public function search(): array|bool
