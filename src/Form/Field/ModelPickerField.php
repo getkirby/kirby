@@ -24,6 +24,7 @@ use Kirby\Uuid\Uuids;
 abstract class ModelPickerField extends InputField
 {
 	use Mixin\ItemLayout;
+	use Mixin\ItemSize;
 	use Mixin\Max;
 	use Mixin\Min;
 
@@ -67,11 +68,6 @@ abstract class ModelPickerField extends InputField
 	 * Enable/disable the search field in the picker
 	 */
 	protected bool $search = true;
-
-	/**
-	 * Layout size for cards: `tiny`, `small`, `medium`, `large`, `huge`, `full`
-	 */
-	protected string $size = 'auto';
 
 	/**
 	 * Whether to store `uuid` or `id` in the content file of the model
@@ -254,11 +250,6 @@ abstract class ModelPickerField extends InputField
 	public function search(): bool
 	{
 		return $this->search;
-	}
-
-	public function size(): string
-	{
-		return $this->size;
 	}
 
 	/**
