@@ -184,7 +184,7 @@ class JsonResponse extends Response
 	 */
 	public function pretty(): bool
 	{
-		return $this->query()['_pretty'] ?? $this->pretty;
+		return $this->pretty;
 	}
 
 	/**

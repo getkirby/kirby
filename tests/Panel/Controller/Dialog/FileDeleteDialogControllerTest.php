@@ -48,13 +48,7 @@ class FileDeleteDialogControllerTest extends FileDialogControllerTestCase
 
 	public function testSubmitForPageWithReferrer(): void
 	{
-		$this->app = $this->app->clone([
-			'request' => [
-				'query' => [
-					'_referrer' => '/pages/test/files/a.jpg'
-				]
-			]
-		]);
+		$this->setHeaders(['X-Panel-Referrer' => '/pages/test/files/a.jpg']);
 
 		$this->app->impersonate('kirby');
 
@@ -65,13 +59,7 @@ class FileDeleteDialogControllerTest extends FileDialogControllerTestCase
 
 	public function testSubmitForSiteWithReferrer(): void
 	{
-		$this->app = $this->app->clone([
-			'request' => [
-				'query' => [
-					'_referrer' => '/site/files/a.jpg'
-				]
-			]
-		]);
+		$this->setHeaders(['X-Panel-Referrer' => '/site/files/a.jpg']);
 
 		$this->app->impersonate('kirby');
 
@@ -82,13 +70,7 @@ class FileDeleteDialogControllerTest extends FileDialogControllerTestCase
 
 	public function testSubmitForUserWithReferrer(): void
 	{
-		$this->app = $this->app->clone([
-			'request' => [
-				'query' => [
-					'_referrer' => '/users/test/files/a.jpg'
-				]
-			]
-		]);
+		$this->setHeaders(['X-Panel-Referrer' => '/users/test/files/a.jpg']);
 
 		$this->app->impersonate('kirby');
 

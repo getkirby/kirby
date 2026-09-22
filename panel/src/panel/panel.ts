@@ -52,6 +52,7 @@ type Urls = {
 
 export type PanelState = {
 	config: Config;
+	csrf: string;
 	dialog: DialogState;
 	drawer: DrawerState;
 	dropdown: DropdownState;
@@ -77,6 +78,7 @@ export type PanelState = {
  */
 export const globals = [
 	"config",
+	"csrf",
 	"languages",
 	"license",
 	"multilang",
@@ -143,6 +145,7 @@ export default class Panel {
 		upload: 0,
 		uploads: 3
 	};
+	csrf: string = "";
 	languages: Languages = [];
 	license: string = "missing";
 	multilang: boolean = false;
@@ -451,7 +454,7 @@ export default class Panel {
 	async request(url: string | URL, options: Partial<PanelRequestOptions> = {}) {
 		return request(url, {
 			referrer: this.view.path ?? undefined,
-			csrf: this.system.csrf,
+			csrf: this.csrf,
 			language: this.language.code,
 			...options
 		});
