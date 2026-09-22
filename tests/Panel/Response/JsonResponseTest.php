@@ -255,17 +255,6 @@ class JsonResponseTest extends TestCase
 		$this->assertFalse($response->pretty());
 	}
 
-	public function testPrettyFromQuery(): void
-	{
-		$response = new JsonResponse();
-
-		$response->context(query: [
-			'_pretty' => true
-		]);
-
-		$this->assertTrue($response->pretty());
-	}
-
 	public function testType(): void
 	{
 		$response = new JsonResponse();

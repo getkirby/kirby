@@ -61,11 +61,11 @@ export default class Api {
 	}
 
 	/**
-	 * Returns the current CSRF token from the Panel state,
-	 * which gets replaced when the `$system` global is refreshed
+	 * Returns the current CSRF which is replaced
+	 * whenever the session is regenerated.
 	 */
 	get csrf(): string {
-		return this.panel.system.csrf;
+		return this.panel.csrf;
 	}
 
 	/**
