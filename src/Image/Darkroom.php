@@ -47,9 +47,10 @@ class Darkroom
 	}
 
 	/**
-	 * Returns the default thumb settings
+	 * Returns the default thumb options
+	 * without any driver-specific settings
 	 */
-	protected function defaults(): array
+	public static function defaultOptions(): array
 	{
 		return [
 			'blur'        => false,
@@ -63,6 +64,14 @@ class Darkroom
 			'sharpen'     => null,
 			'width'       => null,
 		];
+	}
+
+	/**
+	 * Returns the default thumb settings
+	 */
+	protected function defaults(): array
+	{
+		return static::defaultOptions();
 	}
 
 	/**
