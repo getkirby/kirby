@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { toRaw, watch } from "vue";
+import AuthError from "@/errors/AuthError";
 import Panel from "./panel";
 
 describe("panel", () => {
@@ -92,6 +93,35 @@ describe("panel", () => {
 			});
 
 			expect(panel.direction).toStrictEqual("rtl");
+		});
+	});
+
+	describe("error", () => {
+		it("should log out when the session expired", async () => {
+			const panel = Panel.create(app);
+
+			panel.set({ user: { id: "test" } });
+
+			const url = "https://getkirby.com/api/pages/test/changes/save";
+
+			// this is what the content autosave throws in the background
+			// when the session expired while the view was open
+			panel.error(
+				new AuthError("Unauthenticated", {
+					request: new Request(url),
+					response: {
+						headers: new Headers(),
+						json: {},
+						ok: false,
+						status: 401,
+						statusText: "Unauthorized",
+						text: "",
+						url
+					}
+				})
+			);
+
+			expect(window.location.href).toStrictEqual("https://getkirby.com/logout");
 		});
 	});
 

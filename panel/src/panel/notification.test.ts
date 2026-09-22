@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import type { PanelResponse } from "@/panel/request";
 import AuthError from "@/errors/AuthError";
 import JsonRequestError from "@/errors/JsonRequestError";
+import RedirectError from "@/errors/RedirectError";
 import RequestError from "@/errors/RequestError";
 import Notification from "./notification";
 import Panel from "./panel";
@@ -186,6 +187,21 @@ describe("panel.notification", () => {
 
 			expect(notification.type).toStrictEqual("error");
 			expect(notification.theme).toStrictEqual("negative");
+		});
+
+		it("should redirect to the logout view when the session expired", async () => {
+			const panel = Panel.create(app);
+			panel.set({ user: { id: "test" } });
+
+			const notification = Notification(panel);
+
+			expect(() =>
+				notification.error(
+					new AuthError("Unauthenticated", makeRequestOptions())
+				)
+			).toThrowError(RedirectError);
+
+			expect(notification.isOpen).toStrictEqual(false);
 		});
 
 		it("should escalate JsonRequestError to fatal", async () => {

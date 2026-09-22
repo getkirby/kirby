@@ -326,7 +326,11 @@ export default class Panel {
 		}
 
 		if (openNotification === true) {
-			this.notification.error(error);
+			try {
+				this.notification.error(error);
+			} catch (e) {
+				this.error(e);
+			}
 			return;
 		}
 	}
