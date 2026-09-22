@@ -381,7 +381,7 @@ class Dir
 		array|null $ignore = null,
 		bool $absolute = false
 	): array {
-		if (is_dir($dir) === false) {
+		if ($dir === '') {
 			return [];
 		}
 
@@ -389,15 +389,19 @@ class Dir
 		$ignore ??= static::$ignore;
 		$ignore   = [...$ignore, '.', '..'];
 
-		// scan for all files and dirs; the directory can be removed by a
-		// parallel request between the check above and the scan
-		$items = @scandir($dir);
+		// scan for all files and dirs; tolerate anything that is not a
+		// directory, which also covers a parallel request removing it
+		// mid-scan, while all other errors (e.g. a missing read
+		// permission) still go to the regular error handler
+		$items = Helpers::handleErrors(
+			fn (): array|false => scandir($dir),
+			fn (): bool => is_dir($dir) === false,
+			false
+		);
 
-		// @codeCoverageIgnoreStart
 		if ($items === false) {
-			return [];
+			return []; // @codeCoverageIgnore
 		}
-		// @codeCoverageIgnoreEnd
 
 		$result = array_values((array)array_diff($items, $ignore));
 
@@ -530,15 +534,17 @@ class Dir
 	 */
 	protected static function removeRecursive(string $dir): void
 	{
-		// a parallel request can remove the directory first, which
-		// is the outcome this method is after anyway
-		$items = @scandir($dir);
+		// a parallel request can remove the directory first, which is the
+		// outcome this method is after anyway
+		$items = Helpers::handleErrors(
+			fn (): array|false => scandir($dir),
+			fn (): bool => true,
+			false
+		);
 
-		// @codeCoverageIgnoreStart
 		if ($items === false) {
-			return;
+			return; // @codeCoverageIgnore
 		}
-		// @codeCoverageIgnoreEnd
 
 		foreach ($items as $childName) {
 			if (in_array($childName, ['.', '..'], true) === true) {
