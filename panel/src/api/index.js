@@ -21,7 +21,9 @@ import { rtrim } from "@/helpers/string";
  */
 export default (panel) => {
 	const api = {
-		csrf: panel.system.csrf,
+		get csrf() {
+			return panel.system.csrf;
+		},
 		endpoint: rtrim(panel.urls.api, "/"),
 		methodOverride: panel.config.api?.methodOverride ?? false,
 		ping: null,
