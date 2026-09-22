@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import Panel from "./panel.js";
 import Vue from "vue";
 
@@ -98,5 +98,29 @@ describe("panel", () => {
 		expect(panel.url("/path")).toStrictEqual(
 			new URL("https://getkirby.com/path")
 		);
+	});
+
+	it("should send the content language with every request", async () => {
+		const panel = Panel.create(Vue);
+		const fetch = vi.fn(
+			async () =>
+				new Response(JSON.stringify({}), {
+					headers: { "Content-Type": "application/json" }
+				})
+		);
+
+		vi.stubGlobal("fetch", fetch);
+
+		panel.set({
+			$language: { code: "de", name: "Deutsch" }
+		});
+
+		await panel.request("/some/view");
+
+		expect(fetch.mock.calls[0][0].headers.get("x-language")).toStrictEqual(
+			"de"
+		);
+
+		vi.unstubAllGlobals();
 	});
 });

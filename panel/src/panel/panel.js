@@ -303,6 +303,7 @@ export default {
 		return request(url, {
 			referrer: this.view.path,
 			csrf: this.system.csrf,
+			language: this.language.code,
 			...options
 		});
 	},
