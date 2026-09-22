@@ -467,7 +467,16 @@ class Version
 		VersionRules::publish($this, $language);
 
 		$latest  = $this->sibling('latest')->read($language) ?? [];
-		$changes = $this->read($language) ?? [];
+		$changes = $this->read($language);
+
+		// the rules above have checked that the version exists, but a
+		// parallel request can still discard it before it is read here,
+		// and a file that is just being created reads back empty. Neither
+		// must be mistaken for "every field was removed" below, so there
+		// is simply nothing to publish
+		if ($changes === null || $changes === []) {
+			return;
+		}
 
 		// overwrite all fields that are not in the `changes` version
 		// with a null value. The ModelWithContent::update method will merge
@@ -501,12 +510,14 @@ class Version
 		$language = Language::ensure($language);
 
 		try {
-			// make sure that the version exists
-			VersionRules::read($this, $language);
-
+			// serve fields from the cache without checking the disk
+			// again, so one request sees one state of the version
 			$fields = VersionCache::get($this, $language);
 
 			if ($fields === null) {
+				// make sure that the version exists
+				VersionRules::read($this, $language);
+
 				$fields = $this->model->storage()->read($this->id, $language);
 				$fields = $this->prepareFieldsAfterRead($fields, $language);
 
@@ -646,7 +657,7 @@ class Version
 		// merge the previous state with the new state to always
 		// update to a complete version
 		$fields = [
-			...$this->read($language),
+			...$this->read($language) ?? [],
 			...$fields
 		];
 
