@@ -394,7 +394,7 @@ export default function Upload(panel: Panel) {
 						abort: this.abort!.signal,
 						attributes: attributes,
 						filename: file.name + "." + file.extension,
-						headers: { "x-csrf": panel.system.csrf },
+						headers: { "x-csrf": panel.csrf },
 						url: this.url ?? undefined,
 						progress: (xhr, src, progress) => {
 							file.progress = progress;

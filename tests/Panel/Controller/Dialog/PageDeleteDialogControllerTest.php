@@ -117,13 +117,7 @@ class PageDeleteDialogControllerTest extends TestCase
 
 	public function testSubmitWithReferrer(): void
 	{
-		$this->app = $this->app->clone([
-			'request' => [
-				'query' => [
-					'_referrer' => 'pages/test'
-				]
-			]
-		]);
+		$this->setHeaders(['X-Panel-Referrer' => 'pages/test']);
 
 		$this->app->impersonate('kirby');
 

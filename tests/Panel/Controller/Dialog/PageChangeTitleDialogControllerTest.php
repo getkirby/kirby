@@ -222,11 +222,12 @@ class PageChangeTitleDialogControllerTest extends TestCase
 			'request' => [
 				'query' => [
 					'title' => 'test',
-					'slug'  => 'new-test',
-					'_referrer' => '/pages/test'
+					'slug'  => 'new-test'
 				]
 			]
 		]);
+
+		$this->setHeaders(['X-Panel-Referrer' => '/pages/test']);
 
 		$this->app->impersonate('kirby');
 

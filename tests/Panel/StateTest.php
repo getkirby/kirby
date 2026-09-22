@@ -26,12 +26,34 @@ class StateTest extends TestCase
 		$this->assertArrayHasKey('upload', $config);
 	}
 
+	public function testCsrf(): void
+	{
+		$state = new State();
+
+		$this->assertSame(
+			$this->app->auth()->csrfFromSession(),
+			$state->csrf()
+		);
+	}
+
+	public function testCsrfAfterLogout(): void
+	{
+		// the logout clears the token, so the next state
+		// has to hand out the regenerated one (#8502)
+		$before = $this->app->auth()->csrfFromSession();
+
+		$this->app->auth()->logout();
+
+		$this->assertNotSame($before, (new State())->csrf());
+	}
+
 	public function testData(): void
 	{
 		// without custom data
 		$state = new State();
 		$data  = $state->data();
 
+		$this->assertArrayHasKey('csrf', $data);
 		$this->assertArrayHasKey('direction', $data);
 		$this->assertArrayHasKey('language', $data);
 		$this->assertArrayHasKey('languages', $data);
@@ -107,112 +129,6 @@ class StateTest extends TestCase
 		$this->assertSame($data, $result);
 	}
 
-	public function testFilterOnlyRequest(): void
-	{
-		// empty only
-		$data   = ['foo' => 'bar'];
-		$result = (new State())->filter($data);
-		$this->assertSame($data, $result);
-
-		// via get
-		$this->setRequest(['_only' => 'a']);
-
-		$data = [
-			'a' => 'A',
-			'b' => 'B'
-		];
-
-		$result = (new State())->filter($data);
-		$this->assertSame(['a' => 'A'], $result);
-
-		// via headers
-		$this->app = $this->app->clone([
-			'request' => [
-				'headers' => [
-					'X-Panel-Only' => 'a',
-				]
-			]
-		]);
-
-		$data = [
-			'a' => 'A',
-			'b' => 'B'
-		];
-
-		$result = (new State())->filter($data);
-		$this->assertSame(['a' => 'A'], $result);
-	}
-
-	public function testFilterOnlyRequestWithGlobal(): void
-	{
-		// simulate a simple partial request
-		$this->setRequest(['_only' => 'a,urls']);
-
-		$data = [
-			'a' => 'A',
-			'b' => 'B'
-		];
-
-		$result = (new State())->filter($data);
-
-		$expected = [
-			'a' => 'A',
-			'urls' => [
-				'api'   => '/api',
-				'icons' => '/panel/assets/' . $this->app->versionHash() . '/icons.svg',
-				'panel' => '/panel',
-				'site'  => '/'
-			]
-		];
-
-		$this->assertSame($expected, $result);
-	}
-
-	public function testFilterOnlyRequestWithNestedData(): void
-	{
-		// simulate a simple partial request
-		$this->setRequest(['_only' => 'b.c']);
-
-		$data = [
-			'a' => 'A',
-			'b' => [
-				'c' => 'C'
-			]
-		];
-
-		$result = (new State())->filter($data);
-
-		$expected = [
-			'b' => [
-				'c' => 'C'
-			]
-		];
-
-		$this->assertSame($expected, $result);
-	}
-
-	public function testFilterOnlyRequestWithNestedGlobal(): void
-	{
-		// simulate a simple partial request
-		$this->setRequest(['_only' => 'a,urls.site']);
-
-		$data = [
-			'a' => 'A',
-			'b' => 'B'
-		];
-
-		$result = (new State())->filter($data);
-
-		$expected = [
-			'a' => 'A',
-			'urls' => [
-				'site' => '/'
-			]
-		];
-
-		$this->assertSame($expected, $result);
-	}
-
 	public function testFilterGlobalsRequest(): void
 	{
 		// not included
@@ -224,20 +140,8 @@ class StateTest extends TestCase
 		$result = (new State())->filter($data);
 		$this->assertSame($data, $result);
 
-		// via query
-		$this->setRequest(['_globals' => 'translation']);
-
-		$data = (new State())->filter([]);
-		$this->assertArrayHasKey('translation', $data);
-
 		// via header
-		$this->app = $this->app->clone([
-			'request' => [
-				'headers' => [
-					'X-Panel-Globals' => 'translation'
-				]
-			]
-		]);
+		$this->setHeaders(['X-Panel-Globals' => 'translation']);
 
 		$data = (new State())->filter([]);
 		$this->assertArrayHasKey('translation', $data);
@@ -269,7 +173,6 @@ class StateTest extends TestCase
 
 		// $system
 		$this->assertSame(Str::$ascii, $system['ascii']);
-		$this->assertSame(csrf(), $system['csrf']);
 		$this->assertFalse($system['isLocal']);
 		$this->assertArrayHasKey('de', $system['locales']);
 		$this->assertArrayHasKey('en', $system['locales']);
@@ -489,7 +392,6 @@ class StateTest extends TestCase
 		$system = A::apply($system);
 
 		$this->assertArrayHasKey('ascii', $system);
-		$this->assertArrayHasKey('csrf', $system);
 		$this->assertArrayHasKey('isLocal', $system);
 		$this->assertArrayHasKey('locales', $system);
 		$this->assertArrayHasKey('slugs', $system);
