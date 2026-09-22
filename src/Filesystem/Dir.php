@@ -389,8 +389,17 @@ class Dir
 		$ignore ??= static::$ignore;
 		$ignore   = [...$ignore, '.', '..'];
 
-		// scan for all files and dirs
-		$result = array_values((array)array_diff(scandir($dir), $ignore));
+		// scan for all files and dirs; the directory can be removed by a
+		// parallel request between the check above and the scan
+		$items = @scandir($dir);
+
+		// @codeCoverageIgnoreStart
+		if ($items === false) {
+			return [];
+		}
+		// @codeCoverageIgnoreEnd
+
+		$result = array_values((array)array_diff($items, $ignore));
 
 		// add absolute paths
 		if ($absolute === true) {
@@ -521,7 +530,17 @@ class Dir
 	 */
 	protected static function removeRecursive(string $dir): void
 	{
-		foreach (scandir($dir) as $childName) {
+		// a parallel request can remove the directory first, which
+		// is the outcome this method is after anyway
+		$items = @scandir($dir);
+
+		// @codeCoverageIgnoreStart
+		if ($items === false) {
+			return;
+		}
+		// @codeCoverageIgnoreEnd
+
+		foreach ($items as $childName) {
 			if (in_array($childName, ['.', '..'], true) === true) {
 				continue;
 			}
