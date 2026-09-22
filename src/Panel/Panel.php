@@ -107,16 +107,14 @@ class Panel
 	}
 
 	/**
-	 * Checks for a Panel request via get parameters or headers
+	 * Checks for a Panel request via the `X-Panel` header
 	 */
 	public function isStateRequest(): bool
 	{
 		$request = $this->kirby->request();
 
 		if ($request->method() === 'GET') {
-			return
-				(bool)($request->get('_json') ??
-				$request->header('X-Panel'));
+			return (bool)$request->header('X-Panel');
 		}
 
 		return false;
@@ -132,17 +130,18 @@ class Panel
 	}
 
 	/**
-	 * Returns a JSON response
-	 * for State calls
+	 * Returns a JSON response for State calls
 	 */
 	public static function json(array $data, int $code = 200): Response
 	{
-		$request = App::instance()->request();
-
-		return Response::json($data, $code, $request->get('_pretty'), [
-			'X-Panel'       => 'true',
-			'Cache-Control' => 'no-store, private'
-		]);
+		return Response::json(
+			body: $data,
+			code: $code,
+			headers: [
+				'X-Panel'       => 'true',
+				'Cache-Control' => 'no-store, private'
+			]
+		);
 	}
 
 	/**
@@ -193,9 +192,7 @@ class Panel
 	{
 		$request = $this->kirby->request();
 
-		$referrer = $request->header('X-Panel-Referrer')
-				 ?? $request->get('_referrer')
-				 ?? '';
+		$referrer = $request->header('X-Panel-Referrer') ?? '';
 
 		return '/' . trim($referrer, '/');
 	}

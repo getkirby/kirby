@@ -13,11 +13,7 @@ return function ($kirby) {
 				'auth'    => false,
 				'action'  => function () use ($kirby) {
 					$kirby->auth()->logout();
-
-					// the Panel follows this redirect in place and has to
-					// refresh the globals it cached, above all the CSRF token
-					// that has just been removed by the logout
-					Panel::go('login?_globals=$system,$translation');
+					Panel::go('login');
 				},
 			]
 		]
