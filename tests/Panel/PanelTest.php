@@ -48,7 +48,7 @@ class PanelTest extends TestCase
 		$_GET = [];
 
 		// clean up $_SERVER
-		unset($_SERVER['SERVER_SOFTWARE']);
+		unset($_SERVER['SERVER_SOFTWARE'], $_SERVER['HTTP_X_LANGUAGE']);
 	}
 
 	public function testArea(): void
@@ -784,6 +784,129 @@ class PanelTest extends TestCase
 
 		$this->assertSame('de', $language);
 		$this->assertSame('de', $this->app->session()->get('panel.language'));
+		$this->assertSame('de', $this->app->language()->code());
+	}
+
+	public function testSetLanguageViaHeader(): void
+	{
+		// switch via the request header of the Panel tab
+		// needs to come first before the app is cloned
+		$_SERVER['HTTP_X_LANGUAGE'] = 'de';
+
+		$this->app = $this->app->clone([
+			'options' => [
+				'languages' => true,
+			],
+			'languages' => [
+				[
+					'code' => 'en',
+					'name' => 'English',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+					'name' => 'Deutsch',
+				]
+			]
+		]);
+
+		$language = Panel::setLanguage();
+
+		$this->assertSame('de', $language);
+		$this->assertSame('de', $this->app->session()->get('panel.language'));
+		$this->assertSame('de', $this->app->language()->code());
+	}
+
+	public function testSetLanguageViaHeaderOverridesSession(): void
+	{
+		// the session is shared between all browser tabs, while the
+		// header is sent by the tab that makes the request
+		$_SERVER['HTTP_X_LANGUAGE'] = 'en';
+
+		$this->app = $this->app->clone([
+			'options' => [
+				'languages' => true,
+			],
+			'languages' => [
+				[
+					'code' => 'en',
+					'name' => 'English',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+					'name' => 'Deutsch',
+				]
+			]
+		]);
+
+		// another tab has switched to German before
+		$this->app->session()->set('panel.language', 'de');
+
+		$language = Panel::setLanguage();
+
+		$this->assertSame('en', $language);
+		$this->assertSame('en', $this->app->session()->get('panel.language'));
+		$this->assertSame('en', $this->app->language()->code());
+	}
+
+	public function testSetLanguageViaGetOverridesHeader(): void
+	{
+		// the query parameter switches the language, so it has to
+		// win over the language the tab is currently on
+		$_GET['language'] = 'de';
+		$_SERVER['HTTP_X_LANGUAGE'] = 'en';
+
+		$this->app = $this->app->clone([
+			'options' => [
+				'languages' => true,
+			],
+			'languages' => [
+				[
+					'code' => 'en',
+					'name' => 'English',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+					'name' => 'Deutsch',
+				]
+			]
+		]);
+
+		$language = Panel::setLanguage();
+
+		$this->assertSame('de', $language);
+		$this->assertSame('de', $this->app->session()->get('panel.language'));
+		$this->assertSame('de', $this->app->language()->code());
+	}
+
+	public function testSetLanguageViaSession(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'languages' => true,
+			],
+			'languages' => [
+				[
+					'code' => 'en',
+					'name' => 'English',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+					'name' => 'Deutsch',
+				]
+			]
+		]);
+
+		// the initial document request of a new tab has neither
+		// a query parameter nor a header
+		$this->app->session()->set('panel.language', 'de');
+
+		$language = Panel::setLanguage();
+
+		$this->assertSame('de', $language);
 		$this->assertSame('de', $this->app->language()->code());
 	}
 
