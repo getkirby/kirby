@@ -126,6 +126,24 @@ class StatTest extends TestCase
 		);
 	}
 
+	public function testEmptyValues(): void
+	{
+		foreach (['', ['en' => ''], '{{ page.missing }}'] as $empty) {
+			$stat = Stat::from(
+				input: [
+					'label' => $empty,
+					'value' => $empty,
+					'info'  => $empty,
+				],
+				model: $this->model
+			);
+
+			$this->assertSame('', $stat->label());
+			$this->assertSame('', $stat->value());
+			$this->assertSame('', $stat->info());
+		}
+	}
+
 	public function testFrom(): void
 	{
 		// from array with model
