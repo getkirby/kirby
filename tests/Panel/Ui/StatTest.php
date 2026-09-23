@@ -131,6 +131,7 @@ class StatTest extends TestCase
 	{
 		return [
 			[''],
+			[[]],
 			[['en' => '']],
 			['{{ page.missing }}'],
 		];
