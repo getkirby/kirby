@@ -255,4 +255,22 @@ class StatTest extends TestCase
 			queryable: true,
 		);
 	}
+
+	public function testZeroValues(): void
+	{
+		foreach (['0', 0, 0.0] as $zero) {
+			$stat = Stat::from(
+				input: [
+					'label' => $zero,
+					'value' => $zero,
+					'info'  => $zero,
+				],
+				model: $this->model
+			);
+
+			$this->assertSame('0', $stat->label());
+			$this->assertSame('0', $stat->value());
+			$this->assertSame('0', $stat->info());
+		}
+	}
 }

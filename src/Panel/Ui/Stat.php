@@ -132,7 +132,11 @@ class Stat extends Component
 
 	protected function i18n(string|array|null $param = null): string|null
 	{
-		return empty($param) === false ? I18n::translate($param, $param) : null;
+		if ($param === null) {
+			return null;
+		}
+
+		return I18n::translate($param, $param);
 	}
 
 	public function value(): string
