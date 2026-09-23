@@ -83,6 +83,7 @@
 						:data-selecting="selecting"
 						:data-selectable="rowIsSelectable(row)"
 						:data-sortable="rowIsSortable(row)"
+						:data-theme="row.theme"
 					>
 						<!-- Index & drag handle -->
 						<td
@@ -97,7 +98,12 @@
 									rowIndex
 								}"
 							>
-								<div class="k-table-index" v-text="index + rowIndex" />
+								<k-icon
+									v-if="row.theme === 'skeleton'"
+									class="k-table-index"
+									type="loader"
+								/>
+								<div v-else class="k-table-index" v-text="index + rowIndex" />
 							</slot>
 
 							<k-sort-handle
@@ -648,6 +654,16 @@ export default {
 	--button-width: 100%;
 	--button-height: 100%;
 	outline-offset: -2px;
+}
+
+/* Theme: skeleton */
+.k-table tr[data-theme="skeleton"] .k-table-column::after {
+	content: "";
+	display: block;
+	height: 0.75em;
+	margin-inline: var(--table-cell-padding);
+	border-radius: var(--rounded-sm);
+	background: light-dark(var(--color-gray-250), var(--color-gray-800));
 }
 
 /* Empty */

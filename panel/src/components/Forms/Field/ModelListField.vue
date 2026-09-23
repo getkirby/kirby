@@ -32,7 +32,7 @@
 					:columns="state.columns"
 					:empty="emptyProps"
 					:fields="fields"
-					:items="items"
+					:items="isLoading ? skeleton : items"
 					:layout="layout"
 					:pagination="state.pagination"
 					:selected="selected"
@@ -72,12 +72,15 @@ export default {
 		 * Shows the batch select interface
 		 */
 		batch: Boolean,
+		columns: {
+			type: [Array, Object],
+			default: () => ({})
+		},
 		/**
 		 * Text for the empty state box
 		 */
 		empty: String,
 		endpoints: Object,
-		initial: Object,
 		/**
 		 * Layout of the collection
 		 * @values list, cardlets, cards, table
@@ -110,9 +113,16 @@ export default {
 	},
 	data() {
 		return {
-			fetched: null,
+			error: null,
+			isLoading: true,
 			isSearching: false,
-			searchterm: null
+			searchterm: null,
+			state: {
+				columns: this.columns,
+				models: [],
+				pagination: { limit: 0, offset: 0, page: 1, total: 0 },
+				sortable: false
+			}
 		};
 	},
 	computed: {
@@ -161,11 +171,24 @@ export default {
 		},
 		emptyProps() {
 			return {
-				icon: this.icon,
-				text: this.isSearching
-					? this.$t("search.results.none")
-					: (this.empty ?? this.$t(this.$options.type + ".empty"))
+				icon: this.error !== null ? "alert" : this.icon,
+				text: this.emptyText
 			};
+		},
+		emptyText() {
+			if (this.isLoading === true) {
+				return this.$t("loading");
+			}
+
+			if (this.error !== null) {
+				return this.error;
+			}
+
+			if (this.isSearching === true) {
+				return this.$t("search.results.none");
+			}
+
+			return this.empty ?? this.$t(this.$options.type + ".empty");
 		},
 		/**
 		 * The icon of the empty state
@@ -215,17 +238,24 @@ export default {
 				};
 			});
 		},
-		state() {
-			return this.fetched ?? this.initial;
+		skeleton() {
+			return [
+				{
+					id: "skeleton",
+					image: this.layout !== "table" ? { icon: "loader" } : null,
+					theme: "skeleton"
+				}
+			];
 		},
 		/**
-		 * The list is only validated while it shows everything,
-		 * as a search narrows it down to a part of the collection
+		 * The list is only validated while it shows everything.
+		 * A search narrows it down to a part of the collection
+		 * and the loading list knows no entries at all.
 		 */
 		validator() {
 			const count = this.state.pagination.total;
 
-			if (this.searchterm) {
+			if (this.isLoading === true || this.searchterm) {
 				return { count };
 			}
 
@@ -233,28 +263,20 @@ export default {
 		}
 	},
 	watch: {
-		// a new view always brings unfiltered state for the first page,
-		// so an active search or page has to be restored through the endpoint
-		initial() {
-			if (this.searchterm || this.state.pagination.page > 1) {
-				this.reload();
-			} else {
-				this.fetched = null;
-			}
-		},
 		searchterm() {
 			this.filter();
 		}
 	},
 	created() {
 		this.filter = debounce(this.filter, 200);
+		this.onRefresh = debounce(this.onRefresh, 0);
 
 		for (const event of this.refreshEvents()) {
 			this.$events.on(event, this.onRefresh);
 		}
 	},
 	mounted() {
-		this.$events.emit("field.loaded", this);
+		this.reload();
 	},
 	unmounted() {
 		for (const event of this.refreshEvents()) {
@@ -287,6 +309,12 @@ export default {
 			this.searchterm = null;
 		},
 		onSort() {},
+		/**
+		 * Events after which the list has to load its entries
+		 * again. Every action that changes what the list shows
+		 * has to be in here, as the view no longer carries the
+		 * entries along when it reloads.
+		 */
 		refreshEvents() {
 			return ["model.update"];
 		},
@@ -298,14 +326,17 @@ export default {
 			this.isProcessing = true;
 
 			try {
-				this.fetched = await this.$api.get(this.endpoints.field, {
+				this.state = await this.$api.get(this.endpoints.field, {
 					page: this.state.pagination.page,
 					searchterm: this.searchterm,
 					...query
 				});
+				this.error = null;
 			} catch (error) {
+				this.error = error.message;
 				this.$panel.error(error);
 			} finally {
+				this.isLoading = false;
 				this.isProcessing = false;
 			}
 
