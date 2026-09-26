@@ -13,10 +13,10 @@ trait Pretty
 	/**
 	 * Saves pretty printed JSON in text files
 	 */
-	protected bool|null $pretty;
+	protected bool $pretty = false;
 
 	public function pretty(): bool
 	{
-		return $this->pretty ?? false;
+		return $this->pretty;
 	}
 }

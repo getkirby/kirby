@@ -25,7 +25,7 @@ class InfoField extends DisplayField
 	) {
 		parent::__construct(...$args);
 
-		$this->icon  = $icon;
+		$this->icon  = $icon ?? $this->icon;
 		$this->text  = $text;
 		$this->theme = $theme;
 	}

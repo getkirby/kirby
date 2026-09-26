@@ -2,6 +2,7 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Reflection\Attributes\Derived;
 use Kirby\Toolkit\Date;
 use Kirby\Toolkit\Str;
 
@@ -17,13 +18,21 @@ class DateField extends DateTimeField
 	/**
 	 * Activate/deactivate the dropdown calendar
 	 */
-	protected bool|null $calendar;
+	protected bool $calendar = true;
 
 	/**
 	 * Custom format (dayjs tokens: `DD`, `MM`, `YYYY`) that is
 	 * used to display the field in the Panel
 	 */
-	protected string|null $display;
+	protected string|null $display = 'YYYY-MM-DD';
+
+	/**
+	 * Defines a custom format that is used when the field is saved
+	 */
+	#[Derived]
+	protected string|null $format = null;
+
+	protected string|null $icon = 'calendar';
 
 	/**
 	 * Latest date, which can be selected/saved (Y-m-d)
@@ -38,12 +47,13 @@ class DateField extends DateTimeField
 	/**
 	 * Round to the nearest: sub-options for `unit` (day) and `size` (1)
 	 */
-	protected array|int|string|null $step;
+	#[Derived]
+	protected array $step = ['size' => 1, 'unit' => 'day'];
 
 	/**
 	 * Pass `true` or an array of time field options to show the time selector.
 	 */
-	protected bool|array|null $time;
+	protected bool|array $time = false;
 
 	public function __construct(
 		bool|null $calendar = null,
@@ -52,8 +62,8 @@ class DateField extends DateTimeField
 	) {
 		parent::__construct(...$args);
 
-		$this->calendar = $calendar;
-		$this->time     = $time;
+		$this->calendar = $calendar ?? $this->calendar;
+		$this->time     = $time ?? $this->time;
 	}
 
 	/**
@@ -68,12 +78,12 @@ class DateField extends DateTimeField
 
 	public function calendar(): bool
 	{
-		return $this->calendar ?? true;
+		return $this->calendar;
 	}
 
 	public function display(): string
 	{
-		$display = $this->i18n($this->display) ?? 'YYYY-MM-DD';
+		$display = (string)($this->i18n($this->display) ?? $this->display);
 
 		// a date marker is uppercase, whatever case it was written in,
 		// but what the pattern escapes is printed as it is
@@ -97,11 +107,6 @@ class DateField extends DateTimeField
 		}
 
 		return 'Y-m-d H:i:s';
-	}
-
-	public function icon(): string
-	{
-		return $this->icon ?? 'calendar';
 	}
 
 	public function max(): string|null
@@ -128,10 +133,7 @@ class DateField extends DateTimeField
 		$time = $this->time();
 
 		if ($time === false || empty($time['step']) === true) {
-			return Date::stepConfig($this->step, [
-				'size' => 1,
-				'unit' => 'day'
-			]);
+			return $this->step;
 		}
 
 		return Date::stepConfig($time['step'], [
@@ -142,7 +144,7 @@ class DateField extends DateTimeField
 
 	public function time(): array|bool
 	{
-		if ($this->time === null || $this->time === false) {
+		if ($this->time === false) {
 			return false;
 		}
 

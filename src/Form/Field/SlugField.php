@@ -16,6 +16,10 @@ class SlugField extends TextField
 	 */
 	protected string|null $allow;
 
+	protected bool $counter = false;
+
+	protected string|null $icon = 'url';
+
 	/**
 	 * Set prefix for the help text
 	 */
@@ -31,7 +35,7 @@ class SlugField extends TextField
 	 * Set to object with keys `field` and `text` to add
 	 * button to generate from another field
 	 */
-	protected array|bool|null $wizard;
+	protected array|bool $wizard = false;
 
 	public function __construct(
 		string|null $allow = null,
@@ -45,22 +49,12 @@ class SlugField extends TextField
 		$this->allow  = $allow;
 		$this->path   = $path;
 		$this->sync   = $sync;
-		$this->wizard = $wizard;
+		$this->wizard = $wizard ?? $this->wizard;
 	}
 
 	public function allow(): string|null
 	{
 		return $this->allow;
-	}
-
-	public function counter(): bool
-	{
-		return $this->counter ?? false;
-	}
-
-	public function icon(): string
-	{
-		return $this->icon ?? 'url';
 	}
 
 	public function label(): string
@@ -95,6 +89,6 @@ class SlugField extends TextField
 
 	public function wizard(): array|bool
 	{
-		return $this->wizard ?? false;
+		return $this->wizard;
 	}
 }

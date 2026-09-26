@@ -25,8 +25,8 @@ class CheckboxesField extends OptionsField
 	) {
 		parent::__construct(...$args);
 
-		$this->batch   = $batch;
-		$this->columns = $columns;
+		$this->batch   = $batch ?? $this->batch;
+		$this->columns = $columns ?? $this->columns;
 	}
 
 	public function fill(mixed $value): static

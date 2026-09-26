@@ -18,6 +18,7 @@ use Kirby\Form\Mixin\Min;
 use Kirby\Form\Mixin\Pretty;
 use Kirby\Panel\Controller\Dialog\FieldDialogController;
 use Kirby\Panel\Controller\Drawer\FieldDrawerController;
+use Kirby\Reflection\Attributes\Derived;
 use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Str;
 use Throwable;
@@ -38,6 +39,7 @@ class BlocksField extends InputField
 	/**
 	 * Defines the allowed block types in the blocks field. See below.
 	 */
+	#[Derived(default: Fieldsets::DEFAULT)]
 	protected array|null $fieldsets;
 
 	/**
@@ -53,7 +55,7 @@ class BlocksField extends InputField
 	/**
 	 * Group name to identify all block fields that can share blocks via drag & drop
 	 */
-	protected string|null $group;
+	protected string $group = 'blocks';
 
 	protected array $value = [];
 
@@ -71,10 +73,10 @@ class BlocksField extends InputField
 
 		$this->empty     = $empty;
 		$this->fieldsets = $fieldsets;
-		$this->group     = $group;
+		$this->group     = $group ?? $this->group;
 		$this->max       = $max;
 		$this->min       = $min;
-		$this->pretty    = $pretty;
+		$this->pretty    = $pretty ?? $this->pretty;
 	}
 
 	public function api(): array
@@ -282,7 +284,7 @@ class BlocksField extends InputField
 
 	public function group(): string
 	{
-		return $this->group ?? 'blocks';
+		return $this->group;
 	}
 
 	/**

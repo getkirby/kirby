@@ -11,16 +11,15 @@ namespace Kirby\Form\Field;
  */
 class MultiselectField extends TagsField
 {
+	protected string $accept = 'options';
+
+	protected string|null $icon = 'checklist';
+
 	public function accept(): string
 	{
-		return match($this->accept) {
+		return match ($this->accept) {
 			'all'   => 'all',
 			default => 'options'
 		};
-	}
-
-	public function icon(): string
-	{
-		return $this->icon ?? 'checklist';
 	}
 }

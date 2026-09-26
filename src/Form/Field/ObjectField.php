@@ -29,7 +29,7 @@ class ObjectField extends InputField implements ProvidesNestedForm
 		parent::__construct(...$args, default: $default);
 
 		$this->empty  = $empty;
-		$this->fields = $fields;
+		$this->fields = $fields ?? $this->fields;
 	}
 
 	public function props(): array

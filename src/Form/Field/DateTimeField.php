@@ -19,16 +19,16 @@ abstract class DateTimeField extends InputField
 
 	public const ISO = 'Y-m-d H:i:s';
 
-	protected string|null $display;
+	protected string|null $display = null;
 
 	/**
 	 * Defines a custom format that is used when the field is saved
 	 */
-	protected string|null $format;
+	protected string|null $format = null;
 
 	protected string|null $max;
 	protected string|null $min;
-	protected array|int|string|null $step;
+	protected array $step = [];
 
 	protected Date|null $value = null;
 
@@ -43,12 +43,12 @@ abstract class DateTimeField extends InputField
 	) {
 		parent::__construct(...$args);
 
-		$this->display = $display;
-		$this->format  = $format;
-		$this->icon    = $icon;
+		$this->display = $display ?? $this->display;
+		$this->format  = $format ?? $this->format;
+		$this->icon    = $icon ?? $this->icon;
 		$this->max     = $max;
 		$this->min     = $min;
-		$this->step    = $step;
+		$this->step    = Date::stepConfig($step, $this->step);
 	}
 
 	public function default(): string|null
@@ -68,8 +68,6 @@ abstract class DateTimeField extends InputField
 	}
 
 	abstract public function format(): string;
-
-	abstract public function icon(): string;
 
 	public function max(): string|null
 	{

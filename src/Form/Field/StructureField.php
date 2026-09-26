@@ -47,22 +47,17 @@ class StructureField extends InputField implements ProvidesNestedForm
 	) {
 		parent::__construct(...$args, default: $default);
 
-		$this->batch     = $batch;
+		$this->batch     = $batch ?? $this->batch;
 		$this->columns   = $columns;
-		$this->duplicate = $duplicate;
+		$this->duplicate = $duplicate ?? $this->duplicate;
 		$this->empty     = $empty;
-		$this->fields    = $fields;
-		$this->limit     = $limit;
+		$this->fields    = $fields ?? $this->fields;
+		$this->limit     = $limit ?? $this->limit;
 		$this->max       = $max;
 		$this->min       = $min;
-		$this->prepend   = $prepend;
-		$this->sortable  = $sortable;
+		$this->prepend   = $prepend ?? $this->prepend;
+		$this->sortable  = $sortable ?? $this->sortable;
 		$this->sortBy    = $sortBy;
-	}
-
-	public function duplicate(): bool
-	{
-		return $this->duplicate ?? true;
 	}
 
 	public function fill(mixed $value): static

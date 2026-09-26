@@ -11,6 +11,7 @@ use Kirby\Form\Interface\ProvidesAcceptedBlueprints;
 use Kirby\Panel\Collector\PagesCollector;
 use Kirby\Panel\Controller\Dialog\PageCreateDialogController;
 use Kirby\Panel\Ui\Item\PageItem;
+use Kirby\Reflection\Attributes\Derived;
 use Kirby\Toolkit\A;
 use Throwable;
 
@@ -27,6 +28,8 @@ class PageListField extends ModelListField implements ProvidesAcceptedBlueprints
 {
 	public const string TYPE = 'pages';
 
+	protected array|string|null $text = '{{ model.title }}';
+
 	/**
 	 * Templates that may be added or `false` to disable page creation
 	 */
@@ -35,7 +38,7 @@ class PageListField extends ModelListField implements ProvidesAcceptedBlueprints
 	/**
 	 * Filters the pages by their status
 	 */
-	protected string|null $status;
+	protected string $status = 'all';
 
 	/**
 	 * Filters the list by a single template
@@ -46,12 +49,13 @@ class PageListField extends ModelListField implements ProvidesAcceptedBlueprints
 	 * Filters the list by templates and sets the template
 	 * options for newly created pages
 	 */
-	protected array|string|null $templates;
+	#[Derived]
+	protected array|string|null $templates = null;
 
 	/**
 	 * Excludes the given templates from the list
 	 */
-	protected array|string|null $templatesIgnore;
+	protected array|string $templatesIgnore = [];
 
 	public function __construct(
 		array|string|bool|null $create = null,
@@ -64,10 +68,10 @@ class PageListField extends ModelListField implements ProvidesAcceptedBlueprints
 		parent::__construct(...$args);
 
 		$this->create          = $create;
-		$this->status          = $status;
+		$this->status          = $status ?? $this->status;
 		$this->template        = $template;
 		$this->templates       = $templates;
-		$this->templatesIgnore = $templatesIgnore;
+		$this->templatesIgnore = $templatesIgnore ?? $this->templatesIgnore;
 	}
 
 	/**
@@ -267,11 +271,6 @@ class PageListField extends ModelListField implements ProvidesAcceptedBlueprints
 	public function templatesIgnore(): array
 	{
 		return A::wrap($this->templatesIgnore);
-	}
-
-	public function text(): string
-	{
-		return parent::text() ?? '{{ model.title }}';
 	}
 
 	/**

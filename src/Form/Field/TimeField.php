@@ -2,7 +2,7 @@
 
 namespace Kirby\Form\Field;
 
-use Kirby\Toolkit\Date;
+use Kirby\Reflection\Attributes\Derived;
 
 /**
  * Time field
@@ -15,11 +15,16 @@ class TimeField extends DateTimeField
 {
 	public const ISO = 'H:i:s';
 
+	protected string|null $format = self::ISO;
+
 	/**
 	 * Custom format (dayjs tokens: `HH`, `hh`, `mm`, `ss`, `a`) that is
 	 * used to display the field in the Panel
 	 */
-	protected string|null $display;
+	#[Derived]
+	protected string|null $display = null;
+
+	protected string|null $icon = 'clock';
 
 	/**
 	 * Latest time, which can be selected/saved (H:i or H:i:s)
@@ -35,12 +40,12 @@ class TimeField extends DateTimeField
 	 * `12` or `24` hour notation. If `12`, an AM/PM selector will be shown.
 	 * If `display` is defined, that option will take priority.
 	 */
-	protected int|null $notation;
+	protected int $notation = 24;
 
 	/**
 	 * Round to the nearest: sub-options for `unit` (minute) and `size` (5)
 	 */
-	protected array|int|string|null $step;
+	protected array $step = ['size' => 5, 'unit' => 'minute'];
 
 	public function __construct(
 		int|null $notation = null,
@@ -48,7 +53,7 @@ class TimeField extends DateTimeField
 	) {
 		parent::__construct(...$args);
 
-		$this->notation = $notation;
+		$this->notation = $notation ?? $this->notation;
 	}
 
 	public function display(): string
@@ -63,11 +68,6 @@ class TimeField extends DateTimeField
 	public function format(): string
 	{
 		return $this->format ?? static::ISO;
-	}
-
-	public function icon(): string
-	{
-		return $this->icon ?? 'clock';
 	}
 
 	public function notation(): int
@@ -88,10 +88,7 @@ class TimeField extends DateTimeField
 
 	public function step(): array
 	{
-		return Date::stepConfig($this->step, [
-			'size' => 5,
-			'unit' => 'minute',
-		]);
+		return $this->step;
 	}
 
 	protected function validations(): array

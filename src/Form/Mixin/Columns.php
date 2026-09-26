@@ -13,10 +13,10 @@ trait Columns
 	/**
 	 * Arranges the inputs in the given number of columns
 	 */
-	protected int|null $columns;
+	protected int $columns = 1;
 
 	public function columns(): int
 	{
-		return $this->columns ?? 1;
+		return $this->columns;
 	}
 }

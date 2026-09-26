@@ -11,7 +11,9 @@ namespace Kirby\Form\Field;
  */
 class RangeField extends NumberField
 {
-	protected array|bool|null $tooltip;
+	protected float|null $max = 100;
+
+	protected array|bool $tooltip = true;
 
 	public function __construct(
 		array|bool|null $tooltip = null,
@@ -19,12 +21,7 @@ class RangeField extends NumberField
 	) {
 		parent::__construct(...$args);
 
-		$this->tooltip = $tooltip;
-	}
-
-	public function max(): float|null
-	{
-		return $this->max ?? 100;
+		$this->tooltip = $tooltip ?? $this->tooltip;
 	}
 
 	public function props(): array
@@ -44,6 +41,6 @@ class RangeField extends NumberField
 			];
 		}
 
-		return $this->tooltip ?? true;
+		return $this->tooltip;
 	}
 }
