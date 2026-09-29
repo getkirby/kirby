@@ -187,6 +187,33 @@ class I18nTest extends TestCase
 		$this->assertSame('Save2', I18n::translate('save2'));
 	}
 
+	public function testTranslateI18nKeyWithEmptyString(): void
+	{
+		I18n::$translations = [
+			'en' => ['save' => 'Save'],
+			'fr' => ['save' => '']
+		];
+
+		I18n::$locale = 'fr';
+		$this->assertSame('Save', I18n::translate('save'));
+	}
+
+	public function testTranslateI18nKeyWithZero(): void
+	{
+		I18n::$translations = [
+			'en' => ['count' => 'None'],
+			'fr' => ['count' => '0']
+		];
+
+		I18n::$locale = 'fr';
+		$this->assertSame('0', I18n::translate('count'));
+
+		// from fallback locale
+		I18n::$locale = 'es';
+		I18n::$fallback = ['fr', 'en'];
+		$this->assertSame('0', I18n::translate('count'));
+	}
+
 	public function testTranslateArray(): void
 	{
 		$this->assertSame('Save', I18n::translate(['en' => 'Save']));
@@ -297,6 +324,47 @@ class I18nTest extends TestCase
 				['es' => 'Alguna', 'de' => 'Einzige']
 			)
 		);
+	}
+
+	public function testTranslateArrayWithEmptyString(): void
+	{
+		$this->assertSame(
+			'Keine',
+			I18n::translate(['de' => 'Keine', 'en' => ''])
+		);
+	}
+
+	public function testTranslateArrayWithZero(): void
+	{
+		$this->assertSame('0', I18n::translate(['de' => 'Keine', 'en' => '0']));
+		$this->assertSame('0', I18n::translate(['de' => 'Keine', 'en' => 0]));
+
+		// short locale
+		I18n::$locale = 'es_ES';
+		$this->assertSame('0', I18n::translate(['de' => 'Keine', 'es' => '0']));
+
+		// from fallback array
+		$this->assertSame(
+			'0',
+			I18n::translate(['de' => 'Keine'], ['de' => 'Keine', 'es' => '0'])
+		);
+
+		// from fallback locale
+		I18n::$locale = 'fr';
+		I18n::$fallback = ['es', 'en'];
+		$this->assertSame(
+			'0',
+			I18n::translate(['de' => 'Keine', 'es' => '0', 'en' => 'None'])
+		);
+	}
+
+	public function testTranslateArrayWildcardWithZero(): void
+	{
+		I18n::$translations = [
+			'en' => ['count' => '0']
+		];
+
+		$this->assertSame('0', I18n::translate(['de' => 'Keine', '*' => 'count']));
 	}
 
 	public function testTranslateCount(): void
