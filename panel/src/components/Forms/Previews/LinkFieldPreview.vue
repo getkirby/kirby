@@ -73,7 +73,9 @@ export default {
 		},
 		// page titles are translated, the value might not be
 		"$panel.language.code"() {
-			this.load();
+			if (this.currentType === "page") {
+				this.load();
+			}
 		},
 		type() {
 			this.model = null;
