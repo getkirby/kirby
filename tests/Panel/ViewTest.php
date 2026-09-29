@@ -268,6 +268,27 @@ class ViewTest extends TestCase
 		$this->assertSame('https://localhost.com:8888/foo/bar?foo=bar', $data['$url']);
 	}
 
+	public function testDataWithQuery(): void
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'page'     => 2,
+					'search'   => 'foo',
+					'_globals' => '$system',
+					'_json'    => true,
+					'_only'    => '$view',
+					'_pretty'  => true
+				]
+			]
+		]);
+
+		$view = A::apply(View::data())['$view'];
+
+		// the Fiber params must not end up in the restored Panel URL
+		$this->assertSame(['page' => 2, 'search' => 'foo'], $view['query']);
+	}
+
 	public function testDataWithCustomProps(): void
 	{
 		$data = View::data([
