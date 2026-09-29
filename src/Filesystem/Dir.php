@@ -381,7 +381,7 @@ class Dir
 		array|null $ignore = null,
 		bool $absolute = false
 	): array {
-		if ($dir === '') {
+		if (is_dir($dir) === false) {
 			return [];
 		}
 
@@ -389,18 +389,16 @@ class Dir
 		$ignore ??= static::$ignore;
 		$ignore   = [...$ignore, '.', '..'];
 
-		// scan for all files and dirs; tolerate anything that is not a
-		// directory, which also covers a parallel request removing it
-		// mid-scan, while all other errors (e.g. a missing read
-		// permission) still go to the regular error handler
+		// a parallel request can remove the directory before the scan;
+		// any other scan error must not pass for an empty directory
 		$items = Helpers::handleErrors(
 			fn (): array|false => scandir($dir),
 			fn (): bool => is_dir($dir) === false,
-			false
+			[]
 		);
 
 		if ($items === false) {
-			return []; // @codeCoverageIgnore
+			throw new Exception('The directory "' . $dir . '" could not be read');
 		}
 
 		$result = array_values((array)array_diff($items, $ignore));

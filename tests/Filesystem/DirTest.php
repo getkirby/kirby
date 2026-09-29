@@ -588,6 +588,40 @@ class DirTest extends TestCase
 		$this->assertSame($expected, $files);
 	}
 
+	public function testReadUnreadable(): void
+	{
+		if (posix_getuid() === 0) {
+			$this->markTestSkipped('Cannot test an unreadable directory as root');
+		}
+
+		$dir = static::TMP . '/unreadable';
+
+		Dir::make($dir);
+		touch($dir . '/a.jpg');
+		chmod($dir, 0000);
+
+		// a handler that does not throw (e.g. no Whoops)
+		// still receives the warning
+		$called = false;
+		set_error_handler(function (int $errno) use (&$called) {
+			$called = true;
+			$this->assertSame(E_WARNING, $errno);
+			return true;
+		});
+
+		try {
+			Dir::read($dir);
+			$this->fail('Expected an exception');
+		} catch (Exception $e) {
+			$this->assertSame('The directory "' . $dir . '" could not be read', $e->getMessage());
+		} finally {
+			restore_error_handler();
+			chmod($dir, 0755);
+		}
+
+		$this->assertTrue($called);
+	}
+
 	public function testRealpath(): void
 	{
 		$path = Dir::realpath(__DIR__ . '/../Filesystem');
