@@ -56,6 +56,6 @@ trait HasStringTemplate
 			return $string;
 		}
 
-		return $this->stringTemplate($this->i18n($string), $safe);
+		return $this->stringTemplate($this->i18n($string) ?? '', $safe);
 	}
 }
