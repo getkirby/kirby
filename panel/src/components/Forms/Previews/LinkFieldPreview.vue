@@ -67,12 +67,23 @@ export default {
 					return;
 				}
 
-				this.model = await this.$helper.link.preview(this.detected);
+				await this.load();
 			},
 			immediate: true
 		},
+		// page titles are translated, the value might not be
+		"$panel.language.code"() {
+			if (this.currentType === "page") {
+				this.load();
+			}
+		},
 		type() {
 			this.model = null;
+		}
+	},
+	methods: {
+		async load() {
+			this.model = await this.$helper.link.preview(this.detected);
 		}
 	}
 };
