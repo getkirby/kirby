@@ -277,9 +277,7 @@ trait FileActions
 			$file->createTranslations($props['translations'] ?? null)
 		);
 
-		// if the format is different from the original,
-		// we need to already rename it so that the correct file rules
-		// are applied
+		// get the image processing options from the blueprint
 		$create = $file->blueprint()->create();
 
 		// run the hook
@@ -288,20 +286,57 @@ trait FileActions
 			// remove all public versions, lock and clear UUID cache
 			$file->unpublish();
 
-			// only move the original source if intended
-			$method = $move === true ? 'move' : 'copy';
+			// manipulate uploads in a temporary location first
+			if (empty($create) === false && $upload->isResizable() === true) {
+				$processedRoot = '';
+				$tempDir      = dirname($upload->root()) .
+					'/.' . F::name($file->filename()) .
+					'.tmp-' . uniqid();
+				$tempRoot     = $tempDir . '/{{ name }}.{{ extension }}';
+				Dir::make($tempDir);
 
-			// overwrite the original
-			if (F::$method($upload->root(), $file->root(), true) !== true) {
-				// @codeCoverageIgnoreStart
-				throw new LogicException(
-					message: 'The file could not be created'
-				);
-				// @codeCoverageIgnoreEnd
+				try {
+					$processedRoot = $file->kirby()->thumb(
+						$upload->root(),
+						$tempRoot,
+						$create
+					);
+
+					$file = $file->clone([
+						'filename' => F::name($file->filename()) . '.' . F::extension($processedRoot)
+					]);
+
+					if (F::move($processedRoot, $file->root(), true) !== true) {
+						// @codeCoverageIgnoreStart
+						throw new LogicException(
+							message: 'The file could not be created'
+						);
+						// @codeCoverageIgnoreEnd
+					}
+
+					if ($move === true) {
+						F::remove($upload->root());
+					}
+				} finally {
+					if ($processedRoot !== '') {
+						F::remove($processedRoot);
+					}
+
+					Dir::remove($tempDir);
+				}
+			} else {
+				// only move the original source if intended
+				$method = $move === true ? 'move' : 'copy';
+
+				// overwrite the original
+				if (F::$method($upload->root(), $file->root(), true) !== true) {
+					// @codeCoverageIgnoreStart
+					throw new LogicException(
+						message: 'The file could not be created'
+					);
+					// @codeCoverageIgnoreEnd
+				}
 			}
-
-			// resize the file on upload if configured
-			$file = $file->manipulate($create);
 
 			// store the content if necessary
 			$file->changeStorage($storage);

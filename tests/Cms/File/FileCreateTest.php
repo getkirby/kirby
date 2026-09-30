@@ -310,6 +310,44 @@ class FileCreateTest extends ModelTestCase
 		$this->assertSame('test.webp', $result->filename());
 	}
 
+	public function testCreateImageDoesNotMoveSourceBeforeManipulation(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'files/test' => [
+					'name'   => 'test',
+					'create' => [
+						'width' => 100
+					]
+				]
+			],
+			'components' => [
+				'thumb' => function () {
+					throw new \RuntimeException('Manipulation failed');
+				}
+			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$parent = new Page(['slug' => 'test']);
+		$source = static::FIXTURES . '/test.jpg';
+
+		$this->expectException(\RuntimeException::class);
+		$this->expectExceptionMessage('Manipulation failed');
+
+		try {
+			File::create([
+				'filename' => 'test.jpg',
+				'source'   => $source,
+				'parent'   => $parent,
+				'template' => 'test',
+			], true);
+		} finally {
+			$this->assertFileExists($source);
+			$this->assertFileDoesNotExist($parent->root() . '/test.jpg');
+		}
+	}
+
 	public function testCreateManipulateNonImage(): void
 	{
 		$this->app = $this->app->clone([
