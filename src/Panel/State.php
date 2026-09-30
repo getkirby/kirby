@@ -54,15 +54,25 @@ class State
 	}
 
 	/**
+	 * The CSRF token is replaced whenever the session is
+	 * regenerated, so it travels with every response and must
+	 * never become a global, which is only sent once
+	 */
+	public function csrf(): string
+	{
+		return $this->kirby->auth()->csrfFromSession();
+	}
+
+	/**
 	 * Creates the shared data array for the individual views
-	 * The full shared data is always sent on every JSON and
-	 * full document request unless the `X-Panel-Only` header or
-	 * the `_only` query parameter is set.
+	 * The full shared data is sent on every JSON and
+	 * full document request.
 	 */
 	public function data(): array
 	{
 		// shared data for all requests
 		return [
+			'csrf'        => $this->csrf(...),
 			'direction'   => $this->direction(...),
 			'dialog'      => null,
 			'drawer'      => null,
@@ -96,57 +106,16 @@ class State
 	}
 
 	/**
-	 * Filters the data array based on headers or  query parameters.
-	 *
-	 * This way, JSON requests can tailor the returned data to
-	 * only include certain data fields.
-	 *
-	 * This can be activated with the `X-Panel-Only` header or
-	 * the `_only` query parameter in a request.
+	 * Adds requested globals to the data array.
 	 *
 	 * Globals are normally only loaded with the full document request.
-	 * In addition, they can be requested via the `X-Panel-Globals` header
-	 * or the `_globals` query parameter.
+	 * In addition, they can be requested via the `X-Panel-Globals` header.
 	 */
 	public function filter(array $data): array
 	{
-		$result = [];
+		$filterGlobals = $this->kirby->request()->header('X-Panel-Globals');
 
-		// requested data ids
-		$request  = $this->kirby->request();
-		$filter   = $request->header('X-Panel-Only');
-		$filter ??= $request->get('_only');
-
-		if (empty($filter) === false) {
-			// split include string into an array of fields
-			$keys = Str::split((string)$filter, ',');
-
-			// take care of potentially requested globals
-			$globals     = $this->globals();
-			$keysEntries = A::map($keys, fn ($key) => Str::split($key, '.')[0]);
-
-			// check if the keys from `_only` include any global id as entry
-			if (array_intersect($keysEntries, array_keys($globals)) !== []) {
-				$data = array_merge_recursive($globals, $data);
-			}
-
-			// make sure the data is already resolved to make
-			// nested data fetching work
-			$data = A::apply($data);
-
-			// build a new array with all requested data
-			foreach ($keys as $key) {
-				$result[$key] = A::get($data, $key);
-			}
-
-			// Nest dotted keys in array but ignore $translation
-			return A::nest($result, ['translation']);
-		}
-
-		$filterGlobals   = $request->header('X-Panel-Globals');
-		$filterGlobals ??= $request->get('_globals');
-
-		if (empty($filterGlobals) === false) {
+		if ($filterGlobals !== null && $filterGlobals !== '') {
 			// split globals string into an array of fields
 			$keys = Str::split($filterGlobals, ',');
 
@@ -256,7 +225,6 @@ class State
 
 		return [
 			'ascii'   => Str::$ascii,
-			'csrf'    => $this->kirby->auth()->csrfFromSession(),
 			'isLocal' => $this->kirby->system()->isLocal(),
 			'locales' => $locales,
 			'slugs'   => Str::$language,

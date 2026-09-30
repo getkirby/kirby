@@ -4,7 +4,7 @@ import type Panel from "@/panel/panel";
 
 function makePanel(overrides: Record<string, unknown> = {}) {
 	return {
-		system: { csrf: "test-csrf" },
+		csrf: "test-csrf",
 		urls: { api: "http://localhost:3000/api/" },
 		config: {},
 		language: { code: "en" },
@@ -64,6 +64,16 @@ describe("api", () => {
 		it("should default methodOverride to false when not configured", () => {
 			const api = new Api(makePanel({ config: {} }));
 			expect(api.methodOverride).toStrictEqual(false);
+		});
+
+		it("should follow a csrf token that has been regenerated", () => {
+			const panel = makePanel();
+			const api = new Api(panel);
+
+			// this is what a response after a logout does
+			panel.csrf = "new-csrf";
+
+			expect(api.csrf).toStrictEqual("new-csrf");
 		});
 	});
 
@@ -330,6 +340,17 @@ describe("api", () => {
 				headers: { "x-custom": "value" }
 			});
 			expect(lastRequest().headers.get("x-custom")).toStrictEqual("value");
+		});
+
+		it("should send the regenerated csrf token", async () => {
+			mockFetch();
+			const panel = makePanel();
+			const api = new Api(panel);
+
+			panel.csrf = "new-csrf";
+			await api.post("auth/login", { email: "test@getkirby.com" });
+
+			expect(lastRequest().headers.get("x-csrf")).toStrictEqual("new-csrf");
 		});
 
 		it("should always include x-language header", async () => {
