@@ -448,7 +448,10 @@ class StrTest extends TestCase
 	public function testFloat(): void
 	{
 		$this->assertSame('0', Str::float(false));
-		$this->assertSame('0', Str::float(null));
+		$this->assertNull(Str::float(null));
+		$this->assertNull(Str::float(''));
+		$this->assertNull(Str::float('one'));
+		$this->assertNull(Str::float('1abc'));
 		$this->assertSame('0', Str::float(0));
 		$this->assertSame('0', Str::float('0'));
 		$this->assertSame('1', Str::float(true));
@@ -469,6 +472,7 @@ class StrTest extends TestCase
 		$this->assertSame('1000', Str::float('1000'));
 		$this->assertSame('1000000.00', Str::float('1000000.00'));
 		$this->assertSame('0.00000001', Str::float(0.00000001));
+		$this->assertSame('0.00000001', Str::float('1e-8'));
 	}
 
 	public function testFrom(): void
