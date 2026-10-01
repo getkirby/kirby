@@ -123,6 +123,17 @@ class DateField extends DateTimeField
 		];
 	}
 
+	protected function roundToStep(Date|null $value): Date|null
+	{
+		// without a time selector, the time is cut off
+		// instead of rounding the date to the nearest day
+		if ($this->time() === false) {
+			$value?->setTime(hour: 0, minute: 0);
+		}
+
+		return parent::roundToStep($value);
+	}
+
 	public function step(): array
 	{
 		$time = $this->time();
