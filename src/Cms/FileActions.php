@@ -300,11 +300,11 @@ trait FileActions
 				// @codeCoverageIgnoreEnd
 			}
 
+			// store the content first, manipulate() works on a fresh clone
+			$file->changeStorage($storage);
+
 			// resize the file on upload if configured
 			$file = $file->manipulate($create);
-
-			// store the content if necessary
-			$file->changeStorage($storage);
 
 			$file->uuid()?->populate();
 
