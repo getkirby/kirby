@@ -297,7 +297,7 @@ abstract class ModelPickerField extends InputField
 		// and convert them to the stored values
 		foreach ($this->value as $id) {
 			if ($model = $this->toModel($id)) {
-				$ids[] = (string)$model->{$this->store()}();
+				$ids[] = (string)$model->{$this->store($model)}();
 			}
 		}
 
