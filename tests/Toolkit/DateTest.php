@@ -2,6 +2,7 @@
 
 namespace Kirby\Toolkit;
 
+use DateTime;
 use DateTimeZone;
 use IntlDateFormatter;
 use Kirby\Cms\App;
@@ -294,6 +295,8 @@ class DateTest extends TestCase
 		$this->assertNull(Date::optional(''));
 		$this->assertNull(Date::optional('invalid date'));
 		$this->assertInstanceOf(Date::class, Date::optional('2021-12-12'));
+		$this->assertSame('2021-12-12', Date::optional(new DateTime('2021-12-12'))->format('Y-m-d'));
+		$this->assertSame('2021-12-12', Date::optional(strtotime('2021-12-12'))->format('Y-m-d'));
 	}
 
 	#[DataProvider('roundProvider')]

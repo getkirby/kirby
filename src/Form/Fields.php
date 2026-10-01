@@ -7,6 +7,7 @@ use Kirby\Cms\App;
 use Kirby\Cms\Collection;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Content\Field as ContentField;
 use Kirby\Exception\FormValidationException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Form\Interface\ProvidesNestedForm;
@@ -159,6 +160,11 @@ class Fields extends Collection
 			// resolve closure values
 			if ($value instanceof Closure) {
 				$value = $value($field->toFormValue());
+			}
+
+			// unwrap content fields, e.g. from another model
+			if ($value instanceof ContentField) {
+				$value = $value->value();
 			}
 
 			$field->fill($value);
@@ -346,6 +352,11 @@ class Fields extends Collection
 			// resolve closure values
 			if ($value instanceof Closure) {
 				$value = $value($field->toFormValue());
+			}
+
+			// unwrap content fields, e.g. from another model
+			if ($value instanceof ContentField) {
+				$value = $value->value();
 			}
 
 			// submit the value to the field

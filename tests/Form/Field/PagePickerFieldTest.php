@@ -204,6 +204,22 @@ class PagePickerFieldTest extends TestCase
 		$this->assertSame('Test', $field->empty());
 	}
 
+	public function testFillWithPage(): void
+	{
+		$field = $this->field('pages', ['model' => $this->model()]);
+		$field->fill($this->app->page('b'));
+
+		$this->assertSame(['page://my-b'], $field->toStoredValue());
+	}
+
+	public function testFillWithPages(): void
+	{
+		$field = $this->field('pages', ['model' => $this->model()]);
+		$field->fill($this->model()->children());
+
+		$this->assertSame(['page://my-aa', 'page://my-ab'], $field->toStoredValue());
+	}
+
 	public function testIsValid(): void
 	{
 		$field = $this->field('pages', ['required' => true]);

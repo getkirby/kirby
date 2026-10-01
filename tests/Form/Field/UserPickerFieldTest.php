@@ -188,6 +188,22 @@ class UserPickerFieldTest extends TestCase
 		$this->assertSame('Test', $field->empty());
 	}
 
+	public function testFillWithUser(): void
+	{
+		$field = $this->field('users');
+		$field->fill($this->app->user('leonardo'));
+
+		$this->assertSame(['user://leonardo'], $field->toStoredValue());
+	}
+
+	public function testFillWithUsers(): void
+	{
+		$field = $this->field('users');
+		$field->fill($this->app->users()->limit(2));
+
+		$this->assertSame(['user://leonardo', 'user://raphael'], $field->toStoredValue());
+	}
+
 	public function testIsValid(): void
 	{
 		$field = $this->field('users', ['required' => true]);

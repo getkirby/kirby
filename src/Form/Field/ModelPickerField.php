@@ -2,6 +2,7 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Cms\Collection;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Data\Data;
 use Kirby\Form\Mixin;
@@ -175,7 +176,24 @@ abstract class ModelPickerField extends InputField
 
 	public function fill(mixed $value): static
 	{
-		return parent::fill(value: Data::decode($value, 'yaml'));
+		if ($value instanceof ModelWithContent) {
+			$value = [$value];
+		}
+
+		if ($value instanceof Collection) {
+			$value = $value->values();
+		}
+
+		$value = Data::decode($value, 'yaml');
+
+		// resolve models to an ID that `::toModel()` can find
+		foreach ($value as $key => $item) {
+			if ($item instanceof ModelWithContent) {
+				$value[$key] = $item->uuid()?->toString() ?? $item->id();
+			}
+		}
+
+		return parent::fill(value: $value);
 	}
 
 	public function image(): array|null

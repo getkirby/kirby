@@ -261,6 +261,10 @@ class BlocksField extends InputField
 	#[BlockCollectionAccess]
 	public function fill(mixed $value): static
 	{
+		if ($value instanceof BlocksCollection) {
+			$value = $value->toArray();
+		}
+
 		$value  = BlocksCollection::parse($value);
 		$blocks = BlocksCollection::factory($value)->toArray();
 		return parent::fill(value: $this->blocksToValues($blocks));
