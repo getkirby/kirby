@@ -310,6 +310,48 @@ class FileCreateTest extends ModelTestCase
 		$this->assertSame('test.webp', $result->filename());
 	}
 
+	public function testCreateImageAndManipulateWithContent(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'files/test' => [
+					'name'   => 'test',
+					'create' => [
+						'width'  => 100,
+						'height' => 100,
+						'format' => 'webp',
+					],
+					'fields' => [
+						'a' => [
+							'type'    => 'text',
+							'default' => 'A'
+						],
+						'b' => [
+							'type'    => 'text',
+							'default' => 'B'
+						],
+					]
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$parent = new Page(['slug' => 'test']);
+		$source = static::FIXTURES . '/test.jpg';
+
+		$result = File::create([
+			'content'  => ['a' => 'Custom A'],
+			'filename' => 'test.jpg',
+			'source'   => $source,
+			'parent'   => $parent,
+			'template' => 'test',
+		]);
+
+		$this->assertSame('test.webp', $result->filename());
+		$this->assertSame('Custom A', $result->a()->value());
+		$this->assertSame('B', $result->b()->value());
+	}
+
 	public function testCreateManipulateNonImage(): void
 	{
 		$this->app = $this->app->clone([
