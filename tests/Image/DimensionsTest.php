@@ -230,9 +230,24 @@ class DimensionsTest extends TestCase
 		$this->assertSame(35, $dimensions->width());
 		$this->assertSame(35, $dimensions->height());
 
+		// width derived from the height and viewBox ratio
 		$dimensions = Dimensions::forSvg(static::FIXTURES . '/dimensions/circle-offset.svg');
-		$this->assertSame(40, $dimensions->width());
+		$this->assertSame(25, $dimensions->width());
 		$this->assertSame(25, $dimensions->height());
+
+		// height derived from the width and viewBox ratio
+		$dimensions = Dimensions::forSvg(static::FIXTURES . '/dimensions/circle-width.svg');
+		$this->assertSame(36, $dimensions->width());
+		$this->assertSame(108, $dimensions->height());
+
+		// rounded viewBox width and height, regardless of its offset
+		$dimensions = Dimensions::forSvg(static::FIXTURES . '/dimensions/circle-decimal.svg');
+		$this->assertSame(50, $dimensions->width());
+		$this->assertSame(152, $dimensions->height());
+
+		$dimensions = Dimensions::forSvg(static::FIXTURES . '/dimensions/missing.svg');
+		$this->assertSame(0, $dimensions->width());
+		$this->assertSame(0, $dimensions->height());
 	}
 
 	public function testOrientation(): void
