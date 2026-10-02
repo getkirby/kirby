@@ -228,6 +228,35 @@ describe("panel.notification", () => {
 			expect(notification.type).toStrictEqual("error");
 		});
 
+		it("should open a validation error dialog for form errors in view context", async () => {
+			const panel = Panel.create(app);
+			const notification = Notification(panel);
+			const open = vi.spyOn(panel.dialog, "open");
+			const details = {
+				title: {
+					label: "Title",
+					message: { required: "Please enter something" }
+				}
+			};
+
+			notification.error(
+				new RequestError(
+					"error",
+					makeRequestOptions({
+						status: "error",
+						message: "Please fix all form errors…",
+						key: "error.form.incomplete",
+						details
+					})
+				)
+			);
+
+			expect(open).toHaveBeenCalledWith({
+				component: "k-validation-error-dialog",
+				props: { message: "Please fix all form errors…", fields: details }
+			});
+		});
+
 		it("should open a generic error dialog for plain errors in view context", async () => {
 			const panel = Panel.create(app);
 			const notification = Notification(panel);
