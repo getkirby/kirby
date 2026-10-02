@@ -400,6 +400,42 @@ class ModelTest extends TestCase
 		$this->assertSame('blue', $image['back']);
 	}
 
+	public function testImageWithRatioQuery(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$panel = $this->panel([
+			'content' => ['ratio' => '3/2'],
+			'files'   => [
+				['filename' => 'test.jpg']
+			]
+		]);
+
+		$testImage = static::FIXTURES . '/image/test.jpg';
+		F::copy($testImage, $panel->model()->root() . '/test.jpg');
+
+		// ratio defined as query
+		$image = $panel->image([
+			'cover' => true,
+			'query' => 'site.image',
+			'ratio' => '{{ site.ratio }}'
+		], 'cards');
+		$this->assertSame('3/2', $image['ratio']);
+		$this->assertStringContainsString('test-400x267-crop.jpg 400w', $image['srcset']);
+		$this->assertStringContainsString('test-800x533-crop.jpg 800w', $image['srcset']);
+		$this->assertStringContainsString('test-1600x1067-crop.jpg 1600w', $image['srcset']);
+
+		// query without result falls back to a square
+		$image = $panel->image([
+			'cover' => true,
+			'query' => 'site.image',
+			'ratio' => '{{ site.missing }}'
+		], 'cards');
+		$this->assertStringContainsString('test-400x400-crop.jpg 400w', $image['srcset']);
+		$this->assertStringContainsString('test-800x800-crop.jpg 800w', $image['srcset']);
+		$this->assertStringContainsString('test-1600x1600-crop.jpg 1600w', $image['srcset']);
+	}
+
 	public function testImagePlaceholder(): void
 	{
 		$this->assertIsString(Model::imagePlaceholder());

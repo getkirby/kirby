@@ -450,6 +450,7 @@ export default class Panel {
 		return request(url, {
 			referrer: this.view.path ?? undefined,
 			csrf: this.system.csrf,
+			language: this.language.code,
 			...options
 		});
 	}

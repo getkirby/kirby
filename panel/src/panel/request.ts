@@ -38,6 +38,7 @@ export interface PanelRequestOptions extends Omit<
 	csrf?: string;
 	globals?: string | string[];
 	headers: Record<string, string>;
+	language?: string | null;
 	query: Record<string, string | null>;
 	referrer?: string;
 }
@@ -92,6 +93,11 @@ export function headers(
 		result["x-csrf"] = options.csrf;
 	}
 
+	// the content language is per browser tab, the session is not
+	if (options.language) {
+		result["x-language"] = options.language;
+	}
+
 	const globalsHeader = globals(options.globals);
 
 	if (globalsHeader) {
@@ -126,7 +132,7 @@ export async function request(
 	options: Partial<PanelRequestOptions> = {}
 ): Promise<{ request: Request; response: PanelResponse }> {
 	// extract Request options from options
-	const { csrf, globals, referrer, query, ...rest } = options;
+	const { csrf, globals, language, referrer, query, ...rest } = options;
 
 	// merge with a few defaults
 	const init: RequestInit = {

@@ -90,14 +90,27 @@ describe("panel.request", () => {
 
 		it("should set options", () => {
 			expect(
-				headers({}, { csrf: "dev", globals: ["$language"], referrer: "/test" })
+				headers(
+					{},
+					{
+						csrf: "dev",
+						globals: ["$language"],
+						language: "de",
+						referrer: "/test"
+					}
+				)
 			).toStrictEqual({
 				"content-type": "application/json",
 				"x-csrf": "dev",
+				"x-language": "de",
 				"x-panel": "true",
 				"x-panel-globals": "$language",
 				"x-panel-referrer": "/test"
 			});
+		});
+
+		it("should not set the language header without a language", () => {
+			expect(headers({}, { language: null })).not.toHaveProperty("x-language");
 		});
 	});
 

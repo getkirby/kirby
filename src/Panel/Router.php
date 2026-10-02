@@ -223,8 +223,9 @@ class Router
 
 	/**
 	 * Set the current language in multi-lang
-	 * installations based on the session or the
-	 * query language query parameter
+	 * installations based on the `language` query
+	 * parameter, the `x-language` request header
+	 * or the session
 	 */
 	public function setLanguage(): string|null
 	{
@@ -236,9 +237,16 @@ class Router
 				$fallback = $defaultLanguage->code();
 			}
 
+			$request         = $this->kirby->request();
 			$session         = $this->kirby->session();
 			$sessionLanguage = $session->get('panel.language', $fallback);
-			$language        = $this->kirby->request()->get('language') ?? $sessionLanguage;
+
+			// the header carries the language of the requesting Panel tab,
+			// the session is only the fallback for the first request of a tab
+			$language =
+				$request->get('language') ??
+				$request->header('x-language') ??
+				$sessionLanguage;
 
 			// keep the language for the next visit
 			if ($language !== $sessionLanguage) {

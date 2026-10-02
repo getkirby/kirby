@@ -125,6 +125,30 @@ describe("panel", () => {
 		});
 	});
 
+	describe("request", () => {
+		it("should send the content language with every request", async () => {
+			const panel = Panel.create(app);
+			const fetch = vi.fn<(request: Request) => Promise<Response>>(
+				async () =>
+					new Response(JSON.stringify({}), {
+						headers: { "Content-Type": "application/json" }
+					})
+			);
+
+			vi.stubGlobal("fetch", fetch);
+
+			panel.set({
+				language: { code: "de", name: "Deutsch" }
+			});
+
+			await panel.request("/some/view");
+
+			const [request] = fetch.mock.calls[0]!;
+
+			expect(request.headers.get("x-language")).toStrictEqual("de");
+		});
+	});
+
 	describe("title", () => {
 		it("should set the correct title without system title", async () => {
 			const panel = Panel.create(app);
