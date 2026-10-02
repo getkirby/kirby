@@ -103,6 +103,9 @@ export default function Notification(panel: TODO) {
 						details: broken.details
 					};
 				}
+
+				// flat API error responses carry their details on the error itself
+				notification.details ??= error.details as Record<string, unknown>;
 			}
 
 			if (error instanceof Error) {
