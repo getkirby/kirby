@@ -118,6 +118,8 @@ export default {
 					language: this.$panel.language.code
 				});
 
+				this.isSaved = true;
+
 				this.$panel.dialog.close();
 				this.$panel.view.refresh();
 			} catch (e) {
@@ -125,6 +127,10 @@ export default {
 			}
 		},
 		onInput(values) {
+			// the new values only exist in the form until the
+			// throttled save request has written them
+			this.isSaved = false;
+
 			// update the content for the current view
 			// this will also refresh the content prop
 			this.$panel.content.updateLazy(values, {
@@ -143,6 +149,8 @@ export default {
 					api: this.api,
 					language: this.$panel.language.code
 				});
+
+				this.isSaved = true;
 
 				this.$panel.notification.success();
 				this.$events.emit("model.update");
