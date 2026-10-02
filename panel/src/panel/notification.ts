@@ -91,10 +91,10 @@ export default function Notification(panel: TODO) {
 				const response = Object.values(error.response.json) as Array<{
 					error?: string;
 					details: Record<string, unknown>;
-				}>;
+				} | null>;
 
 				const broken = response.find(
-					(element) => typeof element.error === "string"
+					(element) => typeof element?.error === "string"
 				);
 
 				if (broken) {

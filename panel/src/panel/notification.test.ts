@@ -203,6 +203,17 @@ describe("panel.notification", () => {
 			expect(notification.message).toStrictEqual("Field is required");
 		});
 
+		it("should skip null values in the RequestError response", async () => {
+			const panel = Panel.create();
+			const notification = Notification(panel);
+
+			notification.error(
+				new RequestError("error", makeRequestOptions({ $dialog: null, $view: { error: "Page not found" } }))
+			);
+
+			expect(notification.message).toStrictEqual("Page not found");
+		});
+
 		it("should not set a timer", async () => {
 			const panel = Panel.create();
 			const notification = Notification(panel);
