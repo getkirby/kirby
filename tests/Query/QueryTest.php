@@ -39,20 +39,6 @@ class QueryTest extends TestCase
 		$this->assertInstanceOf(DefaultRunner::class, $query::$runner);
 	}
 
-	public function test__ConstructWitLegacyConfig(): void
-	{
-		new App([
-			'options' => [
-				'query' => [
-					'runner' => 'legacy'
-				]
-			]
-		]);
-
-		$query = new Query('');
-		$this->assertSame('legacy', $query::$runner);
-	}
-
 	public function test__ConstructWithInvalidConfig(): void
 	{
 		new App([

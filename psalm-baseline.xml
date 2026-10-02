@@ -283,24 +283,6 @@
       <code><![CDATA[$this->key ??= Str::random(10, 'alphaNum')]]></code>
     </FalsableReturnStatement>
   </file>
-  <file src="src/Query/Expression.php">
-    <FalsableReturnStatement>
-      <code><![CDATA[preg_split(
-			'/\s+([\?\:]+)\s+|' . Arguments::OUTSIDE . '/',
-			trim($string),
-			flags: PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY
-		)]]></code>
-    </FalsableReturnStatement>
-  </file>
-  <file src="src/Query/Segments.php">
-    <FalsableReturnStatement>
-      <code><![CDATA[preg_split(
-			'/(\??\.)|(\(([^()]+|(?2))*+\))(*SKIP)(*FAIL)/',
-			trim($string),
-			flags: PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY
-		)]]></code>
-    </FalsableReturnStatement>
-  </file>
   <file src="src/Session/Session.php">
     <RedundantPropertyInitializationCheck>
       <code><![CDATA[isset($this->data) === true]]></code>

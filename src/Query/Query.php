@@ -2,7 +2,6 @@
 
 namespace Kirby\Query;
 
-use Closure;
 use Kirby\Cms\App;
 use Kirby\Cms\Collection;
 use Kirby\Cms\File;
@@ -42,15 +41,13 @@ class Query
 
 		static::$runner ??= App::instance()->option('query.runner', DefaultRunner::class);
 
-		if (static::$runner !== 'legacy') {
-			if (is_subclass_of(static::$runner, Runner::class) === false) {
-				throw new InvalidArgumentException(
-					message: 'Query runner "' . static::$runner . '" must extend ' . Runner::class
-				);
-			}
-
-			static::$runner = static::$runner::for($this);
+		if (is_subclass_of(static::$runner, Runner::class) === false) {
+			throw new InvalidArgumentException(
+				message: 'Query runner "' . static::$runner . '" must extend ' . Runner::class
+			);
 		}
+
+		static::$runner = static::$runner::for($this);
 	}
 
 	/**
@@ -83,43 +80,7 @@ class Query
 			return $data;
 		}
 
-		// TODO: remove in v7
-		// @codeCoverageIgnoreStart
-		if (static::$runner === 'legacy') {
-			return $this->resolveLegacy($data);
-		}
-		// @codeCoverageIgnoreEnd
-
 		return static::$runner->run($this->query, (array)$data);
-	}
-
-	/**
-	 * @deprecated 5.1.0
-	 * @codeCoverageIgnore
-	 */
-	private function resolveLegacy(array|object $data = []): mixed
-	{
-		// merge data with default entries
-		if (is_array($data) === true) {
-			$data = [...static::$entries, ...$data];
-		}
-
-		// direct data array access via key
-		if (
-			is_array($data) === true &&
-			array_key_exists($this->query, $data) === true
-		) {
-			$value = $data[$this->query];
-
-			if ($value instanceof Closure) {
-				$value = $value();
-			}
-
-			return $value;
-		}
-
-		// loop through all segments to resolve query
-		return Expression::factory($this->query, $this)->resolve($data);
 	}
 }
 
