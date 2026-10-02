@@ -2,9 +2,11 @@
 
 namespace Kirby\Cms;
 
+use Exception;
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
+use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\File as BaseFile;
 use Kirby\Image\Image;
@@ -350,6 +352,109 @@ class FileCreateTest extends ModelTestCase
 		$this->assertSame('test.webp', $result->filename());
 		$this->assertSame('Custom A', $result->a()->value());
 		$this->assertSame('B', $result->b()->value());
+	}
+
+	public function testCreateImageAndManipulateFailure(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'files/test' => [
+					'name'   => 'test',
+					'create' => ['width' => 100]
+				]
+			],
+			'components' => [
+				'thumb' => function () {
+					throw new Exception('Resize failed');
+				}
+			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$parent = new Page(['slug' => 'test']);
+		$source = static::FIXTURES . '/test.jpg';
+
+		try {
+			File::create([
+				'filename' => 'test.jpg',
+				'source'   => $source,
+				'parent'   => $parent,
+				'template' => 'test',
+			]);
+			$this->fail('The resize did not fail');
+		} catch (Exception $e) {
+			$this->assertSame('Resize failed', $e->getMessage());
+		}
+
+		// nothing is left behind in the content folder or the cache
+		$this->assertFileExists($source);
+		$this->assertSame([], Dir::read($parent->root()));
+		$this->assertSame([], Dir::read($this->app->root('cache') . '/.uploads'));
+	}
+
+	public function testCreateImageAndManipulateMove(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'files/test' => [
+					'name'   => 'test',
+					'create' => ['width' => 100]
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$parent = new Page(['slug' => 'test']);
+		$source = static::TMP . '/source.jpg';
+
+		F::copy(static::FIXTURES . '/test.jpg', $source);
+
+		$result = File::create([
+			'filename' => 'test.jpg',
+			'source'   => $source,
+			'parent'   => $parent,
+			'template' => 'test',
+		], true);
+
+		$this->assertFileDoesNotExist($source);
+		$this->assertSame(100, $result->width());
+	}
+
+	public function testCreateImageAndManipulateOutsideContentFolder(): void
+	{
+		$parent = new Page(['slug' => 'test']);
+		$roots  = [];
+
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'files/test' => [
+					'name'   => 'test',
+					'create' => [
+						'width'  => 100,
+						'format' => 'webp',
+					]
+				]
+			],
+			'components' => [
+				'thumb' => function ($kirby, $src, $dst, $options) use ($parent, &$roots) {
+					$roots[] = Dir::read($parent->root());
+					return $kirby->nativeComponent('thumb')($kirby, $src, $dst, $options);
+				}
+			]
+		]);
+		$this->app->impersonate('kirby');
+
+		File::create([
+			'filename' => 'test.jpg',
+			'source'   => static::FIXTURES . '/test.jpg',
+			'parent'   => $parent,
+			'template' => 'test',
+		]);
+
+		// the content folder is still empty while resizing
+		$this->assertSame([[]], $roots);
+		$this->assertSame(['default.txt', 'test.webp', 'test.webp.txt'], Dir::read($parent->root()));
+		$this->assertSame([], Dir::read($this->app->root('cache') . '/.uploads'));
 	}
 
 	public function testCreateManipulateNonImage(): void
