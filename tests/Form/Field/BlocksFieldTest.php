@@ -3,6 +3,7 @@
 namespace Kirby\Form\Field;
 
 use Kirby\Cms\App;
+use Kirby\Cms\Blocks;
 use Kirby\Cms\Page;
 use Kirby\Exception\NotFoundException;
 use Kirby\Form\Field;
@@ -138,6 +139,33 @@ class BlocksFieldTest extends TestCase
 		]);
 
 		$this->assertSame($value, $field->empty());
+	}
+
+	public function testFillWithBlocks(): void
+	{
+		$blocks = Blocks::factory([
+			[
+				'id'      => 'a',
+				'type'    => 'heading',
+				'content' => ['level' => 'h3', 'text' => 'Heading']
+			],
+			[
+				'id'      => 'b',
+				'type'    => 'text',
+				'content' => ['text' => 'Text']
+			]
+		]);
+
+		$field = $this->field('blocks');
+		$field->fill($blocks);
+
+		$value = $field->toFormValue();
+
+		$this->assertCount(2, $value);
+		$this->assertSame('a', $value[0]['id']);
+		$this->assertSame('h3', $value[0]['content']['level']);
+		$this->assertSame('b', $value[1]['id']);
+		$this->assertSame('Text', $value[1]['content']['text']);
 	}
 
 	public function testGroups(): void

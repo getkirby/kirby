@@ -260,6 +260,58 @@ class FilePickerFieldTest extends TestCase
 		$this->assertSame('Test', $field->empty());
 	}
 
+	public function testFillWithFile(): void
+	{
+		$field = $this->field('files', ['model' => $this->model()]);
+		$field->fill($this->app->file('test/a.jpg'));
+
+		$this->assertSame(['file://test-a'], $field->toStoredValue());
+	}
+
+	public function testFillWithFileInArray(): void
+	{
+		$field = $this->field('files', ['model' => $this->model()]);
+		$field->fill([
+			$this->app->file('test/a.jpg'),
+			$this->app->file('test-draft/b.jpg')
+		]);
+
+		$this->assertSame(['file://test-a', 'file://draft-b'], $field->toStoredValue());
+	}
+
+	public function testFillWithFiles(): void
+	{
+		$field = $this->field('files', ['model' => $this->model()]);
+		$field->fill($this->model()->files());
+
+		$expected = ['file://test-a', 'file://test-b', 'file://test-c'];
+		$this->assertSame($expected, $field->toStoredValue());
+	}
+
+	public function testFillWithFilesWithoutUuids(): void
+	{
+		$this->app->clone([
+			'options' => [
+				'content' => [
+					'uuid' => false
+				]
+			]
+		]);
+
+		$field = $this->field('files', ['model' => $this->model()]);
+		$field->fill([$this->app->file('test/a.jpg')]);
+
+		$this->assertSame(['test/a.jpg'], $field->toStoredValue());
+	}
+
+	public function testFillWithPage(): void
+	{
+		$field = $this->field('files', ['model' => $this->model()]);
+		$field->fill([$this->model()]);
+
+		$this->assertSame([], $field->toStoredValue());
+	}
+
 	public function testIsValid(): void
 	{
 		$field = $this->field('files', [

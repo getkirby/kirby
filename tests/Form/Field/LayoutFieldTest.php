@@ -193,6 +193,38 @@ class LayoutFieldTest extends TestCase
 		$this->assertInstanceOf(Fieldsets::class, $field->fieldsets());
 	}
 
+	public function testFillWithLayouts(): void
+	{
+		$layouts = Layouts::factory([
+			[
+				'id'      => 'layout',
+				'columns' => [
+					[
+						'id'     => 'column',
+						'width'  => '1/1',
+						'blocks' => [
+							[
+								'id'      => 'block',
+								'type'    => 'heading',
+								'content' => ['text' => 'Heading']
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$field = $this->field('layout');
+		$field->fill($layouts);
+
+		$value = $field->toFormValue();
+
+		$this->assertCount(1, $value);
+		$this->assertSame('layout', $value[0]['id']);
+		$this->assertSame('column', $value[0]['columns'][0]['id']);
+		$this->assertSame('block', $value[0]['columns'][0]['blocks'][0]['id']);
+	}
+
 	public function testLayouts(): void
 	{
 		$field = $this->field('layout', []);

@@ -158,6 +158,10 @@ class LayoutField extends BlocksField
 	#[BlockCollectionAccess]
 	public function fill(mixed $value): static
 	{
+		if ($value instanceof Layouts) {
+			$value = $value->toArray();
+		}
+
 		$attrs   = $this->attrsForm();
 		$value   = Data::decode($value, type: 'json', fail: false);
 		$layouts = Layouts::factory($value, ['parent' => $this->model()])->toArray();

@@ -4,6 +4,7 @@ namespace Kirby\Form\Field;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
+use Kirby\Cms\Structure;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(StructureField::class)]
@@ -190,6 +191,29 @@ class StructureFieldTest extends TestCase
 			'empty' => ['en' => 'Test', 'de' => 'Töst']
 		]);
 		$this->assertSame('Test', $field->empty());
+	}
+
+	public function testFillWithStructure(): void
+	{
+		$field = $this->field('structure', [
+			'fields' => [
+				'text' => [
+					'type' => 'text'
+				]
+			]
+		]);
+
+		$structure = Structure::factory([
+			['text' => 'A'],
+			['text' => 'B']
+		]);
+
+		$field->fill($structure);
+
+		$this->assertSame([
+			['text' => 'A'],
+			['text' => 'B']
+		], $field->toStoredValue());
 	}
 
 	public function testIsValid(): void

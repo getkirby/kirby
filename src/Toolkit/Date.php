@@ -338,7 +338,7 @@ class Date extends DateTime implements Stringable
 	 * or fails silently by returning `null` on error
 	 */
 	public static function optional(
-		string|null $datetime = null,
+		string|int|DateTimeInterface|null $datetime = null,
 		DateTimeZone|null $timezone = null
 	): static|null {
 		if (empty($datetime) === true) {
