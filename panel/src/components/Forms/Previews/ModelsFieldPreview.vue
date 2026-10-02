@@ -36,6 +36,10 @@ export default {
 		};
 	},
 	watch: {
+		"$panel.language.code"() {
+			this.tags = [];
+			this.collect();
+		},
 		value: {
 			immediate: true,
 			handler() {

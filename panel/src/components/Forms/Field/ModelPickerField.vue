@@ -111,6 +111,10 @@ export default {
 		value: {
 			handler: "fetch",
 			immediate: true
+		},
+		"$panel.language.code"() {
+			this.selected = [];
+			this.fetch();
 		}
 	},
 	methods: {
