@@ -545,20 +545,21 @@ class Str
 	 * Convert the value to a float with a decimal
 	 * point, no matter what the locale setting is
 	 */
-	public static function float(string|int|float|null $value): string
+	public static function float(string|int|float|null $value): string|null
 	{
 		// make sure $value is not null
 		$value ??= '';
+		$value   = str_replace(',', '.', (string)$value);
 
-		// turn the value into a string
-		$value = (string)$value;
+		if (is_numeric($value) === false) {
+			return null;
+		}
 
 		// Convert exponential to decimal, 1e-8 as 0.00000001
 		if (str_contains(strtolower($value), 'e') === true) {
 			$value = rtrim(sprintf('%.16f', (float)$value), '0');
 		}
 
-		$value   = str_replace(',', '.', $value);
 		$decimal = strrchr($value, '.');
 		$decimal = match ($decimal) {
 			false   => 0,

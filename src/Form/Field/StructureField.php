@@ -2,6 +2,7 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Cms\Structure;
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Interface\ProvidesNestedForm;
@@ -67,6 +68,10 @@ class StructureField extends InputField implements ProvidesNestedForm
 
 	public function fill(mixed $value): static
 	{
+		if ($value instanceof Structure) {
+			$value = $value->toArray(fn ($row) => $row->content()->toArray());
+		}
+
 		return parent::fill(
 			value: Data::decode($value, 'yaml')
 		);

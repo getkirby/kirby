@@ -115,12 +115,18 @@ class FilePickerField extends ModelPickerField
 	 */
 	public function store(ModelWithContent|null $model = null): string
 	{
-		// store only the filename if the file belongs to the current model
-		if ($model?->parent()->is($this->model()) === true) {
+		$store = parent::store($model);
+
+		// store only the filename instead of the full ID
+		// if the file belongs to the current model
+		if (
+			$store === 'id' &&
+			$model?->parent()->is($this->model()) === true
+		) {
 			return 'filename';
 		}
 
-		return parent::store($model);
+		return $store;
 	}
 
 	/**

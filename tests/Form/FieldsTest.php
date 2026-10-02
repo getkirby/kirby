@@ -316,6 +316,31 @@ class FieldsTest extends TestCase
 		], $fields->toFormValues());
 	}
 
+	public function testFillWithContentField(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type' => 'text'
+				],
+			],
+			model: $this->model
+		);
+
+		$page = new Page([
+			'slug'    => 'source',
+			'content' => ['a' => 'From source']
+		]);
+
+		$fields->fill([
+			'a' => $page->a()
+		]);
+
+		$this->assertSame([
+			'a' => 'From source'
+		], $fields->toFormValues());
+	}
+
 	public function testFillWithDefaults(): void
 	{
 		$fields = new Fields(
@@ -899,6 +924,34 @@ class FieldsTest extends TestCase
 
 		$this->assertSame([
 			'a' => 'A updated'
+		], $fields->toStoredValues());
+	}
+
+	public function testSubmitWithContentField(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type' => 'structure',
+					'fields' => [
+						'text' => ['type' => 'text']
+					]
+				],
+			],
+			model: $this->model
+		);
+
+		$page = new Page([
+			'slug'    => 'source',
+			'content' => ['a' => "-\n  text: From source\n"]
+		]);
+
+		$fields->submit([
+			'a' => $page->a()
+		]);
+
+		$this->assertSame([
+			'a' => [['text' => 'From source']]
 		], $fields->toStoredValues());
 	}
 

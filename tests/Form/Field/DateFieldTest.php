@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Field;
 
+use DateTime;
+use DateTimeImmutable;
 use Kirby\Toolkit\Date;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -245,6 +247,8 @@ class DateFieldTest extends TestCase
 			['12.12.2012', date('Y-m-d H:i:s', strtotime('2012-12-12'))],
 			['2016-11-21', date('Y-m-d H:i:s', strtotime('2016-11-21'))],
 			['2016-11-21 12:12:12', date('Y-m-d H:i:s', strtotime('2016-11-21 12:10:00')), 5],
+			[new DateTime('2016-11-21 12:12:12'), date('Y-m-d H:i:s', strtotime('2016-11-21 12:10:00')), 5],
+			[new DateTimeImmutable('2016-11-21'), date('Y-m-d H:i:s', strtotime('2016-11-21'))],
 			['something', ''],
 			[null, ''],
 		];
