@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Exception;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\File as BaseFile;
 use Kirby\Image\Image;
@@ -88,6 +89,46 @@ class FileReplaceTest extends ModelTestCase
 
 		$this->assertSame(F::read($replacement), F::read($replacedFile->root()));
 		$this->assertInstanceOf(Image::class, $replacedFile->asset());
+	}
+
+	public function testReplaceImageAndManipulateFailure(): void
+	{
+		$parent   = new Page(['slug' => 'test']);
+		$original = static::FIXTURES . '/test.jpg';
+
+		$originalFile = File::create([
+			'filename' => 'test.jpg',
+			'source'   => $original,
+			'parent'   => $parent,
+			'template' => 'test'
+		]);
+
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'files/test' => [
+					'name'   => 'test',
+					'create' => ['width' => 100]
+				]
+			],
+			'components' => [
+				'thumb' => function () {
+					throw new Exception('Resize failed');
+				}
+			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$originalFile = $this->app->page('test')->file('test.jpg');
+
+		try {
+			$originalFile->replace(static::FIXTURES . '/cat.jpg');
+			$this->fail('The resize did not fail');
+		} catch (Exception $e) {
+			$this->assertSame('Resize failed', $e->getMessage());
+		}
+
+		// the original file is untouched
+		$this->assertFileEquals($original, $originalFile->root());
 	}
 
 	public function testReplaceManipulateNonImage(): void
