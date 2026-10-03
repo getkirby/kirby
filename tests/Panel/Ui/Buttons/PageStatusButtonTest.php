@@ -40,4 +40,24 @@ class PageStatusButtonTest extends TestCase
 		$this->assertSame('Status: Unlisted', $button->title);
 		$this->assertSame('info-icon', $button->theme);
 	}
+
+	public function testButtonWithCustomIconAndTheme(): void
+	{
+		App::instance()->impersonate('kirby');
+		$page   = new Page([
+			'slug'      => 'test',
+			'blueprint' => [
+				'status' => [
+					'draft'    => true,
+					'unlisted' => ['label' => 'Review', 'icon' => '👀', 'theme' => 'purple'],
+				]
+			]
+		]);
+		$button = new PageStatusButton($page);
+
+		$this->assertSame('👀', $button->icon);
+		$this->assertSame('Review', $button->text);
+		$this->assertSame('Status: Review', $button->title);
+		$this->assertSame('purple-icon', $button->theme);
+	}
 }

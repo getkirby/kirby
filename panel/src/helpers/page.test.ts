@@ -44,4 +44,30 @@ describe("$helper.page.status()", () => {
 		expect(result.disabled).toBe(true);
 		expect(result.title).toBe("page.status: page.status.draft (disabled)");
 	});
+
+	it("uses the icon, label and theme from the blueprint", () => {
+		const result = status("draft", true, {
+			icon: "edit",
+			label: "Idea",
+			theme: "purple"
+		});
+		expect(result.icon).toBe("edit");
+		expect(result.theme).toBe("purple-icon");
+		expect(result.title).toBe("page.status: Idea (disabled)");
+	});
+
+	it("passes an emoji icon through", () => {
+		expect(status("listed", false, { icon: "🚀" }).icon).toBe("🚀");
+	});
+
+	it("falls back when the blueprint does not define the status", () => {
+		const result = status("listed", false, {
+			icon: null,
+			label: null,
+			theme: null
+		});
+		expect(result.icon).toBe("status-listed");
+		expect(result.theme).toBe("positive-icon");
+		expect(result.title).toBe("page.status: page.status.listed");
+	});
 });
