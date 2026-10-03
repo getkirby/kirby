@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Filesystem\F;
+use Kirby\Http\Uri;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(App::class)]
@@ -10,6 +11,12 @@ class AppResolveTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
 	public const TMP      = KIRBY_TMP_DIR . '/Cms.AppResolve';
+
+	protected function tearDown(): void
+	{
+		parent::tearDown();
+		Uri::$current = null;
+	}
 
 	public function testResolveHomePage(): void
 	{
@@ -306,6 +313,11 @@ class AppResolveTest extends TestCase
 		$this->assertSame(301, $response->code());
 		$this->assertSame('/test', $response->header('Location'));
 
+		// keeps query and params
+		Uri::$current = new Uri('https://getkirby.com/test.html/tag:foo?bar=baz');
+
+		$response = $app->resolve('test.html');
+		$this->assertSame('/test/tag:foo?bar=baz', $response->header('Location'));
 	}
 
 	public function testResolveFileDefault(): void

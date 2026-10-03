@@ -6,12 +6,19 @@ use InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
 use Kirby\Http\Response;
+use Kirby\Http\Uri;
 use Kirby\Toolkit\I18n;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 class RouterTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.Router';
+
+	protected function tearDown(): void
+	{
+		parent::tearDown();
+		Uri::$current = null;
+	}
 
 	public function testHomeRoute(): void
 	{
@@ -41,6 +48,30 @@ class RouterTest extends TestCase
 		$response = $app->call('home');
 		$this->assertInstanceOf(Responder::class, $response);
 		$this->assertSame(302, $response->code());
+	}
+
+	public function testHomeFolderRouteWithQueryAndParams(): void
+	{
+		Uri::$current = new Uri('https://getkirby.com/home/tag:foo?bar=baz');
+
+		$app = $this->app->clone([
+			'site' => ['children' => [['slug' => 'home']]],
+			'urls' => ['index' => 'https://getkirby.com']
+		]);
+
+		$response = $app->call('home');
+		$this->assertSame(
+			'https://getkirby.com/tag:foo?bar=baz',
+			$response->header('Location')
+		);
+
+		// params must not turn into a host with a relative index URL
+		Uri::$current = new Uri('https://getkirby.com/home/evil.com:443');
+
+		$app = $app->clone(['urls' => ['index' => '/']]);
+
+		$response = $app->call('home');
+		$this->assertSame('/evil.com:443/', $response->header('Location'));
 	}
 
 	public function testHomeCustomFolderRoute(): void
@@ -231,6 +262,45 @@ class RouterTest extends TestCase
 		$page = $app->call('projects/project-a');
 		$this->assertIsPage($page);
 		$this->assertSame('projects/project-a', $page->id());
+	}
+
+	public function testUUIDRouteWithQueryAndParams(): void
+	{
+		Uri::$current = new Uri('https://getkirby.com/@/page/notes/tag:foo?bar=baz');
+
+		$app = $this->app->clone([
+			'site'    => [
+				'children' => [
+					[
+						'slug'    => 'notes',
+						'content' => ['uuid' => 'notes'],
+						'files'   => [
+							[
+								'filename' => 'test.jpg',
+								'content'  => ['uuid' => 'test']
+							]
+						]
+					]
+				]
+			],
+			'urls' => ['index' => 'https://getkirby.com']
+		]);
+
+		$page = $app->page('notes');
+		$page->uuid()->populate();
+
+		$response = $app->call('@/page/notes');
+		$this->assertSame(
+			'https://getkirby.com/notes/tag:foo?bar=baz',
+			$response->header('Location')
+		);
+
+		// files point to the media folder and don't inherit
+		$file = $page->file('test.jpg');
+		$file->uuid()->populate();
+
+		$response = $app->call('@/file/test');
+		$this->assertSame($file->url(), $response->header('Location'));
 	}
 
 	public function testNotFoundRoute(): void
