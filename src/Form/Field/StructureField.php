@@ -21,13 +21,17 @@ class StructureField extends InputField implements ProvidesNestedForm
 	use Mixin\Duplicate;
 	use Mixin\EmptyState;
 	use Mixin\Fields;
-	use Mixin\Limit;
 	use Mixin\Max;
 	use Mixin\Min;
 	use Mixin\Prepend;
 	use Mixin\Sortable;
 	use Mixin\SortBy;
 	use Mixin\TableColumns;
+
+	/**
+	 * The number of entries that will be displayed on a single page. Afterwards pagination kicks in.
+	 */
+	protected int|null $limit = null;
 
 	protected array $value = [];
 
@@ -70,6 +74,11 @@ class StructureField extends InputField implements ProvidesNestedForm
 		return parent::fill(
 			value: Data::decode($value, 'yaml')
 		);
+	}
+
+	public function limit(): int|null
+	{
+		return $this->limit;
 	}
 
 	public function props(): array
