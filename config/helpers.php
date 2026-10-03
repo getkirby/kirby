@@ -199,10 +199,15 @@ if (Helpers::hasOverride('go') === false) { // @codeCoverageIgnore
 	/**
 	 * Redirects to the given Urls
 	 * Urls can be relative or absolute.
+	 *
+	 * @param bool $inherit Keep the query and params of the current request (since 5.7.0)
 	 */
-	function go(string $url = '/', int $code = 302): never
-	{
-		Response::go($url, $code); // @codeCoverageIgnore
+	function go(
+		string $url = '/',
+		int $code = 302,
+		bool $inherit = false
+	): never {
+		Response::go($url, $code, $inherit); // @codeCoverageIgnore
 	}
 }
 
