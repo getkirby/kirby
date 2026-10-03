@@ -73,7 +73,7 @@ class Imagick extends Darkroom
 	 */
 	protected function coalesce(Image $image): Image
 	{
-		if ($image->getImageMimeType() === 'image/gif') {
+		if ($image->getImageFormat() === 'GIF') {
 			return $image->coalesceImages();
 		}
 
