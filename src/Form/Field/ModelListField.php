@@ -423,8 +423,6 @@ abstract class ModelListField extends DisplayField
 		};
 	}
 
-
-
 	/**
 	 * Panel link to the parent, unless it is the field's own model
 	 */

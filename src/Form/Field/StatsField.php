@@ -18,7 +18,7 @@ class StatsField extends DisplayField
 	 * Array or query string for reports. Each report needs a `label` and `value` and can have additional `info`, `link`, `icon` and `theme` settings.
 	 */
 	#[Derived]
-	protected array|string|null $reports = [];
+	protected array|string $reports = [];
 
 	/**
 	 * The size of the report cards. Available sizes: `tiny`, `small`, `medium`, `large`
