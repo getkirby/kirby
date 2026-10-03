@@ -211,6 +211,56 @@ class ImagickTest extends TestCase
 		], $imagick->process($file));
 	}
 
+	public function testProcessAnimatedGif(): void
+	{
+		copy(
+			static::FIXTURES . '/image/animated.gif',
+			$file = static::TMP . '/animated.gif'
+		);
+
+		$imagick = new Imagick(['width' => 50]);
+		$imagick->process($file);
+
+		$image = new Image($file);
+		$this->assertSame(3, $image->getNumberImages());
+
+		foreach ($image as $frame) {
+			$this->assertSame(50, $frame->getImageWidth());
+			$this->assertSame(50, $frame->getImageHeight());
+			$this->assertSame(
+				['width' => 50, 'height' => 50, 'x' => 0, 'y' => 0],
+				$frame->getImagePage()
+			);
+		}
+	}
+
+	public function testProcessAnimatedGifWithCrop(): void
+	{
+		copy(
+			static::FIXTURES . '/image/animated.gif',
+			$file = static::TMP . '/animated.gif'
+		);
+
+		$imagick = new Imagick([
+			'crop'   => true,
+			'width'  => 50,
+			'height' => 30
+		]);
+		$imagick->process($file);
+
+		$image = new Image($file);
+		$this->assertSame(3, $image->getNumberImages());
+
+		foreach ($image as $frame) {
+			$this->assertSame(50, $frame->getImageWidth());
+			$this->assertSame(30, $frame->getImageHeight());
+			$this->assertSame(
+				['width' => 50, 'height' => 30, 'x' => 0, 'y' => 0],
+				$frame->getImagePage()
+			);
+		}
+	}
+
 	public function testQuality(): void
 	{
 		$image = $this->createMock(Image::class);
