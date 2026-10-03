@@ -40,7 +40,9 @@ class ImageMagick extends Darkroom
 	 */
 	protected function coalesce(string $file, array $options): string|null
 	{
-		if (F::extension($file) === 'gif') {
+		// check the content, as the extension
+		// already is the one of the output format
+		if (F::mime($file) === 'image/gif') {
 			return '-coalesce';
 		}
 
