@@ -4,7 +4,7 @@
 	"type": "module",
 	"scripts": {
 		"build": "vite build",
-		"ci": "npm run test && npm run lint",
+		"ci": "npm run test && npm run lint && npm run format",
 		"build:docs": "node scripts/docs.js",
 		"dev": "vite --host",
 		"format": "prettier --check \"src/**/*.{js,ts,vue}\"",
