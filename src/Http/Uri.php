@@ -501,7 +501,10 @@ class Uri implements Stringable
 			$slash = false;
 		}
 
-		$path = $this->path->toString($slash) . $this->params->toString(true);
+		// relative root URLs already start with a slash,
+		// another one would turn params into a host (`//page:2`)
+		$path  = $this->path->toString($slash);
+		$path .= $this->params->toString($slash === true || $path !== '');
 
 		if ($this->slash && ($path !== '' || $slash === true)) {
 			$path .= '/';
