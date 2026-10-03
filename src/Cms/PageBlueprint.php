@@ -134,8 +134,11 @@ class PageBlueprint extends Blueprint
 			}
 
 			// always make sure to have a proper label
-			if (empty($status[$key]['label']) === true) {
+			if (($status[$key]['label'] ?? '') === '') {
 				$status[$key]['label'] = $defaults[$key]['label'];
+
+				// the default description only fits the default label
+				$status[$key]['text'] ??= $defaults[$key]['text'];
 			}
 
 			// also make sure to have the text field set

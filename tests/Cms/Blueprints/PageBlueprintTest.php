@@ -166,6 +166,31 @@ class PageBlueprintTest extends TestCase
 		$this->assertSame('positive', $status['listed']['theme']);
 	}
 
+	public function testStatusWithDefaultLabel(): void
+	{
+		$blueprint = new PageBlueprint([
+			'model'  => new Page(['slug' => 'test']),
+			'status' => [
+				'draft'    => ['icon' => 'edit'],
+				'unlisted' => ['label' => '', 'text' => 'Custom Text'],
+				'listed'   => ['label' => 'Live']
+			]
+		]);
+
+		$status = $blueprint->status();
+
+		// the default label brings the default description along
+		$this->assertSame('Draft', $status['draft']['label']);
+		$this->assertSame('The page is in draft mode and only visible for logged in editors or via secret link', $status['draft']['text']);
+
+		$this->assertSame('Unlisted', $status['unlisted']['label']);
+		$this->assertSame('Custom Text', $status['unlisted']['text']);
+
+		// a custom label has no description unless defined
+		$this->assertSame('Live', $status['listed']['label']);
+		$this->assertNull($status['listed']['text']);
+	}
+
 	public function testStatus(): void
 	{
 		$blueprint = new PageBlueprint([
