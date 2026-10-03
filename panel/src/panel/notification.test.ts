@@ -214,6 +214,33 @@ describe("panel.notification", () => {
 			expect(notification.message).toStrictEqual("Page not found");
 		});
 
+		it("should pass details of flat API errors to the error dialog", async () => {
+			const panel = Panel.create();
+			const notification = Notification(panel);
+			// @ts-expect-error panel.js is not typed
+			const open = vi.spyOn(panel.dialog, "open");
+			const details = {
+				title: { label: "Title", message: { required: "Please enter something" } }
+			};
+
+			notification.error(
+				new RequestError(
+					"error",
+					makeRequestOptions({
+						status: "error",
+						message: "Please fix all form errors…",
+						key: "error.form.incomplete",
+						details
+					})
+				)
+			);
+
+			expect(open).toHaveBeenCalledWith({
+				component: "k-error-dialog",
+				props: { message: "Please fix all form errors…", details }
+			});
+		});
+
 		it("should not set a timer", async () => {
 			const panel = Panel.create();
 			const notification = Notification(panel);
