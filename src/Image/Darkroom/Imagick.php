@@ -131,13 +131,18 @@ class Imagick extends Darkroom
 		$image = $this->threads($image, $options);
 		$image = $this->interlace($image, $options);
 		$image = $this->coalesce($image);
-		$image = $this->grayscale($image, $options);
-		$image = $this->autoOrient($image);
-		$image = $this->resize($image, $options);
-		$image = $this->quality($image, $options);
-		$image = $this->blur($image, $options);
-		$image = $this->sharpen($image, $options);
-		$image = $this->strip($image, $options);
+
+		// Imagick only transforms the current frame,
+		// so apply all steps to each frame of animated images
+		foreach ($image as $frame) {
+			$frame = $this->grayscale($frame, $options);
+			$frame = $this->autoOrient($frame);
+			$frame = $this->resize($frame, $options);
+			$frame = $this->quality($frame, $options);
+			$frame = $this->blur($frame, $options);
+			$frame = $this->sharpen($frame, $options);
+			$frame = $this->strip($frame, $options);
+		}
 
 		if ($this->save($image, $file, $options) === false) {
 			// @codeCoverageIgnoreStart
@@ -185,6 +190,9 @@ class Imagick extends Darkroom
 					$focus['x1'],
 					$focus['y1']
 				);
+
+				// drop the canvas offset left by the crop (like `+repage`)
+				$image->setImagePage(0, 0, 0, 0);
 			}
 
 			return $image;
