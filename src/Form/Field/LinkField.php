@@ -16,7 +16,7 @@ use Kirby\Toolkit\V;
 class LinkField extends InputField
 {
 	/**
-	 * @values 'anchor', 'url, 'page, 'file', 'email', 'tel', 'custom'
+	 * Link types that can be selected. Available types: `anchor`, `custom`, `email`, `file`, `page`, `tel`, `url`
 	 */
 	protected array $options = ['url', 'page', 'file', 'email', 'tel', 'anchor'];
 
