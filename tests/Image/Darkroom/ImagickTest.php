@@ -198,6 +198,28 @@ class ImagickTest extends TestCase
 		$this->call($imagick, 'interlace', $image, ['interlace' => true]);
 	}
 
+	public function testOptimize(): void
+	{
+		$image = $this->createMock(Image::class);
+		$image->method('getImageFormat')->willReturn('GIF');
+		$image->expects($this->once())
+			->method('optimizeImageLayers')
+			->willReturn($optimized = new Image());
+
+		$imagick = new Imagick();
+		$this->assertSame($optimized, $this->call($imagick, 'optimize', $image));
+	}
+
+	public function testOptimizeNonGif(): void
+	{
+		$image = $this->createMock(Image::class);
+		$image->method('getImageFormat')->willReturn('JPEG');
+		$image->expects($this->never())->method('optimizeImageLayers');
+
+		$imagick = new Imagick();
+		$this->assertSame($image, $this->call($imagick, 'optimize', $image));
+	}
+
 	public function testProcess(): void
 	{
 		$imagick = new Imagick();
@@ -286,6 +308,11 @@ class ImagickTest extends TestCase
 
 		$imagick = new Imagick(['width' => 50]);
 		$imagick->process($file);
+
+		// frames 2 and 3 got optimized again
+		$image = new Image($file);
+		$image->setIteratorIndex(1);
+		$this->assertLessThan(50, $image->getImageWidth());
 
 		// a black square moves from left to right
 		$squares = [];
