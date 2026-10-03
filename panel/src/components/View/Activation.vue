@@ -6,10 +6,12 @@
 				<a href="https://getkirby.com/buy" target="_blank">{{
 					$t("license.buy")
 				}}</a>
-				&amp;
-				<button type="button" @click="$dialog('registration')">
-					{{ $t("license.activate") }}
-				</button>
+				<template v-if="$panel.permissions.access.system === true">
+					&amp;
+					<button type="button" @click="$dialog('registration')">
+						{{ $t("license.activate") }}
+					</button>
+				</template>
 			</template>
 		</p>
 		<k-button
