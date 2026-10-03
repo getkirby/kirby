@@ -1,4 +1,8 @@
-import Modal, { defaults as modalDefaults, type ModalState } from "./modal";
+import Modal, {
+	defaults as modalDefaults,
+	save,
+	type ModalState
+} from "./modal";
 import { isObject } from "@/helpers/object";
 import { reactive } from "vue";
 import { type Listener } from "./listeners";
@@ -27,26 +31,7 @@ export default function Dialog(panel: Panel) {
 	// shortcut to submit dialogs
 	panel.events.on("dialog.save", (e?: Event) => {
 		e?.preventDefault();
-
-		const target = e?.target as HTMLElement | null | undefined;
-		const form = target?.closest?.("form.k-dialog") as HTMLFormElement | null;
-
-		if (form) {
-			if (typeof form.requestSubmit === "function") {
-				form.requestSubmit();
-			} else {
-				form.dispatchEvent(
-					new Event("submit", {
-						bubbles: true,
-						cancelable: true
-					})
-				);
-			}
-
-			return;
-		}
-
-		panel.dialog.submit();
+		save(panel, "dialog");
 	});
 
 	const parent = Modal(panel, "dialog", defaults());
