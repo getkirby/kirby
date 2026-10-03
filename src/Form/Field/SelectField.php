@@ -17,7 +17,7 @@ class SelectField extends OptionField
 	use Mixin\Icon;
 
 	/**
-	 * Optional placeholder value that will be shown when the field is empty
+	 * Text shown when no option is selected yet
 	 */
 	protected array|string|null $placeholder = '—';
 

@@ -19,14 +19,14 @@ class TagsField extends OptionsField
 	use Mixin\Separator;
 
 	/**
-	 * Optional icon that will be shown at the end of the field
-	 */
-	protected string|null $icon = 'tag';
-
-	/**
 	 * If set to `all`, any type of input is accepted. If set to `options` only the predefined options are accepted as input.
 	 */
 	protected string $accept = 'all';
+
+	/**
+	 * Icon that will be shown at the end of the field
+	 */
+	protected string|null $icon = 'tag';
 
 	/**
 	 * Set to `list` to display each tag with 100% width,
