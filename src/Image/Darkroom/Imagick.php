@@ -120,6 +120,18 @@ class Imagick extends Darkroom
 	}
 
 	/**
+	 * Shrinks animated gifs again after coalescing
+	 */
+	protected function optimize(Image $image): Image
+	{
+		if ($image->getImageFormat() === 'GIF') {
+			return $image->optimizeImageLayers();
+		}
+
+		return $image;
+	}
+
+	/**
 	 * Creates and runs the full imagemagick command
 	 * to process the image
 	 *
@@ -145,6 +157,8 @@ class Imagick extends Darkroom
 			$frame = $this->sharpen($frame, $options);
 			$frame = $this->strip($frame, $options);
 		}
+
+		$image = $this->optimize($image);
 
 		if ($this->save($image, $file, $options) === false) {
 			// @codeCoverageIgnoreStart
