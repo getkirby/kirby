@@ -198,6 +198,17 @@ class ImagickTest extends TestCase
 		$this->call($imagick, 'interlace', $image, ['interlace' => true]);
 	}
 
+	public function testIsAnimatable(): void
+	{
+		$imagick = new Imagick();
+
+		$this->assertTrue($this->call($imagick, 'isAnimatable', 'image.gif', ['format' => null]));
+		$this->assertTrue($this->call($imagick, 'isAnimatable', 'image.gif', ['format' => 'WEBP']));
+		$this->assertTrue($this->call($imagick, 'isAnimatable', 'image.gif', ['format' => 'avif']));
+		$this->assertFalse($this->call($imagick, 'isAnimatable', 'image.gif', ['format' => 'jpg']));
+		$this->assertFalse($this->call($imagick, 'isAnimatable', 'image.png', ['format' => null]));
+	}
+
 	public function testOptimize(): void
 	{
 		$image = $this->createMock(Image::class);
@@ -269,6 +280,39 @@ class ImagickTest extends TestCase
 				$frame->getImagePage()
 			);
 		}
+	}
+
+	public static function stillFormatProvider(): array
+	{
+		return [
+			['jpg', 'JPEG'],
+			['png', 'PNG'],
+		];
+	}
+
+	#[DataProvider('stillFormatProvider')]
+	public function testProcessAnimatedGifToStillFormat(
+		string $format,
+		string $type
+	): void {
+		Dir::make($dir = static::TMP . '/' . $format);
+
+		copy(
+			static::FIXTURES . '/image/animated-optimized.gif',
+			$file = $dir . '/thumb.' . $format
+		);
+
+		$imagick = new Imagick(['width' => 50, 'format' => $format]);
+		$imagick->process($file);
+
+		// only the first frame, no numbered file per frame
+		$this->assertSame(['thumb.' . $format], Dir::read($dir));
+
+		$image = new Image($file);
+		$this->assertSame($type, $image->getImageFormat());
+		$this->assertSame(1, $image->getNumberImages());
+		$this->assertSame(50, $image->getImageWidth());
+		$this->assertSame(30, $image->getImageHeight());
 	}
 
 	public function testProcessAnimatedGifWithCrop(): void

@@ -21,6 +21,8 @@ use Kirby\Image\Focus;
  */
 class ImageMagick extends Darkroom
 {
+	public static array $animatableTypes = ['avif', 'gif', 'webp'];
+
 	/**
 	 * Applies the blur settings
 	 */
@@ -54,6 +56,12 @@ class ImageMagick extends Darkroom
 
 		// default is limiting to single-threading to keep CPU usage sane
 		$command .= ' -limit thread ' . escapeshellarg($options['threads']);
+
+		// formats without animation only get the first frame,
+		// otherwise ImageMagick writes a numbered file per frame
+		if ($this->isAnimatable($file, $options) === false) {
+			$file .= '[0]';
+		}
 
 		// append input file
 		return $command . ' ' . escapeshellarg($file);
