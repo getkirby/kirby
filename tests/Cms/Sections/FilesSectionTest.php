@@ -334,14 +334,11 @@ class FilesSectionTest extends TestCase
 	{
 		$this->app->impersonate('kirby');
 
-		$locale = setlocale(LC_ALL, 0);
-		setlocale(LC_ALL, ['de_DE.ISO8859-1', 'de_DE']);
-
 		$model = new Page([
 			'slug'  => 'test',
 			'files' => [
 				[
-					'filename' => 'z.jpg'
+					'filename' => 'Z.jpg'
 				],
 				[
 					'filename' => 'ä.jpg'
@@ -358,7 +355,7 @@ class FilesSectionTest extends TestCase
 			'model' => $model
 		]);
 		$this->assertSame('b.jpg', $section->data()[0]['filename']);
-		$this->assertSame('z.jpg', $section->data()[1]['filename']);
+		$this->assertSame('Z.jpg', $section->data()[1]['filename']);
 		$this->assertSame('ä.jpg', $section->data()[2]['filename']);
 
 		// custom sorting direction
@@ -368,30 +365,28 @@ class FilesSectionTest extends TestCase
 			'sortBy' => 'filename desc'
 		]);
 		$this->assertSame('ä.jpg', $section->data()[0]['filename']);
-		$this->assertSame('z.jpg', $section->data()[1]['filename']);
+		$this->assertSame('Z.jpg', $section->data()[1]['filename']);
 		$this->assertSame('b.jpg', $section->data()[2]['filename']);
 
 		// custom flag
 		$section = new Section('files', [
 			'name'   => 'test',
 			'model'  => $model,
-			'sortBy' => 'filename SORT_LOCALE_STRING'
+			'sortBy' => 'filename SORT_STRING'
 		]);
-		$this->assertSame('ä.jpg', $section->data()[0]['filename']);
+		$this->assertSame('Z.jpg', $section->data()[0]['filename']);
 		$this->assertSame('b.jpg', $section->data()[1]['filename']);
-		$this->assertSame('z.jpg', $section->data()[2]['filename']);
+		$this->assertSame('ä.jpg', $section->data()[2]['filename']);
 
 		// flag & sorting direction
 		$section = new Section('files', [
 			'name'   => 'test',
 			'model'  => $model,
-			'sortBy' => 'filename desc SORT_LOCALE_STRING'
+			'sortBy' => 'filename desc SORT_STRING'
 		]);
-		$this->assertSame('z.jpg', $section->data()[0]['filename']);
+		$this->assertSame('ä.jpg', $section->data()[0]['filename']);
 		$this->assertSame('b.jpg', $section->data()[1]['filename']);
-		$this->assertSame('ä.jpg', $section->data()[2]['filename']);
-
-		setlocale(LC_ALL, $locale);
+		$this->assertSame('Z.jpg', $section->data()[2]['filename']);
 	}
 
 	public function testSortable(): void
