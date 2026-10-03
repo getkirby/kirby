@@ -228,30 +228,7 @@ describe("panel.notification", () => {
 			expect(notification.type).toStrictEqual("error");
 		});
 
-		it("should open a generic error dialog for plain errors in view context", async () => {
-			const panel = Panel.create(app);
-			const notification = Notification(panel);
-			const open = vi.spyOn(panel.dialog, "open");
-
-			notification.error(new Error("Something failed"));
-
-			expect(open).toHaveBeenCalledWith(
-				expect.objectContaining({ component: "k-error-dialog" })
-			);
-			expect(notification.type).toStrictEqual("error");
-		});
-
-		it("should set error icon and theme", async () => {
-			const panel = Panel.create(app);
-			const notification = Notification(panel);
-
-			notification.error("Test");
-
-			expect(notification.icon).toStrictEqual("alert");
-			expect(notification.theme).toStrictEqual("negative");
-		});
-
-		it("should pass field errors of flat API errors to the validation error dialog", async () => {
+		it("should open a validation error dialog for form errors in view context", async () => {
 			const panel = Panel.create(app);
 			const notification = Notification(panel);
 			const open = vi.spyOn(panel.dialog, "open");
@@ -278,6 +255,29 @@ describe("panel.notification", () => {
 				component: "k-validation-error-dialog",
 				props: { message: "Please fix all form errors…", fields: details }
 			});
+		});
+
+		it("should open a generic error dialog for plain errors in view context", async () => {
+			const panel = Panel.create(app);
+			const notification = Notification(panel);
+			const open = vi.spyOn(panel.dialog, "open");
+
+			notification.error(new Error("Something failed"));
+
+			expect(open).toHaveBeenCalledWith(
+				expect.objectContaining({ component: "k-error-dialog" })
+			);
+			expect(notification.type).toStrictEqual("error");
+		});
+
+		it("should set error icon and theme", async () => {
+			const panel = Panel.create(app);
+			const notification = Notification(panel);
+
+			notification.error("Test");
+
+			expect(notification.icon).toStrictEqual("alert");
+			expect(notification.theme).toStrictEqual("negative");
 		});
 
 		it("should not set a timer", async () => {
