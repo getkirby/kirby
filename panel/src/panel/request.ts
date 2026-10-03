@@ -24,11 +24,7 @@ export interface PanelResponse {
 }
 
 export type RequestBody =
-	| string
-	| FormData
-	| HTMLFormElement
-	| Record<string, unknown>
-	| null;
+	string | FormData | HTMLFormElement | Record<string, unknown> | null;
 
 export interface PanelRequestOptions extends Omit<
 	RequestInit,

@@ -18,12 +18,16 @@ describe("$helper.string.sanitizeHTML", () => {
 
 	it("should strip class and style attributes", async () => {
 		expect(
-			await sanitizeHTML('<span class="k-tag" style="background: red">hello</span>')
+			await sanitizeHTML(
+				'<span class="k-tag" style="background: red">hello</span>'
+			)
 		).toBe("hello");
 	});
 
 	it("should preserve bold with strong tag", async () => {
-		expect(await sanitizeHTML("<strong>bold</strong>")).toBe("<strong>bold</strong>");
+		expect(await sanitizeHTML("<strong>bold</strong>")).toBe(
+			"<strong>bold</strong>"
+		);
 	});
 
 	it("should preserve bold with b tag", async () => {
@@ -105,10 +109,12 @@ describe("$helper.string.sanitizeHTML", () => {
 			Mark.prototype
 		);
 
-		expect(await sanitizeHTML("<mark>text</mark>", { marks: [highlight] })).toBe(
-			"<mark>text</mark>"
+		expect(
+			await sanitizeHTML("<mark>text</mark>", { marks: [highlight] })
+		).toBe("<mark>text</mark>");
+		expect(await sanitizeHTML("<b>bold</b>", { marks: [highlight] })).toBe(
+			"bold"
 		);
-		expect(await sanitizeHTML("<b>bold</b>", { marks: [highlight] })).toBe("bold");
 	});
 
 	it("should combine custom marks and nodes", async () => {

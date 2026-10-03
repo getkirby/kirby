@@ -93,9 +93,13 @@ describe("markPasteRule", () => {
 	});
 
 	it("computes attrs from a getAttrs function", () => {
-		const plugin = markPasteRule(regexp(), linkType, (match: RegExpMatchArray) => ({
-			href: `https://${match[1]}.com`
-		}));
+		const plugin = markPasteRule(
+			regexp(),
+			linkType,
+			(match: RegExpMatchArray) => ({
+				href: `https://${match[1]}.com`
+			})
+		);
 		const result = applyRule(plugin, paragraph(schema.text("<example>")));
 		const para = result.content.firstChild!;
 		expect(para.child(0).marks[0].attrs.href).toBe("https://example.com");

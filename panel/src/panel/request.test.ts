@@ -162,8 +162,10 @@ describe("panel.request", () => {
 				})
 			);
 
-			const props = (response.json.dialog as Record<string, unknown>)
-				.props as { help: HtmlString; text: string };
+			const props = (response.json.dialog as Record<string, unknown>).props as {
+				help: HtmlString;
+				text: string;
+			};
 
 			expect(props.help).toBeInstanceOf(HtmlString);
 			expect(props.help.toString()).toBe("<b>trusted</b>");

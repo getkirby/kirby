@@ -5,7 +5,7 @@ import SortHandle from "./SortHandle.vue";
 function mount(attrs = {}) {
 	return vueMount(SortHandle, {
 		attrs,
-		shallow: true,
+		shallow: true
 	});
 }
 

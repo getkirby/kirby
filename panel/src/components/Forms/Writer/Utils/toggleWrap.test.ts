@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { type Node, Schema } from "prosemirror-model";
-import { EditorState, TextSelection, type Transaction } from "prosemirror-state";
+import {
+	EditorState,
+	TextSelection,
+	type Transaction
+} from "prosemirror-state";
 import toggleWrap from "./toggleWrap";
 
 const schema = new Schema({

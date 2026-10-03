@@ -37,12 +37,9 @@ function fire(
 		index: 0,
 		input: matchStrings[0]
 	}) as RegExpMatchArray;
-	return (rule as unknown as { handler: (...args: unknown[]) => Transaction | null }).handler(
-		state,
-		match,
-		start,
-		end
-	);
+	return (
+		rule as unknown as { handler: (...args: unknown[]) => Transaction | null }
+	).handler(state, match, start, end);
 }
 
 // Shared document: paragraph containing "`text" (no closing backtick).
@@ -92,10 +89,14 @@ describe("markInputRule", () => {
 
 	it("calls a getAttrs function with the match array", () => {
 		let receivedMatch: RegExpMatchArray | null = null;
-		const rule = markInputRule(/`([^`]+)`$/, codeType, (match: RegExpMatchArray) => {
-			receivedMatch = match;
-			return {};
-		});
+		const rule = markInputRule(
+			/`([^`]+)`$/,
+			codeType,
+			(match: RegExpMatchArray) => {
+				receivedMatch = match;
+				return {};
+			}
+		);
 		fire(rule, EditorState.create({ doc: codeDoc }), ["`text`", "text"], 1, 6);
 		expect(receivedMatch![0]).toBe("`text`");
 	});

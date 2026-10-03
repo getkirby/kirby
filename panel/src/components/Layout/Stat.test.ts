@@ -146,6 +146,5 @@ describe("Stat.vue", () => {
 			(wrapper.vm as unknown as StatInstanceFn).target();
 			expect(open).toHaveBeenCalledWith("pages/preview");
 		});
-
 	});
 });

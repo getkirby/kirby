@@ -22,13 +22,17 @@ const linkType = schema.marks.link;
 const regexp = () => /hello/g;
 
 function applyRule(plugin: Plugin, slice: Slice): Slice {
-	return (plugin.props as { transformPasted: (s: Slice) => Slice }).transformPasted(
-		slice
-	);
+	return (
+		plugin.props as { transformPasted: (s: Slice) => Slice }
+	).transformPasted(slice);
 }
 
 function paragraph(...children: Node[]): Slice {
-	return new Slice(Fragment.from(schema.node("paragraph", null, children)), 0, 0);
+	return new Slice(
+		Fragment.from(schema.node("paragraph", null, children)),
+		0,
+		0
+	);
 }
 
 describe("pasteRule", () => {
@@ -79,7 +83,9 @@ describe("pasteRule", () => {
 	});
 
 	it("uses attrs from a getAttrs object", () => {
-		const plugin = pasteRule(regexp(), linkType, { href: "https://static.com" });
+		const plugin = pasteRule(regexp(), linkType, {
+			href: "https://static.com"
+		});
 		const result = applyRule(plugin, paragraph(schema.text("hello")));
 		const para = result.content.firstChild!;
 		expect(para.child(0).marks[0].attrs.href).toBe("https://static.com");

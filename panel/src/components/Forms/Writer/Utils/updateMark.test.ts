@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { Schema } from "prosemirror-model";
-import { EditorState, TextSelection, type Transaction } from "prosemirror-state";
+import {
+	EditorState,
+	TextSelection,
+	type Transaction
+} from "prosemirror-state";
 import updateMark from "./updateMark";
 
 const schema = new Schema({

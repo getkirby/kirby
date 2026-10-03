@@ -88,9 +88,9 @@ describe("Dropzone.vue", () => {
 				dataTransfer: { files }
 			});
 			expect(wrapper.emitted("drop")?.[0][0]).toEqual(files);
-			expect((wrapper.vm as unknown as DropzoneInstance).$events.emit).toHaveBeenCalledWith(
-				"dropzone.drop"
-			);
+			expect(
+				(wrapper.vm as unknown as DropzoneInstance).$events.emit
+			).toHaveBeenCalledWith("dropzone.drop");
 		});
 
 		it("does not emit drop when disabled", async () => {
@@ -99,7 +99,9 @@ describe("Dropzone.vue", () => {
 				dataTransfer: { files: [] }
 			});
 			expect(wrapper.emitted("drop")).toBeUndefined();
-			expect((wrapper.vm as unknown as DropzoneInstance).$events.emit).not.toHaveBeenCalled();
+			expect(
+				(wrapper.vm as unknown as DropzoneInstance).$events.emit
+			).not.toHaveBeenCalled();
 		});
 
 		it("does not emit drop when event is not an upload event", async () => {
@@ -113,7 +115,9 @@ describe("Dropzone.vue", () => {
 			});
 			await wrapper.trigger("drop", { dataTransfer: { files: [] } });
 			expect(wrapper.emitted("drop")).toBeUndefined();
-			expect((wrapper.vm as unknown as DropzoneInstance).$events.emit).not.toHaveBeenCalled();
+			expect(
+				(wrapper.vm as unknown as DropzoneInstance).$events.emit
+			).not.toHaveBeenCalled();
 		});
 
 		it("resets dragging and over state after drop", async () => {

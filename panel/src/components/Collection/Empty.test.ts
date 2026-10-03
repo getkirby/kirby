@@ -2,7 +2,10 @@ import { describe, it, expect } from "@test/unit";
 import { mount as vueMount } from "@vue/test-utils";
 import Empty from "./Empty.vue";
 
-function mount(props: Record<string, unknown> = {}, attrs: Record<string, unknown> = {}) {
+function mount(
+	props: Record<string, unknown> = {},
+	attrs: Record<string, unknown> = {}
+) {
 	return vueMount(Empty, {
 		props,
 		attrs,

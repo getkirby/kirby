@@ -134,7 +134,9 @@ describe("PicklistInput.vue", () => {
 		});
 
 		it("does not double-escape entities in trusted HTML", () => {
-			expect(String(highlight(html("Tom &amp; Jerry")))).toBe("Tom &amp; Jerry");
+			expect(String(highlight(html("Tom &amp; Jerry")))).toBe(
+				"Tom &amp; Jerry"
+			);
 		});
 	});
 });

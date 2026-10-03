@@ -54,9 +54,13 @@ describe("panel", () => {
 			panel.get = vi.fn().mockResolvedValue({});
 
 			const states: boolean[] = [];
-			watch(() => panel.isLoading, (state) => states.push(state), {
-				flush: "sync"
-			});
+			watch(
+				() => panel.isLoading,
+				(state) => states.push(state),
+				{
+					flush: "sync"
+				}
+			);
 
 			await raw.open("https://getkirby.com/panel/pages/test");
 

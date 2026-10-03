@@ -65,9 +65,13 @@ describe("nodeInputRule", () => {
 		});
 
 		it("applies attrs from a getAttrs function", () => {
-			const rule = nodeInputRule(/^(#{1,6})\s/, headingType, (match: RegExpMatchArray) => ({
-				level: match[1].length
-			}));
+			const rule = nodeInputRule(
+				/^(#{1,6})\s/,
+				headingType,
+				(match: RegExpMatchArray) => ({
+					level: match[1].length
+				})
+			);
 			const tr = getHandler(rule)(state, makeMatch("## ", "##"), 0, 3)!;
 			expect(state.apply(tr).doc.firstChild!.attrs.level).toBe(2);
 		});
