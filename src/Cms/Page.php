@@ -425,11 +425,15 @@ class Page extends ModelWithContent
 	 *
 	 * @param array $options Options for `Kirby\Http\Uri` to create URL parts
 	 * @param int $code HTTP status code
+	 * @param bool $inherit Keep the query and params of the current request (since 5.7.0)
 	 */
 	#[BlockCollectionAccess]
-	public function go(array $options = [], int $code = 302): void
-	{
-		Response::go($this->url($options), $code);
+	public function go(
+		array $options = [],
+		int $code = 302,
+		bool $inherit = false
+	): void {
+		Response::go($this->url($options), $code, $inherit);
 	}
 
 	/**

@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Mime;
 use Kirby\Http\Response as HttpResponse;
+use Kirby\Http\Uri;
 use Kirby\Http\VolatileHeaders;
 use Kirby\Toolkit\Str;
 use Stringable;
@@ -345,13 +346,20 @@ class Responder implements Stringable
 	/**
 	 * Shortcut to create a redirect response
 	 *
+	 * @param bool $inherit Keep the query and params of the current request (since 5.7.0)
 	 * @return $this
 	 */
 	public function redirect(
 		string|null $location = null,
-		int|null $code = null
+		int|null $code = null,
+		bool $inherit = false
 	): static {
 		$location = Url::to($location ?? '/');
+
+		if ($inherit === true) {
+			$location = (new Uri($location))->inherit(Uri::current())->toString();
+		}
+
 		$location = Url::unIdn($location);
 
 		return $this
