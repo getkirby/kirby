@@ -52,6 +52,26 @@ describe("TimeInput.vue", () => {
 		it.inheritsNoAttrs(mount);
 	});
 
+	// computed
+	describe("placeholder computed", () => {
+		it("shows an example time", () => {
+			const input = mount({ display: "h:mm a" }).find("input");
+			expect(input.attributes("placeholder")).toBe("12:00 am");
+		});
+
+		it("follows the display pattern", () => {
+			expect(
+				mount({ display: "HH:mm" }).find("input").attributes("placeholder")
+			).toBe("00:00");
+		});
+
+		it("uses `min` when now is before it", () => {
+			const input = mount({ display: "h:mm a", min: "13:00:00" }).find("input");
+			expect(input.attributes("placeholder")).toBe("1:00 pm");
+		});
+	});
+
+	// methods
 	describe("alter()", () => {
 		beforeAll(() => {
 			vi.setSystemTime(new Date(2022, 0, 15, 14, 32));
@@ -76,21 +96,31 @@ describe("TimeInput.vue", () => {
 		});
 	});
 
-	describe("placeholder", () => {
-		it("shows an example time", () => {
-			const input = mount({ display: "h:mm a" }).find("input");
-			expect(input.attributes("placeholder")).toBe("12:00 am");
+	describe("onBlur()", () => {
+		it("does not re-parse an untouched rendering of the value", async () => {
+			const wrapper = mount({ display: "h:mm a", value: "17:12:00" });
+			const input = wrapper.find("input");
+			expect((input.element as HTMLInputElement).value).toBe("5:12 pm");
+
+			await input.trigger("blur");
+
+			expect(wrapper.emitted("input")).toBeUndefined();
+			expect((input.element as HTMLInputElement).value).toBe("5:12 pm");
 		});
 
-		it("follows the display pattern", () => {
-			expect(
-				mount({ display: "HH:mm" }).find("input").attributes("placeholder")
-			).toBe("00:00");
+		it("keeps unparseable text and flags the input as invalid", async () => {
+			const wrapper = mount({ display: "HH:mm" });
+			const input = await type(wrapper, "25:61");
+
+			expect(input.value).toBe("25:61");
+			expect(wrapper.emitted("input")).toBeUndefined();
+			expect(input.validationMessage).toBe("error.validation.time");
 		});
 
-		it("uses `min` when now is before it", () => {
-			const input = mount({ display: "h:mm a", min: "13:00:00" }).find("input");
-			expect(input.attributes("placeholder")).toBe("1:00 pm");
+		it("commits an empty string for empty input", async () => {
+			const wrapper = mount({ display: "HH:mm", value: "17:12:00" });
+			await type(wrapper, "");
+			expect(emitted(wrapper)).toBe("");
 		});
 	});
 
@@ -137,34 +167,6 @@ describe("TimeInput.vue", () => {
 			});
 			await type(wrapper, "05:07");
 			expect(emitted(wrapper)).toBe("05:00:00");
-		});
-	});
-
-	describe("onBlur()", () => {
-		it("does not re-parse an untouched rendering of the value", async () => {
-			const wrapper = mount({ display: "h:mm a", value: "17:12:00" });
-			const input = wrapper.find("input");
-			expect((input.element as HTMLInputElement).value).toBe("5:12 pm");
-
-			await input.trigger("blur");
-
-			expect(wrapper.emitted("input")).toBeUndefined();
-			expect((input.element as HTMLInputElement).value).toBe("5:12 pm");
-		});
-
-		it("keeps unparseable text and flags the input as invalid", async () => {
-			const wrapper = mount({ display: "HH:mm" });
-			const input = await type(wrapper, "25:61");
-
-			expect(input.value).toBe("25:61");
-			expect(wrapper.emitted("input")).toBeUndefined();
-			expect(input.validationMessage).toBe("error.validation.time");
-		});
-
-		it("commits an empty string for empty input", async () => {
-			const wrapper = mount({ display: "HH:mm", value: "17:12:00" });
-			await type(wrapper, "");
-			expect(emitted(wrapper)).toBe("");
 		});
 	});
 });

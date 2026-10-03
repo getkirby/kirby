@@ -109,7 +109,7 @@ describe("Item.vue", () => {
 	});
 
 	// computed
-	describe("hasFigure", () => {
+	describe("hasFigure computed", () => {
 		it("is false without an image", () => {
 			const wrapper = mount({ text: "Kirby" });
 

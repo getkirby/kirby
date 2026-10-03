@@ -61,7 +61,8 @@ describe("DateInput.vue", () => {
 		it.inheritsNoAttrs(mount);
 	});
 
-	describe("placeholder", () => {
+	// computed
+	describe("placeholder computed", () => {
 		it("shows an example value", () => {
 			const input = mount({ display: "MMMM D, YYYY" }).find("input");
 			expect(input.attributes("placeholder")).toBe("January 15, 2022");
@@ -111,52 +112,7 @@ describe("DateInput.vue", () => {
 		});
 	});
 
-	describe("parse()", () => {
-		it("reads input in the display pattern, not day-first", async () => {
-			// https://github.com/getkirby/kirby/issues/7342
-			const wrapper = mount({ display: "MM-DD-YYYY" });
-			await type(wrapper, "06-26-2025");
-			expect(emitted(wrapper)).toBe("2025-06-26");
-		});
-
-		it("accepts any separator and unpadded numbers", async () => {
-			const wrapper = mount({ display: "MM-DD-YYYY" });
-			await type(wrapper, "6/26/2025");
-			expect(emitted(wrapper)).toBe("2025-06-26");
-		});
-
-		it("parses a pattern without a day part", async () => {
-			// https://github.com/getkirby/kirby/issues/6408
-			const wrapper = mount({ display: "MM/YYYY" });
-			await type(wrapper, "08/2025");
-			expect(emitted(wrapper)).toBe("2025-08-01");
-		});
-
-		it("resolves ambiguous input via the display pattern", async () => {
-			const monthFirst = mount({ display: "MM/DD/YYYY" });
-			await type(monthFirst, "05-03-2021");
-			expect(emitted(monthFirst)).toBe("2021-05-03");
-
-			const dayFirst = mount({ display: "DD.MM.YYYY" });
-			await type(dayFirst, "05-03-2021");
-			expect(emitted(dayFirst)).toBe("2021-03-05");
-		});
-
-		it("still falls back to interpret() for partial input", async () => {
-			const wrapper = mount({ display: "DD.MM.YYYY" });
-			await type(wrapper, "5");
-			expect(emitted(wrapper)).toBe("2022-01-05");
-		});
-
-		it("reads a display pattern that escapes a literal", async () => {
-			const wrapper = mount({ display: "[Am] D. MMMM YYYY" });
-			const input = await type(wrapper, "Am 5. March 2021");
-
-			expect(emitted(wrapper)).toBe("2021-03-05");
-			expect(input.value).toBe("Am 5. March 2021");
-		});
-	});
-
+	// methods
 	describe("alter()", () => {
 		// in the afternoon, where rounding the time of day to the
 		// nearest day would land on tomorrow
@@ -437,6 +393,52 @@ describe("DateInput.vue", () => {
 			await press(wrapper, "Tab");
 
 			expect(selected(wrapper)).toBe("2026");
+		});
+	});
+
+	describe("parse()", () => {
+		it("reads input in the display pattern, not day-first", async () => {
+			// https://github.com/getkirby/kirby/issues/7342
+			const wrapper = mount({ display: "MM-DD-YYYY" });
+			await type(wrapper, "06-26-2025");
+			expect(emitted(wrapper)).toBe("2025-06-26");
+		});
+
+		it("accepts any separator and unpadded numbers", async () => {
+			const wrapper = mount({ display: "MM-DD-YYYY" });
+			await type(wrapper, "6/26/2025");
+			expect(emitted(wrapper)).toBe("2025-06-26");
+		});
+
+		it("parses a pattern without a day part", async () => {
+			// https://github.com/getkirby/kirby/issues/6408
+			const wrapper = mount({ display: "MM/YYYY" });
+			await type(wrapper, "08/2025");
+			expect(emitted(wrapper)).toBe("2025-08-01");
+		});
+
+		it("resolves ambiguous input via the display pattern", async () => {
+			const monthFirst = mount({ display: "MM/DD/YYYY" });
+			await type(monthFirst, "05-03-2021");
+			expect(emitted(monthFirst)).toBe("2021-05-03");
+
+			const dayFirst = mount({ display: "DD.MM.YYYY" });
+			await type(dayFirst, "05-03-2021");
+			expect(emitted(dayFirst)).toBe("2021-03-05");
+		});
+
+		it("still falls back to interpret() for partial input", async () => {
+			const wrapper = mount({ display: "DD.MM.YYYY" });
+			await type(wrapper, "5");
+			expect(emitted(wrapper)).toBe("2022-01-05");
+		});
+
+		it("reads a display pattern that escapes a literal", async () => {
+			const wrapper = mount({ display: "[Am] D. MMMM YYYY" });
+			const input = await type(wrapper, "Am 5. March 2021");
+
+			expect(emitted(wrapper)).toBe("2021-03-05");
+			expect(input.value).toBe("Am 5. March 2021");
 		});
 	});
 });

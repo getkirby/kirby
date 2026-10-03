@@ -35,6 +35,13 @@ describe("Box.vue", () => {
 		});
 	});
 
+	describe("height prop", () => {
+		it("sets the CSS custom property", () => {
+			const wrapper = mount(Box, { props: { height: "10rem" } });
+			expect(wrapper.attributes("style")).toContain("--box-height: 10rem");
+		});
+	});
+
 	describe("html prop", () => {
 		beforeEach(() => {
 			vi.clearAllMocks();
@@ -53,20 +60,6 @@ describe("Box.vue", () => {
 		});
 	});
 
-	describe("theme prop", () => {
-		it("renders value as attribute", () => {
-			const wrapper = mount(Box, { props: { theme: "positive" } });
-			expect(wrapper.attributes("data-theme")).toBe("positive");
-		});
-	});
-
-	describe("height prop", () => {
-		it("sets the CSS custom property", () => {
-			const wrapper = mount(Box, { props: { height: "10rem" } });
-			expect(wrapper.attributes("style")).toContain("--box-height: 10rem");
-		});
-	});
-
 	describe("icon prop", () => {
 		it("renders a k-icon with the correct type", () => {
 			const wrapper = mount(Box, { props: { icon: "add" } });
@@ -76,6 +69,13 @@ describe("Box.vue", () => {
 		it("does not render a k-icon when not provided", () => {
 			const wrapper = mount(Box);
 			expect(wrapper.find("k-icon").exists()).toBe(false);
+		});
+	});
+
+	describe("theme prop", () => {
+		it("renders value as attribute", () => {
+			const wrapper = mount(Box, { props: { theme: "positive" } });
+			expect(wrapper.attributes("data-theme")).toBe("positive");
 		});
 	});
 

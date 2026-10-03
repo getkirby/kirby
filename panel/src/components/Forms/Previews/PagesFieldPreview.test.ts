@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "@test/unit";
-import { flushPromises, mount } from "@vue/test-utils";
+import { flushPromises, mount as vueMount } from "@vue/test-utils";
 import { reactive } from "vue";
 import { clone } from "@/helpers/object";
 import PagesFieldPreview from "./PagesFieldPreview.vue";
@@ -9,16 +9,15 @@ const helper = {
 	items: vi.fn()
 };
 
-function factory(panel: { language: { code: string } }) {
-	return mount(PagesFieldPreview, {
-		props: {
-			value: ["page://a"]
-		},
+function mount(props = {}, attrs = {}, $panel = { language: { code: "en" } }) {
+	return vueMount(PagesFieldPreview, {
+		props,
+		attrs,
 		shallow: true,
 		global: {
 			mocks: {
 				$helper: helper,
-				$panel: panel
+				$panel
 			}
 		}
 	});
@@ -29,22 +28,31 @@ describe("PagesFieldPreview.vue", () => {
 		helper.items.mockReset();
 	});
 
-	it("reloads the items on language switch", async () => {
-		const panel = reactive({ language: { code: "en" } });
+	// $el
+	describe("element", () => {
+		it.rendersAs(mount, "K-TAGS-FIELD-PREVIEW", "k-models-field-preview");
+		it.inheritsNoAttrs(mount);
+	});
 
-		helper.items.mockResolvedValueOnce([{ text: "Home" }]);
-		const wrapper = factory(panel);
-		await flushPromises();
+	// watch
+	describe("$panel.language.code watcher", () => {
+		it("reloads the items", async () => {
+			const $panel = reactive({ language: { code: "en" } });
 
-		expect(wrapper.vm.tags).toStrictEqual([{ id: "page://a", text: "Home" }]);
+			helper.items.mockResolvedValueOnce([{ text: "Home" }]);
+			const wrapper = mount({ value: ["page://a"] }, {}, $panel);
+			await flushPromises();
 
-		helper.items.mockResolvedValueOnce([{ text: "Startseite" }]);
-		panel.language.code = "de";
-		await flushPromises();
+			expect(wrapper.vm.tags).toStrictEqual([{ id: "page://a", text: "Home" }]);
 
-		expect(helper.items).toHaveBeenCalledTimes(2);
-		expect(wrapper.vm.tags).toStrictEqual([
-			{ id: "page://a", text: "Startseite" }
-		]);
+			helper.items.mockResolvedValueOnce([{ text: "Startseite" }]);
+			$panel.language.code = "de";
+			await flushPromises();
+
+			expect(helper.items).toHaveBeenCalledTimes(2);
+			expect(wrapper.vm.tags).toStrictEqual([
+				{ id: "page://a", text: "Startseite" }
+			]);
+		});
 	});
 });

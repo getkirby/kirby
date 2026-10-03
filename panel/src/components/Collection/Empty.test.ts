@@ -24,13 +24,6 @@ describe("Empty.vue", () => {
 	});
 
 	// props
-	describe("text prop", () => {
-		it("renders text content", () => {
-			const wrapper = mount({ text: "No items yet" });
-			expect(wrapper.text()).toBe("No items yet");
-		});
-	});
-
 	describe("icon prop", () => {
 		it("passes to k-box as icon attribute", () => {
 			const wrapper = mount({ icon: "image" });
@@ -70,8 +63,15 @@ describe("Empty.vue", () => {
 		});
 	});
 
-	// computed: attrs
-	describe("attrs", () => {
+	describe("text prop", () => {
+		it("renders text content", () => {
+			const wrapper = mount({ text: "No items yet" });
+			expect(wrapper.text()).toBe("No items yet");
+		});
+	});
+
+	// computed
+	describe("attrs computed", () => {
 		it("always sets theme to empty", () => {
 			const wrapper = mount();
 			expect(wrapper.attributes("theme")).toBe("empty");
@@ -80,6 +80,15 @@ describe("Empty.vue", () => {
 		it("sets button to true when onClick is provided", () => {
 			const wrapper = mount({ onClick: () => {} });
 			expect(wrapper.attributes("button")).toBe("true");
+		});
+	});
+
+	// events
+	describe("click event", () => {
+		it("emits click when clicked", async () => {
+			const wrapper = mount({ onClick: () => {} });
+			await wrapper.trigger("click");
+			expect(wrapper.emitted("click")).toBeTruthy();
 		});
 	});
 
@@ -100,15 +109,6 @@ describe("Empty.vue", () => {
 				shallow: true
 			});
 			expect(wrapper.text()).toBe("Slot content");
-		});
-	});
-
-	// events
-	describe("click event", () => {
-		it("emits click when clicked", async () => {
-			const wrapper = mount({ onClick: () => {} });
-			await wrapper.trigger("click");
-			expect(wrapper.emitted("click")).toBeTruthy();
 		});
 	});
 });

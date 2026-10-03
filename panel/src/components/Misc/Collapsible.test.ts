@@ -28,67 +28,9 @@ describe("Collapsible.vue", () => {
 		it.rendersAs(mount, "DIV");
 		it.acceptsClass(mount);
 		it.acceptsStyle(mount);
-
-		it("renders as the configured element", () => {
-			const wrapper = mount({ element: "section" });
-			expect(wrapper.element.tagName).toBe("SECTION");
-		});
 	});
 
-	// slots
-	describe("default slot", () => {
-		it("renders the default slot children", () => {
-			const wrapper = vueMount(Collapsible, {
-				global: { mocks: { $panel: { observers: createObservers() } } },
-				slots: {
-					default: '<span class="item">a</span><span class="item">b</span>'
-				}
-			});
-			expect(wrapper.findAll(".item")).toHaveLength(2);
-		});
-
-		it("exposes offset and total to the slot", () => {
-			const wrapper = vueMount(Collapsible, {
-				global: { mocks: { $panel: { observers: createObservers() } } },
-				slots: {
-					default: (props: { offset: number; total: number }) =>
-						h("span", { class: "info" }, `total=${props.total}`)
-				}
-			});
-			// total is 0 with no rendered items
-			expect(wrapper.find(".info").text()).toBe("total=0");
-		});
-	});
-
-	describe("fallback slot", () => {
-		it("does not render fallback when not collapsed", () => {
-			const wrapper = vueMount(Collapsible, {
-				global: { mocks: { $panel: { observers: createObservers() } } },
-				slots: {
-					default: '<span class="a">A</span>',
-					fallback: '<span class="f">F</span>'
-				}
-			});
-			expect(wrapper.find(".f").exists()).toBe(false);
-		});
-
-		it("renders fallback marked with data-collapsible-fallback when collapsed", async () => {
-			const wrapper = vueMount(Collapsible, {
-				global: { mocks: { $panel: { observers: createObservers() } } },
-				slots: {
-					default: '<span class="a">A</span>',
-					fallback: '<span class="f">F</span>'
-				}
-			});
-			wrapper.vm.isCollapsed = true;
-			await wrapper.vm.$nextTick();
-			const fb = wrapper.find(".f");
-			expect(fb.exists()).toBe(true);
-			expect(fb.attributes("data-collapsible-fallback")).toBe("");
-		});
-	});
-
-	// direction
+	// props
 	describe("direction prop", () => {
 		const slots = {
 			default: '<span class="a">A</span>',
@@ -121,8 +63,15 @@ describe("Collapsible.vue", () => {
 		});
 	});
 
-	// integration: collapse behavior triggered by calculate()
-	describe("collapse behavior", () => {
+	describe("element prop", () => {
+		it("renders as the configured element", () => {
+			const wrapper = mount({ element: "section" });
+			expect(wrapper.element.tagName).toBe("SECTION");
+		});
+	});
+
+	// methods
+	describe("calculate()", () => {
 		// calculate() is async with several awaits. Wait for it to finish.
 		async function flush(vm: {
 			isUpdating: boolean;
@@ -241,81 +190,7 @@ describe("Collapsible.vue", () => {
 		});
 	});
 
-	// observe / unobserve
-	describe("resize observation", () => {
-		it("registers with $panel.observers.resize on mount", () => {
-			const observers = createObservers();
-			const wrapper = vueMount(Collapsible, {
-				global: { mocks: { $panel: { observers } } }
-			});
-			expect(observers.resize.observe).toHaveBeenCalledWith(wrapper.element);
-		});
-
-		it("unregisters on unmount", () => {
-			const observers = createObservers();
-			const wrapper = vueMount(Collapsible, {
-				global: { mocks: { $panel: { observers } } }
-			});
-			const el = wrapper.element;
-			wrapper.unmount();
-			expect(observers.resize.unobserve).toHaveBeenCalledWith(el);
-		});
-
-		it("recalculates when the element fires a resize event", () => {
-			const wrapper = mount();
-			const calculate = vi.spyOn(wrapper.vm, "calculate");
-			wrapper.element.dispatchEvent(new Event("resize"));
-			expect(calculate).toHaveBeenCalledOnce();
-		});
-
-		it("skips recalculation when already updating", () => {
-			const wrapper = mount();
-			wrapper.vm.isUpdating = true;
-			const calculate = vi.spyOn(wrapper.vm, "calculate");
-			wrapper.element.dispatchEvent(new Event("resize"));
-			expect(calculate).not.toHaveBeenCalled();
-		});
-
-		it("removes the resize listener on unmount", () => {
-			const wrapper = mount();
-			const el = wrapper.element;
-			wrapper.unmount();
-			// after unmount the vm is still accessible;
-			// spy on calculate and dispatch
-			const calculate = vi.spyOn(wrapper.vm, "calculate");
-			el.dispatchEvent(new Event("resize"));
-			expect(calculate).not.toHaveBeenCalled();
-		});
-	});
-
-	// pure helpers
-	describe("width method", () => {
-		it("returns 0 for count <= 0", () => {
-			const vm = mount().vm;
-			expect(vm.width([10, 20, 30], 0, 5)).toBe(0);
-			expect(vm.width([10, 20, 30], -1, 5)).toBe(0);
-		});
-
-		it("uses the first N widths when direction=end", () => {
-			const vm = mount({ direction: "end" }).vm;
-			// 10 + 20 + 1 gap of 5
-			expect(vm.width([10, 20, 30], 2, 5)).toBe(35);
-		});
-
-		it("uses the last N widths when direction=start", () => {
-			const vm = mount({ direction: "start" }).vm;
-			// 20 + 30 + 1 gap of 5
-			expect(vm.width([10, 20, 30], 2, 5)).toBe(55);
-		});
-
-		it("adds (count - 1) gaps", () => {
-			const vm = mount().vm;
-			// 3*10 + 2*4
-			expect(vm.width([10, 10, 10], 3, 4)).toBe(38);
-		});
-	});
-
-	describe("growUntilFull method", () => {
+	describe("growUntilFull()", () => {
 		it("fits as many items as the available width allows", () => {
 			const wrapper = mount();
 			// 10 fits (10 ≤ 35); 10+20+5=35 fits; 10+20+30+10=70 doesn't
@@ -351,6 +226,135 @@ describe("Collapsible.vue", () => {
 					widths: [10, 10]
 				})
 			).toEqual({ offset: 0, total: 2, overflown: true });
+		});
+	});
+
+	describe("observe()", () => {
+		it("registers with $panel.observers.resize on mount", () => {
+			const observers = createObservers();
+			const wrapper = vueMount(Collapsible, {
+				global: { mocks: { $panel: { observers } } }
+			});
+			expect(observers.resize.observe).toHaveBeenCalledWith(wrapper.element);
+		});
+	});
+
+	describe("onResize()", () => {
+		it("recalculates when the element fires a resize event", () => {
+			const wrapper = mount();
+			const calculate = vi.spyOn(wrapper.vm, "calculate");
+			wrapper.element.dispatchEvent(new Event("resize"));
+			expect(calculate).toHaveBeenCalledOnce();
+		});
+
+		it("skips recalculation when already updating", () => {
+			const wrapper = mount();
+			wrapper.vm.isUpdating = true;
+			const calculate = vi.spyOn(wrapper.vm, "calculate");
+			wrapper.element.dispatchEvent(new Event("resize"));
+			expect(calculate).not.toHaveBeenCalled();
+		});
+	});
+
+	describe("unobserve()", () => {
+		it("unregisters on unmount", () => {
+			const observers = createObservers();
+			const wrapper = vueMount(Collapsible, {
+				global: { mocks: { $panel: { observers } } }
+			});
+			const el = wrapper.element;
+			wrapper.unmount();
+			expect(observers.resize.unobserve).toHaveBeenCalledWith(el);
+		});
+
+		it("removes the resize listener on unmount", () => {
+			const wrapper = mount();
+			const el = wrapper.element;
+			wrapper.unmount();
+			// after unmount the vm is still accessible;
+			// spy on calculate and dispatch
+			const calculate = vi.spyOn(wrapper.vm, "calculate");
+			el.dispatchEvent(new Event("resize"));
+			expect(calculate).not.toHaveBeenCalled();
+		});
+	});
+
+	describe("width()", () => {
+		it("returns 0 for count <= 0", () => {
+			const vm = mount().vm;
+			expect(vm.width([10, 20, 30], 0, 5)).toBe(0);
+			expect(vm.width([10, 20, 30], -1, 5)).toBe(0);
+		});
+
+		it("uses the first N widths when direction=end", () => {
+			const vm = mount({ direction: "end" }).vm;
+			// 10 + 20 + 1 gap of 5
+			expect(vm.width([10, 20, 30], 2, 5)).toBe(35);
+		});
+
+		it("uses the last N widths when direction=start", () => {
+			const vm = mount({ direction: "start" }).vm;
+			// 20 + 30 + 1 gap of 5
+			expect(vm.width([10, 20, 30], 2, 5)).toBe(55);
+		});
+
+		it("adds (count - 1) gaps", () => {
+			const vm = mount().vm;
+			// 3*10 + 2*4
+			expect(vm.width([10, 10, 10], 3, 4)).toBe(38);
+		});
+	});
+
+	// slots
+	describe("default slot", () => {
+		it("renders the default slot children", () => {
+			const wrapper = vueMount(Collapsible, {
+				global: { mocks: { $panel: { observers: createObservers() } } },
+				slots: {
+					default: '<span class="item">a</span><span class="item">b</span>'
+				}
+			});
+			expect(wrapper.findAll(".item")).toHaveLength(2);
+		});
+
+		it("exposes offset and total to the slot", () => {
+			const wrapper = vueMount(Collapsible, {
+				global: { mocks: { $panel: { observers: createObservers() } } },
+				slots: {
+					default: (props: { offset: number; total: number }) =>
+						h("span", { class: "info" }, `total=${props.total}`)
+				}
+			});
+			// total is 0 with no rendered items
+			expect(wrapper.find(".info").text()).toBe("total=0");
+		});
+	});
+
+	describe("fallback slot", () => {
+		it("does not render fallback when not collapsed", () => {
+			const wrapper = vueMount(Collapsible, {
+				global: { mocks: { $panel: { observers: createObservers() } } },
+				slots: {
+					default: '<span class="a">A</span>',
+					fallback: '<span class="f">F</span>'
+				}
+			});
+			expect(wrapper.find(".f").exists()).toBe(false);
+		});
+
+		it("renders fallback marked with data-collapsible-fallback when collapsed", async () => {
+			const wrapper = vueMount(Collapsible, {
+				global: { mocks: { $panel: { observers: createObservers() } } },
+				slots: {
+					default: '<span class="a">A</span>',
+					fallback: '<span class="f">F</span>'
+				}
+			});
+			wrapper.vm.isCollapsed = true;
+			await wrapper.vm.$nextTick();
+			const fb = wrapper.find(".f");
+			expect(fb.exists()).toBe(true);
+			expect(fb.attributes("data-collapsible-fallback")).toBe("");
 		});
 	});
 });

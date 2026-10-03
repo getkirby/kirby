@@ -20,20 +20,10 @@ describe("Label.vue", () => {
 	});
 
 	// props
-	describe("type prop", () => {
-		it("defaults to field", () => {
-			const wrapper = mount({ input: "field" });
-			expect(wrapper.classes()).toContain("k-field-label");
-		});
-
-		it("renders type as class", () => {
-			const wrapper = mount({ type: "section" });
-			expect(wrapper.classes()).toContain("k-section-label");
-		});
-
-		it("renders as h2 when type is section", () => {
-			const wrapper = mount({ type: "section" });
-			expect(wrapper.element.tagName).toBe("H2");
+	describe("hasDiff prop", () => {
+		it("sets data-has-diff attribute", () => {
+			const wrapper = mount({ hasDiff: true });
+			expect(wrapper.attributes("data-has-diff")).toBe("true");
 		});
 	});
 
@@ -73,10 +63,20 @@ describe("Label.vue", () => {
 		});
 	});
 
-	describe("hasDiff prop", () => {
-		it("sets data-has-diff attribute", () => {
-			const wrapper = mount({ hasDiff: true });
-			expect(wrapper.attributes("data-has-diff")).toBe("true");
+	describe("type prop", () => {
+		it("defaults to field", () => {
+			const wrapper = mount({ input: "field" });
+			expect(wrapper.classes()).toContain("k-field-label");
+		});
+
+		it("renders type as class", () => {
+			const wrapper = mount({ type: "section" });
+			expect(wrapper.classes()).toContain("k-section-label");
+		});
+
+		it("renders as h2 when type is section", () => {
+			const wrapper = mount({ type: "section" });
+			expect(wrapper.element.tagName).toBe("H2");
 		});
 	});
 

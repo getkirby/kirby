@@ -18,6 +18,8 @@ describe("Stats.vue", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "DL", "k-stats");
+		it.acceptsClass(mount);
+		it.acceptsStyle(mount);
 	});
 
 	// props

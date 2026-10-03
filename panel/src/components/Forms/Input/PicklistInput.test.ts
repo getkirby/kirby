@@ -21,6 +21,7 @@ describe("PicklistInput.vue", () => {
 		it.rendersAs(component, "K-NAVIGATE", "k-picklist-input");
 		it.acceptsClass(component);
 		it.acceptsStyle(component);
+		it.inheritsNoAttrs(component);
 	});
 
 	// props

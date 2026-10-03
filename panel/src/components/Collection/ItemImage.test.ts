@@ -18,25 +18,13 @@ describe("ItemImage.vue", () => {
 	describe("element", () => {
 		const component = (attrs?: Record<string, unknown>) => mount({}, attrs);
 
+		it.rendersAs(component, "K-ICON-FRAME", "k-item-image");
 		it.acceptsClass(component);
 		it.acceptsStyle(component);
 		it.inheritsNoAttrs(component);
 	});
 
-	// computed: component
-	describe("component", () => {
-		it("renders k-icon-frame when image has no src", () => {
-			const wrapper = mount({ image: { icon: "file" } });
-			expect(wrapper.element.tagName).toBe("K-ICON-FRAME");
-		});
-
-		it("renders k-image-frame when image has a src", () => {
-			const wrapper = mount({ image: { src: "/image.jpg" } });
-			expect(wrapper.element.tagName).toBe("K-IMAGE-FRAME");
-		});
-	});
-
-	// computed: attrs
+	// props
 	describe("image prop", () => {
 		it("passes through image props as attrs", () => {
 			const wrapper = mount({ image: { back: "black" } });
@@ -49,7 +37,6 @@ describe("ItemImage.vue", () => {
 		});
 	});
 
-	// props
 	describe("layout prop", () => {
 		it("sets ratio to auto in list layout", () => {
 			const wrapper = mount({ image: { ratio: "1/1" }, layout: "list" });
@@ -59,6 +46,19 @@ describe("ItemImage.vue", () => {
 		it("uses image ratio in non-list layout", () => {
 			const wrapper = mount({ image: { ratio: "16/9" }, layout: "cards" });
 			expect(wrapper.attributes("ratio")).toBe("16/9");
+		});
+	});
+
+	// computed
+	describe("component computed", () => {
+		it("renders k-icon-frame when image has no src", () => {
+			const wrapper = mount({ image: { icon: "file" } });
+			expect(wrapper.element.tagName).toBe("K-ICON-FRAME");
+		});
+
+		it("renders k-image-frame when image has a src", () => {
+			const wrapper = mount({ image: { src: "/image.jpg" } });
+			expect(wrapper.element.tagName).toBe("K-IMAGE-FRAME");
 		});
 	});
 });

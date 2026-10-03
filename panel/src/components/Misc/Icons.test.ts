@@ -29,7 +29,8 @@ describe("Icons.vue", () => {
 		});
 	});
 
-	describe("icons", () => {
+	// options
+	describe("icons option", () => {
 		it("renders a <symbol> for each icon", () => {
 			const wrapper = mount(Icons);
 			expect(wrapper.findAll("symbol")).toHaveLength(2);

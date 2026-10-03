@@ -151,7 +151,7 @@ describe("ImageFrame.vue", () => {
 	});
 
 	// computed
-	describe("resolvedSizes", () => {
+	describe("resolvedSizes computed", () => {
 		it("lets the browser measure a lazy image", () => {
 			const img = mount({ src: "/image.jpg" }).find("img");
 			expect(img.attributes("sizes")).toBe("auto");

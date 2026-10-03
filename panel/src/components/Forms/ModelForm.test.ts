@@ -1,9 +1,6 @@
 import { describe, expect, it } from "@test/unit";
-import { mount } from "@vue/test-utils";
+import { mount as vueMount } from "@vue/test-utils";
 import ModelForm from "./ModelForm.vue";
-
-const { isEmpty, isLocked, resolvedColumns } = ModelForm.computed!;
-const { fieldsWithAdditionalData } = ModelForm.methods!;
 
 type Field = Record<string, unknown>;
 type Fields = Record<string, Field>;
@@ -15,184 +12,167 @@ type ResolvedFields = Record<string, ResolvedField>;
 type Column = { fields?: Fields; sticky?: boolean; width?: string };
 type ResolvedColumn = Column & { fields: ResolvedFields };
 
-interface Context {
-	api?: string;
-	columns?: Record<string, Column>;
-	diff?: Record<string, unknown>;
-	fieldsWithAdditionalData: (fields: Fields) => ResolvedFields;
-}
+const columns = {
+	0: { width: "1/2", fields: { headline: { type: "text" } } },
+	1: { width: "1/2", sticky: true, fields: { text: { type: "textarea" } } }
+};
 
-/**
- * Builds a mocked component context
- */
-function context(props: Partial<Context> = {}): Context {
-	const ctx = {
-		api: "pages/test",
-		columns: {},
-		diff: {},
-		...props
-	} as Context;
-
-	ctx.fieldsWithAdditionalData = fieldsWithAdditionalData.bind(
-		ctx
-	) as Context["fieldsWithAdditionalData"];
-
-	return ctx;
+function mount(props = {}, attrs = {}) {
+	return vueMount(ModelForm, {
+		props: { api: "pages/test", columns, ...props },
+		attrs
+	});
 }
 
 describe("ModelForm.vue", () => {
-	const columns = {
-		0: { width: "1/2", fields: { headline: { type: "text" } } },
-		1: { width: "1/2", sticky: true, fields: { text: { type: "textarea" } } }
-	};
-
-	it("renders a column for each column of the tab", () => {
-		const wrapper = mount(ModelForm, {
-			props: { api: "pages/test", columns, content: { headline: "Test" } }
-		});
-
-		const rendered = wrapper.findAll("k-column");
-
-		expect(wrapper.find("form.k-model-form").exists()).toBe(true);
-		expect(rendered.length).toBe(2);
-		expect(rendered[0].attributes("width")).toBe("1/2");
-		expect(rendered[1].attributes("sticky")).toBe("true");
-		expect(wrapper.findAll("k-fieldset").length).toBe(2);
+	// $el
+	describe("element", () => {
+		it.rendersAs(mount, "FORM", "k-model-form");
+		it.acceptsClass(mount);
+		it.acceptsStyle(mount);
 	});
 
-	it("disables the fieldsets of a locked model", () => {
-		const wrapper = mount(ModelForm, {
-			props: {
-				api: "pages/test",
-				columns,
+	// props
+	describe("columns prop", () => {
+		it("renders a column for each column of the tab", () => {
+			const wrapper = mount({ content: { headline: "Test" } });
+			const rendered = wrapper.findAll("k-column");
+
+			expect(rendered.length).toBe(2);
+			expect(rendered[0].attributes("width")).toBe("1/2");
+			expect(rendered[1].attributes("sticky")).toBe("true");
+			expect(wrapper.findAll("k-fieldset").length).toBe(2);
+		});
+	});
+
+	describe("empty prop", () => {
+		it("renders the empty state instead of the form", () => {
+			const wrapper = mount({ columns: {}, empty: "No blueprint" });
+
+			expect(wrapper.find("k-box").exists()).toBe(true);
+			expect(wrapper.find("form").exists()).toBe(false);
+		});
+	});
+
+	describe("lock prop", () => {
+		it("disables the fieldsets of a locked model", () => {
+			const wrapper = mount({
 				lock: { isLegacy: false, isLocked: true, modified: null, user: {} }
+			});
+
+			expect(wrapper.attributes("data-locked")).toBe("true");
+
+			for (const fieldset of wrapper.findAll("k-fieldset")) {
+				expect(fieldset.attributes("disabled")).toBe("true");
 			}
 		});
 
-		expect(wrapper.attributes("data-locked")).toBe("true");
-
-		for (const fieldset of wrapper.findAll("k-fieldset")) {
-			expect(fieldset.attributes("disabled")).toBe("true");
-		}
-	});
-
-	it("keeps the fieldsets of an unlocked model editable", () => {
-		const wrapper = mount(ModelForm, {
-			props: {
-				api: "pages/test",
-				columns,
+		it("keeps the fieldsets of an unlocked model editable", () => {
+			const wrapper = mount({
 				lock: { isLegacy: false, isLocked: false, modified: null, user: {} }
+			});
+
+			expect(wrapper.attributes("data-locked")).toBe("false");
+
+			for (const fieldset of wrapper.findAll("k-fieldset")) {
+				expect(fieldset.attributes("disabled")).toBe("false");
 			}
 		});
+	});
 
-		expect(wrapper.attributes("data-locked")).toBe("false");
+	// computed
+	describe("isEmpty computed", () => {
+		it("only reports empty when there are no columns and a text to show", () => {
+			expect(mount({ columns: {}, empty: "No blueprint" }).vm.isEmpty).toBe(
+				"No blueprint"
+			);
+			expect(mount({ columns: {} }).vm.isEmpty).toBeFalsy();
+			expect(mount({ empty: "No blueprint" }).vm.isEmpty).toBe(false);
+		});
+	});
 
-		for (const fieldset of wrapper.findAll("k-fieldset")) {
-			expect(fieldset.attributes("disabled")).toBe("false");
+	describe("isLocked computed", () => {
+		it("reads the lock state from the lock payload", () => {
+			expect(mount({ lock: { isLocked: true } }).vm.isLocked).toBe(true);
+			expect(mount({ lock: { isLocked: false } }).vm.isLocked).toBe(false);
+			expect(mount({ lock: false }).vm.isLocked).toBe(false);
+			expect(mount().vm.isLocked).toBe(false);
+		});
+	});
+
+	describe("resolvedColumns computed", () => {
+		it("keeps the column props and resolves its fields", () => {
+			const wrapper = mount({
+				columns: {
+					0: { width: "2/3", fields: { headline: { type: "text" } } }
+				}
+			});
+
+			const resolved = wrapper.vm.resolvedColumns as Record<
+				string,
+				ResolvedColumn
+			>;
+
+			expect(resolved[0].width).toBe("2/3");
+			expect(resolved[0].fields.headline.endpoints.field).toBe(
+				"pages/test/fields/headline"
+			);
+		});
+	});
+
+	// methods
+	describe("fieldsWithAdditionalData()", () => {
+		function resolve(props = {}, fields: Fields = {}): ResolvedFields {
+			return mount(props).vm.fieldsWithAdditionalData(fields) as ResolvedFields;
 		}
-	});
 
-	it("renders the empty state instead of the form", () => {
-		const wrapper = mount(ModelForm, {
-			props: { columns: {}, empty: "No blueprint" }
+		it("points regular fields at the field endpoint", () => {
+			const fields = resolve({}, { headline: { type: "text" } });
+
+			expect(fields.headline.endpoints).toStrictEqual({
+				model: "pages/test",
+				field: "pages/test/fields/headline"
+			});
 		});
 
-		expect(wrapper.find("k-box").exists()).toBe(true);
-		expect(wrapper.find("form").exists()).toBe(false);
-	});
+		it("flags fields with unsaved changes", () => {
+			const fields = resolve(
+				{ diff: { headline: "changed" } },
+				{ headline: { type: "text" }, text: { type: "textarea" } }
+			);
 
-	it("passes on the input of a fieldset", async () => {
-		const wrapper = mount(ModelForm, {
-			props: { api: "pages/test", columns }
+			expect(fields.headline.hasDiff).toBe(true);
+			expect(fields.text.hasDiff).toBe(false);
 		});
 
-		await wrapper.find("k-fieldset").trigger("input");
-
-		expect(wrapper.emitted("input")).toHaveLength(1);
-	});
-
-	it("submits the form and the fieldsets", async () => {
-		const wrapper = mount(ModelForm, {
-			props: { api: "pages/test", columns }
-		});
-
-		await wrapper.find("form").trigger("submit");
-		expect(wrapper.emitted("submit")).toHaveLength(1);
-
-		// the submit of a fieldset bubbles up to the form as well
-		await wrapper.find("k-fieldset").trigger("submit");
-		expect(wrapper.emitted("submit")).toHaveLength(3);
-	});
-});
-
-describe("ModelForm.fieldsWithAdditionalData()", () => {
-	it("points regular fields at the field endpoint", () => {
-		const ctx = context();
-		const fields = ctx.fieldsWithAdditionalData({
-			headline: { type: "text" }
-		});
-
-		expect(fields.headline.endpoints).toStrictEqual({
-			model: "pages/test",
-			field: "pages/test/fields/headline"
+		it("survives a missing diff", () => {
+			const fields = resolve(
+				{ diff: undefined },
+				{ headline: { type: "text" } }
+			);
+			expect(fields.headline.hasDiff).toBe(false);
 		});
 	});
 
-	it("flags fields with unsaved changes", () => {
-		const ctx = context({ diff: { headline: "changed" } });
-		const fields = ctx.fieldsWithAdditionalData({
-			headline: { type: "text" },
-			text: { type: "textarea" }
+	// events
+	describe("input event", () => {
+		it("passes on the input of a fieldset", async () => {
+			const wrapper = mount();
+			await wrapper.find("k-fieldset").trigger("input");
+			expect(wrapper.emitted("input")).toHaveLength(1);
 		});
-
-		expect(fields.headline.hasDiff).toBe(true);
-		expect(fields.text.hasDiff).toBe(false);
 	});
 
-	it("survives a missing diff", () => {
-		const ctx = context({ diff: undefined });
-		const fields = ctx.fieldsWithAdditionalData({
-			headline: { type: "text" }
+	describe("submit event", () => {
+		it("submits the form and the fieldsets", async () => {
+			const wrapper = mount();
+
+			await wrapper.find("form").trigger("submit");
+			expect(wrapper.emitted("submit")).toHaveLength(1);
+
+			// the submit of a fieldset bubbles up to the form as well
+			await wrapper.find("k-fieldset").trigger("submit");
+			expect(wrapper.emitted("submit")).toHaveLength(3);
 		});
-
-		expect(fields.headline.hasDiff).toBe(false);
-	});
-});
-
-describe("ModelForm.resolvedColumns()", () => {
-	it("keeps the column props and resolves its fields", () => {
-		const ctx = context({
-			columns: {
-				0: { width: "2/3", fields: { headline: { type: "text" } } }
-			}
-		});
-
-		const columns = resolvedColumns.call(ctx) as Record<string, ResolvedColumn>;
-
-		expect(columns[0].width).toBe("2/3");
-		expect(columns[0].fields.headline.endpoints.field).toBe(
-			"pages/test/fields/headline"
-		);
-	});
-});
-
-describe("ModelForm.isLocked()", () => {
-	it("reads the lock state from the lock payload", () => {
-		expect(isLocked.call({ lock: { isLocked: true } })).toBe(true);
-		expect(isLocked.call({ lock: { isLocked: false } })).toBe(false);
-		expect(isLocked.call({ lock: false })).toBe(false);
-		expect(isLocked.call({})).toBe(false);
-	});
-});
-
-describe("ModelForm.isEmpty()", () => {
-	it("only reports empty when there are no columns and a text to show", () => {
-		expect(isEmpty.call({ columns: {}, empty: "No blueprint" })).toBe(
-			"No blueprint"
-		);
-		expect(isEmpty.call({ columns: {}, empty: null })).toBeFalsy();
-		expect(isEmpty.call({ columns: { 0: {} }, empty: "No blueprint" })).toBe(
-			false
-		);
 	});
 });

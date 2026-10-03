@@ -11,6 +11,8 @@ describe("Text.vue", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "DIV", "k-text");
+		it.acceptsClass(mount);
+		it.acceptsStyle(mount);
 	});
 
 	// props
@@ -18,13 +20,6 @@ describe("Text.vue", () => {
 		it("renders value as attribute", () => {
 			const wrapper = mount({ align: "center" });
 			expect(wrapper.attributes("data-align")).toBe("center");
-		});
-	});
-
-	describe("size prop", () => {
-		it("renders value as attribute", () => {
-			const wrapper = mount({ size: "large" });
-			expect(wrapper.attributes("data-size")).toBe("large");
 		});
 	});
 
@@ -47,6 +42,13 @@ describe("Text.vue", () => {
 			expect(window.panel.deprecated).toHaveBeenCalledWith(
 				expect.stringContaining("`html` prop has been deprecated")
 			);
+		});
+	});
+
+	describe("size prop", () => {
+		it("renders value as attribute", () => {
+			const wrapper = mount({ size: "large" });
+			expect(wrapper.attributes("data-size")).toBe("large");
 		});
 	});
 

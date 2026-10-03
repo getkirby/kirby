@@ -23,6 +23,17 @@ describe("Progress.vue", () => {
 	});
 
 	// props
+	describe("label prop", () => {
+		it("names the bar for screen readers", () => {
+			const wrapper = mount({ label: "Upload" });
+			expect(wrapper.find(".sr-only").text()).toBe("Upload");
+		});
+
+		it("falls back to a generic label", () => {
+			expect(mount().find(".sr-only").text()).toBe("progress");
+		});
+	});
+
 	describe("value prop", () => {
 		it("defaults to 0", () => {
 			expect(bar(mount()).attributes("value")).toBe("0");
@@ -34,17 +45,6 @@ describe("Progress.vue", () => {
 
 		it("renders value as percentage text", () => {
 			expect(bar(mount({ value: 75 })).text()).toBe("75%");
-		});
-	});
-
-	describe("label prop", () => {
-		it("names the bar for screen readers", () => {
-			const wrapper = mount({ label: "Upload" });
-			expect(wrapper.find(".sr-only").text()).toBe("Upload");
-		});
-
-		it("falls back to a generic label", () => {
-			expect(mount().find(".sr-only").text()).toBe("progress");
 		});
 	});
 });

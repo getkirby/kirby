@@ -22,11 +22,15 @@ function badges(diff = {}): Badge[] {
 }
 
 describe("ModelTabs.vue", () => {
+	// $el
 	describe("element", () => {
-		it.rendersAs(() => mount(ModelTabs).find("k-tabs"), "K-TABS");
+		it.rendersAs(ModelTabs, "K-TABS", "k-model-tabs");
+		it.acceptsClass(ModelTabs);
+		it.acceptsStyle(ModelTabs);
 	});
 
-	describe("withBadges", () => {
+	// computed
+	describe("withBadges computed", () => {
 		it("counts the changed fields of a tab", () => {
 			expect(badges({ headline: "a", seo: "b" })).toStrictEqual([
 				{ text: 1 },

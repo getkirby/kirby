@@ -83,11 +83,8 @@ describe("ValidationIssues.vue", () => {
 			const wrapper = mount({ fields: {} });
 			expect(wrapper.findAll("k-definition")).toHaveLength(0);
 		});
-	});
 
-	// checklist
-	describe("checklist", () => {
-		it("uses negative theme", () => {
+		it("lists the issues in a negative checklist", () => {
 			const wrapper = mount({
 				fields: {
 					title: { label: "Title", issues: { required: "Title is required" } }

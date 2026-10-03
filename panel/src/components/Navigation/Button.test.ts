@@ -11,31 +11,6 @@ describe("Button.vue", () => {
 		it.inheritsNoAttrs(Button);
 	});
 
-	// computed
-	describe("component computed", () => {
-		it("renders as a button by default", () => {
-			const wrapper = mount(Button);
-			expect(wrapper.element.tagName).toBe("BUTTON");
-		});
-
-		it("renders as k-link when link prop is set", () => {
-			const wrapper = mount(Button, { props: { link: "/path" } });
-			expect(wrapper.element.tagName).toBe("K-LINK");
-		});
-
-		it("renders as the specified element", () => {
-			const wrapper = mount(Button, { props: { element: "a" } });
-			expect(wrapper.element.tagName).toBe("A");
-		});
-
-		it("element prop takes precedence over link", () => {
-			const wrapper = mount(Button, {
-				props: { element: "span", link: "/path" }
-			});
-			expect(wrapper.element.tagName).toBe("SPAN");
-		});
-	});
-
 	// props
 	describe("badge prop", () => {
 		it("renders badge text in k-button-badge span", () => {
@@ -162,17 +137,28 @@ describe("Button.vue", () => {
 		});
 	});
 
-	// slots
-	describe("default slot", () => {
-		it("sets data-has-text to true", () => {
-			const wrapper = mount(Button, { slots: { default: "Save" } });
-			expect(wrapper.attributes("data-has-text")).toBe("true");
+	// computed
+	describe("component computed", () => {
+		it("renders as a button by default", () => {
+			const wrapper = mount(Button);
+			expect(wrapper.element.tagName).toBe("BUTTON");
 		});
 
-		it("renders slotted content in k-button-text", () => {
-			const slot = "<span>Custom</span>";
-			const wrapper = mount(Button, { slots: { default: slot } });
-			expect(wrapper.find(".k-button-text").element.innerHTML).toContain(slot);
+		it("renders as k-link when link prop is set", () => {
+			const wrapper = mount(Button, { props: { link: "/path" } });
+			expect(wrapper.element.tagName).toBe("K-LINK");
+		});
+
+		it("renders as the specified element", () => {
+			const wrapper = mount(Button, { props: { element: "a" } });
+			expect(wrapper.element.tagName).toBe("A");
+		});
+
+		it("element prop takes precedence over link", () => {
+			const wrapper = mount(Button, {
+				props: { element: "span", link: "/path" }
+			});
+			expect(wrapper.element.tagName).toBe("SPAN");
 		});
 	});
 
@@ -215,6 +201,20 @@ describe("Button.vue", () => {
 			});
 			await wrapper.trigger("click");
 			expect(open).toHaveBeenCalledWith("my-drawer");
+		});
+	});
+
+	// slots
+	describe("default slot", () => {
+		it("sets data-has-text to true", () => {
+			const wrapper = mount(Button, { slots: { default: "Save" } });
+			expect(wrapper.attributes("data-has-text")).toBe("true");
+		});
+
+		it("renders slotted content in k-button-text", () => {
+			const slot = "<span>Custom</span>";
+			const wrapper = mount(Button, { slots: { default: slot } });
+			expect(wrapper.find(".k-button-text").element.innerHTML).toContain(slot);
 		});
 	});
 });

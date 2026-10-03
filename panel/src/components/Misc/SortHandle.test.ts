@@ -20,10 +20,7 @@ describe("SortHandle.vue", () => {
 			const wrapper = mount();
 			expect(wrapper.attributes("aria-hidden")).toBe("true");
 		});
-	});
 
-	// button props
-	describe("button", () => {
 		it("uses the sort icon", () => {
 			const wrapper = mount();
 			expect(wrapper.attributes("icon")).toBe("sort");

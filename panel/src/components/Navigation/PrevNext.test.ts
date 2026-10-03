@@ -37,25 +37,6 @@ describe("PrevNext.vue", () => {
 	});
 
 	// props
-	describe("prev prop", () => {
-		it("defaults to a disabled button", () => {
-			const wrapper = vueMount(PrevNext, {
-				props: { next: { link: "/next" } }
-			});
-			expect(wrapper.vm.buttons[0].disabled).toBe(true);
-		});
-
-		it("passes config to the left button with angle-left icon", () => {
-			const wrapper = vueMount(PrevNext, {
-				props: { prev: { link: "/prev" } }
-			});
-			expect(wrapper.vm.buttons[0]).toMatchObject({
-				link: "/prev",
-				icon: "angle-left"
-			});
-		});
-	});
-
 	describe("next prop", () => {
 		it("defaults to a disabled button", () => {
 			const wrapper = vueMount(PrevNext, {
@@ -71,6 +52,25 @@ describe("PrevNext.vue", () => {
 			expect(wrapper.vm.buttons[1]).toMatchObject({
 				link: "/next",
 				icon: "angle-right"
+			});
+		});
+	});
+
+	describe("prev prop", () => {
+		it("defaults to a disabled button", () => {
+			const wrapper = vueMount(PrevNext, {
+				props: { next: { link: "/next" } }
+			});
+			expect(wrapper.vm.buttons[0].disabled).toBe(true);
+		});
+
+		it("passes config to the left button with angle-left icon", () => {
+			const wrapper = vueMount(PrevNext, {
+				props: { prev: { link: "/prev" } }
+			});
+			expect(wrapper.vm.buttons[0]).toMatchObject({
+				link: "/prev",
+				icon: "angle-left"
 			});
 		});
 	});

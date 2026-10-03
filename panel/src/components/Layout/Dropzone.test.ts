@@ -23,10 +23,7 @@ describe("Dropzone.vue", () => {
 		it.rendersAs(mount, "DIV", "k-dropzone");
 		it.acceptsClass(mount);
 		it.acceptsStyle(mount);
-	});
 
-	// data
-	describe("initial state", () => {
 		it("sets data-dragging to false", () => {
 			const wrapper = mount();
 			expect(wrapper.attributes("data-dragging")).toBe("false");
@@ -38,7 +35,7 @@ describe("Dropzone.vue", () => {
 		});
 	});
 
-	// drag events
+	// events
 	describe("dragenter event", () => {
 		it("sets data-dragging to true", async () => {
 			const wrapper = mount();

@@ -25,20 +25,23 @@ describe("TimeoptionsInput.vue", () => {
 		it.rendersAs(mount, "DIV", "k-timeoptions-input");
 		it.acceptsClass(mount);
 		it.acceptsStyle(mount);
+		it.inheritsNoAttrs(mount);
 	});
 
-	describe("day", () => {
+	// computed
+	describe("day computed", () => {
 		it("starts in the morning", () => {
 			expect(labels(mount())[0]).toBe("06:00");
 		});
 	});
 
-	describe("night", () => {
+	describe("night computed", () => {
 		it("runs into the small hours", () => {
 			expect(labels(mount()).at(-1)).toBe("05:00");
 		});
 	});
 
+	// methods
 	describe("formatTimes()", () => {
 		it("renders every option as a time", () => {
 			for (const label of labels(mount())) {

@@ -11,18 +11,6 @@ describe("Headline.vue", () => {
 	});
 
 	// props
-	describe("tag prop", () => {
-		it("defaults to h2", () => {
-			const wrapper = mount(Headline);
-			expect(wrapper.element.tagName).toBe("H2");
-		});
-
-		it("renders the given tag", () => {
-			const wrapper = mount(Headline, { props: { tag: "h3" } });
-			expect(wrapper.element.tagName).toBe("H3");
-		});
-	});
-
 	describe("link prop", () => {
 		it("wraps content in a k-link", () => {
 			const wrapper = mount(Headline, { props: { link: "/foo" } });
@@ -36,6 +24,18 @@ describe("Headline.vue", () => {
 			expect(wrapper.find("a").exists()).toBe(false);
 			expect(wrapper.find("k-link").exists()).toBe(false);
 			expect(wrapper.text()).toBe("Hello");
+		});
+	});
+
+	describe("tag prop", () => {
+		it("defaults to h2", () => {
+			const wrapper = mount(Headline);
+			expect(wrapper.element.tagName).toBe("H2");
+		});
+
+		it("renders the given tag", () => {
+			const wrapper = mount(Headline, { props: { tag: "h3" } });
+			expect(wrapper.element.tagName).toBe("H3");
 		});
 	});
 

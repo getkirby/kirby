@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "@test/unit";
-import { mount } from "@vue/test-utils";
+import { mount as vueMount } from "@vue/test-utils";
 import PreviewForm from "./PreviewForm.vue";
 
 const events = { off: vi.fn(), on: vi.fn() };
@@ -8,16 +8,18 @@ const panel = {
 	view: { path: "/pages/test" }
 };
 
-function factory() {
-	return mount(PreviewForm, {
+function mount(props = {}, attrs = {}) {
+	return vueMount(PreviewForm, {
 		props: {
 			api: "pages/test",
 			blueprint: "default",
 			content: {},
 			diff: {},
 			tab: { name: "main", columns: {} },
-			tabs: [{ name: "main" }, { name: "meta" }]
+			tabs: [{ name: "main" }, { name: "meta" }],
+			...props
 		},
+		attrs,
 		shallow: true,
 		global: {
 			mocks: {
@@ -64,39 +66,17 @@ describe("PreviewForm.vue", () => {
 		original.mockClear();
 	});
 
-	describe("events", () => {
-		it("listens to loaded fields while mounted", () => {
-			const wrapper = factory();
-
-			expect(events.on).toHaveBeenCalledWith(
-				"field.loaded",
-				wrapper.vm.fixLinks
-			);
-
-			const fixLinks = wrapper.vm.fixLinks;
-			wrapper.unmount();
-
-			expect(events.off).toHaveBeenCalledWith("field.loaded", fixLinks);
-		});
+	// $el
+	describe("element", () => {
+		it.rendersAs(mount, "DIV", "k-preview-form");
+		it.acceptsClass(mount);
+		it.acceptsStyle(mount);
 	});
 
-	describe("form", () => {
-		it("passes on the events of the form and its controls", async () => {
-			const wrapper = factory();
-
-			await wrapper.find("k-model-form").trigger("input");
-			await wrapper.find("k-model-form").trigger("submit");
-			await wrapper.find("k-form-controls").trigger("discard");
-
-			expect(wrapper.emitted("input")).toHaveLength(1);
-			expect(wrapper.emitted("submit")).toHaveLength(1);
-			expect(wrapper.emitted("discard")).toHaveLength(1);
-		});
-	});
-
-	describe("fixLinks", () => {
+	// methods
+	describe("fixLinks()", () => {
 		it("redirects page links to the preview form", () => {
-			const wrapper = factory();
+			const wrapper = mount();
 			const { $el, links } = loaded("/pages/test+child");
 
 			wrapper.vm.fixLinks({ $el });
@@ -112,7 +92,7 @@ describe("PreviewForm.vue", () => {
 		});
 
 		it("redirects all page links of the element", () => {
-			const wrapper = factory();
+			const wrapper = mount();
 			const { $el, links } = loaded("/pages/a", "/pages/b");
 
 			wrapper.vm.fixLinks({ $el });
@@ -128,7 +108,7 @@ describe("PreviewForm.vue", () => {
 		});
 
 		it("keeps links that don't point to a page view", () => {
-			const wrapper = factory();
+			const wrapper = mount();
 			const { $el, links } = loaded(
 				"/pages/test+child/files/test.jpg",
 				"/users/test",
@@ -148,7 +128,7 @@ describe("PreviewForm.vue", () => {
 		});
 
 		it("ignores links outside of item titles", () => {
-			const wrapper = factory();
+			const wrapper = mount();
 			const { $el, links } = loaded("/pages/test+child");
 
 			// move the link out of the item title
@@ -157,6 +137,47 @@ describe("PreviewForm.vue", () => {
 			wrapper.vm.fixLinks({ $el });
 
 			expect(links[0].__vue__.onClick).toBe(original);
+		});
+	});
+
+	// events
+	describe("discard event", () => {
+		it("passes on the discard of the form controls", async () => {
+			const wrapper = mount();
+			await wrapper.find("k-form-controls").trigger("discard");
+			expect(wrapper.emitted("discard")).toHaveLength(1);
+		});
+	});
+
+	describe("field.loaded event", () => {
+		it("is listened to while mounted", () => {
+			const wrapper = mount();
+			const fixLinks = wrapper.vm.fixLinks;
+
+			expect(events.on).toHaveBeenCalledWith("field.loaded", fixLinks);
+
+			wrapper.unmount();
+
+			expect(events.off).toHaveBeenCalledWith("field.loaded", fixLinks);
+		});
+	});
+
+	describe("input event", () => {
+		it("passes on the input of the form", async () => {
+			const wrapper = mount();
+			await wrapper.find("k-model-form").trigger("input");
+			expect(wrapper.emitted("input")).toHaveLength(1);
+		});
+	});
+
+	describe("submit event", () => {
+		it("passes on the submit of the form and its controls", async () => {
+			const wrapper = mount();
+
+			await wrapper.find("k-model-form").trigger("submit");
+			await wrapper.find("k-form-controls").trigger("submit");
+
+			expect(wrapper.emitted("submit")).toHaveLength(2);
 		});
 	});
 });
