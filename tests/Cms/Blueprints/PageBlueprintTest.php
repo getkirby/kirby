@@ -145,6 +145,27 @@ class PageBlueprintTest extends TestCase
 		$this->assertSame($expected, $blueprint->num());
 	}
 
+	public function testStatusWithCustomIconAndTheme(): void
+	{
+		$blueprint = new PageBlueprint([
+			'model'  => new Page(['slug' => 'test']),
+			'status' => [
+				'draft'    => ['label' => 'Idea', 'icon' => 'edit', 'theme' => 'notice'],
+				'unlisted' => ['label' => 'Review', 'icon' => '👀'],
+				'listed'   => 'Live'
+			]
+		]);
+
+		$status = $blueprint->status();
+
+		$this->assertSame('edit', $status['draft']['icon']);
+		$this->assertSame('notice', $status['draft']['theme']);
+		$this->assertSame('👀', $status['unlisted']['icon']);
+		$this->assertSame('info', $status['unlisted']['theme']);
+		$this->assertSame('status-listed', $status['listed']['icon']);
+		$this->assertSame('positive', $status['listed']['theme']);
+	}
+
 	public function testStatus(): void
 	{
 		$blueprint = new PageBlueprint([
@@ -159,15 +180,21 @@ class PageBlueprintTest extends TestCase
 		$expected = [
 			'draft' => [
 				'label' => 'Draft Label',
-				'text'  => null
+				'text'  => null,
+				'icon'  => 'status-draft',
+				'theme' => 'negative'
 			],
 			'unlisted' => [
 				'label' => 'Unlisted Label',
-				'text'  => null
+				'text'  => null,
+				'icon'  => 'status-unlisted',
+				'theme' => 'info'
 			],
 			'listed' => [
 				'label' => 'Listed Label',
-				'text'  => null
+				'text'  => null,
+				'icon'  => 'status-listed',
+				'theme' => 'positive'
 			]
 		];
 
@@ -179,15 +206,21 @@ class PageBlueprintTest extends TestCase
 		$expected = [
 			'draft' => [
 				'label' => 'Draft Label',
-				'text'  => 'Draft Text'
+				'text'  => 'Draft Text',
+				'icon'  => 'status-draft',
+				'theme' => 'negative'
 			],
 			'unlisted' => [
 				'label' => 'Unlisted Label',
-				'text'  => 'Unlisted Text'
+				'text'  => 'Unlisted Text',
+				'icon'  => 'status-unlisted',
+				'theme' => 'info'
 			],
 			'listed' => [
 				'label' => 'Listed Label',
-				'text'  => 'Listed Text'
+				'text'  => 'Listed Text',
+				'icon'  => 'status-listed',
+				'theme' => 'positive'
 			]
 		];
 
@@ -225,15 +258,21 @@ class PageBlueprintTest extends TestCase
 		$expected = [
 			'draft' => [
 				'label' => 'Draft Label',
-				'text'  => 'Draft Text'
+				'text'  => 'Draft Text',
+				'icon'  => 'status-draft',
+				'theme' => 'negative'
 			],
 			'unlisted' => [
 				'label' => 'Unlisted Label',
-				'text'  => 'Unlisted Text'
+				'text'  => 'Unlisted Text',
+				'icon'  => 'status-unlisted',
+				'theme' => 'info'
 			],
 			'listed' => [
 				'label' => 'Listed Label',
-				'text'  => 'Listed Text'
+				'text'  => 'Listed Text',
+				'icon'  => 'status-listed',
+				'theme' => 'positive'
 			]
 		];
 
@@ -256,11 +295,15 @@ class PageBlueprintTest extends TestCase
 		$expected = [
 			'draft' => [
 				'label' => 'Draft',
-				'text'  => null
+				'text'  => null,
+				'icon'  => 'status-draft',
+				'theme' => 'negative'
 			],
 			'unlisted' => [
 				'label' => 'Unlisted',
-				'text'  => null
+				'text'  => null,
+				'icon'  => 'status-unlisted',
+				'theme' => 'info'
 			],
 		];
 
@@ -309,11 +352,15 @@ class PageBlueprintTest extends TestCase
 		$expected = [
 			'draft' => [
 				'label' => 'Draft',
-				'text'  => null
+				'text'  => null,
+				'icon'  => 'status-draft',
+				'theme' => 'negative'
 			],
 			'listed' => [
 				'label' => 'Published',
-				'text'  => null
+				'text'  => null,
+				'icon'  => 'status-listed',
+				'theme' => 'positive'
 			],
 		];
 
@@ -333,14 +380,20 @@ class PageBlueprintTest extends TestCase
 					'draft'    => [
 						'label' => 'Draft Label',
 						'text'  => null,
+						'icon'  => 'status-draft',
+						'theme' => 'negative',
 					],
 					'unlisted' => [
 						'label' => 'Unlisted Label',
 						'text'  => null,
+						'icon'  => 'status-unlisted',
+						'theme' => 'info',
 					],
 					'listed' => [
 						'label' => 'Listed Label',
-						'text'  => null
+						'text'  => null,
+						'icon'  => 'status-listed',
+						'theme' => 'positive'
 					]
 				],
 			]

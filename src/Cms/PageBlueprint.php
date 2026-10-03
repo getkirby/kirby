@@ -87,14 +87,20 @@ class PageBlueprint extends Blueprint
 			'draft'    => [
 				'label' => $this->i18n('page.status.draft'),
 				'text'  => $this->i18n('page.status.draft.description'),
+				'icon'  => 'status-draft',
+				'theme' => 'negative',
 			],
 			'unlisted' => [
 				'label' => $this->i18n('page.status.unlisted'),
 				'text'  => $this->i18n('page.status.unlisted.description'),
+				'icon'  => 'status-unlisted',
+				'theme' => 'info',
 			],
 			'listed' => [
 				'label' => $this->i18n('page.status.listed'),
 				'text'  => $this->i18n('page.status.listed.description'),
+				'icon'  => 'status-listed',
+				'theme' => 'positive',
 			]
 		];
 
@@ -134,6 +140,10 @@ class PageBlueprint extends Blueprint
 
 			// also make sure to have the text field set
 			$status[$key]['text'] ??= null;
+
+			// fall back to the default icon and theme of the status
+			$status[$key]['icon']  ??= $defaults[$key]['icon'];
+			$status[$key]['theme'] ??= $defaults[$key]['theme'];
 
 			// translate text and label if necessary
 			$status[$key]['label'] = $this->i18n($status[$key]['label'], $status[$key]['label']);
