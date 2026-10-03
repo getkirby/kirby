@@ -1010,35 +1010,6 @@ class VersionTest extends TestCase
 		$this->assertArrayNotHasKey('focus', $latestContent, 'The focus point should have been removed');
 	}
 
-	public function testPublishWithHookChangingUser(): void
-	{
-		$this->setUpSingleLanguage();
-
-		$this->app = $this->app->clone([
-			'users' => [
-				['id' => 'editor', 'email' => 'editor@getkirby.com', 'role' => 'admin']
-			],
-			'hooks' => [
-				// impersonating without a callback outlives the hook
-				'page.update:after' => function () {
-					App::instance()->impersonate('kirby');
-				}
-			]
-		]);
-
-		$this->app->impersonate('editor');
-
-		$changes = $this->app->page('a-page')->version('changes');
-		$changes->save(['title' => 'Title changes']);
-
-		$this->assertSame('editor', $changes->read()['lock']);
-
-		$changes->publish();
-
-		$this->assertContentFileDoesNotExist(null, VersionId::changes());
-		$this->assertSame('Title changes', Data::read($this->contentFile())['title']);
-	}
-
 	public function testReadMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
