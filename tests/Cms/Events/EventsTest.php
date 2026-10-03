@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\LogicException;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Events::class)]
@@ -284,5 +285,59 @@ class EventsTest extends TestCase
 		$events->trigger('test');
 
 		$this->assertSame(2, $count);
+	}
+
+	public function testTriggerWithImpersonation(): void
+	{
+		$self = $this;
+		$app  = $this->app([
+			'test' => [
+				function () use ($self) {
+					$this->impersonate('kirby');
+					$self->assertSame('kirby', $this->user()->id());
+				}
+			]
+		]);
+
+		$app->trigger('test');
+
+		$this->assertNull($app->user());
+	}
+
+	public function testTriggerWithImpersonationAndException(): void
+	{
+		$app = $this->app([
+			'test' => [
+				function () {
+					$this->impersonate('kirby');
+					throw new LogicException('Hook failed');
+				}
+			]
+		]);
+
+		try {
+			$app->trigger('test');
+			$this->fail('The hook exception should not be swallowed');
+		} catch (LogicException $e) {
+			$this->assertSame('Hook failed', $e->getMessage());
+		}
+
+		$this->assertNull($app->user());
+	}
+
+	public function testTriggerWithImpersonationBefore(): void
+	{
+		$app = $this->app([
+			'test' => [
+				function () {
+					$this->impersonate('nobody');
+				}
+			]
+		]);
+
+		$app->impersonate('kirby');
+		$app->trigger('test');
+
+		$this->assertSame('kirby', $app->user()->id());
 	}
 }
