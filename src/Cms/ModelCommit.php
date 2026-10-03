@@ -218,13 +218,24 @@ class ModelCommit
 		// is modified by the return value from the hook (if any returned)
 		$appliedTo = array_key_first($arguments);
 
-		// run the hook and modify the first argument
-		$arguments[$appliedTo] = $this->kirby->apply(
-			// e.g. page.create:before
-			$this->prefix . '.' . $this->action . ':' . $hook,
-			$arguments,
-			$appliedTo
-		);
+		$auth = $this->kirby->auth();
+		$user = $auth->currentUserFromImpersonation();
+
+		try {
+			// run the hook and modify the first argument
+			$arguments[$appliedTo] = $this->kirby->apply(
+				// e.g. page.create:before
+				$this->prefix . '.' . $this->action . ':' . $hook,
+				$arguments,
+				$appliedTo
+			);
+		} finally {
+			// don't leak an impersonation from the hook
+			// into the rest of the model action
+			if ($auth->currentUserFromImpersonation() !== $user) {
+				$auth->impersonate($user?->id());
+			}
+		}
 
 		return [
 			'arguments' => $arguments,
