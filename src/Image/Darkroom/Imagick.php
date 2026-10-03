@@ -73,7 +73,9 @@ class Imagick extends Darkroom
 	 */
 	protected function coalesce(Image $image): Image
 	{
-		if ($image->getImageMimeType() === 'image/gif') {
+		// the mime type depends on ImageMagick's `mime.xml`
+		// being found (falls back to `image/x-gif`)
+		if ($image->getImageFormat() === 'GIF') {
 			return $image->coalesceImages();
 		}
 

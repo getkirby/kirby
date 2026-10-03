@@ -142,6 +142,21 @@ class ImagickTest extends TestCase
 		$this->assertSame(3, $image->getNumberImages());
 	}
 
+	public function testCoalesceGifFormat(): void
+	{
+		// the mime type falls back to `image/x-gif`
+		// when ImageMagick cannot find its `mime.xml`
+		$image = $this->createMock(Image::class);
+		$image->method('getImageMimeType')->willReturn('image/x-gif');
+		$image->method('getImageFormat')->willReturn('GIF');
+		$image->expects($this->once())
+			->method('coalesceImages')
+			->willReturn($coalesced = new Image());
+
+		$imagick = new Imagick();
+		$this->assertSame($coalesced, $this->call($imagick, 'coalesce', $image));
+	}
+
 	public function testCoalesceNonGif(): void
 	{
 		copy(
@@ -259,6 +274,33 @@ class ImagickTest extends TestCase
 				$frame->getImagePage()
 			);
 		}
+	}
+
+	public function testProcessAnimatedGifWithOptimizedLayers(): void
+	{
+		// frames 2 and 3 only contain the changed area
+		copy(
+			static::FIXTURES . '/image/animated-optimized.gif',
+			$file = static::TMP . '/animated.gif'
+		);
+
+		$imagick = new Imagick(['width' => 50]);
+		$imagick->process($file);
+
+		// a black square moves from left to right
+		$squares = [];
+
+		foreach ((new Image($file))->coalesceImages() as $frame) {
+			$this->assertSame(50, $frame->getImageWidth());
+			$this->assertSame(30, $frame->getImageHeight());
+
+			$squares[] = implode('', array_map(
+				fn ($x) => $frame->getImagePixelColor($x, 15)->getColor()['r'] < 128 ? 'x' : '.',
+				[10, 25, 40]
+			));
+		}
+
+		$this->assertSame(['x..', '.x.', '..x'], $squares);
 	}
 
 	public function testQuality(): void
