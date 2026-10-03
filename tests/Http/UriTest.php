@@ -387,6 +387,23 @@ class UriTest extends TestCase
 				'/search/page:2/?q=something'
 			],
 
+			// relative root + adding params
+			[
+				'/',
+				[
+					'params' => ['page' => 2],
+					'query'  => ['q' => 'something']
+				],
+				'/page:2/?q=something'
+			],
+
+			// relative root with params
+			[
+				'/evil.com:443',
+				[],
+				'/evil.com:443'
+			],
+
 			// relative path with colon + adding query
 			[
 				'/search/page:2',
