@@ -18,11 +18,14 @@ class Response extends \Kirby\Http\Response
 	 * Adjusted redirect creation which
 	 * parses locations with the Url::to method
 	 * first.
+	 *
+	 * @param bool $inherit Keep the query and params of the current request (since 5.7.0)
 	 */
 	public static function redirect(
 		string $location = '/',
-		int $code = 302
+		int $code = 302,
+		bool $inherit = false
 	): static {
-		return parent::redirect(Url::to($location), $code);
+		return parent::redirect(Url::to($location), $code, $inherit);
 	}
 }
