@@ -84,7 +84,16 @@ export default {
 			);
 		},
 		refreshEvents() {
-			return ["model.update", "page.changeStatus", "page.sort"];
+			return [
+				"model.update",
+				"page.changeSlug",
+				"page.changeStatus",
+				"page.changeTemplate",
+				"page.changeTitle",
+				"page.create",
+				"page.delete",
+				"page.sort"
+			];
 		}
 	}
 };
