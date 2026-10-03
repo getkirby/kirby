@@ -307,7 +307,7 @@ class StructureFieldTest extends TestCase
 			'help'      => null,
 			'hidden'    => false,
 			'label'     => 'Structure',
-			'limit'     => 20,
+			'limit'     => null,
 			'max'       => null,
 			'min'       => null,
 			'name'      => 'structure',
