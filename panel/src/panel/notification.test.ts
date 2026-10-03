@@ -251,6 +251,35 @@ describe("panel.notification", () => {
 			expect(notification.theme).toStrictEqual("negative");
 		});
 
+		it("should pass field errors of flat API errors to the validation error dialog", async () => {
+			const panel = Panel.create(app);
+			const notification = Notification(panel);
+			const open = vi.spyOn(panel.dialog, "open");
+			const details = {
+				title: {
+					label: "Title",
+					message: { required: "Please enter something" }
+				}
+			};
+
+			notification.error(
+				new RequestError(
+					"error",
+					makeRequestOptions({
+						status: "error",
+						message: "Please fix all form errors…",
+						key: "error.form.incomplete",
+						details
+					})
+				)
+			);
+
+			expect(open).toHaveBeenCalledWith({
+				component: "k-validation-error-dialog",
+				props: { message: "Please fix all form errors…", fields: details }
+			});
+		});
+
 		it("should not set a timer", async () => {
 			const panel = Panel.create(app);
 			const notification = Notification(panel);

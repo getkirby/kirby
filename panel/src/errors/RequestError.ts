@@ -39,7 +39,11 @@ export default class RequestError extends Error {
 	dialog() {
 		const state = this.state();
 
-		if (state.exception === "Kirby\\Exception\\FormValidationException") {
+		// the exception class is only exposed in debug mode
+		if (
+			state.exception === "Kirby\\Exception\\FormValidationException" ||
+			this.key === "error.form.incomplete"
+		) {
 			return {
 				component: "k-validation-error-dialog",
 				props: {
