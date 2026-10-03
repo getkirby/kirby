@@ -60,6 +60,7 @@ export default {
 					info: option.info,
 					label: option.text,
 					name: this.name ?? this.id,
+					theme: option.theme,
 					type: "radio",
 					value: option.value
 				};
