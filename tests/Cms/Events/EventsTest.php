@@ -285,4 +285,21 @@ class EventsTest extends TestCase
 
 		$this->assertSame(2, $count);
 	}
+
+	public function testTriggerWithImpersonation(): void
+	{
+		// request hooks like `system.loadPlugins:after`
+		// may impersonate for the rest of the request
+		$app = $this->app([
+			'test' => [
+				function () {
+					$this->impersonate('kirby');
+				}
+			]
+		]);
+
+		$app->trigger('test');
+
+		$this->assertSame('kirby', $app->user()->id());
+	}
 }
