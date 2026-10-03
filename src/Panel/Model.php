@@ -286,7 +286,7 @@ abstract class Model
 				is_numeric($parts[0]) === true &&
 				(float)($parts[1] ?? 0) > 0
 			) {
-				$ratio = $parts[0] / $parts[1];
+				$ratio = (float)$parts[0] / (float)$parts[1];
 			}
 		}
 
