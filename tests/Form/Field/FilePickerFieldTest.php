@@ -299,9 +299,13 @@ class FilePickerFieldTest extends TestCase
 		]);
 
 		$field = $this->field('files', ['model' => $this->model()]);
-		$field->fill([$this->app->file('test/a.jpg')]);
+		$field->fill([
+			$this->app->file('test/a.jpg'),
+			$this->app->file('test-draft/b.jpg')
+		]);
 
-		$this->assertSame(['test/a.jpg'], $field->toStoredValue());
+		// files of the model itself are stored by filename
+		$this->assertSame(['a.jpg', 'test-draft/b.jpg'], $field->toStoredValue());
 	}
 
 	public function testFillWithPage(): void
