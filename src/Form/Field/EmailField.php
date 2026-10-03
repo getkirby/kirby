@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Reflection\Attributes\Derived;
+
 /**
  * Email Field
  *
@@ -11,20 +13,12 @@ namespace Kirby\Form\Field;
  */
 class EmailField extends TextField
 {
-	public function autocomplete(): string
-	{
-		return $this->autocomplete ?? 'email';
-	}
+	protected string|null $autocomplete = 'email';
+	protected bool $counter = false;
+	protected string|null $icon = 'email';
 
-	public function counter(): bool
-	{
-		return $this->counter ?? false;
-	}
-
-	public function icon(): string
-	{
-		return $this->icon ?? 'email';
-	}
+	#[Derived]
+	protected array|string|null $placeholder = null;
 
 	public function placeholder(): string
 	{

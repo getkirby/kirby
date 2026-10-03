@@ -13,10 +13,10 @@ trait Batch
 	/**
 	 * Show/hide the batch select interface
 	 */
-	protected bool|null $batch;
+	protected bool $batch = false;
 
 	public function batch(): bool
 	{
-		return $this->batch ?? false;
+		return $this->batch;
 	}
 }

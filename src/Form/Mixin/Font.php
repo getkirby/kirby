@@ -13,9 +13,9 @@ trait Font
 	/**
 	 * Sets the font family (sans or monospace)
 	 */
-	protected string|null $font;
+	protected string $font = 'sans-serif';
 
-	public function font(): string|null
+	public function font(): string
 	{
 		return match ($this->font) {
 			'monospace', 'mono' => 'monospace',

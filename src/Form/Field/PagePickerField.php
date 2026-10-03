@@ -21,7 +21,7 @@ class PagePickerField extends ModelPickerField
 	/**
 	 * Optionally include subpages of pages
 	 */
-	protected bool|null $subpages;
+	protected bool $subpages = true;
 
 	public function __construct(
 		bool|null $subpages = null,
@@ -29,7 +29,7 @@ class PagePickerField extends ModelPickerField
 	) {
 		parent::__construct(...$args);
 
-		$this->subpages = $subpages;
+		$this->subpages = $subpages ?? $this->subpages;
 	}
 
 	public function dialogs(): array
@@ -60,7 +60,7 @@ class PagePickerField extends ModelPickerField
 
 	public function subpages(): bool
 	{
-		return $this->subpages ?? true;
+		return $this->subpages;
 	}
 
 	/**

@@ -15,7 +15,11 @@ use Kirby\Form\Mixin;
 class SelectField extends OptionField
 {
 	use Mixin\Icon;
-	use Mixin\Placeholder;
+
+	/**
+	 * Text shown when no option is selected yet
+	 */
+	protected array|string|null $placeholder = '—';
 
 	public function __construct(
 		string|null $icon = null,
@@ -24,8 +28,8 @@ class SelectField extends OptionField
 	) {
 		parent::__construct(...$args);
 
-		$this->icon        = $icon;
-		$this->placeholder = $placeholder;
+		$this->icon        = $icon ?? $this->icon;
+		$this->placeholder = $placeholder ?? $this->placeholder;
 	}
 
 	protected function fetchOptions(): array
@@ -41,7 +45,7 @@ class SelectField extends OptionField
 
 	public function placeholder(): string|null
 	{
-		return $this->stringTemplateI18n($this->placeholder) ?? '—';
+		return $this->stringTemplateI18n($this->placeholder);
 	}
 
 	public function props(): array
