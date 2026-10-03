@@ -17,6 +17,36 @@ export const defaults = () => {
 };
 
 /**
+ * Submits the modal like its submit button would. The form is
+ * looked up in the portal and not via the event target, because
+ * the focus can be outside of it. Modals without a form are
+ * submitted directly.
+ *
+ * @param {any} panel
+ * @param {string} key
+ */
+export function save(panel, key) {
+	const forms = document.querySelectorAll(`.k-${key}-portal form.k-${key}`);
+	// the last form belongs to the topmost modal
+	const form = forms[forms.length - 1];
+
+	if (form === undefined) {
+		return panel[key].submit();
+	}
+
+	if (typeof form.requestSubmit === "function") {
+		return form.requestSubmit();
+	}
+
+	form.dispatchEvent(
+		new Event("submit", {
+			bubbles: true,
+			cancelable: true
+		})
+	);
+}
+
+/**
  * A modal is a feature that can be opened and
  * closed and will be placed in the Panel by the matching
  * Modal component
