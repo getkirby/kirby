@@ -124,6 +124,11 @@ class PageDialogsTest extends AreaTestCase
 		$this->assertSame('Unlisted', $props['fields']['status']['options'][1]['text']);
 		$this->assertSame('Public', $props['fields']['status']['options'][2]['text']);
 
+		$this->assertSame('status-draft', $props['fields']['status']['options'][0]['icon']);
+		$this->assertSame('negative', $props['fields']['status']['options'][0]['theme']);
+		$this->assertSame('status-listed', $props['fields']['status']['options'][2]['icon']);
+		$this->assertSame('positive', $props['fields']['status']['options'][2]['theme']);
+
 		$this->assertSame('Please select a position', $props['fields']['position']['label']);
 		$this->assertSame(['status' => 'listed'], $props['fields']['position']['when']);
 
@@ -211,6 +216,35 @@ class PageDialogsTest extends AreaTestCase
 
 		$this->assertSame('listed', $this->app->page('test')->status());
 		$this->assertSame(1, $this->app->page('test')->num());
+	}
+
+	public function testChangeStatusWithCustomIconAndTheme(): void
+	{
+		$this->app([
+			'blueprints' => [
+				'pages/article' => [
+					'status' => [
+						'draft'    => ['label' => 'Idea', 'icon' => '💡'],
+						'unlisted' => ['label' => 'Review', 'icon' => 'eye', 'theme' => 'purple'],
+					]
+				]
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'test', 'template' => 'article']
+				]
+			]
+		]);
+
+		$this->login();
+
+		$dialog  = $this->dialog('pages/test/changeStatus');
+		$options = $dialog['props']['fields']['status']['options'];
+
+		$this->assertSame('💡', $options[0]['icon']);
+		$this->assertSame('negative', $options[0]['theme']);
+		$this->assertSame('eye', $options[1]['icon']);
+		$this->assertSame('purple', $options[1]['theme']);
 	}
 
 	public function testChangeTemplate(): void
