@@ -19,6 +19,8 @@ use Kirby\Image\Focus;
  */
 class Imagick extends Darkroom
 {
+	public static array $animatableTypes = ['avif', 'gif', 'webp'];
+
 	protected function autoOrient(Image $image): Image
 	{
 		switch ($image->getImageOrientation()) {
@@ -141,13 +143,15 @@ class Imagick extends Darkroom
 	{
 		$options = $this->preprocess($file, $options);
 
-		$image = new Image($file);
+		// formats without animation only get the first frame,
+		// otherwise Imagick writes a numbered file per frame
+		$input = $this->isAnimatable($file, $options) === true ? $file : $file . '[0]';
+
+		$image = new Image($input);
 		$image = $this->threads($image, $options);
 		$image = $this->interlace($image, $options);
 		$image = $this->coalesce($image);
 
-		// Imagick only transforms the current frame,
-		// so apply all steps to each frame of animated images
 		foreach ($image as $frame) {
 			$frame = $this->grayscale($frame, $options);
 			$frame = $this->autoOrient($frame);

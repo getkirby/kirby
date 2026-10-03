@@ -3,6 +3,7 @@
 namespace Kirby\Image;
 
 use Exception;
+use Kirby\Filesystem\F;
 use Kirby\Image\Darkroom\GdLib;
 use Kirby\Image\Darkroom\ImageMagick;
 use Kirby\Image\Darkroom\Imagick;
@@ -19,6 +20,12 @@ use Kirby\Image\Darkroom\Imagick;
  */
 class Darkroom
 {
+	/**
+	 * Output formats the driver can write with all frames
+	 * of an animated image (others only get the first frame)
+	 */
+	public static array $animatableTypes = [];
+
 	public static array $types = [
 		'gd'      => GdLib::class,
 		'imagick' => Imagick::class,
@@ -135,6 +142,18 @@ class Darkroom
 		}
 
 		return $dimensions->fitHeight($options['height'], true);
+	}
+
+	/**
+	 * Checks if the output format can keep
+	 * all frames of an animated image
+	 *
+	 * @since 5.6.2
+	 */
+	protected function isAnimatable(string $file, array $options): bool
+	{
+		$format = $options['format'] ?? F::extension($file);
+		return in_array(strtolower($format), static::$animatableTypes, true);
 	}
 
 	/**
