@@ -96,19 +96,8 @@ class Events
 			// mark the hook as processed, to avoid endless loops
 			$this->processed[$name][] = $hook;
 
-			$auth = $this->app->auth();
-			$user = $auth->currentUserFromImpersonation();
-
-			try {
-				// bind the Kirby instance to the hook and run it
-				$result = $event->call($this->app, $hook);
-			} finally {
-				// don't leak an impersonation from the hook
-				// into the rest of the request
-				if ($auth->currentUserFromImpersonation() !== $user) {
-					$auth->impersonate($user?->id());
-				}
-			}
+			// bind the Kirby instance to the hook and run it
+			$result = $event->call($this->app, $hook);
 
 			// run the afterEach callback
 			if ($afterEach !== null) {

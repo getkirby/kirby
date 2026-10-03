@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -438,6 +439,69 @@ class ModelCommitTest extends TestCase
 		], $result);
 
 		$this->assertSame(1, $calls);
+	}
+
+	public function testHookWithImpersonation(): void
+	{
+		$phpunit = $this;
+
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'page.test:after' => function () use ($phpunit) {
+					$this->impersonate('kirby');
+					$phpunit->assertSame('kirby', $this->user()->id());
+				}
+			]
+		]);
+
+		$page   = new Page(['slug' => 'test']);
+		$commit = new ModelCommit(model: $page, action: 'test');
+		$commit->hook(hook: 'after', arguments: ['page' => $page]);
+
+		$this->assertNull($this->app->user());
+	}
+
+	public function testHookWithImpersonationAndException(): void
+	{
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'page.test:after' => function () {
+					$this->impersonate('kirby');
+					throw new LogicException('Hook failed');
+				}
+			]
+		]);
+
+		$page   = new Page(['slug' => 'test']);
+		$commit = new ModelCommit(model: $page, action: 'test');
+
+		try {
+			$commit->hook(hook: 'after', arguments: ['page' => $page]);
+			$this->fail('The hook exception should not be swallowed');
+		} catch (LogicException $e) {
+			$this->assertSame('Hook failed', $e->getMessage());
+		}
+
+		$this->assertNull($this->app->user());
+	}
+
+	public function testHookWithImpersonationByCaller(): void
+	{
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'page.test:after' => function () {
+					$this->impersonate('nobody');
+				}
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page   = new Page(['slug' => 'test']);
+		$commit = new ModelCommit(model: $page, action: 'test');
+		$commit->hook(hook: 'after', arguments: ['page' => $page]);
+
+		$this->assertSame('kirby', $this->app->user()->id());
 	}
 
 	public function testHookWithModifiedModel(): void
