@@ -210,6 +210,28 @@ class DateFieldTest extends TestCase
 		$this->assertSame('', $field->toFormValue());
 	}
 
+	public function testRoundToStepWithoutTime(): void
+	{
+		$field = $this->field('date');
+
+		$field->fill('2026-10-01 14:35');
+		$this->assertSame('2026-10-01', $field->toStoredValue());
+
+		$field->fill('2026-10-01 23:59:59');
+		$this->assertSame('2026-10-01', $field->toStoredValue());
+
+		$field = $this->field('date', ['default' => 'now']);
+		$this->assertSame(date('Y-m-d') . ' 00:00:00', $field->default());
+	}
+
+	public function testRoundToStepWithTime(): void
+	{
+		$field = $this->field('date', ['time' => true]);
+
+		$field->fill('2026-10-01 23:58');
+		$this->assertSame('2026-10-02 00:00:00', $field->toStoredValue());
+	}
+
 	/**
 	 * @link https://github.com/getkirby/kirby/issues/3642
 	 */
