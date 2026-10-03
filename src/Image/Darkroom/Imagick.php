@@ -19,6 +19,8 @@ use Kirby\Image\Focus;
  */
 class Imagick extends Darkroom
 {
+	public static array $animatableTypes = ['avif', 'gif', 'webp'];
+
 	protected function autoOrient(Image $image): Image
 	{
 		switch ($image->getImageOrientation()) {
@@ -73,7 +75,9 @@ class Imagick extends Darkroom
 	 */
 	protected function coalesce(Image $image): Image
 	{
-		if ($image->getImageMimeType() === 'image/gif') {
+		// the mime type depends on ImageMagick's `mime.xml`
+		// being found (falls back to `image/x-gif`)
+		if ($image->getImageFormat() === 'GIF') {
 			return $image->coalesceImages();
 		}
 
@@ -118,6 +122,18 @@ class Imagick extends Darkroom
 	}
 
 	/**
+	 * Shrinks animated gifs again after coalescing
+	 */
+	protected function optimize(Image $image): Image
+	{
+		if ($image->getImageFormat() === 'GIF') {
+			return $image->optimizeImageLayers();
+		}
+
+		return $image;
+	}
+
+	/**
 	 * Creates and runs the full imagemagick command
 	 * to process the image
 	 *
@@ -127,17 +143,28 @@ class Imagick extends Darkroom
 	{
 		$options = $this->preprocess($file, $options);
 
-		$image = new Image($file);
+		// formats without animation only get the first frame,
+		// otherwise ImageMagick writes a numbered file per frame
+		$input = $this->isAnimatable($file, $options) === true ? $file : $file . '[0]';
+
+		$image = new Image($input);
 		$image = $this->threads($image, $options);
 		$image = $this->interlace($image, $options);
 		$image = $this->coalesce($image);
-		$image = $this->grayscale($image, $options);
-		$image = $this->autoOrient($image);
-		$image = $this->resize($image, $options);
-		$image = $this->quality($image, $options);
-		$image = $this->blur($image, $options);
-		$image = $this->sharpen($image, $options);
-		$image = $this->strip($image, $options);
+
+		// Imagick only transforms the current frame,
+		// so apply all steps to each frame of animated images
+		foreach ($image as $frame) {
+			$frame = $this->grayscale($frame, $options);
+			$frame = $this->autoOrient($frame);
+			$frame = $this->resize($frame, $options);
+			$frame = $this->quality($frame, $options);
+			$frame = $this->blur($frame, $options);
+			$frame = $this->sharpen($frame, $options);
+			$frame = $this->strip($frame, $options);
+		}
+
+		$image = $this->optimize($image);
 
 		if ($this->save($image, $file, $options) === false) {
 			// @codeCoverageIgnoreStart
@@ -185,6 +212,9 @@ class Imagick extends Darkroom
 					$focus['x1'],
 					$focus['y1']
 				);
+
+				// drop the canvas offset left by the crop (like `+repage`)
+				$image->setImagePage(0, 0, 0, 0);
 			}
 
 			return $image;

@@ -51,6 +51,57 @@ class ImageMagickTest extends TestCase
 		], $im->process($file));
 	}
 
+	public static function stillFormatProvider(): array
+	{
+		return [
+			['jpg', 'JPEG'],
+			['png', 'PNG'],
+		];
+	}
+
+	#[DataProvider('stillFormatProvider')]
+	public function testProcessAnimatedGifToStillFormat(
+		string $format,
+		string $type
+	): void {
+		Dir::make($dir = static::TMP . '/' . $format);
+
+		copy(
+			static::FIXTURES . '/animated-optimized.gif',
+			$file = $dir . '/thumb.' . $format
+		);
+
+		$im = new ImageMagick(['width' => 50, 'format' => $format]);
+		$im->process($file);
+
+		// only the first frame, no numbered file per frame
+		$this->assertSame(['thumb.' . $format], Dir::read($dir));
+
+		$info = shell_exec('identify -format "%m %wx%h|" ' . escapeshellarg($file) . ' 2>/dev/null');
+		$this->assertSame($type . ' 50x30|', $info);
+	}
+
+	public function testProcessAnimatedGifToWebp(): void
+	{
+		// frames 2 and 3 only contain the changed area
+		copy(
+			static::FIXTURES . '/animated-optimized.gif',
+			$file = static::TMP . '/thumb.webp'
+		);
+
+		$im = new ImageMagick(['width' => 50, 'format' => 'webp']);
+		$im->process($file);
+
+		// a black square moves from left to right
+		$squares = shell_exec(
+			'convert ' . escapeshellarg($file) . ' -coalesce -format ' .
+			escapeshellarg('%[fx:p{10,15}.r<0.5]%[fx:p{25,15}.r<0.5]%[fx:p{40,15}.r<0.5] ') .
+			' info: 2>/dev/null'
+		);
+
+		$this->assertSame('100 010 001 ', $squares);
+	}
+
 	public function testResizeWithCrop(): void
 	{
 		$im = new ImageMagick();

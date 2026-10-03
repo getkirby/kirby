@@ -142,6 +142,21 @@ class ImagickTest extends TestCase
 		$this->assertSame(3, $image->getNumberImages());
 	}
 
+	public function testCoalesceGifFormat(): void
+	{
+		// the mime type falls back to `image/x-gif`
+		// when ImageMagick cannot find its `mime.xml`
+		$image = $this->createMock(Image::class);
+		$image->method('getImageMimeType')->willReturn('image/x-gif');
+		$image->method('getImageFormat')->willReturn('GIF');
+		$image->expects($this->once())
+			->method('coalesceImages')
+			->willReturn($coalesced = new Image());
+
+		$imagick = new Imagick();
+		$this->assertSame($coalesced, $this->call($imagick, 'coalesce', $image));
+	}
+
 	public function testCoalesceNonGif(): void
 	{
 		copy(
@@ -183,6 +198,39 @@ class ImagickTest extends TestCase
 		$this->call($imagick, 'interlace', $image, ['interlace' => true]);
 	}
 
+	public function testIsAnimatable(): void
+	{
+		$imagick = new Imagick();
+
+		$this->assertTrue($this->call($imagick, 'isAnimatable', 'image.gif', ['format' => null]));
+		$this->assertTrue($this->call($imagick, 'isAnimatable', 'image.gif', ['format' => 'WEBP']));
+		$this->assertTrue($this->call($imagick, 'isAnimatable', 'image.gif', ['format' => 'avif']));
+		$this->assertFalse($this->call($imagick, 'isAnimatable', 'image.gif', ['format' => 'jpg']));
+		$this->assertFalse($this->call($imagick, 'isAnimatable', 'image.png', ['format' => null]));
+	}
+
+	public function testOptimize(): void
+	{
+		$image = $this->createMock(Image::class);
+		$image->method('getImageFormat')->willReturn('GIF');
+		$image->expects($this->once())
+			->method('optimizeImageLayers')
+			->willReturn($optimized = new Image());
+
+		$imagick = new Imagick();
+		$this->assertSame($optimized, $this->call($imagick, 'optimize', $image));
+	}
+
+	public function testOptimizeNonGif(): void
+	{
+		$image = $this->createMock(Image::class);
+		$image->method('getImageFormat')->willReturn('JPEG');
+		$image->expects($this->never())->method('optimizeImageLayers');
+
+		$imagick = new Imagick();
+		$this->assertSame($image, $this->call($imagick, 'optimize', $image));
+	}
+
 	public function testProcess(): void
 	{
 		$imagick = new Imagick();
@@ -209,6 +257,121 @@ class ImagickTest extends TestCase
 			'sourceWidth'  => 500,
 			'sourceHeight' => 500
 		], $imagick->process($file));
+	}
+
+	public function testProcessAnimatedGif(): void
+	{
+		copy(
+			static::FIXTURES . '/image/animated.gif',
+			$file = static::TMP . '/animated.gif'
+		);
+
+		$imagick = new Imagick(['width' => 50]);
+		$imagick->process($file);
+
+		$image = new Image($file);
+		$this->assertSame(3, $image->getNumberImages());
+
+		foreach ($image as $frame) {
+			$this->assertSame(50, $frame->getImageWidth());
+			$this->assertSame(50, $frame->getImageHeight());
+			$this->assertSame(
+				['width' => 50, 'height' => 50, 'x' => 0, 'y' => 0],
+				$frame->getImagePage()
+			);
+		}
+	}
+
+	public static function stillFormatProvider(): array
+	{
+		return [
+			['jpg', 'JPEG'],
+			['png', 'PNG'],
+		];
+	}
+
+	#[DataProvider('stillFormatProvider')]
+	public function testProcessAnimatedGifToStillFormat(
+		string $format,
+		string $type
+	): void {
+		Dir::make($dir = static::TMP . '/' . $format);
+
+		copy(
+			static::FIXTURES . '/image/animated-optimized.gif',
+			$file = $dir . '/thumb.' . $format
+		);
+
+		$imagick = new Imagick(['width' => 50, 'format' => $format]);
+		$imagick->process($file);
+
+		// only the first frame, no numbered file per frame
+		$this->assertSame(['thumb.' . $format], Dir::read($dir));
+
+		$image = new Image($file);
+		$this->assertSame($type, $image->getImageFormat());
+		$this->assertSame(1, $image->getNumberImages());
+		$this->assertSame(50, $image->getImageWidth());
+		$this->assertSame(30, $image->getImageHeight());
+	}
+
+	public function testProcessAnimatedGifWithCrop(): void
+	{
+		copy(
+			static::FIXTURES . '/image/animated.gif',
+			$file = static::TMP . '/animated.gif'
+		);
+
+		$imagick = new Imagick([
+			'crop'   => true,
+			'width'  => 50,
+			'height' => 30
+		]);
+		$imagick->process($file);
+
+		$image = new Image($file);
+		$this->assertSame(3, $image->getNumberImages());
+
+		foreach ($image as $frame) {
+			$this->assertSame(50, $frame->getImageWidth());
+			$this->assertSame(30, $frame->getImageHeight());
+			$this->assertSame(
+				['width' => 50, 'height' => 30, 'x' => 0, 'y' => 0],
+				$frame->getImagePage()
+			);
+		}
+	}
+
+	public function testProcessAnimatedGifWithOptimizedLayers(): void
+	{
+		// frames 2 and 3 only contain the changed area
+		copy(
+			static::FIXTURES . '/image/animated-optimized.gif',
+			$file = static::TMP . '/animated.gif'
+		);
+
+		$imagick = new Imagick(['width' => 50]);
+		$imagick->process($file);
+
+		// frames 2 and 3 got optimized again
+		$image = new Image($file);
+		$image->setIteratorIndex(1);
+		$this->assertLessThan(50, $image->getImageWidth());
+
+		// a black square moves from left to right
+		$squares = [];
+
+		foreach ((new Image($file))->coalesceImages() as $frame) {
+			$this->assertSame(50, $frame->getImageWidth());
+			$this->assertSame(30, $frame->getImageHeight());
+
+			$squares[] = implode('', array_map(
+				fn ($x) => $frame->getImagePixelColor($x, 15)->getColor()['r'] < 128 ? 'x' : '.',
+				[10, 25, 40]
+			));
+		}
+
+		$this->assertSame(['x..', '.x.', '..x'], $squares);
 	}
 
 	public function testQuality(): void
