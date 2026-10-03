@@ -24,6 +24,10 @@ class ReflectableTestChildClass extends ReflectableTestClass
 	}
 }
 
+class ReflectableTestClassWithoutConstructor
+{
+}
+
 #[CoversClass(Constructor::class)]
 class ConstructorTest extends TestCase
 {
@@ -66,6 +70,26 @@ class ConstructorTest extends TestCase
 
 		$this->assertSame($accepted, $result['accepted']);
 		$this->assertSame([], $result['ignored']);
+	}
+
+	public function testFor(): void
+	{
+		// returns a Constructor for a class with a constructor
+		$this->assertInstanceOf(
+			Constructor::class,
+			Constructor::for(ReflectableTestClass::class)
+		);
+
+		// also accepts an object instance
+		$this->assertInstanceOf(
+			Constructor::class,
+			Constructor::for(new ReflectableTestClass('a', 'b'))
+		);
+
+		// returns null for a class without a constructor
+		$this->assertNull(
+			Constructor::for(ReflectableTestClassWithoutConstructor::class)
+		);
 	}
 
 	public function testGetAcceptedArguments(): void
