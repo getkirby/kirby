@@ -380,7 +380,7 @@ class System
 	{
 		return
 			version_compare(PHP_VERSION, '8.2.0', '>=') === true &&
-			version_compare(PHP_VERSION, '8.6.0', '<')  === true;
+			version_compare(PHP_VERSION, '8.7.0', '<')  === true;
 	}
 
 	/**
