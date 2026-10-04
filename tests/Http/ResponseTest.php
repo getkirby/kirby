@@ -3,6 +3,7 @@
 namespace Kirby\Http;
 
 use Exception;
+use JsonException;
 use Kirby\Cms\App;
 use Kirby\Exception\LogicException;
 use Kirby\TestCase;
@@ -204,6 +205,12 @@ class ResponseTest extends TestCase
 		$response = Response::json($data);
 
 		$this->assertSame($expected, $response->body());
+	}
+
+	public function testJsonWithInvalidUtf8(): void
+	{
+		$this->expectException(JsonException::class);
+		Response::json(['bad' => "\xC3\x28"]);
 	}
 
 	public function testJsonWithPrettyArray(): void
