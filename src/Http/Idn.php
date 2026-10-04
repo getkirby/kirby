@@ -24,14 +24,6 @@ class Idn
 	}
 
 	/**
-	 * Convert domain name to IDNA ASCII form
-	 */
-	public static function encode(string $domain): string|false
-	{
-		return idn_to_ascii($domain);
-	}
-
-	/**
 	 * Decodes a email address to the Unicode format
 	 */
 	public static function decodeEmail(string $email): string
@@ -44,6 +36,14 @@ class Idn
 		}
 
 		return $email;
+	}
+
+	/**
+	 * Convert domain name to IDNA ASCII form
+	 */
+	public static function encode(string $domain): string|false
+	{
+		return idn_to_ascii($domain);
 	}
 
 	/**
