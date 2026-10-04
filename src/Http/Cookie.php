@@ -56,7 +56,7 @@ class Cookie
 		$expires  = static::lifetime($options['lifetime'] ?? 0);
 		$path     = $options['path']     ?? '/';
 		$domain   = $options['domain']   ?? null;
-		$secure   = $options['secure']   ?? false;
+		$secure   = $options['secure']   ?? Url::scheme() === 'https';
 		$httponly = $options['httpOnly'] ?? true;
 		$samesite = $options['sameSite'] ?? 'Lax';
 
