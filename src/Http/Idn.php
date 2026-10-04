@@ -20,7 +20,8 @@ class Idn
 	 */
 	public static function decode(string $domain): string|false
 	{
-		return idn_to_utf8($domain);
+		// `idn_to_utf8()` throws instead of failing for an empty domain
+		return $domain !== '' ? idn_to_utf8($domain) : false;
 	}
 
 	/**
@@ -32,7 +33,11 @@ class Idn
 			$parts   = Str::split($email, '@');
 			$address = $parts[0];
 			$domain  = Idn::decode($parts[1] ?? '');
-			$email   = $address . '@' . $domain;
+
+			// keep the email as is if the domain cannot be converted
+			if ($domain !== false) {
+				$email = $address . '@' . $domain;
+			}
 		}
 
 		return $email;
@@ -43,7 +48,8 @@ class Idn
 	 */
 	public static function encode(string $domain): string|false
 	{
-		return idn_to_ascii($domain);
+		// `idn_to_ascii()` throws instead of failing for an empty domain
+		return $domain !== '' ? idn_to_ascii($domain) : false;
 	}
 
 	/**
@@ -55,7 +61,11 @@ class Idn
 			$parts   = Str::split($email, '@');
 			$address = $parts[0];
 			$domain  = Idn::encode($parts[1] ?? '');
-			$email   = $address . '@' . $domain;
+
+			// keep the email as is if the domain cannot be converted
+			if ($domain !== false) {
+				$email = $address . '@' . $domain;
+			}
 		}
 
 		return $email;
