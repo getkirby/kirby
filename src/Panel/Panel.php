@@ -139,7 +139,7 @@ class Panel
 	{
 		$request = App::instance()->request();
 
-		return Response::json($data, $code, $request->get('_pretty'), [
+		return Response::json($data, $code, (bool)$request->get('_pretty'), [
 			'X-Panel'       => 'true',
 			'Cache-Control' => 'no-store, private'
 		]);

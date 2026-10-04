@@ -260,7 +260,7 @@ class Response implements Stringable
 	public static function json(
 		string|array $body = '',
 		int|null $code = null,
-		bool|null $pretty = null,
+		bool $pretty = false,
 		array $headers = []
 	): static {
 		if (is_array($body) === true) {
