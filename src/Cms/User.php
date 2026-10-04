@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Closure;
 use Exception;
+use Kirby\Auth\Passwords;
 use Kirby\Blueprint\UserBlueprint;
 use Kirby\Content\Field;
 use Kirby\Exception\InvalidArgumentException;
@@ -810,7 +811,35 @@ class User extends ModelWithContent
 		#[SensitiveParameter]
 		string|null $password = null
 	): bool {
-		$this->guards()->validators()->validatePassword($password);
+		// not checked through the guards: they need the current
+		// user, which this check may be about to establish
+		if ($this->hasPassword() === false) {
+			throw new NotFoundException(
+				key: 'user.password.undefined'
+			);
+		}
+
+		// the password policy enforces the same minimum length,
+		// so everything below that is a typo
+		if (Str::length($password) < Passwords::MINLENGTH) {
+			throw new InvalidArgumentException(
+				key: 'user.password.invalid'
+			);
+		}
+
+		// too long passwords can cause DoS attacks
+		if (Str::length($password) > Passwords::MAXLENGTH) {
+			throw new InvalidArgumentException(
+				key: 'user.password.excessive'
+			);
+		}
+
+		if (password_verify($password, $this->password()) !== true) {
+			throw new InvalidArgumentException(
+				key: 'user.password.wrong',
+				httpCode: 401
+			);
+		}
 
 		return true;
 	}
