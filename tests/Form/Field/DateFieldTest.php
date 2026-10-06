@@ -191,4 +191,19 @@ class DateFieldTest extends TestCase
 
 		$this->assertSame($expected, $field->value());
 	}
+
+	public function testValueWithoutTimeIgnoresStoredTime(): void
+	{
+		$field = $this->field('date', [
+			'value' => '2026-09-22 12:00:01'
+		]);
+
+		$this->assertSame('2026-09-22 00:00:00', $field->value());
+
+		$field = $this->field('date', [
+			'value' => '2026-09-22 23:59:59'
+		]);
+
+		$this->assertSame('2026-09-22 00:00:00', $field->value());
+	}
 }

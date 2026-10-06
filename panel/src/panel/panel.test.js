@@ -1,4 +1,5 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import AuthError from "@/errors/AuthError";
 import Panel from "./panel.js";
 import Vue from "vue";
 
@@ -74,6 +75,25 @@ describe("panel", () => {
 		expect(panel.direction).toStrictEqual("rtl");
 	});
 
+	it("should log out when the session expired", async () => {
+		const panel = Panel.create(Vue);
+
+		panel.set({ user: { id: "test" } });
+
+		// this is what the content autosave throws in the background
+		// when the session expired while the view was open
+		panel.error(
+			new AuthError("Unauthenticated", {
+				request: new Request(
+					"https://getkirby.com/api/pages/test/changes/save"
+				),
+				response: { json: {}, status: 401 }
+			})
+		);
+
+		expect(window.location.href).toStrictEqual("https://getkirby.com/logout");
+	});
+
 	it("should set the correct title without system title", async () => {
 		const panel = Panel.create(Vue);
 
@@ -98,5 +118,29 @@ describe("panel", () => {
 		expect(panel.url("/path")).toStrictEqual(
 			new URL("https://getkirby.com/path")
 		);
+	});
+
+	it("should send the content language with every request", async () => {
+		const panel = Panel.create(Vue);
+		const fetch = vi.fn(
+			async () =>
+				new Response(JSON.stringify({}), {
+					headers: { "Content-Type": "application/json" }
+				})
+		);
+
+		vi.stubGlobal("fetch", fetch);
+
+		panel.set({
+			$language: { code: "de", name: "Deutsch" }
+		});
+
+		await panel.request("/some/view");
+
+		expect(fetch.mock.calls[0][0].headers.get("x-language")).toStrictEqual(
+			"de"
+		);
+
+		vi.unstubAllGlobals();
 	});
 });

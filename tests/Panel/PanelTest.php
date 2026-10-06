@@ -4,6 +4,7 @@ namespace Kirby\Panel;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Blueprint;
+use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Response;
@@ -47,7 +48,7 @@ class PanelTest extends TestCase
 		$_GET = [];
 
 		// clean up $_SERVER
-		unset($_SERVER['SERVER_SOFTWARE']);
+		unset($_SERVER['SERVER_SOFTWARE'], $_SERVER['HTTP_X_LANGUAGE']);
 	}
 
 	public function testArea(): void
@@ -450,6 +451,40 @@ class PanelTest extends TestCase
 		$this->assertNull($result);
 	}
 
+	public function testRouterWithUnknownPath(): void
+	{
+		$app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'_json' => true,
+				]
+			],
+			'users' => [
+				[
+					'email' => 'test@getkirby.com',
+					'role'  => 'admin'
+				]
+			],
+			'roles' => [
+				[
+					'name' => 'admin'
+				]
+			]
+		]);
+
+		$app->impersonate('test@getkirby.com');
+
+		$response = Panel::router('does-not-exist');
+		$json     = json_decode($response->body(), true);
+
+		$this->assertSame(404, $response->code());
+		$this->assertSame('k-error-view', $json['$view']['component']);
+		$this->assertSame(
+			'Could not find Panel view for route: does-not-exist',
+			$json['$view']['props']['error']
+		);
+	}
+
 	public function testRoutes(): void
 	{
 		$routes = Panel::routes([]);
@@ -457,7 +492,14 @@ class PanelTest extends TestCase
 		$this->assertSame('browser', $routes[0]['pattern']);
 		$this->assertSame(['/', 'installation', 'login'], $routes[1]['pattern']);
 		$this->assertSame('(:all)', $routes[2]['pattern']);
-		$this->assertSame('Could not find Panel view for route: foo', $routes[2]['action']('foo'));
+
+		// the catch-all route returns a not found exception,
+		// so that the Panel responds with a 404 instead of a 500
+		$result = $routes[2]['action']('foo');
+
+		$this->assertInstanceOf(NotFoundException::class, $result);
+		$this->assertSame('Could not find Panel view for route: foo', $result->getMessage());
+		$this->assertSame(404, $result->getHttpCode());
 	}
 
 
@@ -742,6 +784,129 @@ class PanelTest extends TestCase
 
 		$this->assertSame('de', $language);
 		$this->assertSame('de', $this->app->session()->get('panel.language'));
+		$this->assertSame('de', $this->app->language()->code());
+	}
+
+	public function testSetLanguageViaHeader(): void
+	{
+		// switch via the request header of the Panel tab
+		// needs to come first before the app is cloned
+		$_SERVER['HTTP_X_LANGUAGE'] = 'de';
+
+		$this->app = $this->app->clone([
+			'options' => [
+				'languages' => true,
+			],
+			'languages' => [
+				[
+					'code' => 'en',
+					'name' => 'English',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+					'name' => 'Deutsch',
+				]
+			]
+		]);
+
+		$language = Panel::setLanguage();
+
+		$this->assertSame('de', $language);
+		$this->assertSame('de', $this->app->session()->get('panel.language'));
+		$this->assertSame('de', $this->app->language()->code());
+	}
+
+	public function testSetLanguageViaHeaderOverridesSession(): void
+	{
+		// the session is shared between all browser tabs, while the
+		// header is sent by the tab that makes the request
+		$_SERVER['HTTP_X_LANGUAGE'] = 'en';
+
+		$this->app = $this->app->clone([
+			'options' => [
+				'languages' => true,
+			],
+			'languages' => [
+				[
+					'code' => 'en',
+					'name' => 'English',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+					'name' => 'Deutsch',
+				]
+			]
+		]);
+
+		// another tab has switched to German before
+		$this->app->session()->set('panel.language', 'de');
+
+		$language = Panel::setLanguage();
+
+		$this->assertSame('en', $language);
+		$this->assertSame('en', $this->app->session()->get('panel.language'));
+		$this->assertSame('en', $this->app->language()->code());
+	}
+
+	public function testSetLanguageViaGetOverridesHeader(): void
+	{
+		// the query parameter switches the language, so it has to
+		// win over the language the tab is currently on
+		$_GET['language'] = 'de';
+		$_SERVER['HTTP_X_LANGUAGE'] = 'en';
+
+		$this->app = $this->app->clone([
+			'options' => [
+				'languages' => true,
+			],
+			'languages' => [
+				[
+					'code' => 'en',
+					'name' => 'English',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+					'name' => 'Deutsch',
+				]
+			]
+		]);
+
+		$language = Panel::setLanguage();
+
+		$this->assertSame('de', $language);
+		$this->assertSame('de', $this->app->session()->get('panel.language'));
+		$this->assertSame('de', $this->app->language()->code());
+	}
+
+	public function testSetLanguageViaSession(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'languages' => true,
+			],
+			'languages' => [
+				[
+					'code' => 'en',
+					'name' => 'English',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+					'name' => 'Deutsch',
+				]
+			]
+		]);
+
+		// the initial document request of a new tab has neither
+		// a query parameter nor a header
+		$this->app->session()->set('panel.language', 'de');
+
+		$language = Panel::setLanguage();
+
+		$this->assertSame('de', $language);
 		$this->assertSame('de', $this->app->language()->code());
 	}
 

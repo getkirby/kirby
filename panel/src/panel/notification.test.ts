@@ -1,6 +1,8 @@
 import { describe, expect, it, vi } from "vitest";
 import type { PanelResponse } from "@/panel/request";
+import AuthError from "@/errors/AuthError";
 import JsonRequestError from "@/errors/JsonRequestError";
+import RedirectError from "@/errors/RedirectError";
 import RequestError from "@/errors/RequestError";
 import Notification from "./notification";
 import Panel from "./panel.js";
@@ -166,6 +168,21 @@ describe("panel.notification", () => {
 			expect(notification.message).toStrictEqual("Something went wrong");
 		});
 
+		it("should redirect to the logout view when the session expired", async () => {
+			const panel = Panel.create();
+			panel.set({ user: { id: "test" } });
+
+			const notification = Notification(panel);
+
+			expect(() =>
+				notification.error(
+					new AuthError("Unauthenticated", makeRequestOptions())
+				)
+			).toThrowError(RedirectError);
+
+			expect(notification.isOpen).toStrictEqual(false);
+		});
+
 		it("should escalate JsonRequestError to fatal", async () => {
 			const panel = Panel.create();
 			const notification = Notification(panel);
@@ -184,6 +201,44 @@ describe("panel.notification", () => {
 			);
 
 			expect(notification.message).toStrictEqual("Field is required");
+		});
+
+		it("should skip null values in the RequestError response", async () => {
+			const panel = Panel.create();
+			const notification = Notification(panel);
+
+			notification.error(
+				new RequestError("error", makeRequestOptions({ $dialog: null, $view: { error: "Page not found" } }))
+			);
+
+			expect(notification.message).toStrictEqual("Page not found");
+		});
+
+		it("should pass details of flat API errors to the error dialog", async () => {
+			const panel = Panel.create();
+			const notification = Notification(panel);
+			// @ts-expect-error panel.js is not typed
+			const open = vi.spyOn(panel.dialog, "open");
+			const details = {
+				title: { label: "Title", message: { required: "Please enter something" } }
+			};
+
+			notification.error(
+				new RequestError(
+					"error",
+					makeRequestOptions({
+						status: "error",
+						message: "Please fix all form errors…",
+						key: "error.form.incomplete",
+						details
+					})
+				)
+			);
+
+			expect(open).toHaveBeenCalledWith({
+				component: "k-error-dialog",
+				props: { message: "Please fix all form errors…", details }
+			});
 		});
 
 		it("should not set a timer", async () => {

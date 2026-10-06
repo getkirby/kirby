@@ -283,6 +283,26 @@ class ImagickTest extends TestCase
 		$this->assertEquals(150, $image->getImageHeight());
 	}
 
+	public function testResizeWithCropRounding(): void
+	{
+		$imagick = new Imagick([
+			'crop'   => true,
+			'width'  => 200,
+			'height' => 289
+		]);
+
+		copy(
+			static::FIXTURES . '/orientation/Landscape_0.jpg',
+			$file = static::TMP . '/resize.jpg'
+		);
+
+		$imagick->process($file);
+		$image = new Image($file);
+
+		$this->assertEquals(200, $image->getImageWidth());
+		$this->assertEquals(289, $image->getImageHeight());
+	}
+
 	public function testSaveWithFormat(): void
 	{
 		$imagick = new Imagick(['format' => 'webp']);

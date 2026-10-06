@@ -192,7 +192,11 @@ export default {
 		}
 
 		if (openNotification === true) {
-			return this.notification.error(error);
+			try {
+				return this.notification.error(error);
+			} catch (e) {
+				return this.error(e);
+			}
 		}
 	},
 
@@ -303,6 +307,7 @@ export default {
 		return request(url, {
 			referrer: this.view.path,
 			csrf: this.system.csrf,
+			language: this.language.code,
 			...options
 		});
 	},

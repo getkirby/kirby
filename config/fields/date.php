@@ -121,6 +121,24 @@ return [
 			return $this->toDatetime($this->value) ?? '';
 		},
 	],
+	'methods' => [
+		'toDatetime' => function ($value, string $format = 'Y-m-d H:i:s') {
+			if ($date = Date::optional($value)) {
+				if ($this->time === false) {
+					$date->setTime(0, 0);
+				}
+
+				if ($this->step) {
+					$step = Date::stepConfig($this->step);
+					$date->round($step['unit'], $step['size']);
+				}
+
+				return $date->format($format);
+			}
+
+			return null;
+		}
+	],
 	'validations' => [
 		'date',
 		'minMax' => function ($value) {

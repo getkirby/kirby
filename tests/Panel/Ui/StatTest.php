@@ -7,6 +7,7 @@ use Kirby\Cms\Page;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 #[CoversClass(Stat::class)]
 class StatTest extends TestCase
@@ -124,6 +125,33 @@ class StatTest extends TestCase
 			translatable: true,
 			queryable: true
 		);
+	}
+
+	public static function emptyValueProvider(): array
+	{
+		return [
+			[''],
+			[[]],
+			[['en' => '']],
+			['{{ page.missing }}'],
+		];
+	}
+
+	#[DataProvider('emptyValueProvider')]
+	public function testEmptyValues(array|string $empty): void
+	{
+		$stat = Stat::from(
+			input: [
+				'label' => $empty,
+				'value' => $empty,
+				'info'  => $empty,
+			],
+			model: $this->model
+		);
+
+		$this->assertSame('', $stat->label());
+		$this->assertSame('', $stat->value());
+		$this->assertSame('', $stat->info());
 	}
 
 	public function testFrom(): void
@@ -254,5 +282,31 @@ class StatTest extends TestCase
 			translatable: true,
 			queryable: true,
 		);
+	}
+
+	public static function zeroValueProvider(): array
+	{
+		return [
+			['0'],
+			[0],
+			[0.0],
+		];
+	}
+
+	#[DataProvider('zeroValueProvider')]
+	public function testZeroValues(string|int|float $zero): void
+	{
+		$stat = Stat::from(
+			input: [
+				'label' => $zero,
+				'value' => $zero,
+				'info'  => $zero,
+			],
+			model: $this->model
+		);
+
+		$this->assertSame('0', $stat->label());
+		$this->assertSame('0', $stat->value());
+		$this->assertSame('0', $stat->info());
 	}
 }

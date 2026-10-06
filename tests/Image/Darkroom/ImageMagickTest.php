@@ -51,6 +51,47 @@ class ImageMagickTest extends TestCase
 		], $im->process($file));
 	}
 
+	public function testResizeWithCrop(): void
+	{
+		$im = new ImageMagick();
+
+		$method = new ReflectionMethod($im::class, 'resize');
+
+		$result = $method->invoke($im, '', [
+			'crop'         => 'center',
+			'sourceWidth'  => 4000,
+			'sourceHeight' => 6000,
+			'width'        => 300,
+			'height'       => 536
+		]);
+
+		$this->assertSame(
+			'-thumbnail 357x536! -crop 300x536+28+0 +repage',
+			$result
+		);
+	}
+
+	public function testResizeWithCropRounding(): void
+	{
+		$im = new ImageMagick();
+
+		$method = new ReflectionMethod($im::class, 'resize');
+
+		// Focus::coords() floors 289 * (200 / 289) to 199
+		$result = $method->invoke($im, '', [
+			'crop'         => 'center',
+			'sourceWidth'  => 1800,
+			'sourceHeight' => 1200,
+			'width'        => 200,
+			'height'       => 289
+		]);
+
+		$this->assertSame(
+			'-thumbnail 434x289! -crop 200x289+117+0 +repage',
+			$result
+		);
+	}
+
 	public function testSharpen(): void
 	{
 		$im = new ImageMagick();

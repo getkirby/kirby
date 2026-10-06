@@ -102,10 +102,14 @@ export default {
 					icon: "smile"
 				});
 
+				// the code login destroys the session and hands out a new
+				// CSRF token, so the cached globals have to be refreshed
+				const globals = ["$system", "$translation"];
+
 				if (this.mode === "password-reset") {
-					this.$go("reset-password");
+					this.$go("reset-password", { globals });
 				} else {
-					this.$reload();
+					this.$reload({ globals });
 				}
 			} catch (error) {
 				this.$emit("error", error);

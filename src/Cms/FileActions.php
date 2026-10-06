@@ -9,6 +9,7 @@ use Kirby\Content\VersionCache;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\F;
+use Kirby\Image\Darkroom;
 use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Uuid\Uuid;
 use Kirby\Uuid\Uuids;
@@ -300,11 +301,11 @@ trait FileActions
 				// @codeCoverageIgnoreEnd
 			}
 
+			// store the content first, manipulate() works on a fresh clone
+			$file->changeStorage($storage);
+
 			// resize the file on upload if configured
 			$file = $file->manipulate($create);
-
-			// store the content if necessary
-			$file->changeStorage($storage);
 
 			$file->uuid()?->populate();
 
@@ -353,6 +354,10 @@ trait FileActions
 		if (empty($options) === true || $this->isResizable() === false) {
 			return $this;
 		}
+
+		// apply the options on top of the defaults
+		// instead of the global thumb settings
+		$options = [...Darkroom::defaultOptions(), ...$options];
 
 		// generate image file and overwrite it in place
 		$this->kirby()->thumb($this->root(), $this->root(), $options);
