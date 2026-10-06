@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use JsonException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Tests\MockTime;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -419,6 +420,20 @@ class ResponderTest extends TestCase
 		$this->assertTrue($responder->isPrivate(false, ['foo', 'bar']));
 		$this->assertFalse($responder->isPrivate(false, ['bar']));
 		$this->assertFalse($responder->isPrivate(false, []));
+	}
+
+	public function testJson(): void
+	{
+		$responder = new Responder();
+		$responder->json(['foo' => 'bar']);
+		$this->assertSame('{"foo":"bar"}', $responder->body());
+		$this->assertSame('application/json', $responder->type());
+	}
+
+	public function testJsonWithInvalidUtf8(): void
+	{
+		$this->expectException(JsonException::class);
+		(new Responder())->json(['bad' => "\xC3\x28"]);
 	}
 
 	public function testSend(): void

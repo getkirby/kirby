@@ -260,11 +260,17 @@ class Response implements Stringable
 	public static function json(
 		string|array $body = '',
 		int|null $code = null,
-		bool|null $pretty = null,
+		bool $pretty = false,
 		array $headers = []
 	): static {
 		if (is_array($body) === true) {
-			$body = json_encode($body, $pretty === true ? JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES : 0);
+			$flags = JSON_THROW_ON_ERROR;
+
+			if ($pretty === true) {
+				$flags |= JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES;
+			}
+
+			$body = json_encode($body, $flags);
 		}
 
 		return new static([

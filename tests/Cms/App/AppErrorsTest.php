@@ -395,6 +395,34 @@ class AppErrorsTest extends TestCase
 		$this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
 	}
 
+	public function testHandleJsonErrorsWithInvalidUtf8(): void
+	{
+		$whoopsMethod  = new ReflectionMethod(App::class, 'whoops');
+		$optionsMethod = new ReflectionMethod(App::class, 'optionsFromProps');
+		$testMethod    = new ReflectionMethod(App::class, 'handleJsonErrors');
+
+		$app    = App::instance();
+		$whoops = $whoopsMethod->invoke($app);
+
+		$testMethod->invoke($app);
+		$handler = $whoops->getHandlers()[0];
+		$handler->setException(new Exception(
+			message: "Message \xC3\x28",
+			details: ["Detail \xC3\x28"]
+		));
+
+		$json = json_decode($this->_getBufferedContent($handler), true);
+		$this->assertSame(["Detail \u{FFFD}("], $json['details']);
+
+		// with debugging enabled
+		$optionsMethod->invoke($app, ['debug' => true, 'whoops' => true]);
+		$handler = $whoops->getHandlers()[0];
+
+		$json = json_decode($this->_getBufferedContent($handler), true);
+		$this->assertSame("Message \u{FFFD}(", $json['message']);
+		$this->assertSame(["Detail \u{FFFD}("], $json['details']);
+	}
+
 	public function testSetUnsetWhoopsHandler(): void
 	{
 		$whoopsMethod = new ReflectionMethod(App::class, 'whoops');
