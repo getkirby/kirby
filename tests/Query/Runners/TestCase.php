@@ -203,6 +203,30 @@ abstract class TestCase extends BaseTestCase
 				2, // result
 			],
 
+			'subtraction without whitespace' => [
+				'a-1', // query
+				['a' => 5], // context
+				4, // result
+			],
+
+			'negative variable' => [
+				'-a', // query
+				['a' => 2.5], // context
+				-2.5, // result
+			],
+
+			'negative grouping' => [
+				'-(1 + 2)', // query
+				[], // context
+				-3, // result
+			],
+
+			'negative argument' => [
+				'a.f(-1)', // query
+				['a' => ['f' => fn ($x) => $x]], // context
+				-1, // result
+			],
+
 			'basic multiplication' => [
 				'4 * 3', // query
 				[], // context

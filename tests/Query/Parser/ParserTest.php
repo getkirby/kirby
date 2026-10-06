@@ -725,4 +725,43 @@ class ParserTest extends TestCase
 			$ast
 		);
 	}
+
+	public function testUnaryMinus(): void
+	{
+		// negative number literals are folded
+		$parser = new Parser('2 - -3');
+		$this->assertEquals(
+			new ArithmeticNode(
+				left: new LiteralNode(2),
+				operator: '-',
+				right: new LiteralNode(-3)
+			),
+			$parser->parse()
+		);
+
+		// any other operand is subtracted from zero
+		$parser = new Parser('-a.b');
+		$this->assertEquals(
+			new ArithmeticNode(
+				left: new LiteralNode(0),
+				operator: '-',
+				right: new MemberAccessNode(
+					object: new VariableNode('a'),
+					member: new LiteralNode('b')
+				)
+			),
+			$parser->parse()
+		);
+
+		// binds tighter than multiplication
+		$parser = new Parser('-2 * 3');
+		$this->assertEquals(
+			new ArithmeticNode(
+				left: new LiteralNode(-2),
+				operator: '*',
+				right: new LiteralNode(3)
+			),
+			$parser->parse()
+		);
+	}
 }
