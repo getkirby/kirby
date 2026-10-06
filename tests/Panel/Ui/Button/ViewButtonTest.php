@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Ui\Button;
 
 use Kirby\Cms\App;
+use Kirby\Cms\Language;
 use Kirby\Cms\Page;
 use Kirby\Panel\Areas\AreaTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -203,6 +204,23 @@ class ViewButtonTest extends AreaTestCase
 			'variant'    => 'filled',
 			'options'    => '/my/route'
 		], $component->props());
+	}
+
+	public function testPropsWithLanguageModel(): void
+	{
+		$component = new ViewButton(
+			model: new Language(['code' => 'en']),
+			icon: 'book',
+			link: 'https://getkirby.com',
+			options: 'my/options',
+			text: 'Docs'
+		);
+
+		$props = $component->props();
+		$this->assertSame('book', $props['icon']);
+		$this->assertSame('https://getkirby.com', $props['link']);
+		$this->assertSame('my/options', $props['options']);
+		$this->assertSame('Docs', $props['text']);
 	}
 
 	public function testPropsRejectsDangerousLinkScheme(): void
