@@ -2,6 +2,7 @@
 
 namespace Kirby\Query\Parser;
 
+use ErrorException;
 use Exception;
 use Kirby\Query\AST\ArgumentListNode;
 use Kirby\Query\AST\ArithmeticNode;
@@ -394,6 +395,23 @@ class ParserTest extends TestCase
 
 		$parser = new Parser('(a, b) a');
 		$parser->parse();
+	}
+
+	public function testGroupingEmpty(): void
+	{
+		// fail with a parser error, not a PHP warning
+		set_error_handler(function (int $no, string $message) {
+			throw new ErrorException($message, 0, $no);
+		});
+
+		try {
+			$this->expectException(Exception::class);
+			$this->expectExceptionMessage('Expect expression');
+
+			(new Parser('()'))->parse();
+		} finally {
+			restore_error_handler();
+		}
 	}
 
 	public function testIdentifier(): void

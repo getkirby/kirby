@@ -253,6 +253,11 @@ class Parser
 				);
 			}
 
+			// an empty grouping holds no expression
+			if ($list === []) {
+				throw new Exception('Expect expression');
+			}
+
 			if (count($list) > 1) {
 				throw new Exception('Expecting "=>" after closure argument list');
 			}
