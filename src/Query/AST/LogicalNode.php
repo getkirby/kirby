@@ -26,7 +26,7 @@ class LogicalNode extends Node
 		return $visitor->logical(
 			left: $this->left->resolve($visitor),
 			operator: $this->operator,
-			right: $this->right->resolve($visitor)
+			right: fn () => $this->right->resolve($visitor)
 		);
 	}
 }

@@ -27,8 +27,8 @@ class TernaryNode extends Node
 	{
 		return $visitor->ternary(
 			condition: $this->condition->resolve($visitor),
-			true:      $this->true?->resolve($visitor),
-			false:     $this->false->resolve($visitor)
+			true:      $this->true !== null ? fn () => $this->true->resolve($visitor) : null,
+			false:     fn () => $this->false->resolve($visitor)
 		);
 	}
 }

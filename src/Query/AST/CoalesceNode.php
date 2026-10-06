@@ -24,7 +24,7 @@ class CoalesceNode extends Node
 	{
 		return $visitor->coalescence(
 			left:  $this->left->resolve($visitor),
-			right: $this->right->resolve($visitor)
+			right: fn () => $this->right->resolve($visitor)
 		);
 	}
 }
