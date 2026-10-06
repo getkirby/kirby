@@ -340,7 +340,7 @@ class Responder implements Stringable
 	public function json(array|null $json = null): static|string
 	{
 		if ($json !== null) {
-			$this->body(json_encode($json));
+			$this->body(json_encode($json, JSON_THROW_ON_ERROR));
 		}
 
 		return $this->type('application/json');
