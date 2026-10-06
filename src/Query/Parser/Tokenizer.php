@@ -110,7 +110,7 @@ class Tokenizer
 			return new Token(
 				TokenType::T_STRING,
 				$lex,
-				stripcslashes(substr($lex, 1, -1))
+				static::unescape($lex)
 			);
 		}
 
@@ -119,7 +119,7 @@ class Tokenizer
 			return new Token(
 				TokenType::T_STRING,
 				$lex,
-				stripcslashes(substr($lex, 1, -1))
+				static::unescape($lex)
 			);
 		}
 
@@ -252,5 +252,21 @@ class Tokenizer
 		}
 
 		yield new Token(TokenType::T_EOF, '', null);
+	}
+
+	/**
+	 * Returns the value of a string literal: only its quote
+	 * and the backslash can be escaped (e.g. `"say \"hi\""`),
+	 * all other backslashes are kept as-is (e.g. `'\d+'`)
+	 * @since 6.0.0
+	 */
+	protected static function unescape(string $lexeme): string
+	{
+		$quote = $lexeme[0];
+
+		return strtr(substr($lexeme, 1, -1), [
+			'\\' . $quote => $quote,
+			'\\\\'      => '\\'
+		]);
 	}
 }
