@@ -2,13 +2,11 @@
 
 namespace Kirby\Guards;
 
-use Kirby\Auth\Passwords;
 use Kirby\Cms\Model;
 use Kirby\Cms\Role;
 use Kirby\Cms\User;
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\Totp;
@@ -293,47 +291,6 @@ class UserValidators extends ModelValidators
 
 		// validate against the configured policy (`auth.passwords`)
 		$this->model->kirby()->auth()->passwords()->validate($password);
-	}
-
-	/**
-	 * Validates that the given password matches the password
-	 * that is currently stored for the user
-	 *
-	 * @throws NotFoundException If the user has no password
-	 * @throws InvalidArgumentException If the password is out of bounds
-	 *                                  or does not match the stored one
-	 */
-	public function validatePassword(
-		#[SensitiveParameter]
-		string|null $password = null
-	): void {
-		if ($this->model->hasPassword() === false) {
-			throw new NotFoundException(
-				key: 'user.password.undefined'
-			);
-		}
-
-		// the password policy enforces the same minimum length,
-		// so everything below that is a typo
-		if (Str::length($password) < Passwords::MINLENGTH) {
-			$this->error(
-				key: 'user.password.invalid'
-			);
-		}
-
-		// too long passwords can cause DoS attacks
-		if (Str::length($password) > Passwords::MAXLENGTH) {
-			$this->error(
-				key: 'user.password.excessive'
-			);
-		}
-
-		if (password_verify($password, $this->model->password()) !== true) {
-			throw new InvalidArgumentException(
-				key: 'user.password.wrong',
-				httpCode: 401
-			);
-		}
 	}
 
 	/**

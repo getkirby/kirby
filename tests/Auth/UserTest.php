@@ -123,6 +123,20 @@ class UserTest extends TestCase
 		$this->assertNull($this->user->fromSession($session));
 	}
 
+	public function testGetWithBasicAuthHeader(): void
+	{
+		$app = $this->app->clone([
+			'server' => [
+				'HTTP_AUTHORIZATION' => 'Basic ' . base64_encode('marge@simpsons.com:springfield123')
+			]
+		]);
+
+		// resolving the user from the header must not
+		// depend on the current user it is about to resolve
+		$user = new User($app->auth(), $app);
+		$this->assertSame('marge@simpsons.com', $user->get()->email());
+	}
+
 	public function testImpersonate(): void
 	{
 		$this->assertFalse($this->user->isImpersonated());
