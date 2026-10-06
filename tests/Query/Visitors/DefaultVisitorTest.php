@@ -43,6 +43,19 @@ class DefaultVisitorTest extends TestCase
 		$this->assertSame(5, $closure(5, null));
 	}
 
+	public function testClosureWithOtherArgumentCount(): void
+	{
+		$visitor = new DefaultVisitor();
+		$closure = $visitor->closure(new ClosureNode(
+			arguments: ['a', 'b'],
+			body: new CoalesceNode(new VariableNode('b'), new VariableNode('a'))
+		));
+
+		// missing arguments are null, extra ones are ignored
+		$this->assertSame('x', $closure('x'));
+		$this->assertSame('y', $closure('x', 'y', 'z'));
+	}
+
 	public function testCoalescence(): void
 	{
 		$visitor = new DefaultVisitor();

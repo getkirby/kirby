@@ -60,11 +60,13 @@ class DefaultVisitor extends Visitor
 
 		return function (...$params) use ($self, $node) {
 			// [key1, key2] + [value1, value2] =>
-			// [key1 => value1, key2 => value2]
-			$arguments = array_combine(
-				$node->arguments,
-				$params
-			);
+			// [key1 => value1, key2 => value2],
+			// missing values are null, extra values are ignored
+			$arguments = [];
+
+			foreach ($node->arguments as $index => $name) {
+				$arguments[$name] = $params[$index] ?? null;
+			}
 
 			// Create new nested visitor with combined
 			// data context for resolving the closure body
