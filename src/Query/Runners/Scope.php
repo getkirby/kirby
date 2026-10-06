@@ -19,7 +19,7 @@ class Scope
 	 * Access the key on the object/array during runtime
 	 */
 	public static function access(
-		array|object|null $object,
+		mixed $object,
 		string|int $key,
 		bool $nullSafe = false,
 		...$arguments

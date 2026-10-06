@@ -28,6 +28,13 @@ class ScopeTest extends TestCase
 		$this->assertNull($result);
 	}
 
+	public function testAccessWithScalar(): void
+	{
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Cannot access "bar" on string');
+		Scope::access('foo', 'bar');
+	}
+
 	public function testAccessWithObject(): void
 	{
 		$obj = new class () {
