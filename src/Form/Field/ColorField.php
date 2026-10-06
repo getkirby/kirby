@@ -22,18 +22,18 @@ class ColorField extends OptionField
 	/**
 	 * Whether to allow alpha transparency in the color
 	 */
-	protected bool|null $alpha;
+	protected bool $alpha = false;
 
 	/**
 	 * The CSS format (hex, rgb, hsl) to display and store the value
 	 */
-	protected string|null $format;
+	protected string $format = 'hex';
 
 	/**
 	 * Change mode to disable the color picker (`input`) or to only
 	 * show the `options` as toggles
 	 */
-	protected string|null $mode;
+	protected string $mode = 'picker';
 
 	public function __construct(
 		bool|null $alpha = null,
@@ -45,16 +45,16 @@ class ColorField extends OptionField
 	) {
 		parent::__construct(...$args);
 
-		$this->alpha       = $alpha;
-		$this->format      = $format;
-		$this->icon        = $icon;
-		$this->mode        = $mode;
-		$this->placeholder = $placeholder;
+		$this->alpha       = $alpha ?? $this->alpha;
+		$this->format      = $format ?? $this->format;
+		$this->icon        = $icon ?? $this->icon;
+		$this->mode        = $mode ?? $this->mode;
+		$this->placeholder = $placeholder ?? $this->placeholder;
 	}
 
 	public function alpha(): bool
 	{
-		return $this->alpha ?? false;
+		return $this->alpha;
 	}
 
 	protected function fetchOptions(): array
@@ -97,10 +97,6 @@ class ColorField extends OptionField
 
 	public function format(): string
 	{
-		if ($this->format === null) {
-			return 'hex';
-		}
-
 		if (in_array($this->format, ['hex', 'hsl', 'rgb'], true) === true) {
 			return $this->format;
 		}
@@ -135,10 +131,6 @@ class ColorField extends OptionField
 
 	public function mode(): string
 	{
-		if ($this->mode === null) {
-			return 'picker';
-		}
-
 		if (in_array($this->mode, ['picker', 'input', 'options'], true) === true) {
 			return $this->mode;
 		}

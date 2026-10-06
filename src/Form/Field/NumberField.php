@@ -22,7 +22,7 @@ class NumberField extends InputField
 	/**
 	 * The highest allowed number
 	 */
-	protected float|null $max;
+	protected float|null $max = null;
 
 	/**
 	 * The lowest allowed number
@@ -52,8 +52,8 @@ class NumberField extends InputField
 
 		$this->after       = $after;
 		$this->before      = $before;
-		$this->icon        = $icon;
-		$this->max         = $max;
+		$this->icon        = $icon ?? $this->icon;
+		$this->max         = $max ?? $this->max;
 		$this->min         = $min;
 		$this->placeholder = $placeholder;
 		$this->step        = $step;

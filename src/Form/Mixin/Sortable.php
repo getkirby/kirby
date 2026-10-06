@@ -13,10 +13,10 @@ trait Sortable
 	/**
 	 * If `true`, entries are sortable via drag & drop
 	 */
-	protected bool|null $sortable;
+	protected bool $sortable = true;
 
 	public function sortable(): bool
 	{
-		return $this->sortable ?? true;
+		return $this->sortable;
 	}
 }

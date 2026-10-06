@@ -13,11 +13,11 @@ trait Disabled
 	/**
 	 * If `true`, the field is no longer editable and will not be saved
 	 */
-	protected bool|null $disabled;
+	protected bool $disabled = false;
 
 	public function disabled(): bool
 	{
-		return $this->disabled ?? false;
+		return $this->disabled;
 	}
 
 	public function isDisabled(): bool

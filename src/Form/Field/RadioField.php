@@ -21,7 +21,7 @@ class RadioField extends OptionField
 	) {
 		parent::__construct(...$args);
 
-		$this->columns = $columns;
+		$this->columns = $columns ?? $this->columns;
 	}
 
 	public function props(): array

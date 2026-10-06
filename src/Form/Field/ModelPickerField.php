@@ -7,6 +7,7 @@ use Kirby\Cms\ModelWithContent;
 use Kirby\Data\Data;
 use Kirby\Form\Mixin;
 use Kirby\Panel\Ui\Item\ProtectedItem;
+use Kirby\Reflection\Attributes\Derived;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 use Kirby\Uuid\Uuids;
@@ -22,6 +23,8 @@ use Kirby\Uuid\Uuids;
  */
 abstract class ModelPickerField extends InputField
 {
+	use Mixin\ItemLayout;
+	use Mixin\ItemSize;
 	use Mixin\Max;
 	use Mixin\Min;
 
@@ -41,26 +44,20 @@ abstract class ModelPickerField extends InputField
 	protected string|null $info;
 
 	/**
-	 * Changes the layout of the selected entries.
-	 * Available layouts: `list`, `cardlets`, `cards`
-	 */
-	protected string|null $layout;
-
-	/**
 	 * Whether each item should be clickable
 	 */
-	protected bool|null $link;
+	protected bool $link = true;
 
 	/**
 	 * If `false`, only a single one can be selected
 	 */
-	protected bool|null $multiple;
+	protected bool $multiple = true;
 
 	/**
 	 * Additional picker dialog props { image, layout, size }
 	 * @since 6.0.0
 	 */
-	protected array|null $picker;
+	protected array $picker = [];
 
 	/**
 	 * Query for the items to be included in the picker
@@ -70,17 +67,13 @@ abstract class ModelPickerField extends InputField
 	/**
 	 * Enable/disable the search field in the picker
 	 */
-	protected bool|null $search;
-
-	/**
-	 * Layout size for cards: `tiny`, `small`, `medium`, `large`, `huge`, `full`
-	 */
-	protected string|null $size;
+	protected bool $search = true;
 
 	/**
 	 * Whether to store `uuid` or `id` in the content file of the model
 	 */
-	protected string|null $store;
+	#[Derived]
+	protected string $store = 'uuid';
 
 	/**
 	 * Main text for each item
@@ -111,16 +104,16 @@ abstract class ModelPickerField extends InputField
 		$this->empty    = $empty;
 		$this->image    = $image;
 		$this->info     = $info;
-		$this->layout   = $layout;
-		$this->link     = $link;
+		$this->layout   = $layout ?? $this->layout;
+		$this->link     = $link ?? $this->link;
 		$this->max      = $max;
 		$this->min      = $min;
-		$this->multiple = $multiple;
-		$this->picker   = $picker;
+		$this->multiple = $multiple ?? $this->multiple;
+		$this->picker   = $picker ?? $this->picker;
 		$this->query    = $query;
-		$this->search   = $search;
-		$this->store    = $store;
-		$this->size     = $size;
+		$this->search   = $search ?? $this->search;
+		$this->store    = $store ?? $this->store;
+		$this->size     = $size ?? $this->size;
 		$this->text     = $text;
 	}
 
@@ -209,25 +202,24 @@ abstract class ModelPickerField extends InputField
 	public function layout(): string
 	{
 		return match ($this->layout) {
-			'cards'    => 'cards',
-			'cardlets' => 'cardlets',
-			default    => 'list'
+			'cards', 'cardlets' => $this->layout,
+			default             => 'list'
 		};
 	}
 
 	public function link(): bool
 	{
-		return $this->link ?? true;
+		return $this->link;
 	}
 
 	public function multiple(): bool
 	{
-		return $this->multiple ?? true;
+		return $this->multiple;
 	}
 
 	public function picker(): array
 	{
-		return $this->picker ?? [];
+		return $this->picker;
 	}
 
 	public function props(): array
@@ -257,12 +249,7 @@ abstract class ModelPickerField extends InputField
 
 	public function search(): bool
 	{
-		return $this->search ?? true;
-	}
-
-	public function size(): string
-	{
-		return $this->size ?? 'auto';
+		return $this->search;
 	}
 
 	/**
@@ -274,7 +261,7 @@ abstract class ModelPickerField extends InputField
 			return 'id';
 		}
 
-		return Str::lower($this->store ?? 'uuid');
+		return Str::lower($this->store);
 	}
 
 	public function text(): string|null
