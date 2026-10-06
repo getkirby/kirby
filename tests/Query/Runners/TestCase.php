@@ -149,6 +149,12 @@ class TestCase extends BaseTestCase
 				true, // result
 			],
 
+			'logical precedence' => [
+				'true || false && false', // query
+				[], // context
+				true, // result
+			],
+
 			'logical operations with member access' => [
 				'user.isAdmin && user.hasPermission', // query
 				['user' => ['isAdmin' => true, 'hasPermission' => true]], // context
