@@ -259,7 +259,7 @@
 	"error.user.password.wrong": "Falsches Passwort",
 	"error.user.role.invalid": "Bitte gib eine gültige Rolle an",
 	"error.user.undefined": "Der Benutzer wurde nicht gefunden",
-	"error.user.update.permission": "Du darfst den den Account \"{name}\" nicht bearbeiten",
+	"error.user.update.permission": "Du darfst den Account \"{name}\" nicht bearbeiten",
 
 	"error.validation.accepted": "Bitte bestätige",
 	"error.validation.alpha": "Bitte gib nur Zeichen zwischen A und Z ein",
