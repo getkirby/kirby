@@ -159,12 +159,13 @@ class Tokenizer
 			return new Token(TokenType::T_ARROW, $lex);
 		}
 
-		// Logical operators (check before comparison operators)
-		if ($lex = static::match($query, $current, '&&|AND')) {
+		// Logical operators (check before comparison operators);
+		// group the alternation so that `\G` anchors both keywords
+		if ($lex = static::match($query, $current, '(?:&&|AND\b)')) {
 			return new Token(TokenType::T_AND, $lex);
 		}
 
-		if ($lex = static::match($query, $current, '\|\||OR')) {
+		if ($lex = static::match($query, $current, '(?:\|\||OR\b)')) {
 			return new Token(TokenType::T_OR, $lex);
 		}
 

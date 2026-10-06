@@ -178,6 +178,58 @@ class TokenizerTest extends TestCase
 		$this->assertSame($expected, array_map(fn ($t) => $t->type, $tokens));
 	}
 
+	public static function logicalKeywordProvider(): array
+	{
+		return [
+			'AND' => [
+				'a AND b',
+				[TokenType::T_IDENTIFIER, TokenType::T_AND, TokenType::T_IDENTIFIER]
+			],
+			'OR' => [
+				'a OR b',
+				[TokenType::T_IDENTIFIER, TokenType::T_OR, TokenType::T_IDENTIFIER]
+			],
+			'&& without whitespace' => [
+				'a&&b',
+				[TokenType::T_IDENTIFIER, TokenType::T_AND, TokenType::T_IDENTIFIER]
+			],
+			'|| without whitespace' => [
+				'a||b',
+				[TokenType::T_IDENTIFIER, TokenType::T_OR, TokenType::T_IDENTIFIER]
+			],
+			'AND later in a string' => [
+				'a("BRAND")',
+				[TokenType::T_IDENTIFIER, TokenType::T_OPEN_PAREN, TokenType::T_STRING, TokenType::T_CLOSE_PAREN]
+			],
+			'OR later in a string' => [
+				'a == "ORANGE"',
+				[TokenType::T_IDENTIFIER, TokenType::T_EQUAL, TokenType::T_STRING]
+			],
+			'identifier starting with AND' => [
+				'ANDROID',
+				[TokenType::T_IDENTIFIER]
+			],
+			'identifier starting with OR' => [
+				'page.ORDER',
+				[TokenType::T_IDENTIFIER, TokenType::T_DOT, TokenType::T_IDENTIFIER]
+			],
+		];
+	}
+
+	#[DataProvider('logicalKeywordProvider')]
+	public function testTokensWithLogicalKeywords(
+		string $query,
+		array $expected
+	): void {
+		$tokenizer = new Tokenizer($query);
+		$tokens    = iterator_to_array($tokenizer->tokens());
+
+		$this->assertSame(
+			[...$expected, TokenType::T_EOF],
+			array_map(fn ($t) => $t->type, $tokens)
+		);
+	}
+
 	public function testTokensWithComparisonOperatorsPrecedence(): void
 	{
 		// Test that longer operators are matched before shorter ones

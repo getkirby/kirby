@@ -138,6 +138,24 @@ class TestCase extends BaseTestCase
 				true, // result
 			],
 
+			'logical AND keyword' => [
+				'a AND b', // query
+				['a' => true, 'b' => true], // context
+				true, // result
+			],
+
+			'logical OR keyword' => [
+				'a OR b', // query
+				['a' => false, 'b' => true], // context
+				true, // result
+			],
+
+			'uppercase keyword inside a string' => [
+				'a == "ORANGE"', // query
+				['a' => 'ORANGE'], // context
+				true, // result
+			],
+
 			'complex logical expression' => [
 				'(a > b) && (c || d)', // query
 				[
