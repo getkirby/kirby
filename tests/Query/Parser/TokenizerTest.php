@@ -178,6 +178,50 @@ class TokenizerTest extends TestCase
 		$this->assertSame($expected, array_map(fn ($t) => $t->type, $tokens));
 	}
 
+	public static function literalKeywordProvider(): array
+	{
+		return [
+			'true' => [
+				'TRUE || false',
+				[TokenType::T_TRUE, TokenType::T_OR, TokenType::T_FALSE]
+			],
+			'null' => [
+				'a ?? null',
+				[TokenType::T_IDENTIFIER, TokenType::T_COALESCE, TokenType::T_NULL]
+			],
+			'identifier starting with true' => [
+				'trueColor',
+				[TokenType::T_IDENTIFIER]
+			],
+			'identifier starting with false' => [
+				'falsey',
+				[TokenType::T_IDENTIFIER]
+			],
+			'identifier starting with null' => [
+				'page.Nullable',
+				[TokenType::T_IDENTIFIER, TokenType::T_DOT, TokenType::T_IDENTIFIER]
+			],
+			'identifier starting with null and underscore' => [
+				'null_value',
+				[TokenType::T_IDENTIFIER]
+			],
+		];
+	}
+
+	#[DataProvider('literalKeywordProvider')]
+	public function testTokensWithLiteralKeywords(
+		string $query,
+		array $expected
+	): void {
+		$tokenizer = new Tokenizer($query);
+		$tokens    = iterator_to_array($tokenizer->tokens());
+
+		$this->assertSame(
+			[...$expected, TokenType::T_EOF],
+			array_map(fn ($t) => $t->type, $tokens)
+		);
+	}
+
 	public static function logicalKeywordProvider(): array
 	{
 		return [

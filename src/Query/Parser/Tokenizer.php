@@ -94,17 +94,17 @@ class Tokenizer
 		}
 
 		// true
-		if ($lex = static::match($query, $current, 'true', true)) {
+		if ($lex = static::match($query, $current, 'true\b', true)) {
 			return new Token(TokenType::T_TRUE, $lex, true);
 		}
 
 		// false
-		if ($lex = static::match($query, $current, 'false', true)) {
+		if ($lex = static::match($query, $current, 'false\b', true)) {
 			return new Token(TokenType::T_FALSE, $lex, false);
 		}
 
 		// null
-		if ($lex = static::match($query, $current, 'null', true)) {
+		if ($lex = static::match($query, $current, 'null\b', true)) {
 			return new Token(TokenType::T_NULL, $lex, null);
 		}
 

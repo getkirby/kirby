@@ -15,6 +15,12 @@ class TestCase extends BaseTestCase
 				'Homer', // result
 			],
 
+			'field starting with a keyword' => [
+				'a.nullable', // query
+				['a' => ['nullable' => 'n']], // context
+				'n', // result
+			],
+
 			'nested field' => [
 				'user.name.first', // query
 				['user' => ['name' => ['first' => 'Homer']]], // context
