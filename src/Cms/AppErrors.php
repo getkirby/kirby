@@ -180,7 +180,7 @@ trait AppErrors
 			$editor = $kirby->option('editor', false);
 
 			if ($kirby->option('debug') === true) {
-				echo Response::json([
+				$data = [
 					'status'    => 'error',
 					'exception' => $exception::class,
 					'code'      => $code,
@@ -190,15 +190,21 @@ trait AppErrors
 					'line'      => $line = $exception->getLine(),
 					'editor'    => Url::editor($editor, $file, $line),
 					'trace'     => $kirby->trace($exception, $editor),
-				], $httpCode);
+				];
 			} else {
-				echo Response::json([
+				$data = [
 					'status'  => 'error',
 					'code'    => $code,
 					'details' => $details,
 					'message' => I18n::translate('error.unexpected'),
-				], $httpCode);
+				];
 			}
+
+			// the error response itself must never fail to encode,
+			// e.g. for a message with invalid UTF-8
+			$json = json_encode($data, JSON_INVALID_UTF8_SUBSTITUTE | JSON_PARTIAL_OUTPUT_ON_ERROR);
+
+			echo Response::json($json, $httpCode);
 
 			return Handler::QUIT;
 		});
