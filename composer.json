@@ -38,18 +38,18 @@
 		"ext-simplexml": "*",
 		"christian-riesen/base32": "1.6.0",
 		"claviska/simpleimage": "4.4.0",
-		"composer/semver": "3.4.4",
+		"composer/semver": "3.5.1",
 		"erusev/parsedown": "1.8.0",
 		"erusev/parsedown-extra": "0.9.0",
-		"filp/whoops": "2.18.4",
+		"filp/whoops": "2.18.6",
 		"getkirby/composer-installer": "^1.2.1",
 		"laminas/laminas-escaper": "2.18.0",
 		"lbuchs/webauthn": "^2.2",
 		"michelf/php-smartypants": "1.8.1",
 		"phpmailer/phpmailer": "7.1.1",
-		"symfony/polyfill-intl-idn": "1.42.0",
-		"symfony/polyfill-mbstring": "1.38.2",
-		"symfony/yaml": "7.4.18"
+		"symfony/polyfill-intl-idn": "1.43.0",
+		"symfony/polyfill-mbstring": "1.43.0",
+		"symfony/yaml": "7.4.20"
 	},
 	"suggest": {
 		"ext-apcu": "Support for the Apcu cache driver",
