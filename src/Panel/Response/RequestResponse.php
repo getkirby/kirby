@@ -2,6 +2,8 @@
 
 namespace Kirby\Panel\Response;
 
+use Kirby\Http\Response;
+
 /**
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
@@ -16,6 +18,19 @@ class RequestResponse extends JsonResponse
 	public function data(): array
 	{
 		return $this->data;
+	}
+
+	/**
+	 * Creates a response object from mixed input
+	 */
+	public static function from(mixed $data): Response
+	{
+		// an empty list is a valid result for requests
+		if ($data === []) {
+			return new static([]);
+		}
+
+		return parent::from($data);
 	}
 
 	/**

@@ -20,4 +20,12 @@ class RequestResponseTest extends TestCase
 		$response = new RequestResponse($data = ['foo' => 'bar']);
 		$this->assertSame($data, $response->data());
 	}
+
+	public function testFromEmptyArray(): void
+	{
+		$response = RequestResponse::from([]);
+
+		$this->assertSame(200, $response->code());
+		$this->assertSame([], json_decode($response->body(), true));
+	}
 }
