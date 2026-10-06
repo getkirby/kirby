@@ -81,6 +81,12 @@ class QueryTest extends TestCase
 				['foo' => 'bar'],
 				['foo' => 'bar']
 			],
+			// `0` is a query, not an empty one
+			[
+				'0',
+				['foo' => 'bar'],
+				0
+			],
 			// coalescing
 			[
 				'user.nothing ?? (user.nothing ?? user.isYello(false)) ? user.says("error") : (user.nothing ?? user.says("success"))',
