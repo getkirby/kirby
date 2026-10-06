@@ -31,14 +31,12 @@ class Scope
 		}
 
 		if (is_array($object) === true) {
-			if ($item = $object[$key] ?? $object[(string)$key] ?? null) {
-				if ($arguments) {
-					return $item(...$arguments);
-				}
+			$item = $object[$key] ?? $object[(string)$key] ?? null;
 
-				if ($item instanceof Closure) {
-					return $item();
-				}
+			// only call closures, never other callables
+			// like strings that name a PHP function
+			if ($item instanceof Closure) {
+				return $item(...$arguments);
 			}
 
 			return $item;

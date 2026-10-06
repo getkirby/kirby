@@ -42,6 +42,12 @@ class TestCase extends BaseTestCase
 				'arg' // result
 			],
 
+			'array value with arguments is not called' => [
+				'a.k("x")', // query
+				['a' => ['k' => 'strtoupper']], // context
+				'strtoupper', // result
+			],
+
 			'closure access to parent context' => [
 				'thing.call(() => result).field', // query
 				[

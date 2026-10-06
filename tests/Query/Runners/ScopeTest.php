@@ -28,6 +28,27 @@ class ScopeTest extends TestCase
 		$this->assertNull($result);
 	}
 
+	public function testAccessWithArrayValueAndArguments(): void
+	{
+		$array = [
+			'zero'     => 0,
+			'empty'    => '',
+			'false'    => false,
+			'list'     => [],
+			'function' => 'strtoupper',
+			'callable' => [new Exception('message'), 'getMessage'],
+		];
+
+		// only closures get called, any other value
+		// is returned as-is, ignoring the arguments
+		$this->assertSame(0, Scope::access($array, 'zero', false, 'a'));
+		$this->assertSame('', Scope::access($array, 'empty', false, 'a'));
+		$this->assertFalse(Scope::access($array, 'false', false, 'a'));
+		$this->assertSame([], Scope::access($array, 'list', false, 'a'));
+		$this->assertSame('strtoupper', Scope::access($array, 'function', false, 'a'));
+		$this->assertSame($array['callable'], Scope::access($array, 'callable', false, 'a'));
+	}
+
 	public function testAccessWithObject(): void
 	{
 		$obj = new class () {
