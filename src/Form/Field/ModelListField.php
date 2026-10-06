@@ -90,7 +90,7 @@ abstract class ModelListField extends DisplayField
 	/**
 	 * Enables/disables the search
 	 */
-	protected bool|null $searchable;
+	protected bool $search = false;
 
 	/**
 	 * Setup for the main text of each entry
@@ -120,24 +120,24 @@ abstract class ModelListField extends DisplayField
 	) {
 		parent::__construct(...$args);
 
-		$this->batch      = $batch ?? $this->batch;
-		$this->columns    = $columns;
-		$this->empty      = $empty;
-		$this->flip       = $flip ?? $this->flip;
-		$this->image      = $image ?? $this->image;
-		$this->info       = $info;
-		$this->layout     = $layout ?? $this->layout;
-		$this->limit      = $limit ?? $this->limit;
-		$this->max        = $max;
-		$this->min        = $min;
-		$this->page       = $page;
-		$this->parent     = $parent;
-		$this->query      = $query;
-		$this->searchable = $search;
-		$this->size       = $size ?? $this->size;
-		$this->sortable   = $sortable ?? $this->sortable;
-		$this->sortBy     = $sortBy;
-		$this->text       = $text ?? $this->text;
+		$this->batch    = $batch ?? $this->batch;
+		$this->columns  = $columns;
+		$this->empty    = $empty;
+		$this->flip     = $flip ?? $this->flip;
+		$this->image    = $image ?? $this->image;
+		$this->info     = $info;
+		$this->layout   = $layout ?? $this->layout;
+		$this->limit    = $limit ?? $this->limit;
+		$this->max      = $max;
+		$this->min      = $min;
+		$this->page     = $page;
+		$this->parent   = $parent;
+		$this->query    = $query;
+		$this->search   = $search ?? $this->search;
+		$this->size     = $size ?? $this->size;
+		$this->sortable = $sortable ?? $this->sortable;
+		$this->sortBy   = $sortBy;
+		$this->text     = $text ?? $this->text;
 	}
 
 	/**
@@ -554,7 +554,7 @@ abstract class ModelListField extends DisplayField
 
 	public function searchable(): bool
 	{
-		return $this->searchable ?? false;
+		return $this->search;
 	}
 
 	/**
