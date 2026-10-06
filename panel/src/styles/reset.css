@@ -44,8 +44,8 @@
 
 :where(select) {
 	appearance: none;
-	background: var(--color-white);
-	color: var(--color-black);
+	background: light-dark(var(--color-white), var(--color-black));
+	color: var(--color-text);
 	cursor: pointer;
 }
 
