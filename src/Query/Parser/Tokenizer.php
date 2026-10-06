@@ -226,8 +226,10 @@ class Tokenizer
 			return new Token(TokenType::T_IDENTIFIER, $lex);
 		}
 
-		// Unknown token
-		throw new Exception('Invalid character in query: ' . $query[$current]);
+		// Unknown token (with the full character, even if multibyte)
+		throw new Exception(
+			'Invalid character in query: ' . mb_substr(substr($query, $current), 0, 1)
+		);
 	}
 
 	/**

@@ -79,6 +79,13 @@ class TokenizerTest extends TestCase
 		Tokenizer::token('a ?? @', 5);
 	}
 
+	public function testTokenInvalidMultibyteCharacter(): void
+	{
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Invalid character in query: §');
+		Tokenizer::token('a ?? §', 5);
+	}
+
 	public function testTokens(): void
 	{
 		$string    = static::stringProvider();
