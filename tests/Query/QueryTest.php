@@ -16,13 +16,12 @@ class QueryTest extends TestCase
 	protected function tearDown(): void
 	{
 		App::destroy();
-		Query::$runner = null;
 	}
 
 	public function test__Construct(): void
 	{
 		$query = new Query('');
-		$this->assertInstanceOf(DefaultRunner::class, $query::$runner);
+		$this->assertInstanceOf(DefaultRunner::class, $query->runner);
 	}
 
 	public function test__ConstructWitoutConfig(): void
@@ -36,7 +35,7 @@ class QueryTest extends TestCase
 		]);
 
 		$query = new Query('');
-		$this->assertInstanceOf(DefaultRunner::class, $query::$runner);
+		$this->assertInstanceOf(DefaultRunner::class, $query->runner);
 	}
 
 	public function test__ConstructWithInvalidConfig(): void
@@ -200,6 +199,41 @@ class QueryTest extends TestCase
 
 		$bar = $query->resolve($data);
 		$this->assertSame('homer simpson', $bar);
+	}
+
+	public function testResolveWithInterceptorOfEachQuery(): void
+	{
+		$log    = [];
+		$logger = function (string $name) use (&$log) {
+			$log[] = $name;
+		};
+
+		$a = new class ('a.name') extends Query {
+			public Closure $log;
+
+			public function intercept($result): mixed
+			{
+				($this->log)('a');
+				return $result;
+			}
+		};
+
+		$b = new class ('b.name') extends Query {
+			public Closure $log;
+
+			public function intercept($result): mixed
+			{
+				($this->log)('b');
+				return $result;
+			}
+		};
+
+		$a->log = $b->log = $logger;
+
+		// resolving the earlier query must use its own interceptor,
+		// not the one of the most recently created query
+		$this->assertSame('homer', $a->resolve(['a' => ['name' => 'homer']]));
+		$this->assertSame(['a'], $log);
 	}
 
 	public function testDefaultEntries(): void

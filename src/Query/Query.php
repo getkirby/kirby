@@ -27,7 +27,7 @@ class Query
 {
 	public static array $cache = [];
 	public static array $entries = [];
-	public static Runner|string|null $runner = null;
+	public Runner $runner;
 
 	/**
 	 * Creates a new Query object
@@ -39,15 +39,15 @@ class Query
 			$this->query = trim($query);
 		}
 
-		static::$runner ??= App::instance()->option('query.runner', DefaultRunner::class);
+		$runner = App::instance()->option('query.runner', DefaultRunner::class);
 
-		if (is_subclass_of(static::$runner, Runner::class) === false) {
+		if (is_subclass_of($runner, Runner::class) === false) {
 			throw new InvalidArgumentException(
-				message: 'Query runner "' . static::$runner . '" must extend ' . Runner::class
+				message: 'Query runner "' . $runner . '" must extend ' . Runner::class
 			);
 		}
 
-		static::$runner = static::$runner::for($this);
+		$this->runner = $runner::for($this);
 	}
 
 	/**
@@ -80,7 +80,7 @@ class Query
 			return $data;
 		}
 
-		return static::$runner->run($this->query, (array)$data);
+		return $this->runner->run($this->query, (array)$data);
 	}
 }
 
