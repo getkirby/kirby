@@ -103,4 +103,17 @@ class ScopeTest extends TestCase
 		$result = Scope::get('fox', $context, $functions);
 		$this->assertSame('fax', $result);
 	}
+
+	public function testGetWithNullInContext(): void
+	{
+		$functions = ['fox' => fn () => 'fax'];
+
+		// a context entry wins over a global function,
+		// even if its value is null
+		$result = Scope::get('fox', ['fox' => null], $functions);
+		$this->assertNull($result);
+
+		$result = Scope::get('fox', ['fox' => null], [], false);
+		$this->assertNull($result);
+	}
 }

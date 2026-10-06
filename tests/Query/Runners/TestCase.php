@@ -71,6 +71,13 @@ class TestCase extends BaseTestCase
 				['foo' => fn () => ['bar' => 42]] // functions
 			],
 
+			'null context entry over global function' => [
+				'page?.title', // query
+				['page' => null], // context
+				null, // result
+				['page' => fn (string $id) => ['title' => $id]] // functions
+			],
+
 			'equal comparison' => [
 				'5 == 5', // query
 				[], // context
