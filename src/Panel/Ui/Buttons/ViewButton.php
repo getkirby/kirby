@@ -165,10 +165,11 @@ class ViewButton extends Button
 
 	public function props(): array
 	{
-		// helper for props that support Kirby queries
+		// helper for props that support Kirby queries,
+		// only content models can resolve them, not languages
 		$resolve = fn (string|null $value) =>
 			$value ?
-			$this->model?->toSafeString($value) ?? $value :
+			($this->model instanceof ModelWithContent ? $this->model->toSafeString($value) : $value) :
 			null;
 
 		$props   = parent::props();
