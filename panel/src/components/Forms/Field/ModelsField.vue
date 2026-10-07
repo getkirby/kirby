@@ -145,6 +145,12 @@ export default {
 			this.onInput();
 		},
 		select(items) {
+			// the dialog always submits full items. Anything else, e.g. a plain
+			// list of IDs, would wipe the selection instead of updating it
+			if (items.every((item) => this.$helper.object.isObject(item)) === false) {
+				return;
+			}
+
 			if (items.length === 0) {
 				this.selected = [];
 				this.onInput();
