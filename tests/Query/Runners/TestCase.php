@@ -42,6 +42,12 @@ class TestCase extends BaseTestCase
 				'arg' // result
 			],
 
+			'array value with arguments is not called' => [
+				'a.k("x")', // query
+				['a' => ['k' => 'strtoupper']], // context
+				'strtoupper', // result
+			],
+
 			'closure access to parent context' => [
 				'thing.call(() => result).field', // query
 				[
@@ -63,6 +69,13 @@ class TestCase extends BaseTestCase
 				[], // context
 				42, // result
 				['foo' => fn () => ['bar' => 42]] // functions
+			],
+
+			'null context entry over global function' => [
+				'page?.title', // query
+				['page' => null], // context
+				null, // result
+				['page' => fn (string $id) => ['title' => $id]] // functions
 			],
 
 			'equal comparison' => [
