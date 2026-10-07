@@ -36,6 +36,12 @@ abstract class TestCase extends BaseTestCase
 				'yes' // result
 			],
 
+			'string argument keeps backslashes' => [
+				'a.f("say \"hi\"", \'\d+\')', // query
+				['a' => ['f' => fn ($a, $b) => $a . ' ' . $b]], // context
+				'say "hi" \d+', // result
+			],
+
 			'method result' => [
 				'user.get("arg").thing', // query
 				['user' => ['get' => fn ($a) => ['thing' => $a]]], // context

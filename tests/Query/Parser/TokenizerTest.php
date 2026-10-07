@@ -72,6 +72,26 @@ class TokenizerTest extends TestCase
 		$this->assertSame($literal, $token->literal);
 	}
 
+	public static function stringEscapeProvider(): array
+	{
+		return [
+			'regex pattern'               => ["'\\d+'", '\d+'],
+			'no control characters'       => ['"line\nbreak"', 'line\nbreak'],
+			'escaped single quote'        => ["'it\\'s'", "it's"],
+			'escaped double quote'        => ['"say \"hi\""', 'say "hi"'],
+			'escaped backslash'           => ["'a\\\\'", 'a\\'],
+			'other quote needs no escape' => ["'say \"hi\"'", 'say "hi"'],
+		];
+	}
+
+	#[DataProvider('stringEscapeProvider')]
+	public function testTokenWithStringEscapes(string $query, string $expected): void
+	{
+		$token = Tokenizer::token($query, 0);
+		$this->assertSame(TokenType::T_STRING, $token->type);
+		$this->assertSame($expected, $token->literal);
+	}
+
 	public function testTokenInvalidCharacter(): void
 	{
 		$this->expectException(Exception::class);
