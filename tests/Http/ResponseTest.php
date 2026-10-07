@@ -160,6 +160,29 @@ class ResponseTest extends TestCase
 		});
 	}
 
+	public function testGuardAgainstOutputWithBufferedOutput(): void
+	{
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('Disallowed output, possible accidental whitespace?');
+		$this->expectOutputString(' ');
+
+		Response::guardAgainstOutput(function () {
+			echo ' ';
+		});
+	}
+
+	public function testGuardAgainstOutputWithBufferFromCallback(): void
+	{
+		$level = ob_get_level();
+
+		Response::guardAgainstOutput(fn () => ob_start());
+
+		// the buffer started by the callback stays open
+		$this->assertSame($level + 1, ob_get_level());
+
+		ob_end_clean();
+	}
+
 	public function testHeaders(): void
 	{
 		$response = new Response();

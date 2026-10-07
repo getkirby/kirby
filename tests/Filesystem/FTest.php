@@ -342,6 +342,17 @@ class FTest extends TestCase
 		F::load($file, allowOutput: false);
 	}
 
+	public function testLoadAccidentalWhitespace(): void
+	{
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('Disallowed output, possible accidental whitespace?');
+		$this->expectOutputString(' ');
+
+		F::write($file = static::TMP . '/test.php', ' <?php return "foo";');
+
+		F::load($file, allowOutput: false);
+	}
+
 	public function testLoadCache(): void
 	{
 		// create a file that uses require_once internally
