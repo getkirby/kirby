@@ -315,6 +315,38 @@ class TokenizerTest extends TestCase
 
 	}
 
+	public static function minusTokenProvider(): array
+	{
+		return [
+			'subtraction without whitespace' => [
+				'5-3',
+				[TokenType::T_INTEGER, TokenType::T_MINUS, TokenType::T_INTEGER]
+			],
+			'subtraction from identifier' => [
+				'a-1.5',
+				[TokenType::T_IDENTIFIER, TokenType::T_MINUS, TokenType::T_FLOAT]
+			],
+			'negative number' => [
+				'-5',
+				[TokenType::T_MINUS, TokenType::T_INTEGER]
+			],
+		];
+	}
+
+	#[DataProvider('minusTokenProvider')]
+	public function testTokensWithMinus(
+		string $query,
+		array $expected
+	): void {
+		$tokenizer = new Tokenizer($query);
+		$tokens    = iterator_to_array($tokenizer->tokens());
+
+		$this->assertSame(
+			[...$expected, TokenType::T_EOF],
+			array_map(fn ($t) => $t->type, $tokens)
+		);
+	}
+
 	public function testTokensWithMultibyteCharacters(): void
 	{
 		// Multibyte (UTF-8) characters in a non-final token must not desync

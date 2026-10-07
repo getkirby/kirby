@@ -124,13 +124,13 @@ class Tokenizer
 		}
 
 		// float (check before single character tokens)
-		$lex = static::match($query, $current, '-?\d+\.\d+\b');
+		$lex = static::match($query, $current, '\d+\.\d+\b');
 		if ($lex !== null) {
 			return new Token(TokenType::T_FLOAT, $lex, (float)$lex);
 		}
 
 		// int (check before single character tokens)
-		$lex = static::match($query, $current, '-?\d+\b');
+		$lex = static::match($query, $current, '\d+\b');
 		if ($lex !== null) {
 			return new Token(TokenType::T_INTEGER, $lex, (int)$lex);
 		}

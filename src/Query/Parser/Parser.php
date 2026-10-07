@@ -478,13 +478,31 @@ class Parser
 	}
 
 	/**
-	 * Parses a unary expression (logical negation)
+	 * Parses a unary expression (logical negation or minus)
 	 * @since 6.0.0
 	 */
 	protected function unary(): Node
 	{
 		if ($this->consume(TokenType::T_NOT) !== false) {
 			return new NotNode(value: $this->unary());
+		}
+
+		if ($this->consume(TokenType::T_MINUS) !== false) {
+			$value = $this->unary();
+
+			// fold negative number literals, e.g. `-1`
+			if (
+				$value instanceof LiteralNode &&
+				(is_int($value->value) || is_float($value->value))
+			) {
+				return new LiteralNode(-$value->value);
+			}
+
+			return new ArithmeticNode(
+				left: new LiteralNode(0),
+				operator: '-',
+				right: $value
+			);
 		}
 
 		return $this->memberAccess();
