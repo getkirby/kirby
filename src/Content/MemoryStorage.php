@@ -31,11 +31,11 @@ class MemoryStorage extends Storage
 
 	/**
 	 * Returns a unique id for a combination
-	 * of the version id, the language code and the model id
+	 * of the version id and the language code
 	 */
 	protected function cacheId(VersionId $versionId, Language $language): string
 	{
-		return $versionId->value() . '/' . $language->code() . '/' . $this->model->id() . '/' . spl_object_hash($this->model);
+		return $versionId->value() . '/' . $language->code();
 	}
 
 	/**
