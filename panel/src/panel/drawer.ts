@@ -1,4 +1,8 @@
-import Modal, { defaults as modalDefaults, type ModalState } from "./modal";
+import Modal, {
+	defaults as modalDefaults,
+	save,
+	type ModalState
+} from "./modal";
 import { isObject } from "@/helpers/object";
 import { reactive } from "vue";
 import { type Listener } from "./listeners";
@@ -30,7 +34,7 @@ export default function Drawer(panel: Panel) {
 	// shortcut to submit drawers
 	panel.events.on("drawer.save", (e?: Event) => {
 		e?.preventDefault();
-		panel.drawer.submit();
+		save(panel, "drawer");
 	});
 
 	return reactive({

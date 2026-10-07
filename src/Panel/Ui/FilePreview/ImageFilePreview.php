@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Ui\FilePreview;
 
 use Kirby\Cms\File;
+use Kirby\Image\Svg;
 use Kirby\Panel\Ui\FilePreview;
 
 /**
@@ -46,7 +47,35 @@ class ImageFilePreview extends FilePreview
 	{
 		return [
 			...parent::props(),
-			'focusable' => $this->file->panel()->isFocusable()
+			'focusable' => $this->file->panel()->isFocusable(),
+			'ratio'     => $this->ratio()
 		];
+	}
+
+	/**
+	 * Aspect ratio for SVGs without their own size,
+	 * which the preview cannot fit by a natural size
+	 * @since 5.6.2
+	 */
+	public function ratio(): float|null
+	{
+		if ($this->file->extension() !== 'svg') {
+			return null;
+		}
+
+		$svg = Svg::from($this->file->root());
+
+		if ($svg->hasNaturalSize() === true) {
+			return null;
+		}
+
+		// without any size information, fall back to a square
+		$ratio = $svg->ratio();
+
+		if ($ratio === 0.0) {
+			return 1.0;
+		}
+
+		return $ratio;
 	}
 }

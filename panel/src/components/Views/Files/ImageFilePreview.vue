@@ -9,7 +9,13 @@
 				:value="focus"
 				@input="setFocus($event)"
 			>
-				<img alt="" v-bind="image" decoding="async" @dragstart.prevent />
+				<img
+					alt=""
+					v-bind="image"
+					:style="{ '--ratio': ratio }"
+					decoding="async"
+					@dragstart.prevent
+				/>
 			</k-coords-input>
 		</k-file-preview-frame>
 
@@ -60,6 +66,11 @@ export default {
 			type: Object
 		},
 		isLocked: Boolean,
+		/**
+		 * Aspect ratio for SVGs without their own size
+		 * @since 5.6.2
+		 */
+		ratio: Number,
 		url: String
 	},
 	emits: ["focus", "input"],
@@ -129,6 +140,10 @@ export default {
 	--range-thumb-size: 1.25rem;
 	--range-thumb-shadow: none;
 	cursor: crosshair;
+}
+.k-image-file-preview img[style*="--ratio"] {
+	width: min(100cqw, 100cqh * var(--ratio));
+	aspect-ratio: auto var(--ratio);
 }
 .k-image-file-preview .k-coords-input-thumb::after {
 	--size: 0.4rem;
