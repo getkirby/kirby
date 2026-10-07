@@ -150,6 +150,70 @@ class PageCreateDialogTest extends AreaTestCase
 		], $input);
 	}
 
+	public function testResolveFieldTemplatesDoesNotEscape(): void
+	{
+		$this->app([
+			'blueprints' => [
+				'pages/test' => [
+					'create' => [
+						'title' => '{{ page.name }} — {{ page.city }}',
+						'slug'  => '{{ page.name }}'
+					]
+				]
+			]
+		]);
+
+		$this->login();
+
+		$dialog = new PageCreateDialog(
+			null,
+			null,
+			'test',
+			null
+		);
+
+		$input = $dialog->resolveFieldTemplates([
+			'name' => 'Tom & Jerry',
+			'city' => '<b>Köln</b>',
+		]);
+
+		$this->assertSame('Tom & Jerry — <b>Köln</b>', $input['title']);
+		$this->assertSame('Tom & Jerry', $input['slug']);
+	}
+
+	public function testResolveFieldTemplatesDoesNotResolveInput(): void
+	{
+		$this->app([
+			'site' => [
+				'content' => ['secret' => 'S3CRET']
+			],
+			'blueprints' => [
+				'pages/test' => [
+					'create' => [
+						'title' => '{{ page.name }}',
+						'slug'  => '{{ page.name }}'
+					]
+				]
+			]
+		]);
+
+		$this->login();
+
+		$dialog = new PageCreateDialog(
+			null,
+			null,
+			'test',
+			null
+		);
+
+		$input = $dialog->resolveFieldTemplates([
+			'name' => '{{ site.secret }} {< site.secret >}',
+		]);
+
+		$this->assertSame('{{ site.secret }} {< site.secret >}', $input['title']);
+		$this->assertSame('{{ site.secret }} {< site.secret >}', $input['slug']);
+	}
+
 	public function testSanitize(): void
 	{
 		$this->app([
@@ -596,6 +660,39 @@ class PageCreateDialogTest extends AreaTestCase
 		$this->assertSame('cat-photo', $page->slug());
 		$this->assertSame('New: photo', $page->title()->value());
 		$this->assertSame('photo', $page->category()->value());
+	}
+
+	public function testSubmitWithTitleAndSlugFromTemplateWithSpecialChars(): void
+	{
+		$app = $this->app([
+			'blueprints' => [
+				'pages/article' => [
+					'create' => [
+						'title'  => 'New: {{ page.category }}',
+						'slug'   => 'cat-{{ page.category }}',
+						'fields' => ['category']
+					],
+					'fields' => [
+						'category' => ['type' => 'text']
+					]
+				]
+			]
+		]);
+		$app->impersonate('kirby');
+
+		$dialog = new PageCreateDialog(
+			null,
+			null,
+			'article',
+			null
+		);
+
+		$dialog->submit(['category' => 'Tom & Jerry']);
+		$page = $app->page('cat-tom-jerry');
+
+		$this->assertSame('cat-tom-jerry', $page->slug());
+		$this->assertSame('New: Tom & Jerry', $page->title()->value());
+		$this->assertSame('Tom & Jerry', $page->category()->value());
 	}
 
 	public function testSubmitDoesNotLeakParentContent(): void
