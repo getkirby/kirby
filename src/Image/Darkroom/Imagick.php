@@ -121,6 +121,8 @@ class Imagick extends Darkroom
 
 	/**
 	 * Shrinks animated gifs again after coalescing
+	 *
+	 * @since 5.6.2
 	 */
 	protected function optimize(Image $image): Image
 	{
