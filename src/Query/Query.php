@@ -76,7 +76,7 @@ class Query
 	 */
 	public function resolve(array|object $data = []): mixed
 	{
-		if (empty($this->query) === true) {
+		if ($this->query === null || $this->query === '') {
 			return $data;
 		}
 

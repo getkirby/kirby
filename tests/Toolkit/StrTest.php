@@ -1427,6 +1427,24 @@ class StrTest extends TestCase
 				],
 				'`another` varchar(255) NOT NULL  ',
 				['fallback'  => '']
+			],
+			// empty placeholders are no queries and stay as-is
+			[
+				'a {} b {{ }} c {<  >}',
+				['foo' => 'bar'],
+				'a {} b {{ }} c {<  >}',
+			],
+			[
+				'a {} b',
+				['foo' => 'bar'],
+				'a {} b',
+				['fallback' => '-']
+			],
+			// `0` is a query, not an empty placeholder
+			[
+				'{{ 0 }}',
+				['foo' => 'bar'],
+				'0',
 			]
 		];
 	}

@@ -1462,6 +1462,11 @@ class Str
 			function (array $match) use ($data, $fallback, $callback) {
 				$query = trim($match[1]);
 
+				// empty placeholders like `{}` are no queries
+				if ($query === '') {
+					return $match[0];
+				}
+
 				try {
 					$result = Query::factory($query)->resolve($data);
 				} catch (Throwable) {
