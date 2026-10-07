@@ -2,6 +2,7 @@
 
 namespace Kirby\Content;
 
+use BackedEnum;
 use Closure;
 use DOMElement;
 use IntlDateFormatter;
@@ -505,6 +506,25 @@ trait FieldMethods
 		}
 
 		return $entries;
+	}
+
+	/**
+	 * Converts the value to a case of the given enum
+	 *
+	 * @example
+	 * $field->toEnum(MyEnum::class)
+	 *
+	 * @template T of \BackedEnum
+	 * @param class-string<T> $enum
+	 * @return T|null
+	 */
+	public function toEnum(string $enum): BackedEnum|null
+	{
+		if ($this->isEmpty() === true) {
+			return null;
+		}
+
+		return $enum::tryFrom($this->value());
 	}
 
 	/**

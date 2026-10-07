@@ -856,6 +856,33 @@ class AppPluginsTest extends TestCase
 		$this->assertSame('Deutscher Test', I18n::translate('test'));
 	}
 
+	public function testTranslationsWithWarmCache(): void
+	{
+		$kirby = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			]
+		]);
+
+		// warm all translation caches before the strings are registered
+		I18n::$locale = 'de';
+		I18n::translate('test');
+		$kirby->translations();
+		$kirby->coreI18nStrings('de');
+
+		$kirby->extend([
+			'translations' => [
+				'de' => [
+					'test' => 'Deutscher Test'
+				]
+			]
+		]);
+
+		$this->assertSame('Deutscher Test', I18n::translate('test'));
+		$this->assertSame('Deutscher Test', $kirby->translation('de')->get('test'));
+		$this->assertSame('Deutscher Test', $kirby->coreI18nStrings('de')['test']);
+	}
+
 	public function testUserMethod(): void
 	{
 		$kirby = new App([

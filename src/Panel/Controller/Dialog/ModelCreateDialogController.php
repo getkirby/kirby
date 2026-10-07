@@ -129,8 +129,10 @@ abstract class ModelCreateDialogController extends DialogController
 		foreach ($fields as $field) {
 			$template = $this->blueprint()->create()[$field] ?? null;
 
+			// values get stored as content, so they must not be
+			// HTML-escaped here; escaping happens on output
 			if (is_string($template) === true) {
-				$input[$field] = $page->toSafeString($template);
+				$input[$field] = $page->toString($template);
 			}
 		}
 

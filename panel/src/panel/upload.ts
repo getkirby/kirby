@@ -376,7 +376,7 @@ export default function Upload(panel: Panel) {
 				}
 			}
 
-			await queue(files);
+			await queue(files, panel.config.uploads);
 
 			// if no uncompleted files are left, be done
 			if (this.files.length === this.completed.length) {

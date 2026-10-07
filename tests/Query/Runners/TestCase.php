@@ -15,6 +15,12 @@ abstract class TestCase extends BaseTestCase
 				'Homer', // result
 			],
 
+			'field starting with a keyword' => [
+				'a.nullable', // query
+				['a' => ['nullable' => 'n']], // context
+				'n', // result
+			],
+
 			'nested field' => [
 				'user.name.first', // query
 				['user' => ['name' => ['first' => 'Homer']]], // context
@@ -48,6 +54,12 @@ abstract class TestCase extends BaseTestCase
 				'arg' // result
 			],
 
+			'array value with arguments is not called' => [
+				'a.k("x")', // query
+				['a' => ['k' => 'strtoupper']], // context
+				'strtoupper', // result
+			],
+
 			'closure access to parent context' => [
 				'thing.call(() => result).field', // query
 				[
@@ -69,6 +81,13 @@ abstract class TestCase extends BaseTestCase
 				[], // context
 				42, // result
 				['foo' => fn () => ['bar' => 42]] // functions
+			],
+
+			'null context entry over global function' => [
+				'page?.title', // query
+				['page' => null], // context
+				null, // result
+				['page' => fn (string $id) => ['title' => $id]] // functions
 			],
 
 			'equal comparison' => [
@@ -144,6 +163,24 @@ abstract class TestCase extends BaseTestCase
 				true, // result
 			],
 
+			'logical AND keyword' => [
+				'a AND b', // query
+				['a' => true, 'b' => true], // context
+				true, // result
+			],
+
+			'logical OR keyword' => [
+				'a OR b', // query
+				['a' => false, 'b' => true], // context
+				true, // result
+			],
+
+			'uppercase keyword inside a string' => [
+				'a == "ORANGE"', // query
+				['a' => 'ORANGE'], // context
+				true, // result
+			],
+
 			'complex logical expression' => [
 				'(a > b) && (c || d)', // query
 				[
@@ -152,6 +189,12 @@ abstract class TestCase extends BaseTestCase
 					'c' => false,
 					'd' => true
 				], // context
+				true, // result
+			],
+
+			'logical precedence' => [
+				'true || false && false', // query
+				[], // context
 				true, // result
 			],
 

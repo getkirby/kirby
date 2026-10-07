@@ -48,6 +48,39 @@ class ParserTest extends TestCase
 		$this->assertSame(TokenType::T_EOF, $parser->current()->type);
 	}
 
+	public function testAnd(): void
+	{
+		// left-associative: (a && b) && c
+		$parser = new Parser('a && b && c');
+		$this->assertEquals(
+			new LogicalNode(
+				left: new LogicalNode(
+					left: new VariableNode('a'),
+					operator: '&&',
+					right: new VariableNode('b')
+				),
+				operator: '&&',
+				right: new VariableNode('c')
+			),
+			$parser->parse()
+		);
+
+		// comparison binds tighter: a && (b == c)
+		$parser = new Parser('a && b == c');
+		$this->assertEquals(
+			new LogicalNode(
+				left: new VariableNode('a'),
+				operator: '&&',
+				right: new ComparisonNode(
+					left: new VariableNode('b'),
+					operator: '==',
+					right: new VariableNode('c')
+				)
+			),
+			$parser->parse()
+		);
+	}
+
 	public function testArgumentList(): void
 	{
 		$parser = new Parser('site.method(a, b, c)');
@@ -664,6 +697,53 @@ class ParserTest extends TestCase
 				new VariableNode('b')
 			),
 			$ast
+		);
+	}
+
+	public function testOr(): void
+	{
+		// && binds tighter: a || (b && c)
+		$parser = new Parser('a || b && c');
+		$this->assertEquals(
+			new LogicalNode(
+				left: new VariableNode('a'),
+				operator: '||',
+				right: new LogicalNode(
+					left: new VariableNode('b'),
+					operator: '&&',
+					right: new VariableNode('c')
+				)
+			),
+			$parser->parse()
+		);
+
+		// && binds tighter: (a && b) || c
+		$parser = new Parser('a && b || c');
+		$this->assertEquals(
+			new LogicalNode(
+				left: new LogicalNode(
+					left: new VariableNode('a'),
+					operator: '&&',
+					right: new VariableNode('b')
+				),
+				operator: '||',
+				right: new VariableNode('c')
+			),
+			$parser->parse()
+		);
+
+		// coalesce binds looser: a ?? (b || c)
+		$parser = new Parser('a ?? b || c');
+		$this->assertEquals(
+			new CoalesceNode(
+				left: new VariableNode('a'),
+				right: new LogicalNode(
+					left: new VariableNode('b'),
+					operator: '||',
+					right: new VariableNode('c')
+				)
+			),
+			$parser->parse()
 		);
 	}
 

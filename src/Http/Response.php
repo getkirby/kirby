@@ -219,17 +219,26 @@ class Response implements Stringable
 	}
 
 	/**
-	 * Ensures that the callback does not produce the first body output
+	 * Ensures that the callback does not produce any body output
 	 * (used to show when loading a file creates side effects)
 	 */
 	public static function guardAgainstOutput(Closure $callback, ...$args): mixed
 	{
 		$before = headers_sent();
+		$level  = ob_get_level();
+		$length = ob_get_length();
 		$result = $callback(...$args);
 		$after  = headers_sent($file, $line);
 
 		if ($before === false && $after === true) {
 			throw new LogicException("Disallowed output from file $file:$line, possible accidental whitespace?");
+		}
+
+		// output that is held back in an output buffer
+		// (e.g. with the `output_buffering` PHP setting)
+		// doesn't send the headers, so check if the buffer grew
+		if (ob_get_level() === $level && ob_get_length() > $length) {
+			throw new LogicException('Disallowed output, possible accidental whitespace?');
 		}
 
 		return $result;

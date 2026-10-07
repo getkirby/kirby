@@ -610,6 +610,68 @@ class PageCreateDialogControllerTest extends TestCase
 		], $input);
 	}
 
+	public function testResolveFieldTemplatesDoesNotEscape(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => [
+					'create' => [
+						'title' => '{{ page.name }} — {{ page.city }}',
+						'slug'  => '{{ page.name }}'
+					]
+				]
+			],
+			'request' => [
+				'query' => [
+					'template' => 'test'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PageCreateDialogController();
+		$input      = $controller->resolveFieldTemplates([
+			'name' => 'Tom & Jerry',
+			'city' => '<b>Köln</b>',
+		], ['title', 'slug']);
+
+		$this->assertSame('Tom & Jerry — <b>Köln</b>', $input['title']);
+		$this->assertSame('Tom & Jerry', $input['slug']);
+	}
+
+	public function testResolveFieldTemplatesDoesNotResolveInput(): void
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'content' => ['secret' => 'S3CRET']
+			],
+			'blueprints' => [
+				'pages/test' => [
+					'create' => [
+						'title' => '{{ page.name }}',
+						'slug'  => '{{ page.name }}'
+					]
+				]
+			],
+			'request' => [
+				'query' => [
+					'template' => 'test'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PageCreateDialogController();
+		$input      = $controller->resolveFieldTemplates([
+			'name' => '{{ site.secret }} {< site.secret >}',
+		], ['title', 'slug']);
+
+		$this->assertSame('{{ site.secret }} {< site.secret >}', $input['title']);
+		$this->assertSame('{{ site.secret }} {< site.secret >}', $input['slug']);
+	}
+
 	public function testSanitize(): void
 	{
 		$this->app = $this->app->clone([
@@ -992,6 +1054,42 @@ class PageCreateDialogControllerTest extends TestCase
 		$this->assertSame('cat-photo', $page->slug());
 		$this->assertSame('New: photo', $page->title()->value());
 		$this->assertSame('photo', $page->category()->value());
+	}
+
+	public function testSubmitWithTitleAndSlugFromTemplateWithSpecialChars(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/article' => [
+					'create' => [
+						'title'  => 'New: {{ page.category }}',
+						'slug'   => 'cat-{{ page.category }}',
+						'fields' => ['category']
+					],
+					'fields' => [
+						'category' => ['type' => 'text']
+					]
+				]
+			],
+			'request' => [
+				'query' => [
+					'template' => 'article',
+					'title'    => '',
+					'slug'     => '',
+					'category' => 'Tom & Jerry'
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$controller = new PageCreateDialogController();
+		$controller->submit();
+
+		$page = $this->app->page('cat-tom-jerry');
+
+		$this->assertSame('cat-tom-jerry', $page->slug());
+		$this->assertSame('New: Tom & Jerry', $page->title()->value());
+		$this->assertSame('Tom & Jerry', $page->category()->value());
 	}
 
 	public function testSubmitDoesNotLeakParentContent(): void

@@ -24,6 +24,22 @@ class StateTest extends TestCase
 		$this->assertArrayHasKey('kirbytext', $config);
 		$this->assertArrayHasKey('translation', $config);
 		$this->assertArrayHasKey('upload', $config);
+		$this->assertSame(3, $config['uploads']);
+	}
+
+	public function testConfigWithUploads(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'panel' => [
+					'uploads' => 1
+				]
+			]
+		]);
+
+		$state  = new State();
+		$config = A::apply($state->config());
+		$this->assertSame(1, $config['uploads']);
 	}
 
 	public function testData(): void

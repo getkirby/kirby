@@ -19,6 +19,19 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Image\QrCode;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use TypeError;
+
+enum Priority: int
+{
+	case Low = 1;
+	case High = 2;
+}
+
+enum Status: string
+{
+	case Draft = 'draft';
+	case Listed = 'listed';
+}
 
 #[CoversClass(Field::class)]
 class FieldMethodsTest extends FieldTest
@@ -700,6 +713,43 @@ class FieldMethodsTest extends FieldTest
 
 		$this->assertInstanceOf(Collection::class, $entries);
 		$this->assertCount(0, $entries);
+	}
+
+	public function testToEnum(): void
+	{
+		$this->assertSame(Status::Draft, $this->field('draft')->toEnum(Status::class));
+		$this->assertSame(Status::Listed, $this->field('listed')->toEnum(Status::class));
+	}
+
+	public function testToEnumWithEmptyValue(): void
+	{
+		$this->assertNull($this->field()->toEnum(Status::class));
+		$this->assertNull($this->field(null)->toEnum(Status::class));
+	}
+
+	public function testToEnumWithInvalidValue(): void
+	{
+		$this->assertNull($this->field('unlisted')->toEnum(Status::class));
+		$this->assertNull($this->field('Draft')->toEnum(Status::class));
+	}
+
+	public function testToEnumWithIntBackedEnum(): void
+	{
+		$this->assertSame(Priority::Low, $this->field('1')->toEnum(Priority::class));
+		$this->assertSame(Priority::High, $this->field('2')->toEnum(Priority::class));
+		$this->assertNull($this->field('3')->toEnum(Priority::class));
+	}
+
+	public function testToEnumWithIntBackedEnumAndEmptyValue(): void
+	{
+		$this->assertNull($this->field()->toEnum(Priority::class));
+		$this->assertNull($this->field(null)->toEnum(Priority::class));
+	}
+
+	public function testToEnumWithIntBackedEnumAndInvalidValue(): void
+	{
+		$this->expectException(TypeError::class);
+		$this->field('high')->toEnum(Priority::class);
 	}
 
 	public function testToFile(): void

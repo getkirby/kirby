@@ -50,6 +50,7 @@ class State
 			'theme'       => $this->kirby->option('panel.theme', 'system'),
 			'translation' => $this->kirby->option('panel.language', 'en'),
 			'upload'      => Upload::chunkSize(),
+			'uploads'     => $this->kirby->option('panel.uploads', 3),
 		];
 	}
 
