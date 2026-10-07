@@ -56,7 +56,7 @@ class Query extends Obj implements Stringable
 
 	public function toString(bool $questionMark = false): string
 	{
-		$query = http_build_query($this, '', '&', PHP_QUERY_RFC3986);
+		$query = http_build_query($this->toArray(), '', '&', PHP_QUERY_RFC3986);
 
 		if ($query === '') {
 			return '';
