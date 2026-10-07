@@ -331,4 +331,35 @@ describe("panel.upload", () => {
 			expect(upload.multiple).toStrictEqual(false);
 		});
 	});
+
+	describe("submit()", () => {
+		it("should limit the number of parallel uploads", async () => {
+			const panel = Panel.create(app);
+			panel.set({ config: { uploads: 2 } });
+
+			const upload = Upload(panel);
+			const files = Array.from({ length: 8 }, (_, index) =>
+				makeFile(`image-${index}.jpg`)
+			);
+
+			upload.url = "/api/pages/test/files";
+			upload.select(makeFileList(...files));
+
+			let active = 0;
+			let max = 0;
+
+			upload.upload = vi.fn(async (file) => {
+				active++;
+				max = Math.max(max, active);
+				await new Promise((resolve) => setTimeout(resolve, 5));
+				active--;
+				file.completed = true;
+			});
+
+			await upload.submit();
+
+			expect(upload.upload).toHaveBeenCalledTimes(8);
+			expect(max).toStrictEqual(2);
+		});
+	});
 });

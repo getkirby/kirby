@@ -37,6 +37,7 @@ type Config = {
 	theme: string;
 	translation: string;
 	upload: number;
+	uploads: number;
 };
 
 type Languages = Record<string, LanguageState>[];
@@ -139,7 +140,8 @@ export default class Panel {
 		kirbytext: true,
 		theme: "system",
 		translation: "en",
-		upload: 0
+		upload: 0,
+		uploads: 3
 	};
 	languages: Languages = [];
 	license: string = "missing";
