@@ -59,7 +59,7 @@ export default {
 		isLocked: Boolean,
 		/**
 		 * Aspect ratio for SVGs without their own size
-		 * @since 5.6.1
+		 * @since 5.6.2
 		 */
 		ratio: Number,
 		url: String

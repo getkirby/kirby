@@ -13,7 +13,7 @@ use Kirby\Toolkit\Str;
  *
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
- * @since     5.6.1
+ * @since     5.6.2
  */
 class Svg
 {
