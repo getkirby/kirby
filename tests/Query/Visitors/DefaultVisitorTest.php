@@ -59,8 +59,8 @@ class DefaultVisitorTest extends TestCase
 	public function testCoalescence(): void
 	{
 		$visitor = new DefaultVisitor();
-		$this->assertSame(3, $visitor->coalescence(3, 4));
-		$this->assertSame(4, $visitor->coalescence(null, 4));
+		$this->assertSame(3, $visitor->coalescence(3, fn () => $this->fail('Right side must not be resolved')));
+		$this->assertSame(4, $visitor->coalescence(null, fn () => 4));
 	}
 
 	public function testComparison(): void
@@ -190,6 +190,31 @@ class DefaultVisitorTest extends TestCase
 		$this->assertSame(null, $visitor->literal(null));
 	}
 
+	public function testLogical(): void
+	{
+		$visitor = new DefaultVisitor();
+		$unused  = fn () => $this->fail('Right side must not be resolved');
+
+		$this->assertTrue($visitor->logical(true, '&&', fn () => true));
+		$this->assertFalse($visitor->logical(true, 'AND', fn () => false));
+		$this->assertFalse($visitor->logical(false, '&&', $unused));
+		$this->assertFalse($visitor->logical(null, 'AND', $unused));
+
+		$this->assertTrue($visitor->logical(false, '||', fn () => true));
+		$this->assertFalse($visitor->logical(false, 'OR', fn () => false));
+		$this->assertTrue($visitor->logical(true, '||', $unused));
+		$this->assertTrue($visitor->logical('yes', 'OR', $unused));
+	}
+
+	public function testLogicalInvalidOperator(): void
+	{
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Unknown logical operator: XOR');
+
+		$visitor = new DefaultVisitor();
+		$visitor->logical(true, 'XOR', fn () => true);
+	}
+
 	public function testMemberAccess(): void
 	{
 		$visitor = new DefaultVisitor();
@@ -241,11 +266,13 @@ class DefaultVisitorTest extends TestCase
 	public function testTernary(): void
 	{
 		$visitor = new DefaultVisitor();
-		$this->assertSame(2, $visitor->ternary(true, 2, 3));
-		$this->assertSame(3, $visitor->ternary(false, 2, 3));
+		$unused  = fn () => $this->fail('Unused branch must not be resolved');
 
-		$this->assertSame('truthy', $visitor->ternary('truthy', null, 3));
-		$this->assertSame(3, $visitor->ternary(null, null, 3));
+		$this->assertSame(2, $visitor->ternary(true, fn () => 2, $unused));
+		$this->assertSame(3, $visitor->ternary(false, $unused, fn () => 3));
+
+		$this->assertSame('truthy', $visitor->ternary('truthy', null, $unused));
+		$this->assertSame(3, $visitor->ternary(null, null, fn () => 3));
 	}
 
 	public function testVariable(): void

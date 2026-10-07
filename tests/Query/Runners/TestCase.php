@@ -196,6 +196,44 @@ abstract class TestCase extends BaseTestCase
 				['user' => ['isAdmin' => true]], // context
 				'admin', // result
 			],
+
+			// Short-circuit: the unused operand must not be resolved
+			'coalesce skips the right side' => [
+				'a ?? b.c', // query
+				['a' => 'A', 'b' => null], // context
+				'A', // result
+			],
+
+			'ternary default skips the false side' => [
+				'a ?: b.c', // query
+				['a' => 'A', 'b' => null], // context
+				'A', // result
+			],
+
+			'ternary skips the false side' => [
+				'a ? "T" : b.c', // query
+				['a' => true, 'b' => null], // context
+				'T', // result
+			],
+
+			'ternary skips the true side' => [
+				'a ? b.c : "F"', // query
+				['a' => false, 'b' => null], // context
+				'F', // result
+			],
+
+			'logical AND skips the right side' => [
+				'a && a.b', // query
+				['a' => null], // context
+				false, // result
+			],
+
+			'logical OR skips the right side' => [
+				'a || b.c', // query
+				['a' => true, 'b' => null], // context
+				true, // result
+			],
+
 			// Arithmetic operations
 			'basic addition' => [
 				'2 + 3', // query

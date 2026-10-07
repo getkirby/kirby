@@ -83,9 +83,9 @@ class DefaultVisitor extends Visitor
 	/**
 	 * Processes coalescence operator
 	 */
-	public function coalescence(mixed $left, mixed $right): mixed
+	public function coalescence(mixed $left, Closure $right): mixed
 	{
-		return $left ?? $right;
+		return $left ?? $right();
 	}
 
 	/**
@@ -137,11 +137,11 @@ class DefaultVisitor extends Visitor
 	public function logical(
 		mixed $left,
 		string $operator,
-		mixed $right
+		Closure $right
 	): bool {
 		return match ($operator) {
-			'&&', 'AND' => $left && $right,
-			'||', 'OR'  => $left || $right,
+			'&&', 'AND' => $left && $right(),
+			'||', 'OR'  => $left || $right(),
 			default     => throw new Exception("Unknown logical operator: $operator")
 		};
 	}
@@ -176,14 +176,14 @@ class DefaultVisitor extends Visitor
 	 */
 	public function ternary(
 		mixed $condition,
-		mixed $true,
-		mixed $false
+		Closure|null $true,
+		Closure $false
 	): mixed {
 		if ($true === null) {
-			return $condition ?: $false;
+			return $condition ?: $false();
 		}
 
-		return $condition ? $true : $false;
+		return $condition ? $true() : $false();
 	}
 
 	/**

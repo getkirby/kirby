@@ -36,7 +36,7 @@ abstract class Visitor
 
 	abstract public function closure(ClosureNode $node): Closure;
 
-	abstract public function coalescence(mixed $left, mixed $right): mixed;
+	abstract public function coalescence(mixed $left, Closure $right): mixed;
 
 	abstract public function comparison(
 		mixed $left,
@@ -51,7 +51,7 @@ abstract class Visitor
 	abstract public function logical(
 		mixed $left,
 		string $operator,
-		mixed $right
+		Closure $right
 	): bool;
 
 	abstract public function memberAccess(
@@ -68,8 +68,8 @@ abstract class Visitor
 
 	abstract public function ternary(
 		mixed $condition,
-		mixed $true,
-		mixed $false
+		Closure|null $true,
+		Closure $false
 	): mixed;
 
 	abstract public function variable(string $name): mixed;
