@@ -41,7 +41,7 @@ class DefaultRunnerTest extends TestCase
 	 * Runners should keep a cache of parsed queries
 	 * to avoid parsing the same query multiple times
 	 */
-	public function testResolverMemoryCache(): void
+	public function testParseMemoryCache(): void
 	{
 		$cache    = [];
 		$cacheSpy = $this->createStub(ArrayAccess::class);
@@ -112,5 +112,50 @@ class DefaultRunnerTest extends TestCase
 		$runner = new DefaultRunner(global: ['null' => fn () => null]);
 		$result = $runner->run('null');
 		$this->assertNull($result);
+	}
+
+	/**
+	 * A cached query must use the globals of the runner
+	 * that runs it, not those of the runner that parsed it
+	 */
+	public function testRunWithCachedQueryAndOtherGlobals(): void
+	{
+		$cache = [];
+
+		$runner = new DefaultRunner(global: ['foo' => fn () => 'one'], cache: $cache);
+		$this->assertSame('one', $runner->run('foo()'));
+
+		$runner = new DefaultRunner(global: ['foo' => fn () => 'two'], cache: $cache);
+		$this->assertSame('two', $runner->run('foo()'));
+	}
+
+	/**
+	 * A cached query must use the interceptor of the runner
+	 * that runs it, not that of the runner that parsed it
+	 */
+	public function testRunWithCachedQueryAndOtherInterceptor(): void
+	{
+		$cache = [];
+		$log   = [];
+
+		$runner = new DefaultRunner(
+			interceptor: function ($value) use (&$log) {
+				$log[] = 'one';
+				return $value;
+			},
+			cache: $cache
+		);
+		$runner->run('foo.bar', ['foo' => ['bar' => 42]]);
+
+		$runner = new DefaultRunner(
+			interceptor: function ($value) use (&$log) {
+				$log[] = 'two';
+				return $value;
+			},
+			cache: $cache
+		);
+		$runner->run('foo.bar', ['foo' => ['bar' => 42]]);
+
+		$this->assertSame(['one', 'two'], $log);
 	}
 }

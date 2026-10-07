@@ -27,7 +27,6 @@ use Kirby\Http\Router;
 use Kirby\Http\Uri;
 use Kirby\Http\Visitor;
 use Kirby\Panel\Panel;
-use Kirby\Query\Query;
 use Kirby\Session\Session;
 use Kirby\Session\Sessions;
 use Kirby\Template\Snippet;
@@ -113,9 +112,6 @@ class App
 		Snippet::$cache = [];
 		Stack::reset();
 		VersionCache::reset();
-
-		// start with a fresh Query runner option
-		Query::$runner = null;
 
 		// reset the UUIDs option cache
 		Uuids::$enabled = null;
