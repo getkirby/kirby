@@ -11,6 +11,7 @@ use Kirby\Query\AST\CoalesceNode;
 use Kirby\Query\AST\ComparisonNode;
 use Kirby\Query\AST\GlobalFunctionNode;
 use Kirby\Query\AST\LiteralNode;
+use Kirby\Query\AST\LogicalNode;
 use Kirby\Query\AST\MemberAccessNode;
 use Kirby\Query\AST\TernaryNode;
 use Kirby\Query\AST\VariableNode;
@@ -43,6 +44,39 @@ class ParserTest extends TestCase
 		$this->assertSame(TokenType::T_EOF, $parser->current()->type);
 		$advance->invoke($parser);
 		$this->assertSame(TokenType::T_EOF, $parser->current()->type);
+	}
+
+	public function testAnd(): void
+	{
+		// left-associative: (a && b) && c
+		$parser = new Parser('a && b && c');
+		$this->assertEquals(
+			new LogicalNode(
+				left: new LogicalNode(
+					left: new VariableNode('a'),
+					operator: '&&',
+					right: new VariableNode('b')
+				),
+				operator: '&&',
+				right: new VariableNode('c')
+			),
+			$parser->parse()
+		);
+
+		// comparison binds tighter: a && (b == c)
+		$parser = new Parser('a && b == c');
+		$this->assertEquals(
+			new LogicalNode(
+				left: new VariableNode('a'),
+				operator: '&&',
+				right: new ComparisonNode(
+					left: new VariableNode('b'),
+					operator: '==',
+					right: new VariableNode('c')
+				)
+			),
+			$parser->parse()
+		);
 	}
 
 	public function testArgumentList(): void
@@ -552,6 +586,53 @@ class ParserTest extends TestCase
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Expect property name after "."');
 		$parser->parse();
+	}
+
+	public function testOr(): void
+	{
+		// && binds tighter: a || (b && c)
+		$parser = new Parser('a || b && c');
+		$this->assertEquals(
+			new LogicalNode(
+				left: new VariableNode('a'),
+				operator: '||',
+				right: new LogicalNode(
+					left: new VariableNode('b'),
+					operator: '&&',
+					right: new VariableNode('c')
+				)
+			),
+			$parser->parse()
+		);
+
+		// && binds tighter: (a && b) || c
+		$parser = new Parser('a && b || c');
+		$this->assertEquals(
+			new LogicalNode(
+				left: new LogicalNode(
+					left: new VariableNode('a'),
+					operator: '&&',
+					right: new VariableNode('b')
+				),
+				operator: '||',
+				right: new VariableNode('c')
+			),
+			$parser->parse()
+		);
+
+		// coalesce binds looser: a ?? (b || c)
+		$parser = new Parser('a ?? b || c');
+		$this->assertEquals(
+			new CoalesceNode(
+				left: new VariableNode('a'),
+				right: new LogicalNode(
+					left: new VariableNode('b'),
+					operator: '||',
+					right: new VariableNode('c')
+				)
+			),
+			$parser->parse()
+		);
 	}
 
 	public function testParse(): void

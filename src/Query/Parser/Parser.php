@@ -67,6 +67,26 @@ class Parser
 	}
 
 	/**
+	 * Parses logical AND expressions,
+	 * which bind tighter than logical OR
+	 * @since 5.7.0
+	 */
+	protected function and(): Node
+	{
+		$left = $this->comparison();
+
+		while ($token = $this->consume(TokenType::T_AND)) {
+			$left = new LogicalNode(
+				left: $left,
+				operator: $token->lexeme,
+				right: $this->comparison()
+			);
+		}
+
+		return $left;
+	}
+
+	/**
 	 * Parses an array
 	 */
 	private function array(): ArrayListNode|null
@@ -112,12 +132,12 @@ class Parser
 	 */
 	private function coalesce(): Node
 	{
-		$node = $this->logical();
+		$node = $this->or();
 
 		while ($this->consume(TokenType::T_COALESCE)) {
 			$node = new CoalesceNode(
 				left: $node,
-				right: $this->logical()
+				right: $this->or()
 			);
 		}
 
@@ -392,20 +412,19 @@ class Parser
 	}
 
 	/**
-	 * Parses logical expressions with proper precedence
+	 * Parses logical OR expressions,
+	 * which bind looser than logical AND
+	 * @since 5.7.0
 	 */
-	private function logical(): Node
+	protected function or(): Node
 	{
-		$left = $this->comparison();
+		$left = $this->and();
 
-		while ($token = $this->consumeAny([
-			TokenType::T_AND,
-			TokenType::T_OR
-		])) {
+		while ($token = $this->consume(TokenType::T_OR)) {
 			$left = new LogicalNode(
 				left: $left,
 				operator: $token->lexeme,
-				right: $this->comparison()
+				right: $this->and()
 			);
 		}
 
