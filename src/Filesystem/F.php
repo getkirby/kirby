@@ -1017,11 +1017,8 @@ class F
 	): bool {
 		// ensure the parent directory exists so `fopen('c+')`
 		// can create the file if it does not yet exist
-		$dir = dirname($file);
-		if (is_dir($dir) === false) {
-			if (Dir::make($dir) === false) {
-				return false; // @codeCoverageIgnore
-			}
+		if (Dir::make(dirname($file)) === false) {
+			return false; // @codeCoverageIgnore
 		}
 
 		// `c+` opens read/write, creates the file if missing,
@@ -1100,11 +1097,9 @@ class F
 
 		$mode = $append === true ? FILE_APPEND | LOCK_EX : LOCK_EX;
 
-		// if the parent directory does not exist, create it
-		if (is_dir(dirname($file)) === false) {
-			if (Dir::make(dirname($file)) === false) {
-				return false;
-			}
+		// create the parent directory if it does not exist yet
+		if (Dir::make(dirname($file)) === false) {
+			return false;
 		}
 
 		if (static::isWritable($file) === false) {
