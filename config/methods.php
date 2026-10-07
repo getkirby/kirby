@@ -146,6 +146,24 @@ return function (App $app) {
 		},
 
 		/**
+		 * Converts the value to a case of the given enum
+		 *
+		 * @example
+		 * $field->toEnum(MyEnum::class)
+		 *
+		 * @template T of \BackedEnum
+		 * @param class-string<T> $enum
+		 * @return T|null
+		 */
+		'toEnum' => function (Field $field, string $enum): BackedEnum|null {
+			if ($field->isEmpty() === true) {
+				return null;
+			}
+
+			return $enum::tryFrom($field->value());
+		},
+
+		/**
 		 * Returns a file object from a filename in the field
 		 */
 		'toFile' => function (Field $field): File|null {
