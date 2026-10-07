@@ -15,6 +15,12 @@ class TestCase extends BaseTestCase
 				'Homer', // result
 			],
 
+			'field starting with a keyword' => [
+				'a.nullable', // query
+				['a' => ['nullable' => 'n']], // context
+				'n', // result
+			],
+
 			'nested field' => [
 				'user.name.first', // query
 				['user' => ['name' => ['first' => 'Homer']]], // context
@@ -148,6 +154,24 @@ class TestCase extends BaseTestCase
 			'logical OR' => [
 				'false || true', // query
 				[], // context
+				true, // result
+			],
+
+			'logical AND keyword' => [
+				'a AND b', // query
+				['a' => true, 'b' => true], // context
+				true, // result
+			],
+
+			'logical OR keyword' => [
+				'a OR b', // query
+				['a' => false, 'b' => true], // context
+				true, // result
+			],
+
+			'uppercase keyword inside a string' => [
+				'a == "ORANGE"', // query
+				['a' => 'ORANGE'], // context
 				true, // result
 			],
 
