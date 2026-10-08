@@ -208,7 +208,7 @@ export default defineConfig(({ mode }) => {
 		},
 		optimizeDeps: {
 			entries: ["src/**/*.{js,ts,vue}", "!src/**/*.test.{js,ts}"],
-			exclude: ["vitest", "vue"]
+			exclude: ["vue"]
 		},
 		resolve: {
 			alias
