@@ -6,7 +6,7 @@
 				variant="filled"
 				@click="
 					$panel.dialog.open({
-						component: 'k-link-dialog',
+						component: 'k-link-dialog'
 					})
 				"
 			>

@@ -27,8 +27,8 @@ export default {
 	data() {
 		return {
 			pageA: 1,
-			pageB: 1,
+			pageB: 1
 		};
-	},
+	}
 };
 </script>
