@@ -12,7 +12,7 @@
 		"lint": "eslint \"src/**/*.{js,ts,vue}\"",
 		"lint:fix": "npm run lint -- --fix",
 		"test": "npm run test:unit && npm run test:types",
-		"test:unit": "vitest run --no-isolate",
+		"test:unit": "vitest run",
 		"test:coverage": "npm run test:unit -- --coverage",
 		"test:types": "vue-tsc --noEmit"
 	},

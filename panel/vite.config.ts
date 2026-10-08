@@ -149,6 +149,8 @@ function createTest() {
 		css: false,
 		environment: "happy-dom",
 		include: ["**/*.test.{js,ts}"],
+		isolate: false,
+		pool: "threads",
 		setupFiles: ["tests/unit/setup.ts"],
 		coverage: {
 			provider: "v8",
