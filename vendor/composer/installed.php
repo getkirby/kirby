@@ -1,8 +1,8 @@
 <?php return array(
     'root' => array(
         'name' => 'getkirby/cms',
-        'pretty_version' => '6.0.0-alpha.3',
-        'version' => '6.0.0.0-alpha3',
+        'pretty_version' => '6.0.0-beta.1',
+        'version' => '6.0.0.0-beta1',
         'reference' => null,
         'type' => 'kirby-cms',
         'install_path' => __DIR__ . '/../../',
@@ -65,8 +65,8 @@
             'dev_requirement' => false,
         ),
         'getkirby/cms' => array(
-            'pretty_version' => '6.0.0-alpha.3',
-            'version' => '6.0.0.0-alpha3',
+            'pretty_version' => '6.0.0-beta.1',
+            'version' => '6.0.0.0-beta1',
             'reference' => null,
             'type' => 'kirby-cms',
             'install_path' => __DIR__ . '/../../',
