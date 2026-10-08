@@ -5,7 +5,7 @@
 	"scripts": {
 		"build": "vite build",
 		"ci": "npm run test && npm run lint && npm run format",
-		"build:docs": "node scripts/docs.js",
+		"build:docs": "node scripts/docs.ts",
 		"dev": "vite",
 		"format": "prettier --check \"src/**/*.{js,ts,vue}\"",
 		"format:fix": "npm run format -- --write",
