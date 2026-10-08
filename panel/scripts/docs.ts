@@ -4,7 +4,6 @@
  */
 
 import fs from "fs";
-import { glob } from "glob";
 import path from "path";
 import { fileURLToPath, pathToFileURL } from "url";
 import docgen, { type ComponentDoc, type SlotDescriptor } from "vue-docgen-api";
@@ -77,7 +76,7 @@ export default async function generate(file?: string): Promise<Doc[]> {
 	}
 
 	// If file argument is not given, get all Vue SFC files
-	const files = file ? [file] : await glob("src/components/**/*.vue");
+	const files = file ? [file] : fs.globSync("src/components/**/*.vue");
 	const docs = [];
 
 	// Parse each Vue SFC file and write earch result to a separate JSON file
