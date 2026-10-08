@@ -2,6 +2,8 @@
 import LinkDialog from "@/components/Dialogs/LinkDialog.vue";
 
 /**
+ * @displayName ToolbarLinkDialog
+ *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
