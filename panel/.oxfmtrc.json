@@ -1,0 +1,8 @@
+{
+	"$schema": "./node_modules/oxfmt/configuration_schema.json",
+	"trailingComma": "none",
+	"useTabs": true,
+	"printWidth": 80,
+	"sortPackageJson": false,
+	"ignorePatterns": ["dist", "tmp", "src/components/Text/Highlight.vue"]
+}

@@ -102,7 +102,7 @@ We use [PHP CS Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer) to ensure a 
 
 #### Frontend/Panel (JavaScript, TypeScript, Vue)
 
-We use [Prettier](https://prettier.io) to ensure a consistent style for our JavaScript, TypeScript and Vue code. After running `npm install` in the `kirby/panel` folder, you can run `npm run format` to check for inconsistencies and `npm run format:fix` to fix them. We also use [ESLint](https://eslint.org) which you can use by running `npm run lint` and/or `npm run lint:fix`.
+We use [Oxfmt](https://oxc.rs/docs/guide/usage/formatter) to ensure a consistent style for our JavaScript, TypeScript and Vue code. After running `npm install` in the `kirby/panel` folder, you can run `npm run format` to check for inconsistencies and `npm run format:fix` to fix them. We also use [ESLint](https://eslint.org) which you can use by running `npm run lint` and/or `npm run lint:fix`.
 
 ### Documentation
 

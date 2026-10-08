@@ -74,5 +74,5 @@ jobs:
       - name: "ESLint: JavaScript coding style violations"
         run: npm run lint -- --max-warnings 0 --format stylish --no-fix
 
-      - name: "Prettier: JavaScript coding style violations"
+      - name: "Oxfmt: JavaScript coding style violations"
         run: npm run format
