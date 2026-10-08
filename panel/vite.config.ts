@@ -11,7 +11,7 @@ import {
 	type ServerOptions
 } from "vite";
 import vue from "@vitejs/plugin-vue";
-import { viteStaticCopy } from "vite-plugin-static-copy";
+import copy from "./scripts/vite-copy.ts";
 import kirby from "./scripts/vite-kirby.ts";
 
 type ProxyConfig = ProxyOptions & { target: string };
@@ -64,11 +64,10 @@ function createServer(proxy: ProxyConfig): ServerOptions {
 }
 
 /**
- * Returns an array of plugins used,
- * depending on the mode (development or build)
+ * Returns an array of plugins used
  */
-function createPlugins(mode: string): Plugin[] {
-	const plugins: Plugin[] = [
+function createPlugins(): Plugin[] {
+	return [
 		vue({
 			template: {
 				compilerOptions: {
@@ -77,31 +76,16 @@ function createPlugins(mode: string): Plugin[] {
 				}
 			}
 		}),
-		...kirby()
+		...kirby(),
+		// Kirby loads Vue from the dist directory via import map
+		copy(
+			[
+				"node_modules/vue/dist/vue.esm-browser.js",
+				"node_modules/vue/dist/vue.esm-browser.prod.js"
+			],
+			"js"
+		)
 	];
-
-	// when building…
-	if (mode === "production") {
-		//copy Vue to the dist directory
-		plugins.push(
-			...viteStaticCopy({
-				targets: [
-					{
-						src: "node_modules/vue/dist/vue.esm-browser.js",
-						dest: "js",
-						rename: { stripBase: true }
-					},
-					{
-						src: "node_modules/vue/dist/vue.esm-browser.prod.js",
-						dest: "js",
-						rename: { stripBase: true }
-					}
-				]
-			})
-		);
-	}
-
-	return plugins;
 }
 
 /**
@@ -181,7 +165,7 @@ export default defineConfig(({ mode }) => {
 	};
 
 	const alias = createAliases(proxy);
-	const plugins = createPlugins(mode);
+	const plugins = createPlugins();
 	const server = createServer(proxy);
 	const test = createTest();
 
