@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         'christian-riesen/base32' => array(
-            'pretty_version' => '1.6.0',
-            'version' => '1.6.0.0',
-            'reference' => '2e82dab3baa008e24a505649b0d583c31d31e894',
+            'pretty_version' => '2.0.1',
+            'version' => '2.0.1.0',
+            'reference' => 'be07b4a4a2d6056975934d71e111c64e7d8babf9',
             'type' => 'library',
             'install_path' => __DIR__ . '/../christian-riesen/base32',
             'aliases' => array(),

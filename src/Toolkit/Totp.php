@@ -3,6 +3,7 @@
 namespace Kirby\Toolkit;
 
 use Base32\Base32;
+use InvalidArgumentException as GlobalInvalidArgumentException;
 use Kirby\Exception\InvalidArgumentException;
 use SensitiveParameter;
 
@@ -44,7 +45,15 @@ class Totp
 		if ($secret !== null) {
 			$secret = strtoupper(preg_replace('/\s+/', '', $secret));
 			$secret = str_pad($secret, (int)ceil(strlen($secret) / 8) * 8, '=');
-			$this->secret = Base32::decode($secret);
+
+			try {
+				$this->secret = Base32::decode($secret);
+			} catch (GlobalInvalidArgumentException $e) {
+				throw new InvalidArgumentException(
+					message: 'TOTP secrets should be 32 Base32 digits (= 20 bytes)',
+					previous: $e
+				);
+			}
 		}
 
 		// otherwise generate a new one;

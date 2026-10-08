@@ -25,13 +25,10 @@ class Base32Hex extends Base32
      */
     protected const ALPHABET = '0123456789ABCDEFGHIJKLMNOPQRSTUV=';
 
-    protected const BASE32HEX_PATTERN = '/[^0-9A-V]/';
-
     /**
      * Maps the Base32 character to its corresponding bit value.
      */
     protected const MAPPING = [
-        '=' => 0b00000,
         '0' => 0b00000,
         '1' => 0b00001,
         '2' => 0b00010,

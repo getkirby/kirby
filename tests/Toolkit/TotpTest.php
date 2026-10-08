@@ -93,6 +93,14 @@ class TotpTest extends TestCase
 		new Totp('ABcDEfGHiJKlMNoPQRStuVWXYZ012345'); // invalid Base32 digits
 	}
 
+	public function testSecretInvalid4(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('TOTP secrets should be 32 Base32 digits (= 20 bytes)');
+
+		new Totp('TOOSHORT=', true); // invalid padding
+	}
+
 	public function testUri(): void
 	{
 		$totp = new Totp('ABCDEFGHIJKLMNOPQRSTUVWXYZ234567');
