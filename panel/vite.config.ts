@@ -24,7 +24,14 @@ let customServer = {};
 try {
 	const module = await import("./vite.config.custom.js");
 	customServer = module.default ?? {};
-} catch {}
+} catch (error) {
+	const custom = path.resolve(import.meta.dirname, "vite.config.custom.js");
+
+	// don't hide errors of an existing custom config
+	if (fs.existsSync(custom) === true) {
+		throw error;
+	}
+}
 
 /**
  * Returns all aliases used in the project
