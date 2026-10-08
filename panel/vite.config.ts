@@ -149,7 +149,6 @@ function createTest() {
 		css: false,
 		environment: "happy-dom",
 		include: ["**/*.test.{js,ts}"],
-		reporter: "dot",
 		setupFiles: ["tests/unit/setup.ts"],
 		coverage: {
 			provider: "v8",
