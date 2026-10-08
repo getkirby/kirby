@@ -6,29 +6,24 @@ Our setup expects that you are running [Kirby Sandbox](https://github.com/getkir
 
 We are using [Herd](https://herd.laravel.com) to run our setup locally.
 
-If you are using a different setup, you might need to create a `/panel/vite.config.custom.js` where you can point `vite` to the right server.
+If you are using a different setup, point `vite` to your server with a `SERVER` entry in `/panel/.env` (see `/panel/.env.example`). Further `vite` server options can go into a `/panel/vite.config.custom.js`.
 
-### Using Herd with HTTPS
+### HTTPS
 
-If you're using [Herd](https://herd.laravel.com) in your local setup, you will need to enable HTTPS for the site and add the following `/panel/vite.config.custom.js`:
+If HTTPS for your site is set up with [Herd](https://herd.laravel.com) or [Valet](https://laravel.com/docs/valet), the dev server uses its certificate automatically.
 
-```node
-/* eslint-env node */
+For any other setup, add the certificate to `/panel/vite.config.custom.js`:
+
+```js
 import fs from "fs";
 
-module.exports = {
+export default {
 	https: {
-		key: fs.readFileSync(
-			"/Users/XYZ/Library/Application Support/Herd/config/valet/Certificates/sandbox.test.key"
-		),
-		cert: fs.readFileSync(
-			"/Users/XYZ/Library/Application Support/Herd/config/valet/Certificates/sandbox.test.crt"
-		)
+		key: fs.readFileSync("/path/to/sandbox.test.key"),
+		cert: fs.readFileSync("/path/to/sandbox.test.crt")
 	}
 };
 ```
-
-Replace `XYZ` with your username. Adapt the whole path if those Herd files are located elsewhere (e.g. on Windows).
 
 ### `panel.dev` mode
 
