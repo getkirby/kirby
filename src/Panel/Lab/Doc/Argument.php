@@ -29,7 +29,9 @@ class Argument
 	{
 		return new static(
 			name:        $data['name'],
-			type:        $data['type']['names'][0] ?? null,
+			// event properties list `names`, method params
+			// and slot bindings a single `name`
+			type:        $data['type']['names'][0] ?? $data['type']['name'] ?? null,
 			description: $data['description'] ?? null,
 		);
 	}
