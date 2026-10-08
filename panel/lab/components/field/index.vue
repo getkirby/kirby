@@ -2,7 +2,7 @@
 	<k-lab-examples>
 		<k-lab-example label="Default">
 			<k-field input="a" label="Label">
-				<k-input :value="value" id="a" type="text" @input="value = $event" />
+				<k-input id="a" :value="value" type="text" @input="value = $event" />
 			</k-field>
 		</k-lab-example>
 		<k-lab-example label="Required">

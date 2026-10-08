@@ -3,7 +3,6 @@
  * @license   https://getkirby.com/license
  */
 
-/* eslint-env node */
 import fs from "fs";
 import generateDocs from "./docs.ts";
 import { type Plugin } from "vite";

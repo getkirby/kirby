@@ -3,7 +3,7 @@
 		<k-lab-example label="View Buttons: buttons & slot">
 			<k-header>
 				Home
-				<template slot="buttons">
+				<template #buttons>
 					<k-view-buttons :buttons="viewButtons">
 						<template #after>
 							<k-form-controls
@@ -21,7 +21,7 @@
 		<k-lab-example label="View Buttons: no buttons & slot">
 			<k-header>
 				Home
-				<template slot="buttons">
+				<template #buttons>
 					<k-view-buttons :buttons="[]">
 						<template #after>
 							<k-form-controls
