@@ -7,6 +7,11 @@ import tseslint from "typescript-eslint";
 import vue from "eslint-plugin-vue";
 
 export default [
+	// generated files
+	{
+		ignores: ["dist/", "tests/coverage/", "tmp/"]
+	},
+
 	js.configs.recommended,
 	...tseslint.configs.recommended.map((config) => ({
 		...config,
@@ -113,6 +118,14 @@ export default [
 			globals: {
 				...globals.browser
 			}
+		}
+	},
+	{
+		// Prettier keeps the whitespace of inline code examples
+		// with closing brackets this rule doesn't allow
+		files: ["lab/**/*.vue"],
+		rules: {
+			"vue/html-closing-bracket-newline": "off"
 		}
 	}
 ];
