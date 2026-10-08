@@ -6,7 +6,7 @@
 		"build": "vite build",
 		"ci": "npm run test && npm run lint && npm run format",
 		"build:docs": "node scripts/docs.js",
-		"dev": "vite --host",
+		"dev": "vite",
 		"format": "prettier --check \"src/**/*.{js,ts,vue}\"",
 		"format:fix": "npm run format -- --write",
 		"lint": "eslint \"src/**/*.{js,ts,vue}\"",

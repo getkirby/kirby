@@ -56,9 +56,12 @@ function createAliases(proxy: ProxyConfig): AliasOptions {
  * Returns the server configuration
  */
 function createServer(proxy: ProxyConfig): ServerOptions {
+	const host = new URL(proxy.target).hostname;
+
 	return {
-		allowedHosts: [proxy.target.substring(8)],
+		allowedHosts: [host],
 		cors: { origin: proxy.target },
+		host,
 		proxy: {
 			"/api": proxy,
 			"/env": proxy,
@@ -66,6 +69,7 @@ function createServer(proxy: ProxyConfig): ServerOptions {
 		},
 		open: proxy.target + "/panel",
 		port: 3000,
+		strictPort: true,
 		...(customServer ?? {})
 	};
 }
