@@ -7,7 +7,7 @@ import fs from "fs";
 import { glob } from "glob";
 import path from "path";
 import { fileURLToPath, pathToFileURL } from "url";
-import docgen, { type ComponentDoc } from "vue-docgen-api";
+import docgen, { type ComponentDoc, type SlotDescriptor } from "vue-docgen-api";
 
 type Doc = Omit<ComponentDoc, "exportName" | "sourceFiles"> & {
 	component: string;
@@ -28,6 +28,12 @@ export function normalizeDoc(
 			data.displayName.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase(),
 		sourceFile: path
 	};
+
+	// docgen adds the template slots of `.vue` files that
+	// mixins are imported from, but mixins can't render slots
+	doc.slots = doc.slots?.filter(
+		(slot: SlotDescriptor) => slot.mixin === undefined
+	);
 
 	for (const access in doc.tags.access ?? []) {
 		delete doc.tags.access[access].title;
