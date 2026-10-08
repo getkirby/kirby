@@ -3,6 +3,7 @@
 namespace Kirby\Toolkit;
 
 use Base32\Base32;
+use InvalidArgumentException as GlobalInvalidArgumentException;
 use Kirby\Exception\InvalidArgumentException;
 use SensitiveParameter;
 
@@ -39,7 +40,18 @@ class Totp
 		// if provided, decode the existing secret into binary;
 		// otherwise generate a new one (20 bytes = length of the SHA1 HMAC)
 		if ($secret !== null) {
-			$this->secret = Base32::decode($secret);
+			// the decoder is strict, so normalize case, spaces and padding
+			$secret = strtoupper(preg_replace('/\s+/', '', $secret));
+			$secret = str_pad($secret, (int)ceil(strlen($secret) / 8) * 8, '=');
+
+			try {
+				$this->secret = Base32::decode($secret);
+			} catch (GlobalInvalidArgumentException $e) {
+				throw new InvalidArgumentException(
+					message: 'TOTP secrets should be 32 Base32 digits (= 20 bytes)',
+					previous: $e
+				);
+			}
 		} else {
 			$this->secret = random_bytes(20);
 		}
