@@ -2,6 +2,9 @@
 	"name": "kirby",
 	"private": true,
 	"type": "module",
+	"engines": {
+		"node": ">=22.18"
+	},
 	"scripts": {
 		"build": "vite build",
 		"ci": "npm run test && npm run lint && npm run format",
