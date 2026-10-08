@@ -448,6 +448,28 @@ class LanguageTest extends TestCase
 		$this->assertFalse($language->isDeletable());
 	}
 
+	public function testIsLast(): void
+	{
+		$this->app = $this->app->clone([
+			'languages' => [
+				['code' => 'en', 'name' => 'English', 'default' => true],
+				['code' => 'de', 'name' => 'Deutsch']
+			]
+		]);
+
+		$en = $this->app->language('en');
+		$de = $this->app->language('de');
+
+		$this->assertFalse($en->isLast());
+		$this->assertTrue($de->isLast());
+
+		// with custom collection
+		$languages = $this->app->languages()->flip();
+
+		$this->assertTrue($en->isLast($languages));
+		$this->assertFalse($de->isLast($languages));
+	}
+
 	public function testIsSingle(): void
 	{
 		// default
