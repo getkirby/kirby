@@ -39,8 +39,11 @@ class Totp
 		string|null $secret = null,
 		bool $force = false
 	) {
-		// if provided, decode the existing secret into binary
+		// if provided, decode the existing secret into binary;
+		// the decoder is strict, so normalize case, spaces and padding
 		if ($secret !== null) {
+			$secret = strtoupper(preg_replace('/\s+/', '', $secret));
+			$secret = str_pad($secret, (int)ceil(strlen($secret) / 8) * 8, '=');
 			$this->secret = Base32::decode($secret);
 		}
 

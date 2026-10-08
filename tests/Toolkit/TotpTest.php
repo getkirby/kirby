@@ -58,6 +58,15 @@ class TotpTest extends TestCase
 		// force mode (third-party services)
 		$totp4 = new Totp($secret = 'TOOSHORT', true);
 		$this->assertSame($secret, $totp4->secret());
+
+		// lowercase and grouped secret
+		$totp5 = new Totp('abcd efgh ijkl mnop qrst uvwx yz23 4567');
+		$this->assertSame('ABCDEFGHIJKLMNOPQRSTUVWXYZ234567', $totp5->secret());
+
+		// unpadded secret in force mode
+		$secret = Base32::encode('1234567890123456');
+		$totp6  = new Totp(rtrim($secret, '='), true);
+		$this->assertSame($secret, $totp6->secret());
 	}
 
 	public function testSecretInvalid1(): void
