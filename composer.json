@@ -36,7 +36,7 @@
 		"ext-mbstring": "*",
 		"ext-openssl": "*",
 		"ext-simplexml": "*",
-		"christian-riesen/base32": "1.6.0",
+		"christian-riesen/base32": "2.0.1",
 		"claviska/simpleimage": "4.4.0",
 		"composer/semver": "3.5.1",
 		"erusev/parsedown": "1.8.0",
