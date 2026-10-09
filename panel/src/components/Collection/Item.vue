@@ -423,6 +423,9 @@ export default {
 	--item-color-icon: light-dark(var(--color-gray-500), var(--color-gray-650));
 	--item-color-image: light-dark(var(--color-gray-250), var(--color-gray-800));
 }
+.k-item[data-theme="skeleton"] {
+	opacity: 0.75;
+}
 
 .k-item[data-theme="skeleton"] .k-item-options {
 	visibility: hidden;

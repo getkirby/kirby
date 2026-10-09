@@ -1,22 +1,31 @@
 import { beforeEach, describe, expect, it, vi } from "@test/unit";
-import { mount as vueMount } from "@vue/test-utils";
+import { flushPromises, mount as vueMount } from "@vue/test-utils";
+import { reactive } from "vue";
 import ModelListField from "./ModelListField.vue";
 
-const events = { emit: vi.fn(), off: vi.fn(), on: vi.fn() };
+const listeners: Record<string, () => void> = {};
+
+const events = {
+	emit: vi.fn(),
+	off: vi.fn(),
+	on: vi.fn((event: string, handler: () => void) => {
+		listeners[event] = handler;
+	})
+};
 const api = { get: vi.fn() };
 const panel = { error: vi.fn() };
 
-const initial = {
-	columns: {},
+const state = {
+	columns: { title: { label: "Title", type: "url" } },
 	models: [],
-	pagination: { page: 1, total: 0 }
+	pagination: { limit: 20, offset: 0, page: 1, total: 0 },
+	sortable: true
 };
 
-function mount(props = {}, attrs = {}) {
+function mount(props = {}, attrs = {}, $panel: object = panel) {
 	return vueMount(ModelListField, {
 		props: {
 			endpoints: { field: "pages/test/fields/drafts" },
-			initial,
 			name: "drafts",
 			...props
 		},
@@ -26,7 +35,7 @@ function mount(props = {}, attrs = {}) {
 			mocks: {
 				$api: api,
 				$events: events,
-				$panel: panel
+				$panel
 			}
 		}
 	});
@@ -43,7 +52,10 @@ function lastEmit() {
 describe("ModelListField.vue", () => {
 	beforeEach(() => {
 		api.get.mockReset();
+		api.get.mockResolvedValue(state);
 		events.emit.mockClear();
+		events.off.mockClear();
+		events.on.mockClear();
 		panel.error.mockClear();
 	});
 
@@ -53,38 +65,131 @@ describe("ModelListField.vue", () => {
 		it.inheritsNoAttrs(mount);
 	});
 
-	// methods
-	describe("reload()", () => {
-		it("replaces the initial state with a fresh one", async () => {
-			const state = { ...initial, pagination: { page: 2, total: 25 } };
-			api.get.mockResolvedValue(state);
-
+	// loading
+	describe("loading", () => {
+		it("fetches its entries once it is mounted", async () => {
 			const wrapper = mount();
-			await wrapper.vm.reload({ page: 2 });
 
+			// no page, so the server can start on the `page` prop
 			expect(api.get).toHaveBeenCalledWith("pages/test/fields/drafts", {
-				page: 2,
+				page: null,
 				searchterm: null
 			});
+
+			await flushPromises();
+
 			expect(wrapper.vm.state).toStrictEqual(state);
+			expect(wrapper.vm.isLoading).toBe(false);
 		});
 
-		it("reports a failing request", async () => {
+		it("shows a skeleton until the entries arrive", async () => {
+			const wrapper = mount();
+
+			expect(wrapper.vm.isLoading).toBe(true);
+			expect(wrapper.vm.skeleton).toHaveLength(1);
+			expect(wrapper.vm.skeleton[0].theme).toBe("skeleton");
+
+			// the entries are unknown, so the list cannot be validated yet
+			expect(wrapper.vm.validator).toStrictEqual({ count: 0 });
+
+			await flushPromises();
+
+			expect(wrapper.vm.validator).toStrictEqual({
+				count: 0,
+				max: undefined,
+				min: undefined
+			});
+		});
+
+		it("keeps the columns from the props while loading", async () => {
+			const columns = { title: { label: "Title" } };
+			const wrapper = mount({ columns });
+
+			expect(wrapper.vm.state.columns).toStrictEqual(columns);
+
+			await flushPromises();
+
+			// the loaded columns carry the resolved types
+			expect(wrapper.vm.state.columns).toStrictEqual(state.columns);
+		});
+
+		it("reports a failing load", async () => {
 			const error = new Error("Nope");
 			api.get.mockRejectedValue(error);
 
 			const wrapper = mount();
-			await wrapper.vm.reload();
+			await flushPromises();
 
 			expect(panel.error).toHaveBeenCalledWith(error);
+			expect(wrapper.vm.isLoading).toBe(false);
 			expect(wrapper.vm.isProcessing).toBe(false);
+
+			// the list must not look empty when it could not be loaded
+			expect(wrapper.vm.emptyProps).toStrictEqual({
+				icon: "alert",
+				text: "Nope"
+			});
+		});
+	});
+
+	// watch
+	describe("$panel.language.code watcher", () => {
+		it("reloads the entries", async () => {
+			const $panel = reactive({ language: { code: "en" } });
+
+			mount({}, {}, $panel);
+			await flushPromises();
+
+			$panel.language.code = "de";
+			await flushPromises();
+
+			expect(api.get).toHaveBeenCalledTimes(2);
+		});
+	});
+
+	// methods
+	describe("reload()", () => {
+		it("keeps the page of the current state", async () => {
+			api.get.mockResolvedValue({
+				...state,
+				pagination: { ...state.pagination, page: 3 }
+			});
+
+			const wrapper = mount();
+			await flushPromises();
+			await wrapper.vm.reload();
+
+			expect(api.get).toHaveBeenLastCalledWith("pages/test/fields/drafts", {
+				page: 3,
+				searchterm: null
+			});
+		});
+
+		it("replaces the state with a fresh one", async () => {
+			const wrapper = mount();
+			await flushPromises();
+
+			const reloaded = { ...state, pagination: { page: 2, total: 25 } };
+			api.get.mockResolvedValue(reloaded);
+
+			await wrapper.vm.reload({ page: 2 });
+
+			expect(api.get).toHaveBeenLastCalledWith("pages/test/fields/drafts", {
+				page: 2,
+				searchterm: null
+			});
+			expect(wrapper.vm.state).toStrictEqual(reloaded);
 		});
 	});
 
 	// events
 	describe("field.loaded event", () => {
-		it("is emitted once mounted", () => {
+		it("is emitted once the entries have arrived", async () => {
 			const wrapper = mount();
+
+			expect(events.emit).not.toHaveBeenCalled();
+
+			await flushPromises();
 
 			expect(events.emit).toHaveBeenCalledTimes(1);
 			expect(lastEmit()[0]).toBe("field.loaded");
@@ -92,32 +197,32 @@ describe("ModelListField.vue", () => {
 		});
 
 		it("is emitted again after a reload", async () => {
-			api.get.mockResolvedValue(initial);
-
 			const wrapper = mount();
+			await flushPromises();
 			await wrapper.vm.reload();
 
-			// once on mount, once after the reload
+			// once after the initial load, once after the reload
 			expect(events.emit).toHaveBeenCalledTimes(2);
 			expect(lastEmit()[0]).toBe("field.loaded");
 			expect(lastEmit()[1]).toBe(wrapper.vm);
 		});
 
-		it("is emitted even when the reload fails", async () => {
+		it("is emitted even when the load fails", async () => {
 			api.get.mockRejectedValue(new Error("Nope"));
 
 			const wrapper = mount();
-			await wrapper.vm.reload();
+			await flushPromises();
 
-			expect(events.emit).toHaveBeenCalledTimes(2);
+			expect(events.emit).toHaveBeenCalledOnce();
 			expect(lastEmit()[0]).toBe("field.loaded");
 			expect(lastEmit()[1]).toBe(wrapper.vm);
 		});
 	});
 
 	describe("model.update event", () => {
-		it("is listened to while mounted", () => {
+		it("is listened to while mounted", async () => {
 			const wrapper = mount();
+			await flushPromises();
 
 			expect(events.on).toHaveBeenCalledWith("model.update", expect.anything());
 
@@ -127,6 +232,23 @@ describe("ModelListField.vue", () => {
 				"model.update",
 				expect.anything()
 			);
+		});
+
+		it("triggers a single reload when fired in quick succession", async () => {
+			mount();
+			await flushPromises();
+			api.get.mockClear();
+
+			vi.useFakeTimers();
+
+			// a dialog that answers with two events is worth one reload
+			listeners["model.update"]();
+			listeners["model.update"]();
+
+			await vi.advanceTimersByTimeAsync(1);
+			vi.useRealTimers();
+
+			expect(api.get).toHaveBeenCalledOnce();
 		});
 	});
 });
