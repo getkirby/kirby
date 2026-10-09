@@ -197,6 +197,30 @@ class InputFieldTest extends BaseTestCase
 		$this->assertSame(['custom' => 'Please enter an a'], $field->errors());
 	}
 
+	public function testErrorsWithValidate(): void
+	{
+		// single rule
+		$field = TestField::factory(['validate' => 'email', 'value' => 'nope']);
+		$this->assertSame(['email' => 'Please enter a valid email address'], $field->errors());
+
+		$field = TestField::factory(['validate' => 'email', 'value' => 'test@getkirby.com']);
+		$this->assertSame([], $field->errors());
+
+		// multiple rules, with and without arguments
+		$field = TestField::factory([
+			'validate' => ['email', 'maxLength' => 3],
+			'value'    => 'nope'
+		]);
+		$this->assertSame([
+			'email'     => 'Please enter a valid email address',
+			'maxlength' => 'Please enter a shorter value. (max. 3 characters)'
+		], $field->errors());
+
+		// empty optional fields skip the rules
+		$field = TestField::factory(['validate' => 'email', 'value' => '']);
+		$this->assertSame([], $field->errors());
+	}
+
 	public function testFill(): void
 	{
 		$field = new TestField();
