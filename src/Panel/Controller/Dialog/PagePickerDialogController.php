@@ -28,7 +28,7 @@ class PagePickerDialogController extends ModelPickerDialogController
 	public function __construct(
 		ModelWithContent $model,
 		bool $hasSearch = true,
-		array|null $image = [],
+		array|string|false|null $image = [],
 		string|null $info = null,
 		string $layout = 'list',
 		public int|null $limit = null,

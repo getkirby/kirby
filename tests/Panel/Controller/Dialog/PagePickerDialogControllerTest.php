@@ -103,6 +103,27 @@ class PagePickerDialogControllerTest extends TestCase
 		$this->assertFalse($item['hasChildren']);
 	}
 
+	public function testItemWithImage(): void
+	{
+		// query string
+		$controller = new PagePickerDialogController(
+			model: $this->app->site(),
+			image: 'page.image'
+		);
+
+		$item = $controller->item($this->app->page('alpha'));
+		$this->assertSame('page', $item['image']['icon']);
+
+		// disabled
+		$controller = new PagePickerDialogController(
+			model: $this->app->site(),
+			image: false
+		);
+
+		$item = $controller->item($this->app->page('alpha'));
+		$this->assertNull($item['image']);
+	}
+
 	public function testItems(): void
 	{
 		$controller = new PagePickerDialogController(

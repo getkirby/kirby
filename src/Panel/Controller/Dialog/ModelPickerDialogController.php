@@ -26,7 +26,7 @@ abstract class ModelPickerDialogController extends DialogController
 	public function __construct(
 		public ModelWithContent $model,
 		public bool $hasSearch = true,
-		public array|null $image = [],
+		public array|string|false|null $image = [],
 		public string|null $info = null,
 		public string $layout = 'list',
 		public int|null $max = null,
