@@ -1,6 +1,9 @@
 import type Panel from "@/panel/panel";
+import type * as components from "../components/index";
 import type { helper } from "../helpers/index";
 import type { library } from "../libraries/index";
+
+type Components = typeof components;
 
 declare module "vue" {
 	interface ComponentCustomProperties {
@@ -20,4 +23,7 @@ declare module "vue" {
 		$th: Panel["th"];
 		$url: Panel["url"];
 	}
+
+	// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+	interface GlobalComponents extends Components {}
 }
