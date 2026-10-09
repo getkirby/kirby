@@ -98,9 +98,14 @@ class LanguageRouter
 				// and attackers can't force Kirby to go through the whole
 				// site index with a non-existing UUID
 				if ($model = Uuid::for($type . '://' . $id)?->model(true)) {
+					// files point to the media folder, so only pages keep
+					// the query and params of the request
 					return $kirby
 						->response()
-						->redirect($model->url($language->code()));
+						->redirect(
+							$model->url($language->code()),
+							inherit: $type === 'page'
+						);
 				}
 
 				// render the error page

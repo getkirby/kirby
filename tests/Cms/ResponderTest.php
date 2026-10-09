@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Http\Uri;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 class TestResponse extends Response
@@ -24,6 +25,7 @@ class ResponderTest extends TestCase
 	protected function tearDown(): void
 	{
 		unset($_COOKIE['foo'], $_SERVER['HTTP_AUTHORIZATION']);
+		Uri::$current = null;
 	}
 
 	public function testCache(): void
@@ -418,6 +420,20 @@ class ResponderTest extends TestCase
 		$this->assertTrue($responder->isPrivate(false, ['foo', 'bar']));
 		$this->assertFalse($responder->isPrivate(false, ['bar']));
 		$this->assertFalse($responder->isPrivate(false, []));
+	}
+
+	public function testRedirect(): void
+	{
+		Uri::$current = new Uri('https://getkirby.test/notes/tag:foo?bar=baz');
+
+		$responder = new Responder();
+		$responder->redirect('/de');
+		$this->assertSame(302, $responder->code());
+		$this->assertSame('https://getkirby.test/de', $responder->header('Location'));
+
+		$responder->redirect('/de', 301, inherit: true);
+		$this->assertSame(301, $responder->code());
+		$this->assertSame('https://getkirby.test/de/tag:foo?bar=baz', $responder->header('Location'));
 	}
 
 	public function testSend(): void
