@@ -86,7 +86,8 @@ export default {
 				return "";
 			}
 
-			if (this.to[0] === "/" && !this.target) {
+			// protocol-relative URLs are no Panel paths
+			if (this.to[0] === "/" && this.to[1] !== "/" && !this.target) {
 				return this.$url(this.to);
 			}
 

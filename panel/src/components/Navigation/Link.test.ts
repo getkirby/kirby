@@ -128,6 +128,11 @@ describe("Link.vue", () => {
 			expect(wrapper.attributes("href")).toBe("/pages/a");
 		});
 
+		it("keeps a protocol-relative URL", () => {
+			const wrapper = mount({ to: "//cdn.getkirby.com/a" });
+			expect(wrapper.attributes("href")).toBe("//cdn.getkirby.com/a");
+		});
+
 		it("turns an email address into a mailto link", () => {
 			const wrapper = mount({ to: "mail@getkirby.com" });
 			expect(wrapper.attributes("href")).toBe("mailto:mail@getkirby.com");
@@ -206,6 +211,11 @@ describe("Link.vue", () => {
 			expect(wrapper.vm.isRoutable({})).toBe(false);
 		});
 
+		it("does not route a protocol-relative URL", () => {
+			const wrapper = mount({ to: "//cdn.getkirby.com/a" });
+			expect(wrapper.vm.isRoutable({})).toBe(false);
+		});
+
 		it("does not route an email link", () => {
 			const wrapper = mount({ to: "mail@getkirby.com" });
 			expect(wrapper.vm.isRoutable({})).toBe(false);
@@ -228,6 +238,12 @@ describe("Link.vue", () => {
 
 		it("leaves an absolute URL to the browser", () => {
 			const wrapper = mount({ to: "https://getkirby.com/a" });
+			expect(click(wrapper)).toBe(false);
+			expect(wrapper.vm.$go).not.toHaveBeenCalled();
+		});
+
+		it("leaves a protocol-relative URL to the browser", () => {
+			const wrapper = mount({ to: "//cdn.getkirby.com/a" });
 			expect(click(wrapper)).toBe(false);
 			expect(wrapper.vm.$go).not.toHaveBeenCalled();
 		});
