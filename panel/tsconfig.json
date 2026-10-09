@@ -12,7 +12,7 @@
 		"isolatedModules": true,
 		"resolveJsonModule": true,
 		"jsx": "preserve",
-		"lib": ["ESNext", "DOM", "DOM.Iterable"],
+		"lib": ["ESNext", "DOM"],
 		"types": ["vite/client", "vitest"],
 		"paths": {
 			"@/*": ["./src/*"],

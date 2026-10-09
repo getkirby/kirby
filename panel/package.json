@@ -15,7 +15,7 @@
 		"lint": "eslint .",
 		"lint:fix": "npm run lint -- --fix",
 		"test": "npm run test:unit && npm run test:types",
-		"test:unit": "vitest run --no-isolate",
+		"test:unit": "vitest run",
 		"test:coverage": "npm run test:unit -- --coverage",
 		"test:types": "vue-tsc --noEmit"
 	},
@@ -39,8 +39,7 @@
 		"@types/autosize": "^4.0.3",
 		"@vitejs/plugin-vue": "^6.0.9",
 		"@vitest/coverage-v8": "^5.0.3",
-		"@vitest/eslint-plugin": "1.6.27",
-		"@vue/compiler-sfc": "^3.5.43",
+		"@vitest/eslint-plugin": "^1.6.27",
 		"@vue/test-utils": "^2.5.1",
 		"eslint": "^10.12.0",
 		"eslint-config-prettier": "^10.1.8",
@@ -52,13 +51,11 @@
 		"typescript": "^6.0.3",
 		"typescript-eslint": "^8.71.1",
 		"vite": "^8.3.4",
-		"vite-plugin-static-copy": "^4.1.1",
 		"vitest": "^5.0.3",
 		"vue-docgen-api": "^4.79.2",
 		"vue-tsc": "^3.3.12"
 	},
 	"allowScripts": {
-		"fsevents@2.3.3": true,
-		"esbuild@0.28.2": true
+		"fsevents@2.3.3": true
 	}
 }
