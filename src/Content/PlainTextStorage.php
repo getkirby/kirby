@@ -313,7 +313,17 @@ class PlainTextStorage extends Storage
 		$contentFile = $this->contentFile($versionId, $language);
 
 		if (file_exists($contentFile) === true) {
-			return Data::read($contentFile);
+			// read under a shared lock, so that a concurrent save
+			// cannot be observed as an empty or half-written file
+			$contents = F::read($contentFile, lock: true);
+
+			if ($contents === false) {
+				throw new Exception(
+					message: 'The file "' . $contentFile . '" does not exist or cannot be read'
+				);
+			}
+
+			return Data::decode($contents, F::extension($contentFile));
 		}
 
 		// For existing versions that don't have a content file yet,

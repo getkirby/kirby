@@ -450,6 +450,26 @@ class PlainTextStorageTest extends TestCase
 		$this->assertSame($fields, $this->storage->read(VersionId::latest(), Language::single()));
 	}
 
+	public function testReadReleasesLock(): void
+	{
+		$this->setUpSingleLanguage();
+
+		Data::write($file = $this->model->root() . '/article.txt', [
+			'title' => 'Foo'
+		]);
+
+		$this->storage->read(VersionId::latest(), Language::single());
+
+		// an exclusive, non-blocking lock can only be acquired
+		// if the read released its shared lock again
+		$handle = fopen($file, 'r+');
+
+		$this->assertTrue(flock($handle, LOCK_EX | LOCK_NB));
+
+		flock($handle, LOCK_UN);
+		fclose($handle);
+	}
+
 	public function testTouchChangesMultiLang(): void
 	{
 		$this->setUpMultiLanguage();
