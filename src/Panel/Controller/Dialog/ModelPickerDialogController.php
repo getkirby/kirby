@@ -91,7 +91,15 @@ abstract class ModelPickerDialogController extends DialogController
 			'multiple'   => $this->multiple,
 			'pagination' => $this->collector()->pagination()->toArray(),
 			'size'       => $this->size,
-			'value'      => Str::split($this->request->get('value', ''))
+			'value'      => $this->value()
 		];
+	}
+
+	/**
+	 * IDs of the currently selected models
+	 */
+	protected function value(): array
+	{
+		return Str::split($this->request->get('value', ''));
 	}
 }

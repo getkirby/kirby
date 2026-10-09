@@ -101,6 +101,7 @@ class PagePickerDialogControllerTest extends TestCase
 		$this->assertSame('/pages/alpha', $item['link']);
 		$this->assertArrayHasKey('permissions', $item);
 		$this->assertFalse($item['hasChildren']);
+		$this->assertSame(0, $item['selectedChildren']);
 	}
 
 	public function testItemWithImage(): void
@@ -122,6 +123,61 @@ class PagePickerDialogControllerTest extends TestCase
 
 		$item = $controller->item($this->app->page('alpha'));
 		$this->assertNull($item['image']);
+	}
+
+	public function testItemWithSelectedChildren(): void
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'value' => 'page://my-delta, gamma/delta/zeta, alpha, page://missing',
+				],
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'    => 'alpha',
+						'content' => ['uuid' => 'my-alpha']
+					],
+					[
+						'slug'    => 'beta',
+						'content' => ['uuid' => 'my-beta']
+					],
+					[
+						'slug'     => 'gamma',
+						'content'  => ['uuid' => 'my-gamma'],
+						'children' => [
+							[
+								'slug'     => 'delta',
+								'content'  => ['uuid' => 'my-delta'],
+								'children' => [
+									[
+										'slug'    => 'zeta',
+										'content' => ['uuid' => 'my-zeta']
+									]
+								]
+							],
+							[
+								'slug'    => 'epsilon',
+								'content' => ['uuid' => 'my-epsilon']
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PagePickerDialogController(
+			model: $this->app->site()
+		);
+
+		// counts selected pages at any depth below the page
+		$this->assertSame(2, $controller->item($this->app->page('gamma'))['selectedChildren']);
+		$this->assertSame(1, $controller->item($this->app->page('gamma/delta'))['selectedChildren']);
+		$this->assertSame(0, $controller->item($this->app->page('gamma/epsilon'))['selectedChildren']);
+		$this->assertSame(0, $controller->item($this->app->page('alpha'))['selectedChildren']);
 	}
 
 	public function testItems(): void
