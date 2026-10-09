@@ -70,8 +70,9 @@ describe("ModelListField.vue", () => {
 		it("fetches its entries once it is mounted", async () => {
 			const wrapper = mount();
 
+			// no page, so the server can start on the `page` prop
 			expect(api.get).toHaveBeenCalledWith("pages/test/fields/drafts", {
-				page: 1,
+				page: null,
 				searchterm: null
 			});
 
@@ -148,6 +149,22 @@ describe("ModelListField.vue", () => {
 
 	// methods
 	describe("reload()", () => {
+		it("keeps the page of the current state", async () => {
+			api.get.mockResolvedValue({
+				...state,
+				pagination: { ...state.pagination, page: 3 }
+			});
+
+			const wrapper = mount();
+			await flushPromises();
+			await wrapper.vm.reload();
+
+			expect(api.get).toHaveBeenLastCalledWith("pages/test/fields/drafts", {
+				page: 3,
+				searchterm: null
+			});
+		});
+
 		it("replaces the state with a fresh one", async () => {
 			const wrapper = mount();
 			await flushPromises();

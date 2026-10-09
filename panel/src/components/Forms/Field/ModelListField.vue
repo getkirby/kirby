@@ -120,7 +120,7 @@ export default {
 			state: {
 				columns: this.columns,
 				models: [],
-				pagination: { limit: 0, offset: 0, page: 1, total: 0 },
+				pagination: { limit: 0, offset: 0, page: null, total: 0 },
 				sortable: false
 			}
 		};
