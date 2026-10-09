@@ -263,6 +263,9 @@ export default {
 		}
 	},
 	watch: {
+		"$panel.language.code"() {
+			this.reload();
+		},
 		searchterm() {
 			this.filter();
 		}

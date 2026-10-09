@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "@test/unit";
 import { flushPromises, mount as vueMount } from "@vue/test-utils";
+import { reactive } from "vue";
 import ModelListField from "./ModelListField.vue";
 
 const listeners: Record<string, () => void> = {};
@@ -21,7 +22,7 @@ const state = {
 	sortable: true
 };
 
-function mount(props = {}, attrs = {}) {
+function mount(props = {}, attrs = {}, $panel: object = panel) {
 	return vueMount(ModelListField, {
 		props: {
 			endpoints: { field: "pages/test/fields/drafts" },
@@ -34,7 +35,7 @@ function mount(props = {}, attrs = {}) {
 			mocks: {
 				$api: api,
 				$events: events,
-				$panel: panel
+				$panel
 			}
 		}
 	});
@@ -127,6 +128,21 @@ describe("ModelListField.vue", () => {
 				icon: "alert",
 				text: "Nope"
 			});
+		});
+	});
+
+	// watch
+	describe("$panel.language.code watcher", () => {
+		it("reloads the entries", async () => {
+			const $panel = reactive({ language: { code: "en" } });
+
+			mount({}, {}, $panel);
+			await flushPromises();
+
+			$panel.language.code = "de";
+			await flushPromises();
+
+			expect(api.get).toHaveBeenCalledTimes(2);
 		});
 	});
 
