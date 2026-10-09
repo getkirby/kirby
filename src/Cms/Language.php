@@ -240,7 +240,7 @@ class Language extends Model
 
 		// if needed, convert content storage to single lang
 		foreach ($kirby->models() as $model) {
-			if ($language->isLast() === true) {
+			if ($language->isLastLanguage() === true) {
 				$model->storage()->moveLanguage($this, Language::single());
 			} else {
 				$model->storage()->deleteLanguage($this);
@@ -347,8 +347,9 @@ class Language extends Model
 
 	/**
 	 * Checks if this is the last language
+	 * @since 6.0.0
 	 */
-	public function isLast(): bool
+	public function isLastLanguage(): bool
 	{
 		return App::instance()->languages()->count() === 1;
 	}

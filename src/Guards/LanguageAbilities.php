@@ -42,7 +42,7 @@ class LanguageAbilities extends ModelAbilities
 		}
 
 		// the default language can only be deleted if it's the last
-		if ($this->model->isDefault() === true && $this->model->isLast() === false) {
+		if ($this->model->isDefault() === true && $this->model->isLastLanguage() === false) {
 			$this->error(key: 'delete.default');
 		}
 	}

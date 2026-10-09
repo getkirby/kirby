@@ -41,6 +41,31 @@ class LanguageAbilitiesTest extends ModelTestCase
 		$abilities->ensure('delete');
 	}
 
+	public function testDeleteWithDefaultLanguageInLastPosition(): void
+	{
+		$this->app = $this->app->clone([
+			'languages' => [
+				[
+					'code' => 'de'
+				],
+				[
+					'code'    => 'en',
+					'default' => true
+				]
+			]
+		]);
+
+		$abilities = new LanguageAbilities(
+			model: $this->app->language('en'),
+			user: $this->user()
+		);
+
+		$this->expectException(AbilityException::class);
+		$this->expectExceptionCode('error.language.delete.default');
+
+		$abilities->ensure('delete');
+	}
+
 	public function testDeleteWithLastDefaultLanguage(): void
 	{
 		$this->app = $this->app->clone([

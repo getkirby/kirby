@@ -132,4 +132,49 @@ class LanguageConversionTest extends TestCase
 		$this->assertSame('English Title', Data::read($page->root() . '/test.txt')['title']);
 	}
 
+	public function testDeleteLanguageInLastPosition(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+		]);
+
+		// create two languages
+		Data::write($app->root('languages') . '/de.php', [
+			'code'    => 'de',
+			'default' => true
+		]);
+
+		Data::write($app->root('languages') . '/en.php', [
+			'code' => 'en',
+		]);
+
+		// create some models
+		Data::write($app->root('content') . '/test/test.de.txt', [
+			'title' => 'German Title'
+		]);
+
+		Data::write($app->root('content') . '/test/test.en.txt', [
+			'title' => 'English Title'
+		]);
+
+		$page = $app->page('test');
+
+		// delete the language that comes last in the collection
+		// while another language still remains
+		$app->impersonate('kirby', function () use ($app) {
+			$app->language('en')->delete();
+		});
+
+		// the .en file should be removed instead of
+		// being converted to a single-language content file
+		$this->assertFileDoesNotExist($page->root() . '/test.en.txt');
+		$this->assertFileDoesNotExist($page->root() . '/test.txt');
+		$this->assertFileExists($page->root() . '/test.de.txt');
+
+		$this->assertCount(1, $app->languages());
+		$this->assertTrue($app->multilang());
+	}
+
 }
