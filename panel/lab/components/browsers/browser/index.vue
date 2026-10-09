@@ -4,7 +4,11 @@
 			<k-grid style="--columns: 2; gap: 3rem">
 				<div>
 					<k-headline>Browse …</k-headline>
-					<k-browser :items="items" :selected="selected?.value" @select="selected = $event" />
+					<k-browser
+						:items="items"
+						:selected="selected?.value"
+						@select="selected = $event"
+					/>
 				</div>
 				<div v-if="selected">
 					<k-headline>Selected</k-headline>
@@ -18,13 +22,13 @@
 <script>
 export default {
 	props: {
-		items: Array,
+		items: Array
 	},
 	data() {
 		return {
-			selected: null,
+			selected: null
 		};
-	},
+	}
 };
 </script>
 

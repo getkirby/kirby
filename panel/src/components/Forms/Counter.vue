@@ -1,5 +1,9 @@
 <template>
-	<span :data-invalid="!valid" :data-theme="valid ? 'positive' : 'negative'" class="k-counter">
+	<span
+		:data-invalid="!valid"
+		:data-theme="valid ? 'positive' : 'negative'"
+		class="k-counter"
+	>
 		<span>{{ count }}</span>
 
 		<span v-if="min || max" class="k-counter-rules">

@@ -8,7 +8,9 @@
 		</k-box>
 
 		<k-lab-example label="dayjs.interpret(input, 'date')" :code="false">
-			<k-code language="javascript">this.$library.dayjs.interpret("23-09-12", "date"): dayjs|null</k-code>
+			<k-code language="javascript"
+				>this.$library.dayjs.interpret("23-09-12", "date"): dayjs|null</k-code
+			>
 
 			<k-grid variant="fields">
 				<k-column width="1/2">
@@ -26,7 +28,9 @@
 		</k-lab-example>
 
 		<k-lab-example label="dayjs.interpret(input, 'time')" :code="false">
-			<k-code language="javascript">this.$library.dayjs.interpret("9:12", "time"): dayjs|null</k-code>
+			<k-code language="javascript"
+				>this.$library.dayjs.interpret("9:12", "time"): dayjs|null</k-code
+			>
 
 			<k-grid variant="fields">
 				<k-column width="1/2">

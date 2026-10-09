@@ -10,4 +10,16 @@ import Paragraph from "./Paragraph";
 import Quote from "./Quote";
 import Text from "./Text";
 
-export { BulletList, Doc, HardBreak, Heading, HorizontalRule, ListDoc, ListItem, OrderedList, Paragraph, Quote, Text };
+export {
+	BulletList,
+	Doc,
+	HardBreak,
+	Heading,
+	HorizontalRule,
+	ListDoc,
+	ListItem,
+	OrderedList,
+	Paragraph,
+	Quote,
+	Text
+};

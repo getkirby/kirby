@@ -88,7 +88,9 @@ describe("panel.view", () => {
 		});
 
 		it("should reset scroll position when path changes", async () => {
-			const scrollTo = vi.spyOn(window, "scrollTo").mockImplementation(() => {});
+			const scrollTo = vi
+				.spyOn(window, "scrollTo")
+				.mockImplementation(() => {});
 			const panel = Panel();
 			const view = View(panel);
 
@@ -109,6 +111,5 @@ describe("panel.view", () => {
 			expect(pushState).not.toHaveBeenCalled();
 			pushState.mockRestore();
 		});
-
 	});
 });
