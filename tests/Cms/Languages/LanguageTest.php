@@ -470,6 +470,30 @@ class LanguageTest extends TestCase
 		$this->assertFalse($de->isLast($languages));
 	}
 
+	public function testIsLastLanguage(): void
+	{
+		$this->app = $this->app->clone([
+			'languages' => [
+				['code' => 'en', 'name' => 'English', 'default' => true]
+			]
+		]);
+
+		$this->assertTrue($this->app->language('en')->isLastLanguage());
+	}
+
+	public function testIsLastLanguageWithMultipleLanguages(): void
+	{
+		$this->app = $this->app->clone([
+			'languages' => [
+				['code' => 'en', 'name' => 'English', 'default' => true],
+				['code' => 'de', 'name' => 'Deutsch']
+			]
+		]);
+
+		$this->assertFalse($this->app->language('en')->isLastLanguage());
+		$this->assertFalse($this->app->language('de')->isLastLanguage());
+	}
+
 	public function testIsSingle(): void
 	{
 		// default
