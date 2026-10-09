@@ -88,7 +88,7 @@ export default async function generate(file?: string): Promise<Doc[]> {
 
 		// parse with Vue docgen API
 		try {
-			let data = await docgen.parse(file, { alias });
+			const data = await docgen.parse(file, { alias });
 
 			if (!data.tags.internal) {
 				const doc = normalizeDoc(data, path.relative(root, file));

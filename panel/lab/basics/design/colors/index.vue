@@ -13,7 +13,7 @@
 			>
 				<k-box style="--span: 2"> {{ name }}- </k-box>
 				<k-box
-					v-for="(step, index) in steps"
+					v-for="step in steps"
 					:key="step"
 					:style="{
 						background: `var(--color-${name}-${step})`,
@@ -27,8 +27,16 @@
 
 		<k-lab-example label="theme" :code="false">
 			<k-text>
-				<p>In some situations, you might want to use different colors for light and dark mode of the Panel. For this, you can use the <code>light-dark()</code> CSS function which will pick the respective color/value based on the current theme:</p>
-				<k-code language="css">background: light-dark(var(--color-gray-250), var(--color-gray-850));</k-code>
+				<p>
+					In some situations, you might want to use different colors for light
+					and dark mode of the Panel. For this, you can use the
+					<code>light-dark()</code> CSS function which will pick the respective
+					color/value based on the current theme:
+				</p>
+				<k-code language="css"
+					>background: light-dark(var(--color-gray-250),
+					var(--color-gray-850));</k-code
+				>
 			</k-text>
 		</k-lab-example>
 	</k-lab-examples>

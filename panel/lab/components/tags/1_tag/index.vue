@@ -7,7 +7,7 @@
 				{ value: 'light', text: 'Light', icon: 'sun' }
 			]"
 			:value="theme"
-			@input="(theme = $event)"
+			@input="theme = $event"
 		/>
 
 		<k-lab-example label="Slot">
@@ -27,7 +27,11 @@
 		</k-lab-example>
 		<k-lab-example :flex="true" label="Icon">
 			<k-tag :image="{ icon: 'heart', back: 'pattern' }" :theme="theme" />
-			<k-tag :image="{ icon: 'heart', back: 'pattern' }" :theme="theme" text="Foo" />
+			<k-tag
+				:image="{ icon: 'heart', back: 'pattern' }"
+				:theme="theme"
+				text="Foo"
+			/>
 			<k-tag
 				:image="{ icon: 'heart', back: 'pattern' }"
 				:removable="true"

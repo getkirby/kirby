@@ -9,7 +9,7 @@
 		>
 			<div>
 				<k-lab-example label="select" :code="false">
-					<select>
+					<select aria-label="Select">
 						<option>Select A</option>
 						<option>Select B</option>
 					</select>
@@ -17,7 +17,7 @@
 			</div>
 			<div>
 				<k-lab-example label="select disabled" :code="false">
-					<select disabled>
+					<select aria-label="Select" disabled>
 						<option>Select A</option>
 						<option>Select B</option>
 					</select>
@@ -25,52 +25,52 @@
 			</div>
 			<div>
 				<k-lab-example label="input[type=text]" :code="false">
-					<input type="text" />
+					<input type="text" aria-label="Text" />
 				</k-lab-example>
 			</div>
 			<div>
 				<k-lab-example label="input[type=text] disabled" :code="false">
-					<input type="text" disabled />
+					<input type="text" aria-label="Text" disabled />
 				</k-lab-example>
 			</div>
 			<div>
 				<k-lab-example label="input[type=checkbox]" :code="false">
-					<input type="checkbox" />
+					<input type="checkbox" aria-label="Checkbox" />
 				</k-lab-example>
 			</div>
 			<div>
 				<k-lab-example label="input[type=checkbox] disabled" :code="false">
-					<input type="checkbox" disabled />
+					<input type="checkbox" aria-label="Checkbox" disabled />
 				</k-lab-example>
 			</div>
 			<div>
 				<k-lab-example label="input[type=radio]" :code="false">
-					<input type="radio" />
+					<input type="radio" aria-label="Radio" />
 				</k-lab-example>
 			</div>
 			<div>
 				<k-lab-example label="input[type=radio] disabled" :code="false">
-					<input type="radio" disabled />
+					<input type="radio" aria-label="Radio" disabled />
 				</k-lab-example>
 			</div>
 			<div>
 				<k-lab-example label="textarea" :code="false">
-					<textarea>Textarea</textarea>
+					<textarea aria-label="Textarea">Textarea</textarea>
 				</k-lab-example>
 			</div>
 			<div>
 				<k-lab-example label="textarea disabled" :code="false">
-					<textarea disabled>Textarea</textarea>
+					<textarea aria-label="Textarea" disabled>Textarea</textarea>
 				</k-lab-example>
 			</div>
 			<div>
 				<k-lab-example label="input[type=range]" :code="false">
-					<input type="range" />
+					<input type="range" aria-label="Range" />
 				</k-lab-example>
 			</div>
 			<div>
 				<k-lab-example label="input[type=range] disabled" :code="false">
-					<input type="range" disabled />
+					<input type="range" aria-label="Range" disabled />
 				</k-lab-example>
 			</div>
 			<div>

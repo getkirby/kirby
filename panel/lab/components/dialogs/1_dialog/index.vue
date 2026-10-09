@@ -14,9 +14,11 @@
 			</k-button>
 		</k-lab-example>
 		<k-lab-example :flex="true" label="Sizes">
-			<template v-for="size in ['small', 'medium', 'large', 'huge']">
+			<template
+				v-for="size in ['small', 'medium', 'large', 'huge']"
+				:key="size"
+			>
 				<k-button
-					:key="size"
 					icon="open"
 					variant="filled"
 					@click="

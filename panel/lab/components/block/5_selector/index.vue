@@ -32,19 +32,19 @@ export default {
 					fieldsets: {
 						code: {
 							icon: "code",
-							name: "Code",
+							name: "Code"
 						},
 						heading: {
 							icon: "title",
-							name: "Heading",
+							name: "Heading"
 						},
 						text: {
 							icon: "text",
-							name: "Text",
-						},
+							name: "Text"
+						}
 					},
-					...props,
-				},
+					...props
+				}
 			});
 		},
 		openSelectorWithGroups() {
@@ -54,38 +54,38 @@ export default {
 					fieldsets: {
 						code: {
 							icon: "code",
-							name: "Code",
+							name: "Code"
 						},
 						heading: {
 							icon: "title",
-							name: "Heading",
+							name: "Heading"
 						},
 						image: {
 							icon: "image",
-							name: "Image",
+							name: "Image"
 						},
 						text: {
 							icon: "text",
-							name: "Text",
+							name: "Text"
 						},
 						video: {
 							icon: "video",
-							name: "Video",
-						},
+							name: "Video"
+						}
 					},
 					fieldsetGroups: {
 						media: {
 							label: "Media",
-							sets: ["image", "video"],
+							sets: ["image", "video"]
 						},
 						text: {
 							label: "Text",
-							sets: ["code", "heading", "text"],
-						},
-					},
-				},
+							sets: ["code", "heading", "text"]
+						}
+					}
+				}
 			});
-		},
-	},
+		}
+	}
 };
 </script>

@@ -35,8 +35,8 @@
 					<li>List item</li>
 					<li>List item</li>
 				</ol>
-				<img src="https://picsum.photos/300/300?id=64f1c14869edb" />
-				<img src="https://picsum.photos/1600/300?id=64f1c14869edb" />
+				<img alt="" src="https://picsum.photos/300/300?id=64f1c14869edb" />
+				<img alt="" src="https://picsum.photos/1600/300?id=64f1c14869edb" />
 				<p>
 					Donec id elit non mi porta gravida at eget metus. Lorem ipsum dolor
 					sit amet, consectetur adipiscing elit.
@@ -51,6 +51,7 @@
 				</p>
 
 				<iframe
+					title="YouTube video"
 					allow="fullscreen"
 					allowfullscreen=""
 					src="https://www.youtube.com/embed/Sqa8Zo2XWc4"

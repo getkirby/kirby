@@ -26,6 +26,7 @@
 			<k-input>
 				<input
 					type="text"
+					aria-label="Text"
 					:style="{ 'padding-inline': 'var(--input-padding)', outline: 'none' }"
 				/>
 			</k-input>
