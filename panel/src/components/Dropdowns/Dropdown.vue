@@ -13,7 +13,7 @@
 		@close="onClose"
 		@click="onClick"
 	>
-		<k-navigate ref="navigate" :disabled="navigate === false" align="y">
+		<k-navigate ref="navigate" :disabled="navigate === false" axis="y">
 			<!-- @slot Content of the dropdown which overrides passed `options` prop -->
 			<slot v-bind="{ items }">
 				<template v-for="(option, index) in items">
