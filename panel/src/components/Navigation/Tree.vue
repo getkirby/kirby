@@ -3,7 +3,7 @@
 		:is="scrollable ? 'k-scrollable' : 'ul'"
 		v-bind="scrollable ? { element: 'ul' } : {}"
 		:class="['k-tree', $options.name, $attrs.class]"
-		:style="{ '--tree-level': level, ...$attrs.style }"
+		:style="[{ '--tree-level': level }, $attrs.style]"
 	>
 		<li
 			v-for="item in state"

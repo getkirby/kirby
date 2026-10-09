@@ -34,6 +34,11 @@ export const it = Object.assign(vitestIt, {
 			const wrapper = ensureMount(Component, { style: { "--foo:": "bar" } });
 			expect(wrapper.attributes("style")).toContain("--foo");
 		});
+
+		vitestIt("accepts a custom style as string", () => {
+			const wrapper = ensureMount(Component, { style: "--foo: bar" });
+			expect(wrapper.attributes("style")).toContain("--foo: bar");
+		});
 	},
 	inheritsNoAttrs(Component: Mountable) {
 		vitestIt("does not inherit random attrs", () => {

@@ -4,12 +4,14 @@
 		:class="['k-frame', $attrs.class]"
 		:data-ratio="ratio"
 		:data-theme="theme"
-		:style="{
-			'--fit': fit ?? (cover ? 'cover' : 'contain'),
-			'--ratio': ratio,
-			'--back': background,
-			...$attrs.style
-		}"
+		:style="[
+			{
+				'--fit': fit ?? (cover ? 'cover' : 'contain'),
+				'--ratio': ratio,
+				'--back': background
+			},
+			$attrs.style
+		]"
 	>
 		<slot />
 	</component>

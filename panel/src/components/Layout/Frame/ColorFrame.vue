@@ -2,7 +2,7 @@
 	<k-frame
 		v-bind="$props"
 		:class="['k-color-frame', $attrs.class]"
-		:style="{ '--color-frame-back': color, ...$attrs.style }"
+		:style="[{ '--color-frame-back': color }, $attrs.style]"
 	>
 		<slot />
 	</k-frame>
