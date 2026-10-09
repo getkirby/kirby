@@ -17,8 +17,7 @@ _test/ export-ignore
 # .browserslistrc is intentionally not ignored, it is read at runtime
 panel/.env.example export-ignore
 panel/.gitignore export-ignore
-panel/.prettierignore export-ignore
-panel/.prettierrc.json export-ignore
+panel/.oxfmtrc.json export-ignore
 panel/dist/ui export-ignore
 panel/eslint.config.js export-ignore
 panel/lab export-ignore

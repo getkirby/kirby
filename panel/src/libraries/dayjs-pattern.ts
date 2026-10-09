@@ -26,7 +26,13 @@ export interface PatternPart {
  * Date/time unit the pattern refers to, e.g. `YYYY` to `year`
  */
 export type PatternUnit =
-	"year" | "month" | "day" | "hour" | "minute" | "second" | "meridiem";
+	| "year"
+	| "month"
+	| "day"
+	| "hour"
+	| "minute"
+	| "second"
+	| "meridiem";
 
 /**
  * The unit each supported pattern format refers to

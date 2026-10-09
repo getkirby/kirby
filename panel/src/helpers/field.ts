@@ -22,7 +22,8 @@ export function defaultValue(field: Field): unknown {
 	}
 
 	const component = window.panel.app.component(`k-${field.type}-field`) as
-		ConcreteComponent | undefined;
+		| ConcreteComponent
+		| undefined;
 	const valueProp = component?.props?.value;
 
 	// if the field has no value prop,

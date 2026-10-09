@@ -43,7 +43,11 @@ import {
  * with `true`/`false`/options.
  */
 export type Allowed<T = never> =
-	boolean | (string | T)[] | Record<string, unknown> | null | undefined;
+	| boolean
+	| (string | T)[]
+	| Record<string, unknown>
+	| null
+	| undefined;
 
 /**
  * Resolves the list of allowed extensions

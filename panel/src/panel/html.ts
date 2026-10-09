@@ -3,7 +3,10 @@ import { isObject } from "@/helpers/object";
 
 export type HtmlData = {
 	[key: string]:
-		StringTemplateValues[string] | HtmlString | HtmlData | undefined;
+		| StringTemplateValues[string]
+		| HtmlString
+		| HtmlData
+		| undefined;
 };
 
 /**
