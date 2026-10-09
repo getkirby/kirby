@@ -176,10 +176,6 @@ export default {
 			};
 		},
 		emptyText() {
-			if (this.isLoading === true) {
-				return this.$t("loading");
-			}
-
 			if (this.error !== null) {
 				return this.error;
 			}
