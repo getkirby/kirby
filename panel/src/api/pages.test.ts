@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
-import pages from "./pages.js";
+import type Api from "./index";
+import pages from "./pages";
 
-const api = pages({});
+const api = pages({} as Api);
 
 describe("api.pages.id()", () => {
 	it("should convert page permalink", () => {
