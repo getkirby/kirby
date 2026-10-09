@@ -41,8 +41,16 @@ import InputValidator from "./InputValidator";
  */
 const WriterInput = defineAsyncComponent(() => import("./WriterInput.vue"));
 
-/** @deprecated */
-import Writer from "../Writer/Writer.vue";
+/**
+ * @deprecated 5.0.0 Use `k-writer-input` instead
+ */
+const Writer = defineAsyncComponent(() => {
+	window.panel.deprecated(
+		"`k-writer` will be removed in a future version. Use `k-writer-input` instead."
+	);
+
+	return import("./WriterInput.vue");
+});
 
 export default {
 	install(app) {
