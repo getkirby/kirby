@@ -49,6 +49,11 @@ class PageItemTest extends TestCase
 			'text'     => 'test',
 			'uuid'     => $this->model->uuid()?->toString(),
 			'dragText' => '(link: ' . $this->model->uuid() . ' text: test)',
+			'flag'     => [
+				'icon'  => 'status-unlisted',
+				'label' => 'Unlisted',
+				'theme' => 'info',
+			],
 			'parent'   => null,
 			'status'   => 'unlisted',
 			'template' => 'default',
@@ -56,5 +61,39 @@ class PageItemTest extends TestCase
 		];
 
 		$this->assertSame($expected, $item->props());
+	}
+
+	public function testPropsFlag(): void
+	{
+		$page = new Page([
+			'slug'      => 'test',
+			'blueprint' => [
+				'status' => [
+					'draft'    => true,
+					'unlisted' => ['label' => 'Review', 'icon' => '👀', 'theme' => 'purple'],
+				]
+			]
+		]);
+
+		$item = new PageItem(page: $page);
+		$this->assertSame(
+			['icon' => '👀', 'label' => 'Review', 'theme' => 'purple'],
+			$item->props()['flag']
+		);
+	}
+
+	public function testPropsFlagForUndefinedStatus(): void
+	{
+		// the page is unlisted, but its blueprint only allows drafts
+		$page = new Page([
+			'slug'      => 'test',
+			'blueprint' => ['status' => ['draft' => true]]
+		]);
+
+		$item = new PageItem(page: $page);
+		$this->assertSame(
+			['icon' => null, 'label' => null, 'theme' => null],
+			$item->props()['flag']
+		);
 	}
 }

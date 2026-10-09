@@ -291,6 +291,11 @@ class PagesFieldTest extends TestCase
 			'text' => 'Test Title',
 			'uuid' => 'page://my-test-uuid',
 			'dragText' => '(link: page://my-test-uuid text: Test Title)',
+			'flag' => [
+				'icon'  => 'status-unlisted',
+				'label' => 'Unlisted',
+				'theme' => 'info',
+			],
 			'parent' => null,
 			'status' => 'unlisted',
 			'template' => 'default',
