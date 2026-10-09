@@ -501,12 +501,14 @@ class Version
 		$language = Language::ensure($language);
 
 		try {
-			// make sure that the version exists
-			VersionRules::read($this, $language);
-
+			// serve fields from the cache without checking the disk
+			// again, so one request sees one state of the version
 			$fields = VersionCache::get($this, $language);
 
 			if ($fields === null) {
+				// make sure that the version exists
+				VersionRules::read($this, $language);
+
 				$fields = $this->model->storage()->read($this->id, $language);
 				$fields = $this->prepareFieldsAfterRead($fields, $language);
 
@@ -646,7 +648,7 @@ class Version
 		// merge the previous state with the new state to always
 		// update to a complete version
 		$fields = [
-			...$this->read($language),
+			...$this->read($language) ?? [],
 			...$fields
 		];
 
