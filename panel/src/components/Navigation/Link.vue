@@ -127,6 +127,11 @@ export default {
 				return false;
 			}
 
+			// don't route downloads
+			if (this.download === true) {
+				return false;
+			}
+
 			if (typeof this.href === "string") {
 				// don't route if it's an absolute link
 				if (this.href.includes("://") || this.href.startsWith("//")) {

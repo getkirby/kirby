@@ -196,6 +196,11 @@ describe("Link.vue", () => {
 			expect(wrapper.vm.isRoutable({})).toBe(false);
 		});
 
+		it("does not route a download", () => {
+			const wrapper = mount({ download: true, to: "/a/b.pdf" });
+			expect(wrapper.vm.isRoutable({})).toBe(false);
+		});
+
 		it("does not route an absolute URL", () => {
 			const wrapper = mount({ to: "https://getkirby.com/a" });
 			expect(wrapper.vm.isRoutable({})).toBe(false);
@@ -230,6 +235,12 @@ describe("Link.vue", () => {
 		it("leaves a click with a modifier key to the browser", () => {
 			const wrapper = mount({ to: "/pages/a" });
 			expect(click(wrapper, { metaKey: true })).toBe(false);
+			expect(wrapper.vm.$go).not.toHaveBeenCalled();
+		});
+
+		it("leaves a download to the browser", () => {
+			const wrapper = mount({ download: true, to: "/a/b.pdf" });
+			expect(click(wrapper)).toBe(false);
 			expect(wrapper.vm.$go).not.toHaveBeenCalled();
 		});
 
