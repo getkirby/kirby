@@ -12,7 +12,7 @@
 
 <script>
 import Input from "@/mixins/input.js";
-import { props as WriterInputProps } from "@/components/Forms/Input/WriterInput.props.js";
+import { props as WriterInputProps } from "@/components/Forms/Input/WriterInput.props";
 import ListDoc from "@/components/Forms/Writer/Nodes/ListDoc.js";
 
 export const props = {

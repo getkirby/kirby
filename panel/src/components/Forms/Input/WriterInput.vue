@@ -39,7 +39,7 @@ import Toolbar from "../Writer/Extensions/Toolbar.js";
 
 // Input
 import Input from "@/mixins/input.js";
-import { props } from "./WriterInput.props.js";
+import { props } from "./WriterInput.props";
 
 /**
  * @copyright Bastian Allgeier

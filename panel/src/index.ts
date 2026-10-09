@@ -6,7 +6,7 @@
 import { createApp } from "vue";
 
 import App from "./panel/app";
-import Components from "./components/index";
+import Components from "./config/components";
 import ErrorHandling from "./config/errorhandling";
 import Helpers from "./helpers/index";
 import I18n from "./config/i18n";
