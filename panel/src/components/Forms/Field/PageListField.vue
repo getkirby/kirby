@@ -28,7 +28,8 @@ export default {
 				const flag = {
 					...this.$helper.page.status(
 						page.status,
-						page.permissions.changeStatus === false
+						page.permissions.changeStatus === false,
+						page.flag
 					),
 					class: "k-page-status-icon-option",
 					dialog: page.link + "/changeStatus"

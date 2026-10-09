@@ -13,33 +13,43 @@ type StatusButton = {
 	title: string;
 };
 
+// icon, label and theme of the status as defined in the page blueprint
+type StatusFlag = {
+	icon?: string | null;
+	label?: string | null;
+	theme?: string | null;
+};
+
+const themes: Record<string, string> = {
+	draft: "negative",
+	unlisted: "info",
+	listed: "positive"
+};
+
 /**
  * Returns props for a page status button
  * @unstable
  */
 export function status(
 	status: string,
-	disabled: boolean = false
+	disabled: boolean = false,
+	flag: StatusFlag = {}
 ): StatusButton {
 	const panel = window.panel;
+	const label = flag.label ?? panel.t("page.status." + status);
+	const theme = flag.theme ?? themes[status] ?? "positive";
 
 	const button: StatusButton = {
 		disabled: disabled,
-		icon: "status-" + status,
+		icon: flag.icon ?? "status-" + status,
 		size: "xs",
 		style: "--icon-size: 15px",
-		theme: "positive-icon",
-		title: panel.t("page.status") + ": " + panel.t("page.status." + status)
+		theme: theme + "-icon",
+		title: panel.t("page.status") + ": " + label
 	};
 
 	if (disabled) {
 		button.title += ` (${panel.t("disabled")})`;
-	}
-
-	if (status === "draft") {
-		button.theme = "negative-icon";
-	} else if (status === "unlisted") {
-		button.theme = "info-icon";
 	}
 
 	return button;

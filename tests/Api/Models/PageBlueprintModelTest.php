@@ -79,7 +79,9 @@ class PageBlueprintModelTest extends ModelTestCase
 			'status'  => $status = [
 				'draft' => [
 					'label' => 'Test',
-					'text'  => 'Test'
+					'text'  => 'Test',
+					'icon'  => 'edit',
+					'theme' => 'purple'
 				],
 			]
 		]);

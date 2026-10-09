@@ -91,14 +91,20 @@ class PageBlueprint extends Blueprint
 			'draft'    => [
 				'label' => 'page.status.draft',
 				'text'  => 'page.status.draft.description',
+				'icon'  => 'status-draft',
+				'theme' => 'negative',
 			],
 			'unlisted' => [
 				'label' => 'page.status.unlisted',
 				'text'  => 'page.status.unlisted.description',
+				'icon'  => 'status-unlisted',
+				'theme' => 'info',
 			],
 			'listed' => [
 				'label' => 'page.status.listed',
 				'text'  => 'page.status.listed.description',
+				'icon'  => 'status-listed',
+				'theme' => 'positive',
 			]
 		];
 
@@ -132,12 +138,19 @@ class PageBlueprint extends Blueprint
 			}
 
 			// always make sure to have a proper label
-			if (empty($status[$key]['label']) === true) {
+			if (($status[$key]['label'] ?? '') === '') {
 				$status[$key]['label'] = $defaults[$key]['label'];
+
+				// the default description only fits the default label
+				$status[$key]['text'] ??= $defaults[$key]['text'];
 			}
 
 			// also make sure to have the text field set
 			$status[$key]['text'] ??= null;
+
+			// fall back to the default icon and theme of the status
+			$status[$key]['icon']  ??= $defaults[$key]['icon'];
+			$status[$key]['theme'] ??= $defaults[$key]['theme'];
 		}
 
 		// the draft status is required

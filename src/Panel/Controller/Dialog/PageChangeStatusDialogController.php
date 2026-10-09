@@ -28,6 +28,8 @@ class PageChangeStatusDialogController extends PageDialogController
 				'value' => $key,
 				'text'  => $state['label'],
 				'info'  => $state['text'],
+				'icon'  => $state['icon'],
+				'theme' => $state['theme'],
 			];
 		}
 

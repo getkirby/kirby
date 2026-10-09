@@ -34,6 +34,21 @@ class PageItem extends ModelItem
 		return $this->panel->dragText();
 	}
 
+	/**
+	 * Returns the icon, label and theme of the page's
+	 * current status, as defined in its blueprint
+	 */
+	protected function flag(): array
+	{
+		$status = $this->model->blueprint()->status()[$this->model->status()] ?? [];
+
+		return [
+			'icon'  => $status['icon'] ?? null,
+			'label' => $status['label'] ?? null,
+			'theme' => $status['theme'] ?? null,
+		];
+	}
+
 	protected function permissions(): array
 	{
 		$guards = $this->model->guards();
@@ -52,6 +67,7 @@ class PageItem extends ModelItem
 		return [
 			...parent::props(),
 			'dragText' => $this->dragText(),
+			'flag'     => $this->flag(),
 			'parent'   => $this->model->parentId(),
 			'status'   => $this->model->status(),
 			'template' => $this->model->intendedTemplate()->name(),

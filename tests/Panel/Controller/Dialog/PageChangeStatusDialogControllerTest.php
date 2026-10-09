@@ -74,6 +74,10 @@ class PageChangeStatusDialogControllerTest extends TestCase
 		$this->assertSame('Draft', $fields['status']['options'][0]['text']);
 		$this->assertSame('Unlisted', $fields['status']['options'][1]['text']);
 		$this->assertSame('Public', $fields['status']['options'][2]['text']);
+		$this->assertSame('status-draft', $fields['status']['options'][0]['icon']);
+		$this->assertSame('negative', $fields['status']['options'][0]['theme']);
+		$this->assertSame('status-listed', $fields['status']['options'][2]['icon']);
+		$this->assertSame('positive', $fields['status']['options'][2]['theme']);
 		$this->assertSame('Please select a position', $fields['position']['label']);
 		$this->assertSame(['status' => 'listed'], $fields['position']['when']);
 	}
@@ -86,6 +90,35 @@ class PageChangeStatusDialogControllerTest extends TestCase
 		$this->assertCount(2, $fields);
 		$this->assertCount(3, $fields['position']['options']);
 		$this->assertSame('b', $fields['position']['options'][1]['value']);
+	}
+
+	public function testFieldsWithCustomIconAndTheme(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/article' => [
+					'status' => [
+						'draft'    => ['label' => 'Idea', 'icon' => '💡'],
+						'unlisted' => ['label' => 'Review', 'icon' => 'eye', 'theme' => 'purple'],
+					]
+				]
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'test', 'template' => 'article']
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PageChangeStatusDialogController($this->app->page('test'));
+		$options    = $controller->fields()['status']['options'];
+
+		$this->assertSame('💡', $options[0]['icon']);
+		$this->assertSame('negative', $options[0]['theme']);
+		$this->assertSame('eye', $options[1]['icon']);
+		$this->assertSame('purple', $options[1]['theme']);
 	}
 
 	public function testLoad(): void

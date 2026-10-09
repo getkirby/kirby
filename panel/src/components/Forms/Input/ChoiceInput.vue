@@ -22,7 +22,12 @@
 			@input="$emit('input', $event.target.checked)"
 		/>
 
-		<k-icon v-if="icon" :type="icon" class="k-choice-input-icon" />
+		<k-icon
+			v-if="icon"
+			:type="icon"
+			:data-theme="theme"
+			class="k-choice-input-icon"
+		/>
 
 		<span v-if="label || info" class="k-choice-input-label">
 			<span v-safe-html="label" class="k-choice-input-label-text" />
@@ -47,6 +52,13 @@ export const props = {
 			type: String
 		},
 		label: {
+			type: String
+		},
+		/**
+		 * Colors the icon with a Panel theme, e.g. `positive`
+		 * @since 5.7.0
+		 */
+		theme: {
 			type: String
 		},
 		type: {
@@ -85,6 +97,9 @@ export default {
 .k-choice-input-icon {
 	--icon-size: var(--text-md);
 	position: relative;
+}
+.k-choice-input-icon[data-theme] {
+	--icon-color: var(--theme-color-icon);
 }
 .k-choice-input-icon,
 .k-choice-input input {
