@@ -4,12 +4,11 @@ namespace Kirby\Panel;
 
 use Kirby\Cms\App;
 use Kirby\Filesystem\F;
-use Kirby\Toolkit\Str;
+use Kirby\Http\Response;
 
 /**
- * The Plugins class takes care of collecting
- * js and css plugin files for the panel and caches
- * them in the media folder
+ * The Plugins class collects the Panel files of all
+ * plugins: each stylesheet and script is loaded on its own
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
@@ -17,94 +16,78 @@ use Kirby\Toolkit\Str;
 class Plugins
 {
 	/**
-	 * Cache of all collected plugin files
+	 * Returns the URLs of all plugin stylesheets,
+	 * in the order the plugins are loaded
+	 * @since 6.0.0
 	 */
-	public array|null $files = null;
+	public function css(): array
+	{
+		return $this->urls(['css']);
+	}
 
 	/**
-	 * Collects and returns the plugin files for all plugins
+	 * Returns the URLs of all plugin scripts,
+	 * in the order the plugins are loaded
+	 * @since 6.0.0
 	 */
-	public function files(): array
+	public function js(): array
 	{
-		if ($this->files !== null) {
-			return $this->files;
+		// during plugin development, kirbyup adds an index.dev.js,
+		// which Kirby will load instead of the regular index.js
+		return $this->urls(['dev.js', 'js']);
+	}
+
+	/**
+	 * Returns the stylesheet or script of a plugin
+	 * as response; its URL changes with the file,
+	 * so browsers can cache it for good
+	 * @since 6.0.0
+	 *
+	 * @param string $extension `css`, `js` or `dev.js`
+	 */
+	public static function resolve(
+		string $plugin,
+		string $extension
+	): Response|null {
+		$plugin = App::instance()->plugin($plugin);
+
+		if ($plugin === null) {
+			return null;
 		}
 
-		$this->files = [];
+		$root = $plugin->root() . '/index.' . $extension;
+
+		if (is_file($root) === false) {
+			return null;
+		}
+
+		return Response::file($root, [
+			'headers' => [
+				'Cache-Control' => 'public, max-age=31536000, immutable'
+			]
+		]);
+	}
+
+	/**
+	 * Returns the URL of the first non-empty `index.*` file
+	 * of each plugin, trying the extensions in the given order
+	 * @since 6.0.0
+	 */
+	protected function urls(array $extensions): array
+	{
+		$urls = [];
 
 		foreach (App::instance()->plugins() as $plugin) {
-			$this->files[] = $plugin->root() . '/index.css';
-			$this->files[] = $plugin->root() . '/index.js';
-			// During plugin development, kirbyup adds an index.dev.js,
-			// which Kirby will load instead of the regular index.js.
-			$this->files[] = $plugin->root() . '/index.dev.js';
-		}
+			foreach ($extensions as $extension) {
+				$root = $plugin->root() . '/index.' . $extension;
 
-		return $this->files;
-	}
-
-	/**
-	 * Returns the last modification
-	 * of the collected plugin files
-	 */
-	public function modified(): int
-	{
-		$files    = $this->files();
-		$modified = [0];
-
-		foreach ($files as $file) {
-			$modified[] = F::modified($file) ?: 0;
-		}
-
-		return max($modified);
-	}
-
-	/**
-	 * Read the files from all plugins and concatenate them
-	 */
-	public function read(string $type): string
-	{
-		$dist = [];
-
-		foreach ($this->files() as $file) {
-			// filter out files with a different type
-			if (F::extension($file) !== $type) {
-				continue;
-			}
-
-			// filter out empty files and files that don't exist
-			$content = F::read($file);
-			if (!$content) {
-				continue;
-			}
-
-			if ($type === 'js') {
-				// filter out all index.js files that shouldn't be loaded
-				// because an index.dev.js exists
-				if (F::exists(preg_replace('/\.js$/', '.dev.js', $file)) === true) {
-					continue;
-				}
-
-				$content = trim($content);
-
-				// make sure that each plugin is ended correctly
-				if (Str::endsWith($content, ';') === false) {
-					$content .= ';';
+				if (F::size($root) > 0) {
+					$urls[] = $plugin->mediaUrl() . '.' . $extension . '?' . F::modified($root);
+					break;
 				}
 			}
-
-			$dist[] = $content;
 		}
 
-		return implode(PHP_EOL . PHP_EOL, $dist);
-	}
-
-	/**
-	 * Absolute url to the cache file
-	 * This is used by the panel to link the plugins
-	 */
-	public function url(string $type): string
-	{
-		return App::instance()->url('media') . '/plugins/index.' . $type . '?' . $this->modified();
+		return $urls;
 	}
 }

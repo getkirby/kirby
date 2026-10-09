@@ -6,6 +6,7 @@ import Plugins, {
 	installComponent,
 	installComponents,
 	installPlugins,
+	load,
 	resolveComponentExtension,
 	resolveComponentMixins,
 	resolveComponentRender
@@ -224,6 +225,58 @@ describe("panel.plugins", () => {
 			expect(result).toStrictEqual([pluginA, pluginB]);
 
 			use.mockRestore();
+		});
+	});
+
+	describe("load()", () => {
+		// each script pushes to `window.loaded`
+		function script(code: string): string {
+			return "data:text/javascript," + encodeURIComponent(code);
+		}
+
+		it("does nothing without scripts", async () => {
+			await expect(load(undefined)).resolves.toBeUndefined();
+		});
+
+		it("loads the scripts in order", async () => {
+			const loaded: string[] = [];
+			Object.assign(window, { loaded });
+
+			await load([
+				script("await Promise.resolve(); window.loaded.push('a');"),
+				script("window.loaded.push('b');")
+			]);
+
+			expect(loaded).toStrictEqual(["a", "b"]);
+		});
+
+		it("keeps loading after a broken script", async () => {
+			const error = vi
+				.spyOn(window.console, "error")
+				.mockImplementation(() => {});
+			const loaded: string[] = [];
+			const throws = script("window.loaded.push('throws'); undefinedThing();");
+			const syntax = script("window.loaded.push('syntax'); {");
+
+			Object.assign(window, { loaded });
+
+			await load([
+				script("window.loaded.push('c');"),
+				throws,
+				syntax,
+				script("window.loaded.push('d');")
+			]);
+
+			expect(loaded).toStrictEqual(["c", "throws", "d"]);
+			expect(error).toHaveBeenCalledTimes(2);
+			expect(error.mock.calls[0][0]).toBe(
+				`Plugin could not be loaded: ${throws}`
+			);
+			expect(error.mock.calls[1][0]).toBe(
+				`Plugin could not be loaded: ${syntax}`
+			);
+
+			error.mockRestore();
 		});
 	});
 

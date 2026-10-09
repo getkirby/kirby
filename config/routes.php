@@ -79,15 +79,10 @@ return function (App $kirby) {
 			}
 		],
 		[
-			'pattern' => $media . '/plugins/index.(css|js)',
+			'pattern' => $media . '/plugins/([a-zA-Z0-9-]+/[a-zA-Z0-9-]+)\.(css|js|dev\.js)',
 			'env'     => 'media',
-			'action'  => function (string $type) use ($kirby) {
-				$plugins = new Plugins();
-
-				return $kirby
-					->response()
-					->type($type)
-					->body($plugins->read($type));
+			'action'  => function (string $plugin, string $extension) {
+				return Plugins::resolve($plugin, $extension);
 			}
 		],
 		[

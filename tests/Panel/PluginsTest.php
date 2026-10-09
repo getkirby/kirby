@@ -58,78 +58,107 @@ class PluginsTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	public function testFiles(): void
-	{
-		$this->createPlugins();
-
-		// app must be created again to load the new plugins
-		$app = $this->app->clone();
-
-		$plugins  = new Plugins();
-		$expected = [
-			$this->cssA,
-			$this->jsA,
-			$this->devJsA,
-			$this->cssB,
-			$this->jsB,
-			$this->devJsB,
-			$this->cssC,
-			$this->jsC,
-			$this->devJsC,
-		];
-
-		$this->assertSame($expected, $plugins->files());
-		// from cached property
-		$this->assertSame($expected, $plugins->files());
-	}
-
-	public function testModifiedWithoutFiles(): void
-	{
-		$plugins = new Plugins();
-		$this->assertSame(0, $plugins->modified());
-	}
-
-	public function testModifiedWithFiles(): void
+	public function testCss(): void
 	{
 		$time = $this->createPlugins();
 
+		// an empty stylesheet
+		F::write($this->cssB, '');
+
 		// app must be created again to load the new plugins
 		$app = $this->app->clone();
 
 		$plugins = new Plugins();
-		$this->assertSame($time, $plugins->modified());
+		$media   = $this->app->url('media') . '/plugins/test/';
+
+		$this->assertSame([
+			$media . 'a.css?' . $time,
+			$media . 'c.css?' . $time,
+		], $plugins->css());
 	}
 
-	public function testRead(): void
+	public function testCssWithoutPlugins(): void
+	{
+		$plugins = new Plugins();
+		$this->assertSame([], $plugins->css());
+	}
+
+	public function testJs(): void
+	{
+		$time = $this->createPlugins();
+
+		// a plugin in development
+		F::write($this->devJsB, 'dev b');
+		touch($this->devJsB, $time + 1);
+
+		// an empty script
+		F::write($this->jsC, '');
+
+		// app must be created again to load the new plugins
+		$app = $this->app->clone();
+
+		$plugins = new Plugins();
+		$media   = $this->app->url('media') . '/plugins/test/';
+
+		$this->assertSame([
+			$media . 'a.js?' . F::modified($this->jsA),
+			$media . 'b.dev.js?' . ($time + 1),
+		], $plugins->js());
+	}
+
+	public function testResolve(): void
+	{
+		$this->createPlugins();
+		F::write($this->devJsA, 'dev a');
+
+		// app must be created again to load the new plugins
+		$app = $this->app->clone();
+
+		$response = Plugins::resolve('test/a', 'js');
+		$this->assertSame('a', $response->body());
+		$this->assertSame('text/javascript', $response->type());
+		$this->assertSame(
+			'public, max-age=31536000, immutable',
+			$response->headers()['Cache-Control']
+		);
+
+		$response = Plugins::resolve('test/a', 'dev.js');
+		$this->assertSame('dev a', $response->body());
+
+		$response = Plugins::resolve('test/a', 'css');
+		$this->assertSame('a', $response->body());
+		$this->assertSame('text/css', $response->type());
+	}
+
+	public function testResolveRoute(): void
 	{
 		$this->createPlugins();
 
 		// app must be created again to load the new plugins
 		$app = $this->app->clone();
 
-		$plugins = new Plugins();
+		$response = $app->call('media/plugins/test/b.js');
+		$this->assertSame('b', $response->body());
 
-		// css
-		$expected = "a\n\nb\n\nc";
-		$this->assertSame($expected, $plugins->read('css'));
+		$response = $app->call('media/plugins/test/b.css');
+		$this->assertSame('b', $response->body());
 
-		// js
-		$expected = "a;\n\nb;\n\nc;";
-		$this->assertSame($expected, $plugins->read('js'));
+		$this->assertNull($app->call('media/plugins/test/b.dev.js'));
+		$this->assertNull($app->call('media/plugins/index.css'));
 	}
 
-	public function testUrl(): void
+	public function testResolveWithoutFile(): void
 	{
-		// css
-		$plugins  = new Plugins();
-		$expected = $this->app->url('media') . '/plugins/index.css?0';
+		$this->createPlugins();
 
-		$this->assertSame($expected, $plugins->url('css'));
+		// app must be created again to load the new plugins
+		$app = $this->app->clone();
 
-		// js
-		$plugins  = new Plugins();
-		$expected = $this->app->url('media') . '/plugins/index.js?0';
+		$this->assertNull(Plugins::resolve('test/a', 'dev.js'));
+	}
 
-		$this->assertSame($expected, $plugins->url('js'));
+	public function testResolveWithoutPlugin(): void
+	{
+		$this->assertNull(Plugins::resolve('test/missing', 'js'));
 	}
 }

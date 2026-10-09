@@ -119,6 +119,28 @@ export function installPlugins(app: App, plugins?: Plugin[]): Plugin[] {
 }
 
 /**
+ * Loads each plugin script as its own module, in order;
+ * a plugin that fails to load doesn't stop the others
+ * @since 6.0.0
+ */
+export async function load(scripts?: string[]): Promise<void> {
+	if (Array.isArray(scripts) === false) {
+		return;
+	}
+
+	for (const script of scripts) {
+		try {
+			// resolve against the page, not the Panel's
+			// own script, which comes from Vite in dev mode
+			const url = new URL(script, document.baseURI).href;
+			await import(/* @vite-ignore */ url);
+		} catch (error) {
+			window.console.error(`Plugin could not be loaded: ${script}`, error);
+		}
+	}
+}
+
+/**
  * Resolves a component extension if defined as component name
  * @since 4.0.0
  */
