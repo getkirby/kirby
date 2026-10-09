@@ -18,6 +18,11 @@ use Kirby\Toolkit\V;
 trait Validation
 {
 	/**
+	 * Additional validator rules for the value, e.g. `email` or `['minLength' => 3]`
+	 */
+	protected array|string|null $validate = null;
+
+	/**
 	 * Runs all validations and returns an array of
 	 * error messages
 	 */

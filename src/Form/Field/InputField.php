@@ -31,6 +31,7 @@ abstract class InputField extends ValueField
 		array|string|null $label = null,
 		bool|null $required = null,
 		bool|null $translate = null,
+		array|string|null $validate = null,
 		mixed ...$args
 	) {
 		parent::__construct(...$args);
@@ -42,6 +43,7 @@ abstract class InputField extends ValueField
 		$this->label     = $label;
 		$this->required  = $required ?? $this->required;
 		$this->translate = $translate ?? $this->translate;
+		$this->validate  = $validate;
 	}
 
 	public function props(): array
