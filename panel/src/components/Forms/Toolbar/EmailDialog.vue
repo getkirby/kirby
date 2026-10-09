@@ -2,6 +2,8 @@
 import EmailDialog from "@/components/Dialogs/EmailDialog.vue";
 
 /**
+ * @displayName ToolbarEmailDialog
+ *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */

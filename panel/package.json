@@ -2,10 +2,13 @@
 	"name": "kirby",
 	"private": true,
 	"type": "module",
+	"engines": {
+		"node": ">=22.18"
+	},
 	"scripts": {
 		"build": "vite build",
 		"ci": "npm run test && npm run lint && npm run format",
-		"build:docs": "node scripts/docs.js",
+		"build:docs": "node scripts/docs.ts",
 		"dev": "vite",
 		"format": "prettier --check \"src/**/*.{js,ts,vue}\"",
 		"format:fix": "npm run format -- --write",
@@ -43,7 +46,6 @@
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-vue": "^10.11.1",
 		"eslint-plugin-vuejs-accessibility": "^2.6.2",
-		"glob": "^13.0.6",
 		"globals": "^17.13.0",
 		"happy-dom": "^20.14.5",
 		"prettier": "^3.9.9",
