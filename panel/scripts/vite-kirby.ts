@@ -9,43 +9,39 @@ import generateDocs from "./docs.ts";
 import { type Plugin } from "vite";
 
 /**
- * Runs callback on any kind of console exit
- */
-function onExit(callback: () => void): void {
-	for (const event of ["exit", "SIGINT", "uncaughtException"]) {
-		process.on(event, function (err) {
-			callback?.();
-
-			if (event === "uncaughtException") {
-				console.error(err);
-			}
-
-			process.exit();
-		});
-	}
-}
-
-/**
  * Creates flag file to tell Kirby that we are in dev mode
  */
 function devMode(): Plugin {
+	const flag = import.meta.dirname + "/../.vite-running";
+	const tmp = import.meta.dirname + "/../tmp";
+
+	function clean(): void {
+		fs.rmSync(flag, { force: true });
+		fs.rmSync(tmp, { recursive: true, force: true });
+	}
+
+	function exit(): void {
+		process.exit();
+	}
+
 	return {
 		name: "kirby-dev-mode",
 		apply: "serve",
-		config() {
-			// Create the flag file on start
-			const flag = import.meta.dirname + "/../.vite-running";
-			fs.closeSync(fs.openSync(flag, "w"));
+		configureServer({ httpServer }) {
+			// Vitest runs a server without HTTP server: no flag for it
+			httpServer?.once("listening", () => {
+				fs.writeFileSync(flag, "");
+				process.on("exit", clean);
+				process.on("SIGHUP", exit);
+				process.on("SIGINT", exit);
+			});
 
-			// UI json tmp directory
-			const tmp = import.meta.dirname + "/../tmp";
-
-			// Delete the flag file and panel/tmp on any kind of exit
-			onExit(() => {
-				fs.existsSync(flag) ? fs.unlinkSync(flag) : null;
-				fs.existsSync(tmp)
-					? fs.rmSync(tmp, { recursive: true, force: true })
-					: null;
+			// Vite closes the server on SIGTERM and on restarts
+			httpServer?.once("close", () => {
+				clean();
+				process.off("exit", clean);
+				process.off("SIGHUP", exit);
+				process.off("SIGINT", exit);
 			});
 		}
 	};

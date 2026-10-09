@@ -1,5 +1,6 @@
 /* eslint-env node */
 import fs from "fs";
+import os from "os";
 import path from "path";
 
 import {
@@ -24,7 +25,14 @@ let customServer = {};
 try {
 	const module = await import("./vite.config.custom.js");
 	customServer = module.default ?? {};
-} catch {}
+} catch (error) {
+	const custom = path.resolve(import.meta.dirname, "vite.config.custom.js");
+
+	// don't hide errors of an existing custom config
+	if (fs.existsSync(custom) === true) {
+		throw error;
+	}
+}
 
 /**
  * Returns all aliases used in the project
@@ -46,12 +54,44 @@ function createAliases(proxy: ProxyConfig): AliasOptions {
 }
 
 /**
+ * Returns the Herd/Valet certificate for the host, if present
+ */
+function createHttps(host: string): ServerOptions["https"] {
+	const dirs = [
+		// Herd on macOS
+		["Library", "Application Support", "Herd", "config", "valet"],
+		// Herd on Windows
+		[".config", "herd", "config", "valet"],
+		// Valet
+		[".config", "valet"]
+	];
+
+	for (const dir of dirs) {
+		const root = path.resolve(os.homedir(), ...dir, "Certificates", host);
+
+		if (
+			fs.existsSync(root + ".crt") === true &&
+			fs.existsSync(root + ".key") === true
+		) {
+			return {
+				cert: fs.readFileSync(root + ".crt"),
+				key: fs.readFileSync(root + ".key")
+			};
+		}
+	}
+}
+
+/**
  * Returns the server configuration
  */
 function createServer(proxy: ProxyConfig): ServerOptions {
+	const { hostname: host, protocol } = new URL(proxy.target);
+
 	return {
-		allowedHosts: [proxy.target.substring(8)],
+		allowedHosts: [host],
 		cors: { origin: proxy.target },
+		host,
+		https: protocol === "https:" ? createHttps(host) : undefined,
 		proxy: {
 			"/api": proxy,
 			"/env": proxy,
@@ -59,6 +99,7 @@ function createServer(proxy: ProxyConfig): ServerOptions {
 		},
 		open: proxy.target + "/panel",
 		port: 3000,
+		strictPort: true,
 		...(customServer ?? {})
 	};
 }
