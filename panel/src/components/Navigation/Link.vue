@@ -75,7 +75,7 @@ export default {
 	emits: ["click"],
 	computed: {
 		downloadAttr() {
-			return this.download ? this.href.split("/").pop() : undefined;
+			return this.download ? String(this.href).split("/").pop() : undefined;
 		},
 		href() {
 			if (typeof this.to === "function") {
