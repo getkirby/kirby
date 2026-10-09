@@ -220,6 +220,29 @@ class PagePickerFieldTest extends TestCase
 		$this->assertSame(['page://my-aa', 'page://my-ab'], $field->toStoredValue());
 	}
 
+	public function testImage(): void
+	{
+		// query string
+		$field = $this->field('pages', [
+			'image' => 'page.image',
+			'model' => $this->model()
+		]);
+
+		$this->assertSame('page.image', $field->image());
+		$this->assertSame('page', $field->toItem($this->app->page('b'))['image']['icon']);
+		$this->assertInstanceOf(PagePickerDialogController::class, $field->dialogs()['picker']());
+
+		// disabled
+		$field = $this->field('pages', [
+			'image' => false,
+			'model' => $this->model()
+		]);
+
+		$this->assertFalse($field->image());
+		$this->assertNull($field->toItem($this->app->page('b'))['image']);
+		$this->assertInstanceOf(PagePickerDialogController::class, $field->dialogs()['picker']());
+	}
+
 	public function testIsValid(): void
 	{
 		$field = $this->field('pages', ['required' => true]);

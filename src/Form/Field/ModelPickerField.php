@@ -34,9 +34,10 @@ abstract class ModelPickerField extends InputField
 	protected array|string|null $empty;
 
 	/**
-	 * Image settings for each item
+	 * Image settings for each item, a query string for the
+	 * preview image or `false` to disable previews
 	 */
-	protected array|null $image;
+	protected array|string|false|null $image;
 
 	/**
 	 * Info text for each item
@@ -84,7 +85,7 @@ abstract class ModelPickerField extends InputField
 
 	public function __construct(
 		array|string|null $empty = null,
-		array|null $image = null,
+		array|string|false|null $image = null,
 		string|null $info = null,
 		string|null $layout = null,
 		bool|null $link = null,
@@ -189,7 +190,7 @@ abstract class ModelPickerField extends InputField
 		return parent::fill(value: $value);
 	}
 
-	public function image(): array|null
+	public function image(): array|string|false|null
 	{
 		return $this->image;
 	}

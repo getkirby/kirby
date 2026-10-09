@@ -24,11 +24,12 @@ use Kirby\Panel\Ui\Item\PageItem;
 class PagePickerDialogController extends ModelPickerDialogController
 {
 	protected PagesCollector|null $collector = null;
+	protected array|null $selected = null;
 
 	public function __construct(
 		ModelWithContent $model,
 		bool $hasSearch = true,
-		array|null $image = [],
+		array|string|false|null $image = [],
 		string|null $info = null,
 		string $layout = 'list',
 		public int|null $limit = null,
@@ -120,7 +121,11 @@ class PagePickerDialogController extends ModelPickerDialogController
 				layout: $this->layout,
 				text: $this->text
 			))->props(),
-			'hasChildren' => $model->hasChildren()
+			'hasChildren'      => $model->hasChildren(),
+			'selectedChildren' => count(array_filter(
+				$this->selected(),
+				fn (string $id) => str_starts_with($id, $model->id() . '/')
+			))
 		];
 	}
 
@@ -229,5 +234,17 @@ class PagePickerDialogController extends ModelPickerDialogController
 		}
 
 		return $parent ?? Find::site();
+	}
+
+	/**
+	 * IDs of the currently selected pages,
+	 * resolved from their UUIDs if needed
+	 */
+	protected function selected(): array
+	{
+		return $this->selected ??= array_values(array_filter(array_map(
+			fn (string $value) => $this->find($value)?->id(),
+			$this->value()
+		)));
 	}
 }

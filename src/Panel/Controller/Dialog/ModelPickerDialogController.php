@@ -26,7 +26,7 @@ abstract class ModelPickerDialogController extends DialogController
 	public function __construct(
 		public ModelWithContent $model,
 		public bool $hasSearch = true,
-		public array|null $image = [],
+		public array|string|false|null $image = [],
 		public string|null $info = null,
 		public string $layout = 'list',
 		public int|null $max = null,
@@ -91,7 +91,15 @@ abstract class ModelPickerDialogController extends DialogController
 			'multiple'   => $this->multiple,
 			'pagination' => $this->collector()->pagination()->toArray(),
 			'size'       => $this->size,
-			'value'      => Str::split($this->request->get('value', ''))
+			'value'      => $this->value()
 		];
+	}
+
+	/**
+	 * IDs of the currently selected models
+	 */
+	protected function value(): array
+	{
+		return Str::split($this->request->get('value', ''));
 	}
 }
