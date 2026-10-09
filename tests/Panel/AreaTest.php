@@ -53,13 +53,31 @@ class AreaTest extends TestCase
 	{
 		$area = new Area(id: 'test', label: 'Test');
 		$this->assertSame([
-			'id'     => 'test',
-			'icon'   => null,
-			'label'  => 'Test',
-			'link'   => null,
-			'menu'   => false,
-			'title'  => 'Test',
+			'id'      => 'test',
+			'current' => null,
+			'dialog'  => null,
+			'drawer'  => null,
+			'icon'    => null,
+			'label'   => 'Test',
+			'link'    => null,
+			'menu'    => false,
+			'target'  => null,
+			'title'   => 'Test',
 		], $area->menuItem());
+
+		$area = new Area(
+			id: 'test',
+			current: true,
+			dialog: 'test/dialog',
+			drawer: 'test/drawer',
+			target: '_blank'
+		);
+
+		$item = $area->menuItem();
+		$this->assertTrue($item['current']);
+		$this->assertSame('test/dialog', $item['dialog']);
+		$this->assertSame('test/drawer', $item['drawer']);
+		$this->assertSame('_blank', $item['target']);
 	}
 
 	public function testRoutes(): void

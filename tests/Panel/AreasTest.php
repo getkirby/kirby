@@ -24,6 +24,33 @@ class AreasTest extends TestCase
 		$this->assertNull($area->search());
 	}
 
+	public function testAreaWithNullValues(): void
+	{
+		$area = Areas::area('test', [
+			'breadcrumb' => null,
+			'menu'       => null,
+			'searches'   => null,
+			'views'      => null
+		]);
+
+		$this->assertSame([], $area->breadcrumb());
+		$this->assertFalse($area->menu());
+		$this->assertSame([], $area->searches());
+		$this->assertSame([], $area->views());
+	}
+
+	public function testAreaWithUnknownKeys(): void
+	{
+		$area = Areas::area('test', [
+			'disabled' => false,
+			'foo'      => 'bar',
+			'label'    => 'Test'
+		]);
+
+		$this->assertSame('test', $area->id());
+		$this->assertSame('Test', $area->label());
+	}
+
 	public function testButtons(): void
 	{
 		$this->app = $this->app->clone([
