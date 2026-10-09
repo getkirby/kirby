@@ -14,6 +14,8 @@ export { default as "k-layout-field" } from "./LayoutField.vue";
 export { default as "k-line-field" } from "./LineField.vue";
 export { default as "k-link-field" } from "./LinkField.vue";
 export { default as "k-list-field" } from "./ListField.vue";
+export { default as "k-model-list-field" } from "./ModelListField.vue";
+export { default as "k-model-picker-field" } from "./ModelPickerField.vue";
 export { default as "k-multiselect-field" } from "./MultiselectField.vue";
 export { default as "k-number-field" } from "./NumberField.vue";
 export { default as "k-object-field" } from "./ObjectField.vue";

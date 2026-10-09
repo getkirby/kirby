@@ -14,4 +14,5 @@ export { default as "k-login-password-reset-method-form" } from "./LoginPassword
 export { default as "k-login-email-challenge-form" } from "./LoginEmailChallengeForm.vue";
 export { default as "k-login-totp-challenge-form" } from "./LoginTotpChallengeForm.vue";
 export { default as "k-login-webauthn-challenge-form" } from "./LoginWebauthnChallengeForm.vue";
+export { default as "k-login-webauthn-form" } from "./LoginWebauthnForm.vue";
 export { default as "k-login-webauthn-method-form" } from "./LoginWebauthnMethodForm.vue";

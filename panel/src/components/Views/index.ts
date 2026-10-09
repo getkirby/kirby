@@ -1,4 +1,5 @@
 export { default as "k-error-view" } from "./ErrorView.vue";
+export { default as "k-model-view" } from "./ModelView.vue";
 export { default as "k-search-view" } from "./SearchView.vue";
 
 export * from "./Files/index";

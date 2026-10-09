@@ -7,6 +7,7 @@ export { default as "k-flag-field-preview" } from "./FlagFieldPreview.vue";
 export { default as "k-html-field-preview" } from "./HtmlFieldPreview.vue";
 export { default as "k-image-field-preview" } from "./ImageFieldPreview.vue";
 export { default as "k-link-field-preview" } from "./LinkFieldPreview.vue";
+export { default as "k-models-field-preview" } from "./ModelsFieldPreview.vue";
 export { default as "k-object-field-preview" } from "./ObjectFieldPreview.vue";
 export { default as "k-pages-field-preview" } from "./PagesFieldPreview.vue";
 export { default as "k-tag-field-preview" } from "./TagFieldPreview.vue";
