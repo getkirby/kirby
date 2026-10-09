@@ -317,11 +317,13 @@ class PlainTextStorage extends Storage
 			// cannot be observed as an empty or half-written file
 			$contents = F::read($contentFile, lock: true);
 
+			// @codeCoverageIgnoreStart
 			if ($contents === false) {
 				throw new Exception(
 					message: 'The file "' . $contentFile . '" does not exist or cannot be read'
 				);
 			}
+			// @codeCoverageIgnoreEnd
 
 			return Data::decode($contents, F::extension($contentFile));
 		}
