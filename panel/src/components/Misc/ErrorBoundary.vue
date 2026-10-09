@@ -1,5 +1,5 @@
 <script>
-import { h } from "vue";
+import { h, resolveComponent } from "vue";
 
 /**
  * @copyright Bastian Allgeier
@@ -23,23 +23,18 @@ export default {
 	render() {
 		if (this.error) {
 			if (this.$slots.error) {
-				return this.$slots.error()[0];
-			}
-
-			if (this.$slots.error) {
 				return this.$slots.error({
 					error: this.error
 				});
 			}
 
-			return h(
-				"k-box",
-				{ attrs: { theme: "negative" } },
-				this.error.message ?? this.error
-			);
+			return h(resolveComponent("k-box"), {
+				text: this.error.message ?? String(this.error),
+				theme: "negative"
+			});
 		}
 
-		return this.$slots.default()[0];
+		return this.$slots.default?.()[0];
 	}
 };
 </script>
