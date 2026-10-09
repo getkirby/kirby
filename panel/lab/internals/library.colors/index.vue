@@ -3,7 +3,8 @@
 		<k-box theme="text">
 			<k-text>
 				<p>
-					Kirby provides at <code>$library.colors</code> several methods to parse, format and convert colors in HEX, RGB and HSL formats.
+					Kirby provides at <code>$library.colors</code> several methods to
+					parse, format and convert colors in HEX, RGB and HSL formats.
 				</p>
 			</k-text>
 		</k-box>
@@ -45,11 +46,14 @@
 		>
 			<k-text>
 				<p>
-					Parses the input string and coverts it (if necessary) to the target color space
+					Parses the input string and coverts it (if necessary) to the target
+					color space
 				</p>
 			</k-text>
 
-			<k-code language="javascript">this.$library.colors.parseAs(string, format)</k-code>
+			<k-code language="javascript"
+				>this.$library.colors.parseAs(string, format)</k-code
+			>
 
 			<k-grid variant="fields">
 				<k-column width="1/2" class="flex">
@@ -89,7 +93,9 @@
 				<p>Formats color as CSS string.</p>
 			</k-text>
 
-			<k-code language="javascript">this.$library.colors.toString(color, format, alpha)</k-code>
+			<k-code language="javascript"
+				>this.$library.colors.toString(color, format, alpha)</k-code
+			>
 
 			<k-grid variant="fields">
 				<k-column width="1/3">

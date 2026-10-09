@@ -221,12 +221,13 @@
 				</k-column>
 				<k-column width="1/2">
 					<h2>Result</h2>
-					<k-code language="html">{{ $helper.string.sanitizeHTML(html) }}</k-code>
+					<k-code language="html">{{
+						$helper.string.sanitizeHTML(html)
+					}}</k-code>
 				</k-column>
 			</k-grid>
 			<!-- @code-end -->
 		</k-lab-example>
-
 
 		<k-lab-example label="$helper.string.slug()" script="slug">
 			<k-text>

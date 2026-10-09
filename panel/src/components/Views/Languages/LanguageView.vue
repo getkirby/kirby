@@ -50,7 +50,11 @@
 				/>
 			</template>
 			<template v-else>
-				<k-empty :disabled="!canUpdate" icon="translate" @click="createTranslation">
+				<k-empty
+					:disabled="!canUpdate"
+					icon="translate"
+					@click="createTranslation"
+				>
 					{{ $t("language.variables.empty") }}
 				</k-empty>
 			</template>

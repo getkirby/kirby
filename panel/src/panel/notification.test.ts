@@ -8,7 +8,10 @@ import Notification from "./notification";
 import Panel from "./panel.js";
 import Vue from "vue";
 
-function makeRequestOptions(json: Record<string, unknown> = {}, text = ""): {
+function makeRequestOptions(
+	json: Record<string, unknown> = {},
+	text = ""
+): {
 	request: Request;
 	response: PanelResponse;
 } {
@@ -197,7 +200,10 @@ describe("panel.notification", () => {
 			const notification = Notification(panel);
 
 			notification.error(
-				new RequestError("error", makeRequestOptions({ $dialog: { error: "Field is required" } }))
+				new RequestError(
+					"error",
+					makeRequestOptions({ $dialog: { error: "Field is required" } })
+				)
 			);
 
 			expect(notification.message).toStrictEqual("Field is required");
@@ -208,7 +214,13 @@ describe("panel.notification", () => {
 			const notification = Notification(panel);
 
 			notification.error(
-				new RequestError("error", makeRequestOptions({ $dialog: null, $view: { error: "Page not found" } }))
+				new RequestError(
+					"error",
+					makeRequestOptions({
+						$dialog: null,
+						$view: { error: "Page not found" }
+					})
+				)
 			);
 
 			expect(notification.message).toStrictEqual("Page not found");
@@ -220,7 +232,10 @@ describe("panel.notification", () => {
 			// @ts-expect-error panel.js is not typed
 			const open = vi.spyOn(panel.dialog, "open");
 			const details = {
-				title: { label: "Title", message: { required: "Please enter something" } }
+				title: {
+					label: "Title",
+					message: { required: "Please enter something" }
+				}
 			};
 
 			notification.error(
@@ -276,7 +291,10 @@ describe("panel.notification", () => {
 			const notification = Notification(panel);
 
 			notification.fatal(
-				new JsonRequestError("error", makeRequestOptions({}, "<html>PHP error</html>"))
+				new JsonRequestError(
+					"error",
+					makeRequestOptions({}, "<html>PHP error</html>")
+				)
 			);
 
 			expect(notification.type).toStrictEqual("fatal");

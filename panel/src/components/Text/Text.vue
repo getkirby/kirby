@@ -147,7 +147,8 @@ export default {
 	font-size: var(--text-lg);
 	line-height: 1.25;
 	padding-inline-start: var(--spacing-4);
-	border-inline-start: 2px solid light-dark(var(--color-black), var(--color-border));
+	border-inline-start: 2px solid
+		light-dark(var(--color-black), var(--color-border));
 }
 
 /* Images */
