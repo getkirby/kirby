@@ -53,7 +53,7 @@ class Doc
 	{
 		return
 			file_exists(static::file($name, 'dist')) ||
-			file_exists(static::file($name, 'dev'));
+			(Docs::isDev() === true && file_exists(static::file($name, 'dev')));
 	}
 
 	public static function factory(string $name): static|null
@@ -61,10 +61,10 @@ class Doc
 		// protect against path traversal
 		$name = basename($name);
 
-		// read data
+		// read data (dev server docs are only fresh in dev mode)
 		$file = static::file($name, 'dev');
 
-		if (file_exists($file) === false) {
+		if (Docs::isDev() === false || file_exists($file) === false) {
 			$file = static::file($name, 'dist');
 		}
 
