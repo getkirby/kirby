@@ -3,7 +3,6 @@
 
 # build files
 /dist.zip
-/kirby.zip
 /panel/tmp
 
 # cs fixer
