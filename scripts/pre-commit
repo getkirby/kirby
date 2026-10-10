@@ -23,39 +23,67 @@ set -e
 # enable extended globbing
 shopt -s extglob
 
-# loop over all files that are currently staged
-git diff-index --cached --name-only HEAD | while read -r file; do
+php=()
+psalm=()
+panel=()
+composer=false
+
+# collect all staged files (deleted files can't be checked)
+while read -r file; do
     case "$file" in
         bootstrap.php | router.php | @(config|src|tests|views)/**.php)
-            echo "### PHP-CS-Fixer on $file"
-            composer run fix -- --dry-run --diff "$file"
-            echo
+            php+=("$file")
 
             if [[ "$file" != tests/** ]]; then
-                echo "### Psalm on $file"
-                composer run analyze:psalm -- "$file"
-                echo
+                psalm+=("$file")
             fi
         ;;
 
-        *.js | *.vue)
-            cd panel
+        # built bundles
+        panel/dist/*)
+        ;;
 
-            echo "### ESLint on $file"
-            npm exec -c "eslint --no-fix '../$file'"
-            echo
-
-            echo "### Prettier on $file"
-            npm exec -c "prettier --check '../$file'"
-            echo
-
-            cd ..
+        panel/*.@(js|ts|vue))
+            panel+=("${file#panel/}")
         ;;
 
         composer.json | composer.lock)
-            echo "### composer validate"
-            composer run analyze:composer
-            echo
+            composer=true
         ;;
     esac
-done
+done < <(git diff --cached --name-only --diff-filter=d)
+
+# check each group with one run per tool
+if [[ ${#php[@]} -gt 0 ]]; then
+    echo "### PHP-CS-Fixer"
+    # multiple paths need an explicit config
+    composer run fix:style -- --config=.php-cs-fixer.dist.php --dry-run --diff "${php[@]}"
+    composer run fix:types -- --dry-run --diff "${php[@]}"
+    echo
+fi
+
+if [[ ${#psalm[@]} -gt 0 ]]; then
+    echo "### Psalm"
+    composer run analyze:psalm -- "${psalm[@]}"
+    echo
+fi
+
+if [[ ${#panel[@]} -gt 0 ]]; then
+    cd panel
+
+    echo "### ESLint"
+    npm exec -- eslint --no-fix "${panel[@]}"
+    echo
+
+    echo "### Oxfmt"
+    npm exec -- oxfmt --check "${panel[@]}"
+    echo
+
+    cd ..
+fi
+
+if [[ $composer == true ]]; then
+    echo "### composer validate"
+    composer run analyze:composer
+    echo
+fi
