@@ -77,7 +77,7 @@ We use [`cpx`](https://github.com/laravel/cpx) to run our PHP dev tools (e.g. PH
 Install `cpx` globally once via Composer:
 
 ```bash
-composer global require laravel/cpx
+composer global require cpx/cpx
 ```
 
 Make sure Composer's global `bin` directory is on your `PATH` (run `composer global config bin-dir --absolute` to find it). After that you don't need to install PHPUnit, Psalm or PHP CS Fixer globally. The `composer` scripts (`composer fix`, `composer test`, `composer analyze`) call them through `cpx` for you.
