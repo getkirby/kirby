@@ -50,6 +50,9 @@ use Kirby\Toolkit\Html;
 	<?php if (($js['defer'] ?? null) !== true): ?>
 	<link rel="modulepreload" href="<?= $js['src'] ?>">
 	<?php endif ?>
+	<?php foreach ($js['plugins'] ?? [] as $plugin): ?>
+	<link rel="modulepreload" href="<?= $plugin ?>">
+	<?php endforeach ?>
 	<?php endforeach ?>
 
 	<base href="<?= $panelUrl ?>">
@@ -68,13 +71,11 @@ use Kirby\Toolkit\Html;
 
 	<?php foreach ($assets['js'] as $key => $js): ?>
 		<?php if ($key === 'index'): ?>
-			<script type="module" nonce="<?= $nonce ?>" defer>
-			try {
-				await import("<?= $js['plugins'] ?>")
-			} finally {
-				import("<?= $js['src'] ?>")
-			}
+			<script nonce="<?= $nonce ?>">
+			// plugin scripts, loaded by the Panel
+			window.panelPlugins = <?= json_encode($js['plugins']) ?>;
 			</script>
+			<script type="module" nonce="<?= $nonce ?>" src="<?= $js['src'] ?>"></script>
 		<?php else: ?>
 			<?= Html::tag('script', '', $js) . PHP_EOL ?>
 		<?php endif ?>

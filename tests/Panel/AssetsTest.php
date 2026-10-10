@@ -85,8 +85,7 @@ class AssetsTest extends TestCase
 		$css     = $assets->css();
 
 		// css
-		$this->assertSame($base . '/css/style.min.css', $css['index']);
-		$this->assertSame('/media/plugins/index.css?0', $css['plugins']);
+		$this->assertSame(['index' => $base . '/css/style.min.css'], $css);
 	}
 
 	public function testCssInDevMode(): void
@@ -97,7 +96,7 @@ class AssetsTest extends TestCase
 		$css    = $assets->css();
 
 		// css
-		$this->assertSame(['plugins' => '/media/plugins/index.css?0'], $css);
+		$this->assertSame([], $css);
 	}
 
 	public function testCssWithCustomFile(): void
@@ -159,7 +158,23 @@ class AssetsTest extends TestCase
 		$css    = $assets->css();
 
 		// css
-		$this->assertSame(['plugins' => '/media/plugins/index.css?0'], $css);
+		$this->assertSame([], $css);
+	}
+
+	public function testCssWithPlugins(): void
+	{
+		// a plugin with only a stylesheet
+		F::write($stylesheet = static::TMP . '/site/plugins/a/index.css', 'a');
+
+		// app must be created again to load the new plugin
+		$this->app->clone();
+
+		$css = (new Assets())->css();
+
+		$this->assertSame([
+			'/media/panel/' . $this->app->versionHash() . '/css/style.min.css',
+			'/media/plugins/plugins/a.css?' . F::modified($stylesheet)
+		], array_values($css));
 	}
 
 	public function testExternalWithCustomCssJs(): void
@@ -411,6 +426,7 @@ class AssetsTest extends TestCase
 
 		$this->assertSame($base . '/js/plugins.js', $js['plugin-registry']['src']);
 		$this->assertSame($base . '/js/index.min.js', $js['index']['src']);
+		$this->assertSame([], $js['index']['plugins']);
 	}
 
 	public function testJsInDevMode(): void
@@ -493,6 +509,21 @@ class AssetsTest extends TestCase
 			'index'           => $base . '/src/index.js',
 			'vite'            => $base . '/@vite/client'
 		], array_map(fn ($js) => $js['src'], $js));
+	}
+
+	public function testJsWithPlugins(): void
+	{
+		F::write(static::TMP . '/site/plugins/a/index.php', '<?php Kirby::plugin("test/a", []);');
+		F::write($script = static::TMP . '/site/plugins/a/index.js', 'a');
+
+		// app must be created again to load the new plugin
+		$this->app->clone();
+
+		$js = (new Assets())->js();
+
+		$this->assertSame([
+			'/media/plugins/test/a.js?' . F::modified($script)
+		], $js['index']['plugins']);
 	}
 
 	public function testLink(): void

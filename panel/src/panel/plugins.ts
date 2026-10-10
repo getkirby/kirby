@@ -18,10 +18,7 @@ import { isObject } from "@/helpers/object";
  * Allows string references for `mixins` and `extends`, which are resolved
  * at install time by resolveComponentMixins and resolveComponentExtension.
  */
-export type Component = Omit<
-	ComponentOptions,
-	"extends" | "mixins" | "render"
-> & {
+type Component = Omit<ComponentOptions, "extends" | "mixins" | "render"> & {
 	mixins?: (string | ComponentOptions | ConcreteComponent)[];
 	extends?: string | ComponentOptions | ConcreteComponent;
 	// `null` explicitly clears an inherited render method so the component's
@@ -39,11 +36,7 @@ import Node from "@/components/Forms/Writer/Node";
  * Installs a plugin component
  * @since 4.0.0
  */
-export function installComponent(
-	app: App,
-	name: string,
-	component: Component
-): Component {
+function install(app: App, name: string, component: Component): Component {
 	// make sure component has something to show
 	if (
 		!component.template &&
@@ -78,51 +71,32 @@ export function installComponent(
 }
 
 /**
- * Installs all components in the given object
- * @since 4.0.0
+ * Loads each plugin script as its own module, in order;
+ * a plugin that fails to load doesn't stop the others
+ * @since 6.0.0
  */
-export function installComponents(
-	app: App,
-	components?: Record<string, Component>
-): Record<string, Component> {
-	if (isObject(components) === false) {
-		return {};
+export async function load(scripts?: string[]): Promise<void> {
+	if (Array.isArray(scripts) === false) {
+		return;
 	}
 
-	const installed: Record<string, Component> = {};
-
-	for (const [name, component] of Object.entries(components)) {
+	for (const script of scripts) {
 		try {
-			installed[name] = installComponent(app, name, component);
+			// resolve against the page, not the Panel's
+			// own script, which comes from Vite in dev mode
+			const url = new URL(script, document.baseURI).href;
+			await import(/* @vite-ignore */ url);
 		} catch (error) {
-			window.console.warn((error as Error).message);
+			window.console.error(`Plugin could not be loaded: ${script}`, error);
 		}
 	}
-
-	return installed;
-}
-
-/**
- * Installs plugins
- * @since 4.0.0
- */
-export function installPlugins(app: App, plugins?: Plugin[]): Plugin[] {
-	if (Array.isArray(plugins) === false) {
-		return [];
-	}
-
-	for (const plugin of plugins) {
-		app.use(plugin);
-	}
-
-	return plugins;
 }
 
 /**
  * Resolves a component extension if defined as component name
  * @since 4.0.0
  */
-export function resolveComponentExtension(
+function resolveComponentExtension(
 	app: App,
 	name: string,
 	component: Component
@@ -152,7 +126,7 @@ export function resolveComponentExtension(
  * Resolve available mixins if they are defined
  * @since 4.0.0
  */
-export function resolveComponentMixins(component: Component): Component {
+function resolveComponentMixins(component: Component): Component {
 	if (Array.isArray(component.mixins) === false) {
 		return component;
 	}
@@ -200,7 +174,7 @@ export function resolveComponentMixins(component: Component): Component {
  * Resolve a component's competing template/render options
  * @since 5.0.0
  */
-export function resolveComponentRender(component: Component): Component {
+function resolveComponentRender(component: Component): Component {
 	if (component.template) {
 		// set to `null` instead of deleting, so an inherited render method
 		// is overridden and Vue compiles the component's own template
@@ -227,6 +201,23 @@ export type PanelPlugins = Partial<{
 }>;
 
 export default function Plugins(app: App, plugins: PanelPlugins = {}) {
+	const components: Record<string, Component> = {};
+	const use = Array.isArray(plugins.use) === true ? plugins.use : [];
+
+	if (isObject(plugins.components) === true) {
+		for (const [name, component] of Object.entries(plugins.components)) {
+			try {
+				components[name] = install(app, name, component);
+			} catch (error) {
+				window.console.warn((error as Error).message);
+			}
+		}
+	}
+
+	for (const plugin of use) {
+		app.use(plugin);
+	}
+
 	return {
 		// expose helper functions for kirbyup
 		resolveComponentExtension,
@@ -241,7 +232,7 @@ export default function Plugins(app: App, plugins: PanelPlugins = {}) {
 		writerNodes: {},
 		// registered
 		...plugins,
-		components: installComponents(app, plugins.components),
-		use: installPlugins(app, plugins.use)
+		components,
+		use
 	};
 }

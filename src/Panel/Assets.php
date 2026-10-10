@@ -57,8 +57,8 @@ class Assets
 	public function css(): array
 	{
 		$css = [
-			'index'   => $this->url . '/css/style.min.css',
-			'plugins' => $this->plugins->url('css'),
+			'index' => $this->url . '/css/style.min.css',
+			...$this->plugins->css(),
 			...$this->custom('panel.css')
 		];
 
@@ -249,7 +249,7 @@ class Assets
 			'index' => [
 				'nonce'   => $this->nonce,
 				'src'     => $this->url . '/js/index.min.js',
-				'plugins' => $this->plugins->url('js'),
+				'plugins' => $this->plugins->js(),
 			],
 		];
 
