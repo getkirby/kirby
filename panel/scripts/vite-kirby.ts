@@ -5,7 +5,14 @@
 
 import fs from "fs";
 import generateDocs from "./docs.ts";
-import { type Plugin } from "vite";
+import { type ConfigEnv, type Plugin, type UserConfig } from "vite";
+
+/**
+ * Applies a plugin to the dev server, but not to Vitest
+ */
+function serve(config: UserConfig, env: ConfigEnv): boolean {
+	return env.command === "serve" && process.env.VITEST === undefined;
+}
 
 /**
  * Creates flag file to tell Kirby that we are in dev mode
@@ -25,9 +32,8 @@ function devMode(): Plugin {
 
 	return {
 		name: "kirby-dev-mode",
-		apply: "serve",
+		apply: serve,
 		configureServer({ httpServer }) {
-			// Vitest runs a server without HTTP server: no flag for it
 			httpServer?.once("listening", () => {
 				fs.writeFileSync(flag, "");
 				process.on("exit", clean);
@@ -54,7 +60,7 @@ function devMode(): Plugin {
 function labDev(): Plugin {
 	return {
 		name: "kirby-lab-dev",
-		apply: "serve",
+		apply: serve,
 		configureServer({ watcher, ws }) {
 			watcher.on("change", async (file) => {
 				// Vue components: regenerate docs in tmp directory
