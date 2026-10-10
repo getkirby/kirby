@@ -25,7 +25,10 @@ class Area
 		protected array $breadcrumb = [],
 		protected Closure|array|string|null $breadcrumbLabel = null,
 		protected array $buttons = [],
+		protected Closure|bool|null $current = null,
+		protected array|string|null $dialog = null,
 		protected array $dialogs = [],
+		protected array|string|null $drawer = null,
 		protected array $drawers = [],
 		protected array $dropdowns = [],
 		protected string|null $icon = null,
@@ -35,6 +38,7 @@ class Area
 		protected string|null $search = null,
 		protected array $searches = [],
 		protected array $requests = [],
+		protected string|null $target = null,
 		protected Closure|array|string|null $title = null,
 		protected array $views = [],
 	) {
@@ -114,12 +118,16 @@ class Area
 	public function menuItem(): array
 	{
 		return [
-			'id'     => $this->id(),
-			'icon'   => $this->icon(),
-			'label'  => $this->label(),
-			'link'   => $this->link(),
-			'menu'   => $this->menu(),
-			'title'  => $this->title()
+			'id'      => $this->id(),
+			'current' => $this->current(),
+			'dialog'  => $this->dialog(),
+			'drawer'  => $this->drawer(),
+			'icon'    => $this->icon(),
+			'label'   => $this->label(),
+			'link'    => $this->link(),
+			'menu'    => $this->menu(),
+			'target'  => $this->target(),
+			'title'   => $this->title()
 		];
 	}
 
