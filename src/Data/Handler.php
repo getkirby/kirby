@@ -35,7 +35,7 @@ abstract class Handler
 	 */
 	public static function read(string $file): array
 	{
-		$contents = F::read($file);
+		$contents = F::read($file, lock: true);
 
 		if ($contents === false) {
 			throw new Exception(
