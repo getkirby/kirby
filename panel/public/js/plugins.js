@@ -41,14 +41,6 @@ window.panel.plugin = function (plugin, extensions) {
 		window.panel.plugins.icons[name] = options;
 	});
 
-	// Sections
-	resolve(extensions, "sections", (name, options) => {
-		window.panel.plugins.components[`k-${name}-section`] = {
-			...options,
-			mixins: ["section", ...(options.mixins ?? [])]
-		};
-	});
-
 	// View Buttons
 	resolve(extensions, "viewButtons", (name, options) => {
 		window.panel.plugins.components[`k-${name}-view-button`] = options;
