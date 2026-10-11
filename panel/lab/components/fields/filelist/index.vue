@@ -2,18 +2,26 @@
 	<k-lab-form>
 		<k-lab-examples class="k-lab-field-examples">
 			<k-box theme="notice" icon="alert">
-				The examples below are rendered from static props. There is no model
-				behind them, so everything that talks to the field endpoint (search,
-				pagination, sorting, uploads and batch deletion) answers with a 404 here
-				and only works in a real model view.
+				The field loads its entries from its own endpoint. There is no model
+				behind the lab, so the examples answer that request with static state
+				instead. Everything that writes (sorting, uploads and batch deletion)
+				still talks to the endpoint and answers with a 404 here.
 			</k-box>
 
 			<k-lab-example label="Default">
-				<k-filelist-field :initial="state(files)" label="Files" />
+				<k-lab-filelist-field :initial="state(files)" label="Files" />
+			</k-lab-example>
+
+			<k-lab-example label="Loading">
+				<k-lab-filelist-field label="Files" />
+			</k-lab-example>
+
+			<k-lab-example label="Loading: table">
+				<k-lab-filelist-field :columns="columns" label="Files" layout="table" />
 			</k-lab-example>
 
 			<k-lab-example label="Help">
-				<k-filelist-field
+				<k-lab-filelist-field
 					:initial="state(files)"
 					help="Every file of this page"
 					label="Files"
@@ -21,14 +29,14 @@
 			</k-lab-example>
 
 			<k-lab-example label="Empty">
-				<k-filelist-field
+				<k-lab-filelist-field
 					:initial="state([], { pagination: empty })"
 					label="Files"
 				/>
 			</k-lab-example>
 
 			<k-lab-example label="Empty with custom text">
-				<k-filelist-field
+				<k-lab-filelist-field
 					:initial="state([], { pagination: empty })"
 					empty="No images have been added yet"
 					label="Files"
@@ -36,7 +44,7 @@
 			</k-lab-example>
 
 			<k-lab-example label="Invalid: fewer than min">
-				<k-filelist-field
+				<k-lab-filelist-field
 					:initial="state(files.slice(0, 1), { pagination: single })"
 					:min="2"
 					help="The label marks the field as invalid until a second file is added"
@@ -45,7 +53,7 @@
 			</k-lab-example>
 
 			<k-lab-example label="Layout: cardlets">
-				<k-filelist-field
+				<k-lab-filelist-field
 					:initial="state(files)"
 					label="Files"
 					layout="cardlets"
@@ -53,7 +61,7 @@
 			</k-lab-example>
 
 			<k-lab-example label="Layout: cards">
-				<k-filelist-field
+				<k-lab-filelist-field
 					:initial="state(files)"
 					label="Files"
 					layout="cards"
@@ -61,7 +69,7 @@
 			</k-lab-example>
 
 			<k-lab-example label="Layout: cards, size small">
-				<k-filelist-field
+				<k-lab-filelist-field
 					:initial="state(files)"
 					label="Files"
 					layout="cards"
@@ -70,7 +78,7 @@
 			</k-lab-example>
 
 			<k-lab-example label="Layout: table">
-				<k-filelist-field
+				<k-lab-filelist-field
 					:initial="state(tableRows, { columns })"
 					label="Files"
 					layout="table"
@@ -78,7 +86,7 @@
 			</k-lab-example>
 
 			<k-lab-example label="Layout: table with columns">
-				<k-filelist-field
+				<k-lab-filelist-field
 					:initial="state(tableRows, { columns: customColumns })"
 					label="Files"
 					layout="table"
@@ -86,7 +94,7 @@
 			</k-lab-example>
 
 			<k-lab-example label="Link to another parent">
-				<k-filelist-field
+				<k-lab-filelist-field
 					:initial="state(files)"
 					label="Files"
 					link="/pages/photography"
@@ -94,7 +102,7 @@
 			</k-lab-example>
 
 			<k-lab-example label="Pagination">
-				<k-filelist-field
+				<k-lab-filelist-field
 					:endpoints="endpoints"
 					:initial="state(files.slice(0, 3), { pagination: paginated })"
 					label="Files"
@@ -102,7 +110,7 @@
 			</k-lab-example>
 
 			<k-lab-example label="Search">
-				<k-filelist-field
+				<k-lab-filelist-field
 					:endpoints="endpoints"
 					:initial="state(files)"
 					:searchable="true"
@@ -111,7 +119,7 @@
 			</k-lab-example>
 
 			<k-lab-example label="Batch">
-				<k-filelist-field
+				<k-lab-filelist-field
 					:batch="true"
 					:endpoints="endpoints"
 					:initial="state(files)"
@@ -120,7 +128,7 @@
 			</k-lab-example>
 
 			<k-lab-example label="Upload">
-				<k-filelist-field
+				<k-lab-filelist-field
 					:endpoints="endpoints"
 					:initial="state(files, { upload })"
 					label="Files"
@@ -128,7 +136,7 @@
 			</k-lab-example>
 
 			<k-lab-example label="All options">
-				<k-filelist-field
+				<k-lab-filelist-field
 					:batch="true"
 					:endpoints="endpoints"
 					:initial="
@@ -148,7 +156,27 @@
 </template>
 
 <script>
+const field = {
+	extends: window.panel.app.component("k-filelist-field"),
+	props: {
+		initial: Object
+	},
+	methods: {
+		async reload() {
+			if (this.initial === undefined) {
+				return;
+			}
+
+			this.state = this.initial;
+			this.isLoading = false;
+		}
+	}
+};
+
 export default {
+	components: {
+		"k-lab-filelist-field": field
+	},
 	props: {
 		columns: Object,
 		customColumns: Object,
