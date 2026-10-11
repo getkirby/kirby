@@ -141,6 +141,44 @@ class MenuTest extends TestCase
 		$this->assertFalse($item->props()['disabled']);
 	}
 
+	public function testItemWithAreaProps(): void
+	{
+		$areas = new Areas([
+			'docs' => new Area(
+				id: 'docs',
+				link: 'https://getkirby.com',
+				menu: true,
+				target: '_blank'
+			),
+			'todos' => new Area(
+				id: 'todos',
+				current: true,
+				dialog: 'todos/create',
+				menu: true
+			),
+			'notes' => new Area(
+				id: 'notes',
+				drawer: 'notes/create',
+				menu: true
+			)
+		]);
+
+		$menu = new Menu($areas);
+
+		$item = $menu->item('docs')->props();
+		$this->assertSame('https://getkirby.com', $item['link']);
+		$this->assertSame('_blank', $item['target']);
+
+		$item = $menu->item('todos')->props();
+		$this->assertTrue($item['current']);
+		$this->assertSame('todos/create', $item['dialog']);
+		$this->assertNull($item['link']);
+
+		$item = $menu->item('notes')->props();
+		$this->assertSame('notes/create', $item['drawer']);
+		$this->assertNull($item['link']);
+	}
+
 	public function testItemWithExtraProps(): void
 	{
 		$menu = new Menu();
