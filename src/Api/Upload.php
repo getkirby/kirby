@@ -98,9 +98,7 @@ readonly class Upload
 		}
 
 		// remove tmp directory if completely empty
-		if (Dir::isEmpty($dir) === true) {
-			Dir::remove($dir);
-		}
+		Dir::removeIfEmpty($dir);
 	}
 
 	/**

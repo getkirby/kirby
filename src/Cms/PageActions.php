@@ -787,13 +787,8 @@ trait PageActions
 				);
 			}
 
-			// Get the draft folder and check if there are any other drafts
-			// left. Otherwise delete it.
-			$draftDir = dirname($this->root());
-
-			if (Dir::isEmpty($draftDir) === true) {
-				Dir::remove($draftDir);
-			}
+			// delete the draft folder if there are no other drafts left
+			Dir::removeIfEmpty(dirname($this->root()));
 		}
 
 		// remove the page from the parent drafts and add it to children
