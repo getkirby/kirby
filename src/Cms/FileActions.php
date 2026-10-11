@@ -392,30 +392,31 @@ trait FileActions
 		$method = $move === true ? 'move' : 'copy';
 		$format = null;
 
-		if (
-			$options !== null &&
-			$options !== [] &&
-			$source->isResizable() === true
-		) {
+		if ($options !== null && $options !== []) {
 			$tmp = $this->kirby()->root('cache') . '/.uploads/' . uniqid() . '.' . $this->filename();
 
 			F::$method($root, $tmp);
 
-			try {
-				// apply the options on top of the defaults
-				// instead of the global thumb settings
-				$this->kirby()->thumb($tmp, $tmp, [
-					...Darkroom::defaultOptions(),
-					...$options
-				]);
-			} catch (Throwable $e) {
-				F::remove($tmp);
-				throw $e;
-			}
-
 			$root   = $tmp;
 			$method = 'move';
-			$format = $options['format'] ?? null;
+
+			// check the copy as it carries the final extension,
+			// the source might have none (e.g. `tmp_name` from forms)
+			if ($this->assetFactory($tmp)->isResizable() === true) {
+				try {
+					// apply the options on top of the defaults
+					// instead of the global thumb settings
+					$this->kirby()->thumb($tmp, $tmp, [
+						...Darkroom::defaultOptions(),
+						...$options
+					]);
+				} catch (Throwable $e) {
+					F::remove($tmp);
+					throw $e;
+				}
+
+				$format = $options['format'] ?? null;
+			}
 		}
 
 		if (F::$method($root, $this->root(), true) !== true) {

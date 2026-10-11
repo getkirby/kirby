@@ -457,6 +457,32 @@ class FileCreateTest extends ModelTestCase
 		$this->assertSame([], Dir::read($this->app->root('cache') . '/.uploads'));
 	}
 
+	public function testCreateImageAndManipulateSourceWithoutExtension(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'files/test' => [
+					'name'   => 'test',
+					'create' => ['width' => 100]
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
+		// e.g. `tmp_name` from a frontend upload form
+		$source = static::TMP . '/phpAbC123';
+		F::copy(static::FIXTURES . '/test.jpg', $source);
+
+		$result = File::create([
+			'filename' => 'test.jpg',
+			'source'   => $source,
+			'parent'   => new Page(['slug' => 'test']),
+			'template' => 'test',
+		]);
+
+		$this->assertSame(100, $result->width());
+	}
+
 	public function testCreateManipulateNonImage(): void
 	{
 		$this->app = $this->app->clone([
@@ -484,6 +510,7 @@ class FileCreateTest extends ModelTestCase
 		]);
 
 		$this->assertFileEquals($source, $result->root());
+		$this->assertSame([], Dir::read($this->app->root('cache') . '/.uploads'));
 	}
 
 	public function testCreateHooks(): void

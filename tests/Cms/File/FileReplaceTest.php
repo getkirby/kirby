@@ -131,6 +131,36 @@ class FileReplaceTest extends ModelTestCase
 		$this->assertFileEquals($original, $originalFile->root());
 	}
 
+	public function testReplaceImageAndManipulateSourceWithoutExtension(): void
+	{
+		$parent = new Page(['slug' => 'test']);
+
+		File::create([
+			'filename' => 'test.jpg',
+			'source'   => static::FIXTURES . '/test.jpg',
+			'parent'   => $parent,
+			'template' => 'test'
+		]);
+
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'files/test' => [
+					'name'   => 'test',
+					'create' => ['width' => 100]
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
+		// e.g. `tmp_name` from a frontend upload form
+		$source = static::TMP . '/phpAbC123';
+		F::copy(static::FIXTURES . '/cat.jpg', $source);
+
+		$result = $this->app->page('test')->file('test.jpg')->replace($source);
+
+		$this->assertSame(100, $result->width());
+	}
+
 	public function testReplaceManipulateNonImage(): void
 	{
 		$parent      = new Page(['slug' => 'test']);
