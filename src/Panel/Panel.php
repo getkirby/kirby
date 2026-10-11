@@ -110,7 +110,7 @@ class Panel
 		return array_merge(...array_values(
 			A::map(
 				Panel::areas(),
-				fn($area) => $area['buttons'] ?? []
+				fn ($area) => $area['buttons'] ?? []
 			)
 		));
 	}
@@ -274,7 +274,7 @@ class Panel
 				message: 'The data could not be found'
 			);
 
-			// interpret strings as errors
+		// interpret strings as errors
 		} elseif (is_string($result) === true) {
 			$result = new Exception($result);
 		}
@@ -371,7 +371,7 @@ class Panel
 			[
 				'pattern' => 'browser',
 				'auth'    => false,
-				'action'  => fn() => new Response(
+				'action'  => fn () => new Response(
 					Tpl::load($kirby->root('kirby') . '/views/browser.php')
 				),
 			]
@@ -400,7 +400,7 @@ class Panel
 				'installation',
 				'login',
 			],
-			'action' => fn() => Panel::go(Home::url()),
+			'action' => fn () => Panel::go(Home::url()),
 			'auth' => false
 		];
 
@@ -436,7 +436,7 @@ class Panel
 				'pattern' => $pattern,
 				'method'  => 'ALL',
 				'type'    => $type,
-				'action'  => fn(string $path) => new NotFoundException(
+				'action'  => fn (string $path) => new NotFoundException(
 					message: 'Could not find Panel ' . $type . ' for route: ' . $path
 				)
 			];
