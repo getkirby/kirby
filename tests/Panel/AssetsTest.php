@@ -164,7 +164,7 @@ class AssetsTest extends TestCase
 	public function testCssWithPlugins(): void
 	{
 		// a plugin with only a stylesheet
-		F::write($stylesheet = static::TMP . '/site/plugins/a/index.css', 'a');
+		F::write(static::TMP . '/site/plugins/a/index.css', 'a');
 
 		// app must be created again to load the new plugin
 		$this->app->clone();
@@ -173,7 +173,7 @@ class AssetsTest extends TestCase
 
 		$this->assertSame([
 			'/media/panel/' . $this->app->versionHash() . '/css/style.min.css',
-			'/media/plugins/plugins/a.css?' . F::modified($stylesheet)
+			'/media/plugins/plugins/a.css?' . hash('xxh3', 'a')
 		], array_values($css));
 	}
 
@@ -514,7 +514,7 @@ class AssetsTest extends TestCase
 	public function testJsWithPlugins(): void
 	{
 		F::write(static::TMP . '/site/plugins/a/index.php', '<?php Kirby::plugin("test/a", []);');
-		F::write($script = static::TMP . '/site/plugins/a/index.js', 'a');
+		F::write(static::TMP . '/site/plugins/a/index.js', 'a');
 
 		// app must be created again to load the new plugin
 		$this->app->clone();
@@ -522,7 +522,7 @@ class AssetsTest extends TestCase
 		$js = (new Assets())->js();
 
 		$this->assertSame([
-			'/media/plugins/test/a.js?' . F::modified($script)
+			'/media/plugins/test/a.js?' . hash('xxh3', 'a')
 		], $js['index']['plugins']);
 	}
 

@@ -82,7 +82,7 @@ class Plugins
 				$root = $plugin->root() . '/index.' . $extension;
 
 				if (F::size($root) > 0) {
-					$urls[] = $plugin->mediaUrl() . '.' . $extension . '?' . F::modified($root);
+					$urls[] = $plugin->mediaUrl() . '.' . $extension . '?' . hash_file('xxh3', $root);
 					break;
 				}
 			}

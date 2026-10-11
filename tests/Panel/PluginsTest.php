@@ -21,46 +21,32 @@ class PluginsTest extends TestCase
 	protected string $devJsB;
 	protected string $devJsC;
 
-	public function createPlugins()
-	{
-		$time = \time() + 2;
-
-		F::write(static::TMP . '/site/plugins/a/index.php', '<?php Kirby::plugin("test/a", []);');
-		touch(static::TMP . '/site/plugins/a/index.php', $time);
-		F::write($this->cssA = static::TMP . '/site/plugins/a/index.css', 'a');
-		touch($this->cssA, $time);
-		F::write($this->jsA = static::TMP . '/site/plugins/a/index.js', 'a');
-		touch($this->jsA, $time);
-		F::write($this->jsA = static::TMP . '/site/plugins/a/index.js', 'a');
-		$this->devJsA = static::TMP . '/site/plugins/a/index.dev.js';
-
-		F::write(static::TMP . '/site/plugins/b/index.php', '<?php Kirby::plugin("test/b", []);');
-		touch(static::TMP . '/site/plugins/b/index.php', $time);
-		F::write($this->cssB = static::TMP . '/site/plugins/b/index.css', 'b');
-		touch($this->cssB, $time);
-		F::write($this->jsB = static::TMP . '/site/plugins/b/index.js', 'b');
-		touch($this->jsB, $time);
-		$this->devJsB = static::TMP . '/site/plugins/b/index.dev.js';
-
-		F::write(static::TMP . '/site/plugins/c/index.php', '<?php Kirby::plugin("test/c", []);');
-		touch(static::TMP . '/site/plugins/c/index.php', $time);
-		F::write($this->cssC = static::TMP . '/site/plugins/c/index.css', 'c');
-		touch($this->cssC, $time);
-		F::write($this->jsC = static::TMP . '/site/plugins/c/index.js', 'c');
-		touch($this->jsC, $time);
-		$this->devJsC = static::TMP . '/site/plugins/c/index.dev.js';
-
-		return $time;
-	}
-
 	protected function tearDown(): void
 	{
 		Dir::remove(static::TMP);
 	}
 
+	public function createPlugins(): void
+	{
+		F::write(static::TMP . '/site/plugins/a/index.php', '<?php Kirby::plugin("test/a", []);');
+		F::write($this->cssA = static::TMP . '/site/plugins/a/index.css', 'a');
+		F::write($this->jsA = static::TMP . '/site/plugins/a/index.js', 'a');
+		$this->devJsA = static::TMP . '/site/plugins/a/index.dev.js';
+
+		F::write(static::TMP . '/site/plugins/b/index.php', '<?php Kirby::plugin("test/b", []);');
+		F::write($this->cssB = static::TMP . '/site/plugins/b/index.css', 'b');
+		F::write($this->jsB = static::TMP . '/site/plugins/b/index.js', 'b');
+		$this->devJsB = static::TMP . '/site/plugins/b/index.dev.js';
+
+		F::write(static::TMP . '/site/plugins/c/index.php', '<?php Kirby::plugin("test/c", []);');
+		F::write($this->cssC = static::TMP . '/site/plugins/c/index.css', 'c');
+		F::write($this->jsC = static::TMP . '/site/plugins/c/index.js', 'c');
+		$this->devJsC = static::TMP . '/site/plugins/c/index.dev.js';
+	}
+
 	public function testCss(): void
 	{
-		$time = $this->createPlugins();
+		$this->createPlugins();
 
 		// an empty stylesheet
 		F::write($this->cssB, '');
@@ -72,8 +58,8 @@ class PluginsTest extends TestCase
 		$media   = $this->app->url('media') . '/plugins/test/';
 
 		$this->assertSame([
-			$media . 'a.css?' . $time,
-			$media . 'c.css?' . $time,
+			$media . 'a.css?' . hash('xxh3', 'a'),
+			$media . 'c.css?' . hash('xxh3', 'c'),
 		], $plugins->css());
 	}
 
@@ -85,11 +71,10 @@ class PluginsTest extends TestCase
 
 	public function testJs(): void
 	{
-		$time = $this->createPlugins();
+		$this->createPlugins();
 
 		// a plugin in development
 		F::write($this->devJsB, 'dev b');
-		touch($this->devJsB, $time + 1);
 
 		// an empty script
 		F::write($this->jsC, '');
@@ -101,9 +86,26 @@ class PluginsTest extends TestCase
 		$media   = $this->app->url('media') . '/plugins/test/';
 
 		$this->assertSame([
-			$media . 'a.js?' . F::modified($this->jsA),
-			$media . 'b.dev.js?' . ($time + 1),
+			$media . 'a.js?' . hash('xxh3', 'a'),
+			$media . 'b.dev.js?' . hash('xxh3', 'dev b'),
 		], $plugins->js());
+	}
+
+	public function testJsWithSameModificationTime(): void
+	{
+		$this->createPlugins();
+		touch($this->jsA, $time = time());
+
+		// app must be created again to load the new plugins
+		$app    = $this->app->clone();
+		$before = (new Plugins())->js();
+
+		// a rebuild within the same second
+		F::write($this->jsA, 'a2');
+		touch($this->jsA, $time);
+		clearstatcache();
+
+		$this->assertNotSame($before, (new Plugins())->js());
 	}
 
 	public function testResolve(): void

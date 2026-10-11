@@ -282,6 +282,29 @@ describe("panel.plugins", () => {
 			use.mockRestore();
 		});
 
+		it("keeps installing after a broken use plugin", () => {
+			const error = vi
+				.spyOn(window.console, "error")
+				.mockImplementation(() => {});
+
+			const broken = {
+				install: () => {
+					throw new Error("broken");
+				}
+			};
+			const working = { install: vi.fn() };
+
+			Plugins(app, { use: [broken, working] });
+
+			expect(working.install).toHaveBeenCalledOnce();
+			expect(error).toHaveBeenCalledWith(
+				"Plugin could not be installed",
+				expect.objectContaining({ message: "broken" })
+			);
+
+			error.mockRestore();
+		});
+
 		it("merges created callbacks", () => {
 			const cb = vi.fn();
 			const plugins = Plugins(app, { created: [cb] });

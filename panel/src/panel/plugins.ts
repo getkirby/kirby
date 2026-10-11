@@ -215,7 +215,11 @@ export default function Plugins(app: App, plugins: PanelPlugins = {}) {
 	}
 
 	for (const plugin of use) {
-		app.use(plugin);
+		try {
+			app.use(plugin);
+		} catch (error) {
+			window.console.error("Plugin could not be installed", error);
+		}
 	}
 
 	return {

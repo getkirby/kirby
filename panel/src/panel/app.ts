@@ -22,10 +22,15 @@ export default defineComponent({
 		this.$panel.events.subscribe();
 
 		/**
-		 * Register all created plugins
+		 * Register all created plugins;
+		 * a failing one doesn't stop the others
 		 */
 		for (const plugin of this.$panel.plugins.created) {
-			plugin(this);
+			try {
+				plugin(this);
+			} catch (error) {
+				this.$panel.error(error);
+			}
 		}
 
 		/**
