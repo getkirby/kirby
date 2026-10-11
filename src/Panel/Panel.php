@@ -110,7 +110,7 @@ class Panel
 		return array_merge(...array_values(
 			A::map(
 				Panel::areas(),
-				fn ($area) => $area['buttons'] ?? []
+				fn($area) => $area['buttons'] ?? []
 			)
 		));
 	}
@@ -213,7 +213,7 @@ class Panel
 		if ($request->method() === 'GET') {
 			return
 				(bool)($request->get('_json') ??
-				$request->header('X-Fiber'));
+					$request->header('X-Fiber'));
 		}
 
 		return false;
@@ -251,8 +251,8 @@ class Panel
 		$request = App::instance()->request();
 
 		$referrer = $request->header('X-Fiber-Referrer')
-				 ?? $request->get('_referrer')
-				 ?? '';
+			?? $request->get('_referrer')
+			?? '';
 
 		return '/' . trim($referrer, '/');
 	}
@@ -274,7 +274,7 @@ class Panel
 				message: 'The data could not be found'
 			);
 
-		// interpret strings as errors
+			// interpret strings as errors
 		} elseif (is_string($result) === true) {
 			$result = new Exception($result);
 		}
@@ -314,15 +314,10 @@ class Panel
 
 		$areas  = static::areas();
 		$routes = static::routes($areas);
+		$method = $kirby->request()->method();
 
 		// create a micro-router for the Panel
-		// HEAD requests are answered like GET requests;
-		// the web server takes care of stripping the body.
-		// The hooks still receive the original request method
-		$method      = $kirby->request()->method();
-		$routeMethod = $method === 'HEAD' ? 'GET' : $method;
-
-		return Router::execute($path, $routeMethod, $routes, function ($route) use ($areas, $kirby, $method, $path) {
+		return Router::execute($path, $method, $routes, function ($route) use ($areas, $kirby, $method, $path) {
 			// route needs authentication?
 			$auth   = $route->attributes()['auth'] ?? true;
 			$areaId = $route->attributes()['area'] ?? null;
@@ -376,7 +371,7 @@ class Panel
 			[
 				'pattern' => 'browser',
 				'auth'    => false,
-				'action'  => fn () => new Response(
+				'action'  => fn() => new Response(
 					Tpl::load($kirby->root('kirby') . '/views/browser.php')
 				),
 			]
@@ -405,9 +400,23 @@ class Panel
 				'installation',
 				'login',
 			],
-			'action' => fn () => Panel::go(Home::url()),
+			'action' => fn() => Panel::go(Home::url()),
 			'auth' => false
 		];
+
+		// answer HEAD requests like GET requests; the copies
+		// come after all other routes, so that routes which
+		// handle HEAD requests themselves take precedence
+		foreach ($routes as $route) {
+			$methods = A::map(
+				explode('|', strtoupper($route['method'] ?? 'GET')),
+				trim(...)
+			);
+
+			if (in_array('GET', $methods, true) === true) {
+				$routes[] = [...$route, 'method' => 'HEAD'];
+			}
+		}
 
 		// catch all routes; they are registered for all request
 		// methods, so that unsupported methods are answered with
@@ -427,7 +436,7 @@ class Panel
 				'pattern' => $pattern,
 				'method'  => 'ALL',
 				'type'    => $type,
-				'action'  => fn (string $path) => new NotFoundException(
+				'action'  => fn(string $path) => new NotFoundException(
 					message: 'Could not find Panel ' . $type . ' for route: ' . $path
 				)
 			];
@@ -634,7 +643,7 @@ class Panel
 		// use the user language for the default translation or
 		// fall back to the language from the config
 		$translation = $kirby->user()?->language() ??
-						$kirby->panelLanguage();
+			$kirby->panelLanguage();
 
 		$kirby->setCurrentTranslation($translation);
 

@@ -475,27 +475,6 @@ class PanelTest extends TestCase
 		$this->assertSame($get->code(), $head->code());
 	}
 
-	public function testRouterWithHeadMethodHooks(): void
-	{
-		$app = $this->app->clone([
-			'request' => [
-				'method' => 'HEAD'
-			],
-			'hooks' => [
-				'panel.route:before' => function ($route, $path, $method) use (&$captured) {
-					$captured = $method;
-					return $route;
-				}
-			]
-		]);
-
-		Panel::router('login');
-
-		// the route is resolved as GET, but the hooks still
-		// receive the request method the client actually sent
-		$this->assertSame('HEAD', $captured);
-	}
-
 	public function testRouterWithUnknownPath(): void
 	{
 		$app = $this->app->clone([
@@ -537,14 +516,20 @@ class PanelTest extends TestCase
 		$this->assertSame('browser', $routes[0]['pattern']);
 		$this->assertSame(['/', 'installation', 'login'], $routes[1]['pattern']);
 
+		// routes that answer GET requests also answer HEAD requests
+		$this->assertSame('browser', $routes[2]['pattern']);
+		$this->assertSame('HEAD', $routes[2]['method']);
+		$this->assertSame(['/', 'installation', 'login'], $routes[3]['pattern']);
+		$this->assertSame('HEAD', $routes[3]['method']);
+
 		// the catch-all routes keep the response type of the path,
 		// so that Panel requests keep receiving JSON
 		$fallbacks = [
-			2 => ['dialogs/(:all)', 'dialog'],
-			3 => ['drawers/(:all)', 'drawer'],
-			4 => ['dropdowns/(:all)', 'dropdown'],
-			5 => ['search/(:all)', 'search'],
-			6 => ['(:all)', 'view'],
+			4 => ['dialogs/(:all)', 'dialog'],
+			5 => ['drawers/(:all)', 'drawer'],
+			6 => ['dropdowns/(:all)', 'dropdown'],
+			7 => ['search/(:all)', 'search'],
+			8 => ['(:all)', 'view'],
 		];
 
 		foreach ($fallbacks as $index => [$pattern, $type]) {
@@ -747,6 +732,34 @@ class PanelTest extends TestCase
 			$route = $router->find('dialogs/does-not-exist', $method);
 			$this->assertSame('dialog', $route->attributes()['type'], $method);
 		}
+	}
+
+	public function testRoutesWithHeadMethod(): void
+	{
+		$router = new Router(Panel::routes([
+			'test' => [
+				'views' => [
+					['pattern' => 'a', 'action' => fn () => 'view'],
+					['pattern' => 'b', 'action' => fn () => 'view'],
+				],
+				'requests' => [
+					['pattern' => 'b', 'method' => 'HEAD', 'action' => fn () => 'request'],
+				]
+			]
+		]));
+
+		// HEAD requests are answered by the GET route
+		$route = $router->find('a', 'HEAD');
+		$this->assertSame('view', $route->attributes()['type']);
+		$this->assertSame('test', $route->attributes()['area']);
+
+		// a route for HEAD requests takes precedence,
+		// even if the GET route has been registered first
+		$route = $router->find('b', 'HEAD');
+		$this->assertSame('request', $route->attributes()['type']);
+
+		$route = $router->find('b', 'GET');
+		$this->assertSame('view', $route->attributes()['type']);
 	}
 
 	public function testSetLanguageWithoutRequest(): void
