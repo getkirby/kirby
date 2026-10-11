@@ -10,6 +10,7 @@ use Kirby\TestCase;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 use PHPUnit\Framework\Attributes\CoversClass;
+use ReflectionMethod;
 
 class DirFlakyRemoveRecursive extends Dir
 {
@@ -22,6 +23,15 @@ class DirFlakyRemoveRecursive extends Dir
 			return;
 		}
 		parent::removeRecursive($dir);
+	}
+}
+
+class DirScanStale extends Dir
+{
+	// the scan misses an entry that another process adds right after it
+	protected static function scan(string $dir): array
+	{
+		return [];
 	}
 }
 
@@ -795,6 +805,112 @@ class DirTest extends TestCase
 		// no .remove-* tmp dirs should be left in the parent
 		$leftovers = glob($parent . '/.remove-*');
 		$this->assertSame([], $leftovers);
+	}
+
+	public function testRemoveIfEmpty(): void
+	{
+		Dir::make($dir = static::TMP . '/dir');
+
+		$this->assertTrue(Dir::removeIfEmpty($dir));
+		$this->assertDirectoryDoesNotExist($dir);
+	}
+
+	public function testRemoveIfEmptyFile(): void
+	{
+		F::write($file = static::TMP . '/a.txt', 'a');
+
+		// a file is no directory to remove
+		$this->assertFalse(Dir::removeIfEmpty($file));
+		$this->assertFileExists($file);
+	}
+
+	public function testRemoveIfEmptyLink(): void
+	{
+		Dir::make($target = static::TMP . '/target');
+		symlink($target, $link = static::TMP . '/link');
+
+		$this->assertTrue(Dir::removeIfEmpty($link));
+
+		// only the link is removed, never its target
+		$this->assertFalse(is_link($link));
+		$this->assertDirectoryExists($target);
+	}
+
+	public function testRemoveIfEmptyLinkWithContent(): void
+	{
+		F::write($file = static::TMP . '/target/a.txt', 'a');
+		symlink(static::TMP . '/target', $link = static::TMP . '/link');
+
+		$this->assertFalse(Dir::removeIfEmpty($link));
+		$this->assertTrue(is_link($link));
+		$this->assertFileExists($file);
+	}
+
+	public function testRemoveIfEmptyUnreadable(): void
+	{
+		if (PHP_OS_FAMILY === 'Windows' || posix_getuid() === 0) {
+			$this->markTestSkipped('Needs file permissions that apply to the current user');
+		}
+
+		Dir::make($dir = static::TMP . '/unreadable');
+		chmod($dir, 0000);
+
+		// without a handler that throws (e.g. Whoops)
+		set_error_handler(fn () => true);
+
+		try {
+			// an unreadable directory must not pass for an empty one
+			$this->expectException(Exception::class);
+			$this->expectExceptionMessage('The directory "' . $dir . '" could not be read');
+
+			Dir::removeIfEmpty($dir);
+		} finally {
+			restore_error_handler();
+			chmod($dir, 0755);
+		}
+	}
+
+	public function testRemoveIfEmptyWithContent(): void
+	{
+		F::write($file = static::TMP . '/dir/a.txt', 'a');
+		F::write($htaccess = static::TMP . '/dir/.htaccess', 'deny');
+
+		$this->assertFalse(Dir::removeIfEmpty(static::TMP . '/dir'));
+
+		// ignored files only go when the directory goes
+		$this->assertFileExists($file);
+		$this->assertFileExists($htaccess);
+	}
+
+	public function testRemoveIfEmptyWithContentAddedMeanwhile(): void
+	{
+		F::write($file = static::TMP . '/dir/a.txt', 'a');
+
+		// the scan saw an empty directory, but `rmdir()` refuses
+		$this->assertFalse(DirScanStale::removeIfEmpty(static::TMP . '/dir'));
+		$this->assertFileExists($file);
+	}
+
+	public function testRemoveIfEmptyWithIgnoredFiles(): void
+	{
+		F::write(static::TMP . '/dir/.DS_Store', '');
+		F::write(static::TMP . '/dir/@eaDir/thumb.jpg', '');
+
+		$this->assertTrue(Dir::removeIfEmpty(static::TMP . '/dir'));
+		$this->assertDirectoryDoesNotExist(static::TMP . '/dir');
+	}
+
+	public function testRemoveIfEmptyWithoutDirectory(): void
+	{
+		$this->assertTrue(Dir::removeIfEmpty(static::TMP . '/missing'));
+	}
+
+	public function testScanVanished(): void
+	{
+		$method = new ReflectionMethod(Dir::class, 'scan');
+
+		// another process removed the directory before the scan
+		$this->assertSame([], $method->invoke(null, static::TMP . '/vanished'));
 	}
 
 	public function testIsReadable(): void
