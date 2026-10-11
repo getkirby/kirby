@@ -385,12 +385,11 @@ class Dir
 			return [];
 		}
 
-		// create the ignore pattern
-		$ignore ??= static::$ignore;
-		$ignore   = [...$ignore, '.', '..'];
-
 		// scan for all files and dirs
-		$result = array_values((array)array_diff(scandir($dir), $ignore));
+		$result = array_values(array_diff(
+			static::scan($dir),
+			$ignore ?? static::$ignore
+		));
 
 		// add absolute paths
 		if ($absolute === true) {
@@ -525,11 +524,7 @@ class Dir
 	 */
 	protected static function removeRecursive(string $dir): void
 	{
-		foreach (scandir($dir) as $childName) {
-			if (in_array($childName, ['.', '..'], true) === true) {
-				continue;
-			}
-
+		foreach (static::scan($dir) as $childName) {
 			$child = $dir . '/' . $childName;
 
 			if (is_dir($child) === true && is_link($child) === false) {
@@ -543,6 +538,29 @@ class Dir
 			fn (): bool => rmdir($dir),
 			fn () => true
 		);
+	}
+
+	/**
+	 * Returns all entries of the directory; a directory that another
+	 * process removed in the meantime has none, any other error throws
+	 * @since 5.7.0
+	 */
+	protected static function scan(string $dir): array
+	{
+		$entries = Helpers::handleErrors(
+			fn (): array|false => scandir($dir),
+			// if the dir was already removed (race condition),
+			fn (int $errno, string $errstr): bool => Str::endsWith($errstr, 'No such file or directory'),
+			// consider it empty
+			[]
+		);
+
+		// an unreadable directory must not pass for an empty one
+		if ($entries === false) {
+			throw new Exception(sprintf('The directory "%s" could not be read', $dir));
+		}
+
+		return array_values(array_diff($entries, ['.', '..']));
 	}
 
 	/**
