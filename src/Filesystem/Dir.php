@@ -438,18 +438,22 @@ class Dir
 	}
 
 	/**
-	 * Removes a folder including all containing files and folders
+	 * Removes a folder including all containing files and folders.
+	 * A link is removed itself; with a trailing slash (`link/`)
+	 * its target is removed instead, like with `rm -r`
 	 */
 	public static function remove(string $dir): bool
 	{
+		// remove the link itself, not its target
+		// (like `rm -r`, `link/` refers to the target)
+		if (is_link($dir) === true) {
+			return F::unlink($dir);
+		}
+
 		$dir = realpath($dir);
 
 		if (is_dir($dir) === false) {
 			return true;
-		}
-
-		if (is_link($dir) === true) {
-			return F::unlink($dir);
 		}
 
 		// Attempt an atomic rename before deletion to prevent race conditions

@@ -659,8 +659,18 @@ class FTest extends TestCase
 
 		$this->assertTrue(F::remove($b));
 
-		$this->assertFileDoesNotExist($a);
-		$this->assertTrue(is_link($b));
+		// only the link is removed, never its target
+		$this->assertFileExists($a);
+		$this->assertFalse(is_link($b));
+	}
+
+	public function testRemoveBrokenLink(): void
+	{
+		symlink(static::TMP . '/missing.jpg', $a = static::TMP . '/a.jpg');
+
+		$this->assertTrue(is_link($a));
+		$this->assertTrue(F::remove($a));
+		$this->assertFalse(is_link($a));
 	}
 
 	public function testRemoveGlob(): void
