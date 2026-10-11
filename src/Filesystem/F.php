@@ -1100,17 +1100,47 @@ class F
 			$content = serialize($content);
 		}
 
-		$mode = $append === true ? FILE_APPEND | LOCK_EX : LOCK_EX;
+		$mode   = $append === true ? FILE_APPEND | LOCK_EX : LOCK_EX;
+		$parent = dirname($file);
 
-		// create the parent directory if it does not exist yet
-		if (Dir::make(dirname($file)) === false) {
-			return false;
+		// a parallel request can remove the empty parent directory
+		// between creating it and writing, which then needs a retry
+		for ($attempt = 1; ; $attempt++) {
+			// the last attempt fails as loud as it always did
+			$last = $attempt === 3;
+
+			// create the parent directory if it does not exist yet
+			if (Dir::make($parent) === false) {
+				return false; // @codeCoverageIgnore
+			}
+
+			if (static::isWritable($file) === false) {
+				// retry only if the parent directory vanished again
+				clearstatcache(true, $parent);
+
+				if ($last === false && is_dir($parent) === false) {
+					continue;
+				}
+
+				throw new Exception('The file "' . $file . '" is not writable');
+			}
+
+			$retry   = false;
+			$written = Helpers::handleErrors(
+				fn (): int|false => file_put_contents($file, $content, $mode),
+				fn (int $errno, string $errstr): bool =>
+					$last === false &&
+					Str::endsWith($errstr, 'No such file or directory'),
+				function () use (&$retry, $parent): bool {
+					clearstatcache(true, $parent);
+					$retry = true;
+					return false;
+				}
+			);
+
+			if ($retry === false) {
+				return $written !== false;
+			}
 		}
-
-		if (static::isWritable($file) === false) {
-			throw new Exception('The file "' . $file . '" is not writable');
-		}
-
-		return file_put_contents($file, $content, $mode) !== false;
 	}
 }

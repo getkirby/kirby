@@ -2,6 +2,7 @@
 
 namespace Kirby\Filesystem;
 
+use ErrorException;
 use Exception;
 use Kirby\Exception\LogicException;
 use Kirby\Http\HeadersSent;
@@ -10,6 +11,37 @@ use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 use PHPUnit\Framework\Attributes\CoversClass;
 use stdClass;
+
+class FWriteRace extends F
+{
+	// how often a parallel request removes the
+	// empty parent directory before the writable check
+	// or between the check and the write
+	public static int $beforeCheck = 0;
+	public static int $beforeWrite = 0;
+
+	// how often the writable check ran
+	public static int $checks = 0;
+
+	public static function isWritable(string $file): bool
+	{
+		static::$checks++;
+
+		if (static::$beforeCheck > 0) {
+			static::$beforeCheck--;
+			rmdir(dirname($file));
+		}
+
+		$writable = parent::isWritable($file);
+
+		if (static::$beforeWrite > 0) {
+			static::$beforeWrite--;
+			rmdir(dirname($file));
+		}
+
+		return $writable;
+	}
+}
 
 #[CoversClass(F::class)]
 class FTest extends TestCase
@@ -41,6 +73,10 @@ class FTest extends TestCase
 
 		HeadersSent::$value = false;
 		F::$loadCache = [];
+
+		FWriteRace::$beforeCheck = 0;
+		FWriteRace::$beforeWrite = 0;
+		FWriteRace::$checks      = 0;
 	}
 
 	public function testAppend(): void
@@ -1007,6 +1043,59 @@ class FTest extends TestCase
 	public function testWrite(): void
 	{
 		$this->assertTrue(F::write($this->test, 'my content'));
+	}
+
+	public function testWriteNotWritable(): void
+	{
+		if (PHP_OS_FAMILY === 'Windows' || posix_getuid() === 0) {
+			$this->markTestSkipped('Needs file permissions that apply to the current user');
+		}
+
+		Dir::make($dir = static::TMP . '/dir');
+		chmod($dir, 0555);
+
+		try {
+			$this->expectException(Exception::class);
+			$this->expectExceptionMessage('The file "' . $dir . '/a.txt" is not writable');
+
+			FWriteRace::write($dir . '/a.txt', 'a');
+		} finally {
+			chmod($dir, 0755);
+
+			// a permission problem is not retried
+			$this->assertSame(1, FWriteRace::$checks);
+		}
+	}
+
+	public function testWriteVanishedBeforeCheck(): void
+	{
+		FWriteRace::$beforeCheck = 1;
+
+		$this->assertTrue(FWriteRace::write($file = static::TMP . '/dir/a.txt', 'a'));
+		$this->assertSame('a', F::read($file));
+	}
+
+	public function testWriteVanishedBeforeWrite(): void
+	{
+		FWriteRace::$beforeWrite = 1;
+
+		$this->assertTrue(FWriteRace::write($file = static::TMP . '/dir/a.txt', 'a'));
+		$this->assertSame('a', F::read($file));
+	}
+
+	public function testWriteVanishedEveryTime(): void
+	{
+		FWriteRace::$beforeWrite = 3;
+
+		// a handler that throws (e.g. Whoops)
+		set_error_handler(fn (int $errno, string $errstr) => throw new ErrorException($errstr));
+		$this->hasErrorHandler = true;
+
+		// the last of three attempts fails as loud as before
+		$this->expectException(ErrorException::class);
+		$this->expectExceptionMessage('No such file or directory');
+
+		FWriteRace::write(static::TMP . '/dir/a.txt', 'a');
 	}
 
 	public function testWriteArray(): void
