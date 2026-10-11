@@ -39,9 +39,17 @@ class DirTest extends TestCase
 	public const FIXTURES = __DIR__ . '/fixtures/dir';
 	public const TMP      = KIRBY_TMP_DIR . '/Filesystem.Dir';
 
+	protected array $ignore;
+
+	protected function setUp(): void
+	{
+		$this->ignore = Dir::$ignore;
+	}
+
 	protected function tearDown(): void
 	{
 		Helpers::$deprecations['dir-inventory'] = true;
+		Dir::$ignore = $this->ignore;
 		Dir::remove(static::TMP);
 	}
 
