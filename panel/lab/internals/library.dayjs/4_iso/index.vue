@@ -9,7 +9,9 @@
 		</k-box>
 
 		<k-lab-example label="dayjs.iso()" :code="false">
-			<k-code language="javascript">this.$library.dayjs.iso("2023-09-12", "date"): dayjs</k-code>
+			<k-code language="javascript"
+				>this.$library.dayjs.iso("2023-09-12", "date"): dayjs</k-code
+			>
 
 			<k-grid variant="fields">
 				<k-column width="1/4">

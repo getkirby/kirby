@@ -67,7 +67,9 @@ describe("panel.translation", () => {
 		it("interpolates template placeholders", () => {
 			const translation = Translation();
 			translation.set({ data: { greeting: "Hello {{ name }}" } });
-			expect(translation.translate("greeting", { name: "Peter" })).toStrictEqual("Hello Peter");
+			expect(
+				translation.translate("greeting", { name: "Peter" })
+			).toStrictEqual("Hello Peter");
 		});
 
 		it("returns a non-string value as-is", () => {
@@ -78,7 +80,9 @@ describe("panel.translation", () => {
 
 		it("returns the fallback when key does not exist", () => {
 			const translation = Translation();
-			expect(translation.translate("does-not-exist", {}, "Fallback")).toStrictEqual("Fallback");
+			expect(
+				translation.translate("does-not-exist", {}, "Fallback")
+			).toStrictEqual("Fallback");
 		});
 
 		it("returns undefined for non-string keys", () => {

@@ -14,9 +14,9 @@ export default {
 		openPasteboard(props = {}) {
 			this.$panel.dialog.open({
 				component: "k-block-pasteboard",
-				props: {},
+				props: {}
 			});
-		},
-	},
+		}
+	}
 };
 </script>

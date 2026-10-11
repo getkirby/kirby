@@ -17,13 +17,13 @@
 export default {
 	data() {
 		return {
-			page: 1,
+			page: 1
 		};
 	},
 	methods: {
 		async validate() {
 			throw new Error("Validation error");
-		},
-	},
+		}
+	}
 };
 </script>
