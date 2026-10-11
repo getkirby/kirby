@@ -135,6 +135,27 @@ class LanguageRoutesTest extends TestCase
 		$this->assertSame($expected, $response->header('Location'));
 	}
 
+	public function testHomeRedirectWithoutMatchingBaseUrl(): void
+	{
+		Uri::$current = new Uri('https://getkirby.com/tag:foo?bar=baz');
+
+		$app = $this->app->clone([
+			'languages' => [
+				['url' => 'https://en.getkirby.com'],
+				['url' => 'https://de.getkirby.com']
+			],
+			'urls' => ['index' => 'https://getkirby.com']
+		]);
+
+		$response = $app->call('');
+
+		$this->assertInstanceOf(Responder::class, $response);
+		$this->assertSame(
+			'https://en.getkirby.com/tag:foo?bar=baz',
+			$response->header('Location')
+		);
+	}
+
 	public function testNotNextWhenFalsyReturn(): void
 	{
 		$a = $b = $c = $d = $e = 0;
