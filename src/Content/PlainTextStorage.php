@@ -147,7 +147,7 @@ class PlainTextStorage extends Storage
 		$contentDirectory = $this->contentDirectory($versionId);
 
 		// clean up empty content directories (_changes or the page/user directory)
-		$this->deleteEmptyDirectory($contentDirectory);
+		Dir::removeIfEmpty($contentDirectory);
 
 		// delete empty _drafts directories for pages
 		if (
@@ -155,28 +155,7 @@ class PlainTextStorage extends Storage
 			$this->model instanceof Page &&
 			$this->model->isDraft() === true
 		) {
-			$this->deleteEmptyDirectory(dirname($contentDirectory));
-		}
-	}
-
-	/**
-	 * Helper to delete empty _changes directories
-	 *
-	 * @throws \Kirby\Exception\Exception if the directory cannot be deleted
-	 */
-	protected function deleteEmptyDirectory(string $directory): void
-	{
-		if (
-			Dir::exists($directory) === true &&
-			Dir::isEmpty($directory) === true
-		) {
-			// @codeCoverageIgnoreStart
-			if (Dir::remove($directory) !== true) {
-				throw new Exception(
-					message: 'Could not delete empty content directory'
-				);
-			}
-			// @codeCoverageIgnoreEnd
+			Dir::removeIfEmpty(dirname($contentDirectory));
 		}
 	}
 

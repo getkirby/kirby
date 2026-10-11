@@ -2,7 +2,6 @@
 
 namespace Kirby\Cache;
 
-use Kirby\Exception\Exception;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\Str;
@@ -181,30 +180,16 @@ class FileCache extends Cache
 	 */
 	protected function removeEmptyDirectories(string $dir): void
 	{
-		try {
-			// ensure the path doesn't end with a slash for the next comparison
-			$dir = rtrim($dir, '/\/');
+		// ensure the path doesn't end with a slash for the next comparison
+		$dir = rtrim($dir, '/\/');
 
-			// checks all directory segments until reaching the root directory
-			while (Str::startsWith($dir, $this->root()) === true && $dir !== $this->root()) {
-				$files = scandir($dir);
-
-				if ($files === false) {
-					$files = []; // @codeCoverageIgnore
-				}
-
-				$files = array_diff($files, ['.', '..']);
-
-				if ($files === [] && Dir::remove($dir) === true) {
-					// continue with the next level up
-					$dir = dirname($dir);
-				} else {
-					// no need to continue with the next level up as `$dir` was not deleted
-					break;
-				}
-			}
-		} catch (Exception) { // @codeCoverageIgnore
-			// silently stops the process
+		// remove each level up to the root, as long as it is empty
+		while (
+			Str::startsWith($dir, $this->root()) === true &&
+			$dir !== $this->root() &&
+			Dir::removeIfEmpty($dir) === true
+		) {
+			$dir = dirname($dir);
 		}
 	}
 
