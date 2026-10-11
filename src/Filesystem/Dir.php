@@ -518,6 +518,61 @@ class Dir
 	}
 
 	/**
+	 * Removes the directory if it holds nothing but ignored files
+	 * like `.DS_Store` (see `Dir::$ignore`); content that another
+	 * process adds in the meantime is never removed, though the
+	 * ignored files are already gone by then
+	 * @since 5.7.0
+	 *
+	 * @return bool Whether the directory is gone
+	 */
+	public static function removeIfEmpty(string $dir): bool
+	{
+		// a file or nothing is no directory to remove
+		if (is_dir($dir) === false) {
+			return file_exists($dir) === false;
+		}
+
+		$entries = static::scan($dir);
+
+		// keep a directory with content
+		if (array_diff($entries, static::$ignore) !== []) {
+			return false;
+		}
+
+		// remove the ignored files, which would keep
+		// the directory from being empty
+		foreach ($entries as $entry) {
+			$root = $dir . '/' . $entry;
+
+			if (is_dir($root) === true && is_link($root) === false) {
+				static::remove($root);
+			} else {
+				F::unlink($root);
+			}
+		}
+
+		// remove the link itself, not its target
+		if (is_link($dir) === true) {
+			return F::unlink($dir);
+		}
+
+		// `rmdir()` only removes an empty directory, so content
+		// that another process added since the scan stays
+		return Helpers::handleErrors(
+			fn (): bool => rmdir($dir),
+			fn (int $errno, string $errstr): bool =>
+				Str::endsWith($errstr, 'No such file or directory') ||
+				Str::endsWith($errstr, 'Directory not empty') ||
+				Str::endsWith($errstr, 'File exists'),
+			function () use ($dir): bool {
+				clearstatcache(true, $dir);
+				return file_exists($dir) === false;
+			}
+		);
+	}
+
+	/**
 	 * Recursively removes all contents of a directory and then the directory
 	 * itself; errors on the final rmdir are silently suppressed so that
 	 * partial failures (e.g. inside a renamed tmp dir) do not abort callers
