@@ -433,7 +433,7 @@ class Page extends ModelWithContent
 		int $code = 302,
 		bool $inherit = false
 	): void {
-		Response::go($this->url($options), $code, $inherit);
+		Response::go($this->url($options), $code, $inherit); // @codeCoverageIgnore
 	}
 
 	/**
