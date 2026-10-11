@@ -4,12 +4,16 @@
 			<k-text>
 				Formats a <code>dayjs</code> object based on a chosen format pattern.
 				Check out
-				<a href="https://day.js.org/docs/en/display/format">available formats</a>.
+				<a href="https://day.js.org/docs/en/display/format">available formats</a
+				>.
 			</k-text>
 		</k-box>
 
 		<k-lab-example label="dayjs.pattern().format()" :code="false">
-			<k-code language="javascript">this.$library.dayjs.pattern("Y/M/D").format(myDate): string|null</k-code>
+			<k-code language="javascript"
+				>this.$library.dayjs.pattern("Y/M/D").format(myDate):
+				string|null</k-code
+			>
 
 			<k-grid variant="fields">
 				<k-column width="1/3">

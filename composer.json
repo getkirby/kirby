@@ -98,7 +98,6 @@
 		"analyze:composer": "composer validate --strict --no-check-version --no-check-all",
 		"analyze:composer:unused": "./scripts/cpx icanhazstring/composer-unused:0.9.6 --no-progress",
 		"analyze:psalm": "./scripts/cpx vimeo/psalm:6.16.1",
-		"build": "./scripts/build",
 		"ci": [
 			"@fix",
 			"@analyze",

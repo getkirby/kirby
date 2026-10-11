@@ -22,12 +22,18 @@ function makeOptions(json: Record<string, unknown> = {}): {
 
 describe("RequestError", () => {
 	it("uses response.json.message as error message", () => {
-		const error = new RequestError("fallback", makeOptions({ message: "From JSON" }));
+		const error = new RequestError(
+			"fallback",
+			makeOptions({ message: "From JSON" })
+		);
 		expect(error.message).toBe("From JSON");
 	});
 
 	it("falls back to response.json.error when no message", () => {
-		const error = new RequestError("fallback", makeOptions({ error: "From error field" }));
+		const error = new RequestError(
+			"fallback",
+			makeOptions({ error: "From error field" })
+		);
 		expect(error.message).toBe("From error field");
 	});
 
