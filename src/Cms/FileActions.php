@@ -291,8 +291,8 @@ trait FileActions
 			// remove all public versions, lock and clear UUID cache
 			$file->unpublish();
 
-			// place the upload and resize it on the way if configured
-			$file = $file->place($upload, $create, $move);
+			// ingest the upload and resize it on the way if configured
+			$file = $file->ingest($upload, $create, $move);
 
 			// store the content once the final filename is known
 			$file->changeStorage($storage);
@@ -335,55 +335,10 @@ trait FileActions
 	}
 
 	/**
-	 * Resizes/crops the original file with Kirby's thumb handler
+	 * Ingests the source into the file's root. If options are given,
+	 * the source is resized in the cache folder beforehand.
 	 */
-	#[BlockCollectionAccess]
-	public function manipulate(array|null $options = []): static
-	{
-		// nothing to process
-		if (empty($options) === true || $this->isResizable() === false) {
-			return $this;
-		}
-
-		// resize a copy and put it back in place
-		return $this->place($this->asset(), $options)->clone();
-	}
-
-	protected static function normalizeProps(array $props): array
-	{
-		// Prevent injecting blueprint as this always must be derived from
-		// the template/model name and blueprint object in the app,
-		// never directly be supplied by the caller
-		unset($props['blueprint']);
-
-		if (isset($props['source'], $props['parent']) === false) {
-			throw new InvalidArgumentException(
-				message: 'Please provide the "source" and "parent" props for the File'
-			);
-		}
-
-		$content  = $props['content']  ?? [];
-		$template = $props['template'] ?? 'default';
-
-		// prefer the filename from the props
-		$filename = $props['filename'] ?? basename($props['source']);
-		$filename = F::safeName($filename);
-
-		return [
-			...$props,
-			'content'  => $content,
-			'filename' => $filename,
-			'model'    => $props['model'] ?? $template,
-			'template' => $template,
-		];
-	}
-
-	/**
-	 * Places the source at the file's root. If options are given,
-	 * the source is resized in the cache folder beforehand, so a slow
-	 * or failed resize never leaves files behind in the content folder.
-	 */
-	protected function place(
+	protected function ingest(
 		BaseFile $source,
 		array|null $options = null,
 		bool $move = false
@@ -436,6 +391,50 @@ trait FileActions
 	}
 
 	/**
+	 * Resizes/crops the original file with Kirby's thumb handler
+	 */
+	#[BlockCollectionAccess]
+	public function manipulate(array|null $options = []): static
+	{
+		// nothing to process
+		if (empty($options) === true || $this->isResizable() === false) {
+			return $this;
+		}
+
+		// resize a copy and put it back in place
+		return $this->ingest($this->asset(), $options)->clone();
+	}
+
+	protected static function normalizeProps(array $props): array
+	{
+		// Prevent injecting blueprint as this always must be derived from
+		// the template/model name and blueprint object in the app,
+		// never directly be supplied by the caller
+		unset($props['blueprint']);
+
+		if (isset($props['source'], $props['parent']) === false) {
+			throw new InvalidArgumentException(
+				message: 'Please provide the "source" and "parent" props for the File'
+			);
+		}
+
+		$content  = $props['content']  ?? [];
+		$template = $props['template'] ?? 'default';
+
+		// prefer the filename from the props
+		$filename = $props['filename'] ?? basename($props['source']);
+		$filename = F::safeName($filename);
+
+		return [
+			...$props,
+			'content'  => $content,
+			'filename' => $filename,
+			'model'    => $props['model'] ?? $template,
+			'template' => $template,
+		];
+	}
+
+	/**
 	 * Move the file to the public media folder
 	 * if it's not already there.
 	 *
@@ -475,7 +474,7 @@ trait FileActions
 			// overwrite the original and apply the
 			// resizing/crop options from the blueprint
 			$create = $file->blueprint()->create();
-			$file   = $file->place($upload, $create, $move);
+			$file   = $file->ingest($upload, $create, $move);
 
 			// return a fresh clone
 			return $file->clone();
