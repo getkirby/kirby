@@ -184,7 +184,7 @@ class PagePickerFieldTest extends TestCase
 
 	public function testDialogs(): void
 	{
-		$field = $this->field('pages', [
+		$field = $this->field('pagepicker', [
 			'model' => $this->model()
 		]);
 
@@ -195,10 +195,10 @@ class PagePickerFieldTest extends TestCase
 
 	public function testEmpty(): void
 	{
-		$field = $this->field('pages', ['empty' => 'Test']);
+		$field = $this->field('pagepicker', ['empty' => 'Test']);
 		$this->assertSame('Test', $field->empty());
 
-		$field = $this->field('pages', [
+		$field = $this->field('pagepicker', [
 			'empty' => ['en' => 'Test', 'de' => 'Töst']
 		]);
 		$this->assertSame('Test', $field->empty());
@@ -206,7 +206,7 @@ class PagePickerFieldTest extends TestCase
 
 	public function testFillWithPage(): void
 	{
-		$field = $this->field('pages', ['model' => $this->model()]);
+		$field = $this->field('pagepicker', ['model' => $this->model()]);
 		$field->fill($this->app->page('b'));
 
 		$this->assertSame(['page://my-b'], $field->toStoredValue());
@@ -214,7 +214,7 @@ class PagePickerFieldTest extends TestCase
 
 	public function testFillWithPages(): void
 	{
-		$field = $this->field('pages', ['model' => $this->model()]);
+		$field = $this->field('pagepicker', ['model' => $this->model()]);
 		$field->fill($this->model()->children());
 
 		$this->assertSame(['page://my-aa', 'page://my-ab'], $field->toStoredValue());
@@ -223,7 +223,7 @@ class PagePickerFieldTest extends TestCase
 	public function testImage(): void
 	{
 		// query string
-		$field = $this->field('pages', [
+		$field = $this->field('pagepicker', [
 			'image' => 'page.image',
 			'model' => $this->model()
 		]);
@@ -233,7 +233,7 @@ class PagePickerFieldTest extends TestCase
 		$this->assertInstanceOf(PagePickerDialogController::class, $field->dialogs()['picker']());
 
 		// disabled
-		$field = $this->field('pages', [
+		$field = $this->field('pagepicker', [
 			'image' => false,
 			'model' => $this->model()
 		]);
@@ -245,10 +245,10 @@ class PagePickerFieldTest extends TestCase
 
 	public function testIsValid(): void
 	{
-		$field = $this->field('pages', ['required' => true]);
+		$field = $this->field('pagepicker', ['required' => true]);
 		$this->assertFalse($field->isValid());
 
-		$field = $this->field('pages', [
+		$field = $this->field('pagepicker', [
 			'required' => true,
 			'value'    => ['a/aa'],
 		]);
@@ -257,7 +257,7 @@ class PagePickerFieldTest extends TestCase
 
 	public function testMax(): void
 	{
-		$field = $this->field('pages', [
+		$field = $this->field('pagepicker', [
 			'model' => $this->model(),
 			'value' => [
 				'a/aa', // exists
@@ -273,7 +273,7 @@ class PagePickerFieldTest extends TestCase
 
 	public function testMin(): void
 	{
-		$field = $this->field('pages', [
+		$field = $this->field('pagepicker', [
 			'model' => $this->model(),
 			'value' => [
 				'a/aa', // exists
@@ -290,7 +290,7 @@ class PagePickerFieldTest extends TestCase
 
 	public function testProps(): void
 	{
-		$field = $this->field('pages', [
+		$field = $this->field('pagepicker', [
 			'model' => $this->model()
 		]);
 		$props = $field->props();
@@ -331,14 +331,14 @@ class PagePickerFieldTest extends TestCase
 
 	public function testRequired(): void
 	{
-		$field = $this->field('pages', ['required' => true]);
+		$field = $this->field('pagepicker', ['required' => true]);
 		$this->assertTrue($field->required());
 		$this->assertSame(1, $field->min());
 	}
 
 	public function testToFormValue(): void
 	{
-		$field = $this->field('pages', [
+		$field = $this->field('pagepicker', [
 			'model' => $this->model(),
 			'value' => [
 				'a/aa', // exists
@@ -357,7 +357,7 @@ class PagePickerFieldTest extends TestCase
 
 	public function testToModel(): void
 	{
-		$field = $this->field('pages');
+		$field = $this->field('pagepicker');
 		$model = $field->toModel('a/aa');
 		$this->assertInstanceOf(Page::class, $model);
 		$this->assertSame('a/aa', $model->id());

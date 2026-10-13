@@ -490,6 +490,21 @@ class NormalizerTest extends TestCase
 		$this->assertSame('1/1', $props['width']);
 	}
 
+	public function testNormalizeFieldPropsWithAlias(): void
+	{
+		$props = Normalizer::normalizeFieldProps([
+			'name' => 'related',
+			'type' => 'pages'
+		]);
+
+		$this->assertSame('pagepicker', $props['type']);
+
+		// the type taken from the name is mapped as well
+		$props = Normalizer::normalizeFieldProps(['name' => 'files']);
+
+		$this->assertSame('filepicker', $props['type']);
+	}
+
 	public function testNormalizeFieldPropsWithGroup(): void
 	{
 		$props = Normalizer::normalizeFieldProps([

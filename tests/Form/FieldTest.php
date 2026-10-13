@@ -82,6 +82,10 @@ class RedeclaredMockField extends OptionsMockField
 	protected bool $enabled = false;
 }
 
+class FieldWithDialogsField extends Field
+{
+}
+
 class BrokenField extends Field
 {
 	public function props(): array
@@ -512,5 +516,28 @@ class FieldTest extends TestCase
 		$this->assertSame('Error', $array['label']);
 		$this->assertSame('negative', $array['theme']);
 		$this->assertSame('<p>Broken props</p>', (string)$array['text']);
+	}
+
+	public function testType(): void
+	{
+		// a field created directly takes its type from the class name
+		$field = new MockField();
+		$this->assertSame('mock', $field->type());
+	}
+
+	public function testTypeFromConstructor(): void
+	{
+		// a field keeps the type it was created for,
+		// even if its class name cannot express it
+		$field = new MockField(type: 'my-mock');
+		$this->assertSame('my-mock', $field->type());
+		$this->assertSame('my-mock', $field->props()['type']);
+	}
+
+	public function testTypeWithFieldInClassName(): void
+	{
+		// only the suffix is removed from the class name
+		$field = new FieldWithDialogsField();
+		$this->assertSame('fieldwithdialogs', $field->type());
 	}
 }

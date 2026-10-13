@@ -118,6 +118,25 @@ class FieldsTest extends TestCase
 		$this->assertInstanceOf(InfoField::class, $fields->get('a'));
 	}
 
+	public function testConstructWithRegisteredType(): void
+	{
+		// a field keeps the type it was registered with
+		Field::$types['my-info'] = InfoField::class;
+
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type' => 'my-info',
+				],
+			],
+			model: $this->model
+		);
+
+		$this->assertInstanceOf(InfoField::class, $fields->get('a'));
+		$this->assertSame('my-info', $fields->get('a')->type());
+		$this->assertSame('my-info', $fields->get('a')->toArray()['type']);
+	}
+
 	public function testDefaults(): void
 	{
 		$fields = new Fields([

@@ -256,7 +256,7 @@ class BlueprintFieldReferencesTest extends TestCase
 		$this->assertArrayHasKey('date', $metaFields);
 		$this->assertArrayHasKey('author', $metaFields);
 		$this->assertSame('date', $metaFields['date']['type']);
-		$this->assertSame('users', $metaFields['author']['type']);
+		$this->assertSame('userpicker', $metaFields['author']['type']);
 	}
 
 	public function testInlineFieldsExtractedToGlobal(): void

@@ -231,20 +231,6 @@ class Core
 	}
 
 	/**
-	 * Returns the field classes for the `files`, `pages` and `users`
-	 * type names. They referred to the picker fields in v5.
-	 * @since 6.0.0
-	 */
-	public function fieldAliases(): array
-	{
-		return [
-			'files' => FilePickerField::class,
-			'pages' => PagePickerField::class,
-			'users' => UserPickerField::class,
-		];
-	}
-
-	/**
 	 * Returns an array of all class names of panel fields
 	 *
 	 * The field classes can be found in `/kirby/src/Form/Field`
@@ -291,10 +277,6 @@ class Core
 			'url'         => UrlField::class,
 			'userpicker'  => UserPickerField::class,
 			'writer'      => WriterField::class,
-
-			// `files`, `pages` and `users` point at the
-			// picker fields.
-			...$this->fieldAliases(),
 		];
 	}
 
