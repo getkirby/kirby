@@ -149,7 +149,7 @@ class PageCreateDialogControllerTest extends TestCase
 					],
 					'fields' => [
 						'foo' => [
-							'type' => 'files',
+							'type' => 'filepicker',
 						]
 					]
 				]
@@ -160,7 +160,7 @@ class PageCreateDialogControllerTest extends TestCase
 
 		$controller = new PageCreateDialogController();
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Field type "files" not supported in create dialog');
+		$this->expectExceptionMessage('Field type "filepicker" not supported in create dialog');
 
 		$controller->customFields();
 	}

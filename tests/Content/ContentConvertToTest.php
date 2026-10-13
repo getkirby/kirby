@@ -77,6 +77,45 @@ class ContentConvertToTest extends TestCase
 		$this->assertSame('keep this', $new['removed']);
 	}
 
+	public function testConvertToForPageWithAlias(): void
+	{
+		// a deprecated type name and the type it points
+		// to are the same type and keep the content
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'template' => 'content-a',
+						'content'  => [
+							'related' => '- page://abc'
+						]
+					]
+				]
+			],
+			'blueprints' => [
+				'pages/content-a' => [
+					'fields' => [
+						'related' => [
+							'type' => 'pages'
+						]
+					]
+				],
+				'pages/content-b' => [
+					'fields' => [
+						'related' => [
+							'type' => 'pagepicker'
+						]
+					]
+				]
+			],
+		]);
+
+		$new = $app->page('test')->content()->convertTo('content-b');
+
+		$this->assertSame('- page://abc', $new['related']);
+	}
+
 	public function testConvertToForFile(): void
 	{
 		$app = $this->app->clone([
