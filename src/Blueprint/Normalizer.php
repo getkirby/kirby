@@ -22,6 +22,18 @@ use Throwable;
 class Normalizer
 {
 	/**
+	 * Maps the legacy `files`, `pages` and `users`
+	 * field types onto the picker fields
+	 *
+	 * @unstable
+	 */
+	public static array $fieldAliases = [
+		'files' => 'filepicker',
+		'pages' => 'pagepicker',
+		'users' => 'userpicker',
+	];
+
+	/**
 	 * Maps the legacy section types onto their field
 	 * equivalent. The `fields` section is not part of this
 	 * map, because it is unwrapped into its own fields.
@@ -303,6 +315,7 @@ class Normalizer
 
 		$name = $props['name'];
 		$type = $props['type'] ?? $name;
+		$type = static::$fieldAliases[$type] ?? $type;
 
 		if ($type !== 'group' && isset(Field::$types[$type]) === false) {
 			throw new InvalidArgumentException(

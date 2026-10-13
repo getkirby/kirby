@@ -149,13 +149,13 @@ class UserPickerFieldTest extends TestCase
 	{
 		$this->app->impersonate('raphael@getkirby.com');
 
-		$field = $this->field('users');
+		$field = $this->field('userpicker');
 		$this->assertSame([], $field->default());
 
-		$field = $this->field('users', ['default' => true]);
+		$field = $this->field('userpicker', ['default' => true]);
 		$this->assertSame('raphael', $field->default()[0]);
 
-		$field = $this->field('users', [
+		$field = $this->field('userpicker', [
 			'default' => [
 				'raphael@getkirby.com',
 				'donatello@getkirby.com'
@@ -165,13 +165,13 @@ class UserPickerFieldTest extends TestCase
 		$this->assertSame('raphael@getkirby.com', $field->default()[0]);
 		$this->assertSame('donatello@getkirby.com', $field->default()[1]);
 
-		$field = $this->field('users', ['default' => false]);
+		$field = $this->field('userpicker', ['default' => false]);
 		$this->assertSame([], $field->default());
 	}
 
 	public function testDialogs(): void
 	{
-		$field   = $this->field('users');
+		$field   = $this->field('userpicker');
 		$dialogs = $field->dialogs();
 		$dialog  = $dialogs['picker']();
 		$this->assertInstanceOf(UserPickerDialogController::class, $dialog);
@@ -179,10 +179,10 @@ class UserPickerFieldTest extends TestCase
 
 	public function testEmpty(): void
 	{
-		$field = $this->field('users', ['empty' => 'Test']);
+		$field = $this->field('userpicker', ['empty' => 'Test']);
 		$this->assertSame('Test', $field->empty());
 
-		$field = $this->field('users', [
+		$field = $this->field('userpicker', [
 			'empty' => ['en' => 'Test', 'de' => 'Töst']
 		]);
 		$this->assertSame('Test', $field->empty());
@@ -190,7 +190,7 @@ class UserPickerFieldTest extends TestCase
 
 	public function testFillWithUser(): void
 	{
-		$field = $this->field('users');
+		$field = $this->field('userpicker');
 		$field->fill($this->app->user('leonardo'));
 
 		$this->assertSame(['user://leonardo'], $field->toStoredValue());
@@ -198,7 +198,7 @@ class UserPickerFieldTest extends TestCase
 
 	public function testFillWithUsers(): void
 	{
-		$field = $this->field('users');
+		$field = $this->field('userpicker');
 		$field->fill($this->app->users()->limit(2));
 
 		$this->assertSame(['user://leonardo', 'user://raphael'], $field->toStoredValue());
@@ -206,7 +206,7 @@ class UserPickerFieldTest extends TestCase
 
 	public function testIsValid(): void
 	{
-		$field = $this->field('users', ['required' => true]);
+		$field = $this->field('userpicker', ['required' => true]);
 		$this->assertFalse($field->isValid());
 
 		$field = $this->field('tags', [
@@ -218,7 +218,7 @@ class UserPickerFieldTest extends TestCase
 
 	public function testMax(): void
 	{
-		$field = $this->field('users', [
+		$field = $this->field('userpicker', [
 			'value' => [
 				'leonardo@getkirby.com',
 				'raphael@getkirby.com'
@@ -233,7 +233,7 @@ class UserPickerFieldTest extends TestCase
 
 	public function testMin(): void
 	{
-		$field = $this->field('users', [
+		$field = $this->field('userpicker', [
 			'value' => [
 				'leonardo@getkirby.com',
 				'raphael@getkirby.com'
@@ -249,7 +249,7 @@ class UserPickerFieldTest extends TestCase
 
 	public function testProps(): void
 	{
-		$field = $this->field('users');
+		$field = $this->field('userpicker');
 		$props = $field->props();
 
 		ksort($props);
@@ -287,14 +287,14 @@ class UserPickerFieldTest extends TestCase
 
 	public function testRequired(): void
 	{
-		$field = $this->field('users', ['required' => true]);
+		$field = $this->field('userpicker', ['required' => true]);
 		$this->assertTrue($field->required());
 		$this->assertSame(1, $field->min());
 	}
 
 	public function testToModel(): void
 	{
-		$field = $this->field('users');
+		$field = $this->field('userpicker');
 		$model = $field->toModel('leonardo@getkirby.com');
 		$this->assertInstanceOf(User::class, $model);
 		$this->assertSame('leonardo@getkirby.com', $model->email());
@@ -302,7 +302,7 @@ class UserPickerFieldTest extends TestCase
 
 	public function testToStoredValue(): void
 	{
-		$field = $this->field('users', [
+		$field = $this->field('userpicker', [
 			'value' => [
 				'leonardo@getkirby.com', // exists
 				'raphael@getkirby.com', // exists

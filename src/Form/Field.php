@@ -31,6 +31,7 @@ abstract class Field implements Stringable
 	use Mixin\Name;
 	use Mixin\Siblings;
 	use Mixin\Translatable;
+	use Mixin\Type;
 	use Mixin\When;
 	use Mixin\Width;
 
@@ -174,7 +175,6 @@ abstract class Field implements Stringable
 			...(new Props($this))->values(),
 			'hidden'   => $this->isHidden(),
 			'saveable' => $this->hasValue(),
-			'type'     => $this->type(),
 		];
 	}
 
@@ -285,13 +285,5 @@ abstract class Field implements Stringable
 		ksort($props);
 
 		return array_filter($props, fn ($item) => $item !== null);
-	}
-
-	/**
-	 * Returns the field type
-	 */
-	public function type(): string
-	{
-		return strtolower(basename(str_replace(['\\', 'Field'], ['/', ''], static::class)));
 	}
 }
