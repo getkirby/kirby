@@ -3,6 +3,7 @@
 namespace Kirby\Cache;
 
 use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use ReflectionMethod;
@@ -357,6 +358,23 @@ class FileCacheTest extends TestCase
 		// remove
 		$this->assertTrue($cache->remove('foo/bar/baz/test'));
 		$this->assertDirectoryDoesNotExist($root . '/foo/bar/baz');
+		$this->assertDirectoryDoesNotExist($root . '/foo/bar');
+		$this->assertDirectoryDoesNotExist($root . '/foo');
+		$this->assertDirectoryExists($root);
+	}
+
+	public function testRemoveEmptyDirectoriesWithIgnoredFiles(): void
+	{
+		$cache = new FileCache([
+			'root'      => $root = static::TMP,
+			'extension' => 'cache'
+		]);
+
+		$this->assertTrue($cache->set('foo/bar/test', 'Value', 10));
+		F::write($root . '/foo/bar/.DS_Store', '');
+
+		// ignored files don't keep the directories around
+		$this->assertTrue($cache->remove('foo/bar/test'));
 		$this->assertDirectoryDoesNotExist($root . '/foo/bar');
 		$this->assertDirectoryDoesNotExist($root . '/foo');
 		$this->assertDirectoryExists($root);
