@@ -3,6 +3,7 @@ import type Panel from "@/panel/panel";
 declare global {
 	interface Window {
 		panel: Panel;
+		panelPlugins?: string[];
 		panelState: Record<string, unknown>;
 	}
 

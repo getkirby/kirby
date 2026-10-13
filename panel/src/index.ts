@@ -14,6 +14,7 @@ import Legacy from "./panel/legacy";
 import Libraries from "./libraries/index";
 import Panel from "./panel/panel";
 import SafeHtml from "./config/safeHtml";
+import { load as Plugins } from "./panel/plugins";
 
 import preserveDataAttrs from "./mixins/preserveDataAttrs";
 import preserveListeners from "./mixins/preserveListeners";
@@ -45,34 +46,35 @@ app.mixin(preserveDataAttrs);
 app.mixin(preserveListeners);
 
 /**
- * Create the Panel instance
- */
-Panel.create(app, window.panel.plugins);
-
-/**
  * Load CSS utilities after components
  * to increase specificity
  */
 import "./styles/utilities.css";
 
 /**
- * Additional functionalities and app configuration
+ * Creates the Panel instance and mounts the app
  */
-app.use(I18n);
-app.use(ErrorHandling);
-app.use(SafeHtml);
-app.use(Legacy);
+function mount(): void {
+	Panel.create(app, window.panel.plugins);
+
+	// additional functionalities and app configuration
+	app.use(I18n);
+	app.use(ErrorHandling);
+	app.use(SafeHtml);
+	app.use(Legacy);
+
+	// restore some Vue 2 functionality
+	app.mixin({
+		mounted() {
+			this.$el.__vue__ = this;
+		}
+	});
+
+	app.mount("#app");
+}
 
 /**
- * Restore some Vue 2 functionality
+ * Load the plugins once the core components are registered,
+ * then mount the Panel app
  */
-app.mixin({
-	mounted() {
-		this.$el.__vue__ = this;
-	}
-});
-
-/**
- * Mount the Vue application
- */
-app.mount("#app");
+Plugins(window.panelPlugins).then(mount);

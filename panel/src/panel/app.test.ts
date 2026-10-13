@@ -58,6 +58,29 @@ describe("panel.app", () => {
 			wrapper.unmount();
 		});
 
+		it("should keep registering after a broken created plugin", () => {
+			const panel = Panel.create(app);
+			const error = vi.spyOn(panel, "error").mockImplementation(() => {});
+			const open = vi.spyOn(panel, "open").mockResolvedValue(undefined);
+			const broken = new Error("broken");
+			const plugin = vi.fn();
+
+			panel.plugins.created.push(() => {
+				throw broken;
+			}, plugin);
+
+			const wrapper = render(panel);
+
+			expect(plugin).toHaveBeenCalledOnce();
+			expect(error).toHaveBeenCalledWith(broken);
+
+			// the rest of created() still runs
+			panel.events.emit("popstate");
+			expect(open).toHaveBeenCalledOnce();
+
+			wrapper.unmount();
+		});
+
 		it("should open the current location on popstate", () => {
 			const panel = Panel.create(app);
 			const open = vi.spyOn(panel, "open").mockResolvedValue(undefined);

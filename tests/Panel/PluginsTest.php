@@ -21,115 +21,164 @@ class PluginsTest extends TestCase
 	protected string $devJsB;
 	protected string $devJsC;
 
-	public function createPlugins()
-	{
-		$time = \time() + 2;
-
-		F::write(static::TMP . '/site/plugins/a/index.php', '<?php Kirby::plugin("test/a", []);');
-		touch(static::TMP . '/site/plugins/a/index.php', $time);
-		F::write($this->cssA = static::TMP . '/site/plugins/a/index.css', 'a');
-		touch($this->cssA, $time);
-		F::write($this->jsA = static::TMP . '/site/plugins/a/index.js', 'a');
-		touch($this->jsA, $time);
-		F::write($this->jsA = static::TMP . '/site/plugins/a/index.js', 'a');
-		$this->devJsA = static::TMP . '/site/plugins/a/index.dev.js';
-
-		F::write(static::TMP . '/site/plugins/b/index.php', '<?php Kirby::plugin("test/b", []);');
-		touch(static::TMP . '/site/plugins/b/index.php', $time);
-		F::write($this->cssB = static::TMP . '/site/plugins/b/index.css', 'b');
-		touch($this->cssB, $time);
-		F::write($this->jsB = static::TMP . '/site/plugins/b/index.js', 'b');
-		touch($this->jsB, $time);
-		$this->devJsB = static::TMP . '/site/plugins/b/index.dev.js';
-
-		F::write(static::TMP . '/site/plugins/c/index.php', '<?php Kirby::plugin("test/c", []);');
-		touch(static::TMP . '/site/plugins/c/index.php', $time);
-		F::write($this->cssC = static::TMP . '/site/plugins/c/index.css', 'c');
-		touch($this->cssC, $time);
-		F::write($this->jsC = static::TMP . '/site/plugins/c/index.js', 'c');
-		touch($this->jsC, $time);
-		$this->devJsC = static::TMP . '/site/plugins/c/index.dev.js';
-
-		return $time;
-	}
-
 	protected function tearDown(): void
 	{
 		Dir::remove(static::TMP);
 	}
 
-	public function testFiles(): void
+	public function createPlugins(): void
+	{
+		F::write(static::TMP . '/site/plugins/a/index.php', '<?php Kirby::plugin("test/a", []);');
+		F::write($this->cssA = static::TMP . '/site/plugins/a/index.css', 'a');
+		F::write($this->jsA = static::TMP . '/site/plugins/a/index.js', 'a');
+		$this->devJsA = static::TMP . '/site/plugins/a/index.dev.js';
+
+		F::write(static::TMP . '/site/plugins/b/index.php', '<?php Kirby::plugin("test/b", []);');
+		F::write($this->cssB = static::TMP . '/site/plugins/b/index.css', 'b');
+		F::write($this->jsB = static::TMP . '/site/plugins/b/index.js', 'b');
+		$this->devJsB = static::TMP . '/site/plugins/b/index.dev.js';
+
+		F::write(static::TMP . '/site/plugins/c/index.php', '<?php Kirby::plugin("test/c", []);');
+		F::write($this->cssC = static::TMP . '/site/plugins/c/index.css', 'c');
+		F::write($this->jsC = static::TMP . '/site/plugins/c/index.js', 'c');
+		$this->devJsC = static::TMP . '/site/plugins/c/index.dev.js';
+	}
+
+	public function testCss(): void
+	{
+		$this->createPlugins();
+
+		// an empty stylesheet
+		F::write($this->cssB, '');
+
+		// app must be created again to load the new plugins
+		$app = $this->app->clone();
+
+		$plugins = new Plugins();
+		$media   = $this->app->url('media') . '/plugins/test/';
+
+		$this->assertSame([
+			$media . 'a.' . hash('xxh3', 'a') . '.css',
+			$media . 'c.' . hash('xxh3', 'c') . '.css',
+		], $plugins->css());
+	}
+
+	public function testCssWithoutPlugins(): void
+	{
+		$plugins = new Plugins();
+		$this->assertSame([], $plugins->css());
+	}
+
+	public function testJs(): void
+	{
+		$this->createPlugins();
+
+		// a plugin in development
+		F::write($this->devJsB, 'dev b');
+
+		// an empty script
+		F::write($this->jsC, '');
+
+		// app must be created again to load the new plugins
+		$app = $this->app->clone();
+
+		$plugins = new Plugins();
+		$media   = $this->app->url('media') . '/plugins/test/';
+
+		$this->assertSame([
+			$media . 'a.' . hash('xxh3', 'a') . '.js',
+			$media . 'b.' . hash('xxh3', 'dev b') . '.dev.js',
+		], $plugins->js());
+	}
+
+	public function testJsWithSameModificationTime(): void
+	{
+		$this->createPlugins();
+		touch($this->jsA, $time = time());
+
+		// app must be created again to load the new plugins
+		$app    = $this->app->clone();
+		$before = (new Plugins())->js();
+
+		// a rebuild within the same second
+		F::write($this->jsA, 'a2');
+		touch($this->jsA, $time);
+		clearstatcache();
+
+		$this->assertNotSame($before, (new Plugins())->js());
+	}
+
+	public function testResolve(): void
+	{
+		$this->createPlugins();
+		F::write($this->devJsA, 'dev a');
+
+		// app must be created again to load the new plugins
+		$app = $this->app->clone();
+
+		$response = Plugins::resolve('test/a', hash('xxh3', 'a'), 'js');
+		$this->assertSame('a', $response->body());
+		$this->assertSame('text/javascript', $response->type());
+		$this->assertSame(
+			'public, max-age=31536000, immutable',
+			$response->headers()['Cache-Control']
+		);
+
+		$response = Plugins::resolve('test/a', hash('xxh3', 'dev a'), 'dev.js');
+		$this->assertSame('dev a', $response->body());
+
+		$response = Plugins::resolve('test/a', hash('xxh3', 'a'), 'css');
+		$this->assertSame('a', $response->body());
+		$this->assertSame('text/css', $response->type());
+	}
+
+	public function testResolveRoute(): void
 	{
 		$this->createPlugins();
 
 		// app must be created again to load the new plugins
 		$app = $this->app->clone();
 
-		$plugins  = new Plugins();
-		$expected = [
-			$this->cssA,
-			$this->jsA,
-			$this->devJsA,
-			$this->cssB,
-			$this->jsB,
-			$this->devJsB,
-			$this->cssC,
-			$this->jsC,
-			$this->devJsC,
-		];
+		$hash = hash('xxh3', 'b');
 
-		$this->assertSame($expected, $plugins->files());
-		// from cached property
-		$this->assertSame($expected, $plugins->files());
+		$response = $app->call('media/plugins/test/b.' . $hash . '.js');
+		$this->assertSame('b', $response->body());
+
+		$response = $app->call('media/plugins/test/b.' . $hash . '.css');
+		$this->assertSame('b', $response->body());
+
+		$this->assertNull($app->call('media/plugins/test/b.' . $hash . '.dev.js'));
+		$this->assertNull($app->call('media/plugins/test/b.js'));
+		$this->assertNull($app->call('media/plugins/index.css'));
 	}
 
-	public function testModifiedWithoutFiles(): void
+	public function testResolveWithOutdatedHash(): void
 	{
-		$plugins = new Plugins();
-		$this->assertSame(0, $plugins->modified());
-	}
-
-	public function testModifiedWithFiles(): void
-	{
-		$time = $this->createPlugins();
+		$this->createPlugins();
 
 		// app must be created again to load the new plugins
-		$app = $this->app->clone();
+		$app  = $this->app->clone();
+		$hash = hash('xxh3', 'a');
 
-		$plugins = new Plugins();
-		$this->assertSame($time, $plugins->modified());
+		// the plugin gets updated
+		F::write($this->jsA, 'a2');
+
+		$this->assertNull(Plugins::resolve('test/a', $hash, 'js'));
+		$this->assertNull($app->call('media/plugins/test/a.' . $hash . '.js'));
 	}
 
-	public function testRead(): void
+	public function testResolveWithoutFile(): void
 	{
 		$this->createPlugins();
 
 		// app must be created again to load the new plugins
 		$app = $this->app->clone();
 
-		$plugins = new Plugins();
-
-		// css
-		$expected = "a\n\nb\n\nc";
-		$this->assertSame($expected, $plugins->read('css'));
-
-		// js
-		$expected = "a;\n\nb;\n\nc;";
-		$this->assertSame($expected, $plugins->read('js'));
+		$this->assertNull(Plugins::resolve('test/a', hash('xxh3', ''), 'dev.js'));
 	}
 
-	public function testUrl(): void
+	public function testResolveWithoutPlugin(): void
 	{
-		// css
-		$plugins  = new Plugins();
-		$expected = $this->app->url('media') . '/plugins/index.css?0';
-
-		$this->assertSame($expected, $plugins->url('css'));
-
-		// js
-		$plugins  = new Plugins();
-		$expected = $this->app->url('media') . '/plugins/index.js?0';
-
-		$this->assertSame($expected, $plugins->url('js'));
+		$this->assertNull(Plugins::resolve('test/missing', hash('xxh3', ''), 'js'));
 	}
 }
