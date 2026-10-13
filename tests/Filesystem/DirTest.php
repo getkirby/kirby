@@ -606,6 +606,30 @@ class DirTest extends TestCase
 		$this->assertSame($expected, $files);
 	}
 
+	public function testReadUnreadable(): void
+	{
+		if (PHP_OS_FAMILY === 'Windows' || posix_getuid() === 0) {
+			$this->markTestSkipped('Needs file permissions that apply to the current user');
+		}
+
+		F::write(static::TMP . '/unreadable/a.txt', 'a');
+		chmod($dir = static::TMP . '/unreadable', 0000);
+
+		// without a handler that throws (e.g. Whoops)
+		set_error_handler(fn () => true);
+
+		try {
+			// an unreadable directory must not pass for an empty one
+			$this->expectException(Exception::class);
+			$this->expectExceptionMessage('The directory "' . $dir . '" could not be read');
+
+			Dir::read($dir);
+		} finally {
+			restore_error_handler();
+			chmod($dir, 0755);
+		}
+	}
+
 	public function testRealpath(): void
 	{
 		$path = Dir::realpath(__DIR__ . '/../Filesystem');
@@ -903,6 +927,16 @@ class DirTest extends TestCase
 	public function testRemoveIfEmptyWithoutDirectory(): void
 	{
 		$this->assertTrue(Dir::removeIfEmpty(static::TMP . '/missing'));
+	}
+
+	public function testRemoveRecursiveVanished(): void
+	{
+		$method = new ReflectionMethod(Dir::class, 'removeRecursive');
+
+		// another process removed the directory first
+		$method->invoke(null, static::TMP . '/vanished');
+
+		$this->assertDirectoryDoesNotExist(static::TMP . '/vanished');
 	}
 
 	public function testScanVanished(): void

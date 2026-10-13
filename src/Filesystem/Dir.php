@@ -385,12 +385,11 @@ class Dir
 			return [];
 		}
 
-		// create the ignore pattern
-		$ignore ??= static::$ignore;
-		$ignore   = [...$ignore, '.', '..'];
-
 		// scan for all files and dirs
-		$result = array_values((array)array_diff(scandir($dir), $ignore));
+		$result = array_values(array_diff(
+			static::scan($dir),
+			$ignore ?? static::$ignore
+		));
 
 		// add absolute paths
 		if ($absolute === true) {
@@ -576,11 +575,7 @@ class Dir
 	 */
 	protected static function removeRecursive(string $dir): void
 	{
-		foreach (scandir($dir) as $childName) {
-			if (in_array($childName, ['.', '..'], true) === true) {
-				continue;
-			}
-
+		foreach (static::scan($dir) as $childName) {
 			$child = $dir . '/' . $childName;
 
 			if (is_dir($child) === true && is_link($child) === false) {
