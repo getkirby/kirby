@@ -58,8 +58,8 @@ class PluginsTest extends TestCase
 		$media   = $this->app->url('media') . '/plugins/test/';
 
 		$this->assertSame([
-			$media . 'a.css?' . hash('xxh3', 'a'),
-			$media . 'c.css?' . hash('xxh3', 'c'),
+			$media . 'a.' . hash('xxh3', 'a') . '.css',
+			$media . 'c.' . hash('xxh3', 'c') . '.css',
 		], $plugins->css());
 	}
 
@@ -86,8 +86,8 @@ class PluginsTest extends TestCase
 		$media   = $this->app->url('media') . '/plugins/test/';
 
 		$this->assertSame([
-			$media . 'a.js?' . hash('xxh3', 'a'),
-			$media . 'b.dev.js?' . hash('xxh3', 'dev b'),
+			$media . 'a.' . hash('xxh3', 'a') . '.js',
+			$media . 'b.' . hash('xxh3', 'dev b') . '.dev.js',
 		], $plugins->js());
 	}
 
@@ -116,7 +116,7 @@ class PluginsTest extends TestCase
 		// app must be created again to load the new plugins
 		$app = $this->app->clone();
 
-		$response = Plugins::resolve('test/a', 'js');
+		$response = Plugins::resolve('test/a', hash('xxh3', 'a'), 'js');
 		$this->assertSame('a', $response->body());
 		$this->assertSame('text/javascript', $response->type());
 		$this->assertSame(
@@ -124,10 +124,10 @@ class PluginsTest extends TestCase
 			$response->headers()['Cache-Control']
 		);
 
-		$response = Plugins::resolve('test/a', 'dev.js');
+		$response = Plugins::resolve('test/a', hash('xxh3', 'dev a'), 'dev.js');
 		$this->assertSame('dev a', $response->body());
 
-		$response = Plugins::resolve('test/a', 'css');
+		$response = Plugins::resolve('test/a', hash('xxh3', 'a'), 'css');
 		$this->assertSame('a', $response->body());
 		$this->assertSame('text/css', $response->type());
 	}
@@ -139,14 +139,32 @@ class PluginsTest extends TestCase
 		// app must be created again to load the new plugins
 		$app = $this->app->clone();
 
-		$response = $app->call('media/plugins/test/b.js');
+		$hash = hash('xxh3', 'b');
+
+		$response = $app->call('media/plugins/test/b.' . $hash . '.js');
 		$this->assertSame('b', $response->body());
 
-		$response = $app->call('media/plugins/test/b.css');
+		$response = $app->call('media/plugins/test/b.' . $hash . '.css');
 		$this->assertSame('b', $response->body());
 
-		$this->assertNull($app->call('media/plugins/test/b.dev.js'));
+		$this->assertNull($app->call('media/plugins/test/b.' . $hash . '.dev.js'));
+		$this->assertNull($app->call('media/plugins/test/b.js'));
 		$this->assertNull($app->call('media/plugins/index.css'));
+	}
+
+	public function testResolveWithOutdatedHash(): void
+	{
+		$this->createPlugins();
+
+		// app must be created again to load the new plugins
+		$app  = $this->app->clone();
+		$hash = hash('xxh3', 'a');
+
+		// the plugin gets updated
+		F::write($this->jsA, 'a2');
+
+		$this->assertNull(Plugins::resolve('test/a', $hash, 'js'));
+		$this->assertNull($app->call('media/plugins/test/a.' . $hash . '.js'));
 	}
 
 	public function testResolveWithoutFile(): void
@@ -156,11 +174,11 @@ class PluginsTest extends TestCase
 		// app must be created again to load the new plugins
 		$app = $this->app->clone();
 
-		$this->assertNull(Plugins::resolve('test/a', 'dev.js'));
+		$this->assertNull(Plugins::resolve('test/a', hash('xxh3', ''), 'dev.js'));
 	}
 
 	public function testResolveWithoutPlugin(): void
 	{
-		$this->assertNull(Plugins::resolve('test/missing', 'js'));
+		$this->assertNull(Plugins::resolve('test/missing', hash('xxh3', ''), 'js'));
 	}
 }

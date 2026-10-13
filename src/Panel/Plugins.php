@@ -39,14 +39,15 @@ class Plugins
 
 	/**
 	 * Returns the stylesheet or script of a plugin
-	 * as response; its URL changes with the file,
-	 * so browsers can cache it for good
+	 * as response; its URL path contains the file hash,
+	 * so browsers and CDNs can cache it for good
 	 * @since 6.0.0
 	 *
 	 * @param string $extension `css`, `js` or `dev.js`
 	 */
 	public static function resolve(
 		string $plugin,
+		string $hash,
 		string $extension
 	): Response|null {
 		$plugin = App::instance()->plugin($plugin);
@@ -57,7 +58,9 @@ class Plugins
 
 		$root = $plugin->root() . '/index.' . $extension;
 
-		if (is_file($root) === false) {
+		// only serve the file the URL was created for,
+		// so no cache stores another file under that URL
+		if (is_file($root) === false || hash_file('xxh3', $root) !== $hash) {
 			return null;
 		}
 
@@ -82,7 +85,7 @@ class Plugins
 				$root = $plugin->root() . '/index.' . $extension;
 
 				if (F::size($root) > 0) {
-					$urls[] = $plugin->mediaUrl() . '.' . $extension . '?' . hash_file('xxh3', $root);
+					$urls[] = $plugin->mediaUrl() . '.' . hash_file('xxh3', $root) . '.' . $extension;
 					break;
 				}
 			}

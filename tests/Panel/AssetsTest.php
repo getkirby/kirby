@@ -173,7 +173,7 @@ class AssetsTest extends TestCase
 
 		$this->assertSame([
 			'/media/panel/' . $this->app->versionHash() . '/css/style.min.css',
-			'/media/plugins/plugins/a.css?' . hash('xxh3', 'a')
+			'/media/plugins/plugins/a.' . hash('xxh3', 'a') . '.css'
 		], array_values($css));
 	}
 
@@ -522,7 +522,7 @@ class AssetsTest extends TestCase
 		$js = (new Assets())->js();
 
 		$this->assertSame([
-			'/media/plugins/test/a.js?' . hash('xxh3', 'a')
+			'/media/plugins/test/a.' . hash('xxh3', 'a') . '.js'
 		], $js['index']['plugins']);
 	}
 
