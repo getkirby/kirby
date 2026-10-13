@@ -14,6 +14,7 @@ use Kirby\Image\Darkroom;
 use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Uuid\Uuid;
 use Kirby\Uuid\Uuids;
+use Throwable;
 
 /**
  * FileActions
@@ -312,23 +313,11 @@ trait FileActions
 				// remove all public versions, lock and clear UUID cache
 				$file->unpublish();
 
-				// only move the original source if intended
-				$method = $move === true ? 'move' : 'copy';
+				// ingest the upload and resize it on the way if configured
+				$file = $file->ingest($upload, $create, $move);
 
-				// overwrite the original
-				if (F::$method($upload->root(), $file->root(), true) !== true) {
-					// @codeCoverageIgnoreStart
-					throw new LogicException(
-						message: 'The file could not be created'
-					);
-					// @codeCoverageIgnoreEnd
-				}
-
-				// store the content first, manipulate() works on a fresh clone
+				// store the content once the final filename is known
 				$file->changeStorage($storage);
-
-				// resize the file on upload if configured
-				$file = $file->manipulate($create);
 
 				$file->uuid()?->populate();
 
@@ -373,6 +362,62 @@ trait FileActions
 	}
 
 	/**
+	 * Ingests the source into the file's root. If options are given,
+	 * the source is resized in the cache folder beforehand.
+	 */
+	protected function ingest(
+		FilesystemFile $source,
+		array|null $options = null,
+		bool $move = false
+	): static {
+		$root   = $source->root();
+		$method = $move === true ? 'move' : 'copy';
+		$format = null;
+
+		if ($options !== null && $options !== []) {
+			$tmp = $this->kirby()->root('cache') . '/.uploads/' . uniqid() . '.' . $this->filename();
+
+			F::$method($root, $tmp);
+
+			$root   = $tmp;
+			$method = 'move';
+
+			// check the copy as it carries the final extension,
+			// the source might have none (e.g. `tmp_name` from forms)
+			if ($this->assetFactory($tmp)->isResizable() === true) {
+				try {
+					// apply the options on top of the defaults
+					// instead of the global thumb settings
+					$this->kirby()->thumb($tmp, $tmp, [
+						...Darkroom::defaultOptions(),
+						...$options
+					]);
+				} catch (Throwable $e) {
+					F::remove($tmp);
+					throw $e;
+				}
+
+				$format = $options['format'] ?? null;
+			}
+		}
+
+		if (F::$method($root, $this->root(), true) !== true) {
+			// @codeCoverageIgnoreStart
+			throw new LogicException(
+				message: 'The file could not be created'
+			);
+			// @codeCoverageIgnoreEnd
+		}
+
+		// change the file extension if format option configured
+		if ($format !== null) {
+			return $this->changeExtension($this, $format);
+		}
+
+		return $this;
+	}
+
+	/**
 	 * Resizes/crops the original file with Kirby's thumb handler
 	 */
 	#[BlockCollectionAccess]
@@ -383,21 +428,8 @@ trait FileActions
 			return $this;
 		}
 
-		// apply the options on top of the defaults
-		// instead of the global thumb settings
-		$options = [...Darkroom::defaultOptions(), ...$options];
-
-		// generate image file and overwrite it in place
-		$this->kirby()->thumb($this->root(), $this->root(), $options);
-
-		$file = $this->clone();
-
-		// change the file extension if format option configured
-		if ($format = $options['format'] ?? null) {
-			$file = $file->changeExtension($file, $format);
-		}
-
-		return $file;
+		// resize a copy and put it back in place
+		return $this->ingest($this->asset(), $options)->clone();
 	}
 
 	protected static function normalizeProps(array $props): array
@@ -461,7 +493,7 @@ trait FileActions
 			action:    'replace',
 			arguments: [
 				'file'   => $file,
-				'upload' => $file->asset($source)
+				'upload' => $file->assetFactory($source)
 			],
 			callback: function (
 				File $file,
@@ -470,19 +502,10 @@ trait FileActions
 				// delete all public versions
 				$file->unpublish(true);
 
-				// only move the original source if intended
-				$method = $move === true ? 'move' : 'copy';
-
-				// overwrite the original
-				if (F::$method($upload->root(), $file->root(), true) !== true) {
-					throw new LogicException(
-						message: 'The file could not be created'
-					);
-				}
-
-				// apply the resizing/crop options from the blueprint
+				// overwrite the original and apply the
+				// resizing/crop options from the blueprint
 				$create = $file->blueprint()->create();
-				$file   = $file->manipulate($create);
+				$file   = $file->ingest($upload, $create, $move);
 
 				// return a fresh clone
 				return $file->clone();

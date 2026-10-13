@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Exception;
+use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(File::class)]
@@ -30,6 +32,36 @@ class FileManipulateTest extends ModelTestCase
 		$this->assertSame($originalFile->root(), $replacedFile->root());
 		$this->assertSame(100, $replacedFile->width());
 		$this->assertSame(100, $replacedFile->height());
+	}
+
+	public function testManipulateFailure(): void
+	{
+		$parent = new Page(['slug' => 'test']);
+		$source = static::FIXTURES . '/test.jpg';
+		$file   = File::create([
+			'filename' => 'test.jpg',
+			'source'   => $source,
+			'parent'   => $parent
+		]);
+
+		$this->app = $this->app->clone([
+			'components' => [
+				'thumb' => function () {
+					throw new Exception('Resize failed');
+				}
+			]
+		]);
+
+		try {
+			$file->manipulate(['width' => 100]);
+			$this->fail('The resize did not fail');
+		} catch (Exception $e) {
+			$this->assertSame('Resize failed', $e->getMessage());
+		}
+
+		// the original file is untouched
+		$this->assertFileEquals($source, $file->root());
+		$this->assertSame([], Dir::read($this->app->root('cache') . '/.uploads'));
 	}
 
 	public function testManipulateNonImage(): void
