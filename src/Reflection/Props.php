@@ -94,9 +94,8 @@ class Props
 	}
 
 	/**
-	 * Returns the `#[Prop]` attribute of the property. Attributes are
-	 * not inherited by PHP, so the attribute of the closest parent
-	 * declaration is used when a child class redeclares the property.
+	 * Returns the `#[Prop]` attribute of the property,
+	 * falling back to the one of a redeclared parent property
 	 */
 	protected function attribute(ReflectionProperty $property): Prop|null
 	{
@@ -123,7 +122,7 @@ class Props
 		$names = [];
 
 		foreach ($props as $name => $prop) {
-			$key = $prop['attribute']->exportName($name);
+			$key = $prop['attribute']->export($name);
 
 			if ($key === null) {
 				continue;
@@ -187,9 +186,8 @@ class Props
 	}
 
 	/**
-	 * Returns a closure that reads the exported values. It is bound
-	 * to the scope of the class, so that it can call protected getters
-	 * and read protected properties without going through reflection.
+	 * Returns a closure bound to the class scope that
+	 * reads exported values, incl. protected ones
 	 */
 	protected static function exporter(string $class): Closure
 	{
@@ -220,9 +218,8 @@ class Props
 	}
 
 	/**
-	 * Returns the getter method for the property. A getter that is
-	 * named in the attribute may also be protected. Otherwise, a
-	 * public method with the name of the property is used.
+	 * Returns the getter named in the attribute or
+	 * the public method named like the property
 	 *
 	 * @throws LogicException if the named getter is invalid
 	 */
@@ -309,10 +306,8 @@ class Props
 	}
 
 	/**
-	 * Sets the value of a prop. If the attribute names a setter,
-	 * the value is passed to it. Otherwise, associative arrays
-	 * are merged into the current value and all other values
-	 * replace it.
+	 * Sets the value of a prop via its setter or directly,
+	 * merging associative arrays into the current value
 	 *
 	 * @throws LogicException if the prop does not exist
 	 * @throws \TypeError if the value has the wrong type
@@ -417,12 +412,8 @@ class Props
 	}
 
 	/**
-	 * Returns the current values of all exportable props, sorted by name.
-	 * Each value is read via the getter from the attribute or the public
-	 * method with the same name as the property, if there is one.
-	 * Otherwise, the property value is used as is. Props marked with
-	 * `#[Prop(export: false)]` are skipped. Props with
-	 * `#[Prop(export: 'name')]` are exported under the given name.
+	 * Returns the values of all exported props,
+	 * read via their getter if there is one
 	 *
 	 * @throws LogicException if no object is given
 	 */
@@ -435,7 +426,7 @@ class Props
 			$exports = [];
 
 			foreach ($this->all() as $name => $prop) {
-				$key = $prop['attribute']->exportName($name);
+				$key = $prop['attribute']->export($name);
 
 				if ($key === null) {
 					continue;

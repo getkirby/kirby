@@ -76,19 +76,19 @@ class PropTest extends TestCase
 		$this->assertSame('setStep', $attribute->setter);
 	}
 
-	public function testExportName(): void
+	public function testExport(): void
 	{
 		$attribute = new Prop();
-		$this->assertSame('marker', $attribute->exportName('marker'));
+		$this->assertSame('marker', $attribute->export('marker'));
 
 		$attribute = new Prop(export: true);
-		$this->assertSame('marker', $attribute->exportName('marker'));
+		$this->assertSame('marker', $attribute->export('marker'));
 
 		$attribute = new Prop(export: 'markerColor');
-		$this->assertSame('markerColor', $attribute->exportName('marker'));
+		$this->assertSame('markerColor', $attribute->export('marker'));
 
 		$attribute = new Prop(export: false);
-		$this->assertNull($attribute->exportName('marker'));
+		$this->assertNull($attribute->export('marker'));
 	}
 
 	public function testOnProperty(): void
