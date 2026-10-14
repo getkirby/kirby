@@ -343,7 +343,12 @@ class State
 			'code'       => 200,
 			'path'       => Str::after($this->kirby->path(), '/'),
 			'props'      => [],
-			'query'      => $this->kirby->request()->query()->toArray(),
+			// the State params are part of the transport and
+			// must not end up in the URL the Panel restores
+			'query'      => A::without(
+				$this->kirby->request()->query()->toArray(),
+				['_globals', '_json', '_only', '_pretty']
+			),
 			'referrer'   => $this->panel->referrer(),
 			'search'     => $this->kirby->option('panel.search.type', 'pages'),
 			'timestamp'  => (int)(microtime(true) * 1000),
