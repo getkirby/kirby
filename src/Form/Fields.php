@@ -70,7 +70,7 @@ class Fields extends Collection
 			// the entire view. It is replaced by an error field.
 			try {
 				$class = Field::resolve($field['type'], $field['name']);
-				$field = $class::factory($field, $this);
+				$field = new $class(...[...$field, 'siblings' => $this]);
 			} catch (Throwable $e) {
 				$field = Field::error(
 					name:     $field['name'],

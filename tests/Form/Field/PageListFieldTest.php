@@ -64,7 +64,7 @@ class PageListFieldTest extends TestCase
 
 	protected function pagelist(array $attr = []): PageListField
 	{
-		return PageListField::factory([
+		return new PageListField(...[
 			'model' => $this->app->page('photography'),
 			'name'  => 'albums',
 			...$attr

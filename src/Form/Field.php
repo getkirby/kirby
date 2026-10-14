@@ -39,11 +39,28 @@ abstract class Field implements Stringable
 	 */
 	public static array $types = [];
 
+	/**
+	 * Field plugins that define their own constructor need to
+	 * accept all other props as `mixed ...$args` and pass them
+	 * on to `parent::__construct()`
+	 */
 	public function __construct(
+		ModelWithContent|null $model = null,
+		Fields|null $siblings = null,
 		mixed ...$args
 	) {
+		$this->model    = $model;
+		$this->siblings = $siblings;
+
 		$this->register($this->config());
 		$this->register($args);
+
+		if (
+			array_key_exists('value', $args) === true &&
+			$this->hasValue() === true
+		) {
+			$this->fill($args['value']);
+		}
 	}
 
 	public function __toString(): string
@@ -87,13 +104,11 @@ abstract class Field implements Stringable
 		ModelWithContent|null $model = null,
 		Fields|null $siblings = null
 	): InfoField {
-		return InfoField::factory(
-			props: [
-				...Blueprint::fieldError($name, $message),
-				'model' => $model
-			],
-			siblings: $siblings
-		);
+		return new InfoField(...[
+			...Blueprint::fieldError($name, $message),
+			'model'    => $model,
+			'siblings' => $siblings
+		]);
 	}
 
 	/**
@@ -104,31 +119,6 @@ abstract class Field implements Stringable
 	public function errors(): array
 	{
 		return [];
-	}
-
-	/**
-	 * Creates a new field instance from a $props array
-	 * @since 6.0.0
-	 */
-	public static function factory(
-		array $props,
-		Fields|null $siblings = null
-	): static {
-		$field = static::instantiate($props);
-		$field->setSiblings($siblings);
-
-		if (array_key_exists('model', $props) === true) {
-			$field->setModel($props['model']);
-		}
-
-		if (
-			array_key_exists('value', $props) === true &&
-			$field->hasValue() === true
-		) {
-			$field->fill($props['value']);
-		}
-
-		return $field;
 	}
 
 	/**
@@ -147,33 +137,6 @@ abstract class Field implements Stringable
 	public function id(): string
 	{
 		return $this->name();
-	}
-
-	/**
-	 * Creates a new instance from the given props. Field plugins
-	 * may define their own constructor without a variadic parameter.
-	 * In this case, all props that the constructor does not accept
-	 * are registered after the field has been constructed.
-	 */
-	protected static function instantiate(array $props): static
-	{
-		$constructor = new ReflectionMethod(static::class, '__construct');
-
-		if ($constructor->isVariadic() === true) {
-			return new static(...$props);
-		}
-
-		$params = [];
-
-		foreach ($constructor->getParameters() as $param) {
-			$params[$param->getName()] = true;
-		}
-
-		$accepted = array_intersect_key($props, $params);
-		$field    = new static(...$accepted);
-		$field->register(array_diff_key($props, $accepted));
-
-		return $field;
 	}
 
 	public function isHidden(): bool
@@ -256,7 +219,7 @@ abstract class Field implements Stringable
 	 * @since 6.0.0
 	 *
 	 * @return class-string<static>
-	 * @throws InvalidArgumentException if the type is unknown or not a field class
+	 * @throws InvalidArgumentException if the type is unknown, not a field class or its constructor does not accept all props
 	 */
 	public static function resolve(
 		string $type,
@@ -287,6 +250,15 @@ abstract class Field implements Stringable
 			throw new InvalidArgumentException(
 				message: 'The field type "' . $type . '" is registered as "' .
 				$class . '", which does not extend ' . self::class
+			);
+		}
+
+		// all props from the blueprint are passed to the constructor
+		if ((new ReflectionMethod($class, '__construct'))->isVariadic() === false) {
+			throw new InvalidArgumentException(
+				message: 'The constructor of "' . $class . '" must accept ' .
+				'all other props as `mixed ...$args` and pass them on ' .
+				'to `parent::__construct()`'
 			);
 		}
 
