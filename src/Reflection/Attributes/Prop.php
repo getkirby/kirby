@@ -44,11 +44,11 @@ class Prop
 	 * Returns the name under which the prop is exported
 	 * or `null` if the prop is not exported
 	 */
-	public function exportName(string $property): string|null
+	public function export(string $default): string|null
 	{
 		return match ($this->export) {
 			false   => null,
-			true    => $property,
+			true    => $default,
 			default => $this->export
 		};
 	}

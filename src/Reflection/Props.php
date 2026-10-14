@@ -123,7 +123,7 @@ class Props
 		$names = [];
 
 		foreach ($props as $name => $prop) {
-			$key = $prop['attribute']->exportName($name);
+			$key = $prop['attribute']->export($name);
 
 			if ($key === null) {
 				continue;
@@ -435,7 +435,7 @@ class Props
 			$exports = [];
 
 			foreach ($this->all() as $name => $prop) {
-				$key = $prop['attribute']->exportName($name);
+				$key = $prop['attribute']->export($name);
 
 				if ($key === null) {
 					continue;
