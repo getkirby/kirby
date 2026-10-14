@@ -67,6 +67,30 @@ describe("api", () => {
 		});
 	});
 
+	describe("csrf", () => {
+		it("should follow a regenerated token", () => {
+			const panel = makePanel();
+			const api = new Api(panel);
+
+			// this is what a response with a new `$system` global does
+			panel.system.csrf = "new-csrf";
+
+			expect(api.csrf).toStrictEqual("new-csrf");
+		});
+
+		it("should send the current token with each request", async () => {
+			mockFetch();
+			const panel = makePanel();
+			const api = new Api(panel);
+
+			panel.system.csrf = "new-csrf";
+
+			await api.post("auth/login", { email: "test@getkirby.com" });
+
+			expect(lastRequest().headers.get("x-csrf")).toStrictEqual("new-csrf");
+		});
+	});
+
 	describe("delete()", () => {
 		it("should delegate to post with DELETE method", async () => {
 			mockFetch();

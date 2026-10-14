@@ -22,7 +22,6 @@ import { buildQuery } from "@/helpers/url";
  * Panel API Setup
  */
 export default class Api {
-	csrf: string;
 	endpoint: string;
 	methodOverride: boolean;
 	language: string | null;
@@ -42,7 +41,6 @@ export default class Api {
 
 	constructor(panel: Panel) {
 		this.panel = panel;
-		this.csrf = panel.system.csrf;
 		this.endpoint = rtrim(panel.urls.api, "/");
 		this.methodOverride = panel.config.api?.methodOverride ?? false;
 		this.language = panel.language.code;
@@ -60,6 +58,14 @@ export default class Api {
 
 		// regularly ping API to keep session alive
 		this.ping();
+	}
+
+	/**
+	 * Returns the current CSRF token from the Panel state,
+	 * which gets replaced when the `$system` global is refreshed
+	 */
+	get csrf(): string {
+		return this.panel.system.csrf;
 	}
 
 	/**
