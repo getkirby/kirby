@@ -134,15 +134,14 @@ class InputFieldTest extends BaseTestCase
 
 		// default value from string template
 		$field = new TestField(
-			default: '{{ page.title }}'
+			default: '{{ page.title }}',
+			model: new Page([
+				'slug'    => 'test',
+				'content' => [
+					'title' => 'Test title'
+				]
+			])
 		);
-
-		$field->setModel(new Page([
-			'slug'    => 'test',
-			'content' => [
-				'title' => 'Test title'
-			]
-		]));
 
 		$this->assertSame('Test title', $field->default());
 	}
@@ -250,15 +249,14 @@ class InputFieldTest extends BaseTestCase
 
 		// help from string template
 		$field = new TestField(
-			help: 'A field for {{ page.title }}'
+			help: 'A field for {{ page.title }}',
+			model: new Page([
+				'slug'    => 'test',
+				'content' => [
+					'title' => 'Test title'
+				]
+			])
 		);
-
-		$field->setModel(new Page([
-			'slug'    => 'test',
-			'content' => [
-				'title' => 'Test title'
-			]
-		]));
 
 		$this->assertSame('<p>A field for Test title</p>', (string)$field->help());
 	}
@@ -407,10 +405,9 @@ class InputFieldTest extends BaseTestCase
 		]);
 
 		$field = new TestField(
+			siblings: $siblings,
 			when: ['a' => 'b']
 		);
-
-		$field->setSiblings($siblings);
 
 		$this->assertTrue($field->isSubmittable($language));
 	}
@@ -424,10 +421,9 @@ class InputFieldTest extends BaseTestCase
 		]);
 
 		$field = new TestField(
+			siblings: $siblings,
 			when: ['a' => 'b']
 		);
-
-		$field->setSiblings($siblings);
 
 		$this->assertTrue($field->isSubmittable($language));
 	}
@@ -511,7 +507,7 @@ class InputFieldTest extends BaseTestCase
 		$this->assertIsSite($site, $field->model());
 
 		$page  = new Page(['slug' => 'test']);
-		$field = (new TestField())->setModel($page);
+		$field = new TestField(model: $page);
 		$this->assertIsPage($page, $field->model());
 	}
 
@@ -545,16 +541,13 @@ class InputFieldTest extends BaseTestCase
 
 		// placeholder from string template
 		$field = new TestField(
-			placeholder: 'Placeholder for {{ page.title }}'
-		);
-
-		$field->setModel(
-			new Page([
+			model: new Page([
 				'slug'    => 'test',
 				'content' => [
 					'title' => 'Test title'
 				]
 			]),
+			placeholder: 'Placeholder for {{ page.title }}'
 		);
 
 		$this->assertSame('Placeholder for Test title', $field->placeholder());
@@ -606,11 +599,12 @@ class InputFieldTest extends BaseTestCase
 		$this->assertCount(1, $field->siblings());
 		$this->assertSame($field, $field->siblings()->first());
 
-		$field = new TestField();
-		$field->setSiblings(new Fields([
-			new TestField(name: 'a'),
-			new TestField(name: 'b'),
-		]));
+		$field = new TestField(
+			siblings: new Fields([
+				new TestField(name: 'a'),
+				new TestField(name: 'b'),
+			])
+		);
 
 		$this->assertCount(2, $field->siblings());
 		$this->assertSame('a', $field->siblings()->first()->name());
