@@ -12,7 +12,6 @@ use Kirby\Form\Form;
 use Kirby\Form\Mixin;
 use Kirby\Panel\Collector\ModelsCollector;
 use Kirby\Reflection\Attributes\Prop;
-use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
@@ -72,6 +71,12 @@ abstract class ModelListField extends DisplayField
 	protected array|string|null $info = null;
 
 	/**
+	 * The number of entries that will be displayed at once. Afterwards pagination kicks in.
+	 */
+	#[Prop(export: false)]
+	protected int $limit = 20;
+
+	/**
 	 * Sets the minimum number of required entries
 	 */
 	#[Prop]
@@ -100,6 +105,19 @@ abstract class ModelListField extends DisplayField
 	 */
 	#[Prop(export: false)]
 	protected bool $search = false;
+
+	/**
+	 * If `true`, entries are sortable via drag & drop
+	 */
+	#[Prop(export: false)]
+	protected bool $sortable = true;
+
+	/**
+	 * Sorts the entries by the given field and order (i.e. `title desc`)
+	 * Drag & drop is disabled in this case
+	 */
+	#[Prop(export: false)]
+	protected string|null $sortBy = null;
 
 	/**
 	 * Setup for the main text of each entry
@@ -466,11 +484,8 @@ abstract class ModelListField extends DisplayField
 
 	public function props(): array
 	{
-		// limit and sorting are applied by the backend
-		$props = A::without(parent::props(), ['limit', 'sortable', 'sortBy']);
-
 		return [
-			...$props,
+			...parent::props(),
 			'link'       => $this->link(),
 			'searchable' => $this->searchable(),
 		];
