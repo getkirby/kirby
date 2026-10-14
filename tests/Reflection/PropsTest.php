@@ -2,36 +2,64 @@
 
 namespace Kirby\Reflection;
 
-use Exception;
-use Kirby\Reflection\Attributes\Derived;
+use Kirby\Exception\LogicException;
+use Kirby\Reflection\Attributes\Prop;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
+use TypeError;
 
 class PropsTestClass
 {
+	protected array|null $cache = ['foo'];
+
+	/**
+	 * Only used in the backend
+	 */
+	#[Prop(export: false)]
+	protected string $hidden = 'hidden';
+
+	/**
+	 * The label of the field
+	 */
+	#[Prop]
+	protected string|null $label = 'label';
+
+	/**
+	 * The color of the marker
+	 */
+	#[Prop(exportAs: 'markerColor')]
+	protected string $marker = 'red';
+
+	#[Prop]
+	protected string $uninitialized;
+
 	/**
 	 * The width of the field in the field grid
 	 *
 	 * @since 1.0.0
 	 */
+	#[Prop]
 	protected string $width = '1/1';
 
-	/**
-	 * The value that gets stored
-	 */
-	protected mixed $value;
+	#[Prop]
+	protected string $withArgs = 'raw';
 
-	public function __construct(
-		mixed $value = null,
-		string|null $width = null
-	) {
-		$this->value = $value;
-		$this->width = $width ?? $this->width;
+	#[Prop]
+	protected string $withPrivateGetter = 'raw';
+
+	public function label(): string
+	{
+		return 'Label via getter';
 	}
 
-	public function width(): string
+	public function withArgs(string $suffix): string
 	{
-		throw new Exception('Getters are never called');
+		return $this->withArgs . $suffix;
+	}
+
+	private function withPrivateGetter(): string
+	{
+		return 'private';
 	}
 }
 
@@ -40,106 +68,236 @@ class PropsTestChildClass extends PropsTestClass
 	/**
 	 * The fieldsets that the getter resolves into a collection
 	 */
-	#[Derived(default: ['heading', 'text'])]
-	protected array|null $fieldsets;
+	#[Prop(computed: true, default: ['heading', 'text'])]
+	protected array|null $fieldsets = null;
 
 	/**
 	 * An optional icon
 	 */
-	#[Derived]
-	protected string|null $icon;
+	#[Prop(computed: true)]
+	protected string|null $icon = null;
 
+	#[Prop]
 	protected string $width = '1/2';
-
-	public function __construct(
-		array|null $fieldsets = null,
-		string|null $icon = null,
-		array|null $value = null,
-		mixed ...$args
-	) {
-		parent::__construct(...$args, value: $value);
-
-		$this->fieldsets = $fieldsets;
-		$this->icon      = $icon;
-	}
 }
 
-class PropsTestPropertylessClass
+class PropsTestRedeclaredClass extends PropsTestClass
 {
-	public function __construct(
-		string|null $type = null
-	) {
-	}
+	// redeclared without attribute to change the defaults
+	protected string $hidden = 'redeclared';
+	protected string $width = '1/3';
 }
 
-class PropsTestRequiredClass
+class PropsTestSetterClass
 {
-	protected string $title;
+	#[Prop(getter: 'isActive')]
+	protected bool $active = false;
 
-	public function __construct(string $title)
+	#[Prop]
+	protected array $settings = ['size' => 'small', 'colors' => ['red', 'blue']];
+
+	#[Prop]
+	protected array $step = ['size' => 1, 'unit' => 'day'];
+
+	#[Prop]
+	protected array $tags = ['a', 'b', 'c'];
+
+	#[Prop]
+	protected bool $toggle = false;
+
+	public function option(string $name): mixed
 	{
-		$this->title = $title;
+		return $this->$name;
 	}
+
+	protected function isActive(): bool
+	{
+		return $this->active === false;
+	}
+
+	protected function setStep(array|int|string $step): void
+	{
+		$this->step = match (true) {
+			is_int($step)    => [...$this->step, 'size' => $step],
+			is_string($step) => [...$this->step, 'unit' => $step],
+			default          => [...$this->step, ...$step]
+		};
+	}
+}
+
+class PropsTestCollisionClass
+{
+	#[Prop(exportAs: 'b')]
+	protected string $a = 'a';
+
+	#[Prop]
+	protected string $b = 'b';
+}
+
+class PropsTestInvalidGetterClass
+{
+	#[Prop(getter: 'missing')]
+	protected string $a = 'a';
 }
 
 #[CoversClass(Props::class)]
 class PropsTest extends TestCase
 {
-	public function testToArray(): void
+	public function testAll(): void
 	{
-		$props = (new Props(new PropsTestClass()))->toArray();
+		$props = (new Props(PropsTestClass::class))->all();
 
-		$this->assertSame(['value', 'width'], array_keys($props));
-		$this->assertSame([
-			'name'        => 'width',
-			'type'        => '?string',
-			'default'     => '1/1',
-			'derived'     => false,
-			'description' => 'The width of the field in the field grid'
-		], $props['width']);
-	}
-
-	public function testToArrayFromClassName(): void
-	{
-		// the class never has to be instantiated to be described
-		$props = (new Props(PropsTestChildClass::class))->toArray();
-
-		$this->assertSame('1/2', $props['width']['default']);
-	}
-
-	public function testToArrayWithDerivedAttribute(): void
-	{
-		$props = (new Props(new PropsTestChildClass()))->toArray();
-
-		// there is no default to document, the value is computed
-		$this->assertTrue($props['icon']['derived']);
-		$this->assertNull($props['icon']['default']);
-		$this->assertSame('An optional icon', $props['icon']['description']);
-	}
-
-	public function testToArrayWithDerivedAttributeDefault(): void
-	{
-		$props = (new Props(new PropsTestChildClass()))->toArray();
-
-		// the attribute can document a default the getter never returns
-		$this->assertTrue($props['fieldsets']['derived']);
-		$this->assertSame(['heading', 'text'], $props['fieldsets']['default']);
-	}
-
-	public function testToArrayWithInheritedParameters(): void
-	{
-		$props = (new Props(new PropsTestChildClass()))->toArray();
-
-		// resolved through the variadic parameter, sorted by name
 		$this->assertSame(
-			['fieldsets', 'icon', 'value', 'width'],
+			['hidden', 'label', 'marker', 'uninitialized', 'width', 'withArgs', 'withPrivateGetter'],
+			array_keys($props)
+		);
+
+		$this->assertInstanceOf(Prop::class, $props['label']['attribute']);
+		$this->assertSame('label', $props['label']['getter']->getName());
+		$this->assertSame('label', $props['label']['property']->getName());
+
+		// only public getters without required arguments are used
+		$this->assertNull($props['width']['getter']);
+		$this->assertNull($props['withArgs']['getter']);
+		$this->assertNull($props['withPrivateGetter']['getter']);
+	}
+
+	public function testAllWithExportCollision(): void
+	{
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('The props "a" and "b" of Kirby\Reflection\PropsTestCollisionClass are both exported as "b"');
+
+		(new Props(PropsTestCollisionClass::class))->all();
+	}
+
+	public function testAllWithInheritedProperties(): void
+	{
+		$props = (new Props(new PropsTestChildClass()))->all();
+
+		$this->assertSame(
+			['fieldsets', 'hidden', 'icon', 'label', 'marker', 'uninitialized', 'width', 'withArgs', 'withPrivateGetter'],
 			array_keys($props)
 		);
 	}
 
+	public function testAllWithInvalidGetter(): void
+	{
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('The getter "missing" for the prop "a" must be a non-static method');
+
+		(new Props(PropsTestInvalidGetterClass::class))->all();
+	}
+
+	public function testAllWithRedeclaredProperty(): void
+	{
+		$props = new Props(new PropsTestRedeclaredClass());
+
+		// the attribute of the parent declaration is used
+		$this->assertTrue($props->has('width'));
+		$this->assertTrue($props->has('hidden'));
+		$this->assertFalse($props->all()['hidden']['attribute']->export);
+
+		$values = $props->values();
+		$this->assertSame('1/3', $values['width']);
+		$this->assertArrayNotHasKey('hidden', $values);
+	}
+
+	public function testHas(): void
+	{
+		$props = new Props(PropsTestClass::class);
+
+		$this->assertTrue($props->has('label'));
+		$this->assertTrue($props->has('hidden'));
+		$this->assertFalse($props->has('cache'));
+		$this->assertFalse($props->has('foo'));
+	}
+
+	public function testSet(): void
+	{
+		$object = new PropsTestSetterClass();
+		$props  = new Props($object);
+
+		// associative arrays are merged, lists are replaced
+		$props->set('settings', ['colors' => ['green']]);
+		$props->set('tags', ['b']);
+		$props->set('toggle', true);
+
+		$this->assertSame(['size' => 'small', 'colors' => ['green']], $object->option('settings'));
+		$this->assertSame(['b'], $object->option('tags'));
+		$this->assertTrue($object->option('toggle'));
+	}
+
+	public function testSetWithClassName(): void
+	{
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('Props can only be set or exported for an object');
+
+		(new Props(PropsTestSetterClass::class))->set('toggle', true);
+	}
+
+	public function testSetWithInvalidType(): void
+	{
+		$this->expectException(TypeError::class);
+
+		(new Props(new PropsTestSetterClass()))->set('toggle', ['yes']);
+	}
+
+	public function testSetWithSetter(): void
+	{
+		$object = new PropsTestSetterClass();
+		$props  = new Props($object);
+
+		$props->set('step', 5);
+		$this->assertSame(['size' => 5, 'unit' => 'day'], $object->option('step'));
+
+		$props->set('step', 'week');
+		$this->assertSame(['size' => 5, 'unit' => 'week'], $object->option('step'));
+	}
+
+	public function testSetWithUnknownProp(): void
+	{
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('The prop "foo" does not exist');
+
+		(new Props(new PropsTestSetterClass()))->set('foo', 'bar');
+	}
+
+	public function testToArray(): void
+	{
+		$props = (new Props(PropsTestClass::class))->toArray();
+
+		$this->assertSame([
+			'name'        => 'width',
+			'type'        => 'string',
+			'computed'    => false,
+			'default'     => '1/1',
+			'description' => 'The width of the field in the field grid'
+		], $props['width']);
+
+		// props that are not exported are still documented
+		$this->assertSame('Only used in the backend', $props['hidden']['description']);
+	}
+
+	public function testToArrayWithComputedProp(): void
+	{
+		$props = (new Props(PropsTestChildClass::class))->toArray();
+
+		$this->assertTrue($props['icon']['computed']);
+		$this->assertNull($props['icon']['default']);
+		$this->assertSame('An optional icon', $props['icon']['description']);
+	}
+
+	public function testToArrayWithExportAs(): void
+	{
+		$props = (new Props(PropsTestClass::class))->toArray();
+
+		// the documentation uses the original prop name
+		$this->assertSame('marker', $props['marker']['name']);
+	}
+
 	public function testToArrayWithOverriddenDefault(): void
 	{
-		$props = (new Props(new PropsTestChildClass()))->toArray();
+		$props = (new Props(PropsTestChildClass::class))->toArray();
 
 		// the child only redeclares the property to change the default,
 		// so the description still comes from the parent
@@ -147,36 +305,62 @@ class PropsTest extends TestCase
 		$this->assertSame('The width of the field in the field grid', $props['width']['description']);
 	}
 
-	public function testToArrayWithRefinedParameter(): void
+	public function testToArrayWithPropDefault(): void
 	{
-		$props = (new Props(new PropsTestChildClass()))->toArray();
+		$props = (new Props(PropsTestChildClass::class))->toArray();
 
-		// the child narrows `mixed` and must only show up once
-		$this->assertSame('?array', $props['value']['type']);
-
-		// the description still comes from the parent's property
-		$this->assertSame('The value that gets stored', $props['value']['description']);
+		// the attribute can document a default the property never holds
+		$this->assertTrue($props['fieldsets']['computed']);
+		$this->assertSame(['heading', 'text'], $props['fieldsets']['default']);
 	}
 
 	public function testToArrayWithoutDefaultValue(): void
 	{
-		$props = (new Props(new PropsTestRequiredClass('test')))->toArray();
+		$props = (new Props(PropsTestClass::class))->toArray();
 
-		$this->assertNull($props['title']['default']);
-		$this->assertNull($props['title']['description']);
+		$this->assertNull($props['uninitialized']['default']);
+		$this->assertNull($props['uninitialized']['description']);
 	}
 
-	public function testToArrayWithoutProperty(): void
+	public function testType(): void
 	{
-		$props = (new Props(new PropsTestPropertylessClass()))->toArray();
+		$props = new Props(PropsTestSetterClass::class);
 
-		// a parameter that isn't stored has no docblock to describe it
+		$this->assertSame('bool', $props->type('toggle'));
+
+		// the setter can accept more types than the property
+		$this->assertSame('array|string|int', $props->type('step'));
+
+		$this->assertNull($props->type('foo'));
+	}
+
+	public function testValues(): void
+	{
+		$props = new Props(new PropsTestClass());
+
 		$this->assertSame([
-			'name'        => 'type',
-			'type'        => '?string',
-			'default'     => null,
-			'derived'     => false,
-			'description' => null
-		], $props['type']);
+			'label'             => 'Label via getter',
+			'markerColor'       => 'red',
+			'uninitialized'     => null,
+			'width'             => '1/1',
+			'withArgs'          => 'raw',
+			'withPrivateGetter' => 'raw'
+		], $props->values());
+	}
+
+	public function testValuesWithClassName(): void
+	{
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('Props can only be set or exported for an object');
+
+		(new Props(PropsTestClass::class))->values();
+	}
+
+	public function testValuesWithGetterAttribute(): void
+	{
+		$values = (new Props(new PropsTestSetterClass()))->values();
+
+		// the protected getter from the attribute is used
+		$this->assertTrue($values['active']);
 	}
 }
