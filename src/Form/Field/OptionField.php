@@ -17,15 +17,6 @@ abstract class OptionField extends InputField
 
 	protected string $value = '';
 
-	public function __construct(
-		array|string|null $options = null,
-		mixed ...$args
-	) {
-		parent::__construct(...$args);
-
-		$this->options = $options;
-	}
-
 	public function props(): array
 	{
 		return [

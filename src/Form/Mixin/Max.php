@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Mixin;
 
+use Kirby\Reflection\Attributes\Prop;
+
 /**
  * Provides the `max` prop for the maximum number of allowed items
  *
@@ -13,7 +15,8 @@ trait Max
 	/**
 	 * Sets the maximum number of allowed items in the field
 	 */
-	protected int|null $max;
+	#[Prop]
+	protected int|null $max = null;
 
 	public function max(): int|null
 	{

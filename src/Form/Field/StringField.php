@@ -20,21 +20,6 @@ abstract class StringField extends InputField
 
 	protected string $value = '';
 
-	public function __construct(
-		int|null $maxlength = null,
-		int|null $minlength = null,
-		array|string|null $placeholder = null,
-		bool|null $spellcheck = null,
-		mixed ...$args
-	) {
-		parent::__construct(...$args);
-
-		$this->maxlength   = $maxlength;
-		$this->minlength   = $minlength;
-		$this->placeholder = $placeholder ?? $this->placeholder;
-		$this->spellcheck  = $spellcheck;
-	}
-
 	public function props(): array
 	{
 		return [

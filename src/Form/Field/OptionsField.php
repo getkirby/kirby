@@ -19,19 +19,6 @@ abstract class OptionsField extends InputField
 
 	protected array $value = [];
 
-	public function __construct(
-		int|null $max = null,
-		int|null $min = null,
-		array|string|null $options = null,
-		mixed ...$args
-	) {
-		parent::__construct(...$args);
-
-		$this->max     = $max;
-		$this->min     = $min;
-		$this->options = $options;
-	}
-
 	public function props(): array
 	{
 		return [

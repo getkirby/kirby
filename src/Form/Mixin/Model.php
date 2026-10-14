@@ -13,7 +13,7 @@ use Kirby\Cms\ModelWithContent;
  */
 trait Model
 {
-	protected ModelWithContent|null $model;
+	protected ModelWithContent|null $model = null;
 
 	/**
 	 * Returns the Kirby instance

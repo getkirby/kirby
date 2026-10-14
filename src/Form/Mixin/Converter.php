@@ -3,6 +3,7 @@
 namespace Kirby\Form\Mixin;
 
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Reflection\Attributes\Prop;
 use Kirby\Toolkit\Str;
 
 /**
@@ -16,7 +17,8 @@ trait Converter
 	/**
 	 * The field value will be converted with the selected converter before the value gets saved. Available converters: `lower`, `upper`, `ucfirst`, `slug`
 	 */
-	protected string|null $converter;
+	#[Prop]
+	protected string|null $converter = null;
 
 	public function convert(string|null $value): string|null
 	{

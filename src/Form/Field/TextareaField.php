@@ -7,6 +7,7 @@ use Kirby\Cms\File;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Form\Mixin;
 use Kirby\Panel\Controller\Dialog\FilePickerDialogController;
+use Kirby\Reflection\Attributes\Prop;
 
 /**
  * Textarea Field
@@ -30,45 +31,23 @@ class TextareaField extends InputField
 	 * Available buttons: `headlines`, `italic`, `bold`, `link`, `email`,
 	 * `file`, `code`, `ul`, `ol` (as well as `|` for a divider)
 	 */
+	#[Prop]
 	protected array|bool $buttons = true;
 
 	/**
 	 * Sets the options for the files picker
 	 */
-	protected mixed $files;
+	#[Prop]
+	protected mixed $files = null;
 
 	/**
 	 * Changes the size of the textarea.
 	 * Available sizes: `small`, `medium`, `large`, `huge`
 	 */
-	protected string|null $size;
+	#[Prop]
+	protected string|null $size = null;
 
 	protected string $value = '';
-
-	public function __construct(
-		array|bool|null $buttons = null,
-		bool|null $counter = null,
-		mixed $files = null,
-		string|null $font = null,
-		int|null $maxlength = null,
-		int|null $minlength = null,
-		string|null $size = null,
-		bool|null $spellcheck = null,
-		mixed $uploads = null,
-		mixed ...$args
-	) {
-		parent::__construct(...$args);
-
-		$this->buttons    = $buttons ?? $this->buttons;
-		$this->counter    = $counter ?? $this->counter;
-		$this->files      = $files;
-		$this->font       = $font ?? $this->font;
-		$this->maxlength  = $maxlength;
-		$this->minlength  = $minlength;
-		$this->size       = $size;
-		$this->spellcheck = $spellcheck;
-		$this->uploads    = $uploads;
-	}
 
 	public function api(): array
 	{

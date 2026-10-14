@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Mixin;
 
+use Kirby\Reflection\Attributes\Prop;
+
 /**
  * Provides the `maxlength` prop for the maximum number of allowed characters
  *
@@ -13,7 +15,8 @@ trait Maxlength
 	/**
 	 * Maximum number of allowed characters
 	 */
-	protected int|null $maxlength;
+	#[Prop]
+	protected int|null $maxlength = null;
 
 	public function maxlength(): int|null
 	{

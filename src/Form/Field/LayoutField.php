@@ -12,7 +12,7 @@ use Kirby\Data\Data;
 use Kirby\Data\Json;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Form;
-use Kirby\Reflection\Attributes\Derived;
+use Kirby\Reflection\Attributes\Prop;
 use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Str;
 use Throwable;
@@ -28,36 +28,25 @@ class LayoutField extends BlocksField
 	/**
 	 * Define available layouts. Each layout is list of column widths. (e.g. 1/2, 1/2 or 1/4, 3/4)
 	 */
-	#[Derived]
+	#[Prop(computed: true)]
 	protected array|null $layouts = ['1/1'];
 
 	/**
 	 * Customize the `size` and `columns` in the layout selector to account for the number of different layouts you have defined via the layouts property. Available sizes: `small`, `medium` (default), `large`, `huge`. Default columns: `3`
 	 */
-	protected array|null $selector;
+	#[Prop]
+	protected array|null $selector = null;
 
 	/**
 	 * Define tabs and fields for the layout settings. Layout settings are defined globally. Each layout will then get a "Settings" button in its dropdown and open a settings drawer with the configured fields.
 	 */
+	#[Prop]
 	protected array|string|null $settings = null;
 
 	/**
 	 * Cache for the settings Fieldset instance
 	 */
 	protected Fieldset|null $settingsFieldset;
-
-	public function __construct(
-		array|null $layouts = null,
-		array|null $selector = null,
-		array|string|null $settings = null,
-		mixed ...$args
-	) {
-		parent::__construct(...$args);
-
-		$this->layouts  = $layouts ?? $this->layouts;
-		$this->selector = $selector;
-		$this->settings = $settings;
-	}
 
 	public function api(): array
 	{

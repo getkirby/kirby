@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Mixin;
 
+use Kirby\Reflection\Attributes\Prop;
+
 /**
  * Provides the `pattern` prop for regular expression validation
  *
@@ -13,7 +15,8 @@ trait Pattern
 	/**
 	 * A regular expression, which will be used to validate the input
 	 */
-	protected string|null $pattern;
+	#[Prop]
+	protected string|null $pattern = null;
 
 	public function pattern(): string|null
 	{

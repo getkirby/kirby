@@ -2,7 +2,7 @@
 
 namespace Kirby\Form\Mixin;
 
-use Kirby\Reflection\Attributes\Derived;
+use Kirby\Reflection\Attributes\Prop;
 
 /**
  * Provides the `name` prop and accessor for the field's identifier
@@ -15,8 +15,8 @@ trait Name
 	/**
 	 * Unique name of the field, which is used as key in the content file
 	 */
-	#[Derived]
-	protected string|null $name;
+	#[Prop(computed: true)]
+	protected string|null $name = null;
 
 	public function name(): string
 	{

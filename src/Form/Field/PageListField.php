@@ -11,7 +11,7 @@ use Kirby\Form\Interface\ProvidesAcceptedBlueprints;
 use Kirby\Panel\Collector\PagesCollector;
 use Kirby\Panel\Controller\Dialog\PageCreateDialogController;
 use Kirby\Panel\Ui\Item\PageItem;
-use Kirby\Reflection\Attributes\Derived;
+use Kirby\Reflection\Attributes\Prop;
 use Kirby\Toolkit\A;
 use Throwable;
 
@@ -28,51 +28,39 @@ class PageListField extends ModelListField implements ProvidesAcceptedBlueprints
 {
 	public const string TYPE = 'pages';
 
+	#[Prop]
 	protected array|string|null $text = '{{ model.title }}';
 
 	/**
 	 * Templates that may be added or `false` to disable page creation
 	 */
-	protected array|string|bool|null $create;
+	#[Prop]
+	protected array|string|bool|null $create = null;
 
 	/**
 	 * Filters the pages by their status
 	 */
+	#[Prop]
 	protected string $status = 'all';
 
 	/**
 	 * Filters the list by a single template
 	 */
-	protected string|array|null $template;
+	#[Prop]
+	protected string|array|null $template = null;
 
 	/**
 	 * Filters the list by templates and sets the template
 	 * options for newly created pages
 	 */
-	#[Derived]
+	#[Prop(computed: true)]
 	protected array|string|null $templates = null;
 
 	/**
 	 * Excludes the given templates from the list
 	 */
+	#[Prop]
 	protected array|string $templatesIgnore = [];
-
-	public function __construct(
-		array|string|bool|null $create = null,
-		string|null $status = null,
-		string|array|null $template = null,
-		array|string|null $templates = null,
-		array|string|null $templatesIgnore = null,
-		mixed ...$args
-	) {
-		parent::__construct(...$args);
-
-		$this->create          = $create;
-		$this->status          = $status ?? $this->status;
-		$this->template        = $template;
-		$this->templates       = $templates;
-		$this->templatesIgnore = $templatesIgnore ?? $this->templatesIgnore;
-	}
 
 	/**
 	 * Whether new pages can be added to the list

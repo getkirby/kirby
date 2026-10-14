@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Mixin;
 
+use Kirby\Reflection\Attributes\Prop;
+
 /**
  * Provides the `default` prop for the fallback value on new models
  *
@@ -13,7 +15,8 @@ trait DefaultValue
 	/**
 	 * Default value for the field, which will be used when a page/file/user is created
 	 */
-	protected mixed $default;
+	#[Prop]
+	protected mixed $default = null;
 
 	/**
 	 * Returns the default value of the field

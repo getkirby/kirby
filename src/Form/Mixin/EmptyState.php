@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Mixin;
 
+use Kirby\Reflection\Attributes\Prop;
+
 /**
  * Provides the `empty` prop to customize the empty state message
  *
@@ -13,7 +15,8 @@ trait EmptyState
 	/**
 	 * Sets the text for the empty state box
 	 */
-	protected array|string|null $empty;
+	#[Prop]
+	protected array|string|null $empty = null;
 
 	public function empty(): string|null
 	{

@@ -2,7 +2,7 @@
 
 namespace Kirby\Form\Field;
 
-use Kirby\Reflection\Attributes\Derived;
+use Kirby\Reflection\Attributes\Prop;
 
 /**
  * Email Field
@@ -13,11 +13,16 @@ use Kirby\Reflection\Attributes\Derived;
  */
 class EmailField extends TextField
 {
+	#[Prop]
 	protected string|null $autocomplete = 'email';
+
+	#[Prop]
 	protected bool $counter = false;
+
+	#[Prop]
 	protected string|null $icon = 'email';
 
-	#[Derived]
+	#[Prop(computed: true)]
 	protected array|string|null $placeholder = null;
 
 	public function placeholder(): string

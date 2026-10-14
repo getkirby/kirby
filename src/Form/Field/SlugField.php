@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Reflection\Attributes\Prop;
+
 /**
  * Slug Field
  *
@@ -14,43 +16,34 @@ class SlugField extends TextField
 	/**
 	 * Set of characters allowed in the slug
 	 */
-	protected string|null $allow;
+	#[Prop]
+	protected string|null $allow = null;
 
+	#[Prop]
 	protected bool $counter = false;
 
+	#[Prop]
 	protected string|null $icon = 'url';
 
 	/**
 	 * Set prefix for the help text
 	 */
-	protected string|null $path;
+	#[Prop]
+	protected string|null $path = null;
 
 	/**
 	 * Name of another field that should be used to
 	 * automatically update this field's value
 	 */
-	protected string|null $sync;
+	#[Prop]
+	protected string|null $sync = null;
 
 	/**
 	 * Set to object with keys `field` and `text` to add
 	 * button to generate from another field
 	 */
+	#[Prop]
 	protected array|bool $wizard = false;
-
-	public function __construct(
-		string|null $allow = null,
-		string|null $path = null,
-		string|null $sync = null,
-		array|bool|null $wizard = null,
-		mixed ...$args
-	) {
-		parent::__construct(...$args);
-
-		$this->allow  = $allow;
-		$this->path   = $path;
-		$this->sync   = $sync;
-		$this->wizard = $wizard ?? $this->wizard;
-	}
 
 	public function allow(): string|null
 	{

@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Reflection\Attributes\Prop;
+
 /**
  * Multiselect Field
  *
@@ -11,8 +13,10 @@ namespace Kirby\Form\Field;
  */
 class MultiselectField extends TagsField
 {
+	#[Prop]
 	protected string $accept = 'options';
 
+	#[Prop]
 	protected string|null $icon = 'checklist';
 
 	public function accept(): string
