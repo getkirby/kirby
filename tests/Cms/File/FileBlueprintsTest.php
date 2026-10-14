@@ -31,27 +31,27 @@ class FileBlueprintsTest extends ModelTestCase
 							'type' => 'info'
 						],
 						'b' => [
-							'type' => 'files'
+							'type' => 'filepicker'
 						],
 						'c' => [
-							'type'    => 'files',
+							'type'    => 'filepicker',
 							'uploads' => 'for-fields/a'
 						],
 						'd' => [
-							'type'    => 'files',
+							'type'    => 'filepicker',
 							'uploads' => [
 								'template' => 'for-fields/b'
 							]
 						],
 						'e' => [
-							'type'    => 'files',
+							'type'    => 'filepicker',
 							'uploads' => [
 								'parent'   => 'site',
 								'template' => 'for-fields/c'
 							]
 						],
 						'f' => [
-							'type'    => 'files',
+							'type'    => 'filepicker',
 							'uploads' => 'for-fields/c'
 						],
 						'g' => [
@@ -62,14 +62,14 @@ class FileBlueprintsTest extends ModelTestCase
 							'type'    => 'structure',
 							'fields'  => [
 								[
-									'type'    => 'files',
+									'type'    => 'filepicker',
 									'uploads' => 'for-fields/e'
 								],
 								[
 									'type'    => 'structure',
 									'fields'  => [
 										[
-											'type'    => 'files',
+											'type'    => 'filepicker',
 											'uploads' => 'for-fields/f'
 										]
 									]
@@ -148,27 +148,27 @@ class FileBlueprintsTest extends ModelTestCase
 							'template' => 'for-list/b'
 						],
 						'field-a' => [
-							'type' => 'files'
+							'type' => 'filepicker'
 						],
 						'field-b' => [
-							'type'    => 'files',
+							'type'    => 'filepicker',
 							'uploads' => 'for-fields/a'
 						],
 						'field-c' => [
-							'type'    => 'files',
+							'type'    => 'filepicker',
 							'uploads' => [
 								'template' => 'for-fields/b'
 							]
 						],
 						'field-d' => [
-							'type'    => 'files',
+							'type'    => 'filepicker',
 							'uploads' => [
 								'parent'   => 'site',
 								'template' => 'for-fields/c'
 							]
 						],
 						'field-e' => [
-							'type'    => 'files',
+							'type'    => 'filepicker',
 							'uploads' => 'for-fields/c'
 						]
 					]

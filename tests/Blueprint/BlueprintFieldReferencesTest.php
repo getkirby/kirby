@@ -216,7 +216,7 @@ class BlueprintFieldReferencesTest extends TestCase
 					'type' => 'date'
 				],
 				'author' => [
-					'type' => 'users'
+					'type' => 'userpicker'
 				],
 				'text' => [
 					'type' => 'textarea'

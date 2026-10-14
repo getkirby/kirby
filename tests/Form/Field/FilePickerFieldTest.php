@@ -138,7 +138,7 @@ class FilePickerFieldTest extends TestCase
 							'name' => 'test',
 							'fields' => [
 								'gallery' => [
-									'type' => 'files',
+									'type' => 'filepicker',
 								]
 							]
 						]
@@ -199,7 +199,7 @@ class FilePickerFieldTest extends TestCase
 							'name' => 'test',
 							'fields' => [
 								'gallery' => [
-									'type' => 'files',
+									'type' => 'filepicker',
 								]
 							]
 						]

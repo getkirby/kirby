@@ -537,7 +537,7 @@ class ApiTest extends TestCase
 							'name'   => 'test',
 							'fields' => [
 								'cover' => [
-									'type' => 'files',
+									'type' => 'filepicker',
 								]
 							]
 						]

@@ -51,7 +51,7 @@ class AcceptRulesTest extends BlueprintTest
 			'name'  => 'default',
 			'fields' => [
 				'a' => [
-					'type' => 'files',
+					'type' => 'filepicker',
 					'uploads' => [
 						'template' => 'a'
 					]
@@ -158,7 +158,7 @@ class AcceptRulesTest extends BlueprintTest
 			'name'  => 'default',
 			'fields' => [
 				'a' => [
-					'type' => 'files',
+					'type' => 'filepicker',
 					'uploads' => [
 						'parent'   => 'site',
 						'template' => 'a'
@@ -193,7 +193,7 @@ class AcceptRulesTest extends BlueprintTest
 			'name'  => 'default',
 			'fields' => [
 				'a' => [
-					'type' => 'files',
+					'type' => 'filepicker',
 					'uploads' => [
 						'template' => 'a'
 					]
@@ -223,7 +223,7 @@ class AcceptRulesTest extends BlueprintTest
 				'blocks/hero' => [
 					'fields' => [
 						'image' => [
-							'type'    => 'files',
+							'type'    => 'filepicker',
 							'uploads' => 'hero'
 						]
 					]
@@ -260,7 +260,7 @@ class AcceptRulesTest extends BlueprintTest
 						'cover' => [
 							'fields' => [
 								'image' => [
-									'type'    => 'files',
+									'type'    => 'filepicker',
 									'uploads' => 'cover'
 								]
 							]
