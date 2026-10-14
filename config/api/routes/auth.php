@@ -60,7 +60,7 @@ return [
 			}
 
 			$email    = $this->requestBody('email');
-			$long     = $this->requestBody('long');
+			$long     = $this->requestBody('long') === true;
 			$password = $this->requestBody('password');
 
 			$method = match (true) {
