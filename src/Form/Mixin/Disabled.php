@@ -15,7 +15,7 @@ trait Disabled
 	/**
 	 * If `true`, the field is no longer editable and will not be saved
 	 */
-	#[Prop]
+	#[Prop(getter: 'isDisabled')]
 	protected bool $disabled = false;
 
 	public function disabled(): bool

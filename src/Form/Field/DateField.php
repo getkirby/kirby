@@ -114,15 +114,6 @@ class DateField extends DateTimeField
 		return $this->boundary($this->min);
 	}
 
-	public function props(): array
-	{
-		return [
-			...parent::props(),
-			'calendar' => $this->calendar(),
-			'time'     => $this->time()
-		];
-	}
-
 	protected function roundToStep(Date|null $value): Date|null
 	{
 		// without a time selector, the time is cut off

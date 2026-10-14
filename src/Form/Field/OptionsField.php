@@ -19,16 +19,6 @@ abstract class OptionsField extends InputField
 
 	protected array $value = [];
 
-	public function props(): array
-	{
-		return [
-			...parent::props(),
-			'max'     => $this->max(),
-			'min'     => $this->min(),
-			'options' => $this->options(),
-		];
-	}
-
 	protected function validations(): array
 	{
 		return [

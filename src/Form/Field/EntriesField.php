@@ -33,7 +33,7 @@ class EntriesField extends InputField implements ProvidesNestedForm
 	 * Supported field types are `color`, `date`, `email`, `number`, `select`,
 	 * `slug`, `tel`, `text`, `time`, `url`.
 	 */
-	#[Prop]
+	#[Prop(getter: 'fieldProps')]
 	protected array|string $field = ['type' => 'text'];
 
 	protected Form|null $form = null;
@@ -79,18 +79,6 @@ class EntriesField extends InputField implements ProvidesNestedForm
 			fields: [$this->field()],
 			model:  $this->model()
 		);
-	}
-
-	public function props(): array
-	{
-		return [
-			...parent::props(),
-			'empty'    => $this->empty(),
-			'field'    => $this->fieldProps(),
-			'max'      => $this->max(),
-			'min'      => $this->min(),
-			'sortable' => $this->sortable(),
-		];
 	}
 
 	public function supports(): array

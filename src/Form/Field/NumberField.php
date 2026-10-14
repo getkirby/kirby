@@ -65,20 +65,6 @@ class NumberField extends InputField
 		return $this->min;
 	}
 
-	public function props(): array
-	{
-		return [
-			...parent::props(),
-			'after'       => $this->after(),
-			'before'      => $this->before(),
-			'icon'        => $this->icon(),
-			'max'         => $this->max(),
-			'min'         => $this->min(),
-			'placeholder' => $this->placeholder(),
-			'step'        => $this->step(),
-		];
-	}
-
 	public function step(): float|string|null
 	{
 		return match ($this->step) {

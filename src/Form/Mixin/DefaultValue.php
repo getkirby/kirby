@@ -15,7 +15,7 @@ trait DefaultValue
 	/**
 	 * Default value for the field, which will be used when a page/file/user is created
 	 */
-	#[Prop]
+	#[Prop(export: false)]
 	protected mixed $default = null;
 
 	/**

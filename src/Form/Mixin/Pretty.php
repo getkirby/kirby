@@ -15,7 +15,7 @@ trait Pretty
 	/**
 	 * Saves pretty printed JSON in text files
 	 */
-	#[Prop]
+	#[Prop(export: false)]
 	protected bool $pretty = false;
 
 	public function pretty(): bool

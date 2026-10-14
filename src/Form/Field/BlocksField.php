@@ -299,13 +299,10 @@ class BlocksField extends InputField
 	public function props(): array
 	{
 		return [
-			'empty'          => $this->empty(),
+			...parent::props(),
 			'fieldsets'      => $this->fieldsets()->toArray(),
 			'fieldsetGroups' => $this->fieldsetGroups(),
-			'group'          => $this->group(),
-			'max'            => $this->max(),
-			'min'            => $this->min(),
-		] + parent::props();
+		];
 	}
 
 	public function toStoredValue(): mixed

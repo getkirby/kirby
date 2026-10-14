@@ -37,12 +37,4 @@ class ButtonsField extends DisplayField
 			))->props()
 		);
 	}
-
-	public function props(): array
-	{
-		return [
-			...parent::props(),
-			'buttons' => $this->buttons()
-		];
-	}
 }

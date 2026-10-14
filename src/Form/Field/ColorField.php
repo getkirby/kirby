@@ -127,18 +127,6 @@ class ColorField extends OptionField
 		);
 	}
 
-	public function props(): array
-	{
-		return [
-			...parent::props(),
-			'alpha'       => $this->alpha(),
-			'format'      => $this->format(),
-			'icon'        => $this->icon(),
-			'mode'        => $this->mode(),
-			'placeholder' => $this->placeholder(),
-		];
-	}
-
 	protected function validations(): array
 	{
 		return [
