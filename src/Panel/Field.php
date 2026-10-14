@@ -34,7 +34,7 @@ class Field
 	 */
 	public static function email(array $props = []): array
 	{
-		return EmailField::factory($props)->toArray();
+		return (new EmailField(...$props))->toArray();
 	}
 
 	/**
@@ -53,7 +53,7 @@ class Field
 
 	public static function hidden(array $props = []): array
 	{
-		return HiddenField::factory($props)->toArray();
+		return (new HiddenField(...$props))->toArray();
 	}
 
 	/**
@@ -80,7 +80,7 @@ class Field
 	 */
 	public static function password(array $props = []): array
 	{
-		return PasswordField::factory($props)->toArray();
+		return (new PasswordField(...$props))->toArray();
 	}
 
 	/**
@@ -120,7 +120,7 @@ class Field
 
 	public static function slug(array $props = []): array
 	{
-		return SlugField::factory($props)->toArray();
+		return (new SlugField(...$props))->toArray();
 	}
 
 	public static function template(
@@ -135,7 +135,7 @@ class Field
 
 	public static function title(array $props = []): array
 	{
-		return TitleField::factory($props)->toArray();
+		return (new TitleField(...$props))->toArray();
 	}
 
 	/**
@@ -143,11 +143,11 @@ class Field
 	 */
 	public static function translation(array $props = []): array
 	{
-		return TranslationField::factory($props)->toArray();
+		return (new TranslationField(...$props))->toArray();
 	}
 
 	public static function username(array $props = []): array
 	{
-		return UsernameField::factory($props)->toArray();
+		return (new UsernameField(...$props))->toArray();
 	}
 }

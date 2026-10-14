@@ -58,6 +58,24 @@ class ConstructorMockField extends Field
 	}
 }
 
+class VariadicConstructorMockField extends Field
+{
+	#[Prop]
+	protected string $peter = 'pan';
+
+	public function __construct(
+		protected string $homer = 'simpson',
+		mixed ...$args
+	) {
+		parent::__construct(...$args);
+	}
+
+	public function option(string $name): mixed
+	{
+		return $this->$name;
+	}
+}
+
 class RedeclaredMockField extends OptionsMockField
 {
 	// redeclared without attribute to change the default
@@ -75,6 +93,78 @@ class BrokenField extends Field
 #[CoversClass(Field::class)]
 class FieldTest extends TestCase
 {
+	public function test__construct(): void
+	{
+		$field = new MockField(name: 'test');
+		$this->assertSame('test', $field->name());
+
+		// siblings
+		$siblings = new Fields([
+			new MockField(name: 'a'),
+			new MockField(name: 'b')
+		]);
+		$field = new MockField(siblings: $siblings);
+		$this->assertCount(2, $field->siblings());
+
+		// model
+		$model = new Page(['slug' => 'test']);
+		$field = new MockField(model: $model);
+		$this->assertSame($model, $field->model());
+
+		// unknown props are ignored
+		$field = new MockField(name: 'test', foo: 'bar');
+		$this->assertSame('test', $field->name());
+	}
+
+	public function test__constructWithCustomConstructor(): void
+	{
+		$model = new Page(['slug' => 'test']);
+		$field = new VariadicConstructorMockField(
+			homer: 'jay',
+			model: $model,
+			name: 'test',
+			peter: 'shaw'
+		);
+
+		$this->assertSame('test', $field->name());
+		$this->assertSame($model, $field->model());
+		$this->assertSame('jay', $field->option('homer'));
+		$this->assertSame('shaw', $field->option('peter'));
+	}
+
+	public function test__constructWithModelInConfig(): void
+	{
+		// the model is available before the config is read
+		$model = new Page(['slug' => 'test']);
+		$field = new class (model: $model) extends MockField {
+			public function config(): array
+			{
+				return ['name' => $this->model()->slug()];
+			}
+		};
+
+		$this->assertSame('test', $field->name());
+	}
+
+	public function test__constructWithValue(): void
+	{
+		$field = new HiddenField(value: 'test');
+		$this->assertSame('test', $field->toFormValue());
+
+		// the value is filled after all other props are set
+		$field = new class (name: 'hidden', value: 'test') extends HiddenField {
+			public function fill(mixed $value): static
+			{
+				return parent::fill($this->name() . ':' . $value);
+			}
+		};
+		$this->assertSame('hidden:test', $field->toFormValue());
+
+		// fields without a value ignore it
+		$field = new MockField(value: 'test');
+		$this->assertFalse($field->hasValue());
+	}
+
 	public function test__toString(): void
 	{
 		$field = new MockField(name: 'my-field');
@@ -133,40 +223,6 @@ class FieldTest extends TestCase
 		$this->assertSame([
 			'required' => 'Please enter something'
 		], $field->errors());
-	}
-
-	public function testFactory(): void
-	{
-		$field = MockField::factory(['name' => 'test']);
-		$this->assertInstanceOf(MockField::class, $field);
-		$this->assertSame('test', $field->name());
-
-		// siblings
-		$siblings = new Fields([
-			new MockField(name: 'a'),
-			new MockField(name: 'b')
-		]);
-		$field = MockField::factory([], $siblings);
-		$this->assertCount(2, $field->siblings());
-
-		// model
-		$model = new Page(['slug' => 'test']);
-		$field = MockField::factory(['model' => $model]);
-		$this->assertSame($model, $field->model());
-	}
-
-	public function testFactoryWithCustomConstructor(): void
-	{
-		$field = ConstructorMockField::factory([
-			'name'  => 'test',
-			'homer' => 'simpson',
-			'peter' => 'shaw',
-			'foo'   => 'bar'
-		]);
-
-		$this->assertSame('test', $field->name());
-		$this->assertSame('simpson', $field->option('homer'));
-		$this->assertSame('shaw', $field->option('peter'));
 	}
 
 	public function testHasValue(): void
@@ -304,7 +360,6 @@ class FieldTest extends TestCase
 		$field = new OptionsMockField(
 			cache: ['foo'],
 			page: 'test',
-			siblings: 'test',
 			value: 'test'
 		);
 
@@ -374,6 +429,20 @@ class FieldTest extends TestCase
 		$this->expectExceptionMessage(
 			'The field type "mock" is registered as "Kirby\Cms\Page", ' .
 			'which does not extend Kirby\Form\Field'
+		);
+
+		Field::resolve('mock');
+	}
+
+	public function testResolveWithNonVariadicConstructor(): void
+	{
+		Field::$types['mock'] = ConstructorMockField::class;
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage(
+			'The constructor of "Kirby\Form\ConstructorMockField" must accept ' .
+			'all other props as `mixed ...$args` and pass them on ' .
+			'to `parent::__construct()`'
 		);
 
 		Field::resolve('mock');
