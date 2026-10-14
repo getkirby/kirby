@@ -578,6 +578,7 @@ Snippets and templates can push output onto a stack, which gets rendered anywher
 - Custom validators cannot overwrite default validators from the `Kirby\Toolkit\V` class any longer. [#7674](https://github.com/getkirby/kirby/pull/7674)
 - Removed `Kirby\Cms\Api` class. Use `Kirby\Api\Api` class instead. [#7532](https://github.com/getkirby/kirby/pull/7532)
 - Removed `Kirby\Cms\System::php()` [#7816](https://github.com/getkirby/kirby/pull/7816)
+- Removed `Kirby\Blueprint\FileBlueprint::acceptMime()`. Use `Kirby\Blueprint\FileBlueprint::acceptAttribute()` instead.
 - `Kirby\Cms\App::models()` and `Kirby\Uuid\Uuid::index()` generators are now keyed by id
 - `Kirby\Cms\LazyCollection::getIterator()` skips items that failed hydration
 - `Kirby\Cms\Fields` extends `Kirby\Cms\Collection` and `Kirby\Cms\HasSiblings` relies on `Kirby\Cms\Collection`, not `Kirby\Toolkit\Collection`
