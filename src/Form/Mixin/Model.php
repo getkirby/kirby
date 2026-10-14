@@ -30,13 +30,4 @@ trait Model
 	{
 		return $this->model ?? App::instance()->site();
 	}
-
-	/**
-	 * Sets the parent model
-	 */
-	public function setModel(ModelWithContent|null $model): static
-	{
-		$this->model = $model;
-		return $this;
-	}
 }
