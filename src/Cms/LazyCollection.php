@@ -46,21 +46,6 @@ abstract class LazyCollection extends Collection
 	protected bool $initialized = true;
 
 	/**
-	 * Temporary auto-hydration whenever a collection
-	 * method is called; some methods may not need raw
-	 * access to all collection data, so performance
-	 * will be improved if methods call initialization
-	 * or hydration themselves only if they need it
-	 * @deprecated
-	 * @todo Remove this in v6
-	 */
-	public function __call(string $key, $arguments)
-	{
-		$this->hydrate();
-		return parent::__call($key, $arguments);
-	}
-
-	/**
 	 * Low-level getter for elements
 	 *
 	 * @return TValue|null
@@ -117,26 +102,6 @@ abstract class LazyCollection extends Collection
 		$this->initialize();
 
 		return parent::count();
-	}
-
-	/**
-	 * Returns the current element
-	 * @deprecated
-	 * @todo Remove in v6
-	 *
-	 * @return TValue
-	 */
-	public function current(): mixed
-	{
-		$current = parent::current();
-
-		// `$current === null` could mean "empty collection"
-		// or "element found but not hydrated"
-		if ($current === null && $key = $this->key()) {
-			return $this->hydrateElement($key);
-		}
-
-		return $current;
 	}
 
 	/**
@@ -372,29 +337,6 @@ abstract class LazyCollection extends Collection
 	}
 
 	/**
-	 * Moves the cursor to the next element
-	 * and returns it
-	 * @deprecated
-	 * @todo Remove in v6
-	 *
-	 * @return TValue
-	 */
-	public function next(): mixed
-	{
-		$this->initialize();
-
-		$next = parent::next();
-
-		// `$next === null` could mean "empty collection"
-		// or "element found but not hydrated"
-		if ($next === null && $key = $this->key()) {
-			return $this->hydrateElement($key);
-		}
-
-		return $next;
-	}
-
-	/**
 	 * Returns the nth element from the collection
 	 *
 	 * @return TValue|null
@@ -437,29 +379,6 @@ abstract class LazyCollection extends Collection
 		$this->initialize();
 
 		return parent::prepend(...$args);
-	}
-
-	/**
-	 * Moves the cursor to the previous element
-	 * and returns it
-	 * @deprecated
-	 * @todo Remove in v6
-	 *
-	 * @return TValue
-	 */
-	public function prev(): mixed
-	{
-		$this->initialize();
-
-		$prev = parent::prev();
-
-		// `$prev === null` could mean "empty collection"
-		// or "element found but not hydrated"
-		if ($prev === null && $key = $this->key()) {
-			return $this->hydrateElement($key);
-		}
-
-		return $prev;
 	}
 
 	/**
