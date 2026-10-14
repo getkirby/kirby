@@ -803,6 +803,33 @@ class PageCreateDialogControllerTest extends TestCase
 		$this->assertSame('draft', $this->app->page('test')->status());
 	}
 
+	public function testSubmitWithUuidFromValue(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$uuid = (new PageCreateDialogController())->value()['uuid'];
+
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'title' => 'Test',
+					'slug'  => 'test',
+					'uuid'  => $uuid
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PageCreateDialogController();
+		$controller->submit();
+
+		$page = $this->app->page('test');
+
+		$this->assertStringNotContainsString('://', $page->content()->get('uuid')->value());
+		$this->assertSame('test', $this->app->page('page://' . $uuid)?->id());
+	}
+
 	public function testSubmitWithParent(): void
 	{
 		$this->app = $this->app->clone([
@@ -1280,7 +1307,29 @@ class PageCreateDialogControllerTest extends TestCase
 		$this->assertSame('', $value['slug']);
 		$this->assertSame('test', $value['template']);
 		$this->assertSame('', $value['title']);
-		$this->assertNotNull($value['uuid']);
+		$this->assertSame($controller->model()->uuid()->id(), $value['uuid']);
+		$this->assertStringNotContainsString('://', $value['uuid']);
 		$this->assertSame('bar', $value['foo']);
+	}
+
+	public function testValueUuidDisabled(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'content.uuid' => false
+			],
+			'request' => [
+				'query' => [
+					'template' => 'test'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PageCreateDialogController();
+		$value      = $controller->value();
+
+		$this->assertNull($value['uuid']);
 	}
 }
