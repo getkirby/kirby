@@ -5,6 +5,7 @@ namespace Kirby\Blueprint;
 use Kirby\Cms\App;
 use Kirby\Form\Field\BlocksField;
 use Kirby\Form\Field\FileListField;
+use Kirby\Form\Field\LayoutField;
 use Kirby\Form\Fields;
 use Kirby\Form\Interface\ProvidesNestedForm;
 
@@ -111,8 +112,8 @@ class AcceptRules
 	}
 
 	/**
-	 * Gathers the allowed file templates from
-	 * the fieldsets of a blocks or layout field
+	 * Gathers the allowed file templates from the fieldsets
+	 * of a blocks or layout field and the layout settings
 	 */
 	public function fileTemplatesFromFieldsets(BlocksField $field): array
 	{
@@ -123,6 +124,13 @@ class AcceptRules
 			$templates = [
 				...$templates,
 				...$this->fileTemplatesFromFields($form->fields())
+			];
+		}
+
+		if ($field instanceof LayoutField) {
+			$templates = [
+				...$templates,
+				...$this->fileTemplatesFromFields($field->attrsForm()->fields())
 			];
 		}
 

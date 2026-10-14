@@ -98,6 +98,11 @@ class AcceptRulesTest extends BlueprintTest
 							]
 						]
 					]
+				],
+				// uploads are disabled
+				'f' => [
+					'type'    => 'filepicker',
+					'uploads' => false
 				]
 			]
 		]);
@@ -260,6 +265,14 @@ class AcceptRulesTest extends BlueprintTest
 								]
 							]
 						]
+					],
+					'settings' => [
+						'fields' => [
+							'background' => [
+								'type'    => 'filepicker',
+								'uploads' => 'background'
+							]
+						]
 					]
 				]
 			]
@@ -268,7 +281,7 @@ class AcceptRulesTest extends BlueprintTest
 		$rules = new AcceptRules($blueprint);
 
 		$this->assertSame(
-			['blocks/image', 'hero', 'hero', 'cover'],
+			['blocks/image', 'hero', 'hero', 'cover', 'background'],
 			$rules->fileTemplates()
 		);
 	}
