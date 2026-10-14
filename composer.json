@@ -49,7 +49,7 @@
 		"phpmailer/phpmailer": "7.1.1",
 		"symfony/polyfill-intl-idn": "1.43.0",
 		"symfony/polyfill-mbstring": "1.43.0",
-		"symfony/yaml": "7.4.20"
+		"symfony/yaml": "7.4.21"
 	},
 	"suggest": {
 		"ext-apcu": "Support for the Apcu cache driver",
