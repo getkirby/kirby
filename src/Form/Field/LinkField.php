@@ -133,14 +133,6 @@ class LinkField extends InputField
 		return $this->options;
 	}
 
-	public function props(): array
-	{
-		return [
-			...parent::props(),
-			'options' => $this->options()
-		];
-	}
-
 	public function validations(): array
 	{
 		return [

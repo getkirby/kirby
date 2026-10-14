@@ -27,13 +27,7 @@ abstract class InputField extends ValueField
 	{
 		return [
 			...parent::props(),
-			'autofocus' => $this->autofocus(),
-			'disabled'  => $this->isDisabled(),
-			'help'      => $this->help(),
-			'label'     => $this->label(),
 			'translate' => $this->translate(),
-			'required'  => $this->isRequired(),
-			'width'     => $this->width(),
 		];
 	}
 }

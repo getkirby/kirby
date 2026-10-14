@@ -63,7 +63,7 @@ abstract class ModelPickerField extends InputField
 	 * Additional picker dialog props { image, layout, size }
 	 * @since 6.0.0
 	 */
-	#[Prop]
+	#[Prop(export: false)]
 	protected array $picker = [];
 
 	/**
@@ -195,26 +195,6 @@ abstract class ModelPickerField extends InputField
 	public function picker(): array
 	{
 		return $this->picker;
-	}
-
-	public function props(): array
-	{
-		return [
-			...parent::props(),
-			'empty'    => $this->empty(),
-			'image'    => $this->image(),
-			'info'     => $this->info(),
-			'layout'   => $this->layout(),
-			'link'     => $this->link(),
-			'max'      => $this->max(),
-			'min'      => $this->min(),
-			'multiple' => $this->multiple(),
-			'query'    => $this->query(),
-			'search'   => $this->search(),
-			'size'     => $this->size(),
-			'store'    => $this->store(),
-			'text'     => $this->text(),
-		];
 	}
 
 	public function query(): string|null

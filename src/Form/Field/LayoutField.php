@@ -246,8 +246,6 @@ class LayoutField extends BlocksField
 	{
 		return [
 			...parent::props(),
-			'layouts'  => $this->layouts(),
-			'selector' => $this->selector(),
 			'settings' => $this->settings()?->toArray()
 		];
 	}

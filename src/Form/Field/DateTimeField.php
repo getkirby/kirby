@@ -66,19 +66,6 @@ abstract class DateTimeField extends InputField
 		return Date::optional($this->min)?->format(static::ISO);
 	}
 
-	public function props(): array
-	{
-		return [
-			...parent::props(),
-			'display' => $this->display(),
-			'format'  => $this->format(),
-			'icon'    => $this->icon(),
-			'max'     => $this->max(),
-			'min'     => $this->min(),
-			'step'    => $this->step(),
-		];
-	}
-
 	protected function roundToStep(Date|null $value): Date|null
 	{
 		if ($value === null) {

@@ -15,7 +15,7 @@ trait Required
 	/**
 	 * If `true`, the field has to be filled in correctly to be saved.
 	 */
-	#[Prop]
+	#[Prop(getter: 'isRequired')]
 	protected bool $required = false;
 
 	/**

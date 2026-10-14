@@ -45,14 +45,4 @@ class TogglesField extends OptionField
 	{
 		return $this->resettable;
 	}
-
-	public function props(): array
-	{
-		return [
-			...parent::props(),
-			'grow'       => $this->grow(),
-			'labels'     => $this->labels(),
-			'resettable' => $this->resettable(),
-		];
-	}
 }
