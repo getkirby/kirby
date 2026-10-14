@@ -103,7 +103,7 @@ abstract class ModelListField extends DisplayField
 	/**
 	 * Enables/disables the search
 	 */
-	#[Prop(export: false)]
+	#[Prop(export: 'searchable', getter: 'searchable')]
 	protected bool $search = false;
 
 	/**
@@ -486,8 +486,7 @@ abstract class ModelListField extends DisplayField
 	{
 		return [
 			...parent::props(),
-			'link'       => $this->link(),
-			'searchable' => $this->searchable(),
+			'link' => $this->link(),
 		];
 	}
 

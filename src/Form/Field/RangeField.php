@@ -16,6 +16,9 @@ class RangeField extends NumberField
 	#[Prop]
 	protected float|null $max = 100;
 
+	/**
+	 * Enables/disables the tooltip and sets the `before` and `after` values
+	 */
 	#[Prop]
 	protected array|bool $tooltip = true;
 

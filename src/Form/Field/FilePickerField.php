@@ -23,6 +23,10 @@ class FilePickerField extends ModelPickerField
 {
 	use Mixin\Upload;
 
+	/**
+	 * Query for the model whose files can be picked.
+	 * By default, the files of the field's own model are used.
+	 */
 	#[Prop(computed: true)]
 	protected string|null $parent = null;
 
