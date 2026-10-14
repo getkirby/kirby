@@ -22,7 +22,11 @@ use Kirby\Toolkit\Str;
 class Panel
 {
 	protected Access|null $access = null;
-	protected Areas|null $areas = null;
+	/**
+	 * Areas cached per user id, since the available
+	 * areas change when the user logs in or out
+	 */
+	protected array $areas = [];
 	protected Assets|null $assets = null;
 	protected Home|null $home = null;
 	protected Router|null $router = null;
@@ -42,11 +46,12 @@ class Panel
 	}
 
 	/**
-	 * Collect all registered areas
+	 * Collect all registered areas for the current user
 	 */
 	public function areas(): Areas
 	{
-		return $this->areas ??= Areas::for($this->kirby);
+		$key = $this->kirby->user()?->id() ?? '';
+		return $this->areas[$key] ??= Areas::for($this->kirby);
 	}
 
 	/**

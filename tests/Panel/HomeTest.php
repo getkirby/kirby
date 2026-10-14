@@ -190,6 +190,26 @@ class HomeTest extends TestCase
 		$this->assertTrue($home->hasAccess('browser'));
 	}
 
+	public function testHasAccessAfterLoginInSameRequest(): void
+	{
+		$this->app = $this->app->clone([
+			'users' => [
+				['email' => 'test@getkirby.com', 'role' => 'admin']
+			]
+		]);
+
+		$panel = $this->app->panel();
+		$home  = $panel->home();
+
+		// areas are resolved before the user is authenticated
+		$this->assertFalse($home->hasAccess('site'));
+
+		$this->app->impersonate('test@getkirby.com');
+
+		$this->assertTrue($home->hasAccess('site'));
+		$this->assertSame('/panel/site', $home->url());
+	}
+
 	public function testHasAccessWithLimitedAccess(): void
 	{
 		$this->app = $this->app->clone([
