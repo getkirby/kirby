@@ -7,7 +7,7 @@ use Kirby\Cms\ModelWithContent;
 use Kirby\Data\Data;
 use Kirby\Form\Mixin;
 use Kirby\Panel\Ui\Item\ProtectedItem;
-use Kirby\Reflection\Attributes\Derived;
+use Kirby\Reflection\Attributes\Prop;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 use Kirby\Uuid\Uuids;
@@ -31,92 +31,66 @@ abstract class ModelPickerField extends InputField
 	/**
 	 * The placeholder text if none have been selected yet
 	 */
-	protected array|string|null $empty;
+	#[Prop]
+	protected array|string|null $empty = null;
 
 	/**
 	 * Image settings for each item, a query string for the
 	 * preview image or `false` to disable previews
 	 */
-	protected array|string|false|null $image;
+	#[Prop]
+	protected array|string|false|null $image = null;
 
 	/**
 	 * Info text for each item
 	 */
-	protected string|null $info;
+	#[Prop]
+	protected string|null $info = null;
 
 	/**
 	 * Whether each item should be clickable
 	 */
+	#[Prop]
 	protected bool $link = true;
 
 	/**
 	 * If `false`, only a single one can be selected
 	 */
+	#[Prop]
 	protected bool $multiple = true;
 
 	/**
 	 * Additional picker dialog props { image, layout, size }
 	 * @since 6.0.0
 	 */
+	#[Prop]
 	protected array $picker = [];
 
 	/**
 	 * Query for the items to be included in the picker
 	 */
-	protected string|null $query;
+	#[Prop]
+	protected string|null $query = null;
 
 	/**
 	 * Enable/disable the search field in the picker
 	 */
+	#[Prop]
 	protected bool $search = true;
 
 	/**
 	 * Whether to store `uuid` or `id` in the content file of the model
 	 */
-	#[Derived]
+	#[Prop(computed: true)]
 	protected string $store = 'uuid';
 
 	/**
 	 * Main text for each item
 	 */
-	protected string|null $text;
+	#[Prop]
+	protected string|null $text = null;
 
 	protected array $value = [];
-
-	public function __construct(
-		array|string|null $empty = null,
-		array|string|false|null $image = null,
-		string|null $info = null,
-		string|null $layout = null,
-		bool|null $link = null,
-		int|null $max = null,
-		int|null $min = null,
-		bool|null $multiple = null,
-		array|null $picker = null,
-		string|null $query = null,
-		bool|null $search = null,
-		string|null $size = null,
-		string|null $store = null,
-		string|null $text = null,
-		mixed ...$args
-	) {
-		parent::__construct(...$args);
-
-		$this->empty    = $empty;
-		$this->image    = $image;
-		$this->info     = $info;
-		$this->layout   = $layout ?? $this->layout;
-		$this->link     = $link ?? $this->link;
-		$this->max      = $max;
-		$this->min      = $min;
-		$this->multiple = $multiple ?? $this->multiple;
-		$this->picker   = $picker ?? $this->picker;
-		$this->query    = $query;
-		$this->search   = $search ?? $this->search;
-		$this->store    = $store ?? $this->store;
-		$this->size     = $size ?? $this->size;
-		$this->text     = $text;
-	}
 
 	public function api(): array
 	{

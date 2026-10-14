@@ -6,6 +6,7 @@ use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Panel\Controller\Dialog\PagePickerDialogController;
 use Kirby\Panel\Ui\Item\PageItem;
+use Kirby\Reflection\Attributes\Prop;
 
 /**
  * Pagepicker field
@@ -21,16 +22,8 @@ class PagePickerField extends ModelPickerField
 	/**
 	 * Optionally include subpages of pages
 	 */
+	#[Prop]
 	protected bool $subpages = true;
-
-	public function __construct(
-		bool|null $subpages = null,
-		mixed ...$args
-	) {
-		parent::__construct(...$args);
-
-		$this->subpages = $subpages ?? $this->subpages;
-	}
 
 	public function dialogs(): array
 	{

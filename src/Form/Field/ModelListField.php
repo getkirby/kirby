@@ -11,7 +11,8 @@ use Kirby\Exception\PermissionException;
 use Kirby\Form\Form;
 use Kirby\Form\Mixin;
 use Kirby\Panel\Collector\ModelsCollector;
-use Kirby\Reflection\Attributes\Derived;
+use Kirby\Reflection\Attributes\Prop;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
@@ -45,7 +46,7 @@ abstract class ModelListField extends DisplayField
 	/**
 	 * Columns config for `layout: table`
 	 */
-	#[Derived]
+	#[Prop(computed: true)]
 	protected array|null $columns = null;
 
 	protected array|null $columnsCache = null;
@@ -54,91 +55,57 @@ abstract class ModelListField extends DisplayField
 	/**
 	 * If `true`, the order of the entries is reversed
 	 */
+	#[Prop]
 	protected bool $flip = false;
 
 	/**
 	 * Image options for each entry, a query string for the preview
 	 * image or `false` to disable previews
 	 */
+	#[Prop]
 	protected array|string|false $image = [];
 
 	/**
 	 * Info text shown next to or below the main text of each entry
 	 */
-	protected array|string|null $info;
+	#[Prop]
+	protected array|string|null $info = null;
 
 	/**
 	 * Sets the minimum number of required entries
 	 */
-	protected int|null $min;
+	#[Prop]
+	protected int|null $min = null;
 
 	/**
 	 * Sets the default page for the pagination
 	 */
-	protected int|null $page;
+	#[Prop]
+	protected int|null $page = null;
 
 	/**
 	 * Query for the parent model that holds the entries
 	 */
-	protected string|null $parent;
+	#[Prop]
+	protected string|null $parent = null;
 
 	/**
 	 * Filters the entries by a query. Sorting will be disabled
 	 */
-	protected string|null $query;
+	#[Prop]
+	protected string|null $query = null;
 
 	/**
 	 * Enables/disables the search
 	 */
+	#[Prop]
 	protected bool $search = false;
 
 	/**
 	 * Setup for the main text of each entry
 	 */
+	#[Prop]
 	protected array|string|null $text = null;
-
-	public function __construct(
-		bool|null $batch = null,
-		array|null $columns = null,
-		array|string|null $empty = null,
-		bool|null $flip = null,
-		array|string|false|null $image = null,
-		array|string|null $info = null,
-		string|null $layout = null,
-		int|null $limit = null,
-		int|null $max = null,
-		int|null $min = null,
-		int|null $page = null,
-		string|null $parent = null,
-		string|null $query = null,
-		bool|null $search = null,
-		string|null $size = null,
-		bool|null $sortable = null,
-		string|null $sortBy = null,
-		array|string|null $text = null,
-		mixed ...$args
-	) {
-		parent::__construct(...$args);
-
-		$this->batch    = $batch ?? $this->batch;
-		$this->columns  = $columns;
-		$this->empty    = $empty;
-		$this->flip     = $flip ?? $this->flip;
-		$this->image    = $image ?? $this->image;
-		$this->info     = $info;
-		$this->layout   = $layout ?? $this->layout;
-		$this->limit    = $limit ?? $this->limit;
-		$this->max      = $max;
-		$this->min      = $min;
-		$this->page     = $page;
-		$this->parent   = $parent;
-		$this->query    = $query;
-		$this->search   = $search ?? $this->search;
-		$this->size     = $size ?? $this->size;
-		$this->sortable = $sortable ?? $this->sortable;
-		$this->sortBy   = $sortBy;
-		$this->text     = $text ?? $this->text;
-	}
 
 	/**
 	 * The list is not part of the form values, so it loads and

@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Reflection\Attributes\Prop;
+
 /**
  * Tel Field
  *
@@ -11,7 +13,10 @@ namespace Kirby\Form\Field;
  */
 class TelField extends TextField
 {
+	#[Prop]
 	protected string|null $autocomplete = 'tel';
+	#[Prop]
 	protected bool $counter = false;
+	#[Prop]
 	protected string|null $icon = 'phone';
 }

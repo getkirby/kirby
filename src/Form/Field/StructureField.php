@@ -7,6 +7,7 @@ use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Interface\ProvidesNestedForm;
 use Kirby\Form\Mixin;
+use Kirby\Reflection\Attributes\Prop;
 use Kirby\Toolkit\Str;
 
 /**
@@ -31,39 +32,10 @@ class StructureField extends InputField implements ProvidesNestedForm
 	/**
 	 * The number of entries that will be displayed on a single page. Afterwards pagination kicks in.
 	 */
+	#[Prop]
 	protected int|null $limit = null;
 
 	protected array $value = [];
-
-	public function __construct(
-		bool|null $batch = null,
-		array|null $columns = null,
-		array|null $default = null,
-		bool|null $duplicate = null,
-		array|string|null $empty = null,
-		array|null $fields = null,
-		int|null $limit = null,
-		int|null $max = null,
-		int|null $min = null,
-		bool|null $prepend = null,
-		bool|null $sortable = null,
-		string|null $sortBy = null,
-		mixed ...$args
-	) {
-		parent::__construct(...$args, default: $default);
-
-		$this->batch     = $batch ?? $this->batch;
-		$this->columns   = $columns;
-		$this->duplicate = $duplicate ?? $this->duplicate;
-		$this->empty     = $empty;
-		$this->fields    = $fields ?? $this->fields;
-		$this->limit     = $limit ?? $this->limit;
-		$this->max       = $max;
-		$this->min       = $min;
-		$this->prepend   = $prepend ?? $this->prepend;
-		$this->sortable  = $sortable ?? $this->sortable;
-		$this->sortBy    = $sortBy;
-	}
 
 	public function fill(mixed $value): static
 	{

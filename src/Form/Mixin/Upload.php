@@ -10,7 +10,7 @@ use Kirby\Cms\Site;
 use Kirby\Cms\User;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Reflection\Attributes\Derived;
+use Kirby\Reflection\Attributes\Prop;
 
 /**
  * Provides upload options and file linking functionality
@@ -23,7 +23,7 @@ trait Upload
 	/**
 	 * Sets the upload options for linked files
 	 */
-	#[Derived]
+	#[Prop(computed: true)]
 	protected mixed $uploads = null;
 
 	/**

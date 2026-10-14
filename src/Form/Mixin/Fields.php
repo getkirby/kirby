@@ -3,6 +3,7 @@
 namespace Kirby\Form\Mixin;
 
 use Kirby\Form\Form;
+use Kirby\Reflection\Attributes\Prop;
 
 /**
  * Provides nested fields and form handling for complex field types
@@ -15,6 +16,7 @@ trait Fields
 	/**
 	 * Fields setup for the form. Works just like fields in regular forms.
 	 */
+	#[Prop]
 	protected array $fields = [];
 
 	/**

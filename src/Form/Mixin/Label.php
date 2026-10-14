@@ -2,7 +2,7 @@
 
 namespace Kirby\Form\Mixin;
 
-use Kirby\Reflection\Attributes\Derived;
+use Kirby\Reflection\Attributes\Prop;
 use Kirby\Toolkit\Str;
 
 /**
@@ -16,8 +16,8 @@ trait Label
 	/**
 	 * The field label can be set as string or associative array with translations
 	 */
-	#[Derived]
-	protected array|string|null $label;
+	#[Prop(computed: true)]
+	protected array|string|null $label = null;
 
 	public function label(): string
 	{

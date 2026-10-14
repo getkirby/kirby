@@ -13,19 +13,6 @@ class HiddenField extends ValueField
 {
 	protected mixed $value = null;
 
-	public function __construct(
-		mixed $default = null,
-		string|null $name = null,
-		bool|null $translate = null
-	) {
-		parent::__construct(
-			name: $name
-		);
-
-		$this->default   = $default;
-		$this->translate = $translate ?? $this->translate;
-	}
-
 	public function isHidden(): bool
 	{
 		return true;

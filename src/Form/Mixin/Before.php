@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Mixin;
 
+use Kirby\Reflection\Attributes\Prop;
+
 /**
  * Provides the `before` prop for rendering optional text before the field input
  *
@@ -13,7 +15,8 @@ trait Before
 	/**
 	 * Optional text that will be shown before the input
 	 */
-	protected array|string|null $before;
+	#[Prop]
+	protected array|string|null $before = null;
 
 	public function before(): string|null
 	{

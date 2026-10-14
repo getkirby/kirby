@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Mixin;
 
+use Kirby\Reflection\Attributes\Prop;
+
 /**
  * Provides the `autocomplete` prop for setting HTML5 autocomplete behavior
  *
@@ -13,6 +15,7 @@ trait Autocomplete
 	/**
 	 * Sets the HTML5 autocomplete mode for the input
 	 */
+	#[Prop]
 	protected string|null $autocomplete = null;
 
 	public function autocomplete(): string|null

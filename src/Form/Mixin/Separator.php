@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Mixin;
 
+use Kirby\Reflection\Attributes\Prop;
+
 /**
  * Provides the `separator` prop for custom list value storage
  *
@@ -13,6 +15,7 @@ trait Separator
 	/**
 	 * Custom separator, which will be used to store a list of values in the content file
 	 */
+	#[Prop]
 	protected string $separator = ',';
 
 	public function separator(): string

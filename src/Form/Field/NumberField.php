@@ -3,6 +3,7 @@
 namespace Kirby\Form\Field;
 
 use Kirby\Form\Mixin;
+use Kirby\Reflection\Attributes\Prop;
 use Kirby\Toolkit\Str;
 
 /**
@@ -22,42 +23,23 @@ class NumberField extends InputField
 	/**
 	 * The highest allowed number
 	 */
+	#[Prop]
 	protected float|null $max = null;
 
 	/**
 	 * The lowest allowed number
 	 */
-	protected float|null $min;
+	#[Prop]
+	protected float|null $min = null;
 
 	/**
 	 * Allowed incremental steps between numbers (i.e `0.5`)
 	 * Use `any` to allow any decimal value.
 	 */
-	protected float|string|null $step;
+	#[Prop]
+	protected float|string|null $step = null;
 
 	protected float|null $value = null;
-
-	public function __construct(
-		array|string|null $after = null,
-		array|string|null $before = null,
-		float|string|null $default = null,
-		string|null $icon = null,
-		array|string|null $placeholder = null,
-		float|null $max = null,
-		float|null $min = null,
-		float|string|null $step = null,
-		mixed ...$args
-	) {
-		parent::__construct(...$args, default: $default);
-
-		$this->after       = $after;
-		$this->before      = $before;
-		$this->icon        = $icon ?? $this->icon;
-		$this->max         = $max ?? $this->max;
-		$this->min         = $min;
-		$this->placeholder = $placeholder;
-		$this->step        = $step;
-	}
 
 	public function fill(mixed $value): static
 	{
