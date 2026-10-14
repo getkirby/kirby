@@ -22,7 +22,6 @@ import { buildQuery } from "@/helpers/url";
  * Panel API Setup
  */
 export default class Api {
-	csrf: string;
 	endpoint: string;
 	methodOverride: boolean;
 	language: string | null;
@@ -42,7 +41,6 @@ export default class Api {
 
 	constructor(panel: Panel) {
 		this.panel = panel;
-		this.csrf = panel.system.csrf;
 		this.endpoint = rtrim(panel.urls.api, "/");
 		this.methodOverride = panel.config.api?.methodOverride ?? false;
 		this.language = panel.language.code;
@@ -60,6 +58,14 @@ export default class Api {
 
 		// regularly ping API to keep session alive
 		this.ping();
+	}
+
+	/**
+	 * The token is replaced whenever the session is regenerated,
+	 * so it has to be read from the state on every request
+	 */
+	get csrf(): string {
+		return this.panel.csrf;
 	}
 
 	/**

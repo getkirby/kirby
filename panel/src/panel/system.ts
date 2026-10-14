@@ -2,7 +2,6 @@ import State from "./state";
 
 export type SystemState = {
 	ascii: Record<string, string>;
-	csrf: string;
 	isLocal: boolean;
 	locales: Record<string, string>;
 	slugs: string[];
@@ -12,7 +11,6 @@ export type SystemState = {
 export function defaults(): SystemState {
 	return {
 		ascii: {},
-		csrf: "",
 		isLocal: false,
 		locales: {},
 		slugs: [],
@@ -22,7 +20,7 @@ export function defaults(): SystemState {
 
 /**
  * Represents global system information provided by the backend,
- * such as the CSRF token, slug rules, and available locales
+ * such as slug rules and available locales
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license

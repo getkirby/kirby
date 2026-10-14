@@ -16,14 +16,12 @@ abstract class AreaTestCase extends TestCase
 
 	protected function setUp(): void
 	{
+		// all area requests are Panel state requests
+		$_SERVER['HTTP_X_PANEL'] = 'true';
+
 		$this->app = new App([
 			'roots' => [
 				'index' => static::TMP,
-			],
-			'request' => [
-				'query' => [
-					'_json' => true,
-				]
 			],
 			'options' => [
 				'api' => [
@@ -42,8 +40,8 @@ abstract class AreaTestCase extends TestCase
 
 		Dir::remove(static::TMP);
 
-		// clean up server software fakes
-		unset($_SERVER['SERVER_SOFTWARE']);
+		// clean up server fakes
+		unset($_SERVER['SERVER_SOFTWARE'], $_SERVER['HTTP_X_PANEL']);
 
 		App::destroy();
 	}

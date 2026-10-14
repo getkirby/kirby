@@ -13,6 +13,7 @@ use Kirby\Filesystem\Dir;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Locale;
 use Kirby\Toolkit\Str;
+use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
@@ -25,6 +26,7 @@ abstract class TestCase extends BaseTestCase
 	protected Closure|null $i18nLoad;
 	protected array $i18nTranslations;
 	protected array|string $localeBackup;
+	protected array $serverHeaders = [];
 
 	protected function setUp(): void
 	{
@@ -77,6 +79,37 @@ abstract class TestCase extends BaseTestCase
 			restore_error_handler();
 			$this->activeErrorHandlers--;
 		}
+	}
+
+	/**
+	 * Runs even when a subclass overrides `tearDown()`
+	 * without calling the parent
+	 */
+	#[After]
+	protected function tearDownHeaders(): void
+	{
+		foreach ($this->serverHeaders as $key) {
+			unset($_SERVER[$key]);
+		}
+
+		$this->serverHeaders = [];
+	}
+
+	/**
+	 * Fakes request headers. They are only ever read from
+	 * `$_SERVER`, so passing them as request props has no effect.
+	 */
+	protected function setHeaders(array $headers = []): App
+	{
+		foreach ($headers as $key => $value) {
+			$key = 'HTTP_' . strtoupper(str_replace('-', '_', $key));
+
+			$_SERVER[$key]         = $value;
+			$this->serverHeaders[] = $key;
+		}
+
+		// the environment reads the headers once on construction
+		return $this->app = $this->app->clone();
 	}
 
 	public function assertError(
