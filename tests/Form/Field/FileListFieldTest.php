@@ -73,7 +73,7 @@ class FileListFieldTest extends TestCase
 
 	protected function filelist(array $attr = []): FileListField
 	{
-		return FileListField::factory([
+		return new FileListField(...[
 			'model' => $this->app->page('photography'),
 			'name'  => 'gallery',
 			...$attr
