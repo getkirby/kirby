@@ -93,19 +93,6 @@ class TagsField extends OptionsField
 		return $this->sort;
 	}
 
-	public function props(): array
-	{
-		return [
-			...parent::props(),
-			'accept'    => $this->accept(),
-			'icon'      => $this->icon(),
-			'layout'    => $this->layout(),
-			'search'    => $this->search(),
-			'separator' => $this->separator(),
-			'sort'      => $this->sort(),
-		];
-	}
-
 	public function toStoredValue(): string
 	{
 		return A::join($this->value, $this->separator() . ' ');

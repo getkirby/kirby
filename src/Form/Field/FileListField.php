@@ -26,19 +26,19 @@ class FileListField extends ModelListField
 {
 	public const string TYPE = 'files';
 
-	#[Prop]
+	#[Prop(export: false)]
 	protected array|string|null $text = '{{ file.filename }}';
 
 	/**
 	 * Option to switch off the upload button
 	 */
-	#[Prop]
+	#[Prop(export: false)]
 	protected bool $create = true;
 
 	/**
 	 * Filters the files by template and sets the template for all uploads
 	 */
-	#[Prop]
+	#[Prop(export: false)]
 	protected string|null $template = null;
 
 	public function accept(): string|null

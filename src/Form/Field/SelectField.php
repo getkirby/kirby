@@ -38,13 +38,4 @@ class SelectField extends OptionField
 	{
 		return $this->stringTemplateI18n($this->placeholder);
 	}
-
-	public function props(): array
-	{
-		return [
-			...parent::props(),
-			'icon'        => $this->icon(),
-			'placeholder' => $this->placeholder(),
-		];
-	}
 }

@@ -21,7 +21,7 @@ trait Validation
 	/**
 	 * Additional validator rules for the value, e.g. `email` or `['minLength' => 3]`
 	 */
-	#[Prop]
+	#[Prop(export: false)]
 	protected array|string|null $validate = null;
 
 	/**

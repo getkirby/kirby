@@ -20,15 +20,6 @@ class ObjectField extends InputField implements ProvidesNestedForm
 
 	protected array $value = [];
 
-	public function props(): array
-	{
-		return [
-			...parent::props(),
-			'empty'  => $this->empty(),
-			'fields' => $this->fields(),
-		];
-	}
-
 	public function fill(mixed $value): static
 	{
 		return parent::fill(

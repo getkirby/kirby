@@ -14,12 +14,4 @@ use Kirby\Form\Mixin;
 class RadioField extends OptionField
 {
 	use Mixin\Columns;
-
-	public function props(): array
-	{
-		return [
-			...parent::props(),
-			'columns' => $this->columns(),
-		];
-	}
 }

@@ -37,14 +37,4 @@ class WriterField extends ProseMirrorField
 	{
 		return $this->inline;
 	}
-
-	public function props(): array
-	{
-		return [
-			...parent::props(),
-			'counter'  => $this->counter(),
-			'headings' => $this->headings(),
-			'inline'   => $this->inline(),
-		];
-	}
 }

@@ -20,17 +20,6 @@ abstract class StringField extends InputField
 
 	protected string $value = '';
 
-	public function props(): array
-	{
-		return [
-			...parent::props(),
-			'maxlength'    => $this->maxlength(),
-			'minlength'    => $this->minlength(),
-			'placeholder'  => $this->placeholder(),
-			'spellcheck'   => $this->spellcheck(),
-		];
-	}
-
 	protected function validations(): array
 	{
 		return [

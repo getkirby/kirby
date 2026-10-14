@@ -87,15 +87,6 @@ class FilePickerField extends ModelPickerField
 		return $this->parentModel()->apiUrl(true);
 	}
 
-	public function props(): array
-	{
-		return [
-			...parent::props(),
-			'parent'  => $this->parent(),
-			'uploads' => $this->uploads()
-		];
-	}
-
 	public function query(): string|null
 	{
 		return $this->query;

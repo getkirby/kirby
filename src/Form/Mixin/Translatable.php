@@ -16,7 +16,7 @@ trait Translatable
 	/**
 	 * Should the field be translatable?
 	 */
-	#[Prop]
+	#[Prop(export: false)]
 	protected bool $translate = true;
 
 	/**

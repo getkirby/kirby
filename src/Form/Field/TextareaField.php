@@ -37,7 +37,7 @@ class TextareaField extends InputField
 	/**
 	 * Sets the options for the files picker
 	 */
-	#[Prop]
+	#[Prop(export: false)]
 	protected mixed $files = null;
 
 	/**
@@ -112,21 +112,6 @@ class TextareaField extends InputField
 		return parent::fill(
 			value: trim($value ?? '')
 		);
-	}
-
-	public function props(): array
-	{
-		return [
-			...parent::props(),
-			'buttons'    => $this->buttons(),
-			'counter'    => $this->counter(),
-			'font'       => $this->font(),
-			'maxlength'  => $this->maxlength(),
-			'minlength'  => $this->minlength(),
-			'spellcheck' => $this->spellcheck(),
-			'size'       => $this->size(),
-			'uploads'    => $this->uploads()
-		];
 	}
 
 	public function size(): string|null

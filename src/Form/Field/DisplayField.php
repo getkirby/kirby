@@ -16,14 +16,4 @@ abstract class DisplayField extends Field
 {
 	use Mixin\Help;
 	use Mixin\Label;
-
-	public function props(): array
-	{
-		return [
-			...parent::props(),
-			'help'  => $this->help(),
-			'label' => $this->label(),
-			'width' => $this->width(),
-		];
-	}
 }

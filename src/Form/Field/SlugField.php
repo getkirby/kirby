@@ -64,17 +64,6 @@ class SlugField extends TextField
 		return $this->path;
 	}
 
-	public function props(): array
-	{
-		return [
-			...parent::props(),
-			'allow'  => $this->allow(),
-			'path'   => $this->path(),
-			'sync'   => $this->sync(),
-			'wizard' => $this->wizard(),
-		];
-	}
-
 	public function sync(): string|null
 	{
 		return $this->sync;
