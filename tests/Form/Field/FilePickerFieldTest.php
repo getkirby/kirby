@@ -238,7 +238,7 @@ class FilePickerFieldTest extends TestCase
 
 	public function testDialogs(): void
 	{
-		$field = $this->field('files', [
+		$field = $this->field('filepicker', [
 			'model' => $this->model()
 		]);
 
@@ -249,11 +249,11 @@ class FilePickerFieldTest extends TestCase
 
 	public function testEmpty(): void
 	{
-		$field = $this->field('files', ['empty' => 'Test']);
+		$field = $this->field('filepicker', ['empty' => 'Test']);
 		$this->assertSame('Test', $field->empty());
 
 		// translated
-		$field = $this->field('files', [
+		$field = $this->field('filepicker', [
 			'empty' => ['en' => 'Test', 'de' => 'Töst']
 		]);
 
@@ -262,7 +262,7 @@ class FilePickerFieldTest extends TestCase
 
 	public function testFillWithFile(): void
 	{
-		$field = $this->field('files', ['model' => $this->model()]);
+		$field = $this->field('filepicker', ['model' => $this->model()]);
 		$field->fill($this->app->file('test/a.jpg'));
 
 		$this->assertSame(['file://test-a'], $field->toStoredValue());
@@ -270,7 +270,7 @@ class FilePickerFieldTest extends TestCase
 
 	public function testFillWithFileInArray(): void
 	{
-		$field = $this->field('files', ['model' => $this->model()]);
+		$field = $this->field('filepicker', ['model' => $this->model()]);
 		$field->fill([
 			$this->app->file('test/a.jpg'),
 			$this->app->file('test-draft/b.jpg')
@@ -281,7 +281,7 @@ class FilePickerFieldTest extends TestCase
 
 	public function testFillWithFiles(): void
 	{
-		$field = $this->field('files', ['model' => $this->model()]);
+		$field = $this->field('filepicker', ['model' => $this->model()]);
 		$field->fill($this->model()->files());
 
 		$expected = ['file://test-a', 'file://test-b', 'file://test-c'];
@@ -298,7 +298,7 @@ class FilePickerFieldTest extends TestCase
 			]
 		]);
 
-		$field = $this->field('files', ['model' => $this->model()]);
+		$field = $this->field('filepicker', ['model' => $this->model()]);
 		$field->fill([
 			$this->app->file('test/a.jpg'),
 			$this->app->file('test-draft/b.jpg')
@@ -310,7 +310,7 @@ class FilePickerFieldTest extends TestCase
 
 	public function testFillWithPage(): void
 	{
-		$field = $this->field('files', ['model' => $this->model()]);
+		$field = $this->field('filepicker', ['model' => $this->model()]);
 		$field->fill([$this->model()]);
 
 		$this->assertSame([], $field->toStoredValue());
@@ -318,14 +318,14 @@ class FilePickerFieldTest extends TestCase
 
 	public function testIsValid(): void
 	{
-		$field = $this->field('files', [
+		$field = $this->field('filepicker', [
 			'model'    => $this->model(),
 			'required' => true
 		]);
 
 		$this->assertFalse($field->isValid());
 
-		$field = $this->field('files', [
+		$field = $this->field('filepicker', [
 			'model'    => $this->model(),
 			'required' => true,
 			'value'    => ['a.jpg'],
@@ -336,7 +336,7 @@ class FilePickerFieldTest extends TestCase
 
 	public function testMax(): void
 	{
-		$field = $this->field('files', [
+		$field = $this->field('filepicker', [
 			'model' => $this->model(),
 			'value' => [
 				'a.jpg', // exists
@@ -352,7 +352,7 @@ class FilePickerFieldTest extends TestCase
 
 	public function testMin(): void
 	{
-		$field = $this->field('files', [
+		$field = $this->field('filepicker', [
 			'model' => $this->model(),
 			'value' => [
 				'a.jpg', // exists
@@ -369,7 +369,7 @@ class FilePickerFieldTest extends TestCase
 
 	public function testProps(): void
 	{
-		$field = $this->field('files', [
+		$field = $this->field('filepicker', [
 			'model' => $this->model()
 		]);
 		$props = $field->props();
@@ -423,7 +423,7 @@ class FilePickerFieldTest extends TestCase
 
 		$parent = new FilePickerFieldTestPage(['slug' => 'test']);
 
-		$field = $this->field('files', [
+		$field = $this->field('filepicker', [
 			'model'   => $parent,
 			'uploads' => 'custom'
 		]);
@@ -444,13 +444,13 @@ class FilePickerFieldTest extends TestCase
 
 	public function testParentModel(): void
 	{
-		$field = $this->field('files', [
+		$field = $this->field('filepicker', [
 			'model' => $this->model()
 		]);
 
 		$this->assertSame($this->model(), $field->parentModel());
 
-		$field = $this->field('files', [
+		$field = $this->field('filepicker', [
 			'model'  => $this->model(),
 			'parent' => 'site'
 		]);
@@ -460,7 +460,7 @@ class FilePickerFieldTest extends TestCase
 
 	public function testRequired(): void
 	{
-		$field = $this->field('files', [
+		$field = $this->field('filepicker', [
 			'model'    => $this->model(),
 			'required' => true
 		]);
@@ -472,15 +472,15 @@ class FilePickerFieldTest extends TestCase
 	public function testStore(): void
 	{
 		// Default
-		$field = $this->field('files');
+		$field = $this->field('filepicker');
 		$this->assertSame('uuid', $field->store());
 
 		// Custom
-		$field = $this->field('files', ['store' => 'id']);
+		$field = $this->field('filepicker', ['store' => 'id']);
 		$this->assertSame('id', $field->store());
 
 		// Belongs to parent model, but stores UUIDs
-		$field = $this->field('files', ['model' => $this->model()]);
+		$field = $this->field('filepicker', ['model' => $this->model()]);
 		$file  = $this->app->file('test/a.jpg');
 		$this->assertSame('uuid', $field->store($file));
 
@@ -493,11 +493,11 @@ class FilePickerFieldTest extends TestCase
 			]
 		]);
 
-		$field = $this->field('files');
+		$field = $this->field('filepicker');
 		$this->assertSame('id', $field->store());
 
 		// Belongs to parent model
-		$field = $this->field('files', ['model' => $this->model()]);
+		$field = $this->field('filepicker', ['model' => $this->model()]);
 		$file  = $this->app->file('test/a.jpg');
 		$this->assertSame('id', $field->store());
 		$this->assertSame('filename', $field->store($file));
@@ -505,7 +505,7 @@ class FilePickerFieldTest extends TestCase
 
 	public function testToModel(): void
 	{
-		$field = $this->field('files', [
+		$field = $this->field('filepicker', [
 			'model' => new Page(['slug' => 'test']),
 		]);
 
@@ -516,7 +516,7 @@ class FilePickerFieldTest extends TestCase
 
 	public function testToStoredValue(): void
 	{
-		$field = $this->field('files', [
+		$field = $this->field('filepicker', [
 			'model' => $this->model(),
 			'value' => [
 				'a.jpg',
@@ -537,7 +537,7 @@ class FilePickerFieldTest extends TestCase
 			]
 		]);
 
-		$field = $this->field('files', [
+		$field = $this->field('filepicker', [
 			'model' => $this->model(),
 			'value' => [
 				'a.jpg',
@@ -551,7 +551,7 @@ class FilePickerFieldTest extends TestCase
 
 	public function testValue(): void
 	{
-		$field = $this->field('files', [
+		$field = $this->field('filepicker', [
 			'model' => $this->model(),
 			'value' => [
 				'a.jpg', // exists
@@ -570,7 +570,7 @@ class FilePickerFieldTest extends TestCase
 
 	public function testValueFilesInDraft(): void
 	{
-		$field = $this->field('files', [
+		$field = $this->field('filepicker', [
 			'model' => $this->app->page('test-draft'),
 			'value' => [
 				'a.jpg', // exists
