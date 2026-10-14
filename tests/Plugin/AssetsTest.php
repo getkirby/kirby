@@ -65,13 +65,16 @@ class AssetsTest extends TestCase
 	public function testCss(): void
 	{
 		// assets defined in plugin config
-		$plugin = new Plugin('getkirby/test-plugin', [
-			'root'   => static::TMP,
-			'assets' => [
-				'test.css' => static::TMP . '/test.css',
-				'test.js'  => static::TMP . '/test.js'
-			]
-		]);
+		$plugin = new Plugin(
+			name: 'getkirby/test-plugin',
+			extends: [
+				'assets' => [
+					'test.css' => static::TMP . '/test.css',
+					'test.js'  => static::TMP . '/test.js'
+				]
+			],
+			root: static::TMP
+		);
 
 		$assets = Assets::factory($plugin);
 		$this->assertCount(2, $assets);
@@ -84,13 +87,16 @@ class AssetsTest extends TestCase
 	public function testFactory(): void
 	{
 		// assets defined in plugin config
-		$plugin = new Plugin('getkirby/test-plugin', [
-			'root'   => static::FIXTURES,
-			'assets' => [
-				'c.css' => static::FIXTURES . '/a.css',
-				'd.css' => static::FIXTURES . '/foo/b.css'
-			]
-		]);
+		$plugin = new Plugin(
+			name: 'getkirby/test-plugin',
+			extends: [
+				'assets' => [
+					'c.css' => static::FIXTURES . '/a.css',
+					'd.css' => static::FIXTURES . '/foo/b.css'
+				]
+			],
+			root: static::FIXTURES
+		);
 
 		$assets = Assets::factory($plugin);
 		$this->assertInstanceOf(Assets::class, $assets);
@@ -99,13 +105,16 @@ class AssetsTest extends TestCase
 		$this->assertSame(static::FIXTURES . '/foo/b.css', $assets->get('d.css')->root());
 
 		// assets defined as non-associative array in the plugin config
-		$plugin = new Plugin('getkirby/test-plugin', [
-			'root'   => static::FIXTURES,
-			'assets' => [
-				static::FIXTURES . '/a.css',
-				static::FIXTURES . '/foo/b.css'
-			]
-		]);
+		$plugin = new Plugin(
+			name: 'getkirby/test-plugin',
+			extends: [
+				'assets' => [
+					static::FIXTURES . '/a.css',
+					static::FIXTURES . '/foo/b.css'
+				]
+			],
+			root: static::FIXTURES
+		);
 
 		$assets = Assets::factory($plugin);
 		$this->assertInstanceOf(Assets::class, $assets);
@@ -114,13 +123,16 @@ class AssetsTest extends TestCase
 		$this->assertSame(static::FIXTURES . '/foo/b.css', $assets->get('foo/b.css')->root());
 
 		// assets defined als closure in the plugin config
-		$plugin = new Plugin('getkirby/test-plugin', [
-			'root'   => static::FIXTURES,
-			'assets' => fn () => [
-				static::FIXTURES . '/a.css',
-				static::FIXTURES . '/foo/b.css'
-			]
-		]);
+		$plugin = new Plugin(
+			name: 'getkirby/test-plugin',
+			extends: [
+				'assets' => fn () => [
+					static::FIXTURES . '/a.css',
+					static::FIXTURES . '/foo/b.css'
+				]
+			],
+			root: static::FIXTURES
+		);
 
 		$assets = Assets::factory($plugin);
 		$this->assertInstanceOf(Assets::class, $assets);
@@ -129,9 +141,10 @@ class AssetsTest extends TestCase
 		$this->assertSame(static::FIXTURES . '/foo/b.css', $assets->get('foo/b.css')->root());
 
 		// assets gathered from `assets` folder inside plugin root
-		$plugin = new Plugin('getkirby/test-plugin', [
-			'root' => static::FIXTURES
-		]);
+		$plugin = new Plugin(
+			name: 'getkirby/test-plugin',
+			root: static::FIXTURES
+		);
 
 		$assets = Assets::factory($plugin);
 		$this->assertInstanceOf(Assets::class, $assets);
@@ -141,9 +154,10 @@ class AssetsTest extends TestCase
 
 	public function testPlugin(): void
 	{
-		$plugin = new Plugin('getkirby/test-plugin', [
-			'root' => static::FIXTURES
-		]);
+		$plugin = new Plugin(
+			name: 'getkirby/test-plugin',
+			root: static::FIXTURES
+		);
 
 		$assets = Assets::factory($plugin);
 		$this->assertSame($plugin, $assets->plugin());
