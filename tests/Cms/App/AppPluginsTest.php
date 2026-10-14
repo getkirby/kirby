@@ -434,11 +434,11 @@ class AppPluginsTest extends TestCase
 
 		$page  = new Page(['slug' => 'test']);
 		$class = FormField::resolve('dummy');
-		$field = $class::factory([
-			'name'  => 'dummy',
-			'peter' => 'shaw',
-			'model' => $page
-		]);
+		$field = new $class(
+			name: 'dummy',
+			peter: 'shaw',
+			model: $page
+		);
 
 		$this->assertInstanceOf(DummyField::class, $field);
 		$this->assertSame('simpson', $field->homer());
