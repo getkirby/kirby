@@ -172,6 +172,13 @@ function createTest() {
 	return {
 		css: false,
 		environment: "happy-dom",
+		environmentOptions: {
+			happyDOM: {
+				// happy-dom 21+ disables iframe windows by default,
+				// but k-fatal writes into the iframe document
+				settings: { enableIframePageLoading: true }
+			}
+		},
 		include: ["**/*.test.{js,ts}"],
 		isolate: false,
 		pool: "threads",
