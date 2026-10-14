@@ -97,6 +97,9 @@ class PropsTestSetterClass
 	protected array $settings = ['size' => 'small', 'colors' => ['red', 'blue']];
 
 	#[Prop]
+	protected string $mode = 'a';
+
+	#[Prop(setter: 'setStep')]
 	protected array $step = ['size' => 1, 'unit' => 'day'];
 
 	#[Prop]
@@ -113,6 +116,14 @@ class PropsTestSetterClass
 	protected function isActive(): bool
 	{
 		return $this->active === false;
+	}
+
+	/**
+	 * Not used, because the attribute doesn't name it
+	 */
+	protected function setMode(string $mode): void
+	{
+		$this->mode = strtoupper($mode);
 	}
 
 	protected function setStep(array|int|string $step): void
@@ -138,6 +149,16 @@ class PropsTestInvalidGetterClass
 {
 	#[Prop(getter: 'missing')]
 	protected string $a = 'a';
+}
+
+class PropsTestInvalidSetterClass
+{
+	#[Prop(setter: 'setA')]
+	protected string $a = 'a';
+
+	protected function setA(): void
+	{
+	}
 }
 
 #[CoversClass(Props::class)]
@@ -186,6 +207,14 @@ class PropsTest extends TestCase
 		$this->expectExceptionMessage('The getter "missing" for the prop "a" must be a non-static method');
 
 		(new Props(PropsTestInvalidGetterClass::class))->all();
+	}
+
+	public function testAllWithInvalidSetter(): void
+	{
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('The setter "setA" for the prop "a" must be a non-static method of Kirby\Reflection\PropsTestInvalidSetterClass that accepts the value as its only required argument');
+
+		(new Props(PropsTestInvalidSetterClass::class))->all();
 	}
 
 	public function testAllWithRedeclaredProperty(): void
@@ -252,6 +281,17 @@ class PropsTest extends TestCase
 
 		$props->set('step', 'week');
 		$this->assertSame(['size' => 5, 'unit' => 'week'], $object->option('step'));
+	}
+
+	public function testSetWithoutNamedSetter(): void
+	{
+		$object = new PropsTestSetterClass();
+		$props  = new Props($object);
+
+		// a `set{Name}()` method is only used
+		// when the attribute names it
+		$props->set('mode', 'b');
+		$this->assertSame('b', $object->option('mode'));
 	}
 
 	public function testSetWithUnknownProp(): void

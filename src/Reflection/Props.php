@@ -50,7 +50,7 @@ class Props
 	 * Returns all props of the class with their attribute,
 	 * property, getter and setter method, sorted by name
 	 *
-	 * @throws LogicException if a getter is invalid or two props are exported under the same name
+	 * @throws LogicException if a getter or setter is invalid or two props are exported under the same name
 	 */
 	public function all(): array
 	{
@@ -82,7 +82,7 @@ class Props
 				'attribute' => $attribute,
 				'getter'    => $this->getter($reflection, $property, $attribute),
 				'property'  => $property,
-				'setter'    => $this->setter($reflection, $property)
+				'setter'    => $this->setter($reflection, $property, $attribute)
 			];
 		}
 
@@ -309,10 +309,10 @@ class Props
 	}
 
 	/**
-	 * Sets the value of a prop. If the class has a `set{Name}()`
-	 * method, the value is passed to it. Otherwise, associative
-	 * arrays are merged into the current value and all other
-	 * values replace it.
+	 * Sets the value of a prop. If the attribute names a setter,
+	 * the value is passed to it. Otherwise, associative arrays
+	 * are merged into the current value and all other values
+	 * replace it.
 	 *
 	 * @throws LogicException if the prop does not exist
 	 * @throws \TypeError if the value has the wrong type
@@ -343,26 +343,34 @@ class Props
 	}
 
 	/**
-	 * Returns the `set{Name}()` method for the property, if there is one
+	 * Returns the setter method that is named in the attribute, if any.
+	 * The setter may also be protected.
+	 *
+	 * @throws LogicException if the named setter is invalid
 	 */
 	protected function setter(
 		ReflectionClass $class,
-		ReflectionProperty $property
+		ReflectionProperty $property,
+		Prop $attribute
 	): ReflectionMethod|null {
-		$name = 'set' . ucfirst($property->getName());
-
-		if ($class->hasMethod($name) === false) {
+		if ($attribute->setter === null) {
 			return null;
 		}
 
-		$method = $class->getMethod($name);
+		$method = match ($class->hasMethod($attribute->setter)) {
+			true    => $class->getMethod($attribute->setter),
+			default => null
+		};
 
 		if (
+			$method === null ||
 			$method->isStatic() === true ||
 			$method->getNumberOfParameters() === 0 ||
 			$method->getNumberOfRequiredParameters() > 1
 		) {
-			return null;
+			throw new LogicException(
+				message: 'The setter "' . $attribute->setter . '" for the prop "' . $property->getName() . '" must be a non-static method of ' . $class->getName() . ' that accepts the value as its only required argument'
+			);
 		}
 
 		return $method;

@@ -31,6 +31,7 @@ class PropTest extends TestCase
 		$this->assertNull($attribute->default);
 		$this->assertTrue($attribute->export);
 		$this->assertNull($attribute->getter);
+		$this->assertNull($attribute->setter);
 	}
 
 	public function testConstructWithComputed(): void
@@ -66,6 +67,13 @@ class PropTest extends TestCase
 		$attribute = new Prop(getter: 'isDisabled');
 
 		$this->assertSame('isDisabled', $attribute->getter);
+	}
+
+	public function testConstructWithSetter(): void
+	{
+		$attribute = new Prop(setter: 'setStep');
+
+		$this->assertSame('setStep', $attribute->setter);
 	}
 
 	public function testExportName(): void

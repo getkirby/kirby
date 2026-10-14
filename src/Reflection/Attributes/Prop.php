@@ -16,12 +16,13 @@ use Attribute;
  * `export: 'name'` exports the prop under a different name.
  * `getter` names the method that returns the exported value,
  * if it differs from the property name.
+ * `setter` names the method that receives the value when the
+ * prop is set, e.g. to normalize it before it gets stored.
  *
  * `computed` and `default` are only used for the documentation.
  *
  * The attribute is inherited when a child class redeclares
- * the property, e.g. to change its default value. To change
- * how a value gets stored, add a `set{Name}()` method.
+ * the property, e.g. to change its default value.
  *
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
@@ -34,7 +35,8 @@ class Prop
 		public bool $computed = false,
 		public mixed $default = null,
 		public bool|string $export = true,
-		public string|null $getter = null
+		public string|null $getter = null,
+		public string|null $setter = null
 	) {
 	}
 
