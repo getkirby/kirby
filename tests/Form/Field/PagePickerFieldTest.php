@@ -72,7 +72,7 @@ class PagePickerFieldTest extends TestCase
 							'name' => 'test',
 							'fields' => [
 								'related' => [
-									'type' => 'pages',
+									'type' => 'pagepicker',
 								]
 							]
 						]
@@ -136,7 +136,7 @@ class PagePickerFieldTest extends TestCase
 							'name' => 'test',
 							'fields' => [
 								'related' => [
-									'type' => 'pages',
+									'type' => 'pagepicker',
 								]
 							]
 						]

@@ -53,7 +53,7 @@ class UserPickerFieldTest extends TestCase
 							'name' => 'test',
 							'fields' => [
 								'authors' => [
-									'type' => 'users',
+									'type' => 'userpicker',
 								]
 							]
 						]
@@ -103,7 +103,7 @@ class UserPickerFieldTest extends TestCase
 							'name' => 'test',
 							'fields' => [
 								'authors' => [
-									'type' => 'users',
+									'type' => 'userpicker',
 								]
 							]
 						]
