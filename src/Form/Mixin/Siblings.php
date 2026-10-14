@@ -21,10 +21,4 @@ trait Siblings
 	{
 		return $this->siblings ?? new Fields([$this]);
 	}
-
-	public function setSiblings(Fields|null $siblings = null): static
-	{
-		$this->siblings = $siblings;
-		return $this;
-	}
 }

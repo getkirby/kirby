@@ -450,8 +450,10 @@ class FieldsTest extends TestCase
 			}
 		};
 
-		$mother = new $motherClass(name: 'mother');
-		$mother->setModel($this->model);
+		$mother = new $motherClass(
+			model: $this->model,
+			name: 'mother'
+		);
 
 		$fields = new Fields([
 			$mother
