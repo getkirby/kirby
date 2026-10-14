@@ -4,9 +4,7 @@ namespace Kirby\Api\Controller;
 
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
-use Kirby\Content\Lock;
 use Kirby\Exception\PermissionException;
-use Kirby\Filesystem\F;
 use Kirby\Form\Fields;
 use Kirby\Form\Form;
 
@@ -20,20 +18,6 @@ use Kirby\Form\Form;
 class Changes
 {
 	/**
-	 * Cleans up legacy lock files. The `discard`, `publish` and `save` actions
-	 * are perfect for this cleanup job. They will be stopped early if
-	 * the lock is still active and otherwise, we can use them to clean
-	 * up outdated .lock files to keep the content folders clean. This
-	 * can be removed as soon as old .lock files should no longer be around.
-	 *
-	 * @todo Remove in 6.0.0
-	 */
-	protected static function cleanup(ModelWithContent $model): void
-	{
-		F::remove(Lock::legacyFile($model));
-	}
-
-	/**
 	 * Discards unsaved changes by deleting the changes version
 	 */
 	public static function discard(ModelWithContent $model): array
@@ -45,10 +29,6 @@ class Changes
 		}
 
 		$model->version('changes')->delete('current');
-
-		// Removes the old .lock file when it is no longer needed
-		// @todo Remove in 6.0.0
-		static::cleanup($model);
 
 		return [
 			'status' => 'ok'
@@ -71,10 +51,6 @@ class Changes
 			model: $model,
 			input: $input
 		);
-
-		// Removes the old .lock file when it is no longer needed
-		// @todo Remove in 6.0.0
-		static::cleanup($model);
 
 		// get the changes version
 		$changes = $model->version('changes');
@@ -106,10 +82,6 @@ class Changes
 				key: 'version.save.permission',
 			);
 		}
-
-		// Removes the old .lock file when it is no longer needed
-		// @todo Remove in 6.0.0
-		static::cleanup($model);
 
 		// get the current language
 		$language = Language::ensure('current');
