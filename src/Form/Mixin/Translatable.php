@@ -3,6 +3,7 @@
 namespace Kirby\Form\Mixin;
 
 use Kirby\Cms\Language;
+use Kirby\Reflection\Attributes\Prop;
 
 /**
  * Provides the `translate` prop to mark the field as translatable
@@ -15,6 +16,7 @@ trait Translatable
 	/**
 	 * Should the field be translatable?
 	 */
+	#[Prop]
 	protected bool $translate = true;
 
 	/**

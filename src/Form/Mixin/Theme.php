@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Mixin;
 
+use Kirby\Reflection\Attributes\Prop;
+
 /**
  * Provides the `theme` prop to control the visual design variant
  *
@@ -13,7 +15,8 @@ trait Theme
 	/**
 	 * The design theme for the field
 	 */
-	protected string|null $theme;
+	#[Prop]
+	protected string|null $theme = null;
 
 	public function theme(): string|null
 	{

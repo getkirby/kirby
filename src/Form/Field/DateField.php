@@ -2,7 +2,7 @@
 
 namespace Kirby\Form\Field;
 
-use Kirby\Reflection\Attributes\Derived;
+use Kirby\Reflection\Attributes\Prop;
 use Kirby\Toolkit\Date;
 use Kirby\Toolkit\Str;
 
@@ -18,53 +18,48 @@ class DateField extends DateTimeField
 	/**
 	 * Activate/deactivate the dropdown calendar
 	 */
+	#[Prop]
 	protected bool $calendar = true;
 
 	/**
 	 * Custom format (dayjs tokens: `DD`, `MM`, `YYYY`) that is
 	 * used to display the field in the Panel
 	 */
+	#[Prop]
 	protected string|null $display = 'YYYY-MM-DD';
 
 	/**
 	 * Defines a custom format that is used when the field is saved
 	 */
-	#[Derived]
+	#[Prop(computed: true)]
 	protected string|null $format = null;
 
+	#[Prop]
 	protected string|null $icon = 'calendar';
 
 	/**
 	 * Latest date, which can be selected/saved (Y-m-d)
 	 */
-	protected string|null $max;
+	#[Prop]
+	protected string|null $max = null;
 
 	/**
 	 * Earliest date, which can be selected/saved (Y-m-d)
 	 */
-	protected string|null $min;
+	#[Prop]
+	protected string|null $min = null;
 
 	/**
 	 * Round to the nearest: sub-options for `unit` (day) and `size` (1)
 	 */
-	#[Derived]
+	#[Prop(computed: true, setter: 'setStep')]
 	protected array $step = ['size' => 1, 'unit' => 'day'];
 
 	/**
 	 * Pass `true` or an array of time field options to show the time selector.
 	 */
+	#[Prop]
 	protected bool|array $time = false;
-
-	public function __construct(
-		bool|null $calendar = null,
-		bool|array|null $time = null,
-		mixed ...$args
-	) {
-		parent::__construct(...$args);
-
-		$this->calendar = $calendar ?? $this->calendar;
-		$this->time     = $time ?? $this->time;
-	}
 
 	/**
 	 * Cuts a boundary down to the precision of the field, so that it

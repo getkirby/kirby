@@ -2,6 +2,7 @@
 
 namespace Kirby\Form\Mixin;
 
+use Kirby\Reflection\Attributes\Prop;
 use Kirby\Toolkit\HtmlString;
 
 /**
@@ -15,7 +16,8 @@ trait Text
 	/**
 	 * Text to be displayed
 	 */
-	protected array|string|null $text;
+	#[Prop]
+	protected array|string|null $text = null;
 
 	public function text(): HtmlString|null
 	{

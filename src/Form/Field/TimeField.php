@@ -2,7 +2,7 @@
 
 namespace Kirby\Form\Field;
 
-use Kirby\Reflection\Attributes\Derived;
+use Kirby\Reflection\Attributes\Prop;
 
 /**
  * Time field
@@ -15,46 +15,43 @@ class TimeField extends DateTimeField
 {
 	public const ISO = 'H:i:s';
 
+	#[Prop]
 	protected string|null $format = self::ISO;
 
 	/**
 	 * Custom format (dayjs tokens: `HH`, `hh`, `mm`, `ss`, `a`) that is
 	 * used to display the field in the Panel
 	 */
-	#[Derived]
+	#[Prop(computed: true)]
 	protected string|null $display = null;
 
+	#[Prop]
 	protected string|null $icon = 'clock';
 
 	/**
 	 * Latest time, which can be selected/saved (H:i or H:i:s)
 	 */
-	protected string|null $max;
+	#[Prop]
+	protected string|null $max = null;
 
 	/**
 	 * Earliest time, which can be selected/saved (H:i or H:i:s)
 	 */
-	protected string|null $min;
+	#[Prop]
+	protected string|null $min = null;
 
 	/**
 	 * `12` or `24` hour notation. If `12`, an AM/PM selector will be shown.
 	 * If `display` is defined, that option will take priority.
 	 */
+	#[Prop]
 	protected int $notation = 24;
 
 	/**
 	 * Round to the nearest: sub-options for `unit` (minute) and `size` (5)
 	 */
+	#[Prop(setter: 'setStep')]
 	protected array $step = ['size' => 5, 'unit' => 'minute'];
-
-	public function __construct(
-		int|null $notation = null,
-		mixed ...$args
-	) {
-		parent::__construct(...$args);
-
-		$this->notation = $notation ?? $this->notation;
-	}
 
 	public function display(): string
 	{

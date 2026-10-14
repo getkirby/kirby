@@ -3,6 +3,7 @@
 namespace Kirby\Form\Field;
 
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Reflection\Attributes\Prop;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 
@@ -18,18 +19,10 @@ class LinkField extends InputField
 	/**
 	 * Link types that can be selected. Available types: `anchor`, `custom`, `email`, `file`, `page`, `tel`, `url`
 	 */
+	#[Prop]
 	protected array $options = ['url', 'page', 'file', 'email', 'tel', 'anchor'];
 
 	protected string $value = '';
-
-	public function __construct(
-		array|string|null $options = null,
-		mixed ...$args
-	) {
-		parent::__construct(...$args);
-
-		$this->options = $options ?? $this->options;
-	}
 
 	public function activeTypes(): array
 	{

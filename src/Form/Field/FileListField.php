@@ -11,6 +11,7 @@ use Kirby\Cms\User;
 use Kirby\Panel\Collector\FilesCollector;
 use Kirby\Panel\Ui\Item\FileItem;
 use Kirby\Panel\Ui\Upload;
+use Kirby\Reflection\Attributes\Prop;
 
 /**
  * Lists the files of a model
@@ -25,28 +26,20 @@ class FileListField extends ModelListField
 {
 	public const string TYPE = 'files';
 
+	#[Prop]
 	protected array|string|null $text = '{{ file.filename }}';
 
 	/**
 	 * Option to switch off the upload button
 	 */
+	#[Prop]
 	protected bool $create = true;
 
 	/**
 	 * Filters the files by template and sets the template for all uploads
 	 */
-	protected string|null $template;
-
-	public function __construct(
-		bool|null $create = null,
-		string|null $template = null,
-		mixed ...$args
-	) {
-		parent::__construct(...$args);
-
-		$this->create   = $create ?? $this->create;
-		$this->template = $template;
-	}
+	#[Prop]
+	protected string|null $template = null;
 
 	public function accept(): string|null
 	{

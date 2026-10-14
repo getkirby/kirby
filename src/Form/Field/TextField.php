@@ -22,29 +22,6 @@ class TextField extends StringField
 	use Mixin\Icon;
 	use Mixin\Pattern;
 
-	public function __construct(
-		array|string|null $after = null,
-		string|null $autocomplete = null,
-		array|string|null $before = null,
-		string|null $converter = null,
-		bool|null $counter = null,
-		string|null $font = null,
-		string|null $icon = null,
-		string|null $pattern = null,
-		mixed ...$args
-	) {
-		parent::__construct(...$args);
-
-		$this->after        = $after;
-		$this->autocomplete = $autocomplete ?? $this->autocomplete;
-		$this->before       = $before;
-		$this->converter    = $converter;
-		$this->counter      = $counter ?? $this->counter;
-		$this->font         = $font ?? $this->font;
-		$this->icon         = $icon ?? $this->icon;
-		$this->pattern      = $pattern;
-	}
-
 	public function default(): string
 	{
 		return $this->convert(value: parent::default()) ?? '';

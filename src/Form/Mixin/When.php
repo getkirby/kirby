@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Mixin;
 
+use Kirby\Reflection\Attributes\Prop;
+
 /**
  * Provides the `when` prop for conditional field visibility
  *
@@ -15,7 +17,8 @@ trait When
 	 *
 	 * @since 3.1.0
 	 */
-	protected array|null $when;
+	#[Prop]
+	protected array|null $when = null;
 
 	/**
 	 * Checks if the field is currently active

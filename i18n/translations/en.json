@@ -125,6 +125,7 @@
 	"error.field.pagelist.max.singular": "You must not add more than one page to the \"{field}\" field",
 	"error.field.pagelist.min.plural": "The \"{field}\" field requires at least {min} pages",
 	"error.field.pagelist.min.singular": "The \"{field}\" field requires at least one page",
+	"error.field.prop.invalid": "Field \"{ name }\": The option \"{ prop }\" must be of type { type }",
 	"error.field.type.missing": "Field \"{ name }\": The field type \"{ type }\" does not exist",
 
 	"error.file.changeName.empty": "The name must not be empty",

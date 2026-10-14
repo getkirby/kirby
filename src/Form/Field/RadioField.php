@@ -15,15 +15,6 @@ class RadioField extends OptionField
 {
 	use Mixin\Columns;
 
-	public function __construct(
-		int|null $columns = null,
-		mixed ...$args
-	) {
-		parent::__construct(...$args);
-
-		$this->columns = $columns ?? $this->columns;
-	}
-
 	public function props(): array
 	{
 		return [

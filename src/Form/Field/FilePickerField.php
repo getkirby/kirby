@@ -8,7 +8,7 @@ use Kirby\Cms\ModelWithContent;
 use Kirby\Form\Mixin;
 use Kirby\Panel\Controller\Dialog\FilePickerDialogController;
 use Kirby\Panel\Ui\Item\FileItem;
-use Kirby\Reflection\Attributes\Derived;
+use Kirby\Reflection\Attributes\Prop;
 
 /**
  * Filepicker field
@@ -23,19 +23,8 @@ class FilePickerField extends ModelPickerField
 {
 	use Mixin\Upload;
 
-	#[Derived]
+	#[Prop(computed: true)]
 	protected string|null $parent = null;
-
-	public function __construct(
-		string|null $parent = null,
-		mixed $uploads = null,
-		mixed ...$args
-	) {
-		parent::__construct(...$args);
-
-		$this->parent  = $parent;
-		$this->uploads = $uploads;
-	}
 
 	public function api(): array
 	{

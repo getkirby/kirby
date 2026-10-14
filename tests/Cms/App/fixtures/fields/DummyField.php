@@ -3,17 +3,17 @@
 namespace Kirby\Cms\Fixtures;
 
 use Kirby\Form\Field\InputField;
+use Kirby\Reflection\Attributes\Prop;
 
 class DummyField extends InputField
 {
-	protected mixed $value = null;
+	#[Prop]
+	protected string $homer = 'simpson';
 
-	public function __construct(
-		protected string $homer = 'simpson',
-		protected string $peter = 'pan'
-	) {
-		parent::__construct();
-	}
+	#[Prop]
+	protected string $peter = 'pan';
+
+	protected mixed $value = null;
 
 	public function homer(): string
 	{

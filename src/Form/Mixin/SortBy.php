@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Mixin;
 
+use Kirby\Reflection\Attributes\Prop;
+
 /**
  * Provides the `sortBy` prop to sort entries by field and direction
  *
@@ -14,7 +16,8 @@ trait SortBy
 	 * Sorts the entries by the given field and order (i.e. `title desc`)
 	 * Drag & drop is disabled in this case
 	 */
-	protected string|null $sortBy;
+	#[Prop]
+	protected string|null $sortBy = null;
 
 	public function sortBy(): string|null
 	{

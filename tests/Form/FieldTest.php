@@ -8,10 +8,60 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Field\HiddenField;
 use Kirby\Form\Field\InfoField;
 use Kirby\Form\Field\TestCase;
+use Kirby\Reflection\Attributes\Prop;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 class MockField extends Field
 {
+}
+
+class OptionsMockField extends Field
+{
+	protected array|null $cache = null;
+
+	#[Prop]
+	protected bool $enabled = true;
+
+	protected Page|null $page = null;
+
+	#[Prop]
+	protected array $settings = ['size' => 'small', 'colors' => ['red', 'blue']];
+
+	#[Prop]
+	protected array $tags = ['a', 'b', 'c'];
+
+	public function config(): array
+	{
+		return ['enabled' => false];
+	}
+
+	public function option(string $name): mixed
+	{
+		return $this->$name;
+	}
+}
+
+class ConstructorMockField extends Field
+{
+	#[Prop]
+	protected string $peter = 'pan';
+
+	public function __construct(
+		protected string $homer = 'simpson'
+	) {
+		parent::__construct();
+	}
+
+	public function option(string $name): mixed
+	{
+		return $this->$name;
+	}
+}
+
+class RedeclaredMockField extends OptionsMockField
+{
+	// redeclared without attribute to change the default
+	protected bool $enabled = false;
 }
 
 class BrokenField extends Field
@@ -29,6 +79,16 @@ class FieldTest extends TestCase
 	{
 		$field = new MockField(name: 'my-field');
 		$this->assertSame('my-field', (string)$field);
+	}
+
+	public function testConfig(): void
+	{
+		$field = new OptionsMockField();
+		$this->assertFalse($field->option('enabled'));
+
+		// props win over config
+		$field = new OptionsMockField(enabled: true);
+		$this->assertTrue($field->option('enabled'));
 	}
 
 	public function testDialogs(): void
@@ -93,6 +153,20 @@ class FieldTest extends TestCase
 		$model = new Page(['slug' => 'test']);
 		$field = MockField::factory(['model' => $model]);
 		$this->assertSame($model, $field->model());
+	}
+
+	public function testFactoryWithCustomConstructor(): void
+	{
+		$field = ConstructorMockField::factory([
+			'name'  => 'test',
+			'homer' => 'simpson',
+			'peter' => 'shaw',
+			'foo'   => 'bar'
+		]);
+
+		$this->assertSame('test', $field->name());
+		$this->assertSame('simpson', $field->option('homer'));
+		$this->assertSame('shaw', $field->option('peter'));
 	}
 
 	public function testHasValue(): void
@@ -192,6 +266,64 @@ class FieldTest extends TestCase
 		];
 
 		$this->assertSame($expected, $props);
+	}
+
+	public function testRegisterWithArrays(): void
+	{
+		$field = new OptionsMockField(
+			settings: ['colors' => ['green']],
+			tags: ['b']
+		);
+
+		// associative arrays are merged, lists are replaced
+		$this->assertSame(['size' => 'small', 'colors' => ['green']], $field->option('settings'));
+		$this->assertSame(['b'], $field->option('tags'));
+	}
+
+	public function testRegisterWithInvalidType(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Field "test": The option "enabled" must be of type bool');
+
+		new OptionsMockField(name: 'test', enabled: ['yes']);
+	}
+
+	public function testRegisterWithNull(): void
+	{
+		$field = new OptionsMockField(
+			settings: null,
+			width: null
+		);
+
+		$this->assertSame('1/1', $field->width());
+		$this->assertSame(['size' => 'small', 'colors' => ['red', 'blue']], $field->option('settings'));
+	}
+
+	public function testRegisterWithPropertiesWithoutPropAttribute(): void
+	{
+		$field = new OptionsMockField(
+			cache: ['foo'],
+			page: 'test',
+			siblings: 'test',
+			value: 'test'
+		);
+
+		$this->assertNull($field->option('cache'));
+		$this->assertNull($field->option('page'));
+	}
+
+	public function testRegisterWithRedeclaredProperty(): void
+	{
+		$field = new RedeclaredMockField(enabled: true);
+
+		// the prop stays settable
+		$this->assertTrue($field->option('enabled'));
+	}
+
+	public function testRegisterWithUnknownProperty(): void
+	{
+		$field = new OptionsMockField(foo: 'bar');
+		$this->assertFalse(isset($field->foo));
 	}
 
 	public function testResolve(): void

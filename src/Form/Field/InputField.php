@@ -23,29 +23,6 @@ abstract class InputField extends ValueField
 	use Mixin\Required;
 	use Mixin\Validation;
 
-	public function __construct(
-		bool|null $autofocus = null,
-		mixed $default = null,
-		bool|null $disabled = null,
-		array|string|null $help = null,
-		array|string|null $label = null,
-		bool|null $required = null,
-		bool|null $translate = null,
-		array|string|null $validate = null,
-		mixed ...$args
-	) {
-		parent::__construct(...$args);
-
-		$this->autofocus = $autofocus ?? $this->autofocus;
-		$this->default   = $default;
-		$this->disabled  = $disabled ?? $this->disabled;
-		$this->help      = $help;
-		$this->label     = $label;
-		$this->required  = $required ?? $this->required;
-		$this->translate = $translate ?? $this->translate;
-		$this->validate  = $validate;
-	}
-
 	public function props(): array
 	{
 		return [

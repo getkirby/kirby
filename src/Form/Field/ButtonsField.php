@@ -3,6 +3,7 @@
 namespace Kirby\Form\Field;
 
 use Kirby\Panel\Ui\Button\ModelButton;
+use Kirby\Reflection\Attributes\Prop;
 use Kirby\Toolkit\A;
 
 /**
@@ -17,16 +18,8 @@ class ButtonsField extends DisplayField
 	/**
 	 * Array or query string for buttons
 	 */
+	#[Prop]
 	protected array|string $buttons = [];
-
-	public function __construct(
-		array|string|null $buttons = null,
-		mixed ...$args
-	) {
-		parent::__construct(...$args);
-
-		$this->buttons = $buttons ?? $this->buttons;
-	}
 
 	public function buttons(): array
 	{
