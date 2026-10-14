@@ -367,7 +367,7 @@ Snippets and templates can push output onto a stack, which gets rendered anywher
   }
   ```
 
-- New `Kirby\Form\Field::config()` method for custom fields to read additional options from Kirby's config. Options from the blueprint take precedence. [#8616](https://github.com/getkirby/kirby/pull/8616)
+- Custom fields can read additional options from Kirby's config by overriding the new `Kirby\Form\Field::config()` method. Options from the blueprint take precedence. [#8616](https://github.com/getkirby/kirby/pull/8616)
 - The type of a field is always the name it was registered with. A field class that is registered under a different name no longer reports a type derived from its class name. [#8622](https://github.com/getkirby/kirby/pull/8622)
 - New `Kirby\Cms\Model` base class, extended by `Kirby\Cms\ModelWithContent` and `Kirby\Cms\Language`, for unified type checks across all models [#8369](https://github.com/getkirby/kirby/pull/8369)
 - New `Kirby\Cms\User::ensure()` method that always returns a user and falls back to an anonymous `nobody` user if nobody is logged in [#8369](https://github.com/getkirby/kirby/pull/8369)
@@ -388,11 +388,15 @@ Snippets and templates can push output onto a stack, which gets rendered anywher
 #### Frontend
 
 - Migrated from Vue 2 to Vue 3 [#7104](https://github.com/getkirby/kirby/pull/7104)
+- Panel plugins load their scripts as separate modules and their stylesheets as separate files [#8603](https://github.com/getkirby/kirby/pull/8603)
+- Panel plugins without a build step can use top-level `import`, e.g. `import { h } from "vue"` [#8603](https://github.com/getkirby/kirby/pull/8603)
+- Panel plugins run after the core components are registered, right before the Panel starts [#8603](https://github.com/getkirby/kirby/pull/8603)
 - Dialogs and drawers: Added dropzone that becomes active when a `@drop` listener is added on the component [#7520](https://github.com/getkirby/kirby/pull/7520)
 - New `<k-video-frame>` component [#7755](https://github.com/getkirby/kirby/pull/7755)
 - The `<k-table>` component has a new `responsive` prop, which is set to `true` by default. Switching the responsive mode off will no longer hide columns that are not marked with `data-mobile="true"`. This gives more control over custom responsive behaviors for tables and also helps to improve the usability in narrow widths. [#7770](https://github.com/getkirby/kirby/pull/7770)
 - `<k-item>` has a new `selected` prop to control its selection state and a `selectmode` prop to select single or multiple items [#7516](https://github.com/getkirby/kirby/pull/7516)
 - `<k-collection>`/`<k-items>` can receive a list of `selected` items to control selection status from parent [#7516](https://github.com/getkirby/kirby/pull/7516)
+- `<k-collection>` supports the `skeleton` theme also with the `table` layout [#8482](https://github.com/getkirby/kirby/pull/8482)
 - New `<k-model-picker-dialog>` and `<k-page-picker-dialog>` components [#7529](https://github.com/getkirby/kirby/pull/7529)
 - New `<k-collapsible>` component that can wrap a list of elements with a default and fallback slot and provide the necessary data how many elements fit in the current container width to render the element as a responsive list of visible and hidden elements (the latter represented by the fallback slot content). [#7901](https://github.com/getkirby/kirby/pull/7901)
 - New `<k-model-form>` component [#8449](https://github.com/getkirby/kirby/pull/8449)
@@ -509,6 +513,7 @@ Snippets and templates can push output onto a stack, which gets rendered anywher
 - `panel.content.diff()` is computed once per change instead of on every call [#8340](https://github.com/getkirby/kirby/pull/8340)
 - ProseMirror is no longer part of the initial Panel bundle but imported when needed [#8342](https://github.com/getkirby/kirby/pull/8342)
 - The icon sprite is no longer inlined into every Panel document [#8445](https://github.com/getkirby/kirby/pull/8445)
+- Browsers cache each plugin script and stylesheet until the file changes [#8603](https://github.com/getkirby/kirby/pull/8603)
 
 ---
 
@@ -561,6 +566,7 @@ Snippets and templates can push output onto a stack, which gets rendered anywher
 - `$helper.string.template()` no longer HTML-escapes the placeholder key, which prevented lookups for keys containing characters like `/` or `&` [#8348](https://github.com/getkirby/kirby/pull/8348)
 - The "Split" option is no longer missing from the block options on first render [#8447](https://github.com/getkirby/kirby/pull/8447)
 - A table column with `value: "0"` renders `0` instead of falling back to the field value [#8439](https://github.com/getkirby/kirby/pull/8439)
+- Sorting no longer breaks when a collection becomes sortable while the drag library is still loading [#8482](https://github.com/getkirby/kirby/pull/8482)
 
 ---
 
@@ -583,6 +589,7 @@ Snippets and templates can push output onto a stack, which gets rendered anywher
 - `Kirby\Cms\Fields` extends `Kirby\Cms\Collection` and `Kirby\Cms\HasSiblings` relies on `Kirby\Cms\Collection`, not `Kirby\Toolkit\Collection`
 - `Kirby\Cms\Fieldset::name()` falls back to a labelized type
 - Added abstract `Kirby\Cms\ModelWithContent::apiUrl()` method
+- `Kirby\Cms\Language::isLast()` checks the position in the collection now. Use `Kirby\Cms\Language::isLastLanguage()` to check whether it is the only language. [#7857](https://github.com/getkirby/kirby/issues/7857)
 - `Kirby\Data\Txt::encodeValue()` encodes `true` and `false` as `'true'` and `'false'` instead of `'1'` and `'0'`, and an empty array as empty string instead of `[]`
 - `Kirby\Http\VolatileHeaders::append()` requires an array as third parameter
 - `Kirby\Toolkit\Str::float()` returns `null` instead of `'0'` for non-numeric values (including `null` and `''`). Use `Kirby\Toolkit\Str::float($value) ?? '0'` if you relied on the old behavior. [#8534](https://github.com/getkirby/kirby/pull/8534)
@@ -787,11 +794,12 @@ Sections have been replaced by fields (see "Sections become fields" above). Blue
 - The Panel needs Chrome 124, Edge 124, Firefox 125, Safari 17.5 or newer, i.e. browsers released from roughly mid-2024 onwards. Kirby follows Baseline "widely available": we only rely on web platform features that have been in every major browser for at least 30 months. [#8450](https://github.com/getkirby/kirby/pull/8450)
 - `panel.favicon` option: Use `href` instead of `url` attribute. Use `rel` attribute instead of passing string as key.
 - Color field options `text => value` notation has been removed. Please rewrite your options as `value => text`. [#7534](https://github.com/getkirby/kirby/pull/7534)
+- `media/plugins/index.css` and `media/plugins/index.js` no longer exist. Each plugin's files are served at `media/plugins/{vendor}/{name}.{hash}.css` and `media/plugins/{vendor}/{name}.{hash}.js` instead. [#8603](https://github.com/getkirby/kirby/pull/8603)
 
 #### Frontend
 
 - All plugins that have compiled their Vue Single File Components with Vue 2 have to recompile their SFC for Vue 3 to work with Kirby 6. Consider also the [Vue 3 migration guide](https://v3-migration.vuejs.org/breaking-changes/).
-- All plugin JS files get loaded as module.
+- All plugin JS files get loaded as module. Plugin scripts no longer share one scope, so a plugin can't read another plugin's top-level variables. Put shared values on `window` explicitly. [#8603](https://github.com/getkirby/kirby/pull/8603)
 - The icon sprite is no longer part of the Panel document. Custom icons registered by plugins keep working, but markup that references the sprite by hand (`<use xlink:href="#icon-…">`) needs the sprite's URL now: `window.panel.urls.icons + "#icon-edit"` [#8445](https://github.com/getkirby/kirby/pull/8445)
 - The Panel no longer sets a `data-overlay` attribute. Use `:has(.k-overlay[open])` instead. [#8343](https://github.com/getkirby/kirby/pull/8343)
 - Renamed components
@@ -873,6 +881,8 @@ Moved and replaced classes and methods:
   - `Kirby\Panel\Model::isDisabledDropdownOption()` [#7425](https://github.com/getkirby/kirby/pull/7425)
   - `Kirby\Panel\Model::toPrevNextLink()` and the deprecated `Kirby\Panel\Model::content()` (also on `Kirby\Panel\Site`, `Kirby\Panel\Page`, `Kirby\Panel\File` and `Kirby\Panel\User`) [#7480](https://github.com/getkirby/kirby/pull/7480)
   - `fileResponse()`/`toFiles()`, `pageResponse()`/`toPages()` and `userResponse()`/`toUsers()` of the former `files`, `pages` and `users` field definitions. Use `Kirby\Form\Field\ModelPickerField::toItem()` and `Kirby\Form\Field\ModelPickerField::toFormValue()` instead. [#7528](https://github.com/getkirby/kirby/pull/7528)
+  - `Kirby\Panel\Plugins::url()`. Use `Kirby\Panel\Plugins::css()` for the plugin stylesheet URLs and `Kirby\Panel\Plugins::js()` for the plugin script URLs. [#8603](https://github.com/getkirby/kirby/pull/8603)
+  - `Kirby\Panel\Plugins::files()`, `Kirby\Panel\Plugins::modified()`, `Kirby\Panel\Plugins::read()` and the `Kirby\Panel\Plugins::$files` property. The new `Kirby\Panel\Plugins::resolve()` serves each plugin's stylesheet and script on its own. [#8603](https://github.com/getkirby/kirby/pull/8603)
 - Changed methods
   - `Kirby\Panel\Controller\Dialog\PageCreateDialogController` is initiated with a parent model (page/site) and the available blueprints [#7466](https://github.com/getkirby/kirby/pull/7466) [#8449](https://github.com/getkirby/kirby/pull/8449)
   - `Kirby\Panel\Panel` and `Kirby\Panel\Home` and their methods are non-static. Instead of `Kirby\Panel\Panel::router($path)`, use `$panel->router()?->call($path)`. [#7394](https://github.com/getkirby/kirby/pull/7394) [#7407](https://github.com/getkirby/kirby/pull/7407) [#7409](https://github.com/getkirby/kirby/pull/7409)
@@ -1124,6 +1134,8 @@ Shared behavior has been extracted into reusable mixins, such as:
   - Added `Kirby\Panel\TestCase::setRequest()` helper method [#7440](https://github.com/getkirby/kirby/pull/7440)
   - Memcached tests are skipped locally if Memcached is not installed [#8360](https://github.com/getkirby/kirby/pull/8360)
 - Upgraded to Vite 8 [#8037](https://github.com/getkirby/kirby/pull/8037)
+- The Panel code is formatted with Oxfmt instead of Prettier [#8592](https://github.com/getkirby/kirby/pull/8592)
+- Panel templates can be type-checked against all core components [#8593](https://github.com/getkirby/kirby/pull/8593)
 - Panel browser support is defined in one place: `panel/.browserslistrc` [#8450](https://github.com/getkirby/kirby/pull/8450)
 - Simplified PHP class docblocks [#7944](https://github.com/getkirby/kirby/pull/7944) and added docblocks to frontend files [#8220](https://github.com/getkirby/kirby/pull/8220)
   - Docblocks use short class names where the class has been imported via `use` [#8338](https://github.com/getkirby/kirby/pull/8338)
