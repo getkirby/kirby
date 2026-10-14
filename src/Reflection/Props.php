@@ -2,14 +2,16 @@
 
 namespace Kirby\Reflection;
 
-use Kirby\Reflection\Attributes\Derived;
+use Kirby\Exception\LogicException;
+use Kirby\Reflection\Attributes\Prop;
+use Kirby\Toolkit\A;
 use ReflectionClass;
-use ReflectionParameter;
+use ReflectionMethod;
 use ReflectionProperty;
 
 /**
- * Describes a class' properties
- * through the class' constructor signature
+ * Describes, sets and exports all properties of
+ * a class that are marked with the `#[Prop]` attribute
  *
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
@@ -17,52 +19,135 @@ use ReflectionProperty;
  */
 class Props
 {
-	protected ReflectionClass $class;
-	protected Constructor $constructor;
+	/**
+	 * Cache for the prop definitions per class
+	 */
+	protected static array $cache = [];
+
+	/**
+	 * The prop definitions for this instance
+	 */
+	protected array|null $props = null;
 
 	public function __construct(
 		protected object|string $objectOrClass
 	) {
-		$this->class       = new ReflectionClass($objectOrClass);
-		$this->constructor = new Constructor($objectOrClass);
+	}
+
+	/**
+	 * Returns all props of the class with their attribute,
+	 * property, getter and setter method, sorted by name
+	 *
+	 * @throws LogicException if a getter is invalid or two props are exported under the same name
+	 */
+	public function all(): array
+	{
+		if ($this->props !== null) {
+			return $this->props;
+		}
+
+		$class = $this->objectOrClass;
+
+		if (is_object($class) === true) {
+			$class = $class::class;
+		}
+
+		if (isset(static::$cache[$class]) === true) {
+			return $this->props = static::$cache[$class];
+		}
+
+		$reflection = new ReflectionClass($class);
+		$props      = [];
+
+		foreach ($reflection->getProperties() as $property) {
+			$attribute = $this->attribute($property);
+
+			if ($attribute === null) {
+				continue;
+			}
+
+			$props[$property->getName()] = [
+				'attribute' => $attribute,
+				'getter'    => $this->getter($reflection, $property, $attribute),
+				'property'  => $property,
+				'setter'    => $this->setter($reflection, $property)
+			];
+		}
+
+		ksort($props);
+
+		$this->checkExportNames($class, $props);
+
+		return $this->props = static::$cache[$class] = $props;
+	}
+
+	/**
+	 * Returns the `#[Prop]` attribute of the property. Attributes are
+	 * not inherited by PHP, so the attribute of the closest parent
+	 * declaration is used when a child class redeclares the property.
+	 */
+	protected function attribute(ReflectionProperty $property): Prop|null
+	{
+		$attribute = $property->getAttributes(Prop::class)[0] ?? null;
+
+		if ($attribute !== null) {
+			return $attribute->newInstance();
+		}
+
+		if ($inherited = $this->inherited($property)) {
+			return $this->attribute($inherited);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Makes sure that no two props are exported under the same name
+	 *
+	 * @throws LogicException
+	 */
+	protected function checkExportNames(string $class, array $props): void
+	{
+		$names = [];
+
+		foreach ($props as $name => $prop) {
+			if ($prop['attribute']->export === false) {
+				continue;
+			}
+
+			$key = $prop['attribute']->exportAs ?? $name;
+
+			if (isset($names[$key]) === true) {
+				throw new LogicException(
+					message: 'The props "' . $names[$key] . '" and "' . $name . '" of ' . $class . ' are both exported as "' . $key . '"'
+				);
+			}
+
+			$names[$key] = $name;
+		}
 	}
 
 	/**
 	 * Returns the value a user gets when the prop is not set
 	 */
 	protected function default(
-		ReflectionParameter $parameter,
-		ReflectionProperty|null $property = null
+		Prop $attribute,
+		ReflectionProperty $property
 	): mixed {
-		// `#[Derived]` may document a default the property cannot hold
-		if ($this->derived($property)?->default !== null) {
-			return $this->derived($property)->default;
+		// `#[Prop]` may document a default the property cannot hold
+		if ($attribute->default !== null) {
+			return $attribute->default;
 		}
 
-		if ($property?->hasDefaultValue() === true) {
+		if ($property->hasDefaultValue() === true) {
 			return $property->getDefaultValue();
 		}
 
-		return match ($parameter->isDefaultValueAvailable()) {
-			true    => $parameter->getDefaultValue(),
-			default => null
-		};
-	}
-
-	/**
-	 * Returns the `#[Derived]` attribute of a property, if it has one
-	 */
-	protected function derived(
-		ReflectionProperty|null $property = null
-	): Derived|null {
-		$attribute = $property?->getAttributes(Derived::class)[0] ?? null;
-
-		return $attribute?->newInstance();
+		return null;
 	}
 
 	/**
 	 * Returns the docblock text of the property
-	 * that belongs to a constructor parameter
 	 */
 	protected function description(ReflectionProperty|null $property = null): string|null
 	{
@@ -90,6 +175,64 @@ class Props
 	}
 
 	/**
+	 * Returns the getter method for the property. A getter that is
+	 * named in the attribute may also be protected. Otherwise, a
+	 * public method with the name of the property is used.
+	 *
+	 * @throws LogicException if the named getter is invalid
+	 */
+	protected function getter(
+		ReflectionClass $class,
+		ReflectionProperty $property,
+		Prop $attribute
+	): ReflectionMethod|null {
+		if ($attribute->getter !== null) {
+			$method = match ($class->hasMethod($attribute->getter)) {
+				true    => $class->getMethod($attribute->getter),
+				default => null
+			};
+
+			if (
+				$method === null ||
+				$method->isStatic() === true ||
+				$method->getNumberOfRequiredParameters() > 0
+			) {
+				throw new LogicException(
+					message: 'The getter "' . $attribute->getter . '" for the prop "' . $property->getName() . '" must be a non-static method of ' . $class->getName() . ' without required arguments'
+				);
+			}
+
+			return $method;
+		}
+
+		$name = $property->getName();
+
+		if ($class->hasMethod($name) === false) {
+			return null;
+		}
+
+		$method = $class->getMethod($name);
+
+		if (
+			$method->isPublic() === false ||
+			$method->isStatic() === true ||
+			$method->getNumberOfRequiredParameters() > 0
+		) {
+			return null;
+		}
+
+		return $method;
+	}
+
+	/**
+	 * Checks if the class has a prop with the given name
+	 */
+	public function has(string $name): bool
+	{
+		return isset($this->all()[$name]);
+	}
+
+	/**
 	 * Returns the same property as declared by the closest parent class
 	 */
 	protected function inherited(ReflectionProperty $property): ReflectionProperty|null
@@ -105,40 +248,168 @@ class Props
 	}
 
 	/**
-	 * Returns the property that belongs to a constructor parameter
+	 * Returns the object
+	 *
+	 * @throws LogicException if only a class name was given
 	 */
-	protected function property(ReflectionParameter $parameter): ReflectionProperty|null
+	protected function object(): object
 	{
-		$name = $parameter->getName();
+		if (is_object($this->objectOrClass) === false) {
+			throw new LogicException(
+				message: 'Props can only be set or exported for an object'
+			);
+		}
 
-		return match ($this->class->hasProperty($name)) {
-			true    => $this->class->getProperty($name),
-			default => null
-		};
+		return $this->objectOrClass;
 	}
 
 	/**
-	 * Returns all documented properties, sorted by name
+	 * Sets the value of a prop. If the class has a `set{Name}()`
+	 * method, the value is passed to it. Otherwise, associative
+	 * arrays are merged into the current value and all other
+	 * values replace it.
+	 *
+	 * @throws LogicException if the prop does not exist
+	 * @throws \TypeError if the value has the wrong type
+	 */
+	public function set(string $name, mixed $value): void
+	{
+		$object = $this->object();
+		$prop   = $this->all()[$name] ?? throw new LogicException(
+			message: 'The prop "' . $name . '" does not exist'
+		);
+
+		if ($prop['setter'] !== null) {
+			$prop['setter']->invoke($object, $value);
+			return;
+		}
+
+		$property = $prop['property'];
+
+		if (
+			is_array($value) === true &&
+			$property->isInitialized($object) === true &&
+			is_array($current = $property->getValue($object)) === true
+		) {
+			$value = A::merge($current, $value, A::MERGE_REPLACE);
+		}
+
+		$property->setValue($object, $value);
+	}
+
+	/**
+	 * Returns the `set{Name}()` method for the property, if there is one
+	 */
+	protected function setter(
+		ReflectionClass $class,
+		ReflectionProperty $property
+	): ReflectionMethod|null {
+		$name = 'set' . ucfirst($property->getName());
+
+		if ($class->hasMethod($name) === false) {
+			return null;
+		}
+
+		$method = $class->getMethod($name);
+
+		if (
+			$method->isStatic() === true ||
+			$method->getNumberOfParameters() === 0 ||
+			$method->getNumberOfRequiredParameters() > 1
+		) {
+			return null;
+		}
+
+		return $method;
+	}
+
+	/**
+	 * Returns the documentation for all props, sorted by name
 	 */
 	public function toArray(): array
 	{
 		$props = [];
 
-		foreach ($this->constructor->getAllParameters() as $parameter) {
-			$name     = $parameter->getName();
-			$property = $this->property($parameter);
-
+		foreach ($this->all() as $name => $prop) {
 			$props[$name] = [
 				'name'        => $name,
-				'type'        => (string)$parameter->getType(),
-				'default'     => $this->default($parameter, $property),
-				'derived'     => $this->derived($property) !== null,
-				'description' => $this->description($property)
+				'type'        => $this->type($name),
+				'computed'    => $prop['attribute']->computed,
+				'default'     => $this->default($prop['attribute'], $prop['property']),
+				'description' => $this->description($prop['property'])
 			];
 		}
 
-		ksort($props);
-
 		return $props;
+	}
+
+	/**
+	 * Returns the type of value that the prop accepts.
+	 * A setter may accept more types than the property itself.
+	 */
+	public function type(string $name): string|null
+	{
+		$prop = $this->all()[$name] ?? null;
+
+		if ($prop === null) {
+			return null;
+		}
+
+		$type = match ($prop['setter']) {
+			null    => $prop['property']->getType(),
+			default => $prop['setter']->getParameters()[0]->getType()
+		};
+
+		return $type === null ? 'mixed' : (string)$type;
+	}
+
+	/**
+	 * Returns the value of the prop via its getter or the property itself
+	 */
+	protected function value(
+		ReflectionProperty $property,
+		ReflectionMethod|null $getter = null
+	): mixed {
+		$object = $this->object();
+
+		if ($getter !== null) {
+			return $getter->invoke($object);
+		}
+
+		if ($property->isInitialized($object) === false) {
+			return null;
+		}
+
+		return $property->getValue($object);
+	}
+
+	/**
+	 * Returns the current values of all exportable props, sorted by name.
+	 * Each value is read via the getter from the attribute or the public
+	 * method with the same name as the property, if there is one.
+	 * Otherwise, the property value is used as is. Props marked with
+	 * `#[Prop(export: false)]` are skipped. Props with
+	 * `#[Prop(exportAs: 'name')]` are exported under the given name.
+	 *
+	 * @throws LogicException if no object is given
+	 */
+	public function values(): array
+	{
+		$this->object();
+
+		$values = [];
+
+		foreach ($this->all() as $name => $prop) {
+			if ($prop['attribute']->export === false) {
+				continue;
+			}
+
+			$key          = $prop['attribute']->exportAs ?? $name;
+			$values[$key] = $this->value($prop['property'], $prop['getter']);
+		}
+
+		ksort($values);
+
+		return $values;
 	}
 }
