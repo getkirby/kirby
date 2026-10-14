@@ -41,9 +41,8 @@ abstract class Field implements Stringable
 	public static array $types = [];
 
 	/**
-	 * Field plugins that define their own constructor need to
-	 * accept all other props as `mixed ...$args` and pass them
-	 * on to `parent::__construct()`
+	 * Custom constructors need to pass
+	 * `...$args` on to `parent::__construct()`
 	 */
 	public function __construct(
 		ModelWithContent|null $model = null,
@@ -164,10 +163,8 @@ abstract class Field implements Stringable
 	}
 
 	/**
-	 * Define the props that will be sent to the Vue component.
-	 * All properties marked with `#[Prop]` are exported automatically
-	 * via their getter. Field classes can overwrite this method to
-	 * add more props or to change the value of exported props.
+	 * Returns the props for the Vue component,
+	 * incl. all exported `#[Prop]` properties
 	 */
 	public function props(): array
 	{
@@ -179,9 +176,8 @@ abstract class Field implements Stringable
 	}
 
 	/**
-	 * Register properties and their values. This is mainly used in the constructor.
-	 * Only properties marked with `#[Prop]` can be registered. `null` values
-	 * are skipped to keep the property defaults.
+	 * Sets `#[Prop]` properties, skipping
+	 * `null` values to keep their defaults
 	 * @see Props::set()
 	 *
 	 * @throws InvalidArgumentException if a value has the wrong type
