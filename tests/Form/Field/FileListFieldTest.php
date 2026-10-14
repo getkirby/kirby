@@ -93,6 +93,26 @@ class FileListFieldTest extends TestCase
 		$this->assertFalse($field->props()['saveable']);
 	}
 
+	public function testPropsWithoutBackendOptions(): void
+	{
+		$field = $this->filelist([
+			'limit'    => 5,
+			'sortable' => false,
+			'sortBy'   => 'title desc'
+		]);
+
+		// limit and sorting are applied by the backend
+		$props = $field->props();
+		$this->assertArrayNotHasKey('limit', $props);
+		$this->assertArrayNotHasKey('sortable', $props);
+		$this->assertArrayNotHasKey('sortBy', $props);
+
+		// but the options are still set
+		$this->assertSame(5, $field->limit());
+		$this->assertFalse($field->sortable());
+		$this->assertSame('title desc', $field->sortBy());
+	}
+
 	public function testData(): void
 	{
 		$data = $this->filelist()->data();
