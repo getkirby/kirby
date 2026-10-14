@@ -71,7 +71,7 @@ abstract class ModelListField extends DisplayField
 	protected array|string|null $info = null;
 
 	/**
-	 * The number of entries that will be displayed on a single page. Afterwards pagination kicks in.
+	 * The number of entries that will be displayed at once. Afterwards pagination kicks in.
 	 */
 	#[Prop(export: false)]
 	protected int $limit = 20;
