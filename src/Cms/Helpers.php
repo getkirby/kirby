@@ -35,17 +35,12 @@ class Helpers
 		// Setting undefined permission categories or actions is deprecated
 		// and will be ignored in a future version. Custom permissions should
 		// be registered via the `permissions` extension instead.
-		// The warning is disabled by default for now, as it is triggered
-		// while loading roles and would thus break the Panel on every request
-		// even though the permission is still applied.
-		// TODO: switch to true in v6
-		'permissions-undefined' => false,
+		'permissions-undefined' => true,
 
 		// Passing an `info` array inside the `extends` array
 		// has been deprecated. Pass the individual entries (e.g. root, version)
 		// directly as named arguments.
-		// TODO: switch to true in v6
-		'plugin-extends-root' => false,
+		'plugin-extends-root' => true,
 
 		// The `Content\Translation` class keeps a set of methods from the old
 		// `ContentTranslation` class for compatibility that should no longer be used.

@@ -89,9 +89,10 @@ class HtmlTest extends TestCase
 
 	public function testCssWithPluginAssets(): void
 	{
-		$plugin = new Plugin('getkirby/test-plugin', [
-			'root' => $root = static::TMP . '/plugin'
-		]);
+		$plugin = new Plugin(
+			name: 'getkirby/test-plugin',
+			root: $root = static::TMP . '/plugin'
+		);
 		touch($root . '/assets/styles.css', 1337000000);
 		$result = Html::css($plugin);
 
@@ -139,9 +140,10 @@ class HtmlTest extends TestCase
 
 	public function testJsWithPluginAssets(): void
 	{
-		$plugin = new Plugin('getkirby/test-plugin', [
-			'root' => $root = static::TMP . '/plugin'
-		]);
+		$plugin = new Plugin(
+			name: 'getkirby/test-plugin',
+			root: $root = static::TMP . '/plugin'
+		);
 		touch($root . '/assets/scripts.js', 1337000000);
 		$result = Html::js($plugin);
 

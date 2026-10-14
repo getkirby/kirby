@@ -164,11 +164,12 @@ class UpdateStatusTest extends TestCase
 			]
 		]);
 
-		$plugin = new Plugin('getkirby/public', [
-			'info' => [
+		$plugin = new Plugin(
+			name: 'getkirby/public',
+			info: [
 				'version' => '88888.8.5'
 			]
-		]);
+		);
 
 		$updateStatus = new UpdateStatus($plugin);
 		$this->assertSame('88888.8.6', $updateStatus->targetVersion());
@@ -182,11 +183,12 @@ class UpdateStatusTest extends TestCase
 		$this->assertSame([], $updateStatus->exceptionMessages());
 
 		// but the plugin version does
-		$plugin = new Plugin('getkirby/public', [
-			'info' => [
+		$plugin = new Plugin(
+			name: 'getkirby/public',
+			info: [
 				'version' => '88888.8.6'
 			]
-		]);
+		);
 
 		$updateStatus = new UpdateStatus($plugin);
 		$this->assertSame('88888.8.8', $updateStatus->targetVersion());
@@ -280,11 +282,12 @@ class UpdateStatusTest extends TestCase
 	public function testLoadDataNotFound(): void
 	{
 		$app    = $this->app('88888.8.8');
-		$plugin = new Plugin('getkirby/test', [
-			'info' => [
+		$plugin = new Plugin(
+			name: 'getkirby/test',
+			info: [
 				'version' => '88888.8.5'
 			]
-		]);
+		);
 
 		// curl's wording for a missing local file differs between
 		// versions ("Couldn't open file" vs. "Could not open file"),
@@ -320,11 +323,12 @@ class UpdateStatusTest extends TestCase
 	public function testLoadDataNotJson(): void
 	{
 		$app    = $this->app('88888.8.8');
-		$plugin = new Plugin('getkirby/invalid-json', [
-			'info' => [
+		$plugin = new Plugin(
+			name: 'getkirby/invalid-json',
+			info: [
 				'version' => '88888.8.5'
 			]
-		]);
+		);
 
 		$updateStatus = new UpdateStatus($plugin);
 		$this->assertNull($updateStatus->targetVersion());
@@ -1715,10 +1719,11 @@ class UpdateStatusTest extends TestCase
 		// ensure a global app object is initialized for message filtering
 		$this->app('88888.8.8');
 
-		return new Plugin('getkirby/test', [
-			'info' => [
+		return new Plugin(
+			name: 'getkirby/test',
+			info: [
 				'version' => $version
 			]
-		]);
+		);
 	}
 }

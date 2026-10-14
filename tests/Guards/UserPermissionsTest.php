@@ -22,7 +22,8 @@ class UserPermissionsTest extends ModelTestCase
 				[
 					'name'        => 'editor',
 					'permissions' => [
-						'user'  => $permissions,
+						// `create` only exists in the `users` category
+						'user'  => is_array($permissions) === true ? array_diff_key($permissions, ['create' => true]) : $permissions,
 						'users' => $permissions
 					]
 				]

@@ -20,9 +20,10 @@ class AssetTest extends TestCase
 
 		Dir::copy(static::FIXTURES, static::TMP . '/test-plugin');
 
-		$this->plugin = new Plugin('getkirby/test-plugin', [
-			'root' => static::TMP . '/test-plugin'
-		]);
+		$this->plugin = new Plugin(
+			name: 'getkirby/test-plugin',
+			root: static::TMP . '/test-plugin'
+		);
 
 		touch(static::TMP . '/test-plugin/assets/test.css', 1337000000);
 	}

@@ -109,12 +109,16 @@ class SystemViewControllerTest extends TestCase
 
 	protected function installPlugins(): void
 	{
-		App::plugin('getkirby/private', [
-			'info' => []
-		]);
+		App::plugin(
+			name: 'getkirby/private',
+			extends: [],
+			info: []
+		);
 
-		App::plugin('getkirby/public', [
-			'info' => [
+		App::plugin(
+			name: 'getkirby/public',
+			extends: [],
+			info: [
 				'authors' => [
 					[
 						'name' => 'A'
@@ -126,13 +130,15 @@ class SystemViewControllerTest extends TestCase
 				'homepage' => 'https://getkirby.com',
 				'version'  => '1.0.0',
 			]
-		]);
+		);
 
-		App::plugin('getkirby/unknown', [
-			'info' => [
+		App::plugin(
+			name: 'getkirby/unknown',
+			extends: [],
+			info: [
 				'version' => '1.0.0'
 			]
-		]);
+		);
 	}
 
 	public function testButtons(): void
