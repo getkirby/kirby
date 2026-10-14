@@ -5,6 +5,7 @@ namespace Kirby\Form\Field;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\FieldOptions;
 use Kirby\Form\Mixin;
+use Kirby\Reflection\Attributes\Prop;
 use Kirby\Toolkit\A;
 
 /**
@@ -22,35 +23,21 @@ class ColorField extends OptionField
 	/**
 	 * Whether to allow alpha transparency in the color
 	 */
+	#[Prop]
 	protected bool $alpha = false;
 
 	/**
 	 * The CSS format (hex, rgb, hsl) to display and store the value
 	 */
+	#[Prop]
 	protected string $format = 'hex';
 
 	/**
 	 * Change mode to disable the color picker (`input`) or to only
 	 * show the `options` as toggles
 	 */
+	#[Prop]
 	protected string $mode = 'picker';
-
-	public function __construct(
-		bool|null $alpha = null,
-		string|null $format = null,
-		string|null $icon = null,
-		string|null $mode = null,
-		array|string|null $placeholder = null,
-		mixed ...$args
-	) {
-		parent::__construct(...$args);
-
-		$this->alpha       = $alpha ?? $this->alpha;
-		$this->format      = $format ?? $this->format;
-		$this->icon        = $icon ?? $this->icon;
-		$this->mode        = $mode ?? $this->mode;
-		$this->placeholder = $placeholder ?? $this->placeholder;
-	}
 
 	public function alpha(): bool
 	{

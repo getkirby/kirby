@@ -18,17 +18,6 @@ class CheckboxesField extends OptionsField
 	use Mixin\Batch;
 	use Mixin\Columns;
 
-	public function __construct(
-		bool|null $batch = null,
-		int|null $columns = null,
-		mixed ...$args
-	) {
-		parent::__construct(...$args);
-
-		$this->batch   = $batch ?? $this->batch;
-		$this->columns = $columns ?? $this->columns;
-	}
-
 	public function fill(mixed $value): static
 	{
 		return parent::fill(

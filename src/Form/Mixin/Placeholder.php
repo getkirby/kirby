@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Mixin;
 
+use Kirby\Reflection\Attributes\Prop;
+
 /**
  * Provides the `placeholder` prop for input placeholder text
  *
@@ -13,6 +15,7 @@ trait Placeholder
 	/**
 	 * Optional placeholder value that will be shown when the field is empty
 	 */
+	#[Prop]
 	protected array|string|null $placeholder = null;
 
 	public function placeholder(): string|null

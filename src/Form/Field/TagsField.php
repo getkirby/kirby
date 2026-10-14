@@ -4,6 +4,7 @@ namespace Kirby\Form\Field;
 
 use Kirby\Form\Mixin;
 use Kirby\Form\Validations;
+use Kirby\Reflection\Attributes\Prop;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 
@@ -21,50 +22,36 @@ class TagsField extends OptionsField
 	/**
 	 * If set to `all`, any type of input is accepted. If set to `options` only the predefined options are accepted as input.
 	 */
+	#[Prop]
 	protected string $accept = 'all';
 
 	/**
 	 * Icon that will be shown at the end of the field
 	 */
+	#[Prop]
 	protected string|null $icon = 'tag';
 
 	/**
 	 * Set to `list` to display each tag with 100% width,
 	 * otherwise the tags are displayed inline
 	 */
-	protected string|null $layout;
+	#[Prop]
+	protected string|null $layout = null;
 
 	/**
 	 * Enable/disable the search in the dropdown
 	 * Also limit displayed items (display: 20)
 	 * and set minimum number of characters to search (min: 3)
 	 */
+	#[Prop]
 	protected array|bool $search = true;
 
 	/**
 	 * If `true`, selected entries will be sorted
 	 * according to their position in the dropdown
 	 */
+	#[Prop]
 	protected bool $sort = false;
-
-	public function __construct(
-		string|null $accept = null,
-		string|null $icon = null,
-		string|null $layout = null,
-		array|bool|null $search = null,
-		string|null $separator = null,
-		bool|null $sort = null,
-		mixed ...$args
-	) {
-		parent::__construct(...$args);
-
-		$this->accept    = $accept ?? $this->accept;
-		$this->icon      = $icon ?? $this->icon;
-		$this->layout    = $layout;
-		$this->search    = $search ?? $this->search;
-		$this->separator = $separator ?? $this->separator;
-		$this->sort      = $sort ?? $this->sort;
-	}
 
 	public function accept(): string
 	{

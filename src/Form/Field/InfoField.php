@@ -17,19 +17,6 @@ class InfoField extends DisplayField
 	use Mixin\Text;
 	use Mixin\Theme;
 
-	public function __construct(
-		string|null $icon = null,
-		array|string|null $text = null,
-		string|null $theme = null,
-		mixed ...$args
-	) {
-		parent::__construct(...$args);
-
-		$this->icon  = $icon ?? $this->icon;
-		$this->text  = $text;
-		$this->theme = $theme;
-	}
-
 	public function props(): array
 	{
 		return [

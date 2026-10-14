@@ -17,17 +17,6 @@ abstract class DisplayField extends Field
 	use Mixin\Help;
 	use Mixin\Label;
 
-	public function __construct(
-		array|string|null $help = null,
-		array|string|null $label = null,
-		mixed ...$args
-	) {
-		parent::__construct(...$args);
-
-		$this->help  = $help;
-		$this->label = $label;
-	}
-
 	public function props(): array
 	{
 		return [

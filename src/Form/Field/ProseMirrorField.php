@@ -4,6 +4,7 @@ namespace Kirby\Form\Field;
 
 use Kirby\Form\Mixin;
 use Kirby\Form\Validations;
+use Kirby\Reflection\Attributes\Prop;
 use Kirby\Sane\Sane;
 
 /**
@@ -20,32 +21,20 @@ abstract class ProseMirrorField extends StringField
 	/**
 	 * Sets the allowed HTML formats. Available formats: `bold`, `italic`, `underline`, `strike`, `code`, `link`, `email`. Activate/deactivate them all by passing `true`/`false`. Default marks are `bold`, `italic`, `underline`, `strike`, `link`, `email`
 	 */
-	protected array|bool|null $marks;
+	#[Prop]
+	protected array|bool|null $marks = null;
 
 	/**
 	 * Sets the allowed nodes. Available nodes: `paragraph`, `heading`, `bulletList`, `orderedList`, `quote`. Activate/deactivate them all by passing `true`/`false`. Default nodes are `paragraph`, `heading`, `bulletList`, `orderedList`.
 	 */
-	protected array|bool|null $nodes;
+	#[Prop]
+	protected array|bool|null $nodes = null;
 
 	/**
 	 * Toolbar options, incl. `marks` (to narrow down which marks should have toolbar buttons), `nodes` (to narrow down which nodes should have toolbar dropdown entries) and `inline` to set the position of the toolbar (false = sticking on top of the field)
 	 */
-	protected array|bool|null $toolbar;
-
-	public function __construct(
-		string|null $icon = null,
-		array|bool|null $marks = null,
-		array|bool|null $nodes = null,
-		array|bool|null $toolbar = null,
-		mixed ...$args
-	) {
-		parent::__construct(...$args);
-
-		$this->icon    = $icon ?? $this->icon;
-		$this->marks   = $marks;
-		$this->nodes   = $nodes;
-		$this->toolbar = $toolbar;
-	}
+	#[Prop]
+	protected array|bool|null $toolbar = null;
 
 	public function fill(mixed $value): static
 	{

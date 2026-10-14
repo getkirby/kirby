@@ -3,6 +3,7 @@
 namespace Kirby\Form\Field;
 
 use Kirby\Form\Mixin;
+use Kirby\Reflection\Attributes\Prop;
 
 /**
  * Writer Field
@@ -18,25 +19,14 @@ class WriterField extends ProseMirrorField
 	/**
 	 * Available heading levels
 	 */
+	#[Prop]
 	protected array|null $headings = [1, 2, 3, 4, 5, 6];
 
 	/**
 	 * Enables inline mode, which will not wrap new lines in paragraphs and creates hard breaks instead.
 	 */
+	#[Prop]
 	protected bool $inline = false;
-
-	public function __construct(
-		bool|null $counter = null,
-		array|null $headings = null,
-		bool|null $inline = null,
-		mixed ...$args
-	) {
-		parent::__construct(...$args);
-
-		$this->counter  = $counter ?? $this->counter;
-		$this->headings = $headings ?? $this->headings;
-		$this->inline   = $inline ?? $this->inline;
-	}
 
 	public function headings(): array
 	{

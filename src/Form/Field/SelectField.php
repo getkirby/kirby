@@ -4,6 +4,7 @@ namespace Kirby\Form\Field;
 
 use Kirby\Form\FieldOptions;
 use Kirby\Form\Mixin;
+use Kirby\Reflection\Attributes\Prop;
 
 /**
  * Select Field
@@ -19,18 +20,8 @@ class SelectField extends OptionField
 	/**
 	 * Text shown when no option is selected yet
 	 */
+	#[Prop]
 	protected array|string|null $placeholder = '—';
-
-	public function __construct(
-		string|null $icon = null,
-		array|string|null $placeholder = null,
-		mixed ...$args
-	) {
-		parent::__construct(...$args);
-
-		$this->icon        = $icon ?? $this->icon;
-		$this->placeholder = $placeholder ?? $this->placeholder;
-	}
 
 	protected function fetchOptions(): array
 	{

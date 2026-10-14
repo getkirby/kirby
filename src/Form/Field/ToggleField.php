@@ -4,6 +4,7 @@ namespace Kirby\Form\Field;
 
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Mixin;
+use Kirby\Reflection\Attributes\Prop;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\HtmlString;
 
@@ -26,24 +27,10 @@ class ToggleField extends InputField
 	 * and the second one the positive. The text will automatically
 	 * switch when the toggle is triggered.
 	 */
-	protected array|string|null $text;
+	#[Prop]
+	protected array|string|null $text = null;
 
 	protected bool|null $value = null;
-
-	public function __construct(
-		array|string|null $after = null,
-		array|string|null $before = null,
-		string|null $icon = null,
-		array|string|null $text = null,
-		mixed ...$args
-	) {
-		parent::__construct(...$args);
-
-		$this->after  = $after;
-		$this->before = $before;
-		$this->icon   = $icon ?? $this->icon;
-		$this->text   = $text;
-	}
 
 	public function fill(mixed $value): static
 	{

@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Reflection\Attributes\Prop;
+
 /**
  * Range field
  *
@@ -11,18 +13,11 @@ namespace Kirby\Form\Field;
  */
 class RangeField extends NumberField
 {
+	#[Prop]
 	protected float|null $max = 100;
 
+	#[Prop]
 	protected array|bool $tooltip = true;
-
-	public function __construct(
-		array|bool|null $tooltip = null,
-		mixed ...$args
-	) {
-		parent::__construct(...$args);
-
-		$this->tooltip = $tooltip ?? $this->tooltip;
-	}
 
 	public function props(): array
 	{

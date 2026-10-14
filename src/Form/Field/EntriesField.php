@@ -10,6 +10,7 @@ use Kirby\Form\Mixin\EmptyState;
 use Kirby\Form\Mixin\Max;
 use Kirby\Form\Mixin\Min;
 use Kirby\Form\Mixin\Sortable;
+use Kirby\Reflection\Attributes\Prop;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\BlockCollectionAccess;
 
@@ -32,27 +33,11 @@ class EntriesField extends InputField implements ProvidesNestedForm
 	 * Supported field types are `color`, `date`, `email`, `number`, `select`,
 	 * `slug`, `tel`, `text`, `time`, `url`.
 	 */
+	#[Prop]
 	protected array|string $field = ['type' => 'text'];
 
 	protected Form|null $form = null;
 	protected array $value = [];
-
-	public function __construct(
-		array|string|null $empty = null,
-		array|string|null $field = null,
-		int|null $max = null,
-		int|null $min = null,
-		bool|null $sortable = null,
-		mixed ...$args
-	) {
-		parent::__construct(...$args);
-
-		$this->empty    = $empty;
-		$this->field    = $field ?? $this->field;
-		$this->max      = $max;
-		$this->min      = $min;
-		$this->sortable = $sortable ?? $this->sortable;
-	}
 
 	public function field(): array
 	{

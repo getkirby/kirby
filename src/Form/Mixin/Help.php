@@ -2,6 +2,7 @@
 
 namespace Kirby\Form\Mixin;
 
+use Kirby\Reflection\Attributes\Prop;
 use Kirby\Toolkit\HtmlString;
 
 /**
@@ -15,7 +16,8 @@ trait Help
 	/**
 	 * Optional help text below the field
 	 */
-	protected array|string|null $help;
+	#[Prop]
+	protected array|string|null $help = null;
 
 	public function help(): HtmlString|null
 	{
