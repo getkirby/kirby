@@ -149,14 +149,14 @@ abstract class DateTimeField extends InputField
 		if ($min && $value->isMin($min) === false) {
 			throw new InvalidArgumentException(
 				key: 'validation.' . $this->type() . '.after',
-				data: ['date' => $min->format($format)]
+				data: [$this->type() => $min->format($format)]
 			);
 		}
 
 		if ($max && $value->isMax($max) === false) {
 			throw new InvalidArgumentException(
 				key: 'validation.' . $this->type() . '.before',
-				data: ['date' => $max->format($format)]
+				data: [$this->type() => $max->format($format)]
 			);
 		}
 	}
