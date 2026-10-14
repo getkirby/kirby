@@ -30,6 +30,7 @@ class RemoveDialog extends TextDialog
 			'size'         => $size,
 			'submitButton' => $submitButton ?? [
 				'icon'  => 'trash',
+				'text'  => $this->i18n('delete'),
 				'theme' => 'negative'
 			],
 			'text'         => $text

@@ -21,6 +21,7 @@ class RemoveDialogTest extends TestCase
 			'size'         => 'medium',
 			'submitButton' => [
 				'icon'  => 'trash',
+				'text'  => 'Delete',
 				'theme' => 'negative'
 			],
 			'text'         => 'A little text',
