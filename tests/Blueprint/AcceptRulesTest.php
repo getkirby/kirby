@@ -118,8 +118,6 @@ class AcceptRulesTest extends BlueprintTest
 					'fieldsets' => [
 						'text' => [
 							'fields' => [
-								// fieldsets are not normalized, so the field
-								// type can be anything at this point
 								'text' => [
 									'type'    => 'does-not-exist',
 									'uploads' => [
@@ -135,7 +133,8 @@ class AcceptRulesTest extends BlueprintTest
 
 		$rules = new AcceptRules($blueprint);
 
-		// a field type that cannot be resolved does not support uploads
+		// a field type that cannot be resolved becomes
+		// an error field, which does not support uploads
 		$this->assertSame([], $rules->fileTemplates());
 	}
 
@@ -210,6 +209,87 @@ class AcceptRulesTest extends BlueprintTest
 		$rules = new AcceptRules($blueprint);
 
 		$this->assertSame(['a', 'b', 'c'], $rules->fileTemplates());
+	}
+
+	public function testFileTemplatesFromFieldsets(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'blocks/hero' => [
+					'fields' => [
+						'image' => [
+							'type'    => 'files',
+							'uploads' => 'hero'
+						]
+					]
+				]
+			]
+		]);
+
+		$blueprint = new Blueprint([
+			'model'  => $this->model,
+			'name'   => 'default',
+			'fields' => [
+				'a' => [
+					'type'      => 'blocks',
+					'fieldsets' => ['image']
+				],
+				'b' => [
+					'type'      => 'blocks',
+					'fieldsets' => [
+						'hero' => true
+					]
+				],
+				'c' => [
+					'type'      => 'blocks',
+					'fieldsets' => [
+						'media' => [
+							'type'      => 'group',
+							'fieldsets' => ['hero']
+						]
+					]
+				],
+				'd' => [
+					'type'      => 'layout',
+					'fieldsets' => [
+						'cover' => [
+							'fields' => [
+								'image' => [
+									'type'    => 'files',
+									'uploads' => 'cover'
+								]
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$rules = new AcceptRules($blueprint);
+
+		$this->assertSame(
+			['blocks/image', 'hero', 'hero', 'cover'],
+			$rules->fileTemplates()
+		);
+	}
+
+	public function testFileTemplatesFromDefaultFieldsets(): void
+	{
+		$blueprint = new Blueprint([
+			'model'  => $this->model,
+			'name'   => 'default',
+			'fields' => [
+				'blocks' => [
+					'type' => 'blocks'
+				]
+			]
+		]);
+
+		$rules = new AcceptRules($blueprint);
+
+		// the core image, gallery and video blocks
+		// upload their files as `blocks/image`
+		$this->assertContains('blocks/image', $rules->fileTemplates());
 	}
 
 	public function testFileTemplatesInField(): void
