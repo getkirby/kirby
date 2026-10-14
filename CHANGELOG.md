@@ -336,12 +336,39 @@ Snippets and templates can push output onto a stack, which gets rendered anywher
   | `webmanifest` | `application/manifest+json`                           |
 
 - `Kirby\Toolkit\Date::optional()` accepts `DateTimeInterface` objects and UNIX timestamps
+- A field option with the wrong type in a blueprint shows a clear error message, e.g. `Field "title": The option "required" must be of type bool` [#8616](https://github.com/getkirby/kirby/pull/8616)
 
 ### For plugin developers
 
 #### Core
 
 - Custom fields are implemented as PHP classes based on `Kirby\Form\Field` or any of the `Kirby\Form\Field\*` classes and registered by their class name. You can learn more about this in the "Refactored" section.
+- Custom fields declare their options as properties with the new `#[Kirby\Reflection\Attributes\Prop]` attribute. All marked options can be set in the blueprint and are sent to the Panel automatically. `export: false` keeps an option in the backend, `export: 'name'` sends it under a different name, and `getter` and `setter` name the methods that read or normalize the value. [#8615](https://github.com/getkirby/kirby/pull/8615) [#8616](https://github.com/getkirby/kirby/pull/8616) [#8618](https://github.com/getkirby/kirby/pull/8618)
+
+  ```php
+  use Kirby\Form\Field\InputField;
+  use Kirby\Reflection\Attributes\Prop;
+
+  class RatingField extends InputField
+  {
+  	/**
+  	 * The highest possible rating
+  	 */
+  	#[Prop]
+  	protected int $max = 5;
+
+  	/**
+  	 * Only used in the backend
+  	 */
+  	#[Prop(export: false)]
+  	protected string|null $query = null;
+
+  	protected mixed $value = null;
+  }
+  ```
+
+- New `Kirby\Form\Field::config()` method for custom fields to read additional options from Kirby's config. Options from the blueprint take precedence. [#8616](https://github.com/getkirby/kirby/pull/8616)
+- The type of a field is always the name it was registered with. A field class that is registered under a different name no longer reports a type derived from its class name. [#8622](https://github.com/getkirby/kirby/pull/8622)
 - New `Kirby\Cms\Model` base class, extended by `Kirby\Cms\ModelWithContent` and `Kirby\Cms\Language`, for unified type checks across all models [#8369](https://github.com/getkirby/kirby/pull/8369)
 - New `Kirby\Cms\User::ensure()` method that always returns a user and falls back to an anonymous `nobody` user if nobody is logged in [#8369](https://github.com/getkirby/kirby/pull/8369)
 - New `Kirby\Exception\AbilityException` [#8369](https://github.com/getkirby/kirby/pull/8369)
@@ -513,6 +540,7 @@ Snippets and templates can push output onto a stack, which gets rendered anywher
   - Changes to `Kirby\Query\Query::$entries` (e.g. from plugins) also reach queries that were resolved before [#8579](https://github.com/getkirby/kirby/pull/8579)
   - `{{ 0 }}` resolves to `0` instead of the data array [#8577](https://github.com/getkirby/kirby/pull/8577)
   - `Kirby\Toolkit\Str::template()`: empty placeholders like `{}` or `{{ }}` stay as they are instead of failing with "Array to string conversion" [#8577](https://github.com/getkirby/kirby/pull/8577)
+- Field class names that contain `Field` in the middle, e.g. `FieldWithDialogsField`, no longer lose that part in their type [#8622](https://github.com/getkirby/kirby/pull/8622)
 
 ### Panel
 
@@ -635,10 +663,11 @@ Snippets and templates can push output onto a stack, which gets rendered anywher
 - Removed `Kirby\Form\FieldClass` and the `legacy-*` fields. `Kirby\Form\Field` has been fully rewritten as base class for all fields. It has a new `Kirby\Form\Field::id()` method and implements `Stringable`. [#8395](https://github.com/getkirby/kirby/pull/8395) [#8399](https://github.com/getkirby/kirby/pull/8399)
 - Removed the `Kirby\Form\Mixin\Value` mixin in favor of the new `Kirby\Form\Field\ValueField` base class. Custom fields with a value must extend `Kirby\Form\Field\ValueField` (or `Kirby\Form\Field\InputField`), as the now final `Kirby\Form\Field::hasValue()` checks for it. The deprecated `Kirby\Form\Mixin\Value::data()` and `Kirby\Form\Mixin\Value::save()` methods are replaced by `Kirby\Form\Field\ValueField::toStoredValue()` and `Kirby\Form\Field::hasValue()`. [#8400](https://github.com/getkirby/kirby/pull/8400) [#8401](https://github.com/getkirby/kirby/pull/8401)
 - Fields with subfields must implement the new `Kirby\Form\Interface\ProvidesNestedForm` interface to be found by nested lookups like `Kirby\Form\Fields::findByKeyRecursive('parent+child')` [#8401](https://github.com/getkirby/kirby/pull/8401)
-- Field constructors only declare their own parameters and forward inherited ones via `...$args`. The positional order has changed, so pass field props as named arguments. [#8492](https://github.com/getkirby/kirby/pull/8492)
+- Field options are no longer constructor parameters. Declare each option as a property with the `#[Kirby\Reflection\Attributes\Prop]` attribute instead. A custom constructor must accept all other options as `mixed ...$args` and pass them on to `parent::__construct(...$args)`, otherwise `Kirby\Form\Field::resolve()` throws an exception. [#8492](https://github.com/getkirby/kirby/pull/8492) [#8616](https://github.com/getkirby/kirby/pull/8616) [#8620](https://github.com/getkirby/kirby/pull/8620)
+- `Kirby\Form\Field::factory()` has been removed. Create fields with `new`, e.g. with the class from `Kirby\Form\Field::resolve($type)`: `new $class(...$props)` [#8620](https://github.com/getkirby/kirby/pull/8620)
 - Field props are stored as passed: all setters of field classes and mixins have been removed (set the properties directly), and defaults, translations (`after`, `before`, `empty`, `help`, `label`, `placeholder`) and the lower-casing of the name are applied in the getters instead. This keeps the originally passed values accessible and reduces the work done on instantiation.
-- The model and siblings of a field are injected after the construction via the public `Kirby\Form\Field::setModel()` and `Kirby\Form\Field::setSiblings()` methods. Constructors and setters can no longer rely on them. Use getters instead.
-- The value is no longer passed to the constructor. Use `Kirby\Form\Field\ValueField::fill()` to provide an initial value.
+- The model and siblings of a field are passed to the constructor as `model` and `siblings` arguments and can't be changed afterwards. There are no `setModel()` and `setSiblings()` methods. An initial value can be passed as `value` argument and is filled after all other props are set. [#8620](https://github.com/getkirby/kirby/pull/8620) [#8621](https://github.com/getkirby/kirby/pull/8621)
+- `files`, `pages` and `users` are no longer registered field types. They still work in blueprints and are mapped to `filepicker`, `pagepicker` and `userpicker`. Code that looks up a field class in `Kirby\Form\Field::$types` must use the new names. [#8622](https://github.com/getkirby/kirby/pull/8622)
 - Fields define their API routes in `Kirby\Form\Field::api()`, not in a `routes()` method
 - Removed `Kirby\Cms\Picker`, `Kirby\Cms\PagePicker`, `Kirby\Cms\FilePicker` and `Kirby\Cms\UserPicker`. Use `Kirby\Panel\Controller\Dialog\ModelPickerDialogController`, `Kirby\Panel\Controller\Dialog\PagePickerDialogController`, `Kirby\Panel\Controller\Dialog\FilePickerDialogController` and `Kirby\Panel\Controller\Dialog\UserPickerDialogController` instead. [#8395](https://github.com/getkirby/kirby/pull/8395)
 
@@ -970,14 +999,14 @@ Deprecated classes, methods, components and options keep working for now, but wi
 - `Kirby\Cms\ModelWithContent::errors()` only collects errors from fields [#8449](https://github.com/getkirby/kirby/pull/8449)
 - `Kirby\Exception\Exception::$prefix` is a class constant now [#8459](https://github.com/getkirby/kirby/pull/8459)
 - Query package: switched from `private` to `protected` methods; fixed the types of the `Kirby\Query\Query::filterQuery()` param and return value [#8464](https://github.com/getkirby/kirby/pull/8464)
-- New `Kirby\Reflection\Props` class and `#[Kirby\Reflection\Attributes\Derived]` attribute [#8457](https://github.com/getkirby/kirby/pull/8457)
+- New `Kirby\Reflection\Props` class and `#[Kirby\Reflection\Attributes\Prop]` attribute to describe, set and export the props of a class [#8457](https://github.com/getkirby/kirby/pull/8457) [#8615](https://github.com/getkirby/kirby/pull/8615)
 - PHP type hints have been added to all class constants [#7536](https://github.com/getkirby/kirby/pull/7536)
 
 ### Forms
 
 Form fields have been fully refactored as PHP classes instead of the previous array definitions [#8399](https://github.com/getkirby/kirby/pull/8399):
 
-- All fields use named props instead of `$props` arrays. `Kirby\Form\Field::factory()` creates field instances from a `$props` array.
+- All fields declare their props as properties with the `#[Prop]` attribute instead of `$props` arrays. Fields are created with named arguments, e.g. `new Kirby\Form\Field\TextField(model: $page, name: 'title')`. [#8616](https://github.com/getkirby/kirby/pull/8616) [#8618](https://github.com/getkirby/kirby/pull/8618) [#8620](https://github.com/getkirby/kirby/pull/8620)
 - Removed `default` from field props passed to Panel [#7789](https://github.com/getkirby/kirby/pull/7789)
 - Moved `Kirby\Field\FieldOptions` class to `Kirby\Form\FieldOptions`
 - The slug field gets the 'slug' translation string as default label [#7846](https://github.com/getkirby/kirby/pull/7846)
@@ -1007,7 +1036,7 @@ Every core field type has its own class:
 
 Shared behavior has been extracted into reusable mixins, such as:
 
-`Kirby\Form\Mixin\Autocomplete`, `Kirby\Form\Mixin\Batch`, `Kirby\Form\Mixin\Columns`, `Kirby\Form\Mixin\Converter`, `Kirby\Form\Mixin\Counter`, `Kirby\Form\Mixin\DefaultValue`, `Kirby\Form\Mixin\Disabled`, `Kirby\Form\Mixin\Duplicate`, `Kirby\Form\Mixin\Fields`, `Kirby\Form\Mixin\Font`, `Kirby\Form\Mixin\ItemLayout`, `Kirby\Form\Mixin\ItemSize`, `Kirby\Form\Mixin\Limit`, `Kirby\Form\Mixin\Maxlength`, `Kirby\Form\Mixin\Minlength`, `Kirby\Form\Mixin\Name`, `Kirby\Form\Mixin\Options`, `Kirby\Form\Mixin\Pattern`, `Kirby\Form\Mixin\Prepend`, `Kirby\Form\Mixin\Pretty`, `Kirby\Form\Mixin\Required`, `Kirby\Form\Mixin\Separator`, `Kirby\Form\Mixin\Siblings`, `Kirby\Form\Mixin\Sortable`, `Kirby\Form\Mixin\SortBy`, `Kirby\Form\Mixin\Spellcheck`, `Kirby\Form\Mixin\TableColumns`, `Kirby\Form\Mixin\Text`, `Kirby\Form\Mixin\Theme` and `Kirby\Form\Mixin\Upload` [#8457](https://github.com/getkirby/kirby/pull/8457)
+`Kirby\Form\Mixin\Autocomplete`, `Kirby\Form\Mixin\Batch`, `Kirby\Form\Mixin\Columns`, `Kirby\Form\Mixin\Converter`, `Kirby\Form\Mixin\Counter`, `Kirby\Form\Mixin\DefaultValue`, `Kirby\Form\Mixin\Disabled`, `Kirby\Form\Mixin\Duplicate`, `Kirby\Form\Mixin\Fields`, `Kirby\Form\Mixin\Font`, `Kirby\Form\Mixin\ItemLayout`, `Kirby\Form\Mixin\ItemSize`, `Kirby\Form\Mixin\Limit`, `Kirby\Form\Mixin\Maxlength`, `Kirby\Form\Mixin\Minlength`, `Kirby\Form\Mixin\Name`, `Kirby\Form\Mixin\Options`, `Kirby\Form\Mixin\Pattern`, `Kirby\Form\Mixin\Prepend`, `Kirby\Form\Mixin\Pretty`, `Kirby\Form\Mixin\Required`, `Kirby\Form\Mixin\Separator`, `Kirby\Form\Mixin\Siblings`, `Kirby\Form\Mixin\Sortable`, `Kirby\Form\Mixin\SortBy`, `Kirby\Form\Mixin\Spellcheck`, `Kirby\Form\Mixin\TableColumns`, `Kirby\Form\Mixin\Text`, `Kirby\Form\Mixin\Theme`, `Kirby\Form\Mixin\Type` and `Kirby\Form\Mixin\Upload` [#8457](https://github.com/getkirby/kirby/pull/8457)
 
 ### Panel
 
