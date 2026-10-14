@@ -13,7 +13,7 @@ use Attribute;
  * default value that the property itself cannot hold.
  * `export: false` excludes the prop from the props
  * that are exported by `Kirby\Reflection\Props::values()`.
- * `exportAs` exports the prop under a different name.
+ * `export: 'name'` exports the prop under a different name.
  * `getter` names the method that returns the exported value,
  * if it differs from the property name.
  *
@@ -33,9 +33,21 @@ class Prop
 	public function __construct(
 		public bool $computed = false,
 		public mixed $default = null,
-		public bool $export = true,
-		public string|null $exportAs = null,
+		public bool|string $export = true,
 		public string|null $getter = null
 	) {
+	}
+
+	/**
+	 * Returns the name under which the prop is exported
+	 * or `null` if the prop is not exported
+	 */
+	public function exportName(string $property): string|null
+	{
+		return match ($this->export) {
+			false   => null,
+			true    => $property,
+			default => $this->export
+		};
 	}
 }

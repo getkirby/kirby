@@ -30,7 +30,6 @@ class PropTest extends TestCase
 		$this->assertFalse($attribute->computed);
 		$this->assertNull($attribute->default);
 		$this->assertTrue($attribute->export);
-		$this->assertNull($attribute->exportAs);
 		$this->assertNull($attribute->getter);
 	}
 
@@ -55,11 +54,11 @@ class PropTest extends TestCase
 		$this->assertFalse($attribute->export);
 	}
 
-	public function testConstructWithExportAs(): void
+	public function testConstructWithExportName(): void
 	{
-		$attribute = new Prop(exportAs: 'markerColor');
+		$attribute = new Prop(export: 'markerColor');
 
-		$this->assertSame('markerColor', $attribute->exportAs);
+		$this->assertSame('markerColor', $attribute->export);
 	}
 
 	public function testConstructWithGetter(): void
@@ -67,6 +66,21 @@ class PropTest extends TestCase
 		$attribute = new Prop(getter: 'isDisabled');
 
 		$this->assertSame('isDisabled', $attribute->getter);
+	}
+
+	public function testExportName(): void
+	{
+		$attribute = new Prop();
+		$this->assertSame('marker', $attribute->exportName('marker'));
+
+		$attribute = new Prop(export: true);
+		$this->assertSame('marker', $attribute->exportName('marker'));
+
+		$attribute = new Prop(export: 'markerColor');
+		$this->assertSame('markerColor', $attribute->exportName('marker'));
+
+		$attribute = new Prop(export: false);
+		$this->assertNull($attribute->exportName('marker'));
 	}
 
 	public function testOnProperty(): void

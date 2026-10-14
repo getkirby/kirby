@@ -123,11 +123,11 @@ class Props
 		$names = [];
 
 		foreach ($props as $name => $prop) {
-			if ($prop['attribute']->export === false) {
+			$key = $prop['attribute']->exportName($name);
+
+			if ($key === null) {
 				continue;
 			}
-
-			$key = $prop['attribute']->exportAs ?? $name;
 
 			if (isset($names[$key]) === true) {
 				throw new LogicException(
@@ -414,7 +414,7 @@ class Props
 	 * method with the same name as the property, if there is one.
 	 * Otherwise, the property value is used as is. Props marked with
 	 * `#[Prop(export: false)]` are skipped. Props with
-	 * `#[Prop(exportAs: 'name')]` are exported under the given name.
+	 * `#[Prop(export: 'name')]` are exported under the given name.
 	 *
 	 * @throws LogicException if no object is given
 	 */
@@ -427,11 +427,12 @@ class Props
 			$exports = [];
 
 			foreach ($this->all() as $name => $prop) {
-				if ($prop['attribute']->export === false) {
+				$key = $prop['attribute']->exportName($name);
+
+				if ($key === null) {
 					continue;
 				}
 
-				$key           = $prop['attribute']->exportAs ?? $name;
 				$exports[$key] = [$prop['getter']?->getName(), $name];
 			}
 

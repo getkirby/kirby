@@ -27,7 +27,7 @@ class PropsTestClass
 	/**
 	 * The color of the marker
 	 */
-	#[Prop(exportAs: 'markerColor')]
+	#[Prop(export: 'markerColor')]
 	protected string $marker = 'red';
 
 	#[Prop]
@@ -127,7 +127,7 @@ class PropsTestSetterClass
 
 class PropsTestCollisionClass
 {
-	#[Prop(exportAs: 'b')]
+	#[Prop(export: 'b')]
 	protected string $a = 'a';
 
 	#[Prop]
