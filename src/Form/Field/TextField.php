@@ -34,21 +34,6 @@ class TextField extends StringField
 		);
 	}
 
-	public function props(): array
-	{
-		return [
-			...parent::props(),
-			'after'        => $this->after(),
-			'autocomplete' => $this->autocomplete(),
-			'before'       => $this->before(),
-			'converter'    => $this->converter(),
-			'counter'      => $this->counter(),
-			'font'         => $this->font(),
-			'icon'         => $this->icon(),
-			'pattern'      => $this->pattern()
-		];
-	}
-
 	protected function validations(): array
 	{
 		return [

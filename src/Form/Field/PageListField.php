@@ -28,38 +28,38 @@ class PageListField extends ModelListField implements ProvidesAcceptedBlueprints
 {
 	public const string TYPE = 'pages';
 
-	#[Prop]
+	#[Prop(export: false)]
 	protected array|string|null $text = '{{ model.title }}';
 
 	/**
 	 * Templates that may be added or `false` to disable page creation
 	 */
-	#[Prop]
+	#[Prop(export: false)]
 	protected array|string|bool|null $create = null;
 
 	/**
 	 * Filters the pages by their status
 	 */
-	#[Prop]
+	#[Prop(export: false)]
 	protected string $status = 'all';
 
 	/**
 	 * Filters the list by a single template
 	 */
-	#[Prop]
+	#[Prop(export: false)]
 	protected string|array|null $template = null;
 
 	/**
 	 * Filters the list by templates and sets the template
 	 * options for newly created pages
 	 */
-	#[Prop(computed: true)]
+	#[Prop(computed: true, export: false)]
 	protected array|string|null $templates = null;
 
 	/**
 	 * Excludes the given templates from the list
 	 */
-	#[Prop]
+	#[Prop(export: false)]
 	protected array|string $templatesIgnore = [];
 
 	/**

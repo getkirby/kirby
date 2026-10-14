@@ -43,14 +43,6 @@ class PagePickerField extends ModelPickerField
 		];
 	}
 
-	public function props(): array
-	{
-		return [
-			...parent::props(),
-			'subpages' => $this->subpages()
-		];
-	}
-
 	public function subpages(): bool
 	{
 		return $this->subpages;

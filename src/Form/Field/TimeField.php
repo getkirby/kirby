@@ -75,14 +75,6 @@ class TimeField extends DateTimeField
 		};
 	}
 
-	public function props(): array
-	{
-		return [
-			...parent::props(),
-			'notation' => $this->notation()
-		];
-	}
-
 	public function step(): array
 	{
 		return $this->step;

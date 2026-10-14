@@ -46,7 +46,7 @@ abstract class ModelListField extends DisplayField
 	/**
 	 * Columns config for `layout: table`
 	 */
-	#[Prop(computed: true)]
+	#[Prop(computed: true, getter: 'defineColumns')]
 	protected array|null $columns = null;
 
 	protected array|null $columnsCache = null;
@@ -55,20 +55,20 @@ abstract class ModelListField extends DisplayField
 	/**
 	 * If `true`, the order of the entries is reversed
 	 */
-	#[Prop]
+	#[Prop(export: false)]
 	protected bool $flip = false;
 
 	/**
 	 * Image options for each entry, a query string for the preview
 	 * image or `false` to disable previews
 	 */
-	#[Prop]
+	#[Prop(export: false)]
 	protected array|string|false $image = [];
 
 	/**
 	 * Info text shown next to or below the main text of each entry
 	 */
-	#[Prop]
+	#[Prop(export: false)]
 	protected array|string|null $info = null;
 
 	/**
@@ -80,31 +80,31 @@ abstract class ModelListField extends DisplayField
 	/**
 	 * Sets the default page for the pagination
 	 */
-	#[Prop]
+	#[Prop(export: false)]
 	protected int|null $page = null;
 
 	/**
 	 * Query for the parent model that holds the entries
 	 */
-	#[Prop]
+	#[Prop(export: false)]
 	protected string|null $parent = null;
 
 	/**
 	 * Filters the entries by a query. Sorting will be disabled
 	 */
-	#[Prop]
+	#[Prop(export: false)]
 	protected string|null $query = null;
 
 	/**
 	 * Enables/disables the search
 	 */
-	#[Prop]
+	#[Prop(export: false)]
 	protected bool $search = false;
 
 	/**
 	 * Setup for the main text of each entry
 	 */
-	#[Prop]
+	#[Prop(export: false)]
 	protected array|string|null $text = null;
 
 	/**
@@ -466,17 +466,13 @@ abstract class ModelListField extends DisplayField
 
 	public function props(): array
 	{
+		// limit and sorting are applied by the backend
+		$props = A::without(parent::props(), ['limit', 'sortable', 'sortBy']);
+
 		return [
-			...parent::props(),
-			'batch'      => $this->batch(),
-			'columns'    => $this->defineColumns(),
-			'empty'      => $this->empty(),
-			'layout'     => $this->layout(),
+			...$props,
 			'link'       => $this->link(),
-			'max'        => $this->max(),
-			'min'        => $this->min(),
 			'searchable' => $this->searchable(),
-			'size'       => $this->size(),
 		];
 	}
 

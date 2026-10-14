@@ -17,14 +17,6 @@ abstract class OptionField extends InputField
 
 	protected string $value = '';
 
-	public function props(): array
-	{
-		return [
-			...parent::props(),
-			'options' => $this->options(),
-		];
-	}
-
 	protected function validations(): array
 	{
 		return [

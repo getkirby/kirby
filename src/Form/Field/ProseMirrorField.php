@@ -53,17 +53,6 @@ abstract class ProseMirrorField extends StringField
 		return $this->nodes;
 	}
 
-	public function props(): array
-	{
-		return [
-			...parent::props(),
-			'icon'    => $this->icon(),
-			'marks'   => $this->marks(),
-			'nodes'   => $this->nodes(),
-			'toolbar' => $this->toolbar(),
-		];
-	}
-
 	public function toolbar(): array|bool|null
 	{
 		return $this->toolbar;

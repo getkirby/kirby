@@ -39,17 +39,6 @@ class ToggleField extends InputField
 		);
 	}
 
-	public function props(): array
-	{
-		return [
-			...parent::props(),
-			'after'  => $this->after(),
-			'before' => $this->before(),
-			'icon'   => $this->icon(),
-			'text'   => $this->text(),
-		];
-	}
-
 	public function text(): array|HtmlString|null
 	{
 		$text = $this->text;

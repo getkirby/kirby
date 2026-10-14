@@ -200,18 +200,18 @@ abstract class Field implements Stringable
 	}
 
 	/**
-	 * Define the props that will be sent to
-	 * the Vue component
+	 * Define the props that will be sent to the Vue component.
+	 * All properties marked with `#[Prop]` are exported automatically
+	 * via their getter. Field classes can overwrite this method to
+	 * add more props or to change the value of exported props.
 	 */
 	public function props(): array
 	{
 		return [
+			...(new Props($this))->values(),
 			'hidden'   => $this->isHidden(),
-			'name'     => $this->name(),
 			'saveable' => $this->hasValue(),
 			'type'     => $this->type(),
-			'when'     => $this->when(),
-			'width'    => $this->width()
 		];
 	}
 

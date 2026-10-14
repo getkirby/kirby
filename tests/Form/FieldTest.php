@@ -316,14 +316,33 @@ class FieldTest extends TestCase
 	{
 		$field = new RedeclaredMockField(enabled: true);
 
-		// the prop stays settable
+		// the prop stays settable and exportable
 		$this->assertTrue($field->option('enabled'));
+		$this->assertTrue($field->props()['enabled']);
 	}
 
 	public function testRegisterWithUnknownProperty(): void
 	{
 		$field = new OptionsMockField(foo: 'bar');
 		$this->assertFalse(isset($field->foo));
+	}
+
+	public function testPropsWithPropAttributes(): void
+	{
+		$props = (new OptionsMockField(name: 'test'))->props();
+
+		// all `#[Prop]` properties are exported automatically
+		$this->assertFalse($props['enabled']);
+		$this->assertSame(['size' => 'small', 'colors' => ['red', 'blue']], $props['settings']);
+		$this->assertSame(['a', 'b', 'c'], $props['tags']);
+
+		// properties without the attribute are not exported
+		$this->assertArrayNotHasKey('cache', $props);
+		$this->assertArrayNotHasKey('page', $props);
+
+		// props marked with `export: false` are not exported
+		$this->assertArrayNotHasKey('default', $props);
+		$this->assertArrayNotHasKey('translate', $props);
 	}
 
 	public function testResolve(): void

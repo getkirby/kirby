@@ -25,15 +25,6 @@ class CheckboxesField extends OptionsField
 		);
 	}
 
-	public function props(): array
-	{
-		return [
-			...parent::props(),
-			'batch'   => $this->batch(),
-			'columns' => $this->columns(),
-		];
-	}
-
 	public function toStoredValue(): mixed
 	{
 		return A::join($this->value, ', ');

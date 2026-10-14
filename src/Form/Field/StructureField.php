@@ -53,24 +53,6 @@ class StructureField extends InputField implements ProvidesNestedForm
 		return $this->limit;
 	}
 
-	public function props(): array
-	{
-		return [
-			...parent::props(),
-			'batch'     => $this->batch(),
-			'columns'   => $this->columns(),
-			'duplicate' => $this->duplicate(),
-			'empty'     => $this->empty(),
-			'fields'    => $this->fields(),
-			'limit'     => $this->limit(),
-			'max'       => $this->max(),
-			'min'       => $this->min(),
-			'prepend'   => $this->prepend(),
-			'sortable'  => $this->sortable(),
-			'sortBy'    => $this->sortBy()
-		];
-	}
-
 	public function toFormValue(): array
 	{
 		$data = [];
