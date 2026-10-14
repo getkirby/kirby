@@ -339,7 +339,7 @@ class PageCreateDialogController extends ModelCreateDialogController
 			'slug'     => $this->request->get('slug', ''),
 			'template' => $this->template(),
 			'title'    => $this->request->get('title', ''),
-			'uuid'     => $this->model()->uuid()->toString(),
+			'uuid'     => $this->model()->uuid()?->id(),
 		];
 	}
 }
