@@ -262,6 +262,13 @@ export default {
 		"$panel.language.code"() {
 			this.reload();
 		},
+		/**
+		 * The endpoint contains the path of the model,
+		 * which changes e.g. with the slug of its page
+		 */
+		"endpoints.field"() {
+			this.reload();
+		},
 		searchterm() {
 			this.filter();
 		}
@@ -300,7 +307,13 @@ export default {
 		onPaginate(pagination) {
 			this.reload({ page: pagination.page });
 		},
-		onRefresh() {
+		onRefresh(response) {
+			// the view is about to be replaced and might hand the
+			// field a new endpoint (e.g. after the slug changed)
+			if (response?.redirect) {
+				return;
+			}
+
 			this.reload();
 		},
 		onSearchToggle() {

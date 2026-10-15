@@ -3,12 +3,12 @@ import { flushPromises, mount as vueMount } from "@vue/test-utils";
 import { reactive } from "vue";
 import ModelListField from "./ModelListField.vue";
 
-const listeners: Record<string, () => void> = {};
+const listeners: Record<string, (payload?: object) => void> = {};
 
 const events = {
 	emit: vi.fn(),
 	off: vi.fn(),
-	on: vi.fn((event: string, handler: () => void) => {
+	on: vi.fn((event: string, handler: (payload?: object) => void) => {
 		listeners[event] = handler;
 	})
 };
@@ -147,6 +147,37 @@ describe("ModelListField.vue", () => {
 		});
 	});
 
+	describe("endpoints.field watcher", () => {
+		it("reloads the entries from the new endpoint", async () => {
+			const wrapper = mount();
+			await flushPromises();
+
+			// the slug of the parent page changed
+			await wrapper.setProps({
+				endpoints: { field: "pages/new-slug/fields/drafts" }
+			});
+			await flushPromises();
+
+			expect(api.get).toHaveBeenCalledTimes(2);
+			expect(api.get).toHaveBeenLastCalledWith("pages/new-slug/fields/drafts", {
+				page: 1,
+				searchterm: null
+			});
+		});
+
+		it("does not reload for the same endpoint", async () => {
+			const wrapper = mount();
+			await flushPromises();
+
+			await wrapper.setProps({
+				endpoints: { field: "pages/test/fields/drafts" }
+			});
+			await flushPromises();
+
+			expect(api.get).toHaveBeenCalledOnce();
+		});
+	});
+
 	// methods
 	describe("reload()", () => {
 		it("keeps the page of the current state", async () => {
@@ -249,6 +280,22 @@ describe("ModelListField.vue", () => {
 			vi.useRealTimers();
 
 			expect(api.get).toHaveBeenCalledOnce();
+		});
+
+		it("does not reload when the view redirects", async () => {
+			mount();
+			await flushPromises();
+			api.get.mockClear();
+
+			vi.useFakeTimers();
+
+			// the new view hands the field its new endpoint
+			listeners["model.update"]({ redirect: "/pages/new-slug" });
+
+			await vi.advanceTimersByTimeAsync(1);
+			vi.useRealTimers();
+
+			expect(api.get).not.toHaveBeenCalled();
 		});
 	});
 });
