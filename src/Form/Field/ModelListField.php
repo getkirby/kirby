@@ -12,6 +12,7 @@ use Kirby\Form\Form;
 use Kirby\Form\Mixin;
 use Kirby\Panel\Collector\ModelsCollector;
 use Kirby\Reflection\Attributes\Prop;
+use Kirby\Toolkit\HtmlString;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
@@ -515,7 +516,6 @@ abstract class ModelListField extends DisplayField
 			// a column query is resolved against the model
 			if (($query = $column['value'] ?? '') !== '') {
 				$item[$name] = $model->toString($query);
-				continue;
 			}
 
 			// otherwise fall back to the form value,
@@ -523,6 +523,14 @@ abstract class ModelListField extends DisplayField
 			if (isset($item[$name]) === false) {
 				$values ??= $this->columnValues($model);
 				$item[$name] = $values[$column['id'] ?? $name] ?? null;
+			}
+
+			// `type: html` opts the column out of escaping
+			if (
+				($column['type'] ?? null) === 'html' &&
+				is_string($item[$name]) === true
+			) {
+				$item[$name] = new HtmlString($item[$name]);
 			}
 		}
 

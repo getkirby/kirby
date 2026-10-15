@@ -321,6 +321,34 @@ class FileListFieldTest extends TestCase
 		$this->assertSame(['a', 'b'], $field->data()[0]['tags']);
 	}
 
+	public function testDataWithTableLayoutAndHtmlColumns(): void
+	{
+		$field = $this->filelist([
+			'columns' => [
+				'alt'      => ['type' => 'html'],
+				'caption'  => ['value' => '<b>{{ file.filename }}</b>'],
+				'filename' => ['type' => 'html', 'value' => '<b>{{ file.filename }}</b>'],
+				'tags'     => ['type' => 'html']
+			],
+			'layout' => 'table'
+		]);
+
+		$item = $field->data()[0];
+
+		// `type: html` marks both the content value
+		// and the query result as trusted HTML
+		$this->assertInstanceOf(HtmlString::class, $item['alt']);
+		$this->assertSame('Alt A', $item['alt']->value());
+		$this->assertInstanceOf(HtmlString::class, $item['filename']);
+		$this->assertSame('<b>a.jpg</b>', $item['filename']->value());
+
+		// all other columns stay untrusted
+		$this->assertSame('<b>a.jpg</b>', $item['caption']);
+
+		// only strings can be marked
+		$this->assertSame(['a', 'b'], $item['tags']);
+	}
+
 	public function testDataWithTableLayoutAndPassthroughValues(): void
 	{
 		// a column without a matching blueprint field
