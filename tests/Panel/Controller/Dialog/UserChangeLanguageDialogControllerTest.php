@@ -46,7 +46,7 @@ class UserChangeLanguageDialogControllerTest extends TestCase
 		$props = $dialog->props();
 		$this->assertSame('Language', $props['fields']['translation']['label']);
 		$this->assertSame('Change', $props['submitButton']);
-		$this->assertSame('en', $props['value']['translation']);
+		$this->assertSame('en', $props['value']->translation);
 	}
 
 	public function testSubmit(): void

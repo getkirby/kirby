@@ -23,7 +23,7 @@ class FormDrawerTest extends TestCase
 			]
 		);
 
-		$this->assertSame([
+		$this->assertEquals([
 			'class'    => null,
 			'style'    => null,
 			'icon'     => null,
@@ -32,8 +32,14 @@ class FormDrawerTest extends TestCase
 			'disabled' => false,
 			'empty'    => 'No form',
 			'fields'   => $fields,
-			'value'    => $value,
+			'value'    => (object)$value,
 		], $drawer->props());
+	}
+
+	public function testPropsWithoutValue(): void
+	{
+		$drawer = new FormDrawer();
+		$this->assertSame('{}', json_encode($drawer->props()['value']));
 	}
 
 	public function testRender(): void

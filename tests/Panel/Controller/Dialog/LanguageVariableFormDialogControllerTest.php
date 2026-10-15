@@ -121,7 +121,7 @@ class LanguageVariableFormDialogControllerTest extends TestCase
 		$props = $dialog->props();
 		$this->assertSame('large', $props['size']);
 		$this->assertCount(4, $props['fields']);
-		$this->assertSame(['multiple' => false], $props['value']);
+		$this->assertSame(['multiple' => false], (array)$props['value']);
 	}
 
 	public function testLoadForUpdate(): void
@@ -136,7 +136,7 @@ class LanguageVariableFormDialogControllerTest extends TestCase
 			'key'      => 'normal',
 			'multiple' => false,
 			'value'    => 'test',
-		], $props['value']);
+		], (array)$props['value']);
 	}
 
 	public function testLoadForUpdateHasMultipleValues(): void
@@ -151,7 +151,7 @@ class LanguageVariableFormDialogControllerTest extends TestCase
 			'entries'  => ['one', 'two', 'three'],
 			'key'      => 'variable',
 			'multiple' => true,
-		], $props['value']);
+		], (array)$props['value']);
 	}
 
 	public function testSubmitForCreate(): void

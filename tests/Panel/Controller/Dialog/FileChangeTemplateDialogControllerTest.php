@@ -27,7 +27,7 @@ class FileChangeTemplateDialogControllerTest extends FileDialogControllerTestCas
 		$this->assertSame('select', $props['fields']['template']['type']);
 		$this->assertSame('Change', $props['submitButton']['text']);
 		$this->assertSame('notice', $props['submitButton']['theme']);
-		$this->assertSame('a', $props['value']['template']);
+		$this->assertSame('a', $props['value']->template);
 	}
 
 	protected function assertSubmit(

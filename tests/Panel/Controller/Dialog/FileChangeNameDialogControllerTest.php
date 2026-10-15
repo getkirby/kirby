@@ -26,7 +26,7 @@ class FileChangeNameDialogControllerTest extends FileDialogControllerTestCase
 		$this->assertSame('Name', $props['fields']['name']['label']);
 		$this->assertSame('slug', $props['fields']['name']['type']);
 		$this->assertSame('Rename', $props['submitButton']);
-		$this->assertSame('a', $props['value']['name']);
+		$this->assertSame('a', $props['value']->name);
 	}
 
 	protected function assertSubmit(

@@ -58,11 +58,11 @@ class UserCreateDialogControllerTest extends TestCase
 		$this->assertSame('Create', $props['submitButton']);
 
 		// check values
-		$this->assertSame('', $props['value']['name']);
-		$this->assertSame('', $props['value']['email']);
-		$this->assertSame('', $props['value']['password']);
-		$this->assertSame('en', $props['value']['translation']);
-		$this->assertSame('admin', $props['value']['role']);
+		$this->assertSame('', $props['value']->name);
+		$this->assertSame('', $props['value']->email);
+		$this->assertSame('', $props['value']->password);
+		$this->assertSame('en', $props['value']->translation);
+		$this->assertSame('admin', $props['value']->role);
 	}
 
 	public function testLoadWithRoleQuery(): void
@@ -82,7 +82,7 @@ class UserCreateDialogControllerTest extends TestCase
 		$this->assertInstanceOf(FormDialog::class, $dialog);
 
 		$props = $dialog->props();
-		$this->assertSame('editor', $props['value']['role']);
+		$this->assertSame('editor', $props['value']->role);
 	}
 
 	public function testSubmit(): void

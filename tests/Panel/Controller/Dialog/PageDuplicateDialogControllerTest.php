@@ -112,9 +112,9 @@ class PageDuplicateDialogControllerTest extends TestCase
 		$props = $dialog->props();
 		$this->assertIsArray($props['fields']);
 		$this->assertSame('Duplicate', $props['submitButton']);
-		$this->assertFalse($props['value']['children']);
-		$this->assertFalse($props['value']['files']);
-		$this->assertSame('test-copy', $props['value']['slug']);
+		$this->assertFalse($props['value']->children);
+		$this->assertFalse($props['value']->files);
+		$this->assertSame('test-copy', $props['value']->slug);
 	}
 
 	public function testPath(): void

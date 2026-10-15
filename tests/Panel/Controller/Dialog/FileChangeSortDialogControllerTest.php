@@ -26,7 +26,7 @@ class FileChangeSortDialogControllerTest extends FileDialogControllerTestCase
 		$props = $dialog->props();
 		$this->assertSame('Change position', $props['fields']['position']['label']);
 		$this->assertSame('Change', $props['submitButton']);
-		$this->assertSame(3, $props['value']['position']);
+		$this->assertSame(3, $props['value']->position);
 	}
 
 	protected function assertSubmit(

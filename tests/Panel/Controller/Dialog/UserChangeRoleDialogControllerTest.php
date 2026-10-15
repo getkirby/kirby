@@ -58,7 +58,7 @@ class UserChangeRoleDialogControllerTest extends TestCase
 		$props = $dialog->props();
 		$this->assertSame('Select a new role', $props['fields']['role']['label']);
 		$this->assertSame('Change role', $props['submitButton']);
-		$this->assertSame('admin', $props['value']['role']);
+		$this->assertSame('admin', $props['value']->role);
 	}
 
 	public function testSubmit(): void

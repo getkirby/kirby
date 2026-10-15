@@ -41,7 +41,8 @@ class FormDialog extends TextDialog
 		return [
 			...parent::props(),
 			'fields' => $this->fields,
-			'value'  => $this->value
+			// object, so an empty value isn't sent as a JSON array
+			'value'  => (object)$this->value
 		];
 	}
 }

@@ -132,8 +132,8 @@ class PageChangeStatusDialogControllerTest extends TestCase
 
 		$this->assertIsArray($props['fields']);
 		$this->assertSame('Change', $props['submitButton']);
-		$this->assertSame('unlisted', $props['value']['status']);
-		$this->assertSame(2, $props['value']['position']);
+		$this->assertSame('unlisted', $props['value']->status);
+		$this->assertSame(2, $props['value']->position);
 	}
 
 	public function testLoadForDraft(): void
@@ -144,7 +144,7 @@ class PageChangeStatusDialogControllerTest extends TestCase
 		$this->assertInstanceOf(FormDialog::class, $dialog);
 
 		$props = $dialog->props();
-		$this->assertSame(2, $props['value']['position']);
+		$this->assertSame(2, $props['value']->position);
 	}
 
 	public function testLoadForDraftWithErrors(): void

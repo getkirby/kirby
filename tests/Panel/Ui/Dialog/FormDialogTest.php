@@ -21,7 +21,7 @@ class FormDialogTest extends TestCase
 			]
 		);
 
-		$this->assertSame([
+		$this->assertEquals([
 			'class'        => null,
 			'style'        => null,
 			'cancelButton' => null,
@@ -29,8 +29,14 @@ class FormDialogTest extends TestCase
 			'submitButton' => null,
 			'text'         => null,
 			'fields'       => $fields,
-			'value'        => $value
+			'value'        => (object)$value
 		], $dialog->props());
+	}
+
+	public function testPropsWithoutValue(): void
+	{
+		$dialog = new FormDialog();
+		$this->assertSame('{}', json_encode($dialog->props()['value']));
 	}
 
 	public function testRender(): void

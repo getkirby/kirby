@@ -36,7 +36,7 @@ class SiteChangeTitleDialogControllerTest extends TestCase
 
 		$props = $dialog->props();
 		$this->assertArrayHasKey('title', $props['fields']);
-		$this->assertSame('My Site', $props['value']['title']);
+		$this->assertSame('My Site', $props['value']->title);
 	}
 
 	public function testConstructNotAccessible(): void
