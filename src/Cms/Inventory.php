@@ -168,4 +168,92 @@ class Inventory
 
 		return $template ?? 'default';
 	}
+
+	/**
+	 * Determines only the main template of a directory,
+	 * with the same result as `Inventory::for($dir)['template']`
+	 * but without the cost of a full inventory
+	 * (no `is_dir()` call for every item and
+	 * no model lookup for every child directory)
+	 */
+	public static function templateFor(
+		string $dir,
+		string $extension = 'txt',
+		array|null $ignore = null,
+		bool $multilang = false
+	): string {
+		return static::templateFromItems(
+			$dir,
+			Dir::read($dir, $ignore),
+			$extension,
+			$multilang
+		);
+	}
+
+	/**
+	 * Determines the main template from an already read
+	 * directory listing, following the same rules as
+	 * `Inventory::for()` and `Inventory::template()`
+	 */
+	protected static function templateFromItems(
+		string $dir,
+		array $items,
+		string $extension,
+		bool $multilang
+	): string {
+		natsort($items);
+
+		$content = [];
+
+		foreach ($items as $item) {
+			// ignore all items with a leading dot or underscore
+			if (
+				str_starts_with($item, '.') ||
+				str_starts_with($item, '_')
+			) {
+				continue;
+			}
+
+			if (pathinfo($item, PATHINFO_EXTENSION) !== $extension) {
+				continue;
+			}
+
+			$filename = pathinfo($item, PATHINFO_FILENAME);
+
+			// remove the language codes from all content filenames
+			if ($multilang === true) {
+				$filename = pathinfo($filename, PATHINFO_FILENAME);
+			}
+
+			$content[] = $filename;
+		}
+
+		$items = array_flip($items);
+
+		// the last match wins in `Inventory::template()`,
+		// so the first match from the end is the same result
+		foreach (array_reverse(array_unique($content)) as $name) {
+			// a content file is a meta file if there is a
+			// file of the same name, i.e. cover.jpg + cover.jpg.txt;
+			// `Inventory::for()` does not track content files
+			// and files with the extensions below as files,
+			// and only directories need to be ruled out by
+			// asking the filesystem
+			if (isset($items[$name]) === true) {
+				$itemExt = pathinfo($name, PATHINFO_EXTENSION);
+
+				if (
+					$itemExt !== $extension &&
+					in_array($itemExt, ['htm', 'html', 'php'], true) === false &&
+					is_dir($dir . '/' . $name) === false
+				) {
+					continue;
+				}
+			}
+
+			return $name;
+		}
+
+		return 'default';
+	}
 }

@@ -468,9 +468,23 @@ class Page extends ModelWithContent
 			return $this->intendedTemplate;
 		}
 
-		return $this
-			->setTemplate($this->inventory()['template'])
-			->intendedTemplate();
+		// reuse the inventory if it has already been loaded,
+		// otherwise only determine the template: the full inventory
+		// would also check every item and look up the model of
+		// every child page, which is not needed here
+		if ($this->inventory !== null) {
+			$template = $this->inventory['template'];
+		} else {
+			$kirby    = $this->kirby();
+			$template = Inventory::templateFor(
+				$this->root(),
+				$kirby->contentExtension(),
+				$kirby->contentIgnore(),
+				$kirby->multilang()
+			);
+		}
+
+		return $this->setTemplate($template)->intendedTemplate();
 	}
 
 	/**

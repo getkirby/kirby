@@ -7,6 +7,7 @@ use Kirby\Filesystem\F;
 use Kirby\TestCase;
 use Kirby\Toolkit\A;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 #[CoversClass(Inventory::class)]
 class InventoryTest extends TestCase
@@ -296,5 +297,112 @@ class InventoryTest extends TestCase
 		$this->assertSame('a', $inventory['children'][0]['model']);
 		$this->assertSame('b', $inventory['children'][1]['model']);
 		$this->assertNull($inventory['children'][2]['model']);
+	}
+
+	public static function templateForProvider(): array
+	{
+		return [
+			'single content file' => [
+				['article.txt'],
+				'article'
+			],
+			'meta file sorted after the content file' => [
+				['article.txt', 'zebra.jpg', 'zebra.jpg.txt'],
+				'article'
+			],
+			'meta file sorted before the content file' => [
+				['aaa.jpg', 'aaa.jpg.txt', 'article.txt'],
+				'article'
+			],
+			'only a meta file' => [
+				['cover.jpg', 'cover.jpg.txt'],
+				'default'
+			],
+			'dot in template name' => [
+				['cover.jpg', 'cover.jpg.txt', 'article.video.txt'],
+				'article.video'
+			],
+			'directory named like a content file' => [
+				['article.txt', 'zzz', 'zzz.txt'],
+				'zzz'
+			],
+			'content file of a skipped file type' => [
+				['article.txt', 'skipped.php', 'skipped.php.txt'],
+				'skipped.php'
+			],
+			'ignored content files' => [
+				['article.txt', '_hidden.txt', '.invisible.txt'],
+				'article'
+			],
+			'last template wins' => [
+				['article.txt', 'note.txt'],
+				'note'
+			],
+			'natural sorting' => [
+				['item10.txt', 'item9.txt'],
+				'item10'
+			],
+			'no content file' => [
+				['cover.jpg'],
+				'default'
+			],
+			'empty directory' => [
+				[],
+				'default'
+			],
+		];
+	}
+
+	#[DataProvider('templateForProvider')]
+	public function testTemplateFor(array $items, string $expected): void
+	{
+		Dir::make(static::TMP);
+		$this->create($items);
+
+		$this->assertSame($expected, Inventory::templateFor(static::TMP));
+
+		// same result as the full inventory
+		$this->assertSame(
+			Inventory::for(static::TMP)['template'],
+			Inventory::templateFor(static::TMP)
+		);
+	}
+
+	public function testTemplateForExtension(): void
+	{
+		$this->create([
+			'cover.jpg',
+			'cover.jpg.md',
+			'article.md'
+		]);
+
+		$this->assertSame('article', Inventory::templateFor(static::TMP, 'md'));
+	}
+
+	public function testTemplateForIgnore(): void
+	{
+		$this->create([
+			'article.txt',
+			'note.txt'
+		]);
+
+		$this->assertSame('article', Inventory::templateFor(static::TMP, 'txt', ['note.txt']));
+	}
+
+	public function testTemplateForMultilang(): void
+	{
+		$this->create([
+			'cover.jpg',
+			'cover.jpg.en.txt',
+			'article.en.txt',
+			'article.de.txt'
+		]);
+
+		$this->assertSame('article', Inventory::templateFor(static::TMP, 'txt', null, true));
+	}
+
+	public function testTemplateForNonExistingDir(): void
+	{
+		$this->assertSame('default', Inventory::templateFor('/does-not-exist-' . uniqid()));
 	}
 }
