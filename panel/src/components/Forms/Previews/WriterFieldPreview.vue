@@ -1,5 +1,6 @@
 <script>
 import HtmlFieldPreview from "./HtmlFieldPreview.vue";
+import html from "@/panel/html";
 
 export default {
 	extends: HtmlFieldPreview,
@@ -11,19 +12,19 @@ export default {
 	},
 	computed: {
 		html() {
-			return this.sanitized;
+			return html(this.sanitized);
 		}
 	},
 	watch: {
 		value: {
 			immediate: true,
 			async handler(value) {
-				const html = await this.$helper.string.sanitizeHTML(value);
+				const sanitized = await this.$helper.string.sanitizeHTML(value);
 
 				// a newer value may have superseded this one while
 				// the writer schema was still being loaded
 				if (value === this.value) {
-					this.sanitized = html;
+					this.sanitized = sanitized;
 				}
 			}
 		}

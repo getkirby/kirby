@@ -323,30 +323,33 @@ class FileListFieldTest extends TestCase
 
 	public function testDataWithTableLayoutAndHtmlColumns(): void
 	{
+		$this->app->file('photography/a.jpg')->update([
+			'alt' => '<img src=x onerror=alert(1)>'
+		]);
+
 		$field = $this->filelist([
 			'columns' => [
 				'alt'      => ['type' => 'html'],
-				'caption'  => ['value' => '<b>{{ file.filename }}</b>'],
-				'filename' => ['type' => 'html', 'value' => '<b>{{ file.filename }}</b>'],
-				'tags'     => ['type' => 'html']
+				'caption'  => ['value' => '<b>{{ file.alt }}</b>'],
+				'filename' => ['type' => 'html', 'value' => '<b>{{ file.alt }}</b>']
 			],
 			'layout' => 'table'
 		]);
 
 		$item = $field->data()[0];
 
-		// `type: html` marks both the content value
-		// and the query result as trusted HTML
-		$this->assertInstanceOf(HtmlString::class, $item['alt']);
-		$this->assertSame('Alt A', $item['alt']->value());
+		// `type: html` keeps the markup of the query
+		// but escapes the values it inserts
 		$this->assertInstanceOf(HtmlString::class, $item['filename']);
-		$this->assertSame('<b>a.jpg</b>', $item['filename']->value());
+		$this->assertSame('<b>&lt;img src=x onerror=alert(1)&gt;</b>', $item['filename']->value());
 
-		// all other columns stay untrusted
-		$this->assertSame('<b>a.jpg</b>', $item['caption']);
+		// content values stay plain strings,
+		// which the html preview escapes
+		$this->assertSame('<img src=x onerror=alert(1)>', $item['alt']);
 
-		// only strings can be marked
-		$this->assertSame(['a', 'b'], $item['tags']);
+		// other columns render as text in the Panel,
+		// so escaping here would show up as entities
+		$this->assertSame('<b><img src=x onerror=alert(1)></b>', $item['caption']);
 	}
 
 	public function testDataWithTableLayoutAndPassthroughValues(): void
