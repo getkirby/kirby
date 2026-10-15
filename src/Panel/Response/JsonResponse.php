@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel\Response;
 
+use Kirby\Cms\App;
 use Kirby\Data\Json;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
@@ -98,6 +99,23 @@ class JsonResponse extends Response
 	}
 
 	/**
+	 * Renders the error response for a Kirby exception
+	 */
+	public static function exception(Exception $exception): Response
+	{
+		return Response::json(
+			body: [
+				'status'  => 'error',
+				'message' => $exception->getMessage(),
+				'code'    => $exception->getHttpCode(),
+				'key'     => $exception->getKey(),
+				'details' => $exception->getDetails()
+			],
+			code: $exception->getHttpCode()
+		);
+	}
+
+	/**
 	 * Creates a response object from mixed input
 	 */
 	public static function from(mixed $data): Response
@@ -131,6 +149,14 @@ class JsonResponse extends Response
 		// interpret missing/empty data as not found
 		if ($data === null || $data === false) {
 			throw new NotFoundException('The data could not be found');
+		}
+
+		// handle Kirby exceptions
+		if (
+			$data instanceof Exception &&
+			App::instance()->option('debug') !== true
+		) {
+			return static::exception($data);
 		}
 
 		// handle Throwables

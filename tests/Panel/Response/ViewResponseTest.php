@@ -2,6 +2,8 @@
 
 namespace Kirby\Panel\Response;
 
+use Kirby\Data\Json;
+use Kirby\Exception\NotFoundException;
 use Kirby\Http\Response;
 use Kirby\Panel\Redirect;
 use Kirby\Panel\State;
@@ -42,6 +44,16 @@ class ViewResponseTest extends TestCase
 
 		$this->assertInstanceOf(Response::class, $response);
 		$this->assertSame('https://getkirby.com', $response->header('Location'));
+	}
+
+	public function testFromKirbyException(): void
+	{
+		$response = ViewResponse::from(new NotFoundException('test'));
+		$body     = Json::decode($response->body());
+
+		$this->assertSame(404, $response->code());
+		$this->assertSame('test', $body['message']);
+		$this->assertSame('error.notFound', $body['key']);
 	}
 
 	public function testFromRedirectRefresh(): void
