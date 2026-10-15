@@ -50,6 +50,29 @@ export default {
 						icon: "open",
 						title: "Open"
 					}
+				},
+				{
+					key: "status",
+					props: {
+						icon: "status-listed",
+						responsive: true,
+						text: "Published",
+						theme: "positive-icon"
+					}
+				},
+				"-",
+				{
+					key: "settings",
+					props: {
+						icon: "cog",
+						options: [
+							{ icon: "edit", text: "Rename" },
+							{ icon: "copy", text: "Duplicate" },
+							"-",
+							{ icon: "trash", text: "Delete" }
+						],
+						title: "Settings"
+					}
 				}
 			]
 		};

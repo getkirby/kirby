@@ -9,7 +9,7 @@
 			/>
 		</k-lab-example>
 		<k-lab-example label="Dropdown: State route">
-			<k-view-button text="A dropdown" options="pages/sections+files" />
+			<k-view-button text="A dropdown" options="account" />
 		</k-lab-example>
 		<k-lab-example label="Dropdown: Options array">
 			<k-view-button
@@ -18,13 +18,21 @@
 			/>
 		</k-lab-example>
 		<k-lab-example label="Settings button">
-			<k-settings-view-button icon="cog" options="pages/sections+info" />
+			<k-view-button
+				class="k-settings-view-button"
+				icon="cog"
+				options="account"
+				title="Settings"
+			/>
 		</k-lab-example>
 		<k-lab-example label="Status button">
-			<k-status-view-button
-				text="Draft"
+			<k-view-button
+				class="k-status-view-button"
 				icon="status-draft"
+				style="--icon-size: 15px"
+				text="Draft"
 				theme="negative-icon"
+				title="Status: Draft"
 			/>
 		</k-lab-example>
 		<k-lab-example label="Theme button">
