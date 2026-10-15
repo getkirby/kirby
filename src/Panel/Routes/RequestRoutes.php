@@ -21,7 +21,7 @@ class RequestRoutes extends Routes
 			$routes[] = $this->route(
 				pattern: $params['pattern'],
 				action:  $params['load'] ?? fn () => 'The request action handler is missing',
-				method:  $params['method'] ?? 'GET',
+				method:  $params['method'] ?? 'GET|POST',
 				auth:    $params['auth'] ?? true,
 			);
 		}

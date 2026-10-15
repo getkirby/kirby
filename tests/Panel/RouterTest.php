@@ -65,6 +65,12 @@ class RouterTest extends TestCase
 		$this->assertSame('Done', json_decode($response->body(), true)['message']);
 	}
 
+	public function testCallWithCsrfViaPost(): void
+	{
+		$response = $this->call('test/request', ['csrf' => 'test-csrf'], 'POST');
+		$this->assertSame(200, $response->code());
+	}
+
 	public function testCallWithoutCsrf(): void
 	{
 		$response = $this->call('test/request');

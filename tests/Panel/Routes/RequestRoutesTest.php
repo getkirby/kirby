@@ -43,6 +43,6 @@ class RequestRoutesTest extends TestCase
 		$this->assertCount(1, $routes);
 		$this->assertSame('test', $routes[0]['area']);
 		$this->assertSame('foo/(:any)', $routes[0]['pattern']);
-		$this->assertSame('GET', $routes[0]['method']);
+		$this->assertSame('GET|POST', $routes[0]['method']);
 	}
 }
