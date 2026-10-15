@@ -1,5 +1,5 @@
 <template>
-	<div class="k-view-button">
+	<div :class="['k-view-button', $attrs.class]" :style="$attrs.style">
 		<k-button
 			v-bind="$props"
 			:dropdown="dropdown || hasDropdown"
