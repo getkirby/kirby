@@ -5,6 +5,7 @@
 		v-bind="$attrs"
 		:disabled="disabled"
 		:icon="options[0].icon ?? icon"
+		:request="options[0].request"
 		:size="options[0].size ?? size"
 		:title="options[0].title ?? options[0].tooltip ?? options[0].text"
 		:variant="options[0].variant ?? variant"

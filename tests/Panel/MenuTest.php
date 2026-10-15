@@ -287,6 +287,14 @@ class MenuTest extends TestCase
 		$this->assertNull($item);
 	}
 
+	public function testItemWithRequest(): void
+	{
+		$menu = new Menu();
+		$item = $menu->item('users', ['request' => 'users/sync']);
+		$this->assertSame('users/sync', $item->props()['request']);
+		$this->assertNull($item->props()['link']);
+	}
+
 	public function testRender(): void
 	{
 		$menu = new Menu();
