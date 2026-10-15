@@ -3,7 +3,7 @@ import { defineAsyncComponent } from "vue";
 /**
  * All Lab views resolve through this one dynamic import,
  * so that they share a single lazy chunk. Its file name
- * also becomes the chunk name: `Lab.min.js`
+ * also becomes the chunk name: `lab.min.js`
  */
 function lab() {
 	return import("./Lab");
