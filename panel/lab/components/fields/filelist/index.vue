@@ -16,10 +16,6 @@
 				<k-lab-filelist-field label="Files" />
 			</k-lab-example>
 
-			<k-lab-example label="Loading: table">
-				<k-lab-filelist-field :columns="columns" label="Files" layout="table" />
-			</k-lab-example>
-
 			<k-lab-example label="Help">
 				<k-lab-filelist-field
 					:initial="state(files)"

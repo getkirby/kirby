@@ -32,7 +32,7 @@
 					:columns="state.columns"
 					:empty="emptyProps"
 					:fields="fields"
-					:items="isLoading ? skeleton : items"
+					:items="items"
 					:layout="layout"
 					:pagination="state.pagination"
 					:selected="selected"
@@ -170,21 +170,22 @@ export default {
 			return this.batch === true && this.items.length > 0;
 		},
 		emptyProps() {
-			return {
-				icon: this.error !== null ? "alert" : this.icon,
-				text: this.emptyText
-			};
-		},
-		emptyText() {
+			if (this.isLoading === true) {
+				return { icon: "loader", text: this.$t("loading") };
+			}
+
 			if (this.error !== null) {
-				return this.error;
+				return { icon: "alert", text: this.error };
 			}
 
 			if (this.isSearching === true) {
-				return this.$t("search.results.none");
+				return { icon: this.icon, text: this.$t("search.results.none") };
 			}
 
-			return this.empty ?? this.$t(this.$options.type + ".empty");
+			return {
+				icon: this.icon,
+				text: this.empty ?? this.$t(this.$options.type + ".empty")
+			};
 		},
 		/**
 		 * The icon of the empty state
@@ -233,15 +234,6 @@ export default {
 					sortable: sortable
 				};
 			});
-		},
-		skeleton() {
-			return [
-				{
-					id: "skeleton",
-					image: this.layout !== "table" ? { icon: "loader" } : null,
-					theme: "skeleton"
-				}
-			];
 		},
 		/**
 		 * The list is only validated while it shows everything.
