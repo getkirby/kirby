@@ -33,7 +33,7 @@ trait HasChildren
 	 */
 	public function children(): Pages
 	{
-		return $this->children ??= Pages::factory($this->inventory()['children'], $this);
+		return $this->children ??= Pages::factory($this->inventory()->children(), $this);
 	}
 
 	/**
@@ -87,14 +87,14 @@ trait HasChildren
 		$kirby = $this->kirby();
 
 		// create the inventory for all drafts
-		$inventory = Inventory::for(
+		$inventory = new Inventory(
 			$this->root() . '/_drafts',
 			$kirby->contentExtension(),
 			$kirby->contentIgnore(),
 			$kirby->multilang()
 		);
 
-		return $this->drafts = Pages::factory($inventory['children'], $this, true);
+		return $this->drafts = Pages::factory($inventory->children(), $this, true);
 	}
 
 	/**

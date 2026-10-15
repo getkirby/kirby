@@ -80,7 +80,7 @@ class Page extends ModelWithContent
 	 */
 	protected Template|null $intendedTemplate = null;
 
-	protected array|null $inventory = null;
+	protected Inventory|null $inventory = null;
 
 	/**
 	 * The sorting number
@@ -484,8 +484,10 @@ class Page extends ModelWithContent
 			return $this->intendedTemplate;
 		}
 
+		// only needs the directory listing,
+		// not the children and files of the inventory
 		return $this
-			->setTemplate($this->inventory()['template'])
+			->setTemplate($this->inventory()->template())
 			->intendedTemplate();
 	}
 
@@ -493,15 +495,11 @@ class Page extends ModelWithContent
 	 * Returns the inventory of files children and content files
 	 */
 	#[BlockCollectionAccess]
-	public function inventory(): array
+	public function inventory(): Inventory
 	{
-		if ($this->inventory !== null) {
-			return $this->inventory;
-		}
-
 		$kirby = $this->kirby();
 
-		return $this->inventory = Inventory::for(
+		return $this->inventory ??= new Inventory(
 			$this->root(),
 			$kirby->contentExtension(),
 			$kirby->contentIgnore(),
