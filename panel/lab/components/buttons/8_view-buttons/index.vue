@@ -62,6 +62,15 @@ export default {
 				},
 				"-",
 				{
+					key: "magic",
+					props: {
+						badge: { text: 3, theme: "love" },
+						icon: "wand",
+						request: "requests/lab/request",
+						title: "Do some magic"
+					}
+				},
+				{
 					key: "settings",
 					props: {
 						icon: "cog",
