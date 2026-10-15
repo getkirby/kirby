@@ -3,6 +3,7 @@
 		v-bind="$props"
 		:class="['k-url-field', $attrs.class]"
 		:input="id"
+		:link="undefined"
 		:style="$attrs.style"
 	>
 		<k-input

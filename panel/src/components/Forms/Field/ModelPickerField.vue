@@ -3,6 +3,7 @@
 		v-bind="$props"
 		:class="['k-models-field', `k-${$options.type}-field`, $attrs.class]"
 		:input="false"
+		:link="undefined"
 		:style="$attrs.style"
 	>
 		<template v-if="!disabled" #options>
