@@ -7,6 +7,7 @@ use Kirby\Filesystem\F;
 use Kirby\TestCase;
 use Kirby\Toolkit\A;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 #[CoversClass(Inventory::class)]
 class InventoryTest extends TestCase
@@ -30,12 +31,42 @@ class InventoryTest extends TestCase
 		foreach ($items as $item) {
 			$root = static::TMP . '/' . $item;
 
-			if (F::extension($item)) {
+			// a trailing slash creates a directory with a dot in its name
+			if (str_ends_with($item, '/') === false && F::extension($item)) {
 				F::write($root, '');
 			} else {
 				Dir::make($root);
 			}
 		}
+	}
+
+	public function testChildren(): void
+	{
+		$this->create([
+			'1_project-a',
+			'cover.jpg',
+			'project.txt'
+		]);
+
+		$inventory = new Inventory(static::TMP);
+
+		$this->assertCount(1, $inventory->children());
+		$this->assertSame('project-a', $inventory->children()[0]['slug']);
+	}
+
+	public function testFiles(): void
+	{
+		$this->create([
+			'1_project-a',
+			'cover.jpg',
+			'cover.jpg.txt',
+			'index.php',
+			'project.txt'
+		]);
+
+		$inventory = new Inventory(static::TMP);
+
+		$this->assertSame(['cover.jpg'], array_keys($inventory->files()));
 	}
 
 	public function testFor(): void
@@ -346,5 +377,102 @@ class InventoryTest extends TestCase
 		$this->assertSame('a', $inventory['children'][0]['model']);
 		$this->assertSame('b', $inventory['children'][1]['model']);
 		$this->assertNull($inventory['children'][2]['model']);
+	}
+
+	public function testForDirectoryWithContentExtension(): void
+	{
+		// content files are never directories
+		$this->create([
+			'article.txt',
+			'notes.txt/'
+		]);
+
+		$inventory = Inventory::for(static::TMP);
+
+		$this->assertSame([], $inventory['children']);
+		$this->assertSame('notes', $inventory['template']);
+	}
+
+	public static function templateProvider(): array
+	{
+		return [
+			'single content file' => [
+				['article.txt'],
+				'article'
+			],
+			'meta file sorted after the content file' => [
+				['article.txt', 'zebra.jpg', 'zebra.jpg.txt'],
+				'article'
+			],
+			'meta file sorted before the content file' => [
+				['aaa.jpg', 'aaa.jpg.txt', 'article.txt'],
+				'article'
+			],
+			'only a meta file' => [
+				['cover.jpg', 'cover.jpg.txt'],
+				'default'
+			],
+			'dot in template name' => [
+				['cover.jpg', 'cover.jpg.txt', 'article.video.txt'],
+				'article.video'
+			],
+			'directory named like a content file' => [
+				['article.txt', 'zzz', 'zzz.txt'],
+				'zzz'
+			],
+			'directory named like a file' => [
+				['article.txt', 'zzz.jpg/', 'zzz.jpg.txt'],
+				'zzz.jpg'
+			],
+			'content file of a skipped file type' => [
+				['article.txt', 'skipped.php', 'skipped.php.txt'],
+				'skipped.php'
+			],
+			'ignored content files' => [
+				['article.txt', '_hidden.txt', '.invisible.txt'],
+				'article'
+			],
+			'last template wins' => [
+				['article.txt', 'note.txt'],
+				'note'
+			],
+			'natural sorting' => [
+				['item10.txt', 'item9.txt'],
+				'item10'
+			],
+			'no content file' => [
+				['cover.jpg'],
+				'default'
+			],
+			'empty directory' => [
+				[],
+				'default'
+			],
+		];
+	}
+
+	#[DataProvider('templateProvider')]
+	public function testTemplate(array $items, string $expected): void
+	{
+		Dir::make(static::TMP);
+		$this->create($items);
+
+		$inventory = new Inventory(static::TMP);
+
+		$this->assertSame($expected, $inventory->template());
+	}
+
+	public function testTemplateMultilang(): void
+	{
+		$this->create([
+			'cover.jpg',
+			'cover.jpg.en.txt',
+			'article.en.txt',
+			'article.de.txt'
+		]);
+
+		$inventory = new Inventory(static::TMP, 'txt', null, true);
+
+		$this->assertSame('article', $inventory->template());
 	}
 }
