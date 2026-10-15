@@ -59,6 +59,21 @@ class PageTest extends ModelTestCase
 		$this->assertSame(3, $child->depth());
 	}
 
+	public function testDirname(): void
+	{
+		$page = new Page(['slug' => 'about', 'num' => 1]);
+		$this->assertSame('1_about', $page->dirname());
+
+		Inventory::$numSeparator = '-';
+
+		try {
+			$page = new Page(['slug' => 'about', 'num' => 1]);
+			$this->assertSame('1-about', $page->dirname());
+		} finally {
+			Inventory::$numSeparator = '_';
+		}
+	}
+
 	public function testId(): void
 	{
 		$page = new Page([

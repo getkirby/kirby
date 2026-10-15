@@ -41,6 +41,13 @@ class Inventory
 	protected array $items = [];
 
 	/**
+	 * Separator between num and slug in page directory names
+	 * (e.g. `1_about` → num: 1, slug: 'about')
+	 * @since 6.0.0
+	 */
+	public static string $numSeparator = '_';
+
+	/**
 	 * @since 6.0.0
 	 */
 	public function __construct(
@@ -100,8 +107,7 @@ class Inventory
 	protected function child(string $item, array $models): array
 	{
 		// extract the slug and num of the directory
-		// TODO: Switch to static::$numSeparator in v6
-		if ($separator = strpos($item, Dir::$numSeparator)) {
+		if ($separator = strpos($item, static::$numSeparator)) {
 			$num  = (int)substr($item, 0, $separator);
 			$slug = substr($item, $separator + 1);
 		}

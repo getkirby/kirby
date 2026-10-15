@@ -41,8 +41,6 @@ class Dir
 		'@eaDir'
 	];
 
-	public static string $numSeparator = '_';
-
 	/**
 	 * Copy the directory to a new destination
 	 *
