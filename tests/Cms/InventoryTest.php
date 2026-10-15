@@ -23,6 +23,7 @@ class InventoryTest extends TestCase
 	{
 		parent::tearDown();
 		static::tearDownTmp();
+		Inventory::$numSeparator = '_';
 		Page::$models = [];
 	}
 
@@ -52,6 +53,23 @@ class InventoryTest extends TestCase
 
 		$this->assertCount(1, $inventory->children());
 		$this->assertSame('project-a', $inventory->children()[0]['slug']);
+	}
+
+	public function testChildrenWithNumSeparator(): void
+	{
+		Inventory::$numSeparator = '-';
+
+		$this->create([
+			'1-project-a',
+			'project_b'
+		]);
+
+		$children = (new Inventory(static::TMP))->children();
+
+		$this->assertSame(1, $children[0]['num']);
+		$this->assertSame('project-a', $children[0]['slug']);
+		$this->assertNull($children[1]['num']);
+		$this->assertSame('project_b', $children[1]['slug']);
 	}
 
 	public function testFiles(): void
