@@ -1,8 +1,21 @@
 import { describe, expect, it, vi } from "vitest";
+import { type Component, defineAsyncComponent, h } from "vue";
+import { flushPromises, mount } from "@vue/test-utils";
 import isComponent from "@/helpers/isComponent";
 import dialog from "@/mixins/dialog.js";
 import drawer from "@/mixins/drawer.js";
 import Plugins, { load } from "./plugins";
+
+// renders a registered component inside a host,
+// as test-utils can't mount an async component directly
+async function render(name: string, props?: object): Promise<string> {
+	const wrapper = mount({
+		render: () => h(app.component(name) as Component, props)
+	});
+	await flushPromises();
+
+	return wrapper.text();
+}
 
 describe("panel.plugins", () => {
 	describe("load()", () => {
@@ -99,6 +112,22 @@ describe("panel.plugins", () => {
 			);
 
 			expect(typeof result.extends).not.toBe("string");
+		});
+
+		it("resolves extends to the loaded definition of a lazy component", async () => {
+			const base = { template: "<p>base</p>" };
+			app.component(
+				"k-plugins-test-lazy-loaded",
+				defineAsyncComponent(async () => base)
+			);
+
+			expect(await render("k-plugins-test-lazy-loaded")).toBe("base");
+
+			const result = resolveComponentExtension(app, "k-plugins-test-lazy", {
+				extends: "k-plugins-test-lazy-loaded"
+			});
+
+			expect(result.extends).toBe(base);
 		});
 	});
 
@@ -213,6 +242,68 @@ describe("panel.plugins", () => {
 			});
 			expect(plugins.components["k-plugins-default"]).toStrictEqual(component);
 			expect(isComponent("k-plugins-default", app)).toBe(true);
+		});
+
+		it("installs a component extending a lazy component once it has loaded", async () => {
+			const base = {
+				props: { label: String },
+				methods: {
+					greet: () => "Hello"
+				},
+				template: "<p>{{ greet() }} {{ label }}</p>"
+			};
+
+			app.component(
+				"k-plugins-lazy",
+				defineAsyncComponent(async () => base)
+			);
+
+			const component = {
+				extends: "k-plugins-lazy",
+				methods: {
+					greet: () => "Hi"
+				}
+			};
+
+			const plugins = Plugins(app, {
+				components: { "k-plugins-lazy-extended": component }
+			});
+
+			// options stay exposed for kirbyup's HMR
+			expect(plugins.components["k-plugins-lazy-extended"]).toBe(component);
+
+			expect(await render("k-plugins-lazy-extended", { label: "Kirby" })).toBe(
+				"Hi Kirby"
+			);
+			expect(component.extends).toBe(base);
+		});
+
+		it("installs a component extending a plugin component that extends a lazy component", async () => {
+			app.component(
+				"k-plugins-lazy-base",
+				defineAsyncComponent(async () => ({
+					methods: {
+						greet: () => "Hello"
+					},
+					template: "<p>base</p>"
+				}))
+			);
+
+			const component = {
+				extends: "k-plugins-lazy-a",
+				mixins: ["dialog"],
+				template: "<p>{{ greet() }} b</p>"
+			};
+
+			Plugins(app, {
+				components: {
+					"k-plugins-lazy-a": { extends: "k-plugins-lazy-base" },
+					"k-plugins-lazy-b": component
+				}
+			});
+
+			expect(await render("k-plugins-lazy-b")).toBe("Hello b");
+			expect(component.mixins).toStrictEqual([dialog]);
 		});
 
 		it("installs a component with a render function", () => {

@@ -3,6 +3,7 @@
  * @license   https://getkirby.com/license
  */
 
+import { defineAsyncComponent } from "vue";
 import type {
 	App,
 	ComponentOptions,
@@ -24,6 +25,14 @@ type Component = Omit<ComponentOptions, "extends" | "mixins" | "render"> & {
 	// `null` explicitly clears an inherited render method so the component's
 	// own template is used instead (see resolveComponentRender)
 	render?: ComponentOptions["render"] | null;
+};
+
+/**
+ * Vue's internal markers on a `defineAsyncComponent()` wrapper
+ */
+type Lazy = {
+	__asyncLoader?: () => Promise<ConcreteComponent>;
+	__asyncResolved?: ConcreteComponent;
 };
 
 // mixins
@@ -49,14 +58,8 @@ function install(app: App, name: string, component: Component): Component {
 		);
 	}
 
-	// extend the component if it defines extensions
-	component = resolveComponentExtension(app, name, component);
-
-	// remove a render method if there's a template
-	component = resolveComponentRender(component);
-
-	// add mixins
-	component = resolveComponentMixins(component);
+	// resolve extends, render and mixins
+	const resolved = resolveComponent(app, name, component);
 
 	// check if the component is replacing a core component
 	if (isComponent(name, app) === true) {
@@ -64,7 +67,7 @@ function install(app: App, name: string, component: Component): Component {
 	}
 
 	// register the component (strings in mixins/extends are resolved at this point)
-	app.component(name, component as ComponentOptions);
+	app.component(name, resolved as ComponentOptions);
 
 	// return component options
 	return component;
@@ -93,6 +96,44 @@ export async function load(scripts?: string[]): Promise<void> {
 }
 
 /**
+ * Resolves the extension, render method and mixins of a component;
+ * a component extending a lazy-loaded component (e.g. `k-writer-input`)
+ * turns lazy too and gets resolved once the latter has loaded
+ * @since 6.0.0
+ */
+function resolveComponent(
+	app: App,
+	name: string,
+	component: Component
+): Component | ConcreteComponent {
+	const parent =
+		typeof component.extends === "string"
+			? (app.component(component.extends) as Lazy | undefined)
+			: undefined;
+
+	if (
+		parent?.__asyncLoader !== undefined &&
+		parent.__asyncResolved === undefined
+	) {
+		const loader = parent.__asyncLoader;
+
+		return defineAsyncComponent(async () => {
+			await loader();
+			return resolveComponent(app, name, component) as ComponentOptions;
+		});
+	}
+
+	// extend the component if it defines extensions
+	component = resolveComponentExtension(app, name, component);
+
+	// remove a render method if there's a template
+	component = resolveComponentRender(component);
+
+	// add mixins
+	return resolveComponentMixins(component);
+}
+
+/**
  * Resolves a component extension if defined as component name
  * @since 4.0.0
  */
@@ -117,7 +158,10 @@ function resolveComponentExtension(
 		return component;
 	}
 
-	component.extends = app.component(component.extends) as ComponentOptions;
+	const parent = app.component(component.extends) as ConcreteComponent & Lazy;
+
+	// a lazy-loaded component is extended by its loaded definition
+	component.extends = parent.__asyncResolved ?? parent;
 
 	return component;
 }
