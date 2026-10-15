@@ -200,6 +200,29 @@ class InventoryTest extends TestCase
 		$this->assertSame('article', $inventory['template']);
 	}
 
+	public function testForMultilangWithoutChildren(): void
+	{
+		// the default language is only needed to match children
+		new App([
+			'roots' => [
+				'index' => '/dev/null'
+			]
+		]);
+
+		Page::$models = [
+			'article' => 'A'
+		];
+
+		$this->create([
+			'article.en.txt'
+		]);
+
+		$inventory = Inventory::for(static::TMP, 'txt', null, true);
+
+		$this->assertSame([], $inventory['children']);
+		$this->assertSame('article', $inventory['template']);
+	}
+
 	public function testForChildModels(): void
 	{
 		Page::$models = [
@@ -218,6 +241,33 @@ class InventoryTest extends TestCase
 		$this->assertSame('a', $inventory['children'][0]['model']);
 		$this->assertSame('b', $inventory['children'][1]['model']);
 		$this->assertNull($inventory['children'][2]['model']);
+	}
+
+	public function testForChildModelsOfSiblings(): void
+	{
+		Page::$models = [
+			'a' => 'A',
+			'b' => 'A',
+			'c' => 'A'
+		];
+
+		// siblings' models are tried first,
+		// which must not leak into the next child
+		$this->create([
+			'1_child/c.txt',
+			'2_child/c.txt',
+			'3_child/a.txt',
+			'4_child/d.txt',
+			'5_child/b.txt',
+			'6_child/c.txt',
+		]);
+
+		$inventory = Inventory::for(static::TMP);
+
+		$this->assertSame(
+			['c', 'c', 'a', null, 'b', 'c'],
+			array_column($inventory['children'], 'model')
+		);
 	}
 
 	public function testForNonExistingDir(): void
