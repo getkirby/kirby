@@ -13,6 +13,84 @@ class RouterTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.Panel';
 
+	protected function call(
+		string $path,
+		array $query = [],
+		string $method = 'GET',
+		bool $login = true
+	): Response {
+		$_SERVER['SERVER_SOFTWARE'] = 'php';
+
+		$this->app = $this->app->clone([
+			'areas' => [
+				'test' => fn () => [
+					'requests' => [
+						'test' => [
+							'pattern' => 'test/request',
+							'action'  => fn () => ['message' => 'Done']
+						]
+					],
+					'views' => [
+						'test' => [
+							'pattern' => 'test/view',
+							'action'  => fn () => ['component' => 'k-test-view']
+						]
+					]
+				]
+			],
+			'options' => [
+				'api' => ['csrf' => 'test-csrf']
+			],
+			'request' => [
+				'method' => $method,
+				'query'  => $query
+			],
+			'users' => [
+				['email' => 'test@getkirby.com', 'role' => 'admin']
+			]
+		]);
+
+		// a real session login, as impersonation skips the CSRF check
+		if ($login === true) {
+			$this->app->user('test@getkirby.com')->loginPasswordless();
+		}
+
+		return $this->app->panel()->router()->call($path);
+	}
+
+	public function testCallWithCsrf(): void
+	{
+		$response = $this->call('test/request', ['csrf' => 'test-csrf']);
+		$this->assertSame(200, $response->code());
+		$this->assertSame('Done', json_decode($response->body(), true)['message']);
+	}
+
+	public function testCallWithoutCsrf(): void
+	{
+		$response = $this->call('test/request');
+		$this->assertSame(400, $response->code());
+		$this->assertSame(
+			'Invalid CSRF token',
+			json_decode($response->body(), true)['message']
+		);
+	}
+
+	public function testCallWithoutCsrfForLogin(): void
+	{
+		$response = $this->call('login/method/password', [], 'POST', false);
+		$this->assertSame(400, $response->code());
+		$this->assertSame(
+			'Invalid CSRF token',
+			json_decode($response->body(), true)['message']
+		);
+	}
+
+	public function testCallWithoutCsrfForView(): void
+	{
+		$response = $this->call('test/view', ['_json' => true]);
+		$this->assertSame(200, $response->code());
+	}
+
 	public function testIcons(): void
 	{
 		$router   = new Router($this->app->panel());

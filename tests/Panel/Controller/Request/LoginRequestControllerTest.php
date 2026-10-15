@@ -7,7 +7,6 @@ use Kirby\Auth\Challenges;
 use Kirby\Auth\Pending;
 use Kirby\Cms\User;
 use Kirby\Email\Email;
-use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Panel\Redirect;
@@ -158,24 +157,6 @@ class LoginRequestControllerTest extends TestCase
 		(new LoginRequestController('method', 'password'))->load();
 	}
 
-	public function testLoadInvalidCsrf(): void
-	{
-		$this->app = $this->app->clone([
-			'request' => [
-				'query' => [
-					'email'    => 'test@example.com',
-					'password' => 'secret123',
-				]
-			]
-		]);
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid CSRF token');
-
-		$controller = new LoginRequestController('method', 'password');
-		$controller->load();
-	}
-
 	public function testLoadUnknownType(): void
 	{
 		$this->app = $this->app->clone([
@@ -234,16 +215,6 @@ class LoginRequestControllerTest extends TestCase
 		$this->assertInstanceOf(Redirect::class, $exception);
 		$this->assertStringEndsWith('login/challenge/switch-test2', $exception->location());
 		$this->assertSame('switch-test2', $session->get('kirby.challenge.type'));
-	}
-
-	public function testSwitchRequiresCsrf(): void
-	{
-		// switch goes through the same CSRF gate as the other types
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid CSRF token');
-
-		$controller = new LoginRequestController('switch', 'switch-test2');
-		$controller->load();
 	}
 
 	public function testSwitchWithoutPendingState(): void
