@@ -13,14 +13,21 @@ import { isAbortError } from "@/helpers/error";
 import { toLowerKeys } from "@/helpers/object";
 import { buildUrl, isSameOrigin, makeAbsolute } from "@/helpers/url";
 
-export interface PanelResponse {
+/**
+ * @since 6.0.0
+ */
+export interface HttpResponse {
 	headers: Headers;
-	json: Record<string, unknown>;
+	json: Record<string, unknown> | null;
 	ok: boolean;
 	status: number;
 	statusText: string;
 	text: string;
 	url: string;
+}
+
+export interface PanelResponse extends Omit<HttpResponse, "json"> {
+	json: Record<string, unknown>;
 }
 
 export type RequestBody =
@@ -36,6 +43,7 @@ export interface PanelRequestOptions extends Omit<
 > {
 	body: RequestBody;
 	csrf?: string;
+	external?: boolean;
 	globals?: string | string[];
 	headers: Record<string, string>;
 	language?: string | null;
@@ -61,6 +69,73 @@ export function body(data: RequestBody | undefined): string | null | undefined {
 	}
 
 	return data;
+}
+
+/**
+ * Sends a plain request to a third-party URL without
+ * any of the Panel's headers or response handling
+ * @since 6.0.0
+ */
+export async function external(
+	url: string | URL,
+	options: Partial<PanelRequestOptions> = {}
+): Promise<{ request: Request; response: HttpResponse }> {
+	// Panel-only options must not reach the third party
+	const {
+		body: data,
+		csrf,
+		external,
+		globals,
+		headers,
+		language,
+		query,
+		referrer,
+		...rest
+	} = options;
+
+	const payload = body(data);
+
+	const req = new Request(buildUrl(url, query), {
+		...rest,
+		body: payload,
+		// without a payload, skip the content type to avoid a CORS preflight
+		headers: payload
+			? { "content-type": "application/json", ...toLowerKeys(headers ?? {}) }
+			: headers
+	});
+
+	// no safeFetch: a dead endpoint must not mark the Panel offline
+	const raw = await fetch(req);
+
+	const response: HttpResponse = {
+		headers: raw.headers,
+		json: null,
+		ok: raw.ok,
+		status: raw.status,
+		statusText: raw.statusText,
+		text: await raw.text(),
+		url: raw.url
+	};
+
+	if (raw.headers.get("Content-Type")?.includes("json") === true) {
+		try {
+			response.json = JSON.parse(response.text);
+		} catch {
+			// no JsonRequestError: the fatal view renders its text as Panel HTML
+		}
+	}
+
+	if (response.ok === false) {
+		throw new RequestError(`The request to ${req.url} failed`, {
+			request: req,
+			response
+		});
+	}
+
+	return {
+		request: req,
+		response
+	};
 }
 
 /**
@@ -125,12 +200,29 @@ export function redirect(url: string | URL): never {
  * It also makes sure to redirect requests,
  * which cannot be handled via fetch and
  * throws more useful errors.
+ * Pass `external: true` for third-party URLs.
  * @since 4.0.0
  */
 export async function request(
 	url: string | URL,
+	options: Partial<PanelRequestOptions> & { external: true }
+): Promise<{ request: Request; response: HttpResponse }>;
+export async function request(
+	url: string | URL,
+	options?: Partial<PanelRequestOptions> & { external?: false }
+): Promise<{ request: Request; response: PanelResponse }>;
+export async function request(
+	url: string | URL,
+	options?: Partial<PanelRequestOptions>
+): Promise<{ request: Request; response: HttpResponse | PanelResponse }>;
+export async function request(
+	url: string | URL,
 	options: Partial<PanelRequestOptions> = {}
-): Promise<{ request: Request; response: PanelResponse }> {
+): Promise<{ request: Request; response: HttpResponse | PanelResponse }> {
+	if (options.external === true) {
+		return await external(url, options);
+	}
+
 	// extract Request options from options
 	const { csrf, globals, language, referrer, query, ...rest } = options;
 

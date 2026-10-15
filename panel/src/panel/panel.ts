@@ -22,7 +22,13 @@ import Translation, { type TranslationState } from "./translation";
 import Upload from "./upload";
 import User, { type UserState } from "./user";
 import View, { type ViewState } from "./view";
-import { type PanelRequestOptions, redirect, request } from "./request";
+import {
+	type HttpResponse,
+	type PanelRequestOptions,
+	type PanelResponse,
+	redirect,
+	request
+} from "./request";
 import { isAbortError } from "@/helpers/error";
 import { isObject, length } from "@/helpers/object";
 import { isEmpty } from "@/helpers/string";
@@ -447,7 +453,20 @@ export default class Panel {
 	 * It also makes sure to redirect requests,
 	 * which cannot be handled via fetch and
 	 * throws more useful errors.
+	 * Pass `external: true` for third-party URLs.
 	 */
+	async request(
+		url: string | URL,
+		options: Partial<PanelRequestOptions> & { external: true }
+	): Promise<{ request: Request; response: HttpResponse }>;
+	async request(
+		url: string | URL,
+		options?: Partial<PanelRequestOptions> & { external?: false }
+	): Promise<{ request: Request; response: PanelResponse }>;
+	async request(
+		url: string | URL,
+		options?: Partial<PanelRequestOptions>
+	): Promise<{ request: Request; response: HttpResponse | PanelResponse }>;
 	async request(url: string | URL, options: Partial<PanelRequestOptions> = {}) {
 		return request(url, {
 			referrer: this.view.path ?? undefined,

@@ -7,12 +7,27 @@ import RequestError from "@/errors/RequestError";
 import { HtmlString } from "./html";
 import {
 	body,
+	external,
 	globals,
 	headers,
 	redirect,
+	request,
 	responder,
 	safeFetch
 } from "./request";
+
+function jsonResponse(body: unknown, status = 200) {
+	return new Response(JSON.stringify(body), {
+		status,
+		headers: { "Content-Type": "application/json" }
+	});
+}
+
+function stubFetch(response: Response) {
+	const mock = vi.fn().mockResolvedValue(response);
+	vi.stubGlobal("fetch", mock);
+	return mock;
+}
 
 describe("panel.request", () => {
 	describe("body()", () => {
@@ -45,6 +60,133 @@ describe("panel.request", () => {
 
 		it("should return undefined for undefined", () => {
 			expect(body(undefined)).toStrictEqual(undefined);
+		});
+	});
+
+	describe("external()", () => {
+		afterEach(() => vi.unstubAllGlobals());
+
+		it("should not send any Panel options", async () => {
+			const mock = stubFetch(jsonResponse({}));
+
+			await external("https://example.com/api", {
+				csrf: "secret",
+				globals: "$language",
+				language: "de",
+				referrer: "/pages/test"
+			});
+
+			const req = mock.mock.calls[0][0] as Request;
+			expect(req.headers.get("x-csrf")).toStrictEqual(null);
+			expect(req.headers.get("x-language")).toStrictEqual(null);
+			expect(req.headers.get("x-panel")).toStrictEqual(null);
+			expect(req.headers.get("x-panel-globals")).toStrictEqual(null);
+			expect(req.referrer).not.toContain("/pages/test");
+		});
+
+		it("should not send a content type without a body", async () => {
+			const mock = stubFetch(jsonResponse({}));
+
+			await external("https://example.com/api");
+
+			const req = mock.mock.calls[0][0] as Request;
+			expect(req.headers.get("content-type")).toStrictEqual(null);
+		});
+
+		it("should send a JSON body with content type", async () => {
+			const mock = stubFetch(jsonResponse({}));
+
+			await external("https://example.com/api", {
+				method: "POST",
+				body: { a: "A" }
+			});
+
+			const req = mock.mock.calls[0][0] as Request;
+			expect(req.headers.get("content-type")).toStrictEqual("application/json");
+			expect(await req.text()).toStrictEqual('{"a":"A"}');
+		});
+
+		it("should prefer a custom content type", async () => {
+			const mock = stubFetch(jsonResponse({}));
+
+			await external("https://example.com/api", {
+				method: "POST",
+				body: "Hello",
+				headers: { "Content-Type": "text/plain" }
+			});
+
+			const req = mock.mock.calls[0][0] as Request;
+			expect(req.headers.get("content-type")).toStrictEqual("text/plain");
+		});
+
+		it("should add query parameters", async () => {
+			const mock = stubFetch(jsonResponse({}));
+
+			await external("https://example.com/api", { query: { search: "Foo" } });
+
+			const req = mock.mock.calls[0][0] as Request;
+			expect(req.url).toStrictEqual("https://example.com/api?search=Foo");
+		});
+
+		it("should parse a JSON response", async () => {
+			stubFetch(jsonResponse({ message: "ok" }));
+
+			const { response } = await external("https://example.com/api");
+			expect(response.json).toStrictEqual({ message: "ok" });
+			expect(response.text).toStrictEqual('{"message":"ok"}');
+		});
+
+		it("should not rewrap <key> payloads into HtmlString instances", async () => {
+			stubFetch(jsonResponse({ "<help>": "<b>untrusted</b>" }));
+
+			const { response } = await external("https://example.com/api");
+			expect(response.json).toStrictEqual({ "<help>": "<b>untrusted</b>" });
+		});
+
+		it("should keep json null for a text response", async () => {
+			stubFetch(
+				new Response("Hello", { headers: { "Content-Type": "text/plain" } })
+			);
+
+			const { response } = await external("https://example.com/api");
+			expect(response.json).toStrictEqual(null);
+			expect(response.text).toStrictEqual("Hello");
+		});
+
+		it("should keep invalid JSON as text", async () => {
+			stubFetch(
+				new Response("<script>alert(1)</script>", {
+					headers: { "Content-Type": "application/json" }
+				})
+			);
+
+			const { response } = await external("https://example.com/api");
+			expect(response.json).toStrictEqual(null);
+			expect(response.text).toStrictEqual("<script>alert(1)</script>");
+		});
+
+		it("should throw RequestError for a non-ok response", async () => {
+			stubFetch(jsonResponse({ message: "Server Error" }, 500));
+
+			const error = await external("https://example.com/api").catch((e) => e);
+			expect(error).toBeInstanceOf(RequestError);
+			expect(error).not.toBeInstanceOf(JsonRequestError);
+			expect(error.message).toStrictEqual("Server Error");
+		});
+
+		it("should throw RequestError for a non-ok text response", async () => {
+			stubFetch(new Response("Nope", { status: 500 }));
+
+			await expect(external("https://example.com/api")).rejects.toThrow(
+				"The request to https://example.com/api failed"
+			);
+		});
+
+		it("should not go offline on network failure", async () => {
+			const error = new TypeError("Failed to fetch");
+			vi.stubGlobal("fetch", vi.fn().mockRejectedValue(error));
+
+			await expect(external("https://example.com/api")).rejects.toBe(error);
 		});
 	});
 
@@ -129,15 +271,41 @@ describe("panel.request", () => {
 		});
 	});
 
+	describe("request()", () => {
+		afterEach(() => vi.unstubAllGlobals());
+
+		it("should redirect cross-origin requests", async () => {
+			await expect(request("https://example.com/api")).rejects.toThrow(
+				RedirectError
+			);
+		});
+
+		it("should fetch cross-origin requests when external", async () => {
+			const mock = stubFetch(jsonResponse({ message: "ok" }));
+
+			const { response } = await request("https://example.com/api", {
+				csrf: "secret",
+				external: true
+			});
+
+			const req = mock.mock.calls[0][0] as Request;
+			expect(req.headers.get("x-csrf")).toStrictEqual(null);
+			expect(response.json).toStrictEqual({ message: "ok" });
+		});
+
+		it("should send Panel headers for same-origin requests", async () => {
+			const mock = stubFetch(jsonResponse({ message: "ok" }));
+
+			await request("/api/test", { csrf: "secret" });
+
+			const req = mock.mock.calls[0][0] as Request;
+			expect(req.headers.get("x-panel")).toStrictEqual("true");
+			expect(req.headers.get("x-csrf")).toStrictEqual("secret");
+		});
+	});
+
 	describe("responder()", () => {
 		const req = new Request("https://example.com/api");
-
-		function jsonResponse(body: unknown, status = 200) {
-			return new Response(JSON.stringify(body), {
-				status,
-				headers: { "Content-Type": "application/json" }
-			});
-		}
 
 		it("should return parsed response for successful JSON", async () => {
 			const { response } = await responder(
