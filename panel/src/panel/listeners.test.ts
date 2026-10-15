@@ -32,6 +32,18 @@ describe("panel.listeners", () => {
 			);
 			warn.mockRestore();
 		});
+
+		it("should not warn when re-registering the same listener", () => {
+			const listeners = Listeners();
+			const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+			const submit = vi.fn();
+			listeners.addEventListener("submit", submit);
+			listeners.addEventListener("submit", submit);
+			listeners.emit("submit");
+			expect(submit).toHaveBeenCalledOnce();
+			expect(warn).not.toHaveBeenCalled();
+			warn.mockRestore();
+		});
 	});
 
 	describe("addEventListeners()", () => {

@@ -26,6 +26,11 @@ export default function Listeners() {
 				return;
 			}
 
+			// re-registering the same callback is a no-op
+			if (this.on[event] === callback) {
+				return;
+			}
+
 			if (this.hasEventListener(event) === true) {
 				console.warn(
 					`Listener for "${event}" already exists and will be overwritten`
