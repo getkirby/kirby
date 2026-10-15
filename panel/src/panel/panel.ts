@@ -23,6 +23,7 @@ import Upload from "./upload";
 import User, { type UserState } from "./user";
 import View, { type ViewState } from "./view";
 import { type PanelRequestOptions, redirect, request } from "./request";
+import { wrap } from "@/helpers/array";
 import { isAbortError } from "@/helpers/error";
 import { isObject, length } from "@/helpers/object";
 import { isEmpty } from "@/helpers/string";
@@ -48,6 +49,17 @@ type Urls = {
 	icons: string;
 	panel: string;
 	site: string;
+};
+
+/**
+ * What a response can ask the Panel to do next
+ * @since 6.0.0
+ */
+export type PanelResponseActions = {
+	event?: string | string[];
+	message?: string;
+	redirect?: string | { url: string; options?: Record<string, unknown> } | null;
+	reload?: boolean | Parameters<Panel["reload"]>[0];
 };
 
 export type PanelState = {
@@ -334,6 +346,35 @@ export default class Panel {
 				this.error(e);
 			}
 			return;
+		}
+	}
+
+	/**
+	 * Acts on the `message`, `event`, `redirect`
+	 * and `reload` actions of a response
+	 * @since 6.0.0
+	 */
+	async act(response: PanelResponseActions = {}): Promise<unknown> {
+		const { event, message, redirect, reload } = response;
+
+		if (message) {
+			this.notification.success(message);
+		}
+
+		for (const name of wrap(event ?? [])) {
+			this.events.emit(name, response);
+		}
+
+		if (redirect) {
+			if (typeof redirect === "string") {
+				return await this.open(redirect);
+			}
+
+			return await this.open(redirect.url, redirect.options);
+		}
+
+		if (reload) {
+			return await this.view.reload(reload === true ? {} : reload);
 		}
 	}
 

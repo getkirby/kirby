@@ -7,22 +7,17 @@ import Feature, {
 import History from "@/helpers/history";
 import focus from "@/helpers/focus";
 import { uuid } from "@/helpers/string";
-import { wrap } from "@/helpers/array";
 import { type Listener } from "./listeners";
-import Panel from "./panel";
+import Panel, { type PanelResponseActions } from "./panel";
 
 export type ModalState = FeatureState & {
 	id: string | null;
 	props: Record<string, unknown>;
 };
 
-type ModalSubmitResponse = {
+type ModalSubmitResponse = PanelResponseActions & {
 	emit?: false;
-	event?: string | string[];
-	message?: string;
-	redirect?: string | { url: string; options?: Record<string, unknown> };
-	reload?: Parameters<Panel["reload"]>[0];
-	route?: string | { url: string; options?: Record<string, unknown> };
+	route?: PanelResponseActions["redirect"];
 };
 
 /**
@@ -309,72 +304,19 @@ export default function Modal<T extends ModalState>(
 				return;
 			}
 
-			// show a success message
-			this.successNotification(success);
+			// dialogs and drawers reload the view unless redirected
+			panel.act({
+				...success,
+				redirect: success.route ?? success.redirect,
+				reload: success.reload ?? true
+			});
 
-			// send custom events to the event bus
-			this.successEvents(success);
-
-			// redirect or reload
-			if (success.route || success.redirect) {
-				// handle any redirects
-				this.successRedirect(success);
-			} else {
-				// reload the parent view to show changes
-				panel.view.reload(success.reload);
+			// emit a success event
+			if (success.emit !== false) {
+				panel.events.emit("success", success);
 			}
 
 			return success;
-		},
-
-		/**
-		 * Emit all events that might be in the response
-		 */
-		successEvents(state: ModalSubmitResponse): void {
-			if (state.event) {
-				// wrap single events to treat them all at once
-				const events = wrap(state.event);
-
-				// emit all defined events
-				for (const event of events) {
-					if (typeof event === "string") {
-						panel.events.emit(event, state);
-					}
-				}
-			}
-
-			// emit a success event
-			if (state.emit !== false) {
-				panel.events.emit("success", state);
-			}
-		},
-
-		/**
-		 * Sends a success notification if the
-		 * response contains a success message
-		 */
-		successNotification(state: ModalSubmitResponse): void {
-			if (state.message) {
-				panel.notification.success(state.message);
-			}
-		},
-
-		/**
-		 * Handles redirects in submit responses
-		 */
-		successRedirect(state: ModalSubmitResponse): unknown | false {
-			const redirect = state.route ?? state.redirect;
-
-			// no redirect
-			if (!redirect) {
-				return false;
-			}
-
-			if (typeof redirect === "string") {
-				return panel.open(redirect);
-			}
-
-			return panel.open(redirect.url, redirect.options);
 		},
 
 		/**
