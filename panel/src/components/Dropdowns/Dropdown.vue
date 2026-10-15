@@ -27,6 +27,7 @@
 							:key="'item-' + index"
 							v-bind="option"
 							:click="() => onOptionClick(option)"
+							@success="close"
 						>
 							{{ option.label ?? option.text }}
 						</k-dropdown-item>
@@ -153,7 +154,14 @@ export default {
 		focus(n = 0) {
 			this.$refs.navigate.focus(n);
 		},
-		onClick() {
+		async onClick(e) {
+			// keep the dropdown open while an item sends its request
+			await this.$nextTick();
+
+			if (e?.target?.closest?.('[aria-busy="true"]')) {
+				return;
+			}
+
 			this.close();
 		},
 		onClose() {

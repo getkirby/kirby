@@ -99,7 +99,13 @@ export default {
 			}));
 		},
 		isDisabled(crumb) {
-			return !crumb.link && !crumb.click && !crumb.dialog && !crumb.drawer;
+			return (
+				!crumb.link &&
+				!crumb.click &&
+				!crumb.dialog &&
+				!crumb.drawer &&
+				!crumb.request
+			);
 		},
 		visible(offset) {
 			if (offset > 0) {
