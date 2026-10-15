@@ -6,6 +6,7 @@ use Exception;
 use Kirby\Data\Json;
 use Kirby\Exception\Exception as KirbyException;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Panel\Redirect;
 use Kirby\Panel\TestCase;
@@ -131,6 +132,27 @@ class JsonResponseTest extends TestCase
 
 	public function testFromKirbyException(): void
 	{
+		$output   = JsonResponse::from(new LogicException(key: 'page.delete.hasChildren'));
+		$expected = [
+			'status'  => 'error',
+			'message' => 'The page has subpages and cannot be deleted',
+			'code'    => 400,
+			'key'     => 'error.page.delete.hasChildren',
+			'details' => []
+		];
+
+		$this->assertSame(400, $output->code());
+		$this->assertSame($expected, Json::decode($output->body()));
+	}
+
+	public function testFromKirbyExceptionInDebugMode(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'debug' => true
+			]
+		]);
+
 		$this->expectException(KirbyException::class);
 		$this->expectExceptionMessage('Error message');
 

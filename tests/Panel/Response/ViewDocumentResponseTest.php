@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Response;
 
 use Kirby\Exception\NotFoundException;
+use Kirby\Exception\PermissionException;
 use Kirby\Panel\State;
 use Kirby\Panel\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -61,6 +62,14 @@ class ViewDocumentResponseTest extends TestCase
 	{
 		$response = new ViewDocumentResponse();
 		$this->assertInstanceOf(State::class, $response->state());
+	}
+
+	public function testFromKirbyException(): void
+	{
+		$response = ViewDocumentResponse::from(new PermissionException('test'));
+
+		$this->assertSame(403, $response->code());
+		$this->assertSame('test', $response->state()->view()['error']);
 	}
 
 	public function testFromNotFoundException(): void
