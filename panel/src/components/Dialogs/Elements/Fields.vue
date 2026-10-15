@@ -60,6 +60,9 @@ export default {
 	padding-bottom: 0.5rem;
 	container-type: inline-size;
 }
+.k-dialog-text + .k-dialog-fields {
+	margin-top: var(--spacing-6);
+}
 /** The line field is creating a huge gap, which is too much in dialogs **/
 .k-dialog-fields .k-line-field {
 	height: 2px;
