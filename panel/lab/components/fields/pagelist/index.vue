@@ -16,10 +16,6 @@
 				<k-lab-pagelist-field label="Pages" />
 			</k-lab-example>
 
-			<k-lab-example label="Loading: table">
-				<k-lab-pagelist-field :columns="columns" label="Pages" layout="table" />
-			</k-lab-example>
-
 			<k-lab-example label="Help">
 				<k-lab-pagelist-field
 					:initial="state(pages)"

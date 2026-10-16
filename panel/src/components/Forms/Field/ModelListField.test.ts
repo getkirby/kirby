@@ -82,18 +82,25 @@ describe("ModelListField.vue", () => {
 			expect(wrapper.vm.isLoading).toBe(false);
 		});
 
-		it("shows a skeleton until the entries arrive", async () => {
+		it("shows a loading empty state until the entries arrive", async () => {
 			const wrapper = mount();
 
 			expect(wrapper.vm.isLoading).toBe(true);
-			expect(wrapper.vm.skeleton).toHaveLength(1);
-			expect(wrapper.vm.skeleton[0].theme).toBe("skeleton");
+			expect(wrapper.vm.items).toStrictEqual([]);
+			expect(wrapper.vm.emptyProps).toStrictEqual({
+				icon: "loader",
+				text: "loading"
+			});
 
 			// the entries are unknown, so the list cannot be validated yet
 			expect(wrapper.vm.validator).toStrictEqual({ count: 0 });
 
 			await flushPromises();
 
+			expect(wrapper.vm.emptyProps).toStrictEqual({
+				icon: "box",
+				text: "models.empty"
+			});
 			expect(wrapper.vm.validator).toStrictEqual({
 				count: 0,
 				max: undefined,
