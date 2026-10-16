@@ -60,7 +60,8 @@ export const props = {
 		 */
 		removable: Boolean,
 		/**
-		 * @values "dark"|"light"
+		 * Color themes tint the light tag
+		 * @values "dark"|"light"|"positive"|"negative"|"notice"|"warning"|"info"
 		 * @since 5.0.0
 		 */
 		theme: {
@@ -150,6 +151,7 @@ export default {
 :root {
 	--tag-color-back: var(--color-gray-950);
 	--tag-color-text: var(--color-white);
+	--tag-color-icon: currentColor;
 	--tag-color-toggle: currentColor;
 	--tag-color-disabled-back: var(--color-gray-600);
 	--tag-color-disabled-text: var(--tag-color-text);
@@ -161,6 +163,15 @@ export default {
 .k-tag[data-theme="light"] {
 	--tag-color-back: var(--panel-color-back);
 	--tag-color-text: var(--color-text);
+	--tag-color-disabled-back: var(--color-gray-200);
+	--tag-color-disabled-text: var(--color-gray-600);
+}
+
+/* color themes, e.g. `negative`, tint the light tag */
+.k-tag[data-theme]:not([data-theme="dark"], [data-theme="light"]) {
+	--tag-color-back: light-dark(var(--theme-color-300), var(--theme-color-850));
+	--tag-color-text: var(--color-text);
+	--tag-color-icon: var(--theme-color-icon);
 	--tag-color-disabled-back: var(--color-gray-200);
 	--tag-color-disabled-text: var(--color-gray-600);
 }
@@ -195,6 +206,7 @@ button.k-tag:not([aria-disabled="true"]) {
 	border-start-start-radius: var(--tag-rounded);
 	border-end-start-radius: var(--tag-rounded);
 	background-clip: padding-box;
+	color: var(--tag-color-icon);
 }
 
 .k-tag-text {

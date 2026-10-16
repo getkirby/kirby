@@ -40,6 +40,14 @@
 			</k-lab-table-cell>
 		</k-lab-example>
 
+		<k-lab-example label="Missing page">
+			<k-lab-table-cell>
+				<!-- @code -->
+				<k-link-field-preview value="page://doesnotexist" />
+				<!-- @code-end -->
+			</k-lab-table-cell>
+		</k-lab-example>
+
 		<k-lab-example label="Anchor">
 			<k-lab-table-cell>
 				<!-- @code -->

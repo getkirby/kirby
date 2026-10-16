@@ -97,7 +97,11 @@ export default {
 
 					// the value might have changed while the request was in flight
 					if (key !== -1) {
-						this.tags[key] = { ...loaded[index], id };
+						// a model that does not exist (anymore) or
+						// must not be listed shows its stored ID
+						this.tags[key] = loaded[index]
+							? { ...loaded[index], id }
+							: this.unknown(id);
 					}
 				}
 			}
@@ -110,6 +114,14 @@ export default {
 		},
 		tag(item) {
 			return item;
+		},
+		unknown(id) {
+			return {
+				id,
+				text: id,
+				image: { icon: "alert" },
+				theme: "negative"
+			};
 		}
 	}
 };
