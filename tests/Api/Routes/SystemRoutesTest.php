@@ -4,6 +4,7 @@ namespace Kirby\Api;
 
 use Kirby\Cms\App;
 use Kirby\Cms\User;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\TestCase;
 
@@ -180,6 +181,14 @@ class SystemRoutesTest extends TestCase
 		$this->assertArrayNotHasKey('authStatus', $data);
 		$this->assertArrayNotHasKey('loginMethods', $data);
 		$this->assertArrayNotHasKey('user', $data);
+	}
+
+	public function testInstallWithoutCSRF(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid CSRF token');
+
+		$this->app->api()->call('system/install', 'POST');
 	}
 
 	public function testRegisterWithoutSystemAccess(): void
