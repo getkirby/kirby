@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import AuthError from "@/errors/AuthError";
+import ExternalRequestError from "@/errors/ExternalRequestError";
 import JsonRequestError from "@/errors/JsonRequestError";
 import OfflineError from "@/errors/OfflineError";
 import RedirectError from "@/errors/RedirectError";
@@ -64,7 +65,10 @@ describe("panel.request", () => {
 	});
 
 	describe("external()", () => {
-		afterEach(() => vi.unstubAllGlobals());
+		afterEach(() => {
+			vi.restoreAllMocks();
+			vi.unstubAllGlobals();
+		});
 
 		it("should not send any Panel options", async () => {
 			const mock = stubFetch(jsonResponse({}));
@@ -165,20 +169,47 @@ describe("panel.request", () => {
 			expect(response.text).toStrictEqual("<script>alert(1)</script>");
 		});
 
-		it("should throw RequestError for a non-ok response", async () => {
+		it("should throw ExternalRequestError for a non-ok response", async () => {
 			stubFetch(jsonResponse({ message: "Server Error" }, 500));
+			const t = vi.spyOn(window.panel, "t");
 
 			const error = await external("https://example.com/api").catch((e) => e);
-			expect(error).toBeInstanceOf(RequestError);
-			expect(error).not.toBeInstanceOf(JsonRequestError);
-			expect(error.message).toStrictEqual("Server Error");
+			expect(error).toBeInstanceOf(ExternalRequestError);
+			expect(error).not.toBeInstanceOf(RequestError);
+			expect(error.message).toStrictEqual("error.request.failed");
+			expect(error.response.json).toStrictEqual({ message: "Server Error" });
+			expect(t).toHaveBeenCalledWith("error.request.failed", {
+				url: "https://example.com/api"
+			});
 		});
 
-		it("should throw RequestError for a non-ok text response", async () => {
+		it("should not let the response pick the error dialog", async () => {
+			stubFetch(
+				jsonResponse(
+					{
+						message: "Please log in again",
+						key: "error.form.incomplete",
+						exception: "Kirby\\Exception\\FormValidationException",
+						details: { password: { label: "Password", message: ["Required"] } },
+						editor: "https://example.org",
+						trace: [{ url: "javascript:alert(1)" }]
+					},
+					500
+				)
+			);
+
+			const error = await external("https://example.com/api").catch((e) => e);
+			expect(error.message).toStrictEqual("error.request.failed");
+			expect(error.key).toStrictEqual(undefined);
+			expect(error.details).toStrictEqual(undefined);
+			expect(error.dialog).toStrictEqual(undefined);
+		});
+
+		it("should throw ExternalRequestError for a non-ok text response", async () => {
 			stubFetch(new Response("Nope", { status: 500 }));
 
 			await expect(external("https://example.com/api")).rejects.toThrow(
-				"The request to https://example.com/api failed"
+				"error.request.failed"
 			);
 		});
 

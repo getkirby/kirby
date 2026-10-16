@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import type { PanelResponse } from "@/panel/request";
 import AuthError from "@/errors/AuthError";
+import ExternalRequestError from "@/errors/ExternalRequestError";
 import JsonRequestError from "@/errors/JsonRequestError";
 import RedirectError from "@/errors/RedirectError";
 import RequestError from "@/errors/RequestError";
@@ -255,6 +256,27 @@ describe("panel.notification", () => {
 				component: "k-validation-error-dialog",
 				props: { message: "Please fix all form errors…", fields: details }
 			});
+		});
+
+		it("should open a generic error dialog for ExternalRequestError in view context", async () => {
+			const panel = Panel.create(app);
+			const notification = Notification(panel);
+			const open = vi.spyOn(panel.dialog, "open");
+			const { request, response } = makeRequestOptions({
+				message: "Please log in again",
+				key: "error.form.incomplete",
+				details: { password: { label: "Password", message: ["Required"] } }
+			});
+
+			notification.error(
+				new ExternalRequestError("The request failed", { request, response })
+			);
+
+			expect(open).toHaveBeenCalledWith({
+				component: "k-error-dialog",
+				props: { message: "The request failed", details: {} }
+			});
+			expect(notification.message).toStrictEqual("The request failed");
 		});
 
 		it("should open a generic error dialog for plain errors in view context", async () => {

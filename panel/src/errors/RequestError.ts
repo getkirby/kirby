@@ -1,4 +1,4 @@
-import type { HttpResponse } from "@/panel/request";
+import type { PanelResponse } from "@/panel/request";
 
 /**
  * Stores the request and response in the error
@@ -12,7 +12,7 @@ export default class RequestError extends Error {
 	details: unknown;
 	key: string | undefined;
 	request: Request;
-	response: HttpResponse;
+	response: PanelResponse;
 
 	constructor(
 		message: string,
@@ -22,17 +22,16 @@ export default class RequestError extends Error {
 			cause
 		}: {
 			request: Request;
-			response: HttpResponse;
+			response: PanelResponse;
 			cause?: unknown;
 		}
 	) {
-		super(
-			(response.json?.message ?? response.json?.error ?? message) as string,
-			{ cause }
-		);
+		super((response.json.message ?? response.json.error ?? message) as string, {
+			cause
+		});
 
-		this.details = response.json?.details;
-		this.key = response.json?.key as string | undefined;
+		this.details = response.json.details;
+		this.key = response.json.key as string | undefined;
 		this.request = request;
 		this.response = response;
 	}
@@ -78,6 +77,6 @@ export default class RequestError extends Error {
 	}
 
 	state() {
-		return this.response.json ?? {};
+		return this.response.json;
 	}
 }

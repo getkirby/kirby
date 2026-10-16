@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
-import type { HttpResponse } from "@/panel/request";
+import type { PanelResponse } from "@/panel/request";
 import RequestError from "./RequestError";
 
-function makeOptions(json: Record<string, unknown> | null = {}): {
+function makeOptions(json: Record<string, unknown> = {}): {
 	request: Request;
-	response: HttpResponse;
+	response: PanelResponse;
 } {
 	return {
 		request: new Request("https://example.com/api"),
@@ -47,12 +47,6 @@ describe("RequestError", () => {
 			const details = { field: "name", message: "required" };
 			const error = new RequestError("msg", makeOptions({ details }));
 			expect(error.details).toStrictEqual(details);
-		});
-
-		it("falls back to constructor message without json", () => {
-			const error = new RequestError("Fallback message", makeOptions(null));
-			expect(error.message).toBe("Fallback message");
-			expect(error.details).toBeUndefined();
 		});
 
 		it("stores request and response", () => {
@@ -126,11 +120,6 @@ describe("RequestError", () => {
 			const json = { message: "ok", details: { field: "name" } };
 			const error = new RequestError("msg", makeOptions(json));
 			expect(error.state()).toStrictEqual(json);
-		});
-
-		it("returns an empty object without json", () => {
-			const error = new RequestError("msg", makeOptions(null));
-			expect(error.state()).toStrictEqual({});
 		});
 	});
 });

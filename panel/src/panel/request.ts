@@ -4,6 +4,7 @@
  */
 
 import AuthError from "@/errors/AuthError.js";
+import ExternalRequestError from "@/errors/ExternalRequestError.js";
 import JsonRequestError from "@/errors/JsonRequestError.js";
 import OfflineError from "@/errors/OfflineError.js";
 import RedirectError from "@/errors/RedirectError.js";
@@ -125,11 +126,12 @@ export async function external(
 		}
 	}
 
+	// no RequestError: its message, key and details come from the response
 	if (response.ok === false) {
-		throw new RequestError(`The request to ${req.url} failed`, {
-			request: req,
-			response
-		});
+		throw new ExternalRequestError(
+			window.panel.t("error.request.failed", { url: req.url }),
+			{ request: req, response }
+		);
 	}
 
 	return {
