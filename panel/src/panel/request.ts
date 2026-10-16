@@ -274,8 +274,9 @@ export async function responder(
 ): Promise<{ request: Request; response: PanelResponse }> {
 	const type = raw.headers.get("Content-Type");
 
-	// redirect to non-json requests
-	if (type?.includes("application/json") === false) {
+	// follow successful non-JSON responses, e.g. a login page;
+	// failed ones, e.g. a proxy's error page, are errors instead
+	if (raw.ok === true && type?.includes("application/json") === false) {
 		return redirect(raw.url);
 	}
 
