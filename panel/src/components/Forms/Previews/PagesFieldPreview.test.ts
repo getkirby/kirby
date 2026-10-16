@@ -55,4 +55,23 @@ describe("PagesFieldPreview.vue", () => {
 			]);
 		});
 	});
+
+	// methods
+	describe("collect()", () => {
+		it("shows the stored ID for unknown items", async () => {
+			helper.items.mockResolvedValueOnce([{ text: "Home" }, undefined]);
+			const wrapper = mount({ value: ["page://a", "page://b"] });
+			await flushPromises();
+
+			expect(wrapper.vm.tags).toStrictEqual([
+				{ id: "page://a", text: "Home" },
+				{
+					id: "page://b",
+					text: "page://b",
+					image: { icon: "alert" },
+					theme: "negative"
+				}
+			]);
+		});
+	});
 });

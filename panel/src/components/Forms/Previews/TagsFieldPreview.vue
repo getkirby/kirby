@@ -13,7 +13,7 @@
 				:link="!removable ? tag.link : undefined"
 				:text="tag.text"
 				:removable="removable"
-				theme="light"
+				:theme="tag.theme ?? 'light'"
 				@remove="$emit('remove', $event)"
 			/>
 		</li>
