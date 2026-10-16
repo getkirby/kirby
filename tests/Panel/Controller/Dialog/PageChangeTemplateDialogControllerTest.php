@@ -68,7 +68,7 @@ class PageChangeTemplateDialogControllerTest extends TestCase
 
 		$this->assertSame('Change', $props['submitButton']['text']);
 		$this->assertSame('notice', $props['submitButton']['theme']);
-		$this->assertSame('a', $props['value']['template']);
+		$this->assertSame('a', $props['value']->template);
 	}
 
 	public function testLoadWithoutAlternatives(): void

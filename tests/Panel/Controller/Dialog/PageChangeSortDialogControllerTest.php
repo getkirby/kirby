@@ -61,7 +61,7 @@ class PageChangeSortDialogControllerTest extends TestCase
 		$props = $dialog->props();
 		$this->assertSame('Please select a position', $props['fields']['position']['label']);
 		$this->assertSame('Change', $props['submitButton']);
-		$this->assertSame(3, $props['value']['position']);
+		$this->assertSame(3, $props['value']->position);
 	}
 
 	public function testLoadDisabled(): void

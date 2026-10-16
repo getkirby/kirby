@@ -304,9 +304,9 @@ class PageCreateDialogControllerTest extends TestCase
 
 		$this->assertSame('Create as Draft', $props['submitButton']);
 
-		$this->assertSame('', $props['value']['slug']);
-		$this->assertSame('default', $props['value']['template']);
-		$this->assertSame('', $props['value']['title']);
+		$this->assertSame('', $props['value']->slug);
+		$this->assertSame('default', $props['value']->template);
+		$this->assertSame('', $props['value']->title);
 	}
 
 	public function testLoadWithMultipleBlueprints(): void

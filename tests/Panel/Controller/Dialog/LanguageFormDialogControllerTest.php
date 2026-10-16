@@ -109,7 +109,7 @@ class LanguageFormDialogControllerTest extends TestCase
 				'name'      => '',
 				'rules'     => '',
 			],
-			$props['value']
+			(array)$props['value']
 		);
 	}
 
@@ -130,7 +130,7 @@ class LanguageFormDialogControllerTest extends TestCase
 				'name'      => 'English',
 				'rules'     => []
 			],
-			$props['value']
+			(array)$props['value']
 		);
 	}
 

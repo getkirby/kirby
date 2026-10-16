@@ -24,8 +24,8 @@ class SystemLicenseActivateDialogControllerTest extends TestCase
 		$this->assertArrayHasKey('license', $props['fields']);
 		$this->assertArrayHasKey('email', $props['fields']);
 		$this->assertSame('Activate', $props['submitButton']['text']);
-		$this->assertNull($props['value']['license']);
-		$this->assertNull($props['value']['email']);
+		$this->assertNull($props['value']->license);
+		$this->assertNull($props['value']->email);
 	}
 
 	public function testSubmitWithInvalidLicense(): void

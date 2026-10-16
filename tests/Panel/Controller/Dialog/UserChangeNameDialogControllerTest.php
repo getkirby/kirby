@@ -46,7 +46,7 @@ class UserChangeNameDialogControllerTest extends TestCase
 		$props = $dialog->props();
 		$this->assertSame('Name', $props['fields']['name']['label']);
 		$this->assertSame('Rename', $props['submitButton']);
-		$this->assertNull($props['value']['name']);
+		$this->assertNull($props['value']->name);
 	}
 
 	public function testSubmit(): void

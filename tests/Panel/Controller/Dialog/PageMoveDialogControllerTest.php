@@ -63,8 +63,8 @@ class PageMoveDialogControllerTest extends TestCase
 		$this->assertSame('k-page-move-dialog', $dialog->component);
 
 		$props = $dialog->props();
-		$this->assertSame('page://a', $props['value']['parent']);
-		$this->assertSame('/pages/a+test', $props['value']['move']);
+		$this->assertSame('page://a', $props['value']->parent);
+		$this->assertSame('/pages/a+test', $props['value']->move);
 	}
 
 	public function testParent(): void

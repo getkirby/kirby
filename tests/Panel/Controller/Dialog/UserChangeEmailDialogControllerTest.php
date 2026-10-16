@@ -47,7 +47,7 @@ class UserChangeEmailDialogControllerTest extends TestCase
 		$this->assertSame('Email', $props['fields']['email']['label']);
 		$this->assertNull($props['fields']['email']['help']);
 		$this->assertSame('Change', $props['submitButton']);
-		$this->assertSame('test@getkirby.com', $props['value']['email']);
+		$this->assertSame('test@getkirby.com', $props['value']->email);
 	}
 
 	public function testLoadWithEmailChallenge(): void

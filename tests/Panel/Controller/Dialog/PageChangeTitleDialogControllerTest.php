@@ -56,8 +56,8 @@ class PageChangeTitleDialogControllerTest extends TestCase
 		$this->assertSame('Create from title', $props['fields']['slug']['wizard']['text']);
 		$this->assertSame('title', $props['fields']['slug']['wizard']['field']);
 
-		$this->assertSame('test', $props['value']['title']);
-		$this->assertSame('test', $props['value']['slug']);
+		$this->assertSame('test', $props['value']->title);
+		$this->assertSame('test', $props['value']->slug);
 
 		$this->assertSame('Change', $props['submitButton']);
 	}
