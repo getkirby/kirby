@@ -6,7 +6,6 @@ use Kirby\Auth\Auth;
 use Kirby\Auth\State;
 use Kirby\Cms\User;
 use Kirby\Exception\Exception;
-use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Panel\Controller\RequestController;
 use Kirby\Panel\Panel;
@@ -50,13 +49,6 @@ class LoginRequestController extends RequestController
 	public function load(): array
 	{
 		$auth = $this->kirby->auth();
-
-		// CSRF check
-		if ($auth->type() === 'session' && $auth->csrf() === false) {
-			throw new InvalidArgumentException(
-				message: 'Invalid CSRF token'
-			);
-		}
 
 		match ($this->type) {
 			'method'    => $this->authenticate($auth),

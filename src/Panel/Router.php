@@ -4,6 +4,7 @@ namespace Kirby\Panel;
 
 use Kirby\Api\Upload;
 use Kirby\Cms\App;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Http\Response;
 use Kirby\Http\Router as BaseRouter;
@@ -73,6 +74,16 @@ class Router
 					// check for access before executing area routes
 					if ($auth !== false) {
 						$this->panel->access()->area($areaId, throws: true);
+					}
+
+					// only views can be opened by navigating to them,
+					// all other routes need the CSRF token of the Panel
+					if (
+						$type !== 'view' &&
+						$this->kirby->auth()->type() === 'session' &&
+						$this->kirby->auth()->csrf() === false
+					) {
+						throw new InvalidArgumentException(key: 'csrf.invalid');
 					}
 
 					$result = $route->action()->call($route, ...$route->arguments());

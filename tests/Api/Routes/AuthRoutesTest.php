@@ -38,6 +38,14 @@ class AuthRoutesTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
+	public function testCodeWithoutCSRF(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid CSRF token');
+
+		$this->app->api()->call('auth/code', 'POST');
+	}
+
 	public function testGet(): void
 	{
 		$this->app->impersonate('kirby');
