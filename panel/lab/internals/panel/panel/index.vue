@@ -221,6 +221,17 @@
 			<k-text>
 				<k-code language="js">window.panel.request(url, options = {});</k-code>
 				<p>Low-level request handler</p>
+				<p>
+					A <code>FormData</code> body is sent as multipart, e.g. to upload
+					files. The <code>progress</code> option reports the upload progress in
+					percent:
+				</p>
+				<!-- prettier-ignore -->
+				<k-code language="js">window.panel.request(url, {
+	method: "POST",
+	body: formData,
+	progress: (percent) => {}
+});</k-code>
 			</k-text>
 		</k-lab-example>
 		<k-lab-example label="search" :code="false">

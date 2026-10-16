@@ -13,6 +13,7 @@ import { HtmlString } from "@/panel/html";
 import { isAbortError } from "@/helpers/error";
 import { toLowerKeys } from "@/helpers/object";
 import { buildUrl, isSameOrigin, makeAbsolute } from "@/helpers/url";
+import * as xhr from "./xhr";
 
 /**
  * @since 6.0.0
@@ -48,6 +49,7 @@ export interface PanelRequestOptions extends Omit<
 	globals?: string | string[];
 	headers: Record<string, string>;
 	language?: string | null;
+	progress?: (percent: number) => void;
 	query: Record<string, string | null>;
 	referrer?: string;
 }
@@ -56,13 +58,16 @@ export interface PanelRequestOptions extends Omit<
  * Creates a proper request body
  * @since 4.0.0
  */
-export function body(data: RequestBody | undefined): string | null | undefined {
-	if (data instanceof HTMLFormElement) {
-		data = new FormData(data);
+export function body(
+	data: RequestBody | undefined
+): string | FormData | null | undefined {
+	// keep FormData as multipart body, e.g. for file uploads
+	if (data instanceof FormData) {
+		return data;
 	}
 
-	if (data instanceof FormData) {
-		data = Object.fromEntries(data);
+	if (data instanceof HTMLFormElement) {
+		data = Object.fromEntries(new FormData(data));
 	}
 
 	if (typeof data === "object" && data !== null) {
@@ -166,6 +171,11 @@ export function headers(
 		...toLowerKeys(input)
 	};
 
+	// the browser sets the multipart content type with its boundary
+	if (options.body instanceof FormData) {
+		delete result["content-type"];
+	}
+
 	if (options.csrf) {
 		result["x-csrf"] = options.csrf;
 	}
@@ -226,7 +236,8 @@ export async function request(
 	}
 
 	// extract Request options from options
-	const { csrf, globals, language, referrer, query, ...rest } = options;
+	const { csrf, globals, language, progress, referrer, query, ...rest } =
+		options;
 
 	// merge with a few defaults
 	const init: RequestInit = {
@@ -249,7 +260,7 @@ export async function request(
 	}
 
 	// parse the JSON response and react on errors
-	return await responder(req, await safeFetch(req));
+	return await responder(req, await safeFetch(req, progress));
 }
 
 /**
@@ -322,8 +333,16 @@ export async function responder(
  * Fetches a request and converts network errors
  * into a Panel offline state
  */
-export async function safeFetch(request: Request): Promise<Response> {
+export async function safeFetch(
+	request: Request,
+	progress?: (percent: number) => void
+): Promise<Response> {
 	try {
+		// only XMLHttpRequest can report the upload progress
+		if (progress !== undefined) {
+			return await xhr.send(request, progress);
+		}
+
 		return await fetch(request);
 	} catch (error) {
 		if (isAbortError(error) === true) {
