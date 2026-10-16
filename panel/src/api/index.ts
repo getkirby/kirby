@@ -171,7 +171,7 @@ export default class Api {
 				this.methodOverride && method !== "GET" && method !== "POST";
 
 			const { response } = await request(url, {
-				...(options as Partial<PanelRequestOptions>),
+				...(options as Omit<Partial<PanelRequestOptions>, "external">),
 				csrf: this.csrf,
 				method: overrideMethod ? "POST" : method,
 				headers: {

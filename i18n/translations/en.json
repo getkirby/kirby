@@ -245,6 +245,8 @@
 	"error.page.undefined": "The page cannot be found",
 	"error.page.update.permission": "You are not allowed to update \"{slug}\"",
 
+	"error.request.failed": "The request to {url} failed",
+
 	"error.role.notFound": "The role \"{name}\" cannot be found",
 
 	"error.site.changeTitle.empty": "The title must not be empty",

@@ -2,7 +2,7 @@
 	<div class="k-error-trace">
 		<ol class="k-stack">
 			<li v-for="(item, index) in trace" :key="'trace-' + index">
-				<a :href="item.url ? item.url : null">
+				<a :href="href(item.url)">
 					<p v-if="item.file">
 						<span style="color: var(--color-gray-200)">{{ item.file }}</span>
 						<template v-if="item.line">
@@ -34,6 +34,8 @@
 </template>
 
 <script>
+import { hasDangerousScheme } from "@/helpers/url";
+
 /**
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
@@ -42,6 +44,15 @@
 export default {
 	props: {
 		trace: Array
+	},
+	methods: {
+		href(url) {
+			if (!url || hasDangerousScheme(url) === true) {
+				return null;
+			}
+
+			return url;
+		}
 	}
 };
 </script>
