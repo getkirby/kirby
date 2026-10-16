@@ -107,6 +107,57 @@ class PagePickerFieldTest extends TestCase
 		$this->assertSame('page://my-b', $api[2]['uuid']);
 	}
 
+	public function testApiItemsWithMissingModel(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'options' => ['api.allowImpersonation' => true],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+						'content' => ['uuid' => 'my-test-uuid'],
+						'blueprint' => [
+							'title' => 'Test',
+							'name' => 'test',
+							'fields' => [
+								'related' => [
+									'type' => 'pagepicker',
+								]
+							]
+						]
+					],
+					[
+						'slug' => 'a',
+						'content' => ['uuid'  => 'my-a'],
+					],
+				]
+			],
+			'request' => [
+				'query' => [
+					'items' => 'page://my-a,page://does-not-exist'
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+		$api = $app->api()->call('pages/test/fields/related/items');
+
+		$this->assertCount(2, $api);
+
+		// the existing page is resolved as usual
+		$this->assertSame('a', $api[0]['id']);
+		$this->assertSame('page://my-a', $api[0]['uuid']);
+
+		// the missing page shows the ID that is stored in the content file
+		$this->assertSame('page://does-not-exist', $api[1]['id']);
+		$this->assertSame('page://does-not-exist', $api[1]['uuid']);
+		$this->assertSame('page://does-not-exist', $api[1]['text']);
+		$this->assertFalse($api[1]['link']);
+	}
+
 	public function testApiItemsWithProtectedModel(): void
 	{
 		// the permission cache is keyed by template and role,
@@ -347,9 +398,11 @@ class PagePickerFieldTest extends TestCase
 			]
 		]);
 
+		// the missing page keeps its stored ID
 		$expected = [
 			'page://my-aa',
-			'page://my-ab'
+			'page://my-ab',
+			'a/ac'
 		];
 
 		$this->assertSame($expected, $field->toFormValue());
@@ -361,5 +414,26 @@ class PagePickerFieldTest extends TestCase
 		$model = $field->toModel('a/aa');
 		$this->assertInstanceOf(Page::class, $model);
 		$this->assertSame('a/aa', $model->id());
+	}
+
+	public function testToStoredValue(): void
+	{
+		$field = $this->field('pagepicker', [
+			'model' => $this->model(),
+			'value' => [
+				'a/aa',                 // exists
+				'page://my-ab',         // exists
+				'page://does-not-exist' // does not exist
+			]
+		]);
+
+		// the missing page keeps its stored ID
+		$expected = [
+			'page://my-aa',
+			'page://my-ab',
+			'page://does-not-exist'
+		];
+
+		$this->assertSame($expected, $field->toStoredValue());
 	}
 }

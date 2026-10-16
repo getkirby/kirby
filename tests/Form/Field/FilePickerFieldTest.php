@@ -560,9 +560,11 @@ class FilePickerFieldTest extends TestCase
 			]
 		]);
 
+		// the missing file keeps its stored ID
 		$expected = [
 			'file://test-a',
-			'file://test-b'
+			'file://test-b',
+			'e.jpg'
 		];
 
 		$this->assertSame($expected, $field->value());
@@ -579,9 +581,11 @@ class FilePickerFieldTest extends TestCase
 			]
 		]);
 
+		// the missing file keeps its stored ID
 		$expected = [
 			'file://draft-a',
-			'file://draft-b'
+			'file://draft-b',
+			'e.jpg'
 		];
 
 		$this->assertSame($expected, $field->value());
