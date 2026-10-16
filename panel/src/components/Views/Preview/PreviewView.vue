@@ -192,8 +192,11 @@ export const Preview = {
 
 			this.$refs.tree?.close();
 
-			const id = page.id === "/" ? "site" : page.id;
-			const url = this.$api.pages.url(id, "preview/" + this.mode);
+			if (page.id === "/") {
+				return this.onViewNavigate("site/preview/" + this.mode);
+			}
+
+			const url = this.$api.pages.url(page.id, "preview/" + this.mode);
 			this.onViewNavigate(url);
 		},
 		/**
