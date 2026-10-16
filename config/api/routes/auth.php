@@ -30,9 +30,7 @@ return [
 
 			// csrf token check
 			if ($auth->type() === 'session' && $auth->csrf() === false) {
-				throw new InvalidArgumentException(
-					message: 'Invalid CSRF token'
-				);
+				throw new InvalidArgumentException(key: 'csrf.invalid');
 			}
 
 			$user = $auth->verifyChallenge($this->requestBody('code'));
@@ -54,9 +52,7 @@ return [
 
 			// csrf token check
 			if ($auth->type() === 'session' && $auth->csrf() === false) {
-				throw new InvalidArgumentException(
-					message: 'Invalid CSRF token'
-				);
+				throw new InvalidArgumentException(key: 'csrf.invalid');
 			}
 
 			$email    = $this->requestBody('email');

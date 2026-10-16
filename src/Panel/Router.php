@@ -83,9 +83,7 @@ class Router
 						$this->kirby->auth()->type() === 'session' &&
 						$this->kirby->auth()->csrf() === false
 					) {
-						throw new InvalidArgumentException(
-							message: 'Invalid CSRF token'
-						);
+						throw new InvalidArgumentException(key: 'csrf.invalid');
 					}
 
 					$result = $route->action()->call($route, ...$route->arguments());

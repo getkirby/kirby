@@ -45,9 +45,7 @@ return [
 
 			// csrf token check
 			if ($auth->type() === 'session' && $auth->csrf() === false) {
-				throw new InvalidArgumentException(
-					message: 'Invalid CSRF token'
-				);
+				throw new InvalidArgumentException(key: 'csrf.invalid');
 			}
 
 			if ($system->isOk() === false) {
