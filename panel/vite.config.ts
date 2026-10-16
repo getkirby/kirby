@@ -228,20 +228,23 @@ export default defineConfig(({ mode }) => {
 				input: "./src/index.ts",
 				output: {
 					entryFileNames: "js/[name].min.js",
-					chunkFileNames: "js/[name].min.js",
+					chunkFileNames: (chunk) =>
+						"js/" +
+						chunk.name.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase() +
+						".min.js",
 					assetFileNames: "[ext]/[name].min.[ext]",
 					codeSplitting: {
 						groups: [
 							{
-								name: "Sortable",
+								name: "sortable",
 								test: /node_modules\/sortablejs\//
 							},
 							{
-								name: "ProsemirrorModel",
+								name: "prosemirror-model",
 								test: /node_modules\/prosemirror-model\//
 							},
 							{
-								name: "Prosemirror",
+								name: "prosemirror",
 								test: /node_modules\/prosemirror-/
 							},
 							{
