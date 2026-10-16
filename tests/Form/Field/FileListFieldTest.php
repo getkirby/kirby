@@ -321,6 +321,37 @@ class FileListFieldTest extends TestCase
 		$this->assertSame(['a', 'b'], $field->data()[0]['tags']);
 	}
 
+	public function testDataWithTableLayoutAndHtmlColumns(): void
+	{
+		$this->app->file('photography/a.jpg')->update([
+			'alt' => '<img src=x onerror=alert(1)>'
+		]);
+
+		$field = $this->filelist([
+			'columns' => [
+				'alt'      => ['type' => 'html'],
+				'caption'  => ['value' => '<b>{{ file.alt }}</b>'],
+				'filename' => ['type' => 'html', 'value' => '<b>{{ file.alt }}</b>']
+			],
+			'layout' => 'table'
+		]);
+
+		$item = $field->data()[0];
+
+		// `type: html` keeps the markup of the query
+		// but escapes the values it inserts
+		$this->assertInstanceOf(HtmlString::class, $item['filename']);
+		$this->assertSame('<b>&lt;img src=x onerror=alert(1)&gt;</b>', $item['filename']->value());
+
+		// content values stay plain strings,
+		// which the html preview escapes
+		$this->assertSame('<img src=x onerror=alert(1)>', $item['alt']);
+
+		// other columns render as text in the Panel,
+		// so escaping here would show up as entities
+		$this->assertSame('<b><img src=x onerror=alert(1)></b>', $item['caption']);
+	}
+
 	public function testDataWithTableLayoutAndPassthroughValues(): void
 	{
 		// a column without a matching blueprint field

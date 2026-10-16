@@ -512,9 +512,13 @@ abstract class ModelListField extends DisplayField
 		];
 
 		foreach ($this->columns() as $name => $column) {
-			// a column query is resolved against the model
+			// a column query is resolved against the model;
+			// `type: html` keeps its markup but escapes its values
 			if (($query = $column['value'] ?? '') !== '') {
-				$item[$name] = $model->toString($query);
+				$item[$name] = match ($column['type'] ?? null) {
+					'html'  => $model->toSafeHtmlString($query),
+					default => $model->toString($query)
+				};
 				continue;
 			}
 
