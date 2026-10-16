@@ -466,6 +466,21 @@ describe("panel.request", () => {
 			await expect(responder(req, raw)).rejects.toThrow(RedirectError);
 		});
 
+		it("should throw JsonRequestError for a non-JSON error response", async () => {
+			const raw = new Response("<html>Request Entity Too Large</html>", {
+				status: 413,
+				headers: { "Content-Type": "text/html" }
+			});
+
+			const error = (await responder(req, raw).catch(
+				(reason) => reason
+			)) as JsonRequestError;
+
+			expect(error).toBeInstanceOf(JsonRequestError);
+			expect(error.response.status).toBe(413);
+			expect(error.response.text).toBe("<html>Request Entity Too Large</html>");
+		});
+
 		it("should throw AuthError for 401", async () => {
 			await expect(
 				responder(req, jsonResponse({ message: "Unauthenticated" }, 401))
