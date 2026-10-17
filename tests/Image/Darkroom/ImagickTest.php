@@ -177,7 +177,7 @@ class ImagickTest extends TestCase
 		$image = $this->createMock(Image::class);
 
 		$image->expects($this->once())
-			->method('setImageColorspace')
+			->method('transformImageColorspace')
 			->with(Image::COLORSPACE_GRAY);
 
 		$imagick = new Imagick();
@@ -425,6 +425,33 @@ class ImagickTest extends TestCase
 		}
 
 		$this->assertSame(['x..', '.x.', '..x'], $squares);
+	}
+
+	public function testProcessGrayscaleAnimatedGif(): void
+	{
+		// a red and a blue frame with palette colors
+		$gif = new Image();
+
+		foreach (['#c0392b', '#2471a3'] as $color) {
+			$frame = new Image();
+			$frame->newImage(20, 20, $color);
+			$frame->setImageFormat('gif');
+			$gif->addImage($frame);
+		}
+
+		$gif->writeImages($file = static::TMP . '/grayscale.gif', true);
+
+		$imagick = new Imagick(['grayscale' => true, 'width' => 10]);
+		$imagick->process($file);
+
+		$gray = [];
+
+		foreach ((new Image($file))->coalesceImages() as $frame) {
+			$gray[] = $frame->getImagePixelColor(5, 5)->getColor(true)['r'];
+		}
+
+		// the luminance of the colors, not their red channel
+		$this->assertEqualsWithDelta([0.35, 0.38], $gray, 0.08);
 	}
 
 	public function testQuality(): void

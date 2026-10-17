@@ -102,7 +102,9 @@ class Imagick extends Darkroom
 	protected function grayscale(Image $image, array $options): Image
 	{
 		if ($options['grayscale'] === true) {
-			$image->setImageColorspace(Image::COLORSPACE_GRAY);
+			// converts the pixels, not just the colorspace
+			// (palette images like GIFs would keep their colors)
+			$image->transformImageColorspace(Image::COLORSPACE_GRAY);
 		}
 
 		return $image;
