@@ -308,6 +308,27 @@ class FileCacheTest extends TestCase
 		$this->assertDirectoryDoesNotExist($root . '/d');
 	}
 
+	public function testFlushWithLinkedRoot(): void
+	{
+		Dir::make($target = static::TMP . '/target');
+		symlink($target, $root = static::TMP . '/cache');
+
+		$cache = new FileCache([
+			'root' => $root
+		]);
+
+		$cache->set('a', 'A basic value');
+		$cache->set('b/a', 'A basic value');
+		$this->assertFileExists($target . '/a');
+		$this->assertFileExists($target . '/b/a');
+
+		$this->assertTrue($cache->flush());
+
+		// the link stays in place, only its contents are removed
+		$this->assertTrue(is_link($root));
+		$this->assertSame([], Dir::read($target, []));
+	}
+
 	public function testFlushWithPrefix(): void
 	{
 		$cache1 = new FileCache([

@@ -214,13 +214,16 @@ class FileCache extends Cache
 	 */
 	public function flush(): bool
 	{
-		if (
-			Dir::remove($this->root) === true &&
-			Dir::make($this->root) === true
-		) {
-			return true;
+		// empty the root instead of removing it,
+		// so that a linked root stays in place
+		foreach (Dir::read($this->root, [], absolute: true) as $item) {
+			$removed = is_dir($item) === true ? Dir::remove($item) : F::remove($item);
+
+			if ($removed !== true) {
+				return false; // @codeCoverageIgnore
+			}
 		}
 
-		return false; // @codeCoverageIgnore
+		return Dir::make($this->root);
 	}
 }
