@@ -234,6 +234,21 @@ class QueryTest extends TestCase
 		$this->assertSame(2, $count);
 	}
 
+	public function testCountAllColumns(): void
+	{
+		$users = fn () => $this->database->table('users')->join('roles', 'roles.id = users.role_id');
+
+		// `*` must not end up in the counted subquery,
+		// where MySQL rejects the repeated `id` column
+		foreach ([null, '*', '', []] as $select) {
+			$this->assertSame(4, $users()->distinct()->select($select)->count());
+			$this->assertStringNotContainsString('SELECT DISTINCT *', $this->database->lastQuery());
+
+			$this->assertSame(3, $users()->select($select)->group('users.role_id')->count());
+			$this->assertStringNotContainsString('SELECT *', $this->database->lastQuery());
+		}
+	}
+
 	public function testCountDistinct(): void
 	{
 		$count = $this->database

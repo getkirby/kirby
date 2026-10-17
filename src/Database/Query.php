@@ -485,20 +485,25 @@ class Query
 
 	/**
 	 * Builds a count query
+	 *
+	 * Distinct and grouped queries are counted in a subquery, where
+	 * MySQL fails on repeated column names (e.g. `users.*, roles.*`
+	 * with a join), so alias those columns to count such queries.
 	 */
 	public function count(): int
 	{
 		// `DISTINCT *` compares full rows, which a primary key keeps
 		// unique, so only a select list makes `DISTINCT` change the count
-		$distinct = $this->distinct === true && $this->select !== null;
+		$all      = $this->database->sql()->selected($this->table, $this->select) === '*';
+		$distinct = $this->distinct === true && $all === false;
 
 		if ($this->group === null && $distinct === false) {
 			return (int)$this->aggregate('COUNT');
 		}
 
-		// without a select list there are no aliases to keep,
-		// and `SELECT *` would fail MySQL's `ONLY_FULL_GROUP_BY`
-		if ($this->select === null) {
+		// without a select list there are no aliases to keep, and `*` can fail
+		// MySQL's `ONLY_FULL_GROUP_BY` or repeat column names of joined tables
+		if ($all === true) {
 			$this->distinct(false)->select('1');
 		}
 
