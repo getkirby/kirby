@@ -193,6 +193,23 @@ class ImageMagickTest extends TestCase
 		);
 	}
 
+	public function testResizeWithoutCrop(): void
+	{
+		$im = new ImageMagick();
+
+		$method = new ReflectionMethod($im::class, 'resize');
+
+		// the size is used as it is; filling it (`^`)
+		// could add a pixel to the other side
+		$result = $method->invoke($im, '', [
+			'crop'   => false,
+			'width'  => 98,
+			'height' => 300
+		]);
+
+		$this->assertSame("-thumbnail '98x300!'", $result);
+	}
+
 	public function testSharpen(): void
 	{
 		$im = new ImageMagick();

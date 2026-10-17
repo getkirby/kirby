@@ -208,7 +208,9 @@ class ImageMagick extends Darkroom
 			}
 		}
 
-		return '-thumbnail ' . escapeshellarg(sprintf('%sx%s^', $options['width'], $options['height']));
+		// the size is already fitted to the source ratio,
+		// filling it (`^`) could add a pixel
+		return '-thumbnail ' . escapeshellarg(sprintf('%sx%s!', $options['width'], $options['height']));
 	}
 
 	/**

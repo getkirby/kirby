@@ -226,12 +226,13 @@ class Imagick extends Darkroom
 			return $image;
 		}
 
+		// the size is already fitted to the source ratio,
+		// refitting it (`bestfit`) could lose a pixel
 		$image->resizeImage(
 			$options['width'],
 			$options['height'],
 			Image::FILTER_LANCZOS,
-			1,
-			true
+			1
 		);
 
 		return $image;

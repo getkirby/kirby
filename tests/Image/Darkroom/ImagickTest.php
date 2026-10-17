@@ -506,6 +506,23 @@ class ImagickTest extends TestCase
 		$this->assertEquals(200, $image->getImageHeight());
 	}
 
+	public function testResizeWithoutCropExactSize(): void
+	{
+		// 1800×260 at a width of 300 is 43.33 high,
+		// refitting into 300×43 would make it 298 wide
+		$image = new Image();
+		$image->newImage(1800, 260, 'white');
+		$image->setImageFormat('jpg');
+		$image->writeImage($file = static::TMP . '/panorama.jpg');
+
+		$imagick = new Imagick(['width' => 300]);
+		$imagick->process($file);
+
+		$image = new Image($file);
+		$this->assertSame(300, $image->getImageWidth());
+		$this->assertSame(43, $image->getImageHeight());
+	}
+
 	public function testResizeWithFocusPoint(): void
 	{
 		$imagick = new Imagick([
