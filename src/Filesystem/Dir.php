@@ -142,15 +142,13 @@ class Dir
 	/**
 	 * Read the directory and all subdirectories
 	 *
-	 * @todo Remove support for `$ignore = null` in v6
-	 * @param array|false|null $ignore Array of absolute file paths;
-	 *                                 `false` to disable `Dir::$ignore` list
-	 *                                 (passing null is deprecated)
+	 * @param array|false $ignore Array of absolute file paths;
+	 *                            `false` to disable `Dir::$ignore` list
 	 */
 	public static function index(
 		string $dir,
 		bool $recursive = false,
-		array|false|null $ignore = [],
+		array|false $ignore = [],
 		string|null $path = null
 	): array {
 		$result = [];
