@@ -577,10 +577,7 @@ class Query
 			];
 		}
 
-		if ($this->fail) {
-			$this->database->fail();
-		}
-
+		$fail   = $this->fail;
 		$result = $this->database->query(
 			$sql['query'],
 			$sql['bindings'],
@@ -588,6 +585,13 @@ class Query
 		);
 
 		$this->reset();
+
+		// throw for this query only, the database keeps its own mode
+		$error = $this->database->lastError();
+
+		if ($fail === true && $error !== null) {
+			throw $error;
+		}
 
 		return $result;
 	}
@@ -612,13 +616,17 @@ class Query
 			];
 		}
 
-		if ($this->fail) {
-			$this->database->fail();
-		}
-
+		$fail   = $this->fail;
 		$result = $this->database->execute($sql['query'], $sql['bindings']);
 
 		$this->reset();
+
+		// throw for this query only, the database keeps its own mode
+		$error = $this->database->lastError();
+
+		if ($fail === true && $error !== null) {
+			throw $error;
+		}
 
 		return $result;
 	}
