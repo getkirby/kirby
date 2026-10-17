@@ -32,6 +32,10 @@ export type SortOptions = {
 	insensitive?: boolean;
 };
 
+/**
+ * Creates a natural sort comparator. It keeps every value it has
+ * prepared, so create a new comparator for each sort.
+ */
 /* eslint-disable no-control-regex, no-useless-escape */
 export default function natsort(options: SortOptions = {}) {
 	const ore = /^0/;
@@ -74,10 +78,50 @@ export default function natsort(options: SortOptions = {}) {
 		);
 	}
 
+	type Prepared = {
+		normalized: string;
+		parsed: (string | number)[];
+		hex: RegExpMatchArray | null;
+		date: number | false;
+		isDate: boolean;
+		time: number;
+	};
+
+	// normalizing, tokenizing and parsing once per value
+	// instead of on every comparison
+	const prepared = new Map<string | number, Prepared>();
+
+	function prepare(value: string | number): Prepared {
+		let entry = prepared.get(value);
+
+		if (entry === undefined) {
+			// trim pre-post whitespace
+			const normalized = normalize(value);
+
+			// tokenize: split numeric strings and default strings
+			const tokens = tokenize(normalized);
+			const time = Date.parse(normalized);
+
+			entry = {
+				normalized,
+				parsed: tokens.map((token) => parse(token, tokens.length)),
+				hex: normalized.match(hre),
+				date: tokens.length !== 1 && time,
+				isDate: dre.test(normalized),
+				time
+			};
+
+			prepared.set(value, entry);
+		}
+
+		return entry;
+	}
+
 	return function (a: string | number, b: string | number): number {
-		// trim pre-post whitespace
-		const aa = normalize(a);
-		const bb = normalize(b);
+		const pa = prepare(a);
+		const pb = prepare(b);
+		const aa = pa.normalized;
+		const bb = pb.normalized;
 
 		// return immediately if at least one of the values is empty.
 		// empty string < any others
@@ -93,21 +137,12 @@ export default function natsort(options: SortOptions = {}) {
 			return GREATER;
 		}
 
-		// tokenize: split numeric strings and default strings
-		const aArr = tokenize(aa);
-		const bArr = tokenize(bb);
-
 		// hex or date detection
-		const aHex = aa.match(hre);
-		const bHex = bb.match(hre);
-		const av =
-			aHex && bHex
-				? parseInt(aHex[0], 16)
-				: aArr.length !== 1 && Date.parse(aa);
+		const av = pa.hex && pb.hex ? parseInt(pa.hex[0], 16) : pa.date;
 		const bv =
-			aHex && bHex
-				? parseInt(bHex[0], 16)
-				: (av && bb.match(dre) && Date.parse(bb)) || null;
+			pa.hex && pb.hex
+				? parseInt(pb.hex[0], 16)
+				: (av && pb.isDate && pb.time) || null;
 
 		// try and sort Hex codes or Dates
 		if (bv) {
@@ -124,13 +159,13 @@ export default function natsort(options: SortOptions = {}) {
 			}
 		}
 
-		const al = aArr.length;
-		const bl = bArr.length;
+		const al = pa.parsed.length;
+		const bl = pb.parsed.length;
 
 		// handle numeric strings and default strings
 		for (let i = 0, l = Math.max(al, bl); i < l; i += 1) {
-			const af = parse(aArr[i] || "", al);
-			const bf = parse(bArr[i] || "", bl);
+			const af = pa.parsed[i] ?? 0;
+			const bf = pb.parsed[i] ?? 0;
 
 			// handle numeric vs string comparison.
 			// numeric < string
