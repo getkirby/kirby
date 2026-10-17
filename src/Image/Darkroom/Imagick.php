@@ -74,11 +74,12 @@ class Imagick extends Darkroom
 	}
 
 	/**
-	 * Keep animated gifs
+	 * Gives every frame of an animation the full canvas,
+	 * as GIF and WebP store only the changed area
 	 */
 	protected function coalesce(Image $image): Image
 	{
-		if ($image->getImageFormat() === 'GIF') {
+		if ($image->getNumberImages() > 1) {
 			return $image->coalesceImages();
 		}
 

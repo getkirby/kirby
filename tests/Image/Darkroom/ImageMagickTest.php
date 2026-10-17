@@ -26,6 +26,25 @@ class ImageMagickTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
+	public static function coalesceProvider(): array
+	{
+		return [
+			['animated.gif', '-coalesce'],
+			['animated.webp', '-coalesce'],
+			['valley.webp', null],
+			['cat.jpg', null],
+		];
+	}
+
+	#[DataProvider('coalesceProvider')]
+	public function testCoalesce(string $fixture, string|null $expected): void
+	{
+		$im     = new ImageMagick();
+		$method = new ReflectionMethod($im::class, 'coalesce');
+
+		$this->assertSame($expected, $method->invoke($im, static::FIXTURES . '/' . $fixture, []));
+	}
+
 	public function testProcess(): void
 	{
 		$im = new ImageMagick();
@@ -90,6 +109,37 @@ class ImageMagickTest extends TestCase
 		);
 
 		$im = new ImageMagick(['width' => 50, 'format' => 'webp']);
+		$im->process($file);
+
+		// a black square moves from left to right
+		$squares = shell_exec(
+			'convert ' . escapeshellarg($file) . ' -coalesce -format ' .
+			escapeshellarg('%[fx:p{10,15}.r<0.5]%[fx:p{25,15}.r<0.5]%[fx:p{40,15}.r<0.5] ') .
+			' info: 2>/dev/null'
+		);
+
+		$this->assertSame('100 010 001 ', $squares);
+	}
+
+	public function testProcessAnimatedWebp(): void
+	{
+		// frames 2 and 3 only contain the changed area
+		copy(
+			static::FIXTURES . '/animated.webp',
+			$file = static::TMP . '/thumb.webp'
+		);
+
+		$frames = shell_exec('identify -format "%n\\n" ' . escapeshellarg($file) . ' 2>/dev/null');
+
+		if ((int)$frames !== 3) {
+			$this->markTestSkipped('ImageMagick cannot read animated WebP');
+		}
+
+		$im = new ImageMagick([
+			'crop'   => true,
+			'width'  => 50,
+			'height' => 30
+		]);
 		$im->process($file);
 
 		// a black square moves from left to right

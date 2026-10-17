@@ -125,6 +125,19 @@ class ImagickTest extends TestCase
 		$this->call($imagick, 'blur', $image, ['blur' => 50]);
 	}
 
+	public function testCoalesceAnimation(): void
+	{
+		// any format with more than one frame
+		$image = $this->createMock(Image::class);
+		$image->method('getNumberImages')->willReturn(3);
+		$image->expects($this->once())
+			->method('coalesceImages')
+			->willReturn($coalesced = new Image());
+
+		$imagick = new Imagick();
+		$this->assertSame($coalesced, $this->call($imagick, 'coalesce', $image));
+	}
+
 	public function testCoalesceGif(): void
 	{
 		copy(
@@ -140,21 +153,6 @@ class ImagickTest extends TestCase
 
 		$image = new Image($file);
 		$this->assertSame(3, $image->getNumberImages());
-	}
-
-	public function testCoalesceGifFormat(): void
-	{
-		// the mime type falls back to `image/x-gif`
-		// when ImageMagick cannot find its `mime.xml`
-		$image = $this->createMock(Image::class);
-		$image->method('getImageMimeType')->willReturn('image/x-gif');
-		$image->method('getImageFormat')->willReturn('GIF');
-		$image->expects($this->once())
-			->method('coalesceImages')
-			->willReturn($coalesced = new Image());
-
-		$imagick = new Imagick();
-		$this->assertSame($coalesced, $this->call($imagick, 'coalesce', $image));
 	}
 
 	public function testCoalesceNonGif(): void
@@ -377,6 +375,41 @@ class ImagickTest extends TestCase
 		$image = new Image($file);
 		$image->setIteratorIndex(1);
 		$this->assertLessThan(50, $image->getImageWidth());
+
+		// a black square moves from left to right
+		$squares = [];
+
+		foreach ((new Image($file))->coalesceImages() as $frame) {
+			$this->assertSame(50, $frame->getImageWidth());
+			$this->assertSame(30, $frame->getImageHeight());
+
+			$squares[] = implode('', array_map(
+				fn ($x) => $frame->getImagePixelColor($x, 15)->getColor()['r'] < 128 ? 'x' : '.',
+				[10, 25, 40]
+			));
+		}
+
+		$this->assertSame(['x..', '.x.', '..x'], $squares);
+	}
+
+	public function testProcessAnimatedWebp(): void
+	{
+		// frames 2 and 3 only contain the changed area
+		copy(
+			static::FIXTURES . '/image/animated.webp',
+			$file = static::TMP . '/animated.webp'
+		);
+
+		if ((new Image($file))->getNumberImages() !== 3) {
+			$this->markTestSkipped('ImageMagick cannot read animated WebP');
+		}
+
+		$imagick = new Imagick([
+			'crop'   => true,
+			'width'  => 50,
+			'height' => 30
+		]);
+		$imagick->process($file);
 
 		// a black square moves from left to right
 		$squares = [];
