@@ -155,6 +155,8 @@ class Router
 	 * The Route's arguments method is used to
 	 * find matches and return all the found
 	 * arguments in the path.
+	 *
+	 * @param array<Route> $ignore Routes to skip
 	 */
 	public function find(
 		string $path,

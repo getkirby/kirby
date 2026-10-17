@@ -8,9 +8,9 @@ use Iterator as PhpIterator;
 use IteratorAggregate;
 
 /**
- * Extended version of PHP's iterator
- * class that builds the foundation of our
- * Collection class.
+ * Iterable and countable wrapper around
+ * a data array that builds the foundation
+ * of our Collection class.
  *
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
