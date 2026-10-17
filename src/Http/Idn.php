@@ -2,6 +2,7 @@
 
 namespace Kirby\Http;
 
+use Closure;
 use Kirby\Toolkit\Str;
 
 /**
@@ -15,6 +16,25 @@ use Kirby\Toolkit\Str;
  */
 class Idn
 {
+	/**
+	 * Converts the domain of an email address and keeps
+	 * the email as is if the domain cannot be converted
+	 * @since 5.6.2
+	 */
+	protected static function convertEmail(string $email, Closure $converter): string
+	{
+		// the domain starts after the last `@`
+		$at = strrpos($email, '@');
+
+		if ($at === false) {
+			return $email;
+		}
+
+		$domain = $converter(substr($email, $at + 1));
+
+		return $domain !== false ? substr($email, 0, $at + 1) . $domain : $email;
+	}
+
 	/**
 	 * Convert domain name from IDNA ASCII to Unicode
 	 */
@@ -30,14 +50,7 @@ class Idn
 	public static function decodeEmail(string $email): string
 	{
 		if (Str::contains($email, 'xn--') === true) {
-			$parts   = Str::split($email, '@');
-			$address = $parts[0];
-			$domain  = Idn::decode($parts[1] ?? '');
-
-			// keep the email as is if the domain cannot be converted
-			if ($domain !== false) {
-				$email = $address . '@' . $domain;
-			}
+			return static::convertEmail($email, static::decode(...));
 		}
 
 		return $email;
@@ -58,14 +71,7 @@ class Idn
 	public static function encodeEmail(string $email): string
 	{
 		if (mb_detect_encoding($email, 'ASCII', true) === false) {
-			$parts   = Str::split($email, '@');
-			$address = $parts[0];
-			$domain  = Idn::encode($parts[1] ?? '');
-
-			// keep the email as is if the domain cannot be converted
-			if ($domain !== false) {
-				$email = $address . '@' . $domain;
-			}
+			return static::convertEmail($email, static::encode(...));
 		}
 
 		return $email;

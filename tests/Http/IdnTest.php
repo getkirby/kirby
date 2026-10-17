@@ -20,6 +20,7 @@ class IdnTest extends TestCase
 		$this->assertSame('test@example.com', Idn::decodeEmail('test@example.com'));
 		$this->assertSame('test@exämple.com', Idn::decodeEmail('test@exämple.com'));
 		$this->assertSame('test@exämple.com', Idn::decodeEmail('test@xn--exmple-cua.com'));
+		$this->assertSame('"a@b"@exämple.com', Idn::decodeEmail('"a@b"@xn--exmple-cua.com'));
 	}
 
 	public function testDecodeEmailWithInvalidDomain(): void
@@ -41,6 +42,7 @@ class IdnTest extends TestCase
 		$this->assertSame('test@example.com', Idn::encodeEmail('test@example.com'));
 		$this->assertSame('test@xn--exmple-cua.com', Idn::encodeEmail('test@xn--exmple-cua.com'));
 		$this->assertSame('test@xn--exmple-cua.com', Idn::encodeEmail('test@exämple.com'));
+		$this->assertSame('"a@b"@xn--exmple-cua.com', Idn::encodeEmail('"a@b"@exämple.com'));
 	}
 
 	public function testEncodeEmailWithInvalidDomain(): void
