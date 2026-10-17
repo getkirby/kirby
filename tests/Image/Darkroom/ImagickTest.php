@@ -212,23 +212,42 @@ class ImagickTest extends TestCase
 	public function testOptimize(): void
 	{
 		$image = $this->createMock(Image::class);
-		$image->method('getImageFormat')->willReturn('GIF');
+		$image->method('getNumberImages')->willReturn(3);
 		$image->expects($this->once())
 			->method('optimizeImageLayers')
 			->willReturn($optimized = new Image());
 
 		$imagick = new Imagick();
-		$this->assertSame($optimized, $this->call($imagick, 'optimize', $image));
+		$this->assertSame($optimized, $this->call($imagick, 'optimize', $image, 'thumb.gif', ['format' => null]));
 	}
 
-	public function testOptimizeNonGif(): void
+	public static function optimizeNonGifProvider(): array
+	{
+		return [
+			['thumb.avif', null],
+			['thumb.gif', 'webp'],
+		];
+	}
+
+	#[DataProvider('optimizeNonGifProvider')]
+	public function testOptimizeNonGif(string $file, string|null $format): void
 	{
 		$image = $this->createMock(Image::class);
-		$image->method('getImageFormat')->willReturn('JPEG');
+		$image->method('getNumberImages')->willReturn(3);
 		$image->expects($this->never())->method('optimizeImageLayers');
 
 		$imagick = new Imagick();
-		$this->assertSame($image, $this->call($imagick, 'optimize', $image));
+		$this->assertSame($image, $this->call($imagick, 'optimize', $image, $file, ['format' => $format]));
+	}
+
+	public function testOptimizeSingleFrame(): void
+	{
+		$image = $this->createMock(Image::class);
+		$image->method('getNumberImages')->willReturn(1);
+		$image->expects($this->never())->method('optimizeImageLayers');
+
+		$imagick = new Imagick();
+		$this->assertSame($image, $this->call($imagick, 'optimize', $image, 'thumb.gif', ['format' => null]));
 	}
 
 	public function testProcess(): void
@@ -297,8 +316,9 @@ class ImagickTest extends TestCase
 	): void {
 		Dir::make($dir = static::TMP . '/' . $format);
 
+		// a black square on a transparent canvas
 		copy(
-			static::FIXTURES . '/image/animated-optimized.gif',
+			static::FIXTURES . '/image/animated-transparent.gif',
 			$file = $dir . '/thumb.' . $format
 		);
 
