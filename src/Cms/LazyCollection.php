@@ -105,6 +105,21 @@ abstract class LazyCollection extends Collection
 	}
 
 	/**
+	 * Getter and setter for the data
+	 *
+	 * @return array|$this
+	 */
+	public function data(array|null $data = null): array|static
+	{
+		// to return the data, we need all values present
+		if ($data === null) {
+			$this->hydrate();
+		}
+
+		return parent::data($data);
+	}
+
+	/**
 	 * Clone and remove all elements from the collection
 	 */
 	public function empty(): static
