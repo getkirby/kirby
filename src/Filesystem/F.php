@@ -826,6 +826,11 @@ class F
 			return true;
 		}
 
+		// remove the link itself, not its target
+		if (is_link($file) === true) {
+			return static::unlink($file);
+		}
+
 		$file = realpath($file);
 
 		if (is_string($file) === false) {

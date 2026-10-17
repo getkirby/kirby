@@ -658,6 +658,39 @@ class DirTest extends TestCase
 		$this->assertDirectoryDoesNotExist(static::TMP);
 	}
 
+	public function testRemoveLink(): void
+	{
+		F::write($file = static::TMP . '/source/a.txt', 'a');
+		symlink(static::TMP . '/source', $link = static::TMP . '/link');
+
+		$this->assertTrue(Dir::remove($link));
+
+		// only the link is removed, never its target
+		$this->assertFalse(is_link($link));
+		$this->assertFileExists($file);
+	}
+
+	public function testRemoveLinkWithTrailingSlash(): void
+	{
+		F::write($file = static::TMP . '/source/a.txt', 'a');
+		symlink(static::TMP . '/source', $link = static::TMP . '/link');
+
+		// like `rm -r link/`, the trailing slash refers to the target
+		$this->assertTrue(Dir::remove($link . '/'));
+
+		$this->assertTrue(is_link($link));
+		$this->assertFileDoesNotExist($file);
+	}
+
+	public function testRemoveBrokenLink(): void
+	{
+		Dir::make(static::TMP);
+		symlink(static::TMP . '/missing', $link = static::TMP . '/link');
+
+		$this->assertTrue(Dir::remove($link));
+		$this->assertFalse(is_link($link));
+	}
+
 	public function testRemoveNonExistent(): void
 	{
 		$this->assertTrue(Dir::remove(static::TMP . '/does-not-exist'));
