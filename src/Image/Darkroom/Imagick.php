@@ -4,6 +4,7 @@ namespace Kirby\Image\Darkroom;
 
 use Exception;
 use Imagick as Image;
+use Kirby\Filesystem\F;
 use Kirby\Image\Darkroom;
 use Kirby\Image\Focus;
 
@@ -126,9 +127,13 @@ class Imagick extends Darkroom
 	 *
 	 * @since 5.6.2
 	 */
-	protected function optimize(Image $image): Image
+	protected function optimize(Image $image, string $file, array $options): Image
 	{
-		if ($image->getImageFormat() === 'GIF') {
+		// other formats ignore the canvas offset
+		// of trimmed frames and would crop the image
+		$format = strtolower($options['format'] ?? F::extension($file));
+
+		if ($format === 'gif' && $image->getNumberImages() > 1) {
 			return $image->optimizeImageLayers();
 		}
 
@@ -164,7 +169,7 @@ class Imagick extends Darkroom
 			$frame = $this->strip($frame, $options);
 		}
 
-		$image = $this->optimize($image);
+		$image = $this->optimize($image, $file, $options);
 
 		if ($this->save($image, $file, $options) === false) {
 			// @codeCoverageIgnoreStart
