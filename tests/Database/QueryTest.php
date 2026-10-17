@@ -234,6 +234,45 @@ class QueryTest extends TestCase
 		$this->assertSame(2, $count);
 	}
 
+	public function testCountDistinct(): void
+	{
+		$count = $this->database
+			->table('users')
+			->distinct()
+			->select('password')
+			->count();
+
+		// there are two different passwords in use
+		$this->assertSame(2, $count);
+
+		// full rows are unique
+		$this->assertSame(5, $this->database->table('users')->distinct()->count());
+	}
+
+	public function testCountGrouped(): void
+	{
+		$users = fn () => $this->database->table('users');
+
+		// one row per role, not the rows of the first role
+		$this->assertSame(4, $users()->group('role_id')->count());
+
+		// with bindings
+		$this->assertSame(3, $users()->where('balance', '>', 0)->group('role_id')->count());
+
+		// with having
+		$this->assertSame(3, $users()->group('role_id')->having('role_id', '<', 4)->count());
+
+		// grouped by an alias from the select list
+		$this->assertSame(4, $users()->select('substr(fname, 1, 1) AS initial')->group('initial')->count());
+
+		// with a join
+		$this->assertSame(3, $users()->join('roles', 'roles.id = users.role_id')->group('users.role_id')->count());
+
+		// distinct rows of a grouped query
+		$this->assertSame(4, $users()->distinct()->select('role_id')->group('role_id, active')->count());
+		$this->assertSame(4, $users()->distinct()->group('role_id')->count());
+	}
+
 	public function testQuery(): void
 	{
 		$result = $this->database
@@ -752,6 +791,21 @@ class QueryTest extends TestCase
 		$this->assertSame(4, $pagination->start());
 		$this->assertSame(5, $pagination->end());
 		$this->assertSame(3, $pagination->limit());
+	}
+
+	public function testPageGrouped(): void
+	{
+		$results = $this->database
+			->table('users')
+			->select('role_id')
+			->group('role_id')
+			->page(1, 3);
+
+		$pagination = $results->pagination();
+
+		$this->assertCount(3, $results);
+		$this->assertSame(4, $pagination->total());
+		$this->assertSame(2, $pagination->pages());
 	}
 
 	public function testTable(): void

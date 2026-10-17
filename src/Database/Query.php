@@ -488,7 +488,33 @@ class Query
 	 */
 	public function count(): int
 	{
-		return (int)$this->aggregate('COUNT');
+		// `DISTINCT *` compares full rows, which a primary key keeps
+		// unique, so only a select list makes `DISTINCT` change the count
+		$distinct = $this->distinct === true && $this->select !== null;
+
+		if ($this->group === null && $distinct === false) {
+			return (int)$this->aggregate('COUNT');
+		}
+
+		// without a select list there are no aliases to keep,
+		// and `SELECT *` would fail MySQL's `ONLY_FULL_GROUP_BY`
+		if ($this->select === null) {
+			$this->distinct(false)->select('1');
+		}
+
+		// `COUNT(*)` would only count the first group and ignore
+		// `DISTINCT`, so count the rows of the full query instead
+		$sql = $this->order(null)->offset(0)->limit(null)->build('select');
+		$row = $this->query([
+			'query'    => 'SELECT COUNT(*) AS aggregation FROM (' . $sql['query'] . ') AS counted',
+			'bindings' => $sql['bindings']
+		], [
+			'fetch'    => Obj::class,
+			'iterator' => 'array',
+			'method'   => 'fetch'
+		]);
+
+		return $row instanceof Obj ? (int)$row->get('aggregation') : 0;
 	}
 
 	/**
