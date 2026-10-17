@@ -2,6 +2,9 @@
 
 namespace Kirby\Cms;
 
+use Exception;
+use Kirby\Exception\PermissionException;
+use Kirby\Filesystem\F;
 use Kirby\Toolkit\Str;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -168,6 +171,95 @@ class PageDeleteTest extends ModelTestCase
 
 		$this->assertFalse($page->exists());
 		$this->assertDirectoryDoesNotExist($page->root());
+	}
+
+	public function testDeletePageWithUndeletableChild(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/undeletable' => ['options' => ['delete' => false]]
+			],
+			'users' => [
+				['email' => 'admin@getkirby.com', 'role' => 'admin']
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		F::write($source = static::TMP . '/source.md', '');
+
+		$page = Page::create([
+			'slug'    => 'test',
+			'content' => ['title' => 'Test']
+		]);
+
+		$file = $page->createFile([
+			'filename' => 'test.md',
+			'source'   => $source
+		]);
+
+		$a = $page->createChild([
+			'slug'  => 'a',
+			'num'   => 1,
+			'draft' => false
+		]);
+
+		$b = $page->createChild([
+			'slug'     => 'b',
+			'template' => 'undeletable',
+			'draft'    => false
+		]);
+
+		$this->app->impersonate('admin@getkirby.com');
+
+		try {
+			$page->delete(force: true);
+			$this->fail('The page should not have been deleted');
+		} catch (PermissionException $e) {
+			$this->assertSame('You are not allowed to delete "b"', $e->getMessage());
+		}
+
+		// nothing has been touched
+		$this->assertStringContainsString('Title: Test', F::read($page->root() . '/default.txt'));
+		$this->assertFileExists($file->root());
+		$this->assertDirectoryExists($a->root());
+		$this->assertDirectoryExists($b->root());
+	}
+
+	public function testDeletePageWithFailingFileDelete(): void
+	{
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'file.delete:before' => function () {
+					throw new Exception('The file could not be deleted');
+				}
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		F::write($source = static::TMP . '/source.md', '');
+
+		$page = Page::create([
+			'slug'    => 'test',
+			'content' => ['title' => 'Test']
+		]);
+
+		$file = $page->createFile([
+			'filename' => 'test.md',
+			'source'   => $source
+		]);
+
+		try {
+			$page->delete();
+			$this->fail('The page should not have been deleted');
+		} catch (Exception $e) {
+			$this->assertSame('The file could not be deleted', $e->getMessage());
+		}
+
+		// the page content survives a failure during the deletion
+		$this->assertStringContainsString('Title: Test', F::read($page->root() . '/default.txt'));
+		$this->assertFileExists($file->root());
 	}
 
 	public function testDeleteHookWithUUIDAccess(): void

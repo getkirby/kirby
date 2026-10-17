@@ -159,6 +159,28 @@ class PageGuards extends ModelGuards
 	}
 
 	/**
+	 * Checks if the page can be deleted
+	 *
+	 * @throws LogicException If the page has children and should not be force-deleted
+	 * @throws PermissionException If the user is not allowed to delete the page, one of its files or subpages
+	 */
+	protected function ensureToDelete(bool $force = false): void
+	{
+		$this->ensureAvailable('delete');
+		$this->validators()->ensure('delete', $force);
+
+		// files and subpages get deleted with the page, so check them
+		// upfront instead of failing halfway through the deletion
+		foreach ($this->model->files() as $file) {
+			$file->guards()->ensureExecutable('delete');
+		}
+
+		foreach ($this->model->childrenAndDrafts() as $child) {
+			$child->guards()->ensureExecutable('delete', true);
+		}
+	}
+
+	/**
 	 * Checks if the page can be moved to the given parent
 	 *
 	 * @throws DuplicateException If the new parent already has a page with this slug

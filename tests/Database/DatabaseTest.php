@@ -256,6 +256,15 @@ class DatabaseTest extends TestCase
 		$this->assertInstanceOf(PDO::class, $this->database->connection());
 	}
 
+	public function testConnectConnectionDriverClass(): void
+	{
+		// driver-specific methods like `createFunction()`
+		// are only available on the driver's subclass
+		// TODO: only expect `Pdo\Sqlite` once PHP 8.4 is required
+		$expected = PHP_VERSION_ID >= 80400 ? 'Pdo\Sqlite' : PDO::class;
+		$this->assertSame($expected, $this->database->connection()::class);
+	}
+
 	public function testFail(): void
 	{
 		$this->expectException(PDOException::class);

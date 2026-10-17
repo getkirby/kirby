@@ -657,10 +657,6 @@ trait PageActions
 			callback:  function (Page $page, bool $force): bool {
 				$old = $page->clone();
 
-				// keep the content in iummtable memory storage
-				// to still have access to it in after hooks
-				$page->changeStorage(ImmutableMemoryStorage::class);
-
 				// clear UUID cache
 				$page->uuid()?->clear(recursive: true);
 
@@ -683,6 +679,11 @@ trait PageActions
 				while ($child = $page->childrenAndDrafts()->first()) {
 					$child->delete(true);
 				}
+
+				// keep the content in immutable memory storage
+				// to still have access to it in after hooks;
+				// only now, so a failure above can't lose the content
+				$page->changeStorage(ImmutableMemoryStorage::class);
 
 				// delete all versions,
 				// the plain text storage handler will then clean

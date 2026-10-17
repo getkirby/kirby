@@ -7,6 +7,7 @@ use Kirby\Cms\Page;
 use Kirby\Cms\User;
 use Kirby\Exception\AbilityException;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\PermissionException;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 class PageGuardsTestValidators extends PageValidators
@@ -251,6 +252,77 @@ class PageGuardsTest extends ModelTestCase
 		$page = new Page(['slug' => 'test']);
 
 		$this->assertNull($this->guards($page)->ensureExecutable('create'));
+	}
+
+	public function testDelete(): void
+	{
+		$this->assertNull($this->guards()->ensureExecutable('delete'));
+	}
+
+	public function testDeleteWithUndeletableChild(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/undeletable' => ['options' => ['delete' => false]]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'children' => [
+							[
+								'slug'     => 'a',
+								'children' => [
+									['slug' => 'b', 'template' => 'undeletable']
+								]
+							]
+						]
+					]
+				]
+			],
+			'users' => [
+				['email' => 'admin@getkirby.com', 'role' => 'admin']
+			]
+		]);
+
+		$this->app->impersonate('admin@getkirby.com');
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionCode('error.page.delete.permission');
+
+		$this->guards($this->app->page('test'))->ensureExecutable('delete', true);
+	}
+
+	public function testDeleteWithUndeletableFile(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'files/undeletable' => ['options' => ['delete' => false]]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'test',
+						'files' => [
+							[
+								'filename' => 'a.jpg',
+								'content'  => ['template' => 'undeletable']
+							]
+						]
+					]
+				]
+			],
+			'users' => [
+				['email' => 'admin@getkirby.com', 'role' => 'admin']
+			]
+		]);
+
+		$this->app->impersonate('admin@getkirby.com');
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionCode('error.file.delete.permission');
+
+		$this->guards($this->app->page('test'))->ensureExecutable('delete');
 	}
 
 	public function testMove(): void
