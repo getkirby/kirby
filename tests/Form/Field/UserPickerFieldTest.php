@@ -312,9 +312,11 @@ class UserPickerFieldTest extends TestCase
 
 		$ids = $field->toStoredValue();
 
+		// the missing user keeps its stored ID
 		$expected = [
 			'user://leonardo',
-			'user://raphael'
+			'user://raphael',
+			'homer@getkirby.com'
 		];
 
 		$this->assertSame($expected, $ids);

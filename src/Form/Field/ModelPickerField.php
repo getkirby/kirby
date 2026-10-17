@@ -6,6 +6,7 @@ use Kirby\Cms\Collection;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Data\Data;
 use Kirby\Form\Mixin;
+use Kirby\Panel\Ui\Item\MissingItem;
 use Kirby\Panel\Ui\Item\ProtectedItem;
 use Kirby\Reflection\Attributes\Prop;
 use Kirby\Toolkit\A;
@@ -105,11 +106,16 @@ abstract class ModelPickerField extends InputField
 
 					return A::map(
 						$ids,
-						function ($id) use ($field): array|null {
+						function ($id) use ($field): array {
 							$model = $field->toModel($id);
 
+							// keep a model that does not exist (anymore)
+							// in the value, so that it can be removed
 							if ($model === null) {
-								return null;
+								return (new MissingItem(
+									$id,
+									layout: $field->layout()
+								))->props();
 							}
 
 							// never disclose a model the current user must not
@@ -154,10 +160,18 @@ abstract class ModelPickerField extends InputField
 
 		$value = Data::decode($value, 'yaml');
 
-		// resolve models to an ID that `::toModel()` can find
+		// resolve models to an ID that `::toModel()` can find,
+		// models of another type (e.g. a page for files) are dropped
 		foreach ($value as $key => $item) {
 			if ($item instanceof ModelWithContent) {
-				$value[$key] = $item->uuid()?->toString() ?? $item->id();
+				$id = $item->uuid()?->toString() ?? $item->id();
+
+				if ($this->toModel($id) === null) {
+					unset($value[$key]);
+					continue;
+				}
+
+				$value[$key] = $id;
 			}
 		}
 
@@ -229,11 +243,14 @@ abstract class ModelPickerField extends InputField
 		$ids = [];
 
 		// loop through the IDs from the $value property
-		// and resolve them to the model to ensure the correct IDs
+		// and resolve them to the model to ensure the correct IDs;
+		// models that do not exist (anymore) keep their stored ID
 		foreach ($this->value as $id) {
 			if ($model = $this->toModel($id)) {
-				$ids[] = $model->uuid()?->toString() ?? $model->id();
+				$id = $model->uuid()?->toString() ?? $model->id();
 			}
+
+			$ids[] = $id;
 		}
 
 		return $ids;
@@ -254,11 +271,14 @@ abstract class ModelPickerField extends InputField
 		$ids = [];
 
 		// loop through the IDs from the $value property
-		// and convert them to the stored values
+		// and convert them to the stored values;
+		// models that do not exist (anymore) keep their stored ID
 		foreach ($this->value as $id) {
 			if ($model = $this->toModel($id)) {
-				$ids[] = (string)$model->{$this->store($model)}();
+				$id = (string)$model->{$this->store($model)}();
 			}
+
+			$ids[] = $id;
 		}
 
 		return $ids;
