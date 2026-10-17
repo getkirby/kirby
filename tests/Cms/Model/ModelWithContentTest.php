@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Content\DiscardingStorage;
 use Kirby\Content\Lock;
 use Kirby\Content\Version;
 use Kirby\Content\VersionId;
@@ -267,6 +268,41 @@ class ModelWithContentTest extends TestCase
 		VersionId::$render = null;
 
 		$this->assertSame('Original Title', $page->content()->title()->value());
+	}
+
+	public function testUpdateWhenChangesAreRemovedInParallel(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'foo']
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$page = $app->page('foo');
+		$page->version('latest')->save(['title' => 'Original Title']);
+		$page->version('changes')->save(['title' => 'Changed Title']);
+
+		// the changes are discarded after this request checked them
+		$file = $page->version('changes')->contentFile();
+		unlink($file);
+
+		$page->changeStorage(DiscardingStorage::class);
+		DiscardingStorage::$stale = $file;
+
+		try {
+			$updated = $page->update(['title' => 'Updated Title']);
+		} finally {
+			DiscardingStorage::$stale = null;
+		}
+
+		$this->assertSame('Updated Title', $updated->version('latest')->read()['title']);
 	}
 
 	public function testCreateContent(): void

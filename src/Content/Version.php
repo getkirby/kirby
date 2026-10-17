@@ -169,7 +169,8 @@ class Version
 	}
 
 	/**
-	 * Checks if a version exists for the given language
+	 * Checks if a version exists for the given language; to act
+	 * on the version, read it and check for `null` instead
 	 */
 	public function exists(Language|string $language = 'default'): bool
 	{
@@ -501,7 +502,8 @@ class Version
 	}
 
 	/**
-	 * Returns the stored content fields
+	 * Returns the stored content fields, or `null` if the version does
+	 * not exist (anymore); an existing, empty version returns `[]`
 	 *
 	 * @return array<string, string>|null
 	 */
