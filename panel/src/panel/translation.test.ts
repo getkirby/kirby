@@ -33,6 +33,16 @@ describe("panel.translation", () => {
 			expect(document.documentElement.lang).toStrictEqual("fr");
 		});
 
+		it.each([
+			["pt_BR", "pt-BR"],
+			["es_419", "es-419"],
+			["sr@latin", "sr"]
+		])("turns %s into the language tag %s", (code, lang) => {
+			const translation = Translation();
+			translation.set({ code });
+			expect(document.documentElement.lang).toStrictEqual(lang);
+		});
+
 		it("updates document.body.dir", () => {
 			const translation = Translation();
 			translation.set({ code: "en", direction: "ltr" });
