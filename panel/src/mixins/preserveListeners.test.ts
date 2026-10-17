@@ -8,6 +8,13 @@ const ComponentWithoutInherit = {
 	template: "<div />"
 };
 
+const ComponentForwardingAttrs = {
+	mixins: [preserveListeners],
+	inheritAttrs: false,
+	preserveListeners: false,
+	template: '<div><input v-bind="$attrs" /></div>'
+};
+
 describe("preserveListeners", () => {
 	describe("when inheritAttrs is false", () => {
 		it("attaches event listeners to the root element", async () => {
@@ -47,6 +54,17 @@ describe("preserveListeners", () => {
 			wrapper.unmount();
 			wrapper.element.dispatchEvent(new Event("click"));
 			expect(handler).not.toHaveBeenCalled();
+		});
+	});
+
+	describe("when preserveListeners is false", () => {
+		it("leaves the listeners to the component", async () => {
+			const handler = vi.fn();
+			const wrapper = mount(ComponentForwardingAttrs, {
+				attrs: { onKeydown: handler }
+			});
+			await wrapper.find("input").trigger("keydown");
+			expect(handler).toHaveBeenCalledOnce();
 		});
 	});
 });

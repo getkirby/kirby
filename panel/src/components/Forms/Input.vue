@@ -62,6 +62,8 @@ export const props = {
  */
 export default {
 	mixins: [props],
+	// `inputProps` forwards the listeners to the input
+	preserveListeners: false,
 	emits: ["input", "submit"],
 	computed: {
 		inputProps() {

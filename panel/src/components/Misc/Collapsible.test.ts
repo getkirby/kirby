@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from "@test/unit";
 import { mount as vueMount } from "@vue/test-utils";
 import { h, ref } from "vue";
+import preserveListeners from "@/mixins/preserveListeners";
 import Collapsible from "./Collapsible.vue";
 
 function createObservers() {
@@ -302,6 +303,22 @@ describe("Collapsible.vue", () => {
 			const vm = mount().vm;
 			// 3*10 + 2*4
 			expect(vm.width([10, 10, 10], 3, 4)).toBe(38);
+		});
+	});
+
+	// events
+	describe("click event", () => {
+		it("calls the listener once", async () => {
+			const handler = vi.fn();
+			const wrapper = vueMount(Collapsible, {
+				attrs: { onClick: handler },
+				global: {
+					mixins: [preserveListeners],
+					mocks: { $panel: { observers: createObservers() } }
+				}
+			});
+			await wrapper.trigger("click");
+			expect(handler).toHaveBeenCalledOnce();
 		});
 	});
 

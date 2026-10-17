@@ -4,14 +4,19 @@ import { wrap } from "@/helpers/array";
 /**
  * Ensures that even when a component prohibits to
  * inherit non-prop attributes, applied listeners
- * are still preserved and attached to the root element
+ * are still preserved and attached to the root element.
+ * Components that forward `$attrs` themselves opt out
+ * with `preserveListeners: false`.
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
 export default {
 	mounted() {
-		if (this.$options.inheritAttrs !== false) {
+		if (
+			this.$options.inheritAttrs !== false ||
+			this.$options.preserveListeners === false
+		) {
 			return;
 		}
 
