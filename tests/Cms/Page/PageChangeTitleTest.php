@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Content\DiscardingStorage;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Page::class)]
@@ -52,6 +53,30 @@ class PageChangeTitleTest extends ModelTestCase
 
 		$this->assertSame('New Title', $changes->get('title')->value(), 'The title should be updated in the changes version');
 		$this->assertSame('Some additional text', $changes->get('text')->value(), 'Other changes should remain the same');
+	}
+
+	public function testChangeTitleWhenChangesAreRemovedInParallel(): void
+	{
+		$model = Page::create(['slug' => 'test']);
+
+		$model->version('latest')->save(['title' => 'Old Title']);
+		$model->version('changes')->save(['text' => 'Some additional text']);
+
+		// the changes are discarded after this request checked them
+		$file = $model->version('changes')->contentFile();
+		unlink($file);
+
+		$model->changeStorage(DiscardingStorage::class);
+		DiscardingStorage::$stale = $file;
+
+		try {
+			$modified = $model->changeTitle('New Title');
+		} finally {
+			DiscardingStorage::$stale = null;
+		}
+
+		$this->assertSame('New Title', $modified->title()->value());
+		$this->assertFileDoesNotExist($file);
 	}
 
 	public function testChangeTitleHooks(): void

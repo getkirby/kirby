@@ -241,6 +241,24 @@ class StorageTest extends TestCase
 		$this->assertTrue($handler2->exists(VersionId::changes(), Language::single()));
 	}
 
+	public function testCopyAllSkipsVersionRemovedInParallel(): void
+	{
+		$this->setUpSingleLanguage();
+
+		Data::write($this->model->root() . '/article.txt', ['title' => 'Latest']);
+		Data::write($this->model->root() . '/_changes/article.txt', ['title' => 'Changes']);
+
+		$from = new DiscardingStorage($this->model);
+		$to   = new MemoryStorage($this->model);
+
+		DiscardingStorage::$discard = true;
+
+		$from->copyAll($to);
+
+		$this->assertSame(['title' => 'Latest'], $to->read(VersionId::latest(), Language::single()));
+		$this->assertFalse($to->exists(VersionId::changes(), Language::single()));
+	}
+
 	public function testDeleteLanguageMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
@@ -508,6 +526,44 @@ class StorageTest extends TestCase
 		$this->assertFalse($handler1->exists(VersionId::changes(), Language::single()));
 		$this->assertTrue($handler2->exists(VersionId::latest(), Language::single()));
 		$this->assertTrue($handler2->exists(VersionId::changes(), Language::single()));
+	}
+
+	public function testMoveAllSkipsVersionRemovedInParallel(): void
+	{
+		$this->setUpSingleLanguage();
+
+		Data::write($this->model->root() . '/article.txt', ['title' => 'Latest']);
+		Data::write($this->model->root() . '/_changes/article.txt', ['title' => 'Changes']);
+
+		$from = new DiscardingStorage($this->model);
+		$to   = new MemoryStorage($this->model);
+
+		DiscardingStorage::$discard = true;
+
+		$from->moveAll($to);
+
+		$this->assertSame(['title' => 'Latest'], $to->read(VersionId::latest(), Language::single()));
+		$this->assertFalse($to->exists(VersionId::changes(), Language::single()));
+	}
+
+	public function testMoveLanguageSkipsVersionRemovedInParallel(): void
+	{
+		$this->setUpMultiLanguage();
+
+		Data::write($this->model->root() . '/article.txt', ['title' => 'Latest']);
+		Data::write($this->model->root() . '/_changes/article.txt', ['title' => 'Changes']);
+
+		$handler = new DiscardingStorage($this->model);
+
+		DiscardingStorage::$discard = true;
+
+		$handler->moveLanguage(
+			Language::single(),
+			$this->app->language('en')
+		);
+
+		$this->assertSame(['title' => 'Latest'], $handler->read(VersionId::latest(), $this->app->language('en')));
+		$this->assertFalse($handler->exists(VersionId::changes(), $this->app->language('en')));
 	}
 
 	public function testMoveSingleLanguageToMultiLanguage(): void

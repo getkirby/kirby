@@ -8,6 +8,7 @@ use Kirby\Cms\Page;
 use Kirby\Cms\User;
 use Kirby\Data\Data;
 use Kirby\Exception\LogicException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -448,6 +449,35 @@ class PlainTextStorageTest extends TestCase
 		Data::write($this->model->root() . '/article.txt', $fields);
 
 		$this->assertSame($fields, $this->storage->read(VersionId::latest(), Language::single()));
+	}
+
+	public function testReadMissingChanges(): void
+	{
+		$this->setUpSingleLanguage();
+
+		// a changes version exists only as its file
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The version has been removed by another request');
+
+		$this->storage->read(VersionId::changes(), Language::single());
+	}
+
+	public function testReadMissingLatest(): void
+	{
+		$this->setUpSingleLanguage();
+
+		// a page directory without a content file is an empty version
+		$this->assertSame([], $this->storage->read(VersionId::latest(), Language::single()));
+	}
+
+	public function testReadMissingTranslation(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The version has been removed by another request');
+
+		$this->storage->read(VersionId::latest(), $this->app->language('de'));
 	}
 
 	public function testReadReleasesLock(): void

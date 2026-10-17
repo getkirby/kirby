@@ -6,6 +6,7 @@ use Generator;
 use Kirby\Cms\Language;
 use Kirby\Cms\Languages;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\A;
 
 /**
@@ -83,7 +84,11 @@ abstract class Storage
 	public function copyAll(Storage $to): void
 	{
 		foreach ($this->all() as $versionId => $language) {
-			$this->copy($versionId, $language, toStorage: $to);
+			try {
+				$this->copy($versionId, $language, toStorage: $to);
+			} catch (NotFoundException) {
+				// removed by a parallel request since it was listed
+			}
 		}
 	}
 
@@ -220,7 +225,11 @@ abstract class Storage
 	public function moveAll(Storage $to): void
 	{
 		foreach ($this->all() as $versionId => $language) {
-			$this->move($versionId, $language, toStorage: $to);
+			try {
+				$this->move($versionId, $language, toStorage: $to);
+			} catch (NotFoundException) {
+				// removed by a parallel request since it was listed
+			}
 		}
 	}
 
@@ -235,19 +244,25 @@ abstract class Storage
 	): void {
 		foreach ($this->model->versions() as $version) {
 			if ($this->exists($version->id(), $fromLanguage) === true) {
-				$this->move(
-					$version->id(),
-					$fromLanguage,
-					toLanguage: $toLanguage
-				);
+				try {
+					$this->move(
+						$version->id(),
+						$fromLanguage,
+						toLanguage: $toLanguage
+					);
+				} catch (NotFoundException) {
+					// removed by a parallel request since the check
+				}
 			}
 		}
 	}
 
 	/**
-	 * Returns the stored content fields
+	 * Returns the stored content fields; an existing
+	 * version without any fields returns an empty array
 	 *
 	 * @return array<string, string>
+	 * @throws \Kirby\Exception\NotFoundException If the version does not exist (anymore)
 	 */
 	abstract public function read(VersionId $versionId, Language $language): array;
 
