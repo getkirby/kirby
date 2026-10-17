@@ -526,6 +526,73 @@ class PageRulesTest extends ModelTestCase
 		PageRules::delete($page, true);
 	}
 
+	public function testDeleteWithUndeletableChild(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/undeletable' => ['options' => ['delete' => false]]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'children' => [
+							['slug' => 'a'],
+							[
+								'slug'     => 'b',
+								'children' => [
+									['slug' => 'c', 'template' => 'undeletable']
+								]
+							]
+						]
+					]
+				]
+			],
+			'users' => [
+				['email' => 'admin@getkirby.com', 'role' => 'admin']
+			]
+		]);
+
+		$this->app->impersonate('admin@getkirby.com');
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to delete "c"');
+
+		PageRules::delete($this->app->page('test'), true);
+	}
+
+	public function testDeleteWithUndeletableFile(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'files/undeletable' => ['options' => ['delete' => false]]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'test',
+						'files' => [
+							[
+								'filename' => 'a.jpg',
+								'content'  => ['template' => 'undeletable']
+							]
+						]
+					]
+				]
+			],
+			'users' => [
+				['email' => 'admin@getkirby.com', 'role' => 'admin']
+			]
+		]);
+
+		$this->app->impersonate('admin@getkirby.com');
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('The file cannot be deleted');
+
+		PageRules::delete($this->app->page('test'));
+	}
+
 	public function testDuplicate(): void
 	{
 		$page = new Page([
