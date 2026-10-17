@@ -54,6 +54,8 @@ describe("k-collection", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "DIV", "k-collection");
+		it.acceptsClass(mount);
+		it.acceptsStyle(mount);
 		it.inheritsNoAttrs(mount);
 
 		it("renders the items", () => {
