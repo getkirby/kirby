@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Http\Uri;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Response::class)]
@@ -14,6 +15,12 @@ class ResponseTest extends TestCase
 				'index' => 'https://getkirby.test'
 			]
 		]);
+	}
+
+	protected function tearDown(): void
+	{
+		parent::tearDown();
+		Uri::$current = null;
 	}
 
 	public function testRedirect(): void
@@ -46,5 +53,13 @@ class ResponseTest extends TestCase
 		$this->assertSame('', $response->body());
 		$this->assertSame(301, $response->code());
 		$this->assertEquals(['Location' => 'https://getkirby.test/uri'], $response->headers()); // cannot use strict assertion (Uri object)
+	}
+
+	public function testRedirectWithInherit(): void
+	{
+		Uri::$current = new Uri('https://getkirby.test/notes/tag:foo?bar=baz');
+
+		$response = Response::redirect('/de', inherit: true);
+		$this->assertEquals(['Location' => 'https://getkirby.test/de/tag:foo?bar=baz'], $response->headers()); // cannot use strict assertion (Uri object)
 	}
 }
