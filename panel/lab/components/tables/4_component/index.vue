@@ -19,6 +19,14 @@
 				:sortable="true"
 			></k-table>
 		</k-lab-example>
+		<k-lab-example label="Sortable columns">
+			<k-table
+				:columns="sortableColumns"
+				:options="options"
+				:rows="sortedRows"
+				@header="onHeader"
+			></k-table>
+		</k-lab-example>
 		<k-lab-example label="Selecting">
 			<k-table
 				:columns="columns"
@@ -44,6 +52,11 @@
 
 <script>
 export default {
+	data() {
+		return {
+			sortBy: null
+		};
+	},
 	computed: {
 		columns() {
 			return {
@@ -73,6 +86,23 @@ export default {
 				}
 			];
 		},
+		sortableColumns() {
+			const [field, direction] = this.sortBy?.split(" ") ?? [];
+
+			return Object.fromEntries(
+				Object.entries(this.columns).map(([name, column]) => [
+					name,
+					{ ...column, sorted: name === field ? direction : false }
+				])
+			);
+		},
+		sortedRows() {
+			if (this.sortBy === null) {
+				return this.rows;
+			}
+
+			return this.$helper.array.sortBy([...this.rows], this.sortBy);
+		},
 		rows() {
 			return [
 				{
@@ -95,6 +125,12 @@ export default {
 				{ id: "skeleton-1", theme: "skeleton" },
 				{ id: "skeleton-2", theme: "skeleton" }
 			];
+		}
+	},
+	methods: {
+		onHeader({ columnIndex }) {
+			const ascending = this.sortBy === columnIndex + " asc";
+			this.sortBy = columnIndex + (ascending ? " desc" : " asc");
 		}
 	}
 };
