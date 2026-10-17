@@ -9,7 +9,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Http\Idn;
 use Kirby\Uuid\Uuid;
 use ReflectionFunction;
-use Throwable;
+use Stringable;
 
 /**
  * A set of validator methods
@@ -374,17 +374,17 @@ V::$validators = [
 	 * Checks for valid email addresses
 	 */
 	'email' => function ($value): bool {
-		if (filter_var($value, FILTER_VALIDATE_EMAIL) === false) {
-			try {
-				$email = Idn::encodeEmail($value);
-			} catch (Throwable) {
-				return false;
-			}
-
-			return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
+		if (filter_var($value, FILTER_VALIDATE_EMAIL) !== false) {
+			return true;
 		}
 
-		return true;
+		// retry with the domain encoded to Punycode (only possible for strings)
+		if (is_string($value) === false && $value instanceof Stringable === false) {
+			return false;
+		}
+
+		$email = Idn::encodeEmail((string)$value);
+		return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
 	},
 
 	/**
