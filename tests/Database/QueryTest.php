@@ -322,6 +322,31 @@ class QueryTest extends TestCase
 			->one();
 	}
 
+	public function testFailKeepsDatabaseMode(): void
+	{
+		// successful queries
+		$this->database->table('users')->fail()->all();
+		$this->assertFalse($this->database->query('SELECT foo FROM users'));
+
+		$this->database->table('roles')->fail()->insert(['role' => 'guest']);
+		$this->assertFalse($this->database->execute('INSERT INTO foo VALUES (1)'));
+
+		// failing queries
+		try {
+			$this->database->table('users')->fail()->where('foo = "bar"')->all();
+			$this->fail('Expected an exception for the failing select');
+		} catch (PDOException) {
+			$this->assertFalse($this->database->query('SELECT foo FROM users'));
+		}
+
+		try {
+			$this->database->table('users')->fail()->insert(['username' => 'ringo']);
+			$this->fail('Expected an exception for the failing insert');
+		} catch (PDOException) {
+			$this->assertFalse($this->database->execute('INSERT INTO foo VALUES (1)'));
+		}
+	}
+
 	public function testFetch(): void
 	{
 		$query = $this->database
