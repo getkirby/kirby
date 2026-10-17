@@ -32,7 +32,8 @@
 					theme
 				}"
 				@change="$emit('change', $event)"
-				@item="$emit('item', $event)"
+				@header="$emit('header', $event)"
+				@item="onItem"
 				@option="onOption"
 				@select="onSelect"
 				@sort="$emit('sort', $event)"
@@ -102,6 +103,7 @@ export default {
 		"action",
 		"change",
 		"empty",
+		"header",
 		"item",
 		"option",
 		"paginate",
@@ -160,6 +162,9 @@ export default {
 		onEmpty(e) {
 			e.stopPropagation();
 			this.$emit("empty");
+		},
+		onItem(...args) {
+			this.$emit("item", ...args);
 		},
 		onOption(...args) {
 			this.$emit("action", ...args);
