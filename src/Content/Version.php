@@ -467,7 +467,17 @@ class Version
 		VersionRules::publish($this, $language);
 
 		$latest  = $this->sibling('latest')->read($language) ?? [];
-		$changes = $this->read($language) ?? [];
+		$changes = $this->read($language);
+
+		// the rules above have checked that the version exists, but a
+		// parallel request can still discard it before it is read here,
+		// and a file that is just being created reads back empty. Neither
+		// must be mistaken for "every field was removed" below
+		if ($changes === null || $changes === []) {
+			throw new NotFoundException(
+				message: 'The changes version has no content to publish'
+			);
+		}
 
 		// overwrite all fields that are not in the `changes` version
 		// with a null value. The ModelWithContent::update method will merge
