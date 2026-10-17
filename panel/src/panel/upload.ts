@@ -1,12 +1,23 @@
 import { reactive } from "vue";
-import { uuid } from "@/helpers/string";
-import type { DialogState } from "./dialog";
-import State from "./state";
-import listeners, { type Listener } from "./listeners";
-import queue from "@/helpers/queue";
-import { uploadAsChunks } from "@/helpers/upload";
+import JsonRequestError from "@/errors/JsonRequestError";
+import RequestError from "@/errors/RequestError";
+import { isAbortError } from "@/helpers/error";
 import { extension, name, niceSize } from "@/helpers/file";
+import queue from "@/helpers/queue";
+import { random, uuid } from "@/helpers/string";
+import type { DialogState } from "./dialog";
+import listeners, { type Listener } from "./listeners";
 import Panel from "./panel";
+import State from "./state";
+
+type Chunk = {
+	blob: Blob;
+	headers: Record<string, string>;
+	/** Share of the file the chunk starts at, in percent */
+	from: number;
+	/** Share of the file the chunk ends at, in percent */
+	to: number;
+};
 
 type UploadFileData = {
 	completed: boolean;
@@ -36,6 +47,37 @@ export type UploadState = {
 	replacing: UploadFileData | null;
 	url: string | null;
 };
+
+/**
+ * Splits a file into the chunks to upload, with
+ * the headers for the backend to put them together
+ */
+function chunks(file: File, size: number): Chunk[] {
+	// small and empty files are sent in one piece
+	if (file.size <= size) {
+		return [{ blob: file, headers: {}, from: 0, to: 100 }];
+	}
+
+	const id = random(16).toLowerCase();
+	const chunks: Chunk[] = [];
+
+	for (let start = 0; start < file.size; start += size) {
+		const end = Math.min(start + size, file.size);
+
+		chunks.push({
+			blob: file.slice(start, end, file.type),
+			headers: {
+				"upload-id": id,
+				"upload-length": String(file.size),
+				"upload-offset": String(start)
+			},
+			from: (start / file.size) * 100,
+			to: (end / file.size) * 100
+		});
+	}
+
+	return chunks;
+}
 
 export function defaults(): UploadState {
 	return {
@@ -338,6 +380,7 @@ export default function Upload(panel: Panel) {
 
 			// prepare the abort controller
 			this.abort = new AbortController();
+			const signal = this.abort.signal;
 
 			// gather upload tasks for all files
 			const files = [];
@@ -378,6 +421,11 @@ export default function Upload(panel: Panel) {
 
 			await queue(files, panel.config.uploads);
 
+			// the upload got cancelled in the meantime
+			if (signal.aborted === true) {
+				return;
+			}
+
 			// if no uncompleted files are left, be done
 			if (this.files.length === this.completed.length) {
 				return this.done();
@@ -387,32 +435,56 @@ export default function Upload(panel: Panel) {
 			file: UploadFileData,
 			attributes: Record<string, string | number>
 		): Promise<void> {
+			// skip empty attributes, e.g. a missing template
+			const fields = Object.entries(attributes).filter(
+				([, value]) => value !== null && value !== undefined
+			);
+
 			try {
-				const response = (await uploadAsChunks(
-					file.src,
-					{
-						abort: this.abort!.signal,
-						attributes: attributes,
-						filename: file.name + "." + file.extension,
-						headers: { "x-csrf": panel.system.csrf },
-						url: this.url ?? undefined,
-						progress: (xhr, src, progress) => {
-							file.progress = progress;
-						}
-					},
-					panel.config.upload
-				)) as Record<string, unknown>;
+				let json: Record<string, unknown> = {};
+
+				for (const chunk of chunks(file.src, panel.config.upload)) {
+					const body = new FormData();
+					body.append("file", chunk.blob, file.name + "." + file.extension);
+
+					for (const [key, value] of fields) {
+						body.append(key, String(value));
+					}
+
+					const { response } = await panel.request(this.url!, {
+						method: "POST",
+						body,
+						headers: chunk.headers,
+						progress: (percent) => {
+							const share = ((chunk.to - chunk.from) * percent) / 100;
+							file.progress = Math.round(chunk.from + share);
+						},
+						signal: this.abort!.signal
+					});
+
+					json = response.json;
+				}
 
 				file.completed = true;
-				file.model = response.data;
+				file.model = json.data;
 
 				panel.events.emit("file.upload", file);
 			} catch (error) {
+				// cancelled uploads don't need an error state
+				if (isAbortError(error) === true) {
+					return;
+				}
+
 				panel.error(error, false);
 
-				// store the error message to show it in
-				// the dialog for example
-				if (error instanceof Error) {
+				// show the server's message, e.g. for duplicate
+				// filenames, and a generic one for anything else
+				file.error = panel.t("upload.error.default");
+
+				if (
+					error instanceof RequestError &&
+					error instanceof JsonRequestError === false
+				) {
 					file.error = error.message;
 				}
 
