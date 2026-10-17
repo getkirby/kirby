@@ -655,10 +655,20 @@ class Version
 		// check if updating is allowed
 		VersionRules::update($this, $fields, $language);
 
+		// a parallel request has deleted the version since the rules
+		// checked it: the merge would write a partial version
+		$previous = $this->read($language);
+
+		if ($previous === null) {
+			throw new NotFoundException(
+				message: 'The version has been removed by another request'
+			);
+		}
+
 		// merge the previous state with the new state to always
 		// update to a complete version
 		$fields = [
-			...$this->read($language) ?? [],
+			...$previous,
 			...$fields
 		];
 
