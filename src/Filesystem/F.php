@@ -1047,11 +1047,8 @@ class F
 	}
 
 	/**
-	 * Serializes concurrent read-update-writes of a file by
-	 * holding an exclusive `flock` for the whole operation, so
-	 * that other writers (that lock the same way) cannot lose
-	 * each other's updates. The `$modifier` callback receives
-	 * the current file contents.
+	 * Updates a file under an exclusive lock; the `$modifier`
+	 * callback receives the current file contents
 	 *
 	 * @since 5.5.0
 	 */
@@ -1098,6 +1095,8 @@ class F
 				return false;
 			}
 
+			// rewritten in place on purpose: replacing the file would let
+			// a process waiting for this lock write into the replaced one
 			rewind($handle);
 			ftruncate($handle, 0);
 
@@ -1156,5 +1155,56 @@ class F
 		}
 
 		return file_put_contents($file, $content, $mode) !== false;
+	}
+
+	/**
+	 * Replaces a file in one step via a temporary file and
+	 * `rename()`, so that readers never see a partial file
+	 *
+	 * @since 5.6.2
+	 */
+	public static function writeAtomic(string $file, string $content): bool
+	{
+		$directory = dirname($file);
+
+		if (Dir::make($directory) === false) {
+			return false;
+		}
+
+		// a rename only needs a writable directory: refuse a
+		// read-only file the same way `F::write()` does
+		if (static::isWritable($file) === false) {
+			throw new Exception('The file "' . $file . '" is not writable');
+		}
+
+		// keep the mode of an existing file; read it in a single call so
+		// that a file removed in between cannot be mistaken for mode 0
+		$mode = Helpers::handleErrors(
+			fn (): int|false => fileperms($file),
+			fn (int $errno, string $errstr): bool => str_contains($errstr, 'stat failed'),
+			false
+		);
+
+		// a leading dot keeps the temporary file out of the inventory
+		$tmp = $directory . '/.' . basename($file) . '.' . bin2hex(random_bytes(6)) . '.tmp';
+
+		if (file_put_contents($tmp, $content) === false) {
+			return false;
+		}
+
+		if ($mode !== false) {
+			chmod($tmp, $mode & 0777);
+		}
+
+		// `rename()` replaces the target atomically on POSIX filesystems
+		if (@rename($tmp, $file) === true) {
+			return true;
+		}
+
+		// e.g. Windows while another process holds the target open:
+		// fall back to the locked in-place write
+		@unlink($tmp);
+
+		return static::write($file, $content);
 	}
 }
