@@ -1,5 +1,9 @@
 <template>
-	<div :data-scrollable="scrollable" class="k-collection">
+	<div
+		:class="['k-collection', $attrs.class]"
+		:data-scrollable="scrollable"
+		:style="$attrs.style"
+	>
 		<component
 			:is="scrollable ? 'k-scrollable' : 'div'"
 			class="k-collection-body"
