@@ -501,12 +501,14 @@ class Version
 		$language = Language::ensure($language);
 
 		try {
-			// make sure that the version exists
-			VersionRules::read($this, $language);
-
+			// serve fields from the cache without checking the disk
+			// again, so one request sees one state of the version
 			$fields = VersionCache::get($this, $language);
 
 			if ($fields === null) {
+				// make sure that the version exists
+				VersionRules::read($this, $language);
+
 				$fields = $this->model->storage()->read($this->id, $language);
 				$fields = $this->prepareFieldsAfterRead($fields, $language);
 
@@ -643,10 +645,20 @@ class Version
 		// check if updating is allowed
 		VersionRules::update($this, $fields, $language);
 
+		// a parallel request has deleted the version since the rules
+		// checked it: the merge would write a partial version
+		$previous = $this->read($language);
+
+		if ($previous === null) {
+			throw new NotFoundException(
+				message: 'The version has been removed by another request'
+			);
+		}
+
 		// merge the previous state with the new state to always
 		// update to a complete version
 		$fields = [
-			...$this->read($language),
+			...$previous,
 			...$fields
 		];
 

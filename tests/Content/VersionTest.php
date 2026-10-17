@@ -8,6 +8,7 @@ use Kirby\Cms\Page;
 use Kirby\Data\Data;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Filesystem\F;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -1041,6 +1042,28 @@ class VersionTest extends TestCase
 		$this->assertSame($expected['content'], $version->read());
 	}
 
+	public function testReadFromCacheAfterFileIsGone(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::changes()
+		);
+
+		Data::write($file = $this->contentFile(null, VersionId::changes()), $content = [
+			'title' => 'Test'
+		]);
+
+		$this->assertSame($content, $version->read());
+
+		// a parallel request discards the version
+		F::remove($file);
+
+		$this->assertSame($content, $version->read());
+		$this->assertSame($content, $version->content()->toArray());
+	}
+
 	public function testReadLatestWithoutContentFile(): void
 	{
 		$this->setUpSingleLanguage();
@@ -1589,6 +1612,23 @@ class VersionTest extends TestCase
 		// check for untranslatable fields
 		$this->assertArrayHasKey('date', $version->read('en'));
 		$this->assertArrayNotHasKey('date', $version->read('de'));
+	}
+
+	public function testUpdateVersionRemovedInParallel(): void
+	{
+		$this->setUpSingleLanguage();
+
+		Data::write($this->contentFile(null, VersionId::changes()), [
+			'title' => 'Title changes'
+		]);
+
+		$this->model->changeStorage(DiscardingStorage::class);
+		DiscardingStorage::$discard = true;
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The version has been removed by another request');
+
+		$this->model->version('changes')->update(['text' => 'Text']);
 	}
 
 	public function testUrlPage(): void
