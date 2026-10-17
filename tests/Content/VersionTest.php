@@ -1614,6 +1614,23 @@ class VersionTest extends TestCase
 		$this->assertArrayNotHasKey('date', $version->read('de'));
 	}
 
+	public function testUpdateVersionRemovedInParallel(): void
+	{
+		$this->setUpSingleLanguage();
+
+		Data::write($this->contentFile(null, VersionId::changes()), [
+			'title' => 'Title changes'
+		]);
+
+		$this->model->changeStorage(DiscardingStorage::class);
+		DiscardingStorage::$discard = true;
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The version has been removed by another request');
+
+		$this->model->version('changes')->update(['text' => 'Text']);
+	}
+
 	public function testUrlPage(): void
 	{
 		$this->setUpSingleLanguage();
