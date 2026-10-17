@@ -10,6 +10,7 @@ use Kirby\Cms\User;
 use Kirby\Data\Data;
 use Kirby\Exception\Exception;
 use Kirby\Exception\LogicException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 
@@ -307,6 +308,7 @@ class PlainTextStorage extends Storage
 	 * Returns the stored content fields
 	 *
 	 * @return array<string, string>
+	 * @throws \Kirby\Exception\NotFoundException If the version does not exist (anymore)
 	 */
 	public function read(VersionId $versionId, Language $language): array
 	{
@@ -326,6 +328,18 @@ class PlainTextStorage extends Storage
 			// @codeCoverageIgnoreEnd
 
 			return Data::decode($contents, F::extension($contentFile));
+		}
+
+		// A changes version or a translation exists only as its content
+		// file. If that is gone, a parallel request has removed the
+		// version since its existence was checked.
+		if (
+			$versionId->is('latest') === false ||
+			$language->isDefault() === false
+		) {
+			throw new NotFoundException(
+				message: 'The version has been removed by another request'
+			);
 		}
 
 		// For existing versions that don't have a content file yet,

@@ -17,8 +17,21 @@ class DiscardingStorage extends PlainTextStorage
 	 */
 	public static bool $discard = false;
 
+	/**
+	 * A content file that is gone, but that existence checks
+	 * still report, like checks made just before the removal
+	 */
+	public static string|null $stale = null;
+
 	public function exists(VersionId $versionId, Language $language): bool
 	{
+		if (
+			static::$stale !== null &&
+			$this->contentFile($versionId, $language) === static::$stale
+		) {
+			return true;
+		}
+
 		$exists = parent::exists($versionId, $language);
 
 		if (

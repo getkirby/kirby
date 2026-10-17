@@ -10,6 +10,7 @@ use Kirby\Content\VersionId;
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Template\Template;
 use Kirby\Toolkit\A;
@@ -186,8 +187,10 @@ trait PageActions
 
 			// make sure to update the slug in the changes version as well
 			// otherwise the new slug would be lost as soon as the changes are saved
-			if ($page->version('changes')->exists($language) === true) {
+			try {
 				$page->version('changes')->update(['slug' => $slug], $language);
+			} catch (NotFoundException) {
+				// no changes, or a parallel request discarded them
 			}
 
 			return $page->save(['slug' => $slug], $languageCode);
@@ -339,8 +342,10 @@ trait PageActions
 
 			// make sure to update the title in the changes version as well
 			// otherwise the new title would be lost as soon as the changes are saved
-			if ($page->version('changes')->exists($language) === true) {
+			try {
 				$page->version('changes')->update(['title' => $title], $language);
+			} catch (NotFoundException) {
+				// no changes, or a parallel request discarded them
 			}
 
 			return $page->save(['title' => $title], $language->code());

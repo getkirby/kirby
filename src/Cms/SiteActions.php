@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\BlockCollectionAccess;
 
 /**
@@ -59,8 +60,10 @@ trait SiteActions
 
 			// make sure to update the title in the changes version as well
 			// otherwise the new title would be lost as soon as the changes are saved
-			if ($site->version('changes')->exists($language) === true) {
+			try {
 				$site->version('changes')->update(['title' => $title], $language);
+			} catch (NotFoundException) {
+				// no changes, or a parallel request discarded them
 			}
 
 			return $site->save(['title' => $title], $language->code());
