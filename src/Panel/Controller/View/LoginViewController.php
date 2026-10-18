@@ -75,19 +75,23 @@ class LoginViewController extends ViewController
 			return [];
 		}
 
-		$mode        = $this->status->mode();
-		$user        = $this->user();
-		$challenges  = $this->kirby->auth()->challenges();
-		$available   = $challenges->available($user, $mode);
-		$currentType = $this->status->challenge();
+		$mode       = $this->status->mode();
+		$user       = $this->user();
+		$challenges = $this->kirby->auth()->challenges();
+		$available  = A::map(
+			$challenges->available($user, $mode),
+			fn (string $type) => $challenges->get($type, $user, $mode)
+		);
+
+		$active = $this->status->challenge();
 
 		return A::map(
 			$available,
-			fn (string $type) => [
-				'type'   => $type,
-				'label'  => static::i18n('login.challenge.' . $type . '.label'),
-				'icon'   => $challenges->class($type)::icon(),
-				'active' => $type === $currentType,
+			fn (Challenge $challenge) => [
+				'type'   => $challenge->type(),
+				'label'  => $challenge->label(),
+				'icon'   => $challenge->icon(),
+				'active' => $challenge->type() === $active,
 			]
 		);
 	}
