@@ -97,8 +97,9 @@ class Focus
 			return '50% 50%';
 		}
 
+		// unknown positions fall back to the center
 		if (static::isFocalPoint($value) === false) {
-			return Gravity::from($value)->toPercentageString();
+			return (Gravity::tryFrom($value) ?? Gravity::CENTER)->toPercentageString();
 		}
 
 		return $value;

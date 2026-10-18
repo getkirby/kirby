@@ -121,6 +121,10 @@ class FocusTest extends TestCase
 		$this->assertSame('50% 50%', Focus::normalize('{"x":0.5}'));
 		$this->assertSame('50% 50%', Focus::normalize('{"x":"a","y":"b"}'));
 		$this->assertSame('50% 50%', Focus::normalize('{}'));
+
+		// unknown positions
+		$this->assertSame('50% 50%', Focus::normalize('middle'));
+		$this->assertSame('50% 50%', Focus::normalize('left top'));
 	}
 
 	public function testParse(): void
