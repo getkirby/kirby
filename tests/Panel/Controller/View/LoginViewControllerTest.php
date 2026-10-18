@@ -20,12 +20,12 @@ class TestChallenge extends Challenge
 {
 	public static bool $available = true;
 
-	public static function icon(): string
+	public function icon(): string
 	{
 		return 'test-icon';
 	}
 
-	public static function isAvailable(User $user, string $mode): bool
+	public function isAvailable(): bool
 	{
 		return static::$available;
 	}
@@ -52,7 +52,7 @@ class TestChallenge extends Challenge
 
 class TestChallenge2 extends Challenge
 {
-	public static function isAvailable(User $user, string $mode): bool
+	public function isAvailable(): bool
 	{
 		return true;
 	}
@@ -95,9 +95,9 @@ class TestNullFormChallenge extends TestChallenge2
 class TestSecretChallenge extends Challenge
 {
 	// only available once the user has set it up
-	public static function isAvailable(User $user, string $mode): bool
+	public function isAvailable(): bool
 	{
-		return $user->secret('foo') !== null;
+		return $this->user->secret('foo') !== null;
 	}
 
 	public function create(): Pending|null

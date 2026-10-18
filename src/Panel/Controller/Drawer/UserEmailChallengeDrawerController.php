@@ -2,7 +2,6 @@
 
 namespace Kirby\Panel\Controller\Drawer;
 
-use Kirby\Auth\Challenge\EmailChallenge;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
@@ -45,7 +44,7 @@ class UserEmailChallengeDrawerController extends UserCredentialDrawerController
 	{
 		return new Drawer(
 			component: 'k-user-email-challenge-drawer',
-			icon:      EmailChallenge::icon(),
+			icon:      $this->challenge()->icon(),
 			title:     $this->i18n('login.challenge.email.label'),
 			isAccount: $this->isCurrentUser(),
 			isEnabled: $this->isEnabled(),

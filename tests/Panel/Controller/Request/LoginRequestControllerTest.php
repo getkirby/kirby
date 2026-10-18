@@ -16,7 +16,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 
 class SwitchTestChallenge extends Challenge
 {
-	public static function isAvailable(User $user, string $mode): bool
+	public function isAvailable(): bool
 	{
 		return true;
 	}
@@ -39,7 +39,7 @@ class SwitchTestChallenge extends Challenge
 
 class SwitchTestChallenge2 extends Challenge
 {
-	public static function isAvailable(User $user, string $mode): bool
+	public function isAvailable(): bool
 	{
 		return true;
 	}

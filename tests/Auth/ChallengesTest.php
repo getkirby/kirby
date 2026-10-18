@@ -50,7 +50,7 @@ class DummyChallenge extends Challenge
 		);
 	}
 
-	public static function isAvailable(User $user, string $mode): bool
+	public function isAvailable(): bool
 	{
 		return static::$available;
 	}
@@ -66,7 +66,7 @@ class DummyChallenge2 extends Challenge
 {
 	public static bool $available = true;
 
-	public static function isAvailable(User $user, string $mode): bool
+	public function isAvailable(): bool
 	{
 		return static::$available;
 	}
@@ -150,7 +150,8 @@ class ChallengesTest extends TestCase
 		unset(
 			Challenges::$challenges['dummy'],
 			Challenges::$challenges['dummy2'],
-			Challenges::$challenges['dummy3']
+			Challenges::$challenges['dummy3'],
+			Challenges::$challenges['sms']
 		);
 
 	}
@@ -363,6 +364,25 @@ class ChallengesTest extends TestCase
 		$this->assertNull($session->get('kirby.challenge.data'));
 	}
 
+	public function testCreateWithType(): void
+	{
+		// a plugin may register a class under a type
+		// that differs from the class name
+		Challenges::$challenges['sms'] = DummyChallenge::class;
+
+		$this->app = $this->app->clone([
+			'options' => ['auth' => ['challenges' => ['sms']]]
+		]);
+
+		$challenges = new Challenges($this->app->auth(), $this->app);
+		$session    = $this->session();
+		$challenge  = $challenges->create($session, 'marge@simpsons.com', 'login');
+
+		$this->assertSame('sms', $challenge->type());
+		$this->assertSame('sms', $session->get('kirby.challenge.type'));
+		$this->assertSame('sms', $challenges->verify($session, 'ok')->type());
+	}
+
 	public function testEnabledDefaults(): void
 	{
 		$app        = new App(['roots' => ['index' => static::TMP]]);
@@ -402,6 +422,7 @@ class ChallengesTest extends TestCase
 
 		$this->assertInstanceOf(DummyChallenge::class, $challenge);
 		$this->assertSame($user, $challenge->user());
+		$this->assertSame('dummy', $challenge->type());
 		$this->assertSame('login', $challenge->mode());
 		$this->assertSame(123, $challenge->timeout());
 	}
