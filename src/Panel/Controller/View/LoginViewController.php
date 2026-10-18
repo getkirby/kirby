@@ -154,15 +154,15 @@ class LoginViewController extends ViewController
 			fn ($type) => $methods->get($type),
 		);
 
-		$active = $this->current instanceof Method ? $this->current::type() : null;
+		$active = $this->current instanceof Method ? $this->current->type() : null;
 
 		return A::map(
 			$enabled,
 			fn (Method $method) => [
-				'type'   => $method::type(),
-				'label'  => static::i18n('login.method.' . $method::type() . '.label'),
-				'icon'   => $method::icon(),
-				'active' => $method::type() === $active,
+				'type'   => $method->type(),
+				'label'  => $method->label(),
+				'icon'   => $method->icon(),
+				'active' => $method->type() === $active,
 			]
 		);
 	}

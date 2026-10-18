@@ -111,16 +111,16 @@ class WebauthnMethod extends Method
 		);
 	}
 
-	public static function icon(): string
+	public function icon(): string
 	{
 		return 'fingerprint';
 	}
 
-	public static function settings(User $user): array
+	public function settings(User $user): array
 	{
 		return [
 			new Button(
-				icon:   static::icon(),
+				icon:   $this->icon(),
 				text:   I18n::translate('login.webauthn.label'),
 				drawer: $user->panel()->url(true) . '/security/method/webauthn',
 			)
