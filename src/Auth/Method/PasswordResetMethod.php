@@ -2,7 +2,6 @@
 
 namespace Kirby\Auth\Method;
 
-use Kirby\Auth\Auth;
 use Kirby\Auth\Status;
 use Kirby\Cms\User;
 use Kirby\Panel\Ui\Component;
@@ -35,26 +34,26 @@ class PasswordResetMethod extends CodeMethod
 		return new Component(
 			component: 'k-login-password-reset-method-form',
 			submit: [
-				'icon'  => static::icon(),
+				'icon'  => $this->icon(),
 				'label' => static::i18n('login.method.password-reset.submit'),
 			],
 		);
 	}
 
-	public static function icon(): string
+	public function icon(): string
 	{
 		return 'question';
 	}
 
-	public static function isEnabled(Auth $auth, array $options = []): bool
+	public function isEnabled(): bool
 	{
 		// don't allow to circumvent 2FA by 1FA code method
-		static::isWithoutAny2FA($auth);
+		$this->isWithoutAny2FA();
 
 		return true;
 	}
 
-	public static function settings(User $user): array
+	public function settings(User $user): array
 	{
 		return [];
 	}

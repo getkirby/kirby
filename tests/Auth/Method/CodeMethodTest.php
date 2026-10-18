@@ -51,7 +51,7 @@ class CodeMethodTest extends TestCase
 				return $status;
 			});
 
-		$method = new CodeMethod(auth: $auth);
+		$method = new CodeMethod(auth: $auth, type: 'code');
 
 		$result = $method->authenticate('marge@simpsons.com', long: true);
 		$this->assertInstanceOf(Status::class, $result);
@@ -66,7 +66,7 @@ class CodeMethodTest extends TestCase
 	public function testForm(): void
 	{
 		$auth   = $this->auth();
-		$method = new CodeMethod(auth: $auth);
+		$method = new CodeMethod(auth: $auth, type: 'code');
 		$form   = $method->form();
 
 		$this->assertInstanceOf(Component::class, $form);
@@ -79,14 +79,14 @@ class CodeMethodTest extends TestCase
 
 	public function testIcon(): void
 	{
-		$icon = CodeMethod::icon();
+		$icon = (new CodeMethod(auth: $this->auth(), type: 'code'))->icon();
 		$this->assertSame('hashtag', $icon);
 	}
 
 	public function testIsEnabled(): void
 	{
 		$auth = $this->auth();
-		$this->assertTrue(CodeMethod::isEnabled($auth));
+		$this->assertTrue((new CodeMethod(auth: $auth, type: 'code'))->isEnabled());
 	}
 
 	public function testIsEnabledWith2F(): void
@@ -96,7 +96,7 @@ class CodeMethodTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The "code" login method cannot be enabled when 2FA is required');
 
-		CodeMethod::isEnabled($auth);
+		(new CodeMethod(auth: $auth, type: 'code'))->isEnabled();
 	}
 
 	public function testIsEnabledWithPasswordReset(): void
@@ -106,18 +106,13 @@ class CodeMethodTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The "code" and "password-reset" login methods cannot be enabled together');
 
-		CodeMethod::isEnabled($auth);
+		(new CodeMethod(auth: $auth, type: 'code'))->isEnabled();
 	}
 
 	public function testSettings(): void
 	{
 		$user     = $this->createStub(User::class);
-		$settings = CodeMethod::settings($user);
+		$settings = (new CodeMethod(auth: $this->auth(), type: 'code'))->settings($user);
 		$this->assertCount(1, $settings);
-	}
-
-	public function testType(): void
-	{
-		$this->assertSame('code', CodeMethod::type());
 	}
 }
