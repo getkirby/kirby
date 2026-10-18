@@ -123,16 +123,17 @@ class Methods
 		$enabled = [];
 
 		foreach ($config as $type => $options) {
-			$class = $this->class($type);
+			// fail loudly for unknown types
+			$this->class($type);
 
 			try {
-				if ($class::isEnabled($this->auth, $options) === true) {
+				if ($this->get($type)->isEnabled() === true) {
 					$enabled[$type] = $options;
 				}
 
 			} catch (Exception $e) {
-				// consider methods that throw an exception
-				// from their `::isEnabled()` method as not enabled
+				// consider methods that throw an exception from
+				// their constructor or `::isEnabled()` as not enabled
 
 				// when running in debug, re-throw exception
 				if ($this->kirby->option('debug') === true) {
@@ -175,7 +176,8 @@ class Methods
 
 		return new $method(
 			auth:    $this->auth,
-			options: $this->enabled()[$type] ?? []
+			type:    $type,
+			options: $this->config()[$type] ?? []
 		);
 	}
 

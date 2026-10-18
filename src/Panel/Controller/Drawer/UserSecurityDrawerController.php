@@ -62,14 +62,13 @@ class UserSecurityDrawerController extends UserDrawerController
 			]
 		];
 
-		$methods = $this->auth()->methods()->enabled();
+		$methods = $this->auth()->methods();
 
-		foreach (array_keys($methods) as $type) {
-			$method  = $this->auth()->methods()->class($type);
+		foreach (array_keys($methods->enabled()) as $type) {
 			$buttons = [
 				...$buttons,
 				...A::map(
-					$method::settings($this->user),
+					$methods->get($type)->settings($this->user),
 					fn (Button $button) => $button->render()['props']
 				)
 			];

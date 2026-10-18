@@ -60,7 +60,7 @@ class PasswordMethod extends Method
 		return new Component(
 			component: 'k-login-password-method-form',
 			submit: [
-				'icon'  => static::icon(),
+				'icon'  => $this->icon(),
 				'label' => static::i18n('login'),
 			],
 		);
@@ -82,11 +82,11 @@ class PasswordMethod extends Method
 		return $this->auth->challenges()->hasAvailable($user, '2fa');
 	}
 
-	public static function settings(User $user): array
+	public function settings(User $user): array
 	{
 		return [
 			new Button(
-				icon:     static::icon(),
+				icon:     $this->icon(),
 				text:     static::i18n('password'),
 				dialog:   $user->panel()->url(true) . '/changePassword',
 				disabled: $user->guards()->isAvailable('changePassword') === false,
