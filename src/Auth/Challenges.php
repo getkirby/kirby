@@ -46,7 +46,7 @@ class Challenges
 	{
 		$available = array_values(A::filter(
 			$this->enabled(),
-			fn ($type) => $this->class($type)::isAvailable($user, $mode)
+			fn ($type) => $this->get($type, $user, $mode)->isAvailable()
 		));
 
 		// a single-factor flow (e.g. the `code` login method or a
@@ -214,6 +214,7 @@ class Challenges
 
 		return new $challenge(
 			user:    $user,
+			type:    $type,
 			mode:    $mode,
 			timeout: $timeout
 		);

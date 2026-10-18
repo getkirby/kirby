@@ -5,6 +5,7 @@ namespace Kirby\Auth;
 use Kirby\Cms\User;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
+use Kirby\Toolkit\I18n;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 class AttemptChallenge extends Challenge
@@ -67,6 +68,7 @@ class ChallengeTest extends TestCase
 	{
 		return new AttemptChallenge(
 			user:    $this->user,
+			type:    'attempt',
 			mode:    '2fa',
 			timeout: 600
 		);
@@ -181,5 +183,24 @@ class ChallengeTest extends TestCase
 		// the nonce must be burnt even if the exception
 		// comes from the challenge instead of a wrong input
 		$this->assertTrue($invalidated);
+	}
+
+	public function testIsAvailable(): void
+	{
+		$this->assertTrue($this->challenge()->isAvailable());
+	}
+
+	public function testLabel(): void
+	{
+		I18n::$translations = [
+			'en' => ['login.challenge.attempt.label' => 'Attempt']
+		];
+
+		$this->assertSame('Attempt', $this->challenge()->label());
+	}
+
+	public function testType(): void
+	{
+		$this->assertSame('attempt', $this->challenge()->type());
 	}
 }
