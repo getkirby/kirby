@@ -22,7 +22,7 @@ class Imagick extends Darkroom
 {
 	// animated AVIF needs ImageMagick 7.1.2-19 with libheif 1.20,
 	// older versions write a still image per frame
-	public static array $animatableTypes = ['gif', 'webp'];
+	protected static array $animatableTypes = ['gif', 'webp'];
 
 	protected function autoOrient(Image $image): Image
 	{

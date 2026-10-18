@@ -24,7 +24,7 @@ class Darkroom
 	 * Output formats the driver can write with all frames
 	 * of an animated image (others only get the first frame)
 	 */
-	public static array $animatableTypes = [];
+	protected static array $animatableTypes = [];
 
 	public static array $types = [
 		'gd'      => GdLib::class,
