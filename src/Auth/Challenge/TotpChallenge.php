@@ -4,7 +4,6 @@ namespace Kirby\Auth\Challenge;
 
 use Kirby\Auth\Challenge;
 use Kirby\Auth\Pending;
-use Kirby\Cms\User;
 use Kirby\Panel\Ui\Button;
 use Kirby\Panel\Ui\Component;
 use Kirby\Toolkit\Totp;
@@ -40,7 +39,7 @@ class TotpChallenge extends Challenge
 		);
 	}
 
-	public static function icon(): string
+	public function icon(): string
 	{
 		return 'qr-code';
 	}
@@ -48,18 +47,18 @@ class TotpChallenge extends Challenge
 	/**
 	 * Checks whether the user has set up TOTP
 	 */
-	public static function isAvailable(User $user, string $mode = 'login'): bool
+	public function isAvailable(): bool
 	{
-		return $user->secret('totp') !== null;
+		return $this->user->secret('totp') !== null;
 	}
 
-	public static function settings(User $user): array
+	public function settings(): array
 	{
 		return [
 			new Button(
-				icon:   static::icon(),
-				text:   static::i18n('login.challenge.totp.label'),
-				drawer: $user->panel()->url(true) . '/security/challenge/totp'
+				icon:   $this->icon(),
+				text:   $this->label(),
+				drawer: $this->user->panel()->url(true) . '/security/challenge/totp'
 			)
 		];
 	}

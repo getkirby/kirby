@@ -53,7 +53,7 @@ class EmailChallengeTest extends TestCase
 
 	public function testCreate(): void
 	{
-		$challenge = new EmailChallenge($this->user, 'login', 7.3 * 60);
+		$challenge = new EmailChallenge($this->user, 'email', 'login', 7.3 * 60);
 		$pending   = $challenge->create();
 
 		$this->assertCount(1, Email::$emails);
@@ -80,7 +80,7 @@ class EmailChallengeTest extends TestCase
 
 	public function testCreate2FA(): void
 	{
-		$challenge = new EmailChallenge($this->user, '2fa', 7.3 * 60);
+		$challenge = new EmailChallenge($this->user, 'email', '2fa', 7.3 * 60);
 		$pending   = $challenge->create();
 
 		$this->assertCount(1, Email::$emails);
@@ -101,7 +101,7 @@ class EmailChallengeTest extends TestCase
 
 	public function testCreatePasswordReset(): void
 	{
-		$challenge = new EmailChallenge($this->user, 'password-reset', 7.3 * 60);
+		$challenge = new EmailChallenge($this->user, 'email', 'password-reset', 7.3 * 60);
 		$pending   = $challenge->create();
 
 		$this->assertCount(1, Email::$emails);
@@ -123,7 +123,7 @@ class EmailChallengeTest extends TestCase
 	public function testCreateResetUserLanguage(): void
 	{
 		$user = $this->app->user('bart@simpsons.com');
-		$challenge = new EmailChallenge($user, 'password-reset', 7.3 * 60);
+		$challenge = new EmailChallenge($user, 'email', 'password-reset', 7.3 * 60);
 		$challenge->create();
 
 		$email = Email::$emails[0];
@@ -144,7 +144,7 @@ class EmailChallengeTest extends TestCase
 		]);
 
 		$user = $this->app->user('bart@simpsons.com');
-		$challenge = new EmailChallenge($user, 'login', 7.3 * 60);
+		$challenge = new EmailChallenge($user, 'email', 'login', 7.3 * 60);
 		$challenge->create();
 
 		$email = Email::$emails[0];
@@ -168,7 +168,7 @@ class EmailChallengeTest extends TestCase
 		]);
 
 		$user = $this->app->user('marge@simpsons.com');
-		$challenge = new EmailChallenge($user, 'login', 7.3 * 60);
+		$challenge = new EmailChallenge($user, 'email', 'login', 7.3 * 60);
 		$challenge->create();
 
 		$email = Email::$emails[0];
@@ -188,7 +188,7 @@ class EmailChallengeTest extends TestCase
 
 	public function testForm(): void
 	{
-		$challenge = new EmailChallenge($this->user, 'login', 600);
+		$challenge = new EmailChallenge($this->user, 'email', 'login', 600);
 		$pending   = new Pending();
 		$form      = $challenge->form($pending);
 
@@ -203,19 +203,19 @@ class EmailChallengeTest extends TestCase
 
 	public function testIsAvailable(): void
 	{
-		$this->assertTrue(EmailChallenge::isAvailable($this->user, 'login'));
-		$this->assertTrue(EmailChallenge::isAvailable($this->user, 'password-reset'));
+		$this->assertTrue((new EmailChallenge($this->user, 'email', 'login', 600))->isAvailable());
+		$this->assertTrue((new EmailChallenge($this->user, 'email', 'password-reset', 600))->isAvailable());
 	}
 
 	public function testIsAvailable2FA(): void
 	{
 		// as a second factor, the challenge is opt-in per user
-		$this->assertFalse(EmailChallenge::isAvailable($this->user, '2fa'));
+		$this->assertFalse((new EmailChallenge($this->user, 'email', '2fa', 600))->isAvailable());
 
 		$this->app->impersonate('kirby');
 		$user = $this->user->changeSecret('email', true);
 
-		$this->assertTrue(EmailChallenge::isAvailable($user, '2fa'));
+		$this->assertTrue((new EmailChallenge($user, 'email', '2fa', 600))->isAvailable());
 	}
 
 	public function testIsAvailable2FAEnforced(): void
@@ -231,7 +231,7 @@ class EmailChallengeTest extends TestCase
 		]);
 
 		$user = $this->app->user('marge');
-		$this->assertTrue(EmailChallenge::isAvailable($user, '2fa'));
+		$this->assertTrue((new EmailChallenge($user, 'email', '2fa', 600))->isAvailable());
 	}
 
 	public function testIsAvailable2FAWithoutOptIn(): void
@@ -240,7 +240,7 @@ class EmailChallengeTest extends TestCase
 		$this->app->impersonate('kirby');
 		$user = $this->user->changeSecret('email', 'yes');
 
-		$this->assertFalse(EmailChallenge::isAvailable($user, '2fa'));
+		$this->assertFalse((new EmailChallenge($user, 'email', '2fa', 600))->isAvailable());
 	}
 
 	public function testIsEnabled(): void
@@ -250,19 +250,19 @@ class EmailChallengeTest extends TestCase
 
 	public function testIsSingleUse(): void
 	{
-		$challenge = new EmailChallenge($this->user, 'login', 600);
+		$challenge = new EmailChallenge($this->user, 'email', 'login', 600);
 		$this->assertFalse($challenge->isSingleUse());
 	}
 
 	public function testMode(): void
 	{
-		$challenge = new EmailChallenge($this->user, 'password-reset', 900);
+		$challenge = new EmailChallenge($this->user, 'email', 'password-reset', 900);
 		$this->assertSame('password-reset', $challenge->mode());
 	}
 
 	public function testSettings(): void
 	{
-		$settings = EmailChallenge::settings($this->user);
+		$settings = (new EmailChallenge($this->user, 'email', '2fa', 600))->settings();
 		$this->assertCount(1, $settings);
 
 		$props = $settings[0]->render()['props'];
@@ -275,25 +275,19 @@ class EmailChallengeTest extends TestCase
 
 	public function testTimeout(): void
 	{
-		$challenge = new EmailChallenge($this->user, 'password-reset', 900);
+		$challenge = new EmailChallenge($this->user, 'email', 'password-reset', 900);
 		$this->assertSame(900, $challenge->timeout());
-	}
-
-	public function testType(): void
-	{
-		$challenge = new EmailChallenge($this->user, 'password-reset', 900);
-		$this->assertSame('email', $challenge->type());
 	}
 
 	public function testUser(): void
 	{
-		$challenge = new EmailChallenge($this->user, 'password-reset', 900);
+		$challenge = new EmailChallenge($this->user, 'email', 'password-reset', 900);
 		$this->assertSame($this->user, $challenge->user());
 	}
 
 	public function testVerify(): void
 	{
-		$challenge = new EmailChallenge($this->user, 'login', 600);
+		$challenge = new EmailChallenge($this->user, 'email', 'login', 600);
 		$data      = new Pending(secret: self::$password);
 
 		$this->assertTrue($challenge->verify('123456', $data));
@@ -302,7 +296,7 @@ class EmailChallengeTest extends TestCase
 
 	public function testVerifyWithInvalidHash(): void
 	{
-		$challenge = new EmailChallenge($this->user, 'login', 600);
+		$challenge = new EmailChallenge($this->user, 'email', 'login', 600);
 		$data      = new Pending(secret: null);
 
 		$this->assertFalse($challenge->verify('1234', $data));
@@ -310,7 +304,7 @@ class EmailChallengeTest extends TestCase
 
 	public function testVerifyMismatch(): void
 	{
-		$challenge = new EmailChallenge($this->user, 'login', 600);
+		$challenge = new EmailChallenge($this->user, 'email', 'login', 600);
 		$data      = new Pending(secret: self::$password);
 
 		$this->assertFalse($challenge->verify('654 321', $data));

@@ -21,7 +21,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 
 class DummyChallenge extends Challenge
 {
-	public static function isAvailable(User $user, string $mode): bool
+	public function isAvailable(): bool
 	{
 		return true;
 	}

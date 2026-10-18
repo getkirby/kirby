@@ -45,13 +45,13 @@ class TotpChallengeTest extends TestCase
 
 	public function testCreate(): void
 	{
-		$challenge = new TotpChallenge($this->user, 'login', 600);
+		$challenge = new TotpChallenge($this->user, 'totp', 'login', 600);
 		$this->assertNull($challenge->create());
 	}
 
 	public function testForm(): void
 	{
-		$challenge = new TotpChallenge($this->user, 'login', 600);
+		$challenge = new TotpChallenge($this->user, 'totp', 'login', 600);
 		$pending   = new Pending();
 		$form      = $challenge->form($pending);
 
@@ -66,27 +66,27 @@ class TotpChallengeTest extends TestCase
 
 	public function testIsAvailable(): void
 	{
-		$this->assertTrue(TotpChallenge::isAvailable($this->user, 'login'));
+		$this->assertTrue((new TotpChallenge($this->user, 'totp', 'login', 600))->isAvailable());
 
 		F::write(static::TMP . '/site/accounts/marge/.htpasswd', '');
-		$this->assertFalse(TotpChallenge::isAvailable($this->user, 'login'));
+		$this->assertFalse((new TotpChallenge($this->user, 'totp', 'login', 600))->isAvailable());
 	}
 
 	public function testIsSingleUse(): void
 	{
-		$challenge = new TotpChallenge($this->user, 'login', 600);
+		$challenge = new TotpChallenge($this->user, 'totp', 'login', 600);
 		$this->assertFalse($challenge->isSingleUse());
 	}
 
 	public function testMode(): void
 	{
-		$challenge = new TotpChallenge($this->user, '2fa', 300);
+		$challenge = new TotpChallenge($this->user, 'totp', '2fa', 300);
 		$this->assertSame('2fa', $challenge->mode());
 	}
 
 	public function testSettings(): void
 	{
-		$settings = TotpChallenge::settings($this->user);
+		$settings = (new TotpChallenge($this->user, 'totp', '2fa', 600))->settings();
 		$this->assertCount(1, $settings);
 	}
 
@@ -96,31 +96,25 @@ class TotpChallengeTest extends TestCase
 		$this->app->impersonate('marge');
 		F::write(static::TMP . '/site/accounts/marge/.htpasswd', '');
 
-		$settings = TotpChallenge::settings($this->app->user('marge'));
+		$settings = (new TotpChallenge($this->app->user('marge'), 'totp', '2fa', 600))->settings();
 		$this->assertCount(1, $settings);
 	}
 
 	public function testTimeout(): void
 	{
-		$challenge = new TotpChallenge($this->user, '2fa', 300);
+		$challenge = new TotpChallenge($this->user, 'totp', '2fa', 300);
 		$this->assertSame(300, $challenge->timeout());
-	}
-
-	public function testType(): void
-	{
-		$challenge = new TotpChallenge($this->user, '2fa', 300);
-		$this->assertSame('totp', $challenge->type());
 	}
 
 	public function testUser(): void
 	{
-		$challenge = new TotpChallenge($this->user, '2fa', 300);
+		$challenge = new TotpChallenge($this->user, 'totp', '2fa', 300);
 		$this->assertSame($this->user, $challenge->user());
 	}
 
 	public function testVerify(): void
 	{
-		$challenge = new TotpChallenge($this->user, 'login', 600);
+		$challenge = new TotpChallenge($this->user, 'totp', 'login', 600);
 		$totp      = new Totp($this->secret);
 		$code      = $totp->generate();
 
