@@ -132,6 +132,12 @@ class FocusTest extends TestCase
 		$this->assertSame([0.7, 0.3], Focus::parse('0.7, 0.3'));
 		$this->assertSame([0.704, 0.304], Focus::parse('70.4,30.4'));
 		$this->assertSame([0.7, 0.3], Focus::parse('{"x":0.7,"y":0.3}'));
+
+		// small percentages are no fractions
+		$this->assertSame([0.01, 0.5], Focus::parse('1% 50%'));
+		$this->assertSame([0.01, 0.5], Focus::parse('1.0% 50.0%'));
+		$this->assertSame([0.005, 0.5], Focus::parse('0.5% 50%'));
+		$this->assertSame([0.0, 1.0], Focus::parse('0% 100%'));
 	}
 
 	public function testRatio(): void

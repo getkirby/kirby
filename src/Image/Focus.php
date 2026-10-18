@@ -112,11 +112,14 @@ class Focus
 	{
 		preg_match_all("/(\d{1,3}\.?\d*)[%|,|\s]*/", $value, $points);
 
+		// values without percent sign are fractions up to 1
+		$percent = str_contains($value, '%');
+
 		return A::map(
 			$points[1],
-			function ($point) {
+			function ($point) use ($percent) {
 				$point = (float)$point;
-				$point = $point > 1 ? $point / 100 : $point;
+				$point = $percent === true || $point > 1 ? $point / 100 : $point;
 				return round($point, 3);
 			}
 		);
