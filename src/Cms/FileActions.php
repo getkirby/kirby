@@ -243,7 +243,7 @@ trait FileActions
 			'translations' => null,
 		]);
 
-		$upload   = new FilesystemFile($props['source']);
+		$upload   = new FilesystemFile(root: $props['source']);
 		$existing = null;
 
 		// check the rules before any user input is passed
@@ -474,7 +474,7 @@ trait FileActions
 			action:    'replace',
 			arguments: [
 				'file'   => $file,
-				'upload' => new FilesystemFile($source)
+				'upload' => new FilesystemFile(root: $source)
 			],
 			callback: function (
 				File $file,

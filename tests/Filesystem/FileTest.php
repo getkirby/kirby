@@ -47,9 +47,9 @@ class FileTest extends TestCase
 
 	protected function _file($file = 'test.js')
 	{
-		return new File([
-			'root' => static::TMP . '/' . $file
-		]);
+		return new File(
+			root: static::TMP . '/' . $file
+		);
 	}
 
 	public function testBase64(): void
@@ -79,15 +79,15 @@ class FileTest extends TestCase
 
 	public function testConstruct(): void
 	{
-		$file = new File([
-			'root' => '/dev/null/test.pdf',
-			'url'  => 'https://foo.bar/test.pdf'
-		]);
+		$file = new File(
+			root: '/dev/null/test.pdf',
+			url:  'https://foo.bar/test.pdf'
+		);
 
 		$this->assertSame('/dev/null/test.pdf', $file->root());
 		$this->assertSame('https://foo.bar/test.pdf', $file->url());
 
-		$file = new File('/dev/null/test.js');
+		$file = new File(root: '/dev/null/test.js');
 		$this->assertSame('/dev/null/test.js', $file->root());
 		$this->assertNull($file->url());
 	}
@@ -97,7 +97,7 @@ class FileTest extends TestCase
 		$oldRoot = static::TMP . '/test.txt';
 		$newRoot = static::TMP . '/awesome.txt';
 
-		$file = new File($oldRoot);
+		$file = new File(root: $oldRoot);
 		$file->write('test');
 
 		$this->assertFileExists($oldRoot);
@@ -118,7 +118,7 @@ class FileTest extends TestCase
 		$this->expectExceptionMessageIs('The file "' . static::TMP . '/awesome.txt" could not be copied');
 
 		static::$block[] = 'copy';
-		$file = new File(static::TMP . '/awesome.txt');
+		$file = new File(root: static::TMP . '/awesome.txt');
 		$file->copy(static::TMP . '/copied.txt');
 	}
 
@@ -156,7 +156,7 @@ class FileTest extends TestCase
 
 	public function testDelete(): void
 	{
-		$file = new File(static::TMP . '/test.txt');
+		$file = new File(root: static::TMP . '/test.txt');
 
 		$file->write('test');
 		$this->assertTrue($file->exists());
@@ -177,7 +177,7 @@ class FileTest extends TestCase
 
 	public function testDeleteNotExisting(): void
 	{
-		$file = new File('test.txt');
+		$file = new File(root: 'test.txt');
 		$this->assertFalse($file->exists());
 		$this->assertTrue($file->delete());
 	}
@@ -226,7 +226,7 @@ class FileTest extends TestCase
 		$file = $this->_file();
 		$this->assertTrue($file->exists());
 
-		$file = new File('does-not-exist.jpg');
+		$file = new File(root: 'does-not-exist.jpg');
 		$this->assertFalse($file->exists());
 	}
 
@@ -262,19 +262,19 @@ class FileTest extends TestCase
 
 	public function testHtml(): void
 	{
-		$file = new File([
-			'root' => static::TMP . '/blank.pdf',
-			'url'  => 'https://foo.bar/blank.pdf'
-		]);
+		$file = new File(
+			root: static::TMP . '/blank.pdf',
+			url:  'https://foo.bar/blank.pdf'
+		);
 		$this->assertSame('<a href="https://foo.bar/blank.pdf">foo.bar/blank.pdf</a>', $file->html());
 	}
 
 	public function testHtmlImage(): void
 	{
-		$file = new File([
-			'root' => static::TMP . '/cat.jpg',
-			'url'  => 'https://foo.bar/cat.jpg'
-		]);
+		$file = new File(
+			root: static::TMP . '/cat.jpg',
+			url:  'https://foo.bar/cat.jpg'
+		);
 		$this->assertSame('<img alt="" src="https://foo.bar/cat.jpg">', $file->html());
 		$this->assertSame('<img alt="" src="https://foo.bar/cat.jpg">', (string)$file);
 	}
@@ -312,10 +312,10 @@ class FileTest extends TestCase
 		$file = $this->_file();
 		$this->assertTrue($file->isWritable());
 
-		$file = new File(static::TMP . '/permissions/unwritable/test.txt');
+		$file = new File(root: static::TMP . '/permissions/unwritable/test.txt');
 		$this->assertFalse($file->isWritable());
 
-		$file = new File(static::TMP . '/permissions/unwritable.txt');
+		$file = new File(root: static::TMP . '/permissions/unwritable.txt');
 		$this->assertFalse($file->isWritable());
 	}
 
@@ -327,16 +327,6 @@ class FileTest extends TestCase
 
 		App::instance();
 		$this->assertInstanceOf(App::class, $file->kirby());
-	}
-
-	public function testLegacyConstruct(): void
-	{
-		$file = new File(
-			'/dev/null/test.pdf',
-			'https://home.io/test.pdf'
-		);
-		$this->assertSame('/dev/null/test.pdf', $file->root());
-		$this->assertSame('https://home.io/test.pdf', $file->url());
 	}
 
 	public function testMatch(): void
@@ -435,7 +425,7 @@ class FileTest extends TestCase
 		$oldRoot = static::TMP . '/test.txt';
 		$newRoot = static::TMP . '/awesome.txt';
 
-		$file = new File($oldRoot);
+		$file = new File(root: $oldRoot);
 		$file->write('test');
 
 		$this->assertFileExists($oldRoot);
@@ -455,7 +445,7 @@ class FileTest extends TestCase
 		$this->expectExceptionMessageIs('The file: "' . static::TMP . '/awesome.txt" could not be moved to: "' . static::TMP . '/moved.txt"');
 
 		static::$block[] = 'rename';
-		$file = new File(static::TMP . '/awesome.txt');
+		$file = new File(root: static::TMP . '/awesome.txt');
 		$file->move(static::TMP . '/moved.txt');
 	}
 
@@ -520,7 +510,7 @@ class FileTest extends TestCase
 
 	public function testRename(): void
 	{
-		$file = new File(static::TMP . '/test.js');
+		$file = new File(root: static::TMP . '/test.js');
 		$file->write('test');
 
 		$renamed = $file->rename('awesome');
@@ -540,7 +530,7 @@ class FileTest extends TestCase
 
 	public function testRenameSameRoot(): void
 	{
-		$file = new File(static::TMP . '/test.txt');
+		$file = new File(root: static::TMP . '/test.txt');
 		$file->write('test');
 		$file->rename('test');
 
@@ -556,7 +546,7 @@ class FileTest extends TestCase
 
 	public function testSanitizeContentsMissingHandler(): void
 	{
-		$file = new File(static::TMP . '/test.js');
+		$file = new File(root: static::TMP . '/test.js');
 
 		// lazy mode
 		$file->sanitizeContents(true);
@@ -574,7 +564,7 @@ class FileTest extends TestCase
 		$tmp     = static::TMP . '/clean.svg';
 		copy($fixture, $tmp);
 
-		$file = new File($tmp);
+		$file = new File(root: $tmp);
 		$this->assertNull($file->sanitizeContents());
 		$this->assertNull($file->sanitizeContents(true));
 		$this->assertNull($file->sanitizeContents(false));
@@ -588,7 +578,7 @@ class FileTest extends TestCase
 		$tmp     = static::TMP . '/real.svg';
 		copy($fixture, $tmp);
 
-		$file = new File($tmp);
+		$file = new File(root: $tmp);
 		$file->sanitizeContents('xml');
 
 		$this->assertFileEquals(static::TMP . '/real.sanitized.svg', $tmp);
@@ -654,22 +644,22 @@ class FileTest extends TestCase
 
 	public function testToString(): void
 	{
-		$file = new File([
-			'root' => static::TMP . '/blank.pdf',
-			'url'  => $expected = 'https://foo.bar/blank.pdf'
-		]);
+		$file = new File(
+			root: static::TMP . '/blank.pdf',
+			url:  $expected = 'https://foo.bar/blank.pdf'
+		);
 
 		$this->assertSame($expected, (string)$file);
 		$this->assertSame($expected, $file->__toString());
 
-		$file = new File([
-			'root' => $expected = static::TMP . '/blank.pdf'
-		]);
+		$file = new File(
+			root: $expected = static::TMP . '/blank.pdf'
+		);
 
 		$this->assertSame($expected, (string)$file);
 		$this->assertSame($expected, $file->__toString());
 
-		$file = new File([]);
+		$file = new File();
 
 		$this->assertSame('', (string)$file);
 		$this->assertSame('', $file->__toString());
@@ -690,13 +680,13 @@ class FileTest extends TestCase
 	public function testUrlLazy(): void
 	{
 		$calls = 0;
-		$file  = new File([
-			'root' => static::TMP . '/test.js',
-			'url'  => function () use (&$calls) {
+		$file  = new File(
+			root: static::TMP . '/test.js',
+			url:  function () use (&$calls) {
 				$calls++;
 				return 'https://foo.bar/test.js';
 			}
-		]);
+		);
 
 		$this->assertSame(0, $calls);
 		$this->assertSame('https://foo.bar/test.js', $file->url());
@@ -706,7 +696,7 @@ class FileTest extends TestCase
 
 	public function testValidateContentsMissingHandler(): void
 	{
-		$file = new File(static::TMP . '/test.js');
+		$file = new File(root: static::TMP . '/test.js');
 
 		// lazy mode
 		$file->validateContents(true);
@@ -720,7 +710,7 @@ class FileTest extends TestCase
 
 	public function testValidateContentsValid(): void
 	{
-		$file = new File(static::TMP . '/real.svg');
+		$file = new File(root: static::TMP . '/real.svg');
 		$this->assertNull($file->validateContents());
 		$this->assertNull($file->validateContents(true));
 		$this->assertNull($file->validateContents(false));
@@ -731,7 +721,7 @@ class FileTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessageIs('The namespace "http://www.w3.org/2000/svg" is not allowed (around line 2)');
 
-		$file = new File(static::TMP . '/real.svg');
+		$file = new File(root: static::TMP . '/real.svg');
 		$file->validateContents('xml');
 	}
 
@@ -739,7 +729,7 @@ class FileTest extends TestCase
 	{
 		$root = static::TMP . '/test.txt';
 
-		$file = new File($root);
+		$file = new File(root: $root);
 		$this->assertFalse($file->exists());
 
 		$file->write('test');
@@ -753,7 +743,7 @@ class FileTest extends TestCase
 		$this->expectExceptionMessageIs('The file "' . static::TMP . '/test.txt" could not be written');
 
 		static::$block[] = 'file_put_contents';
-		$file = new File(static::TMP . '/test.txt');
+		$file = new File(root: static::TMP . '/test.txt');
 		$file->write('test');
 	}
 
@@ -762,7 +752,7 @@ class FileTest extends TestCase
 		$this->expectException(GlobalException::class);
 		$this->expectExceptionMessageIs('The file "' . static::TMP . '/unwritable.txt" is not writable');
 
-		$file = new File(static::TMP . '/unwritable.txt');
+		$file = new File(root: static::TMP . '/unwritable.txt');
 		$file->write('test');
 		chmod($file->root(), 0o555);
 		$file->write('kirby');

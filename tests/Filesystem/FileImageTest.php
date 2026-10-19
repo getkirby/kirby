@@ -16,10 +16,10 @@ class FileImageTest extends TestCase
 
 	protected function _image($file = 'cat.jpg')
 	{
-		return new File([
-			'root' => static::FIXTURES . '/image/' . $file,
-			'url'  => 'https://foo.bar/' . $file
-		]);
+		return new File(
+			root: static::FIXTURES . '/image/' . $file,
+			url:  'https://foo.bar/' . $file
+		);
 	}
 
 	public function testDimensions(): void
@@ -58,7 +58,7 @@ class FileImageTest extends TestCase
 	public function testDimensionsDoesNotReadHeaderWithoutImageSignature(): void
 	{
 		foreach (['circle.svg' => 50, 'invalid.jpg' => null] as $filename => $size) {
-			$file = new class (['root' => static::FIXTURES . '/image/' . $filename]) extends File {
+			$file = new class (root: static::FIXTURES . '/image/' . $filename) extends File {
 				public function imagesize(): array|false
 				{
 					throw new LogicException('imagesize() must not be called');
@@ -72,7 +72,7 @@ class FileImageTest extends TestCase
 
 	public function testDimensionsReadsTypeFromImageHeader(): void
 	{
-		$file = new class (['root' => static::FIXTURES . '/image/cat.jpg']) extends File {
+		$file = new class (root: static::FIXTURES . '/image/cat.jpg') extends File {
 			public int $mimeCalls = 0;
 
 			public function mime(): string|null
@@ -89,7 +89,7 @@ class FileImageTest extends TestCase
 
 	public function testDimensionsUsesMimeForOtherTypes(): void
 	{
-		$file = new class (['root' => static::FIXTURES . '/image/onigiri-adobe-rgb-gps.avif']) extends File {
+		$file = new class (root: static::FIXTURES . '/image/onigiri-adobe-rgb-gps.avif') extends File {
 			public function mime(): string|null
 			{
 				return 'image/heif';
@@ -149,7 +149,7 @@ class FileImageTest extends TestCase
 	{
 		$this->expectException(LogicException::class);
 		$this->expectExceptionMessageIs('Calling File::html() for an image requires that the URL property is not null');
-		$file = new File(['root' => static::FIXTURES . '/image/cat.jpg']);
+		$file = new File(root: static::FIXTURES . '/image/cat.jpg');
 		$file->html();
 	}
 

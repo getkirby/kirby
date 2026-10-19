@@ -45,10 +45,10 @@ class Asset extends File
 			);
 		}
 
-		parent::__construct([
-			'root' => $this->kirby()->root('index') . '/' . $path,
-			'url'  => $this->kirby()->url('base') . '/' . $path
-		]);
+		parent::__construct(
+			root: $this->kirby()->root('index') . '/' . $path,
+			url:  $this->kirby()->url('base') . '/' . $path
+		);
 
 		// set relative file path
 		$this->path = dirname($path);

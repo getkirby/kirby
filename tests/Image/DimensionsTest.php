@@ -145,24 +145,24 @@ class DimensionsTest extends TestCase
 
 	public function testForImage(): void
 	{
-		$image = new File([
-			'root' => __DIR__ . '/fixtures/image/onigiri-adobe-rgb-gps.jpg'
-		]);
+		$image = new File(
+			root: __DIR__ . '/fixtures/image/onigiri-adobe-rgb-gps.jpg'
+		);
 		$dimensions = Dimensions::forImage($image);
 		$this->assertSame(600, $dimensions->width());
 		$this->assertSame(400, $dimensions->height());
 
-		$image = new File([
-			'root' => __DIR__ . '/fixtures/image/onigiri-adobe-rgb-gps.webp'
-		]);
+		$image = new File(
+			root: __DIR__ . '/fixtures/image/onigiri-adobe-rgb-gps.webp'
+		);
 
 		$dimensions = Dimensions::forImage($image);
 		$this->assertSame(600, $dimensions->width());
 		$this->assertSame(400, $dimensions->height());
 
-		$image = new File([
-			'root' => __DIR__ . '/fixtures/image/onigiri-adobe-rgb-gps.avif'
-		]);
+		$image = new File(
+			root: __DIR__ . '/fixtures/image/onigiri-adobe-rgb-gps.avif'
+		);
 
 		$dimensions = Dimensions::forImage($image);
 		$this->assertSame(600, $dimensions->width());
@@ -199,9 +199,9 @@ class DimensionsTest extends TestCase
 		int $width,
 		int $height
 	): void {
-		$image = new File([
-			'root' => __DIR__ . '/fixtures/orientation/' . $filename
-		]);
+		$image = new File(
+			root: __DIR__ . '/fixtures/orientation/' . $filename
+		);
 
 		$dimensions = Dimensions::forImage($image);
 		$this->assertSame($width, $dimensions->width());
@@ -210,9 +210,9 @@ class DimensionsTest extends TestCase
 
 	public function testForImageWithInvalidImage(): void
 	{
-		$image = new File([
-			'root' => static::FIXTURES . '/image/invalid.jpg'
-		]);
+		$image = new File(
+			root: static::FIXTURES . '/image/invalid.jpg'
+		);
 
 		$dimensions = Dimensions::forImage($image);
 		$this->assertSame(0, $dimensions->width());

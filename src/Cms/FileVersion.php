@@ -27,10 +27,10 @@ class FileVersion extends FilesystemFile
 	 */
 	public function __construct(array $props)
 	{
-		parent::__construct([
-			'root' => $props['root'] ?? null,
-			'url'  => $props['url'] ?? null
-		]);
+		parent::__construct(
+			root: $props['root'] ?? null,
+			url:  $props['url'] ?? null
+		);
 
 		$this->original      = $props['original'];
 		$this->modifications = $props['modifications'] ?? [];
