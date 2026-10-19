@@ -483,6 +483,8 @@ class Database
 
 	/**
 	 * Checks if a table exists in the current database
+	 *
+	 * @throws \PDOException if the tables cannot be listed
 	 */
 	public function validateTable(string $table): bool
 	{
@@ -491,11 +493,12 @@ class Database
 			$sql     = $this->sql()->tables();
 			$results = $this->query($sql['query'], $sql['bindings']);
 
-			if ($results) {
-				$this->tables = $results->pluck('name');
-			} else {
-				return false;
+			// a failed lookup doesn't mean the table is missing
+			if ($this->lastError !== null) {
+				throw $this->lastError;
 			}
+
+			$this->tables = $results->pluck('name');
 		}
 
 		return in_array($table, $this->tables, true) === true;
@@ -503,6 +506,8 @@ class Database
 
 	/**
 	 * Checks if a column exists in a specified table
+	 *
+	 * @throws \PDOException if the tables or columns cannot be listed
 	 */
 	public function validateColumn(string $table, string $column): bool
 	{
@@ -516,11 +521,12 @@ class Database
 			$sql     = $this->sql()->columns($table);
 			$results = $this->query($sql['query'], $sql['bindings']);
 
-			if ($results) {
-				$this->columnWhitelist[$table] = $results->pluck('name');
-			} else {
-				return false;
+			// a failed lookup doesn't mean the column is missing
+			if ($this->lastError !== null) {
+				throw $this->lastError;
 			}
+
+			$this->columnWhitelist[$table] = $results->pluck('name');
 		}
 
 		return in_array($column, $this->columnWhitelist[$table], true) === true;

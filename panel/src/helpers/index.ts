@@ -12,6 +12,7 @@ import isUploadEvent from "./isUploadEvent";
 import items from "./items";
 import keyboard from "./keyboard";
 import link from "./link";
+import number from "./number";
 import object from "./object";
 import page from "./page";
 import ratio from "./ratio";
@@ -39,6 +40,7 @@ export const helper = {
 	items,
 	keyboard,
 	link,
+	number,
 	object,
 	page,
 	pad: string.pad,

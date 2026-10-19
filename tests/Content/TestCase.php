@@ -137,6 +137,8 @@ abstract class TestCase extends BaseTestCase
 
 	protected function tearDown(): void
 	{
+		DiscardingStorage::$discard = false;
+
 		App::destroy();
 		$this->tearDownTmp();
 	}

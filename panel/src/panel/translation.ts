@@ -25,6 +25,19 @@ export function defaults(): TranslationState {
 }
 
 /**
+ * Converts a translation code like `pt_BR` into a
+ * BCP 47 language tag like `pt-BR`
+ */
+function lang(code: string): string {
+	try {
+		return Intl.getCanonicalLocales(code.replace("_", "-"))[0];
+	} catch {
+		// gettext modifiers like `sr@latin` have no tag
+		return code.split(/[_@]/)[0];
+	}
+}
+
+/**
  * Represents the interface language for the current user
  *
  * @copyright Bastian Allgeier
@@ -118,7 +131,7 @@ export default function Translation() {
 			parent.set.call(this, state);
 
 			if (this.code) {
-				document.documentElement.lang = this.code;
+				document.documentElement.lang = lang(this.code);
 			}
 
 			document.body.dir = this.direction;

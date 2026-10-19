@@ -115,6 +115,16 @@ class DarkroomTest extends TestCase
 		$this->assertSame(1200, $dimensions->height());
 	}
 
+	public function testIsAnimatable(): void
+	{
+		// drivers have to opt in to animated output
+		$darkroom = new Darkroom();
+		$method   = new ReflectionMethod($darkroom::class, 'isAnimatable');
+
+		$this->assertFalse($method->invoke($darkroom, 'image.gif', ['format' => null]));
+		$this->assertFalse($method->invoke($darkroom, 'image.jpg', ['format' => 'gif']));
+	}
+
 	public function testDefaultOptions(): void
 	{
 		$this->assertSame([

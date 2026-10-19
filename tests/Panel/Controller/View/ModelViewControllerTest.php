@@ -2,7 +2,9 @@
 
 namespace Kirby\Panel\Controller\View;
 
+use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Content\VersionId;
 use Kirby\Panel\TestCase;
 use Kirby\Panel\Ui\View;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -162,5 +164,43 @@ class ModelViewControllerTest extends TestCase
 		$versions   = $controller->versions();
 		$this->assertSame('bar', $versions['latest']['foo']);
 		$this->assertSame('baz', $versions['changes']['foo']);
+	}
+
+	public function testVersionsWithEmptyChanges(): void
+	{
+		$this->model->version('latest')->save([
+			'foo' => 'bar'
+		]);
+
+		// a changes version that exists but reads back empty must not
+		// be sent to the Panel as if every field had been cleared
+		$this->model->storage()->create(
+			VersionId::changes(),
+			Language::ensure('default'),
+			[]
+		);
+
+		$controller = new TestModelViewController($this->model);
+		$versions   = $controller->versions();
+		$this->assertSame('bar', $versions['latest']['foo']);
+		$this->assertSame('bar', $versions['changes']['foo']);
+	}
+
+	public function testVersionsWithLockOnlyChanges(): void
+	{
+		$this->model->version('latest')->save([
+			'foo' => 'bar'
+		]);
+
+		$this->model->storage()->create(
+			VersionId::changes(),
+			Language::ensure('default'),
+			['lock' => 'kirby']
+		);
+
+		$controller = new TestModelViewController($this->model);
+		$versions   = $controller->versions();
+		$this->assertSame('bar', $versions['latest']['foo']);
+		$this->assertSame('bar', $versions['changes']['foo']);
 	}
 }

@@ -156,12 +156,11 @@ export default {
 			this.$el.querySelector("input")?.focus();
 		},
 		format(value) {
-			const locale = document.lang ? document.lang.replace("_", "-") : "en";
 			const parts = this.step.toString().split(".");
 			const digits = parts.length > 1 ? parts[1].length : 0;
-			return new Intl.NumberFormat(locale, {
+			return this.$helper.number.format(value, {
 				minimumFractionDigits: digits
-			}).format(value);
+			});
 		},
 		onInput(value) {
 			this.$emit("input", value);

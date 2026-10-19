@@ -120,6 +120,19 @@ class ImagickTest extends TestCase
 		$this->call($imagick, 'blur', $image, ['blur' => 50]);
 	}
 
+	public function testCoalesceAnimation(): void
+	{
+		// any format with more than one frame
+		$image = $this->createMock(Image::class);
+		$image->method('getNumberImages')->willReturn(3);
+		$image->expects($this->once())
+			->method('coalesceImages')
+			->willReturn($coalesced = new Image());
+
+		$imagick = new Imagick();
+		$this->assertSame($coalesced, $this->call($imagick, 'coalesce', $image));
+	}
+
 	public function testCoalesceGif(): void
 	{
 		copy(
@@ -158,7 +171,7 @@ class ImagickTest extends TestCase
 	{
 		$image = $this->createMock(Image::class);
 		$image->expects($this->once())
-			->method('setImageColorspace')
+			->method('transformImageColorspace')
 			->with(Image::COLORSPACE_GRAY);
 
 		$imagick = new Imagick();
@@ -174,6 +187,58 @@ class ImagickTest extends TestCase
 
 		$imagick = new Imagick();
 		$this->call($imagick, 'interlace', $image, ['interlace' => true]);
+	}
+
+	public function testIsAnimatable(): void
+	{
+		$imagick = new Imagick();
+
+		$this->assertTrue($this->call($imagick, 'isAnimatable', 'image.gif', ['format' => null]));
+		$this->assertTrue($this->call($imagick, 'isAnimatable', 'image.gif', ['format' => 'WEBP']));
+		$this->assertFalse($this->call($imagick, 'isAnimatable', 'image.gif', ['format' => 'avif']));
+		$this->assertFalse($this->call($imagick, 'isAnimatable', 'image.gif', ['format' => 'jpg']));
+		$this->assertFalse($this->call($imagick, 'isAnimatable', 'image.png', ['format' => null]));
+	}
+
+	public function testOptimize(): void
+	{
+		$image = $this->createMock(Image::class);
+		$image->method('getNumberImages')->willReturn(3);
+		$image->expects($this->once())
+			->method('optimizeImageLayers')
+			->willReturn($optimized = new Image());
+
+		$imagick = new Imagick();
+		$this->assertSame($optimized, $this->call($imagick, 'optimize', $image, 'thumb.gif', ['format' => null]));
+	}
+
+	public static function optimizeNonGifProvider(): array
+	{
+		return [
+			['thumb.avif', null],
+			['thumb.gif', 'webp'],
+		];
+	}
+
+	#[DataProvider('optimizeNonGifProvider')]
+	public function testOptimizeNonGif(string $file, string|null $format): void
+	{
+		$image = $this->createMock(Image::class);
+		$image->method('getNumberImages')->willReturn(3);
+		$image->expects($this->never())->method('optimizeImageLayers');
+
+		$imagick = new Imagick();
+		$this->assertSame($image, $this->call($imagick, 'optimize', $image, $file, ['format' => $format]));
+	}
+
+	public function testOptimizeSingleFrame(): void
+	{
+		$image = $this->createMock(Image::class);
+		$image->method('getNumberImages')->willReturn(1);
+		$image->expects($this->never())->method('optimizeImageLayers');
+
+		$imagick = new Imagick();
+		$this->assertSame($image, $this->call($imagick, 'optimize', $image, 'thumb.gif', ['format' => null]));
 	}
 
 	public function testProcess(): void
@@ -202,6 +267,184 @@ class ImagickTest extends TestCase
 			'sourceWidth'  => 500,
 			'sourceHeight' => 500
 		], $imagick->process($file));
+	}
+
+	public function testProcessAnimatedGif(): void
+	{
+		copy(
+			static::FIXTURES . '/image/animated.gif',
+			$file = static::TMP . '/animated.gif'
+		);
+
+		$imagick = new Imagick(['width' => 50]);
+		$imagick->process($file);
+
+		$image = new Image($file);
+		$this->assertSame(3, $image->getNumberImages());
+
+		foreach ($image as $frame) {
+			$this->assertSame(50, $frame->getImageWidth());
+			$this->assertSame(50, $frame->getImageHeight());
+			$this->assertSame(
+				['width' => 50, 'height' => 50, 'x' => 0, 'y' => 0],
+				$frame->getImagePage()
+			);
+		}
+	}
+
+	public static function stillFormatProvider(): array
+	{
+		return [
+			['jpg', 'JPEG'],
+			['png', 'PNG'],
+		];
+	}
+
+	#[DataProvider('stillFormatProvider')]
+	public function testProcessAnimatedGifToStillFormat(
+		string $format,
+		string $type
+	): void {
+		Dir::make($dir = static::TMP . '/' . $format);
+
+		// a black square on a transparent canvas
+		copy(
+			static::FIXTURES . '/image/animated-transparent.gif',
+			$file = $dir . '/thumb.' . $format
+		);
+
+		$imagick = new Imagick(['width' => 50, 'format' => $format]);
+		$imagick->process($file);
+
+		// only the first frame, no numbered file per frame
+		$this->assertSame(['thumb.' . $format], Dir::read($dir));
+
+		$image = new Image($file);
+		$this->assertSame($type, $image->getImageFormat());
+		$this->assertSame(1, $image->getNumberImages());
+		$this->assertSame(50, $image->getImageWidth());
+		$this->assertSame(30, $image->getImageHeight());
+	}
+
+	public function testProcessAnimatedGifWithCrop(): void
+	{
+		copy(
+			static::FIXTURES . '/image/animated.gif',
+			$file = static::TMP . '/animated.gif'
+		);
+
+		$imagick = new Imagick([
+			'crop'   => true,
+			'width'  => 50,
+			'height' => 30
+		]);
+		$imagick->process($file);
+
+		$image = new Image($file);
+		$this->assertSame(3, $image->getNumberImages());
+
+		foreach ($image as $frame) {
+			$this->assertSame(50, $frame->getImageWidth());
+			$this->assertSame(30, $frame->getImageHeight());
+			$this->assertSame(
+				['width' => 50, 'height' => 30, 'x' => 0, 'y' => 0],
+				$frame->getImagePage()
+			);
+		}
+	}
+
+	public function testProcessAnimatedGifWithOptimizedLayers(): void
+	{
+		// frames 2 and 3 only contain the changed area
+		copy(
+			static::FIXTURES . '/image/animated-optimized.gif',
+			$file = static::TMP . '/animated.gif'
+		);
+
+		$imagick = new Imagick(['width' => 50]);
+		$imagick->process($file);
+
+		// frames 2 and 3 got optimized again
+		$image = new Image($file);
+		$image->setIteratorIndex(1);
+		$this->assertLessThan(50, $image->getImageWidth());
+
+		// a black square moves from left to right
+		$squares = [];
+
+		foreach ((new Image($file))->coalesceImages() as $frame) {
+			$this->assertSame(50, $frame->getImageWidth());
+			$this->assertSame(30, $frame->getImageHeight());
+
+			$squares[] = implode('', array_map(
+				fn ($x) => $frame->getImagePixelColor($x, 15)->getColor()['r'] < 128 ? 'x' : '.',
+				[10, 25, 40]
+			));
+		}
+
+		$this->assertSame(['x..', '.x.', '..x'], $squares);
+	}
+
+	public function testProcessAnimatedWebp(): void
+	{
+		// frames 2 and 3 only contain the changed area
+		copy(
+			static::FIXTURES . '/image/animated.webp',
+			$file = static::TMP . '/animated.webp'
+		);
+
+		if ((new Image($file))->getNumberImages() !== 3) {
+			$this->markTestSkipped('ImageMagick cannot read animated WebP');
+		}
+
+		$imagick = new Imagick([
+			'crop'   => true,
+			'width'  => 50,
+			'height' => 30
+		]);
+		$imagick->process($file);
+
+		// a black square moves from left to right
+		$squares = [];
+
+		foreach ((new Image($file))->coalesceImages() as $frame) {
+			$this->assertSame(50, $frame->getImageWidth());
+			$this->assertSame(30, $frame->getImageHeight());
+
+			$squares[] = implode('', array_map(
+				fn ($x) => $frame->getImagePixelColor($x, 15)->getColor()['r'] < 128 ? 'x' : '.',
+				[10, 25, 40]
+			));
+		}
+
+		$this->assertSame(['x..', '.x.', '..x'], $squares);
+	}
+
+	public function testProcessGrayscaleAnimatedGif(): void
+	{
+		// a red and a blue frame with palette colors
+		$gif = new Image();
+
+		foreach (['#c0392b', '#2471a3'] as $color) {
+			$frame = new Image();
+			$frame->newImage(20, 20, $color);
+			$frame->setImageFormat('gif');
+			$gif->addImage($frame);
+		}
+
+		$gif->writeImages($file = static::TMP . '/grayscale.gif', true);
+
+		$imagick = new Imagick(['grayscale' => true, 'width' => 10]);
+		$imagick->process($file);
+
+		$gray = [];
+
+		foreach ((new Image($file))->coalesceImages() as $frame) {
+			$gray[] = $frame->getImagePixelColor(5, 5)->getColor(true)['r'];
+		}
+
+		// the luminance of the colors, not their red channel
+		$this->assertEqualsWithDelta([0.35, 0.38], $gray, 0.08);
 	}
 
 	public function testQuality(): void
@@ -306,6 +549,7 @@ class ImagickTest extends TestCase
 
 		$imagick->process($file);
 		$this->assertTrue(F::exists($file));
+		$this->assertSame('image/webp', F::mime($file));
 	}
 
 	public function testSaveSetsOutputFormat(): void
@@ -314,11 +558,8 @@ class ImagickTest extends TestCase
 		$image   = $this->createMock(Image::class);
 
 		$image->expects($this->once())
-			->method('setImageFormat')
-			->with('webp');
-
-		$image->expects($this->once())
 			->method('writeImages')
+			->with('webp:' . static::TMP . '/cat.jpg', true)
 			->willReturn(true);
 
 		$result = $this->call($imagick, 'save', $image, static::TMP . '/cat.jpg', [

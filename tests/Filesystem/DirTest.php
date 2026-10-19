@@ -789,6 +789,28 @@ class DirTest extends TestCase
 		}
 	}
 
+	public function testRemoveVanishedBeforeRename(): void
+	{
+		Dir::make($dir = static::TMP . '/vanished');
+
+		// another process removes the directory right before
+		// the rename, which then fails like with a blocked one
+		FileTest::$mocks['rename'] = function (string $old): bool {
+			if (is_dir($old) === true) {
+				rmdir($old);
+			}
+
+			return false;
+		};
+
+		try {
+			$this->assertTrue(Dir::remove($dir));
+			$this->assertDirectoryDoesNotExist($dir);
+		} finally {
+			FileTest::$mocks = [];
+		}
+	}
+
 	public function testRemoveLeavesNoTmpSiblings(): void
 	{
 		Dir::make(static::TMP);

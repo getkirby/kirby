@@ -242,6 +242,60 @@ class QueryTest extends TestCase
 		$this->assertSame(2, $count);
 	}
 
+	public function testCountAllColumns(): void
+	{
+		$users = fn () => $this->database->table('users')->join('roles', 'roles.id = users.role_id');
+
+		// `*` must not end up in the counted subquery,
+		// where MySQL rejects the repeated `id` column
+		foreach ([null, '*', '', []] as $select) {
+			$this->assertSame(4, $users()->distinct()->select($select)->count());
+			$this->assertStringNotContainsString('SELECT DISTINCT *', $this->database->lastQuery());
+
+			$this->assertSame(3, $users()->select($select)->group('users.role_id')->count());
+			$this->assertStringNotContainsString('SELECT *', $this->database->lastQuery());
+		}
+	}
+
+	public function testCountDistinct(): void
+	{
+		$count = $this->database
+			->table('users')
+			->distinct()
+			->select('password')
+			->count();
+
+		// there are two different passwords in use
+		$this->assertSame(2, $count);
+
+		// full rows are unique
+		$this->assertSame(5, $this->database->table('users')->distinct()->count());
+	}
+
+	public function testCountGrouped(): void
+	{
+		$users = fn () => $this->database->table('users');
+
+		// one row per role, not the rows of the first role
+		$this->assertSame(4, $users()->group('role_id')->count());
+
+		// with bindings
+		$this->assertSame(3, $users()->where('balance', '>', 0)->group('role_id')->count());
+
+		// with having
+		$this->assertSame(3, $users()->group('role_id')->having('role_id', '<', 4)->count());
+
+		// grouped by an alias from the select list
+		$this->assertSame(4, $users()->select('substr(fname, 1, 1) AS initial')->group('initial')->count());
+
+		// with a join
+		$this->assertSame(3, $users()->join('roles', 'roles.id = users.role_id')->group('users.role_id')->count());
+
+		// distinct rows of a grouped query
+		$this->assertSame(4, $users()->distinct()->select('role_id')->group('role_id, active')->count());
+		$this->assertSame(4, $users()->distinct()->group('role_id')->count());
+	}
+
 	public function testQuery(): void
 	{
 		$result = $this->database
@@ -328,6 +382,31 @@ class QueryTest extends TestCase
 			->fail(true)
 			->where('foo = "bar"')
 			->one();
+	}
+
+	public function testFailKeepsDatabaseMode(): void
+	{
+		// successful queries
+		$this->database->table('users')->fail()->all();
+		$this->assertFalse($this->database->query('SELECT foo FROM users'));
+
+		$this->database->table('roles')->fail()->insert(['role' => 'guest']);
+		$this->assertFalse($this->database->execute('INSERT INTO foo VALUES (1)'));
+
+		// failing queries
+		try {
+			$this->database->table('users')->fail()->where('foo = "bar"')->all();
+			$this->fail('Expected an exception for the failing select');
+		} catch (PDOException) {
+			$this->assertFalse($this->database->query('SELECT foo FROM users'));
+		}
+
+		try {
+			$this->database->table('users')->fail()->insert(['username' => 'ringo']);
+			$this->fail('Expected an exception for the failing insert');
+		} catch (PDOException) {
+			$this->assertFalse($this->database->execute('INSERT INTO foo VALUES (1)'));
+		}
 	}
 
 	public function testFetch(): void
@@ -760,6 +839,21 @@ class QueryTest extends TestCase
 		$this->assertSame(4, $pagination->start());
 		$this->assertSame(5, $pagination->end());
 		$this->assertSame(3, $pagination->limit());
+	}
+
+	public function testPageGrouped(): void
+	{
+		$results = $this->database
+			->table('users')
+			->select('role_id')
+			->group('role_id')
+			->page(1, 3);
+
+		$pagination = $results->pagination();
+
+		$this->assertCount(3, $results);
+		$this->assertSame(4, $pagination->total());
+		$this->assertSame(2, $pagination->pages());
 	}
 
 	public function testTable(): void

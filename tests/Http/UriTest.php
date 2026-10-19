@@ -146,6 +146,14 @@ class UriTest extends TestCase
 		$this->assertSame('bücher.ch', $url->idn()->host());
 	}
 
+	public function testIdnWithMalformedPunycode(): void
+	{
+		// the host must not be dropped when the conversion fails
+		$url = new Uri('https://xn--invalid--.example/a');
+		$this->assertSame('xn--invalid--.example', $url->idn()->host());
+		$this->assertSame('https://xn--invalid--.example/a', $url->toString());
+	}
+
 	public function testIndex(): void
 	{
 		new App([
@@ -570,5 +578,13 @@ class UriTest extends TestCase
 		$url = new Uri('https://bücher.ch');
 		$this->assertSame('bücher.ch', $url->host());
 		$this->assertSame('xn--bcher-kva.ch', $url->unIdn()->host());
+	}
+
+	public function testUnIdnWithInvalidHost(): void
+	{
+		// the host must not be dropped when the conversion fails
+		$url = new Uri('https://-leading-hyphen-.example/a');
+		$this->assertSame('-leading-hyphen-.example', $url->unIdn()->host());
+		$this->assertSame('https://-leading-hyphen-.example/a', $url->toString());
 	}
 }
