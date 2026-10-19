@@ -979,6 +979,36 @@ class VersionTest extends TestCase
 		$version->publish();
 	}
 
+	public function testPublishEmptyChanges(): void
+	{
+		$this->setUpSingleLanguage();
+		$this->app->impersonate('kirby');
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::changes()
+		);
+
+		Data::write($fileLatest = $this->contentFile(null, VersionId::latest()), [
+			'title' => 'Title Latest'
+		]);
+
+		// a changes file that reads back empty, e.g. because
+		// a parallel request is just creating it
+		Data::write($fileChanges = $this->contentFile(null, VersionId::changes()), []);
+
+		try {
+			$version->publish();
+			$this->fail('Expected exception was not thrown');
+		} catch (NotFoundException $e) {
+			$this->assertSame('The changes version has no content to publish', $e->getMessage());
+		}
+
+		// publishing nothing must not wipe the latest version
+		$this->assertSame('Title Latest', Data::read($fileLatest)['title']);
+		$this->assertFileExists($fileChanges);
+	}
+
 	public function testPublishNullValues(): void
 	{
 		$this->setUpSingleLanguage();
