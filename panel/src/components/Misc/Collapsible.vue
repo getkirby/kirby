@@ -15,6 +15,8 @@ import { cloneVNode, h } from "vue";
  */
 export default {
 	inheritAttrs: false,
+	// `render()` passes the listeners to the root element
+	preserveListeners: false,
 	props: {
 		/**
 		 * Direction to collapse items and
