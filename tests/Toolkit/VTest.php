@@ -8,7 +8,6 @@ use Kirby\Content\Field;
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use stdClass;
 
@@ -28,7 +27,7 @@ class HasCount
 	}
 }
 
-#[CoversClass(V::class)]
+// no #[CoversClass]: the validators are closures outside the class and would not count
 class VTest extends TestCase
 {
 	protected function tearDown(): void
@@ -220,12 +219,20 @@ class VTest extends TestCase
 		$this->assertTrue(V::email('bastian-v3@getkirby.com'));
 		$this->assertTrue(V::email('bastian.allgeier@getkirby.com'));
 		$this->assertTrue(V::email('bastian@getkürby.com'));
+		$this->assertTrue(V::email(new class () {
+			public function __toString(): string
+			{
+				return 'bastian@getkürby.com';
+			}
+		}));
 
 		$this->assertFalse(V::email('bastian@getkirby'));
 		$this->assertFalse(V::email('bastiangetkirby.com'));
 		$this->assertFalse(V::email('bastian[at]getkirby.com'));
 		$this->assertFalse(V::email('bastian@getkürby'));
 		$this->assertFalse(V::email('@getkirby.com'));
+		$this->assertFalse(V::email(null));
+		$this->assertFalse(V::email(['bastian@getkirby.com']));
 	}
 
 	public function testEmpty(): void
