@@ -661,7 +661,7 @@ class Version
 
 		if ($previous === null) {
 			throw new NotFoundException(
-				message: 'The version has been removed by another request'
+				key: 'version.removed'
 			);
 		}
 
