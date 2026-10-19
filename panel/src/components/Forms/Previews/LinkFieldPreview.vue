@@ -23,7 +23,7 @@
 		</template>
 		<template v-else-if="isLink">
 			<p class="k-text">
-				<a :href="value" target="_blank">
+				<a :href="value" target="_blank" @click.stop>
 					<span>{{ detected.link }}</span>
 				</a>
 			</p>

@@ -13,6 +13,10 @@ function blockMethod($method, $args)
 	if (in_array($method, FileTest::$block)) {
 		return false;
 	}
+	if (isset(FileTest::$mocks[$method]) === true) {
+		return (FileTest::$mocks[$method])(...$args);
+	}
+
 	return call_user_func_array('\\' . $method, $args);
 }
 

@@ -26,12 +26,14 @@ class FileTest extends TestCase
 
 	// used for the mocks
 	public static array $block = [];
+	public static array $mocks = [];
 
 	protected function setUp(): void
 	{
 		Dir::copy(static::FIXTURES, static::TMP);
 
 		static::$block = [];
+		static::$mocks = [];
 	}
 
 	protected function tearDown(): void
@@ -41,6 +43,7 @@ class FileTest extends TestCase
 		}
 
 		static::$block = [];
+		static::$mocks = [];
 		App::destroy();
 		Dir::remove(static::TMP);
 	}

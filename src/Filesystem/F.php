@@ -678,8 +678,11 @@ class F
 	 * contents of a remote HTTP or HTTPS URL
 	 *
 	 * @param string $file The path for the file or an absolute URL
+	 * @param bool $lock Read the file while holding a shared lock, so that
+	 *                   a file another process is currently writing cannot
+	 *                   be observed in a truncated or half-written state
 	 */
-	public static function read(string $file): string|false
+	public static function read(string $file, bool $lock = false): string|false
 	{
 		if (str_contains($file, '://') === true) {
 			return false;
@@ -690,6 +693,10 @@ class F
 			return false;
 		}
 
+		if ($lock === true) {
+			return static::readLocked($file);
+		}
+
 		// to increase performance, directly try to load the file
 		// without checking if it exists; fall back to return `false`
 		// if it doesn't exist while letting other warnings through
@@ -698,6 +705,43 @@ class F
 			fn (int $errno, string $errstr): bool => str_contains($errstr, 'No such file'),
 			false
 		);
+	}
+
+	/**
+	 * Reads a local file while holding a shared lock on it, so that the
+	 * read cannot fall into the window in which a writer holds the
+	 * exclusive lock while it truncates and rewrites the file
+	 * @psalm-suppress UnusedFunctionCall
+	 *
+	 * @since 5.6.2
+	 */
+	protected static function readLocked(string $file): string|false
+	{
+		$handle = Helpers::handleErrors(
+			fn () => fopen($file, 'rb'),
+			fn (int $errno, string $errstr): bool => str_contains($errstr, 'No such file'),
+			false
+		);
+
+		if ($handle === false) {
+			return false;
+		}
+
+		try {
+			// wait for a concurrent writer to release its lock; if the
+			// filesystem does not support locking at all, read anyway
+			// rather than failing the request
+			flock($handle, LOCK_SH);
+
+			// a buffered stream copies the file through an 8 KB read
+			// buffer, which slows down larger files considerably
+			stream_set_read_buffer($handle, 0);
+
+			return stream_get_contents($handle);
+		} finally {
+			// `fclose()` releases the `flock()` automatically
+			fclose($handle);
+		}
 	}
 
 	/**
@@ -1003,11 +1047,8 @@ class F
 	}
 
 	/**
-	 * Serializes concurrent read-update-writes of a file by
-	 * holding an exclusive `flock` for the whole operation, so
-	 * that other writers (that lock the same way) cannot lose
-	 * each other's updates. The `$modifier` callback receives
-	 * the current file contents.
+	 * Updates a file under an exclusive lock; the `$modifier`
+	 * callback receives the current file contents
 	 *
 	 * @since 5.5.0
 	 */
@@ -1051,6 +1092,8 @@ class F
 				return false;
 			}
 
+			// rewritten in place on purpose: replacing the file would let
+			// a process waiting for this lock write into the replaced one
 			rewind($handle);
 			ftruncate($handle, 0);
 
@@ -1107,5 +1150,56 @@ class F
 		}
 
 		return file_put_contents($file, $content, $mode) !== false;
+	}
+
+	/**
+	 * Replaces a file in one step via a temporary file and
+	 * `rename()`, so that readers never see a partial file
+	 *
+	 * @since 5.6.2
+	 */
+	public static function writeAtomic(string $file, string $content): bool
+	{
+		$directory = dirname($file);
+
+		if (Dir::make($directory) === false) {
+			return false;
+		}
+
+		// a rename only needs a writable directory: refuse a
+		// read-only file the same way `F::write()` does
+		if (static::isWritable($file) === false) {
+			throw new Exception('The file "' . $file . '" is not writable');
+		}
+
+		// keep the mode of an existing file; read it in a single call so
+		// that a file removed in between cannot be mistaken for mode 0
+		$mode = Helpers::handleErrors(
+			fn (): int|false => fileperms($file),
+			fn (int $errno, string $errstr): bool => str_contains($errstr, 'stat failed'),
+			false
+		);
+
+		// a leading dot keeps the temporary file out of the inventory
+		$tmp = $directory . '/.' . basename($file) . '.' . bin2hex(random_bytes(6)) . '.tmp';
+
+		if (file_put_contents($tmp, $content) === false) {
+			return false;
+		}
+
+		if ($mode !== false) {
+			chmod($tmp, $mode & 0777);
+		}
+
+		// `rename()` replaces the target atomically on POSIX filesystems
+		if (@rename($tmp, $file) === true) {
+			return true;
+		}
+
+		// e.g. Windows while another process holds the target open:
+		// fall back to the locked in-place write
+		@unlink($tmp);
+
+		return static::write($file, $content);
 	}
 }

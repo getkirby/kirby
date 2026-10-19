@@ -21,6 +21,10 @@ use Kirby\Image\Focus;
  */
 class ImageMagick extends Darkroom
 {
+	// animated AVIF needs ImageMagick 7.1.2-19 with libheif 1.20,
+	// older versions write a still image per frame
+	protected static array $animatableTypes = ['gif', 'webp'];
+
 	/**
 	 * Applies the blur settings
 	 */
@@ -38,8 +42,26 @@ class ImageMagick extends Darkroom
 	 */
 	protected function coalesce(string $file, array $options): string|null
 	{
-		if (F::extension($file) === 'gif') {
+		// check the content, as the extension
+		// already is the one of the output format
+		$mime = F::mime($file);
+
+		if ($mime === 'image/gif') {
 			return '-coalesce';
+		}
+
+		// animated WebPs set a flag in their `VP8X` header,
+		// coalescing other WebPs would only copy the image
+		if ($mime === 'image/webp') {
+			$header = (string)file_get_contents($file, false, null, 12, 9);
+
+			if (
+				strlen($header) === 9 &&
+				str_starts_with($header, 'VP8X') === true &&
+				(ord($header[8]) & 0x02) !== 0
+			) {
+				return '-coalesce';
+			}
 		}
 
 		return null;
@@ -54,6 +76,12 @@ class ImageMagick extends Darkroom
 
 		// default is limiting to single-threading to keep CPU usage sane
 		$command .= ' -limit thread ' . escapeshellarg($options['threads']);
+
+		// formats without animation only get the first frame,
+		// otherwise ImageMagick writes a numbered file per frame
+		if ($this->isAnimatable($file, $options) === false) {
+			$file .= '[0]';
+		}
 
 		// append input file
 		return $command . ' ' . escapeshellarg($file);

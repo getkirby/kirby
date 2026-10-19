@@ -485,10 +485,41 @@ class Query
 
 	/**
 	 * Builds a count query
+	 *
+	 * Distinct and grouped queries are counted in a subquery, where
+	 * MySQL fails on repeated column names (e.g. `users.*, roles.*`
+	 * with a join), so alias those columns to count such queries.
 	 */
 	public function count(): int
 	{
-		return (int)$this->aggregate('COUNT');
+		// `DISTINCT *` compares full rows, which a primary key keeps
+		// unique, so only a select list makes `DISTINCT` change the count
+		$all      = $this->database->sql()->selected($this->table, $this->select) === '*';
+		$distinct = $this->distinct === true && $all === false;
+
+		if ($this->group === null && $distinct === false) {
+			return (int)$this->aggregate('COUNT');
+		}
+
+		// without a select list there are no aliases to keep, and `*` can fail
+		// MySQL's `ONLY_FULL_GROUP_BY` or repeat column names of joined tables
+		if ($all === true) {
+			$this->distinct(false)->select('1');
+		}
+
+		// `COUNT(*)` would only count the first group and ignore
+		// `DISTINCT`, so count the rows of the full query instead
+		$sql = $this->order(null)->offset(0)->limit(null)->build('select');
+		$row = $this->query([
+			'query'    => 'SELECT COUNT(*) AS aggregation FROM (' . $sql['query'] . ') AS counted',
+			'bindings' => $sql['bindings']
+		], [
+			'fetch'    => Obj::class,
+			'iterator' => 'array',
+			'method'   => 'fetch'
+		]);
+
+		return $row instanceof Obj ? (int)$row->get('aggregation') : 0;
 	}
 
 	/**
