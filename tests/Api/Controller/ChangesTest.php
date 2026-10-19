@@ -154,9 +154,8 @@ class ChangesTest extends TestCase
 			'uuid'  => 'test'
 		]);
 
-		// a changes version that exists but reads back empty. A parallel
-		// request that discards the version leaves exactly this state
-		// behind between our `exists()` check and the read.
+		// a changes version that exists but holds no fields
+		// must not replace the content of the latest version
 		Data::write($file = $this->page->root() . '/_changes/article.txt', []);
 
 		$response = Changes::save($this->page, [
@@ -172,33 +171,6 @@ class ChangesTest extends TestCase
 			'text'  => 'New text',
 			'uuid'  => 'test',
 			'lock'  => 'kirby'
-		], Data::read($file));
-	}
-
-	public function testSaveWithLockOnlyChanges(): void
-	{
-		$this->app->impersonate('kirby');
-
-		Data::write($this->page->root() . '/article.txt', [
-			'title' => 'Test',
-			'text'  => 'Published text',
-			'uuid'  => 'test'
-		]);
-
-		// a changes version that only holds the lock has no content
-		Data::write($file = $this->page->root() . '/_changes/article.txt', [
-			'lock' => 'kirby'
-		]);
-
-		Changes::save($this->page, [
-			'text' => 'New text'
-		]);
-
-		$this->assertSame([
-			'title' => 'Test',
-			'lock'  => 'kirby',
-			'text'  => 'New text',
-			'uuid'  => 'test'
 		], Data::read($file));
 	}
 
@@ -258,6 +230,33 @@ class ChangesTest extends TestCase
 			'text'  => 'German draft',
 			'lock'  => 'kirby'
 		], Data::read($de));
+	}
+
+	public function testSaveWithLockOnlyChanges(): void
+	{
+		$this->app->impersonate('kirby');
+
+		Data::write($this->page->root() . '/article.txt', [
+			'title' => 'Test',
+			'text'  => 'Published text',
+			'uuid'  => 'test'
+		]);
+
+		// a changes version that only holds the lock has no content
+		Data::write($file = $this->page->root() . '/_changes/article.txt', [
+			'lock' => 'kirby'
+		]);
+
+		Changes::save($this->page, [
+			'text' => 'New text'
+		]);
+
+		$this->assertSame([
+			'title' => 'Test',
+			'lock'  => 'kirby',
+			'text'  => 'New text',
+			'uuid'  => 'test'
+		], Data::read($file));
 	}
 
 	public function testSaveWithNoDiff(): void
