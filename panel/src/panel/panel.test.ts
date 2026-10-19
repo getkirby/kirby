@@ -44,6 +44,76 @@ describe("panel", () => {
 		});
 	});
 
+	describe("act", () => {
+		it("should do nothing without actions", async () => {
+			const panel = Panel.create(app);
+			const open = vi.spyOn(panel, "open");
+			const reload = vi.spyOn(panel.view, "reload");
+
+			await panel.act();
+
+			expect(panel.notification.message).toStrictEqual(null);
+			expect(open).not.toHaveBeenCalled();
+			expect(reload).not.toHaveBeenCalled();
+		});
+
+		it("should emit events with the response", async () => {
+			const panel = Panel.create(app);
+			const response = { event: ["a", "b"] };
+			const emitted: unknown[] = [];
+
+			panel.events.on("a", (e) => emitted.push(["a", e]));
+			panel.events.on("b", (e) => emitted.push(["b", e]));
+
+			await panel.act(response);
+
+			expect(emitted).toStrictEqual([
+				["a", response],
+				["b", response]
+			]);
+		});
+
+		it("should open the redirect", async () => {
+			const panel = Panel.create(app);
+			const open = vi.spyOn(panel, "open").mockResolvedValue(undefined);
+			const reload = vi.spyOn(panel.view, "reload");
+
+			await panel.act({ redirect: "pages/a", reload: true });
+
+			expect(open).toHaveBeenCalledWith("pages/a");
+			expect(reload).not.toHaveBeenCalled();
+		});
+
+		it("should open the redirect with options", async () => {
+			const panel = Panel.create(app);
+			const open = vi.spyOn(panel, "open").mockResolvedValue(undefined);
+			const options = { on: {} };
+
+			await panel.act({ redirect: { url: "pages/a", options } });
+
+			expect(open).toHaveBeenCalledWith("pages/a", options);
+		});
+
+		it("should reload the view", async () => {
+			const panel = Panel.create(app);
+			const reload = vi.spyOn(panel.view, "reload").mockResolvedValue(false);
+
+			await panel.act({ reload: true });
+			await panel.act({ reload: { title: "Test" } });
+
+			expect(reload.mock.calls).toStrictEqual([[{}], [{ title: "Test" }]]);
+		});
+
+		it("should show the message", async () => {
+			const panel = Panel.create(app);
+
+			await panel.act({ message: "Synced" });
+
+			expect(panel.notification.message).toStrictEqual("Synced");
+			expect(panel.notification.theme).toStrictEqual("positive");
+		});
+	});
+
 	describe("create", () => {
 		it("should keep methods reactive when called on the raw instance", async () => {
 			const panel = Panel.create(app);

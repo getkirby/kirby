@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import Modal, { defaults } from "./modal";
 import Panel from "./panel";
 
@@ -421,6 +421,34 @@ describe("panel.modal", () => {
 			modal.success({ event: ["user.created", "page.created"], emit: false });
 
 			expect(emitted).toStrictEqual(["user.created", "page.created"]);
+		});
+
+		it("should reload the view unless redirected", async () => {
+			const panel = Panel.create(app);
+			const modal = Modal(panel, "test", defaults());
+			const act = vi.spyOn(panel, "act").mockResolvedValue(undefined);
+
+			modal.success({ message: "Saved" });
+
+			expect(act).toHaveBeenCalledWith({
+				message: "Saved",
+				redirect: undefined,
+				reload: true
+			});
+		});
+
+		it("should use the legacy route as redirect", async () => {
+			const panel = Panel.create(app);
+			const modal = Modal(panel, "test", defaults());
+			const act = vi.spyOn(panel, "act").mockResolvedValue(undefined);
+
+			modal.success({ route: "pages/a" });
+
+			expect(act).toHaveBeenCalledWith({
+				redirect: "pages/a",
+				reload: true,
+				route: "pages/a"
+			});
 		});
 	});
 });
