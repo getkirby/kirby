@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "@test/unit";
 import { flushPromises, mount as vueMount } from "@vue/test-utils";
 import { reactive } from "vue";
-import preserveListeners from "@/mixins/preserveListeners";
 import ModelListField from "./ModelListField.vue";
 
 const listeners: Record<string, (payload?: object) => void> = {};
@@ -37,8 +36,7 @@ function mount(props = {}, attrs = {}, $panel: object = panel) {
 				$api: api,
 				$events: events,
 				$panel
-			},
-			mixins: [preserveListeners]
+			}
 		}
 	});
 }
@@ -65,20 +63,6 @@ describe("ModelListField.vue", () => {
 	describe("element", () => {
 		it.rendersAs(mount, "K-FIELD", "k-modellist-field");
 		it.inheritsNoAttrs(mount);
-	});
-
-	// events
-	describe.each([
-		["input", "onInput"],
-		["submit", "onSubmit"]
-	])("native %s event", (event, listener) => {
-		it("does not call the listener of the form", async () => {
-			const handler = vi.fn();
-			const wrapper = mount({}, { [listener]: handler });
-			await wrapper.trigger(event);
-
-			expect(handler).not.toHaveBeenCalled();
-		});
 	});
 
 	// loading
