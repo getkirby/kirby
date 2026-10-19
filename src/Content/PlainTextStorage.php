@@ -375,7 +375,10 @@ class PlainTextStorage extends Storage
 
 		$this->ensureCurrentPageRoot($versionId);
 
-		$success = Data::write($this->contentFile($versionId, $language), $fields);
+		// replace the file in one step, so that a parallel reader can never
+		// see a truncated file and mistake it for an empty version
+		$file    = $this->contentFile($versionId, $language);
+		$success = F::writeAtomic($file, Data::encode($fields, F::extension($file)));
 
 		// @codeCoverageIgnoreStart
 		if ($success !== true) {
