@@ -557,6 +557,7 @@ class ImagickTest extends TestCase
 
 		$imagick->process($file);
 		$this->assertTrue(F::exists($file));
+		$this->assertSame('image/webp', F::mime($file));
 	}
 
 	public function testSaveSetsOutputFormat(): void
@@ -565,11 +566,8 @@ class ImagickTest extends TestCase
 		$image   = $this->createMock(Image::class);
 
 		$image->expects($this->once())
-			->method('setImageFormat')
-			->with('webp');
-
-		$image->expects($this->once())
 			->method('writeImages')
+			->with('webp:' . static::TMP . '/cat.jpg', true)
 			->willReturn(true);
 
 		$result = $this->call($imagick, 'save', $image, static::TMP . '/cat.jpg', [
