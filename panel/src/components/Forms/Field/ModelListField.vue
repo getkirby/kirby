@@ -66,7 +66,6 @@ import { help, id, label, name, type } from "@/mixins/props.js";
 export default {
 	mixins: [help, id, label, name, type, batchEditing],
 	inheritAttrs: false,
-	preserveListeners: false,
 	type: "models",
 	props: {
 		/**
@@ -112,6 +111,7 @@ export default {
 		 */
 		size: String
 	},
+	emits: ["focus", "input", "submit"],
 	data() {
 		return {
 			error: null,

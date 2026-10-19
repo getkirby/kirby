@@ -69,6 +69,7 @@ describe("ModelListField.vue", () => {
 
 	// events
 	describe.each([
+		["focus", "onFocus"],
 		["input", "onInput"],
 		["submit", "onSubmit"]
 	])("native %s event", (event, listener) => {
@@ -78,6 +79,16 @@ describe("ModelListField.vue", () => {
 			await wrapper.trigger(event);
 
 			expect(handler).not.toHaveBeenCalled();
+		});
+	});
+
+	describe("native click event", () => {
+		it("calls the listener once", async () => {
+			const handler = vi.fn();
+			const wrapper = mount({}, { onClick: handler });
+			await wrapper.trigger("click");
+
+			expect(handler).toHaveBeenCalledOnce();
 		});
 	});
 
