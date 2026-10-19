@@ -111,6 +111,7 @@ export default {
 		 */
 		size: String
 	},
+	emits: ["focus", "input", "submit"],
 	data() {
 		return {
 			error: null,
