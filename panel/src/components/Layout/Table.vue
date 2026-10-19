@@ -437,7 +437,7 @@ export default {
 			const index = this.findSelectedIndex(row);
 
 			if (index !== -1) {
-				return this.selected.toSpliced(index, 1);
+				return this.$emit("select", this.selected.toSpliced(index, 1));
 			}
 
 			return this.$emit("select", [...this.selected, row._id ?? row.id]);
