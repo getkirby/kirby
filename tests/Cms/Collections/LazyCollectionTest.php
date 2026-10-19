@@ -374,6 +374,36 @@ class LazyCollectionTest extends TestCase
 		$this->assertTrue($collection->initialized);
 	}
 
+	public function testData(): void
+	{
+		$collection = new MockLazyCollectionWithInitialization();
+		$collection->targetData = [
+			'a' => new Obj(['id' => 'a', 'type' => 'static']),
+			'b' => null,
+			'c' => null
+		];
+
+		$this->assertSame([
+			'a' => ['id' => 'a', 'type' => 'static'],
+			'b' => ['id' => 'b', 'type' => 'hydrated'],
+			'c' => ['id' => 'c', 'type' => 'hydrated']
+		], array_map(fn ($element) => $element->toArray(), $collection->data()));
+
+		$this->assertSame(['b', 'c'], $collection->hydratedElements);
+		$this->assertTrue($collection->hydrated);
+		$this->assertTrue($collection->initialized);
+	}
+
+	public function testDataSetter(): void
+	{
+		$collection = new MockLazyCollection();
+		$data       = ['a' => new Obj(['id' => 'a', 'type' => 'static'])];
+
+		$this->assertSame($collection, $collection->data($data));
+		$this->assertSame($data, $collection->data);
+		$this->assertSame([], $collection->hydratedElements);
+	}
+
 	public function testFilter(): void
 	{
 		$collection = new MockLazyCollection();
