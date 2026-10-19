@@ -10,6 +10,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Database::class)]
 class DatabaseTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Database.Database';
+
 	protected function setUp(): void
 	{
 		$this->database = new Database([
@@ -58,6 +60,7 @@ class DatabaseTest extends TestCase
 	protected function tearDown(): void
 	{
 		Database::$connections = [];
+		$this->tearDownTmp();
 	}
 
 	public function testInstance(): void
@@ -304,6 +307,54 @@ class DatabaseTest extends TestCase
 		$this->assertTrue($this->database->validateColumn('accounts', 'email'));
 		$this->assertTrue($this->database->dropTable('accounts'));
 		$this->assertFalse($this->database->validateTable('accounts'));
+	}
+
+	public function testValidateWhenLocked(): void
+	{
+		$this->setUpTmp();
+
+		$file     = static::TMP . '/locked.sqlite';
+		$database = new Database([
+			'database' => $file,
+			'type'     => 'sqlite'
+		]);
+
+		$database->execute('CREATE TABLE "users" ("id" INTEGER PRIMARY KEY)');
+		$database->execute('CREATE TABLE "posts" ("id" INTEGER PRIMARY KEY)');
+
+		// fail right away instead of waiting for the lock
+		$database->connection()->setAttribute(PDO::ATTR_TIMEOUT, 0);
+
+		$lock = new PDO('sqlite:' . $file);
+
+		// tables lookup
+		$lock->exec('BEGIN EXCLUSIVE');
+
+		try {
+			$database->validateColumn('users', 'id');
+			$this->fail('Expected an exception for the locked database');
+		} catch (PDOException $e) {
+			$this->assertStringContainsString('database is locked', $e->getMessage());
+		}
+
+		$lock->exec('ROLLBACK');
+
+		// nothing was cached while locked
+		$this->assertTrue($database->validateColumn('users', 'id'));
+
+		// columns lookup
+		$lock->exec('BEGIN EXCLUSIVE');
+
+		try {
+			$database->validateColumn('posts', 'id');
+			$this->fail('Expected an exception for the locked database');
+		} catch (PDOException $e) {
+			$this->assertStringContainsString('database is locked', $e->getMessage());
+		}
+
+		$lock->exec('ROLLBACK');
+
+		$this->assertTrue($database->validateColumn('posts', 'id'));
 	}
 
 	public function testMagicCall(): void
