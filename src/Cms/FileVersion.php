@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Filesystem\Asset;
+use Kirby\Filesystem\F;
 use Kirby\Filesystem\IsFile;
 
 /**
@@ -100,6 +101,10 @@ class FileVersion
 			$this->root(),
 			$this->modifications()
 		);
+
+		// like `Media::thumb()`, as the job is done
+		F::remove(dirname($this->root()) . '/.jobs/' . basename($this->root()) . '.json');
+
 		return $this;
 	}
 

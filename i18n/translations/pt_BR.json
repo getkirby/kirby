@@ -309,6 +309,7 @@
 
 	"error.version.discard.permission": "Não tem permissão para reverter esta versão",
 	"error.version.publish.permission": "Não tem permissão para publicar esta versão",
+	"error.version.removed": "The version has been removed by another request",
 	"error.version.save.permission": "Não tem permissão para alterar esta versão",
 	"error.version.unlock.permission": "Não tem permissão para desbloquear esta versão",
 
