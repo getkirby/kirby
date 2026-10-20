@@ -93,7 +93,9 @@ class RouterTest extends TestCase
 
 	public function testCallWithoutCsrfForView(): void
 	{
-		$response = $this->call('test/view', ['_json' => true]);
+		$this->setHeaders(['X-Panel' => 'true']);
+
+		$response = $this->call('test/view');
 		$this->assertSame(200, $response->code());
 	}
 

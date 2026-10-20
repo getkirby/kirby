@@ -58,6 +58,18 @@ class RedirectTest extends AreaTestCase
 		$this->assertSame('somewhere', $this->app->session()->get('panel.path'));
 	}
 
+	public function testLoginRedirectWithQuery(): void
+	{
+		$this->install();
+		$this->app([
+			'request' => [
+				'query' => ['email' => 'test@getkirby.com']
+			]
+		]);
+
+		$this->assertRedirect('login', 'login/method/password?email=test%40getkirby.com');
+	}
+
 	public function testLogoutGuest(): void
 	{
 		$this->install();
@@ -88,30 +100,21 @@ class RedirectTest extends AreaTestCase
 	public function testLogoutCsrf(): void
 	{
 		$this->install();
-
-		// the Panel follows the redirects in place, so the login
-		// view it lands on has to hand out a new CSRF token
-		$this->app([
-			'request' => [
-				'query' => [
-					'_globals' => 'system,translation'
-				]
-			]
-		]);
-
 		$this->login('test@getkirby.com');
 
 		$token = $this->app->auth()->csrfFromSession();
 
-		$this->assertRedirect('logout', 'login?_globals=system%2Ctranslation');
+		$this->assertRedirect('logout', 'login');
 		$this->assertNull($this->app->session()->get('kirby.csrf'));
 
-		$this->assertRedirect('login', 'login/method/password?_json=1&_globals=system%2Ctranslation');
+		$this->assertRedirect('login', 'login/method/password');
 
+		// the Panel follows the redirects in place, so the login
+		// view it lands on has to hand out a new CSRF token
 		$login = $this->response('login/method/password', true);
 
-		$this->assertArrayHasKey('system', $login);
-		$this->assertNotSame($token, $login['system']['csrf']);
+		$this->assertArrayHasKey('csrf', $login);
+		$this->assertNotSame($token, $login['csrf']);
 	}
 
 	public function testPageWithoutAuthentication(): void
