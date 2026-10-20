@@ -273,12 +273,19 @@ class Parser
                     throw new ParseException((is_numeric($key) ? 'Numeric' : 'Non-string').' keys are not supported. Quote your evaluable mapping keys instead.', $this->getRealCurrentLineNb() + 1, $this->currentLine);
                 }
 
+                if (Yaml::PARSE_OBJECT_FOR_MAP & $flags && \is_string($key) && str_starts_with($key, "\0")) {
+                    throw new ParseException('Mapping keys starting with a NUL byte are not supported with the "Yaml::PARSE_OBJECT_FOR_MAP" flag.', $this->getRealCurrentLineNb() + 1, $this->currentLine, $this->filename);
+                }
+
                 // Convert float keys to strings, to avoid being converted to integers by PHP
                 if (\is_float($key)) {
                     $key = (string) $key;
                 }
 
-                if ('<<' === $key && (!isset($values['value']) || '&' !== $values['value'][0] || !self::preg_match('#^&(?P<ref>[^ ]+)#u', $values['value'], $refMatches))) {
+                // Only a plain (unquoted) "<<" key is a merge key
+                $isMergeKey = '<<' === rtrim($values['key']);
+
+                if ($isMergeKey && (!isset($values['value']) || '&' !== $values['value'][0] || !self::preg_match('#^&(?P<ref>[^ ]+)#u', $values['value'], $refMatches))) {
                     $mergeNode = true;
                     $allowOverwrite = true;
                     if (isset($values['value'][0]) && '*' === $values['value'][0]) {
@@ -349,7 +356,7 @@ class Parser
                             $data += $parsed; // array union
                         }
                     }
-                } elseif ('<<' !== $key && isset($values['value']) && '&' === $values['value'][0] && self::preg_match(self::REFERENCE_PATTERN, $values['value'], $matches)) {
+                } elseif (!$isMergeKey && isset($values['value']) && '&' === $values['value'][0] && self::preg_match(self::REFERENCE_PATTERN, $values['value'], $matches)) {
                     $isRef = $matches['ref'];
                     $this->refsBeingParsed[] = $isRef;
                     $values['value'] = $matches['value'];
@@ -358,7 +365,7 @@ class Parser
                 $subTag = null;
                 if ($mergeNode) {
                     // Merge keys
-                } elseif (!isset($values['value']) || '' === $values['value'] || str_starts_with($values['value'], '#') || (null !== $subTag = $this->getLineTag($values['value'], $flags)) || '<<' === $key) {
+                } elseif (!isset($values['value']) || '' === $values['value'] || str_starts_with($values['value'], '#') || (null !== $subTag = $this->getLineTag($values['value'], $flags)) || $isMergeKey) {
                     // hash
                     // if next line is less indented or equal, then it means that the current value is null
                     if (!$this->isNextLineIndented() && !$this->isNextLineUnIndentedCollection()) {
@@ -381,7 +388,7 @@ class Parser
                         // remember the parsed line number here in case we need it to provide some contexts in error messages below
                         $realCurrentLineNbKey = $this->getRealCurrentLineNb();
                         $value = $this->parseBlock($this->getRealCurrentLineNb() + 1, $this->getNextEmbedBlock(), $flags);
-                        if ('<<' === $key) {
+                        if ($isMergeKey) {
                             $this->refs[$refMatches['ref']] = $value;
 
                             if (Yaml::PARSE_OBJECT_FOR_MAP & $flags && $value instanceof \stdClass) {
@@ -905,12 +912,9 @@ class Parser
 
         $isCurrentLineBlank = $this->isCurrentLineBlank();
         $blockLines = [];
-        $longestBlankLine = 0;
 
         // leading blank lines are consumed before determining indentation
         while ($notEOF && $isCurrentLineBlank && (!$indentation || \strlen($this->currentLine) <= $indentation)) {
-            $longestBlankLine = max($longestBlankLine, \strlen($this->currentLine));
-
             // newline only if not EOF
             if ($notEOF = $this->moveToNextLine()) {
                 $blockLines[] = '';
@@ -924,11 +928,6 @@ class Parser
 
             for ($i = 0; $i < $currentLineLength && ' ' === $this->currentLine[$i]; ++$i) {
                 ++$indentation;
-            }
-
-            // a comment less indented than the leading empty lines is not content, the indentation is then the one of the longest empty line
-            if ($indentation < $longestBlankLine && $this->isCurrentLineComment()) {
-                $indentation = $longestBlankLine;
             }
         }
 
@@ -1249,22 +1248,26 @@ class Parser
 
         do {
             if (++$lineNumber > 1) {
-                $cursor += strspn($this->currentLine, ' ', $cursor);
+                $cursor += strspn($this->currentLine, " \t", $cursor);
             }
 
-            if ($this->isCurrentLineBlank()) {
+            if ($isBlankLine = '' === trim($this->currentLine, " \t")) {
                 $value .= "\n";
             } elseif (!$previousLineWasNewline && !$previousLineWasTerminatedWithBackslash) {
                 $value .= ' ';
             }
 
+            $line = '';
+            $escapedLength = 0;
+
             for (; \strlen($this->currentLine) > $cursor; ++$cursor) {
                 switch ($this->currentLine[$cursor]) {
                     case '\\':
                         if ("'" === $quotation) {
-                            $value .= '\\';
+                            $line .= '\\';
                         } elseif (isset($this->currentLine[++$cursor])) {
-                            $value .= '\\'.$this->currentLine[$cursor];
+                            $line .= '\\'.$this->currentLine[$cursor];
+                            $escapedLength = \strlen($line);
                         }
 
                         break;
@@ -1272,17 +1275,17 @@ class Parser
                         ++$cursor;
 
                         if ("'" === $quotation && isset($this->currentLine[$cursor]) && "'" === $this->currentLine[$cursor]) {
-                            $value .= "''";
+                            $line .= "''";
                             break;
                         }
 
-                        return $value.$quotation;
+                        return $value.$line.$quotation;
                     default:
-                        $value .= $this->currentLine[$cursor];
+                        $line .= $this->currentLine[$cursor];
                 }
             }
 
-            if ($this->isCurrentLineBlank()) {
+            if ($isBlankLine) {
                 $previousLineWasNewline = true;
                 $previousLineWasTerminatedWithBackslash = false;
             } elseif ('"' === $quotation && 1 === (\strlen($this->currentLine) - \strlen(rtrim($this->currentLine, '\\'))) % 2) {
@@ -1291,7 +1294,12 @@ class Parser
             } else {
                 $previousLineWasNewline = false;
                 $previousLineWasTerminatedWithBackslash = false;
+
+                // trailing white space is removed when the line is folded, unless it is escaped
+                $line = substr($line, 0, $escapedLength).rtrim(substr($line, $escapedLength), " \t");
             }
+
+            $value .= $line;
 
             if ($this->hasMoreLines()) {
                 $cursor = 0;
