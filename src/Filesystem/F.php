@@ -1185,8 +1185,10 @@ class F
 			false
 		);
 
-		// a leading dot keeps the temporary file out of the inventory
-		$tmp = $directory . '/.' . basename($file) . '.' . bin2hex(random_bytes(6)) . '.tmp';
+		// a leading dot keeps the temporary file out of the inventory;
+		// a fixed-length random name (instead of the original basename)
+		// keeps it within filesystem limits for long filenames
+		$tmp = $directory . '/.' . bin2hex(random_bytes(8)) . '.tmp';
 
 		if (file_put_contents($tmp, $content) === false) {
 			return false;

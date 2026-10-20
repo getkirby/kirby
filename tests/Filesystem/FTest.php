@@ -1123,6 +1123,15 @@ class FTest extends TestCase
 		$this->assertSame(['moved.txt'], array_values(array_diff(scandir(static::TMP), ['.', '..'])));
 	}
 
+	public function testWriteAtomicWithLongFilename(): void
+	{
+		// the longest name most filesystems allow
+		$file = static::TMP . '/' . str_repeat('a', 251) . '.txt';
+
+		$this->assertTrue(F::writeAtomic($file, 'my content'));
+		$this->assertSame('my content', F::read($file));
+	}
+
 	public function testWriteAtomicReplacesFileInOneStep(): void
 	{
 		F::write($this->test, 'old content');
