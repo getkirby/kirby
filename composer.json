@@ -41,7 +41,7 @@
 		"composer/semver": "3.5.1",
 		"erusev/parsedown": "1.8.0",
 		"erusev/parsedown-extra": "0.9.0",
-		"filp/whoops": "2.18.6",
+		"filp/whoops": "2.18.7",
 		"getkirby/composer-installer": "^1.2.1",
 		"laminas/laminas-escaper": "2.18.0",
 		"lbuchs/webauthn": "^2.2",

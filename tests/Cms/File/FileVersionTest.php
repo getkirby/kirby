@@ -104,6 +104,29 @@ class FileVersionTest extends ModelTestCase
 		$this->assertTrue($version->exists());
 	}
 
+	public function testSave(): void
+	{
+		$page = new Page([
+			'root' => static::FIXTURES,
+			'slug' => 'files'
+		]);
+
+		$original = new File([
+			'filename' => 'test.jpg',
+			'parent'   => $page
+		]);
+
+		$version = $original->thumb(['width' => 50]);
+		$job     = dirname($version->root()) . '/.jobs/' . basename($version->root()) . '.json';
+
+		$this->assertFileExists($job);
+
+		$version->save();
+
+		$this->assertFileExists($version->root());
+		$this->assertFileDoesNotExist($job);
+	}
+
 	public function testToArray(): void
 	{
 		$page = new Page([

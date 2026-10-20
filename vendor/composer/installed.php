@@ -56,9 +56,9 @@
             'dev_requirement' => false,
         ),
         'filp/whoops' => array(
-            'pretty_version' => '2.18.6',
-            'version' => '2.18.6.0',
-            'reference' => '7d0a2cde892089bb09372f4366e9b960eb3001a9',
+            'pretty_version' => '2.18.7',
+            'version' => '2.18.7.0',
+            'reference' => '50670ba239926c50f2073e868f6672f775cd57ec',
             'type' => 'library',
             'install_path' => __DIR__ . '/../filp/whoops',
             'aliases' => array(),
