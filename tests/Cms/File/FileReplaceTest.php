@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Exception;
+use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
@@ -193,6 +194,49 @@ class FileReplaceTest extends ModelTestCase
 		$this->assertSame('image/webp', $result->mime());
 		$this->assertFileExists($result->root());
 		$this->assertFileDoesNotExist(static::TMP . '/content/test/legacy.jpg');
+	}
+
+	public function testReplaceImageAndChangeFormatDuplicate(): void
+	{
+		$parent   = new Page(['slug' => 'test']);
+		$original = static::FIXTURES . '/test.jpg';
+
+		File::create([
+			'filename' => 'test.jpg',
+			'source'   => $original,
+			'parent'   => $parent,
+			'template' => 'test'
+		]);
+
+		File::create([
+			'filename' => 'test.webp',
+			'source'   => $original,
+			'parent'   => $parent
+		]);
+
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'files/test' => [
+					'name'   => 'test',
+					'create' => ['format' => 'webp']
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$file = $this->app->page('test')->file('test.jpg');
+
+		try {
+			$file->replace(static::FIXTURES . '/cat.jpg');
+			$this->fail('The duplicate was not detected');
+		} catch (DuplicateException $e) {
+			$this->assertSame('A file with the name "test.webp" already exists', $e->getMessage());
+		}
+
+		// the original file is untouched
+		$this->assertFileEquals($original, $file->root());
+		$this->assertFileEquals($original, $parent->root() . '/test.webp');
+		$this->assertSame([], Dir::read($this->app->root('cache') . '/.uploads'));
 	}
 
 	public function testReplaceImageWithDifferentMime(): void

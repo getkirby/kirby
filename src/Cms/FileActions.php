@@ -365,12 +365,22 @@ trait FileActions
 						...Darkroom::defaultOptions(),
 						...$options
 					]);
+
+					$format = $options['format'] ?? null;
+
+					// validate the rename before the original gets
+					// overwritten, e.g. to catch existing duplicates
+					if ($format !== null && $format !== F::extension($this->filename())) {
+						FileRules::changeName(
+							file: $this,
+							name: F::name($this->filename()),
+							extension: $format
+						);
+					}
 				} catch (Throwable $e) {
 					F::remove($tmp);
 					throw $e;
 				}
-
-				$format = $options['format'] ?? null;
 			}
 		}
 

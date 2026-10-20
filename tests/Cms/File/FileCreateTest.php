@@ -354,6 +354,46 @@ class FileCreateTest extends ModelTestCase
 		$this->assertSame('B', $result->b()->value());
 	}
 
+	public function testCreateImageAndManipulateDuplicate(): void
+	{
+		$parent = new Page(['slug' => 'test']);
+		$source = static::FIXTURES . '/test.jpg';
+
+		File::create([
+			'filename' => 'test.webp',
+			'source'   => $source,
+			'parent'   => $parent
+		]);
+
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'files/test' => [
+					'name'   => 'test',
+					'create' => ['format' => 'webp']
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
+		try {
+			File::create([
+				'filename' => 'test.jpg',
+				'source'   => static::FIXTURES . '/cat.jpg',
+				'parent'   => $parent,
+				'template' => 'test',
+			]);
+			$this->fail('The duplicate was not detected');
+		} catch (DuplicateException $e) {
+			$this->assertSame('A file with the name "test.webp" already exists', $e->getMessage());
+		}
+
+		// nothing is left behind in the content folder or the cache
+		$this->assertFileDoesNotExist($parent->root() . '/test.jpg');
+		$this->assertFileDoesNotExist($parent->root() . '/test.jpg.txt');
+		$this->assertFileEquals($source, $parent->root() . '/test.webp');
+		$this->assertSame([], Dir::read($this->app->root('cache') . '/.uploads'));
+	}
+
 	public function testCreateImageAndManipulateFailure(): void
 	{
 		$this->app = $this->app->clone([

@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Exception;
+use Kirby\Exception\DuplicateException;
 use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -32,6 +33,36 @@ class FileManipulateTest extends ModelTestCase
 		$this->assertSame($originalFile->root(), $replacedFile->root());
 		$this->assertSame(100, $replacedFile->width());
 		$this->assertSame(100, $replacedFile->height());
+	}
+
+	public function testManipulateDuplicate(): void
+	{
+		$parent   = new Page(['slug' => 'test']);
+		$original = static::FIXTURES . '/test.jpg';
+
+		$file = File::create([
+			'filename' => 'test.jpg',
+			'source'   => $original,
+			'parent'   => $parent
+		]);
+
+		File::create([
+			'filename' => 'test.webp',
+			'source'   => $original,
+			'parent'   => $parent
+		]);
+
+		try {
+			$file->manipulate(['format' => 'webp']);
+			$this->fail('The duplicate was not detected');
+		} catch (DuplicateException $e) {
+			$this->assertSame('A file with the name "test.webp" already exists', $e->getMessage());
+		}
+
+		// the original file is untouched
+		$this->assertFileEquals($original, $file->root());
+		$this->assertFileEquals($original, $parent->root() . '/test.webp');
+		$this->assertSame([], Dir::read($this->app->root('cache') . '/.uploads'));
 	}
 
 	public function testManipulateFailure(): void
