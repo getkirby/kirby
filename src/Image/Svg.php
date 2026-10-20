@@ -74,7 +74,12 @@ class Svg
 		$value  = $this->attr($attr);
 		$length = (float)$value;
 
-		if ($length <= 0 || Str::endsWith($value, '%') === true) {
+		// `1e400` overflows to INF
+		if (
+			$length <= 0 ||
+			is_finite($length) === false ||
+			Str::endsWith($value, '%') === true
+		) {
 			return null;
 		}
 
@@ -92,7 +97,10 @@ class Svg
 			return 0.0;
 		}
 
-		return $width / $height;
+		$ratio = $width / $height;
+
+		// extreme sizes can overflow the ratio
+		return is_finite($ratio) === true ? $ratio : 0.0;
 	}
 
 	/**
@@ -114,7 +122,11 @@ class Svg
 			$height ??= $width * $box[3] / $box[2];
 		}
 
-		return [$width, $height];
+		// an extreme viewBox can overflow the derived side
+		return [
+			is_finite($width ?? 0.0) === true ? $width : null,
+			is_finite($height ?? 0.0) === true ? $height : null
+		];
 	}
 
 	/**
@@ -125,7 +137,13 @@ class Svg
 		$value = trim($this->attr('viewBox'));
 		$box   = array_map(floatval(...), preg_split('/[\s,]+/', $value));
 
-		if (count($box) !== 4 || $box[2] < 0 || $box[3] < 0) {
+		// `1e400` overflows to INF
+		if (
+			count($box) !== 4 ||
+			$box[2] < 0 ||
+			$box[3] < 0 ||
+			array_filter($box, is_finite(...)) !== $box
+		) {
 			return null;
 		}
 

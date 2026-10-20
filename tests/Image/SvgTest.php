@@ -44,6 +44,7 @@ class SvgTest extends TestCase
 			'height in em' => ['height="2em"', true],
 			'percentages' => ['width="100%" height="100%" viewBox="0 0 20 10"', false],
 			'viewBox'     => ['viewBox="0 0 20 10"', false],
+			'overflowing size' => ['width="1e400" viewBox="0 0 20 10"', false],
 			'no size info' => ['', false],
 		];
 	}
@@ -65,6 +66,9 @@ class SvgTest extends TestCase
 			'width only'       => ['width="40"', 40.0, null],
 			'viewBox'          => ['viewBox="10 10 50.4 151.7"', 50.4, 151.7],
 			'invalid sizes'    => ['width="0" height="-5" viewBox="0 0 20 10"', 20.0, 10.0],
+			'overflowing size' => ['width="1e400" height="10" viewBox="0 0 20 10"', 20.0, 10.0],
+			'overflowing viewBox' => ['viewBox="0 0 1e400 1"', null, null],
+			'overflowing derived side' => ['height="1e300" viewBox="0 0 1e300 1e-10"', null, 1.0e300],
 			'auto'             => ['width="auto" height="auto"', null, null],
 			'no size info'     => ['', null, null],
 		];
@@ -86,6 +90,8 @@ class SvgTest extends TestCase
 			'viewBox'         => ['viewBox="0 0 188 152"', 188 / 152],
 			'decimal viewBox' => ['viewBox="0 0 2 1.5"', 2 / 1.5],
 			'offset viewBox'  => ['viewBox="10 10 50 25"', 2.0],
+			'overflowing viewBox' => ['viewBox="0 0 1e400 1e400"', 0.0],
+			'overflowing ratio' => ['viewBox="0 0 1e300 1e-300"', 0.0],
 			'width only'      => ['width="40"', 0.0],
 			'no size info'    => ['', 0.0],
 		];
@@ -104,6 +110,7 @@ class SvgTest extends TestCase
 			'commas'     => ['0,0,24,12', [0.0, 0.0, 24.0, 12.0]],
 			'mixed'      => [" -1, -2\n 24.5  12 ", [-1.0, -2.0, 24.5, 12.0]],
 			'negative'   => ['0 0 -24 12', null],
+			'overflowing' => ['-1e400 0 24 12', null],
 			'incomplete' => ['0 0 24', null],
 			'empty'      => ['', null],
 		];
