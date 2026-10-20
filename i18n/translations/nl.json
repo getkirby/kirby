@@ -309,6 +309,7 @@
 
 	"error.version.discard.permission": "Je hebt geen rechten om deze versie te annuleren",
 	"error.version.publish.permission": "Je hebt geen rechten om deze versie te publiceren",
+	"error.version.removed": "The version has been removed by another request",
 	"error.version.save.permission": "Je hebt geen rechten om deze versie te wijzigen",
 	"error.version.unlock.permission": "You are not allowed to unlock this version",
 

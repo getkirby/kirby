@@ -309,6 +309,7 @@
 
 	"error.version.discard.permission": "شما اجازه کنار گذاشتن این نسخه را ندارید",
 	"error.version.publish.permission": "شما اجازه انتشار این نسخه را ندارید",
+	"error.version.removed": "The version has been removed by another request",
 	"error.version.save.permission": "شما اجازه تغییر این نسخه را ندارید",
 	"error.version.unlock.permission": "شما اجازه باز کردن قفل این نسخه را ندارید",
 

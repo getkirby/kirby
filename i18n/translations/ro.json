@@ -309,6 +309,7 @@
 
 	"error.version.discard.permission": "Nu ai voie să înlături această versiune",
 	"error.version.publish.permission": "Nu ai voie să publici această versiune",
+	"error.version.removed": "The version has been removed by another request",
 	"error.version.save.permission": "Nu ai voie să modifici această versiune",
 	"error.version.unlock.permission": "You are not allowed to unlock this version",
 
