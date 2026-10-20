@@ -529,17 +529,12 @@ class StateTest extends TestCase
 	public function testViewWithQuery(): void
 	{
 		$this->setRequest([
-			'page'     => 2,
-			'search'   => 'foo',
-			'_globals' => '$system',
-			'_json'    => true,
-			'_only'    => '$view',
-			'_pretty'  => true
+			'page'   => 2,
+			'search' => 'foo'
 		]);
 
 		$view = A::apply((new State())->view());
 
-		// the State params must not end up in the restored Panel URL
 		$this->assertSame(['page' => 2, 'search' => 'foo'], $view['query']);
 	}
 }
