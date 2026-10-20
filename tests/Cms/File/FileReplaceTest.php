@@ -3,6 +3,8 @@
 namespace Kirby\Cms;
 
 use Exception;
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\File as BaseFile;
 use Kirby\Image\Image;
@@ -159,6 +161,65 @@ class FileReplaceTest extends ModelTestCase
 		$result = $this->app->page('test')->file('test.jpg')->replace($source);
 
 		$this->assertSame(100, $result->width());
+	}
+
+	public function testReplaceImageAndChangeFormat(): void
+	{
+		// uploaded before the format option was configured
+		File::create([
+			'filename' => 'legacy.jpg',
+			'source'   => static::FIXTURES . '/test.jpg',
+			'parent'   => new Page(['slug' => 'test']),
+			'template' => 'test'
+		]);
+
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'files/test' => [
+					'name'   => 'test',
+					'create' => ['format' => 'webp']
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
+		// named like an upload from the Panel
+		$source = static::TMP . '/uploads/6ad72b24c2433.holiday.jpg';
+		F::copy(static::FIXTURES . '/cat.jpg', $source);
+
+		$result = $this->app->page('test')->file('legacy.jpg')->replace($source);
+
+		$this->assertSame('legacy.webp', $result->filename());
+		$this->assertSame('image/webp', $result->mime());
+		$this->assertFileExists($result->root());
+		$this->assertFileDoesNotExist(static::TMP . '/content/test/legacy.jpg');
+	}
+
+	public function testReplaceImageWithDifferentMime(): void
+	{
+		$parent   = new Page(['slug' => 'test']);
+		$original = static::FIXTURES . '/test.jpg';
+
+		$file = File::create([
+			'filename' => 'test.jpg',
+			'source'   => $original,
+			'parent'   => $parent
+		]);
+
+		$source = static::TMP . '/uploads/test.png';
+
+		Dir::make(dirname($source));
+		imagepng(imagecreatefromjpeg(static::FIXTURES . '/cat.jpg'), $source);
+
+		try {
+			$file->replace($source);
+			$this->fail('The different mime type was not detected');
+		} catch (InvalidArgumentException $e) {
+			$this->assertSame('error.file.mime.differs', $e->getKey());
+		}
+
+		// the original file is untouched
+		$this->assertFileEquals($original, $file->root());
 	}
 
 	public function testReplaceManipulateNonImage(): void

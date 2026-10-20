@@ -464,7 +464,7 @@ trait FileActions
 
 		$arguments = [
 			'file' => $file,
-			'upload' => $file->asset($source)
+			'upload' => $file->assetFactory($source)
 		];
 
 		return $this->commit('replace', $arguments, function ($file, $upload) use ($move) {
