@@ -53,10 +53,7 @@
 									{{ label(column, columnIndex) }}
 								</slot>
 							</span>
-							<k-icon
-								v-if="column.sorted"
-								:type="column.sorted === 'desc' ? 'angle-down' : 'angle-up'"
-							/>
+							<k-icon type="angle-up-down" class="k-table-column-icon" />
 						</button>
 						<slot
 							v-else
@@ -616,6 +613,21 @@ export default {
 	min-width: 0;
 	overflow: hidden;
 	text-overflow: ellipsis;
+}
+/* both chevrons stay dimmed until the sort direction darkens one */
+.k-table-column-icon {
+	--icon-size: var(--text-md);
+	--table-sort-dimmed: rgba(0, 0, 0, 0.4);
+	mask-image: linear-gradient(
+		var(--table-sort-dimmed),
+		var(--table-sort-dimmed)
+	);
+}
+.k-table th[aria-sort="ascending"] .k-table-column-icon {
+	mask-image: linear-gradient(#000 50%, var(--table-sort-dimmed) 50%);
+}
+.k-table th[aria-sort="descending"] .k-table-column-icon {
+	mask-image: linear-gradient(var(--table-sort-dimmed) 50%, #000 50%);
 }
 
 /* Table Header */
