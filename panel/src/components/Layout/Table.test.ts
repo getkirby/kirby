@@ -66,9 +66,20 @@ describe("Table.vue", () => {
 			expect(wrapper.findAll('tr[data-sortable="true"]')).toHaveLength(2);
 		});
 
-		it("stops dragging rows with sortable columns", () => {
+		it("keeps rows draggable while no column is sorted", () => {
 			const wrapper = mount({
 				columns: { title: { label: "Title", sorted: false } },
+				sortable: true
+			});
+			expect(wrapper.findAll('tr[data-sortable="true"]')).toHaveLength(2);
+		});
+
+		it("stops dragging rows while a column is sorted", () => {
+			const wrapper = mount({
+				columns: {
+					title: { label: "Title", sorted: false },
+					date: { label: "Date", sorted: "desc" }
+				},
 				sortable: true
 			});
 			expect(wrapper.findAll('tr[data-sortable="true"]')).toHaveLength(0);

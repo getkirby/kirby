@@ -329,14 +329,14 @@ export default {
 			return this.$helper.object.length(this.columns);
 		},
 		/**
-		 * Rows are ordered either by hand or by column,
-		 * so sortable columns turn off dragging
+		 * A sorted column replaces the manual order,
+		 * so rows can only be dragged while no column is sorted
 		 * @returns {boolean}
 		 */
 		draggable() {
 			return (
 				this.sortable === true &&
-				Object.values(this.columns).some(this.isSortable) === false
+				Object.values(this.columns).some(this.isSorted) === false
 			);
 		},
 		/**
@@ -427,6 +427,14 @@ export default {
 		 */
 		isSortable(column) {
 			return ["asc", "desc", false].includes(column.sorted);
+		},
+		/**
+		 * Whether the rows are sorted by the column
+		 * @param {Object} column
+		 * @returns {boolean}
+		 */
+		isSorted(column) {
+			return ["asc", "desc"].includes(column.sorted);
 		},
 		/**
 		 * Returns label for a column
