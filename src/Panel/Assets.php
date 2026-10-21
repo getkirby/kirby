@@ -24,7 +24,6 @@ use Kirby\Toolkit\A;
 class Assets
 {
 	protected bool $isDev;
-	protected bool $isPluginDev;
 	protected App $kirby;
 	protected string $nonce;
 	protected Plugins $plugins;
@@ -42,10 +41,6 @@ class Assets
 		$this->isDev =
 			$this->kirby->option('panel.dev', false) !== false &&
 			is_file($this->kirby->root('panel') . '/.vite-running') === true;
-
-		// check if any plugin is running in dev mode to
-		// load the non-production version of Vue
-		$this->isPluginDev = count(glob($this->kirby->root('plugins') . '/*/index.dev.js')) > 0;
 
 		// Get the base URL
 		$this->url = $this->url();
@@ -349,7 +344,7 @@ class Assets
 
 		// When any plugin is in dev mode, also load the dev version
 		// of Vue but from the dist folder, not node_modules
-		if ($this->isPluginDev === true) {
+		if ($this->plugins->isDev() === true) {
 			return $this->url . '/js/vue.esm-browser.js';
 		}
 

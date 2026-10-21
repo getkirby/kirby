@@ -98,6 +98,36 @@ class PluginsTest extends TestCase
 		$this->assertSame([], $plugins->css());
 	}
 
+	public function testIsDev(): void
+	{
+		$this->createPlugins();
+
+		// a plugin in development
+		F::write($this->devJsB, 'dev b');
+
+		// an empty script
+		F::write($this->devJsC, '');
+
+		// app must be created again to load the new plugins
+		$app     = $this->app->clone();
+		$plugins = new Plugins();
+
+		$this->assertFalse($plugins->isDev($app->plugin('test/a')));
+		$this->assertTrue($plugins->isDev($app->plugin('test/b')));
+		$this->assertFalse($plugins->isDev($app->plugin('test/c')));
+		$this->assertTrue($plugins->isDev());
+	}
+
+	public function testIsDevWithoutDevelopment(): void
+	{
+		$this->createPlugins();
+
+		// app must be created again to load the new plugins
+		$app = $this->app->clone();
+
+		$this->assertFalse((new Plugins())->isDev());
+	}
+
 	public function testJs(): void
 	{
 		$this->createPlugins();
