@@ -24,7 +24,9 @@
 				:columns="sortableColumns"
 				:options="options"
 				:rows="sortedRows"
+				:sortable="true"
 				@header="onHeader"
+				@sort="order = $event"
 			></k-table>
 		</k-lab-example>
 		<k-lab-example label="Selecting">
@@ -54,6 +56,7 @@
 export default {
 	data() {
 		return {
+			order: null,
 			sortBy: null
 		};
 	},
@@ -88,34 +91,44 @@ export default {
 		},
 		sortableColumns() {
 			const [field, direction] = this.sortBy?.split(" ") ?? [];
+			const columns = {
+				...this.columns,
+				views: { label: "Views", align: "right" }
+			};
 
 			return Object.fromEntries(
-				Object.entries(this.columns).map(([name, column]) => [
+				Object.entries(columns).map(([name, column]) => [
 					name,
 					{ ...column, sorted: name === field ? direction : false }
 				])
 			);
 		},
 		sortedRows() {
+			// a copy, so dragging doesn't reorder the other examples
+			const rows = this.order ?? [...this.rows];
+
 			if (this.sortBy === null) {
-				return this.rows;
+				return rows;
 			}
 
-			return this.$helper.array.sortBy([...this.rows], this.sortBy);
+			return this.$helper.array.sortBy([...rows], this.sortBy);
 		},
 		rows() {
 			return [
 				{
 					title: "Title 1",
-					date: "2020-01-01"
+					date: "2020-01-01",
+					views: 42
 				},
 				{
 					title: "Title 2",
-					date: "2020-01-02"
+					date: "2020-01-02",
+					views: 1280
 				},
 				{
 					title: "Title 3",
 					date: "2020-01-03",
+					views: 7,
 					selectable: false
 				}
 			];
@@ -129,6 +142,12 @@ export default {
 	},
 	methods: {
 		onHeader({ columnIndex }) {
+			// the third click goes back to the manual order
+			if (this.sortBy === columnIndex + " desc") {
+				this.sortBy = null;
+				return;
+			}
+
 			const ascending = this.sortBy === columnIndex + " asc";
 			this.sortBy = columnIndex + (ascending ? " desc" : " asc");
 		}
