@@ -230,6 +230,23 @@ describe("k-collection", () => {
 			expect(wrapper.emitted("item")).toStrictEqual([[items[1], 1, "text"]]);
 		});
 
+		it("toggles the selection for a table cell click while selecting", async () => {
+			const wrapper = mountTable({ selecting: true });
+			await wrapper.findAll("k-table-cell")[1].trigger("click");
+			expect(wrapper.emitted("item")).toBeUndefined();
+			expect(wrapper.emitted("select")).toStrictEqual([[["b"]]]);
+		});
+
+		it("emits the item of an unselectable row while selecting", async () => {
+			const wrapper = mountTable({
+				items: [{ id: "a", text: "A", selectable: false }],
+				selecting: true
+			});
+			await wrapper.find("k-table-cell").trigger("click");
+			expect(wrapper.emitted("item")).toHaveLength(1);
+			expect(wrapper.emitted("select")).toBeUndefined();
+		});
+
 		it("emits the option of an item as action and option", () => {
 			const wrapper = mount();
 			wrapper.findComponent(Items).vm.$emit("option", "remove", items[0], 0);
