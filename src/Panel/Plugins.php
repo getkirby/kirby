@@ -5,6 +5,8 @@ namespace Kirby\Panel;
 use Kirby\Cms\App;
 use Kirby\Filesystem\F;
 use Kirby\Http\Response;
+use Kirby\Plugin\Plugin;
+use Kirby\Toolkit\A;
 
 /**
  * The Plugins class collects the Panel files of all
@@ -23,6 +25,23 @@ class Plugins
 	public function css(): array
 	{
 		return $this->urls('css');
+	}
+
+	/**
+	 * Whether the given plugin, or any plugin if none is given,
+	 * is in development, i.e. kirbyup added an `index.dev.js`
+	 * @since 6.0.0
+	 */
+	public function isDev(Plugin|null $plugin = null): bool
+	{
+		if ($plugin === null) {
+			return A::some(
+				App::instance()->plugins(),
+				fn (Plugin $plugin) => $this->isDev($plugin)
+			);
+		}
+
+		return F::size($plugin->root() . '/index.dev.js') > 0;
 	}
 
 	/**
@@ -82,10 +101,7 @@ class Plugins
 		$urls = [];
 
 		foreach (App::instance()->plugins() as $plugin) {
-			// during plugin development, kirbyup adds an index.dev.js and
-			// index.dev.css, which Kirby loads instead of index.js and index.css
-			$dev       = F::size($plugin->root() . '/index.dev.js') > 0;
-			$extension = $dev === true ? 'dev.' . $type : $type;
+			$extension = $this->isDev($plugin) === true ? 'dev.' . $type : $type;
 			$root      = $plugin->root() . '/index.' . $extension;
 
 			if (F::size($root) > 0) {
