@@ -25,12 +25,16 @@ export function defaults(): TranslationState {
  * BCP 47 language tag like `pt-BR`
  */
 function lang(code: string): string {
-	try {
-		return Intl.getCanonicalLocales(code.replace("_", "-"))[0];
-	} catch {
-		// gettext modifiers like `sr@latin` have no tag
-		return code.split(/[_@]/)[0];
+	for (const tag of [code.replace("_", "-"), code.split(/[-_@]/)[0]]) {
+		try {
+			return Intl.getCanonicalLocales(tag)[0];
+		} catch {
+			// codes like `sr@latin` or `de-sie` have no tag,
+			// so try their primary language next
+		}
 	}
+
+	return "en";
 }
 
 /**
