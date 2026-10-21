@@ -209,6 +209,11 @@ export default {
 		 * the other layouts, plus the clicked column
 		 */
 		onCell({ row, rowIndex, columnIndex }) {
+			// like `k-item`, toggle the selection while selecting
+			if (this.selecting === true && row.selectable !== false) {
+				return this.onSelect(row);
+			}
+
 			this.$emit("item", row, rowIndex, columnIndex);
 		},
 		onDragStart($event, dragText) {
