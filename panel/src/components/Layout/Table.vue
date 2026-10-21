@@ -41,16 +41,18 @@
 					>
 						<!-- the click reaches the th and emits `header` -->
 						<button v-if="isSortable(column)" type="button">
-							<slot
-								name="header"
-								v-bind="{
-									column,
-									columnIndex,
-									label: label(column, columnIndex)
-								}"
-							>
-								{{ label(column, columnIndex) }}
-							</slot>
+							<span class="k-table-column-label">
+								<slot
+									name="header"
+									v-bind="{
+										column,
+										columnIndex,
+										label: label(column, columnIndex)
+									}"
+								>
+									{{ label(column, columnIndex) }}
+								</slot>
+							</span>
 							<k-icon
 								v-if="column.sorted"
 								:type="column.sorted === 'desc' ? 'angle-down' : 'angle-up'"
@@ -598,10 +600,22 @@ export default {
 .k-table th button:focus-visible {
 	outline-offset: -2px;
 }
-.k-table th[aria-sort] button {
+.k-table th[data-has-button="true"] button {
 	display: flex;
 	align-items: center;
 	gap: var(--spacing-1);
+}
+.k-table th[data-has-button="true"][data-align] button {
+	justify-content: var(--align);
+}
+/* the icon goes first, so the label lines up with right-aligned values */
+.k-table th[data-has-button="true"][data-align="right"] button {
+	flex-direction: row-reverse;
+}
+.k-table-column-label {
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 /* Table Header */
