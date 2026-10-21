@@ -61,13 +61,13 @@ describe("k-table", () => {
 
 			expect(title.find("button").exists()).toBe(true);
 			expect(title.attributes("aria-sort")).toBeUndefined();
-			expect(title.find("k-icon").exists()).toBe(false);
+			expect(title.find("k-icon").attributes("type")).toBe("angle-up-down");
 		});
 
 		it.each([
-			["asc", "ascending", "angle-up"],
-			["desc", "descending", "angle-down"]
-		])("marks a column sorted %s", (sorted, aria, icon) => {
+			["asc", "ascending"],
+			["desc", "descending"]
+		])("marks a column sorted %s", (sorted, aria) => {
 			const wrapper = mount({
 				columns: { title: { label: "Title", sorted } }
 			});
@@ -75,7 +75,7 @@ describe("k-table", () => {
 
 			expect(title.find("button").exists()).toBe(true);
 			expect(title.attributes("aria-sort")).toBe(aria);
-			expect(title.find("k-icon").attributes("type")).toBe(icon);
+			expect(title.find("k-icon").attributes("type")).toBe("angle-up-down");
 		});
 
 		it("keeps rows draggable without sortable columns", () => {
