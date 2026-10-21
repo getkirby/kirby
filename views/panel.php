@@ -23,7 +23,7 @@ use Kirby\Toolkit\Html;
 
 	<script type="importmap" nonce="<?= $nonce ?>">
 	{
-	  "imports": <?= json_encode($assets['import-maps'] ?? []) ?>
+	  "imports": <?= json_encode($assets['import-maps'] ?? [], JSON_HEX_TAG) ?>
 	}
 	</script>
 
@@ -64,7 +64,7 @@ use Kirby\Toolkit\Html;
 
   <script nonce="<?= $nonce ?>">
     // Fiber setup
-    window.fiber = <?= json_encode($fiber) ?>;
+    window.fiber = <?= json_encode($fiber, JSON_HEX_TAG) ?>;
   </script>
 
 	<?php foreach ($assets['js'] as $key => $js): ?>
