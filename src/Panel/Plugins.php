@@ -22,7 +22,7 @@ class Plugins
 	 */
 	public function css(): array
 	{
-		return $this->urls(['css']);
+		return $this->urls('css');
 	}
 
 	/**
@@ -32,9 +32,7 @@ class Plugins
 	 */
 	public function js(): array
 	{
-		// during plugin development, kirbyup adds an index.dev.js,
-		// which Kirby will load instead of the regular index.js
-		return $this->urls(['dev.js', 'js']);
+		return $this->urls('js');
 	}
 
 	/**
@@ -43,7 +41,7 @@ class Plugins
 	 * so browsers and CDNs can cache it for good
 	 * @since 6.0.0
 	 *
-	 * @param string $extension `css`, `js` or `dev.js`
+	 * @param string $extension `css`, `js`, `dev.css` or `dev.js`
 	 */
 	public static function resolve(
 		string $plugin,
@@ -72,22 +70,26 @@ class Plugins
 	}
 
 	/**
-	 * Returns the URL of the first non-empty `index.*` file
-	 * of each plugin, trying the extensions in the given order
+	 * Returns the URL of the non-empty `index.css` or `index.js`
+	 * of each plugin, or of its `index.dev.*` counterpart
+	 * while the plugin is in development
 	 * @since 6.0.0
+	 *
+	 * @param string $type `css` or `js`
 	 */
-	protected function urls(array $extensions): array
+	protected function urls(string $type): array
 	{
 		$urls = [];
 
 		foreach (App::instance()->plugins() as $plugin) {
-			foreach ($extensions as $extension) {
-				$root = $plugin->root() . '/index.' . $extension;
+			// during plugin development, kirbyup adds an index.dev.js and
+			// index.dev.css, which Kirby loads instead of index.js and index.css
+			$dev       = F::size($plugin->root() . '/index.dev.js') > 0;
+			$extension = $dev === true ? 'dev.' . $type : $type;
+			$root      = $plugin->root() . '/index.' . $extension;
 
-				if (F::size($root) > 0) {
-					$urls[] = $plugin->mediaUrl() . '.' . hash_file('xxh3', $root) . '.' . $extension;
-					break;
-				}
+			if (F::size($root) > 0) {
+				$urls[] = $plugin->mediaUrl() . '.' . hash_file('xxh3', $root) . '.' . $extension;
 			}
 		}
 
