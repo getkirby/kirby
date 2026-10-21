@@ -60,5 +60,22 @@ describe("Collection.vue", () => {
 				[{ id: "b", title: "B" }, 1, "title"]
 			]);
 		});
+
+		it("toggles the selection for a table cell click while selecting", async () => {
+			const wrapper = mount({ selecting: true });
+			await wrapper.findAll("k-table-cell")[1].trigger("click");
+			expect(wrapper.emitted("item")).toBeUndefined();
+			expect(wrapper.emitted("select")).toStrictEqual([[["b"]]]);
+		});
+
+		it("is emitted for an unselectable row while selecting", async () => {
+			const wrapper = mount({
+				items: [{ id: "a", title: "A", selectable: false }],
+				selecting: true
+			});
+			await wrapper.find("k-table-cell").trigger("click");
+			expect(wrapper.emitted("item")).toHaveLength(1);
+			expect(wrapper.emitted("select")).toBeUndefined();
+		});
 	});
 });
