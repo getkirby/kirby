@@ -42,6 +42,9 @@
 						<!-- the click reaches the th and emits `header` -->
 						<button v-if="isSortable(column)" type="button">
 							<span class="k-table-column-label">
+								<!--
+									@slot Column header. Sortable columns render it inside a button, so no buttons, links or inputs
+								-->
 								<slot
 									name="header"
 									v-bind="{
