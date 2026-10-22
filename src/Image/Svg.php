@@ -71,14 +71,28 @@ class Svg
 	 */
 	protected function length(string $attr): float|null
 	{
-		$value  = $this->attr($attr);
-		$length = (float)$value;
+		$value = $this->attr($attr);
 
-		if ($length <= 0 || Str::endsWith($value, '%') === true) {
+		if (Str::endsWith($value, '%') === true) {
 			return null;
 		}
 
-		return $length;
+		return $this->normalizeFloat((float)$value);
+	}
+
+	/**
+	 * Returns the value if it can be used as size or ratio:
+	 * positive and within the int range (as `Dimensions` casts
+	 * sizes to int), which rejects values that over- or underflow
+	 */
+	protected function normalizeFloat(float|null $value): float|null
+	{
+		// the positive check also rejects NAN
+		if ($value > 0 && $value < PHP_INT_MAX) {
+			return $value;
+		}
+
+		return null;
 	}
 
 	/**
@@ -88,11 +102,11 @@ class Svg
 	{
 		[$width, $height] = $this->size();
 
-		if ($width === null || $height === null || $width <= 0 || $height <= 0) {
+		if ($width === null || $height === null) {
 			return 0.0;
 		}
 
-		return $width / $height;
+		return $this->normalizeFloat($width / $height) ?? 0.0;
 	}
 
 	/**
@@ -106,15 +120,16 @@ class Svg
 		$box    = $this->viewBox();
 
 		if ($width === null && $height === null) {
-			return [$box[2] ?? null, $box[3] ?? null];
+			$width  = $box[2] ?? null;
+			$height = $box[3] ?? null;
+		} elseif ($box !== null && $box[2] > 0 && $box[3] > 0) {
+			// divide first, so that only a result that is
+			// too large can overflow, not an intermediate product
+			$width  ??= $height * ($box[2] / $box[3]);
+			$height ??= $width  * ($box[3] / $box[2]);
 		}
 
-		if ($box !== null && $box[2] > 0 && $box[3] > 0) {
-			$width  ??= $height * $box[2] / $box[3];
-			$height ??= $width * $box[3] / $box[2];
-		}
-
-		return [$width, $height];
+		return [$this->normalizeFloat($width), $this->normalizeFloat($height)];
 	}
 
 	/**
@@ -125,7 +140,13 @@ class Svg
 		$value = trim($this->attr('viewBox'));
 		$box   = array_map(floatval(...), preg_split('/[\s,]+/', $value));
 
-		if (count($box) !== 4 || $box[2] < 0 || $box[3] < 0) {
+		// `1e400` overflows to INF
+		if (
+			count($box) !== 4 ||
+			$box[2] < 0 ||
+			$box[3] < 0 ||
+			array_filter($box, is_finite(...)) !== $box
+		) {
 			return null;
 		}
 
