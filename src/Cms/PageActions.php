@@ -464,7 +464,8 @@ trait PageActions
 		// Make sure that the page does not already exist at this point.
 		// Otherwise, moving the storage to memory storage, might delete
 		// an existing page before we can even run the checks.
-		PageRules::create($page);
+		// The full create rules incl. content validation run in the commit.
+		PageRules::creatable($page);
 
 		// merge the content with the defaults and run it through
 		// the fields to apply their save handlers
