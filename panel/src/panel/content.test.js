@@ -204,6 +204,37 @@ describe("panel.content", () => {
 
 			expect(content.isProcessing).toBe(false);
 		});
+
+		it("waits for a running save request", async () => {
+			const calls = [];
+			let finish;
+			const { content } = factory({
+				post: vi.fn((url) => {
+					calls.push(url);
+
+					if (url.endsWith("/save") === true) {
+						return new Promise((resolve) => (finish = resolve));
+					}
+
+					return Promise.resolve();
+				})
+			});
+
+			const save = content.save({ title: "Draft" });
+			const discard = content.discard();
+
+			await Promise.resolve();
+			expect(calls).toStrictEqual(["/pages/test/changes/save"]);
+
+			finish();
+			await save;
+			await discard;
+
+			expect(calls).toStrictEqual([
+				"/pages/test/changes/save",
+				"/pages/test/changes/discard"
+			]);
+		});
 	});
 
 	describe("emit()", () => {
@@ -454,6 +485,37 @@ describe("panel.content", () => {
 
 			expect(content.isProcessing).toBe(false);
 		});
+
+		it("waits for a running save request", async () => {
+			const calls = [];
+			let finish;
+			const { content } = factory({
+				post: vi.fn((url) => {
+					calls.push(url);
+
+					if (url.endsWith("/save") === true) {
+						return new Promise((resolve) => (finish = resolve));
+					}
+
+					return Promise.resolve();
+				})
+			});
+
+			const save = content.save({ title: "Draft" });
+			const publish = content.publish({ title: "Draft" });
+
+			await Promise.resolve();
+			expect(calls).toStrictEqual(["/pages/test/changes/save"]);
+
+			finish();
+			await save;
+			await publish;
+
+			expect(calls).toStrictEqual([
+				"/pages/test/changes/save",
+				"/pages/test/changes/publish"
+			]);
+		});
 	});
 
 	describe("save()", () => {
@@ -564,6 +626,71 @@ describe("panel.content", () => {
 		});
 	});
 
+	describe("settle()", () => {
+		it("cancels the scheduled save", async () => {
+			const { content } = factory();
+			const cancel = vi.spyOn(content.saveLazy, "cancel");
+
+			await content.settle();
+
+			expect(cancel).toHaveBeenCalledOnce();
+		});
+
+		it("waits for a running save request", async () => {
+			let finish;
+			const { content } = factory({
+				post: vi.fn(() => new Promise((resolve) => (finish = resolve)))
+			});
+
+			const save = content.save({ title: "Draft" });
+			let settled = false;
+			const settle = content.settle().then(() => (settled = true));
+
+			await Promise.resolve();
+			expect(settled).toBe(false);
+
+			finish();
+			await save;
+			await settle;
+
+			expect(settled).toBe(true);
+		});
+
+		it("waits for a save request that starts while waiting", async () => {
+			const finish = [];
+			const { content } = factory({
+				post: vi.fn(() => new Promise((resolve) => finish.push(resolve)))
+			});
+
+			const first = content.save({ title: "First" });
+			let settled = false;
+			const settle = content.settle().then(() => (settled = true));
+
+			await Promise.resolve();
+			const second = content.save({ title: "Second" });
+
+			finish[0]();
+			await first;
+			await Promise.resolve();
+			expect(settled).toBe(false);
+
+			finish[1]();
+			await second;
+			await settle;
+
+			expect(settled).toBe(true);
+		});
+
+		it("ignores a failed save request", async () => {
+			const { content } = factory({
+				post: vi.fn(() => Promise.reject(new Error("failed")))
+			});
+
+			await content.save().catch(() => {});
+
+			await expect(content.settle()).resolves.toBeUndefined();
+		});
+	});
 	describe("unlock()", () => {
 		it("sends the unlock request for the current view", async () => {
 			const { content, panel } = factory();

@@ -74,15 +74,14 @@ export default (panel) => {
 				throw new Error("Cannot discard locked changes");
 			}
 
-			// Cancel any ongoing save requests.
-			// The discard request will throw those
-			// changes away anyway.
-			this.cancelSaving();
-
 			// Start processing the request
 			this.isProcessing = true;
 
 			try {
+				// Wait for a running save request instead of aborting it:
+				// the server would still write the changes in parallel
+				// with the discard request
+				await this.settle();
 				await this.request("discard", {}, env);
 
 				// update the props for the current view
@@ -223,16 +222,15 @@ export default (panel) => {
 				throw new Error("Cannot publish content from another view");
 			}
 
-			// Cancel any ongoing save requests.
-			// The publish request will submit the
-			// latest state of the form again.
-			this.cancelSaving();
-
 			// Start processing the request
 			this.isProcessing = true;
 
 			// Send updated values to API
 			try {
+				// Wait for a running save request instead of aborting it:
+				// the server would still write the changes in parallel
+				// with the publish request
+				await this.settle();
 				await this.request("publish", this.merge(values, env), env);
 
 				// close the dialog if it is still open
@@ -288,7 +286,8 @@ export default (panel) => {
 			this.saveAbortController = new AbortController();
 
 			try {
-				await this.request("save", values, env);
+				this.saveRequest = this.request("save", values, env);
+				await this.saveRequest;
 
 				// close the dialog if it is still open
 				this.dialog?.close();
@@ -329,6 +328,28 @@ export default (panel) => {
 		 * @var {AbortController}
 		 */
 		saveAbortController: null,
+
+		/**
+		 * @internal
+		 * @var {Promise}
+		 */
+		saveRequest: null,
+
+		/**
+		 * Drops any scheduled save request and waits for a running one.
+		 * Aborting it would only cancel the request in the browser while
+		 * the server keeps processing it in parallel with the next request.
+		 */
+		async settle() {
+			let request;
+
+			// a newer save request can start while an older one is awaited
+			do {
+				this.saveLazy.cancel();
+				request = this.saveRequest;
+				await request?.catch(() => {});
+			} while (request !== this.saveRequest);
+		},
 
 		/**
 		 * Releases the content lock without discarding changes.
