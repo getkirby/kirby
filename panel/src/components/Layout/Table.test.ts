@@ -131,6 +131,21 @@ describe("k-table", () => {
 			expect(inputs[0].element.checked).toBe(false);
 			expect(inputs[1].element.checked).toBe(true);
 		});
+
+		it("matches rows by uuid before id, like k-items", () => {
+			const wrapper = mount({
+				rows: [
+					{ id: "a", uuid: "page://a", title: "A" },
+					{ id: "b", uuid: "page://b", title: "B" }
+				],
+				selected: ["page://b"],
+				selecting: true
+			});
+			const checkboxes = wrapper.findAll("input");
+
+			expect(checkboxes[0].element.checked).toBe(false);
+			expect(checkboxes[1].element.checked).toBe(true);
+		});
 	});
 
 	describe("selecting prop", () => {
@@ -193,6 +208,16 @@ describe("k-table", () => {
 			const wrapper = mount({ selecting: true, selected: ["a"] });
 			await wrapper.findAll("input")[1].trigger("change");
 			expect(wrapper.emitted("select")).toStrictEqual([[["a", "b"]]]);
+		});
+
+		it("adds the uuid of a checked row", async () => {
+			const wrapper = mount({
+				rows: [{ id: "a", uuid: "page://a", title: "A" }],
+				selecting: true
+			});
+
+			await wrapper.find("input").trigger("change");
+			expect(wrapper.emitted("select")).toStrictEqual([[["page://a"]]]);
 		});
 
 		it("removes an unchecked row", async () => {

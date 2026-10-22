@@ -406,7 +406,7 @@ export default {
 		},
 		findSelectedIndex(row) {
 			return this.selected.findIndex(
-				(selected) => selected === (row._id ?? row.id)
+				(selected) => selected === (row._id ?? row.uuid ?? row.id)
 			);
 		},
 		/**
@@ -489,7 +489,7 @@ export default {
 		},
 		onSelect(row) {
 			if (this.selectmode === "single") {
-				return this.$emit("select", [row._id ?? row.id]);
+				return this.$emit("select", [row._id ?? row.uuid ?? row.id]);
 			}
 
 			const index = this.findSelectedIndex(row);
@@ -498,7 +498,10 @@ export default {
 				return this.$emit("select", this.selected.toSpliced(index, 1));
 			}
 
-			return this.$emit("select", [...this.selected, row._id ?? row.id]);
+			return this.$emit("select", [
+				...this.selected,
+				row._id ?? row.uuid ?? row.id
+			]);
 		},
 		/**
 		 * When the table has been sorted,
