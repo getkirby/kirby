@@ -9,13 +9,17 @@ import Content from "./content.js";
  * @param {Object} options.latest - values of the latest version
  * @param {Object} options.lock - overrides for the lock state
  * @param {Function} options.post - mock for `panel.api.post`
+ * @param {Function} options.patch - mock for `panel.api.patch`
+ * @param {boolean} options.methodOverride - overrides for `panel.api.methodOverride`
  */
-function factory({ changes = {}, latest = {}, lock = {}, post } = {}) {
+function factory({ changes = {}, latest = {}, lock = {}, post, patch, methodOverride } = {}) {
 	const panel = {
 		api: {
 			csrf: "csrf-token",
 			endpoint: "/api",
-			post: post ?? vi.fn(() => Promise.resolve())
+			methodOverride: methodOverride ?? false,
+			post: post ?? vi.fn(() => Promise.resolve()),
+			patch: patch ?? vi.fn(() => Promise.resolve())
 		},
 		dialog: {
 			close: vi.fn(),
@@ -52,10 +56,14 @@ function factory({ changes = {}, latest = {}, lock = {}, post } = {}) {
 }
 
 /**
- * Returns all API endpoints that have been posted to
+ * Returns all API endpoints that have been called (post and patch)
  */
 function endpoints(panel) {
-	return panel.api.post.mock.calls.map((call) => call[0]);
+	const calls = [
+		...panel.api.patch.mock.calls.map((call) => call[0]),
+		...panel.api.post.mock.calls.map((call) => call[0])
+	];
+	return calls;
 }
 
 /**
@@ -418,6 +426,24 @@ describe("panel.content", () => {
 			);
 		});
 
+		it("sends the full values and not the diff for POST requests", async () => {
+			const { content, panel } = factory({
+				changes: { title: "Draft", subtitle: "Draft subtitle" },
+				latest: { title: "Original", subtitle: "Original subtitle" }
+			});
+
+			await content.publish({ subtitle: "Published subtitle" });
+
+			// POST must send the merged values, not the diff between changes and latest
+			// The diff would be { title: "Draft", subtitle: "Draft subtitle" }
+			// but publish sends the merged changes: { title: "Draft", subtitle: "Published subtitle" }
+			expect(panel.api.post).toHaveBeenCalledWith(
+				"/pages/test/changes/publish",
+				{ title: "Draft", subtitle: "Published subtitle" },
+				{ headers: { "x-language": "en" } }
+			);
+		});
+
 		it("updates the latest version to the current changes", async () => {
 			const { content } = factory({ changes: { title: "Draft" } });
 
@@ -457,14 +483,35 @@ describe("panel.content", () => {
 	});
 
 	describe("save()", () => {
-		it("posts the save request", async () => {
-			const { content, panel } = factory();
+		it("patches the save request with only changed fields", async () => {
+			const { content, panel } = factory({
+				changes: { title: "Draft", slug: "draft" },
+				latest: { title: "Original", slug: "draft" }
+			});
 
 			await content.save({ title: "Draft" });
 
-			expect(panel.api.post).toHaveBeenCalledWith(
+			expect(panel.api.patch).toHaveBeenCalledWith(
 				"/pages/test/changes/save",
 				{ title: "Draft" },
+				expect.objectContaining({ silent: true })
+			);
+		});
+
+		it("sends full values when methodOverride is enabled", async () => {
+			const { content, panel } = factory({
+				changes: { title: "Draft", slug: "draft" },
+				latest: { title: "Original", slug: "draft" },
+				methodOverride: true
+			});
+
+			await content.save({ title: "Draft" });
+
+			// When methodOverride is true, PATCH is converted to POST at the
+			// transport layer, so the full values must be sent instead of the diff
+			expect(panel.api.patch).toHaveBeenCalledWith(
+				"/pages/test/changes/save",
+				{ title: "Draft", slug: "draft" },
 				expect.objectContaining({ silent: true })
 			);
 		});
@@ -497,7 +544,7 @@ describe("panel.content", () => {
 
 		it("returns false and opens the lock dialog when the view got locked", async () => {
 			const { content, panel } = factory({
-				post: vi.fn(() => Promise.reject(lockError()))
+				patch: vi.fn(() => Promise.reject(lockError()))
 			});
 
 			await expect(content.save({ title: "Draft" })).resolves.toBe(false);
@@ -509,7 +556,7 @@ describe("panel.content", () => {
 			error.name = "AbortError";
 
 			const { content } = factory({
-				post: vi.fn(() => Promise.reject(error))
+				patch: vi.fn(() => Promise.reject(error))
 			});
 
 			await expect(content.save({ title: "Draft" })).resolves.toBe(false);
@@ -517,7 +564,7 @@ describe("panel.content", () => {
 
 		it("rethrows any other error", async () => {
 			const { content } = factory({
-				post: vi.fn(() => Promise.reject(new Error("Offline")))
+				patch: vi.fn(() => Promise.reject(new Error("Offline")))
 			});
 
 			await expect(content.save({ title: "Draft" })).rejects.toThrowError(
@@ -540,7 +587,7 @@ describe("panel.content", () => {
 
 			content.saveLazy({ title: "Draft" });
 
-			expect(panel.api.post).toHaveBeenCalledOnce();
+			expect(panel.api.patch).toHaveBeenCalledOnce();
 		});
 
 		it("throttles rapid subsequent calls", () => {
@@ -550,7 +597,7 @@ describe("panel.content", () => {
 			content.saveLazy({ title: "Second" });
 			content.saveLazy({ title: "Third" });
 
-			expect(panel.api.post).toHaveBeenCalledOnce();
+			expect(panel.api.patch).toHaveBeenCalledOnce();
 		});
 
 		it("fires a trailing call after the throttle delay", async () => {
@@ -560,7 +607,7 @@ describe("panel.content", () => {
 			content.saveLazy({ title: "Second" });
 			await vi.advanceTimersByTimeAsync(1000);
 
-			expect(panel.api.post).toHaveBeenCalledTimes(2);
+			expect(panel.api.patch).toHaveBeenCalledTimes(2);
 		});
 	});
 
@@ -611,7 +658,7 @@ describe("panel.content", () => {
 			const { content, panel } = factory({
 				changes: { title: "New title" },
 				latest: { title: "Test" },
-				post: vi.fn(() => Promise.reject(lockError()))
+				patch: vi.fn(() => Promise.reject(lockError()))
 			});
 
 			await expect(content.unlock()).resolves.toBe(false);
@@ -632,7 +679,7 @@ describe("panel.content", () => {
 			const { content, panel } = factory({
 				changes: { title: "New title" },
 				latest: { title: "Test" },
-				post: vi.fn(() => Promise.reject(error))
+				patch: vi.fn(() => Promise.reject(error))
 			});
 
 			// an aborted save is an internal condition that must not be
@@ -729,16 +776,20 @@ describe("panel.content", () => {
 	});
 
 	describe("update()", () => {
-		it("merges the values and saves them", async () => {
+		it("merges the values and saves only the changed fields", async () => {
 			const { content, panel } = factory({
-				changes: { title: "Draft", slug: "draft" }
+				changes: { title: "Draft", slug: "draft" },
+				latest: { title: "Original", slug: "draft" }
 			});
 
 			await expect(content.update({ title: "Updated" })).resolves.toBe(true);
 
-			expect(panel.api.post).toHaveBeenCalledWith(
+			// The PATCH body should contain only the diff between changes and latest
+			// After merge: changes = { title: "Updated", slug: "draft" }
+			// Diff vs latest: { title: "Updated" } (slug unchanged)
+			expect(panel.api.patch).toHaveBeenCalledWith(
 				"/pages/test/changes/save",
-				{ title: "Updated", slug: "draft" },
+				{ title: "Updated" },
 				expect.objectContaining({ silent: true })
 			);
 		});
