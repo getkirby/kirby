@@ -6,7 +6,7 @@ describe("panel.system", () => {
 		it("restores all default values", () => {
 			const system = System();
 
-			system.set({ csrf: "dev", title: "Kirby" });
+			system.set({ isLocal: true, title: "Kirby" });
 			system.reset();
 
 			expect(system.state()).toStrictEqual(system.defaults());
@@ -17,11 +17,10 @@ describe("panel.system", () => {
 		it("applies partial state", () => {
 			const system = System();
 
-			system.set({ csrf: "dev", title: "Kirby" });
+			system.set({ isLocal: true, title: "Kirby" });
 
-			expect(system.csrf).toStrictEqual("dev");
 			expect(system.title).toStrictEqual("Kirby");
-			expect(system.isLocal).toStrictEqual(false);
+			expect(system.isLocal).toStrictEqual(true);
 		});
 	});
 
@@ -31,7 +30,6 @@ describe("panel.system", () => {
 
 			expect(system.state()).toStrictEqual({
 				ascii: {},
-				csrf: "",
 				isLocal: false,
 				locales: {},
 				slugs: [],
