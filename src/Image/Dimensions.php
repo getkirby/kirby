@@ -259,14 +259,11 @@ class Dimensions implements Stringable
 	 */
 	public static function forSvg(string $root): static
 	{
-		$svg    = Svg::from($root);
-		$width  = $svg->width() ?? 0;
-		$height = $svg->height() ?? 0;
+		$svg = Svg::from($root);
 
-		// sizes beyond the int range are no usable sizes
 		return new static(
-			$width < PHP_INT_MAX ? (int)round($width) : 0,
-			$height < PHP_INT_MAX ? (int)round($height) : 0
+			(int)round($svg->width() ?? 0),
+			(int)round($svg->height() ?? 0)
 		);
 	}
 
