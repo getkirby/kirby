@@ -214,11 +214,15 @@ class Response implements Stringable
 	 * Urls can be relative or absolute.
 	 * @since 3.7.0
 	 *
+	 * @param bool $inherit Keep the query and params of the current request (since 5.7.0)
 	 * @codeCoverageIgnore
 	 */
-	public static function go(string $url = '/', int $code = 302): never
-	{
-		die(static::redirect($url, $code));
+	public static function go(
+		string $url = '/',
+		int $code = 302,
+		bool $inherit = false
+	): never {
+		die(static::redirect($url, $code, $inherit));
 	}
 
 	/**
@@ -291,9 +295,18 @@ class Response implements Stringable
 	 * Creates a redirect response,
 	 * which will send the visitor to the
 	 * given location.
+	 *
+	 * @param bool $inherit Keep the query and params of the current request (since 5.7.0)
 	 */
-	public static function redirect(string $location = '/', int $code = 302): static
-	{
+	public static function redirect(
+		string $location = '/',
+		int $code = 302,
+		bool $inherit = false
+	): static {
+		if ($inherit === true) {
+			$location = (new Uri($location))->inherit(Uri::current())->toString();
+		}
+
 		return new static([
 			'code' => $code,
 			'headers' => [
