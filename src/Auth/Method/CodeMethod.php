@@ -2,7 +2,6 @@
 
 namespace Kirby\Auth\Method;
 
-use Kirby\Auth\Auth;
 use Kirby\Auth\Method;
 use Kirby\Auth\Status;
 use Kirby\Cms\User;
@@ -40,24 +39,24 @@ class CodeMethod extends Method
 		return new Component(
 			component: 'k-login-code-method-form',
 			submit: [
-				'icon'  => static::icon(),
+				'icon'  => $this->icon(),
 				'label' => static::i18n('login'),
 			],
 		);
 	}
 
-	public static function icon(): string
+	public function icon(): string
 	{
 		return 'hashtag';
 	}
 
-	public static function isEnabled(Auth $auth, array $options = []): bool
+	public function isEnabled(): bool
 	{
 		// don't allow to circumvent 2FA by 1FA code method
-		static::isWithoutAny2FA($auth);
+		$this->isWithoutAny2FA();
 
 		// only one code-based mode can be active at once
-		static::isWithoutPasswordReset($auth);
+		$this->isWithoutPasswordReset();
 
 		return true;
 	}
@@ -65,11 +64,11 @@ class CodeMethod extends Method
 	/**
 	 * Don't allow to circumvent 2FA by 1FA code method
 	 */
-	protected static function isWithoutAny2FA(Auth $auth): bool
+	protected function isWithoutAny2FA(): bool
 	{
-		if ($auth->methods()->hasAnyRequiring2FA() === true) {
+		if ($this->auth->methods()->hasAnyRequiring2FA() === true) {
 			throw new InvalidArgumentException(
-				message: 'The "' . static::type() . '" login method cannot be enabled when 2FA is required'
+				message: 'The "' . $this->type() . '" login method cannot be enabled when 2FA is required'
 			);
 		}
 
@@ -79,9 +78,9 @@ class CodeMethod extends Method
 	/**
 	 * Only one code-based mode can be active at once
 	 */
-	protected static function isWithoutPasswordReset(Auth $auth): bool
+	protected function isWithoutPasswordReset(): bool
 	{
-		if (array_key_exists('password-reset', $auth->methods()->config()) === true) {
+		if (array_key_exists('password-reset', $this->auth->methods()->config()) === true) {
 			throw new InvalidArgumentException(
 				message: 'The "code" and "password-reset" login methods cannot be enabled together'
 			);
@@ -90,11 +89,11 @@ class CodeMethod extends Method
 		return true;
 	}
 
-	public static function settings(User $user): array
+	public function settings(User $user): array
 	{
 		return [
 			new Button(
-				icon: static::icon(),
+				icon: $this->icon(),
 				text: static::i18n('login.method.code.label'),
 				drawer: $user->panel()->url(true) . '/security/method/code'
 			)

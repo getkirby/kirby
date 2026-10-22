@@ -51,7 +51,7 @@ class WebauthnMethodTest extends TestCase
 
 	protected function method(): WebauthnMethod
 	{
-		return new WebauthnMethod(auth: $this->app->auth());
+		return new WebauthnMethod(auth: $this->app->auth(), type: 'webauthn');
 	}
 
 	/**
@@ -96,19 +96,15 @@ class WebauthnMethodTest extends TestCase
 		return json_encode($payload);
 	}
 
-	public function testType(): void
-	{
-		$this->assertSame('webauthn', WebauthnMethod::type());
-	}
 
 	public function testIcon(): void
 	{
-		$this->assertSame('fingerprint', WebauthnMethod::icon());
+		$this->assertSame('fingerprint', $this->method()->icon());
 	}
 
 	public function testSettings(): void
 	{
-		$settings = WebauthnMethod::settings($this->app->user('marge'));
+		$settings = $this->method()->settings($this->app->user('marge'));
 
 		$this->assertCount(1, $settings);
 		$this->assertInstanceOf(Button::class, $settings[0]);

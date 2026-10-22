@@ -45,7 +45,7 @@ class PasswordResetMethodTest extends TestCase
 				return $status;
 			});
 
-		$method = new PasswordResetMethod(auth: $auth);
+		$method = new PasswordResetMethod(auth: $auth, type: 'password-reset');
 
 		$result = $method->authenticate('marge@simpsons.com');
 		$this->assertInstanceOf(Status::class, $result);
@@ -60,7 +60,7 @@ class PasswordResetMethodTest extends TestCase
 	public function testForm(): void
 	{
 		$auth   = $this->auth();
-		$method = new PasswordResetMethod(auth: $auth);
+		$method = new PasswordResetMethod(auth: $auth, type: 'password-reset');
 		$form   = $method->form();
 
 		$this->assertInstanceOf(Component::class, $form);
@@ -73,14 +73,14 @@ class PasswordResetMethodTest extends TestCase
 
 	public function testIcon(): void
 	{
-		$icon = PasswordResetMethod::icon();
+		$icon = (new PasswordResetMethod(auth: $this->auth(), type: 'password-reset'))->icon();
 		$this->assertSame('question', $icon);
 	}
 
 	public function testIsEnabled(): void
 	{
 		$auth = $this->auth();
-		$this->assertTrue(PasswordResetMethod::isEnabled($auth));
+		$this->assertTrue((new PasswordResetMethod(auth: $auth, type: 'password-reset'))->isEnabled());
 	}
 
 	public function testIsEnabledWith2FA(): void
@@ -90,18 +90,13 @@ class PasswordResetMethodTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The "password-reset" login method cannot be enabled when 2FA is required');
 
-		PasswordResetMethod::isEnabled($auth);
+		(new PasswordResetMethod(auth: $auth, type: 'password-reset'))->isEnabled();
 	}
 
 	public function testSettings(): void
 	{
 		$user     = $this->createStub(User::class);
-		$settings = PasswordResetMethod::settings($user);
+		$settings = (new PasswordResetMethod(auth: $this->auth(), type: 'password-reset'))->settings($user);
 		$this->assertCount(0, $settings);
-	}
-
-	public function testType(): void
-	{
-		$this->assertSame('password-reset', PasswordResetMethod::type());
 	}
 }

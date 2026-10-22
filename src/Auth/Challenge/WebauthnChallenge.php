@@ -5,7 +5,6 @@ namespace Kirby\Auth\Challenge;
 use Kirby\Auth\Challenge;
 use Kirby\Auth\Pending;
 use Kirby\Auth\Service\Webauthn;
-use Kirby\Cms\User;
 use Kirby\Panel\Ui\Button;
 use Kirby\Panel\Ui\Component;
 use SensitiveParameter;
@@ -50,7 +49,7 @@ class WebauthnChallenge extends Challenge
 		);
 	}
 
-	public static function icon(): string
+	public function icon(): string
 	{
 		return 'fingerprint';
 	}
@@ -58,9 +57,9 @@ class WebauthnChallenge extends Challenge
 	/**
 	 * Checks whether the user has registered any passkeys
 	 */
-	public static function isAvailable(User $user, string $mode = 'login'): bool
+	public function isAvailable(): bool
 	{
-		$credentials = $user->secret('webauthn');
+		$credentials = $this->user->secret('webauthn');
 		return is_array($credentials) === true && $credentials !== [];
 	}
 
@@ -74,13 +73,21 @@ class WebauthnChallenge extends Challenge
 		return true;
 	}
 
-	public static function settings(User $user): array
+	/**
+	 * Shares the passkey label with the method and its drawer
+	 */
+	public function label(): string
+	{
+		return static::i18n('login.webauthn.label');
+	}
+
+	public function settings(): array
 	{
 		return [
 			new Button(
-				icon:   static::icon(),
+				icon:   $this->icon(),
 				text:   static::i18n('login.webauthn.label'),
-				drawer: $user->panel()->url(true) . '/security/method/webauthn',
+				drawer: $this->user->panel()->url(true) . '/security/method/webauthn',
 			)
 		];
 	}

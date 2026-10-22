@@ -89,12 +89,11 @@ class BasicAuthMethod extends Method
 	 * @throws InvalidArgumentException if the authorization header is invalid
 	 * @throws PermissionException if basic authentication is not allowed
 	 */
-	public static function isEnabled(
-		Auth $auth,
-		array $options = [],
+	public function isEnabled(
+		BasicAuth|null $header = null,
 		bool $fail = false
 	): bool {
-		$kirby   = $auth->kirby();
+		$kirby   = $this->auth->kirby();
 		$request = $kirby->request();
 
 		if ($kirby->option('api.basicAuth', false) !== true) {
@@ -107,9 +106,9 @@ class BasicAuthMethod extends Method
 			return false;
 		}
 
-		$requestAuth = $options['auth'] ?? $request->auth();
+		$header ??= $request->auth();
 
-		if ($requestAuth instanceof BasicAuth === false) {
+		if ($header instanceof BasicAuth === false) {
 			if ($fail === true) {
 				throw new InvalidArgumentException(
 					message: 'Invalid authorization header'
@@ -121,7 +120,7 @@ class BasicAuthMethod extends Method
 
 		// if logging in with password is disabled,
 		// basic auth cannot be possible either
-		$methods = $auth->methods()->config();
+		$methods = $this->auth->methods()->config();
 
 		if (array_key_exists('password', $methods) !== true) {
 			if ($fail === true) {
@@ -139,7 +138,7 @@ class BasicAuthMethod extends Method
 		// without enforced 2FA this general gate stays open, as it
 		// cannot know which user is authenticating; users who set
 		// up a second factor are rejected in `::authenticate()`
-		if ($auth->methods()->hasAnyRequiring2FA() === true) {
+		if ($this->auth->methods()->hasAnyRequiring2FA() === true) {
 			if ($fail === true) {
 				throw new PermissionException(
 					message: 'Basic authentication cannot be used with required 2FA'
@@ -173,11 +172,9 @@ class BasicAuthMethod extends Method
 	public function user(
 		BasicAuth|null $auth = null
 	): User|null {
-		$config = ['auth' => $auth];
-
 		// ensure basic auth method is actually enabled
-		// with the provided config
-		if (static::isEnabled($this->auth, $config, true) === true) {
+		// with the provided header
+		if ($this->isEnabled($auth, fail: true) === true) {
 			/**
 			 * @var BasicAuth $auth
 			 */

@@ -5,7 +5,6 @@ namespace Kirby\Auth;
 use Kirby\Cms\User;
 use Kirby\Panel\Ui\Component;
 use Kirby\Toolkit\HasI18n;
-use Kirby\Toolkit\Str;
 use SensitiveParameter;
 
 /**
@@ -22,8 +21,13 @@ abstract class Method
 {
 	use HasI18n;
 
+	/**
+	 * Must not throw or have side effects, as methods
+	 * are also created to check if they are enabled
+	 */
 	public function __construct(
 		protected Auth $auth,
+		protected string $type,
 		protected array $options = []
 	) {
 	}
@@ -54,7 +58,7 @@ abstract class Method
 	 * Returns an icon name used to represent
 	 * the method, e.g. on the login view
 	 */
-	public static function icon(): string
+	public function icon(): string
 	{
 		return 'key';
 	}
@@ -62,11 +66,18 @@ abstract class Method
 	/**
 	 * Checks if this method can be used in the current context
 	 */
-	public static function isEnabled(
-		Auth $auth,
-		array $options = []
-	): bool {
+	public function isEnabled(): bool
+	{
 		return true;
+	}
+
+	/**
+	 * Returns the label used to represent
+	 * the method, e.g. on the login view
+	 */
+	public function label(): string
+	{
+		return static::i18n('login.method.' . $this->type() . '.label');
 	}
 
 	/**
@@ -82,16 +93,17 @@ abstract class Method
 	 * used as entries in the user security settings drawer
 	 * @codeCoverageIgnore
 	 */
-	public static function settings(User $user): array
+	public function settings(User $user): array
 	{
 		return [];
 	}
 
 	/**
-	 * Returns the identifier of the method (e.g. 'password')
+	 * Returns the identifier the method
+	 * is registered with (e.g. 'password')
 	 */
-	public static function type(): string
+	public function type(): string
 	{
-		return Str::camelToKebab(lcfirst(basename(str_replace(['\\', 'Method'], ['/', ''], static::class))));
+		return $this->type;
 	}
 }
