@@ -625,6 +625,9 @@ export default {
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
+.k-table th[aria-sort] {
+	color: var(--color-text);
+}
 /* both chevrons stay dimmed until the sort direction darkens one */
 .k-table-column-icon {
 	--icon-size: var(--text-md);
