@@ -7,6 +7,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\Panel\TestCase;
 use Kirby\Panel\Ui\Drawer;
+use Kirby\Toolkit\HtmlString;
 use Kirby\Toolkit\Totp;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -75,6 +76,7 @@ class UserTotpDrawerControllerTest extends TestCase
 
 		$props = $drawer->props();
 		$this->assertFalse($props['isEnabled']);
+		$this->assertInstanceOf(HtmlString::class, $props['qr']);
 		$this->assertStringContainsString('data:image/png;base64,', $props['qr']);
 		$this->assertSame(
 			['avatar' => null, 'email' => 'test@getkirby.com', 'name' => 'Test User'],

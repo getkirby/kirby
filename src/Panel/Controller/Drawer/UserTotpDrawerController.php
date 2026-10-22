@@ -6,6 +6,7 @@ use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Image\QrCode;
 use Kirby\Panel\Ui\Drawer;
+use Kirby\Toolkit\HtmlString;
 use Kirby\Toolkit\Totp;
 
 /**
@@ -63,7 +64,7 @@ class UserTotpDrawerController extends UserCredentialDrawerController
 			title:     $this->i18n('login.challenge.totp.label'),
 			isAccount: $this->isCurrentUser(),
 			isEnabled: $this->isEnabled(),
-			qr:        '<img src="' . $this->qr($totp)->toDataUri(size: 200) . '" />',
+			qr:        new HtmlString('<img src="' . $this->qr($totp)->toDataUri(size: 200) . '" />'),
 			uri:       $totp->uri(
 				issuer: $this->user->kirby()->site()->title(),
 				label: $this->user->email()
