@@ -1,5 +1,9 @@
 <template>
-	<div :data-scrollable="scrollable" class="k-collection">
+	<div
+		:class="['k-collection', $attrs.class]"
+		:data-scrollable="scrollable"
+		:style="$attrs.style"
+	>
 		<component
 			:is="scrollable ? 'k-scrollable' : 'div'"
 			class="k-collection-body"
@@ -28,7 +32,8 @@
 					theme
 				}"
 				@change="$emit('change', $event)"
-				@item="$emit('item', $event)"
+				@header="$emit('header', $event)"
+				@item="onItem"
 				@option="onOption"
 				@select="onSelect"
 				@sort="$emit('sort', $event)"
@@ -98,6 +103,7 @@ export default {
 		"action",
 		"change",
 		"empty",
+		"header",
 		"item",
 		"option",
 		"paginate",
@@ -156,6 +162,9 @@ export default {
 		onEmpty(e) {
 			e.stopPropagation();
 			this.$emit("empty");
+		},
+		onItem(...args) {
+			this.$emit("item", ...args);
 		},
 		onOption(...args) {
 			this.$emit("action", ...args);

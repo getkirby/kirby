@@ -25,8 +25,10 @@
 					<th
 						v-for="(column, columnIndex) in columns"
 						:key="columnIndex + '-header'"
+						:aria-sort="ariaSort(column)"
 						:data-align="column.align"
 						:data-column-id="columnIndex"
+						:data-has-button="isSortable(column)"
 						:data-mobile="column.mobile"
 						:style="{ width: width(column.width) }"
 						class="k-table-column"
@@ -37,7 +39,27 @@
 							})
 						"
 					>
+						<!-- the click reaches the th and emits `header` -->
+						<button v-if="isSortable(column)" type="button">
+							<span class="k-table-column-label">
+								<!--
+									@slot Column header. Sortable columns render it inside a button, so no buttons, links or inputs
+								-->
+								<slot
+									name="header"
+									v-bind="{
+										column,
+										columnIndex,
+										label: label(column, columnIndex)
+									}"
+								>
+									{{ label(column, columnIndex) }}
+								</slot>
+							</span>
+							<k-icon type="angle-up-down" class="k-table-column-icon" />
+						</button>
 						<slot
+							v-else
 							name="header"
 							v-bind="{
 								column,
@@ -193,7 +215,7 @@ export default {
 	props: {
 		/**
 		 * Configuration which columns to include.
-		 * @value name: { after, before, label, type, width }
+		 * @value name: { after, before, label, sorted, type, width }
 		 * @example { title: { label: "title", type: "text" } }
 		 */
 		columns: {
@@ -310,12 +332,23 @@ export default {
 			return this.$helper.object.length(this.columns);
 		},
 		/**
+		 * A sorted column replaces the manual order,
+		 * so rows can only be dragged while no column is sorted
+		 * @returns {boolean}
+		 */
+		draggable() {
+			return (
+				this.sortable === true &&
+				Object.values(this.columns).some(this.isSorted) === false
+			);
+		},
+		/**
 		 * Config options for `k-draggable`
 		 * @returns {Object}
 		 */
 		dragOptions() {
 			return {
-				disabled: !this.sortable || this.rows.length === 0,
+				disabled: this.draggable === false || this.rows.length === 0,
 				draggable: ".k-table-sortable-row",
 				fallbackClass: "k-table-row-fallback",
 				ghostClass: "k-table-row-ghost"
@@ -362,9 +395,17 @@ export default {
 		}
 	},
 	methods: {
+		/**
+		 * Returns the `aria-sort` value for a sorted column
+		 * @param {Object} column
+		 * @returns {string|undefined}
+		 */
+		ariaSort(column) {
+			return { asc: "ascending", desc: "descending" }[column.sorted];
+		},
 		findSelectedIndex(row) {
 			return this.selected.findIndex(
-				(selected) => selected === (row._id ?? row.id)
+				(selected) => selected === (row._id ?? row.uuid ?? row.id)
 			);
 		},
 		/**
@@ -381,6 +422,22 @@ export default {
 		},
 		isSelected(row) {
 			return this.findSelectedIndex(row) !== -1;
+		},
+		/**
+		 * Whether the column header sorts the rows
+		 * @param {Object} column
+		 * @returns {boolean}
+		 */
+		isSortable(column) {
+			return ["asc", "desc", false].includes(column.sorted);
+		},
+		/**
+		 * Whether the rows are sorted by the column
+		 * @param {Object} column
+		 * @returns {boolean}
+		 */
+		isSorted(column) {
+			return ["asc", "desc"].includes(column.sorted);
 		},
 		/**
 		 * Returns label for a column
@@ -431,7 +488,7 @@ export default {
 		},
 		onSelect(row) {
 			if (this.selectmode === "single") {
-				return this.$emit("select", [row._id ?? row.id]);
+				return this.$emit("select", [row._id ?? row.uuid ?? row.id]);
 			}
 
 			const index = this.findSelectedIndex(row);
@@ -440,7 +497,10 @@ export default {
 				return this.$emit("select", this.selected.toSpliced(index, 1));
 			}
 
-			return this.$emit("select", [...this.selected, row._id ?? row.id]);
+			return this.$emit("select", [
+				...this.selected,
+				row._id ?? row.uuid ?? row.id
+			]);
 		},
 		/**
 		 * When the table has been sorted,
@@ -455,7 +515,7 @@ export default {
 		},
 		rowIsSortable(row) {
 			return (
-				this.sortable === true &&
+				this.draggable === true &&
 				this.selecting === false &&
 				row.sortable !== false
 			);
@@ -550,6 +610,41 @@ export default {
 }
 .k-table th button:focus-visible {
 	outline-offset: -2px;
+}
+.k-table th[data-has-button="true"] button {
+	display: flex;
+	align-items: center;
+	gap: var(--spacing-1);
+}
+.k-table th[data-has-button="true"][data-align] button {
+	justify-content: var(--align);
+}
+/* the icon goes first, so the label lines up with right-aligned values */
+.k-table th[data-has-button="true"][data-align="right"] button {
+	flex-direction: row-reverse;
+}
+.k-table-column-label {
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.k-table th[aria-sort] {
+	color: var(--color-text);
+}
+/* both chevrons stay dimmed until the sort direction darkens one */
+.k-table-column-icon {
+	--icon-size: var(--text-md);
+	--table-sort-dimmed: rgba(0, 0, 0, 0.4);
+	mask-image: linear-gradient(
+		var(--table-sort-dimmed),
+		var(--table-sort-dimmed)
+	);
+}
+.k-table th[aria-sort="ascending"] .k-table-column-icon {
+	mask-image: linear-gradient(#000 50%, var(--table-sort-dimmed) 50%);
+}
+.k-table th[aria-sort="descending"] .k-table-column-icon {
+	mask-image: linear-gradient(var(--table-sort-dimmed) 50%, #000 50%);
 }
 
 /* Table Header */

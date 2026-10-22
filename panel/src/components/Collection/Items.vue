@@ -5,7 +5,9 @@
 		v-bind="table"
 		:class="$attrs.class"
 		:style="$attrs.style"
+		@cell="onCell"
 		@change="$emit('change', $event)"
+		@header="$emit('header', $event)"
 		@select="$emit('select', $event)"
 		@sort="$emit('sort', $event)"
 		@option="onOption"
@@ -161,7 +163,7 @@ export default {
 			default: () => ({})
 		}
 	},
-	emits: ["change", "hover", "item", "option", "select", "sort"],
+	emits: ["change", "header", "hover", "item", "option", "select", "sort"],
 	computed: {
 		dragOptions() {
 			return {
@@ -201,6 +203,18 @@ export default {
 		},
 		isSelected(item) {
 			return this.findSelectedIndex(item) !== -1;
+		},
+		/**
+		 * A table cell click is an item click, like in
+		 * the other layouts, plus the clicked column
+		 */
+		onCell({ row, rowIndex, columnIndex }) {
+			// like `k-item`, toggle the selection while selecting
+			if (this.selecting === true && row.selectable !== false) {
+				return this.onSelect(row);
+			}
+
+			this.$emit("item", row, rowIndex, columnIndex);
 		},
 		onDragStart($event, dragText) {
 			this.$panel.drag.start("text", dragText);
