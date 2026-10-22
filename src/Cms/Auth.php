@@ -380,8 +380,10 @@ class Auth
 			}
 		}
 
-		if ($this->kirby->users()->find($email)) {
-			if ($entry = ($log['by-email'][$email] ?? null)) {
+		if ($user = $this->kirby->users()->find($email)) {
+			$key = $user->email() ?? $user->id();
+
+			if ($entry = ($log['by-email'][$key] ?? null)) {
 				if ($entry['trials'] >= $trials) {
 					return true;
 				}
@@ -719,14 +721,16 @@ class Auth
 			];
 		}
 
-		if ($email !== null && $this->kirby->users()->find($email)) {
-			if (isset($log['by-email'][$email]) === true) {
-				$log['by-email'][$email] = [
+		if ($email !== null && $user = $this->kirby->users()->find($email)) {
+			$key = $user->email() ?? $user->id();
+
+			if (isset($log['by-email'][$key]) === true) {
+				$log['by-email'][$key] = [
 					'time'   => $time,
-					'trials' => ($log['by-email'][$email]['trials'] ?? 0) + 1
+					'trials' => ($log['by-email'][$key]['trials'] ?? 0) + 1
 				];
 			} else {
-				$log['by-email'][$email] = [
+				$log['by-email'][$key] = [
 					'time'   => $time,
 					'trials' => 1
 				];

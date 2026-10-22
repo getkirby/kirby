@@ -176,6 +176,38 @@ class AuthProtectionTest extends TestCase
 		$this->assertSame(json_encode($data), file_get_contents(static::TMP . '/site/accounts/.logins'));
 	}
 
+	public function testTrackWithEmailInOtherCase(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'trials' => 3
+				]
+			]
+		]);
+
+		$this->auth = new Auth($this->app);
+
+		$this->app->visitor()->ip('10.1.123.234');
+		$this->auth->track('MARGE@simpsons.com');
+
+		$this->app->visitor()->ip('10.2.123.234');
+		$this->auth->track('Marge@Simpsons.com');
+
+		$this->app->visitor()->ip('10.3.123.234');
+		$this->auth->track('marge@simpsons.com');
+
+		$this->assertSame([
+			'marge@simpsons.com' => [
+				'time'   => MockTime::$time,
+				'trials' => 3
+			]
+		], $this->auth->log()['by-email']);
+
+		$this->app->visitor()->ip('10.4.123.234');
+		$this->assertTrue($this->auth->isBlocked('mArGe@simpsons.com'));
+	}
+
 	public function testValidatePasswordValid(): void
 	{
 		copy(static::FIXTURES . '/logins.json', static::TMP . '/site/accounts/.logins');
