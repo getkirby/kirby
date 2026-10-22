@@ -254,39 +254,38 @@ export default (panel) => {
 			}
 		},
 
- 	/**
- 	 * Simplified request handler for all content API requests
- 	 */
- 	async request(method = "save", values = {}, env = {}) {
- 		const { api, language } = this.env(env);
+		/**
+		 * Simplified request handler for all content API requests
+		 */
+		async request(method = "save", values = {}, env = {}) {
+			const { api, language } = this.env(env);
 
- 		const options = {
- 			headers: {
- 				"x-language": language
- 			}
- 		};
+			const options = {
+				headers: {
+					"x-language": language
+				}
+			};
 
- 		if (method === "save") {
- 			options.signal = this.saveAbortController.signal;
- 			options.silent = true;
- 		}
+			if (method === "save") {
+				options.signal = this.saveAbortController.signal;
+				options.silent = true;
+			}
 
- 		const httpMethod = method === "save" ? "patch" : "post";
+			const httpMethod = method === "save" ? "patch" : "post";
 
- 		// For PATCH requests, send only the changed fields.
- 		// If methodOverride is enabled, PATCH is converted to POST at the transport
- 		// layer, so send the full changes version instead of the diff.
- 		if (httpMethod === "patch") {
- 			if (panel.api.methodOverride === true) {
- 				values = this.version("changes", env);
- 			}
- 			else {
- 				values = this.diff(env);
- 			}
- 		}
+			// For PATCH requests, send only the changed fields.
+			// If methodOverride is enabled, PATCH is converted to POST at the transport
+			// layer, so send the full changes version instead of the diff.
+			if (httpMethod === "patch") {
+				if (panel.api.methodOverride === true) {
+					values = this.version("changes", env);
+				} else {
+					values = this.diff(env);
+				}
+			}
 
- 		return panel.api[httpMethod](api + "/changes/" + method, values, options);
- 	},
+			return panel.api[httpMethod](api + "/changes/" + method, values, options);
+		},
 
 		/**
 		 * Saves any changes
