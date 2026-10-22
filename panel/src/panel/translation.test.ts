@@ -42,7 +42,9 @@ describe("panel.translation", () => {
 		it.each([
 			["pt_BR", "pt-BR"],
 			["es_419", "es-419"],
-			["sr@latin", "sr"]
+			["sr@latin", "sr"],
+			["de-sie", "de"],
+			["x-pirate", "en"]
 		])("turns %s into the language tag %s", (code, lang) => {
 			const translation = Translation();
 			translation.set({ code });
