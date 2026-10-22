@@ -98,7 +98,7 @@ trait HasFiles
 			return $this->files;
 		}
 
-		return $this->files = Files::factory($this->inventory()['files'], $this);
+		return $this->files = Files::factory($this->inventory()->files(), $this);
 	}
 
 	/**
