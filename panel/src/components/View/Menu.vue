@@ -35,6 +35,7 @@
 			<menu v-if="activationButton">
 				<k-button
 					v-bind="activationButton"
+					:disabled="$panel.permissions.access.system !== true"
 					class="k-activation-button k-panel-menu-button"
 					icon="key"
 					theme="love"

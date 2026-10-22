@@ -23,8 +23,8 @@ export default {
 	data() {
 		return {
 			page: 1,
-			total: 50,
+			total: 50
 		};
-	},
+	}
 };
 </script>

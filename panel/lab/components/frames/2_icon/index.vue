@@ -30,7 +30,7 @@ export default {
 	computed: {
 		ratios() {
 			return ["1/1", "4/3", "16/9"];
-		},
-	},
+		}
+	}
 };
 </script>

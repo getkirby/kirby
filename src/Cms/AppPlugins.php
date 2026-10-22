@@ -16,6 +16,7 @@ use Kirby\Plugin\Plugin;
 use Kirby\Text\KirbyTag;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Collection as ToolkitCollection;
+use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\V;
 
 /**
@@ -649,6 +650,11 @@ trait AppPlugins
 	 */
 	protected function extendTranslations(array $translations): array
 	{
+		// drop translations that were cached before these strings existed
+		$this->i18nStrings  = [];
+		$this->translations = null;
+		I18n::$translations = [];
+
 		return $this->extensions['translations'] = array_replace_recursive(
 			$this->extensions['translations'],
 			$translations

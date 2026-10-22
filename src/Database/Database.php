@@ -171,8 +171,12 @@ class Database
 			);
 		}
 
-		// try to connect
-		$connection = new PDO($dsn, $options['user'], $options['password']);
+		// try to connect; `PDO::connect()` returns the driver's
+		// subclass, e.g. `Pdo\Sqlite` with `createFunction()`
+		// TODO: only use `PDO::connect()` once PHP 8.4 is required
+		$connection = PHP_VERSION_ID >= 80400
+			? PDO::connect($dsn, $options['user'], $options['password'])
+			: new PDO($dsn, $options['user'], $options['password']);
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 

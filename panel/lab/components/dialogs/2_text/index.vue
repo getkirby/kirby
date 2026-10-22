@@ -8,8 +8,8 @@
 					$panel.dialog.open({
 						component: 'k-text-dialog',
 						props: {
-							text: 'This is a text dialog',
-						},
+							text: 'This is a text dialog'
+						}
 					})
 				"
 			>

@@ -253,7 +253,7 @@ class PageRules
 	 * Validates if the page can be deleted
 	 *
 	 * @throws \Kirby\Exception\LogicException If the page has children and should not be force-deleted
-	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to delete the page
+	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to delete the page, one of its files or subpages
 	 */
 	public static function delete(Page $page, bool $force = false): void
 	{
@@ -266,6 +266,16 @@ class PageRules
 
 		if (($page->hasChildren() === true || $page->hasDrafts() === true) && $force === false) {
 			throw new LogicException(key: 'page.delete.hasChildren');
+		}
+
+		// files and subpages get deleted with the page, so check them
+		// upfront instead of failing halfway through the deletion
+		foreach ($page->files() as $file) {
+			FileRules::delete($file);
+		}
+
+		foreach ($page->childrenAndDrafts() as $child) {
+			static::delete($child, force: true);
 		}
 	}
 

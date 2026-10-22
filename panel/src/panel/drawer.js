@@ -1,4 +1,4 @@
-import Modal, { defaults as modalDefaults } from "./modal.js";
+import Modal, { defaults as modalDefaults, save } from "./modal.js";
 import { isObject } from "@/helpers/object";
 import { reactive, set } from "vue";
 
@@ -16,8 +16,8 @@ export default (panel) => {
 
 	// shortcut to submit drawers
 	panel.events.on("drawer.save", (e) => {
-		e.preventDefault();
-		panel.drawer.submit();
+		e?.preventDefault?.();
+		save(panel, "drawer");
 	});
 
 	return reactive({

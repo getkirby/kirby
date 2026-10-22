@@ -488,6 +488,18 @@ class Dir
 			return true;
 		}
 
+		// another process may have removed the directory in the
+		// meantime, which PHP's stat cache doesn't know about yet
+		$exists = function () use ($dir): bool {
+			clearstatcache(true, $dir);
+			return is_dir($dir);
+		};
+
+		// the renames also fail if the directory is already gone
+		if ($exists() === false) {
+			return true;
+		}
+
 		// Rename failed (e.g. permission on parent); fall back to in-place removal.
 		// Delete all contents first, then retry to tolerate transient
 		// "directory not empty" errors caused by concurrent writes.
@@ -495,7 +507,7 @@ class Dir
 
 		// removeRecursive may have already removed $dir successfully;
 		// only retry if it still exists
-		if (is_dir($dir) === false) {
+		if ($exists() === false) {
 			return true;
 		}
 
@@ -506,7 +518,7 @@ class Dir
 
 			static::removeRecursive($dir);
 
-			if (is_dir($dir) === false) {
+			if ($exists() === false) {
 				return true;
 			}
 		}

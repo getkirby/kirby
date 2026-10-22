@@ -309,6 +309,7 @@
 
 	"error.version.discard.permission": "이 버전을 무시할 권한이 없습니다.",
 	"error.version.publish.permission": "이 버전을 공개할 권한이 없습니다.",
+	"error.version.removed": "The version has been removed by another request",
 	"error.version.save.permission": "이 버전을 변경할 권한이 없습니다.",
 	"error.version.unlock.permission": "You are not allowed to unlock this version",
 

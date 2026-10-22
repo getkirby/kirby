@@ -356,7 +356,7 @@ class MediaTest extends TestCase
 
 		$this->assertNotNull($processedFile);
 		$this->assertNotSame($destination, $processedFile);
-		$this->assertStringStartsWith(static::TMP . '/media/test.tmp-', $processedFile);
+		$this->assertStringStartsWith(static::TMP . '/media/.test.tmp-', $processedFile);
 		$this->assertStringEndsWith('.jpg', $processedFile);
 		$this->assertFileExists($destination);
 		$this->assertFileDoesNotExist($processedFile);

@@ -370,8 +370,9 @@ return [
 		$root      = (new Filename($src, $dst, $options))->toString();
 		$extension = F::extension($root);
 
-		// generate the thumb in a temp file so broken output never appears at the final path
-		$tempRoot  = F::dirname($root) . '/' . F::name($root) . '.tmp-' . uniqid();
+		// generate the thumb in a hidden temp file so broken output never appears
+		// at the final path and the temp file is not picked up as model file
+		$tempRoot  = F::dirname($root) . '/.' . F::name($root) . '.tmp-' . uniqid();
 
 		// keep the original extension so the darkroom can infer the output format.
 		if ($extension !== '') {

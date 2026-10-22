@@ -11,14 +11,14 @@
 							fields: {
 								name: {
 									label: 'Name',
-									type: 'text',
+									type: 'text'
 								},
 								email: {
 									label: 'Email',
-									type: 'email',
-								},
-							},
-						},
+									type: 'email'
+								}
+							}
+						}
 					})
 				"
 			>

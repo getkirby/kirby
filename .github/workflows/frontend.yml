@@ -116,7 +116,7 @@ jobs:
         run: npm run lint -- --max-warnings 0 --format stylish --no-fix
         working-directory: panel
 
-      - name: Check for JavaScript coding style violations (Prettier)
+      - name: Check for JavaScript coding style violations (Oxfmt)
         if: always() && steps.finishPrepare.outcome == 'success'
-        run: npm run format --check
+        run: npm run format
         working-directory: panel

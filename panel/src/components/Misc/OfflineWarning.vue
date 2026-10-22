@@ -1,5 +1,8 @@
 <template>
-	<div v-if="!$panel.system.isLocal && $panel.isOffline" class="k-offline-warning">
+	<div
+		v-if="!$panel.system.isLocal && $panel.isOffline"
+		class="k-offline-warning"
+	>
 		<p><k-icon type="bolt" /> {{ $t("error.offline") }}</p>
 	</div>
 </template>
