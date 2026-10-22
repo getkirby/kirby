@@ -245,6 +245,11 @@ class DimensionsTest extends TestCase
 		$this->assertSame(50, $dimensions->width());
 		$this->assertSame(152, $dimensions->height());
 
+		// width beyond the int range
+		$dimensions = Dimensions::forSvg(static::FIXTURES . '/dimensions/circle-huge.svg');
+		$this->assertSame(0, $dimensions->width());
+		$this->assertSame(10, $dimensions->height());
+
 		$dimensions = Dimensions::forSvg(static::FIXTURES . '/dimensions/missing.svg');
 		$this->assertSame(0, $dimensions->width());
 		$this->assertSame(0, $dimensions->height());
