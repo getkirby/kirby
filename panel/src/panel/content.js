@@ -1,6 +1,6 @@
-import { isAbortError } from "@/helpers/error";
 import { isObject, length } from "@/helpers/object";
 import { reactive } from "vue";
+import lane from "@/helpers/lane";
 import throttle from "@/helpers/throttle";
 
 /**
@@ -9,15 +9,11 @@ import throttle from "@/helpers/throttle";
 export default (panel) => {
 	const content = reactive({
 		/**
-		 * Cancel any scheduled or ongoing save requests
+		 * Cancels any scheduled save request. A running request
+		 * cannot be cancelled: the server would finish it regardless.
 		 */
 		cancelSaving() {
-			// cancel any scheduled save requests
 			this.saveLazy.cancel();
-
-			// ensure to abort unfinished previous save request
-			// to avoid race conditions with older content
-			this.saveAbortController?.abort();
 		},
 
 		dialog: null,
@@ -74,16 +70,15 @@ export default (panel) => {
 				throw new Error("Cannot discard locked changes");
 			}
 
-			// Cancel any ongoing save requests.
-			// The discard request will throw those
-			// changes away anyway.
+			// A scheduled save request is pointless,
+			// the discard throws the changes away anyway
 			this.cancelSaving();
 
 			// Start processing the request
 			this.isProcessing = true;
 
 			try {
-				await this.request("discard", {}, env);
+				await this.lane("discard", () => this.request("discard", {}, env));
 
 				// update the props for the current view
 				panel.view.props.versions.changes = this.version("latest");
@@ -157,6 +152,13 @@ export default (panel) => {
 		isProcessing: false,
 
 		/**
+		 * Runs all content requests one after another
+		 * @internal
+		 * @var {Function}
+		 */
+		lane: null,
+
+		/**
 		 * Get the lock state for the current view
 		 * @param {String} api
 		 */
@@ -223,9 +225,8 @@ export default (panel) => {
 				throw new Error("Cannot publish content from another view");
 			}
 
-			// Cancel any ongoing save requests.
-			// The publish request will submit the
-			// latest state of the form again.
+			// A scheduled save request is covered by the publish,
+			// which submits the full state of the form again
 			this.cancelSaving();
 
 			// Start processing the request
@@ -233,7 +234,9 @@ export default (panel) => {
 
 			// Send updated values to API
 			try {
-				await this.request("publish", this.merge(values, env), env);
+				const changes = this.merge(values, env);
+
+				await this.lane("publish", () => this.request("publish", changes, env));
 
 				// close the dialog if it is still open
 				this.dialog?.close();
@@ -267,7 +270,6 @@ export default (panel) => {
 			};
 
 			if (method === "save") {
-				options.signal = this.saveAbortController.signal;
 				options.silent = true;
 			}
 
@@ -280,15 +282,12 @@ export default (panel) => {
 		 * @returns {Boolean} Whether the changes have been written
 		 */
 		async save(values = {}, env = {}) {
-			// ensure to abort unfinished previous save request
-			// to avoid race conditions with older content
+			// A scheduled save request is superseded,
+			// this one carries the full state of the form
 			this.cancelSaving();
 
-			// create a new abort controller
-			this.saveAbortController = new AbortController();
-
 			try {
-				await this.request("save", values, env);
+				await this.lane("save", () => this.request("save", values, env));
 
 				// close the dialog if it is still open
 				this.dialog?.close();
@@ -302,18 +301,6 @@ export default (panel) => {
 
 				return true;
 			} catch (error) {
-				// handle aborted requests silently. A newer save request
-				// has taken over and will write the latest state instead.
-				if (isAbortError(error) === true) {
-					return false;
-				}
-
-				// processing must not be interrupted for aborted
-				// requests because the follow-up request is already
-				// in progress and setting the state to false here
-				// would be wrong
-				this.isProcessing = false;
-
 				// handle locked states
 				if (error.key?.startsWith("error.content.lock")) {
 					this.lockDialog(error.details);
@@ -323,12 +310,6 @@ export default (panel) => {
 				throw error;
 			}
 		},
-
-		/**
-		 * @internal
-		 * @var {AbortController}
-		 */
-		saveAbortController: null,
 
 		/**
 		 * Releases the content lock without discarding changes.
@@ -342,10 +323,9 @@ export default (panel) => {
 			// due to a save that finishes after the unlock request.
 			// changes can only be detected for the current view
 			if (this.isCurrent(env) === true && this.hasDiff(env) === true) {
-				// abort the unlock when the changes could not be written:
-				// the view got locked in the meantime or a newer save
-				// request took over. Both cases are already reported by
-				// `save`, so they must not be raised again here.
+				// abort the unlock when the changes could not be written
+				// because the view got locked in the meantime. The lock
+				// dialog already reports it, so it must not be raised again.
 				if ((await this.update({}, env)) !== true) {
 					return false;
 				}
@@ -393,13 +373,15 @@ export default (panel) => {
 
 			this.cancelSaving();
 
-			return panel.api.post(
-				api + "/changes/unlock",
-				{},
-				{
-					headers: { "x-language": language },
-					silent: true
-				}
+			return this.lane("unlock", () =>
+				panel.api.post(
+					api + "/changes/unlock",
+					{},
+					{
+						headers: { "x-language": language },
+						silent: true
+					}
+				)
 			);
 		},
 
@@ -436,6 +418,9 @@ export default (panel) => {
 			return panel.view.props.versions;
 		}
 	});
+
+	// all content requests go through one lane
+	content.lane = lane();
 
 	// create a delayed version of save
 	// that we can use in the input event
