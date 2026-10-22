@@ -277,6 +277,20 @@ class XmlTest extends TestCase
 		Xml::validateFile($fixture);
 	}
 
+	public function testDisallowedMutationXssRcdataComment(): void
+	{
+		// `<textarea>` is an HTML RCDATA element once the XML is embedded
+		// in an HTML page, which a smuggled `</textarea>` breaks out of
+		$fixture   = '<root><textarea><!--</textarea><img src=x onerror=alert(1)>--></textarea></root>';
+		$sanitized = '<root><textarea/></root>';
+
+		$this->assertSame($sanitized, Xml::sanitize($fixture));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The comment (line 1) is not allowed');
+		Xml::validate($fixture);
+	}
+
 	public function testDisallowedStylesheet(): void
 	{
 		$fixture   = $this->fixture('disallowed/stylesheet.xml');

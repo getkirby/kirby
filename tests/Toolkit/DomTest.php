@@ -2081,8 +2081,8 @@ class DomTest extends TestCase
 		// a comment whose data closes it early is removed: the tokenizer
 		// ends it there, so the rest would re-parse as live markup
 		$this->assertSame(
-			['<root><title/></root>', ['The comment (line 1) is not allowed']],
-			$sanitize('<root><title><!--><img src=x onerror=alert(1)>--></title></root>')
+			['<root><p/></root>', ['The comment (line 1) is not allowed']],
+			$sanitize('<root><p><!--><img src=x onerror=alert(1)>--></p></root>')
 		);
 
 		// the `<!--->` spelling closes the comment just the same
@@ -2184,11 +2184,57 @@ class DomTest extends TestCase
 			$sanitize('<root><svg><b><![CDATA[><img src=x>]]></b></svg></root>')
 		);
 
+		// RCDATA, the other raw text elements and plaintext are read as
+		// text just the same, so their closing tag is what breaks out
+		foreach (['iframe', 'noembed', 'noframes', 'noscript', 'plaintext', 'textarea', 'title', 'xmp'] as $name) {
+			$this->assertSame(
+				['<root><' . $name . '/></root>', ['The comment (line 1) is not allowed']],
+				$sanitize('<root><' . $name . '><!--</' . $name . '><img src=x>--></' . $name . '></root>')
+			);
+
+			$this->assertSame(
+				['<root><' . $name . '><!--><img src=x>--></' . $name . '></root>', []],
+				$sanitize('<root><' . $name . '><!--><img src=x>--></' . $name . '></root>')
+			);
+
+			$this->assertSame(
+				[
+					'<root><' . $name . '>&lt;/' . $name . '&gt;&lt;img src=x&gt;</' . $name . '></root>',
+					['The CDATA section (line 1) is not allowed']
+				],
+				$sanitize('<root><' . $name . '><![CDATA[</' . $name . '><img src=x>]]></' . $name . '></root>')
+			);
+		}
+
+		// the closing tag is matched case-insensitively
+		$this->assertSame(
+			['<root><title/></root>', ['The comment (line 1) is not allowed']],
+			$sanitize('<root><title><!--</TITLE><img src=x>--></title></root>')
+		);
+
 		// raw text starts at the outermost such element, so this comment
 		// needs the `</script>` and not the `</style>` to break out
 		$this->assertSame(
 			['<root><script><style/></script></root>', ['The comment (line 1) is not allowed']],
 			$sanitize('<root><script><style><!--</script><img src=x>--></style></script></root>')
+		);
+
+		$this->assertSame(
+			['<root><title><title/></title></root>', ['The comment (line 1) is not allowed']],
+			$sanitize('<root><title><title><!--</title><img src=x>--></title></title></root>')
+		);
+
+		// a foreign `<title>` is no RCDATA element, so a comment directly
+		// below it must not close itself early...
+		$this->assertSame(
+			['<root><svg><title/></svg></root>', ['The comment (line 1) is not allowed']],
+			$sanitize('<root><svg><title><!--><img src=x>--></title></svg></root>')
+		);
+
+		// ...but an HTML `<title>` below the integration point is
+		$this->assertSame(
+			['<root><svg><desc><title/></desc></svg></root>', ['The comment (line 1) is not allowed']],
+			$sanitize('<root><svg><desc><title><!--</title><img src=x>--></title></desc></svg></root>')
 		);
 
 		// a foreign `<style>` is no raw text element, so a comment below

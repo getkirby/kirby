@@ -597,6 +597,33 @@ class SvgTest extends TestCase
 		Svg::validate($fixture);
 	}
 
+	public function testDisallowedMutationXssIntegrationPointTitleComment(): void
+	{
+		// below an integration point `<title>` is an HTML RCDATA element,
+		// which a smuggled `</title>` breaks out of
+		$fixture   = '<svg><desc><title><!--</title><img src=x onerror=alert(1)>--></title></desc></svg>';
+		$sanitized = '<svg><desc><title/></desc></svg>';
+
+		$this->assertSame($sanitized, Svg::sanitize($fixture));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The comment (line 1) is not allowed');
+		Svg::validate($fixture);
+	}
+
+	public function testDisallowedMutationXssIntegrationPointTitleCommentNested(): void
+	{
+		// the outermost RCDATA `<title>` holds everything below it as text
+		$fixture   = '<svg><desc><title><title><!--</title><img src=x onerror=alert(1)>--></title></title></desc></svg>';
+		$sanitized = '<svg><desc><title><title/></title></desc></svg>';
+
+		$this->assertSame($sanitized, Svg::sanitize($fixture));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The comment (line 1) is not allowed');
+		Svg::validate($fixture);
+	}
+
 	public function testDisallowedMutationXssIntegrationPointStyleComment(): void
 	{
 		// the same raw text element also turns a comment into plain text,

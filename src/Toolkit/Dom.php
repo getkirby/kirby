@@ -58,6 +58,18 @@ class Dom
 	];
 
 	/**
+	 * HTML elements whose content an HTML parser reads as text
+	 * (raw text, RCDATA, script data and plaintext) until the
+	 * matching closing tag.
+	 *
+	 * @link https://html.spec.whatwg.org/multipage/parsing.html#parsing-html-fragments
+	 */
+	protected const RAW_TEXT = [
+		'iframe', 'noembed', 'noframes', 'noscript', 'plaintext',
+		'script', 'style', 'textarea', 'title', 'xmp'
+	];
+
+	/**
 	 * Cache for the HTML body
 	 */
 	protected DOMElement|null $body;
@@ -919,7 +931,7 @@ class Dom
 			// element to it at all
 			if (
 				$root === null &&
-				($name === 'style' || $name === 'script')
+				in_array($name, static::RAW_TEXT, true) === true
 			) {
 				return ['foreign' => false, 'rawText' => $name];
 			}
