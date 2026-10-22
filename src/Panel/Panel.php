@@ -213,7 +213,7 @@ class Panel
 		if ($request->method() === 'GET') {
 			return
 				(bool)($request->get('_json') ??
-				$request->header('X-Fiber'));
+					$request->header('X-Fiber'));
 		}
 
 		return false;
@@ -251,8 +251,8 @@ class Panel
 		$request = App::instance()->request();
 
 		$referrer = $request->header('X-Fiber-Referrer')
-				 ?? $request->get('_referrer')
-				 ?? '';
+			?? $request->get('_referrer')
+			?? '';
 
 		return '/' . trim($referrer, '/');
 	}
@@ -314,9 +314,10 @@ class Panel
 
 		$areas  = static::areas();
 		$routes = static::routes($areas);
+		$method = $kirby->request()->method();
 
 		// create a micro-router for the Panel
-		return Router::execute($path, $method = $kirby->request()->method(), $routes, function ($route) use ($areas, $kirby, $method, $path) {
+		return Router::execute($path, $method, $routes, function ($route) use ($areas, $kirby, $method, $path) {
 			// route needs authentication?
 			$auth   = $route->attributes()['auth'] ?? true;
 			$areaId = $route->attributes()['area'] ?? null;
@@ -403,13 +404,43 @@ class Panel
 			'auth' => false
 		];
 
-		// catch all route
-		$routes[] = [
-			'pattern' => '(:all)',
-			'action'  => fn (string $pattern) => new NotFoundException(
-				message: 'Could not find Panel view for route: ' . $pattern
-			)
+		// answer HEAD requests like GET requests; the copies
+		// come after all other routes, so that routes which
+		// handle HEAD requests themselves take precedence
+		foreach ($routes as $route) {
+			$methods = A::map(
+				explode('|', strtoupper($route['method'] ?? 'GET')),
+				trim(...)
+			);
+
+			if (in_array('GET', $methods, true) === true) {
+				$routes[] = [...$route, 'method' => 'HEAD'];
+			}
+		}
+
+		// catch all routes; they are registered for all request
+		// methods, so that unsupported methods are answered with
+		// a proper 404 instead of an uncaught exception. The
+		// response type is taken from the path, so that Panel
+		// requests keep receiving JSON instead of a document
+		$fallbacks = [
+			'dialogs/(:all)'   => 'dialog',
+			'drawers/(:all)'   => 'drawer',
+			'dropdowns/(:all)' => 'dropdown',
+			'search/(:all)'    => 'search',
+			'(:all)'           => 'view'
 		];
+
+		foreach ($fallbacks as $pattern => $type) {
+			$routes[] = [
+				'pattern' => $pattern,
+				'method'  => 'ALL',
+				'type'    => $type,
+				'action'  => fn (string $path) => new NotFoundException(
+					message: 'Could not find Panel ' . $type . ' for route: ' . $path
+				)
+			];
+		}
 
 		return $routes;
 	}
@@ -612,7 +643,7 @@ class Panel
 		// use the user language for the default translation or
 		// fall back to the language from the config
 		$translation = $kirby->user()?->language() ??
-						$kirby->panelLanguage();
+			$kirby->panelLanguage();
 
 		$kirby->setCurrentTranslation($translation);
 

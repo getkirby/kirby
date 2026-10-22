@@ -8,6 +8,7 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Response;
+use Kirby\Http\Router;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -451,6 +452,29 @@ class PanelTest extends TestCase
 		$this->assertNull($result);
 	}
 
+	public function testRouterWithHeadMethod(): void
+	{
+		$app = $this->app->clone([
+			'request' => [
+				'method' => 'GET'
+			]
+		]);
+
+		$get = Panel::router('login');
+
+		$app = $this->app->clone([
+			'request' => [
+				'method' => 'HEAD'
+			]
+		]);
+
+		$head = Panel::router('login');
+
+		// HEAD is routed like GET and must not fall through
+		// to the catch-all route
+		$this->assertSame($get->code(), $head->code());
+	}
+
 	public function testRouterWithUnknownPath(): void
 	{
 		$app = $this->app->clone([
@@ -491,15 +515,39 @@ class PanelTest extends TestCase
 
 		$this->assertSame('browser', $routes[0]['pattern']);
 		$this->assertSame(['/', 'installation', 'login'], $routes[1]['pattern']);
-		$this->assertSame('(:all)', $routes[2]['pattern']);
 
-		// the catch-all route returns a not found exception,
-		// so that the Panel responds with a 404 instead of a 500
-		$result = $routes[2]['action']('foo');
+		// routes that answer GET requests also answer HEAD requests
+		$this->assertSame('browser', $routes[2]['pattern']);
+		$this->assertSame('HEAD', $routes[2]['method']);
+		$this->assertSame(['/', 'installation', 'login'], $routes[3]['pattern']);
+		$this->assertSame('HEAD', $routes[3]['method']);
 
-		$this->assertInstanceOf(NotFoundException::class, $result);
-		$this->assertSame('Could not find Panel view for route: foo', $result->getMessage());
-		$this->assertSame(404, $result->getHttpCode());
+		// the catch-all routes keep the response type of the path,
+		// so that Panel requests keep receiving JSON
+		$fallbacks = [
+			4 => ['dialogs/(:all)', 'dialog'],
+			5 => ['drawers/(:all)', 'drawer'],
+			6 => ['dropdowns/(:all)', 'dropdown'],
+			7 => ['search/(:all)', 'search'],
+			8 => ['(:all)', 'view'],
+		];
+
+		foreach ($fallbacks as $index => [$pattern, $type]) {
+			$this->assertSame($pattern, $routes[$index]['pattern']);
+			$this->assertSame('ALL', $routes[$index]['method']);
+			$this->assertSame($type, $routes[$index]['type']);
+
+			// the catch-all routes return a not found exception,
+			// so that the Panel responds with a 404 instead of a 500
+			$result = $routes[$index]['action']('foo');
+
+			$this->assertInstanceOf(NotFoundException::class, $result);
+			$this->assertSame(
+				'Could not find Panel ' . $type . ' for route: foo',
+				$result->getMessage()
+			);
+			$this->assertSame(404, $result->getHttpCode());
+		}
 	}
 
 
@@ -665,6 +713,53 @@ class PanelTest extends TestCase
 		];
 
 		$this->assertSame($expected, $routes);
+	}
+
+	public function testRoutesWithAllMethods(): void
+	{
+		$router = new Router(Panel::routes([]));
+
+		// every request method needs to resolve to the catch-all
+		// route; otherwise the router throws and the Panel
+		// responds with a 500 instead of a 404
+		foreach (['GET', 'POST', 'HEAD', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'] as $method) {
+			$route = $router->find('does-not-exist', $method);
+			$this->assertSame('(:all)', $route->attributes()['pattern'], $method);
+
+			// requests for dialogs, drawers, dropdowns and searches
+			// need to keep their response type, so that the Panel
+			// receives JSON instead of a full document
+			$route = $router->find('dialogs/does-not-exist', $method);
+			$this->assertSame('dialog', $route->attributes()['type'], $method);
+		}
+	}
+
+	public function testRoutesWithHeadMethod(): void
+	{
+		$router = new Router(Panel::routes([
+			'test' => [
+				'views' => [
+					['pattern' => 'a', 'action' => fn () => 'view'],
+					['pattern' => 'b', 'action' => fn () => 'view'],
+				],
+				'requests' => [
+					['pattern' => 'b', 'method' => 'HEAD', 'action' => fn () => 'request'],
+				]
+			]
+		]));
+
+		// HEAD requests are answered by the GET route
+		$route = $router->find('a', 'HEAD');
+		$this->assertSame('view', $route->attributes()['type']);
+		$this->assertSame('test', $route->attributes()['area']);
+
+		// a route for HEAD requests takes precedence,
+		// even if the GET route has been registered first
+		$route = $router->find('b', 'HEAD');
+		$this->assertSame('request', $route->attributes()['type']);
+
+		$route = $router->find('b', 'GET');
+		$this->assertSame('view', $route->attributes()['type']);
 	}
 
 	public function testSetLanguageWithoutRequest(): void
