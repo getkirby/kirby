@@ -2,23 +2,20 @@
 
 namespace Kirby\Image;
 
-use Kirby\Filesystem\File;
+use Darkroom\Size;
 use Stringable;
 
 /**
- * The Dimension class is used to provide additional
- * methods for images and possibly other objects with
- * width and height to recalculate the size,
- * get the ratio or just the width and height.
+ * Width and height of an image as displayed
  *
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
-class Dimensions implements Stringable
+readonly class Dimensions implements Stringable
 {
 	public function __construct(
-		public int $width,
-		public int $height
+		protected int $width,
+		protected int $height
 	) {
 	}
 
@@ -40,341 +37,69 @@ class Dimensions implements Stringable
 	}
 
 	/**
-	 * Crops the dimensions by width and height
-	 *
-	 * @return $this
+	 * From a size of the image library
 	 */
-	public function crop(int $width, int|null $height = null): static
+	public static function from(Size $size): static
 	{
-		$this->width  = $width;
-		$this->height = $width;
-
-		if ($height !== 0 && $height !== null) {
-			$this->height = $height;
-		}
-
-		return $this;
+		return new static($size->width, $size->height);
 	}
 
-	/**
-	 * Recalculates the width and height to fit into the given box.
-	 *
-	 * ```php
-	 * $dimensions = new Dimensions(1200, 768);
-	 * $dimensions->fit(500);
-	 *
-	 * echo $dimensions->width();
-	 * // output: 500
-	 *
-	 * echo $dimensions->height();
-	 * // output: 320
-	 * ```
-	 *
-	 * @param $box the max width and/or height
-	 * @param $force If true, the dimensions will be
-	 *              upscaled to fit the box if smaller
-	 * @return $this object with recalculated dimensions
-	 */
-	public function fit(int $box, bool $force = false): static
-	{
-		if ($this->width === 0 || $this->height === 0) {
-			$this->width  = $box;
-			$this->height = $box;
-			return $this;
-		}
-
-		$ratio = $this->ratio();
-
-		if ($this->width > $this->height) {
-			// wider than tall
-			if ($this->width > $box || $force === true) {
-				$this->width = $box;
-			}
-			$this->height = (int)round($this->width / $ratio);
-		} elseif ($this->height > $this->width) {
-			// taller than wide
-			if ($this->height > $box || $force === true) {
-				$this->height = $box;
-			}
-			$this->width = (int)round($this->height * $ratio);
-		} elseif ($this->width > $box) {
-			// width = height but bigger than box
-			$this->width  = $box;
-			$this->height = $box;
-		}
-
-		return $this;
-	}
-
-	/**
-	 * Recalculates the width and height to fit the given height
-	 *
-	 * ```php
-	 * $dimensions = new Dimensions(1200, 768);
-	 * $dimensions->fitHeight(500);
-	 *
-	 * echo $dimensions->width();
-	 * // output: 781
-	 *
-	 * echo $dimensions->height();
-	 * // output: 500
-	 * ```
-	 *
-	 * @param $fit the max height
-	 * @param $force If true, the dimensions will be
-	 *              upscaled to fit the box if smaller
-	 * @return $this object with recalculated dimensions
-	 */
-	public function fitHeight(
-		int|null $fit = null,
-		bool $force = false
-	): static {
-		return $this->fitSize('height', $fit, $force);
-	}
-
-	/**
-	 * Helper for fitWidth and fitHeight methods
-	 *
-	 * @param $ref reference (width or height)
-	 * @param $fit the max width
-	 * @param $force If true, the dimensions will be
-	 *              upscaled to fit the box if smaller
-	 * @return $this object with recalculated dimensions
-	 */
-	protected function fitSize(
-		string $ref,
-		int|null $fit = null,
-		bool $force = false
-	): static {
-		if ($fit === 0 || $fit === null) {
-			return $this;
-		}
-
-		if ($this->$ref <= $fit && !$force) {
-			return $this;
-		}
-
-		$ratio        = $this->ratio();
-		$mode         = $ref === 'width';
-		$this->width  =  $mode ? $fit : (int)round($fit * $ratio);
-		$this->height = !$mode ? $fit : (int)round($fit / $ratio);
-
-		return $this;
-	}
-
-	/**
-	 * Recalculates the width and height to fit the given width
-	 *
-	 * ```php
-	 * $dimensions = new Dimensions(1200, 768);
-	 * $dimensions->fitWidth(500);
-	 *
-	 * echo $dimensions->width();
-	 * // output: 500
-	 *
-	 * echo $dimensions->height();
-	 * // output: 320
-	 * ```
-	 *
-	 * @param $fit the max width
-	 * @param $force If true, the dimensions will be
-	 *              upscaled to fit the box if smaller
-	 * @return $this object with recalculated dimensions
-	 */
-	public function fitWidth(
-		int|null $fit = null,
-		bool $force = false
-	): static {
-		return $this->fitSize('width', $fit, $force);
-	}
-
-	/**
-	 * Recalculates the dimensions by the width and height
-	 *
-	 * @param $width the max height
-	 * @param $height the max width
-	 * @return $this
-	 */
-	public function fitWidthAndHeight(
-		int|null $width = null,
-		int|null $height = null,
-		bool $force = false
-	): static {
-		if ($this->width > $this->height) {
-			$this->fitWidth($width, $force);
-
-			// do another check for the max height
-			if ($this->height > $height) {
-				$this->fitHeight($height);
-			}
-		} else {
-			$this->fitHeight($height, $force);
-
-			// do another check for the max width
-			if ($this->width > $width) {
-				$this->fitWidth($width);
-			}
-		}
-
-		return $this;
-	}
-
-	/**
-	 * Detect the dimensions for an image file
-	 */
-	public static function forImage(File $image): static
-	{
-		if ($image->exists() === false) {
-			return new static(0, 0);
-		}
-
-		$orientation = $image->exif()?->orientation() ?? 1;
-		$size        = $image->imagesize();
-
-		// handle invalid or corrupted images that bypass mime type validation
-		if ($size === false) {
-			return new static(0, 0);
-		}
-
-		return match ($orientation) {
-			// 5-8 = rotated
-			5, 6, 7, 8 => new static($size[1] ?? 1, $size[0] ?? 0),
-			// 1 = normal; 2-4 = flipped
-			default    => new static($size[0] ?? 0, $size[1] ?? 1)
-		};
-	}
-
-	/**
-	 * Detect the dimensions for a svg file
-	 */
-	public static function forSvg(string $root): static
-	{
-		$svg = Svg::from($root);
-
-		return new static(
-			(int)round($svg->width() ?? 0),
-			(int)round($svg->height() ?? 0)
-		);
-	}
-
-	/**
-	 * Returns the height
-	 */
 	public function height(): int
 	{
 		return $this->height;
 	}
 
-	/**
-	 * Checks if the dimensions are landscape
-	 */
-	public function landscape(): bool
+	public function isLandscape(): bool
 	{
 		return $this->width > $this->height;
 	}
 
-	/**
-	 * Returns a string representation of the orientation
-	 */
-	public function orientation(): string|false
-	{
-		if (!$this->ratio()) {
-			return false;
-		}
-
-		if ($this->portrait() === true) {
-			return 'portrait';
-		}
-
-		if ($this->landscape() === true) {
-			return 'landscape';
-		}
-
-		return 'square';
-	}
-
-	/**
-	 * Checks if the dimensions are portrait
-	 */
-	public function portrait(): bool
+	public function isPortrait(): bool
 	{
 		return $this->height > $this->width;
 	}
 
-	/**
-	 * Calculates and returns the ratio
-	 *
-	 * ```php
-	 * $dimensions = new Dimensions(1200, 768);
-	 * echo $dimensions->ratio();
-	 * // output: 1.5625
-	 * ```
-	 */
-	public function ratio(): float
-	{
-		if ($this->width !== 0 && $this->height !== 0) {
-			return $this->width / $this->height;
-		}
-
-		return 0.0;
-	}
-
-	/**
-	 * Resizes image
-	 * @return $this
-	 */
-	public function resize(
-		int|null $width = null,
-		int|null $height = null,
-		bool $force = false
-	): static {
-		return $this->fitWidthAndHeight($width, $height, $force);
-	}
-
-	/**
-	 * Checks if the dimensions are square
-	 */
-	public function square(): bool
+	public function isSquare(): bool
 	{
 		return $this->width === $this->height;
 	}
 
 	/**
-	 * Resize and crop
-	 *
-	 * @return $this
+	 * `landscape`, `portrait` or `square`;
+	 * `false` without a readable size
 	 */
-	public function thumb(array $options = []): static
+	public function orientation(): string|false
 	{
-		$width  = $options['width']  ?? null;
-		$height = $options['height'] ?? null;
-		$crop   = $options['crop']   ?? false;
-		$method = $crop !== false ? 'crop' : 'resize';
-
-		if ($width === null && $height === null) {
-			return $this;
-		}
-
-		return $this->$method($width, $height);
+		return match (true) {
+			$this->ratio() === 0.0 => false,
+			$this->isPortrait()    => 'portrait',
+			$this->isLandscape()   => 'landscape',
+			default                => 'square'
+		};
 	}
 
 	/**
-	 * Converts the dimensions object
-	 * to a plain PHP array
+	 * Width divided by height; `0.0` without a readable size
 	 */
+	public function ratio(): float
+	{
+		if ($this->width === 0 || $this->height === 0) {
+			return 0.0;
+		}
+
+		return $this->width / $this->height;
+	}
+
 	public function toArray(): array
 	{
 		return [
-			'width'       => $this->width(),
-			'height'      => $this->height(),
+			'width'       => $this->width,
+			'height'      => $this->height,
 			'ratio'       => $this->ratio(),
 			'orientation' => $this->orientation(),
 		];
 	}
 
-	/**
-	 * Returns the width
-	 */
 	public function width(): int
 	{
 		return $this->width;

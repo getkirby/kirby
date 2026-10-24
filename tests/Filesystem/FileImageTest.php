@@ -2,10 +2,10 @@
 
 namespace Kirby\Filesystem;
 
+use Kirby\Cms\App;
 use Kirby\Exception\Exception;
 use Kirby\Exception\LogicException;
 use Kirby\Image\Dimensions;
-use Kirby\Image\Exif;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -26,22 +26,30 @@ class FileImageTest extends TestCase
 	{
 		// jpg
 		$file = $this->_image();
-		$this->assertInstanceOf(Dimensions::class, $file->dimensions());
+		$this->assertEquals(new Dimensions(500, 500), $file->dimensions());
 
 		// svg with width and height
 		$file = $this->_image('square.svg');
-		$this->assertSame(100, $file->dimensions()->width());
-		$this->assertSame(100, $file->dimensions()->height());
+		$this->assertEquals(new Dimensions(100, 100), $file->dimensions());
 
 		// svg with viewBox
 		$file = $this->_image('circle.svg');
-		$this->assertSame(50, $file->dimensions()->width());
-		$this->assertSame(50, $file->dimensions()->height());
+		$this->assertEquals(new Dimensions(50, 50), $file->dimensions());
+
+		// cached object
+		$this->assertSame($file->dimensions(), $file->dimensions());
+
+		// svg with a width beyond the int range
+		$file = new File(root: static::FIXTURES . '/dimensions/circle-huge.svg');
+		$this->assertEquals(new Dimensions(0, 10), $file->dimensions());
 
 		// webp
 		$file = $this->_image('valley.webp');
-		$this->assertSame(550, $file->dimensions()->width());
-		$this->assertSame(368, $file->dimensions()->height());
+		$this->assertEquals(new Dimensions(550, 368), $file->dimensions());
+
+		// a format only PHP's `getimagesize()` reads
+		$file = $this->_image('test.bmp');
+		$this->assertEquals(new Dimensions(12, 8), $file->dimensions());
 
 		// non-image file
 		$file = $this->_image('blank.pdf');
@@ -53,21 +61,6 @@ class FileImageTest extends TestCase
 		// cached object
 		$file = $this->_image();
 		$this->assertSame($file->dimensions(), $file->dimensions());
-	}
-
-	public function testDimensionsDoesNotReadHeaderWithoutImageSignature(): void
-	{
-		foreach (['circle.svg' => 50, 'invalid.jpg' => null] as $filename => $size) {
-			$file = new class (root: static::FIXTURES . '/image/' . $filename) extends File {
-				public function imagesize(): array|false
-				{
-					throw new LogicException('imagesize() must not be called');
-				}
-			};
-
-			$this->assertSame($size, $file->dimensions()?->width());
-			$this->assertSame($size, $file->dimensions()?->height());
-		}
 	}
 
 	public function testDimensionsReadsTypeFromImageHeader(): void
@@ -87,24 +80,12 @@ class FileImageTest extends TestCase
 		$this->assertSame(0, $file->mimeCalls);
 	}
 
-	public function testDimensionsUsesMimeForOtherTypes(): void
-	{
-		$file = new class (root: static::FIXTURES . '/image/onigiri-adobe-rgb-gps.avif') extends File {
-			public function mime(): string|null
-			{
-				return 'image/heif';
-			}
-		};
-
-		$this->assertNull($file->dimensions());
-		$this->assertFalse($file->isResizable());
-	}
-
 	public function testDimensionsWithInvalidGif(): void
 	{
 		$file = $this->_image('invalid.gif');
 
-		$this->assertNull($file->dimensions());
+		$this->assertSame(0, $file->dimensions()->width());
+		$this->assertSame(0, $file->dimensions()->height());
 		$this->assertFalse($file->isResizable());
 	}
 
@@ -112,7 +93,8 @@ class FileImageTest extends TestCase
 	{
 		$file = $this->_image('invalid-chunk.png');
 
-		$this->assertNull($file->dimensions());
+		$this->assertSame(0, $file->dimensions()->width());
+		$this->assertSame(0, $file->dimensions()->height());
 		$this->assertFalse($file->isResizable());
 	}
 
@@ -125,12 +107,14 @@ class FileImageTest extends TestCase
 		$this->assertFalse($file->isResizable());
 	}
 
-	public function testExif(): void
+	public function testDimensionsWithOrientation(): void
 	{
-		$file = $this->_image();
-		$this->assertInstanceOf(Exif::class, $file->exif());
-		// cached object
-		$this->assertInstanceOf(Exif::class, $file->exif());
+		$file = new File(root: static::FIXTURES . '/orientation/Landscape_1.jpg');
+		$this->assertEquals(new Dimensions(1800, 1200), $file->dimensions());
+
+		// stored portrait, displayed landscape
+		$file = new File(root: static::FIXTURES . '/orientation/Landscape_6.jpg');
+		$this->assertEquals(new Dimensions(1800, 1200), $file->dimensions());
 	}
 
 	public function testHeight(): void
@@ -151,19 +135,6 @@ class FileImageTest extends TestCase
 		$this->expectExceptionMessageIs('Calling File::html() for an image requires that the URL property is not null');
 		$file = new File(root: static::FIXTURES . '/image/cat.jpg');
 		$file->html();
-	}
-
-	public function testImagesize(): void
-	{
-		$file = $this->_image();
-		$this->assertIsArray($file->imagesize());
-		$this->assertSame(500, $file->imagesize()[0]);
-	}
-
-	public function testImagesizeWithInvalidImage(): void
-	{
-		$file = $this->_image('invalid.jpg');
-		$this->assertFalse($file->imagesize());
 	}
 
 	public function testIsLandscape(): void
@@ -187,10 +158,25 @@ class FileImageTest extends TestCase
 		$this->assertFalse($file->isResizable());
 	}
 
+	public function testIsResizableAboveLimit(): void
+	{
+		new App(['options' => ['thumbs' => ['limit' => 1000]]]);
+
+		$this->assertFalse($this->_image()->isResizable());
+
+		App::destroy();
+	}
+
 	public function testIsResizableWithInvalidImage(): void
 	{
 		$file = $this->_image('invalid.jpg');
 		$this->assertFalse($file->isResizable());
+	}
+
+	public function testIsResizableWithoutImage(): void
+	{
+		$this->assertFalse($this->_image('blank.pdf')->isResizable());
+		$this->assertFalse($this->_image('square.svg')->isResizable());
 	}
 
 	public function testIsSquare(): void
@@ -202,10 +188,10 @@ class FileImageTest extends TestCase
 	public function testIsViewable(): void
 	{
 		$file = $this->_image();
-		$this->assertTrue($file->isResizable());
+		$this->assertTrue($file->isViewable());
 
 		$file = $this->_image('test.heic');
-		$this->assertFalse($file->isResizable());
+		$this->assertFalse($file->isViewable());
 	}
 
 	public function testMatch(): void
@@ -256,14 +242,6 @@ class FileImageTest extends TestCase
 		$this->assertSame('cat.jpg', $file->toArray()['filename']);
 		$this->assertIsArray($file->toArray()['exif']);
 		$this->assertIsArray($file->toArray()['dimensions']);
-	}
-
-	public function testToString(): void
-	{
-		$file = $this->_image();
-		$expected = '<img alt="" src="https://foo.bar/cat.jpg">';
-		$this->assertSame($expected, $file->__toString());
-		$this->assertSame($expected, (string)$file);
 	}
 
 	public function testWidth(): void

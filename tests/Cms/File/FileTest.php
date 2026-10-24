@@ -186,12 +186,6 @@ class FileTest extends ModelTestCase
 		$this->assertSame('text/plain', $response->type());
 	}
 
-	public function testImagesize(): void
-	{
-		$size = $this->image()->imagesize();
-		$this->assertSame([128, 128], [$size[0], $size[1]]);
-	}
-
 	public function testIsLandscape(): void
 	{
 		$this->assertFalse($this->image()->isLandscape());

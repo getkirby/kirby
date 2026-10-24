@@ -406,6 +406,30 @@ class AppTest extends TestCase
 		$session->destroy();
 	}
 
+	public function testDarkroom(): void
+	{
+		$app = new App([
+			'options' => [
+				'thumbs' => [
+					'quality' => 10,
+					'limit'   => 1000
+				]
+			]
+		]);
+
+		$darkroom = $app->darkroom();
+		$this->assertSame($darkroom, $app->darkroom());
+		$this->assertSame(10, $darkroom->defaults->quality);
+		$this->assertSame(1000, $darkroom->settings->limit);
+
+		// without the defaults, but with the settings
+		$darkroom = $app->darkroom(defaults: false);
+		$this->assertSame($darkroom, $app->darkroom(defaults: false));
+		$this->assertNotSame($darkroom, $app->darkroom());
+		$this->assertNull($darkroom->defaults->quality);
+		$this->assertSame(1000, $darkroom->settings->limit);
+	}
+
 	public function testDebugInfo(): void
 	{
 		$app = new App();

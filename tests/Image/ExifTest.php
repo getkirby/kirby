@@ -4,238 +4,148 @@ namespace Kirby\Image;
 
 use Kirby\Filesystem\File;
 use PHPUnit\Framework\Attributes\CoversClass;
-use ReflectionClass;
 
 #[CoversClass(Exif::class)]
 class ExifTest extends TestCase
 {
-	protected function _exif($filename = 'image/cat.jpg')
+	protected function sections(): array
 	{
-		$image = $this->_image($filename);
-		return new Exif($image);
-	}
-
-	protected function _image($filename = 'image/cat.jpg')
-	{
-		return new File(root: static::FIXTURES . '/' . $filename);
+		return [
+			'IFD0' => [
+				'Make'  => 'Kirby Kamera Inc.',
+				'Model' => 'Deluxe Snap 3000'
+			],
+			'EXIF' => [
+				'DateTimeOriginal' => '2016:12:11 11:13:14',
+				'ExposureTime'     => '1/250',
+				'FNumber'          => '28/10',
+				'FocalLength'      => '50/1',
+				'ISOSpeedRatings'  => 100
+			],
+			'GPS' => [
+				'GPSLatitudeRef'  => 'N',
+				'GPSLatitude'     => ['40/1', '15/1', '0/1'],
+				'GPSLongitudeRef' => 'W',
+				'GPSLongitude'    => ['75/1', '7/1', '0/1']
+			],
+			'THUMBNAIL' => [
+				'Make' => 'Thumbnail'
+			]
+		];
 	}
 
 	public function testAperture(): void
 	{
-		$exif  = $this->_exif();
+		$exif = new Exif($this->sections());
+		$this->assertSame('f/2.8', $exif->aperture());
+
+		$exif = new Exif([]);
+		$this->assertNull($exif->aperture());
+
+		$exif = new Exif(['EXIF' => ['FNumber' => '28/0']]);
 		$this->assertNull($exif->aperture());
 	}
 
 	public function testCamera(): void
 	{
-		$exif = $this->_exif();
-		$this->assertInstanceOf(Camera::class, $exif->camera());
+		$exif = new Exif($this->sections());
+
+		$this->assertSame('Kirby Kamera Inc.', $exif->camera()->make());
+		$this->assertSame('Deluxe Snap 3000', $exif->camera()->model());
 
 		// from cache
-		$this->assertInstanceOf(Camera::class, $exif->camera());
+		$this->assertSame($exif->camera(), $exif->camera());
 	}
 
 	public function testData(): void
 	{
-		$exif  = $this->_exif();
-		$this->assertSame([
-			'FileName'      => 'cat.jpg',
-			'FileDateTime'  => exif_read_data(static::FIXTURES . '/image/cat.jpg')['FileDateTime'],
-			'FileSize'      => 23574,
-			'FileType'      => 2,
-			'MimeType'      => 'image/jpeg',
-			'SectionsFound' => '',
-			'COMPUTED'      => [
-				'html'      => 'width="500" height="500"',
-				'Height'    => 500,
-				'Width'     => 500,
-				'IsColor'   => 1
-			]
-		], $exif->data());
+		$exif = new Exif($this->sections());
+
+		$this->assertSame('Kirby Kamera Inc.', $exif->data()['Make']);
+		$this->assertSame('1/250', $exif->data()['ExposureTime']);
+		$this->assertSame('N', $exif->data()['GPSLatitudeRef']);
 	}
 
 	public function testExposure(): void
 	{
-		$exif  = $this->_exif();
+		$exif = new Exif($this->sections());
+		$this->assertSame('1/250', $exif->exposure());
+
+		$exif = new Exif([]);
 		$this->assertNull($exif->exposure());
 	}
 
 	public function testFocalLength(): void
 	{
-		$exif  = $this->_exif();
-		$this->assertNull($exif->focalLength());
+		$exif = new Exif($this->sections());
+		$this->assertSame('50/1', $exif->focalLength());
+
+		$exif = new Exif(['EXIF' => ['FocalLengthIn35mmFilm' => '75']]);
+		$this->assertSame('75', $exif->focalLength());
 	}
 
-	public function testIsBw(): void
+	public function testFromImage(): void
 	{
-		$exif  = $this->_exif();
-		$this->assertFalse($exif->isBw());
-	}
+		$image = new File(root: static::FIXTURES . '/image/onigiri-adobe-rgb-gps.webp');
+		$exif  = $image->exif();
 
-	public function testIsBwWithoutValue(): void
-	{
-		$image = $this->_image();
-		$exif = new class ($image) extends Exif {
-			public static function read(string $root): array
-			{
-				return [];
-			}
-		};
-
-		$this->assertNull($exif->isBw());
-	}
-
-	public function testIsColor(): void
-	{
-		$exif  = $this->_exif();
-		$this->assertTrue($exif->isColor());
-	}
-
-	public function testIsColorWithoutValue(): void
-	{
-		$image = $this->_image();
-		$exif = new class ($image) extends Exif {
-			public static function read(string $root): array
-			{
-				return [];
-			}
-		};
-
-		$this->assertNull($exif->isColor());
+		$this->assertSame(40.25, round($exif->location()->lat(), 2));
+		$this->assertSame(-75.13, round($exif->location()->lng(), 2));
 	}
 
 	public function testIso(): void
 	{
-		$image = $this->_image();
-		$exif = new class ($image) extends Exif {
-			public static function read(string $root): array
-			{
-				return [
-					...parent::read($root),
-					'ISOSpeedRatings' => 100
-				];
-			}
-		};
-
+		$exif = new Exif($this->sections());
 		$this->assertSame('100', $exif->iso());
-	}
 
-	public function testIsoWithArrayValue(): void
-	{
-		$image = $this->_image();
-		$exif = new class ($image) extends Exif {
-			public static function read(string $root): array
-			{
-				return [
-					...parent::read($root),
-					'ISOSpeedRatings' => [100, 200]
-				];
-			}
-		};
-
+		$exif = new Exif(['EXIF' => ['ISOSpeedRatings' => [100, 200]]]);
 		$this->assertSame([100, 200], $exif->iso());
-	}
 
-	public function testIsoWithoutValue(): void
-	{
-		$exif  = $this->_exif();
+		$exif = new Exif([]);
 		$this->assertNull($exif->iso());
 	}
 
 	public function testLocation(): void
 	{
-		$exif = $this->_exif();
-		$this->assertInstanceOf(Location::class, $exif->location());
+		$exif = new Exif($this->sections());
+
+		$this->assertSame(40.25, $exif->location()->lat());
+		$this->assertSame(-75.11666666666666, $exif->location()->lng());
 
 		// from cache
-		$this->assertInstanceOf(Location::class, $exif->location());
-	}
-
-	public function testOrientation(): void
-	{
-		$exif  = $this->_exif('orientation/Landscape_0.jpg');
-		$this->assertSame(0, $exif->orientation());
-
-		$exif  = $this->_exif('orientation/Landscape_6.jpg');
-		$this->assertSame(6, $exif->orientation());
-	}
-
-	public function testParseTimestampDateTimeOriginal(): void
-	{
-		$exif = $this->_exif();
-
-		// changing protected property $data via Reflection class
-		$ref = new ReflectionClass($exif);
-		$data = $ref->getProperty('data');
-		$options = $data->getValue($exif);
-		$options['DateTimeOriginal'] = '11.12.2016 11:13:14';
-		$data->setValue($exif, $options);
-
-		// setting protected method public
-		$parse = $ref->getMethod('parseTimestamp');
-
-		$this->assertSame((string)strtotime('11.12.2016 11:13:14'), $parse->invoke($exif));
-	}
-
-	public function testParseTimestampFallsBackToImageModified(): void
-	{
-		$exif = $this->_exif();
-
-		// strip both timestamp keys so we fall through to image->modified()
-		$ref  = new ReflectionClass($exif);
-		$data = $ref->getProperty('data');
-		$data->setValue($exif, []);
-
-		$parse = $ref->getMethod('parseTimestamp');
-
-		$this->assertSame(
-			(string)filemtime(static::FIXTURES . '/image/cat.jpg'),
-			$parse->invoke($exif)
-		);
-	}
-
-	public function testParseTimestampFileDateTime(): void
-	{
-		$exif = $this->_exif();
-
-		// strip DateTimeOriginal so the FileDateTime branch is reached;
-		// FileDateTime is already present from exif_read_data
-		$ref     = new ReflectionClass($exif);
-		$data    = $ref->getProperty('data');
-		$options = $data->getValue($exif);
-		unset($options['DateTimeOriginal']);
-		$data->setValue($exif, $options);
-
-		$parse = $ref->getMethod('parseTimestamp');
-
-		$this->assertSame((string)$options['FileDateTime'], $parse->invoke($exif));
-	}
-
-	public function testParseTimestampReturnsNullWhenUnavailable(): void
-	{
-		// image pointing at a non-existent file makes modified() return false
-		$image = new File(root: static::FIXTURES . '/image/does-not-exist.jpg');
-		$exif  = new Exif($image);
-
-		$ref  = new ReflectionClass($exif);
-		$data = $ref->getProperty('data');
-		$data->setValue($exif, []);
-
-		$parse = $ref->getMethod('parseTimestamp');
-
-		$this->assertNull($parse->invoke($exif));
+		$this->assertSame($exif->location(), $exif->location());
 	}
 
 	public function testTimestamp(): void
 	{
-		$exif  = $this->_exif();
-		$this->assertSame((string)exif_read_data(static::FIXTURES . '/image/cat.jpg')['FileDateTime'], $exif->timestamp());
+		$exif = new Exif($this->sections(), 1000);
+		$this->assertSame((string)strtotime('2016-12-11 11:13:14'), $exif->timestamp());
+
+		$exif = new Exif([], 1000);
+		$this->assertSame('1000', $exif->timestamp());
+
+		$exif = new Exif([]);
+		$this->assertNull($exif->timestamp());
 	}
 
 	public function testToArray(): void
 	{
-		$exif  = $this->_exif();
-		$this->assertIsArray($exif->toArray());
-		$this->assertIsArray($exif->__debugInfo());
+		$exif = new Exif($this->sections());
+
+		$this->assertSame([
+			'camera'      => [
+				'make'  => 'Kirby Kamera Inc.',
+				'model' => 'Deluxe Snap 3000'
+			],
+			'location'    => [
+				'lat' => 40.25,
+				'lng' => -75.11666666666666
+			],
+			'timestamp'   => (string)strtotime('2016-12-11 11:13:14'),
+			'exposure'    => '1/250',
+			'aperture'    => 'f/2.8',
+			'iso'         => '100',
+			'focalLength' => '50/1'
+		], $exif->toArray());
 	}
 }

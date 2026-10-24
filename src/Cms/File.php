@@ -125,7 +125,7 @@ class File extends ModelWithContent
 
 		// low-level methods of the file on disk must be called
 		// explicitly, e.g. to not bypass the file actions
-		if (method_exists($this->asset(), $method) === true) {
+		if (is_callable([$this->asset(), $method]) === true) {
 			throw new BadMethodCallException(
 				message: 'The method "' . $method . '" is only available via `$file->asset()->' . $method . '()`'
 			);
@@ -444,14 +444,6 @@ class File extends ModelWithContent
 		}
 
 		return $this->id ??= $this->filename();
-	}
-
-	/**
-	 * Returns the PHP imagesize array
-	 */
-	public function imagesize(): array|false
-	{
-		return $this->asset()->imagesize();
 	}
 
 	/**

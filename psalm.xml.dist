@@ -28,13 +28,6 @@
 		<!-- Don't warn about duplicate array keys as Psalm will throw false positive when unpacking arrays -->
 		<DuplicateArrayKey errorLevel="suppress" />
 
-		<!-- Allow ImageMagick to run exec() call -->
-		<ForbiddenCode>
-			<errorLevel type="suppress">
-				<file name="src/Image/Darkroom/ImageMagick.php" />
-			</errorLevel>
-		</ForbiddenCode>
-
 		<!-- Kirby is built on Stringable objects that are meant to be used directly in string contexts -->
 		<ImplicitToStringCast errorLevel="suppress" />
 

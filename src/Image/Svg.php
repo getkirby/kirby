@@ -82,7 +82,7 @@ class Svg
 
 	/**
 	 * Returns the value if it can be used as size or ratio:
-	 * positive and within the int range (as `Dimensions` casts
+	 * positive and within the int range (as `File::dimensions()` casts
 	 * sizes to int), which rejects values that over- or underflow
 	 */
 	protected function normalizeFloat(float|null $value): float|null

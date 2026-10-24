@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Darkroom\Focus;
+use Darkroom\Options;
 use Kirby\Content\Field;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Asset;
@@ -44,25 +46,19 @@ trait FileModifications
 		int|null $height = null,
 		$options = null
 	): FileVersion|File|Asset {
-		$quality = null;
-		$crop    = true;
-
-		if (is_int($options) === true) {
-			$quality = $options;
-		} elseif (is_string($options)) {
-			$crop = $options;
-		} elseif ($options instanceof Field) {
-			$crop = $options->value();
-		} elseif (is_array($options)) {
-			$quality = $options['quality'] ?? $quality;
-			$crop    = $options['crop']    ?? $crop;
-		}
+		$options = match (true) {
+			is_int($options)          => ['quality' => $options],
+			is_string($options)       => ['crop' => $options],
+			$options instanceof Field => ['crop' => $options->value()],
+			is_array($options)        => $options,
+			default                   => []
+		};
 
 		return $this->thumb([
 			'width'   => $width,
 			'height'  => $height,
-			'quality' => $quality,
-			'crop'    => $crop
+			'quality' => $options['quality'] ?? null,
+			'crop'    => $options['crop'] ?? true
 		]);
 	}
 
@@ -72,7 +68,7 @@ trait FileModifications
 	#[BlockCollectionAccess]
 	public function grayscale(): FileVersion|File|Asset
 	{
-		return $this->thumb(['grayscale' => true]);
+		return $this->bw();
 	}
 
 	/**
@@ -81,7 +77,7 @@ trait FileModifications
 	#[BlockCollectionAccess]
 	public function greyscale(): FileVersion|File|Asset
 	{
-		return $this->thumb(['grayscale' => true]);
+		return $this->bw();
 	}
 
 	/**
@@ -113,10 +109,11 @@ trait FileModifications
 	}
 
 	/**
-	 * Sharpens the image
+	 * Sharpens the image, by the library's
+	 * default amount for `true`
 	 */
 	#[BlockCollectionAccess]
-	public function sharpen(int $amount = 50): FileVersion|File|Asset
+	public function sharpen(int|bool $amount = true): FileVersion|File|Asset
 	{
 		return $this->thumb(['sharpen' => $amount]);
 	}
@@ -132,12 +129,9 @@ trait FileModifications
 	#[BlockCollectionAccess]
 	public function srcset(array|string|null $sizes = null): string|null
 	{
-		if (empty($sizes) === true) {
-			$sizes = $this->kirby()->option('thumbs.srcsets.default', []);
-		}
-
-		if (is_string($sizes) === true) {
-			$sizes = $this->kirby()->option('thumbs.srcsets.' . $sizes, []);
+		// a set by name, the default one without sizes
+		if (is_array($sizes) === false || $sizes === []) {
+			$sizes = $this->kirby()->option('thumbs.srcsets.' . ($sizes ?: 'default'));
 		}
 
 		if (is_array($sizes) === false || $sizes === []) {
@@ -184,32 +178,23 @@ trait FileModifications
 	public function thumb(
 		array|string|null $options = null
 	): FileVersion|File|Asset {
-		// thumb presets
-		if (empty($options) === true) {
-			$options = $this->kirby()->option('thumbs.presets.default');
-		} elseif (is_string($options) === true) {
-			$options = $this->kirby()->option('thumbs.presets.' . $options);
+		// a preset by name, the default one without options
+		if (is_array($options) === false || $options === []) {
+			$options = $this->kirby()->option('thumbs.presets.' . ($options ?: 'default'));
 		}
 
-		if (empty($options) === true || is_array($options) === false) {
+		if (is_array($options) === false || $options === []) {
 			return $this;
 		}
 
-		// fallback to content file options
-		if (($options['crop'] ?? false) === true) {
-			$options['crop'] = match (true) {
-				$this instanceof File => $this->focus()->value() ?? 'center',
-				default               => 'center'
-			};
+		// `crop: true` centres on a valid focus point of the file
+		if (($options['crop'] ?? null) === true && $this instanceof File) {
+			$options['crop'] = Focus::tryFrom($this->focus()->value()) ?? true;
 		}
 
-		// fallback to global config options
-		if (isset($options['format']) === false) {
-			if ($format = $this->kirby()->option('thumbs.format')) {
-				$options['format'] = $format;
-			}
-		}
-
+		// normalised by the library: aliases and `true` resolved,
+		// unset ones dropped; invalid options throw in the template
+		$options   = Options::from($options)->toArray();
 		$component = $this->kirby()->component('file::version');
 		$result    = $component($this->kirby(), $this, $options);
 

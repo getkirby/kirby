@@ -4,21 +4,19 @@ use Kirby\Cms\App;
 use Kirby\Cms\Collection;
 use Kirby\Cms\File;
 use Kirby\Cms\FileVersion;
+use Kirby\Cms\Media;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\User;
 use Kirby\Content\PlainTextStorage;
 use Kirby\Content\Storage;
-use Kirby\Data\Data;
 use Kirby\Email\PHPMailer as Emailer;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Asset;
 use Kirby\Filesystem\F;
-use Kirby\Filesystem\Filename;
 use Kirby\Http\Uri;
 use Kirby\Http\Url;
-use Kirby\Image\Darkroom;
 use Kirby\Session\Store;
 use Kirby\Template\Snippet;
 use Kirby\Template\Template;
@@ -62,58 +60,30 @@ return [
 	},
 
 	/**
-	 * Adapt file characteristics
-	 *
-	 * @param array $options All thumb options (width, height, crop, blur, grayscale)
+	 * Plans a thumb and leaves a job for the
+	 * media route; the original if it can't be made
 	 */
 	'file::version' => function (
 		App $kirby,
 		File|Asset $file,
-		array $options = []
+		array $options
 	): File|Asset|FileVersion {
-		// if file is not resizable, return
-		if ($file->isResizable() === false) {
+		// planned from the original's header, named by its plan
+		$version = new FileVersion(
+			original: $file,
+			options:  $options
+		);
+
+		if ($version->dimensions() === null) {
 			return $file;
 		}
 
-		// create url and root
-		$mediaRoot = $file->mediaDir();
-		$template  = $mediaRoot . '/{{ name }}{{ attributes }}.{{ extension }}';
-		$thumbRoot = new Filename($file->root(), $template, $options)->toString();
-		$thumbName = basename($thumbRoot);
-		$job       = $mediaRoot . '/.jobs/' . $thumbName . '.json';
-
-		// additional protection against path traversal
-		// e.g. from dynamic user-controlled file or asset objects
-		// or malicious data in the `$options`; we check both for `../` and `..\` (Windows)
-		if (Str::contains(Str::replace($thumbRoot, '\\', '/'), '../') === true) {
-			throw new InvalidArgumentException('Received unexpected generated thumb root');
+		// without a job, the thumb can't be made
+		if (Media::queue($version) === false) {
+			return $file;
 		}
 
-		// check if the thumb or job file already exists
-		if (
-			file_exists($thumbRoot) === false &&
-			file_exists($job) === false
-		) {
-			// if not, create job file
-			try {
-				Data::write(
-					$job,
-					[...$options, 'filename' => $file->filename()]
-				);
-			} catch (Throwable) {
-				// if thumb doesn't exist yet and job file cannot
-				// be created, return
-				return $file;
-			}
-		}
-
-		return new FileVersion([
-			'modifications' => $options,
-			'original'      => $file,
-			'root'          => $thumbRoot,
-			'url'           => $file->mediaUrl($thumbName),
-		]);
+		return $version;
 	},
 
 	/**
@@ -383,11 +353,12 @@ return [
 	},
 
 	/**
-	 * Add your own thumb generator
+	 * Add your own thumb generator; the thumb
+	 * should only appear at `$dst` once complete
 	 *
 	 * @param string $src Root of the original file
-	 * @param string $dst Template string for the root to the desired destination
-	 * @param array $options All thumb options that should be applied: `width`, `height`, `crop`, `blur`, `grayscale`
+	 * @param string $dst Root of the thumb, in its format's extension
+	 * @param array $options Thumb options, e.g. `width`, `height`, `crop`, `blur`, `grayscale`, `quality`, `format`
 	 */
 	'thumb' => function (
 		App $kirby,
@@ -395,38 +366,9 @@ return [
 		string $dst,
 		array $options
 	): string {
-		$darkroom = Darkroom::factory(
-			$kirby->option('thumbs.driver', 'gd'),
-			$kirby->option('thumbs', [])
-		);
-		$options   = $darkroom->preprocess($src, $options);
-		$root      = new Filename($src, $dst, $options)->toString();
-		$extension = F::extension($root);
+		$kirby->darkroom()->process($src, $dst, $options);
 
-		// generate the thumb in a hidden temp file so broken output never appears
-		// at the final path and the temp file is not picked up as model file
-		$tempRoot  = F::dirname($root) . '/.' . F::name($root) . '.tmp-' . uniqid();
-
-		// keep the original extension so the darkroom can infer the output format.
-		if ($extension !== '') {
-			$tempRoot .= '.' . $extension;
-		}
-
-		F::copy($src, $tempRoot, true);
-
-		try {
-			$darkroom->process($tempRoot, $options);
-
-			// move the finished file into place so the final path
-			// only appears once generation succeeded
-			F::move($tempRoot, $root, true);
-		} catch (Throwable $e) {
-			// clean up the temp file so failed jobs don't leave broken output behind
-			F::remove($tempRoot);
-			throw $e;
-		}
-
-		return $root;
+		return $dst;
 	},
 
 	/**

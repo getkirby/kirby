@@ -85,7 +85,7 @@ class FileItemsRequestControllerTest extends TestCase
 		// driving a cropped srcset for the requested `cards` layout
 		$this->assertSame('16/9', $item['image']['ratio']);
 		$this->assertTrue($item['image']['cover']);
-		$this->assertStringContainsString('-crop.jpg 400w', $item['image']['srcset']);
+		$this->assertStringContainsString('test-128x72-crop0-28-128-72-q85.jpg 400w', $item['image']['srcset']);
 	}
 
 	public function testLoadDoesNotEvaluateRequestTemplates(): void

@@ -181,6 +181,9 @@ class FileCreateTest extends ModelTestCase
 		$this->assertSame(100, $result->height());
 		$this->assertSame('webp', $result->extension());
 		$this->assertSame('test.webp', $result->filename());
+
+		// no hidden file is left behind
+		$this->assertSame([], glob($parent->root() . '/.[!.]*'));
 	}
 
 	public function testCreateImageAndManipulateWithContent(): void

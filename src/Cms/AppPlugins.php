@@ -369,7 +369,6 @@ trait AppPlugins
 			$extension = $definition['extension'] ?? $key;
 			$type      = $definition['type'] ?? null;
 			$mime      = $definition['mime'] ?? null;
-			$resizable = $definition['resizable'] ?? false;
 			$viewable  = $definition['viewable'] ?? false;
 
 			if (is_string($type) === true) {
@@ -397,13 +396,6 @@ trait AppPlugins
 			}
 
 			if (
-				$resizable === true &&
-				in_array($extension, FilesystemFile::$resizableTypes, true) === false
-			) {
-				FilesystemFile::$resizableTypes[] = $extension;
-			}
-
-			if (
 				$viewable === true &&
 				in_array($extension, FilesystemFile::$viewableTypes, true) === false
 			) {
@@ -412,10 +404,9 @@ trait AppPlugins
 		}
 
 		return $this->extensions['fileTypes'] = [
-			'type'      => F::$types,
-			'mime'      => Mime::$types,
-			'resizable' => FilesystemFile::$resizableTypes,
-			'viewable'  => FilesystemFile::$viewableTypes
+			'type'     => F::$types,
+			'mime'     => Mime::$types,
+			'viewable' => FilesystemFile::$viewableTypes
 		];
 	}
 

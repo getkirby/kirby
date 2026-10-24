@@ -2,14 +2,18 @@
 
 namespace Kirby\Cms;
 
+use Closure;
+use Darkroom\Plan;
 use Kirby\Filesystem\Asset;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\File as FilesystemFile;
+use Kirby\Image\Dimensions;
 
 /**
- * A modified version of a file or asset
- * (e.g. a thumb), which gets generated on
- * first access to its content
+ * A thumb of a file or asset, planned from the
+ * original's header: its size is known without
+ * making it, the thumb is made on first access
+ * to its content
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
@@ -17,23 +21,32 @@ use Kirby\Filesystem\File as FilesystemFile;
 class FileVersion extends FilesystemFile
 {
 	/**
-	 * @var array<string, mixed>
+	 * `false` if no driver makes the thumb
 	 */
-	protected array $modifications;
-	protected File|Asset $original;
+	protected Plan|false|null $plan = null;
 
 	/**
-	 * @param array<string, mixed> $props
+	 * Named by its plan in the original's media
+	 * folder, unless a `root` or `url` is given
+	 *
+	 * @param array<string, mixed> $options
 	 */
-	public function __construct(array $props)
-	{
-		parent::__construct(
-			root: $props['root'] ?? null,
-			url:  $props['url'] ?? null
-		);
+	public function __construct(
+		protected File|Asset $original,
+		protected array $options = [],
+		string|null $root = null,
+		Closure|string|null $url = null
+	) {
+		if ($root === null && $url === null) {
+			$name = $this->basename();
 
-		$this->original      = $props['original'];
-		$this->modifications = $props['modifications'] ?? [];
+			if ($name !== null) {
+				$root = $original->mediaDir() . '/' . $name;
+				$url  = $original->mediaUrl($name);
+			}
+		}
+
+		parent::__construct(root: $root, url: $url);
 	}
 
 	/**
@@ -49,11 +62,50 @@ class FileVersion extends FilesystemFile
 	}
 
 	/**
+	 * Named by the plan's key, so requests
+	 * for the same image share the thumb
+	 */
+	protected function basename(): string|null
+	{
+		$plan = $this->plan();
+
+		if ($plan === null) {
+			return null;
+		}
+
+		$name = F::safeBasename($this->original->filename());
+
+		return $name . '-' . $plan->key() . '.' . $plan->format->extension();
+	}
+
+	/**
+	 * The planned size, without making the thumb
+	 */
+	public function dimensions(): Dimensions|null
+	{
+		$plan = $this->plan();
+
+		if ($plan === null) {
+			return parent::dimensions();
+		}
+
+		return Dimensions::from($plan->size());
+	}
+
+	/**
 	 * Checks if the version has already been generated
 	 */
 	public function exists(): bool
 	{
 		return $this->root !== null && file_exists($this->root) === true;
+	}
+
+	/**
+	 * Returns the filename without making the thumb
+	 */
+	public function filename(): string
+	{
+		return basename($this->root ?? $this->url());
 	}
 
 	/**
@@ -78,7 +130,17 @@ class FileVersion extends FilesystemFile
 	 */
 	public function id(): string
 	{
+		// the name without making the thumb
 		return dirname($this->original()->id()) . '/' . $this->filename();
+	}
+
+	/**
+	 * Checks if the version is a thumb a driver makes,
+	 * without making it
+	 */
+	public function isResizable(): bool
+	{
+		return $this->plan() !== null;
 	}
 
 	/**
@@ -90,23 +152,62 @@ class FileVersion extends FilesystemFile
 	}
 
 	/**
-	 * Returns an array with all applied modifications
+	 * @deprecated 7.0.0 Use `::options()` instead
 	 *
 	 * @return array<string, mixed>
 	 */
 	public function modifications(): array
 	{
-		return $this->modifications;
+		return $this->options();
+	}
+
+	/**
+	 * Returns the thumb options, as planned
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function options(): array
+	{
+		$plan = $this->plan();
+
+		if ($plan === null) {
+			return $this->options;
+		}
+
+		return $plan->options->toArray();
 	}
 
 	/**
 	 * Returns the instance of the original File object
-	 *
-	 * @return File|Asset
 	 */
-	public function original(): mixed
+	public function original(): File|Asset
 	{
 		return $this->original;
+	}
+
+	/**
+	 * Planned from the header the original
+	 * read once for all its thumbs
+	 * @internal
+	 */
+	protected function plan(): Plan|null
+	{
+		if ($this->plan === null) {
+			$file = $this->original;
+
+			if ($this->original instanceof File === true) {
+				$file = $this->original->asset();
+			}
+
+			$source = $file->source();
+
+			$this->plan = match ($source) {
+				null    => false,
+				default => $this->kirby()->darkroom()->tryPlan($source, $this->options) ?? false
+			};
+		}
+
+		return $this->plan !== false ? $this->plan : null;
 	}
 
 	/**
@@ -123,8 +224,7 @@ class FileVersion extends FilesystemFile
 	}
 
 	/**
-	 * Applies the stored modifications and
-	 * saves the file on disk
+	 * Makes the thumb
 	 *
 	 * @return $this
 	 */
@@ -133,11 +233,11 @@ class FileVersion extends FilesystemFile
 		$this->kirby()->thumb(
 			$this->original()->root(),
 			$this->root,
-			$this->modifications()
+			$this->options()
 		);
 
 		// like `Media::thumb()`, as the job is done
-		F::remove(dirname($this->root) . '/.jobs/' . basename($this->root) . '.json');
+		Media::dequeue($this->root);
 
 		return $this;
 	}
@@ -151,19 +251,11 @@ class FileVersion extends FilesystemFile
 	{
 		$array = [
 			...parent::toArray(),
-			'modifications' => $this->modifications()
+			'options' => $this->options()
 		];
 
 		ksort($array);
 
 		return $array;
-	}
-
-	/**
-	 * Returns the file type without generating the version
-	 */
-	public function type(): string|null
-	{
-		return F::type($this->root ?? $this->url());
 	}
 }

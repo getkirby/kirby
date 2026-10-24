@@ -197,8 +197,7 @@ class FileTest extends TestCase
 	public function testDimensions(): void
 	{
 		$file = $this->_file('cat.jpg');
-		$this->assertInstanceOf(Dimensions::class, $file->dimensions());
-		$this->assertSame(500, $file->dimensions()->width());
+		$this->assertEquals(new Dimensions(500, 500), $file->dimensions());
 
 		// cached object
 		$this->assertSame($file->dimensions(), $file->dimensions());
@@ -206,6 +205,9 @@ class FileTest extends TestCase
 		// files without visual dimensions
 		$this->assertNull($this->_file('blank.pdf')->dimensions());
 		$this->assertNull($this->_file('test.js')->dimensions());
+
+		// an image whose size can't be read
+		$this->assertEquals(new Dimensions(0, 0), $this->_file('missing.jpg')->dimensions());
 	}
 
 	public function testDownload(): void
