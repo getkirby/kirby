@@ -751,6 +751,8 @@ class Str
 
 	/**
 	 * Get a character pool with various possible combinations
+	 *
+	 * @return ($array is true ? list<string> : string)
 	 */
 	public static function pool(
 		string|array $type,
@@ -767,10 +769,10 @@ class Str
 				'alphalower' => range('a', 'z'),
 				'alphaupper' => range('A', 'Z'),
 				'alpha'      => static::pool(['alphaLower', 'alphaUpper']),
-				'num'        => range(0, 9),
+				'num'        => str_split('0123456789'),
 				'alphanum'   => static::pool(['alpha', 'num']),
-				'base32'     => [...static::pool('alphaUpper'), ...range(2, 7)],
-				'base32hex'  => [...range(0, 9), ...range('A', 'V')],
+				'base32'     => [...static::pool('alphaUpper'), ...str_split('234567')],
+				'base32hex'  => [...static::pool('num'), ...range('A', 'V')],
 				default      => []
 			};
 		}
