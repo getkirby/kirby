@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "@test/unit";
-import { mount } from "@vue/test-utils";
+import { flushPromises, mount } from "@vue/test-utils";
 import Button from "./Button.vue";
 
 describe("Button.vue", () => {
@@ -83,6 +83,83 @@ describe("Button.vue", () => {
 		});
 	});
 
+	describe("request prop", () => {
+		function panel(json: unknown = {}) {
+			return {
+				act: vi.fn(),
+				request: vi.fn().mockResolvedValue({ response: { json } })
+			};
+		}
+
+		it("calls a function", async () => {
+			const request = vi.fn().mockResolvedValue("done");
+			const wrapper = mount(Button, { props: { request } });
+			await wrapper.trigger("click");
+			await flushPromises();
+			expect(request).toHaveBeenCalled();
+			expect(wrapper.emitted("click")).toBeUndefined();
+		});
+
+		it("passes the options of an object", async () => {
+			const $panel = panel();
+			const wrapper = mount(Button, {
+				props: {
+					request: { url: "my/endpoint", method: "DELETE", query: { a: "b" } }
+				},
+				global: { mocks: { $panel } }
+			});
+			await wrapper.trigger("click");
+			expect($panel.request).toHaveBeenCalledWith("my/endpoint", {
+				external: false,
+				method: "DELETE",
+				query: { a: "b" }
+			});
+		});
+
+		it("refuses URLs with dot segments", async () => {
+			const $panel = { ...panel(), error: vi.fn() };
+			const wrapper = mount(Button, {
+				props: { request: "shop/sync/../../../api/pages/a" },
+				global: { mocks: { $panel } }
+			});
+			await wrapper.trigger("click");
+			await flushPromises();
+			expect($panel.request).not.toHaveBeenCalled();
+			expect($panel.error.mock.calls[0][0].message).toStrictEqual(
+				"Invalid request URL: shop/sync/../../../api/pages/a"
+			);
+		});
+
+		it("sends a POST request to a Panel path", async () => {
+			const $panel = panel();
+			const wrapper = mount(Button, {
+				props: { request: "my/endpoint" },
+				global: { mocks: { $panel } }
+			});
+			await wrapper.trigger("click");
+			expect($panel.request).toHaveBeenCalledWith("my/endpoint", {
+				external: false,
+				method: "POST"
+			});
+			expect(wrapper.emitted("click")).toBeUndefined();
+		});
+
+		it("sends absolute URLs as external requests", async () => {
+			const $panel = panel();
+			const wrapper = mount(Button, {
+				props: {
+					request: { url: "https://example.com/hook", external: false }
+				},
+				global: { mocks: { $panel } }
+			});
+			await wrapper.trigger("click");
+			expect($panel.request).toHaveBeenCalledWith("https://example.com/hook", {
+				external: true,
+				method: "POST"
+			});
+		});
+	});
+
 	describe("selected prop", () => {
 		it("renders as aria-selected attribute", () => {
 			const wrapper = mount(Button, { props: { selected: true } });
@@ -162,6 +239,96 @@ describe("Button.vue", () => {
 		});
 	});
 
+	// methods
+	describe("send()", () => {
+		it("acts on the response of a Panel route", async () => {
+			const json = { message: "Synced" };
+			const $panel = {
+				act: vi.fn(),
+				request: vi.fn().mockResolvedValue({ response: { json } })
+			};
+			const wrapper = mount(Button, {
+				props: { request: "shop/sync" },
+				global: { mocks: { $panel } }
+			});
+			await wrapper.vm.send();
+			expect($panel.act).toHaveBeenCalledWith(json);
+		});
+
+		it("disables the button and shows a loader while sending", async () => {
+			let resolve: (value: unknown) => void = () => {};
+			const request = vi.fn(() => new Promise((r) => (resolve = r)));
+			const wrapper = mount(Button, {
+				props: { icon: "trash", request: "my/endpoint" },
+				global: { mocks: { $panel: { act: vi.fn(), request } } }
+			});
+
+			await wrapper.trigger("click");
+			expect(wrapper.attributes("aria-busy")).toBe("true");
+			expect(wrapper.attributes("aria-disabled")).toBe("true");
+			expect(wrapper.find("k-icon").attributes("type")).toBe("loader");
+
+			await wrapper.trigger("click");
+			expect(request).toHaveBeenCalledTimes(1);
+
+			resolve({ response: { json: {} } });
+			await flushPromises();
+			expect(wrapper.attributes("aria-busy")).toBeUndefined();
+			expect(wrapper.attributes("aria-disabled")).toBeUndefined();
+			expect(wrapper.find("k-icon").attributes("type")).toBe("trash");
+		});
+
+		it("ignores actions from absolute URLs and functions", async () => {
+			const json = { message: "Hello", redirect: "https://example.com" };
+			const $panel = {
+				act: vi.fn(),
+				request: vi.fn().mockResolvedValue({ response: { json } })
+			};
+
+			for (const request of ["https://example.com/hook", () => json]) {
+				const wrapper = mount(Button, {
+					props: { request },
+					global: { mocks: { $panel } }
+				});
+				await wrapper.vm.send();
+			}
+
+			expect($panel.act).not.toHaveBeenCalled();
+		});
+
+		it("reports errors and resets", async () => {
+			const error = new Error("Request failed");
+			const $panel = {
+				error: vi.fn(),
+				request: vi.fn().mockRejectedValue(error)
+			};
+			const wrapper = mount(Button, {
+				props: { request: "my/endpoint" },
+				global: { mocks: { $panel } }
+			});
+
+			expect(await wrapper.vm.send()).toBeUndefined();
+			expect($panel.error).toHaveBeenCalledWith(error);
+			expect(wrapper.attributes("aria-busy")).toBeUndefined();
+		});
+
+		it("returns the response", async () => {
+			const wrapper = mount(Button, {
+				props: { request: () => "done" }
+			});
+			expect(await wrapper.vm.send()).toBe("done");
+		});
+
+		it("shows a loader without icon", async () => {
+			const wrapper = mount(Button, {
+				props: { request: () => new Promise(() => {}) }
+			});
+			expect(wrapper.find(".k-button-icon").exists()).toBe(false);
+			await wrapper.trigger("click");
+			expect(wrapper.find("k-icon").attributes("type")).toBe("loader");
+		});
+	});
+
 	// events
 	describe("click event", () => {
 		it("emits click when clicked", async () => {
@@ -201,6 +368,44 @@ describe("Button.vue", () => {
 			});
 			await wrapper.trigger("click");
 			expect(open).toHaveBeenCalledWith("my-drawer");
+		});
+	});
+
+	describe("success event", () => {
+		it("emits the response json", async () => {
+			const request = vi.fn().mockResolvedValue({
+				response: { json: { status: "ok" }, text: '{"status":"ok"}' }
+			});
+			const wrapper = mount(Button, {
+				props: { request: "my/endpoint" },
+				global: { mocks: { $panel: { act: vi.fn(), request } } }
+			});
+			await wrapper.trigger("click");
+			await flushPromises();
+			expect(wrapper.emitted("success")).toStrictEqual([[{ status: "ok" }]]);
+		});
+
+		it("emits the response text without json", async () => {
+			const request = vi.fn().mockResolvedValue({
+				response: { json: null, text: "OK" }
+			});
+			const wrapper = mount(Button, {
+				props: { request: "https://example.com/hook" },
+				global: { mocks: { $panel: { act: vi.fn(), request } } }
+			});
+			await wrapper.trigger("click");
+			await flushPromises();
+			expect(wrapper.emitted("success")).toStrictEqual([["OK"]]);
+		});
+
+		it("is not emitted when the request fails", async () => {
+			const wrapper = mount(Button, {
+				props: { request: () => Promise.reject(new Error("Nope")) },
+				global: { mocks: { $panel: { error: vi.fn() } } }
+			});
+			await wrapper.trigger("click");
+			await flushPromises();
+			expect(wrapper.emitted("success")).toBeUndefined();
 		});
 	});
 
