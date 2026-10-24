@@ -270,7 +270,7 @@ abstract class Model
 		$srcset = [];
 
 		foreach ($sizes as $size) {
-			$srcset[$size . 'w'] = [
+			$srcset[] = [
 				'width'  => $size,
 				'height' => round($size / $ratio),
 				'crop'   => true
