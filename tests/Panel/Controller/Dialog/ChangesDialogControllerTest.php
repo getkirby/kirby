@@ -143,12 +143,12 @@ class ChangesDialogControllerTest extends TestCase
 		$this->app->file('file://file-secret')->version('changes')->save(['alt' => 'Secret']);
 
 		// kirby sees all files
-		$files = (new ChangesDialogController())->files();
+		$files = new ChangesDialogController()->files();
 		$this->assertCount(2, $files);
 
 		// editor cannot list the secret file
 		$this->app->impersonate('editor@getkirby.com');
-		$files = (new ChangesDialogController())->files();
+		$files = new ChangesDialogController()->files();
 		$this->assertCount(1, $files);
 		$this->assertSame('public.jpg', (string)$files[0]['text']);
 	}
@@ -266,12 +266,12 @@ class ChangesDialogControllerTest extends TestCase
 		$this->app->page('page://page-secret')->version('changes')->save([]);
 
 		// kirby sees all pages
-		$pages = (new ChangesDialogController())->pages();
+		$pages = new ChangesDialogController()->pages();
 		$this->assertCount(2, $pages);
 
 		// editor cannot list the secret page
 		$this->app->impersonate('editor@getkirby.com');
-		$pages = (new ChangesDialogController())->pages();
+		$pages = new ChangesDialogController()->pages();
 		$this->assertCount(1, $pages);
 		$this->assertSame('public', (string)$pages[0]['text']);
 	}
@@ -339,12 +339,12 @@ class ChangesDialogControllerTest extends TestCase
 		$this->app->user('user://restricted')->version('changes')->save([]);
 
 		// kirby sees all users
-		$users = (new ChangesDialogController())->users();
+		$users = new ChangesDialogController()->users();
 		$this->assertCount(2, $users);
 
 		// editor cannot list the restricted user
 		$this->app->impersonate('editor@getkirby.com');
-		$users = (new ChangesDialogController())->users();
+		$users = new ChangesDialogController()->users();
 		$this->assertCount(1, $users);
 		$this->assertSame('editor@getkirby.com', (string)$users[0]['text']);
 	}

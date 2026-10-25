@@ -5,6 +5,7 @@ namespace Kirby\Database;
 use Kirby\Database\Sql\Sqlite;
 use Kirby\Exception\InvalidArgumentException;
 use PDO;
+use Pdo\Sqlite as PdoSqlite;
 use PDOException;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -263,9 +264,7 @@ class DatabaseTest extends TestCase
 	{
 		// driver-specific methods like `createFunction()`
 		// are only available on the driver's subclass
-		// TODO: only expect `Pdo\Sqlite` once PHP 8.4 is required
-		$expected = PHP_VERSION_ID >= 80400 ? 'Pdo\Sqlite' : PDO::class;
-		$this->assertSame($expected, $this->database->connection()::class);
+		$this->assertSame(PdoSqlite::class, $this->database->connection()::class);
 	}
 
 	public function testFail(): void

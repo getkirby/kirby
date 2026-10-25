@@ -44,7 +44,7 @@ class Category
 		// all core lab examples from `kirby/panel/lab`
 		$examples = A::map(
 			Inventory::for(static::base())['children'],
-			fn ($props) => (new static($props['dirname']))->toArray()
+			fn ($props) => new static($props['dirname'])->toArray()
 		);
 
 		// all custom lab examples from `site/lab`

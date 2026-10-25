@@ -299,7 +299,7 @@ class Uri implements Stringable
 			$url = $app->url('index');
 		}
 
-		$url ??= (new Environment())->baseUrl();
+		$url ??= new Environment()->baseUrl();
 
 		return new static($url, $props);
 	}

@@ -807,7 +807,7 @@ class PageCreateDialogControllerTest extends TestCase
 	{
 		$this->app->impersonate('kirby');
 
-		$uuid = (new PageCreateDialogController())->value()['uuid'];
+		$uuid = new PageCreateDialogController()->value()['uuid'];
 
 		$this->app = $this->app->clone([
 			'request' => [

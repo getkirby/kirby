@@ -1474,7 +1474,7 @@ class DomTest extends TestCase
 		if ($nodeNS !== null) {
 			$element = new DOMElement($nodeName, null, $nodeNS);
 		} else {
-			$element = (new DOMDocument())->createElement($nodeName);
+			$element = new DOMDocument()->createElement($nodeName);
 		}
 
 		$options = ['allowedNamespaces' => $allowedNamespaces];

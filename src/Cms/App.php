@@ -644,7 +644,7 @@ class App
 	public function email(mixed $preset = [], array $props = []): BaseEmail
 	{
 		$debug = $props['debug'] ?? false;
-		$props = (new Email($preset, $props))->toArray();
+		$props = new Email($preset, $props)->toArray();
 
 		return ($this->component('email'))($this, $props, $debug);
 	}
@@ -873,7 +873,7 @@ class App
 		$data['site']   ??= $data['kirby']->site();
 		$data['parent'] ??= $data['site']->page();
 
-		return (new KirbyTag($type, $value, $attr, $data))->render();
+		return new KirbyTag($type, $value, $attr, $data)->render();
 	}
 
 	/**
@@ -1269,7 +1269,7 @@ class App
 		$this->setCurrentLanguage($language);
 
 		try {
-			return (new Resolver($this))->resolve($path);
+			return new Resolver($this)->resolve($path);
 		} catch (NotFoundException) {
 			// an unresolvable path resolves to null, so the router falls
 			// through to the error page (the old resolver behavior);
@@ -1290,7 +1290,7 @@ class App
 		}
 
 		// the file redirect logic is owned by the resolver
-		if ((new Resolver($this))->isResolvableFile($file) === true) {
+		if (new Resolver($this)->isResolvableFile($file) === true) {
 			return $file;
 		}
 

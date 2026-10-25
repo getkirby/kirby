@@ -120,7 +120,7 @@ class UserCredentialDrawerControllerTest extends TestCase
 	{
 		$secret = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
 		$this->app->user('test')->changeSecret('totp', $secret);
-		return (new Totp($secret))->generate();
+		return new Totp($secret)->generate();
 	}
 
 	public function testAuthorization(): void

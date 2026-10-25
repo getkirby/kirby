@@ -128,7 +128,7 @@ class UserEmailChallengeDrawerControllerTest extends TestCase
 		$this->setRequest(['action' => 'code']);
 		$this->app->impersonate('test');
 
-		$result = (new UserEmailChallengeDrawerController($this->app->user('test')))->submit();
+		$result = new UserEmailChallengeDrawerController($this->app->user('test'))->submit();
 
 		$this->assertTrue($result);
 		$this->assertCount(1, Email::$emails);
@@ -153,7 +153,7 @@ class UserEmailChallengeDrawerControllerTest extends TestCase
 		$this->setRequest(['action' => 'code']);
 		$this->app->impersonate('test');
 
-		(new UserEmailChallengeDrawerController($this->app->user('test')))->submit();
+		new UserEmailChallengeDrawerController($this->app->user('test'))->submit();
 
 		// sending the code is a metered side effect, so it has to
 		// consume budget like any other challenge creation
@@ -196,10 +196,10 @@ class UserEmailChallengeDrawerControllerTest extends TestCase
 		$this->app->impersonate('test');
 
 		$user = $this->app->user('test');
-		(new UserEmailChallengeDrawerController($user))->submit();
+		new UserEmailChallengeDrawerController($user)->submit();
 
 		try {
-			(new UserEmailChallengeDrawerController($user))->submit();
+			new UserEmailChallengeDrawerController($user)->submit();
 			$this->fail('Expected RateLimitException');
 		} catch (RateLimitException) {
 			// expected
@@ -219,7 +219,7 @@ class UserEmailChallengeDrawerControllerTest extends TestCase
 		$this->app->impersonate('test');
 		$this->storeCode();
 
-		$result = (new UserEmailChallengeDrawerController($this->app->user('test')))->submit();
+		$result = new UserEmailChallengeDrawerController($this->app->user('test'))->submit();
 
 		$this->assertTrue($result);
 		$this->assertTrue($this->app->user('test')->secret('email'));
@@ -254,7 +254,7 @@ class UserEmailChallengeDrawerControllerTest extends TestCase
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionCode('error.access.code');
 
-		(new UserEmailChallengeDrawerController($this->app->user('test')))->submit();
+		new UserEmailChallengeDrawerController($this->app->user('test'))->submit();
 	}
 
 	public function testSubmitCreateWithoutCode(): void
@@ -270,7 +270,7 @@ class UserEmailChallengeDrawerControllerTest extends TestCase
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionCode('error.access.code');
 
-		(new UserEmailChallengeDrawerController($this->app->user('test')))->submit();
+		new UserEmailChallengeDrawerController($this->app->user('test'))->submit();
 	}
 
 	public function testSubmitRemoveAsAccount(): void
@@ -286,7 +286,7 @@ class UserEmailChallengeDrawerControllerTest extends TestCase
 		$this->app->impersonate('test');
 		$this->storeCode();
 
-		$result = (new UserEmailChallengeDrawerController($this->app->user('test')))->submit();
+		$result = new UserEmailChallengeDrawerController($this->app->user('test'))->submit();
 
 		$this->assertTrue($result);
 		$this->assertNull($this->app->user('test')->secret('email'));
@@ -306,7 +306,7 @@ class UserEmailChallengeDrawerControllerTest extends TestCase
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionCode('error.access.code');
 
-		(new UserEmailChallengeDrawerController($this->app->user('test')))->submit();
+		new UserEmailChallengeDrawerController($this->app->user('test'))->submit();
 	}
 
 	public function testSubmitRemoveAsAdmin(): void
@@ -321,7 +321,7 @@ class UserEmailChallengeDrawerControllerTest extends TestCase
 		]);
 		$this->app->impersonate('admin');
 
-		$result = (new UserEmailChallengeDrawerController($this->app->user('test')))->submit();
+		$result = new UserEmailChallengeDrawerController($this->app->user('test'))->submit();
 
 		$this->assertTrue($result);
 		$this->assertNull($this->app->user('test')->secret('email'));
@@ -340,7 +340,7 @@ class UserEmailChallengeDrawerControllerTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionCode('error.user.password.wrong');
 
-		(new UserEmailChallengeDrawerController($this->app->user('test')))->submit();
+		new UserEmailChallengeDrawerController($this->app->user('test'))->submit();
 	}
 
 	public function testSubmitWithInvalidAction(): void
@@ -351,6 +351,6 @@ class UserEmailChallengeDrawerControllerTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid action: nope');
 
-		(new UserEmailChallengeDrawerController($this->app->user('test')))->submit();
+		new UserEmailChallengeDrawerController($this->app->user('test'))->submit();
 	}
 }

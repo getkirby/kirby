@@ -236,7 +236,7 @@ class PageTest extends TestCase
 			]
 		]);
 
-		$image = (new Page($page))->image();
+		$image = new Page($page)->image();
 		$this->assertSame('test', $image['icon']);
 	}
 
@@ -248,7 +248,7 @@ class PageTest extends TestCase
 			'parent' => $parent
 		]);
 
-		$id = (new Page($page))->id();
+		$id = new Page($page)->id();
 		$this->assertSame('foo+bar', $id);
 	}
 
@@ -264,7 +264,7 @@ class PageTest extends TestCase
 		]);
 
 		// fallback to model itself
-		$image = (new Page($page))->image();
+		$image = new Page($page)->image();
 		$this->assertTrue(Str::endsWith($image['url'], '/test.jpg'));
 	}
 
@@ -278,7 +278,7 @@ class PageTest extends TestCase
 			]
 		]);
 
-		$image = (new Page($page))->image();
+		$image = new Page($page)->image();
 		$this->assertSame($emoji, $image['icon']);
 	}
 

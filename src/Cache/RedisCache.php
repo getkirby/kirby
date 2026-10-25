@@ -203,7 +203,7 @@ class RedisCache extends Cache
 	public function set(string $key, $value, int $minutes = 0): bool
 	{
 		$key   = $this->key($key);
-		$value = (new Value($value, $minutes))->toJson();
+		$value = new Value($value, $minutes)->toJson();
 
 		if ($minutes > 0) {
 			$result = $this->connection->setex($key, $minutes * 60, $value);

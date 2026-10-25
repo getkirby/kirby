@@ -159,15 +159,13 @@ class DimensionsTest extends TestCase
 		$this->assertSame(600, $dimensions->width());
 		$this->assertSame(400, $dimensions->height());
 
-		if (version_compare(phpversion(), '8.2.0') >= 0) {
-			$image = new Image([
-				'root' => __DIR__ . '/fixtures/image/onigiri-adobe-rgb-gps.avif'
-			]);
+		$image = new Image([
+			'root' => __DIR__ . '/fixtures/image/onigiri-adobe-rgb-gps.avif'
+		]);
 
-			$dimensions = Dimensions::forImage($image);
-			$this->assertSame(600, $dimensions->width());
-			$this->assertSame(400, $dimensions->height());
-		}
+		$dimensions = Dimensions::forImage($image);
+		$this->assertSame(600, $dimensions->width());
+		$this->assertSame(400, $dimensions->height());
 	}
 
 	public static function imageOrientationProvider(): array

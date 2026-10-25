@@ -71,12 +71,12 @@ class CollectionTest extends TestCase
 			]
 		]);
 
-		$this->assertSame('collection test', (new Collection())->test());
+		$this->assertSame('collection test', new Collection()->test());
 		$this->assertSame('collection test', $kirby->site()->children()->test());
 
 		Pages::$methods['test'] = fn () => 'pages test';
 
-		$this->assertSame('collection test', (new Collection())->test());
+		$this->assertSame('collection test', new Collection()->test());
 		$this->assertSame('pages test', $kirby->site()->children()->test());
 
 		Collection::$methods = [];

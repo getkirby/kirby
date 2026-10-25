@@ -376,7 +376,7 @@ class Normalizer
 		mixed $fields,
 		FieldsRegistry|null $definitions = null
 	): array {
-		return (new FieldsRegistry())->add(static::expand($fields, $definitions));
+		return new FieldsRegistry()->add(static::expand($fields, $definitions));
 	}
 
 	/**

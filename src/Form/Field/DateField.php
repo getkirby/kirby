@@ -150,7 +150,7 @@ class DateField extends DateTimeField
 			'model' => $this->model()
 		];
 
-		return (new TimeField(...$props))->toArray();
+		return new TimeField(...$props)->toArray();
 	}
 
 	protected function validations(): array

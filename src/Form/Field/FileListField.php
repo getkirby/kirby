@@ -130,7 +130,7 @@ class FileListField extends ModelListField
 	 */
 	public function toItem(ModelWithContent $model): array
 	{
-		return (new FileItem(
+		return new FileItem(
 			file:               $model,
 			// the link is only set when the files come from another model
 			dragTextIsAbsolute: $this->link() !== null,
@@ -138,7 +138,7 @@ class FileListField extends ModelListField
 			info:               $this->info(),
 			layout:             $this->layout(),
 			text:               $this->text(),
-		))->props();
+		)->props();
 	}
 
 	/**

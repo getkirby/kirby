@@ -23,7 +23,7 @@ class ResolverTest extends TestCase
 	protected function assertResolveNotFound(App $app, string|null $path): void
 	{
 		try {
-			(new Resolver($app))->resolve($path);
+			new Resolver($app)->resolve($path);
 			$this->fail('Expected a NotFoundException for path: ' . ($path ?? 'null'));
 		} catch (NotFoundException) {
 			$this->assertTrue(true);
@@ -32,7 +32,7 @@ class ResolverTest extends TestCase
 
 	protected function resolve(App $app, string|null $path = null): mixed
 	{
-		return (new Resolver($app))->resolve($path);
+		return new Resolver($app)->resolve($path);
 	}
 
 	public function testResolveHomePage(): void
@@ -694,14 +694,14 @@ class ResolverTest extends TestCase
 
 		// disabled by default
 		$app = $this->app->clone($props);
-		$this->assertFalse((new Resolver($app))->isResolvableFile($app->site()->file('public.jpg')));
+		$this->assertFalse(new Resolver($app)->isResolvableFile($app->site()->file('public.jpg')));
 
 		// enabled for all files
 		$app = $this->app->clone([
 			...$props,
 			'options' => ['content' => ['fileRedirects' => true]]
 		]);
-		$this->assertTrue((new Resolver($app))->isResolvableFile($app->site()->file('public.jpg')));
+		$this->assertTrue(new Resolver($app)->isResolvableFile($app->site()->file('public.jpg')));
 
 		// enabled per file through a closure
 		$app = $this->app->clone([

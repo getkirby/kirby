@@ -334,7 +334,7 @@ class Url
 			return $url;
 		}
 
-		return (new Uri($url, $options))->toString();
+		return new Uri($url, $options)->toString();
 	}
 
 	/**

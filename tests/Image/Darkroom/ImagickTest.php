@@ -372,7 +372,7 @@ class ImagickTest extends TestCase
 		// a black square moves from left to right
 		$squares = [];
 
-		foreach ((new Image($file))->coalesceImages() as $frame) {
+		foreach (new Image($file)->coalesceImages() as $frame) {
 			$this->assertSame(50, $frame->getImageWidth());
 			$this->assertSame(30, $frame->getImageHeight());
 
@@ -393,7 +393,7 @@ class ImagickTest extends TestCase
 			$file = static::TMP . '/animated.webp'
 		);
 
-		if ((new Image($file))->getNumberImages() !== 3) {
+		if (new Image($file)->getNumberImages() !== 3) {
 			$this->markTestSkipped('ImageMagick cannot read animated WebP');
 		}
 
@@ -407,7 +407,7 @@ class ImagickTest extends TestCase
 		// a black square moves from left to right
 		$squares = [];
 
-		foreach ((new Image($file))->coalesceImages() as $frame) {
+		foreach (new Image($file)->coalesceImages() as $frame) {
 			$this->assertSame(50, $frame->getImageWidth());
 			$this->assertSame(30, $frame->getImageHeight());
 
@@ -439,7 +439,7 @@ class ImagickTest extends TestCase
 
 		$gray = [];
 
-		foreach ((new Image($file))->coalesceImages() as $frame) {
+		foreach (new Image($file)->coalesceImages() as $frame) {
 			$gray[] = $frame->getImagePixelColor(5, 5)->getColor(true)['r'];
 		}
 

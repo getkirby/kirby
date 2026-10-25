@@ -278,7 +278,7 @@ class DateTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('At least one datetime must be provided');
 
-		(new Date('2021-12-12'))->nearest();
+		new Date('2021-12-12')->nearest();
 	}
 
 	public function testNow(): void

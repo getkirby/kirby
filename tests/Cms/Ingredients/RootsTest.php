@@ -63,7 +63,7 @@ class RootsTest extends TestCase
 		// fake the default behavior for this test
 		Core::$indexRoot = null;
 
-		$roots = (new App())->roots();
+		$roots = new App()->roots();
 
 		$this->assertSame($root, $roots->$method());
 	}

@@ -500,13 +500,13 @@ class Collection extends Iterator implements Stringable
 		if (isset($cache[$key]) === false) {
 			if (method_exists($object, $attribute) === true) {
 				// explicit PHP method: check for #[BlockCollectionAccess] via reflection
-				$cache[$key] = (new ReflectionMethod($object, $attribute))
+				$cache[$key] = new ReflectionMethod($object, $attribute)
 					->getAttributes(BlockCollectionAccess::class) === [];
 			} elseif (method_exists($object, 'hasMethod') === true && $object->hasMethod($attribute) === true) {
 				// closure registered via HasMethods::$methods: check the closure's attributes
 				$closure = $object->getMethod($attribute);
 				$cache[$key] = $closure === null ||
-					(new ReflectionFunction($closure))
+					new ReflectionFunction($closure)
 						->getAttributes(BlockCollectionAccess::class) === [];
 			} else {
 				// no PHP method and no registered closure (e.g. a CMS content field

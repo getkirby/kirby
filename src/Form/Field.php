@@ -169,7 +169,7 @@ abstract class Field implements Stringable
 	public function props(): array
 	{
 		return [
-			...(new Props($this))->values(),
+			...new Props($this)->values(),
 			'hidden'   => $this->isHidden(),
 			'saveable' => $this->hasValue(),
 		];
@@ -250,7 +250,7 @@ abstract class Field implements Stringable
 		}
 
 		// all props from the blueprint are passed to the constructor
-		if ((new ReflectionMethod($class, '__construct'))->isVariadic() === false) {
+		if (new ReflectionMethod($class, '__construct')->isVariadic() === false) {
 			throw new InvalidArgumentException(
 				message: 'The constructor of "' . $class . '" must accept ' .
 				'all other props as `mixed ...$args` and pass them on ' .

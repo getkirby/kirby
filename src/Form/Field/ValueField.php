@@ -27,7 +27,7 @@ abstract class ValueField extends Field
 	 */
 	public function emptyValue(): mixed
 	{
-		return (new ReflectionProperty($this, 'value'))->getDefaultValue();
+		return new ReflectionProperty($this, 'value')->getDefaultValue();
 	}
 
 	/**

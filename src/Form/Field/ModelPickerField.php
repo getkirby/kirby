@@ -112,20 +112,20 @@ abstract class ModelPickerField extends InputField
 							// keep a model that does not exist (anymore)
 							// in the value, so that it can be removed
 							if ($model === null) {
-								return (new MissingItem(
+								return new MissingItem(
 									$id,
 									layout: $field->layout()
-								))->props();
+								)->props();
 							}
 
 							// never disclose a model the current user must not
 							// list, but keep its ID to not drop it from the value
 							return match ($model->isListable()) {
 								true  => $field->toItem($model),
-								false => (new ProtectedItem(
+								false => new ProtectedItem(
 									$id,
 									layout: $field->layout()
-								))->props()
+								)->props()
 							};
 						}
 					);

@@ -266,12 +266,12 @@ class PageListField extends ModelListField implements ProvidesAcceptedBlueprints
 	 */
 	public function toItem(ModelWithContent $model): array
 	{
-		return (new PageItem(
+		return new PageItem(
 			page:   $model,
 			image:  $this->image(),
 			info:   $this->info(),
 			layout: $this->layout(),
 			text:   $this->text(),
-		))->props();
+		)->props();
 	}
 }

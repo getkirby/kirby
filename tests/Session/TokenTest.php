@@ -82,8 +82,8 @@ class TokenTest extends TestCase
 
 	public function testIsReadonly(): void
 	{
-		$this->assertFalse((new Token(1234567890, 'someId', 'someKey'))->isReadonly());
-		$this->assertTrue((new Token(1234567890, 'someId'))->isReadonly());
+		$this->assertFalse(new Token(1234567890, 'someId', 'someKey')->isReadonly());
+		$this->assertTrue(new Token(1234567890, 'someId')->isReadonly());
 	}
 
 	public function testParse(): void

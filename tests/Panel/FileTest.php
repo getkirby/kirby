@@ -245,7 +245,7 @@ class FileTest extends TestCase
 			'parent'   => $page
 		]);
 
-		$image = (new File($file))->image();
+		$image = new File($file)->image();
 		$this->assertSame('image', $image['icon']);
 		$this->assertSame('orange-500', $image['color']);
 		$this->assertSame('pattern', $image['back']);
@@ -305,7 +305,7 @@ class FileTest extends TestCase
 		]);
 
 		// fallback to model itself
-		$image = (new File($page->file()))->image('foo.bar');
+		$image = new File($page->file())->image('foo.bar');
 		$this->assertNotEmpty($image);
 	}
 
@@ -378,7 +378,7 @@ class FileTest extends TestCase
 			'parent'   => $page,
 		]);
 
-		$this->assertFalse((new File($file))->isFocusable());
+		$this->assertFalse(new File($file)->isFocusable());
 
 		// default for images (viewable)
 		$file = new ModelFile([
@@ -387,7 +387,7 @@ class FileTest extends TestCase
 		]);
 		$file->kirby()->impersonate('kirby');
 
-		$this->assertTrue((new File($file))->isFocusable());
+		$this->assertTrue(new File($file)->isFocusable());
 
 		// default for others (not viewable)
 		$file = new ModelFile([
@@ -396,7 +396,7 @@ class FileTest extends TestCase
 		]);
 		$file->kirby()->impersonate('kirby');
 
-		$this->assertFalse((new File($file))->isFocusable());
+		$this->assertFalse(new File($file)->isFocusable());
 
 		// blueprint option: false
 		$file = new ModelFile([
@@ -406,7 +406,7 @@ class FileTest extends TestCase
 		]);
 		$file->kirby()->impersonate('kirby');
 
-		$this->assertFalse((new File($file))->isFocusable());
+		$this->assertFalse(new File($file)->isFocusable());
 
 		// editing secondary language
 		$app = $this->app->clone([
@@ -432,7 +432,7 @@ class FileTest extends TestCase
 		]);
 		$file->kirby()->impersonate('kirby');
 
-		$this->assertFalse((new File($file))->isFocusable());
+		$this->assertFalse(new File($file)->isFocusable());
 	}
 
 	public function testOptions(): void

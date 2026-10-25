@@ -73,6 +73,6 @@ class TotpChallenge extends Challenge
 		Pending $data
 	): bool {
 		$secret = $this->user->secret('totp');
-		return (new Totp($secret))->verify($input);
+		return new Totp($secret)->verify($input);
 	}
 }

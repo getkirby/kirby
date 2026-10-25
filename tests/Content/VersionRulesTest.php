@@ -176,7 +176,7 @@ class VersionRulesTest extends TestCase
 		);
 
 		// use a regular version to create in storage, bypassing the lock check
-		(new Version(model: $this->model, id: VersionId::changes()))->save([]);
+		new Version(model: $this->model, id: VersionId::changes())->save([]);
 		$target->save([]);
 
 		$this->expectException(LockedContentException::class);
@@ -234,7 +234,7 @@ class VersionRulesTest extends TestCase
 		);
 
 		// use a regular version to create in storage, bypassing the lock check
-		(new Version(model: $this->model, id: VersionId::changes()))->save([]);
+		new Version(model: $this->model, id: VersionId::changes())->save([]);
 
 		$this->expectException(LockedContentException::class);
 		$this->expectExceptionCode('error.content.lock.publish');
@@ -271,7 +271,7 @@ class VersionRulesTest extends TestCase
 		);
 
 		// use a regular version to create in storage, bypassing the lock check
-		(new Version(model: $this->model, id: VersionId::changes()))->save([]);
+		new Version(model: $this->model, id: VersionId::changes())->save([]);
 
 		$this->expectException(LockedContentException::class);
 		$this->expectExceptionCode('error.content.lock.replace');
@@ -308,7 +308,7 @@ class VersionRulesTest extends TestCase
 		);
 
 		// use a regular version to create in storage, bypassing the lock check
-		(new Version(model: $this->model, id: VersionId::changes()))->save([]);
+		new Version(model: $this->model, id: VersionId::changes())->save([]);
 
 		$this->expectException(LockedContentException::class);
 		$this->expectExceptionCode('error.content.lock.update');

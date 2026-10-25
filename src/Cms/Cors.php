@@ -50,7 +50,7 @@ class Cors
 	 */
 	public static function headers(bool $preflight = false): array
 	{
-		return (new static())->toArray($preflight);
+		return new static()->toArray($preflight);
 	}
 
 	/**

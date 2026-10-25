@@ -21,10 +21,10 @@ class FileSiblingsTest extends ModelTestCase
 
 	protected function files(): Files
 	{
-		return (new Page([
+		return new Page([
 			'slug'  => 'test',
 			'files' => $this->collection(),
-		]))->files();
+		])->files();
 	}
 
 	public function testFiles(): void

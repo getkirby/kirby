@@ -433,7 +433,7 @@ class ResponderTest extends TestCase
 	public function testJsonWithInvalidUtf8(): void
 	{
 		$this->expectException(JsonException::class);
-		(new Responder())->json(['bad' => "\xC3\x28"]);
+		new Responder()->json(['bad' => "\xC3\x28"]);
 	}
 
 	public function testSend(): void

@@ -88,10 +88,10 @@ class OptionsQueryTest extends TestCase
 	public function testResolveForArray(): void
 	{
 		$model   = new MyPage(['slug' => 'a']);
-		$options = (new OptionsQuery(
+		$options = new OptionsQuery(
 			query: 'page.myArray',
 			value: '{{ arrayItem.name }}',
-		))->render($model);
+		)->render($model);
 
 		$this->assertSame('foo', $options[0]['value']);
 		$this->assertSame('bar', $options[1]['value']);
@@ -102,20 +102,20 @@ class OptionsQueryTest extends TestCase
 		$this->assertSame('', (string)$options[0]['text']);
 
 		// with shorter alias
-		$options = (new OptionsQuery(
+		$options = new OptionsQuery(
 			query: 'page.myArray',
 			value: '{{ item.name }}',
-		))->render($model);
+		)->render($model);
 
 		$this->assertSame('foo', $options[0]['value']);
 		$this->assertSame('bar', $options[1]['value']);
 
 		// with non-associative array
-		$options = (new OptionsQuery(
+		$options = new OptionsQuery(
 			query: 'page.mySimpleArray',
 			value: '{{ item.value }}',
 			text:  '{{ item.value }}',
-		))->render($model);
+		)->render($model);
 
 		$this->assertSame('tag1', $options[0]['value']);
 		$this->assertSame('tag2', $options[1]['value']);
@@ -123,9 +123,9 @@ class OptionsQueryTest extends TestCase
 		$this->assertSame('tag3', (string)$options[2]['text']);
 
 		// associative array uses the array key as value by default
-		$options = (new OptionsQuery(
+		$options = new OptionsQuery(
 			query: 'page.myAssocArray',
-		))->render($model);
+		)->render($model);
 
 		$this->assertSame('myValue', $options[0]['value']);
 		$this->assertSame('My text', (string)$options[0]['text']);
@@ -146,19 +146,19 @@ class OptionsQueryTest extends TestCase
 			]
 		]);
 
-		$options = (new OptionsQuery(
+		$options = new OptionsQuery(
 			query: 'page.foo.toStructure',
 			value: '{{ structureItem.name }}',
-		))->render($model);
+		)->render($model);
 
 		$this->assertSame('foo', $options[0]['value']);
 		$this->assertSame('bar', $options[1]['value']);
 
 		// with shorter alias
-		$options = (new OptionsQuery(
+		$options = new OptionsQuery(
 			query: 'page.foo.toStructure',
 			value: '{{ item.name }}',
-		))->render($model);
+		)->render($model);
 
 		$this->assertSame('foo', $options[0]['value']);
 		$this->assertSame('bar', $options[1]['value']);
@@ -176,11 +176,11 @@ class OptionsQueryTest extends TestCase
 			]
 		]);
 
-		$options = (new OptionsQuery(
+		$options = new OptionsQuery(
 			query: 'page.foo.toBlocks',
 			text: '{{ block.type }}',
 			value: '{{ block.headline }}',
-		))->render($model);
+		)->render($model);
 
 		$this->assertSame('image', (string)$options[0]['text']);
 		$this->assertSame('foo', $options[0]['value']);
@@ -282,7 +282,7 @@ class OptionsQueryTest extends TestCase
 			]
 		]);
 
-		$options = (new OptionsQuery('site.children'))->render($app->site());
+		$options = new OptionsQuery('site.children')->render($app->site());
 
 		$this->assertSame('{{ page.slug }}', (string)$options[0]['text']);
 	}
@@ -300,7 +300,7 @@ class OptionsQueryTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid query result data: Kirby\Content\Field');
 
-		$options = (new OptionsQuery('site.foo'))->render($app->site());
+		$options = new OptionsQuery('site.foo')->render($app->site());
 	}
 
 	public function testResolveHtmlEscape(): void
@@ -308,11 +308,11 @@ class OptionsQueryTest extends TestCase
 		$model   = new MyPage(['slug' => 'a']);
 
 		// text escaped by default
-		$options = (new OptionsQuery(
+		$options = new OptionsQuery(
 			query: 'page.myHtmlArray',
 			text: '{{ item.slogan }}',
 			value: '{{ item.slogan }}',
-		))->render($model);
+		)->render($model);
 
 		$this->assertSame('We are &lt;b&gt;great&lt;/b&gt;', (string)$options[0]['text']);
 		$this->assertSame('We are <b>great</b>', $options[0]['value']);
@@ -320,22 +320,22 @@ class OptionsQueryTest extends TestCase
 		$this->assertSame('We are <b>better</b>', $options[1]['value']);
 
 		// text unescaped via {< >}
-		$options = (new OptionsQuery(
+		$options = new OptionsQuery(
 			query: 'page.myHtmlArray',
 			text: '{< item.slogan >}',
 			value: '{{ item.slogan }}'
-		))->render($model);
+		)->render($model);
 		$this->assertSame('We are <b>great</b>', (string)$options[0]['text']);
 		$this->assertSame('We are <b>great</b>', $options[0]['value']);
 		$this->assertSame('We are <b>better</b>', (string)$options[1]['text']);
 		$this->assertSame('We are <b>better</b>', $options[1]['value']);
 
 		// test unescaped with disabled safe mode
-		$options = (new OptionsQuery(
+		$options = new OptionsQuery(
 			query: 'page.myHtmlArray',
 			text: '{{ item.slogan }}',
 			value: '{{ item.slogan }}'
-		))->resolve($model, false)->render($model);
+		)->resolve($model, false)->render($model);
 		$this->assertSame('We are <b>great</b>', (string)$options[0]['text']);
 		$this->assertSame('We are <b>great</b>', $options[0]['value']);
 		$this->assertSame('We are <b>better</b>', (string)$options[1]['text']);

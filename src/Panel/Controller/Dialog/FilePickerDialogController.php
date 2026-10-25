@@ -76,14 +76,14 @@ class FilePickerDialogController extends ModelPickerDialogController
 	 */
 	public function item(ModelWithContent $model): array
 	{
-		return (new FileItem(
+		return new FileItem(
 			file: $model,
 			dragTextIsAbsolute: $model->parent()->is($this->model),
 			image: $this->image,
 			info: $this->info,
 			layout: $this->layout,
 			text: $this->text
-		))->props();
+		)->props();
 	}
 
 	public function query(): string

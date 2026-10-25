@@ -90,7 +90,7 @@ class KirbyTag
 	 */
 	public static function __callStatic(string $type, array $arguments = []): string
 	{
-		return (new static($type, ...$arguments))->render();
+		return new static($type, ...$arguments)->render();
 	}
 
 	public function __get(string $attr)
@@ -112,7 +112,7 @@ class KirbyTag
 
 	public static function factory(...$arguments): string
 	{
-		return (new static(...$arguments))->render();
+		return new static(...$arguments)->render();
 	}
 
 	/**

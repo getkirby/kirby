@@ -154,7 +154,7 @@ class LoginRequestControllerTest extends TestCase
 		]);
 
 		$this->expectException(Redirect::class);
-		(new LoginRequestController('method', 'password'))->load();
+		new LoginRequestController('method', 'password')->load();
 	}
 
 	public function testLoadUnknownType(): void
@@ -231,7 +231,7 @@ class LoginRequestControllerTest extends TestCase
 		$exception = null;
 
 		try {
-			(new LoginRequestController('switch', 'email'))->load();
+			new LoginRequestController('switch', 'email')->load();
 		} catch (Redirect $e) {
 			$exception = $e;
 		}

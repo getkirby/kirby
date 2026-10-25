@@ -98,14 +98,14 @@ class PluginsTest extends TestCase
 
 		// app must be created again to load the new plugins
 		$app    = $this->app->clone();
-		$before = (new Plugins())->js();
+		$before = new Plugins()->js();
 
 		// a rebuild within the same second
 		F::write($this->jsA, 'a2');
 		touch($this->jsA, $time);
 		clearstatcache();
 
-		$this->assertNotSame($before, (new Plugins())->js());
+		$this->assertNotSame($before, new Plugins()->js());
 	}
 
 	public function testResolve(): void

@@ -178,15 +178,6 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
-        'symfony/polyfill-mbstring' => array(
-            'pretty_version' => 'v1.43.0',
-            'version' => '1.43.0.0',
-            'reference' => '4d5d331bf731e0aedbc6b2f5e61135b7b7996a72',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../symfony/polyfill-mbstring',
-            'aliases' => array(),
-            'dev_requirement' => false,
-        ),
         'symfony/yaml' => array(
             'pretty_version' => 'v7.4.21',
             'version' => '7.4.21.0',

@@ -76,7 +76,7 @@ class Page extends Model
 	 */
 	public function dropdown(): array
 	{
-		return (new PageSettingsDropdownController($this->model))->load();
+		return new PageSettingsDropdownController($this->model)->load();
 	}
 
 	/**
@@ -88,7 +88,7 @@ class Page extends Model
 	 */
 	public function dropdownOption(): array
 	{
-		return (new PageItem(page: $this->model))->props() + [
+		return new PageItem(page: $this->model)->props() + [
 			'icon' => 'page'
 		];
 	}
