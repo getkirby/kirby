@@ -83,7 +83,7 @@ class Pagination
 	 * Creates a pagination instance for the given
 	 * collection with a flexible argument api
 	 */
-	public static function for(Collection $collection, ...$arguments): static
+	public static function for(Collection $collection, mixed ...$arguments): static
 	{
 		$a = $arguments[0] ?? null;
 		$b = $arguments[1] ?? null;
@@ -115,18 +115,21 @@ class Pagination
 			$params['limit'] = $a;
 		}
 
-		// add the total count from the collection
 		$params['total'] = $collection->count();
 
-		// remove null values to make later merges work properly
-		$params = array_filter($params);
+		// remove empty values to make later merges work properly
+		$params = array_filter(
+			$params,
+			fn ($value) => $value !== null && $value !== ''
+		);
 
-		// create the pagination instance
 		return new static($params);
 	}
 
 	/**
 	 * Getter for the current page
+	 *
+	 * @return non-negative-int
 	 */
 	public function page(): int
 	{
@@ -135,6 +138,8 @@ class Pagination
 
 	/**
 	 * Getter for the total number of items
+	 *
+	 * @return non-negative-int
 	 */
 	public function total(): int
 	{
@@ -143,6 +148,8 @@ class Pagination
 
 	/**
 	 * Getter for the number of items per page
+	 *
+	 * @return positive-int
 	 */
 	public function limit(): int
 	{
@@ -151,6 +158,8 @@ class Pagination
 
 	/**
 	 * Returns the index of the first item on the page
+	 *
+	 * @return positive-int
 	 */
 	public function start(): int
 	{
@@ -160,15 +169,18 @@ class Pagination
 
 	/**
 	 * Returns the index of the last item on the page
+	 *
+	 * @return non-negative-int
 	 */
 	public function end(): int
 	{
-		$value = min($this->total(), ($this->start() - 1) + $this->limit());
-		return $value;
+		return min($this->total(), ($this->start() - 1) + $this->limit());
 	}
 
 	/**
 	 * Returns the total number of pages
+	 *
+	 * @return non-negative-int
 	 */
 	public function pages(): int
 	{
@@ -181,6 +193,8 @@ class Pagination
 
 	/**
 	 * Returns the first page
+	 *
+	 * @return 0|1
 	 */
 	public function firstPage(): int
 	{
@@ -189,6 +203,8 @@ class Pagination
 
 	/**
 	 * Returns the last page
+	 *
+	 * @return non-negative-int
 	 */
 	public function lastPage(): int
 	{
@@ -197,6 +213,8 @@ class Pagination
 
 	/**
 	 * Returns the offset (i.e. for db queries)
+	 *
+	 * @return non-negative-int
 	 */
 	public function offset(): int
 	{
@@ -208,15 +226,7 @@ class Pagination
 	 */
 	public function hasPage(int $page): bool
 	{
-		if ($page <= 0) {
-			return false;
-		}
-
-		if ($page > $this->pages()) {
-			return false;
-		}
-
-		return true;
+		return $page > 0 && $page <= $this->pages();
 	}
 
 	/**
@@ -237,10 +247,13 @@ class Pagination
 
 	/**
 	 * Returns the previous page
+	 *
+	 * @return positive-int|null
 	 */
 	public function prevPage(): int|null
 	{
-		return $this->hasPrevPage() ? $this->page() - 1 : null;
+		$page = $this->page();
+		return $page > 1 ? $page - 1 : null;
 	}
 
 	/**
@@ -253,6 +266,8 @@ class Pagination
 
 	/**
 	 * Returns the next page
+	 *
+	 * @return positive-int|null
 	 */
 	public function nextPage(): int|null
 	{
@@ -277,7 +292,8 @@ class Pagination
 
 	/**
 	 * Creates a range of page numbers for Google-like pagination
-	 * @return non-empty-list<int>
+	 *
+	 * @return list<positive-int>
 	 */
 	public function range(int $range = 5): array
 	{
@@ -286,8 +302,12 @@ class Pagination
 		$start = 1;
 		$end   = $pages;
 
+		if ($pages === 0) {
+			return [];
+		}
+
 		if ($pages <= $range) {
-			/** @var non-empty-list<int> */
+			/** @var list<positive-int> */
 			return range($start, $end);
 		}
 
@@ -305,25 +325,29 @@ class Pagination
 			$end   = $pages;
 		}
 
-		/** @var non-empty-list<int> */
+		/** @var list<positive-int> */
 		return range($start, $end);
 	}
 
 	/**
 	 * Returns the first page of the created range
+	 *
+	 * @return non-negative-int
 	 */
 	public function rangeStart(int $range = 5): int
 	{
-		return $this->range($range)[0];
+		return $this->range($range)[0] ?? 0;
 	}
 
 	/**
 	 * Returns the last page of the created range
+	 *
+	 * @return non-negative-int
 	 */
 	public function rangeEnd(int $range = 5): int
 	{
 		$range = $this->range($range);
-		return array_pop($range);
+		return array_pop($range) ?? 0;
 	}
 
 	/**
@@ -363,8 +387,8 @@ class Pagination
 	/**
 	 * Sets the current page
 	 *
-	 * @param int|string|null $page Int or int in string form;
-	 *                              automatically determined if null
+	 * @param $page Int or int in string form;
+	 *              automatically determined if null
 	 * @return $this
 	 */
 	protected function setPage(int|string|null $page = null): static

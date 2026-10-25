@@ -359,6 +359,15 @@ class PaginationTest extends TestCase
 		$this->assertSame($end, $pagination->rangeEnd($case['range']));
 	}
 
+	public function testRangeWithoutPages(): void
+	{
+		$pagination = new Pagination(['total' => 0]);
+
+		$this->assertSame([], $pagination->range());
+		$this->assertSame(0, $pagination->rangeStart());
+		$this->assertSame(0, $pagination->rangeEnd());
+	}
+
 	public function testClone(): void
 	{
 		$pagination = new Pagination();
@@ -512,5 +521,21 @@ class PaginationTest extends TestCase
 		$this->assertSame(2, $pagination->page());
 		$this->assertSame(3, $pagination->pages());
 		$this->assertSame(1, $pagination->limit());
+	}
+
+	public function testForWithEmptyPage(): void
+	{
+		$collection = new Collection(['a', 'b', 'c']);
+		$pagination = Pagination::for($collection, 1, ['page' => '']);
+
+		$this->assertSame(1, $pagination->page());
+	}
+
+	public function testForWithZeroLimit(): void
+	{
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Invalid pagination limit: 0');
+
+		Pagination::for(new Collection(['a', 'b', 'c']), 0);
 	}
 }
