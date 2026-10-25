@@ -253,4 +253,16 @@ class XmlTest extends TestCase
 			['tö]]>st', '<![CDATA[tö]]]]><![CDATA[>st]]>']
 		];
 	}
+
+	public function testValueStringable(): void
+	{
+		$value = new class () {
+			public function __toString(): string
+			{
+				return 'Homer';
+			}
+		};
+
+		$this->assertSame('Homer', Xml::value($value));
+	}
 }

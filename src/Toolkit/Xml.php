@@ -435,14 +435,10 @@ class Xml
 	/**
 	 * Properly encodes tag contents
 	 */
-	public static function value($value): string|null
+	public static function value(string|int|float|bool|null $value): string|null
 	{
-		if ($value === true) {
-			return 'true';
-		}
-
-		if ($value === false) {
-			return 'false';
+		if (is_bool($value) === true) {
+			return $value === true ? 'true' : 'false';
 		}
 
 		if (is_numeric($value) === true) {
