@@ -48,8 +48,7 @@ class A
 	/**
 	 * Returns the average value of an array
 	 *
-	 * @param $array The source array
-	 * @param $decimals The number of decimals to return
+	 * @param array<int|float|numeric-string> $array
 	 */
 	public static function average(array $array, int $decimals = 0): float|null
 	{
@@ -62,6 +61,8 @@ class A
 
 	/**
 	 * Counts the number of elements in an array
+	 *
+	 * @return non-negative-int
 	 */
 	public static function count(array $array): int
 	{
@@ -69,19 +70,15 @@ class A
 	}
 
 	/**
-	 * Merges arrays recursively
+	 * Merges arrays recursively; values of the same key are
+	 * combined, not overwritten (use `A::merge()` for that)
 	 *
 	 * ```php
-	 * $defaults = [
-	 *   'username' => 'admin',
-	 *   'password' => 'admin',
-	 * ];
-	 *
-	 * $options = A::extend($defaults, ['password' => 'super-secret']);
-	 * // returns: [
-	 * //   'username' => 'admin',
-	 * //   'password' => 'super-secret'
-	 * // ];
+	 * $array = A::extend(
+	 *   ['tags' => ['php'], 'cms' => 'kirby'],
+	 *   ['tags' => ['js']]
+	 * );
+	 * // returns: ['tags' => ['php', 'js'], 'cms' => 'kirby']
 	 * ```
 	 *
 	 * @psalm-suppress NamedArgumentNotAllowed
@@ -97,13 +94,11 @@ class A
 	 * ```php
 	 * $array = [1, 30, 39, 29, 10, 13];
 	 *
-	 * $isBelowThreshold = fn($value) => $value < 40;
-	 * echo A::every($array, $isBelowThreshold) ? 'true' : 'false';
-	 * // output: 'true'
+	 * echo A::every($array, fn ($value) => $value < 40) ? 'a' : 'b';
+	 * // output: 'a'
 	 *
-	 * $isIntegerKey = fn($value, $key) => is_int($key);
-	 * echo A::every($array, $isIntegerKey) ? 'true' : 'false';
-	 * // output: 'true'
+	 * echo A::every($array, fn ($value, $key) => is_int($key)) ? 'a' : 'b';
+	 * // output: 'a'
 	 * ```
 	 *
 	 * @since 3.9.8
@@ -124,46 +119,39 @@ class A
 	 * Fills an array up with additional elements to certain amount.
 	 *
 	 * ```php
-	 * $array = [
-	 *   'cat'  => 'miao',
-	 *   'dog'  => 'wuff',
-	 *   'bird' => 'tweet'
-	 * ];
-	 *
-	 * $result = A::fill($array, 5, 'elephant');
-	 *
-	 * // result: [
-	 * //   'cat',
-	 * //   'dog',
-	 * //   'bird',
-	 * //   'elephant',
-	 * //   'elephant',
-	 * // ];
+	 * $result = A::fill(['miao', 'wuff', 'tweet'], 5, 'elephant');
+	 * // result: ['miao', 'wuff', 'tweet', 'elephant', 'elephant']
 	 * ```
 	 *
-	 * @param $array The source array
 	 * @param $limit The number of elements the array should
 	 *              contain after filling it up.
 	 * @param $fill The element, which should be used to
-	 *             fill the array. If it's a callable, it
-	 *             will be called with the current index
+	 *             fill the array. If it's a callable (but no
+	 *             string), it will be called with the current index
 	 */
 	public static function fill(
 		array $array,
 		int $limit,
 		mixed $fill = 'placeholder'
 	): array {
+		$callable = is_string($fill) === false && is_callable($fill) === true;
+
 		for ($x = count($array); $x < $limit; $x++) {
-			$array[] = is_callable($fill) ? $fill($x) : $fill;
+			$array[] = $callable === true ? $fill($x) : $fill;
 		}
 
 		return $array;
 	}
 
 	/**
-	 * Filter the array using the given callback
-	 * using both value and key
+	 * Filter the array using the given callback using both value and key.
 	 * @since 3.6.5
+	 *
+	 * @template TKey of array-key
+	 * @template TValue
+	 * @param array<TKey, TValue> $array
+	 * @param callable(TValue $value, TKey $key):bool $callback
+	 * @return array<TKey, TValue>
 	 */
 	public static function filter(array $array, callable $callback): array
 	{
@@ -177,25 +165,26 @@ class A
 	 * ```php
 	 * $array = [1, 30, 39, 29, 10, 13];
 	 *
-	 * $isAboveThreshold = fn($value) => $value > 30;
-	 * echo A::find($array, $isAboveThreshold);
+	 * echo A::find($array, fn ($value) => $value > 30);
 	 * // output: '39'
 	 *
 	 * $array = [
-	 *   'cat' => 'miao',
-	 *   'cow' => 'moo',
+	 *   'cat'     => 'miao',
+	 *   'cow'     => 'moo',
 	 *   'colibri' => 'humm',
-	 *   'dog' => 'wuff',
+	 *   'dog'     => 'wuff',
 	 *   'chicken' => 'cluck',
-	 *   'bird' => 'tweet'
+	 *   'bird'    => 'tweet'
 	 * ];
 	 *
-	 * $keyNotStartingWithC = fn($value, $key) => $key[0] !== 'c';
-	 * echo A::find($array, $keyNotStartingWithC);
+	 * echo A::find($array, fn ($value, $key) => $key[0] !== 'c');
 	 * // output: 'wuff'
 	 * ```
 	 *
-	 * @param callable(mixed $value, int|string $key, array $array):bool $callback
+	 * @template T
+	 * @param array<T> $array
+	 * @param callable(T $value, int|string $key, array<T> $array):bool $callback
+	 * @return T|null
 	 */
 	public static function find(array $array, callable $callback): mixed
 	{
@@ -221,6 +210,10 @@ class A
 	 * $first = A::first($array);
 	 * // first: 'miao'
 	 * ```
+	 *
+	 * @template T
+	 * @param array<T> $array
+	 * @return T|null
 	 */
 	public static function first(array $array): mixed
 	{
@@ -252,6 +245,10 @@ class A
 	 * ```
 	 *
 	 * @since 5.5.0
+	 *
+	 * @template TKey of array-key
+	 * @param array<TKey, mixed> $array
+	 * @return array<array-key, non-empty-list<TKey>>
 	 */
 	public static function flip(array $array): array
 	{
@@ -286,23 +283,18 @@ class A
 	 * // result: ['cat' => 'miao', 'dog' => 'wuff'];
 	 * ```
 	 *
-	 * @param $array The source array
-	 * @param $key The key to look for
-	 * @param $default Optional default value, which
-	 *                should be returned if no element
-	 *                has been found
+	 * @param $key Key, dot notation path or list of keys;
+	 *            `null` returns the entire array
 	 */
 	public static function get(
 		array $array,
 		string|int|array|null $key,
 		mixed $default = null
-	) {
-		// return the entire array if the key is null
+	): mixed {
 		if ($key === null) {
 			return $array;
 		}
 
-		// get an array of keys
 		if (is_array($key) === true) {
 			$result = [];
 			foreach ($key as $k) {
@@ -341,32 +333,7 @@ class A
 				}
 			}
 
-			// if the input array also uses dot notation,
-			// try to find a subset of the $keys
 			if (isset($array[$firstKey]) === false) {
-				$currentKey = $firstKey;
-
-				while ($innerKey = array_shift($keys)) {
-					$currentKey .= '.' . $innerKey;
-
-					// the element needs to exist and also needs
-					// to be an array; otherwise we cannot find the
-					// remaining keys within it (invalid array structure)
-					if (
-						isset($array[$currentKey]) === true &&
-						is_array($array[$currentKey]) === true
-					) {
-						// $keys only holds the remaining keys
-						// that have not been shifted off yet
-						return static::get(
-							$array[$currentKey],
-							implode('.', $keys),
-							$default
-						);
-					}
-				}
-
-				// searching through the full chain of keys wasn't successful
 				return $default;
 			}
 
@@ -454,22 +421,25 @@ class A
 
 	/**
 	 * Takes an array and makes it associative by an argument.
-	 * If the argument is a callable, it will be used to map the array.
 	 * If it is a string, it will be used as a key to pluck from the array.
+	 * Otherwise, the callable will be used to map the array.
 	 *
 	 * ```php
-	 * $array = [['id'=>1], ['id'=>2], ['id'=>3]];
+	 * $array = [['id' => 1], ['id' => 2], ['id' => 3]];
 	 * $keyed = A::keyBy($array, 'id');
-	 *
-	 * // Now you can access the array by the id
+	 * // result: [1 => ['id' => 1], 2 => ['id' => 2], 3 => ['id' => 3]]
 	 * ```
+	 *
+	 * @template TValue
+	 * @param array<TValue> $array
+	 * @param string|callable(TValue):array-key $keyBy
+	 * @return array<array-key, TValue>
 	 */
 	public static function keyBy(array $array, string|callable $keyBy): array
 	{
-		$keys =
-			is_callable($keyBy) ?
-			static::map($array, $keyBy) :
-			static::pluck($array, $keyBy);
+		$keys = is_string($keyBy) === true
+			? static::pluck($array, $keyBy)
+			: static::map($array, $keyBy);
 
 		if (count($keys) !== count($array)) {
 			throw new InvalidArgumentException(
@@ -483,7 +453,7 @@ class A
 	/**
 	 * Returns the last element of an array
 	 *
-	 * @example
+	 * ```php
 	 * $array = [
 	 *   'cat'  => 'miao',
 	 *   'dog'  => 'wuff',
@@ -492,6 +462,11 @@ class A
 	 *
 	 * $last = A::last($array);
 	 * // last: 'tweet'
+	 * ```
+	 *
+	 * @template T
+	 * @param array<T> $array
+	 * @return T|null
 	 */
 	public static function last(array $array): mixed
 	{
@@ -506,6 +481,13 @@ class A
 	 * A simple wrapper around array_map
 	 * with a sane argument order
 	 * @since 3.6.0
+	 *
+	 * @template TKey of array-key
+	 * @template TValue
+	 * @template TResult
+	 * @param array<TKey, TValue> $array
+	 * @param callable(TValue):TResult $map
+	 * @return array<TKey, TResult>
 	 */
 	public static function map(array $array, callable $map): array
 	{
@@ -522,16 +504,14 @@ class A
 	 * If last argument is an integer, it defines the
 	 * behavior for elements with numeric keys;
 	 * - A::MERGE_OVERWRITE:  elements are overwritten, keys are preserved
-	 * - A::MERGE_APPEND:     elements are appended, keys are reset;
+	 * - A::MERGE_APPEND:     elements are appended, keys are reset (default)
 	 * - A::MERGE_REPLACE:    non-associative arrays are completely replaced
 	 */
 	public static function merge(array|int ...$arrays): array
 	{
-		// get mode from parameters
 		$last = A::last($arrays);
 		$mode = is_int($last) ? array_pop($arrays) : A::MERGE_APPEND;
 
-		// get the first two arrays that should be merged
 		$merged = array_shift($arrays);
 
 		// no arrays passed (or only a mode constant)
@@ -559,16 +539,12 @@ class A
 					$mode === static::MERGE_APPEND
 				) {
 					$merged[] = $value;
-
-				// recursively merge the two array values
 				} elseif (
 					is_array($value) === true &&
 					isset($merged[$key]) === true &&
 					is_array($merged[$key]) === true
 				) {
 					$merged[$key] = static::merge($merged[$key], $value, $mode);
-
-				// simply overwrite with the value from the second array
 				} else {
 					$merged[$key] = $value;
 				}
@@ -617,8 +593,7 @@ class A
 	 * // result: ['homer', 'marge', 'lisa'];
 	 * ```
 	 *
-	 * @param $array The source array
-	 * @param $key The key name of the column to extract
+	 * @return list<mixed>
 	 */
 	public static function pluck(array $array, string $key): array
 	{
@@ -643,11 +618,18 @@ class A
 
 	/**
 	 * Reduce an array to a single value
+	 *
+	 * @template TValue
+	 * @template TCarry
+	 * @param array<TValue> $array
+	 * @param callable(TCarry, TValue):TCarry $callback
+	 * @param TCarry $initial
+	 * @return TCarry
 	 */
 	public static function reduce(
 		array $array,
 		callable $callback,
-		$initial = null
+		mixed $initial = null
 	): mixed {
 		return array_reduce($array, $callback, $initial);
 	}
@@ -673,8 +655,9 @@ class A
 	 * // ];
 	 * ```
 	 *
-	 * @param $array The source array
-	 * @param $required An array of required keys
+	 * @template T of array-key
+	 * @param array<T> $required Required keys
+	 * @return list<T>
 	 */
 	public static function missing(array $array, array $required = []): array
 	{
@@ -709,7 +692,6 @@ class A
 		return $array;
 	}
 
-
 	/**
 	 * Normalizes an array into a nested form by converting
 	 * dot notation in keys to nested structures
@@ -722,8 +704,7 @@ class A
 		// convert a simple ignore list
 		// to a nested $key => true array
 		if (isset($ignore[0]) === true) {
-			/** @psalm-suppress TooManyArguments */
-			$ignore = array_map(fn () => true, array_flip($ignore));
+			$ignore = array_fill_keys($ignore, true);
 			$ignore = A::nest($ignore);
 		}
 
@@ -766,24 +747,20 @@ class A
 	}
 
 	/**
-	 * Recursively creates a nested array from a set of keys
-	 * with a key on each level
+	 * Recursively creates a nested array from a set of keys with
+	 * a key on each level; returns `$value` itself if `$keys` is empty
 	 *
 	 * @param $value Arbitrary value that will end up at the bottom of the tree
-	 * @param $keys List of keys to use sorted from the topmost level
-	 * @return array|mixed Nested array or (if `$keys` is empty) the input `$value`
+	 * @param list<array-key> $keys List of keys to use sorted from the topmost level
 	 */
-	public static function nestByKeys($value, array $keys)
+	public static function nestByKeys(mixed $value, array $keys): mixed
 	{
-		// shift off the first key from the list
 		$firstKey = array_shift($keys);
 
-		// stop further recursion if there are no more keys
 		if ($firstKey === null) {
 			return $value;
 		}
 
-		// return one level of the output tree, recurse further
 		return [
 			$firstKey => static::nestByKeys($value, $keys)
 		];
@@ -793,7 +770,12 @@ class A
 	 * Returns a number of random elements from an array,
 	 * either in original or shuffled order
 	 *
-	 * @throws Exception When $count is larger than array length
+	 * @template TKey of array-key
+	 * @template TValue
+	 * @param array<TKey, TValue> $array
+	 * @param positive-int $count
+	 * @return array<TKey, TValue>
+	 * @throws InvalidArgumentException When $count is larger than array length
 	 */
 	public static function random(
 		array $array,
@@ -807,7 +789,12 @@ class A
 		}
 
 		if ($shuffle === true) {
-			return array_slice(self::shuffle($array), 0, $count);
+			return array_slice(
+				array: self::shuffle($array),
+				offset: 0,
+				length: $count,
+				preserve_keys: true
+			);
 		}
 
 		if ($count === 1) {
@@ -835,6 +822,11 @@ class A
 	 * //    'bird' => 'tweet'
 	 * // ];
 	 * ```
+	 *
+	 * @template TKey of array-key
+	 * @template TValue
+	 * @param array<TKey, TValue> $array
+	 * @return array<TKey, TValue>
 	 */
 	public static function shuffle(array $array): array
 	{
@@ -843,7 +835,6 @@ class A
 
 		shuffle($keys);
 
-		// resort the array
 		foreach ($keys as $key) {
 			$new[$key] = $array[$key];
 		}
@@ -851,9 +842,13 @@ class A
 		return $new;
 	}
 
-
 	/**
 	 * Returns a slice of an array
+	 *
+	 * @template TKey of array-key
+	 * @template TValue
+	 * @param array<TKey, TValue> $array
+	 * @return array<TKey, TValue>
 	 */
 	public static function slice(
 		array $array,
@@ -870,13 +865,11 @@ class A
 	 * ```php
 	 * $array = [1, 30, 39, 29, 10, 'foo' => 12, 13];
 	 *
-	 * $isAboveThreshold = fn($value) => $value > 30;
-	 * echo A::some($array, $isAboveThreshold) ? 'true' : 'false';
-	 * // output: 'true'
+	 * echo A::some($array, n ($value) => $value > 30) ? 'a' : 'b';
+	 * // output: 'a'
 	 *
-	 * $isStringKey = fn($value, $key) => is_string($key);
-	 * echo A::some($array, $isStringKey) ? 'true' : 'false';
-	 * // output: 'true'
+	 * echo A::some($array, fn ($value, $key) => is_string($key)) ? 'a' : 'b';
+	 * // output: 'a'
 	 * ```
 	 *
 	 * @since 3.9.8
@@ -897,46 +890,26 @@ class A
 	 * Sorts a multi-dimensional array by a certain column
 	 *
 	 * ```php
-	 * $array[0] = [
-	 *   'id' => 1,
-	 *   'username' => 'mike',
+	 * $array = [
+	 *   ['id' => 1, 'username' => 'mike'],
+	 *   ['id' => 2, 'username' => 'peter'],
+	 *   ['id' => 3, 'username' => 'john']
 	 * ];
 	 *
-	 * $array[1] = [
-	 *   'id' => 2,
-	 *   'username' => 'peter',
-	 * ];
-	 *
-	 * $array[3] = [
-	 *   'id' => 3,
-	 *   'username' => 'john',
-	 * ];
-	 *
-	 * $sorted = A::sort($array, 'username ASC');
-	 * // Array
-	 * // (
-	 * //      [0] => Array
-	 * //          (
-	 * //              [id] => 3
-	 * //              [username] => john
-	 * //          )
-	 * //      [1] => Array
-	 * //          (
-	 * //              [id] => 1
-	 * //              [username] => mike
-	 * //          )
-	 * //      [2] => Array
-	 * //          (
-	 * //              [id] => 2
-	 * //              [username] => peter
-	 * //          )
-	 * // )
+	 * $sorted = A::sort($array, 'username', 'asc');
+	 * // result: [
+	 * //   2 => ['id' => 3, 'username' => 'john'],
+	 * //   0 => ['id' => 1, 'username' => 'mike'],
+	 * //   1 => ['id' => 2, 'username' => 'peter']
+	 * // ]
 	 * ```
 	 *
-	 * @param $array The source array
-	 * @param $field The name of the column
+	 * @template TKey of array-key
+	 * @template TValue
+	 * @param array<TKey, TValue> $array
 	 * @param $direction desc (descending) or asc (ascending)
 	 * @param $method A PHP sort method flag
+	 * @return array<TKey, TValue>
 	 */
 	public static function sort(
 		array $array,
@@ -948,19 +921,16 @@ class A
 		$helper    = [];
 		$result    = [];
 
-		// build the helper array
 		foreach ($array as $key => $row) {
-			$helper[$key] = $row[$field];
+			$helper[$key] = $row[$field] ?? null;
 		}
 
-		// natural sorting
 		if ($direction === SORT_DESC) {
 			arsort($helper, $method);
 		} else {
 			asort($helper, $method);
 		}
 
-		// rebuild the original array
 		foreach (array_keys($helper) as $key) {
 			$result[$key] = $array[$key];
 		}
@@ -970,6 +940,8 @@ class A
 
 	/**
 	 * Sums an array
+	 *
+	 * @param array<int|float|numeric-string> $array
 	 */
 	public static function sum(array $array): int|float
 	{
@@ -978,7 +950,7 @@ class A
 
 	/**
 	 * Update an array with a second array
-	 * The second array can contain callbacks as values,
+	 * The second array can contain closures as values,
 	 * which will get the original values as argument
 	 *
 	 * ```php
@@ -1019,14 +991,16 @@ class A
 	 * treated as equivalent.
 	 *
 	 * @since 3.6.5
+	 *
+	 * @template TKey of array-key
+	 * @template TValue
+	 * @param array<TKey, TValue> $array
+	 * @param int|string|array<int|string> $keys
+	 * @return array<TKey, TValue>
 	 */
 	public static function without(array $array, int|string|array $keys): array
 	{
-		if (is_int($keys) === true || is_string($keys) === true) {
-			$keys = static::wrap($keys);
-		}
-
-		$exclude = array_flip($keys);
+		$exclude = array_flip(static::wrap($keys));
 
 		return static::filter(
 			$array,
@@ -1037,8 +1011,12 @@ class A
 	/**
 	 * Wraps the given value in an array
 	 * if it's not an array yet.
+	 *
+	 * @template T
+	 * @param T|array<T>|null $array
+	 * @return array<T>
 	 */
-	public static function wrap($array = null): array
+	public static function wrap(mixed $array = null): array
 	{
 		if ($array === null) {
 			return [];

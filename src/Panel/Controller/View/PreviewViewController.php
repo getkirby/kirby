@@ -185,7 +185,9 @@ class PreviewViewController extends ViewController
 			$src['changes'] = $model->previewUrl('changes');
 		}
 
-		if (array_filter($src) === []) {
+		$src = array_filter($src);
+
+		if ($src === []) {
 			throw new PermissionException('The preview is not available');
 		}
 

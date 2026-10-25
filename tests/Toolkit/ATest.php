@@ -718,6 +718,18 @@ class ATest extends TestCase
 		}
 	}
 
+	public function testRandomShuffledKeepsIntKeys(): void
+	{
+		$array  = [5 => 'a', 9 => 'b', 'x' => 'c'];
+		$random = A::random($array, 3, true);
+
+		$this->assertCount(3, $random);
+
+		foreach ($random as $key => $value) {
+			$this->assertSame($array[$key], $value);
+		}
+	}
+
 	public function testRandomInvalidCount(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -765,6 +777,9 @@ class ATest extends TestCase
 
 		// callable with callable
 		$this->assertSame([false, true, false], A::fill([], 3, [V::class, 'accepted']));
+
+		// strings are never called, even if they name a function
+		$this->assertSame(['trim', 'trim'], A::fill([], 2, 'trim'));
 	}
 
 	public function testMove(): void
@@ -1034,6 +1049,17 @@ class ATest extends TestCase
 		$this->assertSame(3, array_search('img12.png', array_column($natural, 'file')));
 	}
 
+	public function testSortWithMissingField(): void
+	{
+		$array = [
+			'a' => ['username' => 'sonja'],
+			'b' => ['id' => 2],
+			'c' => ['username' => 'bastian']
+		];
+
+		$this->assertSame(['b', 'c', 'a'], array_keys(A::sort($array, 'username', 'asc')));
+	}
+
 	public function testIsAssociative(): void
 	{
 		$yes = $this->_array();
@@ -1139,6 +1165,24 @@ class ATest extends TestCase
 
 		// test with associative array
 		$this->assertSame($array_by_id, A::keyBy($array_by_cb, 'id'));
+	}
+
+	public function testKeyByWithFunctionNamedKey(): void
+	{
+		$array = [
+			['key' => 'a', 'date' => '2026-01-01'],
+			['key' => 'b', 'date' => '2026-01-02']
+		];
+
+		$this->assertSame(
+			['a' => $array[0], 'b' => $array[1]],
+			A::keyBy($array, 'key')
+		);
+
+		$this->assertSame(
+			['2026-01-01' => $array[0], '2026-01-02' => $array[1]],
+			A::keyBy($array, 'date')
+		);
 	}
 
 	public function testKeyByWithNonexistentKeys(): void
