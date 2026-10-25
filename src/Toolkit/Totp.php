@@ -24,13 +24,11 @@ class Totp
 	protected string $secret;
 
 	/**
-	 * Class constructor
-	 *
-	 * @param string|null $secret Existing secret in Base32 format
-	 *                            or `null` to generate a new one
-	 * @param bool $force Whether to skip the secret length validation;
-	 *                    WARNING: Only ever set this to `true` when
-	 *                    generating codes for third-party services
+	 * @param $secret Existing secret in Base32 format
+	 *                or `null` to generate a new one
+	 * @param $force Whether to skip the secret length validation;
+	 *               WARNING: Only ever set this to `true` when
+	 *               generating codes for third-party services
 	 */
 	public function __construct(
 		#[SensitiveParameter]
@@ -67,13 +65,14 @@ class Totp
 	/**
 	 * Generates the current TOTP code
 	 *
-	 * @param int $offset Optional counter offset to generate
-	 *                    previous or upcoming codes
+	 * @param $offset Optional counter offset to generate
+	 *                previous or upcoming codes
+	 * @return numeric-string
 	 */
 	public function generate(int $offset = 0): string
 	{
 		// generate a new code every 30 seconds
-		$counter = floor(time() / 30) + $offset;
+		$counter = intdiv(time(), 30) + $offset;
 
 		// pack the number into a binary 64-bit unsigned int
 		$binaryCounter = pack('J', $counter);
@@ -86,7 +85,6 @@ class Totp
 		}
 		// @codeCoverageIgnoreEnd
 
-		// create a binary HMAC from the binary counter and the binary secret
 		$binaryHmac = hash_hmac('sha1', $binaryCounter, $this->secret, true);
 
 		// convert the HMAC into an array of byte values (from 0-255)
@@ -99,10 +97,8 @@ class Totp
 			($bytes[$byteOffset + 3] << 8) |
 			$bytes[$byteOffset + 4];
 
-		// truncate the resulting number to at max six digits
 		$code %= 1000000;
 
-		// format as a six-digit string, left-padded with zeros
 		return sprintf('%06d', $code);
 	}
 
@@ -117,8 +113,9 @@ class Totp
 	/**
 	 * Returns a `otpauth://` URI for use in a setup QR code or link
 	 *
-	 * @param string $issuer Name of the site the code is valid for
-	 * @param string $label Account name the code is valid for
+	 * @param $issuer Name of the site the code is valid for
+	 * @param $label Account name the code is valid for
+	 * @return non-empty-string
 	 */
 	public function uri(string $issuer, string $label): string
 	{
