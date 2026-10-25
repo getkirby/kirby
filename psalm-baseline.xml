@@ -278,11 +278,6 @@
       <code><![CDATA[$data]]></code>
     </InvalidOperand>
   </file>
-  <file src="src/Panel/Ui/Component.php">
-    <FalsableReturnStatement>
-      <code><![CDATA[$this->key ??= Str::random(10, 'alphaNum')]]></code>
-    </FalsableReturnStatement>
-  </file>
   <file src="src/Session/Session.php">
     <RedundantPropertyInitializationCheck>
       <code><![CDATA[isset($this->data) === true]]></code>
@@ -376,7 +371,6 @@
 					$result = null;
 				}
 
-				// if we don't have a result, use the fallback if given
 				$result ??= $fallback;
 
 				// callback on result if given, with the raw result

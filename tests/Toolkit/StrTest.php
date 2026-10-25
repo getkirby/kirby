@@ -35,6 +35,28 @@ class StrTest extends TestCase
 		], Str::accepted('image/jpeg,  image/png;q=0.7'));
 	}
 
+	public function testAcceptedValueIsNoParam(): void
+	{
+		$this->assertSame([
+			['quality' => 1.0, 'value' => 'q=0.3']
+		], Str::accepted('q=0.3'));
+	}
+
+	public function testAcceptedWithoutValue(): void
+	{
+		$this->assertSame([
+			['quality' => 1.0, 'value' => 'text/html']
+		], Str::accepted('text/html, ;, ; ;'));
+	}
+
+	public function testAcceptedZeroQuality(): void
+	{
+		$this->assertSame([
+			['quality' => 1.0, 'value' => 'text/html'],
+			['quality' => 0.0, 'value' => 'image/png']
+		], Str::accepted('image/png;q=0, text/html'));
+	}
+
 	public function testAscii(): void
 	{
 		// clean ASCII
@@ -191,10 +213,14 @@ class StrTest extends TestCase
 
 		$string = 'fòô_bàř';
 		$this->assertSame('fòôBàř', Str::camel($string));
+
+		$this->assertSame('', Str::camel(null));
 	}
 
 	public function testCamelToKebab(): void
 	{
+		$this->assertSame('', Str::camelToKebab(null));
+
 		$string = 'foobar';
 		$this->assertSame('foobar', Str::camelToKebab($string));
 
@@ -653,14 +679,6 @@ class StrTest extends TestCase
 		$this->assertSame(32, strlen($string));
 		$this->assertSame('0123456789ABCDEFGHIJKLMNOPQRSTUV', $string);
 
-		// default fallback: empty pool
-		$pool = Str::pool('invalid', true);
-		$this->assertSame([], $pool);
-
-		// default fallback: empty pool
-		$pool = Str::pool('invalid', true);
-		$this->assertSame([], $pool);
-
 		// [alphaLower, num]
 		$string = Str::pool(['alphaLower', 'num'], false);
 		$this->assertSame(36, strlen($string));
@@ -669,6 +687,13 @@ class StrTest extends TestCase
 		// string vs. array
 		$this->assertIsString(Str::pool('alpha', false));
 		$this->assertIsArray(Str::pool('alpha'));
+	}
+
+	public function testPoolWithInvalidType(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid pool type "nmu"');
+		Str::pool(['alpha', 'nmu']);
 	}
 
 	public function testPosition(): void
@@ -719,11 +744,16 @@ class StrTest extends TestCase
 
 		$this->assertMatchesRegularExpression('/^[[:digit:]]+$/', Str::random($length, 'num'));
 
-		$this->assertFalse(Str::random($length, 'something invalid'));
-
 		// non-positive lengths return an empty string
 		$this->assertSame('', Str::random(0));
 		$this->assertSame('', Str::random(-5));
+	}
+
+	public function testRandomWithInvalidPool(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid pool type "something invalid"');
+		Str::random(10, 'something invalid');
 	}
 
 	public function testReplace(): void
@@ -1203,6 +1233,13 @@ class StrTest extends TestCase
 			'this-is-a-very-long-sentence-that-should-be-used-to-test-the-maxlenght-parameter-of-the-str-slug-method-by-default-it-should-limit-the-slug-to-128-characters-but-we-can-disable-the-shortening',
 			Str::slug('This is a very long sentence that should be used to test the $maxlenght parameter of the Str::slug() method. By default it should limit the slug to 128 characters, but we can disable the shortening.', null, null, false)
 		);
+
+		// no trailing separator after the cut
+		$this->assertSame('hello', Str::slug('Hello World', maxlength: 6));
+		$this->assertSame('hello-world', Str::slug('Hello World and more', maxlength: 12));
+
+		// leading non-word-chars don't count towards the limit
+		$this->assertSame('abc', Str::slug('---abc', maxlength: 3));
 	}
 
 	public function testSnake(): void
@@ -1212,6 +1249,8 @@ class StrTest extends TestCase
 
 		$string = 'kingCobra';
 		$this->assertSame('king_cobra', Str::snake($string));
+
+		$this->assertSame('', Str::snake(null));
 	}
 
 	public function testSplit(): void
@@ -1263,6 +1302,8 @@ class StrTest extends TestCase
 
 	public function testStudly(): void
 	{
+		$this->assertSame('', Str::studly(null));
+
 		$string = 'foo_bar';
 		$this->assertSame('FooBar', Str::studly($string));
 
