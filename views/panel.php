@@ -22,7 +22,7 @@ use Kirby\Toolkit\Html;
 
 	<script type="importmap" nonce="<?= $nonce ?>">
 	{
-		"imports": <?= json_encode($assets['import-maps'] ?? []) ?>
+		"imports": <?= json_encode($assets['import-maps'] ?? [], JSON_HEX_TAG) ?>
 	}
 	</script>
 
@@ -66,7 +66,7 @@ use Kirby\Toolkit\Html;
 
 	<script nonce="<?= $nonce ?>">
 	// Panel state setup
-	window.panelState = <?= json_encode($state) ?>;
+	window.panelState = <?= json_encode($state, JSON_HEX_TAG) ?>;
 	</script>
 
 	<?php foreach ($assets['js'] as $key => $js): ?>
