@@ -722,6 +722,13 @@ class VTest extends TestCase
 		}
 	}
 
+	public function testUrlWithInvalidUtf8(): void
+	{
+		$this->assertFalse(V::url("not a url \xff"));
+		$this->assertFalse(V::url("javascript:alert(1)//\xff"));
+		$this->assertFalse(V::url("https://getkirby.com/\xff"));
+	}
+
 	public static function inputProvider(): array
 	{
 		return [
