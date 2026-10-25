@@ -703,6 +703,18 @@ class ATest extends TestCase
 		}
 	}
 
+	public function testRandomShuffledKeepsIntKeys(): void
+	{
+		$array  = [5 => 'a', 9 => 'b', 'x' => 'c'];
+		$random = A::random($array, 3, true);
+
+		$this->assertCount(3, $random);
+
+		foreach ($random as $key => $value) {
+			$this->assertSame($array[$key], $value);
+		}
+	}
+
 	public function testRandomInvalidCount(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
