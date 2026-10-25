@@ -511,8 +511,9 @@ trait FieldMethods
 	/**
 	 * Converts the value to a case of the given enum
 	 *
-	 * @example
+	 * ```php
 	 * $field->toEnum(MyEnum::class)
+	 * ```
 	 *
 	 * @template T of \BackedEnum
 	 * @param class-string<T> $enum

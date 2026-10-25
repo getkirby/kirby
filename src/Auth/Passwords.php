@@ -16,7 +16,7 @@ use SensitiveParameter;
  * The policy can be defined as a set of preset rules,
  * a regular expression or a custom callback.
  *
- * @example
+ * ```php
  * // preset rules
  * 'auth' => [
  *   'passwords' => [
@@ -45,6 +45,7 @@ use SensitiveParameter;
  *
  * // validate manually, e.g. in a frontend registration form
  * $kirby->auth()->passwords()->validate($password);
+ * ```
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license

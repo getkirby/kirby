@@ -483,7 +483,7 @@ class A
 	/**
 	 * Returns the last element of an array
 	 *
-	 * @example
+	 * ```php
 	 * $array = [
 	 *   'cat'  => 'miao',
 	 *   'dog'  => 'wuff',
@@ -492,6 +492,7 @@ class A
 	 *
 	 * $last = A::last($array);
 	 * // last: 'tweet'
+	 * ```
 	 */
 	public static function last(array $array): mixed
 	{
