@@ -196,10 +196,14 @@ class StrTest extends TestCase
 
 		$string = 'fòô_bàř';
 		$this->assertSame('fòôBàř', Str::camel($string));
+
+		$this->assertSame('', Str::camel(null));
 	}
 
 	public function testCamelToKebab(): void
 	{
+		$this->assertSame('', Str::camelToKebab(null));
+
 		$string = 'foobar';
 		$this->assertSame('foobar', Str::camelToKebab($string));
 
@@ -1164,6 +1168,8 @@ class StrTest extends TestCase
 
 		$string = 'kingCobra';
 		$this->assertSame('king_cobra', Str::snake($string));
+
+		$this->assertSame('', Str::snake(null));
 	}
 
 	public function testSplit(): void
@@ -1215,6 +1221,8 @@ class StrTest extends TestCase
 
 	public function testStudly(): void
 	{
+		$this->assertSame('', Str::studly(null));
+
 		$string = 'foo_bar';
 		$this->assertSame('FooBar', Str::studly($string));
 
