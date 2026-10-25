@@ -2,9 +2,9 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Data\Data;
-use Kirby\Exception\InvalidArgumentException;
+use Darkroom\Options;
 use Kirby\Exception\NotFoundException;
+use Kirby\Filesystem\Asset;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Http\Response;
@@ -20,23 +20,6 @@ use Throwable;
  */
 class Media
 {
-	/**
-	 * Removes the job once its thumb is made
-	 * @since 7.0.0
-	 */
-	public static function dequeue(string $thumb): bool
-	{
-		return F::remove(static::job($thumb));
-	}
-
-	/**
-	 * The job file the media route makes the thumb from
-	 */
-	protected static function job(string $thumb): string
-	{
-		return dirname($thumb) . '/.jobs/' . basename($thumb) . '.json';
-	}
-
 	/**
 	 * Tries to find a file by model and filename
 	 * and to copy it to the media folder.
@@ -81,6 +64,44 @@ class Media
 	}
 
 	/**
+	 * The original whose media folder `$hash` is,
+	 * among the files the thumb's name may stem from
+	 */
+	protected static function original(
+		File|Page|Site|User|string $model,
+		string $hash,
+		string $filename
+	): File|Asset|null {
+		if ($model instanceof File) {
+			return $model->mediaHash() === $hash ? $model : null;
+		}
+
+		if (is_string($model) === true) {
+			$index = App::instance()->root('index');
+			$root  = Dir::realpath($index . '/' . $model, $index);
+			$files = array_map(
+				fn (string $name) => new Asset($model . '/' . $name),
+				Dir::files($root)
+			);
+		} else {
+			$files = $model->files();
+		}
+
+		foreach ($files as $file) {
+			$prefix = F::safeBasename($file->filename()) . '-';
+
+			if (
+				str_starts_with($filename, $prefix) === true &&
+				$file->mediaHash() === $hash
+			) {
+				return $file;
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * Copy the file to the final media folder location
 	 */
 	public static function publish(File $file, string $dest): bool
@@ -100,118 +121,59 @@ class Media
 	}
 
 	/**
-	 * Leaves a job for the media route, unless the thumb
-	 * or a job exist; `false` if the job can't be written
+	 * The thumb's name with a signature, so that the
+	 * media route only makes the thumbs Kirby named
 	 * @since 7.0.0
 	 */
-	public static function queue(FileVersion $version): bool
+	public static function sign(File|Asset $original, string $name): string
 	{
-		$original = $version->original();
-		$thumb    = $original->mediaDir() . '/' . $version->filename();
-		$job      = static::job($thumb);
+		$value = $original->mediaHash() . '/' . $name;
+		$token = $original->kirby()->contentToken($original, $value);
 
-		if (file_exists($thumb) === true || file_exists($job) === true) {
-			return true;
-		}
-
-		try {
-			Data::write($job, [
-				...$version->options(),
-				'filename' => $original->filename()
-			]);
-
-			return true;
-		} catch (Throwable) {
-			return false;
-		}
+		return F::name($name) . '-' . substr($token, 0, 10) . '.' . F::extension($name);
 	}
 
 	/**
-	 * Tries to find a job file for the
-	 * given filename and then calls the thumb
-	 * component to create a thumbnail accordingly
+	 * Makes the thumb that a signed name asks for:
+	 * `{original}-{key}-{signature}.{extension}`
+	 *
+	 * @throws NotFoundException Without a valid name
 	 */
 	public static function thumb(
 		File|Page|Site|User|string $model,
 		string $hash,
 		string $filename
 	): Response|false {
-		$kirby = App::instance();
-		$index = $kirby->root('index');
-		$media = $kirby->root('media');
-
-		$root = match (true) {
-			// assets
-			is_string($model)
-				=> $media . '/assets/' . $model . '/' . $hash,
-			// parent files for file model that already included hash
-			$model instanceof File
-				=> $model->mediaDir(),
-			// model files
-			default
-			=> $model->mediaRoot() . '/' . $hash
-		};
-
 		try {
-			// prevent path traversal
-			$root = Dir::realpath($root, $media);
-
-			// $filename is appended unmodified to the validated root
-			// to build the thumbnail and job file paths;
-			// it must be a plain filename without any path information
-			if (
-				$filename === '' ||
-				$filename === '.' ||
-				$filename === '..' ||
-				basename($filename) !== $filename
-			) {
-				throw new InvalidArgumentException();
+			// a plain name, appended to the original's media folder
+			if (basename($filename) !== $filename) {
+				throw new NotFoundException();
 			}
 
-			$thumb = $root . '/' . $filename;
-			$job   = static::job($thumb);
+			$original = static::original($model, $hash, $filename);
 
-			$options = Data::read($job);
+			if (
+				$original === null ||
+				preg_match('/^(.+)-[0-9a-f]{10}(\.[a-z0-9]+)$/', $filename, $match) !== 1 ||
+				hash_equals(static::sign($original, $match[1] . $match[2]), $filename) === false
+			) {
+				throw new NotFoundException();
+			}
+
+			$prefix  = F::safeBasename($original->filename()) . '-';
+			$key     = substr($match[1], strlen($prefix));
+			$options = Options::from($key)->toArray();
 		} catch (Throwable) {
-			// send a customized error message
-			// to make clearer what happened here
 			throw new NotFoundException(
-				message: 'The thumbnail configuration could not be found'
+				message: 'The thumbnail could not be found'
 			);
 		}
 
-		// the original's filename, the rest are thumb options
-		$original = $options['filename'] ?? null;
-		unset($options['filename']);
-
-		if (is_string($original) === false || $original === '') {
-			throw new InvalidArgumentException(
-				message: 'Incomplete thumbnail configuration'
-			);
-		}
+		$thumb = $original->mediaDir() . '/' . $filename;
 
 		try {
-			// find the correct source file depending on the model
-			// this adds support for custom assets
-			$source = match (true) {
-				is_string($model) === true
-					=> F::realpath(
-						$index . '/' . $model . '/' . $original,
-						$index
-					),
-				$model instanceof File
-					=> $model->root(),
-				default
-				=> $model->file($original)->root()
-			};
+			$original->kirby()->thumb($original->root(), $thumb, $options);
 
-			// generate the thumbnail and save it in the media folder
-			$kirby->thumb($source, $thumb, $options);
-
-			// remove the job file once the thumbnail has been created
-			static::dequeue($thumb);
-
-			// read the file and send it to the browser
 			return Response::file($thumb);
 		} catch (Throwable $e) {
 			// remove potentially broken thumbnails

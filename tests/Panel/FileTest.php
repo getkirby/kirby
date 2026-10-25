@@ -4,6 +4,7 @@ namespace Kirby\Panel;
 
 use Kirby\Cms\App;
 use Kirby\Cms\File as ModelFile;
+use Kirby\Cms\Media;
 use Kirby\Cms\Page as ModelPage;
 use Kirby\Cms\User as ModelUser;
 use Kirby\Content\Lock;
@@ -277,7 +278,9 @@ class FileTest extends TestCase
 
 		$panel = new File($file);
 
-		$hash = $file->mediaHash();
+		$hash  = $file->mediaHash();
+		$small = Media::sign($file, 'test-36x36-q85.jpg');
+		$large = Media::sign($file, 'test-96x96-q85.jpg');
 
 		// cover disabled as default
 		$this->assertSame([
@@ -287,7 +290,7 @@ class FileTest extends TestCase
 			'icon'   => 'image',
 			'url'    => '/media/site/' . $hash . '/test.jpg',
 			'src'    => Model::imagePlaceholder(),
-			'srcset' => '/media/site/' . $hash . '/test-36x36-q85.jpg 36w, /media/site/' . $hash . '/test-96x96-q85.jpg 96w'
+			'srcset' => '/media/site/' . $hash . '/' . $small . ' 36w, /media/site/' . $hash . '/' . $large . ' 96w'
 		], $panel->image());
 
 		// cover enabled
@@ -298,7 +301,7 @@ class FileTest extends TestCase
 			'icon'   => 'image',
 			'url'    => '/media/site/' . $hash . '/test.jpg',
 			'src'    => Model::imagePlaceholder(),
-			'srcset' => '/media/site/' . $hash . '/test-36x36-q85.jpg 1x, /media/site/' . $hash . '/test-96x96-q85.jpg 2x'
+			'srcset' => '/media/site/' . $hash . '/' . $small . ' 1x, /media/site/' . $hash . '/' . $large . ' 2x'
 		], $panel->image(['cover' => true]));
 	}
 

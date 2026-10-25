@@ -3,6 +3,7 @@
 namespace Kirby\Panel;
 
 use Kirby\Cms\App;
+use Kirby\Cms\Media;
 use Kirby\Cms\User as ModelUser;
 use Kirby\Content\Lock;
 use Kirby\Filesystem\Dir;
@@ -149,6 +150,8 @@ class UserTest extends TestCase
 
 		$hash = $user->image()->mediaHash();
 		$mediaUrl = $user->mediaUrl() . '/' . $hash;
+		$small    = Media::sign($user->image(), 'test-36x36-q85.jpg');
+		$large    = Media::sign($user->image(), 'test-96x96-q85.jpg');
 
 		// cover disabled as default
 		$this->assertSame([
@@ -159,7 +162,7 @@ class UserTest extends TestCase
 			'ratio'  => '1/1',
 			'url'    => $mediaUrl . '/test.jpg',
 			'src'    => Model::imagePlaceholder(),
-			'srcset' => $mediaUrl . '/test-36x36-q85.jpg 36w, ' . $mediaUrl . '/test-96x96-q85.jpg 96w'
+			'srcset' => $mediaUrl . '/' . $small . ' 36w, ' . $mediaUrl . '/' . $large . ' 96w'
 		], $panel->image());
 
 		// cover enabled
@@ -171,7 +174,7 @@ class UserTest extends TestCase
 			'ratio'  => '1/1',
 			'url'    => $mediaUrl . '/test.jpg',
 			'src'    => Model::imagePlaceholder(),
-			'srcset' => $mediaUrl . '/test-36x36-q85.jpg 1x, ' . $mediaUrl . '/test-96x96-q85.jpg 2x'
+			'srcset' => $mediaUrl . '/' . $small . ' 1x, ' . $mediaUrl . '/' . $large . ' 2x'
 		], $panel->image(['cover' => true]));
 	}
 

@@ -3,6 +3,7 @@
 namespace Kirby\Panel;
 
 use Kirby\Cms\App;
+use Kirby\Cms\Media;
 use Kirby\Cms\Site as ModelSite;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
@@ -75,6 +76,8 @@ class SiteTest extends TestCase
 
 		$hash = $site->image()->mediaHash();
 		$mediaUrl = $site->mediaUrl() . '/' . $hash;
+		$small    = Media::sign($site->image(), 'test-36x36-q85.jpg');
+		$large    = Media::sign($site->image(), 'test-96x96-q85.jpg');
 
 		// cover disabled as default
 		$this->assertSame([
@@ -84,7 +87,7 @@ class SiteTest extends TestCase
 			'icon'   => 'page',
 			'url'    => $mediaUrl . '/test.jpg',
 			'src'    => Model::imagePlaceholder(),
-			'srcset' => $mediaUrl . '/test-36x36-q85.jpg 36w, ' . $mediaUrl . '/test-96x96-q85.jpg 96w'
+			'srcset' => $mediaUrl . '/' . $small . ' 36w, ' . $mediaUrl . '/' . $large . ' 96w'
 		], $panel->image());
 
 		// cover enabled
@@ -95,7 +98,7 @@ class SiteTest extends TestCase
 			'icon'   => 'page',
 			'url'    => $mediaUrl . '/test.jpg',
 			'src'    => Model::imagePlaceholder(),
-			'srcset' => $mediaUrl . '/test-36x36-q85.jpg 1x, ' . $mediaUrl . '/test-96x96-q85.jpg 2x'
+			'srcset' => $mediaUrl . '/' . $small . ' 1x, ' . $mediaUrl . '/' . $large . ' 2x'
 		], $panel->image(['cover' => true]));
 	}
 

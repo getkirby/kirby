@@ -212,24 +212,24 @@ class ModelTest extends TestCase
 		$this->assertArrayHasKey('src', $image);
 		$this->assertArrayHasKey('srcset', $image);
 		$this->assertArrayNotHasKey('query', $image);
-		$this->assertStringContainsString('test-36x36-q85.jpg 36w', $image['srcset']);
-		$this->assertStringContainsString('test-96x96-q85.jpg 96w', $image['srcset']);
+		$this->assertStringContainsString('test-36x36-q85.jpg 36w', $this->unsigned($image['srcset']));
+		$this->assertStringContainsString('test-96x96-q85.jpg 96w', $this->unsigned($image['srcset']));
 
 		// cards: widths beyond the 128 px original share its size
 		$image = $panel->image('site.image', 'cards');
-		$this->assertStringContainsString('test-128x128-q85.jpg 400w', $image['srcset']);
-		$this->assertStringContainsString('test-128x128-q85.jpg 800w', $image['srcset']);
-		$this->assertStringContainsString('test-128x128-q85.jpg 1600w', $image['srcset']);
+		$this->assertStringContainsString('test-128x128-q85.jpg 400w', $this->unsigned($image['srcset']));
+		$this->assertStringContainsString('test-128x128-q85.jpg 800w', $this->unsigned($image['srcset']));
+		$this->assertStringContainsString('test-128x128-q85.jpg 1600w', $this->unsigned($image['srcset']));
 
 		// cardlets
 		$image = $panel->image('site.image', 'cardlets');
-		$this->assertStringContainsString('test-96x96-q85.jpg 96w', $image['srcset']);
-		$this->assertStringContainsString('test-128x128-q85.jpg 192w', $image['srcset']);
+		$this->assertStringContainsString('test-96x96-q85.jpg 96w', $this->unsigned($image['srcset']));
+		$this->assertStringContainsString('test-128x128-q85.jpg 192w', $this->unsigned($image['srcset']));
 
 		// table
 		$image = $panel->image('site.image', 'table');
-		$this->assertStringContainsString('test-36x36-q85.jpg 36w', $image['srcset']);
-		$this->assertStringContainsString('test-96x96-q85.jpg 96w', $image['srcset']);
+		$this->assertStringContainsString('test-36x36-q85.jpg 36w', $this->unsigned($image['srcset']));
+		$this->assertStringContainsString('test-96x96-q85.jpg 96w', $this->unsigned($image['srcset']));
 
 		// full options
 		$image = $panel->image([
@@ -243,8 +243,8 @@ class ModelTest extends TestCase
 		$this->assertArrayHasKey('srcset', $image);
 		$this->assertSame($icon, $image['icon']);
 		$this->assertSame($ratio, $image['ratio']);
-		$this->assertStringContainsString('test-36x36-q85.jpg 1x', $image['srcset']);
-		$this->assertStringContainsString('test-96x96-q85.jpg 2x', $image['srcset']);
+		$this->assertStringContainsString('test-36x36-q85.jpg 1x', $this->unsigned($image['srcset']));
+		$this->assertStringContainsString('test-96x96-q85.jpg 2x', $this->unsigned($image['srcset']));
 
 		// string ratio
 		$image = $panel->image([
@@ -256,9 +256,9 @@ class ModelTest extends TestCase
 		$this->assertArrayHasKey('src', $image);
 		$this->assertArrayHasKey('srcset', $image);
 		$this->assertSame($ratio, $image['ratio']);
-		$this->assertStringContainsString('test-128x85-crop0-22-128-85-q85.jpg 400w', $image['srcset']);
-		$this->assertStringContainsString('test-128x85-crop0-22-128-85-q85.jpg 800w', $image['srcset']);
-		$this->assertStringContainsString('test-128x85-crop0-22-128-85-q85.jpg 1600w', $image['srcset']);
+		$this->assertStringContainsString('test-128x85-crop0-22-128-85-q85.jpg 400w', $this->unsigned($image['srcset']));
+		$this->assertStringContainsString('test-128x85-crop0-22-128-85-q85.jpg 800w', $this->unsigned($image['srcset']));
+		$this->assertStringContainsString('test-128x85-crop0-22-128-85-q85.jpg 1600w', $this->unsigned($image['srcset']));
 
 		// numeric ratio
 		$image = $panel->image([
@@ -270,9 +270,9 @@ class ModelTest extends TestCase
 		$this->assertArrayHasKey('src', $image);
 		$this->assertArrayHasKey('srcset', $image);
 		$this->assertSame($ratio, $image['ratio']);
-		$this->assertStringContainsString('test-128x85-crop0-22-128-85-q85.jpg 400w', $image['srcset']);
-		$this->assertStringContainsString('test-128x85-crop0-22-128-85-q85.jpg 800w', $image['srcset']);
-		$this->assertStringContainsString('test-128x85-crop0-22-128-85-q85.jpg 1600w', $image['srcset']);
+		$this->assertStringContainsString('test-128x85-crop0-22-128-85-q85.jpg 400w', $this->unsigned($image['srcset']));
+		$this->assertStringContainsString('test-128x85-crop0-22-128-85-q85.jpg 800w', $this->unsigned($image['srcset']));
+		$this->assertStringContainsString('test-128x85-crop0-22-128-85-q85.jpg 1600w', $this->unsigned($image['srcset']));
 	}
 
 	public function testImagePlaceholder(): void
@@ -408,9 +408,9 @@ class ModelTest extends TestCase
 			'ratio' => '{{ site.ratio }}'
 		], 'cards');
 		$this->assertSame('3/2', $image['ratio']);
-		$this->assertStringContainsString('test-128x85-crop0-22-128-85-q85.jpg 400w', $image['srcset']);
-		$this->assertStringContainsString('test-128x85-crop0-22-128-85-q85.jpg 800w', $image['srcset']);
-		$this->assertStringContainsString('test-128x85-crop0-22-128-85-q85.jpg 1600w', $image['srcset']);
+		$this->assertStringContainsString('test-128x85-crop0-22-128-85-q85.jpg 400w', $this->unsigned($image['srcset']));
+		$this->assertStringContainsString('test-128x85-crop0-22-128-85-q85.jpg 800w', $this->unsigned($image['srcset']));
+		$this->assertStringContainsString('test-128x85-crop0-22-128-85-q85.jpg 1600w', $this->unsigned($image['srcset']));
 
 		// query without result falls back to a square
 		$image = $panel->image([
@@ -418,9 +418,9 @@ class ModelTest extends TestCase
 			'query' => 'site.image',
 			'ratio' => '{{ site.missing }}'
 		], 'cards');
-		$this->assertStringContainsString('test-128x128-q85.jpg 400w', $image['srcset']);
-		$this->assertStringContainsString('test-128x128-q85.jpg 800w', $image['srcset']);
-		$this->assertStringContainsString('test-128x128-q85.jpg 1600w', $image['srcset']);
+		$this->assertStringContainsString('test-128x128-q85.jpg 400w', $this->unsigned($image['srcset']));
+		$this->assertStringContainsString('test-128x128-q85.jpg 800w', $this->unsigned($image['srcset']));
+		$this->assertStringContainsString('test-128x128-q85.jpg 1600w', $this->unsigned($image['srcset']));
 	}
 
 	public function testModel(): void
@@ -480,5 +480,13 @@ class ModelTest extends TestCase
 	{
 		$this->assertSame('/panel/custom', $this->panel()->url());
 		$this->assertSame('/custom', $this->panel()->url(true));
+	}
+
+	/**
+	 * The srcset without the thumbs' signatures
+	 */
+	protected function unsigned(string $srcset): string
+	{
+		return preg_replace('/-[0-9a-f]{10}(\.[a-z]+)(?= )/', '$1', $srcset);
 	}
 }

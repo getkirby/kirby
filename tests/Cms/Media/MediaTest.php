@@ -2,27 +2,19 @@
 
 namespace Kirby\Cms;
 
-use Darkroom\Exception\UnsupportedException;
+use Closure;
 use Exception;
-use Kirby\Data\Data;
-use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Filesystem\Asset;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Http\Response;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class MediaTest extends TestCase
 {
 	public const string FIXTURES = __DIR__ . '/fixtures';
 	public const string TMP      = KIRBY_TMP_DIR . '/Cms.Media';
-
-	public function testDequeue(): void
-	{
-		F::write($job = static::TMP . '/media/a/.jobs/b.jpg.json', '{}');
-
-		$this->assertTrue(Media::dequeue(static::TMP . '/media/a/b.jpg'));
-		$this->assertFileDoesNotExist($job);
-	}
 
 	public function testLinkNonExistingFile(): void
 	{
@@ -108,101 +100,86 @@ class MediaTest extends TestCase
 		$this->assertDirectoryDoesNotExist($versionB1);
 	}
 
-	public function testQueue(): void
+	public function testSign(): void
 	{
 		F::copy(static::FIXTURES . '/files/test.jpg', static::TMP . '/content/test.jpg');
 
-		$file    = $this->app->file('test.jpg');
-		$version = new FileVersion(original: $file, options: ['width' => 64]);
-		$thumb   = $file->mediaDir() . '/' . $version->filename();
-		$job     = $file->mediaDir() . '/.jobs/' . $version->filename() . '.json';
+		$file   = $this->app->file('test.jpg');
+		$signed = Media::sign($file, 'test-64x64-q85.jpg');
+		$other  = Media::sign($file, 'test-32x32-q85.jpg');
 
-		$this->assertTrue(Media::queue($version));
-		$this->assertSame([
-			...$version->options(),
-			'filename' => 'test.jpg'
-		], Data::read($job));
-
-		// a queued job stays as it is
-		F::write($job, '{"filename":"test.jpg"}');
-		$this->assertTrue(Media::queue($version));
-		$this->assertSame(['filename' => 'test.jpg'], Data::read($job));
-
-		// a made thumb needs no job
-		F::remove($job);
-		F::write($thumb, 'thumb');
-		$this->assertTrue(Media::queue($version));
-		$this->assertFileDoesNotExist($job);
-	}
-
-	public function testQueueWithoutJob(): void
-	{
-		F::copy(static::FIXTURES . '/files/test.jpg', static::TMP . '/content/test.jpg');
-
-		$file    = $this->app->file('test.jpg');
-		$version = new FileVersion(original: $file, options: ['width' => 64]);
-
-		// a file where the jobs folder belongs
-		F::write($file->mediaDir() . '/.jobs', '');
-
-		$this->assertFalse(Media::queue($version));
+		$this->assertMatchesRegularExpression('/^test-64x64-q85-[0-9a-f]{10}\.jpg$/', $signed);
+		$this->assertSame($signed, Media::sign($file, 'test-64x64-q85.jpg'));
+		$this->assertNotSame(substr($signed, -14), substr($other, -14));
 	}
 
 	public function testThumb(): void
 	{
-		Dir::make(static::TMP . '/content');
-
-		// copy test image to content
 		F::copy(static::FIXTURES . '/files/test.jpg', static::TMP . '/content/test.jpg');
 
-		// get file object
-		$file  = $this->app->file('test.jpg');
-		Dir::make($file->mediaDir());
-		$this->assertIsFile($file);
+		$file    = $this->app->file('test.jpg');
+		$version = $file->thumb(['width' => 64, 'height' => 64, 'crop' => 'center']);
 
-		// create job file
-		$jobString = '{"width":64,"height":64,"quality":null,"crop":"center","filename":"test.jpg"}';
-		F::write($file->mediaDir() . '/.jobs/' . $file->filename() . '.json', $jobString);
+		// nothing is made or written until the thumb is asked for
+		$this->assertDirectoryDoesNotExist($file->mediaDir());
 
-		// copy to media folder
-		$file->asset()->copy($mediaRoot = $file->mediaRoot());
+		$thumb = Media::thumb($this->app->site(), $file->mediaHash(), $version->filename());
 
-		$thumb = Media::thumb($file, $file->mediaHash(), $file->filename());
 		$this->assertInstanceOf(Response::class, $thumb);
-		$this->assertNotFalse($thumb->body());
 		$this->assertSame(200, $thumb->code());
 		$this->assertSame('image/jpeg', $thumb->type());
 
-		$thumbInfo = getimagesize($mediaRoot);
-		$this->assertSame(64, $thumbInfo[0]);
-		$this->assertSame(64, $thumbInfo[1]);
+		$size = getimagesize($file->mediaDir() . '/' . $version->filename());
+		$this->assertSame([64, 64], [$size[0], $size[1]]);
+	}
+
+	public function testThumbFileModel(): void
+	{
+		F::copy(static::FIXTURES . '/files/test.jpg', static::TMP . '/content/test.jpg');
+
+		$file    = $this->app->file('test.jpg');
+		$version = $file->thumb(['width' => 64]);
+		$thumb   = Media::thumb($file, $file->mediaHash(), $version->filename());
+
+		$this->assertSame(200, $thumb->code());
+	}
+
+	public static function thumbInvalidProvider(): array
+	{
+		return [
+			'forged signature' => [fn (string $name) => preg_replace('/-[0-9a-f]{10}\./', '-0123456789.', $name)],
+			'other key'        => [fn (string $name) => str_replace('64x64', '128x128', $name)],
+			'other format'     => [fn (string $name) => str_replace('.jpg', '.webp', $name)],
+			'no signature'     => [fn (string $name) => preg_replace('/-[0-9a-f]{10}\./', '.', $name)],
+			'traversal'        => [fn (string $name) => '../../../../../' . $name],
+		];
+	}
+
+	#[DataProvider('thumbInvalidProvider')]
+	public function testThumbInvalid(Closure $change): void
+	{
+		F::copy(static::FIXTURES . '/files/test.jpg', static::TMP . '/content/test.jpg');
+
+		$file    = $this->app->file('test.jpg');
+		$version = $file->thumb(['width' => 64]);
+		$name    = $change($version->filename());
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessageIs('The thumbnail could not be found');
+
+		Media::thumb($this->app->site(), $file->mediaHash(), $name);
 	}
 
 	public function testThumbStringModel(): void
 	{
-		Dir::make(static::TMP . '/content');
-
-		// copy test image to content
 		F::copy(static::FIXTURES . '/files/test.jpg', static::TMP . '/content/test.jpg');
 
-		// get file object
-		$file  = $this->app->file('test.jpg');
-		Dir::make(static::TMP . '/media/assets/content/' . $file->mediaHash());
-		$this->assertIsFile($file);
+		$asset   = new Asset('content/test.jpg');
+		$version = $asset->thumb(['width' => 64]);
+		$thumb   = Media::thumb('content', $asset->mediaHash(), $version->filename());
 
-		// create job file
-		$jobString = '{"width":64,"height":64,"quality":null,"crop":"center","filename":"test.jpg"}';
-		F::write(static::TMP . '/media/assets/content/' . $file->mediaHash() . '/.jobs/' . $file->filename() . '.json', $jobString);
-
-		$thumb = Media::thumb('content', $file->mediaHash(), $file->filename());
-		$this->assertInstanceOf(Response::class, $thumb);
-		$this->assertNotFalse($thumb->body());
 		$this->assertSame(200, $thumb->code());
-		$this->assertSame('image/jpeg', $thumb->type());
-
-		$thumbInfo = getimagesize(static::TMP . '/media/assets/content/' . $file->mediaHash() . '/' . $file->filename());
-		$this->assertSame(64, $thumbInfo[0]);
-		$this->assertSame(64, $thumbInfo[1]);
+		$this->assertFileExists($asset->mediaDir() . '/' . $version->filename());
 	}
 
 	public function testThumbWhenComponentFails(): void
@@ -219,47 +196,19 @@ class MediaTest extends TestCase
 			]
 		]);
 
-		$file  = $app->file('test.jpg');
-		$thumb = $file->mediaDir() . '/' . $file->filename();
-		$job   = $file->mediaDir() . '/.jobs/' . $file->filename() . '.json';
-
-		F::write($job, '{"width":64,"filename":"test.jpg"}');
+		$file    = $app->file('test.jpg');
+		$version = $file->thumb(['width' => 64]);
+		$root    = $file->mediaDir() . '/' . $version->filename();
 
 		try {
-			Media::thumb($file, $file->mediaHash(), $file->filename());
+			Media::thumb($app->site(), $file->mediaHash(), $version->filename());
 			$this->fail('The component did not throw');
 		} catch (Exception $e) {
 			$this->assertSame('Generation failed', $e->getMessage());
 		}
 
-		// no broken thumb, the job stays for the next request
-		$this->assertFileDoesNotExist($thumb);
-		$this->assertFileExists($job);
-	}
-
-	public function testThumbWhenGenerationFails(): void
-	{
-		Dir::make(static::TMP . '/content');
-
-		// copy test image to content
-		F::copy(static::FIXTURES . '/files/test.jpg', static::TMP . '/content/test.jpg');
-
-		// get file object
-		$site = $this->app->site();
-		$file = $site->file('test.jpg');
-
-		// make the image mysteriously disappear again
-		F::remove(static::TMP . '/content/test.jpg');
-
-		// create a valid job file
-		$jobString = '{"width":64,"height":64,"quality":null,"crop":"center","filename":"test.jpg"}';
-		F::write($file->mediaDir() . '/.jobs/' . $file->filename() . '.json', $jobString);
-
-		$this->expectException(UnsupportedException::class);
-		// the message ends with the path of the image
-		$this->expectExceptionMessageIsOrContains('Unsupported or unreadable image');
-
-		Media::thumb($site, $file->mediaHash(), $file->filename());
+		// no broken thumb, the next request tries again
+		$this->assertFileDoesNotExist($root);
 	}
 
 	public function testThumbWithComponent(): void
@@ -277,114 +226,57 @@ class MediaTest extends TestCase
 			]
 		]);
 
-		$file = $app->file('test.jpg');
-		$job  = $file->mediaDir() . '/.jobs/' . $file->filename() . '.json';
+		$file    = $app->file('test.jpg');
+		$version = $file->thumb(['width' => 64]);
 
-		F::write($job, '{"width":64,"filename":"test.jpg"}');
+		Media::thumb($app->site(), $file->mediaHash(), $version->filename());
 
-		$response = Media::thumb($file, $file->mediaHash(), $file->filename());
-
-		$this->assertSame(200, $response->code());
+		// the options the name's key holds
 		$this->assertSame([
 			$file->root(),
-			$file->mediaDir() . '/' . $file->filename(),
-			['width' => 64]
+			$file->mediaDir() . '/' . $version->filename(),
+			['quality' => 85, 'interlace' => false, 'strip' => true, 'width' => 64, 'height' => 64]
 		], $args);
-		$this->assertFileDoesNotExist($job);
 	}
 
-	public function testThumbWithExistingJobFile(): void
+	public function testThumbWithInvalidKey(): void
 	{
-		Dir::make(static::TMP . '/content');
-
-		// copy test image to content
-		F::copy(
-			static::FIXTURES . '/files/test.jpg',
-			static::TMP . '/content/test.jpg'
-		);
-
-		// get file object
-		$file = $this->app->file('test.jpg');
-		$this->assertIsFile($file);
-
-		// create job file with specific marker before calling thumb()
-		$dir = $file->mediaDir() . '/.jobs';
-		$job = $dir . '/test-64x64-crop.jpg.json';
-		$payload = '{"width":64,"height":64,"crop":"center","filename":"test.jpg","custom":"marker"}';
-
-		Dir::make($dir);
-		F::write($job, $payload);
-
-		// call thumb() which triggers file::version component
-		$file->thumb(['width' => 64, 'height' => 64, 'crop' => 'center']);
-
-		// job file should not have been overwritten
-		$this->assertFileExists($job);
-		$this->assertSame($payload, F::read($job));
-	}
-
-	public function testThumbWithIncompleteJobFile(): void
-	{
-		Dir::make(static::TMP . '/content');
-
-		// copy test image to content
 		F::copy(static::FIXTURES . '/files/test.jpg', static::TMP . '/content/test.jpg');
 
-		// get file object
+		// signed, but no key the library reads
 		$file = $this->app->file('test.jpg');
+		$name = Media::sign($file, 'test-abc.jpg');
 
-		// create an empty job file
-		F::write($file->mediaDir() . '/.jobs/' . $file->filename() . '.json', '{}');
+		$this->expectException(NotFoundException::class);
 
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessageIs('Incomplete thumbnail configuration');
-
-		$thumb = Media::thumb($file, $file->mediaHash(), $file->filename());
-		$this->assertFalse($thumb);
+		Media::thumb($this->app->site(), $file->mediaHash(), $name);
 	}
 
-	public function testThumbWithoutJobsFile(): void
+	public function testThumbWithOutdatedHash(): void
 	{
-		Dir::make(static::TMP . '/content');
-
-		// copy test image to content
 		F::copy(static::FIXTURES . '/files/test.jpg', static::TMP . '/content/test.jpg');
 
-		// get file object
-		$file = $this->app->file('test.jpg');
+		$file    = $this->app->file('test.jpg');
+		$version = $file->thumb(['width' => 64]);
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessageIs('The thumbnail configuration could not be found');
 
-		// invalid with no job file
-		$thumb = Media::thumb($file, $file->mediaHash(), $file->filename());
-		$this->assertFalse($thumb);
+		Media::thumb($this->app->site(), $file->mediaToken() . '-1', $version->filename());
 	}
 
-	public function testThumbWithTraversalFilename(): void
+	public function testThumbWithoutOriginal(): void
 	{
-		$hash = 'test-1234';
-		$root = static::TMP . '/media/assets/content/' . $hash;
-		Dir::make($jobs = $root . '/.jobs');
+		F::copy(static::FIXTURES . '/files/test.jpg', static::TMP . '/content/test.jpg');
 
-		// a valid JSON file outside the media root
-		// that an unguarded `$job` path would resolve
-		//  to and read as configuration
-		$traversal = '../../../../../evil';
-		F::write($jobs . '/' . $traversal . '.json', '{"x":1}');
+		$file    = $this->app->file('test.jpg');
+		$version = $file->thumb(['width' => 64]);
+		$hash    = $file->mediaHash();
 
-		// confirm the marker really escaped the media root
-		$outside = realpath($jobs . '/' . $traversal . '.json');
-		$this->assertIsString($outside);
-		$this->assertFalse(str_starts_with($outside, realpath(static::TMP) . '/media/'));
+		F::remove($file->root());
 
-		// the traversal filename must be rejected
-		// before it is appended to the job/thumb path,
-		// so it never reaches `$outside`
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessageIs('The thumbnail configuration could not be found');
 
-		Media::thumb('content', $hash, $traversal);
+		Media::thumb($this->app->site(), $hash, $version->filename());
 	}
 
 	public function testUnpublish(): void
