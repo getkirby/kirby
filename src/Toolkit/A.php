@@ -402,6 +402,13 @@ class A
 	/**
 	 * Join array elements as a string,
 	 * also supporting nested arrays
+	 *
+	 * ```php
+	 * $array = ['a', 'b', ['cc', 'dd']];
+	 *
+	 * A::implode($array); // abccdd
+	 * A::implode($array, ', '); // a, b, cc, dd
+	 * ```
 	 */
 	public static function implode(
 		array $array,

@@ -129,6 +129,13 @@ class Version
 
 	/**
 	 * Deletes a version for a specific language
+	 *
+	 * ```php
+	 * $page->version('changes')->delete();
+	 *
+	 * // by language
+	 * $page->version('changes')->delete('de');
+	 * ```
 	 */
 	#[BlockCollectionAccess]
 	public function delete(Language|string $language = 'default'): void
@@ -463,6 +470,13 @@ class Version
 	 * This method can only be applied to the "changes" version.
 	 * It will copy all fields over to the "latest" version and delete
 	 * this version afterwards.
+	 *
+	 * ```php
+	 * $page->version('changes')->publish();
+	 *
+	 * // by language
+	 * $page->version('changes')->publish('de');
+	 * ```
 	 */
 	#[BlockCollectionAccess]
 	public function publish(Language|string $language = 'default'): void

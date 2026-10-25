@@ -73,6 +73,14 @@ trait FieldMethods
 
 	/**
 	 * Applies the callback function to the field
+	 *
+	 * ```php
+	 * echo $page->title()->callback(function ($field) {
+	 *   $field->value = 'Title: ' . $field->value;
+	 *   return $field;
+	 * });
+	 * ```
+	 *
 	 * @since 3.4.0
 	 */
 	public function callback(Closure $callback): mixed

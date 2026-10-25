@@ -419,6 +419,12 @@ class Pages extends Collection
 	/**
 	 * Include all given items in the collection
 	 *
+	 * ```php
+	 * $collection1   = page('exhibitions')->children()->listed();
+	 * $collection2   = page('news')->children()->listed();
+	 * $newCollection = $collection1->merge($collection2);
+	 * ```
+	 *
 	 * @return $this|static
 	 */
 	public function merge(string|Pages|Page|array ...$args): static
