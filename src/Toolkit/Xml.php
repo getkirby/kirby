@@ -218,7 +218,7 @@ class Xml
 	public static function decode(string|null $string): string
 	{
 		$string = strip_tags($string ?? '');
-		return html_entity_decode($string, ENT_COMPAT, 'utf-8');
+		return html_entity_decode($string, ENT_QUOTES | ENT_HTML5, 'utf-8');
 	}
 
 	/**

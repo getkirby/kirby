@@ -177,6 +177,9 @@ class XmlTest extends TestCase
 
 		$this->assertSame('S&#252;per Täst', Xml::encode('S&uuml;per Täst', false));
 
+		$this->assertSame("Homer's \"Duff\"", Xml::decode(Xml::encode("Homer's \"Duff\"")));
+		$this->assertSame("Homer's", Xml::decode('Homer&apos;s'));
+
 		$this->assertSame('', Xml::decode(''));
 		$this->assertSame('', Xml::encode(''));
 		$this->assertSame('', Xml::decode(null));
