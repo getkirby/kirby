@@ -130,7 +130,7 @@ class Xml
 	 * @param $level Indentation level (used internally)
 	 */
 	public static function create(
-		array|string $props,
+		array|string|null $props,
 		string $name = 'root',
 		bool $head = true,
 		string $indent = '  ',

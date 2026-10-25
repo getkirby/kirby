@@ -54,6 +54,14 @@ class XmlTest extends TestCase
 		$this->assertSame('a="&"', $result);
 	}
 
+	public function testCreateNull(): void
+	{
+		$this->assertSame('<name />', Xml::create(null, 'name', false));
+
+		$expected = '<contact>' . PHP_EOL . '  <name>Homer</name>' . PHP_EOL . '  <email />' . PHP_EOL . '</contact>';
+		$this->assertSame($expected, Xml::create(['name' => 'Homer', 'email' => null], 'contact', false));
+	}
+
 	public function testParseSimplifyCreate(): void
 	{
 		$this->assertSame('<name>Homer</name>', Xml::create('Homer', 'name', false));
