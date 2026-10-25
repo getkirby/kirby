@@ -67,7 +67,7 @@ class Xml
 	 */
 	public static function attr(
 		string|array $name,
-		$value = null
+		mixed $value = null
 	): string|null {
 		if (is_array($name) === true) {
 			if ($value !== false) {
@@ -286,87 +286,68 @@ class Xml
 		SimpleXMLElement $element,
 		bool $collectName = true
 	): array|string {
-		// get all XML namespaces of the whole document to iterate over later;
-		// we don't need the global namespace (empty string) in the list
-		$usedNamespaces = $element->getNamespaces(true);
+		// prefixes of all XML namespaces of the whole document and `null`
+		// for attributes and children without any namespace
+		$namespaces = $element->getNamespaces(true);
+		unset($namespaces['']);
+		$namespaces = [null, ...array_keys($namespaces)];
 
-		unset($usedNamespaces['']);
-
-		// now collect element metadata of the parent
 		$array = [];
 
 		if ($collectName === true) {
 			$array['@name'] = $element->getName();
 		}
 
-		// collect attributes with each defined document namespace;
-		// also check for attributes without any namespace
-		$attributeArray = [];
+		$attributes = [];
 
-		foreach ([0 => null, ...array_keys($usedNamespaces)] as $namespace) {
-			$prefix     = $namespace ? $namespace . ':' : '';
-			$attributes = $element->attributes($namespace, true);
+		foreach ($namespaces as $namespace) {
+			$prefix = $namespace === null ? '' : $namespace . ':';
 
-			foreach ($attributes as $key => $value) {
-				$attributeArray[$prefix . $key] = (string)$value;
+			foreach ($element->attributes($namespace, true) as $key => $value) {
+				$attributes[$prefix . $key] = (string)$value;
 			}
 		}
 
 		/** @psalm-suppress RedundantCondition */
-		if ($attributeArray !== []) {
-			$array['@attributes'] = $attributeArray;
+		if ($attributes !== []) {
+			$array['@attributes'] = $attributes;
 		}
 
-		// collect namespace definitions of this particular XML element
-		if ($namespaces = $element->getDocNamespaces(false, false)) {
-			$array['@namespaces'] = $namespaces;
+		// namespace definitions of this particular XML element
+		if ($definitions = $element->getDocNamespaces(false, false)) {
+			$array['@namespaces'] = $definitions;
 		}
 
-		// check for children with each defined document namespace;
-		// also check for children without any namespace
-		$hasChildren = false;
+		// group the simplified children per element name
+		$children = [];
 
-		foreach ([0 => null, ...array_keys($usedNamespaces)] as $namespace) {
-			$prefix   = $namespace ? $namespace . ':' : '';
-			$children = $element->children($namespace, true);
+		foreach ($namespaces as $namespace) {
+			$prefix = $namespace === null ? '' : $namespace . ':';
 
-			if (count($children) > 0) {
-				// there are children, recursively simplify each one
-				$hasChildren = true;
-
-				// make a grouped collection of elements per element name
-				foreach ($children as $child) {
-					$array[$prefix . $child->getName()][] = static::simplify($child, false);
-				}
+			foreach ($element->children($namespace, true) as $child) {
+				$children[$prefix . $child->getName()][] = static::simplify($child, false);
 			}
 		}
 
-		if ($hasChildren === true) {
-			// there were children of any namespace
-
-			// reduce elements where there is only one item
-			// of the respective type to a simple string;
-			// don't do anything with special `@` metadata keys
-			foreach ($array as $name => $item) {
-				if (
-					str_starts_with($name, '@') === false &&
-					count($item) === 1
-				) {
-					$array[$name] = $item[0];
-				}
+		/** @psalm-suppress RedundantCondition */
+		if ($children !== []) {
+			// reduce elements where there is only
+			// one item of the respective type
+			foreach ($children as $name => $items) {
+				$array[$name] = count($items) === 1 ? $items[0] : $items;
 			}
 
 			return $array;
 		}
 
-		// we didn't find any XML children above, only use the string value
-		$element = (string)$element;
+		// no XML children, only use the string value
+		$value = (string)$element;
 
 		if ($array === []) {
-			return $element;
+			return $value;
 		}
 
-		$array['@value'] = $element;
+		$array['@value'] = $value;
 
 		return $array;
 	}
@@ -387,42 +368,40 @@ class Xml
 		string|null $indent = null,
 		int $level = 0
 	): string {
-		$attr       = static::attr($attr);
-		$start      = '<' . $name . ($attr ? ' ' . $attr : '') . '>';
-		$startShort = '<' . $name . ($attr ? ' ' . $attr : '') . static::$void;
-		$end        = '</' . $name . '>';
-		$baseIndent = match ($indent) {
-			null    => '',
-			default => str_repeat($indent, $level)
-		};
+		$attr   = static::attr($attr);
+		$start  = '<' . $name . ($attr ? ' ' . $attr : '');
+		$prefix = $indent === null ? '' : str_repeat($indent, $level);
 
-		if (is_array($content) === false) {
-			return match ($content) {
-				null    => $baseIndent . $startShort,
-				default => $baseIndent . $start . static::value($content) . $end
-			};
+		if ($content === null) {
+			return $prefix . $start . static::$void;
 		}
 
-		if (is_string($indent) === false) {
+		$start .= '>';
+		$end    = '</' . $name . '>';
+
+		if (is_array($content) === false) {
+			return $prefix . $start . static::value($content) . $end;
+		}
+
+		if ($indent === null) {
 			return $start . implode($content) . $end;
 		}
 
-		$xml = $baseIndent . $start . PHP_EOL;
+		$xml = $prefix . $start . PHP_EOL;
 
 		foreach ($content as $line) {
-			$xml .= $baseIndent . $indent . $line . PHP_EOL;
+			$xml .= $prefix . $indent . $line . PHP_EOL;
 		}
 
-		$xml .= $baseIndent . $end;
-
-		return $xml;
+		return $xml . $prefix . $end;
 	}
 
 	/**
 	 * Properly encodes tag contents
 	 */
-	public static function value(string|int|float|bool|null $value): string|null
-	{
+	public static function value(
+		string|int|float|bool|null $value
+	): string|null {
 		if (is_bool($value) === true) {
 			return $value === true ? 'true' : 'false';
 		}
@@ -438,9 +417,9 @@ class Xml
 		// accept raw CDATA only if the entire string is made up of
 		// complete consecutive CDATA blocks without any content outside
 		if (
-			Str::startsWith($value, '<![CDATA[') === true &&
-			Str::endsWith($value, ']]>') === true &&
-			Str::matches($value, '/\]\]>(?!<!\[CDATA\[|$)/') === false
+			str_starts_with($value, '<![CDATA[') === true &&
+			str_ends_with($value, ']]>') === true &&
+			preg_match('/\]\]>(?!<!\[CDATA\[|$)/', $value) === 0
 		) {
 			return $value;
 		}
