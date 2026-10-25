@@ -1178,6 +1178,13 @@ class StrTest extends TestCase
 			'this-is-a-very-long-sentence-that-should-be-used-to-test-the-maxlenght-parameter-of-the-str-slug-method-by-default-it-should-limit-the-slug-to-128-characters-but-we-can-disable-the-shortening',
 			Str::slug('This is a very long sentence that should be used to test the $maxlenght parameter of the Str::slug() method. By default it should limit the slug to 128 characters, but we can disable the shortening.', null, null, false)
 		);
+
+		// no trailing separator after the cut
+		$this->assertSame('hello', Str::slug('Hello World', maxlength: 6));
+		$this->assertSame('hello-world', Str::slug('Hello World and more', maxlength: 12));
+
+		// leading non-word-chars don't count towards the limit
+		$this->assertSame('abc', Str::slug('---abc', maxlength: 3));
 	}
 
 	public function testSnake(): void
