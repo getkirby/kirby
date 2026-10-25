@@ -24,7 +24,7 @@ class Obj extends stdClass
 	/**
 	 * Magic getter
 	 */
-	public function __call(string $property, array $arguments)
+	public function __call(string $property, array $arguments): mixed
 	{
 		return $this->$property ?? null;
 	}
@@ -38,17 +38,11 @@ class Obj extends stdClass
 		return $this->toArray();
 	}
 
-	/**
-	 * Magic property getter
-	 */
-	public function __get(string $property)
+	public function __get(string $property): mixed
 	{
 		return null;
 	}
 
-	/**
-	 * Magic property setter
-	 */
 	public function __set(string $property, mixed $value): void
 	{
 		$this->{$property} = $value;
@@ -57,12 +51,12 @@ class Obj extends stdClass
 	/**
 	 * Gets one or multiple properties of the object
 	 *
-	 * @param mixed $fallback If multiple properties are requested:
-	 *                        Associative array of fallback values per key
+	 * @param $fallback If multiple properties are requested:
+	 *                  Associative array of fallback values per key
 	 */
-	public function get(string|array $property, $fallback = null)
+	public function get(string|array $property, mixed $fallback = null): mixed
 	{
-		if (is_array($property)) {
+		if (is_array($property) === true) {
 			$fallback ??= [];
 
 			if (is_array($fallback) === false) {
@@ -91,12 +85,9 @@ class Obj extends stdClass
 		$result = [];
 
 		foreach ((array)$this as $key => $value) {
-			$result[$key] = match (true) {
-				is_object($value) === true && method_exists($value, 'toArray')
-					=> $value->toArray(),
-				default
-				=> $value
-			};
+			$result[$key] = is_object($value) === true && method_exists($value, 'toArray') === true
+				? $value->toArray()
+				: $value;
 		}
 
 		return $result;
@@ -105,11 +96,12 @@ class Obj extends stdClass
 	/**
 	 * Converts the object to a json string
 	 *
+	 * @return non-empty-string
 	 * @throws \JsonException for invalid JSON
 	 */
 	public function toJson(int $flags = 0, int $depth = 512): string
 	{
-		/** @var string $json */
+		/** @var non-empty-string $json */
 		$json = json_encode(
 			$this->toArray(),
 			$flags | JSON_THROW_ON_ERROR,
@@ -120,7 +112,9 @@ class Obj extends stdClass
 	}
 
 	/**
-	 *  Returns the property names as keys
+	 * Returns the property names
+	 *
+	 * @return list<int|string>
 	 */
 	public function toKeys(): array
 	{
