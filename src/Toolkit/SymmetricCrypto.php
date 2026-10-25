@@ -24,7 +24,7 @@ class SymmetricCrypto
 	 *
 	 * @var array<string, string>
 	 */
-	protected array $secretKeysByOptions = [];
+	protected array $keys = [];
 
 	/**
 	 * Initializes the keys used for crypto, both optional
@@ -75,9 +75,9 @@ class SymmetricCrypto
 		$this->memzero($this->password);
 		$this->memzero($this->secretKey);
 
-		foreach ($this->secretKeysByOptions as $key => &$value) {
+		foreach ($this->keys as $key => &$value) {
 			$this->memzero($value);
-			unset($this->secretKeysByOptions[$key]);
+			unset($this->keys[$key]);
 		}
 	}
 
@@ -108,10 +108,10 @@ class SymmetricCrypto
 		}
 
 		if (
-			isset($props['data']) !== true ||
-			isset($props['nonce']) !== true ||
-			isset($props['salt']) !== true ||
-			isset($props['limits']) !== true
+			is_string($props['data'] ?? null) === false ||
+			is_string($props['nonce'] ?? null) === false ||
+			is_string($props['salt'] ?? null) === false ||
+			is_array($props['limits'] ?? null) === false
 		) {
 			throw new InvalidArgumentException(
 				message: 'Input data does not contain all required props'
@@ -207,13 +207,26 @@ class SymmetricCrypto
 				);
 			}
 
-			$options = $salt . ':' . implode(',', $limits);
-
-			if (isset($this->secretKeysByOptions[$options]) === true) {
-				return $this->secretKeysByOptions[$options];
+			// don't let crafted limits make the key derivation arbitrarily
+			// expensive; `encrypt()` uses lower limits than these
+			if (
+				is_int($limits[0] ?? null) === false ||
+				is_int($limits[1] ?? null) === false ||
+				$limits[0] > SODIUM_CRYPTO_PWHASH_OPSLIMIT_MODERATE ||
+				$limits[1] > SODIUM_CRYPTO_PWHASH_MEMLIMIT_MODERATE
+			) {
+				throw new InvalidArgumentException(
+					message: 'Unsupported key derivation limits'
+				);
 			}
 
-			return $this->secretKeysByOptions[$options] = sodium_crypto_pwhash(
+			$options = $salt . ':' . implode(',', $limits);
+
+			if (isset($this->keys[$options]) === true) {
+				return $this->keys[$options];
+			}
+
+			return $this->keys[$options] = sodium_crypto_pwhash(
 				SODIUM_CRYPTO_SECRETBOX_KEYBYTES,
 				$this->password,
 				$salt,

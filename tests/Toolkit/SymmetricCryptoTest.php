@@ -64,16 +64,16 @@ class SymmetricCryptoTest extends TestCase
 	{
 		// helper to access protected props by reference
 		$reader = fn () => [
-			'password'            => &$this->password,
-			'secretKey'           => &$this->secretKey,
-			'secretKeysByOptions' => &$this->secretKeysByOptions,
+			'password'  => &$this->password,
+			'secretKey' => &$this->secretKey,
+			'keys'      => &$this->keys,
 		];
 
 		$crypto = new SymmetricCrypto(secretKey: $secretKey = 'abcdefghijklmnopabcdefghijklmnop');
 		$values = Closure::bind($reader, $crypto, $crypto)();
-		$this->assertSame(['password' => null, 'secretKey' => $secretKey, 'secretKeysByOptions' => []], $values);
+		$this->assertSame(['password' => null, 'secretKey' => $secretKey, 'keys' => []], $values);
 		unset($crypto);
-		$this->assertSame(['password' => null, 'secretKey' => '', 'secretKeysByOptions' => []], $values);
+		$this->assertSame(['password' => null, 'secretKey' => '', 'keys' => []], $values);
 
 		$crypto = new SymmetricCrypto(password: $password = 'super secure');
 		$crypto->secretKey(str_repeat('A', SODIUM_CRYPTO_PWHASH_SALTBYTES), [SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE, SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE]);
@@ -83,13 +83,13 @@ class SymmetricCryptoTest extends TestCase
 		$this->assertSame([
 			'password' => $password,
 			'secretKey' => null,
-			'secretKeysByOptions' => [
+			'keys' => [
 				str_repeat('A', SODIUM_CRYPTO_PWHASH_SALTBYTES) . ':' . $limits => hex2bin('8bfb935f72ecc1c77aecde1a44168f73aed70a21d35d8bd11c8c43dcec07ccb3'),
 				str_repeat('B', SODIUM_CRYPTO_PWHASH_SALTBYTES) . ':' . $limits => hex2bin('957a8b8b435aefb479351c8c5b5dcf0ca76253846d47c69dcc0ddba569c14d62'),
 			]
 		], $values);
 		unset($crypto);
-		$this->assertSame(['password' => '', 'secretKey' => null, 'secretKeysByOptions' => []], $values);
+		$this->assertSame(['password' => '', 'secretKey' => null, 'keys' => []], $values);
 	}
 
 	public function testDecrypt(): void
@@ -102,6 +102,20 @@ class SymmetricCryptoTest extends TestCase
 		$this->assertSame('a very confidential message', $crypto->decrypt($input));
 	}
 
+	public function testDecryptExcessiveLimits(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Unsupported key derivation limits');
+
+		$crypto = new SymmetricCrypto(password: 'super secure');
+
+		// limits far above what `encrypt()` uses
+		$input = '{"mode":"secretbox","data":"tXH/eNjDMhL+BIgPDWkeYZvBpqBbMKEfUhoHHrhLde7gbTBGqsz1IzhG7Q==",' .
+			'"nonce":"X3xgVLA1Zyffp5/AOlZQeccD6aynPj43","salt":"VHC6wQ2g7Z9+HK0XJUWV6Q==","limits":[4,1073741824]}';
+
+		$crypto->decrypt($input);
+	}
+
 	public function testDecryptInvalidJson(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -109,6 +123,15 @@ class SymmetricCryptoTest extends TestCase
 
 		$crypto = new SymmetricCrypto(secretKey: 'abcdefghijklmnopabcdefghijklmnop');
 		$crypto->decrypt('not JSON!');
+	}
+
+	public function testDecryptInvalidLimits(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Unsupported key derivation limits');
+
+		$crypto = new SymmetricCrypto(password: 'super secure');
+		$crypto->decrypt('{"mode":"secretbox","data":"a","nonce":"b","salt":"c","limits":["a","b"]}');
 	}
 
 	public function testDecryptInvalidMode(): void
@@ -122,6 +145,15 @@ class SymmetricCryptoTest extends TestCase
 			'"nonce":"QZ9NM4JIP0jDgfzQRe1ir6fcAwjBuRKZ"}';
 
 		$crypto->decrypt($input);
+	}
+
+	public function testDecryptInvalidProps(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Input data does not contain all required props');
+
+		$crypto = new SymmetricCrypto(secretKey: 'abcdefghijklmnopabcdefghijklmnop');
+		$crypto->decrypt('{"mode":"secretbox","data":["not a string"],"nonce":"b","salt":"c","limits":[2,67108864]}');
 	}
 
 	public function testDecryptMissingProps(): void
