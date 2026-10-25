@@ -136,6 +136,11 @@ class Str
 			$value   = A::first($parts); // $parts now only contains params
 			$quality = 1;
 
+			// skip items without a value, e.g. a lone `;`
+			if ($value === null) {
+				continue;
+			}
+
 			// check for the q param ("quality" of the type)
 			foreach ($parts as $param) {
 				$param = static::split($param, '=');

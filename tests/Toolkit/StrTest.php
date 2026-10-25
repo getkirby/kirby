@@ -33,6 +33,13 @@ class StrTest extends TestCase
 		], Str::accepted('image/jpeg,  image/png;q=0.7'));
 	}
 
+	public function testAcceptedWithoutValue(): void
+	{
+		$this->assertSame([
+			['quality' => 1.0, 'value' => 'text/html']
+		], Str::accepted('text/html, ;, ; ;'));
+	}
+
 	public function testAscii(): void
 	{
 		// clean ASCII
