@@ -54,7 +54,7 @@ class UserChangeEmailDialogControllerTest extends TestCase
 	{
 		$user = $this->app->user('test')->changeSecret('email', true);
 
-		$dialog = (new UserChangeEmailDialogController($user))->load();
+		$dialog = new UserChangeEmailDialogController($user)->load();
 		$props  = $dialog->props();
 
 		// changing the address resets the opt-in, so the dialog says so

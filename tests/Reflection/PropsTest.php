@@ -166,7 +166,7 @@ class PropsTest extends TestCase
 {
 	public function testAll(): void
 	{
-		$props = (new Props(PropsTestClass::class))->all();
+		$props = new Props(PropsTestClass::class)->all();
 
 		$this->assertSame(
 			['hidden', 'label', 'marker', 'uninitialized', 'width', 'withArgs', 'withPrivateGetter'],
@@ -188,12 +188,12 @@ class PropsTest extends TestCase
 		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('The props "a" and "b" of Kirby\Reflection\PropsTestCollisionClass are both exported as "b"');
 
-		(new Props(PropsTestCollisionClass::class))->all();
+		new Props(PropsTestCollisionClass::class)->all();
 	}
 
 	public function testAllWithInheritedProperties(): void
 	{
-		$props = (new Props(new PropsTestChildClass()))->all();
+		$props = new Props(new PropsTestChildClass())->all();
 
 		$this->assertSame(
 			['fieldsets', 'hidden', 'icon', 'label', 'marker', 'uninitialized', 'width', 'withArgs', 'withPrivateGetter'],
@@ -206,7 +206,7 @@ class PropsTest extends TestCase
 		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('The getter "missing" for the prop "a" must be a non-static method');
 
-		(new Props(PropsTestInvalidGetterClass::class))->all();
+		new Props(PropsTestInvalidGetterClass::class)->all();
 	}
 
 	public function testAllWithInvalidSetter(): void
@@ -214,7 +214,7 @@ class PropsTest extends TestCase
 		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('The setter "setA" for the prop "a" must be a non-static method of Kirby\Reflection\PropsTestInvalidSetterClass that accepts the value as its only required argument');
 
-		(new Props(PropsTestInvalidSetterClass::class))->all();
+		new Props(PropsTestInvalidSetterClass::class)->all();
 	}
 
 	public function testAllWithRedeclaredProperty(): void
@@ -261,14 +261,14 @@ class PropsTest extends TestCase
 		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('Props can only be set or exported for an object');
 
-		(new Props(PropsTestSetterClass::class))->set('toggle', true);
+		new Props(PropsTestSetterClass::class)->set('toggle', true);
 	}
 
 	public function testSetWithInvalidType(): void
 	{
 		$this->expectException(TypeError::class);
 
-		(new Props(new PropsTestSetterClass()))->set('toggle', ['yes']);
+		new Props(new PropsTestSetterClass())->set('toggle', ['yes']);
 	}
 
 	public function testSetWithSetter(): void
@@ -299,12 +299,12 @@ class PropsTest extends TestCase
 		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('The prop "foo" does not exist');
 
-		(new Props(new PropsTestSetterClass()))->set('foo', 'bar');
+		new Props(new PropsTestSetterClass())->set('foo', 'bar');
 	}
 
 	public function testToArray(): void
 	{
-		$props = (new Props(PropsTestClass::class))->toArray();
+		$props = new Props(PropsTestClass::class)->toArray();
 
 		$this->assertSame([
 			'name'        => 'width',
@@ -320,7 +320,7 @@ class PropsTest extends TestCase
 
 	public function testToArrayWithComputedProp(): void
 	{
-		$props = (new Props(PropsTestChildClass::class))->toArray();
+		$props = new Props(PropsTestChildClass::class)->toArray();
 
 		$this->assertTrue($props['icon']['computed']);
 		$this->assertNull($props['icon']['default']);
@@ -329,7 +329,7 @@ class PropsTest extends TestCase
 
 	public function testToArrayWithExportAs(): void
 	{
-		$props = (new Props(PropsTestClass::class))->toArray();
+		$props = new Props(PropsTestClass::class)->toArray();
 
 		// the documentation uses the original prop name
 		$this->assertSame('marker', $props['marker']['name']);
@@ -337,7 +337,7 @@ class PropsTest extends TestCase
 
 	public function testToArrayWithOverriddenDefault(): void
 	{
-		$props = (new Props(PropsTestChildClass::class))->toArray();
+		$props = new Props(PropsTestChildClass::class)->toArray();
 
 		// the child only redeclares the property to change the default,
 		// so the description still comes from the parent
@@ -347,7 +347,7 @@ class PropsTest extends TestCase
 
 	public function testToArrayWithPropDefault(): void
 	{
-		$props = (new Props(PropsTestChildClass::class))->toArray();
+		$props = new Props(PropsTestChildClass::class)->toArray();
 
 		// the attribute can document a default the property never holds
 		$this->assertTrue($props['fieldsets']['computed']);
@@ -356,7 +356,7 @@ class PropsTest extends TestCase
 
 	public function testToArrayWithoutDefaultValue(): void
 	{
-		$props = (new Props(PropsTestClass::class))->toArray();
+		$props = new Props(PropsTestClass::class)->toArray();
 
 		$this->assertNull($props['uninitialized']['default']);
 		$this->assertNull($props['uninitialized']['description']);
@@ -393,12 +393,12 @@ class PropsTest extends TestCase
 		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('Props can only be set or exported for an object');
 
-		(new Props(PropsTestClass::class))->values();
+		new Props(PropsTestClass::class)->values();
 	}
 
 	public function testValuesWithGetterAttribute(): void
 	{
-		$values = (new Props(new PropsTestSetterClass()))->values();
+		$values = new Props(new PropsTestSetterClass())->values();
 
 		// the protected getter from the attribute is used
 		$this->assertTrue($values['active']);

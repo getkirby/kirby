@@ -441,7 +441,7 @@ class ParserTest extends TestCase
 			$this->expectException(Exception::class);
 			$this->expectExceptionMessage('Expect expression');
 
-			(new Parser('()'))->parse();
+			new Parser('()')->parse();
 		} finally {
 			restore_error_handler();
 		}

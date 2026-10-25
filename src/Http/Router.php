@@ -147,7 +147,7 @@ class Router
 		array $routes = [],
 		Closure|null $callback = null
 	) {
-		return (new static($routes))->call($path, $method, $callback);
+		return new static($routes)->call($path, $method, $callback);
 	}
 
 	/**

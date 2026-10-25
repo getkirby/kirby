@@ -169,7 +169,7 @@ class AssetsTest extends TestCase
 		// app must be created again to load the new plugin
 		$this->app->clone();
 
-		$css = (new Assets())->css();
+		$css = new Assets()->css();
 
 		$this->assertSame([
 			'/media/panel/' . $this->app->versionHash() . '/css/style.min.css',
@@ -408,9 +408,9 @@ class AssetsTest extends TestCase
 
 	public function testIsDev(): void
 	{
-		$this->assertFalse((new Assets())->isDev());
+		$this->assertFalse(new Assets()->isDev());
 		$this->setDevMode();
-		$this->assertTrue((new Assets())->isDev());
+		$this->assertTrue(new Assets()->isDev());
 	}
 
 	public function testJs(): void
@@ -519,7 +519,7 @@ class AssetsTest extends TestCase
 		// app must be created again to load the new plugin
 		$this->app->clone();
 
-		$js = (new Assets())->js();
+		$js = new Assets()->js();
 
 		$this->assertSame([
 			'/media/plugins/test/a.' . hash('xxh3', 'a') . '.js'

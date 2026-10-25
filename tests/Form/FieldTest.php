@@ -388,7 +388,7 @@ class FieldTest extends TestCase
 
 	public function testPropsWithPropAttributes(): void
 	{
-		$props = (new OptionsMockField(name: 'test'))->props();
+		$props = new OptionsMockField(name: 'test')->props();
 
 		// all `#[Prop]` properties are exported automatically
 		$this->assertFalse($props['enabled']);

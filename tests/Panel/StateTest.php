@@ -635,7 +635,7 @@ class StateTest extends TestCase
 			'_pretty'  => true
 		]);
 
-		$view = A::apply((new State())->view());
+		$view = A::apply(new State()->view());
 
 		// the State params must not end up in the restored Panel URL
 		$this->assertSame(['page' => 2, 'search' => 'foo'], $view['query']);

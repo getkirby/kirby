@@ -35,7 +35,7 @@ class DefaultRunner extends Runner
 	 */
 	protected function parse(string $query): Node
 	{
-		return $this->cache[$query] ??= (new Parser($query))->parse();
+		return $this->cache[$query] ??= new Parser($query)->parse();
 	}
 
 	/**
