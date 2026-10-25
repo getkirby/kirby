@@ -19,6 +19,12 @@ class LazyValueTest extends TestCase
 		$this->assertSame($expected, $value->resolve());
 	}
 
+	public function testResolveWithNamedArgs(): void
+	{
+		$value = new LazyValue(fn (string $prefix) => $prefix . '-resolved');
+		$this->assertSame('a-resolved', $value->resolve(prefix: 'a'));
+	}
+
 	public function testUnwrap(): void
 	{
 		$value = LazyValue::unwrap($expected = 'a');

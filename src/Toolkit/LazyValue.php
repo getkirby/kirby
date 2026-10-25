@@ -11,9 +11,14 @@ use Closure;
  *
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
+ *
+ * @template TValue
  */
 class LazyValue
 {
+	/**
+	 * @param Closure(mixed...):TValue $value
+	 */
 	public function __construct(
 		protected Closure $value
 	) {
@@ -21,10 +26,12 @@ class LazyValue
 
 	/**
 	 * Resolve the lazy value to its actual value
+	 *
+	 * @return TValue
 	 */
 	public function resolve(mixed ...$args): mixed
 	{
-		return call_user_func_array($this->value, $args);
+		return ($this->value)(...$args);
 	}
 
 	/**
@@ -33,7 +40,10 @@ class LazyValue
 	public static function unwrap(mixed $data, mixed ...$args): mixed
 	{
 		if (is_array($data) === true) {
-			return A::map($data, fn ($value) => static::unwrap($value, ...$args));
+			return A::map(
+				$data,
+				fn ($value) => static::unwrap($value, ...$args)
+			);
 		}
 
 		if ($data instanceof static) {
