@@ -145,7 +145,7 @@ class Str
 			foreach ($parts as $param) {
 				$param = static::split($param, '=');
 
-				if (A::get($param, 0) === 'q' && empty($param[1]) === false) {
+				if (A::get($param, 0) === 'q' && isset($param[1]) === true) {
 					$quality = $param[1];
 				}
 			}

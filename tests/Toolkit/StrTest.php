@@ -40,6 +40,14 @@ class StrTest extends TestCase
 		], Str::accepted('text/html, ;, ; ;'));
 	}
 
+	public function testAcceptedZeroQuality(): void
+	{
+		$this->assertSame([
+			['quality' => 1.0, 'value' => 'text/html'],
+			['quality' => 0.0, 'value' => 'image/png']
+		], Str::accepted('image/png;q=0, text/html'));
+	}
+
 	public function testAscii(): void
 	{
 		// clean ASCII
