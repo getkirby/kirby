@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Exception;
 use Kirby\Data\Data;
 use Kirby\Email\PHPMailer;
 use Kirby\Exception\InvalidArgumentException;
@@ -1135,6 +1136,109 @@ class AppTest extends TestCase
 		$count = 0;
 		$app->trigger('recursive2');
 		$this->assertSame(10, $count);
+	}
+
+	/**
+	 * @covers ::trigger
+	 */
+	public function testTriggerAfterException()
+	{
+		$a = 0;
+		$b = 0;
+
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'hooks' => [
+				'a' => [
+					function () use (&$a) {
+						$a++;
+						throw new Exception('blocked');
+					}
+				],
+				'b' => [
+					function () use (&$b) {
+						$b++;
+					}
+				]
+			]
+		]);
+
+		foreach ([1, 2] as $attempt) {
+			try {
+				$app->trigger('a');
+			} catch (Exception) {
+			}
+		}
+
+		// the loop protection must not outlive the failed hook
+		$app->trigger('b');
+		$app->trigger('b');
+
+		$this->assertSame(2, $a);
+		$this->assertSame(2, $b);
+	}
+
+	/**
+	 * @covers ::trigger
+	 */
+	public function testTriggerNestingRepeated()
+	{
+		$message = '';
+
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'hooks' => [
+				'a' => [
+					function () use (&$message) {
+						$message .= 'a';
+						$this->trigger('b');
+						$this->trigger('b');
+					}
+				],
+				'b' => [
+					function () use (&$message) {
+						$message .= 'b';
+					}
+				]
+			]
+		]);
+
+		$app->trigger('a');
+		$this->assertSame('abb', $message);
+	}
+
+	/**
+	 * @covers ::trigger
+	 */
+	public function testTriggerNestingSameEvent()
+	{
+		$message = '';
+
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'hooks' => [
+				'a' => [
+					function () use (&$message) {
+						$message .= '1';
+					},
+					function () use (&$message) {
+						$message .= '2';
+						$this->trigger('a');
+					}
+				]
+			]
+		]);
+
+		// the nested event runs the first hook again,
+		// only the running second hook is skipped
+		$app->trigger('a');
+		$this->assertSame('121', $message);
 	}
 
 	/**

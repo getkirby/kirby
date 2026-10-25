@@ -1700,26 +1700,23 @@ class App
 		$event = $originalEvent ?? new Event($name, $args);
 
 		if ($functions = $this->extension('hooks', $name)) {
-			static $level = 0;
-			static $triggered = [];
-			$level++;
+			static $running = [];
 
-			foreach ($functions as $index => $function) {
-				if (in_array($function, $triggered[$name] ?? []) === true) {
+			foreach ($functions as $function) {
+				// skip hooks that are already running for this event,
+				// to avoid endless loops
+				if (in_array($function, $running[$name] ?? [], true) === true) {
 					continue;
 				}
 
-				// mark the hook as triggered, to avoid endless loops
-				$triggered[$name][] = $function;
+				$running[$name][] = $function;
 
-				// bind the App object to the hook
-				$event->call($this, $function);
-			}
-
-			$level--;
-
-			if ($level === 0) {
-				$triggered = [];
+				try {
+					// bind the App object to the hook
+					$event->call($this, $function);
+				} finally {
+					array_pop($running[$name]);
+				}
 			}
 		}
 
