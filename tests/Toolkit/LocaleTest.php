@@ -106,6 +106,14 @@ class LocaleTest extends TestCase
 		Locale::get(987654321);
 	}
 
+	public function testGetInvalid3(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid locale category "LC_KIRBY"');
+
+		Locale::get('LC_KIRBY');
+	}
+
 	public function testNormalize(): void
 	{
 		// empty array
@@ -172,5 +180,13 @@ class LocaleTest extends TestCase
 		$this->assertSame('de_AT.' . $this->localeSuffix, setlocale(LC_NUMERIC, '0'));
 		$this->assertSame('de_AT.' . $this->localeSuffix, setlocale(LC_COLLATE, '0'));
 		$this->assertSame('de_CH.' . $this->localeSuffix, locale_get_default());
+	}
+
+	public function testSetInvalidCategory(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid locale category "KIRBY"');
+
+		Locale::set(['KIRBY' => 'de_DE']);
 	}
 }
