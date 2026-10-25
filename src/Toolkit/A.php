@@ -126,16 +126,18 @@ class A
 	 * @param $limit The number of elements the array should
 	 *              contain after filling it up.
 	 * @param $fill The element, which should be used to
-	 *             fill the array. If it's a callable, it
-	 *             will be called with the current index
+	 *             fill the array. If it's a callable (but no
+	 *             string), it will be called with the current index
 	 */
 	public static function fill(
 		array $array,
 		int $limit,
 		mixed $fill = 'placeholder'
 	): array {
+		$callable = is_string($fill) === false && is_callable($fill) === true;
+
 		for ($x = count($array); $x < $limit; $x++) {
-			$array[] = is_callable($fill) ? $fill($x) : $fill;
+			$array[] = $callable === true ? $fill($x) : $fill;
 		}
 
 		return $array;
@@ -451,8 +453,8 @@ class A
 
 	/**
 	 * Takes an array and makes it associative by an argument.
-	 * If the argument is a callable, it will be used to map the array.
 	 * If it is a string, it will be used as a key to pluck from the array.
+	 * Otherwise, the callable will be used to map the array.
 	 *
 	 * ```php
 	 * $array = [['id' => 1], ['id' => 2], ['id' => 3]];
@@ -467,10 +469,9 @@ class A
 	 */
 	public static function keyBy(array $array, string|callable $keyBy): array
 	{
-		$keys =
-			is_callable($keyBy) ?
-			static::map($array, $keyBy) :
-			static::pluck($array, $keyBy);
+		$keys = is_string($keyBy) === true
+			? static::pluck($array, $keyBy)
+			: static::map($array, $keyBy);
 
 		if (count($keys) !== count($array)) {
 			throw new InvalidArgumentException(
