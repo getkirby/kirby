@@ -585,6 +585,19 @@ class VTest extends TestCase
 		$this->assertFalse(V::less(2, 1));
 	}
 
+	public function testMatch(): void
+	{
+		$this->assertTrue(V::match('kirby', '/^k/'));
+		$this->assertTrue(V::match(123, '/^\d+$/'));
+		$this->assertFalse(V::match('kirby', '/^a/'));
+
+		// arrays and objects without a string representation never match
+		$this->assertFalse(V::match(['kirby'], '/k/'));
+		$this->assertFalse(V::match(new stdClass(), '/./'));
+		$this->assertFalse(V::alpha(['a']));
+		$this->assertFalse(V::filename(['file']));
+	}
+
 	public function testMaxLength(): void
 	{
 		$this->assertTrue(V::maxLength('Kirby', 10));

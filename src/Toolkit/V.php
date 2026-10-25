@@ -40,13 +40,13 @@ class V
 			throw new Exception('The validator does not exist: ' . $method);
 		}
 
-		return call_user_func_array($validators[$method], $arguments);
+		return $validators[$method](...$arguments);
 	}
 
 	/**
 	 * Valid: `'yes' | true | 1 | 'on'`
 	 */
-	public static function accepted($value): bool
+	public static function accepted(mixed $value): bool
 	{
 		return static::in($value, [1, true, 'yes', 'true', '1', 'on'], true) === true;
 	}
@@ -54,7 +54,7 @@ class V
 	/**
 	 * Valid: `a-z | A-Z`
 	 */
-	public static function alpha($value, bool $unicode = false): bool
+	public static function alpha(mixed $value, bool $unicode = false): bool
 	{
 		return static::match($value, ($unicode === true ? '/^([\pL])+$/u' : '/^([a-z])+$/i')) === true;
 	}
@@ -62,7 +62,7 @@ class V
 	/**
 	 * Valid: `a-z | A-Z | 0-9`
 	 */
-	public static function alphanum($value, bool $unicode = false): bool
+	public static function alphanum(mixed $value, bool $unicode = false): bool
 	{
 		return static::match($value, ($unicode === true ? '/^[\pL\pN]+$/u' : '/^([a-z0-9])+$/i')) === true;
 	}
@@ -70,7 +70,7 @@ class V
 	/**
 	 * Checks for numbers within the given range
 	 */
-	public static function between($value, $min, $max): bool
+	public static function between(mixed $value, float $min, float $max): bool
 	{
 		return
 			static::min($value, $min) === true &&
@@ -81,7 +81,7 @@ class V
 	 * Checks with the callback sent by the user
 	 * It's ideal for one-time custom validations
 	 */
-	public static function callback($value, callable $callback): bool
+	public static function callback(mixed $value, callable $callback): bool
 	{
 		return $callback($value);
 	}
@@ -89,7 +89,7 @@ class V
 	/**
 	 * Checks if the given string contains the given value
 	 */
-	public static function contains($value, $needle): bool
+	public static function contains(mixed $value, string $needle): bool
 	{
 		return Str::contains($value, $needle);
 	}
@@ -139,7 +139,7 @@ class V
 	/**
 	 * Valid: `'no' | false | 0 | 'off'`
 	 */
-	public static function denied($value): bool
+	public static function denied(mixed $value): bool
 	{
 		return static::in($value, [0, false, 'no', 'false', '0', 'off'], true) === true;
 	}
@@ -147,8 +147,11 @@ class V
 	/**
 	 * Checks for a value, which does not equal the given value
 	 */
-	public static function different($value, $other, $strict = false): bool
-	{
+	public static function different(
+		mixed $value,
+		mixed $other,
+		bool $strict = false
+	): bool {
 		if ($strict === true) {
 			return $value !== $other;
 		}
@@ -159,7 +162,7 @@ class V
 	/**
 	 * Checks for valid email addresses
 	 */
-	public static function email($value): bool
+	public static function email(mixed $value): bool
 	{
 		if (filter_var($value, FILTER_VALIDATE_EMAIL) !== false) {
 			return true;
@@ -177,7 +180,7 @@ class V
 	/**
 	 * Checks for empty values
 	 */
-	public static function empty($value = null): bool
+	public static function empty(mixed $value = null): bool
 	{
 		$empty = ['', null, []];
 
@@ -206,7 +209,7 @@ class V
 	 * The array will be empty if the input is valid
 	 */
 	public static function errors(
-		$input,
+		mixed $input,
 		array $rules,
 		array $messages = []
 	): array {
@@ -222,7 +225,7 @@ class V
 	/**
 	 * Checks for a valid filename
 	 */
-	public static function filename($value): bool
+	public static function filename(mixed $value): bool
 	{
 		return
 			static::match($value, '/^[a-z0-9@._-]+$/i') === true &&
@@ -232,8 +235,11 @@ class V
 	/**
 	 * Checks if the value exists in a list of given values
 	 */
-	public static function in($value, array $in, bool $strict = false): bool
-	{
+	public static function in(
+		mixed $value,
+		array $in,
+		bool $strict = false
+	): bool {
 		return in_array($value, $in, $strict) === true;
 	}
 
@@ -273,7 +279,7 @@ class V
 	/**
 	 * Checks for a valid integer
 	 */
-	public static function integer($value, bool $strict = false): bool
+	public static function integer(mixed $value, bool $strict = false): bool
 	{
 		if ($strict === true) {
 			return is_int($value) === true;
@@ -321,7 +327,7 @@ class V
 						continue;
 					}
 				} elseif ($filled === true) {
-					if (V::$method(...$options) === true) {
+					if (static::$method(...$options) === true) {
 						continue;
 					}
 				} else {
@@ -346,7 +352,7 @@ class V
 	/**
 	 * Checks for a valid IP address
 	 */
-	public static function ip($value): bool
+	public static function ip(mixed $value): bool
 	{
 		return filter_var($value, FILTER_VALIDATE_IP) !== false;
 	}
@@ -354,7 +360,7 @@ class V
 	/**
 	 * Checks for valid json
 	 */
-	public static function json($value): bool
+	public static function json(mixed $value): bool
 	{
 		if (is_string($value) === false) {
 			return false;
@@ -366,7 +372,7 @@ class V
 	/**
 	 * Checks if the value is lower than the second value
 	 */
-	public static function less($value, float $max): bool
+	public static function less(mixed $value, float $max): bool
 	{
 		return static::size($value, $max, '<') === true;
 	}
@@ -374,15 +380,24 @@ class V
 	/**
 	 * Checks if the value matches the given regular expression
 	 */
-	public static function match($value, string $pattern): bool
+	public static function match(mixed $value, string $pattern): bool
 	{
+		// only strings and string-like values can match
+		if (
+			is_scalar($value) === false &&
+			$value !== null &&
+			$value instanceof Stringable === false
+		) {
+			return false;
+		}
+
 		return preg_match($pattern, (string)$value) === 1;
 	}
 
 	/**
 	 * Checks if the value does not exceed the maximum value
 	 */
-	public static function max($value, float $max): bool
+	public static function max(mixed $value, float $max): bool
 	{
 		return static::size($value, $max, '<=') === true;
 	}
@@ -391,7 +406,7 @@ class V
 	 * Checks if the number of characters in the value equals
 	 * or is below the given maximum
 	 */
-	public static function maxLength(string|null $value, $max): bool
+	public static function maxLength(string|null $value, int $max): bool
 	{
 		return Str::length(trim($value ?? '')) <= $max;
 	}
@@ -400,7 +415,7 @@ class V
 	 * Checks if the number of words in the value equals or
 	 * is below the given maximum
 	 */
-	public static function maxWords(string|null $value, $max): bool
+	public static function maxWords(string|null $value, int $max): bool
 	{
 		return V::max(preg_split('/\s+/', trim($value ?? ''), -1, PREG_SPLIT_NO_EMPTY), $max) === true;
 	}
@@ -412,7 +427,7 @@ class V
 	 */
 	public static function message(
 		string $validatorName,
-		...$params
+		mixed ...$params
 	): string|null {
 		$validatorName = strtolower($validatorName);
 		$validators    = array_change_key_case(static::$validators);
@@ -455,7 +470,7 @@ class V
 	/**
 	 * Checks if the value is higher than the minimum value
 	 */
-	public static function min($value, float $min): bool
+	public static function min(mixed $value, float $min): bool
 	{
 		return static::size($value, $min, '>=') === true;
 	}
@@ -464,7 +479,7 @@ class V
 	 * Checks if the number of characters in the value equals or
 	 * is greater than the given minimum
 	 */
-	public static function minLength(string|null $value, $min): bool
+	public static function minLength(string|null $value, int $min): bool
 	{
 		return Str::length(trim($value ?? '')) >= $min;
 	}
@@ -473,7 +488,7 @@ class V
 	 * Checks if the number of words in the value equals or
 	 * is greater the given minimum
 	 */
-	public static function minWords(string|null $value, $min): bool
+	public static function minWords(string|null $value, int $min): bool
 	{
 		return V::min(preg_split('/\s+/', trim($value ?? ''), -1, PREG_SPLIT_NO_EMPTY), $min) === true;
 	}
@@ -481,7 +496,7 @@ class V
 	/**
 	 * Checks if the first value is higher than the second value
 	 */
-	public static function more($value, float $min): bool
+	public static function more(mixed $value, float $min): bool
 	{
 		return static::size($value, $min, '>') === true;
 	}
@@ -489,7 +504,7 @@ class V
 	/**
 	 * Checks that the given string does not contain the second value
 	 */
-	public static function notContains($value, $needle): bool
+	public static function notContains(mixed $value, string $needle): bool
 	{
 		return static::contains($value, $needle) === false;
 	}
@@ -497,7 +512,7 @@ class V
 	/**
 	 * Checks that the given value is not empty
 	 */
-	public static function notEmpty($value): bool
+	public static function notEmpty(mixed $value): bool
 	{
 		return static::empty($value) === false;
 	}
@@ -505,7 +520,7 @@ class V
 	/**
 	 * Checks that the given value is not in the given list of values
 	 */
-	public static function notIn($value, $notIn): bool
+	public static function notIn(mixed $value, array $notIn): bool
 	{
 		return static::in($value, $notIn) === false;
 	}
@@ -513,7 +528,7 @@ class V
 	/**
 	 * Checks for a valid number / numeric value (float, int, double)
 	 */
-	public static function num($value): bool
+	public static function num(mixed $value): bool
 	{
 		return is_numeric($value) === true;
 	}
@@ -521,8 +536,10 @@ class V
 	/**
 	 * Checks if the value is present
 	 */
-	public static function required($value, $array = null): bool
-	{
+	public static function required(
+		mixed $value,
+		array|null $array = null
+	): bool {
 		if (is_array($array) === true) {
 			return isset($array[$value]) === true && static::notEmpty($array[$value]) === true;
 		}
@@ -533,8 +550,11 @@ class V
 	/**
 	 * Checks that the first value equals the second value
 	 */
-	public static function same($value, $other, bool $strict = false): bool
-	{
+	public static function same(
+		mixed $value,
+		mixed $other,
+		bool $strict = false
+	): bool {
 		if ($strict === true) {
 			return $value === $other;
 		}
@@ -547,8 +567,11 @@ class V
 	 *
 	 * @param '=='|'<'|'>'|'<='|'>=' $operator
 	 */
-	public static function size($value, $size, $operator = '=='): bool
-	{
+	public static function size(
+		mixed $value,
+		float $size,
+		string $operator = '=='
+	): bool {
 		// if value is field object, first convert it to a readable value
 		// it is important to check at the beginning as the value can be string or numeric
 		if ($value instanceof Field) {
@@ -589,7 +612,7 @@ class V
 	/**
 	 * Checks for a valid unformatted telephone number
 	 */
-	public static function tel($value): bool
+	public static function tel(mixed $value): bool
 	{
 		return static::match($value, '!^[+]{0,1}[0-9]+$!');
 	}
@@ -597,7 +620,7 @@ class V
 	/**
 	 * Checks for valid time
 	 */
-	public static function time($value): bool
+	public static function time(mixed $value): bool
 	{
 		return static::date($value);
 	}
@@ -639,7 +662,7 @@ class V
 	 * validators
 	 */
 	public static function value(
-		$value,
+		mixed $value,
 		array $rules,
 		array $messages = [],
 		bool $fail = true
