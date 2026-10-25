@@ -14,20 +14,29 @@ use ReflectionFunction;
  *
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
+ *
+ * @template TReturn
  */
 class Controller
 {
 	/**
-	 * Cached parameter list of the wrapped closure;
-	 * @var \ReflectionParameter[]|null
+	 * Cached parameter list of the wrapped closure
+	 * @var list<\ReflectionParameter>|null
 	 */
 	protected array|null $params = null;
 
+	/**
+	 * @param Closure(mixed...):TReturn $function
+	 */
 	public function __construct(
 		protected Closure $function
 	) {
 	}
 
+	/**
+	 * @param array<string, mixed> $data
+	 * @return array<string, mixed>
+	 */
 	public function arguments(array $data = []): array
 	{
 		$this->params ??= new ReflectionFunction($this->function)->getParameters();
@@ -41,7 +50,6 @@ class Controller
 				// variadic ... argument collects all remaining values
 				$args += $data;
 			} elseif (isset($data[$name]) === true) {
-				// use provided argument value if available
 				$args[$name] = $data[$name];
 			} elseif ($param->isDefaultValueAvailable() === false) {
 				// use null for any other arguments that don't define
@@ -53,9 +61,14 @@ class Controller
 		return $args;
 	}
 
-	public function call($bind = null, $data = [])
-	{
-		// unwrap lazy values in arguments
+	/**
+	 * @param array<string, mixed> $data
+	 * @return TReturn
+	 */
+	public function call(
+		object|null $bind = null,
+		array $data = []
+	): mixed {
 		$args = $this->arguments($data);
 		$args = LazyValue::unwrap($args);
 
