@@ -279,10 +279,7 @@ class Html extends Xml
 				$list['&']
 			);
 
-			$search = array_keys($list);
-			$values = array_values($list);
-
-			return str_replace($search, $values, $string);
+			return strtr($string, $list);
 		}
 
 		return htmlentities($string, ENT_QUOTES | ENT_SUBSTITUTE, 'utf-8');
