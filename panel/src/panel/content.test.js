@@ -284,6 +284,26 @@ describe("panel.content", () => {
 		});
 	});
 
+	describe("isBusy()", () => {
+		it("returns whether content requests are running or waiting", async () => {
+			const finish = [];
+			const { content } = factory({
+				post: vi.fn(() => new Promise((resolve) => finish.push(resolve)))
+			});
+
+			expect(content.isBusy()).toBe(false);
+
+			const save = content.save({ title: "Draft" });
+
+			expect(content.isBusy()).toBe(true);
+
+			finish[0]();
+			await save;
+
+			expect(content.isBusy()).toBe(false);
+		});
+	});
+
 	describe("isCurrent()", () => {
 		it("returns true when api and language match the current view", () => {
 			const { content } = factory();

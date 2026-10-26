@@ -131,6 +131,13 @@ export default (panel) => {
 		},
 
 		/**
+		 * Whether content requests are still running or waiting
+		 */
+		isBusy() {
+			return requests.isBusy();
+		},
+
+		/**
 		 * Whether the api endpoint belongs to the current view
 		 * @var {String} api
 		 */

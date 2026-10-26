@@ -20,6 +20,7 @@ interface Entry {
  * const run = lane();
  * run("save", () => fetch(url));
  * run("save", () => fetch(url)); // replaces the waiting save
+ * run.isBusy(); // true until both have finished
  */
 export default function () {
 	const waiting: Entry[] = [];
@@ -40,7 +41,7 @@ export default function () {
 		running = false;
 	}
 
-	return function <T>(key: string, task: () => Promise<T>): Promise<T> {
+	function run<T>(key: string, task: () => Promise<T>): Promise<T> {
 		return new Promise<T>((resolve, reject) => {
 			const index = waiting.findIndex((entry) => entry.key === key);
 			const callers = index === -1 ? [] : waiting.splice(index, 1)[0].callers;
@@ -51,5 +52,10 @@ export default function () {
 				process();
 			}
 		});
-	};
+	}
+
+	// Add isBusy method to check for running or waiting tasks
+	run.isBusy = (): boolean => running;
+
+	return run;
 }

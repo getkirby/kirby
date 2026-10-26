@@ -34,11 +34,6 @@ export default {
 		uuid: String,
 		versions: Object
 	},
-	data() {
-		return {
-			isSaved: true
-		};
-	},
 	computed: {
 		content() {
 			return this.versions.changes;
@@ -72,7 +67,6 @@ export default {
 	},
 	mounted() {
 		this.$events.on("beforeunload", this.onBeforeUnload);
-		this.$events.on("content.save", this.onContentSave);
 		this.$events.on("keydown.left", this.toPrev);
 		this.$events.on("keydown.right", this.toNext);
 		this.$events.on("model.reload", this.$reload);
@@ -81,7 +75,6 @@ export default {
 	},
 	destroyed() {
 		this.$events.off("beforeunload", this.onBeforeUnload);
-		this.$events.off("content.save", this.onContentSave);
 		this.$events.off("keydown.left", this.toPrev);
 		this.$events.off("keydown.right", this.toNext);
 		this.$events.off("model.reload", this.$reload);
@@ -96,9 +89,15 @@ export default {
 	},
 	methods: {
 		onBeforeUnload(e) {
-			if (this.$panel.content.isProcessing === true || this.isSaved === false) {
+			// a scheduled save would not run anymore once the page is gone
+			this.$panel.content.saveLazy.flush();
+
+			// warn about changes on their way to the server and keep the lock,
+			// an unlock would overtake them and the lock times out anyway
+			if (this.$panel.content.isBusy() === true) {
 				e.preventDefault();
 				e.returnValue = "";
+				return;
 			}
 
 			// the window or tab is closed, so let's unlock this view.
@@ -110,19 +109,12 @@ export default {
 				});
 			}
 		},
-		onContentSave({ api, language }) {
-			if (api === this.api && language === this.$panel.language.code) {
-				this.isSaved = true;
-			}
-		},
 		async onDiscard() {
 			try {
 				await this.$panel.content.discard({
 					api: this.api,
 					language: this.$panel.language.code
 				});
-
-				this.isSaved = true;
 
 				this.$panel.dialog.close();
 				this.$panel.view.refresh();
@@ -131,10 +123,6 @@ export default {
 			}
 		},
 		onInput(values) {
-			// the new values only exist in the form until the
-			// throttled save request has written them
-			this.isSaved = false;
-
 			// update the content for the current view
 			// this will also refresh the content prop
 			this.$panel.content.updateLazy(values, {
@@ -153,8 +141,6 @@ export default {
 					api: this.api,
 					language: this.$panel.language.code
 				});
-
-				this.isSaved = true;
 
 				this.$panel.notification.success();
 				this.$events.emit("model.update");
