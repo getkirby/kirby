@@ -301,7 +301,7 @@ class Html extends Xml
 		string|array|null $caption = '',
 		array $attr = []
 	): string {
-		if ($caption) {
+		if ($caption !== null && $caption !== '' && $caption !== []) {
 			$figcaption = static::tag('figcaption', $caption);
 
 			if (is_string($content) === true) {

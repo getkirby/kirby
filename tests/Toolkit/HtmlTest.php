@@ -331,6 +331,10 @@ class HtmlTest extends TestCase
 		$html = Html::figure('test', 'yay');
 		$expected = '<figure>test<figcaption>yay</figcaption></figure>';
 		$this->assertSame($expected, $html);
+
+		$html = Html::figure('test', '0');
+		$expected = '<figure>test<figcaption>0</figcaption></figure>';
+		$this->assertSame($expected, $html);
 	}
 
 	public function testGist(): void
