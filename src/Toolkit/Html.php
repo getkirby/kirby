@@ -178,7 +178,7 @@ class Html extends Xml
 		// all other cases can share the XML variant
 		$attr = parent::attr($name, $value);
 
-		if ($attr === null) {
+		if ($attr === null || $attr === '') {
 			return null;
 		}
 
@@ -199,11 +199,7 @@ class Html extends Xml
 			$attr = strtr($attr, $map);
 		}
 
-		if ($attr) {
-			return $before . $attr . $after;
-		}
-
-		return null;
+		return $before . $attr . $after;
 	}
 
 	/**
