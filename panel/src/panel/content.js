@@ -316,17 +316,11 @@ export default (panel) => {
 		 * @returns {Boolean} Whether the lock has been released
 		 */
 		async unlock(env = {}) {
-			// persist any pending changes before releasing the lock, so that
-			// the changes cannot be dropped or the lock left behind
-			// due to a save that finishes after the unlock request.
-			// changes can only be detected for the current view
-			if (this.isCurrent(env) === true && this.hasDiff(env) === true) {
-				// abort the unlock when the changes could not be written
-				// because the view got locked in the meantime. The lock
-				// dialog already reports it, so it must not be raised again.
-				if ((await this.update({}, env)) !== true) {
-					return false;
-				}
+			// write the scheduled save first, the unlock runs after any
+			// other save anyway. When the view got locked in the meantime,
+			// the lock dialog already reports it and the lock stays.
+			if ((await this.saveLazy.flush()) === false) {
+				return false;
 			}
 
 			// fail silently because the lock will be released after the configured timeout
@@ -367,8 +361,6 @@ export default (panel) => {
 		 * as a regular API request
 		 */
 		async unlockPostRequest(env = {}) {
-			this.cancelSaving();
-
 			return this.request("unlock", {}, env);
 		},
 
@@ -385,7 +377,8 @@ export default (panel) => {
 		 * Updates the form values of the current view with a delay
 		 */
 		updateLazy(values = {}, env = {}) {
-			this.saveLazy(this.merge(values, env), env);
+			// the scheduled save keeps its view, even when written after leaving it
+			this.saveLazy(this.merge(values, env), this.env(env));
 		},
 
 		/**

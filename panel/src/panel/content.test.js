@@ -714,6 +714,10 @@ describe("panel.content", () => {
 	});
 
 	describe("unlock()", () => {
+		afterEach(() => {
+			vi.useRealTimers();
+		});
+
 		it("sends the unlock request for the current view", async () => {
 			const { content, panel } = factory();
 
@@ -729,9 +733,9 @@ describe("panel.content", () => {
 			);
 		});
 
-		it("does not save when there are no pending changes", async () => {
+		it("does not save changes that have already been written", async () => {
 			const { content, panel } = factory({
-				changes: { title: "Test" },
+				changes: { title: "New title" },
 				latest: { title: "Test" }
 			});
 
@@ -740,45 +744,25 @@ describe("panel.content", () => {
 			expect(endpoints(panel)).toStrictEqual(["/pages/test/changes/unlock"]);
 		});
 
-		it("persists pending changes before releasing the lock", async () => {
-			const { content, panel } = factory({
-				changes: { title: "New title" },
-				latest: { title: "Test" }
-			});
+		it("writes the scheduled save of the current view first", async () => {
+			const { content, panel } = factory();
+
+			content.updateLazy({ title: "First" });
+			content.updateLazy({ title: "Second" });
 
 			await expect(content.unlock()).resolves.toBe(true);
 
-			// the changes must be written before the lock is released,
-			// otherwise a late save would rewrite the lock we just released
+			// a save after the unlock would rewrite the lock we just released
 			expect(endpoints(panel)).toStrictEqual([
+				"/pages/test/changes/save",
 				"/pages/test/changes/save",
 				"/pages/test/changes/unlock"
 			]);
 		});
 
-		it("does not release the lock when the view got locked in the meantime", async () => {
-			const { content, panel } = factory({
-				changes: { title: "New title" },
-				latest: { title: "Test" },
-				post: vi.fn(() => Promise.reject(lockError()))
-			});
-
-			await expect(content.unlock()).resolves.toBe(false);
-
-			// staying on the current view keeps both the changes and the lock,
-			// so nothing is lost and the call can simply be repeated
-			expect(endpoints(panel)).toStrictEqual(["/pages/test/changes/save"]);
-
-			// the lock dialog already reports the case, so `unlock` must not
-			// raise a second error on top of it
-			expect(panel.dialog.open).toHaveBeenCalledOnce();
-		});
-
-		it("releases the lock after a newer save request took over", async () => {
+		it("releases the lock after the running save request", async () => {
 			const finish = [];
 			const { content, panel } = factory({
-				changes: { title: "New title" },
-				latest: { title: "Test" },
 				post: vi.fn((url) => {
 					if (url.endsWith("/unlock") === true) {
 						return Promise.resolve();
@@ -788,20 +772,18 @@ describe("panel.content", () => {
 				})
 			});
 
-			const first = content.save({ title: "First" });
+			const save = content.save({ title: "Draft" });
 			const unlock = content.unlock();
-			const second = content.save({ title: "Second" });
+
+			// the unlock waits for the running save
+			await new Promise((resolve) => setTimeout(resolve));
+			expect(endpoints(panel)).toStrictEqual(["/pages/test/changes/save"]);
 
 			finish[0]();
-			await first;
-			finish[1]();
-			await second;
-
-			// the newer save request wrote the changes of the unlock as well
+			await save;
 			await expect(unlock).resolves.toBe(true);
 
 			expect(endpoints(panel)).toStrictEqual([
-				"/pages/test/changes/save",
 				"/pages/test/changes/save",
 				"/pages/test/changes/unlock"
 			]);
@@ -834,6 +816,72 @@ describe("panel.content", () => {
 			]);
 		});
 
+		it("writes the scheduled save of a view that was left first", async () => {
+			const { content, panel } = factory();
+
+			content.updateLazy({ title: "First" });
+			content.updateLazy({ title: "Second" });
+
+			// the editor navigates to another view
+			panel.view.props.api = "/pages/other";
+
+			await expect(content.unlock({ api: "/pages/test" })).resolves.toBe(true);
+
+			expect(endpoints(panel)).toStrictEqual([
+				"/pages/test/changes/save",
+				"/pages/test/changes/save",
+				"/pages/test/changes/unlock"
+			]);
+			expect(panel.api.post.mock.calls[1][1]).toStrictEqual({
+				title: "Second"
+			});
+		});
+
+		it("keeps the scheduled save of the next view", async () => {
+			vi.useFakeTimers();
+
+			const { content, panel } = factory();
+
+			content.updateLazy({ title: "First" });
+			content.updateLazy({ title: "Second" });
+
+			panel.view.props.api = "/pages/other";
+			const unlock = content.unlock({ api: "/pages/test" });
+
+			// the editor types in the next view while the unlock is waiting
+			content.updateLazy({ title: "Next" });
+			content.updateLazy({ title: "Later" });
+
+			await unlock;
+			await vi.advanceTimersByTimeAsync(1000);
+
+			expect(endpoints(panel)).toStrictEqual([
+				"/pages/test/changes/save",
+				"/pages/test/changes/save",
+				"/pages/other/changes/save",
+				"/pages/test/changes/unlock",
+				"/pages/other/changes/save"
+			]);
+		});
+
+		it("does not release the lock when the scheduled save hit a lock", async () => {
+			const { content, panel } = factory({
+				post: vi.fn(() => Promise.reject(lockError()))
+			});
+
+			content.updateLazy({ title: "First" });
+			content.updateLazy({ title: "Second" });
+
+			panel.view.props.api = "/pages/other";
+
+			await expect(content.unlock({ api: "/pages/test" })).resolves.toBe(false);
+
+			expect(endpoints(panel)).toStrictEqual([
+				"/pages/test/changes/save",
+				"/pages/test/changes/save"
+			]);
+		});
+
 		it("ignores failed unlock requests", async () => {
 			// the lock will be released after 10 minutes anyway
 			const { content } = factory({
@@ -841,18 +889,6 @@ describe("panel.content", () => {
 			});
 
 			await expect(content.unlock()).resolves.toBe(true);
-		});
-
-		it("skips the diff check for another view", async () => {
-			// changes can only be detected for the current view
-			const { content, panel } = factory({
-				changes: { title: "New title" },
-				latest: { title: "Test" }
-			});
-
-			await content.unlock({ api: "/pages/other" });
-
-			expect(endpoints(panel)).toStrictEqual(["/pages/other/changes/unlock"]);
 		});
 	});
 

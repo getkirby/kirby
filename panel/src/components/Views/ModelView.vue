@@ -102,8 +102,12 @@ export default {
 			}
 
 			// the window or tab is closed, so let's unlock this view.
+			// Only a beacon still gets through while the page unloads.
 			if (this.isLocked === false) {
-				this.unlock(this.api);
+				this.$panel.content.unlockBeaconRequest({
+					api: this.api,
+					language: this.$panel.language.code
+				});
 			}
 		},
 		onContentSave({ api, language }) {
@@ -178,10 +182,13 @@ export default {
 			}
 		},
 		unlock(api) {
-			this.$panel.content.unlockBeaconRequest({
-				api: api,
-				language: this.$panel.language.code
-			});
+			// a regular request lets the scheduled save of the view go first
+			return this.$panel.content
+				.unlock({
+					api: api,
+					language: this.$panel.language.code
+				})
+				.catch((error) => this.$panel.error(error));
 		}
 	}
 };
