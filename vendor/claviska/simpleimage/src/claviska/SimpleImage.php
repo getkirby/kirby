@@ -277,12 +277,15 @@ class SimpleImage
                 imagefill($gif, 0, 0, $alpha);
 
                 imagecopy($this->image, $gif, 0, 0, 0, 0, $width, $height);
-                imagedestroy($gif);
                 break;
             case 'image/jpeg':
                 // Load exif data from JPEG images
                 if (function_exists('exif_read_data')) {
-                    $this->exif = @exif_read_data('data://image/jpeg;base64,'.base64_encode($data));
+                    $stream = fopen('php://memory', 'r+b');
+                    fwrite($stream, $data);
+                    rewind($stream);
+                    $this->exif = @exif_read_data($stream);
+                    fclose($stream);
                 }
                 break;
         }
