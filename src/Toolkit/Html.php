@@ -130,11 +130,12 @@ class Html extends Xml
 		$text = null,
 		array $attr = []
 	): string {
-		if (Str::startsWith($href, 'mailto:')) {
+		// URL schemes are case-insensitive
+		if (Str::startsWith($href, 'mailto:', true) === true) {
 			return static::email(substr($href, 7), $text, $attr);
 		}
 
-		if (Str::startsWith($href, 'tel:')) {
+		if (Str::startsWith($href, 'tel:', true) === true) {
 			return static::tel(substr($href, 4), $text, $attr);
 		}
 
@@ -222,7 +223,7 @@ class Html extends Xml
 			return '';
 		}
 
-		if (empty($text) === true) {
+		if ($text === null || $text === '' || $text === []) {
 			// show only the email address without additional parameters
 			$address = match (Str::contains($email, '?')) {
 				true  => Str::before($email, '?'),
@@ -304,7 +305,7 @@ class Html extends Xml
 		string|array|null $caption = '',
 		array $attr = []
 	): string {
-		if ($caption) {
+		if ($caption !== null && $caption !== '' && $caption !== []) {
 			$figcaption = static::tag('figcaption', $caption);
 
 			if (is_string($content) === true) {
@@ -338,7 +339,7 @@ class Html extends Xml
 		$src = $url . '.js';
 
 		if ($file !== null) {
-			$src .= '?file=' . $file;
+			$src .= '?file=' . rawurlencode($file);
 		}
 
 		return static::tag('script', '', [...$attr, 'src' => $src]);
@@ -395,7 +396,7 @@ class Html extends Xml
 
 		$attr = ['href' => $href, ...$attr];
 
-		if (empty($text) === true) {
+		if ($text === null || $text === '' || $text === []) {
 			$text = $attr['href'];
 		}
 
@@ -427,7 +428,8 @@ class Html extends Xml
 	): string|null {
 		$rel = trim($rel ?? '');
 
-		if ($target === '_blank' && $rel === '') {
+		// target keywords are case-insensitive
+		if (strtolower($target ?? '') === '_blank' && $rel === '') {
 			return 'noreferrer';
 		}
 
@@ -477,7 +479,7 @@ class Html extends Xml
 	): string {
 		$number = preg_replace('![^0-9\+]+!', '', $tel);
 
-		if (empty($text) === true) {
+		if ($text === null || $text === '' || $text === []) {
 			$text = $tel;
 		}
 
@@ -523,14 +525,12 @@ class Html extends Xml
 		array $options = [],
 		array $attr = []
 	): string|null {
-		// YouTube video
-		if (Str::contains($url, 'youtu', true) === true) {
-			return static::youtube($url, $options['youtube'] ?? [], $attr);
-		}
+		// YouTube or Vimeo video
+		$embed   = static::youtube($url, $options['youtube'] ?? [], $attr);
+		$embed ??= static::vimeo($url, $options['vimeo'] ?? [], $attr);
 
-		// Vimeo video
-		if (Str::contains($url, 'vimeo', true) === true) {
-			return static::vimeo($url, $options['vimeo'] ?? [], $attr);
+		if ($embed !== null) {
+			return $embed;
 		}
 
 		// self-hosted video file
@@ -586,7 +586,7 @@ class Html extends Xml
 		$path  = $uri->path();
 		$query = $uri->query();
 
-		$id = match ($uri->host()) {
+		$id = match (strtolower((string)$uri->host())) {
 			'vimeo.com', 'www.vimeo.com' => $path->last(),
 			'player.vimeo.com'           => $path->nth(1),
 			default                      => null
@@ -689,7 +689,7 @@ class Html extends Xml
 			default:
 				// short URLs
 				if (
-					Str::contains($uri->host(), 'youtu.be') === true &&
+					Str::contains($domain, 'youtu.be') === true &&
 					$isYoutubeId($first) === true
 				) {
 					$src = 'https://www.youtube.com/embed/' . $first;
