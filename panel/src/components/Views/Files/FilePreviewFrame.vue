@@ -37,8 +37,8 @@ export default {
 
 <style>
 .k-file-preview-frame-column {
-	/* Prevent Safari from shrinking the grid item to its content height. */
-	width: 100%;
+	/* Grid items with an aspect ratio don't stretch by default */
+	justify-self: stretch;
 	aspect-ratio: 1/1;
 	background: var(--pattern);
 }
