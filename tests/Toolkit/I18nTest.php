@@ -38,6 +38,10 @@ class I18nTest extends TestCase
 
 		I18n::$fallback = fn () => ['de', 'en'];
 		$this->assertSame(['de', 'en'], I18n::fallbacks());
+
+		// locale codes that are also PHP function names
+		I18n::$fallback = 'min';
+		$this->assertSame(['min'], I18n::fallbacks());
 	}
 
 	public function testForm(): void

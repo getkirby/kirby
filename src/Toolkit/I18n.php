@@ -74,7 +74,7 @@ class I18n
 	 */
 	public static function fallbacks(): array
 	{
-		if (is_callable(static::$fallback) === true) {
+		if (static::$fallback instanceof Closure) {
 			static::$fallback = (static::$fallback)();
 		}
 
