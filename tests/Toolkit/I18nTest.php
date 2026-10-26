@@ -493,6 +493,28 @@ class I18nTest extends TestCase
 		$this->assertNull(I18n::translate('test'));
 	}
 
+	public function testTranslationLoadEmptyOnce(): void
+	{
+		$calls = 0;
+
+		I18n::$load = function () use (&$calls) {
+			$calls++;
+			return [];
+		};
+
+		$this->assertSame([], I18n::translation('fr'));
+		$this->assertSame([], I18n::translation('fr'));
+		$this->assertSame(1, $calls);
+	}
+
+	public function testTranslationRegisteredLater(): void
+	{
+		$this->assertSame([], I18n::translation('es_ES'));
+
+		I18n::$translations['es'] = ['go' => 'Vamos'];
+		$this->assertSame(['go' => 'Vamos'], I18n::translation('es_ES'));
+	}
+
 	public function testTranslations(): void
 	{
 		$this->assertSame([], I18n::translations());

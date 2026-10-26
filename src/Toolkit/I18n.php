@@ -294,8 +294,8 @@ class I18n
 	{
 		$locale ??= static::locale();
 
-		if ($translation = static::$translations[$locale] ?? null) {
-			return $translation;
+		if (isset(static::$translations[$locale]) === true) {
+			return static::$translations[$locale];
 		}
 
 		if (static::$load instanceof Closure) {
@@ -303,11 +303,7 @@ class I18n
 		}
 
 		// try to use language code, e.g. `es` when locale is `es_ES`
-		if ($translation = static::$translations[Str::before($locale, '_')] ?? null) {
-			return $translation;
-		}
-
-		return static::$translations[$locale] = [];
+		return static::$translations[Str::before($locale, '_')] ?? [];
 	}
 
 	/**
