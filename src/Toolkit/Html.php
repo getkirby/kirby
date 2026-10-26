@@ -285,7 +285,7 @@ class Html extends Xml
 			return str_replace($search, $values, $string);
 		}
 
-		return htmlentities($string, ENT_QUOTES, 'utf-8');
+		return htmlentities($string, ENT_QUOTES | ENT_SUBSTITUTE, 'utf-8');
 	}
 
 	/**

@@ -350,6 +350,12 @@ class HtmlTest extends TestCase
 		$this->assertSame('', Html::encode(null));
 	}
 
+	public function testEncodeInvalidUtf8(): void
+	{
+		$this->assertSame("Caf\u{FFFD} &amp; more", Html::encode("Caf\xe9 & more"));
+		$this->assertSame("<p>Caf\u{FFFD}</p>", Html::tag('p', "Caf\xe9"));
+	}
+
 	public function testEntities(): void
 	{
 		Html::$entities = null;
