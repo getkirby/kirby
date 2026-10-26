@@ -31,14 +31,12 @@ class Scope
 		}
 
 		if (is_array($object) === true) {
-			if ($item = $object[$key] ?? $object[(string)$key] ?? null) {
-				if ($arguments) {
-					return $item(...$arguments);
-				}
+			$item = $object[$key] ?? $object[(string)$key] ?? null;
 
-				if ($item instanceof Closure) {
-					return $item();
-				}
+			// only call closures, never other callables
+			// like strings that name a PHP function
+			if ($item instanceof Closure) {
+				return $item(...$arguments);
 			}
 
 			return $item;
@@ -71,8 +69,8 @@ class Scope
 	): mixed {
 		// What looks like a variable might actually be a global function
 		// but if there is a variable with the same name,
-		// the variable takes precedence
-		if (isset($context[$name]) === true) {
+		// the variable takes precedence (even if its value is null)
+		if (array_key_exists($name, $context) === true) {
 			if ($context[$name] instanceof Closure) {
 				return $context[$name]();
 			}

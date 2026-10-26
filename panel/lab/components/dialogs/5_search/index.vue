@@ -6,7 +6,7 @@
 				variant="filled"
 				@click="
 					$panel.dialog.open({
-						component: 'k-search-dialog',
+						component: 'k-search-dialog'
 					})
 				"
 			>

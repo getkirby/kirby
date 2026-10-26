@@ -396,6 +396,7 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
         'Kirby\\Image\\Image' => __DIR__ . '/../..' . '/src/Image/Image.php',
         'Kirby\\Image\\Location' => __DIR__ . '/../..' . '/src/Image/Location.php',
         'Kirby\\Image\\QrCode' => __DIR__ . '/../..' . '/src/Image/QrCode.php',
+        'Kirby\\Image\\Svg' => __DIR__ . '/../..' . '/src/Image/Svg.php',
         'Kirby\\Option\\Option' => __DIR__ . '/../..' . '/src/Option/Option.php',
         'Kirby\\Option\\Options' => __DIR__ . '/../..' . '/src/Option/Options.php',
         'Kirby\\Option\\OptionsApi' => __DIR__ . '/../..' . '/src/Option/OptionsApi.php',

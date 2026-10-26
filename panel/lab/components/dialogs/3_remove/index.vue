@@ -8,8 +8,8 @@
 					$panel.dialog.open({
 						component: 'k-remove-dialog',
 						props: {
-							text: 'Do you really want to remove this?',
-						},
+							text: 'Do you really want to remove this?'
+						}
 					})
 				"
 			>

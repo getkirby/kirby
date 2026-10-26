@@ -309,6 +309,7 @@
 
 	"error.version.discard.permission": "このバージョンを破棄する権限がありません",
 	"error.version.publish.permission": "このバージョンを公開する権限がありません",
+	"error.version.removed": "The version has been removed by another request",
 	"error.version.save.permission": "このバージョンを変更する権限がありません",
 	"error.version.unlock.permission": "You are not allowed to unlock this version",
 

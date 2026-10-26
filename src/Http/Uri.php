@@ -283,7 +283,11 @@ class Uri implements Stringable
 	{
 		if ($this->isAbsolute() === true) {
 			$host = Idn::decode($this->host);
-			$this->setHost($host);
+
+			// preserve the original host if the conversion failed
+			if ($host !== false) {
+				$this->setHost($host);
+			}
 		}
 		return $this;
 	}
@@ -527,7 +531,11 @@ class Uri implements Stringable
 	{
 		if ($this->isAbsolute() === true) {
 			$host = Idn::encode($this->host);
-			$this->setHost($host);
+
+			// preserve the original host if the conversion failed
+			if ($host !== false) {
+				$this->setHost($host);
+			}
 		}
 		return $this;
 	}

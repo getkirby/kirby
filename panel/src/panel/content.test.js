@@ -140,9 +140,9 @@ describe("panel.content", () => {
 		it("throws when called for another view", async () => {
 			const { content } = factory();
 
-			await expect(content.discard({ api: "/pages/other" })).rejects.toThrowError(
-				"Cannot discard content from another view"
-			);
+			await expect(
+				content.discard({ api: "/pages/other" })
+			).rejects.toThrowError("Cannot discard content from another view");
 		});
 
 		it("throws when the content is locked", async () => {

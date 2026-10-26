@@ -43,7 +43,13 @@ describe("panel.dropdown", () => {
 
 			await dropdown.open(
 				{ component: "k-dropdown" },
-				{ on: { close: () => { emitted = true; } } }
+				{
+					on: {
+						close: () => {
+							emitted = true;
+						}
+					}
+				}
 			);
 
 			dropdown.close();

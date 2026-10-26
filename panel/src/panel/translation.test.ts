@@ -33,6 +33,18 @@ describe("panel.translation", () => {
 			expect(document.documentElement.lang).toStrictEqual("fr");
 		});
 
+		it.each([
+			["pt_BR", "pt-BR"],
+			["es_419", "es-419"],
+			["sr@latin", "sr"],
+			["de-sie", "de"],
+			["x-pirate", "en"]
+		])("turns %s into the language tag %s", (code, lang) => {
+			const translation = Translation();
+			translation.set({ code });
+			expect(document.documentElement.lang).toStrictEqual(lang);
+		});
+
 		it("updates document.body.dir", () => {
 			const translation = Translation();
 			translation.set({ code: "en", direction: "ltr" });
@@ -67,7 +79,9 @@ describe("panel.translation", () => {
 		it("interpolates template placeholders", () => {
 			const translation = Translation();
 			translation.set({ data: { greeting: "Hello {{ name }}" } });
-			expect(translation.translate("greeting", { name: "Peter" })).toStrictEqual("Hello Peter");
+			expect(
+				translation.translate("greeting", { name: "Peter" })
+			).toStrictEqual("Hello Peter");
 		});
 
 		it("returns a non-string value as-is", () => {
@@ -78,7 +92,9 @@ describe("panel.translation", () => {
 
 		it("returns the fallback when key does not exist", () => {
 			const translation = Translation();
-			expect(translation.translate("does-not-exist", {}, "Fallback")).toStrictEqual("Fallback");
+			expect(
+				translation.translate("does-not-exist", {}, "Fallback")
+			).toStrictEqual("Fallback");
 		});
 
 		it("returns undefined for non-string keys", () => {

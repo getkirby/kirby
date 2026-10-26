@@ -309,6 +309,7 @@
 
 	"error.version.discard.permission": "Þú mátt ekki hunsa þessa útgáfu",
 	"error.version.publish.permission": "Þú mátt ekki gefa út þessa útgáfu",
+	"error.version.removed": "The version has been removed by another request",
 	"error.version.save.permission": "Þú mátt ekki breyta þessari útgáfu",
 	"error.version.unlock.permission": "You are not allowed to unlock this version",
 

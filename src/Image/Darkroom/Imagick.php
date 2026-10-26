@@ -4,6 +4,7 @@ namespace Kirby\Image\Darkroom;
 
 use Exception;
 use Imagick as Image;
+use Kirby\Filesystem\F;
 use Kirby\Image\Darkroom;
 use Kirby\Image\Focus;
 
@@ -19,6 +20,10 @@ use Kirby\Image\Focus;
  */
 class Imagick extends Darkroom
 {
+	// animated AVIF needs ImageMagick 7.1.2-19 with libheif 1.20,
+	// older versions write a still image per frame
+	protected static array $animatableTypes = ['gif', 'webp'];
+
 	protected function autoOrient(Image $image): Image
 	{
 		switch ($image->getImageOrientation()) {
@@ -69,11 +74,12 @@ class Imagick extends Darkroom
 	}
 
 	/**
-	 * Keep animated gifs
+	 * Gives every frame of an animation the full canvas,
+	 * as GIF and WebP store only the changed area
 	 */
 	protected function coalesce(Image $image): Image
 	{
-		if ($image->getImageMimeType() === 'image/gif') {
+		if ($image->getNumberImages() > 1) {
 			return $image->coalesceImages();
 		}
 
@@ -98,7 +104,9 @@ class Imagick extends Darkroom
 	protected function grayscale(Image $image, array $options): Image
 	{
 		if ($options['grayscale'] === true) {
-			$image->setImageColorspace(Image::COLORSPACE_GRAY);
+			// converts the pixels, not just the colorspace
+			// (palette images like GIFs would keep their colors)
+			$image->transformImageColorspace(Image::COLORSPACE_GRAY);
 		}
 
 		return $image;
@@ -118,6 +126,24 @@ class Imagick extends Darkroom
 	}
 
 	/**
+	 * Shrinks animated gifs again after coalescing
+	 *
+	 * @since 5.6.2
+	 */
+	protected function optimize(Image $image, string $file, array $options): Image
+	{
+		// other formats ignore the canvas offset
+		// of trimmed frames and would crop the image
+		$format = strtolower($options['format'] ?? F::extension($file));
+
+		if ($format === 'gif' && $image->getNumberImages() > 1) {
+			return $image->optimizeImageLayers();
+		}
+
+		return $image;
+	}
+
+	/**
 	 * Creates and runs the full imagemagick command
 	 * to process the image
 	 *
@@ -127,17 +153,26 @@ class Imagick extends Darkroom
 	{
 		$options = $this->preprocess($file, $options);
 
-		$image = new Image($file);
+		// formats without animation only get the first frame,
+		// otherwise Imagick writes a numbered file per frame
+		$input = $this->isAnimatable($file, $options) === true ? $file : $file . '[0]';
+
+		$image = new Image($input);
 		$image = $this->threads($image, $options);
 		$image = $this->interlace($image, $options);
 		$image = $this->coalesce($image);
-		$image = $this->grayscale($image, $options);
-		$image = $this->autoOrient($image);
-		$image = $this->resize($image, $options);
-		$image = $this->quality($image, $options);
-		$image = $this->blur($image, $options);
-		$image = $this->sharpen($image, $options);
-		$image = $this->strip($image, $options);
+
+		foreach ($image as $frame) {
+			$frame = $this->grayscale($frame, $options);
+			$frame = $this->autoOrient($frame);
+			$frame = $this->resize($frame, $options);
+			$frame = $this->quality($frame, $options);
+			$frame = $this->blur($frame, $options);
+			$frame = $this->sharpen($frame, $options);
+			$frame = $this->strip($frame, $options);
+		}
+
+		$image = $this->optimize($image, $file, $options);
 
 		if ($this->save($image, $file, $options) === false) {
 			// @codeCoverageIgnoreStart
@@ -185,6 +220,9 @@ class Imagick extends Darkroom
 					$focus['x1'],
 					$focus['y1']
 				);
+
+				// drop the canvas offset left by the crop (like `+repage`)
+				$image->setImagePage(0, 0, 0, 0);
 			}
 
 			return $image;
@@ -206,10 +244,10 @@ class Imagick extends Darkroom
 	 */
 	protected function save(Image $image, string $file, array $options): bool
 	{
-		// set the output format explicitly if specified;
-		// writing to the original path
+		// the `format:` prefix wins over the file extension
+		// when writing to the original path
 		if ($options['format'] !== null) {
-			$image->setImageFormat($options['format']);
+			$file = $options['format'] . ':' . $file;
 		}
 
 		return $image->writeImages($file, true);

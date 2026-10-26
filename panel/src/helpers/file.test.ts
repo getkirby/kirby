@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 import { extension, name, niceSize } from "./file";
 
 describe("$helper.file.extension()", () => {
@@ -18,9 +18,24 @@ describe("$helper.file.name()", () => {
 });
 
 describe("$helper.file.niceSize()", () => {
-	it("formats bytes", () => {
-		expect(niceSize(0)).toBe("0B");
-		expect(niceSize(1024)).toBe("1KB");
-		expect(niceSize(1048576)).toBe("1MB");
+	afterEach(() => {
+		document.documentElement.lang = "";
+	});
+
+	// same as `F::niceSize()`
+	it.each([
+		[0, "0\u00a0KB"],
+		[512, "512\u00a0B"],
+		[1024, "1\u00a0KB"],
+		[1536000, "1.46\u00a0MB"],
+		[1572864, "1.5\u00a0MB"],
+		[2684354560, "2.5\u00a0GB"]
+	])("formats %i bytes", (size, expected) => {
+		expect(niceSize(size)).toBe(expected);
+	});
+
+	it("formats the number for the interface language", () => {
+		document.documentElement.lang = "de";
+		expect(niceSize(1536000)).toBe("1,46\u00a0MB");
 	});
 });

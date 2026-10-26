@@ -309,6 +309,7 @@
 
 	"error.version.discard.permission": "Non hai il permesso di scartare questa versione",
 	"error.version.publish.permission": "Non hai il permesso di pubblicare questa versione",
+	"error.version.removed": "The version has been removed by another request",
 	"error.version.save.permission": "Non hai il permesso di modificare questa versione",
 	"error.version.unlock.permission": "Non hai il permesso di sbloccare questa versione",
 

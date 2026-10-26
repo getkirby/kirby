@@ -309,6 +309,7 @@
 
 	"error.version.discard.permission": "Nije vam dozvoljeno da odbacite ovu verziju",
 	"error.version.publish.permission": "Nije vam dozvoljeno da objavite ovu verziju",
+	"error.version.removed": "The version has been removed by another request",
 	"error.version.save.permission": "Nije vam dozvoljeno da menjate ovu verziju",
 	"error.version.unlock.permission": "You are not allowed to unlock this version",
 

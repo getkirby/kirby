@@ -462,6 +462,7 @@ class ViewTest extends TestCase
 		$this->assertFalse($config['debug']);
 		$this->assertTrue($config['kirbytext']);
 		$this->assertSame('en', $config['translation']);
+		$this->assertSame(3, $config['uploads']);
 
 		// $system
 		$this->assertSame(Str::$ascii, $system['ascii']);
@@ -481,6 +482,21 @@ class ViewTest extends TestCase
 		// $urls
 		$this->assertSame('/api', $urls['api']);
 		$this->assertSame('/', $urls['site']);
+	}
+
+	public function testGlobalsWithUploads(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'panel' => [
+					'uploads' => 1
+				]
+			]
+		]);
+
+		$globals = View::globals();
+		$globals = A::apply($globals);
+		$this->assertSame(1, $globals['$config']['uploads']);
 	}
 
 	public function testGlobalsWithUser(): void

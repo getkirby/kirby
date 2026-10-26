@@ -240,4 +240,28 @@ class EventTest extends TestCase
 
 		$this->assertSame($mutablePage, $event->argument('page'));
 	}
+
+	public function testUpdateArgumentWithNextModelChain(): void
+	{
+		$mutablePage = new Page(['slug' => 'test']);
+
+		// simulate two chained mutating model actions
+		// without the hook returning the result
+		$secondPage = $mutablePage->clone();
+		$secondPage->changeStorage(new ImmutableMemoryStorage(
+			model: $secondPage,
+			nextModel: $mutablePage
+		));
+
+		$firstPage = $mutablePage->clone();
+		$firstPage->changeStorage(new ImmutableMemoryStorage(
+			model: $firstPage,
+			nextModel: $secondPage
+		));
+
+		$event = new Event('page.create:after', ['page' => $firstPage]);
+		$event->updateArgument('page', null);
+
+		$this->assertSame($mutablePage, $event->argument('page'));
+	}
 }

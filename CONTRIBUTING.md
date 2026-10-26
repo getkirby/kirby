@@ -77,7 +77,7 @@ We use [`cpx`](https://github.com/laravel/cpx) to run our PHP dev tools (e.g. PH
 Install `cpx` globally once via Composer:
 
 ```bash
-composer global require laravel/cpx
+composer global require cpx/cpx
 ```
 
 Make sure Composer's global `bin` directory is on your `PATH` (run `composer global config bin-dir --absolute` to find it). After that you don't need to install PHPUnit, Psalm or PHP CS Fixer globally. The `composer` scripts (`composer fix`, `composer test`, `composer analyze`) call them through `cpx` for you.
@@ -102,7 +102,7 @@ We use [PHP CS Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer) to ensure a 
 
 #### Frontend/Panel (JavaScript, Vue)
 
-We use [Prettier](https://prettier.io) to ensure a consistent style for our JavaScript and Vue code. After running `npm install` in the `kirby/panel` folder, you can run `npm run format` to check for inconsistencies and fix them. We also use [ESLint](https://eslint.org) which you can use by running `npm run lint` and/or `npm run lint:fix`.
+We use [Oxfmt](https://oxc.rs/docs/guide/usage/formatter) to ensure a consistent style for our JavaScript and Vue code. After running `npm install` in the `kirby/panel` folder, you can run `npm run format` to check for inconsistencies and `npm run format:fix` to fix them. We also use [ESLint](https://eslint.org) which you can use by running `npm run lint` and/or `npm run lint:fix`.
 
 ### Documentation
 

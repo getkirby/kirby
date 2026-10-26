@@ -309,6 +309,7 @@
 
 	"error.version.discard.permission": "Du darfst diese Version nicht verwerfen",
 	"error.version.publish.permission": "Du darfst diese Version nicht veröffentlichen",
+	"error.version.removed": "Die Version wurde von einer anderen Anfrage gelöscht",
 	"error.version.save.permission": "Du darfst diese Version nicht ändern",
 	"error.version.unlock.permission": "Du darfst diese Version nicht entsperren",
 
