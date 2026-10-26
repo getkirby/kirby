@@ -17,28 +17,20 @@ use Stringable;
 class Slot implements Stringable
 {
 	/**
-	 * The captured slot content
-	 */
-	public string|null $content;
-
-	/**
-	 * The name that was declared during
-	 * the definition of the slot
-	 */
-	protected string $name;
-
-	/**
-	 * Keeps track of the slot state
+	 * Level of the output buffer while the slot is open
 	 */
 	protected bool $open = false;
 
 	/**
 	 * Creates a new slot
+	 *
+	 * @param $name The name that was declared during the definition of the slot
+	 * @param $content The captured slot content
 	 */
-	public function __construct(string $name, string|null $content = null)
-	{
-		$this->name    = $name;
-		$this->content = $content;
+	public function __construct(
+		protected string $name,
+		public string|null $content = null
+	) {
 	}
 
 	/**
@@ -54,7 +46,7 @@ class Slot implements Stringable
 	 * Opens a slot in the current snippet;
 	 * used by the `slot()` helper
 	 */
-	public static function begin(string $name = 'default'): static|null
+	public static function begin(string $name = 'default'): self|null
 	{
 		return Snippet::$current?->slot($name);
 	}
