@@ -4,8 +4,6 @@ namespace Kirby\Filesystem;
 
 use Exception;
 use Kirby\Cms\Helpers;
-use Kirby\Cms\Inventory;
-use Kirby\Cms\Page;
 use Kirby\Toolkit\Str;
 use Throwable;
 
@@ -40,8 +38,6 @@ class Dir
 		'Thumb.db',
 		'@eaDir'
 	];
-
-	public static string $numSeparator = '_';
 
 	/**
 	 * Copy the directory to a new destination
@@ -201,33 +197,6 @@ class Dir
 	public static function isWritable(string $dir): bool
 	{
 		return is_writable($dir);
-	}
-
-	/**
-	 * Scans the directory and analyzes files,
-	 * content, meta info and children. This is used
-	 * in `Kirby\Cms\Page`, `Kirby\Cms\Site` and
-	 * `Kirby\Cms\User` objects to fetch all
-	 * relevant information.
-	 *
-	 * Don't use outside the Cms context.
-	 *
-	 * @deprecated 5.6.0 Use `Kirby\Cms\Inventory::for()` instead. Will be removed in Kirby 6.
-	 */
-	public static function inventory(
-		string $dir,
-		string $contentExtension = 'txt',
-		array|null $contentIgnore = null,
-		bool $multilang = false
-	): array {
-		Helpers::deprecated('`Kirby\Filesystem\Dir::inventory()` has been deprecated. Please use `Kirby\Cms\Inventory::for()` instead.', 'dir-inventory');
-
-		return Inventory::for(
-			$dir,
-			$contentExtension,
-			$contentIgnore,
-			$multilang
-		);
 	}
 
 	/**
