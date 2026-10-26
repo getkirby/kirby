@@ -359,6 +359,10 @@ class HtmlTest extends TestCase
 		$html = Html::gist($url = 'https://gist.github.com/bastianallgeier/dfb2a889ae73c7c318ea300efd2df6ff', 'kirbycontent.txt');
 		$expected = '<script src="' . $url . '.js?file=kirbycontent.txt"></script>';
 		$this->assertSame($expected, $html);
+
+		$html = Html::gist($url, 'my #1 file.txt');
+		$expected = '<script src="' . $url . '.js?file=my%20%231%20file.txt"></script>';
+		$this->assertSame($expected, $html);
 	}
 
 	public function testGistWithDisallowedDomain(): void

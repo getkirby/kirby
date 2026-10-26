@@ -337,7 +337,7 @@ class Html extends Xml
 		$src = $url . '.js';
 
 		if ($file !== null) {
-			$src .= '?file=' . $file;
+			$src .= '?file=' . rawurlencode($file);
 		}
 
 		return static::tag('script', '', [...$attr, 'src' => $src]);
