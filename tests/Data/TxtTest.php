@@ -165,6 +165,14 @@ class TxtTest extends TestCase
 		$this->assertSame('Number: 1234567890123456789', $data);
 	}
 
+	public function testEncodeIntKeys(): void
+	{
+		$data = Txt::encode(['a', 'b']);
+
+		$this->assertSame("0: a\n\n----\n\n1: b", $data);
+		$this->assertSame(['a', 'b'], Txt::decode($data));
+	}
+
 	public function testDecodeFile(): void
 	{
 		$array = [

@@ -22,7 +22,7 @@ class Txt extends Handler
 		$result = [];
 
 		foreach (A::wrap($data) as $key => $value) {
-			if (empty($key) === true || $value === null) {
+			if ($key === '' || $value === null) {
 				continue;
 			}
 
