@@ -16,7 +16,7 @@ class Xml extends Handler
 	/**
 	 * Converts an array to an encoded XML string
 	 */
-	public static function encode($data): string
+	public static function encode(mixed $data): string
 	{
 		return XmlConverter::create($data, 'data');
 	}
@@ -24,7 +24,7 @@ class Xml extends Handler
 	/**
 	 * Parses an encoded XML string and returns a multi-dimensional array
 	 */
-	public static function decode($string): array
+	public static function decode(mixed $string): array
 	{
 		if ($string === null || $string === '') {
 			return [];
