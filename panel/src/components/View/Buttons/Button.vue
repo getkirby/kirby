@@ -4,6 +4,7 @@
 			v-bind="$props"
 			:dropdown="dropdown || hasDropdown"
 			@click="onClick"
+			@success="$emit('success', $event)"
 		/>
 		<k-dropdown
 			v-if="hasDropdown"
@@ -38,7 +39,7 @@ export default {
 			default: "filled"
 		}
 	},
-	emits: ["action", "click"],
+	emits: ["action", "click", "success"],
 	computed: {
 		hasDropdown() {
 			if (Array.isArray(this.options) === true) {

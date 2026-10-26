@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from "@test/unit";
-import { mount } from "@vue/test-utils";
+import { flushPromises, mount } from "@vue/test-utils";
+import Button from "@/components/Navigation/Button.vue";
 import ViewButton from "./Button.vue";
 
 describe("ViewButton.vue", () => {
@@ -48,6 +49,18 @@ describe("ViewButton.vue", () => {
 			await wrapper.find("k-button").trigger("click");
 			expect(toggle).toHaveBeenCalled();
 			expect(wrapper.emitted("click")).toBeUndefined();
+		});
+	});
+
+	describe("success event", () => {
+		it("passes on the success event of the button", async () => {
+			const wrapper = mount(ViewButton, {
+				props: { request: () => "done" },
+				global: { components: { "k-button": Button } }
+			});
+			await wrapper.find("button").trigger("click");
+			await flushPromises();
+			expect(wrapper.emitted("success")).toStrictEqual([["done"]]);
 		});
 	});
 });
