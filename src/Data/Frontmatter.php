@@ -37,7 +37,7 @@ class Frontmatter extends Handler
 
 		// parse standard frontmatter block: opening ---, YAML, closing ---,
 		// and optional body text after the closing delimiter
-		if (preg_match('/^---\r?\n(.*?)\r?\n---\r?\n?(.*)?$/s', $string, $matches)) {
+		if (preg_match('/^---\r?\n(?:(.*?)\r?\n)??---\r?\n?(.*)?$/s', $string, $matches)) {
 			$fields = Yaml::decode($matches[1]);
 			$body   = trim($matches[2] ?? '');
 

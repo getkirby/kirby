@@ -63,6 +63,21 @@ class FrontmatterTest extends TestCase
 		], Frontmatter::decode($string));
 	}
 
+	public function testDecodeEmptyFrontmatter(): void
+	{
+		$this->assertSame([], Frontmatter::decode("---\n---\n"));
+
+		$this->assertSame(
+			['text' => 'This is the body.'],
+			Frontmatter::decode("---\n---\nThis is the body.\n")
+		);
+
+		$this->assertSame(
+			['text' => "Before\n---\nAfter"],
+			Frontmatter::decode("---\n---\nBefore\n---\nAfter\n")
+		);
+	}
+
 	public function testDecodeFallback(): void
 	{
 		// string without --- delimiters falls back to plain YAML
