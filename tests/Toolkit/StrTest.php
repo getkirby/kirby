@@ -669,6 +669,17 @@ class StrTest extends TestCase
 		// string vs. array
 		$this->assertIsString(Str::pool('alpha', false));
 		$this->assertIsArray(Str::pool('alpha'));
+
+		// array of strings, also for digits
+		$this->assertSame(str_split('0123456789'), Str::pool('num'));
+		$this->assertSame(
+			str_split('ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'),
+			Str::pool('base32')
+		);
+		$this->assertSame(
+			str_split('0123456789ABCDEFGHIJKLMNOPQRSTUV'),
+			Str::pool('base32hex')
+		);
 	}
 
 	public function testPosition(): void
