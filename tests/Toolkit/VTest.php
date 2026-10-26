@@ -573,6 +573,12 @@ class VTest extends TestCase
 		$this->assertFalse(V::json(''));
 	}
 
+	public function testLengthWithNull(): void
+	{
+		$this->assertTrue(V::maxLength(null, 3));
+		$this->assertFalse(V::minLength(null, 1));
+	}
+
 	public function testLess(): void
 	{
 		$this->assertTrue(V::less(1, 2));

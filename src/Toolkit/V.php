@@ -402,7 +402,7 @@ class V
 	 */
 	public static function maxLength(string|null $value, $max): bool
 	{
-		return Str::length(trim($value)) <= $max;
+		return Str::length(trim($value ?? '')) <= $max;
 	}
 
 	/**
@@ -475,7 +475,7 @@ class V
 	 */
 	public static function minLength(string|null $value, $min): bool
 	{
-		return Str::length(trim($value)) >= $min;
+		return Str::length(trim($value ?? '')) >= $min;
 	}
 
 	/**
