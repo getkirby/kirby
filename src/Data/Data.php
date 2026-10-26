@@ -53,11 +53,8 @@ class Data
 	public static function handler(string $type): Handler
 	{
 		$type    = strtolower($type);
-		$handler = static::$handlers[$type] ?? null;
-
-		if ($alias = static::$aliases[$type] ?? null) {
-			$handler ??= static::$handlers[$alias] ?? null;
-		}
+		$alias   = static::$aliases[$type] ?? $type;
+		$handler = static::$handlers[$type] ?? static::$handlers[$alias] ?? null;
 
 		if ($handler === null || class_exists($handler) === false) {
 			throw new Exception(
@@ -80,7 +77,7 @@ class Data
 	 * Decodes data with the specified handler
 	 */
 	public static function decode(
-		$string,
+		mixed $string,
 		string $type,
 		bool $fail = true
 	): array {
@@ -98,7 +95,7 @@ class Data
 	/**
 	 * Encodes data with the specified handler
 	 */
-	public static function encode($data, string $type): string
+	public static function encode(mixed $data, string $type): string
 	{
 		return static::handler($type)->encode($data);
 	}
@@ -132,7 +129,7 @@ class Data
 	 */
 	public static function write(
 		string $file,
-		$data = [],
+		mixed $data = [],
 		string|null $type = null
 	): bool {
 		$type ??= F::extension($file);
