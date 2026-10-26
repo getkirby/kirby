@@ -696,7 +696,7 @@ class Html extends Xml
 			default:
 				// short URLs
 				if (
-					Str::contains($uri->host(), 'youtu.be') === true &&
+					Str::contains($domain, 'youtu.be') === true &&
 					$isYoutubeId($first) === true
 				) {
 					$src = 'https://www.youtube.com/embed/' . $first;

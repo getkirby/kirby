@@ -685,6 +685,10 @@ class HtmlTest extends TestCase
 				'https://www.youtube.com/embed/d9NF2edxy-M?start=10'
 			],
 			[
+				'https://YOUTU.BE/d9NF2edxy-M',
+				'https://www.youtube.com/embed/d9NF2edxy-M'
+			],
+			[
 				'https://www.youtu.be/d9NF2edxy-M?test=value&t=10',
 				'https://www.youtube.com/embed/d9NF2edxy-M?test=value&amp;start=10'
 			],
