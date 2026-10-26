@@ -20,9 +20,9 @@ function blockMethod($method, $args)
 	return call_user_func_array('\\' . $method, $args);
 }
 
-function file_put_contents($file, $content)
+function file_put_contents($file, $content, ...$args)
 {
-	return blockMethod('file_put_contents', [$file, $content]);
+	return blockMethod('file_put_contents', [$file, $content, ...$args]);
 }
 
 function rename($old, $new)
@@ -33,6 +33,11 @@ function rename($old, $new)
 function copy($old, $new)
 {
 	return blockMethod('copy', [$old, $new]);
+}
+
+function stat($file)
+{
+	return blockMethod('stat', [$file]);
 }
 
 function unlink($file)
