@@ -2,6 +2,7 @@
 
 namespace Kirby\Template;
 
+use Kirby\Exception\LogicException;
 use Kirby\Toolkit\Str;
 use Stringable;
 
@@ -45,11 +46,13 @@ class Stack
 	 */
 	public static function begin(string $name, bool $unique = false): void
 	{
+		ob_start();
+
 		static::$active[] = [
 			'name'   => $name,
-			'unique' => $unique
+			'unique' => $unique,
+			'level'  => ob_get_level()
 		];
-		ob_start();
 	}
 
 	/**
@@ -71,6 +74,19 @@ class Stack
 
 		if ($active === null) {
 			return;
+		}
+
+		// otherwise the stack would capture or close the wrong buffer
+		if (ob_get_level() > $active['level']) {
+			throw new LogicException(
+				message: 'The "' . $active['name'] . '" stack cannot be closed: an output buffer started inside of it with `ob_start()` is still open'
+			);
+		}
+
+		if (ob_get_level() < $active['level']) {
+			throw new LogicException(
+				message: 'The "' . $active['name'] . '" stack cannot be closed: its output was already ended inside of it, e.g. with `ob_end_clean()`'
+			);
 		}
 
 		static::push(
