@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import ModelView from "./ModelView.vue";
 
-const { onBeforeUnload, unlock } = ModelView.methods;
+const { onBeforeUnload, onModelUpdate, unlock } = ModelView.methods;
 
 /**
  * Builds a mocked component context
@@ -15,6 +15,7 @@ function context({ isBusy = false, unlockError = null } = {}) {
 		$panel: {
 			content: {
 				isBusy: vi.fn(() => isBusy),
+				refresh: vi.fn(),
 				saveLazy: {
 					flush: vi.fn()
 				},
@@ -81,6 +82,24 @@ describe("ModelView.onBeforeUnload()", () => {
 		onBeforeUnload.call(ctx, { preventDefault: vi.fn() });
 
 		expect(ctx.$panel.content.unlockBeaconRequest).not.toHaveBeenCalled();
+	});
+});
+
+describe("ModelView.onModelUpdate()", () => {
+	it("refreshes the view once the content requests are written", () => {
+		const ctx = context();
+
+		onModelUpdate.call(ctx, { path: "/pages/test" });
+
+		expect(ctx.$panel.content.refresh).toHaveBeenCalledOnce();
+	});
+
+	it("does not refresh for another model", () => {
+		const ctx = context();
+
+		onModelUpdate.call(ctx, { path: "/pages/other" });
+
+		expect(ctx.$panel.content.refresh).not.toHaveBeenCalled();
 	});
 });
 

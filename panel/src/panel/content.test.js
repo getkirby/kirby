@@ -536,6 +536,108 @@ describe("panel.content", () => {
 		});
 	});
 
+	describe("refresh()", () => {
+		/**
+		 * Mocks a view refresh that finishes on demand
+		 * and then replaces the props with the server's
+		 */
+		function refreshing(panel, versions) {
+			const finish = [];
+
+			panel.view.refresh = vi.fn(
+				() =>
+					new Promise((resolve) =>
+						finish.push(() => {
+							panel.view.props = { ...panel.view.props, versions };
+							resolve();
+						})
+					)
+			);
+
+			return finish;
+		}
+
+		it("keeps the changes made while the view was refreshed", async () => {
+			const { content, panel } = factory();
+			const finish = refreshing(panel, {
+				changes: { title: "Published" },
+				latest: { title: "Published" }
+			});
+
+			const refresh = content.refresh();
+
+			content.updateLazy({ title: "Typed" });
+
+			finish[0]();
+			await refresh;
+
+			expect(content.version("changes")).toStrictEqual({ title: "Typed" });
+			expect(content.version("latest")).toStrictEqual({ title: "Published" });
+		});
+
+		it("adopts the refreshed changes without new input", async () => {
+			const { content, panel } = factory({ changes: { title: "Old" } });
+			const finish = refreshing(panel, {
+				changes: { title: "Server" },
+				latest: { title: "Server" }
+			});
+
+			const refresh = content.refresh();
+
+			finish[0]();
+			await refresh;
+
+			expect(content.version("changes")).toStrictEqual({ title: "Server" });
+		});
+
+		it("refreshes after the running save and before a newer one", async () => {
+			const posts = [];
+			const { content, panel } = factory({
+				post: vi.fn(() => new Promise((resolve) => posts.push(resolve)))
+			});
+			const finish = refreshing(panel, { changes: {}, latest: {} });
+
+			const save = content.save({ title: "Draft" });
+			const refresh = content.refresh();
+			content.save({ title: "Typed" });
+
+			expect(panel.view.refresh).not.toHaveBeenCalled();
+
+			posts[0]();
+			await save;
+
+			expect(panel.view.refresh).toHaveBeenCalledOnce();
+			expect(endpoints(panel)).toStrictEqual(["/pages/test/changes/save"]);
+
+			finish[0]();
+			await refresh;
+
+			expect(endpoints(panel)).toStrictEqual([
+				"/pages/test/changes/save",
+				"/pages/test/changes/save"
+			]);
+		});
+
+		it("writes the scheduled save first", async () => {
+			const { content, panel } = factory();
+			const finish = refreshing(panel, { changes: {}, latest: {} });
+
+			content.updateLazy({ title: "First" });
+			content.updateLazy({ title: "Second" });
+
+			const refresh = content.refresh();
+
+			await vi.waitFor(() => expect(panel.view.refresh).toHaveBeenCalledOnce());
+			expect(endpoints(panel)).toStrictEqual([
+				"/pages/test/changes/save",
+				"/pages/test/changes/save"
+			]);
+
+			finish[0]();
+			await refresh;
+		});
+	});
+
 	describe("save()", () => {
 		it("posts the save request", async () => {
 			const { content, panel } = factory();

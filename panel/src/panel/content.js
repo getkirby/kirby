@@ -259,6 +259,26 @@ export default (panel) => {
 		},
 
 		/**
+		 * Refreshes the view once all content requests have been
+		 * written and keeps the changes made in the meantime
+		 */
+		async refresh() {
+			const env = this.env();
+			const props = panel.view.props;
+			const changes = props.versions.changes;
+
+			// the refreshed props have to include the scheduled save
+			this.saveLazy.flush();
+
+			await requests("refresh", () => panel.view.refresh());
+
+			// the editor kept typing while the view was refreshed
+			if (this.isCurrent(env) === true && props.versions.changes !== changes) {
+				this.merge(props.versions.changes, env);
+			}
+		},
+
+		/**
 		 * Simplified request handler for all content API requests.
 		 * Requests run one after another, a waiting request is only
 		 * replaced by a newer one of the same type for the same view.

@@ -117,7 +117,7 @@ export default {
 				});
 
 				this.$panel.dialog.close();
-				this.$panel.view.refresh();
+				this.$panel.content.refresh();
 			} catch (e) {
 				this.$panel.error(e);
 			}
@@ -132,7 +132,7 @@ export default {
 		},
 		onModelUpdate({ path } = {}) {
 			if (path === this.api) {
-				this.$panel.view.refresh();
+				this.$panel.content.refresh();
 			}
 		},
 		async onSubmit() {
@@ -147,7 +147,7 @@ export default {
 
 				// the view needs to be refreshed to get an updated set of props
 				// this will also rerender sections if needed
-				await this.$panel.view.refresh();
+				await this.$panel.content.refresh();
 			} catch (error) {
 				this.$panel.notification.error(error);
 			}
