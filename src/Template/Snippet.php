@@ -105,6 +105,12 @@ class Snippet extends Tpl
 			);
 		}
 
+		// close slots that were left open, as their
+		// buffers are on top of the snippet's buffer
+		while ($this->capture !== []) {
+			$this->endslot();
+		}
+
 		// create a default slot for the content
 		// that has been captured between start and end
 		if ($this->slots === []) {

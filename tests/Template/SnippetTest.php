@@ -24,6 +24,33 @@ class SnippetTest extends TestCase
 		$snippet->close();
 	}
 
+	public function testCloseWithOpenSlots(): void
+	{
+		// all output must be captured
+		$this->expectOutputString('');
+
+		$snippet = new Snippet('test.php');
+		$snippet->open();
+
+		$snippet->slot('header');
+		echo 'Header';
+		$snippet->endslot();
+
+		// both slots are left open
+		$snippet->slot('footer');
+		echo 'Footer';
+		$snippet->slot('nested');
+		echo 'Nested';
+
+		$snippet->close();
+
+		$slots = $snippet->slots();
+
+		$this->assertSame('Header', $slots->header()->render());
+		$this->assertSame('Footer', $slots->footer()->render());
+		$this->assertSame('Nested', $slots->nested()->render());
+	}
+
 	public function testEndslotWithoutSlot(): void
 	{
 		$snippet = new Snippet('test.php');
