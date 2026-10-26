@@ -57,7 +57,7 @@ use Kirby\Toolkit\Html;
 
   <script nonce="<?= $nonce ?>">
     // Fiber setup
-    window.fiber = <?= json_encode($fiber) ?>;
+    window.fiber = <?= json_encode($fiber, JSON_HEX_TAG) ?>;
   </script>
 
   <?php foreach ($assets['js'] as $key => $js): ?>

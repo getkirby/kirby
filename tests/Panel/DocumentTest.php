@@ -6,6 +6,7 @@ use Kirby\Cms\App;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Response;
 use Kirby\TestCase;
+use Kirby\Toolkit\Str;
 
 /**
  * @coversDefaultClass \Kirby\Panel\Document
@@ -61,6 +62,32 @@ class DocumentTest extends TestCase
 		$this->assertSame('UTF-8', $response->charset());
 		$this->assertSame("frame-ancestors 'none'", $response->header('Content-Security-Policy'));
 		$this->assertNotNull($response->body());
+	}
+
+	/**
+	 * @covers ::response
+	 */
+	public function testResponseEscapesTagsInFiber(): void
+	{
+		// create panel dist files first to avoid redirect
+		(new Assets())->link();
+
+		// `<!--<script>` would keep the inline script open
+		// until the end of the document
+		$response = Document::response([
+			'$system' => [
+				'title' => '<!--<script></script>'
+			]
+		]);
+
+		$fiber = Str::after($response->body(), 'window.fiber = ');
+		$fiber = rtrim(trim(Str::before($fiber, '</script>')), ';');
+
+		$this->assertStringNotContainsString('<', $fiber);
+		$this->assertSame(
+			'<!--<script></script>',
+			json_decode($fiber, true)['$system']['title']
+		);
 	}
 
 	/**
