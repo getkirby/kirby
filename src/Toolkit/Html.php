@@ -528,14 +528,12 @@ class Html extends Xml
 		array $options = [],
 		array $attr = []
 	): string|null {
-		// YouTube video
-		if (Str::contains($url, 'youtu', true) === true) {
-			return static::youtube($url, $options['youtube'] ?? [], $attr);
-		}
+		// YouTube or Vimeo video
+		$embed   = static::youtube($url, $options['youtube'] ?? [], $attr);
+		$embed ??= static::vimeo($url, $options['vimeo'] ?? [], $attr);
 
-		// Vimeo video
-		if (Str::contains($url, 'vimeo', true) === true) {
-			return static::vimeo($url, $options['vimeo'] ?? [], $attr);
+		if ($embed !== null) {
+			return $embed;
 		}
 
 		// self-hosted video file

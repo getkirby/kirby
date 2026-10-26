@@ -559,6 +559,15 @@ class HtmlTest extends TestCase
 		$expected = '<video><source src="../myvideo.mp4" type="video/mp4"></video>';
 		$this->assertSame($expected, $html);
 
+		// file names that mention YouTube or Vimeo
+		$html = Html::video('https://getkirby.com/vimeo-export.mp4');
+		$expected = '<video><source src="https://getkirby.com/vimeo-export.mp4" type="video/mp4"></video>';
+		$this->assertSame($expected, $html);
+
+		$html = Html::video('../youtube-backup.mp4');
+		$expected = '<video><source src="../youtube-backup.mp4" type="video/mp4"></video>';
+		$this->assertSame($expected, $html);
+
 		// invalid file type
 		$html = Html::video('https://getkirby.com/myvideo.mp3');
 		$this->assertNull($html);
@@ -698,6 +707,10 @@ class HtmlTest extends TestCase
 			[
 				'https://vimeo.com/239882943?test=value',
 				'https://player.vimeo.com/video/239882943?test=value'
+			],
+			[
+				'https://vimeo.com/239882943?ref=youtube',
+				'https://player.vimeo.com/video/239882943?ref=youtube'
 			],
 			[
 				'https://vimeo.com/channels/channelname/239882943?test=value',
