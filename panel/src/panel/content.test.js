@@ -78,16 +78,6 @@ describe("panel.content", () => {
 
 			expect(cancel).toHaveBeenCalledOnce();
 		});
-
-		it("aborts an ongoing save request", () => {
-			const { content } = factory();
-			const abort = vi.fn();
-
-			content.saveAbortController = { abort: abort };
-			content.cancelSaving();
-
-			expect(abort).toHaveBeenCalledOnce();
-		});
 	});
 
 	describe("diff()", () => {
@@ -203,6 +193,29 @@ describe("panel.content", () => {
 			await content.discard();
 
 			expect(content.isProcessing).toBe(false);
+		});
+
+		it("runs after a running save request", async () => {
+			const finish = [];
+			const { content, panel } = factory({
+				post: vi.fn(() => new Promise((resolve) => finish.push(resolve)))
+			});
+
+			const save = content.save({ title: "Draft" });
+			const discard = content.discard();
+
+			expect(endpoints(panel)).toStrictEqual(["/pages/test/changes/save"]);
+
+			finish[0]();
+			await save;
+
+			expect(endpoints(panel)).toStrictEqual([
+				"/pages/test/changes/save",
+				"/pages/test/changes/discard"
+			]);
+
+			finish[1]();
+			await discard;
 		});
 	});
 
@@ -454,6 +467,53 @@ describe("panel.content", () => {
 
 			expect(content.isProcessing).toBe(false);
 		});
+
+		it("runs after a running save request", async () => {
+			const finish = [];
+			const { content, panel } = factory({
+				post: vi.fn(() => new Promise((resolve) => finish.push(resolve)))
+			});
+
+			const save = content.save({ title: "Draft" });
+			const publish = content.publish({ title: "Draft" });
+
+			expect(endpoints(panel)).toStrictEqual(["/pages/test/changes/save"]);
+
+			finish[0]();
+			await save;
+
+			expect(endpoints(panel)).toStrictEqual([
+				"/pages/test/changes/save",
+				"/pages/test/changes/publish"
+			]);
+
+			finish[1]();
+			await publish;
+		});
+
+		it("runs before a save request that is added while waiting", async () => {
+			const finish = [];
+			const { content, panel } = factory({
+				post: vi.fn(() => new Promise((resolve) => finish.push(resolve)))
+			});
+
+			const first = content.save({ title: "First" });
+			const publish = content.publish({ title: "First" });
+			const second = content.save({ title: "Second" });
+
+			finish[0]();
+			await first;
+			finish[1]();
+			await publish;
+			finish[2]();
+			await second;
+
+			expect(endpoints(panel)).toStrictEqual([
+				"/pages/test/changes/save",
+				"/pages/test/changes/publish",
+				"/pages/test/changes/save"
+			]);
+		});
 	});
 
 	describe("save()", () => {
@@ -504,15 +564,104 @@ describe("panel.content", () => {
 			expect(panel.dialog.open).toHaveBeenCalledOnce();
 		});
 
-		it("returns false when a newer save request took over", async () => {
-			const error = new Error("The request was aborted");
-			error.name = "AbortError";
-
-			const { content } = factory({
-				post: vi.fn(() => Promise.reject(error))
+		it("runs save requests one after another", async () => {
+			const finish = [];
+			const { content, panel } = factory({
+				post: vi.fn(() => new Promise((resolve) => finish.push(resolve)))
 			});
 
-			await expect(content.save({ title: "Draft" })).resolves.toBe(false);
+			const first = content.save({ title: "First" });
+			const second = content.save({ title: "Second" });
+
+			expect(panel.api.post).toHaveBeenCalledOnce();
+
+			finish[0]();
+			await expect(first).resolves.toBe(true);
+
+			expect(panel.api.post).toHaveBeenCalledTimes(2);
+
+			finish[1]();
+			await expect(second).resolves.toBe(true);
+		});
+
+		it("replaces a waiting save request with a newer one", async () => {
+			const finish = [];
+			const { content, panel } = factory({
+				post: vi.fn(() => new Promise((resolve) => finish.push(resolve)))
+			});
+
+			const first = content.save({ title: "First" });
+			const second = content.save({ title: "Second" });
+			const third = content.save({ title: "Third" });
+
+			finish[0]();
+			await first;
+			finish[1]();
+
+			// the newer request carries the full state,
+			// so it covers the replaced one as well
+			await expect(second).resolves.toBe(true);
+			await expect(third).resolves.toBe(true);
+
+			expect(panel.api.post).toHaveBeenCalledTimes(2);
+			expect(panel.api.post).toHaveBeenLastCalledWith(
+				"/pages/test/changes/save",
+				{ title: "Third" },
+				expect.objectContaining({ silent: true })
+			);
+		});
+
+		it("keeps a waiting save request of another view", async () => {
+			const finish = [];
+			const { content, panel } = factory({
+				post: vi.fn(() => new Promise((resolve) => finish.push(resolve)))
+			});
+
+			const first = content.save({ title: "First" });
+			const second = content.save({ title: "Second" });
+
+			// the editor navigates to another view
+			panel.view.props.api = "/pages/other";
+			const other = content.save({ title: "Other" });
+
+			finish[0]();
+			await first;
+			finish[1]();
+			await second;
+			finish[2]();
+			await other;
+
+			expect(endpoints(panel)).toStrictEqual([
+				"/pages/test/changes/save",
+				"/pages/test/changes/save",
+				"/pages/other/changes/save"
+			]);
+		});
+
+		it("keeps a waiting save request of another language", async () => {
+			const finish = [];
+			const { content, panel } = factory({
+				post: vi.fn(() => new Promise((resolve) => finish.push(resolve)))
+			});
+
+			const first = content.save({ title: "First" });
+			const second = content.save({ title: "Second" });
+
+			panel.language.code = "de";
+			const translation = content.save({ title: "Zweiter" });
+
+			finish[0]();
+			await first;
+			finish[1]();
+			await second;
+			finish[2]();
+			await translation;
+
+			const languages = panel.api.post.mock.calls.map(
+				(call) => call[2].headers["x-language"]
+			);
+
+			expect(languages).toStrictEqual(["en", "en", "de"]);
 		});
 
 		it("rethrows any other error", async () => {
@@ -625,21 +774,64 @@ describe("panel.content", () => {
 			expect(panel.dialog.open).toHaveBeenCalledOnce();
 		});
 
-		it("does not release the lock when a newer save request took over", async () => {
-			const error = new Error("The request was aborted");
-			error.name = "AbortError";
-
+		it("releases the lock after a newer save request took over", async () => {
+			const finish = [];
 			const { content, panel } = factory({
 				changes: { title: "New title" },
 				latest: { title: "Test" },
-				post: vi.fn(() => Promise.reject(error))
+				post: vi.fn((url) => {
+					if (url.endsWith("/unlock") === true) {
+						return Promise.resolve();
+					}
+
+					return new Promise((resolve) => finish.push(resolve));
+				})
 			});
 
-			// an aborted save is an internal condition that must not be
-			// reported to the editor, so it aborts the unlock silently
-			await expect(content.unlock()).resolves.toBe(false);
+			const first = content.save({ title: "First" });
+			const unlock = content.unlock();
+			const second = content.save({ title: "Second" });
 
-			expect(endpoints(panel)).toStrictEqual(["/pages/test/changes/save"]);
+			finish[0]();
+			await first;
+			finish[1]();
+			await second;
+
+			// the newer save request wrote the changes of the unlock as well
+			await expect(unlock).resolves.toBe(true);
+
+			expect(endpoints(panel)).toStrictEqual([
+				"/pages/test/changes/save",
+				"/pages/test/changes/save",
+				"/pages/test/changes/unlock"
+			]);
+		});
+
+		it("keeps a waiting unlock request of another view", async () => {
+			const finish = [];
+			const { content, panel } = factory({
+				post: vi.fn((url) => {
+					if (url.endsWith("/save") === true) {
+						return new Promise((resolve) => finish.push(resolve));
+					}
+
+					return Promise.resolve();
+				})
+			});
+
+			const save = content.save({ title: "Draft" });
+			const one = content.unlock({ api: "/pages/one" });
+			const two = content.unlock({ api: "/pages/two" });
+
+			finish[0]();
+			await save;
+			await Promise.all([one, two]);
+
+			expect(endpoints(panel)).toStrictEqual([
+				"/pages/test/changes/save",
+				"/pages/one/changes/unlock",
+				"/pages/two/changes/unlock"
+			]);
 		});
 
 		it("ignores failed unlock requests", async () => {
