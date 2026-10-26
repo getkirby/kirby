@@ -217,7 +217,7 @@ class Html extends Xml
 			return '';
 		}
 
-		if (empty($text) === true) {
+		if ($text === null || $text === '' || $text === []) {
 			// show only the email address without additional parameters
 			$address = match (Str::contains($email, '?')) {
 				true  => Str::before($email, '?'),

@@ -248,6 +248,9 @@ class HtmlTest extends TestCase
 		$this->assertMatchesRegularExpression($expected, $html);
 		preg_match($expected, $html, $matches);
 		$this->assertSame('mail@company.com', Html::decode($matches[1]));
+
+		$html = Html::email('mail@company.com', '0');
+		$this->assertMatchesRegularExpression('!^<a href="mailto:(.*?)">0</a>$!', $html);
 	}
 
 	public function testEmailWithArrayText(): void
