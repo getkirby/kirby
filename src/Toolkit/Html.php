@@ -481,7 +481,7 @@ class Html extends Xml
 	): string {
 		$number = preg_replace('![^0-9\+]+!', '', $tel);
 
-		if (empty($text) === true) {
+		if ($text === null || $text === '' || $text === []) {
 			$text = $tel;
 		}
 

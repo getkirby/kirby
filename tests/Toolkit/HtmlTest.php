@@ -415,6 +415,10 @@ class HtmlTest extends TestCase
 		$html = Html::tel('1234', 'Tel');
 		$expected = '<a href="tel:1234">Tel</a>';
 		$this->assertSame($expected, $html);
+
+		$html = Html::tel('1234', '0');
+		$expected = '<a href="tel:1234">0</a>';
+		$this->assertSame($expected, $html);
 	}
 
 	public function testTelWithArrayText(): void
