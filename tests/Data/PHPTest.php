@@ -27,6 +27,13 @@ class PHPTest extends TestCase
 		$this->assertSame('123', PHP::encode(123));
 	}
 
+	public function testEncodeNumbers(): void
+	{
+		$this->assertSame('0.30000000000000004', PHP::encode(0.1 + 0.2));
+		$this->assertSame('1.0', PHP::encode(1.0));
+		$this->assertSame('-9223372036854775807-1', PHP::encode(PHP_INT_MIN));
+	}
+
 	public function testDecode(): void
 	{
 		$this->expectException(BadMethodCallException::class);

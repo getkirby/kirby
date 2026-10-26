@@ -21,13 +21,11 @@ class PHP extends Handler
 	 */
 	public static function encode($data, string $indent = ''): string
 	{
-		return match (gettype($data)) {
-			'array'   => static::encodeArray($data, $indent),
-			'boolean' => $data ? 'true' : 'false',
-			'integer',
-			'double'  => (string)$data,
-			default   => var_export($data, true)
-		};
+		if (is_array($data) === true) {
+			return static::encodeArray($data, $indent);
+		}
+
+		return var_export($data, true);
 	}
 
 	/**
