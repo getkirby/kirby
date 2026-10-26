@@ -17,7 +17,7 @@ class Txt extends Handler
 	/**
 	 * Converts an array to an encoded Kirby txt string
 	 */
-	public static function encode($data): string
+	public static function encode(mixed $data): string
 	{
 		$result = [];
 
@@ -37,9 +37,9 @@ class Txt extends Handler
 	/**
 	 * Helper for converting the value
 	 */
-	protected static function encodeValue(array|bool|float|int|string $value): string
-	{
-		// avoid problems with certain values
+	protected static function encodeValue(
+		array|bool|float|int|string $value
+	): string {
 		$value = match (true) {
 			$value === true  => 'true',
 			$value === false => 'false',
@@ -49,9 +49,7 @@ class Txt extends Handler
 		};
 
 		// escape accidental dividers within a field
-		$value = preg_replace('!(?<=\n|^)----!', '\\----', $value) ?? $value;
-
-		return $value;
+		return preg_replace('!(?<=\n|^)----!', '\\----', $value) ?? $value;
 	}
 
 	/**
@@ -59,25 +57,21 @@ class Txt extends Handler
 	 */
 	protected static function encodeResult(string $key, string $value): string
 	{
-		$value = trim($value);
-		$result = $key . ':';
-
-		$result .= match (preg_match('!\R!', $value)) {
+		$value     = trim($value);
+		$separator = match (preg_match('!\R!', $value)) {
 			// multi-line content
-			1 => "\n\n",
+			1       => "\n\n",
 			// single line content, just add space after colon
 			default => ' ',
 		};
 
-		$result .= $value;
-
-		return $result;
+		return $key . ':' . $separator . $value;
 	}
 
 	/**
 	 * Parses a Kirby txt string and returns a multi-dimensional array
 	 */
-	public static function decode($string): array
+	public static function decode(mixed $string): array
 	{
 		if ($string === null || $string === '') {
 			return [];
@@ -98,32 +92,31 @@ class Txt extends Handler
 			$string = substr($string, 3);
 		}
 
-		// explode all fields by the line separator
 		$fields = preg_split('!\n----\s*\n*!', $string);
+		$data   = [];
 
-		// start the data array
-		$data = [];
-
-		// loop through all fields and add them to the content
 		foreach ($fields as $field) {
-			if ($pos = strpos($field, ':')) {
-				$key = strtolower(trim(substr($field, 0, $pos)));
-				$key = str_replace(['-', ' '], '_', $key);
+			$pos = strpos($field, ':');
 
-				// Don't add fields with empty keys
-				if ($key === '') {
-					continue;
-				}
-
-				$value = trim(substr($field, $pos + 1));
-
-				// unescape escaped dividers within a field
-				$data[$key] = preg_replace(
-					'!(?<=\n|^)\\\\----!',
-					'----',
-					$value
-				);
+			if ($pos === false) {
+				continue;
 			}
+
+			$key = strtolower(trim(substr($field, 0, $pos)));
+			$key = str_replace(['-', ' '], '_', $key);
+
+			if ($key === '') {
+				continue;
+			}
+
+			$value = trim(substr($field, $pos + 1));
+
+			// unescape escaped dividers within a field
+			$data[$key] = preg_replace(
+				'!(?<=\n|^)\\\\----!',
+				'----',
+				$value
+			) ?? $value;
 		}
 
 		return $data;
