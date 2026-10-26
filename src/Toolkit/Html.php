@@ -123,11 +123,12 @@ class Html extends Xml
 		$text = null,
 		array $attr = []
 	): string {
-		if (Str::startsWith($href, 'mailto:')) {
+		// URL schemes are case-insensitive
+		if (Str::startsWith($href, 'mailto:', true) === true) {
 			return static::email(substr($href, 7), $text, $attr);
 		}
 
-		if (Str::startsWith($href, 'tel:')) {
+		if (Str::startsWith($href, 'tel:', true) === true) {
 			return static::tel(substr($href, 4), $text, $attr);
 		}
 

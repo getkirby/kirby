@@ -34,6 +34,19 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $html);
 	}
 
+	public function testAWithUppercaseScheme(): void
+	{
+		$html = Html::a('MAILTO:mail@company.com');
+		$expected = '!^<a href="mailto:(.*?)">(.*?)</a>$!';
+		$this->assertMatchesRegularExpression($expected, $html);
+		preg_match($expected, $html, $matches);
+		$this->assertSame('mail@company.com', Html::decode($matches[2]));
+
+		$html = Html::a('Tel:1234');
+		$expected = '<a href="tel:1234">1234</a>';
+		$this->assertSame($expected, $html);
+	}
+
 	public function testAWithText(): void
 	{
 		$html = Html::a('https://getkirby.com', 'Kirby');
