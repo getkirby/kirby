@@ -143,6 +143,15 @@ class VTest extends TestCase
 		$this->assertFalse(V::date('January 32, 1989'));
 	}
 
+	public function testDateWithoutOperatorOrTest(): void
+	{
+		// no operator means a simple date validation
+		$this->assertTrue(V::date('2017-12-24', null, null));
+
+		// missing comparison value
+		$this->assertFalse(V::date('2345-01-01', '<'));
+	}
+
 	public function testDateComparison(): void
 	{
 		$this->assertTrue(V::date('2345-01-01', '==', '01.01.2345'));

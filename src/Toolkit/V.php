@@ -108,17 +108,15 @@ class V
 		// make sure $value is a string
 		$value ??= '';
 
-		$args = func_get_args();
-
 		// simple date validation
-		if (count($args) === 1) {
+		if ($operator === null) {
 			$date = date_parse($value);
 			return $date['error_count'] === 0 &&
 					$date['warning_count'] === 0;
 		}
 
 		$value = strtotime($value);
-		$test  = strtotime($test);
+		$test  = strtotime($test ?? '');
 
 		if (is_int($value) !== true || is_int($test) !== true) {
 			return false;
