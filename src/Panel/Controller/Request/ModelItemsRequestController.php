@@ -17,15 +17,46 @@ abstract class ModelItemsRequestController extends RequestController
 {
 	protected const ITEM_CLASS = ModelItem::class;
 
+	/**
+	 * Presentation hints for the thumbnail image
+	 */
+	protected function image(): array
+	{
+		$settings = json_decode($this->request->get('image', '{}'), true);
+
+		if (is_array($settings) === false) {
+			return [];
+		}
+
+		$image = [];
+
+		if (isset($settings['cover']) === true) {
+			$image['cover'] = $settings['cover'] === true;
+		}
+
+		// accept a literal ratio (a number or `width/height`) only,
+		// never a query that `Panel\Model::image()` would resolve
+		if (
+			isset($settings['ratio']) === true &&
+			is_string($settings['ratio']) === true &&
+			preg_match('!^\d+(\.\d+)?(/\d+(\.\d+)?)?$!', $settings['ratio']) === 1
+		) {
+			$image['ratio'] = $settings['ratio'];
+		}
+
+		return $image;
+	}
+
 	protected function item(ModelWithContent $model): ModelItem
 	{
 		$class = static::ITEM_CLASS;
+
+		// the text and info templates are not read from the request:
+		// they would be evaluated as queries against the model
 		return new $class(
 			$model,
-			image:  json_decode($this->request->get('image', '{}'), true),
-			info:   $this->request->get('info'),
+			image:  $this->image(),
 			layout: $this->request->get('layout'),
-			text:   $this->request->get('text'),
 		);
 	}
 
