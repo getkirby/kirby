@@ -213,6 +213,13 @@ class Snippet extends Tpl
 	public function endslot(): void
 	{
 		$slot = array_pop($this->capture);
+
+		if ($slot === null) {
+			throw new LogicException(
+				message: '`endslot()` was called without a matching `slot()`'
+			);
+		}
+
 		$slot->close();
 		$this->slots[$slot->name()] = $slot;
 	}

@@ -24,6 +24,21 @@ class SnippetTest extends TestCase
 		$snippet->close();
 	}
 
+	public function testEndslotWithoutSlot(): void
+	{
+		$snippet = new Snippet('test.php');
+		$snippet->open();
+
+		try {
+			$this->expectException(LogicException::class);
+			$this->expectExceptionMessage('`endslot()` was called without a matching `slot()`');
+
+			$snippet->endslot();
+		} finally {
+			$snippet->close();
+		}
+	}
+
 	public function testFactory(): void
 	{
 		// all output must be captured
