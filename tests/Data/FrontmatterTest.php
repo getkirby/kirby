@@ -2,8 +2,10 @@
 
 namespace Kirby\Data;
 
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
+use stdClass;
 
 #[CoversClass(Frontmatter::class)]
 class FrontmatterTest extends TestCase
@@ -87,6 +89,14 @@ class FrontmatterTest extends TestCase
 			'title' => 'My Title',
 			'uuid'  => 'abc123'
 		], Frontmatter::decode($string));
+	}
+
+	public function testDecodeInvalid(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid frontmatter data; please pass a string');
+
+		Frontmatter::decode(new stdClass());
 	}
 
 	public function testDecodeWithWhitespaceOnlyBody(): void

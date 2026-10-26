@@ -2,6 +2,8 @@
 
 namespace Kirby\Data;
 
+use Kirby\Exception\InvalidArgumentException;
+
 /**
  * Reads and writes YAML frontmatter format:
  *
@@ -25,7 +27,7 @@ class Frontmatter extends Handler
 	/**
 	 * Parses a frontmatter string and returns a multi-dimensional array
 	 */
-	public static function decode($string): array
+	public static function decode(mixed $string): array
 	{
 		if ($string === null || $string === '') {
 			return [];
@@ -35,9 +37,15 @@ class Frontmatter extends Handler
 			return $string;
 		}
 
-		// parse standard frontmatter block: opening ---, YAML, closing ---,
-		// and optional body text after the closing delimiter
-		if (preg_match('/^---\r?\n(?:(.*?)\r?\n)??---\r?\n?(.*)?$/s', $string, $matches)) {
+		if (is_string($string) === false) {
+			throw new InvalidArgumentException(
+				message: 'Invalid frontmatter data; please pass a string'
+			);
+		}
+
+		// parse standard frontmatter block: opening ---, optional YAML,
+		// closing --- and optional body text after the closing delimiter
+		if (preg_match('/^---\r?\n(?:(.*?)\r?\n)??---\r?\n?(.*)?$/s', $string, $matches) === 1) {
 			$fields = Yaml::decode($matches[1]);
 			$body   = trim($matches[2] ?? '');
 
@@ -55,7 +63,7 @@ class Frontmatter extends Handler
 	/**
 	 * Converts an array to a frontmatter string
 	 */
-	public static function encode($data): string
+	public static function encode(mixed $data): string
 	{
 		$body = $data[static::$body] ?? null;
 		unset($data[static::$body]);
