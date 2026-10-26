@@ -28,23 +28,17 @@ class Locale
 
 	/**
 	 * Builds an associative array with the locale
-	 * categories that are actually supported on this system
+	 * categories that are actually supported on this system,
+	 * without `LC_ALL`
 	 * @since 7.0.0
 	 *
-	 * @param $withAll If set to `true`, `LC_ALL` is returned as well
 	 * @return array<int, string>
 	 */
-	protected static function categories(bool $withAll = false): array
+	protected static function categories(): array
 	{
-		$names = static::LOCALE_CONSTANTS;
-
-		if ($withAll === true) {
-			array_unshift($names, 'LC_ALL');
-		}
-
 		$constants = [];
 
-		foreach ($names as $name) {
+		foreach (static::LOCALE_CONSTANTS as $name) {
 			if (defined($name) === true) {
 				$constants[constant($name)] = $name;
 			}
@@ -81,7 +75,7 @@ class Locale
 	public static function export(array $locale): array
 	{
 		$result    = [];
-		$constants = static::categories(true);
+		$constants = [LC_ALL => 'LC_ALL'] + static::categories();
 
 		// replace the keys in the locale data array with the locale names
 		foreach ($locale as $key => $value) {
