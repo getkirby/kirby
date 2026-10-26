@@ -1009,6 +1009,14 @@ class FTest extends TestCase
 		$this->assertSame($input, $result);
 	}
 
+	public function testWriteCreatesParentDirectory(): void
+	{
+		$file = static::TMP . '/a/b/test.txt';
+
+		$this->assertTrue(F::write($file, 'my content'));
+		$this->assertSame('my content', F::read($file));
+	}
+
 	public function testWriteObject(): void
 	{
 		$input = new stdClass([
@@ -1019,6 +1027,32 @@ class FTest extends TestCase
 
 		$result = unserialize(F::read($this->test));
 		$this->assertEquals($input, $result); // cannot use strict assertion (serialization)
+	}
+
+	public function testWriteWithEmptyPath(): void
+	{
+		$this->assertFalse(F::write('', 'my content'));
+	}
+
+	public function testWriteWithReadOnlyFile(): void
+	{
+		if (posix_getuid() === 0) {
+			$this->markTestSkipped('Cannot test a read-only file as root');
+		}
+
+		F::write($this->test, 'old content');
+		chmod($this->test, 0o444);
+
+		try {
+			F::write($this->test, 'new content');
+			$this->fail('Expected an exception');
+		} catch (Exception $e) {
+			$this->assertSame('The file "' . $this->test . '" is not writable', $e->getMessage());
+		} finally {
+			chmod($this->test, 0o644);
+		}
+
+		$this->assertSame('old content', F::read($this->test));
 	}
 
 	public function testSimilar(): void
