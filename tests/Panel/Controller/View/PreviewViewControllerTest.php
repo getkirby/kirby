@@ -2,11 +2,25 @@
 
 namespace Kirby\Panel\Controller\View;
 
+use Kirby\Cms\Page;
+use Kirby\Content\VersionId;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Panel\TestCase;
 use Kirby\Panel\Ui\View;
 use PHPUnit\Framework\Attributes\CoversClass;
+
+class PageWithoutChangesPreview extends Page
+{
+	public function previewUrl(VersionId|string $versionId = 'latest'): string|null
+	{
+		if ($versionId === 'changes') {
+			return null;
+		}
+
+		return parent::previewUrl($versionId);
+	}
+}
 
 #[CoversClass(PreviewViewController::class)]
 class PreviewViewControllerTest extends TestCase
@@ -189,5 +203,13 @@ class PreviewViewControllerTest extends TestCase
 
 		$this->assertSame('/test/foo:bar?_preview=true&foo=bar', $src['latest']);
 		$this->assertSame('/test/foo:bar?_token=' . $token . '&_version=changes&_preview=true&foo=bar', $src['changes']);
+	}
+
+	public function testSrcWithoutChangesPreview(): void
+	{
+		$model      = new PageWithoutChangesPreview(['slug' => 'test']);
+		$controller = new PreviewViewController($model, 'compare');
+
+		$this->assertSame(['latest' => '/test?_preview=true'], $controller->src());
 	}
 }
