@@ -37,6 +37,8 @@ export default {
 
 <style>
 .k-file-preview-frame-column {
+	/* Grid items with an aspect ratio don't stretch by default */
+	justify-self: stretch;
 	aspect-ratio: 1/1;
 	background: var(--pattern);
 }
