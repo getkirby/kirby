@@ -102,7 +102,7 @@ class Date extends DateTime implements Stringable
 		// config option, if available
 		$weekday = App::instance(lazy: true)?->option('date.weekday');
 
-		if (is_int($weekday) === true) {
+		if (is_int($weekday) === true && $weekday >= 0 && $weekday <= 6) {
 			return $weekday;
 		}
 

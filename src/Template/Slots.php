@@ -33,6 +33,15 @@ class Slots implements Countable
 	}
 
 	/**
+	 * Checks if a slot has been defined;
+	 * e.g. `isset($slots->heading)`
+	 */
+	public function __isset(string $name): bool
+	{
+		return isset($this->slots[$name]);
+	}
+
+	/**
 	 * Magic getter method for slots;
 	 * e.g. `$slots->heading()`
 	 */
