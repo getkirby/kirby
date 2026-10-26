@@ -417,6 +417,7 @@ class HtmlTest extends TestCase
 		// _blank target without existing rel: adds noreferrer as safe default
 		$this->assertSame('noreferrer', Html::rel(null, '_blank'));
 		$this->assertSame('noreferrer', Html::rel('', '_blank'));
+		$this->assertSame('noreferrer', Html::rel(null, '_BLANK'));
 
 		// _blank target with existing rel: left untouched (opt-out)
 		$this->assertSame('noopener', Html::rel('noopener', '_blank'));

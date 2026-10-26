@@ -430,7 +430,8 @@ class Html extends Xml
 	): string|null {
 		$rel = trim($rel ?? '');
 
-		if ($target === '_blank' && $rel === '') {
+		// target keywords are case-insensitive
+		if (strtolower($target ?? '') === '_blank' && $rel === '') {
 			return 'noreferrer';
 		}
 
