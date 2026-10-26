@@ -1027,11 +1027,8 @@ class F
 	}
 
 	/**
-	 * Serializes concurrent read-update-writes of a file by
-	 * holding an exclusive `flock` for the whole operation, so
-	 * that other writers (that lock the same way) cannot lose
-	 * each other's updates. The `$modifier` callback receives
-	 * the current file contents.
+	 * Updates a file under an exclusive lock; the `$modifier`
+	 * callback receives the current file contents
 	 *
 	 * @since 5.5.0
 	 */
@@ -1075,6 +1072,8 @@ class F
 				return false;
 			}
 
+			// rewritten in place on purpose: replacing the file would let
+			// a process waiting for this lock write into the replaced one
 			rewind($handle);
 			ftruncate($handle, 0);
 
@@ -1104,7 +1103,9 @@ class F
 	}
 
 	/**
-	 * Creates a new file
+	 * Creates a new file. An existing file is replaced in one step via a
+	 * temporary file and `rename()`, so a parallel reader never sees it
+	 * empty or half-written; appending changes the file in place.
 	 *
 	 * @param string $file The path for the new file
 	 * @param mixed $content Either a string, an object or an array. Arrays and objects will be serialized.
@@ -1119,6 +1120,105 @@ class F
 			$content = serialize($content);
 		}
 
-		return static::put($file, $content, $append);
+		if ($append === true) {
+			return static::put($file, $content, append: true);
+		}
+
+		$directory = dirname($file);
+
+		// create the parent directory if it does not exist yet
+		if (Dir::make($directory) === false) {
+			return false;
+		}
+
+		if (static::isWritable($file) === false) {
+			throw new Exception('The file "' . $file . '" is not writable');
+		}
+
+		// a symlink would turn into a regular file, a stream can only
+		// be read once and the temporary file needs a writable directory
+		if (
+			is_link($file) === true ||
+			is_resource($content) === true ||
+			is_writable($directory) === false
+		) {
+			return static::put($file, $content);
+		}
+
+		// `tempnam()` creates the temporary file with mode 0600, so nobody
+		// else can read the content before the final mode is set;
+		// the leading dot keeps the file out of the inventory
+		$tmp = Helpers::handleErrors(
+			fn (): string|false => tempnam($directory, '.kirby-'),
+			fn (): bool => true,
+			false
+		);
+
+		// `tempnam()` falls back to the system temp directory
+		if ($tmp === false || dirname($tmp) !== realpath($directory)) {
+			if ($tmp !== false) {
+				Helpers::handleErrors(fn (): bool => unlink($tmp), fn (): bool => true, false);
+			}
+
+			return static::put($file, $content);
+		}
+
+		try {
+			$old = Helpers::handleErrors(
+				fn (): array|false => stat($file),
+				fn (int $errno, string $errstr): bool => str_contains($errstr, 'stat failed'),
+				false
+			);
+			$new = stat($tmp);
+
+			// the replacement would belong to the PHP user (e.g. instead of
+			// a deploy user): keep owner and group by writing in place
+			if (
+				$old !== false &&
+				($old['uid'] !== $new['uid'] || $old['gid'] !== $new['gid'])
+			) {
+				return static::put($file, $content);
+			}
+
+			if (file_put_contents($tmp, $content) === false) {
+				return false;
+			}
+
+			// a replaced file keeps its mode, a new file gets the default mode
+			$mode = $old === false ? 0666 & ~umask() : $old['mode'] & 0777;
+			Helpers::handleErrors(fn (): bool => chmod($tmp, $mode), fn (): bool => true, false);
+
+			// `rename()` replaces the target atomically on POSIX filesystems
+			$renamed = Helpers::handleErrors(
+				fn (): bool => rename($tmp, $file),
+				fn (): bool => true,
+				false
+			);
+
+			if ($renamed === true) {
+				$tmp = null;
+				return true;
+			}
+
+			// the directory was moved or removed in the meantime and took the
+			// temporary file along: never recreate it with an in-place write
+			if (is_file($tmp) === false) {
+				$tmp = null;
+				return false;
+			}
+
+			// e.g. Windows while another process holds the target open:
+			// fall back to the locked in-place write
+			return static::put($file, $content);
+		} finally {
+			// the cleanup must never replace the actual result or error
+			if ($tmp !== null) {
+				Helpers::handleErrors(
+					fn (): bool => unlink($tmp),
+					fn (): bool => true,
+					false
+				);
+			}
+		}
 	}
 }

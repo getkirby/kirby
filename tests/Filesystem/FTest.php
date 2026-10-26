@@ -49,6 +49,17 @@ class FTest extends TestCase
 		$this->assertTrue(F::append($this->test, ' is awesome'));
 	}
 
+	public function testAppendWritesInPlace(): void
+	{
+		F::write($this->test, 'test');
+		$inode = fileinode($this->test);
+
+		F::append($this->test, ' is awesome');
+
+		$this->assertSame($inode, fileinode($this->test));
+		$this->assertSame('test is awesome', F::read($this->test));
+	}
+
 	public function testBase64(): void
 	{
 		F::write($this->test, 'test');
@@ -568,7 +579,6 @@ class FTest extends TestCase
 		I18n::$locale = $locale;
 	}
 
-
 	public function testRange(): void
 	{
 		file_put_contents($this->test, 'my content is awesome');
@@ -1017,6 +1027,132 @@ class FTest extends TestCase
 		$this->assertSame('my content', F::read($file));
 	}
 
+	public function testWriteDoesNotRecreateVanishedDirectory(): void
+	{
+		$dir  = static::TMP . '/page';
+		$file = $dir . '/test.txt';
+
+		F::write($file, 'old content');
+
+		// a parallel request moves the directory (e.g. a sorting change)
+		// after the temporary file was written and before the rename
+		FileTest::$mocks['rename'] = function ($from, $to) use ($dir) {
+			\rename($dir, $dir . '-moved');
+			return \rename($from, $to);
+		};
+
+		try {
+			$this->assertFalse(F::write($file, 'new content'));
+			$this->assertDirectoryDoesNotExist($dir);
+			$this->assertSame('old content', F::read($dir . '-moved/test.txt'));
+		} finally {
+			FileTest::$mocks = [];
+		}
+	}
+
+	public function testWriteFailsOnShortWrite(): void
+	{
+		F::write($this->test, 'old content');
+
+		// e.g. a full disk: PHP returns `false` after a short write
+		FileTest::$mocks['file_put_contents'] = function ($file, $content) {
+			\file_put_contents($file, substr($content, 0, 3));
+			return false;
+		};
+
+		try {
+			$this->assertFalse(F::write($this->test, 'new content'));
+			$this->assertSame('old content', F::read($this->test));
+			$this->assertSame(['moved.txt'], array_values(array_diff(scandir(static::TMP), ['.', '..'])));
+		} finally {
+			FileTest::$mocks = [];
+		}
+	}
+
+	public function testWriteFailsWhenContentCannotBeWritten(): void
+	{
+		FileTest::$block = ['file_put_contents'];
+
+		try {
+			$this->assertFalse(F::write($this->test, 'my content'));
+			$this->assertFileDoesNotExist($this->test);
+		} finally {
+			FileTest::$block = [];
+		}
+	}
+
+	public function testWriteFallsBackWhenRenameFails(): void
+	{
+		FileTest::$block = ['rename'];
+
+		try {
+			$this->assertTrue(F::write($this->test, 'my content'));
+			$this->assertSame('my content', F::read($this->test));
+
+			// the temporary file must not stay behind
+			$this->assertSame(['moved.txt'], array_values(array_diff(scandir(static::TMP), ['.', '..'])));
+		} finally {
+			FileTest::$block = [];
+		}
+	}
+
+	public function testWriteKeepsFileMode(): void
+	{
+		F::write($this->test, 'old content');
+		chmod($this->test, 0o640);
+
+		F::write($this->test, 'new content');
+
+		$this->assertSame(0o640, fileperms($this->test) & 0o777);
+	}
+
+	public function testWriteKeepsOwner(): void
+	{
+		F::write($this->test, 'old content');
+		$inode = fileinode($this->test);
+
+		// e.g. a file of the deploy user: a replacement
+		// would belong to the PHP user instead
+		FileTest::$mocks['stat'] = function ($file) {
+			$stat = \stat($file);
+
+			if ($file === $this->test) {
+				$stat['uid']++;
+			}
+
+			return $stat;
+		};
+
+		try {
+			$this->assertTrue(F::write($this->test, 'new content'));
+			$this->assertSame($inode, fileinode($this->test));
+			$this->assertSame('new content', F::read($this->test));
+			$this->assertSame(['moved.txt'], array_values(array_diff(scandir(static::TMP), ['.', '..'])));
+		} finally {
+			FileTest::$mocks = [];
+		}
+	}
+
+	public function testWriteLeavesNoTemporaryFile(): void
+	{
+		F::write($this->test, 'first');
+		F::write($this->test, 'second');
+
+		$this->assertSame(['moved.txt'], array_values(array_diff(scandir(static::TMP), ['.', '..'])));
+	}
+
+	public function testWriteNewFileGetsDefaultMode(): void
+	{
+		$umask = umask(0o027);
+
+		try {
+			F::write($this->test, 'content');
+			$this->assertSame(0o640, fileperms($this->test) & 0o777);
+		} finally {
+			umask($umask);
+		}
+	}
+
 	public function testWriteObject(): void
 	{
 		$input = new stdClass([
@@ -1029,9 +1165,95 @@ class FTest extends TestCase
 		$this->assertEquals($input, $result); // cannot use strict assertion (serialization)
 	}
 
+	public function testWriteReplacesFileInOneStep(): void
+	{
+		F::write($this->test, 'old content');
+
+		// a reader that opened the file before the write
+		// keeps seeing the complete old content
+		$handle = fopen($this->test, 'r');
+
+		F::write($this->test, 'new content');
+
+		$this->assertSame('old content', stream_get_contents($handle));
+		$this->assertSame('new content', F::read($this->test));
+
+		fclose($handle);
+	}
+
+	public function testWriteReplacesSymlinkTarget(): void
+	{
+		$target = static::TMP . '/target.txt';
+		$link   = static::TMP . '/link.txt';
+
+		F::write($target, 'old content');
+		symlink($target, $link);
+
+		$this->assertTrue(F::write($link, 'new content'));
+		$this->assertTrue(is_link($link));
+		$this->assertSame('new content', F::read($target));
+	}
+
+	public function testWriteTemporaryFileIsPrivate(): void
+	{
+		F::write($this->test, 'old content');
+		chmod($this->test, 0o644);
+
+		// the content must not be readable by others before the final mode is set
+		$mode = null;
+		FileTest::$mocks['file_put_contents'] = function ($file, $content, ...$args) use (&$mode) {
+			if (str_contains(basename($file), '.kirby-') === true) {
+				$mode = fileperms($file) & 0o777;
+			}
+
+			return \file_put_contents($file, $content, ...$args);
+		};
+
+		try {
+			$this->assertTrue(F::write($this->test, 'new content'));
+			$this->assertSame(0o600, $mode);
+			$this->assertSame(0o644, fileperms($this->test) & 0o777);
+		} finally {
+			FileTest::$mocks = [];
+		}
+	}
+
+	public function testWriteWithDanglingSymlink(): void
+	{
+		$target = static::TMP . '/missing.txt';
+		$link   = static::TMP . '/link.txt';
+
+		symlink($target, $link);
+
+		// falls back to the in-place write, which creates the target
+		$this->assertTrue(F::write($link, 'new content'));
+		$this->assertSame('new content', F::read($target));
+	}
+
 	public function testWriteWithEmptyPath(): void
 	{
 		$this->assertFalse(F::write('', 'my content'));
+	}
+
+	public function testWriteWithReadOnlyDirectory(): void
+	{
+		if (posix_getuid() === 0) {
+			$this->markTestSkipped('Cannot test a read-only directory as root');
+		}
+
+		$dir  = static::TMP . '/readonly';
+		$file = $dir . '/test.txt';
+
+		F::write($file, 'old content');
+		chmod($dir, 0o555);
+
+		try {
+			// no temporary file can be created: falls back to the in-place write
+			$this->assertTrue(F::write($file, 'new content'));
+			$this->assertSame('new content', F::read($file));
+		} finally {
+			chmod($dir, 0o755);
+		}
 	}
 
 	public function testWriteWithReadOnlyFile(): void
@@ -1053,6 +1275,18 @@ class FTest extends TestCase
 		}
 
 		$this->assertSame('old content', F::read($this->test));
+	}
+
+	public function testWriteWithStream(): void
+	{
+		$stream = fopen('php://memory', 'r+');
+		fwrite($stream, 'stream content');
+		rewind($stream);
+
+		$this->assertTrue(F::write($this->test, $stream));
+		$this->assertSame('stream content', F::read($this->test));
+
+		fclose($stream);
 	}
 
 	public function testSimilar(): void
