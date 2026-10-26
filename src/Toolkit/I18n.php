@@ -42,7 +42,7 @@ class I18n
 	 *
 	 * @var array<string, NumberFormatter>
 	 */
-	protected static array $decimalsFormatters = [];
+	protected static array $formatters = [];
 
 	/**
 	 * Returns the entry for the key or `null`
@@ -115,7 +115,7 @@ class I18n
 		string|null $locale = null
 	): string {
 		$locale  ??= static::locale();
-		$formatter = static::decimalNumberFormatter($locale);
+		$formatter = static::formatter($locale);
 		$number    = $formatter?->format($number) ?? $number;
 		return (string)$number;
 	}
@@ -318,11 +318,13 @@ class I18n
 
 	/**
 	 * Returns (and creates) a decimal number formatter for a given locale
+	 *
+	 * @since 7.0.0
 	 */
-	protected static function decimalNumberFormatter(
+	protected static function formatter(
 		string $locale
 	): NumberFormatter|null {
-		if ($formatter = static::$decimalsFormatters[$locale] ?? null) {
+		if ($formatter = static::$formatters[$locale] ?? null) {
 			return $formatter;
 		}
 
@@ -333,7 +335,7 @@ class I18n
 			return null; // @codeCoverageIgnore
 		}
 
-		return static::$decimalsFormatters[$locale] = new NumberFormatter($locale, NumberFormatter::DECIMAL);
+		return static::$formatters[$locale] = new NumberFormatter($locale, NumberFormatter::DECIMAL);
 	}
 
 	/**
