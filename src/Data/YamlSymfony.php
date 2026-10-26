@@ -17,7 +17,7 @@ class YamlSymfony
 	/**
 	 * Converts an array to an encoded YAML string
 	 */
-	public static function encode($data): string
+	public static function encode(mixed $data): string
 	{
 		$kirby = App::instance(lazy: true);
 
@@ -32,7 +32,7 @@ class YamlSymfony
 	/**
 	 * Parses an encoded YAML string and returns a multi-dimensional array
 	 */
-	public static function decode($string): array
+	public static function decode(string $string): array
 	{
 		return A::wrap(Symfony::parse($string));
 	}
