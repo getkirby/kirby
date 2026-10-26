@@ -16,16 +16,16 @@ use Stringable;
 class Stack
 {
 	/**
-	 * Render depth counter
-	 */
-	protected static int $depths = 0;
-
-	/**
 	 * Stacks currently capturing output
 	 *
 	 * @var list<array{name: string, unique: bool, level: int}>
 	 */
 	protected static array $active = [];
+
+	/**
+	 * Render depth counter
+	 */
+	protected static int $depth = 0;
 
 	/**
 	 * Deferred stack placeholders by their token
@@ -60,8 +60,8 @@ class Stack
 	 */
 	public static function close(): void
 	{
-		if (static::$depths > 0) {
-			static::$depths--;
+		if (static::$depth > 0) {
+			static::$depth--;
 		}
 	}
 
@@ -101,7 +101,7 @@ class Stack
 	 */
 	public static function isRendering(): bool
 	{
-		return static::$depths > 0;
+		return static::$depth > 0;
 	}
 
 	/**
@@ -109,7 +109,7 @@ class Stack
 	 */
 	public static function open(): void
 	{
-		static::$depths++;
+		static::$depth++;
 	}
 
 	/**
@@ -196,7 +196,7 @@ class Stack
 	public static function reset(): void
 	{
 		static::$active       = [];
-		static::$depths       = 0;
+		static::$depth        = 0;
 		static::$placeholders = [];
 		static::$stacks       = [];
 	}
