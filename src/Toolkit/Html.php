@@ -396,7 +396,7 @@ class Html extends Xml
 
 		$attr = ['href' => $href, ...$attr];
 
-		if (empty($text) === true) {
+		if ($text === null || $text === '' || $text === []) {
 			$text = $attr['href'];
 		}
 

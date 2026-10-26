@@ -99,6 +99,10 @@ class HtmlTest extends TestCase
 		$html = Html::link('https://getkirby.com', 'Kirby');
 		$expected = '<a href="https://getkirby.com">Kirby</a>';
 		$this->assertSame($expected, $html);
+
+		$html = Html::link('https://getkirby.com', '0');
+		$expected = '<a href="https://getkirby.com">0</a>';
+		$this->assertSame($expected, $html);
 	}
 
 	public function testLinkWithDangerousSchemes(): void
