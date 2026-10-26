@@ -225,12 +225,18 @@ class HtmlTest extends TestCase
 	{
 		$attr = Html::attr(['test' => 'test'], null, ' ');
 		$this->assertSame(' test="test"', $attr);
+
+		$attr = Html::attr('required', true, ' ');
+		$this->assertSame(' required', $attr);
 	}
 
 	public function testAttrWithAfterValue(): void
 	{
 		$attr = Html::attr(['test' => 'test'], null, null, ' ');
 		$this->assertSame('test="test" ', $attr);
+
+		$attr = Html::attr('required', true, null, ' ');
+		$this->assertSame('required ', $attr);
 	}
 
 	public function testAttrWithoutValues(): void

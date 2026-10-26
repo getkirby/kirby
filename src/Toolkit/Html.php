@@ -167,7 +167,7 @@ class Html extends Xml
 	): string|null {
 		// HTML supports boolean attributes without values
 		if (is_array($name) === false && is_bool($value) === true) {
-			return $value === true ? strtolower($name) : null;
+			return $value === true ? $before . strtolower($name) . $after : null;
 		}
 
 		// HTML attribute names are case-insensitive
