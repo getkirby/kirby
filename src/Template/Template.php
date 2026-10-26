@@ -19,36 +19,18 @@ use Stringable;
 class Template implements Stringable
 {
 	/**
-	 * Global template data
-	 */
-	public static array $data = [];
-
-	/**
-	 * Default template type if no specific type is set
-	 */
-	protected string $defaultType;
-
-	/**
-	 * The name of the template
-	 */
-	protected string $name;
-
-	/**
-	 * Template type (html, json, etc.)
-	 */
-	protected string $type;
-
-	/**
 	 * Creates a new template object
+	 *
+	 * @param $name The name of the template
+	 * @param $type Template type (html, json, etc.)
+	 * @param $defaultType Default template type if no specific type is set
 	 */
 	public function __construct(
-		string $name,
-		string $type = 'html',
-		string $defaultType = 'html'
+		protected string $name,
+		protected string $type = 'html',
+		protected string $defaultType = 'html'
 	) {
-		$this->name        = strtolower($name);
-		$this->type        = $type;
-		$this->defaultType = $defaultType;
+		$this->name = strtolower($name);
 	}
 
 	/**
@@ -73,11 +55,9 @@ class Template implements Stringable
 	 */
 	public function exists(): bool
 	{
-		if ($file = $this->file()) {
-			return file_exists($file);
-		}
+		$file = $this->file();
 
-		return false;
+		return $file !== null && file_exists($file) === true;
 	}
 
 	/**
