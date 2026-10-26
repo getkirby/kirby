@@ -681,7 +681,7 @@ class F
 	protected static function put(
 		string $file,
 		mixed $content,
-		int $flags = LOCK_EX
+		bool $append = false
 	): bool {
 		// create the parent directory if it does not exist yet
 		if (Dir::make(dirname($file)) === false) {
@@ -691,6 +691,8 @@ class F
 		if (static::isWritable($file) === false) {
 			throw new Exception('The file "' . $file . '" is not writable');
 		}
+
+		$flags = $append === true ? FILE_APPEND | LOCK_EX : LOCK_EX;
 
 		return file_put_contents($file, $content, $flags) !== false;
 	}
@@ -1117,8 +1119,6 @@ class F
 			$content = serialize($content);
 		}
 
-		$flags = $append === true ? FILE_APPEND | LOCK_EX : LOCK_EX;
-
-		return static::put($file, $content, $flags);
+		return static::put($file, $content, $append);
 	}
 }
