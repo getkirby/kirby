@@ -105,6 +105,17 @@ class DateTest extends TestCase
 		]);
 
 		$this->assertSame(4, Date::firstWeekday('en_US'));
+
+		// out-of-range config option falls back to the locale
+		new App([
+			'options' => [
+				'date' => [
+					'weekday' => 7
+				]
+			]
+		]);
+
+		$this->assertSame(0, Date::firstWeekday('en_US'));
 	}
 
 	public function testFloor(): void
