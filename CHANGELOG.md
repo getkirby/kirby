@@ -285,6 +285,7 @@ Snippets and templates can push output onto a stack, which gets rendered anywher
 - Date field: month names and their abbreviations are recognized in English and in the current Panel language [#8327](https://github.com/getkirby/kirby/pull/8327) [#8328](https://github.com/getkirby/kirby/pull/8328)
 - The loading spinner in the topbar only shows up after a short delay, so it no longer flashes for quick requests [#8331](https://github.com/getkirby/kirby/pull/8331)
 - The "browser not supported" page names the browser versions the Panel needs [#8450](https://github.com/getkirby/kirby/pull/8450)
+- Pages, files and users fields keep entries whose page, file or user doesn't exist (anymore). They show the stored ID with an alert icon and can be removed. Missing entries count towards `min`, `max` and `required`. [#8662](https://github.com/getkirby/kirby/pull/8662) [#8663](https://github.com/getkirby/kirby/pull/8663)
 
 ### For site developers
 
@@ -446,6 +447,9 @@ Snippets and templates can push output onto a stack, which gets rendered anywher
 - `<k-image-frame>` loads images lazily and decodes them asynchronously. Lazy-loaded images use `sizes="auto"` if no `sizes` are specified. Set `:lazy="false"` for images that are visible right away, e.g. an avatar in the header. [#8341](https://github.com/getkirby/kirby/pull/8341) [#8438](https://github.com/getkirby/kirby/pull/8438)
 - New `$library.dayjs.parse(input, { pattern, strict, type })` to parse user input against a display pattern [#8328](https://github.com/getkirby/kirby/pull/8328)
 - `$library.dayjs()` follows the locale of the current Panel language [#8327](https://github.com/getkirby/kirby/pull/8327)
+- `panel.request()` has a new `external` option to send plain requests to third-party URLs. They don't carry the CSRF token, `X-Panel` headers or Panel globals, and their responses never become trusted HTML. [#8658](https://github.com/getkirby/kirby/pull/8658)
+- New `panel.act()` method to act on the `message`, `event`, `redirect` and `reload` keys of a response, e.g. after an own `panel.post()` [#8660](https://github.com/getkirby/kirby/pull/8660)
+- `<k-tag>` supports the color themes `positive`, `negative`, `notice`, `warning` and `info` as tinted tags [#8662](https://github.com/getkirby/kirby/pull/8662)
 
 #### Backend
 
@@ -477,6 +481,9 @@ Snippets and templates can push output onto a stack, which gets rendered anywher
 
 - New `Kirby\Panel\User::info()` method that returns the data for `<k-user-info>` [#8245](https://github.com/getkirby/kirby/pull/8245)
 - New `Kirby\Panel\Controller\View\ModelViewController::fields()` method that returns all form fields of the current tabs and versions [#8449](https://github.com/getkirby/kirby/pull/8449)
+- Panel request routes accept `GET` and `POST` requests by default [#8659](https://github.com/getkirby/kirby/pull/8659)
+- Dialog and drawer responses can skip the view reload with `reload: false` [#8660](https://github.com/getkirby/kirby/pull/8660)
+- New `Kirby\Panel\Ui\Item\MissingItem` class for entries of pages, files and users fields whose model doesn't exist (anymore) [#8663](https://github.com/getkirby/kirby/pull/8663)
 
 ### More
 
@@ -491,6 +498,7 @@ Snippets and templates can push output onto a stack, which gets rendered anywher
 - `Kirby\Http\Cookie::set()` adds the `Secure` flag by default when the site is served over HTTPS [#8560](https://github.com/getkirby/kirby/pull/8560)
 - Panel components escape plain strings and only render HTML that has been marked as trusted (`Kirby\Toolkit\HtmlString`), e.g. in `<k-item>`, `<k-text>`, `<k-box>` and `<k-tags>`. The block pasteboard, block selector and installation view no longer use `v-html` at all. [#8344](https://github.com/getkirby/kirby/pull/8344) [#8348](https://github.com/getkirby/kirby/pull/8348)
 - Hardened security of `Kirby\Session\Session` (thx [@XananasX7](https://github.com/XananasX7))
+- The Panel checks the CSRF token for all its routes but views: dialogs, drawers, dropdowns, searches and request routes. Before, they relied on the `SameSite=Lax` session cookie alone. [#8659](https://github.com/getkirby/kirby/pull/8659)
 
 ---
 
@@ -546,6 +554,7 @@ Snippets and templates can push output onto a stack, which gets rendered anywher
   - `{{ 0 }}` resolves to `0` instead of the data array [#8577](https://github.com/getkirby/kirby/pull/8577)
   - `Kirby\Toolkit\Str::template()`: empty placeholders like `{}` or `{{ }}` stay as they are instead of failing with "Array to string conversion" [#8577](https://github.com/getkirby/kirby/pull/8577)
 - Field class names that contain `Field` in the middle, e.g. `FieldWithDialogsField`, no longer lose that part in their type [#8622](https://github.com/getkirby/kirby/pull/8622)
+- `Kirby\Cms\LazyCollection::data()` loads all elements before returning them, e.g. `$kirby->users()->data()` no longer returns an empty array [#8635](https://github.com/getkirby/kirby/pull/8635)
 
 ### Panel
 
@@ -587,6 +596,9 @@ Snippets and templates can push output onto a stack, which gets rendered anywher
 - Removed `Kirby\Blueprint\FileBlueprint::acceptMime()`. Use `Kirby\Blueprint\FileBlueprint::acceptAttribute()` instead.
 - `Kirby\Cms\App::models()` and `Kirby\Uuid\Uuid::index()` generators are now keyed by id
 - `Kirby\Cms\LazyCollection::getIterator()` skips items that failed hydration
+- `Kirby\Cms\LazyCollection` (e.g. `Kirby\Cms\Users`) no longer loads all elements before calling a custom collection method. Inside custom methods, the `$this->data` property can be empty or contain `null` values. Use `$this->data()`, `foreach` or other collection methods, or call `$this->hydrate()` first. [#8635](https://github.com/getkirby/kirby/pull/8635)
+- Removed deprecated `Kirby\Cms\LazyCollection::current()`, `Kirby\Cms\LazyCollection::next()` and `Kirby\Cms\LazyCollection::prev()` [#8635](https://github.com/getkirby/kirby/pull/8635)
+- Removed deprecated `Kirby\Toolkit\Iterator::key()`, `Kirby\Toolkit\Iterator::current()`, `Kirby\Toolkit\Iterator::prev()`, `Kirby\Toolkit\Iterator::next()`, `Kirby\Toolkit\Iterator::rewind()` and `Kirby\Toolkit\Iterator::valid()`. Loop over collections with `foreach` or use `Kirby\Toolkit\Collection::first()`, `Kirby\Toolkit\Collection::last()` or `Kirby\Toolkit\Collection::nth()` instead. Remaining calls like `$collection->current()` don't throw an error: CMS collections (e.g. `Kirby\Cms\Pages`) return `null`, `Kirby\Toolkit\Collection` returns the element with the key `current` (or `null`). [#8635](https://github.com/getkirby/kirby/pull/8635)
 - `Kirby\Cms\Fields` extends `Kirby\Cms\Collection` and `Kirby\Cms\HasSiblings` relies on `Kirby\Cms\Collection`, not `Kirby\Toolkit\Collection`
 - `Kirby\Cms\Fieldset::name()` falls back to a labelized type
 - Added abstract `Kirby\Cms\ModelWithContent::apiUrl()` method
@@ -596,6 +608,8 @@ Snippets and templates can push output onto a stack, which gets rendered anywher
 - `Kirby\Toolkit\Str::float()` returns `null` instead of `'0'` for non-numeric values (including `null` and `''`). Use `Kirby\Toolkit\Str::float($value) ?? '0'` if you relied on the old behavior. [#8534](https://github.com/getkirby/kirby/pull/8534)
 - Removed `command`, `keygen` and `param` from `Kirby\Toolkit\Html::$voidList`, as they are obsolete and no longer part of the WHATWG list of void elements. `Kirby\Toolkit\Html::isVoid()` returns `false` for them and `Kirby\Toolkit\Html::tag()` no longer renders them self-closing. [#8286](https://github.com/getkirby/kirby/pull/8286)
 - `qr()` helper only accepts a site, page or file object or a URL string as parameter.
+- `Kirby\Filesystem\Dir::index()` no longer accepts `null` for the `$ignore` argument. Pass an array of absolute paths, or `false` to disable the `Kirby\Filesystem\Dir::$ignore` list. [#8635](https://github.com/getkirby/kirby/pull/8635)
+- `Kirby\Http\Router::find()` no longer accepts `null` for the `$ignore` argument. Pass an empty array instead. [#8635](https://github.com/getkirby/kirby/pull/8635)
 
 #### Cookies & HTTP
 
@@ -831,12 +845,14 @@ Sections have been replaced by fields (see "Sections become fields" above). Blue
   - The `window.fiber` global has been replaced with `window.panelState`
   - The `X-Fiber` namespace in request headers has been replaced with `X-Panel`
   - Keys aren't prefixed with `$` anymore in request responses. Use without prefix. This also affects Panel plugins reloading the Panel by defining only specific keys to be reloaded. [#7365](https://github.com/getkirby/kirby/pull/7365)
+- Plugins that call Panel dialogs, drawers, dropdowns, searches or request routes with their own `fetch()` have to send the CSRF token in the `X-CSRF` header (`panel.system.csrf`). `panel.get()`, `panel.post()` and `panel.request()` already send it. [#8659](https://github.com/getkirby/kirby/pull/8659)
 - Helpers
   - Removed `$helper.isVueComponent()` [#7518](https://github.com/getkirby/kirby/pull/7518)
   - Removed `$helper.link.preview()`. Use `<k-pages-field-preview>` or `<k-files-field-preview>` to render a model preview, or `$helper.items("items/pages", id)` / `$helper.items("items/files", id)` if you need the raw data. [#7725](https://github.com/getkirby/kirby/pull/7725) [#8341](https://github.com/getkirby/kirby/pull/8341)
   - `$helper.string.sanitizeHTML()` is asynchronous now [#8342](https://github.com/getkirby/kirby/pull/8342)
   - Removed `$library.dayjs.merge()`
 - Removed deprecated `panel.dialog.openComponent()` method [#7518](https://github.com/getkirby/kirby/pull/7518)
+- Removed `panel.dialog.successEvents()`, `panel.dialog.successNotification()` and `panel.dialog.successRedirect()`, as well as the same methods on `panel.drawer`. Use `panel.act()` instead. [#8660](https://github.com/getkirby/kirby/pull/8660)
 - `panel.notification.error()` no longer resolves nested errors in the state. Always throw Exceptions instead to create first-level error responses. [#7782](https://github.com/getkirby/kirby/pull/7782)
 - Removed deprecated v3 CSS properties [#7825](https://github.com/getkirby/kirby/pull/7825)
 

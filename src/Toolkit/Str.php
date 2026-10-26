@@ -748,7 +748,7 @@ class Str
 	 * Get a character pool with various possible combinations
 	 *
 	 * @param string|array<string> $type
-	 * @return ($array is true ? list<int|string> : string)
+	 * @return ($array is true ? list<string> : string)
 	 * @throws InvalidArgumentException for an invalid pool type
 	 */
 	public static function pool(
@@ -766,10 +766,10 @@ class Str
 				'alphalower' => range('a', 'z'),
 				'alphaupper' => range('A', 'Z'),
 				'alpha'      => static::pool(['alphaLower', 'alphaUpper']),
-				'num'        => range(0, 9),
+				'num'        => str_split('0123456789'),
 				'alphanum'   => static::pool(['alpha', 'num']),
-				'base32'     => [...static::pool('alphaUpper'), ...range(2, 7)],
-				'base32hex'  => [...range(0, 9), ...range('A', 'V')],
+				'base32'     => [...static::pool('alphaUpper'), ...str_split('234567')],
+				'base32hex'  => [...str_split('0123456789'), ...range('A', 'V')],
 				default      => throw new InvalidArgumentException(
 					message: 'Invalid pool type "' . $type . '"'
 				)
