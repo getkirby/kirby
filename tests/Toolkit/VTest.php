@@ -374,6 +374,19 @@ class VTest extends TestCase
 		$this->assertTrue(V::input($input, $rules));
 	}
 
+	public function testInputWithPercentInMessage(): void
+	{
+		V::$validators['discount'] = fn ($value): bool => false;
+		I18n::$translations['en'] = [
+			'error.validation.discount' => 'Must be 100%s off'
+		];
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Must be 100%s off for field "price"');
+
+		V::input(['price' => 5], ['price' => ['discount' => []]]);
+	}
+
 	public function testInteger(): void
 	{
 		$this->assertTrue(V::integer(5));

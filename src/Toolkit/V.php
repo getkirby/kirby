@@ -266,7 +266,7 @@ class V
 			try {
 				static::value($value, $rules);
 			} catch (Exception $e) {
-				throw new Exception(sprintf($e->getMessage() . ' for field "%s"', $field));
+				throw new Exception($e->getMessage() . ' for field "' . $field . '"');
 			}
 		}
 
