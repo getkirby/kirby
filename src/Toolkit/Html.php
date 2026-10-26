@@ -592,7 +592,7 @@ class Html extends Xml
 		$path  = $uri->path();
 		$query = $uri->query();
 
-		$id = match ($uri->host()) {
+		$id = match (strtolower((string)$uri->host())) {
 			'vimeo.com', 'www.vimeo.com' => $path->last(),
 			'player.vimeo.com'           => $path->nth(1),
 			default                      => null

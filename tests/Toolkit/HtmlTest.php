@@ -719,6 +719,10 @@ class HtmlTest extends TestCase
 				'https://player.vimeo.com/video/239882943?test=value'
 			],
 			[
+				'https://Vimeo.com/239882943',
+				'https://player.vimeo.com/video/239882943'
+			],
+			[
 				'https://vimeo.com/channels/channelname/239882943?test=value',
 				'https://player.vimeo.com/video/239882943?test=value'
 			],
