@@ -152,23 +152,12 @@ class Permissions
 
 	/**
 	 * @return ($default is null ? bool|null : bool)
-	 *
-	 * @todo Replace first param with `string $category` in v6
 	 */
 	public function for(
-		string|null $category = null,
+		string $category,
 		string|null $action = null,
 		bool|null $default = false
 	): bool|null {
-		if (is_null($category) === true) {
-			Helpers::deprecated(
-				'Passing `$category = null` to `Permissions::for()` is not supported',
-				'permissions-for-category-null'
-			);
-
-			return $default;
-		}
-
 		if ($this->has($category, $action) === false) {
 			return $default;
 		}
