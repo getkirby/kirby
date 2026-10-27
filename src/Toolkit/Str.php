@@ -136,6 +136,11 @@ class Str
 			$value   = A::first($parts); // $parts now only contains params
 			$quality = 1;
 
+			// skip items without a value, e.g. a lone `;`
+			if ($value === null) {
+				continue;
+			}
+
 			// check for the q param ("quality" of the type)
 			foreach ($parts as $param) {
 				$param = static::split($param, '=');
@@ -311,7 +316,7 @@ class Str
 	 */
 	public static function camelToKebab(string|null $value): string
 	{
-		$value = preg_replace('!([a-z0-9])([A-Z])!', '$1-$2', $value);
+		$value = preg_replace('!([a-z0-9])([A-Z])!', '$1-$2', $value ?? '');
 		return static::lower($value);
 	}
 
@@ -1311,6 +1316,8 @@ class Str
 		string|null $value,
 		string $delimiter = '_'
 	): string {
+		$value ??= '';
+
 		if (ctype_lower($value) === false) {
 			$value = preg_replace('/\s+/u', '', ucwords($value));
 			$value = preg_replace('/(.)(?=[A-Z])/u', '$1' . $delimiter, $value);
@@ -1388,7 +1395,7 @@ class Str
 	 */
 	public static function studly(string|null $value): string
 	{
-		$value = str_replace(['-', '_'], ' ', $value);
+		$value = str_replace(['-', '_'], ' ', $value ?? '');
 		$value = ucwords($value);
 		return str_replace(' ', '', $value);
 	}

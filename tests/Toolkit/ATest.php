@@ -1019,6 +1019,17 @@ class ATest extends TestCase
 		$this->assertSame(3, array_search('img12.png', array_column($natural, 'file')));
 	}
 
+	public function testSortWithMissingField(): void
+	{
+		$array = [
+			'a' => ['username' => 'sonja'],
+			'b' => ['id' => 2],
+			'c' => ['username' => 'bastian']
+		];
+
+		$this->assertSame(['b', 'c', 'a'], array_keys(A::sort($array, 'username', 'asc')));
+	}
+
 	public function testIsAssociative(): void
 	{
 		$yes = $this->_array();
