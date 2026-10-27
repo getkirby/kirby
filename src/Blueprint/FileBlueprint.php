@@ -89,7 +89,7 @@ class FileBlueprint extends Blueprint
 		if (is_array($accept['mime']) === true) {
 			// determine the extensions for each MIME type
 			$extensions = array_map(
-				fn ($pattern) => Mime::toExtensions($pattern, true),
+				fn (string $pattern) => Mime::toExtensions($pattern, true),
 				$accept['mime']
 			);
 
