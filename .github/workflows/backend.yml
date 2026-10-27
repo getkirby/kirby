@@ -169,7 +169,7 @@ jobs:
         uses: ./.github/actions/setup-php
         with:
           php: ${{ env.php }}
-          tools: composer-normalize:2.52.0
+          tools: composer-normalize:2.54.0
 
       - name: Setup problem matchers
         run: |
