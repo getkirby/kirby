@@ -220,7 +220,7 @@ class Responder implements Stringable
 	/**
 	 * Setter and getter for the status code
 	 *
-	 * @return ($code is null ? int|null : static)
+	 * @return ($code is null ? int|null : $this)
 	 */
 	public function code(int|null $code = null): static|int|null
 	{
@@ -253,7 +253,7 @@ class Responder implements Stringable
 	 *
 	 * @param string|false|null $value
 	 * @param $lazy If `true`, an existing header value is not overridden
-	 * @return ($value is null ? string|null : static)
+	 * @return ($value is null ? string|null : $this)
 	 */
 	public function header(
 		string $key,
@@ -281,7 +281,7 @@ class Responder implements Stringable
 	 * Setter and getter for all headers
 	 *
 	 * @param array<string, string>|null $headers
-	 * @return ($headers is null ? array<string, string> : static)
+	 * @return ($headers is null ? array<string, string> : $this)
 	 */
 	public function headers(array|null $headers = null): static|array
 	{
