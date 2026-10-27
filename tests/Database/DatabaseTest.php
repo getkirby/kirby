@@ -390,6 +390,17 @@ class DatabaseTest extends TestCase
 		$this->assertSame("sql''inject", $this->database->escape("sql'inject"));
 	}
 
+	public function testLastQueryAndResultWithoutQuery(): void
+	{
+		$database = new Database([
+			'database' => ':memory:',
+			'type'     => 'sqlite'
+		]);
+
+		$this->assertNull($database->lastQuery());
+		$this->assertNull($database->lastResult());
+	}
+
 	public function testLastQuery(): void
 	{
 		$this->database->users()->all();

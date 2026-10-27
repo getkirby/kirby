@@ -76,12 +76,12 @@ class Database
 	/**
 	 * The last query
 	 */
-	protected string $lastQuery;
+	protected string|null $lastQuery = null;
 
 	/**
 	 * The last result set
 	 */
-	protected mixed $lastResult;
+	protected mixed $lastResult = null;
 
 	/**
 	 * Optional prefix for table names
