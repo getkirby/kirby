@@ -95,7 +95,7 @@ class Element
 	 */
 	public function find(string $query): static|null
 	{
-		if ($result = $this->query($query)[0]) {
+		if ($result = $this->query($query)?->item(0)) {
 			return new static($result);
 		}
 
@@ -136,7 +136,7 @@ class Element
 	public function query(string $query): DOMNodeList|null
 	{
 		$path = new DOMXPath($this->node->ownerDocument);
-		return $path->query($query, $this->node);
+		return $path->query($query, $this->node) ?: null;
 	}
 
 	/**
