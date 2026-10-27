@@ -34,6 +34,8 @@ class Tab
 	 * If a `Fields` collection is passed, the blueprint field
 	 * definitions of each column are replaced by the resolved
 	 * field props for the Panel.
+	 *
+	 * @return array<string|int, array>
 	 */
 	public function columns(Fields|null $fields = null): array
 	{
@@ -63,6 +65,8 @@ class Tab
 	 * Returns a flat list of the lowercase names of all
 	 * fields in the tab. The Panel uses this list to count
 	 * the unsaved changes per tab.
+	 *
+	 * @return list<string>
 	 */
 	public function fieldNames(): array
 	{
