@@ -63,7 +63,11 @@ class Remote
 		$cainfo = ini_get('curl.cainfo');
 
 		// Suppress warnings e.g. if system CA is outside of open_basedir (See: issue #6236)
-		if (empty($cainfo) === false && @is_file($cainfo) === true) {
+		if (
+			is_string($cainfo) === true &&
+			$cainfo !== '' &&
+			@is_file($cainfo) === true
+		) {
 			$defaults['ca'] = self::CA_SYSTEM;
 		}
 
@@ -427,7 +431,7 @@ class Remote
 	/**
 	 * Internal method to handle post field data
 	 */
-	protected function postfields($data)
+	protected function postfields(mixed $data)
 	{
 		if (is_object($data) === true || is_array($data) === true) {
 			return http_build_query($data);
