@@ -30,6 +30,8 @@ class Database
 
 	/**
 	 * Whitelist for column names
+	 *
+	 * @var array<string, list<string>>
 	 */
 	protected array $columnWhitelist = [];
 
@@ -40,6 +42,8 @@ class Database
 
 	/**
 	 * A global array of started connections
+	 *
+	 * @var array<string, Database>
 	 */
 	public static array $connections = [];
 
@@ -91,11 +95,15 @@ class Database
 
 	/**
 	 * List of existing tables in the database
+	 *
+	 * @var array<int, string>|null
 	 */
 	protected array|null $tables = null;
 
 	/**
 	 * An array with all queries which are being made
+	 *
+	 * @var list<array>
 	 */
 	protected array $trace = [];
 
@@ -104,6 +112,11 @@ class Database
 	 */
 	protected string $type;
 
+	/**
+	 * Available database types with their Sql class and DSN builder
+	 *
+	 * @var array<string, array{sql: class-string<Sql>, dsn: Closure(array): string}>
+	 */
 	public static array $types = [];
 
 	/**
@@ -128,6 +141,8 @@ class Database
 
 	/**
 	 * Returns all started instances
+	 *
+	 * @return array<string, Database>
 	 */
 	public static function instances(): array
 	{
@@ -191,10 +206,8 @@ class Database
 		$this->dsn        = $dsn;
 		$this->connection = $connection;
 
-		// store the connection
 		static::$connections[$this->id] = $this;
 
-		// return the connection
 		return $this->connection;
 	}
 
@@ -245,6 +258,8 @@ class Database
 	/**
 	 * Adds a value to the db trace and also
 	 * returns the entire trace if nothing is specified
+	 *
+	 * @return list<array>
 	 */
 	public function trace(array|null $data = null): array
 	{
@@ -320,7 +335,7 @@ class Database
 			// bind parameters to statement
 			foreach ($bindings as $parameter => $value) {
 				// positional parameters start at 1
-				if (is_int($parameter)) {
+				if (is_int($parameter) === true) {
 					$parameter++;
 				}
 
@@ -333,6 +348,7 @@ class Database
 
 				$this->statement->bindValue($parameter, $value, $type);
 			}
+
 			$this->statement->execute();
 
 			$this->affected  = $this->statement->rowCount();
@@ -561,12 +577,14 @@ class Database
 	public function dropTable(string $table): bool
 	{
 		$sql = $this->sql()->dropTable($table);
+
 		if ($this->execute($sql['query'], $sql['bindings']) !== true) {
 			return false;
 		}
 
 		// update cache
 		$key = array_search($table, $this->tables ?? []);
+
 		if ($key !== false) {
 			unset($this->tables[$key]);
 		}
