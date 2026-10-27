@@ -38,17 +38,11 @@ class Obj extends stdClass
 		return $this->toArray();
 	}
 
-	/**
-	 * Magic property getter
-	 */
 	public function __get(string $property)
 	{
 		return null;
 	}
 
-	/**
-	 * Magic property setter
-	 */
 	public function __set(string $property, mixed $value): void
 	{
 		$this->{$property} = $value;
@@ -105,11 +99,12 @@ class Obj extends stdClass
 	/**
 	 * Converts the object to a json string
 	 *
+	 * @return non-empty-string
 	 * @throws \JsonException for invalid JSON
 	 */
 	public function toJson(int $flags = 0, int $depth = 512): string
 	{
-		/** @var string $json */
+		/** @var non-empty-string $json */
 		$json = json_encode(
 			$this->toArray(),
 			$flags | JSON_THROW_ON_ERROR,
@@ -120,7 +115,9 @@ class Obj extends stdClass
 	}
 
 	/**
-	 *  Returns the property names as keys
+	 * Returns the property names
+	 *
+	 * @return list<int|string>
 	 */
 	public function toKeys(): array
 	{
