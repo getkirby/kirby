@@ -374,7 +374,7 @@ class App
 	 * automatically injected
 	 *
 	 * @return Collection|null
-	 * @todo 6.0 Add return type declaration
+	 * @todo 8.0 Add return type declaration
 	 */
 	public function collection(string $name, array $options = [])
 	{
