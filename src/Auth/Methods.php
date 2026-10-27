@@ -97,6 +97,8 @@ class Methods
 	/**
 	 * Returns normalized array of configured methods;
 	 * methods that are set to `false` are left out
+	 *
+	 * @return array<string, array>
 	 */
 	public function config(): array
 	{
