@@ -94,7 +94,7 @@ class MemoryStorage extends Storage
 	/**
 	 * Writes the content fields of an existing version
 	 *
-	 * @param array<string, string> $fields Content fields
+	 * @param array<string, string|null> $fields Content fields
 	 */
 	protected function write(VersionId $versionId, Language $language, array $fields): void
 	{
