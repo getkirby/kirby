@@ -68,6 +68,8 @@ class Uri implements Stringable
 
 	/**
 	 * Supported schemes
+	 *
+	 * @var list<string>
 	 */
 	protected static array $schemes = ['http', 'https', 'ftp'];
 
@@ -286,6 +288,7 @@ class Uri implements Stringable
 				$this->setHost($host);
 			}
 		}
+
 		return $this;
 	}
 
@@ -414,12 +417,10 @@ class Uri implements Stringable
 			$port = null;
 		}
 
-		if ($port !== null) {
-			if ($port < 1 || $port > 65535) {
-				throw new InvalidArgumentException(
-					message: 'Invalid port format: ' . $port
-				);
-			}
+		if ($port !== null && ($port < 1 || $port > 65535)) {
+			throw new InvalidArgumentException(
+				message: 'Invalid port format: ' . $port
+			);
 		}
 
 		$this->port = $port;
@@ -476,6 +477,8 @@ class Uri implements Stringable
 
 	/**
 	 * Converts the Url object to an array
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function toArray(): array
 	{
@@ -521,7 +524,7 @@ class Uri implements Stringable
 
 		$path = $this->path->toString($slash) . $this->params->toString(true);
 
-		if ($this->slash && ($path !== '' || $slash === true)) {
+		if ($this->slash === true && ($path !== '' || $slash === true)) {
 			$path .= '/';
 		}
 
@@ -551,6 +554,7 @@ class Uri implements Stringable
 				$this->setHost($host);
 			}
 		}
+
 		return $this;
 	}
 
@@ -558,7 +562,7 @@ class Uri implements Stringable
 	 * Parses the path inside the props and extracts
 	 * the params unless disabled
 	 *
-	 * @return array Modified props array
+	 * @return array<string, mixed> Modified props array
 	 */
 	protected static function parsePath(array $props): array
 	{
