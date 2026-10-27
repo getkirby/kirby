@@ -10,7 +10,6 @@
 @import url("./config/z-index.css");
 @import url("./config/pattern.css");
 
-/** @deprecated */
 :root {
 	--leading-none: 1;
 	--leading-tight: 1.25;
