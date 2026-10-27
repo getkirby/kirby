@@ -13,6 +13,8 @@ class Html extends DomHandler
 {
 	/**
 	 * Global list of allowed attribute prefixes
+	 *
+	 * @var list<string>
 	 */
 	public static array $allowedAttrPrefixes = [
 		'aria-',
@@ -21,6 +23,8 @@ class Html extends DomHandler
 
 	/**
 	 * Global list of allowed attributes
+	 *
+	 * @var list<string>
 	 */
 	public static array $allowedAttrs = [
 		'class',
@@ -33,6 +37,8 @@ class Html extends DomHandler
 	 * for this tag, `true` to allow any attribute from the
 	 * `allowedAttrs` list or `false` to allow the tag without
 	 * any attributes
+	 *
+	 * @var array<string, list<string>|bool>
 	 */
 	public static array $allowedTags = [
 		'a'          => ['href', 'rel', 'title', 'target'],
@@ -78,6 +84,8 @@ class Html extends DomHandler
 	 *
 	 * IMPORTANT: Use lower-case names here because
 	 * of the case-insensitive matching
+	 *
+	 * @var list<string>
 	 */
 	public static array $disallowedTags = [
 		'iframe',
@@ -89,6 +97,8 @@ class Html extends DomHandler
 
 	/**
 	 * List of attributes that may contain URLs
+	 *
+	 * @var list<string>
 	 */
 	public static array $urlAttrs = [
 		'href',
@@ -107,6 +117,7 @@ class Html extends DomHandler
 	 *
 	 * @param $isExternal Whether the string is from an external file
 	 *                   that may be accessed directly
+	 * @return array<string, mixed>
 	 */
 	public static function options(bool $isExternal): array
 	{

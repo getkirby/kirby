@@ -23,8 +23,8 @@ class Element
 	}
 
 	/**
-	 * The returns the attribute value or
-	 * the given fallback if the attribute does not exist
+	 * Returns the attribute value or the given
+	 * fallback if the attribute does not exist
 	 */
 	public function attr(
 		string $attr,
@@ -47,6 +47,8 @@ class Element
 
 	/**
 	 * Returns an array with all class names
+	 *
+	 * @return list<string>
 	 */
 	public function classList(): array
 	{
@@ -72,15 +74,15 @@ class Element
 	/**
 	 * Returns an array with all nested elements
 	 * that could be found for the given query
+	 *
+	 * @return list<static>
 	 */
 	public function filter(string $query): array
 	{
 		$result = [];
 
-		if ($queryResult = $this->query($query)) {
-			foreach ($queryResult as $node) {
-				$result[] = new static($node);
-			}
+		foreach ($this->query($query) ?? [] as $node) {
+			$result[] = new static($node);
 		}
 
 		return $result;

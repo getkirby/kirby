@@ -14,6 +14,9 @@ use Kirby\Query\Visitors\Visitor;
  */
 class ArgumentListNode extends Node
 {
+	/**
+	 * @param list<Node> $arguments
+	 */
 	public function __construct(
 		public array $arguments = []
 	) {
@@ -21,14 +24,11 @@ class ArgumentListNode extends Node
 
 	public function resolve(Visitor $visitor): array|string
 	{
-		// Resolve each argument
 		$arguments = array_map(
 			fn ($argument) => $argument->resolve($visitor),
 			$this->arguments
 		);
 
-		// Keep as array or convert to string
-		// depending on the visitor type
 		return $visitor->arguments($arguments);
 	}
 }

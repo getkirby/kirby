@@ -54,7 +54,7 @@ class Auth
 	 * Login a user with email and (maybe optional) password
 	 * as well as an auth challenge, if required by the auth method
 	 *
-	 * @throws PermissionException If the rate limit was exceeded if any other error occurred with debug mode off
+	 * @throws PermissionException If the rate limit was exceeded or if any other error occurred with debug mode off
 	 * @throws NotFoundException If the email was invalid
 	 * @throws InvalidArgumentException If the password is not valid (via `$user->login()`)
 	 */
@@ -185,7 +185,7 @@ class Auth
 
 	/**
 	 * Returns the logged in user by checking the current session
-	 * and finding a valid valid user id in there
+	 * and finding a valid user id in there
 	 */
 	public function currentUserFromSession(
 		Session|array|null $session = null
@@ -198,6 +198,8 @@ class Auth
 	 * configured order
 	 * @since 3.5.1
 	 * @deprecated 6.0.0 Use `self::challenges()->enabled()` instead
+	 *
+	 * @return list<string>
 	 */
 	public function enabledChallenges(): array
 	{
@@ -527,10 +529,9 @@ class Auth
 	): Status {
 		// only the status for the auto-detected session with
 		// impersonation allowed should be cached
-		$isDefault = $session === null && $allowImpersonation === true;
+		$default = $session === null && $allowImpersonation === true;
 
-		// try to return from cache
-		if ($this->status !== null && $isDefault === true) {
+		if ($this->status !== null && $default === true) {
 			return $this->status;
 		}
 
@@ -541,11 +542,10 @@ class Auth
 			user:         $user,
 			impersonated: $allowImpersonation && $this->user->isImpersonated(),
 			session:      $session,
-			challenges:  $this->challenges()->enabled()
+			challenges:   $this->challenges()->enabled()
 		);
 
-		// only cache the default object
-		if ($isDefault === true) {
+		if ($default === true) {
 			$this->status = $status;
 		}
 
@@ -571,6 +571,7 @@ class Auth
 	 * @param $allowImpersonation If set to false, 'impersonate' won't
 	 *                           be returned as authentication type
 	 *                           even if an impersonation is active
+	 * @return 'basic'|'impersonate'|'session'
 	 */
 	public function type(bool $allowImpersonation = true): string
 	{
@@ -691,7 +692,6 @@ class Auth
 			attempt: function () use ($session, $input) {
 				try {
 					$challenge = $this->challenges->verify($session, $input);
-
 				} catch (ChallengeTimeoutException $e) {
 					// a timed-out challenge already cleared its own session
 					// state; additionally drop any active login so the

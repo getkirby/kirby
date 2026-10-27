@@ -15,7 +15,7 @@ use Kirby\Query\Query;
 abstract class Runner
 {
 	/**
-	 * @param $global Allowed global function closures
+	 * @param array<string, Closure> $global Allowed global function closures
 	 */
 	public function __construct(
 		public array $global = [],

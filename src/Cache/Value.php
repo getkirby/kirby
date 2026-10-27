@@ -17,11 +17,10 @@ class Value
 	protected int $created;
 
 	/**
-	 * Constructor
-	 *
-	 * @param $minutes the number of minutes until the value expires
+	 * @param $minutes The number of minutes until the value expires
 	 *                or an absolute UNIX timestamp
-	 * @param $created the UNIX timestamp when the value has been created  (defaults to the current time)
+	 * @param $created The UNIX timestamp when the value has been created
+	 *                (defaults to the current time)
 	 *
 	 * @todo Rename $minutes property to $expiry to reflect
 	 *       both minutes and absolute timestamps
@@ -102,6 +101,8 @@ class Value
 
 	/**
 	 * Converts the object to an array
+	 *
+	 * @return array{created: int, minutes: int, value: mixed}
 	 */
 	public function toArray(): array
 	{
