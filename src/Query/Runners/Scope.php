@@ -22,7 +22,7 @@ class Scope
 		mixed $object,
 		string|int $key,
 		bool $nullSafe = false,
-		...$arguments
+		mixed ...$arguments
 	): mixed {
 		if ($object === null && $nullSafe === true) {
 			return null;
