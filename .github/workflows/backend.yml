@@ -112,7 +112,7 @@ jobs:
         uses: ./.github/actions/setup-php
         with:
           php: ${{ matrix.php }}
-          ini: 'apc.enabled=1, apc.enable_cli=1, pcov.directory=., pcov.exclude="~(vendor|tests)~"'
+          ini: 'apc.enabled=1, apc.enable_cli=1, opcache.jit=disable, pcov.directory=., pcov.exclude="~(vendor|tests)~"'
           coverage: ${{ matrix.php == env.COVERAGE_PHP && 'pcov' || 'none' }}
 
       - name: Check Composer platform requirements
