@@ -291,11 +291,11 @@ class Query
 	/**
 	 * Shortcut for creating an inner join clause
 	 *
-	 * @param string $table Name of the table, which should be joined
-	 * @param string $on The on clause for this join
+	 * @param $table Name of the table, which should be joined
+	 * @param $on The on clause for this join
 	 * @return $this
 	 */
-	public function innerJoin($table, $on): static
+	public function innerJoin(string $table, string $on): static
 	{
 		return $this->join($table, $on, 'inner join');
 	}
@@ -306,7 +306,7 @@ class Query
 	 * @param $values Can either be a string or an array of values
 	 * @return $this
 	 */
-	public function values($values = []): static
+	public function values(mixed $values = []): static
 	{
 		if ($values !== null) {
 			$this->values = $values;
@@ -346,7 +346,7 @@ class Query
 	 *
 	 * @return $this
 	 */
-	public function where(...$args): static
+	public function where(mixed ...$args): static
 	{
 		$this->where = $this->filterQuery($args, $this->where);
 		return $this;
@@ -358,7 +358,7 @@ class Query
 	 *
 	 * @return $this
 	 */
-	public function orWhere(...$args): static
+	public function orWhere(mixed ...$args): static
 	{
 		$this->where = $this->filterQuery($args, $this->where, 'OR');
 		return $this;
@@ -370,7 +370,7 @@ class Query
 	 *
 	 * @return $this
 	 */
-	public function andWhere(...$args): static
+	public function andWhere(mixed ...$args): static
 	{
 		$this->where = $this->filterQuery($args, $this->where, 'AND');
 		return $this;
@@ -400,7 +400,7 @@ class Query
 	 *
 	 * @return $this
 	 */
-	public function having(...$args): static
+	public function having(mixed ...$args): static
 	{
 		$this->having = $this->filterQuery($args, $this->having);
 		return $this;
@@ -788,7 +788,7 @@ class Query
 	/**
 	 * Find a single row by column and value
 	 */
-	public function findBy(string $column, $value)
+	public function findBy(string $column, mixed $value)
 	{
 		return $this->where([$column => $value])->first();
 	}
@@ -796,7 +796,7 @@ class Query
 	/**
 	 * Find a single row by its primary key
 	 */
-	public function find($id)
+	public function find(mixed $id)
 	{
 		return $this->findBy($this->primaryKeyName, $id);
 	}
@@ -807,7 +807,7 @@ class Query
 	 * @param $values You can pass values here or set them with ->values() before
 	 * @return mixed Returns the last inserted id on success or false.
 	 */
-	public function insert($values = null)
+	public function insert(mixed $values = null)
 	{
 		$query = $this->execute(
 			$this->values($values)->build('insert')
@@ -827,7 +827,7 @@ class Query
 	 * @param $where You can pass a where clause here or set it with ->where() before
 	 * @return bool|array The debug info if debugging is enabled
 	 */
-	public function update($values = null, $where = null): bool|array
+	public function update(mixed $values = null, mixed $where = null): bool|array
 	{
 		return $this->execute(
 			$this->values($values)->where($where)->build('update')
@@ -840,7 +840,7 @@ class Query
 	 * @param $where You can pass a where clause here or set it with ->where() before
 	 * @return bool|array The debug info if debugging is enabled
 	 */
-	public function delete($where = null): bool|array
+	public function delete(mixed $where = null): bool|array
 	{
 		return $this->execute(
 			$this->where($where)->build('delete')
