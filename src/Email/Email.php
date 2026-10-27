@@ -104,7 +104,7 @@ class Email
 	/**
 	 * Returns the email body
 	 */
-	public function body(): Body|null
+	public function body(): Body
 	{
 		return $this->body;
 	}
