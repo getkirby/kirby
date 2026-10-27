@@ -95,6 +95,12 @@ class FTest extends TestCase
 		$this->assertSame('test.jpg', F::extension($this->sample, 'jpg'));
 	}
 
+	public function testExtensionWithoutFile(): void
+	{
+		$this->assertSame('', F::extension());
+		$this->assertSame('.jpg', F::extension(null, 'jpg'));
+	}
+
 	public function testExtensionToType(): void
 	{
 		$this->assertSame('image', F::extensionToType('jpg'));
