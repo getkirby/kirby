@@ -121,7 +121,7 @@ class PagePickerDialogController extends ModelPickerDialogController
 				layout: $this->layout,
 				text: $this->text
 			))->props(),
-			'hasChildren'      => $model->hasChildren(),
+			'hasChildren'      => $model->children()->findBy('isListable', true) !== null,
 			'selectedChildren' => count(array_filter(
 				$this->selected(),
 				fn (string $id) => str_starts_with($id, $model->id() . '/')

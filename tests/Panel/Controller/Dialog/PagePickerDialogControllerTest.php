@@ -180,6 +180,52 @@ class PagePickerDialogControllerTest extends TestCase
 		$this->assertSame(0, $controller->item($this->app->page('alpha'))['selectedChildren']);
 	}
 
+	public function testItemWithUnlistableChildren(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/limited' => [
+					'options' => [
+						'list' => false
+					]
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'alpha',
+						'children' => [
+							['slug' => 'delta']
+						]
+					],
+					[
+						'slug'     => 'beta',
+						'children' => [
+							['slug' => 'epsilon', 'template' => 'limited']
+						]
+					]
+				]
+			],
+			'roles' => [
+				['name' => 'admin'],
+				['name' => 'editor']
+			],
+			'users' => [
+				['id' => 'editor', 'role' => 'editor']
+			]
+		]);
+
+		$this->app->impersonate('editor');
+
+		$controller = new PagePickerDialogController(
+			model: $this->app->site()
+		);
+
+		// only pages with listable children can be navigated into
+		$this->assertTrue($controller->item($this->app->page('alpha'))['hasChildren']);
+		$this->assertFalse($controller->item($this->app->page('beta'))['hasChildren']);
+	}
+
 	public function testItems(): void
 	{
 		$controller = new PagePickerDialogController(
