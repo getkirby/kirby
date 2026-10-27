@@ -253,6 +253,7 @@ class File extends Model
 	/**
 	 * Prepares the response data for file pickers
 	 * and file fields
+	 * @deprecated 6.0.0 Use `Kirby\Panel\Controller\Dialog\FilePickerDialogController::item()` instead
 	 */
 	public function pickerData(array $params = []): array
 	{
