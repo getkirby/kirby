@@ -19,7 +19,7 @@ if (
 		defined('KIRBY_PHP_VERSION_CHECK') !== true ||
 		KIRBY_PHP_VERSION_CHECK !== false
 	) && (
-		version_compare(PHP_VERSION, '8.4.0', '>=') === false ||
+		version_compare(PHP_VERSION, '8.4.1', '>=') === false ||
 		version_compare(PHP_VERSION, '8.6.0', '<')  === false
 	)
 ) {
