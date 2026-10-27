@@ -81,7 +81,7 @@ class AcceptRules
 				$template  = $field->template();
 				$templates = [
 					...$templates,
-					...($template
+					...($template !== null
 						? [$template]
 						: App::instance()->blueprints('files'))
 				];
