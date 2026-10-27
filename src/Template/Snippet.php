@@ -21,6 +21,8 @@ class Snippet extends Tpl
 {
 	/**
 	 * Cache for the snippet files
+	 *
+	 * @var array<string, string>
 	 */
 	public static array $cache = [];
 
@@ -35,6 +37,8 @@ class Snippet extends Tpl
 	/**
 	 * Contains all slots that are opened
 	 * but not yet closed
+	 *
+	 * @var list<Slot>
 	 */
 	protected array $capture = [];
 
@@ -57,6 +61,8 @@ class Snippet extends Tpl
 	/**
 	 * The collection of closed slots that will be used
 	 * to pass down to the template for the snippet.
+	 *
+	 * @var array<string, Slot>
 	 */
 	protected array $slots = [];
 
@@ -77,7 +83,8 @@ class Snippet extends Tpl
 
 	/**
 	 * Creates and opens a new snippet. This can be used
-	 * directly in a template or via the slots() helper
+	 * directly in a template or via the `snippet()`
+	 * helper with `slots: true`
 	 */
 	public static function begin(string|null $file, array $data = []): static
 	{
@@ -92,9 +99,6 @@ class Snippet extends Tpl
 	 */
 	public function close(): static
 	{
-		// make sure that ending a snippet
-		// is only supported if the snippet has
-		// been started before
 		if ($this->open === false) {
 			throw new LogicException(
 				message: 'The snippet has not been opened'
@@ -122,7 +126,8 @@ class Snippet extends Tpl
 	}
 
 	/**
-	 * Used in the endsnippet() helper
+	 * Renders the current snippet;
+	 * used by the `endsnippet()` helper
 	 */
 	public static function end(): void
 	{
@@ -139,12 +144,11 @@ class Snippet extends Tpl
 	}
 
 	/**
-	 * Loads the code of the given snippet.
+	 * Loads the code of the given snippet
 	 *
-	 * @param string $file Path to the snippet file
+	 * @param $file Path to the snippet file
 	 * @param $data Data available inside the snippet
-	 * @param Slots|null Slots available in the snippet
-	 * @return string The rendered content of the given snippet file
+	 * @param $slots Slots available inside the snippet
 	 */
 	public static function load(
 		string|null $file = null,
@@ -161,7 +165,6 @@ class Snippet extends Tpl
 			// we need to keep the "outside" snippet to compare it later
 			$outside = Snippet::$current;
 
-			// load the snippet code
 			$snippet = parent::load(
 				file: $file,
 				data: $scope
@@ -205,17 +208,12 @@ class Snippet extends Tpl
 	}
 
 	/**
-	 * Closes the last openend slot
+	 * Closes the last opened slot
 	 */
 	public function endslot(): void
 	{
-		// take the last slot from the capture stack
 		$slot = array_pop($this->capture);
-
-		// capture the content and close the slot
 		$slot->close();
-
-		// add the slot to the scope
 		$this->slots[$slot->name()] = $slot;
 	}
 
@@ -258,7 +256,6 @@ class Snippet extends Tpl
 		foreach ($names as $name) {
 			$name = (string)$name;
 
-			// retrieve the file from the cache if it exists
 			if (isset(static::$cache[$name]) === true) {
 				return static::$cache[$name];
 			}
@@ -270,7 +267,6 @@ class Snippet extends Tpl
 			}
 
 			if ($file) {
-				// cache the file for future use
 				return static::$cache[$name] = $file;
 			}
 		}
@@ -309,6 +305,8 @@ class Snippet extends Tpl
 	/**
 	 * Renders the snippet and passes the scope
 	 * with all slots and data
+	 *
+	 * @param array<string, string|null> $slots Additional slot contents by name
 	 */
 	public function render(array $data = [], array $slots = []): string
 	{
@@ -318,16 +316,14 @@ class Snippet extends Tpl
 			$this->close();
 		}
 
-		// manually add slots
-		foreach ($slots as $slotName => $slotContent) {
-			$this->slots[$slotName] = new Slot($slotName, $slotContent);
+		foreach ($slots as $name => $content) {
+			$this->slots[$name] = new Slot($name, $content);
 		}
 
 		// custom data overrides the data from the controller
 		// as well as the data passed to the Snippet instance
 		$data = array_replace_recursive($this->data, $data);
 
-		// load the template representing this snippet
 		return static::load(
 			file: $this->file,
 			data: $data,
@@ -354,7 +350,6 @@ class Snippet extends Tpl
 		$slot = new Slot($name);
 		$slot->open();
 
-		// start a new slot
 		$this->capture[] = $slot;
 
 		return $slot;

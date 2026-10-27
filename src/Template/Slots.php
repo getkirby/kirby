@@ -17,6 +17,8 @@ class Slots implements Countable
 {
 	/**
 	 * Creates a new slots collection
+	 *
+	 * @param array<string, Slot> $slots
 	 */
 	public function __construct(
 		protected array $slots

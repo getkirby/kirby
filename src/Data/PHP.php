@@ -47,7 +47,7 @@ class PHP extends Handler
 
 			$line .= static::encode($value, "$indent    ");
 
-			$lines[] =  $line;
+			$lines[] = $line;
 		}
 
 		return "[\n" . implode(",\n", $lines) . "\n" . $indent . ']';
@@ -82,8 +82,7 @@ class PHP extends Handler
 	 */
 	public static function write(string $file, $data = []): bool
 	{
-		$php = static::encode($data);
-		$php = "<?php\n\nreturn $php;";
+		$php = "<?php\n\nreturn " . static::encode($data) . ';';
 
 		if (F::write($file, $php) === true) {
 			F::invalidateOpcodeCache($file);

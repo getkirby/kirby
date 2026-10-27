@@ -6,6 +6,7 @@ use Closure;
 use Kirby\Cms\App;
 use Kirby\Cms\User;
 use Kirby\Exception\PermissionException;
+use Kirby\Panel\Ui\Button;
 use Kirby\Panel\Ui\Component;
 use Kirby\Toolkit\HasI18n;
 use Kirby\Toolkit\Str;
@@ -121,6 +122,7 @@ abstract class Challenge
 
 	/**
 	 * Returns the purpose of the challenge
+	 *
 	 * @return 'login'|'password-reset'|'2fa'
 	 */
 	public function mode(): string
@@ -132,6 +134,8 @@ abstract class Challenge
 	 * Returns an array of buttons that will be
 	 * used as entries in the user security settings drawer
 	 * @codeCoverageIgnore
+	 *
+	 * @return list<Button>
 	 */
 	public static function settings(User $user): array
 	{
@@ -140,6 +144,8 @@ abstract class Challenge
 
 	/**
 	 * Returns the submit button definition for the challenge form
+	 *
+	 * @return array{icon: string, label: string}
 	 */
 	protected function submit(): array
 	{

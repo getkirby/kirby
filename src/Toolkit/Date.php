@@ -52,7 +52,7 @@ class Date extends DateTime implements Stringable
 	/**
 	 * Rounds the datetime value up to next value of the specified unit
 	 *
-	 * @param $unit `year`, `month`, `day`, `hour`, `minute` or `second`
+	 * @param 'year'|'month'|'day'|'hour'|'minute'|'second' $unit
 	 * @return $this
 	 *
 	 * @throws InvalidArgumentException If the unit name is invalid
@@ -80,6 +80,8 @@ class Date extends DateTime implements Stringable
 
 	/**
 	 * Gets or sets the day value
+	 *
+	 * @return int<1, 31>
 	 */
 	public function day(int|null $day = null): int
 	{
@@ -87,7 +89,12 @@ class Date extends DateTime implements Stringable
 			return (int)$this->format('d');
 		}
 
-		$this->setDate($this->year(), $this->month(), $day);
+		$this->setDate(
+			$this->year(),
+			$this->month(),
+			$day
+		);
+
 		return $this->day();
 	}
 
@@ -96,10 +103,11 @@ class Date extends DateTime implements Stringable
 	 * for the given locale (or as defined via config option)
 	 *
 	 * @since 4.5.0
+	 *
+	 * @return int<0, 6>
 	 */
 	public static function firstWeekday(string $locale): int
 	{
-		// config option, if available
 		$weekday = App::instance(lazy: true)?->option('date.weekday');
 
 		if (is_int($weekday) === true && $weekday >= 0 && $weekday <= 6) {
@@ -116,7 +124,7 @@ class Date extends DateTime implements Stringable
 
 		$calendar = IntlCalendar::createInstance(null, $locale);
 
-		/** @var int|false $day */
+		/** @var int<1, 7>|false $day */
 		$day = $calendar->getFirstDayOfWeek();
 
 		// if any error occurs, return Monday
@@ -131,7 +139,7 @@ class Date extends DateTime implements Stringable
 	/**
 	 * Rounds the datetime value down to the specified unit
 	 *
-	 * @param $unit `year`, `month`, `day`, `hour`, `minute` or `second`
+	 * @param 'year'|'month'|'day'|'hour'|'minute'|'second' $unit
 	 * @return $this
 	 *
 	 * @throws InvalidArgumentException If the unit name is invalid
@@ -151,6 +159,7 @@ class Date extends DateTime implements Stringable
 
 		$flooredDate = $this->format($formats[$unit]);
 		$this->set($flooredDate, $this->timezone());
+
 		return $this;
 	}
 
@@ -158,8 +167,8 @@ class Date extends DateTime implements Stringable
 	 * Formats the datetime value with a custom handler
 	 * or with the globally configured one
 	 *
-	 * @param 'date'|'intl'|'strftime'|null $handler Custom date handler or `null`
-	 *                                               for the globally configured one
+	 * @param 'date'|'intl'|'strftime'|null $handler Date handler, `null` for the configured one
+	 * @return ($format is null ? int : string|false)
 	 */
 	public function formatWithHandler(
 		string|IntlDateFormatter|null $format = null,
@@ -170,6 +179,8 @@ class Date extends DateTime implements Stringable
 
 	/**
 	 * Gets or sets the hour value
+	 *
+	 * @return int<0, 23>
 	 */
 	public function hour(int|null $hour = null): int
 	{
@@ -253,6 +264,8 @@ class Date extends DateTime implements Stringable
 
 	/**
 	 * Gets the microsecond value
+	 *
+	 * @return int<0, 999999>
 	 */
 	public function microsecond(): int
 	{
@@ -261,6 +274,8 @@ class Date extends DateTime implements Stringable
 
 	/**
 	 * Gets the millisecond value
+	 *
+	 * @return int<0, 999>
 	 */
 	public function millisecond(): int
 	{
@@ -269,6 +284,8 @@ class Date extends DateTime implements Stringable
 
 	/**
 	 * Gets or sets the minute value
+	 *
+	 * @return int<0, 59>
 	 */
 	public function minute(int|null $minute = null): int
 	{
@@ -282,6 +299,8 @@ class Date extends DateTime implements Stringable
 
 	/**
 	 * Gets or sets the month value
+	 *
+	 * @return int<1, 12>
 	 */
 	public function month(int|null $month = null): int
 	{
@@ -296,7 +315,9 @@ class Date extends DateTime implements Stringable
 	/**
 	 * Returns the datetime which is nearest to the object's datetime
 	 *
-	 * @param ...$datetime Datetime strings, UNIX timestamps or objects
+	 * @template T of string|int|DateTimeInterface
+	 * @param T ...$datetime Datetime strings, UNIX timestamps or objects
+	 * @return T
 	 */
 	public function nearest(
 		string|int|DateTimeInterface ...$datetime
@@ -355,7 +376,7 @@ class Date extends DateTime implements Stringable
 	/**
 	 * Rounds the date to the nearest value of the given unit
 	 *
-	 * @param $unit `year`, `month`, `day`, `hour`, `minute` or `second`
+	 * @param 'year'|'month'|'day'|'hour'|'minute'|'second' $unit
 	 * @param $size Rounding step starting at `0` of the specified unit
 	 * @return $this
 	 *
@@ -372,11 +393,9 @@ class Date extends DateTime implements Stringable
 		$this->set($nearest);
 
 		if ($size === 1) {
-			// we are already done
 			return $this;
 		}
 
-		// validate step size
 		if (
 			in_array($unit, ['day', 'month', 'year'], true) && $size !== 1 ||
 			$unit === 'hour' && 24 % $size !== 0 ||
@@ -387,7 +406,6 @@ class Date extends DateTime implements Stringable
 			);
 		}
 
-		// round to other rounding steps
 		$value = $this->{$unit}();
 		$value = round($value / $size) * $size;
 		$this->{$unit}($value);
@@ -400,7 +418,7 @@ class Date extends DateTime implements Stringable
 	 * by the defined step
 	 * @since 3.7.0
 	 *
-	 * @param $step array of `unit` and `size` to round to nearest
+	 * @param int|array{unit?: string, size?: int}|null $step
 	 */
 	public static function roundedTimestamp(
 		string|null $date = null,
@@ -423,6 +441,8 @@ class Date extends DateTime implements Stringable
 
 	/**
 	 * Gets or sets the second value
+	 *
+	 * @return int<0, 59>
 	 */
 	public function second(int|null $second = null): int
 	{
@@ -483,6 +503,8 @@ class Date extends DateTime implements Stringable
 
 	/**
 	 * Returns the time in `hh:mm:ss` format
+	 *
+	 * @return non-empty-string
 	 */
 	public function time(): string
 	{
@@ -517,8 +539,9 @@ class Date extends DateTime implements Stringable
 	 * Returns the date, time or datetime in `YYYY-MM-DD hh:mm:ss` format
 	 * with optional timezone
 	 *
-	 * @param $mode `date`, `time` or `datetime`
+	 * @param 'date'|'time'|'datetime' $mode
 	 * @param $timezone Whether the timezone is printed as well
+	 * @return non-empty-string
 	 *
 	 * @throws InvalidArgumentException If the mode is invalid
 	 */

@@ -21,6 +21,8 @@ class SymmetricCrypto
 	/**
 	 * Cache for secret keys derived from the password
 	 * indexed by the used salt and limits
+	 *
+	 * @var array<string, string>
 	 */
 	protected array $secretKeysByOptions = [];
 
@@ -42,7 +44,10 @@ class SymmetricCrypto
 			);
 		}
 
-		if ($secretKey !== null && strlen($secretKey) !== SODIUM_CRYPTO_SECRETBOX_KEYBYTES) {
+		if (
+			$secretKey !== null &&
+			strlen($secretKey) !== SODIUM_CRYPTO_SECRETBOX_KEYBYTES
+		) {
 			throw new InvalidArgumentException(
 				message: 'Invalid secret key length, expected ' . SODIUM_CRYPTO_SECRETBOX_KEYBYTES . ' bytes'
 			);
@@ -51,6 +56,8 @@ class SymmetricCrypto
 
 	/**
 	 * Hide values of secrets when printing the object
+	 *
+	 * @return array{hasPassword: bool, hasSecretKey: bool}
 	 */
 	public function __debugInfo(): array
 	{
@@ -75,12 +82,15 @@ class SymmetricCrypto
 	}
 
 	/**
-	 * Decrypts JSON data encrypted by `SymmetricCrypto::encrypt()` using the secret key or password
+	 * Decrypts JSON data encrypted by `SymmetricCrypto::encrypt()`
+	 * using the secret key or password
 	 *
 	 * ```php
 	 * // decryption with a password
-	 * $crypto    = new SymmetricCrypto(password: 'super secure');
-	 * $plaintext = $crypto->decrypt('a very confidential string');
+	 * $crypto     = new SymmetricCrypto(password: 'super secure');
+	 * $ciphertext = $crypto->encrypt('a very confidential string');
+	 * $plaintext  = $crypto->decrypt($ciphertext);
+	 * // $plaintext: 'a very confidential string'
 	 *
 	 * // decryption with a previously generated key
 	 * $crypto    = new SymmetricCrypto(secretKey: $secretKey);
@@ -113,7 +123,11 @@ class SymmetricCrypto
 		$salt   = base64_decode($props['salt']);
 		$limits = $props['limits'];
 
-		$plaintext = sodium_crypto_secretbox_open($data, $nonce, $this->secretKey($salt, $limits));
+		$plaintext = sodium_crypto_secretbox_open(
+			$data,
+			$nonce,
+			$this->secretKey($salt, $limits)
+		);
 
 		if (is_string($plaintext) !== true) {
 			throw new LogicException(
@@ -137,6 +151,8 @@ class SymmetricCrypto
 	 * $ciphertext = $crypto->encrypt('a very confidential string');
 	 * $secretKey  = $crypto->secretKey();
 	 * ```
+	 *
+	 * @return non-empty-string
 	 */
 	public function encrypt(
 		#[SensitiveParameter]
@@ -173,7 +189,7 @@ class SymmetricCrypto
 	 * or randomly generated
 	 *
 	 * @param $salt Salt for password-based key derivation
-	 * @param $limits Processing limits for password-based key derivation
+	 * @param array{int, int}|null $limits Processing limits for password-based key derivation
 	 */
 	public function secretKey(
 		#[SensitiveParameter]
@@ -184,7 +200,6 @@ class SymmetricCrypto
 			return $this->secretKey;
 		}
 
-		// derive from password
 		if (isset($this->password) === true) {
 			if ($salt === null || $limits === null) {
 				throw new InvalidArgumentException(
@@ -192,8 +207,8 @@ class SymmetricCrypto
 				);
 			}
 
-			// access from cache
 			$options = $salt . ':' . implode(',', $limits);
+
 			if (isset($this->secretKeysByOptions[$options]) === true) {
 				return $this->secretKeysByOptions[$options];
 			}
@@ -208,7 +223,6 @@ class SymmetricCrypto
 			);
 		}
 
-		// generate a random key
 		return $this->secretKey = random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES);
 	}
 

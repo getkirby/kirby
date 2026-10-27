@@ -13,7 +13,11 @@ use Kirby\Filesystem\F;
  */
 class Header
 {
-	// configuration
+	/**
+	 * Known status codes with their messages
+	 *
+	 * @var array<string, string>
+	 */
 	public static array $codes = [
 		// successful
 		'_200' => 'OK',
@@ -151,7 +155,6 @@ class Header
 			return $header;
 		}
 
-		// try to send the header
 		header($header);
 	}
 
