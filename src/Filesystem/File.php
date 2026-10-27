@@ -295,15 +295,12 @@ class File implements Stringable
 				);
 			}
 
-			// determine if any pattern matches the MIME type;
-			// once any pattern matches, `$carry` is `true` and the rest is skipped
-			$matches = array_reduce(
+			$matches = array_any(
 				$rules['mime'],
-				fn ($carry, $pattern) => $carry || Mime::matches($mime, $pattern),
-				false
+				fn (string $pattern) => Mime::matches($mime, $pattern)
 			);
 
-			if ($matches !== true) {
+			if ($matches === false) {
 				throw new Exception(
 					key: 'file.mime.invalid',
 					data: compact('mime')
