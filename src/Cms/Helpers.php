@@ -26,9 +26,6 @@ class Helpers
 	 * ```
 	 */
 	public static array $deprecations = [
-		// The internal `$model->contentFile*()` methods have been deprecated
-		'model-content-file' => true,
-
 		// Setting undefined permission categories or actions is deprecated
 		// and will be ignored in a future version. Custom permissions should
 		// be registered via the `permissions` extension instead.
