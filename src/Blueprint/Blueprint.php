@@ -23,6 +23,11 @@ use Kirby\Toolkit\I18n;
  */
 class Blueprint
 {
+	/**
+	 * Cache of the raw props of all found blueprints, keyed by name
+	 *
+	 * @var array<string, array>
+	 */
 	public static array $loaded = [];
 
 	/**
@@ -232,7 +237,7 @@ class Blueprint
 	 * Normalize field props for a single field.
 	 * Facade for `Normalizer::normalizeFieldProps()`
 	 *
-	 * @throws InvalidArgumentException If the filed name is missing or the field type is invalid
+	 * @throws InvalidArgumentException If the field name is missing or the field type is invalid
 	 */
 	public static function fieldProps(array|string $props): array
 	{
@@ -241,6 +246,8 @@ class Blueprint
 
 	/**
 	 * Returns all field definitions
+	 *
+	 * @return array<string|int, array>
 	 */
 	public function fields(): array
 	{
@@ -394,10 +401,10 @@ class Blueprint
 			is_array($rules) === true &&
 			A::isAssociative($rules) === true
 		) {
-			$roleId = $user->role()->id();
+			$role = $user->role()->id();
 
-			if (isset($rules[$roleId]) === true) {
-				return $rules[$roleId];
+			if (isset($rules[$role]) === true) {
+				return $rules[$role];
 			}
 
 			if (isset($rules['*']) === true) {
