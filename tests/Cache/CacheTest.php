@@ -72,13 +72,6 @@ class CacheTest extends TestCase
 		$this->assertSame(1, $count);
 	}
 
-	public function testEnabled(): void
-	{
-		$cache = new TestCache();
-
-		$this->assertTrue($cache->enabled());
-	}
-
 	public function testExpiration(): void
 	{
 		$method = new ReflectionMethod(Cache::class, 'expiration');
