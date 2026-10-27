@@ -61,9 +61,7 @@ class User
 	public function fromBasicAuth(
 		BasicAuth|null $auth = null
 	): CmsUser|null {
-		/**
-		 * @var BasicAuthMethod
-		 */
+		/** @var BasicAuthMethod $basic */
 		$basic = $this->auth->methods()->get('basic-auth');
 		return $basic->user($auth);
 	}
@@ -78,7 +76,7 @@ class User
 
 	/**
 	 * Returns the logged in user by checking the current session
-	 * and finding a valid valid user id in there
+	 * and finding a valid user id in there
 	 */
 	public function fromSession(
 		Session|array|null $session = null
@@ -128,7 +126,7 @@ class User
 		Session|array|null $session = null,
 		bool $allowImpersonation = true
 	): CmsUser|null {
-		if ($allowImpersonation === true && $this->isImpersonated()) {
+		if ($allowImpersonation === true && $this->isImpersonated() === true) {
 			return $this->impersonate;
 		}
 
