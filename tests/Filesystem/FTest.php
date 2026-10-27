@@ -810,8 +810,16 @@ class FTest extends TestCase
 		$this->assertSame('code', F::type('content.php'));
 		$this->assertSame('code', F::type('py'));
 		$this->assertSame('code', F::type('java'));
+		$this->assertSame('document', F::type('mdown'));
+		$this->assertSame('image', F::type('JPG'));
 		$this->assertNull(F::type('foo'));
 		$this->assertNull(F::type('tmp'));
+	}
+
+	public function testTypeWithShortFilename(): void
+	{
+		$this->assertSame('code', F::type('a.js'));
+		$this->assertSame('document', F::type('a.md'));
 	}
 
 	public function testTypeWithoutExtension(): void
