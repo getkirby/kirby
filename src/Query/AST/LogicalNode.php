@@ -21,7 +21,7 @@ class LogicalNode extends Node
 	) {
 	}
 
-	public function resolve(Visitor $visitor): bool|string
+	public function resolve(Visitor $visitor): bool
 	{
 		return $visitor->logical(
 			left: $this->left->resolve($visitor),

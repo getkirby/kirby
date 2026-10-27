@@ -21,7 +21,7 @@ class ComparisonNode extends Node
 	) {
 	}
 
-	public function resolve(Visitor $visitor): bool|string
+	public function resolve(Visitor $visitor): bool
 	{
 		return $visitor->comparison(
 			left: $this->left->resolve($visitor),

@@ -22,10 +22,10 @@ class ArgumentListNode extends Node
 	) {
 	}
 
-	public function resolve(Visitor $visitor): array|string
+	public function resolve(Visitor $visitor): array
 	{
 		$arguments = array_map(
-			fn ($argument) => $argument->resolve($visitor),
+			fn (Node $argument) => $argument->resolve($visitor),
 			$this->arguments
 		);
 

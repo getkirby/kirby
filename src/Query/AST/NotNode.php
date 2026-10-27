@@ -19,7 +19,7 @@ class NotNode extends Node
 	) {
 	}
 
-	public function resolve(Visitor $visitor): bool|string
+	public function resolve(Visitor $visitor): bool
 	{
 		return $visitor->not(
 			value: $this->value->resolve($visitor)

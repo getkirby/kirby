@@ -22,10 +22,10 @@ class ArrayListNode extends Node
 	) {
 	}
 
-	public function resolve(Visitor $visitor): array|string
+	public function resolve(Visitor $visitor): array
 	{
 		$elements = array_map(
-			fn ($element) => $element->resolve($visitor),
+			fn (Node $element) => $element->resolve($visitor),
 			$this->elements
 		);
 
