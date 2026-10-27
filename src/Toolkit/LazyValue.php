@@ -11,9 +11,14 @@ use Closure;
  *
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
+ *
+ * @template TValue
  */
 class LazyValue
 {
+	/**
+	 * @param Closure(mixed...):TValue $value
+	 */
 	public function __construct(
 		protected Closure $value
 	) {
@@ -21,6 +26,8 @@ class LazyValue
 
 	/**
 	 * Resolve the lazy value to its actual value
+	 *
+	 * @return TValue
 	 */
 	public function resolve(mixed ...$args): mixed
 	{
