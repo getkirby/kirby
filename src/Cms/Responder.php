@@ -464,18 +464,6 @@ class Responder implements Stringable
 	}
 
 	/**
-	 * Marks headers (or header parts) as request-dependent, so they
-	 * can be subtracted before caching a response snapshot
-	 *
-	 * @since 5.2.0
-	 * @deprecated 5.3.0 Use `::volatileHeaders()->mark($name, $values)` instead. Will be removed in Kirby 6.
-	 */
-	public function markVolatileHeader(string $name, array|null $values = null): void
-	{
-		$this->volatileHeaders()->mark($name, $values);
-	}
-
-	/**
 	 * Setter and getter for the volatile headers manager
 	 * @since 5.3.0
 	 */
