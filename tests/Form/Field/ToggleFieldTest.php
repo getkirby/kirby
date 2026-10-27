@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Cms\Page;
+use Kirby\Form\Fields;
 use Kirby\Toolkit\I18n;
 
 class ToggleFieldTest extends TestCase
@@ -110,5 +112,44 @@ class ToggleFieldTest extends TestCase
 
 		$field = $this->field('toggle', $props);
 		$this->assertSame(['Ja test', 'Nein test'], $field->text());
+	}
+
+	public function testWhen(): void
+	{
+		$page = new Page(['slug' => 'test']);
+
+		$fields = new Fields([
+			'foo' => [
+				'type'  => 'text',
+				'model' => $page,
+				'value' => 'a'
+			]
+		]);
+
+		$field = $this->field('toggle', [
+			'model'    => $page,
+			'required' => true,
+			'value'    => false,
+			'when'     => [
+				'foo' => 'x'
+			]
+		], $fields);
+
+		$this->assertSame([], $field->errors());
+
+		$field = $this->field('toggle', [
+			'model'    => $page,
+			'required' => true,
+			'value'    => false,
+			'when'     => [
+				'foo' => 'a'
+			]
+		], $fields);
+
+		$expected = [
+			'required' => 'The field is required',
+		];
+
+		$this->assertSame($expected, $field->errors());
 	}
 }
