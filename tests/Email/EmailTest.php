@@ -77,7 +77,7 @@ class EmailTest extends TestCase
 
 	public function testInvalidAddress(): void
 	{
-		$this->expectException(Exception::class);
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessageIs('"not-valid" is not a valid email address');
 
 		$this->_email([

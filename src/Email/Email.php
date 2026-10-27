@@ -3,7 +3,6 @@
 namespace Kirby\Email;
 
 use Closure;
-use Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\V;
 
@@ -203,7 +202,7 @@ class Email
 	 * Converts single or multiple email addresses to a sanitized format
 	 *
 	 * @return ($multiple is true ? array<string, string|null> : string)
-	 * @throws Exception
+	 * @throws InvalidArgumentException If an address is not valid
 	 */
 	protected function resolveEmail(
 		string|array|null $email = null,
@@ -231,7 +230,9 @@ class Email
 
 			// ensure that the address is valid
 			if (V::email($address) === false) {
-				throw new Exception(sprintf('"%s" is not a valid email address', $address));
+				throw new InvalidArgumentException(
+					message: '"' . $address . '" is not a valid email address'
+				);
 			}
 		}
 
