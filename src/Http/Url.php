@@ -312,34 +312,6 @@ class Url
 	}
 
 	/**
-	 * Smart resolver for internal and external urls
-	 * @deprecated 5.3.0 Use `Kirby\Cms\Url::to()` instead
-	 */
-	public static function to(
-		string|null $path = null,
-		array|null $options = null
-	): string {
-		// make sure $path is string
-		$path ??= '';
-
-		// keep relative urls
-		if (
-			str_starts_with($path, './') === true ||
-			str_starts_with($path, '../') === true
-		) {
-			return $path;
-		}
-
-		$url = static::makeAbsolute($path);
-
-		if ($options === null) {
-			return $url;
-		}
-
-		return (new Uri($url, $options))->toString();
-	}
-
-	/**
 	 * Converts the Url to a Uri object
 	 */
 	public static function toObject(string|null $url = null): Uri

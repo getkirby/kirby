@@ -10,7 +10,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(Url::class)]
 class UrlTest extends TestCase
 {
-	protected string $_yt   = 'http://www.youtube.com/watch?v=9q_aXttJduk';
 	protected string $_yts  = 'https://www.youtube.com/watch?v=9q_aXttJduk';
 	protected string $_docs = 'http://getkirby.com/docs/';
 	protected $_SERVER = null;
@@ -52,15 +51,6 @@ class UrlTest extends TestCase
 	public function testHome(): void
 	{
 		$this->assertSame('/', Url::home());
-	}
-
-	public function testTo(): void
-	{
-		$this->assertSame('/', Url::to());
-		$this->assertSame($this->_yt, Url::to($this->_yt));
-		$this->assertSame('/getkirby.com', Url::to('getkirby.com'));
-		$this->assertSame('./something', Url::to('./something'));
-		$this->assertSame('../something', Url::to('../something'));
 	}
 
 	public function testLast(): void
