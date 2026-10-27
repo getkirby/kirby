@@ -343,7 +343,7 @@ class Blocks extends Plain
 	{
 		$language = 'text';
 
-		if ($code = $node->find('//code')) {
+		if ($code = $node->find('.//code')) {
 			foreach ($code->classList() as $className) {
 				if (preg_match('!language-(.*?)!', $className)) {
 					$language = str_replace('language-', '', $className);
