@@ -6,6 +6,7 @@ env:
   OS: &os ubuntu-24.04
   TIMEOUT: &timeout 10
   COVERAGE_PHP: "8.4"
+  APT_PACKAGES: locales-all imagemagick
 
   SHOULD_RUN: &should-run >-
     github.event_name == 'workflow_dispatch' ||
@@ -71,12 +72,30 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Install system locales and imagemagick
+      # the runner's apt mirror often takes minutes to serve these packages,
+      # so they are cached by the exact versions apt resolves for them
+      - name: Resolve system packages
+        id: apt
         shell: bash
         run: |
           sudo apt-get update
+          packages=$(apt-get install -s --no-install-recommends $APT_PACKAGES | grep '^Inst')
+          echo "$packages"
+          echo "key=$(sha1sum <<< "$packages" | cut -c1-16)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache system packages
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
+        with:
+          path: ~/apt/*.deb
+          key: apt-${{ runner.os }}-${{ steps.apt.outputs.key }}
+
+      - name: Install system locales and imagemagick
+        shell: bash
+        run: |
+          mkdir -p ~/apt/partial
           sudo apt-get install -y --no-install-recommends \
-            -o Acquire::Retries=3 locales-all imagemagick
+            -o Acquire::Retries=3 -o Dir::Cache::Archives="$HOME/apt" \
+            $APT_PACKAGES
 
       - name: Verify test dependencies
         shell: bash
@@ -157,14 +176,13 @@ jobs:
           echo "::add-matcher::${{ runner.tool_cache }}/php.json"
           echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
+      # keyed on the Psalm version in composer.json and without fallback keys,
+      # as Psalm keeps a full cache per version and never prunes old ones
       - name: Cache Psalm analysis data
         uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
         with:
           path: ~/.cache/psalm
-          key: psalm-${{ env.php }}-${{ hashFiles('composer.lock') }}
-          restore-keys: |
-            psalm-${{ env.php }}-
-            psalm-
+          key: psalm-${{ env.php }}-${{ hashFiles('composer.json', 'composer.lock') }}
 
       - name: Validate composer.json/composer.lock
         run: composer run analyze:composer
@@ -179,7 +197,7 @@ jobs:
 
       - name: Statically analyze using Psalm
         id: psalm
-        run: composer run analyze:psalm -- --output-format=github --php-version=${{ env.php }} --report=sarif/psalm.sarif --report-show-info=false --force-jit
+        run: composer run analyze:psalm -- --output-format=github --php-version=${{ env.php }} --report=sarif/psalm.sarif --report-show-info=false
 
       - name: Upload code scanning results to GitHub
         if: github.repository == 'getkirby/kirby' && steps.psalm.outcome == 'success'
@@ -187,11 +205,15 @@ jobs:
         with:
           sarif_file: sarif
 
+      # saved under a new key per run, as cache entries can't be updated
+      # and the fixer only uses a cache from its own version and config
       - name: Cache PHP-CS-Fixer data
         uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
         with:
-          path: ./.php-cs-fixer.cache
-          key: php-cs-fixer-${{ hashFiles('.php-cs-fixer.dist.php') }}
+          path: |
+            .php-cs-fixer.cache
+            .php-cs-fixer.types.cache
+          key: php-cs-fixer-${{ github.sha }}
           restore-keys: |
             php-cs-fixer-
 

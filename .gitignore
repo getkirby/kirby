@@ -18,7 +18,6 @@
 .phpunit.cache
 phpunit.xml
 /tests/coverage
-/tests/tmp
 
 # ignore all the vendor cruft
 /vendor/**/.*
