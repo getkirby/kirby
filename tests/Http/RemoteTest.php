@@ -428,6 +428,24 @@ class RemoteTest extends TestCase
 		$this->assertSame([], $request->headers());
 	}
 
+	public function testHeadersParsing(): void
+	{
+		$request = new Remote('https://getkirby.com');
+		$parse   = $request->curlopt[CURLOPT_HEADERFUNCTION];
+
+		$parse(null, "HTTP/1.1 200 OK\r\n");
+		$parse(null, "Content-Length: 0\r\n");
+		$parse(null, "X-Ip: ::1\r\n");
+		$parse(null, "X-Text: a : b\r\n");
+		$parse(null, "X-Empty:\r\n");
+
+		$this->assertSame([
+			'Content-Length' => '0',
+			'X-Ip'           => '::1',
+			'X-Text'         => 'a : b',
+		], $request->headers());
+	}
+
 	public function testInfo(): void
 	{
 		$request = new Remote('https://getkirby.com');

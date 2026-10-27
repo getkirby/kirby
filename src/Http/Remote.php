@@ -144,12 +144,13 @@ class Remote
 			CURLOPT_PROTOCOLS        => $this->options['protocols'],
 			CURLOPT_REDIR_PROTOCOLS  => $this->options['protocols'],
 			CURLOPT_HEADER           => false,
-			CURLOPT_HEADERFUNCTION   => function ($curl, $header): int {
-				$parts = Str::split($header, ':');
+			CURLOPT_HEADERFUNCTION   => function ($curl, string $header): int {
+				$parts = explode(':', $header, 2);
+				$key   = trim($parts[0]);
+				$value = trim($parts[1] ?? '');
 
-				if (empty($parts[0]) === false && empty($parts[1]) === false) {
-					$key = array_shift($parts);
-					$this->headers[$key] = implode(':', $parts);
+				if ($key !== '' && $value !== '') {
+					$this->headers[$key] = $value;
 				}
 
 				return strlen($header);
