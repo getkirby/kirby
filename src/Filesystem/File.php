@@ -43,6 +43,8 @@ class File implements Stringable
 
 	/**
 	 * Validation rules to be used for `::match()`
+	 *
+	 * @var array<string, array{0: string, 1: string}>
 	 */
 	public static array $validations = [
 		'maxsize' => ['size', 'max'],
@@ -150,12 +152,12 @@ class File implements Stringable
 		return true;
 	}
 
-	/*
+	/**
 	 * Automatically sends all needed headers
 	 * for the file to be downloaded and
 	 * echos the file's content
 	 *
-	 * @param string|null $filename Optional filename for the download
+	 * @param $filename Optional filename for the download
 	 */
 	public function download(string|null $filename = null): string
 	{
@@ -311,7 +313,8 @@ class File implements Stringable
 
 		if (is_array($rules['extension'] ?? null) === true) {
 			$extension = $this->extension();
-			if (in_array($extension, $rules['extension'], true) !== true) {
+
+			if (in_array($extension, $rules['extension'], true) === false) {
 				throw new Exception(
 					key: 'file.extension.invalid',
 					data: compact('extension')
@@ -321,7 +324,8 @@ class File implements Stringable
 
 		if (is_array($rules['type'] ?? null) === true) {
 			$type = $this->type();
-			if (in_array($type, $rules['type'], true) !== true) {
+
+			if (in_array($type, $rules['type'], true) === false) {
 				throw new Exception(
 					key: 'file.type.invalid',
 					data: compact('type')
@@ -530,6 +534,8 @@ class File implements Stringable
 	/**
 	 * Converts the media object to a
 	 * plain PHP array
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function toArray(): array
 	{
