@@ -17,8 +17,6 @@ use Kirby\Toolkit\Str;
 class FileStore extends Store
 {
 	protected string $path;
-
-	// state of the session files
 	protected array $handles  = [];
 	protected array $isLocked = [];
 

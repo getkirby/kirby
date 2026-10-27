@@ -18,10 +18,6 @@ class Tokenizer
 	private int $length = 0;
 
 	/**
-	 * The more complex regexes are written here in nowdoc format
-	 * so we don't need to double or triple escape backslashes
-	 * (that becomes ridiculous rather fast).
-	 *
 	 * Identifiers can contain letters, numbers and underscores.
 	 * They can't start with a number.
 	 * For more complex identifier strings, subscript member access
