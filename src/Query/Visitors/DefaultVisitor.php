@@ -39,7 +39,7 @@ class DefaultVisitor extends Visitor
 			'*'     => $left * $right,
 			'/'     => $left / $right,
 			'%'     => $left % $right,
-			default => throw new Exception("Unknown arithmetic operator: $operator")
+			default => throw new Exception('Unknown arithmetic operator: ' . $operator)
 		};
 	}
 
@@ -105,7 +105,7 @@ class DefaultVisitor extends Visitor
 			'<='    => $left <= $right,
 			'>'     => $left > $right,
 			'>='    => $left >= $right,
-			default => throw new Exception("Unknown comparison operator: $operator")
+			default => throw new Exception('Unknown comparison operator: ' . $operator)
 		};
 	}
 
@@ -117,7 +117,7 @@ class DefaultVisitor extends Visitor
 		$function = $this->global[$name] ?? null;
 
 		if ($function === null) {
-			throw new Exception("Invalid global function in query: $name");
+			throw new Exception('Invalid global function in query: ' . $name);
 		}
 
 		return $function(...$arguments);
@@ -142,7 +142,7 @@ class DefaultVisitor extends Visitor
 		return match ($operator) {
 			'&&', 'AND' => $left && $right(),
 			'||', 'OR'  => $left || $right(),
-			default     => throw new Exception("Unknown logical operator: $operator")
+			default     => throw new Exception('Unknown logical operator: ' . $operator)
 		};
 	}
 
