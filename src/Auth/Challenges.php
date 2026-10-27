@@ -229,8 +229,7 @@ class Challenges
 	 */
 	public function firstAvailable(User $user, string $mode): Challenge|null
 	{
-		$available = $this->available($user, $mode);
-		$type      = array_shift($available);
+		$type = $this->available($user, $mode)[0] ?? null;
 		return $type !== null ? $this->get($type, $user, $mode) : null;
 	}
 
@@ -350,7 +349,7 @@ class Challenges
 			// check if new challenge is available for the user and mode
 			$available = $this->available($user, $mode);
 
-			if (in_array($type, $available) === false) {
+			if (in_array($type, $available, true) === false) {
 				throw new InvalidArgumentException(
 					fallback: 'The requested challenge is not available'
 				);
@@ -375,7 +374,7 @@ class Challenges
 	/**
 	 * Returns the lifetime of new challenges in seconds
 	 */
-	public function timeout(): int|null
+	public function timeout(): int
 	{
 		return $this->kirby->option('auth.challenge.timeout', 10 * 60);
 	}
