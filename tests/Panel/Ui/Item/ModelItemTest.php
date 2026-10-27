@@ -183,5 +183,4 @@ class ModelItemTest extends TestCase
 		$this->assertInstanceOf(HtmlString::class, $text);
 		$this->assertSame('Fish &lt;b&gt;&amp;&lt;/b&gt; Chips', (string)$text);
 	}
-
 }

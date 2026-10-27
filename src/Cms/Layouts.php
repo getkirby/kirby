@@ -95,7 +95,7 @@ class Layouts extends Items
 	 * Converts layouts to blocks
 	 * @since 3.6.0
 	 *
-	 * @param bool $includeHidden Sets whether to include hidden blocks
+	 * @param $includeHidden Sets whether to include hidden blocks
 	 */
 	public function toBlocks(bool $includeHidden = false): Blocks
 	{

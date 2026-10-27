@@ -46,7 +46,6 @@ class TextareaField extends InputField
 	 */
 	#[Prop]
 	protected string|null $size = null;
-
 	protected string $value = '';
 
 	public function api(): array

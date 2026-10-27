@@ -174,7 +174,7 @@ class User extends ModelWithContent
 	 * Prepares the content for the write method
 	 * @internal
 	 *
-	 * @param string|null $languageCode Not used so far
+	 * @param $languageCode Not used so far
 	 */
 	public function contentFileData(
 		array $data,
@@ -412,7 +412,7 @@ class User extends ModelWithContent
 	/**
 	 * Logs the user in without checking the password
 	 *
-	 * @param Session|array|null $session Session options or session object to set the user in
+	 * @param $session Session options or session object to set the user in
 	 */
 	#[BlockCollectionAccess]
 	public function loginPasswordless(
@@ -450,7 +450,7 @@ class User extends ModelWithContent
 	/**
 	 * Logs the user out
 	 *
-	 * @param Session|array|null $session Session options or session object to unset the user in
+	 * @param $session Session options or session object to unset the user in
 	 */
 	#[BlockCollectionAccess]
 	public function logout(Session|array|null $session = null): void
@@ -729,7 +729,7 @@ class User extends ModelWithContent
 	/**
 	 * Converts session options into a session object
 	 *
-	 * @param Session|array $session Session options or session object to unset the user in
+	 * @param $session Session options or session object to unset the user in
 	 */
 	protected function sessionFromOptions(Session|array|null $session): Session
 	{
@@ -772,8 +772,8 @@ class User extends ModelWithContent
 	/**
 	 * String template builder
 	 *
-	 * @param string|null $fallback Fallback for tokens in the template that cannot be replaced
-	 *                              (`null` to keep the original token)
+	 * @param $fallback Fallback for tokens in the template that cannot be replaced
+	 *                 (`null` to keep the original token)
 	 */
 	public function toString(
 		string|null $template = null,

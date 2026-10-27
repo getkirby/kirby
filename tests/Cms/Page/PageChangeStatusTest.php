@@ -486,5 +486,4 @@ class PageChangeStatusTest extends ModelTestCase
 		$this->assertNull($drafts->find('test'));
 		$this->assertSame($newPage, $childrenAndDrafts->find('test'));
 	}
-
 }

@@ -30,11 +30,9 @@ class Tokenizer
 	private const string IDENTIFIER_REGEX = <<<'REGEX'
 	(?:[\p{L}\p{N}_])*
 	REGEX;
-
 	private const string SINGLEQUOTE_STRING_REGEX = <<<'REGEX'
 	'([^'\\]*(?:\\.[^'\\]*)*)'
 	REGEX;
-
 	private const string DOUBLEQUOTE_STRING_REGEX = <<<'REGEX'
 	"([^"\\]*(?:\\.[^"\\]*)*)"
 	REGEX;
@@ -49,8 +47,8 @@ class Tokenizer
 	 * Matches a regex pattern at the current position in the query string.
 	 * The matched lexeme will be stored in the $lexeme variable.
 	 *
-	 * @param int $offset Current position in the query string
-	 * @param string $regex Regex pattern without delimiters/flags
+	 * @param $offset Current position in the query string
+	 * @param $regex Regex pattern without delimiters/flags
 	 */
 	public static function match(
 		string $query,
@@ -76,7 +74,7 @@ class Tokenizer
 	 * Scans the source string for a next token
 	 * starting from the given position
 	 *
-	 * @param int $current The current position in the source string
+	 * @param $current The current position in the source string
 	 *
 	 * @throws Exception If an unexpected character is encountered
 	 */

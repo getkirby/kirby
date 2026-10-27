@@ -151,7 +151,6 @@ class RequestTest extends TestCase
 		$this->assertFalse($request->cli());
 	}
 
-
 	public function testUnknownAuth(): void
 	{
 		new App([

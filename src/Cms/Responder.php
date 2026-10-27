@@ -167,7 +167,7 @@ class Responder implements Stringable
 	 * @since 3.5.5
 	 *
 	 * @param int|string|null $expires Timestamp, number of minutes or time string to parse
-	 * @param bool $override If `true`, the already defined timestamp will be overridden
+	 * @param $override If `true`, the already defined timestamp will be overridden
 	 * @return int|null|$this
 	 */
 	public function expires($expires = null, bool $override = false): static|int|null
@@ -248,7 +248,7 @@ class Responder implements Stringable
 	 * Setter and getter for a single header
 	 *
 	 * @param string|false|null $value
-	 * @param bool $lazy If `true`, an existing header value is not overridden
+	 * @param $lazy If `true`, an existing header value is not overridden
 	 * @return ($value is null ? string|null : static)
 	 */
 	public function header(

@@ -194,5 +194,4 @@ class Methods
 	{
 		return in_array(true, array_column($this->config(), '2fa'), true);
 	}
-
 }

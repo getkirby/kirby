@@ -1054,7 +1054,7 @@ class Dom
 	 * Sanitizes a comment or CDATA section node
 	 * @since 5.6.0
 	 *
-	 * @param array $errors Array to store additional errors in by reference
+	 * @param $errors Array to store additional errors in by reference
 	 */
 	protected function sanitizeCharacterData(
 		DOMNode $node,

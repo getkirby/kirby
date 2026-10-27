@@ -69,7 +69,7 @@ abstract class ModelGuards
 	 * This is typically used to check if UI elements in the Panel should be
 	 * availabel or not.
 	 *
-	 * @param bool $default Used if the action has no permission rule
+	 * @param $default Used if the action has no permission rule
 	 * @throws AbilityException|PermissionException
 	 */
 	public function ensureAvailable(string $action, bool $default = false): void
@@ -131,7 +131,7 @@ abstract class ModelGuards
 	/**
 	 * Non-throwing counterpart of `::ensureAvailable()`
 	 *
-	 * @param bool $default Used if the action has no permission rule
+	 * @param $default Used if the action has no permission rule
 	 */
 	public function isAvailable(string $action, bool $default = false): bool
 	{
@@ -165,7 +165,6 @@ abstract class ModelGuards
 	{
 		return $this->permissions;
 	}
-
 
 	public function user(): User
 	{

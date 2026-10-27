@@ -32,7 +32,7 @@ class Uuids
 	/**
 	 * Runs the callback for each identifiable model of type
 	 *
-	 * @param string $type which models to include (`all`|`page`|`file`|`block`|`struct`)
+	 * @param $type which models to include (`all`|`page`|`file`|`block`|`struct`)
 	 */
 	public static function each(Closure $callback, string $type = 'all'): void
 	{
@@ -90,7 +90,7 @@ class Uuids
 	/**
 	 * Generates UUID for all identifiable models of type
 	 *
-	 * @param string $type which models to include (`all`|`page`|`file`|`block`|`struct`)
+	 * @param $type which models to include (`all`|`page`|`file`|`block`|`struct`)
 	 */
 	public static function generate(string $type = 'all'): void
 	{
@@ -110,7 +110,7 @@ class Uuids
 	 * Populates cache with UUIDs for all identifiable models
 	 * that need to be cached (not site and users)
 	 *
-	 * @param string $type which models to include (`all`|`page`|`file`|`block`|`struct`)
+	 * @param $type which models to include (`all`|`page`|`file`|`block`|`struct`)
 	 */
 	public static function populate(string $type = 'all'): void
 	{

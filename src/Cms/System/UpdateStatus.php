@@ -49,7 +49,7 @@ class UpdateStatus
 	protected array|null $vulnerabilities = null;
 
 	/**
-	 * @param array|null $data Custom override for the getkirby.com update data
+	 * @param $data Custom override for the getkirby.com update data
 	 */
 	public function __construct(
 		App|Plugin $package,
@@ -340,7 +340,7 @@ class UpdateStatus
 	 * Compares a version against a Composer version constraint
 	 * and returns whether the constraint is satisfied
 	 *
-	 * @param string $reason Suffix for error messages
+	 * @param $reason Suffix for error messages
 	 */
 	protected function checkConstraint(string $version, string $constraint, string $reason): bool
 	{
@@ -361,9 +361,9 @@ class UpdateStatus
 	 * for each value by one or multiple version filters;
 	 * values that don't contain the filter keys are removed
 	 *
-	 * @param array $array Array that contains associative arrays
-	 * @param array $filters Associative array `field => version`
-	 * @param string $reason Suffix for error messages
+	 * @param $array Array that contains associative arrays
+	 * @param $filters Associative array `field => version`
+	 * @param $reason Suffix for error messages
 	 */
 	protected function filterArrayByVersion(array $array, array $filters, string $reason): array
 	{

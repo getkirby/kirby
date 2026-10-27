@@ -19,9 +19,9 @@ class Value
 	/**
 	 * Constructor
 	 *
-	 * @param int $minutes the number of minutes until the value expires
-	 *                     or an absolute UNIX timestamp
-	 * @param int|null $created the UNIX timestamp when the value has been created  (defaults to the current time)
+	 * @param $minutes the number of minutes until the value expires
+	 *                or an absolute UNIX timestamp
+	 * @param $created the UNIX timestamp when the value has been created  (defaults to the current time)
 	 *
 	 * @todo Rename $minutes property to $expiry to reflect
 	 *       both minutes and absolute timestamps

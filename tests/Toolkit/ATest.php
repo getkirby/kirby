@@ -1230,7 +1230,6 @@ class ATest extends TestCase
 		$this->assertSame([], $result);
 	}
 
-
 	public function testFilter(): void
 	{
 		$associativeArray = $this->_array();

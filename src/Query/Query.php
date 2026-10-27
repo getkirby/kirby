@@ -27,6 +27,7 @@ class Query
 {
 	public static array $cache = [];
 	public static array $entries = [];
+
 	public Runner $runner;
 
 	/**

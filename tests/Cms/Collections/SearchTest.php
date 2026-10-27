@@ -77,7 +77,6 @@ class SearchTest extends TestCase
 		Search::collection($collection, 'homer', [$option => 'invalid']);
 	}
 
-
 	public function testIgnoreFieldCase(): void
 	{
 		$collection = Pages::factory([

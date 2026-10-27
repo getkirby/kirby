@@ -56,5 +56,4 @@ class SlugFieldTest extends TestCase
 
 		$this->assertSame('Test', $field->label());
 	}
-
 }

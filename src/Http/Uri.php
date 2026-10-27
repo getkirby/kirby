@@ -81,7 +81,7 @@ class Uri implements Stringable
 	/**
 	 * Creates a new URI object
 	 *
-	 * @param array $inject Additional props to inject if a URL string is passed
+	 * @param $inject Additional props to inject if a URL string is passed
 	 */
 	public function __construct(array|string $props = [], array $inject = [])
 	{

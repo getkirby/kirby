@@ -27,7 +27,7 @@ class FileValidators extends ModelValidators
 	/**
 	 * Validates the input of the `changeName` action
 	 *
-	 * @param string|null $extension If not passed, the current extension is kept
+	 * @param $extension If not passed, the current extension is kept
 	 */
 	protected function ensureToChangeName(
 		string $name,
@@ -82,7 +82,7 @@ class FileValidators extends ModelValidators
 	/**
 	 * Validates that no other file with the same name exists
 	 *
-	 * @param string|null $extension If not passed, the current extension is kept
+	 * @param $extension If not passed, the current extension is kept
 	 */
 	public function validateDuplicate(
 		string $name,
@@ -145,8 +145,8 @@ class FileValidators extends ModelValidators
 	/**
 	 * Validates the extension, MIME type and filename
 	 *
-	 * @param string|false|null $mime If not passed, the MIME type is detected from the file,
-	 *                                if `false`, the MIME type is not validated for performance reasons
+	 * @param $mime If not passed, the MIME type is detected from the file,
+	 *             if `false`, the MIME type is not validated for performance reasons
 	 */
 	public function validateFile(string|false|null $mime = null): void
 	{

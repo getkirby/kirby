@@ -47,7 +47,6 @@ class Database
 	 * Database name
 	 */
 	protected string $database;
-
 	protected string $dsn;
 
 	/**

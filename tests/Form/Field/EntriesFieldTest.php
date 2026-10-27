@@ -291,7 +291,6 @@ class EntriesFieldTest extends TestCase
 		$this->assertSame($field->errors()['entries'], 'You must add at least 3 entries');
 	}
 
-
 	public function testProps(): void
 	{
 		$field = $this->field('entries');

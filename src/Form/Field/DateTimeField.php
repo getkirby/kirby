@@ -31,11 +31,12 @@ abstract class DateTimeField extends InputField
 
 	#[Prop]
 	protected string|null $max = null;
+
 	#[Prop]
 	protected string|null $min = null;
+
 	#[Prop(setter: 'setStep')]
 	protected array $step = [];
-
 	protected Date|null $value = null;
 
 	public function default(): string|null

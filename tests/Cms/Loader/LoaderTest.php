@@ -172,8 +172,6 @@ class LoaderTest extends TestCase
 		$this->assertSame('Test', $resolved['test']['test']);
 	}
 
-
-
 	public function testWithPlugins(): void
 	{
 		$loader = new Loader($this->app);

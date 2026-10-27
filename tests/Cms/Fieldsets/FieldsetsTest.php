@@ -93,5 +93,4 @@ class FieldsetsTest extends TestCase
 
 		$this->assertSame('Media blocks', $fieldsets->groups()['mediaBlocks']['label']);
 	}
-
 }

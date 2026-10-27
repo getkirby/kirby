@@ -872,7 +872,6 @@ class ApiTest extends TestCase
 		$this->assertSame(['a', 'c'], $app->api()->pages()->keys());
 	}
 
-
 	public function testParent(): void
 	{
 		$app = $this->app->clone([
@@ -1435,7 +1434,6 @@ class ApiTest extends TestCase
 
 		$this->assertSame('a', $api->searchPages()->first()->id());
 	}
-
 
 	public function testSite(): void
 	{

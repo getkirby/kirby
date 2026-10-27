@@ -42,7 +42,6 @@ class Fields extends Collection
 		}
 	}
 
-
 	public function __call(string $key, $arguments)
 	{
 		if ($method = parent::__call($key, $arguments)) {
@@ -320,8 +319,8 @@ class Fields extends Collection
 	 * but only if the field is not disabled
 	 *
 	 * @since 5.0.0
-	 * @param bool $passthrough If true, values for undefined fields will be submitted
-	 * @param bool $force If true, values for fields that cannot be submitted (e.g. disabled or untranslatable fields) will be submitted
+	 * @param $passthrough If true, values for undefined fields will be submitted
+	 * @param $force If true, values for fields that cannot be submitted (e.g. disabled or untranslatable fields) will be submitted
 	 */
 	public function submit(
 		array $input,

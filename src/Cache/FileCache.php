@@ -23,9 +23,9 @@ class FileCache extends Cache
 	/**
 	 * Sets all parameters which are needed for the file cache
 	 *
-	 * @param array $options 'root' (required)
-	 *                       'prefix' (default: none)
-	 *                       'extension' (file extension for cache files, default: none)
+	 * @param $options 'root' (required)
+	 *                'prefix' (default: none)
+	 *                'extension' (file extension for cache files, default: none)
 	 */
 	public function __construct(array $options)
 	{

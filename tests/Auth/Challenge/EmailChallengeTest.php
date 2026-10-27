@@ -18,6 +18,7 @@ class EmailChallengeTest extends TestCase
 	public const string TMP = KIRBY_TMP_DIR . '/Auth.EmailChallenge';
 
 	protected User $user;
+
 	protected static string $password;
 
 	public static function setUpBeforeClass(): void

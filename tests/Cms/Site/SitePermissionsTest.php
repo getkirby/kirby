@@ -40,5 +40,4 @@ class SitePermissionsTest extends ModelTestCase
 
 		$this->assertFalse($permissions->can($action));
 	}
-
 }

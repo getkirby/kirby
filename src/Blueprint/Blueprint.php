@@ -36,7 +36,6 @@ class Blueprint
 	public static array $normalized = [];
 
 	protected AcceptRules|null $acceptRules = null;
-
 	protected FieldsRegistry $fields;
 	protected ModelWithContent $model;
 	protected array $props;

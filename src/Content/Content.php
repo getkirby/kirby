@@ -48,7 +48,7 @@ class Content
 	/**
 	 * Creates a new Content object
 	 *
-	 * @param bool $normalize Set to `false` if the input field keys are already lowercase
+	 * @param $normalize Set to `false` if the input field keys are already lowercase
 	 */
 	public function __construct(
 		array $data = [],

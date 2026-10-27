@@ -16,7 +16,6 @@ class Exif
 	 * The raw exif array
 	 */
 	protected array $data = [];
-
 	protected string|null $aperture = null;
 	protected Camera|null $camera = null;
 	protected string|null $exposure = null;

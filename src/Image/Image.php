@@ -33,7 +33,6 @@ class Image extends File
 		'png',
 		'webp'
 	];
-
 	public static array $viewableTypes = [
 		'avif',
 		'jpg',

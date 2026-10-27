@@ -21,8 +21,8 @@ class Html extends \Kirby\Toolkit\Html
 	 * Creates one or multiple CSS link tags
 	 * @since 3.7.0
 	 *
-	 * @param string|array|Plugin|Assets $url Relative or absolute URLs, an array of URLs or `@auto` for automatic template css loading
-	 * @param string|array|null $options Pass an array of attributes for the link tag or a media attribute string
+	 * @param $url Relative or absolute URLs, an array of URLs or `@auto` for automatic template css loading
+	 * @param $options Pass an array of attributes for the link tag or a media attribute string
 	 */
 	public static function css(
 		string|array|Plugin|Assets $url,
@@ -72,9 +72,9 @@ class Html extends \Kirby\Toolkit\Html
 	/**
 	 * Generates an `a` tag with an absolute Url
 	 *
-	 * @param string|null $href Relative or absolute Url
-	 * @param string|array|null $text If `null`, the link will be used as link text. If an array is passed, each element will be added unencoded
-	 * @param array $attr Additional attributes for the a tag.
+	 * @param $href Relative or absolute Url
+	 * @param $text If `null`, the link will be used as link text. If an array is passed, each element will be added unencoded
+	 * @param $attr Additional attributes for the a tag.
 	 */
 	public static function link(
 		string|null $href = null,

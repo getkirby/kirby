@@ -43,7 +43,6 @@ class ViewButtons
 		return $this;
 	}
 
-
 	/**
 	 * Sets the default buttons
 	 *

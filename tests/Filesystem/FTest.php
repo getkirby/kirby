@@ -574,7 +574,6 @@ class FTest extends TestCase
 		I18n::$locale = $locale;
 	}
 
-
 	public function testRange(): void
 	{
 		file_put_contents($this->test, 'my content is awesome');
