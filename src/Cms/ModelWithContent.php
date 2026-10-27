@@ -332,19 +332,6 @@ abstract class ModelWithContent extends Model implements Identifiable
 	}
 
 	/**
-	 * Creates default content for the model, by using our
-	 * Form class to generate the defaults, based on the
-	 * model's blueprint setup.
-	 *
-	 * @since 5.0.0
-	 * @deprecated 5.6.0 Use `::createContent()` instead
-	 */
-	public function createDefaultContent(): array
-	{
-		return $this->createContent();
-	}
-
-	/**
 	 * Converts the content of the given translations to the values
 	 * that will be stored by running each of them through the fields
 	 * of the model's blueprint
@@ -444,15 +431,6 @@ abstract class ModelWithContent extends Model implements Identifiable
 	}
 
 	/**
-	 * Checks if the model is locked for the current user
-	 * @deprecated 5.0.0 Use `->lock()->isLocked()` instead
-	 */
-	public function isLocked(): bool
-	{
-		return $this->lock()->isLocked() === true;
-	}
-
-	/**
 	 * Checks if the data has any errors
 	 */
 	public function isValid(): bool
@@ -528,17 +506,6 @@ abstract class ModelWithContent extends Model implements Identifiable
 	}
 
 	/**
-	 * Read the content from the content file
-	 * @internal
-	 * @deprecated 5.0.0 Use `->version()->read()` instead
-	 */
-	public function readContent(string|null $languageCode = null): array
-	{
-		Helpers::deprecated('$model->readContent() is deprecated. Use $model->version()->read() instead.', 'model-content-file'); // @codeCoverageIgnore
-		return $this->version()->read($languageCode ?? 'default') ?? [];
-	}
-
-	/**
 	 * Returns the absolute path to the model
 	 */
 	abstract public function root(): string|null;
@@ -579,29 +546,6 @@ abstract class ModelWithContent extends Model implements Identifiable
 		);
 
 		return $clone;
-	}
-
-	/**
-	 * @deprecated 5.0.0 Use $model->save() instead
-	 */
-	protected function saveContent(
-		array|null $data = null,
-		bool $overwrite = false
-	): static {
-		Helpers::deprecated('$model->saveContent() is deprecated. Use $model->save() instead.', 'model-content-file');
-		return $this->save($data, 'default', $overwrite);
-	}
-
-	/**
-	 * @deprecated 5.0.0 Use $model->save() instead
-	 */
-	protected function saveTranslation(
-		array|null $data = null,
-		string|null $languageCode = null,
-		bool $overwrite = false
-	): static {
-		Helpers::deprecated('$model->saveTranslation() is deprecated. Use $model->save() instead.', 'model-content-file');
-		return $this->save($data, $languageCode ?? 'default', $overwrite);
 	}
 
 	/**
@@ -843,19 +787,5 @@ abstract class ModelWithContent extends Model implements Identifiable
 	public function versions(): Versions
 	{
 		return Versions::load($this);
-	}
-
-	/**
-	 * Low level data writer method
-	 * to store the given data on disk or anywhere else
-	 * @internal
-	 * @deprecated 5.0.0 Use `->version()->save()` instead
-	 */
-	#[BlockCollectionAccess]
-	public function writeContent(array $data, string|null $languageCode = null): bool
-	{
-		Helpers::deprecated('$model->writeContent() is deprecated. Use $model->version()->save() instead.', 'model-content-file'); // @codeCoverageIgnore
-		$this->version()->save($data, $languageCode ?? 'default', true);
-		return true;
 	}
 }
