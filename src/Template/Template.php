@@ -52,8 +52,8 @@ class Template implements Stringable
 	}
 
 	/**
-	 * Converts the object to a simple string
-	 * This is used in template filters for example
+	 * Converts the object to a simple string;
+	 * this is used in template filters for example
 	 */
 	public function __toString(): string
 	{
@@ -188,7 +188,7 @@ class Template implements Stringable
 
 	/**
 	 * Returns the place where templates are located
-	 * in the site folder and and can be found in extensions
+	 * in the site folder and can be found in extensions
 	 */
 	public function store(): string
 	{
