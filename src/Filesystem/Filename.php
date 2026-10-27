@@ -255,7 +255,7 @@ class Filename implements Stringable
 		}
 
 		try {
-			return F::safeBasename($this->filename);
+			return F::safeBasename($name);
 		} finally {
 			// restore language rules even if F::safeBasename throws
 			Str::$language = $rules;
