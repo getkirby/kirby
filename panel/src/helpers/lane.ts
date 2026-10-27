@@ -18,9 +18,9 @@ interface Entry {
  *
  * @example
  * const run = lane();
- * run("save", () => fetch(url));
+ * run("save", () => fetch(url)); // runs right away
+ * run("save", () => fetch(url)); // waits
  * run("save", () => fetch(url)); // replaces the waiting save
- * run.isBusy(); // true until both have finished
  */
 export default function () {
 	const waiting: Entry[] = [];
@@ -53,9 +53,6 @@ export default function () {
 			}
 		});
 	}
-
-	// Add isBusy method to check for running or waiting tasks
-	run.isBusy = (): boolean => running;
 
 	return run;
 }

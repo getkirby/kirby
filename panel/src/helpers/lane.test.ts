@@ -98,27 +98,6 @@ describe("lane()", () => {
 		expect(calls).toStrictEqual(["publish", "new save"]);
 	});
 
-	it("is busy while a task is running or waiting", async () => {
-		const run = lane();
-		const first = deferred();
-
-		expect(run.isBusy()).toBe(false);
-
-		const a = run("save", first.run);
-		const b = run("publish", () => Promise.resolve());
-
-		expect(run.isBusy()).toBe(true);
-
-		first.resolve(undefined);
-		await a;
-
-		expect(run.isBusy()).toBe(true);
-
-		await b;
-
-		expect(run.isBusy()).toBe(false);
-	});
-
 	it("keeps the order of tasks with different keys", async () => {
 		const run = lane();
 		const first = deferred();

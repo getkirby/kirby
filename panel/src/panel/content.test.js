@@ -464,6 +464,43 @@ describe("panel.content", () => {
 
 			expect(content.isBusy()).toBe(false);
 		});
+
+		it("returns false while the view is refreshed", async () => {
+			const finish = [];
+			const { content, panel } = factory();
+
+			// closing the page during a refresh loses nothing
+			panel.view.refresh = vi.fn(
+				() => new Promise((resolve) => finish.push(resolve))
+			);
+
+			const refresh = content.refresh();
+
+			await vi.waitFor(() => expect(panel.view.refresh).toHaveBeenCalledOnce());
+			expect(content.isBusy()).toBe(false);
+
+			finish[0]();
+			await refresh;
+		});
+
+		it("returns true for a save that waits behind the refresh", async () => {
+			const finish = [];
+			const { content, panel } = factory();
+
+			panel.view.refresh = vi.fn(
+				() => new Promise((resolve) => finish.push(resolve))
+			);
+
+			const refresh = content.refresh();
+			const save = content.save({ title: "Typed" });
+
+			expect(content.isBusy()).toBe(true);
+
+			finish[0]();
+			await Promise.all([refresh, save]);
+
+			expect(content.isBusy()).toBe(false);
+		});
 	});
 
 	describe("isCurrent()", () => {

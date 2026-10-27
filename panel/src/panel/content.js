@@ -10,6 +10,9 @@ export default (panel) => {
 	// all content requests run one after another
 	const requests = lane();
 
+	// content requests that are running or waiting
+	let writes = 0;
+
 	// the props of the view whose last save or publish failed,
 	// its form holds changes that the server does not have
 	let failed = null;
@@ -150,10 +153,11 @@ export default (panel) => {
 		},
 
 		/**
-		 * Whether content requests are still running or waiting
+		 * Whether content requests are still running or waiting.
+		 * A refresh does not count, it only reads.
 		 */
 		isBusy() {
-			return requests.isBusy();
+			return writes > 0;
 		},
 
 		/**
@@ -321,9 +325,15 @@ export default (panel) => {
 				options.silent = true;
 			}
 
-			return requests(`${method}:${api}:${language}`, () =>
-				panel.api.post(api + "/changes/" + method, values, options)
-			);
+			writes++;
+
+			try {
+				return await requests(`${method}:${api}:${language}`, () =>
+					panel.api.post(api + "/changes/" + method, values, options)
+				);
+			} finally {
+				writes--;
+			}
 		},
 
 		/**
