@@ -132,8 +132,8 @@ class Normalizer
 				continue;
 			}
 
-			// fallback to default props when true is passed
-			if ($section === true) {
+			// fallback to default props when true or null is passed
+			if ($section === true || $section === null) {
 				$section = [];
 			}
 
@@ -433,6 +433,11 @@ class Normalizer
 			// unset / remove tab if its props are false
 			if ($props === false) {
 				continue;
+			}
+
+			// fallback to default props when true or null is passed
+			if ($props === true || $props === null) {
+				$props = [];
 			}
 
 			// inject all tab extensions

@@ -917,6 +917,17 @@ class NormalizerTest extends TestCase
 		);
 	}
 
+	public function testSectionsWithNull(): void
+	{
+		$normalizer = $this->normalizer([
+			'sections' => [
+				'pages' => null
+			]
+		]);
+
+		$this->assertSame('pagelist', $normalizer->fields()->toArray()['pages']['type']);
+	}
+
 	public function testSectionsWithTrue(): void
 	{
 		$normalizer = $this->normalizer([
@@ -1048,6 +1059,19 @@ class NormalizerTest extends TestCase
 	public function testTabsWithInvalidValue(): void
 	{
 		$this->assertSame([], $this->normalizer(['tabs' => 'nonsense'])->tabs());
+	}
+
+	public function testTabsWithNullAndTrue(): void
+	{
+		$normalizer = $this->normalizer([
+			'tabs' => [
+				'content' => null,
+				'seo'     => true
+			]
+		]);
+
+		$this->assertSame(['content', 'seo'], array_keys($normalizer->tabs()));
+		$this->assertSame([], $normalizer->tabs()['seo']['columns']);
 	}
 
 	public function testTabsWithLabel(): void
