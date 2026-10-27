@@ -2,8 +2,6 @@
 
 namespace Kirby\Email;
 
-use Kirby\Toolkit\Properties;
-
 /**
  * Representation of a an Email body
  * with a text and optional html version

@@ -29,9 +29,6 @@ class Helpers
 		// The internal `$model->contentFile*()` methods have been deprecated
 		'model-content-file' => true,
 
-		// Passing `$category = null` to `Permissions::for()` is not supported
-		'permissions-for-category-null' => true,
-
 		// Setting undefined permission categories or actions is deprecated
 		// and will be ignored in a future version. Custom permissions should
 		// be registered via the `permissions` extension instead.

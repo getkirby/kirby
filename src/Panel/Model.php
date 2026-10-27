@@ -52,14 +52,6 @@ abstract class Model
 	}
 
 	/**
-	 * @deprecated 5.0.0 Use `Kirby\Panel\Controller\View\ModelViewController::versions()` instead
-	 */
-	public function content(): array
-	{
-		return $this->versions()['changes'];
-	}
-
-	/**
 	 * Returns the drag text from a custom callback
 	 * if the callback is defined in the config
 	 * @internal
