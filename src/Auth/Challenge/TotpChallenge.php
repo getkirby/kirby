@@ -72,6 +72,15 @@ class TotpChallenge extends Challenge
 		mixed $input,
 		Pending $data
 	): bool {
+		// codes from JSON requests may be numbers
+		if (is_int($input) === true) {
+			$input = (string)$input;
+		}
+
+		if (is_string($input) !== true) {
+			return false;
+		}
+
 		$secret = $this->user->secret('totp');
 		return (new Totp($secret))->verify($input);
 	}
