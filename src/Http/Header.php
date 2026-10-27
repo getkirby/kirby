@@ -146,7 +146,7 @@ class Header
 				$code = 500;
 			}
 
-			$message = $codes['_' . $code] ?? 'Something went wrong';
+			$message = $codes['_' . $code];
 		}
 
 		$header = $protocol . ' ' . $code . ' ' . $message;
