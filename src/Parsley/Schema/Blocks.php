@@ -96,7 +96,9 @@ class Blocks extends Plain
 			'text'  => $node->innerHtml()
 		];
 
-		if ($id = $node->attr('id')) {
+		$id = $node->attr('id');
+
+		if ($id !== null && $id !== '') {
 			$content['id'] = $id;
 		}
 
@@ -333,12 +335,12 @@ class Blocks extends Plain
 	{
 		$language = 'text';
 
-		if ($code = $node->find('.//code')) {
-			foreach ($code->classList() as $className) {
-				if (preg_match('!language-(.*?)!', $className)) {
-					$language = str_replace('language-', '', $className);
-					break;
-				}
+		$code = $node->find('.//code');
+
+		foreach ($code?->classList() ?? [] as $class) {
+			if (str_starts_with($class, 'language-') === true) {
+				$language = substr($class, 9);
+				break;
 			}
 		}
 
