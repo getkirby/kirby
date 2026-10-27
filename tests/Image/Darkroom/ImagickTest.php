@@ -83,24 +83,30 @@ class ImagickTest extends TestCase
 	public static function autoOrientMethodProvider(): array
 	{
 		return [
-			'No change'         => [Image::ORIENTATION_TOPLEFT, []],
-			'Flop'              => [Image::ORIENTATION_TOPRIGHT, ['flopImage']],
-			'Rotate 180'        => [Image::ORIENTATION_BOTTOMRIGHT, ['rotateImage']],
-			'Flop + Rotate 180' => [Image::ORIENTATION_BOTTOMLEFT, ['flopImage', 'rotateImage']],
-			'Flop + Rotate -90' => [Image::ORIENTATION_LEFTTOP, ['flopImage', 'rotateImage']],
-			'Rotate 90'         => [Image::ORIENTATION_RIGHTTOP, ['rotateImage']],
-			'Flop + Rotate 90'  => [Image::ORIENTATION_RIGHTBOTTOM, ['flopImage', 'rotateImage']],
-			'Rotate -90'        => [Image::ORIENTATION_LEFTBOTTOM, ['rotateImage']],
+			'No change'         => [Image::ORIENTATION_TOPLEFT, false, null],
+			'Flop'              => [Image::ORIENTATION_TOPRIGHT, true, null],
+			'Rotate 180'        => [Image::ORIENTATION_BOTTOMRIGHT, false, 180],
+			'Flop + Rotate 180' => [Image::ORIENTATION_BOTTOMLEFT, true, 180],
+			'Flop + Rotate -90' => [Image::ORIENTATION_LEFTTOP, true, -90],
+			'Rotate 90'         => [Image::ORIENTATION_RIGHTTOP, false, 90],
+			'Flop + Rotate 90'  => [Image::ORIENTATION_RIGHTBOTTOM, true, 90],
+			'Rotate -90'        => [Image::ORIENTATION_LEFTBOTTOM, false, -90],
 		];
 	}
 
 	#[DataProvider('autoOrientMethodProvider')]
 	public function testAutoOrientMethod(
 		int $orientation,
-		array $expectedTransformations
+		bool $flop,
+		int|null $angle
 	): void {
 		$image = $this->createMock(Image::class);
 		$image->method('getImageOrientation')->willReturn($orientation);
+		$image->expects($this->exactly($flop === true ? 1 : 0))
+			->method('flopImage');
+		$image->expects($this->exactly($angle === null ? 0 : 1))
+			->method('rotateImage')
+			->with('#000', $angle);
 		$image->expects($this->once())
 			->method('setImageOrientation')
 			->with(Image::ORIENTATION_TOPLEFT);
