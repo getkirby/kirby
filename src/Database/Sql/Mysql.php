@@ -15,8 +15,6 @@ class Mysql extends Sql
 	/**
 	 * Returns a query to list the columns of a specified table;
 	 * the query needs to return rows with a column `name`
-	 *
-	 * @param $table Table name
 	 */
 	public function columns(string $table): array
 	{
