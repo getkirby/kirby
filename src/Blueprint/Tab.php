@@ -132,6 +132,8 @@ class Tab
 	 * Returns the reduced props for the Panel tab bar.
 	 * The columns are not included here, as the tab bar
 	 * only needs to render a button per tab.
+	 *
+	 * @return array{fields: list<string>, icon: string|null, label: string, link: string, name: string}
 	 */
 	public function toButtonProps(): array
 	{
