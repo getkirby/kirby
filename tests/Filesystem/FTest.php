@@ -601,6 +601,18 @@ class FTest extends TestCase
 		$this->assertFalse(F::range(''));
 	}
 
+	public function testRangeWithoutContent(): void
+	{
+		file_put_contents($this->test, '');
+		$this->assertSame('', F::range($this->test));
+
+		file_put_contents($this->test, 'my content');
+		$this->assertSame('', F::range($this->test, offset: 10));
+		$this->assertSame('', F::range($this->test, offset: 20));
+		$this->assertSame('', F::range($this->test, length: 0));
+		$this->assertSame('', F::range($this->test, length: -1));
+	}
+
 	public function testRead(): void
 	{
 		file_put_contents($this->test, $content = 'my content is awesome');
