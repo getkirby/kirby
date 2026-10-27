@@ -29,6 +29,9 @@ class Locale
 	/**
 	 * Converts a normalized locale array to an array with the
 	 * locale constants replaced with their string representations
+	 *
+	 * @param array<int|string, string> $locale
+	 * @return array<int|string, string>
 	 */
 	public static function export(array $locale): array
 	{
@@ -50,7 +53,7 @@ class Locale
 	 * a specified or for all locale categories
 	 * @since 3.5.6
 	 *
-	 * @param int|string $category Locale category constant or constant name
+	 * @param $category Locale category constant or constant name
 	 * @return array|string Associative array if `LC_ALL` was passed (default), otherwise string
 	 *
 	 * @throws Exception If the locale cannot be determined
@@ -101,7 +104,7 @@ class Locale
 	 * Converts a locale string or an array with constant or
 	 * string keys to a normalized constant => value array
 	 *
-	 * @param array|string $locale
+	 * @param array<int|string, string>|string $locale
 	 */
 	public static function normalize($locale): array
 	{
@@ -128,6 +131,8 @@ class Locale
 	/**
 	 * Sets the PHP locale with a locale string or
 	 * an array with constant or string keys
+	 *
+	 * @param array<int|string, string>|string $locale
 	 */
 	public static function set(array|string $locale): void
 	{
@@ -169,7 +174,8 @@ class Locale
 	 * Builds an associative array with the locales
 	 * that are actually supported on this system
 	 *
-	 * @param bool $withAll If set to `true`, `LC_ALL` is returned as well
+	 * @param $withAll If set to `true`, `LC_ALL` is returned as well
+	 * @return array<int, string>
 	 */
 	protected static function supportedConstants(bool $withAll = false): array
 	{
