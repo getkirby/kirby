@@ -140,6 +140,7 @@ class Page extends Model
 	/**
 	 * Prepares the response data for page pickers
 	 * and page fields
+	 * @deprecated 6.0.0 Use `Kirby\Panel\Controller\Dialog\PagePickerDialogController::item()` instead
 	 */
 	public function pickerData(array $params = []): array
 	{
