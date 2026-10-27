@@ -143,7 +143,9 @@ class Cookie
 		// modify CMS caching behavior
 		static::trackUsage($key);
 
-		if ($value = $_COOKIE[$key] ?? null) {
+		$value = $_COOKIE[$key] ?? null;
+
+		if (is_string($value) === true && $value !== '') {
 			return static::parse($value);
 		}
 
