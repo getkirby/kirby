@@ -28,6 +28,8 @@ class Visitor
 	 * modify the information about the visitor.
 	 *
 	 * By default everything is pulled from $_SERVER
+	 *
+	 * @param array{ip?: string|null, userAgent?: string|null, acceptedLanguage?: string|null, acceptedMimeType?: string|null} $arguments
 	 */
 	public function __construct(array $arguments = [])
 	{
@@ -80,7 +82,7 @@ class Visitor
 			$parts  = Str::split($value, '-');
 			$code   = isset($parts[0]) === true ? Str::lower($parts[0]) : null;
 			$region = isset($parts[1]) === true ? Str::upper($parts[1]) : null;
-			$locale = $region ? $code . '_' . $region : $code;
+			$locale = $region !== null ? $code . '_' . $region : $code;
 
 			$languages[$locale] = new Obj([
 				'code'     => $code,
