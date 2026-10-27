@@ -18,14 +18,14 @@ class SiteBlueprint extends Blueprint
 	protected ModelWithContent $model;
 
 	/**
-	 * Creates a new page blueprint object
+	 * Creates a new site blueprint object
 	 * with the given props
 	 */
 	public function __construct(array $props)
 	{
 		parent::__construct($props);
 
-		// normalize all available page options
+		// normalize all available site options
 		$this->props['options'] = $this->normalizeOptions(
 			$this->props['options'] ?? true,
 			// defaults
