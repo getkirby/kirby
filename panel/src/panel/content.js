@@ -13,6 +13,10 @@ export default (panel) => {
 	// content requests that are running or waiting
 	let writes = 0;
 
+	// the values of the requests that went out,
+	// a replaced request never does
+	const sent = new WeakSet();
+
 	// the props of the view whose last save or publish failed,
 	// its form holds changes that the server does not have
 	let failed = null;
@@ -328,9 +332,10 @@ export default (panel) => {
 			writes++;
 
 			try {
-				return await requests(`${method}:${api}:${language}`, () =>
-					panel.api.post(api + "/changes/" + method, values, options)
-				);
+				return await requests(`${method}:${api}:${language}`, () => {
+					sent.add(values);
+					return panel.api.post(api + "/changes/" + method, values, options);
+				});
 			} finally {
 				writes--;
 			}
@@ -349,6 +354,11 @@ export default (panel) => {
 			try {
 				await this.request("save", values, env);
 
+				// a newer save replaced this one and reports for both
+				if (sent.has(values) === false) {
+					return true;
+				}
+
 				// close the dialog if it is still open
 				this.dialog?.close();
 
@@ -362,6 +372,11 @@ export default (panel) => {
 
 				return true;
 			} catch (error) {
+				// a newer save replaced this one and reports for both
+				if (sent.has(values) === false) {
+					return false;
+				}
+
 				// handle locked states
 				if (error.key?.startsWith("error.content.lock")) {
 					this.lockDialog(error.details);
@@ -384,8 +399,8 @@ export default (panel) => {
 		 */
 		async unlock(env = {}) {
 			// write the changes of the form first, the unlock runs after any
-			// other save anyway. When the view got locked in the meantime,
-			// the lock dialog already reports it and the lock stays.
+			// other save anyway. When the view got locked in the meantime or
+			// a newer save failed, that is already reported and the lock stays.
 			if ((await this.flush(env)) === false) {
 				return false;
 			}

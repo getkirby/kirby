@@ -955,6 +955,48 @@ describe("panel.content", () => {
 			);
 		});
 
+		it("emits the save event only for values that have been sent", async () => {
+			const finish = [];
+			const { content, panel } = factory({
+				post: vi.fn(() => new Promise((resolve) => finish.push(resolve)))
+			});
+
+			const first = content.save({ title: "First" });
+			const second = content.save({ title: "Second" });
+			const third = content.save({ title: "Third" });
+
+			finish[0]();
+			await first;
+			finish[1]();
+			await Promise.all([second, third]);
+
+			const values = panel.events.emit.mock.calls.map((call) => call[1].values);
+
+			expect(values).toStrictEqual([{ title: "First" }, { title: "Third" }]);
+		});
+
+		it("leaves the error of a replaced save to the newer one", async () => {
+			const finish = [];
+			const { content } = factory({
+				post: vi.fn(
+					() =>
+						new Promise((resolve, reject) => finish.push({ reject, resolve }))
+				)
+			});
+
+			const first = content.save({ title: "First" });
+			const second = content.save({ title: "Second" });
+			const third = content.save({ title: "Third" });
+
+			finish[0].resolve();
+			await first;
+			finish[1].reject(new Error("Offline"));
+
+			// only one of them reports the failed request
+			await expect(second).resolves.toBe(false);
+			await expect(third).rejects.toThrowError("Offline");
+		});
+
 		it("keeps a waiting save request of another view", async () => {
 			const finish = [];
 			const { content, panel } = factory({
