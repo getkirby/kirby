@@ -12,11 +12,9 @@ enum Gravity: string
 	case TOP = 'top';
 	case TOP_LEFT = 'top left';
 	case TOP_RIGHT = 'top right';
-
 	case LEFT = 'left';
 	case CENTER = 'center';
 	case RIGHT = 'right';
-
 	case BOTTOM = 'bottom';
 	case BOTTOM_LEFT = 'bottom left';
 	case BOTTOM_RIGHT = 'bottom right';

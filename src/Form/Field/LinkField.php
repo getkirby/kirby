@@ -21,7 +21,6 @@ class LinkField extends InputField
 	 */
 	#[Prop]
 	protected array $options = ['url', 'page', 'file', 'email', 'tel', 'anchor'];
-
 	protected string $value = '';
 
 	public function activeTypes(): array

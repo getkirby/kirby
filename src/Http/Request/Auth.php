@@ -14,7 +14,7 @@ use Stringable;
 abstract class Auth implements Stringable
 {
 	/**
-	 * @param string $data Raw authentication data after the first space in the `Authorization` header
+	 * @param $data Raw authentication data after the first space in the `Authorization` header
 	 */
 	public function __construct(
 		#[SensitiveParameter]

@@ -19,7 +19,6 @@ abstract class TestCase extends BaseTestCase
 {
 	protected App $app;
 	protected int $activeErrorHandlers = 0;
-
 	protected string|Closure|null $i18nLocale;
 	protected string|array|Closure|null $i18nFallback;
 	protected Closure|null $i18nLoad;

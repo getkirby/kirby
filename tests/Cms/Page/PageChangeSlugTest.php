@@ -152,5 +152,4 @@ class PageChangeSlugTest extends ModelTestCase
 
 		$this->assertSame(2, $calls);
 	}
-
 }

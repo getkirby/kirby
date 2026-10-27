@@ -212,7 +212,6 @@ class VTest extends TestCase
 		$this->assertTrue(V::different('true', true, true));
 	}
 
-
 	public function testEmail(): void
 	{
 		$this->assertTrue(V::email('bastian@getkirby.com'));

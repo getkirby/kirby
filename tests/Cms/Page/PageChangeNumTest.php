@@ -106,5 +106,4 @@ class PageChangeNumTest extends ModelTestCase
 		$this->assertIsPage($page, $children->find('test'));
 		$this->assertIsPage($page, $childrenAndDrafts->find('test'));
 	}
-
 }

@@ -93,5 +93,4 @@ class FileContentFileDataTest extends ModelTestCase
 			'template' => null
 		]));
 	}
-
 }

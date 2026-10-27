@@ -17,7 +17,7 @@ class PHP extends Handler
 	/**
 	 * Converts data to PHP file content
 	 *
-	 * @param string $indent For internal use only
+	 * @param $indent For internal use only
 	 */
 	public static function encode($data, string $indent = ''): string
 	{

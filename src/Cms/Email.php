@@ -31,8 +31,8 @@ class Email
 	/**
 	 * Class constructor
 	 *
-	 * @param string|array $preset Preset name from the config or a simple props array
-	 * @param array $props Props array to override the $preset
+	 * @param $preset Preset name from the config or a simple props array
+	 * @param $props Props array to override the $preset
 	 */
 	public function __construct(string|array $preset = [], array $props = [])
 	{
@@ -63,7 +63,7 @@ class Email
 	 * Grabs a preset from the options; supports fixed
 	 * prop arrays in case a preset is not needed
 	 *
-	 * @param string|array $preset Preset name or simple prop array
+	 * @param $preset Preset name or simple prop array
 	 * @throws NotFoundException
 	 */
 	protected function preset(string|array $preset): array
@@ -138,7 +138,7 @@ class Email
 	 * Transforms file object(s) to an array of file roots;
 	 * supports simple strings, file objects or collections/arrays of either
 	 *
-	 * @param string $prop Prop to transform
+	 * @param $prop Prop to transform
 	 */
 	protected function transformFile(string $prop): void
 	{
@@ -148,11 +148,11 @@ class Email
 	/**
 	 * Transforms Kirby models to a simplified collection
 	 *
-	 * @param string $prop Prop to transform
-	 * @param string $class Fully qualified class name of the supported model
-	 * @param string $contentValue Model method that returns the array value
-	 * @param string|null $contentKey Optional model method that returns the array key;
-	 *                                returns a simple value-only array if not given
+	 * @param $prop Prop to transform
+	 * @param $class Fully qualified class name of the supported model
+	 * @param $contentValue Model method that returns the array value
+	 * @param $contentKey Optional model method that returns the array key;
+	 *                   returns a simple value-only array if not given
 	 * @return array Simple key-value or just value array with the transformed prop data
 	 */
 	protected function transformModel(
@@ -200,8 +200,8 @@ class Email
 	 * supports simple strings, user objects or collections/arrays of either
 	 * (note: only the first item in a collection/array will be used)
 	 *
-	 * @param string $addressProp Prop with the email address
-	 * @param string $nameProp Prop with the name corresponding to the $addressProp
+	 * @param $addressProp Prop with the email address
+	 * @param $nameProp Prop with the name corresponding to the $addressProp
 	 */
 	protected function transformUserSingle(
 		string $addressProp,
@@ -229,7 +229,7 @@ class Email
 	 * Transforms user object(s) to the email address(es) and name(s);
 	 * supports simple strings, user objects or collections/arrays of either
 	 *
-	 * @param string $prop Prop to transform
+	 * @param $prop Prop to transform
 	 */
 	protected function transformUserMultiple(string $prop): void
 	{

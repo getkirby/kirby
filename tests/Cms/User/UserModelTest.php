@@ -52,5 +52,4 @@ class UserModelTest extends ModelTestCase
 
 		$this->assertInstanceOf(UserTestModel::class, $user);
 	}
-
 }

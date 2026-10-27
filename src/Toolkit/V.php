@@ -239,7 +239,6 @@ class V
 		return in_array($value, $in, $strict) === true;
 	}
 
-
 	/**
 	 * Validate an input array against
 	 * a set of rules, using all registered

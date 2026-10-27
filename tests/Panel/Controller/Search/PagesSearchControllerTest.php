@@ -48,6 +48,7 @@ class PagesSearchControllerTest extends TestCase
 		$this->tearDownTmp();
 		App::destroy();
 	}
+
 	public function testItem(): void
 	{
 		$controller = new PagesSearchController(query: 'beautiful');

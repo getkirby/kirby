@@ -637,5 +637,4 @@ class StorageTest extends TestCase
 		$this->assertGreaterThanOrEqual($minTime, filemtime($fileChanges));
 		$this->assertGreaterThanOrEqual($minTime, filemtime($fileLatest));
 	}
-
 }

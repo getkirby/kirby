@@ -63,11 +63,11 @@ class Snippet extends Tpl
 	/**
 	 * Creates a new snippet
 	 *
-	 * @param string|null $file Full path to the PHP file of the snippet;
-	 *                          can be `null` for "dummy" snippets
-	 *                          that don't exist
-	 * @param array $data Associative array with variables that
-	 *                    will be set inside the snippet
+	 * @param $file Full path to the PHP file of the snippet;
+	 *             can be `null` for "dummy" snippets
+	 *             that don't exist
+	 * @param $data Associative array with variables that
+	 *             will be set inside the snippet
 	 */
 	public function __construct(
 		protected string|null $file,
@@ -142,7 +142,7 @@ class Snippet extends Tpl
 	 * Loads the code of the given snippet.
 	 *
 	 * @param string $file Path to the snippet file
-	 * @param array $data Data available inside the snippet
+	 * @param $data Data available inside the snippet
 	 * @param Slots|null Slots available in the snippet
 	 * @return string The rendered content of the given snippet file
 	 */
@@ -371,7 +371,7 @@ class Snippet extends Tpl
 	/**
 	 * Returns the data variables that get passed to a snippet
 	 *
-	 * @param Slots|null $slots If null, an empty dummy object is used
+	 * @param $slots If null, an empty dummy object is used
 	 */
 	protected static function scope(
 		array $data = [],

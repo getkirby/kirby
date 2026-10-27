@@ -271,5 +271,4 @@ class PageUpdateTest extends ModelTestCase
 			$this->assertFileDoesNotExist(static::TMP . '/content/2_b/default.txt');
 		}
 	}
-
 }

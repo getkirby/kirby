@@ -61,8 +61,8 @@ class Component
 	/**
 	 * Creates a new component for the given type
 	 *
-	 * @param string $type The component type
-	 * @param array $attrs An array of all passed attributes
+	 * @param $type The component type
+	 * @param $attrs An array of all passed attributes
 	 */
 	public function __construct(
 		protected string $type,

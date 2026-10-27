@@ -28,7 +28,6 @@ class Email
 	public static array $emails = [];
 
 	protected bool $isSent = false;
-
 	protected array $attachments;
 	protected Body $body;
 	protected array $bcc;

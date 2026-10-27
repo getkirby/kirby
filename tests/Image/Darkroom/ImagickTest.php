@@ -458,7 +458,6 @@ class ImagickTest extends TestCase
 		$this->call($imagick, 'quality', $image, ['quality' => 90]);
 	}
 
-
 	public function testResize(): void
 	{
 		$imagick = new Imagick([

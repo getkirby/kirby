@@ -29,7 +29,6 @@ class ToggleField extends InputField
 	 */
 	#[Prop]
 	protected array|string|null $text = null;
-
 	protected bool|null $value = null;
 
 	public function fill(mixed $value): static

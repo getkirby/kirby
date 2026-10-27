@@ -54,7 +54,6 @@ class ModelButton extends Button
 		return $link;
 	}
 
-
 	public function model(): ModelWithContent|null
 	{
 		return $this->model;

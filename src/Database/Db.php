@@ -26,8 +26,8 @@ class Db
 	/**
 	 * (Re)connect the database
 	 *
-	 * @param array|null $params Pass `[]` to use the default params from the config,
-	 *                           don't pass any argument to get the current connection
+	 * @param $params Pass `[]` to use the default params from the config,
+	 *               don't pass any argument to get the current connection
 	 */
 	public static function connect(array|null $params = null): Database
 	{

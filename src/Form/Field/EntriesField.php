@@ -35,7 +35,6 @@ class EntriesField extends InputField implements ProvidesNestedForm
 	 */
 	#[Prop(getter: 'fieldProps')]
 	protected array|string $field = ['type' => 'text'];
-
 	protected Form|null $form = null;
 	protected array $value = [];
 

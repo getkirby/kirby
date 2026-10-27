@@ -298,7 +298,7 @@ class Str
 	/**
 	 * Converts a string to camel case
 	 *
-	 * @param string $value The string to convert
+	 * @param $value The string to convert
 	 */
 	public static function camel(string|null $value): string
 	{
@@ -309,7 +309,7 @@ class Str
 	 * Converts a camel-case string to kebab-case
 	 * @since 4.0.0
 	 *
-	 * @param string $value The string to convert
+	 * @param $value The string to convert
 	 */
 	public static function camelToKebab(string|null $value): string
 	{
@@ -1355,7 +1355,7 @@ class Str
 	 * Converts a string to studly caps case
 	 * @since 3.7.0
 	 *
-	 * @param string $value The string to convert
+	 * @param $value The string to convert
 	 */
 	public static function studly(string|null $value): string
 	{

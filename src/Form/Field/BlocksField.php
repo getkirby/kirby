@@ -57,7 +57,6 @@ class BlocksField extends InputField
 	 */
 	#[Prop]
 	protected string $group = 'blocks';
-
 	protected array $value = [];
 
 	public function api(): array

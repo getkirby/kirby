@@ -47,7 +47,6 @@ abstract class ModelListField extends DisplayField
 	 */
 	#[Prop(computed: true, getter: 'defineColumns')]
 	protected array|null $columns = null;
-
 	protected array|null $columnsCache = null;
 	protected array|null $columnFieldsCache = null;
 
@@ -565,7 +564,6 @@ abstract class ModelListField extends DisplayField
 			$this->sortBy() === null &&
 			$this->flip() === false;
 	}
-
 
 	public function state(): array
 	{

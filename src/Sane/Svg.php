@@ -466,8 +466,8 @@ class Svg extends Xml
 	 * Returns the sanitization options for the handler
 	 * @internal
 	 *
-	 * @param bool $isExternal Whether the string is from an external file
-	 *                         that may be accessed directly
+	 * @param $isExternal Whether the string is from an external file
+	 *                   that may be accessed directly
 	 */
 	public static function options(bool $isExternal): array
 	{

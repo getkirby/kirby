@@ -387,5 +387,4 @@ class ExceptionTest extends TestCase
 		);
 		$this->assertSame('An error occurred', $exception->getMessage());
 	}
-
 }

@@ -51,7 +51,6 @@ class PagePickerFieldTest extends TestCase
 		return $this->app->page('a');
 	}
 
-
 	public function testApiItems(): void
 	{
 		$app = new App([

@@ -90,7 +90,6 @@ abstract class ModelPickerField extends InputField
 	 */
 	#[Prop]
 	protected string|null $text = null;
-
 	protected array $value = [];
 
 	public function api(): array

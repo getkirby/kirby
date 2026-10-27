@@ -78,6 +78,7 @@ class OptionsTest extends TestCase
 		$this->assertSame('Option B', $options->last()->text['en']);
 		$this->assertSame('Variante B', $options->last()->text['de']);
 	}
+
 	public function testFactoryResolve(): void
 	{
 		$model = new Page(['slug' => 'test']);

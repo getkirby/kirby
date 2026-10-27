@@ -38,9 +38,9 @@ class Collection extends BaseCollection
 	 * Creates a new Collection with the given objects
 	 *
 	 * @param iterable<TValue> $objects
-	 * @param object|null $parent Stores the parent object,
-	 *                            which is needed in some collections
-	 *                            to get the finder methods right
+	 * @param $parent Stores the parent object,
+	 *               which is needed in some collections
+	 *               to get the finder methods right
 	 */
 	public function __construct(
 		iterable $objects = [],
@@ -162,7 +162,7 @@ class Collection extends BaseCollection
 	 * with an item for each group and a collection for each group.
 	 *
 	 * @param string|Closure $field
-	 * @param bool $caseInsensitive Ignore upper/lowercase for group names
+	 * @param $caseInsensitive Ignore upper/lowercase for group names
 	 * @throws Exception
 	 */
 	public function group(
@@ -241,8 +241,8 @@ class Collection extends BaseCollection
 	/**
 	 * Returns a Collection without the given element(s)
 	 *
-	 * @param string|array|object ...$keys any number of keys,
-	 *                                     passed as individual arguments
+	 * @param ...$keys any number of keys,
+	 *                passed as individual arguments
 	 */
 	public function not(string|array|object ...$keys): static
 	{

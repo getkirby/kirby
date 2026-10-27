@@ -49,9 +49,7 @@ class File extends ModelWithContent
 	 * Cache for the initialized blueprint object
 	 */
 	protected FileBlueprint|null $blueprint = null;
-
 	protected string $filename;
-
 	protected string|null $id = null;
 
 	/**
@@ -63,7 +61,6 @@ class File extends ModelWithContent
 	 * The absolute path to the file
 	 */
 	protected string|null $root;
-
 	protected string|null $template;
 
 	/**
@@ -411,7 +408,7 @@ class File extends ModelWithContent
 	/**
 	 * Returns the absolute path to the file in the public media folder
 	 *
-	 * @param string|null $filename Optional override for the filename
+	 * @param $filename Optional override for the filename
 	 */
 	#[BlockCollectionAccess]
 	public function mediaRoot(string|null $filename = null): string
@@ -434,7 +431,7 @@ class File extends ModelWithContent
 	/**
 	 * Returns the absolute Url to the file in the public media folder
 	 *
-	 * @param string|null $filename Optional override for the filename
+	 * @param $filename Optional override for the filename
 	 */
 	public function mediaUrl(string|null $filename = null): string
 	{
@@ -447,7 +444,7 @@ class File extends ModelWithContent
 	/**
 	 * Get the file's last modification time.
 	 *
-	 * @param string|null $handler date, intl or strftime
+	 * @param $handler date, intl or strftime
 	 */
 	public function modified(
 		string|IntlDateFormatter|null $format = null,

@@ -115,5 +115,4 @@ class StackTest extends TestCase
 		$this->assertSame('a', Stack::render('styles', clear: false));
 		$this->assertSame('a', Stack::render('styles', clear: false));
 	}
-
 }

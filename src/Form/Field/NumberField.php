@@ -38,7 +38,6 @@ class NumberField extends InputField
 	 */
 	#[Prop]
 	protected float|string|null $step = null;
-
 	protected float|null $value = null;
 
 	public function fill(mixed $value): static

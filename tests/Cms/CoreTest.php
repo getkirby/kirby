@@ -240,8 +240,6 @@ class CoreTest extends TestCase
 		$this->assertArrayHasKey('video', $tags);
 	}
 
-
-
 	public function testTemplates(): void
 	{
 		$templates = $this->core->templates();

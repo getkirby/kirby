@@ -151,5 +151,4 @@ class LanguageViewControllerTest extends TestCase
 		$translations = $controller->translations();
 		$this->assertFalse($translations[0]['options'][0]['disabled']);
 	}
-
 }

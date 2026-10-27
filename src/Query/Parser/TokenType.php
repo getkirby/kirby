@@ -54,6 +54,5 @@ enum TokenType
 	case T_TRUE;
 	case T_FALSE;
 	case T_NULL;
-
 	case T_IDENTIFIER;
 }

@@ -34,7 +34,6 @@ class StructureField extends InputField implements ProvidesNestedForm
 	 */
 	#[Prop]
 	protected int|null $limit = null;
-
 	protected array $value = [];
 
 	public function fill(mixed $value): static

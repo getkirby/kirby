@@ -90,7 +90,6 @@ class Permissions
 			'update'         => true
 		]
 	];
-
 	protected array $actions;
 
 	/**

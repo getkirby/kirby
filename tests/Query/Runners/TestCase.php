@@ -358,7 +358,6 @@ abstract class TestCase extends BaseTestCase
 		];
 	}
 
-
 	public static function interceptProvider(): array
 	{
 		return [

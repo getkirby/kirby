@@ -248,5 +248,4 @@ class PageDuplicateTest extends ModelTestCase
 
 		$this->assertSame(2, $calls);
 	}
-
 }

@@ -368,5 +368,4 @@ class PlainTextStorage extends Storage
 		}
 		// @codeCoverageIgnoreEnd
 	}
-
 }

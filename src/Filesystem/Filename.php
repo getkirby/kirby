@@ -40,8 +40,8 @@ class Filename implements Stringable
 	/**
 	 * Creates a new Filename object
 	 *
-	 * @param string $template for the final name
-	 * @param array $attributes List of all applicable attributes
+	 * @param $template for the final name
+	 * @param $attributes List of all applicable attributes
 	 */
 	public function __construct(
 		protected string $filename,
@@ -93,7 +93,7 @@ class Filename implements Stringable
 	 * to a string, that can be used in the
 	 * new filename
 	 *
-	 * @param string|null $prefix The prefix will be used in the filename creation
+	 * @param $prefix The prefix will be used in the filename creation
 	 */
 	public function attributesToString(string|null $prefix = null): string
 	{

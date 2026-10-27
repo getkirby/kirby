@@ -28,7 +28,6 @@ class Item
 	public const string ITEMS_CLASS = Items::class;
 
 	protected Field|null $field;
-
 	protected string $id;
 	protected array $params;
 	protected ModelWithContent $parent;

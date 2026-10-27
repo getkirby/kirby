@@ -102,7 +102,7 @@ class Element
 	/**
 	 * Returns the inner HTML of the element
 	 *
-	 * @param array|null $marks List of allowed marks
+	 * @param $marks List of allowed marks
 	 */
 	public function innerHtml(array|null $marks = null): string
 	{

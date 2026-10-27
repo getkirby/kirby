@@ -58,10 +58,10 @@ class Xml
 	/**
 	 * Generates a single attribute or a list of attributes
 	 *
-	 * @param string|array $name String: A single attribute with that name will be generated.
-	 *                           Key-value array: A list of attributes will be generated. Don't pass a second argument in that case.
-	 * @param mixed $value If used with a `$name` string, pass the value of the attribute here.
-	 *                     If used with a `$name` array, this can be set to `false` to disable attribute sorting.
+	 * @param $name String: A single attribute with that name will be generated.
+	 *             Key-value array: A list of attributes will be generated. Don't pass a second argument in that case.
+	 * @param $value If used with a `$name` string, pass the value of the attribute here.
+	 *              If used with a `$name` array, this can be set to `false` to disable attribute sorting.
 	 * @return string|null The generated XML attributes string
 	 */
 	public static function attr(
@@ -122,11 +122,11 @@ class Xml
 	 * `@namespaces` (array with XML namespaces) and
 	 * `@value` (element content)
 	 *
-	 * @param array|string $props The source array or tag content (used internally)
-	 * @param string $name The name of the root element
-	 * @param bool $head Include the XML declaration head or not
-	 * @param string $indent Indentation string, defaults to two spaces
-	 * @param int $level The indentation level (used internally)
+	 * @param $props The source array or tag content (used internally)
+	 * @param $name The name of the root element
+	 * @param $head Include the XML declaration head or not
+	 * @param $indent Indentation string, defaults to two spaces
+	 * @param $level The indentation level (used internally)
 	 * @return string The XML string
 	 */
 	public static function create(
@@ -239,7 +239,7 @@ class Xml
 	 * // output: some &#252;ber crazy stuff
 	 * ```
 	 *
-	 * @param bool $html True = Convert to HTML-safe first
+	 * @param $html True = Convert to HTML-safe first
 	 */
 	public static function encode(
 		string|null $string,
@@ -298,7 +298,7 @@ class Xml
 	 * Breaks a SimpleXMLElement down into a simpler tree
 	 * structure of arrays and strings
 	 *
-	 * @param bool $collectName Whether the element name should be collected (for the root element)
+	 * @param $collectName Whether the element name should be collected (for the root element)
 	 * @return ($collectName is true ? array : array|string)
 	 */
 	public static function simplify(
@@ -393,12 +393,12 @@ class Xml
 	/**
 	 * Builds an XML tag
 	 *
-	 * @param string $name Tag name
-	 * @param array|string|null $content Scalar value or array with multiple lines of content or `null` to
-	 *                                   generate a self-closing tag; pass an empty string to generate empty content
-	 * @param array $attr An associative array with additional attributes for the tag
-	 * @param string|null $indent Indentation string, defaults to two spaces or `null` for output on one line
-	 * @param int $level Indentation level
+	 * @param $name Tag name
+	 * @param $content Scalar value or array with multiple lines of content or `null` to
+	 *                generate a self-closing tag; pass an empty string to generate empty content
+	 * @param $attr An associative array with additional attributes for the tag
+	 * @param $indent Indentation string, defaults to two spaces or `null` for output on one line
+	 * @param $level Indentation level
 	 * @return string The generated XML
 	 */
 	public static function tag(

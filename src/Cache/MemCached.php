@@ -25,9 +25,9 @@ class MemCached extends Cache
 	/**
 	 * Sets all parameters which are needed to connect to Memcached
 	 *
-	 * @param array $options 'host'   (default: localhost)
-	 *                       'port'   (default: 11211)
-	 *                       'prefix' (default: null)
+	 * @param $options 'host'   (default: localhost)
+	 *                'port'   (default: 11211)
+	 *                'prefix' (default: null)
 	 */
 	public function __construct(array $options = [])
 	{

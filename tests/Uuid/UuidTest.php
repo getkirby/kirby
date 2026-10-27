@@ -234,7 +234,6 @@ class UuidTest extends TestCase
 		$this->assertSame('my-page', $uuid->id());
 	}
 
-
 	public function testIndex(): void
 	{
 		$this->assertInstanceOf(Generator::class, Uuid::index());
