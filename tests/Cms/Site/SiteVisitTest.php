@@ -37,7 +37,7 @@ class SiteVisitTest extends ModelTestCase
 	public function testVisitInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid page object');
+		$this->expectExceptionMessageIs('Invalid page object');
 
 		$site = new Site();
 		$site->visit('nonexists');

@@ -133,7 +133,7 @@ class ArithmeticNodeTest extends TestCase
 		// Visitor should throw exception for invalid operator
 		$visitor = new DefaultVisitor();
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Unknown arithmetic operator: ^');
+		$this->expectExceptionMessageIs('Unknown arithmetic operator: ^');
 		$node->resolve($visitor);
 	}
 }

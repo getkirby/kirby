@@ -69,7 +69,7 @@ class OptionsApiTest extends TestCase
 		]);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('is not allowed in safe mode');
+		$this->expectExceptionMessageIs('The URL "http://127.0.0.1/api.json" is not allowed in safe mode');
 
 		try {
 			$options = new OptionsApi(url: 'http://{{ page.host }}/api.json');
@@ -101,7 +101,7 @@ class OptionsApiTest extends TestCase
 		$model   = new Page(['slug' => 'test']);
 		$options = new OptionsApi(url: 'https://example.com');
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Options could not be loaded from API: https://example.com');
+		$this->expectExceptionMessageIs('Options could not be loaded from API: https://example.com');
 		$options->resolve($model);
 	}
 

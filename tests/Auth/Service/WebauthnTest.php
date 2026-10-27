@@ -305,7 +305,7 @@ class WebauthnTest extends TestCase
 	public function testRemoveCredentialNotFound(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Passkey could not be found');
+		$this->expectExceptionCode('error.user.webauthn.notFound');
 
 		$this->webauthn()->removeCredential([['id' => 'aaa']], 'zzz');
 	}
@@ -315,7 +315,7 @@ class WebauthnTest extends TestCase
 		// login failures all report the same generic message so they
 		// cannot be used to distinguish why verification failed
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The passkey could not be verified');
+		$this->expectExceptionCode('error.user.webauthn.failed');
 
 		$this->webauthn()->verifyLogin([], ['client' => 'x'], 'challenge');
 	}
@@ -324,7 +324,7 @@ class WebauthnTest extends TestCase
 	{
 		// same generic message as a missing id (no credential-existence oracle)
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The passkey could not be verified');
+		$this->expectExceptionCode('error.user.webauthn.failed');
 
 		$this->webauthn()->verifyLogin([['id' => 'aaa']], ['id' => 'zzz'], 'challenge');
 	}
@@ -346,7 +346,7 @@ class WebauthnTest extends TestCase
 		];
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The passkey could not be verified');
+		$this->expectExceptionCode('error.user.webauthn.failed');
 
 		$this->webauthn()->verifyLogin($credentials, $payload, 'AQID');
 	}
@@ -354,7 +354,7 @@ class WebauthnTest extends TestCase
 	public function testVerifyLoginMissingChallenge(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The passkey challenge is missing or expired');
+		$this->expectExceptionCode('error.user.webauthn.challenge');
 
 		$this->webauthn()->verifyLogin([], ['id' => 'aaa'], '');
 	}
@@ -362,7 +362,7 @@ class WebauthnTest extends TestCase
 	public function testVerifyLoginInvalidPayload(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid passkey data');
+		$this->expectExceptionCode('error.user.webauthn.invalid');
 
 		$this->webauthn()->verifyLogin([], 123, 'challenge');
 	}
@@ -370,7 +370,7 @@ class WebauthnTest extends TestCase
 	public function testVerifyLoginAcceptsJsonStringPayload(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The passkey could not be verified');
+		$this->expectExceptionCode('error.user.webauthn.failed');
 
 		$this->webauthn()->verifyLogin([], '{"client":"x"}', 'challenge');
 	}
@@ -378,7 +378,7 @@ class WebauthnTest extends TestCase
 	public function testVerifyLoginAcceptsObjectPayload(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The passkey could not be verified');
+		$this->expectExceptionCode('error.user.webauthn.failed');
 
 		$this->webauthn()->verifyLogin([], (object)['id' => 'zzz'], 'challenge');
 	}
@@ -386,7 +386,7 @@ class WebauthnTest extends TestCase
 	public function testVerifyLoginRejectsNonStringPublicKey(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The passkey could not be verified');
+		$this->expectExceptionCode('error.user.webauthn.failed');
 
 		$credentials = [['id' => 'AQID']]; // no publicKey
 		$payload     = ['id' => 'AQID', 'rawId' => 'AQID'];
@@ -397,7 +397,7 @@ class WebauthnTest extends TestCase
 	public function testVerifyLoginRejectsRawIdMismatch(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The passkey could not be verified');
+		$this->expectExceptionCode('error.user.webauthn.failed');
 
 		$credentials = [['id' => 'AQID', 'publicKey' => 'dummy']];
 		$payload     = ['id' => 'AQID', 'rawId' => 'AgME']; // decodes differently
@@ -420,7 +420,7 @@ class WebauthnTest extends TestCase
 	public function testVerifyRegisterMissingChallenge(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The passkey challenge is missing or expired');
+		$this->expectExceptionCode('error.user.webauthn.challenge');
 
 		$this->webauthn()->verifyRegister(['client' => 'x'], '');
 	}
@@ -428,7 +428,7 @@ class WebauthnTest extends TestCase
 	public function testVerifyRegisterInvalidPayload(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid passkey data');
+		$this->expectExceptionCode('error.user.webauthn.invalid');
 
 		$this->webauthn()->verifyRegister(3.14, 'challenge');
 	}
@@ -439,7 +439,7 @@ class WebauthnTest extends TestCase
 		// (here: empty attestation) is reported with the same generic
 		// error instead of leaking the library's internal exception
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The passkey could not be verified');
+		$this->expectExceptionCode('error.user.webauthn.failed');
 
 		$this->webauthn()->verifyRegister(
 			['client' => '', 'attestation' => '', 'rawId' => 'AQID'],

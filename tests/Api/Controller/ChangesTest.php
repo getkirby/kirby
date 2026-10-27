@@ -59,7 +59,7 @@ class ChangesTest extends TestCase
 	public function testDiscardWithoutPermissions(): void
 	{
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to discard this version');
+		$this->expectExceptionCode('error.version.discard.permission');
 
 		Changes::discard($this->page);
 	}
@@ -103,7 +103,7 @@ class ChangesTest extends TestCase
 	public function testPublishWithoutPermissions(): void
 	{
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to publish this version');
+		$this->expectExceptionCode('error.version.publish.permission');
 
 		Changes::publish($this->page, []);
 	}
@@ -320,7 +320,7 @@ class ChangesTest extends TestCase
 	public function testSaveWithoutPermissions(): void
 	{
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to change this version');
+		$this->expectExceptionCode('error.version.save.permission');
 
 		Changes::save($this->page, []);
 	}
@@ -350,7 +350,7 @@ class ChangesTest extends TestCase
 	public function testUnlockWithoutPermissions(): void
 	{
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to unlock this version');
+		$this->expectExceptionCode('error.version.unlock.permission');
 
 		Changes::unlock($this->page);
 	}

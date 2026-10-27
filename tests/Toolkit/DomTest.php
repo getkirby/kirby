@@ -371,7 +371,8 @@ class DomTest extends TestCase
 	public function testParseInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage("The markup could not be parsed: Start tag expected, '<' not found");
+		// the rest of the message comes from libxml and varies by version
+		$this->expectExceptionMessageIsOrContains("The markup could not be parsed: Start tag expected, '<' not found");
 
 		new Dom('{"this": "is not XML"}', 'XML');
 	}
@@ -1508,7 +1509,7 @@ class DomTest extends TestCase
 		$dom = new Dom('<span>Test</span>', 'HTML');
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid XPath query: //[invalid');
+		$this->expectExceptionMessageIs('Invalid XPath query: //[invalid');
 
 		$dom->query('//[invalid');
 	}
@@ -2246,7 +2247,7 @@ class DomTest extends TestCase
 	public function testSanitizeDoctypeCallbackException(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('This exception is not caught as validation error');
+		$this->expectExceptionMessageIs('This exception is not caught as validation error');
 
 		$dom = new Dom('<!DOCTYPE xml><xml/>', 'XML');
 		$dom->sanitize([

@@ -19,7 +19,7 @@ class SnippetTest extends TestCase
 		$snippet = new Snippet('test.php');
 
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('The snippet has not been opened');
+		$this->expectExceptionMessageIs('The snippet has not been opened');
 
 		$snippet->close();
 	}
@@ -421,7 +421,7 @@ class SnippetTest extends TestCase
 		]);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Passing the $slot or $slots variables to snippets is not supported.');
+		$this->expectExceptionMessageIs('Passing the $slot or $slots variables to snippets is not supported.');
 
 		Snippet::factory(
 			name: 'scope',

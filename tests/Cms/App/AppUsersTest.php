@@ -257,7 +257,7 @@ class AppUsersTest extends TestCase
 	public function testUserFromBasicAuthDisabled(): void
 	{
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('Basic authentication is not activated');
+		$this->expectExceptionMessageIs('Basic authentication is not activated');
 
 		$app = $this->basicAuthApp()->clone([
 			'options' => [
@@ -274,7 +274,7 @@ class AppUsersTest extends TestCase
 	public function testUserFromBasicAuthOverHttp(): void
 	{
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('Basic authentication is only allowed over HTTPS');
+		$this->expectExceptionMessageIs('Basic authentication is only allowed over HTTPS');
 
 		$app = $this->basicAuthApp()->clone([
 			'request' => [
@@ -289,7 +289,7 @@ class AppUsersTest extends TestCase
 	public function testUserFromBasicAuthWithInvalidHeader(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid authorization header');
+		$this->expectExceptionMessageIs('Invalid authorization header');
 
 		$app = $this->basicAuthApp()->clone([
 			'request' => [

@@ -73,7 +73,7 @@ class FileTest extends ModelTestCase
 	public function testConstructWithoutFilename(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The filename and parent are required');
+		$this->expectExceptionMessageIs('The filename and parent are required');
 
 		new File([]);
 	}
@@ -81,7 +81,7 @@ class FileTest extends ModelTestCase
 	public function testConstructWithoutParent(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The filename and parent are required');
+		$this->expectExceptionMessageIs('The filename and parent are required');
 
 		new File(['filename' => 'test.jpg']);
 	}

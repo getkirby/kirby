@@ -38,7 +38,7 @@ class FileRulesTest extends ModelTestCase
 		$file = new File(['filename' => 'test.jpg', 'parent' => $parent]);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The name must not be empty');
+		$this->expectExceptionCode('error.file.changeName.empty');
 
 		FileRules::changeName($file, '');
 	}
@@ -51,7 +51,8 @@ class FileRulesTest extends ModelTestCase
 		$file   = new File(['filename' => 'test.jpg', 'parent' => $parent]);
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to change the name of "test.jpg"');
+		$this->expectExceptionCode('error.file.changeName.permission');
+		$this->expectExceptionMessageIs('You are not allowed to change the name of "test.jpg"');
 
 		FileRules::changeName($file, 'test');
 	}
@@ -80,7 +81,8 @@ class FileRulesTest extends ModelTestCase
 		$file   = new File(['filename' => 'test.jpg', 'parent' => $parent]);
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to change the sorting of "test.jpg"');
+		$this->expectExceptionCode('error.file.sort.permission');
+		$this->expectExceptionMessageIs('You are not allowed to change the sorting of "test.jpg"');
 
 		FileRules::changeSort($file, 1);
 	}
@@ -104,7 +106,8 @@ class FileRulesTest extends ModelTestCase
 	public function testChangeNameToExistingFile(): void
 	{
 		$this->expectException(DuplicateException::class);
-		$this->expectExceptionMessage('A file with the name "b.jpg" already exists');
+		$this->expectExceptionCode('error.file.duplicate');
+		$this->expectExceptionMessageIs('A file with the name "b.jpg" already exists');
 
 		$page = new Page([
 			'slug' => 'test',
@@ -121,7 +124,8 @@ class FileRulesTest extends ModelTestCase
 	public function testChangeNameToExistingFileWithNewExtension(): void
 	{
 		$this->expectException(DuplicateException::class);
-		$this->expectExceptionMessage('A file with the name "b.png" already exists');
+		$this->expectExceptionCode('error.file.duplicate');
+		$this->expectExceptionMessageIs('A file with the name "b.png" already exists');
 
 		$page = new Page([
 			'slug' => 'test',
@@ -145,7 +149,8 @@ class FileRulesTest extends ModelTestCase
 		]);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('You are not allowed to upload PHP files');
+		$this->expectExceptionCode('error.file.type.forbidden');
+		$this->expectExceptionMessageIs('You are not allowed to upload PHP files');
 
 		$file = $page->file('a.jpg');
 		FileRules::changeName($file, 'shell', 'php');
@@ -161,7 +166,8 @@ class FileRulesTest extends ModelTestCase
 		]);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('You are not allowed to upload invisible files');
+		$this->expectExceptionCode('error.file.type.forbidden');
+		$this->expectExceptionMessageIs('You are not allowed to upload invisible files');
 
 		$file = $page->file('a.jpg');
 		FileRules::changeName($file, '.hidden');
@@ -183,7 +189,8 @@ class FileRulesTest extends ModelTestCase
 		$this->app->impersonate('nobody');
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to change the template for the file "test/test.jpg"');
+		$this->expectExceptionCode('error.file.changeTemplate.permission');
+		$this->expectExceptionMessageIs('You are not allowed to change the template for the file "test/test.jpg"');
 
 		FileRules::changeTemplate($file, 'b');
 	}
@@ -194,7 +201,8 @@ class FileRulesTest extends ModelTestCase
 		$file   = new File(['filename' => 'test.jpg', 'parent' => $parent]);
 
 		$this->expectException(AbilityException::class);
-		$this->expectExceptionMessage('The template for the file "test/test.jpg" cannot be changed');
+		$this->expectExceptionCode('error.file.changeTemplate');
+		$this->expectExceptionMessageIs('The template for the file "test/test.jpg" cannot be changed');
 
 		FileRules::changeTemplate($file, 'c');
 	}
@@ -281,7 +289,8 @@ class FileRulesTest extends ModelTestCase
 		]);
 
 		$this->expectException(DuplicateException::class);
-		$this->expectExceptionMessage('A file with the name "test.jpg" already exists');
+		$this->expectExceptionCode('error.file.duplicate');
+		$this->expectExceptionMessageIs('A file with the name "test.jpg" already exists');
 
 		$upload = new BaseFile($testImage);
 		FileRules::create($newFile, $upload);
@@ -321,7 +330,8 @@ class FileRulesTest extends ModelTestCase
 		]);
 
 		$this->expectException(DuplicateException::class);
-		$this->expectExceptionMessage('A file with the name "test.jpg" already exists');
+		$this->expectExceptionCode('error.file.duplicate');
+		$this->expectExceptionMessageIs('A file with the name "test.jpg" already exists');
 
 		$upload = new BaseFile(static::FIXTURES . '/cat.jpg');
 		FileRules::create($newFile, $upload);
@@ -334,7 +344,7 @@ class FileRulesTest extends ModelTestCase
 		$upload = new BaseFile(static::FIXTURES . '/test.svg');
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The URL is not allowed in attribute "xlink:href" (line 2)');
+		$this->expectExceptionMessageIs('The URL is not allowed in attribute "xlink:href" (line 2): Unknown URL type');
 
 		FileRules::create($file, $upload);
 	}
@@ -348,7 +358,7 @@ class FileRulesTest extends ModelTestCase
 		$upload = new BaseFile(static::FIXTURES . '/test.jpg');
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('The file cannot be created');
+		$this->expectExceptionCode('error.file.create.permission');
 
 		FileRules::create($file, $upload);
 	}
@@ -361,7 +371,7 @@ class FileRulesTest extends ModelTestCase
 		$file   = new File(['filename' => 'test.jpg', 'parent' => $parent]);
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('The file cannot be deleted');
+		$this->expectExceptionCode('error.file.delete.permission');
 
 		FileRules::delete($file);
 	}
@@ -375,7 +385,7 @@ class FileRulesTest extends ModelTestCase
 		$upload = new BaseFile(static::FIXTURES . '/test.jpg');
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('The file cannot be replaced');
+		$this->expectExceptionCode('error.file.replace.permission');
 
 		FileRules::replace($file, $upload);
 	}
@@ -386,7 +396,8 @@ class FileRulesTest extends ModelTestCase
 		$upload = new BaseFile(static::FIXTURES . '/doc.pdf');
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The uploaded file must be of the same mime type "image/jpeg"');
+		$this->expectExceptionCode('error.file.mime.differs');
+		$this->expectExceptionMessageIs('The uploaded file must be of the same mime type "image/jpeg"');
 
 		FileRules::replace($file, $upload);
 	}
@@ -397,7 +408,7 @@ class FileRulesTest extends ModelTestCase
 		$upload = new BaseFile(static::FIXTURES . '/test.svg');
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The URL is not allowed in attribute "xlink:href" (line 2)');
+		$this->expectExceptionMessageIs('The URL is not allowed in attribute "xlink:href" (line 2): Unknown URL type');
 
 		FileRules::replace($file, $upload);
 	}
@@ -410,7 +421,7 @@ class FileRulesTest extends ModelTestCase
 		$file   = new File(['filename' => 'test.jpg', 'parent' => $parent]);
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('The file cannot be updated');
+		$this->expectExceptionCode('error.file.update.permission');
 
 		FileRules::update($file, []);
 	}
@@ -431,7 +442,8 @@ class FileRulesTest extends ModelTestCase
 		$file   = new File(['filename' => 'test.jpg', 'parent' => $parent]);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The extension "exe" is not allowed');
+		$this->expectExceptionCode('error.file.extension.forbidden');
+		$this->expectExceptionMessageIs('The extension "exe" is not allowed');
 
 		FileRules::validExtension($file, 'exe');
 	}
@@ -451,7 +463,8 @@ class FileRulesTest extends ModelTestCase
 		$file   = new File(['filename' => '.htaccess', 'parent' => $parent]);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('You are not allowed to upload Apache config files');
+		$this->expectExceptionCode('error.file.type.forbidden');
+		$this->expectExceptionMessageIs('You are not allowed to upload Apache config files');
 
 		FileRules::validFile($file, false);
 	}
@@ -482,7 +495,8 @@ class FileRulesTest extends ModelTestCase
 		FileRules::validFile($file, false);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The media type "text/html" is not allowed');
+		$this->expectExceptionCode('error.file.mime.forbidden');
+		$this->expectExceptionMessageIs('The media type "text/html" is not allowed');
 
 		FileRules::validFile($file);
 	}
@@ -503,7 +517,8 @@ class FileRulesTest extends ModelTestCase
 		$file   = new File(['filename' => 'test.jpg', 'parent' => $parent]);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('You are not allowed to upload invisible files');
+		$this->expectExceptionCode('error.file.type.forbidden');
+		$this->expectExceptionMessageIs('You are not allowed to upload invisible files');
 
 		FileRules::validFilename($file, '.gitignore');
 	}
@@ -524,7 +539,8 @@ class FileRulesTest extends ModelTestCase
 		$file   = new File(['filename' => 'test.jpg', 'parent' => $parent]);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The media type "text/html" is not allowed');
+		$this->expectExceptionCode('error.file.mime.forbidden');
+		$this->expectExceptionMessageIs('The media type "text/html" is not allowed');
 
 		FileRules::validMime($file, 'text/html');
 	}

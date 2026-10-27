@@ -44,7 +44,7 @@ class HtmlTest extends TestCase
 		$this->assertStringEqualsFile($sanitized, $html);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The URL points outside of the site index URL');
+		$this->expectExceptionMessageIs('The URL is not allowed in attribute "href" (line 4): The URL points outside of the site index URL');
 		Html::validateFile($fixture);
 	}
 

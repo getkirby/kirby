@@ -485,7 +485,7 @@ class PageRenderTest extends ModelTestCase
 	public function testRenderRepresentationMissing(): void
 	{
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The content representation cannot be found');
+		$this->expectExceptionMessageIs('The content representation cannot be found');
 
 		$page = $this->app->page('representation');
 		$page->render(contentType: 'txt');
@@ -494,7 +494,7 @@ class PageRenderTest extends ModelTestCase
 	public function testRenderTemplateMissing(): void
 	{
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The default template does not exist');
+		$this->expectExceptionCode('error.template.default.notFound');
 
 		$page = $this->app->page('invalid');
 		$page->render();

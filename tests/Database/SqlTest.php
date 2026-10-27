@@ -189,7 +189,7 @@ class SqlTest extends TestCase
 	public function testCreateColumnNoType(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('No column type given for column test');
+		$this->expectExceptionMessageIs('No column type given for column test');
 
 		$this->sql->createColumn('test', []);
 	}
@@ -197,7 +197,7 @@ class SqlTest extends TestCase
 	public function testCreateColumnInvalidType(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Unsupported column type: invalid');
+		$this->expectExceptionMessageIs('Unsupported column type: invalid');
 
 		$this->sql->createColumn('test', ['type' => 'invalid']);
 	}
@@ -449,7 +449,7 @@ class SqlTest extends TestCase
 	public function testSplitIdentifierInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid identifier table.column.invalid');
+		$this->expectExceptionMessageIs('Invalid identifier table.column.invalid');
 
 		$this->sql->splitIdentifier('table', 'table.column.invalid');
 	}
@@ -628,7 +628,7 @@ class SqlTest extends TestCase
 	public function testJoinInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid join type SIDEWAYS JOIN');
+		$this->expectExceptionMessageIs('Invalid join type SIDEWAYS JOIN');
 
 		$this->sql->join('SIDEWAYS JOIN', 'test', 'test.id = another.id');
 	}

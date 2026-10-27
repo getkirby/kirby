@@ -41,7 +41,7 @@ class AuthRoutesTest extends TestCase
 	public function testCodeWithoutCSRF(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid CSRF token');
+		$this->expectExceptionCode('error.csrf.invalid');
 
 		$this->app->api()->call('auth/code', 'POST');
 	}
@@ -80,7 +80,7 @@ class AuthRoutesTest extends TestCase
 	public function testLoginWithoutCSRF(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid CSRF token');
+		$this->expectExceptionCode('error.csrf.invalid');
 
 		$response = $this->app->api()->call('auth/login', 'POST');
 	}

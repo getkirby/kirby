@@ -48,7 +48,8 @@ class AppCachesTest extends TestCase
 	public function testInvalidCacheType(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid cache type "not-exists"');
+		$this->expectExceptionCode('error.cache.type.invalid');
+		$this->expectExceptionMessageIs('Invalid cache type "not-exists"');
 
 		$kirby = $this->app([
 			'options' => [

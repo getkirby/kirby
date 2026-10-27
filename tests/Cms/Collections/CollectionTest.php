@@ -333,7 +333,7 @@ class CollectionTest extends TestCase
 		]);
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Can only group by string values or by providing a callback function');
+		$this->expectExceptionMessageIs('Can only group by string values or by providing a callback function');
 
 		$collection->group(1);
 	}

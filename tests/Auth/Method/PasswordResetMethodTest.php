@@ -88,7 +88,7 @@ class PasswordResetMethodTest extends TestCase
 		$auth = $this->auth(has2fa: true);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The "password-reset" login method cannot be enabled when 2FA is required');
+		$this->expectExceptionMessageIs('The "password-reset" login method cannot be enabled when 2FA is required');
 
 		PasswordResetMethod::isEnabled($auth);
 	}

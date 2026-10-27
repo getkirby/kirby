@@ -111,7 +111,7 @@ class PagesTest extends TestCase
 	public function testAddInvalidObject(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('You must pass a Pages or Page object or an ID of an existing page to the Pages collection');
+		$this->expectExceptionMessageIs('You must pass a Pages or Page object or an ID of an existing page to the Pages collection');
 
 		$site  = new Site();
 		$pages = new Pages();

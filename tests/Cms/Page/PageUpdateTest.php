@@ -261,7 +261,7 @@ class PageUpdateTest extends ModelTestCase
 		$this->assertDirectoryDoesNotExist(static::TMP . '/content/2_b');
 
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('The page was moved during a concurrent operation.');
+		$this->expectExceptionMessageIs('The page was moved during a concurrent operation. Please retry the write with a fresh page instance.');
 
 		try {
 			$stalePage->update(['headline' => 'Test']);

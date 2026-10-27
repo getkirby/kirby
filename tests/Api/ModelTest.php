@@ -18,7 +18,7 @@ class ModelTest extends TestCase
 	public function testConstructInvalidModel(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Invalid model type "stdClass" expected: "nonexists"');
+		$this->expectExceptionMessageIs('Invalid model type "stdClass" expected: "nonexists"');
 
 		new Model(new Api([]), new stdClass(), ['type' => 'nonexists']);
 	}
@@ -26,7 +26,7 @@ class ModelTest extends TestCase
 	public function testConstructMissingModel(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Missing model data');
+		$this->expectExceptionMessageIs('Missing model data');
 
 		new Model(new Api([]), null, []);
 	}
@@ -36,7 +36,7 @@ class ModelTest extends TestCase
 		$model = new Model(new Api([]), [], []);
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Invalid select keys');
+		$this->expectExceptionMessageIs('Invalid select keys');
 		$model->select(0);
 	}
 
@@ -115,7 +115,7 @@ class ModelTest extends TestCase
 		]);
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Invalid sub view: "any"');
+		$this->expectExceptionMessageIs('Invalid sub view: "any"');
 
 		$selection = $model->selection();
 	}

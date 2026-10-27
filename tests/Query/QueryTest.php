@@ -49,7 +49,7 @@ class QueryTest extends TestCase
 		]);
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Query runner "foo" must extend Kirby\Query\Runners\Runner');
+		$this->expectExceptionMessageIs('Query runner "foo" must extend Kirby\Query\Runners\Runner');
 
 		new Query('');
 	}

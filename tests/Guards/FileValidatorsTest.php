@@ -375,7 +375,7 @@ class FileValidatorsTest extends ModelTestCase
 		$upload     = new Upload(static::FIXTURES . '/test.svg');
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The URL is not allowed in attribute "xlink:href" (line 2)');
+		$this->expectExceptionMessageIs('The URL is not allowed in attribute "xlink:href" (line 2): Unknown URL type');
 
 		$validators->validateUpload($upload);
 	}

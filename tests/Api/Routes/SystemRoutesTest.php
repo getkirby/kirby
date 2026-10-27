@@ -186,7 +186,7 @@ class SystemRoutesTest extends TestCase
 	public function testInstallWithoutCSRF(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid CSRF token');
+		$this->expectExceptionCode('error.csrf.invalid');
 
 		$this->app->api()->call('system/install', 'POST');
 	}
@@ -199,7 +199,7 @@ class SystemRoutesTest extends TestCase
 		$this->app->impersonate($user);
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('No access');
+		$this->expectExceptionMessageIs('No access');
 
 		$this->app->api()->call('system/register', 'POST', [
 			'body' => [

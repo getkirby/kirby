@@ -154,7 +154,7 @@ class RouterTest extends TestCase
 		$router = new Router($this->app->panel());
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The data could not be found');
+		$this->expectExceptionMessageIs('The data could not be found');
 
 		$router->response(false);
 	}
@@ -168,7 +168,7 @@ class RouterTest extends TestCase
 		$router = new Router($this->app->panel());
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The data could not be found');
+		$this->expectExceptionMessageIs('The data could not be found');
 
 		$router->response(null);
 	}
@@ -182,7 +182,7 @@ class RouterTest extends TestCase
 		$router = new Router($this->app->panel());
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Test');
+		$this->expectExceptionMessageIs('Test');
 
 		$router->response('Test');
 	}
@@ -200,7 +200,7 @@ class RouterTest extends TestCase
 		$this->assertSame('(:all)', $routes[3]['pattern']);
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Could not find Panel route: foo');
+		$this->expectExceptionMessageIs('Could not find Panel route: foo');
 
 		$routes[3]['action']('foo');
 	}

@@ -51,7 +51,7 @@ class BlueprintFieldTest extends TestCase
 	public function testMissingFieldName(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The field name is missing');
+		$this->expectExceptionMessageIs('The field name is missing');
 
 		$props = Blueprint::fieldProps([]);
 	}
@@ -59,7 +59,7 @@ class BlueprintFieldTest extends TestCase
 	public function testInvalidFieldType(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid field type ("test")');
+		$this->expectExceptionMessageIs('Invalid field type ("test")');
 
 		$props = Blueprint::fieldProps([
 			'name' => 'test',

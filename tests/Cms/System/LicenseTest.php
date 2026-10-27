@@ -552,7 +552,7 @@ class LicenseTest extends TestCase
 		);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The domain for the license is missing');
+		$this->expectExceptionCode('error.license.domain');
 
 		$license->register();
 	}
@@ -565,7 +565,7 @@ class LicenseTest extends TestCase
 		);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Please enter a valid email address');
+		$this->expectExceptionCode('error.license.email');
 
 		$license->register();
 	}
@@ -575,7 +575,7 @@ class LicenseTest extends TestCase
 		$license = new License();
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Please enter a valid license code');
+		$this->expectExceptionCode('error.license.format');
 
 		$license->register();
 	}
@@ -728,7 +728,7 @@ class LicenseTest extends TestCase
 		$license = new License();
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The license could not be verified');
+		$this->expectExceptionCode('error.license.verification');
 
 		$license->save();
 	}

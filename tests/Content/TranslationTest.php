@@ -244,7 +244,7 @@ class TranslationTest extends TestCase
 		);
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('`$translation->parent()` has been deprecated. Please use `$translation->model()` instead');
+		$this->expectExceptionMessageIs('`$translation->parent()` has been deprecated. Please use `$translation->model()` instead');
 
 		$translation->parent();
 	}
@@ -295,7 +295,7 @@ class TranslationTest extends TestCase
 		);
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('`$translation->update()` has been deprecated. Please use `$model->version()->update()` instead');
+		$this->expectExceptionMessageIs('`$translation->update()` has been deprecated. Please use `$model->version()->update()` instead');
 
 		$translation->update();
 	}

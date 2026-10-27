@@ -28,7 +28,7 @@ class ColorFieldTest extends TestCase
 		$this->assertSame('hex', $field->format());
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid format "foo" in color field');
+		$this->expectExceptionMessageIs('Invalid format "foo" in color field');
 
 		$field = $this->field('color', ['format' => 'foo']);
 		$field->format();
@@ -94,7 +94,7 @@ class ColorFieldTest extends TestCase
 		$this->assertSame('picker', $field->mode());
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid mode "foo" in color field');
+		$this->expectExceptionMessageIs('Invalid mode "foo" in color field');
 
 		$field = $this->field('color', ['mode' => 'foo']);
 		$field->mode();

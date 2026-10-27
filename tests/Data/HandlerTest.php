@@ -34,7 +34,7 @@ class HandlerTest extends TestCase
 		$file = static::TMP . '/does-not-exist.json';
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('The file "' . $file . '" does not exist or cannot be read');
+		$this->expectExceptionMessageIs('The file "' . $file . '" does not exist or cannot be read');
 
 		CustomHandler::read($file);
 	}

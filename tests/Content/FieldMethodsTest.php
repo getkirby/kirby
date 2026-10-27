@@ -48,7 +48,7 @@ class FieldMethodsTest extends FieldTest
 	public function test__callNonExistingMethod(): void
 	{
 		$this->expectException(BadMethodCallException::class);
-		$this->expectExceptionMessage('Field method "methoddoesnotexist" does not exist');
+		$this->expectExceptionMessageIs('Field method "methoddoesnotexist" does not exist');
 
 		$field  = $this->field('value');
 		$field->methodDoesNotExist();
@@ -586,7 +586,7 @@ class FieldMethodsTest extends FieldTest
 		$field  = $this->field($json, kirby()->page('files'));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid blocks data for "test" field on parent "files"');
+		$this->expectExceptionMessageIs('Invalid blocks data for "test" field on parent "files"');
 
 		$field->toBlocks();
 	}
@@ -1166,7 +1166,7 @@ class FieldMethodsTest extends FieldTest
 		$field = $this->field($yaml, kirby()->page('files'));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid structure data for "test" field on parent "files"');
+		$this->expectExceptionMessageIs('Invalid structure data for "test" field on parent "files"');
 
 		$field->toStructure();
 	}

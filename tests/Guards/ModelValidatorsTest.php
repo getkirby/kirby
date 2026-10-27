@@ -76,7 +76,8 @@ class ModelValidatorsTest extends ModelTestCase
 	public function testErrorWithData(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Slug length must be less than "10" characters');
+		$this->expectExceptionCode('error.page.slug.maxlength');
+		$this->expectExceptionMessageIs('Slug length must be less than "10" characters');
 
 		$this->validators()->error(
 			key: 'page.slug.maxlength',

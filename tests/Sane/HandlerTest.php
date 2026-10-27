@@ -42,7 +42,7 @@ class HandlerTest extends TestCase
 		$file = $this->fixture('does-not-exist.svg');
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('The file "' . $file . '" does not exist');
+		$this->expectExceptionMessageIs('The file "' . $file . '" does not exist');
 
 		CustomHandler::sanitizeFile($file);
 	}
@@ -57,7 +57,7 @@ class HandlerTest extends TestCase
 	public function testValidateFileError(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The URL is not allowed in attribute "style"');
+		$this->expectExceptionMessageIs('The URL is not allowed in attribute "style" (line 2): The hostname "malicious.com" is not allowed');
 
 		CustomHandler::validateFile($this->fixture('external-source-1.svg'));
 	}
@@ -65,7 +65,7 @@ class HandlerTest extends TestCase
 	public function testValidateFileErrorExternalFile(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The URL points outside of the site index URL');
+		$this->expectExceptionMessageIs('The URL is not allowed in attribute "xlink:href" (line 2): The URL points outside of the site index URL');
 
 		CustomHandler::validateFile($this->fixture('xlink-subfolder.svg'));
 	}
@@ -75,7 +75,7 @@ class HandlerTest extends TestCase
 		$file = $this->fixture('does-not-exist.svg');
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('The file "' . $file . '" does not exist');
+		$this->expectExceptionMessageIs('The file "' . $file . '" does not exist');
 
 		CustomHandler::validateFile($file);
 	}

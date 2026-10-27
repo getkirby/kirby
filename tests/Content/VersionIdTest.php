@@ -27,7 +27,7 @@ class VersionIdTest extends TestCase
 	public function testConstructWithInvalidId(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid Version ID');
+		$this->expectExceptionMessageIs('Invalid Version ID');
 
 		new VersionId('foo');
 	}

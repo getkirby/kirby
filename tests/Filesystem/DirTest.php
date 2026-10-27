@@ -125,7 +125,7 @@ class DirTest extends TestCase
 	public function testCopyMissingSource(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('The directory "/does-not-exist" does not exist');
+		$this->expectExceptionMessageIs('The directory "/does-not-exist" does not exist');
 
 		$src    = '/does-not-exist';
 		$target = static::TMP . '/copy';
@@ -139,7 +139,7 @@ class DirTest extends TestCase
 		$target = static::FIXTURES . '/copy';
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('The target directory "' . $target . '" exists');
+		$this->expectExceptionMessageIs('The target directory "' . $target . '" exists');
 
 		Dir::copy($src, $target);
 	}
@@ -150,7 +150,7 @@ class DirTest extends TestCase
 		$target = '';
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('The target directory "' . $target . '" could not be created');
+		$this->expectExceptionMessageIs('The target directory "' . $target . '" could not be created');
 
 		Dir::copy($src, $target);
 	}
@@ -492,7 +492,7 @@ class DirTest extends TestCase
 		$test = static::TMP . '/test';
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('A file with the name "' . $test . '" already exists');
+		$this->expectExceptionMessageIs('A file with the name "' . $test . '" already exists');
 
 		F::write($test, '');
 		Dir::make($test);
@@ -544,8 +544,7 @@ class DirTest extends TestCase
 		$source = static::TMP . '/source';
 		$link   = static::TMP . '/link';
 
-		$this->expectExceptionMessage('Expection');
-		$this->expectExceptionMessage('The directory "' . $source . '" does not exist and cannot be linked');
+		$this->expectExceptionMessageIs('The directory "' . $source . '" does not exist and cannot be linked');
 
 		Dir::link($source, $link);
 	}
@@ -599,7 +598,7 @@ class DirTest extends TestCase
 		$path = __DIR__ . '/../does-not-exist';
 
 		$this->expectException('Exception');
-		$this->expectExceptionMessage('The directory does not exist at the given path: "' . $path . '"');
+		$this->expectExceptionMessageIs('The directory does not exist at the given path: "' . $path . '"');
 
 		Dir::realpath($path);
 	}
@@ -619,7 +618,7 @@ class DirTest extends TestCase
 		$dir    = __DIR__ . '/../Filesystem';
 
 		$this->expectException('Exception');
-		$this->expectExceptionMessage('The parent directory does not exist: "' . $parent . '"');
+		$this->expectExceptionMessageIs('The parent directory does not exist: "' . $parent . '"');
 
 		Dir::realpath($dir, $parent);
 	}
@@ -630,7 +629,7 @@ class DirTest extends TestCase
 		$dir    = __DIR__ . '/../Filesystem';
 
 		$this->expectException('Exception');
-		$this->expectExceptionMessage('The directory is not within the parent directory');
+		$this->expectExceptionMessageIs('The directory is not within the parent directory');
 
 		Dir::realpath($dir, $parent);
 	}
@@ -642,7 +641,7 @@ class DirTest extends TestCase
 		Dir::make($dir = static::TMP . '/site');
 
 		$this->expectException('Exception');
-		$this->expectExceptionMessage('The directory is not within the parent directory');
+		$this->expectExceptionMessageIs('The directory is not within the parent directory');
 
 		Dir::realpath($dir, $dir);
 	}
@@ -656,7 +655,7 @@ class DirTest extends TestCase
 		Dir::make($dir = static::TMP . '/site2');
 
 		$this->expectException('Exception');
-		$this->expectExceptionMessage('The directory is not within the parent directory');
+		$this->expectExceptionMessageIs('The directory is not within the parent directory');
 
 		Dir::realpath($dir, static::TMP . '/site');
 	}
@@ -693,7 +692,7 @@ class DirTest extends TestCase
 
 		try {
 			$this->expectException(Exception::class);
-			$this->expectExceptionMessage('The directory could not be deleted');
+			$this->expectExceptionMessageIs('The directory could not be deleted');
 			Dir::remove($dir);
 		} finally {
 			// Dir::remove() is expected to throw (fail), so $dir still exists;

@@ -98,7 +98,7 @@ class PHPMailerTest extends TestCase
 	public function testBeforeSendInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('"beforeSend" option return should be instance of PHPMailer\PHPMailer\PHPMailer class');
+		$this->expectExceptionMessageIs('"beforeSend" option return should be instance of PHPMailer\PHPMailer\PHPMailer class');
 
 		$email = $this->_email([
 			'to' => 'someone@gmail.com',
@@ -236,7 +236,7 @@ class PHPMailerTest extends TestCase
 	public function testSMTPTransportSecurityInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Could not automatically detect the "security" protocol from the "port" option, please set it explicitly to "tls" or "ssl".');
+		$this->expectExceptionMessageIs('Could not automatically detect the "security" protocol from the "port" option, please set it explicitly to "tls" or "ssl".');
 
 		$email = $this->_email([
 			'transport' => [

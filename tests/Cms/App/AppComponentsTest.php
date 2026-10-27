@@ -476,7 +476,7 @@ class AppComponentsTest extends TestCase
 		]);
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The model could not be found for "page://invalid" uuid');
+		$this->expectExceptionMessageIs('The model could not be found for "page://invalid" uuid');
 
 		url('page://invalid');
 	}

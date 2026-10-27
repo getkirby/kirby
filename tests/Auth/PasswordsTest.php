@@ -256,7 +256,7 @@ class PasswordsTest extends TestCase
 		$this->assertValid($policy, 'lizard12');
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Needs a lizard');
+		$this->expectExceptionMessageIs('Needs a lizard');
 		$policy->validate('abcdefgh');
 	}
 
@@ -266,7 +266,7 @@ class PasswordsTest extends TestCase
 		});
 
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Passwords rule callback must return boolean');
+		$this->expectExceptionMessageIs('Passwords rule callback must return boolean');
 		$this->assertValid($policy, 'abcdefgh');
 	}
 
@@ -287,7 +287,8 @@ class PasswordsTest extends TestCase
 		$policy = new Passwords(rules: ['minlength' => 12]);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('at least 12 characters long');
+		$this->expectExceptionCode('error.user.password.minlength');
+		$this->expectExceptionMessageIs('Please enter a valid password. Passwords must be at least 12 characters long.');
 		$policy->validate('12345678901');
 	}
 
@@ -344,7 +345,8 @@ class PasswordsTest extends TestCase
 		$policy = new Passwords(rules: ['digits' => true]);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('at least 1 digit(s)');
+		$this->expectExceptionCode('error.user.password.digits');
+		$this->expectExceptionMessageIs('Please enter a valid password. Passwords must contain at least 1 digit(s).');
 		$policy->validate('abcdefgh');
 	}
 
@@ -353,7 +355,8 @@ class PasswordsTest extends TestCase
 		$policy = new Passwords(rules: ['symbols' => 2]);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('at least 2 symbol(s)');
+		$this->expectExceptionCode('error.user.password.symbols');
+		$this->expectExceptionMessageIs('Please enter a valid password. Passwords must contain at least 2 symbol(s).');
 		$policy->validate('abcdefg!');
 	}
 
@@ -422,7 +425,7 @@ class PasswordsTest extends TestCase
 		$policy = new Passwords(rules: '/[/');
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The password policy regex is invalid');
+		$this->expectExceptionMessageIs('The password policy regex is invalid');
 		$policy->validate('abcdefgh');
 	}
 }

@@ -140,7 +140,7 @@ class ApiTest extends TestCase
 		$kirby->method('auth')->willReturn($auth);
 
 		$this->expectException(AuthException::class);
-		$this->expectExceptionMessage('Unauthenticated');
+		$this->expectExceptionMessageIs('Unauthenticated');
 
 		$function = require $this->app->root('kirby') . '/config/api/authentication.php';
 
@@ -160,7 +160,7 @@ class ApiTest extends TestCase
 		$kirby->method('auth')->willReturn($auth);
 
 		$this->expectException(AuthException::class);
-		$this->expectExceptionMessage('Unauthenticated');
+		$this->expectExceptionMessageIs('Unauthenticated');
 
 		$function = require $this->app->root('kirby') . '/config/api/authentication.php';
 
@@ -482,7 +482,7 @@ class ApiTest extends TestCase
 
 		// missing collection
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The collection "not-available" does not exist');
+		$this->expectExceptionMessageIs('The collection "not-available" does not exist');
 
 		$api->collection('not-available', $instance);
 	}
@@ -503,7 +503,7 @@ class ApiTest extends TestCase
 		$this->assertSame('C', $api->data('c', 'C'));
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Api data for "d" does not exist');
+		$this->expectExceptionMessageIs('Api data for "d" does not exist');
 
 		$api->data('d');
 	}
@@ -571,7 +571,7 @@ class ApiTest extends TestCase
 		]);
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The field could not be found');
+		$this->expectExceptionMessageIs('The field could not be found');
 
 		$page = $app->page('test');
 		$app->api()->fieldApi($page, 'nonexists');
@@ -588,7 +588,7 @@ class ApiTest extends TestCase
 		]);
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The field could not be found');
+		$this->expectExceptionMessageIs('The field could not be found');
 
 		$page = $app->page('test');
 		$app->api()->fieldApi($page, '');
@@ -692,7 +692,7 @@ class ApiTest extends TestCase
 		$api = $app->api();
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Not a valid file parent: a/a.jpg');
+		$this->expectExceptionMessageIs('Not a valid file parent: a/a.jpg');
 
 		$api->files('pages/a/files/a.jpg');
 	}
@@ -715,7 +715,8 @@ class ApiTest extends TestCase
 	public function testFileNotFound(): void
 	{
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The file "nope.jpg" cannot be found');
+		$this->expectExceptionCode('error.file.notFound');
+		$this->expectExceptionMessageIs('The file "nope.jpg" cannot be found');
 
 		$this->api->file('site', 'nope.jpg');
 	}
@@ -723,7 +724,8 @@ class ApiTest extends TestCase
 	public function testFileNotReadable(): void
 	{
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The file "protected.jpg" cannot be found');
+		$this->expectExceptionCode('error.file.notFound');
+		$this->expectExceptionMessageIs('The file "protected.jpg" cannot be found');
 
 		$app = $this->app->clone([
 			'blueprints' => [
@@ -783,7 +785,7 @@ class ApiTest extends TestCase
 
 		// missing model
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The model "not-available" does not exist');
+		$this->expectExceptionMessageIs('The model "not-available" does not exist');
 
 		$api->model('not-available', $instance);
 	}
@@ -831,7 +833,8 @@ class ApiTest extends TestCase
 		$this->assertSame($aa, $this->api->page('a+aa'));
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The page "does-not-exist" cannot be found');
+		$this->expectExceptionCode('error.page.notFound');
+		$this->expectExceptionMessageIs('The page "does-not-exist" cannot be found');
 		$this->api->page('does-not-exist');
 	}
 
@@ -908,13 +911,8 @@ class ApiTest extends TestCase
 
 		// model type is not recognized
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid model type: something');
+		$this->expectExceptionMessageIs('Invalid model type: something');
 		$this->assertNull($api->parent('something/something'));
-
-		// model cannot be found
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The page cannot be found');
-		$this->assertNull($api->parent('pages/does-not-exist'));
 	}
 
 	public function testRequestData(): void
@@ -1462,7 +1460,7 @@ class ApiTest extends TestCase
 		$app->impersonate('editor@getkirby.com');
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The site is not accessible');
+		$this->expectExceptionCode('error.site.notAccessible');
 
 		$app->api()->site();
 	}
@@ -1554,7 +1552,7 @@ class ApiTest extends TestCase
 		$this->assertSame('test@getkirby.com', $api->user('test@getkirby.com')->email());
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The user "nope@getkirby.com" cannot be found');
+		$this->expectExceptionMessageIs('The user "nope@getkirby.com" cannot be found');
 		$this->api->user('nope@getkirby.com');
 	}
 
@@ -1593,7 +1591,7 @@ class ApiTest extends TestCase
 		$this->assertSame('editor@getkirby.com', $api->user('editor@getkirby.com')->email());
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The user "admin@getkirby.com" cannot be found');
+		$this->expectExceptionMessageIs('The user "admin@getkirby.com" cannot be found');
 		$this->api->user('admin@getkirby.com');
 	}
 

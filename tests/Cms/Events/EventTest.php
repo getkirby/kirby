@@ -203,7 +203,7 @@ class EventTest extends TestCase
 	public function testUpdateArgumentDoesNotExist(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The argument arg3 does not exist');
+		$this->expectExceptionMessageIs('The argument arg3 does not exist');
 
 		$event = new Event('page.create:after', ['arg1' => 'Arg1', 'arg2' => 123]);
 

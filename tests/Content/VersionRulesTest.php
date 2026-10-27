@@ -44,7 +44,7 @@ class VersionRulesTest extends TestCase
 		);
 
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('The version already exists');
+		$this->expectExceptionMessageIs('The version already exists');
 
 		VersionRules::create($version, [], Language::ensure());
 	}
@@ -126,7 +126,7 @@ class VersionRulesTest extends TestCase
 		);
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Version "changes (de)" does not already exist');
+		$this->expectExceptionMessageIs('Version "changes (de)" does not already exist');
 
 		VersionRules::ensure($version, Language::ensure('de'));
 	}
@@ -141,7 +141,7 @@ class VersionRulesTest extends TestCase
 		);
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Version "changes" does not already exist');
+		$this->expectExceptionMessageIs('Version "changes" does not already exist');
 
 		VersionRules::ensure($version, Language::ensure());
 	}
@@ -156,7 +156,7 @@ class VersionRulesTest extends TestCase
 		);
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Invalid language: fr');
+		$this->expectExceptionMessageIs('Invalid language: fr');
 
 		VersionRules::ensure($version, Language::ensure('fr'));
 	}
@@ -219,7 +219,7 @@ class VersionRulesTest extends TestCase
 		);
 
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('This version is already published');
+		$this->expectExceptionMessageIs('This version is already published');
 
 		VersionRules::publish($version, Language::ensure());
 	}
@@ -256,7 +256,7 @@ class VersionRulesTest extends TestCase
 		Dir::remove($this->model->root());
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Version "latest" does not already exist');
+		$this->expectExceptionMessageIs('Version "latest" does not already exist');
 
 		VersionRules::read($version, Language::ensure());
 	}
@@ -293,7 +293,7 @@ class VersionRulesTest extends TestCase
 		Dir::remove($this->model->root());
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Version "latest" does not already exist');
+		$this->expectExceptionMessageIs('Version "latest" does not already exist');
 
 		VersionRules::touch($version, Language::ensure());
 	}

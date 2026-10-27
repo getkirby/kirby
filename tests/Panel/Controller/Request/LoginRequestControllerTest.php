@@ -168,7 +168,7 @@ class LoginRequestControllerTest extends TestCase
 		]);
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Invalid login route type "unknown"');
+		$this->expectExceptionMessageIs('Invalid login route type "unknown"');
 
 		$controller = new LoginRequestController('unknown', 'password');
 		$controller->load();
@@ -257,7 +257,7 @@ class LoginRequestControllerTest extends TestCase
 		$session->set('kirby.challenge.timeout', time() + 600);
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('No challenge type given');
+		$this->expectExceptionMessageIs('No challenge type given');
 
 		$controller = new LoginRequestController('switch');
 		$controller->load();
@@ -371,7 +371,7 @@ class LoginRequestControllerTest extends TestCase
 		$session->set('kirby.challenge.timeout', time() + 600);
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Login challenge "totp" is not active');
+		$this->expectExceptionMessageIs('Login challenge "totp" is not active');
 
 		$controller = new LoginRequestController('challenge', 'totp');
 		$controller->load();

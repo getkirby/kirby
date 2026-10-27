@@ -72,7 +72,7 @@ class UuidsTest extends TestCase
 		$this->app->clone(['options' => ['content' => ['uuid' => false]]]);
 
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('UUIDs have been disabled via the `content.uuid` config option.');
+		$this->expectExceptionMessageIs('UUIDs have been disabled via the `content.uuid` config option.');
 
 		Uuids::generate();
 	}
@@ -185,7 +185,7 @@ class UuidsTest extends TestCase
 		$this->app->clone(['options' => ['content' => ['uuid' => false]]]);
 
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('UUIDs have been disabled via the `content.uuid` config option.');
+		$this->expectExceptionMessageIs('UUIDs have been disabled via the `content.uuid` config option.');
 
 		Uuids::populate();
 	}

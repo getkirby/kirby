@@ -186,7 +186,7 @@ class PermissionsTest extends TestCase
 	public function testExtendActionsCoreOverride(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The action pages is already a core action');
+		$this->expectExceptionMessageIs('The action pages is already a core action');
 
 		Permissions::$extendedActions = [
 			'pages' => [
@@ -285,7 +285,7 @@ class PermissionsTest extends TestCase
 	public function testForWithNonBoolValueThrowsException(): void
 	{
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage(
+		$this->expectExceptionMessageIs(
 			'The value for the permission "pages.read" must be of type bool, string given'
 		);
 
@@ -297,7 +297,7 @@ class PermissionsTest extends TestCase
 		$p = new Permissions();
 
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage(
+		$this->expectExceptionMessageIs(
 			'The value for the permission "pages" must be of type bool, array given'
 		);
 
@@ -391,7 +391,7 @@ class PermissionsTest extends TestCase
 	public function testUnknownActionWithNonBoolValueStillThrows(): void
 	{
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage(
+		$this->expectExceptionMessageIs(
 			'The value for the permission "access.user" must be of type bool, array given'
 		);
 

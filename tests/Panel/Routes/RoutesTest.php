@@ -114,7 +114,7 @@ class RoutesTest extends TestCase
 		]);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid controller class "Closure" expected child of"Kirby\Panel\Controller\Controller"');
+		$this->expectExceptionMessageIs('Invalid controller class "Closure" expected child of"Kirby\Panel\Controller\Controller"');
 
 		$params['load']();
 	}

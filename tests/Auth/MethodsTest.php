@@ -53,7 +53,7 @@ class MethodsTest extends TestCase
 		$methods = $this->app->auth()->methods();
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Auth method "code" is not enabled');
+		$this->expectExceptionMessageIs('Auth method "code" is not enabled');
 		$methods->authenticate('code', 'marge@simpsons.com', 'secret123');
 	}
 
@@ -62,7 +62,7 @@ class MethodsTest extends TestCase
 		$methods = $this->app->auth()->methods();
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Auth method "foo" is not enabled');
+		$this->expectExceptionMessageIs('Auth method "foo" is not enabled');
 		$methods->authenticate('foo', 'marge@simpsons.com', 'secret123');
 	}
 
@@ -137,7 +137,7 @@ class MethodsTest extends TestCase
 	public function testClassInvalid(): void
 	{
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('No auth method class for: unknown');
+		$this->expectExceptionMessageIs('No auth method class for: unknown');
 
 		$methods = $this->app->auth()->methods();
 		$methods->class('unknown');
@@ -205,7 +205,7 @@ class MethodsTest extends TestCase
 		$methods = $app->auth()->methods();
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The "code" login method cannot be enabled when 2FA is required');
+		$this->expectExceptionMessageIs('The "code" login method cannot be enabled when 2FA is required');
 
 		$methods->enabled();
 	}
@@ -242,7 +242,7 @@ class MethodsTest extends TestCase
 		$methods = $app->auth()->methods();
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('No auth method is enabled');
+		$this->expectExceptionMessageIs('No auth method is enabled');
 
 		$methods->firstEnabled();
 	}

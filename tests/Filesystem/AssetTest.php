@@ -57,7 +57,7 @@ class AssetTest extends TestCase
 	public function testConstructPathTraversal(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Received unexpected asset path');
+		$this->expectExceptionMessageIs('Received unexpected asset path');
 
 		$this->_asset('images/../../logo.svg');
 	}
@@ -65,7 +65,7 @@ class AssetTest extends TestCase
 	public function testConstructPathTraversalWindows(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Received unexpected asset path');
+		$this->expectExceptionMessageIs('Received unexpected asset path');
 
 		$this->_asset('images\..\..\logo.svg');
 	}
@@ -85,7 +85,7 @@ class AssetTest extends TestCase
 
 		// invalid
 		$this->expectException(BadMethodCallException::class);
-		$this->expectExceptionMessage('The method: "foo" does not exist');
+		$this->expectExceptionMessageIs('The method: "foo" does not exist');
 		$asset->foo();
 	}
 
@@ -120,7 +120,7 @@ class AssetTest extends TestCase
 	{
 		$asset = $this->_asset();
 		$this->expectException(BadMethodCallException::class);
-		$this->expectExceptionMessage('The method: "nonexists" does not exist');
+		$this->expectExceptionMessageIs('The method: "nonexists" does not exist');
 		$asset->nonexists();
 	}
 }

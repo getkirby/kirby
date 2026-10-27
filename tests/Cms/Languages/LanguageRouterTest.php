@@ -188,7 +188,7 @@ class LanguageRouterTest extends TestCase
 		]);
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The page "does-not-exist" does not exist');
+		$this->expectExceptionMessageIs('The page "does-not-exist" does not exist');
 
 		$language = $app->language('en');
 		$router   = $language->router()->call('notes/a/slug');

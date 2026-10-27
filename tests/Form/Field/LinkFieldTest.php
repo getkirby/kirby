@@ -101,7 +101,8 @@ class LinkFieldTest extends TestCase
 	public function testOptionsInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid options: foo, bar');
+		$this->expectExceptionCode('error.field.link.options');
+		$this->expectExceptionMessageIs('Invalid options: foo, bar');
 
 		$field = $this->field('link', [
 			'options' => ['page', 'foo', 'bar']
@@ -146,7 +147,7 @@ class LinkFieldTest extends TestCase
 		$validation('http://getkirby.com');
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The link type is not allowed');
+		$this->expectExceptionCode('error.validation.linkType');
 		$validation('abc:/!');
 	}
 }

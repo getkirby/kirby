@@ -57,7 +57,7 @@ class EmailTest extends TestCase
 	public function testRequiredProperty(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('The property "from" is required');
+		$this->expectExceptionMessageIs('The property "from" is required');
 
 		$this->_email(['from' => null]);
 	}
@@ -78,7 +78,7 @@ class EmailTest extends TestCase
 	public function testInvalidAddress(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('"not-valid" is not a valid email address');
+		$this->expectExceptionMessageIs('"not-valid" is not a valid email address');
 
 		$this->_email([
 			'to' => [
@@ -212,7 +212,7 @@ class EmailTest extends TestCase
 		], PHPMailer::class);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('"beforeSend" option return should be instance of PHPMailer\PHPMailer\PHPMailer class');
+		$this->expectExceptionMessageIs('"beforeSend" option return should be instance of PHPMailer\PHPMailer\PHPMailer class');
 		$this->assertSame($mail->beforeSend(), $beforeSend);
 		$this->assertInstanceOf('Closure', $mail->beforeSend());
 

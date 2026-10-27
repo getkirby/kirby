@@ -119,7 +119,7 @@ class FilePreviewTest extends TestCase
 		$file = new File(['filename' => 'test.jpg', 'parent' => $page]);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('File preview handler "Kirby\Panel\Ui\InvalidFilePreview" must extend Kirby\Panel\Ui\FilePreview');
+		$this->expectExceptionMessageIs('File preview handler "Kirby\Panel\Ui\InvalidFilePreview" must extend Kirby\Panel\Ui\FilePreview');
 
 		FilePreview::factory($file);
 	}

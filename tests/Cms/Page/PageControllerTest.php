@@ -112,7 +112,7 @@ class PageControllerTest extends ModelTestCase
 		]);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The returned variable "page" from the controller "default" is not of the required type "Kirby\Cms\Page"');
+		$this->expectExceptionMessageIs('The returned variable "page" from the controller "default" is not of the required type "Kirby\Cms\Page"');
 
 		$page->controller();
 	}

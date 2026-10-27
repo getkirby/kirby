@@ -105,7 +105,7 @@ class StructureTest extends TestCase
 	public function testWithInvalidData(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid data for Kirby\Cms\StructureObject');
+		$this->expectExceptionMessageIs('Invalid data for Kirby\Cms\StructureObject');
 
 		Structure::factory([
 			[

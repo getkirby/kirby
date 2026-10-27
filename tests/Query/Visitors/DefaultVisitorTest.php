@@ -161,7 +161,7 @@ class DefaultVisitorTest extends TestCase
 	{
 		$visitor = new DefaultVisitor();
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Unknown comparison operator: <=>');
+		$this->expectExceptionMessageIs('Unknown comparison operator: <=>');
 		$visitor->comparison(5, '<=>', 6);
 	}
 
@@ -178,7 +178,7 @@ class DefaultVisitorTest extends TestCase
 		$visitor = new DefaultVisitor();
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Invalid global function in query: fox');
+		$this->expectExceptionMessageIs('Invalid global function in query: fox');
 
 		$visitor->function('fox', []);
 	}
@@ -209,7 +209,7 @@ class DefaultVisitorTest extends TestCase
 	public function testLogicalInvalidOperator(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Unknown logical operator: XOR');
+		$this->expectExceptionMessageIs('Unknown logical operator: XOR');
 
 		$visitor = new DefaultVisitor();
 		$visitor->logical(true, 'XOR', fn () => true);

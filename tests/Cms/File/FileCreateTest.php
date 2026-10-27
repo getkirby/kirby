@@ -118,7 +118,7 @@ class FileCreateTest extends ModelTestCase
 	public function testCreateWithoutRequiredProps(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Please provide the "source" and "parent" props for the File');
+		$this->expectExceptionMessageIs('Please provide the "source" and "parent" props for the File');
 
 		File::create([
 			'filename' => 'test.md'

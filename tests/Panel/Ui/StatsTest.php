@@ -65,7 +65,7 @@ class StatsTest extends TestCase
 	public function testFromQueryWithInvalidResult(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid data from stats query. The query must return an array.');
+		$this->expectExceptionMessageIs('Invalid data from stats query. The query must return an array.');
 
 		Stats::from(
 			model: new Page([

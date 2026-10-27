@@ -27,7 +27,7 @@ class FieldsetTest extends TestCase
 	public function testConstructWithMissingType(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The fieldset type is missing');
+		$this->expectExceptionMessageIs('The fieldset type is missing');
 		$fieldset = new Fieldset();
 	}
 

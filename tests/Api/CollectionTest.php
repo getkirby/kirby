@@ -48,7 +48,7 @@ class CollectionTest extends TestCase
 
 		// invalid select
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Invalid select keys');
+		$this->expectExceptionMessageIs('Invalid select keys');
 		$collection->select(0)->toArray();
 	}
 

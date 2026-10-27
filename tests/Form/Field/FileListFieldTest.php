@@ -420,7 +420,7 @@ class FileListFieldTest extends TestCase
 		$field = $this->filelist(['parent' => 'site.find("does-not-exist")']);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The parent for the query "site.find("does-not-exist")" cannot be found in the field "gallery"');
+		$this->expectExceptionMessageIs('The parent for the query "site.find("does-not-exist")" cannot be found in the field "gallery"');
 
 		$field->parentModel();
 	}
@@ -430,7 +430,7 @@ class FileListFieldTest extends TestCase
 		$field = $this->filelist(['parent' => 'site.index']);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The parent for the field "gallery" has to be a page, site, file or user object');
+		$this->expectExceptionMessageIs('The parent for the field "gallery" has to be a page, site, file or user object');
 
 		$field->parentModel();
 	}
@@ -660,7 +660,7 @@ class FileListFieldTest extends TestCase
 		$field = $this->filelist();
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('The field does not support batch actions');
+		$this->expectExceptionMessageIs('The field does not support batch actions');
 
 		$field->deleteSelected(['photography/a.jpg']);
 	}
@@ -673,7 +673,7 @@ class FileListFieldTest extends TestCase
 		]);
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('The "Gallery" field requires at least 3 files');
+		$this->expectExceptionMessageIs('The "Gallery" field requires at least 3 files');
 
 		$field->deleteSelected(['photography/a.jpg']);
 	}

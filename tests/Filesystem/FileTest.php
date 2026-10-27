@@ -111,7 +111,7 @@ class FileTest extends TestCase
 	public function testCopyToExisting(): void
 	{
 		$this->expectException(GlobalException::class);
-		$this->expectExceptionMessage('could not be copied');
+		$this->expectExceptionMessageIs('The file "' . static::TMP . '/test.js" could not be copied');
 
 		$file = $this->_file();
 		$file->copy(static::TMP . '/folder/b.txt');
@@ -120,7 +120,7 @@ class FileTest extends TestCase
 	public function testCopyNonExisting(): void
 	{
 		$this->expectException(GlobalException::class);
-		$this->expectExceptionMessage('could not be copied');
+		$this->expectExceptionMessageIs('The file "' . static::TMP . '/a.txt" could not be copied');
 
 		$file = $this->_file('a.txt');
 		$file->copy(static::TMP . '/b.txt');
@@ -129,7 +129,7 @@ class FileTest extends TestCase
 	public function testCopyFail(): void
 	{
 		$this->expectException(GlobalException::class);
-		$this->expectExceptionMessage('could not be copied');
+		$this->expectExceptionMessageIs('The file "' . static::TMP . '/awesome.txt" could not be copied');
 
 		static::$block[] = 'copy';
 		$file = new File(static::TMP . '/awesome.txt');
@@ -171,7 +171,7 @@ class FileTest extends TestCase
 	public function testDeleteFail(): void
 	{
 		$this->expectException(GlobalException::class);
-		$this->expectExceptionMessage('could not be deleted');
+		$this->expectExceptionMessageIs('The file "' . static::TMP . '/test.js" could not be deleted');
 
 		static::$block[] = 'unlink';
 		$file = $this->_file();
@@ -299,7 +299,8 @@ class FileTest extends TestCase
 	public function testMatchMimeMissing(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('The media type for "doesnotexist.invalid" cannot be detected');
+		$this->expectExceptionCode('error.file.mime.missing');
+		$this->expectExceptionMessageIs('The media type for "doesnotexist.invalid" cannot be detected');
 
 		$this->_file('doesnotexist.invalid')->match(['mime' => ['image/png', 'application/pdf']]);
 	}
@@ -307,7 +308,8 @@ class FileTest extends TestCase
 	public function testMatchMimeInvalid(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Invalid mime type: text/plain');
+		$this->expectExceptionCode('error.file.mime.invalid');
+		$this->expectExceptionMessageIs('Invalid mime type: text/plain');
 
 		// load translations to get the correct exception message
 		App::instance();
@@ -318,7 +320,8 @@ class FileTest extends TestCase
 	public function testMatchExtensionException(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Invalid extension: js');
+		$this->expectExceptionCode('error.file.extension.invalid');
+		$this->expectExceptionMessageIs('Invalid extension: js');
 
 		// load translations to get the correct exception message
 		App::instance();
@@ -329,7 +332,8 @@ class FileTest extends TestCase
 	public function testMatchTypeException(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Invalid file type: code');
+		$this->expectExceptionCode('error.file.type.invalid');
+		$this->expectExceptionMessageIs('Invalid file type: code');
 
 		// load translations to get the correct exception message
 		App::instance();
@@ -383,7 +387,7 @@ class FileTest extends TestCase
 	public function testInvalidModel(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The model object must use the "Kirby\Filesystem\IsFile" trait');
+		$this->expectExceptionMessageIs('The model object must use the "Kirby\Filesystem\IsFile" trait');
 
 		new File([
 			'root' => static::TMP . '/test.js',
@@ -426,7 +430,7 @@ class FileTest extends TestCase
 	public function testMoveToExisting(): void
 	{
 		$this->expectException(GlobalException::class);
-		$this->expectExceptionMessage('could not be moved');
+		$this->expectExceptionMessageIs('The file: "' . static::TMP . '/test.js" could not be moved to: "' . static::TMP . '/folder/b.txt"');
 
 		$file = $this->_file();
 		$file->move(static::TMP . '/folder/b.txt');
@@ -435,7 +439,7 @@ class FileTest extends TestCase
 	public function testMoveNonExisting(): void
 	{
 		$this->expectException(GlobalException::class);
-		$this->expectExceptionMessage('could not be moved');
+		$this->expectExceptionMessageIs('The file: "' . static::TMP . '/a.txt" could not be moved to: "' . static::TMP . '/b.txt"');
 
 		$file = $this->_file('a.txt');
 		$file->move(static::TMP . '/b.txt');
@@ -444,7 +448,7 @@ class FileTest extends TestCase
 	public function testMoveFail(): void
 	{
 		$this->expectException(GlobalException::class);
-		$this->expectExceptionMessage('could not be moved');
+		$this->expectExceptionMessageIs('The file: "' . static::TMP . '/awesome.txt" could not be moved to: "' . static::TMP . '/moved.txt"');
 
 		static::$block[] = 'rename';
 		$file = new File(static::TMP . '/awesome.txt');
@@ -505,7 +509,7 @@ class FileTest extends TestCase
 	public function testRenameFail(): void
 	{
 		$this->expectException(GlobalException::class);
-		$this->expectExceptionMessage('The file: "' . static::TMP . '/test.js" could not be renamed to: "awesome"');
+		$this->expectExceptionMessageIs('The file: "' . static::TMP . '/test.js" could not be renamed to: "awesome"');
 
 		static::$block[] = 'rename';
 		$file = $this->_file();
@@ -563,7 +567,7 @@ class FileTest extends TestCase
 
 		// default mode
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Missing handler for type: "js"');
+		$this->expectExceptionMessageIs('Missing handler for type: "js"');
 
 		$file->sanitizeContents();
 	}
@@ -585,7 +589,7 @@ class FileTest extends TestCase
 		$file = $this->_file('does-not-exist.txt');
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('could not be hashed');
+		$this->expectExceptionMessageIs('The file "' . static::TMP . '/does-not-exist.txt" could not be hashed');
 
 		$file->sha1();
 	}
@@ -661,7 +665,7 @@ class FileTest extends TestCase
 	public function testValidateContentsWrongType(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The namespace "http://www.w3.org/2000/svg" is not allowed (around line 2)');
+		$this->expectExceptionMessageIs('The namespace "http://www.w3.org/2000/svg" is not allowed (around line 2)');
 
 		$file = new File(static::TMP . '/real.svg');
 		$file->validateContents('xml');
@@ -676,7 +680,7 @@ class FileTest extends TestCase
 
 		// default mode
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Missing handler for type: "js"');
+		$this->expectExceptionMessageIs('Missing handler for type: "js"');
 
 		$file->validateContents();
 	}
@@ -696,7 +700,7 @@ class FileTest extends TestCase
 	public function testWriteUnwritable(): void
 	{
 		$this->expectException(GlobalException::class);
-		$this->expectExceptionMessage('is not writable');
+		$this->expectExceptionMessageIs('The file "' . static::TMP . '/unwritable.txt" is not writable');
 
 		$file = new File(static::TMP . '/unwritable.txt');
 		$file->write('test');
@@ -707,7 +711,7 @@ class FileTest extends TestCase
 	public function testWriteFail(): void
 	{
 		$this->expectException(GlobalException::class);
-		$this->expectExceptionMessage('could not be written');
+		$this->expectExceptionMessageIs('The file "' . static::TMP . '/test.txt" could not be written');
 
 		static::$block[] = 'file_put_contents';
 		$file = new File(static::TMP . '/test.txt');

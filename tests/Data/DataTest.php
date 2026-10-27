@@ -49,7 +49,7 @@ class DataTest extends TestCase
 	public function testMissingHandler(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Missing handler for type: "foo"');
+		$this->expectExceptionMessageIs('Missing handler for type: "foo"');
 
 		Data::handler('foo');
 	}
@@ -59,7 +59,7 @@ class DataTest extends TestCase
 		Data::$handlers['invalid'] = CustomInvalidHandler::class;
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Handler for type: "invalid" needs to extend Kirby\Data\Handler');
+		$this->expectExceptionMessageIs('Handler for type: "invalid" needs to extend Kirby\Data\Handler');
 
 		Data::handler('invalid');
 	}
@@ -83,7 +83,7 @@ class DataTest extends TestCase
 	{
 		// decode invalid integer value
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid ' . strtoupper($handler) . ' data; please pass a string');
+		$this->expectExceptionMessageIs('Invalid ' . strtoupper($handler) . ' data; please pass a string');
 		Data::decode(1, $handler);
 	}
 
@@ -92,7 +92,7 @@ class DataTest extends TestCase
 	{
 		// decode invalid object value
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid ' . strtoupper($handler) . ' data; please pass a string');
+		$this->expectExceptionMessageIs('Invalid ' . strtoupper($handler) . ' data; please pass a string');
 		Data::decode(new stdClass(), $handler);
 	}
 
@@ -101,7 +101,7 @@ class DataTest extends TestCase
 	{
 		// decode invalid boolean value
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid ' . strtoupper($handler) . ' data; please pass a string');
+		$this->expectExceptionMessageIs('Invalid ' . strtoupper($handler) . ' data; please pass a string');
 		Data::decode(true, $handler);
 	}
 
@@ -153,7 +153,7 @@ class DataTest extends TestCase
 	public function testReadInvalid(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Missing handler for type: "foo"');
+		$this->expectExceptionMessageIs('Missing handler for type: "foo"');
 
 		Data::read(static::TMP . '/data.foo');
 	}
@@ -167,7 +167,7 @@ class DataTest extends TestCase
 	public function testWriteInvalid(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Missing handler for type: "foo"');
+		$this->expectExceptionMessageIs('Missing handler for type: "foo"');
 
 		$data = [
 			'name'  => 'Homer Simpson',

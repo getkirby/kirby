@@ -63,7 +63,7 @@ class AccountViewControllerTest extends UserViewControllerTest
 		$this->app->impersonate('editor@getkirby.com');
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The user cannot be found');
+		$this->expectExceptionCode('error.user.undefined');
 		AccountViewController::factory();
 	}
 }

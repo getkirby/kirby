@@ -531,7 +531,7 @@ class BlocksFieldTest extends TestCase
 
 		// invalid fieldset calling
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The fieldset not-exists could not be found');
+		$this->expectExceptionMessageIs('The fieldset not-exists could not be found');
 
 		$field->fieldset('not-exists');
 	}

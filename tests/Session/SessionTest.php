@@ -701,7 +701,7 @@ class SessionTest extends TestCase
 	public function testTimeToTimestampInvalidTimeString(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid time string: not a real date');
+		$this->expectExceptionMessageIs('Invalid time string: not a real date');
 
 		$reflector = new ReflectionClass(Session::class);
 		$timeToTimestamp = $reflector->getMethod('timeToTimestamp');
@@ -754,7 +754,7 @@ class SessionTest extends TestCase
 	public function testInitMissingKey(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid argument "$token" in method "Token::parse"');
+		$this->expectExceptionMessageIs('Invalid argument "$token" in method "Token::parse"');
 
 		$token = '9999999999.valid';
 		new Session($this->sessions, $token, []);

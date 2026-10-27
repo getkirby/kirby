@@ -94,7 +94,7 @@ class UsersTest extends TestCase
 	public function testAddInvalidObject(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('You must pass a Users or User object or an ID of an existing user to the Users collection');
+		$this->expectExceptionMessageIs('You must pass a Users or User object or an ID of an existing user to the Users collection');
 
 		$site  = new Site();
 		$users = new Users();

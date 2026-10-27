@@ -364,7 +364,7 @@ class CollectionTest extends TestCase
 		$collection = new Collection(['a' => 'A']);
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Invalid grouping value for key: a');
+		$this->expectExceptionMessageIs('Invalid grouping value for key: a');
 
 		$collection->group(fn ($item) => false);
 	}
@@ -374,7 +374,7 @@ class CollectionTest extends TestCase
 		$collection = new Collection(['a' => 'A']);
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('You cannot group by arrays or objects');
+		$this->expectExceptionMessageIs('You cannot group by arrays or objects');
 
 		$collection->group(fn ($item) => ['a' => 'b']);
 	}
@@ -384,7 +384,7 @@ class CollectionTest extends TestCase
 		$collection = new Collection(['a' => 'A']);
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('You cannot group by arrays or objects');
+		$this->expectExceptionMessageIs('You cannot group by arrays or objects');
 
 		$collection->group(fn ($item) => new Obj(['a' => 'b']));
 	}
@@ -449,7 +449,7 @@ class CollectionTest extends TestCase
 		$collection = new Collection(['a' => 'A']);
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Can only group by string values or by providing a callback function');
+		$this->expectExceptionMessageIs('Can only group by string values or by providing a callback function');
 
 		$collection->group(1);
 	}

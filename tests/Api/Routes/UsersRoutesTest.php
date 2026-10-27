@@ -255,7 +255,7 @@ class UsersRoutesTest extends TestCase
 	public function testChangePasswordMissingCurrentPassword(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Please enter a valid password. Passwords must be at least 8 characters long.');
+		$this->expectExceptionCode('error.user.password.invalid');
 
 		$this->app->impersonate('admin@getkirby.com');
 
@@ -269,7 +269,7 @@ class UsersRoutesTest extends TestCase
 	public function testChangePasswordWrongCurrentPassword(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Wrong password');
+		$this->expectExceptionCode('error.user.password.wrong');
 
 		$this->app->impersonate('admin@getkirby.com');
 
@@ -287,7 +287,7 @@ class UsersRoutesTest extends TestCase
 		// changing the password of a different user
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Please enter a valid password. Passwords must be at least 8 characters long.');
+		$this->expectExceptionCode('error.user.password.invalid');
 
 		$this->app->impersonate('admin@getkirby.com');
 		$this->app->session()->set(
@@ -325,7 +325,7 @@ class UsersRoutesTest extends TestCase
 		$app = $this->setUpAppWithoutUserAccess();
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The user "restricted@getkirby.com" cannot be found');
+		$this->expectExceptionMessageIs('The user "restricted@getkirby.com" cannot be found');
 
 		$app->api()->call('users/restricted@getkirby.com', 'DELETE');
 	}
@@ -475,7 +475,7 @@ class UsersRoutesTest extends TestCase
 		$app = $this->setUpAppWithoutUserAccess();
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The user "restricted@getkirby.com" cannot be found');
+		$this->expectExceptionMessageIs('The user "restricted@getkirby.com" cannot be found');
 
 		$app->api()->call('users/restricted@getkirby.com');
 	}
@@ -642,7 +642,7 @@ class UsersRoutesTest extends TestCase
 		$app = $this->setUpAppWithoutUserAccess();
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The user "restricted@getkirby.com" cannot be found');
+		$this->expectExceptionMessageIs('The user "restricted@getkirby.com" cannot be found');
 
 		$app->api()->call('users/restricted@getkirby.com', 'PATCH', [
 			'body' => [

@@ -152,7 +152,7 @@ class HomeTest extends TestCase
 		$this->app->impersonate('test@getkirby.com');
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('There’s no available Panel page to redirect to');
+		$this->expectExceptionMessageIs('There’s no available Panel page to redirect to');
 
 		$home = $this->app->panel()->home();
 		$home->alternative();
@@ -353,7 +353,7 @@ class HomeTest extends TestCase
 		$this->app->impersonate('test@getkirby.com');
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('External URLs are not allowed for Panel redirects');
+		$this->expectExceptionMessageIs('External URLs are not allowed for Panel redirects');
 
 		$home = $this->app->panel()->home();
 		$home->url();

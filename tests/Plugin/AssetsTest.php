@@ -168,7 +168,7 @@ class AssetsTest extends TestCase
 		$assets = new Assets();
 
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('This assets collection has no associated plugin');
+		$this->expectExceptionMessageIs('This assets collection has no associated plugin');
 
 		$assets->plugin();
 	}

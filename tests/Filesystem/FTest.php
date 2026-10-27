@@ -163,7 +163,7 @@ class FTest extends TestCase
 		$path = __DIR__ . '/../does-not-exist.php';
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('The file does not exist at the given path: "' . $path . '"');
+		$this->expectExceptionMessageIs('The file does not exist at the given path: "' . $path . '"');
 
 		F::realpath($path);
 	}
@@ -183,7 +183,7 @@ class FTest extends TestCase
 		$file   = __DIR__ . '/../Filesystem/FTest.php';
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('The parent directory does not exist: "' . $parent . '"');
+		$this->expectExceptionMessageIs('The parent directory does not exist: "' . $parent . '"');
 
 		F::realpath($file, $parent);
 	}
@@ -194,7 +194,7 @@ class FTest extends TestCase
 		$file   = __DIR__ . '/../Filesystem/FTest.php';
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('The file is not within the parent directory');
+		$this->expectExceptionMessageIs('The file is not within the parent directory');
 
 		F::realpath($file, $parent);
 	}
@@ -208,7 +208,7 @@ class FTest extends TestCase
 		F::write($file = static::TMP . '/site2/secret.txt', 'secret');
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('The file is not within the parent directory');
+		$this->expectExceptionMessageIs('The file is not within the parent directory');
 
 		F::realpath($file, static::TMP . '/site');
 	}
@@ -294,8 +294,7 @@ class FTest extends TestCase
 		$src  = static::TMP . '/a.txt';
 		$link = static::TMP . '/b.txt';
 
-		$this->expectExceptionMessage('Expection');
-		$this->expectExceptionMessage('The file "' . $src . '" does not exist and cannot be linked');
+		$this->expectExceptionMessageIs('The file "' . $src . '" does not exist and cannot be linked');
 
 		F::link($src, $link);
 	}
@@ -341,7 +340,7 @@ class FTest extends TestCase
 	public function testLoadAccidentalOutput(): void
 	{
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Disallowed output from file file.php:123, possible accidental whitespace?');
+		$this->expectExceptionMessageIs('Disallowed output from file file.php:123, possible accidental whitespace?');
 
 		F::write($file = static::TMP . '/test.php', '<?php Kirby\Http\HeadersSent::$value = true; return "foo";');
 
@@ -351,7 +350,7 @@ class FTest extends TestCase
 	public function testLoadAccidentalWhitespace(): void
 	{
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Disallowed output, possible accidental whitespace?');
+		$this->expectExceptionMessageIs('Disallowed output, possible accidental whitespace?');
 		$this->expectOutputString(' ');
 
 		F::write($file = static::TMP . '/test.php', ' <?php return "foo";');
@@ -404,7 +403,7 @@ class FTest extends TestCase
 		$this->assertFalse(class_exists('FTest\\C'));
 
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Disallowed output from file file.php:123, possible accidental whitespace?');
+		$this->expectExceptionMessageIs('Disallowed output from file file.php:123, possible accidental whitespace?');
 		class_exists('FTest\\Output');
 	}
 
@@ -429,7 +428,7 @@ class FTest extends TestCase
 	public function testLoadOnceAccidentalOutput(): void
 	{
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Disallowed output from file file.php:123, possible accidental whitespace?');
+		$this->expectExceptionMessageIs('Disallowed output from file file.php:123, possible accidental whitespace?');
 
 		F::write($file = static::TMP . '/test4.php', '<?php Kirby\Http\HeadersSent::$value = true; return "foo";');
 

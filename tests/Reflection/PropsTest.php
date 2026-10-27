@@ -186,7 +186,7 @@ class PropsTest extends TestCase
 	public function testAllWithExportCollision(): void
 	{
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('The props "a" and "b" of Kirby\Reflection\PropsTestCollisionClass are both exported as "b"');
+		$this->expectExceptionMessageIs('The props "a" and "b" of Kirby\Reflection\PropsTestCollisionClass are both exported as "b"');
 
 		new Props(PropsTestCollisionClass::class)->all();
 	}
@@ -204,7 +204,7 @@ class PropsTest extends TestCase
 	public function testAllWithInvalidGetter(): void
 	{
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('The getter "missing" for the prop "a" must be a non-static method');
+		$this->expectExceptionMessageIs('The getter "missing" for the prop "a" must be a non-static method of Kirby\\Reflection\\PropsTestInvalidGetterClass without required arguments');
 
 		new Props(PropsTestInvalidGetterClass::class)->all();
 	}
@@ -212,7 +212,7 @@ class PropsTest extends TestCase
 	public function testAllWithInvalidSetter(): void
 	{
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('The setter "setA" for the prop "a" must be a non-static method of Kirby\Reflection\PropsTestInvalidSetterClass that accepts the value as its only required argument');
+		$this->expectExceptionMessageIs('The setter "setA" for the prop "a" must be a non-static method of Kirby\Reflection\PropsTestInvalidSetterClass that accepts the value as its only required argument');
 
 		new Props(PropsTestInvalidSetterClass::class)->all();
 	}
@@ -259,7 +259,7 @@ class PropsTest extends TestCase
 	public function testSetWithClassName(): void
 	{
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Props can only be set or exported for an object');
+		$this->expectExceptionMessageIs('Props can only be set or exported for an object');
 
 		new Props(PropsTestSetterClass::class)->set('toggle', true);
 	}
@@ -297,7 +297,7 @@ class PropsTest extends TestCase
 	public function testSetWithUnknownProp(): void
 	{
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('The prop "foo" does not exist');
+		$this->expectExceptionMessageIs('The prop "foo" does not exist');
 
 		new Props(new PropsTestSetterClass())->set('foo', 'bar');
 	}
@@ -391,7 +391,7 @@ class PropsTest extends TestCase
 	public function testValuesWithClassName(): void
 	{
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Props can only be set or exported for an object');
+		$this->expectExceptionMessageIs('Props can only be set or exported for an object');
 
 		new Props(PropsTestClass::class)->values();
 	}

@@ -52,7 +52,7 @@ class ScopeTest extends TestCase
 	public function testAccessWithScalar(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Cannot access "bar" on string');
+		$this->expectExceptionMessageIs('Cannot access "bar" on string');
 		Scope::access('foo', 'bar');
 	}
 
@@ -89,7 +89,7 @@ class ScopeTest extends TestCase
 	public function testAccessWithoutNullSafe(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Cannot access "bar" on NULL');
+		$this->expectExceptionMessageIs('Cannot access "bar" on NULL');
 		Scope::access(null, 'bar', false);
 	}
 

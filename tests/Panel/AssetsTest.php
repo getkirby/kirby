@@ -296,7 +296,7 @@ class AssetsTest extends TestCase
 		$assets = new Assets();
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid panel.favicon option');
+		$this->expectExceptionMessageIs('Invalid panel.favicon option');
 
 		$assets->favicons();
 	}

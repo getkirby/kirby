@@ -82,7 +82,7 @@ class ComponentTest extends TestCase
 		];
 
 		$this->expectException(TypeError::class);
-		$this->expectExceptionMessage('Invalid value for "prop"');
+		$this->expectExceptionMessageIs('Invalid value for "prop"');
 
 		new Component('test', ['prop' => [1, 2, 3]]);
 	}
@@ -98,7 +98,7 @@ class ComponentTest extends TestCase
 		];
 
 		$this->expectException(ArgumentCountError::class);
-		$this->expectExceptionMessage('Please provide a value for "prop"');
+		$this->expectExceptionMessageIs('Please provide a value for "prop"');
 
 		new Component('test');
 	}
@@ -289,7 +289,7 @@ class ComponentTest extends TestCase
 	public function testInvalidType(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Undefined component type: test');
+		$this->expectExceptionMessageIs('Undefined component type: test');
 
 		new Component('test');
 	}
@@ -298,7 +298,7 @@ class ComponentTest extends TestCase
 	{
 		Component::$types = ['foo' => Component::class];
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage(
+		$this->expectExceptionMessageIs(
 			'The "foo" component is defined by the class ' .
 			Component::class . ' and cannot be extended with the array ' .
 			'syntax. Extend the class instead.'
@@ -311,7 +311,7 @@ class ComponentTest extends TestCase
 	{
 		Component::$types = ['foo' => 'bar'];
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Component definition bar does not exist');
+		$this->expectExceptionMessageIs('Component definition bar does not exist');
 
 		Component::load('foo');
 	}

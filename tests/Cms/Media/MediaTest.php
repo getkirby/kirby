@@ -238,7 +238,7 @@ class MediaTest extends TestCase
 		$file = $this->app->file('test.jpg');
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The thumbnail configuration could not be found');
+		$this->expectExceptionMessageIs('The thumbnail configuration could not be found');
 
 		// invalid with no job file
 		$thumb = Media::thumb($file, $file->mediaHash(), $file->filename());
@@ -259,7 +259,7 @@ class MediaTest extends TestCase
 		F::write($file->mediaDir() . '/.jobs/' . $file->filename() . '.json', '{}');
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Incomplete thumbnail configuration');
+		$this->expectExceptionMessageIs('Incomplete thumbnail configuration');
 
 		$thumb = Media::thumb($file, $file->mediaHash(), $file->filename());
 		$this->assertFalse($thumb);
@@ -314,7 +314,8 @@ class MediaTest extends TestCase
 		F::write($file->mediaDir() . '/.jobs/' . $file->filename() . '.json', $jobString);
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('File not found');
+		// the message ends with a random temporary file name
+		$this->expectExceptionMessageIsOrContains('File not found');
 
 		Media::thumb($site, $file->mediaHash(), $file->filename());
 	}
@@ -383,7 +384,7 @@ class MediaTest extends TestCase
 		// before it is appended to the job/thumb path,
 		// so it never reaches `$outside`
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The thumbnail configuration could not be found');
+		$this->expectExceptionMessageIs('The thumbnail configuration could not be found');
 
 		Media::thumb('content', $hash, $traversal);
 	}

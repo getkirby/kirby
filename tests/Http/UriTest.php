@@ -200,7 +200,7 @@ class UriTest extends TestCase
 	public function testInvalidScheme(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid URL scheme: abc');
+		$this->expectExceptionMessageIs('Invalid URL scheme: abc');
 
 		$url = new Uri();
 		$url->setScheme('abc');
@@ -257,7 +257,7 @@ class UriTest extends TestCase
 	public function testInvalidPortFormat2(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid port format: 12010210210');
+		$this->expectExceptionMessageIs('Invalid port format: 12010210210');
 
 		$url = new Uri(['port' => 12010210210]);
 	}

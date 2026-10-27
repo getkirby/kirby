@@ -154,7 +154,7 @@ class JsonResponseTest extends TestCase
 		]);
 
 		$this->expectException(KirbyException::class);
-		$this->expectExceptionMessage('Error message');
+		$this->expectExceptionMessageIs('Error message');
 
 		JsonResponse::from(new KirbyException('Error message'));
 	}
@@ -162,7 +162,7 @@ class JsonResponseTest extends TestCase
 	public function testFromException(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Error message');
+		$this->expectExceptionMessageIs('Error message');
 
 		JsonResponse::from(new Exception('Error message'));
 	}
@@ -178,7 +178,7 @@ class JsonResponseTest extends TestCase
 	public function testFromString(): void
 	{
 		$this->expectException(KirbyException::class);
-		$this->expectExceptionMessage('test');
+		$this->expectExceptionMessageIs('test');
 
 		JsonResponse::from('test');
 	}
@@ -194,7 +194,7 @@ class JsonResponseTest extends TestCase
 	public function testFromEmptyArray(): void
 	{
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The response is empty');
+		$this->expectExceptionMessageIs('The response is empty');
 
 		JsonResponse::from([]);
 	}
@@ -202,7 +202,7 @@ class JsonResponseTest extends TestCase
 	public function testFromNull(): void
 	{
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The data could not be found');
+		$this->expectExceptionMessageIs('The data could not be found');
 
 		JsonResponse::from(null);
 	}
@@ -210,7 +210,7 @@ class JsonResponseTest extends TestCase
 	public function testFromInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid response');
+		$this->expectExceptionMessageIs('Invalid response');
 
 		JsonResponse::from(5);
 	}

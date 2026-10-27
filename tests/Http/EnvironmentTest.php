@@ -367,7 +367,7 @@ class EnvironmentTest extends TestCase
 	public function testDisallowFromInvalidSubfolders(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The environment is not allowed');
+		$this->expectExceptionMessageIs('The environment is not allowed');
 
 		new Environment([
 			'allowed' => [
@@ -506,7 +506,7 @@ class EnvironmentTest extends TestCase
 	public function testHostForbidden(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The environment is not allowed');
+		$this->expectExceptionMessageIs('The environment is not allowed');
 
 		new Environment(
 			[
@@ -690,7 +690,7 @@ class EnvironmentTest extends TestCase
 	public function testHttpsForbidden(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The environment is not allowed');
+		$this->expectExceptionMessageIs('The environment is not allowed');
 
 		new Environment(
 			[
@@ -809,7 +809,7 @@ class EnvironmentTest extends TestCase
 	public function testInvalidAllowList(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid allow list setup for base URLs');
+		$this->expectExceptionMessageIs('Invalid allow list setup for base URLs');
 
 		new Environment([
 			'allowed' => [new stdClass()]
@@ -1244,7 +1244,7 @@ class EnvironmentTest extends TestCase
 	public function testPortForbidden(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The environment is not allowed');
+		$this->expectExceptionMessageIs('The environment is not allowed');
 
 		new Environment(
 			[

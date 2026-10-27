@@ -36,7 +36,7 @@ class LanguageTest extends TestCase
 	public function testConstructNoCode(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The property "code" is required');
+		$this->expectExceptionMessageIs('The property "code" is required');
 
 		new Language([]);
 	}
@@ -110,7 +110,7 @@ class LanguageTest extends TestCase
 		]);
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to create a language');
+		$this->expectExceptionCode('error.language.create.permission');
 
 		$app->impersonate('test@getkirby.com');
 		Language::create([
@@ -121,7 +121,7 @@ class LanguageTest extends TestCase
 	public function testCreateWithoutLoggedUser(): void
 	{
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to create a language');
+		$this->expectExceptionCode('error.language.create.permission');
 
 		Language::create([
 			'code' => 'en'
@@ -194,7 +194,7 @@ class LanguageTest extends TestCase
 		]);
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to delete the language');
+		$this->expectExceptionCode('error.language.delete.permission');
 
 		$app->impersonate('test@getkirby.com');
 		$language = Language::create(['code' => 'en']);
@@ -207,7 +207,7 @@ class LanguageTest extends TestCase
 		$language = Language::create(['code' => 'en']);
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to delete the language');
+		$this->expectExceptionCode('error.language.delete.permission');
 
 		// unimpersonate and test the method
 		$this->app->impersonate();
@@ -933,7 +933,7 @@ class LanguageTest extends TestCase
 		$this->assertFalse($app->language('en')->isDefault());
 
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Please select another language to be the primary language');
+		$this->expectExceptionMessageIs('Please select another language to be the primary language');
 
 		$app->language('de')->update(['default' => false]);
 	}
@@ -1001,7 +1001,7 @@ class LanguageTest extends TestCase
 		]);
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to update the language');
+		$this->expectExceptionCode('error.language.update.permission');
 
 		$app->impersonate('test@getkirby.com');
 
@@ -1015,7 +1015,7 @@ class LanguageTest extends TestCase
 		$language = Language::create(['code' => 'en']);
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to update the language');
+		$this->expectExceptionCode('error.language.update.permission');
 
 		// unimpersonate and test the method
 		$this->app->impersonate();

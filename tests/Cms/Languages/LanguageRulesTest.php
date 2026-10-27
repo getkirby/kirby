@@ -68,7 +68,7 @@ class LanguageRulesTest extends TestCase
 		]);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Please enter a valid code for the language');
+		$this->expectExceptionCode('error.language.code');
 
 		LanguageRules::create($language);
 	}
@@ -83,7 +83,7 @@ class LanguageRulesTest extends TestCase
 		]);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Please enter a valid name for the language');
+		$this->expectExceptionCode('error.language.name');
 
 		LanguageRules::create($language);
 	}
@@ -109,7 +109,8 @@ class LanguageRulesTest extends TestCase
 		]);
 
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('"English" (en) is already set as the default language');
+		$this->expectExceptionCode('error.language.create.default');
+		$this->expectExceptionMessageIs('"English" (en) is already set as the default language');
 
 		LanguageRules::create($language);
 	}
@@ -144,7 +145,7 @@ class LanguageRulesTest extends TestCase
 		]);
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to create a language');
+		$this->expectExceptionCode('error.language.create.permission');
 
 		LanguageRules::create($language);
 	}
@@ -159,7 +160,7 @@ class LanguageRulesTest extends TestCase
 		]);
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to create a language');
+		$this->expectExceptionCode('error.language.create.permission');
 
 		LanguageRules::create($language);
 	}
@@ -191,7 +192,7 @@ class LanguageRulesTest extends TestCase
 		$this->assertFalse($language->isDeletable());
 
 		$this->expectException(AbilityException::class);
-		$this->expectExceptionMessage('The main language in a single-language installation cannot be deleted');
+		$this->expectExceptionCode('error.language.delete.single');
 
 		LanguageRules::delete($language);
 	}
@@ -204,7 +205,7 @@ class LanguageRulesTest extends TestCase
 		]);
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to delete the language');
+		$this->expectExceptionCode('error.language.delete.permission');
 
 		LanguageRules::delete($language);
 	}
@@ -219,7 +220,7 @@ class LanguageRulesTest extends TestCase
 		]);
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to delete the language');
+		$this->expectExceptionCode('error.language.delete.permission');
 
 		LanguageRules::delete($language);
 	}
@@ -248,7 +249,7 @@ class LanguageRulesTest extends TestCase
 		]);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Please enter a valid code for the language');
+		$this->expectExceptionCode('error.language.code');
 
 		LanguageRules::update($language);
 	}
@@ -263,7 +264,7 @@ class LanguageRulesTest extends TestCase
 		]);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Please enter a valid name for the language');
+		$this->expectExceptionCode('error.language.name');
 
 		LanguageRules::update($language);
 	}
@@ -276,7 +277,7 @@ class LanguageRulesTest extends TestCase
 		]);
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to update the language');
+		$this->expectExceptionCode('error.language.update.permission');
 
 		LanguageRules::update($language);
 	}
@@ -291,7 +292,7 @@ class LanguageRulesTest extends TestCase
 		]);
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to update the language');
+		$this->expectExceptionCode('error.language.update.permission');
 
 		LanguageRules::update($language);
 	}
@@ -321,7 +322,7 @@ class LanguageRulesTest extends TestCase
 		]);
 
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Please select another language to be the primary language');
+		$this->expectExceptionMessageIs('Please select another language to be the primary language');
 
 		LanguageRules::update($newLanguage, $oldLanguage);
 	}

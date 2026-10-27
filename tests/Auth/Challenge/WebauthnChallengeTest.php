@@ -156,7 +156,7 @@ class WebauthnChallengeTest extends TestCase
 		$challenge = new WebauthnChallenge($this->user, 'login', 600);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid passkey data');
+		$this->expectExceptionCode('error.user.webauthn.invalid');
 
 		$challenge->verify('not-valid-json', new Pending(secret: 'AQID'));
 	}

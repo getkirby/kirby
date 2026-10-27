@@ -135,7 +135,7 @@ class DbTest extends TestCase
 	public function testCallStaticInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid static Db method: thisIsInvalid');
+		$this->expectExceptionMessageIs('Invalid static Db method: thisIsInvalid');
 
 		Db::thisIsInvalid();
 	}

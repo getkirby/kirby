@@ -73,7 +73,7 @@ class UploadTest extends TestCase
 	public function testChunkIdInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Chunk ID must at least be 3 characters long');
+		$this->expectExceptionMessageIs('Chunk ID must at least be 3 characters long');
 		Upload::chunkId('a-b-');
 	}
 
@@ -138,14 +138,14 @@ class UploadTest extends TestCase
 	public function testError(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('No file was uploaded');
+		$this->expectExceptionMessageIs('No file was uploaded');
 		Upload::error(UPLOAD_ERR_NO_FILE);
 	}
 
 	public function testErrorUnknown(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('The file could not be uploaded');
+		$this->expectExceptionMessageIs('The file could not be uploaded');
 		Upload::error(999);
 	}
 
@@ -540,7 +540,7 @@ class UploadTest extends TestCase
 
 		$this->assertNull($upload->processChunk($source, basename($source)));
 		$this->expectException(DuplicateException::class);
-		$this->expectExceptionMessage('A tmp file upload with the same filename and upload id already exists: abcd-test.md');
+		$this->expectExceptionMessageIs('A tmp file upload with the same filename and upload id already exists: abcd-test.md');
 		$upload->processChunk($source, basename($source));
 	}
 
@@ -571,7 +571,7 @@ class UploadTest extends TestCase
 		]);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Chunk offset 1500 does not match the existing tmp upload file size of 6');
+		$this->expectExceptionMessageIs('Chunk offset 1500 does not match the existing tmp upload file size of 6');
 		$upload->processChunk($source, basename($source));
 	}
 
@@ -590,7 +590,7 @@ class UploadTest extends TestCase
 		]);
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Chunk offset 10 for non-existing tmp file: abcd-a.md');
+		$this->expectExceptionMessageIs('Chunk offset 10 for non-existing tmp file: abcd-a.md');
 		$upload->processChunk($source, basename($source));
 	}
 
@@ -641,7 +641,7 @@ class UploadTest extends TestCase
 		]);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The file template and upload length must not change between chunks');
+		$this->expectExceptionMessageIs('The file template and upload length must not change between chunks');
 
 		$upload->processChunk($source, basename($source));
 	}
@@ -676,7 +676,7 @@ class UploadTest extends TestCase
 		]);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The file template and upload length must not change between chunks');
+		$this->expectExceptionMessageIs('The file template and upload length must not change between chunks');
 		$upload->processChunk($source, basename($source));
 	}
 
@@ -694,7 +694,8 @@ class UploadTest extends TestCase
 		]);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('You are not allowed to upload PHP files');
+		$this->expectExceptionCode('error.file.type.forbidden');
+		$this->expectExceptionMessageIs('You are not allowed to upload PHP files');
 		$upload->processChunk($source, basename($source));
 	}
 
@@ -855,7 +856,7 @@ class UploadTest extends TestCase
 		ini_set('post_max_size', '20M');
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('No files were uploaded');
+		$this->expectExceptionMessageIs('No files were uploaded');
 
 		$upload = $this->upload();
 		$upload->process(function () {
@@ -868,7 +869,7 @@ class UploadTest extends TestCase
 		ini_set('post_max_size', '0');
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('No files were uploaded');
+		$this->expectExceptionMessageIs('No files were uploaded');
 
 		$upload = $this->upload();
 		$upload->process(function () {

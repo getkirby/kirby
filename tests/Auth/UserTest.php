@@ -161,7 +161,7 @@ class UserTest extends TestCase
 	public function testImpersonateInvalidUser(): void
 	{
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The user "lisa@simpsons.com" cannot be found');
+		$this->expectExceptionMessageIs('The user "lisa@simpsons.com" cannot be found');
 
 		$this->user->impersonate('lisa@simpsons.com');
 	}

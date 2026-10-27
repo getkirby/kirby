@@ -211,7 +211,7 @@ class UserWebauthnDrawerControllerTest extends TestCase
 		$this->app->impersonate('admin');
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Passkey could not be found');
+		$this->expectExceptionCode('error.user.webauthn.notFound');
 
 		$this->controller()->submit();
 	}
@@ -257,7 +257,7 @@ class UserWebauthnDrawerControllerTest extends TestCase
 		$this->app->session()->set('kirby.security.authorize.test', ['secret' => 'AQID']);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid passkey data');
+		$this->expectExceptionCode('error.user.webauthn.invalid');
 
 		$this->controller()->submit();
 	}
@@ -276,7 +276,7 @@ class UserWebauthnDrawerControllerTest extends TestCase
 		$this->app->impersonate('admin');
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Wrong password');
+		$this->expectExceptionCode('error.user.password.wrong');
 
 		$this->controller()->submit();
 	}
@@ -355,7 +355,7 @@ class UserWebauthnDrawerControllerTest extends TestCase
 		$this->app->session()->set('kirby.webauthn.test', 'challenge');
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid passkey data');
+		$this->expectExceptionCode('error.user.webauthn.invalid');
 
 		$this->controller()->submit();
 	}
@@ -366,7 +366,7 @@ class UserWebauthnDrawerControllerTest extends TestCase
 		$this->app->impersonate('kirby');
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid passkey action');
+		$this->expectExceptionMessageIs('Invalid passkey action');
 
 		$this->controller()->submit();
 	}

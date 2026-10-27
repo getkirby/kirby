@@ -174,7 +174,7 @@ class WebauthnMethodTest extends TestCase
 		$this->app->session()->set('kirby.method.data', 'wrong-challenge');
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The passkey could not be verified');
+		$this->expectExceptionCode('error.user.webauthn.failed');
 
 		$this->method()->authenticate(null, $payload);
 	}

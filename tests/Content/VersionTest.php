@@ -184,7 +184,7 @@ class VersionTest extends TestCase
 		);
 
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Version::contentFile() is only available for plain text storage');
+		$this->expectExceptionMessageIs('Version::contentFile() is only available for plain text storage');
 
 		$version->contentFile();
 	}
@@ -921,7 +921,7 @@ class VersionTest extends TestCase
 	public function testPreviewTokenInvalidModel(): void
 	{
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Invalid model type');
+		$this->expectExceptionMessageIs('Invalid model type');
 
 		$this->setUpSingleLanguage();
 
@@ -936,7 +936,7 @@ class VersionTest extends TestCase
 	public function testPreviewTokenMissingHomePage(): void
 	{
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The home page does not exist');
+		$this->expectExceptionMessageIs('The home page does not exist');
 
 		$app = new App([
 			'roots' => [
@@ -992,7 +992,7 @@ class VersionTest extends TestCase
 		$this->createContentSingleLanguage();
 
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('This version is already published');
+		$this->expectExceptionMessageIs('This version is already published');
 
 		$version->publish();
 	}
@@ -1155,7 +1155,7 @@ class VersionTest extends TestCase
 		);
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Invalid language: fr');
+		$this->expectExceptionMessageIs('Invalid language: fr');
 
 		$version->read('fr');
 	}
@@ -1619,7 +1619,7 @@ class VersionTest extends TestCase
 		DiscardingStorage::$discard = true;
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The version has been removed by another request');
+		$this->expectExceptionCode('error.version.removed');
 
 		$this->model->version('changes')->update(['text' => 'Text']);
 	}
@@ -1943,7 +1943,7 @@ class VersionTest extends TestCase
 	public function testUrlInvalidModel(): void
 	{
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Only pages and the site have a content preview URL');
+		$this->expectExceptionMessageIs('Only pages and the site have a content preview URL');
 
 		$this->setUpSingleLanguage();
 

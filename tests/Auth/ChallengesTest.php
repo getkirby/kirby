@@ -230,7 +230,7 @@ class ChallengesTest extends TestCase
 	public function testClassInvalid(): void
 	{
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('No auth challenge class for: unknown');
+		$this->expectExceptionMessageIs('No auth challenge class for: unknown');
 		$this->challenges->class('unknown');
 	}
 
@@ -296,7 +296,7 @@ class ChallengesTest extends TestCase
 		$session = $this->session();
 
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Could not find a suitable authentication challenge');
+		$this->expectExceptionMessageIs('Could not find a suitable authentication challenge');
 
 		$this->challenges->create($session, 'marge@simpsons.com', 'login');
 	}

@@ -53,7 +53,7 @@ class BlueprintTest extends TestCase
 	public function testConstructWithoutModel(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('A blueprint model is required');
+		$this->expectExceptionMessageIs('A blueprint model is required');
 
 		new Blueprint([]);
 	}
@@ -61,7 +61,7 @@ class BlueprintTest extends TestCase
 	public function testConstructInvalidModel(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid blueprint model');
+		$this->expectExceptionMessageIs('Invalid blueprint model');
 
 		new Blueprint(['model' => new stdClass()]);
 	}

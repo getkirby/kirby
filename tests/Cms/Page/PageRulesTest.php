@@ -58,7 +58,8 @@ class PageRulesTest extends ModelTestCase
 		PageRules::changeSlug($page, 'test-a');
 
 		$this->expectException(DuplicateException::class);
-		$this->expectExceptionMessage('A page with the URL appendix "test-b" already exists');
+		$this->expectExceptionCode('error.page.duplicate');
+		$this->expectExceptionMessageIs('A page with the URL appendix "test-b" already exists');
 
 		PageRules::changeSlug($page, 'test-b');
 	}
@@ -70,7 +71,8 @@ class PageRulesTest extends ModelTestCase
 		$page = new Page(['slug' => 'test']);
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to change the URL appendix for "test"');
+		$this->expectExceptionCode('error.page.changeSlug.permission');
+		$this->expectExceptionMessageIs('You are not allowed to change the URL appendix for "test"');
 
 		PageRules::changeSlug($page, 'test');
 	}
@@ -148,7 +150,7 @@ class PageRulesTest extends ModelTestCase
 		$page = new Page(['slug' => 'test']);
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('The status for this page cannot be changed');
+		$this->expectExceptionCode('error.page.changeStatus.permission');
 
 		PageRules::{'changeStatusTo' . $status}($page, ...$args);
 	}
@@ -160,7 +162,7 @@ class PageRulesTest extends ModelTestCase
 		$page = new Page(['slug' => 'test']);
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('The status for this page cannot be changed');
+		$this->expectExceptionCode('error.page.changeStatus.permission');
 
 		PageRules::changeStatusToDraft($page);
 	}
@@ -248,7 +250,8 @@ class PageRulesTest extends ModelTestCase
 		$this->app->impersonate('nobody');
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to change the template for "test"');
+		$this->expectExceptionCode('error.page.changeTemplate.permission');
+		$this->expectExceptionMessageIs('You are not allowed to change the template for "test"');
 
 		PageRules::changeTemplate($page, 'b');
 	}
@@ -260,7 +263,8 @@ class PageRulesTest extends ModelTestCase
 		$this->assertCount(1, $page->blueprints());
 
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('The template for the page "test" cannot be changed');
+		$this->expectExceptionCode('error.page.changeTemplate.invalid');
+		$this->expectExceptionMessageIs('The template for the page "test" cannot be changed');
 
 		PageRules::changeTemplate($page, 'c');
 	}
@@ -294,7 +298,8 @@ class PageRulesTest extends ModelTestCase
 		$page = new Page(['slug' => 'test']);
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to change the title for "test"');
+		$this->expectExceptionCode('error.page.changeTitle.permission');
+		$this->expectExceptionMessageIs('You are not allowed to change the title for "test"');
 
 		PageRules::changeTitle($page, 'test');
 	}
@@ -306,7 +311,8 @@ class PageRulesTest extends ModelTestCase
 		$page = new Page(['slug' => 'test']);
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to create "test"');
+		$this->expectExceptionCode('error.page.create.permission');
+		$this->expectExceptionMessageIs('You are not allowed to create "test"');
 
 		PageRules::create($page);
 	}
@@ -380,7 +386,7 @@ class PageRulesTest extends ModelTestCase
 		]);
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('The status for this page cannot be changed');
+		$this->expectExceptionCode('error.page.changeStatus.permission');
 
 		PageRules::create($page);
 	}
@@ -403,7 +409,8 @@ class PageRulesTest extends ModelTestCase
 		$page = new Page(['slug' => 'test']);
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to delete "test"');
+		$this->expectExceptionCode('error.page.delete.permission');
+		$this->expectExceptionMessageIs('You are not allowed to delete "test"');
 
 		PageRules::delete($page);
 	}
@@ -516,7 +523,8 @@ class PageRulesTest extends ModelTestCase
 		$this->app->impersonate('admin@getkirby.com');
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to delete "c"');
+		$this->expectExceptionCode('error.page.delete.permission');
+		$this->expectExceptionMessageIs('You are not allowed to delete "c"');
 
 		PageRules::delete($this->app->page('test'), true);
 	}
@@ -548,7 +556,7 @@ class PageRulesTest extends ModelTestCase
 		$this->app->impersonate('admin@getkirby.com');
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('The file cannot be deleted');
+		$this->expectExceptionCode('error.file.delete.permission');
 
 		PageRules::delete($this->app->page('test'));
 	}
@@ -583,7 +591,8 @@ class PageRulesTest extends ModelTestCase
 		$page = new Page(['slug' => 'test']);
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to duplicate "test"');
+		$this->expectExceptionCode('error.page.duplicate.permission');
+		$this->expectExceptionMessageIs('You are not allowed to duplicate "test"');
 
 		PageRules::duplicate($page, 'something');
 	}
@@ -646,7 +655,8 @@ class PageRulesTest extends ModelTestCase
 		$page = new Page(['slug' => 'test']);
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to update "test"');
+		$this->expectExceptionCode('error.page.update.permission');
+		$this->expectExceptionMessageIs('You are not allowed to update "test"');
 
 		PageRules::update($page, []);
 	}
@@ -758,7 +768,8 @@ class PageRulesTest extends ModelTestCase
 		$page = new Page(['slug' => 'test']);
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to move "test"');
+		$this->expectExceptionCode('error.page.move.permission');
+		$this->expectExceptionMessageIs('You are not allowed to move "test"');
 
 		PageRules::move($page, new Page(['slug' => 'parent']));
 	}
@@ -864,7 +875,8 @@ class PageRulesTest extends ModelTestCase
 		$child   = $this->app->page('parent-a/child');
 
 		$this->expectException(DuplicateException::class);
-		$this->expectExceptionMessage('A sub page with the URL appendix "child" already exists');
+		$this->expectExceptionCode('error.page.move.duplicate');
+		$this->expectExceptionMessageIs('A sub page with the URL appendix "child" already exists');
 
 		PageRules::move($child, $parentB);
 	}
@@ -914,7 +926,8 @@ class PageRulesTest extends ModelTestCase
 		$child   = $this->app->page('parent-a/child');
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('The "article" template is not accepted as a subpage of "parent-b"');
+		$this->expectExceptionCode('error.page.move.template');
+		$this->expectExceptionMessageIs('The "article" template is not accepted as a subpage of "parent-b"');
 
 		PageRules::move($child, $parentB);
 	}
@@ -958,7 +971,8 @@ class PageRulesTest extends ModelTestCase
 		$child   = $this->app->page('parent-a/child');
 
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('The page "parent-b" cannot be a parent of any page because it lacks any pages fields in its blueprint');
+		$this->expectExceptionCode('error.page.move.noBlueprints');
+		$this->expectExceptionMessageIs('The page "parent-b" cannot be a parent of any page because it lacks any pages fields in its blueprint');
 
 		PageRules::move($child, $parentB);
 	}

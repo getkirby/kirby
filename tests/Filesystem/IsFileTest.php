@@ -81,7 +81,7 @@ class IsFileTest extends TestCase
 	{
 		$asset = $this->_asset();
 		$this->expectException(BadMethodCallException::class);
-		$this->expectExceptionMessage('The method: "nonexists" does not exist');
+		$this->expectExceptionMessageIs('The method: "nonexists" does not exist');
 		$asset->nonexists();
 	}
 }
