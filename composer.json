@@ -48,7 +48,7 @@
 		"michelf/php-smartypants": "1.8.1",
 		"phpmailer/phpmailer": "7.1.1",
 		"symfony/polyfill-intl-idn": "1.43.0",
-		"symfony/yaml": "7.4.21"
+		"symfony/yaml": "8.1.9"
 	},
 	"suggest": {
 		"ext-apcu": "Support for the Apcu cache driver",
