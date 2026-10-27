@@ -756,6 +756,19 @@ class NormalizerTest extends TestCase
 		], $options);
 	}
 
+	public function testNormalizeOptionsWithNull(): void
+	{
+		$options = Normalizer::normalizeOptions(
+			options: null,
+			defaults: ['delete' => true, 'update' => false]
+		);
+
+		$this->assertSame([
+			'delete' => true,
+			'update' => false
+		], $options);
+	}
+
 	public function testNormalizeOptionsWithString(): void
 	{
 		$this->app = $this->app->clone([

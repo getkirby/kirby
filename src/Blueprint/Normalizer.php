@@ -392,7 +392,7 @@ class Normalizer
 		array $aliases = []
 	): array {
 		// return defaults when options are not defined or set to true
-		if ($options === true) {
+		if ($options === true || $options === null) {
 			return $defaults;
 		}
 
