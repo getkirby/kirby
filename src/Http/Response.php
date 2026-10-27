@@ -221,7 +221,7 @@ class Response implements Stringable
 	 * Ensures that the callback does not produce any body output
 	 * (used to show when loading a file creates side effects)
 	 */
-	public static function guardAgainstOutput(Closure $callback, ...$args): mixed
+	public static function guardAgainstOutput(Closure $callback, mixed ...$args): mixed
 	{
 		$before = headers_sent();
 		$level  = ob_get_level();
