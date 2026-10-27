@@ -423,6 +423,23 @@ class DatabaseTest extends TestCase
 		]));
 	}
 
+	public function testCreateTableWithoutTableCache(): void
+	{
+		$database = new Database([
+			'database' => ':memory:',
+			'type'     => 'sqlite'
+		]);
+
+		$database->execute('CREATE TABLE existing (id INTEGER)');
+		$database->createTable('created', [
+			'id' => ['type' => 'int']
+		]);
+
+		// the cache must not be started with the new table only
+		$this->assertTrue($database->validateTable('existing'));
+		$this->assertTrue($database->validateTable('created'));
+	}
+
 	public function testMysqlConnector(): void
 	{
 		$dsn = Database::$types['mysql']['dsn'];

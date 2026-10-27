@@ -560,8 +560,11 @@ class Database
 			}
 		}
 
-		// update cache
-		if (in_array($table, $this->tables ?? [], true) !== true) {
+		// update cache if it has been loaded already
+		if (
+			$this->tables !== null &&
+			in_array($table, $this->tables, true) === false
+		) {
 			$this->tables[] = $table;
 		}
 
