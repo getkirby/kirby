@@ -69,7 +69,7 @@ class Tabs extends Collection
 	 */
 	public function toArray(Closure|null $map = null): array
 	{
-		return A::map($this->data, $map ?? fn ($tab) => $tab->toViewProps());
+		return A::map($this->data, $map ?? fn (Tab $tab) => $tab->toViewProps());
 	}
 
 	/**
@@ -81,7 +81,7 @@ class Tabs extends Collection
 	public function toButtonsProps(): array
 	{
 		return array_values(
-			A::map($this->data, fn ($tab) => $tab->toButtonProps())
+			A::map($this->data, fn (Tab $tab) => $tab->toButtonProps())
 		);
 	}
 }
