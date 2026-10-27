@@ -71,14 +71,14 @@ class PageBlueprint extends Blueprint
 	/**
 	 * Normalizes the ordering number
 	 */
-	protected function normalizeNum($num): string
+	protected function normalizeNum(string|int $num): string
 	{
 		$aliases = [
 			'0'    => 'zero',
 			'sort' => 'default',
 		];
 
-		return $aliases[$num] ?? $num;
+		return $aliases[$num] ?? (string)$num;
 	}
 
 	/**
@@ -86,7 +86,7 @@ class PageBlueprint extends Blueprint
 	 *
 	 * @return array<'draft'|'listed'|'unlisted', array>
 	 */
-	protected function normalizeStatus($status): array
+	protected function normalizeStatus(mixed $status): array
 	{
 		// the i18n keys are resolved in `status()`
 		$defaults = [
