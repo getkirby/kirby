@@ -25,6 +25,8 @@ class Challenges
 	/**
 	 * Available auth challenge classes
 	 * from the core and plugins
+	 *
+	 * @var array<string, class-string<Challenge>>
 	 */
 	public static array $challenges = [];
 
@@ -34,6 +36,12 @@ class Challenges
 	) {
 	}
 
+	/**
+	 * Returns the types of all enabled challenges
+	 * that are available for the user and purpose/mode
+	 *
+	 * @return list<string>
+	 */
 	public function available(User $user, string $mode): array
 	{
 		$available = array_values(A::filter(
@@ -57,6 +65,9 @@ class Challenges
 
 	/**
 	 * Returns the challenge handler class for the provided type
+	 *
+	 * @return class-string<Challenge>
+	 * @throws NotFoundException If no valid class is registered for the type
 	 */
 	public function class(string $type): string
 	{
@@ -125,6 +136,8 @@ class Challenges
 	/**
 	 * Returns normalized array of enabled challenges
 	 * by the `auth.challenges` config option
+	 *
+	 * @return list<string>
 	 */
 	public function enabled(): array
 	{
@@ -143,7 +156,6 @@ class Challenges
 	 */
 	protected function ensureActiveChallenge(Session $session): string
 	{
-		// check if we have an active challenge
 		$email = $session->get('kirby.challenge.email');
 		$type  = $session->get('kirby.challenge.type');
 
@@ -320,6 +332,9 @@ class Challenges
 		}
 	}
 
+	/**
+	 * Returns the lifetime of new challenges in seconds
+	 */
 	public function timeout(): int|null
 	{
 		return $this->kirby->option('auth.challenge.timeout', 10 * 60);
@@ -344,13 +359,12 @@ class Challenges
 
 		$type      = $session->get('kirby.challenge.type');
 		$mode      = $session->get('kirby.challenge.mode');
-		$data      = $session->get('kirby.challenge.data');
-		$data      = Pending::from($data ?? []);
+		$pending   = Pending::from($session->get('kirby.challenge.data') ?? []);
 		$challenge = $this->get($type, $user, $mode);
 
 		$challenge->attempt(
 			input:      $input,
-			pending:    $data,
+			pending:    $pending,
 			invalidate: fn () => $this->clear($session)
 		);
 
