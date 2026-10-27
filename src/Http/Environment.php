@@ -47,6 +47,8 @@ class Environment
 
 	/**
 	 * Sanitized `$_SERVER` data
+	 *
+	 * @var array<string, mixed>
 	 */
 	protected array $info;
 
@@ -96,8 +98,6 @@ class Environment
 	protected string $scriptPath;
 
 	/**
-	 * Class constructor
-	 *
 	 * @param $info Optional override for `$_SERVER`
 	 */
 	public function __construct(
@@ -299,7 +299,7 @@ class Environment
 			'host'   => $this->host,
 			'path'   => $this->path,
 			'port'   => $this->port,
-			'scheme' => $this->https ? 'https' : 'http',
+			'scheme' => $this->https === true ? 'https' : 'http',
 		]);
 
 		$this->baseUrl = $this->baseUri->toString();
@@ -324,6 +324,7 @@ class Environment
 
 		// @codeCoverageIgnoreStart
 		$sapi = php_sapi_name();
+
 		if ($sapi === 'cli') {
 			return true;
 		}
@@ -345,6 +346,8 @@ class Environment
 	/**
 	 * Detects the host, protocol, port and client IP
 	 * from the `Forwarded` and `X-Forwarded-*` headers
+	 *
+	 * @return array{for: string|null, host: string|null, https: bool, port: int|null}
 	 */
 	protected function detectForwarded(): array
 	{
@@ -582,6 +585,8 @@ class Environment
 
 	/**
 	 * Splits a hostname:port string into its components
+	 *
+	 * @return array{host: string|null, port: int|null}
 	 */
 	protected function detectPortInHost(string|null $host = null): array
 	{
@@ -711,6 +716,8 @@ class Environment
 
 	/**
 	 * Returns the sanitized `$_SERVER` array
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function info(): array
 	{
@@ -972,13 +979,11 @@ class Environment
 			return $scriptPath;
 		}
 
-		// replace Windows backslashes
+		// replace Windows backslashes before and after
+		// removing the script, as `dirname()` adds new ones
 		$scriptPath = str_replace('\\', '/', $scriptPath);
-		// remove the script
 		$scriptPath = dirname($scriptPath);
-		// replace those fucking backslashes again
 		$scriptPath = str_replace('\\', '/', $scriptPath);
-		// remove the leading and trailing slashes
 		$scriptPath = trim($scriptPath, '/');
 
 		// top-level scripts don't have a path
@@ -1007,6 +1012,8 @@ class Environment
 
 	/**
 	 * Returns all environment data as array
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function toArray(): array
 	{
