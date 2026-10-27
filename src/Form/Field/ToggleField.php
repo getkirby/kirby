@@ -80,7 +80,10 @@ class ToggleField extends InputField
 
 	protected function validateRequired(): void
 	{
-		if ($this->isRequired() === false) {
+		if (
+			$this->isRequired() === false ||
+			$this->isActive() === false
+		) {
 			return;
 		}
 
