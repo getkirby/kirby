@@ -23,9 +23,14 @@ class Methods
 	/**
 	 * Available auth method classes
 	 * from the core and plugins
+	 *
+	 * @var array<string, class-string<Method>>
 	 */
 	public static array $methods = [];
 
+	/**
+	 * @var array<string, array>|null
+	 */
 	protected array|null $enabled = null;
 
 	public function __construct(
@@ -62,6 +67,9 @@ class Methods
 
 	/**
 	 * Returns the auth method class for the provided type
+	 *
+	 * @return class-string<Method>
+	 * @throws NotFoundException If no valid class is registered for the type
 	 */
 	public function class(string $type): string
 	{
@@ -114,6 +122,8 @@ class Methods
 	/**
 	 * Returns normalized array of enabled/configured methods
 	 * by the `auth.methods` config option
+	 *
+	 * @return array<string, array>
 	 */
 	public function enabled(): array
 	{
