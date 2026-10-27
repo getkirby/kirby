@@ -44,7 +44,7 @@ class VolatileHeaders
 			return;
 		}
 
-		$values = A::map($values, static fn ($value) => strtolower(trim($value)));
+		$values = A::map($values, static fn (string $value) => strtolower(trim($value)));
 		$values = A::filter($values, static fn (string $value) => $value !== '');
 
 		if ($values === []) {
@@ -115,7 +115,7 @@ class VolatileHeaders
 
 		return array_values(A::filter(
 			$values,
-			static fn ($value) => in_array(strtolower($value), $remove, true) === false
+			static fn (string $value) => in_array(strtolower($value), $remove, true) === false
 		));
 	}
 
