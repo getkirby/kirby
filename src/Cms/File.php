@@ -33,7 +33,7 @@ use Kirby\Uuid\FileUuid;
  * @license   https://getkirby.com/license
  *
  * @use HasSiblings<Files>
- * @method FileUuid uuid()
+ * @method FileUuid|null uuid()
  */
 class File extends ModelWithContent
 {

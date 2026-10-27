@@ -287,22 +287,6 @@
       <code><![CDATA[$this->i18n($this->title ?? $this->label())]]></code>
     </NullableReturnStatement>
   </file>
-  <file src="src/Panel/Controller/Request/PageTreeParentsRequestController.php">
-    <RedundantCondition>
-      <code><![CDATA[$this->kirby->site()->uuid()?->toString()]]></code>
-    </RedundantCondition>
-    <TypeDoesNotContainNull>
-      <code><![CDATA['/']]></code>
-    </TypeDoesNotContainNull>
-  </file>
-  <file src="src/Panel/Controller/Request/PageTreeRequestController.php">
-    <RedundantCondition>
-      <code><![CDATA[$uuid]]></code>
-    </RedundantCondition>
-    <TypeDoesNotContainNull>
-      <code><![CDATA[$id]]></code>
-    </TypeDoesNotContainNull>
-  </file>
   <file src="src/Panel/Ui/Button/ViewButton.php">
     <InvalidOperand>
       <code><![CDATA[$data]]></code>
