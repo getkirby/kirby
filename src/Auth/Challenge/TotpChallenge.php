@@ -16,7 +16,6 @@ use SensitiveParameter;
  * Users first have to set up time-based codes
  * (storing the TOTP secret in their user account).
  *
- *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
