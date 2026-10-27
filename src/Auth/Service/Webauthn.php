@@ -195,6 +195,7 @@ class Webauthn extends BaseWebauthn
 	/**
 	 * Removes a credential by id and returns the remaining list
 	 *
+	 * @return list<array>
 	 * @throws InvalidArgumentException
 	 */
 	public function removeCredential(array $credentials, string $id): array
@@ -302,6 +303,7 @@ class Webauthn extends BaseWebauthn
 	 * Verifies a login and updates the matching credential's
 	 * signature counter
 	 *
+	 * @return array{credentials: array, counter: int|null}
 	 * @throws InvalidArgumentException
 	 */
 	public function verifyLogin(
@@ -341,6 +343,7 @@ class Webauthn extends BaseWebauthn
 	 * Verifies the registration of a new passkey and
 	 * returns the credential to store
 	 *
+	 * @return array{id: string, publicKey: string, counter: int, createdAt: int, attestation: string|null}
 	 * @throws InvalidArgumentException
 	 */
 	public function verifyRegister(mixed $payload, string $challenge): array
