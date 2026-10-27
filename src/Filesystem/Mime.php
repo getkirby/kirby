@@ -214,7 +214,7 @@ class Mime
 		$mime = static::$types[$extension] ?? null;
 
 		if (is_array($mime) === true) {
-			$mime = array_shift($mime);
+			return $mime[0];
 		}
 
 		return $mime;
@@ -287,13 +287,10 @@ class Mime
 	 */
 	public static function isAccepted(string $mime, string $pattern): bool
 	{
-		foreach (Str::accepted($pattern) as $accepted) {
-			if (static::matches($mime, $accepted['value']) === true) {
-				return true;
-			}
-		}
-
-		return false;
+		return array_any(
+			Str::accepted($pattern),
+			fn (array $accepted) => static::matches($mime, $accepted['value'])
+		);
 	}
 
 	/**
