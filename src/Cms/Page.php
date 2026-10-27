@@ -30,7 +30,7 @@ use Throwable;
  * @license   https://getkirby.com/license
  *
  * @use HasSiblings<Pages>
- * @method PageUuid uuid()
+ * @method PageUuid|null uuid()
  */
 class Page extends ModelWithContent
 {

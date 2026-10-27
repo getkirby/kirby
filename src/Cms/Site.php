@@ -22,7 +22,7 @@ use Kirby\Uuid\SiteUuid;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @method SiteUuid uuid()
+ * @method SiteUuid|null uuid()
  */
 class Site extends ModelWithContent
 {
