@@ -26,6 +26,7 @@ class Normalizer
 	 * field types onto the picker fields
 	 *
 	 * @unstable
+	 * @var array<string, string>
 	 */
 	public static array $fieldAliases = [
 		'files' => 'filepicker',
@@ -39,6 +40,7 @@ class Normalizer
 	 * map, because it is unwrapped into its own fields.
 	 *
 	 * @unstable
+	 * @var array<string, string>
 	 */
 	public static array $sectionFields = [
 		'files' => 'filelist',
@@ -299,7 +301,7 @@ class Normalizer
 	/**
 	 * Normalize field props for a single field
 	 *
-	 * @throws InvalidArgumentException If the filed name is missing or the field type is invalid
+	 * @throws InvalidArgumentException If the field name is missing or the field type is invalid
 	 */
 	public static function normalizeFieldProps(
 		array|string $props,
@@ -608,7 +610,7 @@ class Normalizer
 
 		return A::map(
 			$fields,
-			fn ($field) => array_replace_recursive(['when' => $when], $field)
+			fn (array $field) => array_replace_recursive(['when' => $when], $field)
 		);
 	}
 }
