@@ -22,7 +22,7 @@ use Kirby\Toolkit\Dom;
 class Parsley
 {
 	/**
-	 * @var array<int, array>
+	 * @var list<array>
 	 */
 	protected array $blocks = [];
 	protected DOMDocument $doc;
@@ -153,13 +153,12 @@ class Parsley
 		$html = [];
 
 		foreach ($this->inline as $inline) {
-			$node   = new Inline($inline, $this->marks);
-			$html[] = $node->innerHTML();
+			$html[] = new Inline($inline, $this->marks)->innerHtml();
 		}
 
-		$innerHTML = implode(' ', $html);
+		$fallback = $this->fallback(implode(' ', $html));
 
-		if ($fallback = $this->fallback($innerHTML)) {
+		if ($fallback !== null) {
 			$this->mergeOrAppend($fallback);
 		}
 
@@ -221,16 +220,15 @@ class Parsley
 
 	public function mergeOrAppend(array $block): void
 	{
-		$lastIndex = count($this->blocks) - 1;
-		$lastItem  = $this->blocks[$lastIndex] ?? null;
+		$last = array_key_last($this->blocks);
 
 		// merge with previous block
 		if (
+			$last !== null &&
 			$block['type'] === 'text' &&
-			$lastItem &&
-			$lastItem['type'] === 'text'
+			$this->blocks[$last]['type'] === 'text'
 		) {
-			$this->blocks[$lastIndex]['content']['text'] .= ' ' . $block['content']['text'];
+			$this->blocks[$last]['content']['text'] .= ' ' . $block['content']['text'];
 
 		// append
 		} else {
@@ -263,10 +261,11 @@ class Parsley
 		// known block nodes
 		if ($this->isBlock($element) === true) {
 			/** @var DOMElement $element */
-			if ($parser = $this->nodes[$element->tagName]['parse'] ?? null) {
-				if ($result = $parser(new Element($element, $this->marks))) {
-					$this->blocks[] = $result;
-				}
+			$parser = $this->nodes[$element->tagName]['parse'] ?? null;
+			$result = $parser !== null ? $parser(new Element($element, $this->marks)) : null;
+
+			if ($result !== null && $result !== []) {
+				$this->blocks[] = $result;
 			}
 
 			return true;
@@ -289,9 +288,9 @@ class Parsley
 			// to a simple fallback block. Their children
 			// have to be parsed individually.
 			if (in_array($element->tagName, $wrappers, true) === false) {
-				$node = new Element($element, $this->marks);
+				$block = $this->fallback(new Element($element, $this->marks));
 
-				if ($block = $this->fallback($node)) {
+				if ($block !== null) {
 					$this->mergeOrAppend($block);
 				}
 
