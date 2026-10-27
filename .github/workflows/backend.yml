@@ -6,6 +6,7 @@ env:
   OS: &os ubuntu-24.04
   TIMEOUT: &timeout 10
   COVERAGE_PHP: "8.4"
+  APT_PACKAGES: locales-all imagemagick
 
   SHOULD_RUN: &should-run >-
     github.event_name == 'workflow_dispatch' ||
@@ -71,12 +72,30 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Install system locales and imagemagick
+      # the runner's apt mirror often takes minutes to serve these packages,
+      # so they are cached by the exact versions apt resolves for them
+      - name: Resolve system packages
+        id: apt
         shell: bash
         run: |
           sudo apt-get update
+          packages=$(apt-get install -s --no-install-recommends $APT_PACKAGES | grep '^Inst')
+          echo "$packages"
+          echo "key=$(sha1sum <<< "$packages" | cut -c1-16)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache system packages
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
+        with:
+          path: ~/apt/*.deb
+          key: apt-${{ runner.os }}-${{ steps.apt.outputs.key }}
+
+      - name: Install system locales and imagemagick
+        shell: bash
+        run: |
+          mkdir -p ~/apt/partial
           sudo apt-get install -y --no-install-recommends \
-            -o Acquire::Retries=3 locales-all imagemagick
+            -o Acquire::Retries=3 -o Dir::Cache::Archives="$HOME/apt" \
+            $APT_PACKAGES
 
       - name: Verify test dependencies
         shell: bash
