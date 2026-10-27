@@ -176,8 +176,8 @@ jobs:
           echo "::add-matcher::${{ runner.tool_cache }}/php.json"
           echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
-      # Psalm adds a full cache per version without pruning old ones,
-      # so caches of other versions (in composer.json) aren't restored
+      # keyed on the Psalm version in composer.json and without fallback keys,
+      # as Psalm keeps a full cache per version and never prunes old ones
       - name: Cache Psalm analysis data
         uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
         with:
@@ -205,8 +205,8 @@ jobs:
         with:
           sarif_file: sarif
 
-      # saved under a new key on every run, as a cache entry can't be
-      # updated and the fixer discards one from another version or config
+      # saved under a new key per run, as cache entries can't be updated
+      # and the fixer only uses a cache from its own version and config
       - name: Cache PHP-CS-Fixer data
         uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
         with:
