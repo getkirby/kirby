@@ -176,14 +176,13 @@ jobs:
           echo "::add-matcher::${{ runner.tool_cache }}/php.json"
           echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
+      # Psalm adds a full cache per version without pruning old ones,
+      # so caches of other versions (in composer.json) aren't restored
       - name: Cache Psalm analysis data
         uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
         with:
           path: ~/.cache/psalm
-          key: psalm-${{ env.php }}-${{ hashFiles('composer.lock') }}
-          restore-keys: |
-            psalm-${{ env.php }}-
-            psalm-
+          key: psalm-${{ env.php }}-${{ hashFiles('composer.json', 'composer.lock') }}
 
       - name: Validate composer.json/composer.lock
         run: composer run analyze:composer
