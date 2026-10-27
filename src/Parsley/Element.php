@@ -108,9 +108,7 @@ class Element
 	 */
 	public function innerHtml(array|null $marks = null): string
 	{
-		$marks ??= $this->marks;
-		$inline  = new Inline($this->node, $marks);
-		return $inline->innerHtml();
+		return new Inline($this->node, $marks ?? $this->marks)->innerHtml();
 	}
 
 	/**
