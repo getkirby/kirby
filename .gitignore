@@ -7,7 +7,6 @@
 
 # cs fixer
 .php-cs-fixer.cache
-.php-cs-fixer.types.cache
 
 # editors
 *.sublime-project

@@ -101,12 +101,7 @@
 			"@analyze",
 			"@test"
 		],
-		"fix": [
-			"@fix:style",
-			"@fix:types"
-		],
-		"fix:style": "cpx friendsofphp/php-cs-fixer:3.95.3 fix",
-		"fix:types": "cpx friendsofphp/php-cs-fixer:3.95.3 fix --config=.php-cs-fixer.types.php",
+		"fix": "cpx getkirby/php-cs:0.2.1 fix",
 		"test": "cpx brianium/paratest:7.20.0 --passthru-php=\"-dopcache.enable_cli=1 -dopcache.optimization_level=0 -dopcache.jit=disable\"",
 		"test:coverage": [
 			"@putenv XDEBUG_MODE=coverage",
