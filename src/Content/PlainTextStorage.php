@@ -341,7 +341,7 @@ class PlainTextStorage extends Storage
 	/**
 	 * Writes the content fields of an existing version
 	 *
-	 * @param array<string, string> $fields Content fields
+	 * @param array<string, string|null> $fields Content fields
 	 *
 	 * @throws Exception If the content cannot be written
 	 */

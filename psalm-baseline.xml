@@ -376,7 +376,6 @@
 					$result = null;
 				}
 
-				// if we don't have a result, use the fallback if given
 				$result ??= $fallback;
 
 				// callback on result if given, with the raw result
