@@ -30,7 +30,7 @@ class FileBlueprint extends Blueprint
 	{
 		parent::__construct($props);
 
-		// normalize all available page options
+		// normalize all available file options
 		$this->props['options'] = $this->normalizeOptions(
 			$this->props['options'] ?? true,
 			// defaults
@@ -38,13 +38,13 @@ class FileBlueprint extends Blueprint
 				'access'         => null,
 				'changeName'     => null,
 				'changeTemplate' => null,
-				'create'     	 => null,
-				'delete'     	 => null,
-				'list'     	     => null,
-				'read'       	 => null,
-				'replace'    	 => null,
+				'create'         => null,
+				'delete'         => null,
+				'list'           => null,
+				'read'           => null,
+				'replace'        => null,
 				'sort'           => null,
-				'update'     	 => null,
+				'update'         => null,
 			]
 		);
 
@@ -52,6 +52,11 @@ class FileBlueprint extends Blueprint
 		$this->props['accept'] = $this->normalizeAccept($this->props['accept'] ?? []);
 	}
 
+	/**
+	 * Returns the normalized accept settings
+	 *
+	 * @return array<string, mixed>
+	 */
 	public function accept(): array
 	{
 		return $this->props['accept'];
@@ -88,10 +93,10 @@ class FileBlueprint extends Blueprint
 				$accept['mime']
 			);
 
-			$fromMime = array_unique(array_merge(...array_values($extensions)));
+			$list = array_unique(array_merge(...array_values($extensions)));
 
 			// return early to ignore the other options
-			return implode(',', array_map(fn ($ext) => ".$ext", $fromMime));
+			return implode(',', array_map(fn ($extension) => '.' . $extension, $list));
 		}
 
 		$restrictions = [];
@@ -99,12 +104,11 @@ class FileBlueprint extends Blueprint
 		// get extensions from "type" option
 		if (is_array($accept['type']) === true) {
 			$extensions = array_map(
-				fn ($type) => F::typeToExtensions($type) ?? [],
+				fn (string $type) => F::typeToExtensions($type) ?? [],
 				$accept['type']
 			);
 
-			$fromType = array_merge(...array_values($extensions));
-			$restrictions[] = $fromType;
+			$restrictions[] = array_merge(...array_values($extensions));
 		}
 
 		// get extensions from "extension" option
@@ -122,9 +126,12 @@ class FileBlueprint extends Blueprint
 		$list = array_unique($list);
 
 		// format the list to include a leading dot on each extension
-		return implode(',', array_map(fn ($ext) => ".$ext", $list));
+		return implode(',', array_map(fn ($extension) => '.' . $extension, $list));
 	}
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	protected function normalizeAccept(mixed $accept = null): array
 	{
 		$accept = match (true) {
@@ -168,7 +175,7 @@ class FileBlueprint extends Blueprint
 		// normalize the MIME, extension and type from strings into arrays
 		if (is_string($accept['mime']) === true) {
 			$accept['mime'] = array_map(
-				fn ($mime) => $mime['value'],
+				fn (array $mime) => $mime['value'],
 				Str::accepted($accept['mime'])
 			);
 		}
