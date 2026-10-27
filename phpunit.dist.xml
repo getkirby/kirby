@@ -15,6 +15,7 @@
 	failOnNotice="true"
 	failOnRisky="true"
 	failOnWarning="true"
+	requireSealedMockObjects="true"
 	stderr="true"
 >
 	<source>

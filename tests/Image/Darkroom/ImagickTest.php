@@ -109,7 +109,8 @@ class ImagickTest extends TestCase
 			->with('#000', $angle);
 		$image->expects($this->once())
 			->method('setImageOrientation')
-			->with(Image::ORIENTATION_TOPLEFT);
+			->with(Image::ORIENTATION_TOPLEFT)
+			->seal();
 
 		$imagick = new Imagick();
 		$this->call($imagick, 'autoOrient', $image);
@@ -120,7 +121,8 @@ class ImagickTest extends TestCase
 		$image = $this->createMock(Image::class);
 		$image->expects($this->once())
 			->method('blurImage')
-			->with(0, 50);
+			->with(0, 50)
+			->seal();
 
 		$imagick = new Imagick();
 		$this->call($imagick, 'blur', $image, ['blur' => 50]);
@@ -133,7 +135,8 @@ class ImagickTest extends TestCase
 		$image->method('getNumberImages')->willReturn(3);
 		$image->expects($this->once())
 			->method('coalesceImages')
-			->willReturn($coalesced = new Image());
+			->willReturn($coalesced = new Image())
+			->seal();
 
 		$imagick = new Imagick();
 		$this->assertSame($coalesced, $this->call($imagick, 'coalesce', $image));
@@ -178,7 +181,8 @@ class ImagickTest extends TestCase
 		$image = $this->createMock(Image::class);
 		$image->expects($this->once())
 			->method('transformImageColorspace')
-			->with(Image::COLORSPACE_GRAY);
+			->with(Image::COLORSPACE_GRAY)
+			->seal();
 
 		$imagick = new Imagick();
 		$this->call($imagick, 'grayscale', $image, ['grayscale' => true]);
@@ -189,7 +193,8 @@ class ImagickTest extends TestCase
 		$image = $this->createMock(Image::class);
 		$image->expects($this->once())
 			->method('setInterlaceScheme')
-			->with(Image::INTERLACE_LINE);
+			->with(Image::INTERLACE_LINE)
+			->seal();
 
 		$imagick = new Imagick();
 		$this->call($imagick, 'interlace', $image, ['interlace' => true]);
@@ -212,7 +217,8 @@ class ImagickTest extends TestCase
 		$image->method('getNumberImages')->willReturn(3);
 		$image->expects($this->once())
 			->method('optimizeImageLayers')
-			->willReturn($optimized = new Image());
+			->willReturn($optimized = new Image())
+			->seal();
 
 		$imagick = new Imagick();
 		$this->assertSame($optimized, $this->call($imagick, 'optimize', $image, 'thumb.gif', ['format' => null]));
@@ -231,7 +237,7 @@ class ImagickTest extends TestCase
 	{
 		$image = $this->createMock(Image::class);
 		$image->method('getNumberImages')->willReturn(3);
-		$image->expects($this->never())->method('optimizeImageLayers');
+		$image->expects($this->never())->method('optimizeImageLayers')->seal();
 
 		$imagick = new Imagick();
 		$this->assertSame($image, $this->call($imagick, 'optimize', $image, $file, ['format' => $format]));
@@ -241,7 +247,7 @@ class ImagickTest extends TestCase
 	{
 		$image = $this->createMock(Image::class);
 		$image->method('getNumberImages')->willReturn(1);
-		$image->expects($this->never())->method('optimizeImageLayers');
+		$image->expects($this->never())->method('optimizeImageLayers')->seal();
 
 		$imagick = new Imagick();
 		$this->assertSame($image, $this->call($imagick, 'optimize', $image, 'thumb.gif', ['format' => null]));
@@ -458,7 +464,8 @@ class ImagickTest extends TestCase
 		$image = $this->createMock(Image::class);
 		$image->expects($this->once())
 			->method('setImageCompressionQuality')
-			->with(90);
+			->with(90)
+			->seal();
 
 		$imagick = new Imagick();
 		$this->call($imagick, 'quality', $image, ['quality' => 90]);
@@ -565,7 +572,8 @@ class ImagickTest extends TestCase
 		$image->expects($this->once())
 			->method('writeImages')
 			->with('webp:' . static::TMP . '/cat.jpg', true)
-			->willReturn(true);
+			->willReturn(true)
+			->seal();
 
 		$result = $this->call($imagick, 'save', $image, static::TMP . '/cat.jpg', [
 			'format' => 'webp'
@@ -579,7 +587,8 @@ class ImagickTest extends TestCase
 		$image = $this->createMock(Image::class);
 		$image->expects($this->once())
 			->method('sharpenImage')
-			->with(0, 0.5);
+			->with(0, 0.5)
+			->seal();
 
 		$imagick = new Imagick();
 		$this->call($imagick, 'sharpen', $image, ['sharpen' => 50]);

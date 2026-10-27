@@ -35,7 +35,7 @@ class AuthStateTest extends TestCase
 	public function testFlush(): void
 	{
 		$user = $this->createMock(User::class);
-		$user->expects($this->once())->method('flush');
+		$user->expects($this->once())->method('flush')->seal();
 
 		$auth = $this->auth($user, $this->createStub(Status::class));
 		$auth->flush();
@@ -47,7 +47,7 @@ class AuthStateTest extends TestCase
 		$kirbyUser = $this->createStub(CmsUser::class);
 
 		$authUser = $this->createMock(User::class);
-		$authUser->expects($this->once())->method('set')->with($kirbyUser);
+		$authUser->expects($this->once())->method('set')->with($kirbyUser)->seal();
 
 		$status = $this->createStub(Status::class);
 		$auth   = $this->auth($authUser, $status);

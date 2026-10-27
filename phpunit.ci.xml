@@ -8,6 +8,7 @@
 	colors="true"
 	controlGarbageCollector="true"
 	failOnAllIssues="true"
+	requireSealedMockObjects="true"
 	stderr="true"
 >
 	<source>
