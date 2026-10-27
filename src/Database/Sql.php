@@ -658,10 +658,10 @@ abstract class Sql
 			$result = [];
 
 			foreach ($columns as $column) {
-				[$table, $columnPart] = $this->splitIdentifier($table, $column);
+				[$source, $name] = $this->splitIdentifier($table, $column);
 
-				if ($this->validateColumn($table, $columnPart) === true) {
-					$result[] = $this->combineIdentifier($table, $columnPart);
+				if ($this->validateColumn($source, $name) === true) {
+					$result[] = $this->combineIdentifier($source, $name);
 				}
 			}
 

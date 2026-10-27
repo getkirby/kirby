@@ -320,8 +320,8 @@ class Request
 				continue;
 			}
 
-			// remove HTTP_
-			$key = str_replace(['REDIRECT_HTTP_', 'HTTP_'], '', $key);
+			// remove the prefix
+			$key = preg_replace('/^(REDIRECT_)?HTTP_/', '', $key);
 
 			// convert to lowercase
 			$key = strtolower($key);

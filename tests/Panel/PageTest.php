@@ -440,6 +440,48 @@ class PageTest extends TestCase
 		$this->assertSame('Test Title', (string)$data['text']);
 	}
 
+	public function testPickerDataHasChildren(): void
+	{
+		$uuid = uuid();
+
+		$app = $this->app->clone([
+			'blueprints' => [
+				'pages/secret-' . $uuid => [
+					'options' => ['list' => false]
+				]
+			],
+			'roles' => [
+				['name' => 'editor-' . $uuid]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'a',
+						'children' => [
+							['slug' => 'b']
+						]
+					],
+					[
+						'slug'     => 'c',
+						'children' => [
+							['slug' => 'd', 'template' => 'secret-' . $uuid]
+						]
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor-' . $uuid
+				]
+			],
+			'user' => 'editor@getkirby.com'
+		]);
+
+		$this->assertTrue(new Page($app->page('a'))->pickerData()['hasChildren']);
+		$this->assertFalse(new Page($app->page('c'))->pickerData()['hasChildren']);
+	}
+
 	public function testPosition(): void
 	{
 		$page = new ModelPage([

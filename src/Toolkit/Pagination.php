@@ -388,7 +388,7 @@ class Pagination
 	 * Sets the current page
 	 *
 	 * @param $page Int or int in string form;
-	 *              automatically determined if null
+	 *             automatically determined if null
 	 * @return $this
 	 */
 	protected function setPage(int|string|null $page = null): static

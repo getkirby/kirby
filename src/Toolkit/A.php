@@ -872,7 +872,7 @@ class A
 	 * ```php
 	 * $array = [1, 30, 39, 29, 10, 'foo' => 12, 13];
 	 *
-	 * echo A::some($array, n ($value) => $value > 30) ? 'a' : 'b';
+	 * echo A::some($array, fn ($value) => $value > 30) ? 'a' : 'b';
 	 * // output: 'a'
 	 *
 	 * echo A::some($array, fn ($value, $key) => is_string($key)) ? 'a' : 'b';

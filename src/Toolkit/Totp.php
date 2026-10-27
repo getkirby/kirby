@@ -25,10 +25,10 @@ class Totp
 
 	/**
 	 * @param $secret Existing secret in Base32 format
-	 *                or `null` to generate a new one
+	 *               or `null` to generate a new one
 	 * @param $force Whether to skip the secret length validation;
-	 *               WARNING: Only ever set this to `true` when
-	 *               generating codes for third-party services
+	 *              WARNING: Only ever set this to `true` when
+	 *              generating codes for third-party services
 	 */
 	public function __construct(
 		#[SensitiveParameter]
@@ -66,7 +66,7 @@ class Totp
 	 * Generates the current TOTP code
 	 *
 	 * @param $offset Optional counter offset to generate
-	 *                previous or upcoming codes
+	 *               previous or upcoming codes
 	 * @return numeric-string
 	 */
 	public function generate(int $offset = 0): string

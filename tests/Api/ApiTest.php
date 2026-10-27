@@ -1288,7 +1288,7 @@ class ApiTest extends TestCase
 			$body['message']
 		);
 		$this->assertStringNotContainsString($app->root('index'), $body['message']);
-		$this->assertStringContainsString('{kirby}', $body['message']);
+		$this->assertStringContainsString('{index}', $body['message']);
 	}
 
 	public function testRenderKirbyException(): void
