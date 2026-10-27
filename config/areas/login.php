@@ -26,8 +26,7 @@ return function ($kirby) {
 					$query  = $kirby->request()->query();
 					$path   = 'login/method/' . $method::type();
 
-					// keep the query, e.g. the globals the logout view
-					// requests, as this is only a redirect to the method
+					// keep the query, as this only redirects to the default method
 					if ($query->isNotEmpty() === true) {
 						$path .= '?' . $query->toString();
 					}

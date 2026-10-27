@@ -75,13 +75,7 @@ class UserDeleteDialogControllerTest extends TestCase
 
 	public function testSubmitWithReferrer(): void
 	{
-		$this->app = $this->app->clone([
-			'request' => [
-				'query' => [
-					'_referrer' => '/users/test'
-				]
-			]
-		]);
+		$this->setHeaders(['X-Panel-Referrer' => '/users/test']);
 
 		$this->app->impersonate('kirby');
 
@@ -95,13 +89,7 @@ class UserDeleteDialogControllerTest extends TestCase
 
 	public function testSubmitWithOwnAccount(): void
 	{
-		$this->app = $this->app->clone([
-			'request' => [
-				'query' => [
-					'_referrer' => '/users/test'
-				]
-			]
-		]);
+		$this->setHeaders(['X-Panel-Referrer' => '/users/test']);
 
 		$this->app->impersonate('test');
 
