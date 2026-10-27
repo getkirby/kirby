@@ -333,7 +333,8 @@ class Environment
 
 		if (
 			str_starts_with($sapi, 'cgi') === true &&
-			$term &&
+			$term !== false &&
+			$term !== '' &&
 			$term !== 'unknown'
 		) {
 			return true;
@@ -655,7 +656,7 @@ class Environment
 	 * @param $default Optional default value, which should be
 	 *                returned if no element has been found
 	 */
-	public function get(string|false|null $key = null, $default = null)
+	public function get(string|false|null $key = null, mixed $default = null)
 	{
 		if (is_string($key) === false) {
 			return $this->info;
@@ -680,7 +681,7 @@ class Environment
 	 */
 	public static function getGlobally(
 		string|false|null $key = null,
-		$default = null
+		mixed $default = null
 	) {
 		// first try the global `Environment` object if the CMS is running
 		if ($app = App::instance(lazy: true)) {
@@ -854,7 +855,7 @@ class Environment
 	/**
 	 * Returns the detected path
 	 */
-	public function path(): string|null
+	public function path(): string
 	{
 		return $this->path;
 	}
@@ -889,7 +890,7 @@ class Environment
 	 */
 	public static function sanitize(
 		string|array $key,
-		$value = null
+		mixed $value = null
 	) {
 		if (is_array($key) === true) {
 			foreach ($key as $k => $v) {
