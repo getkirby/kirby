@@ -166,6 +166,9 @@ class Status
 		return $this->state;
 	}
 
+	/**
+	 * @return array{challenge: string|null, data: mixed, email: string|null, mode: string|null, status: string}
+	 */
 	public function toArray(): array
 	{
 		return [
