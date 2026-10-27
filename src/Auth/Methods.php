@@ -9,6 +9,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Session\Session;
 use Kirby\Toolkit\A;
+use SensitiveParameter;
 
 /**
  * Handler for all auth methods
@@ -41,6 +42,7 @@ class Methods
 	public function authenticate(
 		string $type,
 		string|null $email,
+		#[SensitiveParameter]
 		string|null $password = null,
 		bool $long = false
 	): User|Status {

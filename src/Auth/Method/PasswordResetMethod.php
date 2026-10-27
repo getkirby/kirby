@@ -5,6 +5,7 @@ namespace Kirby\Auth\Method;
 use Kirby\Auth\Auth;
 use Kirby\Auth\Status;
 use Kirby\Cms\User;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\Ui\Component;
 use SensitiveParameter;
 
@@ -17,12 +18,21 @@ use SensitiveParameter;
  */
 class PasswordResetMethod extends CodeMethod
 {
+	/**
+	 * @throws InvalidArgumentException If the email is missing
+	 */
 	public function authenticate(
 		string|null $email,
 		#[SensitiveParameter]
 		string|null $password = null,
 		bool $long = false
 	): Status {
+		if ($email === null) {
+			throw new InvalidArgumentException(
+				message: 'Missing email'
+			);
+		}
+
 		return $this->auth->createChallenge(
 			mode: 'password-reset',
 			email: $email,

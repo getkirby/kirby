@@ -21,7 +21,7 @@ use SensitiveParameter;
 class PasswordMethod extends Method
 {
 	/**
-	 * @throws InvalidArgumentException If the password is missing
+	 * @throws InvalidArgumentException If the email or password is missing
 	 */
 	public function authenticate(
 		string|null $email,
@@ -29,6 +29,12 @@ class PasswordMethod extends Method
 		string|null $password = null,
 		bool $long = false
 	): User|Status {
+		if ($email === null) {
+			throw new InvalidArgumentException(
+				message: 'Missing email'
+			);
+		}
+
 		if ($password === null) {
 			throw new InvalidArgumentException(
 				message: 'Missing password'

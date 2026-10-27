@@ -3,6 +3,7 @@
 namespace Kirby\Parsley\Schema;
 
 use Kirby\Parsley\Element;
+use Kirby\Parsley\Parsley;
 use Kirby\Parsley\Schema;
 use Kirby\Toolkit\Dom;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -591,6 +592,21 @@ class BlocksTest extends TestCase
 		];
 
 		$this->assertSame($expected, $this->schema->pre($element));
+	}
+
+	public function testPreWithLanguageOfOtherCodeBlock(): void
+	{
+		$html = <<<HTML
+			<pre><code class="language-php">PHP</code></pre>
+			<pre><code class="language-js">JS</code></pre>
+			<pre>Text</pre>
+			HTML;
+
+		$blocks = (new Parsley($html, $this->schema))->blocks();
+
+		$this->assertSame('php', $blocks[0]['content']['language']);
+		$this->assertSame('js', $blocks[1]['content']['language']);
+		$this->assertSame('text', $blocks[2]['content']['language']);
 	}
 
 	public function testSanitize(): void

@@ -108,17 +108,15 @@ class V
 		// make sure $value is a string
 		$value ??= '';
 
-		$args = func_get_args();
-
 		// simple date validation
-		if (count($args) === 1) {
+		if ($operator === null) {
 			$date = date_parse($value);
 			return $date['error_count'] === 0 &&
 					$date['warning_count'] === 0;
 		}
 
 		$value = strtotime($value);
-		$test  = strtotime($test);
+		$test  = strtotime($test ?? '');
 
 		if (is_int($value) !== true || is_int($test) !== true) {
 			return false;
@@ -268,7 +266,7 @@ class V
 			try {
 				static::value($value, $rules);
 			} catch (Exception $e) {
-				throw new Exception(sprintf($e->getMessage() . ' for field "%s"', $field));
+				throw new Exception($e->getMessage() . ' for field "' . $field . '"');
 			}
 		}
 
@@ -404,7 +402,7 @@ class V
 	 */
 	public static function maxLength(string|null $value, $max): bool
 	{
-		return Str::length(trim($value)) <= $max;
+		return Str::length(trim($value ?? '')) <= $max;
 	}
 
 	/**
@@ -477,7 +475,7 @@ class V
 	 */
 	public static function minLength(string|null $value, $min): bool
 	{
-		return Str::length(trim($value)) >= $min;
+		return Str::length(trim($value ?? '')) >= $min;
 	}
 
 	/**

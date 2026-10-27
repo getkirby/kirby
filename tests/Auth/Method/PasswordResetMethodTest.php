@@ -57,6 +57,16 @@ class PasswordResetMethodTest extends TestCase
 		$this->assertSame(['lisa@simpsons.com', false, 'password-reset'], $args);
 	}
 
+	public function testAuthenticateWithoutEmail(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Missing email');
+
+		$auth   = $this->createStub(Auth::class);
+		$method = new PasswordResetMethod(auth: $auth);
+		$method->authenticate(null, long: true);
+	}
+
 	public function testForm(): void
 	{
 		$auth   = $this->auth();

@@ -298,6 +298,16 @@ class EmailChallengeTest extends TestCase
 
 		$this->assertTrue($challenge->verify('123456', $data));
 		$this->assertTrue($challenge->verify('123 456', $data));
+		$this->assertTrue($challenge->verify(123456, $data));
+	}
+
+	public function testVerifyWithInvalidInput(): void
+	{
+		$challenge = new EmailChallenge($this->user, 'login', 600);
+		$data      = new Pending(secret: self::$password);
+
+		$this->assertFalse($challenge->verify(null, $data));
+		$this->assertFalse($challenge->verify(['123456'], $data));
 	}
 
 	public function testVerifyWithInvalidHash(): void

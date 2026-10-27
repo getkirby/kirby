@@ -143,6 +143,15 @@ class VTest extends TestCase
 		$this->assertFalse(V::date('January 32, 1989'));
 	}
 
+	public function testDateWithoutOperatorOrTest(): void
+	{
+		// no operator means a simple date validation
+		$this->assertTrue(V::date('2017-12-24', null, null));
+
+		// missing comparison value
+		$this->assertFalse(V::date('2345-01-01', '<'));
+	}
+
 	public function testDateComparison(): void
 	{
 		$this->assertTrue(V::date('2345-01-01', '==', '01.01.2345'));
@@ -365,6 +374,19 @@ class VTest extends TestCase
 		$this->assertTrue(V::input($input, $rules));
 	}
 
+	public function testInputWithPercentInMessage(): void
+	{
+		V::$validators['discount'] = fn ($value): bool => false;
+		I18n::$translations['en'] = [
+			'error.validation.discount' => 'Must be 100%s off'
+		];
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Must be 100%s off for field "price"');
+
+		V::input(['price' => 5], ['price' => ['discount' => []]]);
+	}
+
 	public function testInteger(): void
 	{
 		$this->assertTrue(V::integer(5));
@@ -549,6 +571,12 @@ class VTest extends TestCase
 		$this->assertFalse(V::json(false));
 		$this->assertFalse(V::json(42));
 		$this->assertFalse(V::json(''));
+	}
+
+	public function testLengthWithNull(): void
+	{
+		$this->assertTrue(V::maxLength(null, 3));
+		$this->assertFalse(V::minLength(null, 1));
 	}
 
 	public function testLess(): void

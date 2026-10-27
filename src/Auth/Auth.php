@@ -286,6 +286,7 @@ class Auth
 	 */
 	public function guard(
 		string|null $email,
+		#[SensitiveParameter]
 		Closure $attempt,
 		Throwable|null $fallback = null
 	): mixed {

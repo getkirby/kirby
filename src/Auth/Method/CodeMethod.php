@@ -21,12 +21,21 @@ use SensitiveParameter;
  */
 class CodeMethod extends Method
 {
+	/**
+	 * @throws InvalidArgumentException If the email is missing
+	 */
 	public function authenticate(
 		string|null $email,
 		#[SensitiveParameter]
 		string|null $password = null,
 		bool $long = false
 	): Status {
+		if ($email === null) {
+			throw new InvalidArgumentException(
+				message: 'Missing email'
+			);
+		}
+
 		// no password required; directly create challenge
 		return $this->auth->createChallenge(
 			mode: 'login',

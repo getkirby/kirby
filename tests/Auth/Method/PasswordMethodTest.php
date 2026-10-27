@@ -50,6 +50,16 @@ class PasswordMethodTest extends TestCase
 		]], $login);
 	}
 
+	public function testAuthenticateWithoutEmail(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Missing email');
+
+		$auth   = $this->createStub(Auth::class);
+		$method = new PasswordMethod(auth: $auth);
+		$method->authenticate(null, 'secret123');
+	}
+
 	public function testForm(): void
 	{
 		$auth   = $this->createStub(Auth::class);
