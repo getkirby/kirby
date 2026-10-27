@@ -487,8 +487,8 @@ class ImagickTest extends TestCase
 		$imagick->process($file);
 		$image = new Image($file);
 
-		$this->assertEquals(200, $image->getImageWidth());
-		$this->assertEquals(150, $image->getImageHeight());
+		$this->assertSame(200, $image->getImageWidth());
+		$this->assertSame(150, $image->getImageHeight());
 	}
 
 	public function testResizeWithoutCrop(): void
@@ -506,8 +506,8 @@ class ImagickTest extends TestCase
 		$imagick->process($file);
 		$image = new Image($file);
 
-		$this->assertEquals(200, $image->getImageWidth());
-		$this->assertEquals(200, $image->getImageHeight());
+		$this->assertSame(200, $image->getImageWidth());
+		$this->assertSame(200, $image->getImageHeight());
 	}
 
 	public function testResizeWithFocusPoint(): void
@@ -526,8 +526,8 @@ class ImagickTest extends TestCase
 		$imagick->process($file);
 		$image = new Image($file);
 
-		$this->assertEquals(200, $image->getImageWidth());
-		$this->assertEquals(150, $image->getImageHeight());
+		$this->assertSame(200, $image->getImageWidth());
+		$this->assertSame(150, $image->getImageHeight());
 	}
 
 	public function testResizeWithCropRounding(): void
@@ -546,8 +546,8 @@ class ImagickTest extends TestCase
 		$imagick->process($file);
 		$image = new Image($file);
 
-		$this->assertEquals(200, $image->getImageWidth());
-		$this->assertEquals(289, $image->getImageHeight());
+		$this->assertSame(200, $image->getImageWidth());
+		$this->assertSame(289, $image->getImageHeight());
 	}
 
 	public function testSaveWithFormat(): void

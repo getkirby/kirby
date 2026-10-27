@@ -634,7 +634,7 @@ class AppPluginsTest extends TestCase
 			'with_underscore' => 'withunderscorePage'
 		];
 
-		$this->assertEquals($expected, Page::$models); // cannot use strict assertion (filesystem sorting)
+		$this->assertArraysAreIdenticalIgnoringOrder($expected, Page::$models);
 	}
 
 	public function testExtensionsFromOptions(): void

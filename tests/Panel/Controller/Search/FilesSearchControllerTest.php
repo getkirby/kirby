@@ -103,7 +103,7 @@ class FilesSearchControllerTest extends TestCase
 		$models     = $controller->models();
 
 		$this->assertCount(5, $models);
-		$this->assertEqualsCanonicalizing([
+		$this->assertArraysHaveIdenticalValuesIgnoringOrder([
 			'red-fish.jpg',
 			'blue-fish.jpg',
 			'pink-fish.jpg',
@@ -162,7 +162,7 @@ class FilesSearchControllerTest extends TestCase
 		$controller = new FilesSearchController(query:'fish');
 		$models     = $controller->models();
 		$this->assertCount(1, $models);
-		$this->assertEqualsCanonicalizing([
+		$this->assertArraysHaveIdenticalValuesIgnoringOrder([
 			'blue-fish.jpg'
 		], $models->values(fn ($model) => $model->filename()));
 
@@ -170,7 +170,7 @@ class FilesSearchControllerTest extends TestCase
 		$controller = new FilesSearchController(query:'fish');
 		$models     = $controller->models();
 		$this->assertCount(2, $models);
-		$this->assertEqualsCanonicalizing([
+		$this->assertArraysHaveIdenticalValuesIgnoringOrder([
 			'blue-fish.jpg',
 			'red-fish.jpg'
 		], $models->values(fn ($model) => $model->filename()));

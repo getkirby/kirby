@@ -203,7 +203,7 @@ class BlueprintTest extends TestCase
 			]
 		];
 
-		$this->assertEquals($expected, $blueprint->toArray()['tabs']); // cannot use strict assertion (array order)
+		$this->assertArraysAreIdenticalIgnoringOrder($expected, $blueprint->toArray()['tabs']);
 	}
 
 	public function testSectionsToFieldsWithHeadline(): void
@@ -334,7 +334,7 @@ class BlueprintTest extends TestCase
 			]
 		];
 
-		$this->assertEquals($expected, $blueprint->toArray()['tabs']); // cannot use strict assertion (array order)
+		$this->assertArraysAreIdenticalIgnoringOrder($expected, $blueprint->toArray()['tabs']);
 	}
 
 	public function testTitle(): void

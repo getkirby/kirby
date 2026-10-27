@@ -565,7 +565,7 @@ class FieldMethodsTest extends FieldTest
 			$block = $blocks->nth($index);
 
 			$this->assertSame($page, $block->parent());
-			$this->assertEquals($field, $block->field()); // cannot use strict assertion (cloned object)
+			$this->assertSame($field, $block->field());
 			$this->assertSame($row['type'], $block->type());
 			$this->assertSame($row['content'], $block->content()->data());
 			$this->assertNotEmpty($block->toHtml());
@@ -914,7 +914,7 @@ class FieldMethodsTest extends FieldTest
 
 		$layout = $layouts->first();
 		$this->assertSame($page, $layout->parent());
-		$this->assertEquals($field, $layout->field()); // cannot use strict assertion (cloned object)
+		$this->assertSame($field, $layout->field());
 
 		$array = $layout->toArray();
 		$this->assertArrayHasKey('attrs', $array);
@@ -923,7 +923,7 @@ class FieldMethodsTest extends FieldTest
 
 		$block = $blocks->first();
 		$this->assertSame($page, $block->parent());
-		$this->assertEquals($field, $block->field());
+		$this->assertSame($field, $block->field());
 	}
 
 	public function testToLink(): void
@@ -1144,8 +1144,8 @@ class FieldMethodsTest extends FieldTest
 		$structure = $field->toStructure();
 
 		$this->assertCount(2, $structure);
-		$this->assertEquals($field, $structure->field()); // Field object gets cloned by the `Field` class
-		$this->assertEquals($field, $structure->first()->field()); // Field object gets cloned by the `Field` class
+		$this->assertSame($field, $structure->field());
+		$this->assertSame($field, $structure->first()->field());
 		$this->assertSame('a', $structure->first()->title()->value());
 		$this->assertSame('a', $structure->first()->content()->title()->value());
 		$this->assertSame('c', $structure->first()->content()->field()->value());

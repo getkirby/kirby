@@ -95,7 +95,7 @@ class BlueprintFieldTest extends TestCase
 			'width' => '1/1'
 		];
 
-		$this->assertEquals($expected, $props); // cannot use strict assertion (array order)
+		$this->assertArraysAreIdenticalIgnoringOrder($expected, $props);
 	}
 
 	public function testExtendFieldFromString(): void
@@ -141,7 +141,7 @@ class BlueprintFieldTest extends TestCase
 			'width' => '1/1'
 		];
 
-		$this->assertEquals($expected, $props); // cannot use strict assertion (array order)
+		$this->assertArraysAreIdenticalIgnoringOrder($expected, $props);
 	}
 
 	public function testNestedFields(): void
@@ -187,7 +187,7 @@ class BlueprintFieldTest extends TestCase
 			'type' => 'group'
 		];
 
-		$this->assertEquals($expected, $props); // cannot use strict assertion (array order)
+		$this->assertArraysAreIdenticalIgnoringOrder($expected, $props);
 	}
 
 	public function testFieldGroupWhen(): void
@@ -221,7 +221,7 @@ class BlueprintFieldTest extends TestCase
 			'type' => 'group'
 		];
 
-		$this->assertEquals($expected, $props); // cannot use strict assertion (array order)
+		$this->assertArraysAreIdenticalIgnoringOrder($expected, $props);
 	}
 
 	public function testFieldGroupWhenMerge(): void
@@ -262,6 +262,6 @@ class BlueprintFieldTest extends TestCase
 			'type' => 'group'
 		];
 
-		$this->assertEquals($expected, $props); // cannot use strict assertion (array order)
+		$this->assertArraysAreIdenticalIgnoringOrder($expected, $props);
 	}
 }

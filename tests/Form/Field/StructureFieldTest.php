@@ -466,8 +466,8 @@ class StructureFieldTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals($value, $field->toFormValue()); // cannot use strict assertion (array order)
-		$this->assertEquals($value, $field->toStoredValue()); // cannot use strict assertion (array order)
+		$this->assertArraysAreIdenticalIgnoringOrder($value, $field->toFormValue());
+		$this->assertArraysAreIdenticalIgnoringOrder($value, $field->toStoredValue());
 
 		// empty mother form
 		$motherForm = $field->form();
@@ -486,7 +486,7 @@ class StructureFieldTest extends TestCase
 		$motherForm = $field->form()->fill(input: $value[0], passthrough: true);
 		$expected   = $value[0];
 
-		$this->assertEquals($expected, $motherForm->toStoredValues()); // cannot use strict assertion (array order)
+		$this->assertArraysAreIdenticalIgnoringOrder($expected, $motherForm->toStoredValues());
 
 		/**
 		 * @var StructureField $childrenField

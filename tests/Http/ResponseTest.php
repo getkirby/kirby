@@ -365,7 +365,7 @@ class ResponseTest extends TestCase
 		$response = Response::refresh();
 		$this->assertSame('', $response->body());
 		$this->assertSame(302, $response->code());
-		$this->assertEquals(['Refresh' => '0; url=/'], $response->headers());
+		$this->assertSame(['Refresh' => '0; url=/'], $response->headers());
 	}
 
 	public function testRefreshWithLocation(): void
@@ -373,7 +373,7 @@ class ResponseTest extends TestCase
 		$response = Response::refresh('https://getkirby.com');
 		$this->assertSame('', $response->body());
 		$this->assertSame(302, $response->code());
-		$this->assertEquals(['Refresh' => '0; url=https://getkirby.com'], $response->headers());
+		$this->assertSame(['Refresh' => '0; url=https://getkirby.com'], $response->headers());
 	}
 
 	public function testRefreshWithTime(): void
@@ -381,7 +381,7 @@ class ResponseTest extends TestCase
 		$response = Response::refresh('https://getkirby.com', 302, 5);
 		$this->assertSame('', $response->body());
 		$this->assertSame(302, $response->code());
-		$this->assertEquals(['Refresh' => '5; url=https://getkirby.com'], $response->headers());
+		$this->assertSame(['Refresh' => '5; url=https://getkirby.com'], $response->headers());
 	}
 
 	public function testSetHeaderFallbacks(): void
@@ -390,7 +390,7 @@ class ResponseTest extends TestCase
 			'headers' => ['a' => 'b']
 		]);
 		$response->setHeaderFallbacks(['a' => 'z', 'c' => 'd']);
-		$this->assertEquals(['a' => 'b', 'c' => 'd'], $response->headers());
+		$this->assertSame(['a' => 'b', 'c' => 'd'], $response->headers());
 	}
 
 	#[RunInSeparateProcess]

@@ -95,7 +95,7 @@ class PagesSearchControllerTest extends TestCase
 		$models     = $controller->models();
 
 		$this->assertCount(3, $models);
-		$this->assertEqualsCanonicalizing([
+		$this->assertArraysHaveIdenticalValuesIgnoringOrder([
 			'beautiful-animals',
 			'beautiful-flowers',
 			'beautiful-trees'
@@ -155,7 +155,7 @@ class PagesSearchControllerTest extends TestCase
 		$controller = new PagesSearchController(query:'friend');
 		$models     = $controller->models();
 		$this->assertCount(1, $models);
-		$this->assertEqualsCanonicalizing([
+		$this->assertArraysHaveIdenticalValuesIgnoringOrder([
 			'A friend'
 		], $models->values(fn ($model) => $model->title()->value()));
 
@@ -163,7 +163,7 @@ class PagesSearchControllerTest extends TestCase
 		$controller = new PagesSearchController(query:'friend');
 		$models     = $controller->models();
 		$this->assertCount(2, $models);
-		$this->assertEqualsCanonicalizing([
+		$this->assertArraysHaveIdenticalValuesIgnoringOrder([
 			'A friend',
 			'A secret friend'
 		], $models->values(fn ($model) => $model->title()->value()));

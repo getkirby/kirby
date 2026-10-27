@@ -83,7 +83,7 @@ class UsersSearchControllerTest extends TestCase
 		$models     = $controller->models();
 
 		$this->assertCount(2, $models);
-		$this->assertEqualsCanonicalizing([
+		$this->assertArraysHaveIdenticalValuesIgnoringOrder([
 			'bart@simpson.com',
 			'homer@simpson.com'
 		], $models->values(fn ($model) => $model->email()));
@@ -132,7 +132,7 @@ class UsersSearchControllerTest extends TestCase
 		$controller = new UsersSearchController(query: 'getkirby.com');
 		$models     = $controller->models();
 		$this->assertCount(3, $models);
-		$this->assertEqualsCanonicalizing([
+		$this->assertArraysHaveIdenticalValuesIgnoringOrder([
 			'a@getkirby.com',
 			'b@getkirby.com',
 			'c@getkirby.com'
@@ -143,7 +143,7 @@ class UsersSearchControllerTest extends TestCase
 		$controller = new UsersSearchController(query: 'getkirby.com');
 		$models     = $controller->models();
 		$this->assertCount(1, $models);
-		$this->assertEqualsCanonicalizing([
+		$this->assertArraysHaveIdenticalValuesIgnoringOrder([
 			'a@getkirby.com'
 		], $models->values(fn ($model) => $model->email()));
 	}
