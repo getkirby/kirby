@@ -264,8 +264,7 @@ abstract class Storage
 		$fields = $this->read($versionId, $language);
 		$fields = A::map(
 			$fields,
-			/** @param string|null $value */
-			function ($value) use ($map) {
+			function (string|null $value) use ($map): string|null {
 				// skip fields with null values
 				if ($value === null) {
 					return null;
