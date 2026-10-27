@@ -31,18 +31,13 @@ class UpdateStatus
 	 */
 	protected static bool $timedOut = false;
 
-	// props set in constructor
 	protected App $app;
 	protected string|null $currentVersion;
 	protected array|null $data;
 	protected string|null $pluginName;
 	protected bool $securityOnly;
-
-	// props updated throughout the class
 	protected array $exceptions = [];
 	protected bool|null $noVulns = null;
-
-	// caches
 	protected array|null $messages = null;
 	protected array|null $targetData = null;
 	protected array|false|null $versionEntry = null;

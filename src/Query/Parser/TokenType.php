@@ -24,8 +24,6 @@ enum TokenType
 	case T_ARROW;
 	case T_WHITESPACE;
 	case T_EOF;
-
-	// Comparison operators
 	case T_EQUAL; // ==
 	case T_IDENTICAL; // ===
 	case T_NOT_EQUAL; // !=
@@ -34,20 +32,14 @@ enum TokenType
 	case T_LESS_EQUAL; // <=
 	case T_GREATER_THAN; // >
 	case T_GREATER_EQUAL; // >=
-
-	// Math operators
 	case T_PLUS; // +
 	case T_MINUS; // -
 	case T_MULTIPLY; // *
 	case T_DIVIDE; // /
 	case T_MODULO; // %
-
-	// Logical operators
 	case T_AND; // AND or &&
 	case T_OR;  // OR or ||
 	case T_NOT; // !
-
-	// Literals
 	case T_STRING;
 	case T_INTEGER;
 	case T_FLOAT;
