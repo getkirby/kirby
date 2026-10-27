@@ -203,6 +203,7 @@ class ToggleFieldTest extends TestCase
 		$field = $this->field('toggle', [
 			'model'    => $page,
 			'required' => true,
+			'value'    => false,
 			'when'     => [
 				'foo' => 'x'
 			]
@@ -213,11 +214,16 @@ class ToggleFieldTest extends TestCase
 		$field = $this->field('toggle', [
 			'model'    => $page,
 			'required' => true,
+			'value'    => false,
 			'when'     => [
 				'foo' => 'a'
 			]
 		], $fields);
 
-		$this->assertSame(['required' => 'The field is required'], $field->errors());
+		$expected = [
+			'required' => 'The field is required',
+		];
+
+		$this->assertSame($expected, $field->errors());
 	}
 }
