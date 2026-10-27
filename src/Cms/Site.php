@@ -394,9 +394,8 @@ class Site extends ModelWithContent
 			return null;
 		}
 
-		// the site preview defaults to the home page, so for backward
-		// compatibility we also check the home page's preview permission
-		// @todo Remove in 6.0.0, only check `site.preview`
+		// the preview renders the home page with its preview token
+		// @todo 7.0 Only check `site.preview` with a site preview token
 		if ($this->homePage()?->guards()->isAvailable('preview') !== true) {
 			return null;
 		}
