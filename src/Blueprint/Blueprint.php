@@ -72,7 +72,7 @@ class Blueprint
 	 */
 	public function __construct(array $props)
 	{
-		if (empty($props['model']) === true) {
+		if (isset($props['model']) === false) {
 			throw new InvalidArgumentException(
 				message: 'A blueprint model is required'
 			);
@@ -139,10 +139,8 @@ class Blueprint
 	 * Extends the props with props from a given
 	 * mixin, when an extends key is set or the
 	 * props is just a string
-	 *
-	 * @param array|string $props
 	 */
-	public static function extend($props): array
+	public static function extend(array|string $props): array
 	{
 		if (is_string($props) === true) {
 			$props = [
@@ -221,6 +219,8 @@ class Blueprint
 
 	/**
 	 * Creates an error field with the given error message
+	 *
+	 * @return array{label: string, name: string, text: string, theme: string, type: string}
 	 */
 	public static function fieldError(string $name, string $message): array
 	{
