@@ -153,7 +153,7 @@ class Page extends Model
 
 		return [
 			...$item->props(),
-			'hasChildren' => $this->model->hasChildren(),
+			'hasChildren' => $this->model->children()->findBy('isListable', true) !== null,
 			'sortable'    => true
 		];
 	}
