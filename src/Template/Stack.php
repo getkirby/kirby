@@ -20,17 +20,23 @@ class Stack
 	protected static int $depths = 0;
 
 	/**
-	 * Names of stacks currently capturing output
+	 * Stacks currently capturing output
+	 *
+	 * @var list<array{name: string, unique: bool}>
 	 */
 	protected static array $active = [];
 
 	/**
-	 * Deferred stack placeholders
+	 * Deferred stack placeholders by their token
+	 *
+	 * @var array<string, array{name: string, glue: string, clear: bool}>
 	 */
 	protected static array $placeholders = [];
 
 	/**
 	 * Stored stack contents
+	 *
+	 * @var array<string, list<string>>
 	 */
 	protected static array $stacks = [];
 
@@ -119,12 +125,11 @@ class Stack
 	): void {
 		$content = (string)$content;
 
-		if ($unique === true) {
-			$existing = static::$stacks[$name] ?? [];
-
-			if (in_array($content, $existing, true) === true) {
-				return;
-			}
+		if (
+			$unique === true &&
+			in_array($content, static::$stacks[$name] ?? [], true) === true
+		) {
+			return;
 		}
 
 		static::$stacks[$name][] = $content;
@@ -174,9 +179,9 @@ class Stack
 	 */
 	public static function reset(): void
 	{
-		static::$active = [];
-		static::$stacks = [];
+		static::$active       = [];
+		static::$depths       = 0;
 		static::$placeholders = [];
-		static::$depths = 0;
+		static::$stacks       = [];
 	}
 }
