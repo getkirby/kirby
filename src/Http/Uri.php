@@ -321,8 +321,8 @@ class Uri implements Stringable
 		$this->query->merge($parent->query());
 		$this->params->merge($parent->params());
 
-		if ($fragment = $parent->fragment()) {
-			$this->setFragment($fragment);
+		if ($parent->hasFragment() === true) {
+			$this->setFragment($parent->fragment());
 		}
 
 		return $this;
@@ -350,7 +350,8 @@ class Uri implements Stringable
 	 */
 	public function setFragment(string|null $fragment = null): static
 	{
-		$this->fragment = $fragment ? ltrim($fragment, '#') : null;
+		$fragment       = ltrim($fragment ?? '', '#');
+		$this->fragment = $fragment !== '' ? $fragment : null;
 		return $this;
 	}
 

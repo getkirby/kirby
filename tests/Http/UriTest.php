@@ -125,6 +125,15 @@ class UriTest extends TestCase
 
 		$uri = new Uri('https://getkirby.com');
 		$this->assertNull($uri->fragment());
+
+		$uri = new Uri('https://getkirby.com#0');
+		$this->assertSame('0', $uri->fragment());
+		$this->assertNull($uri->setFragment('#')->fragment());
+		$this->assertSame('0', $uri->setFragment('#0')->fragment());
+		$this->assertSame('https://getkirby.com#0', $uri->toString());
+
+		$uri = (new Uri('https://getkirby.com'))->inherit('https://foo.com#0');
+		$this->assertSame('https://getkirby.com#0', $uri->toString());
 	}
 
 	public function testValidScheme(): void
