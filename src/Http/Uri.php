@@ -34,7 +34,7 @@ class Uri implements Stringable
 	/**
 	 * The optional password for basic authentication
 	 */
-	protected string|false|null $password;
+	protected string|null $password;
 
 	/**
 	 * The optional list of params
@@ -49,7 +49,7 @@ class Uri implements Stringable
 	/**
 	 * The optional port number
 	 */
-	protected int|false|null $port;
+	protected int|null $port;
 
 	/**
 	 * All original properties
@@ -78,7 +78,7 @@ class Uri implements Stringable
 	/**
 	 * The optional username for basic authentication
 	 */
-	protected string|false|null $username = null;
+	protected string|null $username = null;
 
 	/**
 	 * Creates a new URI object
@@ -151,7 +151,7 @@ class Uri implements Stringable
 	/**
 	 * Magic setter
 	 */
-	public function __set(string $property, $value): void
+	public function __set(string $property, mixed $value): void
 	{
 		if (method_exists($this, 'set' . $property) === true) {
 			$this->{'set' . $property}($value);
@@ -185,11 +185,17 @@ class Uri implements Stringable
 	 */
 	public function base(): string|null
 	{
-		if ($domain = $this->domain()) {
-			return $this->scheme ? $this->scheme . '://' . $domain : $domain;
+		$domain = $this->domain();
+
+		if ($domain === null) {
+			return null;
 		}
 
-		return null;
+		if ($this->scheme === null || $this->scheme === '') {
+			return $domain;
+		}
+
+		return $this->scheme . '://' . $domain;
 	}
 
 	/**
