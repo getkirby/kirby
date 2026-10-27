@@ -170,7 +170,7 @@ class Request
 		$type  = Str::lower(Str::before($auth, ' '));
 		$class = static::$authTypes[$type] ?? null;
 
-		if (!$class || class_exists($class) === false) {
+		if ($class === null || class_exists($class) === false) {
 			return $this->auth = false;
 		}
 
@@ -283,7 +283,7 @@ class Request
 	 * Returns any data field from the request
 	 * if it exists
 	 */
-	public function get(string|array|null $key = null, $fallback = null)
+	public function get(string|array|null $key = null, mixed $fallback = null)
 	{
 		return A::get($this->data(), $key, $fallback);
 	}
@@ -301,7 +301,7 @@ class Request
 	/**
 	 * Returns a header by key if it exists
 	 */
-	public function header(string $key, $fallback = null)
+	public function header(string $key, mixed $fallback = null)
 	{
 		$headers = array_change_key_case($this->headers());
 		return $headers[strtolower($key)] ?? $fallback;
