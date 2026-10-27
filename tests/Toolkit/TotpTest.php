@@ -73,7 +73,7 @@ class TotpTest extends TestCase
 	public function testSecretInvalid1(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('TOTP secrets should be 32 Base32 digits (= 20 bytes)');
+		$this->expectExceptionMessageIs('TOTP secrets should be 32 Base32 digits (= 20 bytes)');
 
 		new Totp('');
 	}
@@ -81,7 +81,7 @@ class TotpTest extends TestCase
 	public function testSecretInvalid2(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('TOTP secrets should be 32 Base32 digits (= 20 bytes)');
+		$this->expectExceptionMessageIs('TOTP secrets should be 32 Base32 digits (= 20 bytes)');
 
 		new Totp('TOOSHORT');
 	}
@@ -89,7 +89,7 @@ class TotpTest extends TestCase
 	public function testSecretInvalid3(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('TOTP secrets should be 32 Base32 digits (= 20 bytes)');
+		$this->expectExceptionMessageIs('TOTP secrets should be 32 Base32 digits (= 20 bytes)');
 
 		new Totp('ABcDEfGHiJKlMNoPQRStuVWXYZ012345'); // invalid Base32 digits
 	}
@@ -97,7 +97,7 @@ class TotpTest extends TestCase
 	public function testSecretInvalid4(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('TOTP secrets should be 32 Base32 digits (= 20 bytes)');
+		$this->expectExceptionMessageIs('TOTP secrets should be 32 Base32 digits (= 20 bytes)');
 
 		new Totp('TOOSHORT=', true); // invalid padding
 	}

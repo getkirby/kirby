@@ -349,7 +349,7 @@ class UserEmailChallengeDrawerControllerTest extends TestCase
 		$this->app->impersonate('kirby');
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid action: nope');
+		$this->expectExceptionMessageIs('Invalid action: nope');
 
 		new UserEmailChallengeDrawerController($this->app->user('test'))->submit();
 	}

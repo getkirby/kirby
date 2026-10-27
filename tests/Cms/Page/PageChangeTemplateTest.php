@@ -265,7 +265,7 @@ class PageChangeTemplateTest extends ModelTestCase
 		]);
 
 		$this->expectException(AbilityException::class);
-		$this->expectExceptionMessage('The template for the error page cannot be changed');
+		$this->expectExceptionCode('error.page.changeTemplate.errorPage');
 
 		$page->changeTemplate('article');
 	}

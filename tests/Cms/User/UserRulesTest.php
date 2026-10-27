@@ -77,11 +77,11 @@ class UserRulesTest extends ModelTestCase
 	public static function invalidDataProvider(): array
 	{
 		return [
-			['Email', 'domain.com', 'Please enter a valid email address'],
-			['Language', 'english', 'Please enter a valid language'],
-			['Password', '1234', 'Please enter a valid password. Passwords must be at least 8 characters long.'],
-			['Password', str_repeat('1234', 300), 'Please enter a valid password. Passwords must not be longer than 1000 characters.'],
-			['Role', 'rockstar', 'Please enter a valid role']
+			['Email', 'domain.com', 'error.user.email.invalid', 'Please enter a valid email address'],
+			['Language', 'english', 'error.user.language.invalid', 'Please enter a valid language'],
+			['Password', '1234', 'error.user.password.invalid', 'Please enter a valid password. Passwords must be at least 8 characters long.'],
+			['Password', str_repeat('1234', 300), 'error.user.password.excessive', 'Please enter a valid password. Passwords must not be longer than 1000 characters.'],
+			['Role', 'rockstar', 'error.user.role.invalid', 'Please enter a valid role']
 		];
 	}
 
@@ -89,13 +89,15 @@ class UserRulesTest extends ModelTestCase
 	public function testChangeInvalid(
 		string $key,
 		string $value,
+		string $code,
 		string $message
 	): void {
 		$this->app->impersonate('admin@domain.com');
 		$user = $this->app->user('user@domain.com');
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage($message);
+		$this->expectExceptionCode($code);
+		$this->expectExceptionMessageIs($message);
 
 		$this->assertTrue(UserRules::{'change' . $key}($user, $value));
 	}
@@ -103,10 +105,10 @@ class UserRulesTest extends ModelTestCase
 	public static function missingPermissionProvider(): array
 	{
 		return [
-			['Email', 'test@domain.com', 'You are not allowed to change the email for the user "user@domain.com"'],
-			['Language', 'english', 'You are not allowed to change the language for the user "user@domain.com"'],
-			['Name', 'Test', 'You are not allowed to change the name for the user "user@domain.com"'],
-			['Password', '1234', 'You are not allowed to change the password for the user "user@domain.com"'],
+			['Email', 'test@domain.com', 'error.user.changeEmail.permission', 'You are not allowed to change the email for the user "user@domain.com"'],
+			['Language', 'english', 'error.user.changeLanguage.permission', 'You are not allowed to change the language for the user "user@domain.com"'],
+			['Name', 'Test', 'error.user.changeName.permission', 'You are not allowed to change the name for the user "user@domain.com"'],
+			['Password', '1234', 'error.user.changePassword.permission', 'You are not allowed to change the password for the user "user@domain.com"'],
 		];
 	}
 
@@ -114,13 +116,15 @@ class UserRulesTest extends ModelTestCase
 	public function testChangeWithoutPermission(
 		string $key,
 		string $value,
+		string $code,
 		string $message
 	): void {
 		$this->app->impersonate('nobody');
 		$user = $this->app->user('user@domain.com');
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage($message);
+		$this->expectExceptionCode($code);
+		$this->expectExceptionMessageIs($message);
 
 		UserRules::{'change' . $key}($user, $value);
 	}
@@ -142,7 +146,8 @@ class UserRulesTest extends ModelTestCase
 		$user = $this->app->user('another-user@domain.com');
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to change the role for the user "another-user@domain.com"');
+		$this->expectExceptionCode('error.user.changeRole.permission');
+		$this->expectExceptionMessageIs('You are not allowed to change the role for the user "another-user@domain.com"');
 
 		UserRules::changeRole($user, 'editor');
 	}
@@ -329,7 +334,7 @@ class UserRulesTest extends ModelTestCase
 	public function testChangeTotpInvalidSecret(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('TOTP secrets should be 32 Base32 digits (= 20 bytes)');
+		$this->expectExceptionMessageIs('TOTP secrets should be 32 Base32 digits (= 20 bytes)');
 
 		$this->app->impersonate('user@domain.com');
 		$user = $this->app->user('user@domain.com');
@@ -451,7 +456,7 @@ class UserRulesTest extends ModelTestCase
 		]);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Please enter a valid password. Passwords must be at least 8 characters long.');
+		$this->expectExceptionCode('error.user.password.invalid');
 
 		UserRules::create($user, $props);
 	}
@@ -487,7 +492,7 @@ class UserRulesTest extends ModelTestCase
 		]);
 
 		$this->expectException(AbilityException::class);
-		$this->expectExceptionMessage('You are not allowed to create admin accounts');
+		$this->expectExceptionCode('error.user.create.admin');
 
 		UserRules::create($user, $props);
 	}
@@ -503,7 +508,7 @@ class UserRulesTest extends ModelTestCase
 		]);
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to create this user');
+		$this->expectExceptionCode('error.user.create.permission');
 
 		UserRules::create($user, [
 			'password' => 12345678,
@@ -540,7 +545,7 @@ class UserRulesTest extends ModelTestCase
 
 		// invalid role
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Please enter a valid role');
+		$this->expectExceptionCode('error.user.role.invalid');
 
 		UserRules::create($user, [
 			'password' => 12345678,
@@ -569,7 +574,8 @@ class UserRulesTest extends ModelTestCase
 		$user->method('guards')->willReturn(new UserGuards(model: $user, user: $user));
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to update the user "test"');
+		$this->expectExceptionCode('error.user.update.permission');
+		$this->expectExceptionMessageIs('You are not allowed to update the user "test"');
 
 		UserRules::createAvatar($user, '/tmp/avatar.jpg', 'jpg');
 	}
@@ -630,7 +636,8 @@ class UserRulesTest extends ModelTestCase
 		$user->method('guards')->willReturn(new UserGuards(model: $user, user: $user));
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to update the user "test"');
+		$this->expectExceptionCode('error.user.update.permission');
+		$this->expectExceptionMessageIs('You are not allowed to update the user "test"');
 
 		UserRules::deleteAvatar($user);
 	}
@@ -676,7 +683,8 @@ class UserRulesTest extends ModelTestCase
 		$user->method('guards')->willReturn(new UserGuards(model: $user, user: $user));
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to update the user "test"');
+		$this->expectExceptionCode('error.user.update.permission');
+		$this->expectExceptionMessageIs('You are not allowed to update the user "test"');
 
 		UserRules::replaceAvatar($user, '/tmp/avatar.jpg', 'jpg');
 	}
@@ -750,7 +758,8 @@ class UserRulesTest extends ModelTestCase
 		$user = $this->app->user('another-user@domain.com');
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to delete the user "another-user@domain.com"');
+		$this->expectExceptionCode('error.user.delete.permission');
+		$this->expectExceptionMessageIs('You are not allowed to delete the user "another-user@domain.com"');
 
 		UserRules::delete($user);
 	}
@@ -769,7 +778,8 @@ class UserRulesTest extends ModelTestCase
 		$user = $this->app->impersonate('user@domain.com');
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Invalid file type: document');
+		$this->expectExceptionCode('error.file.type.invalid');
+		$this->expectExceptionMessageIs('Invalid file type: document');
 
 		UserRules::validAvatar($user, '/tmp/file.pdf', 'pdf');
 	}
@@ -810,34 +820,38 @@ class UserRulesTest extends ModelTestCase
 	{
 		return [
 			// reserved words
-			['account', 'a reserved word and cannot be used as user id'],
-			['kirby', 'a reserved word and cannot be used as user id'],
-			['nobody', 'a reserved word and cannot be used as user id'],
+			['account', 'error.user.id.reserved', 'a reserved word and cannot be used as user id'],
+			['kirby', 'error.user.id.reserved', 'a reserved word and cannot be used as user id'],
+			['nobody', 'error.user.id.reserved', 'a reserved word and cannot be used as user id'],
 			// unsafe characters
-			['homer%1', 'not a valid user id'],
-			['../../site/config', 'not a valid user id'],
-			['../foo', 'not a valid user id'],
-			['foo/bar', 'not a valid user id'],
-			['foo\\bar', 'not a valid user id'],
-			['foo.bar', 'not a valid user id'],
-			['.', 'not a valid user id'],
-			['..', 'not a valid user id'],
-			['foo bar', 'not a valid user id'],
-			["\nhomer", 'not a valid user id'],
-			["homer\nfoo", 'not a valid user id'],
-			["homer\r\n", 'not a valid user id'],
-			["homer\n", 'not a valid user id'],
-			['', 'not a valid user id']
+			['homer%1', 'error.user.id.invalid', 'not a valid user id'],
+			['../../site/config', 'error.user.id.invalid', 'not a valid user id'],
+			['../foo', 'error.user.id.invalid', 'not a valid user id'],
+			['foo/bar', 'error.user.id.invalid', 'not a valid user id'],
+			['foo\\bar', 'error.user.id.invalid', 'not a valid user id'],
+			['foo.bar', 'error.user.id.invalid', 'not a valid user id'],
+			['.', 'error.user.id.invalid', 'not a valid user id'],
+			['..', 'error.user.id.invalid', 'not a valid user id'],
+			['foo bar', 'error.user.id.invalid', 'not a valid user id'],
+			["\nhomer", 'error.user.id.invalid', 'not a valid user id'],
+			["homer\nfoo", 'error.user.id.invalid', 'not a valid user id'],
+			["homer\r\n", 'error.user.id.invalid', 'not a valid user id'],
+			["homer\n", 'error.user.id.invalid', 'not a valid user id'],
+			['', 'error.user.id.invalid', 'not a valid user id']
 		];
 	}
 
 	#[DataProvider('invalidIdProvider')]
-	public function testValidIdWhenInvalid(string $id, string $error): void
-	{
+	public function testValidIdWhenInvalid(
+		string $id,
+		string $code,
+		string $error
+	): void {
 		$user = new User(['email' => 'test@getkirby.com']);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('"' . $id . '" is ' . $error);
+		$this->expectExceptionCode($code);
+		$this->expectExceptionMessageIs('"' . $id . '" is ' . $error);
 
 		UserRules::validId($user, $id);
 	}
@@ -847,7 +861,7 @@ class UserRulesTest extends ModelTestCase
 		$user = new User(['email' => 'test@getkirby.com']);
 
 		$this->expectException(DuplicateException::class);
-		$this->expectExceptionMessage('A user with this id exists');
+		$this->expectExceptionMessageIs('A user with this id exists');
 
 		UserRules::validId($user, 'admin');
 	}

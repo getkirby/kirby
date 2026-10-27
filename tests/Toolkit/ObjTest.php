@@ -54,7 +54,7 @@ class ObjTest extends TestCase
 	public function testGetMultipleInvalidFallback(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('fallback value must be an array');
+		$this->expectExceptionMessageIs('The fallback value must be an array when getting multiple properties');
 
 		$obj = new Obj(['one' => 'first']);
 		$obj->get(['two'], 'invalid fallback');

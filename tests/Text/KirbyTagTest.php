@@ -67,7 +67,7 @@ class KirbyTagTest extends TestCase
 	public function testConstructMissingTagType(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Undefined tag type: invalid');
+		$this->expectExceptionMessageIs('Undefined tag type: invalid');
 		KirbyTag::parse('invalid: test');
 	}
 
@@ -527,7 +527,7 @@ class KirbyTagTest extends TestCase
 	public function testRenderNoHtml(): void
 	{
 		$this->expectException(BadMethodCallException::class);
-		$this->expectExceptionMessage('Invalid tag render function in tag: noHtml');
+		$this->expectExceptionMessageIs('Invalid tag render function in tag: noHtml');
 
 		$tag = new KirbyTag('noHtml', 'test value', [
 			'a' => 'attrA',
@@ -539,7 +539,7 @@ class KirbyTagTest extends TestCase
 	public function testRenderInvalidHtml(): void
 	{
 		$this->expectException(BadMethodCallException::class);
-		$this->expectExceptionMessage('Invalid tag render function in tag: invalidHtml');
+		$this->expectExceptionMessageIs('Invalid tag render function in tag: invalidHtml');
 
 		$tag = new KirbyTag('invalidHtml', 'test value', [
 			'a' => 'attrA',

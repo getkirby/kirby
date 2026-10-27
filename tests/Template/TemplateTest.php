@@ -122,7 +122,7 @@ class TemplateTest extends TestCase
 		};
 
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Kirby root "foo" does not exist');
+		$this->expectExceptionMessageIs('Kirby root "foo" does not exist');
 
 		$template->root();
 	}

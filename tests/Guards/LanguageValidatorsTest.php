@@ -117,7 +117,7 @@ class LanguageValidatorsTest extends ModelTestCase
 		$validators = $this->validators($newLanguage);
 
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Please select another language to be the primary language');
+		$this->expectExceptionMessageIs('Please select another language to be the primary language');
 
 		$validators->validateDemotion($oldLanguage);
 	}
@@ -198,7 +198,7 @@ class LanguageValidatorsTest extends ModelTestCase
 		$validators = $this->validators($newLanguage);
 
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Please select another language to be the primary language');
+		$this->expectExceptionMessageIs('Please select another language to be the primary language');
 
 		$validators->ensure('update', $oldLanguage);
 	}

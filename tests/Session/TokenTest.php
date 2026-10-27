@@ -111,7 +111,7 @@ class TokenTest extends TestCase
 	public function testParseTooFewParts(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid argument "$token" in method "Token::parse"');
+		$this->expectExceptionMessageIs('Invalid argument "$token" in method "Token::parse"');
 
 		Token::parse('9999999999.thisIsNotAValidToken');
 	}
@@ -119,7 +119,7 @@ class TokenTest extends TestCase
 	public function testParseTooManyParts(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid argument "$token" in method "Token::parse"');
+		$this->expectExceptionMessageIs('Invalid argument "$token" in method "Token::parse"');
 
 		Token::parse('1234567890.thisIsMyAwesomeId.' . $this->store->validKey, key: false);
 	}
@@ -127,7 +127,7 @@ class TokenTest extends TestCase
 	public function testParseReassemblyMismatch(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid argument "$token" in method "Token::parse"');
+		$this->expectExceptionMessageIs('Invalid argument "$token" in method "Token::parse"');
 
 		// the expiry part is not a clean integer, so reassembly fails
 		Token::parse('something.thisIsNotAValidToken.abcdefabcdef');

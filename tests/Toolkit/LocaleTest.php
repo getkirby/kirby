@@ -93,7 +93,7 @@ class LocaleTest extends TestCase
 	public function testGetInvalid1(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid locale category "KIRBY_AWESOME_LOCALE"');
+		$this->expectExceptionMessageIs('Invalid locale category "KIRBY_AWESOME_LOCALE"');
 
 		Locale::get('KIRBY_AWESOME_LOCALE');
 	}
@@ -101,7 +101,7 @@ class LocaleTest extends TestCase
 	public function testGetInvalid2(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Could not determine locale for category "987654321"');
+		$this->expectExceptionMessageIs('Could not determine locale for category "987654321"');
 
 		Locale::get(987654321);
 	}
@@ -109,7 +109,7 @@ class LocaleTest extends TestCase
 	public function testGetInvalid3(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid locale category "LC_KIRBY"');
+		$this->expectExceptionMessageIs('Invalid locale category "LC_KIRBY"');
 
 		Locale::get('LC_KIRBY');
 	}
@@ -135,7 +135,7 @@ class LocaleTest extends TestCase
 
 		// invalid argument
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Locale must be string or array');
+		$this->expectExceptionMessageIs('Locale must be string or array');
 		Locale::normalize(123);
 	}
 
@@ -185,7 +185,7 @@ class LocaleTest extends TestCase
 	public function testSetInvalidCategory(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid locale category "KIRBY"');
+		$this->expectExceptionMessageIs('Invalid locale category "KIRBY"');
 
 		Locale::set(['KIRBY' => 'de_DE']);
 	}

@@ -38,7 +38,8 @@ class TextFieldTest extends TestCase
 	public function testConverterInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid converter "does-not-exist"');
+		$this->expectExceptionCode('error.field.converter.invalid');
+		$this->expectExceptionMessageIs('Invalid converter "does-not-exist"');
 
 		$field = $this->field('text', [
 			'converter' => 'does-not-exist',

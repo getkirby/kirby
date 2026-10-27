@@ -35,7 +35,7 @@ class SiteRulesTest extends ModelTestCase
 		$this->app->impersonate('nobody');
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to change the title');
+		$this->expectExceptionCode('error.site.changeTitle.permission');
 
 		SiteRules::changeTitle($this->app->site(), 'test');
 	}
@@ -54,7 +54,7 @@ class SiteRulesTest extends ModelTestCase
 		$this->app->impersonate('nobody');
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to update the site');
+		$this->expectExceptionCode('error.site.update.permission');
 
 		SiteRules::update($this->app->site(), []);
 	}

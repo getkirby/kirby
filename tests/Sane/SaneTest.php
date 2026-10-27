@@ -55,7 +55,7 @@ class SaneTest extends TestCase
 	public function testMissingHandler(): void
 	{
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Missing handler for type: "foo"');
+		$this->expectExceptionMessageIs('Missing handler for type: "foo"');
 
 		Sane::handler('foo');
 	}
@@ -127,7 +127,7 @@ class SaneTest extends TestCase
 		$fixture = $this->fixture('script-2.xml', true);
 
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Cannot sanitize file as more than one handler applies: Kirby\Sane\Xml, Kirby\Sane\Svg');
+		$this->expectExceptionMessageIs('Cannot sanitize file as more than one handler applies: Kirby\Sane\Xml, Kirby\Sane\Svg');
 
 		Sane::sanitizeFile($fixture);
 	}
@@ -160,7 +160,7 @@ class SaneTest extends TestCase
 	public function testValidateError(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The file is not a SVG (got <html>)');
+		$this->expectExceptionMessageIs('The file is not a SVG (got <html>)');
 
 		Sane::validate('<html></html>', 'svg');
 	}
@@ -168,7 +168,7 @@ class SaneTest extends TestCase
 	public function testValidateMissingHandler(): void
 	{
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Missing handler for type: "foo"');
+		$this->expectExceptionMessageIs('Missing handler for type: "foo"');
 
 		Sane::validate('foo', 'foo');
 	}
@@ -184,7 +184,7 @@ class SaneTest extends TestCase
 	public function testValidateFileError(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The URL is not allowed in attribute "style"');
+		$this->expectExceptionMessageIs('The URL is not allowed in attribute "style" (line 2): The hostname "malicious.com" is not allowed');
 
 		Sane::validateFile($this->fixture('external-source-1.svg'), 'svg');
 	}
@@ -192,7 +192,7 @@ class SaneTest extends TestCase
 	public function testValidateFileErrorExternalFile(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The URL points outside of the site index URL');
+		$this->expectExceptionMessageIs('The URL is not allowed in attribute "xlink:href" (line 2): The URL points outside of the site index URL');
 
 		Sane::validateFile($this->fixture('xlink-subfolder.svg'));
 	}
@@ -200,7 +200,7 @@ class SaneTest extends TestCase
 	public function testValidateFileMime1(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The "script" element (line 2) is not allowed');
+		$this->expectExceptionMessageIs('The "script" element (line 2) is not allowed');
 
 		Sane::validateFile($this->fixture('script-1.xml'));
 	}
@@ -208,7 +208,7 @@ class SaneTest extends TestCase
 	public function testValidateFileMime2(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The namespace "http://www.w3.org/2000/svg" is not allowed (around line 1)');
+		$this->expectExceptionMessageIs('The namespace "http://www.w3.org/2000/svg" is not allowed (around line 1)');
 
 		Sane::validateFile($this->fixture('script-2.xml'));
 	}
@@ -221,7 +221,7 @@ class SaneTest extends TestCase
 	public function testValidateFileMime4(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The doctype must not define a subset');
+		$this->expectExceptionMessageIs('The doctype must not define a subset');
 
 		Sane::validateFile($this->fixture('doctype-entity-attack.svgz'), true);
 	}
@@ -231,7 +231,7 @@ class SaneTest extends TestCase
 		$file = $this->fixture('does-not-exist.svg');
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('The file "' . $file . '" does not exist');
+		$this->expectExceptionMessageIs('The file "' . $file . '" does not exist');
 
 		Sane::validateFile($file);
 	}
@@ -239,7 +239,7 @@ class SaneTest extends TestCase
 	public function testValidateFileMissingHandler1(): void
 	{
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Missing handler for type: "foo"');
+		$this->expectExceptionMessageIs('Missing handler for type: "foo"');
 
 		Sane::validateFile($this->fixture('doctype-valid.svg'), 'foo');
 	}
@@ -247,7 +247,7 @@ class SaneTest extends TestCase
 	public function testValidateFileMissingHandler2(): void
 	{
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Missing handler for type: "xyz"');
+		$this->expectExceptionMessageIs('Missing handler for type: "xyz"');
 
 		Sane::validateFile($this->fixture('unknown.xyz'));
 	}
@@ -255,7 +255,7 @@ class SaneTest extends TestCase
 	public function testValidateFileMissingHandler3(): void
 	{
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Missing handler for type: "xyz"');
+		$this->expectExceptionMessageIs('Missing handler for type: "xyz"');
 
 		Sane::validateFile($this->fixture('unknown.xyz'), false);
 	}

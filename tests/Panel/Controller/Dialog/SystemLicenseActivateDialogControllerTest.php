@@ -35,7 +35,7 @@ class SystemLicenseActivateDialogControllerTest extends TestCase
 		]);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Please enter a valid license code');
+		$this->expectExceptionCode('error.license.format');
 
 		$controller = new SystemLicenseActivateDialogController();
 		$controller->submit();
@@ -49,7 +49,7 @@ class SystemLicenseActivateDialogControllerTest extends TestCase
 		]);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Please enter a valid email address');
+		$this->expectExceptionCode('error.license.email');
 
 		$controller = new SystemLicenseActivateDialogController();
 		$controller->submit();

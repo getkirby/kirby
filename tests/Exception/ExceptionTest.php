@@ -164,7 +164,7 @@ class ExceptionTest extends TestCase
 		// `::__get()` only serves the lazy message; it must not
 		// turn the protected properties into public ones
 		$this->expectException(Error::class);
-		$this->expectExceptionMessage(
+		$this->expectExceptionMessageIs(
 			'Cannot access property Kirby\\Exception\\Exception::$data'
 		);
 

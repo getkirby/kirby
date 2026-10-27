@@ -193,7 +193,7 @@ class TxtTest extends TestCase
 	{
 		// pass invalid object
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid TXT data; please pass a string');
+		$this->expectExceptionMessageIs('Invalid TXT data; please pass a string');
 		Txt::decode(new stdClass());
 	}
 
@@ -201,7 +201,7 @@ class TxtTest extends TestCase
 	{
 		// pass invalid int
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid TXT data; please pass a string');
+		$this->expectExceptionMessageIs('Invalid TXT data; please pass a string');
 		Txt::decode(1);
 	}
 }

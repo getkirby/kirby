@@ -165,7 +165,7 @@ class RemoteTest extends TestCase
 		$this->assertArrayNotHasKey(CURLOPT_CAPATH, $request->curlopt);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid "ca" option for the Remote class');
+		$this->expectExceptionMessageIs('Invalid "ca" option for the Remote class');
 		$request = Remote::get('https://getkirby.com', [
 			'ca' => 'does-not-exist'
 		]);
@@ -219,7 +219,7 @@ class RemoteTest extends TestCase
 
 		if ($allowed === false) {
 			$this->expectException(InvalidArgumentException::class);
-			$this->expectExceptionMessage('The URL "' . $url . '" is not allowed in safe mode');
+			$this->expectExceptionMessageIs('The URL "' . $url . '" is not allowed in safe mode');
 		}
 
 		$request = Remote::get($url, ['safe' => true]);
@@ -278,7 +278,7 @@ class RemoteTest extends TestCase
 	public function testOptionsSafeBlocksResolvedHost(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('is not allowed in safe mode');
+		$this->expectExceptionMessageIs('The URL "https://internal.example.com" is not allowed in safe mode');
 
 		new class ('https://internal.example.com', ['safe' => true, 'test' => true]) extends Remote {
 			protected function resolveHost(string $host): array
@@ -291,7 +291,7 @@ class RemoteTest extends TestCase
 	public function testOptionsSafeRejectsNonAsciiHost(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('is not allowed in safe mode');
+		$this->expectExceptionMessageIs('The non-ASCII URL "https://faß.example.com" is not allowed in safe mode');
 
 		new class ('https://faß.example.com', ['safe' => true, 'test' => true]) extends Remote {
 			protected function resolveHost(string $host): array
@@ -304,7 +304,7 @@ class RemoteTest extends TestCase
 	public function testOptionsSafeRequiresHost(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The "safe" option can only be used with an absolute URL');
+		$this->expectExceptionMessageIs('The "safe" option can only be used with an absolute URL');
 
 		Remote::get('/relative/path', ['safe' => true]);
 	}

@@ -40,7 +40,7 @@ class DarkroomTest extends TestCase
 	public function testFactoryWithInvalidType(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Invalid Darkroom type');
+		$this->expectExceptionMessageIs('Invalid Darkroom type');
 
 		Darkroom::factory('does-not-exist');
 	}

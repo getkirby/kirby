@@ -37,7 +37,7 @@ class SvgzTest extends TestCase
 	public function testInvalid(string $file): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Could not uncompress gzip data');
+		$this->expectExceptionMessageIs('Could not uncompress gzip data');
 
 		Svgz::validateFile($this->fixture($file));
 	}
@@ -55,7 +55,7 @@ class SvgzTest extends TestCase
 		$this->assertStringEqualsFile($sanitized, gzdecode(Svgz::sanitize(file_get_contents($fixture))));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The doctype must not define a subset');
+		$this->expectExceptionMessageIs('The doctype must not define a subset');
 		Svgz::validateFile($fixture);
 	}
 
@@ -69,7 +69,7 @@ class SvgzTest extends TestCase
 		$this->assertStringEqualsFile($sanitized, gzdecode(Svgz::sanitize(file_get_contents($fixtureZ), isExternal: true)));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The URL points outside of the site index URL');
+		$this->expectExceptionMessageIs('The URL is not allowed in attribute "xlink:href" (line 2): The URL points outside of the site index URL');
 		Svgz::validateFile($fixtureZ);
 	}
 }

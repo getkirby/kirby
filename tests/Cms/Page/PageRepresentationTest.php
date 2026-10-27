@@ -84,7 +84,7 @@ class PageRepresentationTest extends ModelTestCase
 		]);
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The content representation cannot be found');
+		$this->expectExceptionMessageIs('The content representation cannot be found');
 
 		$page->representation('json');
 	}

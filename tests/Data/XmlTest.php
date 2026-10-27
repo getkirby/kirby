@@ -46,7 +46,7 @@ class XmlTest extends TestCase
 	{
 		// pass invalid object
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid XML data; please pass a string');
+		$this->expectExceptionMessageIs('Invalid XML data; please pass a string');
 		Xml::decode(new stdClass());
 	}
 
@@ -54,7 +54,7 @@ class XmlTest extends TestCase
 	{
 		// pass invalid int
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid XML data; please pass a string');
+		$this->expectExceptionMessageIs('Invalid XML data; please pass a string');
 		Xml::decode(1);
 	}
 
@@ -67,7 +67,7 @@ class XmlTest extends TestCase
 	public function testDecodeCorrupted(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('XML string is invalid');
+		$this->expectExceptionMessageIs('XML string is invalid');
 
 		Xml::decode('some gibberish');
 	}

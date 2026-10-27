@@ -146,7 +146,8 @@ class EntriesFieldTest extends TestCase
 			$this->assertTrue($field->isValid());
 		} else {
 			$this->expectException(InvalidArgumentException::class);
-			$this->expectExceptionMessage('"' . $type . '" field type is not supported for the entries field');
+			$this->expectExceptionCode('error.entries.supports');
+			$this->expectExceptionMessageIs('"' . $type . '" field type is not supported for the entries field');
 			$field->field();
 		}
 	}

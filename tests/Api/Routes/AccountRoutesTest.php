@@ -199,7 +199,7 @@ class AccountRoutesTest extends TestCase
 	public function testChangePasswordMissingCurrentPassword(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Please enter a valid password. Passwords must be at least 8 characters long.');
+		$this->expectExceptionCode('error.user.password.invalid');
 
 		$this->app->api()->call('account/password', 'PATCH', [
 			'body' => [
@@ -211,7 +211,7 @@ class AccountRoutesTest extends TestCase
 	public function testChangePasswordWrongCurrentPassword(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Wrong password');
+		$this->expectExceptionCode('error.user.password.wrong');
 
 		$this->app->api()->call('account/password', 'PATCH', [
 			'body' => [
@@ -286,7 +286,7 @@ class AccountRoutesTest extends TestCase
 		// a reset flag that was issued for a different user must not
 		// take effect for the user that is logged in now
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Please enter a valid password. Passwords must be at least 8 characters long.');
+		$this->expectExceptionCode('error.user.password.invalid');
 
 		$this->app->session()->set(
 			'kirby.resetPassword',

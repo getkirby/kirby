@@ -122,7 +122,7 @@ class ResponseTest extends TestCase
 	public function testDownloadWithMissingFile(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('The file could not be found');
+		$this->expectExceptionMessageIs('The file could not be found');
 
 		Response::download('does/not/exist.txt');
 	}
@@ -154,7 +154,7 @@ class ResponseTest extends TestCase
 	public function testGuardAgainstOutputWithFirstOutput(): void
 	{
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Disallowed output from file file.php:123, possible accidental whitespace?');
+		$this->expectExceptionMessageIs('Disallowed output from file file.php:123, possible accidental whitespace?');
 
 		Response::guardAgainstOutput(function () {
 			HeadersSent::$value = true;
@@ -164,7 +164,7 @@ class ResponseTest extends TestCase
 	public function testGuardAgainstOutputWithBufferedOutput(): void
 	{
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Disallowed output, possible accidental whitespace?');
+		$this->expectExceptionMessageIs('Disallowed output, possible accidental whitespace?');
 		$this->expectOutputString(' ');
 
 		Response::guardAgainstOutput(function () {

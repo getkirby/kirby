@@ -39,7 +39,7 @@ class DomHandlerTest extends TestCase
 	public function testValidateException1(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The URL is not allowed in attribute "href" (line 2): Unknown URL type');
+		$this->expectExceptionMessageIs('The URL is not allowed in attribute "href" (line 2): Unknown URL type');
 
 		DomHandler::validate("<xml>\n<a href='javascript:alert(1)'></a>\n</xml>");
 	}
@@ -47,7 +47,7 @@ class DomHandlerTest extends TestCase
 	public function testValidateException2(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The doctype must not reference external files');
+		$this->expectExceptionMessageIs('The doctype must not reference external files');
 
 		DomHandler::validate("<!DOCTYPE xml SYSTEM \"https://malicious.com/something.dtd\">\n<xml>\n<a href='javascript:alert(1)'></a>\n</xml>");
 	}
@@ -55,7 +55,7 @@ class DomHandlerTest extends TestCase
 	public function testValidateException3(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The URL points outside of the site index URL');
+		$this->expectExceptionMessageIs('The URL is not allowed in attribute "xlink:href" (line 1): The URL points outside of the site index URL');
 
 		DomHandler::validate('<xml><a xlink:href="/another-folder">Very malicious</a></xml>', isExternal: true);
 	}

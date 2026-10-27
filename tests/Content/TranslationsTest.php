@@ -104,7 +104,7 @@ class TranslationsTest extends TestCase
 		);
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Invalid language: fr');
+		$this->expectExceptionMessageIs('Invalid language: fr');
 
 		$translations->findByKey('fr');
 	}

@@ -92,7 +92,7 @@ class PreviewViewControllerTest extends TestCase
 		$this->app->impersonate('editor@getkirby.com');
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The site is not accessible');
+		$this->expectExceptionCode('error.site.notAccessible');
 		PreviewViewController::factory('site', 'changes');
 	}
 
@@ -120,7 +120,7 @@ class PreviewViewControllerTest extends TestCase
 	public function testLoadInvalid(): void
 	{
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('The preview is not available');
+		$this->expectExceptionMessageIs('The preview is not available');
 		$site       = $this->app->site();
 		$controller = new PreviewViewController($site, 'changes');
 		$controller->load();

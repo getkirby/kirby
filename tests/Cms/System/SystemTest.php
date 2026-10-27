@@ -316,7 +316,7 @@ class SystemTest extends TestCase
 
 		// /site/accounts
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('The ' . $root . ' directory could not be created');
+		$this->expectExceptionMessageIs('The ' . $root . ' directory could not be created');
 
 		new System($app);
 	}
@@ -571,7 +571,7 @@ class SystemTest extends TestCase
 		]);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The "code" and "password-reset" login methods cannot be enabled together');
+		$this->expectExceptionMessageIs('The "code" and "password-reset" login methods cannot be enabled together');
 		$app->system()->loginMethods();
 	}
 
@@ -588,7 +588,7 @@ class SystemTest extends TestCase
 		]);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The "code" login method cannot be enabled when 2FA is required');
+		$this->expectExceptionMessageIs('The "code" login method cannot be enabled when 2FA is required');
 		$app->system()->loginMethods();
 	}
 
@@ -605,7 +605,7 @@ class SystemTest extends TestCase
 		]);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The "password-reset" login method cannot be enabled when 2FA is required');
+		$this->expectExceptionMessageIs('The "password-reset" login method cannot be enabled when 2FA is required');
 		$app->system()->loginMethods();
 	}
 

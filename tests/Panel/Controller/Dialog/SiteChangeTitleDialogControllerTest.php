@@ -62,7 +62,7 @@ class SiteChangeTitleDialogControllerTest extends TestCase
 		$this->app->impersonate('editor@getkirby.com');
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The site is not accessible');
+		$this->expectExceptionCode('error.site.notAccessible');
 		new SiteChangeTitleDialogController();
 	}
 

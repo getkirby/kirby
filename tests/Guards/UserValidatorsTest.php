@@ -261,7 +261,7 @@ class UserValidatorsTest extends ModelTestCase
 		$validators = $this->validators();
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('TOTP secrets should be 32 Base32 digits (= 20 bytes)');
+		$this->expectExceptionMessageIs('TOTP secrets should be 32 Base32 digits (= 20 bytes)');
 
 		$validators->ensure('changeSecret', 'totp', 'foo');
 	}
@@ -356,7 +356,7 @@ class UserValidatorsTest extends ModelTestCase
 		$validators = $this->validators();
 
 		$this->expectException(DuplicateException::class);
-		$this->expectExceptionMessage('A user with this id exists');
+		$this->expectExceptionMessageIs('A user with this id exists');
 
 		$validators->validateId('admin');
 	}
@@ -481,7 +481,7 @@ class UserValidatorsTest extends ModelTestCase
 		$validators = $this->validators();
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('TOTP secrets should be 32 Base32 digits (= 20 bytes)');
+		$this->expectExceptionMessageIs('TOTP secrets should be 32 Base32 digits (= 20 bytes)');
 
 		$validators->validateTotp('foo');
 	}

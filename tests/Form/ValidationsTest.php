@@ -62,7 +62,7 @@ class ValidationsTest extends TestCase
 	public function testBooleanInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Please confirm or deny');
+		$this->expectExceptionCode('error.validation.boolean');
 
 		$page  = new Page(['slug' => 'test']);
 		$field = new ValidationsField(model: $page);
@@ -79,7 +79,7 @@ class ValidationsTest extends TestCase
 	public function testDateInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Please enter a valid date');
+		$this->expectExceptionMessageIs('Please enter a valid date');
 
 		$page  = new Page(['slug' => 'test']);
 		$field = new ValidationsField(model: $page);
@@ -96,7 +96,7 @@ class ValidationsTest extends TestCase
 	public function testEmailInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Please enter a valid email address');
+		$this->expectExceptionMessageIs('Please enter a valid email address');
 
 		$page  = new Page(['slug' => 'test']);
 		$field = new ValidationsField(model: $page);
@@ -117,7 +117,7 @@ class ValidationsTest extends TestCase
 	public function testMaxInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Please enter a value equal to or lower than 5');
+		$this->expectExceptionMessageIs('Please enter a value equal to or lower than 5');
 
 		$page  = new Page(['slug' => 'test']);
 		$field = new ValidationsField(
@@ -142,7 +142,7 @@ class ValidationsTest extends TestCase
 	public function testMaxLengthInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Please enter a shorter value. (max. 5 characters)');
+		$this->expectExceptionMessageIs('Please enter a shorter value. (max. 5 characters)');
 
 		$page  = new Page(['slug' => 'test']);
 		$field = new ValidationsField(
@@ -167,7 +167,7 @@ class ValidationsTest extends TestCase
 	public function testMinInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Please enter a value equal to or greater than 5');
+		$this->expectExceptionMessageIs('Please enter a value equal to or greater than 5');
 
 		$page  = new Page(['slug' => 'test']);
 		$field = new ValidationsField(
@@ -192,7 +192,7 @@ class ValidationsTest extends TestCase
 	public function testMinLengthInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Please enter a longer value. (min. 5 characters)');
+		$this->expectExceptionMessageIs('Please enter a longer value. (min. 5 characters)');
 
 		$page  = new Page(['slug' => 'test']);
 		$field = new ValidationsField(
@@ -220,7 +220,7 @@ class ValidationsTest extends TestCase
 	public function testPatternInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The value does not match the expected pattern');
+		$this->expectExceptionMessageIs('The value does not match the expected pattern');
 
 		$page  = new Page(['slug' => 'test']);
 		$field = new ValidationsField(
@@ -243,7 +243,7 @@ class ValidationsTest extends TestCase
 		$this->assertTrue(Validations::pattern($field, '1234'));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The value does not match the expected pattern');
+		$this->expectExceptionMessageIs('The value does not match the expected pattern');
 
 		Validations::pattern($field, '12345');
 	}
@@ -262,7 +262,7 @@ class ValidationsTest extends TestCase
 	public function testRequiredInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Please enter something');
+		$this->expectExceptionCode('error.validation.required');
 
 		$page  = new Page(['slug' => 'test']);
 		$field = new ValidationsField(
@@ -290,7 +290,7 @@ class ValidationsTest extends TestCase
 	public function testOptionInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Please select a valid option');
+		$this->expectExceptionCode('error.validation.option');
 
 		$page  = new Page(['slug' => 'test']);
 		$field = new ValidationsField(
@@ -321,7 +321,7 @@ class ValidationsTest extends TestCase
 	public function testOptionsInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Please select a valid option');
+		$this->expectExceptionCode('error.validation.option');
 
 		$page  = new Page(['slug' => 'test']);
 		$field = new ValidationsField(
@@ -345,7 +345,7 @@ class ValidationsTest extends TestCase
 	public function testTimeInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Please enter a valid time');
+		$this->expectExceptionMessageIs('Please enter a valid time');
 
 		$page  = new Page(['slug' => 'test']);
 		$field = new ValidationsField(model: $page);
@@ -362,7 +362,7 @@ class ValidationsTest extends TestCase
 	public function testUrlInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Please enter a valid URL');
+		$this->expectExceptionMessageIs('Please enter a valid URL');
 
 		$page  = new Page(['slug' => 'test']);
 		$field = new ValidationsField(model: $page);

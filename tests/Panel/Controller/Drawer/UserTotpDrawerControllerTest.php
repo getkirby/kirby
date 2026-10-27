@@ -246,7 +246,7 @@ class UserTotpDrawerControllerTest extends TestCase
 		$this->app->impersonate('kirby');
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid action: nope');
+		$this->expectExceptionMessageIs('Invalid action: nope');
 
 		$controller = new UserTotpDrawerController($this->app->user('test'));
 		$controller->submit();

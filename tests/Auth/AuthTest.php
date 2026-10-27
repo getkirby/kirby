@@ -312,7 +312,7 @@ class AuthTest extends TestCase
 
 		// debug mode (default) rethrows whatever error guard keeps
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('tracking failed');
+		$this->expectExceptionMessageIs('tracking failed');
 
 		$this->auth->guard(
 			'marge@simpsons.com',
@@ -533,7 +533,7 @@ class AuthTest extends TestCase
 		$this->auth = $this->app->auth();
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('Invalid login');
+		$this->expectExceptionMessageIs('Invalid login');
 
 		$this->auth->login('lisa@simpsons.com', 'springfield123');
 	}
@@ -548,7 +548,7 @@ class AuthTest extends TestCase
 		$this->auth = $this->app->auth();
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('Invalid login');
+		$this->expectExceptionMessageIs('Invalid login');
 
 		$this->auth->login('marge@simpsons.com', 'springfield456');
 	}
@@ -556,7 +556,7 @@ class AuthTest extends TestCase
 	public function testLoginKirby(): void
 	{
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage(
+		$this->expectExceptionMessageIs(
 			'The almighty user "kirby" cannot be used for login, ' .
 			'only for raising permissions in code via `$kirby->impersonate()`'
 		);
@@ -774,7 +774,7 @@ class AuthTest extends TestCase
 		$this->assertSame('basic', $app->auth()->type());
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('Basic authentication is only allowed over HTTPS');
+		$this->expectExceptionMessageIs('Basic authentication is only allowed over HTTPS');
 		$app->auth()->currentUserFromBasicAuth();
 	}
 
@@ -811,7 +811,7 @@ class AuthTest extends TestCase
 		$this->app->visitor()->ip('10.3.123.234');
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Wrong password');
+		$this->expectExceptionCode('error.user.password.wrong');
 
 		$this->auth->validatePassword('marge@simpsons.com', 'invalid-password');
 	}
@@ -821,7 +821,7 @@ class AuthTest extends TestCase
 		$this->app->visitor()->ip('10.3.123.234');
 
 		$this->expectException(UserNotFoundException::class);
-		$this->expectExceptionMessage('The user "lisa@simpsons.com" cannot be found');
+		$this->expectExceptionMessageIs('The user "lisa@simpsons.com" cannot be found');
 
 		$this->auth->validatePassword('lisa@simpsons.com', 'springfield123');
 	}

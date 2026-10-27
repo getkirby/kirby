@@ -49,7 +49,7 @@ class ViewTest extends TestCase
 	public function testRenderWithMissingFile(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('The view does not exist: invalid-file.php');
+		$this->expectExceptionMessageIs('The view does not exist: invalid-file.php');
 
 		$view = new View('invalid-file.php');
 		$view->render();
@@ -58,7 +58,7 @@ class ViewTest extends TestCase
 	public function testRenderWithException(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('View exception');
+		$this->expectExceptionMessageIs('View exception');
 
 		$view = new View(static::FIXTURES . '/view-with-exception.php');
 		$view->render();

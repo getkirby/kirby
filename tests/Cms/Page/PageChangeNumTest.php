@@ -40,7 +40,7 @@ class PageChangeNumTest extends ModelTestCase
 		]);
 
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Drafts cannot change their sorting number');
+		$this->expectExceptionMessageIs('Drafts cannot change their sorting number');
 
 		$page->changeNum(2);
 	}

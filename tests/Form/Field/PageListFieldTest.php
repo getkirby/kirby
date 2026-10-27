@@ -404,7 +404,7 @@ class PageListFieldTest extends TestCase
 		$field = $this->pagelist(['parent' => 'kirby.user']);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The parent is invalid. You must choose the site or a page as parent.');
+		$this->expectExceptionMessageIs('The parent is invalid. You must choose the site or a page as parent.');
 
 		$field->parentModel();
 	}

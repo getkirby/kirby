@@ -52,7 +52,7 @@ class VTest extends TestCase
 	public function testCallInvalidMethod(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('The validator does not exist: fool');
+		$this->expectExceptionMessageIs('The validator does not exist: fool');
 		V::fool('me');
 	}
 
@@ -168,7 +168,7 @@ class VTest extends TestCase
 		$this->assertFalse(V::date('2345-01-02', '<=', '01.01.2345'));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid date comparison operator: "<>". Allowed operators: "==", "!=", "<", "<=", ">", ">="');
+		$this->expectExceptionMessageIs('Invalid date comparison operator: "<>". Allowed operators: "==", "!=", "<", "<=", ">", ">="');
 
 		V::date('2345-01-01', '<>', '2345-01-01');
 	}
@@ -359,7 +359,7 @@ class VTest extends TestCase
 
 		if ($result === false) {
 			$this->expectException(Exception::class);
-			$this->expectExceptionMessage($message);
+			$this->expectExceptionMessageIs($message);
 		}
 
 		$this->assertTrue(V::input($input, $rules));
@@ -766,7 +766,7 @@ class VTest extends TestCase
 	public function testSizeInvalid(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('$value is of type without size');
+		$this->expectExceptionMessageIs('$value is of type without size');
 
 		V::size(false, 5);
 	}
@@ -774,7 +774,7 @@ class VTest extends TestCase
 	public function testSizeInvalidObject(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('$value is an uncountable object');
+		$this->expectExceptionMessageIs('$value is an uncountable object');
 
 		V::size(new stdClass(), 5);
 	}
@@ -867,7 +867,7 @@ class VTest extends TestCase
 		];
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Error message for same');
+		$this->expectExceptionMessageIs('Error message for same: b');
 
 		V::value('a', ['same' => 'b']);
 	}

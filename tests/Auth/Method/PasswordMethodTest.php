@@ -162,7 +162,7 @@ class PasswordMethodTest extends TestCase
 	public function testAuthenticateWithoutPassword(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Missing password');
+		$this->expectExceptionMessageIs('Missing password');
 
 		$auth   = $this->createStub(Auth::class);
 		$method = new PasswordMethod(auth: $auth);

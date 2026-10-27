@@ -30,7 +30,7 @@ class PHPTest extends TestCase
 	public function testDecode(): void
 	{
 		$this->expectException(BadMethodCallException::class);
-		$this->expectExceptionMessage('The PHP::decode() method is not implemented');
+		$this->expectExceptionMessageIs('The PHP::decode() method is not implemented');
 
 		$input  = include static::FIXTURES . '/input.php';
 		$result = PHP::decode($input);
@@ -49,7 +49,7 @@ class PHPTest extends TestCase
 		$file = static::TMP . '/does-not-exist.php';
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('The file "' . $file . '" does not exist');
+		$this->expectExceptionMessageIs('The file "' . $file . '" does not exist');
 
 		PHP::read($file);
 	}

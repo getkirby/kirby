@@ -124,7 +124,7 @@ class KirbyTagsTest extends TestCase
 	public function testParseWithExceptionDebug1(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Just for fun');
+		$this->expectExceptionMessageIs('Just for fun');
 
 		KirbyTag::$types = [
 			'test' => [
@@ -138,7 +138,7 @@ class KirbyTagsTest extends TestCase
 	public function testParseWithExceptionDebug2(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Just for fun');
+		$this->expectExceptionMessageIs('Just for fun');
 
 		KirbyTag::$types = [
 			'invalidargument' => [
@@ -168,7 +168,7 @@ class KirbyTagsTest extends TestCase
 		Helpers::$deprecations['kirbytags-parse-options'] = false;
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Just for fun');
+		$this->expectExceptionMessageIs('Just for fun');
 
 		KirbyTag::$types = [
 			'test' => [

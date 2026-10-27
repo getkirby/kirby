@@ -362,7 +362,8 @@ class FileChangeTemplateTest extends ModelTestCase
 		]);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The template for the file "test/test.pdf" cannot be changed to "for-default-b" (valid: "for-default-c, for-default-d")');
+		$this->expectExceptionCode('error.file.changeTemplate.invalid');
+		$this->expectExceptionMessageIs('The template for the file "test/test.pdf" cannot be changed to "for-default-b" (valid: "for-default-c, for-default-d")');
 
 		$file->changeTemplate('for-default-b');
 	}

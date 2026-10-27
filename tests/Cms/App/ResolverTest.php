@@ -60,7 +60,7 @@ class ResolverTest extends TestCase
 		]);
 
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('The home page does not exist');
+		$this->expectExceptionMessageIs('The home page does not exist');
 
 		$this->resolve($app, null);
 	}

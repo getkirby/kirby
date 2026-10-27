@@ -87,7 +87,8 @@ class FindTest extends TestCase
 		$this->app->impersonate('kirby');
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The file "nope.jpg" cannot be found');
+		$this->expectExceptionCode('error.file.notFound');
+		$this->expectExceptionMessageIs('The file "nope.jpg" cannot be found');
 
 		Find::file('site', 'nope.jpg');
 	}
@@ -119,7 +120,8 @@ class FindTest extends TestCase
 		$app->impersonate('admin@getkirby.com');
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The file "protected.jpg" cannot be found');
+		$this->expectExceptionCode('error.file.notFound');
+		$this->expectExceptionMessageIs('The file "protected.jpg" cannot be found');
 
 		Find::file('site', 'protected.jpg');
 	}
@@ -151,7 +153,7 @@ class FindTest extends TestCase
 		$this->app->impersonate('kirby');
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The language could not be found');
+		$this->expectExceptionCode('error.language.notFound');
 
 		Find::language('en');
 	}
@@ -212,7 +214,8 @@ class FindTest extends TestCase
 		]);
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The page "a" cannot be found');
+		$this->expectExceptionCode('error.page.notFound');
+		$this->expectExceptionMessageIs('The page "a" cannot be found');
 
 		Find::page('a');
 	}
@@ -220,7 +223,8 @@ class FindTest extends TestCase
 	public function testPageNotFound(): void
 	{
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The page "does-not-exist" cannot be found');
+		$this->expectExceptionCode('error.page.notFound');
+		$this->expectExceptionMessageIs('The page "does-not-exist" cannot be found');
 
 		Find::page('does-not-exist');
 	}
@@ -269,7 +273,8 @@ class FindTest extends TestCase
 		$app->impersonate('editor@getkirby.com');
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The role "editor-' . $uuid . '" cannot be found');
+		$this->expectExceptionCode('error.role.notFound');
+		$this->expectExceptionMessageIs('The role "editor-' . $uuid . '" cannot be found');
 
 		Find::role('editor-' . $uuid);
 	}
@@ -301,7 +306,8 @@ class FindTest extends TestCase
 		$app->impersonate('author@getkirby.com');
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The role "editor-' . $uuid . '" cannot be found');
+		$this->expectExceptionCode('error.role.notFound');
+		$this->expectExceptionMessageIs('The role "editor-' . $uuid . '" cannot be found');
 
 		Find::role('editor-' . $uuid);
 	}
@@ -311,7 +317,8 @@ class FindTest extends TestCase
 		$this->app->impersonate('kirby');
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The role "does-not-exist" cannot be found');
+		$this->expectExceptionCode('error.role.notFound');
+		$this->expectExceptionMessageIs('The role "does-not-exist" cannot be found');
 
 		Find::role('does-not-exist');
 	}
@@ -457,14 +464,15 @@ class FindTest extends TestCase
 	public function testParentWithInvalidModelType(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid model type: something');
+		$this->expectExceptionMessageIs('Invalid model type: something');
 		$this->assertNull(Find::parent('something/something'));
 	}
 
 	public function testParentNotFound(): void
 	{
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The page "does-not-exist" cannot be found');
+		$this->expectExceptionCode('error.page.notFound');
+		$this->expectExceptionMessageIs('The page "does-not-exist" cannot be found');
 		$this->assertNull(Find::parent('pages/does-not-exist'));
 	}
 
@@ -490,7 +498,7 @@ class FindTest extends TestCase
 		$app->impersonate('editor@getkirby.com');
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The site is not accessible');
+		$this->expectExceptionCode('error.site.notAccessible');
 
 		Find::parent('site');
 	}
@@ -498,7 +506,7 @@ class FindTest extends TestCase
 	public function testParentUndefined(): void
 	{
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The user "does-not-exist" cannot be found');
+		$this->expectExceptionMessageIs('The user "does-not-exist" cannot be found');
 		$this->assertNull(Find::parent('users/does-not-exist'));
 	}
 
@@ -530,7 +538,7 @@ class FindTest extends TestCase
 		$app->impersonate('editor@getkirby.com');
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The site is not accessible');
+		$this->expectExceptionCode('error.site.notAccessible');
 
 		Find::site();
 	}
@@ -559,7 +567,7 @@ class FindTest extends TestCase
 		$app->impersonate('test@getkirby.com');
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The user "admin@getkirby.com" cannot be found');
+		$this->expectExceptionMessageIs('The user "admin@getkirby.com" cannot be found');
 
 		Find::parent('users/admin@getkirby.com');
 	}
@@ -626,7 +634,7 @@ class FindTest extends TestCase
 		$app->impersonate('test@getkirby.com');
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The user cannot be found');
+		$this->expectExceptionCode('error.user.undefined');
 
 		Find::user();
 	}
@@ -644,7 +652,7 @@ class FindTest extends TestCase
 		$app->impersonate('test@getkirby.com');
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The user cannot be found');
+		$this->expectExceptionCode('error.user.undefined');
 
 		Find::user()->email();
 	}
@@ -693,7 +701,7 @@ class FindTest extends TestCase
 		$app->impersonate('test@getkirby.com');
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The user "admin@getkirby.com" cannot be found');
+		$this->expectExceptionMessageIs('The user "admin@getkirby.com" cannot be found');
 
 		Find::user('admin@getkirby.com');
 	}
@@ -701,7 +709,7 @@ class FindTest extends TestCase
 	public function testUserNotFound(): void
 	{
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The user "nope@getkirby.com" cannot be found');
+		$this->expectExceptionMessageIs('The user "nope@getkirby.com" cannot be found');
 
 		Find::user('nope@getkirby.com');
 	}

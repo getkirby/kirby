@@ -151,7 +151,7 @@ class QrCodeTest extends TestCase
 		// binary mode caps at 2953 bytes
 		$qr = new QrCode(str_repeat('a', 3000));
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The provided data exceeds the maximum capacity of a QR code');
+		$this->expectExceptionMessageIs('The provided data exceeds the maximum capacity of a QR code');
 		$qr->toSvg();
 	}
 
@@ -201,7 +201,7 @@ class QrCodeTest extends TestCase
 	public function testWriteInvalidFormat(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Cannot write QR code as docx');
+		$this->expectExceptionMessageIs('Cannot write QR code as docx');
 
 		$qr = new QrCode('https://getkirby.com');
 		$qr->write('test.docx');

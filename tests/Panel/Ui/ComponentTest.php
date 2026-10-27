@@ -62,7 +62,7 @@ class ComponentTest extends TestCase
 	public function testGetterSetterInvalid(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('The property "fox" does not exist on the UI component "k-test"');
+		$this->expectExceptionMessageIs('The property "fox" does not exist on the UI component "k-test"');
 		$component = new UiComponent(component: 'k-test');
 		$component->fox('my-class');
 	}

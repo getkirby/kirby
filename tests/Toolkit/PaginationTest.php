@@ -381,7 +381,7 @@ class PaginationTest extends TestCase
 	public function testCloneInvalid1(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Invalid pagination limit: 0');
+		$this->expectExceptionMessageIs('Invalid pagination limit: 0');
 
 		$pagination = new Pagination();
 		$pagination = $pagination->clone(['limit' => 0]);
@@ -390,7 +390,7 @@ class PaginationTest extends TestCase
 	public function testCloneInvalid2(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Invalid total number of items: -1');
+		$this->expectExceptionMessageIs('Invalid total number of items: -1');
 
 		$pagination = new Pagination();
 		$pagination = $pagination->clone(['total' => -1]);
@@ -399,7 +399,7 @@ class PaginationTest extends TestCase
 	public function testCloneInvalid3(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Invalid page number: -1');
+		$this->expectExceptionMessageIs('Invalid page number: -1');
 
 		$pagination = new Pagination();
 		$pagination = $pagination->clone(['page' => -1]);
@@ -408,7 +408,7 @@ class PaginationTest extends TestCase
 	public function testCloneOutOfBounds1(): void
 	{
 		$this->expectException(ErrorPageException::class);
-		$this->expectExceptionMessage('Pagination page 3 does not exist, expected 1-2');
+		$this->expectExceptionMessageIs('Pagination page 3 does not exist, expected 1-2');
 
 		$pagination = new Pagination();
 		$pagination = $pagination->clone(['page' => 3, 'total' => 10, 'limit' => 5]);
@@ -417,7 +417,7 @@ class PaginationTest extends TestCase
 	public function testCloneOutOfBounds2(): void
 	{
 		$this->expectException(ErrorPageException::class);
-		$this->expectExceptionMessage('Pagination page 0 does not exist, expected 1-2');
+		$this->expectExceptionMessageIs('Pagination page 0 does not exist, expected 1-2');
 
 		$pagination = new Pagination();
 		$pagination = $pagination->clone(['page' => 0, 'total' => 10, 'limit' => 5]);
@@ -534,7 +534,7 @@ class PaginationTest extends TestCase
 	public function testForWithZeroLimit(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Invalid pagination limit: 0');
+		$this->expectExceptionMessageIs('Invalid pagination limit: 0');
 
 		Pagination::for(new Collection(['a', 'b', 'c']), 0);
 	}

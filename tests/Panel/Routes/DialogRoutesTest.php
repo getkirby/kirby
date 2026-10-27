@@ -41,7 +41,7 @@ class DialogRoutesTest extends TestCase
 		]);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid controller class "Closure" expected child of"Kirby\Panel\Controller\DialogController"');
+		$this->expectExceptionMessageIs('Invalid controller class "Closure" expected child of"Kirby\Panel\Controller\DialogController"');
 
 		$params['load']();
 	}

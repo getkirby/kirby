@@ -282,7 +282,7 @@ class FieldsTest extends TestCase
 		], $this->model);
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The field could not be found');
+		$this->expectExceptionMessageIs('The field could not be found');
 
 		$fields->field('missing');
 	}
@@ -1271,7 +1271,7 @@ class FieldsTest extends TestCase
 		);
 
 		$this->expectException(FormValidationException::class);
-		$this->expectExceptionMessage('Please fix all form errors');
+		$this->expectExceptionMessageIs('Please fix all form errors…');
 
 		$fields->validate();
 	}

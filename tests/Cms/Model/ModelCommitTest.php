@@ -783,7 +783,8 @@ class ModelCommitTest extends TestCase
 		);
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to create "b"');
+		$this->expectExceptionCode('error.page.create.permission');
+		$this->expectExceptionMessageIs('You are not allowed to create "b"');
 
 		$commit->validate(arguments: [
 			'page' => new Page(['slug' => 'b'])

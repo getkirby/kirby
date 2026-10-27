@@ -31,7 +31,7 @@ class SqliteTest extends TestCase
 	public function testColumnsInvalidTable(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid table does-not-exist');
+		$this->expectExceptionMessageIs('Invalid table does-not-exist');
 
 		$this->sql->columns('does-not-exist');
 	}

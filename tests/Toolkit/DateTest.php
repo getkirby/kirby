@@ -66,7 +66,7 @@ class DateTest extends TestCase
 		$this->assertSame('2023-01-01 00:00:00', $date->format('Y-m-d H:i:s'));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid rounding unit');
+		$this->expectExceptionMessageIs('Invalid rounding unit: foo');
 		$date->ceil('foo');
 	}
 
@@ -142,7 +142,7 @@ class DateTest extends TestCase
 		$this->assertSame('2021-01-01 00:00:00', $date->format('Y-m-d H:i:s'));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid rounding unit');
+		$this->expectExceptionMessageIs('Invalid rounding unit: foo');
 		$date->floor('foo');
 	}
 
@@ -287,7 +287,7 @@ class DateTest extends TestCase
 	public function testNearestEmpty(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('At least one datetime must be provided');
+		$this->expectExceptionMessageIs('At least one datetime must be provided');
 
 		new Date('2021-12-12')->nearest();
 	}
@@ -374,7 +374,7 @@ class DateTest extends TestCase
 	public function testRoundUnsupportedSize(string $unit, int $size): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid rounding size for ' . $unit);
+		$this->expectExceptionMessageIs('Invalid rounding size for ' . $unit);
 
 		$date = new Date('2020-01-01');
 		$date->round($unit, $size);
@@ -395,7 +395,7 @@ class DateTest extends TestCase
 	public function testRoundUnsupportedUnit(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid rounding unit');
+		$this->expectExceptionMessageIs('Invalid rounding unit: foo');
 
 		$date = new Date('2020-01-01');
 		$date->round('foo', 1);
@@ -506,7 +506,7 @@ class DateTest extends TestCase
 	public function testStepConfigWithInvalidInput(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid input');
+		$this->expectExceptionMessageIs('Invalid input');
 
 		Date::stepConfig(new Date());
 	}
@@ -592,7 +592,7 @@ class DateTest extends TestCase
 	public function testToStringWithInvalidMode(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid mode');
+		$this->expectExceptionMessageIs('Invalid mode');
 
 		$date = new Date('12:12:12');
 		$date->toString('foo');

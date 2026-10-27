@@ -168,7 +168,7 @@ class AuthChallengeTest extends TestCase
 		$this->auth = $this->app->auth();
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('Invalid login');
+		$this->expectExceptionMessageIs('Invalid login');
 
 		$this->auth->login2fa('lisa@simpsons.com', 'springfield123');
 	}

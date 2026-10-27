@@ -103,7 +103,7 @@ class PageChangeSortTest extends ModelTestCase
 		]);
 
 		$this->expectException(AbilityException::class);
-		$this->expectExceptionMessage('The status of the error page cannot be changed');
+		$this->expectExceptionCode('error.page.changeStatus.errorPage');
 
 		$page->changeSort(1);
 	}

@@ -311,7 +311,7 @@ class AppTest extends TestCase
 	public function testEnvironmentBeforeInitialization(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The environment is not allowed');
+		$this->expectExceptionMessageIs('The environment is not allowed');
 
 		new App([
 			'options' => [

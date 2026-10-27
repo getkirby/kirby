@@ -181,7 +181,7 @@ class ModelWithContentTest extends TestCase
 		]);
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Invalid language: fr');
+		$this->expectExceptionMessageIs('Invalid language: fr');
 
 		$app->page('foo')->content('fr');
 	}
@@ -751,7 +751,7 @@ class ModelWithContentTest extends TestCase
 		]);
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Invalid language: fr');
+		$this->expectExceptionMessageIs('Invalid language: fr');
 
 		$fr = $app->page('foo')->translation('fr');
 	}

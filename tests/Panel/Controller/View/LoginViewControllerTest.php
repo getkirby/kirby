@@ -293,7 +293,7 @@ class LoginViewControllerTest extends TestCase
 		$session->set('kirby.challenge.mode', 'login');
 
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('The login form could not be rendered');
+		$this->expectExceptionMessageIs('The login form could not be rendered');
 
 		new LoginViewController('challenge', 'test-null-form')->load();
 	}

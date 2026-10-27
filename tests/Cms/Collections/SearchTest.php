@@ -71,7 +71,7 @@ class SearchTest extends TestCase
 		]);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage($message);
+		$this->expectExceptionMessageIs($message);
 
 		// a string is the wrong type for every typed option
 		Search::collection($collection, 'homer', [$option => 'invalid']);

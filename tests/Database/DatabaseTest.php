@@ -435,7 +435,7 @@ class DatabaseTest extends TestCase
 		$dsn = Database::$types['mysql']['dsn'];
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The mysql connection requires either a "host" or a "socket" parameter');
+		$this->expectExceptionMessageIs('The mysql connection requires either a "host" or a "socket" parameter');
 
 		$dsn([]);
 	}
@@ -445,7 +445,7 @@ class DatabaseTest extends TestCase
 		$dsn = Database::$types['mysql']['dsn'];
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The mysql connection requires a "database" parameter');
+		$this->expectExceptionMessageIs('The mysql connection requires a "database" parameter');
 
 		$dsn(['host' => 'localhost']);
 	}
@@ -464,7 +464,7 @@ class DatabaseTest extends TestCase
 
 		// no database
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The sqlite connection requires a "database" parameter');
+		$this->expectExceptionMessageIs('The sqlite connection requires a "database" parameter');
 
 		$dsn([]);
 	}

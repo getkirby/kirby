@@ -342,7 +342,8 @@ class FieldTest extends TestCase
 	public function testRegisterWithInvalidType(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Field "test": The option "enabled" must be of type bool');
+		$this->expectExceptionCode('error.field.prop.invalid');
+		$this->expectExceptionMessageIs('Field "test": The option "enabled" must be of type bool');
 
 		new OptionsMockField(name: 'test', enabled: ['yes']);
 	}
@@ -415,7 +416,7 @@ class FieldTest extends TestCase
 		Field::$types['mock'] = ['props' => []];
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage(
+		$this->expectExceptionMessageIs(
 			'The field type "mock" is registered as array. Array-based field ' .
 			'definitions have been removed in Kirby 6. Please register the name ' .
 			'of a class that extends Kirby\Form\Field instead.'
@@ -429,7 +430,7 @@ class FieldTest extends TestCase
 		Field::$types['mock'] = Page::class;
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage(
+		$this->expectExceptionMessageIs(
 			'The field type "mock" is registered as "Kirby\Cms\Page", ' .
 			'which does not extend Kirby\Form\Field'
 		);
@@ -442,7 +443,7 @@ class FieldTest extends TestCase
 		Field::$types['mock'] = ConstructorMockField::class;
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage(
+		$this->expectExceptionMessageIs(
 			'The constructor of "Kirby\Form\ConstructorMockField" must accept ' .
 			'all other props as `mixed ...$args` and pass them on ' .
 			'to `parent::__construct()`'
@@ -454,7 +455,8 @@ class FieldTest extends TestCase
 	public function testResolveWithMissingType(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Field "test": The field type "mock" does not exist');
+		$this->expectExceptionCode('error.field.type.missing');
+		$this->expectExceptionMessageIs('Field "test": The field type "mock" does not exist');
 
 		Field::resolve('mock', 'test');
 	}

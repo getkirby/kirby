@@ -114,7 +114,7 @@ class EmailTest extends TestCase
 	public function testInvalidTemplate(): void
 	{
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The email template "subscription" cannot be found');
+		$this->expectExceptionMessageIs('The email template "subscription" cannot be found');
 
 		$email = new Email([
 			'template' => 'subscription'

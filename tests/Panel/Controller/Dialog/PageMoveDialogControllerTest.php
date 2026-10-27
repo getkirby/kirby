@@ -184,7 +184,7 @@ class PageMoveDialogControllerTest extends TestCase
 		$controller = new PageMoveDialogController($page);
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The site is not accessible');
+		$this->expectExceptionCode('error.site.notAccessible');
 		$controller->submit();
 	}
 }

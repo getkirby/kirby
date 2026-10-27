@@ -37,7 +37,7 @@ class BlockTest extends TestCase
 	public function testConstructWithoutType(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The block type is missing');
+		$this->expectExceptionMessageIs('The block type is missing');
 
 		$block = new Block([]);
 	}
@@ -218,7 +218,7 @@ class BlockTest extends TestCase
 	public function testToHtmlInvalidWithDebugMode(): void
 	{
 		$this->expectException(Error::class);
-		$this->expectExceptionMessage('Call to undefined function shouldThrowException()');
+		$this->expectExceptionMessageIs('Call to undefined function shouldThrowException()');
 
 		new App([
 			'roots' => [

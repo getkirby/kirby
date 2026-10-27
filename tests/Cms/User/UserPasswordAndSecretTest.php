@@ -81,7 +81,7 @@ class UserPasswordAndSecretTest extends ModelTestCase
 		// invalid JSON
 		F::write($file, "\n" . 'this is not JSON');
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('JSON string is invalid');
+		$this->expectExceptionMessageIs('JSON string is invalid');
 		$user->secret('totp');
 	}
 

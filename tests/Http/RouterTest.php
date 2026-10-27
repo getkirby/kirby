@@ -61,7 +61,7 @@ class RouterTest extends TestCase
 	public function testRegisterInvalidRoute(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid route parameters');
+		$this->expectExceptionMessageIs('Invalid route parameters');
 
 		$router = new Router([
 			'test' => 'test'
@@ -78,7 +78,7 @@ class RouterTest extends TestCase
 	public function testFindWithNonexistingMethod(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid routing method: KIRBY');
+		$this->expectExceptionMessageIs('Invalid routing method: KIRBY');
 		$this->expectExceptionCode(400);
 
 		$router = new Router();
@@ -88,7 +88,7 @@ class RouterTest extends TestCase
 	public function testFindNonexistingRoute(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('No route found for path: "a" and request method: "GET"');
+		$this->expectExceptionMessageIs('No route found for path: "a" and request method: "GET"');
 		$this->expectExceptionCode(404);
 
 		$router = new Router();
@@ -194,7 +194,7 @@ class RouterTest extends TestCase
 		$this->assertSame('c', $result);
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('No route found for path: "d" and request method: "GET"');
+		$this->expectExceptionMessageIs('No route found for path: "d" and request method: "GET"');
 
 		$result = $router->call('d');
 	}

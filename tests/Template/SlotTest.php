@@ -66,7 +66,7 @@ class SlotTest extends TestCase
 		$slot = new Slot('test');
 
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('The slot has not been opened');
+		$this->expectExceptionMessageIs('The slot has not been opened');
 
 		$slot->close();
 	}
@@ -78,7 +78,7 @@ class SlotTest extends TestCase
 
 		try {
 			$this->expectException(LogicException::class);
-			$this->expectExceptionMessage('The slot has already been opened');
+			$this->expectExceptionMessageIs('The slot has already been opened');
 
 			$slot->open();
 		} finally {

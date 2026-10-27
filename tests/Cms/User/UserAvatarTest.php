@@ -89,7 +89,8 @@ class UserAvatarTest extends ModelTestCase
 		]);
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to update the user "editor@getkirby.com"');
+		$this->expectExceptionCode('error.user.update.permission');
+		$this->expectExceptionMessageIs('You are not allowed to update the user "editor@getkirby.com"');
 
 		$this->app->user('editor@getkirby.com')->createAvatar($this->avatarSource(), 'jpg');
 	}
@@ -169,7 +170,8 @@ class UserAvatarTest extends ModelTestCase
 		]);
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to update the user "editor@getkirby.com"');
+		$this->expectExceptionCode('error.user.update.permission');
+		$this->expectExceptionMessageIs('You are not allowed to update the user "editor@getkirby.com"');
 
 		$this->app->user('editor@getkirby.com')->deleteAvatar();
 	}
@@ -238,7 +240,8 @@ class UserAvatarTest extends ModelTestCase
 		]);
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to update the user "editor@getkirby.com"');
+		$this->expectExceptionCode('error.user.update.permission');
+		$this->expectExceptionMessageIs('You are not allowed to update the user "editor@getkirby.com"');
 
 		$this->app->user('editor@getkirby.com')->replaceAvatar($this->avatarSource(), 'jpg');
 	}

@@ -126,7 +126,7 @@ class StrTest extends TestCase
 	public function testAfterWithEmptyNeedle(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The needle must not be empty');
+		$this->expectExceptionMessageIs('The needle must not be empty');
 		Str::after('test', '');
 	}
 
@@ -167,7 +167,7 @@ class StrTest extends TestCase
 	public function testBeforeWithEmptyNeedle(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The needle must not be empty');
+		$this->expectExceptionMessageIs('The needle must not be empty');
 		Str::before('test', '');
 	}
 
@@ -322,7 +322,7 @@ class StrTest extends TestCase
 	public function testConvertInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Could not convert string "ÖÄÜ" from "UTF-8" to "ASCII"');
+		$this->expectExceptionMessageIs('Could not convert string "ÖÄÜ" from "UTF-8" to "ASCII"');
 
 		Str::convert('ÖÄÜ', 'ASCII', 'UTF-8');
 	}
@@ -519,7 +519,7 @@ class StrTest extends TestCase
 	public function testFromWithEmptyNeedle(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The needle must not be empty');
+		$this->expectExceptionMessageIs('The needle must not be empty');
 		Str::from('test', '');
 	}
 
@@ -703,7 +703,7 @@ class StrTest extends TestCase
 	public function testPoolWithInvalidType(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid pool type "nmu"');
+		$this->expectExceptionMessageIs('Invalid pool type "nmu"');
 		Str::pool(['alpha', 'nmu']);
 	}
 
@@ -727,7 +727,7 @@ class StrTest extends TestCase
 	public function testPositionWithEmptyNeedle(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The needle must not be empty');
+		$this->expectExceptionMessageIs('The needle must not be empty');
 		Str::position('test', '');
 	}
 
@@ -763,7 +763,7 @@ class StrTest extends TestCase
 	public function testRandomWithInvalidPool(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid pool type "something invalid"');
+		$this->expectExceptionMessageIs('Invalid pool type "something invalid"');
 		Str::random(10, 'something invalid');
 	}
 
@@ -1616,7 +1616,7 @@ class StrTest extends TestCase
 	public function testUntilWithEmptyNeedle(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The needle must not be empty');
+		$this->expectExceptionMessageIs('The needle must not be empty');
 		Str::until('test', '');
 	}
 

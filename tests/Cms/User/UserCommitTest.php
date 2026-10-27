@@ -79,7 +79,7 @@ class UserCommitTest extends ModelTestCase
 		$user = $this->app->impersonate('kirby');
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('The Kirby user cannot be changed');
+		$this->expectExceptionMessageIs('The Kirby user cannot be changed');
 
 		$class = new ReflectionClass($user);
 		$class->getMethod('commit')->invokeArgs($user, [

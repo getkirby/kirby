@@ -85,7 +85,7 @@ class AppResolveTest extends TestCase
 
 		// a missing home page is a hard error that is not caught
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('The home page does not exist');
+		$this->expectExceptionMessageIs('The home page does not exist');
 
 		$app->resolve(null);
 	}

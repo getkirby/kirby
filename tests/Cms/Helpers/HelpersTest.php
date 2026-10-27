@@ -110,7 +110,7 @@ class HelpersTest extends TestCase
 	public function testHandleErrorsException(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Exception inside the action');
+		$this->expectExceptionMessageIs('Exception inside the action');
 
 		Helpers::handleErrors(
 			fn () => throw new Exception(
@@ -236,7 +236,7 @@ class HelpersTest extends TestCase
 
 		// invalid type
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Could not determine the size of the given value');
+		$this->expectExceptionMessageIs('Could not determine the size of the given value');
 		Helpers::size(new Obj());
 	}
 }

@@ -131,7 +131,8 @@ class FileChangeNameTest extends ModelTestCase
 		F::write($file->root(), '');
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('You are not allowed to upload PHP files');
+		$this->expectExceptionCode('error.file.type.forbidden');
+		$this->expectExceptionMessageIs('You are not allowed to upload PHP files');
 
 		$file->changeName('shell', true, 'php');
 	}

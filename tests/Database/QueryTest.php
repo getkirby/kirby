@@ -167,7 +167,7 @@ class QueryTest extends TestCase
 	public function testBuildInvalidType(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid query type: foo');
+		$this->expectExceptionMessageIs('Invalid query type: foo');
 
 		$this->database->table('users')->build('foo');
 	}
@@ -374,7 +374,7 @@ class QueryTest extends TestCase
 			->one();
 
 		$this->expectException(PDOException::class);
-		$this->expectExceptionMessage('SQLSTATE[HY000]: General error: 1 no such column: foo');
+		$this->expectExceptionMessageIs('SQLSTATE[HY000]: General error: 1 no such column: foo');
 
 		// should throw an exception
 		$this->database
@@ -566,7 +566,7 @@ class QueryTest extends TestCase
 	public function testHavingInvalidColumn(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid column "foo" in clause');
+		$this->expectExceptionMessageIs('Invalid column "foo" in clause');
 
 		$this->database
 			->table('users')
@@ -676,7 +676,7 @@ class QueryTest extends TestCase
 	public function testWhereInvalidPredicate(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid predicate INV');
+		$this->expectExceptionMessageIs('Invalid predicate INV');
 
 		$this->database
 			->table('users')
@@ -687,7 +687,7 @@ class QueryTest extends TestCase
 	public function testWhereInvalidPredicateOperator(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid predicate/operator <!>');
+		$this->expectExceptionMessageIs('Invalid predicate/operator <!>');
 
 		$this->database
 			->table('users')
@@ -698,7 +698,7 @@ class QueryTest extends TestCase
 	public function testWhereInvalidColumnArray(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid column "foo" in clause');
+		$this->expectExceptionMessageIs('Invalid column "foo" in clause');
 
 		$this->database
 			->table('users')
@@ -709,7 +709,7 @@ class QueryTest extends TestCase
 	public function testWhereInvalidColumn(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid column "foo" in clause');
+		$this->expectExceptionMessageIs('Invalid column "foo" in clause');
 
 		$this->database
 			->table('users')
@@ -862,7 +862,7 @@ class QueryTest extends TestCase
 		$this->database->table('users');
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid table: accounts');
+		$this->expectExceptionMessageIs('Invalid table: accounts');
 
 		// should throw an exception
 		$this->database->table('accounts');

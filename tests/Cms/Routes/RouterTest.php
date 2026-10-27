@@ -72,7 +72,7 @@ class RouterTest extends TestCase
 		]);
 
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('The home page does not exist');
+		$this->expectExceptionMessageIs('The home page does not exist');
 
 		$app->call('/');
 	}
@@ -371,7 +371,7 @@ class RouterTest extends TestCase
 	public function testBadMethodRoute(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid routing method: WURST');
+		$this->expectExceptionMessageIs('Invalid routing method: WURST');
 		$this->expectExceptionCode(400);
 
 		$this->app->call('/', 'WURST');
@@ -629,7 +629,7 @@ class RouterTest extends TestCase
 		]);
 
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('The home page does not exist');
+		$this->expectExceptionMessageIs('The home page does not exist');
 
 		$app->call('/');
 	}

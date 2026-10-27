@@ -128,7 +128,7 @@ class FileModificationsTest extends ModelTestCase
 		]);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The file::version component must return a File, FileVersion or Asset object');
+		$this->expectExceptionMessageIs('The file::version component must return a File, FileVersion or Asset object');
 
 		$file = $app->file('test.jpg');
 		$file->thumb(['width' => 100]);

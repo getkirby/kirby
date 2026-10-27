@@ -39,7 +39,7 @@ class YamlTest extends TestCase
 	{
 		// pass invalid object
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid YAML data; please pass a string');
+		$this->expectExceptionMessageIs('Invalid YAML data; please pass a string');
 		Yaml::decode(new stdClass());
 	}
 
@@ -47,7 +47,7 @@ class YamlTest extends TestCase
 	{
 		// pass invalid int
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid YAML data; please pass a string');
+		$this->expectExceptionMessageIs('Invalid YAML data; please pass a string');
 		Yaml::decode(1);
 	}
 

@@ -82,7 +82,8 @@ class SvgTest extends TestCase
 	public function testInvalid(string $file): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The markup could not be parsed');
+		// the rest of the message comes from libxml and varies by version
+		$this->expectExceptionMessageIsOrContains('The markup could not be parsed');
 
 		Svg::validateFile($this->fixture($file));
 	}
@@ -100,7 +101,7 @@ class SvgTest extends TestCase
 		$this->assertSame($sanitized, Svg::sanitize($fixture));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The URL is not allowed in attribute "href" (line 2): Unknown URL type');
+		$this->expectExceptionMessageIs('The URL is not allowed in attribute "href" (line 2): Unknown URL type');
 		Svg::validate($fixture);
 	}
 
@@ -118,7 +119,7 @@ class SvgTest extends TestCase
 		$this->assertSame($sanitized, Svg::sanitize($fixture));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The URL is not allowed in attribute "href" (line 1): Unknown URL type');
+		$this->expectExceptionMessageIs('The URL is not allowed in attribute "href" (line 1): Unknown URL type');
 		Svg::validate($fixture);
 	}
 
@@ -130,7 +131,7 @@ class SvgTest extends TestCase
 		$this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The URL is not allowed in attribute "xlink:href" (line 2): Unknown URL type');
+		$this->expectExceptionMessageIs('The URL is not allowed in attribute "xlink:href" (line 2): Unknown URL type');
 		Svg::validateFile($fixture);
 	}
 
@@ -143,7 +144,7 @@ class SvgTest extends TestCase
 		$this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture), isExternal: true));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The URL points outside of the site index URL');
+		$this->expectExceptionMessageIs('The URL is not allowed in attribute "xlink:href" (line 2): The URL points outside of the site index URL');
 		Svg::validateFile($fixture);
 	}
 
@@ -155,7 +156,7 @@ class SvgTest extends TestCase
 		$this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The namespace "https://malicious.com/script.php" is not allowed (around line 1)');
+		$this->expectExceptionMessageIs('The namespace "https://malicious.com/script.php" is not allowed (around line 1)');
 		Svg::validateFile($fixture);
 	}
 
@@ -167,7 +168,7 @@ class SvgTest extends TestCase
 		$this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The namespace "https://malicious.com/script.php" is not allowed (around line 1)');
+		$this->expectExceptionMessageIs('The namespace "https://malicious.com/script.php" is not allowed (around line 1)');
 		Svg::validateFile($fixture);
 	}
 
@@ -179,7 +180,7 @@ class SvgTest extends TestCase
 		$this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The URL is not allowed in attribute "style" (line 7)');
+		$this->expectExceptionMessageIs('The URL is not allowed in attribute "style" (line 7): Invalid data URI');
 		Svg::validateFile($fixture);
 	}
 
@@ -191,7 +192,7 @@ class SvgTest extends TestCase
 		$this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The URL is not allowed in attribute "filter" (line 7)');
+		$this->expectExceptionMessageIs('The URL is not allowed in attribute "filter" (line 7): Invalid data URI');
 		Svg::validateFile($fixture);
 	}
 
@@ -203,7 +204,7 @@ class SvgTest extends TestCase
 		$this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The URL is not allowed in attribute "style" (line 2)');
+		$this->expectExceptionMessageIs('The URL is not allowed in attribute "style" (line 2): The hostname "malicious.com" is not allowed');
 		Svg::validateFile($fixture);
 	}
 
@@ -215,7 +216,7 @@ class SvgTest extends TestCase
 		$this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The URL is not allowed in attribute "href" (line 2)');
+		$this->expectExceptionMessageIs('The URL is not allowed in attribute "href" (line 2): The hostname "malicious.com" is not allowed');
 		Svg::validateFile($fixture);
 	}
 
@@ -227,7 +228,7 @@ class SvgTest extends TestCase
 		$this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The URL is not allowed in attribute "href" (line 2): Protocol-relative URLs are not allowed');
+		$this->expectExceptionMessageIs('The URL is not allowed in attribute "href" (line 2): Protocol-relative URLs are not allowed');
 		Svg::validateFile($fixture);
 	}
 
@@ -239,7 +240,7 @@ class SvgTest extends TestCase
 		$this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The URL is not allowed in attribute "href" (line 2): Protocol-relative URLs are not allowed');
+		$this->expectExceptionMessageIs('The URL is not allowed in attribute "href" (line 2): Protocol-relative URLs are not allowed');
 		Svg::validateFile($fixture);
 	}
 
@@ -251,7 +252,7 @@ class SvgTest extends TestCase
 		$this->assertSame($sanitized, Svg::sanitize($fixture));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The "onclick" attribute (line 2) is not allowed');
+		$this->expectExceptionMessageIs('The "onclick" attribute (line 2) is not allowed: Not included in the global allowlist');
 		Svg::validate($fixture);
 	}
 
@@ -263,7 +264,7 @@ class SvgTest extends TestCase
 		$this->assertSame($sanitized, Svg::sanitize($fixture));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The "onload" attribute (line 1) is not allowed');
+		$this->expectExceptionMessageIs('The "onload" attribute (line 1) is not allowed: Not included in the global allowlist');
 		Svg::validate($fixture);
 	}
 
@@ -275,7 +276,7 @@ class SvgTest extends TestCase
 		$this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Nested "use" elements are not allowed (used in line 14)');
+		$this->expectExceptionMessageIs('Nested "use" elements are not allowed (used in line 14)');
 		Svg::validateFile($fixture);
 	}
 
@@ -287,7 +288,7 @@ class SvgTest extends TestCase
 		$this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Nested "use" elements are not allowed (used in line 18)');
+		$this->expectExceptionMessageIs('Nested "use" elements are not allowed (used in line 18)');
 		Svg::validateFile($fixture);
 	}
 
@@ -299,7 +300,7 @@ class SvgTest extends TestCase
 		$this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Nested "use" elements are not allowed (used in line 18)');
+		$this->expectExceptionMessageIs('Nested "use" elements are not allowed (used in line 18)');
 		Svg::validateFile($fixture);
 	}
 
@@ -311,7 +312,7 @@ class SvgTest extends TestCase
 		$this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Nested "use" elements are not allowed (used in line 14)');
+		$this->expectExceptionMessageIs('Nested "use" elements are not allowed (used in line 14)');
 		Svg::validateFile($fixture);
 	}
 
@@ -323,7 +324,7 @@ class SvgTest extends TestCase
 		$this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The doctype must not reference external files');
+		$this->expectExceptionMessageIs('The doctype must not reference external files');
 		Svg::validateFile($fixture);
 	}
 
@@ -335,7 +336,7 @@ class SvgTest extends TestCase
 		$this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The doctype must not reference external files');
+		$this->expectExceptionMessageIs('The doctype must not reference external files');
 		Svg::validateFile($fixture);
 	}
 
@@ -347,7 +348,7 @@ class SvgTest extends TestCase
 		$this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The doctype must not define a subset');
+		$this->expectExceptionMessageIs('The doctype must not define a subset');
 		Svg::validateFile($fixture);
 	}
 
@@ -359,7 +360,7 @@ class SvgTest extends TestCase
 		$this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid doctype');
+		$this->expectExceptionMessageIs('Invalid doctype');
 		Svg::validateFile($fixture);
 	}
 
@@ -371,7 +372,7 @@ class SvgTest extends TestCase
 		$this->assertSame($sanitized, Svg::sanitize($fixture));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The "Text" element (line 2) is not allowed');
+		$this->expectExceptionMessageIs('The "Text" element (line 2) is not allowed, but its children can be kept');
 		Svg::validate($fixture);
 	}
 
@@ -383,7 +384,7 @@ class SvgTest extends TestCase
 		$this->assertSame($sanitized, Svg::sanitize($fixture));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The "foreignobject" element (line 1) is not allowed');
+		$this->expectExceptionMessageIs('The "foreignobject" element (line 1) is not allowed');
 		Svg::validate($fixture);
 	}
 
@@ -395,7 +396,7 @@ class SvgTest extends TestCase
 		$this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The "set" element (line 7) is not allowed');
+		$this->expectExceptionMessageIs('The "set" element (line 7) is not allowed');
 		Svg::validateFile($fixture);
 	}
 
@@ -407,7 +408,7 @@ class SvgTest extends TestCase
 		$this->assertSame($sanitized, Svg::sanitize($fixture));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The "script" element (line 1) is not allowed');
+		$this->expectExceptionMessageIs('The "script" element (line 1) is not allowed');
 		Svg::validate($fixture);
 	}
 
@@ -419,7 +420,7 @@ class SvgTest extends TestCase
 		$this->assertSame($sanitized, Svg::sanitize($fixture));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The "blockquote" element (line 1) is not allowed');
+		$this->expectExceptionMessageIs('The "blockquote" element (line 1) is not allowed, but its children can be kept');
 		Svg::validate($fixture);
 	}
 
@@ -431,7 +432,7 @@ class SvgTest extends TestCase
 		$this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The URL is not allowed in the "style" element (around line 3)');
+		$this->expectExceptionMessageIs('The URL is not allowed in the "style" element (around line 3)');
 		Svg::validateFile($fixture);
 	}
 
@@ -443,7 +444,7 @@ class SvgTest extends TestCase
 		$this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The URL is not allowed in the "style" element (around line 3)');
+		$this->expectExceptionMessageIs('The URL is not allowed in the "style" element (around line 3)');
 		Svg::validateFile($fixture);
 	}
 
@@ -455,7 +456,7 @@ class SvgTest extends TestCase
 		$this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The URL is not allowed in the "style" element (around line 3)');
+		$this->expectExceptionMessageIs('The URL is not allowed in the "style" element (around line 3)');
 		Svg::validateFile($fixture);
 	}
 
@@ -467,7 +468,7 @@ class SvgTest extends TestCase
 		$this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The "xml-stylesheet" processing instruction (line 6) is not allowed');
+		$this->expectExceptionMessageIs('The "xml-stylesheet" processing instruction (line 6) is not allowed');
 		Svg::validateFile($fixture);
 	}
 
@@ -481,7 +482,7 @@ class SvgTest extends TestCase
 		$this->assertSame($sanitized, Svg::sanitize($fixture));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The comment (line 1) is not allowed');
+		$this->expectExceptionMessageIs('The comment (line 1) is not allowed');
 		Svg::validate($fixture);
 	}
 
@@ -495,7 +496,7 @@ class SvgTest extends TestCase
 		$this->assertSame($sanitized, Svg::sanitize($fixture));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The comment (line 1) is not allowed');
+		$this->expectExceptionMessageIs('The comment (line 1) is not allowed');
 		Svg::validate($fixture);
 	}
 
@@ -509,7 +510,7 @@ class SvgTest extends TestCase
 		$this->assertSame($sanitized, Svg::sanitize($fixture));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The comment (line 1) is not allowed');
+		$this->expectExceptionMessageIs('The comment (line 1) is not allowed');
 		Svg::validate($fixture);
 	}
 
@@ -522,7 +523,7 @@ class SvgTest extends TestCase
 		$this->assertSame($sanitized, Svg::sanitize($fixture));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The comment (line 1) is not allowed');
+		$this->expectExceptionMessageIs('The comment (line 1) is not allowed');
 		Svg::validate($fixture);
 	}
 
@@ -536,7 +537,7 @@ class SvgTest extends TestCase
 		$this->assertSame($sanitized, Svg::sanitize($fixture));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The comment (line 1) is not allowed');
+		$this->expectExceptionMessageIs('The comment (line 1) is not allowed');
 		Svg::validate($fixture);
 	}
 
@@ -550,7 +551,7 @@ class SvgTest extends TestCase
 		$this->assertSame($sanitized, Svg::sanitize($fixture));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The comment (line 1) is not allowed');
+		$this->expectExceptionMessageIs('The comment (line 1) is not allowed');
 		Svg::validate($fixture);
 	}
 
@@ -565,7 +566,7 @@ class SvgTest extends TestCase
 		$this->assertSame($sanitized, Svg::sanitize($fixture));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The CDATA section (line 1) is not allowed');
+		$this->expectExceptionMessageIs('The CDATA section (line 1) is not allowed');
 		Svg::validate($fixture);
 	}
 
@@ -579,7 +580,7 @@ class SvgTest extends TestCase
 		$this->assertSame($sanitized, Svg::sanitize($fixture));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The CDATA section (line 1) is not allowed');
+		$this->expectExceptionMessageIs('The CDATA section (line 1) is not allowed');
 		Svg::validate($fixture);
 	}
 
@@ -593,7 +594,7 @@ class SvgTest extends TestCase
 		$this->assertSame($sanitized, Svg::sanitize($fixture));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The CDATA section (line 1) is not allowed');
+		$this->expectExceptionMessageIs('The CDATA section (line 1) is not allowed');
 		Svg::validate($fixture);
 	}
 
@@ -607,7 +608,7 @@ class SvgTest extends TestCase
 		$this->assertSame($sanitized, Svg::sanitize($fixture));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The comment (line 1) is not allowed');
+		$this->expectExceptionMessageIs('The comment (line 1) is not allowed');
 		Svg::validate($fixture);
 	}
 
@@ -621,7 +622,7 @@ class SvgTest extends TestCase
 		$this->assertSame($sanitized, Svg::sanitize($fixture));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The CDATA section (line 1) is not allowed');
+		$this->expectExceptionMessageIs('The CDATA section (line 1) is not allowed');
 		Svg::validate($fixture);
 	}
 
@@ -634,7 +635,7 @@ class SvgTest extends TestCase
 		$this->assertSame($sanitized, Svg::sanitize($fixture));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The CDATA section (line 1) is not allowed');
+		$this->expectExceptionMessageIs('The CDATA section (line 1) is not allowed');
 		Svg::validate($fixture);
 	}
 
@@ -648,14 +649,14 @@ class SvgTest extends TestCase
 		$this->assertSame($sanitized, Svg::sanitize($fixture));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The comment (line 1) is not allowed');
+		$this->expectExceptionMessageIs('The comment (line 1) is not allowed');
 		Svg::validate($fixture);
 	}
 
 	public function testParseNonSvg(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The file is not a SVG (got <html>)');
+		$this->expectExceptionMessageIs('The file is not a SVG (got <html>)');
 
 		Svg::validate('<html></html>');
 	}

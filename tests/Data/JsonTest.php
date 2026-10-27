@@ -36,7 +36,7 @@ class JsonTest extends TestCase
 	{
 		// pass invalid object
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid JSON data; please pass a string');
+		$this->expectExceptionMessageIs('Invalid JSON data; please pass a string');
 		Json::decode(new stdClass());
 	}
 
@@ -44,14 +44,14 @@ class JsonTest extends TestCase
 	{
 		// pass invalid int
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid JSON data; please pass a string');
+		$this->expectExceptionMessageIs('Invalid JSON data; please pass a string');
 		Json::decode(1);
 	}
 
 	public function testDecodeCorrupted1(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('JSON string is invalid');
+		$this->expectExceptionMessageIs('JSON string is invalid');
 
 		Json::decode('some gibberish');
 	}
@@ -59,7 +59,7 @@ class JsonTest extends TestCase
 	public function testDecodeCorrupted2(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('JSON string is invalid');
+		$this->expectExceptionMessageIs('JSON string is invalid');
 
 		Json::decode('true');
 	}

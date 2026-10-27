@@ -35,7 +35,7 @@ class PageChangeStorageTest extends ModelTestCase
 		]);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid storage class');
+		$this->expectExceptionMessageIs('Invalid storage class');
 
 		$page->changeStorage(PageRules::class);
 	}

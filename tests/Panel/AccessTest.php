@@ -35,7 +35,7 @@ class AccessTest extends TestCase
 
 		// exception
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to access the panel');
+		$this->expectExceptionCode('error.access.panel');
 		$access->area(throws: true);
 	}
 
@@ -50,7 +50,7 @@ class AccessTest extends TestCase
 
 		// exception
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to access the panel');
+		$this->expectExceptionCode('error.access.panel');
 		$access->area(throws: true);
 	}
 
@@ -105,7 +105,7 @@ class AccessTest extends TestCase
 
 		// no area access
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to access this part of the panel');
+		$this->expectExceptionCode('error.access.view');
 
 		$this->assertFalse($access->area('system'));
 		$access->area('system', throws: true);

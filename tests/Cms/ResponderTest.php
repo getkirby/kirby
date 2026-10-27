@@ -114,7 +114,7 @@ class ResponderTest extends TestCase
 	public function testExpiresInvalidString(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid time string "abcde"');
+		$this->expectExceptionMessageIs('Invalid time string "abcde"');
 
 		$responder = new Responder();
 		$responder->expires('abcde');

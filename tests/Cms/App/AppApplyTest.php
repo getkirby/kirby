@@ -33,7 +33,7 @@ class AppApplyTest extends TestCase
 		]);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The argument unused does not exist');
+		$this->expectExceptionMessageIs('The argument unused does not exist');
 
 		$this->app->apply('test', ['foo' => 'bar'], 'unused');
 	}

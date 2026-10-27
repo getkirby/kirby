@@ -21,7 +21,7 @@ class SymmetricCryptoTest extends TestCase
 	public function testConstructKeyAndPassword(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Passing both a secret key and a password is not supported');
+		$this->expectExceptionMessageIs('Passing both a secret key and a password is not supported');
 
 		new SymmetricCrypto(secretKey: 'abcdefghijklmnopabcdefghijklmnop', password: 'super secure');
 	}
@@ -29,7 +29,7 @@ class SymmetricCryptoTest extends TestCase
 	public function testConstructKeyLength(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid secret key length');
+		$this->expectExceptionMessageIs('Invalid secret key length, expected 32 bytes');
 
 		new SymmetricCrypto(secretKey: 'not secure');
 	}
@@ -105,7 +105,7 @@ class SymmetricCryptoTest extends TestCase
 	public function testDecryptInvalidJson(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('JSON string is invalid');
+		$this->expectExceptionMessageIs('JSON string is invalid');
 
 		$crypto = new SymmetricCrypto(secretKey: 'abcdefghijklmnopabcdefghijklmnop');
 		$crypto->decrypt('not JSON!');
@@ -114,7 +114,7 @@ class SymmetricCryptoTest extends TestCase
 	public function testDecryptInvalidMode(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Unsupported encryption mode "box"');
+		$this->expectExceptionMessageIs('Unsupported encryption mode "box"');
 
 		$crypto = new SymmetricCrypto(secretKey: 'abcdefghijklmnopabcdefghijklmnop');
 
@@ -127,7 +127,7 @@ class SymmetricCryptoTest extends TestCase
 	public function testDecryptMissingProps(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Input data does not contain all required props');
+		$this->expectExceptionMessageIs('Input data does not contain all required props');
 
 		$crypto = new SymmetricCrypto(secretKey: 'abcdefghijklmnopabcdefghijklmnop');
 		$crypto->decrypt('{"mode":"secretbox","data":"this is set","nonce":"this is also set"}');
@@ -136,7 +136,7 @@ class SymmetricCryptoTest extends TestCase
 	public function testDecryptTampered1(): void
 	{
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Encrypted string was tampered with');
+		$this->expectExceptionMessageIs('Encrypted string was tampered with');
 
 		$crypto = new SymmetricCrypto(password: 'super secure');
 
@@ -150,7 +150,7 @@ class SymmetricCryptoTest extends TestCase
 	public function testDecryptTampered2(): void
 	{
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Encrypted string was tampered with');
+		$this->expectExceptionMessageIs('Encrypted string was tampered with');
 
 		$crypto = new SymmetricCrypto(password: 'super secure');
 
@@ -164,7 +164,7 @@ class SymmetricCryptoTest extends TestCase
 	public function testDecryptTampered3(): void
 	{
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Encrypted string was tampered with');
+		$this->expectExceptionMessageIs('Encrypted string was tampered with');
 
 		$crypto = new SymmetricCrypto(password: 'super secure');
 
@@ -178,7 +178,7 @@ class SymmetricCryptoTest extends TestCase
 	public function testDecryptTampered4(): void
 	{
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Encrypted string was tampered with');
+		$this->expectExceptionMessageIs('Encrypted string was tampered with');
 
 		$crypto = new SymmetricCrypto(password: 'super secure');
 
@@ -247,7 +247,7 @@ class SymmetricCryptoTest extends TestCase
 	public function testSecretKeyFromPasswordNoSalt(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Salt and limits are required when deriving a secret key from a password');
+		$this->expectExceptionMessageIs('Salt and limits are required when deriving a secret key from a password');
 
 		$crypto = new SymmetricCrypto(password: 'super secure');
 		$crypto->secretKey();

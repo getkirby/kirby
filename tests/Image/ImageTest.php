@@ -89,7 +89,7 @@ class ImageTest extends TestCase
 	public function testHtmlWithoutUrl(): void
 	{
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Calling Image::html() requires that the URL property is not null');
+		$this->expectExceptionMessageIs('Calling Image::html() requires that the URL property is not null');
 		$file = new Image(['root' => static::FIXTURES . '/image/cat.jpg']);
 		$file->html();
 	}
@@ -173,7 +173,8 @@ class ImageTest extends TestCase
 		$kirby = kirby();
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('The orientation of the image must be "portrait"');
+		$this->expectExceptionCode('error.file.orientation');
+		$this->expectExceptionMessageIs('The orientation of the image must be "portrait"');
 
 		$this->_image()->match(['orientation' => 'portrait']);
 	}

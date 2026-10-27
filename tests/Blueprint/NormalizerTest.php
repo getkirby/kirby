@@ -534,7 +534,7 @@ class NormalizerTest extends TestCase
 	public function testNormalizeFieldPropsWithInvalidType(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid field type ("nonsense")');
+		$this->expectExceptionMessageIs('Invalid field type ("nonsense")');
 
 		Normalizer::normalizeFieldProps([
 			'name' => 'title',
@@ -545,7 +545,7 @@ class NormalizerTest extends TestCase
 	public function testNormalizeFieldPropsWithMissingName(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The field name is missing');
+		$this->expectExceptionMessageIs('The field name is missing');
 
 		Normalizer::normalizeFieldProps(['type' => 'text']);
 	}

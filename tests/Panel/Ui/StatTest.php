@@ -212,7 +212,7 @@ class StatTest extends TestCase
 	public function testFromWithInvalidInput(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid data from stat query. The query must return an array.');
+		$this->expectExceptionMessageIs('Invalid data from stat query. The query must return an array.');
 
 		Stat::from(
 			input: 'invalid',

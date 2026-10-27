@@ -733,7 +733,7 @@ class ATest extends TestCase
 	public function testRandomInvalidCount(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('$count is larger than available array items');
+		$this->expectExceptionMessageIs('$count is larger than available array items');
 		A::random([1, 2, 3], 4);
 	}
 
@@ -804,7 +804,7 @@ class ATest extends TestCase
 	public function testMoveWithInvalidFrom(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Invalid "from" index');
+		$this->expectExceptionMessageIs('Invalid "from" index');
 
 		A::move(['a', 'b', 'c'], -1, 2);
 	}
@@ -812,7 +812,7 @@ class ATest extends TestCase
 	public function testMoveWithInvalidTo(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Invalid "to" index');
+		$this->expectExceptionMessageIs('Invalid "to" index');
 
 		A::move(['a', 'b', 'c'], 0, 4);
 	}
@@ -1188,7 +1188,7 @@ class ATest extends TestCase
 	public function testKeyByWithNonexistentKeys(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The "key by" argument must be a valid key or a callable');
+		$this->expectExceptionMessageIs('The "key by" argument must be a valid key or a callable');
 
 		$array = [
 			['id' => 1, 'username' => 'bastian'],

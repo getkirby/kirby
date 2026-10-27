@@ -94,7 +94,7 @@ class CodeMethodTest extends TestCase
 		$auth = $this->auth(has2fa: true);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The "code" login method cannot be enabled when 2FA is required');
+		$this->expectExceptionMessageIs('The "code" login method cannot be enabled when 2FA is required');
 
 		CodeMethod::isEnabled($auth);
 	}
@@ -104,7 +104,7 @@ class CodeMethodTest extends TestCase
 		$auth = $this->auth(hasPasswordReset: true);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The "code" and "password-reset" login methods cannot be enabled together');
+		$this->expectExceptionMessageIs('The "code" and "password-reset" login methods cannot be enabled together');
 
 		CodeMethod::isEnabled($auth);
 	}

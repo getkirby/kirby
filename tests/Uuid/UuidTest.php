@@ -57,7 +57,7 @@ class UuidTest extends TestCase
 		);
 
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('UUID: can\'t create new instance from both model and UUID string that do not match');
+		$this->expectExceptionMessageIs('UUID: can\'t create new instance from both model and UUID string that do not match');
 
 		new PageUuid(
 			model: $page,
@@ -69,7 +69,7 @@ class UuidTest extends TestCase
 	{
 		$this->app->clone(['options' => ['content' => ['uuid' => false]]]);
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('UUIDs have been disabled via the `content.uuid` config option.');
+		$this->expectExceptionMessageIs('UUIDs have been disabled via the `content.uuid` config option.');
 		new TestUuid('page://my-page-uuid');
 	}
 
@@ -165,14 +165,14 @@ class UuidTest extends TestCase
 	public function testFromUuidInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid UUID type "foo" in foo://my-id');
+		$this->expectExceptionMessageIs('Invalid UUID type "foo" in foo://my-id');
 		Uuid::from('foo://my-id');
 	}
 
 	public function testFromInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid UUID string: foo˜bar');
+		$this->expectExceptionMessageIs('Invalid UUID string: foo˜bar');
 		Uuid::from('foo˜bar');
 	}
 
@@ -377,7 +377,7 @@ class UuidTest extends TestCase
 		]]);
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Model for UUID page://something could not be found without searching in the site index');
+		$this->expectExceptionMessageIs('Model for UUID page://something could not be found without searching in the site index');
 		Uuid::from('page://something')->model();
 	}
 

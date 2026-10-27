@@ -370,7 +370,7 @@ class ParserTest extends TestCase
 		$consume = $class->getMethod('consume');
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('foo');
+		$this->expectExceptionMessageIs('foo');
 		$consume->invokeArgs($parser, [TokenType::T_TRUE, 'foo']);
 	}
 
@@ -415,7 +415,7 @@ class ParserTest extends TestCase
 	public function testGroupingClosureInvalidArgument(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Expecting only variables in closure argument list');
+		$this->expectExceptionMessageIs('Expecting only variables in closure argument list');
 
 		$parser = new Parser('(a, 2) => a');
 		$parser->parse();
@@ -424,7 +424,7 @@ class ParserTest extends TestCase
 	public function testGroupingClosureInvalidNotation(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Expecting "=>" after closure argument list');
+		$this->expectExceptionMessageIs('Expecting "=>" after closure argument list');
 
 		$parser = new Parser('(a, b) a');
 		$parser->parse();
@@ -439,7 +439,7 @@ class ParserTest extends TestCase
 
 		try {
 			$this->expectException(Exception::class);
-			$this->expectExceptionMessage('Expect expression');
+			$this->expectExceptionMessageIs('Expect expression');
 
 			new Parser('()')->parse();
 		} finally {
@@ -605,7 +605,7 @@ class ParserTest extends TestCase
 		$parser = new Parser('user.true');
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Expect property name after "."');
+		$this->expectExceptionMessageIs('Expect property name after "."');
 		$parser->parse();
 	}
 

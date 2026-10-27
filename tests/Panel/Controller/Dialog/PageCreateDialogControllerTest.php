@@ -109,7 +109,7 @@ class PageCreateDialogControllerTest extends TestCase
 		$controller = new PageCreateDialogController();
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Page create dialog: title and slug must not be false');
+		$this->expectExceptionMessageIs('Page create dialog: title and slug must not be false at the same time');
 
 		$controller->coreFields();
 	}
@@ -132,7 +132,7 @@ class PageCreateDialogControllerTest extends TestCase
 
 		$controller = new PageCreateDialogController();
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Unknown field  "notthere" in create dialog');
+		$this->expectExceptionMessageIs('Unknown field  "notthere" in create dialog');
 
 		$controller->customFields();
 	}
@@ -160,7 +160,7 @@ class PageCreateDialogControllerTest extends TestCase
 
 		$controller = new PageCreateDialogController();
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Field type "filepicker" not supported in create dialog');
+		$this->expectExceptionMessageIs('Field type "filepicker" not supported in create dialog');
 
 		$controller->customFields();
 	}
@@ -188,7 +188,7 @@ class PageCreateDialogControllerTest extends TestCase
 
 		$controller = new PageCreateDialogController();
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Field name "slug" not allowed as custom field in create dialog');
+		$this->expectExceptionMessageIs('Field name "slug" not allowed as custom field in create dialog');
 
 		$controller->customFields();
 	}
@@ -273,7 +273,7 @@ class PageCreateDialogControllerTest extends TestCase
 		$this->app->impersonate('kirby');
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The field "does-not-exist" does not accept new pages');
+		$this->expectExceptionMessageIs('The field "does-not-exist" does not accept new pages');
 
 		PageCreateDialogController::factory();
 	}
