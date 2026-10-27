@@ -52,8 +52,7 @@ class Url
 		string|null $url = null
 	): string {
 		$url ??= static::current();
-		$uri   = new Uri($url);
-		return $uri->clone($parts)->toString();
+		return new Uri($url)->clone($parts)->toString();
 	}
 
 	/**
@@ -95,9 +94,8 @@ class Url
 
 	/**
 	 * Tries to fix a broken url without protocol
-	 * @psalm-return ($url is null ? string|null : string)
 	 */
-	public static function fix(string|null $url = null): string|null
+	public static function fix(string|null $url = null): string
 	{
 		$url ??= '';
 
@@ -232,7 +230,7 @@ class Url
 		bool $leadingSlash = false,
 		bool $trailingSlash = false
 	): string {
-		return Url::toObject($url)
+		return static::toObject($url)
 			->path()
 			->toString($leadingSlash, $trailingSlash);
 	}
@@ -242,7 +240,7 @@ class Url
 	 */
 	public static function query(string|array|null $url = null): string
 	{
-		return Url::toObject($url)->query()->toString();
+		return static::toObject($url)->query()->toString();
 	}
 
 	/**
