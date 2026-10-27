@@ -98,7 +98,7 @@ class Db
 	 *
 	 * @throws InvalidArgumentException
 	 */
-	public static function __callStatic(string $method, $arguments)
+	public static function __callStatic(string $method, array $arguments)
 	{
 		if (isset(static::$queries[$method]) === true) {
 			return (static::$queries[$method])(...$arguments);
@@ -108,7 +108,7 @@ class Db
 			static::$connection !== null &&
 			method_exists(static::$connection, $method) === true
 		) {
-			return call_user_func_array([static::$connection, $method], $arguments);
+			return static::$connection->$method(...$arguments);
 		}
 
 		throw new InvalidArgumentException(
@@ -208,7 +208,7 @@ Db::$queries['update'] = function (
 	string $table,
 	array $values,
 	mixed $where = null
-): bool {
+): bool|array {
 	return Db::table($table)->where($where)->update($values);
 };
 
@@ -218,7 +218,7 @@ Db::$queries['update'] = function (
  * @param $table The name of the table which should be queried
  * @param $where An optional WHERE clause
  */
-Db::$queries['delete'] = function (string $table, mixed $where = null): bool {
+Db::$queries['delete'] = function (string $table, mixed $where = null): bool|array {
 	return Db::table($table)->where($where)->delete();
 };
 
