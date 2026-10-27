@@ -197,7 +197,7 @@ jobs:
 
       - name: Statically analyze using Psalm
         id: psalm
-        run: composer run analyze:psalm -- --output-format=github --php-version=${{ env.php }} --report=sarif/psalm.sarif --report-show-info=false --force-jit
+        run: composer run analyze:psalm -- --output-format=github --php-version=${{ env.php }} --report=sarif/psalm.sarif --report-show-info=false
 
       - name: Upload code scanning results to GitHub
         if: github.repository == 'getkirby/kirby' && steps.psalm.outcome == 'success'
