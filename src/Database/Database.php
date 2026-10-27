@@ -583,7 +583,7 @@ class Database
 		}
 
 		// update cache
-		$key = array_search($table, $this->tables ?? []);
+		$key = array_search($table, $this->tables ?? [], true);
 
 		if ($key !== false) {
 			unset($this->tables[$key]);
