@@ -261,6 +261,14 @@ class UrlTest extends TestCase
 		$this->assertSame('https://getkirby.com/', Url::stripFragment('https://getkirby.com/#a/b'));
 	}
 
+	public function testPathAndQueryWithArray(): void
+	{
+		$url = ['path' => 'a/b', 'query' => ['c' => 'd']];
+
+		$this->assertSame('a/b', Url::path($url));
+		$this->assertSame('c=d', Url::query($url));
+	}
+
 	public function testQuery(): void
 	{
 		$this->assertSame('', Url::query('https://getkirby.com'));

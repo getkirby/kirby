@@ -323,9 +323,9 @@ class Url
 	}
 
 	/**
-	 * Converts the Url to a Uri object
+	 * Converts the Url or the Uri props to a Uri object
 	 */
-	public static function toObject(string|null $url = null): Uri
+	public static function toObject(string|array|null $url = null): Uri
 	{
 		return $url === null ? Uri::current() : new Uri($url);
 	}
