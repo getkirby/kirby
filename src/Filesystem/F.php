@@ -221,6 +221,8 @@ class F
 		string|null $file = null,
 		string|null $extension = null
 	): string {
+		$file ??= '';
+
 		// overwrite the current extension
 		if ($extension !== null) {
 			return static::name($file) . '.' . $extension;
@@ -657,9 +659,10 @@ class F
 					fseek($handle, $offset);
 				}
 
-				$content = $length !== null
-					? fread($handle, $length)
-					: fread($handle, filesize($file) - $offset);
+				// `fread()` fails for a length of 0,
+				// e.g. for empty files or at the end of the file
+				$length ??= filesize($file) - $offset;
+				$content  = $length > 0 ? fread($handle, $length) : '';
 
 				fclose($handle);
 				return $content;
