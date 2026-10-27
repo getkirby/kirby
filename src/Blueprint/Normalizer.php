@@ -529,6 +529,8 @@ class Normalizer
 
 	/**
 	 * Creates an error field for an invalid section type
+	 *
+	 * @return array{label: string, name: string, text: string, theme: string, type: string}
 	 */
 	protected static function sectionError(string $name, string $label): array
 	{
@@ -559,7 +561,7 @@ class Normalizer
 
 		unset($props['type']);
 
-		if (empty($type) === true || is_string($type) === false) {
+		if (is_string($type) === false || $type === '') {
 			return static::sectionError(
 				$name,
 				'Invalid section type for section "' . $name . '"'
