@@ -89,8 +89,8 @@ export default {
 	},
 	methods: {
 		onBeforeUnload(e) {
-			// a scheduled save would not run anymore once the page is gone
-			this.$panel.content.saveLazy.flush();
+			// a scheduled or failed save would not be sent anymore once the page is gone
+			this.$panel.content.flush();
 
 			// warn about changes on their way to the server and keep the lock,
 			// an unlock would overtake them and the lock times out anyway

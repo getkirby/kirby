@@ -14,11 +14,9 @@ function context({ isBusy = false, unlockError = null } = {}) {
 	return {
 		$panel: {
 			content: {
+				flush: vi.fn(),
 				isBusy: vi.fn(() => isBusy),
 				refresh: vi.fn(),
-				saveLazy: {
-					flush: vi.fn()
-				},
 				unlock: vi.fn(() =>
 					unlockError ? Promise.reject(unlockError) : Promise.resolve(true)
 				),
@@ -48,12 +46,12 @@ describe("ModelView.onBeforeUnload()", () => {
 		expect(ctx.$panel.content.unlock).not.toHaveBeenCalled();
 	});
 
-	it("writes the scheduled save right away", () => {
+	it("writes the changes of the form right away", () => {
 		const ctx = context();
 
 		onBeforeUnload.call(ctx, { preventDefault: vi.fn() });
 
-		expect(ctx.$panel.content.saveLazy.flush).toHaveBeenCalledOnce();
+		expect(ctx.$panel.content.flush).toHaveBeenCalledOnce();
 	});
 
 	it("warns about changes on their way and keeps the lock", () => {

@@ -68,6 +68,21 @@ function lockError() {
 	});
 }
 
+/**
+ * Mocks `panel.api.post` with requests that fail
+ * until the connection is back
+ */
+function offline() {
+	let online = false;
+
+	return {
+		post: vi.fn(() =>
+			online ? Promise.resolve() : Promise.reject(new Error("Offline"))
+		),
+		reconnect: () => (online = true)
+	};
+}
+
 describe("panel.content", () => {
 	describe("cancelSaving()", () => {
 		it("cancels the lazy save", () => {
@@ -261,6 +276,153 @@ describe("panel.content", () => {
 				api: "/pages/other",
 				language: "en"
 			});
+		});
+	});
+
+	describe("flush()", () => {
+		it("writes the scheduled save", async () => {
+			const { content, panel } = factory();
+
+			content.updateLazy({ title: "First" });
+			content.updateLazy({ title: "Second" });
+
+			await expect(content.flush()).resolves.toBe(true);
+
+			expect(endpoints(panel)).toStrictEqual([
+				"/pages/test/changes/save",
+				"/pages/test/changes/save"
+			]);
+			expect(panel.api.post.mock.calls[1][1]).toStrictEqual({
+				title: "Second"
+			});
+		});
+
+		it("does nothing when all changes have been written", () => {
+			const { content, panel } = factory({
+				changes: { title: "Draft" },
+				latest: { title: "Test" }
+			});
+
+			expect(content.flush()).toBeUndefined();
+
+			expect(panel.api.post).not.toHaveBeenCalled();
+		});
+
+		it("sends the form again after a failed save", async () => {
+			const { post, reconnect } = offline();
+			const { content, panel } = factory({ post });
+
+			await expect(content.update({ title: "Typed" })).rejects.toThrowError(
+				"Offline"
+			);
+
+			reconnect();
+
+			await expect(content.flush()).resolves.toBe(true);
+
+			expect(panel.api.post).toHaveBeenLastCalledWith(
+				"/pages/test/changes/save",
+				{ title: "Typed" },
+				expect.objectContaining({ silent: true })
+			);
+		});
+
+		it("sends the form again after a failed publish", async () => {
+			const { post, reconnect } = offline();
+			const { content, panel } = factory({ post });
+
+			await expect(content.publish({ title: "Typed" })).rejects.toThrowError(
+				"Offline"
+			);
+
+			reconnect();
+
+			await expect(content.flush()).resolves.toBe(true);
+
+			expect(panel.api.post).toHaveBeenLastCalledWith(
+				"/pages/test/changes/save",
+				{ title: "Typed" },
+				expect.objectContaining({ silent: true })
+			);
+		});
+
+		it("keeps content busy while the form is sent again", async () => {
+			const { post, reconnect } = offline();
+			const { content } = factory({ post });
+
+			await expect(content.update({ title: "Typed" })).rejects.toThrowError(
+				"Offline"
+			);
+
+			// closing the page has to warn about the failed changes
+			reconnect();
+			const flush = content.flush();
+
+			expect(content.isBusy()).toBe(true);
+
+			await flush;
+		});
+
+		it("does not send the form again once it has been written", async () => {
+			const { post, reconnect } = offline();
+			const { content, panel } = factory({ post });
+
+			await expect(content.update({ title: "Typed" })).rejects.toThrowError(
+				"Offline"
+			);
+
+			reconnect();
+			await content.update({ title: "Typed more" });
+			await content.flush();
+
+			expect(panel.api.post).toHaveBeenCalledTimes(2);
+		});
+
+		it("does not send the form again after a discard", async () => {
+			const { post, reconnect } = offline();
+			const { content, panel } = factory({ post });
+
+			await expect(content.update({ title: "Typed" })).rejects.toThrowError(
+				"Offline"
+			);
+
+			reconnect();
+			await content.discard();
+			await content.flush();
+
+			expect(endpoints(panel)).toStrictEqual([
+				"/pages/test/changes/save",
+				"/pages/test/changes/discard"
+			]);
+		});
+
+		it("does not send the form of a view that was left", async () => {
+			const { post, reconnect } = offline();
+			const { content, panel } = factory({ post });
+
+			await expect(content.update({ title: "Typed" })).rejects.toThrowError(
+				"Offline"
+			);
+
+			// the editor navigates to another view
+			panel.view.props = { ...panel.view.props, api: "/pages/other" };
+			reconnect();
+
+			await content.flush();
+			await content.flush({ api: "/pages/test" });
+
+			expect(panel.api.post).toHaveBeenCalledOnce();
+		});
+
+		it("does not send the form again when the view got locked", async () => {
+			const { content, panel } = factory({
+				post: vi.fn(() => Promise.reject(lockError()))
+			});
+
+			await content.update({ title: "Typed" });
+			await content.flush();
+
+			expect(panel.api.post).toHaveBeenCalledOnce();
 		});
 	});
 
@@ -636,6 +798,29 @@ describe("panel.content", () => {
 			finish[0]();
 			await refresh;
 		});
+
+		it("sends the changes of a failed save again first", async () => {
+			const { post, reconnect } = offline();
+			const { content, panel } = factory({ post });
+			const finish = refreshing(panel, { changes: {}, latest: {} });
+
+			await expect(content.update({ title: "Typed" })).rejects.toThrowError(
+				"Offline"
+			);
+
+			reconnect();
+			const refresh = content.refresh();
+
+			await vi.waitFor(() => expect(panel.view.refresh).toHaveBeenCalledOnce());
+			expect(panel.api.post).toHaveBeenLastCalledWith(
+				"/pages/test/changes/save",
+				{ title: "Typed" },
+				expect.objectContaining({ silent: true })
+			);
+
+			finish[0]();
+			await refresh;
+		});
 	});
 
 	describe("save()", () => {
@@ -864,6 +1049,46 @@ describe("panel.content", () => {
 			await content.unlock();
 
 			expect(endpoints(panel)).toStrictEqual(["/pages/test/changes/unlock"]);
+		});
+
+		it("sends the changes of a failed save again first", async () => {
+			const { post, reconnect } = offline();
+			const { content, panel } = factory({ post });
+
+			await expect(content.update({ title: "Typed" })).rejects.toThrowError(
+				"Offline"
+			);
+
+			// the editor switches the language
+			reconnect();
+
+			await expect(content.unlock()).resolves.toBe(true);
+
+			expect(endpoints(panel)).toStrictEqual([
+				"/pages/test/changes/save",
+				"/pages/test/changes/save",
+				"/pages/test/changes/unlock"
+			]);
+			expect(panel.api.post.mock.calls[1][1]).toStrictEqual({
+				title: "Typed"
+			});
+		});
+
+		it("does not release the lock when the changes fail again", async () => {
+			const { post } = offline();
+			const { content, panel } = factory({ post });
+
+			await expect(content.update({ title: "Typed" })).rejects.toThrowError(
+				"Offline"
+			);
+
+			// the language switch stays on the view and reports the error
+			await expect(content.unlock()).rejects.toThrowError("Offline");
+
+			expect(endpoints(panel)).toStrictEqual([
+				"/pages/test/changes/save",
+				"/pages/test/changes/save"
+			]);
 		});
 
 		it("writes the scheduled save of the current view first", async () => {

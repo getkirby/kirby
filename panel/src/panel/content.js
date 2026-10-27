@@ -10,6 +10,10 @@ export default (panel) => {
 	// all content requests run one after another
 	const requests = lane();
 
+	// the props of the view whose last save or publish failed,
+	// its form holds changes that the server does not have
+	let failed = null;
+
 	const content = reactive({
 		/**
 		 * Cancels any scheduled save request. A running request
@@ -85,6 +89,7 @@ export default (panel) => {
 
 				// update the props for the current view
 				panel.view.props.versions.changes = this.version("latest");
+				failed = null;
 
 				this.emit("discard", {}, env);
 			} catch (error) {
@@ -121,6 +126,20 @@ export default (panel) => {
 				language: panel.language.code,
 				...env
 			};
+		},
+
+		/**
+		 * Writes the scheduled save right away. After a failed save
+		 * or publish, it sends the whole form of the view again.
+		 *
+		 * @returns {Promise<Boolean>|undefined} Whether the changes have been written
+		 */
+		flush(env = {}) {
+			if (failed === panel.view.props && this.isCurrent(env) === true) {
+				return this.update({}, env);
+			}
+
+			return this.saveLazy.flush();
 		},
 
 		/**
@@ -244,12 +263,18 @@ export default (panel) => {
 
 				// update the props for the current view
 				panel.view.props.versions.latest = this.version("changes");
+				failed = null;
 
 				this.emit("publish", { values }, env);
 			} catch (error) {
 				// handle locked states
 				if (error.key?.startsWith("error.content.lock")) {
 					return this.lockDialog(error.details);
+				}
+
+				// the publish cancelled the scheduled save
+				if (this.isCurrent(env) === true) {
+					failed = panel.view.props;
 				}
 
 				throw error;
@@ -267,8 +292,8 @@ export default (panel) => {
 			const props = panel.view.props;
 			const changes = props.versions.changes;
 
-			// the refreshed props have to include the scheduled save
-			this.saveLazy.flush();
+			// the refreshed props have to include the changes of the form
+			this.flush();
 
 			await requests("refresh", () => panel.view.refresh());
 
@@ -317,9 +342,10 @@ export default (panel) => {
 				// close the dialog if it is still open
 				this.dialog?.close();
 
-				// update the lock timestamp
+				// update the lock timestamp, the form has been written
 				if (this.isCurrent(env) === true) {
 					this.lock(env).modified = new Date();
+					failed = null;
 				}
 
 				this.emit("save", { values }, env);
@@ -330,6 +356,10 @@ export default (panel) => {
 				if (error.key?.startsWith("error.content.lock")) {
 					this.lockDialog(error.details);
 					return false;
+				}
+
+				if (this.isCurrent(env) === true) {
+					failed = panel.view.props;
 				}
 
 				throw error;
@@ -343,10 +373,10 @@ export default (panel) => {
 		 * @returns {Boolean} Whether the lock has been released
 		 */
 		async unlock(env = {}) {
-			// write the scheduled save first, the unlock runs after any
+			// write the changes of the form first, the unlock runs after any
 			// other save anyway. When the view got locked in the meantime,
 			// the lock dialog already reports it and the lock stays.
-			if ((await this.saveLazy.flush()) === false) {
+			if ((await this.flush(env)) === false) {
 				return false;
 			}
 
