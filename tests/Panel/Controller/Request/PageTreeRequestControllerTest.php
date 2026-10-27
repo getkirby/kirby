@@ -125,6 +125,57 @@ class PageTreeRequestControllerTest extends TestCase
 		$this->assertTrue($entry['disabled']);
 	}
 
+	public function testEntryWithUnlistableChildren(): void
+	{
+		$uuid = uuid();
+
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'blueprints' => [
+				'pages/secret-' . $uuid => [
+					'options' => ['list' => false]
+				]
+			],
+			'roles' => [
+				['name' => 'editor-' . $uuid]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'a',
+						'children' => [
+							['slug' => 'b', 'template' => 'secret-' . $uuid]
+						],
+						'drafts'   => [
+							['slug' => 'c', 'template' => 'secret-' . $uuid]
+						]
+					],
+					[
+						'slug'   => 'd',
+						'drafts' => [
+							['slug' => 'e']
+						]
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor-' . $uuid
+				]
+			]
+		]);
+
+		$app->impersonate('editor@getkirby.com');
+
+		$controller = new PageTreeRequestController();
+
+		$this->assertFalse($controller->entry($app->page('a'))['hasChildren']);
+		$this->assertTrue($controller->entry($app->page('d'))['hasChildren']);
+	}
+
 	public function testEntryWhenUuidsDisabled(): void
 	{
 		$this->app = $this->app->clone([
