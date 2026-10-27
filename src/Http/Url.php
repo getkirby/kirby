@@ -2,6 +2,7 @@
 
 namespace Kirby\Http;
 
+use Kirby\Exception\BadMethodCallException;
 use Kirby\Toolkit\Str;
 use Whoops\Handler\PrettyPageHandler;
 
@@ -28,6 +29,16 @@ class Url
 	 */
 	public static function __callStatic(string $method, array $arguments)
 	{
+		// `Uri::__call()` would return `null` for anything unknown
+		if (
+			method_exists(Uri::class, $method) === false &&
+			property_exists(Uri::class, $method) === false
+		) {
+			throw new BadMethodCallException(
+				message: 'The method: "' . $method . '" does not exist'
+			);
+		}
+
 		$uri = new Uri($arguments[0] ?? static::current());
 		return $uri->$method(...array_slice($arguments, 1));
 	}

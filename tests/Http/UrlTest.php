@@ -3,6 +3,7 @@
 namespace Kirby\Http;
 
 use Kirby\Cms\App;
+use Kirby\Exception\BadMethodCallException;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -19,6 +20,23 @@ class UrlTest extends TestCase
 		Uri::$current = null;
 		Url::$current = null;
 		Url::$home    = '/';
+	}
+
+	public function testCallStatic(): void
+	{
+		// Uri method
+		$this->assertTrue(Url::hasQuery('https://getkirby.com?foo=bar'));
+
+		// Uri property
+		$this->assertSame('https', Url::scheme('https://getkirby.com'));
+	}
+
+	public function testCallStaticWithUnknownMethod(): void
+	{
+		$this->expectException(BadMethodCallException::class);
+		$this->expectExceptionMessage('The method: "to" does not exist');
+
+		Url::to('https://getkirby.com');
 	}
 
 	public function testCurrent(): void
