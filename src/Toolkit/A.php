@@ -949,7 +949,7 @@ class A
 		$result    = [];
 
 		foreach ($array as $key => $row) {
-			$helper[$key] = $row[$field];
+			$helper[$key] = $row[$field] ?? null;
 		}
 
 		if ($direction === SORT_DESC) {
