@@ -544,7 +544,6 @@ class DirTest extends TestCase
 		$source = static::TMP . '/source';
 		$link   = static::TMP . '/link';
 
-		$this->expectExceptionMessage('Expection');
 		$this->expectExceptionMessage('The directory "' . $source . '" does not exist and cannot be linked');
 
 		Dir::link($source, $link);

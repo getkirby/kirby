@@ -910,11 +910,6 @@ class ApiTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid model type: something');
 		$this->assertNull($api->parent('something/something'));
-
-		// model cannot be found
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The page cannot be found');
-		$this->assertNull($api->parent('pages/does-not-exist'));
 	}
 
 	public function testRequestData(): void

@@ -294,7 +294,6 @@ class FTest extends TestCase
 		$src  = static::TMP . '/a.txt';
 		$link = static::TMP . '/b.txt';
 
-		$this->expectExceptionMessage('Expection');
 		$this->expectExceptionMessage('The file "' . $src . '" does not exist and cannot be linked');
 
 		F::link($src, $link);
