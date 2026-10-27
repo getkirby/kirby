@@ -151,7 +151,7 @@ class F
 	 *
 	 * @param $content Either a string, an object or an array. Arrays and objects will be serialized.
 	 */
-	public static function append(string $file, $content): bool
+	public static function append(string $file, mixed $content): bool
 	{
 		return static::write($file, $content, true);
 	}
@@ -439,7 +439,7 @@ class F
 					return false;
 				}
 
-				if ($base) {
+				if ($base !== null) {
 					include $base . '/' . $classmap[$class];
 				} else {
 					include $classmap[$class];
@@ -759,14 +759,14 @@ class F
 		$name = static::safeName(basename($newName));
 
 		// overwrite the root
-		$newRoot = rtrim(dirname($file) . '/' . $name . '.' . F::extension($file), '.');
+		$newRoot = rtrim(dirname($file) . '/' . $name . '.' . static::extension($file), '.');
 
 		// nothing has changed
 		if ($newRoot === $file) {
 			return $newRoot;
 		}
 
-		if (F::move($file, $newRoot, $overwrite) !== true) {
+		if (static::move($file, $newRoot, $overwrite) !== true) {
 			return false;
 		}
 
@@ -953,7 +953,7 @@ class F
 		if (is_array($file) === true) {
 			return array_reduce(
 				$file,
-				fn ($total, $file) => $total + F::size($file),
+				fn (int $total, string $path) => $total + static::size($path),
 				0
 			);
 		}
