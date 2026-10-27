@@ -3,7 +3,7 @@
 namespace Kirby\Email;
 
 /**
- * Representation of a an Email body
+ * Representation of an email body
  * with a text and optional html version
  *
  * @copyright Bastian Allgeier
@@ -15,7 +15,7 @@ class Body
 	protected string|null $text;
 
 	/**
-	 * Email body constructor
+	 * @param array{html?: string|null, text?: string|null} $props
 	 */
 	public function __construct(array $props = [])
 	{
@@ -41,6 +41,8 @@ class Body
 
 	/**
 	 * @since 4.0.0
+	 *
+	 * @return array{html: string, text: string}
 	 */
 	public function toArray(): array
 	{
