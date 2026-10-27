@@ -56,9 +56,7 @@ class DefaultVisitor extends Visitor
 	 */
 	public function closure(ClosureNode $node): Closure
 	{
-		$self = $this;
-
-		return function (...$params) use ($self, $node) {
+		return function (mixed ...$params) use ($node) {
 			// [key1, key2] + [value1, value2] =>
 			// [key1 => value1, key2 => value2],
 			// missing values are null, extra values are ignored
@@ -71,9 +69,9 @@ class DefaultVisitor extends Visitor
 			// Create new nested visitor with combined
 			// data context for resolving the closure body
 			$visitor = new static(
-				global:      $self->global,
-				context:     [...$self->context, ...$arguments],
-				interceptor: $self->interceptor
+				global:      $this->global,
+				context:     [...$this->context, ...$arguments],
+				interceptor: $this->interceptor
 			);
 
 			return $node->body->resolve($visitor);
