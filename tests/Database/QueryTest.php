@@ -337,6 +337,26 @@ class QueryTest extends TestCase
 		$this->assertCount(4, $users);
 	}
 
+	public function testDeleteAndUpdateWithDebug(): void
+	{
+		$delete = $this->database
+			->table('users')
+			->debug()
+			->delete(['id' => 4]);
+
+		$this->assertStringStartsWith('DELETE FROM "users" WHERE', $delete['query']);
+
+		$update = $this->database
+			->table('users')
+			->debug()
+			->update(['balance' => 250], ['id' => 1]);
+
+		$this->assertStringStartsWith('UPDATE "users" SET', $update['query']);
+
+		// nothing has been deleted
+		$this->assertCount(5, $this->database->table('users')->all());
+	}
+
 	public function testDeleteRejectsInvalidWhereColumn(): void
 	{
 		$this->assertCount(5, $this->database->table('users')->all());

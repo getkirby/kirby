@@ -825,8 +825,9 @@ class Query
 	 *
 	 * @param $values You can pass values here or set them with ->values() before
 	 * @param $where You can pass a where clause here or set it with ->where() before
+	 * @return bool|array The debug info if debugging is enabled
 	 */
-	public function update($values = null, $where = null): bool
+	public function update($values = null, $where = null): bool|array
 	{
 		return $this->execute(
 			$this->values($values)->where($where)->build('update')
@@ -837,8 +838,9 @@ class Query
 	 * Fires a delete query
 	 *
 	 * @param $where You can pass a where clause here or set it with ->where() before
+	 * @return bool|array The debug info if debugging is enabled
 	 */
-	public function delete($where = null): bool
+	public function delete($where = null): bool|array
 	{
 		return $this->execute(
 			$this->where($where)->build('delete')
