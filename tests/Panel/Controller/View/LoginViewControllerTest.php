@@ -4,7 +4,10 @@ namespace Kirby\Panel\Controller\View;
 
 use Kirby\Auth\Challenge;
 use Kirby\Auth\Challenges;
+use Kirby\Auth\Method;
+use Kirby\Auth\Methods;
 use Kirby\Auth\Pending;
+use Kirby\Auth\Status;
 use Kirby\Cms\User;
 use Kirby\Exception\LogicException;
 use Kirby\Panel\Redirect;
@@ -17,12 +20,12 @@ class TestChallenge extends Challenge
 {
 	public static bool $available = true;
 
-	public static function icon(): string
+	public function icon(): string
 	{
 		return 'test-icon';
 	}
 
-	public static function isAvailable(User $user, string $mode): bool
+	public function isAvailable(): bool
 	{
 		return static::$available;
 	}
@@ -49,7 +52,7 @@ class TestChallenge extends Challenge
 
 class TestChallenge2 extends Challenge
 {
-	public static function isAvailable(User $user, string $mode): bool
+	public function isAvailable(): bool
 	{
 		return true;
 	}
@@ -92,9 +95,9 @@ class TestNullFormChallenge extends TestChallenge2
 class TestSecretChallenge extends Challenge
 {
 	// only available once the user has set it up
-	public static function isAvailable(User $user, string $mode): bool
+	public function isAvailable(): bool
 	{
-		return $user->secret('foo') !== null;
+		return $this->user->secret('foo') !== null;
 	}
 
 	public function create(): Pending|null
@@ -117,6 +120,32 @@ class TestSecretChallenge extends Challenge
 	}
 }
 
+class TestProviderMethod extends Method
+{
+	public function authenticate(
+		string|null $email,
+		string|null $password = null,
+		bool $long = false
+	): User|Status {
+		return new User(['email' => $email]);
+	}
+
+	public function form(): Component
+	{
+		return new Component(component: 'k-login-provider-method-form');
+	}
+
+	public function icon(): string
+	{
+		return $this->options['icon'];
+	}
+
+	public function label(): string
+	{
+		return 'Log in with ' . $this->options['name'];
+	}
+}
+
 #[CoversClass(LoginViewController::class)]
 class LoginViewControllerTest extends TestCase
 {
@@ -129,6 +158,8 @@ class LoginViewControllerTest extends TestCase
 		Challenges::$challenges['test2']          = TestChallenge2::class;
 		Challenges::$challenges['test-null-form'] = TestNullFormChallenge::class;
 		Challenges::$challenges['test-secret']    = TestSecretChallenge::class;
+		Methods::$methods['oauth-github']         = TestProviderMethod::class;
+		Methods::$methods['oauth-gitlab']         = TestProviderMethod::class;
 	}
 
 	public function tearDown(): void
@@ -139,7 +170,9 @@ class LoginViewControllerTest extends TestCase
 			Challenges::$challenges['test'],
 			Challenges::$challenges['test2'],
 			Challenges::$challenges['test-null-form'],
-			Challenges::$challenges['test-secret']
+			Challenges::$challenges['test-secret'],
+			Methods::$methods['oauth-github'],
+			Methods::$methods['oauth-gitlab']
 		);
 	}
 
@@ -453,5 +486,35 @@ class LoginViewControllerTest extends TestCase
 		$this->assertSame('key', $method['icon']);
 		$this->assertArrayHasKey('label', $method);
 		$this->assertArrayHasKey('active', $method);
+	}
+
+	public function testMethodsWithType(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth.methods' => [
+					'oauth-github' => ['icon' => 'github', 'name' => 'GitHub'],
+					'oauth-gitlab' => ['icon' => 'gitlab', 'name' => 'GitLab'],
+				]
+			]
+		]);
+
+		$controller = new LoginViewController('method', 'oauth-gitlab');
+		$methods    = $controller->load()->props()['methods'];
+
+		$this->assertSame([
+			[
+				'type'   => 'oauth-github',
+				'label'  => 'Log in with GitHub',
+				'icon'   => 'github',
+				'active' => false,
+			],
+			[
+				'type'   => 'oauth-gitlab',
+				'label'  => 'Log in with GitLab',
+				'icon'   => 'gitlab',
+				'active' => true,
+			]
+		], $methods);
 	}
 }

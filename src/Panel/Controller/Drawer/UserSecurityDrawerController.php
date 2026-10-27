@@ -26,11 +26,16 @@ class UserSecurityDrawerController extends UserDrawerController
 		$challenges = $this->auth()->challenges();
 
 		foreach ($challenges->enabled() as $type) {
-			$challenge = $challenges->class($type);
+			$challenge = $challenges->get(
+				type: $type,
+				user: $this->user,
+				mode: '2fa'
+			);
+
 			$buttons = [
 				...$buttons,
 				...A::map(
-					$challenge::settings($this->user),
+					$challenge->settings(),
 					fn (Button $button) => $button->render()['props']
 				)
 			];
@@ -62,14 +67,13 @@ class UserSecurityDrawerController extends UserDrawerController
 			]
 		];
 
-		$methods = $this->auth()->methods()->enabled();
+		$methods = $this->auth()->methods();
 
-		foreach (array_keys($methods) as $type) {
-			$method  = $this->auth()->methods()->class($type);
+		foreach (array_keys($methods->enabled()) as $type) {
 			$buttons = [
 				...$buttons,
 				...A::map(
-					$method::settings($this->user),
+					$methods->get($type)->settings($this->user),
 					fn (Button $button) => $button->render()['props']
 				)
 			];

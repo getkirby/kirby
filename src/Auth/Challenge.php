@@ -8,7 +8,6 @@ use Kirby\Cms\User;
 use Kirby\Exception\PermissionException;
 use Kirby\Panel\Ui\Component;
 use Kirby\Toolkit\HasI18n;
-use Kirby\Toolkit\Str;
 use SensitiveParameter;
 
 /**
@@ -25,8 +24,13 @@ abstract class Challenge
 
 	protected App $kirby;
 
+	/**
+	 * Must not throw or have side effects, as challenges
+	 * are also created to check if they are available
+	 */
 	public function __construct(
 		protected User $user,
+		protected string $type,
 		protected string $mode,
 		protected int $timeout
 	) {
@@ -85,25 +89,23 @@ abstract class Challenge
 	 * the challenge, e.g. on the login view
 	 * @codeCoverageIgnore
 	 */
-	public static function icon(): string
+	public function icon(): string
 	{
 		return 'key';
 	}
 
 	/**
 	 * Checks whether the challenge is available
-	 * for the specific user and purpose
-	 *
-	 * @param $user User the code will be generated for
-	 * @param 'login'|'password-reset'|'2fa' $mode Purpose of the code
+	 * for its user and purpose
 	 */
-	public static function isAvailable(User $user, string $mode): bool
+	public function isAvailable(): bool
 	{
 		return true;
 	}
 
 	/**
-	 * Checks whether the challenge is generally enabled on this site
+	 * Checks whether the challenge is generally enabled on this site.
+	 * Static, as it is checked without a user (e.g. for guests).
 	 */
 	public static function isEnabled(Auth $auth): bool
 	{
@@ -120,6 +122,15 @@ abstract class Challenge
 	}
 
 	/**
+	 * Returns the label used to represent
+	 * the challenge, e.g. on the login view
+	 */
+	public function label(): string
+	{
+		return static::i18n('login.challenge.' . $this->type() . '.label');
+	}
+
+	/**
 	 * Returns the purpose of the challenge
 	 * @return 'login'|'password-reset'|'2fa'
 	 */
@@ -133,7 +144,7 @@ abstract class Challenge
 	 * used as entries in the user security settings drawer
 	 * @codeCoverageIgnore
 	 */
-	public static function settings(User $user): array
+	public function settings(): array
 	{
 		return [];
 	}
@@ -157,9 +168,13 @@ abstract class Challenge
 		return $this->timeout;
 	}
 
+	/**
+	 * Returns the identifier the challenge
+	 * is registered with (e.g. 'email')
+	 */
 	public function type(): string
 	{
-		return Str::camelToKebab(lcfirst(basename(str_replace(['\\', 'Challenge'], ['/', ''], static::class))));
+		return $this->type;
 	}
 
 	/**

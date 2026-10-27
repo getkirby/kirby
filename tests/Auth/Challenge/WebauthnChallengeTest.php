@@ -69,7 +69,7 @@ class WebauthnChallengeTest extends TestCase
 	{
 		$this->writeCredentials([['id' => 'AQID']]);
 
-		$challenge = new WebauthnChallenge($this->user, 'login', 600);
+		$challenge = new WebauthnChallenge($this->user, 'webauthn', 'login', 600);
 		$pending   = $challenge->create();
 
 		$this->assertInstanceOf(Pending::class, $pending);
@@ -83,7 +83,7 @@ class WebauthnChallengeTest extends TestCase
 
 	public function testForm(): void
 	{
-		$challenge = new WebauthnChallenge($this->user, 'login', 600);
+		$challenge = new WebauthnChallenge($this->user, 'webauthn', 'login', 600);
 		$pending   = new Pending();
 		$form      = $challenge->form($pending);
 
@@ -100,32 +100,38 @@ class WebauthnChallengeTest extends TestCase
 	{
 		// at least one registered passkey
 		$this->writeCredentials([['id' => 'AQID']]);
-		$this->assertTrue(WebauthnChallenge::isAvailable($this->user, 'login'));
+		$this->assertTrue((new WebauthnChallenge($this->user, 'webauthn', 'login', 600))->isAvailable());
 
 		// an empty passkey list (e.g. after removing all passkeys)
 		$this->writeCredentials([]);
-		$this->assertFalse(WebauthnChallenge::isAvailable($this->user, 'login'));
+		$this->assertFalse((new WebauthnChallenge($this->user, 'webauthn', 'login', 600))->isAvailable());
 
 		// no webauthn secret at all
 		F::write(static::TMP . '/site/accounts/marge/.htpasswd', '');
-		$this->assertFalse(WebauthnChallenge::isAvailable($this->user, 'login'));
+		$this->assertFalse((new WebauthnChallenge($this->user, 'webauthn', 'login', 600))->isAvailable());
 	}
 
 	public function testIsSingleUse(): void
 	{
-		$challenge = new WebauthnChallenge($this->user, 'login', 600);
+		$challenge = new WebauthnChallenge($this->user, 'webauthn', 'login', 600);
 		$this->assertTrue($challenge->isSingleUse());
+	}
+
+	public function testLabel(): void
+	{
+		$challenge = new WebauthnChallenge($this->user, 'webauthn', 'login', 600);
+		$this->assertSame('Passkeys', $challenge->label());
 	}
 
 	public function testMode(): void
 	{
-		$challenge = new WebauthnChallenge($this->user, '2fa', 300);
+		$challenge = new WebauthnChallenge($this->user, 'webauthn', '2fa', 300);
 		$this->assertSame('2fa', $challenge->mode());
 	}
 
 	public function testSettings(): void
 	{
-		$settings = WebauthnChallenge::settings($this->user);
+		$settings = (new WebauthnChallenge($this->user, 'webauthn', '2fa', 600))->settings();
 		$this->assertCount(1, $settings);
 
 		$button = $settings[0]->render()['props'];
@@ -135,25 +141,19 @@ class WebauthnChallengeTest extends TestCase
 
 	public function testTimeout(): void
 	{
-		$challenge = new WebauthnChallenge($this->user, '2fa', 300);
+		$challenge = new WebauthnChallenge($this->user, 'webauthn', '2fa', 300);
 		$this->assertSame(300, $challenge->timeout());
-	}
-
-	public function testType(): void
-	{
-		$challenge = new WebauthnChallenge($this->user, '2fa', 300);
-		$this->assertSame('webauthn', $challenge->type());
 	}
 
 	public function testUser(): void
 	{
-		$challenge = new WebauthnChallenge($this->user, '2fa', 300);
+		$challenge = new WebauthnChallenge($this->user, 'webauthn', '2fa', 300);
 		$this->assertSame($this->user, $challenge->user());
 	}
 
 	public function testVerify(): void
 	{
-		$challenge = new WebauthnChallenge($this->user, 'login', 600);
+		$challenge = new WebauthnChallenge($this->user, 'webauthn', 'login', 600);
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid passkey data');
@@ -167,7 +167,7 @@ class WebauthnChallengeTest extends TestCase
 
 		$this->app->impersonate('kirby');
 
-		$challenge = new WebauthnChallenge($this->user, 'login', 600);
+		$challenge = new WebauthnChallenge($this->user, 'webauthn', 'login', 600);
 		$result    = $challenge->verify($payload, new Pending(secret: $secret));
 
 		$this->assertTrue($result);
