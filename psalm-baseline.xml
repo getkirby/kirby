@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="6.16.1@f1f5de594dc76faf8784e02d3dc4716c91c6f6ac">
+<files psalm-version="6.20.2@0706376ff62923efb11946b74bcb4be35daf8e7d">
   <file src="src/Auth/Passwords.php">
     <InvalidReturnStatement>
       <code><![CDATA[I18n::translate($this->hint, $this->hint)]]></code>
@@ -59,7 +59,6 @@
   </file>
   <file src="src/Cms/Collection.php">
     <InvalidPropertyAssignmentValue>
-      <code><![CDATA[$this->data]]></code>
       <code><![CDATA[[...$this->data, ...$object->data]]]></code>
       <code><![CDATA[[...$this->data, ...$object->data]]]></code>
       <code><![CDATA[[...$this->data, ...$object->data]]]></code>
@@ -256,22 +255,6 @@
     <MoreSpecificImplementedParamType>
       <code><![CDATA[$model]]></code>
     </MoreSpecificImplementedParamType>
-  </file>
-  <file src="src/Panel/Panel.php">
-    <RedundantCondition>
-      <code><![CDATA[$this->kirby->user()?->role()->permissions()->toArray()]]></code>
-    </RedundantCondition>
-    <TypeDoesNotContainNull>
-      <code><![CDATA[[]]]></code>
-    </TypeDoesNotContainNull>
-  </file>
-  <file src="src/Panel/State.php">
-    <RedundantCondition>
-      <code><![CDATA[$this->user?->role()->permissions()->toArray()]]></code>
-    </RedundantCondition>
-    <TypeDoesNotContainNull>
-      <code><![CDATA[[]]]></code>
-    </TypeDoesNotContainNull>
   </file>
   <file src="src/Panel/Ui/Button/ViewButton.php">
     <InvalidOperand>
