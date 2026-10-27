@@ -47,7 +47,7 @@ abstract class Sql
 	{
 		// make sure that the binding name is safe to prevent injections;
 		// otherwise use a generic label
-		if (!$label || preg_match('/^[a-zA-Z0-9_]+$/', $label) !== 1) {
+		if (preg_match('/^[a-zA-Z0-9_]+$/', $label) !== 1) {
 			$label = 'invalid';
 		}
 
@@ -186,7 +186,7 @@ abstract class Sql
 
 		$template = $this->columnTypes()[$column['type']] ?? null;
 
-		if (!$template) {
+		if ($template === null) {
 			throw new InvalidArgumentException(
 				message: 'Unsupported column type: ' . $column['type']
 			);
@@ -835,7 +835,7 @@ abstract class Sql
 	 */
 	public function values(
 		string $table,
-		$values,
+		mixed $values,
 		string $separator = ', ',
 		bool $set = true,
 		bool $enforceQualified = false
@@ -871,7 +871,7 @@ abstract class Sql
 	 */
 	public function valueList(
 		string $table,
-		string|array $values,
+		array $values,
 		string $separator = ',',
 		bool $enforceQualified = false
 	): array {
@@ -915,7 +915,7 @@ abstract class Sql
 	 */
 	public function valueSet(
 		string $table,
-		string|array $values,
+		array $values,
 		string $separator = ',',
 		bool $enforceQualified = false
 	): array {
