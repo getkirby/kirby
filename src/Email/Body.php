@@ -2,8 +2,6 @@
 
 namespace Kirby\Email;
 
-use Kirby\Toolkit\Properties;
-
 /**
  * Representation of a an Email body
  * with a text and optional html version
@@ -23,19 +21,6 @@ class Body
 	{
 		$this->html = $props['html'] ?? null;
 		$this->text = $props['text'] ?? null;
-	}
-
-	/**
-	 * Creates a new instance while
-	 * merging initial and new properties
-	 * @deprecated 4.0.0
-	 */
-	public function clone(array $props = []): static
-	{
-		return new static(array_merge_recursive([
-			'html' => $this->html,
-			'text' => $this->text
-		], $props));
 	}
 
 	/**
