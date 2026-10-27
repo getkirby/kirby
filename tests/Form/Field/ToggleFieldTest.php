@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Cms\Page;
+use Kirby\Form\Fields;
 use Kirby\Toolkit\HtmlString;
 use Kirby\Toolkit\I18n;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -184,5 +186,38 @@ class ToggleFieldTest extends TestCase
 			['Ja test', 'Nein test'],
 			array_map(strval(...), $field->text())
 		);
+	}
+
+	public function testWhen(): void
+	{
+		$page = new Page(['slug' => 'test']);
+
+		$fields = new Fields([
+			'foo' => [
+				'type'  => 'text',
+				'model' => $page,
+				'value' => 'a'
+			]
+		]);
+
+		$field = $this->field('toggle', [
+			'model'    => $page,
+			'required' => true,
+			'when'     => [
+				'foo' => 'x'
+			]
+		], $fields);
+
+		$this->assertSame([], $field->errors());
+
+		$field = $this->field('toggle', [
+			'model'    => $page,
+			'required' => true,
+			'when'     => [
+				'foo' => 'a'
+			]
+		], $fields);
+
+		$this->assertSame(['required' => 'The field is required'], $field->errors());
 	}
 }
