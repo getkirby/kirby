@@ -14,6 +14,9 @@ use Kirby\Exception\InvalidArgumentException;
  */
 trait AppCaches
 {
+	/**
+	 * @var array<string, Cache>
+	 */
 	protected array $caches = [];
 
 	/**
@@ -25,7 +28,6 @@ trait AppCaches
 			return $this->caches[$key];
 		}
 
-		// get the options for this cache type
 		$options = $this->cacheOptions($key);
 
 		if ($options['active'] === false) {
@@ -43,12 +45,9 @@ trait AppCaches
 			);
 		}
 
-		$className = $types[$type];
+		$class = $types[$type];
+		$cache = new $class($options);
 
-		// initialize the cache class
-		$cache = new $className($options);
-
-		// check if it is a usable cache object
 		if ($cache instanceof Cache === false) {
 			throw new InvalidArgumentException(
 				key: 'cache.type.invalid',
@@ -61,6 +60,8 @@ trait AppCaches
 
 	/**
 	 * Returns the cache options by key
+	 *
+	 * @return array<string, mixed>
 	 */
 	protected function cacheOptions(string $key): array
 	{
@@ -102,7 +103,7 @@ trait AppCaches
 	{
 		$prefixedKey = 'cache.' . $key;
 
-		if (isset($this->options[$prefixedKey])) {
+		if (isset($this->options[$prefixedKey]) === true) {
 			return $prefixedKey;
 		}
 
