@@ -28,6 +28,21 @@ class ToggleFieldTest extends TestCase
 		$this->assertTrue($field->default() === false);
 	}
 
+	public function testDefaultWithString(): void
+	{
+		foreach (['true', '1', 'on'] as $default) {
+			$field = $this->field('toggle', ['default' => $default]);
+			$this->assertTrue($field->default());
+			$this->assertTrue($field->toFormValue());
+		}
+
+		foreach (['false', '0', 'no', 'off'] as $default) {
+			$field = $this->field('toggle', ['default' => $default]);
+			$this->assertFalse($field->default());
+			$this->assertFalse($field->toFormValue());
+		}
+	}
+
 	public function testEmptyValue(): void
 	{
 		$field = $this->field('toggle');
