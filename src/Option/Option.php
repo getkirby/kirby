@@ -50,7 +50,6 @@ class Option
 			$props['info'] = match (true) {
 				is_array($props['info']),
 				$props['info'] instanceof HtmlString => $props['info'],
-				$props['info'] === null,
 				$props['info'] === false => null,
 				default                  => ['en' => $props['info']]
 			};
@@ -63,7 +62,6 @@ class Option
 			$props['text'] = match (true) {
 				is_array($props['text']),
 				$props['text'] instanceof HtmlString => $props['text'],
-				$props['text'] === null,
 				$props['text'] === false => null,
 				default                  => ['en' => $props['text']]
 			};
@@ -79,6 +77,8 @@ class Option
 
 	/**
 	 * Renders all data for the option
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function render(
 		ModelWithContent $model,
