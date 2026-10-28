@@ -56,7 +56,7 @@ class Site extends ModelWithContent
 
 	/**
 	 * The id of the home page, which is
-	 * fetched in the errorPage method
+	 * fetched in the homePage method
 	 */
 	protected string $homePageId;
 
@@ -82,6 +82,8 @@ class Site extends ModelWithContent
 
 	/**
 	 * Creates a new Site object
+	 *
+	 * @param array<string, mixed> $props
 	 */
 	public function __construct(array $props = [])
 	{
@@ -270,10 +272,6 @@ class Site extends ModelWithContent
 	 */
 	public function is($site): bool
 	{
-		if ($site instanceof self === false) {
-			return false;
-		}
-
 		return $this === $site;
 	}
 
@@ -316,6 +314,7 @@ class Site extends ModelWithContent
 	 * Gets the last modification date of all pages
 	 * in the content folder.
 	 *
+	 * @param 'date'|'intl'|'strftime'|null $handler Date handler, `null` for the configured one
 	 * @return ($format is null ? int : string|false)
 	 */
 	public function modified(
@@ -452,6 +451,8 @@ class Site extends ModelWithContent
 	/**
 	 * Converts the most important site
 	 * properties to an array
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function toArray(): array
 	{
@@ -483,6 +484,8 @@ class Site extends ModelWithContent
 	/**
 	 * Returns the translated url
 	 * @internal
+	 *
+	 * @param $options Not used so far
 	 */
 	public function urlForLanguage(
 		string|null $languageCode = null,
