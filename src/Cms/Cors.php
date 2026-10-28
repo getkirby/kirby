@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Closure;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Str;
 
@@ -16,6 +17,10 @@ use Kirby\Toolkit\Str;
 class Cors
 {
 	protected App $kirby;
+
+	/**
+	 * @var array<string, mixed>
+	 */
 	protected array $config;
 
 	public function __construct()
@@ -27,11 +32,9 @@ class Cors
 			return;
 		}
 
-		// get and resolve config
 		$config = $this->kirby->option('cors', false);
 
-		// resolve closure
-		if ($config instanceof \Closure) {
+		if ($config instanceof Closure) {
 			$config = $config($this->kirby);
 		}
 
@@ -40,13 +43,14 @@ class Cors
 			$config = [];
 		}
 
-		$this->config = is_array($config) ? $config : [];
+		$this->config = is_array($config) === true ? $config : [];
 	}
 
 	/**
 	 * Returns CORS headers based on configuration
 	 *
 	 * @param $preflight Whether this is a preflight request
+	 * @return array<string, string>
 	 */
 	public static function headers(bool $preflight = false): array
 	{
@@ -57,6 +61,7 @@ class Cors
 	 * Converts the CORS configuration to an array of headers
 	 *
 	 * @param $preflight Whether this is a preflight request
+	 * @return array<string, string>
 	 */
 	public function toArray(bool $preflight = false): array
 	{
@@ -67,7 +72,6 @@ class Cors
 
 		$headers = [];
 
-		// determine allowed origin
 		$allowOrigin = $this->allowOrigin();
 
 		// no origin match found
@@ -81,7 +85,6 @@ class Cors
 		$this->addCredentialsHeader($headers, $allowOrigin);
 		$this->addExposeHeaders($headers);
 
-		// add preflight-specific headers
 		if ($preflight === true) {
 			$this->addPreflightHeaders($headers);
 		}
@@ -100,7 +103,7 @@ class Cors
 		return match (true) {
 			$configOrigin === '*' => '*',
 			$requestOrigin === null => null,
-			is_string($configOrigin) => strcasecmp($configOrigin, $requestOrigin) === 0 ? $requestOrigin : null,
+			is_string($configOrigin) === true => strcasecmp($configOrigin, $requestOrigin) === 0 ? $requestOrigin : null,
 			default => $this->matchOriginFromArray($configOrigin, $requestOrigin)
 		};
 	}
@@ -168,7 +171,7 @@ class Cors
 		$exposeHeaders = $this->config['exposeHeaders'] ?? [];
 
 		if ($this->hasConfigValue($exposeHeaders) === true) {
-			$headers['Access-Control-Expose-Headers'] = is_array($exposeHeaders)
+			$headers['Access-Control-Expose-Headers'] = is_array($exposeHeaders) === true
 				? implode(', ', $exposeHeaders)
 				: $exposeHeaders;
 		}
@@ -190,7 +193,7 @@ class Cors
 		// allowed methods
 		$methods = $this->config['allowMethods'] ?? ['GET', 'HEAD', 'PUT', 'POST', 'DELETE', 'PATCH'];
 		if ($this->hasConfigValue($methods) === true) {
-			$headers['Access-Control-Allow-Methods'] = is_array($methods)
+			$headers['Access-Control-Allow-Methods'] = is_array($methods) === true
 				? implode(', ', $methods)
 				: $methods;
 		}
@@ -211,11 +214,11 @@ class Cors
 		// reflect request headers only when explicitly enabled via `true`
 		if ($allowHeaders === true) {
 			$requestHeaders = $this->kirby->request()->header('Access-Control-Request-Headers');
-			$allowHeaders    = $requestHeaders !== null ? Str::split($requestHeaders, ',') : [];
+			$allowHeaders   = $requestHeaders !== null ? Str::split($requestHeaders, ',') : [];
 		}
 
 		if ($this->hasConfigValue($allowHeaders) === true) {
-			$headers['Access-Control-Allow-Headers'] = is_array($allowHeaders)
+			$headers['Access-Control-Allow-Headers'] = is_array($allowHeaders) === true
 				? implode(', ', $allowHeaders)
 				: $allowHeaders;
 
