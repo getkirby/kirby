@@ -60,7 +60,9 @@ class WriterFieldTest extends TestCase
 		ksort($props);
 
 		$expected = [
+			'after'        => null,
 			'autofocus'    => false,
+			'before'       => null,
 			'counter'      => true,
 			'disabled'     => false,
 			'headings'     => [1, 2, 3, 4, 5, 6],
