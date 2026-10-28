@@ -48,22 +48,11 @@ class PageGuards extends ModelGuards
 		Page $model,
 		User $user
 	) {
-		parent::__construct(
-			abilities: new PageAbilities(
-				model: $model,
-				user: $user
-			),
-			model: $model,
-			permissions: new PagePermissions(
-				model: $model,
-				user: $user
-			),
-			user: $user,
-			validators: new PageValidators(
-				model: $model,
-				user: $user
-			),
-		);
+		parent::__construct($model, $user);
+
+		$this->abilities   = new PageAbilities($model, $user);
+		$this->permissions = new PagePermissions($model, $user);
+		$this->validators  = new PageValidators($model, $user);
 	}
 
 	/**
