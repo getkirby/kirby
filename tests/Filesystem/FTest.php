@@ -836,6 +836,10 @@ class FTest extends TestCase
 
 		$this->assertSame('text/x-php', F::mime($file));
 		$this->assertSame('code', F::type($file));
+
+		F::write($file = static::TMP . '/test.TMP', '<?php echo "foo"; ?>');
+
+		$this->assertSame('code', F::type($file));
 	}
 
 	public function testTypeToExtensions(): void

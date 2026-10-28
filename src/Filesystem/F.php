@@ -942,7 +942,7 @@ class F
 			return $type;
 		}
 
-		$extension = pathinfo($file, PATHINFO_EXTENSION);
+		$extension = static::extension($file);
 
 		if ($extension === '' || $extension === 'tmp') {
 			// detect the mime type first to get the most reliable extension
@@ -950,7 +950,7 @@ class F
 			$extension = static::mimeToExtension($mime);
 		}
 
-		return static::extensionToType(strtolower($extension)) ?: null;
+		return static::extensionToType($extension) ?: null;
 	}
 
 	/**
