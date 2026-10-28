@@ -447,6 +447,26 @@ class ApiTest extends TestCase
 		$this->assertSame('en', I18n::$locale);
 	}
 
+	public function testClone(): void
+	{
+		$api = new Api([
+			'authentication' => $authentication = fn () => true,
+			'data'           => ['foo' => 'bar'],
+			'debug'          => true,
+			'requestMethod'  => 'POST'
+		]);
+
+		$clone = $api->clone([
+			'data' => ['foo' => 'baz']
+		]);
+
+		$this->assertNotSame($api, $clone);
+		$this->assertSame($authentication, $clone->authentication());
+		$this->assertSame(['foo' => 'baz'], $clone->data());
+		$this->assertTrue($clone->debug());
+		$this->assertSame('POST', $clone->requestMethod());
+	}
+
 	public function testCollections(): void
 	{
 		$api = new Api([

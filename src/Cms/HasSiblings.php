@@ -52,7 +52,7 @@ trait HasSiblings
 	public function isFirst(Collection|null $collection = null): bool
 	{
 		$collection ??= $this->siblingsCollection();
-		return $collection->first()->is($this);
+		return $collection->first()?->is($this) === true;
 	}
 
 	/**
@@ -63,7 +63,7 @@ trait HasSiblings
 	public function isLast(Collection|null $collection = null): bool
 	{
 		$collection ??= $this->siblingsCollection();
-		return $collection->last()->is($this);
+		return $collection->last()?->is($this) === true;
 	}
 
 	/**
@@ -88,7 +88,13 @@ trait HasSiblings
 	public function next($collection = null)
 	{
 		$collection ??= $this->siblingsCollection();
-		return $collection->nth($this->indexOf($collection) + 1);
+		$index        = $this->indexOf($collection);
+
+		if ($index === false) {
+			return null;
+		}
+
+		return $collection->nth($index + 1);
 	}
 
 	/**
@@ -100,7 +106,13 @@ trait HasSiblings
 	public function nextAll(Collection|null $collection = null): Collection
 	{
 		$collection ??= $this->siblingsCollection();
-		return $collection->slice($this->indexOf($collection) + 1);
+		$index        = $this->indexOf($collection);
+
+		if ($index === false) {
+			return $collection->empty();
+		}
+
+		return $collection->slice($index + 1);
 	}
 
 	/**
