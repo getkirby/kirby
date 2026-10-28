@@ -42,6 +42,8 @@ class Loader
 	/**
 	 * Loads all areas and makes sure that plugins
 	 * are injected properly
+	 *
+	 * @return array<string, array>
 	 */
 	public function areas(): array
 	{
@@ -88,6 +90,8 @@ class Loader
 
 	/**
 	 * Loads all core component closures
+	 *
+	 * @return array<string, Closure>
 	 */
 	public function components(): array
 	{
@@ -145,6 +149,10 @@ class Loader
 	/**
 	 * Calls `static::resolve()` on all items
 	 * in the given array
+	 *
+	 * @template TKey of array-key
+	 * @param array<TKey, mixed> $items
+	 * @return array<TKey, mixed>
 	 */
 	public function resolveAll(array $items): array
 	{
