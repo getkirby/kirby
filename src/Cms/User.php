@@ -40,6 +40,10 @@ class User extends ModelWithContent
 	public const string CLASS_ALIAS = 'user';
 
 	protected UserBlueprint|null $blueprint = null;
+
+	/**
+	 * @var array<string, mixed>|null
+	 */
 	protected array|null $credentials = null;
 	protected string|null $email;
 	protected string $hash;
@@ -52,6 +56,8 @@ class User extends ModelWithContent
 
 	/**
 	 * Creates a new User object
+	 *
+	 * @param array<string, mixed> $props
 	 */
 	public function __construct(array $props)
 	{
@@ -109,7 +115,7 @@ class User extends ModelWithContent
 			return $this->callMethod($method, $arguments);
 		}
 
-		// return site content otherwise
+		// return user content otherwise
 		return $this->content()->get($method);
 	}
 
@@ -192,6 +198,12 @@ class User extends ModelWithContent
 		return $data;
 	}
 
+	/**
+	 * Returns the stored account information
+	 * (email, language, name and role)
+	 *
+	 * @return array<string, mixed>
+	 */
 	protected function credentials(): array
 	{
 		return $this->credentials ??= $this->readCredentials();
@@ -205,6 +217,10 @@ class User extends ModelWithContent
 		return $this->email ??= $this->credentials()['email'] ?? null;
 	}
 
+	/**
+	 * Returns the current user or the virtual
+	 * nobody user if no user is logged in
+	 */
 	public static function ensure(): self
 	{
 		return App::instance()->user() ?? static::nobody();
@@ -221,6 +237,8 @@ class User extends ModelWithContent
 	/**
 	 * Constructs a User object and also
 	 * takes User models into account
+	 *
+	 * @param array<string, mixed> $props
 	 */
 	public static function factory(mixed $props): static
 	{
@@ -236,8 +254,10 @@ class User extends ModelWithContent
 	}
 
 	/**
-	 * Hashes the provided password unless it is `null`,
-	 * which will leave it as `null`
+	 * Hashes the provided password unless it is `null`
+	 * or an empty string, which are returned unchanged
+	 *
+	 * @return ($password is null ? null : string)
 	 */
 	#[BlockCollectionAccess]
 	public static function hashPassword(
@@ -504,17 +524,19 @@ class User extends ModelWithContent
 
 	/**
 	 * Returns the last modification date of the user
+	 *
+	 * @param 'date'|'intl'|'strftime'|null $handler Date handler, `null` for the configured one
 	 */
 	public function modified(
 		string $format = 'U',
 		string|null $handler = null,
 		string|null $languageCode = null
 	): int|string|false {
-		$modifiedContent = $this->version('latest')->modified($languageCode ?? 'current');
-		$modifiedIndex   = F::modified($this->root() . '/index.php');
-		$modifiedTotal   = max([$modifiedContent, $modifiedIndex]);
+		$content  = $this->version('latest')->modified($languageCode ?? 'current');
+		$index    = F::modified($this->root() . '/index.php');
+		$modified = max([$content, $index]);
 
-		return Str::date($modifiedTotal, $format, $handler);
+		return Str::date($modified, $format, $handler);
 	}
 
 	/**
@@ -559,7 +581,7 @@ class User extends ModelWithContent
 	}
 
 	/**
-	 * Returns the encrypted user password
+	 * Returns the hashed user password
 	 */
 	#[BlockCollectionAccess]
 	public function password(): string|null
@@ -604,6 +626,9 @@ class User extends ModelWithContent
 		return $time;
 	}
 
+	/**
+	 * Returns the permissions object for this user
+	 */
 	public function permissions(): UserPermissions
 	{
 		return new UserPermissions($this);
@@ -725,7 +750,7 @@ class User extends ModelWithContent
 	/**
 	 * Converts session options into a session object
 	 *
-	 * @param $session Session options or session object to unset the user in
+	 * @param $session Session options or session object
 	 */
 	protected function sessionFromOptions(Session|array|null $session): Session
 	{
@@ -750,6 +775,8 @@ class User extends ModelWithContent
 	/**
 	 * Converts the most important user properties
 	 * to an array
+	 *
+	 * @return array<string, mixed>
 	 */
 	#[BlockCollectionAccess]
 	public function toArray(): array
