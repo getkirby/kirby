@@ -35,7 +35,7 @@ class Permalink
 		if ($path = Str::after($url, '/@/')) {
 			$path = explode('/', $path);
 
-			return static::for($path[0] . '://' . $path[1]);
+			return static::for($path[0] . '://' . ($path[1] ?? ''));
 		}
 
 		return null;
