@@ -35,6 +35,8 @@ trait FileModifications
 
 	/**
 	 * Crops the image by the given width and height
+	 *
+	 * @param int|string|Field|array{quality?: int, crop?: bool|string}|null $options Quality, crop position or an array with both
 	 */
 	#[BlockCollectionAccess]
 	public function crop(
@@ -124,6 +126,8 @@ trait FileModifications
 	 * Sizes can be defined as a simple array. They can
 	 * also be set up in the config with the thumbs.srcsets option.
 	 * @since 3.1.0
+	 *
+	 * @param array<array-key, int|string|array<string, mixed>>|string|null $sizes Sizes or the name of a `thumbs.srcsets` preset
 	 */
 	#[BlockCollectionAccess]
 	public function srcset(array|string|null $sizes = null): string|null
@@ -173,6 +177,7 @@ trait FileModifications
 	 * could potentially also be a CDN or any other
 	 * place.
 	 *
+	 * @param array<string, mixed>|string|null $options Thumb options or the name of a `thumbs.presets` preset
 	 * @throws InvalidArgumentException
 	 */
 	#[BlockCollectionAccess]
