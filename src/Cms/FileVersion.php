@@ -16,9 +16,15 @@ class FileVersion
 {
 	use IsFile;
 
+	/**
+	 * @var array<string, mixed>
+	 */
 	protected array $modifications;
 	protected File|Asset $original;
 
+	/**
+	 * @param array<string, mixed> $props
+	 */
 	public function __construct(array $props)
 	{
 		$this->root          = $props['root'] ?? null;
@@ -39,7 +45,7 @@ class FileVersion
 		}
 
 		// asset method proxy
-		if (method_exists($this->asset(), $method)) {
+		if (method_exists($this->asset(), $method) === true) {
 			if ($this->exists() === false) {
 				$this->save();
 			}
@@ -73,6 +79,8 @@ class FileVersion
 
 	/**
 	 * Returns an array with all applied modifications
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function modifications(): array
 	{
@@ -81,6 +89,8 @@ class FileVersion
 
 	/**
 	 * Returns the instance of the original File object
+	 *
+	 * @return File|Asset
 	 */
 	public function original(): mixed
 	{
@@ -109,6 +119,8 @@ class FileVersion
 
 	/**
 	 * Converts the object to an array
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function toArray(): array
 	{
