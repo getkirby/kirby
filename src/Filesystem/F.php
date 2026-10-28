@@ -928,30 +928,22 @@ class F
 	 */
 	public static function type(string $file): string|null
 	{
-		$length    = strlen($file);
-		$extension = match ($length >= 2 && $length <= 4) {
-			// use the file name as extension
-			true  => $file,
-			// get the extension from the filename
-			false => pathinfo($file, PATHINFO_EXTENSION)
-		};
+		// the input is an extension itself
+		$type = static::extensionToType(strtolower($file));
 
-		if (empty($extension) === true || $extension === 'tmp') {
+		if ($type !== false) {
+			return $type;
+		}
+
+		$extension = static::extension($file);
+
+		if ($extension === '' || $extension === 'tmp') {
 			// detect the mime type first to get the most reliable extension
 			$mime      = static::mime($file);
 			$extension = static::mimeToExtension($mime);
 		}
 
-		// sanitize extension
-		$extension = strtolower($extension);
-
-		foreach (static::$types as $type => $extensions) {
-			if (in_array($extension, $extensions, true) === true) {
-				return $type;
-			}
-		}
-
-		return null;
+		return static::extensionToType($extension) ?: null;
 	}
 
 	/**
