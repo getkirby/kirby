@@ -556,7 +556,7 @@ abstract class ModelListField extends DisplayField
 		}
 
 		// manual sorting is impossible while the list is filtered
-		if (empty($this->searchterm()) === false) {
+		if ($this->collector()->isSearching() === true) {
 			return false;
 		}
 
