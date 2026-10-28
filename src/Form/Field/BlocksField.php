@@ -368,7 +368,7 @@ class BlocksField extends InputField
 								key:'blocks.validation',
 								data: [
 									'field'    => $field->label(),
-									'fieldset' => $fieldset->name(),
+									'fieldset' => $this->fieldset($type)->name(),
 									'index'    => $index
 								]
 							);
