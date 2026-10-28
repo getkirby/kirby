@@ -26,6 +26,8 @@ trait Fields
 
 	/**
 	 * Returns the props for all fields in the form
+	 *
+	 * @return array<string, array<string, mixed>>
 	 */
 	public function fields(): array
 	{
