@@ -269,7 +269,7 @@ export default {
 }
 .k-item[data-layout="list"] .k-item-box {
 	--item-height: var(
-		--field-input-height
+		--input-height
 	); /* TODO: change back to --height-md after input refactoring */
 	--item-button-height: var(--item-height);
 	--item-button-width: auto;
