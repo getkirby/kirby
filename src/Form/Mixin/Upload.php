@@ -68,7 +68,7 @@ trait Upload
 
 	protected function uploadParent(
 		string|null $parentQuery = null
-	): Site|Page|User|null {
+	): Site|Page|User {
 		$parent = $this->model();
 
 		if ($parentQuery) {
@@ -79,7 +79,18 @@ trait Upload
 			$parent = $parent->parent();
 		}
 
-		return $parent;
+		// query results that cannot hold files are no valid parent
+		if (
+			$parent instanceof Site ||
+			$parent instanceof Page ||
+			$parent instanceof User
+		) {
+			return $parent;
+		}
+
+		throw new InvalidArgumentException(
+			message: '"' . $parentQuery . '" could not be resolved as a valid parent for the upload'
+		);
 	}
 
 	public function uploads(): array|false
@@ -111,12 +122,6 @@ trait Upload
 		if ($template = $uploads['template']) {
 			// get parent object for upload target
 			$parent = $this->uploadParent($uploads['parent']);
-
-			if ($parent === null) {
-				throw new InvalidArgumentException(
-					message: '"' . $uploads['parent'] . '" could not be resolved as a valid parent for the upload'
-				);
-			}
 
 			$file = new File([
 				'filename' => 'tmp',
