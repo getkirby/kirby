@@ -25,10 +25,6 @@ trait HasUuids
 
 		// look up model by UUID while prioritizing
 		// $this collection when searching
-		if ($uuid = Uuid::from($uuid, $scheme, $this)) {
-			return $uuid->model();
-		}
-
-		return null;
+		return Uuid::from($uuid, $scheme, $this)?->model();
 	}
 }
