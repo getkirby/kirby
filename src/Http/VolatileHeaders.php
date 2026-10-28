@@ -17,6 +17,8 @@ class VolatileHeaders
 {
 	/**
 	 * Stored volatile header configurations
+	 *
+	 * @var array<string, list<string>|null>
 	 */
 	protected array $headers = [];
 
@@ -43,32 +45,34 @@ class VolatileHeaders
 		}
 
 		$values = A::map($values, static fn ($value) => strtolower(trim($value)));
-		$values = A::filter($values, static fn ($value) => $value !== '');
+		$values = A::filter($values, static fn (string $value) => $value !== '');
 
 		if ($values === []) {
 			return;
 		}
 
-		$existingValues = $target[$name] ?? [];
-		$target[$name] = array_values(array_unique([...$existingValues, ...$values]));
+		$existing      = $target[$name] ?? [];
+		$target[$name] = array_values(array_unique([...$existing, ...$values]));
 	}
 
 	/**
 	 * Collects all volatile headers including CORS headers
+	 *
+	 * @return array<string, list<string>|null>
 	 */
 	public function collect(): array
 	{
 		$volatile = $this->headers;
-		$corsHeaders = Cors::headers();
+		$cors     = Cors::headers();
 
-		if ($corsHeaders === []) {
+		if ($cors === []) {
 			return $volatile;
 		}
 
-		foreach ($corsHeaders as $name => $value) {
+		foreach ($cors as $name => $value) {
 			if ($name === 'Vary') {
-				$corsVaryValues = array_map(trim(...), explode(',', $value));
-				$this->append($name, $corsVaryValues, $volatile);
+				$vary = array_map(trim(...), explode(',', $value));
+				$this->append($name, $vary, $volatile);
 				continue;
 			}
 
@@ -89,25 +93,29 @@ class VolatileHeaders
 	/**
 	 * Normalizes a comma-separated list of Vary values
 	 * into a unique array without empty entries
+	 *
+	 * @return list<string>
 	 */
 	protected function normalizeVaryValues(string $value): array
 	{
 		$values = A::map(explode(',', $value), trim(...));
-		$values = A::filter($values, static fn ($entry) => $entry !== '');
+		$values = A::filter($values, static fn (string $entry) => $entry !== '');
 
 		return array_values(array_unique($values));
 	}
 
 	/**
 	 * Returns the Vary values with the provided entries removed
+	 *
+	 * @return list<string>
 	 */
 	protected function removeVaryValues(array $values, array $remove): array
 	{
-		$removeLower = A::map($remove, strtolower(...));
+		$remove = A::map($remove, strtolower(...));
 
 		return array_values(A::filter(
 			$values,
-			static fn ($value) => in_array(strtolower($value), $removeLower, true) === false
+			static fn ($value) => in_array(strtolower($value), $remove, true) === false
 		));
 	}
 
@@ -139,7 +147,7 @@ class VolatileHeaders
 			return $headers;
 		}
 
-		$current = $this->normalizeVaryValues($headers['Vary']);
+		$current   = $this->normalizeVaryValues($headers['Vary']);
 		$remaining = $this->removeVaryValues($current, $values);
 
 		if ($remaining === []) {

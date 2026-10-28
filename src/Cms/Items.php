@@ -52,7 +52,7 @@ class Items extends Collection
 		array $params = []
 	): static {
 		if ($items === null || $items === []) {
-			return new static();
+			return new static(options: $params);
 		}
 
 		// create a new collection of blocks

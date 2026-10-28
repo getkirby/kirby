@@ -2,6 +2,7 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Cms\Page;
 use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -149,5 +150,15 @@ class LinkFieldTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionCode('error.validation.linkType');
 		$validation('abc:/!');
+	}
+
+	public function testValidationsInSubclass(): void
+	{
+		$field = new class (
+			model: new Page(['slug' => 'test']),
+			value: 'https://getkirby.com'
+		) extends LinkField {};
+
+		$this->assertSame([], $field->errors());
 	}
 }

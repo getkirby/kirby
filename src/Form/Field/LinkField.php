@@ -135,7 +135,7 @@ class LinkField extends InputField
 	public function validations(): array
 	{
 		return [
-			'option' => $this->validateOption(...)
+			'option' => fn ($value) => $this->validateOption($value)
 		];
 	}
 

@@ -100,7 +100,7 @@ class StructureField extends InputField implements ProvidesNestedForm
 		return [
 			'min',
 			'max',
-			'structure' => $this->validateRows(...)
+			'structure' => fn ($value) => $this->validateRows($value)
 		];
 	}
 

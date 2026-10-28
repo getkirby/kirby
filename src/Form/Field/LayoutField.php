@@ -94,7 +94,7 @@ class LayoutField extends BlocksField
 			'action'  => function (
 				string $fieldName,
 				string|null $path = null
-			) use ($field): array {
+			) use ($field) {
 				/**
 				 * @var Api $api
 				 */

@@ -59,7 +59,7 @@ class ObjectField extends InputField implements ProvidesNestedForm
 	protected function validations(): array
 	{
 		return [
-			'object' => $this->validateObject(...)
+			'object' => fn ($value) => $this->validateObject($value)
 		];
 	}
 

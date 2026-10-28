@@ -33,6 +33,8 @@ class Query
 
 	/**
 	 * An array of bindings for the final query
+	 *
+	 * @var array<string|int, mixed>
 	 */
 	protected array $bindings = [];
 
@@ -43,6 +45,8 @@ class Query
 
 	/**
 	 * An array with additional join parameters
+	 *
+	 * @var list<array{table: string, on: string, type: string}>|null
 	 */
 	protected array|null $join = null;
 
@@ -102,7 +106,7 @@ class Query
 	protected bool $debug = false;
 
 	/**
-	 * @param $table name of the table, which should be queried
+	 * @param $table Name of the table, which should be queried
 	 */
 	public function __construct(
 		protected Database $database,
@@ -251,13 +255,12 @@ class Query
 		string $on,
 		string $type = 'JOIN'
 	): static {
-		$join = [
+		$this->join[] = [
 			'table' => $table,
 			'on'    => $on,
 			'type'  => $type
 		];
 
-		$this->join[] = $join;
 		return $this;
 	}
 
@@ -308,6 +311,7 @@ class Query
 		if ($values !== null) {
 			$this->values = $values;
 		}
+
 		return $this;
 	}
 
@@ -439,8 +443,8 @@ class Query
 	 * Builds the different types of SQL queries
 	 * This uses the SQL class to build stuff.
 	 *
-	 * @param $type (select, update, insert, delete)
-	 * @return array The final query
+	 * @param $type `select`, `update`, `insert` or `delete`
+	 * @return array{query: string, bindings: array}
 	 * @throws InvalidArgumentException If the query type is invalid
 	 */
 	public function build(string $type): array
@@ -574,8 +578,8 @@ class Query
 			$column = $sql->columnName($this->table, $column);
 		}
 
-		$fetch  = $this->fetch;
-		$row    = $this->select($method . '(' . $column . ') as aggregation')->fetch(Obj::class)->first();
+		$fetch = $this->fetch;
+		$row   = $this->select($method . '(' . $column . ') as aggregation')->fetch(Obj::class)->first();
 
 		if ($this->debug === true) {
 			return $row;
@@ -600,7 +604,7 @@ class Query
 			];
 		}
 
-		if ($this->debug) {
+		if ($this->debug === true) {
 			return [
 				'query'    => $sql['query'],
 				'bindings' => $this->bindings(),
@@ -722,7 +726,7 @@ class Query
 		$this->iterator($iterator);
 
 		// return debug information if debug mode is active
-		if ($this->debug) {
+		if ($this->debug === true) {
 			$collection['totalcount'] = $count;
 			return $collection;
 		}
@@ -846,7 +850,7 @@ class Query
 	 */
 	public function __call(string $method, array $arguments = [])
 	{
-		if (preg_match('!^findBy([a-z]+)!i', $method, $match)) {
+		if (preg_match('!^findBy([a-z]+)!i', $method, $match) === 1) {
 			$column = Str::lower($match[1]);
 			return $this->findBy($column, $arguments[0]);
 		}

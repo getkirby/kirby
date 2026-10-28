@@ -49,10 +49,9 @@ class RedisCache extends Cache
 		];
 
 		// filters only redis supported keys
-		$redisOptions = array_intersect_key($options, array_flip($allowed));
+		$params = array_intersect_key($options, array_flip($allowed));
 
-		// creates redis connection
-		$this->connection = new Redis($redisOptions);
+		$this->connection = new Redis($params);
 
 		// sets the prefix if defined
 		if ($prefix = $options['prefix'] ?? null) {

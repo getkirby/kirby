@@ -30,15 +30,12 @@ abstract class Cache
 	 */
 	public function created(string $key): int|false
 	{
-		// get the Value object
 		$value = $this->retrieve($key);
 
-		// check for a valid Value object
 		if ($value instanceof Value === false) {
 			return false;
 		}
 
-		// return the expires timestamp
 		return $value->created();
 	}
 
@@ -72,7 +69,6 @@ abstract class Cache
 			return 0;
 		}
 
-		// calculate the time
 		return time() + ($minutes * 60);
 	}
 
@@ -83,15 +79,12 @@ abstract class Cache
 	 */
 	public function expires(string $key): int|false|null
 	{
-		// get the Value object
 		$value = $this->retrieve($key);
 
-		// check for a valid Value object
 		if ($value instanceof Value === false) {
 			return false;
 		}
 
-		// return the expires timestamp
 		return $value->expires();
 	}
 
@@ -133,10 +126,8 @@ abstract class Cache
 	 */
 	public function get(string $key, $default = null)
 	{
-		// get the Value
 		$value = $this->retrieve($key);
 
-		// check for a valid cache value
 		if ($value instanceof Value === false) {
 			return $default;
 		}
@@ -147,7 +138,6 @@ abstract class Cache
 			return $default;
 		}
 
-		// return the pure value
 		return $value->value();
 	}
 
@@ -163,14 +153,14 @@ abstract class Cache
 		Closure $result,
 		int $minutes = 0
 	) {
-		$value  = $this->get($key);
-		$result = $value ?? $result();
+		$value = $this->get($key);
 
 		if ($value === null) {
-			$this->set($key, $result, $minutes);
+			$value = $result();
+			$this->set($key, $value, $minutes);
 		}
 
-		return $result;
+		return $value;
 	}
 
 	/**
@@ -190,11 +180,13 @@ abstract class Cache
 	 */
 	public function modified(string $key): int|false
 	{
-		return static::created($key);
+		return $this->created($key);
 	}
 
 	/**
 	 * Returns all passed cache options
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function options(): array
 	{

@@ -607,4 +607,19 @@ class StructureFieldTest extends TestCase
 			'structure' => 'There\'s an error on the "Title" field in row 1'
 		], $field->errors());
 	}
+
+	public function testValidationsInSubclass(): void
+	{
+		$field = new class (
+			model: new Page(['slug' => 'test']),
+			fields: [
+				'text' => ['type' => 'text']
+			],
+			value: [
+				['text' => 'foo']
+			]
+		) extends StructureField {};
+
+		$this->assertSame([], $field->errors());
+	}
 }

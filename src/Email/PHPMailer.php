@@ -27,17 +27,19 @@ class PHPMailer extends Email
 		$mailer->setFrom($this->from(), $this->fromName() ?? '');
 
 		// optional reply-to address
-		if ($replyTo = $this->replyTo()) {
-			$mailer->addReplyTo($replyTo, $this->replyToName() ?? '');
+		if ($this->replyTo() !== '') {
+			$mailer->addReplyTo($this->replyTo(), $this->replyToName() ?? '');
 		}
 
 		// add (multiple) recipient, CC & BCC addresses
 		foreach ($this->to() as $email => $name) {
 			$mailer->addAddress($email, $name ?? '');
 		}
+
 		foreach ($this->cc() as $email => $name) {
 			$mailer->addCC($email, $name ?? '');
 		}
+
 		foreach ($this->bcc() as $email => $name) {
 			$mailer->addBCC($email, $name ?? '');
 		}
@@ -46,28 +48,29 @@ class PHPMailer extends Email
 		$mailer->CharSet = 'UTF-8';
 
 		// set body according to html/text
-		if ($this->isHtml()) {
+		if ($this->isHtml() === true) {
 			$mailer->isHTML(true);
-			$mailer->Body = $this->body()->html();
+			$mailer->Body    = $this->body()->html();
 			$mailer->AltBody = $this->body()->text();
 		} else {
 			$mailer->Body = $this->body()->text();
 		}
 
-		// add attachments
 		foreach ($this->attachments() as $attachment) {
 			$mailer->addAttachment($attachment);
 		}
 
 		// smtp transport settings
-		if (($this->transport()['type'] ?? 'mail') === 'smtp') {
+		$transport = $this->transport();
+
+		if (($transport['type'] ?? 'mail') === 'smtp') {
 			$mailer->isSMTP();
-			$mailer->Host       = $this->transport()['host'] ?? null;
-			$mailer->SMTPAuth   = $this->transport()['auth'] ?? false;
-			$mailer->Username   = $this->transport()['username'] ?? null;
-			$mailer->Password   = $this->transport()['password'] ?? null;
-			$mailer->SMTPSecure = $this->transport()['security'] ?? 'ssl';
-			$mailer->Port       = $this->transport()['port'] ?? null;
+			$mailer->Host       = $transport['host'] ?? null;
+			$mailer->SMTPAuth   = $transport['auth'] ?? false;
+			$mailer->Username   = $transport['username'] ?? null;
+			$mailer->Password   = $transport['password'] ?? null;
+			$mailer->SMTPSecure = $transport['security'] ?? 'ssl';
+			$mailer->Port       = $transport['port'] ?? null;
 
 			if ($mailer->SMTPSecure === true) {
 				switch ($mailer->Port) {
@@ -81,14 +84,14 @@ class PHPMailer extends Email
 						break;
 					default:
 						throw new InvalidArgumentException(
-							'Could not automatically detect the "security" protocol from the ' .
-							'"port" option, please set it explicitly to "tls" or "ssl".'
+							message: 'Could not automatically detect the "security" protocol from the ' .
+								'"port" option, please set it explicitly to "tls" or "ssl".'
 						);
 				}
 			}
 		}
 
-		// accessible phpMailer instance
+		// accessible PHPMailer instance
 		$beforeSend = $this->beforeSend();
 
 		if ($beforeSend instanceof Closure) {

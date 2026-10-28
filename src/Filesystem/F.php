@@ -22,6 +22,11 @@ use ZipArchive;
  */
 class F
 {
+	/**
+	 * File types with their extensions
+	 *
+	 * @var array<string, list<string>>
+	 */
 	public static array $types = [
 		'archive' => [
 			'gz',
@@ -118,6 +123,10 @@ class F
 			'webm',
 		],
 	];
+
+	/**
+	 * @var list<string>
+	 */
 	public static array $units = [
 		'B',
 		'KB',
@@ -132,14 +141,15 @@ class F
 
 	/**
 	 * Cache for loaded files when using `load()` with `cache: true`
+	 *
+	 * @var array<string, mixed>
 	 */
 	public static array $loadCache = [];
 
 	/**
 	 * Appends new content to an existing file
 	 *
-	 * @param $file The path for the file
-	 * @param $content Either a string or an array. Arrays will be converted to JSON.
+	 * @param $content Either a string, an object or an array. Arrays and objects will be serialized.
 	 */
 	public static function append(string $file, $content): bool
 	{
@@ -148,8 +158,6 @@ class F
 
 	/**
 	 * Returns the file content as base64 encoded string
-	 *
-	 * @param $file The path for the file
 	 */
 	public static function base64(string $file): string
 	{
@@ -189,8 +197,6 @@ class F
 	 * $dirname = F::dirname('/var/www/test.txt');
 	 * // dirname is /var/www
 	 * ```
-	 *
-	 * @param $file The path
 	 */
 	public static function dirname(string $file): string
 	{
@@ -255,6 +261,8 @@ class F
 
 	/**
 	 * Returns all extensions for a certain file type
+	 *
+	 * @return list<string>
 	 */
 	public static function extensions(string|null $type = null): array
 	{
@@ -272,8 +280,6 @@ class F
 	 * $filename = F::filename('/var/www/test.txt');
 	 * // filename is test.txt
 	 * ```
-	 *
-	 * @param $name The path
 	 */
 	public static function filename(string $name): string
 	{
@@ -281,14 +287,12 @@ class F
 	}
 
 	/**
-	 * Invalidate opcode cache for file.
-	 *
-	 * @param $file The path of the file
+	 * Invalidate opcode cache for file
 	 */
 	public static function invalidateOpcodeCache(string $file): bool
 	{
 		if (
-			function_exists('opcache_invalidate') &&
+			function_exists('opcache_invalidate') === true &&
 			strlen(ini_get('opcache.restrict_api')) === 0
 		) {
 			return opcache_invalidate($file, true);
@@ -377,7 +381,10 @@ class F
 		bool $cache = false
 	) {
 		// return cached result if available
-		if ($cache === true && array_key_exists($file, static::$loadCache)) {
+		if (
+			$cache === true &&
+			array_key_exists($file, static::$loadCache) === true
+		) {
 			return static::$loadCache[$file];
 		}
 
@@ -391,8 +398,8 @@ class F
 		$callback = fn () => static::loadIsolated($file, $data);
 
 		// if the loaded file should not produce any output,
-		// call the loaidIsolated method from the Response class
-		// which checks for unintended ouput and throws an error if detected
+		// call the loadIsolated method via the Response class
+		// which checks for unintended output and throws an error if detected
 		$result = match ($allowOutput) {
 			true  => $callback(),
 			false => Response::guardAgainstOutput($callback),
@@ -582,8 +589,6 @@ class F
 
 	/**
 	 * Extracts the name from a file path or filename without extension
-	 *
-	 * @param $name The path or filename
 	 */
 	public static function name(string $name): string
 	{
@@ -628,9 +633,8 @@ class F
 	 * Reads a specific byte range from a file
 	 * @since 5.3.0
 	 *
-	 * @param $file The path to the file
 	 * @param $offset The byte offset to start reading from
-	 * @param $length The number of bytes to read (null = read to end)
+	 * @param $length The number of bytes to read (`null` = read to end)
 	 */
 	public static function range(
 		string $file,
@@ -672,10 +676,8 @@ class F
 	}
 
 	/**
-	 * Reads the content of a file or requests the
-	 * contents of a remote HTTP or HTTPS URL
-	 *
-	 * @param $file The path for the file or an absolute URL
+	 * Reads the content of a file; returns `false`
+	 * for URLs and files that don't exist
 	 */
 	public static function read(string $file): string|false
 	{
@@ -809,8 +811,6 @@ class F
 	 * $remove = F::remove('test.txt');
 	 * if ($remove) echo 'The file has been removed';
 	 * ```
-	 *
-	 * @param $file The path for the file
 	 */
 	public static function remove(string $file): bool
 	{
@@ -836,16 +836,14 @@ class F
 	 * to strip unwanted special characters
 	 *
 	 * ```php
-	 * $safe = f::safeName('über genius.txt');
+	 * $safe = F::safeName('über genius.txt');
 	 * // safe will be ueber-genius.txt
 	 * ```
-	 *
-	 * @param $string The file name
 	 */
 	public static function safeName(string $string): string
 	{
 		$basename  = static::safeBasename($string);
-		$extension =  static::safeExtension($string);
+		$extension = static::safeExtension($string);
 
 		if ($extension !== '') {
 			$extension = '.' . $extension;
@@ -889,6 +887,8 @@ class F
 	/**
 	 * Tries to find similar or the same file by
 	 * building a glob based on the path
+	 *
+	 * @return list<string>
 	 */
 	public static function similar(string $path, string $pattern = '*'): array
 	{
@@ -900,9 +900,9 @@ class F
 	}
 
 	/**
-	 * Returns the size of a file or an array of files.
+	 * Returns the size of a file or an array of files
 	 *
-	 * @param $file file path or array of paths
+	 * @param $file File path or array of paths
 	 */
 	public static function size(string|array $file): int
 	{
@@ -928,35 +928,29 @@ class F
 	 */
 	public static function type(string $file): string|null
 	{
-		$length    = strlen($file);
-		$extension = match ($length >= 2 && $length <= 4) {
-			// use the file name as extension
-			true  => $file,
-			// get the extension from the filename
-			false => pathinfo($file, PATHINFO_EXTENSION)
-		};
+		// the input is an extension itself
+		$type = static::extensionToType(strtolower($file));
 
-		if (empty($extension) === true || $extension === 'tmp') {
+		if ($type !== false) {
+			return $type;
+		}
+
+		$extension = static::extension($file);
+
+		if ($extension === '' || $extension === 'tmp') {
 			// detect the mime type first to get the most reliable extension
 			$mime      = static::mime($file);
 			$extension = static::mimeToExtension($mime);
 		}
 
-		// sanitize extension
-		$extension = strtolower($extension);
-
-		foreach (static::$types as $type => $extensions) {
-			if (in_array($extension, $extensions, true) === true) {
-				return $type;
-			}
-		}
-
-		return null;
+		return static::extensionToType($extension) ?: null;
 	}
 
 	/**
 	 * Returns all extensions of a given file type
 	 * or `null` if the file type is unknown
+	 *
+	 * @return list<string>|null
 	 */
 	public static function typeToExtensions(string $type): array|null
 	{
@@ -1063,8 +1057,6 @@ class F
 
 	/**
 	 * Returns the file as data uri
-	 *
-	 * @param $file The path for the file
 	 */
 	public static function uri(string $file): string|false
 	{

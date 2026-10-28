@@ -78,7 +78,7 @@ class FilePickerDialogController extends ModelPickerDialogController
 	{
 		return new FileItem(
 			file: $model,
-			dragTextIsAbsolute: $model->parent()->is($this->model),
+			dragTextIsAbsolute: $model->parent()->is($this->model) === false,
 			image: $this->image,
 			info: $this->info,
 			layout: $this->layout,
