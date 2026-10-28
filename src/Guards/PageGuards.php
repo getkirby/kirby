@@ -6,6 +6,7 @@ use Kirby\Cms\Model;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Cms\User;
+use Kirby\Exception\AbilityException;
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
@@ -79,7 +80,9 @@ class PageGuards extends ModelGuards
 	/**
 	 * Checks if the status of the page can be changed
 	 *
-	 * @throws InvalidArgumentException If the given status is invalid
+	 * @throws AbilityException If the status of the page cannot be changed by any user
+	 * @throws InvalidArgumentException If the given status or position is invalid
+	 * @throws PermissionException If the user is not allowed to change the status or to sort the page
 	 */
 	protected function ensureToChangeStatus(
 		string $status,
@@ -100,7 +103,8 @@ class PageGuards extends ModelGuards
 	/**
 	 * Checks if the page can be converted to a draft
 	 *
-	 * @throws PermissionException If the user is not allowed to change the status or the page cannot be converted to a draft
+	 * @throws AbilityException If the page cannot be converted to a draft by any user
+	 * @throws PermissionException If the user is not allowed to change the status
 	 */
 	protected function ensureToChangeStatusToDraft(): void
 	{
@@ -110,8 +114,9 @@ class PageGuards extends ModelGuards
 	/**
 	 * Checks if the status of the page can be changed to listed
 	 *
+	 * @throws AbilityException If the status of the page cannot be changed or the page cannot be sorted by any user
 	 * @throws InvalidArgumentException If the given position is invalid
-	 * @throws PermissionException If the user is not allowed to change the status or the status for the page cannot be changed by any user
+	 * @throws PermissionException If the user is not allowed to change the status or to sort the page
 	 */
 	protected function ensureToChangeStatusToListed(int|null $position = null): void
 	{
@@ -131,6 +136,7 @@ class PageGuards extends ModelGuards
 	/**
 	 * Checks if the status of the page can be changed to unlisted
 	 *
+	 * @throws AbilityException If the status of the page cannot be changed by any user
 	 * @throws PermissionException If the user is not allowed to change the status
 	 */
 	protected function ensureToChangeStatusToUnlisted(): void
@@ -141,9 +147,10 @@ class PageGuards extends ModelGuards
 	/**
 	 * Checks if the page can be created
 	 *
+	 * @throws AbilityException If a listed or unlisted page cannot be published, e.g. the error page
 	 * @throws DuplicateException If the same page or a draft already exists
 	 * @throws InvalidArgumentException If the slug is invalid
-	 * @throws PermissionException If the user is not allowed to create this page
+	 * @throws PermissionException If the user is not allowed to create this page or to publish it
 	 */
 	protected function ensureToCreate(): void
 	{
@@ -161,6 +168,7 @@ class PageGuards extends ModelGuards
 	/**
 	 * Checks if the page can be deleted
 	 *
+	 * @throws AbilityException If the page or one of its subpages cannot be deleted by any user
 	 * @throws LogicException If the page has children and should not be force-deleted
 	 * @throws PermissionException If the user is not allowed to delete the page, one of its files or subpages
 	 */
@@ -183,9 +191,11 @@ class PageGuards extends ModelGuards
 	/**
 	 * Checks if the page can be moved to the given parent
 	 *
+	 * @throws AbilityException If the page cannot be moved by any user
 	 * @throws DuplicateException If the new parent already has a page with this slug
+	 * @throws InvalidArgumentException If the slug is reserved at the new parent
 	 * @throws LogicException If the page cannot be moved to the given parent
-	 * @throws PermissionException If the user is not allowed to move the page
+	 * @throws PermissionException If the user is not allowed to move the page or the new parent does not accept its template
 	 */
 	protected function ensureToMove(Site|Page $parent): void
 	{
@@ -202,7 +212,7 @@ class PageGuards extends ModelGuards
 	 * Checks if the page can be published
 	 * (status change from draft to listed or unlisted)
 	 *
-	 * @throws LogicException If the page is incomplete and cannot be published
+	 * @throws AbilityException If the page is incomplete or its status cannot be changed by any user
 	 * @throws PermissionException If the user is not allowed to change the status
 	 */
 	protected function ensureToPublish(): void
