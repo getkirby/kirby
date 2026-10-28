@@ -202,13 +202,15 @@ trait UserActions
 	/**
 	 * Commits a user action, by following these steps
 	 *
-	 * 1. applies the `before` hook
-	 * 2. checks the action rules
-	 * 3. commits the action
-	 * 4. applies the `after` hook
-	 * 5. returns the result
+	 * 1. checks the action guards
+	 * 2. applies the `before` hook
+	 * 3. checks the action guards again
+	 * 4. runs the action callback
+	 * 5. updates the app-wide model state
+	 * 6. applies the `after` hook, flushes the pages cache
+	 *    and returns the result of the hook
 	 *
-	 * @throws PermissionException
+	 * @throws PermissionException If the user is the almighty Kirby user
 	 */
 	protected function commit(
 		string $action,
