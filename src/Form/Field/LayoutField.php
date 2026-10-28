@@ -26,7 +26,7 @@ use Throwable;
 class LayoutField extends BlocksField
 {
 	/**
-	 * Define available layouts. Each layout is list of column widths. (e.g. 1/2, 1/2 or 1/4, 3/4)
+	 * Define available layouts. Each layout is a list of column widths. (e.g. 1/2, 1/2 or 1/4, 3/4)
 	 */
 	#[Prop(computed: true)]
 	protected array|null $layouts = ['1/1'];
@@ -118,6 +118,9 @@ class LayoutField extends BlocksField
 		return $routes;
 	}
 
+	/**
+	 * @return array|null
+	 */
 	public function default(): mixed
 	{
 		$default = parent::default();
@@ -127,12 +130,10 @@ class LayoutField extends BlocksField
 			array_walk($default, function (&$layout) {
 				$layout['id'] ??= Str::uuid();
 
-				// set columns id within layout
 				if (isset($layout['columns']) === true) {
 					array_walk($layout['columns'], function (&$column) {
 						$column['id'] ??= Str::uuid();
 
-						// set blocks id within column
 						if (isset($column['blocks']) === true) {
 							array_walk($column['blocks'], function (&$block) {
 								$block['id'] ??= Str::uuid();
@@ -153,12 +154,13 @@ class LayoutField extends BlocksField
 			$value = $value->toArray();
 		}
 
-		$attrs   = $this->attrsForm();
-		$value   = Data::decode($value, type: 'json', fail: false);
-		$layouts = Layouts::factory($value, ['parent' => $this->model()])->toArray();
+		$attrs    = $this->attrsForm();
+		$settings = $this->settings();
+		$value    = Data::decode($value, type: 'json', fail: false);
+		$layouts  = Layouts::factory($value, ['parent' => $this->model()])->toArray();
 
 		foreach ($layouts as $layoutIndex => $layout) {
-			if ($this->settings() !== null) {
+			if ($settings !== null) {
 				$layouts[$layoutIndex]['attrs'] = $attrs->reset()->fill($layout['attrs'])->toFormValues();
 			}
 
@@ -180,6 +182,11 @@ class LayoutField extends BlocksField
 		);
 	}
 
+	/**
+	 * Returns the available layouts, each as a list of column widths
+	 *
+	 * @return array<list<string>>
+	 */
 	public function layouts(): array
 	{
 		return array_map(Str::split(...), $this->layouts);
@@ -191,7 +198,7 @@ class LayoutField extends BlocksField
 	public function layoutsToValues(array $layouts): array
 	{
 		foreach ($layouts as &$layout) {
-			$layout['id'] 	   ??= Str::uuid();
+			$layout['id']      ??= Str::uuid();
 			$layout['columns'] ??= [];
 
 			array_walk($layout['columns'], function (&$column) {
@@ -280,6 +287,9 @@ class LayoutField extends BlocksField
 		return $this->settingsFieldset = Fieldset::factory($settings);
 	}
 
+	/**
+	 * @return string
+	 */
 	public function toStoredValue(): mixed
 	{
 		$value = $this->toFormValue();
@@ -292,8 +302,10 @@ class LayoutField extends BlocksField
 			return '';
 		}
 
+		$settings = $this->settings();
+
 		foreach ($value as $layoutIndex => $layout) {
-			if ($this->settings() !== null) {
+			if ($settings !== null) {
 				$value[$layoutIndex]['attrs'] = $attrs->reset()->fill($layout['attrs'])->toStoredValues();
 			}
 
@@ -322,9 +334,9 @@ class LayoutField extends BlocksField
 					foreach ($form->fields() as $field) {
 						$errors = $field->errors();
 
-						if (count($errors) > 0) {
+						if ($errors !== []) {
 							throw new InvalidArgumentException(
-								key:'layout.validation.settings',
+								key: 'layout.validation.settings',
 								data: ['index' => $layoutIndex]
 							);
 						}
@@ -348,14 +360,12 @@ class LayoutField extends BlocksField
 								}
 							}
 
-							// overwrite the content with the serialized form
 							$form = $blockForms[$blockType]->reset()->fill($block['content']);
 
 							foreach ($form->fields() as $field) {
 								$errors = $field->errors();
 
-								// rough first validation
-								if (count($errors) > 0) {
+								if ($errors !== []) {
 									throw new InvalidArgumentException(
 										key: 'layout.validation.block',
 										data: [
