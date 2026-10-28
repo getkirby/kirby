@@ -21,6 +21,15 @@ class WriterFieldTest extends TestCase
 		$this->assertSame([1, 2], $field->headings());
 	}
 
+	public function testHeadingsWithInvalidLevel(): void
+	{
+		$field = $this->field('writer', [
+			'headings' => [7, 2, 3]
+		]);
+
+		$this->assertSame([2, 3], $field->headings());
+	}
+
 	public function testInline(): void
 	{
 		$field = $this->field('writer');
