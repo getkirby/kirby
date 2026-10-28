@@ -6,6 +6,7 @@ use Kirby\Cms\ModelTestCase;
 use Kirby\Cms\Role;
 use Kirby\Exception\PermissionException;
 use PHPUnit\Framework\Attributes\CoversClass;
+use ReflectionMethod;
 
 #[CoversClass(UserPermissions::class)]
 class UserPermissionsTest extends ModelTestCase
@@ -253,7 +254,8 @@ class UserPermissionsTest extends ModelTestCase
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionCode('error.user.test.permission');
 
-		$permissions->error('test');
+		$method = new ReflectionMethod($permissions, 'error');
+		$method->invoke($permissions, 'test');
 	}
 
 	public function testReplaceAvatar(): void

@@ -19,7 +19,7 @@ class LanguageAbilities extends ModelAbilities
 	 */
 	protected Model $model;
 
-	public function error(
+	protected function error(
 		string $key,
 		array $data = [],
 		array $details = []

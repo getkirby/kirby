@@ -7,6 +7,7 @@ use Kirby\Cms\Page;
 use Kirby\Cms\User;
 use Kirby\Exception\PermissionException;
 use PHPUnit\Framework\Attributes\CoversClass;
+use ReflectionMethod;
 
 class ExtendedModelPermissions extends ModelPermissions
 {
@@ -119,7 +120,9 @@ class ModelPermissionsTest extends ModelTestCase
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionCode('error.test');
 
-		$this->permissions()->error('error.test');
+		$permissions = $this->permissions();
+		$method      = new ReflectionMethod($permissions, 'error');
+		$method->invoke($permissions, 'error.test');
 	}
 
 	public function testSetting(): void

@@ -80,7 +80,7 @@ abstract class ModelPermissions
 	/**
 	 * @throws PermissionException
 	 */
-	public function error(string $key, array $data = []): never
+	protected function error(string $key, array $data = []): never
 	{
 		throw new PermissionException(
 			key: $key,

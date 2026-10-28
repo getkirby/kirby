@@ -28,7 +28,7 @@ class UserPermissions extends ModelPermissions
 		return $this->user->is($this->model) === true ? 'user' : 'users';
 	}
 
-	public function error(string $key, array $data = []): never
+	protected function error(string $key, array $data = []): never
 	{
 		parent::error(
 			key: 'user.' . $key . '.permission',

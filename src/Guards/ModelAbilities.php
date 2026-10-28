@@ -42,7 +42,7 @@ abstract class ModelAbilities
 	 *                e.g. the field errors of an incomplete page
 	 * @throws AbilityException
 	 */
-	public function error(
+	protected function error(
 		string $key,
 		array $data = [],
 		array $details = []
