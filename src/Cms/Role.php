@@ -24,6 +24,9 @@ class Role implements Stringable
 	protected Permissions $permissions;
 	protected string|null $title;
 
+	/**
+	 * @param array<string, mixed> $props
+	 */
 	public function __construct(array $props)
 	{
 		$this->name        = $props['name'];
@@ -43,21 +46,38 @@ class Role implements Stringable
 		return $this->toArray();
 	}
 
+	/**
+	 * Returns the role name
+	 * when the role is converted to a string
+	 */
 	public function __toString(): string
 	{
 		return $this->name();
 	}
 
+	/**
+	 * Creates the built-in admin role
+	 *
+	 * @param array<string, mixed> $inject Props to add if not defined
+	 */
 	public static function defaultAdmin(array $inject = []): static
 	{
 		return static::factory(static::defaults()['admin'], $inject);
 	}
 
+	/**
+	 * Creates the built-in nobody role
+	 *
+	 * @param array<string, mixed> $inject Props to add if not defined
+	 */
 	public static function defaultNobody(array $inject = []): static
 	{
 		return static::factory(static::defaults()['nobody'], $inject);
 	}
 
+	/**
+	 * @return array{admin: array<string, mixed>, nobody: array<string, mixed>}
+	 */
 	protected static function defaults(): array
 	{
 		return [
@@ -76,20 +96,32 @@ class Role implements Stringable
 		];
 	}
 
+	/**
+	 * Returns the translated description of the role
+	 */
 	public function description(): string|null
 	{
 		return $this->description;
 	}
 
+	/**
+	 * Creates a role from the given props
+	 * and resolves blueprint extensions
+	 *
+	 * @param array<string, mixed> $props
+	 * @param array<string, mixed> $inject Props to add if not defined
+	 */
 	public static function factory(array $props, array $inject = []): static
 	{
 		// ensure to properly extend the blueprint
-		$props = $props + $inject;
-		$props = Blueprint::extend($props);
+		$props = Blueprint::extend($props + $inject);
 
 		return new static($props);
 	}
 
+	/**
+	 * Returns the role name as id
+	 */
 	public function id(): string
 	{
 		return $this->name();
@@ -137,16 +169,27 @@ class Role implements Stringable
 		return $tmpUser->isAccessible();
 	}
 
+	/**
+	 * Checks if this is the admin role
+	 */
 	public function isAdmin(): bool
 	{
 		return $this->name() === 'admin';
 	}
 
+	/**
+	 * Checks if this is the nobody role
+	 */
 	public function isNobody(): bool
 	{
 		return $this->name() === 'nobody';
 	}
 
+	/**
+	 * Creates a role from the given blueprint file
+	 *
+	 * @param array<string, mixed> $inject Props to add if not defined
+	 */
 	#[BlockCollectionAccess]
 	public static function load(string $file, array $inject = []): static
 	{
@@ -158,16 +201,26 @@ class Role implements Stringable
 		return static::factory($data, $inject);
 	}
 
+	/**
+	 * Returns the role name
+	 */
 	public function name(): string
 	{
 		return $this->name;
 	}
 
+	/**
+	 * Returns the permissions object for this role
+	 */
 	public function permissions(): Permissions
 	{
 		return $this->permissions;
 	}
 
+	/**
+	 * Returns the translated title of the role
+	 * or the name as fallback
+	 */
 	public function title(): string
 	{
 		return $this->title ??= Str::label($this->name());
@@ -176,6 +229,8 @@ class Role implements Stringable
 	/**
 	 * Converts the most important role
 	 * properties to an array
+	 *
+	 * @return array{description: string|null, id: string, name: string, permissions: array, title: string}
 	 */
 	public function toArray(): array
 	{
