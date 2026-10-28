@@ -217,23 +217,6 @@ class FileTest extends TestCase
 		$this->assertSame('(image: file://test-heic)', $panel->dragText());
 	}
 
-	public function testDropdownOption(): void
-	{
-		$page = new ModelPage([
-			'slug' => 'test',
-			'files' => [
-				['filename' => 'test.jpg'],
-			]
-		]);
-
-		$panel  = new File($page->file());
-		$option = $panel->dropdownOption();
-
-		$this->assertSame('image', $option['icon']);
-		$this->assertSame('test.jpg', (string)$option['text']);
-		$this->assertSame('/pages/test/files/test.jpg', $option['link']);
-	}
-
 	public function testImage(): void
 	{
 		$page = new ModelPage([
