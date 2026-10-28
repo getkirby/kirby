@@ -6,7 +6,8 @@ use Kirby\Content\Field;
 use Kirby\Toolkit\Obj;
 
 /**
- * NestObject
+ * Object for an associative array,
+ * created by `Nest::create()`
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
@@ -28,7 +29,7 @@ class NestObject extends Obj
 
 			if (
 				is_object($value) === true &&
-				method_exists($value, 'toArray')
+				method_exists($value, 'toArray') === true
 			) {
 				$result[$key] = $value->toArray();
 				continue;
