@@ -34,17 +34,16 @@ trait When
 
 		$siblings = $this->siblings();
 
-		foreach ($when as $field => $value) {
-			$field = $siblings->get($field);
+		foreach ($when as $name => $value) {
+			$field = $siblings->get($name);
 			$input = '';
 
 			if ($field?->hasValue() === true) {
 				$input = $field->value() ?? '';
 			}
 
-			// if the input data doesn't match the requested `when` value,
-			// that means that this field is not required and can be saved
-			// (*all* `when` conditions must be met for this field to be required)
+			// *all* `when` conditions must be met
+			// for the field to be active
 			if ($input !== $value) {
 				return false;
 			}
@@ -53,6 +52,9 @@ trait When
 		return true;
 	}
 
+	/**
+	 * @return array<string, mixed>|null
+	 */
 	public function when(): array|null
 	{
 		return $this->when;
