@@ -51,6 +51,8 @@ class Pagination extends BasePagination
 	 *     'url'      => new Uri('https://getkirby.com/blog')
 	 * ]);
 	 * ```
+	 *
+	 * @param array<string, mixed> $params
 	 */
 	public function __construct(array $params = [])
 	{
