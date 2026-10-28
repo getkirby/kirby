@@ -24,6 +24,11 @@ abstract class ModelGuards
 {
 	use HasActions;
 
+	/**
+	 * Guards of each model, see `::for()`
+	 *
+	 * @var WeakMap<Model, ModelGuards>|null
+	 */
 	protected static WeakMap|null $cache = null;
 
 	public function __construct(
@@ -43,6 +48,8 @@ abstract class ModelGuards
 	/**
 	 * Returns the availability of every action that the
 	 * blueprint of the model defines an option for.
+	 *
+	 * @return array<string, bool>
 	 */
 	public function availability(): array
 	{
@@ -63,11 +70,11 @@ abstract class ModelGuards
 	}
 
 	/**
-	 * Checks if a method is available to be executed. In comparison to
-	 * `ensureExecutable`, this does not validate any input for the action yet.
+	 * Checks if an action is available to be executed. In comparison to
+	 * `::ensureExecutable()`, this does not validate any input for the action yet.
 	 * It will only check the ability and the permissions to execute this action.
 	 * This is typically used to check if UI elements in the Panel should be
-	 * availabel or not.
+	 * available or not.
 	 *
 	 * @param $default Used if the action has no permission rule
 	 * @throws AbilityException|PermissionException
