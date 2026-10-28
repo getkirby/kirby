@@ -504,6 +504,36 @@ class BlocksFieldTest extends TestCase
 		], $field->errors());
 	}
 
+	public function testValidationsInvalidAfterOtherBlockType(): void
+	{
+		$field = $this->field('blocks', [
+			'value' => [
+				[
+					'type'    => 'video',
+					'content' => [
+						'url' => 'https://www.youtube.com/watch?v=EDVYjxWMecc',
+					]
+				],
+				[
+					'type'    => 'heading',
+					'content' => [
+						'text' => 'A nice heading',
+					]
+				],
+				[
+					'type'    => 'video',
+					'content' => [
+						'url' => 'Invalid URL',
+					]
+				]
+			]
+		]);
+
+		$this->assertSame([
+			'blocks' => 'There\'s an error on the "Video-URL" field in block 3 using the "Video" block type'
+		], $field->errors());
+	}
+
 	public function testValidationsWithInvalidBlockType(): void
 	{
 		$field = $this->field('blocks', [
