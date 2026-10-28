@@ -27,6 +27,12 @@ class Fields extends Collection
 {
 	protected Language $language;
 	protected ModelWithContent $model;
+
+	/**
+	 * Values for fields that don't exist in the form
+	 *
+	 * @var array<string, mixed>
+	 */
 	protected array $passthrough = [];
 
 	public function __construct(
@@ -56,7 +62,7 @@ class Fields extends Collection
 	 * This takes care of validation and of setting
 	 * the collection prop on each object correctly.
 	 *
-	 * @param Field|array $field
+	 * @param Field|array<string, mixed> $field
 	 */
 	public function __set(string $name, $field): void
 	{
@@ -87,6 +93,8 @@ class Fields extends Collection
 	 * Returns an array with the default value of each field
 	 *
 	 * @since 5.0.0
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function defaults(): array
 	{
@@ -95,6 +103,8 @@ class Fields extends Collection
 
 	/**
 	 * An array of all found in all fields errors
+	 *
+	 * @return array<string, array{label: string, message: array<string, mixed>}>
 	 */
 	public function errors(): array
 	{
@@ -151,12 +161,10 @@ class Fields extends Collection
 				continue;
 			}
 
-			// don't change the value of non-value field
 			if ($field->hasValue() === false) {
 				continue;
 			}
 
-			// resolve closure values
 			if ($value instanceof Closure) {
 				$value = $value($field->toFormValue());
 			}
@@ -174,7 +182,7 @@ class Fields extends Collection
 		if ($defaults === true) {
 			$this->fill(
 				input: $this
-					->filter(fn ($field) => $field->hasValue() ? $field->isEmpty() : false)
+					->filter(fn ($field) => $field->hasValue() === true && $field->isEmpty() === true)
 					->toArray(fn ($field) => $field->default()),
 				passthrough: false
 			);
@@ -188,7 +196,7 @@ class Fields extends Collection
 	 */
 	public function findByKey(string $key): Field|null
 	{
-		if (str_contains($key, '+')) {
+		if (str_contains($key, '+') === true) {
 			return $this->findByKeyRecursive($key);
 		}
 
@@ -209,7 +217,6 @@ class Fields extends Collection
 		foreach ($names as $name) {
 			$index++;
 
-			// search for the field by name
 			$field = $fields->get($name);
 
 			// if the field cannot be found,
@@ -265,11 +272,10 @@ class Fields extends Collection
 	 *
 	 * @since 5.0.0
 	 *
-	 * @return ($values is null ? array : static)
+	 * @return ($values is null ? array<string, mixed> : static)
 	 */
 	public function passthrough(array|null $values = null): static|array
 	{
-		// use passthrough method as getter if the value is null
 		if ($values === null) {
 			return $this->passthrough;
 		}
@@ -283,7 +289,6 @@ class Fields extends Collection
 				continue;
 			}
 
-			// resolve closure values
 			if ($value instanceof Closure) {
 				$value = $value($this->passthrough[$key] ?? null);
 			}
@@ -301,10 +306,8 @@ class Fields extends Collection
 	 */
 	public function reset(): static
 	{
-		// reset the passthrough values
 		$this->passthrough = [];
 
-		// reset the values of each field
 		foreach ($this->data as $field) {
 			if ($field->hasValue() === true) {
 				$field->reset();
@@ -316,11 +319,11 @@ class Fields extends Collection
 
 	/**
 	 * Sets the value for each field with a matching key in the input array
-	 * but only if the field is not disabled
+	 * but only if the field can be submitted (e.g. is translatable)
 	 *
 	 * @since 5.0.0
 	 * @param $passthrough If true, values for undefined fields will be submitted
-	 * @param $force If true, values for fields that cannot be submitted (e.g. disabled or untranslatable fields) will be submitted
+	 * @param $force If true, values for fields that cannot be submitted (e.g. untranslatable fields) will be submitted
 	 */
 	public function submit(
 		array $input,
@@ -338,17 +341,14 @@ class Fields extends Collection
 				continue;
 			}
 
-			// don't submit fields without a value
 			if ($field->hasValue() === false) {
 				continue;
 			}
 
-			// don't submit fields that are not submittable
 			if ($force === false && $field->isSubmittable($language) === false) {
 				continue;
 			}
 
-			// resolve closure values
 			if ($value instanceof Closure) {
 				$value = $value($field->toFormValue());
 			}
@@ -358,13 +358,11 @@ class Fields extends Collection
 				$value = $value->value();
 			}
 
-			// submit the value to the field
 			// the field class might override this method
 			// to handle submitted values differently
 			$field->submit($value);
 		}
 
-		// reset the errors cache
 		return $this;
 	}
 
@@ -372,6 +370,8 @@ class Fields extends Collection
 	 * Converts the fields collection to an
 	 * array and also does that for every
 	 * included field.
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function toArray(Closure|null $map = null): array
 	{
@@ -383,6 +383,8 @@ class Fields extends Collection
 	 * (e.g. used as data for Panel Vue components)
 	 *
 	 * @since 5.0.0
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function toFormValues(): array
 	{
@@ -397,15 +399,16 @@ class Fields extends Collection
 	 * for the frontend
 	 *
 	 * @since 5.0.0
+	 *
+	 * @return array<string, array<string, mixed>>
 	 */
 	public function toProps(bool $defaults = false): array
 	{
-		$fields      = $this->data;
 		$props       = [];
 		$language    = $this->language();
 		$permissions = $this->model->guards()->isAvailable('update');
 
-		foreach ($fields as $name => $field) {
+		foreach ($this->data as $name => $field) {
 			$props[$name] = $field->toArray();
 
 			// the field should be disabled in the form if the user
@@ -423,7 +426,6 @@ class Fields extends Collection
 			// view props to make them globally available for the view.
 			unset($props[$name]['value']);
 
-			// include the default value if requested
 			if ($defaults === true) {
 				$props[$name]['default'] = $field->default();
 			}
@@ -437,12 +439,14 @@ class Fields extends Collection
 	 * (e.g. used for saving to content storage)
 	 *
 	 * @since 5.0.0
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function toStoredValues(): array
 	{
 		return $this->toValues(
 			fn ($field) => $field->toStoredValue(),
-			fn ($field) => $field->hasValue() ? $field->isStorable($this->language()) : false
+			fn ($field) => $field->hasValue() === true && $field->isStorable($this->language()) === true
 		);
 	}
 
@@ -450,6 +454,8 @@ class Fields extends Collection
 	 * Returns an array with the values of each field
 	 * and adds passthrough values if they don't exist
 	 * @unstable
+	 *
+	 * @return array<string, mixed>
 	 */
 	protected function toValues(Closure $method, Closure $filter): array
 	{
@@ -475,7 +481,7 @@ class Fields extends Collection
 	{
 		$errors = $this->errors();
 
-		if ($errors !==	[]) {
+		if ($errors !== []) {
 			throw new FormValidationException(
 				details: $errors
 			);
