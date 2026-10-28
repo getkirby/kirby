@@ -226,6 +226,7 @@ trait FileActions
 	 * writing, so it can be replaced by any other
 	 * way of generating files.
 	 *
+	 * @param array<string, mixed> $props
 	 * @param $move If set to `true`, the source will be deleted
 	 * @throws InvalidArgumentException
 	 * @throws LogicException
@@ -276,7 +277,7 @@ trait FileActions
 		// keep the initial storage class
 		$storage = $file->storage()::class;
 
-		// make sure that the temporary page is stored in memory
+		// make sure that the temporary file is stored in memory
 		$file->changeStorage(
 			toStorage: MemoryStorage::class,
 			// when there’s already an existing file,
@@ -295,12 +296,9 @@ trait FileActions
 			$file->createTranslations($props['translations'] ?? null)
 		);
 
-		// if the format is different from the original,
-		// we need to already rename it so that the correct file rules
-		// are applied
+		// resize/crop options from the blueprint for the upload
 		$create = $file->blueprint()->create();
 
-		// run the hook
 		return $file->commit(
 			action:    'create',
 			arguments: [
@@ -353,7 +351,7 @@ trait FileActions
 			callback:  function (File $file): bool {
 				$old = $file->clone();
 
-				// keep the content in iummtable memory storage
+				// keep the content in immutable memory storage
 				// to still have access to it in after hooks
 				$file->changeStorage(ImmutableMemoryStorage::class);
 
@@ -376,12 +374,18 @@ trait FileActions
 
 	/**
 	 * Resizes/crops the original file with Kirby's thumb handler
+	 *
+	 * @param array<string, mixed>|null $options
 	 */
 	#[BlockCollectionAccess]
 	public function manipulate(array|null $options = []): static
 	{
 		// nothing to process
-		if (empty($options) === true || $this->isResizable() === false) {
+		if (
+			$options === null ||
+			$options === [] ||
+			$this->isResizable() === false
+		) {
 			return $this;
 		}
 
@@ -402,6 +406,13 @@ trait FileActions
 		return $file;
 	}
 
+	/**
+	 * Removes props that must not be injected
+	 * and fills in the defaults for a new file
+	 *
+	 * @param array<string, mixed> $props
+	 * @return array<string, mixed>
+	 */
 	protected static function normalizeProps(array $props): array
 	{
 		// Prevent injecting blueprint as this always must be derived from
@@ -503,7 +514,7 @@ trait FileActions
 		// unpublish media files
 		Media::unpublish($this->parent()->mediaRoot(), $this);
 
-		if ($onlyMedia !== true) {
+		if ($onlyMedia === false) {
 			// clear UUID cache
 			$this->uuid()?->clear();
 		}
