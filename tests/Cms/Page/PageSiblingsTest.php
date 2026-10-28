@@ -155,12 +155,24 @@ class PageSiblingsTest extends ModelTestCase
 		$this->assertFalse($collection->last()->isFirst());
 	}
 
+	public function testIsFirstEmptyCollection(): void
+	{
+		$page = $this->site()->children()->first();
+		$this->assertFalse($page->isFirst(new Pages()));
+	}
+
 	public function testIsLast(): void
 	{
 		$collection = $this->site()->children();
 
 		$this->assertTrue($collection->last()->isLast());
 		$this->assertFalse($collection->first()->isLast());
+	}
+
+	public function testIsLastEmptyCollection(): void
+	{
+		$page = $this->site()->children()->first();
+		$this->assertFalse($page->isLast(new Pages()));
 	}
 
 	public function testIsNth(): void
