@@ -113,7 +113,7 @@ class PageGuards extends ModelGuards
 	 * @throws InvalidArgumentException If the given position is invalid
 	 * @throws PermissionException If the user is not allowed to change the status or the status for the page cannot be changed by any user
 	 */
-	protected function ensureToChangeStatusToListed(int $position): void
+	protected function ensureToChangeStatusToListed(int|null $position = null): void
 	{
 		// no need to check for status changing permissions,
 		// instead we need to check for sorting permissions

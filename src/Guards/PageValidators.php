@@ -58,7 +58,7 @@ class PageValidators extends ModelValidators
 	/**
 	 * Validates the input of the `changeStatusToListed` action
 	 */
-	protected function ensureToChangeStatusToListed(int $position): void
+	protected function ensureToChangeStatusToListed(int|null $position = null): void
 	{
 		$this->validateNum($position);
 	}

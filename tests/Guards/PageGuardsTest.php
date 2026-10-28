@@ -184,6 +184,15 @@ class PageGuardsTest extends ModelTestCase
 		$this->guards($page)->ensureExecutable('changeStatus', 'listed', 2);
 	}
 
+	public function testChangeStatusToListedWithoutPosition(): void
+	{
+		$guards = $this->guards();
+
+		$this->assertNull($guards->ensureExecutable('changeStatus', 'listed'));
+		$this->assertNull($guards->ensureExecutable('changeStatusToListed'));
+		$this->assertTrue($guards->isExecutable('changeStatus', 'listed'));
+	}
+
 	public function testChangeStatusToUnlisted(): void
 	{
 		$this->assertNull(
