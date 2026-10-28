@@ -20,6 +20,7 @@ class TextareaField extends StringField
 {
 	use Mixin\Counter;
 	use Mixin\Font;
+	use Mixin\Icon;
 	use Mixin\Upload;
 
 	/**

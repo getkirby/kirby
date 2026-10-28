@@ -129,6 +129,7 @@ class TextareaFieldTest extends TestCase
 			'font'        => 'sans-serif',
 			'help'        => null,
 			'hidden'      => false,
+			'icon'        => null,
 			'label'       => 'Textarea',
 			'maxlength'   => null,
 			'minlength'   => null,
