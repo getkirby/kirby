@@ -171,7 +171,7 @@ class Collection extends BaseCollection
 				$value = $this->getAttribute($item, $field);
 
 				// make sure that there's always a proper value to group by
-				if (!$value) {
+				if ($value === null || $value === false || $value === []) {
 					throw new InvalidArgumentException(
 						message: 'Invalid grouping value for key: ' . $key
 					);
