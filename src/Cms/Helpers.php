@@ -26,9 +26,6 @@ class Helpers
 	 * ```
 	 */
 	public static array $deprecations = [
-		// The internal `$model->contentFile*()` methods have been deprecated
-		'model-content-file' => true,
-
 		// Setting undefined permission categories or actions is deprecated
 		// and will be ignored in a future version. Custom permissions should
 		// be registered via the `permissions` extension instead.
@@ -37,14 +34,7 @@ class Helpers
 		// Passing an `info` array inside the `extends` array
 		// has been deprecated. Pass the individual entries (e.g. root, version)
 		// directly as named arguments.
-		'plugin-extends-root' => true,
-
-		// The `Content\Translation` class keeps a set of methods from the old
-		// `ContentTranslation` class for compatibility that should no longer be used.
-		// Some of them can be replaced by using `Version` class methods instead
-		// (see method comments). `Content\Translation::contentFile` should be avoided
-		//  entirely and has no recommended replacement.
-		'translation-methods' => true
+		'plugin-extends-root' => true
 	];
 
 	/**
