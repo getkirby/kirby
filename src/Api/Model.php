@@ -20,8 +20,15 @@ use Kirby\Toolkit\Str;
  */
 class Model
 {
+	/**
+	 * @var array<string, mixed>
+	 */
 	protected array $fields;
 	protected array|null $select;
+
+	/**
+	 * @var array<string, array>
+	 */
 	protected array $views;
 
 	/**
@@ -66,6 +73,8 @@ class Model
 	}
 
 	/**
+	 * @param $keys Comma-separated string or array of keys,
+	 *             `null` for all keys, `false` to keep the selection
 	 * @return $this
 	 * @throws Exception
 	 */
@@ -88,6 +97,7 @@ class Model
 	}
 
 	/**
+	 * @return array<string, array{view: string|null, select: array|null}>
 	 * @throws Exception
 	 */
 	public function selection(): array
@@ -130,6 +140,7 @@ class Model
 	}
 
 	/**
+	 * @return array<string, mixed>
 	 * @throws NotFoundException
 	 * @throws Exception
 	 */
@@ -158,12 +169,12 @@ class Model
 			) {
 				$selection = $select[$key];
 
-				if ($subview = $selection['view']) {
-					$value->view($subview);
+				if ($selection['view']) {
+					$value->view($selection['view']);
 				}
 
-				if ($subselect = $selection['select']) {
-					$value->select($subselect);
+				if ($selection['select']) {
+					$value->select($selection['select']);
 				}
 
 				$value = $value->toArray();
@@ -178,6 +189,7 @@ class Model
 	}
 
 	/**
+	 * @return array<string, mixed>
 	 * @throws NotFoundException
 	 * @throws Exception
 	 */
