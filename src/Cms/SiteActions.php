@@ -49,16 +49,14 @@ trait SiteActions
 	): static {
 		$language = Language::ensure($languageCode ?? 'current');
 
-		$arguments = [
-			'site'         => $this,
-			'title'        => trim($title),
-			'languageCode' => $languageCode,
-			'language'     => $language
-		];
-
 		return $this->commit(
 			action:    'changeTitle',
-			arguments: $arguments,
+			arguments: [
+				'site'         => $this,
+				'title'        => trim($title),
+				'languageCode' => $languageCode,
+				'language'     => $language
+			],
 			callback:  function (
 				Site $site,
 				string $title,
@@ -78,6 +76,8 @@ trait SiteActions
 
 	/**
 	 * Creates a main page
+	 *
+	 * @param array<string, mixed> $props
 	 */
 	#[BlockCollectionAccess]
 	public function createChild(array $props): Page
