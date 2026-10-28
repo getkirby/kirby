@@ -2,6 +2,7 @@
 
 namespace Kirby\Form\Field;
 
+use Closure;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Reflection\Attributes\Prop;
 use Kirby\Toolkit\Str;
@@ -23,6 +24,11 @@ class LinkField extends InputField
 	protected array $options = ['url', 'page', 'file', 'email', 'tel', 'anchor'];
 	protected string $value = '';
 
+	/**
+	 * Returns the setup of all link types that can be selected
+	 *
+	 * @return array<string, array{detect: Closure, link: Closure, validate: Closure}>
+	 */
 	public function activeTypes(): array
 	{
 		return array_filter(
@@ -32,6 +38,12 @@ class LinkField extends InputField
 		);
 	}
 
+	/**
+	 * Returns the setup of all supported link types, each with
+	 * a callback to detect, create and validate the link
+	 *
+	 * @return array<string, array{detect: Closure, link: Closure, validate: Closure}>
+	 */
 	public function availableTypes(): array
 	{
 		return [
@@ -117,12 +129,16 @@ class LinkField extends InputField
 		];
 	}
 
+	/**
+	 * @return array<string>
+	 * @throws InvalidArgumentException If a link type is not supported
+	 */
 	public function options(): array
 	{
-		// validate options
-		$available = array_keys($this->availableTypes());
+		$available   = array_keys($this->availableTypes());
+		$unavailable = array_diff($this->options, $available);
 
-		if ($unavailable = array_diff($this->options, $available)) {
+		if ($unavailable !== []) {
 			throw new InvalidArgumentException(
 				key: 'field.link.options',
 				data: ['options' => implode(', ', $unavailable)]
