@@ -233,6 +233,8 @@ trait UserActions
 
 	/**
 	 * Creates a new User from the given props and returns a new User object
+	 *
+	 * @param array<string, mixed> $props
 	 */
 	#[BlockCollectionAccess]
 	public static function create(array $props): User
@@ -286,7 +288,6 @@ trait UserActions
 				$user->writePassword($user->password());
 				$user->changeStorage($storage);
 
-				// write the user data
 				return $user;
 			}
 		);
@@ -361,7 +362,7 @@ trait UserActions
 			callback:  function (User $user): bool {
 				$old = $user->clone();
 
-				// keep the content in iummtable memory storage
+				// keep the content in immutable memory storage
 				// to still have access to it in after hooks
 				$user->changeStorage(ImmutableMemoryStorage::class);
 
@@ -399,6 +400,13 @@ trait UserActions
 		);
 	}
 
+	/**
+	 * Removes props that must not be injected
+	 * and fills in the defaults for a new user
+	 *
+	 * @param array<string, mixed> $props
+	 * @return array<string, mixed>
+	 */
 	protected static function normalizeProps(array $props): array
 	{
 		// Prevent injecting blueprint as this always must be derived from
@@ -427,18 +435,20 @@ trait UserActions
 
 	/**
 	 * Read the account information from disk
+	 *
+	 * @return array<string, mixed>
 	 */
 	protected function readCredentials(): array
 	{
 		$path = $this->root() . '/index.php';
 
-		if (is_file($path) === true) {
-			$credentials = F::load($path, allowOutput: false);
-
-			return is_array($credentials) === false ? [] : $credentials;
+		if (is_file($path) === false) {
+			return [];
 		}
 
-		return [];
+		$credentials = F::load($path, allowOutput: false);
+
+		return is_array($credentials) === true ? $credentials : [];
 	}
 
 	/**
@@ -452,6 +462,8 @@ trait UserActions
 	/**
 	 * Reads the secrets from the user secrets file on disk
 	 * @since 4.0.0
+	 *
+	 * @return array<string, mixed>
 	 */
 	protected function readSecrets(): array
 	{
@@ -559,6 +571,8 @@ trait UserActions
 	/**
 	 * This always merges the existing credentials
 	 * with the given input.
+	 *
+	 * @param array<string, mixed> $credentials
 	 */
 	protected function updateCredentials(array $credentials): bool
 	{
@@ -575,6 +589,8 @@ trait UserActions
 
 	/**
 	 * Writes the account information to disk
+	 *
+	 * @param array<string, mixed> $credentials
 	 */
 	protected function writeCredentials(array $credentials): bool
 	{
@@ -610,17 +626,17 @@ trait UserActions
 		}
 
 		// first line is always the password
-		$lines = $secrets['password'] ?? '';
+		$content = $secrets['password'] ?? '';
 
 		// everything else is for the second line
-		$secondLine = Json::encode(
+		$json = Json::encode(
 			A::without($secrets, 'password')
 		);
 
-		if ($secondLine !== '[]') {
-			$lines .= "\n" . $secondLine;
+		if ($json !== '[]') {
+			$content .= "\n" . $json;
 		}
 
-		return F::write($this->secretsFile(), $lines);
+		return F::write($this->secretsFile(), $content);
 	}
 }
