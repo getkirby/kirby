@@ -65,11 +65,11 @@ readonly class Upload
 			Str::toBytes(ini_get('upload_max_filesize'))
 		];
 
-		$postMaxSize = Str::toBytes(ini_get('post_max_size'));
+		$post = Str::toBytes(ini_get('post_max_size'));
 
 		// in PHP, post_max_size=0 means "no limit", so it must not be treated
-		if ($postMaxSize > 0) {
-			$max[] = $postMaxSize;
+		if ($post > 0) {
+			$max[] = $post;
 		}
 
 		// consider cloudflare proxy limit, if detected
@@ -86,7 +86,9 @@ readonly class Upload
 	 */
 	public static function cleanTmpDir(): void
 	{
-		foreach (Dir::files($dir = static::tmpDir(), [], true) as $file) {
+		$dir = static::tmpDir();
+
+		foreach (Dir::files($dir, [], true) as $file) {
 			// remove any file that hasn't been altered
 			// in the last 24 hours
 			if (F::modified($file) < time() - 86400) {
@@ -103,33 +105,35 @@ readonly class Upload
 	/**
 	 * Throws an exception with the appropriate translated error message
 	 *
+	 * @param $error One of the `UPLOAD_ERR_*` constants
 	 * @throws Exception Any upload error
 	 */
 	public static function error(int $error): never
 	{
-		// get error messages from translation
-		$message = [
+		$message = match ($error) {
 			UPLOAD_ERR_INI_SIZE   => I18n::translate('upload.error.iniSize'),
 			UPLOAD_ERR_FORM_SIZE  => I18n::translate('upload.error.formSize'),
 			UPLOAD_ERR_PARTIAL    => I18n::translate('upload.error.partial'),
 			UPLOAD_ERR_NO_FILE    => I18n::translate('upload.error.noFile'),
 			UPLOAD_ERR_NO_TMP_DIR => I18n::translate('upload.error.tmpDir'),
 			UPLOAD_ERR_CANT_WRITE => I18n::translate('upload.error.cantWrite'),
-			UPLOAD_ERR_EXTENSION  => I18n::translate('upload.error.extension')
-		];
+			UPLOAD_ERR_EXTENSION  => I18n::translate('upload.error.extension'),
+			default               => null
+		};
 
 		throw new Exception(
-			message: $message[$error] ?? I18n::translate('upload.error.default', 'The file could not be uploaded')
+			message: $message ?? I18n::translate('upload.error.default', 'The file could not be uploaded')
 		);
 	}
 
 	/**
 	 * Sanitize the filename and extension
 	 * based on the detected mime type
+	 *
+	 * @param array{name: string, tmp_name: string} $upload Entry of the `$_FILES` array
 	 */
 	public static function filename(array $upload): string
 	{
-		// get the extension of the uploaded file
 		$extension = F::extension($upload['name']);
 
 		// try to detect the correct mime and add the extension
@@ -140,17 +144,17 @@ readonly class Upload
 		) {
 			$mime      = F::mime($upload['tmp_name']);
 			$extension = F::mimeToExtension($mime);
-			$filename  = F::name($upload['name']) . '.' . $extension;
-			return $filename;
+			return F::name($upload['name']) . '.' . $extension;
 		}
 
 		return basename($upload['name']);
 	}
 
 	/**
-	 * Upload the files and call closure for each file
+	 * Upload the files and call closure for each file;
+	 * errors of the individual files are part of the response
 	 *
-	 * @throws Exception Any upload error
+	 * @throws Exception If the request has no files
 	 */
 	public function process(Closure $callback): array
 	{
@@ -226,16 +230,19 @@ readonly class Upload
 	 * $source path to the tmp file once complete
 	 *
 	 * @throws DuplicateException Duplicate first chunk (same filename and id)
-	 * @throws \Kirby\Exception\Exception Chunk offset does not match existing tmp file
 	 * @throws InvalidArgumentException Too short ID string
-	 * @throws NotFoundException Subsequent chunk has no  existing tmp file
+	 * @throws InvalidArgumentException Chunk offset does not match existing tmp file
+	 * @throws InvalidArgumentException The maximum file size for this blueprint was exceeded
+	 * @throws InvalidArgumentException Template or total length changed between chunks
+	 * @throws NotFoundException Subsequent chunk has no existing tmp file
 	 */
 	public function processChunk(
 		string $source,
 		string $filename
 	): string|null {
 		// ensure the tmp upload directory exists
-		Dir::make($dir = static::tmpDir());
+		$dir = static::tmpDir();
+		Dir::make($dir);
 
 		// create path for file in tmp upload directory;
 		// prefix with id while file isn't completely uploaded yet
@@ -301,16 +308,18 @@ readonly class Upload
 		// source path for the file back to the API upload method
 		F::remove($metaRoot);
 
-		rename(
-			$tmpRoot,
-			$source = $dir . '/' . $filename
-		);
+		$source = $dir . '/' . $filename;
+		rename($tmpRoot, $source);
 
 		return $source;
 	}
 
 	/**
 	 * Convert uploads and errors in response array for API response
+	 *
+	 * @param array<array-key, mixed> $uploads Callback results by filename
+	 * @param array<array-key, string> $errors Error messages by filename
+	 * @return array<string, mixed>
 	 */
 	public static function response(
 		array $uploads,
@@ -326,7 +335,7 @@ readonly class Upload
 
 			return [
 				'status' => 'ok',
-				'data'   => $uploads ? current($uploads) : null
+				'data'   => $uploads !== [] ? current($uploads) : null
 			];
 		}
 
@@ -357,7 +366,7 @@ readonly class Upload
 
 		$target = dirname($source) . '/' . uniqid() . '.' . $filename;
 
-		if (move_uploaded_file($source, $target)) {
+		if (move_uploaded_file($source, $target) === true) {
 			return $target;
 		}
 
@@ -383,7 +392,7 @@ readonly class Upload
 	 * @throws InvalidArgumentException Chunk offset does not match existing tmp file
 	 * @throws InvalidArgumentException The maximum file size for this blueprint was exceeded
 	 * @throws InvalidArgumentException Template or total length changed between chunks
-	 * @throws NotFoundException Subsequent chunk has no  existing tmp file
+	 * @throws NotFoundException Subsequent chunk has no existing tmp file
 	 */
 	protected static function validateChunk(
 		string $source,
@@ -393,9 +402,10 @@ readonly class Upload
 		int $offset,
 		string|null $template = null
 	): void {
-		$file = new File([
+		$filename = basename($tmp);
+		$file     = new File([
 			'parent'   => new Page(['slug' => 'tmp']),
-			'filename' => $filename = basename($tmp),
+			'filename' => $filename,
 			'template' => $template
 		]);
 
@@ -403,8 +413,10 @@ readonly class Upload
 		// ensure that the total size communicated in the header
 		// as well as the current tmp size after adding this chunk
 		// do not exceed the max limit
+		$max = $file->blueprint()->accept()['maxsize'] ?? null;
+
 		if (
-			($max = $file->blueprint()->accept()['maxsize'] ?? null) &&
+			$max &&
 			(
 				$total > $max ||
 				(F::size($source) + F::size($tmp)) > $max
@@ -426,7 +438,7 @@ readonly class Upload
 			}
 
 			// validate file (extension, name) for first chunk;
-			// will also be validate again by `$model->createFile()`
+			// will also be validated again by `$model->createFile()`
 			// when completely uploaded
 			$file->guards()->validators()->validateFile(false);
 
@@ -476,13 +488,13 @@ readonly class Upload
 	protected static function validateFiles(array $files): void
 	{
 		if ($files === []) {
-			$postMaxSize       = Str::toBytes(ini_get('post_max_size'));
-			$uploadMaxFileSize = Str::toBytes(ini_get('upload_max_filesize'));
+			$post   = Str::toBytes(ini_get('post_max_size'));
+			$upload = Str::toBytes(ini_get('upload_max_filesize'));
 
 			// in PHP, post_max_size=0 means "no limit", so it must not be treated
 			// as smaller than upload_max_filesize.
 			// @codeCoverageIgnoreStart
-			if ($postMaxSize > 0 && $postMaxSize < $uploadMaxFileSize) {
+			if ($post > 0 && $post < $upload) {
 				throw new Exception(
 					message: I18n::translate(
 						'upload.error.iniPostSize',
