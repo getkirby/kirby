@@ -105,8 +105,8 @@ abstract class ModelPermissions
 	}
 
 	/**
-	 * Resolves the permission rule for the current user.
-	 * Returns null if no rule is defined for the action.
+	 * Resolves the permission rule for the user of the guards.
+	 * Returns `$default` if no rule is defined for the action.
 	 */
 	public function setting(string $action, bool|null $default = null): bool|null
 	{
