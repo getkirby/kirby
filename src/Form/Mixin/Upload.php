@@ -93,6 +93,12 @@ trait Upload
 		);
 	}
 
+	/**
+	 * Returns the normalized upload options
+	 * or `false` if uploads are disabled
+	 *
+	 * @return array<string, mixed>|false
+	 */
 	public function uploads(): array|false
 	{
 		$uploads = $this->uploads;
@@ -107,7 +113,6 @@ trait Upload
 			default             => []
 		};
 
-		// add defaults
 		$uploads = [
 			'accept'   => '*',
 			'parent'   => null,
@@ -120,7 +125,6 @@ trait Upload
 		}
 
 		if ($template = $uploads['template']) {
-			// get parent object for upload target
 			$parent = $this->uploadParent($uploads['parent']);
 
 			$file = new File([
