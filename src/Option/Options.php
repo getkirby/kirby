@@ -65,6 +65,14 @@ class Options extends Collection
 		return $collection;
 	}
 
+	/**
+	 * Renders all options
+	 *
+	 * @param $safeMode Whether to escape special HTML characters in
+	 *                 the option text for safe output in the Panel;
+	 *                 only set to `false` if the text is later escaped!
+	 * @return list<array>
+	 */
 	public function render(ModelWithContent $model, bool $safeMode = true): array
 	{
 		$options = [];
