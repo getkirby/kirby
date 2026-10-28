@@ -48,6 +48,8 @@ abstract class ModelWithContent extends Model implements Identifiable
 	/**
 	 * Cached array of valid blueprints
 	 * that could be used for the model
+	 *
+	 * @var list<array<string, mixed>>|null
 	 */
 	public array|null $blueprints = null;
 
@@ -57,7 +59,7 @@ abstract class ModelWithContent extends Model implements Identifiable
 	protected Storage|null $storage = null;
 
 	/**
-	 * Store values used to initilaize object
+	 * Store values used to initialize object
 	 */
 	protected array $propertyData = [];
 
@@ -83,10 +85,11 @@ abstract class ModelWithContent extends Model implements Identifiable
 
 	/**
 	 * Returns an array with all blueprints that are available
+	 *
+	 * @return list<array<string, mixed>>
 	 */
 	public function blueprints(string|null $inField = null): array
 	{
-		// helper function
 		$toBlueprints = static function (iterable $fields): array {
 			$blueprints = [];
 
@@ -173,7 +176,7 @@ abstract class ModelWithContent extends Model implements Identifiable
 	/**
 	 * Returns the content
 	 *
-	 * @throws InvalidArgumentException If the language for the given code does not exist
+	 * @throws NotFoundException If the language for the given code does not exist
 	 */
 	public function content(string|null $languageCode = null): Content
 	{
@@ -193,6 +196,9 @@ abstract class ModelWithContent extends Model implements Identifiable
 	 * Prepares the content that should be written
 	 * to the text file
 	 * @unstable
+	 *
+	 * @param array<string, mixed> $data
+	 * @return array<string, mixed>
 	 */
 	public function contentFileData(
 		array $data,
@@ -320,6 +326,9 @@ abstract class ModelWithContent extends Model implements Identifiable
 	 * converting all of them to their storable values
 	 *
 	 * @since 5.6.0
+	 *
+	 * @param array<string, mixed> $content
+	 * @return array<string, mixed>
 	 */
 	public function createContent(array $content = []): array
 	{
@@ -395,7 +404,7 @@ abstract class ModelWithContent extends Model implements Identifiable
 	{
 		$clone = $this->clone();
 
-		foreach (get_object_vars($clone) as $name => $default) {
+		foreach (array_keys(get_object_vars($clone)) as $name) {
 			if (method_exists($clone, $name) === true) {
 				$clone->$name();
 			}
@@ -478,6 +487,8 @@ abstract class ModelWithContent extends Model implements Identifiable
 
 	/**
 	 * Creates a string query, starting from the model
+	 *
+	 * @param class-string|null $expect Class the result must be an instance of
 	 */
 	public function query(
 		string|null $query = null,
@@ -673,14 +684,12 @@ abstract class ModelWithContent extends Model implements Identifiable
 			throw new InvalidArgumentException(message: 'Invalid toString handler'); // @codeCoverageIgnore
 		}
 
-		$result = Str::$handler($template, array_replace([
+		return Str::$handler($template, array_replace([
 			'kirby'             => $this->kirby(),
 			'site'              => $this instanceof Site ? $this : $this->site(),
 			'model'             => $this,
 			static::CLASS_ALIAS => $this,
 		], $data), ['fallback' => $fallback]);
-
-		return $result;
 	}
 
 	/**
@@ -724,6 +733,7 @@ abstract class ModelWithContent extends Model implements Identifiable
 	/**
 	 * Updates the model data
 	 *
+	 * @param array<string, mixed>|null $input
 	 * @throws InvalidArgumentException If the input array contains invalid values
 	 */
 	#[BlockCollectionAccess]
