@@ -236,10 +236,12 @@ class LayoutField extends BlocksField
 						unset($column['blocks'][$index]);
 					}
 				});
+
+				$column['blocks'] = array_values($column['blocks']);
 			});
 		}
 
-		return $layouts;
+		return array_values($layouts);
 	}
 
 	public function props(): array
