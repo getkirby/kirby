@@ -17,6 +17,8 @@ abstract class OptionsProvider
 
 	/**
 	 * Returns options as array
+	 *
+	 * @return list<array>
 	 */
 	public function render(ModelWithContent $model)
 	{
