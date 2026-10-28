@@ -193,7 +193,6 @@ class PageValidators extends ModelValidators
 
 		$this->validateSlugProtectedPaths(slug: $this->model->slug(), parent: $parent);
 
-		// check for duplicates
 		if ($parent->childrenAndDrafts()->find($this->model->slug()) !== null) {
 			throw new DuplicateException(
 				key: 'page.move.duplicate',
@@ -215,7 +214,7 @@ class PageValidators extends ModelValidators
 		// collect all allowed subpage templates from all page list
 		// fields in the blueprint (only consider fields that list
 		// pages of the targeted new parent page)
-		$hasPageList = false;
+		$found = false;
 
 		foreach (Fields::for($parent) as $field) {
 			if (
@@ -225,25 +224,21 @@ class PageValidators extends ModelValidators
 				continue;
 			}
 
-			$hasPageList = true;
+			$found = true;
 
-			// go through all allowed templates and
-			// add the name to the allowlist
 			foreach ($field->templates() as $template) {
 				$allowed[] = $template;
 			}
 		}
 
-		// check if the parent has at least one page list field
-		if ($hasPageList === false) {
+		if ($found === false) {
 			throw new LogicException(
 				key: 'page.move.noBlueprints',
 				data: ['parent' => $parent->id() ?? '/']
 			);
 		}
 
-		// check if the template of this page is allowed as subpage type
-		// for the potential new parent
+		// an empty allowlist accepts every template
 		if (
 			$allowed !== [] &&
 			in_array($this->model->intendedTemplate()->name(), $allowed, true) === false
@@ -290,18 +285,18 @@ class PageValidators extends ModelValidators
 	 */
 	public function validateSlugLength(string $slug): void
 	{
-		$slugLength = Str::length($slug);
+		$length = Str::length($slug);
 
-		if ($slugLength === 0) {
+		if ($length === 0) {
 			$this->error(
 				key: 'page.slug.invalid'
 			);
 		}
 
-		if ($slugsMaxlength = App::instance()->option('slugs.maxlength', 255)) {
-			$maxlength = (int)$slugsMaxlength;
+		if ($maxlength = App::instance()->option('slugs.maxlength', 255)) {
+			$maxlength = (int)$maxlength;
 
-			if ($slugLength > $maxlength) {
+			if ($length > $maxlength) {
 				$this->error(
 					key: 'page.slug.maxlength',
 					data: ['length' => $maxlength]
