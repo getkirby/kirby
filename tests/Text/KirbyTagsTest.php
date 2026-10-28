@@ -206,6 +206,14 @@ class KirbyTagsTest extends TestCase
 		$this->assertSame('(test: foo (bar)', KirbyTags::parse('(test: foo (bar)'));
 	}
 
+	public function testParseWithRegexError(): void
+	{
+		// deep nesting exhausts the PCRE recursion/JIT stack limit
+		$text = str_repeat('(test:', 50000) . str_repeat(')', 50000);
+
+		$this->assertSame($text, KirbyTags::parse($text));
+	}
+
 	#[DataProvider('dataProvider')]
 	public function testWithMarkdown(
 		string $kirbytext,
