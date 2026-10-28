@@ -19,6 +19,20 @@ class TagsFieldTest extends TestCase
 		$this->assertSame(['a', 'b', 'c'], $field->default());
 	}
 
+	public function testDefaultWithString(): void
+	{
+		$field = $this->field('tags', [
+			'default' => 'design, architecture'
+		]);
+		$this->assertSame(['design', 'architecture'], $field->default());
+
+		$field = $this->field('multiselect', [
+			'default'   => 'a; b',
+			'separator' => ';'
+		]);
+		$this->assertSame(['a', 'b'], $field->default());
+	}
+
 	public function testIsValid(): void
 	{
 		$field = $this->field('tags', [
