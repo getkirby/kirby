@@ -6,7 +6,6 @@ use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Exception\PermissionException;
 use Kirby\Form\Fields;
-use Kirby\Form\Form;
 
 /**
  * The Changes controller takes care of the request logic
@@ -19,6 +18,8 @@ class Changes
 {
 	/**
 	 * Discards unsaved changes by deleting the changes version
+	 *
+	 * @return array<string, mixed>
 	 */
 	public static function discard(ModelWithContent $model): array
 	{
@@ -36,7 +37,9 @@ class Changes
 	}
 
 	/**
-	 * Saves the lastest state of changes first and then publishes them
+	 * Saves the latest state of changes first and then publishes them
+	 *
+	 * @return array<string, mixed>
 	 */
 	public static function publish(ModelWithContent $model, array $input): array
 	{
@@ -46,26 +49,19 @@ class Changes
 			);
 		}
 
-		// save the given changes first
 		static::save(
 			model: $model,
 			input: $input
 		);
 
-		// get the changes version
 		$changes = $model->version('changes');
 
-		// if the changes version does not exist, we need to return early
-		if ($changes->exists('current') === false) {
-			return [
-				'status' => 'ok',
-			];
+		// saving identical content already deleted the changes version
+		if ($changes->exists('current') === true) {
+			$changes->publish(
+				language: 'current'
+			);
 		}
-
-		// publish the changes
-		$changes->publish(
-			language: 'current'
-		);
 
 		return [
 			'status' => 'ok'
@@ -74,6 +70,8 @@ class Changes
 
 	/**
 	 * Saves form input in a new or existing `changes` version
+	 *
+	 * @return array<string, mixed>
 	 */
 	public static function save(ModelWithContent $model, array $input): array
 	{
@@ -83,15 +81,10 @@ class Changes
 			);
 		}
 
-		// get the current language
 		$language = Language::ensure('current');
-
-		// create the fields instance for the model
-		$fields = Fields::for($model, $language);
-
-		// get the changes and latest version for the model
-		$changes = $model->version('changes');
-		$latest  = $model->version('latest');
+		$fields   = Fields::for($model, $language);
+		$changes  = $model->version('changes');
+		$latest   = $model->version('latest');
 
 		// read the raw fields to find out whether the changes version really
 		// holds content. `Version::content()` would not tell us: for a
@@ -111,10 +104,8 @@ class Changes
 		// defined as fields, such as uuid, title or similar.
 		$fields->fill(input: $content);
 
-		// submit the new values from the request input
 		$fields->submit(input: $input);
 
-		// save the changes
 		$changes->save(
 			fields:   $fields->toStoredValues(),
 			language: $language
@@ -122,7 +113,7 @@ class Changes
 
 		// if the changes are identical to the latest version,
 		// we can delete the changes version already at this point
-		if ($changes->isIdentical(version: $latest, language: $language)) {
+		if ($changes->isIdentical(version: $latest, language: $language) === true) {
 			$changes->delete(
 				language: $language
 			);
@@ -135,6 +126,8 @@ class Changes
 
 	/**
 	 * Releases the content lock without discarding changes
+	 *
+	 * @return array<string, mixed>
 	 */
 	public static function unlock(ModelWithContent $model): array
 	{
