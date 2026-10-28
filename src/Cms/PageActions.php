@@ -276,13 +276,11 @@ trait PageActions
 				'status'   => 'listed',
 				'position' => $num
 			],
-			callback: function (
+			callback: fn (
 				Page $page,
 				string $status,
 				int|null $position
-			): Page {
-				return $page->publish()->changeNum($position);
-			}
+			): Page => $page->publish()->changeNum($position)
 		);
 
 		if ($this->blueprint()->num() === 'default') {
@@ -308,9 +306,7 @@ trait PageActions
 				'status'   => 'unlisted',
 				'position' => null
 			],
-			callback: function (Page $page): Page {
-				return $page->publish()->changeNum(null);
-			}
+			callback: fn (Page $page): Page => $page->publish()->changeNum(null)
 		);
 
 		$this->resortSiblingsAfterUnlisting();
@@ -335,7 +331,7 @@ trait PageActions
 	 * Changes the page template
 	 *
 	 * @return $this|static
-	 * @throws LogicException If the textfile cannot be renamed/moved
+	 * @throws LogicException If the content is locked
 	 */
 	#[BlockCollectionAccess]
 	public function changeTemplate(string $template): static
@@ -347,10 +343,8 @@ trait PageActions
 		return $this->commit(
 			action:    'changeTemplate',
 			arguments: ['page' => $this, 'template' => $template],
-			callback:  function (Page $oldPage, string $template): Page {
-				// convert for new template/blueprint
-				return $oldPage->convertTo($template);
-			}
+			callback:  fn (Page $oldPage, string $template): Page =>
+				$oldPage->convertTo($template)
 		);
 	}
 
@@ -420,6 +414,7 @@ trait PageActions
 	 * (e.g. permissions) before calling it.
 	 * @internal
 	 *
+	 * @param array{slug?: string, isDraft?: bool, parent?: Page|null, num?: int|null, children?: bool, files?: bool} $options
 	 * @throws DuplicateException If the page already exists
 	 */
 	#[BlockCollectionAccess]
@@ -496,6 +491,8 @@ trait PageActions
 
 	/**
 	 * Creates and stores a new page
+	 *
+	 * @param array<string, mixed> $props
 	 */
 	#[BlockCollectionAccess]
 	public static function create(array $props): Page
@@ -567,6 +564,8 @@ trait PageActions
 
 	/**
 	 * Creates a child of the current page
+	 *
+	 * @param array<string, mixed> $props
 	 */
 	#[BlockCollectionAccess]
 	public function createChild(array $props): Page
@@ -610,7 +609,6 @@ trait PageActions
 				$date   = $field->isEmpty() ? 'now' : $field;
 				return (int)date($format, strtotime($date));
 			case 'default':
-
 				$max = $this
 					->parentModel()
 					->children()
@@ -707,6 +705,8 @@ trait PageActions
 	/**
 	 * Duplicates the page with the given
 	 * slug and optionally copies all files
+	 *
+	 * @param array{children?: bool, files?: bool, title?: string} $options
 	 */
 	#[BlockCollectionAccess]
 	public function duplicate(
@@ -802,6 +802,13 @@ trait PageActions
 		);
 	}
 
+	/**
+	 * Removes props that must not be injected
+	 * and fills in the defaults for a new page
+	 *
+	 * @param array<string, mixed> $props
+	 * @return array<string, mixed>
+	 */
 	protected static function normalizeProps(array $props): array
 	{
 		unset(
