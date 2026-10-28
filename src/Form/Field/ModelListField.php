@@ -36,7 +36,7 @@ abstract class ModelListField extends DisplayField
 	use Mixin\SortBy;
 
 	/**
-	 * Names the entries in the error messages
+	 * Type of the listed models, e.g. `files` or `pages`
 	 */
 	public const string|null TYPE = null;
 
@@ -47,7 +47,15 @@ abstract class ModelListField extends DisplayField
 	 */
 	#[Prop(computed: true, getter: 'defineColumns')]
 	protected array|null $columns = null;
+
+	/**
+	 * @var array<string, array<string, mixed>>|null
+	 */
 	protected array|null $columnsCache = null;
+
+	/**
+	 * @var list<string>|null
+	 */
 	protected array|null $columnFieldsCache = null;
 
 	/**
@@ -158,6 +166,8 @@ abstract class ModelListField extends DisplayField
 	/**
 	 * Column definitions for `layout: table`, with the type of
 	 * each column resolved from the blueprint of the entries
+	 *
+	 * @return array<string, array<string, mixed>>
 	 */
 	public function columns(): array
 	{
@@ -185,6 +195,8 @@ abstract class ModelListField extends DisplayField
 	/**
 	 * Blueprint field names behind all columns that read their
 	 * value from the model instead of from their own query
+	 *
+	 * @return list<string>
 	 */
 	protected function columnFields(): array
 	{
@@ -218,6 +230,7 @@ abstract class ModelListField extends DisplayField
 	 * the number of columns.
 	 *
 	 * @param TModel $model
+	 * @return array<string, mixed>
 	 */
 	protected function columnValues(ModelWithContent $model): array
 	{
@@ -237,6 +250,8 @@ abstract class ModelListField extends DisplayField
 
 	/**
 	 * The props for all entries of the current page
+	 *
+	 * @return list<array<string, mixed>>
 	 */
 	public function data(): array
 	{
@@ -255,6 +270,8 @@ abstract class ModelListField extends DisplayField
 	 * Builds the column definitions for `layout: table`.
 	 * Subclasses extend this instead of `columns()`,
 	 * so that the cache holds the final set.
+	 *
+	 * @return array<string, array<string, mixed>>
 	 */
 	protected function defineColumns(): array
 	{
@@ -376,6 +393,9 @@ abstract class ModelListField extends DisplayField
 		return $this->flip;
 	}
 
+	/**
+	 * @return array<string, mixed>|false
+	 */
 	public function image(): array|false
 	{
 		if (is_string($this->image) === true) {
@@ -399,6 +419,9 @@ abstract class ModelListField extends DisplayField
 		return $this->total() >= $this->max;
 	}
 
+	/**
+	 * @return 'cardlets'|'cards'|'list'|'table'
+	 */
 	public function layout(): string
 	{
 		return match ($this->layout) {
@@ -443,6 +466,9 @@ abstract class ModelListField extends DisplayField
 		return $this->kirby()->request()->get('page', $this->page);
 	}
 
+	/**
+	 * @return array{limit: int, offset: int, page: int, total: int}
+	 */
 	public function pagination(): array
 	{
 		$pagination = $this->collector()->pagination();
@@ -456,7 +482,7 @@ abstract class ModelListField extends DisplayField
 	}
 
 	/**
-	 * @throws InvalidArgumentException
+	 * @throws InvalidArgumentException If the parent cannot be found or is no model
 	 */
 	public function parentModel(): ModelWithContent
 	{
@@ -498,6 +524,7 @@ abstract class ModelListField extends DisplayField
 	 * The props for a single entry in `layout: table`
 	 *
 	 * @param TModel $model
+	 * @return array<string, mixed>
 	 */
 	protected function row(ModelWithContent $model): array
 	{
