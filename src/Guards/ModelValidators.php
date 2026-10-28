@@ -45,8 +45,8 @@ abstract class ModelValidators
 	}
 
 	/**
-	 * Throws for a failed validation. Can be overridden by child
-	 * classes to prefix the key or add model-specific data.
+	 * Throws for a failed validation. The key is never prefixed,
+	 * as validators also check other models, e.g. user avatars.
 	 *
 	 * @throws InvalidArgumentException
 	 */

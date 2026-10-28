@@ -78,6 +78,9 @@ abstract class ModelPermissions
 	}
 
 	/**
+	 * Throws for a missing permission. The key is the action;
+	 * child classes turn it into e.g. `page.delete.permission`.
+	 *
 	 * @throws PermissionException
 	 */
 	public function error(string $key, array $data = []): never

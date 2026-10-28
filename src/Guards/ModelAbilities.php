@@ -38,6 +38,9 @@ abstract class ModelAbilities
 	}
 
 	/**
+	 * Throws for a failed ability. Child classes prefix
+	 * the key with the model type, e.g. `page.delete.homePage`.
+	 *
 	 * @param $details Additional context for the failure,
 	 *                e.g. the field errors of an incomplete page
 	 * @throws AbilityException
