@@ -15,20 +15,20 @@ class LanguageRoutes
 {
 	/**
 	 * Creates all multi-language routes
+	 *
+	 * @return list<array<string, mixed>>
 	 */
 	public static function create(App $kirby): array
 	{
-		$routes = [];
-
-		// add the route for the home page
-		$routes[] = static::home($kirby);
+		// start with the route for the home page
+		$routes = [static::home($kirby)];
 
 		// Kirby's base url
 		$baseurl = $kirby->url();
 
 		foreach ($kirby->languages() as $language) {
 			// ignore languages with a different base url
-			if ($language->baseurl() !== $baseurl) {
+			if ($language->baseUrl() !== $baseurl) {
 				continue;
 			}
 
@@ -75,6 +75,8 @@ class LanguageRoutes
 	/**
 	 * Create the fallback route
 	 * for unprefixed default language URLs.
+	 *
+	 * @return array<string, mixed>
 	 */
 	public static function fallback(App $kirby): array
 	{
@@ -98,8 +100,8 @@ class LanguageRoutes
 					]);
 
 					if ($url->toString() !== $page->url()) {
-						// redirect to translated page directly if translation
-						// is exists and languages detect is enabled
+						// redirect to the translated page directly if the
+						// translation exists and language detection is enabled
 						$lang = $kirby->detectedLanguage()->code();
 
 						if (
@@ -124,10 +126,11 @@ class LanguageRoutes
 
 	/**
 	 * Create the multi-language home page route
+	 *
+	 * @return array<string, mixed>
 	 */
 	public static function home(App $kirby): array
 	{
-		// Multi-language home
 		return [
 			'pattern' => '',
 			'method'  => 'ALL',
