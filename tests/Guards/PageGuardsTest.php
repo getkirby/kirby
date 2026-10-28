@@ -353,6 +353,15 @@ class PageGuardsTest extends ModelTestCase
 		);
 	}
 
+	public function testMoveToSameParentWithTopLevelPage(): void
+	{
+		$this->movable();
+
+		$this->assertNull(
+			$this->guards($this->app->page('parent-a'))->ensureExecutable('move', $this->app->site())
+		);
+	}
+
 	public function testMoveWithHomePage(): void
 	{
 		$this->app = $this->app->clone([
