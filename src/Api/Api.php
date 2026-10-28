@@ -564,7 +564,7 @@ class Api
 		}
 
 		throw new NotFoundException(
-			message: sprintf('The object "%s" cannot be resolved', $object::class)
+			message: sprintf('The object "%s" cannot be resolved', get_debug_type($object))
 		);
 	}
 

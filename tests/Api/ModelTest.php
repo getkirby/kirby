@@ -23,6 +23,14 @@ class ModelTest extends TestCase
 		new Model(new Api([]), new stdClass(), ['type' => 'nonexists']);
 	}
 
+	public function testConstructInvalidModelWithString(): void
+	{
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Invalid model type "string" expected: "stdClass"');
+
+		new Model(new Api([]), 'foo', ['type' => stdClass::class]);
+	}
+
 	public function testConstructMissingModel(): void
 	{
 		$this->expectException(Exception::class);

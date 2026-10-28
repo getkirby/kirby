@@ -844,6 +844,15 @@ class ApiTest extends TestCase
 		$api->resolve(new MockModel());
 	}
 
+	public function testModelResolverWithString(): void
+	{
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The object "string" cannot be resolved');
+
+		$api = new Api([]);
+		$api->resolve('foo');
+	}
+
 	public function testPage(): void
 	{
 		$a  = $this->app->page('a');
