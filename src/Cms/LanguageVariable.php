@@ -28,6 +28,8 @@ class LanguageVariable
 	 * Creates a new language variable. This will
 	 * be added to the default language first and
 	 * can then be translated in other languages.
+	 *
+	 * @param string|array<array-key, string>|null $value
 	 */
 	public static function create(
 		string $key,
@@ -65,9 +67,7 @@ class LanguageVariable
 
 		$translations[$key] = $value ?? '';
 
-		$language = $language->update(['translations' => $translations]);
-
-		return $language->variable($key);
+		return $language->update(['translations' => $translations])->variable($key);
 	}
 
 	/**
@@ -126,19 +126,23 @@ class LanguageVariable
 
 	/**
 	 * Sets a new value for the language variable
+	 *
+	 * @param string|array<array-key, string>|null $value
 	 */
 	public function update(string|array|null $value = null): static
 	{
 		$translations             = $this->language->translations();
 		$translations[$this->key] = $value ?? '';
 
-		$language = $this->language->update(['translations' => $translations]);
-
-		return $language->variable($this->key);
+		return $this->language
+			->update(['translations' => $translations])
+			->variable($this->key);
 	}
 
 	/**
 	 * Returns the value if the variable has been translated.
+	 *
+	 * @return string|array<array-key, string>|null
 	 */
 	public function value(): string|array|null
 	{
