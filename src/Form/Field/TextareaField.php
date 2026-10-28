@@ -16,13 +16,10 @@ use Kirby\Reflection\Attributes\Prop;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  */
-class TextareaField extends InputField
+class TextareaField extends StringField
 {
 	use Mixin\Counter;
 	use Mixin\Font;
-	use Mixin\Maxlength;
-	use Mixin\Minlength;
-	use Mixin\Spellcheck;
 	use Mixin\Upload;
 
 	/**
@@ -46,7 +43,6 @@ class TextareaField extends InputField
 	 */
 	#[Prop]
 	protected string|null $size = null;
-	protected string $value = '';
 
 	public function api(): array
 	{
@@ -116,13 +112,5 @@ class TextareaField extends InputField
 	public function size(): string|null
 	{
 		return $this->size;
-	}
-
-	protected function validations(): array
-	{
-		return [
-			'minlength',
-			'maxlength'
-		];
 	}
 }

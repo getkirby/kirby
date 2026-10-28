@@ -2,6 +2,7 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Cms\Page;
 use Kirby\Panel\Controller\Dialog\FilePickerDialogController;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -93,6 +94,26 @@ class TextareaFieldTest extends TestCase
 		$this->assertArrayHasKey('minlength', $field->errors());
 	}
 
+	public function testPlaceholder(): void
+	{
+		$field = $this->field('textarea', [
+			'placeholder' => 'Write something'
+		]);
+
+		$this->assertSame('Write something', $field->placeholder());
+		$this->assertSame('Write something', $field->props()['placeholder']);
+
+		$field = $this->field('textarea', [
+			'model'       => new Page([
+				'slug'    => 'test',
+				'content' => ['title' => 'Test title']
+			]),
+			'placeholder' => 'About {{ page.title }}'
+		]);
+
+		$this->assertSame('About Test title', $field->props()['placeholder']);
+	}
+
 	public function testProps(): void
 	{
 		$field = $this->field('textarea');
@@ -112,6 +133,7 @@ class TextareaFieldTest extends TestCase
 			'maxlength'   => null,
 			'minlength'   => null,
 			'name'        => 'textarea',
+			'placeholder' => null,
 			'required'    => false,
 			'saveable'    => true,
 			'size'        => null,
