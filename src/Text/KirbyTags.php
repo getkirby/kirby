@@ -17,12 +17,17 @@ use Kirby\Toolkit\Str;
  */
 class KirbyTags
 {
+	/**
+	 * Replaces all KirbyTags in the given text with their HTML
+	 *
+	 * @param $data Data for the tags, e.g. the `kirby` instance and `parent` model
+	 * @param $debug If `true`, exceptions of a tag are thrown instead of being logged
+	 */
 	public static function parse(
 		string|null $text = null,
 		array $data = [],
 		bool $debug = false
 	): string {
-		// make sure $text is a string
 		$text ??= '';
 
 		$regex = '!
@@ -33,27 +38,23 @@ class KirbyTags
             \))                     # end of capturing group 1
         !isx';
 
-		return preg_replace_callback($regex, function ($match) use ($data, $debug) {
+		return preg_replace_callback($regex, function (array $match) use ($data, $debug): string {
 			try {
 				return KirbyTag::parse($match[0], $data)->render();
-			} catch (InvalidArgumentException $e) {
-				if (Str::startsWith($e->getMessage(), 'Undefined tag type:') === true) {
-					return $match[0];
-				}
-
-				// stay silent in production and ignore non-existing tags
-				if ($debug !== true) {
-					error_log($e);
-
-					return $match[0];
-				}
-
-				throw $e;
 			} catch (Exception $e) {
+				// undefined tags stay as they are, even in debug mode
+				if (
+					$e instanceof InvalidArgumentException === true &&
+					Str::startsWith($e->getMessage(), 'Undefined tag type:') === true
+				) {
+					return $match[0];
+				}
+
 				if ($debug === true) {
 					throw $e;
 				}
 
+				// stay silent in production
 				error_log($e);
 
 				return $match[0];
