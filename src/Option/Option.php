@@ -19,7 +19,7 @@ class Option
 	public HtmlString|string|array $text;
 
 	/**
-	 * @param $resolve Deprecated, will be removed in v6
+	 * @param $resolve Deprecated, will be removed in v7
 	 */
 	public function __construct(
 		public string|int|float|null $value,
@@ -33,7 +33,7 @@ class Option
 	}
 
 	/**
-	 * @param $resolve Deprecated, will be removed in v6
+	 * @param $resolve Deprecated, will be removed in v7
 	 */
 	public static function factory(
 		string|int|float|array|null $props,
