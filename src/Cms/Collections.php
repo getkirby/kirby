@@ -26,11 +26,15 @@ class Collections
 	 * has been called, to avoid further
 	 * processing on sequential calls to
 	 * the same collection.
+	 *
+	 * @var array<string, array{result: mixed, data: array}>
 	 */
 	protected array $cache = [];
 
 	/**
 	 * Store of all collections
+	 *
+	 * @var array<string, Closure>
 	 */
 	protected array $collections = [];
 
