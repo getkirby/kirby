@@ -207,6 +207,21 @@ class QrCodeTest extends TestCase
 		$qr->write('test.docx');
 	}
 
+	public function testWriteWithStringSize(): void
+	{
+		Dir::make(static::TMP);
+
+		$qr = new QrCode('https://getkirby.com');
+
+		// SVG keeps the CSS width
+		$qr->write($file = static::TMP . '/test.svg', '50%');
+		$this->assertStringContainsString('style="width: 50%"', F::read($file));
+
+		// raster formats need a pixel size
+		$qr->write($file = static::TMP . '/test.png', '100');
+		$this->assertSame(100, getimagesize($file)[0]);
+	}
+
 	protected function imageContent(GdImage $image): string
 	{
 		ob_start();
