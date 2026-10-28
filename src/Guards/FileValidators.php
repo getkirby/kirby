@@ -6,7 +6,7 @@ use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Model;
 use Kirby\Exception\DuplicateException;
-use Kirby\Filesystem\File as Upload;
+use Kirby\Filesystem\File as BaseFile;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 
@@ -52,7 +52,7 @@ class FileValidators extends ModelValidators
 	/**
 	 * Validates the file that is about to be created
 	 */
-	protected function ensureToCreate(Upload $upload): void
+	protected function ensureToCreate(BaseFile $upload): void
 	{
 		$this->validateDoesNotExist();
 		$this->validateUpload($upload);
@@ -61,7 +61,7 @@ class FileValidators extends ModelValidators
 	/**
 	 * Validates the input of the `replace` action
 	 */
-	protected function ensureToReplace(Upload $upload): void
+	protected function ensureToReplace(BaseFile $upload): void
 	{
 		$this->validateUploadWithSameType($upload);
 	}
@@ -150,7 +150,6 @@ class FileValidators extends ModelValidators
 	 */
 	public function validateFile(string|false|null $mime = null): void
 	{
-		// request to skip the MIME check for performance reasons
 		if ($mime !== false) {
 			$this->validateMime($mime ?? $this->model->mime());
 		}
@@ -167,14 +166,12 @@ class FileValidators extends ModelValidators
 		// make it easier to compare the filename
 		$filename = strtolower($filename);
 
-		// check for missing filenames
 		if ($filename === '') {
 			$this->error(
 				key: 'file.name.missing'
 			);
 		}
 
-		// Block htaccess files
 		if (Str::startsWith($filename, '.ht') === true) {
 			$this->error(
 				key: 'file.type.forbidden',
@@ -182,7 +179,6 @@ class FileValidators extends ModelValidators
 			);
 		}
 
-		// Block invisible files
 		if (Str::startsWith($filename, '.') === true) {
 			$this->error(
 				key: 'file.type.forbidden',
@@ -257,7 +253,7 @@ class FileValidators extends ModelValidators
 	 * Validates the uploaded file against the general file rules
 	 * as well as the `accept` settings of the file blueprint
 	 */
-	public function validateUpload(Upload $upload): void
+	public function validateUpload(BaseFile $upload): void
 	{
 		$this->validateFile($upload->mime());
 
@@ -269,7 +265,7 @@ class FileValidators extends ModelValidators
 	 * Validates an uploaded replacement file, which must match
 	 * the MIME type or extension of the file it replaces
 	 */
-	public function validateUploadWithSameType(Upload $upload): void
+	public function validateUploadWithSameType(BaseFile $upload): void
 	{
 		$this->validateMime($upload->mime());
 
