@@ -33,7 +33,7 @@ class Exif
 		$this->aperture    = $this->computed()['ApertureFNumber'] ?? null;
 		$this->exposure    = $this->data['ExposureTime'] ?? null;
 		$this->focalLength = $this->parseFocalLength();
-		$this->isColor     = V::accepted($this->computed()['IsColor'] ?? null);
+		$this->isColor     = isset($this->computed()['IsColor']) === true ? V::accepted($this->computed()['IsColor']) : null;
 		$this->iso         = $this->data['ISOSpeedRatings'] ?? null;
 		$this->orientation = $this->data['Orientation'] ?? 1;
 		$this->timestamp   = $this->parseTimestamp();

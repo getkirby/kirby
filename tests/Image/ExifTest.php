@@ -118,10 +118,36 @@ class ExifTest extends TestCase
 		$this->assertTrue($exif->isColor());
 	}
 
+	public function testIsColorWithoutValue(): void
+	{
+		$image = $this->_image();
+		$exif = new class ($image) extends Exif {
+			public static function read(string $root): array
+			{
+				return [];
+			}
+		};
+
+		$this->assertNull($exif->isColor());
+	}
+
 	public function testIsBw(): void
 	{
 		$exif  = $this->_exif();
 		$this->assertFalse($exif->isBw());
+	}
+
+	public function testIsBwWithoutValue(): void
+	{
+		$image = $this->_image();
+		$exif = new class ($image) extends Exif {
+			public static function read(string $root): array
+			{
+				return [];
+			}
+		};
+
+		$this->assertNull($exif->isBw());
 	}
 
 	public function testFocalLength(): void
