@@ -54,8 +54,8 @@ class Items extends Collection
 		array|null $items = null,
 		array $params = []
 	): static {
-		if (empty($items) === true || is_array($items) === false) {
-			return new static();
+		if ($items === null || $items === []) {
+			return new static([], $params);
 		}
 
 		if (is_array($params) === false) {
