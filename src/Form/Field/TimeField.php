@@ -67,6 +67,9 @@ class TimeField extends DateTimeField
 		return $this->format ?? static::ISO;
 	}
 
+	/**
+	 * @return 12|24
+	 */
 	public function notation(): int
 	{
 		return match ($this->notation) {
