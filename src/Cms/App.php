@@ -68,6 +68,9 @@ class App
 	protected static App|null $instance = null;
 	protected static string|null $version = null;
 
+	/**
+	 * @var array<string, mixed>
+	 */
 	public array $data = [];
 
 	protected Api|null $api = null;
@@ -80,6 +83,10 @@ class App
 	protected Languages|null $languages = null;
 	protected bool|null $multilang = null;
 	protected string|null $nonce = null;
+
+	/**
+	 * @var array<string, mixed>
+	 */
 	protected array $options;
 	protected Panel|null $panel = null;
 	protected string|null $path = null;
@@ -94,6 +101,10 @@ class App
 	protected System|null $system = null;
 	protected Ingredients $urls;
 	protected Visitor|null $visitor = null;
+
+	/**
+	 * @var array<string, mixed>
+	 */
 	protected array $propertyData;
 
 	/**
@@ -311,6 +322,8 @@ class App
 
 	/**
 	 * Returns all available blueprints for this installation
+	 *
+	 * @return list<string>
 	 */
 	public function blueprints(string $type = 'pages'): array
 	{
@@ -384,7 +397,6 @@ class App
 			'site'  => $site = $this->site(),
 			'pages' => new LazyValue(fn () => $site->children()),
 			'users' => new LazyValue(fn () => $this->users())
-
 		]);
 	}
 
@@ -457,6 +469,8 @@ class App
 	/**
 	 * Calls a page controller by name
 	 * and with the given arguments
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function controller(
 		string $name,
@@ -610,13 +624,13 @@ class App
 		$languages = $this->languages();
 		$visitor   = $this->visitor();
 
-		foreach ($visitor->acceptedLanguages() as $acceptedLang) {
-			$acceptedCode   = $acceptedLang->code();
-			$acceptedLocale = $acceptedLang->locale();
+		foreach ($visitor->acceptedLanguages() as $accepted) {
+			$code   = $accepted->code();
+			$locale = $accepted->locale();
 
 			$match = fn (Language $language, int $precision) =>
 				Str::substr($language->locale(LC_ALL), 0, $precision) ===
-				Str::substr($acceptedLocale, 0, $precision);
+				Str::substr($locale, 0, $precision);
 
 			// Find exact locale matches (e.g. en_GB => en_GB)
 			if ($language = $languages->filter(fn ($language) => $match($language, 5))->first()) {
@@ -624,7 +638,7 @@ class App
 			}
 
 			// Find exact code matches
-			if ($language = $languages->findBy('code', $acceptedCode)) {
+			if ($language = $languages->findBy('code', $code)) {
 				return $language;
 			}
 
@@ -638,7 +652,8 @@ class App
 	}
 
 	/**
-	 * Returns the Email singleton
+	 * Creates a new email from a preset and/or props
+	 * and sends it (unless in debug mode)
 	 */
 	public function email(mixed $preset = [], array $props = []): BaseEmail
 	{
@@ -934,7 +949,8 @@ class App
 	}
 
 	/**
-	 * Returns the current language code
+	 * Returns the code of a language by code or shortcut
+	 * (`default`, `current`); defaults to the current language
 	 */
 	public function languageCode(string|null $languageCode = null): string|null
 	{
@@ -1149,12 +1165,12 @@ class App
 			}
 
 			// checks custom language definition for slugs
-			if ($slugsOption = $this->option('slugs')) {
+			if ($slugs = $this->option('slugs')) {
 				// slugs option must be set to string or
 				// "slugs" => ["language" => "de"] as array
 				if (
-					is_string($slugsOption) === true ||
-					isset($slugsOption['language']) === true
+					is_string($slugs) === true ||
+					isset($slugs['language']) === true
 				) {
 					$this->i18n();
 				}
@@ -1227,7 +1243,7 @@ class App
 		string|null $path = null,
 		string|null $method = null
 	): Response|null {
-		if ((filter_var($_ENV['KIRBY_RENDER'] ?? true, FILTER_VALIDATE_BOOLEAN)) === false) {
+		if (filter_var($_ENV['KIRBY_RENDER'] ?? true, FILTER_VALIDATE_BOOLEAN) === false) {
 			return null;
 		}
 
@@ -1261,10 +1277,7 @@ class App
 		string|null $path = null,
 		string|null $language = null
 	): mixed {
-		// set the current translation
 		$this->setCurrentTranslation($language);
-
-		// set the current locale
 		$this->setCurrentLanguage($language);
 
 		try {
@@ -1558,7 +1571,7 @@ class App
 	 *
 	 * @param $data Variables or an object that becomes `$item`
 	 * @param $return On `false`, directly echo the snippet
-	 * @psalm-return ($return is true ? string : null)
+	 * @psalm-return ($slots is true ? Snippet : ($return is true ? string : null))
 	 */
 	public function snippet(
 		string|array|null $name,
