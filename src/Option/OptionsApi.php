@@ -30,6 +30,11 @@ class OptionsApi extends OptionsProvider
 	) {
 	}
 
+	/**
+	 * Applies the default text and value queries
+	 *
+	 * @return $this
+	 */
 	public function defaults(): static
 	{
 		$this->text  ??= '{{ item.value }}';
@@ -37,6 +42,10 @@ class OptionsApi extends OptionsProvider
 		return $this;
 	}
 
+	/**
+	 * Creates a new instance from the URL
+	 * or an array of props
+	 */
 	public static function factory(string|array $props): static
 	{
 		if (is_string($props) === true) {
@@ -55,7 +64,7 @@ class OptionsApi extends OptionsProvider
 
 	/**
 	 * Loads the API content from a remote URL
-	 * or local file (or from cache)
+	 * or local file
 	 */
 	public function load(ModelWithContent $model): array|null
 	{
@@ -75,6 +84,10 @@ class OptionsApi extends OptionsProvider
 		return Json::read($url);
 	}
 
+	/**
+	 * Normalizes the URL string or props array,
+	 * including the `fetch` alias for `query`
+	 */
 	public static function polyfill(array|string $props = []): array
 	{
 		if (is_string($props) === true) {
@@ -107,10 +120,8 @@ class OptionsApi extends OptionsProvider
 		}
 		// @codeCoverageIgnoreEnd
 
-		// apply property defaults
 		$this->defaults();
 
-		// load data from URL and convert from JSON to array
 		$data = $this->load($model);
 
 		// @codeCoverageIgnoreStart
@@ -131,10 +142,8 @@ class OptionsApi extends OptionsProvider
 
 		// text is only a raw string when using {< >}
 		// or when the safe mode is explicitly disabled (select field)
-		$safeMethod = $safeMode === true ? 'toSafeHtmlString' : 'toString';
+		$method = $safeMode === true ? 'toSafeHtmlString' : 'toString';
 
-		// create options by resolving text and value query strings
-		// for each item from the data
 		foreach ($data as $key => $item) {
 			// convert simple `key: value` API data
 			if (is_string($item) === true) {
@@ -144,12 +153,9 @@ class OptionsApi extends OptionsProvider
 			$options[] = [
 				// value is always a raw string
 				'value' => $model->toString($this->value, ['item' => $item]),
-				// text is only a raw string when using {< >}
-				// or when the safe mode is explicitly disabled (select field)
-				'text'  => $model->$safeMethod($this->text, ['item' => $item]),
-				// additional data
+				'text'  => $model->$method($this->text, ['item' => $item]),
 				'icon'  => $this->icon !== null ? $model->toString($this->icon, ['item' => $item]) : null,
-				'info'  => $this->info !== null ? $model->$safeMethod($this->info, ['item' => $item]) : null
+				'info'  => $this->info !== null ? $model->$method($this->info, ['item' => $item]) : null
 			];
 		}
 
