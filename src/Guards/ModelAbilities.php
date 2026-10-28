@@ -26,7 +26,7 @@ abstract class ModelAbilities
 	/**
 	 * Runs the ability check for the given action.
 	 * Actions with a dedicated `ensureTo<Action>()` method are
-	 * handed over to it, all others are resolved as true
+	 * handed over to it, all others pass
 	 *
 	 * @throws AbilityException
 	 */
