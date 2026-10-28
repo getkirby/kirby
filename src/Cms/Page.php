@@ -112,6 +112,8 @@ class Page extends ModelWithContent
 
 	/**
 	 * Creates a new page object
+	 *
+	 * @param array<string, mixed> $props
 	 */
 	public function __construct(array $props)
 	{
@@ -211,6 +213,8 @@ class Page extends ModelWithContent
 
 	/**
 	 * Returns an array with all blueprints that are available for the page
+	 *
+	 * @return list<array{name: string, title: string}>
 	 */
 	public function blueprints(string|null $inField = null): array
 	{
@@ -223,7 +227,7 @@ class Page extends ModelWithContent
 		}
 
 		$blueprints  = [];
-		$templates   = $this->blueprint()->changeTemplate() ?? null;
+		$templates   = $this->blueprint()->changeTemplate();
 		$templates ??= $this->blueprint()->options()['changeTemplate'] ?? [];
 
 		$currentTemplate = $this->intendedTemplate()->name();
@@ -304,6 +308,8 @@ class Page extends ModelWithContent
 	/**
 	 * Call the page controller
 	 *
+	 * @param array<string, mixed> $data
+	 * @return array<string, mixed>
 	 * @throws InvalidArgumentException If the controller returns invalid objects for `kirby`, `site`, `pages` or `page`
 	 */
 	#[BlockCollectionAccess]
@@ -354,9 +360,7 @@ class Page extends ModelWithContent
 
 		// unwrap remaining lazy values in data
 		// (happens if the controller didn't override an original lazy Kirby object)
-		$data = LazyValue::unwrap($data);
-
-		return $data;
+		return LazyValue::unwrap($data);
 	}
 
 	/**
@@ -417,6 +421,8 @@ class Page extends ModelWithContent
 	/**
 	 * Constructs a Page object and also
 	 * takes page models into account.
+	 *
+	 * @param array<string, mixed> $props
 	 */
 	public static function factory($props): static
 	{
@@ -712,6 +718,9 @@ class Page extends ModelWithContent
 		return $this->isPublished() && $this->num() !== null;
 	}
 
+	/**
+	 * Checks if the page can be moved to the given parent
+	 */
 	public function isMovableTo(Page|Site $parent): bool
 	{
 		try {
@@ -729,15 +738,9 @@ class Page extends ModelWithContent
 	 */
 	public function isOpen(): bool
 	{
-		if ($this->isActive() === true) {
-			return true;
-		}
-
-		if ($this->site()->page()?->parents()->has($this->id()) === true) {
-			return true;
-		}
-
-		return false;
+		return
+			$this->isActive() === true ||
+			$this->site()->page()?->parents()->has($this->id()) === true;
 	}
 
 	/**
@@ -801,6 +804,9 @@ class Page extends ModelWithContent
 
 	/**
 	 * Returns the last modification date of the page
+	 *
+	 * @param 'date'|'intl'|'strftime'|null $handler Date handler, `null` for the configured one
+	 * @return ($format is null ? int|null : string|false|null)
 	 */
 	public function modified(
 		string|null $format = null,
@@ -1167,6 +1173,8 @@ class Page extends ModelWithContent
 	/**
 	 * Returns the page status, which
 	 * can be `draft`, `listed` or `unlisted`
+	 *
+	 * @return 'draft'|'listed'|'unlisted'
 	 */
 	public function status(): string
 	{
@@ -1210,6 +1218,8 @@ class Page extends ModelWithContent
 	/**
 	 * Converts the most important
 	 * properties to array
+	 *
+	 * @return array<string, mixed>
 	 */
 	#[BlockCollectionAccess]
 	public function toArray(): array
@@ -1251,7 +1261,6 @@ class Page extends ModelWithContent
 	 */
 	public function uri(string|null $languageCode = null): string
 	{
-		// set the id, depending on the parent
 		if ($parent = $this->parent()) {
 			return $parent->uri($languageCode) . '/' . $this->slug($languageCode);
 		}
@@ -1262,7 +1271,7 @@ class Page extends ModelWithContent
 	/**
 	 * Returns the Url
 	 *
-	 * @param array|string|null $options
+	 * @param array<string, mixed>|string|null $options Options for `Kirby\Http\Uri` or a language code
 	 */
 	public function url($options = null): string
 	{
@@ -1291,7 +1300,7 @@ class Page extends ModelWithContent
 				return $this->url = $this->kirby()->url('base') . '/' . $parent->uid() . '/' . $this->uid();
 			}
 
-			return $this->url = $this->parent()->url() . '/' . $this->uid();
+			return $this->url = $parent->url() . '/' . $this->uid();
 		}
 
 		return $this->url = $this->kirby()->url('base') . '/' . $this->uid();
@@ -1302,6 +1311,7 @@ class Page extends ModelWithContent
 	 *
 	 * @internal
 	 * @param string|null $language
+	 * @param array<string, mixed>|null $options Options for `Kirby\Http\Uri`
 	 */
 	public function urlForLanguage(
 		$language = null,
@@ -1320,7 +1330,7 @@ class Page extends ModelWithContent
 				return $this->url = $this->site()->urlForLanguage($language) . '/' . $parent->slug($language) . '/' . $this->slug($language);
 			}
 
-			return $this->url = $this->parent()->urlForLanguage($language) . '/' . $this->slug($language);
+			return $this->url = $parent->urlForLanguage($language) . '/' . $this->slug($language);
 		}
 
 		return $this->url = $this->site()->urlForLanguage($language) . '/' . $this->slug($language);
