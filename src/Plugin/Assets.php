@@ -28,48 +28,50 @@ class Assets extends Collection
 	 */
 	public static function clean(string $pluginName): void
 	{
-		if ($plugin = App::instance()->plugin($pluginName)) {
-			$media  = $plugin->mediaRoot();
-			$assets = $plugin->assets();
+		$plugin = App::instance()->plugin($pluginName);
 
-			// get all media files
-			$files = Dir::index($media, true);
+		if ($plugin === null) {
+			return;
+		}
 
-			// get all active assets' paths from the plugin
-			$active = $assets->values(
-				function ($asset) {
-					$path  = $asset->mediaHash() . '/' . $asset->path();
-					$paths = [];
-					$parts = explode('/', $path);
+		$media  = $plugin->mediaRoot();
+		$assets = $plugin->assets();
+		$files  = Dir::index($media, true);
 
-					// collect all path segments
-					// (e.g. foo/, foo/bar/, foo/bar/baz.css) for the asset
-					for ($i = 1, $max = count($parts); $i <= $max; $i++) {
-						$paths[] = implode('/', array_slice($parts, 0, $i));
+		// paths of all active assets
+		$active = $assets->values(
+			function ($asset) {
+				$path  = $asset->mediaHash() . '/' . $asset->path();
+				$paths = [];
+				$parts = explode('/', $path);
 
-						// TODO: remove when media hash is enforced as mandatory
-						$paths[] = implode('/', array_slice($parts, 1, $i));
-					}
+				// collect all path segments
+				// (e.g. foo/, foo/bar/, foo/bar/baz.css) for the asset
+				for ($i = 1, $max = count($parts); $i <= $max; $i++) {
+					$paths[] = implode('/', array_slice($parts, 0, $i));
 
-					return $paths;
+					// TODO: remove when media hash is enforced as mandatory
+					$paths[] = implode('/', array_slice($parts, 1, $i));
 				}
-			);
 
-			// flatten the array and remove duplicates
-			$active = array_unique(array_merge(...array_values($active)));
+				return $paths;
+			}
+		);
 
-			// get outdated media files by comparing all
-			// files in the media folder against the set of asset paths
-			$stale  = array_diff($files, $active);
+		// flatten the array and remove duplicates
+		$active = array_unique(array_merge(...array_values($active)));
 
-			foreach ($stale as $file) {
-				$root = $media . '/' . $file;
+		// get outdated media files by comparing all
+		// files in the media folder against the set of asset paths
+		$stale = array_diff($files, $active);
 
-				if (is_file($root) === true) {
-					F::remove($root);
-				} else {
-					Dir::remove($root);
-				}
+		foreach ($stale as $file) {
+			$root = $media . '/' . $file;
+
+			if (is_file($root) === true) {
+				F::remove($root);
+			} else {
+				Dir::remove($root);
 			}
 		}
 	}
@@ -136,6 +138,11 @@ class Assets extends Collection
 		return $this->filter(fn ($asset) => $asset->extension() === 'js');
 	}
 
+	/**
+	 * Returns the plugin the assets belong to
+	 *
+	 * @throws LogicException If the collection has no plugin as parent
+	 */
 	public function plugin(): Plugin
 	{
 		if ($this->parent instanceof Plugin === false) {
@@ -156,34 +163,36 @@ class Assets extends Collection
 		string $hash,
 		string $path
 	): Response|null {
-		if ($plugin = App::instance()->plugin($pluginName)) {
-			// do some spring cleaning for older files
-			static::clean($pluginName);
+		$plugin = App::instance()->plugin($pluginName);
 
-			// @codeCoverageIgnoreStart
-			// TODO: deprecated media URL without hash
-			if ($hash === '') {
-				$asset = $plugin->asset($path);
-				$asset->publishAt($path);
-				return Response::file($asset->root());
-			}
+		if ($plugin === null) {
+			return null;
+		}
 
-			// TODO: deprecated media URL with hash (but path)
-			if ($asset = $plugin->asset($hash . '/' . $path)) {
-				$asset->publishAt($hash . '/' . $path);
-				return Response::file($asset->root());
-			}
-			// @codeCoverageIgnoreEnd
+		// do some spring cleaning for older files
+		static::clean($pluginName);
 
-			if ($asset = $plugin->asset($path)) {
-				if ($asset->mediaHash() === $hash) {
-					// create a symlink if possible
-					$asset->publish();
+		// @codeCoverageIgnoreStart
+		// TODO: deprecated media URL without hash
+		if ($hash === '') {
+			$asset = $plugin->asset($path);
+			$asset->publishAt($path);
+			return Response::file($asset->root());
+		}
 
-					// return the file response
-					return Response::file($asset->root());
-				}
-			}
+		// TODO: deprecated media URL with hash (but path)
+		if ($asset = $plugin->asset($hash . '/' . $path)) {
+			$asset->publishAt($hash . '/' . $path);
+			return Response::file($asset->root());
+		}
+		// @codeCoverageIgnoreEnd
+
+		$asset = $plugin->asset($path);
+
+		if ($asset?->mediaHash() === $hash) {
+			// create a symlink if possible
+			$asset->publish();
+			return Response::file($asset->root());
 		}
 
 		return null;
