@@ -2,6 +2,7 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Api\Api;
 use Kirby\Cms\Fieldsets;
 use Kirby\Cms\Layouts;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -53,6 +54,28 @@ class LayoutFieldTest extends TestCase
 		$this->assertSame('1/2', $response['columns'][1]['width']);
 		$this->assertSame([], $response['columns'][0]['blocks']);
 		$this->assertSame([], $response['columns'][1]['blocks']);
+	}
+
+	public function testApiRouteFields(): void
+	{
+		$field = $this->field('layout', [
+			'settings' => [
+				'fields' => [
+					'list' => [
+						'type' => 'pagelist'
+					]
+				]
+			]
+		]);
+
+		$api = new Api(['routes' => $field->api()]);
+
+		// nested field routes may return other values than arrays
+		$this->assertTrue($api->call(
+			'fields/list/delete',
+			'DELETE',
+			['body' => ['ids' => []]]
+		));
 	}
 
 	public function testApiRoutePaste(): void
