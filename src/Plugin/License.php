@@ -97,6 +97,8 @@ class License implements Stringable
 
 	/**
 	 * Returns the license information as an array
+	 *
+	 * @return array{link: string|null, name: string, status: array<string, string|null>}
 	 */
 	public function toArray(): array
 	{
