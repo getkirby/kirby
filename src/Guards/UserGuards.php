@@ -8,6 +8,7 @@ use Kirby\Exception\AbilityException;
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
+use SensitiveParameter;
 
 /**
  * Bundles all guards for a `$user` object
@@ -90,8 +91,10 @@ class UserGuards extends ModelGuards
 	 * @throws InvalidArgumentException If the id, email, language, password or role is invalid
 	 * @throws PermissionException If the user is not allowed to create a new user
 	 */
-	protected function ensureToCreate(array $props = []): void
-	{
+	protected function ensureToCreate(
+		#[SensitiveParameter]
+		array $props = []
+	): void {
 		// the first user can always be created,
 		// but a password is required
 		if ($this->model->kirby()->users()->count() === 0) {

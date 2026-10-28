@@ -6,6 +6,7 @@ use Kirby\Cms\Model;
 use Kirby\Cms\User;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
+use SensitiveParameter;
 
 /**
  * Validators for the input of a model action
@@ -33,8 +34,11 @@ abstract class ModelValidators
 	 * dedicated `ensureTo<Action>()` method are handed over to it,
 	 * all others have nothing to validate.
 	 */
-	public function ensure(string $action, mixed ...$arguments): void
-	{
+	public function ensure(
+		string $action,
+		#[SensitiveParameter]
+		mixed ...$arguments
+	): void {
 		if ($this->has($action) === true) {
 			$this->{$this->method($action)}(...$arguments);
 		}
@@ -59,8 +63,11 @@ abstract class ModelValidators
 	 * throw more specific exception classes than the other
 	 * layers, so this catches every Kirby exception.
 	 */
-	public function may(string $action, mixed ...$arguments): bool
-	{
+	public function may(
+		string $action,
+		#[SensitiveParameter]
+		mixed ...$arguments
+	): bool {
 		try {
 			$this->ensure($action, ...$arguments);
 

@@ -8,6 +8,7 @@ use Kirby\Cms\User;
 use Kirby\Exception\AbilityException;
 use Kirby\Exception\Exception;
 use Kirby\Exception\PermissionException;
+use SensitiveParameter;
 use WeakMap;
 
 /**
@@ -97,8 +98,11 @@ abstract class ModelGuards
 	 *
 	 * @throws AbilityException|PermissionException|Exception
 	 */
-	public function ensureExecutable(string $action, mixed ...$arguments): void
-	{
+	public function ensureExecutable(
+		string $action,
+		#[SensitiveParameter]
+		mixed ...$arguments
+	): void {
 		if ($this->has($action) === true) {
 			$this->{$this->method($action)}(...$arguments);
 
@@ -157,8 +161,11 @@ abstract class ModelGuards
 	 * the layers can throw, not just the ability and permission
 	 * exceptions.
 	 */
-	public function isExecutable(string $action, mixed ...$arguments): bool
-	{
+	public function isExecutable(
+		string $action,
+		#[SensitiveParameter]
+		mixed ...$arguments
+	): bool {
 		try {
 			$this->ensureExecutable($action, ...$arguments);
 

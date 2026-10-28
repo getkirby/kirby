@@ -84,8 +84,10 @@ class UserValidators extends ModelValidators
 	/**
 	 * Validates the user that is about to be created
 	 */
-	protected function ensureToCreate(array $props = []): void
-	{
+	protected function ensureToCreate(
+		#[SensitiveParameter]
+		array $props = []
+	): void {
 		$this->validateId($this->model->id());
 		$this->validateEmail($this->model->email(), strict: true);
 		$this->validateLanguage($this->model->language());
@@ -105,8 +107,10 @@ class UserValidators extends ModelValidators
 	 * Validates the very first user of an installation, which
 	 * has no role to check against, but needs a password
 	 */
-	protected function ensureToCreateFirstUser(array $props = []): void
-	{
+	protected function ensureToCreateFirstUser(
+		#[SensitiveParameter]
+		array $props = []
+	): void {
 		$this->validateId($this->model->id());
 		$this->validateEmail($this->model->email(), strict: true);
 		$this->validateLanguage($this->model->language());
