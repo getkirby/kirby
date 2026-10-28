@@ -16,7 +16,9 @@ class ListFieldTest extends TestCase
 		ksort($props);
 
 		$expected = [
+			'after'        => null,
 			'autofocus'    => false,
+			'before'       => null,
 			'disabled'     => false,
 			'help'         => null,
 			'hidden'       => false,
