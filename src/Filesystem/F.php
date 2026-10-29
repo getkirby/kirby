@@ -676,6 +676,30 @@ class F
 	}
 
 	/**
+	 * Writes the content into the file in place
+	 *
+	 * @since 5.7.0
+	 */
+	protected static function put(
+		string $file,
+		mixed $content,
+		bool $append = false
+	): bool {
+		// create the parent directory if it does not exist yet
+		if (Dir::make(dirname($file)) === false) {
+			return false;
+		}
+
+		if (static::isWritable($file) === false) {
+			throw new Exception('The file "' . $file . '" is not writable');
+		}
+
+		$flags = $append === true ? FILE_APPEND | LOCK_EX : LOCK_EX;
+
+		return file_put_contents($file, $content, $flags) !== false;
+	}
+
+	/**
 	 * Reads the content of a file; returns `false`
 	 * for URLs and files that don't exist
 	 */
@@ -1083,17 +1107,6 @@ class F
 			$content = serialize($content);
 		}
 
-		$mode = $append === true ? FILE_APPEND | LOCK_EX : LOCK_EX;
-
-		// create the parent directory if it does not exist yet
-		if (Dir::make(dirname($file)) === false) {
-			return false;
-		}
-
-		if (static::isWritable($file) === false) {
-			throw new Exception('The file "' . $file . '" is not writable');
-		}
-
-		return file_put_contents($file, $content, $mode) !== false;
+		return static::put($file, $content, $append);
 	}
 }
