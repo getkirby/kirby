@@ -198,7 +198,7 @@ class Request
 	 */
 	public function csrf(): string|null
 	{
-		return $this->header('x-csrf') ?? $this->query()->get('csrf');
+		return $this->header('x-csrf') ?? $this->query()->string('csrf');
 	}
 
 	/**

@@ -1022,10 +1022,10 @@ class Page extends ModelWithContent
 	public function renderVersionFromRequest(): VersionId|null
 	{
 		$request = $this->kirby()->request();
-		$token   = $request->get('_token', '');
+		$token   = $request->string('_token', '');
 
 		try {
-			$versionId = VersionId::from($request->get('_version', ''));
+			$versionId = VersionId::from($request->string('_version', ''));
 		} catch (InvalidArgumentException) {
 			// ignore invalid enum values in the request
 			$versionId = VersionId::latest();
