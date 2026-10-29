@@ -10,6 +10,7 @@ use Kirby\Filesystem\F;
 use Kirby\Filesystem\File as BaseFile;
 use Kirby\Filesystem\IsFile;
 use Kirby\Guards\FileGuards;
+use Kirby\Http\Response;
 use Kirby\Panel\File as Panel;
 use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Str;
@@ -147,6 +148,14 @@ class File extends ModelWithContent
 	}
 
 	/**
+	 * Returns the file content as base64 encoded string
+	 */
+	public function base64(): string
+	{
+		return $this->asset()->base64();
+	}
+
+	/**
 	 * Returns the FileBlueprint object for the file
 	 */
 	public function blueprint(): FileBlueprint
@@ -263,6 +272,31 @@ class File extends ModelWithContent
 	}
 
 	/**
+	 * Returns the file as data uri
+	 */
+	public function dataUri(bool $base64 = true): string
+	{
+		return $this->asset()->dataUri($base64);
+	}
+
+	/**
+	 * Sends all needed headers for the file
+	 * to be downloaded and returns its content
+	 */
+	public function download(string|null $filename = null): string
+	{
+		return $this->asset()->download($filename);
+	}
+
+	/**
+	 * Returns the lowercase extension (without .)
+	 */
+	public function extension(): string
+	{
+		return $this->asset()->extension();
+	}
+
+	/**
 	 * Constructs a File object
 	 *
 	 * @param array<string, mixed> $props
@@ -294,6 +328,22 @@ class File extends ModelWithContent
 	public function guards(): FileGuards
 	{
 		return FileGuards::for($this);
+	}
+
+	/**
+	 * Returns a md5 hash of the root
+	 */
+	public function hash(): string
+	{
+		return $this->asset()->hash();
+	}
+
+	/**
+	 * Sends an appropriate header for the file
+	 */
+	public function header(bool $send = true): Response|null
+	{
+		return $this->asset()->header($send);
 	}
 
 	/**
@@ -393,6 +443,39 @@ class File extends ModelWithContent
 	}
 
 	/**
+	 * Checks if the file is a resizable image
+	 */
+	public function isResizable(): bool
+	{
+		return $this->asset()->isResizable();
+	}
+
+	/**
+	 * Checks if a preview can be displayed for the file
+	 * in the Panel or in the frontend
+	 */
+	public function isViewable(): bool
+	{
+		return $this->asset()->isViewable();
+	}
+
+	/**
+	 * Checks if the file is writable
+	 */
+	public function isWritable(): bool
+	{
+		return $this->asset()->isWritable();
+	}
+
+	/**
+	 * Runs a set of validations on the file
+	 */
+	public function match(array $rules): bool
+	{
+		return $this->asset()->match($rules);
+	}
+
+	/**
 	 * Returns the absolute path to the media folder
 	 * for the file and its versions
 	 * @since 5.0.0
@@ -447,6 +530,14 @@ class File extends ModelWithContent
 	}
 
 	/**
+	 * Detects the mime type of the file
+	 */
+	public function mime(): string|null
+	{
+		return $this->asset()->mime();
+	}
+
+	/**
 	 * Get the file's last modification time.
 	 *
 	 * @param 'date'|'intl'|'strftime'|null $handler Date handler, `null` for the configured one
@@ -480,6 +571,22 @@ class File extends ModelWithContent
 	protected function modifiedFile(): int
 	{
 		return F::modified($this->root()) ?: 0;
+	}
+
+	/**
+	 * Returns the filename without extension
+	 */
+	public function name(): string
+	{
+		return $this->asset()->name();
+	}
+
+	/**
+	 * Returns the file size in a human-readable format
+	 */
+	public function niceSize(string|false|null $locale = null): string
+	{
+		return $this->asset()->niceSize($locale);
 	}
 
 	/**
@@ -604,6 +711,14 @@ class File extends ModelWithContent
 	}
 
 	/**
+	 * Reads the file content and returns it
+	 */
+	public function read(): string|false
+	{
+		return $this->asset()->read();
+	}
+
+	/**
 	 * Returns the absolute root to the file
 	 */
 	#[BlockCollectionAccess]
@@ -639,6 +754,14 @@ class File extends ModelWithContent
 	}
 
 	/**
+	 * Returns the sha1 hash of the file
+	 */
+	public function sha1(): string
+	{
+		return $this->asset()->sha1();
+	}
+
+	/**
 	 * Returns the parent Files collection
 	 */
 	protected function siblingsCollection(): Files
@@ -658,6 +781,14 @@ class File extends ModelWithContent
 		}
 
 		return $this->kirby()->site();
+	}
+
+	/**
+	 * Returns the raw size of the file
+	 */
+	public function size(): int
+	{
+		return $this->asset()->size();
 	}
 
 	/**

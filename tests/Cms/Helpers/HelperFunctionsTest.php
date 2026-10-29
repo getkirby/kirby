@@ -883,11 +883,8 @@ class HelperFunctionsTest extends TestCase
 	public function testSvgWithFileObject(): void
 	{
 		$file = $this->createStub(File::class);
-		$file->method('__call')
-			->willReturnCallback(fn ($method, $args = []) => match ($method) {
-				'extension' => 'svg',
-				default    => 'test'
-			});
+		$file->method('extension')->willReturn('svg');
+		$file->method('read')->willReturn('test');
 
 		$this->assertSame('test', svg($file));
 	}

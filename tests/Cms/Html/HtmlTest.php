@@ -167,11 +167,8 @@ class HtmlTest extends TestCase
 	public function testSvgWithFileObject(): void
 	{
 		$file = $this->createStub(File::class);
-		$file->method('__call')
-			->willReturnCallback(fn ($method) => match ($method) {
-				'extension' => 'svg',
-				default    => 'test'
-			});
+		$file->method('extension')->willReturn('svg');
+		$file->method('read')->willReturn('test');
 
 		$this->assertSame('test', Html::svg($file));
 	}
