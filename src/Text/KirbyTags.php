@@ -58,6 +58,6 @@ class KirbyTags
 
 				return $match[0];
 			}
-		}, $text);
+		}, $text) ?? $text;
 	}
 }

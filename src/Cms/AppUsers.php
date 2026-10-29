@@ -46,21 +46,19 @@ trait AppUsers
 	): mixed {
 		$auth = $this->auth();
 
-		$userBefore = $auth->currentUserFromImpersonation();
-		$userAfter  = $auth->impersonate($who);
+		$before = $auth->currentUserFromImpersonation();
+		$after  = $auth->impersonate($who);
 
 		if ($callback === null) {
-			return $userAfter;
+			return $after;
 		}
 
 		try {
-			return $callback($userAfter);
-		} catch (Throwable $e) {
-			throw $e;
+			return $callback($after);
 		} finally {
 			// ensure that the impersonation is *always* reset
 			// to the original value, even if an error occurred
-			$auth->impersonate($userBefore?->id());
+			$auth->impersonate($before?->id());
 		}
 	}
 

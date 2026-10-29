@@ -129,6 +129,13 @@ class PageValidatorsTest extends ModelTestCase
 		$validators->ensure('changeStatusToListed', -1);
 	}
 
+	public function testEnsureChangeStatusToListedWithoutPosition(): void
+	{
+		$validators = $this->validators(new Page(['slug' => 'test']));
+
+		$this->assertNull($validators->ensure('changeStatusToListed'));
+	}
+
 	public function testEnsureChangeTemplate(): void
 	{
 		$validators = $this->validators(new Page(['slug' => 'test']));

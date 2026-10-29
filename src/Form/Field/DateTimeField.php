@@ -73,7 +73,6 @@ abstract class DateTimeField extends InputField
 			return null;
 		}
 
-		// if `step` option is set, round to nearest step
 		if ($step = $this->step()) {
 			$step = Date::stepConfig($step);
 			$value->round($step['unit'], $step['size']);

@@ -15,7 +15,8 @@ use Kirby\Toolkit\A;
 use Kirby\Toolkit\BlockCollectionAccess;
 
 /**
- * Main class file of the entries field
+ * Allows editors to add a list of entries,
+ * which all use the same type of field
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
@@ -38,6 +39,13 @@ class EntriesField extends InputField implements ProvidesNestedForm
 	protected Form|null $form = null;
 	protected array $value = [];
 
+	/**
+	 * Returns the props of the field that is
+	 * used and repeated for each entry
+	 *
+	 * @return array<string, mixed>
+	 * @throws InvalidArgumentException If the field type is not supported
+	 */
 	public function field(): array
 	{
 		$props = $this->field;
@@ -59,6 +67,9 @@ class EntriesField extends InputField implements ProvidesNestedForm
 		return $props;
 	}
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	public function fieldProps(): array
 	{
 		return $this->form()->fields()->first()->toArray();
@@ -80,6 +91,11 @@ class EntriesField extends InputField implements ProvidesNestedForm
 		);
 	}
 
+	/**
+	 * Returns the field types that can be used for the entries
+	 *
+	 * @return list<string>
+	 */
 	public function supports(): array
 	{
 		return [
@@ -96,10 +112,13 @@ class EntriesField extends InputField implements ProvidesNestedForm
 		];
 	}
 
+	/**
+	 * @return array
+	 */
 	public function toFormValue(): mixed
 	{
 		$form  = $this->form();
-		$value = parent::toFormValue() ?? $this->emptyValue();
+		$value = parent::toFormValue();
 
 		return A::map(
 			$value,
@@ -109,6 +128,9 @@ class EntriesField extends InputField implements ProvidesNestedForm
 		);
 	}
 
+	/**
+	 * @return array
+	 */
 	public function toStoredValue(): mixed
 	{
 		$form  = $this->form();

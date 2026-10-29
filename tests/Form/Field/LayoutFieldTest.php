@@ -352,6 +352,56 @@ class LayoutFieldTest extends TestCase
 		$this->assertSame($original[0]['columns'][0]['blocks'][0]['content'], $pasted[0]['columns'][0]['blocks'][0]['content']);
 	}
 
+	public function testPasteLayoutsWithUnavailableBlock(): void
+	{
+		$field = $this->field('layout');
+
+		$pasted = $field->pasteLayouts([
+			[
+				'columns' => [
+					[
+						'width'  => '1/1',
+						'blocks' => [
+							['type' => 'not-exists', 'content' => []],
+							['type' => 'heading', 'content' => ['text' => 'A']]
+						]
+					]
+				]
+			]
+		]);
+
+		$blocks = $pasted[0]['columns'][0]['blocks'];
+
+		$this->assertCount(1, $blocks);
+		$this->assertSame('heading', $blocks[0]['type']);
+	}
+
+	public function testPasteLayoutsWithUnavailableLayout(): void
+	{
+		$field = $this->field('layout', [
+			'layouts' => [
+				['1/1']
+			]
+		]);
+
+		$pasted = $field->pasteLayouts([
+			[
+				'columns' => [
+					['width' => '1/2', 'blocks' => []],
+					['width' => '1/2', 'blocks' => []]
+				]
+			],
+			[
+				'columns' => [
+					['width' => '1/1', 'blocks' => []]
+				]
+			]
+		]);
+
+		$this->assertCount(1, $pasted);
+		$this->assertSame('1/1', $pasted[0]['columns'][0]['width']);
+	}
+
 	public function testProps(): void
 	{
 		$field = $this->field('layout');

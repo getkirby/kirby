@@ -13,6 +13,9 @@ use Kirby\Toolkit\Str;
  */
 trait AppTranslations
 {
+	/**
+	 * @var array<string, array<string, mixed>>
+	 */
 	protected array $i18nStrings = [];
 	protected Translations|null $translations = null;
 
@@ -22,6 +25,8 @@ trait AppTranslations
 	 * English one, so that is always the complete set, plus whatever
 	 * extensions register for English and for the code itself.
 	 * @since 5.6.0
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function coreI18nStrings(string $code): array
 	{
@@ -39,6 +44,8 @@ trait AppTranslations
 	 * Returns the translation strings that the custom variables of a
 	 * language contribute. A variable must never shadow one of Kirby's
 	 * own strings, as the Panel renders some of them as HTML.
+	 *
+	 * @return array<string, mixed>
 	 */
 	protected function customI18nStrings(Language $language): array
 	{
@@ -57,6 +64,8 @@ trait AppTranslations
 	 * or the App props have registered for the given code
 	 *
 	 * @since 6.0.0
+	 *
+	 * @return array<string, mixed>
 	 */
 	protected function extensionI18nStrings(string $code): array
 	{
@@ -165,10 +174,11 @@ trait AppTranslations
 		$locale   = basename($locale);
 
 		// prefer loading them from the translations collection
-		if ($this->translations instanceof Translations) {
-			if ($translation = $this->translations()->find($locale)) {
-				return $translation;
-			}
+		if (
+			$this->translations instanceof Translations &&
+			$translation = $this->translations()->find($locale)
+		) {
+			return $translation;
 		}
 
 		// get injected translation data from extensions

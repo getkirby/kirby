@@ -53,6 +53,9 @@ class TagsField extends OptionsField
 	#[Prop]
 	protected bool $sort = false;
 
+	/**
+	 * @return 'all'|'options'
+	 */
 	public function accept(): string
 	{
 		return match ($this->accept) {

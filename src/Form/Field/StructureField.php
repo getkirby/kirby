@@ -15,6 +15,7 @@ use Kirby\Toolkit\Str;
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     6.0.0
  */
 class StructureField extends InputField implements ProvidesNestedForm
 {
@@ -52,6 +53,9 @@ class StructureField extends InputField implements ProvidesNestedForm
 		return $this->limit;
 	}
 
+	/**
+	 * @return list<array<string, mixed>>
+	 */
 	public function toFormValue(): array
 	{
 		$data = [];
@@ -68,6 +72,9 @@ class StructureField extends InputField implements ProvidesNestedForm
 		return $data;
 	}
 
+	/**
+	 * @return list<array<string, mixed>>
+	 */
 	public function toStoredValue(): array
 	{
 		$data     = [];
@@ -110,8 +117,8 @@ class StructureField extends InputField implements ProvidesNestedForm
 			return;
 		}
 
-		foreach ($this->value as $index => $value) {
-			$form = $this->form()->fill(input: $value);
+		foreach ($this->value as $index => $row) {
+			$form = $this->form()->fill(input: $row);
 
 			foreach ($form->fields() as $field) {
 				$errors = $field->errors();

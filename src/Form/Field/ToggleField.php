@@ -38,6 +38,9 @@ class ToggleField extends InputField
 		);
 	}
 
+	/**
+	 * @return array<HtmlString>|HtmlString|null
+	 */
 	public function text(): array|HtmlString|null
 	{
 		$text = $this->text;
