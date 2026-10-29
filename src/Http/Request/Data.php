@@ -54,6 +54,34 @@ trait Data
 	}
 
 	/**
+	 * Returns the value for the key as integer
+	 * if it is an integer or an integer string
+	 * (e.g. `'2'` or `'-1'`), otherwise the default
+	 * @since 6.0.0
+	 */
+	public function int(string $key, int|null $default = null): int|null
+	{
+		$value = $this->get($key);
+
+		if (is_string($value) === true) {
+			$value = filter_var($value, FILTER_VALIDATE_INT, FILTER_NULL_ON_FAILURE);
+		}
+
+		return is_int($value) === true ? $value : $default;
+	}
+
+	/**
+	 * Returns the value for the key if it is a string,
+	 * otherwise the default (e.g. for `?key[]=value`)
+	 * @since 6.0.0
+	 */
+	public function string(string $key, string|null $default = null): string|null
+	{
+		$value = $this->get($key);
+		return is_string($value) === true ? $value : $default;
+	}
+
+	/**
 	 * Returns the data array.
 	 * This is basically an alias for Data::data()
 	 */

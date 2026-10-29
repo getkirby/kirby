@@ -226,6 +226,34 @@ class RequestTest extends TestCase
 		$this->assertSame('bar', $headers['X-Foo']);
 	}
 
+	public function testInt(): void
+	{
+		$request = new Request([
+			'body'  => [
+				'a'    => 1,
+				'b'    => 'body',
+				'user' => ['age' => '42']
+			],
+			'query' => [
+				'b' => '2',
+				'c' => 'abc',
+				'd' => ['3'],
+				'e' => '-4'
+			]
+		]);
+
+		$this->assertSame(1, $request->int('a'));
+		$this->assertSame(2, $request->int('b'));
+		$this->assertNull($request->int('c'));
+		$this->assertSame(5, $request->int('c', 5));
+		$this->assertNull($request->int('d'));
+		$this->assertSame(5, $request->int('d', 5));
+		$this->assertSame(-4, $request->int('e'));
+		$this->assertSame(42, $request->int('user.age'));
+		$this->assertNull($request->int('missing'));
+		$this->assertSame(5, $request->int('missing', 5));
+	}
+
 	public function testMethod(): void
 	{
 		$request = new Request();
@@ -269,6 +297,35 @@ class RequestTest extends TestCase
 	{
 		$request = new Request();
 		$this->assertTrue($request->is('get'));
+	}
+
+	public function testString(): void
+	{
+		$request = new Request([
+			'body'  => [
+				'a'    => 'body',
+				'b'    => 'body',
+				'c'    => 1,
+				'user' => ['name' => 'Homer']
+			],
+			'query' => [
+				'b' => 'query',
+				'd' => ['foo'],
+				'e' => ''
+			]
+		]);
+
+		$this->assertSame('body', $request->string('a'));
+		$this->assertSame('query', $request->string('b'));
+		$this->assertNull($request->string('c'));
+		$this->assertSame('fallback', $request->string('c', 'fallback'));
+		$this->assertNull($request->string('d'));
+		$this->assertSame('fallback', $request->string('d', 'fallback'));
+		$this->assertSame('', $request->string('e', 'fallback'));
+		$this->assertSame('Homer', $request->string('user.name'));
+		$this->assertNull($request->string('user'));
+		$this->assertNull($request->string('missing'));
+		$this->assertSame('fallback', $request->string('missing', 'fallback'));
 	}
 
 	public function testUrl(): void

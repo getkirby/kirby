@@ -337,6 +337,17 @@ class Request
 	}
 
 	/**
+	 * Returns a data field from the request as integer
+	 * if it is an integer or an integer string
+	 * (e.g. `'2'` or `'-1'`), otherwise the default
+	 * @since 6.0.0
+	 */
+	public function int(string $key, int|null $default = null): int|null
+	{
+		return (new Query([$key => $this->get($key)]))->int($key, $default);
+	}
+
+	/**
 	 * Checks if the given method name
 	 * matches the name of the request method.
 	 */
@@ -383,6 +394,16 @@ class Request
 	public function ssl(): bool
 	{
 		return $this->url()->scheme() === 'https';
+	}
+
+	/**
+	 * Returns a data field from the request if it is
+	 * a string, otherwise the default (e.g. for `?key[]=value`)
+	 * @since 6.0.0
+	 */
+	public function string(string $key, string|null $default = null): string|null
+	{
+		return (new Query([$key => $this->get($key)]))->string($key, $default);
 	}
 
 	/**

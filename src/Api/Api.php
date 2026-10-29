@@ -19,6 +19,7 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\F;
 use Kirby\Form\Form;
+use Kirby\Http\Request\Query;
 use Kirby\Http\Response;
 use Kirby\Http\Route;
 use Kirby\Http\Router;
@@ -512,6 +513,17 @@ class Api
 	}
 
 	/**
+	 * Returns a query param of the request as integer
+	 * if it is an integer or an integer string
+	 * (e.g. `'2'` or `'-1'`), otherwise the default
+	 * @since 6.0.0
+	 */
+	public function requestInt(string $key, int|null $default = null): int|null
+	{
+		return (new Query([$key => $this->requestQuery($key)]))->int($key, $default);
+	}
+
+	/**
 	 * Returns the request method
 	 */
 	public function requestMethod(): string|null
@@ -527,6 +539,16 @@ class Api
 		mixed $default = null
 	): mixed {
 		return $this->requestData('query', $key, $default);
+	}
+
+	/**
+	 * Returns a query param of the request if it is
+	 * a string, otherwise the default (e.g. for `?key[]=value`)
+	 * @since 6.0.0
+	 */
+	public function requestString(string $key, string|null $default = null): string|null
+	{
+		return (new Query([$key => $this->requestQuery($key)]))->string($key, $default);
 	}
 
 	/**
