@@ -28,7 +28,7 @@ return [
 		'method'  => 'GET|POST',
 		'action'  => function () {
 			if ($this->requestMethod() === 'GET') {
-				return Find::users()->search($this->requestQuery('q'));
+				return Find::users()->search($this->requestString('q'));
 			}
 
 			return Find::users()->query(array_filter([
@@ -140,7 +140,7 @@ return [
 		],
 		'method'  => 'GET',
 		'action'  => function (string $id) {
-			return Find::user($id)->blueprints($this->requestQuery('field'));
+			return Find::user($id)->blueprints($this->requestString('field'));
 		}
 	],
 	[

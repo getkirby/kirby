@@ -115,9 +115,15 @@ class Collection
 		}
 
 		if (!$this->data->pagination()) {
+			// an empty `?limit=` is left to the pagination default
+			$limit = match ($this->api->requestQuery('limit')) {
+				''      => null,
+				default => $this->api->requestInt('limit', 100)
+			};
+
 			$this->data = $this->data->paginate([
-				'page'  => $this->api->requestQuery('page', 1),
-				'limit' => $this->api->requestQuery('limit', 100)
+				'page'  => $this->api->requestInt('page', 1),
+				'limit' => $limit
 			]);
 		}
 
@@ -127,7 +133,7 @@ class Collection
 			$this->select($select);
 		}
 
-		if ($view = $this->api->requestQuery('view')) {
+		if ($view = $this->api->requestString('view')) {
 			$this->view($view);
 		}
 

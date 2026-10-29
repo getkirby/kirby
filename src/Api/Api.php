@@ -360,7 +360,7 @@ class Api
 	public function language(): string|null
 	{
 		return
-			$this->requestQuery('language') ??
+			$this->requestString('language') ??
 			$this->requestHeaders('x-language');
 	}
 
@@ -739,12 +739,12 @@ class Api
 	 */
 	public function searchPages(string|null $parent = null): Pages
 	{
-		$status = $this->requestQuery('status');
+		$status = $this->requestString('status');
 		$method = $this->requestMethod();
 		$pages  = $this->pages($parent, $status);
 
 		if ($method === 'GET') {
-			$query = $this->requestQuery('q');
+			$query = $this->requestString('q');
 			return $pages->search($query);
 		}
 
