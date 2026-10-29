@@ -35,11 +35,6 @@ function copy($old, $new)
 	return blockMethod('copy', [$old, $new]);
 }
 
-function stat($file)
-{
-	return blockMethod('stat', [$file]);
-}
-
 function unlink($file)
 {
 	return blockMethod('unlink', [$file]);

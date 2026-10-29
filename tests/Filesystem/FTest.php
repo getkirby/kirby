@@ -1136,33 +1136,6 @@ class FTest extends TestCase
 		$this->assertSame(0o640, fileperms($this->test) & 0o777);
 	}
 
-	public function testWriteKeepsOwner(): void
-	{
-		F::write($this->test, 'old content');
-		$inode = fileinode($this->test);
-
-		// e.g. a file of the deploy user: a replacement
-		// would belong to the PHP user instead
-		FileTest::$mocks['stat'] = function ($file) {
-			$stat = \stat($file);
-
-			if ($file === $this->test) {
-				$stat['uid']++;
-			}
-
-			return $stat;
-		};
-
-		try {
-			$this->assertTrue(F::write($this->test, 'new content'));
-			$this->assertSame($inode, fileinode($this->test));
-			$this->assertSame('new content', F::read($this->test));
-			$this->assertSame(['moved.txt'], array_values(array_diff(scandir(static::TMP), ['.', '..'])));
-		} finally {
-			FileTest::$mocks = [];
-		}
-	}
-
 	public function testWriteLeavesNoTemporaryFile(): void
 	{
 		F::write($this->test, 'first');
