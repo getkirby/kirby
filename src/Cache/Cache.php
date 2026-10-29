@@ -41,15 +41,10 @@ abstract class Cache
 
 	/**
 	 * Returns whether the cache is ready to
-	 * store values
+	 * store values;
+	 * this needs to be defined by the driver
 	 */
-	public function enabled(): bool
-	{
-		// TODO: Make this method abstract in a future
-		// release to ensure that cache drivers override it;
-		// until then, we assume that the cache is enabled
-		return true;
-	}
+	abstract public function enabled(): bool;
 
 	/**
 	 * Determines if an item exists in the cache
