@@ -200,7 +200,7 @@ class Panel
 		$request = $this->kirby->request();
 
 		$referrer = $request->header('X-Panel-Referrer')
-				 ?? $request->get('_referrer')
+				 ?? $request->string('_referrer')
 				 ?? '';
 
 		return '/' . trim($referrer, '/');

@@ -33,7 +33,7 @@ class UserChangeLanguageDialogController extends UserDialogController
 	public function submit(): array
 	{
 		$this->user = $this->user->changeLanguage(
-			language: $this->request->get('translation')
+			language: $this->request->string('translation', '')
 		);
 
 		return [

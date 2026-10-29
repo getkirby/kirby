@@ -110,7 +110,7 @@ class LanguageVariableFormDialogController extends DialogController
 
 	public function submit(): bool
 	{
-		$key      = $this->request->get('key', '');
+		$key      = $this->request->string('key', '');
 		$multiple = $this->request->get('multiple', false);
 
 		$value = match ($multiple) {

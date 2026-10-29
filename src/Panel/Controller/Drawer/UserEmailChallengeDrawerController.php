@@ -89,7 +89,7 @@ class UserEmailChallengeDrawerController extends UserCredentialDrawerController
 
 	public function submit(): bool
 	{
-		$this->user = match ($action = $this->request->get('action')) {
+		$this->user = match ($action = $this->request->string('action')) {
 			'code'   => $this->send(),
 			'create' => $this->create(),
 			'remove' => $this->remove(),

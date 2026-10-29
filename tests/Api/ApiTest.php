@@ -1403,6 +1403,34 @@ class ApiTest extends TestCase
 		$this->assertSame(500, $result->code());
 	}
 
+	public function testRequestInt(): void
+	{
+		$api = new Api([
+			'requestData' => [
+				'query' => [
+					'page'  => '2',
+					'Limit' => 10,
+					'q'     => 'abc',
+					'view'  => ['3'],
+				],
+				'body' => [
+					'offset' => '4'
+				]
+			]
+		]);
+
+		$this->assertSame(2, $api->requestInt('page'));
+		$this->assertSame(10, $api->requestInt('limit'));
+		$this->assertNull($api->requestInt('q'));
+		$this->assertSame(1, $api->requestInt('q', 1));
+		$this->assertNull($api->requestInt('view'));
+		$this->assertSame(1, $api->requestInt('view', 1));
+
+		// only reads the query
+		$this->assertNull($api->requestInt('offset'));
+		$this->assertSame(1, $api->requestInt('offset', 1));
+	}
+
 	public function testRequestMethod(): void
 	{
 		$api = new Api([
@@ -1410,6 +1438,36 @@ class ApiTest extends TestCase
 		]);
 
 		$this->assertSame('POST', $api->requestMethod());
+	}
+
+	public function testRequestString(): void
+	{
+		$api = new Api([
+			'requestData' => [
+				'query' => [
+					'q'        => 'foo',
+					'Status'   => 'listed',
+					'page'     => 2,
+					'language' => ['en'],
+					'empty'    => ''
+				],
+				'body' => [
+					'title' => 'Title'
+				]
+			]
+		]);
+
+		$this->assertSame('foo', $api->requestString('q'));
+		$this->assertSame('listed', $api->requestString('status'));
+		$this->assertNull($api->requestString('page'));
+		$this->assertSame('fallback', $api->requestString('page', 'fallback'));
+		$this->assertNull($api->requestString('language'));
+		$this->assertSame('fallback', $api->requestString('language', 'fallback'));
+		$this->assertSame('', $api->requestString('empty', 'fallback'));
+
+		// only reads the query
+		$this->assertNull($api->requestString('title'));
+		$this->assertSame('fallback', $api->requestString('title', 'fallback'));
 	}
 
 	public function testRoutes(): void

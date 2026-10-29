@@ -189,7 +189,7 @@ class Model
 			$model = $model->select($select);
 		}
 
-		if ($view = $this->api->requestQuery('view')) {
+		if ($view = $this->api->requestString('view')) {
 			$model = $model->view($view);
 		}
 

@@ -150,7 +150,7 @@ class PageListField extends ModelListField implements ProvidesAcceptedBlueprints
 		return $this->collector ??= new PagesCollector(
 			flip:            $this->flip(),
 			limit:           $this->limit(),
-			page:            (int)$this->page() ?: 1,
+			page:            $this->page() ?: 1,
 			parent:          $parent,
 			query:           $this->query(),
 			search:          $this->searchterm(),

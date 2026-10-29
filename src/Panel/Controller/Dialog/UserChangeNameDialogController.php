@@ -34,7 +34,7 @@ class UserChangeNameDialogController extends UserDialogController
 
 	public function submit(): array
 	{
-		$this->user = $this->user->changeName($this->request->get('name'));
+		$this->user = $this->user->changeName($this->request->string('name'));
 
 		return [
 			'event' => 'user.changeName'

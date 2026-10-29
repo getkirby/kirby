@@ -38,14 +38,14 @@ return [
 		'pattern' => 'pages/(:any)/blueprints',
 		'method'  => 'GET',
 		'action'  => function (string $id) {
-			return $this->page($id)->blueprints($this->requestQuery('field'));
+			return $this->page($id)->blueprints($this->requestString('field'));
 		}
 	],
 	[
 		'pattern' => 'pages/(:any)/children',
 		'method'  => 'GET',
 		'action'  => function (string $id) {
-			return $this->pages($id, $this->requestQuery('status'));
+			return $this->pages($id, $this->requestString('status'));
 		}
 	],
 	[

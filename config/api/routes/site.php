@@ -23,7 +23,7 @@ return [
 		'pattern' => 'site/children',
 		'method'  => 'GET',
 		'action'  => function () {
-			return $this->pages(null, $this->requestQuery('status'));
+			return $this->pages(null, $this->requestString('status'));
 		}
 	],
 	[
@@ -51,7 +51,7 @@ return [
 		'pattern' => 'site/blueprints',
 		'method'  => 'GET',
 		'action'  => function () {
-			return $this->site()->blueprints($this->requestQuery('field'));
+			return $this->site()->blueprints($this->requestString('field'));
 		}
 	],
 	[
@@ -78,7 +78,7 @@ return [
 				->filter('isListable', true);
 
 			if ($this->requestMethod() === 'GET') {
-				return $pages->search($this->requestQuery('q'));
+				return $pages->search($this->requestString('q'));
 			}
 
 			return $pages->query(array_filter([

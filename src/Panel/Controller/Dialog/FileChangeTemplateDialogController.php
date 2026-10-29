@@ -44,7 +44,7 @@ class FileChangeTemplateDialogController extends FileDialogController
 
 	public function submit(): array
 	{
-		$template   = $this->request->get('template');
+		$template   = $this->request->string('template');
 		$this->file = $this->file->changeTemplate($template);
 
 		return [

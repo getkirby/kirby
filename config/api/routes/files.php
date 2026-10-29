@@ -70,7 +70,7 @@ return [
 			$files = $this->files($path);
 
 			if ($this->requestMethod() === 'GET') {
-				return $files->search($this->requestQuery('q'));
+				return $files->search($this->requestString('q'));
 			}
 
 			return $files->query(array_filter([
@@ -153,7 +153,7 @@ return [
 				->filter('isListable', true);
 
 			if ($this->requestMethod() === 'GET') {
-				return $files->search($this->requestQuery('q'));
+				return $files->search($this->requestString('q'));
 			}
 
 			return $files->query(array_filter([

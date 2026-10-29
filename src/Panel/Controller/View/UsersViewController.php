@@ -38,7 +38,7 @@ class UsersViewController extends ViewController
 
 	public static function factory(): static
 	{
-		return new static(role: App::instance()->request()->get('role'));
+		return new static(role: App::instance()->request()->string('role'));
 	}
 
 	public function load(): View
@@ -73,7 +73,7 @@ class UsersViewController extends ViewController
 	{
 		$collector = new UsersCollector(
 			limit: 20,
-			page: $this->kirby->request()->get('page', 1),
+			page: $this->kirby->request()->int('page', 1),
 			role: $this->role,
 			sortBy: 'username asc',
 		);

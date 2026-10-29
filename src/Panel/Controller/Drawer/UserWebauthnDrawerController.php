@@ -90,7 +90,7 @@ class UserWebauthnDrawerController extends UserCredentialDrawerController
 	{
 		$this->authorize();
 
-		$id          = $this->request->get('id');
+		$id          = $this->request->string('id', '');
 		$credentials = $this->credentials();
 		$remaining   = $this->webauthn->removeCredential($credentials, $id);
 

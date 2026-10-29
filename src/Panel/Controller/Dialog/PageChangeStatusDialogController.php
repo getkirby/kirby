@@ -88,8 +88,8 @@ class PageChangeStatusDialogController extends PageDialogController
 	public function submit(): array|true
 	{
 		$this->page = $this->page->changeStatus(
-			$this->request->get('status'),
-			$this->request->get('position')
+			$this->request->string('status', ''),
+			$this->request->int('position')
 		);
 
 		return [

@@ -124,7 +124,7 @@ class PreviewViewController extends ViewController
 	public function redirect(): string|null
 	{
 		// Get redirect URL path
-		if ($redirect = $this->request->get('view')) {
+		if ($redirect = $this->request->string('view')) {
 			$redirect = new Uri($redirect);
 
 			// Look up new model and redirect to its preview
@@ -161,7 +161,7 @@ class PreviewViewController extends ViewController
 		// if view is reloaded with a different browser URL,
 		// find corresponding model for this URL
 		// and use it for the preview URLs
-		if ($browser = $this->request->get('browser')) {
+		if ($browser = $this->request->string('browser')) {
 			$browser = new Uri($browser);
 			$model   = $this->modelFromUri($browser);
 		}

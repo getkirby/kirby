@@ -6,6 +6,7 @@ use Exception;
 use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class CollectionTest extends TestCase
 {
@@ -210,5 +211,119 @@ class CollectionTest extends TestCase
 		]);
 
 		$this->assertCount(2, $collection->toResponse()['data']);
+	}
+
+	public static function invalidLimitProvider(): array
+	{
+		return [
+			[['2'], 100],
+			['abc', 100],
+			// empty values are left to the pagination default
+			['', 20],
+			['0', 20],
+		];
+	}
+
+	#[DataProvider('invalidLimitProvider')]
+	public function testToResponseWithInvalidLimit(mixed $limit, int $expected): void
+	{
+		$api = new Api([
+			'models' => [
+				'test' => [
+					'type'   => Page::class,
+					'fields' => [
+						'value' => fn ($model) => $model->slug()
+					]
+				]
+			],
+			'requestData' => [
+				'query' => [
+					'limit' => $limit
+				]
+			]
+		]);
+		$collection = new Collection($api, new Pages([
+			new Page(['slug' => 'a']),
+			new Page(['slug' => 'b'])
+		]), [
+			'model' => 'test'
+		]);
+
+		// malformed `limit` query falls back to the default
+		$response = $collection->toResponse();
+		$this->assertCount(2, $response['data']);
+		$this->assertSame($expected, $response['pagination']['limit']);
+	}
+
+	public static function invalidPageProvider(): array
+	{
+		return [
+			[['2']],
+			[''],
+			['abc'],
+		];
+	}
+
+	#[DataProvider('invalidPageProvider')]
+	public function testToResponseWithInvalidPage(mixed $page): void
+	{
+		$api = new Api([
+			'models' => [
+				'test' => [
+					'type'   => Page::class,
+					'fields' => [
+						'value' => fn ($model) => $model->slug()
+					]
+				]
+			],
+			'requestData' => [
+				'query' => [
+					'limit' => 1,
+					'page'  => $page
+				]
+			]
+		]);
+		$collection = new Collection($api, new Pages([
+			new Page(['slug' => 'a']),
+			new Page(['slug' => 'b'])
+		]), [
+			'model' => 'test'
+		]);
+
+		// malformed `page` query falls back to the default
+		$response = $collection->toResponse();
+		$this->assertSame([['value' => 'a']], $response['data']);
+		$this->assertSame(1, $response['pagination']['page']);
+	}
+
+	public function testToResponseWithLimitAndPage(): void
+	{
+		$api = new Api([
+			'models' => [
+				'test' => [
+					'type'   => Page::class,
+					'fields' => [
+						'value' => fn ($model) => $model->slug()
+					]
+				]
+			],
+			'requestData' => [
+				'query' => [
+					'limit' => '1',
+					'page'  => '2'
+				]
+			]
+		]);
+		$collection = new Collection($api, new Pages([
+			new Page(['slug' => 'a']),
+			new Page(['slug' => 'b'])
+		]), [
+			'model' => 'test'
+		]);
+
+		$response = $collection->toResponse();
+		$this->assertSame([['value' => 'b']], $response['data']);
+		$this->assertSame(2, $response['pagination']['page']);
+		$this->assertSame(1, $response['pagination']['limit']);
 	}
 }

@@ -148,10 +148,10 @@ class PageCreateDialogController extends ModelCreateDialogController
 	public static function factory(): static
 	{
 		$request = App::instance()->request();
-		$parent  = $request->get('parent');
+		$parent  = $request->string('parent');
 		$parent  = $parent ? Find::parent($parent) : Find::site();
 
-		if ($field = $request->get('field')) {
+		if ($field = $request->string('field')) {
 			$blueprints = $parent->blueprints($field);
 
 			if ($blueprints === []) {
@@ -305,7 +305,7 @@ class PageCreateDialogController extends ModelCreateDialogController
 
 	public function template(): string
 	{
-		return $this->request->get('template', $this->blueprints()[0]['name']);
+		return $this->request->string('template') ?? $this->blueprints()[0]['name'];
 	}
 
 	public function validate(array $input, string $status = 'draft'): bool

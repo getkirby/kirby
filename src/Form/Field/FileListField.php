@@ -90,7 +90,7 @@ class FileListField extends ModelListField
 		return $this->collector ??= new FilesCollector(
 			flip:     $this->flip(),
 			limit:    $this->limit(),
-			page:     (int)$this->page() ?: 1,
+			page:     $this->page() ?: 1,
 			parent:   $this->parentModel(),
 			query:    $this->query(),
 			search:   $this->searchterm(),

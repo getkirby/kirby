@@ -103,7 +103,7 @@ abstract class ModelViewController extends ViewController
 
 		$data = $model->panel()->toLink($title);
 
-		if ($tab = $model->kirby()->request()->get('tab')) {
+		if ($tab = $model->kirby()->request()->string('tab')) {
 			$uri = new Uri($data['link'], [
 				'query' => ['tab' => $tab]
 			]);
@@ -151,7 +151,7 @@ abstract class ModelViewController extends ViewController
 	public function tab(): array|null
 	{
 		$blueprint = $this->model->blueprint();
-		$tab       = $blueprint->tab($this->request->get('tab'));
+		$tab       = $blueprint->tab($this->request->string('tab'));
 
 		// fall back to the first tab if the requested tab does not exist
 		$tab ??= $blueprint->tabs()->first();
