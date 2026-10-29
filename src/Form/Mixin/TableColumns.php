@@ -13,7 +13,8 @@ use Kirby\Reflection\Attributes\Prop;
 trait TableColumns
 {
 	/**
-	 * Columns definition for the table
+	 * Columns definition for the table. `false` hides a column,
+	 * a string sets its label.
 	 */
 	#[Prop(computed: true)]
 	protected array|null $columns = null;
@@ -65,12 +66,23 @@ trait TableColumns
 		// be lowercase as well.
 		$columns = array_change_key_case($columns);
 
-		// create auto-columns from fields
+		// `false` hides a column
+		$hidden  = array_filter($columns, fn ($column) => $column === false);
+		$columns = array_diff_key($columns, $hidden);
+
+		// create auto-columns from all other fields
 		if ($columns === []) {
-			$columns = $this->columnsFromFields($fields);
+			$columns = array_diff_key($this->columnsFromFields($fields), $hidden);
 		}
 
 		foreach ($columns as $name => $column) {
+			// a string is a shorthand for the label
+			$column = match (true) {
+				is_array($column)  => $column,
+				is_string($column) => ['label' => $column],
+				default            => true
+			};
+
 			$columns[$name] = $this->normalizeColumn($name, $column, $fields[$name] ?? null);
 		}
 
