@@ -100,7 +100,7 @@ abstract class ModelPickerField extends InputField
 			[
 				'pattern' => 'items',
 				'action'  => function () use ($field): array {
-					$ids = $field->kirby()->request()->get('items', '');
+					$ids = $field->kirby()->request()->string('items', '');
 					$ids = Str::split($ids);
 
 					return A::map(
