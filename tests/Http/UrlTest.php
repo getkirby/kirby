@@ -3,6 +3,7 @@
 namespace Kirby\Http;
 
 use Kirby\Cms\App;
+use Kirby\Exception\BadMethodCallException;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -10,7 +11,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(Url::class)]
 class UrlTest extends TestCase
 {
-	protected string $_yt   = 'http://www.youtube.com/watch?v=9q_aXttJduk';
 	protected string $_yts  = 'https://www.youtube.com/watch?v=9q_aXttJduk';
 	protected string $_docs = 'http://getkirby.com/docs/';
 	protected $_SERVER = null;
@@ -20,6 +20,23 @@ class UrlTest extends TestCase
 		Uri::$current = null;
 		Url::$current = null;
 		Url::$home    = '/';
+	}
+
+	public function testCallStatic(): void
+	{
+		// Uri method
+		$this->assertTrue(Url::hasQuery('https://getkirby.com?foo=bar'));
+
+		// Uri property
+		$this->assertSame('https', Url::scheme('https://getkirby.com'));
+	}
+
+	public function testCallStaticWithUnknownMethod(): void
+	{
+		$this->expectException(BadMethodCallException::class);
+		$this->expectExceptionMessage('The method: "to" does not exist');
+
+		Url::to('https://getkirby.com');
 	}
 
 	public function testCurrent(): void
@@ -52,15 +69,6 @@ class UrlTest extends TestCase
 	public function testHome(): void
 	{
 		$this->assertSame('/', Url::home());
-	}
-
-	public function testTo(): void
-	{
-		$this->assertSame('/', Url::to());
-		$this->assertSame($this->_yt, Url::to($this->_yt));
-		$this->assertSame('/getkirby.com', Url::to('getkirby.com'));
-		$this->assertSame('./something', Url::to('./something'));
-		$this->assertSame('../something', Url::to('../something'));
 	}
 
 	public function testLast(): void
