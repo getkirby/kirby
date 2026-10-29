@@ -517,7 +517,6 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
         'Kirby\\Image\\Exif' => __DIR__ . '/../..' . '/src/Image/Exif.php',
         'Kirby\\Image\\Focus' => __DIR__ . '/../..' . '/src/Image/Focus.php',
         'Kirby\\Image\\Gravity' => __DIR__ . '/../..' . '/src/Image/Gravity.php',
-        'Kirby\\Image\\Image' => __DIR__ . '/../..' . '/src/Image/Image.php',
         'Kirby\\Image\\Location' => __DIR__ . '/../..' . '/src/Image/Location.php',
         'Kirby\\Image\\QrCode' => __DIR__ . '/../..' . '/src/Image/QrCode.php',
         'Kirby\\Image\\Svg' => __DIR__ . '/../..' . '/src/Image/Svg.php',

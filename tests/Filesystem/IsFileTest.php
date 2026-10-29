@@ -5,7 +5,6 @@ namespace Kirby\Filesystem;
 use Kirby\Cms\App;
 use Kirby\Cms\File as CmsFile;
 use Kirby\Exception\BadMethodCallException;
-use Kirby\Image\Image;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -39,7 +38,7 @@ class IsFileTest extends TestCase
 	public function testAssetImage(): void
 	{
 		$asset = $this->_asset('cat.jpg');
-		$this->assertInstanceOf(Image::class, $asset->asset());
+		$this->assertSame(File::class, $asset->asset()::class);
 	}
 
 	public function testAssetStringProp(): void

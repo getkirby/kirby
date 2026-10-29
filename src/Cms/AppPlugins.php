@@ -10,9 +10,9 @@ use Kirby\Exception\DuplicateException;
 use Kirby\Filesystem\Asset;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
+use Kirby\Filesystem\File as FilesystemFile;
 use Kirby\Filesystem\Mime;
 use Kirby\Form\Field as FormField;
-use Kirby\Image\Image;
 use Kirby\Plugin\Plugin;
 use Kirby\Text\KirbyTag;
 use Kirby\Toolkit\A;
@@ -398,24 +398,24 @@ trait AppPlugins
 
 			if (
 				$resizable === true &&
-				in_array($extension, Image::$resizableTypes, true) === false
+				in_array($extension, FilesystemFile::$resizableTypes, true) === false
 			) {
-				Image::$resizableTypes[] = $extension;
+				FilesystemFile::$resizableTypes[] = $extension;
 			}
 
 			if (
 				$viewable === true &&
-				in_array($extension, Image::$viewableTypes, true) === false
+				in_array($extension, FilesystemFile::$viewableTypes, true) === false
 			) {
-				Image::$viewableTypes[] = $extension;
+				FilesystemFile::$viewableTypes[] = $extension;
 			}
 		}
 
 		return $this->extensions['fileTypes'] = [
 			'type'      => F::$types,
 			'mime'      => Mime::$types,
-			'resizable' => Image::$resizableTypes,
-			'viewable'  => Image::$viewableTypes
+			'resizable' => FilesystemFile::$resizableTypes,
+			'viewable'  => FilesystemFile::$viewableTypes
 		];
 	}
 

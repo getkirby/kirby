@@ -30,6 +30,10 @@ class ImageFilePreview extends FilePreview
 	{
 		$dimensions = $this->file->dimensions();
 
+		if ($dimensions === null) {
+			return parent::details();
+		}
+
 		return [
 			...parent::details(),
 			[

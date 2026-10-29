@@ -110,6 +110,19 @@ class FileTest extends ModelTestCase
 		$this->assertSame('data:text/plain,test', $file->dataUri(false));
 	}
 
+	public function testDimensionsWithoutDimensions(): void
+	{
+		$file = new File([
+			'filename' => 'test.pdf',
+			'parent'   => new Page(['slug' => 'test']),
+			'content'  => ['width' => '300']
+		]);
+
+		$this->assertNull($file->dimensions());
+		$this->assertNull($file->width());
+		$this->assertSame('300', $file->content()->get('width')->value());
+	}
+
 	public function testDownload(): void
 	{
 		$this->assertSame('test', $this->file()->download());

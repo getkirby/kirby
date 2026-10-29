@@ -2,6 +2,7 @@
 
 namespace Kirby\Image;
 
+use Kirby\Filesystem\File;
 use PHPUnit\Framework\Attributes\CoversClass;
 use ReflectionClass;
 
@@ -16,7 +17,7 @@ class ExifTest extends TestCase
 
 	protected function _image($filename = 'image/cat.jpg')
 	{
-		return new Image(static::FIXTURES . '/' . $filename);
+		return new File(static::FIXTURES . '/' . $filename);
 	}
 
 	public function testAperture(): void
@@ -213,7 +214,7 @@ class ExifTest extends TestCase
 	public function testParseTimestampReturnsNullWhenUnavailable(): void
 	{
 		// image pointing at a non-existent file makes modified() return false
-		$image = new Image(static::FIXTURES . '/image/does-not-exist.jpg');
+		$image = new File(static::FIXTURES . '/image/does-not-exist.jpg');
 		$exif  = new Exif($image);
 
 		$ref  = new ReflectionClass($exif);

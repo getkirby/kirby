@@ -2,6 +2,7 @@
 
 namespace Kirby\Image;
 
+use Kirby\Filesystem\File;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -144,14 +145,14 @@ class DimensionsTest extends TestCase
 
 	public function testForImage(): void
 	{
-		$image = new Image([
+		$image = new File([
 			'root' => __DIR__ . '/fixtures/image/onigiri-adobe-rgb-gps.jpg'
 		]);
 		$dimensions = Dimensions::forImage($image);
 		$this->assertSame(600, $dimensions->width());
 		$this->assertSame(400, $dimensions->height());
 
-		$image = new Image([
+		$image = new File([
 			'root' => __DIR__ . '/fixtures/image/onigiri-adobe-rgb-gps.webp'
 		]);
 
@@ -159,7 +160,7 @@ class DimensionsTest extends TestCase
 		$this->assertSame(600, $dimensions->width());
 		$this->assertSame(400, $dimensions->height());
 
-		$image = new Image([
+		$image = new File([
 			'root' => __DIR__ . '/fixtures/image/onigiri-adobe-rgb-gps.avif'
 		]);
 
@@ -198,7 +199,7 @@ class DimensionsTest extends TestCase
 		int $width,
 		int $height
 	): void {
-		$image = new Image([
+		$image = new File([
 			'root' => __DIR__ . '/fixtures/orientation/' . $filename
 		]);
 
@@ -209,7 +210,7 @@ class DimensionsTest extends TestCase
 
 	public function testForImageWithInvalidImage(): void
 	{
-		$image = new Image([
+		$image = new File([
 			'root' => static::FIXTURES . '/image/invalid.jpg'
 		]);
 

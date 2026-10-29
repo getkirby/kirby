@@ -2,6 +2,7 @@
 
 namespace Kirby\Image;
 
+use Kirby\Filesystem\File;
 use Stringable;
 
 /**
@@ -221,13 +222,13 @@ class Dimensions implements Stringable
 	/**
 	 * Detect the dimensions for an image file
 	 */
-	public static function forImage(Image $image): static
+	public static function forImage(File $image): static
 	{
 		if ($image->exists() === false) {
 			return new static(0, 0);
 		}
 
-		$orientation = $image->exif()->orientation();
+		$orientation = $image->exif()?->orientation() ?? 1;
 		$size        = $image->imagesize();
 
 		// handle invalid or corrupted images that bypass mime type validation

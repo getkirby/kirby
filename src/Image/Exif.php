@@ -2,6 +2,7 @@
 
 namespace Kirby\Image;
 
+use Kirby\Filesystem\File;
 use Kirby\Toolkit\V;
 
 /**
@@ -28,7 +29,7 @@ class Exif
 	protected string|null $timestamp = null;
 
 	public function __construct(
-		protected Image $image
+		protected File $image
 	) {
 		$this->data        = $this->read($image->root());
 		$this->aperture    = $this->computed()['ApertureFNumber'] ?? null;

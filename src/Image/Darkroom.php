@@ -4,6 +4,7 @@ namespace Kirby\Image;
 
 use Exception;
 use Kirby\Filesystem\F;
+use Kirby\Filesystem\File;
 use Kirby\Image\Darkroom\GdLib;
 use Kirby\Image\Darkroom\ImageMagick;
 use Kirby\Image\Darkroom\Imagick;
@@ -160,13 +161,12 @@ class Darkroom
 	 */
 	public function preprocess(string $file, array $options = []): array
 	{
-		$options = $this->options($options);
-		$image   = new Image($file);
+		$options    = $this->options($options);
+		$dimensions = new File($file)->dimensions() ?? new Dimensions(0, 0);
 
-		$options['sourceWidth']  = $image->width();
-		$options['sourceHeight'] = $image->height();
+		$options['sourceWidth']  = $dimensions->width();
+		$options['sourceHeight'] = $dimensions->height();
 
-		$dimensions        = $image->dimensions();
 		$thumbDimensions   = $dimensions->thumb($options);
 
 		$options['width']  = $thumbDimensions->width();

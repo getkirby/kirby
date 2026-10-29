@@ -4,11 +4,15 @@ namespace Kirby\Filesystem;
 
 use IntlDateFormatter;
 use Kirby\Cms\App;
+use Kirby\Cms\FileVersion;
+use Kirby\Content\Content;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Http\Response;
+use Kirby\Image\Dimensions;
+use Kirby\Image\Exif;
 use Kirby\Sane\Sane;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\Html;
@@ -19,21 +23,57 @@ use Stringable;
  * Flexible File object with a set of helpful
  * methods to inspect and work with files.
  *
+ * Image files additionally provide their dimensions
+ * and exif data; other files return `null` for those.
+ *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     3.6.0
  */
 class File implements Stringable
 {
+	public static array $resizableTypes = [
+		'avif',
+		'jpg',
+		'jpeg',
+		'gif',
+		'png',
+		'webp'
+	];
+
 	/**
 	 * Validation rules to be used for `::match()`
 	 *
 	 * @var array<string, array{0: string, 1: string}>
 	 */
 	public static array $validations = [
-		'maxsize' => ['size', 'max'],
-		'minsize' => ['size', 'min']
+		'maxsize'     => ['size',   'max'],
+		'minsize'     => ['size',   'min'],
+		'maxwidth'    => ['width',  'max'],
+		'minwidth'    => ['width',  'min'],
+		'maxheight'   => ['height', 'max'],
+		'minheight'   => ['height', 'min'],
+		'orientation' => ['orientation', 'same']
 	];
+	public static array $viewableTypes = [
+		'avif',
+		'jpg',
+		'jpeg',
+		'gif',
+		'png',
+		'svg',
+		'webp'
+	];
+
+	/**
+	 * Cached dimensions; `false` for files without
+	 */
+	protected Dimensions|false|null $dimensions = null;
+
+	/**
+	 * Cached exif data
+	 */
+	protected Exif|null $exif = null;
 
 	/**
 	 * Parent file model
@@ -96,10 +136,15 @@ class File implements Stringable
 	}
 
 	/**
-	 * Returns the URL for the file object
+	 * Returns the `<img>` tag for images with a URL,
+	 * otherwise the URL or root of the file
 	 */
 	public function __toString(): string
 	{
+		if ($this->type() === 'image' && $this->url() !== null) {
+			return $this->html();
+		}
+
 		return $this->url() ?? $this->root() ?? '';
 	}
 
@@ -153,6 +198,54 @@ class File implements Stringable
 	}
 
 	/**
+	 * Returns the dimensions of the file or
+	 * `null` if the file has no visual dimensions
+	 */
+	public function dimensions(): Dimensions|null
+	{
+		// `false` caches that the file has no dimensions
+		if ($this->dimensions !== null) {
+			return $this->dimensions ?: null;
+		}
+
+		if ($this->type() === 'image') {
+			$mime   = null;
+			$header = $this->exists() ? (string)@file_get_contents($this->root, false, null, 0, 16) : '';
+
+			// read the type from the header, `mime()` reads up to 7 MB of the file
+			if (
+				str_starts_with($header, "\xFF\xD8\xFF") === true ||
+				(str_starts_with($header, "\x89PNG\r\n\x1A\n") === true && substr($header, 12, 4) === 'IHDR') ||
+				(str_starts_with($header, 'RIFF') === true && substr($header, 8, 4) === 'WEBP')
+			) {
+				$mime = $this->imagesize()['mime'] ?? null;
+			}
+
+			if (in_array($mime, ['image/jpeg', 'image/png', 'image/webp'], true) === false) {
+				$mime = $this->mime();
+			}
+
+			if (in_array($mime, [
+				'image/avif',
+				'image/gif',
+				'image/jpeg',
+				'image/jp2',
+				'image/png',
+				'image/webp'
+			], true)) {
+				return $this->dimensions = Dimensions::forImage($this);
+			}
+
+			if ($this->extension() === 'svg') {
+				return $this->dimensions = Dimensions::forSvg($this->root());
+			}
+		}
+
+		$this->dimensions = false;
+		return null;
+	}
+
+	/**
 	 * Automatically sends all needed headers
 	 * for the file to be downloaded and
 	 * echos the file's content
@@ -165,6 +258,18 @@ class File implements Stringable
 			$this->root(),
 			$filename ?? $this->filename()
 		);
+	}
+
+	/**
+	 * Returns the exif object for image files
+	 */
+	public function exif(): Exif|null
+	{
+		if ($this->type() !== 'image') {
+			return null;
+		}
+
+		return $this->exif ??= new Exif($this);
 	}
 
 	/**
@@ -215,11 +320,54 @@ class File implements Stringable
 	}
 
 	/**
+	 * Returns the height of the file or `null`
+	 * if the file has no visual dimensions
+	 */
+	public function height(): int|null
+	{
+		return $this->dimensions()?->height();
+	}
+
+	/**
 	 * Converts the file to html
 	 */
 	public function html(array $attr = []): string
 	{
-		return Html::a($this->url() ?? '', $attr);
+		if ($this->type() !== 'image') {
+			return Html::a($this->url() ?? '', $attr);
+		}
+
+		$model = match (true) {
+			$this->model instanceof FileVersion => $this->model->original(),
+			default                             => $this->model
+		};
+
+		// if no alt text explicitly provided,
+		// try to infer from model content file
+		if (
+			$model !== null &&
+			method_exists($model, 'content') === true &&
+			$model->content() instanceof Content &&
+			$model->content()->get('alt')->isNotEmpty() === true
+		) {
+			$attr['alt'] ??= $model->content()->get('alt')->value();
+		}
+
+		if ($url = $this->url()) {
+			return Html::img($url, $attr);
+		}
+
+		throw new LogicException(
+			message: 'Calling File::html() for an image requires that the URL property is not null'
+		);
+	}
+
+	/**
+	 * Returns the PHP imagesize array
+	 */
+	public function imagesize(): array|false
+	{
+		return @getimagesize($this->root());
 	}
 
 	/**
@@ -230,6 +378,22 @@ class File implements Stringable
 	public function is(string $value): bool
 	{
 		return F::is($this->root(), $value);
+	}
+
+	/**
+	 * Checks if the dimensions of the file are landscape
+	 */
+	public function isLandscape(): bool
+	{
+		return $this->dimensions()?->landscape() ?? false;
+	}
+
+	/**
+	 * Checks if the dimensions of the file are portrait
+	 */
+	public function isPortrait(): bool
+	{
+		return $this->dimensions()?->portrait() ?? false;
 	}
 
 	/**
@@ -245,7 +409,31 @@ class File implements Stringable
 	 */
 	public function isResizable(): bool
 	{
-		return false;
+		// check extension first to avoid expensive dimension calculation
+		if (in_array($this->extension(), static::$resizableTypes, true) === false) {
+			return false;
+		}
+
+		$dimensions = $this->dimensions();
+
+		if ($dimensions === null) {
+			return false;
+		}
+
+		// invalid or corrupted images return 0x0 dimensions
+		if ($dimensions->width() === 0 || $dimensions->height() === 0) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Checks if the dimensions of the file are square
+	 */
+	public function isSquare(): bool
+	{
+		return $this->dimensions()?->square() ?? false;
 	}
 
 	/**
@@ -254,7 +442,7 @@ class File implements Stringable
 	 */
 	public function isViewable(): bool
 	{
-		return false;
+		return in_array($this->extension(), static::$viewableTypes, true) === true;
 	}
 
 	/**
@@ -337,6 +525,14 @@ class File implements Stringable
 				$property  = $arguments[0];
 				$validator = $arguments[1];
 
+				// rules on dimensions only apply to files that have them
+				if (
+					method_exists(Dimensions::class, $property) === true &&
+					$this->dimensions() === null
+				) {
+					continue;
+				}
+
 				if (V::$validator($this->$property(), $rule) === false) {
 					throw new Exception(
 						key: 'file.' . $key,
@@ -415,6 +611,24 @@ class File implements Stringable
 	public function niceSize(string|false|null $locale = null): string
 	{
 		return F::niceSize($this->root(), $locale);
+	}
+
+	/**
+	 * Returns the orientation as string
+	 * `landscape` | `portrait` | `square`
+	 */
+	public function orientation(): string|false
+	{
+		return $this->dimensions()?->orientation() ?? false;
+	}
+
+	/**
+	 * Returns the ratio of the file or `null`
+	 * if the file has no visual dimensions
+	 */
+	public function ratio(): float|null
+	{
+		return $this->dimensions()?->ratio();
 	}
 
 	/**
@@ -526,6 +740,8 @@ class File implements Stringable
 	public function toArray(): array
 	{
 		return [
+			'dimensions'   => $this->dimensions()?->toArray(),
+			'exif'         => $this->exif()?->toArray(),
 			'extension'    => $this->extension(),
 			'filename'     => $this->filename(),
 			'hash'         => $this->hash(),
@@ -558,7 +774,13 @@ class File implements Stringable
 	 */
 	public function type(): string|null
 	{
-		return F::type($this->root());
+		$path = $this->root() ?? $this->url();
+
+		if ($path === null) {
+			return null;
+		}
+
+		return F::type($path);
 	}
 
 	/**
@@ -586,6 +808,15 @@ class File implements Stringable
 	public function validateContents(string|bool $typeLazy = false): void
 	{
 		Sane::validateFile($this->root(), $typeLazy);
+	}
+
+	/**
+	 * Returns the width of the file or `null`
+	 * if the file has no visual dimensions
+	 */
+	public function width(): int|null
+	{
+		return $this->dimensions()?->width();
 	}
 
 	/**

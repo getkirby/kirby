@@ -4,12 +4,11 @@ namespace Kirby\Filesystem;
 
 use Kirby\Cms\App;
 use Kirby\Exception\BadMethodCallException;
-use Kirby\Image\Image;
 
 /**
  * Trait for all objects that represent an asset file.
- * Adds `::asset()` method which returns either a
- * `Kirby\Filesystem\File` or `Kirby\Image\Image` object.
+ * Adds `::asset()` method which returns a
+ * `Kirby\Filesystem\File` object.
  * Proxies method calls to this object.
  *
  * @copyright Bastian Allgeier
@@ -88,9 +87,9 @@ trait IsFile
 	}
 
 	/**
-	 * Creates a new asset object based on the file type
+	 * Creates a new asset object
 	 */
-	protected function assetFactory(array|string $props = []): File|Image
+	protected function assetFactory(array|string $props = []): File
 	{
 		if (is_string($props) === true) {
 			$props = ['root' => $props];
@@ -98,10 +97,7 @@ trait IsFile
 
 		$props['model'] ??= $this;
 
-		return match ($this->type()) {
-			'image' => new Image($props),
-			default => new File($props)
-		};
+		return new File($props);
 	}
 
 	/**
