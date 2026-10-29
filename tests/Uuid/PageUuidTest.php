@@ -94,6 +94,23 @@ class PageUuidTest extends TestCase
 		$this->assertSame('page-a', Uuids::cache()->get($uuid->key()));
 	}
 
+	public function testFindByCacheWithZeroId(): void
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					['slug' => '0', 'content' => ['uuid' => 'zero']]
+				]
+			]
+		]);
+
+		$page = $this->app->page('0');
+		$page->uuid()->populate();
+
+		$uuid = new PageUuid('page://zero');
+		$this->assertSame($page, $uuid->model(true));
+	}
+
 	public function testFindByIndex(): void
 	{
 		$page = $this->app->page('page-a');

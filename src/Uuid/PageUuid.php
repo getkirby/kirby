@@ -42,7 +42,9 @@ class PageUuid extends ModelUuid
 	protected function findByCache(): Page|null
 	{
 		if ($key = $this->key()) {
-			if ($value = Uuids::cache()->get($key)) {
+			$value = Uuids::cache()->get($key);
+
+			if ($value !== null) {
 				$page = App::instance()->page($value);
 
 				// the cached path can be stale,
