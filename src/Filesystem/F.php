@@ -1022,11 +1022,8 @@ class F
 	}
 
 	/**
-	 * Serializes concurrent read-update-writes of a file by
-	 * holding an exclusive `flock` for the whole operation, so
-	 * that other writers (that lock the same way) cannot lose
-	 * each other's updates. The `$modifier` callback receives
-	 * the current file contents.
+	 * Updates a file under an exclusive lock; the `$modifier`
+	 * callback receives the current file contents
 	 *
 	 * @since 5.5.0
 	 */
@@ -1070,6 +1067,8 @@ class F
 				return false;
 			}
 
+			// rewritten in place on purpose: replacing the file would let
+			// a process waiting for this lock write into the replaced one
 			rewind($handle);
 			ftruncate($handle, 0);
 
@@ -1099,7 +1098,9 @@ class F
 	}
 
 	/**
-	 * Creates a new file
+	 * Creates a new file. An existing file is replaced in one step via a
+	 * temporary file and `rename()`, so a parallel reader never sees it
+	 * empty or half-written; appending changes the file in place.
 	 *
 	 * @param string $file The path for the new file
 	 * @param mixed $content Either a string, an object or an array. Arrays and objects will be serialized.
@@ -1114,6 +1115,65 @@ class F
 			$content = serialize($content);
 		}
 
-		return static::put($file, $content, $append);
+		$directory = dirname($file);
+
+		// create the parent directory if it does not exist yet
+		if (Dir::make($directory) === false) {
+			return false;
+		}
+
+		if (static::isWritable($file) === false) {
+			throw new Exception('The file "' . $file . '" is not writable');
+		}
+
+		// appending changes the file in place, a symlink would turn into a
+		// regular file, a stream can only be read once and the temporary
+		// file needs a writable directory
+		if (
+			$append === true ||
+			is_link($file) === true ||
+			is_resource($content) === true ||
+			is_writable($directory) === false
+		) {
+			return static::put($file, $content, $append);
+		}
+
+		// `tempnam()` creates the file with mode 0600, so nobody else can
+		// read the content before the final mode is set;
+		// the leading dot keeps the file out of the inventory
+		$tmp = @tempnam($directory, '.kirby-');
+
+		if ($tmp === false) {
+			return static::put($file, $content);
+		}
+
+		try {
+			if (file_put_contents($tmp, $content) === false) {
+				return false;
+			}
+
+			// a replaced file keeps its mode, a new file gets the default mode
+			@chmod($tmp, match (is_file($file)) {
+				true  => fileperms($file) & 0777,
+				false => 0666 & ~umask()
+			});
+
+			// `rename()` replaces the target in one step on POSIX filesystems
+			if (@rename($tmp, $file) === true) {
+				return true;
+			}
+
+			// the directory was moved or removed in the meantime:
+			// never recreate it with an in-place write
+			if (is_dir($directory) === false) {
+				return false;
+			}
+
+			// e.g. Windows while another process holds the file open
+			return static::put($file, $content);
+		} finally {
+			// nothing left to remove after a successful `rename()`
+			@unlink($tmp);
+		}
 	}
 }
