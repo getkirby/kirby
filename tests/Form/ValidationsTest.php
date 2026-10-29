@@ -56,7 +56,10 @@ class ValidationsTest extends TestCase
 	{
 		$page  = new Page(['slug' => 'test']);
 		$field = new ValidationsField(model: $page);
-		$this->assertTrue(Validations::boolean($field, true));
+
+		$this->expectNotToPerformAssertions();
+
+		Validations::boolean($field, true);
 	}
 
 	public function testBooleanInvalid(): void
@@ -73,7 +76,10 @@ class ValidationsTest extends TestCase
 	{
 		$page  = new Page(['slug' => 'test']);
 		$field = new ValidationsField(model: $page);
-		$this->assertTrue(Validations::date($field, '2012-12-12'));
+
+		$this->expectNotToPerformAssertions();
+
+		Validations::date($field, '2012-12-12');
 	}
 
 	public function testDateInvalid(): void
@@ -90,7 +96,10 @@ class ValidationsTest extends TestCase
 	{
 		$page  = new Page(['slug' => 'test']);
 		$field = new ValidationsField(model: $page);
-		$this->assertTrue(Validations::email($field, 'test@getkirby.com'));
+
+		$this->expectNotToPerformAssertions();
+
+		Validations::email($field, 'test@getkirby.com');
 	}
 
 	public function testEmailInvalid(): void
@@ -111,7 +120,9 @@ class ValidationsTest extends TestCase
 			max: 5
 		);
 
-		$this->assertTrue(Validations::max($field, 4));
+		$this->expectNotToPerformAssertions();
+
+		Validations::max($field, 4);
 	}
 
 	public function testMaxInvalid(): void
@@ -136,7 +147,9 @@ class ValidationsTest extends TestCase
 			model: $page
 		);
 
-		$this->assertTrue(Validations::maxlength($field, 'test'));
+		$this->expectNotToPerformAssertions();
+
+		Validations::maxlength($field, 'test');
 	}
 
 	public function testMaxLengthInvalid(): void
@@ -161,7 +174,9 @@ class ValidationsTest extends TestCase
 			model: $page
 		);
 
-		$this->assertTrue(Validations::min($field, 6));
+		$this->expectNotToPerformAssertions();
+
+		Validations::min($field, 6);
 	}
 
 	public function testMinInvalid(): void
@@ -186,7 +201,9 @@ class ValidationsTest extends TestCase
 			model: $page
 		);
 
-		$this->assertTrue(Validations::minlength($field, 'testest'));
+		$this->expectNotToPerformAssertions();
+
+		Validations::minlength($field, 'testest');
 	}
 
 	public function testMinLengthInvalid(): void
@@ -211,10 +228,12 @@ class ValidationsTest extends TestCase
 			model: $page
 		);
 
-		$this->assertTrue(Validations::pattern($field, '#fff'));
-		$this->assertTrue(Validations::pattern($field, '#222'));
-		$this->assertTrue(Validations::pattern($field, '#afafaf'));
-		$this->assertTrue(Validations::pattern($field, '#34b3cd'));
+		$this->expectNotToPerformAssertions();
+
+		Validations::pattern($field, '#fff');
+		Validations::pattern($field, '#222');
+		Validations::pattern($field, '#afafaf');
+		Validations::pattern($field, '#34b3cd');
 	}
 
 	public function testPatternInvalid(): void
@@ -239,8 +258,8 @@ class ValidationsTest extends TestCase
 			model: $page
 		);
 
-		$this->assertTrue(Validations::pattern($field, '123'));
-		$this->assertTrue(Validations::pattern($field, '1234'));
+		Validations::pattern($field, '123');
+		Validations::pattern($field, '1234');
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The value does not match the expected pattern');
@@ -256,7 +275,9 @@ class ValidationsTest extends TestCase
 			model: $page
 		);
 
-		$this->assertTrue(Validations::required($field, 'something'));
+		$this->expectNotToPerformAssertions();
+
+		Validations::required($field, 'something');
 	}
 
 	public function testRequiredInvalid(): void
@@ -284,7 +305,9 @@ class ValidationsTest extends TestCase
 			model: $page
 		);
 
-		$this->assertTrue(Validations::option($field, 'a'));
+		$this->expectNotToPerformAssertions();
+
+		Validations::option($field, 'a');
 	}
 
 	public function testOptionInvalid(): void
@@ -315,7 +338,9 @@ class ValidationsTest extends TestCase
 			model: $page
 		);
 
-		$this->assertTrue(Validations::options($field, ['a', 'b']));
+		$this->expectNotToPerformAssertions();
+
+		Validations::options($field, ['a', 'b']);
 	}
 
 	public function testOptionsInvalid(): void
@@ -339,7 +364,10 @@ class ValidationsTest extends TestCase
 	{
 		$page  = new Page(['slug' => 'test']);
 		$field = new ValidationsField(model: $page);
-		$this->assertTrue(Validations::time($field, '10:12'));
+
+		$this->expectNotToPerformAssertions();
+
+		Validations::time($field, '10:12');
 	}
 
 	public function testTimeInvalid(): void
@@ -356,7 +384,10 @@ class ValidationsTest extends TestCase
 	{
 		$page  = new Page(['slug' => 'test']);
 		$field = new ValidationsField(model: $page);
-		$this->assertTrue(Validations::url($field, 'https://getkirby.com'));
+
+		$this->expectNotToPerformAssertions();
+
+		Validations::url($field, 'https://getkirby.com');
 	}
 
 	public function testUrlInvalid(): void
@@ -374,7 +405,9 @@ class ValidationsTest extends TestCase
 		$page  = new Page(['slug' => 'test']);
 		$field = new ValidationsField(model: $page);
 
-		$this->assertTrue(Validations::url($field, null));
-		$this->assertTrue(Validations::url($field, ''));
+		$this->expectNotToPerformAssertions();
+
+		Validations::url($field, null);
+		Validations::url($field, '');
 	}
 }
