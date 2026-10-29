@@ -23,7 +23,7 @@ class Stack
 	/**
 	 * Stacks currently capturing output
 	 *
-	 * @var list<array{name: string, unique: bool}>
+	 * @var list<array{name: string, unique: bool, level: int}>
 	 */
 	protected static array $active = [];
 
