@@ -19,7 +19,6 @@ import ratio from "./ratio";
 import sort from "./sort";
 import string from "./string";
 import throttle from "./throttle";
-import upload from "./upload";
 import url from "./url";
 import writer from "./writer";
 
@@ -49,7 +48,6 @@ export const helper = {
 	sort,
 	string,
 	throttle,
-	upload,
 	url,
 	uuid: string.uuid,
 	writer
