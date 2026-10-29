@@ -207,6 +207,18 @@ class PageRulesTest extends ModelTestCase
 		PageRules::changeStatus($page, $status, ...$args);
 	}
 
+	public function testChangeStatusToListedWithoutPosition(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$this->expectNotToPerformAssertions();
+
+		$page = new Page(['slug' => 'test']);
+
+		PageRules::changeStatus($page, 'listed');
+		PageRules::changeStatusToListed($page);
+	}
+
 	public function testChangeTemplate(): void
 	{
 		$this->app = $this->app->clone([

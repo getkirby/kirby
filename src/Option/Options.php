@@ -20,7 +20,7 @@ class Options extends Collection
 	public function __construct(array $objects = [])
 	{
 		foreach ($objects as $object) {
-			$this->__set($object->value, $object);
+			$this->__set($object->id(), $object);
 		}
 	}
 

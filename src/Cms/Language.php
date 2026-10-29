@@ -477,7 +477,7 @@ class Language extends Model
 	 */
 	public function rules(): array
 	{
-		$code = $this->locale(LC_CTYPE);
+		$code = $this->locale(LC_CTYPE) ?? $this->code;
 
 		return [
 			...static::loadRules($code),
