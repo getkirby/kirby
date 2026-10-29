@@ -22,16 +22,16 @@ abstract class ModelItemsRequestController extends RequestController
 		$class = static::ITEM_CLASS;
 		return new $class(
 			$model,
-			image:  json_decode($this->request->get('image', '{}'), true),
-			info:   $this->request->get('info'),
-			layout: $this->request->get('layout'),
-			text:   $this->request->get('text'),
+			image:  json_decode($this->request->string('image', '{}'), true),
+			info:   $this->request->string('info'),
+			layout: $this->request->string('layout'),
+			text:   $this->request->string('text'),
 		);
 	}
 
 	public function load(): array
 	{
-		$ids    = $this->request->get('items', '');
+		$ids    = $this->request->string('items', '');
 		$ids    = Str::split($ids);
 		$models = A::map($ids, fn ($id) => $id ? $this->model($id) : null);
 		$items  = A::map($models, fn ($model) => $model?->isListable() === true ? $this->item($model)->props() : null);

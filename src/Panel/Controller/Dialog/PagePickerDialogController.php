@@ -149,7 +149,7 @@ class PagePickerDialogController extends ModelPickerDialogController
 			return null;
 		}
 
-		if ($id = $this->request->get('parent')) {
+		if ($id = $this->request->string('parent')) {
 			$parent = $this->find($id);
 
 			if ($parent?->isAccessible() === true) {

@@ -448,6 +448,34 @@ class RouterTest extends TestCase
 		$this->assertSame('de', $this->app->language()->code());
 	}
 
+	public function testSetLanguageViaSessionWithArray(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'languages' => true,
+			],
+			'languages' => [
+				[
+					'code' => 'en',
+					'name' => 'English',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+					'name' => 'Deutsch',
+				]
+			]
+		]);
+
+		// invalid session values fall back to the default language
+		$this->app->session()->set('panel.language', ['de']);
+
+		$language = $this->app->panel()->router()->setLanguage();
+
+		$this->assertSame('en', $language);
+		$this->assertSame('en', $this->app->session()->get('panel.language'));
+	}
+
 	public function testSetLanguageInSingleLanguageSite(): void
 	{
 		$language = $this->app->panel()->router()->setLanguage();

@@ -93,10 +93,10 @@ class PageDuplicateDialogController extends PageDialogController
 
 	public function submit(): array
 	{
-		$newPage = $this->page->duplicate($this->request->get('slug'), [
+		$newPage = $this->page->duplicate($this->request->string('slug'), [
 			'children' => (bool)$this->request->get('children'),
 			'files'    => (bool)$this->request->get('files'),
-			'title'    => (string)$this->request->get('title'),
+			'title'    => $this->request->string('title', ''),
 		]);
 
 		return [

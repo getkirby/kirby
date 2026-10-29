@@ -125,7 +125,7 @@ trait AppTranslations
 	 */
 	public function panelLanguage(): string
 	{
-		$translation = $this->request()->get('translation');
+		$translation = $this->request()->string('translation');
 
 		if ($translation !== null && $this->translations()->find($translation)) {
 			return $translation;

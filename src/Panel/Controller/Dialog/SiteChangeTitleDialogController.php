@@ -35,7 +35,7 @@ class SiteChangeTitleDialogController extends SiteDialogController
 
 	public function submit(): array
 	{
-		$title      = $this->request->get('title');
+		$title      = $this->request->string('title', '');
 		$this->site = $this->site->changeTitle($title);
 
 		return [
