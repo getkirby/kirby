@@ -628,14 +628,19 @@ class FTest extends TestCase
 
 	public function testReadDoesNotRetryOtherErrors(): void
 	{
+		if (posix_getuid() === 0) {
+			$this->markTestSkipped('Cannot test an unreadable file as root');
+		}
+
 		F::write($this->test, 'content');
 
 		// e.g. a permission problem does not go away by waiting
+		chmod($this->test, 0o000);
+
 		$calls = 0;
 		FileTest::$mocks['file_get_contents'] = function ($file) use (&$calls) {
 			$calls++;
-			trigger_error('file_get_contents(' . $file . '): Failed to open stream: Permission denied', E_USER_WARNING);
-			return false;
+			return \file_get_contents($file);
 		};
 
 		$warnings = [];
@@ -648,8 +653,10 @@ class FTest extends TestCase
 			$this->assertFalse(F::read($this->test));
 			$this->assertSame(1, $calls);
 			$this->assertCount(1, $warnings);
+			$this->assertStringContainsString('Permission denied', $warnings[0]);
 		} finally {
 			restore_error_handler();
+			chmod($this->test, 0o644);
 			FileTest::$mocks = [];
 		}
 	}
