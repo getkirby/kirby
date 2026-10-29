@@ -797,7 +797,7 @@ class A
 		}
 
 		if ($shuffle === true) {
-			return array_slice(self::shuffle($array), 0, $count);
+			return array_slice(self::shuffle($array), 0, $count, true);
 		}
 
 		if ($count === 1) {

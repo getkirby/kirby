@@ -145,7 +145,7 @@ class Str
 			foreach ($parts as $param) {
 				$param = static::split($param, '=');
 
-				if (A::get($param, 0) === 'q' && empty($param[1]) === false) {
+				if (A::get($param, 0) === 'q' && isset($param[1]) === true) {
 					$quality = $param[1];
 				}
 			}
@@ -1299,14 +1299,16 @@ class Str
 		// replace slashes with dashes
 		$string = str_replace('/', $separator, $string);
 
-		// trim leading and trailing non-word-chars
+		// trim leading non-word-chars
 		$string = preg_replace('!^[^a-z0-9]+!', '', $string);
-		$string = preg_replace('![^a-z0-9]+$!', '', $string);
 
 		// cut the string after the given maxlength
 		if ($maxlength !== false) {
 			$string = static::short($string, $maxlength, '');
 		}
+
+		// after the cut, so that it can't leave a trailing separator
+		$string = preg_replace('![^a-z0-9]+$!', '', $string);
 
 		return $string;
 	}
