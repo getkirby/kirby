@@ -223,7 +223,6 @@ return array(
     'Kirby\\Filesystem\\F' => $baseDir . '/src/Filesystem/F.php',
     'Kirby\\Filesystem\\File' => $baseDir . '/src/Filesystem/File.php',
     'Kirby\\Filesystem\\Filename' => $baseDir . '/src/Filesystem/Filename.php',
-    'Kirby\\Filesystem\\IsFile' => $baseDir . '/src/Filesystem/IsFile.php',
     'Kirby\\Filesystem\\Mime' => $baseDir . '/src/Filesystem/Mime.php',
     'Kirby\\Form\\Field' => $baseDir . '/src/Form/Field.php',
     'Kirby\\Form\\FieldOptions' => $baseDir . '/src/Form/FieldOptions.php',

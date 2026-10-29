@@ -5,7 +5,6 @@ namespace Kirby\Filesystem;
 use Exception as GlobalException;
 use JsonException;
 use Kirby\Cms\App;
-use Kirby\Cms\File as CmsFile;
 use Kirby\Cms\Page;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
@@ -15,11 +14,6 @@ use Kirby\Image\Dimensions;
 use Kirby\Image\Exif;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
-
-class InvalidFileModel
-{
-	public string $foo = 'bar';
-}
 
 #[CoversClass(File::class)]
 class FileTest extends TestCase
@@ -63,6 +57,24 @@ class FileTest extends TestCase
 		$file   = $this->_file('real.svg');
 		$base64 = file_get_contents(static::TMP . '/real.svg.base64');
 		$this->assertSame($base64, $file->base64());
+	}
+
+	public function testCmsFileAsset(): void
+	{
+		$parent = Page::factory([
+			'slug' => 'test',
+			'files' => [
+				['filename' => 'a.jpg'],
+				['filename' => 'b.jpg'],
+				['filename' => 'c.jpg'],
+			]
+		]);
+
+		$file = $parent->file('a.jpg');
+		$asset = $file->asset();
+
+		$this->assertSame($file->url(), $asset->url());
+		$this->assertSame($file->root(), $asset->root());
 	}
 
 	public function testConstruct(): void
@@ -267,17 +279,6 @@ class FileTest extends TestCase
 		$this->assertSame('<img alt="" src="https://foo.bar/cat.jpg">', (string)$file);
 	}
 
-	public function testInvalidModel(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessageIs('The model object must use the "Kirby\Filesystem\IsFile" trait');
-
-		new File([
-			'root' => static::TMP . '/test.js',
-			'model' => new InvalidFileModel()
-		]);
-	}
-
 	public function testIs(): void
 	{
 		$file = $this->_file();
@@ -416,23 +417,6 @@ class FileTest extends TestCase
 		$this->assertSame('text/plain', $file->mime());
 	}
 
-	public function testModel(): void
-	{
-		$parent = Page::factory(['slug' => 'test']);
-		$model = CmsFile::factory([
-			'filename' => 'test.js',
-			'parent' => $parent
-		]);
-
-		$file = new File([
-			'root' => static::TMP . '/test.js',
-			'model' => $model
-		]);
-
-		$this->assertTrue(in_array(IsFile::class, class_uses($file->model())));
-		$this->assertSame($model, $file->model());
-	}
-
 	public function testModified(): void
 	{
 		// existing file
@@ -508,26 +492,6 @@ class FileTest extends TestCase
 		// non-existing file
 		$file = $this->_file('does/not/exist.js');
 		$this->assertSame('0 KB', $file->niceSize());
-	}
-
-	public function testParentModel(): void
-	{
-		$parent = Page::factory([
-			'slug' => 'test',
-			'files' => [
-				['filename' => 'a.jpg'],
-				['filename' => 'b.jpg'],
-				['filename' => 'c.jpg'],
-			]
-		]);
-
-		$file = $parent->file('a.jpg');
-		$asset = $file->asset();
-
-		$this->assertTrue(in_array(IsFile::class, class_uses($asset->model())));
-		$this->assertSame($file, $asset->model());
-		$this->assertSame($file->url(), $asset->url());
-		$this->assertSame($file->root(), $asset->root());
 	}
 
 	public function testRead(): void
@@ -721,6 +685,23 @@ class FileTest extends TestCase
 	{
 		$file = $this->_file('test.kirby');
 		$this->assertNull($file->type());
+	}
+
+	public function testUrlLazy(): void
+	{
+		$calls = 0;
+		$file  = new File([
+			'root' => static::TMP . '/test.js',
+			'url'  => function () use (&$calls) {
+				$calls++;
+				return 'https://foo.bar/test.js';
+			}
+		]);
+
+		$this->assertSame(0, $calls);
+		$this->assertSame('https://foo.bar/test.js', $file->url());
+		$this->assertSame('https://foo.bar/test.js', $file->url());
+		$this->assertSame(1, $calls);
 	}
 
 	public function testValidateContentsMissingHandler(): void

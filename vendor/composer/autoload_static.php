@@ -350,7 +350,6 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
         'Kirby\\Filesystem\\F' => __DIR__ . '/../..' . '/src/Filesystem/F.php',
         'Kirby\\Filesystem\\File' => __DIR__ . '/../..' . '/src/Filesystem/File.php',
         'Kirby\\Filesystem\\Filename' => __DIR__ . '/../..' . '/src/Filesystem/Filename.php',
-        'Kirby\\Filesystem\\IsFile' => __DIR__ . '/../..' . '/src/Filesystem/IsFile.php',
         'Kirby\\Filesystem\\Mime' => __DIR__ . '/../..' . '/src/Filesystem/Mime.php',
         'Kirby\\Form\\Field' => __DIR__ . '/../..' . '/src/Form/Field.php',
         'Kirby\\Form\\FieldOptions' => __DIR__ . '/../..' . '/src/Form/FieldOptions.php',

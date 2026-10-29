@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\BadMethodCallException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\File as FilesystemFile;
@@ -97,6 +98,19 @@ class FileTest extends ModelTestCase
 	public function testBase64(): void
 	{
 		$this->assertSame('dGVzdA==', $this->file()->base64());
+	}
+
+	public function testCallMethodOfAsset(): void
+	{
+		$file = new File([
+			'filename' => 'test.jpg',
+			'parent'   => new Page(['slug' => 'test'])
+		]);
+
+		$this->expectException(BadMethodCallException::class);
+		$this->expectExceptionMessage('The method "write" is only available via `$file->asset()->write()`');
+
+		$file->write('foo');
 	}
 
 	public function testConstructWithoutFilename(): void
@@ -285,5 +299,26 @@ class FileTest extends ModelTestCase
 		]);
 
 		$this->assertSame('test.jpg', $file->toString('{{ file.filename }}'));
+	}
+
+	public function testToStringMagic(): void
+	{
+		$page  = new Page(['slug' => 'test']);
+		$image = new File([
+			'filename' => 'test.jpg',
+			'parent'   => $page,
+			'url'      => 'https://getkirby.com/test.jpg',
+			'content'  => ['alt' => 'Test text']
+		]);
+
+		$this->assertSame('<img alt="Test text" src="https://getkirby.com/test.jpg">', (string)$image);
+
+		$pdf = new File([
+			'filename' => 'test.pdf',
+			'parent'   => $page,
+			'url'      => 'https://getkirby.com/test.pdf'
+		]);
+
+		$this->assertSame('https://getkirby.com/test.pdf', (string)$pdf);
 	}
 }
