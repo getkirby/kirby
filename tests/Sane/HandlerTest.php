@@ -4,6 +4,7 @@ namespace Kirby\Sane;
 
 use Exception;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Filesystem\FileTest;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Handler::class)]
@@ -45,6 +46,22 @@ class HandlerTest extends TestCase
 		$this->expectExceptionMessage('The file "' . $file . '" does not exist');
 
 		CustomHandler::sanitizeFile($file);
+	}
+
+	public function testSanitizeFileWriteFails(): void
+	{
+		$file = $this->fixture('external-source-1.svg', true);
+
+		FileTest::$block = ['file_put_contents'];
+
+		try {
+			$this->expectException(Exception::class);
+			$this->expectExceptionMessage('The sanitized file "' . $file . '" could not be written');
+
+			CustomHandler::sanitizeFile($file);
+		} finally {
+			FileTest::$block = [];
+		}
 	}
 
 	public function testValidateFile(): void
