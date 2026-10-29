@@ -2,6 +2,7 @@
 
 namespace Kirby\Filesystem;
 
+use Kirby\Cms\App;
 use Kirby\Cms\FileModifications;
 use Kirby\Cms\HasMethods;
 use Kirby\Exception\BadMethodCallException;
@@ -17,11 +18,10 @@ use Kirby\Toolkit\Str;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class Asset
+class Asset extends File
 {
 	use FileModifications;
 	use HasMethods;
-	use IsFile;
 
 	/**
 	 * Relative file path
@@ -45,8 +45,10 @@ class Asset
 			);
 		}
 
-		$this->root = $this->kirby()->root('index') . '/' . $path;
-		$this->url  = $this->kirby()->url('base') . '/' . $path;
+		parent::__construct([
+			'root' => $this->kirby()->root('index') . '/' . $path,
+			'url'  => $this->kirby()->url('base') . '/' . $path
+		]);
 
 		// set relative file path
 		$this->path = dirname($path);
@@ -63,16 +65,6 @@ class Asset
 	 */
 	public function __call(string $method, array $arguments = []): mixed
 	{
-		// public property access
-		if (isset($this->$method) === true) {
-			return $this->$method;
-		}
-
-		// asset method proxy
-		if (method_exists($this->asset(), $method) === true) {
-			return $this->asset()->$method(...$arguments);
-		}
-
 		// asset methods
 		if ($this->hasMethod($method) === true) {
 			return $this->callMethod($method, $arguments);
@@ -90,6 +82,14 @@ class Asset
 	{
 		/** @var string */
 		return $this->root();
+	}
+
+	/**
+	 * Returns the app instance
+	 */
+	public function kirby(): App
+	{
+		return App::instance();
 	}
 
 	/**
