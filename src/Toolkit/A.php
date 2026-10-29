@@ -797,7 +797,7 @@ class A
 		}
 
 		if ($shuffle === true) {
-			return array_slice(self::shuffle($array), 0, $count);
+			return array_slice(self::shuffle($array), 0, $count, true);
 		}
 
 		if ($count === 1) {
@@ -946,7 +946,7 @@ class A
 
 		// build the helper array
 		foreach ($array as $key => $row) {
-			$helper[$key] = $row[$field];
+			$helper[$key] = $row[$field] ?? null;
 		}
 
 		// natural sorting

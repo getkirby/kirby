@@ -136,11 +136,16 @@ class Str
 			$value   = A::first($parts); // $parts now only contains params
 			$quality = 1;
 
+			// skip items without a value, e.g. a lone `;`
+			if ($value === null) {
+				continue;
+			}
+
 			// check for the q param ("quality" of the type)
 			foreach ($parts as $param) {
 				$param = static::split($param, '=');
 
-				if (A::get($param, 0) === 'q' && empty($param[1]) === false) {
+				if (A::get($param, 0) === 'q' && isset($param[1]) === true) {
 					$quality = $param[1];
 				}
 			}
@@ -311,7 +316,7 @@ class Str
 	 */
 	public static function camelToKebab(string|null $value): string
 	{
-		$value = preg_replace('!([a-z0-9])([A-Z])!', '$1-$2', $value);
+		$value = preg_replace('!([a-z0-9])([A-Z])!', '$1-$2', $value ?? '');
 		return static::lower($value);
 	}
 
@@ -1294,14 +1299,16 @@ class Str
 		// replace slashes with dashes
 		$string = str_replace('/', $separator, $string);
 
-		// trim leading and trailing non-word-chars
+		// trim leading non-word-chars
 		$string = preg_replace('!^[^a-z0-9]+!', '', $string);
-		$string = preg_replace('![^a-z0-9]+$!', '', $string);
 
 		// cut the string after the given maxlength
 		if ($maxlength !== false) {
 			$string = static::short($string, $maxlength, '');
 		}
+
+		// after the cut, so that it can't leave a trailing separator
+		$string = preg_replace('![^a-z0-9]+$!', '', $string);
 
 		return $string;
 	}
@@ -1313,6 +1320,8 @@ class Str
 		string|null $value,
 		string $delimiter = '_'
 	): string {
+		$value ??= '';
+
 		if (ctype_lower($value) === false) {
 			$value = preg_replace('/\s+/u', '', ucwords($value));
 			$value = preg_replace('/(.)(?=[A-Z])/u', '$1' . $delimiter, $value);
@@ -1390,7 +1399,7 @@ class Str
 	 */
 	public static function studly(string|null $value): string
 	{
-		$value = str_replace(['-', '_'], ' ', $value);
+		$value = str_replace(['-', '_'], ' ', $value ?? '');
 		$value = ucwords($value);
 		return str_replace(' ', '', $value);
 	}

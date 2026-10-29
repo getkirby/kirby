@@ -120,7 +120,7 @@ class PageRules
 	 * @throws \Kirby\Exception\InvalidArgumentException If the given position is invalid
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the status or the status for the page cannot be changed by any user
 	 */
-	public static function changeStatusToListed(Page $page, int $position): void
+	public static function changeStatusToListed(Page $page, int|null $position = null): void
 	{
 		// no need to check for status changing permissions,
 		// instead we need to check for sorting permissions

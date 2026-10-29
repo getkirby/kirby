@@ -196,7 +196,7 @@ trait AppPlugins
 	 */
 	protected function extendBlocksMethods(array $methods): array
 	{
-		return $this->extensions['blockMethods'] = Blocks::$methods = [
+		return $this->extensions['blocksMethods'] = Blocks::$methods = [
 			...Blocks::$methods,
 			...$methods
 		];

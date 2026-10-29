@@ -106,6 +106,12 @@ class FTest extends TestCase
 		$this->assertSame('test.jpg', F::extension($this->sample, 'jpg'));
 	}
 
+	public function testExtensionWithoutFile(): void
+	{
+		$this->assertSame('', F::extension());
+		$this->assertSame('.jpg', F::extension(null, 'jpg'));
+	}
+
 	public function testExtensionToType(): void
 	{
 		$this->assertSame('image', F::extensionToType('jpg'));
@@ -611,6 +617,18 @@ class FTest extends TestCase
 		$this->assertFalse(F::range(''));
 	}
 
+	public function testRangeWithoutContent(): void
+	{
+		file_put_contents($this->test, '');
+		$this->assertSame('', F::range($this->test));
+
+		file_put_contents($this->test, 'my content');
+		$this->assertSame('', F::range($this->test, offset: 10));
+		$this->assertSame('', F::range($this->test, offset: 20));
+		$this->assertSame('', F::range($this->test, length: 0));
+		$this->assertSame('', F::range($this->test, length: -1));
+	}
+
 	public function testRead(): void
 	{
 		file_put_contents($this->test, $content = 'my content is awesome');
@@ -802,8 +820,16 @@ class FTest extends TestCase
 		$this->assertSame('code', F::type('content.php'));
 		$this->assertSame('code', F::type('py'));
 		$this->assertSame('code', F::type('java'));
+		$this->assertSame('document', F::type('mdown'));
+		$this->assertSame('image', F::type('JPG'));
 		$this->assertNull(F::type('foo'));
 		$this->assertNull(F::type('tmp'));
+	}
+
+	public function testTypeWithShortFilename(): void
+	{
+		$this->assertSame('code', F::type('a.js'));
+		$this->assertSame('document', F::type('a.md'));
 	}
 
 	public function testTypeWithoutExtension(): void
@@ -819,6 +845,10 @@ class FTest extends TestCase
 		F::write($file = static::TMP . '/test.tmp', '<?php echo "foo"; ?>');
 
 		$this->assertSame('text/x-php', F::mime($file));
+		$this->assertSame('code', F::type($file));
+
+		F::write($file = static::TMP . '/test.TMP', '<?php echo "foo"; ?>');
+
 		$this->assertSame('code', F::type($file));
 	}
 

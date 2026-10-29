@@ -334,8 +334,7 @@ class LayoutField extends BlocksField
 
 							if (isset($blockForms[$blockType]) === false) {
 								try {
-									$fieldset = $this->fieldset($blockType);
-									$fields   = $this->fields($blockType) ?? [];
+									$fields = $this->fields($blockType) ?? [];
 									$blockForms[$blockType] = $this->form($fields);
 								} catch (Throwable) {
 									// skip invalid blocks
@@ -356,7 +355,7 @@ class LayoutField extends BlocksField
 										data: [
 											'blockIndex'  => $blockIndex,
 											'field'       => $field->label(),
-											'fieldset'    => $fieldset->name(),
+											'fieldset'    => $this->fieldset($blockType)->name(),
 											'layoutIndex' => $layoutIndex
 										]
 									);

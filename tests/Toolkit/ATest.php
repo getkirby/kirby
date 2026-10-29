@@ -703,6 +703,18 @@ class ATest extends TestCase
 		}
 	}
 
+	public function testRandomShuffledKeepsIntKeys(): void
+	{
+		$array  = [5 => 'a', 9 => 'b', 'x' => 'c'];
+		$random = A::random($array, 3, true);
+
+		$this->assertCount(3, $random);
+
+		foreach ($random as $key => $value) {
+			$this->assertSame($array[$key], $value);
+		}
+	}
+
 	public function testRandomInvalidCount(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -1017,6 +1029,17 @@ class ATest extends TestCase
 		$this->assertSame(1, array_search('img2.png', array_column($natural, 'file')));
 		$this->assertSame(2, array_search('img10.png', array_column($natural, 'file')));
 		$this->assertSame(3, array_search('img12.png', array_column($natural, 'file')));
+	}
+
+	public function testSortWithMissingField(): void
+	{
+		$array = [
+			'a' => ['username' => 'sonja'],
+			'b' => ['id' => 2],
+			'c' => ['username' => 'bastian']
+		];
+
+		$this->assertSame(['b', 'c', 'a'], array_keys(A::sort($array, 'username', 'asc')));
 	}
 
 	public function testIsAssociative(): void

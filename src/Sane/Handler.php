@@ -41,7 +41,13 @@ abstract class Handler
 	{
 		$content   = static::readFile($file);
 		$sanitized = static::sanitize($content, isExternal: true);
-		F::write($file, $sanitized);
+
+		// the unsanitized file must never stay behind silently
+		if (F::write($file, $sanitized) !== true) {
+			throw new Exception(
+				message: 'The sanitized file "' . $file . '" could not be written'
+			);
+		}
 	}
 
 	/**
