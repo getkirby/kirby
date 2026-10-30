@@ -1,17 +1,12 @@
 import { describe, expect, it, vi } from "vitest";
-import { Schema } from "prosemirror-model";
 import { EditorState, Transaction } from "prosemirror-state";
+import { createSchemaWithNodes } from "@test/unit/editor";
 import insertNode from "./insertNode";
 
-const schema = new Schema({
-	nodes: {
-		doc: { content: "block+" },
-		paragraph: { group: "block", content: "inline*" },
-		image: {
-			group: "block",
-			attrs: { src: { default: "" } }
-		},
-		text: { group: "inline" }
+const schema = createSchemaWithNodes({
+	image: {
+		group: "block",
+		attrs: { src: { default: "" } }
 	}
 });
 

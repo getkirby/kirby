@@ -1,23 +1,17 @@
 import { describe, expect, it } from "vitest";
-import { Schema } from "prosemirror-model";
-import { EditorState, TextSelection } from "prosemirror-state";
+import { createSchemaWithNodes, select } from "@test/unit/editor";
 import getNodeAttrs from "./getNodeAttrs";
 
-const schema = new Schema({
-	nodes: {
-		doc: { content: "block+" },
-		section: {
-			group: "block",
-			content: "block+",
-			attrs: { id: { default: "" } }
-		},
-		heading: {
-			group: "block",
-			content: "inline*",
-			attrs: { level: { default: 1 } }
-		},
-		paragraph: { group: "block", content: "inline*" },
-		text: { group: "inline" }
+const schema = createSchemaWithNodes({
+	section: {
+		group: "block",
+		content: "block+",
+		attrs: { id: { default: "" } }
+	},
+	heading: {
+		group: "block",
+		content: "inline*",
+		attrs: { level: { default: 1 } }
 	}
 });
 
@@ -41,35 +35,24 @@ const docNested = schema.node("doc", null, [
 	])
 ]);
 
-function stateWithSelection(
-	d: typeof doc,
-	from: number,
-	to: number
-): EditorState {
-	return EditorState.create({
-		doc: d,
-		selection: TextSelection.create(d, from, to)
-	});
-}
-
 describe("getNodeAttrs", () => {
 	it("returns an empty object when no node of that type is in the selection", () => {
-		const state = stateWithSelection(doc, 4, 4); // cursor in paragraph
+		const state = select(doc, 4, 4); // cursor in paragraph
 		expect(getNodeAttrs(state, headingType)).toEqual({});
 	});
 
 	it("returns the attrs of the matching node", () => {
-		const state = stateWithSelection(doc, 1, 1); // cursor in h1
+		const state = select(doc, 1, 1); // cursor in h1
 		expect(getNodeAttrs(state, headingType)).toEqual({ level: 1 });
 	});
 
 	it("returns the attrs of the last matched node when the selection spans multiple", () => {
-		const state = stateWithSelection(doc, 1, 7); // spans h1 through h2
+		const state = select(doc, 1, 7); // spans h1 through h2
 		expect(getNodeAttrs(state, headingType)).toEqual({ level: 2 });
 	});
 
 	it("returns the attrs of the deepest matching node when types are nested", () => {
-		const state = stateWithSelection(docNested, 4, 4); // cursor inside "hello"
+		const state = select(docNested, 4, 4); // cursor inside "hello"
 		expect(getNodeAttrs(state, sectionType)).toEqual({ id: "inner" });
 	});
 });

@@ -1,18 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { Schema } from "prosemirror-model";
-import { EditorState, NodeSelection, TextSelection } from "prosemirror-state";
+import { EditorState, NodeSelection } from "prosemirror-state";
+import { createSchemaWithNodes, select } from "@test/unit/editor";
 import nodeIsActive from "./nodeIsActive";
 
-const schema = new Schema({
-	nodes: {
-		doc: { content: "block+" },
-		heading: {
-			group: "block",
-			content: "inline*",
-			attrs: { level: { default: 1 } }
-		},
-		paragraph: { group: "block", content: "inline*" },
-		text: { group: "inline" }
+const schema = createSchemaWithNodes({
+	heading: {
+		group: "block",
+		content: "inline*",
+		attrs: { level: { default: 1 } }
 	}
 });
 
@@ -26,17 +21,13 @@ const doc = schema.node("doc", null, [
 	schema.node("paragraph", null, [schema.text("b")])
 ]);
 
-function stateAt(pos: number): EditorState {
-	return EditorState.create({ doc, selection: TextSelection.create(doc, pos) });
-}
-
 describe("nodeIsActive", () => {
 	it("returns false when no matching node contains the cursor", () => {
-		expect(nodeIsActive(stateAt(4), headingType)).toBe(false);
+		expect(nodeIsActive(select(doc, 4), headingType)).toBe(false);
 	});
 
 	it("returns true when the cursor is inside a node of the given type", () => {
-		expect(nodeIsActive(stateAt(1), headingType)).toBe(true);
+		expect(nodeIsActive(select(doc, 1), headingType)).toBe(true);
 	});
 
 	it("returns true when a node of the given type is selected via NodeSelection", () => {
@@ -57,11 +48,15 @@ describe("nodeIsActive", () => {
 
 	describe("with attrs", () => {
 		it("returns true when the node attrs match", () => {
-			expect(nodeIsActive(stateAt(1), headingType, { level: 1 })).toBe(true);
+			expect(nodeIsActive(select(doc, 1), headingType, { level: 1 })).toBe(
+				true
+			);
 		});
 
 		it("returns false when the node attrs do not match", () => {
-			expect(nodeIsActive(stateAt(1), headingType, { level: 2 })).toBe(false);
+			expect(nodeIsActive(select(doc, 1), headingType, { level: 2 })).toBe(
+				false
+			);
 		});
 	});
 });

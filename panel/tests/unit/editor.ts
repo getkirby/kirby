@@ -11,7 +11,13 @@ import {
 	type NodeSpec,
 	type NodeType
 } from "prosemirror-model";
-import { EditorState, type Plugin, type Transaction } from "prosemirror-state";
+import {
+	EditorState,
+	TextSelection,
+	type Command,
+	type Plugin,
+	type Transaction
+} from "prosemirror-state";
 import { vi } from "vitest";
 import type Editor from "@/components/Forms/Writer/Editor";
 
@@ -25,6 +31,23 @@ const BASE_NODES = {
 	},
 	text: { group: "inline" }
 } satisfies Record<string, NodeSpec>;
+
+/**
+ * Runs the command and returns the state it dispatched,
+ * or null if it did not dispatch
+ */
+export function applyCommand(
+	state: EditorState,
+	command: Command
+): EditorState | null {
+	let result: EditorState | null = null;
+
+	command(state, (tr) => {
+		result = state.apply(tr);
+	});
+
+	return result;
+}
 
 /**
  * Simulates typing `text` into a paragraph and returns the content of the
@@ -174,6 +197,21 @@ export function parseHTML(schema: Schema, html: string): Node {
 	const div = document.createElement("div");
 	div.innerHTML = `<p>${html}</p>`;
 	return DOMParser.fromSchema(schema).parse(div);
+}
+
+/**
+ * Creates a state with a text selection from `from` to `to`,
+ * or a cursor at `from` if `to` is omitted
+ */
+export function select(
+	doc: Node,
+	from: number,
+	to: number = from
+): EditorState {
+	return EditorState.create({
+		doc,
+		selection: TextSelection.create(doc, from, to)
+	});
 }
 
 export function toHTML(schema: Schema, doc: Node): string {
