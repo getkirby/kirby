@@ -232,6 +232,19 @@ class PagePickerFieldTest extends TestCase
 		$this->assertFalse($api[1]['link']);
 	}
 
+	public function testDefaultWithString(): void
+	{
+		$field = $this->field('pagepicker', [
+			'default' => 'a/aa'
+		]);
+		$this->assertSame(['a/aa'], $field->default());
+
+		$field = $this->field('pagepicker', [
+			'default' => "- a/aa\n- a/ab"
+		]);
+		$this->assertSame(['a/aa', 'a/ab'], $field->default());
+	}
+
 	public function testDialogs(): void
 	{
 		$field = $this->field('pagepicker', [

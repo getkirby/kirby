@@ -139,7 +139,7 @@ abstract class ModelPickerField extends InputField
 			return [];
 		}
 
-		return parent::default() ?? [];
+		return Data::decode(parent::default(), 'yaml');
 	}
 
 	public function empty(): string|null
