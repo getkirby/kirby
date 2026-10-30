@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
 	applyPasteRule,
 	createSchemaWithMarks,
@@ -152,6 +152,37 @@ describe("Link mark", () => {
 
 				expect(editor.insertText).not.toHaveBeenCalled();
 			});
+
+			it("does not insert a dangerous href", () => {
+				const mark = new Link();
+				const editor = mockEditor({
+					insertText: vi.fn(),
+					state: { selection: { empty: true } },
+					activeMarks: []
+				});
+				mark.bindEditor(editor);
+
+				const { insertLink } = mark.commands();
+				insertLink({ href: "javascript:alert(1)" });
+
+				expect(editor.insertText).not.toHaveBeenCalled();
+				expect(editor.updateMark).not.toHaveBeenCalled();
+			});
+
+			it("removes an active link for a dangerous href", () => {
+				const mark = new Link();
+				const editor = mockEditor({
+					state: { selection: { empty: false } },
+					activeMarks: ["link"]
+				});
+				mark.bindEditor(editor);
+
+				const { insertLink } = mark.commands();
+				insertLink({ href: "javascript:alert(1)" });
+
+				expect(editor.removeMark).toHaveBeenCalledWith("link");
+				expect(editor.updateMark).not.toHaveBeenCalled();
+			});
 		});
 
 		describe("removeLink", () => {
@@ -238,6 +269,61 @@ describe("Link mark", () => {
 		});
 	});
 
+	describe("plugins", () => {
+		let open: ReturnType<typeof vi.fn>;
+
+		beforeEach(() => {
+			open = vi.fn();
+			vi.stubGlobal("open", open);
+		});
+
+		afterEach(() => {
+			vi.unstubAllGlobals();
+		});
+
+		const handleClick = (mark: Link) =>
+			mark.plugins()[0].props?.handleClick as unknown as (
+				view: unknown,
+				pos: number,
+				event: MouseEvent
+			) => void;
+
+		it("opens the href in its target when alt-clicking a link", () => {
+			const mark = new Link();
+			const editor = mockEditor({
+				getMarkAttrs: vi.fn(() => ({
+					href: "https://example.com",
+					target: "_blank"
+				}))
+			});
+			mark.bindEditor(editor);
+
+			handleClick(mark)(null, 0, {
+				altKey: true,
+				target: document.createElement("a"),
+				stopPropagation: vi.fn()
+			} as unknown as MouseEvent);
+
+			expect(open).toHaveBeenCalledWith("https://example.com", "_blank");
+		});
+
+		it("does not open a dangerous href", () => {
+			const mark = new Link();
+			const editor = mockEditor({
+				getMarkAttrs: vi.fn(() => ({ href: "javascript:alert(1)" }))
+			});
+			mark.bindEditor(editor);
+
+			handleClick(mark)(null, 0, {
+				altKey: true,
+				target: document.createElement("a"),
+				stopPropagation: vi.fn()
+			} as unknown as MouseEvent);
+
+			expect(open).not.toHaveBeenCalled();
+		});
+	});
+
 	describe("schema", () => {
 		describe("parseDOM", () => {
 			it("parses `<a href='...'>` as link mark", () => {
@@ -265,6 +351,11 @@ describe("Link mark", () => {
 
 			it("does not parse mailto links as link mark", () => {
 				const html = '<a href="mailto:test@example.com">email</a>';
+				expect(hasMark(schema, html, schema.marks.link)).toBe(false);
+			});
+
+			it("does not parse a dangerous href as link mark", () => {
+				const html = '<a href="javascript:alert(1)">link</a>';
 				expect(hasMark(schema, html, schema.marks.link)).toBe(false);
 			});
 		});

@@ -118,6 +118,36 @@ describe("Email mark", () => {
 
 				expect(editor.insertText).not.toHaveBeenCalled();
 			});
+
+			it("does not insert an invalid email", () => {
+				const mark = new Email();
+				const editor = mockEditor({
+					insertText: vi.fn(),
+					state: { selection: { empty: true } }
+				});
+				mark.bindEditor(editor);
+
+				const { insertEmail } = mark.commands();
+				insertEmail({ href: "not-an-email" });
+
+				expect(editor.insertText).not.toHaveBeenCalled();
+				expect(editor.updateMark).not.toHaveBeenCalled();
+			});
+
+			it("removes an active email for an invalid email", () => {
+				const mark = new Email();
+				const editor = mockEditor({
+					state: { selection: { empty: false } },
+					activeMarks: ["email"]
+				});
+				mark.bindEditor(editor);
+
+				const { insertEmail } = mark.commands();
+				insertEmail({ href: "not-an-email" });
+
+				expect(editor.removeMark).toHaveBeenCalledWith("email");
+				expect(editor.updateMark).not.toHaveBeenCalled();
+			});
 		});
 
 		describe("removeEmail", () => {
@@ -254,6 +284,22 @@ describe("Email mark", () => {
 
 			expect(open).not.toHaveBeenCalled();
 		});
+
+		it("does not open an invalid email", () => {
+			const mark = new Email();
+			const editor = mockEditor({
+				getMarkAttrs: vi.fn(() => ({ href: "not-an-email" }))
+			});
+			mark.bindEditor(editor);
+
+			handleClick(mark)(null, 0, {
+				altKey: true,
+				target: document.createElement("a"),
+				stopPropagation: vi.fn()
+			} as unknown as MouseEvent);
+
+			expect(open).not.toHaveBeenCalled();
+		});
 	});
 
 	describe("schema", () => {
@@ -271,6 +317,11 @@ describe("Email mark", () => {
 
 			it("does not parse links without mailto: prefix as email mark", () => {
 				const html = '<a href="https://example.com">link</a>';
+				expect(hasMark(schema, html, schema.marks.email)).toBe(false);
+			});
+
+			it("does not parse an invalid `mailto:` address as email mark", () => {
+				const html = '<a href="mailto:not-an-email">email</a>';
 				expect(hasMark(schema, html, schema.marks.email)).toBe(false);
 			});
 		});
