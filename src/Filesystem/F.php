@@ -717,14 +717,34 @@ class F
 			return false;
 		}
 
-		// to increase performance, directly try to load the file
-		// without checking if it exists; fall back to return `false`
-		// if it doesn't exist while letting other warnings through
-		return Helpers::handleErrors(
-			fn (): string|false => file_get_contents($file),
-			fn (int $errno, string $errstr): bool => str_contains($errstr, 'No such file'),
-			false
-		);
+		// on Docker Desktop mounts, a file just replaced via `rename()` can
+		// fail to open for a few ms although it is still listed: retry
+		for ($attempt = 1; $attempt <= 15; $attempt++) {
+			// to increase performance, directly try to load the file
+			// without checking if it exists; fall back to return `false`
+			// if it doesn't exist while letting other warnings through
+			$content = Helpers::handleErrors(
+				action:    fn (): string|false => file_get_contents($file),
+				condition: fn (int $errno, string $errstr): bool => str_contains($errstr, 'No such file'),
+				fallback:  false
+			);
+
+			if ($content !== false) {
+				return $content;
+			}
+
+			// a file that is gone or not readable (e.g. permissions)
+			// does not come back by waiting
+			clearstatcache(true, $file);
+
+			if (is_readable($file) === false) {
+				return false;
+			}
+
+			usleep(1000);
+		}
+
+		return false;
 	}
 
 	/**
