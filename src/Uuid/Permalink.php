@@ -21,15 +21,23 @@ class Permalink
 	) {
 	}
 
+	/**
+	 * Creates a permalink for a page or file UUID string,
+	 * e.g. `page://my-page-uuid`
+	 */
 	public static function for(string $uuid): static|null
 	{
-		if ($uuid = Uuid::from($uuid, ['page', 'file'])) {
-			return new static($uuid);
+		if ($object = Uuid::from($uuid, ['page', 'file'])) {
+			return new static($object);
 		}
 
 		return null;
 	}
 
+	/**
+	 * Creates a permalink from its URL,
+	 * e.g. `https://example.com/@/page/my-page-uuid`
+	 */
 	public static function from(string $url): static|null
 	{
 		if ($path = Str::after($url, '/@/')) {

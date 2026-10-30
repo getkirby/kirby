@@ -425,9 +425,14 @@ class ResponderTest extends TestCase
 	public function testJson(): void
 	{
 		$responder = new Responder();
-		$responder->json(['foo' => 'bar']);
+		$this->assertSame($responder, $responder->json(['foo' => 'bar']));
 		$this->assertSame('{"foo":"bar"}', $responder->body());
 		$this->assertSame('application/json', $responder->type());
+
+		$responder = new Responder();
+		$this->assertSame($responder, $responder->json());
+		$this->assertSame('application/json', $responder->type());
+		$this->assertNull($responder->body());
 	}
 
 	public function testJsonWithInvalidUtf8(): void

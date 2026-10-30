@@ -676,6 +676,30 @@ class F
 	}
 
 	/**
+	 * Writes the content into the file in place
+	 *
+	 * @since 5.7.0
+	 */
+	protected static function put(
+		string $file,
+		mixed $content,
+		bool $append = false
+	): bool {
+		// create the parent directory if it does not exist yet
+		if (Dir::make(dirname($file)) === false) {
+			return false;
+		}
+
+		if (static::isWritable($file) === false) {
+			throw new Exception('The file "' . $file . '" is not writable');
+		}
+
+		$flags = $append === true ? FILE_APPEND | LOCK_EX : LOCK_EX;
+
+		return file_put_contents($file, $content, $flags) !== false;
+	}
+
+	/**
 	 * Reads the content of a file; returns `false`
 	 * for URLs and files that don't exist
 	 */
@@ -690,14 +714,34 @@ class F
 			return false;
 		}
 
-		// to increase performance, directly try to load the file
-		// without checking if it exists; fall back to return `false`
-		// if it doesn't exist while letting other warnings through
-		return Helpers::handleErrors(
-			fn (): string|false => file_get_contents($file),
-			fn (int $errno, string $errstr): bool => str_contains($errstr, 'No such file'),
-			false
-		);
+		// on Docker Desktop mounts, a file just replaced via `rename()` can
+		// fail to open for a few ms although it is still listed: retry
+		for ($attempt = 1; $attempt <= 15; $attempt++) {
+			// to increase performance, directly try to load the file
+			// without checking if it exists; fall back to return `false`
+			// if it doesn't exist while letting other warnings through
+			$content = Helpers::handleErrors(
+				action:    fn (): string|false => file_get_contents($file),
+				condition: fn (int $errno, string $errstr): bool => str_contains($errstr, 'No such file'),
+				fallback:  false
+			);
+
+			if ($content !== false) {
+				return $content;
+			}
+
+			// a file that is gone or not readable (e.g. permissions)
+			// does not come back by waiting
+			clearstatcache(true, $file);
+
+			if (is_readable($file) === false) {
+				return false;
+			}
+
+			usleep(1000);
+		}
+
+		return false;
 	}
 
 	/**
@@ -1083,17 +1127,6 @@ class F
 			$content = serialize($content);
 		}
 
-		$mode = $append === true ? FILE_APPEND | LOCK_EX : LOCK_EX;
-
-		// create the parent directory if it does not exist yet
-		if (Dir::make(dirname($file)) === false) {
-			return false;
-		}
-
-		if (static::isWritable($file) === false) {
-			throw new Exception('The file "' . $file . '" is not writable');
-		}
-
-		return file_put_contents($file, $content, $mode) !== false;
+		return static::put($file, $content, $append);
 	}
 }

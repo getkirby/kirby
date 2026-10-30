@@ -20,9 +20,16 @@ trait TableColumns
 
 	/**
 	 * Cache for the columns definition
+	 *
+	 * @var array<string, array<string, mixed>>|null
 	 */
 	protected array|null $columnsCache = null;
 
+	/**
+	 * Returns the normalized columns, keyed by field name
+	 *
+	 * @return array<string, array<string, mixed>>
+	 */
 	public function columns(): array
 	{
 		return $this->columnsCache ??= $this->normalizeColumns(
@@ -31,15 +38,21 @@ trait TableColumns
 		);
 	}
 
+	/**
+	 * @param array<string, array<string, mixed>> $fields
+	 * @return array<string, true>
+	 */
 	protected function columnsFromFields(array $fields): array
 	{
-		// get all field names
-		$columnNames = array_column($fields, 'name');
-
-		// create keys for each name
-		return array_fill_keys($columnNames, true);
+		$names = array_column($fields, 'name');
+		return array_fill_keys($names, true);
 	}
 
+	/**
+	 * @param array<string, mixed>|true $column
+	 * @param array<string, mixed>|null $field
+	 * @return array<string, mixed>|null
+	 */
 	protected function normalizeColumn(string $name, array|true $column, array|null $field): array|null
 	{
 		// Skip empty and unsaveable fields
@@ -59,6 +72,9 @@ trait TableColumns
 		return $column;
 	}
 
+	/**
+	 * @param array<string, array<string, mixed>> $fields
+	 */
 	protected function normalizeColumns(array $columns, array $fields): array
 	{
 		// lower case all keys, because field names will

@@ -190,7 +190,7 @@ class PageGuards extends ModelGuards
 	protected function ensureToMove(Site|Page $parent): void
 	{
 		// if nothing changes, there's no need for checks
-		if ($parent->is($this->model->parent()) === true) {
+		if ($this->model->parentModel()->is($parent) === true) {
 			return;
 		}
 

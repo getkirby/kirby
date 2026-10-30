@@ -37,7 +37,7 @@ class Txt extends Handler
 	/**
 	 * Helper for converting the value
 	 */
-	protected static function encodeValue(array|bool|float|string $value): string
+	protected static function encodeValue(array|bool|float|int|string $value): string
 	{
 		// avoid problems with certain values
 		$value = match (true) {
@@ -45,7 +45,7 @@ class Txt extends Handler
 			$value === false => 'false',
 			is_array($value) => $value === [] ? '' : Data::encode($value, 'yaml'),
 			is_float($value) => Str::float($value) ?? '',
-			default          => $value
+			default          => (string)$value
 		};
 
 		// escape accidental dividers within a field

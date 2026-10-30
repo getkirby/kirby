@@ -21,6 +21,11 @@ class ButtonsField extends DisplayField
 	#[Prop]
 	protected array|string $buttons = [];
 
+	/**
+	 * Returns the props of each button
+	 *
+	 * @return array<array<string, mixed>>
+	 */
 	public function buttons(): array
 	{
 		$buttons = $this->buttons;

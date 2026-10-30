@@ -335,9 +335,9 @@ class Responder implements Stringable
 	/**
 	 * Shortcut to configure a json response
 	 *
-	 * @return string|$this
+	 * @return $this
 	 */
-	public function json(array|null $json = null): static|string
+	public function json(array|null $json = null): static
 	{
 		if ($json !== null) {
 			$this->body(json_encode($json, JSON_THROW_ON_ERROR));

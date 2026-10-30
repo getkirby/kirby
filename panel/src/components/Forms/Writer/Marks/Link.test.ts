@@ -5,7 +5,7 @@ import {
 	getMarkAttrs,
 	hasMark,
 	mockEditor,
-	toHTML
+	render
 } from "@test/unit/editor";
 import utils from "../Utils";
 import Link from "./Link";
@@ -274,14 +274,8 @@ describe("Link mark", () => {
 				const linkMark = schema.marks.link.create({
 					href: "https://example.com"
 				});
-				const doc = schema.node("doc", null, [
-					schema.node("paragraph", null, [
-						schema.text("before"),
-						schema.text("link", [linkMark])
-					])
-				]);
-				expect(toHTML(schema, doc)).toBe(
-					'<p>before<a href="https://example.com">link</a></p>'
+				expect(render(schema, linkMark, "link")).toBe(
+					'<p><a href="https://example.com">link</a></p>'
 				);
 			});
 
@@ -290,10 +284,7 @@ describe("Link mark", () => {
 					href: "https://example.com",
 					target: "_blank"
 				});
-				const doc = schema.node("doc", null, [
-					schema.node("paragraph", null, [schema.text("link", [linkMark])])
-				]);
-				expect(toHTML(schema, doc)).toBe(
+				expect(render(schema, linkMark, "link")).toBe(
 					'<p><a href="https://example.com" target="_blank">link</a></p>'
 				);
 			});

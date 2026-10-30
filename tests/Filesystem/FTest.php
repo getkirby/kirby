@@ -624,6 +624,41 @@ class FTest extends TestCase
 		$this->assertSame($content, F::read($this->test));
 	}
 
+	public function testReadDoesNotRetryOtherErrors(): void
+	{
+		if (posix_getuid() === 0) {
+			$this->markTestSkipped('Cannot test an unreadable file as root');
+		}
+
+		F::write($this->test, 'content');
+
+		// e.g. a permission problem does not go away by waiting
+		chmod($this->test, 0o000);
+
+		$calls = 0;
+		FileTest::$mocks['file_get_contents'] = function ($file) use (&$calls) {
+			$calls++;
+			return \file_get_contents($file);
+		};
+
+		$warnings = [];
+		set_error_handler(function (int $errno, string $errstr) use (&$warnings): bool {
+			$warnings[] = $errstr;
+			return true;
+		});
+
+		try {
+			$this->assertFalse(F::read($this->test));
+			$this->assertSame(1, $calls);
+			$this->assertCount(1, $warnings);
+			$this->assertStringContainsString('Permission denied', $warnings[0]);
+		} finally {
+			restore_error_handler();
+			chmod($this->test, 0o644);
+			FileTest::$mocks = [];
+		}
+	}
+
 	public function testReadInvalidFile(): void
 	{
 		$this->assertFalse(F::read('invalid file'));
@@ -632,6 +667,70 @@ class FTest extends TestCase
 	public function testReadRemoteFile(): void
 	{
 		$this->assertFalse(F::read('https://example.com/some-file.jpg'));
+	}
+
+	public function testReadRetriesWhenFileCannotBeOpened(): void
+	{
+		F::write($this->test, 'content');
+
+		// e.g. a file that was just replaced via `rename()` on a Docker
+		// Desktop bind mount: the first attempts fail, the file stays listed
+		$calls = 0;
+		FileTest::$mocks['file_get_contents'] = function ($file) use (&$calls) {
+			if (++$calls < 3) {
+				trigger_error('file_get_contents(' . $file . '): Failed to open stream: No such file or directory', E_USER_WARNING);
+				return false;
+			}
+
+			return \file_get_contents($file);
+		};
+
+		try {
+			$this->assertSame('content', F::read($this->test));
+			$this->assertSame(3, $calls);
+		} finally {
+			FileTest::$mocks = [];
+		}
+	}
+
+	public function testReadReturnsFalseWhenRetriesAreExhausted(): void
+	{
+		F::write($this->test, 'content');
+
+		$calls = 0;
+		FileTest::$mocks['file_get_contents'] = function ($file) use (&$calls) {
+			$calls++;
+			trigger_error('file_get_contents(' . $file . '): Failed to open stream: No such file or directory', E_USER_WARNING);
+			return false;
+		};
+
+		try {
+			$this->assertFalse(F::read($this->test));
+			$this->assertSame(15, $calls);
+		} finally {
+			FileTest::$mocks = [];
+		}
+	}
+
+	public function testReadStopsRetryingWhenFileIsGone(): void
+	{
+		F::write($this->test, 'content');
+
+		// a parallel request removed the file after it was found
+		$calls = 0;
+		FileTest::$mocks['file_get_contents'] = function ($file) use (&$calls) {
+			$calls++;
+			\unlink($file);
+			trigger_error('file_get_contents(' . $file . '): Failed to open stream: No such file or directory', E_USER_WARNING);
+			return false;
+		};
+
+		try {
+			$this->assertFalse(F::read($this->test));
+			$this->assertSame(1, $calls);
+		} finally {
+			FileTest::$mocks = [];
+		}
 	}
 
 	public function testRemove(): void
@@ -1037,6 +1136,14 @@ class FTest extends TestCase
 		$this->assertSame($input, $result);
 	}
 
+	public function testWriteCreatesParentDirectory(): void
+	{
+		$file = static::TMP . '/a/b/test.txt';
+
+		$this->assertTrue(F::write($file, 'my content'));
+		$this->assertSame('my content', F::read($file));
+	}
+
 	public function testWriteObject(): void
 	{
 		$input = new stdClass([
@@ -1047,6 +1154,32 @@ class FTest extends TestCase
 
 		$result = unserialize(F::read($this->test));
 		$this->assertEquals($input, $result); // cannot use strict assertion (serialization)
+	}
+
+	public function testWriteWithEmptyPath(): void
+	{
+		$this->assertFalse(F::write('', 'my content'));
+	}
+
+	public function testWriteWithReadOnlyFile(): void
+	{
+		if (posix_getuid() === 0) {
+			$this->markTestSkipped('Cannot test a read-only file as root');
+		}
+
+		F::write($this->test, 'old content');
+		chmod($this->test, 0o444);
+
+		try {
+			F::write($this->test, 'new content');
+			$this->fail('Expected an exception');
+		} catch (Exception $e) {
+			$this->assertSame('The file "' . $this->test . '" is not writable', $e->getMessage());
+		} finally {
+			chmod($this->test, 0o644);
+		}
+
+		$this->assertSame('old content', F::read($this->test));
 	}
 
 	public function testSimilar(): void

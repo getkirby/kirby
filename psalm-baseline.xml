@@ -14,8 +14,6 @@
       <code><![CDATA[$extensions['models'] ?? []]]></code>
       <code><![CDATA[$extensions['routes'] ?? []]]></code>
       <code><![CDATA[$routes]]></code>
-      <code><![CDATA[$system['after']]]></code>
-      <code><![CDATA[$system['before']]]></code>
     </InvalidOperand>
     <InvalidReturnStatement>
       <code><![CDATA[match ($code ?? 'current') {

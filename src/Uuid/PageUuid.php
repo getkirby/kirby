@@ -25,7 +25,6 @@ class PageUuid extends ModelUuid
 	 */
 	public function clear(bool $recursive = false): bool
 	{
-		// if $recursive, also clear UUIDs from cache for all children
 		if ($recursive === true && $model = $this->model()) {
 			foreach ($model->childrenAndDrafts() as $child) {
 				$child->uuid()->clear(true);
@@ -41,16 +40,19 @@ class PageUuid extends ModelUuid
 	 */
 	protected function findByCache(): Page|null
 	{
-		if ($key = $this->key()) {
-			if ($value = Uuids::cache()->get($key)) {
-				$page = App::instance()->page($value);
+		$key   = $this->key();
+		$value = $key !== null ? Uuids::cache()->get($key) : null;
 
-				// the cached path can be stale,
-				// e.g. when the page has been moved or copied
-				if ($this->isFor($page) === true) {
-					return $page;
-				}
-			}
+		if ($value === null) {
+			return null;
+		}
+
+		$page = App::instance()->page($value);
+
+		// the cached path can be stale,
+		// e.g. when the page has been moved or copied
+		if ($this->isFor($page) === true) {
+			return $page;
 		}
 
 		return null;
@@ -87,7 +89,6 @@ class PageUuid extends ModelUuid
 		bool $force = false,
 		bool $recursive = false
 	): bool {
-		// if $recursive, also populate UUIDs for all children
 		if ($recursive === true && $model = $this->model()) {
 			foreach ($model->childrenAndDrafts() as $child) {
 				$child->uuid()->populate($force, true);

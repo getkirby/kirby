@@ -18,8 +18,17 @@ trait Options
 	 */
 	#[Prop(computed: true)]
 	protected array|string|null $options = null;
+
+	/**
+	 * Cache for the resolved options
+	 *
+	 * @var list<array<string, mixed>>|null
+	 */
 	protected array|null $optionsCache = null;
 
+	/**
+	 * @return list<array<string, mixed>>
+	 */
 	protected function fetchOptions(): array
 	{
 		$props   = FieldOptions::polyfill(['options' => $this->options ?? []]);
@@ -27,6 +36,11 @@ trait Options
 		return $options->render($this->model());
 	}
 
+	/**
+	 * Returns the resolved options
+	 *
+	 * @return list<array<string, mixed>>
+	 */
 	public function options(): array
 	{
 		return $this->optionsCache ??= $this->fetchOptions();

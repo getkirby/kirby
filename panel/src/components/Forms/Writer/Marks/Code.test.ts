@@ -5,7 +5,7 @@ import {
 	createSchemaWithMarks,
 	hasMark,
 	mockEditor,
-	toHTML
+	render
 } from "@test/unit/editor";
 import utils from "../Utils";
 import Code from "./Code";
@@ -104,13 +104,7 @@ describe("Code mark", () => {
 		describe("toDOM", () => {
 			it("renders the code mark as a `<code>` element", () => {
 				const mark = schema.marks.code.create();
-				const doc = schema.node("doc", null, [
-					schema.node("paragraph", null, [
-						schema.text("foo"),
-						schema.text("bar", [mark])
-					])
-				]);
-				expect(toHTML(schema, doc)).toBe("<p>foo<code>bar</code></p>");
+				expect(render(schema, mark, "bar")).toBe("<p><code>bar</code></p>");
 			});
 		});
 	});
