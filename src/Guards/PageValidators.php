@@ -317,9 +317,15 @@ class PageValidators extends ModelValidators
 			return;
 		}
 
+		// compare with the paths relative to the index URL
+		// (e.g. `panel` instead of `subfolder/panel`)
+		$base  = $this->model->kirby()->url('index', true)->path()->toString();
 		$paths = A::map(
 			['api', 'assets', 'media', 'panel'],
-			fn ($url) => $this->model->kirby()->url($url, true)->path()->toString()
+			fn ($url) => Str::afterStart(
+				$this->model->kirby()->url($url, true)->path()->toString(),
+				$base . '/'
+			)
 		);
 
 		$index = array_search($slug, $paths, true);
