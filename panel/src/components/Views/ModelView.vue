@@ -101,7 +101,6 @@ export default {
 			}
 
 			// the window or tab is closed, so let's unlock this view.
-			// Only a beacon still gets through while the page unloads.
 			if (this.isLocked === false) {
 				this.$panel.content.unlockBeaconRequest({
 					api: this.api,
