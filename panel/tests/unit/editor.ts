@@ -5,6 +5,7 @@ import {
 	Fragment,
 	Schema,
 	Slice,
+	type Mark,
 	type MarkSpec,
 	type MarkType,
 	type Node,
@@ -197,6 +198,17 @@ export function parseHTML(schema: Schema, html: string): Node {
 	const div = document.createElement("div");
 	div.innerHTML = `<p>${html}</p>`;
 	return DOMParser.fromSchema(schema).parse(div);
+}
+
+/**
+ * Renders a paragraph with `text` carrying the mark
+ */
+export function render(schema: Schema, mark: Mark, text: string): string {
+	const doc = schema.node("doc", null, [
+		schema.node("paragraph", null, [schema.text(text, [mark])])
+	]);
+
+	return toHTML(schema, doc);
 }
 
 /**

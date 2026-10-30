@@ -5,7 +5,7 @@ import {
 	createSchemaWithMarks,
 	hasMark,
 	mockEditor,
-	toHTML
+	render
 } from "@test/unit/editor";
 import utils from "../Utils";
 import Strike from "./Strike";
@@ -120,13 +120,7 @@ describe("Strike mark", () => {
 		describe("toDOM", () => {
 			it("renders the strike mark as a `<s>` element", () => {
 				const mark = schema.marks.strike.create();
-				const doc = schema.node("doc", null, [
-					schema.node("paragraph", null, [
-						schema.text("foo"),
-						schema.text("bar", [mark])
-					])
-				]);
-				expect(toHTML(schema, doc)).toBe("<p>foo<s>bar</s></p>");
+				expect(render(schema, mark, "bar")).toBe("<p><s>bar</s></p>");
 			});
 		});
 	});

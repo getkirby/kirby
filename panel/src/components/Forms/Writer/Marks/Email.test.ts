@@ -5,7 +5,7 @@ import {
 	getMarkAttrs,
 	hasMark,
 	mockEditor,
-	toHTML
+	render
 } from "@test/unit/editor";
 import utils from "../Utils";
 import Email from "./Email";
@@ -280,14 +280,8 @@ describe("Email mark", () => {
 				const mark = schema.marks.email.create({
 					href: "test@example.com"
 				});
-				const doc = schema.node("doc", null, [
-					schema.node("paragraph", null, [
-						schema.text("Write me "),
-						schema.text("an email", [mark])
-					])
-				]);
-				expect(toHTML(schema, doc)).toBe(
-					'<p>Write me <a href="mailto:test@example.com">an email</a></p>'
+				expect(render(schema, mark, "an email")).toBe(
+					'<p><a href="mailto:test@example.com">an email</a></p>'
 				);
 			});
 		});
