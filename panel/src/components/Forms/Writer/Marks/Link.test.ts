@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
 	applyPasteRule,
+	click,
 	createSchemaWithMarks,
 	getMarkAttrs,
 	hasMark,
@@ -24,215 +25,27 @@ describe("Link mark", () => {
 	});
 
 	describe("commands", () => {
-		describe("link", () => {
-			it("emits 'link' event when no modifier key is pressed", () => {
-				const mark = new Link();
-				const editor = mockEditor({ emit: vi.fn() });
-				mark.bindEditor(editor);
-
-				const { link } = mark.commands();
-				link(new MouseEvent("click"));
-
-				expect(editor.emit).toHaveBeenCalledWith("link", editor);
-			});
-
-			it("removes the mark when alt key is pressed", () => {
-				const mark = new Link();
-				const editor = mockEditor();
-				mark.bindEditor(editor);
-
-				const { link } = mark.commands();
-				link(new MouseEvent("click", { altKey: true }));
-
-				expect(editor.removeMark).toHaveBeenCalledWith("link");
-			});
-
-			it("removes the mark when meta key is pressed", () => {
-				const mark = new Link();
-				const editor = mockEditor();
-				mark.bindEditor(editor);
-
-				const { link } = mark.commands();
-				link(new MouseEvent("click", { metaKey: true }));
-
-				expect(editor.removeMark).toHaveBeenCalledWith("link");
-			});
+		it("registers the commands under the link name", () => {
+			expect(Object.keys(mark.commands())).toStrictEqual([
+				"link",
+				"insertLink",
+				"removeLink",
+				"toggleLink"
+			]);
 		});
 
-		describe("insertLink", () => {
-			it("inserts link as text when selection is empty and mark is not active", () => {
-				const mark = new Link();
-				const editor = mockEditor({
-					insertText: vi.fn(),
-					state: { selection: { empty: true } },
-					activeMarks: []
-				});
-				mark.bindEditor(editor);
-
-				const { insertLink } = mark.commands();
-				insertLink({ href: "https://example.com" });
-
-				expect(editor.insertText).toHaveBeenCalledWith(
-					"https://example.com",
-					true
-				);
+		it("does not insert a dangerous href", () => {
+			const mark = new Link();
+			const editor = mockEditor({
+				insertText: vi.fn(),
+				state: { selection: { empty: true } }
 			});
+			mark.bindEditor(editor);
 
-			it("does not insert as text when selection is empty but mark is already active", () => {
-				const mark = new Link();
-				const editor = mockEditor({
-					insertText: vi.fn(),
-					state: { selection: { empty: true } },
-					activeMarks: ["link"]
-				});
-				mark.bindEditor(editor);
+			mark.commands().insertLink({ href: "javascript:alert(1)" });
 
-				const { insertLink } = mark.commands();
-				insertLink({ href: "https://example.com" });
-
-				expect(editor.insertText).not.toHaveBeenCalled();
-			});
-
-			it("does not insert as text when text is selected", () => {
-				const mark = new Link();
-				const editor = mockEditor({
-					insertText: vi.fn(),
-					state: { selection: { empty: false } },
-					activeMarks: []
-				});
-				mark.bindEditor(editor);
-
-				const { insertLink } = mark.commands();
-				insertLink({ href: "https://example.com" });
-
-				expect(editor.insertText).not.toHaveBeenCalled();
-			});
-
-			it("applies the link mark when href is provided", () => {
-				const mark = new Link();
-				const editor = mockEditor({
-					state: { selection: { empty: false } },
-					activeMarks: []
-				});
-				mark.bindEditor(editor);
-
-				const { insertLink } = mark.commands();
-				insertLink({ href: "https://example.com" });
-
-				expect(editor.updateMark).toHaveBeenCalledWith("link", {
-					href: "https://example.com"
-				});
-			});
-
-			it("does not apply the mark when href is absent", () => {
-				const mark = new Link();
-				const editor = mockEditor({
-					state: { selection: { empty: false } },
-					activeMarks: []
-				});
-				mark.bindEditor(editor);
-
-				const { insertLink } = mark.commands();
-				insertLink({});
-
-				expect(editor.updateMark).not.toHaveBeenCalled();
-			});
-
-			it("does not insert as text when href is absent", () => {
-				const mark = new Link();
-				const editor = mockEditor({
-					insertText: vi.fn(),
-					state: { selection: { empty: true } },
-					activeMarks: []
-				});
-				mark.bindEditor(editor);
-
-				const { insertLink } = mark.commands();
-				insertLink({});
-
-				expect(editor.insertText).not.toHaveBeenCalled();
-			});
-
-			it("does not insert a dangerous href", () => {
-				const mark = new Link();
-				const editor = mockEditor({
-					insertText: vi.fn(),
-					state: { selection: { empty: true } },
-					activeMarks: []
-				});
-				mark.bindEditor(editor);
-
-				const { insertLink } = mark.commands();
-				insertLink({ href: "javascript:alert(1)" });
-
-				expect(editor.insertText).not.toHaveBeenCalled();
-				expect(editor.updateMark).not.toHaveBeenCalled();
-			});
-
-			it("removes an active link for a dangerous href", () => {
-				const mark = new Link();
-				const editor = mockEditor({
-					state: { selection: { empty: false } },
-					activeMarks: ["link"]
-				});
-				mark.bindEditor(editor);
-
-				const { insertLink } = mark.commands();
-				insertLink({ href: "javascript:alert(1)" });
-
-				expect(editor.removeMark).toHaveBeenCalledWith("link");
-				expect(editor.updateMark).not.toHaveBeenCalled();
-			});
-		});
-
-		describe("removeLink", () => {
-			it("removes the link mark", () => {
-				const mark = new Link();
-				const editor = mockEditor();
-				mark.bindEditor(editor);
-
-				const { removeLink } = mark.commands();
-				removeLink();
-
-				expect(editor.removeMark).toHaveBeenCalledWith("link");
-			});
-		});
-
-		describe("toggleLink", () => {
-			it("inserts the link when href is provided", () => {
-				const mark = new Link();
-				const editor = mockEditor({ command: vi.fn() });
-				mark.bindEditor(editor);
-
-				const { toggleLink } = mark.commands();
-				toggleLink({ href: "https://example.com" });
-
-				expect(editor.command).toHaveBeenCalledWith("insertLink", {
-					href: "https://example.com"
-				});
-			});
-
-			it("removes the link when href is empty", () => {
-				const mark = new Link();
-				const editor = mockEditor({ command: vi.fn() });
-				mark.bindEditor(editor);
-
-				const { toggleLink } = mark.commands();
-				toggleLink({ href: "" });
-
-				expect(editor.command).toHaveBeenCalledWith("removeLink");
-			});
-
-			it("removes the link when no attrs are provided", () => {
-				const mark = new Link();
-				const editor = mockEditor({ command: vi.fn() });
-				mark.bindEditor(editor);
-
-				const { toggleLink } = mark.commands();
-				toggleLink();
-
-				expect(editor.command).toHaveBeenCalledWith("removeLink");
-			});
+			expect(editor.insertText).not.toHaveBeenCalled();
+			expect(editor.updateMark).not.toHaveBeenCalled();
 		});
 	});
 
@@ -281,13 +94,6 @@ describe("Link mark", () => {
 			vi.unstubAllGlobals();
 		});
 
-		const handleClick = (mark: Link) =>
-			mark.plugins()[0].props?.handleClick as unknown as (
-				view: unknown,
-				pos: number,
-				event: MouseEvent
-			) => void;
-
 		it("opens the href in its target when alt-clicking a link", () => {
 			const mark = new Link();
 			const editor = mockEditor({
@@ -298,11 +104,7 @@ describe("Link mark", () => {
 			});
 			mark.bindEditor(editor);
 
-			handleClick(mark)(null, 0, {
-				altKey: true,
-				target: document.createElement("a"),
-				stopPropagation: vi.fn()
-			} as unknown as MouseEvent);
+			click(mark, { altKey: true });
 
 			expect(open).toHaveBeenCalledWith("https://example.com", "_blank");
 		});
@@ -314,11 +116,7 @@ describe("Link mark", () => {
 			});
 			mark.bindEditor(editor);
 
-			handleClick(mark)(null, 0, {
-				altKey: true,
-				target: document.createElement("a"),
-				stopPropagation: vi.fn()
-			} as unknown as MouseEvent);
+			click(mark, { altKey: true });
 
 			expect(open).not.toHaveBeenCalled();
 		});

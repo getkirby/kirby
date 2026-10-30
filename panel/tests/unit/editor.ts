@@ -21,6 +21,7 @@ import {
 } from "prosemirror-state";
 import { vi } from "vitest";
 import type Editor from "@/components/Forms/Writer/Editor";
+import type Extension from "@/components/Forms/Writer/Extension";
 
 const BASE_NODES = {
 	doc: { content: "block+" },
@@ -132,6 +133,33 @@ export function applyPasteRule(
 	).transformPasted(slice);
 
 	return toHTML(schema, schema.node("doc", null, result.content));
+}
+
+/**
+ * Clicks an `<a>` element via the `handleClick` prop
+ * of the extension's first plugin and returns the event
+ */
+export function click(
+	extension: Extension,
+	event: Partial<MouseEvent> = {}
+): MouseEvent {
+	const [plugin] = extension.plugins();
+	const handleClick = plugin.props?.handleClick as unknown as (
+		view: unknown,
+		pos: number,
+		event: MouseEvent
+	) => void;
+
+	const clicked = {
+		altKey: false,
+		stopPropagation: vi.fn(),
+		target: document.createElement("a"),
+		...event
+	} as unknown as MouseEvent;
+
+	handleClick(null, 0, clicked);
+
+	return clicked;
 }
 
 export function createSchemaWithMarks(marks: Record<string, MarkSpec>): Schema {
