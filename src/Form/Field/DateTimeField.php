@@ -16,6 +16,8 @@ use Kirby\Toolkit\Date;
  */
 abstract class DateTimeField extends InputField
 {
+	use Mixin\After;
+	use Mixin\Before;
 	use Mixin\Icon;
 
 	public const ISO = 'Y-m-d H:i:s';

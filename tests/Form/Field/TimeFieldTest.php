@@ -162,7 +162,9 @@ class TimeFieldTest extends TestCase
 		ksort($props);
 
 		$expected = [
+			'after'       => null,
 			'autofocus'   => false,
+			'before'      => null,
 			'disabled'    => false,
 			'display'     => 'HH:mm',
 			'format'      => 'H:i:s',

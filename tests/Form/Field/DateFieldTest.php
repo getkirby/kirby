@@ -175,7 +175,9 @@ class DateFieldTest extends TestCase
 		ksort($props);
 
 		$expected = [
+			'after'       => null,
 			'autofocus'   => false,
+			'before'      => null,
 			'calendar'    => true,
 			'disabled'    => false,
 			'display'     => 'YYYY-MM-DD',
