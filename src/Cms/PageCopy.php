@@ -164,6 +164,7 @@ class PageCopy
 		bool $withChildren = false
 	): Page {
 		$converter = new static($copy, $original, $withFiles, $withChildren);
+		$converter->removeChanges();
 
 		// loop through all languages to remove slug from non-default
 		// languages and re-generate UUIDs (and track changes)
@@ -176,6 +177,26 @@ class PageCopy
 		$converter->replaceUuids();
 
 		return $converter->copy;
+	}
+
+	/**
+	 * Removes unsaved changes from the copy, its files
+	 * and children. Uses the storage directly, as the changes
+	 * can still be locked by the editor of the original page.
+	 */
+	public function removeChanges(): void
+	{
+		$pages = [$this->copy, ...$this->copy->index(drafts: true)->values()];
+
+		foreach ($pages as $page) {
+			foreach ([$page, ...$page->files()->values()] as $model) {
+				foreach ($model->storage()->all() as $versionId => $language) {
+					if ($versionId->is('changes') === true) {
+						$model->storage()->delete($versionId, $language);
+					}
+				}
+			}
+		}
 	}
 
 	/**
