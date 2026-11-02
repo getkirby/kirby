@@ -125,6 +125,20 @@ class Users extends LazyCollection
 	}
 
 	/**
+	 * Finds a user in the collection by email address only
+	 * @since 6.0.0
+	 * @return TValue|null
+	 */
+	public function findByEmail(string $email): User|null
+	{
+		if (V::email($email) === false) {
+			return null;
+		}
+
+		return parent::findBy('email', Str::lower($email));
+	}
+
+	/**
 	 * Finds a user in the collection by ID or email address
 	 * @internal Use `$users->find()` instead
 	 * @return TValue|null

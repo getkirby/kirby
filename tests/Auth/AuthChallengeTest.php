@@ -10,6 +10,7 @@ use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\F;
 use Kirby\Tests\MockTime;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Throwable;
 
 #[CoversClass(Auth::class)]
@@ -95,17 +96,35 @@ class AuthChallengeTest extends TestCase
 		$this->assertNull($session->get('kirby.challenge.data'));
 	}
 
-	public function testCreateChallengeInvalidUser(): void
+	public static function unknownUserProvider(): array
+	{
+		return [
+			['lisa@simpsons.com'],
+			['marge'],
+			['user://marge'],
+		];
+	}
+
+	#[DataProvider('unknownUserProvider')]
+	public function testCreateChallengeInvalidUser(string $email): void
 	{
 		$this->app  = $this->app->clone(['options' => ['auth' => ['debug' => false]]]);
 		$this->auth = $this->app->auth();
-		$status  = $this->auth->createChallenge('lisa@simpsons.com');
+		$status  = $this->auth->createChallenge($email);
 		$session = $this->app->session();
 
 		$this->assertSame('pending', $status->state()->value);
 		$this->assertNull($status->challenge(false));
-		$this->assertSame('lisa@simpsons.com', $session->get('kirby.challenge.email'));
+		$this->assertSame($email, $session->get('kirby.challenge.email'));
 		$this->assertNull($session->get('kirby.challenge.type'));
+	}
+
+	public function testCreateChallengeWithMixedCaseEmail(): void
+	{
+		$status = $this->auth->createChallenge('Marge@Simpsons.com');
+
+		$this->assertSame('pending', $status->state()->value);
+		$this->assertSame('email', $status->challenge(false));
 	}
 
 	public function testCreateChallengeRateLimitingLog(): void
@@ -154,7 +173,8 @@ class AuthChallengeTest extends TestCase
 		$this->assertSame('email', $status->challenge(false));
 	}
 
-	public function testLogin2faInvalidUser(): void
+	#[DataProvider('unknownUserProvider')]
+	public function testLogin2faInvalidUser(string $email): void
 	{
 		$this->app  = $this->app->clone([
 			'options' => [
@@ -170,7 +190,7 @@ class AuthChallengeTest extends TestCase
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('Invalid login');
 
-		$this->auth->login2fa('lisa@simpsons.com', 'springfield123');
+		$this->auth->login2fa($email, 'springfield123');
 	}
 
 	public function testVerifyChallenge(): void
@@ -190,6 +210,22 @@ class AuthChallengeTest extends TestCase
 
 		$data = $session->data()->get();
 		$this->assertSame('marge', $data['kirby.userId'] ?? null);
+	}
+
+	public function testVerifyChallengeWithMixedCaseEmail(): void
+	{
+		$session = $this->app->session();
+
+		$session->set('kirby.challenge.email', 'Marge@Simpsons.com');
+		$session->set('kirby.challenge.data', ['secret' => self::$password]);
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.type', 'email');
+		$session->set('kirby.challenge.timeout', time() + 60);
+
+		$this->assertSame(
+			$this->app->user('marge@simpsons.com'),
+			$this->auth->verifyChallenge('12345678')
+		);
 	}
 
 	public function testVerifyChallengePasswordReset(): void
