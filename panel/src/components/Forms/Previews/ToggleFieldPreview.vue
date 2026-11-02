@@ -16,12 +16,13 @@ import FieldPreview from "@/mixins/forms/fieldPreview.js";
 export default {
 	mixins: [FieldPreview],
 	props: {
+		disabled: Boolean,
 		value: Boolean
 	},
 	emits: ["input"],
 	computed: {
 		isEditable() {
-			return this.field.disabled !== true;
+			return this.disabled === false && this.field.disabled !== true;
 		},
 		text() {
 			return this.column.text !== false ? this.field.text : null;
