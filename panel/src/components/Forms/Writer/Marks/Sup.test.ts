@@ -3,7 +3,7 @@ import {
 	createSchemaWithMarks,
 	hasMark,
 	mockEditor,
-	toHTML
+	render
 } from "@test/unit/editor";
 import Sup from "./Sup";
 
@@ -49,13 +49,7 @@ describe("Sup mark", () => {
 		describe("toDOM", () => {
 			it("renders the sup mark as a `<sup>` element", () => {
 				const mark = schema.marks.sup.create();
-				const doc = schema.node("doc", null, [
-					schema.node("paragraph", null, [
-						schema.text("foo"),
-						schema.text("bar", [mark])
-					])
-				]);
-				expect(toHTML(schema, doc)).toBe("<p>foo<sup>bar</sup></p>");
+				expect(render(schema, mark, "bar")).toBe("<p><sup>bar</sup></p>");
 			});
 		});
 	});

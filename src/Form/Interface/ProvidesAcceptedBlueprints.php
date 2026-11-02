@@ -15,6 +15,8 @@ interface ProvidesAcceptedBlueprints
 	/**
 	 * Returns all blueprints that are available for the
 	 * models in this field
+	 *
+	 * @return list<array{name: string, title: string}>
 	 */
 	public function blueprints(): array;
 }

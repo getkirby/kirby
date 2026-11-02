@@ -21,7 +21,7 @@ trait Type
 	protected string|null $type = null;
 
 	/**
-	 * Returns the type the field
+	 * Returns the type of the field
 	 */
 	public function type(): string
 	{

@@ -26,11 +26,7 @@ trait Translatable
 	 */
 	public function isTranslatable(Language $language): bool
 	{
-		if ($this->translate() === false && $language->isDefault() === false) {
-			return false;
-		}
-
-		return true;
+		return $this->translate() === true || $language->isDefault() === true;
 	}
 
 	public function translate(): bool

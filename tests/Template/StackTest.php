@@ -2,6 +2,7 @@
 
 namespace Kirby\Template;
 
+use Kirby\Exception\LogicException;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Stack::class)]
@@ -46,6 +47,49 @@ class StackTest extends TestCase
 	{
 		$output = Snippet::load(static::FIXTURES . '/stack-order.php');
 		$this->assertSame('Hello', trim($output));
+	}
+
+	public function testEndWithClosedBuffer(): void
+	{
+		ob_start();
+		echo 'outside';
+		Stack::begin('head');
+		echo 'inside';
+
+		// closes the buffer of the stack
+		ob_end_clean();
+
+		try {
+			$this->expectException(LogicException::class);
+			$this->expectExceptionMessage('The "head" stack cannot be closed: its output was already ended inside of it, e.g. with `ob_end_clean()`');
+
+			Stack::end();
+		} finally {
+			// the stack must not capture the surrounding output
+			$this->assertSame('outside', ob_get_clean());
+			$this->assertSame('', Stack::render('head'));
+		}
+	}
+
+	public function testEndWithOpenBuffer(): void
+	{
+		Stack::begin('head');
+		echo 'inside';
+
+		// starts a buffer that is never closed
+		ob_start();
+		echo 'nested';
+
+		try {
+			$this->expectException(LogicException::class);
+			$this->expectExceptionMessage('The "head" stack cannot be closed: an output buffer started inside of it with `ob_start()` is still open');
+
+			Stack::end();
+		} finally {
+			// clean up both buffers
+			ob_end_clean();
+			ob_end_clean();
+		}
 	}
 
 	public function testEndWithoutBegin(): void

@@ -16,6 +16,8 @@ class Uri extends BaseUri
 {
 	/**
 	 * Supported schemes
+	 *
+	 * @var list<string>
 	 */
 	public static array $schemes = [
 		'site',
@@ -40,7 +42,7 @@ class Uri extends BaseUri
 			parent::__construct([
 				'scheme' => 'site',
 				'host'   => '',
-				'path' 	 => Str::after($props, 'site://')
+				'path'   => Str::after($props, 'site://')
 			]);
 		} else {
 			parent::__construct($props, $inject);
@@ -74,13 +76,9 @@ class Uri extends BaseUri
 	 */
 	public function toString(): string
 	{
-		$url = parent::toString();
-
 		// correction for protocols without host,
 		// e.g. mainly `site://`
-		$url = Str::replace($url, ':///', '://');
-
-		return $url;
+		return Str::replace(parent::toString(), ':///', '://');
 	}
 
 	/**

@@ -2,6 +2,7 @@
 
 namespace Kirby\Query;
 
+use Closure;
 use Kirby\Cms\App;
 use Kirby\Cms\Collection;
 use Kirby\Cms\File;
@@ -12,6 +13,7 @@ use Kirby\Cms\Users;
 use Kirby\Exception\BadMethodCallException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Image\QrCode;
+use Kirby\Query\AST\Node;
 use Kirby\Query\Runners\DefaultRunner;
 use Kirby\Query\Runners\Runner;
 use Kirby\Toolkit\I18n;
@@ -25,7 +27,18 @@ use Kirby\Toolkit\I18n;
  */
 class Query
 {
+	/**
+	 * Parsed queries, keyed by query string
+	 *
+	 * @var array<string, Node>
+	 */
 	public static array $cache = [];
+
+	/**
+	 * Global functions that can be used in queries
+	 *
+	 * @var array<string, Closure>
+	 */
 	public static array $entries = [];
 
 	public Runner $runner;
@@ -118,7 +131,7 @@ Query::$entries['t'] = function (
 	string|null $locale = null
 ): string|null {
 	$result = I18n::translate($key, $fallback, $locale);
-	return is_string($result) ? $result : null;
+	return is_string($result) === true ? $result : null;
 };
 
 Query::$entries['user'] = function (string|null $id = null): User|null {

@@ -24,6 +24,8 @@ class Helpers
 	 * ```php
 	 * Helpers::$deprecations['<deprecation-key>'] = false;
 	 * ```
+	 *
+	 * @var array<string, bool>
 	 */
 	public static array $deprecations = [
 		// The internal `$model->contentFile*()` methods have been deprecated
@@ -43,7 +45,7 @@ class Helpers
 		// `ContentTranslation` class for compatibility that should no longer be used.
 		// Some of them can be replaced by using `Version` class methods instead
 		// (see method comments). `Content\Translation::contentFile` should be avoided
-		//  entirely and has no recommended replacement.
+		// entirely and has no recommended replacement.
 		'translation-methods' => true
 	];
 
@@ -196,15 +198,15 @@ class Helpers
 	 */
 	public static function size(mixed $value): int
 	{
-		if (is_numeric($value)) {
+		if (is_numeric($value) === true) {
 			return (int)$value;
 		}
 
-		if (is_string($value)) {
+		if (is_string($value) === true) {
 			return Str::length(trim($value));
 		}
 
-		if (is_countable($value)) {
+		if (is_countable($value) === true) {
 			return count($value);
 		}
 

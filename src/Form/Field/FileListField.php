@@ -70,7 +70,7 @@ class FileListField extends ModelListField
 					/** @var Api $api */
 					$api = $this;
 
-					/** @var Page|Site|User $parent */
+					/** @var File|Page|Site|User $parent */
 					$parent = $field->parentModel();
 
 					$parent->files()->changeSort(
@@ -143,6 +143,8 @@ class FileListField extends ModelListField
 
 	/**
 	 * Upload settings or `false` if uploads are disabled
+	 *
+	 * @return array<string, mixed>|false
 	 */
 	public function upload(): array|false
 	{

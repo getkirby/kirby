@@ -22,6 +22,9 @@ class RangeField extends NumberField
 	#[Prop]
 	protected array|bool $tooltip = true;
 
+	/**
+	 * @return array{after: string|null, before: string|null}|bool
+	 */
 	public function tooltip(): array|bool
 	{
 		if (is_array($this->tooltip) === true) {

@@ -1,15 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { Schema } from "prosemirror-model";
 import { NodeSelection, TextSelection } from "prosemirror-state";
+import { createSchemaWithNodes } from "@test/unit/editor";
 import findSelectedNodeOfType from "./findSelectedNodeOfType";
 
-const schema = new Schema({
-	nodes: {
-		doc: { content: "block+" },
-		paragraph: { group: "block", content: "inline*" },
-		image: { group: "block", inline: false },
-		text: { group: "inline" }
-	}
+const schema = createSchemaWithNodes({
+	image: { group: "block", inline: false }
 });
 
 // doc(paragraph(), image())

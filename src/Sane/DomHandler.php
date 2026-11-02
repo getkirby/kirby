@@ -20,6 +20,8 @@ class DomHandler extends Handler
 	/**
 	 * List of all MIME types that may
 	 * be used in data URIs
+	 *
+	 * @var list<string>
 	 */
 	public static array $allowedDataUris = [
 		'data:image/png',
@@ -36,6 +38,8 @@ class DomHandler extends Handler
 
 	/**
 	 * Allowed hostnames for HTTP(S) URLs
+	 *
+	 * @var list<string>|true
 	 */
 	public static array|true $allowedDomains = true;
 
@@ -48,6 +52,8 @@ class DomHandler extends Handler
 
 	/**
 	 * Names of allowed XML processing instructions
+	 *
+	 * @var list<string>
 	 */
 	public static array $allowedPIs = [];
 
@@ -91,7 +97,7 @@ class DomHandler extends Handler
 		$errors = $dom->sanitize(static::options($isExternal));
 
 		// there may be multiple errors, we can only throw one of them at a time
-		if (count($errors) > 0) {
+		if ($errors !== []) {
 			throw $errors[0];
 		}
 	}
@@ -100,7 +106,7 @@ class DomHandler extends Handler
 	 * Custom callback for additional attribute sanitization
 	 * @internal
 	 *
-	 * @return array Array with exception objects for each modification
+	 * @return list<InvalidArgumentException> Exceptions for each modification
 	 */
 	public static function sanitizeAttr(
 		DOMAttr $attr,
@@ -114,7 +120,7 @@ class DomHandler extends Handler
 	 * Custom callback for additional element sanitization
 	 * @internal
 	 *
-	 * @return array Array with exception objects for each modification
+	 * @return list<InvalidArgumentException> Exceptions for each modification
 	 */
 	public static function sanitizeElement(
 		DOMElement $element,
@@ -142,6 +148,7 @@ class DomHandler extends Handler
 	 *
 	 * @param $isExternal Whether the string is from an external file
 	 *                   that may be accessed directly
+	 * @return array<string, mixed>
 	 */
 	public static function options(bool $isExternal): array
 	{

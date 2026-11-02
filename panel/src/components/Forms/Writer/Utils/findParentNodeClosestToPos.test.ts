@@ -1,14 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { type Node, Schema } from "prosemirror-model";
+import type { Node } from "prosemirror-model";
+import { createSchemaWithNodes } from "@test/unit/editor";
 import findParentNodeClosestToPos from "./findParentNodeClosestToPos";
 
-const schema = new Schema({
-	nodes: {
-		doc: { content: "block+" },
-		blockquote: { group: "block", content: "block+" },
-		paragraph: { group: "block", content: "inline*" },
-		text: { group: "inline" }
-	}
+const schema = createSchemaWithNodes({
+	blockquote: { group: "block", content: "block+" }
 });
 
 // doc(blockquote(paragraph("hello")))

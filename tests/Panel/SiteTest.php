@@ -39,21 +39,6 @@ class SiteTest extends TestCase
 		return new Site($site);
 	}
 
-	public function testDropdownOption(): void
-	{
-		$model = $this->panel([
-			'content' => [
-				'title' => 'Test site'
-			]
-		]);
-
-		$option = $model->dropdownOption();
-
-		$this->assertSame('home', $option['icon']);
-		$this->assertSame('Test site', $option['text']);
-		$this->assertSame('/site', $option['link']);
-	}
-
 	public function testImage(): void
 	{
 		$this->app->impersonate('kirby');

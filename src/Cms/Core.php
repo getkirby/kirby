@@ -2,20 +2,25 @@
 
 namespace Kirby\Cms;
 
+use Closure;
+use Kirby\Auth\Challenge;
 use Kirby\Auth\Challenge\EmailChallenge;
 use Kirby\Auth\Challenge\TotpChallenge;
 use Kirby\Auth\Challenge\WebauthnChallenge;
+use Kirby\Auth\Method;
 use Kirby\Auth\Method\BasicAuthMethod;
 use Kirby\Auth\Method\CodeMethod;
 use Kirby\Auth\Method\PasswordMethod;
 use Kirby\Auth\Method\PasswordResetMethod;
 use Kirby\Auth\Method\WebauthnMethod;
 use Kirby\Cache\ApcuCache;
+use Kirby\Cache\Cache;
 use Kirby\Cache\FileCache;
 use Kirby\Cache\MemCached;
 use Kirby\Cache\MemoryCache;
 use Kirby\Cache\RedisCache;
 use Kirby\Filesystem\F;
+use Kirby\Form\Field;
 use Kirby\Form\Field\BlocksField;
 use Kirby\Form\Field\ButtonsField;
 use Kirby\Form\Field\CheckboxesField;
@@ -55,6 +60,7 @@ use Kirby\Form\Field\TogglesField;
 use Kirby\Form\Field\UrlField;
 use Kirby\Form\Field\UserPickerField;
 use Kirby\Form\Field\WriterField;
+use Kirby\Panel\Ui\FilePreview;
 use Kirby\Panel\Ui\FilePreview\AudioFilePreview;
 use Kirby\Panel\Ui\FilePreview\ImageFilePreview;
 use Kirby\Panel\Ui\FilePreview\PdfFilePreview;
@@ -62,14 +68,14 @@ use Kirby\Panel\Ui\FilePreview\VideoFilePreview;
 
 /**
  * The Core class lists all parts of Kirby
- * that need to be loaded or initalized in order
+ * that need to be loaded or initialized in order
  * to make the system work. Most core parts can
  * be overwritten by plugins.
  *
  * You can get such lists as kirbytags, components,
  * areas, etc. by accessing them through `$kirby->core()`
  *
- * I.e. `$kirby->core()->areas()`
+ * E.g. `$kirby->core()->areas()`
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
@@ -81,6 +87,9 @@ class Core
 	 */
 	public static string|null $indexRoot = null;
 
+	/**
+	 * @var array<string, array>
+	 */
 	protected array $cache = [];
 	protected string $root;
 
@@ -104,6 +113,8 @@ class Core
 	 * Returns a list of all paths to area definition files
 	 *
 	 * They are located in `/kirby/config/areas`
+	 *
+	 * @return array<string, string>
 	 */
 	public function areas(): array
 	{
@@ -123,6 +134,8 @@ class Core
 
 	/**
 	 * Returns a list of all default auth challenge classes
+	 *
+	 * @return array<string, class-string<Challenge>>
 	 */
 	public function authChallenges(): array
 	{
@@ -136,6 +149,8 @@ class Core
 	/**
 	 * Returns a list of all default auth method classes
 	 * @since 6.0.0
+	 *
+	 * @return array<string, class-string<Method>>
 	 */
 	public function authMethods(): array
 	{
@@ -153,6 +168,8 @@ class Core
 	 * the blueprint in array form
 	 *
 	 * Block blueprints are located in `/kirby/config/blocks`
+	 *
+	 * @return array<string, string|array>
 	 */
 	public function blueprints(): array
 	{
@@ -186,7 +203,7 @@ class Core
 				'fields' => [
 					'pages' => [
 						'label' => ['*' => 'pages'],
-						'type'	=> 'pagelist'
+						'type'  => 'pagelist'
 					]
 				]
 			]
@@ -195,6 +212,8 @@ class Core
 
 	/**
 	 * Returns a list of all core caches
+	 *
+	 * @return array<string, true>
 	 */
 	public function caches(): array
 	{
@@ -207,6 +226,8 @@ class Core
 
 	/**
 	 * Returns a list of all cache driver classes
+	 *
+	 * @return array<string, class-string<Cache>>
 	 */
 	public function cacheTypes(): array
 	{
@@ -224,6 +245,8 @@ class Core
 	 *
 	 * The component functions can be found in
 	 * `/kirby/config/components.php`
+	 *
+	 * @return array<string, Closure>
 	 */
 	public function components(): array
 	{
@@ -234,6 +257,8 @@ class Core
 	 * Returns an array of all class names of panel fields
 	 *
 	 * The field classes can be found in `/kirby/src/Form/Field`
+	 *
+	 * @return array<string, class-string<Field>>
 	 */
 	public function fields(): array
 	{
@@ -281,7 +306,9 @@ class Core
 	}
 
 	/**
-	 * Returns a map of all default file preview handlers
+	 * Returns a list of all default file preview handlers
+	 *
+	 * @return list<class-string<FilePreview>>
 	 */
 	public function filePreviews(): array
 	{
@@ -295,6 +322,8 @@ class Core
 
 	/**
 	 * Returns a map of all kirbytag aliases
+	 *
+	 * @return array<string, string>
 	 */
 	public function kirbyTagAliases(): array
 	{
@@ -308,6 +337,8 @@ class Core
 	 * Returns an array of all kirbytag definitions
 	 *
 	 * They are located in `/kirby/config/tags.php`
+	 *
+	 * @return array<string, array>
 	 */
 	public function kirbyTags(): array
 	{
@@ -330,6 +361,8 @@ class Core
 	 * Returns all absolute paths to important directories
 	 *
 	 * Roots are resolved and baked in `\Kirby\Cms\App::bakeRoots()`
+	 *
+	 * @return array<string, Closure(array<string, string>): string>
 	 */
 	public function roots(): array
 	{
@@ -369,7 +402,9 @@ class Core
 	 *
 	 * Routes are split into `before` and `after` routes.
 	 *
-	 * Plugin routes will be injected inbetween.
+	 * Plugin routes will be injected in between.
+	 *
+	 * @return array{before: list<array>, after: list<array>}
 	 */
 	public function routes(): array
 	{
@@ -380,6 +415,8 @@ class Core
 	 * Returns a list of all paths to core block snippets
 	 *
 	 * They are located in `/kirby/config/blocks`
+	 *
+	 * @return array<string, string>
 	 */
 	public function snippets(): array
 	{
@@ -402,6 +439,8 @@ class Core
 	 * Returns a list of paths to all system templates
 	 *
 	 * They are located in `/kirby/config/templates`
+	 *
+	 * @return array<string, string>
 	 */
 	public function templates(): array
 	{
@@ -415,6 +454,8 @@ class Core
 	 * Returns an array with all system URLs
 	 *
 	 * URLs are resolved and baked in `\Kirby\Cms\App::bakeUrls()`
+	 *
+	 * @return array<string, Closure>
 	 */
 	public function urls(): array
 	{

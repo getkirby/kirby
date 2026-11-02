@@ -1,17 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { Schema } from "prosemirror-model";
+import { createSchemaWithMarks } from "@test/unit/editor";
 import getMarkRange from "./getMarkRange";
 
-const schema = new Schema({
-	nodes: {
-		doc: { content: "block+" },
-		paragraph: { group: "block", content: "inline*" },
-		text: { group: "inline" }
-	},
-	marks: {
-		link: { attrs: { href: {} } },
-		bold: {}
-	}
+const schema = createSchemaWithMarks({
+	link: { attrs: { href: {} } },
+	bold: {}
 });
 
 const linkType = schema.marks.link;

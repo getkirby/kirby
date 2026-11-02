@@ -44,7 +44,7 @@ class PageListField extends ModelListField implements ProvidesAcceptedBlueprints
 	protected string $status = 'all';
 
 	/**
-	 * Filters the list by a single template
+	 * Filters the list by a single template or a list of templates
 	 */
 	#[Prop(export: false)]
 	protected string|array|null $template = null;
@@ -104,6 +104,8 @@ class PageListField extends ModelListField implements ProvidesAcceptedBlueprints
 
 	/**
 	 * The blueprint options for the create dialog
+	 *
+	 * @return list<array{name: string, title: string}>
 	 */
 	public function blueprints(): array
 	{
@@ -145,13 +147,11 @@ class PageListField extends ModelListField implements ProvidesAcceptedBlueprints
 
 	public function collector(): PagesCollector
 	{
-		$parent = $this->parentModel();
-
 		return $this->collector ??= new PagesCollector(
 			flip:            $this->flip(),
 			limit:           $this->limit(),
 			page:            (int)$this->page() ?: 1,
-			parent:          $parent,
+			parent:          $this->parentModel(),
 			query:           $this->query(),
 			search:          $this->searchterm(),
 			sortBy:          $this->sortBy(),
@@ -202,7 +202,7 @@ class PageListField extends ModelListField implements ProvidesAcceptedBlueprints
 	// @codeCoverageIgnoreEnd
 
 	/**
-	 * @throws InvalidArgumentException
+	 * @throws InvalidArgumentException If the parent is neither the site nor a page
 	 */
 	public function parentModel(): Page|Site
 	{
@@ -235,6 +235,9 @@ class PageListField extends ModelListField implements ProvidesAcceptedBlueprints
 		];
 	}
 
+	/**
+	 * @return 'all'|'draft'|'listed'|'published'|'unlisted'
+	 */
 	public function status(): string
 	{
 		return match ($this->status) {

@@ -21,6 +21,9 @@ class Remote
 	public const int CA_INTERNAL = 1;
 	public const int CA_SYSTEM   = 2;
 
+	/**
+	 * @var array<string, mixed>
+	 */
 	public static array $defaults = [
 		'agent'     => null,
 		'basicAuth' => null,
@@ -189,6 +192,7 @@ class Remote
 		if (empty($this->options['headers']) === false) {
 			// convert associative arrays to strings
 			$headers = [];
+
 			foreach ($this->options['headers'] as $key => $value) {
 				if (is_string($key) === true) {
 					$value = $key . ': ' . $value;
@@ -263,7 +267,7 @@ class Remote
 		$this->errorCode    = curl_errno($this->curl);
 		$this->errorMessage = curl_error($this->curl);
 
-		if ($this->errorCode) {
+		if ($this->errorCode !== 0) {
 			throw new Exception($this->errorMessage, $this->errorCode);
 		}
 
@@ -364,6 +368,8 @@ class Remote
 
 	/**
 	 * Returns all received headers
+	 *
+	 * @return array<string, string>
 	 */
 	public function headers(): array
 	{
@@ -381,7 +387,7 @@ class Remote
 	/**
 	 * Decode the response content
 	 *
-	 * @param $array decode as array or object
+	 * @param $array Decode as array or object
 	 * @psalm-return ($array is true ? array|null : stdClass|null)
 	 */
 	public function json(bool $array = true): array|stdClass|null
@@ -443,6 +449,7 @@ class Remote
 	 * Resolves a hostname to all of its IPv4 and IPv6 addresses
 	 * @since 6.0.0
 	 *
+	 * @return list<string>
 	 * @throws InvalidArgumentException when the host cannot be resolved
 	 */
 	protected function resolveHost(string $host): array

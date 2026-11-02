@@ -3,15 +3,17 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Content\Field;
 use Kirby\Toolkit\Collection as BaseCollection;
 
 /**
- * NestCollection
+ * Collection for an array with numeric keys,
+ * created by `Nest::create()`
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @extends BaseCollection<NestCollection|NestObject|\Kirby\Content\Field>
+ * @extends BaseCollection<NestCollection|NestObject|Field>
  */
 class NestCollection extends BaseCollection
 {

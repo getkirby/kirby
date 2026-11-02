@@ -24,8 +24,11 @@ use ReflectionMethod;
 trait HasActions
 {
 	/**
-	 * Cache of the resolved action methods per class and action.
-	 * Lookup only depends on the class, never on the model or user.
+	 * Caches per class and action whether a dedicated action
+	 * method exists. The lookup only depends on the class,
+	 * never on the model or user.
+	 *
+	 * @var array<class-string, array<string, bool>>
 	 */
 	protected static array $actions = [];
 
@@ -66,8 +69,8 @@ trait HasActions
 			return static::$actions[static::class][$action] = false;
 		}
 
-		// action methods are protected, as they are only ever called
-		// through `::ensure()`.
+		// the base class calls the action method, which
+		// it cannot do for a private method of a child class
 		return static::$actions[static::class][$action] = $reflection->isPrivate() === false;
 	}
 

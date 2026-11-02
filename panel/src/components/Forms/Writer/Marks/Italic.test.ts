@@ -5,7 +5,7 @@ import {
 	createSchemaWithMarks,
 	hasMark,
 	mockEditor,
-	toHTML
+	render
 } from "@test/unit/editor";
 import utils from "../Utils";
 import Italic from "./Italic";
@@ -202,13 +202,7 @@ describe("Italic mark", () => {
 		describe("toDOM", () => {
 			it("renders the italic mark as an `<em>` element", () => {
 				const mark = schema.marks.italic.create();
-				const doc = schema.node("doc", null, [
-					schema.node("paragraph", null, [
-						schema.text("foo"),
-						schema.text("bar", [mark])
-					])
-				]);
-				expect(toHTML(schema, doc)).toBe("<p>foo<em>bar</em></p>");
+				expect(render(schema, mark, "bar")).toBe("<p><em>bar</em></p>");
 			});
 		});
 	});

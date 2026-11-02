@@ -23,9 +23,7 @@ class FileCache extends Cache
 	/**
 	 * Sets all parameters which are needed for the file cache
 	 *
-	 * @param $options 'root' (required)
-	 *                'prefix' (default: none)
-	 *                'extension' (file extension for cache files, default: none)
+	 * @param array{root: string, prefix?: string|null, extension?: string|null, ...} $options
 	 */
 	public function __construct(array $options)
 	{
@@ -70,7 +68,8 @@ class FileCache extends Cache
 	{
 		// strip out invalid characters in each path segment
 		// split by slash or backslash
-		$keyParts = [];
+		$parts = [];
+
 		foreach (preg_split('#([\/\\\\])#', $key, 0, PREG_SPLIT_DELIM_CAPTURE) as $part) {
 			switch ($part) {
 				case '/':
@@ -80,13 +79,13 @@ class FileCache extends Cache
 				case '\\':
 					// backslashes get their own marker in the path
 					// to differentiate the cache key from one with forward slashes
-					$keyParts[] = '_backslash';
+					$parts[] = '_backslash';
 					break;
 
 				case '':
 					// empty part means two slashes in a row;
 					// special marker like for backslashes
-					$keyParts[] = '_empty';
+					$parts[] = '_empty';
 					break;
 
 				default:
@@ -95,16 +94,16 @@ class FileCache extends Cache
 					// underscores are *not* safe to guarantee uniqueness
 					// as they are used in the special cases
 					if (preg_match('/^[a-zA-Z0-9-]+$/', $part) === 1) {
-						$keyParts[] = $part;
+						$parts[] = $part;
 					} else {
-						$keyParts[] = Str::slug($part) . '_' . sha1($part);
+						$parts[] = Str::slug($part) . '_' . sha1($part);
 					}
 			}
 		}
 
-		$file = $this->root . '/' . implode('/', $keyParts);
+		$file = $this->root . '/' . implode('/', $parts);
 
-		if (isset($this->options['extension'])) {
+		if (isset($this->options['extension']) === true) {
 			return $file . '.' . $this->options['extension'];
 		}
 

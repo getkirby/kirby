@@ -509,6 +509,14 @@ class FileListFieldTest extends TestCase
 		$this->assertFalse($field->sortable());
 	}
 
+	public function testSortableWhileSearchingForZero(): void
+	{
+		$_GET['searchterm'] = '0';
+
+		$field = $this->filelist(['search' => true]);
+		$this->assertFalse($field->sortable());
+	}
+
 	public function testErrorsWithoutLimits(): void
 	{
 		$this->assertSame([], $this->filelist()->errors());

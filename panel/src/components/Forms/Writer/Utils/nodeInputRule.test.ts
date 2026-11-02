@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { Schema } from "prosemirror-model";
 import { EditorState, type Transaction } from "prosemirror-state";
 import { InputRule } from "prosemirror-inputrules";
+import { createSchemaWithNodes } from "@test/unit/editor";
 import nodeInputRule from "./nodeInputRule";
 
 type InputRuleHandler = (
@@ -15,16 +15,11 @@ function getHandler(rule: InputRule): InputRuleHandler {
 	return (rule as unknown as { handler: InputRuleHandler }).handler;
 }
 
-const schema = new Schema({
-	nodes: {
-		doc: { content: "block+" },
-		heading: {
-			group: "block",
-			content: "inline*",
-			attrs: { level: { default: 1 } }
-		},
-		paragraph: { group: "block", content: "inline*" },
-		text: { group: "inline" }
+const schema = createSchemaWithNodes({
+	heading: {
+		group: "block",
+		content: "inline*",
+		attrs: { level: { default: 1 } }
 	}
 });
 

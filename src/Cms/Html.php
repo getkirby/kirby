@@ -6,6 +6,7 @@ use Kirby\Filesystem\F;
 use Kirby\Plugin\Assets;
 use Kirby\Plugin\Plugin;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\Html as BaseHtml;
 
 /**
  * The `Html` class provides methods for building
@@ -15,7 +16,7 @@ use Kirby\Toolkit\A;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class Html extends \Kirby\Toolkit\Html
+class Html extends BaseHtml
 {
 	/**
 	 * Creates one or multiple CSS link tags
@@ -48,7 +49,9 @@ class Html extends \Kirby\Toolkit\Html
 		$kirby = App::instance();
 
 		if ($url === '@auto') {
-			if (!$url = Url::toTemplateAsset('css/templates', 'css')) {
+			$url = Url::toTemplateAsset('css/templates', 'css');
+
+			if ($url === null) {
 				return null;
 			}
 		}
@@ -112,7 +115,9 @@ class Html extends \Kirby\Toolkit\Html
 		$kirby = App::instance();
 
 		if ($url === '@auto') {
-			if (!$url = Url::toTemplateAsset('js/templates', 'js')) {
+			$url = Url::toTemplateAsset('js/templates', 'js');
+
+			if ($url === null) {
 				return null;
 			}
 		}

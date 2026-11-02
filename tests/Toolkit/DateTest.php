@@ -308,6 +308,9 @@ class DateTest extends TestCase
 		$this->assertInstanceOf(Date::class, Date::optional('2021-12-12'));
 		$this->assertSame('2021-12-12', Date::optional(new DateTime('2021-12-12'))->format('Y-m-d'));
 		$this->assertSame('2021-12-12', Date::optional(strtotime('2021-12-12'))->format('Y-m-d'));
+
+		// `0` is a valid UNIX timestamp
+		$this->assertSame(0, Date::optional(0)->timestamp());
 	}
 
 	#[DataProvider('roundProvider')]

@@ -4,7 +4,6 @@ namespace Kirby\Parsley\Schema;
 
 use Kirby\Parsley\Element;
 use Kirby\Parsley\Schema;
-use Kirby\Toolkit\Str;
 
 /**
  * The plain schema definition converts
@@ -27,7 +26,7 @@ class Plain extends Schema
 		} else {
 			$text = trim($element);
 
-			if (Str::length($text) === 0) {
+			if ($text === '') {
 				return null;
 			}
 		}

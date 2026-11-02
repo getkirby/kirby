@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Exception;
 use Kirby\Content\Field;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Obj;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -390,6 +391,34 @@ class CollectionTest extends TestCase
 
 		$this->assertCount(2, $groups);
 		$this->assertTrue($groups->has(''));
+	}
+
+	public function testGroupWithFalsyValues(): void
+	{
+		$collection = new Collection([
+			new MockObject(['id' => 'a', 'group' => '0']),
+			new MockObject(['id' => 'b', 'group' => '']),
+			new MockObject(['id' => 'c', 'group' => '0']),
+		]);
+
+		$groups = $collection->group('group');
+
+		$this->assertSame(['0', ''], array_map('strval', $groups->keys()));
+		$this->assertSame(['a', 'c'], $groups->first()->keys());
+		$this->assertSame(['b'], $groups->last()->keys());
+	}
+
+	public function testGroupWithNullValue(): void
+	{
+		$collection = new Collection([
+			new MockObject(['id' => 'a', 'group' => 'a']),
+			new MockObject(['id' => 'b'])
+		]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid grouping value for key: b');
+
+		$collection->group('group');
 	}
 
 	public function testIndexOfWithObject(): void

@@ -11,6 +11,11 @@ class TestCache extends Cache
 {
 	public array $store = [];
 
+	public function enabled(): bool
+	{
+		return true;
+	}
+
 	public function set(string $key, $value, int $minutes = 0, int|null $created = null): bool
 	{
 		$value = new Value($value, $minutes, $created);

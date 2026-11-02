@@ -156,6 +156,15 @@ class TxtTest extends TestCase
 		Locale::set($currentLocale);
 	}
 
+	public function testEncodeInt(): void
+	{
+		$data = Txt::encode([
+			'number' => 1234567890123456789
+		]);
+
+		$this->assertSame('Number: 1234567890123456789', $data);
+	}
+
 	public function testDecodeFile(): void
 	{
 		$array = [

@@ -1,19 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { type Node, Schema } from "prosemirror-model";
-import {
-	EditorState,
-	TextSelection,
-	type Transaction
-} from "prosemirror-state";
+import { applyCommand, createSchemaWithNodes, select } from "@test/unit/editor";
 import toggleWrap from "./toggleWrap";
 
-const schema = new Schema({
-	nodes: {
-		doc: { content: "block+" },
-		blockquote: { group: "block", content: "block+" },
-		paragraph: { group: "block", content: "inline*" },
-		text: { group: "inline" }
-	}
+const schema = createSchemaWithNodes({
+	blockquote: { group: "block", content: "block+" }
 });
 
 const blockquoteType = schema.nodes.blockquote;
@@ -33,30 +23,15 @@ const docWithBlockquote = schema.node("doc", null, [
 	])
 ]);
 
-function stateAt(doc: Node, pos: number): EditorState {
-	return EditorState.create({ doc, selection: TextSelection.create(doc, pos) });
-}
-
-function applyCommand(
-	state: EditorState,
-	command: ReturnType<typeof toggleWrap>
-): EditorState | null {
-	let result: EditorState | null = null;
-	command(state, (tr: Transaction) => {
-		result = state.apply(tr);
-	});
-	return result;
-}
-
 describe("toggleWrap", () => {
 	describe("when the node type is not active", () => {
 		it("returns true", () => {
-			const state = stateAt(docWithParagraph, 1);
+			const state = select(docWithParagraph, 1);
 			expect(toggleWrap(blockquoteType)(state, undefined)).toBe(true);
 		});
 
 		it("wraps the selection in the given type", () => {
-			const state = stateAt(docWithParagraph, 1);
+			const state = select(docWithParagraph, 1);
 			const next = applyCommand(state, toggleWrap(blockquoteType));
 			expect(next?.doc.firstChild?.type).toBe(blockquoteType);
 		});
@@ -64,12 +39,12 @@ describe("toggleWrap", () => {
 
 	describe("when the node type is already active", () => {
 		it("returns true", () => {
-			const state = stateAt(docWithBlockquote, 2);
+			const state = select(docWithBlockquote, 2);
 			expect(toggleWrap(blockquoteType)(state, undefined)).toBe(true);
 		});
 
 		it("lifts the content out of the wrapper", () => {
-			const state = stateAt(docWithBlockquote, 2);
+			const state = select(docWithBlockquote, 2);
 			const next = applyCommand(state, toggleWrap(blockquoteType));
 			expect(next?.doc.firstChild?.type).toBe(paragraphType);
 		});

@@ -110,7 +110,7 @@ export default {
 }
 
 .k-toggles-input li {
-	height: var(--field-input-height);
+	height: var(--input-height);
 }
 .k-toggles-input label {
 	align-items: center;

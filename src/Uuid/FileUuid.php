@@ -29,21 +29,23 @@ class FileUuid extends ModelUuid
 	 */
 	protected function findByCache(): File|null
 	{
-		// get mixed Uri from cache
-		if ($key = $this->key()) {
-			if ($value = Uuids::cache()->get($key)) {
-				// value is an array containing
-				// the UUID for the parent and the filename
-				/** @var Page|Site|User|null $parent */
-				$parent = Uuid::from($value['parent'])?->model();
-				$file   = $parent?->file($value['filename']);
+		$key   = $this->key();
+		$value = $key !== null ? Uuids::cache()->get($key) : null;
 
-				// the cached parent/filename pair can be stale,
-				// e.g. when the file has been renamed or copied
-				if ($this->isFor($file) === true) {
-					return $file;
-				}
-			}
+		if ($value === null) {
+			return null;
+		}
+
+		// value is an array containing
+		// the UUID for the parent and the filename
+		/** @var Page|Site|User|null $parent */
+		$parent = Uuid::from($value['parent'])?->model();
+		$file   = $parent?->file($value['filename']);
+
+		// the cached parent/filename pair can be stale,
+		// e.g. when the file has been renamed or copied
+		if ($this->isFor($file) === true) {
+			return $file;
 		}
 
 		return null;

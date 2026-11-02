@@ -18,6 +18,8 @@ class SmartyPants
 	/**
 	 * Array with all configured options
 	 * for the parser
+	 *
+	 * @var array<string, mixed>
 	 */
 	protected array $options = [];
 
@@ -29,6 +31,8 @@ class SmartyPants
 	/**
 	 * Returns default values for all
 	 * available parser options
+	 *
+	 * @return array<string, bool|int|string>
 	 */
 	public function defaults(): array
 	{
@@ -108,10 +112,6 @@ class SmartyPants
 	 */
 	public function parse(string|null $text = null): string
 	{
-		// prepare the text
-		$text ??= '';
-
-		// parse the text
-		return $this->parser->transform($text);
+		return $this->parser->transform($text ?? '');
 	}
 }

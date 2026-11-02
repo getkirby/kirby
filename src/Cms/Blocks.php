@@ -56,7 +56,7 @@ class Blocks extends Items
 		array|null $items = null,
 		array $params = []
 	): static {
-		$items = static::extractFromLayouts($items);
+		$items = static::extractFromLayouts($items ?? []);
 
 		// @deprecated old editor format
 		// @todo block.converter remove eventually

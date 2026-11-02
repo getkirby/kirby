@@ -24,6 +24,18 @@ class OptionsTest extends TestCase
 		$this->assertSame('b', $options->last()->text['en']);
 	}
 
+	public function testConstructWithNullValue(): void
+	{
+		$options = new Options([
+			new Option(null),
+			new Option(1),
+			new Option('a')
+		]);
+
+		$this->assertSame(['', 1, 'a'], $options->keys());
+		$this->assertNull($options->first()->value);
+	}
+
 	public function testFactory(): void
 	{
 		$options = Options::factory(['a', 'b']);

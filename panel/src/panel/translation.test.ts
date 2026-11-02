@@ -6,6 +6,8 @@ import Translation from "./translation";
 describe("panel.translation", () => {
 	afterEach(() => {
 		dayjs.locale("en");
+		document.documentElement.lang = "";
+		document.body.dir = "";
 	});
 
 	describe("reset()", () => {

@@ -25,7 +25,7 @@ class Structure extends Items
 	public static array $methods = [];
 
 	/**
-	 * Creates a new structure collection from a
+	 * Creates a new structure collection from
 	 * an array of item props
 	 */
 	public static function factory(

@@ -30,7 +30,7 @@ class WriterField extends ProseMirrorField
 
 	public function headings(): array
 	{
-		return array_intersect($this->headings, range(1, 6));
+		return array_values(array_intersect($this->headings, range(1, 6)));
 	}
 
 	public function inline(): bool

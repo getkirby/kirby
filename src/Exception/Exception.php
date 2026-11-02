@@ -20,6 +20,8 @@ class Exception extends \Exception
 {
 	/**
 	 * Data variables that can be used inside the exception message
+	 *
+	 * @var array<string, mixed>
 	 */
 	protected array $data;
 
@@ -70,7 +72,6 @@ class Exception extends \Exception
 		$this->details  = $details ?? static::$defaultDetails;
 		$this->key      = $key;
 
-		// hand over to native Exception class constructor
 		parent::__construct($message ?? '', 0, $previous);
 
 		// the code and the message are both built from the key and
@@ -133,6 +134,8 @@ class Exception extends \Exception
 
 	/**
 	 * Returns the data variables from the message
+	 *
+	 * @return array<string, mixed>
 	 */
 	final public function getData(): array
 	{

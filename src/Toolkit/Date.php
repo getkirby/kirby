@@ -362,7 +362,7 @@ class Date extends DateTime implements Stringable
 		string|int|DateTimeInterface|null $datetime = null,
 		DateTimeZone|null $timezone = null
 	): static|null {
-		if (empty($datetime) === true) {
+		if ($datetime === null || $datetime === '') {
 			return null;
 		}
 

@@ -49,6 +49,8 @@ abstract class Uuid implements Stringable
 	/**
 	 * Customizable callback function for generating new ID strings instead
 	 * of `Str::random()`. Receives length of string as parameter.
+	 *
+	 * @var (Closure(int): string)|null
 	 */
 	public static Closure|null $generator = null;
 
@@ -82,7 +84,6 @@ abstract class Uuid implements Stringable
 			);
 		}
 
-
 		$this->context = $context;
 		$this->model   = $model;
 
@@ -105,8 +106,7 @@ abstract class Uuid implements Stringable
 	}
 
 	/**
-	 * Removes the current UUID from cache,
-	 * recursively including all children if needed
+	 * Removes the current UUID from cache
 	 */
 	public function clear(): bool
 	{
@@ -210,17 +210,17 @@ abstract class Uuid implements Stringable
 			return null;
 		}
 
-		if ($type = Str::before($uuid, '://')) {
-			return match ($type) {
+		if ($scheme = Str::before($uuid, '://')) {
+			return match ($scheme) {
 				'page'   => new PageUuid(uuid: $uuid, context: $context),
 				'file'   => new FileUuid(uuid: $uuid, context: $context),
 				'site'   => new SiteUuid(uuid: $uuid, context: $context),
 				'user'   => new UserUuid(uuid: $uuid, context: $context),
 				// TODO: activate for uuid-block-structure-support
-				// 'block'  => new BlockUuid(uuid: $seed, context: $context),
-				// 'struct' => new StructureUuid(uuid: $seed, context: $context),
+				// 'block'  => new BlockUuid(uuid: $uuid, context: $context),
+				// 'struct' => new StructureUuid(uuid: $uuid, context: $context),
 				default  => throw new InvalidArgumentException(
-					message: 'Invalid UUID type "' . $type . '" in ' . $uuid
+					message: 'Invalid UUID type "' . $scheme . '" in ' . $uuid
 				)
 			};
 		}
@@ -326,6 +326,8 @@ abstract class Uuid implements Stringable
 
 	/**
 	 * Returns key for cache entry
+	 *
+	 * @return ($generate is true ? string : string|null)
 	 */
 	public function key(bool $generate = false): string|null
 	{
@@ -362,26 +364,28 @@ abstract class Uuid implements Stringable
 			return $this->model;
 		}
 
-		if ($lazy === false) {
-			if (App::instance()->option('content.uuid.index') === false) {
-				if (App::instance()->option('debug') === true) {
-					throw new NotFoundException(
-						message: 'Model for UUID ' . $this->uri->toString() . ' could not be found without searching in the site index'
-					);
-				}
+		if ($lazy === true) {
+			return null;
+		}
 
-				return null;
+		if (App::instance()->option('content.uuid.index') === false) {
+			if (App::instance()->option('debug') === true) {
+				throw new NotFoundException(
+					message: 'Model for UUID ' . $this->uri->toString() . ' could not be found without searching in the site index'
+				);
 			}
 
-			if ($this->model = $this->findByIndex()) {
-				// lazily fill cache by writing to cache
-				// whenever looked up from index to speed
-				// up future lookups of the same UUID
-				// also force to update value again if it is already cached
-				$this->populate($this->isCached());
+			return null;
+		}
 
-				return $this->model;
-			}
+		if ($this->model = $this->findByIndex()) {
+			// lazily fill cache by writing to cache
+			// whenever looked up from index to speed
+			// up future lookups of the same UUID
+			// also force to update value again if it is already cached
+			$this->populate($this->isCached());
+
+			return $this->model;
 		}
 
 		return null;
@@ -431,11 +435,7 @@ abstract class Uuid implements Stringable
 	{
 		$model = $this->model();
 
-		if ($model === null) {
-			return null;
-		}
-
-		if (method_exists($model, 'url') === false) {
+		if ($model === null || method_exists($model, 'url') === false) {
 			return null;
 		}
 
@@ -450,7 +450,7 @@ abstract class Uuid implements Stringable
 	}
 
 	/**
-	 * @see self::render()
+	 * @see self::toString()
 	 */
 	public function __toString(): string
 	{

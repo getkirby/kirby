@@ -3,7 +3,7 @@ import {
 	createSchemaWithMarks,
 	hasMark,
 	mockEditor,
-	toHTML
+	render
 } from "@test/unit/editor";
 import Underline from "./Underline";
 
@@ -71,10 +71,7 @@ describe("Underline mark", () => {
 		describe("toDOM", () => {
 			it("renders the underline mark as `<u>` element", () => {
 				const mark = schema.marks.underline.create();
-				const doc = schema.node("doc", null, [
-					schema.node("paragraph", null, [schema.text("hello", [mark])])
-				]);
-				expect(toHTML(schema, doc)).toBe("<p><u>hello</u></p>");
+				expect(render(schema, mark, "hello")).toBe("<p><u>hello</u></p>");
 			});
 		});
 	});

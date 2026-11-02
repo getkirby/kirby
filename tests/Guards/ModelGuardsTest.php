@@ -10,6 +10,7 @@ use Kirby\Exception\AbilityException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use PHPUnit\Framework\Attributes\CoversClass;
+use Throwable;
 
 class ModelGuardsTestValidators extends PageValidators
 {
@@ -41,6 +42,21 @@ class ModelGuardsTestGuards extends PageGuards
 class ModelGuardsTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Guards.ModelGuards';
+
+	/**
+	 * Asserts that the value is in no argument of the stack trace,
+	 * e.g. a password that would end up in logged errors
+	 */
+	protected function assertTraceWithout(string $value, Throwable $e): void
+	{
+		$args = array_merge(...array_column($e->getTrace(), 'args'));
+		$this->assertNotSame([], $args);
+
+		array_walk_recursive(
+			$args,
+			fn ($arg) => $this->assertNotSame($value, $arg)
+		);
+	}
 
 	protected function guards(Page|null $page = null): PageGuards
 	{
@@ -223,6 +239,50 @@ class ModelGuardsTest extends ModelTestCase
 		$this->expectExceptionCode('error.page.changeTitle.custom');
 
 		$guards->ensureExecutable('changeTitle', 'New title');
+	}
+
+	public function testEnsureExecutableWithSensitiveArguments(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$guards = new UserGuards(
+			model: new User(['email' => 'test@getkirby.com']),
+			user: $this->app->user()
+		);
+
+		// CI runs with `zend.exception_ignore_args=On`,
+		// which would hide all arguments anyway
+		$ignore = ini_set('zend.exception_ignore_args', '0');
+
+		try {
+			$guards->ensureExecutable('changePassword', 'secret!');
+			$this->fail('The invalid password was accepted');
+		} catch (InvalidArgumentException $e) {
+			$this->assertTraceWithout('secret!', $e);
+		} finally {
+			ini_set('zend.exception_ignore_args', $ignore);
+		}
+	}
+
+	public function testEnsureExecutableWithSensitiveProps(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$guards = new UserGuards(
+			model: new User(['email' => 'invalid']),
+			user: $this->app->user()
+		);
+
+		$ignore = ini_set('zend.exception_ignore_args', '0');
+
+		try {
+			$guards->ensureExecutable('create', ['password' => 'secret-password']);
+			$this->fail('The invalid email address was accepted');
+		} catch (InvalidArgumentException $e) {
+			$this->assertTraceWithout('secret-password', $e);
+		} finally {
+			ini_set('zend.exception_ignore_args', $ignore);
+		}
 	}
 
 	public function testEnsureExecutableWithUndefinedAction(): void

@@ -81,6 +81,42 @@ class FilePickerDialogControllerTest extends TestCase
 		$this->assertArrayHasKey('permissions', $item);
 	}
 
+	public function testItemDragText(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'content' => ['uuid' => false]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'a',
+						'files' => [
+							['filename' => 'b.jpg']
+						]
+					]
+				],
+				'files' => [
+					['filename' => 'test.jpg']
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new FilePickerDialogController(
+			model: $this->app->site()
+		);
+
+		// own files are referenced by filename,
+		// files of other models by their absolute URL
+		$own   = $this->app->file('test.jpg');
+		$other = $this->app->file('a/b.jpg');
+
+		$this->assertSame('(image: test.jpg)', $controller->item($own)['dragText']);
+		$this->assertSame('(image: ' . $other->url() . ')', $controller->item($other)['dragText']);
+	}
+
 	public function testItems(): void
 	{
 		$controller = new FilePickerDialogController(

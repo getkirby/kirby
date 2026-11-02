@@ -53,6 +53,8 @@ class Collection
 	}
 
 	/**
+	 * @param $keys Comma-separated string or array of keys,
+	 *             `null` for all keys, `false` to keep the selection
 	 * @return $this
 	 * @throws Exception
 	 */
@@ -75,6 +77,7 @@ class Collection
 	}
 
 	/**
+	 * @return list<array<string, mixed>>
 	 * @throws NotFoundException
 	 * @throws Exception
 	 */
@@ -100,12 +103,15 @@ class Collection
 	}
 
 	/**
+	 * @return array<string, mixed>
 	 * @throws NotFoundException
 	 * @throws Exception
 	 */
 	public function toResponse(): array
 	{
-		if (is_array($query = $this->api->requestQuery('query')) === true) {
+		$query = $this->api->requestQuery('query');
+
+		if (is_array($query) === true) {
 			$this->data = $this->data->query(array_filter([
 				'limit'    => $query['limit'] ?? null,
 				'offset'   => $query['offset'] ?? null,

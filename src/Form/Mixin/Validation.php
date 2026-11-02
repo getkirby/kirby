@@ -108,16 +108,11 @@ trait Validation
 	 */
 	protected function needsValue(): bool
 	{
-		if (
-			$this->hasValue() === false ||
-			$this->isRequired() === false ||
-			$this->isEmpty() === false ||
-			$this->isActive() === false
-		) {
-			return false;
-		}
-
-		return true;
+		return
+			$this->hasValue() === true &&
+			$this->isRequired() === true &&
+			$this->isEmpty() === true &&
+			$this->isActive() === true;
 	}
 
 	/**

@@ -20,12 +20,16 @@ class Markdown
 	/**
 	 * Array with all configured options
 	 * for the parser
+	 *
+	 * @var array<string, mixed>
 	 */
 	protected array $options = [];
 
 	/**
 	 * Returns default values for all
 	 * available parser options
+	 *
+	 * @return array{breaks: bool, extra: bool, safe: bool}
 	 */
 	public function defaults(): array
 	{

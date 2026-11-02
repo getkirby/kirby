@@ -436,7 +436,7 @@ abstract class ModelWithContent extends Model implements Identifiable
 	): static {
 		$value = (int)$this->content()->get($field)->value() + $by;
 
-		if ($max && $value > $max) {
+		if ($max !== null && $value > $max) {
 			$value = $max;
 		}
 

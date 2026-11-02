@@ -59,35 +59,22 @@ abstract class ValueField extends Field
 
 	/**
 	 * Checks if the field can be stored in the given language.
+	 * Disabled fields are stored as well to keep their value.
 	 */
 	public function isStorable(Language $language): bool
 	{
-		// the field cannot be translated into the given language
-		if ($this->isTranslatable($language) === false) {
-			return false;
-		}
-
-		// We don't need to check if the field is disabled.
-		// A disabled field can still have a value and that value
-		// should still be stored. But that value must not be changed
-		// on submit. That's why we check for the disabled state
-		// in the isSubmittable method.
-
-		return true;
+		return $this->isTranslatable($language);
 	}
 
 	/**
 	 * A field might have a value, but can still not be submitted
-	 * because it is disabled, not translatable into the given
-	 * language or not active due to a `when` rule.
+	 * because it is not translatable into the given language.
+	 * Disabled fields and fields that are not active due to a
+	 * `when` rule are submitted to not lose their value.
 	 */
 	public function isSubmittable(Language $language): bool
 	{
-		if ($this->isTranslatable($language) === false) {
-			return false;
-		}
-
-		return true;
+		return $this->isTranslatable($language);
 	}
 
 	/**
@@ -134,14 +121,14 @@ abstract class ValueField extends Field
 	}
 
 	/**
-	 * Returns the value of the field if it has a value
-	 * otherwise it returns null
-	 *
-	 * @see `self::toFormValue()`
-	 * @todo might get deprecated or reused later. Use `self::toFormValue()` instead.
+	 * Returns the value of the field in a format to be used in forms
 	 *
 	 * If you need the form value with the default as fallback, you should use
 	 * the fill method first `$field->fill($field->default())->toFormValue()`
+	 *
+	 * @param $default Fills an empty field with its default value first
+	 * @see `self::toFormValue()`
+	 * @todo might get deprecated or reused later. Use `self::toFormValue()` instead.
 	 */
 	#[BlockCollectionAccess]
 	public function value(bool $default = false): mixed

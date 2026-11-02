@@ -14,8 +14,6 @@
       <code><![CDATA[$extensions['models'] ?? []]]></code>
       <code><![CDATA[$extensions['routes'] ?? []]]></code>
       <code><![CDATA[$routes]]></code>
-      <code><![CDATA[$system['after']]]></code>
-      <code><![CDATA[$system['before']]]></code>
     </InvalidOperand>
     <InvalidReturnStatement>
       <code><![CDATA[match ($code ?? 'current') {
@@ -75,9 +73,6 @@
     </InvalidOperand>
   </file>
   <file src="src/Cms/Files.php">
-    <ImplementedParamTypeMismatch>
-      <code><![CDATA[$object]]></code>
-    </ImplementedParamTypeMismatch>
     <InvalidArgument>
       <code><![CDATA[$file]]></code>
     </InvalidArgument>
@@ -121,9 +116,6 @@
     </NullableReturnStatement>
   </file>
   <file src="src/Cms/Pages.php">
-    <ImplementedParamTypeMismatch>
-      <code><![CDATA[$object]]></code>
-    </ImplementedParamTypeMismatch>
     <InvalidArgument>
       <code><![CDATA[$args[0]]]></code>
       <code><![CDATA[$page]]></code>
@@ -147,9 +139,6 @@
     </InvalidReturnStatement>
   </file>
   <file src="src/Cms/Users.php">
-    <ImplementedParamTypeMismatch>
-      <code><![CDATA[$object]]></code>
-    </ImplementedParamTypeMismatch>
     <InvalidArgument>
       <code><![CDATA[$user]]></code>
     </InvalidArgument>
@@ -287,39 +276,6 @@
     <RedundantPropertyInitializationCheck>
       <code><![CDATA[isset($this->data) === true]]></code>
     </RedundantPropertyInitializationCheck>
-  </file>
-  <file src="src/Text/KirbyTags.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[string]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[preg_replace_callback($regex, function ($match) use ($data, $debug) {
-			try {
-				return KirbyTag::parse($match[0], $data)->render();
-			} catch (InvalidArgumentException $e) {
-				if (Str::startsWith($e->getMessage(), 'Undefined tag type:') === true) {
-					return $match[0];
-				}
-
-				// stay silent in production and ignore non-existing tags
-				if ($debug !== true) {
-					error_log($e);
-
-					return $match[0];
-				}
-
-				throw $e;
-			} catch (Exception $e) {
-				if ($debug === true) {
-					throw $e;
-				}
-
-				error_log($e);
-
-				return $match[0];
-			}
-		}, $text)]]></code>
-    </NullableReturnStatement>
   </file>
   <file src="src/Toolkit/Collection.php">
     <InvalidArgument>

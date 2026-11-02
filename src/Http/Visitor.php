@@ -78,8 +78,8 @@ class Visitor
 		foreach ($accepted as $language) {
 			$value  = $language['value'];
 			$parts  = Str::split($value, '-');
-			$code   = isset($parts[0]) ? Str::lower($parts[0]) : null;
-			$region = isset($parts[1]) ? Str::upper($parts[1]) : null;
+			$code   = isset($parts[0]) === true ? Str::lower($parts[0]) : null;
+			$region = isset($parts[1]) === true ? Str::upper($parts[1]) : null;
 			$locale = $region ? $code . '_' . $region : $code;
 
 			$languages[$locale] = new Obj([
@@ -130,6 +130,8 @@ class Visitor
 
 	/**
 	 * Returns a collection of all accepted mime types
+	 *
+	 * @return Collection<Obj>
 	 */
 	public function acceptedMimeTypes(): Collection
 	{
@@ -138,8 +140,8 @@ class Visitor
 
 		foreach ($accepted as $mime) {
 			$mimes[$mime['value']] = new Obj([
-				'type'     => $mime['value'],
-				'quality'  => $mime['quality'],
+				'type'    => $mime['value'],
+				'quality' => $mime['quality'],
 			]);
 		}
 

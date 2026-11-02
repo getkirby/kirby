@@ -153,6 +153,27 @@ class MethodsTest extends TestCase
 		$this->assertNull($session->get('kirby.method.data'));
 	}
 
+	public function testConfigWithFalse(): void
+	{
+		$app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'methods' => [
+						'password'       => true,
+						'code'           => false,
+						'password-reset' => true
+					]
+				]
+			]
+		]);
+
+		$methods = $app->auth()->methods();
+
+		// a disabled method doesn't block the conflicting `password-reset`
+		$this->assertSame(['password' => [], 'password-reset' => []], $methods->config());
+		$this->assertSame(['password' => [], 'password-reset' => []], $methods->enabled());
+	}
+
 	public function testEnabledWith2FA(): void
 	{
 		$this->app = $this->app->clone([

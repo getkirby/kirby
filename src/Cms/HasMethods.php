@@ -16,6 +16,8 @@ trait HasMethods
 {
 	/**
 	 * All registered methods
+	 *
+	 * @var array<string, Closure>
 	 */
 	public static array $methods = [];
 

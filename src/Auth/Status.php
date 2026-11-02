@@ -69,6 +69,8 @@ class Status
 
 	/**
 	 * Build a status object from the current auth context
+	 *
+	 * @param list<string> $challenges Enabled challenge types
 	 */
 	public static function for(
 		App $kirby,
@@ -86,7 +88,6 @@ class Status
 		$email = $session->get('kirby.challenge.email');
 
 		if ($email !== null) {
-			$data     = $session->get('kirby.challenge.data');
 			$fallback = match ($challenges) {
 				[]      => null,
 				default => $challenges[array_key_last($challenges)]
@@ -97,7 +98,7 @@ class Status
 				email:     $email,
 				mode:      $session->get('kirby.challenge.mode'),
 				challenge: $session->get('kirby.challenge.type'),
-				data:      Pending::from($data ?? []),
+				data:      Pending::from($session->get('kirby.challenge.data') ?? []),
 				fallback:  $fallback
 			);
 		}

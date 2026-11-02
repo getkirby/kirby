@@ -22,22 +22,30 @@ class Props
 {
 	/**
 	 * Cache for the prop definitions per class
+	 *
+	 * @var array<string, array<string, array>>
 	 */
 	protected static array $cache = [];
 
 	/**
 	 * Cache for the closures that read the exported values per class
+	 *
+	 * @var array<string, Closure>
 	 */
 	protected static array $exporters = [];
 
 	/**
 	 * Cache for the exported props per class, sorted by
 	 * their export name, with the getter or property to read
+	 *
+	 * @var array<string, array<string, array{string|null, string}>>
 	 */
 	protected static array $exports = [];
 
 	/**
 	 * The prop definitions for this instance
+	 *
+	 * @var array<string, array>|null
 	 */
 	protected array|null $props = null;
 
@@ -50,6 +58,7 @@ class Props
 	 * Returns all props of the class with their attribute,
 	 * property, getter and setter method, sorted by name
 	 *
+	 * @return array<string, array{attribute: Prop, getter: ReflectionMethod|null, property: ReflectionProperty, setter: ReflectionMethod|null}>
 	 * @throws LogicException if a getter or setter is invalid or two props are exported under the same name
 	 */
 	public function all(): array
@@ -105,7 +114,9 @@ class Props
 			return $attribute->newInstance();
 		}
 
-		if ($inherited = $this->inherited($property)) {
+		$inherited = $this->inherited($property);
+
+		if ($inherited !== null) {
 			return $this->attribute($inherited);
 		}
 
@@ -115,6 +126,7 @@ class Props
 	/**
 	 * Makes sure that no two props are exported under the same name
 	 *
+	 * @param array<string, array> $props Prop definitions as returned by `::all()`
 	 * @throws LogicException
 	 */
 	protected function checkExportNames(string $class, array $props): void
@@ -271,7 +283,7 @@ class Props
 	 */
 	public function has(string $name): bool
 	{
-		return isset($this->all()[$name]);
+		return isset($this->all()[$name]) === true;
 	}
 
 	/**
@@ -328,10 +340,13 @@ class Props
 
 		if (
 			is_array($value) === true &&
-			$property->isInitialized($object) === true &&
-			is_array($current = $property->getValue($object)) === true
+			$property->isInitialized($object) === true
 		) {
-			$value = A::merge($current, $value, A::MERGE_REPLACE);
+			$current = $property->getValue($object);
+
+			if (is_array($current) === true) {
+				$value = A::merge($current, $value, A::MERGE_REPLACE);
+			}
 		}
 
 		$property->setValue($object, $value);
@@ -373,6 +388,8 @@ class Props
 
 	/**
 	 * Returns the documentation for all props, sorted by name
+	 *
+	 * @return array<string, array>
 	 */
 	public function toArray(): array
 	{
@@ -415,6 +432,7 @@ class Props
 	 * Returns the values of all exported props,
 	 * read via their getter if there is one
 	 *
+	 * @return array<string, mixed>
 	 * @throws LogicException if no object is given
 	 */
 	public function values(): array

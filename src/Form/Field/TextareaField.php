@@ -55,9 +55,7 @@ class TextareaField extends StringField
 				'method'  => 'POST',
 				'action'  => function () use ($field) {
 					// @codeCoverageIgnoreStart
-					/**
-					 * @var Api
-					 */
+					/** @var Api $api */
 					$api = $this;
 
 					return $field->upload(
@@ -76,6 +74,9 @@ class TextareaField extends StringField
 		];
 	}
 
+	/**
+	 * @return array<string>|bool
+	 */
 	public function buttons(): array|bool
 	{
 		return $this->buttons;

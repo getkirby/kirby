@@ -3,6 +3,7 @@
 namespace Kirby\Form\Field;
 
 use Kirby\Cms\Page;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\Controller\Dialog\FilePickerDialogController;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -210,6 +211,22 @@ class TextareaFieldTest extends TestCase
 		];
 
 		$this->assertSame($expected, $field->uploads());
+	}
+
+	public function testUploadsParentWithInvalidQuery(): void
+	{
+		$field = $this->field('textarea', [
+			'value' => 'test',
+			'uploads' => [
+				'parent'   => 'site.title',
+				'template' => 'test'
+			]
+		]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('"site.title" could not be resolved as a valid parent for the upload');
+
+		$field->uploads();
 	}
 
 	public function testUploadsTemplate(): void

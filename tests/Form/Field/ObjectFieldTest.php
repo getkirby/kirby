@@ -2,6 +2,7 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Cms\Page;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(ObjectField::class)]
@@ -78,6 +79,19 @@ class ObjectFieldTest extends TestCase
 		];
 
 		$this->assertSame($expected, $field->errors());
+	}
+
+	public function testErrorsInSubclass(): void
+	{
+		$field = new class (
+			model: new Page(['slug' => 'test']),
+			fields: [
+				'text' => ['type' => 'text']
+			],
+			value: ['text' => 'foo']
+		) extends ObjectField {};
+
+		$this->assertSame([], $field->errors());
 	}
 
 	public function testErrorsWhenEmpty(): void

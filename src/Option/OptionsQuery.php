@@ -33,16 +33,20 @@ class OptionsQuery extends OptionsProvider
 	) {
 	}
 
+	/**
+	 * Wraps scalar values of a query result array
+	 * in objects with `key` and `value` fields
+	 */
 	protected function collection(array $array): Collection
 	{
-		$isAssociative = A::isAssociative($array);
+		$associative = A::isAssociative($array);
 
 		foreach ($array as $key => $value) {
 			if (is_scalar($value) === true) {
 				$array[$key] = new Obj([
 					'key'          => new Field(null, 'key', $key),
 					'value'        => new Field(null, 'value', $value),
-					'hasStringKey' => $isAssociative,
+					'hasStringKey' => $associative,
 				]);
 			}
 		}
@@ -50,6 +54,10 @@ class OptionsQuery extends OptionsProvider
 		return new Collection($array);
 	}
 
+	/**
+	 * Creates a new instance from the query
+	 * or an array of props
+	 */
 	public static function factory(string|array $props): static
 	{
 		if (is_string($props) === true) {
@@ -68,6 +76,8 @@ class OptionsQuery extends OptionsProvider
 	/**
 	 * Returns defaults for the following based on item type:
 	 * [query entry alias, default text query, default value query]
+	 *
+	 * @return array{string, string, string}
 	 */
 	protected function itemToDefaults(array|object $item): array
 	{
@@ -123,6 +133,10 @@ class OptionsQuery extends OptionsProvider
 		};
 	}
 
+	/**
+	 * Normalizes the query string or props array,
+	 * including the `fetch` alias for `query`
+	 */
 	public static function polyfill(array|string $props = []): array
 	{
 		if (is_string($props) === true) {
@@ -155,7 +169,6 @@ class OptionsQuery extends OptionsProvider
 		}
 		// @codeCoverageIgnoreEnd
 
-		// run query
 		$result = $model->query($this->query);
 
 		// the query already returned an options collection
@@ -163,7 +176,6 @@ class OptionsQuery extends OptionsProvider
 			return $result;
 		}
 
-		// convert result to a collection
 		if (is_array($result) === true) {
 			$result = $this->collection($result);
 		}
@@ -176,23 +188,19 @@ class OptionsQuery extends OptionsProvider
 			);
 		}
 
-		// create options array
-		$options = $result->toArray(function ($item) use ($model, $safeMode) {
-			// get defaults based on item type
+		// text is only a raw string when using {< >}
+		// or when the safe mode is explicitly disabled (select field)
+		$method = $safeMode === true ? 'toSafeHtmlString' : 'toString';
+
+		$options = $result->toArray(function ($item) use ($model, $method) {
 			[$alias, $text, $value] = $this->itemToDefaults($item);
 			$data = ['item' => $item, $alias => $item];
 
 			// value is always a raw string
 			$value = $model->toString($this->value ?? $value, $data);
-
-			// text is only a raw string when using {< >}
-			// or when the safe mode is explicitly disabled (select field)
-			$safeMethod = $safeMode === true ? 'toSafeHtmlString' : 'toString';
-			$text = $model->$safeMethod($this->text ?? $text, $data);
-
-			// additional data
-			$icon = $this->icon !== null ? $model->toString($this->icon, $data) : null;
-			$info = $this->info !== null ? $model->$safeMethod($this->info, $data) : null;
+			$text  = $model->$method($this->text ?? $text, $data);
+			$icon  = $this->icon !== null ? $model->toString($this->icon, $data) : null;
+			$info  = $this->info !== null ? $model->$method($this->info, $data) : null;
 
 			return compact('text', 'value', 'icon', 'info');
 		});

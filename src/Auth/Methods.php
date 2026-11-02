@@ -95,7 +95,8 @@ class Methods
 	}
 
 	/**
-	 * Returns normalized array of configured methods
+	 * Returns normalized array of configured methods;
+	 * methods that are set to `false` are left out
 	 */
 	public function config(): array
 	{
@@ -111,6 +112,9 @@ class Methods
 			} elseif ($options === true) {
 				// ['password' => true]
 				$options = [];
+			} elseif ($options === false) {
+				// ['password' => false]
+				continue;
 			}
 
 			$normalized[$type] = $options;

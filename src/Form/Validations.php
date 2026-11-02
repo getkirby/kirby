@@ -19,7 +19,7 @@ class Validations
 	 *
 	 * @throws InvalidArgumentException
 	 */
-	public static function boolean(ValueField $field, mixed $value): bool
+	public static function boolean(ValueField $field, mixed $value): void
 	{
 		if (
 			$field->isEmptyValue($value) === false &&
@@ -29,8 +29,6 @@ class Validations
 				key: 'validation.boolean'
 			);
 		}
-
-		return true;
 	}
 
 	/**
@@ -38,7 +36,7 @@ class Validations
 	 *
 	 * @throws InvalidArgumentException
 	 */
-	public static function date(ValueField $field, mixed $value): bool
+	public static function date(ValueField $field, mixed $value): void
 	{
 		if (
 			$field->isEmptyValue($value) === false &&
@@ -48,8 +46,6 @@ class Validations
 				message: V::message('date', $value)
 			);
 		}
-
-		return true;
 	}
 
 	/**
@@ -57,7 +53,7 @@ class Validations
 	 *
 	 * @throws InvalidArgumentException
 	 */
-	public static function email(ValueField $field, mixed $value): bool
+	public static function email(ValueField $field, mixed $value): void
 	{
 		if (
 			$field->isEmptyValue($value) === false &&
@@ -67,8 +63,6 @@ class Validations
 				message: V::message('email', $value)
 			);
 		}
-
-		return true;
 	}
 
 	/**
@@ -76,7 +70,7 @@ class Validations
 	 *
 	 * @throws InvalidArgumentException
 	 */
-	public static function max(ValueField $field, mixed $value): bool
+	public static function max(ValueField $field, mixed $value): void
 	{
 		if (
 			$field->isEmptyValue($value) === false &&
@@ -88,8 +82,6 @@ class Validations
 				message: V::message('max', $value, $field->max())
 			);
 		}
-
-		return true;
 	}
 
 	/**
@@ -97,7 +89,7 @@ class Validations
 	 *
 	 * @throws InvalidArgumentException
 	 */
-	public static function maxlength(ValueField $field, mixed $value): bool
+	public static function maxlength(ValueField $field, mixed $value): void
 	{
 		if (
 			$field->isEmptyValue($value) === false &&
@@ -109,8 +101,6 @@ class Validations
 				message: V::message('maxlength', $value, $field->maxlength())
 			);
 		}
-
-		return true;
 	}
 
 	/**
@@ -118,7 +108,7 @@ class Validations
 	 *
 	 * @throws InvalidArgumentException
 	 */
-	public static function min(ValueField $field, mixed $value): bool
+	public static function min(ValueField $field, mixed $value): void
 	{
 		if (
 			$field->isEmptyValue($value) === false &&
@@ -130,8 +120,6 @@ class Validations
 				message: V::message('min', $value, $field->min())
 			);
 		}
-
-		return true;
 	}
 
 	/**
@@ -139,7 +127,7 @@ class Validations
 	 *
 	 * @throws InvalidArgumentException
 	 */
-	public static function minlength(ValueField $field, mixed $value): bool
+	public static function minlength(ValueField $field, mixed $value): void
 	{
 		if (
 			$field->isEmptyValue($value) === false &&
@@ -151,8 +139,6 @@ class Validations
 				message: V::message('minlength', $value, $field->minlength())
 			);
 		}
-
-		return true;
 	}
 
 	/**
@@ -160,7 +146,7 @@ class Validations
 	 *
 	 * @throws InvalidArgumentException
 	 */
-	public static function pattern(ValueField $field, mixed $value): bool
+	public static function pattern(ValueField $field, mixed $value): void
 	{
 		if (
 			$field->isEmptyValue($value) === false &&
@@ -178,8 +164,6 @@ class Validations
 				);
 			}
 		}
-
-		return true;
 	}
 
 	/**
@@ -187,7 +171,7 @@ class Validations
 	 *
 	 * @throws InvalidArgumentException
 	 */
-	public static function required(ValueField $field, mixed $value): bool
+	public static function required(ValueField $field, mixed $value): void
 	{
 		if (
 			method_exists($field, 'isRequired') === true &&
@@ -198,8 +182,6 @@ class Validations
 				key: 'validation.required'
 			);
 		}
-
-		return true;
 	}
 
 	/**
@@ -207,7 +189,7 @@ class Validations
 	 *
 	 * @throws InvalidArgumentException
 	 */
-	public static function option(ValueField $field, mixed $value): bool
+	public static function option(ValueField $field, mixed $value): void
 	{
 		if (
 			$field->isEmptyValue($value) === false &&
@@ -221,8 +203,6 @@ class Validations
 				);
 			}
 		}
-
-		return true;
 	}
 
 	/**
@@ -230,7 +210,7 @@ class Validations
 	 *
 	 * @throws InvalidArgumentException
 	 */
-	public static function options(ValueField $field, mixed $value): bool
+	public static function options(ValueField $field, mixed $value): void
 	{
 		if (
 			$field->isEmptyValue($value) === false &&
@@ -246,8 +226,6 @@ class Validations
 				}
 			}
 		}
-
-		return true;
 	}
 
 	/**
@@ -255,7 +233,7 @@ class Validations
 	 *
 	 * @throws InvalidArgumentException
 	 */
-	public static function time(ValueField $field, mixed $value): bool
+	public static function time(ValueField $field, mixed $value): void
 	{
 		if (
 			$field->isEmptyValue($value) === false &&
@@ -265,8 +243,6 @@ class Validations
 				message: V::message('time', $value)
 			);
 		}
-
-		return true;
 	}
 
 	/**
@@ -274,7 +250,7 @@ class Validations
 	 *
 	 * @throws InvalidArgumentException
 	 */
-	public static function url(ValueField $field, mixed $value): bool
+	public static function url(ValueField $field, mixed $value): void
 	{
 		if (
 			$field->isEmptyValue($value) === false &&
@@ -284,7 +260,5 @@ class Validations
 				message: V::message('url', $value)
 			);
 		}
-
-		return true;
 	}
 }

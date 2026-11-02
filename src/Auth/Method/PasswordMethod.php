@@ -2,10 +2,10 @@
 
 namespace Kirby\Auth\Method;
 
-use InvalidArgumentException;
 use Kirby\Auth\Method;
 use Kirby\Auth\Status;
 use Kirby\Cms\User;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\Ui\Button;
 use Kirby\Panel\Ui\Component;
 use SensitiveParameter;

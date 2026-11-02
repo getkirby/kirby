@@ -79,7 +79,7 @@ class Url
 		$handler->setEditor($editor);
 
 		$href = $handler->getEditorHref($file, $line);
-		return is_string($href) ? $href : null;
+		return is_string($href) === true ? $href : null;
 	}
 
 	/**
@@ -88,8 +88,10 @@ class Url
 	 */
 	public static function fix(string|null $url = null): string|null
 	{
+		$url ??= '';
+
 		// make sure to not touch absolute urls
-		if (!preg_match('!^(https|http|ftp)\:\/\/!i', $url ?? '')) {
+		if (preg_match('!^(https|http|ftp)\:\/\/!i', $url) !== 1) {
 			return 'http://' . $url;
 		}
 
@@ -279,7 +281,7 @@ class Url
 		// remove the trailing slash from the path
 		$uri->setSlash(false);
 
-		$url = $base ? $uri->base() : $uri->toString();
+		$url = $base === true ? $uri->base() : $uri->toString();
 		$url = str_replace('www.', '', $url ?? '');
 
 		return Str::short($url, $length, $rep);

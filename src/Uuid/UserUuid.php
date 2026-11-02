@@ -19,7 +19,7 @@ class UserUuid extends Uuid
 {
 	protected const string TYPE = 'user';
 
-	/*
+	/**
 	 * Returns the user ID
 	 * (we can rely in this case that the Uri was filled
 	 * with the model ID on initiation)

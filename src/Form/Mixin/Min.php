@@ -20,7 +20,7 @@ trait Min
 
 	public function min(): int|null
 	{
-		// set min to at least 1, if required
+		// required fields need at least 1 item by default
 		if ($this->required === true) {
 			return $this->min ?? 1;
 		}

@@ -690,6 +690,19 @@ class LanguageTest extends TestCase
 		$this->assertInstanceOf(LanguageRouter::class, $language->router());
 	}
 
+	public function testRulesWithoutCtypeLocale(): void
+	{
+		$language = new Language([
+			'code'   => 'de',
+			'locale' => ['LC_MONETARY' => 'de_DE.utf8']
+		]);
+
+		$rules = $language->rules();
+
+		$this->assertSame('ae', $rules['ä']);
+		$this->assertSame(Language::loadRules('de'), $rules);
+	}
+
 	public function testSave(): void
 	{
 		$app = new App([

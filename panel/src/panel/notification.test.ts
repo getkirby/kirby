@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import type { PanelResponse } from "@/panel/request";
+import { failed } from "@test/unit/request";
 import AuthError from "@/errors/AuthError";
 import ExternalRequestError from "@/errors/ExternalRequestError";
 import JsonRequestError from "@/errors/JsonRequestError";
@@ -7,27 +7,6 @@ import RedirectError from "@/errors/RedirectError";
 import RequestError from "@/errors/RequestError";
 import Notification from "./notification";
 import Panel from "./panel";
-
-function makeRequestOptions(
-	json: Record<string, unknown> = {},
-	text = ""
-): {
-	request: Request;
-	response: PanelResponse;
-} {
-	return {
-		request: new Request("https://example.com/api"),
-		response: {
-			headers: new Headers(),
-			json,
-			ok: false,
-			status: 500,
-			statusText: "Internal Server Error",
-			text,
-			url: "https://example.com/api"
-		}
-	};
-}
 
 describe("panel.notification", () => {
 	describe("state", () => {
@@ -184,7 +163,7 @@ describe("panel.notification", () => {
 			const panel = Panel.create(app);
 			const notification = Notification(panel);
 
-			notification.error(new AuthError("Unauthorized", makeRequestOptions()));
+			notification.error(new AuthError("Unauthorized", failed()));
 
 			expect(notification.type).toStrictEqual("error");
 			expect(notification.theme).toStrictEqual("negative");
@@ -197,9 +176,7 @@ describe("panel.notification", () => {
 			const notification = Notification(panel);
 
 			expect(() =>
-				notification.error(
-					new AuthError("Unauthenticated", makeRequestOptions())
-				)
+				notification.error(new AuthError("Unauthenticated", failed()))
 			).toThrowError(RedirectError);
 
 			expect(notification.isOpen).toStrictEqual(false);
@@ -209,7 +186,7 @@ describe("panel.notification", () => {
 			const panel = Panel.create(app);
 			const notification = Notification(panel);
 
-			notification.error(new JsonRequestError("error", makeRequestOptions()));
+			notification.error(new JsonRequestError("error", failed()));
 
 			expect(notification.type).toStrictEqual("fatal");
 		});
@@ -219,9 +196,7 @@ describe("panel.notification", () => {
 			const notification = Notification(panel);
 			const open = vi.spyOn(panel.dialog, "open");
 
-			notification.error(
-				new RequestError("Something failed", makeRequestOptions())
-			);
+			notification.error(new RequestError("Something failed", failed()));
 
 			expect(open).toHaveBeenCalledWith(
 				expect.objectContaining({ component: "k-request-error-dialog" })
@@ -243,11 +218,13 @@ describe("panel.notification", () => {
 			notification.error(
 				new RequestError(
 					"error",
-					makeRequestOptions({
-						status: "error",
-						message: "Please fix all form errors…",
-						key: "error.form.incomplete",
-						details
+					failed({
+						json: {
+							status: "error",
+							message: "Please fix all form errors…",
+							key: "error.form.incomplete",
+							details
+						}
 					})
 				)
 			);
@@ -262,10 +239,12 @@ describe("panel.notification", () => {
 			const panel = Panel.create(app);
 			const notification = Notification(panel);
 			const open = vi.spyOn(panel.dialog, "open");
-			const { request, response } = makeRequestOptions({
-				message: "Please log in again",
-				key: "error.form.incomplete",
-				details: { password: { label: "Password", message: ["Required"] } }
+			const { request, response } = failed({
+				json: {
+					message: "Please log in again",
+					key: "error.form.incomplete",
+					details: { password: { label: "Password", message: ["Required"] } }
+				}
 			});
 
 			notification.error(
@@ -339,7 +318,7 @@ describe("panel.notification", () => {
 			notification.fatal(
 				new JsonRequestError(
 					"error",
-					makeRequestOptions({}, "<html>PHP error</html>")
+					failed({ text: "<html>PHP error</html>" })
 				)
 			);
 

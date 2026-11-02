@@ -36,6 +36,12 @@ class PermalinkTest extends TestCase
 		$this->assertInstanceOf(PageUuid::class, $permalink->uuid());
 	}
 
+	public function testParseWithoutId(): void
+	{
+		$this->assertNull(Permalink::from('https://getkirby.com/@/page'));
+		$this->assertNull(Permalink::from('https://getkirby.com/@/page/'));
+	}
+
 	public function testModel(): void
 	{
 		$permalink = Permalink::for('page://my-page');

@@ -62,6 +62,24 @@ class ItemsTest extends TestCase
 		$this->assertSame($this->field, $items->first()->field());
 	}
 
+	public function testFactoryFromEmptyArray(): void
+	{
+		$params = [
+			'parent' => $this->page,
+			'field'  => $this->field
+		];
+
+		$items = Items::factory([], $params);
+		$this->assertCount(0, $items);
+		$this->assertSame($this->page, $items->parent());
+		$this->assertSame($this->field, $items->field());
+
+		$items = Items::factory(null, $params);
+		$this->assertCount(0, $items);
+		$this->assertSame($this->page, $items->parent());
+		$this->assertSame($this->field, $items->field());
+	}
+
 	public function testField(): void
 	{
 		$items = new Items([]);

@@ -193,16 +193,16 @@ class QrCode implements Stringable
 	): void {
 		$format = F::extension($file);
 
-		// the string size form is only supported by SVG (CSS width);
-		// raster formats require an integer pixel size
-		if (is_string($size) === true) {
-			$size = (int)$size;
-		}
-
 		if ($format === 'svg') {
 			$svg = $this->toSvg($size, $color, $back, $border);
 			F::write($file, $svg);
 			return;
+		}
+
+		// the string size form is only supported by SVG (CSS width);
+		// raster formats require an integer pixel size
+		if (is_string($size) === true) {
+			$size = (int)$size;
 		}
 
 		$img = $this->toImage($size, $color, $back, $border);
