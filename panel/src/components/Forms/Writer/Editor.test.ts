@@ -19,7 +19,6 @@ describe("Editor", () => {
 
 	afterEach(() => {
 		editor.destroy();
-		document.body.innerHTML = "";
 	});
 
 	describe("constructor", () => {

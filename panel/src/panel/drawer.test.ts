@@ -305,8 +305,6 @@ describe("panel.drawer", () => {
 		});
 
 		it("should submit the active drawer form when the focus is outside of it", () => {
-			document.body.innerHTML = "";
-
 			const panel = Panel.create(app);
 			const { requestSubmit } = render("drawer");
 			const preventDefault = vi.fn();
@@ -323,8 +321,6 @@ describe("panel.drawer", () => {
 		});
 
 		it("should fall back to direct submit without a drawer form", () => {
-			document.body.innerHTML = "";
-
 			const panel = Panel.create(app);
 			const preventDefault = vi.fn();
 			const submit = vi.spyOn(panel.drawer, "submit");

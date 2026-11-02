@@ -91,7 +91,6 @@ describe("clipboard.write()", () => {
 
 	afterEach(() => {
 		vi.restoreAllMocks();
-		document.body.innerHTML = "";
 	});
 
 	it("should use clipboardData.setData when a ClipboardEvent is provided", () => {
