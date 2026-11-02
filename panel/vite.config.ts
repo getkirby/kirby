@@ -225,7 +225,6 @@ export default defineConfig(({ mode }) => {
 			rolldownOptions: {
 				checks: { pluginTimings: false },
 				external: ["vue"],
-				input: "./src/index.ts",
 				output: {
 					entryFileNames: "js/[name].min.js",
 					chunkFileNames: (chunk) =>
@@ -256,8 +255,8 @@ export default defineConfig(({ mode }) => {
 				}
 			}
 		},
+		input: "./src/index.ts",
 		optimizeDeps: {
-			entries: ["src/**/*.{js,ts,vue}", "!src/**/*.test.{js,ts}"],
 			exclude: ["vue"]
 		},
 		resolve: {
