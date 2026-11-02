@@ -2192,10 +2192,12 @@ class DomTest extends TestCase
 				$sanitize('<root><' . $name . '><!--</' . $name . '><img src=x>--></' . $name . '></root>')
 			);
 
-			$this->assertSame(
-				['<root><' . $name . '><!--><img src=x>--></' . $name . '></root>', []],
-				$sanitize('<root><' . $name . '><!--><img src=x>--></' . $name . '></root>')
-			);
+			if ($name !== 'noscript') {
+				$this->assertSame(
+					['<root><' . $name . '><!--><img src=x>--></' . $name . '></root>', []],
+					$sanitize('<root><' . $name . '><!--><img src=x>--></' . $name . '></root>')
+				);
+			}
 
 			$this->assertSame(
 				[
@@ -2205,6 +2207,28 @@ class DomTest extends TestCase
 				$sanitize('<root><' . $name . '><![CDATA[</' . $name . '><img src=x>]]></' . $name . '></root>')
 			);
 		}
+
+		// `<noscript>` is only raw text while scripting is enabled,
+		// otherwise its content is read as markup
+		$this->assertSame(
+			['<root><noscript/></root>', ['The comment (line 1) is not allowed']],
+			$sanitize('<root><noscript><!--><img src=x>--></noscript></root>')
+		);
+
+		$this->assertSame(
+			['<root><noscript>&lt;img src=x&gt;</noscript></root>', ['The CDATA section (line 1) is not allowed']],
+			$sanitize('<root><noscript><![CDATA[<img src=x>]]></noscript></root>')
+		);
+
+		$this->assertSame(
+			['<root><noscript><style/></noscript></root>', ['The comment (line 1) is not allowed']],
+			$sanitize('<root><noscript><style><!--</style><img src=x>--></style></noscript></root>')
+		);
+
+		$this->assertSame(
+			['<root><noscript><!-- comment --></noscript></root>', []],
+			$sanitize('<root><noscript><!-- comment --></noscript></root>')
+		);
 
 		// the closing tag is matched case-insensitively
 		$this->assertSame(

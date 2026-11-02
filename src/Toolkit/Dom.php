@@ -889,7 +889,7 @@ class Dom
 	 *
 	 * @since 5.6.0
 	 *
-	 * @return array{element: DOMElement|null, foreign: bool, rawText: string|null}
+	 * @return array{element: DOMElement|null, foreign: bool, markup: bool, rawText: string|null}
 	 */
 	protected static function context(DOMNode $node): array
 	{
@@ -941,9 +941,12 @@ class Dom
 				$root === null &&
 				in_array($name, static::RAW_TEXT, true) === true
 			) {
+				// but `<noscript>` is only raw text while scripting is
+				// enabled, otherwise the parser reads its content as markup
 				return [
 					'element' => $ancestor,
 					'foreign' => false,
+					'markup'  => $name === 'noscript',
 					'rawText' => $name
 				];
 			}
@@ -952,6 +955,7 @@ class Dom
 		return [
 			'element' => null,
 			'foreign' => $root !== null,
+			'markup'  => false,
 			'rawText' => null
 		];
 	}
@@ -1129,12 +1133,15 @@ class Dom
 		[
 			'element' => $element,
 			'foreign' => $foreign,
+			'markup'  => $markup,
 			'rawText' => $rawText
 		] = static::context($node);
 
 		// a nested element of the same name ends the raw text early,
 		// after which the parser reads the rest as live markup again
-		$markup = $element !== null && $this->endsEarly($element) === true;
+		if ($element !== null && $markup === false) {
+			$markup = $this->endsEarly($element);
+		}
 
 		$dangerous = false;
 
