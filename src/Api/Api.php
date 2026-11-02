@@ -212,7 +212,7 @@ class Api
 	public function clone(array $props = []): static
 	{
 		return new static([
-			'autentication' => $this->authentication,
+			'authentication' => $this->authentication,
 			'data'			=> $this->data,
 			'routes'		=> $this->routes,
 			'debug'			=> $this->debug,

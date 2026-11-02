@@ -70,8 +70,8 @@ class PageTree
 			'children'    => $panel->url(true),
 			'disabled'    => $moving?->isMovableTo($entry) === false,
 			'hasChildren' =>
-				$entry->hasChildren() === true ||
-				$entry->hasDrafts() === true,
+				$entry->children()->findBy('isListable', true) !== null ||
+				$entry->drafts()->findBy('isListable', true) !== null,
 			'icon'        => match (true) {
 				$entry instanceof Site => 'home',
 				default                => $panel->image()['icon'] ?? null

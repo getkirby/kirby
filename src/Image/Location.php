@@ -109,7 +109,7 @@ class Location implements Stringable
 	 */
 	public function __toString(): string
 	{
-		return trim($this->lat() . ', ' . $this->lng(), ',');
+		return trim($this->lat() . ', ' . $this->lng(), ', ');
 	}
 
 	/**

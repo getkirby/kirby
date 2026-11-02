@@ -79,6 +79,13 @@ class BlocksTest extends TestCase
 		$this->assertSame('text', $blocks->last()->type());
 	}
 
+	public function testFactoryWithoutItems(): void
+	{
+		$this->assertCount(0, Blocks::factory());
+		$this->assertCount(0, Blocks::factory(null));
+		$this->assertCount(0, Blocks::factory([]));
+	}
+
 	public function testHasType(): void
 	{
 		$input = [

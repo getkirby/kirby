@@ -212,6 +212,21 @@ class RequestTest extends TestCase
 		];
 	}
 
+	public function testHeaders(): void
+	{
+		new App([
+			'server' => [
+				'HTTP_X_HTTP_METHOD_OVERRIDE' => 'PUT',
+				'REDIRECT_HTTP_X_FOO'         => 'bar'
+			]
+		]);
+
+		$headers = (new Request())->headers();
+
+		$this->assertSame('PUT', $headers['X-Http-Method-Override']);
+		$this->assertSame('bar', $headers['X-Foo']);
+	}
+
 	public function testMethod(): void
 	{
 		$request = new Request();

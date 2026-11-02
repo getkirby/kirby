@@ -946,7 +946,7 @@ class A
 
 		// build the helper array
 		foreach ($array as $key => $row) {
-			$helper[$key] = $row[$field];
+			$helper[$key] = $row[$field] ?? null;
 		}
 
 		// natural sorting

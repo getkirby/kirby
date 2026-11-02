@@ -224,6 +224,8 @@ class F
 		string|null $file = null,
 		string|null $extension = null
 	): string {
+		$file ??= '';
+
 		// overwrite the current extension
 		if ($extension !== null) {
 			return static::name($file) . '.' . $extension;
