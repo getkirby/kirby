@@ -216,13 +216,6 @@ export default {
 		createMarks() {
 			return Object.values(this.$helper.writer.createMarks(this.marks));
 		},
-		/**
-		 * @deprecated 5.4.0 Use this.$helper.writer.availableMarksFromPlugins() instead.
-		 */
-		/* v8 ignore next */
-		createMarksFromPanelPlugins() {
-			return this.$helper.writer.availableMarksFromPlugins();
-		},
 		createNodes() {
 			let nodes = this.nodes;
 
@@ -257,29 +250,8 @@ export default {
 
 			return result;
 		},
-		/**
-		 * @deprecated 5.4.0 Use this.$helper.writer.availableNodesFromPlugins() instead.
-		 */
-		/* v8 ignore next */
-		createNodesFromPanelPlugins() {
-			return this.$helper.writer.availableNodesFromPlugins();
-		},
 		getHTML() {
 			return this.editor.getHTML();
-		},
-		/**
-		 * @deprecated 5.4.0 Use this.$helper.writer.filterExtensions() instead.
-		 */
-		/* v8 ignore next */
-		filterExtensions(available, allowed, postFilter) {
-			allowed = this.$helper.writer.allowedExtensions(available, allowed);
-			let installed = this.$helper.writer.filterExtensions(available, allowed);
-
-			if (typeof postFilter === "function") {
-				installed = postFilter(allowed, installed);
-			}
-
-			return installed;
 		},
 		focus() {
 			this.editor.focus();

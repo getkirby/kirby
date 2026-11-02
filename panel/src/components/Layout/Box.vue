@@ -99,7 +99,7 @@ export default {
 <style>
 :root {
 	--box-height: var(
-		--field-input-height
+		--input-height
 	); /* TODO: change back to --height-md after input refactoring */
 	--box-padding-inline: var(--spacing-2);
 	--box-font-size: var(--text-sm);
