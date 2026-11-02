@@ -17,6 +17,7 @@ class SystemTest extends TestCase
 	public const string TMP      = KIRBY_TMP_DIR . '/Cms.System';
 
 	protected static string $updateStatusHost;
+
 	protected string|null $subTmp = null;
 
 	public static function setUpBeforeClass(): void

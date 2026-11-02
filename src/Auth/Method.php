@@ -3,6 +3,7 @@
 namespace Kirby\Auth;
 
 use Kirby\Cms\User;
+use Kirby\Panel\Ui\Button;
 use Kirby\Panel\Ui\Component;
 use Kirby\Toolkit\HasI18n;
 use Kirby\Toolkit\Str;
@@ -81,6 +82,8 @@ abstract class Method
 	 * Returns an array of buttons that will be
 	 * used as entries in the user security settings drawer
 	 * @codeCoverageIgnore
+	 *
+	 * @return list<Button>
 	 */
 	public static function settings(User $user): array
 	{

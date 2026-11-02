@@ -41,9 +41,7 @@ class FilePickerField extends ModelPickerField
 				'method'  => 'POST',
 				'action'  => function () use ($field) {
 					// @codeCoverageIgnoreStart
-					/**
-					 * @var Api
-					 */
+					/** @var Api $api */
 					$api = $this;
 
 					// move_uploaded_file() not working with unit test
@@ -77,13 +75,11 @@ class FilePickerField extends ModelPickerField
 
 	public function parentModel(): ModelWithContent
 	{
-		$parent = $this->parent;
-
-		if (is_string($parent) === true) {
-			$model = $this->model()->query($parent, ModelWithContent::class);
+		if (is_string($this->parent) === false) {
+			return $this->model();
 		}
 
-		return $model ?? $this->model();
+		return $this->model()->query($this->parent, ModelWithContent::class) ?? $this->model();
 	}
 
 	public function parent(): string
@@ -97,7 +93,7 @@ class FilePickerField extends ModelPickerField
 	}
 
 	/**
-	 * @param File $model
+	 * @param File|null $model
 	 */
 	public function store(ModelWithContent|null $model = null): string
 	{

@@ -19,7 +19,7 @@ class Option
 	public HtmlString|string|array $text;
 
 	/**
-	 * @param bool $resolve Deprecated, will be removed in v6
+	 * @param $resolve Deprecated, will be removed in v7
 	 */
 	public function __construct(
 		public string|int|float|null $value,
@@ -33,7 +33,7 @@ class Option
 	}
 
 	/**
-	 * @param bool $resolve Deprecated, will be removed in v6
+	 * @param $resolve Deprecated, will be removed in v7
 	 */
 	public static function factory(
 		string|int|float|array|null $props,
@@ -50,7 +50,6 @@ class Option
 			$props['info'] = match (true) {
 				is_array($props['info']),
 				$props['info'] instanceof HtmlString => $props['info'],
-				$props['info'] === null,
 				$props['info'] === false => null,
 				default                  => ['en' => $props['info']]
 			};
@@ -63,7 +62,6 @@ class Option
 			$props['text'] = match (true) {
 				is_array($props['text']),
 				$props['text'] instanceof HtmlString => $props['text'],
-				$props['text'] === null,
 				$props['text'] === false => null,
 				default                  => ['en' => $props['text']]
 			};
@@ -79,6 +77,8 @@ class Option
 
 	/**
 	 * Renders all data for the option
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function render(
 		ModelWithContent $model,

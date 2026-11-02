@@ -15,6 +15,9 @@ use Closure;
  */
 class Events
 {
+	/**
+	 * @var array<string, list<Closure>>
+	 */
 	protected array $running = [];
 
 	public function __construct(
@@ -47,16 +50,17 @@ class Events
 
 	/**
 	 * Returns all matching hook handlers for the given event
+	 *
+	 * @return list<Closure>
 	 */
 	public function hooks(Event $event): array
 	{
-		// get all hooks for the event name
-		/** @var array<string, array> $hooks */
+		/** @var array<string, list<Closure>> $hooks */
 		$hooks  = $this->app->extensions('hooks');
 		$name   = $event->name();
 		$result = $hooks[$name] ?? [];
 
-		// get all hooks for the event name wildcards
+		// add all hooks for the event name wildcards
 		foreach ($event->nameWildcards() as $wildcard) {
 			$result = [
 				...$result,
@@ -98,13 +102,11 @@ class Events
 				array_pop($this->running[$name]);
 			}
 
-			// run the afterEach callback
 			if ($afterEach !== null) {
 				$afterEach($event, $result);
 			}
 		}
 
-		// run the return callback
 		if ($return !== null) {
 			return $return($event);
 		}

@@ -63,7 +63,6 @@ class PageChildrenTest extends ModelTestCase
 		$this->assertTrue($page->hasDrafts());
 	}
 
-
 	public function testHasListedChildren(): void
 	{
 		$page = new Page([

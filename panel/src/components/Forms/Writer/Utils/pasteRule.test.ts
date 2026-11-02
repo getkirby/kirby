@@ -1,18 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { type Node, Fragment, Schema, Slice } from "prosemirror-model";
+import { type Node, Fragment, Slice } from "prosemirror-model";
 import { Plugin } from "prosemirror-state";
+import { createSchemaWithMarks } from "@test/unit/editor";
 import pasteRule from "./pasteRule";
 
-const schema = new Schema({
-	nodes: {
-		doc: { content: "block+" },
-		paragraph: { group: "block", content: "inline*" },
-		text: { group: "inline" }
-	},
-	marks: {
-		bold: {},
-		link: { attrs: { href: { default: "" } } }
-	}
+const schema = createSchemaWithMarks({
+	bold: {},
+	link: { attrs: { href: { default: "" } } }
 });
 
 const boldType = schema.marks.bold;

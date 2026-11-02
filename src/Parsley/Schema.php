@@ -24,6 +24,8 @@ class Schema
 	/**
 	 * Returns a list of allowed inline marks
 	 * and their parsing rules
+	 *
+	 * @return list<array>
 	 */
 	public function marks(): array
 	{
@@ -33,6 +35,8 @@ class Schema
 	/**
 	 * Returns a list of allowed nodes and
 	 * their parsing rules
+	 *
+	 * @return list<array>
 	 */
 	public function nodes(): array
 	{
@@ -42,6 +46,8 @@ class Schema
 	/**
 	 * Returns a list of all elements that should be
 	 * skipped and not be parsed at all
+	 *
+	 * @return list<string>
 	 */
 	public function skip(): array
 	{

@@ -44,13 +44,9 @@ abstract class ModelUuid extends Uuid
 			return $id;
 		}
 
-		// generate a new ID (to be saved in the content file)
 		$id = static::generate();
 
-		// store the new UUID
 		$this->storeId($id);
-
-		// update the Uri object
 		$this->uri->host($id);
 
 		return $id;
@@ -88,7 +84,6 @@ abstract class ModelUuid extends Uuid
 	 */
 	protected function storeId(string $id): void
 	{
-		// get the content array from the page
 		$data = $this->model->content('default')->toArray();
 
 		// check for an empty content array

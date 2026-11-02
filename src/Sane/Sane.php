@@ -23,6 +23,8 @@ class Sane
 {
 	/**
 	 * Handler Type Aliases
+	 *
+	 * @var array<string, string>
 	 */
 	public static array $aliases = [
 		'application/xml' => 'xml',
@@ -34,6 +36,8 @@ class Sane
 
 	/**
 	 * All registered handlers
+	 *
+	 * @var array<string, class-string<Handler>>
 	 */
 	public static array $handlers = [
 		'html' => Html::class,
@@ -45,7 +49,7 @@ class Sane
 	/**
 	 * Handler getter
 	 *
-	 * @param bool $lazy If set to `true`, `null` is returned for undefined handlers
+	 * @param $lazy If set to `true`, `null` is returned for undefined handlers
 	 *
 	 * @throws NotFoundException If no handler was found and `$lazy` was set to `false`
 	 */
@@ -80,8 +84,8 @@ class Sane
 	 * Sanitizes the given string with the specified handler
 	 * @since 3.6.0
 	 *
-	 * @param bool $isExternal Whether the string is from an external file
-	 *                         that may be accessed directly
+	 * @param $isExternal Whether the string is from an external file
+	 *                   that may be accessed directly
 	 */
 	public static function sanitize(
 		string $string,
@@ -98,9 +102,9 @@ class Sane
 	 * the extension and MIME type if not specified
 	 * @since 3.6.0
 	 *
-	 * @param string|bool $typeLazy Explicit handler type string,
-	 *                              `true` for lazy autodetection or
-	 *                              `false` for normal autodetection
+	 * @param $typeLazy Explicit handler type string,
+	 *                 `true` for lazy autodetection or
+	 *                 `false` for normal autodetection
 	 *
 	 * @throws InvalidArgumentException If the file didn't pass validation
 	 * @throws LogicException If more than one handler applies
@@ -118,6 +122,7 @@ class Sane
 
 		// try to find exactly one matching handler
 		$handlers = static::handlersForFile($file, $typeLazy === true);
+
 		switch (count($handlers)) {
 			case 0:
 				// lazy autodetection didn't find a handler
@@ -129,8 +134,8 @@ class Sane
 				// more than one matching handler;
 				// sanitizing with all handlers will not leave much in the output
 				throw new LogicException(
-					'Cannot sanitize file as more than one handler applies: ' .
-					implode(', ', A::map($handlers, fn ($handler) => $handler::class))
+					message: 'Cannot sanitize file as more than one handler applies: ' .
+						implode(', ', A::map($handlers, fn (Handler $handler) => $handler::class))
 				);
 		}
 	}
@@ -155,8 +160,8 @@ class Sane
 	/**
 	 * Validates file contents with the specified handler
 	 *
-	 * @param bool $isExternal Whether the string is from an external file
-	 *                         that may be accessed directly
+	 * @param $isExternal Whether the string is from an external file
+	 *                   that may be accessed directly
 	 *
 	 * @throws InvalidArgumentException If the file didn't pass validation
 	 * @throws NotFoundException If the handler was not found
@@ -172,9 +177,9 @@ class Sane
 	 * the sane handlers are automatically chosen by
 	 * the extension and MIME type if not specified
 	 *
-	 * @param string|bool $typeLazy Explicit handler type string,
-	 *                              `true` for lazy autodetection or
-	 *                              `false` for normal autodetection
+	 * @param $typeLazy Explicit handler type string,
+	 *                 `true` for lazy autodetection or
+	 *                 `false` for normal autodetection
 	 *
 	 * @throws InvalidArgumentException If the file didn't pass validation
 	 * @throws NotFoundException If the handler was not found
@@ -200,33 +205,28 @@ class Sane
 	 * Returns all handler objects that apply to the given file based on
 	 * file extension and MIME type
 	 *
-	 * @param bool $lazy If set to `true`, undefined handlers are skipped
-	 * @return array<Handler>
+	 * @param $lazy If set to `true`, undefined handlers are skipped
+	 * @return list<Handler>
 	 */
 	protected static function handlersForFile(
 		string $file,
 		bool $lazy = false
 	): array {
-		$handlers = $handlerClasses = [];
+		$handlers = [];
 
 		// all values that can be used for the handler search;
 		// filter out all empty options
 		$options = array_filter([F::extension($file), F::mime($file)]);
 
 		foreach ($options as $option) {
-			$handler      = static::handler($option, $lazy);
-			$handlerClass = $handler ? $handler::class : null;
+			$handler = static::handler($option, $lazy);
 
 			// ensure that each handler class is only returned once
-			if (
-				$handler &&
-				in_array($handlerClass, $handlerClasses, true) === false
-			) {
-				$handlers[]       = $handler;
-				$handlerClasses[] = $handlerClass;
+			if ($handler !== null) {
+				$handlers[$handler::class] ??= $handler;
 			}
 		}
 
-		return $handlers;
+		return array_values($handlers);
 	}
 }

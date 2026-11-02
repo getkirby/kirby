@@ -47,8 +47,8 @@ class SiteViewController extends ModelViewController
 			'id'          => '/',
 			'permissions' => [
 				...$this->model->guards()->availability(),
-				// the home page check is kept for backward compatibility
-				// @todo Remove the home page check in 6.0.0
+				// the preview renders the home page with its preview token
+				// @todo 7.0 Only check `site.preview` with a site preview token
 				'preview' =>
 					$this->model->guards()->isAvailable('preview') === true &&
 					$this->model->homePage()?->guards()->isAvailable('preview') === true,

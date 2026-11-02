@@ -51,19 +51,24 @@ class Api
 	protected bool $debug = false;
 
 	/**
-	 * Collection definition
+	 * Collection definitions
+	 *
+	 * @var array<string, array>
 	 */
 	protected array $collections = [];
 
 	/**
 	 * Injected data/dependencies
+	 *
+	 * @var array<string, mixed>
 	 */
 	protected array $data = [];
-
 	protected App $kirby;
 
 	/**
 	 * Model definitions
+	 *
+	 * @var array<string, array>
 	 */
 	protected array $models = [];
 
@@ -104,7 +109,7 @@ class Api
 		$this->kirby          = $props['kirby'] ?? App::instance();
 		$this->routes         = $props['routes'] ?? [];
 		$this->router         = new Router($this->routes);
-		$this->debug  		  = $props['debug'] ?? false;
+		$this->debug          = $props['debug'] ?? false;
 
 		if ($collections = $props['collections'] ?? null) {
 			$this->collections = array_change_key_case($collections);
@@ -203,7 +208,7 @@ class Api
 	public function clone(array $props = []): static
 	{
 		return new static([
-			'autentication' => $this->authentication,
+			'authentication' => $this->authentication,
 			'data'			=> $this->data,
 			'collections'   => $this->collections,
 			'debug'			=> $this->debug,
@@ -236,7 +241,9 @@ class Api
 	}
 
 	/**
-	 * Returns the collections definition
+	 * Returns the collection definitions
+	 *
+	 * @return array<string, array>
 	 */
 	public function collections(): array
 	{
@@ -305,7 +312,7 @@ class Api
 	 * Returns the file object for the given
 	 * parent path and filename
 	 *
-	 * @param string $path Path to file's parent model
+	 * @param $path Path to file's parent model
 	 * @throws NotFoundException if the file cannot be found
 	 */
 	public function file(
@@ -316,10 +323,11 @@ class Api
 	}
 
 	/**
-	 * Returns the all readable files for the parent
+	 * Returns all listable files of the parent
 	 *
-	 * @param string $path Path to file's parent model
-	 * @throws NotFoundException if the file cannot be found
+	 * @param $path Path to file's parent model
+	 * @throws InvalidArgumentException if the parent is not a site, page or user
+	 * @throws NotFoundException if the parent cannot be found
 	 */
 	public function files(string $path): Files
 	{
@@ -368,8 +376,8 @@ class Api
 	 * Matches an object with an array item
 	 * based on the `type` field
 	 *
-	 * @param array models or collections
-	 * @return string|null key of match
+	 * @param array<string, array> $array Model or collection definitions
+	 * @return string|null Key of the matching definition
 	 */
 	protected function match(
 		array $array,
@@ -407,6 +415,8 @@ class Api
 
 	/**
 	 * Returns all model definitions
+	 *
+	 * @return array<string, array>
 	 */
 	public function models(): array
 	{
@@ -416,7 +426,7 @@ class Api
 	/**
 	 * Returns the page object for the given id
 	 *
-	 * @param string $id Page's id
+	 * @param $id Page's id
 	 * @throws NotFoundException if the page cannot be found
 	 */
 	public function page(string $id): Page|null
@@ -449,7 +459,7 @@ class Api
 	/**
 	 * Returns the model's object for the given path
 	 *
-	 * @param string $path Path to parent model
+	 * @param $path Path to parent model
 	 * @throws InvalidArgumentException if the model type is invalid
 	 * @throws NotFoundException if the model cannot be found
 	 */
@@ -616,6 +626,8 @@ class Api
 	/**
 	 * Returns a 200 - ok
 	 * response array.
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function responseFor200(): array
 	{
@@ -629,6 +641,8 @@ class Api
 	/**
 	 * Returns a 400 - bad request
 	 * response array.
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function responseFor400(): array
 	{
@@ -642,6 +656,8 @@ class Api
 	/**
 	 * Returns a 404 - not found
 	 * response array.
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function responseFor404(): array
 	{
@@ -738,7 +754,7 @@ class Api
 	/**
 	 * Returns the current Session instance
 	 *
-	 * @param array $options Additional options, see the session component
+	 * @param $options Additional options, see the session component
 	 */
 	public function session(array $options = []): Session
 	{
@@ -750,8 +766,7 @@ class Api
 	 */
 	protected function setLanguage(): void
 	{
-		$language = $this->language();
-		$this->kirby->setCurrentLanguage($language);
+		$this->kirby->setCurrentLanguage($this->language());
 	}
 
 	/**
@@ -816,9 +831,9 @@ class Api
 	 */
 	protected function setTranslation(): void
 	{
-		$allowImpersonation = $this->kirby->option('api.allowImpersonation', false);
+		$impersonate = $this->kirby->option('api.allowImpersonation', false);
 
-		$translation   = $this->kirby->user(null, $allowImpersonation)?->language();
+		$translation   = $this->kirby->user(null, $impersonate)?->language();
 		$translation ??= $this->kirby->panelLanguage();
 		$this->kirby->setCurrentTranslation($translation);
 	}
@@ -840,7 +855,7 @@ class Api
 	 * move_uploaded_file() not working with unit test
 	 * Added debug parameter for testing purposes as we did in the Email class
 	 *
-	 * @throws \Exception If request has no files or there was an error with the upload
+	 * @throws \Exception If the request has no files
 	 */
 	public function upload(
 		Closure $callback,

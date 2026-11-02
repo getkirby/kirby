@@ -19,6 +19,9 @@ class MultiselectField extends TagsField
 	#[Prop]
 	protected string|null $icon = 'checklist';
 
+	/**
+	 * @return 'all'|'options'
+	 */
 	public function accept(): string
 	{
 		return match ($this->accept) {

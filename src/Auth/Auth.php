@@ -54,7 +54,7 @@ class Auth
 	 * Login a user with email and (maybe optional) password
 	 * as well as an auth challenge, if required by the auth method
 	 *
-	 * @throws PermissionException If the rate limit was exceeded if any other error occurred with debug mode off
+	 * @throws PermissionException If the rate limit was exceeded or if any other error occurred with debug mode off
 	 * @throws NotFoundException If the email was invalid
 	 * @throws InvalidArgumentException If the password is not valid (via `$user->login()`)
 	 */
@@ -97,7 +97,7 @@ class Auth
 	 * (one-time auth code)
 	 * @since 3.5.0
 	 *
-	 * @param bool $long If `true`, a long session will be created
+	 * @param $long If `true`, a long session will be created
 	 * @param 'login'|'password-reset'|'2fa' $mode Purpose of the code
 	 *
 	 * @throws LogicException If there is no suitable authentication challenge (only in debug mode)
@@ -185,7 +185,7 @@ class Auth
 
 	/**
 	 * Returns the logged in user by checking the current session
-	 * and finding a valid valid user id in there
+	 * and finding a valid user id in there
 	 */
 	public function currentUserFromSession(
 		Session|array|null $session = null
@@ -198,6 +198,8 @@ class Auth
 	 * configured order
 	 * @since 3.5.1
 	 * @deprecated 6.0.0 Use `self::challenges()->enabled()` instead
+	 *
+	 * @return list<string>
 	 */
 	public function enabledChallenges(): array
 	{
@@ -286,6 +288,7 @@ class Auth
 	 */
 	public function guard(
 		string|null $email,
+		#[SensitiveParameter]
 		Closure $attempt,
 		Throwable|null $fallback = null
 	): mixed {
@@ -321,10 +324,10 @@ class Auth
 	/**
 	 * Become any existing user or disable the current user
 	 *
-	 * @param string|null $who User ID or email address,
-	 *                         `null` to use the actual user again,
-	 *                         `'kirby'` for a virtual admin user or
-	 *                         `'nobody'` to disable the actual user
+	 * @param $who User ID or email address,
+	 *            `null` to use the actual user again,
+	 *            `'kirby'` for a virtual admin user or
+	 *            `'nobody'` to disable the actual user
 	 * @throws NotFoundException if the given user cannot be found
 	 */
 	public function impersonate(string|null $who = null): User|null
@@ -517,8 +520,8 @@ class Auth
 	 * Returns the authentication status object
 	 * @since 3.5.1
 	 *
-	 * @param bool $allowImpersonation If set to false, only the actually
-	 *                                 logged in user will be returned
+	 * @param $allowImpersonation If set to false, only the actually
+	 *                           logged in user will be returned
 	 */
 	public function status(
 		Session|array|null $session = null,
@@ -526,10 +529,9 @@ class Auth
 	): Status {
 		// only the status for the auto-detected session with
 		// impersonation allowed should be cached
-		$isDefault = $session === null && $allowImpersonation === true;
+		$default = $session === null && $allowImpersonation === true;
 
-		// try to return from cache
-		if ($this->status !== null && $isDefault === true) {
+		if ($this->status !== null && $default === true) {
 			return $this->status;
 		}
 
@@ -540,11 +542,10 @@ class Auth
 			user:         $user,
 			impersonated: $allowImpersonation && $this->user->isImpersonated(),
 			session:      $session,
-			challenges:  $this->challenges()->enabled()
+			challenges:   $this->challenges()->enabled()
 		);
 
-		// only cache the default object
-		if ($isDefault === true) {
+		if ($default === true) {
 			$this->status = $status;
 		}
 
@@ -554,7 +555,7 @@ class Auth
 	/**
 	 * Tracks a login
 	 *
-	 * @param bool $triggerHook If `false`, no user.login:failed hook is triggered
+	 * @param $triggerHook If `false`, no user.login:failed hook is triggered
 	 * @deprecated 6.0.0 Use `self::limits()->track()` instead
 	 */
 	public function track(
@@ -567,9 +568,10 @@ class Auth
 	/**
 	 * Returns the current authentication type
 	 *
-	 * @param bool $allowImpersonation If set to false, 'impersonate' won't
-	 *                                 be returned as authentication type
-	 *                                 even if an impersonation is active
+	 * @param $allowImpersonation If set to false, 'impersonate' won't
+	 *                           be returned as authentication type
+	 *                           even if an impersonation is active
+	 * @return 'basic'|'impersonate'|'session'
 	 */
 	public function type(bool $allowImpersonation = true): string
 	{
@@ -592,8 +594,8 @@ class Auth
 	/**
 	 * Validates the currently logged in user
 	 *
-	 * @param bool $allowImpersonation If set to false, only the actually
-	 *                                 logged in user will be returned
+	 * @param $allowImpersonation If set to false, only the actually
+	 *                           logged in user will be returned
 	 *
 	 * @throws Throwable If an authentication error occurred
 	 */
@@ -652,7 +654,7 @@ class Auth
 	 * if successful, the user is automatically logged in
 	 * @since 3.5.0
 	 *
-	 * @param mixed $input User-provided auth code/input to verify
+	 * @param $input User-provided auth code/input to verify
 	 * @return User User object of the logged-in user
 	 *
 	 * @throws PermissionException If the rate limit was exceeded, the challenge timed out, the code
@@ -690,7 +692,6 @@ class Auth
 			attempt: function () use ($session, $input) {
 				try {
 					$challenge = $this->challenges->verify($session, $input);
-
 				} catch (ChallengeTimeoutException $e) {
 					// a timed-out challenge already cleared its own session
 					// state; additionally drop any active login so the

@@ -22,6 +22,7 @@ use Kirby\Toolkit\Str;
 class Panel
 {
 	protected Access|null $access = null;
+
 	/**
 	 * Areas cached per user id, since the available
 	 * areas change when the user logs in or out

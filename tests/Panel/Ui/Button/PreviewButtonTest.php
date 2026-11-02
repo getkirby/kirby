@@ -19,5 +19,4 @@ class PreviewButtonTest extends TestCase
 		$this->assertSame(null, $button->target);
 		$this->assertSame('Preview', $button->title);
 	}
-
 }

@@ -16,6 +16,8 @@ class Html extends Xml
 {
 	/**
 	 * An internal store for an HTML entities translation table
+	 *
+	 * @var array<string, string>|null
 	 */
 	public static array|null $entities = null;
 
@@ -28,6 +30,8 @@ class Html extends Xml
 	 * ```php
 	 * Html::$gistDomains[] = 'gist.example.com';
 	 * ```
+	 *
+	 * @var array<int, string>
 	 */
 	public static array $gistDomains = ['gist.github.com'];
 
@@ -35,6 +39,8 @@ class Html extends Xml
 	 * List of HTML tags that can be used inline
 	 * (text-level semantics as defined by the WHATWG HTML standard,
 	 * plus `img`: https://html.spec.whatwg.org/multipage/text-level-semantics.html)
+	 *
+	 * @var array<int, string>
 	 */
 	public static array $inlineList = [
 		'a',
@@ -83,6 +89,8 @@ class Html extends Xml
 	 * List of HTML tags that are considered to be self-closing
 	 * (void elements as defined by the WHATWG HTML standard:
 	 * https://html.spec.whatwg.org/multipage/syntax.html#void-elements)
+	 *
+	 * @var array<int, string>
 	 */
 	public static array $voidList = [
 		'area',
@@ -104,8 +112,7 @@ class Html extends Xml
 	 * Generic HTML tag generator
 	 * Can be called like `Html::p('A paragraph', ['class' => 'text'])`
 	 *
-	 * @param $tag Tag name
-	 * @param $arguments Further arguments for the Html::tag() method
+	 * @param $arguments Further arguments for `Html::tag()`
 	 */
 	public static function __callStatic(
 		string $tag,
@@ -130,11 +137,12 @@ class Html extends Xml
 		$text = null,
 		array $attr = []
 	): string {
-		if (Str::startsWith($href, 'mailto:')) {
+		// URL schemes are case-insensitive
+		if (Str::startsWith($href, 'mailto:', true) === true) {
 			return static::email(substr($href, 7), $text, $attr);
 		}
 
-		if (Str::startsWith($href, 'tel:')) {
+		if (Str::startsWith($href, 'tel:', true) === true) {
 			return static::tel(substr($href, 4), $text, $attr);
 		}
 
@@ -222,7 +230,7 @@ class Html extends Xml
 			return '';
 		}
 
-		if (empty($text) === true) {
+		if ($text === null || $text === '' || $text === []) {
 			// show only the email address without additional parameters
 			$address = match (Str::contains($email, '?')) {
 				true  => Str::before($email, '?'),
@@ -286,6 +294,8 @@ class Html extends Xml
 
 	/**
 	 * Returns the entity translation table
+	 *
+	 * @return array<string, string>
 	 */
 	public static function entities(): array
 	{
@@ -304,7 +314,7 @@ class Html extends Xml
 		string|array|null $caption = '',
 		array $attr = []
 	): string {
-		if ($caption) {
+		if ($caption !== null && $caption !== '' && $caption !== []) {
 			$figcaption = static::tag('figcaption', $caption);
 
 			if (is_string($content) === true) {
@@ -338,7 +348,7 @@ class Html extends Xml
 		$src = $url . '.js';
 
 		if ($file !== null) {
-			$src .= '?file=' . $file;
+			$src .= '?file=' . rawurlencode($file);
 		}
 
 		return static::tag('script', '', [...$attr, 'src' => $src]);
@@ -395,7 +405,7 @@ class Html extends Xml
 
 		$attr = ['href' => $href, ...$attr];
 
-		if (empty($text) === true) {
+		if ($text === null || $text === '' || $text === []) {
 			$text = $attr['href'];
 		}
 
@@ -427,7 +437,8 @@ class Html extends Xml
 	): string|null {
 		$rel = trim($rel ?? '');
 
-		if ($target === '_blank' && $rel === '') {
+		// target keywords are case-insensitive
+		if (strtolower($target ?? '') === '_blank' && $rel === '') {
 			return 'noreferrer';
 		}
 
@@ -437,11 +448,10 @@ class Html extends Xml
 	/**
 	 * Builds an HTML tag
 	 *
-	 * @param $name Tag name
 	 * @param $content Scalar value or array with multiple lines of content; self-closing
 	 *                tags are generated automatically based on the `Html::isVoid()` list
 	 * @param $attr An associative array with additional attributes for the tag
-	 * @param $indent Indentation string, defaults to two spaces or `null` for output on one line
+	 * @param $indent Indentation string or `null` for output on one line
 	 * @param $level Indentation level
 	 */
 	public static function tag(
@@ -477,7 +487,7 @@ class Html extends Xml
 	): string {
 		$number = preg_replace('![^0-9\+]+!', '', $tel);
 
-		if (empty($text) === true) {
+		if ($text === null || $text === '' || $text === []) {
 			$text = $tel;
 		}
 
@@ -489,12 +499,8 @@ class Html extends Xml
 	 */
 	public static function value($value): string|null
 	{
-		if ($value === true) {
-			return 'true';
-		}
-
-		if ($value === false) {
-			return 'false';
+		if (is_bool($value) === true) {
+			return $value === true ? 'true' : 'false';
 		}
 
 		if (is_numeric($value) === true) {
@@ -510,27 +516,25 @@ class Html extends Xml
 
 	/**
 	 * Creates a video embed via `<iframe>` for YouTube or Vimeo
-	 * videos; the embed URLs are automatically detected from
-	 * the given URL
+	 * videos or a `<video>` tag for self-hosted video files;
+	 * the embed URLs are automatically detected from the given URL
 	 *
 	 * @param $url Video URL
 	 * @param $options Additional `vimeo` and `youtube` options
 	 *                (will be used as query params in the embed URL)
-	 * @param $attr Additional attributes for the `<iframe>` tag
+	 * @param $attr Additional attributes for the `<iframe>` or `<video>` tag
 	 */
 	public static function video(
 		string $url,
 		array $options = [],
 		array $attr = []
 	): string|null {
-		// YouTube video
-		if (Str::contains($url, 'youtu', true) === true) {
-			return static::youtube($url, $options['youtube'] ?? [], $attr);
-		}
+		// YouTube or Vimeo video
+		$embed   = static::youtube($url, $options['youtube'] ?? [], $attr);
+		$embed ??= static::vimeo($url, $options['vimeo'] ?? [], $attr);
 
-		// Vimeo video
-		if (Str::contains($url, 'vimeo', true) === true) {
-			return static::vimeo($url, $options['vimeo'] ?? [], $attr);
+		if ($embed !== null) {
+			return $embed;
 		}
 
 		// self-hosted video file
@@ -538,7 +542,6 @@ class Html extends Xml
 		$type      = F::extensionToType($extension);
 		$mime      = F::extensionToMime($extension);
 
-		// ignore unknown file types
 		if ($type !== 'video') {
 			return null;
 		}
@@ -586,7 +589,7 @@ class Html extends Xml
 		$path  = $uri->path();
 		$query = $uri->query();
 
-		$id = match ($uri->host()) {
+		$id = match (strtolower((string)$uri->host())) {
 			'vimeo.com', 'www.vimeo.com' => $path->last(),
 			'player.vimeo.com'           => $path->nth(1),
 			default                      => null
@@ -599,12 +602,10 @@ class Html extends Xml
 			return null;
 		}
 
-		// append query params
 		foreach ($options as $key => $value) {
 			$query->$key = $value;
 		}
 
-		// build the full video src URL
 		$src = 'https://player.vimeo.com/video/' . $id . $query->toString(true);
 
 		return static::iframe($src, static::videoAttr($attr));
@@ -650,11 +651,9 @@ class Html extends Xml
 		$src    = null;
 
 		// always build the embed src on the canonical, fixed host
-		$host = match (true) {
-			Str::endsWith($domain, 'youtube-nocookie.com') === true
-				=> 'https://www.youtube-nocookie.com/embed',
-			default
-			=> 'https://www.youtube.com/embed'
+		$host = match (str_ends_with($domain, 'youtube-nocookie.com')) {
+			true  => 'https://www.youtube-nocookie.com/embed',
+			false => 'https://www.youtube.com/embed'
 		};
 
 		$isYoutubeId = static function (string|null $id = null): bool {
@@ -689,7 +688,7 @@ class Html extends Xml
 			default:
 				// short URLs
 				if (
-					Str::contains($uri->host(), 'youtu.be') === true &&
+					str_contains($domain, 'youtu.be') === true &&
 					$isYoutubeId($first) === true
 				) {
 					$src = 'https://www.youtube.com/embed/' . $first;
@@ -697,7 +696,7 @@ class Html extends Xml
 					$query->start = $query->t;
 					unset($query->t);
 				} elseif (
-					in_array($first, ['embed', 'shorts']) === true &&
+					in_array($first, ['embed', 'shorts'], true) === true &&
 					$isYoutubeId($second) === true
 				) {
 					// embedded and shorts video URLs
@@ -705,19 +704,16 @@ class Html extends Xml
 				}
 		}
 
-		if (empty($src) === true) {
+		if ($src === null) {
 			return null;
 		}
 
-		// append all query parameters
 		foreach ($options as $key => $value) {
 			$query->$key = $value;
 		}
 
-		// build the full video src URL
 		$src .= $query->toString(true);
 
-		// render the iframe
 		return static::iframe($src, static::videoAttr($attr));
 	}
 }

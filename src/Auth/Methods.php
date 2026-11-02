@@ -9,6 +9,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Session\Session;
 use Kirby\Toolkit\A;
+use SensitiveParameter;
 
 /**
  * Handler for all auth methods
@@ -22,9 +23,14 @@ class Methods
 	/**
 	 * Available auth method classes
 	 * from the core and plugins
+	 *
+	 * @var array<string, class-string<Method>>
 	 */
 	public static array $methods = [];
 
+	/**
+	 * @var array<string, array>|null
+	 */
 	protected array|null $enabled = null;
 
 	public function __construct(
@@ -41,6 +47,7 @@ class Methods
 	public function authenticate(
 		string $type,
 		string|null $email,
+		#[SensitiveParameter]
 		string|null $password = null,
 		bool $long = false
 	): User|Status {
@@ -60,6 +67,9 @@ class Methods
 
 	/**
 	 * Returns the auth method class for the provided type
+	 *
+	 * @return class-string<Method>
+	 * @throws NotFoundException If no valid class is registered for the type
 	 */
 	public function class(string $type): string
 	{
@@ -85,7 +95,8 @@ class Methods
 	}
 
 	/**
-	 * Returns normalized array of configured methods
+	 * Returns normalized array of configured methods;
+	 * methods that are set to `false` are left out
 	 */
 	public function config(): array
 	{
@@ -101,6 +112,9 @@ class Methods
 			} elseif ($options === true) {
 				// ['password' => true]
 				$options = [];
+			} elseif ($options === false) {
+				// ['password' => false]
+				continue;
 			}
 
 			$normalized[$type] = $options;
@@ -112,6 +126,8 @@ class Methods
 	/**
 	 * Returns normalized array of enabled/configured methods
 	 * by the `auth.methods` config option
+	 *
+	 * @return array<string, array>
 	 */
 	public function enabled(): array
 	{
@@ -194,5 +210,4 @@ class Methods
 	{
 		return in_array(true, array_column($this->config(), '2fa'), true);
 	}
-
 }

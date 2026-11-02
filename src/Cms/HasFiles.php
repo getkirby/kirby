@@ -37,7 +37,7 @@ trait HasFiles
 	/**
 	 * Creates a new file
 	 *
-	 * @param bool $move If set to `true`, the source will be deleted
+	 * @param $move If set to `true`, the source will be deleted
 	 */
 	#[BlockCollectionAccess]
 	public function createFile(array $props, bool $move = false): File

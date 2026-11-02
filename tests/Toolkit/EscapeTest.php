@@ -22,7 +22,6 @@ class EscapeTest extends TestCase
 		'cp932',        '932',          'euc-jp',       'eucjp',
 		'eucjp-win',    'macroman'
 	];
-
 	protected array $htmlSpecialChars = [
 		'\''    => '&#039;',
 		'"'     => '&quot;',
@@ -30,7 +29,6 @@ class EscapeTest extends TestCase
 		'>'     => '&gt;',
 		'&'     => '&amp;',
 	];
-
 	protected array $htmlAttrSpecialChars = [
 		'\''    => '&#x27;',
 		// Characters beyond ASCII value 255 to unicode escape
@@ -62,7 +60,6 @@ class EscapeTest extends TestCase
 		// Encode spaces for quoteless attribute protection
 		' '     => '&#x20;',
 	];
-
 	protected array $jsSpecialChars = [
 		// HTML special chars - escape without exception to hex
 		'<'     => '\\x3C',
@@ -93,7 +90,6 @@ class EscapeTest extends TestCase
 		// Encode spaces for quoteless attribute protection
 		' '     => '\\x20',
 	];
-
 	protected array $urlSpecialChars = [
 		// HTML special chars - escape without exception to percent encoding
 		'<'     => '%3C',
@@ -128,7 +124,6 @@ class EscapeTest extends TestCase
 		'~'     => '~',
 		'+'     => '%2B',
 	];
-
 	protected array $cssSpecialChars = [
 		// HTML special chars - escape without exception to hex
 		'<'     => '\\3C ',
@@ -159,7 +154,6 @@ class EscapeTest extends TestCase
 		// Encode spaces for quoteless attribute protection
 		' '     => '\\20 ',
 	];
-
 
 	public function testHtmlEscapingConvertsSpecialChars(): void
 	{
@@ -258,7 +252,7 @@ class EscapeTest extends TestCase
 	/**
 	 * Convert a Unicode Codepoint to a literal UTF-8 character.
 	 *
-	 * @param int $codepoint Unicode codepoint in hex notation
+	 * @param $codepoint Unicode codepoint in hex notation
 	 * @return string UTF-8 literal string
 	 */
 	protected function codepointToUtf8(int $codepoint): string

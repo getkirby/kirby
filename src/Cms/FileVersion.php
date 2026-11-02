@@ -107,7 +107,6 @@ class FileVersion
 		return $this;
 	}
 
-
 	/**
 	 * Converts the object to an array
 	 */

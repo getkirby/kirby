@@ -264,7 +264,7 @@ abstract class Storage
 		$fields = $this->read($versionId, $language);
 		$fields = A::map(
 			$fields,
-			function ($value) use ($map) {
+			function (string|null $value) use ($map): string|null {
 				// skip fields with null values
 				if ($value === null) {
 					return null;
@@ -305,7 +305,7 @@ abstract class Storage
 	/**
 	 * Updates the content fields of an existing version
 	 *
-	 * @param array<string, string> $fields Content fields
+	 * @param array<string, string|null> $fields Content fields
 	 *
 	 * @throws Exception If the file cannot be written
 	 */
@@ -317,7 +317,7 @@ abstract class Storage
 	/**
 	 * Writes the content fields of an existing version
 	 *
-	 * @param array<string, string> $fields Content fields
+	 * @param array<string, string|null> $fields Content fields
 	 *
 	 * @throws Exception If the content cannot be written
 	 */

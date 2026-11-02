@@ -7,7 +7,6 @@
 
 # cs fixer
 .php-cs-fixer.cache
-.php-cs-fixer.types.cache
 
 # editors
 *.sublime-project
@@ -18,7 +17,6 @@
 .phpunit.cache
 phpunit.xml
 /tests/coverage
-/tests/tmp
 
 # ignore all the vendor cruft
 /vendor/**/.*

@@ -41,6 +41,7 @@ class LanguageVariableFormDialogControllerTest extends TestCase
 
 		$this->app->impersonate('kirby');
 	}
+
 	public function testFactoryForCreate(): void
 	{
 		$controller = LanguageVariableFormDialogController::factory('en');

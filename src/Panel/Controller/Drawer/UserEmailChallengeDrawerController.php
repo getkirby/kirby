@@ -100,5 +100,4 @@ class UserEmailChallengeDrawerController extends UserCredentialDrawerController
 
 		return true;
 	}
-
 }

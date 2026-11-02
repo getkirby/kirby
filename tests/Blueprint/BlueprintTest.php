@@ -225,7 +225,6 @@ class BlueprintTest extends TestCase
 		$this->assertArrayNotHasKey('headline', $field);
 	}
 
-
 	public function testSectionsToFieldsWithUnknownType(): void
 	{
 		$blueprint = new Blueprint([
@@ -816,16 +815,6 @@ class BlueprintTest extends TestCase
 
 		$this->assertSame('info', $blueprint->field('info')['type']);
 	}
-
-
-
-
-
-
-
-
-
-
 
 	public function testSectionAndFieldOfSameName(): void
 	{

@@ -16,7 +16,6 @@ use SensitiveParameter;
  * Users first have to set up time-based codes
  * (storing the TOTP secret in their user account).
  *
- *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
@@ -72,6 +71,15 @@ class TotpChallenge extends Challenge
 		mixed $input,
 		Pending $data
 	): bool {
+		// codes from JSON requests may be numbers
+		if (is_int($input) === true) {
+			$input = (string)$input;
+		}
+
+		if (is_string($input) !== true) {
+			return false;
+		}
+
 		$secret = $this->user->secret('totp');
 		return (new Totp($secret))->verify($input);
 	}

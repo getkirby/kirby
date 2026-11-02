@@ -23,10 +23,10 @@ export { default as "k-search-dialog" } from "./SearchDialog.vue";
 export { default as "k-text-dialog" } from "./TextDialog.vue";
 export { default as "k-upload-dialog" } from "./UploadDialog.vue";
 export { default as "k-upload-replace-dialog" } from "./UploadReplaceDialog.vue";
+export { default as "k-validation-error-dialog" } from "./ValidationErrorDialog.vue";
 
 // @deprecated
 export { default as "k-files-dialog" } from "./FilesDialog.vue";
 export { default as "k-models-dialog" } from "./ModelsDialog.vue";
 export { default as "k-pages-dialog" } from "./PagesDialog.vue";
 export { default as "k-users-dialog" } from "./UsersDialog.vue";
-export { default as "k-validation-error-dialog" } from "./ValidationErrorDialog.vue";

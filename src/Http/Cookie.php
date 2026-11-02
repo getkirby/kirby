@@ -37,10 +37,10 @@ class Cookie
 	 * Cookie::set('mycookie', 'hello', ['lifetime' => 60]);
 	 * ```
 	 *
-	 * @param string $key The name of the cookie
-	 * @param string $value The cookie content
-	 * @param array $options Array of options:
-	 *                       lifetime, path, domain, secure, httpOnly, sameSite
+	 * @param $key The name of the cookie
+	 * @param $value The cookie content
+	 * @param $options Array of options:
+	 *                lifetime, path, domain, secure, httpOnly, sameSite
 	 * @return bool true: cookie was created,
 	 *              false: cookie creation failed
 	 */
@@ -77,7 +77,7 @@ class Cookie
 	/**
 	 * Calculates the lifetime for a cookie
 	 *
-	 * @param int $minutes Number of minutes or timestamp
+	 * @param $minutes Number of minutes or timestamp
 	 */
 	public static function lifetime(int $minutes): int
 	{
@@ -102,10 +102,10 @@ class Cookie
 	 * Cookie::forever('mycookie', 'hello');
 	 * ```
 	 *
-	 * @param string $key The name of the cookie
-	 * @param string $value The cookie content
-	 * @param array $options Array of options:
-	 *                       path, domain, secure, httpOnly
+	 * @param $key The name of the cookie
+	 * @param $value The cookie content
+	 * @param $options Array of options:
+	 *                path, domain, secure, httpOnly
 	 * @return bool true: cookie was created,
 	 *              false: cookie creation failed
 	 */
@@ -127,9 +127,9 @@ class Cookie
 	 * Cookie::get('mycookie', 'peter');
 	 * ```
 	 *
-	 * @param string|null $key The name of the cookie
-	 * @param string|null $default The default value, which should be returned
-	 *                             if the cookie has not been found
+	 * @param $key The name of the cookie
+	 * @param $default The default value, which should be returned
+	 *                if the cookie has not been found
 	 * @return string|array|null The found value
 	 */
 	public static function get(
@@ -210,7 +210,7 @@ class Cookie
 	 * Cookie::remove('mycookie');
 	 * ```
 	 *
-	 * @param string $key The name of the cookie
+	 * @param $key The name of the cookie
 	 * @return bool true: the cookie has been removed,
 	 *              false: the cookie could not be removed
 	 */

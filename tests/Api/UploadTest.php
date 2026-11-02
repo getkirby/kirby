@@ -573,7 +573,6 @@ class UploadTest extends TestCase
 		$this->assertSame($expected, $response['errors']);
 	}
 
-
 	public function testValidateChunkDuplicate(): void
 	{
 		$source = static::TMP . '/test.md';

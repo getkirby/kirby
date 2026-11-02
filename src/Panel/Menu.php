@@ -25,6 +25,7 @@ class Menu
 
 	public Areas $areas;
 	public array $config;
+
 	protected array|null $items = null;
 	protected App $kirby;
 

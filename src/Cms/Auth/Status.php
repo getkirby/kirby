@@ -84,9 +84,9 @@ class Status implements Stringable
 	/**
 	 * Returns the type of the active challenge
 	 *
-	 * @param bool $automaticFallback If set to `false`, no faked challenge is returned;
-	 *                                WARNING: never send the resulting `null` value to the
-	 *                                user to avoid leaking whether the pending user exists
+	 * @param $automaticFallback If set to `false`, no faked challenge is returned;
+	 *                          WARNING: never send the resulting `null` value to the
+	 *                          user to avoid leaking whether the pending user exists
 	 */
 	public function challenge(bool $automaticFallback = true): string|null
 	{

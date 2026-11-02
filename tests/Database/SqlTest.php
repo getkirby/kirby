@@ -616,6 +616,15 @@ class SqlTest extends TestCase
 		], $this->sql->limit());
 	}
 
+	public function testSelectedWithQualifiedColumn(): void
+	{
+		// a qualified column must not change the table of the following ones
+		$this->assertSame(
+			'`test`.`id`, `another`.`id`',
+			$this->sql->selected('another', ['test.id', 'id'])
+		);
+	}
+
 	public function testJoinInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);

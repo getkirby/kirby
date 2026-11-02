@@ -14,6 +14,7 @@ class ModelTest extends TestCase
 
 		$this->assertInstanceOf(Model::class, $model);
 	}
+
 	public function testConstructInvalidModel(): void
 	{
 		$this->expectException(Exception::class);
@@ -117,5 +118,19 @@ class ModelTest extends TestCase
 		$this->expectExceptionMessage('Invalid sub view: "any"');
 
 		$selection = $model->selection();
+	}
+
+	public function testViewWithMissingView(): void
+	{
+		$model = new Model(new Api([]), [], [
+			'views' => [
+				'compact' => ['id']
+			]
+		]);
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('The view "foo" does not exist');
+
+		$model->view('foo');
 	}
 }

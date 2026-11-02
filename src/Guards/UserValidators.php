@@ -84,8 +84,10 @@ class UserValidators extends ModelValidators
 	/**
 	 * Validates the user that is about to be created
 	 */
-	protected function ensureToCreate(array $props = []): void
-	{
+	protected function ensureToCreate(
+		#[SensitiveParameter]
+		array $props = []
+	): void {
 		$this->validateId($this->model->id());
 		$this->validateEmail($this->model->email(), strict: true);
 		$this->validateLanguage($this->model->language());
@@ -105,8 +107,10 @@ class UserValidators extends ModelValidators
 	 * Validates the very first user of an installation, which
 	 * has no role to check against, but needs a password
 	 */
-	protected function ensureToCreateFirstUser(array $props = []): void
-	{
+	protected function ensureToCreateFirstUser(
+		#[SensitiveParameter]
+		array $props = []
+	): void {
 		$this->validateId($this->model->id());
 		$this->validateEmail($this->model->email(), strict: true);
 		$this->validateLanguage($this->model->language());
@@ -154,7 +158,7 @@ class UserValidators extends ModelValidators
 		if (Str::startsWith($mime, 'image/') !== true) {
 			$this->error(
 				key: 'file.mime.invalid',
-				data: compact('mime')
+				data: ['mime' => $mime]
 			);
 		}
 	}
@@ -170,7 +174,7 @@ class UserValidators extends ModelValidators
 		if ($type !== 'image') {
 			$this->error(
 				key: 'file.type.invalid',
-				data: compact('type')
+				data: ['type' => $type]
 			);
 		}
 	}
@@ -183,7 +187,6 @@ class UserValidators extends ModelValidators
 	public function validateCreatableRole(string $role): void
 	{
 		if ($this->model->kirby()->users()->count() === 0) {
-			// the first user has to be an admin
 			if ($role !== 'admin') {
 				$this->error(
 					key: 'user.role.invalid'
@@ -207,8 +210,8 @@ class UserValidators extends ModelValidators
 	 * Validates that the email address is formatted correctly
 	 * and is not used by another user yet
 	 *
-	 * @param bool $strict If `true`, the user itself is not ignored,
-	 *                     which is needed for users that don't exist yet
+	 * @param $strict If `true`, the user itself is not ignored,
+	 *               which is needed for users that don't exist yet
 	 */
 	public function validateEmail(string $email, bool $strict = false): void
 	{
@@ -241,14 +244,14 @@ class UserValidators extends ModelValidators
 		if (V::match($id, static::ID_PATTERN) !== true) {
 			$this->error(
 				key: 'user.id.invalid',
-				data: compact('id')
+				data: ['id' => $id]
 			);
 		}
 
 		if (in_array($id, ['account', 'kirby', 'nobody'], true) === true) {
 			$this->error(
 				key: 'user.id.reserved',
-				data: compact('id')
+				data: ['id' => $id]
 			);
 		}
 
@@ -276,9 +279,9 @@ class UserValidators extends ModelValidators
 	 * Validates a new password against the password policy
 	 * configured in the `auth.passwords` option
 	 *
-	 * @param bool $allowEmpty If `true`, an empty password is accepted,
-	 *                         which is needed for users that are created
-	 *                         without a password
+	 * @param $allowEmpty If `true`, an empty password is accepted,
+	 *                   which is needed for users that are created
+	 *                   without a password
 	 */
 	public function validateNewPassword(
 		#[SensitiveParameter]
@@ -289,7 +292,6 @@ class UserValidators extends ModelValidators
 			return;
 		}
 
-		// validate against the configured policy (`auth.passwords`)
 		$this->model->kirby()->auth()->passwords()->validate($password);
 	}
 
@@ -308,16 +310,16 @@ class UserValidators extends ModelValidators
 	}
 
 	/**
-	 * Validates that a TOTP secret has the correct length
+	 * Validates that a TOTP secret is valid Base32
+	 * and has the correct length
 	 *
-	 * @throws InvalidArgumentException If the secret is too short or too long
+	 * @throws InvalidArgumentException If the secret is not valid Base32, too short or too long
 	 */
 	public function validateTotp(
 		#[SensitiveParameter]
 		string|null $secret = null
 	): void {
-		// safety check to avoid accidental insecure secrets;
-		// throws an exception for secrets of the wrong length
+		// the constructor throws for invalid secrets
 		if ($secret !== null) {
 			new Totp($secret);
 		}

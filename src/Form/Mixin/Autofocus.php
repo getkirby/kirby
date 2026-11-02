@@ -13,7 +13,7 @@ use Kirby\Reflection\Attributes\Prop;
 trait Autofocus
 {
 	/**
-	 * Sets the focus on this field when the form loads. Only the first field with this label gets
+	 * Sets the focus on this field when the form loads. Only the first field with this option gets focus
 	 */
 	#[Prop]
 	protected bool $autofocus = false;

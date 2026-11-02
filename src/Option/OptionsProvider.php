@@ -17,6 +17,8 @@ abstract class OptionsProvider
 
 	/**
 	 * Returns options as array
+	 *
+	 * @return list<array>
 	 */
 	public function render(ModelWithContent $model)
 	{
@@ -27,9 +29,9 @@ abstract class OptionsProvider
 	 * Dynamically determines the actual options and resolves
 	 * them to the correct text-value entries
 	 *
-	 * @param bool $safeMode Whether to escape special HTML characters in
-	 *                       the option text for safe output in the Panel;
-	 *                       only set to `false` if the text is later escaped!
+	 * @param $safeMode Whether to escape special HTML characters in
+	 *                 the option text for safe output in the Panel;
+	 *                 only set to `false` if the text is later escaped!
 	 */
 	abstract public function resolve(ModelWithContent $model, bool $safeMode = true): Options;
 }

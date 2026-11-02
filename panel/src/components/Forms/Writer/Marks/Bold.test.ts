@@ -5,7 +5,7 @@ import {
 	createSchemaWithMarks,
 	hasMark,
 	mockEditor,
-	toHTML
+	render
 } from "@test/unit/editor";
 import utils from "../Utils";
 import Bold from "./Bold";
@@ -220,13 +220,7 @@ describe("Bold mark", () => {
 		describe("toDOM", () => {
 			it("renders the bold mark as a `<strong>` element", () => {
 				const mark = schema.marks.bold.create();
-				const doc = schema.node("doc", null, [
-					schema.node("paragraph", null, [
-						schema.text("foo"),
-						schema.text("bar", [mark])
-					])
-				]);
-				expect(toHTML(schema, doc)).toBe("<p>foo<strong>bar</strong></p>");
+				expect(render(schema, mark, "bar")).toBe("<p><strong>bar</strong></p>");
 			});
 		});
 	});

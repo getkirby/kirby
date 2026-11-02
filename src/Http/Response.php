@@ -125,7 +125,7 @@ class Response implements Stringable
 	 * Creates a response that triggers
 	 * a file download for the given file
 	 *
-	 * @param array $props Custom overrides for response props (e.g. headers)
+	 * @param $props Custom overrides for response props (e.g. headers)
 	 */
 	public static function download(
 		string $file,
@@ -179,7 +179,7 @@ class Response implements Stringable
 	 * Creates a response for a file and
 	 * sends the file content to the browser
 	 *
-	 * @param array $props Custom overrides for response props (e.g. headers)
+	 * @param $props Custom overrides for response props (e.g. headers)
 	 */
 	public static function file(string $file, array $props = []): static
 	{
@@ -204,7 +204,6 @@ class Response implements Stringable
 
 		return new static($props);
 	}
-
 
 	/**
 	 * Redirects to the given Urls
@@ -231,14 +230,18 @@ class Response implements Stringable
 		$after  = headers_sent($file, $line);
 
 		if ($before === false && $after === true) {
-			throw new LogicException("Disallowed output from file $file:$line, possible accidental whitespace?");
+			throw new LogicException(
+				message: 'Disallowed output from file ' . $file . ':' . $line . ', possible accidental whitespace?'
+			);
 		}
 
 		// output that is held back in an output buffer
 		// (e.g. with the `output_buffering` PHP setting)
 		// doesn't send the headers, so check if the buffer grew
 		if (ob_get_level() === $level && ob_get_length() > $length) {
-			throw new LogicException('Disallowed output, possible accidental whitespace?');
+			throw new LogicException(
+				message: 'Disallowed output, possible accidental whitespace?'
+			);
 		}
 
 		return $result;
@@ -246,8 +249,6 @@ class Response implements Stringable
 
 	/**
 	 * Getter for single headers
-	 *
-	 * @param string $key Name of the header
 	 */
 	public function header(string $key): string|null
 	{
@@ -363,6 +364,8 @@ class Response implements Stringable
 	 * Converts all relevant response attributes
 	 * to an associative array for debugging,
 	 * testing or whatever.
+	 *
+	 * @return array{type: string, charset: string, code: int, headers: array, body: string}
 	 */
 	public function toArray(): array
 	{

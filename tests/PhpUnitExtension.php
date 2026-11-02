@@ -38,8 +38,9 @@ final class PhpUnitExtension implements Extension
 
 	public static function init(): void
 	{
-		// determine a unique path to a temporary directory
-		$tmpDir = __DIR__ . '/tmp';
+		// determine a unique path to a temporary directory per checkout outside
+		// of the repo, so that file watchers and search indexes ignore it
+		$tmpDir = realpath(sys_get_temp_dir()) . '/kirby-tests-' . hash('xxh3', dirname(__DIR__));
 
 		// when running via ParaTest, use a separate directory for each process
 		if (getenv('UNIQUE_TEST_TOKEN') !== false) {

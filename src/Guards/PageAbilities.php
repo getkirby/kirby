@@ -100,15 +100,17 @@ class PageAbilities extends ModelAbilities
 	{
 		$this->ensureToChangeStatus();
 
-		if ($this->model->isDraft() === true) {
-			// the field errors are passed on as details, so that
-			// the Panel can show which fields are still incomplete
-			if ($errors = $this->model->errors()) {
-				$this->error(
-					key: 'changeStatus.incomplete',
-					details: $errors
-				);
-			}
+		if ($this->model->isDraft() === false) {
+			return;
+		}
+
+		// the field errors are passed on as details, so that
+		// the Panel can show which fields are still incomplete
+		if ($errors = $this->model->errors()) {
+			$this->error(
+				key: 'changeStatus.incomplete',
+				details: $errors
+			);
 		}
 	}
 
@@ -118,7 +120,7 @@ class PageAbilities extends ModelAbilities
 			$this->error(key: 'sort.errorPage');
 		}
 
-		if ($this->model->isListed() !== true) {
+		if ($this->model->isListed() === false) {
 			$this->error(key: 'sort.unlisted');
 		}
 

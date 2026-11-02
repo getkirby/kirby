@@ -84,14 +84,11 @@ class Token implements Stringable
 		string $token,
 		bool $key = true
 	): static {
-		// split the token into its parts
 		$parts = explode('.', $token);
 
 		// only continue if the token has exactly
 		// the right amount of parts
-		$expectedParts = $key !== true ? 2 : 3;
-
-		if (count($parts) !== $expectedParts) {
+		if (count($parts) !== ($key === true ? 3 : 2)) {
 			throw new InvalidArgumentException(
 				data: ['method' => 'Token::parse', 'argument' => '$token'],
 				translate: false
@@ -101,7 +98,7 @@ class Token implements Stringable
 		$instance = new static(
 			expiry: (int)$parts[0],
 			id: $parts[1],
-			key: $key !== true ? null : $parts[2]
+			key: $key === true ? $parts[2] : null
 		);
 
 		// verify that all parts were parsed correctly using reassembly

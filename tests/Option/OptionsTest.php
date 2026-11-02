@@ -24,6 +24,18 @@ class OptionsTest extends TestCase
 		$this->assertSame('b', $options->last()->text['en']);
 	}
 
+	public function testConstructWithNullValue(): void
+	{
+		$options = new Options([
+			new Option(null),
+			new Option(1),
+			new Option('a')
+		]);
+
+		$this->assertSame(['', 1, 'a'], $options->keys());
+		$this->assertNull($options->first()->value);
+	}
+
 	public function testFactory(): void
 	{
 		$options = Options::factory(['a', 'b']);
@@ -78,6 +90,7 @@ class OptionsTest extends TestCase
 		$this->assertSame('Option B', $options->last()->text['en']);
 		$this->assertSame('Variante B', $options->last()->text['de']);
 	}
+
 	public function testFactoryResolve(): void
 	{
 		$model = new Page(['slug' => 'test']);

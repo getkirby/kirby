@@ -21,7 +21,6 @@ class OptionsMockField extends Field
 
 	#[Prop]
 	protected bool $enabled = true;
-
 	protected Page|null $page = null;
 
 	#[Prop]

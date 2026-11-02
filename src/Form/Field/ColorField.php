@@ -62,7 +62,7 @@ class ColorField extends OptionField
 		}
 
 		if (
-			is_numeric($options[0]['value']) ||
+			is_numeric($options[0]['value']) === true ||
 			$options[0]['value'] === (string)$options[0]['text']
 		) {
 			// simple array of values
@@ -82,6 +82,10 @@ class ColorField extends OptionField
 		return $options;
 	}
 
+	/**
+	 * @return 'hex'|'hsl'|'rgb'
+	 * @throws InvalidArgumentException If the format is not supported
+	 */
 	public function format(): string
 	{
 		if (in_array($this->format, ['hex', 'hsl', 'rgb'], true) === true) {
@@ -116,6 +120,10 @@ class ColorField extends OptionField
 		return preg_match('/^rgba?\(\s*(\d{1,3})(%?)(?:,|\s)+(\d{1,3})(%?)(?:,|\s)+(\d{1,3})(%?)(?:,|\s|\/)*(\d*(?:\.\d+)?)(%?)\s*\)?$/i', $value) === 1;
 	}
 
+	/**
+	 * @return 'input'|'options'|'picker'
+	 * @throws InvalidArgumentException If the mode is not supported
+	 */
 	public function mode(): string
 	{
 		if (in_array($this->mode, ['picker', 'input', 'options'], true) === true) {

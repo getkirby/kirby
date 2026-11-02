@@ -7,6 +7,7 @@ use Kirby\Api\Api;
 use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\Controller\Dialog\FilePickerDialogController;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -440,6 +441,21 @@ class FilePickerFieldTest extends TestCase
 		$this->assertSame('custom', $api->template);
 		$this->assertSame('custom', $parent->createdFile['template']);
 		$this->assertSame('custom', $result['data']);
+	}
+
+	public function testUploadWithInvalidParentQuery(): void
+	{
+		$field = $this->field('filepicker', [
+			'model'   => new FilePickerFieldTestPage(['slug' => 'test']),
+			'uploads' => ['parent' => 'site.title']
+		]);
+
+		$api = new FilePickerFieldTestApi(['kirby' => $this->app]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('"site.title" could not be resolved as a valid parent for the upload');
+
+		$field->upload($api, $field->uploads(), fn ($file) => $file);
 	}
 
 	public function testParentModel(): void

@@ -287,7 +287,6 @@ class FieldsTest extends TestCase
 		$fields->field('missing');
 	}
 
-
 	public function testFill(): void
 	{
 		$fields = new Fields([
@@ -601,7 +600,6 @@ class FieldsTest extends TestCase
 			'b' => 'B'
 		], $fields->passthrough());
 	}
-
 
 	public function testPassthroughWithExistingField(): void
 	{

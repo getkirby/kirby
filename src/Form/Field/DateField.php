@@ -78,7 +78,7 @@ class DateField extends DateTimeField
 
 	public function display(): string
 	{
-		$display = (string)($this->i18n($this->display) ?? $this->display);
+		$display = (string)$this->i18n($this->display);
 
 		// a date marker is uppercase, whatever case it was written in,
 		// but what the pattern escapes is printed as it is
@@ -139,6 +139,9 @@ class DateField extends DateTimeField
 		]);
 	}
 
+	/**
+	 * @return array<string, mixed>|false
+	 */
 	public function time(): array|bool
 	{
 		if ($this->time === false) {

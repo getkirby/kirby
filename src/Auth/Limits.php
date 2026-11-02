@@ -25,6 +25,8 @@ class Limits
 	/**
 	 * Normalizes the log structure and removes
 	 * entries whose timeout has expired
+	 *
+	 * @return array<'by-ip'|'by-email', array<string, array{time: int, trials: int}>>
 	 */
 	protected function clean(array $log): array
 	{
@@ -51,6 +53,11 @@ class Limits
 		);
 	}
 
+	/**
+	 * Fails if the visitor's IP or the given email is blocked
+	 *
+	 * @throws RateLimitException
+	 */
 	public function ensure(string|null $email = null): void
 	{
 		if ($this->isBlocked($email) === true) {
@@ -93,6 +100,12 @@ class Limits
 		return false;
 	}
 
+	/**
+	 * Returns the cleaned log of failed login attempts
+	 * and updates the log file if needed
+	 *
+	 * @return array<'by-ip'|'by-email', array<string, array{time: int, trials: int}>>
+	 */
 	public function log(): array
 	{
 		$log     = Data::read($this->file(), 'json', fail: false);
@@ -108,6 +121,10 @@ class Limits
 		return $updated;
 	}
 
+	/**
+	 * Tracks a failed login attempt
+	 * for the visitor's IP and the email
+	 */
 	public function track(
 		string|null $email,
 		bool $triggerHook = true

@@ -15,7 +15,6 @@ class UserChangePasswordDialogControllerTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.UserChangePasswordDialogController';
 
-
 	protected function setUp(): void
 	{
 		parent::setUp();

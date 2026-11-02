@@ -43,8 +43,8 @@ trait Data
 		if (is_array($key) === true) {
 			$result = [];
 
-			foreach ($key as $k) {
-				$result[$k] = $this->get($k);
+			foreach ($key as $name) {
+				$result[$name] = $this->get($name);
 			}
 
 			return $result;

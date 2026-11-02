@@ -15,6 +15,11 @@ use ReflectionParameter;
  */
 class Constructor extends ReflectionMethod
 {
+	/**
+	 * Cache of parameter names by class
+	 *
+	 * @var array<string, list<string>>
+	 */
 	protected static array $names = [];
 
 	public function __construct(object|string $objectOrClass)
@@ -24,19 +29,21 @@ class Constructor extends ReflectionMethod
 
 	/**
 	 * Group arguments into 'accepted' and 'ignored' arrays
+	 *
+	 * @param array<string, mixed> $arguments
+	 * @return array{accepted: array<string, mixed>, ignored: array<string, mixed>}
 	 */
 	public function classifyArguments(array $arguments): array
 	{
-		$parameterNames = $this->getParameterNames();
-
+		$names    = $this->getParameterNames();
 		$accepted = [];
 		$ignored  = [];
 
-		foreach ($arguments as $argumentName => $argumentValue) {
-			if (in_array($argumentName, $parameterNames, true) === true) {
-				$accepted[$argumentName] = $argumentValue;
+		foreach ($arguments as $name => $value) {
+			if (in_array($name, $names, true) === true) {
+				$accepted[$name] = $value;
 			} else {
-				$ignored[$argumentName] = $argumentValue;
+				$ignored[$name] = $value;
 			}
 		}
 
@@ -48,6 +55,9 @@ class Constructor extends ReflectionMethod
 
 	/**
 	 * Returns all arguments that are defined as constructor parameters
+	 *
+	 * @param array<string, mixed> $arguments
+	 * @return array<string, mixed>
 	 */
 	public function getAcceptedArguments(array $arguments): array
 	{
@@ -57,6 +67,8 @@ class Constructor extends ReflectionMethod
 	/**
 	 * Get all parameters, including parameters from all parent constructors
 	 * when a variadic parameter is used (...)
+	 *
+	 * @return array<int, ReflectionParameter>
 	 */
 	public function getAllParameters(): array
 	{
@@ -82,6 +94,9 @@ class Constructor extends ReflectionMethod
 
 	/**
 	 * Returns all arguments that are not defined as constructor parameters
+	 *
+	 * @param array<string, mixed> $arguments
+	 * @return array<string, mixed>
 	 */
 	public function getIgnoredArguments(array $arguments): array
 	{
@@ -90,11 +105,13 @@ class Constructor extends ReflectionMethod
 
 	/**
 	 * Returns an array of all parameter names in this constructor
+	 *
+	 * @return list<string>
 	 */
 	public function getParameterNames(): array
 	{
 		return static::$names[$this->class] ??= array_values(array_map(
-			fn (ReflectionParameter $param) => $param->name,
+			fn (ReflectionParameter $parameter) => $parameter->name,
 			$this->getAllParameters()
 		));
 	}
@@ -102,14 +119,17 @@ class Constructor extends ReflectionMethod
 	/**
 	 * Get all parameters from the parent constructor. This will go recursively
 	 * through all parent classes, if they use a variadic parameter (...)
+	 *
+	 * @return array<int, ReflectionParameter>
 	 */
 	public function getParentParameters(): array
 	{
-		if ($parentClass = $this->getDeclaringClass()->getParentClass()) {
-			$parentConstructor = new static($parentClass->getName());
-			return $parentConstructor->getAllParameters();
+		$parent = $this->getDeclaringClass()->getParentClass();
+
+		if ($parent === false) {
+			return [];
 		}
 
-		return [];
+		return (new static($parent->getName()))->getAllParameters();
 	}
 }

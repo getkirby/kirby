@@ -75,6 +75,8 @@ class Tabs extends Collection
 	/**
 	 * Returns the reduced props of each tab
 	 * for the Panel tab bar
+	 *
+	 * @return list<array>
 	 */
 	public function toButtonsProps(): array
 	{

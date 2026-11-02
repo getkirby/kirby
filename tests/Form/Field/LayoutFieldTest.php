@@ -2,6 +2,7 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Api\Api;
 use Kirby\Cms\Fieldsets;
 use Kirby\Cms\Layouts;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -53,6 +54,28 @@ class LayoutFieldTest extends TestCase
 		$this->assertSame('1/2', $response['columns'][1]['width']);
 		$this->assertSame([], $response['columns'][0]['blocks']);
 		$this->assertSame([], $response['columns'][1]['blocks']);
+	}
+
+	public function testApiRouteFields(): void
+	{
+		$field = $this->field('layout', [
+			'settings' => [
+				'fields' => [
+					'list' => [
+						'type' => 'pagelist'
+					]
+				]
+			]
+		]);
+
+		$api = new Api(['routes' => $field->api()]);
+
+		// nested field routes may return other values than arrays
+		$this->assertTrue($api->call(
+			'fields/list/delete',
+			'DELETE',
+			['body' => ['ids' => []]]
+		));
 	}
 
 	public function testApiRoutePaste(): void
@@ -329,6 +352,56 @@ class LayoutFieldTest extends TestCase
 		$this->assertSame($original[0]['columns'][0]['blocks'][0]['content'], $pasted[0]['columns'][0]['blocks'][0]['content']);
 	}
 
+	public function testPasteLayoutsWithUnavailableBlock(): void
+	{
+		$field = $this->field('layout');
+
+		$pasted = $field->pasteLayouts([
+			[
+				'columns' => [
+					[
+						'width'  => '1/1',
+						'blocks' => [
+							['type' => 'not-exists', 'content' => []],
+							['type' => 'heading', 'content' => ['text' => 'A']]
+						]
+					]
+				]
+			]
+		]);
+
+		$blocks = $pasted[0]['columns'][0]['blocks'];
+
+		$this->assertCount(1, $blocks);
+		$this->assertSame('heading', $blocks[0]['type']);
+	}
+
+	public function testPasteLayoutsWithUnavailableLayout(): void
+	{
+		$field = $this->field('layout', [
+			'layouts' => [
+				['1/1']
+			]
+		]);
+
+		$pasted = $field->pasteLayouts([
+			[
+				'columns' => [
+					['width' => '1/2', 'blocks' => []],
+					['width' => '1/2', 'blocks' => []]
+				]
+			],
+			[
+				'columns' => [
+					['width' => '1/1', 'blocks' => []]
+				]
+			]
+		]);
+
+		$this->assertCount(1, $pasted);
+		$this->assertSame('1/1', $pasted[0]['columns'][0]['width']);
+	}
+
 	public function testProps(): void
 	{
 		$field = $this->field('layout');
@@ -503,6 +576,36 @@ class LayoutFieldTest extends TestCase
 		$this->assertFalse($field->isValid());
 		$this->assertSame([
 			'layout' => 'There\'s an error on the "Video-URL" field in block 2 using the "Video" block type in layout 1'
+		], $field->errors());
+	}
+
+	public function testValidationsInvalidAfterOtherBlockType(): void
+	{
+		$field = $this->field('layout', [
+			'value' => [
+				[
+					'type'    => 'video',
+					'content' => [
+						'url' => 'https://www.youtube.com/watch?v=EDVYjxWMecc',
+					]
+				],
+				[
+					'type'    => 'heading',
+					'content' => [
+						'text' => 'A nice heading',
+					]
+				],
+				[
+					'type'    => 'video',
+					'content' => [
+						'url' => 'Invalid URL',
+					]
+				]
+			]
+		]);
+
+		$this->assertSame([
+			'layout' => 'There\'s an error on the "Video-URL" field in block 3 using the "Video" block type in layout 1'
 		], $field->errors());
 	}
 

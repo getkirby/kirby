@@ -15,10 +15,13 @@ class UrlField extends TextField
 {
 	#[Prop]
 	protected array|string|null $placeholder = 'https://example.com';
+
 	#[Prop]
 	protected string|null $autocomplete = 'url';
+
 	#[Prop]
 	protected bool $counter = false;
+
 	#[Prop]
 	protected string|null $icon = 'url';
 

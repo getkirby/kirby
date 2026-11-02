@@ -338,8 +338,8 @@ class Site extends ModelWithContent
 	 * prop, the home page will be returned if
 	 * it can be found. (see `Site::homePage()`)
 	 *
-	 * @param string|null $path omit for current page,
-	 *                          otherwise e.g. `notes/across-the-ocean`
+	 * @param $path omit for current page,
+	 *             otherwise e.g. `notes/across-the-ocean`
 	 */
 	public function page(string|null $path = null): Page|null
 	{
@@ -394,9 +394,8 @@ class Site extends ModelWithContent
 			return null;
 		}
 
-		// the site preview defaults to the home page, so for backward
-		// compatibility we also check the home page's preview permission
-		// @todo Remove in 6.0.0, only check `site.preview`
+		// the preview renders the home page with its preview token
+		// @todo 7.0 Only check `site.preview` with a site preview token
 		if ($this->homePage()?->guards()->isAvailable('preview') !== true) {
 			return null;
 		}

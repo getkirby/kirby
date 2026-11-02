@@ -447,6 +447,26 @@ class ApiTest extends TestCase
 		$this->assertSame('en', I18n::$locale);
 	}
 
+	public function testClone(): void
+	{
+		$api = new Api([
+			'authentication' => $authentication = fn () => true,
+			'data'           => ['foo' => 'bar'],
+			'debug'          => true,
+			'requestMethod'  => 'POST'
+		]);
+
+		$clone = $api->clone([
+			'data' => ['foo' => 'baz']
+		]);
+
+		$this->assertNotSame($api, $clone);
+		$this->assertSame($authentication, $clone->authentication());
+		$this->assertSame(['foo' => 'baz'], $clone->data());
+		$this->assertTrue($clone->debug());
+		$this->assertSame('POST', $clone->requestMethod());
+	}
+
 	public function testCollections(): void
 	{
 		$api = new Api([
@@ -872,7 +892,6 @@ class ApiTest extends TestCase
 		$this->assertSame(['a', 'c'], $app->api()->pages()->keys());
 	}
 
-
 	public function testParent(): void
 	{
 		$app = $this->app->clone([
@@ -1288,7 +1307,7 @@ class ApiTest extends TestCase
 			$body['message']
 		);
 		$this->assertStringNotContainsString($app->root('index'), $body['message']);
-		$this->assertStringContainsString('{kirby}', $body['message']);
+		$this->assertStringContainsString('{index}', $body['message']);
 	}
 
 	public function testRenderKirbyException(): void
@@ -1435,7 +1454,6 @@ class ApiTest extends TestCase
 
 		$this->assertSame('a', $api->searchPages()->first()->id());
 	}
-
 
 	public function testSite(): void
 	{

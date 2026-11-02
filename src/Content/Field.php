@@ -29,8 +29,8 @@ class Field implements Stringable
 	/**
 	 * Creates a new field object
 	 *
-	 * @param ModelWithContent|null $parent Parent object if available. This will be the page, site, user or file to which the content belongs
-	 * @param string $key The field name
+	 * @param $parent Parent object if available. This will be the page, site, user or file to which the content belongs
+	 * @param $key The field name
 	 */
 	public function __construct(
 		protected ModelWithContent|null $parent,

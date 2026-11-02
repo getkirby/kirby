@@ -176,5 +176,4 @@ class LanguageConversionTest extends TestCase
 		$this->assertCount(1, $app->languages());
 		$this->assertTrue($app->multilang());
 	}
-
 }

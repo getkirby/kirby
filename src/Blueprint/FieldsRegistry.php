@@ -14,10 +14,18 @@ use Kirby\Toolkit\Str;
  */
 class FieldsRegistry
 {
-	// Props of all fields, keyed by their declared name
+	/**
+	 * Props of all fields, keyed by their declared name
+	 *
+	 * @var array<string|int, mixed>
+	 */
 	protected array $fields = [];
 
-	// Declared names of all fields, keyed by their lowercase name
+	/**
+	 * Declared names of all fields, keyed by their lowercase name
+	 *
+	 * @var array<string|int, string|int>
+	 */
 	protected array $names = [];
 
 	/**
@@ -37,6 +45,8 @@ class FieldsRegistry
 	 * Adds the props of the given fields under names that are
 	 * not taken yet and returns them, keyed by the names they
 	 * ended up with. A list is keyed by the name in the props.
+	 *
+	 * @return array<string|int, array>
 	 */
 	public function add(array $fields): array
 	{
@@ -63,6 +73,8 @@ class FieldsRegistry
 	 * Creates an error field for a name that is already taken.
 	 * The error gets a unique name of its own, so that the field
 	 * which claimed the name first can stay intact.
+	 *
+	 * @return array{label: mixed, name: string, text: string, theme: string, type: string}
 	 */
 	protected function conflict(string|int $name, array $props): array
 	{
@@ -103,6 +115,8 @@ class FieldsRegistry
 	/**
 	 * Returns the props of all fields,
 	 * keyed by their declared name
+	 *
+	 * @return array<string|int, array>
 	 */
 	public function toArray(): array
 	{

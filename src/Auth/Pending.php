@@ -14,8 +14,8 @@ use SensitiveParameter;
 class Pending
 {
 	/**
-	 * @param mixed|null $public Will be shared with the frontend
-	 * @param mixed|null $secret Will be kept secret
+	 * @param $public Will be shared with the frontend
+	 * @param $secret Will be kept secret
 	 */
 	public function __construct(
 		protected mixed $public = null,
@@ -26,6 +26,8 @@ class Pending
 
 	/**
 	 * Creates a new Pending object from the session data array
+	 *
+	 * @param array{public?: mixed, secret?: mixed} $session
 	 */
 	public static function from(array $session = []): static
 	{
@@ -55,7 +57,7 @@ class Pending
 	/**
 	 * Returns the pending data as array
 	 *
-	 * @return array<'public'|'secret', mixed>
+	 * @return array{public: mixed, secret: mixed}
 	 */
 	public function toArray(): array
 	{

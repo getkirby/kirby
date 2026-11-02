@@ -32,7 +32,7 @@ class Collection extends Iterator implements Stringable
 	 * Whether the collection keys should be
 	 * treated as case-sensitive
 	 *
-	 * @todo 6.0 Check if case-sensitive can become the
+	 * @todo 7.0 Check if case-sensitive can become the
 	 * default mode, see https://github.com/getkirby/kirby/pull/5635
 	 */
 	protected bool $caseSensitive = false;
@@ -46,8 +46,8 @@ class Collection extends Iterator implements Stringable
 	 * Constructor
 	 *
 	 * @param array<string, TValue> $data
-	 * @param bool $caseSensitive Whether the collection keys should be
-	 *                            treated as case-sensitive
+	 * @param $caseSensitive Whether the collection keys should be
+	 *                      treated as case-sensitive
 	 */
 	public function __construct(
 		array $data = [],
@@ -1194,7 +1194,7 @@ class Collection extends Iterator implements Stringable
 	 * This Closure will execute if the first parameter evaluates as false
 	 *
 	 * @since 3.3.0
-	 * @param mixed $condition a truthy or falsy value
+	 * @param $condition a truthy or falsy value
 	 */
 	public function when(
 		$condition,

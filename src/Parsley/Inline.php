@@ -19,6 +19,10 @@ use Kirby\Toolkit\Html;
 class Inline
 {
 	protected string $html = '';
+
+	/**
+	 * @var array<string, array>
+	 */
 	protected array $marks = [];
 
 	public function __construct(DOMNode $node, array $marks = [])
@@ -37,6 +41,8 @@ class Inline
 
 	/**
 	 * Loads all mark rules
+	 *
+	 * @return array<string, array>
 	 */
 	protected function createMarkRules(array $marks): array
 	{
@@ -50,6 +56,8 @@ class Inline
 	/**
 	 * Get all allowed attributes for a DOMElement
 	 * as clean array
+	 *
+	 * @return array<string, string|null>
 	 */
 	public static function parseAttrs(
 		DOMElement $node,
@@ -84,9 +92,11 @@ class Inline
 		array $marks
 	): string {
 		$html = '';
+
 		foreach ($children as $child) {
 			$html .= static::parseNode($child, $marks);
 		}
+
 		return $html;
 	}
 
@@ -136,17 +146,18 @@ class Inline
 				return '<' . $node->tagName . Html::attr($attrs, null, ' ') . ' />';
 			}
 
-			$innerHtml = static::parseInnerHtml($node, $marks);
+			$inner = static::parseInnerHtml($node, $marks);
 
 			// skip empty paragraphs
-			if ($innerHtml === null && $node->tagName === 'p') {
+			if ($inner === null && $node->tagName === 'p') {
 				return null;
 			}
 
 			// create the outer html for the element
 			$html  = '<' . $node->tagName . Html::attr($attrs, null, ' ') . '>';
-			$html .= $innerHtml;
+			$html .= $inner;
 			$html .= '</' . $node->tagName . '>';
+
 			return $html;
 		}
 

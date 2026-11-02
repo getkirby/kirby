@@ -39,7 +39,7 @@ class Session
 	/**
 	 * Creates a new Session instance
 	 *
-	 * @param Sessions $sessions Parent sessions object
+	 * @param $sessions Parent sessions object
 	 * @param $token Session token or null for a new session
 	 * @param $options Optional additional options:
 	 *                - `mode`: Token transmission mode (cookie or manual); defaults to `cookie`

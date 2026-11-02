@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { input, mounter } from "./Validator.test.helpers";
+import { input, mounter } from "@test/unit/validator";
 import Validator from "./Validator";
 
 const TAG = "k-validator-test";

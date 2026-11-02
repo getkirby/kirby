@@ -20,8 +20,8 @@ abstract class Handler
 	/**
 	 * Sanitizes the given string
 	 *
-	 * @param bool $isExternal Whether the string is from an external file
-	 *                         that may be accessed directly
+	 * @param $isExternal Whether the string is from an external file
+	 *                   that may be accessed directly
 	 */
 	abstract public static function sanitize(
 		string $string,
@@ -39,14 +39,20 @@ abstract class Handler
 	{
 		$content   = static::readFile($file);
 		$sanitized = static::sanitize($content, isExternal: true);
-		F::write($file, $sanitized);
+
+		// the unsanitized file must never stay behind silently
+		if (F::write($file, $sanitized) !== true) {
+			throw new Exception(
+				message: 'The sanitized file "' . $file . '" could not be written'
+			);
+		}
 	}
 
 	/**
 	 * Validates file contents
 	 *
-	 * @param bool $isExternal Whether the string is from an external file
-	 *                         that may be accessed directly
+	 * @param $isExternal Whether the string is from an external file
+	 *                   that may be accessed directly
 	 *
 	 * @throws InvalidArgumentException If the file didn't pass validation
 	 * @throws Exception On other errors

@@ -66,7 +66,6 @@ class Query extends Obj implements Stringable
 		return $query;
 	}
 
-
 	public function __toString(): string
 	{
 		return $this->toString();

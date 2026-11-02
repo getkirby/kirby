@@ -53,7 +53,7 @@ class Scope
 			return $object->$key ?? null;
 		}
 
-		throw new Exception("Cannot access \"$key\" on " . gettype($object));
+		throw new Exception('Cannot access "' . $key . '" on ' . gettype($object));
 	}
 
 	/**

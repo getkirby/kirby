@@ -25,6 +25,9 @@ class CheckboxesField extends OptionsField
 		);
 	}
 
+	/**
+	 * @return string
+	 */
 	public function toStoredValue(): mixed
 	{
 		return A::join($this->value, ', ');

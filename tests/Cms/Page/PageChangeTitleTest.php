@@ -144,5 +144,4 @@ class PageChangeTitleTest extends ModelTestCase
 
 		$this->assertSame(1, $calls);
 	}
-
 }

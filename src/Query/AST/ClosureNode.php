@@ -15,7 +15,7 @@ use Kirby\Query\Visitors\Visitor;
 class ClosureNode extends Node
 {
 	/**
-	 * @param string[] $arguments The arguments names
+	 * @param list<string> $arguments The arguments names
 	 */
 	public function __construct(
 		public array $arguments,

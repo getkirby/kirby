@@ -107,6 +107,8 @@ class LicenseStatus implements Stringable
 
 	/**
 	 * Returns the status information as an array
+	 *
+	 * @return array<string, string|null>
 	 */
 	public function toArray(): array
 	{

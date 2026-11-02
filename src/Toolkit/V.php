@@ -22,6 +22,8 @@ class V
 {
 	/**
 	 * All custom validators
+	 *
+	 * @var array<string, callable>
 	 */
 	public static array $validators = [];
 
@@ -105,20 +107,16 @@ class V
 		string|null $operator = null,
 		string|null $test = null
 	): bool {
-		// make sure $value is a string
 		$value ??= '';
 
-		$args = func_get_args();
-
-		// simple date validation
-		if (count($args) === 1) {
+		if ($operator === null) {
 			$date = date_parse($value);
 			return $date['error_count'] === 0 &&
 					$date['warning_count'] === 0;
 		}
 
 		$value = strtotime($value);
-		$test  = strtotime($test);
+		$test  = strtotime($test ?? '');
 
 		if (is_int($value) !== true || is_int($test) !== true) {
 			return false;
@@ -128,9 +126,9 @@ class V
 			'!=' => $value !== $test,
 			'<'  => $value < $test,
 			'>'  => $value > $test,
-			'<='  => $value <= $test,
-			'>='  => $value >= $test,
-			'=='  => $value === $test,
+			'<=' => $value <= $test,
+			'>=' => $value >= $test,
+			'==' => $value === $test,
 
 			default => throw new InvalidArgumentException(
 				message: 'Invalid date comparison operator: "' . $operator . '". Allowed operators: "==", "!=", "<", "<=", ">", ">="'
@@ -239,7 +237,6 @@ class V
 		return in_array($value, $in, $strict) === true;
 	}
 
-
 	/**
 	 * Validate an input array against
 	 * a set of rules, using all registered
@@ -247,29 +244,26 @@ class V
 	 */
 	public static function input(array $input, array $rules): bool
 	{
-		foreach ($rules as $field => $rules) {
+		foreach ($rules as $field => $validations) {
 			$value = $input[$field] ?? null;
 
-			// first check for required fields
 			if (
-				($rules['required'] ?? false) === true &&
+				($validations['required'] ?? false) === true &&
 				$value === null
 			) {
 				throw new Exception(sprintf('The "%s" field is missing', $field));
 			}
 
-			// remove the required rule
-			unset($rules['required']);
+			unset($validations['required']);
 
-			// skip validation for empty fields
 			if ($value === null) {
 				continue;
 			}
 
 			try {
-				static::value($value, $rules);
+				static::value($value, $validations);
 			} catch (Exception $e) {
-				throw new Exception(sprintf($e->getMessage() . ' for field "%s"', $field));
+				throw new Exception($e->getMessage() . ' for field "' . $field . '"');
 			}
 		}
 
@@ -302,14 +296,9 @@ class V
 		foreach ($rules as $field => $validations) {
 			$validationIndex = -1;
 
-			// See: http://php.net/manual/en/types.comparisons.php
-			// only false for: null, undefined variable, '', []
 			$value   = $data[$field] ?? null;
 			$filled  = $value !== null && $value !== '' && $value !== [];
 			$message = $messages[$field] ?? $field;
-
-			// True if there is an error message for each validation method.
-			$messageArray = is_array($message);
 
 			foreach ($validations as $method => $options) {
 				// If the index is numeric, there is no option
@@ -328,13 +317,11 @@ class V
 				$validationIndex++;
 
 				if ($method === 'required') {
-					if ($filled) {
-						// Field is required and filled.
+					if ($filled === true) {
 						continue;
 					}
-				} elseif ($filled) {
+				} elseif ($filled === true) {
 					if (V::$method(...$options) === true) {
-						// Field is filled and passes validation method.
 						continue;
 					}
 				} else {
@@ -343,8 +330,9 @@ class V
 					continue;
 				}
 
-				// If no continue was called we have a failed validation.
-				if ($messageArray) {
+				// If no continue was called we have a failed validation;
+				// an array provides one message per validation method
+				if (is_array($message) === true) {
 					$errors[$field][] = $message[$validationIndex] ?? $field;
 				} else {
 					$errors[$field] = $message;
@@ -405,7 +393,7 @@ class V
 	 */
 	public static function maxLength(string|null $value, $max): bool
 	{
-		return Str::length(trim($value)) <= $max;
+		return Str::length(trim($value ?? '')) <= $max;
 	}
 
 	/**
@@ -431,7 +419,7 @@ class V
 
 		if (method_exists(static::class, $validatorName) === true) {
 			$reflection = new ReflectionMethod(static::class, $validatorName);
-		} elseif ($validator  = $validators[$validatorName] ?? null) {
+		} elseif ($validator = $validators[$validatorName] ?? null) {
 			$reflection = new ReflectionFunction($validator);
 		}
 
@@ -478,7 +466,7 @@ class V
 	 */
 	public static function minLength(string|null $value, $min): bool
 	{
-		return Str::length(trim($value)) >= $min;
+		return Str::length(trim($value ?? '')) >= $min;
 	}
 
 	/**
@@ -535,12 +523,10 @@ class V
 	 */
 	public static function required($value, $array = null): bool
 	{
-		// with reference array
 		if (is_array($array) === true) {
 			return isset($array[$value]) === true && static::notEmpty($array[$value]) === true;
 		}
 
-		// without reference array
 		return static::notEmpty($value);
 	}
 
@@ -558,6 +544,8 @@ class V
 
 	/**
 	 * Checks that the value has the given size
+	 *
+	 * @param '=='|'<'|'>'|'<='|'>=' $operator
 	 */
 	public static function size($value, $size, $operator = '=='): bool
 	{
@@ -637,6 +625,8 @@ class V
 
 	/**
 	 * Return the list of all validators
+	 *
+	 * @return array<string, callable>
 	 */
 	public static function validators(): array
 	{

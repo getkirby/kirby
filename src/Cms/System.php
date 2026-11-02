@@ -7,6 +7,7 @@ use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
+use Kirby\Plugin\Plugin;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 use Throwable;
@@ -55,7 +56,7 @@ class System
 	 * if the file is located in the document
 	 * root. Otherwise it will return null.
 	 *
-	 * @param string $folder 'git', 'content', 'site', 'kirby'
+	 * @param $folder 'git', 'content', 'site', 'kirby'
 	 */
 	public function exposedFileUrl(string $folder): string|null
 	{
@@ -98,6 +99,8 @@ class System
 	/**
 	 * Returns the status of all required PHP extensions
 	 * @since 6.0.0
+	 *
+	 * @return array<string, bool>
 	 */
 	public function extensions(): array
 	{
@@ -121,7 +124,7 @@ class System
 	 * if the folder is located in the document
 	 * root. Otherwise it will return null.
 	 *
-	 * @param string $folder 'git', 'content', 'site', 'kirby'
+	 * @param $folder 'git', 'content', 'site', 'kirby'
 	 */
 	public function folderUrl(string $folder): string|null
 	{
@@ -336,6 +339,8 @@ class System
 	/**
 	 * Returns a sorted collection of all
 	 * installed plugins
+	 *
+	 * @return Collection<Plugin>
 	 */
 	public function plugins(): Collection
 	{
@@ -379,8 +384,7 @@ class System
 	 */
 	public function serverSoftwareShort(): string
 	{
-		$software = $this->serverSoftware();
-		return explode(' ', $software, 2)[0];
+		return explode(' ', $this->serverSoftware(), 2)[0];
 	}
 
 	/**
@@ -392,7 +396,9 @@ class System
 	}
 
 	/**
-	 * Get an status array of all checks
+	 * Returns a status array of all checks
+	 *
+	 * @return array{accounts: bool, content: bool, media: bool, sessions: bool}
 	 */
 	public function status(): array
 	{
@@ -422,6 +428,8 @@ class System
 
 	/**
 	 * @see `self::status()`
+	 *
+	 * @return array{accounts: bool, content: bool, media: bool, sessions: bool}
 	 */
 	public function toArray(): array
 	{
@@ -433,7 +441,7 @@ class System
 	 * the update check for Kirby has been disabled
 	 * @since 3.8.0
 	 *
-	 * @param array|null $data Custom override for the getkirby.com update data
+	 * @param $data Custom override for the getkirby.com update data
 	 */
 	public function updateStatus(array|null $data = null): UpdateStatus|null
 	{

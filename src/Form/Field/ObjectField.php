@@ -12,6 +12,7 @@ use Kirby\Form\Mixin;
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     6.0.0
  */
 class ObjectField extends InputField implements ProvidesNestedForm
 {
@@ -27,6 +28,9 @@ class ObjectField extends InputField implements ProvidesNestedForm
 		);
 	}
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	public function toFormValue(): array
 	{
 		if ($this->isEmptyValue($this->value) === true) {
@@ -35,12 +39,15 @@ class ObjectField extends InputField implements ProvidesNestedForm
 
 		return $this->form()
 			->fill(
-				input: $this->value ?? [],
+				input: $this->value,
 				passthrough: true
 			)
 			->toFormValues();
 	}
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	public function toStoredValue(): array
 	{
 		if ($this->isEmptyValue($this->value) === true) {
@@ -59,7 +66,7 @@ class ObjectField extends InputField implements ProvidesNestedForm
 	protected function validations(): array
 	{
 		return [
-			'object' => $this->validateObject(...)
+			'object' => fn ($value) => $this->validateObject($value)
 		];
 	}
 

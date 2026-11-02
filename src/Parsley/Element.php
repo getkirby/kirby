@@ -23,8 +23,8 @@ class Element
 	}
 
 	/**
-	 * The returns the attribute value or
-	 * the given fallback if the attribute does not exist
+	 * Returns the attribute value or the given
+	 * fallback if the attribute does not exist
 	 */
 	public function attr(
 		string $attr,
@@ -47,6 +47,8 @@ class Element
 
 	/**
 	 * Returns an array with all class names
+	 *
+	 * @return list<string>
 	 */
 	public function classList(): array
 	{
@@ -72,15 +74,15 @@ class Element
 	/**
 	 * Returns an array with all nested elements
 	 * that could be found for the given query
+	 *
+	 * @return list<static>
 	 */
 	public function filter(string $query): array
 	{
 		$result = [];
 
-		if ($queryResult = $this->query($query)) {
-			foreach ($queryResult as $node) {
-				$result[] = new static($node);
-			}
+		foreach ($this->query($query) ?? [] as $node) {
+			$result[] = new static($node);
 		}
 
 		return $result;
@@ -92,7 +94,7 @@ class Element
 	 */
 	public function find(string $query): static|null
 	{
-		if ($result = $this->query($query)[0]) {
+		if ($result = $this->query($query)?->item(0)) {
 			return new static($result);
 		}
 
@@ -102,7 +104,7 @@ class Element
 	/**
 	 * Returns the inner HTML of the element
 	 *
-	 * @param array|null $marks List of allowed marks
+	 * @param $marks List of allowed marks
 	 */
 	public function innerHtml(array|null $marks = null): string
 	{
@@ -133,7 +135,7 @@ class Element
 	public function query(string $query): DOMNodeList|null
 	{
 		$path = new DOMXPath($this->node->ownerDocument);
-		return $path->query($query, $this->node);
+		return $path->query($query, $this->node) ?: null;
 	}
 
 	/**

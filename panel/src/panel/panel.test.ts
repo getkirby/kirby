@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { toRaw, watch } from "vue";
+import { failed } from "@test/unit/request";
 import AuthError from "@/errors/AuthError";
 import Panel from "./panel";
 
@@ -181,18 +182,10 @@ describe("panel", () => {
 			// this is what the content autosave throws in the background
 			// when the session expired while the view was open
 			panel.error(
-				new AuthError("Unauthenticated", {
-					request: new Request(url),
-					response: {
-						headers: new Headers(),
-						json: {},
-						ok: false,
-						status: 401,
-						statusText: "Unauthorized",
-						text: "",
-						url
-					}
-				})
+				new AuthError(
+					"Unauthenticated",
+					failed({ status: 401, statusText: "Unauthorized", url })
+				)
 			);
 
 			expect(window.location.href).toStrictEqual("https://getkirby.com/logout");

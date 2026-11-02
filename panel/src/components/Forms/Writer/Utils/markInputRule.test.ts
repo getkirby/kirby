@@ -1,19 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { Schema } from "prosemirror-model";
 import { EditorState, Transaction } from "prosemirror-state";
+import { createSchemaWithMarks } from "@test/unit/editor";
 import markInputRule from "./markInputRule";
 
-const schema = new Schema({
-	nodes: {
-		doc: { content: "block+" },
-		paragraph: { group: "block", content: "inline*" },
-		text: { group: "inline" }
-	},
-	marks: {
-		code: {},
-		bold: {},
-		strike: { excludes: "bold" } // mutually exclusive with bold
-	}
+const schema = createSchemaWithMarks({
+	code: {},
+	bold: {},
+	strike: { excludes: "bold" } // mutually exclusive with bold
 });
 
 const codeType = schema.marks.code;

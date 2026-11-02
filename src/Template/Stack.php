@@ -2,6 +2,7 @@
 
 namespace Kirby\Template;
 
+use Kirby\Exception\LogicException;
 use Kirby\Toolkit\Str;
 use Stringable;
 
@@ -10,6 +11,7 @@ use Stringable;
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     6.0.0
  */
 class Stack
 {
@@ -19,17 +21,23 @@ class Stack
 	protected static int $depths = 0;
 
 	/**
-	 * Names of stacks currently capturing output
+	 * Stacks currently capturing output
+	 *
+	 * @var list<array{name: string, unique: bool, level: int}>
 	 */
 	protected static array $active = [];
 
 	/**
-	 * Deferred stack placeholders
+	 * Deferred stack placeholders by their token
+	 *
+	 * @var array<string, array{name: string, glue: string, clear: bool}>
 	 */
 	protected static array $placeholders = [];
 
 	/**
 	 * Stored stack contents
+	 *
+	 * @var array<string, list<string>>
 	 */
 	protected static array $stacks = [];
 
@@ -38,11 +46,13 @@ class Stack
 	 */
 	public static function begin(string $name, bool $unique = false): void
 	{
+		ob_start();
+
 		static::$active[] = [
 			'name'   => $name,
-			'unique' => $unique
+			'unique' => $unique,
+			'level'  => ob_get_level()
 		];
-		ob_start();
 	}
 
 	/**
@@ -64,6 +74,19 @@ class Stack
 
 		if ($active === null) {
 			return;
+		}
+
+		// otherwise the stack would capture or close the wrong buffer
+		if (ob_get_level() > $active['level']) {
+			throw new LogicException(
+				message: 'The "' . $active['name'] . '" stack cannot be closed: an output buffer started inside of it with `ob_start()` is still open'
+			);
+		}
+
+		if (ob_get_level() < $active['level']) {
+			throw new LogicException(
+				message: 'The "' . $active['name'] . '" stack cannot be closed: its output was already ended inside of it, e.g. with `ob_end_clean()`'
+			);
 		}
 
 		static::push(
@@ -118,12 +141,11 @@ class Stack
 	): void {
 		$content = (string)$content;
 
-		if ($unique === true) {
-			$existing = static::$stacks[$name] ?? [];
-
-			if (in_array($content, $existing, true) === true) {
-				return;
-			}
+		if (
+			$unique === true &&
+			in_array($content, static::$stacks[$name] ?? [], true) === true
+		) {
+			return;
 		}
 
 		static::$stacks[$name][] = $content;
@@ -173,9 +195,9 @@ class Stack
 	 */
 	public static function reset(): void
 	{
-		static::$active = [];
-		static::$stacks = [];
+		static::$active       = [];
+		static::$depths       = 0;
 		static::$placeholders = [];
-		static::$depths = 0;
+		static::$stacks       = [];
 	}
 }

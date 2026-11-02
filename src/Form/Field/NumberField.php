@@ -38,7 +38,6 @@ class NumberField extends InputField
 	 */
 	#[Prop]
 	protected float|string|null $step = null;
-
 	protected float|null $value = null;
 
 	public function fill(mixed $value): static
@@ -65,6 +64,9 @@ class NumberField extends InputField
 		return $this->min;
 	}
 
+	/**
+	 * @return float|'any'|null
+	 */
 	public function step(): float|string|null
 	{
 		return match ($this->step) {

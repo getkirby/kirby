@@ -35,7 +35,6 @@ class Fieldsets extends Items
 		'text'     => 'blocks/text',
 		'video'    => 'blocks/video',
 	];
-
 	public const string ITEM_CLASS = Fieldset::class;
 
 	/**

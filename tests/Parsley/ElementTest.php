@@ -86,6 +86,17 @@ class ElementTest extends TestCase
 		$this->assertNull($element->find('//a'));
 	}
 
+	public function testFindAndQueryWithInvalidQuery(): void
+	{
+		$dom     = new Dom('<p><i>Italic</i><b>Bold</b></p>');
+		$p       = $dom->query('//p')[0];
+		$element = new Element($p);
+
+		$this->assertNull(@$element->query('[['));
+		$this->assertNull(@$element->find('[['));
+		$this->assertSame([], @$element->filter('[['));
+	}
+
 	public function testInnerHtml(): void
 	{
 		$dom     = new Dom('<p><i>Italic</i><b>Bold</b></p>');

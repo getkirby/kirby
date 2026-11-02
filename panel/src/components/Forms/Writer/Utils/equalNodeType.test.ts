@@ -1,14 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { Schema } from "prosemirror-model";
+import { createSchemaWithNodes } from "@test/unit/editor";
 import equalNodeType from "./equalNodeType";
 
-const schema = new Schema({
-	nodes: {
-		doc: { content: "block+" },
-		paragraph: { group: "block", content: "inline*" },
-		heading: { group: "block", content: "inline*" },
-		text: { group: "inline" }
-	}
+const schema = createSchemaWithNodes({
+	heading: { group: "block", content: "inline*" }
 });
 
 const paragraphType = schema.nodes.paragraph;

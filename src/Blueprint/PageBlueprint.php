@@ -29,7 +29,7 @@ class PageBlueprint extends Blueprint
 			$this->props['options'] ?? true,
 			// defaults
 			[
-				'access'     	 => null,
+				'access'         => null,
 				'changeSlug'     => null,
 				'changeStatus'   => null,
 				'changeTemplate' => null,
@@ -83,6 +83,8 @@ class PageBlueprint extends Blueprint
 
 	/**
 	 * Normalizes the available status options for the page
+	 *
+	 * @return array<'draft'|'listed'|'unlisted', array>
 	 */
 	protected function normalizeStatus($status): array
 	{
@@ -164,6 +166,8 @@ class PageBlueprint extends Blueprint
 	/**
 	 * Returns the options object
 	 * that handles page options and permissions
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function options(): array
 	{

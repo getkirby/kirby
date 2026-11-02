@@ -17,7 +17,7 @@ class PHP extends Handler
 	/**
 	 * Converts data to PHP file content
 	 *
-	 * @param string $indent For internal use only
+	 * @param $indent For internal use only
 	 */
 	public static function encode($data, string $indent = ''): string
 	{
@@ -47,7 +47,7 @@ class PHP extends Handler
 
 			$line .= static::encode($value, "$indent    ");
 
-			$lines[] =  $line;
+			$lines[] = $line;
 		}
 
 		return "[\n" . implode(",\n", $lines) . "\n" . $indent . ']';
@@ -82,8 +82,7 @@ class PHP extends Handler
 	 */
 	public static function write(string $file, $data = []): bool
 	{
-		$php = static::encode($data);
-		$php = "<?php\n\nreturn $php;";
+		$php = "<?php\n\nreturn " . static::encode($data) . ';';
 
 		if (F::write($file, $php) === true) {
 			F::invalidateOpcodeCache($file);

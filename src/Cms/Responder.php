@@ -167,7 +167,7 @@ class Responder implements Stringable
 	 * @since 3.5.5
 	 *
 	 * @param int|string|null $expires Timestamp, number of minutes or time string to parse
-	 * @param bool $override If `true`, the already defined timestamp will be overridden
+	 * @param $override If `true`, the already defined timestamp will be overridden
 	 * @return int|null|$this
 	 */
 	public function expires($expires = null, bool $override = false): static|int|null
@@ -248,7 +248,7 @@ class Responder implements Stringable
 	 * Setter and getter for a single header
 	 *
 	 * @param string|false|null $value
-	 * @param bool $lazy If `true`, an existing header value is not overridden
+	 * @param $lazy If `true`, an existing header value is not overridden
 	 * @return ($value is null ? string|null : static)
 	 */
 	public function header(
@@ -335,9 +335,9 @@ class Responder implements Stringable
 	/**
 	 * Shortcut to configure a json response
 	 *
-	 * @return string|$this
+	 * @return $this
 	 */
-	public function json(array|null $json = null): static|string
+	public function json(array|null $json = null): static
 	{
 		if ($json !== null) {
 			$this->body(json_encode($json, JSON_THROW_ON_ERROR));
@@ -461,18 +461,6 @@ class Responder implements Stringable
 		}
 
 		return false;
-	}
-
-	/**
-	 * Marks headers (or header parts) as request-dependent, so they
-	 * can be subtracted before caching a response snapshot
-	 *
-	 * @since 5.2.0
-	 * @deprecated 5.3.0 Use `::volatileHeaders()->mark($name, $values)` instead. Will be removed in Kirby 6.
-	 */
-	public function markVolatileHeader(string $name, array|null $values = null): void
-	{
-		$this->volatileHeaders()->mark($name, $values);
 	}
 
 	/**

@@ -55,4 +55,10 @@ class LocationTest extends TestCase
 		$this->assertStringContainsString('50.8190533333', (string)$camera);
 		$this->assertStringContainsString('-0.016666666666', (string)$camera);
 	}
+
+	public function testToStringWithoutCoordinates(): void
+	{
+		$location = new Location([]);
+		$this->assertSame('', (string)$location);
+	}
 }

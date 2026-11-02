@@ -480,6 +480,32 @@ class ModelWithContentTest extends TestCase
 		$this->assertSame([], $model->blueprints('foo'));
 	}
 
+	public function testIncrement(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'    => 'foo',
+						'content' => ['count' => 5]
+					]
+				],
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$page = $app->page('foo');
+
+		$this->assertSame(6, $page->increment('count')->content()->get('count')->toInt());
+		$this->assertSame(7, $page->increment('count', 2)->content()->get('count')->toInt());
+		$this->assertSame(6, $page->increment('count', 2, 6)->content()->get('count')->toInt());
+		$this->assertSame(0, $page->increment('count', 1, 0)->content()->get('count')->toInt());
+	}
+
 	#[DataProvider('modelsProvider')]
 	public function testIsValid(ModelWithContent $model): void
 	{

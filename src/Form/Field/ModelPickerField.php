@@ -90,7 +90,6 @@ abstract class ModelPickerField extends InputField
 	 */
 	#[Prop]
 	protected string|null $text = null;
-
 	protected array $value = [];
 
 	public function api(): array
@@ -188,6 +187,9 @@ abstract class ModelPickerField extends InputField
 		return $this->info;
 	}
 
+	/**
+	 * @return 'cardlets'|'cards'|'list'
+	 */
 	public function layout(): string
 	{
 		return match ($this->layout) {
@@ -238,12 +240,13 @@ abstract class ModelPickerField extends InputField
 		return $this->text;
 	}
 
+	/**
+	 * @return list<mixed>
+	 */
 	public function toFormValue(): array
 	{
 		$ids = [];
 
-		// loop through the IDs from the $value property
-		// and resolve them to the model to ensure the correct IDs;
 		// models that do not exist (anymore) keep their stored ID
 		foreach ($this->value as $id) {
 			if ($model = $this->toModel($id)) {
@@ -266,12 +269,13 @@ abstract class ModelPickerField extends InputField
 	 */
 	abstract public function toModel(string $id): ModelWithContent|null;
 
+	/**
+	 * @return list<mixed>
+	 */
 	public function toStoredValue(): array
 	{
 		$ids = [];
 
-		// loop through the IDs from the $value property
-		// and convert them to the stored values;
 		// models that do not exist (anymore) keep their stored ID
 		foreach ($this->value as $id) {
 			if ($model = $this->toModel($id)) {

@@ -155,13 +155,19 @@ class EmailChallenge extends Challenge
 		mixed $input,
 		Pending $data
 	): bool {
-		// normalize the formatting in the user-provided code
-		$input = str_replace(' ', '', $input);
-		$hash  = $data->secret();
+		$hash = $data->secret();
 
-		if (is_string($hash) !== true) {
+		// codes from JSON requests may be numbers
+		if (is_int($input) === true) {
+			$input = (string)$input;
+		}
+
+		if (is_string($input) !== true || is_string($hash) !== true) {
 			return false;
 		}
+
+		// normalize the formatting in the user-provided code
+		$input = str_replace(' ', '', $input);
 
 		return password_verify($input, $hash);
 	}

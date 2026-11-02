@@ -49,7 +49,7 @@ abstract class ModelPermissions
 	 * it. The `nobody` role and the `kirby` user still
 	 * overrule the default.
 	 *
-	 * @param bool $default Used if the action has no permission rule
+	 * @param $default Used if the action has no permission rule
 	 * @throws PermissionException
 	 */
 	public function ensure(string $action, bool $default = false): void
@@ -67,7 +67,7 @@ abstract class ModelPermissions
 	 * Throws unless the action is explicitly allowed
 	 * by the model blueprint or the role of the user
 	 *
-	 * @param bool $default Used if no rule is defined for the action
+	 * @param $default Used if no rule is defined for the action
 	 * @throws PermissionException
 	 */
 	protected function ensureSetting(string $action, bool $default = false): void
@@ -78,6 +78,9 @@ abstract class ModelPermissions
 	}
 
 	/**
+	 * Throws for a missing permission. The key is the action;
+	 * child classes turn it into e.g. `page.delete.permission`.
+	 *
 	 * @throws PermissionException
 	 */
 	public function error(string $key, array $data = []): never
@@ -91,7 +94,7 @@ abstract class ModelPermissions
 	/**
 	 * Non-throwing counterpart of `::ensure()`
 	 *
-	 * @param bool $default Used if no rule is defined for the action
+	 * @param $default Used if no rule is defined for the action
 	 */
 	public function may(string $action, bool $default = false): bool
 	{
@@ -105,8 +108,8 @@ abstract class ModelPermissions
 	}
 
 	/**
-	 * Resolves the permission rule for the current user.
-	 * Returns null if no rule is defined for the action.
+	 * Resolves the permission rule for the user of the guards.
+	 * Returns `$default` if no rule is defined for the action.
 	 */
 	public function setting(string $action, bool|null $default = null): bool|null
 	{

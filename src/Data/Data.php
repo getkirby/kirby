@@ -23,7 +23,9 @@ use Throwable;
 class Data
 {
 	/**
-	 * Handler Type Aliases
+	 * Handler type aliases
+	 *
+	 * @var array<string, string>
 	 */
 	public static array $aliases = [
 		'md'    => 'txt',
@@ -34,6 +36,8 @@ class Data
 
 	/**
 	 * All registered handlers
+	 *
+	 * @var array<string, class-string>
 	 */
 	public static array $handlers = [
 		'json' => Json::class,
@@ -48,10 +52,7 @@ class Data
 	 */
 	public static function handler(string $type): Handler
 	{
-		// normalize the type
-		$type = strtolower($type);
-
-		// find a handler or alias
+		$type    = strtolower($type);
 		$handler = static::$handlers[$type] ?? null;
 
 		if ($alias = static::$aliases[$type] ?? null) {
@@ -113,9 +114,8 @@ class Data
 		bool $fail = true
 	): array {
 		try {
-			$type  ??= F::extension($file);
-			$handler = static::handler($type);
-			return $handler->read($file);
+			$type ??= F::extension($file);
+			return static::handler($type)->read($file);
 		} catch (Throwable $e) {
 			if ($fail === false) {
 				return [];
@@ -135,8 +135,7 @@ class Data
 		$data = [],
 		string|null $type = null
 	): bool {
-		$type  ??= F::extension($file);
-		$handler = static::handler($type);
-		return $handler->write($file, $data);
+		$type ??= F::extension($file);
+		return static::handler($type)->write($file, $data);
 	}
 }

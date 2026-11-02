@@ -2,6 +2,7 @@
 
 namespace Kirby\Form\Mixin;
 
+use Closure;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Reflection\Attributes\Prop;
 use Kirby\Toolkit\Str;
@@ -15,7 +16,7 @@ use Kirby\Toolkit\Str;
 trait Converter
 {
 	/**
-	 * The field value will be converted with the selected converter before the value gets saved. Available converters: `lower`, `upper`, `ucfirst`, `slug`
+	 * The field value will be converted with the selected converter before the value gets saved. Available converters: `label`, `lower`, `slug`, `ucfirst`, `upper`
 	 */
 	#[Prop]
 	protected string|null $converter = null;
@@ -45,6 +46,9 @@ trait Converter
 		return $this->converter;
 	}
 
+	/**
+	 * @return array<string, Closure>
+	 */
 	public function converters(): array
 	{
 		return [

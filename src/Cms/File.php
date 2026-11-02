@@ -49,9 +49,7 @@ class File extends ModelWithContent
 	 * Cache for the initialized blueprint object
 	 */
 	protected FileBlueprint|null $blueprint = null;
-
 	protected string $filename;
-
 	protected string|null $id = null;
 
 	/**
@@ -63,7 +61,6 @@ class File extends ModelWithContent
 	 * The absolute path to the file
 	 */
 	protected string|null $root;
-
 	protected string|null $template;
 
 	/**
@@ -330,11 +327,11 @@ class File extends ModelWithContent
 
 	/**
 	 * Checks if the file is accessible to the current user
-	 * This permission depends on the `read` option until v6
+	 * This permission depends on the `read` option until v7
 	 */
 	public function isAccessible(): bool
 	{
-		// TODO: remove this check when `read` option deprecated in v6
+		// TODO: remove this check when `read` option deprecated in v7
 		if ($this->isReadable() === false) {
 			return false;
 		}
@@ -365,7 +362,7 @@ class File extends ModelWithContent
 
 	/**
 	 * Check if the file can be listable by the current user
-	 * This permission depends on the `read` option until v6
+	 * This permission depends on the `read` option until v7
 	 */
 	public function isListable(): bool
 	{
@@ -381,7 +378,7 @@ class File extends ModelWithContent
 	/**
 	 * Check if the file can be read by the current user
 	 *
-	 * @todo Deprecate `read` option in v6 and make the necessary changes for `access` and `list` options.
+	 * @todo Deprecate `read` option in v7 and make the necessary changes for `access` and `list` options.
 	 */
 	public function isReadable(): bool
 	{
@@ -411,7 +408,7 @@ class File extends ModelWithContent
 	/**
 	 * Returns the absolute path to the file in the public media folder
 	 *
-	 * @param string|null $filename Optional override for the filename
+	 * @param $filename Optional override for the filename
 	 */
 	#[BlockCollectionAccess]
 	public function mediaRoot(string|null $filename = null): string
@@ -434,7 +431,7 @@ class File extends ModelWithContent
 	/**
 	 * Returns the absolute Url to the file in the public media folder
 	 *
-	 * @param string|null $filename Optional override for the filename
+	 * @param $filename Optional override for the filename
 	 */
 	public function mediaUrl(string|null $filename = null): string
 	{
@@ -447,7 +444,7 @@ class File extends ModelWithContent
 	/**
 	 * Get the file's last modification time.
 	 *
-	 * @param string|null $handler date, intl or strftime
+	 * @param $handler date, intl or strftime
 	 */
 	public function modified(
 		string|IntlDateFormatter|null $format = null,

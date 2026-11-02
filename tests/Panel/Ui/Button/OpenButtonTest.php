@@ -19,5 +19,4 @@ class OpenButtonTest extends TestCase
 		$this->assertSame('_blank', $button->target);
 		$this->assertSame('Open', $button->title);
 	}
-
 }

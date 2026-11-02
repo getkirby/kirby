@@ -34,6 +34,19 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $html);
 	}
 
+	public function testAWithUppercaseScheme(): void
+	{
+		$html = Html::a('MAILTO:mail@company.com');
+		$expected = '!^<a href="mailto:(.*?)">(.*?)</a>$!';
+		$this->assertMatchesRegularExpression($expected, $html);
+		preg_match($expected, $html, $matches);
+		$this->assertSame('mail@company.com', Html::decode($matches[2]));
+
+		$html = Html::a('Tel:1234');
+		$expected = '<a href="tel:1234">1234</a>';
+		$this->assertSame($expected, $html);
+	}
+
 	public function testAWithText(): void
 	{
 		$html = Html::a('https://getkirby.com', 'Kirby');
@@ -98,6 +111,10 @@ class HtmlTest extends TestCase
 
 		$html = Html::link('https://getkirby.com', 'Kirby');
 		$expected = '<a href="https://getkirby.com">Kirby</a>';
+		$this->assertSame($expected, $html);
+
+		$html = Html::link('https://getkirby.com', '0');
+		$expected = '<a href="https://getkirby.com">0</a>';
 		$this->assertSame($expected, $html);
 	}
 
@@ -244,6 +261,9 @@ class HtmlTest extends TestCase
 		$this->assertMatchesRegularExpression($expected, $html);
 		preg_match($expected, $html, $matches);
 		$this->assertSame('mail@company.com', Html::decode($matches[1]));
+
+		$html = Html::email('mail@company.com', '0');
+		$this->assertMatchesRegularExpression('!^<a href="mailto:(.*?)">0</a>$!', $html);
 	}
 
 	public function testEmailWithArrayText(): void
@@ -324,6 +344,10 @@ class HtmlTest extends TestCase
 		$html = Html::figure('test', 'yay');
 		$expected = '<figure>test<figcaption>yay</figcaption></figure>';
 		$this->assertSame($expected, $html);
+
+		$html = Html::figure('test', '0');
+		$expected = '<figure>test<figcaption>0</figcaption></figure>';
+		$this->assertSame($expected, $html);
 	}
 
 	public function testGist(): void
@@ -334,6 +358,10 @@ class HtmlTest extends TestCase
 
 		$html = Html::gist($url = 'https://gist.github.com/bastianallgeier/dfb2a889ae73c7c318ea300efd2df6ff', 'kirbycontent.txt');
 		$expected = '<script src="' . $url . '.js?file=kirbycontent.txt"></script>';
+		$this->assertSame($expected, $html);
+
+		$html = Html::gist($url, 'my #1 file.txt');
+		$expected = '<script src="' . $url . '.js?file=my%20%231%20file.txt"></script>';
 		$this->assertSame($expected, $html);
 	}
 
@@ -393,6 +421,7 @@ class HtmlTest extends TestCase
 		// _blank target without existing rel: adds noreferrer as safe default
 		$this->assertSame('noreferrer', Html::rel(null, '_blank'));
 		$this->assertSame('noreferrer', Html::rel('', '_blank'));
+		$this->assertSame('noreferrer', Html::rel(null, '_BLANK'));
 
 		// _blank target with existing rel: left untouched (opt-out)
 		$this->assertSame('noopener', Html::rel('noopener', '_blank'));
@@ -410,6 +439,10 @@ class HtmlTest extends TestCase
 	{
 		$html = Html::tel('1234', 'Tel');
 		$expected = '<a href="tel:1234">Tel</a>';
+		$this->assertSame($expected, $html);
+
+		$html = Html::tel('1234', '0');
+		$expected = '<a href="tel:1234">0</a>';
 		$this->assertSame($expected, $html);
 	}
 
@@ -559,6 +592,15 @@ class HtmlTest extends TestCase
 		$expected = '<video><source src="../myvideo.mp4" type="video/mp4"></video>';
 		$this->assertSame($expected, $html);
 
+		// file names that mention YouTube or Vimeo
+		$html = Html::video('https://getkirby.com/vimeo-export.mp4');
+		$expected = '<video><source src="https://getkirby.com/vimeo-export.mp4" type="video/mp4"></video>';
+		$this->assertSame($expected, $html);
+
+		$html = Html::video('../youtube-backup.mp4');
+		$expected = '<video><source src="../youtube-backup.mp4" type="video/mp4"></video>';
+		$this->assertSame($expected, $html);
+
 		// invalid file type
 		$html = Html::video('https://getkirby.com/myvideo.mp3');
 		$this->assertNull($html);
@@ -670,6 +712,10 @@ class HtmlTest extends TestCase
 				'https://www.youtube.com/embed/d9NF2edxy-M?start=10'
 			],
 			[
+				'https://YOUTU.BE/d9NF2edxy-M',
+				'https://www.youtube.com/embed/d9NF2edxy-M'
+			],
+			[
 				'https://www.youtu.be/d9NF2edxy-M?test=value&t=10',
 				'https://www.youtube.com/embed/d9NF2edxy-M?test=value&amp;start=10'
 			],
@@ -698,6 +744,14 @@ class HtmlTest extends TestCase
 			[
 				'https://vimeo.com/239882943?test=value',
 				'https://player.vimeo.com/video/239882943?test=value'
+			],
+			[
+				'https://vimeo.com/239882943?ref=youtube',
+				'https://player.vimeo.com/video/239882943?ref=youtube'
+			],
+			[
+				'https://Vimeo.com/239882943',
+				'https://player.vimeo.com/video/239882943'
 			],
 			[
 				'https://vimeo.com/channels/channelname/239882943?test=value',

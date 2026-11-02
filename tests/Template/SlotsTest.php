@@ -22,4 +22,16 @@ class SlotsTest extends TestCase
 		$this->assertSame($footer, $slots->footer());
 		$this->assertCount(2, $slots);
 	}
+
+	public function testIsset(): void
+	{
+		$slots = new Slots([
+			'header' => new Slot('header')
+		]);
+
+		$this->assertTrue(isset($slots->header));
+		$this->assertFalse(empty($slots->header));
+		$this->assertFalse(isset($slots->footer));
+		$this->assertTrue(empty($slots->footer));
+	}
 }

@@ -21,7 +21,7 @@ class Find
 	 * Returns the file object for the given
 	 * parent path and filename
 	 *
-	 * @param string $path Path to file's parent model
+	 * @param $path Path to file's parent model
 	 * @throws NotFoundException if the file cannot be found
 	 */
 	public static function file(
@@ -45,7 +45,7 @@ class Find
 	/**
 	 * Returns the language object for the given code
 	 *
-	 * @param string $code Language code
+	 * @param $code Language code
 	 * @throws NotFoundException if the language cannot be found
 	 */
 	public static function language(string $code): Language|null
@@ -63,7 +63,7 @@ class Find
 	/**
 	 * Returns the page object for the given id
 	 *
-	 * @param string $id Page's id
+	 * @param $id Page's id
 	 * @throws NotFoundException if the page cannot be found
 	 */
 	public static function page(string $id): Page|null
@@ -86,7 +86,7 @@ class Find
 	/**
 	 * Returns the model's object for the given path
 	 *
-	 * @param string $path Path to parent model
+	 * @param $path Path to parent model
 	 * @throws InvalidArgumentException if the model type is invalid
 	 * @throws NotFoundException if the model cannot be found
 	 */
@@ -134,7 +134,7 @@ class Find
 	/**
 	 * Returns the role object for the given name
 	 *
-	 * @param string $name Role name/id
+	 * @param $name Role name/id
 	 * @throws NotFoundException if the role cannot be found
 	 */
 	public static function role(string $name): Role
@@ -185,7 +185,7 @@ class Find
 	 * returns the current authenticated user if no
 	 * id is passed
 	 *
-	 * @param string|null $id User's id
+	 * @param $id User's id
 	 * @throws NotFoundException if the user for the given id cannot be found
 	 */
 	public static function user(string|null $id = null): User

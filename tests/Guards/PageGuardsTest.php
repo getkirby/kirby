@@ -184,6 +184,15 @@ class PageGuardsTest extends ModelTestCase
 		$this->guards($page)->ensureExecutable('changeStatus', 'listed', 2);
 	}
 
+	public function testChangeStatusToListedWithoutPosition(): void
+	{
+		$guards = $this->guards();
+
+		$this->assertNull($guards->ensureExecutable('changeStatus', 'listed'));
+		$this->assertNull($guards->ensureExecutable('changeStatusToListed'));
+		$this->assertTrue($guards->isExecutable('changeStatus', 'listed'));
+	}
+
 	public function testChangeStatusToUnlisted(): void
 	{
 		$this->assertNull(
@@ -341,6 +350,15 @@ class PageGuardsTest extends ModelTestCase
 		// nothing changes, so nothing needs to be checked
 		$this->assertNull(
 			$this->guards($page)->ensureExecutable('move', $this->app->page('parent-a'))
+		);
+	}
+
+	public function testMoveToSameParentWithTopLevelPage(): void
+	{
+		$this->movable();
+
+		$this->assertNull(
+			$this->guards($this->app->page('parent-a'))->ensureExecutable('move', $this->app->site())
 		);
 	}
 

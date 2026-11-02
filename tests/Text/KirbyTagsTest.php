@@ -4,7 +4,6 @@ namespace Kirby\Text;
 
 use Exception;
 use Kirby\Cms\App;
-use Kirby\Cms\Helpers;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
@@ -31,7 +30,6 @@ class KirbyTagsTest extends TestCase
 
 	protected function tearDown(): void
 	{
-		Helpers::$deprecations['kirbytags-parse-options'] = true;
 		Dir::remove(static::TMP);
 	}
 
@@ -162,23 +160,6 @@ class KirbyTagsTest extends TestCase
 		$this->assertSame('(undefined: foo)', KirbyTags::parse('(undefined: foo)', [], debug: true));
 	}
 
-	public function testParseWithDeprecatedOptions(): void
-	{
-		// `$options` is a deprecated alias that only ever carried `debug`
-		Helpers::$deprecations['kirbytags-parse-options'] = false;
-
-		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Just for fun');
-
-		KirbyTag::$types = [
-			'test' => [
-				'html' => fn () => throw new Exception('Just for fun')
-			]
-		];
-
-		KirbyTags::parse('(test: foo)', [], ['debug' => true]);
-	}
-
 	public function testParseWithBrackets(): void
 	{
 		KirbyTag::$types = [
@@ -204,6 +185,14 @@ class KirbyTagsTest extends TestCase
 		$this->assertSame('(bar)', KirbyTags::parse('(test: (bar))'));
 		// will not parse if brackets don't match
 		$this->assertSame('(test: foo (bar)', KirbyTags::parse('(test: foo (bar)'));
+	}
+
+	public function testParseWithRegexError(): void
+	{
+		// deep nesting exhausts the PCRE recursion/JIT stack limit
+		$text = str_repeat('(test:', 50000) . str_repeat(')', 50000);
+
+		$this->assertSame($text, KirbyTags::parse($text));
 	}
 
 	#[DataProvider('dataProvider')]

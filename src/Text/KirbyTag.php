@@ -6,7 +6,6 @@ use AllowDynamicProperties;
 use Closure;
 use Kirby\Cms\App;
 use Kirby\Cms\File;
-use Kirby\Cms\Helpers;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Exception\BadMethodCallException;
 use Kirby\Exception\InvalidArgumentException;
@@ -22,16 +21,29 @@ use Kirby\Uuid\Uuid;
 #[AllowDynamicProperties]
 class KirbyTag
 {
+	/**
+	 * Alias names and the tag types they point to
+	 *
+	 * @var array<string, string>
+	 */
 	public static array $aliases = [];
-	public static array $types = [];
-
-	public array $attrs = [];
-	public array $data = [];
 
 	/**
-	 * @deprecated 5.5.0 Use `$tag->kirby()->option()` instead.
+	 * Tag definitions with their `attr` list and `html` callback
+	 *
+	 * @var array<string, array<string, mixed>>
 	 */
-	public array $options = [];
+	public static array $types = [];
+
+	/**
+	 * @var array<string, mixed>
+	 */
+	public array $attrs = [];
+
+	/**
+	 * @var array<string, mixed>
+	 */
+	public array $data = [];
 	public string $type;
 	public string|null $value = null;
 
@@ -39,8 +51,7 @@ class KirbyTag
 		string $type,
 		string|null $value = null,
 		array $attrs = [],
-		array $data = [],
-		array $options = []
+		array $data = []
 	) {
 		// type aliases
 		if (isset(static::$types[$type]) === false) {
@@ -69,12 +80,11 @@ class KirbyTag
 			}
 		}
 
-		$this->attrs   = $attrs;
-		$this->data    = $data;
-		$this->options = $options;
-		$this->$type   = $value;
-		$this->type    = $type;
-		$this->value   = $value;
+		$this->attrs = $attrs;
+		$this->data  = $data;
+		$this->$type = $value;
+		$this->type  = $type;
+		$this->value = $value;
 	}
 
 	/**
@@ -116,18 +126,17 @@ class KirbyTag
 	}
 
 	/**
-	 * Finds a file for the given path.
-	 * The method first searches the file
-	 * in the current parent, if it's a page.
-	 * Afterwards it uses Kirby's global file finder.
+	 * Finds a file for the given path or UUID.
+	 * UUIDs are looked up in the files of the parent first.
+	 * Paths are searched in the parent, then in the page of
+	 * a file parent and finally with Kirby's global file finder.
 	 */
 	public function file(string $path): File|null
 	{
 		$parent = $this->parent();
 
-		// check first for UUID
 		if (Uuid::is($path, 'file') === true) {
-			if ($parent && method_exists($parent, 'files') === true) {
+			if ($parent !== null && method_exists($parent, 'files') === true) {
 				$context = $parent->files();
 			}
 
@@ -135,7 +144,7 @@ class KirbyTag
 		}
 
 		if (
-			$parent &&
+			$parent !== null &&
 			method_exists($parent, 'file') === true &&
 			$file = $parent->file($path)
 		) {
@@ -149,7 +158,7 @@ class KirbyTag
 			return $file;
 		}
 
-		return $this->kirby()->file($path, null, true);
+		return $this->kirby()->file($path);
 	}
 
 	/**
@@ -160,23 +169,12 @@ class KirbyTag
 		return $this->data['kirby'] ?? App::instance();
 	}
 
-	/**
-	 * @deprecated 5.5.0 Use `$tag->kirby()->option()` instead.
-	 */
-	public function option(string $key, $default = null)
-	{
-		Helpers::deprecated('`$tag->option()` has been deprecated. Use `$tag->kirby()->option()` instead.', 'kirbytag-option');
-
-		return $this->kirby()->option($key, $default);
-	}
-
 	public static function parse(
 		string $string,
-		array $data = [],
-		array $options = []
+		array $data = []
 	): static {
 		// remove the brackets, extract the first attribute (the tag type)
-		$tag  = trim(ltrim($string, '('));
+		$tag = trim(ltrim($string, '('));
 
 		// use substr instead of rtrim to keep non-tagged brackets
 		// (link: file.pdf text: Download (PDF))
@@ -196,7 +194,6 @@ class KirbyTag
 		// ensure that UUIDs protocols aren't matched as attributes
 		$uuids = sprintf('(?!(%s):\/\/)', implode('|', UuidUri::$schemes));
 
-		// extract all attributes
 		$regex = sprintf('/%s(%s):/i', $uuids, implode('|', $attr));
 		$search = preg_split($regex, $tag, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 
@@ -212,14 +209,13 @@ class KirbyTag
 			$values[] = '';
 		}
 
-		// combine the two arrays to an associative array
 		$attributes = array_combine($keys, $values);
 
 		// the first attribute is the type attribute
 		// extract and pass its value separately
 		$value = array_shift($attributes);
 
-		return new static($type, $value, $attributes, $data, $options);
+		return new static($type, $value, $attributes, $data);
 	}
 
 	/**

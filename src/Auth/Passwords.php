@@ -165,7 +165,9 @@ class Passwords
 		}
 
 		foreach (['uppercase', 'lowercase', 'digits', 'symbols'] as $rule) {
-			if (($count = static::count($this->rules[$rule] ?? false)) > 0) {
+			$count = static::count($this->rules[$rule] ?? false);
+
+			if ($count > 0) {
 				$requirements[] = I18n::template(
 					'user.password.hint.' . $rule,
 					['count' => $count]

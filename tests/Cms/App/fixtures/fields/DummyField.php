@@ -12,7 +12,6 @@ class DummyField extends InputField
 
 	#[Prop]
 	protected string $peter = 'pan';
-
 	protected mixed $value = null;
 
 	public function homer(): string

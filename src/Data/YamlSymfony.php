@@ -19,7 +19,7 @@ class YamlSymfony
 	 */
 	public static function encode($data): string
 	{
-		$kirby  = App::instance(lazy: true);
+		$kirby = App::instance(lazy: true);
 
 		return Symfony::dump(
 			$data,
@@ -34,8 +34,6 @@ class YamlSymfony
 	 */
 	public static function decode($string): array
 	{
-		$result = Symfony::parse($string);
-		$result = A::wrap($result);
-		return $result;
+		return A::wrap(Symfony::parse($string));
 	}
 }

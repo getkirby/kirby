@@ -34,6 +34,8 @@ class Router
 	 * their request method. This makes
 	 * it faster to find the right route
 	 * later.
+	 *
+	 * @var array<string, list<Route>>
 	 */
 	protected array $routes = [
 		'GET'     => [],
@@ -113,7 +115,7 @@ class Router
 			}
 
 			try {
-				if ($callback) {
+				if ($callback !== null) {
 					$result = $callback($route);
 				} else {
 					$result = $route->action()->call(
@@ -176,10 +178,11 @@ class Router
 		foreach ($this->routes[$method] as $route) {
 			$arguments = $route->parse($route->pattern(), $path);
 
-			if ($arguments !== false) {
-				if (in_array($route, $ignore, true) === false) {
-					return $this->route = $route;
-				}
+			if (
+				$arguments !== false &&
+				in_array($route, $ignore, true) === false
+			) {
+				return $this->route = $route;
 			}
 		}
 

@@ -31,8 +31,9 @@ class Plugin
 	protected UpdateStatus|null $updateStatus = null;
 
 	/**
-	 * @param string $name Plugin name within Kirby (`vendor/plugin`)
-	 * @param array $extends Associative array of plugin extensions
+	 * @param $name Plugin name within Kirby (`vendor/plugin`)
+	 * @param array<string, mixed> $extends Plugin extensions by type
+	 * @param array<string, mixed> $info Plugin info, overrides the composer.json data
 	 *
 	 * @throws InvalidArgumentException If the plugin name has an invalid format
 	 */
@@ -59,7 +60,7 @@ class Plugin
 		if ($info = $extends['info'] ?? null) {
 			Helpers::deprecated('Plugin "' . $name . '": Passing an `info` array inside the `extends` array has been deprecated. Pass the individual entries directly as named `info` argument.', 'plugin-extends-root');
 
-			if (is_array($info) === true && $info !== []) {
+			if (is_array($info) === true) {
 				$this->info = [...$info, ...$this->info];
 			}
 
@@ -67,8 +68,8 @@ class Plugin
 		}
 
 		// read composer.json and use as info fallback
-		$info          = Data::read($this->manifest(), fail: false);
-		$this->info    = [...$info, ...$this->info];
+		$composer      = Data::read($this->manifest(), fail: false);
+		$this->info    = [...$composer, ...$this->info];
 		$this->license = $license ?? $this->info['license'] ?? '-';
 	}
 
@@ -99,6 +100,8 @@ class Plugin
 	/**
 	 * Returns the array with author information
 	 * from the composer.json file
+	 *
+	 * @return array<array<string, string>>
 	 */
 	public function authors(): array
 	{
@@ -121,6 +124,8 @@ class Plugin
 
 	/**
 	 * Returns the associative array of extensions the plugin bundles
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function extends(): array
 	{
@@ -138,6 +143,8 @@ class Plugin
 
 	/**
 	 * Returns the info data (from composer.json)
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function info(): array
 	{
@@ -170,7 +177,7 @@ class Plugin
 		$link ??= $info['support']['docs'] ?? null;
 		$link ??= $info['support']['source'] ?? null;
 
-		return V::url($link) ? $link : null;
+		return V::url($link) === true ? $link : null;
 	}
 
 	/**
@@ -246,6 +253,8 @@ class Plugin
 
 	/**
 	 * Returns all available plugin metadata
+	 *
+	 * @return array<string, mixed>
 	 */
 	#[BlockCollectionAccess]
 	public function toArray(): array
@@ -266,7 +275,7 @@ class Plugin
 	 * update check has been disabled for the plugin
 	 * @since 3.8.0
 	 *
-	 * @param array|null $data Custom override for the getkirby.com update data
+	 * @param $data Custom override for the getkirby.com update data
 	 */
 	public function updateStatus(array|null $data = null): UpdateStatus|null
 	{

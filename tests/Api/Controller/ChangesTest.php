@@ -10,6 +10,7 @@ use Kirby\TestCase;
 class ChangesTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Api.Controller.Changes';
+
 	public Page $page;
 
 	protected function setUp(): void
@@ -286,7 +287,7 @@ class ChangesTest extends TestCase
 	}
 
 	/**
-	 * @todo We want to ignore undefined fields later in v6. This needs to be
+	 * @todo We want to ignore undefined fields later in v7. This needs to be
 	 * refactored at that point to make sure that undefined fields are not saved.
 	 */
 	public function testSaveWithUndefinedField(): void

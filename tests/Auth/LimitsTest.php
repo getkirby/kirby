@@ -11,6 +11,7 @@ class LimitsTest extends TestCase
 	public const string TMP = KIRBY_TMP_DIR . '/Auth.Limits';
 
 	protected Limits $limits;
+
 	public string|null $failedEmail = null;
 
 	protected function setUp(): void

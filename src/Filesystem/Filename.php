@@ -12,15 +12,16 @@ use Stringable;
  * into human readable filenames.
  *
  * ```php
- * $filename = new Filename('some-file.jpg', '{{ name }}-{{ attributes }}.{{ extension }}', [
+ * $filename = new Filename('some-file.jpg', '{{ name }}{{ attributes }}.{{ extension }}', [
  *   'crop'    => 'top left',
  *   'width'   => 300,
- *   'height'  => 200
+ *   'height'  => 200,
  *   'quality' => 80
  * ]);
  *
  * echo $filename->toString();
  * // result: some-file-300x200-crop-top-left-q80.jpg
+ * ```
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
@@ -40,8 +41,8 @@ class Filename implements Stringable
 	/**
 	 * Creates a new Filename object
 	 *
-	 * @param string $template for the final name
-	 * @param array $attributes List of all applicable attributes
+	 * @param $template Template for the final name
+	 * @param $attributes List of all applicable attributes
 	 */
 	public function __construct(
 		protected string $filename,
@@ -68,6 +69,8 @@ class Filename implements Stringable
 	 * Converts all processed attributes
 	 * to an array. The array keys are already
 	 * the shortened versions for the filename
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function attributesToArray(): array
 	{
@@ -93,7 +96,7 @@ class Filename implements Stringable
 	 * to a string, that can be used in the
 	 * new filename
 	 *
-	 * @param string|null $prefix The prefix will be used in the filename creation
+	 * @param $prefix The prefix will be used in the filename creation
 	 */
 	public function attributesToString(string|null $prefix = null): string
 	{
@@ -144,7 +147,6 @@ class Filename implements Stringable
 	 */
 	public function crop(): string|false
 	{
-		// get the crop value
 		$crop = $this->attributes['crop'] ?? false;
 
 		if ($crop === false) {
@@ -157,6 +159,8 @@ class Filename implements Stringable
 	/**
 	 * Returns a normalized array with
 	 * width and height values, if available
+	 *
+	 * @return array{width?: mixed, height?: mixed}
 	 */
 	public function dimensions(): array
 	{
@@ -246,7 +250,8 @@ class Filename implements Stringable
 		if ($this->language !== null) {
 			Str::$language = [
 				...Str::$language,
-				...Language::loadRules($this->language)];
+				...Language::loadRules($this->language)
+			];
 		}
 
 		try {

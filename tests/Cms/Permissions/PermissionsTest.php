@@ -259,29 +259,6 @@ class PermissionsTest extends TestCase
 		$this->assertNull($p->for('access', 'foo', default: null));
 	}
 
-	public function testForNullCategory(): void
-	{
-		$p       = new Permissions();
-		$message = null;
-
-		set_error_handler(function (int $errno, string $errstr) use (&$message) {
-			$message = $errstr;
-			return true;
-		}, E_USER_DEPRECATED);
-
-		// returns false default and triggers deprecation
-		$this->assertFalse($p->for(null));
-		$this->assertSame(
-			'Passing `$category = null` to `Permissions::for()` is not supported',
-			$message
-		);
-
-		// returns custom default
-		$this->assertTrue($p->for(null, default: true));
-
-		restore_error_handler();
-	}
-
 	public function testForWithNonBoolValueThrowsException(): void
 	{
 		$this->expectException(LogicException::class);

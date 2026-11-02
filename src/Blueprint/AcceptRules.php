@@ -19,6 +19,9 @@ use Kirby\Form\Interface\ProvidesNestedForm;
  */
 class AcceptRules
 {
+	/**
+	 * @var list<string>|null
+	 */
 	protected array|null $fileTemplates = null;
 
 	public function __construct(
@@ -29,6 +32,8 @@ class AcceptRules
 	/**
 	 * Gathers what file templates are allowed in
 	 * this model based on the blueprint
+	 *
+	 * @return list<string>
 	 */
 	public function fileTemplates(string|null $inField = null): array
 	{
@@ -63,6 +68,8 @@ class AcceptRules
 
 	/**
 	 * Gathers the allowed file templates from fields
+	 *
+	 * @return list<string>
 	 */
 	public function fileTemplatesFromFields(Fields $fields): array
 	{
@@ -114,6 +121,8 @@ class AcceptRules
 	/**
 	 * Gathers the allowed file templates from the fieldsets
 	 * of a blocks or layout field and the layout settings
+	 *
+	 * @return list<string>
 	 */
 	public function fileTemplatesFromFieldsets(BlocksField $field): array
 	{
@@ -139,6 +148,8 @@ class AcceptRules
 
 	/**
 	 * Extracts templates from field uploads settings
+	 *
+	 * @return list<string>
 	 */
 	public function fileTemplatesFromFieldUploads(array|false $uploads): array
 	{

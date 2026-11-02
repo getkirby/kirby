@@ -22,8 +22,8 @@ class RedisCache extends Cache
 	/**
 	 * Sets all parameters which are needed to connect to Redis
 	 *
-	 * @param array $options 'host'   (default: 127.0.0.1)
-	 *                       'port'   (default: 6379)
+	 * @param $options 'host'   (default: 127.0.0.1)
+	 *                'port'   (default: 6379)
 	 */
 	public function __construct(array $options = [])
 	{
@@ -49,10 +49,9 @@ class RedisCache extends Cache
 		];
 
 		// filters only redis supported keys
-		$redisOptions = array_intersect_key($options, array_flip($allowed));
+		$params = array_intersect_key($options, array_flip($allowed));
 
-		// creates redis connection
-		$this->connection = new Redis($redisOptions);
+		$this->connection = new Redis($params);
 
 		// sets the prefix if defined
 		if ($prefix = $options['prefix'] ?? null) {

@@ -72,7 +72,6 @@ class LanguageRoutes
 		return $routes;
 	}
 
-
 	/**
 	 * Create the fallback route
 	 * for unprefixed default language URLs.

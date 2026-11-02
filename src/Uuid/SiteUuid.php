@@ -19,7 +19,7 @@ class SiteUuid extends Uuid
 {
 	protected const string TYPE = 'site';
 
-	/*
+	/**
 	 * Returns empty string since
 	 * site doesn't really need an ID
 	 */

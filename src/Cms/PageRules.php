@@ -38,7 +38,7 @@ class PageRules
 		$page->guards()->ensureExecutable('changeStatusToDraft');
 	}
 
-	public static function changeStatusToListed(Page $page, int $position): void
+	public static function changeStatusToListed(Page $page, int|null $position = null): void
 	{
 		$page->guards()->ensureExecutable('changeStatusToListed', $position);
 	}

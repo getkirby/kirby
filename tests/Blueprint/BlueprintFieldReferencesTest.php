@@ -444,5 +444,4 @@ class BlueprintFieldReferencesTest extends TestCase
 		$this->assertSame('negative', $fields['nonExistentField']['theme']);
 		$this->assertStringContainsString('nonExistentField', $fields['nonExistentField']['text']);
 	}
-
 }

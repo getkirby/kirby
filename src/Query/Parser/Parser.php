@@ -164,6 +164,8 @@ class Parser
 
 	/**
 	 * Move to next token if of any specific type
+	 *
+	 * @param list<TokenType> $types
 	 */
 	protected function consumeAny(array $types): Token|false
 	{
@@ -177,7 +179,9 @@ class Parser
 	}
 
 	/**
-	 * Collect all list element until closing token
+	 * Collect all list elements until closing token
+	 *
+	 * @return list<Node>
 	 */
 	protected function consumeList(TokenType $until): array
 	{
@@ -255,17 +259,14 @@ class Parser
 			if ($this->consume(TokenType::T_ARROW)) {
 				$expression = $this->expression();
 
-				/**
-				 * Assert that all elements are VariableNodes
-				 * @var VariableNode[] $list
-				 */
 				foreach ($list as $element) {
 					if ($element instanceof VariableNode === false) {
 						throw new Exception('Expecting only variables in closure argument list');
 					}
 				}
 
-				$arguments = array_map(fn ($element) => $element->name, $list);
+				/** @var list<VariableNode> $list */
+				$arguments = array_map(fn (VariableNode $element) => $element->name, $list);
 
 				return new ClosureNode(
 					arguments: $arguments,
@@ -512,7 +513,7 @@ class Parser
 			// fold negative number literals, e.g. `-1`
 			if (
 				$value instanceof LiteralNode &&
-				(is_int($value->value) || is_float($value->value))
+				(is_int($value->value) === true || is_float($value->value) === true)
 			) {
 				return new LiteralNode(-$value->value);
 			}

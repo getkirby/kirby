@@ -57,8 +57,7 @@ done < <(git diff --cached --name-only --diff-filter=d)
 if [[ ${#php[@]} -gt 0 ]]; then
     echo "### PHP-CS-Fixer"
     # multiple paths need an explicit config
-    composer run fix:style -- --config=.php-cs-fixer.dist.php --dry-run --diff "${php[@]}"
-    composer run fix:types -- --dry-run --diff "${php[@]}"
+    composer run fix -- --config=.php-cs-fixer.dist.php --dry-run --diff "${php[@]}"
     echo
 fi
 

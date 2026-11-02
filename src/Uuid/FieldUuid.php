@@ -71,9 +71,9 @@ abstract class FieldUuid extends Uuid
 		return null;
 	}
 
-	/*
+	/**
 	 * Returns the ID for the specific entry/row of the field
-	 * (we can rely in this case that the Uri was filled  on initiation)
+	 * (we can rely in this case that the Uri was filled on initiation)
 	 * @todo needs to be ensured for structure field once refactoring
 	 */
 	public function id(): string

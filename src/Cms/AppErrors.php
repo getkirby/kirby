@@ -38,7 +38,7 @@ trait AppErrors
 
 	/**
 	 * Replaces absolute file paths with placeholders such as
-	 * {kirby_folder}, {site_folder} or {index_folder} to avoid
+	 * `{kirby}`, `{site}` or `{index}` to avoid
 	 * exposing too many details about the filesystem and keeping
 	 * error responses short and readable in debug mode.
 	 *
@@ -214,7 +214,11 @@ trait AppErrors
 	}
 
 	/**
+	 * Returns the exception's stack trace with disguised
+	 * file paths, editor URLs and without arguments
 	 * @since 6.0.0
+	 *
+	 * @return list<array<string, mixed>>
 	 */
 	protected function trace(Throwable $exception, string|false $editor): array
 	{

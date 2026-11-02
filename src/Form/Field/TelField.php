@@ -15,8 +15,10 @@ class TelField extends TextField
 {
 	#[Prop]
 	protected string|null $autocomplete = 'tel';
+
 	#[Prop]
 	protected bool $counter = false;
+
 	#[Prop]
 	protected string|null $icon = 'phone';
 }

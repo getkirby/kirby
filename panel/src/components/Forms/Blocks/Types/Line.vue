@@ -9,7 +9,9 @@
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-export default {};
+export default {
+	inheritAttrs: false
+};
 </script>
 
 <style>

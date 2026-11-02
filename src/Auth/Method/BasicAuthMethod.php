@@ -46,9 +46,7 @@ class BasicAuthMethod extends Method
 		$user = $this->auth->validatePassword($email, $password)
 			?? throw new PermissionException(message: 'Invalid password'); // @codeCoverageIgnore
 
-		/**
-		 * @var PasswordMethod $method
-		 */
+		/** @var PasswordMethod $method */
 		$method = $this->auth->methods()->get('password');
 
 		// users without a second factor (e.g. dedicated
@@ -75,11 +73,7 @@ class BasicAuthMethod extends Method
 			return false;
 		}
 
-		if ($kirby->request()->auth() instanceof BasicAuth === true) {
-			return true;
-		}
-
-		return false;
+		return $kirby->request()->auth() instanceof BasicAuth;
 	}
 
 	/**

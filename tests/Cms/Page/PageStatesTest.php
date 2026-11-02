@@ -128,5 +128,4 @@ class PageStatesTest extends ModelTestCase
 		$this->assertTrue($mother->isOpen());
 		$this->assertTrue($child->isOpen());
 	}
-
 }

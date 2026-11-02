@@ -26,7 +26,7 @@ class File extends Model
 	 * used in the panel, when the file
 	 * gets dragged onto a textarea
 	 *
-	 * @param string|null $type (`auto`|`kirbytext`|`markdown`)
+	 * @param $type (`auto`|`kirbytext`|`markdown`)
 	 */
 	public function dragText(
 		string|null $type = 'auto',
@@ -225,7 +225,7 @@ class File extends Model
 	 * Returns an array of all actions
 	 * that can be performed in the Panel
 	 *
-	 * @param array $unlock An array of options that will be force-unlocked
+	 * @param $unlock An array of options that will be force-unlocked
 	 */
 	public function options(array $unlock = []): array
 	{
@@ -253,6 +253,7 @@ class File extends Model
 	/**
 	 * Prepares the response data for file pickers
 	 * and file fields
+	 * @deprecated 6.0.0 Use `Kirby\Panel\Controller\Dialog\FilePickerDialogController::item()` instead
 	 */
 	public function pickerData(array $params = []): array
 	{

@@ -1,25 +1,15 @@
 import { describe, expect, it } from "vitest";
-import { type Node, Schema } from "prosemirror-model";
-import {
-	EditorState,
-	TextSelection,
-	type Transaction
-} from "prosemirror-state";
+import { applyCommand, createSchemaWithNodes, select } from "@test/unit/editor";
 import toggleList from "./toggleList";
 
-const schema = new Schema({
-	nodes: {
-		doc: { content: "block+" },
-		bulletList: { group: "block", content: "listItem+" },
-		orderedList: {
-			group: "block",
-			content: "listItem+",
-			attrs: { order: { default: 1 } }
-		},
-		listItem: { content: "paragraph block*", defining: true },
-		paragraph: { group: "block", content: "inline*" },
-		text: { group: "inline" }
-	}
+const schema = createSchemaWithNodes({
+	bulletList: { group: "block", content: "listItem+" },
+	orderedList: {
+		group: "block",
+		content: "listItem+",
+		attrs: { order: { default: 1 } }
+	},
+	listItem: { content: "paragraph block*", defining: true }
 });
 
 const bulletListType = schema.nodes.bulletList;
@@ -52,32 +42,17 @@ const docWithOrderedList = schema.node("doc", null, [
 	])
 ]);
 
-function stateAt(doc: Node, pos: number): EditorState {
-	return EditorState.create({ doc, selection: TextSelection.create(doc, pos) });
-}
-
-function applyCommand(
-	state: EditorState,
-	command: ReturnType<typeof toggleList>
-): EditorState | null {
-	let result: EditorState | null = null;
-	command(state, (tr: Transaction) => {
-		result = state.apply(tr);
-	});
-	return result;
-}
-
 describe("toggleList", () => {
 	describe("when the cursor is not in a list", () => {
 		it("returns true", () => {
-			const state = stateAt(docWithParagraph, 1);
+			const state = select(docWithParagraph, 1);
 			expect(toggleList(bulletListType, listItemType)(state, undefined)).toBe(
 				true
 			);
 		});
 
 		it("wraps the block in the given list type", () => {
-			const state = stateAt(docWithParagraph, 1);
+			const state = select(docWithParagraph, 1);
 			const next = applyCommand(
 				state,
 				toggleList(bulletListType, listItemType)
@@ -88,14 +63,14 @@ describe("toggleList", () => {
 
 	describe("when the cursor is in a list of the same type", () => {
 		it("returns true", () => {
-			const state = stateAt(docWithBulletList, 3);
+			const state = select(docWithBulletList, 3);
 			expect(toggleList(bulletListType, listItemType)(state, undefined)).toBe(
 				true
 			);
 		});
 
 		it("lifts the list item out of the list", () => {
-			const state = stateAt(docWithBulletList, 3);
+			const state = select(docWithBulletList, 3);
 			const next = applyCommand(
 				state,
 				toggleList(bulletListType, listItemType)
@@ -106,13 +81,13 @@ describe("toggleList", () => {
 
 	describe("when the cursor is in a list of a different type", () => {
 		it("returns true", () => {
-			const state = stateAt(docWithBulletList, 3);
+			const state = select(docWithBulletList, 3);
 			const result = toggleList(orderedListType, listItemType)(state, () => {});
 			expect(result).toBe(true);
 		});
 
 		it("changes the list type from bullet to ordered", () => {
-			const state = stateAt(docWithBulletList, 3);
+			const state = select(docWithBulletList, 3);
 			const next = applyCommand(
 				state,
 				toggleList(orderedListType, listItemType)
@@ -121,7 +96,7 @@ describe("toggleList", () => {
 		});
 
 		it("changes the list type from ordered to bullet", () => {
-			const state = stateAt(docWithOrderedList, 3);
+			const state = select(docWithOrderedList, 3);
 			const next = applyCommand(
 				state,
 				toggleList(bulletListType, listItemType)

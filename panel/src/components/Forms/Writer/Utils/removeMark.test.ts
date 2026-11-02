@@ -1,16 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
-import { Schema } from "prosemirror-model";
-import { EditorState, TextSelection, Transaction } from "prosemirror-state";
+import { Transaction } from "prosemirror-state";
+import { createSchemaWithMarks, select } from "@test/unit/editor";
 import removeMark from "./removeMark";
 
-const schema = new Schema({
-	nodes: {
-		doc: { content: "block+" },
-		paragraph: { group: "block", content: "inline*" },
-		text: { group: "inline" }
-	},
-	marks: { bold: {} }
-});
+const schema = createSchemaWithMarks({ bold: {} });
 
 const boldType = schema.marks.bold;
 const boldMark = schema.mark("bold");
@@ -25,21 +18,10 @@ const doc = schema.node("doc", null, [
 	])
 ]);
 
-function stateAt(pos: number): EditorState {
-	return EditorState.create({ doc, selection: TextSelection.create(doc, pos) });
-}
-
-function stateWithSelection(from: number, to: number): EditorState {
-	return EditorState.create({
-		doc,
-		selection: TextSelection.create(doc, from, to)
-	});
-}
-
 describe("removeMark", () => {
 	describe("collapsed selection", () => {
 		it("removes the mark across its full range, not just at the cursor position", () => {
-			const state = stateAt(8);
+			const state = select(doc, 8);
 			let dispatched: Transaction | undefined;
 			expect(
 				removeMark(boldType)(state, (tr: Transaction) => {
@@ -51,14 +33,14 @@ describe("removeMark", () => {
 
 		it("does not dispatch when no mark is found", () => {
 			const dispatch = vi.fn();
-			expect(removeMark(boldType)(stateAt(3), dispatch)).toBe(false);
+			expect(removeMark(boldType)(select(doc, 3), dispatch)).toBe(false);
 			expect(dispatch).not.toHaveBeenCalled();
 		});
 	});
 
 	describe("non-collapsed selection", () => {
 		it("removes the mark within the selection", () => {
-			const state = stateWithSelection(7, 11);
+			const state = select(doc, 7, 11);
 			let dispatched: Transaction | undefined;
 			expect(
 				removeMark(boldType)(state, (tr: Transaction) => {
@@ -73,10 +55,10 @@ describe("removeMark", () => {
 		it("calls dispatch with a transaction", () => {
 			const dispatch = vi.fn();
 
-			removeMark(boldType)(stateAt(8));
+			removeMark(boldType)(select(doc, 8));
 			expect(dispatch).not.toHaveBeenCalled();
 
-			removeMark(boldType)(stateAt(8), dispatch);
+			removeMark(boldType)(select(doc, 8), dispatch);
 			expect(dispatch).toHaveBeenCalledExactlyOnceWith(expect.any(Transaction));
 		});
 	});

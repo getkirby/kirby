@@ -109,6 +109,7 @@ class User extends Model
 
 	/**
 	 * Returns prepared data for the panel user picker
+	 * @deprecated 6.0.0 Use `Kirby\Panel\Controller\Dialog\UserPickerDialogController::item()` instead
 	 */
 	public function pickerData(array $params = []): array
 	{

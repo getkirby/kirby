@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { input, mounter } from "../Validator.test.helpers";
+import { input, mounter } from "@test/unit/validator";
 import InputValidator from "./InputValidator";
 
 const mount = mounter<InputValidator>("k-input-validator-test", InputValidator);

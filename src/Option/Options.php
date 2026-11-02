@@ -20,7 +20,7 @@ class Options extends Collection
 	public function __construct(array $objects = [])
 	{
 		foreach ($objects as $object) {
-			$this->__set($object->value, $object);
+			$this->__set($object->id(), $object);
 		}
 	}
 
@@ -37,7 +37,7 @@ class Options extends Collection
 	}
 
 	/**
-	 * @param bool $resolve Deprecated, will be removed in v6
+	 * @param $resolve Deprecated, will be removed in v7
 	 */
 	public static function factory(
 		array $items = [],
@@ -65,6 +65,14 @@ class Options extends Collection
 		return $collection;
 	}
 
+	/**
+	 * Renders all options
+	 *
+	 * @param $safeMode Whether to escape special HTML characters in
+	 *                 the option text for safe output in the Panel;
+	 *                 only set to `false` if the text is later escaped!
+	 * @return list<array>
+	 */
 	public function render(ModelWithContent $model, bool $safeMode = true): array
 	{
 		$options = [];

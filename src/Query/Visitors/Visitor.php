@@ -14,8 +14,8 @@ use Kirby\Query\AST\ClosureNode;
 abstract class Visitor
 {
 	/**
-	 * @param array<string,Closure> $global valid global function closures
-	 * @param array<string,mixed> $context data bindings for the query
+	 * @param array<string, Closure> $global Valid global function closures
+	 * @param array<string, mixed> $context Data bindings for the query
 	 */
 	public function __construct(
 		public array $global = [],

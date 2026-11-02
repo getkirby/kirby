@@ -46,7 +46,6 @@ class TextareaField extends InputField
 	 */
 	#[Prop]
 	protected string|null $size = null;
-
 	protected string $value = '';
 
 	public function api(): array
@@ -59,9 +58,7 @@ class TextareaField extends InputField
 				'method'  => 'POST',
 				'action'  => function () use ($field) {
 					// @codeCoverageIgnoreStart
-					/**
-					 * @var Api
-					 */
+					/** @var Api $api */
 					$api = $this;
 
 					return $field->upload(
@@ -80,6 +77,9 @@ class TextareaField extends InputField
 		];
 	}
 
+	/**
+	 * @return array<string>|bool
+	 */
 	public function buttons(): array|bool
 	{
 		return $this->buttons;

@@ -41,8 +41,8 @@ class Csrf
 	 */
 	public function fromSession(): string
 	{
-		$isDev    = $this->kirby->option('panel.dev', false) !== false;
-		$fallback = $isDev ? 'dev' : $this->kirby->csrf();
+		$dev      = $this->kirby->option('panel.dev', false) !== false;
+		$fallback = $dev === true ? 'dev' : $this->kirby->csrf();
 		return $this->kirby->option('api.csrf', $fallback);
 	}
 
@@ -54,7 +54,6 @@ class Csrf
 		$header  = $this->fromHeader();
 		$session = $this->fromSession();
 
-		// compare both tokens
 		if (hash_equals($session, (string)$header) !== true) {
 			return false;
 		}

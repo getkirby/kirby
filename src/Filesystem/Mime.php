@@ -2,6 +2,7 @@
 
 namespace Kirby\Filesystem;
 
+use Closure;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 
@@ -18,6 +19,8 @@ class Mime
 {
 	/**
 	 * Extension to MIME type map
+	 *
+	 * @var array<string, string|list<string>>
 	 */
 	public static array $types = [
 		'7z'          => 'application/x-7z-compressed',
@@ -148,6 +151,8 @@ class Mime
 
 	/**
 	 * Lazy-built reverse map of $types (MIME type → extensions[])
+	 *
+	 * @var array<string, list<string>>|null
 	 */
 	protected static array|null $mimes = null;
 
@@ -171,7 +176,7 @@ class Mime
 			'text/plain' => [
 				'css'  => 'text/css',
 				'json' => 'application/json',
-				'mjs' => 'text/javascript',
+				'mjs'  => 'text/javascript',
 				'svg'  => Mime::fromSvg(...),
 			],
 			'text/x-asm' => [
@@ -188,11 +193,13 @@ class Mime
 			]
 		];
 
-		if ($mode = $map[$mime][$extension] ?? null) {
-			if (is_callable($mode) === true) {
-				return $mode($file) ?: null;
-			}
+		$mode = $map[$mime][$extension] ?? null;
 
+		if ($mode instanceof Closure) {
+			return $mode($file) ?: null;
+		}
+
+		if ($mode !== null) {
 			return $mode;
 		}
 
@@ -210,7 +217,7 @@ class Mime
 			$mime = array_shift($mime);
 		}
 
-		return  $mime;
+		return $mime;
 	}
 
 	/**
@@ -223,8 +230,7 @@ class Mime
 			file_exists($file) === true
 		) {
 			$finfo = finfo_open(FILEINFO_MIME_TYPE);
-			$mime  = finfo_file($finfo, $file);
-			return $mime;
+			return finfo_file($finfo, $file);
 		}
 
 		return false;
@@ -281,10 +287,8 @@ class Mime
 	 */
 	public static function isAccepted(string $mime, string $pattern): bool
 	{
-		$accepted = Str::accepted($pattern);
-
-		foreach ($accepted as $m) {
-			if (static::matches($mime, $m['value']) === true) {
+		foreach (Str::accepted($pattern) as $accepted) {
+			if (static::matches($mime, $accepted['value']) === true) {
 				return true;
 			}
 		}
@@ -318,6 +322,8 @@ class Mime
 
 	/**
 	 * Returns all available extensions for a given MIME type
+	 *
+	 * @return list<string>
 	 */
 	public static function toExtensions(
 		string|null $mime = null,
@@ -335,9 +341,9 @@ class Mime
 
 		$extensions = [];
 
-		foreach (static::$mimes as $registered => $exts) {
+		foreach (static::$mimes as $registered => $list) {
 			if (static::matches($registered, $mime) === true) {
-				array_push($extensions, ...$exts);
+				array_push($extensions, ...$list);
 			}
 		}
 
@@ -373,6 +379,8 @@ class Mime
 
 	/**
 	 * Returns all detectable MIME types
+	 *
+	 * @return array<string, string|list<string>>
 	 */
 	public static function types(): array
 	{

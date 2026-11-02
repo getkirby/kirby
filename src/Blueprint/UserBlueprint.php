@@ -27,7 +27,7 @@ class UserBlueprint extends Blueprint
 	{
 		parent::__construct($props);
 
-		// normalize all available page options
+		// normalize all available user options
 		$this->props['options'] = $this->normalizeOptions(
 			$this->props['options'] ?? true,
 			// defaults

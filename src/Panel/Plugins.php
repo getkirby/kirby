@@ -43,7 +43,7 @@ class Plugins
 	 * so browsers and CDNs can cache it for good
 	 * @since 6.0.0
 	 *
-	 * @param string $extension `css`, `js` or `dev.js`
+	 * @param $extension `css`, `js` or `dev.js`
 	 */
 	public static function resolve(
 		string $plugin,

@@ -1,5 +1,5 @@
 import { wrap } from "@/helpers/array";
-import type Validator from "./Validator";
+import type Validator from "@/components/Forms/Validator";
 
 export function input(attrs: Record<string, string> = {}): HTMLInputElement {
 	const element = document.createElement("input");

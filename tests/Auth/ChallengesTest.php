@@ -738,5 +738,4 @@ class ChallengesTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->challenges->verify($session, 'ok');
 	}
-
 }
