@@ -52,19 +52,6 @@ class UserTest extends TestCase
 		return new User($user);
 	}
 
-	public function testDropdownOption(): void
-	{
-		$model = new ModelUser([
-			'id'    => 'test',
-			'email' => 'test@getkirby.com',
-		]);
-
-		$option = (new User($model))->dropdownOption();
-		$this->assertSame('user', $option['icon']);
-		$this->assertSame('test@getkirby.com', (string)$option['text']);
-		$this->assertSame('/users/test', $option['link']);
-	}
-
 	public function testHome(): void
 	{
 		$user = new ModelUser([

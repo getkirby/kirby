@@ -92,21 +92,6 @@ abstract class Model
 	}
 
 	/**
-	 * Returns the setup for a dropdown option
-	 * which is used in the changes dropdown
-	 * for example.
-	 */
-	public function dropdownOption(): array
-	{
-		return [
-			'icon'  => 'page',
-			'image' => $this->image(['back' => 'black']),
-			'link'  => $this->url(true),
-			'text'  => $this->model->id(),
-		];
-	}
-
-	/**
 	 * Returns the Panel image definition
 	 */
 	public function image(

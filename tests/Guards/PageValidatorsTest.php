@@ -515,6 +515,22 @@ class PageValidatorsTest extends ModelTestCase
 		$validators->validateSlugProtectedPaths('panel');
 	}
 
+	public function testSlugProtectedPathsWithReservedPathInSubfolder(): void
+	{
+		$this->app = $this->app->clone([
+			'urls' => [
+				'index' => 'https://getkirby.com/sub'
+			]
+		]);
+
+		$validators = $this->validators(new Page(['slug' => 'test']));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The path of top-level pages must not start with "panel"');
+
+		$validators->validateSlugProtectedPaths('panel');
+	}
+
 	public function testStatus(): void
 	{
 		$validators = $this->validators(new Page(['slug' => 'test']));

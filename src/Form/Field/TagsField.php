@@ -66,7 +66,7 @@ class TagsField extends OptionsField
 
 	public function default(): array
 	{
-		return parent::default() ?? [];
+		return Str::split(parent::default(), $this->separator());
 	}
 
 	public function fill(mixed $value): static

@@ -18,6 +18,25 @@ class CheckboxesFieldTest extends TestCase
 		$this->assertTrue($field->batch());
 	}
 
+	public function testDefault(): void
+	{
+		$field = $this->field('checkboxes');
+		$this->assertSame([], $field->default());
+
+		$field = $this->field('checkboxes', [
+			'default' => ['a', 'b']
+		]);
+		$this->assertSame(['a', 'b'], $field->default());
+	}
+
+	public function testDefaultWithString(): void
+	{
+		$field = $this->field('checkboxes', [
+			'default' => 'a, b'
+		]);
+		$this->assertSame(['a', 'b'], $field->default());
+	}
+
 	public function testFillWithInvalidOption(): void
 	{
 		$field = $this->field('checkboxes', [

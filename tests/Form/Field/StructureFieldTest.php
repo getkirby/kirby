@@ -91,6 +91,26 @@ class StructureFieldTest extends TestCase
 		$this->assertSame($expected, $field->columns());
 	}
 
+	public function testColumnsWithFalse(): void
+	{
+		$field = $this->field('structure', [
+			'columns' => [
+				'a' => true,
+				'b' => false
+			],
+			'fields' => [
+				'a' => [
+					'type' => 'text'
+				],
+				'b' => [
+					'type' => 'text'
+				]
+			],
+		]);
+
+		$this->assertSame(['a'], array_keys($field->columns()));
+	}
+
 	public function testColumnsWithI18nLabel(): void
 	{
 		$field = $this->field('structure', [
@@ -118,6 +138,64 @@ class StructureFieldTest extends TestCase
 		];
 
 		$this->assertSame($expected, $field->columns());
+	}
+
+	public function testColumnsWithLabel(): void
+	{
+		$field = $this->field('structure', [
+			'columns' => [
+				'a' => 'Headline'
+			],
+			'fields' => [
+				'a' => [
+					'type' => 'text'
+				],
+				'b' => [
+					'type' => 'text'
+				]
+			],
+		]);
+
+		$this->assertSame('Headline', $field->columns()['a']['label']);
+	}
+
+	public function testColumnsWithNull(): void
+	{
+		$field = $this->field('structure', [
+			'columns' => [
+				'a' => null
+			],
+			'fields' => [
+				'a' => [
+					'type' => 'text'
+				],
+				'b' => [
+					'type' => 'text'
+				]
+			],
+		]);
+
+		$this->assertSame('A', $field->columns()['a']['label']);
+	}
+
+	public function testColumnsWithOnlyFalse(): void
+	{
+		// only hidden columns show all other fields
+		$field = $this->field('structure', [
+			'columns' => [
+				'b' => false
+			],
+			'fields' => [
+				'a' => [
+					'type' => 'text'
+				],
+				'b' => [
+					'type' => 'text'
+				]
+			],
+		]);
+
+		$this->assertSame(['a'], array_keys($field->columns()));
 	}
 
 	public function testColumnsLowerCaseNames(): void

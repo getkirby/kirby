@@ -312,21 +312,6 @@ export default {
 
 			await this.$nextTick();
 		},
-		/**
-		 * @deprecated 5.0.0 Use `restoreSelection` instead
-		 */
-		/* v8 ignore next */
-		restoreSelectionCallback() {
-			// restore selection as `insert` method
-			// depends on it
-			return async (callback) => {
-				await this.restoreSelection();
-
-				if (callback) {
-					callback();
-				}
-			};
-		},
 		select() {
 			this.$refs.input.select();
 		},

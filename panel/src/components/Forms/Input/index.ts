@@ -7,17 +7,6 @@ import { defineAsyncComponent } from "vue";
  */
 const WriterInput = defineAsyncComponent(() => import("./WriterInput.vue"));
 
-/**
- * @deprecated 5.0.0 Use `k-writer-input` instead
- */
-const Writer = defineAsyncComponent(() => {
-	window.panel.deprecated(
-		"`k-writer` will be removed in a future version. Use `k-writer-input` instead."
-	);
-
-	return import("./WriterInput.vue");
-});
-
 export { default as "k-alpha-input" } from "./AlphaInput.vue";
 export { default as "k-calendar-input" } from "./CalendarInput.vue";
 export { default as "k-checkbox-input" } from "./CheckboxInput.vue";
@@ -55,6 +44,3 @@ export { WriterInput as "k-writer-input" };
 /** Keep k-calendar and k-times as legacy aliases */
 export { default as "k-calendar" } from "./CalendarInput.vue";
 export { default as "k-times" } from "./TimeoptionsInput.vue";
-
-/** @deprecated */
-export { Writer as "k-writer" };

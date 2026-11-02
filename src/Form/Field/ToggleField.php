@@ -31,6 +31,11 @@ class ToggleField extends InputField
 	protected array|string|null $text = null;
 	protected bool|null $value = null;
 
+	public function default(): bool
+	{
+		return static::toBool(parent::default());
+	}
+
 	public function fill(mixed $value): static
 	{
 		return parent::fill(
@@ -64,7 +69,7 @@ class ToggleField extends InputField
 
 	public function toFormValue(): bool
 	{
-		return $this->value ?? $this->default() ?? false;
+		return $this->value ?? $this->default();
 	}
 
 	public static function toBool(mixed $value): bool

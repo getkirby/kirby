@@ -16,6 +16,8 @@ use Kirby\Sane\Sane;
  */
 abstract class ProseMirrorField extends StringField
 {
+	use Mixin\After;
+	use Mixin\Before;
 	use Mixin\Icon;
 
 	/**

@@ -209,23 +209,6 @@ class PageTest extends TestCase
 		$this->assertSame('Links sind toll: /test', $panel->dragText());
 	}
 
-	public function testDropdownOption(): void
-	{
-		$page = new ModelPage([
-			'slug'    => 'test',
-			'content' => [
-				'title' => 'Test page'
-			]
-		]);
-
-		$panel  = new Page($page);
-		$option = $panel->dropdownOption();
-
-		$this->assertSame('page', $option['icon']);
-		$this->assertSame('Test page', (string)$option['text']);
-		$this->assertSame('/pages/test', $option['link']);
-	}
-
 	public function testIconFromBlueprint(): void
 	{
 		$page = new ModelPage([

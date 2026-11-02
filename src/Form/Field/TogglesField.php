@@ -26,23 +26,23 @@ class TogglesField extends OptionField
 	protected bool $labels = true;
 
 	/**
-	 * A toggle can be deactivated on click. If resettable is `false` deactivating a toggle is no longer possible.
+	 * A toggle can be deactivated on click. If reset is `false` deactivating a toggle is no longer possible.
 	 */
-	#[Prop]
-	protected bool $resettable = true;
-
-	public function labels(): bool
-	{
-		return $this->labels;
-	}
+	#[Prop(getter: 'isResettable')]
+	protected bool $reset = true;
 
 	public function grow(): bool
 	{
 		return $this->grow;
 	}
 
-	public function resettable(): bool
+	public function isResettable(): bool
 	{
-		return $this->resettable;
+		return $this->reset;
+	}
+
+	public function labels(): bool
+	{
+		return $this->labels;
 	}
 }

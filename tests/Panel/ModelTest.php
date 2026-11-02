@@ -171,25 +171,6 @@ class ModelTest extends TestCase
 		new App();
 	}
 
-	public function testDropdownOption(): void
-	{
-		$model  = new CustomPanelModel(new ModelSite());
-		$option = $model->dropdownOption();
-		$expected = [
-			'icon' => 'page',
-			'image' => [
-				'back'  => 'black',
-				'color' => 'gray-500',
-				'cover' => false,
-				'icon'  => 'page'
-			],
-			'link' => '/custom',
-			'text' => null
-		];
-
-		$this->assertSame($expected, $option);
-	}
-
 	public function testImage(): void
 	{
 		$this->app->impersonate('kirby');
