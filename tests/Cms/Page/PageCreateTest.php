@@ -118,9 +118,6 @@ class PageCreateTest extends ModelTestCase
 		$this->assertSame('B', $page->b()->value());
 	}
 
-	/**
-	 * @see https://github.com/getkirby/kirby/issues/8411
-	 */
 	public function testCreateDraftWithIncompleteContent(): void
 	{
 		$this->app = $this->app->clone([
@@ -146,6 +143,9 @@ class PageCreateTest extends ModelTestCase
 		$this->assertTrue($page->isDraft());
 	}
 
+	/**
+	 * @see https://github.com/getkirby/kirby/issues/8411
+	 */
 	public function testCreateDraftWithSaveHandlers(): void
 	{
 		$this->app = $this->app->clone([
