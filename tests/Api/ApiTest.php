@@ -3,6 +3,7 @@
 namespace Kirby\Api;
 
 use Exception;
+use Kirby\Cms\App;
 use Kirby\Cms\Response;
 use Kirby\Cms\User;
 use Kirby\Exception\NotFoundException;
@@ -712,6 +713,52 @@ class ApiTest extends TestCase
 				'bar.txt' => ['filename' => 'bar.txt'],
 			]
 		], $data);
+	}
+
+	public function testUploadMultipleWithBlockingHook()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'hooks' => [
+				'file.create:before' => function (string $filename) {
+					throw new Exception('blocked: ' . $filename);
+				}
+			]
+		]);
+
+		$api = new Api([
+			'requestMethod' => 'POST',
+			'requestData'   => [
+				'files' => [
+					[
+						'name'     => 'foo.txt',
+						'tmp_name' => KIRBY_TMP_DIR . '/api.api/foo',
+						'size'     => 123,
+						'error'    => 0
+					],
+					[
+						'name'     => 'bar.txt',
+						'tmp_name' => KIRBY_TMP_DIR . '/api.api/bar',
+						'size'     => 123,
+						'error'    => 0
+					]
+				]
+			]
+		]);
+
+		$data = $api->upload(function ($source, $filename) use ($app) {
+			$app->trigger('file.create:before', ['filename' => $filename]);
+			return ['filename' => $filename];
+		}, false, true);
+
+		// the hook must block every file, not only the first
+		$this->assertSame('error', $data['status']);
+		$this->assertSame([
+			'foo.txt' => 'blocked: foo.txt',
+			'bar.txt' => 'blocked: bar.txt'
+		], $data['errors']);
 	}
 
 	public function testUploadFail()
