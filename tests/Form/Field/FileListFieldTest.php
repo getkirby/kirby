@@ -262,6 +262,19 @@ class FileListFieldTest extends TestCase
 		$this->assertSame('url', $columns['title']['type']);
 	}
 
+	public function testColumnsCustomWithLabel(): void
+	{
+		$field = $this->filelist([
+			'columns' => [
+				'alt' => 'Alternative text'
+			],
+			'layout' => 'table'
+		]);
+
+		// a string is a shorthand for the label
+		$this->assertSame('Alternative text', $field->columns()['alt']['label']);
+	}
+
 	public function testColumnsWithTypes(): void
 	{
 		$field = $this->filelist([
