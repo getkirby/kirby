@@ -823,6 +823,12 @@ class Auth
 			// check if we have an active challenge
 			$email     = $session->get('kirby.challenge.email');
 			$challenge = $session->get('kirby.challenge.type');
+
+			// rate-limit faked challenges like real ones
+			if (is_string($email) === true) {
+				$this->checkRateLimit($email);
+			}
+
 			if (is_string($email) !== true || is_string($challenge) !== true) {
 				// if the challenge timed out on the previous request, the
 				// challenge data was already deleted from the session, so we can
@@ -846,9 +852,6 @@ class Auth
 					]
 				]);
 			}
-
-			// rate-limiting
-			$this->checkRateLimit($email);
 
 			if (
 				isset(static::$challenges[$challenge]) === true &&

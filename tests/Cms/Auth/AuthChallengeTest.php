@@ -628,6 +628,82 @@ class AuthChallengeTest extends TestCase
 	}
 
 	/**
+	 * @covers ::checkRateLimit
+	 * @covers ::verifyChallenge
+	 */
+	public function testVerifyChallengeRateLimitedAccount()
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'debug' => false
+				]
+			]
+		]);
+		$auth = $this->app->auth();
+
+		$this->app->visitor()->ip('10.1.123.234');
+		$auth->track('marge@simpsons.com');
+		$auth->track('marge@simpsons.com');
+		$auth->track('marge@simpsons.com');
+
+		// a blocked account only gets a faked challenge
+		$this->app->visitor()->ip('10.2.123.234');
+		$this->app->session()->set('kirby.challenge.email', 'marge@simpsons.com');
+
+		try {
+			$auth->verifyChallenge('123456');
+
+			$this->fail('No PermissionException was thrown');
+		} catch (Throwable $e) {
+			$this->assertInstanceOf(PermissionException::class, $e);
+			$this->assertSame('Invalid code', $e->getMessage());
+			$this->assertSame(['challengeDestroyed' => false], $e->getDetails());
+		}
+
+		// only the ip is counted, not the blocked account
+		$log = $auth->log();
+		$this->assertSame(1, $log['by-ip']['38f0a08519792a17e18a251008f3a116977907f921b0b287c8']['trials']);
+		$this->assertSame(3, $log['by-email']['marge@simpsons.com']['trials']);
+	}
+
+	/**
+	 * @covers ::checkRateLimit
+	 * @covers ::verifyChallenge
+	 */
+	public function testVerifyChallengeRateLimitedFakedChallenge()
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'debug' => false
+				]
+			]
+		]);
+		$auth = $this->app->auth();
+
+		$this->app->visitor()->ip('10.2.123.234');
+		$auth->track('invalid@example.com');
+		$auth->track('invalid@example.com');
+		$auth->track('invalid@example.com');
+
+		// a blocked ip is not counted any further
+		$this->app->session()->set('kirby.challenge.email', 'invalid@example.com');
+
+		try {
+			$auth->verifyChallenge('123456');
+
+			$this->fail('No PermissionException was thrown');
+		} catch (Throwable $e) {
+			$this->assertInstanceOf(PermissionException::class, $e);
+			$this->assertSame('Invalid code', $e->getMessage());
+			$this->assertSame(['challengeDestroyed' => false], $e->getDetails());
+		}
+
+		$this->assertSame(3, $auth->log()['by-ip']['38f0a08519792a17e18a251008f3a116977907f921b0b287c8']['trials']);
+	}
+
+	/**
 	 * @covers ::fail
 	 * @covers ::verifyChallenge
 	 */
