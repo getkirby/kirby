@@ -195,6 +195,42 @@ class AuthProtectionTest extends TestCase
 	}
 
 	/**
+	 * @covers ::isBlocked
+	 * @covers ::track
+	 */
+	public function testTrackWithEmailInOtherCase()
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'trials' => 3
+				]
+			]
+		]);
+
+		$this->auth = new Auth($this->app);
+
+		$this->app->visitor()->ip('10.1.123.234');
+		$this->auth->track('MARGE@simpsons.com');
+
+		$this->app->visitor()->ip('10.2.123.234');
+		$this->auth->track('Marge@Simpsons.com');
+
+		$this->app->visitor()->ip('10.3.123.234');
+		$this->auth->track('marge@simpsons.com');
+
+		$this->assertSame([
+			'marge@simpsons.com' => [
+				'time'   => MockTime::$time,
+				'trials' => 3
+			]
+		], $this->auth->log()['by-email']);
+
+		$this->app->visitor()->ip('10.4.123.234');
+		$this->assertTrue($this->auth->isBlocked('mArGe@simpsons.com'));
+	}
+
+	/**
 	 * @covers ::validatePassword
 	 */
 	public function testValidatePasswordValid()
@@ -275,6 +311,34 @@ class AuthProtectionTest extends TestCase
 		}
 
 		$this->assertTrue($thrown);
+		$this->assertSame(10, $this->auth->log()['by-ip']['38f0a08519792a17e18a251008f3a116977907f921b0b287c8']['trials']);
+		$this->assertSame('homer@simpsons.com', $this->failedEmail);
+	}
+
+	/**
+	 * @covers ::checkRateLimit
+	 * @covers ::validatePassword
+	 */
+	public function testValidatePasswordBlockedAccount()
+	{
+		copy(static::FIXTURES . '/logins.json', static::TMP . '/site/accounts/.logins');
+
+		$this->app->visitor()->ip('10.3.123.234');
+
+		$thrown = false;
+		try {
+			$this->auth->validatePassword('homer@simpsons.com', 'springfield123');
+		} catch (PermissionException $e) {
+			$this->assertSame('Invalid login', $e->getMessage());
+			$thrown = true;
+		}
+
+		$this->assertTrue($thrown);
+
+		// only the ip is counted, not the blocked account
+		$log = $this->auth->log();
+		$this->assertSame(1, $log['by-ip']['85a06e36d926cb901f05d1167913ebd7ec3d8f5bce4551f5da']['trials']);
+		$this->assertSame(['time' => 9999999999, 'trials' => 10], $log['by-email']['homer@simpsons.com']);
 		$this->assertSame('homer@simpsons.com', $this->failedEmail);
 	}
 

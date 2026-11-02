@@ -354,18 +354,17 @@ class Auth
 	 */
 	public function isBlocked(string $email): bool
 	{
-		$ip     = $this->ipHash();
+		if ($this->isIpBlocked() === true) {
+			return true;
+		}
+
 		$log    = $this->log();
 		$trials = $this->kirby->option('auth.trials', 10);
 
-		if ($entry = ($log['by-ip'][$ip] ?? null)) {
-			if ($entry['trials'] >= $trials) {
-				return true;
-			}
-		}
+		if ($user = $this->kirby->users()->find($email)) {
+			$key = $user->email() ?? $user->id();
 
-		if ($this->kirby->users()->find($email)) {
-			if ($entry = ($log['by-email'][$email] ?? null)) {
+			if ($entry = ($log['by-email'][$key] ?? null)) {
 				if ($entry['trials'] >= $trials) {
 					return true;
 				}
@@ -373,6 +372,19 @@ class Auth
 		}
 
 		return false;
+	}
+
+	/**
+	 * Check if logins are blocked for the current ip
+	 * @since 4.9.7
+	 */
+	protected function isIpBlocked(): bool
+	{
+		$ip     = $this->ipHash();
+		$trials = $this->kirby->option('auth.trials', 10);
+		$entry  = $this->log()['by-ip'][$ip] ?? null;
+
+		return $entry !== null && $entry['trials'] >= $trials;
 	}
 
 	/**
@@ -495,6 +507,12 @@ class Auth
 		// check for blocked ips
 		if ($this->isBlocked($email) === true) {
 			$this->kirby->trigger('user.login:failed', compact('email'));
+
+			// count the ip even if only the account is blocked,
+			// otherwise the ip counter reveals that the account exists
+			if ($this->isIpBlocked() === false) {
+				$this->track(null, false);
+			}
 
 			throw new PermissionException([
 				'details'  => ['reason' => 'rate-limited'],
@@ -670,14 +688,16 @@ class Auth
 			];
 		}
 
-		if ($email !== null && $this->kirby->users()->find($email)) {
-			if (isset($log['by-email'][$email]) === true) {
-				$log['by-email'][$email] = [
+		if ($email !== null && $user = $this->kirby->users()->find($email)) {
+			$key = $user->email() ?? $user->id();
+
+			if (isset($log['by-email'][$key]) === true) {
+				$log['by-email'][$key] = [
 					'time'   => $time,
-					'trials' => ($log['by-email'][$email]['trials'] ?? 0) + 1
+					'trials' => ($log['by-email'][$key]['trials'] ?? 0) + 1
 				];
 			} else {
-				$log['by-email'][$email] = [
+				$log['by-email'][$key] = [
 					'time'   => $time,
 					'trials' => 1
 				];
@@ -803,6 +823,12 @@ class Auth
 			// check if we have an active challenge
 			$email     = $session->get('kirby.challenge.email');
 			$challenge = $session->get('kirby.challenge.type');
+
+			// rate-limit faked challenges like real ones
+			if (is_string($email) === true) {
+				$this->checkRateLimit($email);
+			}
+
 			if (is_string($email) !== true || is_string($challenge) !== true) {
 				// if the challenge timed out on the previous request, the
 				// challenge data was already deleted from the session, so we can
@@ -826,9 +852,6 @@ class Auth
 					]
 				]);
 			}
-
-			// rate-limiting
-			$this->checkRateLimit($email);
 
 			if (
 				isset(static::$challenges[$challenge]) === true &&
