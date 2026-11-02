@@ -2224,6 +2224,44 @@ class DomTest extends TestCase
 			$sanitize('<root><title><title><!--</title><img src=x>--></title></title></root>')
 		);
 
+		// a nested element of the same name ends the raw text early with
+		// its closing tag, so what follows is live markup again
+		foreach (['script', 'style', 'textarea', 'title'] as $name) {
+			$this->assertSame(
+				[
+					'<root><' . $name . '><' . $name . '>x</' . $name . '></' . $name . '></root>',
+					['The comment (line 1) is not allowed']
+				],
+				$sanitize('<root><' . $name . '><' . $name . '>x</' . $name . '><!--><img src=x>--></' . $name . '></root>')
+			);
+		}
+
+		$this->assertSame(
+			[
+				'<root><title><title>x</title>&lt;img src=x&gt;</title></root>',
+				['The CDATA section (line 1) is not allowed']
+			],
+			$sanitize('<root><title><title>x</title><![CDATA[<img src=x>]]></title></root>')
+		);
+
+		// the outer closing tag still breaks out as well...
+		$this->assertSame(
+			['<root><title><style/><title>x</title></title></root>', ['The comment (line 1) is not allowed']],
+			$sanitize('<root><title><style><!--</title><img src=x>--></style><title>x</title></title></root>')
+		);
+
+		// ...and so does the one of a raw text element after the early end
+		$this->assertSame(
+			['<root><title><title>x</title><style/></title></root>', ['The comment (line 1) is not allowed']],
+			$sanitize('<root><title><title>x</title><style><!--</style><img src=x>--></style></title></root>')
+		);
+
+		// a prefixed element has a different tag name, which cannot end it
+		$this->assertSame(
+			['<root><title><x:title xmlns:x="x">x</x:title><!--><img src=x>--></title></root>', []],
+			$sanitize('<root><title><x:title xmlns:x="x">x</x:title><!--><img src=x>--></title></root>')
+		);
+
 		// a foreign `<title>` is no RCDATA element, so a comment directly
 		// below it must not close itself early...
 		$this->assertSame(

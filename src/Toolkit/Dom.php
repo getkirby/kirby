@@ -15,6 +15,7 @@ use DOMXPath;
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Http\Url;
+use SplObjectStorage;
 
 /**
  * Helper class for DOM handling using the DOMDocument class
@@ -78,6 +79,11 @@ class Dom
 	 * Document object
 	 */
 	protected DOMDocument $doc;
+
+	/**
+	 * Cache for `Dom::endsEarly()`
+	 */
+	protected SplObjectStorage|null $earlyEnds = null;
 
 	/**
 	 * Class constructor
@@ -690,8 +696,10 @@ class Dom
 			$this->sanitizeElement($element, $options, $errors);
 		}
 
-		// validate all character data (comments and CDATA sections)
-		$characterData = $this->query('//comment() | //text()');
+		// validate all character data (comments and CDATA sections);
+		// the elements may have changed, so start with a fresh cache
+		$this->earlyEnds = new SplObjectStorage();
+		$characterData   = $this->query('//comment() | //text()');
 
 		foreach (iterator_to_array($characterData, false) as $node) {
 			$this->sanitizeCharacterData($node, $errors);
@@ -881,7 +889,7 @@ class Dom
 	 *
 	 * @since 5.6.0
 	 *
-	 * @return array{foreign: bool, rawText: string|null}
+	 * @return array{element: DOMElement|null, foreign: bool, rawText: string|null}
 	 */
 	protected static function context(DOMNode $node): array
 	{
@@ -933,11 +941,49 @@ class Dom
 				$root === null &&
 				in_array($name, static::RAW_TEXT, true) === true
 			) {
-				return ['foreign' => false, 'rawText' => $name];
+				return [
+					'element' => $ancestor,
+					'foreign' => false,
+					'rawText' => $name
+				];
 			}
 		}
 
-		return ['foreign' => $root !== null, 'rawText' => null];
+		return [
+			'element' => null,
+			'foreign' => $root !== null,
+			'rawText' => null
+		];
+	}
+
+	/**
+	 * Checks if a raw text element holds a descendant element of
+	 * the same name, whose closing tag ends the raw text early
+	 * once the document is embedded in an HTML page
+	 *
+	 * @since 5.6.3
+	 */
+	protected function endsEarly(DOMElement $element): bool
+	{
+		// each raw text element usually holds many nodes that need
+		// this check, so only walk its descendants once
+		$this->earlyEnds ??= new SplObjectStorage();
+
+		if ($this->earlyEnds->contains($element) === true) {
+			return $this->earlyEnds[$element];
+		}
+
+		$name   = Str::lower($element->nodeName);
+		$result = false;
+
+		foreach ($element->getElementsByTagName('*') as $descendant) {
+			if (Str::lower($descendant->nodeName) === $name) {
+				$result = true;
+				break;
+			}
+		}
+
+		return $this->earlyEnds[$element] = $result;
 	}
 
 	/**
@@ -1080,30 +1126,53 @@ class Dom
 		// an HTML parser judges the node by the element it sits in: inside
 		// foreign content `<![CDATA[` stays a CDATA section, while raw text
 		// elements only ever exist in the HTML namespace
-		['foreign' => $foreign, 'rawText' => $rawText] = static::context($node);
+		[
+			'element' => $element,
+			'foreign' => $foreign,
+			'rawText' => $rawText
+		] = static::context($node);
+
+		// a nested element of the same name ends the raw text early,
+		// after which the parser reads the rest as live markup again
+		$markup = $element !== null && $this->endsEarly($element) === true;
+
+		$dangerous = false;
 
 		if ($rawText !== null) {
 			// a raw text element holds neither comments nor CDATA sections,
 			// just text, so only a literal closing tag breaks out of it;
-			// legitimate CSS/JS (e.g. `a > b`) is kept untouched
-			$dangerous = preg_match('#</' . $rawText . '\b#i', $data) === 1;
-		} elseif ($isComment === true) {
-			// the HTML tokenizer ends a comment as soon as the data closes
-			// it: `<!-->`/`<!--->` are already complete comments, `-->` and
-			// `--!>` end one mid-data. What follows is then live markup in
-			// every insertion mode, so foreign content is no shelter
-			$dangerous =
-				Str::startsWith($data, '>') === true ||
-				Str::startsWith($data, '->') === true ||
-				Str::contains($data, '-->') === true ||
-				Str::contains($data, '--!>') === true;
-		} else {
-			// outside foreign content `<![CDATA[` degrades to a comment
-			// that already ends at its first `>`, which exposes the rest
-			// of the data as live markup
-			$dangerous =
-				$foreign === false &&
-				Str::contains($data, '<') === true;
+			// legitimate CSS/JS (e.g. `a > b`) is kept untouched. If the
+			// parser may read the content as markup after all, the node may
+			// just as well end up in any other raw text element, so its
+			// closing tag counts as well
+			$names     = $markup === true ? static::RAW_TEXT : [$rawText];
+			$dangerous = preg_match('#</(' . implode('|', $names) . ')\b#i', $data) === 1;
+		}
+
+		// if the parser may read the content of the raw text element as
+		// live markup, the node needs to pass those checks as well
+		if (
+			$dangerous === false &&
+			($rawText === null || $markup === true)
+		) {
+			$dangerous = match ($isComment) {
+				// the HTML tokenizer ends a comment as soon as the data closes
+				// it: `<!-->`/`<!--->` are already complete comments, `-->` and
+				// `--!>` end one mid-data. What follows is then live markup in
+				// every insertion mode, so foreign content is no shelter
+				true =>
+					Str::startsWith($data, '>') === true ||
+					Str::startsWith($data, '->') === true ||
+					Str::contains($data, '-->') === true ||
+					Str::contains($data, '--!>') === true,
+
+				// outside foreign content `<![CDATA[` degrades to a comment
+				// that already ends at its first `>`, which exposes the rest
+				// of the data as live markup
+				false =>
+					$foreign === false &&
+					Str::contains($data, '<') === true
+			};
 		}
 
 		if ($dangerous === false) {

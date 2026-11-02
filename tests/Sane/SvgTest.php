@@ -624,6 +624,20 @@ class SvgTest extends TestCase
 		Svg::validate($fixture);
 	}
 
+	public function testDisallowedMutationXssIntegrationPointTitleCommentEarlyEnd(): void
+	{
+		// the closing tag of the nested `<title>` ends the RCDATA of the
+		// outer one early, so the comment after it is live markup again
+		$fixture   = '<svg><desc><title><title>x</title><!--><img src=x onerror=alert(1)>--></title></desc></svg>';
+		$sanitized = '<svg><desc><title><title>x</title></title></desc></svg>';
+
+		$this->assertSame($sanitized, Svg::sanitize($fixture));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The comment (line 1) is not allowed');
+		Svg::validate($fixture);
+	}
+
 	public function testDisallowedMutationXssIntegrationPointStyleComment(): void
 	{
 		// the same raw text element also turns a comment into plain text,
