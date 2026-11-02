@@ -699,9 +699,8 @@ class Dom
 		// validate all character data (comments and CDATA sections);
 		// the elements may have changed, so start with a fresh cache
 		$this->elementChildren = new SplObjectStorage();
-		$characterData         = $this->query('//comment() | //text()');
 
-		foreach (iterator_to_array($characterData, false) as $node) {
+		foreach ($this->characterData() as $node) {
 			$this->sanitizeCharacterData($node, $errors);
 		}
 
@@ -880,6 +879,48 @@ class Dom
 			...$options,
 			'_normalized'           => true
 		];
+	}
+
+	/**
+	 * Collects all comments and CDATA sections in document order
+	 *
+	 * @since 5.6.3
+	 *
+	 * @return array<\DOMComment|\DOMCdataSection>
+	 */
+	protected function characterData(): array
+	{
+		// walk the tree by hand instead of using XPath: libxml sorts the
+		// results of a query by comparing comment nodes along their
+		// siblings, which takes quadratic time for many siblings
+		$nodes = [];
+		$next  = $this->doc->firstChild;
+
+		while ($next !== null) {
+			$node = $next;
+
+			if (
+				$node->nodeType === XML_COMMENT_NODE ||
+				$node->nodeType === XML_CDATA_SECTION_NODE
+			) {
+				$nodes[] = $node;
+			}
+
+			if ($node->firstChild !== null) {
+				$next = $node->firstChild;
+				continue;
+			}
+
+			// continue with the next sibling of the closest
+			// ancestor that has one
+			while ($node !== null && $node->nextSibling === null) {
+				$node = $node->parentNode;
+			}
+
+			$next = $node?->nextSibling;
+		}
+
+		return $nodes;
 	}
 
 	/**
