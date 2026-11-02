@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "@test/unit";
+import { describe, expect, it } from "@test/unit";
 import { mount } from "@vue/test-utils";
 import Box from "./Box.vue";
 
@@ -43,10 +43,6 @@ describe("Box.vue", () => {
 	});
 
 	describe("html prop", () => {
-		beforeEach(() => {
-			vi.clearAllMocks();
-		});
-
 		it("does not warn when the deprecated prop is unused", () => {
 			mount(Box);
 			expect(window.panel.deprecated).not.toHaveBeenCalled();

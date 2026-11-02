@@ -34,8 +34,6 @@ describe("PagePickerField.vue", () => {
 	beforeEach(() => {
 		api.get.mockReset();
 		api.get.mockResolvedValue([]);
-		dialog.close.mockClear();
-		dialog.open.mockClear();
 	});
 
 	it("applies the IDs submitted by the picker dialog", () => {
