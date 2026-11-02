@@ -354,15 +354,12 @@ class Auth
 	 */
 	public function isBlocked(string $email): bool
 	{
-		$ip     = $this->ipHash();
+		if ($this->isIpBlocked() === true) {
+			return true;
+		}
+
 		$log    = $this->log();
 		$trials = $this->kirby->option('auth.trials', 10);
-
-		if ($entry = ($log['by-ip'][$ip] ?? null)) {
-			if ($entry['trials'] >= $trials) {
-				return true;
-			}
-		}
 
 		if ($user = $this->kirby->users()->find($email)) {
 			$key = $user->email() ?? $user->id();
@@ -375,6 +372,19 @@ class Auth
 		}
 
 		return false;
+	}
+
+	/**
+	 * Check if logins are blocked for the current ip
+	 * @since 4.9.7
+	 */
+	protected function isIpBlocked(): bool
+	{
+		$ip     = $this->ipHash();
+		$trials = $this->kirby->option('auth.trials', 10);
+		$entry  = $this->log()['by-ip'][$ip] ?? null;
+
+		return $entry !== null && $entry['trials'] >= $trials;
 	}
 
 	/**
@@ -497,6 +507,12 @@ class Auth
 		// check for blocked ips
 		if ($this->isBlocked($email) === true) {
 			$this->kirby->trigger('user.login:failed', compact('email'));
+
+			// count the ip even if only the account is blocked,
+			// otherwise the ip counter reveals that the account exists
+			if ($this->isIpBlocked() === false) {
+				$this->track(null, false);
+			}
 
 			throw new PermissionException([
 				'details'  => ['reason' => 'rate-limited'],

@@ -268,6 +268,36 @@ class AuthChallengeTest extends TestCase
 	}
 
 	/**
+	 * @covers ::checkRateLimit
+	 * @covers ::createChallenge
+	 */
+	public function testCreateChallengeRateLimitedAccount()
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'debug' => false
+				]
+			]
+		]);
+		$auth = $this->app->auth();
+
+		$this->app->visitor()->ip('10.1.123.234');
+		$auth->track('marge@simpsons.com');
+		$auth->track('marge@simpsons.com');
+		$auth->track('marge@simpsons.com');
+
+		$this->app->visitor()->ip('10.2.123.234');
+		$auth->createChallenge('marge@simpsons.com');
+
+		// only the ip is counted, not the blocked account
+		$log = $auth->log();
+		$this->assertSame(1, $log['by-ip']['38f0a08519792a17e18a251008f3a116977907f921b0b287c8']['trials']);
+		$this->assertSame(3, $log['by-email']['marge@simpsons.com']['trials']);
+		$this->assertNull($this->app->session()->get('kirby.challenge.type'));
+	}
+
+	/**
 	 * @covers ::createChallenge
 	 * @covers ::fail
 	 * @covers ::status
