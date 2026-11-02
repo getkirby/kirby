@@ -787,6 +787,31 @@ class PageRulesTest extends ModelTestCase
 		PageRules::validateContent($page);
 	}
 
+	public function testValidateContentWithCompleteTranslations(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$page = new Page([
+			'slug'      => 'test',
+			'blueprint' => [
+				'name'   => 'test',
+				'fields' => [
+					'headline' => [
+						'type'     => 'text',
+						'required' => true
+					]
+				]
+			]
+		]);
+
+		$page->version()->save(['headline' => 'Headline'], 'en');
+
+		$this->expectNotToPerformAssertions();
+
+		// the missing German translation falls back to the default language
+		PageRules::validateContent($page);
+	}
+
 	public function testValidateContentWithErrors(): void
 	{
 		$errors = [
@@ -808,6 +833,35 @@ class PageRulesTest extends ModelTestCase
 			$this->assertSame('error.page.changeStatus.incomplete', $e->getKey());
 			$this->assertSame('The page has errors and cannot be published', $e->getMessage());
 			$this->assertSame($errors, $e->getDetails());
+		}
+	}
+
+	public function testValidateContentWithIncompleteTranslation(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$page = new Page([
+			'slug'      => 'test',
+			'blueprint' => [
+				'name'   => 'test',
+				'fields' => [
+					'headline' => [
+						'type'     => 'text',
+						'required' => true
+					]
+				]
+			]
+		]);
+
+		$page->version()->save(['headline' => 'Headline'], 'en');
+		$page->version()->save(['headline' => ''], 'de');
+
+		try {
+			PageRules::validateContent($page);
+			$this->fail('Expected a PermissionException');
+		} catch (PermissionException $e) {
+			$this->assertSame('error.page.changeStatus.incomplete', $e->getKey());
+			$this->assertSame(['headline'], array_keys($e->getDetails()));
 		}
 	}
 

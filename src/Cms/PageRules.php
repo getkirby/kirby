@@ -443,12 +443,25 @@ class PageRules
 
 	/**
 	 * Validates that the page content has no errors
+	 * in any language
 	 *
 	 * @throws \Kirby\Exception\PermissionException If the content is not complete
 	 */
 	public static function validateContent(Page $page): void
 	{
 		$errors = $page->errors();
+
+		// the errors above only cover the current language,
+		// so the content of all other languages must be validated too
+		if ($errors === [] && $page->kirby()->multilang() === true) {
+			foreach ($page->kirby()->languages() as $language) {
+				$errors = $page->version()->errors($language);
+
+				if ($errors !== []) {
+					break;
+				}
+			}
+		}
 
 		if ($errors !== []) {
 			throw new PermissionException(

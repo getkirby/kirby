@@ -402,6 +402,48 @@ class PageCreateTest extends ModelTestCase
 		]);
 	}
 
+	public function testCreateUnlistedPageWithIncompleteTranslation(): void
+	{
+		$this->setupMultiLanguage();
+
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'fields' => [
+						'headline' => [
+							'type'     => 'text',
+							'required' => true
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('The page has errors and cannot be published');
+
+		Page::create([
+			'slug'         => 'new-page',
+			'isDraft'      => false,
+			'translations' => [
+				[
+					'code'    => 'en',
+					'content' => [
+						'headline' => 'Headline'
+					]
+				],
+				[
+					'code'    => 'de',
+					'content' => [
+						'headline' => ''
+					]
+				]
+			]
+		]);
+	}
+
 	public function testCreateWhenDefaultLanguageIsActive(): void
 	{
 		$this->setupMultiLanguage();
