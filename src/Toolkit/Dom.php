@@ -908,6 +908,9 @@ class Dom
 		$root        = null;
 		$integration = false;
 
+		// whether the current element sits in an HTML `<select>`
+		$select = false;
+
 		// walk from the outermost element inwards, the order in which an
 		// HTML parser assigns a namespace to each of them
 		foreach (array_reverse($ancestors) as $ancestor) {
@@ -934,6 +937,10 @@ class Dom
 					static::isIntegration($ancestor, $root) === true;
 			}
 
+			if ($root === null && $name === 'select') {
+				$select = true;
+			}
+
 			// a parser enters raw text at the outermost such element and
 			// reads everything below it as text, so nothing deeper is an
 			// element to it at all
@@ -942,11 +949,13 @@ class Dom
 				in_array($name, static::RAW_TEXT, true) === true
 			) {
 				// but `<noscript>` is only raw text while scripting is
-				// enabled, otherwise the parser reads its content as markup
+				// enabled and inside a `<select>` the parser ignores the
+				// start tag of most raw text elements, so in both cases
+				// it may read their content as markup after all
 				return [
 					'element' => $ancestor,
 					'foreign' => false,
-					'markup'  => $name === 'noscript',
+					'markup'  => $name === 'noscript' || $select === true,
 					'rawText' => $name
 				];
 			}

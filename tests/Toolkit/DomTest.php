@@ -2230,6 +2230,26 @@ class DomTest extends TestCase
 			$sanitize('<root><noscript><!-- comment --></noscript></root>')
 		);
 
+		// inside a `<select>` the parser ignores the start tag of most raw
+		// text elements, so their content is read as markup as well
+		foreach (['style', 'title', 'xmp'] as $name) {
+			$this->assertSame(
+				['<root><select><' . $name . '/></select></root>', ['The comment (line 1) is not allowed']],
+				$sanitize('<root><select><' . $name . '><!--><input><img src=x>--></' . $name . '></select></root>')
+			);
+		}
+
+		$this->assertSame(
+			['<root><select><title>&lt;input&gt;&lt;img src=x&gt;</title></select></root>', ['The CDATA section (line 1) is not allowed']],
+			$sanitize('<root><select><title><![CDATA[<input><img src=x>]]></title></select></root>')
+		);
+
+		// a foreign `<select>` is no HTML `<select>`
+		$this->assertSame(
+			['<root><svg><select><foreignObject><title><!--><img src=x>--></title></foreignObject></select></svg></root>', []],
+			$sanitize('<root><svg><select><foreignObject><title><!--><img src=x>--></title></foreignObject></select></svg></root>')
+		);
+
 		// the closing tag is matched case-insensitively
 		$this->assertSame(
 			['<root><title/></root>', ['The comment (line 1) is not allowed']],

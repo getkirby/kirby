@@ -291,6 +291,20 @@ class XmlTest extends TestCase
 		Xml::validate($fixture);
 	}
 
+	public function testDisallowedMutationXssSelectComment(): void
+	{
+		// inside a `<select>` an HTML parser ignores the `<title>` start
+		// tag, so the comment closes itself and `<input>` ends the select
+		$fixture   = '<root><select><title><!--><input><img src=x onerror=alert(1)>--></title></select></root>';
+		$sanitized = '<root><select><title/></select></root>';
+
+		$this->assertSame($sanitized, Xml::sanitize($fixture));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The comment (line 1) is not allowed');
+		Xml::validate($fixture);
+	}
+
 	public function testDisallowedStylesheet(): void
 	{
 		$fixture   = $this->fixture('disallowed/stylesheet.xml');
