@@ -81,9 +81,9 @@ class Dom
 	protected DOMDocument $doc;
 
 	/**
-	 * Cache for `Dom::endsEarly()`
+	 * Cache for `Dom::hasElementChild()`
 	 */
-	protected SplObjectStorage|null $earlyEnds = null;
+	protected SplObjectStorage|null $elementChildren = null;
 
 	/**
 	 * Class constructor
@@ -698,8 +698,8 @@ class Dom
 
 		// validate all character data (comments and CDATA sections);
 		// the elements may have changed, so start with a fresh cache
-		$this->earlyEnds = new SplObjectStorage();
-		$characterData   = $this->query('//comment() | //text()');
+		$this->elementChildren = new SplObjectStorage();
+		$characterData         = $this->query('//comment() | //text()');
 
 		foreach (iterator_to_array($characterData, false) as $node) {
 			$this->sanitizeCharacterData($node, $errors);
@@ -970,33 +970,22 @@ class Dom
 	}
 
 	/**
-	 * Checks if a raw text element holds a descendant element of
-	 * the same name, whose closing tag ends the raw text early
-	 * once the document is embedded in an HTML page
+	 * Checks if the element has at least one child element
 	 *
 	 * @since 5.6.3
 	 */
-	protected function endsEarly(DOMElement $element): bool
+	protected function hasElementChild(DOMElement $element): bool
 	{
-		// each raw text element usually holds many nodes that need
-		// this check, so only walk its descendants once
-		$this->earlyEnds ??= new SplObjectStorage();
+		// finding the first child element walks all non-element children
+		// before it, so only do this once for each element instead of for
+		// each of the many comments or CDATA sections it may hold
+		$this->elementChildren ??= new SplObjectStorage();
 
-		if ($this->earlyEnds->contains($element) === true) {
-			return $this->earlyEnds[$element];
+		if ($this->elementChildren->contains($element) === false) {
+			$this->elementChildren[$element] = $element->firstElementChild !== null;
 		}
 
-		$name   = Str::lower($element->nodeName);
-		$result = false;
-
-		foreach ($element->getElementsByTagName('*') as $descendant) {
-			if (Str::lower($descendant->nodeName) === $name) {
-				$result = true;
-				break;
-			}
-		}
-
-		return $this->earlyEnds[$element] = $result;
+		return $this->elementChildren[$element];
 	}
 
 	/**
@@ -1146,10 +1135,12 @@ class Dom
 			'rawText' => $rawText
 		] = static::context($node);
 
-		// a nested element of the same name ends the raw text early,
-		// after which the parser reads the rest as live markup again
+		// a nested element of the same name ends the raw text early with
+		// its closing tag, after which the parser reads the rest as live
+		// markup again; raw text elements never hold elements legitimately,
+		// so any child element is treated as such
 		if ($element !== null && $markup === false) {
-			$markup = $this->endsEarly($element);
+			$markup = $this->hasElementChild($element);
 		}
 
 		$dangerous = false;

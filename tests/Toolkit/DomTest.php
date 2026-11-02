@@ -2300,10 +2300,16 @@ class DomTest extends TestCase
 			$sanitize('<root><title><title>x</title><style><!--</style><img src=x>--></style></title></root>')
 		);
 
-		// a prefixed element has a different tag name, which cannot end it
+		// any child element is treated as one that may end the raw text
 		$this->assertSame(
-			['<root><title><x:title xmlns:x="x">x</x:title><!--><img src=x>--></title></root>', []],
-			$sanitize('<root><title><x:title xmlns:x="x">x</x:title><!--><img src=x>--></title></root>')
+			['<root><title><b>x</b></title></root>', ['The comment (line 1) is not allowed']],
+			$sanitize('<root><title><b>x</b><!--><img src=x>--></title></root>')
+		);
+
+		// without one, the comment is just text in the raw text element
+		$this->assertSame(
+			['<root><title>x<!--><img src=x>--></title></root>', []],
+			$sanitize('<root><title>x<!--><img src=x>--></title></root>')
 		);
 
 		// a foreign `<title>` is no RCDATA element, so a comment directly
