@@ -336,6 +336,7 @@ export default {
 					this.items = this.toItems(value);
 				}
 			},
+			deep: true,
 			immediate: true
 		}
 	},
