@@ -235,11 +235,17 @@ abstract class ModelListField extends DisplayField
 	 */
 	protected function columnValues(ModelWithContent $model): array
 	{
+		$blueprint = $model->blueprint();
+		$fields    = [];
+
+		foreach ($this->columnFields() as $name) {
+			if ($field = $blueprint->field($name)) {
+				$fields[] = $field;
+			}
+		}
+
 		$form = new Form(
-			fields: array_intersect_key(
-				$model->blueprint()->fields(),
-				array_flip($this->columnFields())
-			),
+			fields: $fields,
 			model: $model
 		);
 
@@ -556,7 +562,8 @@ abstract class ModelListField extends DisplayField
 			// without overwriting what the item already provides
 			if (isset($item[$name]) === false) {
 				$values ??= $this->columnValues($model);
-				$item[$name] = $values[$column['id'] ?? $name] ?? null;
+				// form values are keyed by the lowercased field name
+				$item[$name] = $values[strtolower($column['id'] ?? $name)] ?? null;
 			}
 		}
 

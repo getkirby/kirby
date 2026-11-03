@@ -27,8 +27,9 @@ class FileListFieldTest extends TestCase
 			'blueprints' => [
 				'files/image' => [
 					'fields' => [
-						'alt'  => ['type' => 'text'],
-						'tags' => ['type' => 'tags']
+						'alt'     => ['type' => 'text'],
+						'altTags' => ['type' => 'tags'],
+						'tags'    => ['type' => 'tags']
 					]
 				]
 			],
@@ -39,7 +40,7 @@ class FileListFieldTest extends TestCase
 						'files' => [
 							[
 								'filename' => 'a.jpg',
-								'content'  => ['alt' => 'Alt A', 'tags' => 'a, b', 'caption' => 'Caption A'],
+								'content'  => ['alt' => 'Alt A', 'alttags' => 'c, d', 'tags' => 'a, b', 'caption' => 'Caption A'],
 								'template' => 'image'
 							],
 							[
@@ -332,6 +333,30 @@ class FileListFieldTest extends TestCase
 		]);
 
 		$this->assertSame(['a', 'b'], $field->data()[0]['tags']);
+	}
+
+	public function testDataWithTableLayoutAndFormValuesWithMixedCase(): void
+	{
+		// column ids and field names are matched case-insensitively
+		$field = $this->filelist([
+			'columns' => [
+				'alttags' => true,
+				'TAGS'    => true
+			],
+			'layout' => 'table'
+		]);
+
+		$item = $field->data()[0];
+
+		$this->assertSame(['c', 'd'], $item['alttags']);
+		$this->assertSame(['a', 'b'], $item['TAGS']);
+
+		$field = $this->filelist([
+			'columns' => ['altTags' => true],
+			'layout'  => 'table'
+		]);
+
+		$this->assertSame(['c', 'd'], $field->data()[0]['altTags']);
 	}
 
 	public function testDataWithTableLayoutAndHtmlColumns(): void
