@@ -335,7 +335,11 @@ export default {
 	opacity: 0;
 	pointer-events: none;
 }
+/* keep the active iframe on top of the stack,
+   Safari doesn't pass scroll events through an iframe
+   with `pointer-events: none` to the one below */
 .k-preview-browser-iframe.is-active {
+	z-index: 1;
 	opacity: 1;
 	pointer-events: auto;
 }
