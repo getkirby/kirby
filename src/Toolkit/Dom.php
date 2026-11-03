@@ -1028,7 +1028,7 @@ class Dom
 		// each of the many comments or CDATA sections it may hold
 		$this->elementChildren ??= new SplObjectStorage();
 
-		if ($this->elementChildren->contains($element) === false) {
+		if (isset($this->elementChildren[$element]) === false) {
 			$this->elementChildren[$element] = $element->firstElementChild !== null;
 		}
 
