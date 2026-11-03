@@ -6,7 +6,6 @@ const TAG = "k-validator-test";
 const mount = mounter<Validator>(TAG, Validator);
 
 afterEach(() => {
-	document.body.innerHTML = "";
 	vi.restoreAllMocks();
 });
 

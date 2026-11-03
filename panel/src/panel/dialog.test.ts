@@ -168,8 +168,6 @@ describe("panel.dialog", () => {
 		});
 
 		it("should submit the active dialog form on save shortcut", () => {
-			document.body.innerHTML = "";
-
 			const panel = Panel.create(app);
 			const { input, requestSubmit } = render("dialog");
 			const preventDefault = vi.fn();
@@ -181,8 +179,6 @@ describe("panel.dialog", () => {
 		});
 
 		it("should submit the active dialog form when the focus is outside of it", () => {
-			document.body.innerHTML = "";
-
 			const panel = Panel.create(app);
 			const { requestSubmit } = render("dialog");
 			const submit = vi.spyOn(panel.dialog, "submit");
@@ -199,8 +195,6 @@ describe("panel.dialog", () => {
 		});
 
 		it("should submit the topmost dialog form", () => {
-			document.body.innerHTML = "";
-
 			const panel = Panel.create(app);
 			const first = render("dialog");
 			const last = render("dialog");
@@ -216,8 +210,6 @@ describe("panel.dialog", () => {
 		});
 
 		it("should fall back to direct submit without a dialog form", () => {
-			document.body.innerHTML = "";
-
 			const panel = Panel.create(app);
 			const preventDefault = vi.fn();
 			const submit = vi.spyOn(panel.dialog, "submit");

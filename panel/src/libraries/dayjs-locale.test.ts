@@ -59,8 +59,9 @@ describe("dayjs.locale()", () => {
 
 	it("formats Persian in the Gregorian calendar", () => {
 		dayjs.locale("fa");
-		expect(dayjs("2024-01-01").format("MMMM")).toStrictEqual("ژانویهٔ");
-		expect(dayjs("2024-01-01").format("D")).toStrictEqual("1");
+		// June: ICU 79 dropped the ezafe of `ژانویهٔ`, `ژوئن` is stable
+		expect(dayjs("2024-06-01").format("MMMM")).toStrictEqual("ژوئن");
+		expect(dayjs("2024-06-01").format("D")).toStrictEqual("1");
 	});
 
 	it("localizes the day period", () => {

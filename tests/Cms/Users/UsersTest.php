@@ -163,6 +163,24 @@ class UsersTest extends TestCase
 		$this->assertNull($users->find(false));
 	}
 
+	public function testFindByEmailOnly(): void
+	{
+		$users = new Users([
+			new User(['email' => 'a@getkirby.com']),
+			new User(['email' => 'B@getKirby.com']),
+			new User(['id' => 'no-email']),
+		]);
+
+		$this->assertSame('a@getkirby.com', $users->findByEmail('a@getkirby.com')->email());
+		$this->assertSame('a@getkirby.com', $users->findByEmail('A@getkirby.com')->email());
+		$this->assertSame('b@getkirby.com', $users->findByEmail('b@getkirby.com')->email());
+		$this->assertNull($users->findByEmail('c@getkirby.com'));
+		$this->assertNull($users->findByEmail($users->first()->id()));
+		$this->assertNull($users->findByEmail('no-email'));
+		$this->assertNull($users->findByEmail(''));
+		$this->assertNull($users->findByEmail('a@'));
+	}
+
 	public function testFindByUuid(): void
 	{
 		$app = new App([
@@ -177,6 +195,7 @@ class UsersTest extends TestCase
 		$this->assertSame($b, $users->find('user://foo')->email());
 		$this->assertNull($users->find('user://bar'));
 		$this->assertNull($users->find(false));
+		$this->assertNull($users->findByEmail('user://homer'));
 
 		$this->assertSame($a, $app->user('user://homer')->email());
 		$this->assertSame($b, $app->user('user://foo')->email());

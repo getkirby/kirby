@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel\Controller\Dialog;
 
+use Kirby\Cms\App;
 use Kirby\Cms\User;
 use Kirby\Panel\TestCase;
 use Kirby\Panel\Ui\Dialog\FormDialog;
@@ -83,6 +84,25 @@ class UserCreateDialogControllerTest extends TestCase
 
 		$props = $dialog->props();
 		$this->assertSame('editor', $props['value']->role);
+	}
+
+	public function testLoadWithSingleRole(): void
+	{
+		$this->app = new App([
+			'roots' => [
+				'index' => static::TMP
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new UserCreateDialogController();
+		$dialog     = $controller->load();
+		$this->assertInstanceOf(FormDialog::class, $dialog);
+
+		$props = $dialog->props();
+		$this->assertSame('hidden', $props['fields']['role']['type']);
+		$this->assertSame('admin', $props['value']->role);
 	}
 
 	public function testSubmit(): void

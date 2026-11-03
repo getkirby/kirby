@@ -624,7 +624,7 @@ class Auth
 		return $this->guard(
 			email:    $email,
 			attempt: function () use ($email, $password) {
-				$user = $this->kirby->users()->find($email);
+				$user = $this->kirby->users()->findByEmail($email);
 
 				// validate the user and its password
 				if (

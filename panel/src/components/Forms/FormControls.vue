@@ -130,13 +130,9 @@ export default {
 						icon: "undo",
 						text: this.$t("form.discard")
 					},
-					text: this.$panel.html(
-						hasOtherEditor
-							? this.$t("form.discard.confirm.editor", {
-									editor: this.$helper.string.stripHTML(this.editor)
-								})
-							: this.$t("form.discard.confirm")
-					)
+					text: hasOtherEditor
+						? this.$th("form.discard.confirm.editor", { editor: this.editor })
+						: this.$th("form.discard.confirm")
 				},
 				on: {
 					submit: () => {

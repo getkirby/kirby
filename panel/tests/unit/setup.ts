@@ -1,6 +1,6 @@
 import { createApp, type App } from "vue";
 import { config } from "@vue/test-utils";
-import { vi } from "vitest";
+import { afterEach, vi } from "vitest";
 import Panel from "@/panel/panel";
 import Helpers from "@/helpers";
 import html from "@/panel/html";
@@ -59,3 +59,11 @@ vi.stubGlobal(
 		.fn()
 		.mockRejectedValue(new Error("No server available in test environment"))
 );
+
+/**
+ * Tests share one document per worker (`isolate: false`),
+ * so markup must not leak into the next test.
+ */
+afterEach(() => {
+	document.body.innerHTML = "";
+});

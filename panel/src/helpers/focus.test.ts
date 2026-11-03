@@ -1,9 +1,5 @@
-import { afterEach, describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import focus, { focusIsInModal, focusTarget, isFocusable } from "./focus";
-
-afterEach(() => {
-	document.body.innerHTML = "";
-});
 
 describe("isFocusable()", () => {
 	it("should return false for null", () => {

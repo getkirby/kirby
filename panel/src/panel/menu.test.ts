@@ -15,7 +15,6 @@ const createMenu = (isMobile = false) => {
 describe("panel.menu", () => {
 	beforeEach(() => {
 		localStorage.clear();
-		document.body.innerHTML = "";
 	});
 
 	afterEach(() => {

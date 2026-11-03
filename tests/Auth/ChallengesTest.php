@@ -15,6 +15,7 @@ use Kirby\Filesystem\F;
 use Kirby\Session\Session;
 use Kirby\Tests\MockTime;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class DummyChallenge extends Challenge
 {
@@ -301,12 +302,22 @@ class ChallengesTest extends TestCase
 		$this->challenges->create($session, 'marge@simpsons.com', 'login');
 	}
 
-	public function testCreateInvalidUser(): void
+	public static function unknownUserProvider(): array
+	{
+		return [
+			['unknown@example.com'],
+			['marge'],
+			['user://marge'],
+		];
+	}
+
+	#[DataProvider('unknownUserProvider')]
+	public function testCreateInvalidUser(string $email): void
 	{
 		$session = $this->session();
 
 		$this->expectException(UserNotFoundException::class);
-		$this->challenges->create($session, 'invalid@example.com', 'login');
+		$this->challenges->create($session, $email, 'login');
 	}
 
 	public function testCreateClearsPreviousChallengeOnFailure(): void
@@ -544,12 +555,13 @@ class ChallengesTest extends TestCase
 		$this->challenges->switch($session, 'dummy2');
 	}
 
-	public function testSwitchUserNotFound(): void
+	#[DataProvider('unknownUserProvider')]
+	public function testSwitchUserNotFound(string $email): void
 	{
 		// a missing user must not be observable here;
 		// instead it keeps the session generically pending
 		$session = $this->session();
-		$session->set('kirby.challenge.email', 'unknown@example.com');
+		$session->set('kirby.challenge.email', $email);
 		$session->set('kirby.challenge.mode', 'login');
 		$session->set('kirby.challenge.type', 'dummy');
 		$session->set('kirby.challenge.timeout', time() + 1000);
@@ -559,7 +571,7 @@ class ChallengesTest extends TestCase
 
 		// no challenge is created, but the session stays pending
 		$this->assertNull($challenge);
-		$this->assertSame('unknown@example.com', $session->get('kirby.challenge.email'));
+		$this->assertSame($email, $session->get('kirby.challenge.email'));
 		$this->assertSame('login', $session->get('kirby.challenge.mode'));
 		$this->assertSame(MockTime::$time + $this->challenges->timeout(), $session->get('kirby.challenge.timeout'));
 
@@ -718,11 +730,12 @@ class ChallengesTest extends TestCase
 		$this->challenges->verify($session, 'ok');
 	}
 
-	public function testVerifyUserNotFound(): void
+	#[DataProvider('unknownUserProvider')]
+	public function testVerifyUserNotFound(string $email): void
 	{
 		$session = $this->session();
 		$session->set('kirby.challenge.type', 'dummy');
-		$session->set('kirby.challenge.email', 'unknown@example.com');
+		$session->set('kirby.challenge.email', $email);
 		$session->set('kirby.challenge.mode', 'login');
 		$session->set('kirby.challenge.timeout', time() + 1000);
 

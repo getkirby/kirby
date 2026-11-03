@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "@test/unit";
+import { describe, expect, it, vi } from "@test/unit";
 import { mount as vueMount } from "@vue/test-utils";
 import type Api from "@/api";
 import Pages from "@/api/pages";
@@ -41,10 +41,6 @@ function mount(props = {}, attrs = {}) {
 }
 
 describe("PreviewView.vue", () => {
-	beforeEach(() => {
-		panel.view.open.mockClear();
-	});
-
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "K-PANEL", "k-preview-view");

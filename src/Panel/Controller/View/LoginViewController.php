@@ -187,6 +187,6 @@ class LoginViewController extends ViewController
 	protected function user(): User
 	{
 		$email = $this->status->email();
-		return $this->kirby->user($email) ?? new User(['email' => $email]);
+		return $this->kirby->users()->findByEmail($email) ?? new User(['email' => $email]);
 	}
 }

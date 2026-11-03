@@ -55,10 +55,6 @@ describe("ModelListField.vue", () => {
 	beforeEach(() => {
 		api.get.mockReset();
 		api.get.mockResolvedValue(state);
-		events.emit.mockClear();
-		events.off.mockClear();
-		events.on.mockClear();
-		panel.error.mockClear();
 	});
 
 	// $el

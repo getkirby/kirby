@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "@test/unit";
+import { describe, expect, it, vi } from "@test/unit";
 import { mount as vueMount } from "@vue/test-utils";
 import PreviewForm from "./PreviewForm.vue";
 
@@ -60,12 +60,6 @@ function loaded(...urls: (string | undefined)[]) {
 const original = vi.fn();
 
 describe("PreviewForm.vue", () => {
-	beforeEach(() => {
-		events.off.mockClear();
-		events.on.mockClear();
-		original.mockClear();
-	});
-
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "DIV", "k-preview-form");

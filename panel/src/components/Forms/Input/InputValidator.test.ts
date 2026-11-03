@@ -5,7 +5,6 @@ import InputValidator from "./InputValidator";
 const mount = mounter<InputValidator>("k-input-validator-test", InputValidator);
 
 afterEach(() => {
-	document.body.innerHTML = "";
 	vi.restoreAllMocks();
 });
 
