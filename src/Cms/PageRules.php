@@ -458,6 +458,15 @@ class PageRules
 				$errors = $page->version()->errors($language);
 
 				if ($errors !== []) {
+					// add the language to the error details
+					// to make clear which translation is incomplete
+					foreach ($errors as $name => $error) {
+						$label = $error['label'] ?? $name;
+
+						$errors[$name]['label']    = $label . ' (' . $language->name() . ')';
+						$errors[$name]['language'] = $language->code();
+					}
+
 					break;
 				}
 			}
