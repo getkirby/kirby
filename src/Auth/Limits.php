@@ -63,6 +63,13 @@ class Limits
 	{
 		if ($this->isBlocked($email) === true) {
 			$this->kirby->trigger('user.login:failed', ['email' => $email]);
+
+			// count the ip even if only the account is blocked,
+			// otherwise the ip counter reveals that the account exists
+			if ($email !== null && $this->isBlocked() === false) {
+				$this->track(null, triggerHook: false);
+			}
+
 			throw new RateLimitException();
 		}
 	}

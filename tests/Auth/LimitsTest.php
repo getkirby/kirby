@@ -58,6 +58,49 @@ class LimitsTest extends TestCase
 		$this->assertSame('homer@simpsons.com', $this->failedEmail);
 	}
 
+	public function testEnsureWithBlockedAccount(): void
+	{
+		copy(
+			static::FIXTURES . '/logins.json',
+			static::TMP . '/site/accounts/.logins'
+		);
+
+		$this->app->visitor()->ip('10.3.123.234');
+
+		try {
+			$this->limits->ensure('homer@simpsons.com');
+			$this->fail('Expected a RateLimitException');
+		} catch (RateLimitException) {
+			// expected
+		}
+
+		// only the ip is counted, not the blocked account
+		$log = $this->limits->log();
+		$this->assertSame(1, $log['by-ip']['85a06e36d926cb901f05d1167913ebd7ec3d8f5bce4551f5da']['trials']);
+		$this->assertSame(['time' => 9999999999, 'trials' => 10], $log['by-email']['homer@simpsons.com']);
+		$this->assertSame('homer@simpsons.com', $this->failedEmail);
+	}
+
+	public function testEnsureWithBlockedIp(): void
+	{
+		copy(
+			static::FIXTURES . '/logins.json',
+			static::TMP . '/site/accounts/.logins'
+		);
+
+		$this->app->visitor()->ip('10.2.123.234');
+
+		try {
+			$this->limits->ensure('homer@simpsons.com');
+			$this->fail('Expected a RateLimitException');
+		} catch (RateLimitException) {
+			// expected
+		}
+
+		// a blocked ip is not counted any further
+		$this->assertSame(10, $this->limits->log()['by-ip']['38f0a08519792a17e18a251008f3a116977907f921b0b287c8']['trials']);
+	}
+
 	public function testEnsurePasses(): void
 	{
 		copy(
