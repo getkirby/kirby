@@ -186,6 +186,16 @@ class Challenges
 	}
 
 	/**
+	 * Returns the challenge type for a pending session without
+	 * a challenge: the one a user without secrets would get
+	 */
+	public function fallback(string $email, string $mode): string|null
+	{
+		$user = new User(['email' => $email]);
+		return $this->available($user, $mode)[0] ?? A::last($this->enabled());
+	}
+
+	/**
 	 * Returns the first available auth challenge
 	 * for the user and purpose/mode
 	 */

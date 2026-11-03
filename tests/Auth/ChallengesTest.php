@@ -393,6 +393,47 @@ class ChallengesTest extends TestCase
 		$this->assertSame([], $this->challenges->enabled());
 	}
 
+	public function testFallback(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'challenges' => ['email', 'totp']
+				]
+			]
+		]);
+
+		// the user has set up TOTP as their second factor
+		F::write(
+			static::TMP . '/site/accounts/marge/.htpasswd',
+			User::hashPassword('12345678') . "\n" . '{"totp":"JBSWY3DPEHPK3PXP"}'
+		);
+
+		$challenges = new Challenges($this->app->auth(), $this->app);
+
+		// the challenge of a user without secrets, not the last one;
+		// the fallback never depends on the account
+		$this->assertSame('email', $challenges->fallback('invalid@example.com', 'login'));
+		$this->assertSame('email', $challenges->fallback('marge@simpsons.com', 'login'));
+		$this->assertSame('email', $challenges->fallback('invalid@example.com', 'password-reset'));
+
+		// no challenge is available without secrets
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'challenges' => ['totp']
+				]
+			]
+		]);
+
+		$challenges = new Challenges($this->app->auth(), $this->app);
+		$this->assertSame('totp', $challenges->fallback('invalid@example.com', 'login'));
+
+		// no challenge is enabled
+		DummyChallenge::$enabled = false;
+		$this->assertNull($this->challenges->fallback('invalid@example.com', 'login'));
+	}
+
 	public function testFirstAvailable(): void
 	{
 		$user = $this->app->user('marge');

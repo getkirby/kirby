@@ -542,7 +542,7 @@ class Auth
 			user:         $user,
 			impersonated: $allowImpersonation && $this->user->isImpersonated(),
 			session:      $session,
-			challenges:   $this->challenges()->enabled()
+			challenges:   $this->challenges()
 		);
 
 		if ($default === true) {
