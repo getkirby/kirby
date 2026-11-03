@@ -2159,6 +2159,16 @@ class DomTest extends TestCase
 			$sanitize('<root><svg><desc><g><![CDATA[><img src=x>]]></g></desc></svg></root>')
 		);
 
+		// ...and older Chromium versions already treat the content of the
+		// integration point itself like that
+		$this->assertSame(
+			[
+				'<root><svg><desc>&gt;&lt;img src=x&gt;</desc></svg></root>',
+				['The CDATA section (line 1) is not allowed']
+			],
+			$sanitize('<root><svg><desc><![CDATA[><img src=x>]]></desc></svg></root>')
+		);
+
 		// ...but `<svg>` re-enters foreign content below one of them
 		$this->assertSame(
 			['<root><svg><desc><svg><![CDATA[><img src=x>]]></svg></desc></svg></root>', []],
@@ -2172,6 +2182,14 @@ class DomTest extends TestCase
 				['The CDATA section (line 1) is not allowed']
 			],
 			$sanitize('<root><math><mtext><b><![CDATA[><img src=x>]]></b></mtext></math></root>')
+		);
+
+		$this->assertSame(
+			[
+				'<root><math><mtext>&gt;&lt;img src=x&gt;</mtext></math></root>',
+				['The CDATA section (line 1) is not allowed']
+			],
+			$sanitize('<root><math><mtext><![CDATA[><img src=x>]]></mtext></math></root>')
 		);
 
 		// HTML elements that break a parser out of foreign content leave
