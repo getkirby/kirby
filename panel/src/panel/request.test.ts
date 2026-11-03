@@ -16,6 +16,7 @@ import {
 	responder,
 	safeFetch
 } from "./request";
+import { flush, MockXHR } from "@test/unit/xhr";
 
 function jsonResponse(body: unknown, status = 200) {
 	return new Response(JSON.stringify(body), {
@@ -40,10 +41,10 @@ describe("panel.request", () => {
 			expect(body("test")).toStrictEqual("test");
 		});
 
-		it("should create body from FormData", () => {
+		it("should keep FormData as multipart body", () => {
 			const formData = new FormData();
 			formData.append("a", "A");
-			expect(body(formData)).toStrictEqual('{"a":"A"}');
+			expect(body(formData)).toBe(formData);
 		});
 
 		it("should create body from HTMLFormElement", () => {
@@ -285,6 +286,12 @@ describe("panel.request", () => {
 		it("should not set the language header without a language", () => {
 			expect(headers({}, { language: null })).not.toHaveProperty("x-language");
 		});
+
+		it("should not set the content type for FormData", () => {
+			expect(
+				headers({ "Content-Type": "text/plain" }, { body: new FormData() })
+			).not.toHaveProperty("content-type");
+		});
 	});
 
 	describe("redirect()", () => {
@@ -332,6 +339,65 @@ describe("panel.request", () => {
 			const req = mock.mock.calls[0][0] as Request;
 			expect(req.headers.get("x-panel")).toStrictEqual("true");
 			expect(req.headers.get("x-csrf")).toStrictEqual("secret");
+		});
+
+		it("should report the upload progress", async () => {
+			MockXHR.instances = [];
+			vi.stubGlobal("XMLHttpRequest", MockXHR);
+
+			const progress = vi.fn();
+			const promise = request("/api/files", {
+				method: "POST",
+				body: new FormData(),
+				progress
+			});
+			await flush();
+
+			MockXHR.instances[0].emitProgress(1, 2);
+			MockXHR.instances[0].emitLoad(
+				'{"status":"ok"}',
+				200,
+				"Content-Type: application/json\r\n"
+			);
+
+			const { response } = await promise;
+			expect(response.json).toStrictEqual({ status: "ok" });
+			expect(progress).toHaveBeenCalledWith(50);
+		});
+
+		it("should not send to other origins with XMLHttpRequest", async () => {
+			MockXHR.instances = [];
+			vi.stubGlobal("XMLHttpRequest", MockXHR);
+
+			const promise = request("https://example.com/api/files", {
+				method: "POST",
+				body: new FormData(),
+				progress: () => {}
+			});
+
+			await expect(promise).rejects.toThrow(RedirectError);
+			expect(MockXHR.instances).toHaveLength(0);
+		});
+
+		it("should not use a response from another origin", async () => {
+			MockXHR.instances = [];
+			vi.stubGlobal("XMLHttpRequest", MockXHR);
+
+			const promise = request("/api/files", {
+				method: "POST",
+				body: new FormData(),
+				progress: () => {}
+			});
+			await flush();
+
+			MockXHR.instances[0].emitLoad(
+				'{"<info>":"<img src=x onerror=alert(1)>"}',
+				200,
+				"Content-Type: application/json\r\n",
+				"https://example.com/steal"
+			);
+
+			await expect(promise).rejects.toThrow(OfflineError);
 		});
 	});
 
@@ -400,6 +466,21 @@ describe("panel.request", () => {
 			await expect(responder(req, raw)).rejects.toThrow(RedirectError);
 		});
 
+		it("should throw JsonRequestError for a non-JSON error response", async () => {
+			const raw = new Response("<html>Request Entity Too Large</html>", {
+				status: 413,
+				headers: { "Content-Type": "text/html" }
+			});
+
+			const error = (await responder(req, raw).catch(
+				(reason) => reason
+			)) as JsonRequestError;
+
+			expect(error).toBeInstanceOf(JsonRequestError);
+			expect(error.response.status).toBe(413);
+			expect(error.response.text).toBe("<html>Request Entity Too Large</html>");
+		});
+
 		it("should throw AuthError for 401", async () => {
 			await expect(
 				responder(req, jsonResponse({ message: "Unauthenticated" }, 401))
@@ -433,6 +514,21 @@ describe("panel.request", () => {
 			const req = new Request("https://example.com/api");
 			await expect(safeFetch(req)).rejects.toThrow("Aborted");
 			await expect(safeFetch(req)).rejects.not.toThrow(OfflineError);
+		});
+
+		it("should send with XMLHttpRequest to report the progress", async () => {
+			MockXHR.instances = [];
+			vi.stubGlobal("XMLHttpRequest", MockXHR);
+			vi.stubGlobal("fetch", vi.fn());
+
+			const req = new Request("https://example.com/api", { method: "POST" });
+			const promise = safeFetch(req, () => {});
+			await flush();
+
+			MockXHR.instances[0].emitLoad("{}");
+
+			await expect(promise).resolves.toBeInstanceOf(Response);
+			expect(fetch).not.toHaveBeenCalled();
 		});
 	});
 });

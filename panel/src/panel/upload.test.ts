@@ -1,6 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
 import Upload, { defaults } from "./upload";
 import Panel from "./panel";
+import JsonRequestError from "@/errors/JsonRequestError";
+import OfflineError from "@/errors/OfflineError";
+import RequestError from "@/errors/RequestError";
+import type { PanelResponse } from "./request";
 
 // URL.createObjectURL/.revokeObjectURL
 // are not implemented in happy-dom
@@ -9,6 +13,23 @@ URL.revokeObjectURL = vi.fn();
 
 function makeFile(name = "test.jpg", type = "image/jpeg", size = 100): File {
 	return new File([new ArrayBuffer(size)], name, { type });
+}
+
+const req = new Request("https://example.com/api/pages/test/files");
+
+function makeResponse(
+	json: Record<string, unknown> = {},
+	status = 200
+): PanelResponse {
+	return {
+		headers: new Headers(),
+		json,
+		ok: status < 400,
+		status,
+		statusText: "",
+		text: JSON.stringify(json),
+		url: req.url
+	};
 }
 
 function makeFileList(...files: File[]): FileList {
@@ -360,6 +381,199 @@ describe("panel.upload", () => {
 
 			expect(upload.upload).toHaveBeenCalledTimes(8);
 			expect(max).toStrictEqual(2);
+		});
+
+		it("should not finish when the upload got cancelled", async () => {
+			const panel = Panel.create(app);
+			const upload = Upload(panel);
+
+			upload.url = "/api/pages/test/files";
+			upload.select(makeFileList(makeFile("a.jpg")));
+			upload.done = vi.fn();
+
+			upload.upload = vi.fn(async () => {
+				await upload.cancel();
+			});
+
+			await upload.submit();
+
+			expect(upload.done).not.toHaveBeenCalled();
+		});
+	});
+
+	describe("upload()", () => {
+		function setup(size = 100) {
+			const panel = Panel.create(app);
+			panel.set({ config: { upload: 100 } });
+
+			const upload = Upload(panel);
+			upload.url = "/api/pages/test/files";
+			upload.abort = new AbortController();
+			upload.files = [upload.file(makeFile("a.jpg", "image/jpeg", size))];
+
+			const request = vi.spyOn(panel, "request").mockResolvedValue({
+				request: req,
+				response: makeResponse({ status: "ok", data: { id: "a" } })
+			});
+
+			return { panel, request, upload, file: upload.files[0] };
+		}
+
+		it("should upload a file", async () => {
+			const { request, upload, file } = setup();
+
+			await upload.upload(file, { sort: 1, template: "image" });
+
+			expect(request).toHaveBeenCalledOnce();
+
+			const [url, options] = request.mock.calls[0];
+			const body = options?.body as FormData;
+			expect(url).toStrictEqual("/api/pages/test/files");
+			expect(options?.method).toStrictEqual("POST");
+			expect(options?.headers).toStrictEqual({});
+			expect(options?.signal).toBe(upload.abort!.signal);
+			expect((body.get("file") as File).name).toStrictEqual("a.jpg");
+			expect(body.get("sort")).toStrictEqual("1");
+			expect(body.get("template")).toStrictEqual("image");
+
+			expect(file.completed).toStrictEqual(true);
+			expect(file.model).toStrictEqual({ id: "a" });
+		});
+
+		it("should skip empty attributes", async () => {
+			const { request, upload, file } = setup();
+
+			await upload.upload(file, {
+				sort: null as unknown as number,
+				template: undefined as unknown as string
+			});
+
+			const body = request.mock.calls[0][1]?.body as FormData;
+			expect(body.has("sort")).toStrictEqual(false);
+			expect(body.has("template")).toStrictEqual(false);
+		});
+
+		it("should upload a large file in chunks", async () => {
+			const { request, upload, file } = setup(250);
+
+			await upload.upload(file, {});
+
+			expect(request).toHaveBeenCalledTimes(3);
+
+			const calls = request.mock.calls.map(([, options]) => ({
+				headers: options?.headers,
+				size: ((options?.body as FormData).get("file") as File).size
+			}));
+
+			const id = calls[0].headers?.["upload-id"];
+			expect(id).toHaveLength(16);
+			expect(calls).toStrictEqual([
+				{
+					headers: {
+						"upload-id": id,
+						"upload-length": "250",
+						"upload-offset": "0"
+					},
+					size: 100
+				},
+				{
+					headers: {
+						"upload-id": id,
+						"upload-length": "250",
+						"upload-offset": "100"
+					},
+					size: 100
+				},
+				{
+					headers: {
+						"upload-id": id,
+						"upload-length": "250",
+						"upload-offset": "200"
+					},
+					size: 50
+				}
+			]);
+		});
+
+		it("should upload an empty file in one request", async () => {
+			const { request, upload, file } = setup(0);
+
+			await upload.upload(file, {});
+
+			expect(request).toHaveBeenCalledOnce();
+			expect(file.completed).toStrictEqual(true);
+		});
+
+		it("should combine the progress of all chunks", async () => {
+			const { request, upload, file } = setup(250);
+			const progress: number[] = [];
+
+			request.mockImplementation(async (url, options) => {
+				options?.progress?.(50);
+				progress.push(file.progress);
+				return { request: req, response: makeResponse() };
+			});
+
+			await upload.upload(file, {});
+
+			expect(progress).toStrictEqual([20, 60, 90]);
+		});
+
+		it("should store the server's error message", async () => {
+			const { request, upload, file } = setup();
+
+			request.mockRejectedValue(
+				new RequestError("The request failed", {
+					request: req,
+					response: makeResponse(
+						{
+							status: "error",
+							message: 'A file with the name "a.jpg" already exists'
+						},
+						400
+					)
+				})
+			);
+
+			await upload.upload(file, {});
+
+			expect(file.error).toStrictEqual(
+				'A file with the name "a.jpg" already exists'
+			);
+			expect(file.completed).toStrictEqual(false);
+			expect(file.progress).toStrictEqual(0);
+		});
+
+		it("should store a generic error message for other errors", async () => {
+			const { panel, request, upload, file } = setup();
+			const errors = [
+				new JsonRequestError("Invalid JSON response", {
+					request: req,
+					response: makeResponse({}, 413)
+				}),
+				new OfflineError("Panel is offline", { request: req }),
+				new TypeError("Something broke")
+			];
+
+			for (const error of errors) {
+				request.mockRejectedValueOnce(error);
+				await upload.upload(file, {});
+				expect(file.error).toStrictEqual(panel.t("upload.error.default"));
+			}
+		});
+
+		it("should not store an error for a cancelled upload", async () => {
+			const { panel, request, upload, file } = setup();
+			const onError = vi.fn();
+
+			panel.events.on("file.upload.error", onError);
+			upload.abort!.abort();
+			request.mockRejectedValue(upload.abort!.signal.reason);
+
+			await upload.upload(file, {});
+
+			expect(file.error).toBeUndefined();
+			expect(onError).not.toHaveBeenCalled();
 		});
 	});
 });
