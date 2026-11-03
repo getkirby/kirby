@@ -14,6 +14,7 @@ use Kirby\Http\Cookie;
 use Kirby\Http\Request\Auth\BasicAuth;
 use Kirby\Session\Session;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 #[CoversClass(Auth::class)]
 class AuthTest extends TestCase
@@ -523,7 +524,17 @@ class AuthTest extends TestCase
 		$this->assertSame('marge@simpsons.com', $this->auth->status()->email());
 	}
 
-	public function testLoginInvalidUser(): void
+	public static function unknownUserProvider(): array
+	{
+		return [
+			['lisa@simpsons.com'],
+			['marge'],
+			['user://marge'],
+		];
+	}
+
+	#[DataProvider('unknownUserProvider')]
+	public function testLoginInvalidUser(string $email): void
 	{
 		$this->app = $this->app->clone([
 			'options' => [
@@ -532,10 +543,15 @@ class AuthTest extends TestCase
 		]);
 		$this->auth = $this->app->auth();
 
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('Invalid login');
+		try {
+			$this->auth->login($email, 'springfield123');
+			$this->fail('Expected PermissionException');
+		} catch (PermissionException $e) {
+			$this->assertSame('Invalid login', $e->getMessage());
+		}
 
-		$this->auth->login('lisa@simpsons.com', 'springfield123');
+		$this->assertSame($email, $this->failedEmail);
+		$this->assertNull($this->app->user());
 	}
 
 	public function testLoginInvalidPassword(): void
@@ -551,6 +567,12 @@ class AuthTest extends TestCase
 		$this->expectExceptionMessage('Invalid login');
 
 		$this->auth->login('marge@simpsons.com', 'springfield456');
+	}
+
+	public function testLoginWithMixedCaseEmail(): void
+	{
+		$user = $this->auth->login('Marge@Simpsons.com', 'springfield123');
+		$this->assertSame($this->app->user('marge@simpsons.com'), $user);
 	}
 
 	public function testLoginKirby(): void
@@ -816,14 +838,21 @@ class AuthTest extends TestCase
 		$this->auth->validatePassword('marge@simpsons.com', 'invalid-password');
 	}
 
-	public function testValidatePasswordInvalidUser(): void
+	#[DataProvider('unknownUserProvider')]
+	public function testValidatePasswordInvalidUser(string $email): void
 	{
 		$this->app->visitor()->ip('10.3.123.234');
 
 		$this->expectException(UserNotFoundException::class);
-		$this->expectExceptionMessage('The user "lisa@simpsons.com" cannot be found');
+		$this->expectExceptionMessage('The user "' . $email . '" cannot be found');
 
-		$this->auth->validatePassword('lisa@simpsons.com', 'springfield123');
+		$this->auth->validatePassword($email, 'springfield123');
+	}
+
+	public function testValidatePasswordWithMixedCaseEmail(): void
+	{
+		$user = $this->auth->validatePassword('Marge@Simpsons.com', 'springfield123');
+		$this->assertSame('marge@simpsons.com', $user->email());
 	}
 
 	public function testValidatePasswordIsGuarded(): void

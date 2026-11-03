@@ -115,7 +115,7 @@ class Challenges
 		$this->auth->limits()->track($email, triggerHook: false);
 
 		// try to find the provided user
-		$user = $this->kirby->user($email);
+		$user = $this->kirby->users()->findByEmail($email);
 
 		if ($user === null) {
 			$this->kirby->trigger('user.login:failed', ['email' => $email]);
@@ -287,7 +287,7 @@ class Challenges
 				);
 			}
 
-			$user = $this->kirby->user($email);
+			$user = $this->kirby->users()->findByEmail($email);
 
 			// Rate-limiting:
 			// Each switch can trigger side effects (e.g. email sends),
@@ -351,7 +351,7 @@ class Challenges
 		// ensure we have an active challenge for a valid user
 		$this->ensureNotTimeout($session);
 		$email = $this->ensureActiveChallenge($session);
-		$user  = $this->kirby->user($email);
+		$user  = $this->kirby->users()->findByEmail($email);
 
 		if ($user === null) {
 			throw new UserNotFoundException(name: $email);

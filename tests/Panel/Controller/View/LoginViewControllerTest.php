@@ -12,6 +12,7 @@ use Kirby\Panel\TestCase;
 use Kirby\Panel\Ui\Component;
 use Kirby\Panel\Ui\View;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class TestChallenge extends Challenge
 {
@@ -387,6 +388,42 @@ class LoginViewControllerTest extends TestCase
 		$this->assertTrue($props['challenges'][0]['active']);
 		$this->assertSame('test2', $props['challenges'][1]['type']);
 		$this->assertFalse($props['challenges'][1]['active']);
+	}
+
+	public static function userIdProvider(): array
+	{
+		return [
+			['test'],
+			['user://test'],
+		];
+	}
+
+	#[DataProvider('userIdProvider')]
+	public function testLoadWithChallengeForUserId(string $id): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'challenges' => ['test']
+				]
+			],
+			'users' => [
+				[
+					'id'    => 'test',
+					'email' => 'test@example.com',
+					'role'  => 'admin'
+				]
+			]
+		]);
+
+		$this->app->session()->set('kirby.challenge.email', $id);
+		$this->app->session()->set('kirby.challenge.type', 'test');
+		$this->app->session()->set('kirby.challenge.mode', 'login');
+
+		$props = (new LoginViewController('challenge', 'test'))->load()->props();
+
+		$this->assertSame('k-login-test-challenge-form', $props['form']['component']);
+		$this->assertSame($id, $props['form']['props']['user']);
 	}
 
 	public function testLoadExcludesUserSpecificChallengeForNonExistentUser(): void
