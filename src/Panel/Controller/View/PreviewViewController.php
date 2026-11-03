@@ -81,7 +81,7 @@ class PreviewViewController extends ViewController
 	 */
 	protected function modelFromUri(Uri $url): Site|Page
 	{
-		$model = $this->kirby->call($url->path(), 'GET');
+		$model = $this->kirby->call($this->pathFromUri($url), 'GET');
 
 		// @codeCoverageIgnoreStart
 		if (
@@ -98,6 +98,31 @@ class PreviewViewController extends ViewController
 	protected function path(): string
 	{
 		return 'preview/' . $this->mode;
+	}
+
+	/**
+	 * Returns the path of the URL relative to the
+	 * site's index URL, so that it can be routed even
+	 * if Kirby is installed in a subfolder
+	 */
+	protected function pathFromUri(Uri $url): string
+	{
+		$path = $url->path()->toString();
+		$base = $this->kirby->url('index', true)->path()->toString();
+
+		if ($base === '') {
+			return $path;
+		}
+
+		if ($path === $base) {
+			return '';
+		}
+
+		if (str_starts_with($path, $base . '/') === true) {
+			return substr($path, strlen($base) + 1);
+		}
+
+		return $path;
 	}
 
 	public function props(): array
