@@ -26,7 +26,7 @@ return [
 	],
 	[
 		'pattern' => '(:all)/changes/save',
-		'method'  => 'POST',
+		'method'  => 'PATCH|POST',
 		'action'  => function (string $path) {
 			return Changes::save(
 				model: Find::parent($path),

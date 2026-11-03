@@ -271,7 +271,20 @@ export default (panel) => {
 				options.silent = true;
 			}
 
-			return panel.api.post(api + "/changes/" + method, values, options);
+			const httpMethod = method === "save" ? "patch" : "post";
+
+			// For PATCH requests, send only the changed fields.
+			// If methodOverride is enabled, PATCH is converted to POST at the transport
+			// layer, so send the full changes version instead of the diff.
+			if (httpMethod === "patch") {
+				if (panel.api.methodOverride === true) {
+					values = this.version("changes", env);
+				} else {
+					values = this.diff(env);
+				}
+			}
+
+			return panel.api[httpMethod](api + "/changes/" + method, values, options);
 		},
 
 		/**
