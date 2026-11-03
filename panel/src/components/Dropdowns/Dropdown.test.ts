@@ -7,10 +7,13 @@ import {
 	type VueWrapper
 } from "@vue/test-utils";
 import { h } from "vue";
+import Button from "@/components/Navigation/Button.vue";
 import Navigate from "@/components/Navigation/Navigate.vue";
 import Dropdown from "./Dropdown.vue";
+import DropdownItem from "./DropdownItem.vue";
 
 type Options = {
+	components?: Record<string, unknown>;
 	mocks?: Record<string, unknown>;
 	slots?: ComponentMountingOptions<typeof Dropdown>["slots"];
 };
@@ -32,7 +35,7 @@ function button(rect: Partial<DOMRect> = {}) {
 function mount(
 	props = {},
 	attrs = {},
-	{ mocks = {}, slots = {} }: Options = {}
+	{ components = {}, mocks = {}, slots = {} }: Options = {}
 ) {
 	return vueMount(Dropdown, {
 		props,
@@ -41,7 +44,7 @@ function mount(
 		attachTo: document.body,
 		data: () => ({ isOpen: true }),
 		global: {
-			components: { "k-navigate": Navigate },
+			components: { "k-navigate": Navigate, ...components },
 			mocks: { $panel: { direction: "ltr" }, ...mocks }
 		}
 	});
@@ -160,6 +163,13 @@ describe("Dropdown.vue", () => {
 			const options = [{ label: "Label", text: "Text" }];
 			const wrapper = await open(mount({ options }));
 			expect(items(wrapper)).toStrictEqual(["Label"]);
+		});
+
+		it("closes after the request of an option", async () => {
+			const options = [{ text: "Sync", request: "shop/sync" }];
+			const wrapper = await open(mount({ options }));
+			await wrapper.find("k-dropdown-item").trigger("success");
+			expect(wrapper.vm.isOpen).toBe(false);
 		});
 
 		it("skips options whose when is false", async () => {
@@ -441,6 +451,23 @@ describe("Dropdown.vue", () => {
 			const wrapper = await open();
 			await wrapper.trigger("click");
 			expect(wrapper.vm.isOpen).toBe(false);
+		});
+
+		it("keeps the dropdown open while an item sends a request", async () => {
+			const options = [{ text: "Sync", request: () => new Promise(() => {}) }];
+			const components = {
+				"k-button": Button,
+				"k-dropdown-item": DropdownItem
+			};
+			const wrapper = await open(mount({ options }, {}, { components }));
+
+			await wrapper.find(".k-dropdown-item").trigger("click");
+			await flushPromises();
+
+			expect(wrapper.vm.isOpen).toBe(true);
+			expect(wrapper.find(".k-dropdown-item").attributes("aria-busy")).toBe(
+				"true"
+			);
 		});
 	});
 

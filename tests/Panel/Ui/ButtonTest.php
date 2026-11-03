@@ -45,6 +45,7 @@ class ButtonTest extends TestCase
 			'dropdown'   => null,
 			'icon'       => 'smile',
 			'link'       => null,
+			'request'    => null,
 			'responsive' => false,
 			'size'       => 'xs',
 			'target'     => null,
