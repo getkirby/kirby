@@ -365,6 +365,51 @@ class LimitsTest extends TestCase
 		$this->assertSame(1, $log['by-email']['homer@simpsons.com']['trials']);
 	}
 
+	public function testTrackWithEmailInOtherCase(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth' => ['trials' => 3]
+			]
+		]);
+		$this->limits = new Limits($this->app);
+
+		$this->app->visitor()->ip('10.1.123.234');
+		$this->limits->track('MARGE@simpsons.com');
+
+		$this->app->visitor()->ip('10.2.123.234');
+		$this->limits->track('Marge@Simpsons.com');
+
+		$this->app->visitor()->ip('10.3.123.234');
+		$this->limits->track('marge@simpsons.com');
+
+		$log = $this->limits->log();
+		$this->assertSame(['marge@simpsons.com'], array_keys($log['by-email']));
+		$this->assertSame(3, $log['by-email']['marge@simpsons.com']['trials']);
+
+		$this->app->visitor()->ip('10.4.123.234');
+		$this->assertTrue($this->limits->isBlocked('mArGe@simpsons.com'));
+	}
+
+	public function testTrackWithUserId(): void
+	{
+		$this->app = $this->app->clone([
+			'users' => [
+				['id' => 'marge', 'email' => 'marge@simpsons.com']
+			]
+		]);
+		$this->limits = new Limits($this->app);
+
+		$this->app->visitor()->ip('10.1.123.234');
+		$this->limits->track('marge');
+
+		// login only accepts emails, so an id is
+		// counted like an unknown email
+		$log = $this->limits->log();
+		$this->assertSame(1, $log['by-ip']['87084f11690867b977a611dd2c943a918c3197f4c02b25ab59']['trials']);
+		$this->assertSame([], $log['by-email']);
+	}
+
 	public function testTrackWithCorruptedFile(): void
 	{
 		file_put_contents($this->limits->file(), 'some gibberish');
