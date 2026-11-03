@@ -99,19 +99,6 @@ class PageAbilities extends ModelAbilities
 	protected function ensureToPublish(): void
 	{
 		$this->ensureToChangeStatus();
-
-		if ($this->model->isDraft() === false) {
-			return;
-		}
-
-		// the field errors are passed on as details, so that
-		// the Panel can show which fields are still incomplete
-		if ($errors = $this->model->errors()) {
-			$this->error(
-				key: 'changeStatus.incomplete',
-				details: $errors
-			);
-		}
 	}
 
 	protected function ensureToSort(): void

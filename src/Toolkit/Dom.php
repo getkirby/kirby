@@ -892,7 +892,7 @@ class Dom
 	 *
 	 * @since 5.6.3
 	 *
-	 * @return array<\DOMComment|\DOMCdataSection>
+	 * @return array<DOMComment|DOMCdataSection>
 	 */
 	protected function characterData(): array
 	{
@@ -1008,9 +1008,12 @@ class Dom
 			}
 		}
 
+		// the content of an integration point itself is not treated as
+		// foreign either: older Chromium versions already degrade
+		// `<![CDATA[` to a bogus comment there, unlike the spec
 		return [
 			'element' => null,
-			'foreign' => $root !== null,
+			'foreign' => $root !== null && $integration === false,
 			'markup'  => false,
 			'rawText' => null
 		];

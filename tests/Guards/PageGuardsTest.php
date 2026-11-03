@@ -254,6 +254,47 @@ class PageGuardsTest extends ModelTestCase
 		$this->guards($page)->ensureExecutable('create');
 	}
 
+	public function testCreateWithIncompleteDraft(): void
+	{
+		$page = new Page([
+			'slug'      => 'test',
+			'isDraft'   => true,
+			'blueprint' => [
+				'name'   => 'test',
+				'fields' => [
+					'headline' => [
+						'type'     => 'text',
+						'required' => true
+					]
+				]
+			]
+		]);
+
+		$this->assertNull($this->guards($page)->ensureExecutable('create'));
+	}
+
+	public function testCreateWithIncompletePublishedPage(): void
+	{
+		$page = new Page([
+			'slug'      => 'test',
+			'isDraft'   => false,
+			'blueprint' => [
+				'name'   => 'test',
+				'fields' => [
+					'headline' => [
+						'type'     => 'text',
+						'required' => true
+					]
+				]
+			]
+		]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.page.changeStatus.incomplete');
+
+		$this->guards($page)->ensureExecutable('create');
+	}
+
 	public function testCreateWithPublishedPage(): void
 	{
 		// creating a page that is not a draft bypasses the
@@ -332,6 +373,56 @@ class PageGuardsTest extends ModelTestCase
 		$this->expectExceptionCode('error.file.delete.permission');
 
 		$this->guards($this->app->page('test'))->ensureExecutable('delete');
+	}
+
+	public function testEnsureToBeCreatable(): void
+	{
+		$page = new Page([
+			'slug'    => 'test',
+			'isDraft' => true
+		]);
+
+		$this->assertNull($this->guards($page)->ensureToBeCreatable());
+	}
+
+	public function testEnsureToBeCreatableWithDuplicate(): void
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [['slug' => 'test']]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page = new Page([
+			'slug'    => 'test',
+			'isDraft' => true
+		]);
+
+		$this->expectExceptionCode('error.page.duplicate');
+
+		$this->guards($page)->ensureToBeCreatable();
+	}
+
+	public function testEnsureToBeCreatableWithIncompletePublishedPage(): void
+	{
+		// the content is not validated before it has been added
+		$page = new Page([
+			'slug'      => 'test',
+			'isDraft'   => false,
+			'blueprint' => [
+				'name'   => 'test',
+				'fields' => [
+					'headline' => [
+						'type'     => 'text',
+						'required' => true
+					]
+				]
+			]
+		]);
+
+		$this->assertNull($this->guards($page)->ensureToBeCreatable());
 	}
 
 	public function testMove(): void

@@ -50,11 +50,15 @@ abstract class ModelValidators
 	 *
 	 * @throws InvalidArgumentException
 	 */
-	public function error(string $key, array $data = []): never
-	{
+	public function error(
+		string $key,
+		array $data = [],
+		array $details = []
+	): never {
 		throw new InvalidArgumentException(
 			key: $key,
-			data: $data
+			data: $data,
+			details: $details
 		);
 	}
 

@@ -514,7 +514,8 @@ trait PageActions
 		// Make sure that the page does not already exist at this point.
 		// Otherwise, moving the storage to memory storage, might delete
 		// an existing page before we can even run the checks.
-		$page->guards()->ensureExecutable('create');
+		// The full create guards incl. content validation run in the commit.
+		$page->guards()->ensureToBeCreatable();
 
 		// merge the content with the defaults and run it through
 		// the fields to apply their save handlers

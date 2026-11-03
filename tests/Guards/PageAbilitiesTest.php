@@ -208,40 +208,6 @@ class PageAbilitiesTest extends ModelTestCase
 		$this->abilities('error')->ensure('publish');
 	}
 
-	public function testPublishWithIncompleteDraft(): void
-	{
-		$this->app = $this->app->clone([
-			'blueprints' => [
-				'pages/test' => [
-					'fields' => [
-						'headline' => [
-							'type'     => 'text',
-							'required' => true
-						]
-					]
-				]
-			]
-		]);
-
-		$page = new Page([
-			'slug'     => 'test',
-			'template' => 'test',
-			'isDraft'  => true
-		]);
-
-		$abilities = new PageAbilities(
-			model: $page,
-			user: $this->user()
-		);
-
-		$this->assertNotSame([], $page->errors());
-
-		$this->expectException(AbilityException::class);
-		$this->expectExceptionCode('error.page.changeStatus.incomplete');
-
-		$abilities->ensure('publish');
-	}
-
 	public function testSortWithCustomNum(): void
 	{
 		$page = new Page([

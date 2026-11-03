@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\DuplicateException;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -116,6 +117,31 @@ class PageCreateTest extends ModelTestCase
 
 		$this->assertSame('Custom A', $page->a()->value());
 		$this->assertSame('B', $page->b()->value());
+	}
+
+	public function testCreateDraftWithIncompleteContent(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'fields' => [
+						'headline' => [
+							'type'     => 'text',
+							'required' => true
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page = Page::create([
+			'slug' => 'new-page',
+		]);
+
+		$this->assertTrue($page->exists());
+		$this->assertTrue($page->isDraft());
 	}
 
 	/**
@@ -319,6 +345,104 @@ class PageCreateTest extends ModelTestCase
 		$this->assertFalse($page->isListed());
 		$this->assertTrue($page->parentModel()->children()->has($page));
 		$this->assertTrue($site->children()->has($page));
+	}
+
+	public function testCreateUnlistedPageWithCompleteContent(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'fields' => [
+						'headline' => [
+							'type'     => 'text',
+							'required' => true
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page = Page::create([
+			'slug'    => 'new-page',
+			'isDraft' => false,
+			'content' => [
+				'headline' => 'Headline'
+			]
+		]);
+
+		$this->assertTrue($page->exists());
+		$this->assertFalse($page->isDraft());
+		$this->assertSame('Headline', $page->headline()->value());
+	}
+
+	public function testCreateUnlistedPageWithIncompleteContent(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'fields' => [
+						'headline' => [
+							'type'     => 'text',
+							'required' => true
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The page has errors and cannot be published');
+
+		Page::create([
+			'slug'    => 'new-page',
+			'isDraft' => false,
+		]);
+	}
+
+	public function testCreateUnlistedPageWithIncompleteTranslation(): void
+	{
+		$this->setupMultiLanguage();
+
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'fields' => [
+						'headline' => [
+							'type'     => 'text',
+							'required' => true
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The page has errors and cannot be published');
+
+		Page::create([
+			'slug'         => 'new-page',
+			'isDraft'      => false,
+			'translations' => [
+				[
+					'code'    => 'en',
+					'content' => [
+						'headline' => 'Headline'
+					]
+				],
+				[
+					'code'    => 'de',
+					'content' => [
+						'headline' => ''
+					]
+				]
+			]
+		]);
 	}
 
 	public function testCreateWhenDefaultLanguageIsActive(): void

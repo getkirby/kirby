@@ -17,6 +17,105 @@ class PageValidatorsTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Guards.PageValidators';
 
+	public function testContent(): void
+	{
+		$validators = $this->validators(new Page([
+			'slug'      => 'test',
+			'blueprint' => [
+				'name'   => 'test',
+				'fields' => [
+					'headline' => [
+						'type'     => 'text',
+						'required' => true
+					]
+				]
+			],
+			'content' => [
+				'headline' => 'Headline'
+			]
+		]));
+
+		$this->assertNull($validators->validateContent());
+	}
+
+	public function testContentWithCompleteTranslations(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$page = new Page([
+			'slug'      => 'test',
+			'blueprint' => [
+				'name'   => 'test',
+				'fields' => [
+					'headline' => [
+						'type'     => 'text',
+						'required' => true
+					]
+				]
+			]
+		]);
+
+		$page->version()->save(['headline' => 'Headline'], 'en');
+
+		// the missing German translation falls back to the default language
+		$this->assertNull($this->validators($page)->validateContent());
+	}
+
+	public function testContentWithErrors(): void
+	{
+		$page = new Page([
+			'slug'      => 'test',
+			'blueprint' => [
+				'name'   => 'test',
+				'fields' => [
+					'headline' => [
+						'type'     => 'text',
+						'required' => true
+					]
+				]
+			]
+		]);
+
+		try {
+			$this->validators($page)->validateContent();
+			$this->fail('Expected an InvalidArgumentException');
+		} catch (InvalidArgumentException $e) {
+			$this->assertSame('error.page.changeStatus.incomplete', $e->getKey());
+			$this->assertSame($page->errors(), $e->getDetails());
+		}
+	}
+
+	public function testContentWithIncompleteTranslation(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$page = new Page([
+			'slug'      => 'test',
+			'blueprint' => [
+				'name'   => 'test',
+				'fields' => [
+					'headline' => [
+						'type'     => 'text',
+						'required' => true
+					]
+				]
+			]
+		]);
+
+		$page->version()->save(['headline' => 'Headline'], 'en');
+		$page->version()->save(['headline' => ''], 'de');
+
+		try {
+			$this->validators($page)->validateContent();
+			$this->fail('Expected an InvalidArgumentException');
+		} catch (InvalidArgumentException $e) {
+			$this->assertSame('error.page.changeStatus.incomplete', $e->getKey());
+			$this->assertSame(['headline'], array_keys($e->getDetails()));
+			$this->assertSame('Headline (de)', $e->getDetails()['headline']['label']);
+			$this->assertSame('de', $e->getDetails()['headline']['language']);
+		}
+	}
+
 	public function testDoesNotExist(): void
 	{
 		$validators = $this->validators(new Page(['slug' => 'test']));
@@ -181,6 +280,47 @@ class PageValidatorsTest extends ModelTestCase
 		$validators->ensure('create');
 	}
 
+	public function testEnsureCreateWithIncompleteDraft(): void
+	{
+		$validators = $this->validators(new Page([
+			'slug'      => 'test',
+			'isDraft'   => true,
+			'blueprint' => [
+				'name'   => 'test',
+				'fields' => [
+					'headline' => [
+						'type'     => 'text',
+						'required' => true
+					]
+				]
+			]
+		]));
+
+		$this->assertNull($validators->ensure('create'));
+	}
+
+	public function testEnsureCreateWithIncompletePublishedPage(): void
+	{
+		$validators = $this->validators(new Page([
+			'slug'      => 'test',
+			'isDraft'   => false,
+			'blueprint' => [
+				'name'   => 'test',
+				'fields' => [
+					'headline' => [
+						'type'     => 'text',
+						'required' => true
+					]
+				]
+			]
+		]));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.page.changeStatus.incomplete');
+
+		$validators->ensure('create');
+	}
+
 	public function testEnsureDuplicate(): void
 	{
 		$validators = $this->validators(new Page(['slug' => 'test']));
@@ -210,6 +350,48 @@ class PageValidatorsTest extends ModelTestCase
 		$this->expectExceptionCode('error.page.move.ancestor');
 
 		$validators->ensure('move', $this->app->page('parent-a/child'));
+	}
+
+	public function testEnsurePublish(): void
+	{
+		// only drafts get their content validated
+		$validators = $this->validators(new Page([
+			'slug'      => 'test',
+			'isDraft'   => false,
+			'blueprint' => [
+				'name'   => 'test',
+				'fields' => [
+					'headline' => [
+						'type'     => 'text',
+						'required' => true
+					]
+				]
+			]
+		]));
+
+		$this->assertNull($validators->ensure('publish'));
+	}
+
+	public function testEnsurePublishWithIncompleteDraft(): void
+	{
+		$validators = $this->validators(new Page([
+			'slug'      => 'test',
+			'isDraft'   => true,
+			'blueprint' => [
+				'name'   => 'test',
+				'fields' => [
+					'headline' => [
+						'type'     => 'text',
+						'required' => true
+					]
+				]
+			]
+		]));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.page.changeStatus.incomplete');
+
+		$validators->ensure('publish');
 	}
 
 	public function testHasNoChildren(): void
@@ -626,6 +808,49 @@ class PageValidatorsTest extends ModelTestCase
 		$this->expectExceptionCode('error.page.changeTitle.empty');
 
 		$validators->validateTitle('');
+	}
+
+	public function testToBeCreatable(): void
+	{
+		$validators = $this->validators(new Page(['slug' => 'test']));
+
+		$this->assertNull($validators->validateToBeCreatable());
+	}
+
+	public function testToBeCreatableWithExistingDraft(): void
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'drafts' => [['slug' => 'test']]
+			]
+		]);
+
+		$validators = $this->validators(new Page(['slug' => 'test']));
+
+		$this->expectException(DuplicateException::class);
+		$this->expectExceptionCode('error.page.draft.duplicate');
+
+		$validators->validateToBeCreatable();
+	}
+
+	public function testToBeCreatableWithIncompletePublishedPage(): void
+	{
+		// the content is not validated before it has been added
+		$validators = $this->validators(new Page([
+			'slug'      => 'test',
+			'isDraft'   => false,
+			'blueprint' => [
+				'name'   => 'test',
+				'fields' => [
+					'headline' => [
+						'type'     => 'text',
+						'required' => true
+					]
+				]
+			]
+		]));
+
+		$this->assertNull($validators->validateToBeCreatable());
 	}
 
 	protected function user(): User
