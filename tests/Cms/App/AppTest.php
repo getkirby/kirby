@@ -488,6 +488,67 @@ class AppTest extends TestCase
 		$this->assertSame('B1', $app->option('namespace.plugin.nested')['key']);
 	}
 
+	public function testOptionFromPluginWithNestedConfig(): void
+	{
+		App::plugin('vendor/plugin', [
+			'options' => [
+				'endpoints' => null,
+				'role'      => null,
+				'debug'     => null,
+				'fallback'  => 'keep-me',
+			]
+		]);
+
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'options' => [
+				// user configures plugin options using nested array syntax
+				'vendor' => [
+					'plugin' => [
+						'endpoints' => [
+							'api' => ['url' => 'https://example.com']
+						],
+						'role' => 'editor',
+						'debug' => false,
+					]
+				]
+			]
+		]);
+
+		// nested config values should override plugin defaults
+		$this->assertSame(
+			['api' => ['url' => 'https://example.com']],
+			$app->option('vendor.plugin.endpoints')
+		);
+		$this->assertSame('editor', $app->option('vendor.plugin.role'));
+		$this->assertFalse($app->option('vendor.plugin.debug'));
+
+		// plugin defaults that are not overridden should still remain
+		$this->assertSame('keep-me', $app->option('vendor.plugin.fallback'));
+		// full plugin options should include merged values
+		$this->assertSame([
+			'endpoints' => [
+				'api' => ['url' => 'https://example.com']
+			],
+			'role' => 'editor',
+			'debug' => false,
+			'fallback' => 'keep-me',
+		], $app->option('vendor.plugin'));
+
+		// option('vendor') should still return the vendor config (not null)
+		$this->assertSame([
+			'plugin' => [
+				'endpoints' => [
+					'api' => ['url' => 'https://example.com']
+				],
+				'role' => 'editor',
+				'debug' => false,
+			]
+		], $app->option('vendor'));
+	}
+
 	public function testOptions(): void
 	{
 		$app = new App([
