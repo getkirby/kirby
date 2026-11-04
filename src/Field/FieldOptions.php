@@ -79,14 +79,27 @@ class FieldOptions
 		return $props;
 	}
 
-	public function render(ModelWithContent $model): array
+	/**
+	 * @param array $keep Values of models the current user must not list
+	 *                    that are kept as placeholders (e.g. stored values)
+	 */
+	public function render(ModelWithContent $model, array $keep = []): array
 	{
-		return $this->resolve($model)->render($model, $this->safeMode);
+		return $this->resolve($model, $keep)->render($model, $this->safeMode);
 	}
 
-	public function resolve(ModelWithContent $model): Options
+	/**
+	 * @param array $keep Values of models the current user must not list
+	 *                    that are kept as placeholders (e.g. stored values)
+	 */
+	public function resolve(ModelWithContent $model, array $keep = []): Options
 	{
-		// resolve OptionsProvider (OptionsApi or OptionsQuery) to Options
+		// only queries can return models with permissions
+		if ($this->options instanceof OptionsQuery) {
+			return $this->options->resolve($model, $this->safeMode, $keep);
+		}
+
+		// resolve OptionsProvider (OptionsApi) to Options
 		if ($this->options instanceof OptionsProvider) {
 			return $this->options->resolve($model, $this->safeMode);
 		}

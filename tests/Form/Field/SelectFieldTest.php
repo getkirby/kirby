@@ -2,6 +2,7 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Cms\App;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 class SelectFieldTest extends TestCase
@@ -116,7 +117,7 @@ class SelectFieldTest extends TestCase
 
 	public function testOptionsQueryAdditionalData(): void
 	{
-		$this->app()->clone([
+		$app = $this->app()->clone([
 			'site' => [
 				'children' => [
 					[
@@ -146,6 +147,8 @@ class SelectFieldTest extends TestCase
 				]
 			]
 		]);
+
+		$app->impersonate('kirby');
 
 		$expected = [
 			[
@@ -183,6 +186,71 @@ class SelectFieldTest extends TestCase
 		]);
 
 		$this->assertSame($expected, $field->options());
+	}
+
+	public function testOptionsQueryWithProtectedPages(): void
+	{
+		// the permission cache is keyed by template and role,
+		// so both need to be unique for this test
+		$uuid = uuid();
+
+		$app = new App([
+			'blueprints' => [
+				'pages/secret-' . $uuid => [
+					'options' => ['list' => false]
+				]
+			],
+			'roles' => [
+				['name' => 'editor-' . $uuid]
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'a'],
+					[
+						'slug'     => 'b',
+						'template' => 'secret-' . $uuid
+					],
+					[
+						'slug'     => 'c',
+						'template' => 'secret-' . $uuid
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor-' . $uuid
+				]
+			],
+			'user' => 'editor@getkirby.com'
+		]);
+
+		$field = $this->field('select', [
+			'model'   => $app->site(),
+			'options' => [
+				'type'  => 'query',
+				'query' => 'site.children'
+			]
+		]);
+
+		// pages that must not be listed are hidden
+		$this->assertSame(['a'], array_column($field->options(), 'value'));
+
+		// ... unless already stored, then they are kept as placeholder
+		// (filled after creating the field, like a form does)
+		$field->fill('b');
+
+		$this->assertSame('b', $field->value());
+		$this->assertSame('a', $field->options()[0]['value']);
+		$this->assertSame([
+			'disabled' => false,
+			'icon'     => 'protected',
+			'info'     => null,
+			'text'     => '–',
+			'value'    => 'b'
+		], $field->options()[1]);
+		$this->assertCount(2, $field->options());
+		$this->assertSame('b', $field->toStoredValue());
 	}
 
 	public static function valueInputProvider(): array

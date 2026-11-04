@@ -25,14 +25,14 @@ return [
 		},
 	],
 	'methods' => [
-		'getOptions' => function () {
+		'getOptions' => function (array $keep = []) {
 			$props = FieldOptions::polyfill($this->props);
 
 			// disable safe mode as the select field does not
 			// render HTML for the option text
 			$options = FieldOptions::factory($props['options'], false);
 
-			return $options->render($this->model());
+			return $options->render($this->model(), $keep);
 		}
 	]
 ];
