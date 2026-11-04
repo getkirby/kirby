@@ -26,6 +26,11 @@ describe("Keys", () => {
 			const ext = new Keys({ "Mod-k": vi.fn() });
 			expect(ext.keys()["Mod-k"]()).toBe(true);
 		});
+
+		it("returns false from a key handler that returns false to pass the key on", () => {
+			const ext = new Keys({ "Mod-k": () => false });
+			expect(ext.keys()["Mod-k"]()).toBe(false);
+		});
 	});
 
 	describe("name", () => {
