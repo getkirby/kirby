@@ -7,6 +7,7 @@ use Kirby\Cms\Page;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\Attributes\CoversClass;
+use ReflectionMethod;
 
 class ExtendedModelValidators extends ModelValidators
 {
@@ -60,7 +61,9 @@ class ModelValidatorsTest extends ModelTestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionCode('error.page.slug.invalid');
 
-		$this->validators()->error('page.slug.invalid');
+		$validators = $this->validators();
+		$method     = new ReflectionMethod($validators, 'error');
+		$method->invoke($validators, 'page.slug.invalid');
 	}
 
 	public function testMay(): void
@@ -78,7 +81,10 @@ class ModelValidatorsTest extends ModelTestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Slug length must be less than "10" characters');
 
-		$this->validators()->error(
+		$validators = $this->validators();
+		$method     = new ReflectionMethod($validators, 'error');
+		$method->invoke(
+			$validators,
 			key: 'page.slug.maxlength',
 			data: ['length' => 10]
 		);

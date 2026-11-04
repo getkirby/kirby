@@ -24,7 +24,7 @@ class SitePermissions extends ModelPermissions
 		return 'site';
 	}
 
-	public function error(string $key, array $data = []): never
+	protected function error(string $key, array $data = []): never
 	{
 		parent::error(
 			key: 'site.' . $key . '.permission',

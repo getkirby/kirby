@@ -137,7 +137,7 @@ class UserAbilities extends ModelAbilities
 		}
 	}
 
-	public function error(
+	protected function error(
 		string $key,
 		array $data = [],
 		array $details = []

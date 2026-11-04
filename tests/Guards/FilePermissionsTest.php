@@ -7,6 +7,7 @@ use Kirby\Cms\ModelTestCase;
 use Kirby\Cms\Page;
 use Kirby\Exception\PermissionException;
 use PHPUnit\Framework\Attributes\CoversClass;
+use ReflectionMethod;
 
 #[CoversClass(FilePermissions::class)]
 class FilePermissionsTest extends ModelTestCase
@@ -114,7 +115,8 @@ class FilePermissionsTest extends ModelTestCase
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionCode('error.file.test.permission');
 
-		$permissions->error('test');
+		$method = new ReflectionMethod($permissions, 'error');
+		$method->invoke($permissions, 'test');
 	}
 
 	public function testReplace(): void

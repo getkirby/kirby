@@ -8,6 +8,7 @@ use Kirby\Cms\Page;
 use Kirby\Cms\User;
 use Kirby\Exception\AbilityException;
 use PHPUnit\Framework\Attributes\CoversClass;
+use ReflectionMethod;
 
 #[CoversClass(FileAbilities::class)]
 class FileAbilitiesTest extends ModelTestCase
@@ -87,7 +88,8 @@ class FileAbilitiesTest extends ModelTestCase
 		$this->expectException(AbilityException::class);
 		$this->expectExceptionCode('error.file.test');
 
-		$abilities->error('test');
+		$method = new ReflectionMethod($abilities, 'error');
+		$method->invoke($abilities, 'test');
 	}
 
 	protected function abilities(): FileAbilities

@@ -24,7 +24,7 @@ class PagePermissions extends ModelPermissions
 		return 'pages';
 	}
 
-	public function error(string $key, array $data = []): never
+	protected function error(string $key, array $data = []): never
 	{
 		parent::error(
 			key: 'page.' . $key . '.permission',

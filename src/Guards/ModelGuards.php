@@ -32,12 +32,17 @@ abstract class ModelGuards
 	 */
 	protected static WeakMap|null $cache = null;
 
+	protected ModelAbilities $abilities;
+	protected ModelPermissions $permissions;
+	protected ModelValidators $validators;
+
+	/**
+	 * Child classes create their abilities, permissions
+	 * and validators for the model and user
+	 */
 	public function __construct(
-		protected ModelAbilities $abilities,
 		protected Model $model,
-		protected ModelPermissions $permissions,
-		protected User $user,
-		protected ModelValidators $validators,
+		protected User $user
 	) {
 	}
 
@@ -132,7 +137,6 @@ abstract class ModelGuards
 			return $cached;
 		}
 
-		/** @psalm-suppress TooFewArguments */
 		return $cache[$model] = new static(
 			model: $model,
 			user: $user

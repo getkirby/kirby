@@ -47,22 +47,11 @@ class UserGuards extends ModelGuards
 		User $model,
 		User $user
 	) {
-		parent::__construct(
-			abilities: new UserAbilities(
-				model: $model,
-				user: $user
-			),
-			model: $model,
-			permissions: new UserPermissions(
-				model: $model,
-				user: $user
-			),
-			user: $user,
-			validators: new UserValidators(
-				model: $model,
-				user: $user
-			),
-		);
+		parent::__construct($model, $user);
+
+		$this->abilities   = new UserAbilities($model, $user);
+		$this->permissions = new UserPermissions($model, $user);
+		$this->validators  = new UserValidators($model, $user);
 	}
 
 	/**

@@ -48,22 +48,11 @@ class FileGuards extends ModelGuards
 		File $model,
 		User $user
 	) {
-		parent::__construct(
-			abilities: new FileAbilities(
-				model: $model,
-				user: $user
-			),
-			model: $model,
-			permissions: new FilePermissions(
-				model: $model,
-				user: $user
-			),
-			user: $user,
-			validators: new FileValidators(
-				model: $model,
-				user: $user
-			),
-		);
+		parent::__construct($model, $user);
+
+		$this->abilities   = new FileAbilities($model, $user);
+		$this->permissions = new FilePermissions($model, $user);
+		$this->validators  = new FileValidators($model, $user);
 	}
 
 	/**

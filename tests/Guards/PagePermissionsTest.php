@@ -6,6 +6,7 @@ use Kirby\Cms\ModelTestCase;
 use Kirby\Cms\Page;
 use Kirby\Exception\PermissionException;
 use PHPUnit\Framework\Attributes\CoversClass;
+use ReflectionMethod;
 
 #[CoversClass(PagePermissions::class)]
 class PagePermissionsTest extends ModelTestCase
@@ -168,7 +169,8 @@ class PagePermissionsTest extends ModelTestCase
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionCode('error.page.test.permission');
 
-		$permissions->error('test');
+		$method = new ReflectionMethod($permissions, 'error');
+		$method->invoke($permissions, 'test');
 	}
 
 	public function testMove(): void
