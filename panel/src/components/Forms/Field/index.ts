@@ -7,6 +7,7 @@ export { default as "k-email-field" } from "./EmailField.vue";
 export { default as "k-entries-field" } from "./EntriesField.vue";
 export { default as "k-filelist-field" } from "./FileListField.vue";
 export { default as "k-filepicker-field" } from "./FilePickerField.vue";
+export { default as "k-filter-field" } from "./FilterField.vue";
 export { default as "k-gap-field" } from "./GapField.vue";
 export { default as "k-headline-field" } from "./HeadlineField.vue";
 export { default as "k-info-field" } from "./InfoField.vue";
