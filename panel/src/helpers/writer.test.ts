@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
+import writer, {
 	allowedExtensions,
 	availableMarks,
 	availableMarksFromPlugins,
@@ -12,6 +12,7 @@ import {
 	filterExtensions,
 	keepInlineNodes
 } from "./writer";
+import Extension from "@/components/Forms/Writer/Extension";
 import Mark from "@/components/Forms/Writer/Mark";
 import Node from "@/components/Forms/Writer/Node";
 
@@ -40,6 +41,22 @@ const allNodeNames = [
 	"quote",
 	"text"
 ];
+
+describe("Extension", () => {
+	it("can be extended by plugins", () => {
+		class Custom extends writer.Extension {
+			get name() {
+				return "custom";
+			}
+		}
+
+		const custom = new Custom();
+
+		expect(custom).toBeInstanceOf(Extension);
+		expect(custom.type).toBe("extension");
+		expect(custom.name).toBe("custom");
+	});
+});
 
 describe("allowedExtensions", () => {
 	const available = { a: 1, b: 2, c: 3 };

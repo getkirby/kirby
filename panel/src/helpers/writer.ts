@@ -3,7 +3,7 @@
  * @license   https://getkirby.com/license
  */
 
-import type Extension from "@/components/Forms/Writer/Extension";
+import Extension from "@/components/Forms/Writer/Extension";
 import Mark from "@/components/Forms/Writer/Mark";
 import Node from "@/components/Forms/Writer/Node";
 import { isObject } from "./object";
@@ -275,6 +275,7 @@ export function keepInlineNodes(nodes: Node[]): Node[] {
 }
 
 export default {
+	Extension,
 	allowedExtensions,
 	availableMarks,
 	availableMarksFromPlugins,
