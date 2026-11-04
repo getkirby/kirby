@@ -46,12 +46,17 @@
 			</k-empty>
 
 			<!-- Conditions -->
-			<div v-else class="k-filter-field-items">
+			<div
+				v-else
+				:data-operators="hasOperatorColumn"
+				class="k-filter-field-items"
+			>
 				<div
 					v-for="(row, index) in rows"
 					:key="row.id"
 					class="k-filter-field-item"
 				>
+					<!-- unknown fields are shown as empty selection -->
 					<k-select-field
 						:ref="'condition-' + index + '-field'"
 						:disabled="disabled"
@@ -59,20 +64,31 @@
 						:options="fieldOptions"
 						:placeholder="$t('field.filter.field')"
 						:required="true"
-						:value="row.condition.field"
+						:value="fitsField(row.condition) ? row.condition.field : ''"
 						class="k-filter-field-item-field"
 						@input="onFieldInput(index, $event)"
 					/>
-					<k-select-field
-						:disabled="disabled"
-						:label="false"
-						:options="operatorsFor(row.condition.field)"
-						:placeholder="$t('field.filter.operator')"
-						:required="true"
-						:value="row.condition.operator"
-						class="k-filter-field-item-operator"
-						@input="onInput(index, 'operator', $event)"
-					/>
+					<template v-if="hasOperatorColumn">
+						<!-- a single fitting operator is shown as plain text -->
+						<span
+							v-if="isFixedOperator(row.condition)"
+							class="k-filter-field-item-operator k-filter-field-item-operator-fixed"
+						>
+							{{ operatorsFor(row.condition.field)[0].text }}
+						</span>
+						<!-- operators that don't fit are shown as empty selection -->
+						<k-select-field
+							v-else
+							:disabled="disabled"
+							:label="false"
+							:options="operatorsFor(row.condition.field)"
+							:placeholder="$t('field.filter.operator')"
+							:required="true"
+							:value="fitsOperator(row.condition) ? row.condition.operator : ''"
+							class="k-filter-field-item-operator"
+							@input="onInput(index, 'operator', $event)"
+						/>
+					</template>
 					<component
 						:is="`k-${target(row.condition.field).type}-field`"
 						v-bind="target(row.condition.field)"
@@ -177,11 +193,51 @@ export default {
 				}));
 		},
 		/**
+		 * Returns the operator option, if all fields share
+		 * the same single operator. Otherwise returns `null`.
+		 * @returns {object|null}
+		 */
+		fixedOperator() {
+			const operators = this.fieldOptions.map((field) =>
+				this.operatorsFor(field.value)
+			);
+
+			if (
+				operators.length === 0 ||
+				operators.some((options) => options.length !== 1) === true
+			) {
+				return null;
+			}
+
+			const first = operators[0][0];
+
+			if (operators.every(([option]) => option.value === first.value)) {
+				return first;
+			}
+
+			return null;
+		},
+		/**
 		 * Returns whether any fields can be matched
 		 * @returns {boolean}
 		 */
 		hasFields() {
 			return this.fieldOptions.length > 0;
+		},
+		/**
+		 * Returns whether the operator column is shown.
+		 * It is hidden if all fields share the same single operator,
+		 * unless a condition has an operator that doesn't fit.
+		 * @returns {boolean}
+		 */
+		hasOperatorColumn() {
+			if (this.fixedOperator === null) {
+				return true;
+			}
+
+			return this.rows.some(
+				(row) => this.fitsOperator(row.condition) === false
+			);
 		},
 		/**
 		 * Returns if new conditions can be added
@@ -263,8 +319,40 @@ export default {
 			const field = this.target(name);
 			return this.$helper.field.form({ field })?.field ?? "";
 		},
+		/**
+		 * Returns whether the field of the condition can be selected
+		 * @param {object} condition
+		 * @returns {boolean}
+		 */
+		fitsField(condition) {
+			return this.fieldOptions.some(
+				(option) => option.value === condition.field
+			);
+		},
+		/**
+		 * Returns whether the operator of the condition fits its field
+		 * @param {object} condition
+		 * @returns {boolean}
+		 */
+		fitsOperator(condition) {
+			return this.operatorsFor(condition.field).some(
+				(option) => option.value === condition.operator
+			);
+		},
 		focus(index) {
 			this.$refs["condition-" + index + "-field"]?.[0]?.focus?.();
+		},
+		/**
+		 * Returns whether the condition's field only offers
+		 * a single operator, which is already selected
+		 * @param {object} condition
+		 * @returns {boolean}
+		 */
+		isFixedOperator(condition) {
+			return (
+				this.operatorsFor(condition.field).length === 1 &&
+				this.fitsOperator(condition) === true
+			);
 		},
 		onFieldInput(index, name) {
 			const condition = this.rows[index].condition;
@@ -355,6 +443,10 @@ export default {
 	border-radius: var(--rounded);
 }
 
+.k-filter-field-items[data-operators="false"] .k-filter-field-item {
+	grid-template-columns: 1fr 2fr auto;
+}
+
 .k-filter-field:not([data-disabled="true"]) .k-filter-field-item {
 	--input-color-border: transparent;
 	box-shadow: var(--shadow);
@@ -365,6 +457,19 @@ export default {
 }
 
 .k-filter-field-item > .k-field:not(:first-child) {
+	border-inline-start: 1px solid var(--panel-color-back);
+}
+
+.k-filter-field-item-operator-fixed {
+	display: flex;
+	align-items: center;
+	min-width: 0;
+	padding-inline: var(--input-padding);
+	font-size: var(--input-font-size);
+	color: var(--color-text-dimmed);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 	border-inline-start: 1px solid var(--panel-color-back);
 }
 
@@ -379,8 +484,13 @@ export default {
 		grid-template-columns: 1fr 1fr auto;
 	}
 
+	.k-filter-field-items[data-operators="false"] .k-filter-field-item {
+		grid-template-columns: 1fr auto;
+	}
+
+	/* the value spans all columns except the last one */
 	.k-filter-field-item-value {
-		grid-column: 1 / 3;
+		grid-column: 1 / -2;
 		grid-row: 2;
 		border-inline-start: 0 !important;
 		border-top: 1px solid var(--panel-color-back);
@@ -388,7 +498,7 @@ export default {
 
 	.k-filter-field-item-remove.k-button {
 		grid-row: 1 / 3;
-		grid-column: 3;
+		grid-column: -2 / -1;
 	}
 }
 
