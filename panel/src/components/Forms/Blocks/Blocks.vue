@@ -12,7 +12,8 @@
 				class="k-blocks-list"
 				@sort="save"
 			>
-				<k-block
+				<component
+					:is="blockComponent"
 					v-for="(block, index) in blocks"
 					:ref="'block-' + block.id"
 					:key="block.id"
@@ -80,6 +81,14 @@ import { focusIsInModal } from "@/helpers/focus";
 export const props = {
 	mixins: [autofocus, disabled, id],
 	props: {
+		/**
+		 * Component that renders each block
+		 * @since 6.0.0
+		 */
+		blockComponent: {
+			type: String,
+			default: "k-block"
+		},
 		empty: String,
 		endpoints: Object,
 		fieldsets: Object,
