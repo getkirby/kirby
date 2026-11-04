@@ -125,6 +125,19 @@ export default {
 			return this.$refs[index === 0 ? "browserA" : "browserB"];
 		},
 		/**
+		 * Checks if a link points to the site, which also
+		 * requires it to be inside the site's install subfolder
+		 */
+		isSiteLink(link) {
+			const site = new URL(this.$panel.urls.site, location.origin);
+			const base = site.pathname.replace(/\/$/, "");
+
+			return (
+				link.origin === site.origin &&
+				(link.pathname === base || link.pathname.startsWith(base + "/"))
+			);
+		},
+		/**
 		 * Double-buffered load:
 		 * - set src on the inactive iframe
 		 * - swap to it once the load finishes
@@ -162,7 +175,7 @@ export default {
 
 			// open external links and Panel links in new tab
 			if (
-				link.href.startsWith(location.origin) === false ||
+				this.isSiteLink(link) === false ||
 				link.href.startsWith(this.$panel.urls.panel) === true
 			) {
 				link.target = "_blank";

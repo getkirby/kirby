@@ -81,16 +81,18 @@ class PreviewViewController extends ViewController
 	 */
 	protected function modelFromUri(Uri $url): Site|Page
 	{
-		$model = $this->kirby->call($this->pathFromUri($url), 'GET');
+		$path = $this->pathFromUri($url);
 
-		// @codeCoverageIgnoreStart
+		// only route URLs that belong to the site as `App::call()`
+		// would otherwise fall back to routing the current request
+		$model = $path !== null ? $this->kirby->call(path: $path, method: 'GET') : null;
+
 		if (
 			$model instanceof Site === false &&
 			$model instanceof Page === false
 		) {
 			throw new Redirect(location: $url->toString());
 		}
-		// @codeCoverageIgnoreEnd
 
 		return $model;
 	}
@@ -103,9 +105,10 @@ class PreviewViewController extends ViewController
 	/**
 	 * Returns the path of the URL relative to the
 	 * site's index URL, so that it can be routed even
-	 * if Kirby is installed in a subfolder
+	 * if Kirby is installed in a subfolder. Returns `null`
+	 * if the path is outside of that subfolder.
 	 */
-	protected function pathFromUri(Uri $url): string
+	protected function pathFromUri(Uri $url): string|null
 	{
 		$path = $url->path()->toString();
 		$base = $this->kirby->url('index', true)->path()->toString();
@@ -122,7 +125,7 @@ class PreviewViewController extends ViewController
 			return substr($path, strlen($base) + 1);
 		}
 
-		return $path;
+		return null;
 	}
 
 	public function props(): array
