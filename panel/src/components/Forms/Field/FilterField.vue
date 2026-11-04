@@ -66,7 +66,7 @@
 					<k-select-field
 						:disabled="disabled"
 						:label="false"
-						:options="operators"
+						:options="operatorsFor(row.condition.field)"
 						:placeholder="$t('field.filter.operator')"
 						:required="true"
 						:value="row.condition.operator"
@@ -144,11 +144,12 @@ export default {
 		 */
 		min: Number,
 		/**
-		 * Available operators as `{ value, text }` options
+		 * Available operators for each field as `{ value, text }` options,
+		 * keyed by field name
 		 */
 		operators: {
-			type: Array,
-			default: () => []
+			type: [Array, Object],
+			default: () => ({})
 		},
 		value: {
 			type: Array,
@@ -163,21 +164,24 @@ export default {
 	},
 	computed: {
 		/**
-		 * Returns the options for the field select
+		 * Returns the options for the field select.
+		 * Fields without any fitting operators are skipped.
 		 * @returns {array}
 		 */
 		fieldOptions() {
-			return Object.values(this.fields).map((field) => ({
-				value: field.name,
-				text: field.label ?? field.name
-			}));
+			return Object.values(this.fields)
+				.filter((field) => this.operatorsFor(field.name).length > 0)
+				.map((field) => ({
+					value: field.name,
+					text: field.label ?? field.name
+				}));
 		},
 		/**
-		 * Returns whether any fields have been defined
+		 * Returns whether any fields can be matched
 		 * @returns {boolean}
 		 */
 		hasFields() {
-			return Object.keys(this.fields).length > 0;
+			return this.fieldOptions.length > 0;
 		},
 		/**
 		 * Returns if new conditions can be added
@@ -240,7 +244,7 @@ export default {
 				id: this.$helper.uuid(),
 				condition: {
 					field: field,
-					operator: this.operators[0]?.value ?? "==",
+					operator: this.operatorsFor(field)[0]?.value ?? "",
 					value: this.defaultValue(field)
 				}
 			});
@@ -271,12 +275,28 @@ export default {
 				condition.value = this.defaultValue(name);
 			}
 
+			// keep the operator if it also fits the new field,
+			// otherwise fall back to the first fitting operator
+			const operators = this.operatorsFor(name);
+
+			if (operators.some((o) => o.value === condition.operator) === false) {
+				condition.operator = operators[0]?.value ?? "";
+			}
+
 			condition.field = name;
 			this.save();
 		},
 		onInput(index, key, value) {
 			this.rows[index].condition[key] = value;
 			this.save();
+		},
+		/**
+		 * Returns the operator options for the given field
+		 * @param {string} name
+		 * @returns {array}
+		 */
+		operatorsFor(name) {
+			return this.operators[name] ?? [];
 		},
 		remove(index) {
 			if (this.disabled === true) {

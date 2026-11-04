@@ -127,19 +127,55 @@ class FilterFieldTest extends TestCase
 		], $field->toFormValue());
 	}
 
+	public function testFillWithDefaultOperatorByType(): void
+	{
+		$field = $this->filterField([
+			'operators' => ['*=', '>', '==']
+		]);
+
+		$field->fill([
+			['field' => 'title'],
+			['field' => 'date'],
+			['field' => 'status'],
+			['field' => 'unknown'],
+		]);
+
+		$this->assertSame(
+			['*=', '>', '==', '*='],
+			array_column($field->toFormValue(), 'operator')
+		);
+	}
+
 	public function testOperatorOptions(): void
 	{
-		$field = $this->field('filter', [
-			'operators' => ['==', '!=', '>=']
+		$field = $this->filterField([
+			'operators' => ['==', '!=', '>=', '*=']
 		]);
 
 		$this->assertSame([
-			['value' => '==', 'text' => 'is'],
-			['value' => '!=', 'text' => 'is not'],
-			['value' => '>=', 'text' => 'is greater than or equal to'],
+			'title' => [
+				['value' => '==', 'text' => 'is'],
+				['value' => '!=', 'text' => 'is not'],
+				['value' => '*=', 'text' => 'contains'],
+			],
+			'status' => [
+				['value' => '==', 'text' => 'is'],
+				['value' => '!=', 'text' => 'is not'],
+			],
+			'date' => [
+				['value' => '==', 'text' => 'is'],
+				['value' => '!=', 'text' => 'is not'],
+				['value' => '>=', 'text' => 'is greater than or equal to'],
+			],
 		], $field->operatorOptions());
 
 		$this->assertSame($field->operatorOptions(), $field->toArray()['operators']);
+	}
+
+	public function testOperatorOptionsWithoutFields(): void
+	{
+		$field = $this->field('filter');
+		$this->assertSame([], $field->operatorOptions());
 	}
 
 	public function testOperators(): void
@@ -152,6 +188,24 @@ class FilterFieldTest extends TestCase
 		]);
 
 		$this->assertSame(['==', '!='], $field->operators());
+	}
+
+	public function testOperatorsFor(): void
+	{
+		$field = $this->field('filter');
+
+		$this->assertSame(['==', '!='], $field->operatorsFor('select'));
+		$this->assertSame(['==', '!=', '>', '>=', '<', '<='], $field->operatorsFor('number'));
+		$this->assertSame(['==', '!=', '*=', '!*=', '^=', '!^=', '$=', '!$='], $field->operatorsFor('text'));
+		$this->assertSame([], $field->operatorsFor('blocks'));
+
+		$field = $this->field('filter', [
+			'operators' => ['>', '*=', '==']
+		]);
+
+		$this->assertSame(['>', '=='], $field->operatorsFor('date'));
+		$this->assertSame(['*=', '=='], $field->operatorsFor('text'));
+		$this->assertSame(['=='], $field->operatorsFor('color'));
 	}
 
 	public function testOperatorsUnsupported(): void
@@ -195,6 +249,7 @@ class FilterFieldTest extends TestCase
 		return [
 			'unknown field'    => [['field' => 'unknown', 'operator' => '==', 'value' => 'test']],
 			'unknown operator' => [['field' => 'title', 'operator' => 'foo', 'value' => 'test']],
+			'type operator'    => [['field' => 'title', 'operator' => '>', 'value' => 'test']],
 			'invalid value'    => [['field' => 'status', 'operator' => '==', 'value' => 'archived']],
 		];
 	}

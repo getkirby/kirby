@@ -44,7 +44,9 @@ class FilterField extends InputField implements ProvidesNestedForm
 
 	/**
 	 * Limits the available operators to the given list,
-	 * e.g. `['==', '!=']`. By default, all operators are available.
+	 * e.g. `['==', '!=']`. Each field only offers the operators
+	 * that fit its type (e.g. `>` only for date, number and time
+	 * fields). By default, all fitting operators are available.
 	 */
 	#[Prop(getter: 'operatorOptions')]
 	protected array|null $operators = null;
@@ -109,6 +111,7 @@ class FilterField extends InputField implements ProvidesNestedForm
 	protected function normalize(mixed $value): array
 	{
 		$value      = Data::decode($value ?? '', 'yaml');
+		$fields     = $this->form()->fields();
 		$conditions = [];
 
 		foreach ($value as $condition) {
@@ -116,9 +119,20 @@ class FilterField extends InputField implements ProvidesNestedForm
 				continue;
 			}
 
+			$field = $condition['field'] ?? '';
+
+			// fall back to the first operator that fits the field type
+			$operator   = $condition['operator'] ?? null;
+			$operator ??= A::first(
+				match ($type = $fields->findByKey($field)?->type()) {
+					null    => $this->operators(),
+					default => $this->operatorsFor($type)
+				}
+			);
+
 			$conditions[] = [
-				'field'    => $condition['field'] ?? '',
-				'operator' => $condition['operator'] ?? A::first($this->operators()),
+				'field'    => $field,
+				'operator' => $operator ?? '',
 				'value'    => $condition['value'] ?? '',
 			];
 		}
@@ -127,26 +141,32 @@ class FilterField extends InputField implements ProvidesNestedForm
 	}
 
 	/**
-	 * Returns the operators with their labels
-	 * for the operator select of each condition
+	 * Returns the operators with their labels for each field.
+	 * Every field only offers the operators that fit its type.
 	 *
-	 * @return list<array{value: string, text: string}>
+	 * @return array<string, list<array{value: string, text: string}>>
 	 */
 	public function operatorOptions(): array
 	{
-		$labels = $this->supportedOperators();
+		$labels  = $this->supportedOperators();
+		$options = [];
 
-		return A::map(
-			$this->operators(),
-			fn ($operator) => [
-				'value' => $operator,
-				'text'  => I18n::translate('field.filter.operator.' . $labels[$operator])
-			]
-		);
+		foreach ($this->form()->fields() as $field) {
+			$options[$field->name()] = A::map(
+				$this->operatorsFor($field->type()),
+				fn ($operator) => [
+					'value' => $operator,
+					'text'  => I18n::translate('field.filter.operator.' . $labels[$operator])
+				]
+			);
+		}
+
+		return $options;
 	}
 
 	/**
 	 * Returns all available operators
+	 * across all field types
 	 *
 	 * @return list<string>
 	 * @throws InvalidArgumentException If an operator is not supported
@@ -169,6 +189,21 @@ class FilterField extends InputField implements ProvidesNestedForm
 		}
 
 		return array_values($this->operators);
+	}
+
+	/**
+	 * Returns the available operators for the given field type
+	 *
+	 * @return list<string>
+	 */
+	public function operatorsFor(string $type): array
+	{
+		return array_values(
+			array_intersect(
+				$this->operators(),
+				$this->typeOperators()[$type] ?? []
+			)
+		);
 	}
 
 	/**
@@ -202,18 +237,7 @@ class FilterField extends InputField implements ProvidesNestedForm
 	 */
 	public function supports(): array
 	{
-		return [
-			'color',
-			'date',
-			'email',
-			'number',
-			'select',
-			'slug',
-			'tel',
-			'text',
-			'time',
-			'url'
-		];
+		return array_keys($this->typeOperators());
 	}
 
 	/**
@@ -267,6 +291,31 @@ class FilterField extends InputField implements ProvidesNestedForm
 		);
 	}
 
+	/**
+	 * Returns the operators that fit each supported field type
+	 *
+	 * @return array<string, list<string>>
+	 */
+	public function typeOperators(): array
+	{
+		$equality   = ['==', '!='];
+		$comparison = [...$equality, '>', '>=', '<', '<='];
+		$text       = [...$equality, '*=', '!*=', '^=', '!^=', '$=', '!$='];
+
+		return [
+			'color'  => $equality,
+			'date'   => $comparison,
+			'email'  => $text,
+			'number' => $comparison,
+			'select' => $equality,
+			'slug'   => $text,
+			'tel'    => $text,
+			'text'   => $text,
+			'time'   => $comparison,
+			'url'    => $text,
+		];
+	}
+
 	protected function validateConditions(array $value): void
 	{
 		if ($this->min && count($value) < $this->min) {
@@ -289,15 +338,14 @@ class FilterField extends InputField implements ProvidesNestedForm
 			);
 		}
 
-		$form      = $this->form();
-		$operators = $this->operators();
+		$form = $this->form();
 
 		foreach ($value as $index => $condition) {
 			$field = $this->target($form, $condition['field'] ?? '');
 
 			if (
 				$field === null ||
-				in_array($condition['operator'] ?? null, $operators, true) === false ||
+				in_array($condition['operator'] ?? null, $this->operatorsFor($field->type()), true) === false ||
 				$field->submit($condition['value'] ?? '')->errors() !== []
 			) {
 				throw new InvalidArgumentException(

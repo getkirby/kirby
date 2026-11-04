@@ -86,13 +86,27 @@ export default {
 			};
 		},
 		operators() {
-			return [
+			const equality = [
 				{ value: "==", text: "is" },
-				{ value: "!=", text: "is not" },
-				{ value: "*=", text: "contains" },
+				{ value: "!=", text: "is not" }
+			];
+
+			const comparison = [
+				...equality,
 				{ value: ">", text: "is greater than" },
 				{ value: "<", text: "is less than" }
 			];
+
+			return {
+				title: [
+					...equality,
+					{ value: "*=", text: "contains" },
+					{ value: "^=", text: "starts with" }
+				],
+				status: equality,
+				date: comparison,
+				views: comparison
+			};
 		}
 	}
 };
