@@ -164,6 +164,14 @@
 	"error.file.undefined": "The file cannot be found",
 	"error.file.update.permission": "The file cannot be updated",
 
+	"error.filter.max.plural": "You must not add more than {max} conditions",
+	"error.filter.max.singular": "You must not add more than one condition",
+	"error.filter.min.plural": "You must add at least {min} conditions",
+	"error.filter.min.singular": "You must add at least one condition",
+	"error.filter.operator": "\"{operator}\" is not a supported operator for the filter field",
+	"error.filter.supports": "\"{type}\" field type is not supported for the filter field",
+	"error.filter.validation": "There's an error on the \"{field}\" field in condition {index}",
+
 	"error.form.incomplete": "Please fix all form errors…",
 	"error.form.notSaved": "The form could not be saved",
 
@@ -425,6 +433,23 @@
 
 	"field.entries.delete.confirm.all": "Do you really want to delete all entries?",
 	"field.entries.empty": "No entries yet",
+	"field.filter.delete.confirm.all": "Do you really want to delete all conditions?",
+	"field.filter.empty": "No conditions yet",
+	"field.filter.field": "Field",
+	"field.filter.operator": "Operator",
+	"field.filter.operator.contains": "contains",
+	"field.filter.operator.contains.not": "does not contain",
+	"field.filter.operator.ends": "ends with",
+	"field.filter.operator.ends.not": "does not end with",
+	"field.filter.operator.greater": "is greater than",
+	"field.filter.operator.greater.equal": "is greater than or equal to",
+	"field.filter.operator.is": "is",
+	"field.filter.operator.is.not": "is not",
+	"field.filter.operator.less": "is less than",
+	"field.filter.operator.less.equal": "is less than or equal to",
+	"field.filter.operator.starts": "starts with",
+	"field.filter.operator.starts.not": "does not start with",
+	"field.filter.value": "Value",
 
 	"field.files.empty": "No files selected yet",
 	"field.files.empty.single": "No file selected yet",

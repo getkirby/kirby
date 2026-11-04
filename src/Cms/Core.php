@@ -30,6 +30,7 @@ use Kirby\Form\Field\EmailField;
 use Kirby\Form\Field\EntriesField;
 use Kirby\Form\Field\FileListField;
 use Kirby\Form\Field\FilePickerField;
+use Kirby\Form\Field\FilterField;
 use Kirby\Form\Field\GapField;
 use Kirby\Form\Field\HeadlineField;
 use Kirby\Form\Field\HiddenField;
@@ -272,6 +273,7 @@ class Core
 			'entries'     => EntriesField::class,
 			'filelist'    => FileListField::class,
 			'filepicker'  => FilePickerField::class,
+			'filter'      => FilterField::class,
 			'gap'         => GapField::class,
 			'headline'    => HeadlineField::class,
 			'hidden'      => HiddenField::class,
