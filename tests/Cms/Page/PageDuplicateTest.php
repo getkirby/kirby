@@ -217,6 +217,24 @@ class PageDuplicateTest extends ModelTestCase
 		$this->assertNotSame($origFile->uuid()->id(), $copyFile->uuid()->id());
 	}
 
+	public function testDuplicateChildrenWithChanges(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$page  = Page::create(['slug' => 'test']);
+		$child = $page->createChild(['slug' => 'foo', 'template' => 'default']);
+
+		$page->version('changes')->save(['uuid' => $page->uuid()->id()]);
+		$child->version('changes')->save(['uuid' => $child->uuid()->id()]);
+
+		$page->duplicate('test-copy', ['children' => true]);
+
+		$this->assertTrue($this->app->page('test')->version('changes')->exists());
+		$this->assertTrue($this->app->page('test/foo')->version('changes')->exists());
+		$this->assertFalse($this->app->page('test-copy')->version('changes')->exists());
+		$this->assertFalse($this->app->page('test-copy/foo')->version('changes')->exists());
+	}
+
 	public function testDuplicateHooks(): void
 	{
 		$calls = 0;
