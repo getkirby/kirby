@@ -90,6 +90,11 @@ class Page extends ModelWithContent
 	protected array|null $inventory = null;
 
 	/**
+	 * Lazily resolved inventory of the page directory
+	 */
+	protected Inventory|null $inventoryObject = null;
+
+	/**
 	 * The sorting number
 	 */
 	protected int|null $num;
@@ -468,8 +473,10 @@ class Page extends ModelWithContent
 			return $this->intendedTemplate;
 		}
 
+		// only needs the directory listing,
+		// not the children and files of the inventory
 		return $this
-			->setTemplate($this->inventory()['template'])
+			->setTemplate($this->inventoryObject()->template())
 			->intendedTemplate();
 	}
 
@@ -479,13 +486,22 @@ class Page extends ModelWithContent
 	#[BlockCollectionAccess]
 	public function inventory(): array
 	{
-		if ($this->inventory !== null) {
-			return $this->inventory;
-		}
+		return $this->inventory ??= $this->inventoryObject()->toArray();
+	}
 
+	/**
+	 * Returns the inventory object of the page directory,
+	 * which is read once and resolved lazily
+	 * @since 5.7.0
+	 * @deprecated 5.7.0 `Kirby\Cms\Page::inventory()` will return the object in Kirby 6
+	 * @internal
+	 */
+	#[BlockCollectionAccess]
+	protected function inventoryObject(): Inventory
+	{
 		$kirby = $this->kirby();
 
-		return $this->inventory = Inventory::for(
+		return $this->inventoryObject ??= new Inventory(
 			$this->root(),
 			$kirby->contentExtension(),
 			$kirby->contentIgnore(),

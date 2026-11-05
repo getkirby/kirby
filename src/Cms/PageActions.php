@@ -826,6 +826,7 @@ trait PageActions
 		$this->drafts            = null;
 		$this->files             = null;
 		$this->inventory         = null;
+		$this->inventoryObject   = null;
 
 		return $this;
 	}
