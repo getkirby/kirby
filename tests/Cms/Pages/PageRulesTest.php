@@ -30,6 +30,19 @@ class PageRulesTest extends TestCase
 		]);
 	}
 
+	protected function blueprintWithRequiredField(): array
+	{
+		return [
+			'name'   => 'test',
+			'fields' => [
+				'headline' => [
+					'type'     => 'text',
+					'required' => true
+				]
+			]
+		];
+	}
+
 	/**
 	 * @covers ::changeNum
 	 */
@@ -493,6 +506,33 @@ class PageRulesTest extends TestCase
 		PageRules::create($page);
 	}
 
+	public function testCreateDraftWithIncompleteContent(): void
+	{
+		$page = new Page([
+			'kirby'     => $this->appWithAdmin(),
+			'slug'      => 'test',
+			'isDraft'   => true,
+			'blueprint' => $this->blueprintWithRequiredField(),
+		]);
+
+		$this->assertTrue(PageRules::create($page));
+	}
+
+	public function testCreateNonDraftWithIncompleteContent(): void
+	{
+		$page = new Page([
+			'kirby'     => $this->appWithAdmin(),
+			'slug'      => 'test',
+			'isDraft'   => false,
+			'blueprint' => $this->blueprintWithRequiredField(),
+		]);
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('The page has errors and cannot be published');
+
+		PageRules::create($page);
+	}
+
 	/**
 	 * @covers ::delete
 	 */
@@ -701,6 +741,40 @@ class PageRulesTest extends TestCase
 		$this->expectExceptionMessage('You are not allowed to update "test"');
 
 		PageRules::update($page, []);
+	}
+
+	public function testValidateContent(): void
+	{
+		$page = $this->createStub(Page::class);
+		$page->method('errors')->willReturn([]);
+
+		$this->expectNotToPerformAssertions();
+
+		PageRules::validateContent($page);
+	}
+
+	public function testValidateContentWithErrors(): void
+	{
+		$errors = [
+			'headline' => [
+				'label'   => 'Headline',
+				'message' => [
+					'required' => 'Please enter something'
+				]
+			]
+		];
+
+		$page = $this->createStub(Page::class);
+		$page->method('errors')->willReturn($errors);
+
+		try {
+			PageRules::validateContent($page);
+			$this->fail('Expected a PermissionException');
+		} catch (PermissionException $e) {
+			$this->assertSame('error.page.changeStatus.incomplete', $e->getKey());
+			$this->assertSame('The page has errors and cannot be published', $e->getMessage());
+			$this->assertSame($errors, $e->getDetails());
+		}
 	}
 
 	/**

@@ -556,6 +556,13 @@ trait PageActions
 		// inject the content
 		$page = $page->clone(['content' => $form->strings(true)]);
 
+		// the content validation in the create rules reads the content
+		// by language code, which doesn't include the injected content
+		$page->translation($languageCode)?->update(
+			data: $page->content()->toArray(),
+			overwrite: true
+		);
+
 		// run the hooks and creation action
 		$page = $page->commit(
 			'create',

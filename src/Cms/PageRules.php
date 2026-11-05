@@ -231,7 +231,7 @@ class PageRules
 	 *
 	 * @throws \Kirby\Exception\DuplicateException If the same page or a draft already exists
 	 * @throws \Kirby\Exception\InvalidArgumentException If the slug is invalid
-	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to create this page
+	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to create this page or the content of a non-draft is incomplete
 	 */
 	public static function create(Page $page): bool
 	{
@@ -278,6 +278,12 @@ class PageRules
 				'key'  => 'page.draft.duplicate',
 				'data' => ['slug' => $slug]
 			]);
+		}
+
+		// a non-draft page must have complete content,
+		// just like a draft that gets published
+		if ($page->isDraft() === false) {
+			self::validateContent($page);
 		}
 
 		return true;
@@ -432,11 +438,8 @@ class PageRules
 			]);
 		}
 
-		if ($page->isDraft() === true && empty($page->errors()) === false) {
-			throw new PermissionException([
-				'key'     => 'page.changeStatus.incomplete',
-				'details' => $page->errors()
-			]);
+		if ($page->isDraft() === true) {
+			self::validateContent($page);
 		}
 
 		return true;
@@ -459,6 +462,23 @@ class PageRules
 		}
 
 		return true;
+	}
+
+	/**
+	 * Validates that the page content has no errors
+	 *
+	 * @throws \Kirby\Exception\PermissionException If the content is not complete
+	 */
+	public static function validateContent(Page $page): void
+	{
+		$errors = $page->errors();
+
+		if ($errors !== []) {
+			throw new PermissionException([
+				'key'     => 'page.changeStatus.incomplete',
+				'details' => $errors
+			]);
+		}
 	}
 
 	/**
