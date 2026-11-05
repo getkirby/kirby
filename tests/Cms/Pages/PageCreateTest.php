@@ -366,6 +366,8 @@ class PageCreateTest extends TestCase
 		} catch (PermissionException $e) {
 			$this->assertSame('error.page.changeStatus.incomplete', $e->getKey());
 			$this->assertSame(['headline'], array_keys($e->getDetails()));
+			$this->assertSame('Headline (Deutsch)', $e->getDetails()['headline']['label']);
+			$this->assertSame('de', $e->getDetails()['headline']['language']);
 		}
 
 		$this->assertTrue($page->isDraft());
