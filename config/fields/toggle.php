@@ -70,6 +70,7 @@ return [
 		'required' => function ($value) {
 			if (
 				$this->isRequired() &&
+				$this->isActive() &&
 				($value === false || $this->isEmptyValue($value))
 			) {
 				throw new InvalidArgumentException(

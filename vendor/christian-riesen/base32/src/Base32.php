@@ -154,13 +154,13 @@ class Base32
                     $n = $len;
                 }
                 $val += static::MAPPING[$pentet];
-                continue;
-            }
-            $shift = $bitLen - 8;
+            } else {
+                $shift = $bitLen - 8;
 
-            $decoded .= \chr($val >> $shift);
-            $val = $val & ((1 << $shift) - 1);
-            $bitLen -= 8;
+                $decoded .= \chr($val >> $shift);
+                $val = $val & ((1 << $shift) - 1);
+                $bitLen -= 8;
+            }
         }
 
         return $decoded;

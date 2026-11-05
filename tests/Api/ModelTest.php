@@ -118,4 +118,18 @@ class ModelTest extends TestCase
 
 		$selection = $model->selection();
 	}
+
+	public function testViewWithMissingView(): void
+	{
+		$model = new Model(new Api([]), [], [
+			'views' => [
+				'compact' => ['id']
+			]
+		]);
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('The view "foo" does not exist');
+
+		$model->view('foo');
+	}
 }

@@ -155,12 +155,24 @@ class PageSiblingsTest extends ModelTestCase
 		$this->assertFalse($collection->last()->isFirst());
 	}
 
+	public function testIsFirstEmptyCollection(): void
+	{
+		$page = $this->site()->children()->first();
+		$this->assertFalse($page->isFirst(new Pages()));
+	}
+
 	public function testIsLast(): void
 	{
 		$collection = $this->site()->children();
 
 		$this->assertTrue($collection->last()->isLast());
 		$this->assertFalse($collection->first()->isLast());
+	}
+
+	public function testIsLastEmptyCollection(): void
+	{
+		$page = $this->site()->children()->first();
+		$this->assertFalse($page->isLast(new Pages()));
 	}
 
 	public function testIsNth(): void
@@ -179,6 +191,14 @@ class PageSiblingsTest extends ModelTestCase
 		$this->assertSame($collection->first()->next(), $collection->nth(1));
 	}
 
+	public function testNextNotInCollection(): void
+	{
+		$collection = $this->site()->children();
+		$page       = $collection->first();
+
+		$this->assertNull($page->next($collection->not($page)));
+	}
+
 	public function testNextAll(): void
 	{
 		$collection = $this->site()->children();
@@ -188,6 +208,14 @@ class PageSiblingsTest extends ModelTestCase
 
 		$this->assertSame($first->nextAll()->first(), $collection->nth(1));
 		$this->assertSame($first->nextAll()->last(), $collection->nth(2));
+	}
+
+	public function testNextAllNotInCollection(): void
+	{
+		$collection = $this->site()->children();
+		$page       = $collection->first();
+
+		$this->assertCount(0, $page->nextAll($collection->not($page)));
 	}
 
 	public function testNextListed(): void

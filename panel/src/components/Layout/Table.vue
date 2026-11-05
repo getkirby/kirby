@@ -111,6 +111,7 @@
 							:id="columnIndex"
 							:key="columnIndex"
 							:column="column"
+							:disabled="disabled"
 							:field="fields[columnIndex]"
 							:row="row"
 							:mobile="column.mobile"
