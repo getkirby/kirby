@@ -43,21 +43,10 @@ class LanguageGuards extends ModelGuards
 		Language $model,
 		User $user
 	) {
-		parent::__construct(
-			abilities: new LanguageAbilities(
-				model: $model,
-				user: $user
-			),
-			model: $model,
-			permissions: new LanguagePermissions(
-				model: $model,
-				user: $user
-			),
-			user: $user,
-			validators: new LanguageValidators(
-				model: $model,
-				user: $user
-			),
-		);
+		parent::__construct($model, $user);
+
+		$this->abilities   = new LanguageAbilities($model, $user);
+		$this->permissions = new LanguagePermissions($model, $user);
+		$this->validators  = new LanguageValidators($model, $user);
 	}
 }

@@ -6,6 +6,7 @@ use Kirby\Cms\ModelTestCase;
 use Kirby\Cms\User;
 use Kirby\Exception\AbilityException;
 use PHPUnit\Framework\Attributes\CoversClass;
+use ReflectionMethod;
 
 #[CoversClass(SiteAbilities::class)]
 class SiteAbilitiesTest extends ModelTestCase
@@ -22,7 +23,8 @@ class SiteAbilitiesTest extends ModelTestCase
 		$this->expectException(AbilityException::class);
 		$this->expectExceptionCode('error.site.test');
 
-		$abilities->error('test');
+		$method = new ReflectionMethod($abilities, 'error');
+		$method->invoke($abilities, 'test');
 	}
 
 	protected function user(): User

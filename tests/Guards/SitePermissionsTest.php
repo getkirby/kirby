@@ -5,6 +5,7 @@ namespace Kirby\Guards;
 use Kirby\Cms\ModelTestCase;
 use Kirby\Exception\PermissionException;
 use PHPUnit\Framework\Attributes\CoversClass;
+use ReflectionMethod;
 
 #[CoversClass(SitePermissions::class)]
 class SitePermissionsTest extends ModelTestCase
@@ -62,7 +63,8 @@ class SitePermissionsTest extends ModelTestCase
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionCode('error.site.test.permission');
 
-		$permissions->error('test');
+		$method = new ReflectionMethod($permissions, 'error');
+		$method->invoke($permissions, 'test');
 	}
 
 	public function testUpdate(): void

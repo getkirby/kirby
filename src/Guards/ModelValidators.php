@@ -50,7 +50,7 @@ abstract class ModelValidators
 	 *
 	 * @throws InvalidArgumentException
 	 */
-	public function error(
+	protected function error(
 		string $key,
 		array $data = [],
 		array $details = []

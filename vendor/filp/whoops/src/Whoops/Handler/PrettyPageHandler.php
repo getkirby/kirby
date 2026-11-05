@@ -17,18 +17,27 @@ use Whoops\Util\TemplateHelper;
 
 class PrettyPageHandler extends Handler
 {
+    const EDITOR_ANTIGRAVITY = "antigravity";
     const EDITOR_SUBLIME = "sublime";
     const EDITOR_TEXTMATE = "textmate";
+    const EDITOR_TRAE = "trae";
+    const EDITOR_FLEET = "fleet";
     const EDITOR_EMACS = "emacs";
+    const EDITOR_KIRO = "kiro";
     const EDITOR_MACVIM = "macvim";
+    const EDITOR_NEOVIM = "neovim";
     const EDITOR_PHPSTORM = "phpstorm";
     const EDITOR_IDEA = "idea";
     const EDITOR_VSCODE = "vscode";
+    const EDITOR_VSCODIUM = "vscodium";
     const EDITOR_ATOM = "atom";
     const EDITOR_ESPRESSO = "espresso";
     const EDITOR_XDEBUG = "xdebug";
     const EDITOR_NETBEANS = "netbeans";
     const EDITOR_CURSOR = "cursor";
+    const EDITOR_NOVA = "nova";
+    const EDITOR_WINDSURF = "windsurf";
+    const EDITOR_ZED = "zed";
 
     /**
      * Search paths to be scanned for resources.
@@ -108,22 +117,39 @@ class PrettyPageHandler extends Handler
     protected $editor;
 
     /**
+     * Server path prefixes mapped to local path prefixes, applied to file
+     * paths before building editor links.
+     *
+     * @var array<string, string>
+     */
+    protected $editorPathMappings = [];
+
+    /**
      * A list of known editor strings.
      *
      * @var array
      */
     protected $editors = [
+        "antigravity" => "antigravity://file/%file:%line",
         "sublime"  => "subl://open?url=file://%file&line=%line",
         "textmate" => "txmt://open?url=file://%file&line=%line",
+        "trae"     => "trae://file/%file:%line",
+        "fleet"    => "fleet://open?file=%file&line=%line",
         "emacs"    => "emacs://open?url=file://%file&line=%line",
+        "kiro"     => "kiro://file/%file:%line",
         "macvim"   => "mvim://open/?url=file://%file&line=%line",
+        "neovim"   => "nvim://open?url=file://%file&line=%line",
         "phpstorm" => "phpstorm://open?file=%file&line=%line",
         "idea"     => "idea://open?file=%file&line=%line",
         "vscode"   => "vscode://file/%file:%line",
+        "vscodium" => "vscodium://file/%file:%line",
         "atom"     => "atom://core/open/file?filename=%file&line=%line",
         "espresso" => "x-espresso://open?filepath=%file&lines=%line",
         "netbeans" => "netbeans://open/?f=%file:%line",
         "cursor"   => "cursor://file/%file:%line",
+        "nova"     => "nova://open?path=%file&line=%line",
+        "windsurf" => "windsurf://file/%file:%line",
+        "zed"      => "zed://file/%file:%line",
     ];
 
     /**
@@ -477,14 +503,22 @@ class PrettyPageHandler extends Handler
      *   $run->setEditor(function($file, $line) { return "file:///{$file}"; });
      * @example
      *   $run->setEditor('sublime');
+     * @example
+     *   $run->setEditor('vscode', ['pathMappings' => ['/var/www/app' => '/Users/me/code/app']]);
+     *
+     * Supported options (each call resets omitted options to their defaults):
+     *   - pathMappings: array<string, string> mapping server path prefixes to
+     *     local path prefixes. Editor links use the local path. Prefixes match
+     *     whole directories only; the longest matching prefix wins.
      *
      * @param string|callable $editor
+     * @param array           $options
      *
-     * @throws InvalidArgumentException If invalid argument identifier provided
+     * @throws InvalidArgumentException If invalid argument identifier or option provided
      *
      * @return static
      */
-    public function setEditor($editor)
+    public function setEditor($editor, array $options = [])
     {
         if (!is_callable($editor) && !isset($this->editors[$editor])) {
             throw new InvalidArgumentException(
@@ -493,8 +527,61 @@ class PrettyPageHandler extends Handler
             );
         }
 
+        $knownOptions = ['pathMappings'];
+        foreach (array_keys($options) as $key) {
+            if (!in_array($key, $knownOptions, true)) {
+                throw new InvalidArgumentException(
+                    "Unknown editor option: $key. Known options: " . implode(",", $knownOptions)
+                );
+            }
+        }
+
+        $pathMappings = isset($options['pathMappings']) ? $options['pathMappings'] : [];
+        if (!is_array($pathMappings)) {
+            throw new InvalidArgumentException("Editor option pathMappings must be an array of strings to strings.");
+        }
+        foreach ($pathMappings as $from => $to) {
+            if (!is_string($from) || !is_string($to)) {
+                throw new InvalidArgumentException("Editor option pathMappings must be an array of strings to strings.");
+            }
+        }
+
         $this->editor = $editor;
+        $this->editorPathMappings = $pathMappings;
         return $this;
+    }
+
+    /**
+     * Map a server file path to a local one using the configured pathMappings.
+     *
+     * @param string $filePath
+     *
+     * @return string
+     */
+    protected function mapEditorPath($filePath)
+    {
+        $bestFrom = null;
+        $bestTo = null;
+        foreach ($this->editorPathMappings as $from => $to) {
+            $from = rtrim($from, '/\\');
+            $length = strlen($from);
+            if (strncmp($filePath, $from, $length) !== 0) {
+                continue;
+            }
+            if (strlen($filePath) > $length && $filePath[$length] !== '/' && $filePath[$length] !== '\\') {
+                continue;
+            }
+            if ($bestFrom === null || $length > strlen($bestFrom)) {
+                $bestFrom = $from;
+                $bestTo = rtrim($to, '/\\');
+            }
+        }
+
+        if ($bestFrom === null) {
+            return $filePath;
+        }
+
+        return $bestTo . substr($filePath, strlen($bestFrom));
     }
 
     /**
@@ -509,6 +596,7 @@ class PrettyPageHandler extends Handler
      */
     public function getEditorHref($filePath, $line)
     {
+        $filePath = $this->mapEditorPath($filePath);
         $editor = $this->getEditor($filePath, $line);
 
         if (empty($editor)) {
@@ -541,6 +629,7 @@ class PrettyPageHandler extends Handler
      */
     public function getEditorAjax($filePath, $line)
     {
+        $filePath = $this->mapEditorPath($filePath);
         $editor = $this->getEditor($filePath, $line);
 
         // Check that the ajax is a bool

@@ -24,7 +24,7 @@ class FilePermissions extends ModelPermissions
 		return 'files';
 	}
 
-	public function error(string $key, array $data = []): never
+	protected function error(string $key, array $data = []): never
 	{
 		parent::error(
 			key: 'file.' . $key . '.permission',
