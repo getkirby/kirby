@@ -1,23 +1,33 @@
-import { isAbortError } from "@/helpers/error";
 import { isObject, length } from "@/helpers/object";
 import { reactive } from "vue";
+import lane from "@/helpers/lane";
 import throttle from "@/helpers/throttle";
 
 /**
  * @since 5.0.0
  */
 export default (panel) => {
+	// all content requests run one after another
+	const requests = lane();
+
+	// content requests that are running or waiting
+	let writes = 0;
+
+	// the values of the requests that went out,
+	// a replaced request never does
+	const sent = new WeakSet();
+
+	// the props of the view whose last save or publish failed,
+	// its form holds changes that the server does not have
+	let failed = null;
+
 	const content = reactive({
 		/**
-		 * Cancel any scheduled or ongoing save requests
+		 * Cancels any scheduled save request. A running request
+		 * cannot be cancelled: the server would finish it regardless.
 		 */
 		cancelSaving() {
-			// cancel any scheduled save requests
 			this.saveLazy.cancel();
-
-			// ensure to abort unfinished previous save request
-			// to avoid race conditions with older content
-			this.saveAbortController?.abort();
 		},
 
 		dialog: null,
@@ -74,9 +84,8 @@ export default (panel) => {
 				throw new Error("Cannot discard locked changes");
 			}
 
-			// Cancel any ongoing save requests.
-			// The discard request will throw those
-			// changes away anyway.
+			// A scheduled save request is pointless,
+			// the discard throws the changes away anyway
 			this.cancelSaving();
 
 			// Start processing the request
@@ -87,6 +96,7 @@ export default (panel) => {
 
 				// update the props for the current view
 				panel.view.props.versions.changes = this.version("latest");
+				failed = null;
 
 				this.emit("discard", {}, env);
 			} catch (error) {
@@ -126,10 +136,32 @@ export default (panel) => {
 		},
 
 		/**
+		 * Writes the scheduled save right away. After a failed save
+		 * or publish, it sends the whole form of the view again.
+		 *
+		 * @returns {Promise<Boolean>|undefined} Whether the changes have been written
+		 */
+		flush(env = {}) {
+			if (failed === panel.view.props && this.isCurrent(env) === true) {
+				return this.update({}, env);
+			}
+
+			return this.saveLazy.flush();
+		},
+
+		/**
 		 * Whether there are any changes
 		 */
 		hasDiff(env = {}) {
 			return length(this.diff(env)) > 0;
+		},
+
+		/**
+		 * Whether content requests are still running or waiting.
+		 * A refresh does not count, it only reads.
+		 */
+		isBusy() {
+			return writes > 0;
 		},
 
 		/**
@@ -223,9 +255,8 @@ export default (panel) => {
 				throw new Error("Cannot publish content from another view");
 			}
 
-			// Cancel any ongoing save requests.
-			// The publish request will submit the
-			// latest state of the form again.
+			// A scheduled save request is covered by the publish,
+			// which submits the full state of the form again
 			this.cancelSaving();
 
 			// Start processing the request
@@ -240,12 +271,18 @@ export default (panel) => {
 
 				// update the props for the current view
 				panel.view.props.versions.latest = this.version("changes");
+				failed = null;
 
 				this.emit("publish", { values }, env);
 			} catch (error) {
 				// handle locked states
 				if (error.key?.startsWith("error.content.lock")) {
 					return this.lockDialog(error.details);
+				}
+
+				// the publish cancelled the scheduled save
+				if (this.isCurrent(env) === true) {
+					failed = panel.view.props;
 				}
 
 				throw error;
@@ -255,7 +292,29 @@ export default (panel) => {
 		},
 
 		/**
-		 * Simplified request handler for all content API requests
+		 * Refreshes the view once all content requests have been
+		 * written and keeps the changes made in the meantime
+		 */
+		async refresh() {
+			const env = this.env();
+			const props = panel.view.props;
+			const changes = props.versions.changes;
+
+			// the refreshed props have to include the changes of the form
+			this.flush();
+
+			await requests("refresh", () => panel.view.refresh());
+
+			// the editor kept typing while the view was refreshed
+			if (this.isCurrent(env) === true && props.versions.changes !== changes) {
+				this.merge(props.versions.changes, env);
+			}
+		},
+
+		/**
+		 * Simplified request handler for all content API requests.
+		 * Requests run one after another, a waiting request is only
+		 * replaced by a newer one of the same type for the same view.
 		 */
 		async request(method = "save", values = {}, env = {}) {
 			const { api, language } = this.env(env);
@@ -266,12 +325,20 @@ export default (panel) => {
 				}
 			};
 
-			if (method === "save") {
-				options.signal = this.saveAbortController.signal;
+			if (method === "save" || method === "unlock") {
 				options.silent = true;
 			}
 
-			return panel.api.post(api + "/changes/" + method, values, options);
+			writes++;
+
+			try {
+				return await requests(`${method}:${api}:${language}`, () => {
+					sent.add(values);
+					return panel.api.post(api + "/changes/" + method, values, options);
+				});
+			} finally {
+				writes--;
+			}
 		},
 
 		/**
@@ -280,39 +347,35 @@ export default (panel) => {
 		 * @returns {Boolean} Whether the changes have been written
 		 */
 		async save(values = {}, env = {}) {
-			// ensure to abort unfinished previous save request
-			// to avoid race conditions with older content
+			// A scheduled save request is superseded,
+			// this one carries the full state of the form
 			this.cancelSaving();
-
-			// create a new abort controller
-			this.saveAbortController = new AbortController();
 
 			try {
 				await this.request("save", values, env);
 
+				// a newer save replaced this one and reports for both
+				if (sent.has(values) === false) {
+					return true;
+				}
+
 				// close the dialog if it is still open
 				this.dialog?.close();
 
-				// update the lock timestamp
+				// update the lock timestamp, the form has been written
 				if (this.isCurrent(env) === true) {
 					this.lock(env).modified = new Date();
+					failed = null;
 				}
 
 				this.emit("save", { values }, env);
 
 				return true;
 			} catch (error) {
-				// handle aborted requests silently. A newer save request
-				// has taken over and will write the latest state instead.
-				if (isAbortError(error) === true) {
+				// a newer save replaced this one and reports for both
+				if (sent.has(values) === false) {
 					return false;
 				}
-
-				// processing must not be interrupted for aborted
-				// requests because the follow-up request is already
-				// in progress and setting the state to false here
-				// would be wrong
-				this.isProcessing = false;
 
 				// handle locked states
 				if (error.key?.startsWith("error.content.lock")) {
@@ -320,15 +383,13 @@ export default (panel) => {
 					return false;
 				}
 
+				if (this.isCurrent(env) === true) {
+					failed = panel.view.props;
+				}
+
 				throw error;
 			}
 		},
-
-		/**
-		 * @internal
-		 * @var {AbortController}
-		 */
-		saveAbortController: null,
 
 		/**
 		 * Releases the content lock without discarding changes.
@@ -337,18 +398,11 @@ export default (panel) => {
 		 * @returns {Boolean} Whether the lock has been released
 		 */
 		async unlock(env = {}) {
-			// persist any pending changes before releasing the lock, so that
-			// the changes cannot be dropped or the lock left behind
-			// due to a save that finishes after the unlock request.
-			// changes can only be detected for the current view
-			if (this.isCurrent(env) === true && this.hasDiff(env) === true) {
-				// abort the unlock when the changes could not be written:
-				// the view got locked in the meantime or a newer save
-				// request took over. Both cases are already reported by
-				// `save`, so they must not be raised again here.
-				if ((await this.update({}, env)) !== true) {
-					return false;
-				}
+			// write the changes of the form first, the unlock runs after any
+			// other save anyway. When the view got locked in the meantime or
+			// a newer save failed, that is already reported and the lock stays.
+			if ((await this.flush(env)) === false) {
+				return false;
 			}
 
 			// fail silently because the lock will be released after the configured timeout
@@ -389,18 +443,7 @@ export default (panel) => {
 		 * as a regular API request
 		 */
 		async unlockPostRequest(env = {}) {
-			const { api, language } = this.env(env);
-
-			this.cancelSaving();
-
-			return panel.api.post(
-				api + "/changes/unlock",
-				{},
-				{
-					headers: { "x-language": language },
-					silent: true
-				}
-			);
+			return this.request("unlock", {}, env);
 		},
 
 		/**
@@ -416,7 +459,8 @@ export default (panel) => {
 		 * Updates the form values of the current view with a delay
 		 */
 		updateLazy(values = {}, env = {}) {
-			this.saveLazy(this.merge(values, env), env);
+			// the scheduled save keeps its view, even when written after leaving it
+			this.saveLazy(this.merge(values, env), this.env(env));
 		},
 
 		/**
