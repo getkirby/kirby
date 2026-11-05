@@ -376,7 +376,7 @@ class Auth
 
 	/**
 	 * Check if logins are blocked for the current ip
-	 * @since 4.9.7
+	 * @since 4.9.8
 	 */
 	protected function isIpBlocked(): bool
 	{

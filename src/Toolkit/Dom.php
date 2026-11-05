@@ -874,7 +874,7 @@ class Dom
 	/**
 	 * Collects all comments and CDATA sections in document order
 	 *
-	 * @since 4.9.7
+	 * @since 4.9.8
 	 *
 	 * @return array<\DOMComment|\DOMCdataSection>
 	 */
@@ -1006,7 +1006,7 @@ class Dom
 	/**
 	 * Checks if the element has at least one child element
 	 *
-	 * @since 4.9.7
+	 * @since 4.9.8
 	 */
 	protected function hasElementChild(DOMElement $element): bool
 	{
