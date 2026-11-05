@@ -41,6 +41,10 @@ class Inventory
 		// a temporary store for all content files
 		$content = [];
 
+		// models to match children against, most common first
+		$models = Page::$models;
+		$counts = [];
+
 		// read and sort all items naturally to avoid sorting issues later
 		$items = Dir::read($dir, $ignore);
 		natsort($items);
@@ -59,12 +63,27 @@ class Inventory
 
 			// collect all directories as children
 			if (is_dir($root) === true) {
-				$inventory['children'][] = static::child(
+				$child = $inventory['children'][] = static::child(
 					$item,
 					$root,
 					$extension,
-					$multilang
+					$multilang,
+					$models
 				);
+
+				// siblings often share the same models,
+				// so try the most common ones first for the next child
+				if ($child['model'] !== null) {
+					$counts[$child['model']] = ($counts[$child['model']] ?? 0) + 1;
+
+					if ($child['model'] !== array_key_first($models)) {
+						arsort($counts);
+						// keys keep the order of $counts, values (classes)
+						// come from $models; models not seen yet go last
+						$models = array_replace($counts, $models);
+					}
+				}
+
 				continue;
 			}
 
@@ -109,12 +128,15 @@ class Inventory
 
 	/**
 	 * Collect information for a child for the inventory
+	 *
+	 * @param $models Models to look for, in the order they are tried
 	 */
 	protected static function child(
 		string $item,
 		string $root,
 		string $extension = 'txt',
-		bool $multilang = false
+		bool $multilang = false,
+		array $models = []
 	): array {
 		// extract the slug and num of the directory
 		// TODO: Switch to static::$numSeparator in v6
@@ -123,20 +145,18 @@ class Inventory
 			$slug = substr($item, $separator + 1);
 		}
 
-		// determine the model
-		if (Page::$models !== []) {
-			if ($multilang === true) {
-				$code = App::instance()->defaultLanguage()->code();
-				$extension = $code . '.' . $extension;
-			}
+		// in multi-language setups, the model is
+		// determined by the default language's content file
+		if ($multilang === true && $models !== []) {
+			$extension = App::instance()->defaultLanguage()->code() . '.' . $extension;
+		}
 
-			// look if a content file can be found
-			// for any of the available models
-			foreach (Page::$models as $name => $class) {
-				if (is_file($root . '/' . $name . '.' . $extension) === true) {
-					$model = $name;
-					break;
-				}
+		// determine the model by looking if a content file
+		// can be found for any of the available models
+		foreach ($models as $name => $class) {
+			if (is_file($root . '/' . $name . '.' . $extension) === true) {
+				$model = $name;
+				break;
 			}
 		}
 
