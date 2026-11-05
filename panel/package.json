@@ -32,7 +32,7 @@
 		"prosemirror-state": "^1.4.4",
 		"prosemirror-view": "^1.42.9",
 		"sortablejs": "^1.15.7",
-		"vue": "^3.5.44"
+		"vue": "^3.5.45"
 	},
 	"devDependencies": {
 		"@eslint/js": "^10.0.1",
@@ -50,7 +50,7 @@
 		"oxfmt": "^0.75.0",
 		"typescript": "^6.0.3",
 		"typescript-eslint": "^8.72.1",
-		"vite": "^8.3.5",
+		"vite": "^8.3.6",
 		"vitest": "^5.0.5",
 		"vue-docgen-api": "^4.79.2",
 		"vue-tsc": "^3.3.14"
