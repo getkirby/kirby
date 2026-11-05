@@ -163,7 +163,7 @@
 	"error.form.notSaved": "O formulário não pôde ser salvo",
 
 	"error.language.code": "Por favor entre um código válido para o idioma",
-	"error.language.create.default": "\"{name}\" ({code}) is already set as the default language",
+	"error.language.create.default": "\"{name}\" ({code}) já se encontra definido como o idioma por defeito",
 	"error.language.create.permission": "Não tem permissões para criar um idioma",
 	"error.language.delete.default": "The default language can only be deleted if no other languages exist",
 	"error.language.delete.permission": "Não tem permissões para eliminar o idioma",
@@ -172,11 +172,11 @@
 	"error.language.name": "Por favor entre um nome válido para o idioma",
 	"error.language.notFound": "O idioma não foi encontrado",
 	"error.language.update.permission": "Não tem permissões para atualizar o idioma",
-	"error.language.variable.core": "\"{key}\" is one of Kirby's own translation strings and cannot be overwritten by a language variable",
-	"error.language.variable.duplicate": "A variable for \"{key}\" already exists",
-	"error.language.variable.key": "Please enter a valid key for the variable",
+	"error.language.variable.core": "\"{key}\" é uma das strings de tradução do próprio Kirby e não pode ser substituída por uma variável de idioma",
+	"error.language.variable.duplicate": "Já existe uma variável para \"{key}\"",
+	"error.language.variable.key": "Por favor, introduza uma chave válida para a variável",
 	"error.language.variable.notFound": "A variável não foi encontrada",
-	"error.language.variable.numeric": "The variable key must not be numeric",
+	"error.language.variable.numeric": "A chave da variável não pode ser numérica",
 
 	"error.layout.validation.block": "Há um erro no campo \"{field}\" no bloco {blockIndex} a usar o tipo de bloco \"{fieldset}\" no layout {layoutIndex}",
 	"error.layout.validation.settings": "Há um erro na configuração do layout {index}",
@@ -350,7 +350,7 @@
 
 	"error.version.discard.permission": "Não tem permissão para reverter esta versão",
 	"error.version.publish.permission": "Não tem permissão para publicar esta versão",
-	"error.version.removed": "The version has been removed by another request",
+	"error.version.removed": "A versão foi removida por outro pedido",
 	"error.version.save.permission": "Não tem permissão para alterar esta versão",
 	"error.version.unlock.permission": "Não tem permissão para desbloquear esta versão",
 
@@ -464,7 +464,7 @@
 
 	"form.discard": "Reverter alterações",
 	"form.discard.confirm": "Tem a certeza que pretende reverter <strong>todas as suas alterações</strong>?",
-	"form.discard.confirm.editor": "Do you really want to <strong>discard the unsaved changes</strong> made by <strong>{editor}</strong>?",
+	"form.discard.confirm.editor": "Tem a certeza de que pretende <strong>descartar as alterações não guardadas</strong> feitas por <strong>{editor}</strong>?",
 	"form.locked": "Este conteúdo está desativado para si porque encontra-se a ser editado por outro utilizador",
 	"form.unsaved": "As alterações atuais ainda não foram guardadas",
 	"form.preview": "Pré-visualizar alterações",
@@ -719,7 +719,7 @@
 	"preview.browser.scroll": "Sincronizar scroll",
 	"progress": "Progress",
 
-	"protected": "Protected",
+	"protected": "Protegida",
 
 	"publish": "Publicar",
 	"published": "Publicadas",
