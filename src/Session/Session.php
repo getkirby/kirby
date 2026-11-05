@@ -14,13 +14,8 @@ use Kirby\Toolkit\Str;
  */
 class Session
 {
-	// parent data
 	protected string $mode;
-
-	// session token
 	protected Token|null $token = null;
-
-	// persistent data
 	protected int $startTime;
 	protected int $expiryTime;
 	protected int $duration;
@@ -29,8 +24,6 @@ class Session
 	protected bool $renewable;
 	protected Data $data;
 	protected array|null $newSession = null;
-
-	// temporary state flags
 	protected bool $updatingLastActivity = false;
 	protected bool $destroyed = false;
 	protected bool $writeMode = false;
