@@ -72,7 +72,7 @@ class OptionsQuery extends OptionsProvider
 	/**
 	 * Whether the current user may list the item
 	 * if it is a model with permissions
-	 * @since 5.6.3
+	 * @since 5.6.4
 	 */
 	protected function isListable(array|object $item): bool
 	{
