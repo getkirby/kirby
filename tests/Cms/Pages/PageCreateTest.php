@@ -301,6 +301,96 @@ class PageCreateTest extends TestCase
 		$this->assertFalse(is_dir(static::TMP . '/content/new-page'));
 	}
 
+	public function testCreateUnlistedPageWithIncompleteTranslation(): void
+	{
+		$this->appWithRequiredField(multilang: true);
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('The page has errors and cannot be published');
+
+		Page::create([
+			'slug'         => 'new-page',
+			'isDraft'      => false,
+			'translations' => [
+				[
+					'code'    => 'en',
+					'content' => [
+						'headline' => 'Headline'
+					]
+				],
+				[
+					'code'    => 'de',
+					'content' => [
+						'headline' => ''
+					]
+				]
+			]
+		]);
+	}
+
+	public function testCreateUnlistedPageWithUntranslatableField(): void
+	{
+		$this->appWithRequiredField(
+			field: ['translate' => false],
+			multilang: true
+		);
+
+		$page = Page::create([
+			'slug'    => 'new-page',
+			'isDraft' => false,
+			'content' => [
+				'headline' => 'Headline'
+			]
+		]);
+
+		$this->assertTrue($page->exists());
+		$this->assertFalse($page->isDraft());
+	}
+
+	public function testPublishDraftWithIncompleteTranslation(): void
+	{
+		$this->appWithRequiredField(multilang: true);
+
+		$page = Page::create([
+			'slug'    => 'new-page',
+			'content' => [
+				'headline' => 'Headline'
+			]
+		]);
+
+		$page = $page->save(['headline' => ''], 'de');
+
+		try {
+			$page->changeStatus('unlisted');
+			$this->fail('Expected a PermissionException');
+		} catch (PermissionException $e) {
+			$this->assertSame('error.page.changeStatus.incomplete', $e->getKey());
+			$this->assertSame(['headline'], array_keys($e->getDetails()));
+		}
+
+		$this->assertTrue($page->isDraft());
+	}
+
+	public function testPublishDraftWithUntranslatableField(): void
+	{
+		$this->appWithRequiredField(
+			field: ['translate' => false],
+			multilang: true
+		);
+
+		$page = Page::create([
+			'slug'    => 'new-page',
+			'content' => [
+				'headline' => 'Headline'
+			]
+		]);
+
+		$page = $page->save(['title' => 'Titel'], 'de');
+		$page = $page->changeStatus('unlisted');
+
+		$this->assertFalse($page->isDraft());
+	}
+
 	public function testCreateDuplicate()
 	{
 		$this->expectException(DuplicateException::class);

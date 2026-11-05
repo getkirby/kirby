@@ -6,6 +6,7 @@ use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
+use Kirby\Form\Form;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 
@@ -466,12 +467,46 @@ class PageRules
 
 	/**
 	 * Validates that the page content has no errors
+	 * in any language
 	 *
 	 * @throws \Kirby\Exception\PermissionException If the content is not complete
 	 */
 	public static function validateContent(Page $page): void
 	{
 		$errors = $page->errors();
+		$kirby  = $page->kirby();
+
+		// the errors above only cover the current language,
+		// so the content of all other languages must be validated too
+		if ($errors === [] && $kirby->multilang() === true) {
+			$default = $page->content($kirby->defaultLanguage()->code())->toArray();
+
+			foreach ($kirby->languages() as $language) {
+				$code = $language->code();
+
+				// a page can be set up with only some of its translations
+				if ($page->translation($code) === null) {
+					continue;
+				}
+
+				// `null` values are not stored in the translation (e.g. of
+				// untranslatable fields), the default language applies instead
+				$content = $page->content($code)->toArray();
+				$content = array_filter($content, fn ($value) => $value !== null);
+
+				$errors = Form::for(
+					model: $page,
+					props: [
+						'language' => $code,
+						'values'   => $content + $default
+					]
+				)->errors();
+
+				if ($errors !== []) {
+					break;
+				}
+			}
+		}
 
 		if ($errors !== []) {
 			throw new PermissionException([

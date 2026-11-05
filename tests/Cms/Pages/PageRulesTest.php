@@ -30,6 +30,33 @@ class PageRulesTest extends TestCase
 		]);
 	}
 
+	public function appWithLanguages(): App
+	{
+		return new App([
+			'languages' => [
+				[
+					'code'    => 'en',
+					'name'    => 'English',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+					'name' => 'Deutsch'
+				]
+			],
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'user' => 'test@getkirby.com',
+			'users' => [
+				[
+					'email' => 'test@getkirby.com',
+					'role'  => 'admin'
+				]
+			]
+		]);
+	}
+
 	protected function blueprintWithRequiredField(): array
 	{
 		return [
@@ -753,6 +780,26 @@ class PageRulesTest extends TestCase
 		PageRules::validateContent($page);
 	}
 
+	public function testValidateContentWithCompleteTranslations(): void
+	{
+		$page = new Page([
+			'kirby'        => $this->appWithLanguages(),
+			'slug'         => 'test',
+			'blueprint'    => $this->blueprintWithRequiredField(),
+			'translations' => [
+				[
+					'code'    => 'en',
+					'content' => ['headline' => 'Headline']
+				]
+			]
+		]);
+
+		$this->expectNotToPerformAssertions();
+
+		// the missing German translation falls back to the default language
+		PageRules::validateContent($page);
+	}
+
 	public function testValidateContentWithErrors(): void
 	{
 		$errors = [
@@ -774,6 +821,33 @@ class PageRulesTest extends TestCase
 			$this->assertSame('error.page.changeStatus.incomplete', $e->getKey());
 			$this->assertSame('The page has errors and cannot be published', $e->getMessage());
 			$this->assertSame($errors, $e->getDetails());
+		}
+	}
+
+	public function testValidateContentWithIncompleteTranslation(): void
+	{
+		$page = new Page([
+			'kirby'        => $this->appWithLanguages(),
+			'slug'         => 'test',
+			'blueprint'    => $this->blueprintWithRequiredField(),
+			'translations' => [
+				[
+					'code'    => 'en',
+					'content' => ['headline' => 'Headline']
+				],
+				[
+					'code'    => 'de',
+					'content' => ['headline' => '']
+				]
+			]
+		]);
+
+		try {
+			PageRules::validateContent($page);
+			$this->fail('Expected a PermissionException');
+		} catch (PermissionException $e) {
+			$this->assertSame('error.page.changeStatus.incomplete', $e->getKey());
+			$this->assertSame(['headline'], array_keys($e->getDetails()));
 		}
 	}
 
