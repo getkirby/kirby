@@ -5,7 +5,6 @@ namespace Kirby\Image;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\Dom;
-use Kirby\Toolkit\Str;
 
 /**
  * Provides information about an SVG
@@ -71,13 +70,23 @@ class Svg
 	 */
 	protected function length(string $attr): float|null
 	{
-		$value = $this->attr($attr);
+		$value = trim($this->attr($attr));
 
-		if (Str::endsWith($value, '%') === true) {
+		if (preg_match('/^([+-]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)(?:e[+-]?[0-9]+)?)(px|in|cm|mm|pt|pc|q)?$/i', $value, $matches) !== 1) {
 			return null;
 		}
 
-		return $this->normalizeFloat((float)$value);
+		$factor = match (strtolower($matches[2] ?? '')) {
+			'in'    => 96,
+			'cm'    => 96 / 2.54,
+			'mm'    => 96 / 25.4,
+			'q'     => 96 / 101.6,
+			'pt'    => 96 / 72,
+			'pc'    => 16,
+			default => 1
+		};
+
+		return $this->normalizeFloat((float)$matches[1] * $factor);
 	}
 
 	/**
