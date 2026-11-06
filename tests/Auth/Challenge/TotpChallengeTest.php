@@ -127,7 +127,7 @@ class TotpChallengeTest extends TestCase
 
 	public function testVerifyWithInvalidInput(): void
 	{
-		$challenge = new TotpChallenge($this->user, 'login', 600);
+		$challenge = new TotpChallenge($this->user, 'totp', 'login', 600);
 
 		$this->assertFalse($challenge->verify(null, new Pending()));
 		$this->assertFalse($challenge->verify(['000000'], new Pending()));

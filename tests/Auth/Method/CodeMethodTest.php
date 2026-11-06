@@ -69,7 +69,7 @@ class CodeMethodTest extends TestCase
 		$this->expectExceptionMessage('Missing email');
 
 		$auth   = $this->createStub(Auth::class);
-		$method = new CodeMethod(auth: $auth);
+		$method = new CodeMethod(auth: $auth, type: 'code');
 		$method->authenticate(null, long: true);
 	}
 
