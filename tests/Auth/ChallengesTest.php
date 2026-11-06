@@ -16,6 +16,7 @@ use Kirby\Session\Session;
 use Kirby\Tests\MockTime;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use RuntimeException;
 
 class DummyChallenge extends Challenge
 {
@@ -102,6 +103,28 @@ class DummyChallenge3 extends Challenge
 	}
 }
 
+class BrokenChallenge extends Challenge
+{
+	public function __construct(
+		User $user,
+		string $type,
+		string $mode,
+		int $timeout
+	) {
+		throw new RuntimeException('Missing client');
+	}
+
+	public function create(): Pending|null
+	{
+		return null;
+	}
+
+	public function verify(mixed $input, Pending $data): bool
+	{
+		return true;
+	}
+}
+
 #[CoversClass(Challenges::class)]
 class ChallengesTest extends TestCase
 {
@@ -123,6 +146,7 @@ class ChallengesTest extends TestCase
 		DummyChallenge::$throw      = null;
 		DummyChallenge2::$available = true;
 
+		Challenges::$challenges['broken'] = BrokenChallenge::class;
 		Challenges::$challenges['dummy']  = DummyChallenge::class;
 		Challenges::$challenges['dummy2'] = DummyChallenge2::class;
 		Challenges::$challenges['dummy3'] = DummyChallenge3::class;
@@ -149,6 +173,7 @@ class ChallengesTest extends TestCase
 	{
 		parent::tearDown();
 		unset(
+			Challenges::$challenges['broken'],
 			Challenges::$challenges['dummy'],
 			Challenges::$challenges['dummy2'],
 			Challenges::$challenges['dummy3'],
@@ -446,6 +471,26 @@ class ChallengesTest extends TestCase
 
 		DummyChallenge::$available = false;
 		$this->assertFalse($this->challenges->hasAvailable($user, 'login'));
+	}
+
+	public function testHasAvailableConstructorException(): void
+	{
+		$app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'challenges' => ['broken', 'dummy']
+				]
+			]
+		]);
+
+		$challenges = new Challenges($app->auth(), $app);
+
+		// must not fall back to "no second factor available",
+		// as `PasswordMethod::has2FA()` would then skip the second factor
+		$this->expectException(RuntimeException::class);
+		$this->expectExceptionMessage('Missing client');
+
+		$challenges->hasAvailable($app->user('marge'), '2fa');
 	}
 
 	public function testSwitch(): void

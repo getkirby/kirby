@@ -10,6 +10,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\Attributes\CoversClass;
+use RuntimeException;
 
 class BrokenMethod extends Method
 {
@@ -27,6 +28,17 @@ class BrokenMethod extends Method
 		bool $long = false
 	): User|Status {
 		return new User(['email' => $email]);
+	}
+}
+
+class BrokenSdkMethod extends BrokenMethod
+{
+	public function __construct(
+		Auth $auth,
+		string $type,
+		array $options = []
+	) {
+		throw new RuntimeException('Missing client');
 	}
 }
 
@@ -69,6 +81,7 @@ class MethodsTest extends TestCase
 		]);
 
 		Methods::$methods['broken']       = BrokenMethod::class;
+		Methods::$methods['broken-sdk']   = BrokenSdkMethod::class;
 		Methods::$methods['oauth-github'] = ProviderMethod::class;
 		Methods::$methods['oauth-gitlab'] = ProviderMethod::class;
 	}
@@ -77,6 +90,7 @@ class MethodsTest extends TestCase
 	{
 		unset(
 			Methods::$methods['broken'],
+			Methods::$methods['broken-sdk'],
 			Methods::$methods['oauth-github'],
 			Methods::$methods['oauth-gitlab']
 		);
@@ -276,6 +290,20 @@ class MethodsTest extends TestCase
 		$this->assertSame(['password' => []], $methods->enabled());
 	}
 
+	public function testEnabledConstructorNonKirbyException(): void
+	{
+		$app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'methods' => ['broken-sdk', 'password']
+				]
+			]
+		]);
+
+		$methods = $app->auth()->methods();
+		$this->assertSame(['password' => []], $methods->enabled());
+	}
+
 	public function testEnabledDebugRethrowsException(): void
 	{
 		$app = $this->app->clone([
@@ -296,6 +324,56 @@ class MethodsTest extends TestCase
 		$this->expectExceptionMessage('The "code" login method cannot be enabled when 2FA is required');
 
 		$methods->enabled();
+	}
+
+	public function testEnabledLogsException(): void
+	{
+		$app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'debug'   => 'log',
+					'methods' => ['broken-sdk', 'password']
+				]
+			]
+		]);
+
+		Dir::make(static::TMP);
+		$log      = static::TMP . '/error.log';
+		$original = ini_set('error_log', $log);
+
+		try {
+			$enabled = $app->auth()->methods()->enabled();
+		} finally {
+			ini_set('error_log', $original);
+		}
+
+		$this->assertSame(['password' => []], $enabled);
+		$this->assertStringContainsString('Missing client', file_get_contents($log));
+	}
+
+	public function testEnabledLogsNoExceptionWhenDisabled(): void
+	{
+		$app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'debug'   => false,
+					'methods' => ['broken-sdk', 'password']
+				]
+			]
+		]);
+
+		Dir::make(static::TMP);
+		$log      = static::TMP . '/error.log';
+		$original = ini_set('error_log', $log);
+
+		try {
+			$enabled = $app->auth()->methods()->enabled();
+		} finally {
+			ini_set('error_log', $original);
+		}
+
+		$this->assertSame(['password' => []], $enabled);
+		$this->assertFileDoesNotExist($log);
 	}
 
 	public function testEnabledPerType(): void

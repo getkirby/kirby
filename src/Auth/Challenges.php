@@ -44,6 +44,8 @@ class Challenges
 	 */
 	public function available(User $user, string $mode): array
 	{
+		// not caught on purpose: skipping a broken challenge could drop the
+		// user's only second factor, so `PasswordMethod::has2FA()` would skip 2FA
 		$available = array_values(A::filter(
 			$this->enabled(),
 			fn ($type) => $this->get($type, $user, $mode)->isAvailable()
