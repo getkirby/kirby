@@ -238,40 +238,46 @@ describe("panel.events", () => {
 		const events = Events(panel);
 
 		it("should remove every listener it registered", () => {
-			const added: Array<[string, unknown]> = [];
-			const removed: Array<[string, unknown]> = [];
+			type Call = [string, unknown, boolean];
+			const added: Call[] = [];
+			const removed: Call[] = [];
+
+			const capture = (options?: boolean | EventListenerOptions) =>
+				typeof options === "boolean" ? options : options?.capture === true;
 
 			const spies = [
 				vi
 					.spyOn(document, "addEventListener")
-					.mockImplementation((type, listener) => {
-						added.push([type, listener]);
+					.mockImplementation((type, listener, options) => {
+						added.push([type, listener, capture(options)]);
 					}),
 				vi
 					.spyOn(window, "addEventListener")
-					.mockImplementation((type, listener) => {
-						added.push([type, listener]);
+					.mockImplementation((type, listener, options) => {
+						added.push([type, listener, capture(options)]);
 					}),
 				vi
 					.spyOn(document, "removeEventListener")
-					.mockImplementation((type, listener) => {
-						removed.push([type, listener]);
+					.mockImplementation((type, listener, options) => {
+						removed.push([type, listener, capture(options)]);
 					}),
 				vi
 					.spyOn(window, "removeEventListener")
-					.mockImplementation((type, listener) => {
-						removed.push([type, listener]);
+					.mockImplementation((type, listener, options) => {
+						removed.push([type, listener, capture(options)]);
 					})
 			];
 
 			events.subscribe();
 			events.unsubscribe();
 
-			// every listener must be removed with the SAME
-			// function reference it was added with
+			// a listener is only removed with the same function
+			// reference and the same capture flag it was added with
 			const leaked = added.filter(
-				([type, listener]) =>
-					removed.some(([t, l]) => t === type && l === listener) === false
+				([type, listener, flag]) =>
+					removed.some(
+						([t, l, f]) => t === type && l === listener && f === flag
+					) === false
 			);
 
 			expect(added.length).toBeGreaterThan(0);
