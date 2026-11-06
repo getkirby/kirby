@@ -28,7 +28,7 @@ abstract class TestCase extends BaseTestCase
 
 		Dir::remove(static::TMP);
 
-		// clear fake json requests
+		// clear fake query requests
 		$_GET = [];
 
 		// clean up $_SERVER

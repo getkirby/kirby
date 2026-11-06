@@ -93,7 +93,9 @@ class RouterTest extends TestCase
 
 	public function testCallWithoutCsrfForView(): void
 	{
-		$response = $this->call('test/view', ['_json' => true]);
+		$this->setHeaders(['X-Panel' => 'true']);
+
+		$response = $this->call('test/view');
 		$this->assertSame(200, $response->code());
 	}
 
@@ -148,7 +150,7 @@ class RouterTest extends TestCase
 	public function testResponseFromFalse(): void
 	{
 		// fake json request for easier assertions
-		$this->setRequest(['_json' => true]);
+		$this->setHeaders(['X-Panel' => 'true']);
 
 		// false is interpreted as 404
 		$router = new Router($this->app->panel());
@@ -162,7 +164,7 @@ class RouterTest extends TestCase
 	public function testResponseFromNull(): void
 	{
 		// fake json request for easier assertions
-		$this->setRequest(['_json' => true]);
+		$this->setHeaders(['X-Panel' => 'true']);
 
 		// null is interpreted as 404
 		$router = new Router($this->app->panel());
@@ -176,7 +178,7 @@ class RouterTest extends TestCase
 	public function testResponseFromString(): void
 	{
 		// fake json request for easier assertions
-		$this->setRequest(['_json' => true]);
+		$this->setHeaders(['X-Panel' => 'true']);
 
 		// strings are interpreted as errors
 		$router = new Router($this->app->panel());
