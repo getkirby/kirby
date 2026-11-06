@@ -81,7 +81,7 @@ trait UserActions
 	#[BlockCollectionAccess]
 	public function changeName(string $name): static
 	{
-		$name = trim($name);
+		$name = trim(strip_tags($name));
 
 		return $this->commit(
 			action:    'changeName',
