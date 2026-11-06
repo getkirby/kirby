@@ -125,6 +125,19 @@ export default {
 			return this.$refs[index === 0 ? "browserA" : "browserB"];
 		},
 		/**
+		 * Checks if a link points to the site, which also
+		 * requires it to be inside the site's install subfolder
+		 */
+		isSiteLink(link) {
+			const site = new URL(this.$panel.urls.site, location.origin);
+			const base = site.pathname.replace(/\/$/, "");
+
+			return (
+				link.origin === site.origin &&
+				(link.pathname === base || link.pathname.startsWith(base + "/"))
+			);
+		},
+		/**
 		 * Double-buffered load:
 		 * - set src on the inactive iframe
 		 * - swap to it once the load finishes
@@ -162,7 +175,7 @@ export default {
 
 			// open external links and Panel links in new tab
 			if (
-				link.href.startsWith(location.origin) === false ||
+				this.isSiteLink(link) === false ||
 				link.href.startsWith(this.$panel.urls.panel) === true
 			) {
 				link.target = "_blank";
@@ -183,7 +196,7 @@ export default {
 		/**
 		 * Handles iframe load events for both buffers
 		 */
-		async onLoad(index) {
+		onLoad(index) {
 			const iframe = this.getIframe(index);
 			const document = iframe?.contentDocument;
 
@@ -192,18 +205,22 @@ export default {
 			}
 
 			if (this.pending === index) {
+				// restore the scroll position before the swap,
+				// so that the iframe is already in place when it becomes
+				// visible and a reload triggered right after the swap
+				// doesn't pick up a scroll position of 0
+				if (this.pendingScroll !== null) {
+					iframe.contentWindow.scrollTo({
+						top: this.pendingScroll,
+						behavior: "instant"
+					});
+					this.pendingScroll = null;
+				}
+
 				// Only swap when the preloaded iframe finishes loading
 				this.pending = null;
 				this.active = index;
 				this.isLoading = false;
-
-				if (this.pendingScroll !== null) {
-					const scrollY = this.pendingScroll;
-					this.pendingScroll = null;
-
-					await this.$nextTick();
-					iframe.contentWindow.scrollTo(0, scrollY);
-				}
 			}
 
 			if (index !== this.active) {
@@ -253,13 +270,7 @@ export default {
 
 			// restore scroll position once the iframe finished loading
 			const target = this.active === 0 ? 1 : 0;
-			const iframe = this.getIframe(target);
-
-			iframe?.addEventListener(
-				"load",
-				() => iframe.contentWindow.scrollTo(0, scroll),
-				{ once: true }
-			);
+			this.pendingScroll = scroll ?? null;
 
 			// load restored URL in iframe
 			this.srcs[target] = src;
@@ -335,7 +346,11 @@ export default {
 	opacity: 0;
 	pointer-events: none;
 }
+/* keep the active iframe on top of the stack,
+   Safari doesn't pass scroll events through an iframe
+   with `pointer-events: none` to the one below */
 .k-preview-browser-iframe.is-active {
+	z-index: 1;
 	opacity: 1;
 	pointer-events: auto;
 }
