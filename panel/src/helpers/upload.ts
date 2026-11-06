@@ -113,6 +113,15 @@ export async function upload(
 			reject(response);
 		});
 
+		// reject like `fetch()` with the reason of the abort signal,
+		// without calling the error callback
+		xhr.addEventListener("abort", () => {
+			reject(
+				options.abort?.reason ??
+					new DOMException("The upload was aborted", "AbortError")
+			);
+		});
+
 		xhr.open(options.method, options.url, true);
 
 		// add all request headers
