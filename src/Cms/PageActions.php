@@ -1055,23 +1055,4 @@ trait PageActions
 
 		return $page;
 	}
-
-	/**
-	 * Updates parent collections with the new page object
-	 * after a page action
-	 *
-	 * @deprecated 5.0.0 Use ModelState::update instead
-	 */
-	protected static function updateParentCollections(
-		Page $page,
-		string|false $method,
-		Page|Site|null $parentModel = null
-	): void {
-		ModelState::update(
-			method: $method,
-			current: $page,
-			next: $page,
-			parent: $parentModel
-		);
-	}
 }
