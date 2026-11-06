@@ -4183,7 +4183,7 @@ describe("$helper.string.hasEmoji", () => {
 	});
 
 	it("should not identify non-emojis", () => {
-		const others = ["Couple", "0", 0, null, false];
+		const others = ["Couple", "0", "Page 2", "A#", "*", 0, null, false];
 
 		for (const other of others) {
 			expect(string.hasEmoji(other)).toBe(false);

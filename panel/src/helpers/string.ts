@@ -85,7 +85,9 @@ export function hasEmoji(string: unknown): boolean {
 		return false;
 	}
 
-	return /\p{Emoji}/u.test(string);
+	// `\p{Emoji}` also matches the digits, `#` and `*`,
+	// which only form an emoji in a keycap sequence (`\u20E3`)
+	return /(?![#*0-9])\p{Emoji}|\u20E3/u.test(string);
 }
 
 /**
