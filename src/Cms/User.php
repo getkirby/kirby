@@ -517,7 +517,15 @@ class User extends ModelWithContent
 			return new Field($this, 'name', $this->name);
 		}
 
-		return $this->name ??= new Field($this, 'name', $this->credentials()['name'] ?? null);
+		$name = $this->credentials()['name'] ?? null;
+
+		// stored credentials can contain tags that were written
+		// before names got sanitized in `::changeName()`
+		if (is_string($name) === true) {
+			$name = trim(strip_tags($name));
+		}
+
+		return $this->name ??= new Field($this, 'name', $name);
 	}
 
 	/**
