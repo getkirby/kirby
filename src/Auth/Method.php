@@ -23,8 +23,9 @@ abstract class Method
 	use HasI18n;
 
 	/**
-	 * Must not throw or have side effects, as methods
-	 * are also created to check if they are enabled
+	 * Must not have side effects, as methods are also created
+	 * to check if they are enabled. A method that throws
+	 * an exception here is treated as not enabled.
 	 */
 	public function __construct(
 		protected Auth $auth,

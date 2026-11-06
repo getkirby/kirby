@@ -44,6 +44,9 @@ class Challenges
 	 */
 	public function available(User $user, string $mode): array
 	{
+		// exceptions are deliberately not caught: treating a broken challenge
+		// as unavailable could remove the user's only second factor, so that
+		// `PasswordMethod::has2FA()` would allow logging in without one
 		$available = array_values(A::filter(
 			$this->enabled(),
 			fn ($type) => $this->get($type, $user, $mode)->isAvailable()

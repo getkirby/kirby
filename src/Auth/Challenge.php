@@ -26,8 +26,9 @@ abstract class Challenge
 	protected App $kirby;
 
 	/**
-	 * Must not throw or have side effects, as challenges
-	 * are also created to check if they are available
+	 * Must not throw or have side effects, as challenges are
+	 * also created to check if they are available. Exceptions
+	 * are not caught there, see `Challenges::available()`.
 	 */
 	public function __construct(
 		protected User $user,
