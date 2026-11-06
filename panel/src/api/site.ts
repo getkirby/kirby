@@ -21,6 +21,6 @@ export default (api: Api) => ({
 		return api.get("site", query);
 	},
 	async update(data: Record<string, unknown>) {
-		return api.post("site", data);
+		return api.patch("site", data);
 	}
 });
