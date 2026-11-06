@@ -56,7 +56,7 @@ class PasswordMethodTest extends TestCase
 		$this->expectExceptionMessage('Missing email');
 
 		$auth   = $this->createStub(Auth::class);
-		$method = new PasswordMethod(auth: $auth);
+		$method = new PasswordMethod(auth: $auth, type: 'password');
 		$method->authenticate(null, 'secret123');
 	}
 

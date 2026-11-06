@@ -63,7 +63,7 @@ class PasswordResetMethodTest extends TestCase
 		$this->expectExceptionMessage('Missing email');
 
 		$auth   = $this->createStub(Auth::class);
-		$method = new PasswordResetMethod(auth: $auth);
+		$method = new PasswordResetMethod(auth: $auth, type: 'password-reset');
 		$method->authenticate(null, long: true);
 	}
 

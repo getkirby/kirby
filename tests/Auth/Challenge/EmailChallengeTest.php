@@ -297,7 +297,7 @@ class EmailChallengeTest extends TestCase
 
 	public function testVerifyWithInvalidInput(): void
 	{
-		$challenge = new EmailChallenge($this->user, 'login', 600);
+		$challenge = new EmailChallenge($this->user, 'email', 'login', 600);
 		$data      = new Pending(secret: self::$password);
 
 		$this->assertFalse($challenge->verify(null, $data));
