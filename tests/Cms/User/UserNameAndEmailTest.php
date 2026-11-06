@@ -46,6 +46,36 @@ class UserNameAndEmailTest extends ModelTestCase
 		$this->assertSame('Homer Simpson', $user->name()->value());
 	}
 
+	public function testNameSanitizedFromCredentials(): void
+	{
+		$user = new User([
+			'credentials' => ['name' => '<strong>Homer</strong> Simpson'],
+		]);
+
+		$this->assertSame('Homer Simpson', $user->name()->value());
+		$this->assertSame('Homer Simpson', $user->username());
+	}
+
+	public function testNameSanitizedFromCredentialsFallsBackToEmail(): void
+	{
+		$user = new User([
+			'credentials' => [
+				'email' => 'homer@simpsons.com',
+				'name'  => '<img src="x">'
+			],
+		]);
+
+		$this->assertSame('', $user->name()->value());
+		$this->assertSame('homer@simpsons.com', $user->username());
+	}
+
+	public function testNameWithoutCredentials(): void
+	{
+		$user = new User(['credentials' => []]);
+
+		$this->assertNull($user->name()->value());
+	}
+
 	public function testNameOrEmail(): void
 	{
 		$user = new User([
