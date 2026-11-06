@@ -46,6 +46,7 @@ class MockXHR {
 	}
 	abort(): void {
 		this.aborted = true;
+		this.listeners.abort?.({ target: this } as unknown as Event);
 	}
 
 	emitLoad(response: string): void {
@@ -201,16 +202,17 @@ describe("$helper.upload()", () => {
 		await promise;
 	});
 
-	it("should abort when the signal fires", async () => {
+	it("should abort and reject when the signal fires", async () => {
 		const controller = new AbortController();
-		const promise = upload(makeFile(), { abort: controller.signal });
+		const error = vi.fn();
+		const promise = upload(makeFile(), { abort: controller.signal, error });
 		const xhr = MockXHR.instances[0];
 
 		controller.abort();
 		expect(xhr.aborted).toBe(true);
 
-		xhr.emitLoad(JSON.stringify({ status: "ok" }));
-		await promise;
+		await expect(promise).rejects.toMatchObject({ name: "AbortError" });
+		expect(error).not.toHaveBeenCalled();
 	});
 });
 

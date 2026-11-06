@@ -1,6 +1,12 @@
 import { describe, expect, it, vi } from "vitest";
+import { uploadAsChunks } from "@/helpers/upload";
 import Upload, { defaults } from "./upload";
 import Panel from "./panel";
+
+vi.mock("@/helpers/upload", async (importOriginal) => ({
+	...(await importOriginal<typeof import("@/helpers/upload")>()),
+	uploadAsChunks: vi.fn()
+}));
 
 // URL.createObjectURL/.revokeObjectURL
 // are not implemented in happy-dom
@@ -329,6 +335,31 @@ describe("panel.upload", () => {
 			upload.set({ max: 3, multiple: false });
 			expect(upload.max).toStrictEqual(1);
 			expect(upload.multiple).toStrictEqual(false);
+		});
+	});
+
+	describe("upload()", () => {
+		it("should not treat an aborted upload as an error", async () => {
+			const panel = Panel.create(app);
+			const upload = Upload(panel);
+			const emit = vi.spyOn(panel.events, "emit");
+
+			vi.mocked(uploadAsChunks).mockRejectedValueOnce(
+				new DOMException("The upload was aborted", "AbortError")
+			);
+
+			upload.url = "/api/pages/test/files";
+			upload.abort = new AbortController();
+			upload.select(makeFileList(makeFile()));
+
+			const file = upload.files[0];
+			file.progress = 50;
+
+			await upload.upload(file, {});
+
+			expect(file.error).toBeUndefined();
+			expect(file.progress).toStrictEqual(50);
+			expect(emit).not.toHaveBeenCalledWith("file.upload.error", file);
 		});
 	});
 
