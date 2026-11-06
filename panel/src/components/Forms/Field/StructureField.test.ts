@@ -15,7 +15,7 @@ function mount(props = {}) {
 		shallow: true,
 		global: {
 			mocks: {
-				$events: { on: vi.fn(), off: vi.fn() },
+				$events: { emit: vi.fn(), on: vi.fn(), off: vi.fn() },
 				$helper: {
 					object: {
 						length: (object: object) => Object.keys(object ?? {}).length
@@ -26,6 +26,10 @@ function mount(props = {}) {
 			}
 		}
 	});
+}
+
+function rows(wrapper: ReturnType<typeof mount>) {
+	return wrapper.vm.items as Record<string, unknown>[];
 }
 
 describe("StructureField.vue", () => {
@@ -47,22 +51,47 @@ describe("StructureField.vue", () => {
 			// a new row gets added in the block drawer and its items
 			// are passed on as value to the field in the block preview
 			const drawer = mount();
-			drawer.vm.items.push({ _id: "a", title: "", label: "" });
+			rows(drawer).push({ _id: "a", title: "", label: "" });
 
 			const preview = mount({ value: drawer.vm.items });
 
-			expect(preview.vm.items[0].title).toBe("");
+			expect(rows(preview)[0].title).toBe("");
 
 			// the row gets updated in place via the structure drawer
-			drawer.vm.items[0].title = "Title";
+			rows(drawer)[0].title = "Title";
 			await nextTick();
 
-			expect(preview.vm.items[0].title).toBe("Title");
+			expect(rows(preview)[0].title).toBe("Title");
+		});
+
+		it("keeps the selection when its own rows are updated in place", async () => {
+			const wrapper = mount();
+			const items = rows(wrapper);
+			items.push({ _id: "a", title: "A" });
+
+			await wrapper.setProps({ value: items });
+			wrapper.vm.startSelecting();
+			wrapper.vm.onSelect(["a"]);
+
+			items[0].title = "B";
+			await nextTick();
+
+			expect(wrapper.vm.isSelecting).toBe(true);
+			expect(wrapper.vm.selected).toStrictEqual(["a"]);
+		});
+
+		it("stops selecting when the rows get replaced", async () => {
+			const wrapper = mount({ value: [{ _id: "a", title: "A" }] });
+			wrapper.vm.startSelecting();
+
+			await wrapper.setProps({ value: [{ _id: "b", title: "B" }] });
+
+			expect(wrapper.vm.isSelecting).toBe(false);
 		});
 
 		it("keeps its own items when its own value is passed back", async () => {
 			const wrapper = mount();
-			const items = wrapper.vm.items;
+			const items = rows(wrapper);
 
 			await wrapper.setProps({ value: items });
 			items.push({ _id: "a", title: "A" });
