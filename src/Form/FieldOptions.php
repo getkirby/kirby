@@ -3,10 +3,12 @@
 namespace Kirby\Form;
 
 use Kirby\Cms\ModelWithContent;
+use Kirby\Option\Option;
 use Kirby\Option\Options;
 use Kirby\Option\OptionsApi;
 use Kirby\Option\OptionsProvider;
 use Kirby\Option\OptionsQuery;
+use Kirby\Option\ProtectedOption;
 
 /**
  * Foundation for radio and select
@@ -76,9 +78,19 @@ class FieldOptions
 		return $props;
 	}
 
-	public function render(ModelWithContent $model): array
+	/**
+	 * @param $values Values of the field; models the current user
+	 *               must not list only show up as placeholders for them
+	 */
+	public function render(ModelWithContent $model, array $values = []): array
 	{
-		return $this->resolve($model)->render($model, $this->safeMode);
+		$options = $this->resolve($model)->filter(
+			fn (Option $option): bool =>
+				$option instanceof ProtectedOption === false ||
+				in_array($option->value, $values, true) === true
+		);
+
+		return $options->render($model, $this->safeMode);
 	}
 
 	public function resolve(ModelWithContent $model): Options

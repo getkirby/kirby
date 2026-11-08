@@ -843,6 +843,8 @@
 
 	"type": "Type",
 
+	"unknown": "unknown",
+
 	"upload": "Upload",
 	"upload.error.cantMove": "The uploaded file could not be moved",
 	"upload.error.cantWrite": "Failed to write file to disk",

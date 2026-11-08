@@ -537,6 +537,7 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
         'Kirby\\Option\\OptionsApi' => __DIR__ . '/../..' . '/src/Option/OptionsApi.php',
         'Kirby\\Option\\OptionsProvider' => __DIR__ . '/../..' . '/src/Option/OptionsProvider.php',
         'Kirby\\Option\\OptionsQuery' => __DIR__ . '/../..' . '/src/Option/OptionsQuery.php',
+        'Kirby\\Option\\ProtectedOption' => __DIR__ . '/../..' . '/src/Option/ProtectedOption.php',
         'Kirby\\Panel\\Access' => __DIR__ . '/../..' . '/src/Panel/Access.php',
         'Kirby\\Panel\\Area' => __DIR__ . '/../..' . '/src/Panel/Area.php',
         'Kirby\\Panel\\Areas' => __DIR__ . '/../..' . '/src/Panel/Areas.php',
