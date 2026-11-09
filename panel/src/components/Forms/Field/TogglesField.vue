@@ -15,6 +15,7 @@
 			ref="input"
 			:class="{ grow }"
 			v-bind="$props"
+			:options="$helper.field.options(options, value)"
 			type="toggles"
 			@input="$emit('input', $event)"
 		/>
