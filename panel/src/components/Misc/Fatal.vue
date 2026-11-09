@@ -18,7 +18,10 @@
  */
 export default {
 	props: {
-		html: String
+		html: {
+			default: "",
+			type: String
+		}
 	},
 	mounted() {
 		try {
