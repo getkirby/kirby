@@ -1,8 +1,15 @@
 import { describe, it, expect } from "@test/unit";
-import { mount } from "@vue/test-utils";
+import { mount, type VueWrapper } from "@vue/test-utils";
 import ButtonGroup from "./ButtonGroup.vue";
 
 const buttons = [{ text: "Edit" }, { text: "Delete" }];
+
+/**
+ * Returns the given attribute of each rendered k-button
+ */
+function attributes(wrapper: VueWrapper, name: string) {
+	return wrapper.findAll("k-button").map((button) => button.attributes(name));
+}
 
 describe("k-button-group", () => {
 	// $el
@@ -41,9 +48,7 @@ describe("k-button-group", () => {
 			const wrapper = mount(ButtonGroup, {
 				props: { buttons, responsive: true }
 			});
-			for (const button of wrapper.findAll("k-button")) {
-				expect(button.attributes("responsive")).toBe("true");
-			}
+			expect(attributes(wrapper, "responsive")).toStrictEqual(["true", "true"]);
 		});
 
 		it("is overridden by individual button config", () => {
@@ -60,9 +65,7 @@ describe("k-button-group", () => {
 	describe("size prop", () => {
 		it("passes to each k-button", () => {
 			const wrapper = mount(ButtonGroup, { props: { buttons, size: "sm" } });
-			for (const button of wrapper.findAll("k-button")) {
-				expect(button.attributes("size")).toBe("sm");
-			}
+			expect(attributes(wrapper, "size")).toStrictEqual(["sm", "sm"]);
 		});
 
 		it("is overridden by individual button config", () => {
@@ -78,9 +81,10 @@ describe("k-button-group", () => {
 			const wrapper = mount(ButtonGroup, {
 				props: { buttons, theme: "positive" }
 			});
-			for (const button of wrapper.findAll("k-button")) {
-				expect(button.attributes("theme")).toBe("positive");
-			}
+			expect(attributes(wrapper, "theme")).toStrictEqual([
+				"positive",
+				"positive"
+			]);
 		});
 
 		it("is overridden by individual button config", () => {
@@ -99,9 +103,10 @@ describe("k-button-group", () => {
 			const wrapper = mount(ButtonGroup, {
 				props: { buttons, variant: "filled" }
 			});
-			for (const button of wrapper.findAll("k-button")) {
-				expect(button.attributes("variant")).toBe("filled");
-			}
+			expect(attributes(wrapper, "variant")).toStrictEqual([
+				"filled",
+				"filled"
+			]);
 		});
 
 		it("is overridden by individual button config", () => {
