@@ -2,10 +2,12 @@ import { describe, expect, it } from "@test/unit";
 import { mount } from "@vue/test-utils";
 import ModelTabs from "./ModelTabs.vue";
 
+const Tabs = { name: "k-tabs", props: ["tab", "tabs"], template: "<nav />" };
+
 const tabs = [
 	{
 		name: "main",
-		fields: ["headline", "Text"]
+		fields: ["headline", "subheadline", "Text"]
 	},
 	{
 		name: "meta",
@@ -15,10 +17,18 @@ const tabs = [
 
 type Badge = { text: number } | undefined;
 
+/**
+ * Returns the badges of the tabs that reach k-tabs
+ */
 function badges(diff = {}): Badge[] {
-	const wrapper = mount(ModelTabs, { props: { tab: "main", tabs, diff } });
-	const withBadges = wrapper.vm.withBadges as { badge: Badge }[];
-	return withBadges.map((tab) => tab.badge);
+	const wrapper = mount(ModelTabs, {
+		props: { tab: "main", tabs, diff },
+		global: { stubs: { "k-tabs": Tabs } }
+	});
+	const received: { badge: Badge }[] = wrapper
+		.findComponent(Tabs)
+		.props("tabs");
+	return received.map((tab) => tab.badge);
 }
 
 describe("k-model-tabs", () => {
@@ -32,10 +42,9 @@ describe("k-model-tabs", () => {
 	// computed
 	describe("withBadges computed", () => {
 		it("counts the changed fields of a tab", () => {
-			expect(badges({ headline: "a", seo: "b" })).toStrictEqual([
-				{ text: 1 },
-				{ text: 1 }
-			]);
+			expect(
+				badges({ headline: "a", subheadline: "b", seo: "c" })
+			).toStrictEqual([{ text: 2 }, { text: 1 }]);
 		});
 
 		it("compares the field names case-insensitively", () => {
