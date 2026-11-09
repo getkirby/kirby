@@ -82,12 +82,19 @@ describe("ModelForm.vue", () => {
 
 	// computed
 	describe("isEmpty computed", () => {
-		it("only reports empty when there are no columns and a text to show", () => {
-			expect(mount({ columns: {}, empty: "No blueprint" }).vm.isEmpty).toBe(
-				"No blueprint"
-			);
-			expect(mount({ columns: {} }).vm.isEmpty).toBeFalsy();
-			expect(mount({ empty: "No blueprint" }).vm.isEmpty).toBe(false);
+		it("is true when there are no columns but a text to show", () => {
+			const wrapper = mount({ columns: {}, empty: "No blueprint" });
+			expect(wrapper.vm.isEmpty).toBe(true);
+		});
+
+		it.each([undefined, ""])("is false when the text is %o", (empty) => {
+			const wrapper = mount({ columns: {}, empty });
+			expect(wrapper.vm.isEmpty).toBe(false);
+		});
+
+		it("is false when there are columns", () => {
+			const wrapper = mount({ empty: "No blueprint" });
+			expect(wrapper.vm.isEmpty).toBe(false);
 		});
 	});
 
