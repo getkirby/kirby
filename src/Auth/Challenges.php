@@ -96,6 +96,37 @@ class Challenges
 	}
 
 	/**
+	 * Returns normalized array of configured challenges;
+	 * challenges that are set to `false` are left out
+	 *
+	 * @return array<string, array>
+	 */
+	public function config(): array
+	{
+		$default    = ['webauthn', 'totp', 'email'];
+		$challenges = $this->kirby->option('auth.challenges', $default);
+		$normalized = [];
+
+		foreach (A::wrap($challenges) as $type => $options) {
+			if (is_int($type) === true) {
+				// ['email']
+				$type    = $options;
+				$options = [];
+			} elseif ($options === true) {
+				// ['email' => true]
+				$options = [];
+			} elseif ($options === false) {
+				// ['email' => false]
+				continue;
+			}
+
+			$normalized[$type] = $options;
+		}
+
+		return $normalized;
+	}
+
+	/**
 	 * Creates the first available challenge for the user
 	 * and stores state in the session
 	 */
@@ -136,19 +167,24 @@ class Challenges
 	}
 
 	/**
-	 * Returns normalized array of enabled challenges
+	 * Returns the types of all enabled challenges
 	 * by the `auth.challenges` config option
 	 *
 	 * @return list<string>
 	 */
 	public function enabled(): array
 	{
-		$config = $this->kirby->option('auth.challenges', ['webauthn', 'totp', 'email']);
+		$enabled = [];
 
-		return array_values(A::filter(
-			A::wrap($config),
-			fn ($type) => $this->class($type)::isEnabled($this->auth)
-		));
+		foreach ($this->config() as $type => $options) {
+			$class = $this->class($type);
+
+			if ($class::isEnabled($this->auth, $type, $options) === true) {
+				$enabled[] = $type;
+			}
+		}
+
+		return $enabled;
 	}
 
 	/**
@@ -218,7 +254,8 @@ class Challenges
 			user:    $user,
 			type:    $type,
 			mode:    $mode,
-			timeout: $timeout
+			timeout: $timeout,
+			options: $this->config()[$type] ?? []
 		);
 	}
 

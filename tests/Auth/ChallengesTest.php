@@ -28,8 +28,11 @@ class DummyChallenge extends Challenge
 	public static Pending|null $pending = null;
 	public static \Throwable|null $throw = null;
 
-	public static function isEnabled(Auth $auth): bool
-	{
+	public static function isEnabled(
+		Auth $auth,
+		string $type,
+		array $options = []
+	): bool {
 		return static::$enabled;
 	}
 
@@ -109,9 +112,37 @@ class BrokenChallenge extends Challenge
 		User $user,
 		string $type,
 		string $mode,
-		int $timeout
+		int $timeout,
+		array $options = []
 	) {
 		throw new RuntimeException('Missing client');
+	}
+
+	public function create(): Pending|null
+	{
+		return null;
+	}
+
+	public function verify(mixed $input, Pending $data): bool
+	{
+		return true;
+	}
+}
+
+/**
+ * One class registered under a type per provider
+ */
+class ProviderChallenge extends Challenge
+{
+	public static array $checked = [];
+
+	public static function isEnabled(
+		Auth $auth,
+		string $type,
+		array $options = []
+	): bool {
+		static::$checked[$type] = $options;
+		return $type !== 'sms-vonage';
 	}
 
 	public function create(): Pending|null
@@ -145,11 +176,14 @@ class ChallengesTest extends TestCase
 		DummyChallenge::$pending    = null;
 		DummyChallenge::$throw      = null;
 		DummyChallenge2::$available = true;
+		ProviderChallenge::$checked = [];
 
-		Challenges::$challenges['broken'] = BrokenChallenge::class;
-		Challenges::$challenges['dummy']  = DummyChallenge::class;
-		Challenges::$challenges['dummy2'] = DummyChallenge2::class;
-		Challenges::$challenges['dummy3'] = DummyChallenge3::class;
+		Challenges::$challenges['broken']     = BrokenChallenge::class;
+		Challenges::$challenges['dummy']      = DummyChallenge::class;
+		Challenges::$challenges['dummy2']     = DummyChallenge2::class;
+		Challenges::$challenges['dummy3']     = DummyChallenge3::class;
+		Challenges::$challenges['sms-twilio'] = ProviderChallenge::class;
+		Challenges::$challenges['sms-vonage'] = ProviderChallenge::class;
 
 		$this->app = $this->app->clone([
 			'options' => [
@@ -177,7 +211,9 @@ class ChallengesTest extends TestCase
 			Challenges::$challenges['dummy'],
 			Challenges::$challenges['dummy2'],
 			Challenges::$challenges['dummy3'],
-			Challenges::$challenges['sms']
+			Challenges::$challenges['sms'],
+			Challenges::$challenges['sms-twilio'],
+			Challenges::$challenges['sms-vonage']
 		);
 
 	}
@@ -277,6 +313,43 @@ class ChallengesTest extends TestCase
 		$this->assertNull($session->get('kirby.challenge.mode'));
 		$this->assertNull($session->get('kirby.challenge.timeout'));
 		$this->assertNull($session->get('kirby.challenge.type'));
+	}
+
+	public function testConfigDefaults(): void
+	{
+		$app        = new App(['roots' => ['index' => static::TMP]]);
+		$challenges = new Challenges($app->auth(), $app);
+
+		$this->assertSame([
+			'webauthn' => [],
+			'totp'     => [],
+			'email'    => []
+		], $challenges->config());
+	}
+
+	public function testConfigNormalization(): void
+	{
+		$app = new App([
+			'roots'   => ['index' => static::TMP],
+			'options' => [
+				'auth' => [
+					'challenges' => [
+						'dummy',
+						'dummy2'     => true,
+						'dummy3'     => false,
+						'sms-twilio' => ['client' => 'a'],
+					]
+				]
+			]
+		]);
+
+		$challenges = new Challenges($app->auth(), $app);
+
+		$this->assertSame([
+			'dummy'      => [],
+			'dummy2'     => [],
+			'sms-twilio' => ['client' => 'a'],
+		], $challenges->config());
 	}
 
 	public function testCreate(): void
@@ -438,6 +511,31 @@ class ChallengesTest extends TestCase
 		$this->assertSame([], $this->challenges->enabled());
 	}
 
+	public function testEnabledPerType(): void
+	{
+		$app = new App([
+			'roots'   => ['index' => static::TMP],
+			'options' => [
+				'auth' => [
+					'challenges' => [
+						'sms-vonage' => ['client' => 'b'],
+						'sms-twilio' => ['client' => 'a'],
+					]
+				]
+			]
+		]);
+
+		$challenges = new Challenges($app->auth(), $app);
+
+		$this->assertSame(['sms-twilio'], $challenges->enabled());
+
+		// the static check receives the type and its options
+		$this->assertSame([
+			'sms-vonage' => ['client' => 'b'],
+			'sms-twilio' => ['client' => 'a'],
+		], ProviderChallenge::$checked);
+	}
+
 	public function testFirstAvailable(): void
 	{
 		$user = $this->app->user('marge');
@@ -461,6 +559,35 @@ class ChallengesTest extends TestCase
 		$this->assertSame('dummy', $challenge->type());
 		$this->assertSame('login', $challenge->mode());
 		$this->assertSame(123, $challenge->timeout());
+		$this->assertSame([], $challenge->options());
+	}
+
+	public function testGetWithType(): void
+	{
+		$app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'challenges' => [
+						'sms-twilio' => ['client' => 'a'],
+						'sms-vonage' => ['client' => 'b']
+					]
+				]
+			]
+		]);
+
+		$challenges = new Challenges($app->auth(), $app);
+		$user       = $app->user('marge');
+		$twilio     = $challenges->get('sms-twilio', $user, 'login');
+		$vonage     = $challenges->get('sms-vonage', $user, 'login');
+
+		$this->assertInstanceOf(ProviderChallenge::class, $twilio);
+		$this->assertSame('sms-twilio', $twilio->type());
+		$this->assertSame(['client' => 'a'], $twilio->options());
+
+		// options are passed even if the challenge is not enabled
+		$this->assertInstanceOf(ProviderChallenge::class, $vonage);
+		$this->assertSame('sms-vonage', $vonage->type());
+		$this->assertSame(['client' => 'b'], $vonage->options());
 	}
 
 	public function testHasAvailable(): void

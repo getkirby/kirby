@@ -245,7 +245,7 @@ class EmailChallengeTest extends TestCase
 
 	public function testIsEnabled(): void
 	{
-		$this->assertTrue(EmailChallenge::isEnabled($this->app->auth()));
+		$this->assertTrue(EmailChallenge::isEnabled($this->app->auth(), 'email'));
 	}
 
 	public function testIsSingleUse(): void

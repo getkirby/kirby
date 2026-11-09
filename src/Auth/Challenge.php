@@ -33,7 +33,8 @@ abstract class Challenge
 		protected User $user,
 		protected string $type,
 		protected string $mode,
-		protected int $timeout
+		protected int $timeout,
+		protected array $options = []
 	) {
 		$this->kirby = $user->kirby();
 	}
@@ -108,8 +109,11 @@ abstract class Challenge
 	 * Checks whether the challenge is generally enabled on this site.
 	 * Static, as it is checked without a user (e.g. for guests).
 	 */
-	public static function isEnabled(Auth $auth): bool
-	{
+	public static function isEnabled(
+		Auth $auth,
+		string $type,
+		array $options = []
+	): bool {
 		return true;
 	}
 
@@ -139,6 +143,14 @@ abstract class Challenge
 	public function mode(): string
 	{
 		return $this->mode;
+	}
+
+	/**
+	 * Returns the config options for this challenge
+	 */
+	public function options(): array
+	{
+		return $this->options;
 	}
 
 	/**
