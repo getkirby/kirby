@@ -53,6 +53,38 @@ describe("k-preview-browser", () => {
 	});
 
 	// methods
+	describe("isPanelLink()", () => {
+		it("accepts the Panel and paths inside it", () => {
+			const { vm } = mount("https://getkirby.com/demo");
+
+			expect(vm.isPanelLink(anchor("https://getkirby.com/demo/panel"))).toBe(
+				true
+			);
+			expect(
+				vm.isPanelLink(anchor("https://getkirby.com/demo/panel/pages/notes"))
+			).toBe(true);
+		});
+
+		it("rejects paths that only start like the Panel path", () => {
+			const { vm } = mount("https://getkirby.com/demo");
+
+			expect(vm.isPanelLink(anchor("https://getkirby.com/demo/panel-2"))).toBe(
+				false
+			);
+		});
+
+		it("resolves a relative Panel URL", () => {
+			const { vm } = mount("/demo");
+
+			expect(
+				vm.isPanelLink(anchor(location.origin + "/demo/panel/pages/notes"))
+			).toBe(true);
+			expect(vm.isPanelLink(anchor(location.origin + "/demo/notes"))).toBe(
+				false
+			);
+		});
+	});
+
 	describe("isSiteLink()", () => {
 		it("accepts all paths for a site in the root", () => {
 			const { vm } = mount("https://getkirby.com");
@@ -137,6 +169,28 @@ describe("k-preview-browser", () => {
 			expect(link.target).toBe("_blank");
 			expect(event.preventDefault).not.toHaveBeenCalled();
 			expect(wrapper.emitted("navigate")).toBeUndefined();
+		});
+
+		it("opens Panel links in a new tab for a relative Panel URL", () => {
+			const wrapper = mount("/demo");
+			const link = anchor(location.origin + "/demo/panel/pages/notes");
+			const event = click(wrapper, link);
+
+			expect(link.target).toBe("_blank");
+			expect(event.preventDefault).not.toHaveBeenCalled();
+			expect(wrapper.emitted("navigate")).toBeUndefined();
+		});
+
+		it("navigates for pages that only start like the Panel path", () => {
+			const wrapper = mount("https://getkirby.com/demo");
+			const link = anchor("https://getkirby.com/demo/panel-2");
+			const event = click(wrapper, link);
+
+			expect(link.target).toBe("");
+			expect(event.preventDefault).toHaveBeenCalled();
+			expect(wrapper.emitted("navigate")).toStrictEqual([
+				[{ view: link.href }]
+			]);
 		});
 	});
 });
