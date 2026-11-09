@@ -37,6 +37,16 @@ describe("Label.vue", () => {
 			const wrapper = mount({ input: false });
 			expect(wrapper.element.tagName).toBe("H2");
 		});
+
+		it("sets no for attribute without input", () => {
+			const wrapper = mount();
+			expect(wrapper.attributes("for")).toBeUndefined();
+		});
+
+		it("sets no for attribute for a section", () => {
+			const wrapper = mount({ input: "my-field", type: "section" });
+			expect(wrapper.attributes("for")).toBeUndefined();
+		});
 	});
 
 	describe("link prop", () => {
