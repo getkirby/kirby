@@ -99,4 +99,10 @@ describe("Clear mark", () => {
 			expect(mark.name).toBe("clear");
 		});
 	});
+
+	describe("schema", () => {
+		it("neither parses nor renders anything", () => {
+			expect(mark.schema).toEqual({});
+		});
+	});
 });
