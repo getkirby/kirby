@@ -1,6 +1,26 @@
 import { describe, expect, it, vi } from "@test/unit";
-import { mount as vueMount } from "@vue/test-utils";
+import { flushPromises, mount as vueMount } from "@vue/test-utils";
+import { defineComponent, type PropType } from "vue";
 import LanguagesDropdown from "./LanguagesDropdown.vue";
+
+type Language = { code: string; current: boolean; text: string };
+
+const languages: Language[] = [
+	{ code: "en", current: true, text: "English" },
+	{ code: "de", current: false, text: "Deutsch" }
+];
+
+/**
+ * Renders the `item` slot for each option, like k-dropdown
+ */
+const Dropdown = defineComponent({
+	props: { options: Array as PropType<Language[]> },
+	render() {
+		return this.options?.map((item, index) =>
+			this.$slots.item?.({ item, index })
+		);
+	}
+});
 
 /**
  * Builds a mocked $panel, whose `unlock` resolves
@@ -21,16 +41,24 @@ function panel({
 	};
 }
 
-function mount(attrs = {}, $panel = panel()) {
+function mount(attrs = {}, $panel = panel(), $dropdown = () => languages) {
 	return vueMount(LanguagesDropdown, {
 		attrs,
 		global: {
-			mocks: {
-				$dropdown: () => () => [],
-				$panel
-			}
+			components: { "k-dropdown": Dropdown },
+			mocks: { $dropdown, $panel }
 		}
 	});
+}
+
+/**
+ * Clicks the dropdown item of a language
+ */
+async function select(wrapper: ReturnType<typeof mount>, code: string) {
+	await wrapper
+		.find(`.k-languages-dropdown-item[code="${code}"]`)
+		.trigger("click");
+	await flushPromises();
 }
 
 describe("k-languages-dropdown", () => {
@@ -41,12 +69,26 @@ describe("k-languages-dropdown", () => {
 		it.acceptsStyle(mount);
 	});
 
+	// props
+	describe("options prop", () => {
+		it("renders an item for each language", () => {
+			const $dropdown = vi.fn(() => languages);
+			const wrapper = mount({ options: "languages" }, panel(), $dropdown);
+			const codes = wrapper
+				.findAll(".k-languages-dropdown-item-code")
+				.map((code) => code.text());
+
+			expect($dropdown).toHaveBeenCalledWith("languages");
+			expect(codes).toStrictEqual(["EN", "DE"]);
+		});
+	});
+
 	// methods
 	describe("change()", () => {
 		it("does nothing when selecting the current language", async () => {
 			const $panel = panel();
 			const wrapper = mount({}, $panel);
-			await wrapper.vm.change({ code: "en", current: true });
+			await select(wrapper, "en");
 
 			expect($panel.content.unlock).not.toHaveBeenCalled();
 			expect($panel.reload).not.toHaveBeenCalled();
@@ -55,7 +97,7 @@ describe("k-languages-dropdown", () => {
 		it("releases the lock and reloads when switching language", async () => {
 			const $panel = panel();
 			const wrapper = mount({}, $panel);
-			await wrapper.vm.change({ code: "de", current: false });
+			await select(wrapper, "de");
 
 			expect($panel.content.unlock).toHaveBeenCalledOnce();
 			expect($panel.reload).toHaveBeenCalledWith({
@@ -78,8 +120,9 @@ describe("k-languages-dropdown", () => {
 			// lock, so nothing is lost and the switch can simply be repeated
 			const $panel = panel({ unlocked: false });
 			const wrapper = mount({}, $panel);
-			await wrapper.vm.change({ code: "de", current: false });
+			await select(wrapper, "de");
 
+			expect($panel.content.unlock).toHaveBeenCalledOnce();
 			expect($panel.error).not.toHaveBeenCalled();
 			expect($panel.reload).not.toHaveBeenCalled();
 		});
@@ -89,7 +132,7 @@ describe("k-languages-dropdown", () => {
 			const error = new Error("Offline");
 			const $panel = panel({ unlockError: error });
 			const wrapper = mount({}, $panel);
-			await wrapper.vm.change({ code: "de", current: false });
+			await select(wrapper, "de");
 
 			expect($panel.error).toHaveBeenCalledWith(error);
 			expect($panel.reload).not.toHaveBeenCalled();
