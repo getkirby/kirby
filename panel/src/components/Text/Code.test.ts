@@ -1,31 +1,45 @@
 import { describe, it, expect } from "@test/unit";
 import { mount as vueMount } from "@vue/test-utils";
+import { defineComponent } from "vue";
 import Code from "./Code.vue";
 
+// k-highlight renders the slot's single <div>, which becomes the root
+// (as a fragment, VTU's wrapper.element would be its mount container)
 const global = {
-	stubs: { "k-highlight": { template: "<div><slot /></div>" } }
+	stubs: {
+		"k-highlight": defineComponent({
+			render() {
+				return this.$slots.default?.()[0];
+			}
+		})
+	}
 };
 
-function mount(props = {}, attrs = {}) {
+function mount(props = {}) {
 	return vueMount(Code, {
 		props,
-		attrs,
 		global,
 		slots: { default: "const x = 1;" }
-	}).find("pre.k-code");
+	});
 }
 
 describe("k-code", () => {
 	// $el
 	describe("element", () => {
-		it.rendersAs(mount, "PRE", "k-code");
+		it.rendersAs(mount, "DIV");
+
+		it("wraps a pre.k-code", () => {
+			const wrapper = mount();
+			const pre = wrapper.find("pre.k-code");
+			expect(pre.element.parentElement).toBe(wrapper.element);
+		});
 	});
 
 	// props
 	describe("language prop", () => {
 		it("sets data-language attribute on pre", () => {
 			const wrapper = mount({ language: "html" });
-			expect(wrapper.attributes("data-language")).toBe("html");
+			expect(wrapper.find("pre").attributes("data-language")).toBe("html");
 		});
 
 		it("sets language class on code element", () => {
@@ -35,7 +49,7 @@ describe("k-code", () => {
 
 		it("omits data-language when not provided", () => {
 			const wrapper = mount();
-			expect(wrapper.attributes("data-language")).toBeUndefined();
+			expect(wrapper.find("pre").attributes("data-language")).toBeUndefined();
 		});
 
 		it("sets no class on code element when not provided", () => {
@@ -47,10 +61,7 @@ describe("k-code", () => {
 	// slots
 	describe("default slot", () => {
 		it("renders slotted content", () => {
-			const wrapper = vueMount(Code, {
-				global,
-				slots: { default: "const x = 1;" }
-			});
+			const wrapper = mount();
 			expect(wrapper.find("code").text()).toBe("const x = 1;");
 		});
 	});
