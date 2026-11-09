@@ -26,24 +26,7 @@ describe("Fatal.vue", () => {
 			const wrapper = mount();
 			expect(wrapper.attributes("visible")).toBe("true");
 		});
-	});
 
-	// props
-	describe("html prop", () => {
-		it("writes the html into the iframe document on mount", () => {
-			const wrapper = mount({ html: "<h1>Boom</h1>" });
-			const iframe = wrapper.find(".k-fatal-iframe")
-				.element as HTMLIFrameElement;
-			expect(iframe.contentDocument?.body.innerHTML).toContain("<h1>Boom</h1>");
-		});
-
-		it("does not throw when html is undefined", () => {
-			expect(() => mount()).not.toThrow();
-		});
-	});
-
-	// notification
-	describe("notification", () => {
 		it("renders the error message", () => {
 			const wrapper = mount();
 			expect(wrapper.find(".k-notification p").text()).toBe(
@@ -68,6 +51,20 @@ describe("Fatal.vue", () => {
 			const wrapper = mount({}, {}, close);
 			await wrapper.find("k-button").trigger("click");
 			expect(close).toHaveBeenCalledTimes(1);
+		});
+	});
+
+	// props
+	describe("html prop", () => {
+		it("writes the html into the iframe document on mount", () => {
+			const wrapper = mount({ html: "<h1>Boom</h1>" });
+			const iframe = wrapper.find(".k-fatal-iframe")
+				.element as HTMLIFrameElement;
+			expect(iframe.contentDocument?.body.innerHTML).toContain("<h1>Boom</h1>");
+		});
+
+		it("does not throw when html is undefined", () => {
+			expect(() => mount()).not.toThrow();
 		});
 	});
 });
