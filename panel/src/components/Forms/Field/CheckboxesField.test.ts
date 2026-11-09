@@ -86,11 +86,11 @@ describe("k-checkboxes-field", () => {
 			);
 		});
 
-		it("adds a placeholder for a value without option", () => {
+		it("adds an option for a value without option", () => {
 			const wrapper = mount({ value: ["a", "b"] });
 			expect(wrapper.findComponent(Input).props("options")).toStrictEqual([
 				...options,
-				{ text: "–", value: "b" }
+				{ text: "[unknown]", value: "b" }
 			]);
 		});
 
