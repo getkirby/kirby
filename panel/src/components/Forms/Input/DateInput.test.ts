@@ -122,6 +122,27 @@ describe("k-date-input", () => {
 		});
 	});
 
+	// lifecycle
+	describe("mounted hook", () => {
+		it("flags an initial value outside of the boundaries", () => {
+			const wrapper = mount({ min: "2024-01-01", value: "2021-03-05" });
+			const input = wrapper.find("input").element as HTMLInputElement;
+			expect(input.validationMessage).toBe("error.validation.date.after");
+		});
+
+		it("flags a missing initial value when required", () => {
+			const wrapper = mount({ required: true });
+			const input = wrapper.find("input").element as HTMLInputElement;
+			expect(input.validationMessage).toBe("error.validation.required");
+		});
+
+		it("accepts an initial value within the boundaries", () => {
+			const wrapper = mount({ min: "2020-01-01", value: "2021-03-05" });
+			const input = wrapper.find("input").element as HTMLInputElement;
+			expect(input.validationMessage).toBe("");
+		});
+	});
+
 	// methods
 	describe("alter()", () => {
 		// in the afternoon, where rounding the time of day to the
