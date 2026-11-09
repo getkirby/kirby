@@ -63,8 +63,11 @@ describe("Fatal.vue", () => {
 			expect(iframe.contentDocument?.body.innerHTML).toContain("<h1>Boom</h1>");
 		});
 
-		it("does not throw when html is undefined", () => {
-			expect(() => mount()).not.toThrow();
+		it("writes an empty document without html", () => {
+			const wrapper = mount();
+			const iframe = wrapper.find(".k-fatal-iframe")
+				.element as HTMLIFrameElement;
+			expect(iframe.contentDocument?.body.innerHTML).toBe("");
 		});
 	});
 });
