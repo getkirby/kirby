@@ -138,6 +138,29 @@ describe("k-button", () => {
 	});
 
 	// computed
+	describe("attrs computed", () => {
+		it("passes aria attributes through", () => {
+			const wrapper = mount(Button, {
+				attrs: {
+					"aria-controls": "menu",
+					"aria-expanded": "true",
+					"data-foo": "bar"
+				}
+			});
+			expect(wrapper.attributes("aria-controls")).toBe("menu");
+			expect(wrapper.attributes("aria-expanded")).toBe("true");
+			expect(wrapper.attributes("data-foo")).toBeUndefined();
+		});
+
+		it("prefers a passed aria-label over the text", () => {
+			const wrapper = mount(Button, {
+				props: { text: "Save" },
+				attrs: { "aria-label": "Save the page" }
+			});
+			expect(wrapper.attributes("aria-label")).toBe("Save the page");
+		});
+	});
+
 	describe("component computed", () => {
 		it("renders as a button by default", () => {
 			const wrapper = mount(Button);
