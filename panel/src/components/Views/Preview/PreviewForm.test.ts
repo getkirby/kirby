@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "@test/unit";
+import { afterEach, describe, expect, it, vi } from "@test/unit";
 import { mount as vueMount } from "@vue/test-utils";
 import PreviewForm from "./PreviewForm.vue";
 
@@ -65,6 +65,41 @@ describe("PreviewForm.vue", () => {
 		it.rendersAs(mount, "DIV", "k-preview-form");
 		it.acceptsClass(mount);
 		it.acceptsStyle(mount);
+	});
+
+	// computed
+	describe("tabsWithPreviewLinks computed", () => {
+		const url = window.location.href;
+
+		afterEach(() => {
+			window.history.replaceState(null, "", url);
+		});
+
+		it("links each tab to itself", () => {
+			const wrapper = mount();
+			const links = wrapper.vm.tabsWithPreviewLinks.map(
+				(tab: { link: string }) => tab.link
+			);
+
+			expect(links).toStrictEqual([
+				"/pages/test?tab=main",
+				"/pages/test?tab=meta"
+			]);
+		});
+
+		it("replaces the current tab and keeps the other query", () => {
+			window.history.replaceState(null, "", "?view=changes&tab=meta");
+
+			const wrapper = mount();
+			const links = wrapper.vm.tabsWithPreviewLinks.map(
+				(tab: { link: string }) => tab.link
+			);
+
+			expect(links).toStrictEqual([
+				"/pages/test?view=changes&tab=main",
+				"/pages/test?view=changes&tab=meta"
+			]);
+		});
 	});
 
 	// methods
