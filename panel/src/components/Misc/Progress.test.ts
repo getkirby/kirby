@@ -18,7 +18,8 @@ describe("k-progress", () => {
 		it.acceptsStyle(mount);
 
 		it("max attribute is always 100", () => {
-			expect(bar(mount()).attributes("max")).toBe("100");
+			const wrapper = mount();
+			expect(bar(wrapper).attributes("max")).toBe("100");
 		});
 	});
 
@@ -30,21 +31,25 @@ describe("k-progress", () => {
 		});
 
 		it("falls back to a generic label", () => {
-			expect(mount().find(".sr-only").text()).toBe("progress");
+			const wrapper = mount();
+			expect(wrapper.find(".sr-only").text()).toBe("progress");
 		});
 	});
 
 	describe("value prop", () => {
 		it("defaults to 0", () => {
-			expect(bar(mount()).attributes("value")).toBe("0");
+			const wrapper = mount();
+			expect(bar(wrapper).attributes("value")).toBe("0");
 		});
 
 		it("reflects the prop as attribute", () => {
-			expect(bar(mount({ value: 42 })).attributes("value")).toBe("42");
+			const wrapper = mount({ value: 42 });
+			expect(bar(wrapper).attributes("value")).toBe("42");
 		});
 
 		it("renders value as percentage text", () => {
-			expect(bar(mount({ value: 75 })).text()).toBe("75%");
+			const wrapper = mount({ value: 75 });
+			expect(bar(wrapper).text()).toBe("75%");
 		});
 	});
 });

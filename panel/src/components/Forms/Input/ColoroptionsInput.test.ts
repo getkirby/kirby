@@ -43,7 +43,8 @@ describe("k-coloroptions-input", () => {
 	// computed
 	describe("choices computed", () => {
 		it("uses the text as title", () => {
-			const labels = mount().findAll("label");
+			const wrapper = mount();
+			const labels = wrapper.findAll("label");
 			expect(labels[0].attributes("title")).toBe("Red");
 			expect(labels[1].attributes("title")).toBe("#00ff00");
 		});

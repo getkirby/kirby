@@ -50,18 +50,19 @@ describe("k-time-input", () => {
 	// computed
 	describe("placeholder computed", () => {
 		it("shows an example time", () => {
-			const input = mount({ display: "h:mm a" }).find("input");
+			const wrapper = mount({ display: "h:mm a" });
+			const input = wrapper.find("input");
 			expect(input.attributes("placeholder")).toBe("12:00 am");
 		});
 
 		it("follows the display pattern", () => {
-			expect(
-				mount({ display: "HH:mm" }).find("input").attributes("placeholder")
-			).toBe("00:00");
+			const wrapper = mount({ display: "HH:mm" });
+			expect(wrapper.find("input").attributes("placeholder")).toBe("00:00");
 		});
 
 		it("uses `min` when now is before it", () => {
-			const input = mount({ display: "h:mm a", min: "13:00:00" }).find("input");
+			const wrapper = mount({ display: "h:mm a", min: "13:00:00" });
+			const input = wrapper.find("input");
 			expect(input.attributes("placeholder")).toBe("1:00 pm");
 		});
 	});

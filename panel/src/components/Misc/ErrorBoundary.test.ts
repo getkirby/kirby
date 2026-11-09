@@ -104,11 +104,13 @@ describe("k-error-boundary", () => {
 	// slots
 	describe("default slot", () => {
 		it("renders its content", () => {
-			expect(mount().text()).toBe("Content");
+			const wrapper = mount();
+			expect(wrapper.text()).toBe("Content");
 		});
 
 		it("renders nothing without content", () => {
-			expect(mount({}, {}).html()).toBe("");
+			const wrapper = mount({}, {});
+			expect(wrapper.html()).toBe("");
 		});
 	});
 

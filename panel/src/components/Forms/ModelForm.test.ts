@@ -99,11 +99,14 @@ describe("k-model-form", () => {
 	});
 
 	describe("isLocked computed", () => {
-		it("reads the lock state from the lock payload", () => {
-			expect(mount({ lock: { isLocked: true } }).vm.isLocked).toBe(true);
-			expect(mount({ lock: { isLocked: false } }).vm.isLocked).toBe(false);
-			expect(mount({ lock: false }).vm.isLocked).toBe(false);
-			expect(mount().vm.isLocked).toBe(false);
+		it.each([
+			[{ lock: { isLocked: true } }, true],
+			[{ lock: { isLocked: false } }, false],
+			[{ lock: false }, false],
+			[{}, false]
+		])("reads the lock state from %o", (props, expected) => {
+			const wrapper = mount(props);
+			expect(wrapper.vm.isLocked).toBe(expected);
 		});
 	});
 
@@ -130,7 +133,8 @@ describe("k-model-form", () => {
 	// methods
 	describe("fieldsWithAdditionalData()", () => {
 		function resolve(props = {}, fields: Fields = {}): ResolvedFields {
-			return mount(props).vm.fieldsWithAdditionalData(fields) as ResolvedFields;
+			const wrapper = mount(props);
+			return wrapper.vm.fieldsWithAdditionalData(fields) as ResolvedFields;
 		}
 
 		it("points regular fields at the field endpoint", () => {

@@ -95,7 +95,8 @@ describe("k-link", () => {
 	// computed
 	describe("downloadAttr computed", () => {
 		it("is not set without download", () => {
-			expect(mount().attributes("download")).toBeUndefined();
+			const wrapper = mount();
+			expect(wrapper.attributes("download")).toBeUndefined();
 		});
 
 		it("names the download after an absolute URL's file", () => {
