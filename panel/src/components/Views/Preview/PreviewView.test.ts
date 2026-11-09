@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "@test/unit";
+import { afterEach, describe, expect, it, vi } from "@test/unit";
 import { mount as vueMount } from "@vue/test-utils";
 import type Api from "@/api";
 import Pages from "@/api/pages";
@@ -48,6 +48,35 @@ describe("PreviewView.vue", () => {
 	});
 
 	// methods
+	describe("onScrollSyncing()", () => {
+		afterEach(() => {
+			localStorage.removeItem("kirby$preview$scroll");
+		});
+
+		it("starts with syncing on without a stored choice", () => {
+			const wrapper = mount({ mode: "compare" });
+			const toggle = wrapper.find(".k-preview-scroll-sync");
+			expect(toggle.attributes("aria-checked")).toBe("true");
+		});
+
+		it("restores a stored choice", () => {
+			localStorage.setItem("kirby$preview$scroll", "false");
+
+			const wrapper = mount({ mode: "compare" });
+			const toggle = wrapper.find(".k-preview-scroll-sync");
+			expect(toggle.attributes("aria-checked")).toBe("false");
+		});
+
+		it("toggles syncing and remembers the choice", async () => {
+			const wrapper = mount({ mode: "compare" });
+			const toggle = wrapper.find(".k-preview-scroll-sync");
+			await toggle.trigger("click");
+
+			expect(toggle.attributes("aria-checked")).toBe("false");
+			expect(localStorage.getItem("kirby$preview$scroll")).toBe("false");
+		});
+	});
+
 	describe("onTreeNavigate()", () => {
 		it("opens the preview of the selected page", () => {
 			const wrapper = mount();
