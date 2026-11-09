@@ -3,29 +3,28 @@ import { mount as vueMount } from "@vue/test-utils";
 import preserveListeners from "@/mixins/preserveListeners";
 import Fields from "./Fields.vue";
 
-function mount(attrs: Record<string, unknown> = {}) {
+function mount(attrs = {}) {
 	return vueMount(Fields, {
 		attrs,
 		global: {
 			mixins: [preserveListeners]
 		},
 		props: {
-			content: {},
-			endpoints: { field: "pages/test/fields/blocks" },
-			fieldset: {
-				name: "Custom",
-				tabs: { content: { fields: { caption: { type: "text" } } } },
-				wysiwyg: true
-			},
-			id: "test",
-			tabs: { content: { fields: { caption: { type: "text" } } } }
+			tabs: {}
 		}
 	});
 }
 
 describe("Fields.vue", () => {
-	describe("native clipboard events", () => {
-		it("do not trigger the block's copy action", () => {
+	// $el
+	describe("element", () => {
+		it.rendersAs(mount, "DIV");
+		it.inheritsNoAttrs(mount);
+	});
+
+	// events
+	describe("copy event", () => {
+		it("is not emitted for a native copy event in the form", () => {
 			const onCopy = vi.fn();
 			const wrapper = mount({ onCopy });
 
@@ -35,8 +34,10 @@ describe("Fields.vue", () => {
 
 			expect(onCopy).not.toHaveBeenCalled();
 		});
+	});
 
-		it("do not trigger the block's paste action", () => {
+	describe("paste event", () => {
+		it("is not emitted for a native paste event in the form", () => {
 			const onPaste = vi.fn();
 			const wrapper = mount({ onPaste });
 
