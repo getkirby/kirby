@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import Dropdown from "./dropdown";
 import Panel from "./panel";
 
@@ -67,6 +67,18 @@ describe("panel.dropdown", () => {
 			await dropdown.open({ props: { options } });
 
 			expect(dropdown.props.options).toStrictEqual(options);
+		});
+
+		it("should read the options of a backend response", async () => {
+			const panel = Panel.create(app);
+			const options = [{ text: "Edit" }];
+
+			// the backend sends the options next to the props
+			vi.spyOn(panel, "get").mockResolvedValue({ dropdown: { options } });
+
+			await panel.dropdown.open("pages/test");
+
+			expect(panel.dropdown.options()).toStrictEqual(options);
 		});
 
 		it("should prefix string with /dropdowns/", async () => {
