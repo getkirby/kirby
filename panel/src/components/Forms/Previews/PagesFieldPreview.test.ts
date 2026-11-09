@@ -93,5 +93,40 @@ describe("k-pages-field-preview", () => {
 				}
 			]);
 		});
+
+		it("reuses the tags of known IDs", async () => {
+			helper.items.mockResolvedValueOnce([{ text: "Home" }]);
+			const wrapper = mount({ value: ["page://a"] });
+			await flushPromises();
+
+			helper.items.mockResolvedValueOnce([{ text: "Blog" }]);
+			await wrapper.setProps({ value: ["page://b", "page://a"] });
+			await flushPromises();
+
+			expect(helper.items).toHaveBeenLastCalledWith("items/pages", [
+				"page://b"
+			]);
+			expect(wrapper.vm.tags).toStrictEqual([
+				{ id: "page://b", text: "Blog" },
+				{ id: "page://a", text: "Home" }
+			]);
+		});
+
+		it("drops a response for a tag removed while loading", async () => {
+			const request = Promise.withResolvers<unknown[]>();
+			helper.items.mockReturnValueOnce(request.promise);
+			const wrapper = mount({ value: ["page://a", "page://b"] });
+
+			// the loading tag of `page://b` is reused, nothing is refetched
+			await wrapper.setProps({ value: ["page://b"] });
+			request.resolve([{ text: "Home" }, { text: "Blog" }]);
+			await flushPromises();
+
+			// the removed tag must not be written to a missing index
+			expect(wrapper.vm.tags).not.toHaveProperty("-1");
+
+			expect(helper.items).toHaveBeenCalledOnce();
+			expect(wrapper.vm.tags).toStrictEqual([{ id: "page://b", text: "Blog" }]);
+		});
 	});
 });
