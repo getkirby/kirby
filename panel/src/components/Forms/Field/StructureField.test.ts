@@ -4,7 +4,21 @@ import { nextTick } from "vue";
 import { helper } from "@/helpers";
 import StructureField from "./StructureField.vue";
 
-function mount(props = {}, attrs = {}) {
+const Table = {
+	name: "k-table",
+	props: ["pagination", "rows"],
+	emits: ["input", "option", "paginate"],
+	template: "<div />"
+};
+
+function panel() {
+	return {
+		dialog: { close: vi.fn(), open: vi.fn() },
+		drawer: { close: vi.fn(), open: vi.fn(), props: {} }
+	};
+}
+
+function mount(props = {}, attrs = {}, $panel = panel()) {
 	return vueMount(StructureField, {
 		props: {
 			fields: {
@@ -17,10 +31,19 @@ function mount(props = {}, attrs = {}) {
 		global: {
 			mocks: {
 				$events: { emit: vi.fn(), on: vi.fn(), off: vi.fn() },
-				$helper: { ...helper, uuid: () => "uuid" }
-			}
+				$helper: { ...helper, uuid: () => "uuid" },
+				$panel
+			},
+			stubs: { "k-table": Table }
 		}
 	});
+}
+
+/**
+ * Submits the dialog the field opened last
+ */
+function confirm($panel: ReturnType<typeof panel>) {
+	$panel.dialog.open.mock.calls.at(-1)?.[0].on.submit();
 }
 
 function rows(wrapper: ReturnType<typeof mount>) {
@@ -101,6 +124,149 @@ describe("k-structure-field", () => {
 			await nextTick();
 
 			expect(wrapper.vm.items).toBe(items);
+		});
+	});
+
+	// methods
+	describe("add()", () => {
+		const fields = { title: { type: "text", default: "New" } };
+		const value = [{ _id: "a", title: "A" }];
+
+		it("appends a new row and opens it", () => {
+			const $panel = panel();
+			const wrapper = mount({ fields, value }, {}, $panel);
+			wrapper.vm.add();
+
+			const row = { _id: "uuid", title: "New" };
+			expect(wrapper.emitted("input")).toStrictEqual([[[...value, row]]]);
+			expect($panel.drawer.open).toHaveBeenCalledWith(
+				expect.objectContaining({
+					component: "k-structure-drawer",
+					props: expect.objectContaining({ value: row })
+				})
+			);
+		});
+
+		it("prepends the new row with the prepend prop", () => {
+			const wrapper = mount({ fields, prepend: true, value });
+			wrapper.vm.add();
+
+			expect(wrapper.emitted("input")).toStrictEqual([
+				[[{ _id: "uuid", title: "New" }, ...value]]
+			]);
+		});
+
+		it("adds no row when the max is reached", () => {
+			const $panel = panel();
+			const wrapper = mount({ fields, max: 1, value }, {}, $panel);
+
+			expect(wrapper.vm.add()).toBe(false);
+			expect(wrapper.emitted("input")).toBeUndefined();
+			expect($panel.drawer.open).not.toHaveBeenCalled();
+		});
+	});
+
+	describe("onTableInput()", () => {
+		it("emits the rows of the table", () => {
+			const wrapper = mount({ value: [{ _id: "a" }, { _id: "b" }] });
+			wrapper
+				.findComponent(Table)
+				.vm.$emit("input", [{ _id: "b" }, { _id: "a" }]);
+
+			expect(wrapper.emitted("input")).toStrictEqual([
+				[[{ _id: "b" }, { _id: "a" }]]
+			]);
+		});
+
+		it("writes the rows of the current page back into all rows", async () => {
+			const wrapper = mount({
+				limit: 2,
+				value: [
+					{ _id: "a" },
+					{ _id: "b" },
+					{ _id: "c" },
+					{ _id: "d" },
+					{ _id: "e" }
+				]
+			});
+			const table = wrapper.findComponent(Table);
+			table.vm.$emit("paginate", { page: 2 });
+			await nextTick();
+
+			expect(table.props("rows")).toStrictEqual([{ _id: "c" }, { _id: "d" }]);
+
+			table.vm.$emit("input", [{ _id: "c" }, { _id: "d", title: "D" }]);
+
+			expect(wrapper.emitted("input")).toStrictEqual([
+				[
+					[
+						{ _id: "a" },
+						{ _id: "b" },
+						{ _id: "c" },
+						{ _id: "d", title: "D" },
+						{ _id: "e" }
+					]
+				]
+			]);
+		});
+	});
+
+	describe("option()", () => {
+		it("duplicates a row with a new id", () => {
+			const $panel = panel();
+			const wrapper = mount({ value: [{ _id: "a", title: "A" }] }, {}, $panel);
+			const table = wrapper.findComponent(Table);
+			table.vm.$emit("option", "duplicate", table.props("rows")[0]);
+
+			expect(wrapper.emitted("input")).toStrictEqual([
+				[
+					[
+						{ _id: "a", title: "A" },
+						{ _id: "uuid", title: "A" }
+					]
+				]
+			]);
+			expect($panel.drawer.open).toHaveBeenCalledOnce();
+		});
+	});
+
+	describe("remove()", () => {
+		it("removes the row once the dialog is submitted", () => {
+			const $panel = panel();
+			const wrapper = mount(
+				{ value: [{ _id: "a" }, { _id: "b" }] },
+				{},
+				$panel
+			);
+			const table = wrapper.findComponent(Table);
+			table.vm.$emit("option", "remove", table.props("rows")[0]);
+
+			expect(wrapper.emitted("input")).toBeUndefined();
+
+			confirm($panel);
+
+			expect(wrapper.emitted("input")).toStrictEqual([[[{ _id: "b" }]]]);
+			expect($panel.dialog.close).toHaveBeenCalledOnce();
+			expect($panel.drawer.close).toHaveBeenCalledOnce();
+		});
+
+		it("goes back a page when the last row of a page is removed", async () => {
+			const $panel = panel();
+			const wrapper = mount(
+				{ limit: 1, value: [{ _id: "a" }, { _id: "b" }] },
+				{},
+				$panel
+			);
+			const table = wrapper.findComponent(Table);
+			table.vm.$emit("paginate", { page: 2 });
+			await nextTick();
+
+			table.vm.$emit("option", "remove", table.props("rows")[0]);
+			confirm($panel);
+			await nextTick();
+
+			expect(table.props("pagination").page).toBe(1);
+			expect(table.props("rows")).toStrictEqual([{ _id: "a" }]);
 		});
 	});
 });

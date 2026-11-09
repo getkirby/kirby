@@ -1,5 +1,8 @@
 import { afterEach, describe, expect, it, vi } from "@test/unit";
 import { mount as vueMount } from "@vue/test-utils";
+import Item from "@/components/Collection/Item.vue";
+import Link from "@/components/Navigation/Link.vue";
+import { buildUrl } from "@/helpers/url";
 import PreviewForm from "./PreviewForm.vue";
 
 const events = { off: vi.fn(), on: vi.fn() };
@@ -132,6 +135,37 @@ describe("k-preview-form", () => {
 			expect(wrapper.emitted("navigate")).toStrictEqual([
 				["/pages/a/preview/form"],
 				["/pages/b/preview/form"]
+			]);
+		});
+
+		it("redirects clicks on the rendered item title link", async () => {
+			const wrapper = mount();
+			const go = vi.fn();
+			const field = vueMount(Item, {
+				props: { link: "/pages/test+child", text: "Child" },
+				global: {
+					components: { "k-link": Link },
+					mocks: {
+						$go: go,
+						$url: (path: string) => buildUrl(path, {}, "https://getkirby.com")
+					},
+					// same as the Panel's mixin in `src/index.ts`
+					mixins: [
+						{
+							mounted() {
+								this.$el.__vue__ = this;
+							}
+						}
+					]
+				}
+			});
+
+			wrapper.vm.fixLinks(field.vm);
+			await field.find(".k-item-title > .k-link").trigger("click");
+
+			expect(go).not.toHaveBeenCalled();
+			expect(wrapper.emitted("navigate")).toStrictEqual([
+				["/pages/test+child/preview/form"]
 			]);
 		});
 

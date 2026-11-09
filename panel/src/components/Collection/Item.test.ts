@@ -110,6 +110,42 @@ describe("k-item", () => {
 		});
 	});
 
+	describe("selectable prop", () => {
+		it("enables the select input by default", () => {
+			const wrapper = mount({ selecting: true });
+			expect(wrapper.find("input").element.disabled).toBe(false);
+		});
+
+		it("disables the select input when false", () => {
+			const wrapper = mount({ selecting: true, selectable: false });
+			expect(wrapper.find("input").element.disabled).toBe(true);
+		});
+	});
+
+	describe("selected prop", () => {
+		it("leaves the select input unchecked by default", () => {
+			const wrapper = mount({ selecting: true });
+			expect(wrapper.find("input").element.checked).toBe(false);
+		});
+
+		it("checks the select input when true", () => {
+			const wrapper = mount({ selecting: true, selected: true });
+			expect(wrapper.find("input").element.checked).toBe(true);
+		});
+	});
+
+	describe("selectmode prop", () => {
+		it("renders a checkbox by default", () => {
+			const wrapper = mount({ selecting: true });
+			expect(wrapper.find("input").element.type).toBe("checkbox");
+		});
+
+		it("renders a radio in single mode", () => {
+			const wrapper = mount({ selecting: true, selectmode: "single" });
+			expect(wrapper.find("input").element.type).toBe("radio");
+		});
+	});
+
 	describe("sortable prop", () => {
 		it("renders no sort handle by default", () => {
 			const wrapper = mount();

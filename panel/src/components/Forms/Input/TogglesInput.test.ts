@@ -46,4 +46,14 @@ describe("k-toggles-input", () => {
 			expect(wrapper.emitted("input")).toBeUndefined();
 		});
 	});
+
+	// events
+	describe("input event", () => {
+		it("emits the value of a picked option", async () => {
+			const wrapper = mount({ value: "a" });
+			await wrapper.findAll("label")[1].trigger("click");
+
+			expect(wrapper.emitted("input")).toStrictEqual([["b"]]);
+		});
+	});
 });

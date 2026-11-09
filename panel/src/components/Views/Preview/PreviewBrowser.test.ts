@@ -42,6 +42,27 @@ function click(wrapper: ReturnType<typeof mount>, link: HTMLAnchorElement) {
 	return event;
 }
 
+/**
+ * Fires the load event of an iframe with a fake page at the given URL
+ */
+async function load(
+	wrapper: ReturnType<typeof mount>,
+	index: number,
+	url: string,
+	html = ""
+) {
+	const iframe = wrapper.findAll("iframe")[index];
+	const page = document.implementation.createHTMLDocument();
+	page.body.innerHTML = html;
+
+	Object.defineProperty(page, "URL", { value: url });
+	Object.defineProperty(iframe.element, "contentDocument", { value: page });
+
+	await iframe.trigger("load");
+
+	return page;
+}
+
 describe("k-preview-browser", () => {
 	// $el
 	describe("element", () => {
@@ -191,6 +212,95 @@ describe("k-preview-browser", () => {
 			expect(wrapper.emitted("navigate")).toStrictEqual([
 				[{ view: link.href }]
 			]);
+		});
+	});
+
+	describe("onLoad()", () => {
+		it("swaps to the pending iframe once it is loaded", async () => {
+			const wrapper = mount("https://getkirby.com", { label: "Changes" });
+			await wrapper.setProps({ src: "https://getkirby.com/notes" });
+
+			const iframes = wrapper.findAll("iframe");
+			expect(iframes[0].classes()).toContain("is-active");
+			expect(iframes[1].attributes("inert")).toBeDefined();
+			expect(wrapper.find("k-icon").attributes("type")).toBe("loader");
+
+			await load(wrapper, 1, "https://getkirby.com/notes");
+
+			expect(iframes[0].classes()).not.toContain("is-active");
+			expect(iframes[0].attributes("inert")).toBeDefined();
+			expect(iframes[1].classes()).toContain("is-active");
+			expect(iframes[1].attributes("inert")).toBeUndefined();
+			expect(wrapper.find("k-icon").attributes("type")).toBe("git-branch");
+		});
+
+		it("navigates the browser after a redirect", async () => {
+			const wrapper = mount("https://getkirby.com", {
+				src: "https://getkirby.com/notes?_token=a&_version=changes"
+			});
+
+			await load(wrapper, 0, "https://getkirby.com/blog?_token=a");
+
+			expect(wrapper.emitted("navigate")).toStrictEqual([
+				[{ browser: new URL("https://getkirby.com/blog?_token=a") }]
+			]);
+		});
+
+		it("keeps a redirect with the preview params", async () => {
+			const wrapper = mount("https://getkirby.com", {
+				src: "https://getkirby.com/notes?_token=a&_version=changes"
+			});
+
+			await load(
+				wrapper,
+				0,
+				"https://getkirby.com/blog?_token=a&_version=changes"
+			);
+
+			expect(wrapper.emitted("navigate")).toBeUndefined();
+		});
+
+		it("handles clicks on links added after the load", async () => {
+			const wrapper = mount("https://getkirby.com");
+			const page = await load(wrapper, 0, "https://getkirby.com/test");
+			const link = page.createElement("a");
+			link.href = "https://getkirby.com/notes";
+			page.body.append(link);
+
+			link.click();
+
+			expect(wrapper.emitted("navigate")).toStrictEqual([
+				[{ view: "https://getkirby.com/notes" }]
+			]);
+		});
+
+		it("handles clicks on links that stop propagation", async () => {
+			const wrapper = mount("https://getkirby.com");
+			const page = await load(
+				wrapper,
+				0,
+				"https://getkirby.com/test",
+				'<nav><a href="https://getkirby.com/notes">Notes</a></nav>'
+			);
+
+			page
+				.querySelector("nav")!
+				.addEventListener("click", (e) => e.stopPropagation());
+			page.querySelector("a")!.click();
+
+			expect(wrapper.emitted("navigate")).toStrictEqual([
+				[{ view: "https://getkirby.com/notes" }]
+			]);
+		});
+
+		it("emits the scroll event of the page", async () => {
+			const wrapper = mount("https://getkirby.com");
+			const page = await load(wrapper, 0, "https://getkirby.com/test");
+			const event = new Event("scroll");
+
+			page.dispatchEvent(event);
+
+			expect(wrapper.emitted("scroll")).toStrictEqual([[event]]);
 		});
 	});
 });

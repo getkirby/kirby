@@ -31,6 +31,55 @@ describe("k-error-trace", () => {
 			expect(wrapper.findAll("li")).toHaveLength(2);
 		});
 
+		it("renders the file and line", () => {
+			const wrapper = mount({
+				trace: [{ file: "a.php", line: 12 }, { file: "b.php" }]
+			});
+			const files = wrapper.findAll("li p").map((p) => p.text());
+
+			expect(files).toStrictEqual(["a.php:12", "b.php"]);
+		});
+
+		it("renders Internal without a file", () => {
+			const wrapper = mount({ trace: [{ function: "array_map" }] });
+			expect(wrapper.find("p").text()).toBe("Internal");
+		});
+
+		it("renders the function with its class", () => {
+			const wrapper = mount({
+				trace: [{ class: "Kirby\\Cms\\App", file: "a.php", function: "render" }]
+			});
+			const call = wrapper.findAll("p")[1].findAll("span");
+
+			expect(call.map((span) => span.text())).toStrictEqual([
+				"Kirby\\Cms\\App",
+				"::",
+				"render",
+				"()"
+			]);
+		});
+
+		it("renders the function with a custom call type", () => {
+			const wrapper = mount({
+				trace: [
+					{
+						class: "Kirby\\Cms\\App",
+						file: "a.php",
+						function: "render",
+						type: "->"
+					}
+				]
+			});
+			const call = wrapper.findAll("p")[1].findAll("span");
+
+			expect(call.map((span) => span.text())).toStrictEqual([
+				"Kirby\\Cms\\App",
+				"->",
+				"render",
+				"()"
+			]);
+		});
+
 		it("links to the item url", () => {
 			const wrapper = mount({
 				trace: [{ file: "a.php", url: "vscode://file/a.php:1" }]

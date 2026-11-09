@@ -9,8 +9,31 @@ const ChoicesInput = {
 	template: "<div />"
 };
 
+const SearchInput = {
+	props: ["value"],
+	emits: ["input"],
+	template: `<input :value="value" @input="$emit('input', $event.target.value)" />`
+};
+
+const stubs = {
+	"k-checkboxes-input": ChoicesInput,
+	"k-search-input": SearchInput
+};
+
 function mount(props = {}, attrs = {}, components = {}) {
 	return vueMount(PicklistInput, { props, attrs, global: { components } });
+}
+
+// the options the checkbox input receives
+function choices(wrapper: ReturnType<typeof mount>) {
+	return wrapper.findComponent(ChoicesInput).props("options") as {
+		disabled: boolean;
+		value: string;
+	}[];
+}
+
+async function search(wrapper: ReturnType<typeof mount>, query: string) {
+	await wrapper.find(".k-picklist-input-search input").setValue(query);
 }
 
 const options = [
@@ -41,6 +64,24 @@ describe("k-picklist-input", () => {
 			await wrapper.setData({ query: "Marketing" });
 
 			expect(wrapper.find(".k-picklist-input-create").exists()).toBe(true);
+		});
+	});
+
+	describe("max prop", () => {
+		it("disables the unselected options once reached", () => {
+			const wrapper = mount({ max: 1, options, value: ["design"] }, {}, stubs);
+			expect(choices(wrapper).map((option) => option.disabled)).toEqual([
+				false,
+				true
+			]);
+		});
+
+		it("keeps all options enabled below the maximum", () => {
+			const wrapper = mount({ max: 2, options, value: ["design"] }, {}, stubs);
+			expect(choices(wrapper).map((option) => option.disabled)).toEqual([
+				false,
+				false
+			]);
 		});
 	});
 
@@ -82,7 +123,140 @@ describe("k-picklist-input", () => {
 		});
 	});
 
+	// computed
+	describe("filteredOptions computed", () => {
+		it("filters the options by the query", async () => {
+			const wrapper = mount({ options }, {}, stubs);
+			await search(wrapper, "velop");
+
+			expect(choices(wrapper).map((option) => option.value)).toEqual([
+				"development"
+			]);
+		});
+
+		it("searches the info as well with `search.info`", async () => {
+			const options = [
+				{ text: "Design", value: "design", info: "Pixels" },
+				{ text: "Development", value: "development", info: "Code" }
+			];
+			const wrapper = mount({ options, search: { info: true } }, {}, stubs);
+			await search(wrapper, "code");
+
+			expect(choices(wrapper).map((option) => option.value)).toEqual([
+				"development"
+			]);
+		});
+
+		it("keeps all options for a query shorter than `search.min`", async () => {
+			const wrapper = mount({ options, search: { min: 3 } }, {}, stubs);
+
+			await search(wrapper, "ve");
+			expect(choices(wrapper).map((option) => option.value)).toEqual([
+				"design",
+				"development"
+			]);
+
+			await search(wrapper, "vel");
+			expect(choices(wrapper).map((option) => option.value)).toEqual([
+				"development"
+			]);
+		});
+	});
+
+	describe("showCreate computed", () => {
+		it("hides the create button for an existing option", async () => {
+			const wrapper = mount({ create: true, options }, {}, stubs);
+			const button = () => wrapper.find(".k-picklist-input-create");
+
+			await search(wrapper, "Marketing");
+			expect(button().exists()).toBe(true);
+
+			// matches the text of one option and the value of another
+			await search(wrapper, "Design");
+			expect(button().exists()).toBe(false);
+
+			await search(wrapper, "development");
+			expect(button().exists()).toBe(false);
+		});
+
+		it("hides the create button for an ignored query", async () => {
+			const wrapper = mount(
+				{ create: true, ignore: ["Marketing"], options },
+				{},
+				stubs
+			);
+			const button = () => wrapper.find(".k-picklist-input-create");
+
+			await search(wrapper, "Sales");
+			expect(button().exists()).toBe(true);
+
+			await search(wrapper, "Marketing");
+			expect(button().exists()).toBe(false);
+		});
+
+		it("hides the create button for a query ignored by `create`", async () => {
+			const wrapper = mount(
+				{ create: { ignore: ["Marketing"] }, options },
+				{},
+				stubs
+			);
+			const button = () => wrapper.find(".k-picklist-input-create");
+
+			await search(wrapper, "Sales");
+			expect(button().exists()).toBe(true);
+
+			await search(wrapper, "Marketing");
+			expect(button().exists()).toBe(false);
+		});
+	});
+
 	// methods
+	describe("add()", () => {
+		it("emits `create` with the query on Enter", async () => {
+			const wrapper = mount({ create: true, options }, {}, stubs);
+			await search(wrapper, "Marketing");
+
+			const input = wrapper.find(".k-picklist-input-search input");
+			await input.trigger("keydown", { key: "Enter" });
+
+			expect(wrapper.emitted("create")).toStrictEqual([["Marketing"]]);
+		});
+
+		it("emits `create` with the query on click", async () => {
+			const wrapper = mount({ create: true, options }, {}, stubs);
+			await search(wrapper, "Marketing");
+			await wrapper.find(".k-picklist-input-create").trigger("click");
+
+			expect(wrapper.emitted("create")).toStrictEqual([["Marketing"]]);
+		});
+
+		it("does not emit `create` on Enter for an existing option", async () => {
+			const wrapper = mount({ create: true, options }, {}, stubs);
+			await search(wrapper, "Design");
+
+			const input = wrapper.find(".k-picklist-input-search input");
+			await input.trigger("keydown", { key: "Enter" });
+
+			expect(wrapper.emitted("create")).toBeUndefined();
+		});
+	});
+
+	describe("escape()", () => {
+		it("clears the query before emitting `escape`", async () => {
+			const wrapper = mount({ options }, {}, stubs);
+			const input = wrapper.find(".k-picklist-input-search input");
+			await search(wrapper, "velop");
+
+			await input.trigger("keydown", { key: "Escape" });
+			expect((input.element as HTMLInputElement).value).toBe("");
+			expect(choices(wrapper)).toHaveLength(2);
+			expect(wrapper.emitted("escape")).toBeUndefined();
+
+			await input.trigger("keydown", { key: "Escape" });
+			expect(wrapper.emitted("escape")).toHaveLength(1);
+		});
+	});
+
 	describe("highlight()", () => {
 		// the text of the option the checkbox or radio input receives
 		async function highlight(

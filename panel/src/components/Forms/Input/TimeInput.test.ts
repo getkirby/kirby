@@ -29,6 +29,14 @@ function emitted(wrapper: ReturnType<typeof mount>) {
 	return events?.[events.length - 1]?.[0];
 }
 
+/**
+ * Text currently selected in the input
+ */
+function selected(wrapper: ReturnType<typeof mount>) {
+	const input = wrapper.find("input").element as HTMLInputElement;
+	return input.value.slice(input.selectionStart!, input.selectionEnd!);
+}
+
 describe("k-time-input", () => {
 	beforeAll(() => {
 		vi.useFakeTimers();
@@ -45,6 +53,30 @@ describe("k-time-input", () => {
 		it.acceptsClass(mount);
 		it.acceptsStyle(mount);
 		it.inheritsNoAttrs(mount);
+	});
+
+	// props
+	describe("step prop", () => {
+		it("rounds to 5 minutes by default", async () => {
+			// an undefined prop falls back to its default
+			const wrapper = mount({ display: "HH:mm", step: undefined });
+
+			await type(wrapper, "05:12");
+			expect(emitted(wrapper)).toBe("05:10:00");
+
+			await type(wrapper, "05:13");
+			expect(emitted(wrapper)).toBe("05:15:00");
+		});
+
+		it("merges a partial step with the default", async () => {
+			const wrapper = mount({ display: "HH:mm", step: { size: 15 } });
+
+			await type(wrapper, "05:07");
+			expect(emitted(wrapper)).toBe("05:00:00");
+
+			await type(wrapper, "05:08");
+			expect(emitted(wrapper)).toBe("05:15:00");
+		});
 	});
 
 	// computed
@@ -89,6 +121,42 @@ describe("k-time-input", () => {
 
 			expect((input.element as HTMLInputElement).value).toBe("14:30");
 			expect(emitted(wrapper)).toBe("14:30:00");
+		});
+
+		it("toggles a selected meridiem by 12 hours on arrow up", async () => {
+			const wrapper = mount({ display: "h:mm a", value: "05:10:00" });
+			const input = wrapper.find("input");
+
+			// select the meridiem
+			(input.element as HTMLInputElement).setSelectionRange(5, 7);
+
+			await input.trigger("keydown", { key: "ArrowUp" });
+			await wrapper.vm.$nextTick();
+			expect(emitted(wrapper)).toBe("17:10:00");
+			expect(selected(wrapper)).toBe("pm");
+
+			await input.trigger("keydown", { key: "ArrowUp" });
+			await wrapper.vm.$nextTick();
+			expect(emitted(wrapper)).toBe("05:10:00");
+			expect(selected(wrapper)).toBe("am");
+		});
+
+		it("toggles a selected meridiem by 12 hours on arrow down", async () => {
+			const wrapper = mount({ display: "h:mm a", value: "17:10:00" });
+			const input = wrapper.find("input");
+
+			// select the meridiem
+			(input.element as HTMLInputElement).setSelectionRange(5, 7);
+
+			await input.trigger("keydown", { key: "ArrowDown" });
+			await wrapper.vm.$nextTick();
+			expect(emitted(wrapper)).toBe("05:10:00");
+			expect(selected(wrapper)).toBe("am");
+
+			await input.trigger("keydown", { key: "ArrowDown" });
+			await wrapper.vm.$nextTick();
+			expect(emitted(wrapper)).toBe("17:10:00");
+			expect(selected(wrapper)).toBe("pm");
 		});
 	});
 

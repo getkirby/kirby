@@ -489,4 +489,49 @@ describe("k-date-input", () => {
 			expect(input.value).toBe("Am 5. March 2021");
 		});
 	});
+
+	describe("validate()", () => {
+		it("flags a date before `min`", async () => {
+			const wrapper = mount({ display: "DD.MM.YYYY", min: "2024-01-01" });
+			const input = await type(wrapper, "05.03.2021");
+			expect(input.validationMessage).toBe("error.validation.date.after");
+		});
+
+		it("flags a date after `max`", async () => {
+			const wrapper = mount({ display: "DD.MM.YYYY", max: "2020-01-01" });
+			const input = await type(wrapper, "05.03.2021");
+			expect(input.validationMessage).toBe("error.validation.date.before");
+		});
+
+		it("flags a missing required value", async () => {
+			const wrapper = mount({
+				display: "DD.MM.YYYY",
+				required: true,
+				value: "2021-03-05"
+			});
+			const input = await type(wrapper, "");
+			expect(input.validationMessage).toBe("error.validation.required");
+		});
+
+		it("clears the message for a date within the boundaries", async () => {
+			const wrapper = mount({
+				display: "DD.MM.YYYY",
+				min: "2020-01-01",
+				max: "2024-12-31"
+			});
+			const input = await type(wrapper, "05.03.2019");
+			expect(input.validationMessage).toBe("error.validation.date.after");
+
+			await type(wrapper, "05.03.2021");
+			expect(input.validationMessage).toBe("");
+		});
+
+		it("validates a value set from outside", async () => {
+			const wrapper = mount({ display: "DD.MM.YYYY", min: "2024-01-01" });
+			await wrapper.setProps({ value: "2021-03-05" } as never);
+
+			const input = wrapper.find("input").element as HTMLInputElement;
+			expect(input.validationMessage).toBe("error.validation.date.after");
+		});
+	});
 });

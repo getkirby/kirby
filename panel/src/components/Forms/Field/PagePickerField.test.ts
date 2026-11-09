@@ -2,6 +2,9 @@ import { beforeEach, describe, expect, it, vi } from "@test/unit";
 import { mount as vueMount } from "@vue/test-utils";
 import PagePickerField from "./PagePickerField.vue";
 
+// registered globally in the Panel
+const Collection = { props: ["empty"], template: "<div />" };
+
 const api = { get: vi.fn() };
 const dialog = { close: vi.fn(), open: vi.fn() };
 const panel = { api, dialog };
@@ -16,6 +19,7 @@ function mount(props = {}, attrs = {}) {
 		},
 		attrs,
 		global: {
+			components: { "k-collection": Collection },
 			mocks: {
 				$panel: panel
 			}
@@ -44,8 +48,52 @@ describe("k-pagepicker-field", () => {
 		it.inheritsNoAttrs(mount);
 	});
 
+	// computed
+	describe("emptyProps computed", () => {
+		function empty(props = {}) {
+			const wrapper = mount(props);
+			return wrapper.findComponent(Collection).props("empty");
+		}
+
+		it("asks for a single page by default", () => {
+			expect(empty()).toStrictEqual({
+				icon: "page",
+				text: "field.pages.empty.single"
+			});
+		});
+
+		it("asks for pages when multiple can be selected", () => {
+			expect(empty({ multiple: true }).text).toBe("field.pages.empty");
+		});
+
+		it("asks for a single page when the max is 1", () => {
+			expect(empty({ max: 1, multiple: true }).text).toBe(
+				"field.pages.empty.single"
+			);
+		});
+
+		it("prefers the empty prop", () => {
+			expect(empty({ empty: "No pages yet", multiple: true }).text).toBe(
+				"No pages yet"
+			);
+		});
+	});
+
 	// methods
 	describe("open()", () => {
+		it("opens the picker dialog with the value", () => {
+			const wrapper = mount();
+			wrapper.vm.open();
+
+			expect(dialog.open).toHaveBeenCalledWith(
+				"pages/test/fields/related/picker",
+				{
+					query: { value: ["a", "b"] },
+					on: { drop: undefined, submit: expect.any(Function) }
+				}
+			);
+		});
+
 		it("applies the IDs submitted by the picker dialog", () => {
 			const wrapper = mount();
 			wrapper.vm.open();

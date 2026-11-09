@@ -22,7 +22,7 @@ async function flush(vm: {
 
 /**
  * Fakes the widths happy-dom cannot measure:
- * items 30px, fallback 20px, gap 0
+ * items 30px (wide ones 50px), fallback 20px, gap 0
  */
 function layout(wrapper: VueWrapper, container: number) {
 	wrapper.element.getBoundingClientRect = () =>
@@ -30,9 +30,13 @@ function layout(wrapper: VueWrapper, container: number) {
 
 	const measure = vi
 		.spyOn(wrapper.vm as unknown as { measure(el: Element): number }, "measure")
-		.mockImplementation((el: Element) =>
-			el.classList.contains("f") ? 20 : 30
-		);
+		.mockImplementation((el: Element) => {
+			if (el.classList.contains("f")) {
+				return 20;
+			}
+
+			return el.classList.contains("w") ? 50 : 30;
+		});
 
 	const realGCS = window.getComputedStyle.bind(window);
 	const gcs = vi
@@ -46,6 +50,25 @@ function layout(wrapper: VueWrapper, container: number) {
 	onTestFinished(() => {
 		measure.mockRestore();
 		gcs.mockRestore();
+	});
+}
+
+/**
+ * Mounts items with the given classes and a fallback
+ * that renders the offset and total it receives
+ */
+function collapse(
+	props: Record<string, unknown> = {},
+	items = ["w", "i", "i"]
+) {
+	return vueMount(Collapsible, {
+		props,
+		global: { mocks: { $panel: { observers: createObservers() } } },
+		slots: {
+			default: () => items.map((item) => h("span", { class: item })),
+			fallback: ({ offset, total }: { offset: number; total: number }) =>
+				h("span", { class: "f" }, `${offset}/${total}`)
+		}
 	});
 }
 
@@ -89,6 +112,26 @@ describe("k-collapsible", () => {
 			const children = [...wrapper.element.children];
 			expect(children[0].className).toBe("a");
 			expect(children[1].className).toBe("f");
+		});
+
+		it("fits the first items next to the fallback by default (end)", async () => {
+			const wrapper = collapse();
+			await flush(wrapper.vm);
+			layout(wrapper, 80);
+			await wrapper.vm.calculate();
+
+			// 50 + 20 fits, 50 + 30 + 20 doesn't
+			expect(wrapper.find(".f").text()).toBe("1/3");
+		});
+
+		it("fits the last items next to the fallback when direction=start", async () => {
+			const wrapper = collapse({ direction: "start" });
+			await flush(wrapper.vm);
+			layout(wrapper, 80);
+			await wrapper.vm.calculate();
+
+			// 30 + 30 + 20 fits, 50 + 30 + 30 + 20 doesn't
+			expect(wrapper.find(".f").text()).toBe("2/3");
 		});
 
 		it("places fallback before items when direction=start", async () => {
@@ -174,6 +217,16 @@ describe("k-collapsible", () => {
 
 			expect(collapsible.vm.isCollapsed).toBe(true);
 			expect(collapsible.vm.total).toBe(3);
+		});
+
+		it("shows as many items as fit next to the fallback", async () => {
+			const wrapper = collapse({}, ["i", "i", "i"]);
+			await flush(wrapper.vm);
+			layout(wrapper, 70);
+			await wrapper.vm.calculate();
+
+			// 30 + 20 fits, 30 + 30 + 20 doesn't
+			expect(wrapper.find(".f").text()).toBe("1/3");
 		});
 
 		it("expands again once items fit (with stubbed widths)", async () => {
