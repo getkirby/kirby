@@ -17,7 +17,7 @@ function mount(props = {}, attrs = {}) {
 	});
 }
 
-describe("Dropzone.vue", () => {
+describe("k-dropzone", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "DIV", "k-dropzone");

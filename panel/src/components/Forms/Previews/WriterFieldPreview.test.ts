@@ -13,7 +13,7 @@ function mount(props = {}, attrs = {}) {
 	});
 }
 
-describe("WriterFieldPreview.vue", () => {
+describe("k-writer-field-preview", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "DIV", "k-writer-field-preview");

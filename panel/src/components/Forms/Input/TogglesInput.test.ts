@@ -15,7 +15,7 @@ function mount(props = {}, attrs = {}) {
 	});
 }
 
-describe("TogglesInput.vue", () => {
+describe("k-toggles-input", () => {
 	// $el
 	describe("element", () => {
 		const component = (attrs = {}) => mount({}, attrs);

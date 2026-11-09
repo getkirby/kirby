@@ -1,6 +1,5 @@
 import { describe, expect, it } from "@test/unit";
 import { mount as vueMount } from "@vue/test-utils";
-import field from "@/helpers/field";
 import RadioField from "./RadioField.vue";
 
 const Input = {
@@ -15,21 +14,19 @@ function mount(props = {}, attrs = {}) {
 		props: { options, ...props },
 		attrs,
 		global: {
-			mocks: { $helper: { field }, $t: (key: string) => key },
 			stubs: {
-				"k-field": { template: "<div><slot /></div>" },
 				"k-radio-input": Input
 			}
 		}
 	});
 }
 
-describe("RadioField.vue", () => {
+describe("k-radio-field", () => {
 	// $el
 	describe("element", () => {
 		const component = (attrs = {}) => mount({}, attrs);
 
-		it.rendersAs(component, "DIV", "k-radio-field");
+		it.rendersAs(component, "K-FIELD", "k-radio-field");
 		it.acceptsClass(component);
 		it.acceptsStyle(component);
 		it.inheritsNoAttrs(component);

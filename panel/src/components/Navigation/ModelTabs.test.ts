@@ -21,7 +21,7 @@ function badges(diff = {}): Badge[] {
 	return withBadges.map((tab) => tab.badge);
 }
 
-describe("ModelTabs.vue", () => {
+describe("k-model-tabs", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(ModelTabs, "K-TABS", "k-model-tabs");

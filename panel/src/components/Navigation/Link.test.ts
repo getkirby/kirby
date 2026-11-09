@@ -40,7 +40,7 @@ function mount(props = {}, attrs = {}, slots = {}) {
 	});
 }
 
-describe("Link.vue", () => {
+describe("k-link", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "A", "k-link");
@@ -95,7 +95,8 @@ describe("Link.vue", () => {
 	// computed
 	describe("downloadAttr computed", () => {
 		it("is not set without download", () => {
-			expect(mount().attributes("download")).toBeUndefined();
+			const wrapper = mount();
+			expect(wrapper.attributes("download")).toBeUndefined();
 		});
 
 		it("names the download after an absolute URL's file", () => {

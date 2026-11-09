@@ -2,7 +2,7 @@ import { describe, it, expect } from "@test/unit";
 import { mount } from "@vue/test-utils";
 import Stack from "./Stack.vue";
 
-describe("Stack.vue", () => {
+describe("k-stack", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(Stack, "DIV", "k-stack");

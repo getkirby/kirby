@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from "@test/unit";
 import { mount } from "@vue/test-utils";
 import ViewButton from "./Button.vue";
 
-describe("ViewButton.vue", () => {
+describe("k-view-button", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(ViewButton, "DIV", "k-view-button");

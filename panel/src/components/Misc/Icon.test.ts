@@ -1,12 +1,11 @@
 import { describe, it, expect } from "@test/unit";
 import { mount as vueMount } from "@vue/test-utils";
-import { hasEmoji } from "@/helpers/string.js";
 import Icon from "./Icon.vue";
 
 const sprite = "/panel/assets/1234/icons.svg";
 
 /**
- * Custom mount which injects $helper and $panel stubs
+ * Custom mount which injects a $panel stub
  */
 function mount(props = {}, attrs = {}, panel: Record<string, unknown> = {}) {
 	return vueMount(Icon, {
@@ -14,10 +13,6 @@ function mount(props = {}, attrs = {}, panel: Record<string, unknown> = {}) {
 		attrs,
 		global: {
 			mocks: {
-				$helper: {
-					color: (c: string) => c ?? null,
-					string: { hasEmoji }
-				},
 				$panel: {
 					plugins: { icons: {} },
 					urls: { icons: sprite },
@@ -28,7 +23,7 @@ function mount(props = {}, attrs = {}, panel: Record<string, unknown> = {}) {
 	});
 }
 
-describe("Icon.vue", () => {
+describe("k-icon", () => {
 	// $el
 	describe("element", () => {
 		const component = (attrs?: Record<string, unknown>) =>
@@ -74,13 +69,13 @@ describe("Icon.vue", () => {
 		});
 	});
 
-	describe("type prop: icon", () => {
-		it("reflects the prop as data-type attribute", () => {
+	describe("type prop", () => {
+		it("reflects an icon as data-type attribute", () => {
 			const wrapper = mount({ type: "edit" });
 			expect(wrapper.attributes("data-type")).toBe("edit");
 		});
 
-		it("references the icon in the sprite file", () => {
+		it("references an icon in the sprite file", () => {
 			const wrapper = mount({ type: "edit" });
 			expect(wrapper.find("use").attributes("href")).toBe(
 				sprite + "#icon-edit"
@@ -97,20 +92,18 @@ describe("Icon.vue", () => {
 			);
 			expect(wrapper.find("use").attributes("href")).toBe("#icon-plugin");
 		});
-	});
 
-	describe("type prop: emoji", () => {
-		it("renders a <span> instead of <svg>", () => {
+		it("renders an emoji as <span> instead of <svg>", () => {
 			const wrapper = mount({ type: "🎉" });
 			expect(wrapper.element.tagName).toBe("SPAN");
 		});
 
-		it("sets data-type to emoji", () => {
+		it("sets data-type to emoji for an emoji", () => {
 			const wrapper = mount({ type: "🎉" });
 			expect(wrapper.attributes("data-type")).toBe("emoji");
 		});
 
-		it("renders the emoji as text content", () => {
+		it("renders an emoji as text content", () => {
 			const wrapper = mount({ type: "🎉" });
 			expect(wrapper.text()).toBe("🎉");
 		});

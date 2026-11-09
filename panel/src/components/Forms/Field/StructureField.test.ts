@@ -1,9 +1,10 @@
 import { describe, expect, it, vi } from "@test/unit";
 import { mount as vueMount } from "@vue/test-utils";
 import { nextTick } from "vue";
+import { helper } from "@/helpers";
 import StructureField from "./StructureField.vue";
 
-function mount(props = {}) {
+function mount(props = {}, attrs = {}) {
 	return vueMount(StructureField, {
 		props: {
 			fields: {
@@ -12,17 +13,11 @@ function mount(props = {}) {
 			},
 			...props
 		},
-		shallow: true,
+		attrs,
 		global: {
 			mocks: {
 				$events: { emit: vi.fn(), on: vi.fn(), off: vi.fn() },
-				$helper: {
-					object: {
-						length: (object: object) => Object.keys(object ?? {}).length
-					},
-					uuid: () => "uuid"
-				},
-				$t: (key: string) => key
+				$helper: { ...helper, uuid: () => "uuid" }
 			}
 		}
 	});
@@ -32,7 +27,15 @@ function rows(wrapper: ReturnType<typeof mount>) {
 	return wrapper.vm.items as Record<string, unknown>[];
 }
 
-describe("StructureField.vue", () => {
+describe("k-structure-field", () => {
+	// $el
+	describe("element", () => {
+		it.rendersAs(mount, "K-FIELD", "k-structure-field");
+		it.acceptsClass(mount);
+		it.acceptsStyle(mount);
+		it.inheritsNoAttrs(mount);
+	});
+
 	// watch
 	describe("value watcher", () => {
 		it("converts the value to items", () => {

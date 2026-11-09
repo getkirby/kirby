@@ -36,7 +36,7 @@ function mount(
 	});
 }
 
-describe("ErrorBoundary.vue", () => {
+describe("k-error-boundary", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "P");
@@ -44,7 +44,7 @@ describe("ErrorBoundary.vue", () => {
 		it.acceptsStyle(mount);
 	});
 
-	// hooks
+	// lifecycle
 	describe("errorCaptured hook", () => {
 		it("replaces the content with a negative box", async () => {
 			const wrapper = await crash();
@@ -104,11 +104,13 @@ describe("ErrorBoundary.vue", () => {
 	// slots
 	describe("default slot", () => {
 		it("renders its content", () => {
-			expect(mount().text()).toBe("Content");
+			const wrapper = mount();
+			expect(wrapper.text()).toBe("Content");
 		});
 
 		it("renders nothing without content", () => {
-			expect(mount({}, {}).html()).toBe("");
+			const wrapper = mount({}, {});
+			expect(wrapper.html()).toBe("");
 		});
 	});
 

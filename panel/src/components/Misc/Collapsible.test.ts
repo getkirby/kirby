@@ -23,7 +23,7 @@ function mount(
 	});
 }
 
-describe("Collapsible.vue", () => {
+describe("k-collapsible", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "DIV");
@@ -282,27 +282,27 @@ describe("Collapsible.vue", () => {
 
 	describe("width()", () => {
 		it("returns 0 for count <= 0", () => {
-			const vm = mount().vm;
-			expect(vm.width([10, 20, 30], 0, 5)).toBe(0);
-			expect(vm.width([10, 20, 30], -1, 5)).toBe(0);
+			const wrapper = mount();
+			expect(wrapper.vm.width([10, 20, 30], 0, 5)).toBe(0);
+			expect(wrapper.vm.width([10, 20, 30], -1, 5)).toBe(0);
 		});
 
 		it("uses the first N widths when direction=end", () => {
-			const vm = mount({ direction: "end" }).vm;
+			const wrapper = mount({ direction: "end" });
 			// 10 + 20 + 1 gap of 5
-			expect(vm.width([10, 20, 30], 2, 5)).toBe(35);
+			expect(wrapper.vm.width([10, 20, 30], 2, 5)).toBe(35);
 		});
 
 		it("uses the last N widths when direction=start", () => {
-			const vm = mount({ direction: "start" }).vm;
+			const wrapper = mount({ direction: "start" });
 			// 20 + 30 + 1 gap of 5
-			expect(vm.width([10, 20, 30], 2, 5)).toBe(55);
+			expect(wrapper.vm.width([10, 20, 30], 2, 5)).toBe(55);
 		});
 
 		it("adds (count - 1) gaps", () => {
-			const vm = mount().vm;
+			const wrapper = mount();
 			// 3*10 + 2*4
-			expect(vm.width([10, 10, 10], 3, 4)).toBe(38);
+			expect(wrapper.vm.width([10, 10, 10], 3, 4)).toBe(38);
 		});
 	});
 

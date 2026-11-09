@@ -1,16 +1,11 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from "@test/unit";
 import { mount as vueMount } from "@vue/test-utils";
-import dayjs from "@/libraries/dayjs";
 import TimeInput from "./TimeInput.vue";
 
 function mount(props: Record<string, unknown> = {}) {
 	return vueMount(TimeInput, {
 		props: { step: { size: 1, unit: "minute" }, ...props } as never,
 		global: {
-			mocks: {
-				$library: { dayjs },
-				$t: (key: string) => key
-			},
 			directives: { direction: {} }
 		}
 	});
@@ -34,7 +29,7 @@ function emitted(wrapper: ReturnType<typeof mount>) {
 	return events?.[events.length - 1]?.[0];
 }
 
-describe("TimeInput.vue", () => {
+describe("k-time-input", () => {
 	beforeAll(() => {
 		vi.useFakeTimers();
 		vi.setSystemTime(new Date(2022, 0, 15));
@@ -55,18 +50,19 @@ describe("TimeInput.vue", () => {
 	// computed
 	describe("placeholder computed", () => {
 		it("shows an example time", () => {
-			const input = mount({ display: "h:mm a" }).find("input");
+			const wrapper = mount({ display: "h:mm a" });
+			const input = wrapper.find("input");
 			expect(input.attributes("placeholder")).toBe("12:00 am");
 		});
 
 		it("follows the display pattern", () => {
-			expect(
-				mount({ display: "HH:mm" }).find("input").attributes("placeholder")
-			).toBe("00:00");
+			const wrapper = mount({ display: "HH:mm" });
+			expect(wrapper.find("input").attributes("placeholder")).toBe("00:00");
 		});
 
 		it("uses `min` when now is before it", () => {
-			const input = mount({ display: "h:mm a", min: "13:00:00" }).find("input");
+			const wrapper = mount({ display: "h:mm a", min: "13:00:00" });
+			const input = wrapper.find("input");
 			expect(input.attributes("placeholder")).toBe("1:00 pm");
 		});
 	});

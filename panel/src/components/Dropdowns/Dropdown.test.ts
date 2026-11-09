@@ -56,7 +56,7 @@ async function open(wrapper = mount(), opener: unknown = button()) {
 	return wrapper;
 }
 
-describe("Dropdown.vue", () => {
+describe("k-dropdown", () => {
 	enableAutoUnmount(afterEach);
 
 	// $el
@@ -66,14 +66,16 @@ describe("Dropdown.vue", () => {
 		it.acceptsStyle(mount);
 
 		it("renders nothing while closed", () => {
-			expect(vueMount(Dropdown).html()).toBe("<!--v-if-->");
+			const wrapper = vueMount(Dropdown);
+			expect(wrapper.html()).toBe("<!--v-if-->");
 		});
 	});
 
 	// props
 	describe("alignX prop", () => {
 		it("defaults to start", () => {
-			expect(mount().attributes("data-align-x")).toBe("start");
+			const wrapper = mount();
+			expect(wrapper.attributes("data-align-x")).toBe("start");
 		});
 
 		it("renders as data-align-x attribute", () => {
@@ -84,7 +86,8 @@ describe("Dropdown.vue", () => {
 
 	describe("alignY prop", () => {
 		it("defaults to bottom", () => {
-			expect(mount().attributes("data-align-y")).toBe("bottom");
+			const wrapper = mount();
+			expect(wrapper.attributes("data-align-y")).toBe("bottom");
 		});
 
 		it("renders as data-align-y attribute", () => {
@@ -171,7 +174,8 @@ describe("Dropdown.vue", () => {
 
 	describe("theme prop", () => {
 		it("defaults to dark", () => {
-			expect(mount().attributes("data-theme")).toBe("dark");
+			const wrapper = mount();
+			expect(wrapper.attributes("data-theme")).toBe("dark");
 		});
 
 		it("renders as data-theme attribute", () => {
@@ -217,7 +221,8 @@ describe("Dropdown.vue", () => {
 		});
 
 		it("does nothing while closed", () => {
-			expect(() => vueMount(Dropdown).vm.close()).not.toThrow();
+			const wrapper = vueMount(Dropdown);
+			expect(() => wrapper.vm.close()).not.toThrow();
 		});
 	});
 
@@ -225,14 +230,16 @@ describe("Dropdown.vue", () => {
 		it("passes an options array on", async () => {
 			const ready = vi.fn();
 			const options = [{ text: "Edit" }];
-			await mount({ options }).vm.fetchOptions(ready);
+			const wrapper = mount({ options });
+			await wrapper.vm.fetchOptions(ready);
 			expect(ready).toHaveBeenCalledWith(options);
 		});
 
 		it("lets an options callback resolve the options", async () => {
 			const ready = vi.fn();
 			const options = vi.fn((ready) => ready([{ text: "Edit" }]));
-			await mount({ options }).vm.fetchOptions(ready);
+			const wrapper = mount({ options });
+			await wrapper.vm.fetchOptions(ready);
 			expect(options).toHaveBeenCalledWith(ready);
 			expect(ready).toHaveBeenCalledWith([{ text: "Edit" }]);
 		});
@@ -255,7 +262,8 @@ describe("Dropdown.vue", () => {
 
 		it("passes the current items on without options", async () => {
 			const ready = vi.fn();
-			await mount().vm.fetchOptions(ready);
+			const wrapper = mount();
+			await wrapper.vm.fetchOptions(ready);
 			expect(ready).toHaveBeenCalledWith([]);
 		});
 	});

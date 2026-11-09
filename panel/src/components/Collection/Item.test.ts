@@ -9,7 +9,7 @@ function mount(props = {}, attrs = {}) {
 
 const component = (attrs = {}) => mount({}, attrs);
 
-describe("Item.vue", () => {
+describe("k-item", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(component, "DIV", "k-item");

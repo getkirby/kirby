@@ -33,7 +33,7 @@ function mount(attrs = {}, $panel = panel()) {
 	});
 }
 
-describe("LanguagesDropdown.vue", () => {
+describe("k-languages-dropdown", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "DIV", "k-languages-dropdown");
@@ -45,7 +45,8 @@ describe("LanguagesDropdown.vue", () => {
 	describe("change()", () => {
 		it("does nothing when selecting the current language", async () => {
 			const $panel = panel();
-			await mount({}, $panel).vm.change({ code: "en", current: true });
+			const wrapper = mount({}, $panel);
+			await wrapper.vm.change({ code: "en", current: true });
 
 			expect($panel.content.unlock).not.toHaveBeenCalled();
 			expect($panel.reload).not.toHaveBeenCalled();
@@ -53,7 +54,8 @@ describe("LanguagesDropdown.vue", () => {
 
 		it("releases the lock and reloads when switching language", async () => {
 			const $panel = panel();
-			await mount({}, $panel).vm.change({ code: "de", current: false });
+			const wrapper = mount({}, $panel);
+			await wrapper.vm.change({ code: "de", current: false });
 
 			expect($panel.content.unlock).toHaveBeenCalledOnce();
 			expect($panel.reload).toHaveBeenCalledWith({
@@ -75,7 +77,8 @@ describe("LanguagesDropdown.vue", () => {
 			// Staying on the current language keeps both the changes and the
 			// lock, so nothing is lost and the switch can simply be repeated
 			const $panel = panel({ unlocked: false });
-			await mount({}, $panel).vm.change({ code: "de", current: false });
+			const wrapper = mount({}, $panel);
+			await wrapper.vm.change({ code: "de", current: false });
 
 			expect($panel.error).not.toHaveBeenCalled();
 			expect($panel.reload).not.toHaveBeenCalled();
@@ -85,7 +88,8 @@ describe("LanguagesDropdown.vue", () => {
 			// genuine failures still reach the regular error handler
 			const error = new Error("Offline");
 			const $panel = panel({ unlockError: error });
-			await mount({}, $panel).vm.change({ code: "de", current: false });
+			const wrapper = mount({}, $panel);
+			await wrapper.vm.change({ code: "de", current: false });
 
 			expect($panel.error).toHaveBeenCalledWith(error);
 			expect($panel.reload).not.toHaveBeenCalled();

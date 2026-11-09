@@ -2,7 +2,7 @@ import { describe, it, expect } from "@test/unit";
 import { mount } from "@vue/test-utils";
 import Header from "./Header.vue";
 
-describe("Header.vue", () => {
+describe("k-header", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(Header, "HEADER", "k-header");

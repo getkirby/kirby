@@ -5,7 +5,7 @@ import string from "@/helpers/string";
 import html, { HtmlString } from "@/panel/html";
 
 function mount(props = {}, attrs = {}) {
-	return vueMount(PicklistInput, { props, attrs, shallow: true });
+	return vueMount(PicklistInput, { props, attrs });
 }
 
 const options = [
@@ -13,7 +13,7 @@ const options = [
 	{ text: "Development", value: "development" }
 ];
 
-describe("PicklistInput.vue", () => {
+describe("k-picklist-input", () => {
 	// $el
 	describe("element", () => {
 		const component = (attrs = {}) => mount({}, attrs);

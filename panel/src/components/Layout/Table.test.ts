@@ -16,7 +16,7 @@ function mount(props = {}, attrs = {}) {
 	});
 }
 
-describe("Table.vue", () => {
+describe("k-table", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "DIV", "k-table");

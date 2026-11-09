@@ -31,7 +31,6 @@ function mount(props = {}, attrs = {}, $panel: object = panel) {
 			...props
 		},
 		attrs,
-		shallow: true,
 		global: {
 			mocks: {
 				$api: api,
@@ -51,7 +50,7 @@ function lastEmit() {
 	return events.emit.mock.calls.at(-1) ?? [];
 }
 
-describe("ModelListField.vue", () => {
+describe("k-model-list-field", () => {
 	beforeEach(() => {
 		api.get.mockReset();
 		api.get.mockResolvedValue(state);
@@ -63,33 +62,54 @@ describe("ModelListField.vue", () => {
 		it.inheritsNoAttrs(mount);
 	});
 
-	// events
-	describe.each([
-		["focus", "onFocus"],
-		["input", "onInput"],
-		["submit", "onSubmit"]
-	])("native %s event", (event, listener) => {
-		it("does not call the listener of the form", async () => {
-			const handler = vi.fn();
-			const wrapper = mount({}, { [listener]: handler });
-			await wrapper.trigger(event);
+	// watch
+	describe("$panel.language.code watcher", () => {
+		it("reloads the entries", async () => {
+			const $panel = reactive({ language: { code: "en" } });
 
-			expect(handler).not.toHaveBeenCalled();
+			mount({}, {}, $panel);
+			await flushPromises();
+
+			$panel.language.code = "de";
+			await flushPromises();
+
+			expect(api.get).toHaveBeenCalledTimes(2);
 		});
 	});
 
-	describe("native click event", () => {
-		it("calls the listener once", async () => {
-			const handler = vi.fn();
-			const wrapper = mount({}, { onClick: handler });
-			await wrapper.trigger("click");
+	describe("endpoints.field watcher", () => {
+		it("reloads the entries from the new endpoint", async () => {
+			const wrapper = mount();
+			await flushPromises();
 
-			expect(handler).toHaveBeenCalledOnce();
+			// the slug of the parent page changed
+			await wrapper.setProps({
+				endpoints: { field: "pages/new-slug/fields/drafts" }
+			});
+			await flushPromises();
+
+			expect(api.get).toHaveBeenCalledTimes(2);
+			expect(api.get).toHaveBeenLastCalledWith("pages/new-slug/fields/drafts", {
+				page: 1,
+				searchterm: null
+			});
+		});
+
+		it("does not reload for the same endpoint", async () => {
+			const wrapper = mount();
+			await flushPromises();
+
+			await wrapper.setProps({
+				endpoints: { field: "pages/test/fields/drafts" }
+			});
+			await flushPromises();
+
+			expect(api.get).toHaveBeenCalledOnce();
 		});
 	});
 
-	// loading
-	describe("loading", () => {
+	// lifecycle
+	describe("mounted hook", () => {
 		it("fetches its entries once it is mounted", async () => {
 			const wrapper = mount();
 
@@ -159,52 +179,6 @@ describe("ModelListField.vue", () => {
 				icon: "alert",
 				text: "Nope"
 			});
-		});
-	});
-
-	// watch
-	describe("$panel.language.code watcher", () => {
-		it("reloads the entries", async () => {
-			const $panel = reactive({ language: { code: "en" } });
-
-			mount({}, {}, $panel);
-			await flushPromises();
-
-			$panel.language.code = "de";
-			await flushPromises();
-
-			expect(api.get).toHaveBeenCalledTimes(2);
-		});
-	});
-
-	describe("endpoints.field watcher", () => {
-		it("reloads the entries from the new endpoint", async () => {
-			const wrapper = mount();
-			await flushPromises();
-
-			// the slug of the parent page changed
-			await wrapper.setProps({
-				endpoints: { field: "pages/new-slug/fields/drafts" }
-			});
-			await flushPromises();
-
-			expect(api.get).toHaveBeenCalledTimes(2);
-			expect(api.get).toHaveBeenLastCalledWith("pages/new-slug/fields/drafts", {
-				page: 1,
-				searchterm: null
-			});
-		});
-
-		it("does not reload for the same endpoint", async () => {
-			const wrapper = mount();
-			await flushPromises();
-
-			await wrapper.setProps({
-				endpoints: { field: "pages/test/fields/drafts" }
-			});
-			await flushPromises();
-
-			expect(api.get).toHaveBeenCalledOnce();
 		});
 	});
 
@@ -326,6 +300,30 @@ describe("ModelListField.vue", () => {
 			vi.useRealTimers();
 
 			expect(api.get).not.toHaveBeenCalled();
+		});
+	});
+
+	describe("native click event", () => {
+		it("calls the listener once", async () => {
+			const handler = vi.fn();
+			const wrapper = mount({}, { onClick: handler });
+			await wrapper.trigger("click");
+
+			expect(handler).toHaveBeenCalledOnce();
+		});
+	});
+
+	describe.each([
+		["focus", "onFocus"],
+		["input", "onInput"],
+		["submit", "onSubmit"]
+	])("native %s event", (event, listener) => {
+		it("does not call the listener of the form", async () => {
+			const handler = vi.fn();
+			const wrapper = mount({}, { [listener]: handler });
+			await wrapper.trigger(event);
+
+			expect(handler).not.toHaveBeenCalled();
 		});
 	});
 });

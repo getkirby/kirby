@@ -9,7 +9,7 @@ function mount(attrs = {}) {
 	});
 }
 
-describe("PrevNext.vue", () => {
+describe("k-prev-next", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "K-BUTTON-GROUP", "k-prev-next");

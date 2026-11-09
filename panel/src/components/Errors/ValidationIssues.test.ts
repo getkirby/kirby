@@ -8,12 +8,11 @@ function mount(
 ) {
 	return vueMount(ValidationIssues, {
 		props,
-		attrs,
-		shallow: true
+		attrs
 	});
 }
 
-describe("ValidationIssues.vue", () => {
+describe("k-validation-issues", () => {
 	// $el
 	describe("element", () => {
 		const component = (attrs?: Record<string, unknown>) => mount({}, attrs);

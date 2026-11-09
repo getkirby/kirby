@@ -15,7 +15,7 @@ function mount(props = {}, attrs = {}, close = vi.fn()) {
 	});
 }
 
-describe("Fatal.vue", () => {
+describe("k-fatal", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "K-OVERLAY", "k-fatal");

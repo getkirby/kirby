@@ -1,16 +1,11 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from "@test/unit";
 import { mount as vueMount } from "@vue/test-utils";
-import dayjs from "@/libraries/dayjs";
 import DateInput from "./DateInput.vue";
 
 function mount(props: Record<string, unknown> = {}) {
 	return vueMount(DateInput, {
 		props: props as never,
 		global: {
-			mocks: {
-				$library: { dayjs },
-				$t: (key: string) => key
-			},
 			directives: { direction: {} }
 		}
 	});
@@ -43,7 +38,7 @@ function selected(wrapper: ReturnType<typeof mount>) {
 	return input.value.slice(input.selectionStart!, input.selectionEnd!);
 }
 
-describe("DateInput.vue", () => {
+describe("k-date-input", () => {
 	beforeAll(() => {
 		vi.useFakeTimers();
 		vi.setSystemTime(new Date(2022, 0, 15));
@@ -64,49 +59,55 @@ describe("DateInput.vue", () => {
 	// computed
 	describe("placeholder computed", () => {
 		it("shows an example value", () => {
-			const input = mount({ display: "MMMM D, YYYY" }).find("input");
+			const wrapper = mount({ display: "MMMM D, YYYY" });
+			const input = wrapper.find("input");
 			expect(input.attributes("placeholder")).toBe("January 15, 2022");
 		});
 
 		it("follows the display pattern", () => {
-			expect(
-				mount({ display: "DD.MM.YYYY" }).find("input").attributes("placeholder")
-			).toBe("15.01.2022");
+			const wrapper = mount({ display: "DD.MM.YYYY" });
+			expect(wrapper.find("input").attributes("placeholder")).toBe(
+				"15.01.2022"
+			);
 		});
 
 		it("uses `min` when now is before it", () => {
-			const input = mount({
+			const wrapper = mount({
 				display: "DD.MM.YYYY",
 				min: "2024-06-23"
-			}).find("input");
+			});
+			const input = wrapper.find("input");
 
 			expect(input.attributes("placeholder")).toBe("23.06.2024");
 		});
 
 		it("uses `max` when now is after it", () => {
-			const input = mount({
+			const wrapper = mount({
 				display: "DD.MM.YYYY",
 				max: "2020-02-29"
-			}).find("input");
+			});
+			const input = wrapper.find("input");
 
 			expect(input.attributes("placeholder")).toBe("29.02.2020");
 		});
 
 		it("stays on now when it is inside the boundaries", () => {
-			const input = mount({
+			const wrapper = mount({
 				display: "DD.MM.YYYY",
 				min: "2020-01-01",
 				max: "2024-12-31"
-			}).find("input");
+			});
+			const input = wrapper.find("input");
 
 			expect(input.attributes("placeholder")).toBe("15.01.2022");
 		});
 
 		it("uses a boundary that carries a time part", () => {
-			const input = mount({
+			const wrapper = mount({
 				display: "DD.MM.YYYY",
 				min: "2024-06-23 08:30:00"
-			}).find("input");
+			});
+			const input = wrapper.find("input");
 
 			expect(input.attributes("placeholder")).toBe("23.06.2024");
 		});

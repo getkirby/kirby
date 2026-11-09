@@ -2,7 +2,7 @@ import { describe, it, expect } from "@test/unit";
 import { mount } from "@vue/test-utils";
 import Checklist from "./Checklist.vue";
 
-describe("Checklist.vue", () => {
+describe("k-checklist", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(Checklist, "UL", "k-checklist");

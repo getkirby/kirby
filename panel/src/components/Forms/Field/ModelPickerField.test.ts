@@ -17,19 +17,17 @@ function mount(props = {}, attrs = {}, $panel = panel()) {
 			...props
 		},
 		attrs,
-		shallow: true,
 		global: {
 			mocks: {
 				// the abstract base leaves `emptyProps` to its subclasses
 				emptyProps: {},
-				$panel,
-				$t: (key: string) => key
+				$panel
 			}
 		}
 	});
 }
 
-describe("ModelPickerField.vue", () => {
+describe("k-model-picker-field", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "K-FIELD", "k-models-field");
