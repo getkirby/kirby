@@ -4,7 +4,7 @@ import { nextTick } from "vue";
 import { helper } from "@/helpers";
 import StructureField from "./StructureField.vue";
 
-function mount(props = {}) {
+function mount(props = {}, attrs = {}) {
 	return vueMount(StructureField, {
 		props: {
 			fields: {
@@ -13,6 +13,7 @@ function mount(props = {}) {
 			},
 			...props
 		},
+		attrs,
 		global: {
 			mocks: {
 				$events: { emit: vi.fn(), on: vi.fn(), off: vi.fn() },
@@ -27,6 +28,14 @@ function rows(wrapper: ReturnType<typeof mount>) {
 }
 
 describe("k-structure-field", () => {
+	// $el
+	describe("element", () => {
+		it.rendersAs(mount, "K-FIELD", "k-structure-field");
+		it.acceptsClass(mount);
+		it.acceptsStyle(mount);
+		it.inheritsNoAttrs(mount);
+	});
+
 	// watch
 	describe("value watcher", () => {
 		it("converts the value to items", () => {
