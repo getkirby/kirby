@@ -40,6 +40,15 @@ describe("k-header", () => {
 			const wrapper = mount(Header, { slots: { default: "My Title" } });
 			expect(wrapper.find(".k-header-title").text()).toContain("My Title");
 		});
+
+		it("renders the title inside the edit button when editable", () => {
+			const wrapper = mount(Header, {
+				props: { editable: true },
+				slots: { default: "My Title" }
+			});
+			const button = wrapper.find("button.k-header-title-button");
+			expect(button.find(".k-header-title-text").text()).toBe("My Title");
+		});
 	});
 
 	describe("buttons slot", () => {
