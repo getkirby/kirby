@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "@test/unit";
+import { describe, expect, it } from "@test/unit";
 import { mount as vueMount } from "@vue/test-utils";
 import Text from "@/components/Text/Text.vue";
 import WriterFieldPreview from "./WriterFieldPreview.vue";
@@ -24,17 +24,14 @@ describe("WriterFieldPreview.vue", () => {
 
 	// computed
 	describe("html computed", () => {
-		it("renders the sanitized value as HTML", async () => {
+		it("renders the sanitized value as HTML", () => {
 			const wrapper = mount({
 				value: "<b>Hello</b><img src=x onerror=alert(1)>"
 			});
 
-			await vi.waitFor(() => {
-				expect(wrapper.find(".k-text").html()).toContain(
-					"<strong>Hello</strong>"
-				);
-			});
-
+			expect(wrapper.find(".k-text").html()).toContain(
+				"<strong>Hello</strong>"
+			);
 			expect(wrapper.find(".k-text").html()).not.toContain("img");
 		});
 	});
