@@ -38,9 +38,6 @@ export default {
 	methods: {
 		focus() {
 			this.$refs.input.focus();
-		},
-		onInput(value) {
-			this.$emit("input", value);
 		}
 	}
 };
