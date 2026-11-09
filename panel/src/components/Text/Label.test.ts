@@ -56,8 +56,12 @@ describe("k-label", () => {
 		});
 
 		it("renders slot without k-link when not provided", () => {
-			const wrapper = mount();
+			const wrapper = vueMount(Label, {
+				slots: { default: "My Label" }
+			});
+
 			expect(wrapper.find("k-link").exists()).toBe(false);
+			expect(wrapper.find(".k-label-text").text()).toBe("My Label");
 		});
 	});
 
