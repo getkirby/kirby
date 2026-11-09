@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "@test/unit";
 import { flushPromises, mount as vueMount } from "@vue/test-utils";
 import { defineComponent, type PropType } from "vue";
+import Button from "@/components/Navigation/Button.vue";
 import LanguagesDropdown from "./LanguagesDropdown.vue";
 
 type Language = { code: string; current: boolean; text: string };
@@ -27,11 +28,17 @@ const Dropdown = defineComponent({
  * with `unlocked` or rejects with `unlockError`
  */
 function panel({
+	locked = false,
 	unlocked = true,
 	unlockError = null
-}: { unlocked?: boolean; unlockError?: Error | null } = {}) {
+}: {
+	locked?: boolean;
+	unlocked?: boolean;
+	unlockError?: Error | null;
+} = {}) {
 	return {
 		content: {
+			isLocked: () => locked,
 			unlock: vi.fn(() =>
 				unlockError ? Promise.reject(unlockError) : Promise.resolve(unlocked)
 			)
@@ -47,6 +54,19 @@ function mount(attrs = {}, $panel = panel(), $dropdown = () => languages) {
 		global: {
 			components: { "k-dropdown": Dropdown },
 			mocks: { $dropdown, $panel }
+		}
+	});
+}
+
+/**
+ * Mounts with the real k-button, which renders the badge
+ */
+function button(props = {}, $panel = panel()) {
+	return vueMount(LanguagesDropdown, {
+		props,
+		global: {
+			components: { "k-button": Button, "k-dropdown": Dropdown },
+			mocks: { $dropdown: () => languages, $panel }
 		}
 	});
 }
@@ -80,6 +100,28 @@ describe("k-languages-dropdown", () => {
 
 			expect($dropdown).toHaveBeenCalledWith("languages");
 			expect(codes).toStrictEqual(["EN", "DE"]);
+		});
+	});
+
+	// computed
+	describe("changesBadge computed", () => {
+		it("is red when the content is locked", () => {
+			const wrapper = button({ hasDiff: true }, panel({ locked: true }));
+			const badge = wrapper.find(".k-button-badge");
+
+			expect(badge.attributes("data-theme")).toBe("red");
+		});
+
+		it("is orange for unsaved changes", () => {
+			const wrapper = button({ hasDiff: true });
+			const badge = wrapper.find(".k-button-badge");
+
+			expect(badge.attributes("data-theme")).toBe("orange");
+		});
+
+		it("is not shown without changes", () => {
+			const wrapper = button({ hasDiff: false }, panel({ locked: true }));
+			expect(wrapper.find(".k-button-badge").exists()).toBe(false);
 		});
 	});
 
