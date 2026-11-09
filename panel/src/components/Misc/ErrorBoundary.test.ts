@@ -44,7 +44,7 @@ describe("ErrorBoundary.vue", () => {
 		it.acceptsStyle(mount);
 	});
 
-	// hooks
+	// lifecycle
 	describe("errorCaptured hook", () => {
 		it("replaces the content with a negative box", async () => {
 			const wrapper = await crash();
