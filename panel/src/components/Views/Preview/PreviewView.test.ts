@@ -78,6 +78,13 @@ describe("k-preview-view", () => {
 	});
 
 	describe("onTreeNavigate()", () => {
+		it("closes the tree dropdown", () => {
+			const wrapper = mount();
+			wrapper.vm.onTreeNavigate({ id: "photography/trees" });
+
+			expect(dropdown.methods.close).toHaveBeenCalledOnce();
+		});
+
 		it("opens the preview of the selected page", () => {
 			const wrapper = mount();
 			wrapper.vm.onTreeNavigate({ id: "photography/trees" });
