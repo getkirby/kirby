@@ -11,7 +11,6 @@ function mount(attrs = {}) {
 			// the input as registered by the Panel
 			// https://github.com/getkirby/kirby/issues/8762
 			components: { "k-writer-input": inputs["k-writer-input"] },
-			directives: { direction: {} },
 			mocks: { $panel: { events: { off: vi.fn(), on: vi.fn() } } }
 		}
 	});

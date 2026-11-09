@@ -23,7 +23,9 @@
 
 		<k-block-figure-caption
 			v-if="caption"
+			:dir="captionDir"
 			:disabled="disabled"
+			:lang="captionLang"
 			:marks="captionMarks"
 			:value="caption"
 			@input="$emit('update', { caption: $event })"
@@ -41,6 +43,16 @@ export default {
 	props: {
 		back: String,
 		caption: String,
+		/**
+		 * Reading direction of the caption
+		 * @since 6.0.0
+		 */
+		captionDir: String,
+		/**
+		 * Language code of the caption
+		 * @since 6.0.0
+		 */
+		captionLang: String,
 		captionMarks: {
 			default: true,
 			type: [Boolean, Array]

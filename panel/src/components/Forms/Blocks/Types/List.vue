@@ -1,8 +1,10 @@
 <template>
 	<k-input
 		ref="input"
+		:dir="textField.dir"
 		:disabled="disabled"
 		:keys="keys"
+		:lang="textField.lang"
 		:marks="marks"
 		:value="content.text"
 		class="k-block-type-list-input"
@@ -37,7 +39,10 @@ export default {
 			};
 		},
 		marks() {
-			return this.field("text", {}).marks;
+			return this.textField.marks;
+		},
+		textField() {
+			return this.field("text", {});
 		}
 	},
 	methods: {
