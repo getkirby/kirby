@@ -74,6 +74,29 @@ describe("k-pages-field-preview", () => {
 				{ id: "page://a", text: "Startseite" }
 			]);
 		});
+
+		it("ignores a late response for the previous language", async () => {
+			const $panel = reactive({ language: { code: "en" } });
+			let en: (items: object[]) => void = () => {};
+			let de: (items: object[]) => void = () => {};
+
+			helper.items
+				.mockReturnValueOnce(new Promise((resolve) => (en = resolve)))
+				.mockReturnValueOnce(new Promise((resolve) => (de = resolve)));
+
+			const wrapper = mount({ value: ["page://a"] }, {}, $panel);
+			$panel.language.code = "de";
+			await flushPromises();
+
+			de([{ text: "Startseite" }]);
+			await flushPromises();
+			en([{ text: "Home" }]);
+			await flushPromises();
+
+			expect(wrapper.vm.tags).toStrictEqual([
+				{ id: "page://a", text: "Startseite" }
+			]);
+		});
 	});
 
 	// methods

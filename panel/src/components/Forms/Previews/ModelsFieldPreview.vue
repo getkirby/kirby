@@ -88,10 +88,16 @@ export default {
 			// get all missing items from API
 			// and replace in tags array
 			if (missing.length > 0) {
+				const language = this.$panel.language.code;
 				const loaded = await this.$helper.items(
 					this.$options.endpoint,
 					missing
 				);
+
+				// a newer request loads the items in the new language
+				if (this.$panel.language.code !== language) {
+					return;
+				}
 
 				for (const [index, id] of missing.entries()) {
 					const key = this.tags.findIndex((tag) => tag.id === id);
