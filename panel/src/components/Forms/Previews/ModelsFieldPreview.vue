@@ -1,8 +1,9 @@
 <template>
 	<k-tags-field-preview
+		:class="['k-models-field-preview', $options.class, $attrs.class]"
 		:removable="removable"
+		:style="$attrs.style"
 		:value="tags"
-		class="k-models-field-preview"
 		@remove="$emit('remove', $event)"
 	/>
 </template>

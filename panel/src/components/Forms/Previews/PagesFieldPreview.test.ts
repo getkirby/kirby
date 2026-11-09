@@ -30,8 +30,15 @@ describe("PagesFieldPreview.vue", () => {
 
 	// $el
 	describe("element", () => {
-		it.rendersAs(mount, "K-TAGS-FIELD-PREVIEW", "k-models-field-preview");
+		it.rendersAs(mount, "K-TAGS-FIELD-PREVIEW", "k-pages-field-preview");
+		it.acceptsClass(mount);
+		it.acceptsStyle(mount);
 		it.inheritsNoAttrs(mount);
+
+		it("keeps the class of all model previews", () => {
+			const wrapper = mount();
+			expect(wrapper.classes()).toContain("k-models-field-preview");
+		});
 	});
 
 	// watch
