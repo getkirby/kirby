@@ -18,6 +18,7 @@ class PanelTest extends TestCase
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Panel';
 
 	protected $app;
+	public bool $submitted = false;
 
 	public function setUp(): void
 	{
@@ -447,6 +448,78 @@ class PanelTest extends TestCase
 	}
 
 	/**
+	 * Calls the Panel router with a test area
+	 * and a user logged in via the session
+	 */
+	protected function router(
+		string $path,
+		array $query = [],
+		string $method = 'GET'
+	): Response {
+		$test = $this;
+
+		$this->app = $this->app->clone([
+			'areas' => [
+				'test' => fn () => [
+					'dialogs' => [
+						'test' => [
+							'load'   => fn () => ['component' => 'k-test-dialog'],
+							'submit' => fn () => $test->submitted = true
+						]
+					],
+					'requests' => [
+						'test' => [
+							'pattern' => 'test/request',
+							'action'  => fn () => ['message' => 'Done']
+						]
+					],
+					'views' => [
+						'test' => [
+							'pattern' => 'test/view',
+							'action'  => fn () => ['component' => 'k-test-view']
+						]
+					]
+				]
+			],
+			'options' => [
+				'api' => ['csrf' => 'test-csrf']
+			],
+			'request' => [
+				'method' => $method,
+				'query'  => $query
+			],
+			'users' => [
+				['email' => 'test@getkirby.com', 'role' => 'admin']
+			]
+		]);
+
+		// a real session login, as impersonation skips the CSRF check
+		$this->app->user('test@getkirby.com')->loginPasswordless();
+
+		return Panel::router($path);
+	}
+
+	/**
+	 * @covers ::router
+	 */
+	public function testRouterWithCsrf(): void
+	{
+		$response = $this->router('test/request', ['csrf' => 'test-csrf']);
+		$this->assertSame(200, $response->code());
+		$this->assertSame('Done', json_decode($response->body(), true)['message']);
+	}
+
+	/**
+	 * @covers ::router
+	 */
+	public function testRouterWithCsrfForDialogSubmit(): void
+	{
+		$response = $this->router('dialogs/test', ['csrf' => 'test-csrf'], 'POST');
+		$this->assertSame(200, $response->code());
+		$this->assertTrue($this->submitted);
+	}
+
+	/**
 	 * @covers ::router
 	 */
 	public function testRouterWithDisabledPanel(): void
@@ -460,6 +533,42 @@ class PanelTest extends TestCase
 		$result = Panel::router('/');
 
 		$this->assertNull($result);
+	}
+
+	/**
+	 * @covers ::router
+	 */
+	public function testRouterWithoutCsrf(): void
+	{
+		$response = $this->router('test/request');
+		$this->assertSame(400, $response->code());
+		$this->assertSame(
+			'Invalid CSRF token',
+			json_decode($response->body(), true)['error']
+		);
+	}
+
+	/**
+	 * @covers ::router
+	 */
+	public function testRouterWithoutCsrfForDialogSubmit(): void
+	{
+		$response = $this->router('dialogs/test', [], 'POST');
+		$this->assertSame(400, $response->code());
+		$this->assertSame(
+			'Invalid CSRF token',
+			json_decode($response->body(), true)['$dialog']['error']
+		);
+		$this->assertFalse($this->submitted);
+	}
+
+	/**
+	 * @covers ::router
+	 */
+	public function testRouterWithoutCsrfForView(): void
+	{
+		$response = $this->router('test/view', ['_json' => true]);
+		$this->assertSame(200, $response->code());
 	}
 
 	/**
