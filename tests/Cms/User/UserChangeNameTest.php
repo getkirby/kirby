@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Filesystem\F;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(User::class)]
@@ -43,5 +44,17 @@ class UserChangeNameTest extends ModelTestCase
 		$user->changeName('Edith Thor');
 
 		$this->assertSame(2, $calls);
+	}
+
+	public function testChangeNameSanitized(): void
+	{
+		$user = new User(['email' => 'editor@domain.com']);
+		$user = $user->changeName('<strong>Edith</strong> Thor');
+
+		$this->assertSame('Edith Thor', $user->name()->value());
+
+		// the stored credentials must be clean as well
+		$credentials = F::load($user->root() . '/index.php');
+		$this->assertSame('Edith Thor', $credentials['name']);
 	}
 }
