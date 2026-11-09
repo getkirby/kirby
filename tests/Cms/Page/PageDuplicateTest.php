@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Content\Changes;
 use Kirby\Content\Translation;
 use Kirby\Filesystem\F;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -233,6 +234,31 @@ class PageDuplicateTest extends ModelTestCase
 		$this->assertTrue($this->app->page('test/foo')->version('changes')->exists());
 		$this->assertFalse($this->app->page('test-copy')->version('changes')->exists());
 		$this->assertFalse($this->app->page('test-copy/foo')->version('changes')->exists());
+	}
+
+	public function testDuplicateChildrenWithChangesOfAnotherUser(): void
+	{
+		$this->app = $this->app->clone([
+			'users' => [
+				['id' => 'editor', 'email' => 'editor@getkirby.com', 'role' => 'admin'],
+				['id' => 'other', 'email' => 'other@getkirby.com', 'role' => 'admin'],
+			]
+		]);
+
+		$this->app->impersonate('editor@getkirby.com');
+
+		$page  = Page::create(['slug' => 'test']);
+		$child = $page->createChild(['slug' => 'foo', 'template' => 'default']);
+		$child->version('changes')->save(['uuid' => $child->uuid()->id()]);
+
+		$this->app->impersonate('other@getkirby.com');
+		$this->app->page('test')->duplicate('test-copy', ['children' => true]);
+
+		$original = $this->app->page('test/foo');
+
+		$this->assertFalse($this->app->page('test-copy/foo')->version('changes')->exists());
+		$this->assertSame('editor', $original->version('changes')->read()['lock']);
+		$this->assertContains($original->uuid()->toString(), (new Changes())->read('pages'));
 	}
 
 	public function testDuplicateHooks(): void
