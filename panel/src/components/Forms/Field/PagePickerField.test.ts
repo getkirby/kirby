@@ -13,7 +13,6 @@ function factory(value = ["a", "b"]) {
 			name: "related",
 			value
 		},
-		shallow: true,
 		global: {
 			mocks: {
 				$panel: panel

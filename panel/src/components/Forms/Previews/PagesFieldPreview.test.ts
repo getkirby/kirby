@@ -13,7 +13,6 @@ function mount(props = {}, attrs = {}, $panel = { language: { code: "en" } }) {
 	return vueMount(PagesFieldPreview, {
 		props,
 		attrs,
-		shallow: true,
 		global: {
 			mocks: {
 				$helper: helper,

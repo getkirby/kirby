@@ -31,7 +31,6 @@ function mount(props = {}, attrs = {}, $panel: object = panel) {
 			...props
 		},
 		attrs,
-		shallow: true,
 		global: {
 			mocks: {
 				$api: api,

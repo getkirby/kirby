@@ -8,8 +8,7 @@ function mount(
 ) {
 	return vueMount(Empty, {
 		props,
-		attrs,
-		shallow: true
+		attrs
 	});
 }
 
@@ -96,8 +95,7 @@ describe("k-empty", () => {
 	describe("default slot", () => {
 		it("renders slotted content", () => {
 			const wrapper = vueMount(Empty, {
-				slots: { default: "<span>Custom empty message</span>" },
-				shallow: true
+				slots: { default: "<span>Custom empty message</span>" }
 			});
 			expect(wrapper.find("span").text()).toBe("Custom empty message");
 		});
@@ -105,8 +103,7 @@ describe("k-empty", () => {
 		it("prefers slot content over text prop", () => {
 			const wrapper = vueMount(Empty, {
 				props: { text: "fallback text" },
-				slots: { default: "Slot content" },
-				shallow: true
+				slots: { default: "Slot content" }
 			});
 			expect(wrapper.text()).toBe("Slot content");
 		});

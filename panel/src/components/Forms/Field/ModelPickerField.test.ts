@@ -17,7 +17,6 @@ function mount(props = {}, attrs = {}, $panel = panel()) {
 			...props
 		},
 		attrs,
-		shallow: true,
 		global: {
 			mocks: {
 				// the abstract base leaves `emptyProps` to its subclasses

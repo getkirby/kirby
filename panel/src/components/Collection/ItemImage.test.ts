@@ -8,8 +8,7 @@ function mount(
 ) {
 	return vueMount(ItemImage, {
 		props: { image: {}, ...props },
-		attrs,
-		shallow: true
+		attrs
 	});
 }
 

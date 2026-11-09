@@ -8,8 +8,7 @@ function mount(
 ) {
 	return vueMount(ValidationIssues, {
 		props,
-		attrs,
-		shallow: true
+		attrs
 	});
 }
 

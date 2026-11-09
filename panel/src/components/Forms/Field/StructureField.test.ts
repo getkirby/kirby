@@ -13,7 +13,6 @@ function mount(props = {}) {
 			},
 			...props
 		},
-		shallow: true,
 		global: {
 			mocks: {
 				$events: { emit: vi.fn(), on: vi.fn(), off: vi.fn() },

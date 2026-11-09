@@ -20,7 +20,6 @@ function mount(props = {}, attrs = {}) {
 			...props
 		},
 		attrs,
-		shallow: true,
 		global: {
 			mocks: {
 				$events: events,
