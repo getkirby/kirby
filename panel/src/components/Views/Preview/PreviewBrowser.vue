@@ -251,12 +251,9 @@ export default {
 				}
 			}
 
-			// attach event listeners to all links inside the iframe
-			document.addEventListener("click", this.onClick);
-
-			for (const link of document.querySelectorAll("a")) {
-				link.addEventListener("click", this.onClick);
-			}
+			// capture all link clicks inside the iframe, also of links
+			// added later or whose own handlers stop the propagation
+			document.addEventListener("click", this.onClick, { capture: true });
 
 			document.addEventListener("scroll", (e) => this.$emit("scroll", e));
 		},

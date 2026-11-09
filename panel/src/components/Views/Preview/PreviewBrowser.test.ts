@@ -260,6 +260,22 @@ describe("k-preview-browser", () => {
 			expect(wrapper.emitted("navigate")).toBeUndefined();
 		});
 
+		it("handles a click on a link of the page once", async () => {
+			const wrapper = mount("https://getkirby.com");
+			const page = await load(
+				wrapper,
+				0,
+				"https://getkirby.com/test",
+				'<a href="https://getkirby.com/notes">Notes</a>'
+			);
+
+			page.querySelector("a")!.click();
+
+			expect(wrapper.emitted("navigate")).toStrictEqual([
+				[{ view: "https://getkirby.com/notes" }]
+			]);
+		});
+
 		it("handles clicks on links added after the load", async () => {
 			const wrapper = mount("https://getkirby.com");
 			const page = await load(wrapper, 0, "https://getkirby.com/test");
