@@ -71,6 +71,19 @@
 import { props } from "@/components/Forms/FormControls.vue";
 
 /**
+ * Checks if a link points to the (relative) URL or a path below it
+ */
+function isLinkBelow(link, url) {
+	const base = new URL(url, location.origin);
+	const path = base.pathname.replace(/\/$/, "");
+
+	return (
+		link.origin === base.origin &&
+		(link.pathname === path || link.pathname.startsWith(path + "/"))
+	);
+}
+
+/**
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
@@ -125,17 +138,17 @@ export default {
 			return this.$refs[index === 0 ? "browserA" : "browserB"];
 		},
 		/**
+		 * Checks if a link points to the Panel
+		 */
+		isPanelLink(link) {
+			return isLinkBelow(link, this.$panel.urls.panel);
+		},
+		/**
 		 * Checks if a link points to the site, which also
 		 * requires it to be inside the site's install subfolder
 		 */
 		isSiteLink(link) {
-			const site = new URL(this.$panel.urls.site, location.origin);
-			const base = site.pathname.replace(/\/$/, "");
-
-			return (
-				link.origin === site.origin &&
-				(link.pathname === base || link.pathname.startsWith(base + "/"))
-			);
+			return isLinkBelow(link, this.$panel.urls.site);
 		},
 		/**
 		 * Double-buffered load:
@@ -174,10 +187,7 @@ export default {
 			}
 
 			// open external links and Panel links in new tab
-			if (
-				this.isSiteLink(link) === false ||
-				link.href.startsWith(this.$panel.urls.panel) === true
-			) {
+			if (this.isSiteLink(link) === false || this.isPanelLink(link) === true) {
 				link.target = "_blank";
 				return true;
 			}
