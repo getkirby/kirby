@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, onTestFinished, vi } from "vitest";
 import { failed } from "@test/unit/request";
 import AuthError from "@/errors/AuthError";
 import ExternalRequestError from "@/errors/ExternalRequestError";
@@ -276,6 +276,34 @@ describe("panel.notification", () => {
 			expect(notification.type).toStrictEqual("error");
 		});
 
+		it("should not open an error dialog in dialogs", async () => {
+			const panel = Panel.create(app);
+			const notification = Notification(panel);
+
+			await panel.dialog.open({ component: "k-text-dialog" });
+			const open = vi.spyOn(panel.dialog, "open");
+
+			notification.error(new Error("Something failed"));
+
+			expect(open).not.toHaveBeenCalled();
+			expect(notification.context).toStrictEqual("dialog");
+			expect(notification.message).toStrictEqual("Something failed");
+		});
+
+		it("should not open an error dialog in drawers", async () => {
+			const panel = Panel.create(app);
+			const notification = Notification(panel);
+
+			await panel.drawer.open({ component: "k-page-drawer" });
+			const open = vi.spyOn(panel.dialog, "open");
+
+			notification.error(new Error("Something failed"));
+
+			expect(open).not.toHaveBeenCalled();
+			expect(notification.context).toStrictEqual("drawer");
+			expect(notification.message).toStrictEqual("Something failed");
+		});
+
 		it("should set error icon and theme", async () => {
 			const panel = Panel.create(app);
 			const notification = Notification(panel);
@@ -400,6 +428,23 @@ describe("panel.notification", () => {
 
 			notification.close();
 
+			expect(notification.isOpen).toStrictEqual(false);
+		});
+
+		it("should close after the timeout", async () => {
+			vi.useFakeTimers();
+			onTestFinished(() => {
+				vi.useRealTimers();
+			});
+
+			const panel = Panel.create(app);
+			const notification = Notification(panel);
+
+			notification.open({ message: "Saved", timeout: 1000 });
+			vi.advanceTimersByTime(999);
+			expect(notification.isOpen).toStrictEqual(true);
+
+			vi.advanceTimersByTime(1);
 			expect(notification.isOpen).toStrictEqual(false);
 		});
 
