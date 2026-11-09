@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { type Node, Fragment, Slice } from "prosemirror-model";
+import { type Node, Fragment, Schema, Slice } from "prosemirror-model";
 import { Plugin } from "prosemirror-state";
 import { createSchemaWithMarks } from "@test/unit/editor";
 import markPasteRule from "./markPasteRule";
@@ -69,6 +69,30 @@ describe("markPasteRule", () => {
 		const para = result.content.firstChild!;
 		expect(para.child(0).text).toBe("no match here");
 		expect(para.child(0).marks).toHaveLength(0);
+	});
+
+	it("skips text inside nodes that do not allow the mark", () => {
+		const schema = new Schema({
+			nodes: {
+				doc: { content: "block+" },
+				code: { content: "text*", group: "block", marks: "" },
+				text: {}
+			},
+			marks: { bold: {} }
+		});
+
+		const plugin = markPasteRule(regexp(), schema.marks.bold);
+		const result = applyRule(
+			plugin,
+			new Slice(
+				Fragment.from(schema.node("code", null, [schema.text("<hello>")])),
+				0,
+				0
+			)
+		);
+		const code = result.content.firstChild!;
+		expect(code.child(0).text).toBe("<hello>");
+		expect(code.child(0).marks).toHaveLength(0);
 	});
 
 	it("skips text nodes that already have a link mark", () => {
