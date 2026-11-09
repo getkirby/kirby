@@ -20,7 +20,7 @@ function mount(props = {}, attrs = {}) {
 	});
 }
 
-describe("TogglesField.vue", () => {
+describe("k-toggles-field", () => {
 	// $el
 	describe("element", () => {
 		const component = (attrs = {}) => mount({}, attrs);

@@ -9,7 +9,7 @@ function mount(attrs = {}) {
 	});
 }
 
-describe("SortHandle.vue", () => {
+describe("k-sort-handle", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "K-BUTTON", "k-sort-handle");

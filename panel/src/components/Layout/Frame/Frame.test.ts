@@ -18,7 +18,7 @@ function mount(props = {}, attrs = {}, slots = {}) {
 	});
 }
 
-describe("Frame.vue", () => {
+describe("k-frame", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "DIV", "k-frame");

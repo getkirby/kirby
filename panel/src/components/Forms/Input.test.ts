@@ -21,7 +21,7 @@ function mount(attrs: Record<string, unknown> = {}) {
 	});
 }
 
-describe("Input.vue", () => {
+describe("k-input", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "DIV", "k-input");

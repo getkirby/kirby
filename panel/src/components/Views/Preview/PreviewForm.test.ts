@@ -59,7 +59,7 @@ function loaded(...urls: (string | undefined)[]) {
 
 const original = vi.fn();
 
-describe("PreviewForm.vue", () => {
+describe("k-preview-form", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "DIV", "k-preview-form");

@@ -7,7 +7,7 @@ function mount(props = {}, attrs = {}) {
 	return vueMount(Text, { props, attrs }).find(".k-text");
 }
 
-describe("Text.vue", () => {
+describe("k-text", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "DIV", "k-text");

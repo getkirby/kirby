@@ -40,7 +40,7 @@ function mount(props = {}, attrs = {}) {
 	});
 }
 
-describe("PreviewView.vue", () => {
+describe("k-preview-view", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "K-PANEL", "k-preview-view");

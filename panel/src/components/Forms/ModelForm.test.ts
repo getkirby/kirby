@@ -24,7 +24,7 @@ function mount(props = {}, attrs = {}) {
 	});
 }
 
-describe("ModelForm.vue", () => {
+describe("k-model-form", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "FORM", "k-model-form");

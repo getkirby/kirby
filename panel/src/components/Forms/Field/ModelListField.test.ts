@@ -51,7 +51,7 @@ function lastEmit() {
 	return events.emit.mock.calls.at(-1) ?? [];
 }
 
-describe("ModelListField.vue", () => {
+describe("k-model-list-field", () => {
 	beforeEach(() => {
 		api.get.mockReset();
 		api.get.mockResolvedValue(state);

@@ -24,7 +24,7 @@ function mount(props = {}, attrs = {}) {
 	});
 }
 
-describe("CheckboxesField.vue", () => {
+describe("k-checkboxes-field", () => {
 	// $el
 	describe("element", () => {
 		const component = (attrs = {}) => mount({}, attrs);

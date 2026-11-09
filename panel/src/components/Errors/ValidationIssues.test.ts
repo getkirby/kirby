@@ -13,7 +13,7 @@ function mount(
 	});
 }
 
-describe("ValidationIssues.vue", () => {
+describe("k-validation-issues", () => {
 	// $el
 	describe("element", () => {
 		const component = (attrs?: Record<string, unknown>) => mount({}, attrs);

@@ -12,7 +12,7 @@ function mount(
 	});
 }
 
-describe("ErrorTrace.vue", () => {
+describe("k-error-trace", () => {
 	// $el
 	describe("element", () => {
 		const component = (attrs?: Record<string, unknown>) => mount({}, attrs);

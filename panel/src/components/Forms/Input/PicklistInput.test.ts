@@ -13,7 +13,7 @@ const options = [
 	{ text: "Development", value: "development" }
 ];
 
-describe("PicklistInput.vue", () => {
+describe("k-picklist-input", () => {
 	// $el
 	describe("element", () => {
 		const component = (attrs = {}) => mount({}, attrs);

@@ -32,7 +32,7 @@ function rows(wrapper: ReturnType<typeof mount>) {
 	return wrapper.vm.items as Record<string, unknown>[];
 }
 
-describe("StructureField.vue", () => {
+describe("k-structure-field", () => {
 	// watch
 	describe("value watcher", () => {
 		it("converts the value to items", () => {

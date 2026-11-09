@@ -13,7 +13,7 @@ function mount(
 	});
 }
 
-describe("ItemImage.vue", () => {
+describe("k-item-image", () => {
 	// $el
 	describe("element", () => {
 		const component = (attrs?: Record<string, unknown>) => mount({}, attrs);

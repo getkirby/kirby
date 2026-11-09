@@ -15,7 +15,7 @@ function mount(attrs = {}) {
 	});
 }
 
-describe("Fields.vue", () => {
+describe("k-block-type-fields", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "DIV");

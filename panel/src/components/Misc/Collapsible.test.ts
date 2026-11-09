@@ -23,7 +23,7 @@ function mount(
 	});
 }
 
-describe("Collapsible.vue", () => {
+describe("k-collapsible", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "DIV");

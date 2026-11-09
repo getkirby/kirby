@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from "@test/unit";
 import { mount } from "@vue/test-utils";
 import Button from "./Button.vue";
 
-describe("Button.vue", () => {
+describe("k-button", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(Button, "BUTTON", "k-button");

@@ -10,7 +10,7 @@ function bar(wrapper: ReturnType<typeof mount>) {
 	return wrapper.find("progress");
 }
 
-describe("Progress.vue", () => {
+describe("k-progress", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "LABEL", "k-progress");

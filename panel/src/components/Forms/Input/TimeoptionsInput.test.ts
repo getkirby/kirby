@@ -19,7 +19,7 @@ function labels(wrapper: ReturnType<typeof mount>) {
 	return wrapper.findAll("k-button").map((button) => button.text());
 }
 
-describe("TimeoptionsInput.vue", () => {
+describe("k-timeoptions-input", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "DIV", "k-timeoptions-input");

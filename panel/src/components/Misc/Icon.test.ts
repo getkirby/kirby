@@ -28,7 +28,7 @@ function mount(props = {}, attrs = {}, panel: Record<string, unknown> = {}) {
 	});
 }
 
-describe("Icon.vue", () => {
+describe("k-icon", () => {
 	// $el
 	describe("element", () => {
 		const component = (attrs?: Record<string, unknown>) =>

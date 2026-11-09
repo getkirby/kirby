@@ -13,7 +13,7 @@ function mount(
 	});
 }
 
-describe("Empty.vue", () => {
+describe("k-empty", () => {
 	// $el
 	describe("element", () => {
 		const component = (attrs?: Record<string, unknown>) => mount({}, attrs);

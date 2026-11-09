@@ -29,7 +29,7 @@ function mount(props = {}, attrs = {}, $panel = panel()) {
 	});
 }
 
-describe("ModelPickerField.vue", () => {
+describe("k-model-picker-field", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "K-FIELD", "k-models-field");

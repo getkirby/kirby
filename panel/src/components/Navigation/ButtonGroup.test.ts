@@ -4,7 +4,7 @@ import ButtonGroup from "./ButtonGroup.vue";
 
 const buttons = [{ text: "Edit" }, { text: "Delete" }];
 
-describe("ButtonGroup.vue", () => {
+describe("k-button-group", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(ButtonGroup, "DIV", "k-button-group");

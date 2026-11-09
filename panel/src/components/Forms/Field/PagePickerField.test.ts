@@ -30,7 +30,7 @@ function submit() {
 	return dialog.open.mock.calls.at(-1)?.[1].on.submit;
 }
 
-describe("PagePickerField.vue", () => {
+describe("k-pagepicker-field", () => {
 	beforeEach(() => {
 		api.get.mockReset();
 		api.get.mockResolvedValue([]);

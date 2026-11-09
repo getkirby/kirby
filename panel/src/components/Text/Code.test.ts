@@ -15,7 +15,7 @@ function mount(props = {}, attrs = {}) {
 	}).find("pre.k-code");
 }
 
-describe("Code.vue", () => {
+describe("k-code", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "PRE", "k-code");

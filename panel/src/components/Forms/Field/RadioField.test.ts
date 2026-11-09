@@ -24,7 +24,7 @@ function mount(props = {}, attrs = {}) {
 	});
 }
 
-describe("RadioField.vue", () => {
+describe("k-radio-field", () => {
 	// $el
 	describe("element", () => {
 		const component = (attrs = {}) => mount({}, attrs);

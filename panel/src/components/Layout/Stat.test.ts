@@ -5,7 +5,7 @@ import Stat from "./Stat.vue";
 type StatInstance = { target: string | null | (() => void) };
 type StatInstanceFn = { target: () => void };
 
-describe("Stat.vue", () => {
+describe("k-stat", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(Stat, "DIV", "k-stat");

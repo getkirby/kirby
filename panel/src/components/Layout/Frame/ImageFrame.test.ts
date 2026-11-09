@@ -23,7 +23,7 @@ function mount(props: Props = {}, attrs: Props = {}) {
 	}) as unknown as VueWrapper<ComponentPublicInstance<Props>>;
 }
 
-describe("ImageFrame.vue", () => {
+describe("k-image-frame", () => {
 	beforeEach(() => {
 		items.mockReset();
 	});

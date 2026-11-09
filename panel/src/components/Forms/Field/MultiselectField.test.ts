@@ -20,7 +20,7 @@ function mount(props = {}, attrs = {}) {
 	});
 }
 
-describe("MultiselectField.vue", () => {
+describe("k-multiselect-field", () => {
 	// $el
 	describe("element", () => {
 		const component = (attrs = {}) => mount({}, attrs);

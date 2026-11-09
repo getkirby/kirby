@@ -36,7 +36,7 @@ function mount(
 	});
 }
 
-describe("ErrorBoundary.vue", () => {
+describe("k-error-boundary", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "P");

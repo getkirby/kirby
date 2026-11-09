@@ -43,7 +43,7 @@ function selected(wrapper: ReturnType<typeof mount>) {
 	return input.value.slice(input.selectionStart!, input.selectionEnd!);
 }
 
-describe("DateInput.vue", () => {
+describe("k-date-input", () => {
 	beforeAll(() => {
 		vi.useFakeTimers();
 		vi.setSystemTime(new Date(2022, 0, 15));

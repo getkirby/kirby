@@ -2,7 +2,7 @@ import { describe, it, expect } from "@test/unit";
 import { mount } from "@vue/test-utils";
 import Headline from "./Headline.vue";
 
-describe("Headline.vue", () => {
+describe("k-headline", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(Headline, "H2", "k-headline");

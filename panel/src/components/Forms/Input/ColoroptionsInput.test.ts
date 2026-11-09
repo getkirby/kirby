@@ -12,7 +12,7 @@ function mount(props = {}, attrs = {}) {
 	});
 }
 
-describe("ColoroptionsInput.vue", () => {
+describe("k-coloroptions-input", () => {
 	// $el
 	describe("element", () => {
 		const component = (attrs = {}) => mount({}, attrs);

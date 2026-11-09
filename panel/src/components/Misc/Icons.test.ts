@@ -16,7 +16,7 @@ vi.hoisted(() => {
 	} as unknown as Panel;
 });
 
-describe("Icons.vue", () => {
+describe("k-icons", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(Icons, "svg", "k-icons");

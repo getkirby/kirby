@@ -23,7 +23,7 @@ function mount(props = {}, attrs = {}, $panel = { language: { code: "en" } }) {
 	});
 }
 
-describe("PagesFieldPreview.vue", () => {
+describe("k-pages-field-preview", () => {
 	beforeEach(() => {
 		helper.items.mockReset();
 	});

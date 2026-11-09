@@ -34,7 +34,7 @@ function emitted(wrapper: ReturnType<typeof mount>) {
 	return events?.[events.length - 1]?.[0];
 }
 
-describe("TimeInput.vue", () => {
+describe("k-time-input", () => {
 	beforeAll(() => {
 		vi.useFakeTimers();
 		vi.setSystemTime(new Date(2022, 0, 15));

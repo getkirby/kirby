@@ -14,7 +14,7 @@ function mount(props = {}, attrs = {}) {
 	}).find(".k-stats");
 }
 
-describe("Stats.vue", () => {
+describe("k-stats", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "DL", "k-stats");

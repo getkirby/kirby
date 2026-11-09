@@ -11,7 +11,7 @@ function mount(props = {}, attrs = {}) {
 
 const component = (attrs = {}) => mount({ input: "field" }, attrs);
 
-describe("Label.vue", () => {
+describe("k-label", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(component, "LABEL", "k-label");

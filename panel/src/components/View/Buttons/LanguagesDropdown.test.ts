@@ -33,7 +33,7 @@ function mount(attrs = {}, $panel = panel()) {
 	});
 }
 
-describe("LanguagesDropdown.vue", () => {
+describe("k-languages-dropdown", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "DIV", "k-languages-dropdown");

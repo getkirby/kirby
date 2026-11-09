@@ -56,7 +56,7 @@ async function open(wrapper = mount(), opener: unknown = button()) {
 	return wrapper;
 }
 
-describe("Dropdown.vue", () => {
+describe("k-dropdown", () => {
 	enableAutoUnmount(afterEach);
 
 	// $el

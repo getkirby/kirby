@@ -40,7 +40,7 @@ function mount(props = {}, attrs = {}, slots = {}) {
 	});
 }
 
-describe("Link.vue", () => {
+describe("k-link", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "A", "k-link");
