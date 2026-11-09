@@ -69,13 +69,13 @@ describe("k-icon", () => {
 		});
 	});
 
-	describe("type prop: icon", () => {
-		it("reflects the prop as data-type attribute", () => {
+	describe("type prop", () => {
+		it("reflects an icon as data-type attribute", () => {
 			const wrapper = mount({ type: "edit" });
 			expect(wrapper.attributes("data-type")).toBe("edit");
 		});
 
-		it("references the icon in the sprite file", () => {
+		it("references an icon in the sprite file", () => {
 			const wrapper = mount({ type: "edit" });
 			expect(wrapper.find("use").attributes("href")).toBe(
 				sprite + "#icon-edit"
@@ -92,20 +92,18 @@ describe("k-icon", () => {
 			);
 			expect(wrapper.find("use").attributes("href")).toBe("#icon-plugin");
 		});
-	});
 
-	describe("type prop: emoji", () => {
-		it("renders a <span> instead of <svg>", () => {
+		it("renders an emoji as <span> instead of <svg>", () => {
 			const wrapper = mount({ type: "🎉" });
 			expect(wrapper.element.tagName).toBe("SPAN");
 		});
 
-		it("sets data-type to emoji", () => {
+		it("sets data-type to emoji for an emoji", () => {
 			const wrapper = mount({ type: "🎉" });
 			expect(wrapper.attributes("data-type")).toBe("emoji");
 		});
 
-		it("renders the emoji as text content", () => {
+		it("renders an emoji as text content", () => {
 			const wrapper = mount({ type: "🎉" });
 			expect(wrapper.text()).toBe("🎉");
 		});
