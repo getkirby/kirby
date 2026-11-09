@@ -34,14 +34,23 @@ export default {
 			// extract the event name
 			const event = attr.slice(2).toLowerCase();
 
-			for (const listener of wrap(this.$attrs[attr])) {
-				// attach each listener to the root element
-				this.$el.addEventListener(event, listener, {
+			// attach a listener to the root element that resolves the
+			// handlers only when the event fires: inline handlers get
+			// recreated on each render of the parent and the ones
+			// from the first render would close over outdated values
+			this.$el.addEventListener(
+				event,
+				(e: Event) => {
+					for (const listener of wrap(this.$attrs[attr] ?? [])) {
+						listener(e);
+					}
+				},
+				{
 					// use an abort signal to ensure that all listeners
 					// are removed when the component is unmounted
 					signal: this.__listeners.signal
-				});
-			}
+				}
+			);
 		}
 	},
 	unmounted() {

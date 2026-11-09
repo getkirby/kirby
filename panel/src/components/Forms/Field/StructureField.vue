@@ -330,12 +330,12 @@ export default {
 	watch: {
 		value: {
 			handler(value) {
-				this.stopSelecting();
-
 				if (value !== this.items) {
+					this.stopSelecting();
 					this.items = this.toItems(value);
 				}
 			},
+			deep: true,
 			immediate: true
 		}
 	},
