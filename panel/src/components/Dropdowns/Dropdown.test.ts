@@ -180,6 +180,34 @@ describe("Dropdown.vue", () => {
 		});
 	});
 
+	// lifecycle
+	describe("unmounted hook", () => {
+		it("stops repositioning an open dropdown on resize", async () => {
+			const opener = button();
+			const wrapper = await open(mount(), opener);
+			const position = { ...wrapper.vm.position };
+
+			wrapper.unmount();
+
+			opener.getBoundingClientRect = () =>
+				({ height: 20, left: 200, top: 50, width: 40 }) as DOMRect;
+			window.dispatchEvent(new Event("resize"));
+
+			await flushPromises();
+			expect(wrapper.vm.position).toStrictEqual(position);
+		});
+
+		it("does not close an unmounted dropdown when another opens", async () => {
+			const a = await open();
+			a.unmount();
+
+			const close = vi.spyOn(a.vm, "close");
+			await open();
+
+			expect(close).not.toHaveBeenCalled();
+		});
+	});
+
 	// methods
 	describe("close()", () => {
 		it("closes the open dropdown", async () => {
