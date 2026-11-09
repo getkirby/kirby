@@ -1,10 +1,20 @@
-import { describe, expect, it, vi } from "@test/unit";
+import { describe, expect, it, onTestFinished } from "@test/unit";
 import { mount as vueMount } from "@vue/test-utils";
 import html from "@/panel/html";
 import Item from "./Item.vue";
 
+const OptionsDropdown = {
+	props: ["options"],
+	emits: ["option"],
+	render: () => null
+};
+
 function mount(props = {}, attrs = {}) {
-	return vueMount(Item, { props, attrs });
+	return vueMount(Item, {
+		props,
+		attrs,
+		global: { components: { "k-options-dropdown": OptionsDropdown } }
+	});
 }
 
 const component = (attrs = {}) => mount({}, attrs);
@@ -70,6 +80,33 @@ describe("k-item", () => {
 				selecting: true
 			});
 			expect(wrapper.find("k-link").exists()).toBe(false);
+		});
+	});
+
+	describe("options prop", () => {
+		it("renders an options dropdown", () => {
+			const options = [{ click: "remove", text: "Remove" }];
+			const wrapper = mount({ text: "Kirby", options });
+			const dropdown = wrapper.findComponent(OptionsDropdown);
+
+			expect(dropdown.props("options")).toStrictEqual(options);
+		});
+
+		it("renders no options dropdown without options", () => {
+			// buttons render the options bar, but no empty dropdown in it
+			const wrapper = mount({ text: "Kirby", buttons: [{ icon: "edit" }] });
+
+			expect(wrapper.find(".k-item-options").exists()).toBe(true);
+			expect(wrapper.findComponent(OptionsDropdown).exists()).toBe(false);
+		});
+
+		it("hides the options dropdown while selecting", () => {
+			const wrapper = mount({
+				text: "Kirby",
+				options: [{ click: "remove", text: "Remove" }],
+				selecting: true
+			});
+			expect(wrapper.findComponent(OptionsDropdown).exists()).toBe(false);
 		});
 	});
 
@@ -141,14 +178,16 @@ describe("k-item", () => {
 
 	// methods
 	describe("onClick()", () => {
-		it("clicks the selector instead while selecting", async () => {
-			const wrapper = mount({ text: "Kirby", selecting: true });
-			const selector = wrapper.vm.$refs.selector as HTMLInputElement;
-			const click = vi.spyOn(selector, "click");
-
+		it("selects the item instead while selecting", async () => {
+			// a checkbox only fires change when it is in the document
+			const wrapper = vueMount(Item, {
+				props: { text: "Kirby", selecting: true },
+				attachTo: document.body
+			});
+			onTestFinished(() => wrapper.unmount());
 			await wrapper.trigger("click");
 
-			expect(click).toHaveBeenCalledOnce();
+			expect(wrapper.emitted("select")).toHaveLength(1);
 			expect(wrapper.emitted("click")).toBeUndefined();
 		});
 
@@ -166,9 +205,12 @@ describe("k-item", () => {
 	});
 
 	describe("onOption()", () => {
-		it("emits action and option for the same event", () => {
-			const wrapper = mount({ text: "Kirby" });
-			wrapper.vm.onOption("remove");
+		it("emits action and option for a dropdown option", () => {
+			const wrapper = mount({
+				text: "Kirby",
+				options: [{ click: "remove", text: "Remove" }]
+			});
+			wrapper.findComponent(OptionsDropdown).vm.$emit("option", "remove");
 
 			expect(wrapper.emitted("action")).toStrictEqual([["remove"]]);
 			expect(wrapper.emitted("option")).toStrictEqual([["remove"]]);
