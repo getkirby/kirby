@@ -2,6 +2,8 @@
 	<k-block-figure
 		:back="back"
 		:caption="content.caption"
+		:caption-dir="captionField.dir"
+		:caption-lang="captionField.lang"
 		:caption-marks="captionMarks"
 		:empty-text="$t('field.blocks.image.placeholder') + ' …'"
 		:disabled="disabled"
@@ -38,8 +40,11 @@ export default {
 		};
 	},
 	computed: {
+		captionField() {
+			return this.field("caption", { marks: true });
+		},
 		captionMarks() {
-			return this.field("caption", { marks: true }).marks;
+			return this.captionField.marks;
 		},
 		crop() {
 			return this.content.crop ?? false;

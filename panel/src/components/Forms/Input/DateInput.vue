@@ -1,7 +1,6 @@
 <template>
 	<input
 		:id="id"
-		v-direction
 		:autofocus="autofocus"
 		:class="['k-string-input', `k-${type}-input`, $attrs.class]"
 		:disabled="disabled"

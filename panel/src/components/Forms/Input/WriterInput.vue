@@ -1,8 +1,8 @@
 <template>
 	<div
 		ref="editor"
-		v-direction
 		:class="['k-writer', 'k-writer-input', $attrs.class]"
+		:dir="dir"
 		:data-disabled="disabled"
 		:data-empty="isEmpty"
 		:data-placeholder="placeholder"
@@ -80,6 +80,9 @@ export default {
 		}
 	},
 	watch: {
+		lang(lang) {
+			this.editor.setLang(lang);
+		},
 		value(newValue, oldValue) {
 			if (newValue !== oldValue && newValue !== this.html) {
 				this.html = newValue;
@@ -95,6 +98,7 @@ export default {
 			editable: !this.disabled,
 			element: this.$el,
 			emptyDocument: this.emptyDocument,
+			lang: this.lang,
 			parseOptions: {
 				preserveWhitespace: true
 			},
@@ -110,6 +114,8 @@ export default {
 					this.$panel.dialog.open({
 						component: "k-link-dialog",
 						props: {
+							dir: this.dir,
+							lang: this.lang,
 							value: editor.getMarkAttrs("link")
 						},
 						on: {
@@ -129,6 +135,8 @@ export default {
 					this.$panel.dialog.open({
 						component: "k-email-dialog",
 						props: {
+							dir: this.dir,
+							lang: this.lang,
 							value: this.editor.getMarkAttrs("email")
 						},
 						on: {

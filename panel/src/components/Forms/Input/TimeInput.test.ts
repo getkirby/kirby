@@ -10,8 +10,7 @@ function mount(props: Record<string, unknown> = {}) {
 			mocks: {
 				$library: { dayjs },
 				$t: (key: string) => key
-			},
-			directives: { direction: {} }
+			}
 		}
 	});
 }

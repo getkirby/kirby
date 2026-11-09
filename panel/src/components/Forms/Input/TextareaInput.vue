@@ -20,7 +20,9 @@
 				ref="input"
 				v-bind="{
 					autofocus,
+					dir,
 					disabled,
+					lang,
 					minlength,
 					name,
 					placeholder,
@@ -28,7 +30,6 @@
 					spellcheck,
 					value
 				}"
-				v-direction
 				:data-font="font"
 				class="k-textarea-input-native"
 				@click="$refs.toolbar?.close()"
@@ -52,7 +53,9 @@ import Input, { props as InputProps } from "@/mixins/input.js";
 import { props as ToolbarProps } from "@/components/Forms/Toolbar/TextareaToolbar.vue";
 
 import {
+	dir,
 	font,
+	lang,
 	maxlength,
 	minlength,
 	placeholder,
@@ -63,7 +66,9 @@ export const props = {
 	mixins: [
 		ToolbarProps,
 		InputProps,
+		dir,
 		font,
+		lang,
 		maxlength,
 		minlength,
 		placeholder,
@@ -136,6 +141,8 @@ export default {
 			this.$panel.dialog.open({
 				component: "k-toolbar-" + dialog + "-dialog",
 				props: {
+					dir: this.dir,
+					lang: this.lang,
 					value: this.parseSelection()
 				},
 				on: {

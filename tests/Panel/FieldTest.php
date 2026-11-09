@@ -255,6 +255,8 @@ class FieldTest extends TestCase
 		$this->assertSame('Title', $field['label']);
 		$this->assertSame('text', $field['type']);
 		$this->assertSame('title', $field['icon']);
+		$this->assertSame('ltr', $field['dir']);
+		$this->assertArrayNotHasKey('lang', $field);
 
 		// with custom props
 		$field = Field::title([
@@ -262,6 +264,28 @@ class FieldTest extends TestCase
 		]);
 
 		$this->assertTrue($field['required']);
+	}
+
+	public function testTitleWithLanguage(): void
+	{
+		$this->app = $this->app->clone([
+			'languages' => [
+				['code' => 'en', 'default' => true],
+				['code' => 'ar', 'direction' => 'rtl']
+			]
+		]);
+
+		$this->app->setCurrentLanguage('ar');
+
+		// current language
+		$field = Field::title();
+		$this->assertSame('rtl', $field['dir']);
+		$this->assertSame('ar', $field['lang']);
+
+		// default language
+		$field = Field::title(language: 'default');
+		$this->assertSame('ltr', $field['dir']);
+		$this->assertSame('en', $field['lang']);
 	}
 
 	public function testTemplate(): void

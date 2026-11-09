@@ -50,6 +50,16 @@ describe("Editor", () => {
 			expect(onInit).toHaveBeenCalledOnce();
 			e.destroy();
 		});
+
+		it("sets the lang option on the editable element", () => {
+			const e = createEditor({ lang: "de" });
+			expect(e.view!.dom.getAttribute("lang")).toBe("de");
+			e.destroy();
+		});
+
+		it("sets no lang on the editable element by default", () => {
+			expect(editor.view!.dom.hasAttribute("lang")).toBe(false);
+		});
 	});
 
 	describe("activeMarkAttrs", () => {
@@ -574,6 +584,25 @@ describe("Editor", () => {
 			proxied.setContent("<p>world</p>");
 			expect(proxied.getHTML()).toBe("<p>world</p>");
 			proxied.destroy();
+		});
+	});
+
+	describe("setLang", () => {
+		it("updates the language of the editable element", () => {
+			editor.setLang("de");
+			expect(editor.options.lang).toBe("de");
+			expect(editor.view!.dom.getAttribute("lang")).toBe("de");
+		});
+
+		it("removes the language from the editable element", () => {
+			editor.setLang("de");
+			editor.setLang(undefined);
+			expect(editor.view!.dom.hasAttribute("lang")).toBe(false);
+		});
+
+		it("keeps the other attributes of the editable element", () => {
+			editor.setLang("de");
+			expect(editor.view!.dom.classList).toContain("k-text");
 		});
 	});
 

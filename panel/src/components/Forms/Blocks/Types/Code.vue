@@ -3,7 +3,9 @@
 		<k-input
 			ref="code"
 			:buttons="false"
+			:dir="codeField.dir"
 			:disabled="disabled"
+			:lang="codeField.lang"
 			:placeholder="placeholder"
 			:spellcheck="false"
 			:value="content.code"
@@ -38,8 +40,11 @@ import Block from "./Default.vue";
 export default {
 	extends: Block,
 	computed: {
+		codeField() {
+			return this.field("code", {});
+		},
 		placeholder() {
-			return this.field("code", {}).placeholder;
+			return this.codeField.placeholder;
 		},
 		languages() {
 			return this.field("language", { options: [] }).options;

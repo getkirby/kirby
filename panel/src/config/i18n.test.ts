@@ -1,4 +1,4 @@
-import { describe, expect, it, beforeEach } from "vitest";
+import { describe, expect, it, beforeEach, vi } from "vitest";
 import { mount } from "@vue/test-utils";
 import Panel from "@/panel/panel";
 import i18n from "./i18n";
@@ -19,6 +19,12 @@ describe("config.i18n", () => {
 	describe("v-direction directive", () => {
 		beforeEach(() => {
 			window.panel = Panel.create(app);
+			vi.spyOn(window.panel, "deprecated").mockImplementation(() => {});
+		});
+
+		it("warns that the directive is deprecated", () => {
+			mountWithDirective(false);
+			expect(window.panel.deprecated).toHaveBeenCalledOnce();
 		});
 
 		it("sets el.dir from Panel language when component is not disabled", () => {

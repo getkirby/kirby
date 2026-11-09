@@ -5,6 +5,7 @@ namespace Kirby\Panel;
 use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Find;
+use Kirby\Cms\Language;
 use Kirby\Cms\Page;
 use Kirby\Cms\Roles;
 use Kirby\Form\Field\EmailField;
@@ -133,9 +134,24 @@ class Field
 		]))->toArray();
 	}
 
-	public static function title(array $props = []): array
-	{
-		return (new TitleField(...$props))->toArray();
+	/**
+	 * @param $language Language of the title value
+	 */
+	public static function title(
+		array $props = [],
+		Language|string $language = 'current'
+	): array {
+		$language = Language::ensure($language);
+		$props    = (new TitleField(...$props))->toArray();
+
+		// language and reading direction of the title for the input
+		$props['dir'] = $language->direction();
+
+		if ($language->isSingle() === false) {
+			$props['lang'] = $language->code();
+		}
+
+		return $props;
 	}
 
 	/**

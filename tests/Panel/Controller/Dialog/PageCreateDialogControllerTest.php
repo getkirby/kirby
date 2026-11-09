@@ -37,6 +37,30 @@ class PageCreateDialogControllerTest extends TestCase
 		$this->assertTrue($fields['uuid']['hidden']);
 	}
 
+	public function testCoreFieldsTitleLanguage(): void
+	{
+		$this->app = $this->app->clone([
+			'languages' => [
+				['code' => 'en', 'default' => true],
+				['code' => 'de']
+			],
+			'request' => [
+				'query' => [
+					'template' => 'test'
+				]
+			]
+		]);
+
+		$this->app->setCurrentLanguage('de');
+		$this->app->impersonate('kirby');
+
+		$controller = new PageCreateDialogController();
+		$fields     = $controller->coreFields();
+
+		// new pages are created in the default language
+		$this->assertSame('en', $fields['title']['lang']);
+	}
+
 	public function testCoreFieldsUuidDisabled(): void
 	{
 		$this->app = $this->app->clone([

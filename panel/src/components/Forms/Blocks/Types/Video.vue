@@ -1,6 +1,8 @@
 <template>
 	<k-block-figure
 		:caption="content.caption"
+		:caption-dir="captionField.dir"
+		:caption-lang="captionField.lang"
 		:caption-marks="captionMarks"
 		:disabled="disabled"
 		:empty-text="$t('field.blocks.video.placeholder') + ' …'"
@@ -32,8 +34,11 @@ import Block from "./Default.vue";
 export default {
 	extends: Block,
 	computed: {
+		captionField() {
+			return this.field("caption", { marks: true });
+		},
 		captionMarks() {
-			return this.field("caption", { marks: true }).marks;
+			return this.captionField.marks;
 		},
 		file() {
 			if (this.isInternal) {

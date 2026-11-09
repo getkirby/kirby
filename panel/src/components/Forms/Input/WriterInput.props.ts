@@ -1,5 +1,7 @@
 import { props as InputProps } from "@/mixins/input.js";
 import {
+	dir,
+	lang,
 	maxlength,
 	minlength,
 	placeholder,
@@ -15,7 +17,15 @@ import {
  * @license   https://getkirby.com/license
  */
 export const props = {
-	mixins: [InputProps, maxlength, minlength, placeholder, spellcheck],
+	mixins: [
+		InputProps,
+		dir,
+		lang,
+		maxlength,
+		minlength,
+		placeholder,
+		spellcheck
+	],
 	props: {
 		breaks: Boolean,
 		code: Boolean,

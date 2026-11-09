@@ -407,15 +407,25 @@ class Fields extends Collection
 
 		foreach ($fields as $name => $field) {
 			$props[$name] = $field->toArray();
+			$translatable = $field->isTranslatable($language);
 
 			// the field should be disabled in the form if the user
 			// has no update permissions for the model or if the field
 			// is not translatable into the current language
-			if (
-				$permissions === false ||
-				$field->isTranslatable($language) === false
-			) {
+			if ($permissions === false || $translatable === false) {
 				$props[$name]['disabled'] = true;
+			}
+
+			// language and reading direction of the value for the inputs;
+			// non-translatable fields show the value of the default language
+			if ($field->hasValue() === true) {
+				$value = $translatable === true ? $language : Language::ensure('default');
+
+				$props[$name]['dir'] ??= $value->direction();
+
+				if ($value->isSingle() === false) {
+					$props[$name]['lang'] ??= $value->code();
+				}
 			}
 
 			// the value should not be included in the props
