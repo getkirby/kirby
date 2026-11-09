@@ -43,11 +43,11 @@ describe("k-header", () => {
 	});
 
 	describe("buttons slot", () => {
-		it("renders buttons area when provided", () => {
+		it("renders the buttons in the buttons area", () => {
 			const wrapper = mount(Header, {
 				slots: { buttons: "<button>Save</button>" }
 			});
-			expect(wrapper.find(".k-header-buttons").exists()).toBe(true);
+			expect(wrapper.find(".k-header-buttons button").text()).toBe("Save");
 		});
 
 		it("does not render buttons area when not provided", () => {

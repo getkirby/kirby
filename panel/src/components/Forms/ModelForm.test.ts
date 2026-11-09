@@ -17,10 +17,18 @@ const columns = {
 	1: { width: "1/2", sticky: true, fields: { text: { type: "textarea" } } }
 };
 
-function mount(props = {}, attrs = {}) {
+// like the real one, it emits `submit` as a component event
+const Fieldset = {
+	props: ["disabled", "fields", "value"],
+	emits: ["input", "submit"],
+	template: '<div class="k-fieldset" />'
+};
+
+function mount(props = {}, attrs = {}, components = {}) {
 	return vueMount(ModelForm, {
 		props: { api: "pages/test", columns, ...props },
-		attrs
+		attrs,
+		global: { components }
 	});
 }
 
@@ -62,7 +70,10 @@ describe("k-model-form", () => {
 
 			expect(wrapper.attributes("data-locked")).toBe("true");
 
-			for (const fieldset of wrapper.findAll("k-fieldset")) {
+			const fieldsets = wrapper.findAll("k-fieldset");
+			expect(fieldsets).toHaveLength(2);
+
+			for (const fieldset of fieldsets) {
 				expect(fieldset.attributes("disabled")).toBe("true");
 			}
 		});
@@ -74,7 +85,10 @@ describe("k-model-form", () => {
 
 			expect(wrapper.attributes("data-locked")).toBe("false");
 
-			for (const fieldset of wrapper.findAll("k-fieldset")) {
+			const fieldsets = wrapper.findAll("k-fieldset");
+			expect(fieldsets).toHaveLength(2);
+
+			for (const fieldset of fieldsets) {
 				expect(fieldset.attributes("disabled")).toBe("false");
 			}
 		});
@@ -167,23 +181,26 @@ describe("k-model-form", () => {
 
 	// events
 	describe("input event", () => {
-		it("passes on the input of a fieldset", async () => {
-			const wrapper = mount();
-			await wrapper.find("k-fieldset").trigger("input");
-			expect(wrapper.emitted("input")).toHaveLength(1);
+		it("passes on the input of a fieldset", () => {
+			const wrapper = mount({}, {}, { "k-fieldset": Fieldset });
+			wrapper.findComponent(Fieldset).vm.$emit("input", { title: "A" });
+			expect(wrapper.emitted("input")).toStrictEqual([[{ title: "A" }]]);
 		});
 	});
 
 	describe("submit event", () => {
-		it("submits the form and the fieldsets", async () => {
-			const wrapper = mount();
+		it("submits the form and the fieldsets", () => {
+			const wrapper = mount({}, {}, { "k-fieldset": Fieldset });
+			const event = new Event("submit", { cancelable: true });
 
-			await wrapper.find("form").trigger("submit");
-			expect(wrapper.emitted("submit")).toHaveLength(1);
+			wrapper.find("form").element.dispatchEvent(event);
+			expect(wrapper.emitted("submit")).toStrictEqual([[event]]);
 
-			// the submit of a fieldset bubbles up to the form as well
-			await wrapper.find("k-fieldset").trigger("submit");
-			expect(wrapper.emitted("submit")).toHaveLength(3);
+			// the browser must not send the form itself
+			expect(event.defaultPrevented).toBe(true);
+
+			wrapper.findComponent(Fieldset).vm.$emit("submit", "fieldset");
+			expect(wrapper.emitted("submit")).toStrictEqual([[event], ["fieldset"]]);
 		});
 	});
 });

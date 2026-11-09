@@ -23,14 +23,23 @@ function emitted(wrapper: ReturnType<typeof mount>) {
 	return events?.[events.length - 1]?.[0];
 }
 
+// returns the event to tell whether the browser may handle the key
 async function press(
 	wrapper: ReturnType<typeof mount>,
 	key: string,
-	options: Record<string, unknown> = {}
-) {
-	await wrapper.find("input").trigger("keydown", { key, ...options });
+	options: KeyboardEventInit = {}
+): Promise<KeyboardEvent> {
+	const event = new KeyboardEvent("keydown", {
+		key,
+		bubbles: true,
+		cancelable: true,
+		...options
+	});
+
+	wrapper.find("input").element.dispatchEvent(event);
 	await wrapper.vm.$nextTick();
 	await wrapper.vm.$nextTick();
+	return event;
 }
 
 function selected(wrapper: ReturnType<typeof mount>) {
@@ -282,9 +291,11 @@ describe("k-date-input", () => {
 			// place the cursor in the first part
 			input.setSelectionRange(0, 0);
 
+			// tab stays inside the input while there is a part to step to
 			for (const part of ["13", "July", "2026"]) {
-				await press(wrapper, "Tab");
+				const event = await press(wrapper, "Tab");
 				expect(selected(wrapper)).toBe(part);
+				expect(event.defaultPrevented).toBe(true);
 			}
 		});
 
@@ -296,9 +307,21 @@ describe("k-date-input", () => {
 			input.setSelectionRange(8, 12);
 
 			for (const part of ["July", "13"]) {
-				await press(wrapper, "Tab", { shiftKey: true });
+				const event = await press(wrapper, "Tab", { shiftKey: true });
 				expect(selected(wrapper)).toBe(part);
+				expect(event.defaultPrevented).toBe(true);
 			}
+		});
+
+		it("leaves the input from the first part on shift + tab", async () => {
+			const wrapper = mount({ display: "D MMMM YYYY", value: "2026-07-13" });
+			const input = wrapper.find("input").element as HTMLInputElement;
+
+			input.setSelectionRange(0, 2);
+			const event = await press(wrapper, "Tab", { shiftKey: true });
+
+			expect(selected(wrapper)).toBe("13");
+			expect(event.defaultPrevented).toBe(false);
 		});
 
 		it("selects the part the cursor sits in", async () => {
@@ -319,9 +342,11 @@ describe("k-date-input", () => {
 
 			await input.setValue("not a date");
 			el.setSelectionRange(0, 0);
-			await press(wrapper, "Tab");
+			const event = await press(wrapper, "Tab");
 
+			// tab moves the focus out of the input
 			expect(selected(wrapper)).toBe("");
+			expect(event.defaultPrevented).toBe(false);
 		});
 
 		it("selects the part behind a leading literal", async () => {
@@ -391,9 +416,10 @@ describe("k-date-input", () => {
 
 			// select the last part, tab moves the focus out of the input
 			input.setSelectionRange(8, 12);
-			await press(wrapper, "Tab");
+			const event = await press(wrapper, "Tab");
 
 			expect(selected(wrapper)).toBe("2026");
+			expect(event.defaultPrevented).toBe(false);
 		});
 	});
 

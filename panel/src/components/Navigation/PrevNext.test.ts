@@ -1,6 +1,23 @@
 import { describe, it, expect } from "@test/unit";
 import { mount as vueMount } from "@vue/test-utils";
+import ButtonGroup from "./ButtonGroup.vue";
 import PrevNext from "./PrevNext.vue";
+
+/**
+ * Returns the buttons rendered by the real button group
+ */
+function buttons(props = {}) {
+	const wrapper = vueMount(PrevNext, {
+		props,
+		global: { components: { "k-button-group": ButtonGroup } }
+	});
+
+	return wrapper.findAll("k-button").map((button) => ({
+		disabled: button.attributes("disabled"),
+		icon: button.attributes("icon"),
+		link: button.attributes("link")
+	}));
+}
 
 function mount(attrs = {}) {
 	return vueMount(PrevNext, {
@@ -39,38 +56,36 @@ describe("k-prev-next", () => {
 	// props
 	describe("next prop", () => {
 		it("defaults to a disabled button", () => {
-			const wrapper = vueMount(PrevNext, {
-				props: { prev: { link: "/prev" } }
+			expect(buttons({ prev: { link: "/prev" } })[1]).toStrictEqual({
+				disabled: "true",
+				icon: "angle-right",
+				link: "#"
 			});
-			expect(wrapper.vm.buttons[1].disabled).toBe(true);
 		});
 
 		it("passes config to the right button with angle-right icon", () => {
-			const wrapper = vueMount(PrevNext, {
-				props: { next: { link: "/next" } }
-			});
-			expect(wrapper.vm.buttons[1]).toMatchObject({
-				link: "/next",
-				icon: "angle-right"
+			expect(buttons({ next: { link: "/next" } })[1]).toStrictEqual({
+				disabled: undefined,
+				icon: "angle-right",
+				link: "/next"
 			});
 		});
 	});
 
 	describe("prev prop", () => {
 		it("defaults to a disabled button", () => {
-			const wrapper = vueMount(PrevNext, {
-				props: { next: { link: "/next" } }
+			expect(buttons({ next: { link: "/next" } })[0]).toStrictEqual({
+				disabled: "true",
+				icon: "angle-left",
+				link: "#"
 			});
-			expect(wrapper.vm.buttons[0].disabled).toBe(true);
 		});
 
 		it("passes config to the left button with angle-left icon", () => {
-			const wrapper = vueMount(PrevNext, {
-				props: { prev: { link: "/prev" } }
-			});
-			expect(wrapper.vm.buttons[0]).toMatchObject({
-				link: "/prev",
-				icon: "angle-left"
+			expect(buttons({ prev: { link: "/prev" } })[0]).toStrictEqual({
+				disabled: undefined,
+				icon: "angle-left",
+				link: "/prev"
 			});
 		});
 	});

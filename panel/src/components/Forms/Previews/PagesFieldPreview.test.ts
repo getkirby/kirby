@@ -40,6 +40,20 @@ describe("k-pages-field-preview", () => {
 		});
 	});
 
+	// options
+	describe("endpoint option", () => {
+		it("loads the items from the pages endpoint", async () => {
+			helper.items.mockResolvedValueOnce([{ text: "Home" }, { text: "Blog" }]);
+			mount({ value: ["page://a", "page://b"] });
+			await flushPromises();
+
+			expect(helper.items).toHaveBeenCalledExactlyOnceWith("items/pages", [
+				"page://a",
+				"page://b"
+			]);
+		});
+	});
+
 	// watch
 	describe("$panel.language.code watcher", () => {
 		it("reloads the items", async () => {

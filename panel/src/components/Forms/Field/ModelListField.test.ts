@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "@test/unit";
+import { afterEach, beforeEach, describe, expect, it, vi } from "@test/unit";
 import { flushPromises, mount as vueMount } from "@vue/test-utils";
 import { reactive } from "vue";
 import preserveListeners from "@/mixins/preserveListeners";
@@ -16,6 +16,12 @@ const events = {
 const api = { get: vi.fn() };
 const panel = { error: vi.fn() };
 
+// registered globally in the Panel
+const Collection = {
+	props: ["empty", "items"],
+	template: "<div />"
+};
+
 const state = {
 	columns: { title: { label: "Title", type: "url" } },
 	models: [],
@@ -32,6 +38,7 @@ function mount(props = {}, attrs = {}, $panel: object = panel) {
 		},
 		attrs,
 		global: {
+			components: { "k-collection": Collection },
 			mocks: {
 				$api: api,
 				$events: events,
@@ -126,28 +133,29 @@ describe("k-model-list-field", () => {
 		});
 
 		it("shows a loading empty state until the entries arrive", async () => {
-			const wrapper = mount();
+			const wrapper = mount({ max: 3, min: 1 });
+			const collection = wrapper.findComponent(Collection);
+			const validator = wrapper.find("k-validator");
 
-			expect(wrapper.vm.isLoading).toBe(true);
-			expect(wrapper.vm.items).toStrictEqual([]);
-			expect(wrapper.vm.emptyProps).toStrictEqual({
+			expect(collection.props("items")).toStrictEqual([]);
+			expect(collection.props("empty")).toStrictEqual({
 				icon: "loader",
 				text: "loading"
 			});
 
 			// the entries are unknown, so the list cannot be validated yet
-			expect(wrapper.vm.validator).toStrictEqual({ count: 0 });
+			expect(validator.attributes()).toStrictEqual({ count: "0" });
 
 			await flushPromises();
 
-			expect(wrapper.vm.emptyProps).toStrictEqual({
+			expect(collection.props("empty")).toStrictEqual({
 				icon: "box",
 				text: "models.empty"
 			});
-			expect(wrapper.vm.validator).toStrictEqual({
-				count: 0,
-				max: undefined,
-				min: undefined
+			expect(validator.attributes()).toStrictEqual({
+				count: "0",
+				max: "3",
+				min: "1"
 			});
 		});
 
@@ -255,18 +263,22 @@ describe("k-model-list-field", () => {
 	});
 
 	describe("model.update event", () => {
+		afterEach(() => {
+			vi.useRealTimers();
+		});
+
 		it("is listened to while mounted", async () => {
 			const wrapper = mount();
 			await flushPromises();
 
-			expect(events.on).toHaveBeenCalledWith("model.update", expect.anything());
+			const handler = listeners["model.update"];
+			expect(events.on).toHaveBeenCalledWith("model.update", handler);
+			expect(events.off).not.toHaveBeenCalled();
 
 			wrapper.unmount();
 
-			expect(events.off).toHaveBeenCalledWith(
-				"model.update",
-				expect.anything()
-			);
+			// any other handler would leave the registered one listening
+			expect(events.off).toHaveBeenCalledWith("model.update", handler);
 		});
 
 		it("triggers a single reload when fired in quick succession", async () => {
@@ -281,7 +293,6 @@ describe("k-model-list-field", () => {
 			listeners["model.update"]();
 
 			await vi.advanceTimersByTimeAsync(1);
-			vi.useRealTimers();
 
 			expect(api.get).toHaveBeenCalledOnce();
 		});
@@ -297,7 +308,6 @@ describe("k-model-list-field", () => {
 			listeners["model.update"]({ redirect: "/pages/new-slug" });
 
 			await vi.advanceTimersByTimeAsync(1);
-			vi.useRealTimers();
 
 			expect(api.get).not.toHaveBeenCalled();
 		});

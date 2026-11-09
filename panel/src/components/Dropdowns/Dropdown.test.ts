@@ -1,4 +1,11 @@
-import { afterEach, describe, expect, it, vi } from "@test/unit";
+import {
+	afterEach,
+	describe,
+	expect,
+	it,
+	onTestFinished,
+	vi
+} from "@test/unit";
 import {
 	enableAutoUnmount,
 	flushPromises,
@@ -285,6 +292,13 @@ describe("k-dropdown", () => {
 	});
 
 	describe("onOptionClick()", () => {
+		it("is called by a clicked option item", async () => {
+			const options = [{ text: "Edit", click: "edit" }];
+			const wrapper = await open(mount({ options }));
+			wrapper.find<HTMLElement>("k-dropdown-item").element.click();
+			expect(wrapper.emitted("action")).toStrictEqual([["edit"]]);
+		});
+
 		it("closes the dropdown", async () => {
 			const wrapper = await open();
 			wrapper.vm.onOptionClick({});
@@ -306,8 +320,9 @@ describe("k-dropdown", () => {
 
 		it("emits a click object by its name", () => {
 			const wrapper = mount();
-			wrapper.vm.onOptionClick({ click: { name: "action", payload: "edit" } });
-			expect(wrapper.emitted("action")).toStrictEqual([["edit"]]);
+			wrapper.vm.onOptionClick({ click: { name: "remove", payload: "edit" } });
+			expect(wrapper.emitted("remove")).toStrictEqual([["edit"]]);
+			expect(wrapper.emitted("action")).toBeUndefined();
 		});
 
 		it("emits a global click object on the event bus", () => {
@@ -320,7 +335,12 @@ describe("k-dropdown", () => {
 
 	describe("open()", () => {
 		it("shows the dialog as modal", async () => {
-			const wrapper = await open();
+			const wrapper = mount();
+			const showModal = vi.spyOn(wrapper.element, "showModal");
+			onTestFinished(() => showModal.mockRestore());
+
+			await open(wrapper);
+			expect(showModal).toHaveBeenCalledOnce();
 			expect(wrapper.element.open).toBe(true);
 		});
 

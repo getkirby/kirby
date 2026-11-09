@@ -1,11 +1,16 @@
 import { describe, it, expect } from "@test/unit";
 import { mount as vueMount } from "@vue/test-utils";
 import PicklistInput from "./PicklistInput.vue";
-import string from "@/helpers/string";
 import html, { HtmlString } from "@/panel/html";
 
-function mount(props = {}, attrs = {}) {
-	return vueMount(PicklistInput, { props, attrs });
+// registered globally in the Panel
+const ChoicesInput = {
+	props: ["options"],
+	template: "<div />"
+};
+
+function mount(props = {}, attrs = {}, components = {}) {
+	return vueMount(PicklistInput, { props, attrs, global: { components } });
 }
 
 const options = [
@@ -79,63 +84,86 @@ describe("k-picklist-input", () => {
 
 	// methods
 	describe("highlight()", () => {
-		// the method only needs `query` and the string helpers
-		function highlight(text: unknown, query = ""): HtmlString {
-			return PicklistInput.methods!.highlight.call(
-				{ query, $helper: { string } },
-				text
+		// the text of the option the checkbox or radio input receives
+		async function highlight(
+			text: unknown,
+			query = "",
+			multiple = true
+		): Promise<HtmlString> {
+			const wrapper = mount(
+				{ multiple, options: [{ text, value: "a" }] },
+				{},
+				{
+					"k-checkboxes-input": ChoicesInput,
+					"k-radio-input": ChoicesInput
+				}
 			);
+
+			await wrapper.setData({ query });
+			return wrapper.findComponent(ChoicesInput).props("options")[0].text;
 		}
 
-		it("wraps the match in bold", () => {
-			expect(String(highlight("Kirby", "ir"))).toBe("K<b>ir</b>by");
+		it("wraps the match in bold", async () => {
+			expect(String(await highlight("Kirby", "ir"))).toBe("K<b>ir</b>by");
 		});
 
-		it("matches case-insensitively", () => {
-			expect(String(highlight("Kirby", "KIR"))).toBe("<b>Kir</b>by");
+		it("matches case-insensitively", async () => {
+			expect(String(await highlight("Kirby", "KIR"))).toBe("<b>Kir</b>by");
 		});
 
-		it("wraps every occurrence", () => {
-			expect(String(highlight("aXbXc", "X"))).toBe("a<b>X</b>b<b>X</b>c");
+		it("wraps every occurrence", async () => {
+			expect(String(await highlight("aXbXc", "X"))).toBe("a<b>X</b>b<b>X</b>c");
 		});
 
-		it("returns the text unchanged without a query", () => {
-			expect(String(highlight("Kirby"))).toBe("Kirby");
+		it("returns the text unchanged without a query", async () => {
+			expect(String(await highlight("Kirby"))).toBe("Kirby");
 		});
 
-		it("treats the query literally, not as a pattern", () => {
-			expect(String(highlight("a.b", "."))).toBe("a<b>.</b>b");
+		it("treats the query literally, not as a pattern", async () => {
+			expect(String(await highlight("a.b", "."))).toBe("a<b>.</b>b");
 		});
 
-		it("returns trusted HTML so the match markup survives rendering", () => {
-			const result = highlight(html("Kirby"), "ir");
+		it("returns trusted HTML so the match markup survives rendering", async () => {
+			const result = await highlight(html("Kirby"), "ir");
 
 			expect(result).toBeInstanceOf(HtmlString);
 			expect(result.toString()).toBe("K<b>ir</b>by");
 		});
 
-		it("escapes untrusted text before adding the match markup", () => {
-			const result = highlight("<script>x</script>", "script");
+		it("returns trusted HTML for the radio input as well", async () => {
+			const result = await highlight("Kirby", "ir", false);
 
-			expect(result.toString()).not.toContain("<script>");
-			expect(result.toString()).toContain("<b>script</b>");
+			expect(result).toBeInstanceOf(HtmlString);
+			expect(result.toString()).toBe("K<b>ir</b>by");
 		});
 
-		it("neutralises untrusted markup that stripHTML would miss", () => {
+		it("escapes untrusted text before adding the match markup", async () => {
+			const result = await highlight("<script>x</script>", "script");
+
+			expect(result).toBeInstanceOf(HtmlString);
+			expect(result.toString()).toBe(
+				"&lt;<b>script</b>&gt;x&lt;&#x2F;<b>script</b>&gt;"
+			);
+		});
+
+		it("neutralises untrusted markup that stripHTML would miss", async () => {
 			// an unclosed tag never matches stripHTML's `<…>` regex,
 			// so escaping — not stripping — is what makes this safe
-			const result = highlight("<img src=x onerror=alert(1)");
+			const result = await highlight("<img src=x onerror=alert(1)");
 
+			expect(result).toBeInstanceOf(HtmlString);
 			expect(result.toString()).not.toContain("<img");
 			expect(result.toString()).toContain("&lt;img");
 		});
 
-		it("strips tags from trusted HTML so a match cannot land inside one", () => {
-			expect(String(highlight(html("<b>Kirby</b>"), "b"))).toBe("Kir<b>b</b>y");
+		it("strips tags from trusted HTML so a match cannot land inside one", async () => {
+			expect(String(await highlight(html("<b>Kirby</b>"), "b"))).toBe(
+				"Kir<b>b</b>y"
+			);
 		});
 
-		it("does not double-escape entities in trusted HTML", () => {
-			expect(String(highlight(html("Tom &amp; Jerry")))).toBe(
+		it("does not double-escape entities in trusted HTML", async () => {
+			expect(String(await highlight(html("Tom &amp; Jerry")))).toBe(
 				"Tom &amp; Jerry"
 			);
 		});

@@ -37,7 +37,10 @@ describe("k-timeoptions-input", () => {
 	// methods
 	describe("formatTimes()", () => {
 		it("renders every option as a time", () => {
-			for (const label of labels(mount())) {
+			const times = labels(mount());
+			expect(times).toHaveLength(24);
+
+			for (const label of times) {
 				expect(label).toMatch(/^\d{2}:\d{2}$/);
 			}
 		});
@@ -48,10 +51,17 @@ describe("k-timeoptions-input", () => {
 			expect(times.at(-1)).toBe("5:00 am");
 		});
 
-		it("marks the option the value selects", () => {
-			const wrapper = mount({ value: "06:00:00" });
-			const button = wrapper.findAll("k-button")[0];
-			expect(button.attributes("selected")).toBe("time");
+		it("marks only the option the value selects", () => {
+			const wrapper = mount({ value: "14:00:00" });
+			const buttons = wrapper.findAll("k-button");
+			const selected = buttons.filter(
+				(button) => button.attributes("selected") !== "false"
+			);
+
+			expect(buttons).toHaveLength(24);
+			expect(selected).toHaveLength(1);
+			expect(selected[0].text()).toBe("14:00");
+			expect(selected[0].attributes("selected")).toBe("time");
 		});
 	});
 
