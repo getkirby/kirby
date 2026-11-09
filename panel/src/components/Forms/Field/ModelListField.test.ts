@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "@test/unit";
 import { flushPromises, mount as vueMount } from "@vue/test-utils";
-import { reactive } from "vue";
+import { nextTick, reactive } from "vue";
 import preserveListeners from "@/mixins/preserveListeners";
 import ModelListField from "./ModelListField.vue";
 
@@ -29,6 +29,28 @@ const state = {
 	sortable: true
 };
 
+function model(id: string, permissions = {}) {
+	return {
+		id,
+		link: `pages/${id}`,
+		permissions: { delete: true, sort: true, ...permissions },
+		template: "default",
+		text: id
+	};
+}
+
+/**
+ * Lets the field load the given entries
+ */
+function entries(models: object[], merge = {}) {
+	api.get.mockResolvedValue({
+		...state,
+		models,
+		pagination: { ...state.pagination, total: models.length },
+		...merge
+	});
+}
+
 function mount(props = {}, attrs = {}, $panel: object = panel) {
 	return vueMount(ModelListField, {
 		props: {
@@ -41,12 +63,21 @@ function mount(props = {}, attrs = {}, $panel: object = panel) {
 			components: { "k-collection": Collection },
 			mocks: {
 				$api: api,
+				// returns its arguments to check the dropdown of each entry
+				$dropdown: (link: string, options: object) => ({ link, ...options }),
 				$events: events,
 				$panel
 			},
 			mixins: [preserveListeners]
 		}
 	});
+}
+
+/**
+ * The entries passed to the collection
+ */
+function items(wrapper: ReturnType<typeof mount>) {
+	return wrapper.findComponent(Collection).props("items");
 }
 
 /**
@@ -67,6 +98,77 @@ describe("k-model-list-field", () => {
 	describe("element", () => {
 		it.rendersAs(mount, "K-FIELD", "k-modellist-field");
 		it.inheritsNoAttrs(mount);
+	});
+
+	// computed
+	describe("items computed", () => {
+		it("passes the entries with their dropdown to the collection", async () => {
+			entries([model("a")]);
+			const wrapper = mount();
+			await flushPromises();
+
+			expect(items(wrapper)).toStrictEqual([
+				{
+					...model("a"),
+					data: { "data-id": "a", "data-template": "default" },
+					options: {
+						link: "pages/a",
+						query: { delete: true, sort: true, view: "list" }
+					},
+					selectable: false,
+					sortable: true
+				}
+			]);
+		});
+
+		it("keeps entries from being deleted at the min", async () => {
+			entries([model("a"), model("b")]);
+			const wrapper = mount({ min: 2 });
+			await flushPromises();
+
+			expect(items(wrapper)[0].options.query.delete).toBe(false);
+		});
+
+		it("keeps entries without permission from being deleted", async () => {
+			entries([model("a", { delete: false })]);
+			const wrapper = mount();
+			await flushPromises();
+
+			expect(items(wrapper)[0].options.query.delete).toBe(false);
+		});
+
+		it("makes deletable entries selectable while selecting", async () => {
+			entries([model("a"), model("b", { delete: false })]);
+			const wrapper = mount({ batch: true });
+			await flushPromises();
+
+			expect(items(wrapper)[0].selectable).toBe(false);
+
+			wrapper.vm.startSelecting();
+			await nextTick();
+
+			expect(items(wrapper)[0].selectable).toBe(true);
+			expect(items(wrapper)[1].selectable).toBe(false);
+		});
+
+		it("makes entries with permission sortable", async () => {
+			entries([model("a"), model("b", { sort: false })]);
+			const wrapper = mount();
+			await flushPromises();
+
+			expect(items(wrapper)[0].sortable).toBe(true);
+			expect(items(wrapper)[1].sortable).toBe(false);
+			expect(items(wrapper)[1].options.query.sort).toBe(false);
+		});
+
+		it("makes no entry sortable while the list is not sortable", async () => {
+			entries([model("a")], { sortable: false });
+			const wrapper = mount();
+			await flushPromises();
+
+			expect(items(wrapper)[0].sortable).toBe(false);
+			expect(items(wrapper)[0].options.query.sort).toBe(false);
+		});
 	});
 
 	// watch
