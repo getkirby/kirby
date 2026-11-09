@@ -5,6 +5,7 @@ import RadioField from "./RadioField.vue";
 const Input = {
 	name: "k-radio-input",
 	props: ["options"],
+	emits: ["input"],
 	template: "<div />"
 };
 const options = [{ text: "A", value: "a" }];
@@ -47,6 +48,21 @@ describe("k-radio-field", () => {
 				...options,
 				{ text: "–", value: "b" }
 			]);
+		});
+
+		it("renders an empty state without options", () => {
+			const wrapper = mount({ options: [] });
+			expect(wrapper.find("k-empty").exists()).toBe(true);
+			expect(wrapper.findComponent(Input).exists()).toBe(false);
+		});
+	});
+
+	// events
+	describe("input event", () => {
+		it("emits the value of the input", () => {
+			const wrapper = mount();
+			wrapper.findComponent(Input).vm.$emit("input", "a");
+			expect(wrapper.emitted("input")).toStrictEqual([["a"]]);
 		});
 	});
 });
