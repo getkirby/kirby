@@ -181,10 +181,10 @@ describe("k-model-form", () => {
 
 	// events
 	describe("input event", () => {
-		it("passes on the input of a fieldset", async () => {
-			const wrapper = mount();
-			await wrapper.find("k-fieldset").trigger("input");
-			expect(wrapper.emitted("input")).toHaveLength(1);
+		it("passes on the input of a fieldset", () => {
+			const wrapper = mount({}, {}, { "k-fieldset": Fieldset });
+			wrapper.findComponent(Fieldset).vm.$emit("input", { title: "A" });
+			expect(wrapper.emitted("input")).toStrictEqual([[{ title: "A" }]]);
 		});
 	});
 
