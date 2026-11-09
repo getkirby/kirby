@@ -80,6 +80,11 @@ describe("k-empty", () => {
 			const wrapper = mount({ onClick: () => {} });
 			expect(wrapper.attributes("button")).toBe("true");
 		});
+
+		it("sets button to false without onClick", () => {
+			const wrapper = mount();
+			expect(wrapper.attributes("button")).toBe("false");
+		});
 	});
 
 	// events
