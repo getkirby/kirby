@@ -1,11 +1,91 @@
-import { describe, expect, it, vi } from "vitest";
-import Upload, { defaults } from "./upload";
+import { describe, expect, it, onTestFinished, vi } from "vitest";
+import Upload, { defaults, type UploadState } from "./upload";
 import Panel from "./panel";
 
 // URL.createObjectURL/.revokeObjectURL
 // are not implemented in happy-dom
 URL.createObjectURL = vi.fn(() => "blob:mock-url");
 URL.revokeObjectURL = vi.fn();
+
+type FakeRequest = {
+	body: FormData | null;
+	headers: Record<string, string>;
+	url: string;
+};
+
+type Listener = (event: object) => void;
+
+function flush(): Promise<void> {
+	return new Promise((resolve) => setTimeout(resolve));
+}
+
+/**
+ * Creates a Panel with a real chunk size, as the
+ * backend sends it (the default 0 never ends chunking)
+ */
+function createPanel(): Panel {
+	const panel = Panel.create(app);
+	panel.config.upload = 5242880;
+	return panel;
+}
+
+/**
+ * Replaces XMLHttpRequest with a fake that records each request
+ * and answers it with the given response after some progress
+ */
+function fakeRequests(
+	respond: () => Record<string, unknown> = () => ({ status: "ok", data: {} })
+): FakeRequest[] {
+	const requests: FakeRequest[] = [];
+	const original = globalThis.XMLHttpRequest;
+
+	class FakeXhr {
+		listeners: Record<string, Listener> = {};
+		progress: Listener = () => {};
+		request: FakeRequest = { body: null, headers: {}, url: "" };
+		response = "";
+		upload = {
+			addEventListener: (type: string, listener: Listener) => {
+				if (type === "progress") {
+					this.progress = listener;
+				}
+			}
+		};
+
+		abort(): void {}
+
+		addEventListener(type: string, listener: Listener): void {
+			this.listeners[type] = listener;
+		}
+
+		open(method: string, url: string): void {
+			this.request.url = url;
+		}
+
+		send(body: FormData): void {
+			this.request.body = body;
+			requests.push(this.request);
+
+			setTimeout(() => {
+				this.progress({ lengthComputable: true, loaded: 1, total: 2 });
+				this.response = JSON.stringify(respond());
+				this.listeners.load({ target: this });
+			});
+		}
+
+		setRequestHeader(key: string, value: string): void {
+			this.request.headers[key] = value;
+		}
+	}
+
+	globalThis.XMLHttpRequest = FakeXhr as unknown as typeof XMLHttpRequest;
+
+	onTestFinished(() => {
+		globalThis.XMLHttpRequest = original;
+	});
+
+	return requests;
+}
 
 function makeFile(name = "test.jpg", type = "image/jpeg", size = 100): File {
 	return new File([new ArrayBuffer(size)], name, { type });
@@ -19,6 +99,45 @@ function makeFileList(...files: File[]): FileList {
 		...files.map((file, i) => ({ [i]: file }))
 	);
 	return list as FileList;
+}
+
+/**
+ * A file model, as views and fields pass it to `replace()`
+ */
+function model(): NonNullable<UploadState["replacing"]> {
+	return {
+		extension: "jpg",
+		filename: "a.jpg",
+		link: "pages/test/files/a.jpg",
+		mime: "image/jpeg"
+	} as unknown as NonNullable<UploadState["replacing"]>;
+}
+
+/**
+ * Captures the file input that `pick()` clicks
+ * instead of opening the system file picker
+ */
+function picker() {
+	const inputs: HTMLInputElement[] = [];
+	const click = vi
+		.spyOn(HTMLInputElement.prototype, "click")
+		.mockImplementation(function (this: HTMLInputElement) {
+			inputs.push(this);
+		});
+
+	onTestFinished(() => click.mockRestore());
+
+	return {
+		get input(): HTMLInputElement | undefined {
+			return inputs[0];
+		},
+		choose(...files: File[]): void {
+			Object.defineProperty(inputs[0], "files", {
+				value: makeFileList(...files)
+			});
+			inputs[0].dispatchEvent(new Event("change"));
+		}
+	};
 }
 
 describe("panel.upload", () => {
@@ -115,6 +234,24 @@ describe("panel.upload", () => {
 		});
 	});
 
+	describe("done()", () => {
+		it("should only close the dialog when no file has been uploaded", async () => {
+			const panel = Panel.create(app);
+			const upload = Upload(panel);
+			const onComplete = vi.fn();
+			const onDone = vi.fn();
+			upload.addEventListener("complete", onComplete);
+			upload.addEventListener("done", onDone);
+
+			await panel.dialog.open({ component: "k-upload-dialog" });
+			await upload.done();
+
+			expect(panel.dialog.isOpen).toStrictEqual(false);
+			expect(onComplete).not.toHaveBeenCalled();
+			expect(onDone).not.toHaveBeenCalled();
+		});
+	});
+
 	describe("findDuplicate()", () => {
 		it("should return -1 when the files list is empty", async () => {
 			const panel = Panel.create(app);
@@ -177,6 +314,148 @@ describe("panel.upload", () => {
 		});
 	});
 
+	describe("open()", () => {
+		it("should select the files and open the upload dialog", async () => {
+			const panel = Panel.create(app);
+			const upload = Upload(panel);
+
+			upload.open(makeFileList(makeFile("a.jpg")), {
+				preview: { ratio: "1/1" },
+				url: "/api/pages/test/files"
+			});
+			await flush();
+
+			expect(upload.files).toHaveLength(1);
+			expect(upload.url).toStrictEqual("/api/pages/test/files");
+			expect(panel.dialog.isOpen).toStrictEqual(true);
+			expect(panel.dialog.component).toStrictEqual("k-upload-dialog");
+			expect(panel.dialog.props).toStrictEqual({
+				original: null,
+				preview: { ratio: "1/1" }
+			});
+		});
+
+		it("should accept the options as first argument", async () => {
+			const panel = Panel.create(app);
+			const upload = Upload(panel);
+
+			upload.open({ multiple: false, url: "/api/pages/test/files" });
+
+			expect(upload.files).toHaveLength(0);
+			expect(upload.max).toStrictEqual(1);
+			expect(upload.url).toStrictEqual("/api/pages/test/files");
+			expect(panel.dialog.component).toStrictEqual("k-upload-dialog");
+		});
+
+		it("should open the replace dialog when replacing a file", async () => {
+			const panel = Panel.create(app);
+			const upload = Upload(panel);
+			const file = model();
+
+			upload.open({ replacing: file });
+
+			expect(panel.dialog.component).toStrictEqual("k-upload-replace-dialog");
+			expect(panel.dialog.props.original).toStrictEqual(file);
+		});
+
+		it("should emit an open event with the dialog", async () => {
+			const panel = Panel.create(app);
+			const upload = Upload(panel);
+			const onOpen = vi.fn();
+
+			upload.open({ on: { open: onOpen } });
+
+			expect(onOpen).toHaveBeenCalledWith(
+				expect.objectContaining({ component: "k-upload-dialog" })
+			);
+		});
+
+		it("should cancel the upload when the dialog is cancelled", async () => {
+			const panel = Panel.create(app);
+			const upload = Upload(panel);
+			const onCancel = vi.fn();
+
+			upload.open(makeFileList(makeFile("a.jpg")), {
+				on: { cancel: onCancel }
+			});
+			await flush();
+			await panel.dialog.cancel();
+			await flush();
+
+			expect(onCancel).toHaveBeenCalledOnce();
+			expect(upload.files).toHaveLength(0);
+			expect(panel.dialog.isOpen).toStrictEqual(false);
+		});
+
+		it("should upload the files when the dialog is submitted", async () => {
+			const panel = createPanel();
+			const upload = Upload(panel);
+			const loading: boolean[] = [];
+			const requests = fakeRequests(() => {
+				loading.push(panel.dialog.isLoading);
+				return { status: "ok", data: {} };
+			});
+
+			upload.open(makeFileList(makeFile("a.jpg")), {
+				url: "/api/pages/test/files"
+			});
+			await flush();
+			await panel.dialog.submit();
+
+			expect(requests).toHaveLength(1);
+			expect(loading).toStrictEqual([true]);
+			expect(panel.dialog.isLoading).toStrictEqual(false);
+			expect(panel.dialog.isOpen).toStrictEqual(false);
+		});
+	});
+
+	describe("pick()", () => {
+		it("should open the system file picker", async () => {
+			const panel = Panel.create(app);
+			const upload = Upload(panel);
+			const pick = picker();
+
+			upload.pick({ accept: "image/*" });
+
+			expect(pick.input?.type).toStrictEqual("file");
+			expect(pick.input?.accept).toStrictEqual("image/*");
+			expect(pick.input?.multiple).toStrictEqual(true);
+		});
+
+		it("should open the upload dialog with the chosen files", async () => {
+			const panel = Panel.create(app);
+			const upload = Upload(panel);
+			const pick = picker();
+
+			upload.pick({ url: "/api/pages/test/files" });
+			pick.choose(makeFile("a.jpg"));
+
+			expect(upload.files.map((file) => file.filename)).toStrictEqual([
+				"a.jpg"
+			]);
+			expect(panel.dialog.component).toStrictEqual("k-upload-dialog");
+		});
+
+		it("should upload the chosen files immediately", async () => {
+			const panel = createPanel();
+			const upload = Upload(panel);
+			const requests = fakeRequests();
+			const pick = picker();
+			const onDone = vi.fn();
+
+			upload.pick({
+				immediate: true,
+				on: { done: onDone },
+				url: "/api/pages/test/files"
+			});
+			pick.choose(makeFile("a.jpg"));
+
+			await vi.waitFor(() => expect(onDone).toHaveBeenCalledOnce());
+			expect(requests).toHaveLength(1);
+			expect(panel.dialog.component).toStrictEqual(null);
+		});
+	});
+
 	describe("remove()", () => {
 		it("should revoke the object URL of the removed file", () => {
 			const panel = Panel.create(app);
@@ -188,6 +467,30 @@ describe("panel.upload", () => {
 			upload.remove(id);
 
 			expect(URL.revokeObjectURL).toHaveBeenCalledWith(url);
+		});
+	});
+
+	describe("replace()", () => {
+		it("should pick a single file to replace the given one", async () => {
+			const panel = Panel.create(app);
+			const upload = Upload(panel);
+			const pick = picker();
+			const file = model();
+
+			panel.urls.api = "/api";
+			upload.replace(file, { preview: { ratio: "1/1" } });
+
+			expect(pick.input?.accept).toStrictEqual(".jpg,image/jpeg");
+			expect(pick.input?.multiple).toStrictEqual(false);
+
+			pick.choose(makeFile("b.jpg"));
+
+			expect(upload.url).toStrictEqual("/api/pages/test/files/a.jpg");
+			expect(panel.dialog.component).toStrictEqual("k-upload-replace-dialog");
+			expect(panel.dialog.props).toStrictEqual({
+				original: file,
+				preview: { ratio: "1/1" }
+			});
 		});
 	});
 
@@ -333,6 +636,76 @@ describe("panel.upload", () => {
 	});
 
 	describe("submit()", () => {
+		it("should throw without an upload URL", async () => {
+			const panel = Panel.create(app);
+			const upload = Upload(panel);
+
+			await expect(upload.submit()).rejects.toThrow(
+				"The upload URL is missing"
+			);
+		});
+
+		it("should skip files that have already been uploaded", async () => {
+			const panel = Panel.create(app);
+			const upload = Upload(panel);
+
+			upload.url = "/api/pages/test/files";
+			upload.select(makeFileList(makeFile("a.jpg"), makeFile("b.jpg")));
+			upload.files[0].completed = true;
+			upload.upload = vi.fn(async (file) => {
+				file.completed = true;
+			});
+
+			await upload.submit();
+
+			expect(upload.upload).toHaveBeenCalledOnce();
+			expect(vi.mocked(upload.upload).mock.calls[0][0].filename).toStrictEqual(
+				"b.jpg"
+			);
+		});
+
+		it("should not upload files with the same name", async () => {
+			const panel = Panel.create(app);
+			const upload = Upload(panel);
+			const onDone = vi.fn();
+
+			upload.url = "/api/pages/test/files";
+			upload.addEventListener("done", onDone);
+			upload.select(
+				makeFileList(
+					makeFile("a.jpg", "image/jpeg", 100),
+					makeFile("a.jpg", "image/jpeg", 200)
+				)
+			);
+			upload.upload = vi.fn();
+
+			await upload.submit();
+
+			expect(upload.upload).not.toHaveBeenCalled();
+			expect(upload.files.map((file) => file.error)).toStrictEqual([
+				"error.file.name.unique",
+				"error.file.name.unique"
+			]);
+			expect(onDone).not.toHaveBeenCalled();
+		});
+
+		it("should increase the sort number for each file", async () => {
+			const panel = Panel.create(app);
+			const upload = Upload(panel);
+
+			upload.set({ attributes: { sort: 3 }, url: "/api/pages/test/files" });
+			upload.select(makeFileList(makeFile("a.jpg"), makeFile("b.jpg")));
+			upload.upload = vi.fn(async (file) => {
+				file.completed = true;
+			});
+
+			await upload.submit();
+
+			expect(
+				vi.mocked(upload.upload).mock.calls.map(([, attributes]) => attributes)
+			).toStrictEqual([{ sort: 3 }, { sort: 4 }]);
+		});
+
 		it("should limit the number of parallel uploads", async () => {
 			const panel = Panel.create(app);
 			panel.set({ config: { uploads: 2 } });
@@ -360,6 +733,57 @@ describe("panel.upload", () => {
 
 			expect(upload.upload).toHaveBeenCalledTimes(8);
 			expect(max).toStrictEqual(2);
+		});
+	});
+
+	describe("upload()", () => {
+		it("should upload the file with its name and attributes", async () => {
+			const panel = createPanel();
+			const upload = Upload(panel);
+			const requests = fakeRequests(() => ({
+				status: "ok",
+				data: { id: "a" }
+			}));
+			const onUpload = vi.fn();
+			const file = upload.file(makeFile("a.jpg"));
+
+			panel.set({ system: { csrf: "token" } });
+			panel.events.on("file.upload", onUpload);
+			upload.abort = new AbortController();
+			upload.url = "/api/pages/test/files";
+			file.name = "renamed";
+
+			await upload.upload(file, { sort: 2 });
+
+			expect(requests).toHaveLength(1);
+			expect(requests[0].url).toStrictEqual("/api/pages/test/files");
+			expect(requests[0].headers).toStrictEqual({ "x-csrf": "token" });
+			expect((requests[0].body?.get("file") as File).name).toStrictEqual(
+				"renamed.jpg"
+			);
+			expect(requests[0].body?.get("sort")).toStrictEqual("2");
+			expect(file.completed).toStrictEqual(true);
+			expect(file.model).toStrictEqual({ id: "a" });
+			expect(file.progress).toStrictEqual(100);
+			expect(onUpload).toHaveBeenCalledWith(file);
+		});
+
+		it("should reset the file when the upload fails", async () => {
+			const panel = createPanel();
+			const upload = Upload(panel);
+			const onError = vi.fn();
+			const file = upload.file(makeFile("a.jpg"));
+
+			fakeRequests(() => ({ status: "error", message: "Not allowed" }));
+			panel.events.on("file.upload.error", onError);
+			upload.abort = new AbortController();
+			upload.url = "/api/pages/test/files";
+
+			await upload.upload(file, {});
+
+			expect(file.completed).toStrictEqual(false);
+			expect(file.progress).toStrictEqual(0);
+			expect(onError).toHaveBeenCalledWith(file);
 		});
 	});
 });
