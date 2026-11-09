@@ -1,6 +1,5 @@
 import { describe, expect, it } from "@test/unit";
 import { mount as vueMount } from "@vue/test-utils";
-import field from "@/helpers/field";
 import CheckboxesField from "./CheckboxesField.vue";
 
 const Input = {
@@ -15,9 +14,7 @@ function mount(props = {}, attrs = {}) {
 		props: { options, ...props },
 		attrs,
 		global: {
-			mocks: { $helper: { field }, $t: (key: string) => key },
 			stubs: {
-				"k-field": { template: "<div><slot /></div>" },
 				"k-checkboxes-input": Input
 			}
 		}
@@ -29,7 +26,7 @@ describe("k-checkboxes-field", () => {
 	describe("element", () => {
 		const component = (attrs = {}) => mount({}, attrs);
 
-		it.rendersAs(component, "DIV", "k-checkboxes-field");
+		it.rendersAs(component, "K-FIELD", "k-checkboxes-field");
 		it.acceptsClass(component);
 		it.acceptsStyle(component);
 		it.inheritsNoAttrs(component);

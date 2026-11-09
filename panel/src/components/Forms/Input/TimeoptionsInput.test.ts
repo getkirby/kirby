@@ -1,17 +1,10 @@
 import { describe, expect, it } from "@test/unit";
 import { mount as vueMount } from "@vue/test-utils";
-import dayjs from "@/libraries/dayjs";
 import TimeoptionsInput from "./TimeoptionsInput.vue";
 
 function mount(props: Record<string, unknown> = {}) {
 	return vueMount(TimeoptionsInput, {
-		props: props as never,
-		global: {
-			mocks: {
-				$library: { dayjs },
-				$t: (key: string) => key
-			}
-		}
+		props: props as never
 	});
 }
 

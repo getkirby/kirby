@@ -1,12 +1,11 @@
 import { describe, it, expect } from "@test/unit";
 import { mount as vueMount } from "@vue/test-utils";
-import { hasEmoji } from "@/helpers/string.js";
 import Icon from "./Icon.vue";
 
 const sprite = "/panel/assets/1234/icons.svg";
 
 /**
- * Custom mount which injects $helper and $panel stubs
+ * Custom mount which injects a $panel stub
  */
 function mount(props = {}, attrs = {}, panel: Record<string, unknown> = {}) {
 	return vueMount(Icon, {
@@ -14,10 +13,6 @@ function mount(props = {}, attrs = {}, panel: Record<string, unknown> = {}) {
 		attrs,
 		global: {
 			mocks: {
-				$helper: {
-					color: (c: string) => c ?? null,
-					string: { hasEmoji }
-				},
 				$panel: {
 					plugins: { icons: {} },
 					urls: { icons: sprite },

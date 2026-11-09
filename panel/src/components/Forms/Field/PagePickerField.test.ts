@@ -16,8 +16,7 @@ function factory(value = ["a", "b"]) {
 		shallow: true,
 		global: {
 			mocks: {
-				$panel: panel,
-				$t: (key: string) => key
+				$panel: panel
 			}
 		}
 	});

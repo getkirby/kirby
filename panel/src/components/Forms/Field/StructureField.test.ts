@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "@test/unit";
 import { mount as vueMount } from "@vue/test-utils";
 import { nextTick } from "vue";
+import { helper } from "@/helpers";
 import StructureField from "./StructureField.vue";
 
 function mount(props = {}) {
@@ -16,13 +17,7 @@ function mount(props = {}) {
 		global: {
 			mocks: {
 				$events: { emit: vi.fn(), on: vi.fn(), off: vi.fn() },
-				$helper: {
-					object: {
-						length: (object: object) => Object.keys(object ?? {}).length
-					},
-					uuid: () => "uuid"
-				},
-				$t: (key: string) => key
+				$helper: { ...helper, uuid: () => "uuid" }
 			}
 		}
 	});
