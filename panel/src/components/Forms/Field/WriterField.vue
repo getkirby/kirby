@@ -21,7 +21,7 @@
 <script>
 import { props as Field } from "../Field.vue";
 import { props as Input } from "../Input.vue";
-import { props as WriterInput } from "@/components/Forms/Input/WriterInput.props";
+import { props as WriterInput } from "@/components/Forms/Input/WriterInput.vue";
 import counter from "@/mixins/forms/counter.js";
 
 /**
