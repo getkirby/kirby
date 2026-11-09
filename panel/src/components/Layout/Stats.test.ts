@@ -11,7 +11,7 @@ function mount(props = {}, attrs = {}) {
 	return vueMount(Stats, {
 		props: { reports, ...props },
 		attrs
-	}).find(".k-stats");
+	});
 }
 
 describe("k-stats", () => {
@@ -25,16 +25,16 @@ describe("k-stats", () => {
 	// props
 	describe("reports prop", () => {
 		it("renders a k-stat for each report", () => {
-			const wrapper = vueMount(Stats, {
-				props: { reports }
-			});
-			expect(wrapper.findAll("k-stat")).toHaveLength(2);
+			const wrapper = mount();
+			const stats = wrapper.findAll("k-stat").map((stat) => ({
+				label: stat.attributes("label"),
+				value: stat.attributes("value")
+			}));
+			expect(stats).toStrictEqual(reports);
 		});
 
 		it("renders k-empty when no reports passed", () => {
-			const wrapper = vueMount(Stats, {
-				props: { reports: [] }
-			});
+			const wrapper = mount({ reports: [] });
 			expect(wrapper.find("k-empty").exists()).toBe(true);
 			expect(wrapper.find(".k-stats").exists()).toBe(false);
 		});
