@@ -1,8 +1,25 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import {
+	afterEach,
+	beforeEach,
+	describe,
+	expect,
+	it,
+	onTestFinished,
+	vi
+} from "vitest";
 import { toRaw, watch } from "vue";
 import { failed } from "@test/unit/request";
 import AuthError from "@/errors/AuthError";
 import Panel from "./panel";
+
+/**
+ * Creates a JSON response, as the backend sends it
+ */
+function json(data: unknown): Response {
+	return new Response(JSON.stringify(data), {
+		headers: { "Content-Type": "application/json" }
+	});
+}
 
 describe("panel", () => {
 	beforeEach(() => {
@@ -154,6 +171,18 @@ describe("panel", () => {
 		});
 	});
 
+	describe("deprecated", () => {
+		it("should warn about deprecations", async () => {
+			const panel = Panel.create(app);
+			const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+			onTestFinished(() => warn.mockRestore());
+
+			panel.deprecated("Use something else");
+
+			expect(warn).toHaveBeenCalledWith("Deprecated: Use something else");
+		});
+	});
+
 	describe("direction", () => {
 		it("should return the correct direction", async () => {
 			const panel = Panel.create(app);
@@ -189,6 +218,122 @@ describe("panel", () => {
 
 			expect(window.location.href).toStrictEqual("https://getkirby.com/logout");
 		});
+
+		it("should ignore aborted requests", async () => {
+			const panel = Panel.create(app);
+
+			panel.error(new DOMException("The request was aborted", "AbortError"));
+
+			expect(panel.notification.isOpen).toStrictEqual(false);
+			expect(panel.dialog.component).toStrictEqual(null);
+		});
+
+		it("should log errors in debug mode", async () => {
+			const panel = Panel.create(app);
+			const log = vi.spyOn(console, "error").mockImplementation(() => {});
+			const error = new Error("Something went wrong");
+			onTestFinished(() => log.mockRestore());
+
+			panel.config.debug = true;
+			panel.error(error, false);
+
+			expect(log).toHaveBeenCalledWith(error);
+			expect(panel.notification.isOpen).toStrictEqual(false);
+		});
+	});
+
+	describe("get", () => {
+		it("should return the response data", async () => {
+			const panel = Panel.create(app);
+			vi.stubGlobal(
+				"fetch",
+				vi.fn(async () => json({ title: "Test" }))
+			);
+
+			expect(await panel.get("/some/view")).toStrictEqual({ title: "Test" });
+		});
+
+		it("should return an empty object for an empty response", async () => {
+			const panel = Panel.create(app);
+			vi.stubGlobal(
+				"fetch",
+				vi.fn(async () => json(null))
+			);
+
+			expect(await panel.get("/some/view")).toStrictEqual({});
+		});
+	});
+
+	describe("hasSearch", () => {
+		it("should detect search types", async () => {
+			const panel = Panel.create(app);
+
+			expect(panel.hasSearch).toStrictEqual(false);
+
+			panel.set({
+				searches: { pages: { icon: "page", id: "pages", label: "Pages" } }
+			});
+
+			expect(panel.hasSearch).toStrictEqual(true);
+		});
+	});
+
+	describe("open", () => {
+		it("should set the state from an object", async () => {
+			const panel = Panel.create(app);
+
+			const state = await panel.open({ license: "active" });
+
+			expect(panel.license).toStrictEqual("active");
+			expect(state?.license).toStrictEqual("active");
+		});
+
+		it("should keep the listeners of a modal opened by URL", async () => {
+			const panel = Panel.create(app);
+			const submit = vi.fn();
+
+			vi.spyOn(panel, "get").mockResolvedValue({
+				dialog: { component: "k-text-dialog" }
+			});
+
+			await panel.open("/dialogs/test", { on: { submit } });
+			await panel.dialog.submit({ title: "Test" });
+
+			expect(submit).toHaveBeenCalledWith({ title: "Test" }, {});
+		});
+	});
+
+	describe("overlays", () => {
+		it("should list the open modals", async () => {
+			const panel = Panel.create(app);
+
+			expect(panel.overlays()).toStrictEqual([]);
+
+			await panel.drawer.open({ component: "k-page-drawer" });
+			await panel.dialog.open({ component: "k-text-dialog" });
+
+			expect(panel.overlays()).toStrictEqual(["drawer", "dialog"]);
+		});
+	});
+
+	describe("post", () => {
+		it("should send the data and return the response data", async () => {
+			const panel = Panel.create(app);
+			const fetch = vi.fn<(request: Request) => Promise<Response>>(async () =>
+				json({ saved: true })
+			);
+
+			vi.stubGlobal("fetch", fetch);
+
+			expect(await panel.post("/some/view", { title: "Test" })).toStrictEqual({
+				saved: true
+			});
+
+			const [request] = fetch.mock.calls[0]!;
+
+			expect(request.method).toStrictEqual("POST");
+			expect(await request.json()).toStrictEqual({ title: "Test" });
+		});
 	});
 
 	describe("request", () => {
@@ -215,6 +360,94 @@ describe("panel", () => {
 		});
 	});
 
+	describe("search", () => {
+		it("should open the search dialog for the view's type", async () => {
+			const panel = Panel.create(app);
+
+			await panel.search();
+
+			expect(panel.dialog.component).toStrictEqual("k-search-dialog");
+			expect(panel.dialog.props).toStrictEqual({ type: "pages" });
+		});
+
+		it("should open the search dialog for the given type", async () => {
+			const panel = Panel.create(app);
+
+			await panel.search("users");
+
+			expect(panel.dialog.props).toStrictEqual({ type: "users" });
+		});
+
+		it("should query the given type", async () => {
+			const panel = Panel.create(app);
+			const search = { results: [{ id: "a" }], pagination: {} };
+			const get = vi.spyOn(panel, "get").mockResolvedValue({ search });
+
+			const result = await panel.search("users", "Test", { limit: 5 });
+
+			expect(get).toHaveBeenCalledWith("/search/users", {
+				query: { query: "Test", limit: 5 },
+				signal: expect.any(AbortSignal)
+			});
+			expect(result).toStrictEqual(search);
+		});
+	});
+
+	describe("set", () => {
+		it("should open modals", async () => {
+			const panel = Panel.create(app);
+
+			panel.set({
+				dialog: { ...panel.dialog.defaults(), component: "k-text-dialog" },
+				drawer: { ...panel.drawer.defaults(), component: "k-page-drawer" }
+			});
+
+			expect(panel.dialog.component).toStrictEqual("k-text-dialog");
+			expect(panel.drawer.component).toStrictEqual("k-page-drawer");
+		});
+
+		it("should close modals", async () => {
+			const panel = Panel.create(app);
+
+			await panel.dialog.open({ component: "k-text-dialog" });
+			await panel.drawer.open({ component: "k-page-drawer" });
+
+			panel.set({ dialog: null, drawer: false });
+
+			expect(panel.dialog.isOpen).toStrictEqual(false);
+			expect(panel.drawer.isOpen).toStrictEqual(false);
+		});
+
+		it("should follow the redirect of a modal", async () => {
+			const panel = Panel.create(app);
+			const open = vi.spyOn(panel, "open").mockResolvedValue(undefined);
+
+			panel.set({
+				dialog: { ...panel.dialog.defaults(), redirect: "/pages/test" }
+			});
+
+			expect(open).toHaveBeenCalledWith("/pages/test");
+		});
+
+		it("should open the view", async () => {
+			const panel = Panel.create(app);
+			const push = vi
+				.spyOn(window.history, "pushState")
+				.mockImplementation(() => {});
+			const scroll = vi.spyOn(window, "scrollTo").mockImplementation(() => {});
+
+			onTestFinished(() => {
+				push.mockRestore();
+				scroll.mockRestore();
+			});
+
+			panel.set({ view: { component: "k-page-view", title: "Test" } });
+
+			expect(panel.view.component).toStrictEqual("k-page-view");
+			expect(panel.title).toStrictEqual("Test");
+		});
+	});
+
 	describe("title", () => {
 		it("should set the correct title without system title", async () => {
 			const panel = Panel.create(app);
@@ -231,6 +464,17 @@ describe("panel", () => {
 			panel.title = "Page";
 
 			expect(panel.title).toStrictEqual("Page | Kirby");
+		});
+
+		it("should clear the title", async () => {
+			const panel = Panel.create(app);
+			const title = vi.spyOn(document, "title", "set");
+			onTestFinished(() => title.mockRestore());
+
+			panel.title = null;
+
+			// browsers would turn null into "null"
+			expect(title).toHaveBeenCalledWith("");
 		});
 	});
 
