@@ -108,6 +108,18 @@ class UserActionsTest extends TestCase
 		$this->assertSame('Edith Thor', $user->name()->value());
 	}
 
+	public function testChangeNameSanitized()
+	{
+		$user = $this->app->user('editor@domain.com');
+		$user = $user->changeName('<strong>Edith</strong> Thor');
+
+		$this->assertSame('Edith Thor', $user->name()->value());
+
+		// the stored credentials must be clean as well
+		$credentials = F::load($user->root() . '/index.php');
+		$this->assertSame('Edith Thor', $credentials['name']);
+	}
+
 	public function testChangePassword()
 	{
 		$user = $this->app->user('editor@domain.com');

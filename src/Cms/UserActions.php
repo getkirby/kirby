@@ -80,7 +80,7 @@ trait UserActions
 	#[BlockCollectionAccess]
 	public function changeName(string $name): static
 	{
-		$name = trim($name);
+		$name = trim(strip_tags($name));
 
 		return $this->commit('changeName', ['user' => $this, 'name' => $name], function ($user, $name) {
 			$user = $user->clone([
