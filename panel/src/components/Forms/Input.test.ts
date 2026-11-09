@@ -15,7 +15,6 @@ function mount(attrs: Record<string, unknown> = {}) {
 				"k-string-input": StringInput,
 				"k-text-input": TextInput
 			},
-			directives: { direction: {} },
 			mixins: [preserveListeners]
 		}
 	});

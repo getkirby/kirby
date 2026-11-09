@@ -109,12 +109,16 @@ class PageCreateDialogController extends ModelCreateDialogController
 		// title field
 		if ($title === null || is_array($title) === true) {
 			$label = $title['label'] ?? 'title';
-			$fields['title'] = Field::title([
-				...$title ?? [],
-				'label'     => $this->i18n($label),
-				'required'  => true,
-				'preselect' => true
-			]);
+			// new pages are created in the default language
+			$fields['title'] = Field::title(
+				props: [
+					...$title ?? [],
+					'label'     => $this->i18n($label),
+					'required'  => true,
+					'preselect' => true
+				],
+				language: 'default'
+			);
 		}
 
 		// slug field

@@ -72,7 +72,7 @@ class EntriesField extends InputField implements ProvidesNestedForm
 	 */
 	public function fieldProps(): array
 	{
-		return $this->form()->fields()->first()->toArray();
+		return A::first($this->form()->fields()->toProps());
 	}
 
 	#[BlockCollectionAccess]
