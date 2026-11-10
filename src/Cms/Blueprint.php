@@ -394,7 +394,7 @@ class Blueprint
 		// the name can contain user input (e.g. the file template),
 		// so it must not leave the folder of the blueprint type,
 		// e.g. `files/../pages/default`
-		if (Str::contains(Str::replace($name, '\\', '/'), '../') === true) {
+		if (str_contains(str_replace('\\', '/', $name), '../') === true) {
 			throw new NotFoundException(
 				key: 'blueprint.notFound',
 				data: ['name' => $name]
