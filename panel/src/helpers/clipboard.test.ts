@@ -26,8 +26,10 @@ class MockClipboardEvent extends Event {
 	}
 }
 
-vi.stubGlobal("DataTransfer", MockDataTransfer);
-vi.stubGlobal("ClipboardEvent", MockClipboardEvent);
+beforeEach(() => {
+	vi.stubGlobal("DataTransfer", MockDataTransfer);
+	vi.stubGlobal("ClipboardEvent", MockClipboardEvent);
+});
 
 describe("clipboard.read()", () => {
 	it("should return null for undefined", () => {

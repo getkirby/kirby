@@ -183,6 +183,8 @@ function createTest() {
 		isolate: false,
 		pool: "threads",
 		setupFiles: ["tests/unit/setup.ts"],
+		// restore stubbed globals before each test, as files share one scope
+		unstubGlobals: true,
 		coverage: {
 			provider: "v8",
 			include: ["src/**/*.{js,ts,vue}"],

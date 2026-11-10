@@ -1,11 +1,7 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import Observers from "./observers";
 
 describe("panel.observers", () => {
-	afterEach(() => {
-		vi.unstubAllGlobals();
-	});
-
 	it("should expose a resize observer", () => {
 		const observers = Observers();
 		expect(observers.resize).toBeInstanceOf(ResizeObserver);

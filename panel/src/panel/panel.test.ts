@@ -10,7 +10,6 @@ describe("panel", () => {
 	});
 
 	afterEach(() => {
-		vi.unstubAllGlobals();
 		document.title = "";
 	});
 
