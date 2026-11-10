@@ -97,7 +97,17 @@ export default {
 
 			// inline buttons (all marks and inline nodes)
 			for (const [type, entry] of Object.entries(this.inlineEntries)) {
+				// skip leading and repeated dividers, e.g. around missing marks
+				if (entry === "|" && (buttons.length === 0 || buttons.at(-1) === "|")) {
+					continue;
+				}
+
 				buttons.push(this.inlineButton(entry, type));
+			}
+
+			// drop a trailing divider
+			if (buttons.at(-1) === "|") {
+				buttons.pop();
 			}
 
 			return buttons;

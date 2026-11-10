@@ -363,6 +363,29 @@ describe("k-writer-toolbar", () => {
 	});
 
 	describe("buttons computed", () => {
+		it("drops dividers next to missing marks", () => {
+			const editor = createEditor("", [new Bold(), new Italic()]);
+			const wrapper = mount({ editor });
+			expect(icons(buttons(wrapper))).toEqual(["bold", "italic"]);
+		});
+
+		it("drops a leading divider", () => {
+			const editor = createEditor("", [new Link(), new Clear()]);
+			const wrapper = mount({ editor });
+			expect(icons(buttons(wrapper))).toEqual(["url", "|", "clear"]);
+		});
+
+		it("drops the divider after inline nodes without marks", () => {
+			const editor = createEditor("", [new Mention()]);
+			const wrapper = mount({ editor, marks: false });
+			expect(icons(buttons(wrapper))).toEqual(["user"]);
+		});
+
+		it("drops all dividers when none of the requested marks exist", () => {
+			const wrapper = mount({ marks: ["underline", "|", "strike"] });
+			expect(icons(buttons(wrapper))).toEqual(["paragraph"]);
+		});
+
 		it("separates the dropdown from the inline buttons", () => {
 			const wrapper = mount();
 			expect(icons(buttons(wrapper))).toEqual([
