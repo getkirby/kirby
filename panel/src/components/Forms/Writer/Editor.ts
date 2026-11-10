@@ -426,7 +426,7 @@ export default class Editor extends Emitter<EditorEvents> {
 				slice: Slice,
 				moved: boolean
 			) => {
-				this.emit("drop", view, event, slice, moved);
+				this.emit("drop", { event, moved, slice, view });
 			},
 			markViews: this.createMarkViews(),
 			nodeViews: this.createNodeViews(),
