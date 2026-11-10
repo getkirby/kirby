@@ -20,7 +20,7 @@ if (
 		KIRBY_PHP_VERSION_CHECK !== false
 	) && (
 		version_compare(PHP_VERSION, '8.3.0', '>=') === false ||
-		version_compare(PHP_VERSION, '8.6.0', '<')  === false
+		version_compare(PHP_VERSION, '8.7.0', '<')  === false
 	)
 ) {
 	http_response_code(503);
