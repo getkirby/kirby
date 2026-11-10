@@ -22,13 +22,15 @@ Prism.manual = true;
  */
 export default {
 	mounted() {
-		Prism.highlightAll(this.$el);
+		Prism.highlightAllUnder(this.$el);
 	},
 	updated() {
-		Prism.highlightAll(this.$el);
+		Prism.highlightAllUnder(this.$el);
 	},
 	render() {
-		return this.$slots.default({});
+		// render the slot element itself instead of a fragment,
+		// so that `$el` is the element to highlight
+		return this.$slots.default({})[0];
 	}
 };
 </script>

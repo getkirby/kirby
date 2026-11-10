@@ -51,13 +51,11 @@ export default function natsort(options: SortOptions = {}) {
 	// datetime
 	const dre =
 		/(^([\w ]+,?[\w ]+)?[\w ]+,?[\w ]+\d+:\d+(:\d+)?[\w ]?|^\d{1,4}[\/\-]\d{1,4}[\/\-]\d{1,4}|^\w+, \w+ \d+, \d{4})/; // tslint:disable-line
-	const toLowerCase =
-		String.prototype.toLocaleLowerCase || String.prototype.toLowerCase;
 
 	const GREATER = options.desc ? -1 : 1;
 	const SMALLER = -GREATER;
 	const normalize = options.insensitive
-		? (s: string | number) => toLowerCase.call(`${s}`).replace(tre, "")
+		? (s: string | number) => `${s}`.toLocaleLowerCase().replace(tre, "")
 		: (s: string | number) => `${s}`.replace(tre, "");
 
 	function tokenize(s: string): string[] {

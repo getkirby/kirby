@@ -8,6 +8,7 @@
 		<k-input
 			v-bind="$props"
 			ref="input"
+			:options="$helper.field.options(options, value)"
 			type="select"
 			@input="$emit('input', $event)"
 		/>

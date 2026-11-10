@@ -75,19 +75,23 @@ class LoginViewController extends ViewController
 			return [];
 		}
 
-		$mode        = $this->status->mode();
-		$user        = $this->user();
-		$challenges  = $this->kirby->auth()->challenges();
-		$available   = $challenges->available($user, $mode);
-		$currentType = $this->status->challenge();
+		$mode       = $this->status->mode();
+		$user       = $this->user();
+		$challenges = $this->kirby->auth()->challenges();
+		$available  = A::map(
+			$challenges->available($user, $mode),
+			fn (string $type) => $challenges->get($type, $user, $mode)
+		);
+
+		$active = $this->status->challenge();
 
 		return A::map(
 			$available,
-			fn (string $type) => [
-				'type'   => $type,
-				'label'  => static::i18n('login.challenge.' . $type . '.label'),
-				'icon'   => $challenges->class($type)::icon(),
-				'active' => $type === $currentType,
+			fn (Challenge $challenge) => [
+				'type'   => $challenge->type(),
+				'label'  => $challenge->label(),
+				'icon'   => $challenge->icon(),
+				'active' => $challenge->type() === $active,
 			]
 		);
 	}
@@ -154,15 +158,15 @@ class LoginViewController extends ViewController
 			fn ($type) => $methods->get($type),
 		);
 
-		$active = $this->current instanceof Method ? $this->current::type() : null;
+		$active = $this->current instanceof Method ? $this->current->type() : null;
 
 		return A::map(
 			$enabled,
 			fn (Method $method) => [
-				'type'   => $method::type(),
-				'label'  => static::i18n('login.method.' . $method::type() . '.label'),
-				'icon'   => $method::icon(),
-				'active' => $method::type() === $active,
+				'type'   => $method->type(),
+				'label'  => $method->label(),
+				'icon'   => $method->icon(),
+				'active' => $method->type() === $active,
 			]
 		);
 	}

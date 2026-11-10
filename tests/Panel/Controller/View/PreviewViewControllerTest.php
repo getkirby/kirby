@@ -6,6 +6,7 @@ use Kirby\Cms\Page;
 use Kirby\Content\VersionId;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
+use Kirby\Panel\Redirect;
 use Kirby\Panel\TestCase;
 use Kirby\Panel\Ui\View;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -151,6 +152,81 @@ class PreviewViewControllerTest extends TestCase
 		$this->assertSame('/panel/pages/notes/preview/latest?_query=foo%3Dbar&_params=page%3A2', $redirect);
 	}
 
+	public function testRedirectInSubfolder(): void
+	{
+		$model     = $this->app->page('test');
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					['slug' => 'notes']
+				]
+			],
+			'request' => [
+				'query' => [
+					'view' => 'https://getkirby.com/demo/notes?_preview=true'
+				],
+			],
+			'urls' => [
+				'index' => 'https://getkirby.com/demo'
+			]
+		]);
+
+		$controller = new PreviewViewController($model, 'latest');
+		$redirect   = $controller->redirect();
+		$this->assertSame('https://getkirby.com/demo/panel/pages/notes/preview/latest', $redirect);
+	}
+
+	public function testRedirectInSubfolderToSite(): void
+	{
+		$model     = $this->app->page('test');
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					['slug' => 'home']
+				]
+			],
+			'request' => [
+				'query' => [
+					'view' => 'https://getkirby.com/demo'
+				],
+			],
+			'urls' => [
+				'index' => 'https://getkirby.com/demo'
+			]
+		]);
+
+		$controller = new PreviewViewController($model, 'latest');
+		$redirect   = $controller->redirect();
+		$this->assertSame('https://getkirby.com/demo/panel/pages/home/preview/latest', $redirect);
+	}
+
+	public function testRedirectOutsideSubfolder(): void
+	{
+		$model     = $this->app->page('test');
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					['slug' => 'notes']
+				]
+			],
+			'request' => [
+				'query' => [
+					'view' => 'https://getkirby.com/notes'
+				],
+			],
+			'urls' => [
+				'index' => 'https://getkirby.com/demo'
+			]
+		]);
+
+		$controller = new PreviewViewController($model, 'latest');
+
+		$this->expectException(Redirect::class);
+		$this->expectExceptionMessage('https://getkirby.com/notes');
+
+		$controller->redirect();
+	}
+
 	public function testSrc(): void
 	{
 		$model      = $this->app->page('test');
@@ -182,6 +258,57 @@ class PreviewViewControllerTest extends TestCase
 		$src        = $controller->src();
 
 		$this->assertSame('/notes/page:2?_token=' . $token . '&_version=changes&foo=bar&_preview=true', $src['changes']);
+	}
+
+	public function testSrcBrowserInSubfolder(): void
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'browser' => 'https://getkirby.com/demo/notes?_preview=true'
+				],
+			],
+			'urls' => [
+				'index' => 'https://getkirby.com/demo'
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+		$this->app->site()->createChild([
+			'slug' => 'notes'
+		]);
+
+		$token      = $this->app->page('notes')->version('changes')->previewToken();
+		$controller = new PreviewViewController($this->app->page('test'), 'changes');
+		$src        = $controller->src();
+
+		$this->assertSame('https://getkirby.com/demo/notes?_token=' . $token . '&_version=changes&_preview=true', $src['changes']);
+	}
+
+	public function testSrcBrowserOutsideSubfolder(): void
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'browser' => 'https://getkirby.com/notes'
+				],
+			],
+			'urls' => [
+				'index' => 'https://getkirby.com/demo'
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+		$this->app->site()->createChild([
+			'slug' => 'notes'
+		]);
+
+		$controller = new PreviewViewController($this->app->page('test'), 'changes');
+
+		$this->expectException(Redirect::class);
+		$this->expectExceptionMessage('https://getkirby.com/notes');
+
+		$controller->src();
 	}
 
 	public function testSrcRedirectParamsQuery(): void

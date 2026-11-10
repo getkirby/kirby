@@ -14,8 +14,7 @@ use Throwable;
  * `Collection` class and refers to a
  * collection of files, i.e. images, documents
  * etc. Files can be filtered, searched,
- * converted, modified or evaluated with the
- * following methods:
+ * converted, modified or evaluated.
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
@@ -33,7 +32,7 @@ class Files extends Collection
 	public static array $methods = [];
 
 	/**
-	 * @var Page|Site|User
+	 * @var Page|Site|User|null
 	 */
 	protected object|null $parent = null;
 
@@ -42,7 +41,7 @@ class Files extends Collection
 	 * an entire second collection to the
 	 * current collection
 	 *
-	 * @param Files<TValue>|TValue|string $object
+	 * @param Files<TValue>|TValue|string|null $object
 	 * @return $this
 	 * @throws InvalidArgumentException When no `File` or `Files` object or an ID of an existing file is passed
 	 */
@@ -78,14 +77,14 @@ class Files extends Collection
 	 * Sort all given files by the
 	 * order in the array
 	 *
-	 * @param $files List of file ids
+	 * @param list<string> $files List of file ids
 	 * @param $offset Sorting offset
 	 * @return $this
 	 */
 	public function changeSort(array $files, int $offset = 0): static
 	{
-		foreach ($files as $filename) {
-			if ($file = $this->get($filename)) {
+		foreach ($files as $id) {
+			if ($file = $this->get($id)) {
 				$offset++;
 				$file->changeSort($offset);
 			}
@@ -136,6 +135,8 @@ class Files extends Collection
 
 	/**
 	 * Creates a files collection from an array of props
+	 *
+	 * @param array<array<string, mixed>> $files
 	 */
 	public static function factory(
 		array $files,
@@ -207,6 +208,7 @@ class Files extends Collection
 	/**
 	 * Filter all files by the given template
 	 *
+	 * @param string|list<string>|null $template
 	 * @return $this|static
 	 */
 	public function template(string|array|null $template): static

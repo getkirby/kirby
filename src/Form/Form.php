@@ -23,9 +23,6 @@ class Form
 	 */
 	protected Fields $fields;
 
-	/**
-	 * Form constructor
-	 */
 	public function __construct(
 		array $fields = [],
 		ModelWithContent|null $model = null,
@@ -42,6 +39,8 @@ class Form
 	 * Returns an array with the default value of each field
 	 *
 	 * @since 5.0.0
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function defaults(): array
 	{
@@ -50,6 +49,8 @@ class Form
 
 	/**
 	 * An array of all found errors
+	 *
+	 * @return array<string, array{label: string, message: array<string, mixed>}>
 	 */
 	public function errors(): array
 	{
@@ -146,7 +147,7 @@ class Form
 	 *
 	 * @since 5.0.0
 	 *
-	 * @return ($values is null ? array : static)
+	 * @return ($values is null ? array<string, mixed> : static)
 	 */
 	public function passthrough(
 		array|null $values = null
@@ -175,11 +176,11 @@ class Form
 
 	/**
 	 * Sets the value for each field with a matching key in the input array
-	 * but only if the field is not disabled
+	 * but only if the field can be submitted (e.g. is translatable)
 	 *
 	 * @since 5.0.0
 	 * @param $passthrough If true, values for undefined fields will be submitted
-	 * @param $force If true, values for fields that cannot be submitted (e.g. disabled or untranslatable fields) will be submitted
+	 * @param $force If true, values for fields that cannot be submitted (e.g. untranslatable fields) will be submitted
 	 */
 	public function submit(
 		array $input,
@@ -196,6 +197,8 @@ class Form
 
 	/**
 	 * Converts the form to a plain array
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function toArray(): array
 	{
@@ -213,6 +216,8 @@ class Form
 	 * (e.g. used as data for Panel Vue components)
 	 *
 	 * @since 5.0.0
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function toFormValues(): array
 	{
@@ -224,6 +229,8 @@ class Form
 	 * for the frontend
 	 *
 	 * @since 5.0.0
+	 *
+	 * @return array<string, array<string, mixed>>
 	 */
 	public function toProps(): array
 	{
@@ -235,6 +242,8 @@ class Form
 	 * (e.g. used for saving to content storage)
 	 *
 	 * @since 5.0.0
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function toStoredValues(): array
 	{

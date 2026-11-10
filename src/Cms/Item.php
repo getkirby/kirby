@@ -8,7 +8,7 @@ use Kirby\Toolkit\Str;
 /**
  * The Item class is the foundation
  * for every object in context with
- * other objects. I.e.
+ * other objects, e.g.
  *
  * - a Block in a collection of Blocks
  * - a Layout in a collection of Layouts
@@ -29,6 +29,10 @@ class Item
 
 	protected Field|null $field;
 	protected string $id;
+
+	/**
+	 * @var array<string, mixed>
+	 */
 	protected array $params;
 	protected ModelWithContent $parent;
 
@@ -39,6 +43,8 @@ class Item
 
 	/**
 	 * Creates a new item
+	 *
+	 * @param array<string, mixed> $params
 	 */
 	public function __construct(array $params = [])
 	{
@@ -52,6 +58,8 @@ class Item
 
 	/**
 	 * Static Item factory
+	 *
+	 * @param array<string, mixed> $params
 	 */
 	public static function factory(array $params): static
 	{

@@ -627,11 +627,22 @@ class Version
 	}
 
 	/**
-	 * Removes the lock from the changes version without discarding changes
+	 * Removes the lock from the changes version without discarding changes.
+	 * With `$force`, the lock is removed even if the current user doesn't hold it.
 	 */
 	#[BlockCollectionAccess]
-	public function unlock(Language|string $language = 'default'): void
-	{
+	public function unlock(
+		Language|string $language = 'default',
+		bool $force = false
+	): void {
+		if ($language === '*') {
+			foreach (Languages::ensure() as $language) {
+				$this->unlock($language, $force);
+			}
+
+			return;
+		}
+
 		$language = Language::ensure($language);
 
 		if ($this->exists($language) === false) {
@@ -641,7 +652,10 @@ class Version
 		$fields = $this->read($language);
 
 		// only remove the lock if the current user holds it
-		if (($fields['lock'] ?? null) !== $this->model->kirby()->user()?->id()) {
+		if (
+			$force === false &&
+			($fields['lock'] ?? null) !== $this->model->kirby()->user()?->id()
+		) {
 			return;
 		}
 

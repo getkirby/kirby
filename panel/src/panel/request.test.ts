@@ -67,7 +67,6 @@ describe("panel.request", () => {
 	describe("external()", () => {
 		afterEach(() => {
 			vi.restoreAllMocks();
-			vi.unstubAllGlobals();
 		});
 
 		it("should not send any Panel options", async () => {
@@ -303,8 +302,6 @@ describe("panel.request", () => {
 	});
 
 	describe("request()", () => {
-		afterEach(() => vi.unstubAllGlobals());
-
 		it("should redirect cross-origin requests", async () => {
 			await expect(request("https://example.com/api")).rejects.toThrow(
 				RedirectError
@@ -414,8 +411,6 @@ describe("panel.request", () => {
 	});
 
 	describe("safeFetch()", () => {
-		afterEach(() => vi.unstubAllGlobals());
-
 		it("should throw OfflineError on network failure", async () => {
 			vi.stubGlobal(
 				"fetch",

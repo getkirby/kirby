@@ -71,6 +71,19 @@
 import { props } from "@/components/Forms/FormControls.vue";
 
 /**
+ * Checks if a link points to the (relative) URL or a path below it
+ */
+function isLinkBelow(link, url) {
+	const base = new URL(url, location.origin);
+	const path = base.pathname.replace(/\/$/, "");
+
+	return (
+		link.origin === base.origin &&
+		(link.pathname === path || link.pathname.startsWith(path + "/"))
+	);
+}
+
+/**
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
@@ -125,6 +138,19 @@ export default {
 			return this.$refs[index === 0 ? "browserA" : "browserB"];
 		},
 		/**
+		 * Checks if a link points to the Panel
+		 */
+		isPanelLink(link) {
+			return isLinkBelow(link, this.$panel.urls.panel);
+		},
+		/**
+		 * Checks if a link points to the site, which also
+		 * requires it to be inside the site's install subfolder
+		 */
+		isSiteLink(link) {
+			return isLinkBelow(link, this.$panel.urls.site);
+		},
+		/**
 		 * Double-buffered load:
 		 * - set src on the inactive iframe
 		 * - swap to it once the load finishes
@@ -161,10 +187,7 @@ export default {
 			}
 
 			// open external links and Panel links in new tab
-			if (
-				link.href.startsWith(location.origin) === false ||
-				link.href.startsWith(this.$panel.urls.panel) === true
-			) {
+			if (this.isSiteLink(link) === false || this.isPanelLink(link) === true) {
 				link.target = "_blank";
 				return true;
 			}
@@ -183,7 +206,7 @@ export default {
 		/**
 		 * Handles iframe load events for both buffers
 		 */
-		async onLoad(index) {
+		onLoad(index) {
 			const iframe = this.getIframe(index);
 			const document = iframe?.contentDocument;
 
@@ -192,18 +215,22 @@ export default {
 			}
 
 			if (this.pending === index) {
+				// restore the scroll position before the swap,
+				// so that the iframe is already in place when it becomes
+				// visible and a reload triggered right after the swap
+				// doesn't pick up a scroll position of 0
+				if (this.pendingScroll !== null) {
+					iframe.contentWindow.scrollTo({
+						top: this.pendingScroll,
+						behavior: "instant"
+					});
+					this.pendingScroll = null;
+				}
+
 				// Only swap when the preloaded iframe finishes loading
 				this.pending = null;
 				this.active = index;
 				this.isLoading = false;
-
-				if (this.pendingScroll !== null) {
-					const scrollY = this.pendingScroll;
-					this.pendingScroll = null;
-
-					await this.$nextTick();
-					iframe.contentWindow.scrollTo(0, scrollY);
-				}
 			}
 
 			if (index !== this.active) {
@@ -224,12 +251,9 @@ export default {
 				}
 			}
 
-			// attach event listeners to all links inside the iframe
-			document.addEventListener("click", this.onClick);
-
-			for (const link of document.querySelectorAll("a")) {
-				link.addEventListener("click", this.onClick);
-			}
+			// capture all link clicks inside the iframe, also of links
+			// added later or whose own handlers stop the propagation
+			document.addEventListener("click", this.onClick, { capture: true });
 
 			document.addEventListener("scroll", (e) => this.$emit("scroll", e));
 		},
@@ -253,13 +277,7 @@ export default {
 
 			// restore scroll position once the iframe finished loading
 			const target = this.active === 0 ? 1 : 0;
-			const iframe = this.getIframe(target);
-
-			iframe?.addEventListener(
-				"load",
-				() => iframe.contentWindow.scrollTo(0, scroll),
-				{ once: true }
-			);
+			this.pendingScroll = scroll ?? null;
 
 			// load restored URL in iframe
 			this.srcs[target] = src;
@@ -335,7 +353,11 @@ export default {
 	opacity: 0;
 	pointer-events: none;
 }
+/* keep the active iframe on top of the stack,
+   Safari doesn't pass scroll events through an iframe
+   with `pointer-events: none` to the one below */
 .k-preview-browser-iframe.is-active {
+	z-index: 1;
 	opacity: 1;
 	pointer-events: auto;
 }

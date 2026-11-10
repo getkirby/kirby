@@ -349,8 +349,11 @@ export default function (panel: Panel) {
 		 */
 		unsubscribe(): void {
 			for (const [event, listener] of listeners) {
-				document.removeEventListener(event, listener);
-				window.removeEventListener(event, listener);
+				// a listener is only removed with the capture flag
+				// it was added with
+				const capture = events.document[event] ?? events.window[event];
+				document.removeEventListener(event, listener, capture);
+				window.removeEventListener(event, listener, capture);
 			}
 
 			listeners.clear();

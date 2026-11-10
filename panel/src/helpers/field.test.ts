@@ -1,6 +1,6 @@
 import type { ConcreteComponent } from "vue";
 import { describe, expect, it } from "vitest";
-import { defaultValue, form, isVisible, subfields } from "./field";
+import { defaultValue, form, isVisible, options, subfields } from "./field";
 import type Panel from "@/panel/panel";
 
 // mock the Panel app with the component definitions used by defaultValue()
@@ -120,6 +120,39 @@ describe("$helper.field", () => {
 			const field = { type: "text", when: { a: 1, b: 2 } };
 			expect(isVisible(field, { a: 1, b: 2 })).toBe(true);
 			expect(isVisible(field, { a: 1, b: 3 })).toBe(false);
+		});
+	});
+
+	describe("options()", () => {
+		const list = [
+			{ value: "a", text: "A" },
+			{ value: 1, text: "One" }
+		];
+
+		it("should add a placeholder for each value without option", () => {
+			expect(options(list, ["a", "b", "c"])).toStrictEqual([
+				...list,
+				{ text: "–", value: "b" },
+				{ text: "–", value: "c" }
+			]);
+		});
+
+		it("should accept a single value", () => {
+			expect(options(list, "b")).toStrictEqual([
+				...list,
+				{ text: "–", value: "b" }
+			]);
+		});
+
+		it("should match values loosely", () => {
+			expect(options(list, "1")).toStrictEqual(list);
+		});
+
+		it("should ignore empty values", () => {
+			expect(options(list, "")).toStrictEqual(list);
+			expect(options(list, null)).toStrictEqual(list);
+			expect(options(list, undefined)).toStrictEqual(list);
+			expect(options(list, [])).toStrictEqual(list);
 		});
 	});
 

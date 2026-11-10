@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
 	applyPasteRule,
 	click,
@@ -88,10 +88,6 @@ describe("Email mark", () => {
 		beforeEach(() => {
 			open = vi.fn();
 			vi.stubGlobal("open", open);
-		});
-
-		afterEach(() => {
-			vi.unstubAllGlobals();
 		});
 
 		it("opens a `mailto:` URL when alt-clicking an email link", () => {

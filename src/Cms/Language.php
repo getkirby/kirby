@@ -43,7 +43,15 @@ class Language extends Model
 
 	protected string $code;
 	protected bool $default;
+
+	/**
+	 * @var 'ltr'|'rtl'
+	 */
 	protected string $direction;
+
+	/**
+	 * @var array<int|string, string>
+	 */
 	protected array $locale;
 	protected string $name;
 	protected bool $single;
@@ -54,6 +62,8 @@ class Language extends Model
 
 	/**
 	 * Creates a new language object
+	 *
+	 * @param array<string, mixed> $props
 	 */
 	public function __construct(array $props)
 	{
@@ -123,6 +133,8 @@ class Language extends Model
 	/**
 	 * Creates an instance with the same
 	 * initial properties.
+	 *
+	 * @param array<string, mixed> $props
 	 */
 	public function clone(array $props = []): static
 	{
@@ -151,6 +163,8 @@ class Language extends Model
 
 	/**
 	 * Creates a new language object
+	 *
+	 * @param array<string, mixed> $props
 	 */
 	#[BlockCollectionAccess]
 	public static function create(array $props): static
@@ -165,11 +179,8 @@ class Language extends Model
 		}
 
 		$language = new static($props);
-
-		// validate the new language
 		$language->guards()->ensureExecutable('create');
 
-		// apply before hook
 		$language = $kirby->apply(
 			'language.create:before',
 			[
@@ -197,7 +208,6 @@ class Language extends Model
 		// update the main languages collection in the app instance
 		$kirby->languages(false)->append($language->code(), $language);
 
-		// apply after hook
 		$language = $kirby->apply(
 			'language.create:after',
 			[
@@ -222,10 +232,8 @@ class Language extends Model
 		$kirby = App::instance();
 		$code  = $this->code();
 
-		// validate the language rules
 		$this->guards()->ensureExecutable('delete');
 
-		// apply before hook
 		$language = $kirby->apply(
 			'language.delete:before',
 			['language' => $this]
@@ -239,8 +247,10 @@ class Language extends Model
 		}
 
 		// if needed, convert content storage to single lang
+		$last = $language->isLastLanguage();
+
 		foreach ($kirby->models() as $model) {
-			if ($language->isLastLanguage() === true) {
+			if ($last === true) {
 				$model->storage()->moveLanguage($this, Language::single());
 			} else {
 				$model->storage()->deleteLanguage($this);
@@ -250,7 +260,6 @@ class Language extends Model
 		// get the original language collection and remove the current language
 		$kirby->languages(false)->remove($code);
 
-		// trigger after hook
 		$kirby->trigger('language.delete:after', [
 			'language' => $language
 		]);
@@ -260,6 +269,8 @@ class Language extends Model
 
 	/**
 	 * Reading direction of this language
+	 *
+	 * @return 'ltr'|'rtl'
 	 */
 	public function direction(): string
 	{
@@ -381,6 +392,8 @@ class Language extends Model
 
 	/**
 	 * Loads the language rules for provided locale code
+	 *
+	 * @return array<string, string>
 	 */
 	public static function loadRules(string $code): array
 	{
@@ -399,7 +412,8 @@ class Language extends Model
 	/**
 	 * Returns the PHP locale setting array
 	 *
-	 * @param int $category If passed, returns the locale for the specified category (e.g. LC_ALL) as string
+	 * @param $category If passed, returns the locale for the specified category (e.g. LC_ALL) as string
+	 * @return ($category is null ? array<int|string, string> : string|null)
 	 */
 	public function locale(int|null $category = null): array|string|null
 	{
@@ -537,6 +551,8 @@ class Language extends Model
 
 	/**
 	 * Returns the custom slug rules for this language
+	 *
+	 * @return array<string, string>
 	 */
 	public function slugs(): array
 	{
@@ -553,6 +569,8 @@ class Language extends Model
 
 	/**
 	 * Returns the most important properties as array
+	 *
+	 * @return array{code: string, default: bool, direction: 'ltr'|'rtl', hasCustomDomain: bool, locale: array<int|string, string>, name: string, rules: array<string, string>, url: string}
 	 */
 	public function toArray(): array
 	{
@@ -581,13 +599,14 @@ class Language extends Model
 	 */
 	public function url(): string
 	{
-		$url   = $this->url;
-		$url ??= '/' . $this->code;
+		$url = $this->url ?? '/' . $this->code;
 		return Url::makeAbsolute($url, $this->kirby()->url());
 	}
 
 	/**
 	 * Update language properties and save them
+	 *
+	 * @param array<string, mixed>|null $props
 	 */
 	#[BlockCollectionAccess]
 	public function update(array|null $props = null): static
@@ -600,7 +619,6 @@ class Language extends Model
 		// make sure the slug is nice and clean
 		$props['slug'] = Str::slug($props['slug'] ?? null);
 
-		// trigger before hook
 		$language = $kirby->apply(
 			'language.update:before',
 			[
@@ -635,7 +653,6 @@ class Language extends Model
 		// make sure the language is also updated in the languages collection
 		$kirby->languages(false)->set($language->code(), $language);
 
-		// trigger after hook
 		$language = $kirby->apply(
 			'language.update:after',
 			[

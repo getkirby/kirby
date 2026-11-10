@@ -1,3 +1,9 @@
+import { inputRules, type InputRule } from "prosemirror-inputrules";
+import {
+	EditorState,
+	TextSelection,
+	type Transaction
+} from "prosemirror-state";
 import { describe, expect, it, vi } from "vitest";
 import {
 	applyInputRule,
@@ -16,6 +22,43 @@ const schema = createSchemaWithNodes({
 	orderedList: node.schema
 });
 const context = { type: schema.nodes.orderedList, schema, utils };
+
+/**
+ * Types `text` into a paragraph below an ordered list
+ * with two items and returns the resulting HTML
+ */
+function type(rule: InputRule, order: number, text: string): string {
+	function item(text: string) {
+		return schema.nodes.listItem.create(null, [
+			schema.nodes.paragraph.create(null, [schema.text(text)])
+		]);
+	}
+
+	const doc = schema.node("doc", null, [
+		schema.nodes.orderedList.create({ order }, [item("a"), item("b")]),
+		schema.nodes.paragraph.create(null, [schema.text(text.slice(0, -1))])
+	]);
+
+	const end = doc.content.size - 1;
+	let state = EditorState.create({
+		doc,
+		selection: TextSelection.create(doc, end)
+	});
+
+	const view = {
+		composing: false,
+		state,
+		dispatch: (tr: Transaction) => (state = state.apply(tr))
+	};
+
+	(
+		inputRules({ rules: [rule] }).props as {
+			handleTextInput: (...args: unknown[]) => boolean;
+		}
+	).handleTextInput(view, end, end, text.slice(-1));
+
+	return toHTML(schema, state.doc);
+}
 
 describe("OrderedList node", () => {
 	describe("button", () => {
@@ -60,6 +103,23 @@ describe("OrderedList node", () => {
 		it("does not trigger for non-numeric input", () => {
 			const result = applyInputRule(schema, rule, "foo. ");
 			expect(result).toBeNull();
+		});
+
+		it("continues the list above with its next number", () => {
+			expect(type(rule, 1, "3. ")).toBe(
+				"<ol><li><p>a</p></li><li><p>b</p></li><li><p></p></li></ol>"
+			);
+
+			expect(type(rule, 4, "6. ")).toBe(
+				'<ol start="4"><li><p>a</p></li><li><p>b</p></li><li><p></p></li></ol>'
+			);
+		});
+
+		it("starts a new list for any other number", () => {
+			expect(type(rule, 1, "5. ")).toBe(
+				"<ol><li><p>a</p></li><li><p>b</p></li></ol>" +
+					'<ol start="5"><li><p></p></li></ol>'
+			);
 		});
 	});
 

@@ -1,4 +1,11 @@
-import { afterEach, describe, expect, it, vi } from "@test/unit";
+import {
+	afterEach,
+	describe,
+	expect,
+	it,
+	onTestFinished,
+	vi
+} from "@test/unit";
 import {
 	enableAutoUnmount,
 	flushPromises,
@@ -56,7 +63,7 @@ async function open(wrapper = mount(), opener: unknown = button()) {
 	return wrapper;
 }
 
-describe("Dropdown.vue", () => {
+describe("k-dropdown", () => {
 	enableAutoUnmount(afterEach);
 
 	// $el
@@ -66,14 +73,16 @@ describe("Dropdown.vue", () => {
 		it.acceptsStyle(mount);
 
 		it("renders nothing while closed", () => {
-			expect(vueMount(Dropdown).html()).toBe("<!--v-if-->");
+			const wrapper = vueMount(Dropdown);
+			expect(wrapper.html()).toBe("<!--v-if-->");
 		});
 	});
 
 	// props
 	describe("alignX prop", () => {
 		it("defaults to start", () => {
-			expect(mount().attributes("data-align-x")).toBe("start");
+			const wrapper = mount();
+			expect(wrapper.attributes("data-align-x")).toBe("start");
 		});
 
 		it("renders as data-align-x attribute", () => {
@@ -84,7 +93,8 @@ describe("Dropdown.vue", () => {
 
 	describe("alignY prop", () => {
 		it("defaults to bottom", () => {
-			expect(mount().attributes("data-align-y")).toBe("bottom");
+			const wrapper = mount();
+			expect(wrapper.attributes("data-align-y")).toBe("bottom");
 		});
 
 		it("renders as data-align-y attribute", () => {
@@ -171,12 +181,41 @@ describe("Dropdown.vue", () => {
 
 	describe("theme prop", () => {
 		it("defaults to dark", () => {
-			expect(mount().attributes("data-theme")).toBe("dark");
+			const wrapper = mount();
+			expect(wrapper.attributes("data-theme")).toBe("dark");
 		});
 
 		it("renders as data-theme attribute", () => {
 			const wrapper = mount({ theme: "light" });
 			expect(wrapper.attributes("data-theme")).toBe("light");
+		});
+	});
+
+	// lifecycle
+	describe("unmounted hook", () => {
+		it("stops repositioning an open dropdown on resize", async () => {
+			const opener = button();
+			const wrapper = await open(mount(), opener);
+			const position = { ...wrapper.vm.position };
+
+			wrapper.unmount();
+
+			opener.getBoundingClientRect = () =>
+				({ height: 20, left: 200, top: 50, width: 40 }) as DOMRect;
+			window.dispatchEvent(new Event("resize"));
+
+			await flushPromises();
+			expect(wrapper.vm.position).toStrictEqual(position);
+		});
+
+		it("does not close an unmounted dropdown when another opens", async () => {
+			const a = await open();
+			a.unmount();
+
+			const close = vi.spyOn(a.vm, "close");
+			await open();
+
+			expect(close).not.toHaveBeenCalled();
 		});
 	});
 
@@ -189,7 +228,8 @@ describe("Dropdown.vue", () => {
 		});
 
 		it("does nothing while closed", () => {
-			expect(() => vueMount(Dropdown).vm.close()).not.toThrow();
+			const wrapper = vueMount(Dropdown);
+			expect(() => wrapper.vm.close()).not.toThrow();
 		});
 	});
 
@@ -197,14 +237,16 @@ describe("Dropdown.vue", () => {
 		it("passes an options array on", async () => {
 			const ready = vi.fn();
 			const options = [{ text: "Edit" }];
-			await mount({ options }).vm.fetchOptions(ready);
+			const wrapper = mount({ options });
+			await wrapper.vm.fetchOptions(ready);
 			expect(ready).toHaveBeenCalledWith(options);
 		});
 
 		it("lets an options callback resolve the options", async () => {
 			const ready = vi.fn();
 			const options = vi.fn((ready) => ready([{ text: "Edit" }]));
-			await mount({ options }).vm.fetchOptions(ready);
+			const wrapper = mount({ options });
+			await wrapper.vm.fetchOptions(ready);
 			expect(options).toHaveBeenCalledWith(ready);
 			expect(ready).toHaveBeenCalledWith([{ text: "Edit" }]);
 		});
@@ -227,7 +269,8 @@ describe("Dropdown.vue", () => {
 
 		it("passes the current items on without options", async () => {
 			const ready = vi.fn();
-			await mount().vm.fetchOptions(ready);
+			const wrapper = mount();
+			await wrapper.vm.fetchOptions(ready);
 			expect(ready).toHaveBeenCalledWith([]);
 		});
 	});
@@ -249,6 +292,13 @@ describe("Dropdown.vue", () => {
 	});
 
 	describe("onOptionClick()", () => {
+		it("is called by a clicked option item", async () => {
+			const options = [{ text: "Edit", click: "edit" }];
+			const wrapper = await open(mount({ options }));
+			wrapper.find<HTMLElement>("k-dropdown-item").element.click();
+			expect(wrapper.emitted("action")).toStrictEqual([["edit"]]);
+		});
+
 		it("closes the dropdown", async () => {
 			const wrapper = await open();
 			wrapper.vm.onOptionClick({});
@@ -270,8 +320,9 @@ describe("Dropdown.vue", () => {
 
 		it("emits a click object by its name", () => {
 			const wrapper = mount();
-			wrapper.vm.onOptionClick({ click: { name: "action", payload: "edit" } });
-			expect(wrapper.emitted("action")).toStrictEqual([["edit"]]);
+			wrapper.vm.onOptionClick({ click: { name: "remove", payload: "edit" } });
+			expect(wrapper.emitted("remove")).toStrictEqual([["edit"]]);
+			expect(wrapper.emitted("action")).toBeUndefined();
 		});
 
 		it("emits a global click object on the event bus", () => {
@@ -284,7 +335,12 @@ describe("Dropdown.vue", () => {
 
 	describe("open()", () => {
 		it("shows the dialog as modal", async () => {
-			const wrapper = await open();
+			const wrapper = mount();
+			const showModal = vi.spyOn(wrapper.element, "showModal");
+			onTestFinished(() => showModal.mockRestore());
+
+			await open(wrapper);
+			expect(showModal).toHaveBeenCalledOnce();
 			expect(wrapper.element.open).toBe(true);
 		});
 

@@ -37,6 +37,37 @@ describe("preserveListeners", () => {
 			expect(handlerB).toHaveBeenCalledOnce();
 		});
 
+		it("passes the event to the listener", async () => {
+			const handler = vi.fn();
+			const wrapper = mount(ComponentWithoutInherit, {
+				attrs: { onClick: handler }
+			});
+			await wrapper.trigger("click");
+			expect(handler.mock.calls[0][0]).toBeInstanceOf(Event);
+		});
+
+		it("calls the latest listener after a re-render", async () => {
+			const before = vi.fn();
+			const after = vi.fn();
+			const wrapper = mount(ComponentWithoutInherit, {
+				attrs: { onClick: before }
+			});
+			await wrapper.setProps({ onClick: after } as object);
+			await wrapper.trigger("click");
+			expect(before).not.toHaveBeenCalled();
+			expect(after).toHaveBeenCalledOnce();
+		});
+
+		it("does not call a listener that has been removed", async () => {
+			const handler = vi.fn();
+			const wrapper = mount(ComponentWithoutInherit, {
+				attrs: { onClick: handler }
+			});
+			await wrapper.setProps({ onClick: undefined } as object);
+			await wrapper.trigger("click");
+			expect(handler).not.toHaveBeenCalled();
+		});
+
 		it("does not attach non-event attributes as listeners", async () => {
 			const handler = vi.fn();
 			const wrapper = mount(ComponentWithoutInherit, {

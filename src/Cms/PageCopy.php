@@ -19,6 +19,9 @@ use Kirby\Uuid\Uuids;
  */
 class PageCopy
 {
+	/**
+	 * @param array<string, string> $uuids Tracked UUID changes (old => new)
+	 */
 	public function __construct(
 		public Page $copy,
 		public Page|null $original = null,
@@ -85,12 +88,10 @@ class PageCopy
 				$child->convertUuids($language);
 				$this->uuids = [...$this->uuids, ...$child->uuids];
 			}
-		}
-
-		// if children have not been copied over,
-		// track all children UUIDs from original page to
-		// remove/replace with empty string
-		if ($this->withChildren === false) {
+		} else {
+			// if children have not been copied over,
+			// track all children UUIDs from original page to
+			// remove/replace with empty string
 			foreach ($this->original?->index(drafts: true) ?? [] as $child) {
 				$this->uuids[$child->uuid()->toString()] = '';
 
@@ -123,12 +124,10 @@ class PageCopy
 					$this->uuids['file://' . $old] = $file->uuid()->toString();
 				}
 			}
-		}
-
-		// if files have not been copied over,
-		// track file UUIDs from original page to
-		// remove/replace with empty string
-		if ($this->withFiles === false) {
+		} else {
+			// if files have not been copied over,
+			// track file UUIDs from original page to
+			// remove/replace with empty string
 			foreach ($this->original?->files() ?? [] as $file) {
 				$this->uuids[$file->uuid()->toString()] = '';
 			}
@@ -138,7 +137,9 @@ class PageCopy
 	/**
 	 * Returns all languages to adapt
 	 *
-	 * @todo Refactor once singe-lang mode also works with a language object
+	 * @todo Refactor once single-lang mode also works with a language object
+	 *
+	 * @return Languages|array{null}
 	 */
 	public function languages(): Languages|iterable
 	{
@@ -173,7 +174,32 @@ class PageCopy
 		// apply all tracked UUID changes at once
 		$converter->replaceUuids();
 
+		// only after the copy got its own UUIDs,
+		// otherwise the original's changes get untracked
+		$converter->removeChanges();
+
 		return $converter->copy;
+	}
+
+	/**
+	 * Removes unsaved changes from the copy, its files
+	 * and children. The lock is forced open, as it can
+	 * still be held by the editor of the original page.
+	 */
+	public function removeChanges(): void
+	{
+		$pages = [$this->copy, ...$this->copy->index(drafts: true)->values()];
+
+		foreach ($pages as $page) {
+			foreach ([$page, ...$page->files()->values()] as $model) {
+				$changes = $model->version('changes');
+
+				if ($changes->exists('*') === true) {
+					$changes->unlock('*', force: true);
+					$changes->delete('*');
+				}
+			}
+		}
 	}
 
 	/**

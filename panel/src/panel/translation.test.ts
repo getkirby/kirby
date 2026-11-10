@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it } from "vitest";
 import dayjs from "@/libraries/dayjs";
 import html, { HtmlString } from "./html";
-import Translation from "./translation";
+import Translation, { type TranslationState } from "./translation";
 
 describe("panel.translation", () => {
 	afterEach(() => {
@@ -131,6 +131,16 @@ describe("panel.translation", () => {
 		it("returns undefined for non-string keys", () => {
 			const translation = Translation();
 			expect(translation.translate(123)).toBeUndefined();
+		});
+
+		it("returns non-string translations unchanged", () => {
+			const translation = Translation();
+			// plugins define count-based translations as lists
+			const cars = ["No cars", "One car", "{{ count }} cars"];
+			translation.set({
+				data: { cars } as unknown as TranslationState["data"]
+			});
+			expect(translation.translate("cars")).toStrictEqual(cars);
 		});
 	});
 

@@ -15,7 +15,7 @@ function mount(props = {}, attrs = {}) {
 	});
 }
 
-describe("TogglesInput.vue", () => {
+describe("k-toggles-input", () => {
 	// $el
 	describe("element", () => {
 		const component = (attrs = {}) => mount({}, attrs);
@@ -44,6 +44,16 @@ describe("TogglesInput.vue", () => {
 			const wrapper = mount({ required: true, reset: true, value: "a" });
 			await wrapper.findAll("input")[0].trigger("click");
 			expect(wrapper.emitted("input")).toBeUndefined();
+		});
+	});
+
+	// events
+	describe("input event", () => {
+		it("emits the value of a picked option", async () => {
+			const wrapper = mount({ value: "a" });
+			await wrapper.findAll("label")[1].trigger("click");
+
+			expect(wrapper.emitted("input")).toStrictEqual([["b"]]);
 		});
 	});
 });

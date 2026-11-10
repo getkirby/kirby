@@ -14,7 +14,7 @@ function mount(props = {}, attrs = {}) {
 	});
 }
 
-describe("HtmlFieldPreview.vue", () => {
+describe("k-html-field-preview", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "DIV", "k-html-field-preview");

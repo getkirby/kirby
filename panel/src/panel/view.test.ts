@@ -8,7 +8,6 @@ describe("panel.view", () => {
 	});
 
 	afterEach(() => {
-		vi.unstubAllGlobals();
 		document.title = "";
 	});
 

@@ -18,7 +18,7 @@ class Inventory
 	 * Scans the directory and analyzes files,
 	 * content, meta info and children
 	 *
-	 * @return array{children: list<array>, files: array<string, array>, template: string}
+	 * @return array{children: list<array>, files: array<string, array{filename: string, extension: string, root: string}>, template: string}
 	 */
 	public static function for(
 		string $dir,
@@ -68,16 +68,16 @@ class Inventory
 				continue;
 			}
 
-			$itemExt = pathinfo($item, PATHINFO_EXTENSION);
+			$ext = pathinfo($item, PATHINFO_EXTENSION);
 
 			// don't track files with these extensions
-			if (in_array($itemExt, ['htm', 'html', 'php'], true) === true) {
+			if (in_array($ext, ['htm', 'html', 'php'], true) === true) {
 				continue;
 			}
 
 			// collect all content files separately,
 			// not as inventory entries
-			if ($itemExt === $extension) {
+			if ($ext === $extension) {
 				$filename = pathinfo($item, PATHINFO_FILENAME);
 
 				// remove the language codes from all content filenames
@@ -92,7 +92,7 @@ class Inventory
 			// collect all other files
 			$inventory['files'][$item] = [
 				'filename'  => $item,
-				'extension' => $itemExt,
+				'extension' => $ext,
 				'root'      => $root,
 			];
 		}
@@ -109,6 +109,8 @@ class Inventory
 
 	/**
 	 * Collect information for a child for the inventory
+	 *
+	 * @return array{dirname: string, model: string|null, num: int|null, root: string, slug: string}
 	 */
 	protected static function child(
 		string $item,
@@ -117,7 +119,7 @@ class Inventory
 		bool $multilang = false
 	): array {
 		// extract the slug and num of the directory
-		// TODO: Switch to static::$numSeparator in v6
+		// TODO: Switch to static::$numSeparator in v7
 		if ($separator = strpos($item, Dir::$numSeparator)) {
 			$num  = (int)substr($item, 0, $separator);
 			$slug = substr($item, $separator + 1);
@@ -152,6 +154,9 @@ class Inventory
 	/**
 	 * Determines the main template for the inventory
 	 * from all collected content files, ignoring meta files
+	 *
+	 * @param array<int, string> $content Content filenames without extension
+	 * @param array<string, array> $files
 	 */
 	protected static function template(
 		array $content,

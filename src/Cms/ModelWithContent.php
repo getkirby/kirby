@@ -48,6 +48,8 @@ abstract class ModelWithContent extends Model implements Identifiable
 	/**
 	 * Cached array of valid blueprints
 	 * that could be used for the model
+	 *
+	 * @var list<array<string, mixed>>|null
 	 */
 	public array|null $blueprints = null;
 
@@ -57,7 +59,7 @@ abstract class ModelWithContent extends Model implements Identifiable
 	protected Storage|null $storage = null;
 
 	/**
-	 * Store values used to initilaize object
+	 * Store values used to initialize object
 	 */
 	protected array $propertyData = [];
 
@@ -83,10 +85,11 @@ abstract class ModelWithContent extends Model implements Identifiable
 
 	/**
 	 * Returns an array with all blueprints that are available
+	 *
+	 * @return list<array<string, mixed>>
 	 */
 	public function blueprints(string|null $inField = null): array
 	{
-		// helper function
 		$toBlueprints = static function (iterable $fields): array {
 			$blueprints = [];
 
@@ -173,7 +176,7 @@ abstract class ModelWithContent extends Model implements Identifiable
 	/**
 	 * Returns the content
 	 *
-	 * @throws InvalidArgumentException If the language for the given code does not exist
+	 * @throws NotFoundException If the language for the given code does not exist
 	 */
 	public function content(string|null $languageCode = null): Content
 	{
@@ -193,6 +196,9 @@ abstract class ModelWithContent extends Model implements Identifiable
 	 * Prepares the content that should be written
 	 * to the text file
 	 * @unstable
+	 *
+	 * @param array<string, mixed> $data
+	 * @return array<string, mixed>
 	 */
 	public function contentFileData(
 		array $data,
@@ -320,6 +326,9 @@ abstract class ModelWithContent extends Model implements Identifiable
 	 * converting all of them to their storable values
 	 *
 	 * @since 5.6.0
+	 *
+	 * @param array<string, mixed> $content
+	 * @return array<string, mixed>
 	 */
 	public function createContent(array $content = []): array
 	{
@@ -329,19 +338,6 @@ abstract class ModelWithContent extends Model implements Identifiable
 			->fill($fields->defaults())
 			->fill($content)
 			->toStoredValues();
-	}
-
-	/**
-	 * Creates default content for the model, by using our
-	 * Form class to generate the defaults, based on the
-	 * model's blueprint setup.
-	 *
-	 * @since 5.0.0
-	 * @deprecated 5.6.0 Use `::createContent()` instead
-	 */
-	public function createDefaultContent(): array
-	{
-		return $this->createContent();
 	}
 
 	/**
@@ -408,7 +404,7 @@ abstract class ModelWithContent extends Model implements Identifiable
 	{
 		$clone = $this->clone();
 
-		foreach (get_object_vars($clone) as $name => $default) {
+		foreach (array_keys(get_object_vars($clone)) as $name) {
 			if (method_exists($clone, $name) === true) {
 				$clone->$name();
 			}
@@ -441,15 +437,6 @@ abstract class ModelWithContent extends Model implements Identifiable
 		}
 
 		return $this->update([$field => $value]);
-	}
-
-	/**
-	 * Checks if the model is locked for the current user
-	 * @deprecated 5.0.0 Use `->lock()->isLocked()` instead
-	 */
-	public function isLocked(): bool
-	{
-		return $this->lock()->isLocked() === true;
 	}
 
 	/**
@@ -500,6 +487,8 @@ abstract class ModelWithContent extends Model implements Identifiable
 
 	/**
 	 * Creates a string query, starting from the model
+	 *
+	 * @param class-string|null $expect Class the result must be an instance of
 	 */
 	public function query(
 		string|null $query = null,
@@ -525,17 +514,6 @@ abstract class ModelWithContent extends Model implements Identifiable
 		}
 
 		return $result;
-	}
-
-	/**
-	 * Read the content from the content file
-	 * @internal
-	 * @deprecated 5.0.0 Use `->version()->read()` instead
-	 */
-	public function readContent(string|null $languageCode = null): array
-	{
-		Helpers::deprecated('$model->readContent() is deprecated. Use $model->version()->read() instead.', 'model-content-file'); // @codeCoverageIgnore
-		return $this->version()->read($languageCode ?? 'default') ?? [];
 	}
 
 	/**
@@ -579,29 +557,6 @@ abstract class ModelWithContent extends Model implements Identifiable
 		);
 
 		return $clone;
-	}
-
-	/**
-	 * @deprecated 5.0.0 Use $model->save() instead
-	 */
-	protected function saveContent(
-		array|null $data = null,
-		bool $overwrite = false
-	): static {
-		Helpers::deprecated('$model->saveContent() is deprecated. Use $model->save() instead.', 'model-content-file');
-		return $this->save($data, 'default', $overwrite);
-	}
-
-	/**
-	 * @deprecated 5.0.0 Use $model->save() instead
-	 */
-	protected function saveTranslation(
-		array|null $data = null,
-		string|null $languageCode = null,
-		bool $overwrite = false
-	): static {
-		Helpers::deprecated('$model->saveTranslation() is deprecated. Use $model->save() instead.', 'model-content-file');
-		return $this->save($data, $languageCode ?? 'default', $overwrite);
 	}
 
 	/**
@@ -729,14 +684,12 @@ abstract class ModelWithContent extends Model implements Identifiable
 			throw new InvalidArgumentException(message: 'Invalid toString handler'); // @codeCoverageIgnore
 		}
 
-		$result = Str::$handler($template, array_replace([
+		return Str::$handler($template, array_replace([
 			'kirby'             => $this->kirby(),
 			'site'              => $this instanceof Site ? $this : $this->site(),
 			'model'             => $this,
 			static::CLASS_ALIAS => $this,
 		], $data), ['fallback' => $fallback]);
-
-		return $result;
 	}
 
 	/**
@@ -780,6 +733,7 @@ abstract class ModelWithContent extends Model implements Identifiable
 	/**
 	 * Updates the model data
 	 *
+	 * @param array<string, mixed>|null $input
 	 * @throws InvalidArgumentException If the input array contains invalid values
 	 */
 	#[BlockCollectionAccess]
@@ -843,19 +797,5 @@ abstract class ModelWithContent extends Model implements Identifiable
 	public function versions(): Versions
 	{
 		return Versions::load($this);
-	}
-
-	/**
-	 * Low level data writer method
-	 * to store the given data on disk or anywhere else
-	 * @internal
-	 * @deprecated 5.0.0 Use `->version()->save()` instead
-	 */
-	#[BlockCollectionAccess]
-	public function writeContent(array $data, string|null $languageCode = null): bool
-	{
-		Helpers::deprecated('$model->writeContent() is deprecated. Use $model->version()->save() instead.', 'model-content-file'); // @codeCoverageIgnore
-		$this->version()->save($data, $languageCode ?? 'default', true);
-		return true;
 	}
 }

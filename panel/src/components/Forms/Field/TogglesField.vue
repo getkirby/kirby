@@ -15,6 +15,7 @@
 			ref="input"
 			:class="{ grow }"
 			v-bind="$props"
+			:options="$helper.field.options(options, value)"
 			type="toggles"
 			@input="$emit('input', $event)"
 		/>
@@ -37,9 +38,6 @@ export default {
 	methods: {
 		focus() {
 			this.$refs.input.focus();
-		},
-		onInput(value) {
-			this.$emit("input", value);
 		}
 	}
 };

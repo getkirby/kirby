@@ -48,7 +48,7 @@ class EmailChallenge extends Challenge
 		);
 	}
 
-	public static function icon(): string
+	public function icon(): string
 	{
 		return 'email-unread';
 	}
@@ -58,19 +58,19 @@ class EmailChallenge extends Challenge
 	 * so that users are not forced into it just by having an email
 	 * address. For every other purpose it stays always available.
 	 */
-	public static function isAvailable(User $user, string $mode): bool
+	public function isAvailable(): bool
 	{
-		if ($mode !== '2fa') {
+		if ($this->mode !== '2fa') {
 			return true;
 		}
 
-		if ($user->secret('email') === true) {
+		if ($this->user->secret('email') === true) {
 			return true;
 		}
 
 		// enforced 2FA must not lock out users, so email stays
 		// available for everybody as long as it is required
-		return $user->kirby()->auth()->methods()->hasAnyRequiring2FA();
+		return $this->kirby->auth()->methods()->hasAnyRequiring2FA();
 	}
 
 	/**
@@ -121,13 +121,13 @@ class EmailChallenge extends Challenge
 		);
 	}
 
-	public static function settings(User $user): array
+	public function settings(): array
 	{
 		return [
 			new Button(
-				icon:   static::icon(),
-				text:   static::i18n('login.challenge.email.label'),
-				drawer: $user->panel()->url(true) . '/security/challenge/email'
+				icon:   $this->icon(),
+				text:   $this->label(),
+				drawer: $this->user->panel()->url(true) . '/security/challenge/email'
 			)
 		];
 	}

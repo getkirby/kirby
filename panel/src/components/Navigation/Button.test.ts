@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from "@test/unit";
 import { mount } from "@vue/test-utils";
 import Button from "./Button.vue";
 
-describe("Button.vue", () => {
+describe("k-button", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(Button, "BUTTON", "k-button");
@@ -138,6 +138,29 @@ describe("Button.vue", () => {
 	});
 
 	// computed
+	describe("attrs computed", () => {
+		it("passes aria attributes through", () => {
+			const wrapper = mount(Button, {
+				attrs: {
+					"aria-controls": "menu",
+					"aria-expanded": "true",
+					"data-foo": "bar"
+				}
+			});
+			expect(wrapper.attributes("aria-controls")).toBe("menu");
+			expect(wrapper.attributes("aria-expanded")).toBe("true");
+			expect(wrapper.attributes("data-foo")).toBeUndefined();
+		});
+
+		it("prefers a passed aria-label over the text", () => {
+			const wrapper = mount(Button, {
+				props: { text: "Save" },
+				attrs: { "aria-label": "Save the page" }
+			});
+			expect(wrapper.attributes("aria-label")).toBe("Save the page");
+		});
+	});
+
 	describe("component computed", () => {
 		it("renders as a button by default", () => {
 			const wrapper = mount(Button);
@@ -145,8 +168,12 @@ describe("Button.vue", () => {
 		});
 
 		it("renders as k-link when link prop is set", () => {
-			const wrapper = mount(Button, { props: { link: "/path" } });
+			const wrapper = mount(Button, {
+				props: { disabled: true, link: "/path" }
+			});
 			expect(wrapper.element.tagName).toBe("K-LINK");
+			expect(wrapper.attributes("to")).toBe("/path");
+			expect(wrapper.attributes("disabled")).toBe("true");
 		});
 
 		it("renders as the specified element", () => {
@@ -177,10 +204,32 @@ describe("Button.vue", () => {
 			expect(onClick).toHaveBeenCalled();
 		});
 
-		it("does not emit click when disabled", async () => {
-			const wrapper = mount(Button, { props: { disabled: true } });
+		it("does not call or emit click when disabled", async () => {
+			const click = vi.fn();
+			const wrapper = mount(Button, { props: { click, disabled: true } });
 			await wrapper.trigger("click");
+			expect(click).not.toHaveBeenCalled();
 			expect(wrapper.emitted("click")).toBeUndefined();
+		});
+
+		it("does not open the dialog when disabled", async () => {
+			const open = vi.fn();
+			const wrapper = mount(Button, {
+				props: { dialog: "my-dialog", disabled: true },
+				global: { mocks: { $panel: { dialog: { open } } } }
+			});
+			await wrapper.trigger("click");
+			expect(open).not.toHaveBeenCalled();
+		});
+
+		it("does not open the drawer when disabled", async () => {
+			const open = vi.fn();
+			const wrapper = mount(Button, {
+				props: { disabled: true, drawer: "my-drawer" },
+				global: { mocks: { $panel: { drawer: { open } } } }
+			});
+			await wrapper.trigger("click");
+			expect(open).not.toHaveBeenCalled();
 		});
 
 		it("opens dialog when dialog prop is set", async () => {

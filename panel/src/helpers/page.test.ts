@@ -29,6 +29,12 @@ describe("$helper.page.status()", () => {
 		expect(result.style).toBe("--icon-size: 15px");
 	});
 
+	it("falls back to the positive theme for an unknown status", () => {
+		const result = status("archived");
+		expect(result.icon).toBe("status-archived");
+		expect(result.theme).toBe("positive-icon");
+	});
+
 	it("returns correct title", () => {
 		expect(status("draft").title).toBe("page.status: page.status.draft");
 	});

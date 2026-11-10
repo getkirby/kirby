@@ -171,6 +171,10 @@ export default {
 			immediate: true
 		}
 	},
+	mounted() {
+		// the immediate watcher runs before the input exists
+		this.validate();
+	},
 	methods: {
 		/**
 		 * Increment/decrement the current dayjs object based on the

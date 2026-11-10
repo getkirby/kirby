@@ -4,12 +4,11 @@ import SortHandle from "./SortHandle.vue";
 
 function mount(attrs = {}) {
 	return vueMount(SortHandle, {
-		attrs,
-		shallow: true
+		attrs
 	});
 }
 
-describe("SortHandle.vue", () => {
+describe("k-sort-handle", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "K-BUTTON", "k-sort-handle");

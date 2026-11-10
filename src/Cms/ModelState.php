@@ -48,6 +48,8 @@ class ModelState
 
 	/**
 	 * Updates the state of the given file.
+	 *
+	 * @param 'append'|'remove'|'update' $method
 	 */
 	protected static function updateFile(
 		string $method,
@@ -62,6 +64,8 @@ class ModelState
 
 	/**
 	 * Updates the state of the given page.
+	 *
+	 * @param 'append'|'remove'|'update' $method
 	 */
 	protected static function updatePage(
 		string $method,
@@ -95,6 +99,8 @@ class ModelState
 
 	/**
 	 * Updates the state of the given user.
+	 *
+	 * @param 'append'|'remove'|'update' $method
 	 */
 	protected static function updateUser(
 		string $method,

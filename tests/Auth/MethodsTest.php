@@ -10,6 +10,56 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\Attributes\CoversClass;
+use RuntimeException;
+
+class BrokenMethod extends Method
+{
+	public function __construct(
+		Auth $auth,
+		string $type,
+		array $options = []
+	) {
+		throw new InvalidArgumentException(message: 'Missing client');
+	}
+
+	public function authenticate(
+		string|null $email,
+		string|null $password = null,
+		bool $long = false
+	): User|Status {
+		return new User(['email' => $email]);
+	}
+}
+
+class BrokenSdkMethod extends BrokenMethod
+{
+	public function __construct(
+		Auth $auth,
+		string $type,
+		array $options = []
+	) {
+		throw new RuntimeException('Missing client');
+	}
+}
+
+/**
+ * One class registered under a type per provider
+ */
+class ProviderMethod extends Method
+{
+	public function authenticate(
+		string|null $email,
+		string|null $password = null,
+		bool $long = false
+	): User|Status {
+		return new User(['email' => $email]);
+	}
+
+	public function isEnabled(): bool
+	{
+		return $this->type() !== 'oauth-gitlab';
+	}
+}
 
 #[CoversClass(Methods::class)]
 class MethodsTest extends TestCase
@@ -29,6 +79,23 @@ class MethodsTest extends TestCase
 				],
 			]
 		]);
+
+		Methods::$methods['broken']       = BrokenMethod::class;
+		Methods::$methods['broken-sdk']   = BrokenSdkMethod::class;
+		Methods::$methods['oauth-github'] = ProviderMethod::class;
+		Methods::$methods['oauth-gitlab'] = ProviderMethod::class;
+	}
+
+	protected function tearDown(): void
+	{
+		unset(
+			Methods::$methods['broken'],
+			Methods::$methods['broken-sdk'],
+			Methods::$methods['oauth-github'],
+			Methods::$methods['oauth-gitlab']
+		);
+
+		parent::tearDown();
 	}
 
 	public function testAuthenticate(): void
@@ -209,6 +276,34 @@ class MethodsTest extends TestCase
 		], $methods);
 	}
 
+	public function testEnabledConstructorException(): void
+	{
+		$app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'methods' => ['broken', 'password']
+				]
+			]
+		]);
+
+		$methods = $app->auth()->methods();
+		$this->assertSame(['password' => []], $methods->enabled());
+	}
+
+	public function testEnabledConstructorNonKirbyException(): void
+	{
+		$app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'methods' => ['broken-sdk', 'password']
+				]
+			]
+		]);
+
+		$methods = $app->auth()->methods();
+		$this->assertSame(['password' => []], $methods->enabled());
+	}
+
 	public function testEnabledDebugRethrowsException(): void
 	{
 		$app = $this->app->clone([
@@ -229,6 +324,96 @@ class MethodsTest extends TestCase
 		$this->expectExceptionMessage('The "code" login method cannot be enabled when 2FA is required');
 
 		$methods->enabled();
+	}
+
+	public function testEnabledLogsException(): void
+	{
+		$app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'debug'   => 'log',
+					'methods' => ['broken-sdk', 'password']
+				]
+			]
+		]);
+
+		Dir::make(static::TMP);
+		$log      = static::TMP . '/error.log';
+		$original = ini_set('error_log', $log);
+
+		try {
+			$enabled = $app->auth()->methods()->enabled();
+		} finally {
+			ini_set('error_log', $original);
+		}
+
+		$this->assertSame(['password' => []], $enabled);
+		$this->assertStringContainsString('Missing client', file_get_contents($log));
+	}
+
+	public function testEnabledLogsNoExceptionWhenDisabled(): void
+	{
+		$app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'debug'   => false,
+					'methods' => ['broken-sdk', 'password']
+				]
+			]
+		]);
+
+		Dir::make(static::TMP);
+		$log      = static::TMP . '/error.log';
+		$original = ini_set('error_log', $log);
+
+		try {
+			$enabled = $app->auth()->methods()->enabled();
+		} finally {
+			ini_set('error_log', $original);
+		}
+
+		$this->assertSame(['password' => []], $enabled);
+		$this->assertFileDoesNotExist($log);
+	}
+
+	public function testEnabledPerType(): void
+	{
+		$app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'methods' => ['oauth-gitlab', 'oauth-github', 'password']
+				]
+			]
+		]);
+
+		$methods = $app->auth()->methods();
+
+		$this->assertSame([
+			'oauth-github' => [],
+			'password'     => []
+		], $methods->enabled());
+
+		// the login view redirects to the type of the first method,
+		// so it must be the type it is registered with
+		$first = $methods->firstEnabled();
+		$this->assertSame('oauth-github', $first->type());
+		$this->assertTrue($methods->has($first->type()));
+	}
+
+	public function testEnabledUnknownType(): void
+	{
+		$app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'methods' => ['pasword', 'password']
+				]
+			]
+		]);
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('No auth method class for: pasword');
+
+		$app->auth()->methods()->enabled();
 	}
 
 	public function testFirstEnabled(): void
@@ -281,6 +466,34 @@ class MethodsTest extends TestCase
 		$methods = $app->auth()->methods();
 		$this->assertInstanceOf(PasswordMethod::class, $methods->get('password'));
 		$this->assertInstanceOf(CodeMethod::class, $methods->get('code'));
+		$this->assertSame('code', $methods->get('code')->type());
+	}
+
+	public function testGetWithType(): void
+	{
+		$app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'methods' => [
+						'oauth-github' => ['client' => 'a'],
+						'oauth-gitlab' => ['client' => 'b']
+					]
+				]
+			]
+		]);
+
+		$methods = $app->auth()->methods();
+		$github  = $methods->get('oauth-github');
+		$gitlab  = $methods->get('oauth-gitlab');
+
+		$this->assertInstanceOf(ProviderMethod::class, $github);
+		$this->assertSame('oauth-github', $github->type());
+		$this->assertSame(['client' => 'a'], $github->options());
+
+		// options are passed even if the method is not enabled
+		$this->assertInstanceOf(ProviderMethod::class, $gitlab);
+		$this->assertSame('oauth-gitlab', $gitlab->type());
+		$this->assertSame(['client' => 'b'], $gitlab->options());
 	}
 
 	public function testHasEnabledMethods(): void

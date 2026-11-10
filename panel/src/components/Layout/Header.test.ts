@@ -2,7 +2,7 @@ import { describe, it, expect } from "@test/unit";
 import { mount } from "@vue/test-utils";
 import Header from "./Header.vue";
 
-describe("Header.vue", () => {
+describe("k-header", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(Header, "HEADER", "k-header");
@@ -40,14 +40,23 @@ describe("Header.vue", () => {
 			const wrapper = mount(Header, { slots: { default: "My Title" } });
 			expect(wrapper.find(".k-header-title").text()).toContain("My Title");
 		});
+
+		it("renders the title inside the edit button when editable", () => {
+			const wrapper = mount(Header, {
+				props: { editable: true },
+				slots: { default: "My Title" }
+			});
+			const button = wrapper.find("button.k-header-title-button");
+			expect(button.find(".k-header-title-text").text()).toBe("My Title");
+		});
 	});
 
 	describe("buttons slot", () => {
-		it("renders buttons area when provided", () => {
+		it("renders the buttons in the buttons area", () => {
 			const wrapper = mount(Header, {
 				slots: { buttons: "<button>Save</button>" }
 			});
-			expect(wrapper.find(".k-header-buttons").exists()).toBe(true);
+			expect(wrapper.find(".k-header-buttons button").text()).toBe("Save");
 		});
 
 		it("does not render buttons area when not provided", () => {

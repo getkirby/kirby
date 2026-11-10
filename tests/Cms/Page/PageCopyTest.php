@@ -290,6 +290,52 @@ class PageCopyTest extends ModelTestCase
 		$this->assertSame('test/test.md', Uuid::from('file://file-a')->model()->id());
 	}
 
+	public function testRemoveChanges(): void
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'children' => [
+							[
+								'slug'  => 'test-a',
+								'files' => [
+									['filename' => 'test-a.jpg']
+								]
+							]
+						],
+						'files' => [
+							['filename' => 'test.jpg']
+						]
+					]
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$page   = $app->page('test');
+		$models = [
+			$page,
+			$page->file('test.jpg'),
+			$app->page('test/test-a'),
+			$app->page('test/test-a')->file('test-a.jpg')
+		];
+
+		foreach ($models as $model) {
+			$model->version('changes')->save(['title' => 'Changed']);
+			$this->assertTrue($model->version('changes')->exists());
+		}
+
+		$copy = new PageCopy($page);
+		$copy->removeChanges();
+
+		foreach ($models as $model) {
+			$this->assertFalse($model->version('changes')->exists());
+		}
+	}
+
 	public function testRemoveSlug(): void
 	{
 		$app = $this->app->clone([

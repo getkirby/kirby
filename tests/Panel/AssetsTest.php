@@ -73,8 +73,11 @@ class AssetsTest extends TestCase
 
 	public function setPluginDevMode(): void
 	{
-		Dir::make($this->app->root('plugins') . '/test');
-		touch($this->app->root('plugins') . '/test/index.dev.js');
+		F::write($this->app->root('plugins') . '/test/index.js', 'test');
+		F::write($this->app->root('plugins') . '/test/index.dev.js', 'test');
+
+		// app must be created again to load the new plugin
+		$this->app->clone();
 	}
 
 	public function testCss(): void

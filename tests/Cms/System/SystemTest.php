@@ -555,6 +555,7 @@ class SystemTest extends TestCase
 	{
 		$app = $this->app->clone([
 			'options' => [
+				'auth.debug'   => false,
 				'auth.methods' => $option
 			]
 		]);

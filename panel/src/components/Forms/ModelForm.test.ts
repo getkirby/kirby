@@ -17,14 +17,22 @@ const columns = {
 	1: { width: "1/2", sticky: true, fields: { text: { type: "textarea" } } }
 };
 
-function mount(props = {}, attrs = {}) {
+// like the real one, it emits `submit` as a component event
+const Fieldset = {
+	props: ["disabled", "fields", "value"],
+	emits: ["input", "submit"],
+	template: '<div class="k-fieldset" />'
+};
+
+function mount(props = {}, attrs = {}, components = {}) {
 	return vueMount(ModelForm, {
 		props: { api: "pages/test", columns, ...props },
-		attrs
+		attrs,
+		global: { components }
 	});
 }
 
-describe("ModelForm.vue", () => {
+describe("k-model-form", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "FORM", "k-model-form");
@@ -62,7 +70,10 @@ describe("ModelForm.vue", () => {
 
 			expect(wrapper.attributes("data-locked")).toBe("true");
 
-			for (const fieldset of wrapper.findAll("k-fieldset")) {
+			const fieldsets = wrapper.findAll("k-fieldset");
+			expect(fieldsets).toHaveLength(2);
+
+			for (const fieldset of fieldsets) {
 				expect(fieldset.attributes("disabled")).toBe("true");
 			}
 		});
@@ -74,7 +85,10 @@ describe("ModelForm.vue", () => {
 
 			expect(wrapper.attributes("data-locked")).toBe("false");
 
-			for (const fieldset of wrapper.findAll("k-fieldset")) {
+			const fieldsets = wrapper.findAll("k-fieldset");
+			expect(fieldsets).toHaveLength(2);
+
+			for (const fieldset of fieldsets) {
 				expect(fieldset.attributes("disabled")).toBe("false");
 			}
 		});
@@ -82,21 +96,31 @@ describe("ModelForm.vue", () => {
 
 	// computed
 	describe("isEmpty computed", () => {
-		it("only reports empty when there are no columns and a text to show", () => {
-			expect(mount({ columns: {}, empty: "No blueprint" }).vm.isEmpty).toBe(
-				"No blueprint"
-			);
-			expect(mount({ columns: {} }).vm.isEmpty).toBeFalsy();
-			expect(mount({ empty: "No blueprint" }).vm.isEmpty).toBe(false);
+		it("is true when there are no columns but a text to show", () => {
+			const wrapper = mount({ columns: {}, empty: "No blueprint" });
+			expect(wrapper.vm.isEmpty).toBe(true);
+		});
+
+		it.each([undefined, ""])("is false when the text is %o", (empty) => {
+			const wrapper = mount({ columns: {}, empty });
+			expect(wrapper.vm.isEmpty).toBe(false);
+		});
+
+		it("is false when there are columns", () => {
+			const wrapper = mount({ empty: "No blueprint" });
+			expect(wrapper.vm.isEmpty).toBe(false);
 		});
 	});
 
 	describe("isLocked computed", () => {
-		it("reads the lock state from the lock payload", () => {
-			expect(mount({ lock: { isLocked: true } }).vm.isLocked).toBe(true);
-			expect(mount({ lock: { isLocked: false } }).vm.isLocked).toBe(false);
-			expect(mount({ lock: false }).vm.isLocked).toBe(false);
-			expect(mount().vm.isLocked).toBe(false);
+		it.each([
+			[{ lock: { isLocked: true } }, true],
+			[{ lock: { isLocked: false } }, false],
+			[{ lock: false }, false],
+			[{}, false]
+		])("reads the lock state from %o", (props, expected) => {
+			const wrapper = mount(props);
+			expect(wrapper.vm.isLocked).toBe(expected);
 		});
 	});
 
@@ -123,7 +147,8 @@ describe("ModelForm.vue", () => {
 	// methods
 	describe("fieldsWithAdditionalData()", () => {
 		function resolve(props = {}, fields: Fields = {}): ResolvedFields {
-			return mount(props).vm.fieldsWithAdditionalData(fields) as ResolvedFields;
+			const wrapper = mount(props);
+			return wrapper.vm.fieldsWithAdditionalData(fields) as ResolvedFields;
 		}
 
 		it("points regular fields at the field endpoint", () => {
@@ -156,23 +181,26 @@ describe("ModelForm.vue", () => {
 
 	// events
 	describe("input event", () => {
-		it("passes on the input of a fieldset", async () => {
-			const wrapper = mount();
-			await wrapper.find("k-fieldset").trigger("input");
-			expect(wrapper.emitted("input")).toHaveLength(1);
+		it("passes on the input of a fieldset", () => {
+			const wrapper = mount({}, {}, { "k-fieldset": Fieldset });
+			wrapper.findComponent(Fieldset).vm.$emit("input", { title: "A" });
+			expect(wrapper.emitted("input")).toStrictEqual([[{ title: "A" }]]);
 		});
 	});
 
 	describe("submit event", () => {
-		it("submits the form and the fieldsets", async () => {
-			const wrapper = mount();
+		it("submits the form and the fieldsets", () => {
+			const wrapper = mount({}, {}, { "k-fieldset": Fieldset });
+			const event = new Event("submit", { cancelable: true });
 
-			await wrapper.find("form").trigger("submit");
-			expect(wrapper.emitted("submit")).toHaveLength(1);
+			wrapper.find("form").element.dispatchEvent(event);
+			expect(wrapper.emitted("submit")).toStrictEqual([[event]]);
 
-			// the submit of a fieldset bubbles up to the form as well
-			await wrapper.find("k-fieldset").trigger("submit");
-			expect(wrapper.emitted("submit")).toHaveLength(3);
+			// the browser must not send the form itself
+			expect(event.defaultPrevented).toBe(true);
+
+			wrapper.findComponent(Fieldset).vm.$emit("submit", "fieldset");
+			expect(wrapper.emitted("submit")).toStrictEqual([[event], ["fieldset"]]);
 		});
 	});
 });

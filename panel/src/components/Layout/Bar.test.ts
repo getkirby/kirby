@@ -2,7 +2,7 @@ import { describe, it, expect } from "@test/unit";
 import { mount } from "@vue/test-utils";
 import Bar from "./Bar.vue";
 
-describe("Bar.vue", () => {
+describe("k-bar", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(Bar, "DIV", "k-bar");

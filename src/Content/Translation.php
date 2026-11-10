@@ -2,10 +2,8 @@
 
 namespace Kirby\Content;
 
-use Kirby\Cms\Helpers;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
-use Kirby\Exception\Exception;
 use Kirby\Toolkit\BlockCollectionAccess;
 
 /**
@@ -56,18 +54,6 @@ class Translation
 	}
 
 	/**
-	 * Absolute path to the translation content file
-	 *
-	 * @deprecated 5.0.0
-	 */
-	#[BlockCollectionAccess]
-	public function contentFile(): string
-	{
-		Helpers::deprecated('`$translation->contentFile()` has been deprecated. Please let us know if you have a use case for a replacement.', 'translation-methods');
-		return $this->version->contentFile($this->language);
-	}
-
-	/**
 	 * Creates a new Translation for the given model
 	 *
 	 * @todo Needs to be refactored as soon as Version::create becomes static
@@ -112,18 +98,6 @@ class Translation
 	}
 
 	/**
-	 * Checks if the this is the default translation
-	 * of the model
-	 *
-	 * @deprecated 5.0.0 Use `::language()->isDefault()` instead
-	 */
-	public function isDefault(): bool
-	{
-		Helpers::deprecated('`$translation->isDefault()` has been deprecated. Use `$translation->language()->isDefault()` instead.', 'translation-methods');
-		return $this->language->isDefault();
-	}
-
-	/**
 	 * Returns the language
 	 */
 	public function language(): Language
@@ -137,16 +111,6 @@ class Translation
 	public function model(): ModelWithContent
 	{
 		return $this->model;
-	}
-
-	/**
-	 * @deprecated 5.0.0 Use `$translation->model()` instead
-	 */
-	public function parent(): ModelWithContent
-	{
-		throw new Exception(
-			message: '`$translation->parent()` has been deprecated. Please use `$translation->model()` instead'
-		);
 	}
 
 	/**
@@ -169,16 +133,6 @@ class Translation
 			'exists'  => $this->exists(),
 			'slug'    => $this->slug(),
 		];
-	}
-
-	/**
-	 * @deprecated 5.0.0 Use `$model->version()->update()` instead
-	 */
-	public function update(array|null $data = null, bool $overwrite = false): static
-	{
-		throw new Exception(
-			message: '`$translation->update()` has been deprecated. Please use `$model->version()->update()` instead'
-		);
 	}
 
 	/**

@@ -1,12 +1,3 @@
-import { defineAsyncComponent } from "vue";
-
-/**
- * Writer carries ProseMirror, which is the heaviest dependency
- * of the Panel and is only needed once an editor is actually rendered.
- * Loading it on demand keeps it out of the initial bundle.
- */
-const WriterInput = defineAsyncComponent(() => import("./WriterInput.vue"));
-
 export { default as "k-alpha-input" } from "./AlphaInput.vue";
 export { default as "k-calendar-input" } from "./CalendarInput.vue";
 export { default as "k-checkbox-input" } from "./CheckboxInput.vue";
@@ -39,7 +30,7 @@ export { default as "k-timeoptions-input" } from "./TimeoptionsInput.vue";
 export { default as "k-toggle-input" } from "./ToggleInput.vue";
 export { default as "k-toggles-input" } from "./TogglesInput.vue";
 export { default as "k-url-input" } from "./UrlInput.vue";
-export { WriterInput as "k-writer-input" };
+export { default as "k-writer-input" } from "./WriterInput.vue";
 
 /** Keep k-calendar and k-times as legacy aliases */
 export { default as "k-calendar" } from "./CalendarInput.vue";

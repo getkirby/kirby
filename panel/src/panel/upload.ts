@@ -174,10 +174,15 @@ export default function Upload(panel: Panel) {
 				this.set(files);
 			}
 
+			const component = this.replacing
+				? "k-upload-replace-dialog"
+				: "k-upload-dialog";
+
 			panel.dialog.open({
-				component: this.replacing
-					? "k-upload-replace-dialog"
-					: "k-upload-dialog",
+				component,
+				// files picked inside the open dialog must not stack another one
+				replace:
+					panel.dialog.isOpen === true && panel.dialog.component === component,
 				props: {
 					preview: this.preview,
 					original: this.replacing

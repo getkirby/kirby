@@ -58,7 +58,7 @@ abstract class LazyCollection extends Collection
 		// or "element found but not hydrated"
 		if (
 			$element === null &&
-			(array_key_exists($key, $this->data) || $this->initialized === false)
+			(array_key_exists($key, $this->data) === true || $this->initialized === false)
 		) {
 			return $this->hydrateElement($key);
 		}
@@ -75,7 +75,7 @@ abstract class LazyCollection extends Collection
 		// might bring back the element that was unset
 		$this->initialize();
 
-		return parent::__unset($key);
+		parent::__unset($key);
 	}
 
 	/**

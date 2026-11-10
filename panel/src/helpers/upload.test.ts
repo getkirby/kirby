@@ -75,7 +75,6 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-	vi.unstubAllGlobals();
 	vi.restoreAllMocks();
 });
 
@@ -120,6 +119,19 @@ describe("$helper.upload()", () => {
 		MockXHR.instances[0].emitError(JSON.stringify({ status: "error" }));
 
 		await expect(promise).rejects.toEqual({ status: "error" });
+		expect(error).toHaveBeenCalled();
+	});
+
+	it("should reject with a generic error on a network failure", async () => {
+		const error = vi.fn();
+		const promise = upload(makeFile(), { error });
+
+		MockXHR.instances[0].emitError("");
+
+		await expect(promise).rejects.toEqual({
+			status: "error",
+			message: "The file could not be uploaded"
+		});
 		expect(error).toHaveBeenCalled();
 	});
 

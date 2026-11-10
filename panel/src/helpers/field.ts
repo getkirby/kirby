@@ -4,9 +4,11 @@
  */
 
 import type { ConcreteComponent } from "vue";
+import { wrap } from "./array";
 import { clone } from "./object";
 
 type Field = Record<string, unknown>;
+type Option = { value: unknown; [key: string]: unknown };
 
 /**
  * Loads the default value for a field definition
@@ -115,6 +117,28 @@ export function isVisible(
 }
 
 /**
+ * Adds a `–` placeholder option for each value
+ * without a matching option, e.g. a deleted page
+ * @unstable
+ *
+ * @example
+ * options([{ value: "a", text: "A" }], ["a", "b"])
+ * // => [{ value: "a", text: "A" }, { value: "b", text: "–" }]
+ */
+export function options(options: Option[], value: unknown): Option[] {
+	const known = options.map((option) => String(option.value));
+	const unknown = wrap(value).filter(
+		(value) =>
+			value !== null &&
+			value !== undefined &&
+			value !== "" &&
+			known.includes(String(value)) === false
+	);
+
+	return [...options, ...unknown.map((value) => ({ text: "–", value }))];
+}
+
+/**
  * Adds proper endpoint definitions
  * to subfields for a form field.
  * @unstable
@@ -150,5 +174,6 @@ export default {
 	defaultValue,
 	form,
 	isVisible,
+	options,
 	subfields
 };

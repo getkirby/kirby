@@ -14,6 +14,9 @@ class PluginsTest extends TestCase
 	protected string $cssA;
 	protected string $cssB;
 	protected string $cssC;
+	protected string $devCssA;
+	protected string $devCssB;
+	protected string $devCssC;
 	protected string $jsA;
 	protected string $jsB;
 	protected string $jsC;
@@ -31,17 +34,20 @@ class PluginsTest extends TestCase
 		F::write(static::TMP . '/site/plugins/a/index.php', '<?php Kirby::plugin("test/a", []);');
 		F::write($this->cssA = static::TMP . '/site/plugins/a/index.css', 'a');
 		F::write($this->jsA = static::TMP . '/site/plugins/a/index.js', 'a');
-		$this->devJsA = static::TMP . '/site/plugins/a/index.dev.js';
+		$this->devCssA = static::TMP . '/site/plugins/a/index.dev.css';
+		$this->devJsA  = static::TMP . '/site/plugins/a/index.dev.js';
 
 		F::write(static::TMP . '/site/plugins/b/index.php', '<?php Kirby::plugin("test/b", []);');
 		F::write($this->cssB = static::TMP . '/site/plugins/b/index.css', 'b');
 		F::write($this->jsB = static::TMP . '/site/plugins/b/index.js', 'b');
-		$this->devJsB = static::TMP . '/site/plugins/b/index.dev.js';
+		$this->devCssB = static::TMP . '/site/plugins/b/index.dev.css';
+		$this->devJsB  = static::TMP . '/site/plugins/b/index.dev.js';
 
 		F::write(static::TMP . '/site/plugins/c/index.php', '<?php Kirby::plugin("test/c", []);');
 		F::write($this->cssC = static::TMP . '/site/plugins/c/index.css', 'c');
 		F::write($this->jsC = static::TMP . '/site/plugins/c/index.js', 'c');
-		$this->devJsC = static::TMP . '/site/plugins/c/index.dev.js';
+		$this->devCssC = static::TMP . '/site/plugins/c/index.dev.css';
+		$this->devJsC  = static::TMP . '/site/plugins/c/index.dev.js';
 	}
 
 	public function testCss(): void
@@ -63,10 +69,63 @@ class PluginsTest extends TestCase
 		], $plugins->css());
 	}
 
+	public function testCssDuringDevelopment(): void
+	{
+		$this->createPlugins();
+
+		// a plugin in development with its own stylesheet
+		F::write($this->devJsB, 'dev b');
+		F::write($this->devCssB, 'dev b');
+
+		// a plugin in development whose styles the dev server injects
+		F::write($this->devJsC, 'dev c');
+
+		// app must be created again to load the new plugins
+		$app = $this->app->clone();
+
+		$plugins = new Plugins();
+		$media   = $this->app->url('media') . '/plugins/test/';
+
+		$this->assertSame([
+			$media . 'a.' . hash('xxh3', 'a') . '.css',
+			$media . 'b.' . hash('xxh3', 'dev b') . '.dev.css',
+		], $plugins->css());
+	}
+
 	public function testCssWithoutPlugins(): void
 	{
 		$plugins = new Plugins();
 		$this->assertSame([], $plugins->css());
+	}
+
+	public function testIsDev(): void
+	{
+		$this->createPlugins();
+
+		// a plugin in development
+		F::write($this->devJsB, 'dev b');
+
+		// an empty script
+		F::write($this->devJsC, '');
+
+		// app must be created again to load the new plugins
+		$app     = $this->app->clone();
+		$plugins = new Plugins();
+
+		$this->assertFalse($plugins->isDev($app->plugin('test/a')));
+		$this->assertTrue($plugins->isDev($app->plugin('test/b')));
+		$this->assertFalse($plugins->isDev($app->plugin('test/c')));
+		$this->assertTrue($plugins->isDev());
+	}
+
+	public function testIsDevWithoutDevelopment(): void
+	{
+		$this->createPlugins();
+
+		// app must be created again to load the new plugins
+		$app = $this->app->clone();
+
+		$this->assertFalse((new Plugins())->isDev());
 	}
 
 	public function testJs(): void
@@ -111,6 +170,7 @@ class PluginsTest extends TestCase
 	public function testResolve(): void
 	{
 		$this->createPlugins();
+		F::write($this->devCssA, 'dev a');
 		F::write($this->devJsA, 'dev a');
 
 		// app must be created again to load the new plugins
@@ -130,6 +190,10 @@ class PluginsTest extends TestCase
 		$response = Plugins::resolve('test/a', hash('xxh3', 'a'), 'css');
 		$this->assertSame('a', $response->body());
 		$this->assertSame('text/css', $response->type());
+
+		$response = Plugins::resolve('test/a', hash('xxh3', 'dev a'), 'dev.css');
+		$this->assertSame('dev a', $response->body());
+		$this->assertSame('text/css', $response->type());
 	}
 
 	public function testResolveRoute(): void
@@ -146,6 +210,10 @@ class PluginsTest extends TestCase
 
 		$response = $app->call('media/plugins/test/b.' . $hash . '.css');
 		$this->assertSame('b', $response->body());
+
+		F::write($this->devCssB, 'dev b');
+		$response = $app->call('media/plugins/test/b.' . hash('xxh3', 'dev b') . '.dev.css');
+		$this->assertSame('dev b', $response->body());
 
 		$this->assertNull($app->call('media/plugins/test/b.' . $hash . '.dev.js'));
 		$this->assertNull($app->call('media/plugins/test/b.js'));

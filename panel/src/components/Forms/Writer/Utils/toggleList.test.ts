@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { applyCommand, createSchemaWithNodes, select } from "@test/unit/editor";
 import toggleList from "./toggleList";
 
@@ -9,13 +9,18 @@ const schema = createSchemaWithNodes({
 		content: "listItem+",
 		attrs: { order: { default: 1 } }
 	},
-	listItem: { content: "paragraph block*", defining: true }
+	listItem: { content: "paragraph block*", defining: true },
+	// list of a plugin with its own item type
+	todoList: { group: "block", content: "todoItem+" },
+	todoItem: { content: "paragraph block*", defining: true }
 });
 
 const bulletListType = schema.nodes.bulletList;
 const orderedListType = schema.nodes.orderedList;
 const listItemType = schema.nodes.listItem;
 const paragraphType = schema.nodes.paragraph;
+const todoListType = schema.nodes.todoList;
+const todoItemType = schema.nodes.todoItem;
 
 // doc(paragraph("a"))
 // Positions: 0=before paragraph, 1=inside paragraph, 2=after "a", 3=after paragraph
@@ -102,6 +107,21 @@ describe("toggleList", () => {
 				toggleList(bulletListType, listItemType)
 			);
 			expect(next?.doc.firstChild?.type).toBe(bulletListType);
+		});
+
+		it("returns true without dispatching on a dry run", () => {
+			const state = select(docWithBulletList, 3);
+			expect(toggleList(orderedListType, listItemType)(state)).toBe(true);
+		});
+
+		it("keeps the list when its items do not fit the other list type", () => {
+			const state = select(docWithBulletList, 3);
+			const dispatch = vi.fn();
+
+			expect(toggleList(todoListType, todoItemType)(state, dispatch)).toBe(
+				false
+			);
+			expect(dispatch).not.toHaveBeenCalled();
 		});
 	});
 });

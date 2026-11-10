@@ -4,12 +4,12 @@ namespace Kirby\Auth;
 
 use Kirby\Cms\App;
 use Kirby\Cms\User;
-use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Session\Session;
 use Kirby\Toolkit\A;
 use SensitiveParameter;
+use Throwable;
 
 /**
  * Handler for all auth methods
@@ -139,20 +139,27 @@ class Methods
 		$enabled = [];
 
 		foreach ($config as $type => $options) {
-			$class = $this->class($type);
+			// fail loudly for unknown types
+			$this->class($type);
 
 			try {
-				if ($class::isEnabled($this->auth, $options) === true) {
+				if ($this->get($type)->isEnabled() === true) {
 					$enabled[$type] = $options;
 				}
 
-			} catch (Exception $e) {
-				// consider methods that throw an exception
-				// from their `::isEnabled()` method as not enabled
+			} catch (Throwable $e) {
+				// consider methods that throw an exception from
+				// their constructor or `::isEnabled()` as not enabled
 
 				// when running in debug, re-throw exception
 				if ($this->kirby->option('debug') === true) {
 					throw $e;
+				}
+
+				// otherwise only print it to the error log
+				// unless disabled by setting `auth.debug` to `false`
+				if ($this->kirby->option('auth.debug', 'log') === 'log') {
+					error_log($e);
 				}
 			}
 		}
@@ -191,7 +198,8 @@ class Methods
 
 		return new $method(
 			auth:    $this->auth,
-			options: $this->enabled()[$type] ?? []
+			type:    $type,
+			options: $this->config()[$type] ?? []
 		);
 	}
 

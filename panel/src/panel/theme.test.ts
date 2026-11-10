@@ -1,4 +1,4 @@
-import { describe, expect, it, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, onTestFinished, vi } from "vitest";
 import Theme, { defaults } from "./theme";
 import Panel from "./panel";
 
@@ -95,6 +95,31 @@ describe("panel.theme", () => {
 			theme.set("dark");
 			expect(theme.setting).toStrictEqual("dark");
 			expect(localStorage.getItem("kirby$theme")).toStrictEqual("dark");
+		});
+	});
+
+	describe("system", () => {
+		it("follows changes of the system color scheme", () => {
+			const panel = Panel.create(app);
+			const matchMedia = window.matchMedia.bind(window);
+			let media: MediaQueryList | undefined;
+
+			const spy = vi
+				.spyOn(window, "matchMedia")
+				.mockImplementation((query) => (media = matchMedia(query)));
+			onTestFinished(() => spy.mockRestore());
+
+			const theme = Theme(panel);
+
+			media?.dispatchEvent(
+				new MediaQueryListEvent("change", { matches: true })
+			);
+			expect(theme.system).toStrictEqual("dark");
+
+			media?.dispatchEvent(
+				new MediaQueryListEvent("change", { matches: false })
+			);
+			expect(theme.system).toStrictEqual("light");
 		});
 	});
 });

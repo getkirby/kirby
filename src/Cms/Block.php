@@ -38,7 +38,7 @@ class Block extends Item implements Stringable
 	public function __call(string $method, array $args = []): mixed
 	{
 		// block methods
-		if ($this->hasMethod($method)) {
+		if ($this->hasMethod($method) === true) {
 			return $this->callMethod($method, $args);
 		}
 
@@ -48,7 +48,8 @@ class Block extends Item implements Stringable
 	/**
 	 * Creates a new block object
 	 *
-	 * @throws InvalidArgumentException
+	 * @param array<string, mixed> $params
+	 * @throws InvalidArgumentException If the block type is missing
 	 */
 	public function __construct(array $params)
 	{
@@ -98,6 +99,8 @@ class Block extends Item implements Stringable
 
 	/**
 	 * Controller for the block snippet
+	 *
+	 * @return array{block: static, content: Content, data: static, id: string, prev: Block|null, next: Block|null}
 	 */
 	#[BlockCollectionAccess]
 	public function controller(): array
@@ -126,7 +129,8 @@ class Block extends Item implements Stringable
 	/**
 	 * Constructs a block object with registering blocks models
 	 *
-	 * @throws InvalidArgumentException
+	 * @param array<string, mixed> $params
+	 * @throws InvalidArgumentException If the block type is missing
 	 */
 	public static function factory(array $params): static
 	{
@@ -159,7 +163,7 @@ class Block extends Item implements Stringable
 	}
 
 	/**
-	 * Returns the sibling collection that filtered by block status
+	 * Returns the sibling collection filtered by block status
 	 */
 	protected function siblingsCollection(): Blocks
 	{
@@ -177,6 +181,8 @@ class Block extends Item implements Stringable
 	/**
 	 * The result is being sent to the editor
 	 * via the API in the panel
+	 *
+	 * @return array{content: array<string, mixed>, id: string, isHidden: bool, type: string}
 	 */
 	public function toArray(): array
 	{
@@ -206,8 +212,9 @@ class Block extends Item implements Stringable
 	#[BlockCollectionAccess]
 	public function toHtml(): string
 	{
+		$kirby = $this->parent()->kirby();
+
 		try {
-			$kirby = $this->parent()->kirby();
 			return (string)$kirby->snippet(
 				'blocks/' . $this->type(),
 				$this->controller(),

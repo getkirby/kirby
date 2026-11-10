@@ -24,6 +24,12 @@ class Layouts extends Items
 	 */
 	public static array $methods = [];
 
+	/**
+	 * Creates a new layouts collection from an array of
+	 * layouts, a single layout or an array of blocks
+	 *
+	 * @param array<string, mixed> $params Collection options, see `Items::__construct()`
+	 */
 	public static function factory(
 		array|null $items = null,
 		array $params = []
@@ -101,12 +107,10 @@ class Layouts extends Items
 	{
 		$blocks = [];
 
-		if ($this->isNotEmpty() === true) {
-			foreach ($this->data() as $layout) {
-				foreach ($layout->columns() as $column) {
-					foreach ($column->blocks($includeHidden) as $block) {
-						$blocks[] = $block->toArray();
-					}
+		foreach ($this->data() as $layout) {
+			foreach ($layout->columns() as $column) {
+				foreach ($column->blocks($includeHidden) as $block) {
+					$blocks[] = $block->toArray();
 				}
 			}
 		}

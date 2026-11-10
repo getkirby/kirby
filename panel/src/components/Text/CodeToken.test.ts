@@ -2,7 +2,7 @@ import { describe, it, expect } from "@test/unit";
 import { mount } from "@vue/test-utils";
 import CodeToken from "./CodeToken.vue";
 
-describe("CodeToken.vue", () => {
+describe("k-code-token", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(CodeToken, "CODE");

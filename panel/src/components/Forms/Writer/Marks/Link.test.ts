@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
 	applyPasteRule,
 	click,
@@ -88,10 +88,6 @@ describe("Link mark", () => {
 		beforeEach(() => {
 			open = vi.fn();
 			vi.stubGlobal("open", open);
-		});
-
-		afterEach(() => {
-			vi.unstubAllGlobals();
 		});
 
 		it("opens the href in its target when alt-clicking a link", () => {

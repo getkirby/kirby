@@ -652,10 +652,6 @@ describe("panel.content", () => {
 	});
 
 	describe("unlockBeaconRequest()", () => {
-		afterEach(() => {
-			vi.unstubAllGlobals();
-		});
-
 		it("uses sendBeacon with correctly constructed URL", () => {
 			const panel = createPanel();
 			const content = Content(panel);

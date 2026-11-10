@@ -48,7 +48,6 @@ export type EditorOptions = {
 	inline: boolean;
 	parseOptions: ParseOptions;
 	topNode: string;
-	useBuiltInExtensions: boolean;
 };
 
 type EditorActiveState = {
@@ -123,8 +122,7 @@ export default class Editor extends Emitter<EditorEvents> {
 		events: {},
 		inline: false,
 		parseOptions: {},
-		topNode: "doc",
-		useBuiltInExtensions: true
+		topNode: "doc"
 	};
 
 	constructor(options: Partial<EditorOptions> = {}) {
@@ -160,16 +158,18 @@ export default class Editor extends Emitter<EditorEvents> {
 
 		this.setActiveNodesAndMarks();
 
-		if (this.options.autofocus !== false) {
-			this.focus(this.options.autofocus);
-		}
-
 		this.emit("init", {
 			view: this.view,
 			state: this.state
 		});
 
 		this.setContent(this.options.content);
+
+		// focus after setting the content,
+		// which would move the cursor to the end
+		if (this.options.autofocus !== false) {
+			this.focus(this.options.autofocus);
+		}
 
 		// Editor manages its own reactivity through `this.active`.
 		// It must never be wrapped in a reactive proxy.
@@ -214,10 +214,6 @@ export default class Editor extends Emitter<EditorEvents> {
 	}
 
 	get builtInExtensions(): Extension[] {
-		if (this.options.useBuiltInExtensions !== true) {
-			return [];
-		}
-
 		return [
 			new Doc({ inline: this.options.inline }),
 			new Text(),
@@ -424,7 +420,7 @@ export default class Editor extends Emitter<EditorEvents> {
 				slice: Slice,
 				moved: boolean
 			) => {
-				this.emit("drop", view, event, slice, moved);
+				this.emit("drop", { event, moved, slice, view });
 			},
 			markViews: this.createMarkViews(),
 			nodeViews: this.createNodeViews(),
@@ -504,10 +500,6 @@ export default class Editor extends Emitter<EditorEvents> {
 		const html = serializer.serializeFragment(fragment);
 
 		div.appendChild(html);
-
-		if (this.options.inline && div.querySelector("p")) {
-			return div.querySelector("p")!.innerHTML;
-		}
 
 		return div.innerHTML;
 	}

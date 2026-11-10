@@ -37,6 +37,7 @@ trait HasFiles
 	/**
 	 * Creates a new file
 	 *
+	 * @param array<string, mixed> $props
 	 * @param $move If set to `true`, the source will be deleted
 	 */
 	#[BlockCollectionAccess]
@@ -168,6 +169,7 @@ trait HasFiles
 	/**
 	 * Sets the Files collection
 	 *
+	 * @param array<array<string, mixed>>|null $files
 	 * @return $this
 	 */
 	protected function setFiles(array|null $files = null): static

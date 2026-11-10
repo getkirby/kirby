@@ -49,6 +49,11 @@ class Users extends LazyCollection
 	 */
 	public static array $methods = [];
 
+	/**
+	 * Creates a new user from the given props
+	 *
+	 * @param array<string, mixed> $data
+	 */
 	public function create(array $data): User
 	{
 		return User::create($data);
@@ -59,7 +64,7 @@ class Users extends LazyCollection
 	 * an entire second collection to the
 	 * current collection
 	 *
-	 * @param Users<TValue>|TValue|string $object
+	 * @param Users<TValue>|TValue|string|null $object
 	 * @return $this
 	 * @throws InvalidArgumentException When no `User` or `Users` object or an ID of an existing user is passed
 	 */
@@ -94,12 +99,14 @@ class Users extends LazyCollection
 	/**
 	 * Takes an array of user props and creates a nice
 	 * and clean user collection from it
+	 *
+	 * @param array<array<string, mixed>> $users
+	 * @param array<string, mixed> $inject Props to inject into each user
 	 */
 	public static function factory(array $users, array $inject = []): static
 	{
 		$collection = new static();
 
-		// read all user blueprints
 		foreach ($users as $props) {
 			$user = User::factory($props + $inject);
 			$collection->set($user->id(), $user);
@@ -158,7 +165,8 @@ class Users extends LazyCollection
 
 	/**
 	 * Loads a user object, sets it in `$this->data[$key]`
-	 * and returns the hydrated user object
+	 * and returns the hydrated user object or `null`
+	 * if the user does not exist
 	 */
 	protected function hydrateElement(string $key): User|null
 	{
@@ -223,12 +231,12 @@ class Users extends LazyCollection
 		$existing   = $this->data;
 		$this->data = [];
 
-		foreach (Dir::read($this->root) as $userDirectory) {
-			if (is_dir($this->root . '/' . $userDirectory) === false) {
+		foreach (Dir::read($this->root) as $dir) {
+			if (is_dir($this->root . '/' . $dir) === false) {
 				continue;
 			}
 
-			$this->data[$userDirectory] = null;
+			$this->data[$dir] = null;
 		}
 
 		$this->data = [...$this->data, ...$existing];

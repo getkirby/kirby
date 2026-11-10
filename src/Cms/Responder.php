@@ -41,6 +41,8 @@ class Responder implements Stringable
 
 	/**
 	 * HTTP headers
+	 *
+	 * @var array<string, string>
 	 */
 	protected array $headers = [];
 
@@ -59,6 +61,8 @@ class Responder implements Stringable
 	/**
 	 * List of cookie names the response
 	 * relies on
+	 *
+	 * @var list<string>
 	 */
 	protected array $usesCookies = [];
 
@@ -78,7 +82,7 @@ class Responder implements Stringable
 	/**
 	 * Setter and getter for the response body
 	 *
-	 * @return $this|string|null
+	 * @return ($body is null ? string|null : static)
 	 */
 	public function body(string|null $body = null): static|string|null
 	{
@@ -96,7 +100,7 @@ class Responder implements Stringable
 	 * by Kirby's cache
 	 * @since 3.5.5
 	 *
-	 * @return bool|$this
+	 * @return ($cache is null ? bool : static)
 	 */
 	public function cache(bool|null $cache = null): bool|static
 	{
@@ -119,7 +123,7 @@ class Responder implements Stringable
 	 * `Authorization` request header
 	 * @since 3.7.0
 	 *
-	 * @return bool|$this
+	 * @return ($usesAuth is null ? bool : static)
 	 */
 	public function usesAuth(bool|null $usesAuth = null): bool|static
 	{
@@ -149,7 +153,8 @@ class Responder implements Stringable
 	 * names the response relies on
 	 * @since 3.7.0
 	 *
-	 * @return array|$this
+	 * @param list<string>|null $usesCookies
+	 * @return ($usesCookies is null ? list<string> : static)
 	 */
 	public function usesCookies(array|null $usesCookies = null): array|static
 	{
@@ -187,18 +192,17 @@ class Responder implements Stringable
 		if (is_int($expires) === true && $expires < 1000000000) {
 			// number of minutes
 			$expires = time() + ($expires * 60);
-
 		} elseif (is_int($expires) !== true) {
 			// time string
-			$parsedExpires = strtotime($expires);
+			$parsed = strtotime($expires);
 
-			if (is_int($parsedExpires) !== true) {
+			if (is_int($parsed) !== true) {
 				throw new InvalidArgumentException(
 					message: 'Invalid time string "' . $expires . '"'
 				);
 			}
 
-			$expires = $parsedExpires;
+			$expires = $parsed;
 		}
 
 		// by default only ever *reduce* the cache expiry time
@@ -276,7 +280,8 @@ class Responder implements Stringable
 	/**
 	 * Setter and getter for all headers
 	 *
-	 * @return ($headers is null ? array : static)
+	 * @param array<string, string>|null $headers
+	 * @return ($headers is null ? array<string, string> : static)
 	 */
 	public function headers(array|null $headers = null): static|array
 	{
@@ -290,11 +295,7 @@ class Responder implements Stringable
 			}
 
 			// inject CORS headers if enabled
-			$corsHeaders = Cors::headers();
-
-			if ($corsHeaders !== []) {
-				$injectedHeaders = [...$injectedHeaders, ...$corsHeaders];
-			}
+			$injectedHeaders = [...$injectedHeaders, ...Cors::headers()];
 
 			if ($isPrivate === false) {
 				// the response is public, but it may
@@ -313,9 +314,8 @@ class Responder implements Stringable
 				if (isset($injectedHeaders['Vary']) === true) {
 					// split CORS Vary into individual values
 					// to avoid duplication
-					$corsVaryValues = explode(',', $injectedHeaders['Vary']);
-					$corsVaryValues = array_map(trim(...), $corsVaryValues);
-					array_push($vary, ...$corsVaryValues);
+					$cors = explode(',', $injectedHeaders['Vary']);
+					array_push($vary, ...array_map(trim(...), $cors));
 				}
 
 				if ($vary !== []) {
@@ -370,7 +370,7 @@ class Responder implements Stringable
 	{
 		if ($body instanceof HttpResponse) {
 			// inject headers from the responder into the response
-			// (only if they are not already set);
+			// (only if they are not already set)
 			$body->setHeaderFallbacks($this->headers());
 			return $body;
 		}
@@ -385,6 +385,8 @@ class Responder implements Stringable
 	/**
 	 * Converts the response configuration
 	 * to an array
+	 *
+	 * @return array{body: string|null, code: int|null, headers: array<string, string>, type: string|null}
 	 */
 	public function toArray(): array
 	{
@@ -404,6 +406,8 @@ class Responder implements Stringable
 	 * that can safely be cached
 	 *
 	 * @since 5.2.0
+	 *
+	 * @return array{body: string|null, code: int|null, headers: array<string, string>, type: string|null}
 	 */
 	public function toCacheArray(): array
 	{

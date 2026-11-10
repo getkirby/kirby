@@ -14,6 +14,7 @@
 			v-else
 			ref="input"
 			v-bind="$props"
+			:options="$helper.field.options(options, value)"
 			@input="$emit('input', $event)"
 		/>
 	</k-field>

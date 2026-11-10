@@ -53,7 +53,7 @@ class Pages extends Collection
 	 * an entire second collection to the
 	 * current collection
 	 *
-	 * @param Pages<TValue>|TValue|string $object
+	 * @param Pages<TValue>|TValue|string|null $object
 	 * @return $this
 	 * @throws InvalidArgumentException When no `Page` or `Pages` object or an ID of an existing page is passed
 	 */
@@ -192,6 +192,8 @@ class Pages extends Collection
 
 	/**
 	 * Creates a pages collection from an array of props
+	 *
+	 * @param array<array<string, mixed>> $pages
 	 */
 	public static function factory(
 		array $pages,
@@ -304,14 +306,14 @@ class Pages extends Collection
 		string|null $startAt = null,
 		bool $multiLang = false
 	): Page|null {
-		$path       = explode('/', $id);
-		$item       = null;
-		$query      = $startAt;
+		$path  = explode('/', $id);
+		$item  = null;
+		$query = $startAt;
 
 		foreach ($path as $key) {
 			$collection = $item?->children() ?? $this;
 			$query      = ltrim($query . '/' . $key, '/');
-			$item       = $collection->get($query) ?? null;
+			$item       = $collection->get($query);
 
 			if (
 				$item === null &&
@@ -425,6 +427,8 @@ class Pages extends Collection
 	 * $newCollection = $collection1->merge($collection2);
 	 * ```
 	 *
+	 * @param ...$args Pages, collections or page IDs (also in arrays);
+	 *                `'drafts'` merges the drafts of the parent
 	 * @return $this|static
 	 */
 	public function merge(string|Pages|Page|array ...$args): static
@@ -478,6 +482,7 @@ class Pages extends Collection
 	 * Filter all pages by excluding the given template
 	 * @since 3.3.0
 	 *
+	 * @param string|list<string>|null $templates
 	 * @return $this|static
 	 */
 	public function notTemplate(string|array|null $templates): static
@@ -497,6 +502,8 @@ class Pages extends Collection
 
 	/**
 	 * Returns an array with all page numbers
+	 *
+	 * @return list<int|null>
 	 */
 	public function nums(): array
 	{
@@ -515,6 +522,7 @@ class Pages extends Collection
 	/**
 	 * Filter all pages by the given template
 	 *
+	 * @param string|list<string>|null $templates
 	 * @return $this|static
 	 */
 	public function template(string|array|null $templates): static

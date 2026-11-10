@@ -1,9 +1,9 @@
-import { describe, expect, it, vi } from "@test/unit";
+import { describe, expect, it, onTestFinished, vi } from "@test/unit";
 import {
 	mount as vueMount,
 	type ComponentMountingOptions
 } from "@vue/test-utils";
-import { h } from "vue";
+import { h, ref } from "vue";
 import ErrorBoundary from "./ErrorBoundary.vue";
 
 type Slots = ComponentMountingOptions<typeof ErrorBoundary>["slots"];
@@ -36,7 +36,7 @@ function mount(
 	});
 }
 
-describe("ErrorBoundary.vue", () => {
+describe("k-error-boundary", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "P");
@@ -44,10 +44,29 @@ describe("ErrorBoundary.vue", () => {
 		it.acceptsStyle(mount);
 	});
 
-	// hooks
+	// lifecycle
 	describe("errorCaptured hook", () => {
 		it("replaces the content with a negative box", async () => {
-			const wrapper = await crash();
+			const broken = ref(false);
+			const Fragile = () => {
+				if (broken.value === true) {
+					throw new Error("Broken");
+				}
+
+				return h("span", "Fragile");
+			};
+
+			// only the fragile part fails, the whole content must go
+			const wrapper = mount(
+				{},
+				{
+					default: () => h("div", [h("p", "Content"), h(Fragile)])
+				}
+			);
+			expect(wrapper.find("p").exists()).toBe(true);
+
+			broken.value = true;
+			await wrapper.vm.$nextTick();
 			const box = wrapper.find("k-box");
 
 			expect(wrapper.find("p").exists()).toBe(false);
@@ -86,29 +105,31 @@ describe("ErrorBoundary.vue", () => {
 
 		it("logs the error in debug mode", async () => {
 			const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+			onTestFinished(() => warn.mockRestore());
 			await crash({}, { debug: true });
 
 			expect(warn).toHaveBeenCalledWith(new Error("Broken"));
-			warn.mockRestore();
 		});
 
 		it("does not log the error outside debug mode", async () => {
 			const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+			onTestFinished(() => warn.mockRestore());
 			await crash();
 
 			expect(warn).not.toHaveBeenCalled();
-			warn.mockRestore();
 		});
 	});
 
 	// slots
 	describe("default slot", () => {
 		it("renders its content", () => {
-			expect(mount().text()).toBe("Content");
+			const wrapper = mount();
+			expect(wrapper.text()).toBe("Content");
 		});
 
 		it("renders nothing without content", () => {
-			expect(mount({}, {}).html()).toBe("");
+			const wrapper = mount({}, {});
+			expect(wrapper.html()).toBe("");
 		});
 	});
 

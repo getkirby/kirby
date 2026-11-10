@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import webauthn, {
 	type SerializedAssertion,
 	type SerializedAttestation
@@ -39,8 +39,6 @@ const stubRejection = (method: "create" | "get", reason: Error) => {
 
 describe("webauthn", () => {
 	describe("create()", () => {
-		afterEach(() => vi.unstubAllGlobals());
-
 		it("decodes the options, runs the ceremony and hands the attestation to onComplete", async () => {
 			const calls = stubCredentials("create", {
 				id: "cred-1",
@@ -172,8 +170,6 @@ describe("webauthn", () => {
 	});
 
 	describe("get()", () => {
-		afterEach(() => vi.unstubAllGlobals());
-
 		/**
 		 * Minimal, serializable login credential for tests that only care
 		 * about how the server options were decoded, not the assertion payload

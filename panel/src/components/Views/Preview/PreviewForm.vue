@@ -63,7 +63,7 @@ export default {
 			const query = new URLSearchParams(window.location.search);
 
 			return this.tabs.map((tab) => {
-				query.append("tab", tab.name);
+				query.set("tab", tab.name);
 
 				return {
 					...tab,
