@@ -143,9 +143,14 @@ describe("panel.notification", () => {
 		it("should fall back to a generic message for errors without a message", async () => {
 			const panel = Panel.create(app);
 			const notification = Notification(panel);
+			const open = vi.spyOn(panel.dialog, "open");
 
 			notification.error(new Error());
 
+			expect(open).toHaveBeenCalledWith({
+				component: "k-error-dialog",
+				props: { message: "Something went wrong", details: {} }
+			});
 			expect(notification.message).toStrictEqual("Something went wrong");
 		});
 
