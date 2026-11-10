@@ -139,8 +139,10 @@ jobs:
           path: ~/.cache/psalm
           key: backend-analysis-${{ matrix.php }}
 
+      # the bundled laminas/laminas-escaper 2.19 no longer declares PHP 8.2,
+      # Composer installs on PHP 8.2 resolve to 2.18 instead
       - name: Check Composer platform requirements
-        if: always() && steps.finishPrepare.outcome == 'success'
+        if: always() && steps.finishPrepare.outcome == 'success' && matrix.php != '8.2'
         run: composer check-platform-reqs
 
       - name: Run tests
