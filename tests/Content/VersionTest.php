@@ -1481,6 +1481,29 @@ class VersionTest extends TestCase
 		$this->assertGreaterThanOrEqual($minTime, filemtime($root));
 	}
 
+	public function testUnlockMultiLanguageWithWildcard(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$this->app->impersonate('kirby');
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::changes()
+		);
+
+		$fileEN = $this->contentFile('en', VersionId::changes());
+		$fileDE = $this->contentFile('de', VersionId::changes());
+
+		Data::write($fileEN, ['title' => 'Test', 'lock' => 'kirby']);
+		Data::write($fileDE, ['title' => 'Test', 'lock' => 'kirby']);
+
+		$version->unlock('*');
+
+		$this->assertSame(['title' => 'Test'], Data::read($fileEN));
+		$this->assertSame(['title' => 'Test'], Data::read($fileDE));
+	}
+
 	public function testUnlockSingleLanguage(): void
 	{
 		$this->setUpSingleLanguage();
@@ -1527,6 +1550,28 @@ class VersionTest extends TestCase
 			'title' => 'Test',
 			'lock'  => 'another-user'
 		], Data::read($file));
+	}
+
+	public function testUnlockWhenLockedByAnotherUserWithForce(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$this->app->impersonate('kirby');
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::changes()
+		);
+
+		$file = $this->contentFile(versionId: VersionId::changes());
+		Data::write($file, [
+			'title' => 'Test',
+			'lock'  => 'another-user'
+		]);
+
+		$version->unlock(force: true);
+
+		$this->assertSame(['title' => 'Test'], Data::read($file));
 	}
 
 	public function testUnlockWhenNotExists(): void
