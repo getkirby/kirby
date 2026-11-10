@@ -239,16 +239,8 @@ export default defineConfig(({ mode }) => {
 								test: /node_modules\/sortablejs\//
 							},
 							{
-								name: "prosemirror-model",
-								test: /node_modules\/prosemirror-model\//
-							},
-							{
-								name: "prosemirror",
-								test: /node_modules\/prosemirror-/
-							},
-							{
 								name: "vendor",
-								test: /node_modules\/(?!sortablejs\/|prosemirror-)|plugin-vue:export-helper|vite\/preload-helper/
+								test: /node_modules\/(?!sortablejs\/)|plugin-vue:export-helper|vite\/preload-helper/
 							}
 						]
 					}
