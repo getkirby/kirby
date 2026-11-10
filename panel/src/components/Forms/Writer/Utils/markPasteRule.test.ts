@@ -71,6 +71,19 @@ describe("markPasteRule", () => {
 		expect(para.child(0).marks).toHaveLength(0);
 	});
 
+	it("applies the mark to text pasted without a parent node", () => {
+		// pasted HTML with only inline elements (e.g. a <span>)
+		const plugin = markPasteRule(regexp(), boldType);
+		const result = applyRule(
+			plugin,
+			new Slice(Fragment.from(schema.text("before <hello> after")), 0, 0)
+		);
+		expect(result.content.child(0).text).toBe("before ");
+		expect(result.content.child(1).text).toBe("hello");
+		expect(result.content.child(1).marks[0].type).toBe(boldType);
+		expect(result.content.child(2).text).toBe(" after");
+	});
+
 	it("skips text inside nodes that do not allow the mark", () => {
 		const schema = new Schema({
 			nodes: {
