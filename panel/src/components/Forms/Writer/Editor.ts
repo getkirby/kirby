@@ -507,10 +507,6 @@ export default class Editor extends Emitter<EditorEvents> {
 
 		div.appendChild(html);
 
-		if (this.options.inline && div.querySelector("p")) {
-			return div.querySelector("p")!.innerHTML;
-		}
-
 		return div.innerHTML;
 	}
 

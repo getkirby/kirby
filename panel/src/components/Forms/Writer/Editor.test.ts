@@ -447,7 +447,7 @@ describe("Editor", () => {
 			e.destroy();
 		});
 
-		it("returns only the inner paragraph content in inline mode", () => {
+		it("returns the inline content without a paragraph in inline mode", () => {
 			const e = createEditor({ inline: true });
 			e.setContent("<p>hello</p>");
 			expect(e.getHTML()).toBe("hello");
