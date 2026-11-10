@@ -407,6 +407,63 @@ describe("panel.upload", () => {
 			expect(panel.dialog.isLoading).toStrictEqual(false);
 			expect(panel.dialog.isOpen).toStrictEqual(false);
 		});
+
+		it("should close the dialog after uploading files picked inside it", async () => {
+			const panel = Panel.create(app);
+			const upload = Upload(panel);
+
+			upload.open({ url: "/api/pages/test/files" });
+			await flush();
+
+			// files picked from inside the dialog open it again
+			upload.open(makeFileList(makeFile("a.jpg")));
+			await flush();
+
+			upload.upload = vi.fn(async (file) => {
+				file.completed = true;
+			});
+
+			await panel.dialog.submit();
+
+			expect(upload.upload).toHaveBeenCalledOnce();
+			expect(panel.dialog.isOpen).toStrictEqual(false);
+		});
+
+		it("should close the dialog when cancelling after picking files inside it", async () => {
+			const panel = Panel.create(app);
+			const upload = Upload(panel);
+
+			upload.open({ url: "/api/pages/test/files" });
+			await flush();
+			upload.open(makeFileList(makeFile("a.jpg")));
+			await flush();
+
+			await panel.dialog.cancel();
+			await flush();
+
+			expect(upload.files).toHaveLength(0);
+			expect(panel.dialog.isOpen).toStrictEqual(false);
+		});
+
+		it("should go back to the previous dialog after uploading", async () => {
+			const panel = Panel.create(app);
+			const upload = Upload(panel);
+
+			await panel.dialog.open({ component: "k-text-dialog" });
+			upload.open(makeFileList(makeFile("a.jpg")), {
+				url: "/api/pages/test/files"
+			});
+			await flush();
+
+			upload.upload = vi.fn(async (file) => {
+				file.completed = true;
+			});
+
+			await panel.dialog.submit();
+
+			expect(panel.dialog.isOpen).toStrictEqual(true);
+			expect(panel.dialog.component).toStrictEqual("k-text-dialog");
+		});
 	});
 
 	describe("pick()", () => {
