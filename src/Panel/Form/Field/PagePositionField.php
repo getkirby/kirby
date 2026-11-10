@@ -56,7 +56,7 @@ class PagePositionField extends SelectField
 				],
 				false => [
 					'value'    => '-' . $index,
-					'text'     => '–',
+					'text'     => '[' . $this->i18n('unknown') . ']',
 					'disabled' => true
 				]
 			};
