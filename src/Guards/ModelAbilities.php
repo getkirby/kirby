@@ -26,7 +26,7 @@ abstract class ModelAbilities
 	/**
 	 * Runs the ability check for the given action.
 	 * Actions with a dedicated `ensureTo<Action>()` method are
-	 * handed over to it, all others are resolved as true
+	 * handed over to it, all others pass
 	 *
 	 * @throws AbilityException
 	 */
@@ -38,11 +38,14 @@ abstract class ModelAbilities
 	}
 
 	/**
+	 * Throws for a failed ability. Child classes prefix
+	 * the key with the model type, e.g. `page.delete.homePage`.
+	 *
 	 * @param $details Additional context for the failure,
 	 *                e.g. the field errors of an incomplete page
 	 * @throws AbilityException
 	 */
-	public function error(
+	protected function error(
 		string $key,
 		array $data = [],
 		array $details = []

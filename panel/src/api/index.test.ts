@@ -36,7 +36,6 @@ describe("api", () => {
 
 	afterEach(() => {
 		vi.useRealTimers();
-		vi.clearAllMocks();
 	});
 
 	describe("properties", () => {

@@ -35,7 +35,7 @@ class Blocks extends Plain
 				$child->tagName !== 'footer'
 			) {
 				$element = new Element($child);
-				$text[]  = $element->innerHTML($this->marks());
+				$text[]  = $element->innerHtml($this->marks());
 			}
 		}
 
@@ -43,7 +43,7 @@ class Blocks extends Plain
 		$text = implode('', array_filter($text));
 
 		// get the citation from the footer
-		$citation = $node->find('footer')?->innerHTML($this->marks());
+		$citation = $node->find('footer')?->innerHtml($this->marks());
 
 		return [
 			'content' => [
@@ -71,7 +71,7 @@ class Blocks extends Plain
 		} else {
 			$html = trim($element);
 
-			if (Str::length($html) === 0) {
+			if ($html === '') {
 				return null;
 			}
 
@@ -93,7 +93,7 @@ class Blocks extends Plain
 	{
 		$content = [
 			'level' => strtolower($node->tagName()),
-			'text'  => $node->innerHTML()
+			'text'  => $node->innerHtml()
 		];
 
 		if ($id = $node->attr('id')) {
@@ -112,42 +112,38 @@ class Blocks extends Plain
 	{
 		$src        = $node->attr('src') ?? '';
 		$figcaption = $node->find('ancestor::figure[1]//figcaption');
-		$caption    = $figcaption?->innerHTML($this->marks());
+		$caption    = $figcaption?->innerHtml($this->marks());
 
 		// avoid parsing the caption twice
 		$figcaption?->remove();
 
 		// reverse engineer video URLs
-		if (preg_match('!player.vimeo.com\/video\/([0-9]+)!i', $src, $array) === 1) {
-			$src = 'https://vimeo.com/' . $array[1];
-		} elseif (preg_match('!youtube.com\/embed\/([a-zA-Z0-9_-]+)!', $src, $array) === 1) {
-			$src = 'https://youtube.com/watch?v=' . $array[1];
-		} elseif (preg_match('!youtube-nocookie.com\/embed\/([a-zA-Z0-9_-]+)!', $src, $array) === 1) {
-			$src = 'https://youtube.com/watch?v=' . $array[1];
+		if (preg_match('!player.vimeo.com\/video\/([0-9]+)!i', $src, $matches) === 1) {
+			$url = 'https://vimeo.com/' . $matches[1];
+		} elseif (preg_match('!youtube.com\/embed\/([a-zA-Z0-9_-]+)!', $src, $matches) === 1) {
+			$url = 'https://youtube.com/watch?v=' . $matches[1];
+		} elseif (preg_match('!youtube-nocookie.com\/embed\/([a-zA-Z0-9_-]+)!', $src, $matches) === 1) {
+			$url = 'https://youtube.com/watch?v=' . $matches[1];
 		} else {
-			$src = false;
+			// only convert iframes with a known video URL; any other
+			// iframe is dropped as it can't be stored safely
+			return null;
 		}
 
-		// only convert iframes with a known video URL; any other
-		// iframe is dropped as it can't be stored safely
-		if ($src !== false) {
-			return [
-				'content' => [
-					'caption' => $caption,
-					'url'     => $src
-				],
-				'type' => 'video',
-			];
-		}
-
-		return null;
+		return [
+			'content' => [
+				'caption' => $caption,
+				'url'     => $url
+			],
+			'type' => 'video',
+		];
 	}
 
 	public function img(Element $node): array
 	{
 		$link       = $node->find('ancestor::a')?->attr('href');
 		$figcaption = $node->find('ancestor::figure[1]//figcaption');
-		$caption    = $figcaption?->innerHTML($this->marks());
+		$caption    = $figcaption?->innerHtml($this->marks());
 
 		if (Url::hasDangerousScheme($link) === true) {
 			$link = null;
@@ -176,33 +172,31 @@ class Blocks extends Plain
 		$html = [];
 
 		foreach ($node->filter('li') as $li) {
-			$innerHtml = '';
+			$inner = '';
 
 			foreach ($li->children() as $child) {
 				if ($child instanceof DOMText) {
-					$innerHtml .= $child->textContent;
+					$inner .= $child->textContent;
 				} elseif ($child instanceof DOMElement) {
-					$child = new Element($child);
-					$list  = ['ul', 'ol'];
-					$innerHtml .= match (in_array($child->tagName(), $list, true)) {
+					$child  = new Element($child);
+					$inner .= match (in_array($child->tagName(), ['ul', 'ol'], true)) {
 						true    => $this->list($child),
-						default => $child->innerHTML($this->marks())
+						default => $child->innerHtml($this->marks())
 					};
 				}
 			}
 
-			$html[] = '<li>' . trim($innerHtml) . '</li>';
+			$html[] = '<li>' . trim($inner) . '</li>';
 		}
 
-		$outerHtml  = '<' . $node->tagName() . '>';
-		$outerHtml .= implode($html);
-		$outerHtml .= '</' . $node->tagName() . '>';
-		return $outerHtml;
+		return '<' . $node->tagName() . '>' . implode($html) . '</' . $node->tagName() . '>';
 	}
 
 	/**
 	 * Returns a list of allowed inline marks
 	 * and their parsing rules
+	 *
+	 * @return list<array>
 	 */
 	public function marks(): array
 	{
@@ -261,6 +255,7 @@ class Blocks extends Plain
 	 * their parsing rules
 	 *
 	 * @codeCoverageIgnore
+	 * @return list<array>
 	 */
 	public function nodes(): array
 	{
@@ -391,7 +386,7 @@ class Blocks extends Plain
 	{
 		return [
 			'content' => [
-				'text' => $this->sanitize($node->outerHTML()),
+				'text' => $this->sanitize($node->outerHtml()),
 			],
 			'type' => 'markdown',
 		];

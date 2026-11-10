@@ -1,6 +1,6 @@
-import { beforeEach, describe, expect, it, vi } from "@test/unit";
+import { afterEach, beforeEach, describe, expect, it, vi } from "@test/unit";
 import { flushPromises, mount as vueMount } from "@vue/test-utils";
-import { reactive } from "vue";
+import { nextTick, reactive } from "vue";
 import preserveListeners from "@/mixins/preserveListeners";
 import ModelListField from "./ModelListField.vue";
 
@@ -16,12 +16,40 @@ const events = {
 const api = { get: vi.fn() };
 const panel = { error: vi.fn() };
 
+// registered globally in the Panel
+const Collection = {
+	props: ["empty", "items"],
+	template: "<div />"
+};
+
 const state = {
 	columns: { title: { label: "Title", type: "url" } },
 	models: [],
 	pagination: { limit: 20, offset: 0, page: 1, total: 0 },
 	sortable: true
 };
+
+function model(id: string, permissions = {}) {
+	return {
+		id,
+		link: `pages/${id}`,
+		permissions: { delete: true, sort: true, ...permissions },
+		template: "default",
+		text: id
+	};
+}
+
+/**
+ * Lets the field load the given entries
+ */
+function entries(models: object[], merge = {}) {
+	api.get.mockResolvedValue({
+		...state,
+		models,
+		pagination: { ...state.pagination, total: models.length },
+		...merge
+	});
+}
 
 function mount(props = {}, attrs = {}, $panel: object = panel) {
 	return vueMount(ModelListField, {
@@ -31,16 +59,25 @@ function mount(props = {}, attrs = {}, $panel: object = panel) {
 			...props
 		},
 		attrs,
-		shallow: true,
 		global: {
+			components: { "k-collection": Collection },
 			mocks: {
 				$api: api,
+				// returns its arguments to check the dropdown of each entry
+				$dropdown: (link: string, options: object) => ({ link, ...options }),
 				$events: events,
 				$panel
 			},
 			mixins: [preserveListeners]
 		}
 	});
+}
+
+/**
+ * The entries passed to the collection
+ */
+function items(wrapper: ReturnType<typeof mount>) {
+	return wrapper.findComponent(Collection).props("items");
 }
 
 /**
@@ -51,14 +88,10 @@ function lastEmit() {
 	return events.emit.mock.calls.at(-1) ?? [];
 }
 
-describe("ModelListField.vue", () => {
+describe("k-model-list-field", () => {
 	beforeEach(() => {
 		api.get.mockReset();
 		api.get.mockResolvedValue(state);
-		events.emit.mockClear();
-		events.off.mockClear();
-		events.on.mockClear();
-		panel.error.mockClear();
 	});
 
 	// $el
@@ -67,102 +100,74 @@ describe("ModelListField.vue", () => {
 		it.inheritsNoAttrs(mount);
 	});
 
-	// events
-	describe.each([
-		["focus", "onFocus"],
-		["input", "onInput"],
-		["submit", "onSubmit"]
-	])("native %s event", (event, listener) => {
-		it("does not call the listener of the form", async () => {
-			const handler = vi.fn();
-			const wrapper = mount({}, { [listener]: handler });
-			await wrapper.trigger(event);
-
-			expect(handler).not.toHaveBeenCalled();
-		});
-	});
-
-	describe("native click event", () => {
-		it("calls the listener once", async () => {
-			const handler = vi.fn();
-			const wrapper = mount({}, { onClick: handler });
-			await wrapper.trigger("click");
-
-			expect(handler).toHaveBeenCalledOnce();
-		});
-	});
-
-	// loading
-	describe("loading", () => {
-		it("fetches its entries once it is mounted", async () => {
-			const wrapper = mount();
-
-			// no page, so the server can start on the `page` prop
-			expect(api.get).toHaveBeenCalledWith("pages/test/fields/drafts", {
-				page: null,
-				searchterm: null
-			});
-
-			await flushPromises();
-
-			expect(wrapper.vm.state).toStrictEqual(state);
-			expect(wrapper.vm.isLoading).toBe(false);
-		});
-
-		it("shows a loading empty state until the entries arrive", async () => {
-			const wrapper = mount();
-
-			expect(wrapper.vm.isLoading).toBe(true);
-			expect(wrapper.vm.items).toStrictEqual([]);
-			expect(wrapper.vm.emptyProps).toStrictEqual({
-				icon: "loader",
-				text: "loading"
-			});
-
-			// the entries are unknown, so the list cannot be validated yet
-			expect(wrapper.vm.validator).toStrictEqual({ count: 0 });
-
-			await flushPromises();
-
-			expect(wrapper.vm.emptyProps).toStrictEqual({
-				icon: "box",
-				text: "models.empty"
-			});
-			expect(wrapper.vm.validator).toStrictEqual({
-				count: 0,
-				max: undefined,
-				min: undefined
-			});
-		});
-
-		it("keeps the columns from the props while loading", async () => {
-			const columns = { title: { label: "Title" } };
-			const wrapper = mount({ columns });
-
-			expect(wrapper.vm.state.columns).toStrictEqual(columns);
-
-			await flushPromises();
-
-			// the loaded columns carry the resolved types
-			expect(wrapper.vm.state.columns).toStrictEqual(state.columns);
-		});
-
-		it("reports a failing load", async () => {
-			const error = new Error("Nope");
-			api.get.mockRejectedValue(error);
-
+	// computed
+	describe("items computed", () => {
+		it("passes the entries with their dropdown to the collection", async () => {
+			entries([model("a")]);
 			const wrapper = mount();
 			await flushPromises();
 
-			expect(panel.error).toHaveBeenCalledWith(error);
-			expect(wrapper.vm.isLoading).toBe(false);
-			expect(wrapper.vm.isProcessing).toBe(false);
+			expect(items(wrapper)).toStrictEqual([
+				{
+					...model("a"),
+					data: { "data-id": "a", "data-template": "default" },
+					options: {
+						link: "pages/a",
+						query: { delete: true, sort: true, view: "list" }
+					},
+					selectable: false,
+					sortable: true
+				}
+			]);
+		});
 
-			// the list must not look empty when it could not be loaded
-			expect(wrapper.vm.emptyProps).toStrictEqual({
-				icon: "alert",
-				text: "Nope"
-			});
+		it("keeps entries from being deleted at the min", async () => {
+			entries([model("a"), model("b")]);
+			const wrapper = mount({ min: 2 });
+			await flushPromises();
+
+			expect(items(wrapper)[0].options.query.delete).toBe(false);
+		});
+
+		it("keeps entries without permission from being deleted", async () => {
+			entries([model("a", { delete: false })]);
+			const wrapper = mount();
+			await flushPromises();
+
+			expect(items(wrapper)[0].options.query.delete).toBe(false);
+		});
+
+		it("makes deletable entries selectable while selecting", async () => {
+			entries([model("a"), model("b", { delete: false })]);
+			const wrapper = mount({ batch: true });
+			await flushPromises();
+
+			expect(items(wrapper)[0].selectable).toBe(false);
+
+			wrapper.vm.startSelecting();
+			await nextTick();
+
+			expect(items(wrapper)[0].selectable).toBe(true);
+			expect(items(wrapper)[1].selectable).toBe(false);
+		});
+
+		it("makes entries with permission sortable", async () => {
+			entries([model("a"), model("b", { sort: false })]);
+			const wrapper = mount();
+			await flushPromises();
+
+			expect(items(wrapper)[0].sortable).toBe(true);
+			expect(items(wrapper)[1].sortable).toBe(false);
+			expect(items(wrapper)[1].options.query.sort).toBe(false);
+		});
+
+		it("makes no entry sortable while the list is not sortable", async () => {
+			entries([model("a")], { sortable: false });
+			const wrapper = mount();
+			await flushPromises();
+
+			expect(items(wrapper)[0].sortable).toBe(false);
+			expect(items(wrapper)[0].options.query.sort).toBe(false);
 		});
 	});
 
@@ -209,6 +214,81 @@ describe("ModelListField.vue", () => {
 			await flushPromises();
 
 			expect(api.get).toHaveBeenCalledOnce();
+		});
+	});
+
+	// lifecycle
+	describe("mounted hook", () => {
+		it("fetches its entries once it is mounted", async () => {
+			const wrapper = mount();
+
+			// no page, so the server can start on the `page` prop
+			expect(api.get).toHaveBeenCalledWith("pages/test/fields/drafts", {
+				page: null,
+				searchterm: null
+			});
+
+			await flushPromises();
+
+			expect(wrapper.vm.state).toStrictEqual(state);
+			expect(wrapper.vm.isLoading).toBe(false);
+		});
+
+		it("shows a loading empty state until the entries arrive", async () => {
+			const wrapper = mount({ max: 3, min: 1 });
+			const collection = wrapper.findComponent(Collection);
+			const validator = wrapper.find("k-validator");
+
+			expect(collection.props("items")).toStrictEqual([]);
+			expect(collection.props("empty")).toStrictEqual({
+				icon: "loader",
+				text: "loading"
+			});
+
+			// the entries are unknown, so the list cannot be validated yet
+			expect(validator.attributes()).toStrictEqual({ count: "0" });
+
+			await flushPromises();
+
+			expect(collection.props("empty")).toStrictEqual({
+				icon: "box",
+				text: "models.empty"
+			});
+			expect(validator.attributes()).toStrictEqual({
+				count: "0",
+				max: "3",
+				min: "1"
+			});
+		});
+
+		it("keeps the columns from the props while loading", async () => {
+			const columns = { title: { label: "Title" } };
+			const wrapper = mount({ columns });
+
+			expect(wrapper.vm.state.columns).toStrictEqual(columns);
+
+			await flushPromises();
+
+			// the loaded columns carry the resolved types
+			expect(wrapper.vm.state.columns).toStrictEqual(state.columns);
+		});
+
+		it("reports a failing load", async () => {
+			const error = new Error("Nope");
+			api.get.mockRejectedValue(error);
+
+			const wrapper = mount();
+			await flushPromises();
+
+			expect(panel.error).toHaveBeenCalledWith(error);
+			expect(wrapper.vm.isLoading).toBe(false);
+			expect(wrapper.vm.isProcessing).toBe(false);
+
+			// the list must not look empty when it could not be loaded
+			expect(wrapper.vm.emptyProps).toStrictEqual({
+				icon: "alert",
+				text: "Nope"
+			});
 		});
 	});
 
@@ -285,18 +365,22 @@ describe("ModelListField.vue", () => {
 	});
 
 	describe("model.update event", () => {
+		afterEach(() => {
+			vi.useRealTimers();
+		});
+
 		it("is listened to while mounted", async () => {
 			const wrapper = mount();
 			await flushPromises();
 
-			expect(events.on).toHaveBeenCalledWith("model.update", expect.anything());
+			const handler = listeners["model.update"];
+			expect(events.on).toHaveBeenCalledWith("model.update", handler);
+			expect(events.off).not.toHaveBeenCalled();
 
 			wrapper.unmount();
 
-			expect(events.off).toHaveBeenCalledWith(
-				"model.update",
-				expect.anything()
-			);
+			// any other handler would leave the registered one listening
+			expect(events.off).toHaveBeenCalledWith("model.update", handler);
 		});
 
 		it("triggers a single reload when fired in quick succession", async () => {
@@ -311,7 +395,6 @@ describe("ModelListField.vue", () => {
 			listeners["model.update"]();
 
 			await vi.advanceTimersByTimeAsync(1);
-			vi.useRealTimers();
 
 			expect(api.get).toHaveBeenCalledOnce();
 		});
@@ -327,9 +410,32 @@ describe("ModelListField.vue", () => {
 			listeners["model.update"]({ redirect: "/pages/new-slug" });
 
 			await vi.advanceTimersByTimeAsync(1);
-			vi.useRealTimers();
 
 			expect(api.get).not.toHaveBeenCalled();
+		});
+	});
+
+	describe("native click event", () => {
+		it("calls the listener once", async () => {
+			const handler = vi.fn();
+			const wrapper = mount({}, { onClick: handler });
+			await wrapper.trigger("click");
+
+			expect(handler).toHaveBeenCalledOnce();
+		});
+	});
+
+	describe.each([
+		["focus", "onFocus"],
+		["input", "onInput"],
+		["submit", "onSubmit"]
+	])("native %s event", (event, listener) => {
+		it("does not call the listener of the form", async () => {
+			const handler = vi.fn();
+			const wrapper = mount({}, { [listener]: handler });
+			await wrapper.trigger(event);
+
+			expect(handler).not.toHaveBeenCalled();
 		});
 	});
 });

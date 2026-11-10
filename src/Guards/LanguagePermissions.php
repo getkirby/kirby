@@ -24,7 +24,7 @@ class LanguagePermissions extends ModelPermissions
 		return 'languages';
 	}
 
-	public function error(string $key, array $data = []): never
+	protected function error(string $key, array $data = []): never
 	{
 		parent::error(
 			key: 'language.' . $key . '.permission',

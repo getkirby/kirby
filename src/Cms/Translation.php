@@ -15,6 +15,9 @@ use Kirby\Toolkit\Str;
  */
 class Translation
 {
+	/**
+	 * @param array<string, mixed> $data
+	 */
 	public function __construct(
 		protected string $code,
 		protected array $data
@@ -49,6 +52,8 @@ class Translation
 	/**
 	 * Returns an array with all
 	 * translation strings
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function data(): array
 	{
@@ -58,6 +63,8 @@ class Translation
 	/**
 	 * Returns the translation data and merges
 	 * it with the data from the default translation
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function dataWithFallback(): array
 	{
@@ -66,7 +73,6 @@ class Translation
 		}
 
 		return [
-			// add the fallback array
 			...App::instance()->translation('en')->data(),
 			...$this->data
 		];
@@ -103,6 +109,8 @@ class Translation
 	/**
 	 * Loads the translation from the
 	 * json file in Kirby's translations folder
+	 *
+	 * @param array<string, mixed> $inject
 	 */
 	#[BlockCollectionAccess]
 	public static function load(
@@ -142,6 +150,8 @@ class Translation
 	/**
 	 * Converts the most important
 	 * properties to an array
+	 *
+	 * @return array{code: string, data: array<string, mixed>, name: string, author: string}
 	 */
 	public function toArray(): array
 	{

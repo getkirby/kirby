@@ -81,18 +81,19 @@ export async function upload(
 		xhr.upload.addEventListener("loadstart", progress);
 		xhr.upload.addEventListener("progress", progress);
 
-		xhr.addEventListener("load", (event: Event) => {
-			const target = event.target as XMLHttpRequest;
-			let response: { status: string; message?: string };
-
+		const parse = (event: Event): { status: string; message?: string } => {
 			try {
-				response = JSON.parse(target.response);
+				return JSON.parse((event.target as XMLHttpRequest).response);
 			} catch {
-				response = {
+				return {
 					status: "error",
 					message: "The file could not be uploaded"
 				};
 			}
+		};
+
+		xhr.addEventListener("load", (event: Event) => {
+			const response = parse(event);
 
 			if (response.status === "error") {
 				options.error(xhr, file, response);
@@ -105,8 +106,7 @@ export async function upload(
 		});
 
 		xhr.addEventListener("error", (event: Event) => {
-			const target = event.target as XMLHttpRequest;
-			const response = JSON.parse(target.response);
+			const response = parse(event);
 
 			options.progress(xhr, file, 100);
 			options.error(xhr, file, response);

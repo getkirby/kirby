@@ -6,6 +6,8 @@ use Kirby\Cms\File;
 use Kirby\Cms\Model;
 use Kirby\Cms\User;
 use Kirby\Exception\DuplicateException;
+use Kirby\Exception\Exception;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\File as BaseFile;
 
@@ -46,22 +48,11 @@ class FileGuards extends ModelGuards
 		File $model,
 		User $user
 	) {
-		parent::__construct(
-			abilities: new FileAbilities(
-				model: $model,
-				user: $user
-			),
-			model: $model,
-			permissions: new FilePermissions(
-				model: $model,
-				user: $user
-			),
-			user: $user,
-			validators: new FileValidators(
-				model: $model,
-				user: $user
-			),
-		);
+		parent::__construct($model, $user);
+
+		$this->abilities   = new FileAbilities($model, $user);
+		$this->permissions = new FilePermissions($model, $user);
+		$this->validators  = new FileValidators($model, $user);
 	}
 
 	/**
@@ -78,6 +69,8 @@ class FileGuards extends ModelGuards
 	 * Checks if the file can be created
 	 *
 	 * @throws DuplicateException If a file with the same name exists
+	 * @throws Exception If the file does not match the `accept` rules of its blueprint
+	 * @throws InvalidArgumentException If the name, extension, MIME type or contents of the file are invalid
 	 * @throws PermissionException If the user is not allowed to create the file
 	 */
 	protected function ensureToCreate(BaseFile $upload): void

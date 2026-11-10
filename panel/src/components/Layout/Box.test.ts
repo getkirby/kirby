@@ -1,8 +1,15 @@
-import { beforeEach, describe, expect, it, vi } from "@test/unit";
+import { describe, expect, it } from "@test/unit";
 import { mount } from "@vue/test-utils";
 import Box from "./Box.vue";
+import Text from "@/components/Text/Text.vue";
+import html from "@/panel/html";
 
-describe("Box.vue", () => {
+// mounts with the real k-text to render the text it passes on
+function box(props = {}) {
+	return mount(Box, { props, global: { components: { "k-text": Text } } });
+}
+
+describe("k-box", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(Box, "DIV", "k-box");
@@ -43,13 +50,14 @@ describe("Box.vue", () => {
 	});
 
 	describe("html prop", () => {
-		beforeEach(() => {
-			vi.clearAllMocks();
-		});
-
 		it("does not warn when the deprecated prop is unused", () => {
 			mount(Box);
 			expect(window.panel.deprecated).not.toHaveBeenCalled();
+		});
+
+		it("renders the text as trusted HTML", () => {
+			const wrapper = box({ html: true, text: "<b>Hello</b>" });
+			expect(wrapper.find(".k-text b").text()).toBe("Hello");
 		});
 
 		it("warns that the prop is deprecated", () => {
@@ -69,6 +77,19 @@ describe("Box.vue", () => {
 		it("does not render a k-icon when not provided", () => {
 			const wrapper = mount(Box);
 			expect(wrapper.find("k-icon").exists()).toBe(false);
+		});
+	});
+
+	describe("text prop", () => {
+		it("escapes a plain string", () => {
+			const wrapper = box({ text: "<b>Hello</b>" });
+			expect(wrapper.find(".k-text b").exists()).toBe(false);
+			expect(wrapper.find(".k-text").text()).toBe("<b>Hello</b>");
+		});
+
+		it("renders trusted HTML as-is", () => {
+			const wrapper = box({ text: html("<b>Hello</b>") });
+			expect(wrapper.find(".k-text b").text()).toBe("Hello");
 		});
 	});
 

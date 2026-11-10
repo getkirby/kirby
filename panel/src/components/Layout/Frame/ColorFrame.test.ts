@@ -2,7 +2,7 @@ import { describe, it, expect } from "@test/unit";
 import { mount } from "@vue/test-utils";
 import ColorFrame from "./ColorFrame.vue";
 
-describe("ColorFrame.vue", () => {
+describe("k-color-frame", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(ColorFrame, "K-FRAME", "k-color-frame");

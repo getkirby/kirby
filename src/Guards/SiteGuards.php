@@ -43,21 +43,10 @@ class SiteGuards extends ModelGuards
 		Site $model,
 		User $user
 	) {
-		parent::__construct(
-			abilities: new SiteAbilities(
-				model: $model,
-				user: $user
-			),
-			model: $model,
-			permissions: new SitePermissions(
-				model: $model,
-				user: $user
-			),
-			user: $user,
-			validators: new SiteValidators(
-				model: $model,
-				user: $user
-			),
-		);
+		parent::__construct($model, $user);
+
+		$this->abilities   = new SiteAbilities($model, $user);
+		$this->permissions = new SitePermissions($model, $user);
+		$this->validators  = new SiteValidators($model, $user);
 	}
 }

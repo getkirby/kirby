@@ -174,9 +174,9 @@
 	"error.language.update.permission": "언어를 변경할 권한이 없습니다.",
 	"error.language.variable.core": "\"{key}\" is one of Kirby's own translation strings and cannot be overwritten by a language variable",
 	"error.language.variable.duplicate": "A variable for \"{key}\" already exists",
-	"error.language.variable.key": "Please enter a valid key for the variable",
+	"error.language.variable.key": "변수에 대한 올바른 키를 입력하세요.",
 	"error.language.variable.notFound": "변수를 찾을 수 없습니다.",
-	"error.language.variable.numeric": "The variable key must not be numeric",
+	"error.language.variable.numeric": "숫자는 변수 키로 지정할 수 없습니다.",
 
 	"error.layout.validation.block": "레이아웃({layoutIndex})의 특정 블록 유형({fieldset})을 사용하는 블록({blockIndex})의 특정 필드({field})에 오류가 있습니다.",
 	"error.layout.validation.settings": "레이아웃({index}) 옵션을 확인하세요.",
@@ -242,11 +242,11 @@
 	"error.page.undefined": "\ud398\uc774\uc9c0\uac00 \uc5c6\uc2b5\ub2c8\ub2e4.",
 	"error.page.update.permission": "페이지({slug})를 변경할 권한이 없습니다.",
 
-	"error.role.notFound": "The role \"{name}\" cannot be found",
+	"error.role.notFound": "역할({{name}})이 없습니다.",
 
 	"error.site.changeTitle.empty": "제목을 입력하세요.",
 	"error.site.changeTitle.permission": "사이트명을 변경할 권한이 없습니다.",
-	"error.site.notAccessible": "The site is not accessible",
+	"error.site.notAccessible": "사이트에 접근할 수 없습니다.",
 	"error.site.update.permission": "사이트 정보를 변경할 권한이 없습니다.",
 
 	"error.structure.validation": "{index}번째 필드({field})에 오류가 있습니다.",
@@ -350,9 +350,9 @@
 
 	"error.version.discard.permission": "이 버전을 무시할 권한이 없습니다.",
 	"error.version.publish.permission": "이 버전을 공개할 권한이 없습니다.",
-	"error.version.removed": "The version has been removed by another request",
+	"error.version.removed": "다른 요청으로 제거된 버전입니다.",
 	"error.version.save.permission": "이 버전을 변경할 권한이 없습니다.",
-	"error.version.unlock.permission": "You are not allowed to unlock this version",
+	"error.version.unlock.permission": "이 버전을 해제할 권한이 없습니다.",
 
 	"expand": "열기",
 	"expand.all": "모두 열기",
@@ -439,7 +439,7 @@
 	"field.structure.delete.confirm.selected": "선택한 항목을 삭제할까요?",
 	"field.structure.empty": "항목이 없습니다.",
 
-	"field.tags.placeholder": "Add tag",
+	"field.tags.placeholder": "태그 추가",
 
 	"field.users.empty": "선택한 사용자가 없습니다.",
 	"field.users.empty.single": "선택한 사용자가 없습니다.",
@@ -538,12 +538,12 @@
 	"license.buy": "라이선스 구매",
 	"license.code": "언어 코드",
 	"license.code.help": "이메일로 전송된 라이선스 코드를 복사해 붙여넣으세요.",
-	"license.code.label": "License code",
+	"license.code.label": "라이선스 코드",
 	"license.remove.text": "<p>라이선스를 제거하면 이 사이트에서 라이선스 파일이 삭제됩니다. 도메인이 동일한 경우 다른 라이선스 키로 이 사이트를 활성화하거나 동일한 라이선스 키를 다시 등록할 수 있습니다.</p><p>라이선스와 연결된 도메인을 변경하려면 Kirby 팀에 문의하십시오.<a href='https://getkirby.com/license'>자세히 보기 &rarr;</a></p>",
 	"license.status.active.info": "새로운 메이저 버전은 {date}까지 포함됩니다.",
 	"license.status.active.label": "유효한 라이선스",
 	"license.status.acknowledged.info": "You confirmed to comply with the <a href=\"https://getkirby.com/license/free-licenses\">free license requirements</a>",
-	"license.status.acknowledged.label": "Active free license",
+	"license.status.acknowledged.label": "무료 라이선스 활성화",
 	"license.status.demo.info": "데모를 설치합니다.",
 	"license.status.demo.label": "데모",
 	"license.status.inactive.info": "새로운 메이저 버전으로 업데이트하려면 라이선스를 갱신하세요.",
@@ -770,7 +770,7 @@
 	"system.info.copied": "시스템 정보가 복사되었습니다.",
 	"system.issues.content": "<code>/content</code> 폴더의 권한을 확인하세요.",
 	"system.issues.content.salt": "The content salt has not been changed from its default value",
-	"system.issues.cookie.key": "The cookie signing key has not been changed from its default value",
+	"system.issues.cookie.key": "쿠키 서명 키가 기본값에서 변경되지 않았습니다.",
 	"system.issues.eol.kirby": "설치된 Kirby 버전이 만료되었습니다. 더 이상 보안 업데이트를 받을 수 없습니다.",
 	"system.issues.eol.plugin": "설치된 플러그인({plugin}의 지원이 종료되었습니다. 더 이상 보안 업데이트를 받을 수 없습니다.",
 	"system.issues.eol.php": "설치된 PHP 버전({release})이 만료되었습니다. 더 이상 보안 업데이트를 받을 수 없습니다.",

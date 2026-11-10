@@ -6,6 +6,7 @@ use Kirby\Cms\Language;
 use Kirby\Cms\ModelTestCase;
 use Kirby\Exception\PermissionException;
 use PHPUnit\Framework\Attributes\CoversClass;
+use ReflectionMethod;
 
 #[CoversClass(LanguagePermissions::class)]
 class LanguagePermissionsTest extends ModelTestCase
@@ -78,7 +79,8 @@ class LanguagePermissionsTest extends ModelTestCase
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionCode('error.language.test.permission');
 
-		$permissions->error('test');
+		$method = new ReflectionMethod($permissions, 'error');
+		$method->invoke($permissions, 'test');
 	}
 
 	public function testSettingForUser(): void

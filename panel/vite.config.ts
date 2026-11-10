@@ -183,6 +183,8 @@ function createTest() {
 		isolate: false,
 		pool: "threads",
 		setupFiles: ["tests/unit/setup.ts"],
+		// restore stubbed globals before each test, as files share one scope
+		unstubGlobals: true,
 		coverage: {
 			provider: "v8",
 			include: ["src/**/*.{js,ts,vue}"],
@@ -225,7 +227,6 @@ export default defineConfig(({ mode }) => {
 			rolldownOptions: {
 				checks: { pluginTimings: false },
 				external: ["vue"],
-				input: "./src/index.ts",
 				output: {
 					entryFileNames: "js/[name].min.js",
 					chunkFileNames: (chunk) =>
@@ -240,24 +241,16 @@ export default defineConfig(({ mode }) => {
 								test: /node_modules\/sortablejs\//
 							},
 							{
-								name: "prosemirror-model",
-								test: /node_modules\/prosemirror-model\//
-							},
-							{
-								name: "prosemirror",
-								test: /node_modules\/prosemirror-/
-							},
-							{
 								name: "vendor",
-								test: /node_modules\/(?!sortablejs\/|prosemirror-)|plugin-vue:export-helper|vite\/preload-helper/
+								test: /node_modules\/(?!sortablejs\/)|plugin-vue:export-helper|vite\/preload-helper/
 							}
 						]
 					}
 				}
 			}
 		},
+		input: "./src/index.ts",
 		optimizeDeps: {
-			entries: ["src/**/*.{js,ts,vue}", "!src/**/*.test.{js,ts}"],
 			exclude: ["vue"]
 		},
 		resolve: {

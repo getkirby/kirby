@@ -1,5 +1,8 @@
-import { beforeEach, describe, expect, it, vi } from "@test/unit";
+import { afterEach, describe, expect, it, vi } from "@test/unit";
 import { mount as vueMount } from "@vue/test-utils";
+import Item from "@/components/Collection/Item.vue";
+import Link from "@/components/Navigation/Link.vue";
+import { buildUrl } from "@/helpers/url";
 import PreviewForm from "./PreviewForm.vue";
 
 const events = { off: vi.fn(), on: vi.fn() };
@@ -20,7 +23,6 @@ function mount(props = {}, attrs = {}) {
 			...props
 		},
 		attrs,
-		shallow: true,
 		global: {
 			mocks: {
 				$events: events,
@@ -59,18 +61,47 @@ function loaded(...urls: (string | undefined)[]) {
 
 const original = vi.fn();
 
-describe("PreviewForm.vue", () => {
-	beforeEach(() => {
-		events.off.mockClear();
-		events.on.mockClear();
-		original.mockClear();
-	});
-
+describe("k-preview-form", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "DIV", "k-preview-form");
 		it.acceptsClass(mount);
 		it.acceptsStyle(mount);
+	});
+
+	// computed
+	describe("tabsWithPreviewLinks computed", () => {
+		const url = window.location.href;
+
+		afterEach(() => {
+			window.history.replaceState(null, "", url);
+		});
+
+		it("links each tab to itself", () => {
+			const wrapper = mount();
+			const links = wrapper.vm.tabsWithPreviewLinks.map(
+				(tab: { link: string }) => tab.link
+			);
+
+			expect(links).toStrictEqual([
+				"/pages/test?tab=main",
+				"/pages/test?tab=meta"
+			]);
+		});
+
+		it("replaces the current tab and keeps the other query", () => {
+			window.history.replaceState(null, "", "?view=changes&tab=meta");
+
+			const wrapper = mount();
+			const links = wrapper.vm.tabsWithPreviewLinks.map(
+				(tab: { link: string }) => tab.link
+			);
+
+			expect(links).toStrictEqual([
+				"/pages/test?view=changes&tab=main",
+				"/pages/test?view=changes&tab=meta"
+			]);
+		});
 	});
 
 	// methods
@@ -104,6 +135,37 @@ describe("PreviewForm.vue", () => {
 			expect(wrapper.emitted("navigate")).toStrictEqual([
 				["/pages/a/preview/form"],
 				["/pages/b/preview/form"]
+			]);
+		});
+
+		it("redirects clicks on the rendered item title link", async () => {
+			const wrapper = mount();
+			const go = vi.fn();
+			const field = vueMount(Item, {
+				props: { link: "/pages/test+child", text: "Child" },
+				global: {
+					components: { "k-link": Link },
+					mocks: {
+						$go: go,
+						$url: (path: string) => buildUrl(path, {}, "https://getkirby.com")
+					},
+					// same as the Panel's mixin in `src/index.ts`
+					mixins: [
+						{
+							mounted() {
+								this.$el.__vue__ = this;
+							}
+						}
+					]
+				}
+			});
+
+			wrapper.vm.fixLinks(field.vm);
+			await field.find(".k-item-title > .k-link").trigger("click");
+
+			expect(go).not.toHaveBeenCalled();
+			expect(wrapper.emitted("navigate")).toStrictEqual([
+				["/pages/test+child/preview/form"]
 			]);
 		});
 

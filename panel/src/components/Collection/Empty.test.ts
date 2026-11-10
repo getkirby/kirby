@@ -8,12 +8,11 @@ function mount(
 ) {
 	return vueMount(Empty, {
 		props,
-		attrs,
-		shallow: true
+		attrs
 	});
 }
 
-describe("Empty.vue", () => {
+describe("k-empty", () => {
 	// $el
 	describe("element", () => {
 		const component = (attrs?: Record<string, unknown>) => mount({}, attrs);
@@ -81,6 +80,11 @@ describe("Empty.vue", () => {
 			const wrapper = mount({ onClick: () => {} });
 			expect(wrapper.attributes("button")).toBe("true");
 		});
+
+		it("sets button to false without onClick", () => {
+			const wrapper = mount();
+			expect(wrapper.attributes("button")).toBe("false");
+		});
 	});
 
 	// events
@@ -96,8 +100,7 @@ describe("Empty.vue", () => {
 	describe("default slot", () => {
 		it("renders slotted content", () => {
 			const wrapper = vueMount(Empty, {
-				slots: { default: "<span>Custom empty message</span>" },
-				shallow: true
+				slots: { default: "<span>Custom empty message</span>" }
 			});
 			expect(wrapper.find("span").text()).toBe("Custom empty message");
 		});
@@ -105,8 +108,7 @@ describe("Empty.vue", () => {
 		it("prefers slot content over text prop", () => {
 			const wrapper = vueMount(Empty, {
 				props: { text: "fallback text" },
-				slots: { default: "Slot content" },
-				shallow: true
+				slots: { default: "Slot content" }
 			});
 			expect(wrapper.text()).toBe("Slot content");
 		});

@@ -5,18 +5,16 @@ import type Panel from "@/panel/panel";
 import Icons from "./Icons.vue";
 
 vi.hoisted(() => {
-	globalThis.panel = {
-		plugins: {
-			icons: {
-				edit: '<path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z"/>',
-				close:
-					'<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>'
-			}
+	globalThis.panel.plugins = {
+		icons: {
+			edit: '<path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z"/>',
+			close:
+				'<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>'
 		}
-	} as unknown as Panel;
+	} as unknown as Panel["plugins"];
 });
 
-describe("Icons.vue", () => {
+describe("k-icons", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(Icons, "svg", "k-icons");
@@ -44,9 +42,11 @@ describe("Icons.vue", () => {
 
 		it("sets viewBox on each symbol", () => {
 			const wrapper = mount(Icons);
-			wrapper
+			const viewBoxes = wrapper
 				.findAll("symbol")
-				.forEach((s) => expect(s.attributes("viewBox")).toBe("0 0 24 24"));
+				.map((symbol) => symbol.attributes("viewBox"));
+
+			expect(viewBoxes).toStrictEqual(["0 0 24 24", "0 0 24 24"]);
 		});
 
 		it("renders the icon svg content", () => {

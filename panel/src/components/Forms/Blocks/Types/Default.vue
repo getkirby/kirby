@@ -39,7 +39,35 @@ export const props = {
 export default {
 	mixins: [props],
 	inheritAttrs: false,
-	emits: ["open", "update"],
+	/**
+	 * All events that `k-block` listens to need to be declared.
+	 * Otherwise, the listeners end up as native DOM listeners on
+	 * the root element (see `preserveListeners` mixin) and
+	 * e.g. native `copy` or `paste` events from inputs within the
+	 * block would trigger the block's copy/paste actions.
+	 */
+	emits: [
+		"append",
+		"chooseToAppend",
+		"chooseToConvert",
+		"chooseToPrepend",
+		"close",
+		"copy",
+		"duplicate",
+		"focus",
+		"hide",
+		"merge",
+		"open",
+		"paste",
+		"prepend",
+		"remove",
+		"removeSelected",
+		"show",
+		"sortDown",
+		"sortUp",
+		"split",
+		"update"
+	],
 	methods: {
 		field(name, fallback = null) {
 			let field = null;

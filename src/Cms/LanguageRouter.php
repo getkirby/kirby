@@ -33,7 +33,8 @@ class LanguageRouter
 	 * Fetches all scoped routes for the
 	 * current language from the Kirby instance
 	 *
-	 * @throws NotFoundException
+	 * @return list<array<string, mixed>>
+	 * @throws NotFoundException If the page of a page-scoped route does not exist
 	 */
 	public function routes(): array
 	{
@@ -63,24 +64,26 @@ class LanguageRouter
 		// add the page-scope if necessary
 		foreach ($routes as $index => $route) {
 			if ($pageId = ($route['page'] ?? null)) {
-				if ($page = $kirby->page($pageId)) {
-					// convert string patterns to arrays
-					$patterns = A::wrap($route['pattern']);
+				$page = $kirby->page($pageId);
 
-					// prefix all patterns with the page slug
-					$patterns = A::map(
-						$patterns,
-						fn ($pattern) => $page->uri($language) . '/' . $pattern
-					);
-
-					// re-inject the pattern and the full page object
-					$routes[$index]['pattern'] = $patterns;
-					$routes[$index]['page']    = $page;
-				} else {
+				if ($page === null) {
 					throw new NotFoundException(
 						message: 'The page "' . $pageId . '" does not exist'
 					);
 				}
+
+				// convert string patterns to arrays
+				$patterns = A::wrap($route['pattern']);
+
+				// prefix all patterns with the page slug
+				$patterns = A::map(
+					$patterns,
+					fn ($pattern) => $page->uri($language) . '/' . $pattern
+				);
+
+				// re-inject the pattern and the full page object
+				$routes[$index]['pattern'] = $patterns;
+				$routes[$index]['page']    = $page;
 			}
 		}
 

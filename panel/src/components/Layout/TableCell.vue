@@ -11,6 +11,7 @@
 			:is="component"
 			v-if="$helper.object.isEmpty(value) === false"
 			:column="column"
+			:disabled="disabled"
 			:field="field"
 			:row="row"
 			:value="value"
@@ -31,6 +32,10 @@ export default {
 		 * Column options
 		 */
 		column: Object,
+		/**
+		 * Whether the cell is disabled
+		 */
+		disabled: Boolean,
 		/**
 		 * Optional corresponding field options
 		 */

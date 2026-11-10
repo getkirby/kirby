@@ -49,17 +49,7 @@ export function save(panel: Panel, key: "dialog" | "drawer"): void {
 		return;
 	}
 
-	if (typeof form.requestSubmit === "function") {
-		form.requestSubmit();
-		return;
-	}
-
-	form.dispatchEvent(
-		new Event("submit", {
-			bubbles: true,
-			cancelable: true
-		})
-	);
+	form.requestSubmit();
 }
 
 /**

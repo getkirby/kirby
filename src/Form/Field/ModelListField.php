@@ -43,7 +43,8 @@ abstract class ModelListField extends DisplayField
 	protected ModelsCollector|null $collector = null;
 
 	/**
-	 * Columns config for `layout: table`
+	 * Columns config for `layout: table`. `false` hides
+	 * a column, a string sets its label.
 	 */
 	#[Prop(computed: true, getter: 'defineColumns')]
 	protected array|null $columns = null;
@@ -234,11 +235,17 @@ abstract class ModelListField extends DisplayField
 	 */
 	protected function columnValues(ModelWithContent $model): array
 	{
+		$blueprint = $model->blueprint();
+		$fields    = [];
+
+		foreach ($this->columnFields() as $name) {
+			if ($field = $blueprint->field($name)) {
+				$fields[] = $field;
+			}
+		}
+
 		$form = new Form(
-			fields: array_intersect_key(
-				$model->blueprint()->fields(),
-				array_flip($this->columnFields())
-			),
+			fields: $fields,
 			model: $model
 		);
 
@@ -311,9 +318,12 @@ abstract class ModelListField extends DisplayField
 				continue;
 			}
 
-			if (is_array($column) === false) {
-				$column = [];
-			}
+			// a string is a shorthand for the label
+			$column = match (true) {
+				is_array($column)  => $column,
+				is_string($column) => ['label' => $column],
+				default            => []
+			};
 
 			$column['label'] ??= Str::ucfirst($name);
 			$column['label']   = $this->i18n($column['label']);
@@ -552,7 +562,8 @@ abstract class ModelListField extends DisplayField
 			// without overwriting what the item already provides
 			if (isset($item[$name]) === false) {
 				$values ??= $this->columnValues($model);
-				$item[$name] = $values[$column['id'] ?? $name] ?? null;
+				// form values are keyed by the lowercased field name
+				$item[$name] = $values[strtolower($column['id'] ?? $name)] ?? null;
 			}
 		}
 

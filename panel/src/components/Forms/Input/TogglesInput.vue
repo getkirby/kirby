@@ -48,7 +48,7 @@ export const props = {
 		grow: Boolean,
 		labels: Boolean,
 		options: Array,
-		resettable: Boolean,
+		reset: Boolean,
 		value: [String, Number, Boolean]
 	}
 };
@@ -73,7 +73,7 @@ export default {
 			)?.focus();
 		},
 		onClick(value) {
-			if (value === this.value && this.resettable && !this.required) {
+			if (value === this.value && this.reset && !this.required) {
 				this.$emit("input", "");
 			}
 		},
@@ -110,7 +110,7 @@ export default {
 }
 
 .k-toggles-input li {
-	height: var(--field-input-height);
+	height: var(--input-height);
 }
 .k-toggles-input label {
 	align-items: center;

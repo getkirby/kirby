@@ -122,6 +122,14 @@ export default {
 			opener: null
 		};
 	},
+	unmounted() {
+		// a removed dialog does not fire its close event
+		window.removeEventListener("resize", this.setPosition);
+
+		if (OpenDropdown === this) {
+			OpenDropdown = null;
+		}
+	},
 	methods: {
 		/**
 		 * Closes the dropdown

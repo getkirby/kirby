@@ -24,8 +24,9 @@ class Languages extends Collection
 	/**
 	 * Creates a new collection with the given language objects
 	 *
+	 * @param array<Language> $objects
 	 * @param null $parent
-	 * @throws DuplicateException
+	 * @throws DuplicateException If more than one language is the default
 	 */
 	public function __construct(
 		array $objects = [],
@@ -47,14 +48,18 @@ class Languages extends Collection
 
 	/**
 	 * Returns all language codes as array
+	 *
+	 * @return list<string>
 	 */
 	public function codes(): array
 	{
-		return App::instance()->multilang() ? $this->keys() : ['default'];
+		return App::instance()->multilang() === true ? $this->keys() : ['default'];
 	}
 
 	/**
 	 * Creates a new language with the given props
+	 *
+	 * @param array<string, mixed> $props
 	 */
 	public function create(array $props): Language
 	{

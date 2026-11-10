@@ -15,6 +15,8 @@ class Db
 {
 	/**
 	 * Query shortcuts
+	 *
+	 * @var array<string, \Closure>
 	 */
 	public static array $queries = [];
 
@@ -26,8 +28,8 @@ class Db
 	/**
 	 * (Re)connect the database
 	 *
-	 * @param $params Pass `[]` to use the default params from the config,
-	 *               don't pass any argument to get the current connection
+	 * @param $params Connection params; without them, the current connection
+	 *               is returned or a new one is created from the `db.*` options
 	 */
 	public static function connect(array|null $params = null): Database
 	{
@@ -98,7 +100,7 @@ class Db
 	 */
 	public static function __callStatic(string $method, $arguments)
 	{
-		if (isset(static::$queries[$method])) {
+		if (isset(static::$queries[$method]) === true) {
 			return (static::$queries[$method])(...$arguments);
 		}
 
@@ -120,14 +122,14 @@ class Db
 /**
  * Shortcut for SELECT clauses
  *
- * @param string $table The name of the table which should be queried
- * @param mixed $columns Either a string with columns or an array of column names
- * @param mixed $where The WHERE clause; can be a string or an array
+ * @param $table The name of the table which should be queried
+ * @param $columns Either a string with columns or an array of column names
+ * @param $where The WHERE clause; can be a string or an array
  */
 Db::$queries['select'] = function (
 	string $table,
-	$columns = '*',
-	$where = null,
+	mixed $columns = '*',
+	mixed $where = null,
 	string|null $order = null,
 	int $offset = 0,
 	int|null $limit = null
@@ -144,14 +146,14 @@ Db::$queries['select'] = function (
 /**
  * Shortcut for selecting a single row in a table
  *
- * @param string $table The name of the table which should be queried
- * @param mixed $columns Either a string with columns or an array of column names
- * @param mixed $where The WHERE clause; can be a string or an array
+ * @param $table The name of the table which should be queried
+ * @param $columns Either a string with columns or an array of column names
+ * @param $where The WHERE clause; can be a string or an array
  */
 Db::$queries['first'] = Db::$queries['row'] = Db::$queries['one'] = function (
 	string $table,
-	$columns = '*',
-	$where = null,
+	mixed $columns = '*',
+	mixed $where = null,
 	string|null $order = null
 ) {
 	return Db::table($table)
@@ -164,14 +166,14 @@ Db::$queries['first'] = Db::$queries['row'] = Db::$queries['one'] = function (
 /**
  * Returns only values from a single column
  *
- * @param string $table The name of the table which should be queried
- * @param string $column The name of the column to select from
- * @param mixed $where The WHERE clause; can be a string or an array
+ * @param $table The name of the table which should be queried
+ * @param $column The name of the column to select from
+ * @param $where The WHERE clause; can be a string or an array
  */
 Db::$queries['column'] = function (
 	string $table,
 	string $column,
-	$where = null,
+	mixed $where = null,
 	string|null $order = null,
 	int $offset = 0,
 	int|null $limit = null
@@ -187,8 +189,8 @@ Db::$queries['column'] = function (
 /**
  * Shortcut for inserting a new row into a table
  *
- * @param string $table The name of the table which should be queried
- * @param array $values An array of values which should be inserted
+ * @param $table The name of the table which should be queried
+ * @param $values An array of values which should be inserted
  * @return mixed Returns the last inserted id on success or false
  */
 Db::$queries['insert'] = function (string $table, array $values): mixed {
@@ -198,14 +200,14 @@ Db::$queries['insert'] = function (string $table, array $values): mixed {
 /**
  * Shortcut for updating a row in a table
  *
- * @param string $table The name of the table which should be queried
- * @param array $values An array of values which should be inserted
- * @param mixed $where An optional WHERE clause
+ * @param $table The name of the table which should be queried
+ * @param $values An array of values which should be updated
+ * @param $where An optional WHERE clause
  */
 Db::$queries['update'] = function (
 	string $table,
 	array $values,
-	$where = null
+	mixed $where = null
 ): bool {
 	return Db::table($table)->where($where)->update($values);
 };
@@ -213,18 +215,18 @@ Db::$queries['update'] = function (
 /**
  * Shortcut for deleting rows in a table
  *
- * @param string $table The name of the table which should be queried
- * @param mixed $where An optional WHERE clause
+ * @param $table The name of the table which should be queried
+ * @param $where An optional WHERE clause
  */
-Db::$queries['delete'] = function (string $table, $where = null): bool {
+Db::$queries['delete'] = function (string $table, mixed $where = null): bool {
 	return Db::table($table)->where($where)->delete();
 };
 
 /**
  * Shortcut for counting rows in a table
  *
- * @param string $table The name of the table which should be queried
- * @param mixed $where An optional WHERE clause
+ * @param $table The name of the table which should be queried
+ * @param $where An optional WHERE clause
  */
 Db::$queries['count'] = function (string $table, mixed $where = null): int {
 	return Db::table($table)->where($where)->count();
@@ -233,14 +235,14 @@ Db::$queries['count'] = function (string $table, mixed $where = null): int {
 /**
  * Shortcut for calculating the minimum value in a column
  *
- * @param string $table The name of the table which should be queried
- * @param string $column The name of the column of which the minimum should be calculated
- * @param mixed $where An optional WHERE clause
+ * @param $table The name of the table which should be queried
+ * @param $column The name of the column of which the minimum should be calculated
+ * @param $where An optional WHERE clause
  */
 Db::$queries['min'] = function (
 	string $table,
 	string $column,
-	$where = null
+	mixed $where = null
 ): float {
 	return Db::table($table)->where($where)->min($column);
 };
@@ -248,14 +250,14 @@ Db::$queries['min'] = function (
 /**
  * Shortcut for calculating the maximum value in a column
  *
- * @param string $table The name of the table which should be queried
- * @param string $column The name of the column of which the maximum should be calculated
- * @param mixed $where An optional WHERE clause
+ * @param $table The name of the table which should be queried
+ * @param $column The name of the column of which the maximum should be calculated
+ * @param $where An optional WHERE clause
  */
 Db::$queries['max'] = function (
 	string $table,
 	string $column,
-	$where = null
+	mixed $where = null
 ): float {
 	return Db::table($table)->where($where)->max($column);
 };
@@ -263,14 +265,14 @@ Db::$queries['max'] = function (
 /**
  * Shortcut for calculating the average value in a column
  *
- * @param string $table The name of the table which should be queried
- * @param string $column The name of the column of which the average should be calculated
- * @param mixed $where An optional WHERE clause
+ * @param $table The name of the table which should be queried
+ * @param $column The name of the column of which the average should be calculated
+ * @param $where An optional WHERE clause
  */
 Db::$queries['avg'] = function (
 	string $table,
 	string $column,
-	$where = null
+	mixed $where = null
 ): float {
 	return Db::table($table)->where($where)->avg($column);
 };
@@ -278,14 +280,14 @@ Db::$queries['avg'] = function (
 /**
  * Shortcut for calculating the sum of all values in a column
  *
- * @param string $table The name of the table which should be queried
- * @param string $column The name of the column of which the sum should be calculated
- * @param mixed $where An optional WHERE clause
+ * @param $table The name of the table which should be queried
+ * @param $column The name of the column of which the sum should be calculated
+ * @param $where An optional WHERE clause
  */
 Db::$queries['sum'] = function (
 	string $table,
 	string $column,
-	$where = null
+	mixed $where = null
 ): float {
 	return Db::table($table)->where($where)->sum($column);
 };

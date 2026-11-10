@@ -1,16 +1,11 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from "@test/unit";
 import { mount as vueMount } from "@vue/test-utils";
-import dayjs from "@/libraries/dayjs";
 import TimeInput from "./TimeInput.vue";
 
 function mount(props: Record<string, unknown> = {}) {
 	return vueMount(TimeInput, {
 		props: { step: { size: 1, unit: "minute" }, ...props } as never,
 		global: {
-			mocks: {
-				$library: { dayjs },
-				$t: (key: string) => key
-			},
 			directives: { direction: {} }
 		}
 	});
@@ -34,7 +29,15 @@ function emitted(wrapper: ReturnType<typeof mount>) {
 	return events?.[events.length - 1]?.[0];
 }
 
-describe("TimeInput.vue", () => {
+/**
+ * Text currently selected in the input
+ */
+function selected(wrapper: ReturnType<typeof mount>) {
+	const input = wrapper.find("input").element as HTMLInputElement;
+	return input.value.slice(input.selectionStart!, input.selectionEnd!);
+}
+
+describe("k-time-input", () => {
 	beforeAll(() => {
 		vi.useFakeTimers();
 		vi.setSystemTime(new Date(2022, 0, 15));
@@ -52,21 +55,46 @@ describe("TimeInput.vue", () => {
 		it.inheritsNoAttrs(mount);
 	});
 
+	// props
+	describe("step prop", () => {
+		it("rounds to 5 minutes by default", async () => {
+			// an undefined prop falls back to its default
+			const wrapper = mount({ display: "HH:mm", step: undefined });
+
+			await type(wrapper, "05:12");
+			expect(emitted(wrapper)).toBe("05:10:00");
+
+			await type(wrapper, "05:13");
+			expect(emitted(wrapper)).toBe("05:15:00");
+		});
+
+		it("merges a partial step with the default", async () => {
+			const wrapper = mount({ display: "HH:mm", step: { size: 15 } });
+
+			await type(wrapper, "05:07");
+			expect(emitted(wrapper)).toBe("05:00:00");
+
+			await type(wrapper, "05:08");
+			expect(emitted(wrapper)).toBe("05:15:00");
+		});
+	});
+
 	// computed
 	describe("placeholder computed", () => {
 		it("shows an example time", () => {
-			const input = mount({ display: "h:mm a" }).find("input");
+			const wrapper = mount({ display: "h:mm a" });
+			const input = wrapper.find("input");
 			expect(input.attributes("placeholder")).toBe("12:00 am");
 		});
 
 		it("follows the display pattern", () => {
-			expect(
-				mount({ display: "HH:mm" }).find("input").attributes("placeholder")
-			).toBe("00:00");
+			const wrapper = mount({ display: "HH:mm" });
+			expect(wrapper.find("input").attributes("placeholder")).toBe("00:00");
 		});
 
 		it("uses `min` when now is before it", () => {
-			const input = mount({ display: "h:mm a", min: "13:00:00" }).find("input");
+			const wrapper = mount({ display: "h:mm a", min: "13:00:00" });
+			const input = wrapper.find("input");
 			expect(input.attributes("placeholder")).toBe("1:00 pm");
 		});
 	});
@@ -93,6 +121,42 @@ describe("TimeInput.vue", () => {
 
 			expect((input.element as HTMLInputElement).value).toBe("14:30");
 			expect(emitted(wrapper)).toBe("14:30:00");
+		});
+
+		it("toggles a selected meridiem by 12 hours on arrow up", async () => {
+			const wrapper = mount({ display: "h:mm a", value: "05:10:00" });
+			const input = wrapper.find("input");
+
+			// select the meridiem
+			(input.element as HTMLInputElement).setSelectionRange(5, 7);
+
+			await input.trigger("keydown", { key: "ArrowUp" });
+			await wrapper.vm.$nextTick();
+			expect(emitted(wrapper)).toBe("17:10:00");
+			expect(selected(wrapper)).toBe("pm");
+
+			await input.trigger("keydown", { key: "ArrowUp" });
+			await wrapper.vm.$nextTick();
+			expect(emitted(wrapper)).toBe("05:10:00");
+			expect(selected(wrapper)).toBe("am");
+		});
+
+		it("toggles a selected meridiem by 12 hours on arrow down", async () => {
+			const wrapper = mount({ display: "h:mm a", value: "17:10:00" });
+			const input = wrapper.find("input");
+
+			// select the meridiem
+			(input.element as HTMLInputElement).setSelectionRange(5, 7);
+
+			await input.trigger("keydown", { key: "ArrowDown" });
+			await wrapper.vm.$nextTick();
+			expect(emitted(wrapper)).toBe("05:10:00");
+			expect(selected(wrapper)).toBe("am");
+
+			await input.trigger("keydown", { key: "ArrowDown" });
+			await wrapper.vm.$nextTick();
+			expect(emitted(wrapper)).toBe("17:10:00");
+			expect(selected(wrapper)).toBe("pm");
 		});
 	});
 

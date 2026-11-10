@@ -27,7 +27,7 @@ use Kirby\Uuid\FileUuid;
  * or `Kirby\Image\Image` class, which
  * is used to handle all asset file methods.
  * In addition the File class handles
- * meta data via `Kirby\Cms\Content`.
+ * meta data via `Kirby\Content\Content`.
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
@@ -70,6 +70,8 @@ class File extends ModelWithContent
 
 	/**
 	 * Creates a new File object
+	 *
+	 * @param array<string, mixed> $props
 	 */
 	public function __construct(array $props)
 	{
@@ -109,7 +111,7 @@ class File extends ModelWithContent
 		}
 
 		// asset method proxy
-		if (method_exists($this->asset(), $method)) {
+		if (method_exists($this->asset(), $method) === true) {
 			return $this->asset()->$method(...$arguments);
 		}
 
@@ -160,6 +162,8 @@ class File extends ModelWithContent
 	/**
 	 * Returns an array with all blueprints that are available for the file
 	 * by comparing the file list fields of the parent model
+	 *
+	 * @return list<array{name: string, title: string}>
 	 */
 	public function blueprints(string|null $inField = null): array
 	{
@@ -253,7 +257,6 @@ class File extends ModelWithContent
 		// default language
 		if ($language->isDefault() === false) {
 			unset($data['template'], $data['sort']);
-			return $data;
 		}
 
 		return $data;
@@ -261,6 +264,8 @@ class File extends ModelWithContent
 
 	/**
 	 * Constructs a File object
+	 *
+	 * @param array<string, mixed> $props
 	 */
 	public static function factory(array $props): static
 	{
@@ -293,6 +298,8 @@ class File extends ModelWithContent
 
 	/**
 	 * Converts the file to html
+	 *
+	 * @param array<string, mixed> $attr
 	 */
 	public function html(array $attr = []): string
 	{
@@ -424,8 +431,7 @@ class File extends ModelWithContent
 	#[BlockCollectionAccess]
 	public function mediaToken(): string
 	{
-		$token = $this->kirby()->contentToken($this, $this->id());
-		return substr($token, 0, 10);
+		return substr($this->kirby()->contentToken($this, $this->id()), 0, 10);
 	}
 
 	/**
@@ -435,16 +441,16 @@ class File extends ModelWithContent
 	 */
 	public function mediaUrl(string|null $filename = null): string
 	{
-		$url        = $this->parent()->mediaUrl() . '/' . $this->mediaHash();
 		$filename ??= $this->filename();
 
-		return $url . '/' . $filename;
+		return $this->parent()->mediaUrl() . '/' . $this->mediaHash() . '/' . $filename;
 	}
 
 	/**
 	 * Get the file's last modification time.
 	 *
-	 * @param $handler date, intl or strftime
+	 * @param 'date'|'intl'|'strftime'|null $handler Date handler, `null` for the configured one
+	 * @return ($format is null ? int : string|false)
 	 */
 	public function modified(
 		string|IntlDateFormatter|null $format = null,

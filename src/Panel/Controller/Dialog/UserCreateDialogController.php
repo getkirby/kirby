@@ -27,6 +27,10 @@ class UserCreateDialogController extends DialogController
 			$role = $roles->find($role)?->id();
 		}
 
+		// fall back to the first role that can be created,
+		// also if the role field is hidden for a single role
+		$role = $role ?: $roles->first()?->id();
+
 		// get role field definition, incl. available role options
 		$roles = Field::role(
 			roles: $roles,
@@ -58,7 +62,7 @@ class UserCreateDialogController extends DialogController
 				'email'       => '',
 				'password'    => '',
 				'translation' => $this->kirby->panelLanguage(),
-				'role'        => $role ?: $roles['options'][0]['value'] ?? null
+				'role'        => $role
 			]
 		);
 	}

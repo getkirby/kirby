@@ -393,11 +393,13 @@ trait PageActions
 	/**
 	 * Commits a page action, by following these steps
 	 *
-	 * 1. applies the `before` hook
-	 * 2. checks the action rules
-	 * 3. commits the store action
-	 * 4. applies the `after` hook
-	 * 5. returns the result
+	 * 1. checks the action guards
+	 * 2. applies the `before` hook
+	 * 3. checks the action guards again
+	 * 4. runs the action callback
+	 * 5. updates the app-wide model state
+	 * 6. applies the `after` hook, flushes the pages cache
+	 *    and returns the result of the hook
 	 */
 	protected function commit(
 		string $action,
@@ -1054,24 +1056,5 @@ trait PageActions
 		}
 
 		return $page;
-	}
-
-	/**
-	 * Updates parent collections with the new page object
-	 * after a page action
-	 *
-	 * @deprecated 5.0.0 Use ModelState::update instead
-	 */
-	protected static function updateParentCollections(
-		Page $page,
-		string|false $method,
-		Page|Site|null $parentModel = null
-	): void {
-		ModelState::update(
-			method: $method,
-			current: $page,
-			next: $page,
-			parent: $parentModel
-		);
 	}
 }

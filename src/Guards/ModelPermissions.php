@@ -78,9 +78,12 @@ abstract class ModelPermissions
 	}
 
 	/**
+	 * Throws for a missing permission. The key is the action;
+	 * child classes turn it into e.g. `page.delete.permission`.
+	 *
 	 * @throws PermissionException
 	 */
-	public function error(string $key, array $data = []): never
+	protected function error(string $key, array $data = []): never
 	{
 		throw new PermissionException(
 			key: $key,
@@ -105,8 +108,8 @@ abstract class ModelPermissions
 	}
 
 	/**
-	 * Resolves the permission rule for the current user.
-	 * Returns null if no rule is defined for the action.
+	 * Resolves the permission rule for the user of the guards.
+	 * Returns `$default` if no rule is defined for the action.
 	 */
 	public function setting(string $action, bool|null $default = null): bool|null
 	{

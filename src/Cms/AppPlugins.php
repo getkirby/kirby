@@ -30,6 +30,8 @@ trait AppPlugins
 {
 	/**
 	 * A list of all registered plugins
+	 *
+	 * @var array<string, Plugin>
 	 */
 	protected static array $plugins = [];
 
@@ -102,7 +104,7 @@ trait AppPlugins
 		array $extensions,
 		Plugin|null $plugin = null
 	): array {
-		foreach ($this->extensions as $type => $registered) {
+		foreach (array_keys($this->extensions) as $type) {
 			if (isset($extensions[$type]) === true) {
 				$this->{'extend' . $type}($extensions[$type], $plugin);
 			}
@@ -330,13 +332,12 @@ trait AppPlugins
 	 */
 	protected function extendFileTypes(array $fileTypes): array
 	{
-		// normalize array
-		foreach ($fileTypes as $ext => $file) {
-			$extension = $file['extension'] ?? $ext;
-			$type      = $file['type'] ?? null;
-			$mime      = $file['mime'] ?? null;
-			$resizable = $file['resizable'] ?? false;
-			$viewable  = $file['viewable'] ?? false;
+		foreach ($fileTypes as $key => $definition) {
+			$extension = $definition['extension'] ?? $key;
+			$type      = $definition['type'] ?? null;
+			$mime      = $definition['mime'] ?? null;
+			$resizable = $definition['resizable'] ?? false;
+			$viewable  = $definition['viewable'] ?? false;
 
 			if (is_string($type) === true) {
 				if (isset(F::$types[$type]) === false) {
@@ -717,8 +718,8 @@ trait AppPlugins
 	/**
 	 * Returns a given extension by type and name
 	 *
-	 * @param $type i.e. `'hooks'`
-	 * @param $name i.e. `'page.delete:before'`
+	 * @param $type e.g. `'hooks'`
+	 * @param $name e.g. `'page.delete:before'`
 	 */
 	public function extension(
 		string $type,
@@ -766,8 +767,8 @@ trait AppPlugins
 
 	/**
 	 * Register extensions that could be located in
-	 * the options array. I.e. hooks and routes can be
-	 * setup from the config.
+	 * the options array, e.g. hooks and routes can be
+	 * set up from the config.
 	 */
 	protected function extensionsFromOptions(): void
 	{
@@ -890,7 +891,8 @@ trait AppPlugins
 	 * Loads and returns all plugins in the site/plugins directory
 	 * Loading only happens on the first call.
 	 *
-	 * @param $plugins Can be used to overwrite the plugins registry
+	 * @param array<string, Plugin>|null $plugins Can be used to overwrite the plugins registry
+	 * @return array<string, Plugin>
 	 */
 	public function plugins(array|null $plugins = null): array
 	{
@@ -916,7 +918,7 @@ trait AppPlugins
 	/**
 	 * Loads all plugins from site/plugins
 	 *
-	 * @return array Array of loaded directories
+	 * @return list<string> Loaded directories
 	 */
 	protected function pluginsLoader(): array
 	{

@@ -7,18 +7,11 @@ function mount(props = {}, attrs = {}, slots = {}) {
 	return vueMount(Frame, {
 		props,
 		attrs,
-		slots,
-		global: {
-			mocks: {
-				$helper: {
-					color: (c: string) => c ?? null
-				}
-			}
-		}
+		slots
 	});
 }
 
-describe("Frame.vue", () => {
+describe("k-frame", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "DIV", "k-frame");
@@ -31,10 +24,7 @@ describe("Frame.vue", () => {
 	describe("back prop", () => {
 		it("sets --back to the value returned by $helper.color", () => {
 			const back = "blue-400";
-			const wrapper = vueMount(Frame, {
-				props: { back },
-				global: { mocks: { $helper: { color } } }
-			});
+			const wrapper = mount({ back });
 			expect(wrapper.attributes("style")).toContain(`--back: ${color(back)}`);
 		});
 	});

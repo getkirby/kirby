@@ -88,6 +88,32 @@ describe("panel.drawer", () => {
 		});
 	});
 
+	describe("listeners()", () => {
+		it("should switch tabs and go back via the breadcrumb", async () => {
+			const panel = Panel.create(app);
+			const drawer = Drawer(panel);
+
+			const first = await drawer.open({ component: "k-first-drawer" });
+			await drawer.open({
+				component: "k-second-drawer",
+				props: {
+					tabs: {
+						content: { fields: { title: {} } },
+						seo: { fields: { description: {} } }
+					}
+				}
+			});
+
+			const listeners = drawer.listeners();
+
+			listeners.tab("seo");
+			expect(drawer.props.tab).toStrictEqual("seo");
+
+			listeners.crumb(first.id);
+			expect(drawer.component).toStrictEqual("k-first-drawer");
+		});
+	});
+
 	describe("open()", () => {
 		it("should open a drawer component", async () => {
 			const panel = Panel.create(app);
@@ -305,8 +331,6 @@ describe("panel.drawer", () => {
 		});
 
 		it("should submit the active drawer form when the focus is outside of it", () => {
-			document.body.innerHTML = "";
-
 			const panel = Panel.create(app);
 			const { requestSubmit } = render("drawer");
 			const preventDefault = vi.fn();
@@ -323,8 +347,6 @@ describe("panel.drawer", () => {
 		});
 
 		it("should fall back to direct submit without a drawer form", () => {
-			document.body.innerHTML = "";
-
 			const panel = Panel.create(app);
 			const preventDefault = vi.fn();
 			const submit = vi.spyOn(panel.drawer, "submit");

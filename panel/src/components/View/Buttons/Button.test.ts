@@ -2,7 +2,13 @@ import { describe, it, expect, vi } from "@test/unit";
 import { mount } from "@vue/test-utils";
 import ViewButton from "./Button.vue";
 
-describe("ViewButton.vue", () => {
+const Dropdown = {
+	props: ["options"],
+	emits: ["action"],
+	render: () => null
+};
+
+describe("k-view-button", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(ViewButton, "DIV", "k-view-button");
@@ -25,9 +31,50 @@ describe("ViewButton.vue", () => {
 			expect(wrapper.find("k-dropdown").exists()).toBe(false);
 			expect(wrapper.find("k-button").attributes("dropdown")).toBe("false");
 		});
+
+		it("passes an options array on as-is", () => {
+			const $dropdown = vi.fn();
+			const options = [{ text: "Option A" }];
+			const wrapper = mount(ViewButton, {
+				props: { options },
+				global: {
+					components: { "k-dropdown": Dropdown },
+					mocks: { $dropdown }
+				}
+			});
+			expect(wrapper.findComponent(Dropdown).props("options")).toStrictEqual(
+				options
+			);
+			expect($dropdown).not.toHaveBeenCalled();
+		});
+
+		it("loads string options via $dropdown", () => {
+			const loader = vi.fn();
+			const $dropdown = vi.fn(() => loader);
+			const wrapper = mount(ViewButton, {
+				props: { options: "pages/test/buttons/open" },
+				global: {
+					components: { "k-dropdown": Dropdown },
+					mocks: { $dropdown }
+				}
+			});
+			expect($dropdown).toHaveBeenCalledWith("pages/test/buttons/open");
+			expect(wrapper.findComponent(Dropdown).props("options")).toBe(loader);
+		});
 	});
 
 	// events
+	describe("action event", () => {
+		it("forwards the dropdown action", () => {
+			const wrapper = mount(ViewButton, {
+				props: { options: [{ text: "Option A" }] },
+				global: { components: { "k-dropdown": Dropdown } }
+			});
+			wrapper.findComponent(Dropdown).vm.$emit("action", "edit");
+			expect(wrapper.emitted("action")).toStrictEqual([["edit"]]);
+		});
+	});
+
 	describe("click event", () => {
 		it("emits click without dropdown", async () => {
 			const wrapper = mount(ViewButton);

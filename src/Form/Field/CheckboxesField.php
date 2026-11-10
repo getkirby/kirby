@@ -18,6 +18,11 @@ class CheckboxesField extends OptionsField
 	use Mixin\Batch;
 	use Mixin\Columns;
 
+	public function default(): array
+	{
+		return Str::split(parent::default(), ',');
+	}
+
 	public function fill(mixed $value): static
 	{
 		return parent::fill(

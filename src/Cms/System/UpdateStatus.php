@@ -39,6 +39,9 @@ class UpdateStatus
 	protected bool $securityOnly;
 
 	// props updated throughout the class
+	/**
+	 * @var list<KirbyException>
+	 */
 	protected array $exceptions = [];
 	protected bool|null $noVulns = null;
 
@@ -81,6 +84,8 @@ class UpdateStatus
 	/**
 	 * Returns the list of exception objects that were
 	 * collected during data fetching and processing
+	 *
+	 * @return list<KirbyException>
 	 */
 	public function exceptions(): array
 	{
@@ -90,6 +95,8 @@ class UpdateStatus
 	/**
 	 * Returns the list of exception message strings that
 	 * were collected during data fetching and processing
+	 *
+	 * @return list<string>
 	 */
 	public function exceptionMessages(): array
 	{
@@ -99,7 +106,7 @@ class UpdateStatus
 	/**
 	 * Returns the Panel icon for the status value
 	 *
-	 * @return string 'check'|'alert'|'info'|'question'
+	 * @return 'check'|'alert'|'info'|'question'
 	 */
 	public function icon(): string
 	{
@@ -225,8 +232,7 @@ class UpdateStatus
 	/**
 	 * Returns the raw status value
 	 *
-	 * @return string 'up-to-date'|'not-vulnerable'|'security-update'|
-	 *                'security-upgrade'|'update'|'upgrade'|'unreleased'|'error'
+	 * @return 'up-to-date'|'not-vulnerable'|'security-update'|'security-upgrade'|'update'|'upgrade'|'unreleased'|'error'
 	 */
 	public function status(): string
 	{
@@ -244,7 +250,7 @@ class UpdateStatus
 	/**
 	 * Returns the Panel theme for the status value
 	 *
-	 * @return string 'positive'|'negative'|'info'|'notice'
+	 * @return 'positive'|'negative'|'info'|'passive'
 	 */
 	public function theme(): string
 	{
@@ -259,6 +265,8 @@ class UpdateStatus
 	/**
 	 * Returns the most important human-readable
 	 * status information as array
+	 *
+	 * @return array{currentVersion: string, icon: string, label: string, latestVersion: string, pluginName: string|null, theme: string, url: string|null}
 	 */
 	public function toArray(): array
 	{

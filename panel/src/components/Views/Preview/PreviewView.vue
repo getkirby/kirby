@@ -248,11 +248,10 @@ export default {
 		title: String
 	},
 	data() {
-		const scroll = localStorage.getItem("kirby$preview$scroll", "true");
-
 		return {
 			isRemote: false,
-			isScrollSyncing: scroll === "true"
+			// syncs unless turned off before
+			isScrollSyncing: localStorage.getItem("kirby$preview$scroll") !== "false"
 		};
 	},
 	watch: {

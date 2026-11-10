@@ -24,7 +24,7 @@ return function ($kirby) {
 				'action'  => function () use ($kirby) {
 					$method = $kirby->auth()->methods()->firstEnabled();
 					$query  = $kirby->request()->query();
-					$path   = 'login/method/' . $method::type();
+					$path   = 'login/method/' . $method->type();
 
 					// keep the query, e.g. the globals the logout view
 					// requests, as this is only a redirect to the method

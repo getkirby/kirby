@@ -51,7 +51,10 @@ export default {
 	emits: ["input", "submit"],
 	computed: {
 		isEmpty() {
-			return Object.keys(this.columns ?? {}).length === 0 && this.empty;
+			return (
+				Object.keys(this.columns ?? {}).length === 0 &&
+				(this.empty ?? "") !== ""
+			);
 		},
 		isLocked() {
 			return this.lock?.isLocked === true;

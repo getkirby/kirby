@@ -1,4 +1,13 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { Slice } from "prosemirror-model";
+import {
+	afterEach,
+	beforeEach,
+	describe,
+	expect,
+	it,
+	onTestFinished,
+	vi
+} from "vitest";
 import { reactive } from "vue";
 import Editor from "./Editor";
 import { Bold, Link } from "./Marks";
@@ -10,6 +19,22 @@ function createEditor(options: Record<string, unknown> = {}): Editor {
 	return new Editor({ element, ...options });
 }
 
+function paste(editor: Editor, html: string, text: string): ClipboardEvent {
+	const clipboardData = new DataTransfer();
+	clipboardData.setData("text/html", html);
+	clipboardData.setData("text/plain", text);
+
+	const event = new ClipboardEvent("paste", {
+		bubbles: true,
+		cancelable: true,
+		clipboardData
+	});
+
+	editor.view!.dom.dispatchEvent(event);
+
+	return event;
+}
+
 describe("Editor", () => {
 	let editor: Editor;
 
@@ -19,7 +44,6 @@ describe("Editor", () => {
 
 	afterEach(() => {
 		editor.destroy();
-		document.body.innerHTML = "";
 	});
 
 	describe("constructor", () => {
@@ -28,7 +52,6 @@ describe("Editor", () => {
 			expect(editor.options.content).toBe("");
 			expect(editor.options.editable).toBe(true);
 			expect(editor.options.inline).toBe(false);
-			expect(editor.options.useBuiltInExtensions).toBe(true);
 		});
 
 		it("merges provided options with defaults", () => {
@@ -49,6 +72,38 @@ describe("Editor", () => {
 			document.body.appendChild(element);
 			const e = new Editor({ element, events: { init: onInit } });
 			expect(onInit).toHaveBeenCalledOnce();
+			e.destroy();
+		});
+
+		it("focuses the editor with autofocus", () => {
+			vi.useFakeTimers();
+			onTestFinished(() => {
+				vi.useRealTimers();
+			});
+
+			const e = createEditor({ autofocus: true, content: "<p>hello</p>" });
+			vi.runAllTimers();
+
+			expect(document.activeElement).toBe(e.view!.dom);
+			e.destroy();
+		});
+
+		it.each([
+			[true, 1],
+			["start", 1],
+			["end", 6],
+			[3, 3]
+		])("places the cursor for autofocus %s", (autofocus, position) => {
+			vi.useFakeTimers();
+			onTestFinished(() => {
+				vi.useRealTimers();
+			});
+
+			const e = createEditor({ autofocus, content: "<p>hello</p>" });
+			vi.runAllTimers();
+
+			expect(e.selection.from).toBe(position);
+			expect(e.selection.to).toBe(position);
 			e.destroy();
 		});
 	});
@@ -212,6 +267,60 @@ describe("Editor", () => {
 		});
 	});
 
+	describe("createView", () => {
+		it("hands pasted content to the paste event", () => {
+			const onPaste = vi.fn(() => true);
+			const e = createEditor({
+				content: "<p>hello</p>",
+				events: { paste: onPaste }
+			});
+
+			const event = paste(e, "<p>world</p>", "world");
+
+			expect(onPaste).toHaveBeenCalledWith(event, "<p>world</p>", "world");
+			expect(event.defaultPrevented).toBe(true);
+			expect(e.getHTML()).toBe("<p>hello</p>");
+			e.destroy();
+		});
+
+		it("pastes when the paste event does not return true", () => {
+			const e = createEditor({
+				content: "<p>hello</p>",
+				events: { paste: () => false }
+			});
+
+			paste(e, "<p>world</p>", "world");
+
+			expect(e.getHTML()).toBe("<p>helloworld</p>");
+			e.destroy();
+		});
+
+		it("pastes without a paste event", () => {
+			editor.setContent("<p>hello</p>");
+			paste(editor, "<p>world</p>", "world");
+			expect(editor.getHTML()).toBe("<p>helloworld</p>");
+		});
+
+		it("emits the drop event and lets ProseMirror handle the drop", () => {
+			const onDrop = vi.fn();
+			editor.on("drop", onDrop);
+
+			const view = editor.view!;
+			const event = new DragEvent("drop");
+			const handled = view.someProp("handleDrop", (handleDrop) =>
+				handleDrop(view, event, Slice.empty, true)
+			);
+
+			expect(onDrop).toHaveBeenCalledWith({
+				event,
+				moved: true,
+				slice: Slice.empty,
+				view
+			});
+			expect(handled).toBeFalsy();
+		});
+	});
+
 	describe("destroy", () => {
 		it("removes the editor DOM element from the document", () => {
 			const e = createEditor();
@@ -310,6 +419,20 @@ describe("Editor", () => {
 			expect(editor.selection.from).toBe(3);
 		});
 
+		it("keeps the selection when the editor already has focus", () => {
+			editor.setContent("<p>hello</p>");
+			editor.setSelection(3, 3);
+			editor.view!.dom.focus();
+
+			const onTransaction = vi.fn();
+			editor.on("transaction", onTransaction);
+			editor.focus();
+			vi.runAllTimers();
+
+			expect(onTransaction).not.toHaveBeenCalled();
+			expect(editor.selection.from).toBe(3);
+		});
+
 		it("is a no-op when position is false", () => {
 			editor.setContent("<p>hello</p>");
 			editor.setSelection(2, 2);
@@ -328,7 +451,7 @@ describe("Editor", () => {
 			e.destroy();
 		});
 
-		it("returns only the inner paragraph content in inline mode", () => {
+		it("returns the inline content without a paragraph in inline mode", () => {
 			const e = createEditor({ inline: true });
 			e.setContent("<p>hello</p>");
 			expect(e.getHTML()).toBe("hello");
@@ -399,6 +522,12 @@ describe("Editor", () => {
 		it("returns undefined for a mark not present in the schema", () => {
 			expect(editor.getMarkAttrs("nonexistent")).toBeUndefined();
 		});
+
+		it("returns undefined without a mark type", () => {
+			const e = createEditor({ extensions: [new Link()] });
+			expect(e.getMarkAttrs()).toBeUndefined();
+			e.destroy();
+		});
 	});
 
 	describe("insertText", () => {
@@ -437,6 +566,12 @@ describe("Editor", () => {
 		it("returns false when the document has text", () => {
 			editor.setContent("<p>hello</p>");
 			expect(editor.isEmpty()).toBe(false);
+		});
+
+		it("returns true after the editor is destroyed", () => {
+			const e = createEditor({ content: "<p>hello</p>" });
+			e.destroy();
+			expect(e.isEmpty()).toBe(true);
 		});
 	});
 

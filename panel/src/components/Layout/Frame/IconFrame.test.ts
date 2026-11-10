@@ -2,7 +2,7 @@ import { describe, it, expect } from "@test/unit";
 import { mount } from "@vue/test-utils";
 import IconFrame from "./IconFrame.vue";
 
-describe("IconFrame.vue", () => {
+describe("k-icon-frame", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(IconFrame, "K-FRAME", "k-icon-frame");

@@ -22,6 +22,27 @@ class TogglesFieldTest extends TestCase
 		$this->assertTrue($field->grow());
 	}
 
+	public function testIsResettable(): void
+	{
+		$field = $this->field('toggles', [
+			'reset' => true
+		]);
+
+		$this->assertTrue($field->isResettable());
+
+		$field = $this->field('toggles', [
+			'options' => ['a', 'b'],
+			'reset'   => false,
+			'value'   => 'a'
+		]);
+
+		$this->assertFalse($field->isResettable());
+
+		// exporting the prop must not call `ValueField::reset()`
+		$this->assertFalse($field->props()['reset']);
+		$this->assertSame('a', $field->toFormValue());
+	}
+
 	public function testLabels(): void
 	{
 		$field = $this->field('toggles', [
@@ -55,7 +76,7 @@ class TogglesFieldTest extends TestCase
 			'name'       => 'toggles',
 			'options'    => [],
 			'required'   => false,
-			'resettable' => true,
+			'reset'      => true,
 			'saveable'   => true,
 			'translate'  => true,
 			'type'       => 'toggles',
@@ -64,20 +85,5 @@ class TogglesFieldTest extends TestCase
 		];
 
 		$this->assertSame($expected, $props);
-	}
-
-	public function testResettable(): void
-	{
-		$field = $this->field('toggles', [
-			'resettable' => false
-		]);
-
-		$this->assertFalse($field->resettable());
-
-		$field = $this->field('toggles', [
-			'resettable' => true
-		]);
-
-		$this->assertTrue($field->resettable());
 	}
 }

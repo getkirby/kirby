@@ -23,7 +23,7 @@ function mount(props: Props = {}, attrs: Props = {}) {
 	}) as unknown as VueWrapper<ComponentPublicInstance<Props>>;
 }
 
-describe("ImageFrame.vue", () => {
+describe("k-image-frame", () => {
 	beforeEach(() => {
 		items.mockReset();
 	});
@@ -49,12 +49,14 @@ describe("ImageFrame.vue", () => {
 	// props
 	describe("alt prop", () => {
 		it("renders the alt text", () => {
-			const img = mount({ src: "/image.jpg", alt: "A cat" }).find("img");
+			const wrapper = mount({ src: "/image.jpg", alt: "A cat" });
+			const img = wrapper.find("img");
 			expect(img.attributes("alt")).toBe("A cat");
 		});
 
 		it("falls back to an empty alt attribute", () => {
-			const img = mount({ src: "/image.jpg" }).find("img");
+			const wrapper = mount({ src: "/image.jpg" });
+			const img = wrapper.find("img");
 			expect(img.attributes("alt")).toBe("");
 		});
 	});
@@ -115,19 +117,22 @@ describe("ImageFrame.vue", () => {
 
 	describe("lazy prop", () => {
 		it("loads lazily by default", () => {
-			const img = mount({ src: "/image.jpg" }).find("img");
+			const wrapper = mount({ src: "/image.jpg" });
+			const img = wrapper.find("img");
 			expect(img.attributes("loading")).toBe("lazy");
 		});
 
 		it("loads eagerly when false", () => {
-			const img = mount({ src: "/image.jpg", lazy: false }).find("img");
+			const wrapper = mount({ src: "/image.jpg", lazy: false });
+			const img = wrapper.find("img");
 			expect(img.attributes("loading")).toBe("eager");
 		});
 	});
 
 	describe("src prop", () => {
 		it("renders an img", () => {
-			const img = mount({ src: "/image.jpg" }).find("img");
+			const wrapper = mount({ src: "/image.jpg" });
+			const img = wrapper.find("img");
 
 			expect(img.attributes("src")).toBe("/image.jpg");
 			expect(img.attributes("decoding")).toBe("async");
@@ -141,10 +146,11 @@ describe("ImageFrame.vue", () => {
 
 	describe("srcset prop", () => {
 		it("renders the srcset attribute", () => {
-			const img = mount({
+			const wrapper = mount({
 				src: "/image.jpg",
 				srcset: "/image.jpg 1x, /image@2x.jpg 2x"
-			}).find("img");
+			});
+			const img = wrapper.find("img");
 
 			expect(img.attributes("srcset")).toBe("/image.jpg 1x, /image@2x.jpg 2x");
 		});
@@ -153,17 +159,20 @@ describe("ImageFrame.vue", () => {
 	// computed
 	describe("resolvedSizes computed", () => {
 		it("lets the browser measure a lazy image", () => {
-			const img = mount({ src: "/image.jpg" }).find("img");
+			const wrapper = mount({ src: "/image.jpg" });
+			const img = wrapper.find("img");
 			expect(img.attributes("sizes")).toBe("auto");
 		});
 
 		it("omits sizes for an eager image", () => {
-			const img = mount({ src: "/image.jpg", lazy: false }).find("img");
+			const wrapper = mount({ src: "/image.jpg", lazy: false });
+			const img = wrapper.find("img");
 			expect(img.attributes("sizes")).toBeUndefined();
 		});
 
 		it("keeps an explicit sizes prop", () => {
-			const img = mount({ src: "/image.jpg", sizes: "50vw" }).find("img");
+			const wrapper = mount({ src: "/image.jpg", sizes: "50vw" });
+			const img = wrapper.find("img");
 			expect(img.attributes("sizes")).toBe("50vw");
 		});
 	});
@@ -200,7 +209,8 @@ describe("ImageFrame.vue", () => {
 	// events
 	describe("dragstart event", () => {
 		it("prevents dragging the image out of the frame", () => {
-			const img = mount({ src: "/image.jpg" }).find("img");
+			const wrapper = mount({ src: "/image.jpg" });
+			const img = wrapper.find("img");
 			const event = new Event("dragstart", { cancelable: true });
 			img.element.dispatchEvent(event);
 			expect(event.defaultPrevented).toBe(true);

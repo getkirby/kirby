@@ -22,6 +22,8 @@ class Fieldsets extends Items
 	/**
 	 * The block types that are available when
 	 * a blocks field doesn't define its own
+	 *
+	 * @var array<string, string>
 	 */
 	public const array DEFAULT = [
 		'code'     => 'blocks/code',
@@ -51,7 +53,7 @@ class Fieldsets extends Items
 		$groups    = [];
 
 		foreach ($params as $type => $fieldset) {
-			if (is_int($type) === true && is_string($fieldset)) {
+			if (is_int($type) === true && is_string($fieldset) === true) {
 				$type     = $fieldset;
 				$fieldset = 'blocks/' . $type;
 			}
@@ -76,10 +78,10 @@ class Fieldsets extends Items
 				$label     = $fieldset['label'] ?? Str::label($type);
 
 				$groups[$type] = [
-					'label'     => I18n::translate($label, $label),
-					'name'      => $type,
-					'open'      => $fieldset['open'] ?? true,
-					'sets'      => array_column($result['fieldsets'], 'type'),
+					'label' => I18n::translate($label, $label),
+					'name'  => $type,
+					'open'  => $fieldset['open'] ?? true,
+					'sets'  => array_column($result['fieldsets'], 'type'),
 				];
 			} else {
 				$fieldsets[$fieldset['type']] = $fieldset;

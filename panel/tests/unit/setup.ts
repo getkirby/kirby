@@ -1,6 +1,6 @@
 import { createApp, type App } from "vue";
 import { config } from "@vue/test-utils";
-import { vi } from "vitest";
+import { afterEach, beforeEach, vi } from "vitest";
 import Panel from "@/panel/panel";
 import Helpers from "@/helpers";
 import html from "@/panel/html";
@@ -52,10 +52,21 @@ config.global.config.warnHandler = (msg, instance, trace) => {
  * Prevent real HTTP requests during tests.
  * Individual tests that need specific fetch behavior can
  * override this with vi.spyOn or vi.stubGlobal.
+ * Stubbed before each test, as `unstubGlobals` restores all globals.
  */
-vi.stubGlobal(
-	"fetch",
-	vi
-		.fn()
-		.mockRejectedValue(new Error("No server available in test environment"))
-);
+beforeEach(() => {
+	vi.stubGlobal(
+		"fetch",
+		vi
+			.fn()
+			.mockRejectedValue(new Error("No server available in test environment"))
+	);
+});
+
+/**
+ * Tests share one document per worker (`isolate: false`),
+ * so markup must not leak into the next test.
+ */
+afterEach(() => {
+	document.body.innerHTML = "";
+});

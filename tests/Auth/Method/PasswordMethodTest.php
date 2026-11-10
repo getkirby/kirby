@@ -38,7 +38,7 @@ class PasswordMethodTest extends TestCase
 				throw new RuntimeException('createChallenge should not be called');
 			});
 
-		$method = new PasswordMethod(auth: $auth);
+		$method = new PasswordMethod(auth: $auth, type: 'password');
 		$result = $method->authenticate('marge@simpsons.com', 'springfield123', true);
 
 		$this->assertInstanceOf(User::class, $result);
@@ -56,14 +56,14 @@ class PasswordMethodTest extends TestCase
 		$this->expectExceptionMessage('Missing email');
 
 		$auth   = $this->createStub(Auth::class);
-		$method = new PasswordMethod(auth: $auth);
+		$method = new PasswordMethod(auth: $auth, type: 'password');
 		$method->authenticate(null, 'secret123');
 	}
 
 	public function testForm(): void
 	{
 		$auth   = $this->createStub(Auth::class);
-		$method = new PasswordMethod(auth: $auth);
+		$method = new PasswordMethod(auth: $auth, type: 'password');
 		$form   = $method->form();
 
 		$this->assertInstanceOf(Component::class, $form);
@@ -92,7 +92,7 @@ class PasswordMethodTest extends TestCase
 				return $status;
 			});
 
-		$method = new PasswordMethod(auth: $auth, options: ['2fa' => true]);
+		$method = new PasswordMethod(auth: $auth, type: 'password', options: ['2fa' => true]);
 		$result = $method->authenticate('marge@simpsons.com', 'springfield123');
 
 		$this->assertSame($status, $result);
@@ -126,7 +126,7 @@ class PasswordMethodTest extends TestCase
 			});
 
 		// 2FA is not enforced and the user has no second factor
-		$method = new PasswordMethod(auth: $auth);
+		$method = new PasswordMethod(auth: $auth, type: 'password');
 		$result = $method->authenticate('marge@simpsons.com', 'springfield123', true);
 
 		$this->assertInstanceOf(User::class, $result);
@@ -161,7 +161,7 @@ class PasswordMethodTest extends TestCase
 			});
 
 		// 2FA is not enforced, but the user opted into a second factor
-		$method = new PasswordMethod(auth: $auth);
+		$method = new PasswordMethod(auth: $auth, type: 'password');
 		$result = $method->authenticate('marge@simpsons.com', 'springfield123');
 
 		$this->assertSame($status, $result);
@@ -175,26 +175,27 @@ class PasswordMethodTest extends TestCase
 		$this->expectExceptionMessageIs('Missing password');
 
 		$auth   = $this->createStub(Auth::class);
-		$method = new PasswordMethod(auth: $auth);
+		$method = new PasswordMethod(auth: $auth, type: 'password');
 		$method->authenticate('marge@simpsons.com');
 	}
 
 	public function testIcon(): void
 	{
-		$icon = PasswordMethod::icon();
+		$auth = $this->createStub(Auth::class);
+		$icon = new PasswordMethod(auth: $auth, type: 'password')->icon();
 		$this->assertSame('key', $icon);
 	}
 
 	public function testIsEnabled(): void
 	{
 		$auth = $this->createStub(Auth::class);
-		$this->assertTrue(PasswordMethod::isEnabled($auth));
+		$this->assertTrue(new PasswordMethod(auth: $auth, type: 'password')->isEnabled());
 	}
 
 	public function testOptions(): void
 	{
 		$auth   = $this->createStub(Auth::class);
-		$method = new PasswordMethod(auth: $auth, options: ['2fa' => true]);
+		$method = new PasswordMethod(auth: $auth, type: 'password', options: ['2fa' => true]);
 
 		$this->assertSame(['2fa' => true], $method->options());
 	}
@@ -202,12 +203,8 @@ class PasswordMethodTest extends TestCase
 	public function testSettings(): void
 	{
 		$user     = new User(['id' => 'test', 'email' => 'test@getkirby.com']);
-		$settings = PasswordMethod::settings($user);
+		$auth     = $this->createStub(Auth::class);
+		$settings = new PasswordMethod(auth: $auth, type: 'password')->settings($user);
 		$this->assertCount(1, $settings);
-	}
-
-	public function testType(): void
-	{
-		$this->assertSame('password', PasswordMethod::type());
 	}
 }

@@ -105,6 +105,7 @@ export default function Notification(panel: Panel) {
 			}
 
 			const err = toError(error);
+			const message = err.message || "Something went wrong";
 
 			// open the error dialog in views
 			if (panel.context === "view") {
@@ -114,7 +115,7 @@ export default function Notification(panel: Panel) {
 					panel.dialog.open({
 						component: "k-error-dialog",
 						props: {
-							message: err.message ?? "Something went wrong",
+							message,
 							details: err.details ?? {}
 						}
 					});
@@ -123,7 +124,7 @@ export default function Notification(panel: Panel) {
 
 			// show the error notification bar
 			return this.open({
-				message: err.message || "Something went wrong",
+				message,
 				icon: "alert",
 				theme: "negative",
 				type: "error"

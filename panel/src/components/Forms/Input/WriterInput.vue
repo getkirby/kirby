@@ -38,8 +38,60 @@ import Keys from "../Writer/Extensions/Keys.js";
 import Toolbar from "../Writer/Extensions/Toolbar.js";
 
 // Input
-import Input from "@/mixins/input.js";
-import { props } from "./WriterInput.props";
+import Input, { props as InputProps } from "@/mixins/input.js";
+import {
+	maxlength,
+	minlength,
+	placeholder,
+	spellcheck
+} from "@/mixins/props.js";
+
+export const props = {
+	mixins: [InputProps, maxlength, minlength, placeholder, spellcheck],
+	props: {
+		breaks: Boolean,
+		code: Boolean,
+		emptyDocument: {
+			type: Object,
+			default: () => ({
+				type: "doc",
+				content: []
+			})
+		},
+		extensions: Array,
+		headings: {
+			default: () => [1, 2, 3, 4, 5, 6],
+			type: [Array, Boolean]
+		},
+		inline: Boolean,
+		keys: Object,
+		marks: {
+			type: [Array, Boolean],
+			default: true
+		},
+		nodes: {
+			type: [Array, Boolean],
+			default: () => ["heading", "bulletList", "orderedList"]
+		},
+		paste: {
+			type: Function,
+			default: () => () => false
+		},
+		/**
+		 * See `k-writer-toolbar` for available options
+		 */
+		toolbar: {
+			type: Object,
+			default: () => ({
+				inline: true
+			})
+		},
+		value: {
+			type: String,
+			default: ""
+		}
+	}
+};
 
 /**
  * @copyright Bastian Allgeier
@@ -216,13 +268,6 @@ export default {
 		createMarks() {
 			return Object.values(this.$helper.writer.createMarks(this.marks));
 		},
-		/**
-		 * @deprecated 5.4.0 Use this.$helper.writer.availableMarksFromPlugins() instead.
-		 */
-		/* v8 ignore next */
-		createMarksFromPanelPlugins() {
-			return this.$helper.writer.availableMarksFromPlugins();
-		},
 		createNodes() {
 			let nodes = this.nodes;
 
@@ -257,29 +302,8 @@ export default {
 
 			return result;
 		},
-		/**
-		 * @deprecated 5.4.0 Use this.$helper.writer.availableNodesFromPlugins() instead.
-		 */
-		/* v8 ignore next */
-		createNodesFromPanelPlugins() {
-			return this.$helper.writer.availableNodesFromPlugins();
-		},
 		getHTML() {
 			return this.editor.getHTML();
-		},
-		/**
-		 * @deprecated 5.4.0 Use this.$helper.writer.filterExtensions() instead.
-		 */
-		/* v8 ignore next */
-		filterExtensions(available, allowed, postFilter) {
-			allowed = this.$helper.writer.allowedExtensions(available, allowed);
-			let installed = this.$helper.writer.filterExtensions(available, allowed);
-
-			if (typeof postFilter === "function") {
-				installed = postFilter(allowed, installed);
-			}
-
-			return installed;
 		},
 		focus() {
 			this.editor.focus();

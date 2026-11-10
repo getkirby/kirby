@@ -19,6 +19,10 @@ export default function markPasteRule(
 	const handler = (fragment: Fragment, parent?: Node): Fragment => {
 		const nodes: Node[] = [];
 
+		// top-level text of an inline-only paste has no parent;
+		// ProseMirror drops the mark if the target node does not allow it
+		const allowed = parent?.type.allowsMarkType(type) ?? true;
+
 		fragment.forEach((child) => {
 			if (child.isText) {
 				const { text, marks } = child;
@@ -28,7 +32,7 @@ export default function markPasteRule(
 				const isLink = !!marks.filter((x) => x.type.name === "link")[0];
 
 				while (!isLink && (match = regexp.exec(text!)) !== null) {
-					if (parent?.type?.allowsMarkType(type) && match[1]) {
+					if (allowed === true && match[1]) {
 						const start = match.index;
 						const end = start + match[0].length;
 						const textStart = start + match[0].indexOf(match[1]);

@@ -1,8 +1,31 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, onTestFinished, vi } from "vitest";
 import Events from "./events";
 import Panel from "./panel";
 
 describe("panel.events", () => {
+	describe("clipboard.write", () => {
+		it("should copy the value and confirm it", async () => {
+			const panel = Panel.create(app);
+			const events = Events(panel);
+			const execCommand = document.execCommand;
+			let copied: string | undefined;
+
+			document.execCommand = vi.fn(() => {
+				copied = document.querySelector("textarea")?.value;
+				return true;
+			});
+
+			onTestFinished(() => {
+				document.execCommand = execCommand;
+			});
+
+			events.emit("clipboard.write", "https://getkirby.com");
+
+			expect(copied).toStrictEqual("https://getkirby.com");
+			expect(panel.notification.message).toStrictEqual("copy.success!");
+		});
+	});
+
 	describe("drag & drop", () => {
 		const panel = Panel.create(app);
 		const events = Events(panel);
@@ -36,6 +59,78 @@ describe("panel.events", () => {
 			// should fire because it's the same target
 			events.dragleave(eventA);
 			expect(fired).toStrictEqual(true);
+		});
+	});
+
+	describe("global events", () => {
+		/**
+		 * Subscribes a new event bus to the global
+		 * events and spies on the given event
+		 */
+		function subscribe(type: string) {
+			const events = Events(Panel.create(app));
+			const handler = vi.fn();
+
+			events.subscribe();
+			events.on(type, handler);
+			onTestFinished(() => events.unsubscribe());
+
+			return { events, handler };
+		}
+
+		it.each([
+			["blur", () => new FocusEvent("blur")],
+			["click", () => new MouseEvent("click", { bubbles: true })],
+			["copy", () => new ClipboardEvent("copy", { bubbles: true })],
+			["focus", () => new FocusEvent("focus")],
+			["paste", () => new ClipboardEvent("paste", { bubbles: true })]
+		])("should forward %s events of any element", (type, create) => {
+			const { handler } = subscribe(type);
+			const input = document.createElement("input");
+			const event = create();
+
+			document.body.append(input);
+			input.dispatchEvent(event);
+
+			expect(handler).toHaveBeenCalledExactlyOnceWith(event);
+		});
+
+		it.each([
+			["beforeunload", () => new Event("beforeunload", { cancelable: true })],
+			["offline", () => new Event("offline")],
+			["online", () => new Event("online")],
+			["popstate", () => new PopStateEvent("popstate")]
+		])("should forward %s events of the window", (type, create) => {
+			const { handler } = subscribe(type);
+			const event = create();
+
+			window.dispatchEvent(event);
+
+			expect(handler).toHaveBeenCalledExactlyOnceWith(event);
+		});
+
+		it.each(["dragover", "drop"])(
+			"should forward %s events and prevent their default",
+			(type) => {
+				const { handler } = subscribe(type);
+				const event = new DragEvent(type, { bubbles: true, cancelable: true });
+
+				document.body.dispatchEvent(event);
+
+				expect(handler).toHaveBeenCalledExactlyOnceWith(event);
+				expect(event.defaultPrevented).toStrictEqual(true);
+			}
+		);
+
+		it("should forget the entered element on drop", () => {
+			const { events } = subscribe("drop");
+			const init = { bubbles: true, cancelable: true };
+
+			document.body.dispatchEvent(new DragEvent("dragenter", init));
+			expect(events.entered).toBe(document.body);
+
+			document.body.dispatchEvent(new DragEvent("drop", init));
+			expect(events.entered).toStrictEqual(null);
 		});
 	});
 
@@ -238,40 +333,46 @@ describe("panel.events", () => {
 		const events = Events(panel);
 
 		it("should remove every listener it registered", () => {
-			const added: Array<[string, unknown]> = [];
-			const removed: Array<[string, unknown]> = [];
+			type Call = [string, unknown, boolean];
+			const added: Call[] = [];
+			const removed: Call[] = [];
+
+			const capture = (options?: boolean | EventListenerOptions) =>
+				typeof options === "boolean" ? options : options?.capture === true;
 
 			const spies = [
 				vi
 					.spyOn(document, "addEventListener")
-					.mockImplementation((type, listener) => {
-						added.push([type, listener]);
+					.mockImplementation((type, listener, options) => {
+						added.push([type, listener, capture(options)]);
 					}),
 				vi
 					.spyOn(window, "addEventListener")
-					.mockImplementation((type, listener) => {
-						added.push([type, listener]);
+					.mockImplementation((type, listener, options) => {
+						added.push([type, listener, capture(options)]);
 					}),
 				vi
 					.spyOn(document, "removeEventListener")
-					.mockImplementation((type, listener) => {
-						removed.push([type, listener]);
+					.mockImplementation((type, listener, options) => {
+						removed.push([type, listener, capture(options)]);
 					}),
 				vi
 					.spyOn(window, "removeEventListener")
-					.mockImplementation((type, listener) => {
-						removed.push([type, listener]);
+					.mockImplementation((type, listener, options) => {
+						removed.push([type, listener, capture(options)]);
 					})
 			];
 
 			events.subscribe();
 			events.unsubscribe();
 
-			// every listener must be removed with the SAME
-			// function reference it was added with
+			// a listener is only removed with the same function
+			// reference and the same capture flag it was added with
 			const leaked = added.filter(
-				([type, listener]) =>
-					removed.some(([t, l]) => t === type && l === listener) === false
+				([type, listener, flag]) =>
+					removed.some(
+						([t, l, f]) => t === type && l === listener && f === flag
+					) === false
 			);
 
 			expect(added.length).toBeGreaterThan(0);
