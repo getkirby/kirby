@@ -160,16 +160,18 @@ export default class Editor extends Emitter<EditorEvents> {
 
 		this.setActiveNodesAndMarks();
 
-		if (this.options.autofocus !== false) {
-			this.focus(this.options.autofocus);
-		}
-
 		this.emit("init", {
 			view: this.view,
 			state: this.state
 		});
 
 		this.setContent(this.options.content);
+
+		// focus after setting the content,
+		// which would move the cursor to the end
+		if (this.options.autofocus !== false) {
+			this.focus(this.options.autofocus);
+		}
 
 		// Editor manages its own reactivity through `this.active`.
 		// It must never be wrapped in a reactive proxy.

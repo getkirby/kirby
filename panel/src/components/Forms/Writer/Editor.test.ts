@@ -88,6 +88,25 @@ describe("Editor", () => {
 			expect(document.activeElement).toBe(e.view!.dom);
 			e.destroy();
 		});
+
+		it.each([
+			[true, 1],
+			["start", 1],
+			["end", 6],
+			[3, 3]
+		])("places the cursor for autofocus %s", (autofocus, position) => {
+			vi.useFakeTimers();
+			onTestFinished(() => {
+				vi.useRealTimers();
+			});
+
+			const e = createEditor({ autofocus, content: "<p>hello</p>" });
+			vi.runAllTimers();
+
+			expect(e.selection.from).toBe(position);
+			expect(e.selection.to).toBe(position);
+			e.destroy();
+		});
 	});
 
 	describe("activeMarkAttrs", () => {
