@@ -644,11 +644,11 @@ export default class Panel {
 	 * Sets the document title
 	 */
 	set title(title: string | null) {
-		if (isEmpty(this.system.title) === false) {
-			title += " | " + this.system.title;
-		}
+		const parts = [title, this.system.title].filter(
+			(part) => isEmpty(part) === false
+		);
 
-		document.title = title ?? "";
+		document.title = parts.join(" | ");
 	}
 
 	/**

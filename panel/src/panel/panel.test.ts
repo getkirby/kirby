@@ -476,6 +476,18 @@ describe("panel", () => {
 			// browsers would turn null into "null"
 			expect(title).toHaveBeenCalledWith("");
 		});
+
+		it("should only show the system title without a title", () => {
+			const panel = Panel.create(app);
+
+			panel.system.title = "Kirby";
+
+			panel.title = null;
+			expect(panel.title).toStrictEqual("Kirby");
+
+			panel.title = "";
+			expect(panel.title).toStrictEqual("Kirby");
+		});
 	});
 
 	describe("url", () => {
