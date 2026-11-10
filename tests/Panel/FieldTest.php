@@ -168,7 +168,7 @@ class FieldTest extends TestCase
 
 		// ... but it must not disclose the file
 		$this->assertSame('-2', $field['options'][3]['value']);
-		$this->assertSame('–', $field['options'][3]['text']);
+		$this->assertSame('[unknown]', $field['options'][3]['text']);
 		$this->assertTrue($field['options'][3]['disabled']);
 
 		$this->assertSame(3, $field['options'][4]['value']);
@@ -276,7 +276,7 @@ class FieldTest extends TestCase
 
 		// ... but it must not disclose the page
 		$this->assertSame('-2', $field['options'][3]['value']);
-		$this->assertSame('–', $field['options'][3]['text']);
+		$this->assertSame('[unknown]', $field['options'][3]['text']);
 		$this->assertTrue($field['options'][3]['disabled']);
 
 		$this->assertSame(3, $field['options'][4]['value']);
