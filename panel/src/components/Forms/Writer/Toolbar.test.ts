@@ -46,6 +46,35 @@ class Callout extends Node {
 	}
 }
 
+// inline node of a plugin with a button per variant
+class Badge extends Node {
+	get button() {
+		return ["info", "alert"].map((tone) => ({
+			attrs: { tone },
+			command: tone + "Badge",
+			icon: tone,
+			id: tone + "Badge",
+			inline: true,
+			label: tone,
+			name: "badge"
+		}));
+	}
+
+	get name() {
+		return "badge";
+	}
+
+	get schema(): NodeSpec {
+		return {
+			atom: true,
+			attrs: { tone: { default: "info" } },
+			group: "inline",
+			inline: true,
+			toDOM: () => ["span"]
+		};
+	}
+}
+
 // inline node of a plugin, listed next to the marks
 class Mention extends Node {
 	get button() {
@@ -552,6 +581,33 @@ describe("k-writer-toolbar", () => {
 			await nextTick();
 
 			expect(mention().current).toBe(true);
+		});
+
+		it("marks the selected variant of an inline node as current", () => {
+			const editor = createEditor(
+				{
+					type: "doc",
+					content: [
+						{
+							type: "paragraph",
+							content: [{ type: "badge", attrs: { tone: "alert" } }]
+						}
+					]
+				},
+				[new Bold(), new Badge()]
+			);
+
+			editor.view!.dispatch(
+				editor.state!.tr.setSelection(
+					NodeSelection.create(editor.state!.doc, 1)
+				)
+			);
+
+			const wrapper = mount({ editor, marks: ["bold"] });
+			const current = buttons(wrapper).map(
+				(button) => button !== "|" && button.current
+			);
+			expect(current).toEqual([false, true, false, false]);
 		});
 	});
 

@@ -312,15 +312,17 @@ export default {
 				return "|";
 			}
 
+			// buttons of an array are keyed by their id,
+			// so prefer the name of their node or mark
+			const button = { ...entry, name: entry.name ?? type };
+
 			// Check if this is a node or a mark by looking at
 			// the button name property - if it's defined in the
 			// schema, we can determine its type
-			const isNode = this.editor.schema.nodes[entry.name ?? type];
+			const isNode = this.editor.schema.nodes[button.name];
 
 			return {
-				current: isNode
-					? this.isNodeActive({ ...entry, name: type })
-					: this.isMarkActive({ ...entry, name: type }),
+				current: isNode ? this.isNodeActive(button) : this.isMarkActive(button),
 				icon: entry.icon,
 				label: entry.label,
 				click: (e) => this.command(entry.command ?? type, e)
