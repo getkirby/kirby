@@ -12,6 +12,7 @@ use Kirby\Content\Field;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Collection;
+use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Obj;
 
 /**
@@ -214,8 +215,7 @@ class OptionsQuery extends OptionsProvider
 			if ($this->isListable($item) === false) {
 				return match (in_array($value, $keep)) {
 					true  => [
-						'icon'  => 'protected',
-						'text'  => '–',
+						'text'  => '[' . I18n::translate('unknown', 'unknown') . ']',
 						'value' => $value
 					],
 					false => null

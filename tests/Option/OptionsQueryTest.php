@@ -351,9 +351,9 @@ class OptionsQueryTest extends TestCase
 		$this->assertSame('a', $options[0]['value']);
 		$this->assertSame([
 			'disabled' => false,
-			'icon'     => 'protected',
+			'icon'     => null,
 			'info'     => null,
-			'text'     => '–',
+			'text'     => '[unknown]',
 			'value'    => 'b'
 		], $options[1]);
 	}

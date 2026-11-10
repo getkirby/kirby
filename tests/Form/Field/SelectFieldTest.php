@@ -244,9 +244,9 @@ class SelectFieldTest extends TestCase
 		$this->assertSame('a', $field->options()[0]['value']);
 		$this->assertSame([
 			'disabled' => false,
-			'icon'     => 'protected',
+			'icon'     => null,
 			'info'     => null,
-			'text'     => '–',
+			'text'     => '[unknown]',
 			'value'    => 'b'
 		], $field->options()[1]);
 		$this->assertCount(2, $field->options());

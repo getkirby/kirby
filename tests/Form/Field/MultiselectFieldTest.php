@@ -110,7 +110,7 @@ class MultiselectFieldTest extends TestCase
 		// as placeholder, the other one is hidden
 		$this->assertSame(['a', 'b'], $field->value());
 		$this->assertSame(['a', 'b'], array_column($field->options(), 'value'));
-		$this->assertSame('–', $field->options()[1]['text']);
+		$this->assertSame('[unknown]', $field->options()[1]['text']);
 		$this->assertSame('a, b', $field->toStoredValue());
 	}
 }
