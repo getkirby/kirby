@@ -174,7 +174,32 @@ class PageCopy
 		// apply all tracked UUID changes at once
 		$converter->replaceUuids();
 
+		// only after the copy got its own UUIDs,
+		// otherwise the original's changes get untracked
+		$converter->removeChanges();
+
 		return $converter->copy;
+	}
+
+	/**
+	 * Removes unsaved changes from the copy, its files
+	 * and children. The lock is forced open, as it can
+	 * still be held by the editor of the original page.
+	 */
+	public function removeChanges(): void
+	{
+		$pages = [$this->copy, ...$this->copy->index(drafts: true)->values()];
+
+		foreach ($pages as $page) {
+			foreach ([$page, ...$page->files()->values()] as $model) {
+				$changes = $model->version('changes');
+
+				if ($changes->exists('*') === true) {
+					$changes->unlock('*', force: true);
+					$changes->delete('*');
+				}
+			}
+		}
 	}
 
 	/**
