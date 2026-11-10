@@ -188,10 +188,10 @@ class PageCopy
 	 */
 	public function removeChanges(): void
 	{
-		$pages = [$this->copy, ...$this->copy->index(drafts: true)->values()];
+		$pages = [$this->copy, ...$this->copy->index(drafts: true)];
 
 		foreach ($pages as $page) {
-			foreach ([$page, ...$page->files()->values()] as $model) {
+			foreach ([$page, ...$page->files()] as $model) {
 				$changes = $model->version('changes');
 
 				if ($changes->exists('*') === true) {
