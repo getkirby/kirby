@@ -585,11 +585,10 @@ export default class Panel {
 		}
 
 		/**
-		 * Toggle the dropdown
+		 * Close the dropdown on null or false,
+		 * new dropdown states are set with the other states
 		 */
-		if (isObject(state.dropdown) === true) {
-			this.dropdown.open(state.dropdown);
-		} else if (state.dropdown !== undefined) {
+		if (state.dropdown !== undefined && isObject(state.dropdown) === false) {
 			this.dropdown.close();
 		}
 
