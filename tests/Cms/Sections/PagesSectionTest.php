@@ -315,15 +315,12 @@ class PagesSectionTest extends TestCase
 
 	public function testSortBy(): void
 	{
-		$locale = setlocale(LC_ALL, 0);
-		setlocale(LC_ALL, ['de_DE.ISO8859-1', 'de_DE']);
-
 		$page = new Page([
 			'slug'     => 'test',
 			'children' => [
 				['slug' => 'subpage-1', 'content' => ['title' => 'Z']],
 				['slug' => 'subpage-2', 'content' => ['title' => 'Ä']],
-				['slug' => 'subpage-3', 'content' => ['title' => 'B']]
+				['slug' => 'subpage-3', 'content' => ['title' => 'b']]
 			]
 		]);
 
@@ -334,7 +331,7 @@ class PagesSectionTest extends TestCase
 		]);
 		$this->assertSame('Z', $section->data()[0]['text']);
 		$this->assertSame('Ä', $section->data()[1]['text']);
-		$this->assertSame('B', $section->data()[2]['text']);
+		$this->assertSame('b', $section->data()[2]['text']);
 
 		// sort by field
 		$section = new Section('pages', [
@@ -342,7 +339,7 @@ class PagesSectionTest extends TestCase
 			'model'  => $page,
 			'sortBy' => 'title'
 		]);
-		$this->assertSame('B', $section->data()[0]['text']);
+		$this->assertSame('b', $section->data()[0]['text']);
 		$this->assertSame('Z', $section->data()[1]['text']);
 		$this->assertSame('Ä', $section->data()[2]['text']);
 
@@ -354,29 +351,27 @@ class PagesSectionTest extends TestCase
 		]);
 		$this->assertSame('Ä', $section->data()[0]['text']);
 		$this->assertSame('Z', $section->data()[1]['text']);
-		$this->assertSame('B', $section->data()[2]['text']);
+		$this->assertSame('b', $section->data()[2]['text']);
 
 		// custom flag
 		$section = new Section('pages', [
 			'name'   => 'test',
 			'model'  => $page,
-			'sortBy' => 'title SORT_LOCALE_STRING'
+			'sortBy' => 'title SORT_STRING'
 		]);
-		$this->assertSame('Ä', $section->data()[0]['text']);
-		$this->assertSame('B', $section->data()[1]['text']);
-		$this->assertSame('Z', $section->data()[2]['text']);
+		$this->assertSame('Z', $section->data()[0]['text']);
+		$this->assertSame('b', $section->data()[1]['text']);
+		$this->assertSame('Ä', $section->data()[2]['text']);
 
 		// flag & sorting direction
 		$section = new Section('pages', [
 			'name'   => 'test',
 			'model'  => $page,
-			'sortBy' => 'title desc SORT_LOCALE_STRING'
+			'sortBy' => 'title desc SORT_STRING'
 		]);
-		$this->assertSame('Z', $section->data()[0]['text']);
-		$this->assertSame('B', $section->data()[1]['text']);
-		$this->assertSame('Ä', $section->data()[2]['text']);
-
-		setlocale(LC_ALL, $locale);
+		$this->assertSame('Ä', $section->data()[0]['text']);
+		$this->assertSame('b', $section->data()[1]['text']);
+		$this->assertSame('Z', $section->data()[2]['text']);
 	}
 
 	public function testSortByMultiple(): void

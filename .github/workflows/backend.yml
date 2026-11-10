@@ -56,8 +56,9 @@ jobs:
     runs-on: ubuntu-22.04
     timeout-minutes: 10
     strategy:
+      fail-fast: false
       matrix:
-        php: ["8.2", "8.3", "8.4", "8.5"]
+        php: ["8.2", "8.3", "8.4", "8.5", "8.6"]
     services:
       redis:
         image: redis:7
@@ -139,8 +140,10 @@ jobs:
           path: ~/.cache/psalm
           key: backend-analysis-${{ matrix.php }}
 
+      # the bundled laminas/laminas-escaper 2.19 no longer declares PHP 8.2,
+      # Composer installs on PHP 8.2 resolve to 2.18 instead
       - name: Check Composer platform requirements
-        if: always() && steps.finishPrepare.outcome == 'success'
+        if: always() && steps.finishPrepare.outcome == 'success' && matrix.php != '8.2'
         run: composer check-platform-reqs
 
       - name: Run tests
@@ -148,7 +151,7 @@ jobs:
         run: composer run test -- --configuration phpunit.ci.xml --coverage-clover ${{ github.workspace }}/clover.xml
 
       - name: Statically analyze using Psalm
-        if: always() && steps.finishPrepare.outcome == 'success' && matrix.php != '8.5'
+        if: always() && steps.finishPrepare.outcome == 'success' && matrix.php != '8.5' && matrix.php != '8.6'
         run: composer run analyze:psalm -- --output-format=github --php-version=${{ matrix.php }} --report=sarif/psalm.sarif --report-show-info=false --force-jit
 
       - name: Upload coverage results to Codecov
@@ -165,7 +168,7 @@ jobs:
           env_vars: PHP
 
       - name: Upload code scanning results to GitHub
-        if: always() && steps.finishPrepare.outcome == 'success' && github.repository == 'getkirby/kirby' && matrix.php != '8.5'
+        if: always() && steps.finishPrepare.outcome == 'success' && github.repository == 'getkirby/kirby' && matrix.php != '8.5' && matrix.php != '8.6'
         uses: github/codeql-action/upload-sarif@8aad20d150bbac5944a9f9d289da16a4b0d87c1e # v4
         with:
           sarif_file: sarif
