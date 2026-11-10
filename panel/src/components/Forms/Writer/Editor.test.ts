@@ -311,7 +311,12 @@ describe("Editor", () => {
 				handleDrop(view, event, Slice.empty, true)
 			);
 
-			expect(onDrop).toHaveBeenCalledWith(view, event, Slice.empty, true);
+			expect(onDrop).toHaveBeenCalledWith({
+				event,
+				moved: true,
+				slice: Slice.empty,
+				view
+			});
 			expect(handled).toBeFalsy();
 		});
 	});
