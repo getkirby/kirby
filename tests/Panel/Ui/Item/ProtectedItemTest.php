@@ -21,7 +21,7 @@ class ProtectedItemTest extends TestCase
 			],
 			'info'        => null,
 			'layout'      => 'list',
-			'text'        => '–',
+			'text'        => '[unknown]',
 			'id'          => 'page://my-uuid',
 			'link'        => false,
 			'permissions' => [],

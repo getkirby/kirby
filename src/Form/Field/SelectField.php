@@ -23,15 +23,13 @@ class SelectField extends OptionField
 	#[Prop]
 	protected array|string|null $placeholder = '—';
 
-	protected function fetchOptions(): array
+	protected function fieldOptions(): FieldOptions
 	{
 		$props = FieldOptions::polyfill(['options' => $this->options ?? []]);
 
 		// disable safe mode as the select field does not
 		// render HTML for the option text
-		$options = FieldOptions::factory($props['options'], false);
-
-		return $options->render($this->model());
+		return FieldOptions::factory($props['options'], safeMode: false);
 	}
 
 	public function placeholder(): string|null

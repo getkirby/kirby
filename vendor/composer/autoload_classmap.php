@@ -397,6 +397,7 @@ return array(
     'Kirby\\Option\\OptionsApi' => $baseDir . '/src/Option/OptionsApi.php',
     'Kirby\\Option\\OptionsProvider' => $baseDir . '/src/Option/OptionsProvider.php',
     'Kirby\\Option\\OptionsQuery' => $baseDir . '/src/Option/OptionsQuery.php',
+    'Kirby\\Option\\ProtectedOption' => $baseDir . '/src/Option/ProtectedOption.php',
     'Kirby\\Panel\\Access' => $baseDir . '/src/Panel/Access.php',
     'Kirby\\Panel\\Area' => $baseDir . '/src/Panel/Area.php',
     'Kirby\\Panel\\Areas' => $baseDir . '/src/Panel/Areas.php',
