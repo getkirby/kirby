@@ -48,7 +48,6 @@ export type EditorOptions = {
 	inline: boolean;
 	parseOptions: ParseOptions;
 	topNode: string;
-	useBuiltInExtensions: boolean;
 };
 
 type EditorActiveState = {
@@ -123,8 +122,7 @@ export default class Editor extends Emitter<EditorEvents> {
 		events: {},
 		inline: false,
 		parseOptions: {},
-		topNode: "doc",
-		useBuiltInExtensions: true
+		topNode: "doc"
 	};
 
 	constructor(options: Partial<EditorOptions> = {}) {
@@ -216,10 +214,6 @@ export default class Editor extends Emitter<EditorEvents> {
 	}
 
 	get builtInExtensions(): Extension[] {
-		if (this.options.useBuiltInExtensions !== true) {
-			return [];
-		}
-
 		return [
 			new Doc({ inline: this.options.inline }),
 			new Text(),

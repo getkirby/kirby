@@ -52,7 +52,6 @@ describe("Editor", () => {
 			expect(editor.options.content).toBe("");
 			expect(editor.options.editable).toBe(true);
 			expect(editor.options.inline).toBe(false);
-			expect(editor.options.useBuiltInExtensions).toBe(true);
 		});
 
 		it("merges provided options with defaults", () => {
