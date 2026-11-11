@@ -70,11 +70,12 @@ return function (App $kirby) {
 
 				$request = $kirby->request();
 
-				return $kirby->api()->render($path, $this->method(), [
-					'body'    => $request->body()->toArray(),
-					'files'   => $request->files()->toArray(),
+				return $kirby->api()->render($path, [
+					'body'    => $request->body(),
+					'files'   => $request->files(),
 					'headers' => $request->headers(),
-					'query'   => $request->query()->toArray(),
+					'method'  => $this->method(),
+					'query'   => $request->query(),
 				]);
 			}
 		],

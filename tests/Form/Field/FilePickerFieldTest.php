@@ -149,7 +149,7 @@ class FilePickerFieldTest extends TestCase
 		]);
 
 		$app->impersonate('kirby');
-		$api = $app->api()->call('pages/test/fields/gallery/items', 'GET', [
+		$api = $app->api()->call('pages/test/fields/gallery/items', [
 			'query' => [
 				'items' => 'test/a.jpg,test/b.jpg'
 			]
@@ -215,7 +215,7 @@ class FilePickerFieldTest extends TestCase
 		]);
 
 		$app->impersonate('editor@getkirby.com');
-		$api = $app->api()->call('pages/test/fields/gallery/items', 'GET', [
+		$api = $app->api()->call('pages/test/fields/gallery/items', [
 			'query' => [
 				'items' => 'file://my-a,file://my-b'
 			]

@@ -116,11 +116,7 @@ class BlocksField extends InputField
 						'data'   => [...$api->data(), 'field' => $field]
 					]);
 
-					return $fieldApi->call(
-						$path,
-						$api->request()->method(),
-						$api->requestData()
-					);
+					return $fieldApi->call($path, $api->request());
 				}
 			],
 		];

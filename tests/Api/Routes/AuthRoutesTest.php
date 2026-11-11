@@ -43,7 +43,7 @@ class AuthRoutesTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionCode('error.csrf.invalid');
 
-		$this->app->api()->call('auth/code', 'POST');
+		$this->app->api()->call('auth/code', ['method' => 'POST']);
 	}
 
 	public function testGet(): void
@@ -63,7 +63,8 @@ class AuthRoutesTest extends TestCase
 			]
 		]);
 
-		$response = $this->app->api()->call('auth/login', 'POST', [
+		$response = $this->app->api()->call('auth/login', [
+			'method' => 'POST',
 			'body' => [
 				'email'    => 'test@getkirby.com',
 				'password' => 'secret123',
@@ -82,7 +83,7 @@ class AuthRoutesTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionCode('error.csrf.invalid');
 
-		$response = $this->app->api()->call('auth/login', 'POST');
+		$response = $this->app->api()->call('auth/login', ['method' => 'POST']);
 	}
 
 	public function testLoginWithoutLong(): void
@@ -93,7 +94,8 @@ class AuthRoutesTest extends TestCase
 			]
 		]);
 
-		$response = $this->app->api()->call('auth/login', 'POST', [
+		$response = $this->app->api()->call('auth/login', [
+			'method' => 'POST',
 			'body' => [
 				'email'    => 'test@getkirby.com',
 				'password' => 'secret123'

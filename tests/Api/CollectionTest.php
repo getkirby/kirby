@@ -129,7 +129,7 @@ class CollectionTest extends TestCase
 					]
 				]
 			],
-			'requestData' => [
+			'request' => [
 				'query' => [
 					'query' => [
 						'filterBy' => [
@@ -162,7 +162,7 @@ class CollectionTest extends TestCase
 					]
 				]
 			],
-			'requestData' => [
+			'request' => [
 				'query' => [
 					'query' => [
 						'sortBy' => 'slug desc'
@@ -194,7 +194,7 @@ class CollectionTest extends TestCase
 					]
 				]
 			],
-			'requestData' => [
+			'request' => [
 				'query' => [
 					'query' => [
 						'limit' => 2
@@ -233,7 +233,7 @@ class CollectionTest extends TestCase
 					]
 				]
 			],
-			'requestData' => [
+			'request' => [
 				'query' => [
 					'query' => $query
 				]
@@ -273,7 +273,7 @@ class CollectionTest extends TestCase
 					]
 				]
 			],
-			'requestData' => [
+			'request' => [
 				'query' => [
 					'limit' => $limit
 				]
@@ -313,7 +313,7 @@ class CollectionTest extends TestCase
 					]
 				]
 			],
-			'requestData' => [
+			'request' => [
 				'query' => [
 					'limit' => 1,
 					'page'  => $page
@@ -344,7 +344,7 @@ class CollectionTest extends TestCase
 					]
 				]
 			],
-			'requestData' => [
+			'request' => [
 				'query' => [
 					'limit' => '1',
 					'page'  => '2'

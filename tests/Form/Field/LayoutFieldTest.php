@@ -36,7 +36,7 @@ class LayoutFieldTest extends TestCase
 		]);
 
 		$api      = $field->api()[4];
-		$response = $api['action']->call(new Api(['requestData' => [
+		$response = $api['action']->call(new Api(['request' => [
 			'body' => [
 				'columns' => ['1/2', '1/2'],
 				'attrs' => [
@@ -58,7 +58,7 @@ class LayoutFieldTest extends TestCase
 
 		$field    = $this->field('layout');
 		$api      = $field->api()[4];
-		$response = $api['action']->call(new Api(['requestData' => [
+		$response = $api['action']->call(new Api(['request' => [
 			'body' => [
 				'columns' => '1/2',
 				'attrs'   => 'test'
@@ -87,8 +87,7 @@ class LayoutFieldTest extends TestCase
 		// nested field routes may return other values than arrays
 		$this->assertTrue($api->call(
 			'fields/list/delete',
-			'DELETE',
-			['body' => ['ids' => []]]
+			['method' => 'DELETE', 'body' => ['ids' => []]]
 		));
 	}
 
@@ -113,7 +112,7 @@ class LayoutFieldTest extends TestCase
 
 		$field    = $this->field('layout');
 		$api      = $field->api()[5];
-		$response = $api['action']->call(new Api(['requestData' => [
+		$response = $api['action']->call(new Api(['request' => [
 			'query' => [
 				'json' => json_encode($value)
 			]

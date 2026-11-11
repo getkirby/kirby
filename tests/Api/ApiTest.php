@@ -12,6 +12,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
+use Kirby\Http\Request;
 use Kirby\Http\Response as HttpResponse;
 use Kirby\TestCase;
 use Kirby\Toolkit\Collection;
@@ -98,7 +99,7 @@ class ApiTest extends TestCase
 		$this->assertSame([], $api->data());
 		$this->assertFalse($api->debug());
 		$this->assertSame([], $api->models());
-		$this->assertSame(['query' => [], 'body' => [], 'files' => []], $api->requestData());
+		$this->assertSame(['query' => [], 'body' => [], 'files' => [], 'headers' => []], $api->requestData());
 		$this->assertSame('GET', $api->request()->method());
 		$this->assertSame([], $api->routes());
 	}
@@ -201,12 +202,13 @@ class ApiTest extends TestCase
 			]
 		]);
 
-		$result = $api->call('testScalar', 'POST', [
+		$result = $api->call('testScalar', [
+			'method' => 'POST',
 			'query' => ['foo' => 'bar']
 		]);
 		$this->assertSame('bar', $result);
 
-		$result = $api->call('testModel', 'POST');
+		$result = $api->call('testModel', ['method' => 'POST']);
 		$this->assertSame([
 			'code'   => 200,
 			'data'   => [
@@ -216,7 +218,7 @@ class ApiTest extends TestCase
 			'type'   => 'model'
 		], $result);
 
-		$result = $api->call('testResponse', 'POST');
+		$result = $api->call('testResponse', ['method' => 'POST']);
 		$this->assertEquals(new Response('test', 'text/plain', 201), $result); // cannot use strict assertion (test for object contents)
 	}
 
@@ -328,7 +330,8 @@ class ApiTest extends TestCase
 		]);
 		$this->api = $this->app->api();
 
-		$this->assertSame('something', $this->api->call('foo', 'GET', [
+		$this->assertSame('something', $this->api->call('foo', [
+			'method' => 'GET',
 			'query' => ['language' => 'de']
 		]));
 		$this->assertSame('de_AT.UTF-8', setlocale(LC_ALL, 0));
@@ -474,7 +477,7 @@ class ApiTest extends TestCase
 			'authentication' => $authentication = fn () => true,
 			'data'           => ['foo' => 'bar'],
 			'debug'          => true,
-			'requestMethod'  => 'POST'
+			'request'  => ['method' => 'POST']
 		]);
 
 		$clone = $api->clone([
@@ -590,7 +593,7 @@ class ApiTest extends TestCase
 
 		$page     = $app->page('test');
 		$response = $app->api()->clone([
-			'requestData' => ['query' => ['items' => 'a.jpg,b.jpg']]
+			'request' => ['query' => ['items' => 'a.jpg,b.jpg']]
 		])->fieldApi($page, 'cover', 'items');
 
 		$this->assertCount(2, $response);
@@ -738,13 +741,13 @@ class ApiTest extends TestCase
 	public function testFileGetRoute(): void
 	{
 		// regular
-		$result = $this->api->call('pages/a/files/a-regular-file.jpg', 'GET');
+		$result = $this->api->call('pages/a/files/a-regular-file.jpg');
 
 		$this->assertSame(200, $result['code']);
 		$this->assertSame('a-regular-file.jpg', $result['data']['filename']);
 
 		// with spaces in filename
-		$result = $this->api->call('pages/a/files/a filename with spaces.jpg', 'GET');
+		$result = $this->api->call('pages/a/files/a filename with spaces.jpg');
 
 		$this->assertSame(200, $result['code']);
 		$this->assertSame('a filename with spaces.jpg', $result['data']['filename']);
@@ -791,7 +794,7 @@ class ApiTest extends TestCase
 	public function testLanguage(): void
 	{
 		$api = $this->api->clone([
-			'requestData' => [
+			'request' => [
 				'headers' => [
 					'x-language' => 'de'
 				]
@@ -956,13 +959,13 @@ class ApiTest extends TestCase
 	public function testRequest(): void
 	{
 		$api = new Api([
-			'requestData' => [
+			'request' => [
 				'query'   => ['q' => 'foo', 'page' => '2'],
 				'body'    => ['title' => 'Title'],
 				'files'   => ['upload' => $file = ['name' => 'a.txt']],
 				'headers' => ['X-Language' => 'de'],
-			],
-			'requestMethod' => 'POST'
+				'method'  => 'POST'
+			]
 		]);
 
 		$request = $api->request();
@@ -1001,14 +1004,35 @@ class ApiTest extends TestCase
 			]
 		]);
 
-		$this->assertSame('GET:a', $api->call('test', 'GET', ['query' => ['q' => 'a']]));
-		$this->assertSame('POST:b', $api->call('test', 'POST', ['query' => ['q' => 'b']]));
+		$this->assertSame('GET:a', $api->call('test', ['method' => 'GET', 'query' => ['q' => 'a']]));
+		$this->assertSame('POST:b', $api->call('test', ['method' => 'POST', 'query' => ['q' => 'b']]));
+	}
+
+	public function testRequestObject(): void
+	{
+		$api = new Api([
+			'routes' => [
+				[
+					'pattern' => 'test',
+					'method'  => 'GET|POST',
+					'action'  => fn () => $this->request()->method() . ':' . $this->request()->query()->string('q')
+				]
+			]
+		]);
+
+		$request = new Request([
+			'method' => 'POST',
+			'query'  => ['q' => 'a']
+		]);
+
+		$this->assertSame('POST:a', $api->call('test', $request));
+		$this->assertSame($request, $api->request());
 	}
 
 	public function testRequestData(): void
 	{
 		$api = new Api([
-			'requestData' => $requestData = [
+			'request' => $requestData = [
 				'query'   => $query   = ['a' => 'A'],
 				'body'    => $body    = ['b' => 'B'],
 				'files'   => $files   = ['c' => 'C'],
@@ -1050,7 +1074,7 @@ class ApiTest extends TestCase
 	public function testRequestDataCase(): void
 	{
 		$api = new Api([
-			'requestData' => [
+			'request' => [
 				'query'   => ['Q' => 'query'],
 				'body'    => ['Title' => 'body'],
 				'headers' => ['X-Language' => 'de'],
@@ -1080,7 +1104,7 @@ class ApiTest extends TestCase
 			]
 		]);
 
-		$this->assertSame('test', $api->render('test', 'POST'));
+		$this->assertSame('test', $api->render('test', ['method' => 'POST']));
 	}
 
 	public function testRenderArray(): void
@@ -1095,7 +1119,7 @@ class ApiTest extends TestCase
 			]
 		]);
 
-		$result = $api->render('test', 'POST');
+		$result = $api->render('test', ['method' => 'POST']);
 
 		$this->assertInstanceOf(HttpResponse::class, $result);
 		$this->assertSame(json_encode(['a' => 'A']), $result->body());
@@ -1116,7 +1140,8 @@ class ApiTest extends TestCase
 			]
 		]);
 
-		$result = $api->render('test', 'POST', [
+		$result = $api->render('test', [
+			'method' => 'POST',
 			'headers' => ['x-panel' => 'true']
 		]);
 
@@ -1141,7 +1166,7 @@ class ApiTest extends TestCase
 			]
 		]);
 
-		$result = $api->render('test', 'POST');
+		$result = $api->render('test', ['method' => 'POST']);
 
 		// without the Panel header, keys must stay untouched
 		$this->assertSame(
@@ -1162,7 +1187,7 @@ class ApiTest extends TestCase
 			]
 		]);
 
-		$result = $api->render('test', 'POST');
+		$result = $api->render('test', ['method' => 'POST']);
 
 		$expected = [
 			'status'  => 'ok',
@@ -1186,7 +1211,7 @@ class ApiTest extends TestCase
 			]
 		]);
 
-		$result = $api->render('test', 'POST');
+		$result = $api->render('test', ['method' => 'POST']);
 
 		$expected = [
 			'status'  => 'error',
@@ -1210,7 +1235,7 @@ class ApiTest extends TestCase
 			]
 		]);
 
-		$result = $api->render('test', 'POST');
+		$result = $api->render('test', ['method' => 'POST']);
 
 		$expected = [
 			'status'  => 'error',
@@ -1236,7 +1261,7 @@ class ApiTest extends TestCase
 			]
 		]);
 
-		$result = $api->render('test', 'POST');
+		$result = $api->render('test', ['method' => 'POST']);
 
 		$expected = [
 			'status'   => 'error',
@@ -1268,7 +1293,7 @@ class ApiTest extends TestCase
 		// simulate the document root to test relative file paths
 		$_SERVER['DOCUMENT_ROOT'] = __DIR__;
 
-		$result = $api->render('test', 'POST');
+		$result = $api->render('test', ['method' => 'POST']);
 
 		$expected = [
 			'status'    => 'error',
@@ -1311,7 +1336,7 @@ class ApiTest extends TestCase
 			]
 		]);
 
-		$result = $api->render('test', 'POST');
+		$result = $api->render('test', ['method' => 'POST']);
 
 		$expected = [
 			'status'    => 'error',
@@ -1345,7 +1370,7 @@ class ApiTest extends TestCase
 			]
 		]);
 
-		$result = $api->render('test', 'POST');
+		$result = $api->render('test', ['method' => 'POST']);
 
 		// without debugging, the actual message
 		// (and the leaked path) is replaced by a generic message
@@ -1385,7 +1410,7 @@ class ApiTest extends TestCase
 			]
 		]);
 
-		$result = $api->render('test', 'POST');
+		$result = $api->render('test', ['method' => 'POST']);
 		$body   = json_decode($result->body(), true);
 
 		// in debug mode the message is exposed,
@@ -1417,7 +1442,7 @@ class ApiTest extends TestCase
 			]
 		]);
 
-		$result = $api->render('test', 'POST');
+		$result = $api->render('test', ['method' => 'POST']);
 
 		$expected = [
 			'status'  => 'error',
@@ -1453,7 +1478,7 @@ class ApiTest extends TestCase
 		// simulate the document root to test relative file paths
 		$_SERVER['DOCUMENT_ROOT'] = __DIR__;
 
-		$result = $api->render('test', 'POST');
+		$result = $api->render('test', ['method' => 'POST']);
 
 		$expected = [
 			'status'    => 'error',
@@ -1487,7 +1512,7 @@ class ApiTest extends TestCase
 			]
 		]);
 
-		$result = $api->render('test', 'POST');
+		$result = $api->render('test', ['method' => 'POST']);
 
 		$this->assertSame(500, $result->code());
 	}
@@ -1495,14 +1520,14 @@ class ApiTest extends TestCase
 	public function testRequestMethod(): void
 	{
 		$api = new Api([
-			'requestMethod' => 'POST',
+			'request' => ['method' => 'POST'],
 		]);
 
 		$this->assertSame('POST', $api->requestMethod());
 
 		// normalized by the request
 		$api = new Api([
-			'requestMethod' => 'patch',
+			'request' => ['method' => 'patch'],
 		]);
 
 		$this->assertSame('PATCH', $api->requestMethod());
@@ -1525,8 +1550,8 @@ class ApiTest extends TestCase
 	public function testSearchPages(): void
 	{
 		$api = new Api([
-			'requestMethod' => 'GET',
-			'requestData'   => [
+			'request' => [
+				'method' => 'GET',
 				'query' => [
 					'q'      => 'fanzy',
 					'status' => 'published'
@@ -1537,8 +1562,8 @@ class ApiTest extends TestCase
 		$this->assertSame('a', $api->searchPages()->first()->id());
 
 		$api = new Api([
-			'requestMethod' => 'POST',
-			'requestData'   => [
+			'request' => [
+				'method' => 'POST',
 				'query' => [
 					'status' => 'published'
 				],
@@ -1586,8 +1611,8 @@ class ApiTest extends TestCase
 	public function testUpload(): void
 	{
 		$api = new Api([
-			'requestMethod' => 'POST',
-			'requestData'   => [
+			'request' => [
+				'method' => 'POST',
 				'files' => [
 					[
 						'name'     => 'test.txt',

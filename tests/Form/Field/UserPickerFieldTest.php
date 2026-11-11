@@ -63,7 +63,7 @@ class UserPickerFieldTest extends TestCase
 		]);
 
 		$app->impersonate('kirby');
-		$api = $app->api()->call('pages/test/fields/authors/items', 'GET', [
+		$api = $app->api()->call('pages/test/fields/authors/items', [
 			'query' => [
 				'items' => 'leonardo@getkirby.com,raphael@getkirby.com'
 			]
@@ -124,7 +124,7 @@ class UserPickerFieldTest extends TestCase
 		]);
 
 		$app->impersonate('editor@getkirby.com');
-		$api = $app->api()->call('pages/test/fields/authors/items', 'GET', [
+		$api = $app->api()->call('pages/test/fields/authors/items', [
 			'query' => [
 				'items' => 'editor@getkirby.com,admin@getkirby.com'
 			]

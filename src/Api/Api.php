@@ -89,22 +89,9 @@ class Api
 	protected array $routes = [];
 
 	/**
-	 * The request of the current API call,
-	 * created from the request data and method
+	 * The request of the current API call
 	 */
-	protected Request|null $request = null;
-
-	/**
-	 * Request data
-	 * [query, body, files]
-	 */
-	protected array $requestData = [];
-
-	/**
-	 * The applied request method
-	 * (GET, POST, PATCH, etc.)
-	 */
-	protected string|null $requestMethod = null;
+	protected Request $request;
 
 	/**
 	 * Creates a new API instance
@@ -126,8 +113,7 @@ class Api
 			$this->models = array_change_key_case($models);
 		}
 
-		$this->setRequestData($props['requestData'] ?? null);
-		$this->setRequestMethod($props['requestMethod'] ?? null);
+		$this->setRequest($props['request'] ?? []);
 	}
 
 	/**
@@ -158,25 +144,23 @@ class Api
 	}
 
 	/**
-	 * Execute an API call for the given path,
-	 * request method and optional request data
+	 * Execute an API call for the given path and request
+	 * (a request object or its options, e.g. `method` and `body`)
 	 *
 	 * @throws NotFoundException
 	 * @throws \Exception
 	 */
 	public function call(
 		string|null $path = null,
-		string $method = 'GET',
-		array $requestData = []
+		Request|array $request = []
 	): mixed {
 		$path = rtrim($path ?? '', '/');
 
-		$this->setRequestMethod($method);
-		$this->setRequestData($requestData);
+		$this->setRequest($request);
 		$this->setLanguage();
 		$this->setTranslation();
 
-		$this->route = $this->router->find($path, $method);
+		$this->route = $this->router->find($path, $this->request->method());
 		$auth = $this->route->attributes()['auth'] ?? true;
 
 		if ($auth !== false) {
@@ -223,8 +207,7 @@ class Api
 			'debug'			=> $this->debug,
 			'kirby'			=> $this->kirby,
 			'models'		=> $this->models,
-			'requestData'   => $this->requestData,
-			'requestMethod' => $this->requestMethod,
+			'request'       => $this->request,
 			'routes'		=> $this->routes,
 			...$props
 		]);
@@ -310,11 +293,7 @@ class Api
 			'routes' => $field->api(),
 		]);
 
-		return $fieldApi->call(
-			$path,
-			$this->request()->method(),
-			$this->requestData()
-		);
+		return $fieldApi->call($path, $this->request);
 	}
 
 	/**
@@ -483,13 +462,7 @@ class Api
 	 */
 	public function request(): Request
 	{
-		return $this->request ??= new Request([
-			'body'    => $this->requestData['body'],
-			'files'   => $this->requestData['files'],
-			'headers' => $this->requestData['headers'] ?? [],
-			'method'  => $this->requestMethod,
-			'query'   => $this->requestData['query'],
-		]);
+		return $this->request;
 	}
 
 	/**
@@ -504,15 +477,17 @@ class Api
 		mixed $default = null
 	): mixed {
 		return match ($type) {
-			null      => $this->requestData,
+			null => [
+				'query'   => $this->requestQuery(),
+				'body'    => $this->requestBody(),
+				'files'   => $this->requestFiles(),
+				'headers' => $this->requestHeaders(),
+			],
 			'body'    => $this->requestBody($key, $default),
 			'files'   => $this->requestFiles($key, $default),
 			'headers' => $this->requestHeaders($key, $default),
 			'query'   => $this->requestQuery($key, $default),
-			default   => match ($key) {
-				null    => $this->requestData[$type] ?? [],
-				default => $this->requestData[$type][$key] ?? $default
-			}
+			default   => $key === null ? [] : $default
 		};
 	}
 
@@ -611,14 +586,18 @@ class Api
 
 	/**
 	 * Renders the API call
+	 * (a request object or its options, e.g. `method` and `body`)
 	 */
 	public function render(
 		string $path,
-		string $method = 'GET',
-		array $requestData = []
+		Request|array $request = []
 	): mixed {
+		// keep the rendered request, nested calls can replace it
+		$this->setRequest($request);
+		$request = $this->request;
+
 		try {
-			$result = $this->call($path, $method, $requestData);
+			$result = $this->call($path, $request);
 		} catch (Throwable $e) {
 			$result = $this->responseForException($e);
 		}
@@ -635,7 +614,7 @@ class Api
 		}
 
 		// pretty print json data
-		$pretty = (bool)($requestData['query']['pretty'] ?? false) === true;
+		$pretty = $request->query()->bool('pretty', false);
 		$code   = 200;
 
 		if (($result['status'] ?? 'ok') === 'error') {
@@ -833,31 +812,25 @@ class Api
 	}
 
 	/**
-	 * Setter for the request data
+	 * Sets the request of the API call; options are
+	 * never filled up with the global request data
+	 * @since 7.0.0
 	 * @return $this
 	 */
-	protected function setRequestData(
-		array|null $requestData = []
-	): static {
-		$this->requestData = [
-			'query' => [],
-			'body'  => [],
-			'files' => [],
-			...$requestData ?? []
-		];
-		$this->request = null;
-		return $this;
-	}
+	protected function setRequest(Request|array $request = []): static
+	{
+		$this->request = match (true) {
+			$request instanceof Request => $request,
+			default => new Request([
+				'body'    => [],
+				'files'   => [],
+				'headers' => [],
+				'method'  => 'GET',
+				'query'   => [],
+				...$request
+			])
+		};
 
-	/**
-	 * Setter for the request method
-	 * @return $this
-	 */
-	protected function setRequestMethod(
-		string|null $requestMethod = null
-	): static {
-		$this->requestMethod = $requestMethod ?? 'GET';
-		$this->request       = null;
 		return $this;
 	}
 

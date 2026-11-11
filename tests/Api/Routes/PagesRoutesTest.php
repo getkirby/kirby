@@ -115,7 +115,8 @@ class PagesRoutesTest extends TestCase
 		$app->impersonate('kirby');
 
 		// all
-		$response = $app->api()->call('pages/parent/children', 'GET', [
+		$response = $app->api()->call('pages/parent/children', [
+			'method' => 'GET',
 			'query' => ['status' => 'all']
 		]);
 
@@ -125,7 +126,8 @@ class PagesRoutesTest extends TestCase
 		$this->assertSame('parent/draft-a', $response['data'][2]['id']);
 
 		// published
-		$response = $app->api()->call('pages/parent/children', 'GET', [
+		$response = $app->api()->call('pages/parent/children', [
+			'method' => 'GET',
 			'query' => ['status' => 'published']
 		]);
 
@@ -134,7 +136,8 @@ class PagesRoutesTest extends TestCase
 		$this->assertSame('parent/child-b', $response['data'][1]['id']);
 
 		// listed
-		$response = $app->api()->call('pages/parent/children', 'GET', [
+		$response = $app->api()->call('pages/parent/children', [
+			'method' => 'GET',
 			'query' => ['status' => 'listed']
 		]);
 
@@ -142,7 +145,8 @@ class PagesRoutesTest extends TestCase
 		$this->assertSame('parent/child-a', $response['data'][0]['id']);
 
 		// unlisted
-		$response = $app->api()->call('pages/parent/children', 'GET', [
+		$response = $app->api()->call('pages/parent/children', [
+			'method' => 'GET',
 			'query' => ['status' => 'unlisted']
 		]);
 
@@ -150,7 +154,8 @@ class PagesRoutesTest extends TestCase
 		$this->assertSame('parent/child-b', $response['data'][0]['id']);
 
 		// drafts
-		$response = $app->api()->call('pages/parent/children', 'GET', [
+		$response = $app->api()->call('pages/parent/children', [
+			'method' => 'GET',
 			'query' => ['status' => 'drafts']
 		]);
 
@@ -308,7 +313,8 @@ class PagesRoutesTest extends TestCase
 
 		// filterBy slug == photography would normally return only 1 page;
 		// since filterBy is stripped from the body, both pages are returned
-		$response = $app->api()->call('pages/parent/children/search', 'POST', [
+		$response = $app->api()->call('pages/parent/children/search', [
+			'method' => 'POST',
 			'body' => [
 				'filterBy' => [
 					['field' => 'slug', 'operator' => '==', 'value' => 'photography']
@@ -344,7 +350,8 @@ class PagesRoutesTest extends TestCase
 		$app->impersonate('kirby');
 
 		// sortBy in the body is stripped; default order (a, b) is preserved
-		$response = $app->api()->call('pages/parent/children/search', 'POST', [
+		$response = $app->api()->call('pages/parent/children/search', [
+			'method' => 'POST',
 			'body' => [
 				'sortBy' => 'slug desc'
 			]
@@ -375,7 +382,8 @@ class PagesRoutesTest extends TestCase
 
 		// filterBy filename == photo.jpg would normally return only 1 file;
 		// since filterBy is stripped from the body, both files are returned
-		$response = $app->api()->call('pages/a/files/search', 'POST', [
+		$response = $app->api()->call('pages/a/files/search', [
+			'method' => 'POST',
 			'body' => [
 				'filterBy' => [
 					['field' => 'filename', 'operator' => '==', 'value' => 'photo.jpg']
@@ -405,7 +413,8 @@ class PagesRoutesTest extends TestCase
 		$app->impersonate('kirby');
 
 		// sortBy in the body is stripped; default sorted order (a, b) is preserved
-		$response = $app->api()->call('pages/a/files/search', 'POST', [
+		$response = $app->api()->call('pages/a/files/search', [
+			'method' => 'POST',
 			'body' => [
 				'sortBy' => 'filename desc'
 			]
@@ -450,7 +459,7 @@ class PagesRoutesTest extends TestCase
 
 		$app->impersonate('kirby');
 
-		$response = $app->api()->render($path, $method, ['body' => $body]);
+		$response = $app->api()->render($path, ['method' => $method, 'body' => $body]);
 		$this->assertSame($code, $response->code());
 	}
 }

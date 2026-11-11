@@ -93,7 +93,7 @@ class PagePickerFieldTest extends TestCase
 		]);
 
 		$app->impersonate('kirby');
-		$api = $app->api()->call('pages/test/fields/related/items', 'GET', [
+		$api = $app->api()->call('pages/test/fields/related/items', [
 			'query' => [
 				'items' => 'test,a,b'
 			]
@@ -136,7 +136,7 @@ class PagePickerFieldTest extends TestCase
 		]);
 
 		$app->impersonate('kirby');
-		$api = $app->api()->call('pages/test/fields/related/items', 'GET', [
+		$api = $app->api()->call('pages/test/fields/related/items', [
 			'query' => [
 				'items' => 'page://my-a,page://does-not-exist'
 			]
@@ -209,7 +209,7 @@ class PagePickerFieldTest extends TestCase
 		]);
 
 		$app->impersonate('editor@getkirby.com');
-		$api = $app->api()->call('pages/test/fields/related/items', 'GET', [
+		$api = $app->api()->call('pages/test/fields/related/items', [
 			'query' => [
 				'items' => 'page://my-a,page://my-b'
 			]

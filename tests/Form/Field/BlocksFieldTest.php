@@ -39,7 +39,7 @@ class BlocksFieldTest extends TestCase
 	{
 		$field    = $this->field('blocks');
 		$api      = $field->api()[1];
-		$response = $api['action']->call(new Api(['requestData' => [
+		$response = $api['action']->call(new Api(['request' => [
 			'query' => [
 				'html' => '<p>Test</p>'
 			]
@@ -55,7 +55,7 @@ class BlocksFieldTest extends TestCase
 	{
 		$field    = $this->field('blocks', ['fieldsets' => ['heading']]);
 		$api      = $field->api()[1];
-		$response = $api['action']->call(new Api(['requestData' => [
+		$response = $api['action']->call(new Api(['request' => [
 			'query' => [
 				'html' => '<h1>Hello World</h1><p>Test</p><h6>Sincerely</h6>'
 			]

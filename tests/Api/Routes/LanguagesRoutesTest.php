@@ -71,7 +71,7 @@ class LanguagesRoutesTest extends TestCase
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessageIs('No route found for path: "languages" and request method: "POST"');
 
-		$response = $app->api()->call('languages', 'POST');
+		$response = $app->api()->call('languages', ['method' => 'POST']);
 	}
 
 	public function testGet(): void
@@ -108,7 +108,7 @@ class LanguagesRoutesTest extends TestCase
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessageIs('No route found for path: "languages/de" and request method: "PATCH"');
 
-		$response = $app->api()->call('languages/de', 'PATCH');
+		$response = $app->api()->call('languages/de', ['method' => 'PATCH']);
 	}
 
 	public function testDeleteDisabled(): void
@@ -122,6 +122,6 @@ class LanguagesRoutesTest extends TestCase
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessageIs('No route found for path: "languages/de" and request method: "DELETE"');
 
-		$response = $app->api()->call('languages/de', 'DELETE');
+		$response = $app->api()->call('languages/de', ['method' => 'DELETE']);
 	}
 }

@@ -126,7 +126,7 @@ class UsersRoutesTest extends TestCase
 			'template' => 'avatar',
 		]);
 
-		$response = $this->app->api()->call('users/admin@getkirby.com/avatar', 'DELETE');
+		$response = $this->app->api()->call('users/admin@getkirby.com/avatar', ['method' => 'DELETE']);
 
 		$this->assertTrue($response);
 	}
@@ -189,7 +189,8 @@ class UsersRoutesTest extends TestCase
 	{
 		$app = $this->app;
 
-		$response = $app->api()->call('users', 'POST', [
+		$response = $app->api()->call('users', [
+			'method' => 'POST',
 			'body' => [
 				'email' => 'test@getkirby.com',
 				'role'  => 'admin'
@@ -204,7 +205,8 @@ class UsersRoutesTest extends TestCase
 
 	public function testChangeEmail(): void
 	{
-		$response = $this->app->api()->call('users/editor@getkirby.com/email', 'PATCH', [
+		$response = $this->app->api()->call('users/editor@getkirby.com/email', [
+			'method' => 'PATCH',
 			'body' => [
 				'email' => 'admin@getkirby.de'
 			]
@@ -216,7 +218,8 @@ class UsersRoutesTest extends TestCase
 
 	public function testChangeLanguage(): void
 	{
-		$response = $this->app->api()->call('users/editor@getkirby.com/language', 'PATCH', [
+		$response = $this->app->api()->call('users/editor@getkirby.com/language', [
+			'method' => 'PATCH',
 			'body' => [
 				'language' => 'de'
 			]
@@ -228,7 +231,8 @@ class UsersRoutesTest extends TestCase
 
 	public function testChangeName(): void
 	{
-		$response = $this->app->api()->call('users/editor@getkirby.com/name', 'PATCH', [
+		$response = $this->app->api()->call('users/editor@getkirby.com/name', [
+			'method' => 'PATCH',
 			'body' => [
 				'name' => 'Test user'
 			]
@@ -242,7 +246,8 @@ class UsersRoutesTest extends TestCase
 	{
 		$this->app->impersonate('admin@getkirby.com');
 
-		$response = $this->app->api()->call('users/editor@getkirby.com/password', 'PATCH', [
+		$response = $this->app->api()->call('users/editor@getkirby.com/password', [
+			'method' => 'PATCH',
 			'body' => [
 				'currentPassword' => '12345678',
 				'password'        => 'super-secure-new-password'
@@ -260,7 +265,8 @@ class UsersRoutesTest extends TestCase
 
 		$this->app->impersonate('admin@getkirby.com');
 
-		$this->app->api()->call('users/editor@getkirby.com/password', 'PATCH', [
+		$this->app->api()->call('users/editor@getkirby.com/password', [
+			'method' => 'PATCH',
 			'body' => [
 				'password' => 'super-secure-new-password'
 			]
@@ -274,7 +280,8 @@ class UsersRoutesTest extends TestCase
 
 		$this->app->impersonate('admin@getkirby.com');
 
-		$this->app->api()->call('users/editor@getkirby.com/password', 'PATCH', [
+		$this->app->api()->call('users/editor@getkirby.com/password', [
+			'method' => 'PATCH',
 			'body' => [
 				'currentPassword' => 'definitely-not-correct',
 				'password'        => 'super-secure-new-password'
@@ -296,7 +303,8 @@ class UsersRoutesTest extends TestCase
 			$this->app->user()->id()
 		);
 
-		$this->app->api()->call('users/editor@getkirby.com/password', 'PATCH', [
+		$this->app->api()->call('users/editor@getkirby.com/password', [
+			'method' => 'PATCH',
 			'body' => [
 				'password' => 'super-secure-new-password'
 			]
@@ -305,7 +313,8 @@ class UsersRoutesTest extends TestCase
 
 	public function testChangeRole(): void
 	{
-		$response = $this->app->api()->call('users/editor@getkirby.com/role', 'PATCH', [
+		$response = $this->app->api()->call('users/editor@getkirby.com/role', [
+			'method' => 'PATCH',
 			'body' => [
 				'role' => 'editor'
 			]
@@ -317,7 +326,7 @@ class UsersRoutesTest extends TestCase
 
 	public function testDelete(): void
 	{
-		$response = $this->app->api()->call('users/admin@getkirby.com', 'DELETE');
+		$response = $this->app->api()->call('users/admin@getkirby.com', ['method' => 'DELETE']);
 		$this->assertTrue($response);
 	}
 
@@ -328,7 +337,7 @@ class UsersRoutesTest extends TestCase
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessageIs('The user "restricted@getkirby.com" cannot be found');
 
-		$app->api()->call('users/restricted@getkirby.com', 'DELETE');
+		$app->api()->call('users/restricted@getkirby.com', ['method' => 'DELETE']);
 	}
 
 	public function testFields(): void
@@ -499,7 +508,7 @@ class UsersRoutesTest extends TestCase
 		$app = $this->app;
 		$app->impersonate('admin@getkirby.com');
 
-		$response = $app->api()->render($path, $method, ['body' => $body]);
+		$response = $app->api()->render($path, ['method' => $method, 'body' => $body]);
 		$this->assertSame($code, $response->code());
 	}
 
@@ -520,7 +529,8 @@ class UsersRoutesTest extends TestCase
 	{
 		$app = $this->app;
 
-		$response = $app->api()->call('users/search', 'GET', [
+		$response = $app->api()->call('users/search', [
+			'method' => 'GET',
 			'query' => [
 				'q' => 'Bastian'
 			]
@@ -534,7 +544,8 @@ class UsersRoutesTest extends TestCase
 	{
 		$app = $this->app;
 
-		$response = $app->api()->call('users/search', 'GET', [
+		$response = $app->api()->call('users/search', [
+			'method' => 'GET',
 			'query' => [
 				'q' => 'editor'
 			]
@@ -548,7 +559,8 @@ class UsersRoutesTest extends TestCase
 	{
 		$app = $this->setUpAppWithoutUserAccess();
 
-		$response = $app->api()->call('users/search', 'GET', [
+		$response = $app->api()->call('users/search', [
+			'method' => 'GET',
 			'query' => [
 				'q' => 'Restricted'
 			]
@@ -561,7 +573,8 @@ class UsersRoutesTest extends TestCase
 	{
 		$app = $this->app;
 
-		$response = $app->api()->call('users/search', 'POST', [
+		$response = $app->api()->call('users/search', [
+			'method' => 'POST',
 			'body' => [
 				'search' => 'editor'
 			]
@@ -575,7 +588,8 @@ class UsersRoutesTest extends TestCase
 	{
 		// filterBy role == editor would normally return only 1 user;
 		// since filterBy is stripped from the body, both users are returned
-		$response = $this->app->api()->call('users/search', 'POST', [
+		$response = $this->app->api()->call('users/search', [
+			'method' => 'POST',
 			'body' => [
 				'filterBy' => [
 					['field' => 'role', 'operator' => '==', 'value' => 'editor']
@@ -589,7 +603,8 @@ class UsersRoutesTest extends TestCase
 	public function testSearchWithPostRequestIgnoresSortBy(): void
 	{
 		// sortBy in the body is stripped; default order (alphabetical asc) is preserved
-		$response = $this->app->api()->call('users/search', 'POST', [
+		$response = $this->app->api()->call('users/search', [
+			'method' => 'POST',
 			'body' => [
 				'sortBy' => 'email desc'
 			]
@@ -604,7 +619,8 @@ class UsersRoutesTest extends TestCase
 	{
 		$app = $this->setUpAppWithoutUserAccess();
 
-		$response = $app->api()->call('users/search', 'POST', [
+		$response = $app->api()->call('users/search', [
+			'method' => 'POST',
 			'body' => [
 				'search' => 'Restricted'
 			]
@@ -615,7 +631,8 @@ class UsersRoutesTest extends TestCase
 
 	public function testSearchWithPostRequestRespectsLimit(): void
 	{
-		$response = $this->app->api()->call('users/search', 'POST', [
+		$response = $this->app->api()->call('users/search', [
+			'method' => 'POST',
 			'body' => [
 				'limit' => 1,
 			]
@@ -627,7 +644,8 @@ class UsersRoutesTest extends TestCase
 	public function testSearchWithPostRequestIgnoresNullValues(): void
 	{
 		// search: null should not restrict results
-		$response = $this->app->api()->call('users/search', 'POST', [
+		$response = $this->app->api()->call('users/search', [
+			'method' => 'POST',
 			'body' => [
 				'search' => null,
 			]
@@ -639,7 +657,8 @@ class UsersRoutesTest extends TestCase
 	public function testSearchWithPostRequestIgnoresNotKey(): void
 	{
 		// the 'not' key is stripped; both users are returned
-		$response = $this->app->api()->call('users/search', 'POST', [
+		$response = $this->app->api()->call('users/search', [
+			'method' => 'POST',
 			'body' => [
 				'not' => ['admin@getkirby.com'],
 			]
@@ -650,7 +669,8 @@ class UsersRoutesTest extends TestCase
 
 	public function testUpdate(): void
 	{
-		$response = $this->app->api()->call('users/admin@getkirby.com', 'PATCH', [
+		$response = $this->app->api()->call('users/admin@getkirby.com', [
+			'method' => 'PATCH',
 			'body' => [
 				'position' => 'Admin'
 			]
@@ -667,7 +687,8 @@ class UsersRoutesTest extends TestCase
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessageIs('The user "restricted@getkirby.com" cannot be found');
 
-		$app->api()->call('users/restricted@getkirby.com', 'PATCH', [
+		$app->api()->call('users/restricted@getkirby.com', [
+			'method' => 'PATCH',
 			'body' => [
 				'position' => 'Restricted'
 			]
