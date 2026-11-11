@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Form\Field;
 
 use Kirby\Form\Field\TextField;
+use Kirby\Reflection\Attributes\Prop;
 
 /**
  * Panel field override for the page or file title with panel defaults
@@ -12,10 +13,11 @@ use Kirby\Form\Field\TextField;
  */
 class TitleField extends TextField
 {
-	public function icon(): string
-	{
-		return $this->icon ?? 'title';
-	}
+	#[Prop]
+	protected string|null $icon = 'title';
+
+	#[Prop(computed: true)]
+	protected string|null $name = 'title';
 
 	public function label(): string
 	{
@@ -24,11 +26,6 @@ class TitleField extends TextField
 		}
 
 		return parent::label();
-	}
-
-	public function name(): string
-	{
-		return $this->name ?? 'title';
 	}
 
 	public function type(): string

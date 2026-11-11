@@ -4,6 +4,7 @@ namespace Kirby\Panel\Form\Field;
 
 use Kirby\Cms\Page;
 use Kirby\Form\Field\SelectField;
+use Kirby\Reflection\Attributes\Prop;
 
 /**
  * Panel field override for selecting a page's position within its siblings
@@ -13,11 +14,14 @@ use Kirby\Form\Field\SelectField;
  */
 class PagePositionField extends SelectField
 {
+	#[Prop(computed: true)]
+	protected string|null $name = 'position';
+
 	public function __construct(
 		protected Page $page,
-		...$props
+		mixed ...$args
 	) {
-		parent::__construct(...$props);
+		parent::__construct(...$args);
 	}
 
 	public function label(): string
@@ -27,11 +31,6 @@ class PagePositionField extends SelectField
 		}
 
 		return parent::label();
-	}
-
-	public function name(): string
-	{
-		return $this->name ?? 'position';
 	}
 
 	public function options(): array

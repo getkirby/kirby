@@ -976,13 +976,12 @@ class FTest extends TestCase
 
 			$this->assertSame(E_WARNING, $errno);
 
-			$expectedPrefix = 'unlink(' . static::TMP . '/folder): ';
-			$expected = [
-				$expectedPrefix . 'Is a directory',
-				$expectedPrefix . 'Operation not permitted'
-			];
-
-			$this->assertTrue(in_array($errstr, $expected, true));
+			// PHP 8.6+ omits the arguments unless `error_include_args` is on
+			$path = preg_quote(static::TMP . '/folder', '/');
+			$this->assertMatchesRegularExpression(
+				'/^unlink\((' . $path . ')?\): (Is a directory|Operation not permitted)$/',
+				$errstr
+			);
 		});
 
 		mkdir(static::TMP . '/folder');
