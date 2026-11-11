@@ -276,6 +276,19 @@ class UserValidatorsTest extends ModelTestCase
 		);
 	}
 
+	public function testEnsureCreateWithoutEmail(): void
+	{
+		$validators = new UserValidators(
+			model: new User(['role' => 'editor']),
+			user: $this->user()
+		);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.user.email.invalid');
+
+		$validators->ensure('create', ['role' => 'editor']);
+	}
+
 	public function testEnsureCreateAvatar(): void
 	{
 		$validators = $this->validators();
