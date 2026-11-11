@@ -177,6 +177,12 @@ class PanelTest extends TestCase
 		$this->assertFalse($result);
 	}
 
+	public function testIsStateRequestWithFalseFlag(): void
+	{
+		$this->setRequest(['_json' => 'false']);
+		$this->assertFalse($this->app->panel()->isStateRequest());
+	}
+
 	public function testIsPanelUrl(): void
 	{
 		$panel = $this->app->panel();

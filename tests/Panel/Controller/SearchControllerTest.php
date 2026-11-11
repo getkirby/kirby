@@ -49,4 +49,23 @@ class SearchControllerTest extends TestCase
 		$this->assertSame(5, $controller->limit);
 		$this->assertSame(2, $controller->page);
 	}
+
+	public function testFactoryWithInvalidQueryValues(): void
+	{
+		new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'request' => [
+				'query' => [
+					'limit' => 'abc',
+					'page'  => ['2']
+				]
+			]
+		]);
+
+		$controller = TestSearchController::factory();
+		$this->assertSame(10, $controller->limit);
+		$this->assertSame(1, $controller->page);
+	}
 }

@@ -28,9 +28,9 @@ abstract class SearchController extends Controller
 		$limit   = $kirby->option('panel.search.limit', 10);
 
 		return new static(
-			query: $request->get('query', ''),
-			limit: (int)$request->get('limit', $limit),
-			page:  (int)$request->get('page', 1)
+			query: $request->string('query', ''),
+			limit: $request->int('limit', $limit),
+			page:  $request->int('page', 1)
 		);
 	}
 }

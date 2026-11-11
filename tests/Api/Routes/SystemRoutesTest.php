@@ -103,7 +103,7 @@ class SystemRoutesTest extends TestCase
 		$this->createValidInstallation();
 		$this->createUser();
 
-		$data = $this->app->api()->call('system', 'GET')['data'];
+		$data = $this->app->api()->call('system')['data'];
 
 		$this->assertValidInstallation($data);
 
@@ -125,7 +125,7 @@ class SystemRoutesTest extends TestCase
 
 		$this->app->impersonate($user);
 
-		$data = $this->app->api()->call('system', 'GET')['data'];
+		$data = $this->app->api()->call('system')['data'];
 
 		$this->assertValidInstallation($data);
 
@@ -157,7 +157,7 @@ class SystemRoutesTest extends TestCase
 
 		$this->app->impersonate($user);
 
-		$data = $this->app->api()->call('system', 'GET')['data'];
+		$data = $this->app->api()->call('system')['data'];
 
 		$this->assertValidInstallation($data);
 		$this->assertUserWithAuthView($data['user']);
@@ -168,7 +168,7 @@ class SystemRoutesTest extends TestCase
 	{
 		$this->createInvalidInstallation();
 
-		$data = $this->app->api()->call('system', 'GET')['data'];
+		$data = $this->app->api()->call('system')['data'];
 
 		$this->assertTrue($data['isInstallable']);
 		$this->assertFalse($data['isInstalled']);
@@ -188,7 +188,7 @@ class SystemRoutesTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionCode('error.csrf.invalid');
 
-		$this->app->api()->call('system/install', 'POST');
+		$this->app->api()->call('system/install', ['method' => 'POST']);
 	}
 
 	public function testRegisterWithoutSystemAccess(): void
@@ -201,7 +201,8 @@ class SystemRoutesTest extends TestCase
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessageIs('No access');
 
-		$this->app->api()->call('system/register', 'POST', [
+		$this->app->api()->call('system/register', [
+			'method' => 'POST',
 			'body' => [
 				'license' => 'K-TEST-1234',
 				'email'   => 'test@getkirby.com'

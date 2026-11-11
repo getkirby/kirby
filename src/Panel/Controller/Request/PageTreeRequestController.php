@@ -25,8 +25,8 @@ class PageTreeRequestController extends RequestController
 	{
 		parent::__construct();
 
-		$parent = $this->request->get('parent');
-		$move   = $this->request->get('move');
+		$parent = $this->request->string('parent');
+		$move   = $this->request->string('move');
 
 		$this->parent = $parent ? Find::parent($parent) : null;
 		$this->move   = $move ? Find::parent($move) : null;

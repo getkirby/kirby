@@ -8,9 +8,9 @@ use Kirby\Http\Request\Auth\BasicAuth;
 use Kirby\Http\Request\Auth\BearerAuth;
 use Kirby\Http\Request\Auth\SessionAuth;
 use Kirby\Http\Request\Body;
+use Kirby\Http\Request\Data;
 use Kirby\Http\Request\Files;
 use Kirby\Http\Request\Query;
-use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 
 /**
@@ -23,6 +23,8 @@ use Kirby\Toolkit\Str;
  */
 class Request
 {
+	use Data;
+
 	/**
 	 * Available auth types and their classes
 	 *
@@ -198,7 +200,7 @@ class Request
 	 */
 	public function csrf(): string|null
 	{
-		return $this->header('x-csrf') ?? $this->query()->get('csrf');
+		return $this->header('x-csrf') ?? $this->query()->string('csrf');
 	}
 
 	/**
@@ -280,15 +282,6 @@ class Request
 	}
 
 	/**
-	 * Returns any data field from the request
-	 * if it exists
-	 */
-	public function get(string|array|null $key = null, $fallback = null)
-	{
-		return A::get($this->data(), $key, $fallback);
-	}
-
-	/**
 	 * Returns whether the request contains
 	 * the `Authorization` header
 	 * @since 3.7.0
@@ -308,13 +301,17 @@ class Request
 	}
 
 	/**
-	 * Return all headers with polyfill for
-	 * missing getallheaders function
+	 * Returns all headers from the `headers` option
+	 * or with polyfill for missing getallheaders function
 	 *
 	 * @return array<string, mixed>
 	 */
 	public function headers(): array
 	{
+		if (isset($this->options['headers']) === true) {
+			return $this->options['headers'];
+		}
+
 		$headers = [];
 
 		foreach (Environment::getGlobally() as $key => $value) {

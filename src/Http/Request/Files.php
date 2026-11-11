@@ -33,7 +33,8 @@ class Files
 		$files ??= $_FILES;
 
 		foreach ($files as $key => $file) {
-			if (is_array($file['name']) === true) {
+			// already normalized lists of multiple uploads have no `name`
+			if (is_array($file['name'] ?? null) === true) {
 				foreach ($file['name'] as $i => $name) {
 					$this->files[$key][] = [
 						'name'     => $name,

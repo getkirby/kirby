@@ -89,7 +89,7 @@ class UserValidators extends ModelValidators
 		array $props = []
 	): void {
 		$this->validateId($this->model->id());
-		$this->validateEmail($this->model->email(), strict: true);
+		$this->validateEmail($this->model->email() ?? '', strict: true);
 		$this->validateLanguage($this->model->language());
 		$this->validateNewPassword($props['password'] ?? '', allowEmpty: true);
 		$this->validateCreatableRole($props['role'] ?? 'default');
@@ -112,7 +112,7 @@ class UserValidators extends ModelValidators
 		array $props = []
 	): void {
 		$this->validateId($this->model->id());
-		$this->validateEmail($this->model->email(), strict: true);
+		$this->validateEmail($this->model->email() ?? '', strict: true);
 		$this->validateLanguage($this->model->language());
 		$this->validateNewPassword($props['password'] ?? '');
 		$this->validateCreatableRole($this->model->role()->id());

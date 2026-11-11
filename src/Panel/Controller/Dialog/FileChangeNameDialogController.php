@@ -39,7 +39,7 @@ class FileChangeNameDialogController extends FileDialogController
 
 	public function submit(): array
 	{
-		$name       = $this->request->get('name');
+		$name       = $this->request->string('name', '');
 		$oldUrl     = $this->file->panel()->url(true);
 		$this->file = $this->file->changeName($name);
 		$newUrl     = $this->file->panel()->url(true);

@@ -10,7 +10,7 @@ return [
 		'pattern' => 'roles',
 		'method'  => 'GET',
 		'action'  => function () {
-			return match ($this->requestQuery('canBe')) {
+			return match ($this->request()->query()->string('canBe')) {
 				'changed' => Find::roles()->canBeChanged(),
 				'created' => Find::roles()->canBeCreated(),
 				default   => Find::roles()

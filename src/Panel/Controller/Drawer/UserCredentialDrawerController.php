@@ -75,7 +75,7 @@ abstract class UserCredentialDrawerController extends UserDrawerController
 	protected function authorizeAdmin(): void
 	{
 		$admin    = $this->kirby->user();
-		$password = $this->request->get('password');
+		$password = $this->request->string('password');
 
 		try {
 			$this->kirby->auth()->ensurePassword($admin, $password);

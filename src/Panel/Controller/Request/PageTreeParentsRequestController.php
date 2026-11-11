@@ -22,8 +22,8 @@ class PageTreeParentsRequestController extends RequestController
 	public function __construct()
 	{
 		parent::__construct();
-		$this->page = $this->kirby->page($this->request->get('page'));
-		$this->root = $this->request->get('root') === 'true';
+		$this->page = $this->kirby->page($this->request->string('page'));
+		$this->root = $this->request->bool('root', false);
 	}
 
 	public function load(): array

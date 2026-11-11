@@ -3,8 +3,10 @@
 namespace Kirby\Api;
 
 use Kirby\Cms\App;
+use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class PagesRoutesTest extends TestCase
 {
@@ -114,7 +116,8 @@ class PagesRoutesTest extends TestCase
 		$app->impersonate('kirby');
 
 		// all
-		$response = $app->api()->call('pages/parent/children', 'GET', [
+		$response = $app->api()->call('pages/parent/children', [
+			'method' => 'GET',
 			'query' => ['status' => 'all']
 		]);
 
@@ -124,7 +127,8 @@ class PagesRoutesTest extends TestCase
 		$this->assertSame('parent/draft-a', $response['data'][2]['id']);
 
 		// published
-		$response = $app->api()->call('pages/parent/children', 'GET', [
+		$response = $app->api()->call('pages/parent/children', [
+			'method' => 'GET',
 			'query' => ['status' => 'published']
 		]);
 
@@ -133,7 +137,8 @@ class PagesRoutesTest extends TestCase
 		$this->assertSame('parent/child-b', $response['data'][1]['id']);
 
 		// listed
-		$response = $app->api()->call('pages/parent/children', 'GET', [
+		$response = $app->api()->call('pages/parent/children', [
+			'method' => 'GET',
 			'query' => ['status' => 'listed']
 		]);
 
@@ -141,7 +146,8 @@ class PagesRoutesTest extends TestCase
 		$this->assertSame('parent/child-a', $response['data'][0]['id']);
 
 		// unlisted
-		$response = $app->api()->call('pages/parent/children', 'GET', [
+		$response = $app->api()->call('pages/parent/children', [
+			'method' => 'GET',
 			'query' => ['status' => 'unlisted']
 		]);
 
@@ -149,7 +155,8 @@ class PagesRoutesTest extends TestCase
 		$this->assertSame('parent/child-b', $response['data'][0]['id']);
 
 		// drafts
-		$response = $app->api()->call('pages/parent/children', 'GET', [
+		$response = $app->api()->call('pages/parent/children', [
+			'method' => 'GET',
 			'query' => ['status' => 'drafts']
 		]);
 
@@ -281,6 +288,24 @@ class PagesRoutesTest extends TestCase
 		$this->assertSame('a.jpg', $response['data']['filename']);
 	}
 
+	public function testFieldsWithMissingField(): void
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					['slug' => 'test']
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessageIs('The field could not be found');
+
+		$app->api()->call('pages/test/fields/nonexists');
+	}
+
 	public function testChildrenSearchWithPostRequestIgnoresFilterBy(): void
 	{
 		$app = $this->app->clone([
@@ -307,7 +332,8 @@ class PagesRoutesTest extends TestCase
 
 		// filterBy slug == photography would normally return only 1 page;
 		// since filterBy is stripped from the body, both pages are returned
-		$response = $app->api()->call('pages/parent/children/search', 'POST', [
+		$response = $app->api()->call('pages/parent/children/search', [
+			'method' => 'POST',
 			'body' => [
 				'filterBy' => [
 					['field' => 'slug', 'operator' => '==', 'value' => 'photography']
@@ -343,7 +369,8 @@ class PagesRoutesTest extends TestCase
 		$app->impersonate('kirby');
 
 		// sortBy in the body is stripped; default order (a, b) is preserved
-		$response = $app->api()->call('pages/parent/children/search', 'POST', [
+		$response = $app->api()->call('pages/parent/children/search', [
+			'method' => 'POST',
 			'body' => [
 				'sortBy' => 'slug desc'
 			]
@@ -374,7 +401,8 @@ class PagesRoutesTest extends TestCase
 
 		// filterBy filename == photo.jpg would normally return only 1 file;
 		// since filterBy is stripped from the body, both files are returned
-		$response = $app->api()->call('pages/a/files/search', 'POST', [
+		$response = $app->api()->call('pages/a/files/search', [
+			'method' => 'POST',
 			'body' => [
 				'filterBy' => [
 					['field' => 'filename', 'operator' => '==', 'value' => 'photo.jpg']
@@ -404,7 +432,8 @@ class PagesRoutesTest extends TestCase
 		$app->impersonate('kirby');
 
 		// sortBy in the body is stripped; default sorted order (a, b) is preserved
-		$response = $app->api()->call('pages/a/files/search', 'POST', [
+		$response = $app->api()->call('pages/a/files/search', [
+			'method' => 'POST',
 			'body' => [
 				'sortBy' => 'filename desc'
 			]
@@ -413,5 +442,43 @@ class PagesRoutesTest extends TestCase
 		$this->assertCount(2, $response['data']);
 		$this->assertSame('a.jpg', $response['data'][0]['filename']);
 		$this->assertSame('b.jpg', $response['data'][1]['filename']);
+	}
+
+	public static function malformedInputProvider(): array
+	{
+		return [
+			'title'        => ['pages/a/title', 'PATCH', ['title' => []], 400],
+			'slug'         => ['pages/a/slug', 'PATCH', ['slug' => []], 400],
+			'status'       => ['pages/a/status', 'PATCH', ['status' => [], 'position' => []], 400],
+			'position'     => ['pages/a/status', 'PATCH', ['status' => 'listed', 'position' => 'abc'], 200],
+			'template'     => ['pages/a/template', 'PATCH', ['template' => []], 403],
+			'delete'       => ['pages/a', 'DELETE', ['force' => []], 200],
+			'search'       => ['pages/a/children/search', 'POST', ['limit' => [], 'offset' => 'abc'], 200],
+			'files search' => ['pages/a/files/search', 'POST', ['limit' => 'abc', 'offset' => []], 200],
+			'file name'    => ['pages/a/files/f.jpg/name', 'PATCH', ['name' => []], 400],
+			'files sort'   => ['pages/a/files/sort', 'PATCH', ['files' => 'x', 'index' => []], 200],
+		];
+	}
+
+	#[DataProvider('malformedInputProvider')]
+	public function testMalformedInput(string $path, string $method, array $body, int $code): void
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'a',
+						'files' => [
+							['filename' => 'f.jpg']
+						]
+					]
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$response = $app->api()->render($path, ['method' => $method, 'body' => $body]);
+		$this->assertSame($code, $response->code());
 	}
 }

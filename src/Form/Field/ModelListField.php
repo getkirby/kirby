@@ -155,7 +155,7 @@ abstract class ModelListField extends DisplayField
 					$api = $this;
 
 					return $field->deleteSelected(
-						ids: $api->requestBody('ids')
+						ids: $api->request()->body()->array('ids', [])
 					);
 				}
 			]
@@ -471,9 +471,9 @@ abstract class ModelListField extends DisplayField
 	/**
 	 * The page from the request, with the prop as fallback
 	 */
-	public function page(): int|string|null
+	public function page(): int|null
 	{
-		return $this->kirby()->request()->get('page', $this->page);
+		return $this->kirby()->request()->int('page', $this->page);
 	}
 
 	/**
@@ -584,7 +584,7 @@ abstract class ModelListField extends DisplayField
 			return null;
 		}
 
-		return $this->kirby()->request()->get('searchterm');
+		return $this->kirby()->request()->string('searchterm');
 	}
 
 	public function sortable(): bool

@@ -42,7 +42,7 @@ class PageMoveDialogController extends PageDialogController
 
 	public function submit(): array|true
 	{
-		$parent = $this->request->get('parent');
+		$parent = $this->request->string('parent');
 
 		if ($parent === '' || $parent === '/' || $parent === 'site://') {
 			$parent = Find::site();

@@ -33,7 +33,7 @@ return [
 				throw new InvalidArgumentException(key: 'csrf.invalid');
 			}
 
-			$user = $auth->verifyChallenge($this->requestBody('code'));
+			$user = $auth->verifyChallenge($this->request()->body()->get('code'));
 
 			return [
 				'code'   => 200,
@@ -55,9 +55,9 @@ return [
 				throw new InvalidArgumentException(key: 'csrf.invalid');
 			}
 
-			$email    = $this->requestBody('email');
-			$long     = $this->requestBody('long') === true;
-			$password = $this->requestBody('password');
+			$email    = $this->request()->body()->string('email');
+			$long     = $this->request()->body()->bool('long', false);
+			$password = $this->request()->body()->string('password');
 
 			$method = match (true) {
 				is_string($password) && $password !== '' => 'password',

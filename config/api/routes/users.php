@@ -3,6 +3,7 @@
 use Kirby\Cms\Find;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\F;
+use Kirby\Form\Form;
 
 /**
  * User Routes
@@ -20,23 +21,14 @@ return [
 		'pattern' => 'users',
 		'method'  => 'POST',
 		'action'  => function () {
-			return Find::users()->create($this->requestBody());
+			return Find::users()->create($this->request()->body()->toArray());
 		}
 	],
 	[
 		'pattern' => 'users/search',
 		'method'  => 'GET|POST',
 		'action'  => function () {
-			if ($this->requestMethod() === 'GET') {
-				return Find::users()->search($this->requestQuery('q'));
-			}
-
-			return Find::users()->query(array_filter([
-				'limit'    => $this->requestBody('limit'),
-				'offset'   => $this->requestBody('offset'),
-				'paginate' => $this->requestBody('paginate'),
-				'search'   => $this->requestBody('search'),
-			], fn ($value) => $value !== null));
+			return $this->search(Find::users());
 		}
 	],
 	[
@@ -56,7 +48,7 @@ return [
 		],
 		'method'  => 'PATCH',
 		'action'  => function (string $id) {
-			return Find::user($id)->update($this->requestBody(), $this->language(), true);
+			return Find::user($id)->update($this->request()->body()->toArray(), $this->language(), true);
 		}
 	],
 	[
@@ -140,7 +132,7 @@ return [
 		],
 		'method'  => 'GET',
 		'action'  => function (string $id) {
-			return Find::user($id)->blueprints($this->requestQuery('field'));
+			return Find::user($id)->blueprints($this->request()->query()->string('field'));
 		}
 	],
 	[
@@ -150,7 +142,7 @@ return [
 		],
 		'method'  => 'PATCH',
 		'action'  => function (string $id) {
-			return Find::user($id)->changeEmail($this->requestBody('email'));
+			return Find::user($id)->changeEmail($this->request()->body()->string('email', ''));
 		}
 	],
 	[
@@ -160,7 +152,7 @@ return [
 		],
 		'method'  => 'PATCH',
 		'action'  => function (string $id) {
-			return Find::user($id)->changeLanguage($this->requestBody('language'));
+			return Find::user($id)->changeLanguage($this->request()->body()->string('language', ''));
 		}
 	],
 	[
@@ -170,7 +162,7 @@ return [
 		],
 		'method'  => 'PATCH',
 		'action'  => function (string $id) {
-			return Find::user($id)->changeName($this->requestBody('name'));
+			return Find::user($id)->changeName($this->request()->body()->string('name', ''));
 		}
 	],
 	[
@@ -191,11 +183,11 @@ return [
 			) {
 				$this->kirby()->auth()->ensurePassword(
 					$currentUser,
-					$this->requestBody('currentPassword')
+					$this->request()->body()->string('currentPassword')
 				);
 			}
 
-			$result = $user->changePassword($this->requestBody('password'));
+			$result = $user->changePassword($this->request()->body()->string('password', ''));
 
 			// if we changed the password of the current user…
 			if ($user->isLoggedIn() === true) {
@@ -213,7 +205,7 @@ return [
 		],
 		'method'  => 'PATCH',
 		'action'  => function (string $id) {
-			return Find::user($id)->changeRole($this->requestBody('role'));
+			return Find::user($id)->changeRole($this->request()->body()->string('role', ''));
 		}
 	],
 	[
@@ -232,7 +224,8 @@ return [
 		],
 		'method'  => 'ALL',
 		'action'  => function (string $id, string $fieldName, string|null $path = null) {
-			return $this->fieldApi(Find::user($id), $fieldName, $path);
+			$field = Form::for(Find::user($id))->field($fieldName);
+			return $this->forward($field, $path);
 		}
 	],
 	// @codeCoverageIgnoreEnd

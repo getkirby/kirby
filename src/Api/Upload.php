@@ -158,7 +158,7 @@ readonly class Upload
 	 */
 	public function process(Closure $callback): array
 	{
-		$files   = $this->api->requestFiles();
+		$files   = $this->api->request()->files()->toArray();
 		$uploads = [];
 		$errors  = [];
 
@@ -187,14 +187,14 @@ readonly class Upload
 				if ($this->preflight !== null) {
 					($this->preflight)(
 						$filename,
-						$this->template ?? $this->api->requestBody('template')
+						$this->template ?? $this->api->request()->body()->string('template')
 					);
 				}
 
 				$source = $this->source($upload['tmp_name'], $filename);
 
 				// if the file is uploaded in chunks…
-				if ($this->api->requestHeaders('Upload-Length')) {
+				if ($this->api->request()->header('Upload-Length')) {
 					$source = $this->processChunk($source, $filename);
 				}
 
@@ -246,12 +246,12 @@ readonly class Upload
 
 		// create path for file in tmp upload directory;
 		// prefix with id while file isn't completely uploaded yet
-		$id       = $this->api->requestHeaders('Upload-Id', '');
+		$id       = $this->api->request()->header('Upload-Id', '');
 		$id       = static::chunkId($id);
-		$total    = (int)$this->api->requestHeaders('Upload-Length');
-		$offset   = (int)$this->api->requestHeaders('Upload-Offset');
+		$total    = (int)$this->api->request()->header('Upload-Length');
+		$offset   = (int)$this->api->request()->header('Upload-Offset');
 		$filename = basename($filename);
-		$template = $this->template ?? $this->api->requestBody('template');
+		$template = $this->template ?? $this->api->request()->body()->string('template');
 		$tmpRoot  = $dir . '/' . $id . '-' . $filename;
 
 		// meta sidecar file storing the template and total length

@@ -31,8 +31,8 @@ class UserTotpDrawerController extends UserCredentialDrawerController
 	{
 		parent::create();
 
-		$secret  = $this->request->get('secret');
-		$confirm = $this->request->get('confirm');
+		$secret  = $this->request->string('secret');
+		$confirm = $this->request->string('confirm');
 
 		if ($confirm === null) {
 			throw new InvalidArgumentException(
@@ -93,7 +93,7 @@ class UserTotpDrawerController extends UserCredentialDrawerController
 
 	public function submit(): bool
 	{
-		$this->user = match ($action = $this->request->get('action')) {
+		$this->user = match ($action = $this->request->string('action')) {
 			'create' => $this->create(),
 			'remove' => $this->remove(),
 			default  => throw new InvalidArgumentException(

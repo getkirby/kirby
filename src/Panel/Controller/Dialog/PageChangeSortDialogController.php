@@ -42,7 +42,7 @@ class PageChangeSortDialogController extends PageDialogController
 	{
 		$this->page = $this->page->changeStatus(
 			'listed',
-			$this->request->get('position')
+			$this->request->int('position')
 		);
 
 		return [

@@ -88,7 +88,7 @@ class AccountRoutesTest extends TestCase
 			'template' => 'avatar',
 		]);
 
-		$response = $this->app->api()->call('account/avatar', 'DELETE');
+		$response = $this->app->api()->call('account/avatar', ['method' => 'DELETE']);
 
 		$this->assertTrue($response);
 	}
@@ -149,7 +149,8 @@ class AccountRoutesTest extends TestCase
 
 	public function testChangeEmail(): void
 	{
-		$response = $this->app->api()->call('account/email', 'PATCH', [
+		$response = $this->app->api()->call('account/email', [
+			'method' => 'PATCH',
 			'body' => [
 				'email' => 'admin@getkirby.de'
 			]
@@ -161,7 +162,8 @@ class AccountRoutesTest extends TestCase
 
 	public function testChangeLanguage(): void
 	{
-		$response = $this->app->api()->call('account/language', 'PATCH', [
+		$response = $this->app->api()->call('account/language', [
+			'method' => 'PATCH',
 			'body' => [
 				'language' => 'de'
 			]
@@ -173,7 +175,8 @@ class AccountRoutesTest extends TestCase
 
 	public function testChangeName(): void
 	{
-		$response = $this->app->api()->call('account/name', 'PATCH', [
+		$response = $this->app->api()->call('account/name', [
+			'method' => 'PATCH',
 			'body' => [
 				'name' => 'Test user'
 			]
@@ -185,7 +188,8 @@ class AccountRoutesTest extends TestCase
 
 	public function testChangePassword(): void
 	{
-		$response = $this->app->api()->call('account/password', 'PATCH', [
+		$response = $this->app->api()->call('account/password', [
+			'method' => 'PATCH',
 			'body' => [
 				'currentPassword' => '12345678',
 				'password'        => 'super-secure-new-password'
@@ -201,7 +205,8 @@ class AccountRoutesTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionCode('error.user.password.invalid');
 
-		$this->app->api()->call('account/password', 'PATCH', [
+		$this->app->api()->call('account/password', [
+			'method' => 'PATCH',
 			'body' => [
 				'password' => 'super-secure-new-password'
 			]
@@ -213,7 +218,8 @@ class AccountRoutesTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionCode('error.user.password.wrong');
 
-		$this->app->api()->call('account/password', 'PATCH', [
+		$this->app->api()->call('account/password', [
+			'method' => 'PATCH',
 			'body' => [
 				'currentPassword' => 'definitely-not-correct',
 				'password'        => 'super-secure-new-password'
@@ -224,7 +230,8 @@ class AccountRoutesTest extends TestCase
 	public function testChangePasswordWrongCurrentPasswordConsumesRateLimit(): void
 	{
 		try {
-			$this->app->api()->call('account/password', 'PATCH', [
+			$this->app->api()->call('account/password', [
+				'method' => 'PATCH',
 				'body' => [
 					'currentPassword' => 'definitely-not-correct',
 					'password'        => 'super-secure-new-password'
@@ -255,7 +262,8 @@ class AccountRoutesTest extends TestCase
 		// even the correct password must not be checked any more
 		$this->expectException(RateLimitException::class);
 
-		$this->app->api()->call('account/password', 'PATCH', [
+		$this->app->api()->call('account/password', [
+			'method' => 'PATCH',
 			'body' => [
 				'currentPassword' => '12345678',
 				'password'        => 'super-secure-new-password'
@@ -270,7 +278,8 @@ class AccountRoutesTest extends TestCase
 			$this->app->user()->id()
 		);
 
-		$response = $this->app->api()->call('account/password', 'PATCH', [
+		$response = $this->app->api()->call('account/password', [
+			'method' => 'PATCH',
 			'body' => [
 				'password' => 'super-secure-new-password'
 			]
@@ -293,7 +302,8 @@ class AccountRoutesTest extends TestCase
 			$this->app->user('editor@getkirby.com')->id()
 		);
 
-		$this->app->api()->call('account/password', 'PATCH', [
+		$this->app->api()->call('account/password', [
+			'method' => 'PATCH',
 			'body' => [
 				'password' => 'super-secure-new-password'
 			]
@@ -302,7 +312,8 @@ class AccountRoutesTest extends TestCase
 
 	public function testChangeRole(): void
 	{
-		$response = $this->app->api()->call('account/role', 'PATCH', [
+		$response = $this->app->api()->call('account/role', [
+			'method' => 'PATCH',
 			'body' => [
 				'role' => 'editor'
 			]
@@ -314,7 +325,7 @@ class AccountRoutesTest extends TestCase
 
 	public function testDelete(): void
 	{
-		$response = $this->app->api()->call('account', 'DELETE');
+		$response = $this->app->api()->call('account', ['method' => 'DELETE']);
 		$this->assertTrue($response);
 	}
 
@@ -474,7 +485,8 @@ class AccountRoutesTest extends TestCase
 
 	public function testUpdate(): void
 	{
-		$response = $this->app->api()->call('account', 'PATCH', [
+		$response = $this->app->api()->call('account', [
+			'method' => 'PATCH',
 			'body' => [
 				'position' => 'Admin'
 			]

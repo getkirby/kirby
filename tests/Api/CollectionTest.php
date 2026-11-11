@@ -6,12 +6,13 @@ use Exception;
 use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class CollectionTest extends TestCase
 {
 	public function testConstruct(): void
 	{
-		$api = new Api([]);
+		$api = new Api();
 		$collection = new Collection($api, [], []);
 
 		$this->assertInstanceOf(Collection::class, $collection);
@@ -19,8 +20,8 @@ class CollectionTest extends TestCase
 
 	public function testSelect(): void
 	{
-		$api = new Api([
-			'models' => [
+		$api = new Api(
+			models: [
 				'test' => [
 					'fields' => [
 						'key'   => fn ($model) => strtolower($model),
@@ -28,7 +29,7 @@ class CollectionTest extends TestCase
 					]
 				]
 			]
-		]);
+		);
 
 		$collection = new Collection($api, [
 			'foo' => 'A',
@@ -54,15 +55,15 @@ class CollectionTest extends TestCase
 
 	public function testToArray(): void
 	{
-		$api = new Api([
-			'models' => [
+		$api = new Api(
+			models: [
 				'test' => [
 					'fields' => [
 						'value' => fn ($model) => $model
 					]
 				]
 			]
-		]);
+		);
 		$collection = new Collection($api, [
 			'foo' => 'A',
 			'bar' => 'B',
@@ -81,8 +82,8 @@ class CollectionTest extends TestCase
 
 	public function testToResponse(): void
 	{
-		$api = new Api([
-			'models' => [
+		$api = new Api(
+			models: [
 				'test' => [
 					'type'   => Page::class,
 					'fields' => [
@@ -90,7 +91,7 @@ class CollectionTest extends TestCase
 					]
 				]
 			]
-		]);
+		);
 		$collection = new Collection($api, new Pages([
 			new Page(['slug' => 'a']),
 			new Page(['slug' => 'b']),
@@ -119,8 +120,8 @@ class CollectionTest extends TestCase
 
 	public function testToResponseIgnoresFilterByInQuery(): void
 	{
-		$api = new Api([
-			'models' => [
+		$api = new Api(
+			models: [
 				'test' => [
 					'type'   => Page::class,
 					'fields' => [
@@ -128,7 +129,7 @@ class CollectionTest extends TestCase
 					]
 				]
 			],
-			'requestData' => [
+			request: [
 				'query' => [
 					'query' => [
 						'filterBy' => [
@@ -137,7 +138,7 @@ class CollectionTest extends TestCase
 					]
 				]
 			]
-		]);
+		);
 		$collection = new Collection($api, new Pages([
 			new Page(['slug' => 'a']),
 			new Page(['slug' => 'b']),
@@ -152,8 +153,8 @@ class CollectionTest extends TestCase
 
 	public function testToResponseIgnoresSortByInQuery(): void
 	{
-		$api = new Api([
-			'models' => [
+		$api = new Api(
+			models: [
 				'test' => [
 					'type'   => Page::class,
 					'fields' => [
@@ -161,14 +162,14 @@ class CollectionTest extends TestCase
 					]
 				]
 			],
-			'requestData' => [
+			request: [
 				'query' => [
 					'query' => [
 						'sortBy' => 'slug desc'
 					]
 				]
 			]
-		]);
+		);
 		$collection = new Collection($api, new Pages([
 			new Page(['slug' => 'a']),
 			new Page(['slug' => 'b']),
@@ -184,8 +185,8 @@ class CollectionTest extends TestCase
 
 	public function testToResponseRespectsLimitInQuery(): void
 	{
-		$api = new Api([
-			'models' => [
+		$api = new Api(
+			models: [
 				'test' => [
 					'type'   => Page::class,
 					'fields' => [
@@ -193,14 +194,14 @@ class CollectionTest extends TestCase
 					]
 				]
 			],
-			'requestData' => [
+			request: [
 				'query' => [
 					'query' => [
 						'limit' => 2
 					]
 				]
 			]
-		]);
+		);
 		$collection = new Collection($api, new Pages([
 			new Page(['slug' => 'a']),
 			new Page(['slug' => 'b']),
@@ -210,5 +211,156 @@ class CollectionTest extends TestCase
 		]);
 
 		$this->assertCount(2, $collection->toResponse()['data']);
+	}
+
+	public static function invalidQueryProvider(): array
+	{
+		return [
+			[['limit' => 'abc']],
+			[['offset' => ['1']]],
+		];
+	}
+
+	#[DataProvider('invalidQueryProvider')]
+	public function testToResponseWithInvalidQuery(array $query): void
+	{
+		$api = new Api(
+			models: [
+				'test' => [
+					'type'   => Page::class,
+					'fields' => [
+						'value' => fn ($model) => $model->slug()
+					]
+				]
+			],
+			request: [
+				'query' => [
+					'query' => $query
+				]
+			]
+		);
+		$collection = new Collection($api, new Pages([
+			new Page(['slug' => 'a']),
+			new Page(['slug' => 'b'])
+		]), [
+			'model' => 'test'
+		]);
+
+		// malformed `limit` and `offset` are ignored
+		$this->assertCount(2, $collection->toResponse()['data']);
+	}
+
+	public static function invalidLimitProvider(): array
+	{
+		return [
+			[['2'], 100],
+			['abc', 100],
+			['', 100],
+			['0', 100],
+			['-1', 100],
+		];
+	}
+
+	#[DataProvider('invalidLimitProvider')]
+	public function testToResponseWithInvalidLimit(mixed $limit, int $expected): void
+	{
+		$api = new Api(
+			models: [
+				'test' => [
+					'type'   => Page::class,
+					'fields' => [
+						'value' => fn ($model) => $model->slug()
+					]
+				]
+			],
+			request: [
+				'query' => [
+					'limit' => $limit
+				]
+			]
+		);
+		$collection = new Collection($api, new Pages([
+			new Page(['slug' => 'a']),
+			new Page(['slug' => 'b'])
+		]), [
+			'model' => 'test'
+		]);
+
+		// malformed `limit` query falls back to the default
+		$response = $collection->toResponse();
+		$this->assertCount(2, $response['data']);
+		$this->assertSame($expected, $response['pagination']['limit']);
+	}
+
+	public static function invalidPageProvider(): array
+	{
+		return [
+			[['2']],
+			[''],
+			['abc'],
+		];
+	}
+
+	#[DataProvider('invalidPageProvider')]
+	public function testToResponseWithInvalidPage(mixed $page): void
+	{
+		$api = new Api(
+			models: [
+				'test' => [
+					'type'   => Page::class,
+					'fields' => [
+						'value' => fn ($model) => $model->slug()
+					]
+				]
+			],
+			request: [
+				'query' => [
+					'limit' => 1,
+					'page'  => $page
+				]
+			]
+		);
+		$collection = new Collection($api, new Pages([
+			new Page(['slug' => 'a']),
+			new Page(['slug' => 'b'])
+		]), [
+			'model' => 'test'
+		]);
+
+		// malformed `page` query falls back to the default
+		$response = $collection->toResponse();
+		$this->assertSame([['value' => 'a']], $response['data']);
+		$this->assertSame(1, $response['pagination']['page']);
+	}
+
+	public function testToResponseWithLimitAndPage(): void
+	{
+		$api = new Api(
+			models: [
+				'test' => [
+					'type'   => Page::class,
+					'fields' => [
+						'value' => fn ($model) => $model->slug()
+					]
+				]
+			],
+			request: [
+				'query' => [
+					'limit' => '1',
+					'page'  => '2'
+				]
+			]
+		);
+		$collection = new Collection($api, new Pages([
+			new Page(['slug' => 'a']),
+			new Page(['slug' => 'b'])
+		]), [
+			'model' => 'test'
+		]);
+
+		$response = $collection->toResponse();
+		$this->assertSame([['value' => 'b']], $response['data']);
+		$this->assertSame(2, $response['pagination']['page']);
+		$this->assertSame(1, $response['pagination']['limit']);
 	}
 }

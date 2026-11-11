@@ -18,7 +18,7 @@ class SearchViewController extends ViewController
 	{
 		return new View(
 			component: 'k-search-view',
-			type: $this->request->get('type')
+			type: $this->request->string('type')
 		);
 	}
 }

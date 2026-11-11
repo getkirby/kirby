@@ -148,10 +148,10 @@ class PageCreateDialogController extends ModelCreateDialogController
 	public static function factory(): static
 	{
 		$request = App::instance()->request();
-		$parent  = $request->get('parent');
+		$parent  = $request->string('parent');
 		$parent  = $parent ? Find::parent($parent) : Find::site();
 
-		if ($field = $request->get('field')) {
+		if ($field = $request->string('field')) {
 			$blueprints = $parent->blueprints($field);
 
 			if ($blueprints === []) {
@@ -216,18 +216,19 @@ class PageCreateDialogController extends ModelCreateDialogController
 			return $this->model;
 		}
 
+		$slug  = $this->request->string('slug', '');
 		$props = [
-			'slug'     => $this->request->get('slug') ?: '__temp__',
+			'slug'     => $slug !== '' ? $slug : '__temp__',
 			'template' => $this->template(),
 			'model'    => $this->template(),
 			'parent'   => $this->parent instanceof Page ? $this->parent : null,
-			'content'  => ['title' => $this->request->get('title')]
+			'content'  => ['title' => $this->request->string('title')]
 		];
 
 		// make sure that a UUID gets generated
 		// and added to content right away
 		if (Uuids::enabled() === true) {
-			$props['content']['uuid'] = $this->request->get('uuid', Uuid::generate());
+			$props['content']['uuid'] = $this->request->string('uuid') ?? Uuid::generate();
 		}
 
 		$this->model = Page::factory($props);
@@ -305,7 +306,7 @@ class PageCreateDialogController extends ModelCreateDialogController
 
 	public function template(): string
 	{
-		return $this->request->get('template', $this->blueprints()[0]['name']);
+		return $this->request->string('template') ?? $this->blueprints()[0]['name'];
 	}
 
 	public function validate(array $input, string $status = 'draft'): bool
@@ -335,10 +336,10 @@ class PageCreateDialogController extends ModelCreateDialogController
 	{
 		return [
 			...parent::value(),
-			'parent'   => $this->request->get('parent', ''),
-			'slug'     => $this->request->get('slug', ''),
+			'parent'   => $this->request->string('parent', ''),
+			'slug'     => $this->request->string('slug', ''),
 			'template' => $this->template(),
-			'title'    => $this->request->get('title', ''),
+			'title'    => $this->request->string('title', ''),
 			'uuid'     => $this->model()->uuid()?->id(),
 		];
 	}

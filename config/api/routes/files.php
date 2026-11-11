@@ -2,6 +2,7 @@
 
 use Kirby\Cms\File;
 use Kirby\Exception\PermissionException;
+use Kirby\Form\Form;
 
 // routing pattern to match all models with files
 $filePattern   = '(account/|pages/[^/]+/|site/|users/[^/]+/|)files/(:any)';
@@ -16,7 +17,8 @@ return [
 		'method'  => 'ALL',
 		'action'  => function (string $parent, string $filename, string $fieldName, string|null $path = null) {
 			if ($file = $this->file($parent, $filename)) {
-				return $this->fieldApi($file, $fieldName, $path);
+				$field = Form::for($file)->field($fieldName);
+				return $this->forward($field, $path);
 			}
 		}
 	],
@@ -39,10 +41,10 @@ return [
 				callback: function ($source, $filename) use ($parent) {
 					return $parent->createFile([
 						'content' => [
-							'sort' => $this->requestBody('sort')
+							'sort' => $this->request()->body()->int('sort')
 						],
 						'source'   => $source,
-						'template' => $this->requestBody('template'),
+						'template' => $this->request()->body()->string('template'),
 						'filename' => $filename
 					], move: true);
 				},
@@ -67,18 +69,21 @@ return [
 		'pattern' => $parentPattern . '/search',
 		'method'  => 'GET|POST',
 		'action'  => function (string $path) {
-			$files = $this->files($path);
+			return $this->search($this->files($path));
+		}
+	],
+	[
+		'pattern' => 'files/search',
+		'method'  => 'GET|POST',
+		'action'  => function () {
+			$files = $this
+				->site()
+				->index(true)
+				->filter('isListable', true)
+				->files()
+				->filter('isListable', true);
 
-			if ($this->requestMethod() === 'GET') {
-				return $files->search($this->requestQuery('q'));
-			}
-
-			return $files->query(array_filter([
-				'limit'    => $this->requestBody('limit'),
-				'offset'   => $this->requestBody('offset'),
-				'paginate' => $this->requestBody('paginate'),
-				'search'   => $this->requestBody('search'),
-			], fn ($value) => $value !== null));
+			return $this->search($files);
 		}
 	],
 	[
@@ -86,8 +91,8 @@ return [
 		'method'  => 'PATCH',
 		'action'  => function (string $path) {
 			return $this->files($path)->changeSort(
-				$this->requestBody('files'),
-				$this->requestBody('index')
+				$this->request()->body()->array('files', []),
+				$this->request()->body()->int('index', 0)
 			);
 		}
 	],
@@ -103,7 +108,7 @@ return [
 		'method'  => 'PATCH',
 		'action'  => function (string $path, string $filename) {
 			return $this->file($path, $filename)->update(
-				$this->requestBody(),
+				$this->request()->body()->toArray(),
 				$this->language(),
 				true
 			);
@@ -138,30 +143,7 @@ return [
 		'pattern' => $filePattern . '/name',
 		'method'  => 'PATCH',
 		'action'  => function (string $path, string $filename) {
-			return $this->file($path, $filename)->changeName($this->requestBody('name'));
-		}
-	],
-	[
-		'pattern' => $parentPattern . '/search',
-		'method'  => 'GET|POST',
-		'action'  => function () {
-			$files = $this
-				->site()
-				->index(true)
-				->filter('isListable', true)
-				->files()
-				->filter('isListable', true);
-
-			if ($this->requestMethod() === 'GET') {
-				return $files->search($this->requestQuery('q'));
-			}
-
-			return $files->query(array_filter([
-				'limit'    => $this->requestBody('limit'),
-				'offset'   => $this->requestBody('offset'),
-				'paginate' => $this->requestBody('paginate'),
-				'search'   => $this->requestBody('search'),
-			], fn ($value) => $value !== null));
+			return $this->file($path, $filename)->changeName($this->request()->body()->string('name', ''));
 		}
 	],
 ];

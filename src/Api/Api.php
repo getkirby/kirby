@@ -3,6 +3,7 @@
 namespace Kirby\Api;
 
 use Closure;
+use Kirby\Api\Interface\ProvidesApi;
 use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Files;
@@ -18,7 +19,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\F;
-use Kirby\Form\Form;
+use Kirby\Http\Request;
 use Kirby\Http\Response;
 use Kirby\Http\Route;
 use Kirby\Http\Router;
@@ -41,28 +42,11 @@ use Throwable;
 class Api
 {
 	/**
-	 * Authentication callback
-	 */
-	protected Closure|null $authentication = null;
-
-	/**
-	 * Debugging flag
-	 */
-	protected bool $debug = false;
-
-	/**
 	 * Collection definitions
 	 *
 	 * @var array<string, array>
 	 */
-	protected array $collections = [];
-
-	/**
-	 * Injected data/dependencies
-	 *
-	 * @var array<string, mixed>
-	 */
-	protected array $data = [];
+	protected array $collections;
 	protected App $kirby;
 
 	/**
@@ -70,57 +54,57 @@ class Api
 	 *
 	 * @var array<string, array>
 	 */
-	protected array $models = [];
+	protected array $models;
+
+	/**
+	 * The request of the current API call
+	 */
+	protected Request $request;
 
 	/**
 	 * The current route
 	 */
 	protected Route|null $route = null;
-
-	/**
-	 * The Router instance
-	 */
-	protected Router|null $router = null;
-
-	/**
-	 * Route definition
-	 */
-	protected array $routes = [];
-
-	/**
-	 * Request data
-	 * [query, body, files]
-	 */
-	protected array $requestData = [];
-
-	/**
-	 * The applied request method
-	 * (GET, POST, PATCH, etc.)
-	 */
-	protected string|null $requestMethod = null;
+	protected Router $router;
 
 	/**
 	 * Creates a new API instance
+	 *
+	 * @param $authentication Authentication callback
+	 * @param $collections Collection definitions
+	 * @param $data Injected data/dependencies
+	 * @param $models Model definitions
+	 * @param $request Request object or its options, e.g. `method` and `body`
+	 * @param $routes Route definitions
 	 */
-	public function __construct(array $props)
-	{
-		$this->authentication = $props['authentication'] ?? null;
-		$this->data           = $props['data'] ?? [];
-		$this->kirby          = $props['kirby'] ?? App::instance();
-		$this->routes         = $props['routes'] ?? [];
-		$this->router         = new Router($this->routes);
-		$this->debug          = $props['debug'] ?? false;
+	public function __construct(
+		protected Closure|null $authentication = null,
+		array $collections = [],
+		protected array $data = [],
+		protected bool $debug = false,
+		App|null $kirby = null,
+		array $models = [],
+		Request|array $request = [],
+		protected array $routes = []
+	) {
+		$this->collections = array_change_key_case($collections);
+		$this->kirby       = $kirby ?? App::instance();
+		$this->models      = array_change_key_case($models);
+		$this->router      = new Router($routes);
 
-		if ($collections = $props['collections'] ?? null) {
-			$this->collections = array_change_key_case($collections);
+		// request options never fall back to the global request
+		if (is_array($request) === true) {
+			$request = new Request([
+				'body'    => [],
+				'files'   => [],
+				'headers' => [],
+				'method'  => 'GET',
+				'query'   => [],
+				...$request
+			]);
 		}
 
-		if ($models = $props['models'] ?? null) {
-			$this->models = array_change_key_case($models);
-		}
-
-		$this->setRequestData($props['requestData'] ?? null);
-		$this->setRequestMethod($props['requestMethod'] ?? null);
+		$this->request = $request;
 	}
 
 	/**
@@ -151,54 +135,18 @@ class Api
 	}
 
 	/**
-	 * Execute an API call for the given path,
-	 * request method and optional request data
+	 * Executes an API call for the given path and request
+	 * (a request object or its options, e.g. `method` and `body`)
+	 * on its own instance
 	 *
 	 * @throws NotFoundException
 	 * @throws \Exception
 	 */
 	public function call(
 		string|null $path = null,
-		string $method = 'GET',
-		array $requestData = []
+		Request|array $request = []
 	): mixed {
-		$path = rtrim($path ?? '', '/');
-
-		$this->setRequestMethod($method);
-		$this->setRequestData($requestData);
-		$this->setLanguage();
-		$this->setTranslation();
-
-		$this->route = $this->router->find($path, $method);
-		$auth = $this->route->attributes()['auth'] ?? true;
-
-		if ($auth !== false) {
-			if (($user = $this->authenticate()) instanceof User) {
-				$this->setLocale($user);
-			}
-		}
-
-		// don't throw pagination errors if pagination
-		// page is out of bounds
-		$validate = Pagination::$validate;
-		Pagination::$validate = false;
-
-		$output = $this->route->action()->call(
-			$this,
-			...$this->route->arguments()
-		);
-
-		// restore old pagination validation mode
-		Pagination::$validate = $validate;
-
-		if (
-			is_object($output) === true &&
-			$output instanceof Response === false
-		) {
-			return $this->resolve($output)->toResponse();
-		}
-
-		return $output;
+		return $this->clone(['request' => $request])->dispatch($path);
 	}
 
 	/**
@@ -207,16 +155,15 @@ class Api
 	 */
 	public function clone(array $props = []): static
 	{
-		return new static([
+		return new static(...[
 			'authentication' => $this->authentication,
-			'data'			=> $this->data,
-			'collections'   => $this->collections,
-			'debug'			=> $this->debug,
-			'kirby'			=> $this->kirby,
-			'models'		=> $this->models,
-			'requestData'   => $this->requestData,
-			'requestMethod' => $this->requestMethod,
-			'routes'		=> $this->routes,
+			'collections'    => $this->collections,
+			'data'           => $this->data,
+			'debug'          => $this->debug,
+			'kirby'          => $this->kirby,
+			'models'         => $this->models,
+			'request'        => $this->request,
+			'routes'         => $this->routes,
 			...$props
 		]);
 	}
@@ -287,25 +234,51 @@ class Api
 	}
 
 	/**
-	 * @throws NotFoundException if the field type cannot be found or the field cannot be loaded
+	 * Runs the request of this instance against its routes
+	 *
+	 * @throws NotFoundException
+	 * @throws \Exception
+	 * @since 7.0.0
 	 */
-	public function fieldApi(
-		ModelWithContent $model,
-		string $name,
-		string|null $path = null
-	): mixed {
-		$field = Form::for($model)->field($name);
+	protected function dispatch(string|null $path = null): mixed
+	{
+		$path = rtrim($path ?? '', '/');
 
-		$fieldApi = $this->clone([
-			'data'   => [...$this->data(), 'field' => $field],
-			'routes' => $field->api(),
-		]);
+		$this->setLanguage();
+		$this->setTranslation();
 
-		return $fieldApi->call(
-			$path,
-			$this->requestMethod(),
-			$this->requestData()
-		);
+		$this->route = $this->router->find($path, $this->request->method());
+		$auth = $this->route->attributes()['auth'] ?? true;
+
+		if ($auth !== false) {
+			if (($user = $this->authenticate()) instanceof User) {
+				$this->setLocale($user);
+			}
+		}
+
+		// don't throw pagination errors if pagination
+		// page is out of bounds
+		$validate = Pagination::$validate;
+		Pagination::$validate = false;
+
+		try {
+			$output = $this->route->action()->call(
+				$this,
+				...$this->route->arguments()
+			);
+		} finally {
+			// restore old pagination validation mode
+			Pagination::$validate = $validate;
+		}
+
+		if (
+			is_object($output) === true &&
+			$output instanceof Response === false
+		) {
+			return $this->resolve($output)->toResponse();
+		}
+
+		return $output;
 	}
 
 	/**
@@ -347,6 +320,18 @@ class Api
 	}
 
 	/**
+	 * Forwards the request to the API routes
+	 * of the given provider, e.g. a field
+	 * @since 7.0.0
+	 */
+	public function forward(
+		ProvidesApi $provider,
+		string|null $path = null
+	): mixed {
+		return $this->clone(['routes' => $provider->api()])->dispatch($path);
+	}
+
+	/**
 	 * Checks if injected data exists for the given key
 	 */
 	public function hasData(string $key): bool
@@ -368,8 +353,8 @@ class Api
 	public function language(): string|null
 	{
 		return
-			$this->requestQuery('language') ??
-			$this->requestHeaders('x-language');
+			$this->request()->query()->string('language') ??
+			$this->request()->header('x-language');
 	}
 
 	/**
@@ -469,75 +454,95 @@ class Api
 	}
 
 	/**
+	 * Returns the request of the current API call
+	 * @since 7.0.0
+	 */
+	public function request(): Request
+	{
+		return $this->request;
+	}
+
+	/**
 	 * Getter for request data
 	 * Can either get all the data
 	 * or certain parts of it.
+	 * @deprecated 7.0.0 Use `self::request()` instead
 	 */
 	public function requestData(
 		string|null $type = null,
 		string|null $key = null,
 		mixed $default = null
 	): mixed {
-		if ($type === null) {
-			return $this->requestData;
-		}
-
-		if ($key === null) {
-			return $this->requestData[$type] ?? [];
-		}
-
-		$data = array_change_key_case($this->requestData($type));
-		$key  = strtolower($key);
-
-		return $data[$key] ?? $default;
+		return match ($type) {
+			null => [
+				'query'   => $this->requestQuery(),
+				'body'    => $this->requestBody(),
+				'files'   => $this->requestFiles(),
+				'headers' => $this->requestHeaders(),
+			],
+			'body'    => $this->requestBody($key, $default),
+			'files'   => $this->requestFiles($key, $default),
+			'headers' => $this->requestHeaders($key, $default),
+			'query'   => $this->requestQuery($key, $default),
+			default   => $key === null ? [] : $default
+		};
 	}
 
 	/**
 	 * Returns the request body if available
+	 * @deprecated 7.0.0 Use `self::request()->body()` instead
 	 */
 	public function requestBody(
 		string|null $key = null,
 		mixed $default = null
 	): mixed {
-		return $this->requestData('body', $key, $default);
+		$body = $this->request()->body();
+		return $key === null ? $body->toArray() : $body->get($key, $default);
 	}
 
 	/**
 	 * Returns the files from the request if available
+	 * @deprecated 7.0.0 Use `self::request()->files()` instead
 	 */
 	public function requestFiles(
 		string|null $key = null,
 		mixed $default = null
 	): mixed {
-		return $this->requestData('files', $key, $default);
+		$files = $this->request()->files();
+		return $key === null ? $files->toArray() : $files->get($key, $default);
 	}
 
 	/**
 	 * Returns all headers from the request if available
+	 * @deprecated 7.0.0 Use `self::request()->headers()` or `self::request()->header()` instead
 	 */
 	public function requestHeaders(
 		string|null $key = null,
 		mixed $default = null
 	): mixed {
-		return $this->requestData('headers', $key, $default);
+		$request = $this->request();
+		return $key === null ? $request->headers() : $request->header($key, $default);
 	}
 
 	/**
 	 * Returns the request method
+	 * @deprecated 7.0.0 Use `self::request()->method()` instead
 	 */
 	public function requestMethod(): string|null
 	{
-		return $this->requestMethod;
+		return $this->request()->method();
 	}
 
 	/**
 	 * Returns the request query if available
+	 * @deprecated 7.0.0 Use `self::request()->query()` instead
 	 */
 	public function requestQuery(
 		string|null $key = null,
 		mixed $default = null
 	): mixed {
-		return $this->requestData('query', $key, $default);
+		$query = $this->request()->query();
+		return $key === null ? $query->toArray() : $query->get($key, $default);
 	}
 
 	/**
@@ -578,31 +583,40 @@ class Api
 
 	/**
 	 * Renders the API call
+	 * (a request object or its options, e.g. `method` and `body`)
+	 * as a response
 	 */
 	public function render(
 		string $path,
-		string $method = 'GET',
-		array $requestData = []
-	): mixed {
+		Request|array $request = []
+	): Response {
+		$api     = $this->clone(['request' => $request]);
+		$request = $api->request();
+
 		try {
-			$result = $this->call($path, $method, $requestData);
+			$result = $api->dispatch($path);
 		} catch (Throwable $e) {
-			$result = $this->responseForException($e);
+			$result = $api->responseForException($e);
 		}
 
 		$result = match ($result) {
-			null    => $this->responseFor404(),
-			false   => $this->responseFor400(),
-			true    => $this->responseFor200(),
+			null    => ['status' => 'error', 'message' => 'not found', 'code' => 404],
+			false   => ['status' => 'error', 'message' => 'bad request', 'code' => 400],
+			true    => ['status' => 'ok', 'message' => 'ok', 'code' => 200],
 			default => $result
 		};
 
-		if (is_array($result) === false) {
+		if ($result instanceof Response) {
 			return $result;
 		}
 
+		// strings and other scalars
+		if (is_array($result) === false) {
+			return new Response((string)$result);
+		}
+
 		// pretty print json data
-		$pretty = (bool)($requestData['query']['pretty'] ?? false) === true;
+		$pretty = $request->query()->bool('pretty', false);
 		$code   = 200;
 
 		if (($result['status'] ?? 'ok') === 'error') {
@@ -616,56 +630,11 @@ class Api
 
 		// mark trusted HTML for the Panel, but never for the public
 		// API, where the marked keys would be a breaking change
-		if ((bool)$this->requestHeaders('x-panel') === true) {
+		if ((bool)$request->header('x-panel') === true) {
 			$result = HtmlString::resolve($result);
 		}
 
 		return Response::json($result, $code, $pretty);
-	}
-
-	/**
-	 * Returns a 200 - ok
-	 * response array.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public function responseFor200(): array
-	{
-		return [
-			'status'  => 'ok',
-			'message' => 'ok',
-			'code'    => 200
-		];
-	}
-
-	/**
-	 * Returns a 400 - bad request
-	 * response array.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public function responseFor400(): array
-	{
-		return [
-			'status'  => 'error',
-			'message' => 'bad request',
-			'code'    => 400,
-		];
-	}
-
-	/**
-	 * Returns a 404 - not found
-	 * response array.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public function responseFor404(): array
-	{
-		return [
-			'status'  => 'error',
-			'message' => 'not found',
-			'code'    => 404,
-		];
 	}
 
 	/**
@@ -730,24 +699,30 @@ class Api
 	}
 
 	/**
-	 * Search for direct subpages of the given parent
+	 * Searches the collection with the `q` query parameter
+	 * or queries it with the `limit`, `offset`, `paginate`
+	 * and `search` options from the request body
+	 *
+	 * @template T of \Kirby\Cms\Files|\Kirby\Cms\Pages|\Kirby\Cms\Users
+	 * @param T $collection
+	 * @return T
+	 * @since 7.0.0
 	 */
-	public function searchPages(string|null $parent = null): Pages
+	public function search(Files|Pages|Users $collection): Files|Pages|Users
 	{
-		$status = $this->requestQuery('status');
-		$method = $this->requestMethod();
-		$pages  = $this->pages($parent, $status);
+		$request = $this->request();
 
-		if ($method === 'GET') {
-			$query = $this->requestQuery('q');
-			return $pages->search($query);
+		if ($request->method() === 'GET') {
+			return $collection->search($request->query()->string('q'));
 		}
 
-		return $pages->query(array_filter([
-			'limit'    => $this->requestBody('limit'),
-			'offset'   => $this->requestBody('offset'),
-			'paginate' => $this->requestBody('paginate'),
-			'search'   => $this->requestBody('search'),
+		$body = $request->body();
+
+		return $collection->query(array_filter([
+			'limit'    => $body->int('limit'),
+			'offset'   => $body->int('offset'),
+			'paginate' => $body->get('paginate'),
+			'search'   => $body->get('search'),
 		], fn ($value) => $value !== null));
 	}
 
@@ -800,33 +775,6 @@ class Api
 	}
 
 	/**
-	 * Setter for the request data
-	 * @return $this
-	 */
-	protected function setRequestData(
-		array|null $requestData = []
-	): static {
-		$this->requestData = [
-			'query' => [],
-			'body'  => [],
-			'files' => [],
-			...$requestData ?? []
-		];
-		return $this;
-	}
-
-	/**
-	 * Setter for the request method
-	 * @return $this
-	 */
-	protected function setRequestMethod(
-		string|null $requestMethod = null
-	): static {
-		$this->requestMethod = $requestMethod ?? 'GET';
-		return $this;
-	}
-
-	/**
 	 * @since 6.0.0
 	 */
 	protected function setTranslation(): void
@@ -850,24 +798,19 @@ class Api
 	}
 
 	/**
-	 * Upload helper method
-	 *
-	 * move_uploaded_file() not working with unit test
-	 * Added debug parameter for testing purposes as we did in the Email class
+	 * Processes the uploaded files of the request
 	 *
 	 * @throws \Exception If the request has no files
 	 */
 	public function upload(
 		Closure $callback,
 		bool $single = false,
-		bool $debug = false,
 		string|null $template = null,
 		Closure|null $preflight = null
 	): array {
 		$upload = new Upload(
 			api: $this,
 			single: $single,
-			debug: $debug,
 			template: $template,
 			preflight: $preflight
 		);

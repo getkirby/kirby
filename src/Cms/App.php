@@ -222,24 +222,24 @@ class App
 		$extensions = $this->extensions['api'] ?? [];
 		$routes     = (include $root . '/routes.php')($this);
 
-		return $this->api = new Api([
-			'debug'          => $this->option('debug', false),
-			'authentication' => $extensions['authentication'] ?? include $root . '/authentication.php',
-			'data'           => $extensions['data'] ?? [],
-			'collections'    => [
+		return $this->api = new Api(
+			authentication: $extensions['authentication'] ?? include $root . '/authentication.php',
+			collections: [
 				...$extensions['collections'] ?? [],
 				...include $root . '/collections.php'
 			],
-			'models'         => [
+			data: $extensions['data'] ?? [],
+			debug: $this->option('debug', false),
+			kirby: $this,
+			models: [
 				...$extensions['models'] ?? [],
 				...include $root . '/models.php'
 			],
-			'routes'         => [
+			routes: [
 				...$routes,
 				...$extensions['routes'] ?? []
-			],
-			'kirby'          => $this,
-		]);
+			]
+		);
 	}
 
 	/**

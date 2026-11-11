@@ -36,8 +36,8 @@ abstract class ModelPickerDialogController extends DialogController
 	) {
 		parent::__construct();
 
-		$this->page   = $this->request->get('page', 1);
-		$this->search = $this->request->get('search');
+		$this->page   = $this->request->int('page', 1);
+		$this->search = $this->request->string('search');
 	}
 
 	/**
@@ -100,6 +100,6 @@ abstract class ModelPickerDialogController extends DialogController
 	 */
 	protected function value(): array
 	{
-		return Str::split($this->request->get('value', ''));
+		return Str::split($this->request->string('value', ''));
 	}
 }

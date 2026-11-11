@@ -5,6 +5,7 @@ namespace Kirby\Api;
 use Kirby\Cms\App;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class SiteRoutesTest extends TestCase
 {
@@ -38,7 +39,7 @@ class SiteRoutesTest extends TestCase
 
 	public function testGet(): void
 	{
-		$response = $this->app->api()->call('site', 'GET');
+		$response = $this->app->api()->call('site');
 
 		$this->assertSame('Test Site', $response['data']['title']);
 	}
@@ -60,7 +61,7 @@ class SiteRoutesTest extends TestCase
 
 		$app->impersonate('kirby');
 
-		$response = $app->api()->call('site/children', 'GET');
+		$response = $app->api()->call('site/children');
 
 		$this->assertCount(2, $response['data']);
 		$this->assertSame('a', $response['data'][0]['id']);
@@ -91,7 +92,8 @@ class SiteRoutesTest extends TestCase
 		$app->impersonate('kirby');
 
 		// all
-		$response = $app->api()->call('site/children', 'GET', [
+		$response = $app->api()->call('site/children', [
+			'method' => 'GET',
 			'query' => ['status' => 'all']
 		]);
 
@@ -101,7 +103,8 @@ class SiteRoutesTest extends TestCase
 		$this->assertSame('draft-a', $response['data'][2]['id']);
 
 		// published
-		$response = $app->api()->call('site/children', 'GET', [
+		$response = $app->api()->call('site/children', [
+			'method' => 'GET',
 			'query' => ['status' => 'published']
 		]);
 
@@ -110,7 +113,8 @@ class SiteRoutesTest extends TestCase
 		$this->assertSame('child-b', $response['data'][1]['id']);
 
 		// listed
-		$response = $app->api()->call('site/children', 'GET', [
+		$response = $app->api()->call('site/children', [
+			'method' => 'GET',
 			'query' => ['status' => 'listed']
 		]);
 
@@ -118,7 +122,8 @@ class SiteRoutesTest extends TestCase
 		$this->assertSame('child-a', $response['data'][0]['id']);
 
 		// unlisted
-		$response = $app->api()->call('site/children', 'GET', [
+		$response = $app->api()->call('site/children', [
+			'method' => 'GET',
 			'query' => ['status' => 'unlisted']
 		]);
 
@@ -126,7 +131,8 @@ class SiteRoutesTest extends TestCase
 		$this->assertSame('child-b', $response['data'][0]['id']);
 
 		// drafts
-		$response = $app->api()->call('site/children', 'GET', [
+		$response = $app->api()->call('site/children', [
+			'method' => 'GET',
 			'query' => ['status' => 'drafts']
 		]);
 
@@ -191,6 +197,36 @@ class SiteRoutesTest extends TestCase
 		$this->assertSame('a.jpg', $response['data'][1]['filename']);
 	}
 
+	public function testFilesSearch(): void
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'files' => [
+					['filename' => 'site-photo.jpg']
+				],
+				'children' => [
+					[
+						'slug'  => 'a',
+						'files' => [
+							['filename' => 'page-photo.jpg'],
+							['filename' => 'document.pdf']
+						]
+					]
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		// searches the files of all pages
+		$response = $app->api()->call('files/search', [
+			'query' => ['q' => 'photo']
+		]);
+
+		$this->assertCount(1, $response['data']);
+		$this->assertSame('page-photo.jpg', $response['data'][0]['filename']);
+	}
+
 	public function testFile(): void
 	{
 		$app = $this->app->clone([
@@ -236,7 +272,8 @@ class SiteRoutesTest extends TestCase
 		$app->impersonate('kirby');
 
 		// find single
-		$result = $app->api()->call('site/find', 'POST', [
+		$result = $app->api()->call('site/find', [
+			'method' => 'POST',
 			'body' => [
 				'a',
 			]
@@ -246,7 +283,8 @@ class SiteRoutesTest extends TestCase
 		$this->assertSame('a', $result['data'][0]['id']);
 
 		// find multiple
-		$result = $app->api()->call('site/find', 'POST', [
+		$result = $app->api()->call('site/find', [
+			'method' => 'POST',
 			'body' => [
 				'a',
 				'a/aa',
@@ -299,7 +337,8 @@ class SiteRoutesTest extends TestCase
 		$app->impersonate('admin@getkirby.com');
 
 		// find single
-		$result = $app->api()->call('site/find', 'POST', [
+		$result = $app->api()->call('site/find', [
+			'method' => 'POST',
 			'body' => [
 				'c',
 			]
@@ -307,7 +346,8 @@ class SiteRoutesTest extends TestCase
 
 		$this->assertCount(0, $result['data']);
 
-		$result = $app->api()->call('site/find', 'POST', [
+		$result = $app->api()->call('site/find', [
+			'method' => 'POST',
 			'body' => [
 				'a/ab',
 			]
@@ -316,7 +356,8 @@ class SiteRoutesTest extends TestCase
 		$this->assertCount(0, $result['data']);
 
 		// find multiple
-		$result = $app->api()->call('site/find', 'POST', [
+		$result = $app->api()->call('site/find', [
+			'method' => 'POST',
 			'body' => [
 				'a',
 				'a/aa',
@@ -330,6 +371,23 @@ class SiteRoutesTest extends TestCase
 		$this->assertSame('a', $result['data'][0]['id']);
 		$this->assertSame('a/aa', $result['data'][1]['id']);
 		$this->assertSame('b', $result['data'][2]['id']);
+	}
+
+	public static function malformedInputProvider(): array
+	{
+		return [
+			'title'  => ['site/title', 'PATCH', ['title' => []], 400],
+			'search' => ['site/search', 'POST', ['limit' => [], 'offset' => 'abc'], 200],
+		];
+	}
+
+	#[DataProvider('malformedInputProvider')]
+	public function testMalformedInput(string $path, string $method, array $body, int $code): void
+	{
+		$app = $this->app;
+
+		$response = $app->api()->render($path, ['method' => $method, 'body' => $body]);
+		$this->assertSame($code, $response->code());
 	}
 
 	public function testSearchWithGetRequest(): void
@@ -357,7 +415,8 @@ class SiteRoutesTest extends TestCase
 
 		$app->impersonate('kirby');
 
-		$response = $app->api()->call('site/search', 'GET', [
+		$response = $app->api()->call('site/search', [
+			'method' => 'GET',
 			'query' => [
 				'q' => 'Photo'
 			]
@@ -392,7 +451,8 @@ class SiteRoutesTest extends TestCase
 
 		$app->impersonate('kirby');
 
-		$response = $app->api()->call('site/search', 'POST', [
+		$response = $app->api()->call('site/search', [
+			'method' => 'POST',
 			'body' => [
 				'search' => 'Photo'
 			]
@@ -423,7 +483,8 @@ class SiteRoutesTest extends TestCase
 
 		// filterBy slug = photography would normally return only 1 page;
 		// since filterBy is stripped from the body, both pages are returned
-		$response = $app->api()->call('site/search', 'POST', [
+		$response = $app->api()->call('site/search', [
+			'method' => 'POST',
 			'body' => [
 				'filterBy' => [
 					['field' => 'slug', 'operator' => '==', 'value' => 'photography']
@@ -454,7 +515,8 @@ class SiteRoutesTest extends TestCase
 		$app->impersonate('kirby');
 
 		// sortBy in the body is stripped; default order (a, b) is preserved
-		$response = $app->api()->call('site/search', 'POST', [
+		$response = $app->api()->call('site/search', [
+			'method' => 'POST',
 			'body' => [
 				'sortBy' => 'slug desc'
 			]

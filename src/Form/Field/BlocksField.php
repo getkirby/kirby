@@ -2,8 +2,7 @@
 
 namespace Kirby\Form\Field;
 
-use Kirby\Cms\Api;
-use Kirby\Cms\App;
+use Kirby\Api\Api;
 use Kirby\Cms\Block;
 use Kirby\Cms\Blocks as BlocksCollection;
 use Kirby\Cms\Fieldset;
@@ -74,9 +73,10 @@ class BlocksField extends InputField
 				'pattern' => 'paste',
 				'method'  => 'POST',
 				'action'  => function () use ($field): array {
-					$request = App::instance()->request();
-					$value   = BlocksCollection::parse($request->get('html'));
-					$blocks  = BlocksCollection::factory($value);
+					/** @var Api $api */
+					$api    = $this;
+					$value  = BlocksCollection::parse($api->request()->string('html'));
+					$blocks = BlocksCollection::factory($value);
 
 					return $field->pasteBlocks($blocks->toArray());
 				}
@@ -111,16 +111,7 @@ class BlocksField extends InputField
 					$fields = $field->fields($fieldsetType);
 					$field  = $field->form($fields)->field($fieldName);
 
-					$fieldApi = $api->clone([
-						'routes' => $field->api(),
-						'data'   => [...$api->data(), 'field' => $field]
-					]);
-
-					return $fieldApi->call(
-						$path,
-						$api->requestMethod(),
-						$api->requestData()
-					);
+					return $api->forward($field, $path);
 				}
 			],
 		];

@@ -111,11 +111,11 @@ class SystemLicenseActivateDialogController extends DialogController
 	 */
 	public function submit(): array
 	{
-		$type    = $this->request->get('type', 'regular');
-		$email   = $this->request->get('email');
+		$type    = $this->request->string('type', 'regular');
+		$email   = $this->request->string('email');
 		$license = match ($type) {
 			'free'  => LicenseType::Free->prefix(),
-			default => $this->request->get('license')
+			default => $this->request->string('license')
 		};
 
 		$this->kirby->system()->register($license, $email);

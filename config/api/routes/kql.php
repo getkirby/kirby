@@ -8,7 +8,7 @@ return [
 				'pattern' => 'query',
 				'method'  => 'POST|GET',
 				'auth'    => $kirby->option('kql.auth') !== false,
-				'action'  => function () use ($kirby) {
+				'action'  => function () {
 					$kql = '\Kirby\Kql\Kql';
 
 					if (class_exists($kql) === false) {
@@ -19,7 +19,7 @@ return [
 						];
 					}
 
-					$input  = $kirby->request()->get();
+					$input  = $this->request()->get();
 					$result = $kql::run($input);
 
 					return [

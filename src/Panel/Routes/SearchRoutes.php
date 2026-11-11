@@ -24,9 +24,9 @@ class SearchRoutes extends Routes
 		return function () use ($action) {
 			$kirby   = App::instance();
 			$request = $kirby->request();
-			$query   = $request->get('query', '');
-			$limit   = (int)$request->get('limit', $kirby->option('panel.search.limit', 10));
-			$page    = (int)$request->get('page', 1);
+			$query   = $request->string('query', '');
+			$limit   = $request->int('limit', $kirby->option('panel.search.limit', 10));
+			$page    = $request->int('page', 1);
 
 			return $action($query, $limit, $page);
 		};

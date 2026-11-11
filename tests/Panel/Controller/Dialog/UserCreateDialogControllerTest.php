@@ -4,6 +4,7 @@ namespace Kirby\Panel\Controller\Dialog;
 
 use Kirby\Cms\App;
 use Kirby\Cms\User;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\TestCase;
 use Kirby\Panel\Ui\Dialog\FormDialog;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -129,5 +130,27 @@ class UserCreateDialogControllerTest extends TestCase
 		$user = $this->app->user('test2@getkirby.com');
 		$this->assertSame('Peter', $user->name()->value());
 		$this->assertSame('admin', $user->role()->name());
+	}
+
+	public function testSubmitWithInvalidInput(): void
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'body' => [
+					'name'     => ['Peter'],
+					'email'    => ['test2@getkirby.com'],
+					'password' => ['secret'],
+					'role'     => 'admin'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		// non-string input is dropped and fails validation
+		$this->expectException(InvalidArgumentException::class);
+
+		$controller = new UserCreateDialogController();
+		$controller->submit();
 	}
 }

@@ -50,7 +50,7 @@ class UserChangeEmailDialogController extends UserDialogController
 
 	public function submit(): array
 	{
-		$this->user = $this->user->changeEmail($this->request->get('email'));
+		$this->user = $this->user->changeEmail($this->request->string('email', ''));
 
 		return [
 			'event' => 'user.changeEmail'

@@ -43,7 +43,7 @@ class UploadTest extends TestCase
 
 	protected function api(array $props = []): Api
 	{
-		return new Api($props);
+		return new Api(...$props);
 	}
 
 	protected function upload(
@@ -161,8 +161,8 @@ class UploadTest extends TestCase
 	public function testProcessSingle(): void
 	{
 		$upload = $this->upload([
-			'requestMethod' => 'POST',
-			'requestData' => [
+			'request' => [
+				'method' => 'POST',
 				'files' => [
 					[
 						'name'     => 'test.txt',
@@ -195,8 +195,8 @@ class UploadTest extends TestCase
 	public function testProcessMultiple(): void
 	{
 		$upload = $this->upload([
-			'requestMethod' => 'POST',
-			'requestData' => [
+			'request' => [
+				'method' => 'POST',
 				'files' => [
 					[
 						'name'     => 'foo.txt',
@@ -235,8 +235,8 @@ class UploadTest extends TestCase
 	public function testProcessError(): void
 	{
 		$upload = $this->upload([
-			'requestMethod' => 'POST',
-			'requestData' => [
+			'request' => [
+				'method' => 'POST',
 				'files' => [
 					[
 						'name'     => 'test.txt',
@@ -261,8 +261,8 @@ class UploadTest extends TestCase
 	public function testProcessException(): void
 	{
 		$upload = $this->upload([
-			'requestMethod' => 'POST',
-			'requestData' => [
+			'request' => [
+				'method' => 'POST',
 				'files' => [
 					[
 						'name'     => 'test.txt',
@@ -296,8 +296,8 @@ class UploadTest extends TestCase
 		F::write($source, 'abcdef');
 
 		$upload = $this->upload([
-			'requestMethod' => 'POST',
-			'requestData' => [
+			'request' => [
+				'method' => 'POST',
 				'headers' => [
 					'Upload-Length' => 3000,
 					'Upload-Offset' => 0,
@@ -331,8 +331,8 @@ class UploadTest extends TestCase
 
 		$upload = $this->upload(
 			api: [
-				'requestMethod' => 'POST',
-				'requestData' => [
+				'request' => [
+					'method' => 'POST',
 					'headers' => [
 						'Upload-Length' => 3000,
 						'Upload-Offset' => 0,
@@ -376,7 +376,7 @@ class UploadTest extends TestCase
 		F::write($source, 'abcdef');
 		$size   = F::size($source);
 		$upload = $this->upload([
-			'requestData' => [
+			'request' => [
 				'headers' => [
 					'Upload-Length' => $size,
 					'Upload-Offset' => 0,
@@ -401,7 +401,7 @@ class UploadTest extends TestCase
 		$source = static::TMP . '/test.md';
 		F::write($source, 'abcdef');
 		$upload = $this->upload([
-			'requestData' => [
+			'request' => [
 				'headers' => [
 					'Upload-Length' => 3000,
 					'Upload-Offset' => 0,
@@ -421,7 +421,7 @@ class UploadTest extends TestCase
 		$source = static::TMP . '/test.md';
 		F::write($source, 'abcdef');
 		$upload = $this->upload([
-			'requestData' => [
+			'request' => [
 				'headers' => [
 					'Upload-Length' => 3000,
 					'Upload-Offset' => 0,
@@ -441,7 +441,7 @@ class UploadTest extends TestCase
 		$source = static::TMP . '/test.md';
 		F::write($source, 'abcdef');
 		$upload = $this->upload([
-			'requestData' => [
+			'request' => [
 				'headers' => [
 					'Upload-Length' => 3000,
 					'Upload-Offset' => 0,
@@ -461,7 +461,7 @@ class UploadTest extends TestCase
 		$source = static::TMP . '/test.md';
 		F::write($source, 'abc');
 		$upload = $this->upload([
-			'requestData' => [
+			'request' => [
 				'headers' => [
 					'Upload-Length' => 6,
 					'Upload-Offset' => 0,
@@ -475,7 +475,7 @@ class UploadTest extends TestCase
 		$source = static::TMP . '/test.md';
 		F::write($source, 'def');
 		$upload = $this->upload([
-			'requestData' => [
+			'request' => [
 				'headers' => [
 					'Upload-Length' => 6,
 					'Upload-Offset' => 3,
@@ -529,7 +529,7 @@ class UploadTest extends TestCase
 		$source = static::TMP . '/test.md';
 		F::write($source, 'abcdef');
 		$upload = $this->upload([
-			'requestData' => [
+			'request' => [
 				'headers' => [
 					'Upload-Length' => 3000,
 					'Upload-Offset' => 0,
@@ -549,7 +549,7 @@ class UploadTest extends TestCase
 		$source = static::TMP . '/a.md';
 		F::write($source, 'abcdef');
 		$upload = $this->upload([
-			'requestData' => [
+			'request' => [
 				'headers' => [
 					'Upload-Length' => 3000,
 					'Upload-Offset' => 0,
@@ -561,7 +561,7 @@ class UploadTest extends TestCase
 		$this->assertNull($upload->processChunk($source, basename($source)));
 
 		$upload = $this->upload([
-			'requestData' => [
+			'request' => [
 				'headers' => [
 					'Upload-Length' => 3000,
 					'Upload-Offset' => 1500,
@@ -580,7 +580,7 @@ class UploadTest extends TestCase
 		$source = static::TMP . '/a.md';
 		F::write($source, 'abcdef');
 		$upload = $this->upload([
-			'requestData' => [
+			'request' => [
 				'headers' => [
 					'Upload-Length' => 3000,
 					'Upload-Offset' => 10,
@@ -613,7 +613,7 @@ class UploadTest extends TestCase
 		F::write($source = static::TMP . '/test.md', 'abc');
 
 		$upload = $this->upload([
-			'requestData' => [
+			'request' => [
 				'body'    => ['template' => 'small'],
 				'headers' => [
 					'Upload-Length' => 5,
@@ -630,7 +630,7 @@ class UploadTest extends TestCase
 		F::write($source = static::TMP . '/test.md', 'defghijkl');
 
 		$upload = $this->upload([
-			'requestData' => [
+			'request' => [
 				'body'    => ['template' => 'large'],
 				'headers' => [
 					'Upload-Length' => 12,
@@ -652,7 +652,7 @@ class UploadTest extends TestCase
 		$source = static::TMP . '/test.md';
 		F::write($source, 'abc');
 		$upload = $this->upload([
-			'requestData' => [
+			'request' => [
 				'headers' => [
 					'Upload-Length' => 6,
 					'Upload-Offset' => 0,
@@ -666,7 +666,7 @@ class UploadTest extends TestCase
 		$source = static::TMP . '/test.md';
 		F::write($source, 'def');
 		$upload = $this->upload([
-			'requestData' => [
+			'request' => [
 				'headers' => [
 					'Upload-Length' => 9,
 					'Upload-Offset' => 3,
@@ -684,7 +684,7 @@ class UploadTest extends TestCase
 	{
 		$source = static::TMP . '/a.php';
 		$upload = $this->upload([
-			'requestData' => [
+			'request' => [
 				'headers' => [
 					'Upload-Length' => 3000,
 					'Upload-Offset' => 0,
@@ -711,7 +711,7 @@ class UploadTest extends TestCase
 			]
 		]);
 		$upload = $this->upload([
-			'requestData' => [
+			'request' => [
 				'body' => [
 					'template' => 'test'
 				],
@@ -740,7 +740,7 @@ class UploadTest extends TestCase
 			]
 		]);
 		$upload = $this->upload([
-			'requestData' => [
+			'request' => [
 				'headers' => [
 					'Upload-Length' => 120,
 					'Upload-Offset' => 0,
@@ -772,7 +772,7 @@ class UploadTest extends TestCase
 			]
 		]);
 		$upload = $this->upload([
-			'requestData' => [
+			'request' => [
 				'headers' => [
 					'Upload-Length' => 120,
 					'Upload-Offset' => 0,
@@ -800,7 +800,7 @@ class UploadTest extends TestCase
 			]
 		]);
 		$upload = $this->upload([
-			'requestData' => [
+			'request' => [
 				'body' => [
 					'template' => 'large'
 				],
@@ -833,7 +833,7 @@ class UploadTest extends TestCase
 			]
 		]);
 		$upload = $this->upload([
-			'requestData' => [
+			'request' => [
 				'body' => [
 					'template' => 'test'
 				],

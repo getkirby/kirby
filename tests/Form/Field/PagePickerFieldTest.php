@@ -89,16 +89,15 @@ class PagePickerFieldTest extends TestCase
 						'content' => ['uuid'  => 'my-c'],
 					],
 				]
-			],
-			'request' => [
-				'query' => [
-					'items' => 'test,a,b'
-				]
 			]
 		]);
 
 		$app->impersonate('kirby');
-		$api = $app->api()->call('pages/test/fields/related/items');
+		$api = $app->api()->call('pages/test/fields/related/items', [
+			'query' => [
+				'items' => 'test,a,b'
+			]
+		]);
 
 		$this->assertCount(3, $api);
 		$this->assertSame('page://my-test-uuid', $api[0]['uuid']);
@@ -133,16 +132,15 @@ class PagePickerFieldTest extends TestCase
 						'content' => ['uuid'  => 'my-a'],
 					],
 				]
-			],
-			'request' => [
-				'query' => [
-					'items' => 'page://my-a,page://does-not-exist'
-				]
 			]
 		]);
 
 		$app->impersonate('kirby');
-		$api = $app->api()->call('pages/test/fields/related/items');
+		$api = $app->api()->call('pages/test/fields/related/items', [
+			'query' => [
+				'items' => 'page://my-a,page://does-not-exist'
+			]
+		]);
 
 		$this->assertCount(2, $api);
 
@@ -207,16 +205,15 @@ class PagePickerFieldTest extends TestCase
 					'email' => 'editor@getkirby.com',
 					'role'  => 'editor-' . $uuid
 				]
-			],
-			'request' => [
-				'query' => [
-					'items' => 'page://my-a,page://my-b'
-				]
 			]
 		]);
 
 		$app->impersonate('editor@getkirby.com');
-		$api = $app->api()->call('pages/test/fields/related/items');
+		$api = $app->api()->call('pages/test/fields/related/items', [
+			'query' => [
+				'items' => 'page://my-a,page://my-b'
+			]
+		]);
 
 		$this->assertCount(2, $api);
 

@@ -21,7 +21,7 @@ class PageChangeTitleDialogController extends PageDialogController
 	public function load(): Dialog
 	{
 		$guards = $this->page->guards();
-		$select = $this->request->get('select', 'title');
+		$select = $this->request->string('select', 'title');
 
 		return new FormDialog(
 			fields: [
@@ -71,8 +71,8 @@ class PageChangeTitleDialogController extends PageDialogController
 
 	public function submit(): array|true
 	{
-		$title   = trim($this->request->get('title', ''));
-		$slug    = trim($this->request->get('slug', ''));
+		$title   = trim($this->request->string('title', ''));
+		$slug    = trim($this->request->string('slug', ''));
 
 		// basic input validation before we move on
 		$validators = $this->page->guards()->validators();

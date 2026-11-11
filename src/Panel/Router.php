@@ -255,9 +255,14 @@ class Router
 			// the header carries the language of the requesting Panel tab,
 			// the session is only the fallback for the first request of a tab
 			$language =
-				$request->get('language') ??
+				$request->string('language') ??
 				$request->header('x-language') ??
 				$sessionLanguage;
+
+			// ignore invalid session values, e.g. from an earlier `?language[]=`
+			if (is_string($language) === false) {
+				$language = $fallback;
+			}
 
 			// keep the language for the next visit
 			if ($language !== $sessionLanguage) {

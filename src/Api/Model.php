@@ -197,11 +197,11 @@ class Model
 	{
 		$model = $this;
 
-		if ($select = $this->api->requestQuery('select')) {
+		if ($select = $this->api->request()->query()->get('select')) {
 			$model = $model->select($select);
 		}
 
-		if ($view = $this->api->requestQuery('view')) {
+		if ($view = $this->api->request()->query()->string('view')) {
 			$model = $model->view($view);
 		}
 
