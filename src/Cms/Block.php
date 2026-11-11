@@ -167,7 +167,11 @@ class Block extends Item implements Stringable
 	 */
 	protected function siblingsCollection(): Blocks
 	{
-		return $this->siblings->filter('isHidden', $this->isHidden());
+		$isHidden = $this->isHidden();
+
+		return $this->siblings->filter(
+			fn ($block) => $block->isHidden() === $isHidden
+		);
 	}
 
 	/**
