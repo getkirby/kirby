@@ -116,7 +116,7 @@ class State
 		// requested data ids
 		$request  = $this->kirby->request();
 		$filter   = $request->header('X-Panel-Only');
-		$filter ??= $request->get('_only');
+		$filter ??= $request->string('_only');
 
 		if (empty($filter) === false) {
 			// split include string into an array of fields
@@ -145,7 +145,7 @@ class State
 		}
 
 		$filterGlobals   = $request->header('X-Panel-Globals');
-		$filterGlobals ??= $request->get('_globals');
+		$filterGlobals ??= $request->string('_globals');
 
 		if (empty($filterGlobals) === false) {
 			// split globals string into an array of fields

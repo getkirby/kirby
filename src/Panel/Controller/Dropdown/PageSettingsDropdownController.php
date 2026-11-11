@@ -22,7 +22,11 @@ class PageSettingsDropdownController extends ModelSettingsDropdownController
 		protected ModelWithContent $model
 	) {
 		parent::__construct();
-		$this->context     = $this->request->get(['view', 'sort', 'delete']);
+		$this->context     = [
+			'delete' => $this->request->bool('delete', true),
+			'sort'   => $this->request->bool('sort', true),
+			'view'   => $this->request->string('view')
+		];
 		$this->permissions = $this->model->panel()->options(['preview']);
 	}
 

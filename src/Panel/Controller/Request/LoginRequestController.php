@@ -30,9 +30,9 @@ class LoginRequestController extends RequestController
 
 	protected function authenticate(Auth $auth): void
 	{
-		$email  = $this->request->get('email');
-		$secret = $this->request->get('password');
-		$long   = $this->request->get('long') === true;
+		$email  = $this->request->string('email');
+		$secret = $this->request->string('password');
+		$long   = $this->request->bool('long', false);
 
 		$result = $auth->authenticate($this->name, $email, $secret, $long);
 

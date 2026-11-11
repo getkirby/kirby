@@ -27,10 +27,7 @@ abstract class ModelSettingsDropdownController extends DropdownController
 		$permission = $this->permissions[$action] ?? false;
 		$context    = $this->context[$action] ?? true;
 
-		return
-			$permission === false ||
-			$context === false ||
-			$context === 'false';
+		return $permission === false || $context === false;
 	}
 
 	public function model(): ModelWithContent

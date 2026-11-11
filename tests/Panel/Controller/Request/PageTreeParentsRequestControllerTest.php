@@ -85,6 +85,24 @@ class PageTreeParentsRequestControllerTest extends TestCase
 		], $data['data']);
 	}
 
+	public function testLoadWithRootFlag(): void
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'page' => 'articles/article/subarticle',
+					'root' => '1'
+				],
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PageTreeParentsRequestController();
+		$data       = $controller->load();
+		$this->assertSame('site://', $data['data'][0]);
+	}
+
 	public function testLoadNotListable(): void
 	{
 		$this->app = $this->app->clone([

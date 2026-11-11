@@ -37,6 +37,22 @@ class PageSettingsDropdownControllerTest extends TestCase
 		$this->assertFalse($controller->isDisabledOption('changeTitle'));
 	}
 
+	public function testIsDisabledOptionWithContextFlag(): void
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'delete' => '0'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PageSettingsDropdownController($this->app->page('test'));
+		$this->assertTrue($controller->isDisabledOption('delete'));
+	}
+
 	public function testLoad(): void
 	{
 		$controller = new PageSettingsDropdownController($this->app->page('test'));

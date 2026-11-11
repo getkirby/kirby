@@ -121,8 +121,8 @@ class Panel
 
 		if ($request->method() === 'GET') {
 			return
-				(bool)($request->get('_json') ??
-				$request->header('X-Panel'));
+				$request->bool('_json') ??
+				(bool)$request->header('X-Panel');
 		}
 
 		return false;
@@ -145,7 +145,7 @@ class Panel
 	{
 		$request = App::instance()->request();
 
-		return Response::json($data, $code, (bool)$request->get('_pretty'), [
+		return Response::json($data, $code, $request->bool('_pretty', false), [
 			'X-Panel'       => 'true',
 			'Cache-Control' => 'no-store, private'
 		]);
@@ -200,7 +200,7 @@ class Panel
 		$request = $this->kirby->request();
 
 		$referrer = $request->header('X-Panel-Referrer')
-				 ?? $request->get('_referrer')
+				 ?? $request->string('_referrer')
 				 ?? '';
 
 		return '/' . trim($referrer, '/');
