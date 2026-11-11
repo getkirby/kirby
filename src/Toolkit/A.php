@@ -290,7 +290,7 @@ class A
 		array $array,
 		string|int|array|null $key,
 		mixed $default = null
-	): mixed {
+	) {
 		if ($key === null) {
 			return $array;
 		}
@@ -760,7 +760,7 @@ class A
 	 * @param $value Arbitrary value that will end up at the bottom of the tree
 	 * @param list<array-key> $keys List of keys to use sorted from the topmost level
 	 */
-	public static function nestByKeys(mixed $value, array $keys): mixed
+	public static function nestByKeys(mixed $value, array $keys)
 	{
 		$firstKey = array_shift($keys);
 

@@ -24,7 +24,7 @@ class Obj extends stdClass
 	/**
 	 * Magic getter
 	 */
-	public function __call(string $property, array $arguments): mixed
+	public function __call(string $property, array $arguments)
 	{
 		return $this->$property ?? null;
 	}
@@ -38,7 +38,7 @@ class Obj extends stdClass
 		return $this->toArray();
 	}
 
-	public function __get(string $property): mixed
+	public function __get(string $property)
 	{
 		return null;
 	}
@@ -54,7 +54,7 @@ class Obj extends stdClass
 	 * @param $fallback If multiple properties are requested:
 	 *                 Associative array of fallback values per key
 	 */
-	public function get(string|array $property, mixed $fallback = null): mixed
+	public function get(string|array $property, mixed $fallback = null)
 	{
 		if (is_array($property) === true) {
 			$fallback ??= [];

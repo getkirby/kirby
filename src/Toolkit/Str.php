@@ -811,7 +811,7 @@ class Str
 	 *
 	 * @param array<string, mixed> $data
 	 */
-	public static function query(string $query, array $data = []): mixed
+	public static function query(string $query, array $data = [])
 	{
 		return Query::factory($query)->resolve($data);
 	}

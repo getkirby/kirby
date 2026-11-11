@@ -65,10 +65,8 @@ class Controller
 	 * @param array<string, mixed> $data
 	 * @return TReturn
 	 */
-	public function call(
-		object|null $bind = null,
-		array $data = []
-	): mixed {
+	public function call(object|null $bind = null, array $data = [])
+	{
 		$args = $this->arguments($data);
 		$args = LazyValue::unwrap($args);
 
