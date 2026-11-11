@@ -584,11 +584,12 @@ class Api
 	/**
 	 * Renders the API call
 	 * (a request object or its options, e.g. `method` and `body`)
+	 * as a response
 	 */
 	public function render(
 		string $path,
 		Request|array $request = []
-	): mixed {
+	): Response {
 		$api     = $this->clone(['request' => $request]);
 		$request = $api->request();
 
@@ -599,14 +600,19 @@ class Api
 		}
 
 		$result = match ($result) {
-			null    => $this->responseFor404(),
-			false   => $this->responseFor400(),
-			true    => $this->responseFor200(),
+			null    => ['status' => 'error', 'message' => 'not found', 'code' => 404],
+			false   => ['status' => 'error', 'message' => 'bad request', 'code' => 400],
+			true    => ['status' => 'ok', 'message' => 'ok', 'code' => 200],
 			default => $result
 		};
 
-		if (is_array($result) === false) {
+		if ($result instanceof Response) {
 			return $result;
+		}
+
+		// strings and other scalars
+		if (is_array($result) === false) {
+			return new Response((string)$result);
 		}
 
 		// pretty print json data
@@ -629,51 +635,6 @@ class Api
 		}
 
 		return Response::json($result, $code, $pretty);
-	}
-
-	/**
-	 * Returns a 200 - ok
-	 * response array.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public function responseFor200(): array
-	{
-		return [
-			'status'  => 'ok',
-			'message' => 'ok',
-			'code'    => 200
-		];
-	}
-
-	/**
-	 * Returns a 400 - bad request
-	 * response array.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public function responseFor400(): array
-	{
-		return [
-			'status'  => 'error',
-			'message' => 'bad request',
-			'code'    => 400,
-		];
-	}
-
-	/**
-	 * Returns a 404 - not found
-	 * response array.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public function responseFor404(): array
-	{
-		return [
-			'status'  => 'error',
-			'message' => 'not found',
-			'code'    => 404,
-		];
 	}
 
 	/**

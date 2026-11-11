@@ -1084,7 +1084,43 @@ class ApiTest extends TestCase
 			]
 		);
 
-		$this->assertSame('test', $api->render('test', ['method' => 'POST']));
+		$result = $api->render('test', ['method' => 'POST']);
+
+		$this->assertInstanceOf(HttpResponse::class, $result);
+		$this->assertSame('test', $result->body());
+		$this->assertSame('text/html', $result->type());
+		$this->assertSame(200, $result->code());
+	}
+
+	public function testRenderResponse(): void
+	{
+		$api = new Api(
+			routes: [
+				[
+					'pattern' => 'test',
+					'action'  => fn () => new HttpResponse('test', 'text/plain', 201)
+				]
+			]
+		);
+
+		$result = $api->render('test');
+		$this->assertSame('test', $result->body());
+		$this->assertSame('text/plain', $result->type());
+		$this->assertSame(201, $result->code());
+	}
+
+	public function testRenderScalar(): void
+	{
+		$api = new Api(
+			routes: [
+				[
+					'pattern' => 'test',
+					'action'  => fn () => 42
+				]
+			]
+		);
+
+		$this->assertSame('42', $api->render('test')->body());
 	}
 
 	public function testRenderArray(): void

@@ -95,7 +95,7 @@ class AppPluginsTest extends TestCase
 		]);
 
 		$kirby->impersonate('kirby');
-		$this->assertSame('nice', $kirby->call('api/awesome'));
+		$this->assertSame('nice', $kirby->call('api/awesome')->body());
 	}
 
 	public function testApiRoutePlugins(): void
