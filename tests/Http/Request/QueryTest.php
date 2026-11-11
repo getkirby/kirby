@@ -115,6 +115,25 @@ class QueryTest extends TestCase
 		$query = new Query(['a' => 'a', 'b' => 'b']);
 		$this->assertSame(['a' => 'a', 'b' => 'b', 'c' => null], $query->get(['a', 'b', 'c']));
 
+		// all data
+		$this->assertSame(['a' => 'a', 'b' => 'b'], $query->get());
+	}
+
+	public function testGetNested(): void
+	{
+		$query = new Query([
+			'paginate' => ['limit' => '10', 'page' => 'abc'],
+			'search.query' => 'flat'
+		]);
+
+		$this->assertSame('10', $query->get('paginate.limit'));
+		$this->assertSame(10, $query->int('paginate.limit'));
+		$this->assertNull($query->int('paginate.page'));
+		$this->assertSame(1, $query->int('paginate.page', 1));
+		$this->assertNull($query->get('paginate.limit.foo'));
+
+		// an exact key wins over the nested lookup
+		$this->assertSame('flat', $query->string('search.query'));
 	}
 
 	public static function intProvider(): array

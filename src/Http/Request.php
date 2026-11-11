@@ -11,7 +11,6 @@ use Kirby\Http\Request\Body;
 use Kirby\Http\Request\Data;
 use Kirby\Http\Request\Files;
 use Kirby\Http\Request\Query;
-use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 
 /**
@@ -280,15 +279,6 @@ class Request
 	public function files(): Files
 	{
 		return $this->files ??= new Files();
-	}
-
-	/**
-	 * Returns any data field from the request
-	 * if it exists
-	 */
-	public function get(string|array|null $key = null, $fallback = null)
-	{
-		return A::get($this->data(), $key, $fallback);
 	}
 
 	/**

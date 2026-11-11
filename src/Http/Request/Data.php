@@ -2,6 +2,8 @@
 
 namespace Kirby\Http\Request;
 
+use Kirby\Toolkit\A;
+
 /**
  * The Data Trait is being used in
  * Query, Files, Body and Request classes
@@ -68,22 +70,13 @@ trait Data
 	/**
 	 * The get method is the heart and soul of this
 	 * Trait. You can use it to fetch a single value
-	 * of the data array by key or multiple values by
-	 * passing an array of keys.
+	 * of the data array by key (nested values with
+	 * dot notation, e.g. `paginate.limit`), multiple
+	 * values by passing an array of keys or all data.
 	 */
-	public function get(string|array $key, $default = null)
+	public function get(string|array|null $key = null, $default = null)
 	{
-		if (is_array($key) === true) {
-			$result = [];
-
-			foreach ($key as $name) {
-				$result[$name] = $this->get($name);
-			}
-
-			return $result;
-		}
-
-		return $this->data()[$key] ?? $default;
+		return A::get($this->data(), $key, $default);
 	}
 
 	/**
