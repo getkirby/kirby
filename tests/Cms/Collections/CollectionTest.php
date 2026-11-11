@@ -528,6 +528,29 @@ class CollectionTest extends TestCase
 		$this->assertSame('a', $result->first()->id());
 	}
 
+	public function testNotWithPropertyNames(): void
+	{
+		$collection = new Collection([
+			new MockObject(['id' => 'data']),
+			new MockObject(['id' => 'pagination']),
+			new MockObject(['id' => 'parent']),
+			new MockObject(['id' => 'a'])
+		], $parent = new MockObject(['id' => 'parent']));
+
+		$result = $collection->not('data');
+		$this->assertSame(['pagination', 'parent', 'a'], $result->keys());
+
+		$result = $collection->not('pagination', 'parent');
+		$this->assertSame(['data', 'a'], $result->keys());
+		$this->assertSame($parent, $result->parent());
+		$this->assertNull($result->pagination());
+
+		$result = $collection->not(new Collection([
+			new MockObject(['id' => 'data'])
+		]));
+		$this->assertSame(['pagination', 'parent', 'a'], $result->keys());
+	}
+
 	public function testNotWithString(): void
 	{
 		$collection = new Collection([
