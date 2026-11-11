@@ -4,6 +4,7 @@ namespace Kirby\Panel\Form\Field;
 
 use Kirby\Cms\File;
 use Kirby\Form\Field\SelectField;
+use Kirby\Reflection\Attributes\Prop;
 
 /**
  * Panel field override for selecting a file's position within its siblings
@@ -13,11 +14,14 @@ use Kirby\Form\Field\SelectField;
  */
 class FilePositionField extends SelectField
 {
+	#[Prop(computed: true)]
+	protected string|null $name = 'position';
+
 	public function __construct(
 		protected File $file,
-		...$props
+		mixed ...$args
 	) {
-		parent::__construct(...$props);
+		parent::__construct(...$args);
 	}
 
 	public function label(): string
@@ -27,11 +31,6 @@ class FilePositionField extends SelectField
 		}
 
 		return parent::label();
-	}
-
-	public function name(): string
-	{
-		return $this->name ?? 'position';
 	}
 
 	public function options(): array

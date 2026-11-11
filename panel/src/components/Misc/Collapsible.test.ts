@@ -9,41 +9,46 @@ function createObservers() {
 }
 
 /**
- * calculate() is async with several awaits. Wait for it to finish.
+ * calculate() awaits several renders. Wait for it to finish.
  */
 async function flush(vm: {
-	isUpdating: boolean;
+	isMeasuring: boolean;
 	$nextTick: () => Promise<void>;
 }) {
-	for (let i = 0; i < 20 && vm.isUpdating; i++) {
+	for (let i = 0; i < 20 && vm.isMeasuring; i++) {
 		await vm.$nextTick();
 	}
 }
 
 /**
- * Fakes the widths happy-dom cannot measure:
- * items 30px (wide ones 50px), fallback 20px, gap 0
+ * Fakes the widths happy-dom cannot measure: items 30px,
+ * wide ones 50px, shrinking ones 50px or 40px next to
+ * the fallback, the fallback 20px
  */
-function layout(wrapper: VueWrapper, container: number) {
-	wrapper.element.getBoundingClientRect = () =>
-		({ width: container }) as DOMRect;
+function layout(wrapper: VueWrapper, gap = "0px") {
+	const vm = wrapper.vm as unknown as {
+		isCollapsed: boolean;
+		measure(el: Element): number;
+	};
 
-	const measure = vi
-		.spyOn(wrapper.vm as unknown as { measure(el: Element): number }, "measure")
-		.mockImplementation((el: Element) => {
-			if (el.classList.contains("f")) {
-				return 20;
-			}
+	const measure = vi.spyOn(vm, "measure").mockImplementation((el: Element) => {
+		if (el.classList.contains("w")) {
+			return 50;
+		}
 
-			return el.classList.contains("w") ? 50 : 30;
-		});
+		if (el.classList.contains("s")) {
+			return vm.isCollapsed ? 40 : 50;
+		}
+
+		return el.classList.contains("f") ? 20 : 30;
+	});
 
 	const realGCS = window.getComputedStyle.bind(window);
 	const gcs = vi
 		.spyOn(window, "getComputedStyle")
 		.mockImplementation((el) =>
 			el === wrapper.element
-				? ({ columnGap: "0", gap: "0" } as CSSStyleDeclaration)
+				? ({ columnGap: gap } as CSSStyleDeclaration)
 				: realGCS(el)
 		);
 
@@ -54,7 +59,18 @@ function layout(wrapper: VueWrapper, container: number) {
 }
 
 /**
- * Mounts items with the given classes and a fallback
+ * Reports a new content box width like `$panel.observers.resize`
+ */
+async function resize(wrapper: VueWrapper, width: number) {
+	wrapper.element.dispatchEvent(
+		new CustomEvent("resize", { detail: { width } })
+	);
+	await flush(wrapper.vm as unknown as Parameters<typeof flush>[0]);
+}
+
+/**
+ * Mounts items with the given classes, of which it renders
+ * the `offset` ones like a consumer, and a fallback
  * that renders the offset and total it receives
  */
 function collapse(
@@ -65,7 +81,10 @@ function collapse(
 		props,
 		global: { mocks: { $panel: { observers: createObservers() } } },
 		slots: {
-			default: () => items.map((item) => h("span", { class: item })),
+			default: ({ offset }: { offset: number }) =>
+				visible(items, offset, props.direction).map((item) =>
+					h("span", { class: item })
+				),
 			fallback: ({ offset, total }: { offset: number; total: number }) =>
 				h("span", { class: "f" }, `${offset}/${total}`)
 		}
@@ -85,6 +104,14 @@ function mount(
 			}
 		}
 	});
+}
+
+/**
+ * Returns the `offset` items that stay visible
+ */
+function visible<T>(items: T[], offset: number, direction: unknown = "end") {
+	const start = direction === "start" ? Math.max(items.length - offset, 0) : 0;
+	return items.slice(start, start + offset);
 }
 
 describe("k-collapsible", () => {
@@ -116,9 +143,8 @@ describe("k-collapsible", () => {
 
 		it("fits the first items next to the fallback by default (end)", async () => {
 			const wrapper = collapse();
-			await flush(wrapper.vm);
-			layout(wrapper, 80);
-			await wrapper.vm.calculate();
+			layout(wrapper);
+			await resize(wrapper, 80);
 
 			// 50 + 20 fits, 50 + 30 + 20 doesn't
 			expect(wrapper.find(".f").text()).toBe("1/3");
@@ -126,9 +152,8 @@ describe("k-collapsible", () => {
 
 		it("fits the last items next to the fallback when direction=start", async () => {
 			const wrapper = collapse({ direction: "start" });
-			await flush(wrapper.vm);
-			layout(wrapper, 80);
-			await wrapper.vm.calculate();
+			layout(wrapper);
+			await resize(wrapper, 80);
 
 			// 30 + 30 + 20 fits, 50 + 30 + 30 + 20 doesn't
 			expect(wrapper.find(".f").text()).toBe("2/3");
@@ -155,19 +180,110 @@ describe("k-collapsible", () => {
 		});
 	});
 
+	// lifecycle
+	describe("updated hook", () => {
+		it("recalculates when the slot content changes", async () => {
+			// drive the slot reactively from a parent so we can add items at runtime
+			const items = ref(["A", "B"]);
+			const wrapper = vueMount(
+				{
+					render: () =>
+						h(Collapsible, null, {
+							default: ({ offset }: { offset: number }) =>
+								visible(items.value, offset).map((t) =>
+									h("span", { class: "i", key: t }, t)
+								),
+							fallback: () => h("span", { class: "f" }, "F")
+						})
+				},
+				{
+					global: { mocks: { $panel: { observers: createObservers() } } }
+				}
+			);
+
+			const collapsible = wrapper.findComponent(Collapsible);
+			layout(collapsible);
+
+			// 2 × 30 = 60 ≤ 80 → fits
+			await resize(collapsible, 80);
+			expect(collapsible.vm.isCollapsed).toBe(false);
+			expect(collapsible.vm.offset).toBe(2);
+
+			// a 3rd item → 90 > 80 → must collapse
+			items.value = ["A", "B", "C"];
+			await collapsible.vm.$nextTick();
+			await flush(collapsible.vm);
+
+			expect(collapsible.vm.isCollapsed).toBe(true);
+			expect(collapsible.vm.total).toBe(3);
+		});
+	});
+
 	// methods
 	describe("calculate()", () => {
-		it("collapses when items overflow and a fallback exists", async () => {
-			// jsdom reports width=0 for every element, so any item overflows
-			const wrapper = vueMount(Collapsible, {
-				global: { mocks: { $panel: { observers: createObservers() } } },
-				slots: {
-					default:
-						'<span class="i">A</span><span class="i">B</span><span class="i">C</span>',
-					fallback: '<span class="f">F</span>'
+		it("collapses once a fallback slot gets added", async () => {
+			const fallback = ref(false);
+			const wrapper = vueMount(
+				{
+					render: () =>
+						h(Collapsible, null, {
+							default: ({ offset }: { offset: number }) =>
+								visible(["i", "i", "i"], offset).map((i) =>
+									h("span", { class: i })
+								),
+							...(fallback.value && {
+								fallback: () => h("span", { class: "f" })
+							})
+						})
+				},
+				{
+					global: { mocks: { $panel: { observers: createObservers() } } }
 				}
-			});
-			await flush(wrapper.vm);
+			);
+
+			const collapsible = wrapper.findComponent(Collapsible);
+			layout(collapsible);
+			await resize(collapsible, 70);
+			expect(collapsible.vm.isCollapsed).toBe(false);
+
+			fallback.value = true;
+			await collapsible.vm.$nextTick();
+			await flush(collapsible.vm);
+
+			// 30 + 20 fits, 30 + 30 + 20 doesn't
+			expect(collapsible.vm.isCollapsed).toBe(true);
+			expect(collapsible.vm.offset).toBe(1);
+		});
+
+		it("waits for the width from the observer", async () => {
+			const wrapper = collapse();
+			await wrapper.vm.calculate();
+			expect(wrapper.vm.isCollapsed).toBe(false);
+			expect(wrapper.vm.offset).toBe(Infinity);
+		});
+
+		it("does nothing while measuring", async () => {
+			const wrapper = collapse();
+			wrapper.vm.isMeasuring = true;
+			await resize(wrapper, 0);
+			expect(wrapper.vm.offset).toBe(Infinity);
+		});
+
+		it("shows all items when they fit", async () => {
+			const wrapper = collapse();
+			layout(wrapper);
+			await resize(wrapper, 110);
+
+			// 50 + 30 + 30 fits
+			expect(wrapper.vm.isCollapsed).toBe(false);
+			expect(wrapper.vm.offset).toBe(3);
+			expect(wrapper.find(".f").exists()).toBe(false);
+		});
+
+		it("collapses when items overflow and a fallback exists", async () => {
+			const wrapper = collapse();
+			layout(wrapper);
+			await resize(wrapper, 0);
 			expect(wrapper.vm.isCollapsed).toBe(true);
 			expect(wrapper.vm.total).toBe(3);
 		});
@@ -179,112 +295,135 @@ describe("k-collapsible", () => {
 					default: '<span class="i">A</span><span class="i">B</span>'
 				}
 			});
-			await flush(wrapper.vm);
+			layout(wrapper);
+			await resize(wrapper, 40);
+
+			// 30 fits, 30 + 30 doesn't
 			expect(wrapper.vm.isCollapsed).toBe(false);
+			expect(wrapper.vm.offset).toBe(1);
 			expect(wrapper.vm.total).toBe(2);
-		});
-
-		it("collapses when more children get added than fit", async () => {
-			// drive the slot reactively from a parent so we can add items at runtime
-			const items = ref(["A", "B"]);
-			const wrapper = vueMount(
-				{
-					render: () =>
-						h(Collapsible, null, {
-							default: () =>
-								items.value.map((t) => h("span", { class: "i", key: t }, t)),
-							fallback: () => h("span", { class: "f" }, "F")
-						})
-				},
-				{
-					global: { mocks: { $panel: { observers: createObservers() } } }
-				}
-			);
-
-			const collapsible = wrapper.findComponent(Collapsible);
-			await flush(collapsible.vm);
-			layout(collapsible, 80);
-
-			// 2 items × 30 = 60 ≤ 80 → fits
-			await collapsible.vm.calculate();
-			expect(collapsible.vm.isCollapsed).toBe(false);
-			expect(collapsible.vm.offset).toBe(2);
-
-			// add a 3rd item → 90 > 80 → must collapse
-			items.value = ["A", "B", "C"];
-			await collapsible.vm.$nextTick();
-			await flush(collapsible.vm);
-
-			expect(collapsible.vm.isCollapsed).toBe(true);
-			expect(collapsible.vm.total).toBe(3);
 		});
 
 		it("shows as many items as fit next to the fallback", async () => {
 			const wrapper = collapse({}, ["i", "i", "i"]);
-			await flush(wrapper.vm);
-			layout(wrapper, 70);
-			await wrapper.vm.calculate();
+			layout(wrapper);
+			await resize(wrapper, 70);
 
 			// 30 + 20 fits, 30 + 30 + 20 doesn't
 			expect(wrapper.find(".f").text()).toBe("1/3");
 		});
 
-		it("expands again once items fit (with stubbed widths)", async () => {
+		it("counts the gaps between items and fallback", async () => {
+			const wrapper = collapse({}, ["i", "i", "i"]);
+			layout(wrapper, "5px");
+			await resize(wrapper, 85);
+
+			// 30 + 5 + 20 fits, 30 + 5 + 30 + 5 + 20 doesn't
+			expect(wrapper.find(".f").text()).toBe("1/3");
+		});
+
+		it("treats a normal gap as none", async () => {
+			const wrapper = collapse({}, ["i", "i", "i"]);
+			layout(wrapper, "normal");
+			await resize(wrapper, 90);
+
+			expect(wrapper.vm.isCollapsed).toBe(false);
+			expect(wrapper.vm.offset).toBe(3);
+		});
+
+		it("hides more items when the fallback grows", async () => {
 			const wrapper = vueMount(Collapsible, {
 				global: { mocks: { $panel: { observers: createObservers() } } },
 				slots: {
-					default: '<span class="i">A</span><span class="i">B</span>',
-					fallback: '<span class="f">F</span>'
+					default: ({ offset }: { offset: number }) =>
+						visible(["i", "i", "i", "i"], offset).map((i) =>
+							h("span", { class: i })
+						),
+					// 50px wide when at most two items are shown
+					fallback: ({ offset, total }: { offset: number; total: number }) =>
+						h("span", { class: offset > 2 ? "f" : "f w" }, `${offset}/${total}`)
 				}
 			});
-			await flush(wrapper.vm);
-			// initially collapsed because jsdom has no layout
-			expect(wrapper.vm.isCollapsed).toBe(true);
+			layout(wrapper);
+			await resize(wrapper, 90);
 
-			layout(wrapper, 200);
-			await wrapper.vm.calculate();
+			// 30 + 30 + 30 + 20 and 30 + 30 + 50 don't fit, 30 + 50 does
+			expect(wrapper.find(".f").text()).toBe("1/4");
+		});
+
+		it("keeps an item that shrinks next to the fallback", async () => {
+			const wrapper = collapse({}, ["s", "i"]);
+			layout(wrapper);
+			await resize(wrapper, 60);
+
+			// 50 + 20 doesn't fit, but the item shrinks to 40
+			expect(wrapper.find(".f").text()).toBe("1/2");
+		});
+
+		it("tolerates subpixel rounding", async () => {
+			const wrapper = collapse({}, ["i", "i", "i"]);
+			layout(wrapper);
+			await resize(wrapper, 89.6);
 
 			expect(wrapper.vm.isCollapsed).toBe(false);
-			expect(wrapper.vm.offset).toBe(2);
+			expect(wrapper.vm.offset).toBe(3);
+		});
+
+		it("expands again once items fit", async () => {
+			const wrapper = collapse();
+			layout(wrapper);
+			await resize(wrapper, 0);
+			expect(wrapper.vm.isCollapsed).toBe(true);
+
+			await resize(wrapper, 200);
+			expect(wrapper.vm.isCollapsed).toBe(false);
+			expect(wrapper.vm.offset).toBe(3);
 		});
 	});
 
-	describe("growUntilFull()", () => {
-		it("fits as many items as the available width allows", () => {
+	describe("fit()", () => {
+		it("fits as many items as the space allows", () => {
 			const wrapper = mount();
-			// 10 fits (10 ≤ 35); 10+20+5=35 fits; 10+20+30+10=70 doesn't
-			expect(
-				wrapper.vm.growUntilFull({
-					available: 35,
-					gap: 5,
-					total: 3,
-					widths: [10, 20, 30]
-				})
-			).toEqual({ offset: 2, total: 3, overflown: true });
+			// 10 + 5 + 20 = 35 fits, 10 + 5 + 20 + 5 + 30 doesn't
+			expect(wrapper.vm.fit([10, 20, 30], 5, 35)).toBe(2);
 		});
 
-		it("returns total when everything fits", () => {
+		it("fits all items into enough space", () => {
 			const wrapper = mount();
-			expect(
-				wrapper.vm.growUntilFull({
-					available: 1000,
-					gap: 5,
-					total: 3,
-					widths: [10, 20, 30]
-				})
-			).toEqual({ offset: 3, total: 3, overflown: false });
+			expect(wrapper.vm.fit([10, 20, 30], 5, 1000)).toBe(3);
 		});
 
-		it("returns 0 when nothing fits", () => {
+		it("fits no item into too little space", () => {
 			const wrapper = mount();
-			expect(
-				wrapper.vm.growUntilFull({
-					available: 5,
-					gap: 0,
-					total: 2,
-					widths: [10, 10]
-				})
-			).toEqual({ offset: 0, total: 2, overflown: true });
+			expect(wrapper.vm.fit([10, 10], 0, 5)).toBe(0);
+		});
+
+		it("fits the last items when direction=start", () => {
+			const wrapper = mount({ direction: "start" });
+			// 10 + 5 + 20 = 35 fits, 30 + 5 + 20 + 5 + 10 doesn't
+			expect(wrapper.vm.fit([30, 20, 10], 5, 35)).toBe(2);
+		});
+	});
+
+	describe("measure()", () => {
+		it("adds the margins to the rendered width", () => {
+			const wrapper = mount();
+			const el = document.createElement("span");
+			el.style.margin = "0 5px 0 3px";
+			document.body.append(el);
+			onTestFinished(() => el.remove());
+			el.getBoundingClientRect = () => ({ width: 30 }) as DOMRect;
+			expect(wrapper.vm.measure(el)).toBe(38);
+		});
+
+		it("ignores margins that are no lengths", () => {
+			const wrapper = mount();
+			const el = document.createElement("span");
+			el.style.margin = "0 auto";
+			document.body.append(el);
+			onTestFinished(() => el.remove());
+			el.getBoundingClientRect = () => ({ width: 30 }) as DOMRect;
+			expect(wrapper.vm.measure(el)).toBe(30);
 		});
 	});
 
@@ -299,18 +438,19 @@ describe("k-collapsible", () => {
 	});
 
 	describe("onResize()", () => {
-		it("recalculates when the element fires a resize event", () => {
+		it("recalculates with the new width", async () => {
 			const wrapper = mount();
 			const calculate = vi.spyOn(wrapper.vm, "calculate");
-			wrapper.element.dispatchEvent(new Event("resize"));
-			expect(calculate).toHaveBeenCalledOnce();
+			await resize(wrapper, 80);
+			expect(calculate).toHaveBeenCalled();
+			expect(wrapper.vm.available).toBe(80);
 		});
 
-		it("skips recalculation when already updating", () => {
+		it("ignores a resize that keeps the width", async () => {
 			const wrapper = mount();
-			wrapper.vm.isUpdating = true;
+			await resize(wrapper, 80);
 			const calculate = vi.spyOn(wrapper.vm, "calculate");
-			wrapper.element.dispatchEvent(new Event("resize"));
+			await resize(wrapper, 80);
 			expect(calculate).not.toHaveBeenCalled();
 		});
 	});
@@ -333,7 +473,7 @@ describe("k-collapsible", () => {
 			// after unmount the vm is still accessible;
 			// spy on calculate and dispatch
 			const calculate = vi.spyOn(wrapper.vm, "calculate");
-			el.dispatchEvent(new Event("resize"));
+			el.dispatchEvent(new CustomEvent("resize", { detail: { width: 80 } }));
 			expect(calculate).not.toHaveBeenCalled();
 		});
 	});
@@ -402,10 +542,11 @@ describe("k-collapsible", () => {
 						)
 				}
 			});
-			await flush(wrapper.vm);
+			layout(wrapper);
+			await resize(wrapper, 70);
 
-			// happy-dom has no layout, so none of the 3 items fits
-			expect(wrapper.find(".info").text()).toBe("0/3");
+			// 30 + 30 fits, 30 + 30 + 30 doesn't
+			expect(wrapper.find(".info").text()).toBe("2/3");
 		});
 	});
 
@@ -418,16 +559,14 @@ describe("k-collapsible", () => {
 					fallback: '<span class="f">F</span>'
 				}
 			});
-			await flush(wrapper.vm);
-			layout(wrapper, 200);
-			wrapper.element.dispatchEvent(new Event("resize"));
-			await flush(wrapper.vm);
+			layout(wrapper);
+			await resize(wrapper, 200);
 
 			expect(wrapper.find(".a").exists()).toBe(true);
 			expect(wrapper.find(".f").exists()).toBe(false);
 		});
 
-		it("renders fallback marked with data-collapsible-fallback when collapsed", async () => {
+		it("renders fallback when collapsed", async () => {
 			const wrapper = vueMount(Collapsible, {
 				global: { mocks: { $panel: { observers: createObservers() } } },
 				slots: {
@@ -437,9 +576,7 @@ describe("k-collapsible", () => {
 			});
 			wrapper.vm.isCollapsed = true;
 			await wrapper.vm.$nextTick();
-			const fb = wrapper.find(".f");
-			expect(fb.exists()).toBe(true);
-			expect(fb.attributes("data-collapsible-fallback")).toBe("");
+			expect(wrapper.find(".f").exists()).toBe(true);
 		});
 	});
 });

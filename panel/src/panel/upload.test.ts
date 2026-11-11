@@ -52,7 +52,12 @@ function fakeRequests(
 			}
 		};
 
-		abort(): void {}
+		aborted = false;
+
+		abort(): void {
+			this.aborted = true;
+			this.listeners.abort?.({ target: this });
+		}
 
 		addEventListener(type: string, listener: Listener): void {
 			this.listeners[type] = listener;
@@ -67,6 +72,10 @@ function fakeRequests(
 			requests.push(this.request);
 
 			setTimeout(() => {
+				if (this.aborted === true) {
+					return;
+				}
+
 				this.progress({ lengthComputable: true, loaded: 1, total: 2 });
 				this.response = JSON.stringify(respond());
 				this.listeners.load({ target: this });
@@ -841,6 +850,28 @@ describe("panel.upload", () => {
 			expect(file.completed).toStrictEqual(false);
 			expect(file.progress).toStrictEqual(0);
 			expect(onError).toHaveBeenCalledWith(file);
+		});
+
+		it("should not treat an aborted upload as an error", async () => {
+			const panel = createPanel();
+			const upload = Upload(panel);
+			const onError = vi.fn();
+			const file = upload.file(makeFile("a.jpg"));
+
+			fakeRequests();
+			panel.events.on("file.upload.error", onError);
+			upload.abort = new AbortController();
+			upload.url = "/api/pages/test/files";
+			file.progress = 50;
+
+			const uploading = upload.upload(file, {});
+			upload.abort.abort();
+			await uploading;
+
+			expect(file.completed).toStrictEqual(false);
+			expect(file.error).toBeUndefined();
+			expect(file.progress).toStrictEqual(50);
+			expect(onError).not.toHaveBeenCalled();
 		});
 	});
 });

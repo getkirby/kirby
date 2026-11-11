@@ -5,6 +5,7 @@ namespace Kirby\Panel\Form\Field;
 use Kirby\Cms\App;
 use Kirby\Cms\Roles;
 use Kirby\Form\Field\RadioField;
+use Kirby\Reflection\Attributes\Prop;
 
 /**
  * Panel field override for selecting a user role
@@ -14,11 +15,14 @@ use Kirby\Form\Field\RadioField;
  */
 class RoleField extends RadioField
 {
+	#[Prop(computed: true)]
+	protected string|null $name = 'role';
+
 	public function __construct(
 		protected Roles|null $roles = null,
-		...$props
+		mixed ...$args
 	) {
-		parent::__construct(...$props);
+		parent::__construct(...$args);
 	}
 
 	public function label(): string
@@ -28,11 +32,6 @@ class RoleField extends RadioField
 		}
 
 		return parent::label();
-	}
-
-	public function name(): string
-	{
-		return $this->name ?? 'role';
 	}
 
 	public function options(): array

@@ -75,6 +75,8 @@ export default {
 .k-topbar-breadcrumb {
 	margin-inline-start: -2px;
 	flex: 1;
+	/* shrinks below all crumbs so `k-collapsible` can hide some */
+	min-width: 0;
 }
 .k-topbar-signals {
 	display: flex;

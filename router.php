@@ -10,6 +10,7 @@ $uri = urldecode($uri);
 $path = $_SERVER['DOCUMENT_ROOT'] . '/' . ltrim($uri, '/');
 if (
 	$uri !== '/' &&
+	str_contains($path, "\0") === false &&
 	file_exists($path) === true &&
 	substr(realpath($path), 0, strlen($_SERVER['DOCUMENT_ROOT'])) === $_SERVER['DOCUMENT_ROOT']
 ) {

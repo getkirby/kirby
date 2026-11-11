@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Form\Field;
 
 use Kirby\Form\Field\SelectField;
+use Kirby\Reflection\Attributes\Prop;
 
 /**
  * Panel field override for selecting a page template
@@ -12,21 +13,22 @@ use Kirby\Form\Field\SelectField;
  */
 class TemplateField extends SelectField
 {
+	#[Prop]
+	protected string|null $icon = 'template';
+
+	#[Prop(computed: true)]
+	protected string|null $name = 'template';
+
 	public function __construct(
 		protected array $blueprints = [],
-		...$props
+		mixed ...$args
 	) {
-		parent::__construct(...$props);
+		parent::__construct(...$args);
 	}
 
 	public function isDisabled(): bool
 	{
 		return $this->disabled() === true || count($this->blueprints) <= 1;
-	}
-
-	public function icon(): string
-	{
-		return $this->icon ?? 'template';
 	}
 
 	public function label(): string
@@ -36,11 +38,6 @@ class TemplateField extends SelectField
 		}
 
 		return parent::label();
-	}
-
-	public function name(): string
-	{
-		return $this->name ?? 'template';
 	}
 
 	public function options(): array

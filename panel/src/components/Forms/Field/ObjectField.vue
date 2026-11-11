@@ -1,5 +1,10 @@
 <template>
-	<k-field v-bind="$props" :input="id" class="k-object-field">
+	<k-field
+		v-bind="$props"
+		:class="['k-object-field', $attrs.class]"
+		:input="id"
+		:style="$attrs.style"
+	>
 		<!-- Remove button -->
 		<template v-if="!disabled && hasFields" #options>
 			<k-button
