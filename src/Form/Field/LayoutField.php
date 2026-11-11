@@ -104,12 +104,7 @@ class LayoutField extends BlocksField
 				$form  = $field->attrsForm();
 				$field = $form->field($fieldName);
 
-				$fieldApi = $api->clone([
-					'routes' => $field->api(),
-					'data'   => [...$api->data(), 'field' => $field]
-				]);
-
-				return $fieldApi->call($path, $api->request());
+				return $api->forward($field, $path);
 			}
 		];
 

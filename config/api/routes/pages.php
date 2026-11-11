@@ -1,5 +1,6 @@
 <?php
 
+use Kirby\Form\Form;
 
 /**
  * Page Routes
@@ -105,7 +106,8 @@ return [
 		'method'  => 'ALL',
 		'action'  => function (string $id, string $fieldName, string|null $path = null) {
 			if ($page = $this->page($id)) {
-				return $this->fieldApi($page, $fieldName, $path);
+				$field = Form::for($page)->field($fieldName);
+				return $this->forward($field, $path);
 			}
 		}
 	],

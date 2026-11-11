@@ -3,6 +3,7 @@
 namespace Kirby\Api;
 
 use Kirby\Cms\App;
+use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -285,6 +286,24 @@ class PagesRoutesTest extends TestCase
 		$response = $app->api()->call('pages/a/files/a.jpg');
 
 		$this->assertSame('a.jpg', $response['data']['filename']);
+	}
+
+	public function testFieldsWithMissingField(): void
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					['slug' => 'test']
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessageIs('The field could not be found');
+
+		$app->api()->call('pages/test/fields/nonexists');
 	}
 
 	public function testChildrenSearchWithPostRequestIgnoresFilterBy(): void

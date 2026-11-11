@@ -3,6 +3,7 @@
 use Kirby\Cms\Find;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\F;
+use Kirby\Form\Form;
 
 /**
  * User Routes
@@ -232,7 +233,8 @@ return [
 		],
 		'method'  => 'ALL',
 		'action'  => function (string $id, string $fieldName, string|null $path = null) {
-			return $this->fieldApi(Find::user($id), $fieldName, $path);
+			$field = Form::for(Find::user($id))->field($fieldName);
+			return $this->forward($field, $path);
 		}
 	],
 	// @codeCoverageIgnoreEnd

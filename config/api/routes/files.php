@@ -2,6 +2,7 @@
 
 use Kirby\Cms\File;
 use Kirby\Exception\PermissionException;
+use Kirby\Form\Form;
 
 // routing pattern to match all models with files
 $filePattern   = '(account/|pages/[^/]+/|site/|users/[^/]+/|)files/(:any)';
@@ -16,7 +17,8 @@ return [
 		'method'  => 'ALL',
 		'action'  => function (string $parent, string $filename, string $fieldName, string|null $path = null) {
 			if ($file = $this->file($parent, $filename)) {
-				return $this->fieldApi($file, $fieldName, $path);
+				$field = Form::for($file)->field($fieldName);
+				return $this->forward($field, $path);
 			}
 		}
 	],

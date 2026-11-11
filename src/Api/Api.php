@@ -3,6 +3,7 @@
 namespace Kirby\Api;
 
 use Closure;
+use Kirby\Api\Interface\ProvidesApi;
 use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Files;
@@ -18,7 +19,6 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\F;
-use Kirby\Form\Form;
 use Kirby\Http\Request;
 use Kirby\Http\Response;
 use Kirby\Http\Route;
@@ -282,24 +282,6 @@ class Api
 	}
 
 	/**
-	 * @throws NotFoundException if the field type cannot be found or the field cannot be loaded
-	 */
-	public function fieldApi(
-		ModelWithContent $model,
-		string $name,
-		string|null $path = null
-	): mixed {
-		$field = Form::for($model)->field($name);
-
-		$fieldApi = $this->clone([
-			'data'   => [...$this->data(), 'field' => $field],
-			'routes' => $field->api(),
-		]);
-
-		return $fieldApi->call($path, $this->request);
-	}
-
-	/**
 	 * Returns the file object for the given
 	 * parent path and filename
 	 *
@@ -335,6 +317,18 @@ class Api
 		}
 
 		return $parent->files()->filter('isListable', true);
+	}
+
+	/**
+	 * Forwards the request to the API routes
+	 * of the given provider, e.g. a field
+	 * @since 7.0.0
+	 */
+	public function forward(
+		ProvidesApi $provider,
+		string|null $path = null
+	): mixed {
+		return $this->clone(['routes' => $provider->api()])->dispatch($path);
 	}
 
 	/**

@@ -1,5 +1,6 @@
 <?php
 
+use Kirby\Form\Form;
 
 /**
  * Site Routes
@@ -93,7 +94,8 @@ return [
 		'pattern' => 'site/fields/(:any)/(:all?)',
 		'method'  => 'ALL',
 		'action'  => function (string $fieldName, string|null $path = null) {
-			return $this->fieldApi($this->site(), $fieldName, $path);
+			$field = Form::for($this->site())->field($fieldName);
+			return $this->forward($field, $path);
 		}
 	],
 	// @codeCoverageIgnoreEnd

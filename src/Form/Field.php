@@ -2,6 +2,7 @@
 
 namespace Kirby\Form;
 
+use Kirby\Api\Interface\ProvidesApi;
 use Kirby\Blueprint\Blueprint;
 use Kirby\Cms\HasStringTemplate;
 use Kirby\Cms\Language;
@@ -22,7 +23,7 @@ use TypeError;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  */
-abstract class Field implements Stringable
+abstract class Field implements ProvidesApi, Stringable
 {
 	use HasStringTemplate;
 	use Mixin\Api;

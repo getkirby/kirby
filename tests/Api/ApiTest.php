@@ -3,6 +3,7 @@
 namespace Kirby\Api;
 
 use Exception;
+use Kirby\Api\Interface\ProvidesApi;
 use Kirby\Auth\Auth;
 use Kirby\Cms\App;
 use Kirby\Cms\Response;
@@ -582,80 +583,6 @@ class ApiTest extends TestCase
 		$this->assertTrue($api->debug());
 	}
 
-	public function testFieldApi(): void
-	{
-		$app = $this->app->clone([
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'test',
-						'content' => [
-							'title' => 'Test Title',
-							'cover' => ['a.jpg']
-						],
-						'files' => [
-							['filename' => 'a.jpg'],
-							['filename' => 'b.jpg'],
-						],
-						'blueprint' => [
-							'title'  => 'Test',
-							'name'   => 'test',
-							'fields' => [
-								'cover' => [
-									'type' => 'filepicker',
-								]
-							]
-						]
-					]
-				]
-			]
-		]);
-		$app->impersonate('kirby');
-
-		$page     = $app->page('test');
-		$response = $app->api()->clone([
-			'request' => ['query' => ['items' => 'a.jpg,b.jpg']]
-		])->fieldApi($page, 'cover', 'items');
-
-		$this->assertCount(2, $response);
-		$this->assertSame('a.jpg', $response[0]['filename']);
-		$this->assertSame('b.jpg', $response[1]['filename']);
-	}
-
-	public function testFieldApiInvalidField(): void
-	{
-		$app = $this->app->clone([
-			'site' => [
-				'children' => [
-					['slug' => 'test']
-				]
-			]
-		]);
-
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessageIs('The field could not be found');
-
-		$page = $app->page('test');
-		$app->api()->fieldApi($page, 'nonexists');
-	}
-
-	public function testFieldApiEmptyField(): void
-	{
-		$app = $this->app->clone([
-			'site' => [
-				'children' => [
-					['slug' => 'test']
-				]
-			]
-		]);
-
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessageIs('The field could not be found');
-
-		$page = $app->page('test');
-		$app->api()->fieldApi($page, '');
-	}
-
 	public function testFile(): void
 	{
 		$app = $this->app->clone([
@@ -810,6 +737,36 @@ class ApiTest extends TestCase
 
 		$app->impersonate('admin@getkirby.com');
 		$this->api->file('site', 'protected.jpg');
+	}
+
+	public function testForward(): void
+	{
+		$provider = new class () implements ProvidesApi {
+			public function api(): array
+			{
+				return [
+					[
+						'pattern' => 'test',
+						'method'  => 'POST',
+						'action'  => fn () => [
+							$this->foo(),
+							$this->request()->body()->string('foo')
+						]
+					]
+				];
+			}
+		};
+
+		$api = new Api(
+			data: ['foo' => 'bar'],
+			request: [
+				'method' => 'POST',
+				'body'   => ['foo' => 'baz']
+			]
+		);
+
+		// keeps the data and request
+		$this->assertSame(['bar', 'baz'], $api->forward($provider, 'test'));
 	}
 
 	public function testLanguage(): void
