@@ -89,10 +89,7 @@ export default {
 			// and replace in tags array
 			if (missing.length > 0) {
 				const language = this.$panel.language.code;
-				const loaded = await this.$helper.items(
-					this.$options.endpoint,
-					missing
-				);
+				const loaded = await this.load(missing);
 
 				// a newer request loads the items in the new language
 				if (this.$panel.language.code !== language) {
@@ -112,6 +109,20 @@ export default {
 					}
 				}
 			}
+		},
+		load(ids) {
+			const endpoint = this.field.endpoints?.field;
+
+			// the field's own route applies its blueprint
+			// options, e.g. `image`, `text` and `info`
+			if (endpoint) {
+				return this.$helper.items(
+					this.$panel.urls.api + "/" + endpoint + "/items",
+					ids
+				);
+			}
+
+			return this.$helper.items(this.$options.endpoint, ids);
 		},
 		skeleton(id) {
 			return {

@@ -175,6 +175,11 @@ export default {
 	--tag-color-disabled-back: var(--color-gray-200);
 	--tag-color-disabled-text: var(--color-gray-600);
 }
+/* the tint carries the state, icons need no background of their own */
+.k-tag[data-theme]:not([data-theme="dark"], [data-theme="light"])
+	.k-icon-frame.k-tag-image {
+	background: none;
+}
 
 .k-tag {
 	position: relative;

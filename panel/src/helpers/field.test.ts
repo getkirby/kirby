@@ -188,5 +188,19 @@ describe("$helper.field", () => {
 		it("should return an empty object for empty fields", () => {
 			expect(subfields({ name: "x" }, {})).toEqual({});
 		});
+
+		it("should leave the given fields untouched", () => {
+			const fields = { title: { type: "text" } };
+			const result = subfields(
+				{
+					name: "structure",
+					endpoints: { field: "pages/x/fields/structure", model: "pages/x" }
+				},
+				fields
+			);
+
+			expect(result.title).not.toBe(fields.title);
+			expect(fields.title).toStrictEqual({ type: "text" });
+		});
 	});
 });
