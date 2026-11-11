@@ -27,6 +27,9 @@ export default {
 			type: String,
 			default: "end"
 		},
+		/**
+		 * HTML element to use as container
+		 */
 		element: {
 			type: String,
 			default: "div"
@@ -34,9 +37,13 @@ export default {
 	},
 	data() {
 		return {
+			// content box width from the observer, `null` until it reports one
 			available: null,
+			// whether the fallback is rendered
 			isCollapsed: false,
+			// keeps own renders from starting another calculation
 			isMeasuring: false,
+			// how many items to render, all until measured
 			offset: Infinity,
 			total: 0
 		};
@@ -48,9 +55,15 @@ export default {
 		this.unobserve();
 	},
 	updated() {
+		// new slot content can change the widths
 		this.calculate();
 	},
 	methods: {
+		/**
+		 * Measures the items and renders as many as fit,
+		 * next to the fallback if not all of them do
+		 * @returns {Promise<void>}
+		 */
 		async calculate() {
 			if (this.available === null || this.isMeasuring === true) {
 				return;
@@ -97,6 +110,10 @@ export default {
 		/**
 		 * Counts how many items fit into the space,
 		 * taken from the end opposite to `direction`
+		 * @param {number[]} widths Widths of all items
+		 * @param {number} gap Gap between two items
+		 * @param {number} space Width the items need to fit into
+		 * @returns {number}
 		 */
 		fit(widths, gap, space) {
 			let count = 0;
@@ -113,6 +130,8 @@ export default {
 		/**
 		 * Returns the rendered width of an element incl. its margins,
 		 * an item that shrinks counts with its shrunk width
+		 * @param {Element} element
+		 * @returns {number}
 		 */
 		measure(element) {
 			const style = getComputedStyle(element);
@@ -120,19 +139,29 @@ export default {
 			const right = parseFloat(style.marginRight) || 0;
 			return element.getBoundingClientRect().width + left + right;
 		},
+		/**
+		 * Starts listening to size changes of the element
+		 */
 		observe() {
 			if (this.$el instanceof Element) {
 				this.$panel.observers.resize.observe(this.$el);
 				this.$el.addEventListener("resize", this.onResize);
 			}
 		},
+		/**
+		 * Recalculates when the element gets a new width,
+		 * height changes from own renders don't matter
+		 * @param {CustomEvent} event With the content box `width` and `height` as `detail`
+		 */
 		onResize(event) {
-			// the content box width, height changes from own renders do not matter
 			if (event.detail.width !== this.available) {
 				this.available = event.detail.width;
 				this.calculate();
 			}
 		},
+		/**
+		 * Stops listening to size changes of the element
+		 */
 		unobserve() {
 			if (this.$el instanceof Element) {
 				this.$panel.observers.resize.unobserve(this.$el);
@@ -140,13 +169,11 @@ export default {
 			}
 		},
 		/**
-		 * Calculates total width of `count` items including gaps.
-		 * direction=end: uses first N items
-		 * direction=start: uses last N items
-		 *
-		 * @param {number[]} widths
-		 * @param {number} count
-		 * @param {number} gap
+		 * Sums up the widths of `count` items and the gaps between
+		 * them, taken from the end opposite to `direction`
+		 * @param {number[]} widths Widths of the elements in order
+		 * @param {number} count How many items to include
+		 * @param {number} gap Gap between two items
 		 * @returns {number}
 		 */
 		width(widths, count, gap) {
