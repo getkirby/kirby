@@ -19,6 +19,7 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\F;
 use Kirby\Form\Form;
+use Kirby\Http\Request;
 use Kirby\Http\Response;
 use Kirby\Http\Route;
 use Kirby\Http\Router;
@@ -86,6 +87,12 @@ class Api
 	 * Route definition
 	 */
 	protected array $routes = [];
+
+	/**
+	 * The request of the current API call,
+	 * created from the request data and method
+	 */
+	protected Request|null $request = null;
 
 	/**
 	 * Request data
@@ -471,6 +478,21 @@ class Api
 	}
 
 	/**
+	 * Returns the request of the current API call
+	 * @since 7.0.0
+	 */
+	public function request(): Request
+	{
+		return $this->request ??= new Request([
+			'body'    => $this->requestData['body'],
+			'files'   => $this->requestData['files'],
+			'headers' => $this->requestData['headers'] ?? [],
+			'method'  => $this->requestMethod,
+			'query'   => $this->requestData['query'],
+		]);
+	}
+
+	/**
 	 * Getter for request data
 	 * Can either get all the data
 	 * or certain parts of it.
@@ -814,6 +836,7 @@ class Api
 			'files' => [],
 			...$requestData ?? []
 		];
+		$this->request = null;
 		return $this;
 	}
 
@@ -825,6 +848,7 @@ class Api
 		string|null $requestMethod = null
 	): static {
 		$this->requestMethod = $requestMethod ?? 'GET';
+		$this->request       = null;
 		return $this;
 	}
 

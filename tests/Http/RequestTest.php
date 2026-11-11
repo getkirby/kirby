@@ -251,6 +251,29 @@ class RequestTest extends TestCase
 		$this->assertSame('bar', $headers['X-Foo']);
 	}
 
+	public function testHeadersOption(): void
+	{
+		new App([
+			'server' => [
+				'HTTP_X_FOO' => 'server'
+			]
+		]);
+
+		$request = new Request([
+			'headers' => $headers = [
+				'X-Language' => 'de'
+			]
+		]);
+
+		$this->assertSame($headers, $request->headers());
+		$this->assertSame('de', $request->header('x-language'));
+		$this->assertNull($request->header('x-foo'));
+
+		// an empty option doesn't fall back to the server
+		$request = new Request(['headers' => []]);
+		$this->assertSame([], $request->headers());
+	}
+
 	public function testInt(): void
 	{
 		$request = new Request([

@@ -301,13 +301,17 @@ class Request
 	}
 
 	/**
-	 * Return all headers with polyfill for
-	 * missing getallheaders function
+	 * Returns all headers from the `headers` option
+	 * or with polyfill for missing getallheaders function
 	 *
 	 * @return array<string, mixed>
 	 */
 	public function headers(): array
 	{
+		if (isset($this->options['headers']) === true) {
+			return $this->options['headers'];
+		}
+
 		$headers = [];
 
 		foreach (Environment::getGlobally() as $key => $value) {

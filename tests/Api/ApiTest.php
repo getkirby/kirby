@@ -956,6 +956,58 @@ class ApiTest extends TestCase
 		$this->assertNull($api->parent('something/something'));
 	}
 
+	public function testRequest(): void
+	{
+		$api = new Api([
+			'requestData' => [
+				'query'   => ['q' => 'foo', 'page' => '2'],
+				'body'    => ['title' => 'Title'],
+				'files'   => ['upload' => $file = ['name' => 'a.txt']],
+				'headers' => ['X-Language' => 'de'],
+			],
+			'requestMethod' => 'POST'
+		]);
+
+		$request = $api->request();
+
+		$this->assertSame('foo', $request->query()->string('q'));
+		$this->assertSame(2, $request->query()->int('page'));
+		$this->assertNull($request->query()->string('title'));
+		$this->assertSame('Title', $request->body()->string('title'));
+		$this->assertSame($file, $request->file('upload'));
+		$this->assertSame('de', $request->header('x-language'));
+		$this->assertSame('POST', $request->method());
+		$this->assertSame($request, $api->request());
+	}
+
+	public function testRequestWithoutData(): void
+	{
+		$api = new Api([]);
+
+		// doesn't fall back to the global request
+		$this->assertSame([], $api->request()->query()->toArray());
+		$this->assertSame([], $api->request()->body()->toArray());
+		$this->assertSame([], $api->request()->files()->toArray());
+		$this->assertSame([], $api->request()->headers());
+		$this->assertSame('GET', $api->request()->method());
+	}
+
+	public function testRequestPerCall(): void
+	{
+		$api = new Api([
+			'routes' => [
+				[
+					'pattern' => 'test',
+					'method'  => 'GET|POST',
+					'action'  => fn () => $this->request()->method() . ':' . $this->request()->query()->string('q')
+				]
+			]
+		]);
+
+		$this->assertSame('GET:a', $api->call('test', 'GET', ['query' => ['q' => 'a']]));
+		$this->assertSame('POST:b', $api->call('test', 'POST', ['query' => ['q' => 'b']]));
+	}
+
 	public function testRequestData(): void
 	{
 		$api = new Api([
