@@ -17,24 +17,7 @@
 			</k-lab-table-cell>
 		</k-lab-example>
 
-		<k-lab-example label="Overlow">
-			<k-lab-table-cell>
-				<!-- @code -->
-				<k-tags-field-preview
-					:value="[
-						{
-							text: 'Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-						},
-						{
-							text: 'Bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
-						}
-					]"
-				/>
-				<!-- @code-end -->
-			</k-lab-table-cell>
-		</k-lab-example>
-
-		<k-lab-example label="Many tags">
+		<k-lab-example label="Overflow: many items">
 			<k-lab-table-cell style="max-width: 20rem">
 				<!-- @code -->
 				<k-tags-field-preview
@@ -51,6 +34,23 @@
 						'Sports',
 						'Fashion',
 						'Science'
+					]"
+				/>
+				<!-- @code-end -->
+			</k-lab-table-cell>
+		</k-lab-example>
+
+		<k-lab-example label="Overflow: long text">
+			<k-lab-table-cell style="max-width: 20rem">
+				<!-- @code -->
+				<k-tags-field-preview
+					:value="[
+						{
+							text: 'Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+						},
+						{
+							text: 'Bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+						}
 					]"
 				/>
 				<!-- @code-end -->

@@ -29,8 +29,8 @@
 			</k-lab-table-cell>
 		</k-lab-example>
 
-		<k-lab-example label="Overflow">
-			<k-lab-table-cell>
+		<k-lab-example label="Overflow: many items">
+			<k-lab-table-cell style="max-width: 20rem">
 				<!-- @code -->
 				<k-files-field-preview
 					:value="
@@ -45,20 +45,20 @@
 			</k-lab-table-cell>
 		</k-lab-example>
 
-		<k-lab-example label="Long filename">
-			<k-lab-table-cell>
+		<k-lab-example label="Overflow: long filename">
+			<k-lab-table-cell style="max-width: 20rem">
 				<!-- @code -->
 				<k-files-field-preview
 					:value="[
 						{
 							image: { icon: 'code', back: 'black', color: 'white' },
-							filename: 'test-2.js',
+							filename:
+								'this-is-a-file-with-a-very-long-filename-to-test-how-previews-handle-overflow.js',
 							link: '/'
 						},
 						{
 							image: { icon: 'code', back: 'black', color: 'white' },
-							filename:
-								'this-is-a-file-with-a-very-long-filename-to-test-how-previews-handle-overflow.js',
+							filename: 'test-2.js',
 							link: '/'
 						}
 					]"
