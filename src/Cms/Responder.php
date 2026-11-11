@@ -357,7 +357,8 @@ class Responder implements Stringable
 		$location = Url::to($location ?? '/');
 
 		if ($inherit === true) {
-			$location = (new Uri($location))->inherit(Uri::current())->toString();
+			$current  = App::instance()->request()->url();
+			$location = (new Uri($location))->inherit($current)->toString();
 		}
 
 		$location = Url::unIdn($location);

@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
-use Kirby\Http\Uri;
 use Kirby\TestCase;
 
 class LanguageRouterTest extends TestCase
@@ -32,7 +31,6 @@ class LanguageRouterTest extends TestCase
 	{
 		Dir::remove(static::TMP);
 		App::destroy();
-		Uri::$current = null;
 	}
 
 	public function testRouteForSingleLanguage(): void
@@ -228,9 +226,8 @@ class LanguageRouterTest extends TestCase
 
 	public function testUUIDRouteWithQueryAndParams(): void
 	{
-		Uri::$current = new Uri('https://getkirby.com/en/@/page/notes/tag:foo?bar=baz');
-
 		$app = $this->app->clone([
+			'request' => ['url' => 'https://getkirby.com/en/@/page/notes/tag:foo?bar=baz'],
 			'site'    => [
 				'children' => [
 					[

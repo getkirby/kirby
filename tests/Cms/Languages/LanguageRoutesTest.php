@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Http\Uri;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -34,11 +33,6 @@ class LanguageRoutesTest extends TestCase
 		]);
 	}
 
-	protected function tearDown(): void
-	{
-		Uri::$current = null;
-	}
-
 	public function testFallback(): void
 	{
 		$app = $this->app->clone([
@@ -61,10 +55,9 @@ class LanguageRoutesTest extends TestCase
 
 	public function testFallbackRedirect(): void
 	{
-		Uri::$current = new Uri('https://getkirby.com/notes/tag:foo?bar=baz');
-
 		$app = $this->app->clone([
 			'languages' => [['url' => '/en']],
+			'request'   => ['url' => 'https://getkirby.com/notes/tag:foo?bar=baz'],
 			'site'      => ['children' => [['slug' => 'notes']]],
 			'urls'      => ['index' => 'https://getkirby.com']
 		]);
@@ -80,11 +73,10 @@ class LanguageRoutesTest extends TestCase
 
 	public function testFallbackRedirectWithDetection(): void
 	{
-		Uri::$current = new Uri('https://getkirby.com/notes/tag:foo?bar=baz');
-
 		$app = $this->app->clone([
 			'languages' => [['url' => '/en']],
 			'options'   => ['languages.detect' => true],
+			'request'   => ['url' => 'https://getkirby.com/notes/tag:foo?bar=baz'],
 			'site'      => [
 				'children' => [
 					[
@@ -120,11 +112,10 @@ class LanguageRoutesTest extends TestCase
 	#[DataProvider('homeRedirectProvider')]
 	public function testHomeRedirect(bool $detect, string $expected): void
 	{
-		Uri::$current = new Uri('https://getkirby.com/tag:foo?bar=baz');
-
 		$app = $this->app->clone([
 			'languages' => [['url' => '/en']],
 			'options'   => ['languages.detect' => $detect],
+			'request'   => ['url' => 'https://getkirby.com/tag:foo?bar=baz'],
 			'urls'      => ['index' => 'https://getkirby.com']
 		]);
 
@@ -137,14 +128,13 @@ class LanguageRoutesTest extends TestCase
 
 	public function testHomeRedirectWithoutMatchingBaseUrl(): void
 	{
-		Uri::$current = new Uri('https://getkirby.com/tag:foo?bar=baz');
-
 		$app = $this->app->clone([
 			'languages' => [
 				['url' => 'https://en.getkirby.com'],
 				['url' => 'https://de.getkirby.com']
 			],
-			'urls' => ['index' => 'https://getkirby.com']
+			'request' => ['url' => 'https://getkirby.com/tag:foo?bar=baz'],
+			'urls'    => ['index' => 'https://getkirby.com']
 		]);
 
 		$response = $app->call('');

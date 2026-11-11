@@ -6,19 +6,12 @@ use InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
 use Kirby\Http\Response;
-use Kirby\Http\Uri;
 use Kirby\Toolkit\I18n;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 class RouterTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.Router';
-
-	protected function tearDown(): void
-	{
-		parent::tearDown();
-		Uri::$current = null;
-	}
 
 	public function testHomeRoute(): void
 	{
@@ -52,11 +45,10 @@ class RouterTest extends TestCase
 
 	public function testHomeFolderRouteWithQueryAndParams(): void
 	{
-		Uri::$current = new Uri('https://getkirby.com/home/tag:foo?bar=baz');
-
 		$app = $this->app->clone([
-			'site' => ['children' => [['slug' => 'home']]],
-			'urls' => ['index' => 'https://getkirby.com']
+			'request' => ['url' => 'https://getkirby.com/home/tag:foo?bar=baz'],
+			'site'    => ['children' => [['slug' => 'home']]],
+			'urls'    => ['index' => 'https://getkirby.com']
 		]);
 
 		$response = $app->call('home');
@@ -66,9 +58,10 @@ class RouterTest extends TestCase
 		);
 
 		// params must not turn into a host with a relative index URL
-		Uri::$current = new Uri('https://getkirby.com/home/evil.com:443');
-
-		$app = $app->clone(['urls' => ['index' => '/']]);
+		$app = $app->clone([
+			'request' => ['url' => 'https://getkirby.com/home/evil.com:443'],
+			'urls'    => ['index' => '/']
+		]);
 
 		$response = $app->call('home');
 		$this->assertSame('/evil.com:443/', $response->header('Location'));
@@ -266,9 +259,8 @@ class RouterTest extends TestCase
 
 	public function testUUIDRouteWithQueryAndParams(): void
 	{
-		Uri::$current = new Uri('https://getkirby.com/@/page/notes/tag:foo?bar=baz');
-
 		$app = $this->app->clone([
+			'request' => ['url' => 'https://getkirby.com/@/page/notes/tag:foo?bar=baz'],
 			'site'    => [
 				'children' => [
 					[

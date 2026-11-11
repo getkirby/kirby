@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Http\Uri;
+
 /**
  * Custom response object with an optimized
  * redirect method to build correct Urls
@@ -26,6 +28,13 @@ class Response extends \Kirby\Http\Response
 		int $code = 302,
 		bool $inherit = false
 	): static {
-		return parent::redirect(Url::to($location), $code, $inherit);
+		$location = Url::to($location);
+
+		if ($inherit === true) {
+			$current  = App::instance()->request()->url();
+			$location = (new Uri($location))->inherit($current)->toString();
+		}
+
+		return parent::redirect($location, $code);
 	}
 }
