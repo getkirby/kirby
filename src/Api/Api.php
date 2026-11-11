@@ -377,8 +377,8 @@ class Api
 	public function language(): string|null
 	{
 		return
-			$this->requestQuery('language') ??
-			$this->requestHeaders('x-language');
+			$this->request()->query()->string('language') ??
+			$this->request()->header('x-language');
 	}
 
 	/**
@@ -758,20 +758,20 @@ class Api
 	 */
 	public function searchPages(string|null $parent = null): Pages
 	{
-		$status = $this->requestQuery('status');
-		$method = $this->requestMethod();
+		$status = $this->request()->query()->string('status');
+		$method = $this->request()->method();
 		$pages  = $this->pages($parent, $status);
 
 		if ($method === 'GET') {
-			$query = $this->requestQuery('q');
+			$query = $this->request()->query()->string('q');
 			return $pages->search($query);
 		}
 
 		return $pages->query(array_filter([
-			'limit'    => $this->requestBody('limit'),
-			'offset'   => $this->requestBody('offset'),
-			'paginate' => $this->requestBody('paginate'),
-			'search'   => $this->requestBody('search'),
+			'limit'    => $this->request()->body()->int('limit'),
+			'offset'   => $this->request()->body()->int('offset'),
+			'paginate' => $this->request()->body()->get('paginate'),
+			'search'   => $this->request()->body()->get('search'),
 		], fn ($value) => $value !== null));
 	}
 

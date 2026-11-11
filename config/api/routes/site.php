@@ -16,21 +16,21 @@ return [
 		'pattern' => 'site',
 		'method'  => 'PATCH',
 		'action'  => function () {
-			return $this->site()->update($this->requestBody(), $this->language(), true);
+			return $this->site()->update($this->request()->body()->toArray(), $this->language(), true);
 		}
 	],
 	[
 		'pattern' => 'site/children',
 		'method'  => 'GET',
 		'action'  => function () {
-			return $this->pages(null, $this->requestQuery('status'));
+			return $this->pages(null, $this->request()->query()->string('status'));
 		}
 	],
 	[
 		'pattern' => 'site/children',
 		'method'  => 'POST',
 		'action'  => function () {
-			return $this->site()->createChild($this->requestBody());
+			return $this->site()->createChild($this->request()->body()->toArray());
 		}
 	],
 	[
@@ -51,21 +51,21 @@ return [
 		'pattern' => 'site/blueprints',
 		'method'  => 'GET',
 		'action'  => function () {
-			return $this->site()->blueprints($this->requestQuery('field'));
+			return $this->site()->blueprints($this->request()->query()->string('field'));
 		}
 	],
 	[
 		'pattern' => 'site/find',
 		'method'  => 'POST',
 		'action'  => function () {
-			return $this->site()->find(false, ...$this->requestBody())->filter('isAccessible', true);
+			return $this->site()->find(false, ...$this->request()->body()->toArray())->filter('isAccessible', true);
 		}
 	],
 	[
 		'pattern' => 'site/title',
 		'method'  => 'PATCH',
 		'action'  => function () {
-			return $this->site()->changeTitle($this->requestBody('title'));
+			return $this->site()->changeTitle($this->request()->body()->string('title', ''));
 		}
 	],
 	[
@@ -77,15 +77,15 @@ return [
 				->index(true)
 				->filter('isListable', true);
 
-			if ($this->requestMethod() === 'GET') {
-				return $pages->search($this->requestQuery('q'));
+			if ($this->request()->method() === 'GET') {
+				return $pages->search($this->request()->query()->string('q'));
 			}
 
 			return $pages->query(array_filter([
-				'limit'    => $this->requestBody('limit'),
-				'offset'   => $this->requestBody('offset'),
-				'paginate' => $this->requestBody('paginate'),
-				'search'   => $this->requestBody('search'),
+				'limit'    => $this->request()->body()->int('limit'),
+				'offset'   => $this->request()->body()->int('offset'),
+				'paginate' => $this->request()->body()->get('paginate'),
+				'search'   => $this->request()->body()->get('search'),
 			], fn ($value) => $value !== null));
 		}
 	],

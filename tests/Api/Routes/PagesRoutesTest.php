@@ -5,6 +5,7 @@ namespace Kirby\Api;
 use Kirby\Cms\App;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class PagesRoutesTest extends TestCase
 {
@@ -413,5 +414,43 @@ class PagesRoutesTest extends TestCase
 		$this->assertCount(2, $response['data']);
 		$this->assertSame('a.jpg', $response['data'][0]['filename']);
 		$this->assertSame('b.jpg', $response['data'][1]['filename']);
+	}
+
+	public static function malformedInputProvider(): array
+	{
+		return [
+			'title'        => ['pages/a/title', 'PATCH', ['title' => []], 400],
+			'slug'         => ['pages/a/slug', 'PATCH', ['slug' => []], 400],
+			'status'       => ['pages/a/status', 'PATCH', ['status' => [], 'position' => []], 400],
+			'position'     => ['pages/a/status', 'PATCH', ['status' => 'listed', 'position' => 'abc'], 200],
+			'template'     => ['pages/a/template', 'PATCH', ['template' => []], 403],
+			'delete'       => ['pages/a', 'DELETE', ['force' => []], 200],
+			'search'       => ['pages/a/children/search', 'POST', ['limit' => [], 'offset' => 'abc'], 200],
+			'files search' => ['pages/a/files/search', 'POST', ['limit' => 'abc', 'offset' => []], 200],
+			'file name'    => ['pages/a/files/f.jpg/name', 'PATCH', ['name' => []], 400],
+			'files sort'   => ['pages/a/files/sort', 'PATCH', ['files' => 'x', 'index' => []], 200],
+		];
+	}
+
+	#[DataProvider('malformedInputProvider')]
+	public function testMalformedInput(string $path, string $method, array $body, int $code): void
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'a',
+						'files' => [
+							['filename' => 'f.jpg']
+						]
+					]
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$response = $app->api()->render($path, $method, ['body' => $body]);
+		$this->assertSame($code, $response->code());
 	}
 }

@@ -32,7 +32,7 @@ return [
 		'action'  => function () {
 			$this->validateAreaAccess('system');
 
-			return $this->kirby()->system()->register($this->requestBody('license'), $this->requestBody('email'));
+			return $this->kirby()->system()->register($this->request()->body()->string('license'), $this->request()->body()->string('email'));
 		}
 	],
 	[
@@ -67,8 +67,8 @@ return [
 			}
 
 			// create the first user
-			$user  = $this->users()->create($this->requestBody());
-			$token = $user->login($this->requestBody('password'));
+			$user  = $this->users()->create($this->request()->body()->toArray());
+			$token = $user->login($this->request()->body()->string('password', ''));
 
 			return [
 				'status' => 'ok',

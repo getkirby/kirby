@@ -10,6 +10,7 @@ use Kirby\Filesystem\Dir;
 use Kirby\Form\Field;
 use Kirby\Form\Field\InputField;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class UsersRoutesTest extends TestCase
 {
@@ -203,7 +204,7 @@ class UsersRoutesTest extends TestCase
 
 	public function testChangeEmail(): void
 	{
-		$response = $this->app->api()->call('users/admin@getkirby.com/email', 'PATCH', [
+		$response = $this->app->api()->call('users/editor@getkirby.com/email', 'PATCH', [
 			'body' => [
 				'email' => 'admin@getkirby.de'
 			]
@@ -215,7 +216,7 @@ class UsersRoutesTest extends TestCase
 
 	public function testChangeLanguage(): void
 	{
-		$response = $this->app->api()->call('users/admin@getkirby.com/language', 'PATCH', [
+		$response = $this->app->api()->call('users/editor@getkirby.com/language', 'PATCH', [
 			'body' => [
 				'language' => 'de'
 			]
@@ -227,7 +228,7 @@ class UsersRoutesTest extends TestCase
 
 	public function testChangeName(): void
 	{
-		$response = $this->app->api()->call('users/admin@getkirby.com/name', 'PATCH', [
+		$response = $this->app->api()->call('users/editor@getkirby.com/name', 'PATCH', [
 			'body' => [
 				'name' => 'Test user'
 			]
@@ -478,6 +479,28 @@ class UsersRoutesTest extends TestCase
 		$this->expectExceptionMessageIs('The user "restricted@getkirby.com" cannot be found');
 
 		$app->api()->call('users/restricted@getkirby.com');
+	}
+
+	public static function malformedInputProvider(): array
+	{
+		return [
+			'search'   => ['users/search', 'POST', ['limit' => [], 'offset' => 'abc'], 200],
+			'email'    => ['users/editor@getkirby.com/email', 'PATCH', ['email' => []], 400],
+			'language' => ['users/editor@getkirby.com/language', 'PATCH', ['language' => []], 400],
+			'name'     => ['users/editor@getkirby.com/name', 'PATCH', ['name' => []], 200],
+			'role'     => ['users/editor@getkirby.com/role', 'PATCH', ['role' => []], 400],
+			'password' => ['users/editor@getkirby.com/password', 'PATCH', ['password' => [], 'currentPassword' => []], 400],
+		];
+	}
+
+	#[DataProvider('malformedInputProvider')]
+	public function testMalformedInput(string $path, string $method, array $body, int $code): void
+	{
+		$app = $this->app;
+		$app->impersonate('admin@getkirby.com');
+
+		$response = $app->api()->render($path, $method, ['body' => $body]);
+		$this->assertSame($code, $response->code());
 	}
 
 	public function testRoles(): void

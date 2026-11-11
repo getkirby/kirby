@@ -15,7 +15,7 @@ return [
 		'pattern' => 'languages',
 		'method'  => 'POST',
 		'action'  => function () {
-			return $this->kirby()->languages()->create($this->requestBody());
+			return $this->kirby()->languages()->create($this->request()->body()->toArray());
 		}
 	],
 	[
@@ -29,7 +29,7 @@ return [
 		'pattern' => 'languages/(:any)',
 		'method'  => 'PATCH',
 		'action'  => function (string $code) {
-			return $this->kirby()->languages()->find($code)?->update($this->requestBody());
+			return $this->kirby()->languages()->find($code)?->update($this->request()->body()->toArray());
 		}
 	],
 	[

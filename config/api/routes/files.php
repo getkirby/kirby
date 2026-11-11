@@ -39,10 +39,10 @@ return [
 				callback: function ($source, $filename) use ($parent) {
 					return $parent->createFile([
 						'content' => [
-							'sort' => $this->requestBody('sort')
+							'sort' => $this->request()->body()->int('sort')
 						],
 						'source'   => $source,
-						'template' => $this->requestBody('template'),
+						'template' => $this->request()->body()->string('template'),
 						'filename' => $filename
 					], move: true);
 				},
@@ -69,15 +69,15 @@ return [
 		'action'  => function (string $path) {
 			$files = $this->files($path);
 
-			if ($this->requestMethod() === 'GET') {
-				return $files->search($this->requestQuery('q'));
+			if ($this->request()->method() === 'GET') {
+				return $files->search($this->request()->query()->string('q'));
 			}
 
 			return $files->query(array_filter([
-				'limit'    => $this->requestBody('limit'),
-				'offset'   => $this->requestBody('offset'),
-				'paginate' => $this->requestBody('paginate'),
-				'search'   => $this->requestBody('search'),
+				'limit'    => $this->request()->body()->int('limit'),
+				'offset'   => $this->request()->body()->int('offset'),
+				'paginate' => $this->request()->body()->get('paginate'),
+				'search'   => $this->request()->body()->get('search'),
 			], fn ($value) => $value !== null));
 		}
 	],
@@ -92,15 +92,15 @@ return [
 				->files()
 				->filter('isListable', true);
 
-			if ($this->requestMethod() === 'GET') {
-				return $files->search($this->requestQuery('q'));
+			if ($this->request()->method() === 'GET') {
+				return $files->search($this->request()->query()->string('q'));
 			}
 
 			return $files->query(array_filter([
-				'limit'    => $this->requestBody('limit'),
-				'offset'   => $this->requestBody('offset'),
-				'paginate' => $this->requestBody('paginate'),
-				'search'   => $this->requestBody('search'),
+				'limit'    => $this->request()->body()->int('limit'),
+				'offset'   => $this->request()->body()->int('offset'),
+				'paginate' => $this->request()->body()->get('paginate'),
+				'search'   => $this->request()->body()->get('search'),
 			], fn ($value) => $value !== null));
 		}
 	],
@@ -109,8 +109,8 @@ return [
 		'method'  => 'PATCH',
 		'action'  => function (string $path) {
 			return $this->files($path)->changeSort(
-				$this->requestBody('files'),
-				$this->requestBody('index')
+				$this->request()->body()->array('files', []),
+				$this->request()->body()->int('index', 0)
 			);
 		}
 	],
@@ -126,7 +126,7 @@ return [
 		'method'  => 'PATCH',
 		'action'  => function (string $path, string $filename) {
 			return $this->file($path, $filename)->update(
-				$this->requestBody(),
+				$this->request()->body()->toArray(),
 				$this->language(),
 				true
 			);
@@ -161,7 +161,7 @@ return [
 		'pattern' => $filePattern . '/name',
 		'method'  => 'PATCH',
 		'action'  => function (string $path, string $filename) {
-			return $this->file($path, $filename)->changeName($this->requestBody('name'));
+			return $this->file($path, $filename)->changeName($this->request()->body()->string('name', ''));
 		}
 	],
 ];

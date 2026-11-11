@@ -5,6 +5,7 @@ namespace Kirby\Api;
 use Kirby\Cms\App;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class SiteRoutesTest extends TestCase
 {
@@ -360,6 +361,23 @@ class SiteRoutesTest extends TestCase
 		$this->assertSame('a', $result['data'][0]['id']);
 		$this->assertSame('a/aa', $result['data'][1]['id']);
 		$this->assertSame('b', $result['data'][2]['id']);
+	}
+
+	public static function malformedInputProvider(): array
+	{
+		return [
+			'title'  => ['site/title', 'PATCH', ['title' => []], 400],
+			'search' => ['site/search', 'POST', ['limit' => [], 'offset' => 'abc'], 200],
+		];
+	}
+
+	#[DataProvider('malformedInputProvider')]
+	public function testMalformedInput(string $path, string $method, array $body, int $code): void
+	{
+		$app = $this->app;
+
+		$response = $app->api()->render($path, $method, ['body' => $body]);
+		$this->assertSame($code, $response->code());
 	}
 
 	public function testSearchWithGetRequest(): void
