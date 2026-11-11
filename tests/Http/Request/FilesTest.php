@@ -30,6 +30,9 @@ class FilesTest extends TestCase
 		$this->assertSame('/tmp/b', $files->get('upload')[1]['tmp_name']);
 		$this->assertSame(456, $files->get('upload')[1]['size']);
 		$this->assertSame(0, $files->get('upload')[1]['error']);
+
+		// already normalized uploads are kept as they are
+		$this->assertSame($files->toArray(), new Files($files->toArray())->toArray());
 	}
 
 	public function testData(): void
