@@ -848,6 +848,7 @@ describe("panel.upload", () => {
 			await upload.upload(file, {});
 
 			expect(file.completed).toStrictEqual(false);
+			expect(file.error).toStrictEqual("Not allowed");
 			expect(file.progress).toStrictEqual(0);
 			expect(onError).toHaveBeenCalledWith(file);
 		});
