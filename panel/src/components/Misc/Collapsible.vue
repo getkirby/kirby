@@ -34,6 +34,7 @@ export default {
 	},
 	data() {
 		return {
+			available: null,
 			isCollapsed: false,
 			isUpdating: false,
 			offset: Infinity,
@@ -58,17 +59,13 @@ export default {
 	},
 	methods: {
 		async calculate() {
-			if (
-				this.isUpdating ||
-				!(this.$el instanceof Element) ||
-				!this.$slots.default
-			) {
+			if (this.isUpdating || this.available === null || !this.$slots.default) {
 				return;
 			}
 
 			this.isUpdating = true;
 
-			const available = this.$el.getBoundingClientRect().width;
+			const available = this.available;
 
 			// First: try fitting all items without fallback
 			this.isCollapsed = false;
@@ -164,11 +161,12 @@ export default {
 			if (this.$el instanceof Element) {
 				this.$panel.observers.resize.observe(this.$el);
 				this.$el.addEventListener("resize", this.onResize);
-				this.calculate();
 			}
 		},
-		onResize() {
-			if (this.isUpdating === false) {
+		onResize(event) {
+			// the content box width, height changes from own renders do not matter
+			if (event.detail.width !== this.available) {
+				this.available = event.detail.width;
 				this.calculate();
 			}
 		},

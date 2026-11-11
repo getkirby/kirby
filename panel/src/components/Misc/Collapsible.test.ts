@@ -24,10 +24,7 @@ async function flush(vm: {
  * Fakes the widths happy-dom cannot measure:
  * items 30px (wide ones 50px), fallback 20px, gap 0
  */
-function layout(wrapper: VueWrapper, container: number) {
-	wrapper.element.getBoundingClientRect = () =>
-		({ width: container }) as DOMRect;
-
+function layout(wrapper: VueWrapper) {
 	const measure = vi
 		.spyOn(wrapper.vm as unknown as { measure(el: Element): number }, "measure")
 		.mockImplementation((el: Element) => {
@@ -51,6 +48,16 @@ function layout(wrapper: VueWrapper, container: number) {
 		measure.mockRestore();
 		gcs.mockRestore();
 	});
+}
+
+/**
+ * Reports a new content box width like `$panel.observers.resize`
+ */
+async function resize(wrapper: VueWrapper, width: number) {
+	wrapper.element.dispatchEvent(
+		new CustomEvent("resize", { detail: { width } })
+	);
+	await flush(wrapper.vm as unknown as Parameters<typeof flush>[0]);
 }
 
 /**
@@ -116,9 +123,8 @@ describe("k-collapsible", () => {
 
 		it("fits the first items next to the fallback by default (end)", async () => {
 			const wrapper = collapse();
-			await flush(wrapper.vm);
-			layout(wrapper, 80);
-			await wrapper.vm.calculate();
+			layout(wrapper);
+			await resize(wrapper, 80);
 
 			// 50 + 20 fits, 50 + 30 + 20 doesn't
 			expect(wrapper.find(".f").text()).toBe("1/3");
@@ -126,9 +132,8 @@ describe("k-collapsible", () => {
 
 		it("fits the last items next to the fallback when direction=start", async () => {
 			const wrapper = collapse({ direction: "start" });
-			await flush(wrapper.vm);
-			layout(wrapper, 80);
-			await wrapper.vm.calculate();
+			layout(wrapper);
+			await resize(wrapper, 80);
 
 			// 30 + 30 + 20 fits, 50 + 30 + 30 + 20 doesn't
 			expect(wrapper.find(".f").text()).toBe("2/3");
@@ -157,8 +162,14 @@ describe("k-collapsible", () => {
 
 	// methods
 	describe("calculate()", () => {
+		it("waits for the width from the observer", async () => {
+			const wrapper = collapse();
+			await wrapper.vm.calculate();
+			expect(wrapper.vm.isCollapsed).toBe(false);
+			expect(wrapper.vm.offset).toBe(Infinity);
+		});
+
 		it("collapses when items overflow and a fallback exists", async () => {
-			// jsdom reports width=0 for every element, so any item overflows
 			const wrapper = vueMount(Collapsible, {
 				global: { mocks: { $panel: { observers: createObservers() } } },
 				slots: {
@@ -167,7 +178,7 @@ describe("k-collapsible", () => {
 					fallback: '<span class="f">F</span>'
 				}
 			});
-			await flush(wrapper.vm);
+			await resize(wrapper, 0);
 			expect(wrapper.vm.isCollapsed).toBe(true);
 			expect(wrapper.vm.total).toBe(3);
 		});
@@ -179,7 +190,7 @@ describe("k-collapsible", () => {
 					default: '<span class="i">A</span><span class="i">B</span>'
 				}
 			});
-			await flush(wrapper.vm);
+			await resize(wrapper, 0);
 			expect(wrapper.vm.isCollapsed).toBe(false);
 			expect(wrapper.vm.total).toBe(2);
 		});
@@ -202,11 +213,10 @@ describe("k-collapsible", () => {
 			);
 
 			const collapsible = wrapper.findComponent(Collapsible);
-			await flush(collapsible.vm);
-			layout(collapsible, 80);
+			layout(collapsible);
 
 			// 2 items × 30 = 60 ≤ 80 → fits
-			await collapsible.vm.calculate();
+			await resize(collapsible, 80);
 			expect(collapsible.vm.isCollapsed).toBe(false);
 			expect(collapsible.vm.offset).toBe(2);
 
@@ -221,9 +231,8 @@ describe("k-collapsible", () => {
 
 		it("shows as many items as fit next to the fallback", async () => {
 			const wrapper = collapse({}, ["i", "i", "i"]);
-			await flush(wrapper.vm);
-			layout(wrapper, 70);
-			await wrapper.vm.calculate();
+			layout(wrapper);
+			await resize(wrapper, 70);
 
 			// 30 + 20 fits, 30 + 30 + 20 doesn't
 			expect(wrapper.find(".f").text()).toBe("1/3");
@@ -237,12 +246,11 @@ describe("k-collapsible", () => {
 					fallback: '<span class="f">F</span>'
 				}
 			});
-			await flush(wrapper.vm);
-			// initially collapsed because jsdom has no layout
+			await resize(wrapper, 0);
 			expect(wrapper.vm.isCollapsed).toBe(true);
 
-			layout(wrapper, 200);
-			await wrapper.vm.calculate();
+			layout(wrapper);
+			await resize(wrapper, 200);
 
 			expect(wrapper.vm.isCollapsed).toBe(false);
 			expect(wrapper.vm.offset).toBe(2);
@@ -299,18 +307,19 @@ describe("k-collapsible", () => {
 	});
 
 	describe("onResize()", () => {
-		it("recalculates when the element fires a resize event", () => {
+		it("recalculates with the new width", async () => {
 			const wrapper = mount();
 			const calculate = vi.spyOn(wrapper.vm, "calculate");
-			wrapper.element.dispatchEvent(new Event("resize"));
+			await resize(wrapper, 80);
 			expect(calculate).toHaveBeenCalledOnce();
+			expect(wrapper.vm.available).toBe(80);
 		});
 
-		it("skips recalculation when already updating", () => {
+		it("ignores a resize that keeps the width", async () => {
 			const wrapper = mount();
-			wrapper.vm.isUpdating = true;
+			await resize(wrapper, 80);
 			const calculate = vi.spyOn(wrapper.vm, "calculate");
-			wrapper.element.dispatchEvent(new Event("resize"));
+			await resize(wrapper, 80);
 			expect(calculate).not.toHaveBeenCalled();
 		});
 	});
@@ -333,7 +342,7 @@ describe("k-collapsible", () => {
 			// after unmount the vm is still accessible;
 			// spy on calculate and dispatch
 			const calculate = vi.spyOn(wrapper.vm, "calculate");
-			el.dispatchEvent(new Event("resize"));
+			el.dispatchEvent(new CustomEvent("resize", { detail: { width: 80 } }));
 			expect(calculate).not.toHaveBeenCalled();
 		});
 	});
@@ -402,9 +411,9 @@ describe("k-collapsible", () => {
 						)
 				}
 			});
-			await flush(wrapper.vm);
+			await resize(wrapper, 0);
 
-			// happy-dom has no layout, so none of the 3 items fits
+			// none of the 3 items fits into no space
 			expect(wrapper.find(".info").text()).toBe("0/3");
 		});
 	});
@@ -418,10 +427,8 @@ describe("k-collapsible", () => {
 					fallback: '<span class="f">F</span>'
 				}
 			});
-			await flush(wrapper.vm);
-			layout(wrapper, 200);
-			wrapper.element.dispatchEvent(new Event("resize"));
-			await flush(wrapper.vm);
+			layout(wrapper);
+			await resize(wrapper, 200);
 
 			expect(wrapper.find(".a").exists()).toBe(true);
 			expect(wrapper.find(".f").exists()).toBe(false);
