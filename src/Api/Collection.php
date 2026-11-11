@@ -109,31 +109,34 @@ class Collection
 	 */
 	public function toResponse(): array
 	{
-		$query = $this->api->requestQuery('query');
+		$query = $this->api->request()->query();
 
-		if (is_array($query) === true) {
+		if ($query->array('query') !== null) {
 			$this->data = $this->data->query(array_filter([
-				'limit'    => $query['limit'] ?? null,
-				'offset'   => $query['offset'] ?? null,
-				'paginate' => $query['paginate'] ?? null,
-				'search'   => $query['search'] ?? null,
+				'limit'    => $query->int('query.limit'),
+				'offset'   => $query->int('query.offset'),
+				'paginate' => $query->get('query.paginate'),
+				'search'   => $query->get('query.search'),
 			], fn ($value) => $value !== null));
 		}
 
-		if (!$this->data->pagination()) {
+		if ($this->data->pagination() === null) {
+			$limit = $query->int('limit', 100);
+
 			$this->data = $this->data->paginate([
-				'page'  => $this->api->requestQuery('page', 1),
-				'limit' => $this->api->requestQuery('limit', 100)
+				'page'  => $query->int('page', 1),
+				// limits below 1 fall back to the default as well
+				'limit' => $limit > 0 ? $limit : 100
 			]);
 		}
 
 		$pagination = $this->data->pagination();
 
-		if ($select = $this->api->requestQuery('select')) {
+		if ($select = $query->get('select')) {
 			$this->select($select);
 		}
 
-		if ($view = $this->api->requestQuery('view')) {
+		if ($view = $query->string('view')) {
 			$this->view($view);
 		}
 
