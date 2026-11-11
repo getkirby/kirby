@@ -191,6 +191,36 @@ class SiteRoutesTest extends TestCase
 		$this->assertSame('a.jpg', $response['data'][1]['filename']);
 	}
 
+	public function testFilesSearch(): void
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'files' => [
+					['filename' => 'site-photo.jpg']
+				],
+				'children' => [
+					[
+						'slug'  => 'a',
+						'files' => [
+							['filename' => 'page-photo.jpg'],
+							['filename' => 'document.pdf']
+						]
+					]
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		// searches the files of all pages
+		$response = $app->api()->call('files/search', 'GET', [
+			'query' => ['q' => 'photo']
+		]);
+
+		$this->assertCount(1, $response['data']);
+		$this->assertSame('page-photo.jpg', $response['data'][0]['filename']);
+	}
+
 	public function testFile(): void
 	{
 		$app = $this->app->clone([

@@ -82,6 +82,29 @@ return [
 		}
 	],
 	[
+		'pattern' => 'files/search',
+		'method'  => 'GET|POST',
+		'action'  => function () {
+			$files = $this
+				->site()
+				->index(true)
+				->filter('isListable', true)
+				->files()
+				->filter('isListable', true);
+
+			if ($this->requestMethod() === 'GET') {
+				return $files->search($this->requestQuery('q'));
+			}
+
+			return $files->query(array_filter([
+				'limit'    => $this->requestBody('limit'),
+				'offset'   => $this->requestBody('offset'),
+				'paginate' => $this->requestBody('paginate'),
+				'search'   => $this->requestBody('search'),
+			], fn ($value) => $value !== null));
+		}
+	],
+	[
 		'pattern' => $parentPattern . '/sort',
 		'method'  => 'PATCH',
 		'action'  => function (string $path) {
@@ -139,29 +162,6 @@ return [
 		'method'  => 'PATCH',
 		'action'  => function (string $path, string $filename) {
 			return $this->file($path, $filename)->changeName($this->requestBody('name'));
-		}
-	],
-	[
-		'pattern' => $parentPattern . '/search',
-		'method'  => 'GET|POST',
-		'action'  => function () {
-			$files = $this
-				->site()
-				->index(true)
-				->filter('isListable', true)
-				->files()
-				->filter('isListable', true);
-
-			if ($this->requestMethod() === 'GET') {
-				return $files->search($this->requestQuery('q'));
-			}
-
-			return $files->query(array_filter([
-				'limit'    => $this->requestBody('limit'),
-				'offset'   => $this->requestBody('offset'),
-				'paginate' => $this->requestBody('paginate'),
-				'search'   => $this->requestBody('search'),
-			], fn ($value) => $value !== null));
 		}
 	],
 ];
