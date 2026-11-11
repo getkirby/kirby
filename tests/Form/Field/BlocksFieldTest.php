@@ -39,11 +39,11 @@ class BlocksFieldTest extends TestCase
 	{
 		$field    = $this->field('blocks');
 		$api      = $field->api()[1];
-		$response = $api['action']->call(new Api(['request' => [
+		$response = $api['action']->call(new Api(request: [
 			'query' => [
 				'html' => '<p>Test</p>'
 			]
-		]]));
+		]));
 
 		$this->assertCount(1, $response);
 		$this->assertSame(['text' => '<p>Test</p>'], $response[0]['content']);
@@ -55,11 +55,11 @@ class BlocksFieldTest extends TestCase
 	{
 		$field    = $this->field('blocks', ['fieldsets' => ['heading']]);
 		$api      = $field->api()[1];
-		$response = $api['action']->call(new Api(['request' => [
+		$response = $api['action']->call(new Api(request: [
 			'query' => [
 				'html' => '<h1>Hello World</h1><p>Test</p><h6>Sincerely</h6>'
 			]
-		]]));
+		]));
 
 		$this->assertCount(2, $response);
 		$this->assertSame(['level' => 'h1', 'text' => 'Hello World'], $response[0]['content']);

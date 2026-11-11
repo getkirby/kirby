@@ -42,28 +42,11 @@ use Throwable;
 class Api
 {
 	/**
-	 * Authentication callback
-	 */
-	protected Closure|null $authentication = null;
-
-	/**
-	 * Debugging flag
-	 */
-	protected bool $debug = false;
-
-	/**
 	 * Collection definitions
 	 *
 	 * @var array<string, array>
 	 */
-	protected array $collections = [];
-
-	/**
-	 * Injected data/dependencies
-	 *
-	 * @var array<string, mixed>
-	 */
-	protected array $data = [];
+	protected array $collections;
 	protected App $kirby;
 
 	/**
@@ -71,22 +54,7 @@ class Api
 	 *
 	 * @var array<string, array>
 	 */
-	protected array $models = [];
-
-	/**
-	 * The current route
-	 */
-	protected Route|null $route = null;
-
-	/**
-	 * The Router instance
-	 */
-	protected Router|null $router = null;
-
-	/**
-	 * Route definition
-	 */
-	protected array $routes = [];
+	protected array $models;
 
 	/**
 	 * The request of the current API call
@@ -94,26 +62,37 @@ class Api
 	protected Request $request;
 
 	/**
-	 * Creates a new API instance
+	 * The current route
 	 */
-	public function __construct(array $props)
-	{
-		$this->authentication = $props['authentication'] ?? null;
-		$this->data           = $props['data'] ?? [];
-		$this->kirby          = $props['kirby'] ?? App::instance();
-		$this->routes         = $props['routes'] ?? [];
-		$this->router         = new Router($this->routes);
-		$this->debug          = $props['debug'] ?? false;
+	protected Route|null $route = null;
+	protected Router $router;
 
-		if ($collections = $props['collections'] ?? null) {
-			$this->collections = array_change_key_case($collections);
-		}
+	/**
+	 * Creates a new API instance
+	 *
+	 * @param $authentication Authentication callback
+	 * @param $collections Collection definitions
+	 * @param $data Injected data/dependencies
+	 * @param $models Model definitions
+	 * @param $request Request object or its options, e.g. `method` and `body`
+	 * @param $routes Route definitions
+	 */
+	public function __construct(
+		protected Closure|null $authentication = null,
+		array $collections = [],
+		protected array $data = [],
+		protected bool $debug = false,
+		App|null $kirby = null,
+		array $models = [],
+		Request|array $request = [],
+		protected array $routes = []
+	) {
+		$this->collections = array_change_key_case($collections);
+		$this->kirby       = $kirby ?? App::instance();
+		$this->models      = array_change_key_case($models);
+		$this->router      = new Router($routes);
 
-		if ($models = $props['models'] ?? null) {
-			$this->models = array_change_key_case($models);
-		}
-
-		$this->setRequest($props['request'] ?? []);
+		$this->setRequest($request);
 	}
 
 	/**
@@ -200,15 +179,15 @@ class Api
 	 */
 	public function clone(array $props = []): static
 	{
-		return new static([
+		return new static(...[
 			'authentication' => $this->authentication,
-			'data'			=> $this->data,
-			'collections'   => $this->collections,
-			'debug'			=> $this->debug,
-			'kirby'			=> $this->kirby,
-			'models'		=> $this->models,
-			'request'       => $this->request,
-			'routes'		=> $this->routes,
+			'collections'    => $this->collections,
+			'data'           => $this->data,
+			'debug'          => $this->debug,
+			'kirby'          => $this->kirby,
+			'models'         => $this->models,
+			'request'        => $this->request,
+			'routes'         => $this->routes,
 			...$props
 		]);
 	}

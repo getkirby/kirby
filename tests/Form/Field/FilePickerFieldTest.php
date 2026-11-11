@@ -428,7 +428,7 @@ class FilePickerFieldTest extends TestCase
 		]);
 		$this->assertSame('.txt', $field->uploads()['accept']);
 
-		$api = new FilePickerFieldTestApi(['kirby' => $this->app]);
+		$api = new FilePickerFieldTestApi(kirby: $this->app);
 
 		$result = $field->upload(
 			$api,
@@ -448,7 +448,7 @@ class FilePickerFieldTest extends TestCase
 			'uploads' => ['parent' => 'site.title']
 		]);
 
-		$api = new FilePickerFieldTestApi(['kirby' => $this->app]);
+		$api = new FilePickerFieldTestApi(kirby: $this->app);
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('"site.title" could not be resolved as a valid parent for the upload');

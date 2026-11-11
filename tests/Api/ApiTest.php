@@ -92,7 +92,7 @@ class ApiTest extends TestCase
 
 	public function testConstruct(): void
 	{
-		$api = new Api([]);
+		$api = new Api();
 
 		$this->assertNull($api->authentication());
 		$this->assertSame([], $api->collections());
@@ -106,11 +106,11 @@ class ApiTest extends TestCase
 
 	public function test__call(): void
 	{
-		$api = new Api([
-			'data' => [
+		$api = new Api(
+			data: [
 				'foo' => 'bar'
 			]
-		]);
+		);
 
 		$this->assertSame('bar', $api->foo());
 	}
@@ -119,14 +119,14 @@ class ApiTest extends TestCase
 	{
 		$phpunit = $this;
 
-		$api = new Api([
-			'data' => [
+		$api = new Api(
+			data: [
 				'foo' => 'bar'
 			],
-			'authentication' => $callback = function () use ($phpunit) {
+			authentication: $callback = function () use ($phpunit) {
 				$phpunit->assertSame('bar', $this->foo());
 			}
-		]);
+		);
 
 		$this->assertSame($callback, $api->authentication());
 		$api->authenticate();
@@ -146,9 +146,9 @@ class ApiTest extends TestCase
 
 		$function = require $this->app->root('kirby') . '/config/api/authentication.php';
 
-		$api = new Api([
-			'kirby' => $kirby
-		]);
+		$api = new Api(
+			kirby: $kirby
+		);
 
 		$function->call($api);
 	}
@@ -166,17 +166,17 @@ class ApiTest extends TestCase
 
 		$function = require $this->app->root('kirby') . '/config/api/authentication.php';
 
-		$api = new Api([
-			'kirby' => $kirby
-		]);
+		$api = new Api(
+			kirby: $kirby
+		);
 
 		$function->call($api);
 	}
 
 	public function testCall(): void
 	{
-		$api = new Api([
-			'routes' => [
+		$api = new Api(
+			routes: [
 				[
 					'pattern' => 'testScalar',
 					'method'  => 'POST',
@@ -193,14 +193,14 @@ class ApiTest extends TestCase
 					'action'  => fn () => new Response('test', 'text/plain', 201)
 				]
 			],
-			'models' => [
+			models: [
 				'test' => [
 					'fields' => [
 						'value' => fn ($model) => $model
 					]
 				]
 			]
-		]);
+		);
 
 		$result = $api->call('testScalar', [
 			'method' => 'POST',
@@ -226,18 +226,18 @@ class ApiTest extends TestCase
 	{
 		$language = 'de';
 
-		$api = new Api([
-			'routes' => [
+		$api = new Api(
+			routes: [
 				[
 					'pattern' => 'foo',
 					'method'  => 'GET',
 					'action'  => fn () => 'something'
 				],
 			],
-			'authentication' => function () use (&$language) {
+			authentication: function () use (&$language) {
 				return new User(['language' => $language]);
 			}
-		]);
+		);
 
 		$this->assertSame('something', $api->call('foo'));
 		$this->assertTrue(in_array(setlocale(LC_CTYPE, 0), ['de', 'de_DE', 'de_DE.UTF-8', 'de_DE.UTF8', 'de_DE.ISO8859-1']));
@@ -453,14 +453,14 @@ class ApiTest extends TestCase
 
 	public function testCallWithExceptionRestoresPaginationValidation(): void
 	{
-		$api = new Api([
-			'routes' => [
+		$api = new Api(
+			routes: [
 				[
 					'pattern' => 'fail',
 					'action'  => fn () => throw new Exception('Route failed')
 				]
 			]
-		]);
+		);
 
 		try {
 			$api->call('fail');
@@ -473,12 +473,12 @@ class ApiTest extends TestCase
 
 	public function testClone(): void
 	{
-		$api = new Api([
-			'authentication' => $authentication = fn () => true,
-			'data'           => ['foo' => 'bar'],
-			'debug'          => true,
-			'request'  => ['method' => 'POST']
-		]);
+		$api = new Api(
+			authentication: $authentication = fn () => true,
+			data: ['foo' => 'bar'],
+			debug: true,
+			request: ['method' => 'POST']
+		);
 
 		$clone = $api->clone([
 			'data' => ['foo' => 'baz']
@@ -493,8 +493,8 @@ class ApiTest extends TestCase
 
 	public function testCollections(): void
 	{
-		$api = new Api([
-			'models' => [
+		$api = new Api(
+			models: [
 				'test' => [
 					'fields' => [
 						'id' => fn ($object) => $object->id()
@@ -502,13 +502,13 @@ class ApiTest extends TestCase
 					'type' => Obj::class
 				]
 			],
-			'collections' => [
+			collections: [
 				'test' => [
 					'model' => 'test',
 					'type'  => Collection::class,
 				]
 			]
-		]);
+		);
 
 		$instance = new Collection([
 			new Obj(['id' => 'a']),
@@ -533,13 +533,13 @@ class ApiTest extends TestCase
 
 	public function testData(): void
 	{
-		$api = new Api([
-			'data' => $data = [
+		$api = new Api(
+			data: $data = [
 				'a' => 'A',
 				'b' => fn () => 'B',
 				'c' => fn ($value) => $value
 			]
-		]);
+		);
 
 		$this->assertSame($data, $api->data());
 		$this->assertSame('A', $api->data('a'));
@@ -554,9 +554,9 @@ class ApiTest extends TestCase
 
 	public function testDebug(): void
 	{
-		$api = new Api([
-			'debug' => true
-		]);
+		$api = new Api(
+			debug: true
+		);
 
 		$this->assertTrue($api->debug());
 	}
@@ -806,8 +806,8 @@ class ApiTest extends TestCase
 
 	public function testModels(): void
 	{
-		$api = new Api([
-			'models' => [
+		$api = new Api(
+			models: [
 				'test' => [
 					'fields' => [
 						'id' => fn ($object) => $object->id()
@@ -815,7 +815,7 @@ class ApiTest extends TestCase
 					'type' => Obj::class
 				]
 			]
-		]);
+		);
 
 		$instance = new Obj(['id' => 'a']);
 		$model    = $api->model('test', $instance);
@@ -833,8 +833,8 @@ class ApiTest extends TestCase
 
 	public function testModelResolver(): void
 	{
-		$api = new Api([
-			'models' => [
+		$api = new Api(
+			models: [
 				'MockModel' => [
 					'type' => MockModel::class,
 				],
@@ -842,7 +842,7 @@ class ApiTest extends TestCase
 					'type' => stdClass::class,
 				]
 			]
-		]);
+		);
 
 		// resolve class with namespace
 		$result = $api->resolve(new MockModel());
@@ -861,7 +861,7 @@ class ApiTest extends TestCase
 	{
 		$this->expectException(NotFoundException::class);
 
-		$api = new Api([]);
+		$api = new Api();
 		$api->resolve(new MockModel());
 	}
 
@@ -958,15 +958,15 @@ class ApiTest extends TestCase
 
 	public function testRequest(): void
 	{
-		$api = new Api([
-			'request' => [
+		$api = new Api(
+			request: [
 				'query'   => ['q' => 'foo', 'page' => '2'],
 				'body'    => ['title' => 'Title'],
 				'files'   => ['upload' => $file = ['name' => 'a.txt']],
 				'headers' => ['X-Language' => 'de'],
 				'method'  => 'POST'
 			]
-		]);
+		);
 
 		$request = $api->request();
 
@@ -982,7 +982,7 @@ class ApiTest extends TestCase
 
 	public function testRequestWithoutData(): void
 	{
-		$api = new Api([]);
+		$api = new Api();
 
 		// doesn't fall back to the global request
 		$this->assertSame([], $api->request()->query()->toArray());
@@ -994,15 +994,15 @@ class ApiTest extends TestCase
 
 	public function testRequestPerCall(): void
 	{
-		$api = new Api([
-			'routes' => [
+		$api = new Api(
+			routes: [
 				[
 					'pattern' => 'test',
 					'method'  => 'GET|POST',
 					'action'  => fn () => $this->request()->method() . ':' . $this->request()->query()->string('q')
 				]
 			]
-		]);
+		);
 
 		$this->assertSame('GET:a', $api->call('test', ['method' => 'GET', 'query' => ['q' => 'a']]));
 		$this->assertSame('POST:b', $api->call('test', ['method' => 'POST', 'query' => ['q' => 'b']]));
@@ -1010,15 +1010,15 @@ class ApiTest extends TestCase
 
 	public function testRequestObject(): void
 	{
-		$api = new Api([
-			'routes' => [
+		$api = new Api(
+			routes: [
 				[
 					'pattern' => 'test',
 					'method'  => 'GET|POST',
 					'action'  => fn () => $this->request()->method() . ':' . $this->request()->query()->string('q')
 				]
 			]
-		]);
+		);
 
 		$request = new Request([
 			'method' => 'POST',
@@ -1031,14 +1031,14 @@ class ApiTest extends TestCase
 
 	public function testRequestData(): void
 	{
-		$api = new Api([
-			'request' => $requestData = [
+		$api = new Api(
+			request: $requestData = [
 				'query'   => $query   = ['a' => 'A'],
 				'body'    => $body    = ['b' => 'B'],
 				'files'   => $files   = ['c' => 'C'],
 				'headers' => $headers = ['d' => 'D'],
 			]
-		]);
+		);
 
 		$this->assertSame($requestData, $api->requestData());
 
@@ -1073,13 +1073,13 @@ class ApiTest extends TestCase
 
 	public function testRequestDataCase(): void
 	{
-		$api = new Api([
-			'request' => [
+		$api = new Api(
+			request: [
 				'query'   => ['Q' => 'query'],
 				'body'    => ['Title' => 'body'],
 				'headers' => ['X-Language' => 'de'],
 			]
-		]);
+		);
 
 		$this->assertNull($api->requestQuery('q'));
 		$this->assertSame('query', $api->requestQuery('Q'));
@@ -1094,30 +1094,30 @@ class ApiTest extends TestCase
 
 	public function testRenderString(): void
 	{
-		$api = new Api([
-			'routes' => [
+		$api = new Api(
+			routes: [
 				[
 					'pattern' => 'test',
 					'method'  => 'POST',
 					'action'  => fn () => 'test'
 				]
 			]
-		]);
+		);
 
 		$this->assertSame('test', $api->render('test', ['method' => 'POST']));
 	}
 
 	public function testRenderArray(): void
 	{
-		$api = new Api([
-			'routes' => [
+		$api = new Api(
+			routes: [
 				[
 					'pattern' => 'test',
 					'method'  => 'POST',
 					'action'  => fn () => ['a' => 'A']
 				]
 			]
-		]);
+		);
 
 		$result = $api->render('test', ['method' => 'POST']);
 
@@ -1127,8 +1127,8 @@ class ApiTest extends TestCase
 
 	public function testRenderArrayWithHtmlString(): void
 	{
-		$api = new Api([
-			'routes' => [
+		$api = new Api(
+			routes: [
 				[
 					'pattern' => 'test',
 					'method'  => 'POST',
@@ -1138,7 +1138,7 @@ class ApiTest extends TestCase
 					]
 				]
 			]
-		]);
+		);
 
 		$result = $api->render('test', [
 			'method' => 'POST',
@@ -1153,8 +1153,8 @@ class ApiTest extends TestCase
 
 	public function testRenderArrayWithHtmlStringOutsideThePanel(): void
 	{
-		$api = new Api([
-			'routes' => [
+		$api = new Api(
+			routes: [
 				[
 					'pattern' => 'test',
 					'method'  => 'POST',
@@ -1164,7 +1164,7 @@ class ApiTest extends TestCase
 					]
 				]
 			]
-		]);
+		);
 
 		$result = $api->render('test', ['method' => 'POST']);
 
@@ -1177,15 +1177,15 @@ class ApiTest extends TestCase
 
 	public function testRenderTrue(): void
 	{
-		$api = new Api([
-			'routes' => [
+		$api = new Api(
+			routes: [
 				[
 					'pattern' => 'test',
 					'method'  => 'POST',
 					'action'  => fn () => true
 				]
 			]
-		]);
+		);
 
 		$result = $api->render('test', ['method' => 'POST']);
 
@@ -1201,15 +1201,15 @@ class ApiTest extends TestCase
 
 	public function testRenderFalse(): void
 	{
-		$api = new Api([
-			'routes' => [
+		$api = new Api(
+			routes: [
 				[
 					'pattern' => 'test',
 					'method'  => 'POST',
 					'action'  => fn () => false
 				]
 			]
-		]);
+		);
 
 		$result = $api->render('test', ['method' => 'POST']);
 
@@ -1225,15 +1225,15 @@ class ApiTest extends TestCase
 
 	public function testRenderNull(): void
 	{
-		$api = new Api([
-			'routes' => [
+		$api = new Api(
+			routes: [
 				[
 					'pattern' => 'test',
 					'method'  => 'POST',
 					'action'  => fn () => null
 				]
 			]
-		]);
+		);
 
 		$result = $api->render('test', ['method' => 'POST']);
 
@@ -1249,8 +1249,8 @@ class ApiTest extends TestCase
 
 	public function testRenderException(): void
 	{
-		$api = new Api([
-			'routes' => [
+		$api = new Api(
+			routes: [
 				[
 					'pattern' => 'test',
 					'method'  => 'POST',
@@ -1259,7 +1259,7 @@ class ApiTest extends TestCase
 					}
 				]
 			]
-		]);
+		);
 
 		$result = $api->render('test', ['method' => 'POST']);
 
@@ -1277,9 +1277,9 @@ class ApiTest extends TestCase
 
 	public function testRenderExceptionWithDebugging(): void
 	{
-		$api = new Api([
-			'debug' => true,
-			'routes' => [
+		$api = new Api(
+			debug: true,
+			routes: [
 				[
 					'pattern' => 'test',
 					'method'  => 'POST',
@@ -1288,7 +1288,7 @@ class ApiTest extends TestCase
 					}
 				]
 			]
-		]);
+		);
 
 		// simulate the document root to test relative file paths
 		$_SERVER['DOCUMENT_ROOT'] = __DIR__;
@@ -1322,10 +1322,10 @@ class ApiTest extends TestCase
 			]
 		]);
 
-		$api = new Api([
-			'debug' => true,
-			'kirby' => $app,
-			'routes' => [
+		$api = new Api(
+			debug: true,
+			kirby: $app,
+			routes: [
 				[
 					'pattern' => 'test',
 					'method'  => 'POST',
@@ -1334,7 +1334,7 @@ class ApiTest extends TestCase
 					}
 				]
 			]
-		]);
+		);
 
 		$result = $api->render('test', ['method' => 'POST']);
 
@@ -1356,9 +1356,9 @@ class ApiTest extends TestCase
 
 	public function testRenderExceptionWithoutDebugging(): void
 	{
-		$api = new Api([
-			'kirby' => $this->app,
-			'routes' => [
+		$api = new Api(
+			kirby: $this->app,
+			routes: [
 				[
 					'pattern' => 'test',
 					'method'  => 'POST',
@@ -1368,7 +1368,7 @@ class ApiTest extends TestCase
 					}
 				]
 			]
-		]);
+		);
 
 		$result = $api->render('test', ['method' => 'POST']);
 
@@ -1396,10 +1396,10 @@ class ApiTest extends TestCase
 
 		$path = $app->root('index') . '/secret/config.php';
 
-		$api = new Api([
-			'debug' => true,
-			'kirby' => $app,
-			'routes' => [
+		$api = new Api(
+			debug: true,
+			kirby: $app,
+			routes: [
 				[
 					'pattern' => 'test',
 					'method'  => 'POST',
@@ -1408,7 +1408,7 @@ class ApiTest extends TestCase
 					}
 				]
 			]
-		]);
+		);
 
 		$result = $api->render('test', ['method' => 'POST']);
 		$body   = json_decode($result->body(), true);
@@ -1426,8 +1426,8 @@ class ApiTest extends TestCase
 
 	public function testRenderKirbyException(): void
 	{
-		$api = new Api([
-			'routes' => [
+		$api = new Api(
+			routes: [
 				[
 					'pattern' => 'test',
 					'method'  => 'POST',
@@ -1440,7 +1440,7 @@ class ApiTest extends TestCase
 					}
 				]
 			]
-		]);
+		);
 
 		$result = $api->render('test', ['method' => 'POST']);
 
@@ -1458,9 +1458,9 @@ class ApiTest extends TestCase
 
 	public function testRenderKirbyExceptionWithDebugging(): void
 	{
-		$api = new Api([
-			'debug' => true,
-			'routes' => [
+		$api = new Api(
+			debug: true,
+			routes: [
 				[
 					'pattern' => 'test',
 					'method'  => 'POST',
@@ -1473,7 +1473,7 @@ class ApiTest extends TestCase
 					}
 				]
 			]
-		]);
+		);
 
 		// simulate the document root to test relative file paths
 		$_SERVER['DOCUMENT_ROOT'] = __DIR__;
@@ -1500,8 +1500,8 @@ class ApiTest extends TestCase
 
 	public function testRenderWithSanitizedErrorCode(): void
 	{
-		$api = new Api([
-			'routes' => [
+		$api = new Api(
+			routes: [
 				[
 					'pattern' => 'test',
 					'method'  => 'POST',
@@ -1510,7 +1510,7 @@ class ApiTest extends TestCase
 					}
 				]
 			]
-		]);
+		);
 
 		$result = $api->render('test', ['method' => 'POST']);
 
@@ -1519,50 +1519,50 @@ class ApiTest extends TestCase
 
 	public function testRequestMethod(): void
 	{
-		$api = new Api([
-			'request' => ['method' => 'POST'],
-		]);
+		$api = new Api(
+			request: ['method' => 'POST'],
+		);
 
 		$this->assertSame('POST', $api->requestMethod());
 
 		// normalized by the request
-		$api = new Api([
-			'request' => ['method' => 'patch'],
-		]);
+		$api = new Api(
+			request: ['method' => 'patch'],
+		);
 
 		$this->assertSame('PATCH', $api->requestMethod());
 	}
 
 	public function testRoutes(): void
 	{
-		$api = new Api([
-			'routes' => $routes = [
+		$api = new Api(
+			routes: $routes = [
 				[
 					'pattern' => 'test',
 					'action'  => fn () => 'foo'
 				]
 			]
-		]);
+		);
 
 		$this->assertSame($routes, $api->routes());
 	}
 
 	public function testSearchPages(): void
 	{
-		$api = new Api([
-			'request' => [
+		$api = new Api(
+			request: [
 				'method' => 'GET',
 				'query' => [
 					'q'      => 'fanzy',
 					'status' => 'published'
 				]
 			]
-		]);
+		);
 
 		$this->assertSame('a', $api->searchPages()->first()->id());
 
-		$api = new Api([
-			'request' => [
+		$api = new Api(
+			request: [
 				'method' => 'POST',
 				'query' => [
 					'status' => 'published'
@@ -1571,7 +1571,7 @@ class ApiTest extends TestCase
 					'search' => 'fanzy'
 				]
 			]
-		]);
+		);
 
 		$this->assertSame('a', $api->searchPages()->first()->id());
 	}
@@ -1610,8 +1610,8 @@ class ApiTest extends TestCase
 
 	public function testUpload(): void
 	{
-		$api = new Api([
-			'request' => [
+		$api = new Api(
+			request: [
 				'method' => 'POST',
 				'files' => [
 					[
@@ -1622,8 +1622,8 @@ class ApiTest extends TestCase
 					]
 				]
 			],
-			'authentication' => fn () => new User(['language' => 'en'])
-		]);
+			authentication: fn () => new User(['language' => 'en'])
+		);
 
 		$phpunit = $this;
 		$api->authenticate();

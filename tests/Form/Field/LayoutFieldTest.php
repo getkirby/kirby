@@ -36,14 +36,14 @@ class LayoutFieldTest extends TestCase
 		]);
 
 		$api      = $field->api()[4];
-		$response = $api['action']->call(new Api(['request' => [
+		$response = $api['action']->call(new Api(request: [
 			'body' => [
 				'columns' => ['1/2', '1/2'],
 				'attrs' => [
 					'class' => 'test'
 				]
 			]
-		]]));
+		]));
 
 		$this->assertSame('test', $response['attrs']['class']);
 		$this->assertSame('1/2', $response['columns'][0]['width']);
@@ -58,12 +58,12 @@ class LayoutFieldTest extends TestCase
 
 		$field    = $this->field('layout');
 		$api      = $field->api()[4];
-		$response = $api['action']->call(new Api(['request' => [
+		$response = $api['action']->call(new Api(request: [
 			'body' => [
 				'columns' => '1/2',
 				'attrs'   => 'test'
 			]
-		]]));
+		]));
 
 		// non-array input falls back to the defaults
 		$this->assertSame([], $response['attrs']);
@@ -82,7 +82,7 @@ class LayoutFieldTest extends TestCase
 			]
 		]);
 
-		$api = new Api(['routes' => $field->api()]);
+		$api = new Api(routes: $field->api());
 
 		// nested field routes may return other values than arrays
 		$this->assertTrue($api->call(
@@ -112,11 +112,11 @@ class LayoutFieldTest extends TestCase
 
 		$field    = $this->field('layout');
 		$api      = $field->api()[5];
-		$response = $api['action']->call(new Api(['request' => [
+		$response = $api['action']->call(new Api(request: [
 			'query' => [
 				'json' => json_encode($value)
 			]
-		]]));
+		]));
 
 		$this->assertCount(1, $response);
 		$this->assertArrayHasKey('id', $response[0]);

@@ -43,7 +43,7 @@ class UploadTest extends TestCase
 
 	protected function api(array $props = []): Api
 	{
-		return new Api($props);
+		return new Api(...$props);
 	}
 
 	protected function upload(

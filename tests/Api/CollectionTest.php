@@ -12,7 +12,7 @@ class CollectionTest extends TestCase
 {
 	public function testConstruct(): void
 	{
-		$api = new Api([]);
+		$api = new Api();
 		$collection = new Collection($api, [], []);
 
 		$this->assertInstanceOf(Collection::class, $collection);
@@ -20,8 +20,8 @@ class CollectionTest extends TestCase
 
 	public function testSelect(): void
 	{
-		$api = new Api([
-			'models' => [
+		$api = new Api(
+			models: [
 				'test' => [
 					'fields' => [
 						'key'   => fn ($model) => strtolower($model),
@@ -29,7 +29,7 @@ class CollectionTest extends TestCase
 					]
 				]
 			]
-		]);
+		);
 
 		$collection = new Collection($api, [
 			'foo' => 'A',
@@ -55,15 +55,15 @@ class CollectionTest extends TestCase
 
 	public function testToArray(): void
 	{
-		$api = new Api([
-			'models' => [
+		$api = new Api(
+			models: [
 				'test' => [
 					'fields' => [
 						'value' => fn ($model) => $model
 					]
 				]
 			]
-		]);
+		);
 		$collection = new Collection($api, [
 			'foo' => 'A',
 			'bar' => 'B',
@@ -82,8 +82,8 @@ class CollectionTest extends TestCase
 
 	public function testToResponse(): void
 	{
-		$api = new Api([
-			'models' => [
+		$api = new Api(
+			models: [
 				'test' => [
 					'type'   => Page::class,
 					'fields' => [
@@ -91,7 +91,7 @@ class CollectionTest extends TestCase
 					]
 				]
 			]
-		]);
+		);
 		$collection = new Collection($api, new Pages([
 			new Page(['slug' => 'a']),
 			new Page(['slug' => 'b']),
@@ -120,8 +120,8 @@ class CollectionTest extends TestCase
 
 	public function testToResponseIgnoresFilterByInQuery(): void
 	{
-		$api = new Api([
-			'models' => [
+		$api = new Api(
+			models: [
 				'test' => [
 					'type'   => Page::class,
 					'fields' => [
@@ -129,7 +129,7 @@ class CollectionTest extends TestCase
 					]
 				]
 			],
-			'request' => [
+			request: [
 				'query' => [
 					'query' => [
 						'filterBy' => [
@@ -138,7 +138,7 @@ class CollectionTest extends TestCase
 					]
 				]
 			]
-		]);
+		);
 		$collection = new Collection($api, new Pages([
 			new Page(['slug' => 'a']),
 			new Page(['slug' => 'b']),
@@ -153,8 +153,8 @@ class CollectionTest extends TestCase
 
 	public function testToResponseIgnoresSortByInQuery(): void
 	{
-		$api = new Api([
-			'models' => [
+		$api = new Api(
+			models: [
 				'test' => [
 					'type'   => Page::class,
 					'fields' => [
@@ -162,14 +162,14 @@ class CollectionTest extends TestCase
 					]
 				]
 			],
-			'request' => [
+			request: [
 				'query' => [
 					'query' => [
 						'sortBy' => 'slug desc'
 					]
 				]
 			]
-		]);
+		);
 		$collection = new Collection($api, new Pages([
 			new Page(['slug' => 'a']),
 			new Page(['slug' => 'b']),
@@ -185,8 +185,8 @@ class CollectionTest extends TestCase
 
 	public function testToResponseRespectsLimitInQuery(): void
 	{
-		$api = new Api([
-			'models' => [
+		$api = new Api(
+			models: [
 				'test' => [
 					'type'   => Page::class,
 					'fields' => [
@@ -194,14 +194,14 @@ class CollectionTest extends TestCase
 					]
 				]
 			],
-			'request' => [
+			request: [
 				'query' => [
 					'query' => [
 						'limit' => 2
 					]
 				]
 			]
-		]);
+		);
 		$collection = new Collection($api, new Pages([
 			new Page(['slug' => 'a']),
 			new Page(['slug' => 'b']),
@@ -224,8 +224,8 @@ class CollectionTest extends TestCase
 	#[DataProvider('invalidQueryProvider')]
 	public function testToResponseWithInvalidQuery(array $query): void
 	{
-		$api = new Api([
-			'models' => [
+		$api = new Api(
+			models: [
 				'test' => [
 					'type'   => Page::class,
 					'fields' => [
@@ -233,12 +233,12 @@ class CollectionTest extends TestCase
 					]
 				]
 			],
-			'request' => [
+			request: [
 				'query' => [
 					'query' => $query
 				]
 			]
-		]);
+		);
 		$collection = new Collection($api, new Pages([
 			new Page(['slug' => 'a']),
 			new Page(['slug' => 'b'])
@@ -264,8 +264,8 @@ class CollectionTest extends TestCase
 	#[DataProvider('invalidLimitProvider')]
 	public function testToResponseWithInvalidLimit(mixed $limit, int $expected): void
 	{
-		$api = new Api([
-			'models' => [
+		$api = new Api(
+			models: [
 				'test' => [
 					'type'   => Page::class,
 					'fields' => [
@@ -273,12 +273,12 @@ class CollectionTest extends TestCase
 					]
 				]
 			],
-			'request' => [
+			request: [
 				'query' => [
 					'limit' => $limit
 				]
 			]
-		]);
+		);
 		$collection = new Collection($api, new Pages([
 			new Page(['slug' => 'a']),
 			new Page(['slug' => 'b'])
@@ -304,8 +304,8 @@ class CollectionTest extends TestCase
 	#[DataProvider('invalidPageProvider')]
 	public function testToResponseWithInvalidPage(mixed $page): void
 	{
-		$api = new Api([
-			'models' => [
+		$api = new Api(
+			models: [
 				'test' => [
 					'type'   => Page::class,
 					'fields' => [
@@ -313,13 +313,13 @@ class CollectionTest extends TestCase
 					]
 				]
 			],
-			'request' => [
+			request: [
 				'query' => [
 					'limit' => 1,
 					'page'  => $page
 				]
 			]
-		]);
+		);
 		$collection = new Collection($api, new Pages([
 			new Page(['slug' => 'a']),
 			new Page(['slug' => 'b'])
@@ -335,8 +335,8 @@ class CollectionTest extends TestCase
 
 	public function testToResponseWithLimitAndPage(): void
 	{
-		$api = new Api([
-			'models' => [
+		$api = new Api(
+			models: [
 				'test' => [
 					'type'   => Page::class,
 					'fields' => [
@@ -344,13 +344,13 @@ class CollectionTest extends TestCase
 					]
 				]
 			],
-			'request' => [
+			request: [
 				'query' => [
 					'limit' => '1',
 					'page'  => '2'
 				]
 			]
-		]);
+		);
 		$collection = new Collection($api, new Pages([
 			new Page(['slug' => 'a']),
 			new Page(['slug' => 'b'])

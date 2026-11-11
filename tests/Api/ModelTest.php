@@ -10,7 +10,7 @@ class ModelTest extends TestCase
 {
 	public function testConstruct(): void
 	{
-		$model = new Model(new Api([]), [], []);
+		$model = new Model(new Api(), [], []);
 
 		$this->assertInstanceOf(Model::class, $model);
 	}
@@ -20,7 +20,7 @@ class ModelTest extends TestCase
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessageIs('Invalid model type "stdClass" expected: "nonexists"');
 
-		new Model(new Api([]), new stdClass(), ['type' => 'nonexists']);
+		new Model(new Api(), new stdClass(), ['type' => 'nonexists']);
 	}
 
 	public function testConstructMissingModel(): void
@@ -28,12 +28,12 @@ class ModelTest extends TestCase
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessageIs('Missing model data');
 
-		new Model(new Api([]), null, []);
+		new Model(new Api(), null, []);
 	}
 
 	public function testSelectInvalidKeys(): void
 	{
-		$model = new Model(new Api([]), [], []);
+		$model = new Model(new Api(), [], []);
 
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessageIs('Invalid select keys');
@@ -42,8 +42,8 @@ class ModelTest extends TestCase
 
 	public function testSelection(): void
 	{
-		$api = new Api([
-			'models' => [
+		$api = new Api(
+			models: [
 				'test' => [
 					'fields' => [
 						'key'   => fn ($model) => strtolower($model),
@@ -51,7 +51,7 @@ class ModelTest extends TestCase
 					]
 				]
 			]
-		]);
+		);
 
 		// invalid select
 		$model = new Model($api, [
@@ -122,7 +122,7 @@ class ModelTest extends TestCase
 
 	public function testViewWithMissingView(): void
 	{
-		$model = new Model(new Api([]), [], [
+		$model = new Model(new Api(), [], [
 			'views' => [
 				'compact' => ['id']
 			]
