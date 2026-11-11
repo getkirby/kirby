@@ -118,7 +118,7 @@ class BlocksField extends InputField
 
 					return $fieldApi->call(
 						$path,
-						$api->requestMethod(),
+						$api->request()->method(),
 						$api->requestData()
 					);
 				}

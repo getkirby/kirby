@@ -99,7 +99,7 @@ class ApiTest extends TestCase
 		$this->assertFalse($api->debug());
 		$this->assertSame([], $api->models());
 		$this->assertSame(['query' => [], 'body' => [], 'files' => []], $api->requestData());
-		$this->assertSame('GET', $api->requestMethod());
+		$this->assertSame('GET', $api->request()->method());
 		$this->assertSame([], $api->routes());
 	}
 
@@ -179,7 +179,7 @@ class ApiTest extends TestCase
 				[
 					'pattern' => 'testScalar',
 					'method'  => 'POST',
-					'action'  => fn () => $this->requestQuery('foo')
+					'action'  => fn () => $this->request()->query()->get('foo')
 				],
 				[
 					'pattern' => 'testModel',
@@ -485,7 +485,7 @@ class ApiTest extends TestCase
 		$this->assertSame($authentication, $clone->authentication());
 		$this->assertSame(['foo' => 'baz'], $clone->data());
 		$this->assertTrue($clone->debug());
-		$this->assertSame('POST', $clone->requestMethod());
+		$this->assertSame('POST', $clone->request()->method());
 	}
 
 	public function testCollections(): void
@@ -1047,6 +1047,27 @@ class ApiTest extends TestCase
 		$this->assertSame('fallback', $api->requestHeaders('x', 'fallback'));
 	}
 
+	public function testRequestDataCase(): void
+	{
+		$api = new Api([
+			'requestData' => [
+				'query'   => ['Q' => 'query'],
+				'body'    => ['Title' => 'body'],
+				'headers' => ['X-Language' => 'de'],
+			]
+		]);
+
+		$this->assertNull($api->requestQuery('q'));
+		$this->assertSame('query', $api->requestQuery('Q'));
+		$this->assertNull($api->requestBody('title'));
+		$this->assertSame('body', $api->requestBody('Title'));
+
+		// header names stay case-insensitive
+		$this->assertSame('de', $api->requestHeaders('x-language'));
+		$this->assertSame('de', $api->requestHeaders('X-LANGUAGE'));
+		$this->assertSame('fallback', $api->requestHeaders('x-other', 'fallback'));
+	}
+
 	public function testRenderString(): void
 	{
 		$api = new Api([
@@ -1478,6 +1499,13 @@ class ApiTest extends TestCase
 		]);
 
 		$this->assertSame('POST', $api->requestMethod());
+
+		// normalized by the request
+		$api = new Api([
+			'requestMethod' => 'patch',
+		]);
+
+		$this->assertSame('PATCH', $api->requestMethod());
 	}
 
 	public function testRoutes(): void

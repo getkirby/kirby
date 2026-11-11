@@ -111,7 +111,7 @@ class LayoutField extends BlocksField
 
 				return $fieldApi->call(
 					$path,
-					$api->requestMethod(),
+					$api->request()->method(),
 					$api->requestData()
 				);
 			}

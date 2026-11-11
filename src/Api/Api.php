@@ -312,7 +312,7 @@ class Api
 
 		return $fieldApi->call(
 			$path,
-			$this->requestMethod(),
+			$this->request()->method(),
 			$this->requestData()
 		);
 	}
@@ -496,72 +496,81 @@ class Api
 	 * Getter for request data
 	 * Can either get all the data
 	 * or certain parts of it.
+	 * @deprecated 7.0.0 Use `self::request()` instead
 	 */
 	public function requestData(
 		string|null $type = null,
 		string|null $key = null,
 		mixed $default = null
 	): mixed {
-		if ($type === null) {
-			return $this->requestData;
-		}
-
-		if ($key === null) {
-			return $this->requestData[$type] ?? [];
-		}
-
-		$data = array_change_key_case($this->requestData($type));
-		$key  = strtolower($key);
-
-		return $data[$key] ?? $default;
+		return match ($type) {
+			null      => $this->requestData,
+			'body'    => $this->requestBody($key, $default),
+			'files'   => $this->requestFiles($key, $default),
+			'headers' => $this->requestHeaders($key, $default),
+			'query'   => $this->requestQuery($key, $default),
+			default   => match ($key) {
+				null    => $this->requestData[$type] ?? [],
+				default => $this->requestData[$type][$key] ?? $default
+			}
+		};
 	}
 
 	/**
 	 * Returns the request body if available
+	 * @deprecated 7.0.0 Use `self::request()->body()` instead
 	 */
 	public function requestBody(
 		string|null $key = null,
 		mixed $default = null
 	): mixed {
-		return $this->requestData('body', $key, $default);
+		$body = $this->request()->body();
+		return $key === null ? $body->toArray() : $body->get($key, $default);
 	}
 
 	/**
 	 * Returns the files from the request if available
+	 * @deprecated 7.0.0 Use `self::request()->files()` instead
 	 */
 	public function requestFiles(
 		string|null $key = null,
 		mixed $default = null
 	): mixed {
-		return $this->requestData('files', $key, $default);
+		$files = $this->request()->files();
+		return $key === null ? $files->toArray() : $files->get($key, $default);
 	}
 
 	/**
 	 * Returns all headers from the request if available
+	 * @deprecated 7.0.0 Use `self::request()->headers()` or `self::request()->header()` instead
 	 */
 	public function requestHeaders(
 		string|null $key = null,
 		mixed $default = null
 	): mixed {
-		return $this->requestData('headers', $key, $default);
+		$request = $this->request();
+		return $key === null ? $request->headers() : $request->header($key, $default);
 	}
 
 	/**
 	 * Returns the request method
+	 * @deprecated 7.0.0 Use `self::request()->method()` instead
 	 */
 	public function requestMethod(): string|null
 	{
-		return $this->requestMethod;
+		return $this->request()->method();
 	}
 
 	/**
 	 * Returns the request query if available
+	 * @deprecated 7.0.0 Use `self::request()->query()` instead
 	 */
 	public function requestQuery(
 		string|null $key = null,
 		mixed $default = null
 	): mixed {
-		return $this->requestData('query', $key, $default);
+		$query = $this->request()->query();
+		return $key === null ? $query->toArray() : $query->get($key, $default);
 	}
 
 	/**
@@ -640,7 +649,7 @@ class Api
 
 		// mark trusted HTML for the Panel, but never for the public
 		// API, where the marked keys would be a breaking change
-		if ((bool)$this->requestHeaders('x-panel') === true) {
+		if ((bool)$this->request()->header('x-panel') === true) {
 			$result = HtmlString::resolve($result);
 		}
 
