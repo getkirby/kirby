@@ -1,5 +1,5 @@
 <script>
-import { cloneVNode, h } from "vue";
+import { h } from "vue";
 
 /**
  * Measures available horizontal space and determines
@@ -36,7 +36,7 @@ export default {
 		return {
 			available: null,
 			isCollapsed: false,
-			isUpdating: false,
+			isMeasuring: false,
 			offset: Infinity,
 			total: 0
 		};
@@ -53,109 +53,76 @@ export default {
 		this.unobserve();
 	},
 	updated() {
-		if (this.isUpdating === false) {
-			this.calculate();
-		}
+		this.calculate();
 	},
 	methods: {
 		async calculate() {
-			if (this.isUpdating || this.available === null || !this.$slots.default) {
+			if (this.available === null || this.isMeasuring === true) {
 				return;
 			}
 
-			this.isUpdating = true;
+			this.isMeasuring = true;
 
-			const available = this.available;
-
-			// First: try fitting all items without fallback
+			// measure all items without the fallback
 			this.isCollapsed = false;
-			const expanded = await this.fitItemsInSpace(available);
-
-			// Second: if overflowing and fallback exists,
-			// show fallback and shrink items to fit
-			if (expanded.overflown && this.hasFallback) {
-				this.isCollapsed = true;
-				const collapsed = await this.fitItemsInSpace(available);
-				this.offset = collapsed.offset;
-				this.total = collapsed.total;
-			} else {
-				this.offset = expanded.offset;
-				this.total = expanded.total;
-			}
-
-			await this.$nextTick();
-			this.isUpdating = false;
-		},
-		async fitItemsInSpace(available) {
-			// Show all items so we can measure them
 			this.offset = Infinity;
 			await this.$nextTick();
 
-			// Separate fallback elements from items using data attribute
-			const children = [...this.$el.children];
-			const items = children.filter(
-				(el) => !el.hasAttribute("data-collapsible-fallback")
-			);
-			const fallbacks = children.filter((el) =>
-				el.hasAttribute("data-collapsible-fallback")
-			);
-
-			const total = items.length;
 			const style = getComputedStyle(this.$el);
 			const gap = parseFloat(style.columnGap ?? style.gap) ?? 0;
+			const widths = [...this.$el.children].map(this.measure);
+			// tolerates subpixel rounding of the measured widths
+			const space = this.available + 0.5;
+			let count = this.fit(widths, gap, space);
 
-			// Handle edge cases
-			if (available === 0) {
-				return { offset: 0, total, overflown: total > 0 };
+			this.total = widths.length;
+			this.isCollapsed = count < widths.length && this.hasFallback;
+			this.offset = count;
+			await this.$nextTick();
+
+			// the fallback's width can depend on the offset:
+			// hide more items until everything rendered fits
+			while (this.isCollapsed === true && count > 0) {
+				const rendered = [...this.$el.children].map(this.measure);
+				const extent = this.width(rendered, rendered.length, gap);
+
+				if (extent <= space) {
+					break;
+				}
+
+				const fallback = extent - this.width(widths, count, gap);
+				count = Math.min(count - 1, this.fit(widths, gap, space - fallback));
+				this.offset = count;
+				await this.$nextTick();
 			}
 
-			if (total === 0) {
-				return { offset: 0, total, overflown: false };
-			}
-
-			// Measure each item's width
-			const widths = items.map((el) => this.measure(el));
-
-			// Use appropriate fitting strategy
-			if (this.isCollapsed) {
-				return this.shrinkUntilFallbackFits({
-					available,
-					fallbacks,
-					gap,
-					total,
-					widths
-				});
-			}
-
-			return this.growUntilFull({ available, gap, total, widths });
+			this.isMeasuring = false;
 		},
-		growUntilFull({ available, gap, total, widths }) {
+		/**
+		 * Counts how many items fit into the space,
+		 * taken from the end opposite to `direction`
+		 */
+		fit(widths, gap, space) {
 			let count = 0;
 
-			while (count < total && this.width(widths, count + 1, gap) <= available) {
+			while (
+				count < widths.length &&
+				this.width(widths, count + 1, gap) <= space
+			) {
 				count++;
 			}
 
-			return { offset: count, total, overflown: count < total };
+			return count;
 		},
+		/**
+		 * Returns the rendered width of an element incl. its margins,
+		 * an item that shrinks counts with its shrunk width
+		 */
 		measure(element) {
-			const rect = element.getBoundingClientRect();
 			const style = getComputedStyle(element);
 			const left = parseFloat(style.marginLeft) ?? 0;
 			const right = parseFloat(style.marginRight) ?? 0;
-			// Use scrollWidth to get natural width without flex shrinking
-			const width = Math.max(rect.width, element.scrollWidth);
-			return width + left + right;
-		},
-		measureFallback(elements, gap) {
-			if (elements.length === 0) {
-				return 0;
-			}
-
-			const widths = elements.map((el) => this.measure(el));
-			return (
-				widths.reduce((sum, w) => sum + w, 0) + (elements.length - 1) * gap
-			);
+			return element.getBoundingClientRect().width + left + right;
 		},
 		observe() {
 			if (this.$el instanceof Element) {
@@ -170,32 +137,11 @@ export default {
 				this.calculate();
 			}
 		},
-		async shrinkUntilFallbackFits({
-			available,
-			fallbacks,
-			gap,
-			total,
-			widths
-		}) {
-			let count = total;
-
-			while (count >= 0) {
-				this.offset = count;
-				await this.$nextTick();
-
-				const fallback = this.measureFallback(fallbacks, gap);
-				const items = this.width(widths, count, gap);
-				gap = count > 0 && fallback > 0 ? gap : 0;
-				const needed = items + gap + fallback;
-
-				if (needed <= available) {
-					break;
-				}
-
-				count--;
+		unobserve() {
+			if (this.$el instanceof Element) {
+				this.$panel.observers.resize.unobserve(this.$el);
+				this.$el.removeEventListener("resize", this.onResize);
 			}
-
-			return { offset: Math.max(0, count), total, overflown: true };
 		},
 		/**
 		 * Calculates total width of `count` items including gaps.
@@ -218,12 +164,6 @@ export default {
 					: widths.slice(0, count);
 
 			return slice.reduce((sum, w) => sum + w, 0) + (count - 1) * gap;
-		},
-		unobserve() {
-			if (this.$el instanceof Element) {
-				this.$panel.observers.resize.unobserve(this.$el);
-				this.$el.removeEventListener("resize", this.onResize);
-			}
 		}
 	},
 
@@ -231,26 +171,17 @@ export default {
 		const props = { offset: this.offset, total: this.total };
 		const slot = this.$slots.default?.(props) ?? [];
 
-		// Get all fallback vnodes and mark them with a data attribute
-		let fallbacks = [];
-
-		if (this.isCollapsed) {
-			const fallback = this.$slots.fallback?.(props) ?? [];
-			fallbacks = fallback.map((vnode) =>
-				cloneVNode(vnode, { "data-collapsible-fallback": "" })
-			);
-		}
-
-		// Position fallback based on direction
-		if (fallbacks.length === 0) {
+		if (this.isCollapsed === false) {
 			return h(this.element, this.$attrs, slot);
 		}
 
+		const fallback = this.$slots.fallback?.(props) ?? [];
+
 		if (this.direction === "start") {
-			return h(this.element, this.$attrs, [...fallbacks, ...slot]);
+			return h(this.element, this.$attrs, [...fallback, ...slot]);
 		}
 
-		return h(this.element, this.$attrs, [...slot, ...fallbacks]);
+		return h(this.element, this.$attrs, [...slot, ...fallback]);
 	}
 };
 </script>
