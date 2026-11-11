@@ -1188,7 +1188,9 @@ class F
 			return static::put($file, $content);
 		} finally {
 			// nothing left to remove after a successful `rename()`
-			@unlink($tmp);
+			if (is_file($tmp) === true) {
+				@unlink($tmp);
+			}
 		}
 	}
 }
