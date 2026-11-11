@@ -584,17 +584,14 @@ class ApiTest extends TestCase
 						]
 					]
 				]
-			],
-			'request' => [
-				'query' => [
-					'items' => 'a.jpg,b.jpg'
-				],
 			]
 		]);
 		$app->impersonate('kirby');
 
 		$page     = $app->page('test');
-		$response = $app->api()->fieldApi($page, 'cover', 'items');
+		$response = $app->api()->clone([
+			'requestData' => ['query' => ['items' => 'a.jpg,b.jpg']]
+		])->fieldApi($page, 'cover', 'items');
 
 		$this->assertCount(2, $response);
 		$this->assertSame('a.jpg', $response[0]['filename']);

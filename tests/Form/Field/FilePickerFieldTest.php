@@ -145,16 +145,15 @@ class FilePickerFieldTest extends TestCase
 						]
 					]
 				]
-			],
-			'request' => [
-				'query' => [
-					'items' => 'test/a.jpg,test/b.jpg'
-				]
 			]
 		]);
 
 		$app->impersonate('kirby');
-		$api = $app->api()->call('pages/test/fields/gallery/items');
+		$api = $app->api()->call('pages/test/fields/gallery/items', 'GET', [
+			'query' => [
+				'items' => 'test/a.jpg,test/b.jpg'
+			]
+		]);
 
 		$this->assertCount(2, $api);
 		$this->assertSame('file://my-a', $api[0]['uuid']);
@@ -212,16 +211,15 @@ class FilePickerFieldTest extends TestCase
 					'email' => 'editor@getkirby.com',
 					'role'  => 'editor-' . $uuid
 				]
-			],
-			'request' => [
-				'query' => [
-					'items' => 'file://my-a,file://my-b'
-				]
 			]
 		]);
 
 		$app->impersonate('editor@getkirby.com');
-		$api = $app->api()->call('pages/test/fields/gallery/items');
+		$api = $app->api()->call('pages/test/fields/gallery/items', 'GET', [
+			'query' => [
+				'items' => 'file://my-a,file://my-b'
+			]
+		]);
 
 		$this->assertCount(2, $api);
 

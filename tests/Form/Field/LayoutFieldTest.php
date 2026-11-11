@@ -21,17 +21,6 @@ class LayoutFieldTest extends TestCase
 
 	public function testApiRouteCreate(): void
 	{
-		$this->app = $this->app->clone([
-			'request' => [
-				'body' => [
-					'columns' => ['1/2', '1/2'],
-					'attrs' => [
-						'class' => 'test'
-					]
-				]
-			]
-		]);
-
 		// we need to impersonate Kirby to get the correct form
 		// without disabled fields for permission reasons
 		$this->app->impersonate('kirby');
@@ -47,13 +36,38 @@ class LayoutFieldTest extends TestCase
 		]);
 
 		$api      = $field->api()[4];
-		$response = $api['action']();
+		$response = $api['action']->call(new Api(['requestData' => [
+			'body' => [
+				'columns' => ['1/2', '1/2'],
+				'attrs' => [
+					'class' => 'test'
+				]
+			]
+		]]));
 
 		$this->assertSame('test', $response['attrs']['class']);
 		$this->assertSame('1/2', $response['columns'][0]['width']);
 		$this->assertSame('1/2', $response['columns'][1]['width']);
 		$this->assertSame([], $response['columns'][0]['blocks']);
 		$this->assertSame([], $response['columns'][1]['blocks']);
+	}
+
+	public function testApiRouteCreateWithInvalidInput(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$field    = $this->field('layout');
+		$api      = $field->api()[4];
+		$response = $api['action']->call(new Api(['requestData' => [
+			'body' => [
+				'columns' => '1/2',
+				'attrs'   => 'test'
+			]
+		]]));
+
+		// non-array input falls back to the defaults
+		$this->assertSame([], $response['attrs']);
+		$this->assertSame('1/1', $response['columns'][0]['width']);
 	}
 
 	public function testApiRouteFields(): void
@@ -97,17 +111,13 @@ class LayoutFieldTest extends TestCase
 			]
 		];
 
-		$this->app = $this->app->clone([
-			'request' => [
-				'query' => [
-					'json' => json_encode($value)
-				]
-			]
-		]);
-
 		$field    = $this->field('layout');
 		$api      = $field->api()[5];
-		$response = $api['action']();
+		$response = $api['action']->call(new Api(['requestData' => [
+			'query' => [
+				'json' => json_encode($value)
+			]
+		]]));
 
 		$this->assertCount(1, $response);
 		$this->assertArrayHasKey('id', $response[0]);

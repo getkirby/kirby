@@ -74,8 +74,8 @@ class FileListField extends ModelListField
 					$parent = $field->parentModel();
 
 					$parent->files()->changeSort(
-						$api->requestBody('files'),
-						$api->requestBody('index')
+						$api->request()->body()->array('files', []),
+						$api->request()->body()->int('index', 0)
 					);
 
 					return true;
@@ -90,7 +90,7 @@ class FileListField extends ModelListField
 		return $this->collector ??= new FilesCollector(
 			flip:     $this->flip(),
 			limit:    $this->limit(),
-			page:     (int)$this->page() ?: 1,
+			page:     $this->page() ?: 1,
 			parent:   $this->parentModel(),
 			query:    $this->query(),
 			search:   $this->searchterm(),

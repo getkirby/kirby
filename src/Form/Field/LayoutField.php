@@ -2,9 +2,8 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Api\Api;
 use Kirby\Blueprint\Blueprint;
-use Kirby\Cms\Api;
-use Kirby\Cms\App;
 use Kirby\Cms\Fieldset;
 use Kirby\Cms\Layout;
 use Kirby\Cms\Layouts;
@@ -57,13 +56,15 @@ class LayoutField extends BlocksField
 			'pattern' => 'layout',
 			'method'  => 'POST',
 			'action'  => function () use ($field): array {
-				$request = App::instance()->request();
+				/** @var Api $api */
+				$api     = $this;
+				$request = $api->request();
 
-				$columns = $request->get('columns') ?? ['1/1'];
+				$columns = $request->array('columns', ['1/1']);
 				$form    = $field->attrsForm();
 
 				$form->fill(defaults: true);
-				$form->submit(input: $request->get('attrs') ?? []);
+				$form->submit(input: $request->array('attrs', []));
 
 				return Layout::factory([
 					'attrs'   => $form->toFormValues(),
@@ -80,8 +81,9 @@ class LayoutField extends BlocksField
 			'pattern' => 'layout/paste',
 			'method'  => 'POST',
 			'action'  => function () use ($field): array {
-				$request = App::instance()->request();
-				$value   = Layouts::parse($request->get('json'));
+				/** @var Api $api */
+				$api     = $this;
+				$value   = Layouts::parse($api->request()->string('json'));
 				$layouts = Layouts::factory($value);
 
 				return $field->pasteLayouts($layouts->toArray());

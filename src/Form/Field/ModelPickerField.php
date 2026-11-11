@@ -2,6 +2,7 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Api\Api;
 use Kirby\Cms\Collection;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Data\Data;
@@ -100,7 +101,9 @@ abstract class ModelPickerField extends InputField
 			[
 				'pattern' => 'items',
 				'action'  => function () use ($field): array {
-					$ids = $field->kirby()->request()->get('items', '');
+					/** @var Api $api */
+					$api = $this;
+					$ids = $api->request()->string('items', '');
 					$ids = Str::split($ids);
 
 					return A::map(

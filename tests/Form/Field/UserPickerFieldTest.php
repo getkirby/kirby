@@ -59,16 +59,15 @@ class UserPickerFieldTest extends TestCase
 						]
 					]
 				]
-			],
-			'request' => [
-				'query' => [
-					'items' => 'leonardo@getkirby.com,raphael@getkirby.com'
-				]
 			]
 		]);
 
 		$app->impersonate('kirby');
-		$api = $app->api()->call('pages/test/fields/authors/items');
+		$api = $app->api()->call('pages/test/fields/authors/items', 'GET', [
+			'query' => [
+				'items' => 'leonardo@getkirby.com,raphael@getkirby.com'
+			]
+		]);
 
 		$this->assertCount(2, $api);
 		$this->assertSame('user://leonardo', $api[0]['uuid']);
@@ -121,16 +120,15 @@ class UserPickerFieldTest extends TestCase
 					'email' => 'admin@getkirby.com',
 					'role'  => 'admin'
 				]
-			],
-			'request' => [
-				'query' => [
-					'items' => 'editor@getkirby.com,admin@getkirby.com'
-				]
 			]
 		]);
 
 		$app->impersonate('editor@getkirby.com');
-		$api = $app->api()->call('pages/test/fields/authors/items');
+		$api = $app->api()->call('pages/test/fields/authors/items', 'GET', [
+			'query' => [
+				'items' => 'editor@getkirby.com,admin@getkirby.com'
+			]
+		]);
 
 		$this->assertCount(2, $api);
 
