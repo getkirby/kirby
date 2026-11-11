@@ -40,7 +40,7 @@
 							<k-button
 								v-for="n in visibleButtons(offset)"
 								:key="n"
-								:text="'Button ' + n"
+								:text="labels[n - 1]"
 								variant="filled"
 							/>
 						</template>
@@ -60,7 +60,7 @@
 						<k-button
 							v-for="n in visibleButtons(offset)"
 							:key="n"
-							:text="'Button ' + n"
+							:text="labels[n - 1]"
 							variant="filled"
 						/>
 					</template>
@@ -76,6 +76,19 @@ export default {
 		return {
 			buttons: 6,
 			direction: "end",
+			// different widths change how many buttons fit
+			labels: [
+				"Button 1",
+				"Button 2",
+				"A much longer button 3",
+				"Button 4",
+				"Btn 5",
+				"Button 6 with a long label",
+				"Button 7",
+				"B8",
+				"Button 9",
+				"Button 10"
+			],
 			width: 70
 		};
 	},
