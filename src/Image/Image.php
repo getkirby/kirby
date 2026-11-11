@@ -74,10 +74,7 @@ class Image extends File
 		}
 
 		$mime   = null;
-		$header = match ($this->exists()) {
-			true    => (string)@file_get_contents($this->root, false, null, 0, 16),
-			default => ''
-		};
+		$header = $this->exists() ? (string)@file_get_contents($this->root, false, null, 0, 16) : '';
 
 		// read the type from the header, `mime()` reads up to 7 MB of the file
 		if (
