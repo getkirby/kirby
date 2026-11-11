@@ -92,7 +92,19 @@ class Api
 		$this->models      = array_change_key_case($models);
 		$this->router      = new Router($routes);
 
-		$this->setRequest($request);
+		// request options never fall back to the global request
+		if (is_array($request) === true) {
+			$request = new Request([
+				'body'    => [],
+				'files'   => [],
+				'headers' => [],
+				'method'  => 'GET',
+				'query'   => [],
+				...$request
+			]);
+		}
+
+		$this->request = $request;
 	}
 
 	/**
@@ -123,8 +135,9 @@ class Api
 	}
 
 	/**
-	 * Execute an API call for the given path and request
+	 * Executes an API call for the given path and request
 	 * (a request object or its options, e.g. `method` and `body`)
+	 * on its own instance
 	 *
 	 * @throws NotFoundException
 	 * @throws \Exception
@@ -133,44 +146,7 @@ class Api
 		string|null $path = null,
 		Request|array $request = []
 	): mixed {
-		$path = rtrim($path ?? '', '/');
-
-		$this->setRequest($request);
-		$this->setLanguage();
-		$this->setTranslation();
-
-		$this->route = $this->router->find($path, $this->request->method());
-		$auth = $this->route->attributes()['auth'] ?? true;
-
-		if ($auth !== false) {
-			if (($user = $this->authenticate()) instanceof User) {
-				$this->setLocale($user);
-			}
-		}
-
-		// don't throw pagination errors if pagination
-		// page is out of bounds
-		$validate = Pagination::$validate;
-		Pagination::$validate = false;
-
-		try {
-			$output = $this->route->action()->call(
-				$this,
-				...$this->route->arguments()
-			);
-		} finally {
-			// restore old pagination validation mode
-			Pagination::$validate = $validate;
-		}
-
-		if (
-			is_object($output) === true &&
-			$output instanceof Response === false
-		) {
-			return $this->resolve($output)->toResponse();
-		}
-
-		return $output;
+		return $this->clone(['request' => $request])->dispatch($path);
 	}
 
 	/**
@@ -255,6 +231,54 @@ class Api
 	public function debug(): bool
 	{
 		return $this->debug;
+	}
+
+	/**
+	 * Runs the request of this instance against its routes
+	 *
+	 * @throws NotFoundException
+	 * @throws \Exception
+	 * @since 7.0.0
+	 */
+	protected function dispatch(string|null $path = null): mixed
+	{
+		$path = rtrim($path ?? '', '/');
+
+		$this->setLanguage();
+		$this->setTranslation();
+
+		$this->route = $this->router->find($path, $this->request->method());
+		$auth = $this->route->attributes()['auth'] ?? true;
+
+		if ($auth !== false) {
+			if (($user = $this->authenticate()) instanceof User) {
+				$this->setLocale($user);
+			}
+		}
+
+		// don't throw pagination errors if pagination
+		// page is out of bounds
+		$validate = Pagination::$validate;
+		Pagination::$validate = false;
+
+		try {
+			$output = $this->route->action()->call(
+				$this,
+				...$this->route->arguments()
+			);
+		} finally {
+			// restore old pagination validation mode
+			Pagination::$validate = $validate;
+		}
+
+		if (
+			is_object($output) === true &&
+			$output instanceof Response === false
+		) {
+			return $this->resolve($output)->toResponse();
+		}
+
+		return $output;
 	}
 
 	/**
@@ -571,14 +595,13 @@ class Api
 		string $path,
 		Request|array $request = []
 	): mixed {
-		// keep the rendered request, nested calls can replace it
-		$this->setRequest($request);
-		$request = $this->request;
+		$api     = $this->clone(['request' => $request]);
+		$request = $api->request();
 
 		try {
-			$result = $this->call($path, $request);
+			$result = $api->dispatch($path);
 		} catch (Throwable $e) {
-			$result = $this->responseForException($e);
+			$result = $api->responseForException($e);
 		}
 
 		$result = match ($result) {
@@ -607,7 +630,7 @@ class Api
 
 		// mark trusted HTML for the Panel, but never for the public
 		// API, where the marked keys would be a breaking change
-		if ((bool)$this->request()->header('x-panel') === true) {
+		if ((bool)$request->header('x-panel') === true) {
 			$result = HtmlString::resolve($result);
 		}
 
@@ -788,29 +811,6 @@ class Api
 		setlocale(LC_MONETARY, $locales);
 		setlocale(LC_NUMERIC, $locales);
 		setlocale(LC_TIME, $locales);
-	}
-
-	/**
-	 * Sets the request of the API call; options are
-	 * never filled up with the global request data
-	 * @since 7.0.0
-	 * @return $this
-	 */
-	protected function setRequest(Request|array $request = []): static
-	{
-		$this->request = match (true) {
-			$request instanceof Request => $request,
-			default => new Request([
-				'body'    => [],
-				'files'   => [],
-				'headers' => [],
-				'method'  => 'GET',
-				'query'   => [],
-				...$request
-			])
-		};
-
-		return $this;
 	}
 
 	/**

@@ -222,6 +222,27 @@ class ApiTest extends TestCase
 		$this->assertEquals(new Response('test', 'text/plain', 201), $result); // cannot use strict assertion (test for object contents)
 	}
 
+	public function testCallWithNestedCall(): void
+	{
+		$api = new Api(
+			routes: [
+				[
+					'pattern' => 'inner',
+					'action'  => fn () => $this->request()->method()
+				],
+				[
+					'pattern' => 'outer',
+					'method'  => 'POST',
+					'action'  => fn () => $this->call('inner') . ':' . $this->request()->method()
+				]
+			]
+		);
+
+		// the nested call doesn't replace the outer request
+		$this->assertSame('GET:POST', $api->call('outer', ['method' => 'POST']));
+		$this->assertSame('GET', $api->request()->method());
+	}
+
 	public function testCallLocale(): void
 	{
 		$language = 'de';
@@ -1026,6 +1047,8 @@ class ApiTest extends TestCase
 		]);
 
 		$this->assertSame('POST:a', $api->call('test', $request));
+
+		$api = new Api(request: $request);
 		$this->assertSame($request, $api->request());
 	}
 
@@ -1171,6 +1194,36 @@ class ApiTest extends TestCase
 		// without the Panel header, keys must stay untouched
 		$this->assertSame(
 			json_encode(['text' => '<b>trusted</b>', 'info' => 'plain']),
+			$result->body()
+		);
+	}
+
+	public function testRenderArrayWithHtmlStringAfterNestedCall(): void
+	{
+		$api = new Api(
+			routes: [
+				[
+					'pattern' => 'inner',
+					'action'  => fn () => 'inner'
+				],
+				[
+					'pattern' => 'outer',
+					'method'  => 'POST',
+					'action'  => function () {
+						$this->call('inner');
+						return ['text' => new HtmlString('<b>trusted</b>')];
+					}
+				]
+			]
+		);
+
+		$result = $api->render('outer', [
+			'method'  => 'POST',
+			'headers' => ['x-panel' => 'true']
+		]);
+
+		$this->assertSame(
+			json_encode(['<text>' => '<b>trusted</b>']),
 			$result->body()
 		);
 	}
