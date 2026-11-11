@@ -67,6 +67,38 @@
 				</k-collapsible>
 			</div>
 		</k-lab-example>
+
+		<k-lab-example label="In a flex row">
+			<div class="k-lab-if-space-frame" :style="{ width: width + '%' }">
+				<!-- @code -->
+				<div style="display: flex; gap: var(--spacing-3)">
+					<k-button icon="bars" variant="filled" />
+
+					<!-- takes the space left and can shrink below its items -->
+					<k-collapsible
+						:direction="direction"
+						class="k-lab-collapsible"
+						style="flex: 1; min-width: 0"
+					>
+						<template #default="{ offset }">
+							<k-button
+								v-for="n in visibleButtons(offset)"
+								:key="n"
+								:text="labels[n - 1]"
+								variant="filled"
+							/>
+						</template>
+
+						<template #fallback="{ offset, total }">
+							<k-button :text="total - offset" icon="dots" variant="filled" />
+						</template>
+					</k-collapsible>
+
+					<k-button icon="cog" variant="filled" />
+				</div>
+				<!-- @code-end -->
+			</div>
+		</k-lab-example>
 	</k-lab-examples>
 </template>
 
@@ -113,9 +145,10 @@ export default {
 
 <style>
 .k-lab-if-space-frame {
-	background-color: var(--color-green-200);
-	border: 1px dashed var(--color-gray-500);
+	background-color: light-dark(var(--color-aqua-200), var(--color-aqua-850));
+	border: 1px dashed light-dark(var(--color-aqua-500), var(--color-aqua-600));
 	border-radius: var(--rounded);
+	padding: var(--spacing-1);
 }
 .k-lab-collapsible {
 	display: flex;
