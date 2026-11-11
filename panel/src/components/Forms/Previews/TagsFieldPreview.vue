@@ -102,7 +102,7 @@ export default {
 	padding: 0.375rem var(--table-cell-padding);
 	overflow: hidden;
 }
-.k-tags-field-preview .k-tags {
+.k-tags-field-preview.k-tags {
 	flex-wrap: nowrap;
 }
 </style>
