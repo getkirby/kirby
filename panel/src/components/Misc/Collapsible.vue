@@ -68,8 +68,8 @@ export default {
 			this.offset = Infinity;
 			await this.$nextTick();
 
-			const style = getComputedStyle(this.$el);
-			const gap = parseFloat(style.columnGap ?? style.gap) ?? 0;
+			// `normal` and the like count as no gap
+			const gap = parseFloat(getComputedStyle(this.$el).columnGap) || 0;
 			const widths = [...this.$el.children].map(this.measure);
 			// tolerates subpixel rounding of the measured widths
 			const space = this.available + 0.5;
@@ -120,8 +120,8 @@ export default {
 		 */
 		measure(element) {
 			const style = getComputedStyle(element);
-			const left = parseFloat(style.marginLeft) ?? 0;
-			const right = parseFloat(style.marginRight) ?? 0;
+			const left = parseFloat(style.marginLeft) || 0;
+			const right = parseFloat(style.marginRight) || 0;
 			return element.getBoundingClientRect().width + left + right;
 		},
 		observe() {

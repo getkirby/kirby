@@ -25,7 +25,7 @@ async function flush(vm: {
  * wide ones 50px, shrinking ones 50px or 40px next to
  * the fallback, the fallback 20px
  */
-function layout(wrapper: VueWrapper, gap = 0) {
+function layout(wrapper: VueWrapper, gap = "0px") {
 	const vm = wrapper.vm as unknown as {
 		isCollapsed: boolean;
 		measure(el: Element): number;
@@ -48,7 +48,7 @@ function layout(wrapper: VueWrapper, gap = 0) {
 		.spyOn(window, "getComputedStyle")
 		.mockImplementation((el) =>
 			el === wrapper.element
-				? ({ columnGap: gap + "px", gap: gap + "px" } as CSSStyleDeclaration)
+				? ({ columnGap: gap } as CSSStyleDeclaration)
 				: realGCS(el)
 		);
 
@@ -281,11 +281,20 @@ describe("k-collapsible", () => {
 
 		it("counts the gaps between items and fallback", async () => {
 			const wrapper = collapse({}, ["i", "i", "i"]);
-			layout(wrapper, 5);
+			layout(wrapper, "5px");
 			await resize(wrapper, 85);
 
 			// 30 + 5 + 20 fits, 30 + 5 + 30 + 5 + 20 doesn't
 			expect(wrapper.find(".f").text()).toBe("1/3");
+		});
+
+		it("treats a normal gap as none", async () => {
+			const wrapper = collapse({}, ["i", "i", "i"]);
+			layout(wrapper, "normal");
+			await resize(wrapper, 90);
+
+			expect(wrapper.vm.isCollapsed).toBe(false);
+			expect(wrapper.vm.offset).toBe(3);
 		});
 
 		it("hides more items when the fallback grows", async () => {
@@ -371,6 +380,16 @@ describe("k-collapsible", () => {
 			onTestFinished(() => el.remove());
 			el.getBoundingClientRect = () => ({ width: 30 }) as DOMRect;
 			expect(wrapper.vm.measure(el)).toBe(38);
+		});
+
+		it("ignores margins that are no lengths", () => {
+			const wrapper = mount();
+			const el = document.createElement("span");
+			el.style.margin = "0 auto";
+			document.body.append(el);
+			onTestFinished(() => el.remove());
+			el.getBoundingClientRect = () => ({ width: 30 }) as DOMRect;
+			expect(wrapper.vm.measure(el)).toBe(30);
 		});
 	});
 
