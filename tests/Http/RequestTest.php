@@ -104,6 +104,31 @@ class RequestTest extends TestCase
 		$this->assertArrayHasKey('url', $info);
 	}
 
+	public function testArray(): void
+	{
+		$request = new Request([
+			'body'  => [
+				'a'    => ['body'],
+				'b'    => ['body'],
+				'c'    => 'body',
+				'user' => ['roles' => ['admin']]
+			],
+			'query' => [
+				'b' => ['query'],
+				'd' => []
+			]
+		]);
+
+		$this->assertSame(['body'], $request->array('a'));
+		$this->assertSame(['query'], $request->array('b'));
+		$this->assertNull($request->array('c'));
+		$this->assertSame(['fallback'], $request->array('c', ['fallback']));
+		$this->assertSame([], $request->array('d', ['fallback']));
+		$this->assertSame(['admin'], $request->array('user.roles'));
+		$this->assertNull($request->array('missing'));
+		$this->assertSame(['fallback'], $request->array('missing', ['fallback']));
+	}
+
 	public function testAuthMissing(): void
 	{
 		$request = new Request();
@@ -226,6 +251,34 @@ class RequestTest extends TestCase
 		$this->assertSame('bar', $headers['X-Foo']);
 	}
 
+	public function testInt(): void
+	{
+		$request = new Request([
+			'body'  => [
+				'a'    => 1,
+				'b'    => 'body',
+				'user' => ['age' => '42']
+			],
+			'query' => [
+				'b' => '2',
+				'c' => 'abc',
+				'd' => ['3'],
+				'e' => '-4'
+			]
+		]);
+
+		$this->assertSame(1, $request->int('a'));
+		$this->assertSame(2, $request->int('b'));
+		$this->assertNull($request->int('c'));
+		$this->assertSame(5, $request->int('c', 5));
+		$this->assertNull($request->int('d'));
+		$this->assertSame(5, $request->int('d', 5));
+		$this->assertSame(-4, $request->int('e'));
+		$this->assertSame(42, $request->int('user.age'));
+		$this->assertNull($request->int('missing'));
+		$this->assertSame(5, $request->int('missing', 5));
+	}
+
 	public function testMethod(): void
 	{
 		$request = new Request();
@@ -245,6 +298,35 @@ class RequestTest extends TestCase
 	{
 		$request = new Request();
 		$this->assertInstanceOf(Body::class, $request->body());
+	}
+
+	public function testBool(): void
+	{
+		$request = new Request([
+			'body'  => [
+				'a'    => true,
+				'b'    => 'false',
+				'c'    => 'abc',
+				'user' => ['active' => 'yes']
+			],
+			'query' => [
+				'b' => 'true',
+				'd' => ['1'],
+				'e' => ''
+			]
+		]);
+
+		$this->assertTrue($request->bool('a'));
+		$this->assertTrue($request->bool('b'));
+		$this->assertNull($request->bool('c'));
+		$this->assertTrue($request->bool('c', true));
+		$this->assertNull($request->bool('d'));
+		$this->assertTrue($request->bool('d', true));
+		$this->assertNull($request->bool('e'));
+		$this->assertTrue($request->bool('e', true));
+		$this->assertTrue($request->bool('user.active'));
+		$this->assertNull($request->bool('missing'));
+		$this->assertTrue($request->bool('missing', true));
 	}
 
 	public function testFiles(): void
@@ -269,6 +351,46 @@ class RequestTest extends TestCase
 	{
 		$request = new Request();
 		$this->assertTrue($request->is('get'));
+	}
+
+	public function testString(): void
+	{
+		$request = new Request([
+			'body'  => [
+				'a'    => 'body',
+				'b'    => 'body',
+				'c'    => 1,
+				'user' => ['name' => 'Homer']
+			],
+			'query' => [
+				'b' => 'query',
+				'd' => ['foo'],
+				'e' => ''
+			]
+		]);
+
+		$this->assertSame('body', $request->string('a'));
+		$this->assertSame('query', $request->string('b'));
+		$this->assertNull($request->string('c'));
+		$this->assertSame('fallback', $request->string('c', 'fallback'));
+		$this->assertNull($request->string('d'));
+		$this->assertSame('fallback', $request->string('d', 'fallback'));
+		$this->assertSame('', $request->string('e', 'fallback'));
+		$this->assertSame('Homer', $request->string('user.name'));
+		$this->assertNull($request->string('user'));
+		$this->assertNull($request->string('missing'));
+		$this->assertSame('fallback', $request->string('missing', 'fallback'));
+	}
+
+	public function testToArrayAndToJson(): void
+	{
+		$request = new Request([
+			'body'  => ['a' => 'body', 'b' => 'body'],
+			'query' => ['b' => 'query'],
+		]);
+
+		$this->assertSame(['a' => 'body', 'b' => 'query'], $request->toArray());
+		$this->assertSame('{"a":"body","b":"query"}', $request->toJson());
 	}
 
 	public function testUrl(): void

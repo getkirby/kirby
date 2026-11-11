@@ -4,10 +4,72 @@ namespace Kirby\Http\Request;
 
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 #[CoversClass(Query::class)]
 class QueryTest extends TestCase
 {
+	public function testArray(): void
+	{
+		$query = new Query([
+			'array'  => ['foo'],
+			'empty'  => [],
+			'string' => 'foo',
+			'null'   => null,
+		]);
+
+		$this->assertSame(['foo'], $query->array('array'));
+		$this->assertSame(['foo'], $query->array('array', ['bar']));
+		$this->assertSame([], $query->array('empty', ['bar']));
+		$this->assertNull($query->array('string'));
+		$this->assertSame(['bar'], $query->array('string', ['bar']));
+		$this->assertSame(['bar'], $query->array('null', ['bar']));
+		$this->assertNull($query->array('missing'));
+		$this->assertSame(['bar'], $query->array('missing', ['bar']));
+	}
+
+	public static function boolProvider(): array
+	{
+		return [
+			[true, true],
+			[false, false],
+			['true', true],
+			['TRUE', true],
+			['1', true],
+			['on', true],
+			['yes', true],
+			[1, true],
+			['false', false],
+			['0', false],
+			['off', false],
+			['no', false],
+			[0, false],
+			['', null],
+			[' ', null],
+			['abc', null],
+			['2', null],
+			[2, null],
+			[1.0, null],
+			[null, null],
+			[['true'], null],
+		];
+	}
+
+	#[DataProvider('boolProvider')]
+	public function testBool(mixed $value, bool|null $expected): void
+	{
+		$query = new Query(['a' => $value]);
+		$this->assertSame($expected, $query->bool('a'));
+		$this->assertSame($expected ?? true, $query->bool('a', true));
+	}
+
+	public function testBoolMissing(): void
+	{
+		$query = new Query();
+		$this->assertNull($query->bool('a'));
+		$this->assertTrue($query->bool('a', true));
+	}
+
 	public function testData(): void
 	{
 		// default
@@ -52,6 +114,71 @@ class QueryTest extends TestCase
 		// multiple gets
 		$query = new Query(['a' => 'a', 'b' => 'b']);
 		$this->assertSame(['a' => 'a', 'b' => 'b', 'c' => null], $query->get(['a', 'b', 'c']));
+
+	}
+
+	public static function intProvider(): array
+	{
+		return [
+			[2, 2],
+			['2', 2],
+			['-1', -1],
+			['+3', 3],
+			['0', 0],
+			[' 2 ', 2],
+			['05', null],
+			['1.5', null],
+			['1e1', null],
+			['abc', null],
+			['2abc', null],
+			['', null],
+			['99999999999999999999', null],
+			[1.0, null],
+			[true, null],
+			[null, null],
+			[['2'], null],
+		];
+	}
+
+	#[DataProvider('intProvider')]
+	public function testInt(mixed $value, int|null $expected): void
+	{
+		$query = new Query(['a' => $value]);
+		$this->assertSame($expected, $query->int('a'));
+		$this->assertSame($expected ?? 5, $query->int('a', 5));
+	}
+
+	public function testIntMissing(): void
+	{
+		$query = new Query();
+		$this->assertNull($query->int('a'));
+		$this->assertSame(5, $query->int('a', 5));
+	}
+
+	public function testString(): void
+	{
+		$query = new Query([
+			'string' => 'foo',
+			'empty'  => '',
+			'number' => '2',
+			'int'    => 2,
+			'bool'   => true,
+			'null'   => null,
+			'array'  => ['foo'],
+		]);
+
+		$this->assertSame('foo', $query->string('string'));
+		$this->assertSame('foo', $query->string('string', 'bar'));
+		$this->assertSame('', $query->string('empty', 'bar'));
+		$this->assertSame('2', $query->string('number'));
+		$this->assertNull($query->string('int'));
+		$this->assertSame('bar', $query->string('int', 'bar'));
+		$this->assertNull($query->string('bool'));
+		$this->assertSame('bar', $query->string('null', 'bar'));
+		$this->assertNull($query->string('array'));
+		$this->assertSame('bar', $query->string('array', 'bar'));
+		$this->assertNull($query->string('missing'));
+		$this->assertSame('bar', $query->string('missing', 'bar'));
 	}
 
 	public function testToString(): void
