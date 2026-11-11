@@ -874,5 +874,24 @@ describe("panel.upload", () => {
 			expect(file.progress).toStrictEqual(50);
 			expect(onError).not.toHaveBeenCalled();
 		});
+
+		it("should start no further uploads after a cancel", async () => {
+			const panel = createPanel();
+			const upload = Upload(panel);
+			const requests = fakeRequests();
+			const onError = vi.fn();
+
+			panel.config.uploads = 1;
+			panel.events.on("file.upload.error", onError);
+			upload.select(makeFileList(makeFile("a.jpg"), makeFile("b.jpg")));
+			upload.url = "/api/pages/test/files";
+
+			const submitting = upload.submit();
+			await upload.cancel();
+			await submitting;
+
+			expect(requests).toHaveLength(1);
+			expect(onError).not.toHaveBeenCalled();
+		});
 	});
 });
