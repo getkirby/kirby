@@ -141,7 +141,7 @@ export default {
 			try {
 				await this.$api.system.install(this.user);
 				await this.$panel.reload({
-					globals: ["system", "translation"]
+					globals: ["system"]
 				});
 
 				this.$panel.notification.success({

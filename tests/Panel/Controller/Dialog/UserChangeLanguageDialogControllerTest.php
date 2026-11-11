@@ -68,7 +68,7 @@ class UserChangeLanguageDialogControllerTest extends TestCase
 		$response   = $controller->submit();
 
 		$this->assertSame('user.changeLanguage', $response['event']);
-		$this->assertSame(['globals' => 'translation'], $response['reload']);
+		$this->assertTrue($response['reload']);
 
 		// reload the user freshly
 		$user = $this->app->user($user->id());
