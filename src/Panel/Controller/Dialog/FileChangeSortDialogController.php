@@ -36,7 +36,7 @@ class FileChangeSortDialogController extends FileDialogController
 	{
 		$files    = $this->file->siblings()->sorted();
 		$ids      = $files->keys();
-		$newIndex = (int)($this->request->get('position')) - 1;
+		$newIndex = $this->request->int('position', 0) - 1;
 		$oldIndex = $files->indexOf($this->file);
 
 		array_splice($ids, $oldIndex, 1);

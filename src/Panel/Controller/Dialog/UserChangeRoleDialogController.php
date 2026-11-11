@@ -38,7 +38,7 @@ class UserChangeRoleDialogController extends UserDialogController
 
 	public function submit(): array
 	{
-		$this->user = $this->user->changeRole($this->request->get('role'));
+		$this->user = $this->user->changeRole($this->request->string('role', ''));
 
 		return [
 			'event' => 'user.changeRole',

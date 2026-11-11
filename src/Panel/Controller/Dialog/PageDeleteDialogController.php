@@ -57,7 +57,7 @@ class PageDeleteDialogController extends PageDialogController
 
 		if (
 			$this->page->childrenAndDrafts()->count() > 0 &&
-			$this->request->get('check') !== $this->page->title()->value()
+			$this->request->string('check') !== $this->page->title()->value()
 		) {
 			throw new InvalidArgumentException(key: 'page.delete.confirm');
 		}

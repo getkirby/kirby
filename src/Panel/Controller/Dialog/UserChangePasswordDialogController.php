@@ -85,9 +85,9 @@ class UserChangePasswordDialogController extends UserDialogController
 
 	public function submit(): array
 	{
-		$currentPassword      = $this->request->get('currentPassword');
-		$password             = $this->request->get('password');
-		$passwordConfirmation = $this->request->get('passwordConfirmation');
+		$currentPassword      = $this->request->string('currentPassword');
+		$password             = $this->request->string('password');
+		$passwordConfirmation = $this->request->string('passwordConfirmation');
 
 		// validate the current password of the acting user
 		try {

@@ -73,4 +73,17 @@ class UserChangeNameDialogControllerTest extends TestCase
 		$user = $this->app->user($user->id());
 		$this->assertSame('Peter', $user->name()->value());
 	}
+
+	public function testSubmitWithoutName(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$this->app->user('test')->changeName('Peter');
+
+		$controller = new UserChangeNameDialogController($this->app->user('test'));
+		$controller->submit();
+
+		// a missing name clears it instead of failing
+		$this->assertTrue($this->app->user('test')->name()->isEmpty());
+	}
 }

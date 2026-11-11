@@ -23,13 +23,12 @@ class UserCreateDialogController extends DialogController
 		$roles = $this->kirby->roles()->canBeCreated();
 
 		// get default value for role
-		if ($role = $this->request->get('role')) {
-			$role = $roles->find($role)?->id();
-		}
+		$role = $this->request->string('role');
+		$role = $role !== null ? $roles->find($role)?->id() : null;
 
 		// fall back to the first role that can be created,
 		// also if the role field is hidden for a single role
-		$role = $role ?: $roles->first()?->id();
+		$role ??= $roles->first()?->id();
 
 		// get role field definition, incl. available role options
 		$roles = Field::role(
@@ -70,11 +69,11 @@ class UserCreateDialogController extends DialogController
 	public function submit(): array
 	{
 		$this->kirby->users()->create([
-			'name'     => $this->request->get('name'),
-			'email'    => $this->request->get('email'),
-			'password' => $this->request->get('password'),
-			'language' => $this->request->get('translation'),
-			'role'     => $this->request->get('role')
+			'name'     => $this->request->string('name'),
+			'email'    => $this->request->string('email'),
+			'password' => $this->request->string('password'),
+			'language' => $this->request->string('translation'),
+			'role'     => $this->request->string('role')
 		]);
 
 		return [

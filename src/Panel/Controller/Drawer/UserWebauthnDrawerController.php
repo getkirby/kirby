@@ -46,7 +46,7 @@ class UserWebauthnDrawerController extends UserCredentialDrawerController
 		);
 
 		// inject name into new credential (incl. fallback)
-		$name = $this->request->get('name', '');
+		$name = $this->request->string('name', '');
 
 		if ($name === '') {
 			$name = '#' . (count($credentials) + 1);
@@ -90,7 +90,7 @@ class UserWebauthnDrawerController extends UserCredentialDrawerController
 	{
 		$this->authorize();
 
-		$id          = $this->request->get('id');
+		$id          = $this->request->string('id', '');
 		$credentials = $this->credentials();
 		$remaining   = $this->webauthn->removeCredential($credentials, $id);
 
@@ -111,7 +111,7 @@ class UserWebauthnDrawerController extends UserCredentialDrawerController
 
 	public function submit(): true
 	{
-		$this->user = match ($this->request->get('action')) {
+		$this->user = match ($this->request->string('action')) {
 			'create' => $this->create(),
 			'remove' => $this->remove(),
 			default  => throw new InvalidArgumentException(

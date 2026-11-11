@@ -52,7 +52,7 @@ class PageChangeTemplateDialogController extends PageDialogController
 
 	public function submit(): array|true
 	{
-		$template   = $this->request->get('template');
+		$template   = $this->request->string('template', '');
 		$this->page = $this->page->changeTemplate($template);
 
 		return [
