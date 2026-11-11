@@ -5,6 +5,7 @@
 		:class="['k-dropdown-item', $attrs.class]"
 		:style="$attrs.style"
 		@click="$emit('click', $event)"
+		@success="$emit('success', $event)"
 	>
 		<!-- @slot The item's content/text -->
 		<slot />
@@ -27,7 +28,7 @@ import { props as Button } from "@/components/Navigation/Button.vue";
 export default {
 	mixins: [Button],
 	inheritAttrs: false,
-	emits: ["click"],
+	emits: ["click", "success"],
 	methods: {
 		focus() {
 			this.$refs.button.focus();
