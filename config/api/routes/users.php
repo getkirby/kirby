@@ -28,16 +28,7 @@ return [
 		'pattern' => 'users/search',
 		'method'  => 'GET|POST',
 		'action'  => function () {
-			if ($this->request()->method() === 'GET') {
-				return Find::users()->search($this->request()->query()->string('q'));
-			}
-
-			return Find::users()->query(array_filter([
-				'limit'    => $this->request()->body()->int('limit'),
-				'offset'   => $this->request()->body()->int('offset'),
-				'paginate' => $this->request()->body()->get('paginate'),
-				'search'   => $this->request()->body()->get('search'),
-			], fn ($value) => $value !== null));
+			return $this->search(Find::users());
 		}
 	],
 	[

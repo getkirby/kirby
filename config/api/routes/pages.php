@@ -60,7 +60,7 @@ return [
 		'pattern' => 'pages/(:any)/children/search',
 		'method'  => 'GET|POST',
 		'action'  => function (string $id) {
-			return $this->searchPages($id);
+			return $this->search($this->pages($id, $this->request()->query()->string('status')));
 		}
 	],
 	[

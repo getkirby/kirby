@@ -69,18 +69,7 @@ return [
 		'pattern' => $parentPattern . '/search',
 		'method'  => 'GET|POST',
 		'action'  => function (string $path) {
-			$files = $this->files($path);
-
-			if ($this->request()->method() === 'GET') {
-				return $files->search($this->request()->query()->string('q'));
-			}
-
-			return $files->query(array_filter([
-				'limit'    => $this->request()->body()->int('limit'),
-				'offset'   => $this->request()->body()->int('offset'),
-				'paginate' => $this->request()->body()->get('paginate'),
-				'search'   => $this->request()->body()->get('search'),
-			], fn ($value) => $value !== null));
+			return $this->search($this->files($path));
 		}
 	],
 	[
@@ -94,16 +83,7 @@ return [
 				->files()
 				->filter('isListable', true);
 
-			if ($this->request()->method() === 'GET') {
-				return $files->search($this->request()->query()->string('q'));
-			}
-
-			return $files->query(array_filter([
-				'limit'    => $this->request()->body()->int('limit'),
-				'offset'   => $this->request()->body()->int('offset'),
-				'paginate' => $this->request()->body()->get('paginate'),
-				'search'   => $this->request()->body()->get('search'),
-			], fn ($value) => $value !== null));
+			return $this->search($files);
 		}
 	],
 	[

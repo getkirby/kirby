@@ -38,7 +38,7 @@ return [
 		'pattern' => 'site/children/search',
 		'method'  => 'GET|POST',
 		'action'  => function () {
-			return $this->searchPages();
+			return $this->search($this->pages(null, $this->request()->query()->string('status')));
 		}
 	],
 	[
@@ -78,16 +78,7 @@ return [
 				->index(true)
 				->filter('isListable', true);
 
-			if ($this->request()->method() === 'GET') {
-				return $pages->search($this->request()->query()->string('q'));
-			}
-
-			return $pages->query(array_filter([
-				'limit'    => $this->request()->body()->int('limit'),
-				'offset'   => $this->request()->body()->int('offset'),
-				'paginate' => $this->request()->body()->get('paginate'),
-				'search'   => $this->request()->body()->get('search'),
-			], fn ($value) => $value !== null));
+			return $this->search($pages);
 		}
 	],
 	[

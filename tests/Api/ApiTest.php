@@ -1593,33 +1593,36 @@ class ApiTest extends TestCase
 		$this->assertSame($routes, $api->routes());
 	}
 
-	public function testSearchPages(): void
+	public function testSearch(): void
 	{
+		$pages = $this->app->site()->children();
+
 		$api = new Api(
 			request: [
 				'method' => 'GET',
-				'query' => [
-					'q'      => 'fanzy',
-					'status' => 'published'
-				]
+				'query'  => ['q' => 'fanzy']
 			]
 		);
 
-		$this->assertSame('a', $api->searchPages()->first()->id());
+		$this->assertSame(['a'], $api->search($pages)->keys());
 
 		$api = new Api(
 			request: [
 				'method' => 'POST',
-				'query' => [
-					'status' => 'published'
-				],
-				'body' => [
-					'search' => 'fanzy'
-				]
+				'body'   => ['search' => 'fanzy']
 			]
 		);
 
-		$this->assertSame('a', $api->searchPages()->first()->id());
+		$this->assertSame(['a'], $api->search($pages)->keys());
+
+		$api = new Api(
+			request: [
+				'method' => 'POST',
+				'body'   => ['limit' => '1', 'offset' => '1']
+			]
+		);
+
+		$this->assertSame(['b'], $api->search($pages)->keys());
 	}
 
 	public function testSite(): void

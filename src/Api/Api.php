@@ -699,24 +699,30 @@ class Api
 	}
 
 	/**
-	 * Search for direct subpages of the given parent
+	 * Searches the collection with the `q` query parameter
+	 * or queries it with the `limit`, `offset`, `paginate`
+	 * and `search` options from the request body
+	 *
+	 * @template T of \Kirby\Cms\Files|\Kirby\Cms\Pages|\Kirby\Cms\Users
+	 * @param T $collection
+	 * @return T
+	 * @since 7.0.0
 	 */
-	public function searchPages(string|null $parent = null): Pages
+	public function search(Files|Pages|Users $collection): Files|Pages|Users
 	{
-		$status = $this->request()->query()->string('status');
-		$method = $this->request()->method();
-		$pages  = $this->pages($parent, $status);
+		$request = $this->request();
 
-		if ($method === 'GET') {
-			$query = $this->request()->query()->string('q');
-			return $pages->search($query);
+		if ($request->method() === 'GET') {
+			return $collection->search($request->query()->string('q'));
 		}
 
-		return $pages->query(array_filter([
-			'limit'    => $this->request()->body()->int('limit'),
-			'offset'   => $this->request()->body()->int('offset'),
-			'paginate' => $this->request()->body()->get('paginate'),
-			'search'   => $this->request()->body()->get('search'),
+		$body = $request->body();
+
+		return $collection->query(array_filter([
+			'limit'    => $body->int('limit'),
+			'offset'   => $body->int('offset'),
+			'paginate' => $body->get('paginate'),
+			'search'   => $body->get('search'),
 		], fn ($value) => $value !== null));
 	}
 
