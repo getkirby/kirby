@@ -361,6 +361,10 @@ class ResponseTest extends TestCase
 		$response = Response::redirect('https://getkirby.com/de', inherit: true);
 		$this->assertEquals(['Location' => 'https://getkirby.com/de/tag:foo?bar=baz'], $response->headers()); // cannot use strict assertion (Uri object)
 
+		// the target's own query and params win
+		$response = Response::redirect('https://getkirby.com/de/tag:own?bar=own', inherit: true);
+		$this->assertEquals(['Location' => 'https://getkirby.com/de/tag:own?bar=own'], $response->headers()); // cannot use strict assertion (Uri object)
+
 		// params must not turn into a host on a relative root
 		Uri::$current = new Uri('https://getkirby.com/evil.com:443');
 
