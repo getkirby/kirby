@@ -183,13 +183,15 @@ class Api
 		$validate = Pagination::$validate;
 		Pagination::$validate = false;
 
-		$output = $this->route->action()->call(
-			$this,
-			...$this->route->arguments()
-		);
-
-		// restore old pagination validation mode
-		Pagination::$validate = $validate;
+		try {
+			$output = $this->route->action()->call(
+				$this,
+				...$this->route->arguments()
+			);
+		} finally {
+			// restore old pagination validation mode
+			Pagination::$validate = $validate;
+		}
 
 		if (
 			is_object($output) === true &&

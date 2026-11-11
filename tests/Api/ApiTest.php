@@ -18,6 +18,7 @@ use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\HtmlString;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Obj;
+use Kirby\Toolkit\Pagination;
 use stdClass;
 
 class MockModel
@@ -445,6 +446,26 @@ class ApiTest extends TestCase
 		$api = $app->api();
 		$this->assertSame('something', $api->call('foo'));
 		$this->assertSame('en', I18n::$locale);
+	}
+
+	public function testCallWithExceptionRestoresPaginationValidation(): void
+	{
+		$api = new Api([
+			'routes' => [
+				[
+					'pattern' => 'fail',
+					'action'  => fn () => throw new Exception('Route failed')
+				]
+			]
+		]);
+
+		try {
+			$api->call('fail');
+		} catch (Exception) {
+			// the exception itself is not under test
+		}
+
+		$this->assertTrue(Pagination::$validate);
 	}
 
 	public function testClone(): void
