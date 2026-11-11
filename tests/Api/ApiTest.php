@@ -1674,51 +1674,25 @@ class ApiTest extends TestCase
 			authentication: fn () => new User(['language' => 'en'])
 		);
 
-		$phpunit = $this;
 		$api->authenticate();
 
-		// move_uploaded_file error
-		$data = $api->upload(function ($source) {
-			// empty closure
-		});
+		$preflight = [];
 
-		$phpunit->assertSame([
+		// the source is no real upload, so moving it fails
+		// after the preflight (successful uploads: see UploadTest)
+		$data = $api->upload(
+			callback: fn ($source) => $source,
+			single: true,
+			template: 'cover',
+			preflight: function ($filename, $template) use (&$preflight) {
+				$preflight = [$filename, $template];
+			}
+		);
+
+		$this->assertSame(['test.txt', 'cover'], $preflight);
+		$this->assertSame([
 			'status'  => 'error',
 			'message' => 'The uploaded file could not be moved'
-		], $data);
-
-		// single
-		$uploads = [];
-		$data = $api->upload(function ($source, $filename) use ($phpunit, &$uploads) {
-			// can't test souce path with dynamic uniqid
-			// $phpunit->assertSame('uniqid.test.txt', $source);
-			$phpunit->assertSame('test.txt', $filename);
-
-			return $uploads = [
-				'filename' => $filename
-			];
-		}, true, true);
-
-		$phpunit->assertSame([
-			'status' => 'ok',
-			'data'   => $uploads
-		], $data);
-
-		// multiple
-		$uploads = [];
-		$data = $api->upload(function ($source, $filename) use ($phpunit, &$uploads) {
-			// can't test souce path with dynamic uniqid
-			// $phpunit->assertSame('uniqid.test.txt', $source);
-			$phpunit->assertSame('test.txt', $filename);
-
-			return $uploads = [
-				'filename' => $filename
-			];
-		}, false, true);
-
-		$phpunit->assertSame([
-			'status' => 'ok',
-			'data'   => $uploads
 		], $data);
 	}
 

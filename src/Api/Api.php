@@ -798,24 +798,19 @@ class Api
 	}
 
 	/**
-	 * Upload helper method
-	 *
-	 * move_uploaded_file() not working with unit test
-	 * Added debug parameter for testing purposes as we did in the Email class
+	 * Processes the uploaded files of the request
 	 *
 	 * @throws \Exception If the request has no files
 	 */
 	public function upload(
 		Closure $callback,
 		bool $single = false,
-		bool $debug = false,
 		string|null $template = null,
 		Closure|null $preflight = null
 	): array {
 		$upload = new Upload(
 			api: $this,
 			single: $single,
-			debug: $debug,
 			template: $template,
 			preflight: $preflight
 		);
