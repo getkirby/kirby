@@ -259,6 +259,30 @@ class StateTest extends TestCase
 		$this->assertArrayHasKey('translation', $data);
 	}
 
+	public function testFilterTranslation(): void
+	{
+		// the Panel still holds the translation of the current user
+		$_SERVER['HTTP_X_PANEL_TRANSLATION'] = 'en';
+		$this->app = $this->app->clone();
+
+		$data = (new State())->filter([]);
+		$this->assertArrayNotHasKey('translation', $data);
+
+		// the user has changed in place, e.g. on login
+		$_SERVER['HTTP_X_PANEL_TRANSLATION'] = 'de';
+		$this->app = $this->app->clone();
+
+		$data = (new State())->filter([]);
+		$this->assertSame('en', $data['translation']['code']);
+	}
+
+	public function testFilterTranslationWithoutHeader(): void
+	{
+		// requests from outside the Panel don't name a translation
+		$data = (new State())->filter([]);
+		$this->assertArrayNotHasKey('translation', $data);
+	}
+
 	public function testGlobals(): void
 	{
 		// defaults
