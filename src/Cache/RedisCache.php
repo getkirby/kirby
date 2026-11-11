@@ -22,8 +22,8 @@ class RedisCache extends Cache
 	/**
 	 * Sets all parameters which are needed to connect to Redis
 	 *
-	 * @param $options 'host'   (default: 127.0.0.1)
-	 *                'port'   (default: 6379)
+	 * @param $options 'host' (default: 127.0.0.1)
+	 *                'port' (default: 6379)
 	 */
 	public function __construct(array $options = [])
 	{
@@ -187,7 +187,7 @@ class RedisCache extends Cache
 	public function retrieve(string $key): Value|null
 	{
 		$value = $this->connection->get($this->key($key));
-		return Value::fromJson($value);
+		return is_string($value) === true ? Value::fromJson($value) : null;
 	}
 
 	/**

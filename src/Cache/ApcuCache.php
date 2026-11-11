@@ -57,7 +57,7 @@ class ApcuCache extends Cache
 	public function retrieve(string $key): Value|null
 	{
 		$value = apcu_fetch($this->key($key));
-		return Value::fromJson($value);
+		return is_string($value) === true ? Value::fromJson($value) : null;
 	}
 
 	/**

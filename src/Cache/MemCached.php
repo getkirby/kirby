@@ -78,7 +78,7 @@ class MemCached extends Cache
 	public function retrieve(string $key): Value|null
 	{
 		$value = $this->connection->get($this->key($key));
-		return Value::fromJson($value);
+		return is_string($value) === true ? Value::fromJson($value) : null;
 	}
 
 	/**
