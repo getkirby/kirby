@@ -2,12 +2,12 @@
 import { h } from "vue";
 
 /**
- * Measures available horizontal space and determines
- * how many children from the default slot can fit.
+ * Renders as many items of the default slot as fit into
+ * the element's width and the `fallback` slot for the rest.
  *
- * Exposes `offset` (visible count) and `total` to slots.
- * When items overflow and a fallback slot exists,
- * the fallback is rendered and items are hidden.
+ * The element's width must not depend on its items, e.g.
+ * a block-level `display: flex`. Items keep their natural
+ * width, an item that shrinks counts as fitting.
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
@@ -165,12 +165,14 @@ export default {
 
 	render() {
 		const props = { offset: this.offset, total: this.total };
+		/** @slot Items, render `offset` of `total`, the last ones for `direction="start"` */
 		const slot = this.$slots.default?.(props) ?? [];
 
 		if (this.isCollapsed === false) {
 			return h(this.element, this.$attrs, slot);
 		}
 
+		/** @slot Rendered next to the items when not all fit, gets `offset` and `total` */
 		const fallback = this.$slots.fallback?.(props) ?? [];
 
 		if (this.direction === "start") {
