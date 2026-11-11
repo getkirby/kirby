@@ -41,11 +41,6 @@ export default {
 			total: 0
 		};
 	},
-	computed: {
-		hasFallback() {
-			return Boolean(this.$slots.fallback);
-		}
-	},
 	mounted() {
 		this.observe();
 	},
@@ -76,7 +71,8 @@ export default {
 			let count = this.fit(widths, gap, space);
 
 			this.total = widths.length;
-			this.isCollapsed = count < widths.length && this.hasFallback;
+			this.isCollapsed =
+				count < widths.length && this.$slots.fallback !== undefined;
 			this.offset = count;
 			await this.$nextTick();
 

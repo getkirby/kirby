@@ -221,6 +221,40 @@ describe("k-collapsible", () => {
 
 	// methods
 	describe("calculate()", () => {
+		it("collapses once a fallback slot gets added", async () => {
+			const fallback = ref(false);
+			const wrapper = vueMount(
+				{
+					render: () =>
+						h(Collapsible, null, {
+							default: ({ offset }: { offset: number }) =>
+								visible(["i", "i", "i"], offset).map((i) =>
+									h("span", { class: i })
+								),
+							...(fallback.value && {
+								fallback: () => h("span", { class: "f" })
+							})
+						})
+				},
+				{
+					global: { mocks: { $panel: { observers: createObservers() } } }
+				}
+			);
+
+			const collapsible = wrapper.findComponent(Collapsible);
+			layout(collapsible);
+			await resize(collapsible, 70);
+			expect(collapsible.vm.isCollapsed).toBe(false);
+
+			fallback.value = true;
+			await collapsible.vm.$nextTick();
+			await flush(collapsible.vm);
+
+			// 30 + 20 fits, 30 + 30 + 20 doesn't
+			expect(collapsible.vm.isCollapsed).toBe(true);
+			expect(collapsible.vm.offset).toBe(1);
+		});
+
 		it("waits for the width from the observer", async () => {
 			const wrapper = collapse();
 			await wrapper.vm.calculate();
