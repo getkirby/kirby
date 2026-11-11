@@ -11,11 +11,17 @@
 	>
 		<!-- @slot Replaces the image/icon frame created via the `image` prop -->
 		<slot name="image">
-			<k-image-frame v-if="image?.src" v-bind="image" class="k-tag-image" />
+			<k-image-frame
+				v-if="image?.src"
+				v-bind="image"
+				class="k-tag-image"
+				ratio="1/1"
+			/>
 			<k-icon-frame
 				v-else-if="image || icon"
 				v-bind="image ?? { icon }"
 				class="k-tag-image"
+				ratio="1/1"
 			/>
 		</slot>
 
@@ -92,7 +98,8 @@ export default {
 		 */
 		icon: String,
 		/**
-		 * See `k-image-frame` or `k-icon-frame` for available options
+		 * See `k-image-frame` or `k-icon-frame` for available options;
+		 * the image stays square and ignores the `ratio` option
 		 */
 		image: {
 			type: Object
