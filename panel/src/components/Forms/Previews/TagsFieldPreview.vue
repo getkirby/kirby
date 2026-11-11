@@ -1,23 +1,37 @@
 <template>
-	<ul
+	<k-collapsible
 		:class="['k-tags-field-preview', 'k-tags', $options.class, $attrs.class]"
 		:style="$attrs.style"
+		element="ul"
 	>
-		<li
-			v-for="(tag, tagIndex) in tags"
-			:key="tag.id ?? tag.value ?? tag.text ?? tagIndex"
-		>
-			<k-tag
-				:element="!removable ? 'div' : undefined"
-				:image="tag.image"
-				:link="!removable ? tag.link : undefined"
-				:text="tag.text"
-				:removable="removable"
-				:theme="tag.theme ?? 'light'"
-				@remove="$emit('remove', $event)"
-			/>
-		</li>
-	</ul>
+		<template #default="{ offset }">
+			<li
+				v-for="(tag, tagIndex) in visible(offset)"
+				:key="tag.id ?? tag.value ?? tag.text ?? tagIndex"
+			>
+				<k-tag
+					:element="!removable ? 'div' : undefined"
+					:image="tag.image"
+					:link="!removable ? tag.link : undefined"
+					:text="tag.text"
+					:removable="removable"
+					:theme="tag.theme ?? 'light'"
+					@remove="$emit('remove', $event)"
+				/>
+			</li>
+		</template>
+
+		<!-- counts the tags that don't fit, a single tag gets truncated instead -->
+		<template v-if="tags.length > 1" #fallback="{ offset }">
+			<li class="k-tags-field-preview-more">
+				<k-tag
+					:text="'+' + (tags.length - visible(offset).length)"
+					element="div"
+					theme="light"
+				/>
+			</li>
+		</template>
+	</k-collapsible>
 </template>
 
 <script>
@@ -90,6 +104,15 @@ export default {
 				"`k-tags-field-preview`: the `html` prop has been deprecated. Trusted HTML in the value is rendered as-is."
 			);
 		}
+	},
+	methods: {
+		/**
+		 * Returns the tags that fit, but at least the
+		 * first one, which gets truncated if needed
+		 */
+		visible(offset) {
+			return this.tags.slice(0, Math.max(offset, 1));
+		}
 	}
 };
 </script>
@@ -102,7 +125,17 @@ export default {
 	padding: 0.375rem var(--table-cell-padding);
 	overflow: hidden;
 }
+/* tags stay on one line, `k-collapsible` needs the full width */
 .k-tags-field-preview.k-tags {
+	display: flex;
 	flex-wrap: nowrap;
+}
+/* only the first tag can be truncated, alone or next to the counter */
+.k-tags-field-preview > li:only-child,
+.k-tags-field-preview > li:first-child:has(+ .k-tags-field-preview-more) {
+	min-width: 0;
+}
+.k-tags-field-preview-more {
+	flex-shrink: 0;
 }
 </style>
