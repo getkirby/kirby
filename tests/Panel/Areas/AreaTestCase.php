@@ -41,8 +41,8 @@ abstract class AreaTestCase extends TestCase
 
 		Dir::remove(static::TMP);
 
-		// clean up server software fakes
-		unset($_SERVER['SERVER_SOFTWARE']);
+		// clean up server fakes
+		unset($_SERVER['SERVER_SOFTWARE'], $_SERVER['HTTP_X_PANEL_TRANSLATION']);
 
 		App::destroy();
 	}
