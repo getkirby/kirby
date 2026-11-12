@@ -915,6 +915,44 @@ class FileActionsTest extends TestCase
 		]);
 	}
 
+	public function testCreateWithPathTraversalTemplate(): void
+	{
+		$this->app = $this->app->clone([
+			'roles' => [
+				[
+					'name'        => 'editor',
+					'permissions' => [
+						'files' => [
+							'create' => false,
+						]
+					]
+				]
+			],
+			'user'  => 'editor@domain.com',
+			'users' => [
+				['email' => 'editor@domain.com', 'role' => 'editor']
+			]
+		]);
+
+		// a page blueprint that would allow the creation
+		// if it was loaded as the file blueprint
+		F::write(static::TMP . '/site/blueprints/pages/public.yml', "options:\n  create: true\n");
+		F::write(static::TMP . '/site/blueprints/files/image.yml', "title: Image\n");
+
+		$parent = new Page(['slug' => 'test']);
+
+		F::write($source = static::TMP . '/source.md', '# Test');
+
+		$this->expectException(PermissionException::class);
+
+		File::create([
+			'filename' => 'test.md',
+			'source'   => $source,
+			'parent'   => $parent,
+			'template' => '../pages/public'
+		]);
+	}
+
 	/**
 	 * @dataProvider parentProvider
 	 */

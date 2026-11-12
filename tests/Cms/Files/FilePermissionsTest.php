@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
 use Kirby\TestCase;
 
 /**
@@ -9,6 +11,8 @@ use Kirby\TestCase;
  */
 class FilePermissionsTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.FilePermissions';
+
 	protected $app;
 
 	public function setUp(): void
@@ -18,6 +22,12 @@ class FilePermissionsTest extends TestCase
 				'index' => '/dev/null'
 			]
 		]);
+	}
+
+	public function tearDown(): void
+	{
+		Blueprint::$loaded = [];
+		Dir::remove(static::TMP);
 	}
 
 	public static function actionProvider(): array
@@ -112,5 +122,48 @@ class FilePermissionsTest extends TestCase
 		$file  = new File(['filename' => 'test.jpg', 'parent' => $page]);
 
 		$this->assertTrue($file->permissions()->can('changeTemplate'));
+	}
+
+	/**
+	 * @covers \Kirby\Cms\ModelPermissions::can
+	 */
+	public function testWithPathTraversalTemplate(): void
+	{
+		$this->app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'roles' => [
+				[
+					'name'        => 'editor',
+					'permissions' => [
+						'files' => [
+							'delete' => false,
+						]
+					]
+				]
+			],
+			'users' => [
+				['email' => 'editor@domain.com', 'role' => 'editor']
+			]
+		]);
+
+		// a page blueprint that would allow the deletion
+		// if it was loaded as the file blueprint
+		F::write(static::TMP . '/site/blueprints/pages/public.yml', "options:\n  delete: true\n");
+		F::write(static::TMP . '/site/blueprints/files/image.yml', "title: Image\n");
+
+		$this->app->impersonate('editor@domain.com');
+
+		// the template can already be stored in the content file
+		$page = new Page(['slug' => 'test']);
+		$file = new File([
+			'filename' => 'test.jpg',
+			'parent'   => $page,
+			'content'  => ['template' => '../pages/public']
+		]);
+
+		$this->assertSame('files/default', $file->blueprint()->name());
+		$this->assertFalse($file->permissions()->can('delete'));
 	}
 }
