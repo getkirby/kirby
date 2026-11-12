@@ -103,6 +103,8 @@
 	"error.content.lock.replace": "Версію заблоковано і її не можна замінити",
 	"error.content.lock.update": "Версію заблоковано і її не можна оновити",
 
+	"error.csrf.invalid": "Invalid CSRF token",
+
 	"error.entries.max.plural": "Не можна додати більше ніж {max} записів",
 	"error.entries.max.singular": "Не можна додати більше одного запису",
 	"error.entries.min.plural": "Потрібно додати щонайменше {min} записів",
@@ -241,6 +243,8 @@
 	"error.page.status.invalid": "Будь ласка, встановіть коректний статус сторінки",
 	"error.page.undefined": "Сторінку не знайдено",
 	"error.page.update.permission": "Вам заборонено оновлювати \"{slug}\"",
+
+	"error.request.failed": "The request to {url} failed",
 
 	"error.role.notFound": "The role \"{name}\" cannot be found",
 
@@ -834,6 +838,8 @@
 	"translation.locale": "uk_UA",
 
 	"type": "Тип",
+
+	"unknown": "unknown",
 
 	"upload": "Завантажити",
 	"upload.error.cantMove": "Не вдалося перемістити завантажений файл",

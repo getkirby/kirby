@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Filesystem\F;
 use Kirby\Template\Template;
 use PHPUnit\Framework\Attributes\CoversClass;
 use TypeError;
@@ -20,6 +21,54 @@ class PageTemplateTest extends ModelTestCase
 
 		$this->assertInstanceOf(Template::class, $page->intendedTemplate());
 		$this->assertSame('test', $page->intendedTemplate()->name());
+	}
+
+	public function testIntendedTemplateFromContentFile(): void
+	{
+		F::write(static::TMP . '/test/article.txt', '');
+		F::write(static::TMP . '/test/cover.jpg', '');
+		F::write(static::TMP . '/test/cover.jpg.txt', '');
+
+		$page = new Page([
+			'slug' => 'test',
+			'root' => static::TMP . '/test'
+		]);
+
+		$this->assertSame('article', $page->intendedTemplate()->name());
+	}
+
+	public function testIntendedTemplateReadsDirectoryOnce(): void
+	{
+		F::write(static::TMP . '/test/article.txt', '');
+
+		$page = new Page([
+			'slug' => 'test',
+			'root' => static::TMP . '/test'
+		]);
+
+		$page->intendedTemplate();
+
+		// the inventory reuses the listing read for the template
+		F::write(static::TMP . '/test/cover.jpg', '');
+
+		$this->assertSame([], $page->inventory()->files());
+	}
+
+	public function testIntendedTemplateWithInventory(): void
+	{
+		F::write(static::TMP . '/test/article.txt', '');
+
+		$page = new Page([
+			'slug' => 'test',
+			'root' => static::TMP . '/test'
+		]);
+
+		$page->inventory();
+
+		// the template reuses the listing read for the inventory
+		F::write(static::TMP . '/test/note.txt', '');
+
+		$this->assertSame('article', $page->intendedTemplate()->name());
 	}
 
 	public function testIntendedTemplateWithWrongCase(): void

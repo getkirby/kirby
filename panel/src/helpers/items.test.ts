@@ -1,9 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import items from "./items";
 
-function mockPanel(
-	responder: (query: Record<string, unknown>) => Record<string, unknown>
-) {
+function mockPanel(responder: (query: Record<string, unknown>) => unknown) {
 	const get = vi.fn(
 		async (_endpoint: string, options: { query: Record<string, unknown> }) =>
 			responder(options.query)
@@ -59,6 +57,18 @@ describe("$helper.items()", () => {
 		await Promise.all([items("items/files", "a"), items("items/pages", "b")]);
 
 		expect(get).toHaveBeenCalledTimes(2);
+	});
+
+	it("should accept a plain list as response", async () => {
+		// e.g. from a field's API route
+		mockPanel((query) => echo(query).items);
+
+		const results = await items("/api/pages/a/fields/b/items", [
+			"x",
+			"missing"
+		]);
+
+		expect(results).toStrictEqual([{ id: "x" }, undefined]);
 	});
 
 	it("should start a new queue after the previous request resolved", async () => {

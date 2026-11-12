@@ -107,7 +107,8 @@ class State
 	 *
 	 * Globals are normally only loaded with the full document request.
 	 * In addition, they can be requested via the `X-Panel-Globals` header
-	 * or the `_globals` query parameter.
+	 * or the `_globals` query parameter. The translation is also added
+	 * when it differs from the one named in the `X-Panel-Translation` header.
 	 */
 	public function filter(array $data): array
 	{
@@ -144,23 +145,26 @@ class State
 			return A::nest($result, ['translation']);
 		}
 
-		$filterGlobals   = $request->header('X-Panel-Globals');
-		$filterGlobals ??= $request->get('_globals');
+		$keys = Str::split(
+			$request->header('X-Panel-Globals') ??
+			$request->get('_globals')
+		);
 
-		if (empty($filterGlobals) === false) {
-			// split globals string into an array of fields
-			$keys = Str::split($filterGlobals, ',');
+		// the Panel holds on to its translation when the user
+		// changes in place, e.g. on login or logout
+		$translation = $request->header('X-Panel-Translation');
 
-			// add requested globals
-			$globals = $this->globals();
+		if ($translation !== null && $translation !== $this->panelLanguage()) {
+			$keys[] = 'translation';
+		}
 
-			foreach ($keys as $key) {
-				if (isset($globals[$key]) === true) {
-					$data[$key] = $globals[$key];
-				}
+		// add requested globals
+		$globals = $this->globals();
+
+		foreach ($keys as $key) {
+			if (isset($globals[$key]) === true) {
+				$data[$key] = $globals[$key];
 			}
-
-			return A::apply($data);
 		}
 
 		return A::apply($data);
@@ -217,6 +221,15 @@ class State
 	public function multilang(): bool
 	{
 		return $this->multilang;
+	}
+
+	/**
+	 * Returns the code of the interface translation,
+	 * which follows the current user
+	 */
+	protected function panelLanguage(): string
+	{
+		return $this->kirby->user()?->language() ?? $this->kirby->panelLanguage();
 	}
 
 	/**
@@ -289,12 +302,7 @@ class State
 
 	public function translation(): array
 	{
-		$language = match ($user = $this->kirby->user()) {
-			null    => $this->kirby->panelLanguage(),
-			default => $user->language()
-		};
-
-		$translation = $this->kirby->translation($language);
+		$translation = $this->kirby->translation($this->panelLanguage());
 
 		return [
 			'code'      => $translation->code(),

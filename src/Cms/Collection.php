@@ -254,11 +254,12 @@ class Collection extends BaseCollection
 
 			if ($key instanceof BaseCollection) {
 				$collection = $collection->not(...$key->keys());
-			} elseif (is_object($key) === true) {
-				$key = $key->id();
+				continue;
 			}
 
-			unset($collection->{$key});
+			// `unset($collection->{$key})` would remove a property
+			// instead of the element for keys like `data`
+			$collection->remove($key);
 		}
 
 		return $collection;

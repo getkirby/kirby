@@ -76,7 +76,7 @@
 					<k-table
 						:columns="columns"
 						:disabled="disabled"
-						:fields="fields"
+						:fields="subfields"
 						:empty="$t('field.structure.empty')"
 						:index="index"
 						:options="options"
@@ -325,6 +325,13 @@ export default {
 				align: "center",
 				details: true
 			};
+		},
+		/**
+		 * Fields with their own endpoints, so that
+		 * the cell previews can load from them
+		 */
+		subfields() {
+			return this.$helper.field.subfields(this, this.fields);
 		}
 	},
 	watch: {

@@ -103,6 +103,8 @@
 	"error.content.lock.replace": "Bu sürüm kilitlidir ve değiştirilemez",
 	"error.content.lock.update": "Bu sürüm kilitlidir ve güncellenemez",
 
+	"error.csrf.invalid": "Invalid CSRF token",
+
 	"error.entries.max.plural": "{max} girdiden fazlasını eklememelisiniz",
 	"error.entries.max.singular": "Birden fazla girdi eklememelisiniz",
 	"error.entries.min.plural": "En az {min} girdi eklemelisiniz",
@@ -241,6 +243,8 @@
 	"error.page.status.invalid": "Lütfen geçerli bir sayfa durumu ayarlayın",
 	"error.page.undefined": "Sayfa bulunamad\u0131",
 	"error.page.update.permission": "\"{slug}\" güncellemesine izin verilmiyor",
+
+	"error.request.failed": "The request to {url} failed",
 
 	"error.role.notFound": "\"{name}\" rolü bulunamadı",
 
@@ -834,6 +838,8 @@
 	"translation.locale": "tr_TR",
 
 	"type": "Tür",
+
+	"unknown": "unknown",
 
 	"upload": "Yükle",
 	"upload.error.cantMove": "Yüklenen dosya taşınamadı",

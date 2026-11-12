@@ -736,7 +736,9 @@ class Collection extends Iterator implements Stringable
 		$collection = clone $this;
 
 		foreach ($keys as $key) {
-			unset($collection->{$key});
+			// `unset($collection->{$key})` would remove a property
+			// instead of the element for keys like `data`
+			$collection->remove($key);
 		}
 
 		return $collection;

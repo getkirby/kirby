@@ -32,7 +32,11 @@ abstract class TestCase extends BaseTestCase
 		$_GET = [];
 
 		// clean up $_SERVER
-		unset($_SERVER['SERVER_SOFTWARE'], $_SERVER['HTTP_X_LANGUAGE']);
+		unset(
+			$_SERVER['SERVER_SOFTWARE'],
+			$_SERVER['HTTP_X_LANGUAGE'],
+			$_SERVER['HTTP_X_PANEL_TRANSLATION']
+		);
 
 		App::destroy();
 	}

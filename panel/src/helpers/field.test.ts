@@ -4,6 +4,7 @@ import { defaultValue, form, isVisible, options, subfields } from "./field";
 import type Panel from "@/panel/panel";
 
 // mock the Panel app with the component definitions used by defaultValue()
+// and the translation used by options()
 window.panel = {
 	app: {
 		component(name: string) {
@@ -21,7 +22,8 @@ window.panel = {
 
 			return components[name];
 		}
-	}
+	},
+	t: (key: string) => key
 } as unknown as Panel;
 
 describe("$helper.field", () => {
@@ -129,18 +131,18 @@ describe("$helper.field", () => {
 			{ value: 1, text: "One" }
 		];
 
-		it("should add a placeholder for each value without option", () => {
+		it("should add an option for each value without option", () => {
 			expect(options(list, ["a", "b", "c"])).toStrictEqual([
 				...list,
-				{ text: "–", value: "b" },
-				{ text: "–", value: "c" }
+				{ text: "[unknown]", value: "b" },
+				{ text: "[unknown]", value: "c" }
 			]);
 		});
 
 		it("should accept a single value", () => {
 			expect(options(list, "b")).toStrictEqual([
 				...list,
-				{ text: "–", value: "b" }
+				{ text: "[unknown]", value: "b" }
 			]);
 		});
 
@@ -187,6 +189,20 @@ describe("$helper.field", () => {
 
 		it("should return an empty object for empty fields", () => {
 			expect(subfields({ name: "x" }, {})).toEqual({});
+		});
+
+		it("should leave the given fields untouched", () => {
+			const fields = { title: { type: "text" } };
+			const result = subfields(
+				{
+					name: "structure",
+					endpoints: { field: "pages/x/fields/structure", model: "pages/x" }
+				},
+				fields
+			);
+
+			expect(result.title).not.toBe(fields.title);
+			expect(fields.title).toStrictEqual({ type: "text" });
 		});
 	});
 });

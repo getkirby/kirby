@@ -103,6 +103,8 @@
 	"error.content.lock.replace": "잠긴 버전은 교체할 수 없습니다.",
 	"error.content.lock.update": "잠긴 버전은 업데이트할 수 없습니다.",
 
+	"error.csrf.invalid": "Invalid CSRF token",
+
 	"error.entries.max.plural": "엔트리를 {max}개 이상 추가할 수 없습니다.",
 	"error.entries.max.singular": "엔트리를 하나 이상 추가할 수 없습니다.",
 	"error.entries.min.plural": "엔트리를 {min}개 이상 추가하세요.",
@@ -241,6 +243,8 @@
 	"error.page.status.invalid": "올바른 상태를 설정하세요.",
 	"error.page.undefined": "\ud398\uc774\uc9c0\uac00 \uc5c6\uc2b5\ub2c8\ub2e4.",
 	"error.page.update.permission": "페이지({slug})를 변경할 권한이 없습니다.",
+
+	"error.request.failed": "The request to {url} failed",
 
 	"error.role.notFound": "역할({{name}})이 없습니다.",
 
@@ -834,6 +838,8 @@
 	"translation.locale": "ko_KR",
 
 	"type": "유형",
+
+	"unknown": "unknown",
 
 	"upload": "업로드",
 	"upload.error.cantMove": "파일을 이동할 수 없습니다.",

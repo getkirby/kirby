@@ -526,6 +526,7 @@ export default class Panel {
 			referrer: this.view.path ?? undefined,
 			csrf: this.system.csrf,
 			language: this.language.code,
+			translation: this.translation.code,
 			...options
 		});
 	}

@@ -103,6 +103,8 @@
 	"error.content.lock.replace": "Þessi útfáfa er læst og það verður ekki skipt út",
 	"error.content.lock.update": "Þessi útgáfa er læst og hún verður ekki uppfærð",
 
+	"error.csrf.invalid": "Invalid CSRF token",
+
 	"error.entries.max.plural": "Ekki fleiri en {max} færslur",
 	"error.entries.max.singular": "Hámark ein færsla",
 	"error.entries.min.plural": "Að minnsta kosti {min} færslur",
@@ -241,6 +243,8 @@
 	"error.page.status.invalid": "Ákjósanlega síðustöðu takk",
 	"error.page.undefined": "Síðan fannst ekkert",
 	"error.page.update.permission": "Þú mátt ekkert uppfæra síðuna \"{slug}\"",
+
+	"error.request.failed": "The request to {url} failed",
 
 	"error.role.notFound": "The role \"{name}\" cannot be found",
 
@@ -834,6 +838,8 @@
 	"translation.locale": "is_IS",
 
 	"type": "Gerð",
+
+	"unknown": "unknown",
 
 	"upload": "Hlaða inn",
 	"upload.error.cantMove": "Innhlöðnu skránni var ekki haggað",

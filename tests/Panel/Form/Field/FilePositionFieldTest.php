@@ -138,7 +138,7 @@ class FilePositionFieldTest extends TestCase
 
 		// ... but it must not disclose the file
 		$this->assertSame('-2', $options[3]['value']);
-		$this->assertSame('–', $options[3]['text']);
+		$this->assertSame('[unknown]', $options[3]['text']);
 		$this->assertTrue($options[3]['disabled']);
 
 		$this->assertSame(3, $options[4]['value']);

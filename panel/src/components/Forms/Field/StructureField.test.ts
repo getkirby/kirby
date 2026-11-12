@@ -6,7 +6,7 @@ import StructureField from "./StructureField.vue";
 
 const Table = {
 	name: "k-table",
-	props: ["pagination", "rows"],
+	props: ["fields", "pagination", "rows"],
 	emits: ["input", "option", "paginate"],
 	template: "<div />"
 };
@@ -57,6 +57,27 @@ describe("k-structure-field", () => {
 		it.acceptsClass(mount);
 		it.acceptsStyle(mount);
 		it.inheritsNoAttrs(mount);
+	});
+
+	// computed
+	describe("subfields computed", () => {
+		it("passes the fields with their own endpoints to the table", () => {
+			const wrapper = mount({
+				endpoints: { field: "pages/x/fields/items", model: "pages/x" },
+				value: [{ title: "A" }]
+			});
+
+			expect(wrapper.findComponent(Table).props("fields")).toStrictEqual({
+				title: {
+					type: "text",
+					endpoints: { field: "pages/x/fields/items+title", model: "pages/x" }
+				},
+				label: {
+					type: "text",
+					endpoints: { field: "pages/x/fields/items+label", model: "pages/x" }
+				}
+			});
+		});
 	});
 
 	// watch

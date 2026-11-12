@@ -25,6 +25,7 @@ class MissingItemTest extends TestCase
 			'id'          => 'page://my-uuid',
 			'link'        => false,
 			'permissions' => [],
+			'theme'       => 'negative',
 			'uuid'        => 'page://my-uuid',
 		], $item->props());
 	}

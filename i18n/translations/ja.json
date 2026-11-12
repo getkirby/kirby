@@ -103,6 +103,8 @@
 	"error.content.lock.replace": "バージョンがロックされており、置換できません",
 	"error.content.lock.update": "バージョンがロックされており、更新できません",
 
+	"error.csrf.invalid": "Invalid CSRF token",
+
 	"error.entries.max.plural": "{max}個を超えるエントリーを追加することはできません",
 	"error.entries.max.singular": "エントリーは1つまでです",
 	"error.entries.min.plural": "少なくとも{min}個のエントリーを追加してください",
@@ -241,6 +243,8 @@
 	"error.page.status.invalid": "有効なページステータスを設定してください",
 	"error.page.undefined": "ページが見つかりません",
 	"error.page.update.permission": "\"{slug}\"を更新する権限がありません",
+
+	"error.request.failed": "The request to {url} failed",
 
 	"error.role.notFound": "The role \"{name}\" cannot be found",
 
@@ -834,6 +838,8 @@
 	"translation.locale": "ja_JP",
 
 	"type": "タイプ",
+
+	"unknown": "unknown",
 
 	"upload": "アップロード",
 	"upload.error.cantMove": "アップロードされたファイルを移動できませんでした",

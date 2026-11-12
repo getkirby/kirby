@@ -103,6 +103,8 @@
 	"error.content.lock.replace": "Ta wersja jest zablokowana i nie można jej zastąpić",
 	"error.content.lock.update": "Ta wersja jest zablokowana i nie można jej zaktualizować",
 
+	"error.csrf.invalid": "Invalid CSRF token",
+
 	"error.entries.max.plural": "Nie można dodać więcej niż {max} elementy/-ów",
 	"error.entries.max.singular": "Nie można dodać więcej niż jednego elementu",
 	"error.entries.min.plural": "Musisz dodać co najmniej {min} elementy/-ów",
@@ -241,6 +243,8 @@
 	"error.page.status.invalid": "Ustaw prawidłowy status strony",
 	"error.page.undefined": "Nie udało się znaleźć strony",
 	"error.page.update.permission": "Nie masz uprawnień, by zaktualizować \"{slug}\"",
+
+	"error.request.failed": "The request to {url} failed",
 
 	"error.role.notFound": "The role \"{name}\" cannot be found",
 
@@ -834,6 +838,8 @@
 	"translation.locale": "pl_PL",
 
 	"type": "Typ",
+
+	"unknown": "unknown",
 
 	"upload": "Prześlij",
 	"upload.error.cantMove": "Przesłany plik nie mógł być przeniesiony",

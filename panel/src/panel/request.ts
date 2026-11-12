@@ -50,6 +50,7 @@ export interface PanelRequestOptions extends Omit<
 	language?: string | null;
 	query: Record<string, string | null>;
 	referrer?: string;
+	translation?: string | null;
 }
 
 /**
@@ -91,6 +92,7 @@ export async function external(
 		language,
 		query,
 		referrer,
+		translation,
 		...rest
 	} = options;
 
@@ -185,6 +187,11 @@ export function headers(
 		result["x-panel-referrer"] = options.referrer;
 	}
 
+	// lets the backend send a new translation when it changed, e.g. on login
+	if (options.translation) {
+		result["x-panel-translation"] = options.translation;
+	}
+
 	return result;
 }
 
@@ -226,7 +233,8 @@ export async function request(
 	}
 
 	// extract Request options from options
-	const { csrf, globals, language, referrer, query, ...rest } = options;
+	const { csrf, globals, language, referrer, query, translation, ...rest } =
+		options;
 
 	// merge with a few defaults
 	const init: RequestInit = {

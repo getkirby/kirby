@@ -103,6 +103,8 @@
 	"error.content.lock.replace": "Versionen är låst och kan inte bytas ut",
 	"error.content.lock.update": "Versionen är låst och kan inte uppdateras",
 
+	"error.csrf.invalid": "Invalid CSRF token",
+
 	"error.entries.max.plural": "Du får inte lägga till fler än {max} poster",
 	"error.entries.max.singular": "Du får inte lägga till mer än en post",
 	"error.entries.min.plural": "Du måste lägga till minst {min} poster",
@@ -241,6 +243,8 @@
 	"error.page.status.invalid": "Sätt en giltig status för sidan",
 	"error.page.undefined": "Sidan kan inte hittas",
 	"error.page.update.permission": "Du har inte behörighet att uppdatera \"{slug}\"",
+
+	"error.request.failed": "The request to {url} failed",
 
 	"error.role.notFound": "Rollen \"{name}\" hittades inte",
 
@@ -834,6 +838,8 @@
 	"translation.locale": "sv_SE",
 
 	"type": "Typ",
+
+	"unknown": "unknown",
 
 	"upload": "Ladda upp",
 	"upload.error.cantMove": "Den överförda filen kunde inte flyttas",

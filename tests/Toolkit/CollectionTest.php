@@ -669,6 +669,24 @@ class CollectionTest extends TestCase
 		$this->assertIsUntouched();
 	}
 
+	public function testNotWithPropertyNames(): void
+	{
+		$collection = new Collection([
+			'data'          => 'a',
+			'caseSensitive' => 'b',
+			'pagination'    => 'c',
+			'other'         => 'd'
+		]);
+
+		$result = $collection->not('data');
+		$this->assertSame(['casesensitive', 'pagination', 'other'], $result->keys());
+
+		$result = $collection->not('caseSensitive', 'pagination');
+		$this->assertSame(['data', 'other'], $result->keys());
+		$this->assertSame('a', $result->get('DATA'));
+		$this->assertNull($result->pagination());
+	}
+
 	public function testNth(): void
 	{
 		$this->assertSame('My first element', $this->collection->nth(0));

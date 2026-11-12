@@ -249,7 +249,7 @@ describe("$helper.uploadAsChunks()", () => {
 		expect(progress).toHaveBeenCalled();
 	});
 
-	it("should stop chunking when aborted between chunks", async () => {
+	it("should stop chunking and reject when aborted between chunks", async () => {
 		const controller = new AbortController();
 		const promise = uploadAsChunks(
 			makeFile("abcdefg"),
@@ -262,8 +262,18 @@ describe("$helper.uploadAsChunks()", () => {
 
 		MockXHR.instances[0].emitLoad(JSON.stringify({ status: "ok" }));
 		controller.abort();
-		await promise;
 
+		await expect(promise).rejects.toMatchObject({ name: "AbortError" });
 		expect(MockXHR.instances).toHaveLength(1);
+	});
+
+	it("should not upload when already aborted", async () => {
+		const controller = new AbortController();
+		controller.abort();
+
+		await expect(
+			uploadAsChunks(makeFile(), { url: "/", abort: controller.signal })
+		).rejects.toMatchObject({ name: "AbortError" });
+		expect(MockXHR.instances).toHaveLength(0);
 	});
 });

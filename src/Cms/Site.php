@@ -61,9 +61,9 @@ class Site extends ModelWithContent
 	protected string $homePageId;
 
 	/**
-	 * Cache for the inventory array
+	 * Inventory of the site directory
 	 */
-	protected array|null $inventory = null;
+	protected Inventory|null $inventory = null;
 
 	/**
 	 * The current page object
@@ -253,15 +253,11 @@ class Site extends ModelWithContent
 	 * and children in the site directory
 	 */
 	#[BlockCollectionAccess]
-	public function inventory(): array
+	public function inventory(): Inventory
 	{
-		if ($this->inventory !== null) {
-			return $this->inventory;
-		}
-
 		$kirby = $this->kirby();
 
-		return $this->inventory = Inventory::for(
+		return $this->inventory ??= new Inventory(
 			$this->root(),
 			$kirby->contentExtension(),
 			$kirby->contentIgnore(),

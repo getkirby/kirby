@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Filesystem\F;
 use Kirby\Panel\Page as PanelPage;
 use PHPUnit\Framework\Attributes\CoversClass;
 use TypeError;
@@ -58,6 +59,21 @@ class PageTest extends ModelTestCase
 		$this->assertSame(3, $child->depth());
 	}
 
+	public function testDirname(): void
+	{
+		$page = new Page(['slug' => 'about', 'num' => 1]);
+		$this->assertSame('1_about', $page->dirname());
+
+		Inventory::$numSeparator = '-';
+
+		try {
+			$page = new Page(['slug' => 'about', 'num' => 1]);
+			$this->assertSame('1-about', $page->dirname());
+		} finally {
+			Inventory::$numSeparator = '_';
+		}
+	}
+
 	public function testId(): void
 	{
 		$page = new Page([
@@ -80,6 +96,26 @@ class PageTest extends ModelTestCase
 
 		$this->assertSame('mother', $mother->id());
 		$this->assertSame('mother/child', $child->id());
+	}
+
+	public function testInventory(): void
+	{
+		F::write(static::TMP . '/test/1_child/note.txt', '');
+		F::write(static::TMP . '/test/cover.jpg', '');
+		F::write(static::TMP . '/test/article.txt', '');
+
+		$page = new Page([
+			'slug' => 'test',
+			'root' => static::TMP . '/test'
+		]);
+
+		$inventory = $page->inventory();
+
+		$this->assertInstanceOf(Inventory::class, $inventory);
+		$this->assertSame($inventory, $page->inventory());
+		$this->assertSame('child', $inventory->children()[0]['slug']);
+		$this->assertArrayHasKey('cover.jpg', $inventory->files());
+		$this->assertSame('article', $inventory->template());
 	}
 
 	public function testPanel(): void

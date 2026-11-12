@@ -103,6 +103,8 @@
 	"error.content.lock.replace": "The version is locked and cannot be replaced",
 	"error.content.lock.update": "The version is locked and cannot be updated",
 
+	"error.csrf.invalid": "Invalid CSRF token",
+
 	"error.entries.max.plural": "You must not add more than {max} entries",
 	"error.entries.max.singular": "You must not add more than one entry",
 	"error.entries.min.plural": "You must add at least {min} entries",
@@ -241,6 +243,8 @@
 	"error.page.status.invalid": "Sæt venligst en gyldig status for siden",
 	"error.page.undefined": "Siden kunne ikke findes",
 	"error.page.update.permission": "Du har ikke tilladelse til at opdatere \"{slug}\"",
+
+	"error.request.failed": "The request to {url} failed",
 
 	"error.role.notFound": "The role \"{name}\" cannot be found",
 
@@ -834,6 +838,8 @@
 	"translation.locale": "da_DK",
 
 	"type": "Type",
+
+	"unknown": "unknown",
 
 	"upload": "Upload",
 	"upload.error.cantMove": "Den uploadede fil kunne ikke flyttes",

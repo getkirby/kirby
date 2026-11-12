@@ -103,6 +103,8 @@
 	"error.content.lock.replace": "內容鎖定中，無法替換",
 	"error.content.lock.update": "內容鎖定中，無法更新",
 
+	"error.csrf.invalid": "Invalid CSRF token",
+
 	"error.entries.max.plural": "最多只能加入 {max} 筆資料",
 	"error.entries.max.singular": "最多只能加入 1 筆資料",
 	"error.entries.min.plural": "至少需要 {min} 筆資料",
@@ -241,6 +243,8 @@
 	"error.page.status.invalid": "頁面狀態無效",
 	"error.page.undefined": "\u627e\u4e0d\u5230\u9801\u9762",
 	"error.page.update.permission": "你沒有更新「{slug}」的權限",
+
+	"error.request.failed": "The request to {url} failed",
 
 	"error.role.notFound": "The role \"{name}\" cannot be found",
 
@@ -834,6 +838,8 @@
 	"translation.locale": "zh_TW",
 
 	"type": "類型",
+
+	"unknown": "unknown",
 
 	"upload": "上傳",
 	"upload.error.cantMove": "檔案無法移動到目標位置",

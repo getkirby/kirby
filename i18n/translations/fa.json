@@ -103,6 +103,8 @@
 	"error.content.lock.replace": "این نسخه قفل شده است و نمی‌توان آن را جایگزین کرد",
 	"error.content.lock.update": "این نسخه قفل شده است و نمی‌توان آن را به‌روزرسانی کرد",
 
+	"error.csrf.invalid": "Invalid CSRF token",
+
 	"error.entries.max.plural": "نمی‌توانید بیش از {max} مورد اضافه کنید",
 	"error.entries.max.singular": "نمی‌توانید بیش از یک مورد اضافه کنید",
 	"error.entries.min.plural": "باید حداقل {min} مورد اضافه کنید",
@@ -241,6 +243,8 @@
 	"error.page.status.invalid": "لطفاً وضعیت معتبری برای صفحه تنظیم کنید",
 	"error.page.undefined": "صفحه پیدا نشد",
 	"error.page.update.permission": "شما اجازه به‌روزرسانی «{slug}» را ندارید",
+
+	"error.request.failed": "The request to {url} failed",
 
 	"error.role.notFound": "نقش «{name}» پیدا نشد",
 
@@ -834,6 +838,8 @@
 	"translation.locale": "fa_IR",
 
 	"type": "نوع",
+
+	"unknown": "unknown",
 
 	"upload": "بارگذاری",
 	"upload.error.cantMove": "امکان انتقال فایل بارگذاری‌شده وجود ندارد",

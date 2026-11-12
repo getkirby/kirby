@@ -38,9 +38,7 @@ class UserChangeLanguageDialogController extends UserDialogController
 
 		return [
 			'event'  => 'user.changeLanguage',
-			'reload' => [
-				'globals' => 'translation'
-			]
+			'reload' => true
 		];
 	}
 }

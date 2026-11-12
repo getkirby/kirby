@@ -31,7 +31,7 @@
 				class="k-table k-object-field-table"
 			>
 				<tbody>
-					<template v-for="field in fields">
+					<template v-for="field in subfields">
 						<tr
 							v-if="field.saveable && $helper.field.isVisible(field, value)"
 							:key="field.name"
@@ -100,6 +100,13 @@ export default {
 			return (
 				this.object === null || this.$helper.object.length(this.object) === 0
 			);
+		},
+		/**
+		 * Fields with their own endpoints, so that
+		 * the cell previews can load from them
+		 */
+		subfields() {
+			return this.$helper.field.subfields(this, this.fields);
 		}
 	},
 	watch: {

@@ -358,6 +358,28 @@ describe("panel", () => {
 
 			expect(request.headers.get("x-language")).toStrictEqual("de");
 		});
+
+		it("should send the code of the current translation", async () => {
+			const panel = Panel.create(app);
+			const fetch = vi.fn<(request: Request) => Promise<Response>>(
+				async () =>
+					new Response(JSON.stringify({}), {
+						headers: { "Content-Type": "application/json" }
+					})
+			);
+
+			vi.stubGlobal("fetch", fetch);
+
+			panel.set({
+				translation: { code: "fr" }
+			});
+
+			await panel.request("/some/view");
+
+			const [request] = fetch.mock.calls[0]!;
+
+			expect(request.headers.get("x-panel-translation")).toStrictEqual("fr");
+		});
 	});
 
 	describe("search", () => {

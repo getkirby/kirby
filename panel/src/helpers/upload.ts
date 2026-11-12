@@ -155,10 +155,8 @@ export async function uploadAsChunks(
 	let response: unknown;
 
 	for (let i = 0; i < parts; i++) {
-		// break if upload got aborted in the meantime
-		if (params.abort?.aborted) {
-			break;
-		}
+		// reject like `fetch()` if the upload got aborted in the meantime
+		params.abort?.throwIfAborted();
 
 		// slice chunk at the right positions
 		const start = i * size;

@@ -30,7 +30,7 @@
 		</k-lab-example>
 
 		<k-lab-example label="Overflow">
-			<k-lab-table-cell>
+			<k-lab-table-cell style="max-width: 20rem">
 				<!-- @code -->
 				<k-users-field-preview
 					:value="

@@ -9,7 +9,11 @@ const helper = {
 	items: vi.fn()
 };
 
-function mount(props = {}, attrs = {}, $panel = { language: { code: "en" } }) {
+function mount(
+	props = {},
+	attrs = {},
+	$panel: Record<string, unknown> = { language: { code: "en" } }
+) {
 	return vueMount(PagesFieldPreview, {
 		props,
 		attrs,
@@ -150,6 +154,35 @@ describe("k-pages-field-preview", () => {
 
 			expect(helper.items).toHaveBeenCalledOnce();
 			expect(wrapper.vm.tags).toStrictEqual([{ id: "page://b", text: "Blog" }]);
+		});
+	});
+
+	describe("load()", () => {
+		it("loads the items from the field's own route", async () => {
+			helper.items.mockResolvedValueOnce([
+				{ text: "Home" },
+				{ text: "page://b", theme: "negative" }
+			]);
+			const wrapper = mount(
+				{
+					field: { endpoints: { field: "pages/x/fields/items+link" } },
+					value: ["page://a", "page://b"]
+				},
+				{},
+				{ language: { code: "en" }, urls: { api: "/api" } }
+			);
+			await flushPromises();
+
+			expect(helper.items).toHaveBeenCalledExactlyOnceWith(
+				"/api/pages/x/fields/items+link/items",
+				["page://a", "page://b"]
+			);
+
+			// the route's stand-in for a missing page keeps its theme
+			expect(wrapper.vm.tags).toStrictEqual([
+				{ id: "page://a", text: "Home" },
+				{ id: "page://b", text: "page://b", theme: "negative" }
+			]);
 		});
 	});
 });

@@ -103,6 +103,8 @@
 	"error.content.lock.replace": "La versione è bloccata e non può essere rimpiazzata",
 	"error.content.lock.update": "La versione è bloccata e non può essere aggiornata",
 
+	"error.csrf.invalid": "Invalid CSRF token",
+
 	"error.entries.max.plural": "Non puoi aggiungere più di {max} voci",
 	"error.entries.max.singular": "Non puoi aggiungere più di una voce ",
 	"error.entries.min.plural": "Devi aggiungere almeno {min} voci",
@@ -241,6 +243,8 @@
 	"error.page.status.invalid": "Imposta uno stato valido per la pagina",
 	"error.page.undefined": "La pagina non \u00e8 stata trovata",
 	"error.page.update.permission": "Non ti è permesso modificare \"{slug}\"",
+
+	"error.request.failed": "The request to {url} failed",
 
 	"error.role.notFound": "The role \"{name}\" cannot be found",
 
@@ -834,6 +838,8 @@
 	"translation.locale": "it_IT",
 
 	"type": "Tipo",
+
+	"unknown": "unknown",
 
 	"upload": "Carica",
 	"upload.error.cantMove": "Non è stato possibile spostare il file caricato",

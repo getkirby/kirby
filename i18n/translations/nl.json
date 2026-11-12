@@ -103,6 +103,8 @@
 	"error.content.lock.replace": "Deze versie is vergrendeld en kan niet worden vervangen",
 	"error.content.lock.update": "Deze versie is vergrendeld en kan niet worden geüpdatet",
 
+	"error.csrf.invalid": "Invalid CSRF token",
+
 	"error.entries.max.plural": "Je kunt niet meer dan {max} items toevoegen",
 	"error.entries.max.singular": "Je kunt niet meer dan één item toevoegen",
 	"error.entries.min.plural": "Je moet ten minste {min} items toevoegen",
@@ -241,6 +243,8 @@
 	"error.page.status.invalid": "Zorg voor een geldige paginastatus",
 	"error.page.undefined": "De pagina kan niet worden gevonden",
 	"error.page.update.permission": "Je hebt geen rechten om \"{slug}\" te updaten",
+
+	"error.request.failed": "The request to {url} failed",
 
 	"error.role.notFound": "The role \"{name}\" cannot be found",
 
@@ -834,6 +838,8 @@
 	"translation.locale": "nl_NL",
 
 	"type": "Type",
+
+	"unknown": "unknown",
 
 	"upload": "Upload",
 	"upload.error.cantMove": "Het geüploadde bestand kon niet worden verplaatst",

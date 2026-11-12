@@ -44,7 +44,7 @@ class User extends ModelWithContent
 	protected string|null $email;
 	protected string $hash;
 	protected string $id;
-	protected array|null $inventory = null;
+	protected Inventory|null $inventory = null;
 	protected string|null $language;
 	protected Field|string|null $name;
 	protected string|null $password;
@@ -274,15 +274,11 @@ class User extends ModelWithContent
 	 * children and content files
 	 */
 	#[BlockCollectionAccess]
-	public function inventory(): array
+	public function inventory(): Inventory
 	{
-		if ($this->inventory !== null) {
-			return $this->inventory;
-		}
-
 		$kirby = $this->kirby();
 
-		return $this->inventory = Inventory::for(
+		return $this->inventory ??= new Inventory(
 			$this->root(),
 			$kirby->contentExtension(),
 			$kirby->contentIgnore(),

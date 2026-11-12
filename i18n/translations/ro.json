@@ -103,6 +103,8 @@
 	"error.content.lock.replace": "Versiunea este blocată și nu poate fi înlocuită",
 	"error.content.lock.update": "Versiunea este blocată și nu poate fi actualizată",
 
+	"error.csrf.invalid": "Invalid CSRF token",
+
 	"error.entries.max.plural": "Nu sunt permise mai mult de {max} înregistrări",
 	"error.entries.max.singular": "Nu este permisă mai mult de o înregistrare",
 	"error.entries.min.plural": "Sunt necesare cel puțin {min} înregistrări",
@@ -241,6 +243,8 @@
 	"error.page.status.invalid": "Te rog stabilește o stare validă pentru pagină",
 	"error.page.undefined": "Pagina nu a fost găsită",
 	"error.page.update.permission": "Nu ai voie să actualizezi \"{slug}\"",
+
+	"error.request.failed": "The request to {url} failed",
 
 	"error.role.notFound": "The role \"{name}\" cannot be found",
 
@@ -834,6 +838,8 @@
 	"translation.locale": "ro_RO",
 
 	"type": "Tip",
+
+	"unknown": "unknown",
 
 	"upload": "Încarcă",
 	"upload.error.cantMove": "Fișierul încărcat nu a putut fi mutat",
