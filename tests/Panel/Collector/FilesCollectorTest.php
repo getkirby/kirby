@@ -46,6 +46,19 @@ class FilesCollectorTest extends TestCase
 		$this->assertCollectByQuery(FilesCollector::class, 'site.files.template("hero")', ['image-b.jpg', 'image-c.jpg']);
 	}
 
+	public function testCollectByQueryUnsorted(): void
+	{
+		$this->setUpFiles();
+		$this->app->impersonate('kirby');
+
+		$collector = new FilesCollector(
+			query: 'site.files.flip',
+			sorted: false
+		);
+
+		$this->assertModelsInCollector($collector, ['image-c.jpg', 'image-b.jpg', 'image-a.jpg']);
+	}
+
 	public function testCollectSorted(): void
 	{
 		$this->setUpFiles();
@@ -103,7 +116,7 @@ class FilesCollectorTest extends TestCase
 	{
 		$collector = new FilesCollector();
 
-		// The files collector is always sorting.
+		// The files collector is always sorting by default.
 		// Either by the sortBy parameter or by the default sort order.
 		$this->assertTrue($collector->isSorting());
 
@@ -120,6 +133,30 @@ class FilesCollectorTest extends TestCase
 		);
 
 		$this->assertTrue($collector->isSorting());
+	}
+
+	public function testIsSortingUnsorted(): void
+	{
+		$collector = new FilesCollector(
+			sorted: false
+		);
+
+		$this->assertFalse($collector->isSorting());
+
+		$collector = new FilesCollector(
+			sortBy: 'filename desc',
+			sorted: false
+		);
+
+		$this->assertTrue($collector->isSorting());
+
+		$collector = new FilesCollector(
+			search: 'test',
+			sortBy: 'filename desc',
+			sorted: false
+		);
+
+		$this->assertFalse($collector->isSorting());
 	}
 
 	public function testModels(): void

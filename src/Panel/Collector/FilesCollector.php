@@ -25,6 +25,7 @@ class FilesCollector extends ModelsCollector
 		protected string|null $query = null,
 		protected string|null $search = null,
 		protected string|null $sortBy = null,
+		protected bool $sorted = true,
 		protected string|null $template = null,
 	) {
 	}
@@ -58,7 +59,11 @@ class FilesCollector extends ModelsCollector
 
 	public function isSorting(): bool
 	{
-		return true;
+		if ($this->sorted === true) {
+			return true;
+		}
+
+		return parent::isSorting();
 	}
 
 	protected function sort(Files|Pages|Users $models): Files

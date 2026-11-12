@@ -128,6 +128,39 @@ class FilePickerDialogControllerTest extends TestCase
 		$this->assertSame('test.jpg', $items[0]['filename']);
 	}
 
+	public function testItemsWithQueryOrder(): void
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'home',
+						'files' => [
+							['filename' => 'b-page.jpg'],
+							['filename' => 'd-page.jpg']
+						]
+					]
+				],
+				'files' => [
+					['filename' => 'a-site.jpg'],
+					['filename' => 'c-site.jpg']
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new FilePickerDialogController(
+			model: $this->app->page('home'),
+			query: 'page.files.add(site.files)'
+		);
+
+		$this->assertSame(
+			['b-page.jpg', 'd-page.jpg', 'a-site.jpg', 'c-site.jpg'],
+			array_column($controller->items(), 'filename')
+		);
+	}
+
 	public function testLoad(): void
 	{
 		$controller = new FilePickerDialogController(
