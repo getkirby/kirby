@@ -16,7 +16,6 @@ use Kirby\Toolkit\A;
 use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Str;
 use SensitiveParameter;
-use Throwable;
 
 /**
  * UserActions
@@ -332,19 +331,13 @@ trait UserActions
 	{
 		$length = 8;
 
+		// random ids always match the id pattern and are never reserved,
+		// so only a taken id needs another try
 		do {
-			try {
-				$id = Str::random($length);
-				$this->guards()->validators()->validateId($id);
-				return $id;
+			$id = Str::random($length++);
+		} while ($this->kirby()->users()->find($id) !== null);
 
-				// we can't really test for a random match
-				// @codeCoverageIgnoreStart
-			} catch (Throwable) {
-				$length++;
-			}
-		} while (true);
-		// @codeCoverageIgnoreEnd
+		return $id;
 	}
 
 	/**

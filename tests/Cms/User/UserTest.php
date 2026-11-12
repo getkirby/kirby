@@ -18,6 +18,31 @@ class UserTest extends ModelTestCase
 		$this->assertNull($user->avatar());
 	}
 
+	public function testCreateId(): void
+	{
+		$user = new User(['email' => 'user@domain.com']);
+		$this->assertMatchesRegularExpression('/^[a-z0-9]{8}$/i', $user->id());
+	}
+
+	public function testCreateIdWithoutApp(): void
+	{
+		$indexRoot = Core::$indexRoot;
+		Core::$indexRoot = static::TMP . '/default';
+		App::destroy();
+
+		try {
+			new App([
+				'roots' => ['index' => static::TMP . '/app'],
+				'users' => [['email' => 'user@domain.com']]
+			]);
+
+			// creating the id must not open a session in the default roots
+			$this->assertDirectoryDoesNotExist(static::TMP . '/default/site/sessions');
+		} finally {
+			Core::$indexRoot = $indexRoot;
+		}
+	}
+
 	public function testCredentials(): void
 	{
 		$user = new User([
