@@ -239,6 +239,33 @@ class HtmlTest extends TestCase
 		$this->assertNull($attr);
 	}
 
+	public function testAttrWithXmlEntities(): void
+	{
+		$attr = Html::attr('a', ['value' => 'a&#160;b &#38;&#8364; &#039; &#160 &', 'escape' => false]);
+		$this->assertSame('a="a&nbsp;b &amp;&euro; &#039; &#160 &"', $attr);
+
+		$attr = Html::attr('a', ['value' => implode(Xml::$entities), 'escape' => false]);
+		$this->assertSame('a="' . implode(array_keys(Xml::$entities)) . '"', $attr);
+
+		$attr = Html::attr(['b' => ['value' => '&#169;', 'escape' => false], 'a' => 'ü'], null, ' ');
+		$this->assertSame(' a="&uuml;" b="&copy;"', $attr);
+	}
+
+	public function testAttrWithCustomXmlEntities(): void
+	{
+		$entities = Xml::$entities;
+
+		Xml::$entities = ['&test;' => '&#1;'];
+		$attr = Html::attr('a', ['value' => '&#1;&#160;', 'escape' => false]);
+		$this->assertSame('a="&test;&#160;"', $attr);
+
+		Xml::$entities = null;
+		$attr = Html::attr('a', ['value' => '&#1;&#160;', 'escape' => false]);
+		$this->assertSame('a="&#1;&#160;"', $attr);
+
+		Xml::$entities = $entities;
+	}
+
 	public function testBreaks(): void
 	{
 		$this->assertSame("line 1<br />\nline 2", Html::breaks("line 1\nline 2"));
