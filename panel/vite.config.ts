@@ -189,8 +189,8 @@ function createTest() {
 			provider: "v8",
 			include: ["src/**/*.{js,ts,vue}"],
 			exclude: ["src/**/*.test.{js,ts}", "src/**/index.{js,ts}"],
-			// local: html report for browsing; CI: lcov for the Codecov upload
-			reporter: process.env.CI ? ["lcov"] : ["text", "html"],
+			// html report for browsing; CI uploads its own report
+			reporter: ["text", "html"],
 			reportsDirectory: "./tests/coverage"
 		}
 	};
