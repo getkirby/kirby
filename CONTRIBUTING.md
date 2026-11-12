@@ -77,7 +77,7 @@ We use [`cpx`](https://github.com/laravel/cpx) to run our PHP dev tools (e.g. PH
 Install `cpx` globally once via Composer:
 
 ```bash
-composer global require laravel/cpx
+composer global require cpx/cpx
 ```
 
 Make sure Composer's global `bin` directory is on your `PATH` (run `composer global config bin-dir --absolute` to find it). After that you don't need to install PHPUnit, Psalm or PHP CS Fixer globally. The `composer` scripts (`composer fix`, `composer test`, `composer analyze`) call them through `cpx` for you.
@@ -98,7 +98,7 @@ We use an [`.editorconfig`](https://editorconfig.org) file to enforce basic form
 
 #### Backend (PHP)
 
-We use [PHP CS Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer) to ensure a consistent style for our PHP code. It is mainly based on [PSR-12](https://www.php-fig.org/psr/psr-12/). Run `composer fix` in the `kirby` folder to check for inconsistencies and fix them (this runs PHP CS Fixer through [`cpx`](#development-setup), no separate installation needed). Our automated PR checks will fail if there are code style issues with your code.
+We use [getkirby/php-cs](https://github.com/getkirby/php-cs) to ensure a consistent style for our PHP code. Run `composer fix` in the `kirby` folder to check for inconsistencies and fix them (this runs it through [`cpx`](#development-setup), no separate installation needed). Our automated PR checks will fail if there are code style issues with your code.
 
 #### Frontend/Panel (JavaScript, TypeScript, Vue)
 
@@ -123,6 +123,8 @@ We also document Kirby on the Kirby website at <https://getkirby.com>. However w
 ### Tests
 
 Unit and integration tests help us prevent regressions when we make changes to the code. Every bug fix should also add a unit test for the fixed bug to make sure we won't re-introduce the same problem later down the road. Every new feature should be accompanied by unit tests to protect it from breaking through future changes.
+
+Our PR checks use the shared workflows from [getkirby/actions](https://github.com/getkirby/actions), which run the same composer and npm scripts as you do locally. To run all of them before you open a PR, use `composer ci` in the `kirby` folder and `npm run ci` in `kirby/panel`.
 
 #### Backend (PHP)
 
@@ -149,7 +151,7 @@ The Panel doesn't have extensive test coverage yet. That's an area we are still 
 We use [vitest](https://vitest.dev) for unit tests for JavaScript. Tests are placed in a `*.test.js` file next to the actual JavaScript file. Run them from the `kirby/panel` folder with:
 
 ```bash
-npm run test:unit
+npm run test
 ```
 
 ### Commit messages
