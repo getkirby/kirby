@@ -103,6 +103,8 @@
 	"error.content.lock.replace": "Cette version est verrouillée et ne peut être remplacée",
 	"error.content.lock.update": "Cette version est verrouillée et ne peut être mise à jour",
 
+	"error.csrf.invalid": "Invalid CSRF token",
+
 	"error.entries.max.plural": "Vous ne devez pas ajouter plus de {max} entrées",
 	"error.entries.max.singular": "Vous ne devez pas ajouter plus d’une entrée",
 	"error.entries.min.plural": "Vous devez ajouter au moins {min} entrées",
@@ -241,6 +243,8 @@
 	"error.page.status.invalid": "Veuillez choisir un statut de page valide",
 	"error.page.undefined": "La page n’a pu être trouvée",
 	"error.page.update.permission": "Vous n’êtes pas autorisé à modifier « {slug} »",
+
+	"error.request.failed": "The request to {url} failed",
 
 	"error.role.notFound": "Le rôle « {name} » n’a pu être trouvé",
 
@@ -834,6 +838,8 @@
 	"translation.locale": "fr_FR",
 
 	"type": "Type",
+
+	"unknown": "unknown",
 
 	"upload": "Transférer",
 	"upload.error.cantMove": "Le fichier transféré n’a pu être déplacé",

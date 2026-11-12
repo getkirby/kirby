@@ -103,6 +103,8 @@
 	"error.content.lock.replace": "The version is locked and cannot be replaced",
 	"error.content.lock.update": "The version is locked and cannot be updated",
 
+	"error.csrf.invalid": "Invalid CSRF token",
+
 	"error.entries.max.plural": "You must not add more than {max} entries",
 	"error.entries.max.singular": "You must not add more than one entry",
 	"error.entries.min.plural": "You must add at least {min} entries",
@@ -241,6 +243,8 @@
 	"error.page.status.invalid": "Prosím, nastavte platnú status pre stránku",
 	"error.page.undefined": "Stránku nie je možné nájsť",
 	"error.page.update.permission": "Nemáte povolenie na aktualizáciu \"{slug}\"",
+
+	"error.request.failed": "The request to {url} failed",
 
 	"error.role.notFound": "The role \"{name}\" cannot be found",
 
@@ -834,6 +838,8 @@
 	"translation.locale": "sk_SK",
 
 	"type": "Type",
+
+	"unknown": "unknown",
 
 	"upload": "Nahrať",
 	"upload.error.cantMove": "The uploaded file could not be moved",

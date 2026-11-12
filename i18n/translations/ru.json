@@ -103,6 +103,8 @@
 	"error.content.lock.replace": "Версия заблокирована и не может быть заменена",
 	"error.content.lock.update": "Версия заблокирована и не может быть обновлена",
 
+	"error.csrf.invalid": "Invalid CSRF token",
+
 	"error.entries.max.plural": "Вы не должны добавлять более {max} записей",
 	"error.entries.max.singular": "Вы должны добавить не более одной записи",
 	"error.entries.min.plural": "Вы должны добавить не менее {min} записей",
@@ -241,6 +243,8 @@
 	"error.page.status.invalid": "Пожалуйста, установите верный статус страницы",
 	"error.page.undefined": "\u0421\u0442\u0440\u0430\u043d\u0438\u0446\u0430 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u0430",
 	"error.page.update.permission": "У вас нет права обновить \"{slug}\"",
+
+	"error.request.failed": "The request to {url} failed",
 
 	"error.role.notFound": "The role \"{name}\" cannot be found",
 
@@ -834,6 +838,8 @@
 	"translation.locale": "ru_RU",
 
 	"type": "Введите",
+
+	"unknown": "unknown",
 
 	"upload": "Загрузить",
 	"upload.error.cantMove": "Не удалось переместить загруженный файл",

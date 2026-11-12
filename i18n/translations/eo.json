@@ -103,6 +103,8 @@
 	"error.content.lock.replace": "The version is locked and cannot be replaced",
 	"error.content.lock.update": "The version is locked and cannot be updated",
 
+	"error.csrf.invalid": "Invalid CSRF token",
+
 	"error.entries.max.plural": "You must not add more than {max} entries",
 	"error.entries.max.singular": "You must not add more than one entry",
 	"error.entries.min.plural": "You must add at least {min} entries",
@@ -241,6 +243,8 @@
 	"error.page.status.invalid": "Bonvolu elekti validan paĝstaton",
 	"error.page.undefined": "La paĝo ne estas trovebla",
 	"error.page.update.permission": "Vi ne rajtas ĝisdatigi \"{slug}\"",
+
+	"error.request.failed": "The request to {url} failed",
 
 	"error.role.notFound": "The role \"{name}\" cannot be found",
 
@@ -834,6 +838,8 @@
 	"translation.locale": "eo",
 
 	"type": "Type",
+
+	"unknown": "unknown",
 
 	"upload": "Alŝuti",
 	"upload.error.cantMove": "Ne eblis movi la alŝutita dosiero",
