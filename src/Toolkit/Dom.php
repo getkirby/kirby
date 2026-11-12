@@ -66,6 +66,13 @@ class Dom
 	protected DOMDocument $doc;
 
 	/**
+	 * Doctypes removed by `Dom::sanitize()`
+	 *
+	 * @var list<DOMDocumentType>
+	 */
+	protected array $doctypes = [];
+
+	/**
 	 * @param $code XML or HTML original input code
 	 * @param $type Document type (`'HTML'` or `'XML'`)
 	 */
@@ -1144,6 +1151,10 @@ class Dom
 		} catch (InvalidArgumentException $e) {
 			$errors[] = $e;
 			static::remove($doctype);
+
+			// keep it alive: entity references in the document
+			// still point to the declarations in its subset
+			$this->doctypes[] = $doctype;
 		}
 	}
 

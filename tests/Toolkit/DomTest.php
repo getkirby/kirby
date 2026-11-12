@@ -14,6 +14,7 @@ use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use WeakReference;
 
 #[CoversClass(Dom::class)]
 class DomTest extends TestCase
@@ -2256,6 +2257,24 @@ class DomTest extends TestCase
 				);
 			}
 		]);
+	}
+
+	public function testSanitizeDoctypeWithEntityReferences(): void
+	{
+		$dom       = new Dom('<!DOCTYPE xml [<!ENTITY lol "lol">]><xml>&lol;</xml>', 'XML');
+		$doctype   = $dom->document()->doctype;
+		$reference = WeakReference::create($doctype);
+		$errors    = $dom->sanitize([]);
+
+		$this->assertSame('The doctype must not define a subset', $errors[0]->getMessage());
+		$this->assertSame('<xml>&lol;</xml>', $dom->toString());
+
+		// `&lol;` still points to the declaration in the removed doctype,
+		// freeing it would leave libxml reading freed memory
+		unset($doctype, $errors);
+		gc_collect_cycles();
+
+		$this->assertInstanceOf(DOMDocumentType::class, $reference->get());
 	}
 
 	public function testSanitizeElementsEvenWhenUnwrapped(): void
