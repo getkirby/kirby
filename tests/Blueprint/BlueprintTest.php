@@ -8,11 +8,13 @@ use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Form\Fields;
 use Kirby\TestCase;
 use Kirby\Toolkit\I18n;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use stdClass;
 
 #[CoversClass(Blueprint::class)]
@@ -542,6 +544,50 @@ class BlueprintTest extends TestCase
 	{
 		$blueprint = Blueprint::factory(new Page(['slug' => 'test']), 'notFound');
 		$this->assertNull($blueprint);
+	}
+
+	public function testFindInSubfolder(): void
+	{
+		$this->app = $this->app->clone([
+			'roots' => [
+				'index'      => '/dev/null',
+				'blueprints' => static::TMP,
+			]
+		]);
+
+		Data::write(static::TMP . '/files/gallery/photo.yml', ['title' => 'Photo']);
+
+		$this->assertSame('Photo', Blueprint::find('files/gallery/photo')['title']);
+	}
+
+	public static function pathTraversalProvider(): array
+	{
+		return [
+			['files/../pages/public'],
+			['files/gallery/../../pages/public'],
+			['files/./../pages/public'],
+			['files/..\\pages\\public'],
+		];
+	}
+
+	#[DataProvider('pathTraversalProvider')]
+	public function testFindWithPathTraversal(string $name): void
+	{
+		$this->app = $this->app->clone([
+			'roots' => [
+				'index'      => '/dev/null',
+				'blueprints' => static::TMP,
+			]
+		]);
+
+		// the type folders have to exist for the path to resolve
+		Data::write(static::TMP . '/files/gallery/photo.yml', ['title' => 'Photo']);
+		Data::write(static::TMP . '/pages/public.yml', ['title' => 'Public']);
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The blueprint "' . $name . '" could not be loaded');
+
+		Blueprint::find($name);
 	}
 
 	public function testFactoryCache(): void
