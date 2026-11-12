@@ -54,7 +54,7 @@ class FilePickerDialogController extends ModelPickerDialogController
 			parent: $this->model,
 			query:  $this->query(),
 			search: $this->search,
-			sorted: false,
+			sorted: $this->query === null,
 		);
 	}
 
