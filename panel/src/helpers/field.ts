@@ -150,7 +150,8 @@ export function subfields(
 	const subfields: Record<string, Field> = {};
 
 	for (const name in fields) {
-		const subfield = fields[name];
+		// copy the subfield, so that the given fields stay untouched
+		const subfield = { ...fields[name] };
 
 		if (field.endpoints) {
 			const endpoints = field.endpoints as {
