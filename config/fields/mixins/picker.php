@@ -115,7 +115,7 @@ return [
 				'link'        => false,
 				'permissions' => [],
 				'sortable'    => true,
-				'text'        => '–'
+				'text'        => '[' . I18n::translate('unknown', 'unknown') . ']'
 			];
 		}
 	]
