@@ -14,23 +14,30 @@ on:
         type: boolean
         default: false
 
+permissions:
+  contents: read
+
 jobs:
   build-and-upload:
     name: "Build & upload Lab docs and examples"
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
+    env:
+      VERSION: ${{ github.event.release.tag_name || inputs.tag }}
 
     permissions:
       contents: write # required to upload release assets
 
     steps:
       - name: Checkout
-        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        uses: getkirby/actions/checkout@07e658b7eb1254cafc0baf94a2d241e810658176 # 0.3.0
         with:
-          ref: ${{ github.event.release.tag_name || inputs.tag }}
+          ref: ${{ env.VERSION }}
 
-      - name: Setup Node/npm
-        uses: ./.github/actions/setup-npm
+      - name: Setup Node
+        uses: getkirby/actions/node@07e658b7eb1254cafc0baf94a2d241e810658176 # 0.3.0
+        with:
+          working-directory: panel
 
       - name: Build Lab JSON docs
         run: npm run build:docs
@@ -38,7 +45,6 @@ jobs:
 
       - name: Create ZIP archive
         run: |
-          VERSION="${{ github.event.release.tag_name || inputs.tag }}"
           # The archive holds two top-level folders that map 1:1 to their
           # install targets, so users can place them without touching the
           # existing panel/dist build:
@@ -56,7 +62,6 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          VERSION="${{ github.event.release.tag_name || inputs.tag }}"
           gh release upload "${VERSION}" \
             "panel/lab-${VERSION}.zip" \
             --clobber
