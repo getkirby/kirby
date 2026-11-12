@@ -1,16 +1,4 @@
-# To upgrade pinned actions: Use https://github.com/mheap/pin-github-action
-
-name: CI - Frontend
-
-env:
-  OS: &os ubuntu-24.04
-  TIMEOUT: &timeout 10
-
-  SHOULD_RUN: &should-run >-
-    github.event_name == 'workflow_dispatch' ||
-    github.event_name == 'workflow_call' ||
-    github.repository == 'getkirby/kirby' ||
-    github.repository_owner != 'getkirby'
+name: Frontend
 
 on:
   # only the long-lived base branches run on push, so that their caches
@@ -24,7 +12,6 @@ on:
       - "develop-minor"
       - "v*/develop"
     paths: &frontend-paths
-      - ".github/actions/setup-npm/**"
       - ".github/workflows/frontend.yml"
       - "panel/**"
       - "!panel/scripts/**"
@@ -37,42 +24,15 @@ concurrency:
   group: frontend-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
-  # ===================== Tests & Style =====================
-  tests:
-    name: "Tests & Style"
-    if: *should-run
-    runs-on: *os
-    timeout-minutes: *timeout
-    defaults:
-      run:
-        working-directory: panel
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
-
-      - name: Setup Node/npm
-        uses: ./.github/actions/setup-npm
-
-      - name: Run JavaScript unit tests with coverage
-        run: npm run test:coverage
-
-      - name: Upload coverage results to Codecov
-        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7
-        with:
-          # for better reliability if the GitHub API is down
-          token: ${{ secrets.CODECOV_TOKEN }}
-          fail_ci_if_error: true
-          files: panel/tests/coverage/lcov.info
-          disable_search: true
-          flags: frontend
-
-      - name: Check for TypeScript type errors
-        run: npm run test:types
-
-      - name: "ESLint: JavaScript coding style violations"
-        run: npm run lint -- --max-warnings 0 --format stylish --no-fix
-
-      - name: "Oxfmt: JavaScript coding style violations"
-        run: npm run format
+  frontend:
+    name: CI
+    uses: getkirby/actions/.github/workflows/node.yml@07e658b7eb1254cafc0baf94a2d241e810658176 # 0.3.0
+    with:
+      codecov-flags: frontend
+      upstream: getkirby/kirby
+      working-directory: panel
+    secrets: inherit
