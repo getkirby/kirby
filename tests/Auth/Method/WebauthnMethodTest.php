@@ -90,7 +90,7 @@ class WebauthnMethodTest extends TestCase
 
 		// discoverable passkeys carry the user id as their user handle
 		if ($withHandle === true) {
-			$payload['user'] = $webauthn->encode($userId);
+			$payload['response']['userHandle'] = $webauthn->encode($userId);
 		}
 
 		return json_encode($payload);
@@ -183,7 +183,9 @@ class WebauthnMethodTest extends TestCase
 	public function testAuthenticateUnknownHandle(): void
 	{
 		$webauthn = Webauthn::site($this->app);
-		$payload  = json_encode(['user' => $webauthn->encode('ghost')]);
+		$payload  = json_encode([
+			'response' => ['userHandle' => $webauthn->encode('ghost')]
+		]);
 
 		$this->expectException(UserNotFoundException::class);
 		$this->method()->authenticate(null, $payload);

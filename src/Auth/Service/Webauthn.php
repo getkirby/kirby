@@ -264,9 +264,10 @@ class Webauthn extends BaseWebauthn
 		$counter   = $credential['counter'] ?? null;
 
 		try {
-			$clientDataJSON    = $this->decode($payload['client'] ?? null);
-			$authenticatorData = $this->decode($payload['authenticator'] ?? null);
-			$signature         = $this->decode($payload['signature'] ?? null);
+			$response          = $payload['response'] ?? [];
+			$clientDataJSON    = $this->decode($response['clientDataJSON'] ?? null);
+			$authenticatorData = $this->decode($response['authenticatorData'] ?? null);
+			$signature         = $this->decode($response['signature'] ?? null);
 			$rawId             = $this->decode($payload['rawId'] ?? null);
 
 			if (
@@ -352,8 +353,9 @@ class Webauthn extends BaseWebauthn
 		$challenge = $this->challenge($challenge);
 
 		try {
-			$client      = $this->decode($payload['client'] ?? null);
-			$attestation = $this->decode($payload['attestation'] ?? null);
+			$response    = $payload['response'] ?? [];
+			$client      = $this->decode($response['clientDataJSON'] ?? null);
+			$attestation = $this->decode($response['attestationObject'] ?? null);
 			$rawId       = $this->decode($payload['rawId'] ?? null);
 
 			$data = $this->processCreate(

@@ -80,7 +80,7 @@ class WebauthnMethod extends Method
 	{
 		$kirby   = $this->auth->kirby();
 		$payload = json_decode(is_string($payload) ? $payload : '{}', true) ?? [];
-		$handle  = $payload['user'] ?? null;
+		$handle  = $payload['response']['userHandle'] ?? null;
 
 		if (is_string($handle) === true && $handle !== '') {
 			$id   = Webauthn::site($kirby)->decode($handle);

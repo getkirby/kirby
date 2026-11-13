@@ -96,11 +96,13 @@ class WebauthnTest extends TestCase
 			'publicKey' => $pem,
 			'challenge' => $challenge,
 			'payload'   => [
-				'id'            => $credentialId,
-				'rawId'         => $credentialId,
-				'client'        => $webauthn->encode($clientDataJSON),
-				'authenticator' => $webauthn->encode($authenticatorData),
-				'signature'     => $webauthn->encode($signature)
+				'id'       => $credentialId,
+				'rawId'    => $credentialId,
+				'response' => [
+					'clientDataJSON'    => $webauthn->encode($clientDataJSON),
+					'authenticatorData' => $webauthn->encode($authenticatorData),
+					'signature'         => $webauthn->encode($signature)
+				]
 			]
 		];
 	}
@@ -167,9 +169,11 @@ class WebauthnTest extends TestCase
 
 		return [
 			'payload' => [
-				'rawId'       => $webauthn->encode($credentialId),
-				'client'      => $webauthn->encode($clientDataJSON),
-				'attestation' => $webauthn->encode($attestation)
+				'rawId'    => $webauthn->encode($credentialId),
+				'response' => [
+					'clientDataJSON'    => $webauthn->encode($clientDataJSON),
+					'attestationObject' => $webauthn->encode($attestation)
+				]
 			],
 			'challenge' => $challenge
 		];
@@ -317,7 +321,11 @@ class WebauthnTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionCode('error.user.webauthn.failed');
 
-		$this->webauthn()->verifyLogin([], ['client' => 'x'], 'challenge');
+		$this->webauthn()->verifyLogin(
+			[],
+			['response' => ['clientDataJSON' => 'x']],
+			'challenge'
+		);
 	}
 
 	public function testVerifyLoginUnknownCredential(): void
@@ -340,9 +348,9 @@ class WebauthnTest extends TestCase
 			'counter'   => 0
 		]];
 		$payload = [
-			'id'     => 'AQID',
-			'rawId'  => 'AQID',
-			'client' => ''
+			'id'       => 'AQID',
+			'rawId'    => 'AQID',
+			'response' => ['clientDataJSON' => '']
 		];
 
 		$this->expectException(InvalidArgumentException::class);
@@ -422,7 +430,10 @@ class WebauthnTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionCode('error.user.webauthn.challenge');
 
-		$this->webauthn()->verifyRegister(['client' => 'x'], '');
+		$this->webauthn()->verifyRegister(
+			['response' => ['clientDataJSON' => 'x']],
+			''
+		);
 	}
 
 	public function testVerifyRegisterInvalidPayload(): void
@@ -442,7 +453,10 @@ class WebauthnTest extends TestCase
 		$this->expectExceptionCode('error.user.webauthn.failed');
 
 		$this->webauthn()->verifyRegister(
-			['client' => '', 'attestation' => '', 'rawId' => 'AQID'],
+			[
+				'rawId'    => 'AQID',
+				'response' => ['clientDataJSON' => '', 'attestationObject' => '']
+			],
 			'AQID'
 		);
 	}
