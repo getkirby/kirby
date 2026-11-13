@@ -183,8 +183,8 @@ abstract class Field implements Stringable
 	}
 
 	/**
-	 * Sets `#[Prop]` properties, skipping
-	 * `null` values to keep their defaults
+	 * Sets `#[Prop]` properties by their name or alias,
+	 * skipping `null` values to keep their defaults
 	 * @see Props::set()
 	 *
 	 * @throws InvalidArgumentException if a value has the wrong type
@@ -194,22 +194,33 @@ abstract class Field implements Stringable
 		$props = new Props($this);
 
 		foreach ($args as $key => $value) {
-			if (
-				$value === null ||
-				$props->has($key) === false
-			) {
+			$name = $props->name($key);
+
+			if ($value === null || $name === null) {
 				continue;
 			}
 
+			// the prop's own name wins over its aliases
+			// and an alias over the ones listed after it
+			foreach ($props->names($name) as $other) {
+				if ($other === $key) {
+					break;
+				}
+
+				if (($args[$other] ?? null) !== null) {
+					continue 2;
+				}
+			}
+
 			try {
-				$props->set($key, $value);
+				$props->set($name, $value);
 			} catch (TypeError $e) {
 				throw new InvalidArgumentException(
 					key: 'field.prop.invalid',
 					data: [
 						'name' => $args['name'] ?? $this->name ?? '-',
 						'prop' => $key,
-						'type' => $props->type($key)
+						'type' => $props->type($name)
 					],
 					previous: $e
 				);
