@@ -87,7 +87,11 @@ class FieldOptions extends Node
 		return $props;
 	}
 
-	public function resolve(ModelWithContent $model): Options
+	/**
+	 * @param array $keep Values of models the current user must not list
+	 *                    that are kept as placeholders (e.g. stored values)
+	 */
+	public function resolve(ModelWithContent $model, array $keep = []): Options
 	{
 		// apply default values
 		$this->defaults();
@@ -97,12 +101,22 @@ class FieldOptions extends Node
 			return $this->options;
 		}
 
+		// only queries can return models with permissions;
+		// don't cache their options with placeholders
+		if ($this->options instanceof OptionsQuery && $keep !== []) {
+			return $this->options->resolve($model, $this->safeMode, $keep);
+		}
+
 		// resolve OptionsProvider (OptionsApi or OptionsQuery) to Options
 		return $this->options = $this->options->resolve($model, $this->safeMode);
 	}
 
-	public function render(ModelWithContent $model): array
+	/**
+	 * @param array $keep Values of models the current user must not list
+	 *                    that are kept as placeholders (e.g. stored values)
+	 */
+	public function render(ModelWithContent $model, array $keep = []): array
 	{
-		return $this->resolve($model)->render($model);
+		return $this->resolve($model, $keep)->render($model);
 	}
 }
