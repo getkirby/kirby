@@ -4,6 +4,7 @@ namespace Kirby\Data;
 
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
+use Kirby\Toolkit\Str;
 use PHPUnit\Framework\Attributes\CoversClass;
 use stdClass;
 
@@ -137,6 +138,21 @@ class TxtTest extends TestCase
 		$this->assertSame('Number: 3.2', $data);
 
 		setlocale(LC_ALL, $currentLocale);
+	}
+
+	public function testEncodeIgnoresLanguageRules(): void
+	{
+		Str::$language = ['ä' => 'ae'];
+
+		try {
+			$data = Txt::encode([
+				'tätigkeit' => 'Test'
+			]);
+
+			$this->assertSame('Tatigkeit: Test', $data);
+		} finally {
+			Str::$language = [];
+		}
 	}
 
 	public function testDecodeFile(): void
