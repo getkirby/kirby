@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Closure;
+
 /**
  * The Structure class wraps
  * array data into a nicely chainable
@@ -21,6 +23,8 @@ class Structure extends Items
 
 	/**
 	 * All registered structure methods
+	 *
+	 * @var array<string, Closure>
 	 */
 	public static array $methods = [];
 

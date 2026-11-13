@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Closure;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
@@ -40,6 +41,8 @@ class Pages extends Collection
 
 	/**
 	 * All registered pages methods
+	 *
+	 * @var array<string, Closure>
 	 */
 	public static array $methods = [];
 

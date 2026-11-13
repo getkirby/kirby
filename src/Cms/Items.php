@@ -24,6 +24,8 @@ class Items extends Collection
 
 	/**
 	 * All registered items methods
+	 *
+	 * @var array<string, Closure>
 	 */
 	public static array $methods = [];
 

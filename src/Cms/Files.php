@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Closure;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
@@ -28,6 +29,8 @@ class Files extends Collection
 
 	/**
 	 * All registered files methods
+	 *
+	 * @var array<string, Closure>
 	 */
 	public static array $methods = [];
 

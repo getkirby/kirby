@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Closure;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 
@@ -20,6 +21,8 @@ class Translations extends Collection
 {
 	/**
 	 * All registered translations methods
+	 *
+	 * @var array<string, Closure>
 	 */
 	public static array $methods = [];
 
