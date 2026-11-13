@@ -103,6 +103,8 @@
 	"error.content.lock.replace": "A versão está bloqueada e não pode ser substituída",
 	"error.content.lock.update": "A versão está bloqueada e não pode ser atualizada",
 
+	"error.csrf.invalid": "Invalid CSRF token",
+
 	"error.entries.max.plural": "Não deve adicionar mais do que {max} entradas",
 	"error.entries.max.singular": "Não deve adicionar mais do que uma entrada",
 	"error.entries.min.plural": "Deve adicionar pelo menos {min} entradas",
@@ -241,6 +243,8 @@
 	"error.page.status.invalid": "Por favor, defina um estado de página válido",
 	"error.page.undefined": "P\u00e1gina n\u00e3o encontrada",
 	"error.page.update.permission": "Você não tem permissão para atualizar \"{slug}\"",
+
+	"error.request.failed": "The request to {url} failed",
 
 	"error.role.notFound": "A função \"{name}\" não foi encontrada",
 
@@ -834,6 +838,8 @@
 	"translation.locale": "pt_BR",
 
 	"type": "Tipo",
+
+	"unknown": "unknown",
 
 	"upload": "Enviar",
 	"upload.error.cantMove": "O arquivo carregado não pôde ser movido",

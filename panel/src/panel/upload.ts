@@ -6,6 +6,7 @@ import listeners, { type Listener } from "./listeners";
 import queue from "@/helpers/queue";
 import { uploadAsChunks } from "@/helpers/upload";
 import { extension, name, niceSize } from "@/helpers/file";
+import { isAbortError } from "@/helpers/error";
 import Panel from "./panel";
 
 type UploadFileData = {
@@ -413,12 +414,19 @@ export default function Upload(panel: Panel) {
 
 				panel.events.emit("file.upload", file);
 			} catch (error) {
+				// a cancelled upload is no upload error
+				if (isAbortError(error) === true) {
+					return;
+				}
+
 				panel.error(error, false);
 
-				// store the error message to show it in
-				// the dialog for example
-				if (error instanceof Error) {
-					file.error = error.message;
+				// store the error message to show it in the dialog;
+				// the upload rejects with the parsed error response
+				const message = (error as { message?: unknown } | null)?.message;
+
+				if (typeof message === "string") {
+					file.error = message;
 				}
 
 				// reset the progress bar on error

@@ -397,15 +397,21 @@ export default class Panel {
 	 *   }
 	 * });
 	 *
+	 * @example
+	 * const { items } = await panel.get<{ items: string[] }>("/some/url");
+	 *
 	 * @returns Returns the parsed response data
 	 */
-	async get(url: string | URL, options = {}) {
+	async get<T = Record<string, unknown>>(
+		url: string | URL,
+		options = {}
+	): Promise<T> {
 		const { response } = await this.request(url, {
 			method: "GET",
 			...options
 		});
 
-		return response?.json ?? {};
+		return (response?.json ?? {}) as T;
 	}
 
 	get hasSearch(): boolean {
@@ -475,16 +481,23 @@ export default class Panel {
 	 * @example
 	 * const data = await panel.post("/some/url", { title: "Test"})
 	 *
+	 * @example
+	 * const { id } = await panel.post<{ id: string }>("/some/url", { title: "Test" });
+	 *
 	 * @returns Returns the parsed response data
 	 */
-	async post(url: string | URL, data = {}, options = {}) {
+	async post<T = Record<string, unknown>>(
+		url: string | URL,
+		data = {},
+		options = {}
+	): Promise<T> {
 		const { response } = await this.request(url, {
 			method: "POST",
 			body: data,
 			...options
 		});
 
-		return response.json;
+		return response.json as T;
 	}
 
 	/**
@@ -513,6 +526,7 @@ export default class Panel {
 			referrer: this.view.path ?? undefined,
 			csrf: this.system.csrf,
 			language: this.language.code,
+			translation: this.translation.code,
 			...options
 		});
 	}

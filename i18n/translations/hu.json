@@ -103,6 +103,8 @@
 	"error.content.lock.replace": "The version is locked and cannot be replaced",
 	"error.content.lock.update": "The version is locked and cannot be updated",
 
+	"error.csrf.invalid": "Invalid CSRF token",
+
 	"error.entries.max.plural": "You must not add more than {max} entries",
 	"error.entries.max.singular": "You must not add more than one entry",
 	"error.entries.min.plural": "You must add at least {min} entries",
@@ -241,6 +243,8 @@
 	"error.page.status.invalid": "Kérlek add meg a megfelelő oldalstátuszt",
 	"error.page.undefined": "Az oldal nem tal\u00e1lhat\u00f3",
 	"error.page.update.permission": "Nincs jogosultságod a(z) \"{slug}\" oldal frissítéséhez",
+
+	"error.request.failed": "The request to {url} failed",
 
 	"error.role.notFound": "The role \"{name}\" cannot be found",
 
@@ -834,6 +838,8 @@
 	"translation.locale": "hu_HU",
 
 	"type": "Type",
+
+	"unknown": "unknown",
 
 	"upload": "Feltöltés",
 	"upload.error.cantMove": "A feltöltött fájlt nem sikerült áthelyezni",

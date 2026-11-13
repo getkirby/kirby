@@ -182,22 +182,22 @@ class Html extends Xml
 			return null;
 		}
 
-		// cache the keys/values arrays;
+		// cache the flipped entities table;
 		// invalidates if $entities changes
 		static $cached = null;
-		static $html   = [];
-		static $xml    = [];
+		static $map    = [];
 
 		// HTML supports named entities
 		$entities = parent::entities();
 
 		if ($cached !== $entities) {
-			$html   = array_keys($entities);
-			$xml    = array_values($entities);
+			$map    = array_flip($entities);
 			$cached = $entities;
 		}
 
-		$attr = str_replace($xml, $html, $attr);
+		if (str_contains($attr, '&') === true) {
+			$attr = strtr($attr, $map);
+		}
 
 		if ($attr) {
 			return $before . $attr . $after;

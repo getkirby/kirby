@@ -29,8 +29,8 @@
 			</k-lab-table-cell>
 		</k-lab-example>
 
-		<k-lab-example label="Overflow">
-			<k-lab-table-cell>
+		<k-lab-example label="Overflow: many items">
+			<k-lab-table-cell style="max-width: 20rem">
 				<!-- @code -->
 				<k-pages-field-preview
 					:value="
@@ -40,6 +40,27 @@
 							link: '/'
 						})
 					"
+				/>
+				<!-- @code-end -->
+			</k-lab-table-cell>
+		</k-lab-example>
+
+		<k-lab-example label="Overflow: long title">
+			<k-lab-table-cell style="max-width: 20rem">
+				<!-- @code -->
+				<k-pages-field-preview
+					:value="[
+						{
+							image: { icon: 'page', back: 'black', color: 'white' },
+							text: 'A page with a very long title to test how previews handle overflow',
+							link: '/'
+						},
+						{
+							image: { icon: 'page', back: 'black', color: 'white' },
+							text: 'Blog',
+							link: '/'
+						}
+					]"
 				/>
 				<!-- @code-end -->
 			</k-lab-table-cell>

@@ -40,6 +40,22 @@
 			</k-lab-table-cell>
 		</k-lab-example>
 
+		<k-lab-example label="Page with overflow">
+			<k-lab-table-cell style="max-width: 20rem">
+				<!-- @code -->
+				<k-link-field-preview value="page://longTitlePageLnk" />
+				<!-- @code-end -->
+			</k-lab-table-cell>
+		</k-lab-example>
+
+		<k-lab-example label="File with overflow">
+			<k-lab-table-cell style="max-width: 20rem">
+				<!-- @code -->
+				<k-link-field-preview value="file://longFilenameLnk1" />
+				<!-- @code-end -->
+			</k-lab-table-cell>
+		</k-lab-example>
+
 		<k-lab-example label="Missing page">
 			<k-lab-table-cell>
 				<!-- @code -->
@@ -65,7 +81,7 @@
 		</k-lab-example>
 
 		<k-lab-example label="URL with overflow">
-			<k-lab-table-cell>
+			<k-lab-table-cell style="max-width: 20rem">
 				<!-- @code -->
 				<k-link-field-preview
 					value="https://getkirby.com/this-is-a-super-long-link-lahsdjkahskdjahskjdhaksjdhkajshdkashdjashdkahjsdkjahsdkjashdkjahskdjhaksjhdkashjdkahjsdajshkdhjahjkd"

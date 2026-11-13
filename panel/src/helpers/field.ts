@@ -117,13 +117,13 @@ export function isVisible(
 }
 
 /**
- * Adds a `–` placeholder option for each value
+ * Adds an `[unknown]` option for each value
  * without a matching option, e.g. a deleted page
  * @unstable
  *
  * @example
  * options([{ value: "a", text: "A" }], ["a", "b"])
- * // => [{ value: "a", text: "A" }, { value: "b", text: "–" }]
+ * // => [{ value: "a", text: "A" }, { value: "b", text: "[unknown]" }]
  */
 export function options(options: Option[], value: unknown): Option[] {
 	const known = options.map((option) => String(option.value));
@@ -135,7 +135,9 @@ export function options(options: Option[], value: unknown): Option[] {
 			known.includes(String(value)) === false
 	);
 
-	return [...options, ...unknown.map((value) => ({ text: "–", value }))];
+	const text = `[${window.panel.t("unknown")}]`;
+
+	return [...options, ...unknown.map((value) => ({ text, value }))];
 }
 
 /**
@@ -150,7 +152,8 @@ export function subfields(
 	const subfields: Record<string, Field> = {};
 
 	for (const name in fields) {
-		const subfield = fields[name];
+		// copy the subfield, so that the given fields stay untouched
+		const subfield = { ...fields[name] };
 
 		if (field.endpoints) {
 			const endpoints = field.endpoints as {

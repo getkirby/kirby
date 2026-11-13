@@ -38,6 +38,7 @@ class MissingItem extends Item
 			'id'          => $this->id,
 			'link'        => false,
 			'permissions' => [],
+			'theme'       => 'negative',
 			'uuid'        => $this->id,
 		];
 	}

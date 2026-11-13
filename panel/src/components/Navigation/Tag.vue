@@ -11,11 +11,17 @@
 	>
 		<!-- @slot Replaces the image/icon frame created via the `image` prop -->
 		<slot name="image">
-			<k-image-frame v-if="image?.src" v-bind="image" class="k-tag-image" />
+			<k-image-frame
+				v-if="image?.src"
+				v-bind="image"
+				class="k-tag-image"
+				ratio="1/1"
+			/>
 			<k-icon-frame
 				v-else-if="image || icon"
 				v-bind="image ?? { icon }"
 				class="k-tag-image"
+				ratio="1/1"
 			/>
 		</slot>
 
@@ -92,7 +98,8 @@ export default {
 		 */
 		icon: String,
 		/**
-		 * See `k-image-frame` or `k-icon-frame` for available options
+		 * See `k-image-frame` or `k-icon-frame` for available options;
+		 * the image stays square and ignores the `ratio` option
 		 */
 		image: {
 			type: Object
@@ -174,6 +181,11 @@ export default {
 	--tag-color-icon: var(--theme-color-icon);
 	--tag-color-disabled-back: var(--color-gray-200);
 	--tag-color-disabled-text: var(--color-gray-600);
+}
+/* the tint carries the state, icons need no background of their own */
+.k-tag[data-theme]:not([data-theme="dark"], [data-theme="light"])
+	.k-icon-frame.k-tag-image {
+	background: none;
 }
 
 .k-tag {

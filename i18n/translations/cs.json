@@ -103,6 +103,8 @@
 	"error.content.lock.replace": "Tato verze je uzamčená a nemůže být nahrazena",
 	"error.content.lock.update": "Tato verze je uzamčená a nemůže být aktualizována",
 
+	"error.csrf.invalid": "Invalid CSRF token",
+
 	"error.entries.max.plural": "Nelze přidat více než {max} záznamů",
 	"error.entries.max.singular": "Nelze přidat více než jeden záznam",
 	"error.entries.min.plural": "Musíte přidat alespoň {min} záznamů",
@@ -241,6 +243,8 @@
 	"error.page.status.invalid": "Nastavte prosím platný status stránky",
 	"error.page.undefined": "Str\u00e1nku se nepoda\u0159ilo nal\u00e9zt.",
 	"error.page.update.permission": "Nemáte dovoleno upravit \"{slug}\"",
+
+	"error.request.failed": "The request to {url} failed",
 
 	"error.role.notFound": "The role \"{name}\" cannot be found",
 
@@ -834,6 +838,8 @@
 	"translation.locale": "cs_CZ",
 
 	"type": "Typ",
+
+	"unknown": "unknown",
 
 	"upload": "Nahrát",
 	"upload.error.cantMove": "Nahraný soubor nemohl být přesunut",

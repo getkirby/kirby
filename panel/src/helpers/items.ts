@@ -140,15 +140,21 @@ class Batch {
 	 */
 	async sendChunk(chunk: string[]): Promise<void> {
 		try {
-			const response = (await window.panel.get(this.endpoint, {
+			const response = await window.panel.get<
+				{ items?: (Item | null)[] } | (Item | null)[]
+			>(this.endpoint, {
 				query: {
 					...this.query,
 					items: chunk.join(",")
 				}
-			})) as { items?: (Item | null)[] };
+			});
+
+			// a field's API route (e.g. `…/fields/icons/items`)
+			// answers with the list itself
+			const items = Array.isArray(response) ? response : response.items;
 
 			for (const [index, id] of chunk.entries()) {
-				this.resolve(id, response.items?.[index] ?? undefined);
+				this.resolve(id, items?.[index] ?? undefined);
 			}
 		} catch (error) {
 			// hand the error to the Panel, so that an expired session,

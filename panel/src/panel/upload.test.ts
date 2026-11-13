@@ -52,7 +52,12 @@ function fakeRequests(
 			}
 		};
 
-		abort(): void {}
+		aborted = false;
+
+		abort(): void {
+			this.aborted = true;
+			this.listeners.abort?.({ target: this });
+		}
 
 		addEventListener(type: string, listener: Listener): void {
 			this.listeners[type] = listener;
@@ -67,6 +72,10 @@ function fakeRequests(
 			requests.push(this.request);
 
 			setTimeout(() => {
+				if (this.aborted === true) {
+					return;
+				}
+
 				this.progress({ lengthComputable: true, loaded: 1, total: 2 });
 				this.response = JSON.stringify(respond());
 				this.listeners.load({ target: this });
@@ -839,8 +848,50 @@ describe("panel.upload", () => {
 			await upload.upload(file, {});
 
 			expect(file.completed).toStrictEqual(false);
+			expect(file.error).toStrictEqual("Not allowed");
 			expect(file.progress).toStrictEqual(0);
 			expect(onError).toHaveBeenCalledWith(file);
+		});
+
+		it("should not treat an aborted upload as an error", async () => {
+			const panel = createPanel();
+			const upload = Upload(panel);
+			const onError = vi.fn();
+			const file = upload.file(makeFile("a.jpg"));
+
+			fakeRequests();
+			panel.events.on("file.upload.error", onError);
+			upload.abort = new AbortController();
+			upload.url = "/api/pages/test/files";
+			file.progress = 50;
+
+			const uploading = upload.upload(file, {});
+			upload.abort.abort();
+			await uploading;
+
+			expect(file.completed).toStrictEqual(false);
+			expect(file.error).toBeUndefined();
+			expect(file.progress).toStrictEqual(50);
+			expect(onError).not.toHaveBeenCalled();
+		});
+
+		it("should start no further uploads after a cancel", async () => {
+			const panel = createPanel();
+			const upload = Upload(panel);
+			const requests = fakeRequests();
+			const onError = vi.fn();
+
+			panel.config.uploads = 1;
+			panel.events.on("file.upload.error", onError);
+			upload.select(makeFileList(makeFile("a.jpg"), makeFile("b.jpg")));
+			upload.url = "/api/pages/test/files";
+
+			const submitting = upload.submit();
+			await upload.cancel();
+			await submitting;
+
+			expect(requests).toHaveLength(1);
+			expect(onError).not.toHaveBeenCalled();
 		});
 	});
 });

@@ -46,6 +46,7 @@ class MockXHR {
 	}
 	abort(): void {
 		this.aborted = true;
+		this.listeners.abort?.({ target: this } as unknown as Event);
 	}
 
 	emitLoad(response: string): void {
@@ -200,16 +201,17 @@ describe("$helper.upload()", () => {
 		await promise;
 	});
 
-	it("should abort when the signal fires", async () => {
+	it("should abort and reject when the signal fires", async () => {
 		const controller = new AbortController();
-		const promise = upload(makeFile(), { abort: controller.signal });
+		const error = vi.fn();
+		const promise = upload(makeFile(), { abort: controller.signal, error });
 		const xhr = MockXHR.instances[0];
 
 		controller.abort();
 		expect(xhr.aborted).toBe(true);
 
-		xhr.emitLoad(JSON.stringify({ status: "ok" }));
-		await promise;
+		await expect(promise).rejects.toMatchObject({ name: "AbortError" });
+		expect(error).not.toHaveBeenCalled();
 	});
 });
 
@@ -247,7 +249,7 @@ describe("$helper.uploadAsChunks()", () => {
 		expect(progress).toHaveBeenCalled();
 	});
 
-	it("should stop chunking when aborted between chunks", async () => {
+	it("should stop chunking and reject when aborted between chunks", async () => {
 		const controller = new AbortController();
 		const promise = uploadAsChunks(
 			makeFile("abcdefg"),
@@ -260,8 +262,18 @@ describe("$helper.uploadAsChunks()", () => {
 
 		MockXHR.instances[0].emitLoad(JSON.stringify({ status: "ok" }));
 		controller.abort();
-		await promise;
 
+		await expect(promise).rejects.toMatchObject({ name: "AbortError" });
 		expect(MockXHR.instances).toHaveLength(1);
+	});
+
+	it("should not upload when already aborted", async () => {
+		const controller = new AbortController();
+		controller.abort();
+
+		await expect(
+			uploadAsChunks(makeFile(), { url: "/", abort: controller.signal })
+		).rejects.toMatchObject({ name: "AbortError" });
+		expect(MockXHR.instances).toHaveLength(0);
 	});
 });

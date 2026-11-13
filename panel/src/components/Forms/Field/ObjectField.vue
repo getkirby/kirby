@@ -1,5 +1,10 @@
 <template>
-	<k-field v-bind="$props" :input="id" class="k-object-field">
+	<k-field
+		v-bind="$props"
+		:class="['k-object-field', $attrs.class]"
+		:input="id"
+		:style="$attrs.style"
+	>
 		<!-- Remove button -->
 		<template v-if="!disabled && hasFields" #options>
 			<k-button
@@ -26,7 +31,7 @@
 				class="k-table k-object-field-table"
 			>
 				<tbody>
-					<template v-for="field in fields">
+					<template v-for="field in subfields">
 						<tr
 							v-if="field.saveable && $helper.field.isVisible(field, value)"
 							:key="field.name"
@@ -95,6 +100,13 @@ export default {
 			return (
 				this.object === null || this.$helper.object.length(this.object) === 0
 			);
+		},
+		/**
+		 * Fields with their own endpoints, so that
+		 * the cell previews can load from them
+		 */
+		subfields() {
+			return this.$helper.field.subfields(this, this.fields);
 		}
 	},
 	watch: {

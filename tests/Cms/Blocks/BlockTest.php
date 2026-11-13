@@ -333,7 +333,10 @@ class BlockTest extends TestCase
 		$blocks = $this->samplePrevNextBlocks();
 		$block = $blocks->first();
 
-		$this->assertCount(5, $block->siblings());
+		$this->assertSame(
+			['code', 'gallery', 'list', 'quote', 'text'],
+			$block->siblings()->values(fn ($block) => $block->type())
+		);
 		$this->assertNull($block->prev());
 	}
 
@@ -342,7 +345,10 @@ class BlockTest extends TestCase
 		$blocks = $this->samplePrevNextBlocks();
 		$block = $blocks->last();
 
-		$this->assertCount(6, $block->siblings());
+		$this->assertSame(
+			['heading', 'image', 'line', 'markdown', 'table', 'video'],
+			$block->siblings()->values(fn ($block) => $block->type())
+		);
 		$this->assertNull($block->next());
 	}
 

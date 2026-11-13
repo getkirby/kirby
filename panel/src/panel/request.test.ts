@@ -76,7 +76,8 @@ describe("panel.request", () => {
 				csrf: "secret",
 				globals: "$language",
 				language: "de",
-				referrer: "/pages/test"
+				referrer: "/pages/test",
+				translation: "de"
 			});
 
 			const req = mock.mock.calls[0][0] as Request;
@@ -84,6 +85,7 @@ describe("panel.request", () => {
 			expect(req.headers.get("x-language")).toStrictEqual(null);
 			expect(req.headers.get("x-panel")).toStrictEqual(null);
 			expect(req.headers.get("x-panel-globals")).toStrictEqual(null);
+			expect(req.headers.get("x-panel-translation")).toStrictEqual(null);
 			expect(req.referrer).not.toContain("/pages/test");
 		});
 
@@ -268,7 +270,8 @@ describe("panel.request", () => {
 						csrf: "dev",
 						globals: ["$language"],
 						language: "de",
-						referrer: "/test"
+						referrer: "/test",
+						translation: "fr"
 					}
 				)
 			).toStrictEqual({
@@ -277,7 +280,8 @@ describe("panel.request", () => {
 				"x-language": "de",
 				"x-panel": "true",
 				"x-panel-globals": "$language",
-				"x-panel-referrer": "/test"
+				"x-panel-referrer": "/test",
+				"x-panel-translation": "fr"
 			});
 		});
 

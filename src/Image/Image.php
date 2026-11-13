@@ -73,7 +73,23 @@ class Image extends File
 			return $this->dimensions;
 		}
 
-		if (in_array($this->mime(), [
+		$mime   = null;
+		$header = $this->exists() ? (string)@file_get_contents($this->root, false, null, 0, 16) : '';
+
+		// read the type from the header, `mime()` reads up to 7 MB of the file
+		if (
+			str_starts_with($header, "\xFF\xD8\xFF") === true ||
+			(str_starts_with($header, "\x89PNG\r\n\x1A\n") === true && substr($header, 12, 4) === 'IHDR') ||
+			(str_starts_with($header, 'RIFF') === true && substr($header, 8, 4) === 'WEBP')
+		) {
+			$mime = $this->imagesize()['mime'] ?? null;
+		}
+
+		if (in_array($mime, ['image/jpeg', 'image/png', 'image/webp'], true) === false) {
+			$mime = $this->mime();
+		}
+
+		if (in_array($mime, [
 			'image/avif',
 			'image/gif',
 			'image/jpeg',

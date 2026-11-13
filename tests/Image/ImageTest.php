@@ -52,6 +52,79 @@ class ImageTest extends TestCase
 		$this->assertInstanceOf(Dimensions::class, $file->dimensions());
 	}
 
+	public function testDimensionsReadsTypeFromImageHeader(): void
+	{
+		$file = new class (['root' => static::FIXTURES . '/image/cat.jpg']) extends Image {
+			public int $mimeCalls = 0;
+
+			public function mime(): string|null
+			{
+				$this->mimeCalls++;
+				return parent::mime();
+			}
+		};
+
+		$this->assertSame(500, $file->dimensions()->width());
+		$this->assertSame(500, $file->dimensions()->height());
+		$this->assertSame(0, $file->mimeCalls);
+	}
+
+	public function testDimensionsUsesMimeForOtherTypes(): void
+	{
+		$file = new class (['root' => static::FIXTURES . '/image/onigiri-adobe-rgb-gps.avif']) extends Image {
+			public function mime(): string|null
+			{
+				return 'image/heif';
+			}
+		};
+
+		$this->assertSame(0, $file->dimensions()->width());
+		$this->assertSame(0, $file->dimensions()->height());
+		$this->assertFalse($file->isResizable());
+	}
+
+	public function testDimensionsDoesNotReadHeaderWithoutImageSignature(): void
+	{
+		foreach (['circle.svg' => 50, 'invalid.jpg' => 0] as $filename => $size) {
+			$file = new class (['root' => static::FIXTURES . '/image/' . $filename]) extends Image {
+				public function imagesize(): array|false
+				{
+					throw new LogicException('imagesize() must not be called');
+				}
+			};
+
+			$this->assertSame($size, $file->dimensions()->width());
+			$this->assertSame($size, $file->dimensions()->height());
+		}
+	}
+
+	public function testDimensionsWithInvalidPngChunk(): void
+	{
+		$file = $this->_image('invalid-chunk.png');
+
+		$this->assertSame(0, $file->dimensions()->width());
+		$this->assertSame(0, $file->dimensions()->height());
+		$this->assertFalse($file->isResizable());
+	}
+
+	public function testDimensionsWithInvalidGif(): void
+	{
+		$file = $this->_image('invalid.gif');
+
+		$this->assertSame(0, $file->dimensions()->width());
+		$this->assertSame(0, $file->dimensions()->height());
+		$this->assertFalse($file->isResizable());
+	}
+
+	public function testDimensionsWithMissingFile(): void
+	{
+		$file = $this->_image('does-not-exist.jpg');
+
+		$this->assertSame(0, $file->dimensions()->width());
+		$this->assertSame(0, $file->dimensions()->height());
+		$this->assertFalse($file->isResizable());
+	}
+
 	public function testExif(): void
 	{
 		$file = $this->_image();

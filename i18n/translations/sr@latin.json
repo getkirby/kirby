@@ -103,6 +103,8 @@
 	"error.content.lock.replace": "Ova verzija je zaključana i ne može biti zamenjena",
 	"error.content.lock.update": "Ova verzija je zaključana i ne može biti ažurirana",
 
+	"error.csrf.invalid": "Invalid CSRF token",
+
 	"error.entries.max.plural": "Ne smete dodati više od {max} unosa",
 	"error.entries.max.singular": "Ne smete dodati više od jednog unosa",
 	"error.entries.min.plural": "Morate dodati najmanje {min} unosa",
@@ -241,6 +243,8 @@
 	"error.page.status.invalid": "Molimo podesite ispravan status stranice",
 	"error.page.undefined": "Stranica ne može biti pronađena",
 	"error.page.update.permission": "Nije Vam dozvoljeno da ažurirate \"{slug}\"",
+
+	"error.request.failed": "The request to {url} failed",
 
 	"error.role.notFound": "Uloga \"{name}\" nije pronađjena",
 
@@ -834,6 +838,8 @@
 	"translation.locale": "sr_RS@latin",
 
 	"type": "Tip",
+
+	"unknown": "unknown",
 
 	"upload": "Otpremi",
 	"upload.error.cantMove": "Otpremljena datoteka nije mogla da se premesti",
