@@ -687,6 +687,64 @@ class FileListFieldTest extends TestCase
 		$this->assertArrayHasKey('upload', $state);
 	}
 
+	public function testCollectorDefaultOrder(): void
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'photography',
+						'files' => [
+							['filename' => 'a.jpg', 'content' => ['sort' => 3]],
+							['filename' => 'b.jpg', 'content' => ['sort' => 1]],
+							['filename' => 'c.jpg', 'content' => ['sort' => 2]]
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$this->assertSame(
+			['photography/b.jpg', 'photography/c.jpg', 'photography/a.jpg'],
+			array_column($this->filelist()->data(), 'id')
+		);
+
+		// a query keeps its own order
+		$this->assertSame(
+			['photography/c.jpg', 'photography/b.jpg', 'photography/a.jpg'],
+			array_column($this->filelist(['query' => 'page.files.flip'])->data(), 'id')
+		);
+	}
+
+	public function testCollectorWhileSearching(): void
+	{
+		$_GET['searchterm'] = 'tree';
+
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'photography',
+						'files' => [
+							['filename' => 'a.jpg', 'content' => ['alt' => 'Old tree', 'sort' => 1]],
+							['filename' => 'b.jpg', 'content' => ['alt' => 'Tree', 'sort' => 2]]
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		// search results keep their ranking
+		$this->assertSame(
+			['photography/b.jpg', 'photography/a.jpg'],
+			array_column($this->filelist(['search' => true])->data(), 'id')
+		);
+	}
+
 	public function testDeleteSelected(): void
 	{
 		$field = $this->filelist(['batch' => true]);

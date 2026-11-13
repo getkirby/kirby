@@ -157,6 +157,38 @@ class FilePickerDialogControllerTest extends TestCase
 		);
 	}
 
+	public function testItemsWhileSearching(): void
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => ['search' => 'tree']
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'home',
+						'files' => [
+							['filename' => 'a.jpg', 'content' => ['alt' => 'Old tree', 'sort' => 1]],
+							['filename' => 'b.jpg', 'content' => ['alt' => 'Tree', 'sort' => 2]]
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new FilePickerDialogController(
+			model: $this->app->page('home')
+		);
+
+		// search results keep their ranking
+		$this->assertSame(
+			['b.jpg', 'a.jpg'],
+			array_column($controller->items(), 'filename')
+		);
+	}
+
 	public function testItemsWithQueryOrder(): void
 	{
 		$this->app = $this->app->clone([
@@ -242,13 +274,13 @@ class FilePickerDialogControllerTest extends TestCase
 			model: $this->app->site()
 		);
 
-		$this->assertSame('site.files', $controller->query());
+		$this->assertSame('site.files.sorted', $controller->query());
 
 		$controller = new FilePickerDialogController(
 			model: $this->app->file('test.jpg')
 		);
 
-		$this->assertSame('file.siblings', $controller->query());
+		$this->assertSame('file.siblings.sorted', $controller->query());
 
 		$controller = new FilePickerDialogController(
 			model: $this->app->file('test.jpg'),
