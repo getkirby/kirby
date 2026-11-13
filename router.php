@@ -7,11 +7,13 @@ $uri = urldecode($uri);
 
 // emulate Apache's `mod_rewrite` functionality, but prevent
 // disclosure of the existence of files outside the document root
+// (the trailing separator keeps out siblings like `/site2` for `/site`)
+$root = rtrim($_SERVER['DOCUMENT_ROOT'], '/\\') . DIRECTORY_SEPARATOR;
 $path = $_SERVER['DOCUMENT_ROOT'] . '/' . ltrim($uri, '/');
 if (
 	$uri !== '/' &&
 	file_exists($path) === true &&
-	substr(realpath($path), 0, strlen($_SERVER['DOCUMENT_ROOT'])) === $_SERVER['DOCUMENT_ROOT']
+	str_starts_with(realpath($path), $root) === true
 ) {
 	return false;
 }
