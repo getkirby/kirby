@@ -92,7 +92,7 @@ export default {
 }
 .k-field-header {
 	display: flex;
-	justify-content: space-between;
+	justify-content: flex-end;
 	align-items: center;
 	gap: var(--spacing-6);
 	position: relative;
