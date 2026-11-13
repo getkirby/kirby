@@ -5,12 +5,13 @@
 # has landed in all core browsers) when the major version is released.
 # Recompute for the next major and paste the result below:
 # npx baseline-browser-mapping --widely-available-on-date YYYY-MM-DD --include-downstream-browsers
+# Then update the feature checks in views/panel.php to the new versions.
 #
-Chrome >= 124
-ChromeAndroid >= 124
-Edge >= 124
-Firefox >= 125
-Opera >= 110
-Safari >= 17.5
-iOS >= 17.5
-Android >= 124
+Chrome >= 137
+ChromeAndroid >= 137
+Edge >= 137
+Firefox >= 139
+Opera >= 121
+Safari >= 18.4
+iOS >= 18.5
+Android >= 137

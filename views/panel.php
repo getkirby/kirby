@@ -27,12 +27,12 @@ use Kirby\Toolkit\Html;
 	</script>
 
 	<script nonce="<?= $nonce ?>">
+	// features that first shipped in the minimum
+	// browser versions from panel/.browserslistrc
 	if (
-		!window.CSS ||
-		window.CSS.supports("color", "light-dark(#fff, #000)") === false ||
-		!window.HTMLScriptElement.supports ||
-		window.HTMLScriptElement.supports("importmap") === false ||
-		!window.Promise.withResolvers
+		window.HTMLDialogElement === undefined ||
+		window.HTMLDialogElement.prototype.requestClose === undefined ||
+		("direction" in window.Selection.prototype) === false
 	) {
 		window.location.replace("<?= $panelUrl ?>browser");
 	}
