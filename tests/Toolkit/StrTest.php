@@ -71,6 +71,48 @@ class StrTest extends TestCase
 		try {
 			$this->assertSame('fuer', Str::ascii('für'));
 			$this->assertSame('haengematte', Str::ascii('hängematte'));
+
+			// explicitly enabled
+			$this->assertSame('fuer', Str::ascii(
+				string: 'für',
+				language: true
+			));
+		} finally {
+			Str::$language = [];
+		}
+	}
+
+	public function testAsciiWithoutLanguageRules(): void
+	{
+		Str::$language = [
+			'ä' => 'ae',
+			'ü' => 'ue',
+			'x' => 'y'
+		];
+
+		try {
+			// falls back to the default ASCII map
+			$this->assertSame('fur', Str::ascii(
+				string: 'für',
+				language: false
+			));
+			$this->assertSame('hangematte', Str::ascii(
+				string: 'hängematte',
+				language: false
+			));
+
+			// rules for ASCII characters are not applied either
+			$this->assertSame('xyz', Str::ascii(
+				string: 'xyz',
+				language: false
+			));
+			$this->assertSame('yyz', Str::ascii('xyz'));
+
+			// the language rules are left untouched
+			$this->assertSame(
+				['ä' => 'ae', 'ü' => 'ue', 'x' => 'y'],
+				Str::$language
+			);
 		} finally {
 			Str::$language = [];
 		}
@@ -1185,6 +1227,24 @@ class StrTest extends TestCase
 
 		// leading non-word-chars don't count towards the limit
 		$this->assertSame('abc', Str::slug('---abc', maxlength: 3));
+	}
+
+	public function testSlugWithoutLanguageRules(): void
+	{
+		Str::$language = ['ä' => 'ae'];
+
+		try {
+			// language rules are applied by default
+			$this->assertSame('ae-b', Str::slug('ä b'));
+
+			// falls back to the default ASCII map
+			$this->assertSame('a-b', Str::slug(
+				string: 'ä b',
+				language: false
+			));
+		} finally {
+			Str::$language = [];
+		}
 	}
 
 	public function testSnake(): void

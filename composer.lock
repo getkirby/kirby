@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ceaba73ee3a2ab01a299742a1bbb3e6f",
+    "content-hash": "b66783188a7793aa7d05855997ed8aef",
     "packages": [
         {
             "name": "christian-riesen/base32",
@@ -314,16 +314,16 @@
         },
         {
             "name": "filp/whoops",
-            "version": "2.19.2",
+            "version": "2.19.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filp/whoops.git",
-                "reference": "84e33631273138ac103d045dc02b0fb7e5485582"
+                "reference": "d5480d53f10069dc4620a39f87e38e8945d47322"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/filp/whoops/zipball/84e33631273138ac103d045dc02b0fb7e5485582",
-                "reference": "84e33631273138ac103d045dc02b0fb7e5485582",
+                "url": "https://api.github.com/repos/filp/whoops/zipball/d5480d53f10069dc4620a39f87e38e8945d47322",
+                "reference": "d5480d53f10069dc4620a39f87e38e8945d47322",
                 "shasum": ""
             },
             "require": {
@@ -373,7 +373,7 @@
             ],
             "support": {
                 "issues": "https://github.com/filp/whoops/issues",
-                "source": "https://github.com/filp/whoops/tree/2.19.2"
+                "source": "https://github.com/filp/whoops/tree/2.19.3"
             },
             "funding": [
                 {
@@ -381,7 +381,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-11-03T23:38:01+00:00"
+            "time": "2026-11-09T23:30:17+00:00"
         },
         {
             "name": "getkirby/composer-installer",
@@ -608,16 +608,16 @@
         },
         {
             "name": "phpmailer/phpmailer",
-            "version": "v7.1.1",
+            "version": "v7.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPMailer/PHPMailer.git",
-                "reference": "1bc1716a507a65e039d4ac9d9adebbbd0d346e15"
+                "reference": "f5eb50148734d03bbbb81825c722c1889636d51a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/1bc1716a507a65e039d4ac9d9adebbbd0d346e15",
-                "reference": "1bc1716a507a65e039d4ac9d9adebbbd0d346e15",
+                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/f5eb50148734d03bbbb81825c722c1889636d51a",
+                "reference": "f5eb50148734d03bbbb81825c722c1889636d51a",
                 "shasum": ""
             },
             "require": {
@@ -632,7 +632,7 @@
                 "php-parallel-lint/php-console-highlighter": "^1.0.0",
                 "php-parallel-lint/php-parallel-lint": "^1.3.2",
                 "phpcompatibility/php-compatibility": "^10.0.0@dev",
-                "squizlabs/php_codesniffer": "^3.13.5",
+                "squizlabs/php_codesniffer": "^3.13.6 || ^4.0.2",
                 "yoast/phpunit-polyfills": "^1.0.4"
             },
             "suggest": {
@@ -678,7 +678,7 @@
             "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
             "support": {
                 "issues": "https://github.com/PHPMailer/PHPMailer/issues",
-                "source": "https://github.com/PHPMailer/PHPMailer/tree/v7.1.1"
+                "source": "https://github.com/PHPMailer/PHPMailer/tree/v7.2.0"
             },
             "funding": [
                 {
@@ -686,7 +686,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-05-18T08:06:14+00:00"
+            "time": "2026-11-07T15:15:17+00:00"
         },
         {
             "name": "psr/log",
