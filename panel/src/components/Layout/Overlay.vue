@@ -151,7 +151,6 @@ export default {
 	overscroll-behavior: contain;
 	inset: 0;
 	width: 100%;
-	height: 100vh;
 	height: 100dvh;
 	background: none;
 	z-index: var(--z-dialog);

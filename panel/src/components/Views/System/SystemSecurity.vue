@@ -59,13 +59,10 @@ export default {
 			"Running system health checks for the Panel system view; failed requests in the following console output are expected behavior."
 		);
 
-		// `Promise.all` as fallback for older browsers
-		const promiseAll = (Promise.allSettled ?? Promise.all).bind(Promise);
-
 		// call the check method on every URL in the `urls` object
 		const promises = Object.entries(this.urls ?? {}).map(this.check);
 
-		await promiseAll(promises);
+		await Promise.allSettled(promises);
 
 		console.info(
 			`System health checks ended. ${

@@ -47,7 +47,6 @@ export default {
 	box-shadow: var(--dialog-shadow);
 	border-radius: var(--dialog-rounded);
 	line-height: 1;
-	height: calc(100vh - 3rem);
 	height: calc(100dvh - 3rem);
 	display: flex;
 	flex-direction: column;

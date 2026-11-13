@@ -3,7 +3,6 @@
  * @license   https://opensource.org/licenses/MIT
  */
 import sort from "./sort";
-import "./regex";
 
 /**
  * Creates an array from an object

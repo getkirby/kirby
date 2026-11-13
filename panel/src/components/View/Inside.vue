@@ -43,7 +43,6 @@ export default {};
 }
 
 .k-panel-main {
-	min-height: 100vh;
 	min-height: 100dvh;
 	padding: var(--spacing-3) var(--main-padding-inline) var(--spacing-24);
 	container: main / inline-size;

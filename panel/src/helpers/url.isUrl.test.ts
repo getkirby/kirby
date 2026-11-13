@@ -15,6 +15,7 @@ describe("$helper.url.isUrl", () => {
 		expect(url.isUrl(false)).toStrictEqual(false);
 		expect(url.isUrl({})).toStrictEqual(false);
 		expect(url.isUrl(1)).toStrictEqual(false);
+		expect(url.isUrl("https://[invalid")).toStrictEqual(false);
 		expect(url.isUrl("/foo", true)).toStrictEqual(false);
 		expect(url.isUrl("javascript:alert(/XSS/)", true)).toStrictEqual(false);
 	});

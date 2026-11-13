@@ -803,8 +803,6 @@ export default {
 	outline: 2px solid var(--color-focus);
 	box-shadow: rgba(17, 17, 17, 0.25) 0 5px 10px;
 	cursor: grabbing;
-	cursor: -moz-grabbing;
-	cursor: -webkit-grabbing;
 }
 
 .k-blocks > .k-blocks-empty {

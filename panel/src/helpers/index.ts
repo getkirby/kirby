@@ -23,8 +23,6 @@ import upload from "./upload";
 import url from "./url";
 import writer from "./writer";
 
-import "./regex";
-
 export const helper = {
 	array,
 	clipboard,
