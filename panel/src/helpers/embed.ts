@@ -14,11 +14,9 @@ export function youtube(url: string, doNotTrack = false): string | false {
 		return false;
 	}
 
-	let uri: URL;
+	const uri = URL.parse(url);
 
-	try {
-		uri = new URL(url);
-	} catch {
+	if (uri === null) {
 		return false;
 	}
 
@@ -109,11 +107,9 @@ export function youtube(url: string, doNotTrack = false): string | false {
  * @param doNotTrack - Whether to include the DNT parameter
  */
 export function vimeo(url: string, doNotTrack = false): string | false {
-	let uri: URL;
+	const uri = URL.parse(url);
 
-	try {
-		uri = new URL(url);
-	} catch {
+	if (uri === null) {
 		return false;
 	}
 

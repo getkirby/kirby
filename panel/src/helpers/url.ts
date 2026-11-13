@@ -126,12 +126,7 @@ export function isUrl(
 		return false;
 	}
 
-	// check if the given URL can be
-	// converted to a URL object to
-	// validate it
-	try {
-		new URL(normalized, window.location.href);
-	} catch {
+	if (URL.canParse(normalized, window.location.href) === false) {
 		return false;
 	}
 
