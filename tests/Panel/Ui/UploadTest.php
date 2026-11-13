@@ -69,21 +69,22 @@ class UploadTest extends TestCase
 		$this->assertSame(5, $upload->props()['attributes']['sort']);
 	}
 
-	public function testAttributesWithTemplate(): void
+	public function testAttributesWithBlueprint(): void
 	{
 		$upload = new Upload(
 			api: '/test',
-			template: 'image'
+			blueprint: 'image'
 		);
 
+		// the upload API expects the blueprint as `template`
 		$this->assertSame('image', $upload->props()['attributes']['template']);
 	}
 
-	public function testAttributesWithDefaultTemplate(): void
+	public function testAttributesWithDefaultBlueprint(): void
 	{
 		$upload = new Upload(
 			api: '/test',
-			template: 'default'
+			blueprint: 'default'
 		);
 
 		$this->assertNull($upload->props()['attributes']['template']);
@@ -155,13 +156,13 @@ class UploadTest extends TestCase
 			api: '/test',
 			accept: 'image/*',
 			attributes: ['foo' => 'bar'],
+			blueprint: 'image',
 			max: 10,
 			multiple: true,
 			preview: [
 				'icon' => 'image'
 			],
-			sort: 5,
-			template: 'image'
+			sort: 5
 		);
 
 		$this->assertSame([

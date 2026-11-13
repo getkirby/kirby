@@ -32,7 +32,7 @@ class PageListField extends ModelListField implements ProvidesAcceptedPageBluepr
 	protected array|string|null $text = '{{ model.title }}';
 
 	/**
-	 * Templates that may be added or `false` to disable page creation
+	 * Blueprints that may be added or `false` to disable page creation
 	 */
 	#[Prop(export: false)]
 	protected array|string|bool|null $create = null;
@@ -44,27 +44,22 @@ class PageListField extends ModelListField implements ProvidesAcceptedPageBluepr
 	protected string $status = 'all';
 
 	/**
-	 * Filters the list by a single template or a list of templates
+	 * Filters the list by one or more blueprints, which are also
+	 * the options for new pages. With `except`, all other
+	 * blueprints are listed and offered instead.
 	 */
-	#[Prop(export: false)]
-	protected string|array|null $template = null;
+	#[Prop(aliases: ['templates', 'template'], export: false)]
+	protected array|string|null $blueprints = null;
 
 	/**
-	 * Filters the list by templates and sets the template
-	 * options for newly created pages
-	 */
-	#[Prop(computed: true, export: false)]
-	protected array|string|null $templates = null;
-
-	/**
-	 * Excludes the given templates from the list
+	 * Alias for the `except` list of the `blueprints` option
 	 */
 	#[Prop(export: false)]
 	protected array|string $templatesIgnore = [];
 
 	/**
 	 * Accepts pages with the blueprints from `create`,
-	 * the list's templates or any blueprint otherwise
+	 * the list's blueprints or any blueprint otherwise
 	 *
 	 * @return list<string>
 	 */
@@ -75,16 +70,13 @@ class PageListField extends ModelListField implements ProvidesAcceptedPageBluepr
 			return [];
 		}
 
-		$blueprints = match ($this->create) {
-			null, true, '', [] => $this->templates(),
+		$list  = $this->blueprints();
+		$names = match ($this->create) {
+			null, true, '', [] => $list['only'] ?? $this->kirby()->blueprints(),
 			default            => A::wrap($this->create)
 		};
 
-		if ($blueprints === []) {
-			$blueprints = $this->kirby()->blueprints();
-		}
-
-		return array_values(array_diff($blueprints, $this->templatesIgnore()));
+		return array_values(array_diff($names, $list['except']));
 	}
 
 	/**
@@ -127,19 +119,45 @@ class PageListField extends ModelListField implements ProvidesAcceptedPageBluepr
 		}
 	}
 
+	/**
+	 * Lists `only` pages with these blueprints (or with any
+	 * for `null`) and none with the blueprints in `except`
+	 *
+	 * @return array{only: list<string>|null, except: list<string>}
+	 */
+	protected function blueprints(): array
+	{
+		$blueprints = $this->blueprints;
+
+		// a mapping only excludes blueprints via `except`
+		$only = match (true) {
+			$blueprints === null,
+			$blueprints === [],
+			is_array($blueprints) === true && array_is_list($blueprints) === false => null,
+			default => A::wrap($blueprints)
+		};
+
+		return [
+			'only'   => $only,
+			'except' => [
+				...A::wrap($blueprints['except'] ?? null),
+				...A::wrap($this->templatesIgnore)
+			]
+		];
+	}
+
 	public function collector(): PagesCollector
 	{
 		return $this->collector ??= new PagesCollector(
-			flip:            $this->flip(),
-			limit:           $this->limit(),
-			page:            (int)$this->page() ?: 1,
-			parent:          $this->parentModel(),
-			query:           $this->query(),
-			search:          $this->searchterm(),
-			sortBy:          $this->sortBy(),
-			status:          $this->status(),
-			templates:       $this->templates(),
-			templatesIgnore: $this->templatesIgnore(),
+			blueprints: $this->blueprints(),
+			flip:       $this->flip(),
+			limit:      $this->limit(),
+			page:       (int)$this->page() ?: 1,
+			parent:     $this->parentModel(),
+			query:      $this->query(),
+			search:     $this->searchterm(),
+			sortBy:     $this->sortBy(),
+			status:     $this->status(),
 		);
 	}
 
@@ -204,11 +222,11 @@ class PageListField extends ModelListField implements ProvidesAcceptedPageBluepr
 			return true;
 		}
 
-		$templates = $this->templates();
+		$list = $this->blueprints();
 
 		return
-			($templates === [] || in_array($blueprint, $templates, true) === true) &&
-			in_array($blueprint, $this->templatesIgnore(), true) === false;
+			($list['only'] === null || in_array($blueprint, $list['only'], true) === true) &&
+			in_array($blueprint, $list['except'], true) === false;
 	}
 
 	/**
@@ -257,21 +275,6 @@ class PageListField extends ModelListField implements ProvidesAcceptedPageBluepr
 			'unlisted'        => 'unlisted',
 			default           => 'all'
 		};
-	}
-
-	public function template(): string|array|null
-	{
-		return $this->template;
-	}
-
-	public function templates(): array
-	{
-		return A::wrap($this->templates ?? $this->template);
-	}
-
-	public function templatesIgnore(): array
-	{
-		return A::wrap($this->templatesIgnore);
 	}
 
 	/**

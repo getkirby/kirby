@@ -746,8 +746,8 @@ class PageRulesTest extends ModelTestCase
 				'pages/parent' => [
 					'fields' => [
 						'subpages' => [
-							'type'     => 'pagelist',
-							'template' => 'child'
+							'type'       => 'pagelist',
+							'blueprints' => 'child'
 						]
 					]
 				]
@@ -827,8 +827,8 @@ class PageRulesTest extends ModelTestCase
 				'pages/parent' => [
 					'fields' => [
 						'subpages' => [
-							'type'     => 'pagelist',
-							'template' => 'child'
+							'type'       => 'pagelist',
+							'blueprints' => 'child'
 						]
 					]
 				]
@@ -906,14 +906,14 @@ class PageRulesTest extends ModelTestCase
 				'pages/photography' => [
 					'fields' => [
 						'albums' => [
-							'type'      => 'pagelist',
-							'templates' => ['album']
+							'type'       => 'pagelist',
+							'blueprints' => ['album']
 						],
 						'related' => [
-							'type'      => 'pagelist',
-							'parent'    => 'site.find("parent-a")',
-							'create'    => 'album',
-							'templates' => ['article']
+							'type'       => 'pagelist',
+							'parent'     => 'site.find("parent-a")',
+							'create'     => 'album',
+							'blueprints' => ['article']
 						]
 					]
 				]

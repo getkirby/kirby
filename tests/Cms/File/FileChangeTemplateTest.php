@@ -29,12 +29,12 @@ class FileChangeTemplateTest extends ModelTestCase
 				'pages/test' => [
 					'fields' => [
 						'files-a' => [
-							'type'     => 'filelist',
-							'template' => 'a'
+							'type'      => 'filelist',
+							'blueprint' => 'a'
 						],
 						'files-b' => [
-							'type'     => 'filelist',
-							'template' => 'b'
+							'type'      => 'filelist',
+							'blueprint' => 'b'
 						]
 					]
 				],
@@ -123,12 +123,12 @@ class FileChangeTemplateTest extends ModelTestCase
 				'pages/test' => [
 					'fields' => [
 						'files-a' => [
-							'type'     => 'filelist',
-							'template' => 'a'
+							'type'      => 'filelist',
+							'blueprint' => 'a'
 						],
 						'files-b' => [
-							'type'     => 'filelist',
-							'template' => 'b'
+							'type'      => 'filelist',
+							'blueprint' => 'b'
 						]
 					]
 				],
@@ -275,8 +275,8 @@ class FileChangeTemplateTest extends ModelTestCase
 							'type' => 'filelist'
 						],
 						'files-b' => [
-							'type'     => 'filelist',
-							'template' => 'for-default-b'
+							'type'      => 'filelist',
+							'blueprint' => 'for-default-b'
 						]
 					]
 				],
@@ -322,16 +322,16 @@ class FileChangeTemplateTest extends ModelTestCase
 				'pages/test-default' => [
 					'fields' => [
 						'files-a' => [
-							'type'     => 'filelist',
-							'template' => 'for-default-b'
+							'type'      => 'filelist',
+							'blueprint' => 'for-default-b'
 						],
 						'files-b' => [
-							'type'     => 'filelist',
-							'template' => 'for-default-c'
+							'type'      => 'filelist',
+							'blueprint' => 'for-default-c'
 						],
 						'files-c' => [
-							'type'     => 'filelist',
-							'template' => 'for-default-d'
+							'type'      => 'filelist',
+							'blueprint' => 'for-default-d'
 						]
 					]
 				],
@@ -376,12 +376,12 @@ class FileChangeTemplateTest extends ModelTestCase
 				'pages/test-default' => [
 					'fields' => [
 						'files-a' => [
-							'type'     => 'filelist',
-							'template' => 'manipulate-a'
+							'type'      => 'filelist',
+							'blueprint' => 'manipulate-a'
 						],
 						'files-b' => [
-							'type'     => 'filelist',
-							'template' => 'manipulate-b'
+							'type'      => 'filelist',
+							'blueprint' => 'manipulate-b'
 						]
 					]
 				],
@@ -433,12 +433,12 @@ class FileChangeTemplateTest extends ModelTestCase
 				'pages/test-default' => [
 					'fields' => [
 						'files-a' => [
-							'type'     => 'filelist',
-							'template' => 'manipulate-a'
+							'type'      => 'filelist',
+							'blueprint' => 'manipulate-a'
 						],
 						'files-b' => [
-							'type'     => 'filelist',
-							'template' => 'manipulate-b'
+							'type'      => 'filelist',
+							'blueprint' => 'manipulate-b'
 						]
 					]
 				],
@@ -500,11 +500,11 @@ class FileChangeTemplateTest extends ModelTestCase
 					'sections' => [
 						[
 							'type' => 'files',
-							'template' => 'a'
+							'blueprint' => 'a'
 						],
 						[
 							'type' => 'files',
-							'template' => 'b'
+							'blueprint' => 'b'
 						]
 					]
 				],

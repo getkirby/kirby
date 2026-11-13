@@ -89,7 +89,7 @@ class PageListFieldTest extends TestCase
 
 		$this->app->impersonate('kirby');
 
-		return $this->pagelist(['templates' => ['broken'], ...$attr]);
+		return $this->pagelist(['blueprints' => ['broken'], ...$attr]);
 	}
 
 	public function testType(): void
@@ -195,38 +195,6 @@ class PageListFieldTest extends TestCase
 		$this->assertCount(3, $this->pagelist(['status' => 'published'])->data());
 	}
 
-	public function testTemplate(): void
-	{
-		$this->assertNull($this->pagelist()->template());
-
-		$field = $this->pagelist(['template' => 'album']);
-		$this->assertSame('album', $field->template());
-
-		$field = $this->pagelist(['template' => ['album', 'note']]);
-		$this->assertSame(['album', 'note'], $field->template());
-	}
-
-	public function testTemplates(): void
-	{
-		// falls back to the single template
-		$field = $this->pagelist(['template' => 'album']);
-		$this->assertSame(['album'], $field->templates());
-		$this->assertCount(3, $field->data());
-
-		// an explicit list wins
-		$field = $this->pagelist([
-			'template'  => 'album',
-			'templates' => ['note']
-		]);
-		$this->assertSame(['note'], $field->templates());
-	}
-
-	public function testTemplatesIgnore(): void
-	{
-		$field = $this->pagelist(['templatesIgnore' => 'album']);
-		$this->assertSame(['album'], $field->templatesIgnore());
-	}
-
 	public function testHasPageBlueprint(): void
 	{
 		// without restriction, the list shows any blueprint
@@ -235,18 +203,68 @@ class PageListFieldTest extends TestCase
 		$this->assertTrue($field->hasPageBlueprint('album'));
 		$this->assertTrue($field->hasPageBlueprint('does-not-exist'));
 
-		$field = $this->pagelist(['templates' => 'album']);
+		$field = $this->pagelist(['blueprints' => 'album']);
 		$this->assertTrue($field->hasPageBlueprint('album'));
 		$this->assertFalse($field->hasPageBlueprint('note'));
 		$this->assertCount(3, $field->data());
+
+		$field = $this->pagelist(['blueprints' => ['album', 'note']]);
+		$this->assertTrue($field->hasPageBlueprint('album'));
+		$this->assertTrue($field->hasPageBlueprint('note'));
 	}
 
-	public function testHasPageBlueprintWithIgnore(): void
+	public function testHasPageBlueprintWithAliases(): void
 	{
+		$field = $this->pagelist(['template' => 'album']);
+		$this->assertTrue($field->hasPageBlueprint('album'));
+		$this->assertFalse($field->hasPageBlueprint('note'));
+
+		$field = $this->pagelist(['templates' => ['album', 'note']]);
+		$this->assertTrue($field->hasPageBlueprint('note'));
+
+		// `templates` wins over `template`
+		$field = $this->pagelist([
+			'template'  => 'album',
+			'templates' => ['note']
+		]);
+		$this->assertFalse($field->hasPageBlueprint('album'));
+		$this->assertTrue($field->hasPageBlueprint('note'));
+
+		// the option's own name wins over both
+		$field = $this->pagelist([
+			'blueprints' => ['album'],
+			'templates'  => ['note']
+		]);
+		$this->assertTrue($field->hasPageBlueprint('album'));
+		$this->assertFalse($field->hasPageBlueprint('note'));
+
 		$field = $this->pagelist(['templatesIgnore' => 'album']);
 		$this->assertFalse($field->hasPageBlueprint('album'));
 		$this->assertTrue($field->hasPageBlueprint('note'));
 		$this->assertCount(1, $field->data());
+
+		// `templatesIgnore` adds to `except`
+		$field = $this->pagelist([
+			'blueprints'      => ['except' => 'album'],
+			'templatesIgnore' => 'note'
+		]);
+		$this->assertFalse($field->hasPageBlueprint('album'));
+		$this->assertFalse($field->hasPageBlueprint('note'));
+		$this->assertTrue($field->hasPageBlueprint('default'));
+	}
+
+	public function testHasPageBlueprintWithExcept(): void
+	{
+		// excluding blueprints doesn't filter by any others
+		$field = $this->pagelist(['blueprints' => ['except' => 'album']]);
+		$this->assertFalse($field->hasPageBlueprint('album'));
+		$this->assertTrue($field->hasPageBlueprint('note'));
+		$this->assertTrue($field->hasPageBlueprint('does-not-exist'));
+		$this->assertCount(1, $field->data());
+
+		$field = $this->pagelist(['blueprints' => ['except' => ['album', 'note']]]);
+		$this->assertFalse($field->hasPageBlueprint('note'));
+		$this->assertCount(0, $field->data());
 	}
 
 	public function testHasPageBlueprintWithInvalidParent(): void
@@ -272,14 +290,14 @@ class PageListFieldTest extends TestCase
 
 	public function testAcceptedPageBlueprints(): void
 	{
-		// the templates of the list
-		$field = $this->pagelist(['templates' => ['album', 'note']]);
+		// the blueprints of the list
+		$field = $this->pagelist(['blueprints' => ['album', 'note']]);
 		$this->assertSame(['album', 'note'], $field->acceptedPageBlueprints());
 
-		// `create` wins over the templates
+		// `create` wins over the blueprints
 		$field = $this->pagelist([
-			'create'    => 'note',
-			'templates' => ['album']
+			'create'     => 'note',
+			'blueprints' => ['album']
 		]);
 		$this->assertSame(['note'], $field->acceptedPageBlueprints());
 	}
@@ -287,8 +305,8 @@ class PageListFieldTest extends TestCase
 	public function testAcceptedPageBlueprintsWithCreateDisabled(): void
 	{
 		$field = $this->pagelist([
-			'create'    => false,
-			'templates' => ['album']
+			'create'     => false,
+			'blueprints' => ['album']
 		]);
 		$this->assertSame([], $field->acceptedPageBlueprints());
 
@@ -299,8 +317,8 @@ class PageListFieldTest extends TestCase
 	{
 		// `create: true` only enables creating pages
 		$field = $this->pagelist([
-			'create'    => true,
-			'templates' => ['album']
+			'create'     => true,
+			'blueprints' => ['album']
 		]);
 		$this->assertSame(['album'], $field->acceptedPageBlueprints());
 
@@ -308,27 +326,26 @@ class PageListFieldTest extends TestCase
 		$this->assertSame(['album', 'default', 'note'], $field->acceptedPageBlueprints());
 	}
 
-	public function testAcceptedPageBlueprintsWithIgnore(): void
+	public function testAcceptedPageBlueprintsWithExcept(): void
 	{
+		$field = $this->pagelist(['blueprints' => ['except' => 'note']]);
+		$this->assertSame(['album', 'default'], $field->acceptedPageBlueprints());
+
+		// the remaining blueprints are re-indexed
+		$field = $this->pagelist(['blueprints' => ['except' => 'album']]);
+		$this->assertSame(['default', 'note'], $field->acceptedPageBlueprints());
+
+		// the aliases can still combine both
 		$field = $this->pagelist([
 			'templates'       => ['album', 'note'],
 			'templatesIgnore' => ['note']
 		]);
-
 		$this->assertSame(['album'], $field->acceptedPageBlueprints());
-
-		// the remaining blueprints are re-indexed
-		$field = $this->pagelist([
-			'templates'       => ['album', 'note'],
-			'templatesIgnore' => ['album']
-		]);
-
-		$this->assertSame(['note'], $field->acceptedPageBlueprints());
 	}
 
 	public function testAcceptedPageBlueprintsWithoutBlueprints(): void
 	{
-		// without any template, every blueprint can be created
+		// without any blueprint, every blueprint can be created
 		$field = $this->pagelist();
 
 		$this->assertSame(['album', 'default', 'note'], $field->acceptedPageBlueprints());
@@ -353,8 +370,8 @@ class PageListFieldTest extends TestCase
 	{
 		// the album blueprint creates listed pages
 		$field = $this->pagelist([
-			'status'    => 'listed',
-			'templates' => ['album']
+			'status'     => 'listed',
+			'blueprints' => ['album']
 		]);
 
 		$this->assertTrue($field->add());
@@ -364,8 +381,8 @@ class PageListFieldTest extends TestCase
 	{
 		// new notes are drafts and would not show up in a listed list
 		$field = $this->pagelist([
-			'status'    => 'listed',
-			'templates' => ['note']
+			'status'     => 'listed',
+			'blueprints' => ['note']
 		]);
 
 		$this->assertFalse($field->add());
@@ -374,8 +391,8 @@ class PageListFieldTest extends TestCase
 	public function testAddWithMixedStatuses(): void
 	{
 		$field = $this->pagelist([
-			'status'    => 'listed',
-			'templates' => ['album', 'note']
+			'status'     => 'listed',
+			'blueprints' => ['album', 'note']
 		]);
 
 		$this->assertFalse($field->add());
@@ -396,15 +413,15 @@ class PageListFieldTest extends TestCase
 	{
 		// a blueprint that cannot be loaded creates a draft
 		$field = $this->pagelist([
-			'status'    => 'draft',
-			'templates' => ['does-not-exist']
+			'status'     => 'draft',
+			'blueprints' => ['does-not-exist']
 		]);
 
 		$this->assertTrue($field->add());
 
 		$field = $this->pagelist([
-			'status'    => 'listed',
-			'templates' => ['does-not-exist']
+			'status'     => 'listed',
+			'blueprints' => ['does-not-exist']
 		]);
 
 		$this->assertFalse($field->add());

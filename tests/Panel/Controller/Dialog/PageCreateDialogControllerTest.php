@@ -260,8 +260,8 @@ class PageCreateDialogControllerTest extends TestCase
 				'pages/parent' => [
 					'fields' => [
 						'kids' => [
-							'type'      => 'pagelist',
-							'templates' => ['child']
+							'type'       => 'pagelist',
+							'blueprints' => ['child']
 						]
 					]
 				],

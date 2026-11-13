@@ -326,8 +326,8 @@ class FileValidatorsTest extends ModelTestCase
 				'pages/test' => [
 					'fields' => [
 						'files' => [
-							'type'     => 'filelist',
-							'template' => 'a'
+							'type'      => 'filelist',
+							'blueprint' => 'a'
 						]
 					]
 				],

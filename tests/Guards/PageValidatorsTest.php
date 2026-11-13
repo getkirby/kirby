@@ -256,8 +256,8 @@ class PageValidatorsTest extends ModelTestCase
 				'pages/parent' => [
 					'fields' => [
 						'subpages' => [
-							'type'     => 'pagelist',
-							'template' => 'child'
+							'type'       => 'pagelist',
+							'blueprints' => 'child'
 						]
 					]
 				]
@@ -368,8 +368,8 @@ class PageValidatorsTest extends ModelTestCase
 				'pages/parent' => [
 					'sections' => [
 						'photos' => [
-							'type'     => 'pages',
-							'template' => 'child'
+							'type'       => 'pages',
+							'blueprints' => 'child'
 						],
 						'details' => [
 							'type'   => 'fields',
@@ -404,8 +404,8 @@ class PageValidatorsTest extends ModelTestCase
 				'pages/parent' => [
 					'fields' => [
 						'subpages' => [
-							'type'      => 'pagelist',
-							'templates' => ['album']
+							'type'       => 'pagelist',
+							'blueprints' => ['album']
 						]
 					]
 				]
@@ -426,15 +426,15 @@ class PageValidatorsTest extends ModelTestCase
 		$validators->validateMoveToTemplate($this->app->page('parent-b'));
 	}
 
-	public function testMoveToTemplateWithIgnore(): void
+	public function testMoveToTemplateWithExcept(): void
 	{
 		$this->app = $this->app->clone([
 			'blueprints' => [
 				'pages/parent' => [
 					'fields' => [
 						'subpages' => [
-							'type'            => 'pagelist',
-							'templatesIgnore' => ['article']
+							'type'       => 'pagelist',
+							'blueprints' => ['except' => ['article']]
 						]
 					]
 				]
@@ -464,8 +464,8 @@ class PageValidatorsTest extends ModelTestCase
 				'pages/parent' => [
 					'fields' => [
 						'albums' => [
-							'type'      => 'pagelist',
-							'templates' => ['album']
+							'type'       => 'pagelist',
+							'blueprints' => ['album']
 						],
 						'subpages' => [
 							'type' => 'pagelist'
@@ -499,8 +499,8 @@ class PageValidatorsTest extends ModelTestCase
 							'type'   => 'object',
 							'fields' => [
 								'subpages' => [
-									'type'      => 'pagelist',
-									'templates' => ['article']
+									'type'       => 'pagelist',
+									'blueprints' => ['article']
 								]
 							]
 						]

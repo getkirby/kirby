@@ -290,9 +290,9 @@ class FileListFieldTest extends TestCase
 	public function testColumnsWithTypesWithoutFiles(): void
 	{
 		$field = $this->filelist([
-			'columns'  => ['alt' => true],
-			'layout'   => 'table',
-			'template' => 'does-not-exist'
+			'blueprint' => 'does-not-exist',
+			'columns'   => ['alt' => true],
+			'layout'    => 'table'
 		]);
 
 		// without entries there is no blueprint to resolve the type from
@@ -594,7 +594,7 @@ class FileListFieldTest extends TestCase
 
 	public function testAcceptedFileBlueprints(): void
 	{
-		$field = $this->filelist(['template' => 'image']);
+		$field = $this->filelist(['blueprint' => 'image']);
 		$this->assertSame(['image'], $field->acceptedFileBlueprints());
 	}
 
@@ -640,9 +640,9 @@ class FileListFieldTest extends TestCase
 		$this->assertSame(2, $upload['max']);
 	}
 
-	public function testUploadWithTemplate(): void
+	public function testUploadWithBlueprint(): void
 	{
-		$upload = $this->filelist(['template' => 'image'])->upload();
+		$upload = $this->filelist(['blueprint' => 'image'])->upload();
 
 		$this->assertSame('image', $upload['attributes']['template']);
 	}
@@ -666,17 +666,29 @@ class FileListFieldTest extends TestCase
 
 	public function testAccept(): void
 	{
-		// without a template, the upload dialog accepts anything
+		// without a blueprint, the upload dialog accepts anything
 		$this->assertNull($this->filelist()->accept());
 
-		$field = $this->filelist(['template' => 'image']);
+		$field = $this->filelist(['blueprint' => 'image']);
 		$this->assertSame('*', $field->accept());
 	}
 
-	public function testTemplate(): void
+	public function testBlueprint(): void
+	{
+		$this->assertNull($this->filelist()->blueprint());
+
+		$field = $this->filelist(['blueprint' => 'cover']);
+		$this->assertSame('cover', $field->blueprint());
+	}
+
+	public function testBlueprintWithAlias(): void
 	{
 		$field = $this->filelist(['template' => 'cover']);
-		$this->assertSame('cover', $field->template());
+		$this->assertSame('cover', $field->blueprint());
+
+		// the option's own name wins
+		$field = $this->filelist(['blueprint' => 'image', 'template' => 'cover']);
+		$this->assertSame('image', $field->blueprint());
 	}
 
 	public function testApi(): void

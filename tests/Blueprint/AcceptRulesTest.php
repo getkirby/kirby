@@ -53,13 +53,13 @@ class AcceptRulesTest extends BlueprintTest
 				'a' => [
 					'type' => 'filepicker',
 					'uploads' => [
-						'template' => 'a'
+						'blueprint' => 'a'
 					]
 				],
 				'b' => [
 					'type' => 'textarea',
 					'uploads' => [
-						'template' => 'b'
+						'blueprint' => 'b'
 					]
 				],
 				'c' => [
@@ -68,7 +68,7 @@ class AcceptRulesTest extends BlueprintTest
 						'text' => [
 							'type' => 'textarea',
 							'uploads' => [
-								'template' => 'c'
+								'blueprint' => 'c'
 							]
 						]
 					]
@@ -79,7 +79,7 @@ class AcceptRulesTest extends BlueprintTest
 						'text' => [
 							'type' => 'textarea',
 							'uploads' => [
-								'template' => 'd'
+								'blueprint' => 'd'
 							]
 						]
 					]
@@ -92,7 +92,7 @@ class AcceptRulesTest extends BlueprintTest
 								'text' => [
 									'type' => 'textarea',
 									'uploads' => [
-										'template' => 'e'
+										'blueprint' => 'e'
 									]
 								]
 							]
@@ -126,7 +126,7 @@ class AcceptRulesTest extends BlueprintTest
 								'text' => [
 									'type'    => 'does-not-exist',
 									'uploads' => [
-										'template' => 'a'
+										'blueprint' => 'a'
 									]
 								]
 							]
@@ -160,8 +160,8 @@ class AcceptRulesTest extends BlueprintTest
 				'a' => [
 					'type' => 'filepicker',
 					'uploads' => [
-						'parent'   => 'site',
-						'template' => 'a'
+						'parent'    => 'site',
+						'blueprint' => 'a'
 					]
 				],
 			]
@@ -195,18 +195,18 @@ class AcceptRulesTest extends BlueprintTest
 				'a' => [
 					'type' => 'filepicker',
 					'uploads' => [
-						'template' => 'a'
+						'blueprint' => 'a'
 					]
 				],
 				'b' => [
 					'type' => 'textarea',
 					'uploads' => [
-						'template' => 'b'
+						'blueprint' => 'b'
 					]
 				],
 				'files' => [
-					'type'     => 'filelist',
-					'template' => 'c'
+					'type'      => 'filelist',
+					'blueprint' => 'c'
 				]
 			]
 		]);
@@ -320,12 +320,12 @@ class AcceptRulesTest extends BlueprintTest
 			'name'  => 'default',
 			'fields' => [
 				'a' => [
-					'type'     => 'filelist',
-					'template' => 'a'
+					'type'      => 'filelist',
+					'blueprint' => 'a'
 				],
 				'b' => [
-					'type'     => 'filelist',
-					'template' => 'b'
+					'type'      => 'filelist',
+					'blueprint' => 'b'
 				],
 			]
 		]);
@@ -353,12 +353,12 @@ class AcceptRulesTest extends BlueprintTest
 			'name'  => 'default',
 			'fields' => [
 				'a' => [
-					'type'     => 'filelist',
-					'template' => 'a'
+					'type'      => 'filelist',
+					'blueprint' => 'a'
 				],
 				'b' => [
-					'type'     => 'filelist',
-					'template' => 'b'
+					'type'      => 'filelist',
+					'blueprint' => 'b'
 				]
 			]
 		]);
@@ -412,8 +412,8 @@ class AcceptRulesTest extends BlueprintTest
 			'name'   => 'default',
 			'fields' => [
 				'albums' => [
-					'type'      => 'pagelist',
-					'templates' => ['album']
+					'type'       => 'pagelist',
+					'blueprints' => ['album']
 				],
 				'notes' => [
 					'type'   => 'pagelist',
@@ -423,8 +423,8 @@ class AcceptRulesTest extends BlueprintTest
 					'type'   => 'object',
 					'fields' => [
 						'events' => [
-							'type'      => 'pagelist',
-							'templates' => 'event'
+							'type'       => 'pagelist',
+							'blueprints' => 'event'
 						]
 					]
 				],
@@ -451,12 +451,12 @@ class AcceptRulesTest extends BlueprintTest
 			'name'   => 'default',
 			'fields' => [
 				'albums' => [
-					'type'      => 'pagelist',
-					'templates' => ['album']
+					'type'       => 'pagelist',
+					'blueprints' => ['album']
 				],
 				'notes' => [
-					'type'      => 'pagelist',
-					'templates' => ['note']
+					'type'       => 'pagelist',
+					'blueprints' => ['note']
 				]
 			]
 		]);

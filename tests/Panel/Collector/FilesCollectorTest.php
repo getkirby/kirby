@@ -64,13 +64,13 @@ class FilesCollectorTest extends TestCase
 		$this->assertCollectUnauthenticated(FilesCollector::class);
 	}
 
-	public function testFilterByTemplates(): void
+	public function testFilterByBlueprint(): void
 	{
 		$this->setUpFiles();
 		$this->app->impersonate('kirby');
 
 		$collector = new FilesCollector(
-			template: 'hero'
+			blueprint: 'hero'
 		);
 
 		$this->assertModelsInCollector($collector, ['image-b.jpg', 'image-c.jpg'], );

@@ -59,8 +59,8 @@ class PageGuardsTest extends ModelTestCase
 				'pages/parent' => [
 					'fields' => [
 						'subpages' => [
-							'type'     => 'pagelist',
-							'template' => 'child'
+							'type'       => 'pagelist',
+							'blueprints' => 'child'
 						]
 					]
 				]

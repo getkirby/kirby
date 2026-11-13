@@ -102,25 +102,32 @@ class PagesCollectorTest extends TestCase
 		$this->assertCollectUnauthenticated(PagesCollector::class);
 	}
 
-	public function testFilterByTemplates(): void
+	public function testFilterByBlueprints(): void
 	{
 		$this->setUpPages();
 		$this->app->impersonate('kirby');
 
 		$collector = new PagesCollector(
-			templates: ['article']
+			blueprints: ['only' => ['article']]
 		);
 
 		$this->assertModelsInCollector($collector, ['b', 'c'], );
 	}
 
-	public function testFilterByTemplatesIgnore(): void
+	public function testFilterByBlueprintsExcept(): void
 	{
 		$this->setUpPages();
 		$this->app->impersonate('kirby');
 
 		$collector = new PagesCollector(
-			templatesIgnore: ['article']
+			blueprints: ['except' => ['article']]
+		);
+
+		$this->assertModelsInCollector($collector, ['a'], );
+
+		// `except` also applies to the `only` list
+		$collector = new PagesCollector(
+			blueprints: ['only' => ['article', 'default'], 'except' => ['article']]
 		);
 
 		$this->assertModelsInCollector($collector, ['a'], );

@@ -83,8 +83,8 @@ class TextareaFieldTest extends TestCase
 	{
 		$field = $this->field('textarea', [
 			'uploads' => [
-				'parent'   => 'site',
-				'template' => 'a'
+				'parent'    => 'site',
+				'blueprint' => 'a'
 			]
 		]);
 
@@ -99,8 +99,8 @@ class TextareaFieldTest extends TestCase
 				'parent' => new Page(['slug' => 'parent'])
 			]),
 			'uploads' => [
-				'parent'   => 'page.parent',
-				'template' => 'a'
+				'parent'    => 'page.parent',
+				'blueprint' => 'a'
 			]
 		]);
 
@@ -111,8 +111,8 @@ class TextareaFieldTest extends TestCase
 	{
 		$field = $this->field('textarea', [
 			'uploads' => [
-				'parent'   => 'page',
-				'template' => 'a'
+				'parent'    => 'page',
+				'blueprint' => 'a'
 			]
 		]);
 
@@ -124,8 +124,8 @@ class TextareaFieldTest extends TestCase
 		// the page has no parent
 		$field = $this->field('textarea', [
 			'uploads' => [
-				'parent'   => 'page.parent',
-				'template' => 'a'
+				'parent'    => 'page.parent',
+				'blueprint' => 'a'
 			]
 		]);
 
@@ -260,13 +260,13 @@ class TextareaFieldTest extends TestCase
 		$field = $this->field('textarea', [
 			'value' => 'test',
 			'uploads' => [
-				'template' => 'test'
+				'blueprint' => 'test'
 			]
 		]);
 
 		$expected = [
-			'accept'   => '*',
-			'template' => 'test',
+			'accept'    => '*',
+			'blueprint' => 'test',
 		];
 
 		$this->assertSame($expected, $field->uploads());
@@ -304,8 +304,8 @@ class TextareaFieldTest extends TestCase
 		$field = $this->field('textarea', [
 			'value' => 'test',
 			'uploads' => [
-				'parent'   => 'site.title',
-				'template' => 'test'
+				'parent'    => 'site.title',
+				'blueprint' => 'test'
 			]
 		]);
 
@@ -315,7 +315,7 @@ class TextareaFieldTest extends TestCase
 		$field->uploads();
 	}
 
-	public function testUploadsTemplate(): void
+	public function testUploadsBlueprint(): void
 	{
 		$field = $this->field('textarea', [
 			'value' => 'test',
@@ -323,11 +323,28 @@ class TextareaFieldTest extends TestCase
 		]);
 
 		$expected = [
-			'accept'   => '*',
-			'template' => 'test',
+			'accept'    => '*',
+			'blueprint' => 'test',
 		];
 
 		$this->assertSame($expected, $field->uploads());
+	}
+
+	public function testUploadsBlueprintWithAlias(): void
+	{
+		$field = $this->field('textarea', [
+			'uploads' => ['template' => 'test']
+		]);
+
+		$this->assertSame('test', $field->uploads()['blueprint']);
+		$this->assertArrayNotHasKey('template', $field->uploads());
+
+		// the option's own name wins
+		$field = $this->field('textarea', [
+			'uploads' => ['blueprint' => 'a', 'template' => 'b']
+		]);
+
+		$this->assertSame('a', $field->uploads()['blueprint']);
 	}
 
 	public function testUploadsWithInvalidInput(): void

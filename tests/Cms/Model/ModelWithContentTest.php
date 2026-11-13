@@ -90,7 +90,7 @@ class BlueprintsModelWithContent extends ExtendedModelWithContent
 							'name' => 'pages',
 							'type' => 'pagelist',
 							'parent' => 'site',
-							'templates' => [
+							'blueprints' => [
 								'foo',
 								'bar',
 							]
@@ -99,7 +99,7 @@ class BlueprintsModelWithContent extends ExtendedModelWithContent
 							'name' => 'menu',
 							'type' => 'pagelist',
 							'parent' => 'site',
-							'templates' => [
+							'blueprints' => [
 								'home',
 								'default',
 							]
@@ -497,8 +497,8 @@ class ModelWithContentTest extends TestCase
 			'blueprint' => [
 				'fields' => [
 					'pages' => [
-						'type'      => 'pagelist',
-						'templates' => ['broken']
+						'type'       => 'pagelist',
+						'blueprints' => ['broken']
 					]
 				]
 			]

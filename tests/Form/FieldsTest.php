@@ -300,8 +300,8 @@ class FieldsTest extends TestCase
 				'uploads' => 'a'
 			],
 			'files' => [
-				'type'     => 'filelist',
-				'template' => 'b'
+				'type'      => 'filelist',
+				'blueprint' => 'b'
 			],
 		], $this->model);
 
@@ -373,15 +373,15 @@ class FieldsTest extends TestCase
 				'type' => 'text',
 			],
 			'albums' => [
-				'type'      => 'pagelist',
-				'templates' => 'album'
+				'type'       => 'pagelist',
+				'blueprints' => 'album'
 			],
 			'object' => [
 				'type'   => 'object',
 				'fields' => [
 					'events' => [
-						'type'      => 'pagelist',
-						'templates' => 'event'
+						'type'       => 'pagelist',
+						'blueprints' => 'event'
 					]
 				]
 			],
@@ -659,8 +659,8 @@ class FieldsTest extends TestCase
 				'type' => 'text',
 			],
 			'albums' => [
-				'type'      => 'pagelist',
-				'templates' => 'album'
+				'type'       => 'pagelist',
+				'blueprints' => 'album'
 			],
 		], $this->model);
 
@@ -676,8 +676,8 @@ class FieldsTest extends TestCase
 				'type'   => 'object',
 				'fields' => [
 					'events' => [
-						'type'      => 'pagelist',
-						'templates' => 'event'
+						'type'       => 'pagelist',
+						'blueprints' => 'event'
 					]
 				]
 			],
