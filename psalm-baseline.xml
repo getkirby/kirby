@@ -231,21 +231,6 @@
       <code><![CDATA[$this->i18n($this->title ?? $this->label())]]></code>
     </NullableReturnStatement>
   </file>
-  <file src="src/Panel/Controller/Dialog/FilePickerDialogController.php">
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[$model]]></code>
-    </MoreSpecificImplementedParamType>
-  </file>
-  <file src="src/Panel/Controller/Dialog/PagePickerDialogController.php">
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[$model]]></code>
-    </MoreSpecificImplementedParamType>
-  </file>
-  <file src="src/Panel/Controller/Dialog/UserPickerDialogController.php">
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[$model]]></code>
-    </MoreSpecificImplementedParamType>
-  </file>
   <file src="src/Panel/Panel.php">
     <RedundantCondition>
       <code><![CDATA[$this->kirby->user()?->role()->permissions()->toArray()]]></code>

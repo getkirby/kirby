@@ -17,6 +17,8 @@ use Kirby\Toolkit\Str;
  * @since     6.0.0
  *
  * @unstable
+ *
+ * @template TModel of ModelWithContent
  */
 abstract class ModelPickerDialogController extends DialogController
 {
@@ -50,11 +52,15 @@ abstract class ModelPickerDialogController extends DialogController
 
 	/**
 	 * Finds a model by its ID
+	 *
+	 * @return TModel|null
 	 */
 	abstract public function find(string $id): ModelWithContent|null;
 
 	/**
 	 * Returns the picker data for a model
+	 *
+	 * @param TModel $model
 	 */
 	abstract public function item(ModelWithContent $model): array;
 
@@ -63,9 +69,7 @@ abstract class ModelPickerDialogController extends DialogController
 	 */
 	public function items(): array
 	{
-		return $this->collector()->models(paginated: true)->values(
-			fn (ModelWithContent $model) => $this->item($model)
-		);
+		return $this->collector()->models(paginated: true)->values($this->item(...));
 	}
 
 	/**
