@@ -241,6 +241,30 @@ class PageListFieldTest extends TestCase
 		$this->assertSame(['note'], $field->acceptedPageBlueprints());
 	}
 
+	public function testAcceptedPageBlueprintsWithCreateDisabled(): void
+	{
+		$field = $this->pagelist([
+			'create'    => false,
+			'templates' => ['album']
+		]);
+		$this->assertSame([], $field->acceptedPageBlueprints());
+
+		$this->assertSame([], $this->pagelist(['create' => false])->acceptedPageBlueprints());
+	}
+
+	public function testAcceptedPageBlueprintsWithCreateEnabled(): void
+	{
+		// `create: true` only enables creating pages
+		$field = $this->pagelist([
+			'create'    => true,
+			'templates' => ['album']
+		]);
+		$this->assertSame(['album'], $field->acceptedPageBlueprints());
+
+		$field = $this->pagelist(['create' => true]);
+		$this->assertSame(['album', 'default', 'note'], $field->acceptedPageBlueprints());
+	}
+
 	public function testAcceptedPageBlueprintsWithIgnore(): void
 	{
 		$field = $this->pagelist([

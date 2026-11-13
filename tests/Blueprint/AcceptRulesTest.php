@@ -427,6 +427,11 @@ class AcceptRulesTest extends BlueprintTest
 							'templates' => 'event'
 						]
 					]
+				],
+				// no pages can be added
+				'archive' => [
+					'type'   => 'pagelist',
+					'create' => false
 				]
 			]
 		]);

@@ -70,9 +70,14 @@ class PageListField extends ModelListField implements ProvidesAcceptedPageBluepr
 	 */
 	public function acceptedPageBlueprints(): array
 	{
+		// no pages can be added through the list
+		if ($this->create === false) {
+			return [];
+		}
+
 		$blueprints = match ($this->create) {
-			null, false, '', [] => $this->templates(),
-			default             => A::wrap($this->create)
+			null, true, '', [] => $this->templates(),
+			default            => A::wrap($this->create)
 		};
 
 		if ($blueprints === []) {
