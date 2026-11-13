@@ -43,6 +43,30 @@ class RouterTest extends TestCase
 		$this->assertSame(302, $response->code());
 	}
 
+	public function testHomeFolderRouteWithQueryAndParams(): void
+	{
+		$app = $this->app->clone([
+			'request' => ['url' => 'https://getkirby.com/home/tag:foo?bar=baz'],
+			'site'    => ['children' => [['slug' => 'home']]],
+			'urls'    => ['index' => 'https://getkirby.com']
+		]);
+
+		$response = $app->call('home');
+		$this->assertSame(
+			'https://getkirby.com/tag:foo?bar=baz',
+			$response->header('Location')
+		);
+
+		// params must not turn into a host with a relative index URL
+		$app = $app->clone([
+			'request' => ['url' => 'https://getkirby.com/home/evil.com:443'],
+			'urls'    => ['index' => '/']
+		]);
+
+		$response = $app->call('home');
+		$this->assertSame('/evil.com:443/', $response->header('Location'));
+	}
+
 	public function testHomeCustomFolderRoute(): void
 	{
 		$app = $this->app->clone([
@@ -231,6 +255,44 @@ class RouterTest extends TestCase
 		$page = $app->call('projects/project-a');
 		$this->assertIsPage($page);
 		$this->assertSame('projects/project-a', $page->id());
+	}
+
+	public function testUUIDRouteWithQueryAndParams(): void
+	{
+		$app = $this->app->clone([
+			'request' => ['url' => 'https://getkirby.com/@/page/notes/tag:foo?bar=baz'],
+			'site'    => [
+				'children' => [
+					[
+						'slug'    => 'notes',
+						'content' => ['uuid' => 'notes'],
+						'files'   => [
+							[
+								'filename' => 'test.jpg',
+								'content'  => ['uuid' => 'test']
+							]
+						]
+					]
+				]
+			],
+			'urls' => ['index' => 'https://getkirby.com']
+		]);
+
+		$page = $app->page('notes');
+		$page->uuid()->populate();
+
+		$response = $app->call('@/page/notes');
+		$this->assertSame(
+			'https://getkirby.com/notes/tag:foo?bar=baz',
+			$response->header('Location')
+		);
+
+		// files point to the media folder and don't inherit
+		$file = $page->file('test.jpg');
+		$file->uuid()->populate();
+
+		$response = $app->call('@/file/test');
+		$this->assertSame($file->url(), $response->header('Location'));
 	}
 
 	public function testNotFoundRoute(): void

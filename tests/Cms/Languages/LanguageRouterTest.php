@@ -223,4 +223,44 @@ class LanguageRouterTest extends TestCase
 		$response = $language->router()->call('@/page/' . $uuid->id());
 		$this->assertFalse($response);
 	}
+
+	public function testUUIDRouteWithQueryAndParams(): void
+	{
+		$app = $this->app->clone([
+			'request' => ['url' => 'https://getkirby.com/en/@/page/notes/tag:foo?bar=baz'],
+			'site'    => [
+				'children' => [
+					[
+						'slug'    => 'notes',
+						'content' => ['uuid' => 'notes'],
+						'files'   => [
+							[
+								'filename' => 'test.jpg',
+								'content'  => ['uuid' => 'test']
+							]
+						]
+					]
+				]
+			],
+			'urls' => ['index' => 'https://getkirby.com']
+		]);
+
+		$page = $app->page('notes');
+		$page->uuid()->populate();
+
+		$language = $app->language('en');
+		$response = $language->router()->call('@/page/notes');
+
+		$this->assertSame(
+			'https://getkirby.com/en/notes/tag:foo?bar=baz',
+			$response->header('Location')
+		);
+
+		// files point to the media folder and don't inherit
+		$file = $page->file('test.jpg');
+		$file->uuid()->populate();
+
+		$response = $language->router()->call('@/file/test');
+		$this->assertSame($file->url(), $response->header('Location'));
+	}
 }

@@ -304,6 +304,14 @@ class ResolverTest extends TestCase
 		$response = $this->resolve($app, 'test.html');
 		$this->assertSame(301, $response->code());
 		$this->assertSame('/test', $response->header('Location'));
+
+		// keeps query and params
+		$app = $app->clone([
+			'request' => ['url' => 'https://getkirby.com/test.html/tag:foo?bar=baz']
+		]);
+
+		$response = $this->resolve($app, 'test.html');
+		$this->assertSame('/test/tag:foo?bar=baz', $response->header('Location'));
 	}
 
 	public function testResolvePageContentNegotiation(): void

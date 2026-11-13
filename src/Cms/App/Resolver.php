@@ -184,7 +184,7 @@ class Resolver
 		// if extension is the default content type,
 		// redirect to the page URL without extension
 		if ($extension === 'html') {
-			return Response::redirect($page->url(), 301);
+			return Response::redirect($page->url(), 301, inherit: true);
 		}
 
 		return $this->resolvePageResponse($page, $extension);

@@ -99,8 +99,15 @@ class LanguageRouter
 				// this ensures that only existing UUIDs can be queried
 				// and attackers can't force Kirby to go through the whole
 				// site index with a non-existing UUID
-				if ($url = $permalink?->model(true)?->url($language->code())) {
-					return $kirby->response()->redirect($url);
+				if ($model = $permalink?->model(true)) {
+					// files point to the media folder, so only pages keep
+					// the query and params of the request
+					return $kirby
+						->response()
+						->redirect(
+							$model->url($language->code()),
+							inherit: $type === 'page'
+						);
 				}
 
 				return false;

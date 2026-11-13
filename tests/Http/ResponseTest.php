@@ -20,6 +20,7 @@ class ResponseTest extends TestCase
 	{
 		App::destroy();
 		HeadersSent::$value = false;
+		Uri::$current = null;
 	}
 
 	public function testBody(): void
@@ -358,6 +359,24 @@ class ResponseTest extends TestCase
 		$this->assertSame('', $response->body());
 		$this->assertSame(301, $response->code());
 		$this->assertEquals(['Location' => '/'], $response->headers()); // cannot use strict assertion (Uri object)
+	}
+
+	public function testRedirectWithInherit(): void
+	{
+		Uri::$current = new Uri('https://getkirby.com/notes/tag:foo?bar=baz');
+
+		$response = Response::redirect('https://getkirby.com/de', inherit: true);
+		$this->assertEquals(['Location' => 'https://getkirby.com/de/tag:foo?bar=baz'], $response->headers()); // cannot use strict assertion (Uri object)
+
+		// the target's own query and params win
+		$response = Response::redirect('https://getkirby.com/de/tag:own?bar=own', inherit: true);
+		$this->assertEquals(['Location' => 'https://getkirby.com/de/tag:own?bar=own'], $response->headers()); // cannot use strict assertion (Uri object)
+
+		// params must not turn into a host on a relative root
+		Uri::$current = new Uri('https://getkirby.com/evil.com:443');
+
+		$response = Response::redirect('/', inherit: true);
+		$this->assertEquals(['Location' => '/evil.com:443/'], $response->headers()); // cannot use strict assertion (Uri object)
 	}
 
 	public function testRefresh(): void
