@@ -1203,6 +1203,24 @@ class StrTest extends TestCase
 		);
 	}
 
+	public function testSlugWithoutLanguageRules(): void
+	{
+		Str::$language = ['ä' => 'ae'];
+
+		try {
+			// language rules are applied by default
+			$this->assertSame('ae-b', Str::slug('ä b'));
+
+			// falls back to the default ASCII map
+			$this->assertSame('a-b', Str::slug(
+				string: 'ä b',
+				language: false
+			));
+		} finally {
+			Str::$language = [];
+		}
+	}
+
 	public function testSnake(): void
 	{
 		$string = 'KingCobra';

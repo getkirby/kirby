@@ -1265,20 +1265,25 @@ class Str
 	 *                          other non-word characters.
 	 * @param string $allowed List of all allowed characters (regex)
 	 * @param int $maxlength The maximum length of the slug
+	 * @param bool $language Whether to apply the language-specific rules
 	 * @return string The safe string
 	 */
 	public static function slug(
 		string|null $string,
 		string|null $separator = null,
 		string|null $allowed = null,
-		int|false $maxlength = 128
+		int|false $maxlength = 128,
+		bool $language = true
 	): string {
 		$separator ??= static::$defaults['slug']['separator'];
 		$allowed   ??= static::$defaults['slug']['allowed'];
 
 		$string = trim($string ?? '');
 		$string = static::lower($string);
-		$string = static::ascii($string);
+		$string = static::ascii(
+			string: $string,
+			language: $language
+		);
 
 		// replace spaces with simple dashes
 		$string = preg_replace(
