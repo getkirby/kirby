@@ -2,7 +2,6 @@
 
 namespace Kirby\Guards;
 
-use Kirby\Cms\Model;
 use Kirby\Cms\Site;
 
 /**
@@ -11,14 +10,11 @@ use Kirby\Cms\Site;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
+ *
+ * @extends ModelPermissions<Site>
  */
 class SitePermissions extends ModelPermissions
 {
-	/**
-	 * @var Site
-	 */
-	protected Model $model;
-
 	public function category(): string
 	{
 		return 'site';

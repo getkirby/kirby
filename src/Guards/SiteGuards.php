@@ -2,7 +2,6 @@
 
 namespace Kirby\Guards;
 
-use Kirby\Cms\Model;
 use Kirby\Cms\Site;
 use Kirby\Cms\User;
 
@@ -13,32 +12,10 @@ use Kirby\Cms\User;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  *
- * @method SiteAbilities abilities()
- * @method SitePermissions permissions()
- * @method SiteValidators validators()
+ * @extends ModelGuards<Site, SiteAbilities, SitePermissions, SiteValidators>
  */
 class SiteGuards extends ModelGuards
 {
-	/**
-	 * @var Site
-	 */
-	protected Model $model;
-
-	/**
-	 * @var SiteAbilities
-	 */
-	protected ModelAbilities $abilities;
-
-	/**
-	 * @var SitePermissions
-	 */
-	protected ModelPermissions $permissions;
-
-	/**
-	 * @var SiteValidators
-	 */
-	protected ModelValidators $validators;
-
 	public function __construct(
 		Site $model,
 		User $user

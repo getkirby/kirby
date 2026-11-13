@@ -3,7 +3,6 @@
 namespace Kirby\Guards;
 
 use Kirby\Cms\File;
-use Kirby\Cms\Model;
 
 /**
  * Role and blueprint based permissions for a `$file` object
@@ -11,14 +10,11 @@ use Kirby\Cms\Model;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
+ *
+ * @extends ModelPermissions<File>
  */
 class FilePermissions extends ModelPermissions
 {
-	/**
-	 * @var File
-	 */
-	protected Model $model;
-
 	public function category(): string
 	{
 		return 'files';

@@ -3,7 +3,6 @@
 namespace Kirby\Guards;
 
 use Kirby\Cms\Language;
-use Kirby\Cms\Model;
 
 /**
  * Abilities for a `$language` object
@@ -11,14 +10,11 @@ use Kirby\Cms\Model;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
+ *
+ * @extends ModelAbilities<Language>
  */
 class LanguageAbilities extends ModelAbilities
 {
-	/**
-	 * @var Language
-	 */
-	protected Model $model;
-
 	protected function error(
 		string $key,
 		array $data = [],

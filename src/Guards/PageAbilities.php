@@ -2,7 +2,6 @@
 
 namespace Kirby\Guards;
 
-use Kirby\Cms\Model;
 use Kirby\Cms\Page;
 
 /**
@@ -11,14 +10,11 @@ use Kirby\Cms\Page;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
+ *
+ * @extends ModelAbilities<Page>
  */
 class PageAbilities extends ModelAbilities
 {
-	/**
-	 * @var Page
-	 */
-	protected Model $model;
-
 	protected function error(
 		string $key,
 		array $data = [],

@@ -3,7 +3,6 @@
 namespace Kirby\Guards;
 
 use Kirby\Cms\File;
-use Kirby\Cms\Model;
 use Kirby\Cms\User;
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\Exception;
@@ -18,32 +17,10 @@ use Kirby\Filesystem\File as BaseFile;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  *
- * @method FileAbilities abilities()
- * @method FilePermissions permissions()
- * @method FileValidators validators()
+ * @extends ModelGuards<File, FileAbilities, FilePermissions, FileValidators>
  */
 class FileGuards extends ModelGuards
 {
-	/**
-	 * @var File
-	 */
-	protected Model $model;
-
-	/**
-	 * @var FileAbilities
-	 */
-	protected ModelAbilities $abilities;
-
-	/**
-	 * @var FilePermissions
-	 */
-	protected ModelPermissions $permissions;
-
-	/**
-	 * @var FileValidators
-	 */
-	protected ModelValidators $validators;
-
 	public function __construct(
 		File $model,
 		User $user

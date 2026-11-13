@@ -2,7 +2,6 @@
 
 namespace Kirby\Guards;
 
-use Kirby\Cms\Model;
 use Kirby\Cms\User;
 
 /**
@@ -11,14 +10,11 @@ use Kirby\Cms\User;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
+ *
+ * @extends ModelAbilities<User>
  */
 class UserAbilities extends ModelAbilities
 {
-	/**
-	 * @var User
-	 */
-	protected Model $model;
-
 	/**
 	 * Only admins are allowed to run actions on other admins
 	 * that could lock them out of their account

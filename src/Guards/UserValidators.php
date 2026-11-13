@@ -2,7 +2,6 @@
 
 namespace Kirby\Guards;
 
-use Kirby\Cms\Model;
 use Kirby\Cms\Role;
 use Kirby\Cms\User;
 use Kirby\Exception\DuplicateException;
@@ -19,6 +18,8 @@ use SensitiveParameter;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
+ *
+ * @extends ModelValidators<User>
  */
 class UserValidators extends ModelValidators
 {
@@ -28,11 +29,6 @@ class UserValidators extends ModelValidators
 	 * into subfolders of the accounts root.
 	 */
 	public const ID_PATTERN = '/^[a-z0-9_-]+\z/i';
-
-	/**
-	 * @var User
-	 */
-	protected Model $model;
 
 	/**
 	 * Validates the input of the `changeEmail` action
