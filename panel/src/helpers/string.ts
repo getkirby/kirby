@@ -5,7 +5,6 @@
 
 import { DOMParser, DOMSerializer, Schema } from "prosemirror-model";
 
-import "./regex";
 import { createMarks, createNodes } from "./writer";
 import type WriterMark from "@/components/Forms/Writer/Mark";
 import type WriterNode from "@/components/Forms/Writer/Node";

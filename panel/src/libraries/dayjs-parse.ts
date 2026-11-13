@@ -3,7 +3,6 @@
  * @license   https://opensource.org/licenses/MIT
  */
 
-import "@/helpers/regex";
 import type { Dayjs, PluginFunc } from "dayjs";
 import type { DatetimeType, DayjsFactory } from "./dayjs";
 import type { Locale } from "./dayjs-locale";
