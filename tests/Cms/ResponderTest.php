@@ -420,6 +420,23 @@ class ResponderTest extends TestCase
 		$this->assertFalse($responder->isPrivate(false, []));
 	}
 
+	public function testRedirect(): void
+	{
+		$this->kirby([
+			'request' => ['url' => 'https://getkirby.test/notes/tag:foo?bar=baz'],
+			'urls'    => ['index' => 'https://getkirby.test']
+		]);
+
+		$responder = new Responder();
+		$responder->redirect('/de');
+		$this->assertSame(302, $responder->code());
+		$this->assertSame('https://getkirby.test/de', $responder->header('Location'));
+
+		$responder->redirect('/de', 301, inherit: true);
+		$this->assertSame(301, $responder->code());
+		$this->assertSame('https://getkirby.test/de/tag:foo?bar=baz', $responder->header('Location'));
+	}
+
 	public function testSend(): void
 	{
 		$responder = new Responder();

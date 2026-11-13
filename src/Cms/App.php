@@ -1293,7 +1293,12 @@ class App
 			// if extension is the default content type,
 			// redirect to page URL without extension
 			if ($extension === 'html') {
-				return Response::redirect($page->url(), 301);
+				// the Cms response inherits from the request object
+				return \Kirby\Cms\Response::redirect(
+					$page->url(),
+					301,
+					inherit: true
+				);
 			}
 
 			try {

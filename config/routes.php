@@ -171,9 +171,11 @@ return function (App $kirby) {
 				// and attackers can't force Kirby to go through the whole
 				// site index with a non-existing UUID
 				if ($model = Uuid::for($type . '://' . $id)?->model(true)) {
+					// files point to the media folder, so only pages keep
+					// the query and params of the request
 					return $kirby
 						->response()
-						->redirect($model->url());
+						->redirect($model->url(), inherit: $type === 'page');
 				}
 
 				// render the error page
@@ -204,7 +206,7 @@ return function (App $kirby) {
 			'action'  => function () use ($kirby) {
 				return $kirby
 					->response()
-					->redirect($kirby->site()->url());
+					->redirect($kirby->site()->url(), inherit: true);
 			}
 		];
 

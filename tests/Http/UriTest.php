@@ -196,6 +196,17 @@ class UriTest extends TestCase
 		$this->assertSame('https://getkirby.com?one=two&foo=bar', $uri->toString());
 	}
 
+	public function testInheritKeepsOwnValues(): void
+	{
+		$uri = new Uri('https://getkirby.com/tag:own?q=own&a=1#own');
+		$uri->inherit('https://foo.com/tag:parent/page:2?q=parent&b=2#parent');
+
+		$this->assertSame(
+			'https://getkirby.com/tag:own/page:2?q=own&a=1&b=2#own',
+			$uri->toString()
+		);
+	}
+
 	public function testInvalidScheme(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -402,6 +413,23 @@ class UriTest extends TestCase
 					'query'  => ['q' => 'something']
 				],
 				'/search/page:2/?q=something'
+			],
+
+			// relative root + adding params
+			[
+				'/',
+				[
+					'params' => ['page' => 2],
+					'query'  => ['q' => 'something']
+				],
+				'/page:2/?q=something'
+			],
+
+			// relative root with params
+			[
+				'/evil.com:443',
+				[],
+				'/evil.com:443'
 			],
 
 			// relative path with colon + adding query

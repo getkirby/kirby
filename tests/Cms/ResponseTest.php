@@ -47,4 +47,15 @@ class ResponseTest extends TestCase
 		$this->assertSame(301, $response->code());
 		$this->assertEquals(['Location' => 'https://getkirby.test/uri'], $response->headers()); // cannot use strict assertion (Uri object)
 	}
+
+	public function testRedirectWithInherit(): void
+	{
+		$this->kirby([
+			'request' => ['url' => 'https://getkirby.test/notes/tag:foo?bar=baz'],
+			'urls'    => ['index' => 'https://getkirby.test']
+		]);
+
+		$response = Response::redirect('/de', inherit: true);
+		$this->assertEquals(['Location' => 'https://getkirby.test/de/tag:foo?bar=baz'], $response->headers()); // cannot use strict assertion (Uri object)
+	}
 }
