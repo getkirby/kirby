@@ -11,7 +11,6 @@
 .scroll-x-auto,
 .scroll-y,
 .scroll-y-auto {
-	-webkit-overflow-scrolling: touch;
 	transform: translate3d(0, 0, 0);
 }
 .scroll-x {
