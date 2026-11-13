@@ -334,6 +334,47 @@ class PageGuardsTest extends ModelTestCase
 		$this->guards($this->app->page('test'))->ensureExecutable('delete');
 	}
 
+	public function testDeleteWithUndeletableFileForOtherUser(): void
+	{
+		$this->app = $this->app->clone([
+			'roles' => [
+				['name' => 'admin'],
+				[
+					'name'        => 'editor',
+					'permissions' => ['files' => ['delete' => false]]
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'test',
+						'files' => [
+							['filename' => 'a.jpg']
+						]
+					]
+				]
+			],
+			'users' => [
+				['email' => 'admin@getkirby.com', 'role' => 'admin'],
+				['email' => 'editor@getkirby.com', 'role' => 'editor']
+			]
+		]);
+
+		// the files must be checked against the user of the
+		// guards, not against the currently logged in user
+		$this->app->impersonate('admin@getkirby.com');
+
+		$guards = new PageGuards(
+			model: $this->app->page('test'),
+			user: $this->app->user('editor@getkirby.com')
+		);
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionCode('error.file.delete.permission');
+
+		$guards->ensureExecutable('delete');
+	}
+
 	public function testMove(): void
 	{
 		$page = $this->movable();

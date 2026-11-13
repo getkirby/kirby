@@ -146,11 +146,11 @@ class PageGuards extends ModelGuards
 		// files and subpages get deleted with the page, so check them
 		// upfront instead of failing halfway through the deletion
 		foreach ($this->model->files() as $file) {
-			$file->guards()->ensureExecutable('delete');
+			$this->guards($file)->ensureExecutable('delete');
 		}
 
 		foreach ($this->model->childrenAndDrafts() as $child) {
-			$child->guards()->ensureExecutable('delete', true);
+			$this->guards($child)->ensureExecutable('delete', true);
 		}
 	}
 

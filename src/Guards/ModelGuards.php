@@ -165,6 +165,25 @@ abstract class ModelGuards
 	}
 
 	/**
+	 * Returns the guards of another model, e.g. a child page,
+	 * bound to the same user as these guards. For another user,
+	 * the model's guards class is rebuilt with `model` and `user`.
+	 */
+	protected function guards(Model $model): ModelGuards
+	{
+		$guards = $model->guards();
+
+		if ($guards->user() === $this->user) {
+			return $guards;
+		}
+
+		return new ($guards::class)(
+			model: $model,
+			user: $this->user
+		);
+	}
+
+	/**
 	 * Non-throwing counterpart of `::ensureAvailable()`
 	 *
 	 * @param $default Used if the action has no permission rule

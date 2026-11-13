@@ -10,6 +10,7 @@ use Kirby\Exception\AbilityException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use PHPUnit\Framework\Attributes\CoversClass;
+use ReflectionMethod;
 use Throwable;
 
 class ModelGuardsTestValidators extends PageValidators
@@ -350,6 +351,39 @@ class ModelGuardsTest extends ModelTestCase
 
 		$this->assertNotSame($first, $second);
 		$this->assertSame($this->app->user(), $second->user());
+	}
+
+	public function testGuards(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$guards = PageGuards::for(new Page(['slug' => 'a']));
+		$other  = new Page(['slug' => 'b']);
+		$method = new ReflectionMethod($guards, 'guards');
+
+		$this->assertSame($other->guards(), $method->invoke($guards, $other));
+	}
+
+	public function testGuardsWithOtherUser(): void
+	{
+		$this->app = $this->app->clone([
+			'users' => [
+				['email' => 'a@getkirby.com', 'role' => 'admin'],
+				['email' => 'b@getkirby.com', 'role' => 'admin'],
+			]
+		]);
+
+		$this->app->impersonate('a@getkirby.com');
+
+		$user   = $this->app->user('b@getkirby.com');
+		$guards = new PageGuards(model: new Page(['slug' => 'a']), user: $user);
+		$other  = new Page(['slug' => 'b']);
+		$method = new ReflectionMethod($guards, 'guards');
+		$result = $method->invoke($guards, $other);
+
+		$this->assertInstanceOf(PageGuards::class, $result);
+		$this->assertNotSame($other->guards(), $result);
+		$this->assertSame($user, $result->user());
 	}
 
 	public function testIsAvailable(): void
