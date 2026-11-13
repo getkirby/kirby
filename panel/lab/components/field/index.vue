@@ -47,9 +47,17 @@
 				<k-input id="f" :value="value" type="text" @input="value = $event" />
 			</k-field>
 		</k-lab-example>
-		<k-lab-example label="Help">
-			<k-field input="g" help="This is some help" label="Label">
+		<k-lab-example label="Options & no label">
+			<k-field input="g">
+				<template #options>
+					<k-button icon="add" size="xs" variant="filled">Add</k-button>
+				</template>
 				<k-input id="g" :value="value" type="text" @input="value = $event" />
+			</k-field>
+		</k-lab-example>
+		<k-lab-example label="Help">
+			<k-field input="h" help="This is some help" label="Label">
+				<k-input id="h" :value="value" type="text" @input="value = $event" />
 			</k-field>
 		</k-lab-example>
 	</k-lab-examples>
