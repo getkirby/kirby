@@ -652,6 +652,50 @@ class FieldsTest extends TestCase
 		$this->assertSame('de', $fields->language()->code());
 	}
 
+	public function testHasPageBlueprint(): void
+	{
+		$fields = new Fields([
+			'text' => [
+				'type' => 'text',
+			],
+			'albums' => [
+				'type'      => 'pagelist',
+				'templates' => 'album'
+			],
+		], $this->model);
+
+		$this->assertTrue($fields->hasPageBlueprint());
+		$this->assertTrue($fields->hasPageBlueprint('album'));
+		$this->assertFalse($fields->hasPageBlueprint('note'));
+	}
+
+	public function testHasPageBlueprintInNestedForms(): void
+	{
+		$fields = new Fields([
+			'object' => [
+				'type'   => 'object',
+				'fields' => [
+					'events' => [
+						'type'      => 'pagelist',
+						'templates' => 'event'
+					]
+				]
+			],
+		], $this->model);
+
+		$this->assertTrue($fields->hasPageBlueprint());
+		$this->assertTrue($fields->hasPageBlueprint('event'));
+		$this->assertFalse($fields->hasPageBlueprint('note'));
+	}
+
+	public function testHasPageBlueprintWithoutFields(): void
+	{
+		$fields = new Fields([], $this->model);
+
+		$this->assertFalse($fields->hasPageBlueprint());
+		$this->assertFalse($fields->hasPageBlueprint('album'));
+	}
+
 	public function testLanguage(): void
 	{
 		// no language passed = current language

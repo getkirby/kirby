@@ -3,7 +3,7 @@
 namespace Kirby\Form\Interface;
 
 /**
- * Implemented by fields that can add pages
+ * Implemented by fields that add or list pages
  * and tell which blueprints those pages may use
  *
  * @copyright Bastian Allgeier
@@ -19,4 +19,10 @@ interface ProvidesAcceptedPageBlueprints
 	 * @return list<string>
 	 */
 	public function acceptedPageBlueprints(): array;
+
+	/**
+	 * Whether the field lists child pages of its model,
+	 * optionally only with the given blueprint
+	 */
+	public function hasPageBlueprint(string|null $blueprint = null): bool;
 }

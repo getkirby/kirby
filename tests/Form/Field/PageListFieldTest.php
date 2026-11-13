@@ -227,6 +227,49 @@ class PageListFieldTest extends TestCase
 		$this->assertSame(['album'], $field->templatesIgnore());
 	}
 
+	public function testHasPageBlueprint(): void
+	{
+		// without restriction, the list shows any blueprint
+		$field = $this->pagelist();
+		$this->assertTrue($field->hasPageBlueprint());
+		$this->assertTrue($field->hasPageBlueprint('album'));
+		$this->assertTrue($field->hasPageBlueprint('does-not-exist'));
+
+		$field = $this->pagelist(['templates' => 'album']);
+		$this->assertTrue($field->hasPageBlueprint('album'));
+		$this->assertFalse($field->hasPageBlueprint('note'));
+		$this->assertCount(3, $field->data());
+	}
+
+	public function testHasPageBlueprintWithIgnore(): void
+	{
+		$field = $this->pagelist(['templatesIgnore' => 'album']);
+		$this->assertFalse($field->hasPageBlueprint('album'));
+		$this->assertTrue($field->hasPageBlueprint('note'));
+		$this->assertCount(1, $field->data());
+	}
+
+	public function testHasPageBlueprintWithInvalidParent(): void
+	{
+		// files cannot have child pages
+		$field = $this->pagelist([
+			'model' => $this->app->page('photography/trees')->file('cover.jpg')
+		]);
+
+		$this->assertFalse($field->hasPageBlueprint());
+		$this->assertFalse($field->hasPageBlueprint('album'));
+	}
+
+	public function testHasPageBlueprintWithOtherParent(): void
+	{
+		// the list shows the children of the site,
+		// not of the field's model
+		$field = $this->pagelist(['parent' => 'site']);
+
+		$this->assertFalse($field->hasPageBlueprint());
+		$this->assertFalse($field->hasPageBlueprint('album'));
+	}
+
 	public function testAcceptedPageBlueprints(): void
 	{
 		// the templates of the list

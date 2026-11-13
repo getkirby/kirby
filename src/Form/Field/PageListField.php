@@ -184,6 +184,34 @@ class PageListField extends ModelListField implements ProvidesAcceptedPageBluepr
 	// @codeCoverageIgnoreEnd
 
 	/**
+	 * Whether the list shows child pages of the field's
+	 * model, optionally only with the given blueprint
+	 */
+	public function hasPageBlueprint(string|null $blueprint = null): bool
+	{
+		try {
+			$parent = $this->parentModel();
+		} catch (InvalidArgumentException) {
+			return false;
+		}
+
+		// the list shows the children of another model
+		if ($parent->is($this->model()) === false) {
+			return false;
+		}
+
+		if ($blueprint === null) {
+			return true;
+		}
+
+		$templates = $this->templates();
+
+		return
+			($templates === [] || in_array($blueprint, $templates, true) === true) &&
+			in_array($blueprint, $this->templatesIgnore(), true) === false;
+	}
+
+	/**
 	 * @throws InvalidArgumentException If the parent is neither the site nor a page
 	 */
 	public function parentModel(): Page|Site

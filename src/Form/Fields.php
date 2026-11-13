@@ -306,6 +306,33 @@ class Fields extends Collection
 	}
 
 	/**
+	 * Whether a field lists child pages of the model,
+	 * optionally only with the given blueprint
+	 * @since 6.0.0
+	 */
+	public function hasPageBlueprint(string|null $blueprint = null): bool
+	{
+		foreach ($this->data as $field) {
+			if (
+				$field instanceof ProvidesAcceptedPageBlueprints &&
+				$field->hasPageBlueprint($blueprint) === true
+			) {
+				return true;
+			}
+
+			// nested forms also list what their fields list
+			if (
+				$field instanceof ProvidesNestedForm &&
+				$field->form()->fields()->hasPageBlueprint($blueprint) === true
+			) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Returns the language of the fields
 	 *
 	 * @since 5.0.0
