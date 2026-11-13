@@ -115,14 +115,14 @@ class FileListTemplateChangeTest extends TestCase
 			]
 		]);
 
-		$templates = $blueprint->acceptedFileTemplates();
+		$blueprints = $blueprint->acceptRules()->fileBlueprints();
 
-		// Should include all available file templates + default
+		// Should include all available file blueprints + default
 		$expected = ['default', 'images', 'documents', 'videos'];
 		sort($expected);
-		sort($templates);
+		sort($blueprints);
 
-		$this->assertSame($expected, $templates);
+		$this->assertSame($expected, $blueprints);
 	}
 
 	public function testFileCanChangeTemplateWithMultipleBlueprintsAvailable(): void

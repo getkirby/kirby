@@ -27,6 +27,31 @@ trait Upload
 	protected mixed $uploads = null;
 
 	/**
+	 * Accepts files with the upload template,
+	 * if the uploads go to the field's own model
+	 * (only used if the field implements `ProvidesAcceptedFileBlueprints`)
+	 *
+	 * @return list<string>
+	 * @since 6.0.0
+	 */
+	public function acceptedFileBlueprints(): array
+	{
+		$uploads = $this->uploads();
+
+		if ($uploads === false) {
+			return [];
+		}
+
+		$parent = $uploads['parent'] ?? null;
+
+		if ($parent !== null && $parent !== $this->model()->id()) {
+			return [];
+		}
+
+		return [$uploads['template'] ?? 'default'];
+	}
+
+	/**
 	 * Uploads and creates files via the API upload handler
 	 * @codeCoverageIgnore
 	 */

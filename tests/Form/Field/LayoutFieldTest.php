@@ -216,6 +216,50 @@ class LayoutFieldTest extends TestCase
 		$this->assertInstanceOf(Fieldsets::class, $field->fieldsets());
 	}
 
+	public function testAcceptedFileBlueprints(): void
+	{
+		$field = $this->field('layout', [
+			'fieldsets' => [
+				'cover' => [
+					'fields' => [
+						'image' => [
+							'type'    => 'filepicker',
+							'uploads' => 'cover'
+						]
+					]
+				]
+			],
+			'settings' => [
+				'fields' => [
+					'background' => [
+						'type'    => 'filepicker',
+						'uploads' => 'background'
+					]
+				]
+			]
+		]);
+
+		$this->assertSame(['cover', 'background'], $field->acceptedFileBlueprints());
+	}
+
+	public function testAcceptedFileBlueprintsWithoutSettings(): void
+	{
+		$field = $this->field('layout', [
+			'fieldsets' => [
+				'cover' => [
+					'fields' => [
+						'image' => [
+							'type'    => 'filepicker',
+							'uploads' => 'cover'
+						]
+					]
+				]
+			]
+		]);
+
+		$this->assertSame(['cover'], $field->acceptedFileBlueprints());
+	}
+
 	public function testFillWithLayouts(): void
 	{
 		$layouts = Layouts::factory([

@@ -64,6 +64,42 @@ class TextareaFieldTest extends TestCase
 		$this->assertInstanceOf(FilePickerDialogController::class, $dialog);
 	}
 
+	public function testAcceptedFileBlueprints(): void
+	{
+		$field = $this->field('textarea', [
+			'uploads' => 'a'
+		]);
+
+		$this->assertSame(['a'], $field->acceptedFileBlueprints());
+	}
+
+	public function testAcceptedFileBlueprintsWithoutBlueprint(): void
+	{
+		$field = $this->field('textarea');
+		$this->assertSame(['default'], $field->acceptedFileBlueprints());
+	}
+
+	public function testAcceptedFileBlueprintsWithOtherParent(): void
+	{
+		$field = $this->field('textarea', [
+			'uploads' => [
+				'parent'   => 'site',
+				'template' => 'a'
+			]
+		]);
+
+		$this->assertSame([], $field->acceptedFileBlueprints());
+	}
+
+	public function testAcceptedFileBlueprintsWithoutUploads(): void
+	{
+		$field = $this->field('textarea', [
+			'uploads' => false
+		]);
+
+		$this->assertSame([], $field->acceptedFileBlueprints());
+	}
+
 	public function testFont(): void
 	{
 		$field = $this->field('textarea');

@@ -7,7 +7,7 @@ use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Form\Interface\ProvidesAcceptedBlueprints;
+use Kirby\Form\Interface\ProvidesAcceptedPageBlueprints;
 use Kirby\Panel\Collector\PagesCollector;
 use Kirby\Panel\Controller\Dialog\PageCreateDialogController;
 use Kirby\Panel\Ui\Item\PageItem;
@@ -24,7 +24,7 @@ use Throwable;
  *
  * @extends ModelListField<Page>
  */
-class PageListField extends ModelListField implements ProvidesAcceptedBlueprints
+class PageListField extends ModelListField implements ProvidesAcceptedPageBlueprints
 {
 	public const string TYPE = 'pages';
 
@@ -63,6 +63,26 @@ class PageListField extends ModelListField implements ProvidesAcceptedBlueprints
 	protected array|string $templatesIgnore = [];
 
 	/**
+	 * Accepts pages with the blueprints from `create`,
+	 * the list's templates or any blueprint otherwise
+	 *
+	 * @return list<string>
+	 */
+	public function acceptedPageBlueprints(): array
+	{
+		$blueprints = match ($this->create) {
+			null, false, '', [] => $this->templates(),
+			default             => A::wrap($this->create)
+		};
+
+		if ($blueprints === []) {
+			$blueprints = $this->kirby()->blueprints();
+		}
+
+		return array_values(array_diff($blueprints, $this->templatesIgnore()));
+	}
+
+	/**
 	 * Whether new pages can be added to the list
 	 */
 	public function add(): bool
@@ -78,7 +98,7 @@ class PageListField extends ModelListField implements ProvidesAcceptedBlueprints
 
 		$statuses = [];
 
-		foreach ($this->blueprintNames() as $name) {
+		foreach ($this->acceptedPageBlueprints() as $name) {
 			$blueprint  = $this->blueprint($name);
 			$statuses[] = $blueprint?->create()['status'] ?? 'draft';
 		}
@@ -100,49 +120,6 @@ class PageListField extends ModelListField implements ProvidesAcceptedBlueprints
 		} catch (Throwable) {
 			return null;
 		}
-	}
-
-	/**
-	 * The blueprint options for the create dialog
-	 *
-	 * @return list<array{name: string, title: string}>
-	 */
-	public function blueprints(): array
-	{
-		$blueprints = [];
-
-		foreach ($this->blueprintNames() as $name) {
-			// the full blueprint, so that a title inherited
-			// through `extends` is taken into account
-			$blueprint = $this->blueprint($name);
-
-			$blueprints[] = match ($blueprint) {
-				null    => [
-					'name'  => basename($name),
-					'title' => ucfirst($name),
-				],
-				default => [
-					'name'  => basename($blueprint->name()),
-					'title' => $blueprint->title(),
-				]
-			};
-		}
-
-		return $blueprints;
-	}
-
-	public function blueprintNames(): array
-	{
-		$blueprints = match (empty($this->create)) {
-			false   => A::wrap($this->create),
-			default => $this->templates()
-		};
-
-		if ($blueprints === []) {
-			$blueprints = $this->kirby()->blueprints();
-		}
-
-		return array_diff($blueprints, $this->templatesIgnore());
 	}
 
 	public function collector(): PagesCollector
@@ -194,7 +171,7 @@ class PageListField extends ModelListField implements ProvidesAcceptedBlueprints
 			'create' => [
 				'action' => fn () => new PageCreateDialogController(
 					parent:     $this->parentModel(),
-					blueprints: $this->blueprints()
+					blueprints: $this->acceptedPageBlueprints()
 				)
 			]
 		];

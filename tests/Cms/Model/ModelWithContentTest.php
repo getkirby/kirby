@@ -480,6 +480,37 @@ class ModelWithContentTest extends TestCase
 		$this->assertSame([], $model->blueprints('foo'));
 	}
 
+	public function testBlueprintsWithInvalidBlueprint(): void
+	{
+		new App([
+			'blueprints' => [
+				'pages/broken' => [
+					'title'  => 'Not used',
+					// a scalar instead of a list of fields
+					// breaks the blueprint
+					'fields' => 'text'
+				]
+			]
+		]);
+
+		$site = new Site([
+			'blueprint' => [
+				'fields' => [
+					'pages' => [
+						'type'      => 'pagelist',
+						'templates' => ['broken']
+					]
+				]
+			]
+		]);
+
+		// a blueprint that cannot be created still
+		// needs an entry, based on its name
+		$this->assertSame([
+			['name' => 'broken', 'title' => 'Broken']
+		], $site->blueprints());
+	}
+
 	public function testIncrement(): void
 	{
 		$app = new App([

@@ -8,6 +8,7 @@ use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Cms\User;
+use Kirby\Form\Interface\ProvidesAcceptedFileBlueprints;
 use Kirby\Panel\Collector\FilesCollector;
 use Kirby\Panel\Ui\Item\FileItem;
 use Kirby\Panel\Ui\Upload;
@@ -22,7 +23,7 @@ use Kirby\Reflection\Attributes\Prop;
  *
  * @extends ModelListField<File>
  */
-class FileListField extends ModelListField
+class FileListField extends ModelListField implements ProvidesAcceptedFileBlueprints
 {
 	public const string TYPE = 'files';
 
@@ -54,6 +55,23 @@ class FileListField extends ModelListField
 		]);
 
 		return $file->blueprint()->acceptAttribute();
+	}
+
+	/**
+	 * Accepts files with its own template
+	 * or with any template if none is set
+	 *
+	 * @return list<string>
+	 */
+	public function acceptedFileBlueprints(): array
+	{
+		$template = $this->template();
+
+		if ($template !== null && $template !== '') {
+			return [$template];
+		}
+
+		return $this->kirby()->blueprints('files');
 	}
 
 	public function api(): array

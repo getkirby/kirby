@@ -592,6 +592,18 @@ class FileListFieldTest extends TestCase
 		$this->assertSame([], $field->errors());
 	}
 
+	public function testAcceptedFileBlueprints(): void
+	{
+		$field = $this->filelist(['template' => 'image']);
+		$this->assertSame(['image'], $field->acceptedFileBlueprints());
+	}
+
+	public function testAcceptedFileBlueprintsWithoutBlueprint(): void
+	{
+		$field = $this->filelist();
+		$this->assertSame(['default', 'image'], $field->acceptedFileBlueprints());
+	}
+
 	public function testIsFull(): void
 	{
 		$this->assertFalse($this->filelist()->isFull());

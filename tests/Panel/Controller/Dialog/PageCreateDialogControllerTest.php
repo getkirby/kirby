@@ -16,6 +16,45 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(PageCreateDialogController::class)]
 class PageCreateDialogControllerTest extends TestCase
 {
+	public function testConstructWithBlueprints(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/album'  => ['title' => 'Album'],
+				'pages/broken' => [
+					'title'  => 'Not used',
+					// a scalar instead of a list of fields
+					// breaks the blueprint
+					'fields' => 'text'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PageCreateDialogController(
+			blueprints: ['album', 'broken', 'does-not-exist']
+		);
+
+		// blueprints that cannot be created or loaded
+		// still get an entry, based on their name
+		$this->assertSame([
+			['name' => 'album', 'title' => 'Album'],
+			['name' => 'broken', 'title' => 'Broken'],
+			['name' => 'does-not-exist', 'title' => 'Does-not-exist']
+		], $controller->blueprints());
+	}
+
+	public function testConstructWithoutBlueprints(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('No new pages can be created here');
+
+		new PageCreateDialogController(blueprints: []);
+	}
+
 	public function testCoreFields(): void
 	{
 		$this->app = $this->app->clone([

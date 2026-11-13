@@ -13,6 +13,8 @@ use Kirby\Exception\FormValidationException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Form\Field\InfoField;
 use Kirby\Form\Field\InputField;
+use Kirby\Form\Field\ObjectField;
+use Kirby\Form\Interface\ProvidesAcceptedFileBlueprints;
 use Kirby\Form\Interface\ProvidesNestedForm;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -285,6 +287,113 @@ class FieldsTest extends TestCase
 		$this->expectExceptionMessage('The field could not be found');
 
 		$fields->field('missing');
+	}
+
+	public function testAcceptedFileBlueprints(): void
+	{
+		$fields = new Fields([
+			'text' => [
+				'type' => 'text',
+			],
+			'textarea' => [
+				'type'    => 'textarea',
+				'uploads' => 'a'
+			],
+			'files' => [
+				'type'     => 'filelist',
+				'template' => 'b'
+			],
+		], $this->model);
+
+		$this->assertSame(['a', 'b'], $fields->acceptedFileBlueprints());
+	}
+
+	public function testAcceptedFileBlueprintsInNestedForms(): void
+	{
+		$fields = new Fields([
+			'structure' => [
+				'type'   => 'structure',
+				'fields' => [
+					'image' => [
+						'type'    => 'filepicker',
+						'uploads' => 'a'
+					],
+					'object' => [
+						'type'   => 'object',
+						'fields' => [
+							'text' => [
+								'type'    => 'textarea',
+								'uploads' => 'b'
+							]
+						]
+					]
+				]
+			],
+			'entries' => [
+				'type' => 'entries'
+			],
+		], $this->model);
+
+		$this->assertSame(['a', 'b'], $fields->acceptedFileBlueprints());
+	}
+
+	public function testAcceptedFileBlueprintsInNestedFormWithOwnTemplates(): void
+	{
+		$field = new class (
+			model: $this->model,
+			name: 'object',
+			fields: [
+				'text' => [
+					'type'    => 'textarea',
+					'uploads' => 'a'
+				]
+			]
+		) extends ObjectField implements ProvidesAcceptedFileBlueprints {
+			public function acceptedFileBlueprints(): array
+			{
+				return ['b'];
+			}
+		};
+
+		$fields = new Fields(['object' => $field], $this->model);
+
+		$this->assertSame(['b', 'a'], $fields->acceptedFileBlueprints());
+	}
+
+	public function testAcceptedFileBlueprintsWithoutFields(): void
+	{
+		$fields = new Fields([], $this->model);
+		$this->assertSame([], $fields->acceptedFileBlueprints());
+	}
+
+	public function testAcceptedPageBlueprints(): void
+	{
+		$fields = new Fields([
+			'text' => [
+				'type' => 'text',
+			],
+			'albums' => [
+				'type'      => 'pagelist',
+				'templates' => 'album'
+			],
+			'object' => [
+				'type'   => 'object',
+				'fields' => [
+					'events' => [
+						'type'      => 'pagelist',
+						'templates' => 'event'
+					]
+				]
+			],
+		], $this->model);
+
+		$this->assertSame(['album', 'event'], $fields->acceptedPageBlueprints());
+	}
+
+	public function testAcceptedPageBlueprintsWithoutFields(): void
+	{
+		$fields = new Fields([], $this->model);
+		$this->assertSame([], $fields->acceptedPageBlueprints());
 	}
 
 	public function testFill(): void

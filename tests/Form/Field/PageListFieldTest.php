@@ -227,67 +227,44 @@ class PageListFieldTest extends TestCase
 		$this->assertSame(['album'], $field->templatesIgnore());
 	}
 
-	public function testBlueprintNames(): void
+	public function testAcceptedPageBlueprints(): void
 	{
 		// the templates of the list
 		$field = $this->pagelist(['templates' => ['album', 'note']]);
-		$this->assertSame(['album', 'note'], $field->blueprintNames());
+		$this->assertSame(['album', 'note'], $field->acceptedPageBlueprints());
 
 		// `create` wins over the templates
 		$field = $this->pagelist([
 			'create'    => 'note',
 			'templates' => ['album']
 		]);
-		$this->assertSame(['note'], $field->blueprintNames());
+		$this->assertSame(['note'], $field->acceptedPageBlueprints());
 	}
 
-	public function testBlueprintNamesWithIgnore(): void
+	public function testAcceptedPageBlueprintsWithIgnore(): void
 	{
 		$field = $this->pagelist([
 			'templates'       => ['album', 'note'],
 			'templatesIgnore' => ['note']
 		]);
 
-		$this->assertSame(['album'], $field->blueprintNames());
+		$this->assertSame(['album'], $field->acceptedPageBlueprints());
+
+		// the remaining blueprints are re-indexed
+		$field = $this->pagelist([
+			'templates'       => ['album', 'note'],
+			'templatesIgnore' => ['album']
+		]);
+
+		$this->assertSame(['note'], $field->acceptedPageBlueprints());
 	}
 
-	public function testBlueprintNamesWithoutTemplates(): void
+	public function testAcceptedPageBlueprintsWithoutBlueprints(): void
 	{
 		// without any template, every blueprint can be created
 		$field = $this->pagelist();
 
-		$this->assertSame(['album', 'default', 'note'], $field->blueprintNames());
-	}
-
-	public function testBlueprints(): void
-	{
-		$field = $this->pagelist(['templates' => ['album']]);
-
-		$this->assertSame([
-			['name' => 'album', 'title' => 'Album']
-		], $field->blueprints());
-	}
-
-	public function testBlueprintsWithInvalidBlueprint(): void
-	{
-		// a blueprint that cannot be created still needs
-		// an entry for the create dialog, based on its name
-		$field = $this->pagelistWithInvalidBlueprint();
-
-		$this->assertSame([
-			['name' => 'broken', 'title' => 'Broken']
-		], $field->blueprints());
-	}
-
-	public function testBlueprintsWithMissingBlueprint(): void
-	{
-		// a blueprint that cannot be loaded still needs
-		// an entry for the create dialog
-		$field = $this->pagelist(['templates' => ['does-not-exist']]);
-
-		$this->assertSame([
-			['name' => 'does-not-exist', 'title' => 'Does-not-exist']
-		], $field->blueprints());
+		$this->assertSame(['album', 'default', 'note'], $field->acceptedPageBlueprints());
 	}
 
 	public function testAddWithAllStatuses(): void
