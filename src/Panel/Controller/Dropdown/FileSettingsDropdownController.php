@@ -12,6 +12,8 @@ use Kirby\Cms\ModelWithContent;
  * @since     6.0.0
  *
  * @unstable
+ *
+ * @extends ModelSettingsDropdownController<File>
  */
 class FileSettingsDropdownController extends ModelSettingsDropdownController
 {

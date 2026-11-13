@@ -12,6 +12,8 @@ use Kirby\Cms\Page;
  * @since     6.0.0
  *
  * @unstable
+ *
+ * @extends ModelSettingsDropdownController<Page>
  */
 class PageSettingsDropdownController extends ModelSettingsDropdownController
 {

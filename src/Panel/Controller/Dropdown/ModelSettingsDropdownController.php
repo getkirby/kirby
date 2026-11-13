@@ -11,10 +11,16 @@ use Kirby\Panel\Controller\DropdownController;
  * @since     6.0.0
  *
  * @unstable
+ *
+ * @template TModel of ModelWithContent
  */
 abstract class ModelSettingsDropdownController extends DropdownController
 {
 	protected array $context = [];
+
+	/**
+	 * @var TModel
+	 */
 	protected ModelWithContent $model;
 	protected array $permissions;
 
@@ -33,6 +39,9 @@ abstract class ModelSettingsDropdownController extends DropdownController
 			$context === 'false';
 	}
 
+	/**
+	 * @return TModel
+	 */
 	public function model(): ModelWithContent
 	{
 		return $this->model;
