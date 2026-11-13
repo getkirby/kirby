@@ -2,7 +2,6 @@
 
 namespace Kirby\Guards;
 
-use Kirby\Cms\Model;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Cms\User;
@@ -19,32 +18,10 @@ use Kirby\Exception\PermissionException;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  *
- * @method PageAbilities abilities()
- * @method PagePermissions permissions()
- * @method PageValidators validators()
+ * @extends ModelGuards<Page, PageAbilities, PagePermissions, PageValidators>
  */
 class PageGuards extends ModelGuards
 {
-	/**
-	 * @var Page
-	 */
-	protected Model $model;
-
-	/**
-	 * @var PageAbilities
-	 */
-	protected ModelAbilities $abilities;
-
-	/**
-	 * @var PagePermissions
-	 */
-	protected ModelPermissions $permissions;
-
-	/**
-	 * @var PageValidators
-	 */
-	protected ModelValidators $validators;
-
 	public function __construct(
 		Page $model,
 		User $user

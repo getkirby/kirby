@@ -45,6 +45,8 @@ class Image extends File
 
 	/**
 	 * Validation rules to be used for `::match()`
+	 *
+	 * @var array<string, array{0: string, 1: string}>
 	 */
 	public static array $validations = [
 		'maxsize'     => ['size',   'max'],

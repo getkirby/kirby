@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Closure;
 use Kirby\Data\Json;
 use Kirby\Toolkit\Str;
 use Throwable;
@@ -21,6 +22,8 @@ class Layouts extends Items
 
 	/**
 	 * All registered layouts methods
+	 *
+	 * @var array<string, Closure>
 	 */
 	public static array $methods = [];
 

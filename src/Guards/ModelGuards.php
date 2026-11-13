@@ -20,6 +20,11 @@ use WeakMap;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
+ *
+ * @template TModel of Model
+ * @template TAbilities of ModelAbilities<TModel>
+ * @template TPermissions of ModelPermissions<TModel>
+ * @template TValidators of ModelValidators<TModel>
  */
 abstract class ModelGuards
 {
@@ -32,13 +37,26 @@ abstract class ModelGuards
 	 */
 	protected static WeakMap|null $cache = null;
 
+	/**
+	 * @var TAbilities
+	 */
 	protected ModelAbilities $abilities;
+
+	/**
+	 * @var TPermissions
+	 */
 	protected ModelPermissions $permissions;
+
+	/**
+	 * @var TValidators
+	 */
 	protected ModelValidators $validators;
 
 	/**
 	 * Child classes create their abilities, permissions
 	 * and validators for the model and user
+	 *
+	 * @param TModel $model
 	 */
 	public function __construct(
 		protected Model $model,
@@ -46,6 +64,9 @@ abstract class ModelGuards
 	) {
 	}
 
+	/**
+	 * @return TAbilities
+	 */
 	public function abilities(): ModelAbilities
 	{
 		return $this->abilities;
@@ -179,6 +200,9 @@ abstract class ModelGuards
 		}
 	}
 
+	/**
+	 * @return TPermissions
+	 */
 	public function permissions(): ModelPermissions
 	{
 		return $this->permissions;
@@ -189,6 +213,9 @@ abstract class ModelGuards
 		return $this->user;
 	}
 
+	/**
+	 * @return TValidators
+	 */
 	public function validators(): ModelValidators
 	{
 		return $this->validators;

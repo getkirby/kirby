@@ -3,7 +3,6 @@
 namespace Kirby\Guards;
 
 use Kirby\Cms\App;
-use Kirby\Cms\Model;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Exception\DuplicateException;
@@ -20,14 +19,11 @@ use Kirby\Toolkit\Str;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
+ *
+ * @extends ModelValidators<Page>
  */
 class PageValidators extends ModelValidators
 {
-	/**
-	 * @var Page
-	 */
-	protected Model $model;
-
 	/**
 	 * Validates the input of the `changeNum` action
 	 */

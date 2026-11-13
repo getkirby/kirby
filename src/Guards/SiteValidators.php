@@ -2,7 +2,6 @@
 
 namespace Kirby\Guards;
 
-use Kirby\Cms\Model;
 use Kirby\Cms\Site;
 use Kirby\Toolkit\Str;
 
@@ -12,14 +11,11 @@ use Kirby\Toolkit\Str;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
+ *
+ * @extends ModelValidators<Site>
  */
 class SiteValidators extends ModelValidators
 {
-	/**
-	 * @var Site
-	 */
-	protected Model $model;
-
 	/**
 	 * Validates the input of the `changeTitle` action
 	 */

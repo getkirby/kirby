@@ -15,6 +15,8 @@ use Kirby\Panel\Ui\Item\UserItem;
  * @since     6.0.0
  *
  * @unstable
+ *
+ * @extends ModelPickerDialogController<User>
  */
 class UserPickerDialogController extends ModelPickerDialogController
 {

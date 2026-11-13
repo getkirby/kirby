@@ -209,16 +209,18 @@ class Str
 	/**
 	 * Convert a string to 7-bit ASCII.
 	 */
-	public static function ascii(string $string): string
+	public static function ascii(string $string, bool $language = true): string
 	{
 		static $ascii = null;
 		static $strtr = [];
 
-		$string = str_replace(
-			array_keys(static::$language),
-			array_values(static::$language),
-			$string
-		);
+		if ($language === true) {
+			$string = str_replace(
+				array_keys(static::$language),
+				array_values(static::$language),
+				$string
+			);
+		}
 
 		// fast-path: nothing to change if string is already 7-bit ASCII
 		if (preg_match('/[^\x09\x0A\x0D\x20-\x7E]/', $string) === 0) {
@@ -1241,19 +1243,24 @@ class Str
 	 *                  other non-word characters.
 	 * @param $allowed List of all allowed characters (regex)
 	 * @param non-negative-int|false $maxlength
+	 * @param $language Whether to apply the language-specific rules
 	 */
 	public static function slug(
 		string|null $string,
 		string|null $separator = null,
 		string|null $allowed = null,
-		int|false $maxlength = 128
+		int|false $maxlength = 128,
+		bool $language = true
 	): string {
 		$separator ??= static::$defaults['slug']['separator'];
 		$allowed   ??= static::$defaults['slug']['allowed'];
 
 		$string = trim($string ?? '');
 		$string = static::lower($string);
-		$string = static::ascii($string);
+		$string = static::ascii(
+			string: $string,
+			language: $language
+		);
 
 		$string = preg_replace(
 			'![^' . $allowed . ']!i',

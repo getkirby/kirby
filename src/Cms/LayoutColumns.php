@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Closure;
+
 /**
  * A collection of layout columns
  *
@@ -17,6 +19,8 @@ class LayoutColumns extends Items
 
 	/**
 	 * All registered layout columns methods
+	 *
+	 * @var array<string, Closure>
 	 */
 	public static array $methods = [];
 }

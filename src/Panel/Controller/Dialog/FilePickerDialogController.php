@@ -15,6 +15,8 @@ use Kirby\Panel\Ui\Item\FileItem;
  * @since     6.0.0
  *
  * @unstable
+ *
+ * @extends ModelPickerDialogController<File>
  */
 class FilePickerDialogController extends ModelPickerDialogController
 {

@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class LanguageRoutesTest extends TestCase
 {
@@ -50,6 +51,99 @@ class LanguageRoutesTest extends TestCase
 
 		$app->call('de/notes');
 		$this->assertSame($app->language()->code(), 'de');
+	}
+
+	public function testFallbackRedirect(): void
+	{
+		$app = $this->app->clone([
+			'languages' => [['url' => '/en']],
+			'request'   => ['url' => 'https://getkirby.com/notes/tag:foo?bar=baz'],
+			'site'      => ['children' => [['slug' => 'notes']]],
+			'urls'      => ['index' => 'https://getkirby.com']
+		]);
+
+		$response = $app->call('notes');
+
+		$this->assertInstanceOf(Responder::class, $response);
+		$this->assertSame(
+			'https://getkirby.com/en/notes/tag:foo?bar=baz',
+			$response->header('Location')
+		);
+	}
+
+	public function testFallbackRedirectWithDetection(): void
+	{
+		$app = $this->app->clone([
+			'languages' => [['url' => '/en']],
+			'options'   => ['languages.detect' => true],
+			'request'   => ['url' => 'https://getkirby.com/notes/tag:foo?bar=baz'],
+			'site'      => [
+				'children' => [
+					[
+						'slug'         => 'notes',
+						'translations' => [
+							['code' => 'en', 'content' => ['title' => 'Notes']],
+							['code' => 'de', 'content' => ['title' => 'Notizen']]
+						]
+					]
+				]
+			],
+			'urls' => ['index' => 'https://getkirby.com']
+		]);
+
+		$app->visitor()->acceptedLanguage('de');
+		$response = $app->call('notes');
+
+		$this->assertInstanceOf(Responder::class, $response);
+		$this->assertSame(
+			'https://getkirby.com/de/notes/tag:foo?bar=baz',
+			$response->header('Location')
+		);
+	}
+
+	public static function homeRedirectProvider(): array
+	{
+		return [
+			'default language'  => [false, 'https://getkirby.com/en/tag:foo?bar=baz'],
+			'detected language' => [true, 'https://getkirby.com/de/tag:foo?bar=baz'],
+		];
+	}
+
+	#[DataProvider('homeRedirectProvider')]
+	public function testHomeRedirect(bool $detect, string $expected): void
+	{
+		$app = $this->app->clone([
+			'languages' => [['url' => '/en']],
+			'options'   => ['languages.detect' => $detect],
+			'request'   => ['url' => 'https://getkirby.com/tag:foo?bar=baz'],
+			'urls'      => ['index' => 'https://getkirby.com']
+		]);
+
+		$app->visitor()->acceptedLanguage('de');
+		$response = $app->call('');
+
+		$this->assertInstanceOf(Responder::class, $response);
+		$this->assertSame($expected, $response->header('Location'));
+	}
+
+	public function testHomeRedirectWithoutMatchingBaseUrl(): void
+	{
+		$app = $this->app->clone([
+			'languages' => [
+				['url' => 'https://en.getkirby.com'],
+				['url' => 'https://de.getkirby.com']
+			],
+			'request' => ['url' => 'https://getkirby.com/tag:foo?bar=baz'],
+			'urls'    => ['index' => 'https://getkirby.com']
+		]);
+
+		$response = $app->call('');
+
+		$this->assertInstanceOf(Responder::class, $response);
+		$this->assertSame(
+			'https://en.getkirby.com/tag:foo?bar=baz',
+			$response->header('Location')
+		);
 	}
 
 	public function testNotNextWhenFalsyReturn(): void

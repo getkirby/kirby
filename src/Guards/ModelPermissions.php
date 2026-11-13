@@ -17,11 +17,16 @@ use Kirby\Exception\PermissionException;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
+ *
+ * @template TModel of Model
  */
 abstract class ModelPermissions
 {
 	use HasActions;
 
+	/**
+	 * @param TModel $model
+	 */
 	public function __construct(
 		protected Model $model,
 		protected User $user

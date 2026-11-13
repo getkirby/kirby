@@ -308,7 +308,8 @@ class Uri implements Stringable
 	}
 
 	/**
-	 * Inherit query, params and fragment from a parent Uri
+	 * Inherit query, params and fragment from a parent Uri;
+	 * the Uri's own values win over the parent's
 	 * @since 5.2.0
 	 * @return $this
 	 */
@@ -318,10 +319,10 @@ class Uri implements Stringable
 			$parent = new static($parent);
 		}
 
-		$this->query->merge($parent->query());
-		$this->params->merge($parent->params());
+		$this->setQuery($this->query->toArray() + $parent->query()->toArray());
+		$this->setParams($this->params->toArray() + $parent->params()->toArray());
 
-		if ($parent->hasFragment() === true) {
+		if ($this->hasFragment() === false) {
 			$this->setFragment($parent->fragment());
 		}
 
@@ -522,7 +523,10 @@ class Uri implements Stringable
 			$slash = false;
 		}
 
-		$path = $this->path->toString($slash) . $this->params->toString(true);
+		// relative root URLs already start with a slash,
+		// another one would turn params into a host (`//page:2`)
+		$path  = $this->path->toString($slash);
+		$path .= $this->params->toString($slash === true || $path !== '');
 
 		if ($this->slash === true && ($path !== '' || $slash === true)) {
 			$path .= '/';
