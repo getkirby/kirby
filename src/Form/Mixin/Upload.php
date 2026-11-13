@@ -36,15 +36,22 @@ trait Upload
 	 */
 	public function acceptedFileBlueprints(): array
 	{
-		$uploads = $this->uploads();
+		try {
+			$uploads = $this->uploads();
 
-		if ($uploads === false) {
+			if ($uploads === false) {
+				return [];
+			}
+
+			$parent = $this->uploadParent($uploads['parent'] ?? null);
+		} catch (InvalidArgumentException) {
+			// nothing can be uploaded to an unresolvable parent
 			return [];
 		}
 
-		$parent = $uploads['parent'] ?? null;
+		$model = $this->model();
 
-		if ($parent !== null && $parent !== $this->model()->id()) {
+		if ($parent::class !== $model::class || $parent->is($model) === false) {
 			return [];
 		}
 

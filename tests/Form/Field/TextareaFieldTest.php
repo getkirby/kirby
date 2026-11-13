@@ -91,6 +91,56 @@ class TextareaFieldTest extends TestCase
 		$this->assertSame([], $field->acceptedFileBlueprints());
 	}
 
+	public function testAcceptedFileBlueprintsWithOtherPage(): void
+	{
+		$field = $this->field('textarea', [
+			'model'   => new Page([
+				'slug'   => 'child',
+				'parent' => new Page(['slug' => 'parent'])
+			]),
+			'uploads' => [
+				'parent'   => 'page.parent',
+				'template' => 'a'
+			]
+		]);
+
+		$this->assertSame([], $field->acceptedFileBlueprints());
+	}
+
+	public function testAcceptedFileBlueprintsWithOwnParent(): void
+	{
+		$field = $this->field('textarea', [
+			'uploads' => [
+				'parent'   => 'page',
+				'template' => 'a'
+			]
+		]);
+
+		$this->assertSame(['a'], $field->acceptedFileBlueprints());
+	}
+
+	public function testAcceptedFileBlueprintsWithUnresolvableParent(): void
+	{
+		// the page has no parent
+		$field = $this->field('textarea', [
+			'uploads' => [
+				'parent'   => 'page.parent',
+				'template' => 'a'
+			]
+		]);
+
+		$this->assertSame([], $field->acceptedFileBlueprints());
+
+		// a page id is no valid query
+		$field = $this->field('textarea', [
+			'uploads' => [
+				'parent' => 'test'
+			]
+		]);
+
+		$this->assertSame([], $field->acceptedFileBlueprints());
+	}
+
 	public function testAcceptedFileBlueprintsWithoutUploads(): void
 	{
 		$field = $this->field('textarea', [
