@@ -50,6 +50,14 @@ describe("k-toggles-field", () => {
 			]);
 		});
 
+		it("renders the input for a value without options", () => {
+			const wrapper = mount({ options: [], value: "b" });
+			expect(wrapper.find("k-empty").exists()).toBe(false);
+			expect(wrapper.findComponent(Input).props("options")).toStrictEqual([
+				{ text: "[unknown]", value: "b" }
+			]);
+		});
+
 		it("renders an empty state without options", () => {
 			const wrapper = mount({ options: [] });
 			expect(wrapper.find("k-empty").exists()).toBe(true);
