@@ -90,7 +90,7 @@ class BlueprintsModelWithContent extends ExtendedModelWithContent
 							'name' => 'pages',
 							'type' => 'pagelist',
 							'parent' => 'site',
-							'templates' => [
+							'blueprints' => [
 								'foo',
 								'bar',
 							]
@@ -99,7 +99,7 @@ class BlueprintsModelWithContent extends ExtendedModelWithContent
 							'name' => 'menu',
 							'type' => 'pagelist',
 							'parent' => 'site',
-							'templates' => [
+							'blueprints' => [
 								'home',
 								'default',
 							]
@@ -478,6 +478,37 @@ class ModelWithContentTest extends TestCase
 
 		// non-existing field
 		$this->assertSame([], $model->blueprints('foo'));
+	}
+
+	public function testBlueprintsWithInvalidBlueprint(): void
+	{
+		new App([
+			'blueprints' => [
+				'pages/broken' => [
+					'title'  => 'Not used',
+					// a scalar instead of a list of fields
+					// breaks the blueprint
+					'fields' => 'text'
+				]
+			]
+		]);
+
+		$site = new Site([
+			'blueprint' => [
+				'fields' => [
+					'pages' => [
+						'type'       => 'pagelist',
+						'blueprints' => ['broken']
+					]
+				]
+			]
+		]);
+
+		// a blueprint that cannot be created still
+		// needs an entry, based on its name
+		$this->assertSame([
+			['name' => 'broken', 'title' => 'Broken']
+		], $site->blueprints());
 	}
 
 	public function testIncrement(): void

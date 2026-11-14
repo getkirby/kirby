@@ -5,6 +5,7 @@ namespace Kirby\Form\Field;
 use Kirby\Api\Api;
 use Kirby\Cms\File;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Form\Interface\ProvidesAcceptedFileBlueprints;
 use Kirby\Form\Mixin;
 use Kirby\Panel\Controller\Dialog\FilePickerDialogController;
 use Kirby\Reflection\Attributes\Prop;
@@ -16,7 +17,7 @@ use Kirby\Reflection\Attributes\Prop;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  */
-class TextareaField extends StringField
+class TextareaField extends StringField implements ProvidesAcceptedFileBlueprints
 {
 	use Mixin\Counter;
 	use Mixin\Font;

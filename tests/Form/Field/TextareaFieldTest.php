@@ -64,6 +64,92 @@ class TextareaFieldTest extends TestCase
 		$this->assertInstanceOf(FilePickerDialogController::class, $dialog);
 	}
 
+	public function testAcceptedFileBlueprints(): void
+	{
+		$field = $this->field('textarea', [
+			'uploads' => 'a'
+		]);
+
+		$this->assertSame(['a'], $field->acceptedFileBlueprints());
+	}
+
+	public function testAcceptedFileBlueprintsWithoutBlueprint(): void
+	{
+		$field = $this->field('textarea');
+		$this->assertSame(['default'], $field->acceptedFileBlueprints());
+	}
+
+	public function testAcceptedFileBlueprintsWithOtherParent(): void
+	{
+		$field = $this->field('textarea', [
+			'uploads' => [
+				'parent'    => 'site',
+				'blueprint' => 'a'
+			]
+		]);
+
+		$this->assertSame([], $field->acceptedFileBlueprints());
+	}
+
+	public function testAcceptedFileBlueprintsWithOtherPage(): void
+	{
+		$field = $this->field('textarea', [
+			'model'   => new Page([
+				'slug'   => 'child',
+				'parent' => new Page(['slug' => 'parent'])
+			]),
+			'uploads' => [
+				'parent'    => 'page.parent',
+				'blueprint' => 'a'
+			]
+		]);
+
+		$this->assertSame([], $field->acceptedFileBlueprints());
+	}
+
+	public function testAcceptedFileBlueprintsWithOwnParent(): void
+	{
+		$field = $this->field('textarea', [
+			'uploads' => [
+				'parent'    => 'page',
+				'blueprint' => 'a'
+			]
+		]);
+
+		$this->assertSame(['a'], $field->acceptedFileBlueprints());
+	}
+
+	public function testAcceptedFileBlueprintsWithUnresolvableParent(): void
+	{
+		// the page has no parent
+		$field = $this->field('textarea', [
+			'uploads' => [
+				'parent'    => 'page.parent',
+				'blueprint' => 'a'
+			]
+		]);
+
+		$this->assertSame([], $field->acceptedFileBlueprints());
+
+		// a page id is no valid query
+		$field = $this->field('textarea', [
+			'uploads' => [
+				'parent' => 'test'
+			]
+		]);
+
+		$this->assertSame([], $field->acceptedFileBlueprints());
+	}
+
+	public function testAcceptedFileBlueprintsWithoutUploads(): void
+	{
+		$field = $this->field('textarea', [
+			'uploads' => false
+		]);
+
+		$this->assertSame([], $field->acceptedFileBlueprints());
+	}
+
 	public function testFont(): void
 	{
 		$field = $this->field('textarea');
@@ -174,13 +260,13 @@ class TextareaFieldTest extends TestCase
 		$field = $this->field('textarea', [
 			'value' => 'test',
 			'uploads' => [
-				'template' => 'test'
+				'blueprint' => 'test'
 			]
 		]);
 
 		$expected = [
-			'accept'   => '*',
-			'template' => 'test',
+			'accept'    => '*',
+			'blueprint' => 'test',
 		];
 
 		$this->assertSame($expected, $field->uploads());
@@ -218,8 +304,8 @@ class TextareaFieldTest extends TestCase
 		$field = $this->field('textarea', [
 			'value' => 'test',
 			'uploads' => [
-				'parent'   => 'site.title',
-				'template' => 'test'
+				'parent'    => 'site.title',
+				'blueprint' => 'test'
 			]
 		]);
 
@@ -229,7 +315,7 @@ class TextareaFieldTest extends TestCase
 		$field->uploads();
 	}
 
-	public function testUploadsTemplate(): void
+	public function testUploadsBlueprint(): void
 	{
 		$field = $this->field('textarea', [
 			'value' => 'test',
@@ -237,11 +323,28 @@ class TextareaFieldTest extends TestCase
 		]);
 
 		$expected = [
-			'accept'   => '*',
-			'template' => 'test',
+			'accept'    => '*',
+			'blueprint' => 'test',
 		];
 
 		$this->assertSame($expected, $field->uploads());
+	}
+
+	public function testUploadsBlueprintWithAlias(): void
+	{
+		$field = $this->field('textarea', [
+			'uploads' => ['template' => 'test']
+		]);
+
+		$this->assertSame('test', $field->uploads()['blueprint']);
+		$this->assertArrayNotHasKey('template', $field->uploads());
+
+		// the option's own name wins
+		$field = $this->field('textarea', [
+			'uploads' => ['blueprint' => 'a', 'template' => 'b']
+		]);
+
+		$this->assertSame('a', $field->uploads()['blueprint']);
 	}
 
 	public function testUploadsWithInvalidInput(): void

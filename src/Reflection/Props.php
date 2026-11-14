@@ -302,6 +302,41 @@ class Props
 	}
 
 	/**
+	 * Returns the name of the prop for the given
+	 * name or alias, or `null` if there is no such prop
+	 */
+	public function name(string $key): string|null
+	{
+		if ($this->has($key) === true) {
+			return $key;
+		}
+
+		foreach ($this->all() as $name => $prop) {
+			if (in_array($key, $prop['attribute']->aliases, true) === true) {
+				return $name;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the name of the prop followed by its aliases
+	 *
+	 * @return list<string>
+	 */
+	public function names(string $name): array
+	{
+		$prop = $this->all()[$name] ?? null;
+
+		if ($prop === null) {
+			return [];
+		}
+
+		return [$name, ...$prop['attribute']->aliases];
+	}
+
+	/**
 	 * Returns the object
 	 *
 	 * @throws LogicException if only a class name was given
@@ -398,6 +433,7 @@ class Props
 		foreach ($this->all() as $name => $prop) {
 			$props[$name] = [
 				'name'        => $name,
+				'aliases'     => $prop['attribute']->aliases,
 				'type'        => $this->type($name),
 				'computed'    => $prop['attribute']->computed,
 				'default'     => $this->default($prop['attribute'], $prop['property']),

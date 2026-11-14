@@ -12,6 +12,7 @@ use Kirby\Data\Json;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Form\Form;
+use Kirby\Form\Interface\ProvidesAcceptedFileBlueprints;
 use Kirby\Form\Mixin\EmptyState;
 use Kirby\Form\Mixin\Max;
 use Kirby\Form\Mixin\Min;
@@ -29,7 +30,7 @@ use Throwable;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class BlocksField extends InputField
+class BlocksField extends InputField implements ProvidesAcceptedFileBlueprints
 {
 	use EmptyState;
 	use Max;
@@ -60,6 +61,24 @@ class BlocksField extends InputField
 	#[Prop]
 	protected string $group = 'blocks';
 	protected array $value = [];
+
+	/**
+	 * Collects the accepted file blueprints of all fieldsets
+	 *
+	 * @return list<string>
+	 * @since 6.0.0
+	 */
+	public function acceptedFileBlueprints(): array
+	{
+		$blueprints = [];
+
+		foreach ($this->fieldsets() as $fieldset) {
+			$form       = $this->form($fieldset->fields());
+			$blueprints = [...$blueprints, ...$form->fields()->acceptedFileBlueprints()];
+		}
+
+		return $blueprints;
+	}
 
 	public function api(): array
 	{

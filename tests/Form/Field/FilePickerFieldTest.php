@@ -261,6 +261,16 @@ class FilePickerFieldTest extends TestCase
 		$this->assertSame('Test', $field->empty());
 	}
 
+	public function testAcceptedFileBlueprints(): void
+	{
+		$field = $this->field('filepicker', [
+			'model'   => $this->model(),
+			'uploads' => 'a'
+		]);
+
+		$this->assertSame(['a'], $field->acceptedFileBlueprints());
+	}
+
 	public function testFillWithFile(): void
 	{
 		$field = $this->field('filepicker', ['model' => $this->model()]);

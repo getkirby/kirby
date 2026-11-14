@@ -5,6 +5,7 @@ namespace Kirby\Form\Field;
 use Kirby\Api\Api;
 use Kirby\Cms\File;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Form\Interface\ProvidesAcceptedFileBlueprints;
 use Kirby\Form\Mixin;
 use Kirby\Panel\Controller\Dialog\FilePickerDialogController;
 use Kirby\Panel\Ui\Item\FileItem;
@@ -19,7 +20,7 @@ use Kirby\Reflection\Attributes\Prop;
  *
  * @extends ModelPickerField<File>
  */
-class FilePickerField extends ModelPickerField
+class FilePickerField extends ModelPickerField implements ProvidesAcceptedFileBlueprints
 {
 	use Mixin\Upload;
 

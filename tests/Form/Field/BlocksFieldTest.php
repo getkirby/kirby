@@ -141,6 +141,44 @@ class BlocksFieldTest extends TestCase
 		$this->assertSame($value, $field->empty());
 	}
 
+	public function testAcceptedFileBlueprints(): void
+	{
+		$field = $this->field('blocks', [
+			'fieldsets' => [
+				'a' => [
+					'fields' => [
+						'image' => [
+							'type'    => 'filepicker',
+							'uploads' => 'a'
+						]
+					]
+				],
+				'b' => [
+					'fields' => [
+						'text' => [
+							'type' => 'text'
+						]
+					]
+				],
+				'c' => [
+					'fields' => [
+						'images' => [
+							'type'   => 'structure',
+							'fields' => [
+								'image' => [
+									'type'    => 'filepicker',
+									'uploads' => 'c'
+								]
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$this->assertSame(['a', 'c'], $field->acceptedFileBlueprints());
+	}
+
 	public function testFillWithBlocks(): void
 	{
 		$blocks = Blocks::factory([

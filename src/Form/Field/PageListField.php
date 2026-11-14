@@ -7,7 +7,7 @@ use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Form\Interface\ProvidesAcceptedBlueprints;
+use Kirby\Form\Interface\ProvidesAcceptedPageBlueprints;
 use Kirby\Panel\Collector\PagesCollector;
 use Kirby\Panel\Controller\Dialog\PageCreateDialogController;
 use Kirby\Panel\Ui\Item\PageItem;
@@ -24,7 +24,7 @@ use Throwable;
  *
  * @extends ModelListField<Page>
  */
-class PageListField extends ModelListField implements ProvidesAcceptedBlueprints
+class PageListField extends ModelListField implements ProvidesAcceptedPageBlueprints
 {
 	public const string TYPE = 'pages';
 
@@ -32,7 +32,7 @@ class PageListField extends ModelListField implements ProvidesAcceptedBlueprints
 	protected array|string|null $text = '{{ model.title }}';
 
 	/**
-	 * Templates that may be added or `false` to disable page creation
+	 * Blueprints that may be added or `false` to disable page creation
 	 */
 	#[Prop(export: false)]
 	protected array|string|bool|null $create = null;
@@ -44,23 +44,40 @@ class PageListField extends ModelListField implements ProvidesAcceptedBlueprints
 	protected string $status = 'all';
 
 	/**
-	 * Filters the list by a single template or a list of templates
+	 * Filters the list by one or more blueprints, which are also
+	 * the options for new pages. With `except`, all other
+	 * blueprints are listed and offered instead.
 	 */
-	#[Prop(export: false)]
-	protected string|array|null $template = null;
+	#[Prop(aliases: ['templates', 'template'], export: false)]
+	protected array|string|null $blueprints = null;
 
 	/**
-	 * Filters the list by templates and sets the template
-	 * options for newly created pages
-	 */
-	#[Prop(computed: true, export: false)]
-	protected array|string|null $templates = null;
-
-	/**
-	 * Excludes the given templates from the list
+	 * Alias for the `except` list of the `blueprints` option
 	 */
 	#[Prop(export: false)]
 	protected array|string $templatesIgnore = [];
+
+	/**
+	 * Accepts pages with the blueprints from `create`,
+	 * the list's blueprints or any blueprint otherwise
+	 *
+	 * @return list<string>
+	 */
+	public function acceptedPageBlueprints(): array
+	{
+		// no pages can be added through the list
+		if ($this->create === false) {
+			return [];
+		}
+
+		$list  = $this->blueprints();
+		$names = match ($this->create) {
+			null, true, '', [] => $list['only'] ?? $this->kirby()->blueprints(),
+			default            => A::wrap($this->create)
+		};
+
+		return array_values(array_diff($names, $list['except']));
+	}
 
 	/**
 	 * Whether new pages can be added to the list
@@ -78,7 +95,7 @@ class PageListField extends ModelListField implements ProvidesAcceptedBlueprints
 
 		$statuses = [];
 
-		foreach ($this->blueprintNames() as $name) {
+		foreach ($this->acceptedPageBlueprints() as $name) {
 			$blueprint  = $this->blueprint($name);
 			$statuses[] = $blueprint?->create()['status'] ?? 'draft';
 		}
@@ -103,61 +120,44 @@ class PageListField extends ModelListField implements ProvidesAcceptedBlueprints
 	}
 
 	/**
-	 * The blueprint options for the create dialog
+	 * Lists `only` pages with these blueprints (or with any
+	 * for `null`) and none with the blueprints in `except`
 	 *
-	 * @return list<array{name: string, title: string}>
+	 * @return array{only: list<string>|null, except: list<string>}
 	 */
-	public function blueprints(): array
+	protected function blueprints(): array
 	{
-		$blueprints = [];
+		$blueprints = $this->blueprints;
 
-		foreach ($this->blueprintNames() as $name) {
-			// the full blueprint, so that a title inherited
-			// through `extends` is taken into account
-			$blueprint = $this->blueprint($name);
-
-			$blueprints[] = match ($blueprint) {
-				null    => [
-					'name'  => basename($name),
-					'title' => ucfirst($name),
-				],
-				default => [
-					'name'  => basename($blueprint->name()),
-					'title' => $blueprint->title(),
-				]
-			};
-		}
-
-		return $blueprints;
-	}
-
-	public function blueprintNames(): array
-	{
-		$blueprints = match (empty($this->create)) {
-			false   => A::wrap($this->create),
-			default => $this->templates()
+		// a mapping only excludes blueprints via `except`
+		$only = match (true) {
+			$blueprints === null,
+			$blueprints === [],
+			is_array($blueprints) === true && array_is_list($blueprints) === false => null,
+			default => A::wrap($blueprints)
 		};
 
-		if ($blueprints === []) {
-			$blueprints = $this->kirby()->blueprints();
-		}
-
-		return array_diff($blueprints, $this->templatesIgnore());
+		return [
+			'only'   => $only,
+			'except' => [
+				...A::wrap($blueprints['except'] ?? null),
+				...A::wrap($this->templatesIgnore)
+			]
+		];
 	}
 
 	public function collector(): PagesCollector
 	{
 		return $this->collector ??= new PagesCollector(
-			flip:            $this->flip(),
-			limit:           $this->limit(),
-			page:            (int)$this->page() ?: 1,
-			parent:          $this->parentModel(),
-			query:           $this->query(),
-			search:          $this->searchterm(),
-			sortBy:          $this->sortBy(),
-			status:          $this->status(),
-			templates:       $this->templates(),
-			templatesIgnore: $this->templatesIgnore(),
+			blueprints: $this->blueprints(),
+			flip:       $this->flip(),
+			limit:      $this->limit(),
+			page:       (int)$this->page() ?: 1,
+			parent:     $this->parentModel(),
+			query:      $this->query(),
+			search:     $this->searchterm(),
+			sortBy:     $this->sortBy(),
+			status:     $this->status(),
 		);
 	}
 
@@ -194,12 +194,40 @@ class PageListField extends ModelListField implements ProvidesAcceptedBlueprints
 			'create' => [
 				'action' => fn () => new PageCreateDialogController(
 					parent:     $this->parentModel(),
-					blueprints: $this->blueprints()
+					blueprints: $this->acceptedPageBlueprints()
 				)
 			]
 		];
 	}
 	// @codeCoverageIgnoreEnd
+
+	/**
+	 * Whether the list shows child pages of the field's
+	 * model, optionally only with the given blueprint
+	 */
+	public function hasPageBlueprint(string|null $blueprint = null): bool
+	{
+		try {
+			$parent = $this->parentModel();
+		} catch (InvalidArgumentException) {
+			return false;
+		}
+
+		// the list shows the children of another model
+		if ($parent->is($this->model()) === false) {
+			return false;
+		}
+
+		if ($blueprint === null) {
+			return true;
+		}
+
+		$list = $this->blueprints();
+
+		return
+			($list['only'] === null || in_array($blueprint, $list['only'], true) === true) &&
+			in_array($blueprint, $list['except'], true) === false;
+	}
 
 	/**
 	 * @throws InvalidArgumentException If the parent is neither the site nor a page
@@ -247,21 +275,6 @@ class PageListField extends ModelListField implements ProvidesAcceptedBlueprints
 			'unlisted'        => 'unlisted',
 			default           => 'all'
 		};
-	}
-
-	public function template(): string|array|null
-	{
-		return $this->template;
-	}
-
-	public function templates(): array
-	{
-		return A::wrap($this->templates ?? $this->template);
-	}
-
-	public function templatesIgnore(): array
-	{
-		return A::wrap($this->templatesIgnore);
 	}
 
 	/**
