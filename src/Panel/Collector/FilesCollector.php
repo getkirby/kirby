@@ -25,14 +25,13 @@ class FilesCollector extends ModelsCollector
 		protected string|null $query = null,
 		protected string|null $search = null,
 		protected string|null $sortBy = null,
-		protected bool $sorted = true,
 		protected string|null $template = null,
 	) {
 	}
 
 	protected function collect(): Files
 	{
-		return $this->parent()->files();
+		return $this->parent()->files()->sorted();
 	}
 
 	protected function collectByQuery(): Files
@@ -55,23 +54,5 @@ class FilesCollector extends ModelsCollector
 
 			return true;
 		});
-	}
-
-	public function isSorting(): bool
-	{
-		if ($this->sorted === true) {
-			return true;
-		}
-
-		return parent::isSorting();
-	}
-
-	protected function sort(Files|Pages|Users $models): Files
-	{
-		if ($this->sortBy === null || $this->isSearching() === true) {
-			return $models->sorted();
-		}
-
-		return parent::sort($models);
 	}
 }
