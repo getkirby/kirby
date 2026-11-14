@@ -1,4 +1,6 @@
 :root {
+	color-scheme: light only;
+
 	/* Lightness */
 	--color-l-100: 98%;
 	--color-l-150: 96%;
