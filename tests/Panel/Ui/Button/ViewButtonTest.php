@@ -150,6 +150,40 @@ class ViewButtonTest extends AreaTestCase
 		$this->assertSame(['component' => 'k-foo-view-button'], $result);
 	}
 
+	public function testFindWithConfig(): void
+	{
+		$app = $this->app->clone([
+			'areas' => [
+				'test' => fn () => [
+					'buttons' => [
+						'a' => ['component' => 'result-a']
+					]
+				]
+			],
+			'options' => [
+				'panel' => [
+					'viewButtons' => [
+						'test' => [
+							'a' => true,
+							'b' => ['component' => 'result-b']
+						]
+					]
+				]
+			]
+		]);
+
+		// simulate a logged in user
+		$app->impersonate('test@getkirby.com');
+
+		// reference by name in config
+		$result = ViewButton::find('a', view: 'test');
+		$this->assertSame(['component' => 'result-a'], $result);
+
+		// definition in config
+		$result = ViewButton::find('b', view: 'test');
+		$this->assertSame(['component' => 'result-b'], $result);
+	}
+
 	public function testNormalize(): void
 	{
 		$result = ViewButton::normalize([

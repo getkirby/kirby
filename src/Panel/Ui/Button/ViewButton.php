@@ -106,10 +106,15 @@ class ViewButton extends ModelButton
 	): array|Closure {
 		$kirby = App::instance();
 
-		// collect all buttons from areas and config
+		// collect all buttons from areas and config,
+		// but skip references by name (`name: true`) in config
+		// so that they don't shadow the referenced button
 		$buttons = [
 			...$kirby->panel()->areas()->buttons(),
-			...(array)$kirby->option('panel.viewButtons.' . $view, [])
+			...array_filter(
+				(array)$kirby->option('panel.viewButtons.' . $view, []),
+				fn ($button) => is_array($button) || $button instanceof Closure
+			)
 		];
 
 		// try to find by full name (view-prefixed)
