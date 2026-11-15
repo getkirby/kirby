@@ -21,10 +21,14 @@ export default {
 			let bubbles = this.value;
 
 			// predefined options
-			const options = this.column.options ?? this.field.options ?? [];
+			const options = this.column.options ?? this.field.options;
+
+			// a value without option is only a custom tag
+			// if the field accepts any value
+			const custom = options === undefined || this.field.accept === "all";
 
 			if (typeof bubbles === "string") {
-				bubbles = bubbles.split(",");
+				bubbles = bubbles.split(",").map((bubble) => bubble.trim());
 			}
 
 			return (bubbles ?? []).map((bubble) => {
@@ -35,10 +39,12 @@ export default {
 					};
 				}
 
-				for (const option of options) {
-					if (option.value === bubble.value) {
-						bubble.text = option.text;
-					}
+				const option = options?.find((option) => option.value === bubble.value);
+
+				if (option) {
+					bubble.text = option.text;
+				} else if (custom === false) {
+					bubble.text = `[${this.$t("unknown")}]`;
 				}
 
 				return bubble;
