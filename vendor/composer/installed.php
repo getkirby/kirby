@@ -19,15 +19,6 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
-        'claviska/simpleimage' => array(
-            'pretty_version' => '4.4.2',
-            'version' => '4.4.2.0',
-            'reference' => 'f2397d67a06ed3334e5cfc22df55e55fb5f8bae1',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../claviska/simpleimage',
-            'aliases' => array(),
-            'dev_requirement' => false,
-        ),
         'composer/semver' => array(
             'pretty_version' => '3.6.0',
             'version' => '3.6.0.0',
@@ -108,21 +99,6 @@
             'install_path' => __DIR__ . '/../lbuchs/webauthn',
             'aliases' => array(),
             'dev_requirement' => false,
-        ),
-        'league/color-extractor' => array(
-            'pretty_version' => '0.4.0',
-            'version' => '0.4.0.0',
-            'reference' => '21fcac6249c5ef7d00eb83e128743ee6678fe505',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../league/color-extractor',
-            'aliases' => array(),
-            'dev_requirement' => false,
-        ),
-        'matthecat/colorextractor' => array(
-            'dev_requirement' => false,
-            'replaced' => array(
-                0 => '*',
-            ),
         ),
         'michelf/php-smartypants' => array(
             'pretty_version' => '1.8.1',

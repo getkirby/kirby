@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9f911db4ea9358dcccc332d3a6676478",
+    "content-hash": "7498aa8be227e5f5db72e7a19b4d5c92",
     "packages": [
         {
             "name": "christian-riesen/base32",
@@ -64,59 +64,6 @@
                 "source": "https://github.com/ChristianRiesen/base32/tree/2.0.1"
             },
             "time": "2026-07-11T21:00:30+00:00"
-        },
-        {
-            "name": "claviska/simpleimage",
-            "version": "4.4.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/claviska/SimpleImage.git",
-                "reference": "f2397d67a06ed3334e5cfc22df55e55fb5f8bae1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/claviska/SimpleImage/zipball/f2397d67a06ed3334e5cfc22df55e55fb5f8bae1",
-                "reference": "f2397d67a06ed3334e5cfc22df55e55fb5f8bae1",
-                "shasum": ""
-            },
-            "require": {
-                "ext-gd": "*",
-                "league/color-extractor": "0.4.*",
-                "php": ">=8.0"
-            },
-            "require-dev": {
-                "laravel/pint": "^1.5",
-                "phpstan/phpstan": "^1.10"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "claviska": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Cory LaViska",
-                    "homepage": "http://www.abeautifulsite.net/",
-                    "role": "Developer"
-                }
-            ],
-            "description": "A PHP class that makes working with images as simple as possible.",
-            "support": {
-                "issues": "https://github.com/claviska/SimpleImage/issues",
-                "source": "https://github.com/claviska/SimpleImage/tree/4.4.2"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/claviska",
-                    "type": "github"
-                }
-            ],
-            "time": "2026-10-23T20:35:49+00:00"
         },
         {
             "name": "composer/semver",
@@ -644,67 +591,6 @@
                 "source": "https://github.com/lbuchs/WebAuthn/tree/v2.2.0"
             },
             "time": "2024-07-04T07:17:40+00:00"
-        },
-        {
-            "name": "league/color-extractor",
-            "version": "0.4.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/thephpleague/color-extractor.git",
-                "reference": "21fcac6249c5ef7d00eb83e128743ee6678fe505"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/color-extractor/zipball/21fcac6249c5ef7d00eb83e128743ee6678fe505",
-                "reference": "21fcac6249c5ef7d00eb83e128743ee6678fe505",
-                "shasum": ""
-            },
-            "require": {
-                "ext-gd": "*",
-                "php": "^7.3 || ^8.0"
-            },
-            "replace": {
-                "matthecat/colorextractor": "*"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "~2",
-                "phpunit/phpunit": "^9.5"
-            },
-            "suggest": {
-                "ext-curl": "To download images from remote URLs if allow_url_fopen is disabled for security reasons"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "League\\ColorExtractor\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Mathieu Lechat",
-                    "email": "math.lechat@gmail.com",
-                    "homepage": "http://matthecat.com",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Extract colors from an image as a human would do.",
-            "homepage": "https://github.com/thephpleague/color-extractor",
-            "keywords": [
-                "color",
-                "extract",
-                "human",
-                "image",
-                "palette"
-            ],
-            "support": {
-                "issues": "https://github.com/thephpleague/color-extractor/issues",
-                "source": "https://github.com/thephpleague/color-extractor/tree/0.4.0"
-            },
-            "time": "2022-09-24T15:57:16+00:00"
         },
         {
             "name": "michelf/php-smartypants",
