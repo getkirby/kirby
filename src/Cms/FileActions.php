@@ -372,7 +372,9 @@ trait FileActions
 	}
 
 	/**
-	 * Resizes/crops the original file with Kirby's thumb handler
+	 * Resizes/crops the original file with Kirby's thumb handler;
+	 * without re-encoding it if only its EXIF tags change
+	 * or no driver can change its pixels
 	 *
 	 * @param array<string, mixed>|null $options
 	 */
@@ -389,11 +391,18 @@ trait FileActions
 
 		// planned from the file on disk, which
 		// may have been replaced since it was read
-		$root = $this->root();
-		$plan = $darkroom->tryPlan($root, $options);
+		$root   = $this->root();
+		$source = $darkroom->open($root);
+		$plan   = $darkroom->tryPlan($source, $options);
 
-		if ($plan === null) {
-			return $this;
+		// nothing but the EXIF tags change, e.g. a width above the
+		// image's own or without a driver, which stripping doesn't need
+		if ($plan === null || $plan->isCopy() === true) {
+			if ($darkroom->tryStrip($source, $root, $options['strip'] ?? null) === false) {
+				return $this;
+			}
+
+			return $this->clone();
 		}
 
 		// the same format keeps the file's name;

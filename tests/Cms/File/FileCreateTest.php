@@ -228,6 +228,39 @@ class FileCreateTest extends ModelTestCase
 		$this->assertSame('B', $result->b()->value());
 	}
 
+	public function testCreateImageAndStrip(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'files/test' => [
+					'name'   => 'test',
+					'create' => [
+						'strip' => true
+					]
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$parent = new Page(['slug' => 'test']);
+		$source = __DIR__ . '/../../Image/fixtures/image/onigiri-adobe-rgb-gps.jpg';
+
+		$result = File::create([
+			'filename' => 'test.jpg',
+			'source'   => $source,
+			'parent'   => $parent,
+			'template' => 'test',
+		]);
+
+		// the same image without its GPS
+		$this->assertNull($result->exif()->location()->lat());
+		$this->assertSame(600, $result->width());
+		$this->assertSame('test.jpg', $result->filename());
+
+		// no hidden file is left behind
+		$this->assertSame([], glob($parent->root() . '/.[!.]*'));
+	}
+
 	public function testCreateManipulateNonImage(): void
 	{
 		$this->app = $this->app->clone([
