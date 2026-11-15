@@ -6,7 +6,7 @@
 		:style="$attrs.style"
 	>
 		<k-empty
-			v-if="!options?.length"
+			v-if="choices.length === 0"
 			:text="$t('options.none')"
 			icon="checklist"
 		/>
@@ -15,6 +15,7 @@
 			ref="input"
 			:class="{ grow }"
 			v-bind="$props"
+			:options="choices"
 			type="toggles"
 			@input="$emit('input', $event)"
 		/>
@@ -29,6 +30,14 @@ import { props as TogglesInput } from "../Input/TogglesInput.vue";
 export default {
 	mixins: [Field, Input, TogglesInput],
 	inheritAttrs: false,
+	computed: {
+		/**
+		 * The options with an `[unknown]` option for each value without one
+		 */
+		choices() {
+			return this.$helper.field.options(this.options ?? [], this.value);
+		}
+	},
 	methods: {
 		focus() {
 			this.$refs.input.focus();
