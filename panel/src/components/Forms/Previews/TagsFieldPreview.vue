@@ -42,10 +42,14 @@ export default {
 			let tags = this.value;
 
 			// predefined options
-			const options = this.column.options ?? this.field.options ?? [];
+			const options = this.column.options ?? this.field.options;
+
+			// a value without option is only a custom tag
+			// if the field accepts any value
+			const custom = options === undefined || this.field.accept === "all";
 
 			if (typeof tags === "string") {
-				tags = tags.split(",");
+				tags = tags.split(",").map((tag) => tag.trim());
 			}
 
 			return (tags ?? []).map((tag) => {
@@ -53,10 +57,12 @@ export default {
 					tag = { value: tag, text: tag };
 				}
 
-				for (const option of options) {
-					if (option.value === tag.value) {
-						tag.text = option.text;
-					}
+				const option = options?.find((option) => option.value === tag.value);
+
+				if (option) {
+					tag.text = option.text;
+				} else if (custom === false) {
+					tag.text = `[${this.$t("unknown")}]`;
 				}
 
 				return tag;
