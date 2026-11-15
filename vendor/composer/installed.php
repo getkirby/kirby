@@ -82,6 +82,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'getkirby/darkroom' => array(
+            'pretty_version' => '0.3.0',
+            'version' => '0.3.0.0',
+            'reference' => '2b1e5faf949bb3225478c2790a7a51a97b199521',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../getkirby/darkroom',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'laminas/laminas-escaper' => array(
             'pretty_version' => '2.19.0',
             'version' => '2.19.0.0',

@@ -447,6 +447,117 @@
             "install-path": "../getkirby/composer-installer"
         },
         {
+            "name": "getkirby/darkroom",
+            "version": "0.3.0",
+            "version_normalized": "0.3.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/getkirby/darkroom.git",
+                "reference": "2b1e5faf949bb3225478c2790a7a51a97b199521"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/getkirby/darkroom/zipball/2b1e5faf949bb3225478c2790a7a51a97b199521",
+                "reference": "2b1e5faf949bb3225478c2790a7a51a97b199521",
+                "shasum": ""
+            },
+            "require": {
+                "ext-filter": "*",
+                "php": "^8.4"
+            },
+            "require-dev": {
+                "jcupitt/vips": "^2.6"
+            },
+            "suggest": {
+                "ext-exif": "To read the raw EXIF tags with Source::exif()",
+                "ext-ffi": "For the vips driver",
+                "ext-gd": "For the gd driver",
+                "ext-imagick": "For the imagick driver",
+                "ext-zlib": "To read and write PNG color profiles",
+                "jcupitt/vips": "For the vips driver (needs libvips)"
+            },
+            "time": "2026-11-27T20:15:01+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Darkroom\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Darkroom\\Bench\\": "bench/",
+                    "Darkroom\\Playground\\": "playground/",
+                    "Darkroom\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "analyze": [
+                    "@analyze:composer",
+                    "@analyze:psalm"
+                ],
+                "analyze:composer": [
+                    "composer validate --strict --no-check-version --no-check-all"
+                ],
+                "analyze:psalm": [
+                    "cpx vimeo/psalm:7.22.1"
+                ],
+                "bench": [
+                    "cpx phpbench/phpbench:1.7.1 run --report=aggregate"
+                ],
+                "ci": [
+                    "@fix",
+                    "@analyze",
+                    "@test"
+                ],
+                "fix": [
+                    "cpx getkirby/php-cs:0.3.0 fix"
+                ],
+                "playground": [
+                    "Composer\\Config::disableProcessTimeout",
+                    "@putenv PHP_CLI_SERVER_WORKERS=8",
+                    "(sleep 1; open http://127.0.0.1:8080 || xdg-open http://127.0.0.1:8080) > /dev/null 2>&1 &",
+                    "@php -d ffi.enable=1 -S 127.0.0.1:8080 -t playground playground/index.php"
+                ],
+                "test": [
+                    "cpx brianium/paratest:7.30.0"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kirby Team",
+                    "email": "support@getkirby.com",
+                    "homepage": "https://getkirby.com"
+                }
+            ],
+            "description": "Resize, crop, orient and filter images with GD, Imagick or libvips",
+            "homepage": "https://github.com/getkirby/darkroom",
+            "keywords": [
+                "crop",
+                "gd",
+                "image",
+                "imagick",
+                "resize",
+                "thumbnail",
+                "vips"
+            ],
+            "support": {
+                "email": "support@getkirby.com",
+                "issues": "https://github.com/getkirby/darkroom/issues",
+                "source": "https://github.com/getkirby/darkroom"
+            },
+            "funding": [
+                {
+                    "type": "custom",
+                    "url": "https://getkirby.com/buy"
+                }
+            ],
+            "install-path": "../getkirby/darkroom"
+        },
+        {
             "name": "laminas/laminas-escaper",
             "version": "2.19.0",
             "version_normalized": "2.19.0.0",

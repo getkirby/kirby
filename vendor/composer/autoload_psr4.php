@@ -16,6 +16,7 @@ return array(
     'League\\ColorExtractor\\' => array($vendorDir . '/league/color-extractor/src'),
     'Laminas\\Escaper\\' => array($vendorDir . '/laminas/laminas-escaper/src'),
     'Kirby\\' => array($baseDir . '/src', $vendorDir . '/getkirby/composer-installer/src'),
+    'Darkroom\\' => array($vendorDir . '/getkirby/darkroom/src'),
     'Composer\\Semver\\' => array($vendorDir . '/composer/semver/src'),
     'Base32\\' => array($vendorDir . '/christian-riesen/base32/src'),
 );
