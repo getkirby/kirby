@@ -1,28 +1,30 @@
 import { describe, expect, it } from "vitest";
-import { form } from "./field";
+import { form, options } from "./field";
 
-describe("$helper.field.form()", () => {
-	// TODO: Remove once window.panel is globally typed
-	// @ts-expect-error - window.panel is not typed yet
-	// mock the app with the component setup
-	window.panel = {
-		app: {
-			$options: {
-				components: {
-					"k-custom-field": {
-						options: {
-							props: {
-								value: {
-									default: "test"
-								}
+// TODO: Remove once window.panel is globally typed
+// @ts-expect-error - window.panel is not typed yet
+// mock the app with the component setup used by form()
+// and the translation used by options()
+window.panel = {
+	app: {
+		$options: {
+			components: {
+				"k-custom-field": {
+					options: {
+						props: {
+							value: {
+								default: "test"
 							}
 						}
 					}
 				}
 			}
 		}
-	};
+	},
+	t: (key: string) => key
+};
 
+describe("$helper.field.form()", () => {
 	it("should create form object with default values for each field", () => {
 		const fields = {
 			name: { default: "John" },
@@ -40,5 +42,42 @@ describe("$helper.field.form()", () => {
 			email: undefined,
 			custom: "test"
 		});
+	});
+});
+
+describe("$helper.field.options()", () => {
+	const list = [
+		{ value: "a", text: "A" },
+		{ value: 1, text: "One" }
+	];
+
+	it("should add an option for each value without option", () => {
+		expect(options(list, ["a", "b", "c"])).toStrictEqual([
+			...list,
+			{ text: "[unknown]", value: "b" },
+			{ text: "[unknown]", value: "c" }
+		]);
+	});
+
+	it("should accept a single value", () => {
+		expect(options(list, "b")).toStrictEqual([
+			...list,
+			{ text: "[unknown]", value: "b" }
+		]);
+	});
+
+	it("should match values loosely", () => {
+		expect(options(list, "1")).toStrictEqual(list);
+	});
+
+	it("should ignore empty values", () => {
+		expect(options(list, "")).toStrictEqual(list);
+		expect(options(list, null)).toStrictEqual(list);
+		expect(options(list, undefined)).toStrictEqual(list);
+		expect(options(list, [])).toStrictEqual(list);
+	});
+
+	it("should ignore a missing value cast to false", () => {
+		expect(options(list, false)).toStrictEqual(list);
 	});
 });
