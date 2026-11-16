@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
 use PHPUnit\Framework\Attributes\CoversClass;
 use TypeError;
 
@@ -768,6 +769,60 @@ class PageCreateTest extends ModelTestCase
 				]
 			]
 		]);
+	}
+
+	public function testCreateStripInjectedChildrenAndDrafts(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'sections' => [
+						'pages' => [
+							'type'   => 'pages',
+							'status' => 'all'
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		// existing content file that must not be touched
+		$existing = static::TMP . '/existing';
+		Dir::make($existing);
+		F::write(
+			file: $existing . '/default.txt',
+			content: 'Title: Existing'
+		);
+
+		$page = Page::create([
+			'slug'     => 'new-page',
+			'isDraft'  => false,
+			// would write UUID content files to the injected
+			// roots during the content validation if respected
+			'children' => [
+				[
+					'slug' => 'child',
+					'root' => static::TMP . '/outside-child'
+				],
+				[
+					'slug' => 'existing',
+					'root' => $existing
+				]
+			],
+			'drafts' => [
+				[
+					'slug' => 'draft',
+					'root' => static::TMP . '/outside-draft'
+				]
+			]
+		]);
+
+		$this->assertCount(0, $page->childrenAndDrafts());
+		$this->assertDirectoryDoesNotExist(static::TMP . '/outside-child');
+		$this->assertDirectoryDoesNotExist(static::TMP . '/outside-draft');
+		$this->assertSame('Title: Existing', F::read($existing . '/default.txt'));
 	}
 
 	public function testCreateStripInjectedRootAndDirname(): void
