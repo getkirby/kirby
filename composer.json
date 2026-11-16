@@ -3,7 +3,7 @@
 	"description": "The Kirby core",
 	"license": "proprietary",
 	"type": "kirby-cms",
-	"version": "4.9.7",
+	"version": "4.9.8",
 	"keywords": [
 		"kirby",
 		"cms",
