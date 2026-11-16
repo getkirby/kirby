@@ -750,12 +750,15 @@ trait PageActions
 			$props['dirname'],
 			$props['root'],
 
-			// Prevent injecting in-memory children and drafts. The content
-			// validation for public pages renders the blueprint sections,
-			// which store UUIDs for listed pages and would thus write
-			// injected pages to disk (also to an injected root)
+			// Prevent injecting in-memory children, drafts and files.
+			// The content validation for public pages renders the
+			// blueprint sections, which store UUIDs for listed pages
+			// and would thus write injected pages to disk (also to an
+			// injected root). Injected files and pages would also count
+			// towards the min/max validation of pages and files sections.
 			$props['children'],
-			$props['drafts']
+			$props['drafts'],
+			$props['files']
 		);
 
 		$content  = $props['content']  ?? [];
