@@ -896,7 +896,12 @@ class Dom
 				$nodes[] = $node;
 			}
 
-			if ($node->firstChild !== null) {
+			// entity references point into the declarations of the doctype,
+			// which may already be removed, so don't walk into them
+			if (
+				$node->nodeType !== XML_ENTITY_REF_NODE &&
+				$node->firstChild !== null
+			) {
 				$next = $node->firstChild;
 				continue;
 			}
