@@ -7,17 +7,16 @@
 	},
 	"scripts": {
 		"build": "vite build",
-		"ci": "npm run test && npm run lint && npm run format",
+		"ci": "npm run lint && npm run format && npm run types && npm run test",
 		"build:docs": "node scripts/docs.ts",
 		"dev": "vite",
 		"format": "oxfmt --check",
 		"format:fix": "oxfmt",
-		"lint": "eslint .",
+		"lint": "eslint . --max-warnings 0",
 		"lint:fix": "npm run lint -- --fix",
-		"test": "npm run test:unit && npm run test:types",
-		"test:unit": "vitest run",
-		"test:coverage": "npm run test:unit -- --coverage",
-		"test:types": "vue-tsc --noEmit"
+		"test": "vitest run",
+		"test:coverage": "npm run test -- --coverage",
+		"types": "vue-tsc --noEmit"
 	},
 	"dependencies": {
 		"autosize": "^6.0.1",

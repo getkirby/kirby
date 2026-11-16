@@ -9,12 +9,17 @@ on:
       - "main"
       - "release/**"
 
+# the jobs of the called workflows get no more than this
+permissions:
+  contents: read
+  security-events: write
+
 jobs:
   release_backend:
-    name: "Release: CI - Backend"
+    name: Backend
     uses: ./.github/workflows/backend.yml
     secrets: inherit
   release_frontend:
-    name: "Release: CI - Frontend"
+    name: Frontend
     uses: ./.github/workflows/frontend.yml
     secrets: inherit

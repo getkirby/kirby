@@ -1,18 +1,4 @@
-# To upgrade pinned actions: Use https://github.com/mheap/pin-github-action
-
-name: CI - Backend
-
-env:
-  OS: &os ubuntu-24.04
-  TIMEOUT: &timeout 10
-  COVERAGE_PHP: "8.4"
-  APT_PACKAGES: locales-all imagemagick
-
-  SHOULD_RUN: &should-run >-
-    github.event_name == 'workflow_dispatch' ||
-    github.event_name == 'workflow_call' ||
-    github.repository == 'getkirby/kirby' ||
-    github.repository_owner != 'getkirby'
+name: Backend
 
 on:
   # only the long-lived base branches run on push, so that their caches
@@ -28,7 +14,6 @@ on:
     paths: &backend-paths
       - "**"
       - "!.github/**"
-      - ".github/actions/setup-php/**"
       - ".github/workflows/backend.yml"
       - "!.tx/**"
       - "!.vscode/**"
@@ -44,185 +29,25 @@ concurrency:
   group: backend-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
-  # ======================== Unit Tests ========================
-  tests:
-    name: "Unit Tests - PHP ${{ matrix.php }}${{ matrix.dependencies == 'latest' && ' - Latest Dependencies' || '' }}"
-    if: *should-run
-    runs-on: *os
-    timeout-minutes: *timeout
-    strategy:
-      fail-fast: false
-      matrix:
-        php: ["8.3", "8.4", "8.5", "8.6"]
-        dependencies: ["locked"]
-        include:
-          # what Composer installs resolve to, while vendor/ stays locked
-          - php: "8.3"
-            dependencies: "latest"
-
-    services:
-      redis:
-        image: redis:7
-        ports:
-          - 6379:6379
-      memcached:
-        image: memcached:latest
-        ports:
-          - 11211:11211
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
-        with:
-          fetch-depth: 2
-
-      # the runner's apt mirror often takes minutes to serve these packages,
-      # so they are cached by the exact versions apt resolves for them
-      - name: Resolve system packages
-        id: apt
-        shell: bash
-        run: |
-          sudo apt-get update
-          packages=$(apt-get install -s --no-install-recommends $APT_PACKAGES | grep '^Inst')
-          echo "$packages"
-          echo "key=$(sha1sum <<< "$packages" | cut -c1-16)" >> "$GITHUB_OUTPUT"
-
-      - name: Cache system packages
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
-        with:
-          path: ~/apt/*.deb
-          key: apt-${{ runner.os }}-${{ steps.apt.outputs.key }}
-
-      - name: Install system locales and imagemagick
-        shell: bash
-        run: |
-          mkdir -p ~/apt/partial
-          sudo apt-get install -y --no-install-recommends \
-            -o Acquire::Retries=3 -o Dir::Cache::Archives="$HOME/apt" \
-            $APT_PACKAGES
-
-      - name: Verify test dependencies
-        shell: bash
-        run: |
-          convert -version
-          identify -version
-          count=$(locale -a | wc -l)
-          if [ "$count" -lt 100 ]; then
-            echo "::error::Only $count locales available, locales-all is missing"
-            exit 1
-          fi
-
-      - name: Setup PHP environment
-        uses: ./.github/actions/setup-php
-        with:
-          php: ${{ matrix.php }}
-          ini: 'apc.enabled=1, apc.enable_cli=1, pcov.directory=., pcov.exclude="~(vendor|tests)~"'
-          coverage: ${{ matrix.php == env.COVERAGE_PHP && 'pcov' || 'none' }}
-
-      - name: Update dependencies to the latest versions in range
-        if: matrix.dependencies == 'latest'
-        run: composer update --no-interaction --no-progress --no-scripts
-
-      - name: Check Composer platform requirements
-        run: composer check-platform-reqs
-
-      - name: Cache PHPUnit results
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
-        with:
-          path: ./.phpunit.cache
-          key: phpunit-${{ matrix.php }}-${{ hashFiles('composer.lock') }}
-          restore-keys: |
-            phpunit-${{ matrix.php }}-
-            phpunit-
-
-      - name: Run PHPUnit tests
-        if: matrix.php != env.COVERAGE_PHP
-        run: composer run test -- --configuration phpunit.ci.xml --processes 4
-
-      - name: Run PHPUnit tests with coverage
-        if: matrix.php == env.COVERAGE_PHP
-        run: composer run test -- --configuration phpunit.ci.xml --processes 4 --coverage-clover ${{ github.workspace }}/clover.xml --exclude-source-from-xml-coverage
-
-      - name: Upload coverage results to Codecov
-        if: matrix.php == env.COVERAGE_PHP
-        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7
-        with:
-          # for better reliability if the GitHub API is down
-          token: ${{ secrets.CODECOV_TOKEN }}
-          fail_ci_if_error: true
-          files: ${{ github.workspace }}/clover.xml
-          disable_search: true
-          flags: backend
-          env_vars: PHP
-        env:
-          PHP: ${{ matrix.php }}
-
-  # ======================== Code Quality ========================
-  analysis:
-    name: "Code Quality"
-    if: *should-run
-    runs-on: *os
-    timeout-minutes: *timeout
-    env:
-      php: 8.3
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
-
-      - name: Preparations
-        run: mkdir -p sarif
-
-      - name: Setup PHP environment
-        uses: ./.github/actions/setup-php
-        with:
-          php: ${{ env.php }}
-          tools: composer-normalize:2.52.0
-
-      - name: Setup problem matchers
-        run: |
-          echo "::add-matcher::${{ runner.tool_cache }}/php.json"
-          echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
-
-      # keyed on the Psalm version in composer.json and without fallback keys,
-      # as Psalm keeps a full cache per version and never prunes old ones
-      - name: Cache Psalm analysis data
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
-        with:
-          path: ~/.cache/psalm
-          key: psalm-${{ env.php }}-${{ hashFiles('composer.json', 'composer.lock') }}
-
-      - name: Validate composer.json/composer.lock
-        run: composer run analyze:composer
-
-      - name: Ensure that composer.json is normalized
-        env:
-          GITHUB_TOKEN: ""
-        run: composer-normalize --dry-run
-
-      - name: Check for unused Composer dependencies
-        run: composer run analyze:composer:unused
-
-      - name: Statically analyze using Psalm
-        id: psalm
-        run: composer run analyze:psalm -- --output-format=github --php-version=${{ env.php }} --report=sarif/psalm.sarif --report-show-info=false
-
-      - name: Upload code scanning results to GitHub
-        if: github.repository == 'getkirby/kirby' && steps.psalm.outcome == 'success'
-        uses: github/codeql-action/upload-sarif@8aad20d150bbac5944a9f9d289da16a4b0d87c1e # v4
-        with:
-          sarif_file: sarif
-
-      # saved under a new key per run, as cache entries can't be updated
-      # and the fixer only uses a cache from its own version and config
-      - name: Cache PHP-CS-Fixer data
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
-        with:
-          path: .php-cs-fixer.cache
-          key: php-cs-fixer-${{ github.sha }}
-          restore-keys: |
-            php-cs-fixer-
-
-      - name: Run PHP-CS-Fixer to catch PHP coding style violations
-        run: composer run fix -- --diff --dry-run
+  backend:
+    name: CI
+    uses: getkirby/actions/.github/workflows/php.yml@07e658b7eb1254cafc0baf94a2d241e810658176 # 0.3.0
+    with:
+      apt: locales-all imagemagick
+      codecov-flags: backend
+      composer-normalize: true
+      extensions: mbstring, ctype, curl, gd, apcu, memcached, redis
+      ini: 'apc.enabled=1, apc.enable_cli=1, pcov.directory=., pcov.exclude="~(vendor|tests)~"'
+      phpunit-args: --configuration phpunit.ci.xml --processes 4
+      sarif: ${{ github.repository == 'getkirby/kirby' }}
+      services: redis memcached
+      upstream: getkirby/kirby
+    secrets: inherit
+    permissions:
+      contents: read
+      # for the Psalm results in code scanning
+      security-events: write
