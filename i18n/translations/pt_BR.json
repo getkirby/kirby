@@ -9,8 +9,11 @@
 	"alpha": "Alpha",
 	"author": "Autor",
 	"avatar": "Foto do perfil",
+
 	"back": "Voltar",
+
 	"buttons.empty": "No buttons",
+
 	"cancel": "Cancelar",
 	"change": "Alterar",
 	"close": "Fechar",
@@ -132,8 +135,8 @@
 	"error.file.changeTemplate": "The template for the file \"{id}\" cannot be changed",
 	"error.file.changeTemplate.invalid": "O template para o ficheiro \"{id}\" não pode ser alterado para \"{template}\" (válido: \"{blueprints}\")",
 	"error.file.changeTemplate.permission": "Não tem permissão para alterar o template do ficheiro \"{id}\"",
-	"error.file.create.permission": "The file cannot be created",
 
+	"error.file.create.permission": "The file cannot be created",
 	"error.file.delete.multiple": "Nem todos os ficheiros puderam ser eliminados. Experimente cada ficheiro restante individualmente para ver o erro específico que impede a sua eliminação.",
 	"error.file.delete.permission": "The file cannot be deleted",
 	"error.file.duplicate": "Um arquivo com o nome \"{filename}\" já existe",
@@ -197,9 +200,9 @@
 	"error.object.validation": "Há um erro no campo \"{label}\":\n{message}",
 
 	"error.offline": "O painel está offline no momento",
+
 	"error.page.changeSlug.errorPage": "The slug of the error page cannot be changed",
 	"error.page.changeSlug.homePage": "The slug of the home page cannot be changed",
-
 	"error.page.changeSlug.permission": "Você não tem permissão para alterar o anexo de URL de \"{slug}\"",
 	"error.page.changeSlug.reserved": "O caminho das páginas de nível superior não deve começar com \"{path}\"",
 	"error.page.changeStatus.errorPage": "The status of the error page cannot be changed",
@@ -258,10 +261,10 @@
 	"error.template.default.notFound": "O tema padrão não existe",
 
 	"error.unexpected": "Ocorreu um erro inesperado! Ative o modo de debug para obter mais informações: https://getkirby.com/docs/reference/system/options/debug",
+
 	"error.user.avatar.duplicate": "The avatar already exists",
 	"error.user.avatar.notFound": "The avatar does not exist",
 	"error.user.changeEmail.admin": "You are not allowed to change the email address of an admin",
-
 	"error.user.changeEmail.permission": "Você não tem permissão para alterar o email do usuário \"{name}\"",
 	"error.user.changeLanguage.permission": "Você não tem permissão para alterar o idioma do usuário \"{name}\"",
 	"error.user.changeName.permission": "Você não tem permissão para alterar o nome do usuário \"{name}\"",
@@ -721,6 +724,7 @@
 	"preview": "Visualizar",
 	"preview.browser.pin": "Toggle whether preview navigation should be in sync or independent",
 	"preview.browser.scroll": "Sincronizar scroll",
+
 	"progress": "Progress",
 
 	"protected": "Protegida",

@@ -9,8 +9,11 @@
 	"alpha": "Gagnsæi",
 	"author": "Höfundur",
 	"avatar": "Prófíl mynd",
+
 	"back": "Til baka",
+
 	"buttons.empty": "No buttons",
+
 	"cancel": "Hætta við",
 	"change": "Breyta",
 	"close": "Loka",
@@ -132,8 +135,8 @@
 	"error.file.changeTemplate": "The template for the file \"{id}\" cannot be changed",
 	"error.file.changeTemplate.invalid": "Sniðmátinu fyrir skránna \"{id}\" er ekki hægt að breyta í  \"{template}\" (gild: \"{blueprints}\")",
 	"error.file.changeTemplate.permission": "Þú mátt ekkert breyta sniðmátinu fyrir skránna \"{id}\"",
-	"error.file.create.permission": "The file cannot be created",
 
+	"error.file.create.permission": "The file cannot be created",
 	"error.file.delete.multiple": "Ekki var unnt að eyða öllum skrám. Reyndu að eyða hverri og einni til þess að sjá hvort þessi villa hindri eyðingu.",
 	"error.file.delete.permission": "The file cannot be deleted",
 	"error.file.duplicate": "Skrá með nafninu \"{filename}\" er nú þegar til",
@@ -197,9 +200,9 @@
 	"error.object.validation": "Það er villa í \"{label}\" sviðinu:\n{message}",
 
 	"error.offline": "Stjórnborðið er óvirkt eins og stendur.",
+
 	"error.page.changeSlug.errorPage": "The slug of the error page cannot be changed",
 	"error.page.changeSlug.homePage": "The slug of the home page cannot be changed",
-
 	"error.page.changeSlug.permission": "Þú hefur ekkert leyfi til þess að breyta slóðarviðskeytinu fyrir  \"{slug}\"",
 	"error.page.changeSlug.reserved": "Slóð síðna í rótinni verður að byrja með \"{path}\"",
 	"error.page.changeStatus.errorPage": "The status of the error page cannot be changed",
@@ -258,10 +261,10 @@
 	"error.template.default.notFound": "Ekkert sjálfgefið sniðmát fannst",
 
 	"error.unexpected": "Það átti sér stað óvænt villa. Notaðu lúsarleitarhaminn (e. debug mode) til að skilja þetta betur. \nFyrir nánari upplýsingar: https://getkirby.com/docs/reference/system/options/debug",
+
 	"error.user.avatar.duplicate": "The avatar already exists",
 	"error.user.avatar.notFound": "The avatar does not exist",
 	"error.user.changeEmail.admin": "You are not allowed to change the email address of an admin",
-
 	"error.user.changeEmail.permission": "Þú mátt ekkert breyta netfangi notandans \"{name}\"",
 	"error.user.changeLanguage.permission": "Þú hefur ekki leyfi til að breyta tungumáli notandans \"{name}\"",
 	"error.user.changeName.permission": "Þú mátt alls ekki breyta nafni notandans \"{name}\"",
@@ -721,6 +724,7 @@
 	"preview": "Forskoða",
 	"preview.browser.pin": "Toggle whether preview navigation should be in sync or independent",
 	"preview.browser.scroll": "Skruna í takt",
+
 	"progress": "Progress",
 
 	"protected": "Protected",

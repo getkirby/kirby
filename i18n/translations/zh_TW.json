@@ -9,8 +9,11 @@
 	"alpha": "字母順序",
 	"author": "作者",
 	"avatar": "\u4f7f\u7528\u8005\u7167\u7247",
+
 	"back": "返回",
+
 	"buttons.empty": "No buttons",
+
 	"cancel": "\u53d6\u6d88",
 	"change": "\u8b8a\u66f4",
 	"close": "\u95dc\u9589",
@@ -132,8 +135,8 @@
 	"error.file.changeTemplate": "The template for the file \"{id}\" cannot be changed",
 	"error.file.changeTemplate.invalid": "檔案「{id}」的樣板無法變更為「{template}」（有效：「{blueprints}」）。",
 	"error.file.changeTemplate.permission": "你沒有變更「{id}」樣板的權限",
-	"error.file.create.permission": "The file cannot be created",
 
+	"error.file.create.permission": "The file cannot be created",
 	"error.file.delete.multiple": "刪除多個檔案時發生錯誤",
 	"error.file.delete.permission": "The file cannot be deleted",
 	"error.file.duplicate": "檔案「{filename}」重複",
@@ -197,9 +200,9 @@
 	"error.object.validation": "欄位「{label}」有錯誤：\n{message}",
 
 	"error.offline": "系統目前離線，請稍後再試",
+
 	"error.page.changeSlug.errorPage": "The slug of the error page cannot be changed",
 	"error.page.changeSlug.homePage": "The slug of the home page cannot be changed",
-
 	"error.page.changeSlug.permission": "\u7121\u6cd5\u66f4\u6539\u9801\u9762 URL",
 	"error.page.changeSlug.reserved": "頂層頁面的路徑不得以「{path}」作為開頭",
 	"error.page.changeStatus.errorPage": "The status of the error page cannot be changed",
@@ -258,10 +261,10 @@
 	"error.template.default.notFound": "找不到預設樣板",
 
 	"error.unexpected": "發生未預期的錯誤！如需更多資訊，請啟用除錯模式：https://getkirby.com/docs/reference/system/options/debug",
+
 	"error.user.avatar.duplicate": "The avatar already exists",
 	"error.user.avatar.notFound": "The avatar does not exist",
 	"error.user.changeEmail.admin": "You are not allowed to change the email address of an admin",
-
 	"error.user.changeEmail.permission": "你沒有變更使用者「{name}」電子郵件的權限",
 	"error.user.changeLanguage.permission": "你沒有變更使用者「{name}」語言的權限",
 	"error.user.changeName.permission": "你沒有變更使用者「{name}」名稱的權限",
@@ -608,15 +611,15 @@
 	"login.email.password-reset.subject": "您的 Kirby 密碼重設連結",
 	"login.method.code.label": "Login via code",
 	"login.method.code.description": "Login via code lets you sign in without a password. You complete a short verification challenge, e.g. receiving a one-time code via an email or from your authenticator app, and enter it to finish logging in. The code expires quickly and can only be used once, making it a secure login method.",
-	"login.method.password.label": "Login with password",
-	"login.method.password-reset.label": "Forgot your password?",
+	"login.method.password.label": "使用電子信箱與密碼登入",
+	"login.method.password-reset.label": "忘記密碼？使用電子信箱重設",
 	"login.method.password-reset.submit": "Forgot password",
 	"login.method.webauthn.label": "Login with passkey",
 	"login.methods.label": "Sign in methods",
 	"login.or": "or",
 	"login.remember": "記住我",
 	"login.reset": "重設密碼",
-	"login.totp.description": "Authenticator apps can generate one‑time codes that are used as a second factor when signing into your account.",
+	"login.totp.description": "增加帳號安全性，需使用驗證器應用程式",
 	"login.totp.enable.qr.label": "1. 掃描這個 QR 碼",
 	"login.totp.enable.qr.help": "無法掃描嗎？請將設定金鑰 {secret} 手動加入你的驗證器 App。",
 	"login.totp.enable.confirm.headline": "2. 使用產生的驗證碼進行確認",
@@ -721,6 +724,7 @@
 	"preview": "預覽",
 	"preview.browser.pin": "Toggle whether preview navigation should be in sync or independent",
 	"preview.browser.scroll": "Sync scroll",
+
 	"progress": "Progress",
 
 	"protected": "Protected",
@@ -891,7 +895,7 @@
 	"version.form": "Live editor",
 	"version.latest": "最新版本",
 	"versionInformation": "版本資訊",
-	"video": "Video",
+	"video": "影片",
 
 	"view": "檢視",
 	"view.account": "\u60a8\u7684\u5e33\u865f",

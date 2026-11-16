@@ -9,8 +9,11 @@
 	"alpha": "Alpha",
 	"author": "Autorius",
 	"avatar": "Profilio nuotrauka",
+
 	"back": "Atgal",
+
 	"buttons.empty": "No buttons",
+
 	"cancel": "Atšaukti",
 	"change": "Keisti",
 	"close": "Uždaryti",
@@ -76,7 +79,7 @@
 
 	"environment": "Aplinka",
 
-	"error": "Error",
+	"error": "Klaida",
 	"error.access.code": "Neteisinas kodas",
 	"error.access.login": "Neteisingas prisijungimo vardas",
 	"error.access.panel": "Neturite teisės prisijungti prie valdymo pulto",
@@ -132,8 +135,8 @@
 	"error.file.changeTemplate": "The template for the file \"{id}\" cannot be changed",
 	"error.file.changeTemplate.invalid": "The template for the file \"{id}\" cannot be changed to \"{template}\" (valid: \"{blueprints}\")",
 	"error.file.changeTemplate.permission": "You are not allowed to change the template for the file \"{id}\"",
-	"error.file.create.permission": "The file cannot be created",
 
+	"error.file.create.permission": "The file cannot be created",
 	"error.file.delete.multiple": "Not all files could be deleted. Try each remaining file individually to see the specific error that prevents deletion.",
 	"error.file.delete.permission": "The file cannot be deleted",
 	"error.file.duplicate": "Failas su pavadinimu \"{filename}\" jau yra",
@@ -197,9 +200,9 @@
 	"error.object.validation": "There’s an error in the \"{label}\" field:\n{message}",
 
 	"error.offline": "Valdymo pultas dabar yra offline",
+
 	"error.page.changeSlug.errorPage": "The slug of the error page cannot be changed",
 	"error.page.changeSlug.homePage": "The slug of the home page cannot be changed",
-
 	"error.page.changeSlug.permission": "Neturite teisės pakeisti \"{slug}\" URL",
 	"error.page.changeSlug.reserved": "The path of top-level pages must not start with \"{path}\"",
 	"error.page.changeStatus.errorPage": "The status of the error page cannot be changed",
@@ -258,10 +261,10 @@
 	"error.template.default.notFound": "Nėra šablono pagal nutylėjimą",
 
 	"error.unexpected": "An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug",
+
 	"error.user.avatar.duplicate": "The avatar already exists",
 	"error.user.avatar.notFound": "The avatar does not exist",
 	"error.user.changeEmail.admin": "You are not allowed to change the email address of an admin",
-
 	"error.user.changeEmail.permission": "Neturite leidimo keisti vartotojo \"{name}\" el. paštą",
 	"error.user.changeLanguage.permission": "Neturite leidimo keisti vartotojo \"{name}\" kalbą",
 	"error.user.changeName.permission": "Neturite leidimo keisti vartotojo \"{name}\" vardą",
@@ -608,15 +611,15 @@
 	"login.email.password-reset.subject": "Jūsų slaptažodžio atstatymo kodas ",
 	"login.method.code.label": "Login via code",
 	"login.method.code.description": "Login via code lets you sign in without a password. You complete a short verification challenge, e.g. receiving a one-time code via an email or from your authenticator app, and enter it to finish logging in. The code expires quickly and can only be used once, making it a secure login method.",
-	"login.method.password.label": "Login with password",
-	"login.method.password-reset.label": "Forgot your password?",
+	"login.method.password.label": "Prisijungti su slaptažodžiu",
+	"login.method.password-reset.label": "Pamiršote slaptažodį?",
 	"login.method.password-reset.submit": "Forgot password",
 	"login.method.webauthn.label": "Login with passkey",
 	"login.methods.label": "Sign in methods",
 	"login.or": "or",
 	"login.remember": "Likti prisijungus",
 	"login.reset": "Sukurti naują slaptažodį",
-	"login.totp.description": "Authenticator apps can generate one‑time codes that are used as a second factor when signing into your account.",
+	"login.totp.description": "Autentifikavimo programėlės gali generuoti vienkartinius kodus, kurie bus naudojami kaip 2-factor prisijungiant prie svetainės.",
 	"login.totp.enable.qr.label": "1. Nuskenuokite šį QR kodą",
 	"login.totp.enable.qr.help": "Negalite nuskenuoti? Pridėkite raktą <code>{secret}</code> rankiniu būdu į savo autentifikavimo programėlę.",
 	"login.totp.enable.confirm.headline": "2. Patvirtinti su sugeneruotu kodu",
@@ -721,6 +724,7 @@
 	"preview": "Peržiūra",
 	"preview.browser.pin": "Toggle whether preview navigation should be in sync or independent",
 	"preview.browser.scroll": "Sync scroll",
+
 	"progress": "Progress",
 
 	"protected": "Protected",
@@ -895,7 +899,7 @@
 
 	"view": "View",
 	"view.account": "Jūsų paskyra",
-	"view.installation": "Installation",
+	"view.installation": "Įdiegimas",
 	"view.languages": "Kalbos",
 	"view.resetPassword": "Sukurti naują slaptažodį",
 	"view.site": "Svetainė",

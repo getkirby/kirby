@@ -9,8 +9,11 @@
 	"alpha": "آلفا",
 	"author": "مؤلف",
 	"avatar": "تصویر پروفایل",
+
 	"back": "بازگشت",
+
 	"buttons.empty": "No buttons",
+
 	"cancel": "انصراف",
 	"change": "تغییر",
 	"close": "بستن",
@@ -132,8 +135,8 @@
 	"error.file.changeTemplate": "The template for the file \"{id}\" cannot be changed",
 	"error.file.changeTemplate.invalid": "نمی‌توان الگوی فایل «{id}» را به «{template}» تغییر داد (الگوهای معتبر: «{blueprints}»)",
 	"error.file.changeTemplate.permission": "شما اجازه تغییر الگوی فایل «{id}» را ندارید",
-	"error.file.create.permission": "The file cannot be created",
 
+	"error.file.create.permission": "The file cannot be created",
 	"error.file.delete.multiple": "امکان حذف همه فایل‌ها وجود نداشت. برای مشاهده علت دقیق خطا، هر یک از فایل‌های باقی‌مانده را جداگانه حذف کنید.",
 	"error.file.delete.permission": "The file cannot be deleted",
 	"error.file.duplicate": "فایلی با نام «{filename}» از قبل وجود دارد",
@@ -197,9 +200,9 @@
 	"error.object.validation": "در فیلد «{label}» خطایی وجود دارد:\n{message}",
 
 	"error.offline": "پنل مدیریت در حال حاضر آفلاین است",
+
 	"error.page.changeSlug.errorPage": "The slug of the error page cannot be changed",
 	"error.page.changeSlug.homePage": "The slug of the home page cannot be changed",
-
 	"error.page.changeSlug.permission": "شما اجازه تغییر بخش پایانی نشانی اینترنتی «{slug}» را ندارید",
 	"error.page.changeSlug.reserved": "مسیر صفحات سطح بالا نباید با «{path}» شروع شود",
 	"error.page.changeStatus.errorPage": "The status of the error page cannot be changed",
@@ -258,10 +261,10 @@
 	"error.template.default.notFound": "الگوی پیش‌فرض وجود ندارد",
 
 	"error.unexpected": "خطای غیرمنتظره‌ای رخ داده است! برای اطلاعات بیشتر، حالت اشکال‌زدایی را فعال کنید: https://getkirby.com/docs/reference/system/options/debug",
+
 	"error.user.avatar.duplicate": "The avatar already exists",
 	"error.user.avatar.notFound": "The avatar does not exist",
 	"error.user.changeEmail.admin": "You are not allowed to change the email address of an admin",
-
 	"error.user.changeEmail.permission": "شما اجازه تغییر ایمیل کاربر «{name}» را ندارید",
 	"error.user.changeLanguage.permission": "شما اجازه تغییر زبان کاربر «{name}» را ندارید",
 	"error.user.changeName.permission": "شما اجازه تغییر نام کاربر «{name}» را ندارید",
@@ -721,6 +724,7 @@
 	"preview": "پیش‌نمایش",
 	"preview.browser.pin": "Toggle whether preview navigation should be in sync or independent",
 	"preview.browser.scroll": "همگام‌سازی پیمایش",
+
 	"progress": "Progress",
 
 	"protected": "محافظت‌شده",

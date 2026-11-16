@@ -9,8 +9,11 @@
 	"alpha": "Alpha",
 	"author": "Auteur",
 	"avatar": "Avatar",
+
 	"back": "Terug",
+
 	"buttons.empty": "No buttons",
+
 	"cancel": "Annuleren",
 	"change": "Wijzigen",
 	"close": "Sluiten",
@@ -132,8 +135,8 @@
 	"error.file.changeTemplate": "The template for the file \"{id}\" cannot be changed",
 	"error.file.changeTemplate.invalid": "Het template voor het bestand \"{id}\" kan niet worden gewijzigd in \"{template}\" (geldig: \"{blueprints}\")",
 	"error.file.changeTemplate.permission": "Je hebt geen rechten om het template te wijzigen voor bestand \"{id}\"",
-	"error.file.create.permission": "The file cannot be created",
 
+	"error.file.create.permission": "The file cannot be created",
 	"error.file.delete.multiple": "Niet alle bestanden kunnen worden verwijderd. Probeer de overgebleven bestanden individueel te verwijderen om het probleem te achterhalen.",
 	"error.file.delete.permission": "The file cannot be deleted",
 	"error.file.duplicate": "Er bestaat al een bestand met de naam \"{filename}\"",
@@ -197,9 +200,9 @@
 	"error.object.validation": "Er is een fout opgetreden in het veld \"{label}\":\n{message}",
 
 	"error.offline": "Het Panel is momenteel offline",
+
 	"error.page.changeSlug.errorPage": "The slug of the error page cannot be changed",
 	"error.page.changeSlug.homePage": "The slug of the home page cannot be changed",
-
 	"error.page.changeSlug.permission": "Je kunt de URL van deze pagina niet wijzigen",
 	"error.page.changeSlug.reserved": "Het pad van hoofdpagina's mogen niet beginnen met \"{path}\".",
 	"error.page.changeStatus.errorPage": "The status of the error page cannot be changed",
@@ -258,10 +261,10 @@
 	"error.template.default.notFound": "Het standaard template bestaat niet",
 
 	"error.unexpected": "Een onverwacht fout heeft plaats gevonden! Schakel debug-modus in voor meer informatie: https://getkirby.com/docs/reference/system/options/debug",
+
 	"error.user.avatar.duplicate": "The avatar already exists",
 	"error.user.avatar.notFound": "The avatar does not exist",
 	"error.user.changeEmail.admin": "You are not allowed to change the email address of an admin",
-
 	"error.user.changeEmail.permission": "Je hebt geen rechten om het e-mailadres van gebruiker \"{name}\" te wijzigen",
 	"error.user.changeLanguage.permission": "Je hebt geen rechten om de taal voor gebruiker \"{name}\" te wijzigen",
 	"error.user.changeName.permission": "Je hebt geen rechten om de naam van gebruiker \"{name}\" te wijzigen",
@@ -721,6 +724,7 @@
 	"preview": "Voorbeeld",
 	"preview.browser.pin": "Toggle whether preview navigation should be in sync or independent",
 	"preview.browser.scroll": "Synchroniseer scroll",
+
 	"progress": "Progress",
 
 	"protected": "Protected",

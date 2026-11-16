@@ -9,8 +9,11 @@
 	"alpha": "Alpha",
 	"author": "Auteur",
 	"avatar": "Image de profil",
+
 	"back": "Retour",
+
 	"buttons.empty": "No buttons",
+
 	"cancel": "Annuler",
 	"change": "Changer",
 	"close": "Fermer",
@@ -132,8 +135,8 @@
 	"error.file.changeTemplate": "The template for the file \"{id}\" cannot be changed",
 	"error.file.changeTemplate.invalid": "Le modèle du fichier « {id} » ne peut être modifié en « {template} » (valide : « {blueprints} »)",
 	"error.file.changeTemplate.permission": "Vous n’êtes pas autorisé à changer le modèle du fichier « {id} »",
-	"error.file.create.permission": "The file cannot be created",
 
+	"error.file.create.permission": "The file cannot be created",
 	"error.file.delete.multiple": "Tous les fichiers n’ont pu être supprimés. Essayez avec chaque fichier restant individuellement pour voir quelle erreur empêche sa suppression.",
 	"error.file.delete.permission": "The file cannot be deleted",
 	"error.file.duplicate": "Un fichier nommé « {filename} » existe déjà",
@@ -197,9 +200,9 @@
 	"error.object.validation": "Il y a une erreur dans le champ « {label} » :\n{message}",
 
 	"error.offline": "Le Panel est actuellement hors ligne",
+
 	"error.page.changeSlug.errorPage": "The slug of the error page cannot be changed",
 	"error.page.changeSlug.homePage": "The slug of the home page cannot be changed",
-
 	"error.page.changeSlug.permission": "Vous n’êtes pas autorisé à modifier l’identifiant d’URL pour « {slug} »",
 	"error.page.changeSlug.reserved": "Le chemin des pages de premier niveau ne doit pas commencer par « {path} »",
 	"error.page.changeStatus.errorPage": "The status of the error page cannot be changed",
@@ -258,10 +261,10 @@
 	"error.template.default.notFound": "Le modèle par défaut n’existe pas",
 
 	"error.unexpected": "Une erreur inattendue est survenue ! Activez le mode de débogage pour plus d’informations : https://getkirby.com/docs/reference/system/options/debug",
+
 	"error.user.avatar.duplicate": "The avatar already exists",
 	"error.user.avatar.notFound": "The avatar does not exist",
 	"error.user.changeEmail.admin": "You are not allowed to change the email address of an admin",
-
 	"error.user.changeEmail.permission": "Vous n’êtes pas autorisé à modifier le courriel de l’utilisateur « {name} »",
 	"error.user.changeLanguage.permission": "Vous n’êtes pas autorisé à changer la langue de l’utilisateur « {name} »",
 	"error.user.changeName.permission": "Vous n’êtes pas autorisé à modifier le nom de l’utilisateur « {name} »",
@@ -721,6 +724,7 @@
 	"preview": "Prévisualiser",
 	"preview.browser.pin": "Toggle whether preview navigation should be in sync or independent",
 	"preview.browser.scroll": "Synchroniser le défilement",
+
 	"progress": "Progress",
 
 	"protected": "Protégé",

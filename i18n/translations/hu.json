@@ -9,8 +9,11 @@
 	"alpha": "Alpha",
 	"author": "Szerző",
 	"avatar": "Profilkép",
+
 	"back": "Vissza",
+
 	"buttons.empty": "No buttons",
+
 	"cancel": "M\u00e9gsem",
 	"change": "M\u00f3dos\u00edt\u00e1s",
 	"close": "Bez\u00e1r",
@@ -132,8 +135,8 @@
 	"error.file.changeTemplate": "The template for the file \"{id}\" cannot be changed",
 	"error.file.changeTemplate.invalid": "The template for the file \"{id}\" cannot be changed to \"{template}\" (valid: \"{blueprints}\")",
 	"error.file.changeTemplate.permission": "You are not allowed to change the template for the file \"{id}\"",
-	"error.file.create.permission": "The file cannot be created",
 
+	"error.file.create.permission": "The file cannot be created",
 	"error.file.delete.multiple": "Not all files could be deleted. Try each remaining file individually to see the specific error that prevents deletion.",
 	"error.file.delete.permission": "The file cannot be deleted",
 	"error.file.duplicate": "Már létezik \"{filename}\" nevű fájl",
@@ -197,9 +200,9 @@
 	"error.object.validation": "There’s an error in the \"{label}\" field:\n{message}",
 
 	"error.offline": "A Panel jelenleg nem elérhető",
+
 	"error.page.changeSlug.errorPage": "The slug of the error page cannot be changed",
 	"error.page.changeSlug.homePage": "The slug of the home page cannot be changed",
-
 	"error.page.changeSlug.permission": "Nem változtathatod meg az URL-előtagot: \"{slug}\"",
 	"error.page.changeSlug.reserved": "The path of top-level pages must not start with \"{path}\"",
 	"error.page.changeStatus.errorPage": "The status of the error page cannot be changed",
@@ -258,10 +261,10 @@
 	"error.template.default.notFound": "Az alapértelmezett sablon nem létezik",
 
 	"error.unexpected": "Váratlan hiba történt! További információért engedélyezd a hibakeresés módot: https://getkirby.com/docs/reference/system/options/debug",
+
 	"error.user.avatar.duplicate": "The avatar already exists",
 	"error.user.avatar.notFound": "The avatar does not exist",
 	"error.user.changeEmail.admin": "You are not allowed to change the email address of an admin",
-
 	"error.user.changeEmail.permission": "Nincs jogosultságod megváltoztatni \"{name}\" felhasználó email-címét",
 	"error.user.changeLanguage.permission": "Nincs jogosultságod megváltoztatni \"{name}\" felhasználó nyelvi beállításait",
 	"error.user.changeName.permission": "Nincs jogosultságod megváltoztatni \"{name}\" felhasználó nevét",
@@ -608,8 +611,8 @@
 	"login.email.password-reset.subject": "Jelszóvisszaállítási kódod",
 	"login.method.code.label": "Login via code",
 	"login.method.code.description": "Login via code lets you sign in without a password. You complete a short verification challenge, e.g. receiving a one-time code via an email or from your authenticator app, and enter it to finish logging in. The code expires quickly and can only be used once, making it a secure login method.",
-	"login.method.password.label": "Login with password",
-	"login.method.password-reset.label": "Forgot your password?",
+	"login.method.password.label": "Bejelentkezés jelszóval",
+	"login.method.password-reset.label": "Elfelejtetted a jelszavad?",
 	"login.method.password-reset.submit": "Forgot password",
 	"login.method.webauthn.label": "Login with passkey",
 	"login.methods.label": "Sign in methods",
@@ -721,6 +724,7 @@
 	"preview": "Előnézet",
 	"preview.browser.pin": "Toggle whether preview navigation should be in sync or independent",
 	"preview.browser.scroll": "Sync scroll",
+
 	"progress": "Progress",
 
 	"protected": "Protected",
@@ -891,7 +895,7 @@
 	"version.form": "Live editor",
 	"version.latest": "Latest version",
 	"versionInformation": "Version information",
-	"video": "Video",
+	"video": "Videó",
 
 	"view": "View",
 	"view.account": "Fi\u00f3kod",

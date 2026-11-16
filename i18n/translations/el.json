@@ -9,8 +9,11 @@
 	"alpha": "Alpha",
 	"author": "Author",
 	"avatar": "\u0395\u03b9\u03ba\u03cc\u03bd\u03b1 \u03c0\u03c1\u03bf\u03c6\u03af\u03bb",
+
 	"back": "Πίσω",
+
 	"buttons.empty": "No buttons",
+
 	"cancel": "\u0391\u03ba\u03cd\u03c1\u03c9\u03c3\u03b7",
 	"change": "\u0391\u03bb\u03bb\u03b1\u03b3\u03ae",
 	"close": "\u039a\u03bb\u03b5\u03af\u03c3\u03b9\u03bc\u03bf",
@@ -76,7 +79,7 @@
 
 	"environment": "Environment",
 
-	"error": "Error",
+	"error": "Σφάλμα",
 	"error.access.code": "Mη έγκυρος κωδικός",
 	"error.access.login": "Mη έγκυρη σύνδεση",
 	"error.access.panel": "Δεν επιτρέπεται η πρόσβαση στον πίνακα ελέγχου",
@@ -132,8 +135,8 @@
 	"error.file.changeTemplate": "The template for the file \"{id}\" cannot be changed",
 	"error.file.changeTemplate.invalid": "The template for the file \"{id}\" cannot be changed to \"{template}\" (valid: \"{blueprints}\")",
 	"error.file.changeTemplate.permission": "You are not allowed to change the template for the file \"{id}\"",
-	"error.file.create.permission": "The file cannot be created",
 
+	"error.file.create.permission": "The file cannot be created",
 	"error.file.delete.multiple": "Not all files could be deleted. Try each remaining file individually to see the specific error that prevents deletion.",
 	"error.file.delete.permission": "The file cannot be deleted",
 	"error.file.duplicate": "Ένα αρχείο με το όνομα \"{filename}\" υπάρχει ήδη",
@@ -197,9 +200,9 @@
 	"error.object.validation": "There’s an error in the \"{label}\" field:\n{message}",
 
 	"error.offline": "The Panel is currently offline",
+
 	"error.page.changeSlug.errorPage": "The slug of the error page cannot be changed",
 	"error.page.changeSlug.homePage": "The slug of the home page cannot be changed",
-
 	"error.page.changeSlug.permission": "Δεν επιτρέπεται να αλλάξετε το URL της σελίδας \"{slug}\"",
 	"error.page.changeSlug.reserved": "The path of top-level pages must not start with \"{path}\"",
 	"error.page.changeStatus.errorPage": "The status of the error page cannot be changed",
@@ -258,10 +261,10 @@
 	"error.template.default.notFound": "Το προεπιλεγμένο πρότυπο δεν υπάρχει",
 
 	"error.unexpected": "An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug",
+
 	"error.user.avatar.duplicate": "The avatar already exists",
 	"error.user.avatar.notFound": "The avatar does not exist",
 	"error.user.changeEmail.admin": "You are not allowed to change the email address of an admin",
-
 	"error.user.changeEmail.permission": "Δεν επιτρέπεται να αλλάξετε τη διεύθινση ηλεκτρονικού ταχυδρομείου για τον χρήστη \"{name}\"",
 	"error.user.changeLanguage.permission": "Δεν επιτρέπεται να αλλάξετε τη γλώσσα για τον χρήστη \"{name}\"",
 	"error.user.changeName.permission": "Δεν επιτρέπεται να αλλάξετε το όνομα του χρήστη \"{name}",
@@ -531,7 +534,7 @@
 
 	"license": "\u0386\u03b4\u03b5\u03b9\u03b1 \u03a7\u03c1\u03ae\u03c3\u03b7\u03c2 \u03c4\u03bf\u03c5 Kirby",
 	"license.activate": "Activate it now",
-	"license.activate.label": "Installation",
+	"license.activate.label": "Εγκατάσταση",
 	"license.activate.domain": "Your license will be activated for <strong>{host}</strong>.",
 	"license.activate.local": "You are about to activate your Kirby license for your local domain <strong>{host}</strong>. If this site will be deployed to a public domain and this is a copy for local development, please activate it as development installation.",
 	"license.activate.public": "You are about to activate a free development license for your public domain <strong>{host}</strong>. You must ensure that your installation is in a private network or password protected. We may verify that development installations remain protected.",
@@ -674,7 +677,7 @@
 	"orientation.portrait": "Κάθετος",
 	"orientation.square": "Τετράγωνος",
 
-	"page": "Page",
+	"page": "Σελίδα",
 	"page.blueprint": "This page has no blueprint yet. You can define the setup in <strong>/site/blueprints/pages/{blueprint}.yml</strong>",
 	"page.changeSlug": "\u0391\u03bb\u03bb\u03b1\u03b3\u03ae URL",
 	"page.changeSlug.fromTitle": "\u0394\u03b7\u03bc\u03b9\u03bf\u03c5\u03c1\u03b3\u03af\u03b1 \u03b1\u03c0\u03cc \u03c4\u03bf\u03bd \u03c4\u03af\u03c4\u03bb\u03bf",
@@ -721,6 +724,7 @@
 	"preview": "Preview",
 	"preview.browser.pin": "Toggle whether preview navigation should be in sync or independent",
 	"preview.browser.scroll": "Sync scroll",
+
 	"progress": "Progress",
 
 	"protected": "Protected",
@@ -811,7 +815,7 @@
 	"toolbar.button.clear": "Clear formatting",
 	"toolbar.button.code": "Κώδικας",
 	"toolbar.button.bold": "\u0388\u03bd\u03c4\u03bf\u03bd\u03b7 \u03b3\u03c1\u03b1\u03c6\u03ae",
-	"toolbar.button.email": "Email",
+	"toolbar.button.email": "Διεύθυνση ηλεκτρονικού ταχυδρομείου",
 	"toolbar.button.headings": "Επικεφαλίδες",
 	"toolbar.button.heading.1": "Επικεφαλίδα 1",
 	"toolbar.button.heading.2": "Επικεφαλίδα 2",

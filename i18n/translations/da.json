@@ -9,8 +9,11 @@
 	"alpha": "Alpha",
 	"author": "Forfatter",
 	"avatar": "Profilbillede",
+
 	"back": "Tilbage",
+
 	"buttons.empty": "No buttons",
+
 	"cancel": "Annuller",
 	"change": "\u00c6ndre",
 	"close": "Luk",
@@ -132,8 +135,8 @@
 	"error.file.changeTemplate": "The template for the file \"{id}\" cannot be changed",
 	"error.file.changeTemplate.invalid": "The template for the file \"{id}\" cannot be changed to \"{template}\" (valid: \"{blueprints}\")",
 	"error.file.changeTemplate.permission": "You are not allowed to change the template for the file \"{id}\"",
-	"error.file.create.permission": "The file cannot be created",
 
+	"error.file.create.permission": "The file cannot be created",
 	"error.file.delete.multiple": "Not all files could be deleted. Try each remaining file individually to see the specific error that prevents deletion.",
 	"error.file.delete.permission": "The file cannot be deleted",
 	"error.file.duplicate": "En fil med navnet \"{filename}\" eksisterer allerede",
@@ -197,9 +200,9 @@
 	"error.object.validation": "There’s an error in the \"{label}\" field:\n{message}",
 
 	"error.offline": "Panelet er i øjeblikket offline",
+
 	"error.page.changeSlug.errorPage": "The slug of the error page cannot be changed",
 	"error.page.changeSlug.homePage": "The slug of the home page cannot be changed",
-
 	"error.page.changeSlug.permission": "Du kan ikke ændre URL-endelse for \"{slug}\"",
 	"error.page.changeSlug.reserved": "The path of top-level pages must not start with \"{path}\"",
 	"error.page.changeStatus.errorPage": "The status of the error page cannot be changed",
@@ -258,10 +261,10 @@
 	"error.template.default.notFound": "Standardskabelonen eksisterer ikke",
 
 	"error.unexpected": "En uventet fejl opstod! Aktiver debug mode for mere info: https://getkirby.com/docs/reference/system/options/debug",
+
 	"error.user.avatar.duplicate": "The avatar already exists",
 	"error.user.avatar.notFound": "The avatar does not exist",
 	"error.user.changeEmail.admin": "You are not allowed to change the email address of an admin",
-
 	"error.user.changeEmail.permission": "Du har ikke tilladelse til at ændre emailen for brugeren \"{name}\"",
 	"error.user.changeLanguage.permission": "Du har ikke tilladelse til at ændre sproget for brugeren \"{name}\"",
 	"error.user.changeName.permission": "Du har ikke tilladelse til at ændre navn på brugeren \"{name}\"",
@@ -450,7 +453,7 @@
 
 	"fields.empty": "No fields yet",
 
-	"file": "File",
+	"file": "Fil",
 	"file.blueprint": "Denne fil har intet blueprint endnu. Du kan definere opsætningen i <strong>/site/blueprints/files/{blueprint}.yml</strong>",
 	"file.changeTemplate": "Skift skabelon",
 	"file.changeTemplate.notice": "Changing the file's template will remove content for fields that don't match in type. If the new template defines certain rules, e.g. image dimensions, those will also be applied irreversibly. Use with caution.",
@@ -608,8 +611,8 @@
 	"login.email.password-reset.subject": "Din kode til nulstilling af adgangskode",
 	"login.method.code.label": "Login via code",
 	"login.method.code.description": "Login via code lets you sign in without a password. You complete a short verification challenge, e.g. receiving a one-time code via an email or from your authenticator app, and enter it to finish logging in. The code expires quickly and can only be used once, making it a secure login method.",
-	"login.method.password.label": "Login with password",
-	"login.method.password-reset.label": "Forgot your password?",
+	"login.method.password.label": "Log ind med adgangskode",
+	"login.method.password-reset.label": "Glemt din adgangskode?",
 	"login.method.password-reset.submit": "Forgot password",
 	"login.method.webauthn.label": "Login with passkey",
 	"login.methods.label": "Sign in methods",
@@ -674,7 +677,7 @@
 	"orientation.portrait": "Portræt",
 	"orientation.square": "Kvadrat",
 
-	"page": "Page",
+	"page": "Side",
 	"page.blueprint": "Denne side har intet blueprint endnu. Du kan definere opsætningen i <strong>/site/blueprints/pages/{blueprint}.yml</strong>",
 	"page.changeSlug": "\u00c6ndre URL",
 	"page.changeSlug.fromTitle": "Generer udfra titel",
@@ -721,6 +724,7 @@
 	"preview": "Forhåndsvisning",
 	"preview.browser.pin": "Toggle whether preview navigation should be in sync or independent",
 	"preview.browser.scroll": "Sync scroll",
+
 	"progress": "Progress",
 
 	"protected": "Protected",
