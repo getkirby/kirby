@@ -76,6 +76,12 @@ describe("k-checkboxes-field", () => {
 			expect(deselect.attributes("disabled")).toBe("false");
 			expect(select.attributes("disabled")).toBe("true");
 		});
+
+		it("counts values without option for select all", () => {
+			const wrapper = field({ batch: true, value: ["b"] });
+			const select = wrapper.find('k-button[icon="select-all"]');
+			expect(select.attributes("disabled")).toBe("false");
+		});
 	});
 
 	describe("options prop", () => {
@@ -90,6 +96,14 @@ describe("k-checkboxes-field", () => {
 			const wrapper = mount({ value: ["a", "b"] });
 			expect(wrapper.findComponent(Input).props("options")).toStrictEqual([
 				...options,
+				{ text: "[unknown]", value: "b" }
+			]);
+		});
+
+		it("renders the input for a value without options", () => {
+			const wrapper = mount({ options: [], value: ["b"] });
+			expect(wrapper.find("k-empty").exists()).toBe(false);
+			expect(wrapper.findComponent(Input).props("options")).toStrictEqual([
 				{ text: "[unknown]", value: "b" }
 			]);
 		});

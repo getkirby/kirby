@@ -24,7 +24,6 @@ class Fieldset extends Item
 
 	protected bool $disabled;
 	protected bool $editable;
-	protected array|null $fields = null;
 	protected string|null $icon;
 	protected string|null $label;
 	protected string $name;
@@ -76,13 +75,7 @@ class Fieldset extends Item
 	protected function createFields(array $fields = []): array
 	{
 		$this->registry ??= new FieldsRegistry();
-		$resolved         = $this->registry->add(Blueprint::fieldsProps($fields));
-		$fields           = $this->form($resolved)->fields()->toProps(defaults: true);
-
-		// collect all fields
-		$this->fields = [...$this->fields ?? [], ...$fields];
-
-		return $fields;
+		return $this->registry->add(Blueprint::fieldsProps($fields));
 	}
 
 	protected function createName(array|string $name): string|null
@@ -149,13 +142,19 @@ class Fieldset extends Item
 		return true;
 	}
 
+	/**
+	 * Returns the props of all fields as defined in the blueprint,
+	 * so that forms resolve options for their own values
+	 *
+	 * @return array<string|int, array>
+	 */
 	public function fields(): array
 	{
-		// the fields of all tabs are collected
+		// the fields of all tabs are registered
 		// while creating the tabs, so ensure they are
 		$this->tabs();
 
-		return $this->fields ??= [];
+		return $this->registry?->toArray() ?? [];
 	}
 
 	/**
@@ -218,6 +217,15 @@ class Fieldset extends Item
 
 	public function toArray(): array
 	{
+		// render the fields of each tab for the Panel
+		$tabs = array_map(
+			fn (array $tab): array => [
+				...$tab,
+				'fields' => $this->form($tab['fields'])->fields()->toProps(defaults: true)
+			],
+			$this->tabs()
+		);
+
 		return [
 			'disabled'  => $this->disabled(),
 			'editable'  => $this->editable(),
@@ -225,7 +233,7 @@ class Fieldset extends Item
 			'label'     => $this->label(),
 			'name'      => $this->name(),
 			'preview'   => $this->preview(),
-			'tabs'      => $this->tabs(),
+			'tabs'      => $tabs,
 			'translate' => $this->translate(),
 			'type'      => $this->type(),
 			'unset'     => $this->unset(),

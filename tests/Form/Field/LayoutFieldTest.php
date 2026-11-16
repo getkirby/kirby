@@ -530,6 +530,33 @@ class LayoutFieldTest extends TestCase
 		$this->assertSame('', $field->toStoredValue());
 	}
 
+	public function testToStoredValueWithProtectedOptions(): void
+	{
+		$app   = $this->appWithProtectedPages();
+		$field = $this->field('layout', [
+			'model'    => $app->site(),
+			'settings' => [
+				'fields' => [
+					'page' => [
+						'type'    => 'select',
+						'options' => 'site.children'
+					]
+				]
+			],
+			'value' => [
+				[
+					'attrs'   => ['page' => 'b'],
+					'columns' => []
+				]
+			]
+		]);
+
+		// the stored value of a page the user must not list is kept
+		$result = json_decode($field->toStoredValue(), true);
+		$this->assertSame(['page' => 'b'], $result[0]['attrs']);
+		$this->assertTrue($field->isValid());
+	}
+
 	public function testValidations(): void
 	{
 		$field = $this->field('layout', [
