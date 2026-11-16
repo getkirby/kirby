@@ -4,6 +4,7 @@ namespace Kirby\Form\Mixin;
 
 use Closure;
 use Kirby\Api\Api;
+use Kirby\Blueprint\FileBlueprint;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
@@ -21,10 +22,43 @@ use Kirby\Reflection\Attributes\Prop;
 trait Upload
 {
 	/**
-	 * Sets the upload options for linked files
+	 * Sets the upload options for linked files: a blueprint name or
+	 * `blueprint` and `parent` (`template` is an alias for `blueprint`)
 	 */
 	#[Prop(computed: true)]
 	protected mixed $uploads = null;
+
+	/**
+	 * Accepts files with the upload blueprint,
+	 * if the uploads go to the field's own model
+	 * (only used if the field implements `ProvidesAcceptedFileBlueprints`)
+	 *
+	 * @return list<string>
+	 * @since 6.0.0
+	 */
+	public function acceptedFileBlueprints(): array
+	{
+		try {
+			$uploads = $this->uploads();
+
+			if ($uploads === false) {
+				return [];
+			}
+
+			$parent = $this->uploadParent($uploads['parent'] ?? null);
+		} catch (InvalidArgumentException) {
+			// nothing can be uploaded to an unresolvable parent
+			return [];
+		}
+
+		$model = $this->model();
+
+		if ($parent::class !== $model::class || $parent->is($model) === false) {
+			return [];
+		}
+
+		return [$uploads['blueprint'] ?? 'default'];
+	}
 
 	/**
 	 * Uploads and creates files via the API upload handler
@@ -62,7 +96,7 @@ trait Upload
 
 				return $map($file, $parent);
 			},
-			template: $params['template'] ?? null
+			template: $params['blueprint'] ?? null
 		);
 	}
 
@@ -108,15 +142,19 @@ trait Upload
 		}
 
 		$uploads = match (true) {
-			is_string($uploads) => ['template' => $uploads],
+			is_string($uploads) => ['blueprint' => $uploads],
 			is_array($uploads)  => $uploads,
 			default             => []
 		};
 
+		// `template` is an alias for `blueprint`
+		$uploads['blueprint'] ??= $uploads['template'] ?? null;
+		unset($uploads['template']);
+
 		$uploads = [
-			'accept'   => '*',
-			'parent'   => null,
-			'template' => null,
+			'accept'    => '*',
+			'blueprint' => null,
+			'parent'    => null,
 			...$uploads
 		];
 
@@ -124,16 +162,14 @@ trait Upload
 			$uploads['preview'] = $this->image();
 		}
 
-		if ($template = $uploads['template']) {
-			$parent = $this->uploadParent($uploads['parent']);
+		$blueprint = $uploads['blueprint'];
 
-			$file = new File([
-				'filename' => 'tmp',
-				'parent'   => $parent,
-				'template' => $template
-			]);
-
-			$uploads['accept'] = $file->blueprint()->acceptAttribute();
+		if ($blueprint !== null && $blueprint !== '') {
+			$uploads['accept'] = FileBlueprint::factory(
+				$this->uploadParent($uploads['parent']),
+				'files/' . $blueprint,
+				'files/default'
+			)?->acceptAttribute();
 		}
 
 		return array_filter($uploads);

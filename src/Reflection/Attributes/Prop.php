@@ -15,7 +15,11 @@ use Attribute;
 #[Attribute(Attribute::TARGET_PROPERTY)]
 class Prop
 {
+	/**
+	 * @param list<string> $aliases Other names the prop can be set with
+	 */
 	public function __construct(
+		public array $aliases = [],
 		public bool $computed = false,
 		public mixed $default = null,
 		public bool|string $export = true,

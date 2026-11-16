@@ -22,12 +22,12 @@ class FileAbilitiesTest extends ModelTestCase
 				'pages/test' => [
 					'fields' => [
 						'list-a' => [
-							'type'     => 'filelist',
-							'template' => 'for-list/a'
+							'type'      => 'filelist',
+							'blueprint' => 'for-list/a'
 						],
 						'list-b' => [
-							'type'     => 'filelist',
-							'template' => 'for-list/b'
+							'type'      => 'filelist',
+							'blueprint' => 'for-list/b'
 						]
 					]
 				],

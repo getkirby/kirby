@@ -18,6 +18,7 @@ use Kirby\Cms\Users;
 class FilesCollector extends ModelsCollector
 {
 	public function __construct(
+		protected string|null $blueprint = null,
 		protected bool $flip = false,
 		protected int|null $limit = null,
 		protected int $page = 1,
@@ -25,7 +26,6 @@ class FilesCollector extends ModelsCollector
 		protected string|null $query = null,
 		protected string|null $search = null,
 		protected string|null $sortBy = null,
-		protected string|null $template = null,
 	) {
 	}
 
@@ -47,8 +47,8 @@ class FilesCollector extends ModelsCollector
 				return false;
 			}
 
-			// filter by template
-			if ($this->template !== null && $file->template() !== $this->template) {
+			// filter by blueprint
+			if ($this->blueprint !== null && $file->template() !== $this->blueprint) {
 				return false;
 			}
 

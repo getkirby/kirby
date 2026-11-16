@@ -50,6 +50,22 @@ class BlueprintTest extends TestCase
 		$this->assertInstanceOf(AcceptRules::class, $blueprint->acceptRules());
 	}
 
+	public function testAcceptedFileTemplates(): void
+	{
+		$blueprint = new Blueprint([
+			'model'  => $this->model,
+			'fields' => [
+				'text' => [
+					'type'    => 'textarea',
+					'uploads' => 'a'
+				]
+			]
+		]);
+
+		// deprecated alias of `::acceptRules()->fileBlueprints()`
+		$this->assertSame(['a'], $blueprint->acceptedFileTemplates());
+	}
+
 	public function testConstructWithoutModel(): void
 	{
 		$this->expectException(InvalidArgumentException::class);

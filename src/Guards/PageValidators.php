@@ -8,7 +8,6 @@ use Kirby\Cms\Site;
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
-use Kirby\Form\Field\PageListField;
 use Kirby\Form\Fields;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
@@ -200,49 +199,27 @@ class PageValidators extends ModelValidators
 	}
 
 	/**
-	 * Validates if the template of the page is accepted
-	 * as a subpage template of the given parent
+	 * Validates that a pages field of the given
+	 * parent lists pages with the page's blueprint
 	 */
 	public function validateMoveToTemplate(Site|Page $parent): void
 	{
-		$allowed = [];
+		$fields = Fields::for($parent);
 
-		// collect all allowed subpage templates from all page list
-		// fields in the blueprint (only consider fields that list
-		// pages of the targeted new parent page)
-		$found = false;
-
-		foreach (Fields::for($parent) as $field) {
-			if (
-				$field instanceof PageListField === false ||
-				$field->parentModel()->is($parent) === false
-			) {
-				continue;
-			}
-
-			$found = true;
-
-			foreach ($field->templates() as $template) {
-				$allowed[] = $template;
-			}
-		}
-
-		if ($found === false) {
+		if ($fields->hasPageBlueprint() === false) {
 			throw new LogicException(
 				key: 'page.move.noBlueprints',
 				data: ['parent' => $parent->id() ?? '/']
 			);
 		}
 
-		// an empty allowlist accepts every template
-		if (
-			$allowed !== [] &&
-			in_array($this->model->intendedTemplate()->name(), $allowed, true) === false
-		) {
+		$template = $this->model->intendedTemplate()->name();
+
+		if ($fields->hasPageBlueprint($template) === false) {
 			throw new PermissionException(
 				key: 'page.move.template',
 				data: [
-					'template' => $this->model->intendedTemplate()->name(),
+					'template' => $template,
 					'parent'   => $parent->id() ?? '/',
 				]
 			);

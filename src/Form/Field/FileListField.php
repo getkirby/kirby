@@ -3,11 +3,13 @@
 namespace Kirby\Form\Field;
 
 use Kirby\Api\Api;
+use Kirby\Blueprint\FileBlueprint;
 use Kirby\Cms\File;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Cms\User;
+use Kirby\Form\Interface\ProvidesAcceptedFileBlueprints;
 use Kirby\Panel\Collector\FilesCollector;
 use Kirby\Panel\Ui\Item\FileItem;
 use Kirby\Panel\Ui\Upload;
@@ -22,7 +24,7 @@ use Kirby\Reflection\Attributes\Prop;
  *
  * @extends ModelListField<File>
  */
-class FileListField extends ModelListField
+class FileListField extends ModelListField implements ProvidesAcceptedFileBlueprints
 {
 	public const string TYPE = 'files';
 
@@ -36,24 +38,39 @@ class FileListField extends ModelListField
 	protected bool $create = true;
 
 	/**
-	 * Filters the files by template and sets the template for all uploads
+	 * Filters the files by blueprint and sets the blueprint for all uploads
 	 */
-	#[Prop(export: false)]
-	protected string|null $template = null;
+	#[Prop(aliases: ['template'], export: false)]
+	protected string|null $blueprint = null;
 
 	public function accept(): string|null
 	{
-		if ($this->template === null) {
+		if ($this->blueprint === null) {
 			return null;
 		}
 
-		$file = new File([
-			'filename' => 'tmp',
-			'parent'   => $this->model(),
-			'template' => $this->template
-		]);
+		return FileBlueprint::factory(
+			$this->model(),
+			'files/' . $this->blueprint,
+			'files/default'
+		)?->acceptAttribute();
+	}
 
-		return $file->blueprint()->acceptAttribute();
+	/**
+	 * Accepts files with its own blueprint
+	 * or with any blueprint if none is set
+	 *
+	 * @return list<string>
+	 */
+	public function acceptedFileBlueprints(): array
+	{
+		$blueprint = $this->blueprint();
+
+		if ($blueprint !== null && $blueprint !== '') {
+			return [$blueprint];
+		}
+
+		return $this->kirby()->blueprints('files');
 	}
 
 	public function api(): array
@@ -85,17 +102,22 @@ class FileListField extends ModelListField
 		];
 	}
 
+	public function blueprint(): string|null
+	{
+		return $this->blueprint;
+	}
+
 	public function collector(): FilesCollector
 	{
 		return $this->collector ??= new FilesCollector(
-			flip:     $this->flip(),
-			limit:    $this->limit(),
-			page:     (int)$this->page() ?: 1,
-			parent:   $this->parentModel(),
-			query:    $this->query(),
-			search:   $this->searchterm(),
-			sortBy:   $this->sortBy(),
-			template: $this->template(),
+			blueprint: $this->blueprint(),
+			flip:      $this->flip(),
+			limit:     $this->limit(),
+			page:      (int)$this->page() ?: 1,
+			parent:    $this->parentModel(),
+			query:     $this->query(),
+			search:    $this->searchterm(),
+			sortBy:    $this->sortBy(),
 		);
 	}
 
@@ -118,11 +140,6 @@ class FileListField extends ModelListField
 			...parent::state(),
 			'upload' => $this->upload()
 		];
-	}
-
-	public function template(): string|null
-	{
-		return $this->template;
 	}
 
 	/**
@@ -154,12 +171,12 @@ class FileListField extends ModelListField
 
 		$total    = $this->total();
 		$settings = new Upload(
-			api:      $this->parentModel()->apiUrl(true) . '/files',
-			accept:   $this->accept(),
-			max:      $this->max() ? $this->max() - $total : null,
-			preview:  $this->image(),
-			sort:     $this->sortable() === true ? $total + 1 : null,
-			template: $this->template(),
+			api:       $this->parentModel()->apiUrl(true) . '/files',
+			accept:    $this->accept(),
+			blueprint: $this->blueprint(),
+			max:       $this->max() ? $this->max() - $total : null,
+			preview:   $this->image(),
+			sort:      $this->sortable() === true ? $total + 1 : null,
 		);
 
 		return $settings->props();

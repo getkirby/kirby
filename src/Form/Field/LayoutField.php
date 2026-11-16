@@ -48,6 +48,21 @@ class LayoutField extends BlocksField
 	 */
 	protected Fieldset|null $settingsFieldset;
 
+	/**
+	 * Collects the accepted file blueprints of all
+	 * fieldsets and of the layout settings
+	 *
+	 * @return list<string>
+	 * @since 6.0.0
+	 */
+	public function acceptedFileBlueprints(): array
+	{
+		return [
+			...parent::acceptedFileBlueprints(),
+			...$this->attrsForm()->fields()->acceptedFileBlueprints()
+		];
+	}
+
 	public function api(): array
 	{
 		$field  = $this;

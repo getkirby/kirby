@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Closure;
 use Kirby\Blueprint\Blueprint;
+use Kirby\Blueprint\PageBlueprint;
 use Kirby\Content\Content;
 use Kirby\Content\ImmutableMemoryStorage;
 use Kirby\Content\Lock;
@@ -19,7 +20,6 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Form\Fields;
 use Kirby\Form\Form;
-use Kirby\Form\Interface\ProvidesAcceptedBlueprints;
 use Kirby\Panel\Model as PanelModel;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\BlockCollectionAccess;
@@ -90,28 +90,46 @@ abstract class ModelWithContent extends Model implements Identifiable
 	 */
 	public function blueprints(string|null $inField = null): array
 	{
-		$toBlueprints = static function (iterable $fields): array {
-			$blueprints = [];
-
-			foreach ($fields as $field) {
-				if ($field instanceof ProvidesAcceptedBlueprints) {
-					foreach ($field->blueprints() as $blueprint) {
-						$blueprints[$blueprint['name']] = $blueprint;
-					}
-				}
-			}
-
-			return array_values($blueprints);
-		};
-
-		$fields = Fields::for($this);
-
 		// no caching for when collecting for a specific field
-		if ($inField !== null) {
-			return $toBlueprints([$fields->get($inField)]);
+		if ($inField === null && $this->blueprints !== null) {
+			return $this->blueprints;
 		}
 
-		return $this->blueprints ??= $toBlueprints($fields);
+		$names      = $this->blueprint()->acceptRules()->pageBlueprints($inField);
+		$blueprints = [];
+
+		foreach ($names as $name) {
+			// the full blueprint, so that a title inherited
+			// through `extends` is taken into account
+			try {
+				$blueprint = PageBlueprint::factory($this, 'pages/' . $name);
+			} catch (Throwable) {
+				$blueprint = null;
+			}
+
+			// a blueprint that cannot be loaded or
+			// created still needs an entry by its name
+			$blueprint = match ($blueprint) {
+				null    => [
+					'name'  => basename($name),
+					'title' => ucfirst($name),
+				],
+				default => [
+					'name'  => basename($blueprint->name()),
+					'title' => $blueprint->title(),
+				]
+			};
+
+			$blueprints[$blueprint['name']] = $blueprint;
+		}
+
+		$blueprints = array_values($blueprints);
+
+		if ($inField !== null) {
+			return $blueprints;
+		}
+
+		return $this->blueprints = $blueprints;
 	}
 
 	/**

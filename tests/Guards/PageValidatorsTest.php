@@ -256,8 +256,8 @@ class PageValidatorsTest extends ModelTestCase
 				'pages/parent' => [
 					'fields' => [
 						'subpages' => [
-							'type'     => 'pagelist',
-							'template' => 'child'
+							'type'       => 'pagelist',
+							'blueprints' => 'child'
 						]
 					]
 				]
@@ -368,8 +368,8 @@ class PageValidatorsTest extends ModelTestCase
 				'pages/parent' => [
 					'sections' => [
 						'photos' => [
-							'type'     => 'pages',
-							'template' => 'child'
+							'type'       => 'pages',
+							'blueprints' => 'child'
 						],
 						'details' => [
 							'type'   => 'fields',
@@ -404,8 +404,8 @@ class PageValidatorsTest extends ModelTestCase
 				'pages/parent' => [
 					'fields' => [
 						'subpages' => [
-							'type'      => 'pagelist',
-							'templates' => ['album']
+							'type'       => 'pagelist',
+							'blueprints' => ['album']
 						]
 					]
 				]
@@ -422,6 +422,133 @@ class PageValidatorsTest extends ModelTestCase
 
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionCode('error.page.move.template');
+
+		$validators->validateMoveToTemplate($this->app->page('parent-b'));
+	}
+
+	public function testMoveToTemplateWithExcept(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/parent' => [
+					'fields' => [
+						'subpages' => [
+							'type'       => 'pagelist',
+							'blueprints' => ['except' => ['article']]
+						]
+					]
+				]
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'parent-a', 'template' => 'album'],
+					['slug' => 'parent-b', 'template' => 'parent'],
+					['slug' => 'parent-c', 'template' => 'article']
+				]
+			]
+		]);
+
+		// any other blueprint is accepted
+		$this->validators($this->app->page('parent-a'))->validateMoveToTemplate($this->app->page('parent-b'));
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionCode('error.page.move.template');
+
+		$this->validators($this->app->page('parent-c'))->validateMoveToTemplate($this->app->page('parent-b'));
+	}
+
+	public function testMoveToTemplateWithUnrestrictedList(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/parent' => [
+					'fields' => [
+						'albums' => [
+							'type'       => 'pagelist',
+							'blueprints' => ['album']
+						],
+						'subpages' => [
+							'type' => 'pagelist'
+						]
+					]
+				]
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'parent-a', 'template' => 'article'],
+					['slug' => 'parent-b', 'template' => 'parent']
+				]
+			]
+		]);
+
+		$validators = $this->validators($this->app->page('parent-a'));
+
+		// the list without restriction accepts the article
+		$validators->validateMoveToTemplate($this->app->page('parent-b'));
+
+		$this->assertTrue(true);
+	}
+
+	public function testMoveToTemplateWithNestedList(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/parent' => [
+					'fields' => [
+						'settings' => [
+							'type'   => 'object',
+							'fields' => [
+								'subpages' => [
+									'type'       => 'pagelist',
+									'blueprints' => ['article']
+								]
+							]
+						]
+					]
+				]
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'parent-a', 'template' => 'article'],
+					['slug' => 'parent-b', 'template' => 'parent']
+				]
+			]
+		]);
+
+		$validators = $this->validators($this->app->page('parent-a'));
+
+		// the list in the object field accepts the article
+		$validators->validateMoveToTemplate($this->app->page('parent-b'));
+
+		$this->assertTrue(true);
+	}
+
+	public function testMoveToTemplateWithListOfOtherParent(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/parent' => [
+					'fields' => [
+						'subpages' => [
+							'type'   => 'pagelist',
+							'parent' => 'site'
+						]
+					]
+				]
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'parent-a', 'template' => 'article'],
+					['slug' => 'parent-b', 'template' => 'parent']
+				]
+			]
+		]);
+
+		$validators = $this->validators($this->app->page('parent-a'));
+
+		// the only list shows the children of the site
+		$this->expectException(LogicException::class);
+		$this->expectExceptionCode('error.page.move.noBlueprints');
 
 		$validators->validateMoveToTemplate($this->app->page('parent-b'));
 	}
