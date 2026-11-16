@@ -817,11 +817,14 @@ trait PageActions
 			$props['dirname'],
 			$props['root'],
 
-			// Prevent injecting in-memory children and drafts. Anything
-			// that stores their content (e.g. a generated UUID) would
-			// write the injected pages to disk (also to an injected root)
+			// Prevent injecting in-memory children, drafts and files.
+			// Anything that stores their content (e.g. a generated UUID)
+			// would write the injected pages to disk (also to an injected
+			// root). Injected files and pages would also count towards
+			// the min/max validation of pages and files sections.
 			$props['children'],
-			$props['drafts']
+			$props['drafts'],
+			$props['files']
 		);
 
 		$content  = (array)($props['content'] ?? []);
@@ -831,7 +834,9 @@ trait PageActions
 			...$props,
 			'content'  => $content,
 			'isDraft'  => $props['isDraft'] ?? $props['draft'] ?? true,
-			'model'    => $props['model']   ?? $template,
+			// always derive the model from the template. A custom model
+			// could otherwise bypass the content validation for public pages
+			'model'    => $template,
 			'slug'     => Url::slug($props['slug'] ?? $content['title'] ?? null),
 			'template' => $template,
 		];
