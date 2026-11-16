@@ -114,7 +114,7 @@ class Field
 				],
 				false => [
 					'value'    => '-' . $index,
-					'text'     => '–',
+					'text'     => '[' . I18n::translate('unknown', 'unknown') . ']',
 					'disabled' => true
 				]
 			};
@@ -166,7 +166,7 @@ class Field
 				],
 				false => [
 					'value'    => '-' . $index,
-					'text'     => '–',
+					'text'     => '[' . I18n::translate('unknown', 'unknown') . ']',
 					'disabled' => true
 				]
 			};

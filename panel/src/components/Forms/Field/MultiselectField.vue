@@ -10,6 +10,7 @@
 			v-else
 			v-bind="$props"
 			ref="input"
+			:options="$helper.field.options(options, value)"
 			type="multiselect"
 			v-on="$listeners"
 		/>

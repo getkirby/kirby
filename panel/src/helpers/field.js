@@ -1,3 +1,5 @@
+import { wrap } from "./array";
+
 /**
  * Loads the default value for a field definition
  * @internal
@@ -95,6 +97,36 @@ export function isVisible(field, values) {
 }
 
 /**
+ * Adds an `[unknown]` option for each value
+ * without a matching option, e.g. a deleted page
+ * @internal
+ *
+ * @example
+ * options([{ value: "a", text: "A" }], ["a", "b"])
+ * // => [{ value: "a", text: "A" }, { value: "b", text: "[unknown]" }]
+ *
+ * @param {Array} options
+ * @param {any} value
+ * @returns {Array}
+ */
+export function options(options, value) {
+	const known = options.map((option) => String(option.value));
+	const unknown = wrap(value).filter(
+		(value) =>
+			value !== null &&
+			value !== undefined &&
+			value !== "" &&
+			// inputs with a Boolean value prop cast a missing value to `false`
+			value !== false &&
+			known.includes(String(value)) === false
+	);
+
+	const text = `[${window.panel.$t("unknown")}]`;
+
+	return [...options, ...unknown.map((value) => ({ text, value }))];
+}
+
+/**
  * Adds proper endpoint and section definitions
  * to subfields for a form field.
  * @internal
@@ -129,5 +161,6 @@ export default {
 	defaultValue,
 	form,
 	isVisible,
+	options,
 	subfields
 };

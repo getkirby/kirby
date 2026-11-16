@@ -73,7 +73,6 @@ class Fieldset extends Item
 	protected function createFields(array $fields = []): array
 	{
 		$fields = Blueprint::fieldsProps($fields);
-		$fields = $this->form($fields)->fields()->toArray();
 
 		// collect all fields
 		$this->fields = array_merge($this->fields, $fields);
@@ -143,6 +142,12 @@ class Fieldset extends Item
 		return true;
 	}
 
+	/**
+	 * Returns the props of all fields as defined in the blueprint,
+	 * so that forms resolve options for their own values
+	 *
+	 * @return array<string|int, array>
+	 */
 	public function fields(): array
 	{
 		return $this->fields;
@@ -203,6 +208,15 @@ class Fieldset extends Item
 
 	public function toArray(): array
 	{
+		// render the fields of each tab for the Panel
+		$tabs = array_map(
+			fn (array $tab): array => [
+				...$tab,
+				'fields' => $this->form($tab['fields'])->fields()->toArray()
+			],
+			$this->tabs()
+		);
+
 		return [
 			'disabled'  => $this->disabled(),
 			'editable'  => $this->editable(),
@@ -210,7 +224,7 @@ class Fieldset extends Item
 			'label'     => $this->label(),
 			'name'      => $this->name(),
 			'preview'   => $this->preview(),
-			'tabs'      => $this->tabs(),
+			'tabs'      => $tabs,
 			'translate' => $this->translate(),
 			'type'      => $this->type(),
 			'unset'     => $this->unset(),

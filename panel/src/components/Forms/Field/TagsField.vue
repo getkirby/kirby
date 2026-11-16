@@ -6,7 +6,14 @@
 		class="k-tags-field"
 	>
 		<k-empty v-if="hasNoOptions" :icon="icon" :text="$t('options.none')" />
-		<k-input v-else v-bind="$props" ref="input" type="tags" v-on="$listeners" />
+		<k-input
+			v-else
+			v-bind="$props"
+			ref="input"
+			:options="choices"
+			type="tags"
+			v-on="$listeners"
+		/>
 	</k-field>
 </template>
 
@@ -23,8 +30,19 @@ export default {
 	mixins: [Field, Input, TagsInput, counter],
 	inheritAttrs: false,
 	computed: {
+		/**
+		 * The options with an `[unknown]` option for each value without one,
+		 * unless any value is accepted as custom tag
+		 */
+		choices() {
+			if (this.accept === "all") {
+				return this.options;
+			}
+
+			return this.$helper.field.options(this.options, this.value);
+		},
 		hasNoOptions() {
-			return this.options.length === 0 && this.accept === "options";
+			return this.choices.length === 0 && this.accept === "options";
 		}
 	},
 	methods: {

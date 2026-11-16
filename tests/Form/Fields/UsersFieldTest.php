@@ -175,7 +175,7 @@ class UsersFieldTest extends TestCase
 		// the ID that is already stored in the content file
 		$this->assertSame(['id', 'uuid', 'image', 'info', 'link', 'permissions', 'sortable', 'text'], array_keys($value[1]));
 		$this->assertSame('admin@getkirby.com', $value[1]['id']);
-		$this->assertSame('–', $value[1]['text']);
+		$this->assertSame('[unknown]', $value[1]['text']);
 		$this->assertFalse($value[1]['link']);
 
 		// ... and is still kept when the value is stored again

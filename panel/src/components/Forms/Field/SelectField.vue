@@ -1,6 +1,12 @@
 <template>
 	<k-field v-bind="$props" :input="id" class="k-select-field">
-		<k-input v-bind="$props" ref="input" type="select" v-on="$listeners" />
+		<k-input
+			v-bind="$props"
+			ref="input"
+			:options="$helper.field.options(options, value)"
+			type="select"
+			v-on="$listeners"
+		/>
 	</k-field>
 </template>
 

@@ -39,6 +39,47 @@ class TestCase extends BaseTestCase
 		return $this->app;
 	}
 
+	/**
+	 * App with an editor who must not list the pages `b` and `c`
+	 */
+	protected function appWithProtectedPages(): App
+	{
+		// the permission cache is keyed by template and role,
+		// so both need to be unique for each test
+		$uuid = uuid();
+
+		return new App([
+			'blueprints' => [
+				'pages/secret-' . $uuid => [
+					'options' => ['list' => false]
+				]
+			],
+			'roles' => [
+				['name' => 'editor-' . $uuid]
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'a'],
+					[
+						'slug'     => 'b',
+						'template' => 'secret-' . $uuid
+					],
+					[
+						'slug'     => 'c',
+						'template' => 'secret-' . $uuid
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor-' . $uuid
+				]
+			],
+			'user' => 'editor@getkirby.com'
+		]);
+	}
+
 	public function field(string $type, array $attr = [], Fields|null $formFields = null)
 	{
 		$page = new Page(['slug' => 'test']);
