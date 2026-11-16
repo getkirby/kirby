@@ -89,8 +89,10 @@ class Dom
 
 	/**
 	 * Cache for `Dom::hasElementChild()`
+	 *
+	 * @var SplObjectStorage<DOMElement, bool>
 	 */
-	protected SplObjectStorage|null $elementChildren = null;
+	protected SplObjectStorage $elementChildren;
 
 	/**
 	 * Class constructor
@@ -103,6 +105,7 @@ class Dom
 		protected string $type = 'HTML'
 	) {
 		$this->doc  = new DOMDocument();
+		$this->elementChildren = new SplObjectStorage();
 		$this->type = strtoupper($type);
 
 		// Switch libxml into internal error handling mode so warnings
@@ -913,7 +916,12 @@ class Dom
 				$nodes[] = $node;
 			}
 
-			if ($node->firstChild !== null) {
+			// entity references point into the declarations of the doctype,
+			// which may already be removed, so don't walk into them
+			if (
+				$node->nodeType !== XML_ENTITY_REF_NODE &&
+				$node->firstChild !== null
+			) {
 				$next = $node->firstChild;
 				continue;
 			}
@@ -1030,8 +1038,6 @@ class Dom
 		// finding the first child element walks all non-element children
 		// before it, so only do this once for each element instead of for
 		// each of the many comments or CDATA sections it may hold
-		$this->elementChildren ??= new SplObjectStorage();
-
 		if (isset($this->elementChildren[$element]) === false) {
 			$this->elementChildren[$element] = $element->firstElementChild !== null;
 		}
