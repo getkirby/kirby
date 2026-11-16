@@ -30,6 +30,46 @@ class PageRulesTest extends TestCase
 		]);
 	}
 
+	public function appWithLanguages(): App
+	{
+		return new App([
+			'languages' => [
+				[
+					'code'    => 'en',
+					'name'    => 'English',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+					'name' => 'Deutsch'
+				]
+			],
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'user' => 'test@getkirby.com',
+			'users' => [
+				[
+					'email' => 'test@getkirby.com',
+					'role'  => 'admin'
+				]
+			]
+		]);
+	}
+
+	protected function blueprintWithRequiredField(): array
+	{
+		return [
+			'name'   => 'test',
+			'fields' => [
+				'headline' => [
+					'type'     => 'text',
+					'required' => true
+				]
+			]
+		];
+	}
+
 	/**
 	 * @covers ::changeNum
 	 */
@@ -493,6 +533,33 @@ class PageRulesTest extends TestCase
 		PageRules::create($page);
 	}
 
+	public function testCreateDraftWithIncompleteContent(): void
+	{
+		$page = new Page([
+			'kirby'     => $this->appWithAdmin(),
+			'slug'      => 'test',
+			'isDraft'   => true,
+			'blueprint' => $this->blueprintWithRequiredField(),
+		]);
+
+		$this->assertTrue(PageRules::create($page));
+	}
+
+	public function testCreateNonDraftWithIncompleteContent(): void
+	{
+		$page = new Page([
+			'kirby'     => $this->appWithAdmin(),
+			'slug'      => 'test',
+			'isDraft'   => false,
+			'blueprint' => $this->blueprintWithRequiredField(),
+		]);
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('The page has errors and cannot be published');
+
+		PageRules::create($page);
+	}
+
 	/**
 	 * @covers ::delete
 	 */
@@ -701,6 +768,89 @@ class PageRulesTest extends TestCase
 		$this->expectExceptionMessage('You are not allowed to update "test"');
 
 		PageRules::update($page, []);
+	}
+
+	public function testValidateContent(): void
+	{
+		$page = $this->createStub(Page::class);
+		$page->method('errors')->willReturn([]);
+
+		$this->expectNotToPerformAssertions();
+
+		PageRules::validateContent($page);
+	}
+
+	public function testValidateContentWithCompleteTranslations(): void
+	{
+		$page = new Page([
+			'kirby'        => $this->appWithLanguages(),
+			'slug'         => 'test',
+			'blueprint'    => $this->blueprintWithRequiredField(),
+			'translations' => [
+				[
+					'code'    => 'en',
+					'content' => ['headline' => 'Headline']
+				]
+			]
+		]);
+
+		$this->expectNotToPerformAssertions();
+
+		// the missing German translation falls back to the default language
+		PageRules::validateContent($page);
+	}
+
+	public function testValidateContentWithErrors(): void
+	{
+		$errors = [
+			'headline' => [
+				'label'   => 'Headline',
+				'message' => [
+					'required' => 'Please enter something'
+				]
+			]
+		];
+
+		$page = $this->createStub(Page::class);
+		$page->method('errors')->willReturn($errors);
+
+		try {
+			PageRules::validateContent($page);
+			$this->fail('Expected a PermissionException');
+		} catch (PermissionException $e) {
+			$this->assertSame('error.page.changeStatus.incomplete', $e->getKey());
+			$this->assertSame('The page has errors and cannot be published', $e->getMessage());
+			$this->assertSame($errors, $e->getDetails());
+		}
+	}
+
+	public function testValidateContentWithIncompleteTranslation(): void
+	{
+		$page = new Page([
+			'kirby'        => $this->appWithLanguages(),
+			'slug'         => 'test',
+			'blueprint'    => $this->blueprintWithRequiredField(),
+			'translations' => [
+				[
+					'code'    => 'en',
+					'content' => ['headline' => 'Headline']
+				],
+				[
+					'code'    => 'de',
+					'content' => ['headline' => '']
+				]
+			]
+		]);
+
+		try {
+			PageRules::validateContent($page);
+			$this->fail('Expected a PermissionException');
+		} catch (PermissionException $e) {
+			$this->assertSame('error.page.changeStatus.incomplete', $e->getKey());
+			$this->assertSame(['headline'], array_keys($e->getDetails()));
+			$this->assertSame('Headline (Deutsch)', $e->getDetails()['headline']['label']);
+			$this->assertSame('de', $e->getDetails()['headline']['language']);
+		}
 	}
 
 	/**

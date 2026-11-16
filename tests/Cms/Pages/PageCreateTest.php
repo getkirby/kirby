@@ -23,6 +23,40 @@ class PageCreateTest extends TestCase
 
 	protected $app;
 
+	protected function appWithRequiredField(
+		array $field = [],
+		bool $multilang = false
+	): App {
+		$app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'fields' => [
+						'headline' => [
+							'type'     => 'text',
+							'required' => true,
+							...$field
+						]
+					]
+				]
+			],
+			'languages' => $multilang === true ? [
+				[
+					'code'    => 'en',
+					'name'    => 'English',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+					'name' => 'Deutsch'
+				]
+			] : []
+		]);
+
+		$app->impersonate('kirby');
+
+		return $app;
+	}
+
 	public function setUp(): void
 	{
 		$this->app = new App([
@@ -123,6 +157,18 @@ class PageCreateTest extends TestCase
 		$this->assertSame('B', $page->b()->value());
 	}
 
+	public function testCreateDraftWithIncompleteContent(): void
+	{
+		$this->appWithRequiredField();
+
+		$page = Page::create([
+			'slug' => 'new-page',
+		]);
+
+		$this->assertTrue($page->exists());
+		$this->assertTrue($page->isDraft());
+	}
+
 	public function testCreateListedPage()
 	{
 		$site = $this->app->site();
@@ -169,6 +215,182 @@ class PageCreateTest extends TestCase
 		$this->assertFalse($page->isListed());
 		$this->assertTrue($page->parentModel()->children()->has($page));
 		$this->assertTrue($site->children()->has($page));
+	}
+
+	public function testCreateUnlistedPageWithCompleteContent(): void
+	{
+		$this->appWithRequiredField();
+
+		$page = Page::create([
+			'slug'    => 'new-page',
+			'isDraft' => false,
+			'content' => [
+				'headline' => 'Headline'
+			]
+		]);
+
+		$this->assertTrue($page->exists());
+		$this->assertFalse($page->isDraft());
+		$this->assertSame('Headline', $page->headline()->value());
+	}
+
+	public function testCreateUnlistedPageWithCompleteContentInMultilang(): void
+	{
+		$this->appWithRequiredField(multilang: true);
+
+		$page = Page::create([
+			'slug'    => 'new-page',
+			'isDraft' => false,
+			'content' => [
+				'headline' => 'Headline'
+			]
+		]);
+
+		$this->assertTrue($page->exists());
+		$this->assertFalse($page->isDraft());
+		$this->assertSame('Headline', $page->content('en')->headline()->value());
+		$this->assertSame('Headline', $page->content('de')->headline()->value());
+	}
+
+	public function testCreateUnlistedPageWithCompleteContentInSecondaryLanguage(): void
+	{
+		$app = $this->appWithRequiredField(multilang: true);
+		$app->setCurrentLanguage('de');
+
+		$page = Page::create([
+			'slug'    => 'new-page',
+			'isDraft' => false,
+			'content' => [
+				'headline' => 'Headline'
+			]
+		]);
+
+		$this->assertTrue($page->exists());
+		$this->assertFalse($page->isDraft());
+		$this->assertSame('Headline', $page->content('en')->headline()->value());
+	}
+
+	public function testCreateUnlistedPageWithIncompleteContent(): void
+	{
+		$this->appWithRequiredField();
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('The page has errors and cannot be published');
+
+		Page::create([
+			'slug'    => 'new-page',
+			'isDraft' => false,
+		]);
+	}
+
+	public function testCreateUnlistedPageWithIncompleteContentInMultilang(): void
+	{
+		$this->appWithRequiredField(multilang: true);
+
+		try {
+			Page::create([
+				'slug'    => 'new-page',
+				'isDraft' => false,
+			]);
+
+			$this->fail('Expected a PermissionException');
+		} catch (PermissionException $e) {
+			$this->assertSame('error.page.changeStatus.incomplete', $e->getKey());
+		}
+
+		$this->assertFalse(is_dir(static::TMP . '/content/new-page'));
+	}
+
+	public function testCreateUnlistedPageWithIncompleteTranslation(): void
+	{
+		$this->appWithRequiredField(multilang: true);
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('The page has errors and cannot be published');
+
+		Page::create([
+			'slug'         => 'new-page',
+			'isDraft'      => false,
+			'translations' => [
+				[
+					'code'    => 'en',
+					'content' => [
+						'headline' => 'Headline'
+					]
+				],
+				[
+					'code'    => 'de',
+					'content' => [
+						'headline' => ''
+					]
+				]
+			]
+		]);
+	}
+
+	public function testCreateUnlistedPageWithUntranslatableField(): void
+	{
+		$this->appWithRequiredField(
+			field: ['translate' => false],
+			multilang: true
+		);
+
+		$page = Page::create([
+			'slug'    => 'new-page',
+			'isDraft' => false,
+			'content' => [
+				'headline' => 'Headline'
+			]
+		]);
+
+		$this->assertTrue($page->exists());
+		$this->assertFalse($page->isDraft());
+	}
+
+	public function testPublishDraftWithIncompleteTranslation(): void
+	{
+		$this->appWithRequiredField(multilang: true);
+
+		$page = Page::create([
+			'slug'    => 'new-page',
+			'content' => [
+				'headline' => 'Headline'
+			]
+		]);
+
+		$page = $page->save(['headline' => ''], 'de');
+
+		try {
+			$page->changeStatus('unlisted');
+			$this->fail('Expected a PermissionException');
+		} catch (PermissionException $e) {
+			$this->assertSame('error.page.changeStatus.incomplete', $e->getKey());
+			$this->assertSame(['headline'], array_keys($e->getDetails()));
+			$this->assertSame('Headline (Deutsch)', $e->getDetails()['headline']['label']);
+			$this->assertSame('de', $e->getDetails()['headline']['language']);
+		}
+
+		$this->assertTrue($page->isDraft());
+	}
+
+	public function testPublishDraftWithUntranslatableField(): void
+	{
+		$this->appWithRequiredField(
+			field: ['translate' => false],
+			multilang: true
+		);
+
+		$page = Page::create([
+			'slug'    => 'new-page',
+			'content' => [
+				'headline' => 'Headline'
+			]
+		]);
+
+		$page = $page->save(['title' => 'Titel'], 'de');
+		$page = $page->changeStatus('unlisted');
+
+		$this->assertFalse($page->isDraft());
 	}
 
 	public function testCreateDuplicate()
@@ -289,6 +511,61 @@ class PageCreateTest extends TestCase
 				]
 			]
 		]);
+	}
+
+	public function testCreateStripInjectedChildrenAndDrafts(): void
+	{
+		$app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'sections' => [
+						'pages' => [
+							'type'   => 'pages',
+							'status' => 'all'
+						]
+					]
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		// existing content file that must not be touched
+		$existing = static::TMP . '/existing';
+		Dir::make($existing);
+		F::write(
+			file: $existing . '/default.txt',
+			content: 'Title: Existing'
+		);
+
+		$page = Page::create([
+			'slug'     => 'new-page',
+			'isDraft'  => false,
+			// would write UUID content files to the injected
+			// roots during the content validation if respected
+			'children' => [
+				[
+					'slug' => 'child',
+					'root' => static::TMP . '/outside-child'
+				],
+				[
+					'slug'    => 'existing',
+					'root'    => $existing,
+					'content' => ['title' => 'Injected']
+				]
+			],
+			'drafts' => [
+				[
+					'slug' => 'draft',
+					'root' => static::TMP . '/outside-draft'
+				]
+			]
+		]);
+
+		$this->assertCount(0, $page->childrenAndDrafts());
+		$this->assertDirectoryDoesNotExist(static::TMP . '/outside-child');
+		$this->assertDirectoryDoesNotExist(static::TMP . '/outside-draft');
+		$this->assertSame('Title: Existing', F::read($existing . '/default.txt'));
 	}
 
 	public function testCreateStripInjectedRootAndDirname(): void

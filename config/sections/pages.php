@@ -162,43 +162,6 @@ return [
 		'total' => function () {
 			return $this->models->pagination()->total();
 		},
-		'data' => function () {
-			$data = [];
-
-			foreach ($this->models as $page) {
-				$panel       = $page->panel();
-				$permissions = $page->permissions();
-
-				$item = [
-					'dragText'    => $panel->dragText(),
-					'id'          => $page->id(),
-					'image'       => $panel->image(
-						$this->image,
-						$this->layout === 'table' ? 'list' : $this->layout
-					),
-					'info'        => $page->toSafeString($this->info ?? false),
-					'link'        => $panel->url(true),
-					'parent'      => $page->parentId(),
-					'permissions' => [
-						'sort'         => $permissions->can('sort'),
-						'changeSlug'   => $permissions->can('changeSlug'),
-						'changeStatus' => $permissions->can('changeStatus'),
-						'changeTitle'  => $permissions->can('changeTitle'),
-					],
-					'status'      => $page->status(),
-					'template'    => $page->intendedTemplate()->name(),
-					'text'        => $page->toSafeString($this->text),
-				];
-
-				if ($this->layout === 'table') {
-					$item = $this->columnsValues($item, $page);
-				}
-
-				$data[] = $item;
-			}
-
-			return $data;
-		},
 		'errors' => function () {
 			$errors = [];
 
@@ -275,6 +238,43 @@ return [
 		}
 	],
 	'methods' => [
+		'data' => function () {
+			$data = [];
+
+			foreach ($this->models as $page) {
+				$panel       = $page->panel();
+				$permissions = $page->permissions();
+
+				$item = [
+					'dragText'    => $panel->dragText(),
+					'id'          => $page->id(),
+					'image'       => $panel->image(
+						$this->image,
+						$this->layout === 'table' ? 'list' : $this->layout
+					),
+					'info'        => $page->toSafeString($this->info ?? false),
+					'link'        => $panel->url(true),
+					'parent'      => $page->parentId(),
+					'permissions' => [
+						'sort'         => $permissions->can('sort'),
+						'changeSlug'   => $permissions->can('changeSlug'),
+						'changeStatus' => $permissions->can('changeStatus'),
+						'changeTitle'  => $permissions->can('changeTitle'),
+					],
+					'status'      => $page->status(),
+					'template'    => $page->intendedTemplate()->name(),
+					'text'        => $page->toSafeString($this->text),
+				];
+
+				if ($this->layout === 'table') {
+					$item = $this->columnsValues($item, $page);
+				}
+
+				$data[] = $item;
+			}
+
+			return $data;
+		},
 		'blueprints' => function () {
 			$blueprints = [];
 
@@ -315,7 +315,7 @@ return [
 	],
 	'toArray' => function () {
 		return [
-			'data'    => $this->data,
+			'data'    => $this->data(),
 			'errors'  => $this->errors,
 			'options' => [
 				'add'      => $this->add,

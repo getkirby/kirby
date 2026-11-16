@@ -6,6 +6,7 @@ use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
+use Kirby\Form\Form;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 
@@ -231,7 +232,7 @@ class PageRules
 	 *
 	 * @throws \Kirby\Exception\DuplicateException If the same page or a draft already exists
 	 * @throws \Kirby\Exception\InvalidArgumentException If the slug is invalid
-	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to create this page
+	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to create this page or the content of a non-draft is incomplete
 	 */
 	public static function create(Page $page): bool
 	{
@@ -278,6 +279,12 @@ class PageRules
 				'key'  => 'page.draft.duplicate',
 				'data' => ['slug' => $slug]
 			]);
+		}
+
+		// a non-draft page must have complete content,
+		// just like a draft that gets published
+		if ($page->isDraft() === false) {
+			self::validateContent($page);
 		}
 
 		return true;
@@ -432,11 +439,8 @@ class PageRules
 			]);
 		}
 
-		if ($page->isDraft() === true && empty($page->errors()) === false) {
-			throw new PermissionException([
-				'key'     => 'page.changeStatus.incomplete',
-				'details' => $page->errors()
-			]);
+		if ($page->isDraft() === true) {
+			self::validateContent($page);
 		}
 
 		return true;
@@ -459,6 +463,66 @@ class PageRules
 		}
 
 		return true;
+	}
+
+	/**
+	 * Validates that the page content has no errors
+	 * in any language
+	 *
+	 * @throws \Kirby\Exception\PermissionException If the content is not complete
+	 */
+	public static function validateContent(Page $page): void
+	{
+		$errors = $page->errors();
+		$kirby  = $page->kirby();
+
+		// the errors above only cover the current language,
+		// so the content of all other languages must be validated too
+		if ($errors === [] && $kirby->multilang() === true) {
+			$default = $page->content($kirby->defaultLanguage()->code())->toArray();
+
+			foreach ($kirby->languages() as $language) {
+				$code = $language->code();
+
+				// a page can be set up with only some of its translations
+				if ($page->translation($code) === null) {
+					continue;
+				}
+
+				// `null` values are not stored in the translation (e.g. of
+				// untranslatable fields), the default language applies instead
+				$content = $page->content($code)->toArray();
+				$content = array_filter($content, fn ($value) => $value !== null);
+
+				$errors = Form::for(
+					model: $page,
+					props: [
+						'language' => $code,
+						'values'   => $content + $default
+					]
+				)->errors();
+
+				if ($errors !== []) {
+					// add the language to the error details
+					// to make clear which translation is incomplete
+					foreach ($errors as $name => $error) {
+						$label = $error['label'] ?? $name;
+
+						$errors[$name]['label']    = $label . ' (' . $language->name() . ')';
+						$errors[$name]['language'] = $language->code();
+					}
+
+					break;
+				}
+			}
+		}
+
+		if ($errors !== []) {
+			throw new PermissionException([
+				'key'     => 'page.changeStatus.incomplete',
+				'details' => $errors
+			]);
+		}
 	}
 
 	/**
