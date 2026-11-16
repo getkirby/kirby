@@ -568,6 +568,50 @@ class PageCreateTest extends TestCase
 		$this->assertSame('Title: Existing', F::read($existing . '/default.txt'));
 	}
 
+	public function testCreateStripInjectedFiles(): void
+	{
+		$app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'sections' => [
+						'gallery' => [
+							'type' => 'files',
+							'min'  => 1
+						]
+					]
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('The page has errors and cannot be published');
+
+		// injected in-memory files must not count
+		// towards the files section min validation
+		Page::create([
+			'slug'    => 'new-page',
+			'isDraft' => false,
+			'files'   => [
+				['filename' => 'fake.jpg']
+			]
+		]);
+	}
+
+	public function testCreateStripInjectedModel(): void
+	{
+		$page = Page::create([
+			'slug'     => 'test',
+			'template' => 'default',
+			// would use the model of another template if respected
+			'model'    => 'uncreatable-page'
+		]);
+
+		$this->assertSame(Page::class, $page::class);
+		$this->assertSame('default', $page->intendedTemplate()->name());
+	}
+
 	public function testCreateStripInjectedRootAndDirname(): void
 	{
 		$page = Page::create([
