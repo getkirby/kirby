@@ -517,7 +517,14 @@ trait PageActions
 			// derived from the parent and slug. Otherwise the caller could
 			// place the page's content at an arbitrary path on disk.
 			$props['dirname'],
-			$props['root']
+			$props['root'],
+
+			// Prevent injecting in-memory children and drafts. The content
+			// validation for public pages renders the blueprint sections,
+			// which store UUIDs for listed pages and would thus write
+			// injected pages to disk (also to an injected root)
+			$props['children'],
+			$props['drafts']
 		);
 
 		// clean up the slug
