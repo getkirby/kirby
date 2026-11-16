@@ -782,6 +782,8 @@
 
 	"type": "Gerð",
 
+	"unknown": "unknown",
+
 	"upload": "Hlaða inn",
 	"upload.error.cantMove": "Innhlöðnu skránni var ekki haggað",
 	"upload.error.cantWrite": "Það mistókst að skrifa skránna í geymslu",

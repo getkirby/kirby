@@ -782,6 +782,8 @@
 
 	"type": "Tip",
 
+	"unknown": "unknown",
+
 	"upload": "Uploadaj",
 	"upload.error.cantMove": "Uploadana datoteka se ne može premjestiti",
 	"upload.error.cantWrite": "Greška prilikom pisanja datoteke na disk",

@@ -782,6 +782,8 @@
 
 	"type": "유형",
 
+	"unknown": "unknown",
+
 	"upload": "업로드",
 	"upload.error.cantMove": "파일을 이동할 수 없습니다.",
 	"upload.error.cantWrite": "디스크를 읽을 수 없습니다.",

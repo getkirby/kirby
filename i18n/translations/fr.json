@@ -782,6 +782,8 @@
 
 	"type": "Type",
 
+	"unknown": "unknown",
+
 	"upload": "Transférer",
 	"upload.error.cantMove": "Le fichier transféré n’a pu être déplacé",
 	"upload.error.cantWrite": "Le fichier n’a pu être écrit sur le disque",

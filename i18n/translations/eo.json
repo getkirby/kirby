@@ -782,6 +782,8 @@
 
 	"type": "Type",
 
+	"unknown": "unknown",
+
 	"upload": "Alŝuti",
 	"upload.error.cantMove": "Ne eblis movi la alŝutita dosiero",
 	"upload.error.cantWrite": "Ne eblis registri la dosieron en la diskon",

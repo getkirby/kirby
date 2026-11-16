@@ -782,6 +782,8 @@
 
 	"type": "Type",
 
+	"unknown": "unknown",
+
 	"upload": "Feltöltés",
 	"upload.error.cantMove": "A feltöltött fájlt nem sikerült áthelyezni",
 	"upload.error.cantWrite": "Hiba a fájl lemezre írása közben",

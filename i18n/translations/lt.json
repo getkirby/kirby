@@ -782,6 +782,8 @@
 
 	"type": "Type",
 
+	"unknown": "unknown",
+
 	"upload": "Įkelti",
 	"upload.error.cantMove": "Įkeltas failas negali būti perkeltas",
 	"upload.error.cantWrite": "Nepavyko įrašyti failo į diską",

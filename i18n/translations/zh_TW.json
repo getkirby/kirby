@@ -782,6 +782,8 @@
 
 	"type": "類型",
 
+	"unknown": "unknown",
+
 	"upload": "上傳",
 	"upload.error.cantMove": "檔案無法移動到目標位置",
 	"upload.error.cantWrite": "檔案無法寫入磁碟",

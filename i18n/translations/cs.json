@@ -782,6 +782,8 @@
 
 	"type": "Typ",
 
+	"unknown": "unknown",
+
 	"upload": "Nahrát",
 	"upload.error.cantMove": "Nahraný soubor nemohl být přesunut",
 	"upload.error.cantWrite": "Zápis souboru na disk se nezdařil",

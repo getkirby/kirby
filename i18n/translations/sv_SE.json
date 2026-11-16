@@ -782,6 +782,8 @@
 
 	"type": "Typ",
 
+	"unknown": "unknown",
+
 	"upload": "Ladda upp",
 	"upload.error.cantMove": "Den överförda filen kunde inte flyttas",
 	"upload.error.cantWrite": "Det gick inte att skriva filen till hårddisken",

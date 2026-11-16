@@ -782,6 +782,8 @@
 
 	"type": "Тип",
 
+	"unknown": "unknown",
+
 	"upload": "Завантажити",
 	"upload.error.cantMove": "Не вдалося перемістити завантажений файл",
 	"upload.error.cantWrite": "Не вдалося записати файл на диск",
