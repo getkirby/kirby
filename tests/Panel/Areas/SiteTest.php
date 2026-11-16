@@ -79,17 +79,17 @@ class SiteTest extends AreaTestCase
 	{
 		$this->login();
 
-		$this->app->site()->createChild([
+		$page = $this->app->site()->createChild([
 			'slug' => 'test',
 			'content' => [
 				'title' => 'Test'
-			],
-			'files' => [
-				[
-					'filename' => 'test.jpg',
-					'template' => 'image'
-				]
 			]
+		]);
+
+		$file = $page->createFile([
+			'filename' => 'test.jpg',
+			'source'   => dirname(__DIR__) . '/fixtures/image/test.jpg',
+			'template' => 'image'
 		]);
 
 		$view  = $this->view('pages/test/files/test.jpg');
@@ -108,15 +108,21 @@ class SiteTest extends AreaTestCase
 		], $props['lock']);
 		$this->assertArrayNotHasKey('tab', $props);
 		$this->assertSame([], $props['tabs']);
-		$this->assertSame([], $props['versions']['changes']);
-		$this->assertSame([], $props['versions']['latest']);
+
+		$content = [
+			'uuid'     => $file->uuid()->id(),
+			'template' => 'image'
+		];
+
+		$this->assertSame($content, $props['versions']['changes']);
+		$this->assertSame($content, $props['versions']['latest']);
 
 		// model
 		$this->assertSame('jpg', $model['extension']);
 		$this->assertSame('test.jpg', $model['filename']);
 		$this->assertSame('test/test.jpg', $model['id']);
 		$this->assertSame('image/jpeg', $model['mime']);
-		$this->assertSame('0 KB', $model['niceSize']);
+		$this->assertSame('1.16 KB', $model['niceSize']);
 		$this->assertSame('pages/test', $model['parent']);
 		$this->assertSame('image', $model['type']);
 
