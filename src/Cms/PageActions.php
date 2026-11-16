@@ -815,7 +815,13 @@ trait PageActions
 			// derived from the parent and slug. Otherwise the caller could
 			// place the page's content at an arbitrary path on disk.
 			$props['dirname'],
-			$props['root']
+			$props['root'],
+
+			// Prevent injecting in-memory children and drafts. Anything
+			// that stores their content (e.g. a generated UUID) would
+			// write the injected pages to disk (also to an injected root)
+			$props['children'],
+			$props['drafts']
 		);
 
 		$content  = (array)($props['content'] ?? []);

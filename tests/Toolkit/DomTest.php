@@ -2396,6 +2396,20 @@ class DomTest extends TestCase
 		);
 	}
 
+	public function testSanitizeCharacterDataWithEntityReferences(): void
+	{
+		$dom    = new Dom('<!DOCTYPE xml [<!ENTITY a "a"><!ENTITY b "&a;">]><xml>&b;<!--><img src=x>--></xml>', 'XML');
+		$errors = $dom->sanitize([]);
+
+		// the references point into the declarations of the removed
+		// doctype, the comment after them must still be found
+		$this->assertSame(
+			['The doctype must not define a subset', 'The comment (line 1) is not allowed'],
+			array_map(fn ($error) => $error->getMessage(), $errors)
+		);
+		$this->assertSame('<xml>&b;</xml>', $dom->toString());
+	}
+
 	public function testSanitizeDoctypeCallbackException(): void
 	{
 		$this->expectException(Exception::class);

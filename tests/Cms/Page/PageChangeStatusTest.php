@@ -12,7 +12,7 @@ class PageChangeStatusTest extends ModelTestCase
 
 	public function testChangeStatusFromDraftToListed(): void
 	{
-		$parent = Page::create([
+		$parent = new Page([
 			'slug'     => 'test',
 			'children' => [
 				[
@@ -57,7 +57,7 @@ class PageChangeStatusTest extends ModelTestCase
 
 	public function testChangeStatusFromDraftToDraft(): void
 	{
-		$parent = Page::create([
+		$parent = new Page([
 			'slug'     => 'test',
 			'children' => [
 				[
@@ -96,7 +96,7 @@ class PageChangeStatusTest extends ModelTestCase
 
 	public function testChangeStatusFromDraftToUnlisted(): void
 	{
-		$parent = Page::create([
+		$parent = new Page([
 			'slug'     => 'test',
 			'children' => [
 				[
@@ -136,7 +136,7 @@ class PageChangeStatusTest extends ModelTestCase
 
 	public function testChangeStatusFromListedToDraft(): void
 	{
-		$parent = Page::create([
+		$parent = new Page([
 			'slug'     => 'test',
 			'children' => [
 				[
@@ -183,7 +183,7 @@ class PageChangeStatusTest extends ModelTestCase
 
 	public function testChangeStatusFromListedToListed(): void
 	{
-		$parent = Page::create([
+		$parent = new Page([
 			'slug'     => 'test',
 			'children' => [
 				[
@@ -218,7 +218,7 @@ class PageChangeStatusTest extends ModelTestCase
 
 	public function testChangeStatusFromListedToUnlisted(): void
 	{
-		$parent = Page::create([
+		$parent = new Page([
 			'slug'     => 'test',
 			'children' => [
 				[
@@ -261,7 +261,7 @@ class PageChangeStatusTest extends ModelTestCase
 
 	public function testChangeStatusFromUnlistedToListed(): void
 	{
-		$parent = Page::create([
+		$parent = new Page([
 			'slug'     => 'test',
 			'children' => [
 				[
@@ -306,7 +306,7 @@ class PageChangeStatusTest extends ModelTestCase
 
 	public function testChangeStatusFromUnlistedToUnlisted(): void
 	{
-		$parent = Page::create([
+		$parent = new Page([
 			'slug'     => 'test',
 			'children' => [
 				[
