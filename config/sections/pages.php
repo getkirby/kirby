@@ -113,27 +113,6 @@ return [
 		'total' => function () {
 			return $this->models()->count();
 		},
-		'data' => function () {
-			$data = [];
-
-			foreach ($this->modelsPaginated() as $page) {
-				$item = (new PageItem(
-					page: $page,
-					image: $this->image,
-					layout: $this->layout,
-					info: $this->info,
-					text: $this->text,
-				))->props();
-
-				if ($this->layout === 'table') {
-					$item = $this->columnsValues($item, $page);
-				}
-
-				$data[] = $item;
-			}
-
-			return $data;
-		},
 		'errors' => function () {
 			$errors = [];
 
@@ -210,6 +189,27 @@ return [
 		}
 	],
 	'methods' => [
+		'data' => function () {
+			$data = [];
+
+			foreach ($this->modelsPaginated() as $page) {
+				$item = (new PageItem(
+					page: $page,
+					image: $this->image,
+					layout: $this->layout,
+					info: $this->info,
+					text: $this->text,
+				))->props();
+
+				if ($this->layout === 'table') {
+					$item = $this->columnsValues($item, $page);
+				}
+
+				$data[] = $item;
+			}
+
+			return $data;
+		},
 		'blueprints' => function () {
 			$blueprints = [];
 
@@ -265,7 +265,7 @@ return [
 	// @codeCoverageIgnoreEnd
 	'toArray' => function () {
 		return [
-			'data'    => $this->data,
+			'data'    => $this->data(),
 			'errors'  => $this->errors,
 			'options' => [
 				'add'      => $this->add,
