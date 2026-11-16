@@ -52,8 +52,8 @@ class UserPickerDialogController extends ModelPickerDialogController
 	{
 		return $this->collector ??= new UsersCollector(
 			limit:  $this->limit,
+			model:  $this->model,
 			page:   $this->page,
-			parent: $this->model,
 			query:  $this->query(),
 			search: $this->search,
 			sortBy: 'username asc'

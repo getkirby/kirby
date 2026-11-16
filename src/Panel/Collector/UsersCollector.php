@@ -4,6 +4,7 @@ namespace Kirby\Panel\Collector;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Files;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
 use Kirby\Cms\Site;
@@ -21,6 +22,7 @@ class UsersCollector extends ModelsCollector
 	public function __construct(
 		protected bool $flip = false,
 		protected int|null $limit = null,
+		protected ModelWithContent|null $model = null,
 		protected int $page = 1,
 		protected Site|Page|User|null $parent = null,
 		protected string|null $query = null,
@@ -37,7 +39,7 @@ class UsersCollector extends ModelsCollector
 
 	protected function collectByQuery(): Users
 	{
-		return $this->parent()->query($this->query, Users::class) ?? new Users([]);
+		return $this->model()->query($this->query, Users::class) ?? new Users([]);
 	}
 
 	protected function filter(Files|Pages|Users $models): Users

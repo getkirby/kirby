@@ -239,6 +239,29 @@ class PagePickerDialogControllerTest extends TestCase
 		$this->assertSame('gamma', $items[2]['id']);
 	}
 
+	public function testItemsWithFileModel(): void
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'files' => [
+					['filename' => 'test.jpg']
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PagePickerDialogController(
+			model: $this->app->file('test.jpg')
+		);
+
+		$items = $controller->items();
+		$this->assertCount(3, $items);
+		$this->assertSame('alpha', $items[0]['id']);
+		$this->assertSame('beta', $items[1]['id']);
+		$this->assertSame('gamma', $items[2]['id']);
+	}
+
 	public function testLoad(): void
 	{
 		$controller = new PagePickerDialogController(

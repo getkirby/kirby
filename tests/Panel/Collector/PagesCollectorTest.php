@@ -96,6 +96,21 @@ class PagesCollectorTest extends TestCase
 		$this->assertCollectByQuery(PagesCollector::class, 'site.children.filterBy("intendedTemplate", "article")', ['b', 'c']);
 	}
 
+	public function testCollectByQueryWithModel(): void
+	{
+		$this->setUpPages();
+		$this->app->impersonate('kirby');
+
+		// the query runs against the model, not the parent
+		$collector = new PagesCollector(
+			model:  $this->app->page('b'),
+			parent: $this->app->page('a'),
+			query:  'page.siblings(false)'
+		);
+
+		$this->assertModelsInCollector($collector, ['a', 'c']);
+	}
+
 	public function testCollectUnauthenticated(): void
 	{
 		$this->setUpPages();

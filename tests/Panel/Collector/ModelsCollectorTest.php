@@ -2,7 +2,9 @@
 
 namespace Kirby\Panel\Collector;
 
+use Kirby\Cms\File;
 use Kirby\Cms\Files;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
 use Kirby\Cms\Site;
@@ -38,6 +40,11 @@ class ModelsCollectorMock extends ModelsCollector
 	protected function filter(Files|Pages|Users $models): Files|Pages|Users
 	{
 		return $models;
+	}
+
+	public function queryModel(): ModelWithContent
+	{
+		return $this->model();
 	}
 
 	public function parentModel(): Site|Page|User
@@ -79,6 +86,27 @@ class ModelsCollectorTest extends TestCase
 	public function testIsSorting(): void
 	{
 		$this->assertIsSorting(ModelsCollectorMock::class);
+	}
+
+	public function testModel(): void
+	{
+		// falls back to the site
+		$collector = new ModelsCollectorMock();
+		$this->assertInstanceOf(Site::class, $collector->queryModel());
+
+		// falls back to the parent
+		$parent    = new Page(['slug' => 'test']);
+		$collector = new ModelsCollectorMock(parent: $parent);
+		$this->assertSame($parent, $collector->queryModel());
+
+		// the model takes precedence over the parent
+		// and can be a model that cannot be a parent
+		$model     = new File(['filename' => 'test.jpg', 'parent' => $parent]);
+		$collector = new ModelsCollectorMock(
+			model:  $model,
+			parent: $parent
+		);
+		$this->assertSame($model, $collector->queryModel());
 	}
 
 	public function testModels(): void

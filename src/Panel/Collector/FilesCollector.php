@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Collector;
 
 use Kirby\Cms\Files;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
 use Kirby\Cms\Site;
@@ -21,6 +22,7 @@ class FilesCollector extends ModelsCollector
 		protected string|null $blueprint = null,
 		protected bool $flip = false,
 		protected int|null $limit = null,
+		protected ModelWithContent|null $model = null,
 		protected int $page = 1,
 		protected Site|Page|User|null $parent = null,
 		protected string|null $query = null,
@@ -36,7 +38,7 @@ class FilesCollector extends ModelsCollector
 
 	protected function collectByQuery(): Files
 	{
-		return $this->parent()->query($this->query, Files::class) ?? new Files([]);
+		return $this->model()->query($this->query, Files::class) ?? new Files([]);
 	}
 
 	protected function filter(Files|Pages|Users $models): Files

@@ -102,6 +102,26 @@ class UserPickerDialogControllerTest extends TestCase
 		$this->assertSame('test', $items[1]['id']);
 	}
 
+	public function testItemsWithFileModel(): void
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'files' => [
+					['filename' => 'test.jpg']
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new UserPickerDialogController(
+			model: $this->app->file('test.jpg')
+		);
+
+		$items = $controller->items();
+		$this->assertCount(2, $items);
+	}
+
 	public function testLoad(): void
 	{
 		$controller = new UserPickerDialogController(

@@ -52,8 +52,8 @@ class FilePickerDialogController extends ModelPickerDialogController
 	{
 		return $this->collector ??= new FilesCollector(
 			limit:  $this->limit,
+			model:  $this->model,
 			page:   $this->page,
-			parent: $this->model,
 			query:  $this->query(),
 			search: $this->search,
 		);
