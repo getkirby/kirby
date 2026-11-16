@@ -86,7 +86,10 @@ class PagePickerDialogController extends ModelPickerDialogController
 			// instead of a pages collection, use its children
 			protected function collectByQuery(): Pages
 			{
-				$pages = $this->model()->query($this->query);
+				$pages = $this->model()->query(
+					query: $this->query,
+					data:  $this->queryData()
+				);
 
 				if ($pages instanceof Site || $pages instanceof Page) {
 					return $pages->children();

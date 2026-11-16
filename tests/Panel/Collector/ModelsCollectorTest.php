@@ -51,6 +51,11 @@ class ModelsCollectorMock extends ModelsCollector
 	{
 		return $this->parent();
 	}
+
+	public function queryDataArray(): array
+	{
+		return $this->queryData();
+	}
 }
 
 #[CoversClass(ModelsCollector::class)]
@@ -128,6 +133,17 @@ class ModelsCollectorTest extends TestCase
 	public function testPagination(): void
 	{
 		$this->assertPagination(ModelsCollectorMock::class);
+	}
+
+	public function testQueryData(): void
+	{
+		// no parent, no parent entry
+		$collector = new ModelsCollectorMock();
+		$this->assertSame([], $collector->queryDataArray());
+
+		$parent    = new Page(['slug' => 'test']);
+		$collector = new ModelsCollectorMock(parent: $parent);
+		$this->assertSame(['parent' => $parent], $collector->queryDataArray());
 	}
 
 	public function testSearch(): void

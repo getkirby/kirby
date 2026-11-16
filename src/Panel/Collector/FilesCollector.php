@@ -38,7 +38,11 @@ class FilesCollector extends ModelsCollector
 
 	protected function collectByQuery(): Files
 	{
-		return $this->model()->query($this->query, Files::class) ?? new Files([]);
+		return $this->model()->query(
+			query:  $this->query,
+			expect: Files::class,
+			data:   $this->queryData()
+		) ?? new Files([]);
 	}
 
 	protected function filter(Files|Pages|Users $models): Files

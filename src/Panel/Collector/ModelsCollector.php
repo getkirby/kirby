@@ -160,6 +160,19 @@ abstract class ModelsCollector
 	}
 
 	/**
+	 * Returns additional data for the query.
+	 * The parent is only available if it has been set.
+	 */
+	protected function queryData(): array
+	{
+		if ($this->parent === null) {
+			return [];
+		}
+
+		return ['parent' => $this->parent];
+	}
+
+	/**
 	 * @param TModels $models
 	 * @return TModels
 	 */
