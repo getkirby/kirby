@@ -599,6 +599,19 @@ class PageCreateTest extends TestCase
 		]);
 	}
 
+	public function testCreateStripInjectedModel(): void
+	{
+		$page = Page::create([
+			'slug'     => 'test',
+			'template' => 'default',
+			// would use the model of another template if respected
+			'model'    => 'uncreatable-page'
+		]);
+
+		$this->assertSame(Page::class, $page::class);
+		$this->assertSame('default', $page->intendedTemplate()->name());
+	}
+
 	public function testCreateStripInjectedRootAndDirname(): void
 	{
 		$page = Page::create([
