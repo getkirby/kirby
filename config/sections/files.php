@@ -102,43 +102,6 @@ return [
 		'files' => function () {
 			return $this->models;
 		},
-		'data' => function () {
-			$data = [];
-
-			// the drag text needs to be absolute when the files come from
-			// a different parent model
-			$dragTextAbsolute = $this->model->is($this->parent) === false;
-
-			foreach ($this->models as $file) {
-				$panel = $file->panel();
-
-				$item = [
-					'dragText'  => $panel->dragText('auto', $dragTextAbsolute),
-					'extension' => $file->extension(),
-					'filename'  => $file->filename(),
-					'id'        => $file->id(),
-					'image'     => $panel->image(
-						$this->image,
-						$this->layout === 'table' ? 'list' : $this->layout
-					),
-					'info'      => $file->toSafeString($this->info ?? false),
-					'link'      => $panel->url(true),
-					'mime'      => $file->mime(),
-					'parent'    => $file->parent()->panel()->path(),
-					'template'  => $file->template(),
-					'text'      => $file->toSafeString($this->text),
-					'url'       => $file->url(),
-				];
-
-				if ($this->layout === 'table') {
-					$item = $this->columnsValues($item, $file);
-				}
-
-				$data[] = $item;
-			}
-
-			return $data;
-		},
 		'total' => function () {
 			return $this->models->pagination()->total();
 		},
@@ -206,6 +169,45 @@ return [
 			];
 		}
 	],
+	'methods' => [
+		'data' => function () {
+			$data = [];
+
+			// the drag text needs to be absolute when the files come from
+			// a different parent model
+			$dragTextAbsolute = $this->model->is($this->parent) === false;
+
+			foreach ($this->models as $file) {
+				$panel = $file->panel();
+
+				$item = [
+					'dragText'  => $panel->dragText('auto', $dragTextAbsolute),
+					'extension' => $file->extension(),
+					'filename'  => $file->filename(),
+					'id'        => $file->id(),
+					'image'     => $panel->image(
+						$this->image,
+						$this->layout === 'table' ? 'list' : $this->layout
+					),
+					'info'      => $file->toSafeString($this->info ?? false),
+					'link'      => $panel->url(true),
+					'mime'      => $file->mime(),
+					'parent'    => $file->parent()->panel()->path(),
+					'template'  => $file->template(),
+					'text'      => $file->toSafeString($this->text),
+					'url'       => $file->url(),
+				];
+
+				if ($this->layout === 'table') {
+					$item = $this->columnsValues($item, $file);
+				}
+
+				$data[] = $item;
+			}
+
+			return $data;
+		},
+	],
 	// @codeCoverageIgnoreStart
 	'api' => function () {
 		return [
@@ -226,7 +228,7 @@ return [
 	// @codeCoverageIgnoreEnd
 	'toArray' => function () {
 		return [
-			'data'    => $this->data,
+			'data'    => $this->data(),
 			'errors'  => $this->errors,
 			'options' => [
 				'accept'   => $this->accept,
