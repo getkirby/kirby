@@ -2,16 +2,11 @@
 
 namespace Kirby\Blueprint;
 
-use Kirby\Cms\App;
-use Kirby\Form\Field\BlocksField;
-use Kirby\Form\Field\FileListField;
-use Kirby\Form\Field\LayoutField;
 use Kirby\Form\Fields;
-use Kirby\Form\Interface\ProvidesNestedForm;
 
 /**
- * The AcceptRules class goes through all fields of a
- * blueprint and collects rules for accepted files
+ * The AcceptRules class goes through all fields of a blueprint
+ * and collects which blueprints new files and pages may use
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
@@ -22,7 +17,12 @@ class AcceptRules
 	/**
 	 * @var list<string>|null
 	 */
-	protected array|null $fileTemplates = null;
+	protected array|null $fileBlueprints = null;
+
+	/**
+	 * @var list<string>|null
+	 */
+	protected array|null $pageBlueprints = null;
 
 	public function __construct(
 		protected Blueprint $blueprint,
@@ -30,140 +30,67 @@ class AcceptRules
 	}
 
 	/**
-	 * Gathers what file templates are allowed in
-	 * this model based on the blueprint
-	 *
-	 * @return list<string>
+	 * Builds the field objects of all fields or of the given field,
+	 * which also collect the blueprints of their nested fields
 	 */
-	public function fileTemplates(string|null $inField = null): array
+	protected function fields(string|null $inField = null): Fields
 	{
-		// get cached results for the current file model
-		// (except when collecting for a specific field)
-		if ($inField === null && $this->fileTemplates !== null) {
-			return $this->fileTemplates; // @codeCoverageIgnore
-		}
-
-		// collect all allowed file templates from blueprint…
 		$fields = match ($inField) {
 			null    => $this->blueprint->fields(),
 			default => array_filter([$inField => $this->blueprint->field($inField)])
 		};
 
-		// …through the field objects, which resolve
-		// their props (e.g. the fieldsets of blocks)
-		$fields = new Fields(
+		return new Fields(
 			fields: $fields,
 			model: $this->blueprint->model()
 		);
+	}
 
-		$templates = $this->fileTemplatesFromFields($fields);
+	/**
+	 * Gathers what file blueprints are allowed in
+	 * this model based on the blueprint
+	 *
+	 * @return list<string>
+	 */
+	public function fileBlueprints(string|null $inField = null): array
+	{
+		// get cached results for the current file model
+		// (except when collecting for a specific field)
+		if ($inField === null && $this->fileBlueprints !== null) {
+			return $this->fileBlueprints; // @codeCoverageIgnore
+		}
+
+		$blueprints = $this->fields($inField)->acceptedFileBlueprints();
 
 		// no caching for when collecting for a specific field
 		if ($inField !== null) {
-			return $templates; // @codeCoverageIgnore
+			return $blueprints; // @codeCoverageIgnore
 		}
 
-		return $this->fileTemplates = $templates;
+		return $this->fileBlueprints = $blueprints;
 	}
 
 	/**
-	 * Gathers the allowed file templates from fields
+	 * Gathers what blueprints pages created
+	 * through the fields of this model may use
 	 *
 	 * @return list<string>
 	 */
-	public function fileTemplatesFromFields(Fields $fields): array
+	public function pageBlueprints(string|null $inField = null): array
 	{
-		$templates = [];
-
-		foreach ($fields as $field) {
-			// file lists accept uploads for their own template
-			if ($field instanceof FileListField) {
-				$template  = $field->template();
-				$templates = [
-					...$templates,
-					...($template
-						? [$template]
-						: App::instance()->blueprints('files'))
-				];
-				continue;
-			}
-
-			// blocks and layout fields
-			if ($field instanceof BlocksField) {
-				$templates = [
-					...$templates,
-					...$this->fileTemplatesFromFieldsets($field)
-				];
-				continue;
-			}
-
-			// structure and object fields
-			if ($field instanceof ProvidesNestedForm) {
-				$templates = [
-					...$templates,
-					...$this->fileTemplatesFromFields($field->form()->fields())
-				];
-				continue;
-			}
-
-			// fields that support uploads
-			if (method_exists($field, 'uploads') === true) {
-				$templates = [
-					...$templates,
-					...$this->fileTemplatesFromFieldUploads($field->uploads())
-				];
-			}
+		// get cached results for the current model
+		// (except when collecting for a specific field)
+		if ($inField === null && $this->pageBlueprints !== null) {
+			return $this->pageBlueprints;
 		}
 
-		return $templates;
-	}
+		$blueprints = $this->fields($inField)->acceptedPageBlueprints();
 
-	/**
-	 * Gathers the allowed file templates from the fieldsets
-	 * of a blocks or layout field and the layout settings
-	 *
-	 * @return list<string>
-	 */
-	public function fileTemplatesFromFieldsets(BlocksField $field): array
-	{
-		$templates = [];
-
-		foreach ($field->fieldsets() as $fieldset) {
-			$form      = $field->form($fieldset->fields());
-			$templates = [
-				...$templates,
-				...$this->fileTemplatesFromFields($form->fields())
-			];
+		// no caching for when collecting for a specific field
+		if ($inField !== null) {
+			return $blueprints;
 		}
 
-		if ($field instanceof LayoutField) {
-			$templates = [
-				...$templates,
-				...$this->fileTemplatesFromFields($field->attrsForm()->fields())
-			];
-		}
-
-		return $templates;
-	}
-
-	/**
-	 * Extracts templates from field uploads settings
-	 *
-	 * @return list<string>
-	 */
-	public function fileTemplatesFromFieldUploads(array|false $uploads): array
-	{
-		if ($uploads === false) {
-			return [];
-		}
-
-		// only if the `uploads` parent is this model
-		if ($target = $uploads['parent'] ?? null) {
-			if ($this->blueprint->model()->id() !== $target) {
-				return [];
-			}
-		}
-
-		return [($uploads['template'] ?? 'default')];
+		return $this->pageBlueprints = $blueprints;
 	}
 }

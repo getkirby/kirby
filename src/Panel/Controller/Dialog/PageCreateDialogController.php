@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel\Controller\Dialog;
 
+use Kirby\Blueprint\PageBlueprint;
 use Kirby\Cms\App;
 use Kirby\Cms\Find;
 use Kirby\Cms\ModelWithContent;
@@ -16,9 +17,9 @@ use Kirby\Panel\Field;
 use Kirby\Panel\Panel;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
-use Kirby\Toolkit\A;
 use Kirby\Uuid\Uuid;
 use Kirby\Uuid\Uuids;
+use Throwable;
 
 /**
  * Controls the Panel dialog to create a new page
@@ -52,8 +53,6 @@ class PageCreateDialogController extends ModelCreateDialogController
 		'url'
 	];
 
-	public array $blueprints;
-
 	/**
 	 * @var Page
 	 */
@@ -64,30 +63,59 @@ class PageCreateDialogController extends ModelCreateDialogController
 	 */
 	public Page|Site|User $parent;
 
+	/**
+	 * @param list<string>|null $blueprints Names of the blueprints for the new page, by default the ones of the parent
+	 * @throws NotFoundException If no blueprints are given
+	 */
 	public function __construct(
 		Page|Site|null $parent = null,
-		array|null $blueprints = null
+		protected array|null $blueprints = null
 	) {
 		parent::__construct(parent: $parent);
 
-		// gather all available blueprints from the
-		// given list or from the parent
-		$this->blueprints = A::map(
-			$blueprints ?? $this->parent->blueprints(),
-			function ($blueprint) {
-				$blueprint['name'] ??= $blueprint['value'] ?? null;
-				return $blueprint;
-			}
-		);
+		if ($blueprints === []) {
+			throw new NotFoundException(
+				message: 'No new pages can be created here'
+			);
+		}
 	}
 
 	/**
-	 * Get an array of all available blueprints
+	 * Returns the name and title of each blueprint for the
+	 * new page, also of ones that cannot be loaded or created
+	 *
+	 * @return list<array{name: string, title: string}>
 	 */
 	public function blueprints(): array
 	{
+		if ($this->blueprints === null) {
+			return $this->parent->blueprints();
+		}
 
-		return $this->blueprints;
+		$blueprints = [];
+
+		foreach ($this->blueprints as $name) {
+			try {
+				// the full blueprint, so that a title inherited
+				// through `extends` is taken into account
+				$blueprint = PageBlueprint::factory($this->parent, 'pages/' . $name);
+			} catch (Throwable) {
+				$blueprint = null;
+			}
+
+			$blueprints[] = match ($blueprint) {
+				null    => [
+					'name'  => basename($name),
+					'title' => ucfirst($name),
+				],
+				default => [
+					'name'  => basename($blueprint->name()),
+					'title' => $blueprint->title(),
+				]
+			};
+		}
+
+		return $blueprints;
 	}
 
 	/**
@@ -152,7 +180,7 @@ class PageCreateDialogController extends ModelCreateDialogController
 		$parent  = $parent ? Find::parent($parent) : Find::site();
 
 		if ($field = $request->get('field')) {
-			$blueprints = $parent->blueprints($field);
+			$blueprints = array_column($parent->blueprints($field), 'name');
 
 			if ($blueprints === []) {
 				throw new NotFoundException(

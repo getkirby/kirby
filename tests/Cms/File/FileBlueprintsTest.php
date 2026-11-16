@@ -16,16 +16,16 @@ class FileBlueprintsTest extends ModelTestCase
 				'pages/test' => [
 					'fields' => [
 						'list-a' => [
-							'type'     => 'filelist',
-							'template' => 'for-list/a'
+							'type'      => 'filelist',
+							'blueprint' => 'for-list/a'
 						],
 						'list-b' => [
-							'type'     => 'filelist',
-							'template' => 'for-list/b'
+							'type'      => 'filelist',
+							'blueprint' => 'for-list/b'
 						],
 						'list-c' => [
-							'type'     => 'filelist',
-							'template' => 'not-exist'
+							'type'      => 'filelist',
+							'blueprint' => 'not-exist'
 						],
 						'a' => [
 							'type' => 'info'
@@ -40,14 +40,14 @@ class FileBlueprintsTest extends ModelTestCase
 						'd' => [
 							'type'    => 'filepicker',
 							'uploads' => [
-								'template' => 'for-fields/b'
+								'blueprint' => 'for-fields/b'
 							]
 						],
 						'e' => [
 							'type'    => 'filepicker',
 							'uploads' => [
-								'parent'   => 'site',
-								'template' => 'for-fields/c'
+								'parent'    => 'site',
+								'blueprint' => 'for-fields/c'
 							]
 						],
 						'f' => [
@@ -140,12 +140,12 @@ class FileBlueprintsTest extends ModelTestCase
 				'pages/test' => [
 					'fields' => [
 						'list-a' => [
-							'type'     => 'filelist',
-							'template' => 'for-list/a'
+							'type'      => 'filelist',
+							'blueprint' => 'for-list/a'
 						],
 						'list-b' => [
-							'type'     => 'filelist',
-							'template' => 'for-list/b'
+							'type'      => 'filelist',
+							'blueprint' => 'for-list/b'
 						],
 						'field-a' => [
 							'type' => 'filepicker'
@@ -157,14 +157,14 @@ class FileBlueprintsTest extends ModelTestCase
 						'field-c' => [
 							'type'    => 'filepicker',
 							'uploads' => [
-								'template' => 'for-fields/b'
+								'blueprint' => 'for-fields/b'
 							]
 						],
 						'field-d' => [
 							'type'    => 'filepicker',
 							'uploads' => [
-								'parent'   => 'site',
-								'template' => 'for-fields/c'
+								'parent'    => 'site',
+								'blueprint' => 'for-fields/c'
 							]
 						],
 						'field-e' => [
