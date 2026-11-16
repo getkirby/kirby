@@ -856,6 +856,27 @@ class PageCreateTest extends ModelTestCase
 		]);
 	}
 
+	public function testCreateStripInjectedModel(): void
+	{
+		$this->app = $this->app->clone([
+			'pageModels' => [
+				'parent' => NewParentPage::class,
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page = Page::create([
+			'slug'     => 'test',
+			'template' => 'default',
+			// would use the model of another template if respected
+			'model'    => 'parent'
+		]);
+
+		$this->assertSame(Page::class, $page::class);
+		$this->assertSame('default', $page->intendedTemplate()->name());
+	}
+
 	public function testCreateStripInjectedRootAndDirname(): void
 	{
 		$page = Page::create([

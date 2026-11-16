@@ -768,7 +768,9 @@ trait PageActions
 			...$props,
 			'content'  => $content,
 			'isDraft'  => $props['isDraft'] ?? $props['draft'] ?? true,
-			'model'    => $props['model']   ?? $template,
+			// always derive the model from the template. A custom model
+			// could otherwise bypass the content validation for public pages
+			'model'    => $template,
 			'slug'     => Url::slug($props['slug'] ?? $content['title'] ?? null),
 			'template' => $template,
 		];
