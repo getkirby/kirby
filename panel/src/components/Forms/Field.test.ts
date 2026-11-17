@@ -98,6 +98,11 @@ describe("k-field", () => {
 			const wrapper = mount({ name: "title" });
 			expect(wrapper.classes()).toContain("k-field-name-title");
 		});
+
+		it("adds no name class without name", () => {
+			const wrapper = mount();
+			expect(wrapper.classes()).toStrictEqual(["k-field"]);
+		});
 	});
 
 	describe("required prop", () => {
@@ -127,6 +132,11 @@ describe("k-field", () => {
 		it("adds the type as class", () => {
 			const wrapper = mount({ type: "text" });
 			expect(wrapper.classes()).toContain("k-field-type-text");
+		});
+
+		it("adds no type class without type", () => {
+			const wrapper = mount({ name: "title" });
+			expect(wrapper.classes()).toStrictEqual(["k-field", "k-field-name-title"]);
 		});
 	});
 
