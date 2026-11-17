@@ -544,6 +544,7 @@
 	"license.code.help": "Þú fékkst leyfiskóðan sendan í tölvupósti eftir að þú borgaðir fyrir leyfið. Vinsamlegast afritaðu hann hingað.",
 	"license.code.label": "License code",
 	"license.remove.text": "<p>Að fjarlægja leyfið mun eyða leyfisskránni varanlega af þessu vefsvæði. Þú getur síðan virkjað vefsvæðið með öðrum leyfislykli eða skráð sama leyfislykil aftur, svo framarlega sem lénið helst óbreytt. </p><p> Til að breyta léninu sem leyfið er tengt við, vinsamlegast hafðu samband við Kirby-teymið.<a href='https://getkirby.com/license'>Lesa nánar &rarr;</a></p>",
+	"license.status": "License status",
 	"license.status.active.info": "Felur í sér allar útgáfur þar til {date}",
 	"license.status.active.label": "Gilt skráningarleyfi",
 	"license.status.acknowledged.info": "You confirmed to comply with the <a href=\"https://getkirby.com/license/free-licenses\">free license requirements</a>",

@@ -544,6 +544,7 @@
 	"license.code.help": "Du fick din licenskod efter köpet via e-post. Kopiera och klistra in det här.",
 	"license.code.label": "License code",
 	"license.remove.text": "<p>Om du tar bort licensen raderas licensfilen permanent från webbplatsen. Du kan sedan aktivera webbplatsen med en annan licensnyckel eller omregistrera samma licensnyckel om domänen förblir densamma.</p><p>För att ändra domänen som är kopplad till licensen, vänligen kontakta Kirby-teamet. <a href='https://getkirby.com/license'>Läs mer &rarr;</a></p>",
+	"license.status": "License status",
 	"license.status.active.info": "Inkluderar nya större versioner fram till {date}",
 	"license.status.active.label": "Giltig licens",
 	"license.status.acknowledged.info": "You confirmed to comply with the <a href=\"https://getkirby.com/license/free-licenses\">free license requirements</a>",

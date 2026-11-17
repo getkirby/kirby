@@ -544,6 +544,7 @@
 	"license.code.help": "Вставьте код лицензии, который вы получили Email после покупки.",
 	"license.code.label": "License code",
 	"license.remove.text": "<p>Removing the license will irreversibly delete the license file from this site. You can then activate this site with a different license key or re-register the same license key if the domain remains the same.</p><p>To change the domain associated with the license, please contact the Kirby team. <a href='https://getkirby.com/license'>Read more &rarr;</a></p>",
+	"license.status": "License status",
 	"license.status.active.info": "Включает обновления до {date}",
 	"license.status.active.label": "Действительная лицензия",
 	"license.status.acknowledged.info": "You confirmed to comply with the <a href=\"https://getkirby.com/license/free-licenses\">free license requirements</a>",

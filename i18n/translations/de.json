@@ -544,6 +544,7 @@
 	"license.code.help": "Du hast deinen Lizenzschlüssel nach dem Kauf per E-Mail bekommen. Bitte kopiere ihn aus der E-Mail und füge ihn hier ein. ",
 	"license.code.label": "Lizenz-Code",
 	"license.remove.text": "<p>Durch das Entfernen der Lizenz wird die Lizenzdatei unwiderruflich von dieser Website gelöscht. Du kannst diese Website dann mit einem anderen Lizenzschlüssel aktivieren oder denselben Lizenzschlüssel erneut registrieren, wenn die Domain unverändert bleibt.</p> <p>Um die mit der Lizenz verknüpfte Domain zu ändern, wende dich bitte an das Kirby-Team. <a href='https://getkirby.com/license'>Weiterlesen &rarr;</a></p>",
+	"license.status": "License status",
 	"license.status.active.info": "Beinhaltet neue Major Versionen bis {date}",
 	"license.status.active.label": "Gültige Lizenz",
 	"license.status.acknowledged.info": "Du hast bestätigt, dass die <a href=\"https://getkirby.com/license/free-licenses\">Anforderungen für kostenlose Lizenzen</a> erfüllt werden.",

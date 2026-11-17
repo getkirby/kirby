@@ -544,6 +544,7 @@
 	"license.code.help": "您可以在購買確認信中找到授權碼",
 	"license.code.label": "License code",
 	"license.remove.text": "<p>Removing the license will irreversibly delete the license file from this site. You can then activate this site with a different license key or re-register the same license key if the domain remains the same.</p><p>To change the domain associated with the license, please contact the Kirby team. <a href='https://getkirby.com/license'>Read more &rarr;</a></p>",
+	"license.status": "License status",
 	"license.status.active.info": "包含至 {date} 前的新主要版本",
 	"license.status.active.label": "已啟用",
 	"license.status.acknowledged.info": "You confirmed to comply with the <a href=\"https://getkirby.com/license/free-licenses\">free license requirements</a>",

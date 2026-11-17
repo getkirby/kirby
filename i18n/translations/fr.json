@@ -544,6 +544,7 @@
 	"license.code.help": "Vous avez reçu votre code de licence par courriel après l‘achat. Veuillez le copier et le coller ici.",
 	"license.code.label": "Code de licence",
 	"license.remove.text": "<p>Retirer la licence supprimera de manière irréversible le fichier de licence de ce site. Vous pourrez alors activer ce site avec une clé de licence différente ou enregistrer à nouveau la même licence si le domaine reste le même.</p><p>Pour modifier le domaine associé à la licence, veuillez contacter l’équipe de Kirby. <a href='https://getkirby.com/license'>En savoir plus &rarr;</a></p>",
+	"license.status": "License status",
 	"license.status.active.info": "Inclut les nouvelles versions majeures jusqu’au {date}",
 	"license.status.active.label": "Licence valide",
 	"license.status.acknowledged.info": "Vous avez confirmé que vous respecterez les <a href=\"https://getkirby.com/license/free-licenses\">conditions de la licence gratuite</a>",
