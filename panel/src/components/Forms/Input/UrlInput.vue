@@ -36,12 +36,12 @@ export default {
 	mixins: [StringInput, props],
 	emits: ["input"],
 	watch: {
-		value: {
-			handler() {
-				this.validate();
-			},
-			immediate: true
+		value() {
+			this.validate();
 		}
+	},
+	mounted() {
+		this.validate();
 	},
 	methods: {
 		validate() {
