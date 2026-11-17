@@ -22,7 +22,7 @@ function mount(props = {}, attrs = {}) {
 describe("k-stats-field", () => {
 	// $el
 	describe("element", () => {
-		it.rendersAs(mount, "K-FIELD");
+		it.rendersAs(mount, "K-FIELD", "k-stats-field");
 		it.acceptsClass(mount);
 		it.acceptsStyle(mount);
 
