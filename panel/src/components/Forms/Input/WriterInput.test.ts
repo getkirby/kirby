@@ -222,6 +222,17 @@ describe("k-writer-input", () => {
 			await wrapper.setProps({ value: "" } as never);
 			expect(wrapper.attributes("data-empty")).toBe("true");
 		});
+
+		it("validates the new value", async () => {
+			const wrapper = mount({ maxlength: 3, value: "<p>Hello</p>" });
+			await validated();
+			expect(output(wrapper).validationMessage).toBe(
+				"error.validation.maxlength"
+			);
+			await wrapper.setProps({ value: "<p>Hi</p>" } as never);
+			await validated();
+			expect(output(wrapper).validationMessage).toBe("");
+		});
 	});
 
 	// lifecycle
