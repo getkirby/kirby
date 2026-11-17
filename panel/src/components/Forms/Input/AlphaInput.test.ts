@@ -24,6 +24,8 @@ describe("k-alpha-input", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "DIV", "k-alpha-input");
+		it.acceptsClass(mount);
+		it.acceptsStyle(mount);
 		it.inheritsNoAttrs(mount);
 
 		it("renders a k-range-input from 0 to 1", () => {
