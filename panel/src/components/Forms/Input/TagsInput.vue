@@ -1,5 +1,10 @@
 <template>
-	<div :data-can-add="canAdd" :data-disabled="disabled" class="k-tags-input">
+	<div
+		:class="['k-tags-input', $attrs.class]"
+		:data-can-add="canAdd"
+		:data-disabled="disabled"
+		:style="$attrs.style"
+	>
 		<k-input-validator
 			v-bind="{ min, max, required }"
 			:value="JSON.stringify(value)"

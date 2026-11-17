@@ -75,6 +75,8 @@ describe("k-tags-input", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "DIV", "k-tags-input");
+		it.acceptsClass(mount);
+		it.acceptsStyle(mount);
 		it.inheritsNoAttrs(mount);
 
 		it("renders removable k-tags", () => {
