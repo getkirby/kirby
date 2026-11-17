@@ -457,9 +457,7 @@ class Dom
 
 		// allow valid email addresses
 		if (Str::startsWith($url, 'mailto:') === true) {
-			$address = Str::after($url, 'mailto:');
-
-			if (empty($address) === true || V::email($address) === true) {
+			if ($url === 'mailto:' || V::mailto($url) === true) {
 				return true;
 			}
 

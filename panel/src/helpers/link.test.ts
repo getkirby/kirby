@@ -132,4 +132,23 @@ describe("$helper.link.types()", () => {
 	it("should return active types", () => {
 		expect(length(types(["page", "file", "url"]))).toStrictEqual(3);
 	});
+
+	it.each([
+		"test@getkirby.com",
+		"test@getkirby.com?subject=Hallo%20Welt&body=Hello"
+	])("should accept %s as email link", (value) => {
+		const pattern = new RegExp(`^(?:${types().email.pattern})$`, "v");
+		expect(pattern.test(value)).toStrictEqual(true);
+	});
+
+	it.each([
+		"test",
+		"test@getkirby",
+		"@getkirby.com",
+		"a b@getkirby.com",
+		"a@getkirby.com,b@getkirby.com"
+	])("should reject %s as email link", (value) => {
+		const pattern = new RegExp(`^(?:${types().email.pattern})$`, "v");
+		expect(pattern.test(value)).toStrictEqual(false);
+	});
 });
