@@ -89,6 +89,8 @@ describe("k-pagelist-field", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "K-FIELD", "k-modellist-field");
+		it.acceptsClass(mount);
+		it.acceptsStyle(mount);
 		it.inheritsNoAttrs(mount);
 
 		it("passes the type to the k-field", () => {
