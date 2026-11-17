@@ -150,6 +150,7 @@ describe("k-layouts", () => {
 		it.rendersAs(mount, "DIV");
 		it.acceptsClass(mount);
 		it.acceptsStyle(mount);
+		it.inheritsNoAttrs(mount);
 
 		it("renders the layouts in a sortable list", () => {
 			const value = rows();
