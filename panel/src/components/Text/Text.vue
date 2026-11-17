@@ -138,7 +138,7 @@ export default {
 	border-radius: var(--rounded-xs);
 	outline-offset: 2px;
 }
-.k-text :where(.k-link, a):hover {
+.k-text :where(.k-link, a):is(:hover, :focus-visible) {
 	color: var(--link-color-hover);
 }
 

@@ -314,6 +314,7 @@ export default {
 }
 .k-button:where([data-variant="dimmed"]):not([aria-disabled="true"]):is(
 		:hover,
+		:focus-visible,
 		[aria-current="true"]
 	)
 	.k-button-text {
@@ -331,7 +332,10 @@ export default {
 .k-button:where([data-variant="filled"]) {
 	--button-color-back: var(--button-filled-color-back);
 }
-.k-button:where([data-variant="filled"]):not([aria-disabled="true"]):hover {
+.k-button:where([data-variant="filled"]):not([aria-disabled="true"]):is(
+		:hover,
+		:focus-visible
+	) {
 	filter: brightness(97%);
 }
 

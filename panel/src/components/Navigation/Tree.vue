@@ -139,7 +139,7 @@ export default {
 	inset-block-start: calc(var(--tree-level) * 1.5rem);
 	z-index: calc(100 - var(--tree-level));
 }
-.k-tree-branch:hover,
+.k-tree-branch:is(:hover, :has(:focus-visible)),
 li[aria-current="true"] > .k-tree-branch {
 	color: var(--tree-branch-hover-color-text);
 	background: var(--tree-branch-hover-color-back);
@@ -159,7 +159,7 @@ li[aria-current="true"] > .k-tree-branch {
 	margin-inline-start: 0.25rem;
 	flex-shrink: 0;
 }
-.k-tree-toggle:hover {
+.k-tree-toggle:is(:hover, :focus-visible) {
 	background: rgba(0, 0, 0, 0.075);
 }
 .k-tree-toggle[disabled] {

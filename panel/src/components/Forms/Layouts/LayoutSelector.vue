@@ -113,7 +113,7 @@ export default {
 	background: var(--color-back);
 	height: 100%;
 }
-.k-layout-selector-option:hover {
+.k-layout-selector-option:is(:hover, :focus-visible) {
 	--color-border: light-dark(var(--color-gray-500), var(--color-gray-800));
 	--color-back: light-dark(var(--color-gray-100), var(--color-gray-900));
 }

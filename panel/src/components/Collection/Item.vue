@@ -333,7 +333,7 @@ export default {
 	z-index: 2;
 }
 .k-item:is([data-layout="cardlets"], [data-layout="cards"])
-	.k-item-sort-handle:hover {
+	.k-item-sort-handle:is(:hover, :focus-visible) {
 	background: light-dark(hsla(0, 0%, 100%, 95%), hsla(0, 0%, 7%, 95%));
 }
 
