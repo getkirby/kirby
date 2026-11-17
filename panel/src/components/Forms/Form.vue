@@ -46,7 +46,6 @@ export default {
 		 * Whether the form is disabled
 		 */
 		disabled: Boolean,
-		config: Object,
 		fields: {
 			type: [Array, Object],
 			default: () => []

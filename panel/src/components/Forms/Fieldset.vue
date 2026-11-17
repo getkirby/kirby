@@ -54,10 +54,6 @@
 export default {
 	props: {
 		/**
-		 * @internal
-		 */
-		config: Object,
-		/**
 		 * If `true`, all fields in the fieldset are disabled
 		 */
 		disabled: Boolean,
