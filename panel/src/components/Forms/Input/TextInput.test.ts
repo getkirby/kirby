@@ -22,6 +22,7 @@ describe("k-text-input", () => {
 	describe("element", () => {
 		it.rendersAs(mount, "INPUT", "k-text-input");
 		it.acceptsClass(mount);
+		it.acceptsStyle(mount);
 		it.inheritsNoAttrs(mount);
 
 		it("renders a k-string-input", () => {
