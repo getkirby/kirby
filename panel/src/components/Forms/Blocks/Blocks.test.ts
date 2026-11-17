@@ -498,6 +498,13 @@ describe("k-blocks", () => {
 			expect(wrapper.vm.selected).toStrictEqual(["b"]);
 			expect(BlockStub.methods.focus).toHaveBeenCalledOnce();
 		});
+
+		it("selects and focuses the first block without block", () => {
+			const wrapper = mount();
+			wrapper.vm.focus();
+			expect(wrapper.vm.selected).toStrictEqual(["a"]);
+			expect(BlockStub.methods.focus).toHaveBeenCalledOnce();
+		});
 	});
 
 	describe("hide()", () => {
