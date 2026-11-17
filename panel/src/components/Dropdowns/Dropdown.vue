@@ -170,7 +170,7 @@ export default {
 			this.$emit("close");
 			window.removeEventListener("resize", this.setPosition);
 		},
-		async onOpen() {
+		async onOpen(byPointer = false) {
 			this.isOpen = true;
 
 			// remember the current scroll position
@@ -187,6 +187,13 @@ export default {
 				await this.setPosition();
 				// restore the scroll position
 				window.scrollTo(0, scrollTop);
+
+				if (byPointer) {
+					const item = document.activeElement;
+					item?.blur();
+					item?.focus({ focusVisible: false, preventScroll: true });
+				}
+
 				this.$emit("open");
 			}
 		},
@@ -237,11 +244,13 @@ export default {
 				window.event?.target.closest("button") ??
 				window.event?.target;
 
+			const byPointer = window.event?.detail > 0;
+
 			// load all options and open the dropdown as
 			// soon as they are loaded
 			this.fetchOptions((items) => {
 				this.items = items;
-				this.onOpen();
+				this.onOpen(byPointer);
 			});
 		},
 		async setPosition() {

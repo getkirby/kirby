@@ -357,7 +357,7 @@ export default {
 .k-picklist-input-options .k-choice-input[aria-disabled="true"] {
 	--choice-color-text: var(--color-text-dimmed);
 }
-.k-picklist-input-options .k-choice-input:has(:focus-within) {
+.k-picklist-input-options .k-choice-input:has(:focus-visible) {
 	outline: var(--outline);
 }
 .k-picklist-input-options .k-choice-input b {

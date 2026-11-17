@@ -307,12 +307,6 @@ export default {
 	overflow: visible;
 	padding: 0;
 }
-.k-link-field .k-tags-field-preview .k-tag:focus {
-	outline: 0;
-}
-.k-link-field .k-tags-field-preview .k-tag:focus-visible {
-	outline: var(--outline);
-}
 .k-link-field .k-tags-field-preview .k-tag-text {
 	font-size: var(--text-sm);
 }

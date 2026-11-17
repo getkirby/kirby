@@ -376,7 +376,7 @@ export default {
 	padding: 0 0.5rem;
 	border-radius: var(--input-rounded);
 }
-.k-calendar-selects .k-select-input:focus-within {
+.k-calendar-selects .k-select-input:has(:focus-visible) {
 	outline: var(--outline);
 }
 .k-calendar-input th {

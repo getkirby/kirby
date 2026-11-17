@@ -95,7 +95,7 @@ export default {
 	gap: var(--spacing-2);
 }
 
-.k-coloroptions-input input:focus + .k-color-frame {
+.k-coloroptions-input input:focus-visible + .k-color-frame {
 	outline: var(--outline);
 }
 .k-coloroptions-input[disabled] label {
