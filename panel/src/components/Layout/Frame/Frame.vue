@@ -102,6 +102,13 @@ export default {
 	object-fit: var(--fit);
 }
 
+.k-frame:has(> button:focus-visible) {
+	outline: var(--outline);
+}
+.k-frame > button:focus-visible {
+	outline: 0;
+}
+
 .k-frame > * {
 	overflow: hidden;
 	text-overflow: ellipsis;
