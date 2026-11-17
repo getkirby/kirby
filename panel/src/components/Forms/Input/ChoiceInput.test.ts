@@ -14,6 +14,13 @@ describe("k-choice-input", () => {
 		it.acceptsClass(mount);
 		it.acceptsStyle(mount);
 		it.inheritsNoAttrs(mount);
+
+		it("keeps a custom class and style off the input", () => {
+			const wrapper = mount({}, { class: "my-class", style: "--foo: bar" });
+			const input = wrapper.find("input");
+			expect(input.classes()).not.toContain("my-class");
+			expect(input.attributes("style")).toBeUndefined();
+		});
 	});
 
 	// props
