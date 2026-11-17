@@ -621,7 +621,7 @@ export default {
 
 			// don't add blocks that exceed the maximum limit
 			if (this.max) {
-				const max = this.max - this.blocks.length;
+				const max = Math.max(this.max - this.blocks.length, 0);
 				blocks = blocks.slice(0, max);
 			}
 
