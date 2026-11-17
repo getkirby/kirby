@@ -207,9 +207,14 @@ export default {
 
 <style>
 .k-block-options {
-	--toolbar-size: 30px;
+	--toolbar-size: 28px;
+	box-sizing: content-box;
 	border: 1px solid light-dark(var(--color-border), var(--color-gray-900));
 	box-shadow: var(--shadow-xl);
+}
+.k-block-options > .k-button.k-toolbar-button {
+	--button-width: 30px;
+	--rounded: calc(var(--rounded-md) - 1px);
 }
 .k-block-options > .k-button:not(:last-of-type) {
 	border-inline-end: 1px solid var(--toolbar-border);
