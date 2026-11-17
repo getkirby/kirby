@@ -107,6 +107,7 @@ import { IsoDateProps } from "./DateInput.vue";
  */
 export default {
 	mixins: [InputProps, IsoDateProps],
+	inheritAttrs: false,
 	emits: ["input"],
 	data() {
 		const today = this.$library.dayjs();

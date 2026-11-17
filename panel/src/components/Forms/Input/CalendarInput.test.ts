@@ -48,6 +48,7 @@ describe("k-calendar-input", () => {
 		it.rendersAs(mount, "FIELDSET", "k-calendar-input");
 		it.acceptsClass(mount);
 		it.acceptsStyle(mount);
+		it.inheritsNoAttrs(mount);
 
 		it("has a legend for screen readers", () => {
 			const wrapper = mount();
