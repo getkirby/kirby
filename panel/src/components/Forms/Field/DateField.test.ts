@@ -3,7 +3,7 @@ import { mount as vueMount } from "@vue/test-utils";
 import DateField from "./DateField.vue";
 
 const Calendar = {
-	name: "k-calendar",
+	name: "k-calendar-input",
 	props: ["max", "min", "value"],
 	emits: ["input"],
 	template: "<div />"
@@ -33,7 +33,7 @@ function mount(props = {}, attrs = {}) {
 		attrs,
 		global: {
 			stubs: {
-				"k-calendar": Calendar,
+				"k-calendar-input": Calendar,
 				"k-dropdown": Dropdown,
 				"k-input": Input,
 				"k-timeoptions-input": Times
