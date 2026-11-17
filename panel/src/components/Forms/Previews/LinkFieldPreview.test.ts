@@ -38,7 +38,11 @@ describe("k-link-field-preview", () => {
 	});
 
 	describe("element of a page", () => {
-		const page = (attrs = {}) => mount({ value: "page://a" }, attrs);
+		// the model preview is rendered in a fragment
+		const page = (attrs = {}) =>
+			mount({ value: "page://a" }, attrs).findComponent(PagesPreview);
+		it.acceptsClass(page);
+		it.acceptsStyle(page);
 		it.inheritsNoAttrs(page);
 	});
 
