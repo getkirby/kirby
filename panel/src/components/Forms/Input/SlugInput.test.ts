@@ -28,6 +28,8 @@ describe("k-slug-input", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "INPUT", "k-slug-input");
+		it.acceptsClass(mount);
+		it.acceptsStyle(mount);
 		it.inheritsNoAttrs(mount);
 
 		it("renders a k-string-input", () => {

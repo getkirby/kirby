@@ -1,10 +1,11 @@
 <template>
 	<k-string-input
 		v-bind="$props"
+		:class="['k-slug-input', $attrs.class]"
 		:spellcheck="false"
+		:style="$attrs.style"
 		:value="slug"
 		autocomplete="off"
-		class="k-slug-input"
 		@input="$emit('input', $event)"
 	/>
 </template>
