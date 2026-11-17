@@ -66,10 +66,12 @@ beforeEach(() => {
 
 /**
  * Tests share one document and module scope per worker
- * (`isolate: false`), so neither markup nor the global
- * dayjs locale must leak into the next test.
+ * (`isolate: false`), so neither markup nor the interface
+ * language must leak into the next test.
  */
 afterEach(() => {
 	document.body.innerHTML = "";
+	document.body.dir = "";
+	document.documentElement.lang = "";
 	dayjs.locale("en");
 });
