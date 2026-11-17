@@ -1,10 +1,6 @@
-import { afterEach, describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import dayjs from "./dayjs";
 import { toName } from "./dayjs-locale";
-
-afterEach(() => {
-	dayjs.locale("en");
-});
 
 describe("dayjs.locale()", () => {
 	it("builds and activates a locale", () => {
