@@ -48,11 +48,14 @@ export default {
 			return this.$refs.input.$refs.input.$refs.input;
 		},
 		merge(blocks) {
+			const html = blocks.map((block) => block.content.text).join("");
+
+			// the input only holds a single list, so the items
+			// of all blocks move into the list of the first block
 			this.update({
-				text: blocks
-					.map((block) => block.content.text)
-					.join("")
-					.replaceAll("</ul><ul>", "")
+				text: html
+					.replace(/<\/[ou]l><[ou]l[^>]*>/g, "")
+					.replace(/<\/[ou]l>$/, html.startsWith("<ol") ? "</ol>" : "</ul>")
 			});
 		},
 		split() {
@@ -60,8 +63,10 @@ export default {
 
 			if (contents) {
 				this.$emit("split", [
-					{ text: contents[0].replace(/(<li><p><\/p><\/li><\/ul>)$/, "</ul>") },
-					{ text: contents[1].replace(/^(<ul><li><p><\/p><\/li>)/, "<ul>") }
+					{ text: contents[0].replace(/<li><p><\/p><\/li>(<\/[ou]l>)$/, "$1") },
+					{
+						text: contents[1].replace(/^(<[ou]l[^>]*>)<li><p><\/p><\/li>/, "$1")
+					}
 				]);
 			}
 		}
