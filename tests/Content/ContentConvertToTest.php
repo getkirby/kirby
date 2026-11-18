@@ -116,6 +116,56 @@ class ContentConvertToTest extends TestCase
 		$this->assertSame('- page://abc', $new['related']);
 	}
 
+	public function testConvertToForPageWithPreservedValues(): void
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'template' => 'content-b',
+						'content'  => [
+							'both'  => 'Both',
+							'onlya' => 'A only'
+						]
+					]
+				]
+			],
+			'blueprints' => [
+				'pages/content-a' => [
+					'fields' => [
+						'both' => [
+							'type' => 'text'
+						],
+						'onlya' => [
+							'type' => 'text'
+						],
+						'empty' => [
+							'type'    => 'text',
+							'default' => 'Default'
+						]
+					]
+				],
+				'pages/content-b' => [
+					'fields' => [
+						'both' => [
+							'type' => 'text'
+						],
+						'onlyb' => [
+							'type' => 'text'
+						]
+					]
+				]
+			],
+		]);
+
+		$new = $app->page('test')->content()->convertTo('content-a');
+
+		$this->assertSame('Both', $new['both']);
+		$this->assertSame('A only', $new['onlya']);
+		$this->assertSame('Default', $new['empty']);
+	}
+
 	public function testConvertToForFile(): void
 	{
 		$app = $this->app->clone([
