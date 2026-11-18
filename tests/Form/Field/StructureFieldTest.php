@@ -294,6 +294,36 @@ class StructureFieldTest extends TestCase
 		], $field->toStoredValue());
 	}
 
+	public function testFillWithInvalidRows(): void
+	{
+		$field = $this->field('structure', [
+			'fields' => [
+				'text' => [
+					'type' => 'text'
+				]
+			]
+		]);
+
+		$field->fill("- text: A\n- B\n- text: C");
+
+		$this->assertSame([
+			['text' => 'A'],
+			['text' => 'C']
+		], $field->toFormValue());
+
+		$this->assertSame([
+			['text' => 'A'],
+			['text' => 'C']
+		], $field->toStoredValue());
+
+		$this->assertTrue($field->isValid());
+
+		$field->fill('A only');
+
+		$this->assertSame([], $field->toFormValue());
+		$this->assertSame([], $field->toStoredValue());
+	}
+
 	public function testIsValid(): void
 	{
 		$field = $this->field('structure', [
