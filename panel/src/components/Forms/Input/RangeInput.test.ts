@@ -228,6 +228,18 @@ describe("k-range-input", () => {
 			const wrapper = mount({ autofocus: true });
 			expect(document.activeElement).toBe(range(wrapper));
 		});
+
+		it("marks a missing required value as invalid", () => {
+			const wrapper = mount({ required: true });
+			expect(range(wrapper).validationMessage).toBe(
+				"error.validation.required"
+			);
+		});
+
+		it("marks a value below the minimum as invalid", () => {
+			const wrapper = mount({ min: 10, value: 5 });
+			expect(range(wrapper).validationMessage).toBe("error.validation.min");
+		});
 	});
 
 	// methods
