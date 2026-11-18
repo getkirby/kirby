@@ -33,7 +33,9 @@ export default abstract class Node<
 		return [];
 	}
 
-	abstract get schema(): NodeSpec;
+	get schema(): NodeSpec {
+		return {};
+	}
 
 	get type(): "node" {
 		return "node";
