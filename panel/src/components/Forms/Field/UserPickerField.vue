@@ -20,6 +20,9 @@ export default {
 						? this.$t("field.users.empty")
 						: this.$t("field.users.empty.single"))
 			};
+		},
+		modelType() {
+			return "user";
 		}
 	}
 };

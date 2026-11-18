@@ -180,7 +180,7 @@ describe("k-filepicker-field", () => {
 	describe("mounted hook", () => {
 		it("listens to deleted files until unmounted", () => {
 			const wrapper = mount();
-			const handler = wrapper.vm.removeById;
+			const handler = wrapper.vm.onDelete;
 			expect(events.on).toHaveBeenCalledWith("file.delete", handler);
 			wrapper.unmount();
 			expect(events.off).toHaveBeenCalledWith("file.delete", handler);
@@ -188,6 +188,41 @@ describe("k-filepicker-field", () => {
 	});
 
 	// methods
+	describe("onDelete()", () => {
+		it("removes the deleted file by uuid", () => {
+			const wrapper = mount({ value: ["file://a", "file://b"] });
+			wrapper.vm.onDelete({
+				event: "file.delete",
+				file: { id: "test/a.jpg", uuid: "file://a" }
+			});
+			expect(wrapper.emitted("input")).toStrictEqual([[["file://b"]]]);
+		});
+
+		it("removes the deleted file by id", () => {
+			const wrapper = mount({ value: ["test/a.jpg", "test/b.jpg"] });
+			wrapper.vm.onDelete({
+				event: "file.delete",
+				file: { id: "test/a.jpg", uuid: null }
+			});
+			expect(wrapper.emitted("input")).toStrictEqual([[["test/b.jpg"]]]);
+		});
+
+		it("does not emit for files that are not selected", () => {
+			const wrapper = mount({ value: ["file://a"] });
+			wrapper.vm.onDelete({
+				event: "file.delete",
+				file: { id: "test/c.jpg", uuid: "file://c" }
+			});
+			expect(wrapper.emitted("input")).toBeUndefined();
+		});
+
+		it("does not emit without file in the response", () => {
+			const wrapper = mount({ value: ["file://a"] });
+			wrapper.vm.onDelete({ event: "file.delete", redirect: null });
+			expect(wrapper.emitted("input")).toBeUndefined();
+		});
+	});
+
 	describe("drop()", () => {
 		it("uploads the dropped files", () => {
 			const $panel = panel();

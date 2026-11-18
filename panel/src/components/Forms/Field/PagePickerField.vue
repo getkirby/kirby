@@ -20,6 +20,9 @@ export default {
 						? this.$t("field.pages.empty")
 						: this.$t("field.pages.empty.single"))
 			};
+		},
+		modelType() {
+			return "page";
 		}
 	}
 };

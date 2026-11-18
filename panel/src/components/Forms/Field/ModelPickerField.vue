@@ -104,6 +104,13 @@ export default {
 		hasDropzone() {
 			return false;
 		},
+		/**
+		 * Type of the picked models (`file`, `page` or `user`),
+		 * used to remove deleted models from the value
+		 */
+		modelType() {
+			return null;
+		},
 		more() {
 			return !this.max || this.max > this.selected.length;
 		}
@@ -116,6 +123,16 @@ export default {
 		"$panel.language.code"() {
 			this.selected = [];
 			this.fetch();
+		}
+	},
+	mounted() {
+		if (this.modelType !== null) {
+			this.$events.on(`${this.modelType}.delete`, this.onDelete);
+		}
+	},
+	unmounted() {
+		if (this.modelType !== null) {
+			this.$events.off(`${this.modelType}.delete`, this.onDelete);
 		}
 	},
 	methods: {
@@ -179,6 +196,19 @@ export default {
 			}
 
 			return item.id === id;
+		},
+		/**
+		 * Removes a deleted model from the value. The delete dialog
+		 * responds with the model's identifiers under its type,
+		 * e.g. `{ event: "page.delete", page: { id, uuid } }`
+		 */
+		onDelete(response) {
+			const { id, uuid } = response?.[this.modelType] ?? {};
+			const ids = [id, uuid].filter(Boolean);
+
+			if (ids.length > 0) {
+				this.removeById(...ids);
+			}
 		},
 		onSort(items) {
 			this.$emit(

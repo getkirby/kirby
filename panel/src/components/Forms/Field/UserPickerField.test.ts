@@ -6,6 +6,7 @@ import UserPickerField from "./UserPickerField.vue";
 const Collection = { props: ["empty"], template: "<div />" };
 
 const api = { get: vi.fn() };
+const events = { off: vi.fn(), on: vi.fn() };
 
 function mount(props = {}, attrs = {}) {
 	return vueMount(UserPickerField, {
@@ -18,7 +19,7 @@ function mount(props = {}, attrs = {}) {
 		attrs,
 		global: {
 			components: { "k-collection": Collection },
-			mocks: { $panel: { api } }
+			mocks: { $events: events, $panel: { api } }
 		}
 	});
 }
@@ -64,6 +65,29 @@ describe("k-userpicker-field", () => {
 			expect(empty({ empty: "No authors yet", multiple: true }).text).toBe(
 				"No authors yet"
 			);
+		});
+	});
+
+	// lifecycle
+	describe("mounted hook", () => {
+		it("listens to deleted users until unmounted", () => {
+			const wrapper = mount();
+			const handler = wrapper.vm.onDelete;
+			expect(events.on).toHaveBeenCalledWith("user.delete", handler);
+			wrapper.unmount();
+			expect(events.off).toHaveBeenCalledWith("user.delete", handler);
+		});
+	});
+
+	// methods
+	describe("onDelete()", () => {
+		it("removes the deleted user", () => {
+			const wrapper = mount({ value: ["user://a", "user://b"] });
+			wrapper.vm.onDelete({
+				event: "user.delete",
+				user: { id: "a", uuid: "user://a" }
+			});
+			expect(wrapper.emitted("input")).toStrictEqual([[["user://b"]]]);
 		});
 	});
 });
