@@ -10,6 +10,7 @@
 		@input="$emit('input', $event)"
 		@paste="onPaste"
 		@keydown.meta.s.stop.prevent="onSave"
+		@keydown.ctrl.s.stop.prevent="onSave"
 		@keydown.enter="onSave"
 	/>
 </template>

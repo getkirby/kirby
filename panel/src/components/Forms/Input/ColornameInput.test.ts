@@ -160,6 +160,12 @@ describe("k-colorname-input", () => {
 	});
 
 	describe("keydown event", () => {
+		it("converts the color on ctrl+s", async () => {
+			const wrapper = mount({ value: "rgb(255, 0, 0)" });
+			await wrapper.find("input").trigger("keydown.s", { ctrlKey: true });
+			expect(wrapper.emitted("input")).toStrictEqual([["#ff0000"]]);
+		});
+
 		it("converts the color on enter", async () => {
 			const wrapper = mount({ value: "rgb(255, 0, 0)" });
 			await wrapper.find("input").trigger("keydown.enter");
