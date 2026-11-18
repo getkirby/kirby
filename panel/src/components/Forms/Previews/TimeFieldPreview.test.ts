@@ -44,5 +44,10 @@ describe("k-time-field-preview", () => {
 		it("formats the time as hours and minutes by default", () => {
 			expect(mount().text()).toBe("14:30");
 		});
+
+		it("shows a value that is no ISO time as is", () => {
+			const wrapper = mount({ value: "09:05" });
+			expect(wrapper.text()).toBe("09:05");
+		});
 	});
 });
