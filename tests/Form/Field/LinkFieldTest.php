@@ -30,6 +30,21 @@ class LinkFieldTest extends TestCase
 		], $field->options());
 	}
 
+	public function testEmailWithHeaderFields(): void
+	{
+		$field = $this->field('link', [
+			'value' => 'mailto:test@getkirby.com?subject=Hallo%20Welt&body=Hello'
+		]);
+
+		$this->assertTrue($field->isValid());
+
+		$field = $this->field('link', [
+			'value' => 'mailto:test@getkirby.com?attach=/etc/passwd'
+		]);
+
+		$this->assertFalse($field->isValid());
+	}
+
 	public function testOptionsInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);

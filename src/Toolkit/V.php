@@ -466,6 +466,47 @@ V::$validators = [
 	},
 
 	/**
+	 * Checks for a valid `mailto:` URI with one email
+	 * address and only the `subject`, `body`, `cc`
+	 * and `bcc` header fields
+	 */
+	'mailto' => function ($value): bool {
+		if (is_string($value) === false) {
+			return false;
+		}
+
+		$uri = parse_url($value);
+
+		if (
+			($uri['scheme'] ?? null) !== 'mailto' ||
+			isset($uri['fragment']) === true ||
+			V::email(rawurldecode($uri['path'] ?? '')) === false
+		) {
+			return false;
+		}
+
+		foreach (explode('&', $uri['query'] ?? '') as $field) {
+			$name = strtolower(rawurldecode(Str::before($field, '=') ?: $field));
+
+			if ($field === '' || in_array($name, ['subject', 'body'], true) === true) {
+				continue;
+			}
+
+			if (in_array($name, ['cc', 'bcc'], true) === false) {
+				return false;
+			}
+
+			foreach (explode(',', rawurldecode(Str::after($field, '='))) as $address) {
+				if (V::email($address) === false) {
+					return false;
+				}
+			}
+		}
+
+		return true;
+	},
+
+	/**
 	 * Checks if the value matches the given regular expression
 	 */
 	'match' => function ($value, string $pattern): bool {

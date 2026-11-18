@@ -949,6 +949,9 @@ class DomTest extends TestCase
 			// allowed valid email address
 			['mailto:test@getkirby.com', true],
 
+			// allowed email address with subject and body
+			['mailto:test@getkirby.com?subject=Hi&body=Hello', true],
+
 			// allowed empty phone number
 			['tel:', true],
 
@@ -994,6 +997,9 @@ class DomTest extends TestCase
 
 			// forbidden invalid email address
 			['mailto:test', 'Invalid email address'],
+
+			// forbidden header fields in email links
+			['mailto:test@getkirby.com?attach=/etc/passwd', 'Invalid email address'],
 
 			// forbidden phone numbers
 			['tel:test', 'Invalid telephone number'],

@@ -213,6 +213,67 @@ class VTest extends TestCase
 		$this->assertFalse(V::same('true', true, true));
 	}
 
+	public static function mailtoProvider(): array
+	{
+		return [
+			// RFC 6068, section 6
+			['mailto:chris@example.com', true],
+			['mailto:infobot@example.com?subject=current-issue', true],
+			['mailto:infobot@example.com?body=send%20current-issue', true],
+			['mailto:infobot@example.com?body=send%20current-issue%0D%0Asend%20index', true],
+			['mailto:majordomo@example.com?body=subscribe%20bamboo-l', true],
+			['mailto:gorby%25kremvax@example.com', true],
+			['mailto:Mike%26family@example.org', true],
+			['mailto:%22not%40me%22@example.org', true],
+			['mailto:%22oh%5C%5Cno%22@example.org', true],
+			['mailto:user@example.org?subject=caf%C3%A9&body=caf%C3%A9', true],
+			['mailto:user@example.org?subject=%3D%3Futf-8%3FQ%3Fcaf%3DC3%3DA9%3F%3D', true],
+			['mailto:user@%E7%B4%8D%E8%B1%86.example.org?subject=Test&body=NATTO', true],
+			['mailto:joe@example.com?cc=bob@example.com?body=hello', false],
+			['mailto:unlikely%3Faddress@example.com?blat=foop', false],
+
+			['mailto:joe@example.com?cc=bob@example.com&body=hello', true],
+
+			// RFC 6068, section 6: more than one address or other header fields
+			['mailto:list@example.org?In-Reply-To=%3C3469A91.D10AF4C@example.com%3E', false],
+			['mailto:?to=addr1@an.example,addr2@an.example', false],
+			['mailto:addr1@an.example,addr2@an.example', false],
+			['mailto:addr1@an.example?to=addr2@an.example', false],
+
+			// subject, body, cc and bcc
+			['mailto:test@getkirby.com?SUBJECT=Hi&Body=Hello', true],
+			['mailto:test@getkirby.com?cc=a@getkirby.com&BCC=b@getkirby.com,c@getkirby.com', true],
+			['mailto:test@getkirby.com?cc=a%40getkirby.com', true],
+			['mailto:test@getkirby.com?subject=', true],
+			['mailto:test@getkirby.com?', true],
+
+			// invalid or unsafe
+			['mailto:test@getkirby.com?attach=/etc/passwd', false],
+			['mailto:test@getkirby.com?subject=Hi&attachment=/etc/passwd', false],
+			['mailto:test@getkirby.com?keywords=kirby', false],
+			['mailto:test@getkirby.com?to=a@getkirby.com', false],
+			['mailto:test@getkirby.com?cc=nope', false],
+			['mailto:test@getkirby.com?cc=', false],
+			['mailto:test@getkirby.com?bcc=a@getkirby.com,%20b@getkirby.com', false],
+			['mailto:test@getkirby.com#top', false],
+			['mailto:', false],
+			['mailto:?subject=Hi', false],
+			['mailto:test', false],
+			['MAILTO:test@getkirby.com', false],
+			['test@getkirby.com', false],
+			['https://getkirby.com', false],
+			['', false],
+			[null, false],
+			[['mailto:test@getkirby.com'], false],
+		];
+	}
+
+	#[DataProvider('mailtoProvider')]
+	public function testMailto(mixed $value, bool $expected): void
+	{
+		$this->assertSame($expected, V::mailto($value));
+	}
+
 	public function testEmail(): void
 	{
 		$this->assertTrue(V::email('bastian@getkirby.com'));

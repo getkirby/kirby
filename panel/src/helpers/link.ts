@@ -183,8 +183,9 @@ export function types(keys: string[] = []): Record<string, LinkType> {
 			id: "email",
 			label: panel.$t("email"),
 			link: (value) => value.replace(/^mailto:/, ""),
+			pattern: "[^\\s,]+@[^\\s,]+\\.[^\\s,]+",
 			placeholder: panel.$t("email.placeholder"),
-			input: "email",
+			input: "text",
 			value: (value) => "mailto:" + value
 		},
 		tel: {

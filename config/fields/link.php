@@ -73,7 +73,7 @@ return [
 						return str_replace('mailto:', '', $value);
 					},
 					'validate' => function (string $value): bool {
-						return V::email($value);
+						return V::mailto('mailto:' . $value);
 					},
 				],
 				'file' => [
