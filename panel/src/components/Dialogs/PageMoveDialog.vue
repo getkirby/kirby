@@ -12,7 +12,7 @@
 		@submit="$emit('submit', value)"
 	>
 		<k-headline>{{ $t("page.move") }}</k-headline>
-		<div class="k-page-move-parent" tabindex="0" data-autofocus>
+		<div class="k-page-move-parent" tabindex="-1" data-autofocus>
 			<k-page-tree
 				:current="value.parent"
 				:move="value.move"
