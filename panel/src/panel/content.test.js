@@ -68,6 +68,21 @@ function lockError() {
 	});
 }
 
+/**
+ * Mocks `panel.api.post` with requests that fail
+ * until the connection is back
+ */
+function offline() {
+	let online = false;
+
+	return {
+		post: vi.fn(() =>
+			online ? Promise.resolve() : Promise.reject(new Error("Offline"))
+		),
+		reconnect: () => (online = true)
+	};
+}
+
 describe("panel.content", () => {
 	describe("cancelSaving()", () => {
 		it("cancels the lazy save", () => {
@@ -77,16 +92,6 @@ describe("panel.content", () => {
 			content.cancelSaving();
 
 			expect(cancel).toHaveBeenCalledOnce();
-		});
-
-		it("aborts an ongoing save request", () => {
-			const { content } = factory();
-			const abort = vi.fn();
-
-			content.saveAbortController = { abort: abort };
-			content.cancelSaving();
-
-			expect(abort).toHaveBeenCalledOnce();
 		});
 	});
 
@@ -204,6 +209,29 @@ describe("panel.content", () => {
 
 			expect(content.isProcessing).toBe(false);
 		});
+
+		it("runs after a running save request", async () => {
+			const finish = [];
+			const { content, panel } = factory({
+				post: vi.fn(() => new Promise((resolve) => finish.push(resolve)))
+			});
+
+			const save = content.save({ title: "Draft" });
+			const discard = content.discard();
+
+			expect(endpoints(panel)).toStrictEqual(["/pages/test/changes/save"]);
+
+			finish[0]();
+			await save;
+
+			expect(endpoints(panel)).toStrictEqual([
+				"/pages/test/changes/save",
+				"/pages/test/changes/discard"
+			]);
+
+			finish[1]();
+			await discard;
+		});
 	});
 
 	describe("emit()", () => {
@@ -251,6 +279,153 @@ describe("panel.content", () => {
 		});
 	});
 
+	describe("flush()", () => {
+		it("writes the scheduled save", async () => {
+			const { content, panel } = factory();
+
+			content.updateLazy({ title: "First" });
+			content.updateLazy({ title: "Second" });
+
+			await expect(content.flush()).resolves.toBe(true);
+
+			expect(endpoints(panel)).toStrictEqual([
+				"/pages/test/changes/save",
+				"/pages/test/changes/save"
+			]);
+			expect(panel.api.post.mock.calls[1][1]).toStrictEqual({
+				title: "Second"
+			});
+		});
+
+		it("does nothing when all changes have been written", () => {
+			const { content, panel } = factory({
+				changes: { title: "Draft" },
+				latest: { title: "Test" }
+			});
+
+			expect(content.flush()).toBeUndefined();
+
+			expect(panel.api.post).not.toHaveBeenCalled();
+		});
+
+		it("sends the form again after a failed save", async () => {
+			const { post, reconnect } = offline();
+			const { content, panel } = factory({ post });
+
+			await expect(content.update({ title: "Typed" })).rejects.toThrowError(
+				"Offline"
+			);
+
+			reconnect();
+
+			await expect(content.flush()).resolves.toBe(true);
+
+			expect(panel.api.post).toHaveBeenLastCalledWith(
+				"/pages/test/changes/save",
+				{ title: "Typed" },
+				expect.objectContaining({ silent: true })
+			);
+		});
+
+		it("sends the form again after a failed publish", async () => {
+			const { post, reconnect } = offline();
+			const { content, panel } = factory({ post });
+
+			await expect(content.publish({ title: "Typed" })).rejects.toThrowError(
+				"Offline"
+			);
+
+			reconnect();
+
+			await expect(content.flush()).resolves.toBe(true);
+
+			expect(panel.api.post).toHaveBeenLastCalledWith(
+				"/pages/test/changes/save",
+				{ title: "Typed" },
+				expect.objectContaining({ silent: true })
+			);
+		});
+
+		it("keeps content busy while the form is sent again", async () => {
+			const { post, reconnect } = offline();
+			const { content } = factory({ post });
+
+			await expect(content.update({ title: "Typed" })).rejects.toThrowError(
+				"Offline"
+			);
+
+			// closing the page has to warn about the failed changes
+			reconnect();
+			const flush = content.flush();
+
+			expect(content.isBusy()).toBe(true);
+
+			await flush;
+		});
+
+		it("does not send the form again once it has been written", async () => {
+			const { post, reconnect } = offline();
+			const { content, panel } = factory({ post });
+
+			await expect(content.update({ title: "Typed" })).rejects.toThrowError(
+				"Offline"
+			);
+
+			reconnect();
+			await content.update({ title: "Typed more" });
+			await content.flush();
+
+			expect(panel.api.post).toHaveBeenCalledTimes(2);
+		});
+
+		it("does not send the form again after a discard", async () => {
+			const { post, reconnect } = offline();
+			const { content, panel } = factory({ post });
+
+			await expect(content.update({ title: "Typed" })).rejects.toThrowError(
+				"Offline"
+			);
+
+			reconnect();
+			await content.discard();
+			await content.flush();
+
+			expect(endpoints(panel)).toStrictEqual([
+				"/pages/test/changes/save",
+				"/pages/test/changes/discard"
+			]);
+		});
+
+		it("does not send the form of a view that was left", async () => {
+			const { post, reconnect } = offline();
+			const { content, panel } = factory({ post });
+
+			await expect(content.update({ title: "Typed" })).rejects.toThrowError(
+				"Offline"
+			);
+
+			// the editor navigates to another view
+			panel.view.props = { ...panel.view.props, api: "/pages/other" };
+			reconnect();
+
+			await content.flush();
+			await content.flush({ api: "/pages/test" });
+
+			expect(panel.api.post).toHaveBeenCalledOnce();
+		});
+
+		it("does not send the form again when the view got locked", async () => {
+			const { content, panel } = factory({
+				post: vi.fn(() => Promise.reject(lockError()))
+			});
+
+			await content.update({ title: "Typed" });
+			await content.flush();
+
+			expect(panel.api.post).toHaveBeenCalledOnce();
+		});
+	});
+
 	describe("hasDiff()", () => {
 		it("returns false when changes match latest", () => {
 			const { content } = factory({
@@ -268,6 +443,63 @@ describe("panel.content", () => {
 			});
 
 			expect(content.hasDiff()).toBe(true);
+		});
+	});
+
+	describe("isBusy()", () => {
+		it("returns whether content requests are running or waiting", async () => {
+			const finish = [];
+			const { content } = factory({
+				post: vi.fn(() => new Promise((resolve) => finish.push(resolve)))
+			});
+
+			expect(content.isBusy()).toBe(false);
+
+			const save = content.save({ title: "Draft" });
+
+			expect(content.isBusy()).toBe(true);
+
+			finish[0]();
+			await save;
+
+			expect(content.isBusy()).toBe(false);
+		});
+
+		it("returns false while the view is refreshed", async () => {
+			const finish = [];
+			const { content, panel } = factory();
+
+			// closing the page during a refresh loses nothing
+			panel.view.refresh = vi.fn(
+				() => new Promise((resolve) => finish.push(resolve))
+			);
+
+			const refresh = content.refresh();
+
+			await vi.waitFor(() => expect(panel.view.refresh).toHaveBeenCalledOnce());
+			expect(content.isBusy()).toBe(false);
+
+			finish[0]();
+			await refresh;
+		});
+
+		it("returns true for a save that waits behind the refresh", async () => {
+			const finish = [];
+			const { content, panel } = factory();
+
+			panel.view.refresh = vi.fn(
+				() => new Promise((resolve) => finish.push(resolve))
+			);
+
+			const refresh = content.refresh();
+			const save = content.save({ title: "Typed" });
+
+			expect(content.isBusy()).toBe(true);
+
+			finish[0]();
+			await Promise.all([refresh, save]);
+
+			expect(content.isBusy()).toBe(false);
 		});
 	});
 
@@ -454,6 +686,178 @@ describe("panel.content", () => {
 
 			expect(content.isProcessing).toBe(false);
 		});
+
+		it("runs after a running save request", async () => {
+			const finish = [];
+			const { content, panel } = factory({
+				post: vi.fn(() => new Promise((resolve) => finish.push(resolve)))
+			});
+
+			const save = content.save({ title: "Draft" });
+			const publish = content.publish({ title: "Draft" });
+
+			expect(endpoints(panel)).toStrictEqual(["/pages/test/changes/save"]);
+
+			finish[0]();
+			await save;
+
+			expect(endpoints(panel)).toStrictEqual([
+				"/pages/test/changes/save",
+				"/pages/test/changes/publish"
+			]);
+
+			finish[1]();
+			await publish;
+		});
+
+		it("runs before a save request that is added while waiting", async () => {
+			const finish = [];
+			const { content, panel } = factory({
+				post: vi.fn(() => new Promise((resolve) => finish.push(resolve)))
+			});
+
+			const first = content.save({ title: "First" });
+			const publish = content.publish({ title: "First" });
+			const second = content.save({ title: "Second" });
+
+			finish[0]();
+			await first;
+			finish[1]();
+			await publish;
+			finish[2]();
+			await second;
+
+			expect(endpoints(panel)).toStrictEqual([
+				"/pages/test/changes/save",
+				"/pages/test/changes/publish",
+				"/pages/test/changes/save"
+			]);
+		});
+	});
+
+	describe("refresh()", () => {
+		/**
+		 * Mocks a view refresh that finishes on demand
+		 * and then replaces the props with the server's
+		 */
+		function refreshing(panel, versions) {
+			const finish = [];
+
+			panel.view.refresh = vi.fn(
+				() =>
+					new Promise((resolve) =>
+						finish.push(() => {
+							panel.view.props = { ...panel.view.props, versions };
+							resolve();
+						})
+					)
+			);
+
+			return finish;
+		}
+
+		it("keeps the changes made while the view was refreshed", async () => {
+			const { content, panel } = factory();
+			const finish = refreshing(panel, {
+				changes: { title: "Published" },
+				latest: { title: "Published" }
+			});
+
+			const refresh = content.refresh();
+
+			content.updateLazy({ title: "Typed" });
+
+			finish[0]();
+			await refresh;
+
+			expect(content.version("changes")).toStrictEqual({ title: "Typed" });
+			expect(content.version("latest")).toStrictEqual({ title: "Published" });
+		});
+
+		it("adopts the refreshed changes without new input", async () => {
+			const { content, panel } = factory({ changes: { title: "Old" } });
+			const finish = refreshing(panel, {
+				changes: { title: "Server" },
+				latest: { title: "Server" }
+			});
+
+			const refresh = content.refresh();
+
+			finish[0]();
+			await refresh;
+
+			expect(content.version("changes")).toStrictEqual({ title: "Server" });
+		});
+
+		it("refreshes after the running save and before a newer one", async () => {
+			const posts = [];
+			const { content, panel } = factory({
+				post: vi.fn(() => new Promise((resolve) => posts.push(resolve)))
+			});
+			const finish = refreshing(panel, { changes: {}, latest: {} });
+
+			const save = content.save({ title: "Draft" });
+			const refresh = content.refresh();
+			content.save({ title: "Typed" });
+
+			expect(panel.view.refresh).not.toHaveBeenCalled();
+
+			posts[0]();
+			await save;
+
+			expect(panel.view.refresh).toHaveBeenCalledOnce();
+			expect(endpoints(panel)).toStrictEqual(["/pages/test/changes/save"]);
+
+			finish[0]();
+			await refresh;
+
+			expect(endpoints(panel)).toStrictEqual([
+				"/pages/test/changes/save",
+				"/pages/test/changes/save"
+			]);
+		});
+
+		it("writes the scheduled save first", async () => {
+			const { content, panel } = factory();
+			const finish = refreshing(panel, { changes: {}, latest: {} });
+
+			content.updateLazy({ title: "First" });
+			content.updateLazy({ title: "Second" });
+
+			const refresh = content.refresh();
+
+			await vi.waitFor(() => expect(panel.view.refresh).toHaveBeenCalledOnce());
+			expect(endpoints(panel)).toStrictEqual([
+				"/pages/test/changes/save",
+				"/pages/test/changes/save"
+			]);
+
+			finish[0]();
+			await refresh;
+		});
+
+		it("sends the changes of a failed save again first", async () => {
+			const { post, reconnect } = offline();
+			const { content, panel } = factory({ post });
+			const finish = refreshing(panel, { changes: {}, latest: {} });
+
+			await expect(content.update({ title: "Typed" })).rejects.toThrowError(
+				"Offline"
+			);
+
+			reconnect();
+			const refresh = content.refresh();
+
+			await vi.waitFor(() => expect(panel.view.refresh).toHaveBeenCalledOnce());
+			expect(panel.api.post).toHaveBeenLastCalledWith(
+				"/pages/test/changes/save",
+				{ title: "Typed" },
+				expect.objectContaining({ silent: true })
+			);
+
+			finish[0]();
+			await refresh;
+		});
 	});
 
 	describe("save()", () => {
@@ -504,15 +908,146 @@ describe("panel.content", () => {
 			expect(panel.dialog.open).toHaveBeenCalledOnce();
 		});
 
-		it("returns false when a newer save request took over", async () => {
-			const error = new Error("The request was aborted");
-			error.name = "AbortError";
-
-			const { content } = factory({
-				post: vi.fn(() => Promise.reject(error))
+		it("runs save requests one after another", async () => {
+			const finish = [];
+			const { content, panel } = factory({
+				post: vi.fn(() => new Promise((resolve) => finish.push(resolve)))
 			});
 
-			await expect(content.save({ title: "Draft" })).resolves.toBe(false);
+			const first = content.save({ title: "First" });
+			const second = content.save({ title: "Second" });
+
+			expect(panel.api.post).toHaveBeenCalledOnce();
+
+			finish[0]();
+			await expect(first).resolves.toBe(true);
+
+			expect(panel.api.post).toHaveBeenCalledTimes(2);
+
+			finish[1]();
+			await expect(second).resolves.toBe(true);
+		});
+
+		it("replaces a waiting save request with a newer one", async () => {
+			const finish = [];
+			const { content, panel } = factory({
+				post: vi.fn(() => new Promise((resolve) => finish.push(resolve)))
+			});
+
+			const first = content.save({ title: "First" });
+			const second = content.save({ title: "Second" });
+			const third = content.save({ title: "Third" });
+
+			finish[0]();
+			await first;
+			finish[1]();
+
+			// the newer request carries the full state,
+			// so it covers the replaced one as well
+			await expect(second).resolves.toBe(true);
+			await expect(third).resolves.toBe(true);
+
+			expect(panel.api.post).toHaveBeenCalledTimes(2);
+			expect(panel.api.post).toHaveBeenLastCalledWith(
+				"/pages/test/changes/save",
+				{ title: "Third" },
+				expect.objectContaining({ silent: true })
+			);
+		});
+
+		it("emits the save event only for values that have been sent", async () => {
+			const finish = [];
+			const { content, panel } = factory({
+				post: vi.fn(() => new Promise((resolve) => finish.push(resolve)))
+			});
+
+			const first = content.save({ title: "First" });
+			const second = content.save({ title: "Second" });
+			const third = content.save({ title: "Third" });
+
+			finish[0]();
+			await first;
+			finish[1]();
+			await Promise.all([second, third]);
+
+			const values = panel.events.emit.mock.calls.map((call) => call[1].values);
+
+			expect(values).toStrictEqual([{ title: "First" }, { title: "Third" }]);
+		});
+
+		it("leaves the error of a replaced save to the newer one", async () => {
+			const finish = [];
+			const { content } = factory({
+				post: vi.fn(
+					() =>
+						new Promise((resolve, reject) => finish.push({ reject, resolve }))
+				)
+			});
+
+			const first = content.save({ title: "First" });
+			const second = content.save({ title: "Second" });
+			const third = content.save({ title: "Third" });
+
+			finish[0].resolve();
+			await first;
+			finish[1].reject(new Error("Offline"));
+
+			// only one of them reports the failed request
+			await expect(second).resolves.toBe(false);
+			await expect(third).rejects.toThrowError("Offline");
+		});
+
+		it("keeps a waiting save request of another view", async () => {
+			const finish = [];
+			const { content, panel } = factory({
+				post: vi.fn(() => new Promise((resolve) => finish.push(resolve)))
+			});
+
+			const first = content.save({ title: "First" });
+			const second = content.save({ title: "Second" });
+
+			// the editor navigates to another view
+			panel.view.props.api = "/pages/other";
+			const other = content.save({ title: "Other" });
+
+			finish[0]();
+			await first;
+			finish[1]();
+			await second;
+			finish[2]();
+			await other;
+
+			expect(endpoints(panel)).toStrictEqual([
+				"/pages/test/changes/save",
+				"/pages/test/changes/save",
+				"/pages/other/changes/save"
+			]);
+		});
+
+		it("keeps a waiting save request of another language", async () => {
+			const finish = [];
+			const { content, panel } = factory({
+				post: vi.fn(() => new Promise((resolve) => finish.push(resolve)))
+			});
+
+			const first = content.save({ title: "First" });
+			const second = content.save({ title: "Second" });
+
+			panel.language.code = "de";
+			const translation = content.save({ title: "Zweiter" });
+
+			finish[0]();
+			await first;
+			finish[1]();
+			await second;
+			finish[2]();
+			await translation;
+
+			const languages = panel.api.post.mock.calls.map(
+				(call) => call[2].headers["x-language"]
+			);
+
+			expect(languages).toStrictEqual(["en", "en", "de"]);
 		});
 
 		it("rethrows any other error", async () => {
@@ -565,6 +1100,10 @@ describe("panel.content", () => {
 	});
 
 	describe("unlock()", () => {
+		afterEach(() => {
+			vi.useRealTimers();
+		});
+
 		it("sends the unlock request for the current view", async () => {
 			const { content, panel } = factory();
 
@@ -580,9 +1119,9 @@ describe("panel.content", () => {
 			);
 		});
 
-		it("does not save when there are no pending changes", async () => {
+		it("does not save changes that have already been written", async () => {
 			const { content, panel } = factory({
-				changes: { title: "Test" },
+				changes: { title: "New title" },
 				latest: { title: "Test" }
 			});
 
@@ -591,55 +1130,182 @@ describe("panel.content", () => {
 			expect(endpoints(panel)).toStrictEqual(["/pages/test/changes/unlock"]);
 		});
 
-		it("persists pending changes before releasing the lock", async () => {
-			const { content, panel } = factory({
-				changes: { title: "New title" },
-				latest: { title: "Test" }
-			});
+		it("sends the changes of a failed save again first", async () => {
+			const { post, reconnect } = offline();
+			const { content, panel } = factory({ post });
+
+			await expect(content.update({ title: "Typed" })).rejects.toThrowError(
+				"Offline"
+			);
+
+			// the editor switches the language
+			reconnect();
 
 			await expect(content.unlock()).resolves.toBe(true);
 
-			// the changes must be written before the lock is released,
-			// otherwise a late save would rewrite the lock we just released
+			expect(endpoints(panel)).toStrictEqual([
+				"/pages/test/changes/save",
+				"/pages/test/changes/save",
+				"/pages/test/changes/unlock"
+			]);
+			expect(panel.api.post.mock.calls[1][1]).toStrictEqual({
+				title: "Typed"
+			});
+		});
+
+		it("does not release the lock when the changes fail again", async () => {
+			const { post } = offline();
+			const { content, panel } = factory({ post });
+
+			await expect(content.update({ title: "Typed" })).rejects.toThrowError(
+				"Offline"
+			);
+
+			// the language switch stays on the view and reports the error
+			await expect(content.unlock()).rejects.toThrowError("Offline");
+
+			expect(endpoints(panel)).toStrictEqual([
+				"/pages/test/changes/save",
+				"/pages/test/changes/save"
+			]);
+		});
+
+		it("writes the scheduled save of the current view first", async () => {
+			const { content, panel } = factory();
+
+			content.updateLazy({ title: "First" });
+			content.updateLazy({ title: "Second" });
+
+			await expect(content.unlock()).resolves.toBe(true);
+
+			// a save after the unlock would rewrite the lock we just released
+			expect(endpoints(panel)).toStrictEqual([
+				"/pages/test/changes/save",
+				"/pages/test/changes/save",
+				"/pages/test/changes/unlock"
+			]);
+		});
+
+		it("releases the lock after the running save request", async () => {
+			const finish = [];
+			const { content, panel } = factory({
+				post: vi.fn((url) => {
+					if (url.endsWith("/unlock") === true) {
+						return Promise.resolve();
+					}
+
+					return new Promise((resolve) => finish.push(resolve));
+				})
+			});
+
+			const save = content.save({ title: "Draft" });
+			const unlock = content.unlock();
+
+			// the unlock waits for the running save
+			await new Promise((resolve) => setTimeout(resolve));
+			expect(endpoints(panel)).toStrictEqual(["/pages/test/changes/save"]);
+
+			finish[0]();
+			await save;
+			await expect(unlock).resolves.toBe(true);
+
 			expect(endpoints(panel)).toStrictEqual([
 				"/pages/test/changes/save",
 				"/pages/test/changes/unlock"
 			]);
 		});
 
-		it("does not release the lock when the view got locked in the meantime", async () => {
+		it("keeps a waiting unlock request of another view", async () => {
+			const finish = [];
 			const { content, panel } = factory({
-				changes: { title: "New title" },
-				latest: { title: "Test" },
+				post: vi.fn((url) => {
+					if (url.endsWith("/save") === true) {
+						return new Promise((resolve) => finish.push(resolve));
+					}
+
+					return Promise.resolve();
+				})
+			});
+
+			const save = content.save({ title: "Draft" });
+			const one = content.unlock({ api: "/pages/one" });
+			const two = content.unlock({ api: "/pages/two" });
+
+			finish[0]();
+			await save;
+			await Promise.all([one, two]);
+
+			expect(endpoints(panel)).toStrictEqual([
+				"/pages/test/changes/save",
+				"/pages/one/changes/unlock",
+				"/pages/two/changes/unlock"
+			]);
+		});
+
+		it("writes the scheduled save of a view that was left first", async () => {
+			const { content, panel } = factory();
+
+			content.updateLazy({ title: "First" });
+			content.updateLazy({ title: "Second" });
+
+			// the editor navigates to another view
+			panel.view.props.api = "/pages/other";
+
+			await expect(content.unlock({ api: "/pages/test" })).resolves.toBe(true);
+
+			expect(endpoints(panel)).toStrictEqual([
+				"/pages/test/changes/save",
+				"/pages/test/changes/save",
+				"/pages/test/changes/unlock"
+			]);
+			expect(panel.api.post.mock.calls[1][1]).toStrictEqual({
+				title: "Second"
+			});
+		});
+
+		it("keeps the scheduled save of the next view", async () => {
+			vi.useFakeTimers();
+
+			const { content, panel } = factory();
+
+			content.updateLazy({ title: "First" });
+			content.updateLazy({ title: "Second" });
+
+			panel.view.props.api = "/pages/other";
+			const unlock = content.unlock({ api: "/pages/test" });
+
+			// the editor types in the next view while the unlock is waiting
+			content.updateLazy({ title: "Next" });
+			content.updateLazy({ title: "Later" });
+
+			await unlock;
+			await vi.advanceTimersByTimeAsync(1000);
+
+			expect(endpoints(panel)).toStrictEqual([
+				"/pages/test/changes/save",
+				"/pages/test/changes/save",
+				"/pages/other/changes/save",
+				"/pages/test/changes/unlock",
+				"/pages/other/changes/save"
+			]);
+		});
+
+		it("does not release the lock when the scheduled save hit a lock", async () => {
+			const { content, panel } = factory({
 				post: vi.fn(() => Promise.reject(lockError()))
 			});
 
-			await expect(content.unlock()).resolves.toBe(false);
+			content.updateLazy({ title: "First" });
+			content.updateLazy({ title: "Second" });
 
-			// staying on the current view keeps both the changes and the lock,
-			// so nothing is lost and the call can simply be repeated
-			expect(endpoints(panel)).toStrictEqual(["/pages/test/changes/save"]);
+			panel.view.props.api = "/pages/other";
 
-			// the lock dialog already reports the case, so `unlock` must not
-			// raise a second error on top of it
-			expect(panel.dialog.open).toHaveBeenCalledOnce();
-		});
+			await expect(content.unlock({ api: "/pages/test" })).resolves.toBe(false);
 
-		it("does not release the lock when a newer save request took over", async () => {
-			const error = new Error("The request was aborted");
-			error.name = "AbortError";
-
-			const { content, panel } = factory({
-				changes: { title: "New title" },
-				latest: { title: "Test" },
-				post: vi.fn(() => Promise.reject(error))
-			});
-
-			// an aborted save is an internal condition that must not be
-			// reported to the editor, so it aborts the unlock silently
-			await expect(content.unlock()).resolves.toBe(false);
-
-			expect(endpoints(panel)).toStrictEqual(["/pages/test/changes/save"]);
+			expect(endpoints(panel)).toStrictEqual([
+				"/pages/test/changes/save",
+				"/pages/test/changes/save"
+			]);
 		});
 
 		it("ignores failed unlock requests", async () => {
@@ -649,18 +1315,6 @@ describe("panel.content", () => {
 			});
 
 			await expect(content.unlock()).resolves.toBe(true);
-		});
-
-		it("skips the diff check for another view", async () => {
-			// changes can only be detected for the current view
-			const { content, panel } = factory({
-				changes: { title: "New title" },
-				latest: { title: "Test" }
-			});
-
-			await content.unlock({ api: "/pages/other" });
-
-			expect(endpoints(panel)).toStrictEqual(["/pages/other/changes/unlock"]);
 		});
 	});
 
