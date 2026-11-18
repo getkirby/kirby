@@ -136,7 +136,10 @@ describe("k-field", () => {
 
 		it("adds no type class without type", () => {
 			const wrapper = mount({ name: "title" });
-			expect(wrapper.classes()).toStrictEqual(["k-field", "k-field-name-title"]);
+			expect(wrapper.classes()).toStrictEqual([
+				"k-field",
+				"k-field-name-title"
+			]);
 		});
 	});
 
