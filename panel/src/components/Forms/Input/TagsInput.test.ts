@@ -268,6 +268,18 @@ describe("k-tags-input", () => {
 			expect(wrapper.emitted("input")).toStrictEqual([[["a"]]]);
 		});
 
+		it("adds a tag only once", () => {
+			const wrapper = mount();
+			wrapper.vm.create("a, a");
+			expect(wrapper.emitted("input")).toStrictEqual([[["a"]]]);
+		});
+
+		it("adds no more tags than the maximum", () => {
+			const wrapper = mount({ max: 2, value: ["a"] });
+			wrapper.vm.create("b, c");
+			expect(wrapper.emitted("input")).toStrictEqual([[["a", "b"]]]);
+		});
+
 		it("closes the dropdown", async () => {
 			const wrapper = mount();
 			wrapper.vm.focus();
