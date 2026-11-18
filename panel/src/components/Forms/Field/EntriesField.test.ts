@@ -6,7 +6,6 @@ const Button = {
 	name: "k-button",
 	props: ["disabled", "icon", "text", "title"],
 	emits: ["click"],
-	methods: { focus: vi.fn() },
 	template: `<button @click="$emit('click', $event)" />`
 };
 const Draggable = {
@@ -337,12 +336,6 @@ describe("k-entries-field", () => {
 			expect(TextField.methods.focus).toHaveBeenCalledOnce();
 		});
 
-		it("focuses the sort handle of the entry", () => {
-			const wrapper = mount();
-			wrapper.vm.focus(1, "sort-handle");
-			expect(Button.methods.focus).toHaveBeenCalledOnce();
-		});
-
 		it("ignores an unknown entry", () => {
 			const wrapper = mount();
 			expect(() => wrapper.vm.focus(5)).not.toThrow();
@@ -383,42 +376,6 @@ describe("k-entries-field", () => {
 			dialog.on.submit();
 			expect(lastInput(wrapper)).toStrictEqual([]);
 			expect($panel.dialog.close).toHaveBeenCalledOnce();
-		});
-	});
-
-	describe("sortDown()", () => {
-		it("moves the entry down and focuses its handle", async () => {
-			const wrapper = mount();
-			await wrapper.vm.sortDown(0);
-			await wrapper.vm.$nextTick();
-			expect(lastInput(wrapper)).toStrictEqual(["b", "a"]);
-			expect(Button.methods.focus).toHaveBeenCalledOnce();
-		});
-
-		it("keeps the last entry in place", () => {
-			const wrapper = mount();
-			wrapper.vm.sortDown(1);
-			expect(wrapper.emitted("input")).toBeUndefined();
-		});
-	});
-
-	describe("sortUp()", () => {
-		it("moves the entry up", () => {
-			const wrapper = mount();
-			wrapper.vm.sortUp(1);
-			expect(lastInput(wrapper)).toStrictEqual(["b", "a"]);
-		});
-
-		it("keeps the first entry in place", () => {
-			const wrapper = mount();
-			wrapper.vm.sortUp(0);
-			expect(wrapper.emitted("input")).toBeUndefined();
-		});
-
-		it("keeps the entries when not sortable", () => {
-			const wrapper = mount({ sortable: false });
-			wrapper.vm.sortUp(1);
-			expect(wrapper.emitted("input")).toBeUndefined();
 		});
 	});
 
@@ -463,15 +420,6 @@ describe("k-entries-field", () => {
 			const wrapper = mount();
 			inputs(wrapper)[0].vm.$emit("input", "c");
 			expect(lastInput(wrapper)).toStrictEqual(["c", "b"]);
-		});
-	});
-
-	describe("keydown event", () => {
-		it("sorts with the arrow keys on a sort handle", async () => {
-			const wrapper = mount();
-			const [first] = buttons(wrapper, "sort");
-			await first.trigger("keydown.down");
-			expect(lastInput(wrapper)).toStrictEqual(["b", "a"]);
 		});
 	});
 

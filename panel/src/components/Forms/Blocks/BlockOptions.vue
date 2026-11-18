@@ -115,6 +115,7 @@ export default {
 					icon: "sort",
 					title: this.$t("sort.drag"),
 					class: "k-sort-handle",
+					keyshortcuts: "ArrowUp ArrowDown",
 					key: (e) => this.sort(e)
 				},
 				{
