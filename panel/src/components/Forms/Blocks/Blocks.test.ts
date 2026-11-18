@@ -640,6 +640,18 @@ describe("k-blocks", () => {
 			await wrapper.vm.paste(new Event("paste"), 0);
 			expect(ids(lastInput(wrapper))).toStrictEqual(["x", "a", "b", "c"]);
 		});
+
+		it("pastes nothing into a field over the maximum", async () => {
+			api.post.mockResolvedValue([
+				{ content: {}, id: "x", type: "text" },
+				{ content: {}, id: "y", type: "text" },
+				{ content: {}, id: "z", type: "text" }
+			]);
+			const wrapper = mount({ max: 2 });
+			clipboard(wrapper);
+			await wrapper.vm.paste(new Event("paste"), 0);
+			expect(ids(lastInput(wrapper))).toStrictEqual(["a", "b", "c"]);
+		});
 	});
 
 	describe("pasteboard()", () => {
