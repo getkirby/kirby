@@ -70,7 +70,7 @@ class PageChangeStatusDialogController extends PageDialogController
 			fields: $this->fields(),
 			submitButton: $this->i18n('change'),
 			value: [
-				'status'   => $this->page->status(),
+				'status'   => $this->status(),
 				'position' => $this->position()
 			]
 		);
@@ -80,6 +80,17 @@ class PageChangeStatusDialogController extends PageDialogController
 	{
 		if ($this->page->blueprint()->num() === 'default') {
 			return $this->page->panel()->position();
+		}
+
+		return null;
+	}
+
+	protected function status(): string|null
+	{
+		$status = $this->page->status();
+
+		if (isset($this->page->blueprint()->status()[$status]) === true) {
+			return $status;
 		}
 
 		return null;
