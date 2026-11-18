@@ -544,6 +544,7 @@
 	"license.code.help": "ライセンスコードは購入後にメールで送られます。ここにコピー＆ペーストしてください。",
 	"license.code.label": "License code",
 	"license.remove.text": "<p>ライセンスを削除すると、このサイトからライセンスファイルが完全に削除されます。その後、別のライセンスキーでこのサイトを有効化するか、ドメインが同じであれば同じライセンスキーで再登録できます。</p>",
+	"license.status": "License status",
 	"license.status.active.info": "{date}まで新しいメジャーバージョンを含む",
 	"license.status.active.label": "有効なライセンス",
 	"license.status.acknowledged.info": "You confirmed to comply with the <a href=\"https://getkirby.com/license/free-licenses\">free license requirements</a>",
@@ -804,6 +805,8 @@
 	"theme.light": "ライト",
 	"theme.dark": "ダーク",
 	"theme.automatic": "システムに合わせる",
+
+	"time.select": "Select a time",
 
 	"title": "タイトル",
 	"today": "今日",

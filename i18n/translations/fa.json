@@ -544,6 +544,7 @@
 	"license.code.help": "کد مجوز پس از خرید از طریق ایمیل برای شما ارسال شده است. لطفاً آن را کپی کرده و در اینجا جای‌گذاری کنید.",
 	"license.code.label": "کد مجوز",
 	"license.remove.text": "<p>با حذف مجوز، فایل مجوز این سایت به‌صورت غیرقابل‌بازگشت حذف خواهد شد. سپس می‌توانید سایت را با کلید مجوز دیگری فعال کنید یا در صورت ثابت ماندن دامنه، همان کلید مجوز را دوباره ثبت کنید.</p><p>برای تغییر دامنه مرتبط با مجوز، لطفاً با تیم Kirby تماس بگیرید. <a href='https://getkirby.com/license'>اطلاعات بیشتر ←</a></p>",
+	"license.status": "License status",
 	"license.status.active.info": "شامل نسخه‌های اصلی جدید تا تاریخ {date}",
 	"license.status.active.label": "مجوز معتبر",
 	"license.status.acknowledged.info": "تأیید کرده‌اید که شرایط <a href=\"https://getkirby.com/license/free-licenses\">مجوز رایگان</a> را رعایت می‌کنید",
@@ -804,6 +805,8 @@
 	"theme.light": "روشن",
 	"theme.dark": "تیره",
 	"theme.automatic": "مطابق با تنظیمات پیش‌فرض سیستم",
+
+	"time.select": "Select a time",
 
 	"title": "عنوان",
 	"today": "امروز",
