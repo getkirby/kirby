@@ -173,4 +173,22 @@ describe("k-model-picker-field", () => {
 			expect(wrapper.emitted("input")).toStrictEqual([[["a", "c"]]]);
 		});
 	});
+
+	describe("removeById()", () => {
+		it("removes all given ids from the value", () => {
+			const $panel = panel();
+			$panel.api.get.mockResolvedValueOnce([]);
+			const wrapper = mount({ value: ["a", "file://b", "c"] }, {}, $panel);
+			wrapper.vm.removeById("a", "file://b");
+			expect(wrapper.emitted("input")).toStrictEqual([[["c"]]]);
+		});
+
+		it("does not emit when nothing has been removed", () => {
+			const $panel = panel();
+			$panel.api.get.mockResolvedValueOnce([]);
+			const wrapper = mount({ value: ["a", "b"] }, {}, $panel);
+			wrapper.vm.removeById("c");
+			expect(wrapper.emitted("input")).toBeUndefined();
+		});
+	});
 });

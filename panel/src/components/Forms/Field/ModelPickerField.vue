@@ -213,11 +213,13 @@ export default {
 		remove(index) {
 			this.$emit("input", this.value.toSpliced(index, 1));
 		},
-		removeById(id) {
-			this.$emit(
-				"input",
-				this.value.filter((item) => item !== id)
-			);
+		removeById(...ids) {
+			const value = this.value.filter((item) => ids.includes(item) === false);
+
+			// only emit when something has actually been removed
+			if (value.length !== this.value.length) {
+				this.$emit("input", value);
+			}
 		}
 	}
 };
