@@ -214,7 +214,8 @@ export default {
 .k-item-box:has(a:focus) {
 	outline: 2px solid var(--color-focus);
 }
-.k-item:not(:hover):not(.k-sortable-fallback) .k-item-sort-handle {
+.k-item:not(:hover, :has(:focus-visible), .k-sortable-fallback)
+	.k-item-sort-handle {
 	opacity: 0;
 }
 .k-item-box {
