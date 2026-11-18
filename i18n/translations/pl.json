@@ -782,6 +782,8 @@
 
 	"type": "Typ",
 
+	"unknown": "unknown",
+
 	"upload": "Prześlij",
 	"upload.error.cantMove": "Przesłany plik nie mógł być przeniesiony",
 	"upload.error.cantWrite": "Nie udało się zapisać pliku na dysku",

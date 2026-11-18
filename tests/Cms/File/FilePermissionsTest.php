@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\LogicException;
+use Kirby\Filesystem\F;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -175,5 +176,42 @@ class FilePermissionsTest extends ModelTestCase
 
 		// Should be able to change template because multiple templates are available
 		$this->assertTrue($file->permissions()->can('changeTemplate'));
+	}
+
+	public function testWithPathTraversalTemplate(): void
+	{
+		$this->app = $this->app->clone([
+			'roles' => [
+				[
+					'name'        => 'editor',
+					'permissions' => [
+						'files' => [
+							'delete' => false,
+						]
+					]
+				]
+			],
+			'users' => [
+				['id' => 'editor', 'role' => 'editor']
+			]
+		]);
+
+		// a page blueprint that would allow the deletion
+		// if it was loaded as the file blueprint
+		F::write(static::TMP . '/site/blueprints/pages/public.yml', "options:\n  delete: true\n");
+		F::write(static::TMP . '/site/blueprints/files/image.yml', "title: Image\n");
+
+		$this->app->impersonate('editor');
+
+		// the template can already be stored in the content file
+		$page = new Page(['slug' => 'test']);
+		$file = new File([
+			'filename' => 'test.jpg',
+			'parent'   => $page,
+			'content'  => ['template' => '../pages/public']
+		]);
+
+		$this->assertSame('files/default', $file->blueprint()->name());
+		$this->assertFalse($file->permissions()->can('delete'));
 	}
 }

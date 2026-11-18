@@ -782,6 +782,8 @@
 
 	"type": "Tip",
 
+	"unknown": "unknown",
+
 	"upload": "Încarcă",
 	"upload.error.cantMove": "Fișierul încărcat nu a putut fi mutat",
 	"upload.error.cantWrite": "Nu s-a putut scrie fișierul pe disc",

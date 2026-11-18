@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Cms\App;
+
 class CheckboxesFieldTest extends TestCase
 {
 	public function testDefaultProps(): void
@@ -96,6 +98,60 @@ class CheckboxesFieldTest extends TestCase
 		]);
 
 		$this->assertSame(['a', 'b'], $field->value());
+	}
+
+	public function testIgnoreProtectedOptions(): void
+	{
+		// the permission cache is keyed by template and role,
+		// so both need to be unique for this test
+		$uuid = uuid();
+
+		$app = new App([
+			'blueprints' => [
+				'pages/secret-' . $uuid => [
+					'options' => ['list' => false]
+				]
+			],
+			'roles' => [
+				['name' => 'editor-' . $uuid]
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'a'],
+					[
+						'slug'     => 'b',
+						'template' => 'secret-' . $uuid
+					],
+					[
+						'slug'     => 'c',
+						'template' => 'secret-' . $uuid
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor-' . $uuid
+				]
+			],
+			'user' => 'editor@getkirby.com'
+		]);
+
+		$field = $this->field('checkboxes', [
+			'model'   => $app->site(),
+			'options' => [
+				'type'  => 'query',
+				'query' => 'site.children'
+			],
+			'value' => 'a, b'
+		]);
+
+		// the stored page that must not be listed is kept
+		// as placeholder, the other one is hidden
+		$this->assertSame(['a', 'b'], $field->value());
+		$this->assertSame(['a', 'b'], array_column($field->options(), 'value'));
+		$this->assertSame('[unknown]', $field->options()[1]['text']);
+		$this->assertSame('a, b', $field->toStoredValue());
 	}
 
 	public function testMin(): void

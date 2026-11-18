@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Exception;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Events::class)]
@@ -29,6 +30,28 @@ class EventsTest extends TestCase
 
 		$result = $events->apply('test', ['message' => 'hello']);
 		$this->assertSame('message: hello', $result);
+	}
+
+	public function testApplyAfterException(): void
+	{
+		$count  = 0;
+		$events = $this->events([
+			'test' => [
+				function () use (&$count) {
+					$count++;
+					throw new Exception('blocked');
+				}
+			]
+		]);
+
+		foreach (['a', 'b'] as $message) {
+			try {
+				$events->apply('test', ['message' => $message]);
+			} catch (Exception) {
+			}
+		}
+
+		$this->assertSame(2, $count);
 	}
 
 	public function testApplyNesting(): void
@@ -199,6 +222,39 @@ class EventsTest extends TestCase
 		$this->assertSame(1, $count);
 	}
 
+	public function testTriggerAfterException(): void
+	{
+		$a      = 0;
+		$b      = 0;
+		$events = $this->events([
+			'a' => [
+				function () use (&$a) {
+					$a++;
+					throw new Exception('blocked');
+				}
+			],
+			'b' => [
+				function () use (&$b) {
+					$b++;
+				}
+			]
+		]);
+
+		foreach ([1, 2] as $attempt) {
+			try {
+				$events->trigger('a');
+			} catch (Exception) {
+			}
+		}
+
+		// the loop protection must not outlive the failed hook
+		$events->trigger('b');
+		$events->trigger('b');
+
+		$this->assertSame(2, $a);
+		$this->assertSame(2, $b);
+	}
+
 	public function testTriggerNesting(): void
 	{
 		$message = '';
@@ -220,6 +276,49 @@ class EventsTest extends TestCase
 		$this->assertSame('ab', $message);
 	}
 
+	public function testTriggerNestingRepeated(): void
+	{
+		$message = '';
+		$app     = $this->app([
+			'a' => [
+				function () use (&$message) {
+					$message .= 'a';
+					$this->trigger('b');
+					$this->trigger('b');
+				}
+			],
+			'b' => [
+				function () use (&$message) {
+					$message .= 'b';
+				}
+			]
+		]);
+
+		$app->trigger('a');
+		$this->assertSame('abb', $message);
+	}
+
+	public function testTriggerNestingSameEvent(): void
+	{
+		$message = '';
+		$app     = $this->app([
+			'a' => [
+				function () use (&$message) {
+					$message .= '1';
+				},
+				function () use (&$message) {
+					$message .= '2';
+					$this->trigger('a');
+				}
+			]
+		]);
+
+		// the nested event runs the first hook again,
+		// only the running second hook is skipped
+		$app->trigger('a');
+		$this->assertSame('121', $message);
+	}
+
 	public function testTriggerWithLoopProtection(): void
 	{
 		$count = 0;
@@ -234,6 +333,28 @@ class EventsTest extends TestCase
 
 		$app->trigger('test');
 		$this->assertSame(1, $count);
+	}
+
+	public function testTriggerWithMutualLoopProtection(): void
+	{
+		$message = '';
+		$app     = $this->app([
+			'a' => [
+				function () use (&$message) {
+					$message .= 'a';
+					$this->trigger('b');
+				}
+			],
+			'b' => [
+				function () use (&$message) {
+					$message .= 'b';
+					$this->trigger('a');
+				}
+			]
+		]);
+
+		$app->trigger('a');
+		$this->assertSame('ab', $message);
 	}
 
 	public function testTriggerWithWildcard(): void

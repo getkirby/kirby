@@ -3,7 +3,7 @@
 	"description": "The Kirby core",
 	"license": "proprietary",
 	"type": "kirby-cms",
-	"version": "5.6.3",
+	"version": "5.6.4",
 	"keywords": [
 		"kirby",
 		"cms",
@@ -43,7 +43,7 @@
 		"erusev/parsedown-extra": "^0.9.0",
 		"filp/whoops": "^2.19.3",
 		"getkirby/composer-installer": "^1.2.1",
-		"laminas/laminas-escaper": "^2.18.0",
+		"laminas/laminas-escaper": "~2.18.0",
 		"michelf/php-smartypants": "^1.8.1",
 		"phpmailer/phpmailer": "^7.2.0",
 		"symfony/polyfill-intl-idn": "^1.43.0",

@@ -8,6 +8,7 @@ use Kirby\Cms\App;
 use Kirby\Cms\Url as CmsUrl;
 use Kirby\Cms\User;
 use Kirby\Exception\Exception;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Http\Response;
@@ -334,6 +335,18 @@ class Panel
 				// check for access before executing area routes
 				if ($auth !== false) {
 					static::firewall($kirby->user(), $areaId);
+				}
+
+				// only views can be opened by navigating to them,
+				// all other routes need the CSRF token of the Panel
+				if (
+					$type !== 'view' &&
+					$kirby->auth()->type() === 'session' &&
+					$kirby->auth()->csrf() === false
+				) {
+					throw new InvalidArgumentException(
+						message: 'Invalid CSRF token'
+					);
 				}
 
 				$result = $route->action()->call($route, ...$route->arguments());

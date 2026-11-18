@@ -298,15 +298,16 @@ readonly class Upload
 			return null;
 		}
 
-		// the upload is complete: the meta sidecar is no longer
-		// needed and the id prefix can be removed from the filename, so
+		// the upload is complete: the meta sidecar is no longer needed;
 		// we can pass the path from the tmp upload directory as new
-		// source path for the file back to the API upload method
+		// source path for the file back to the API upload method;
+		// a unique component keeps two uploads that share a filename
+		// under different ids from converging on one path
 		F::remove($metaRoot);
 
 		rename(
 			$tmpRoot,
-			$source = $dir . '/' . $filename
+			$source = $dir . '/' . uniqid('', true) . '-' . $filename
 		);
 
 		return $source;

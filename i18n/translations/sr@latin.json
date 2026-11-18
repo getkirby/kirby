@@ -782,6 +782,8 @@
 
 	"type": "Tip",
 
+	"unknown": "unknown",
+
 	"upload": "Otpremi",
 	"upload.error.cantMove": "Otpremljena datoteka nije mogla da se premesti",
 	"upload.error.cantWrite": "Neuspešno prebacivanje datoteka na disk",

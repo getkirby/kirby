@@ -102,6 +102,32 @@ class FieldsetTest extends TestCase
 		$this->assertSame('text', $fieldset->fields()['text']['type']);
 	}
 
+	public function testFieldsWithQueryOptions(): void
+	{
+		$app = new App([
+			'roots' => ['index' => '/dev/null'],
+			'site'  => ['children' => [['slug' => 'a']]]
+		]);
+
+		$app->impersonate('kirby');
+
+		$fieldset = new Fieldset([
+			'type'   => 'test',
+			'fields' => [
+				'page' => [
+					'type'    => 'select',
+					'options' => 'site.children'
+				]
+			]
+		]);
+
+		// forms resolve the options for their own values,
+		// only the Panel gets them rendered
+		$this->assertSame('site.children', $fieldset->fields()['page']['options']);
+		$this->assertSame('site.children', $fieldset->tabs()['content']['fields']['page']['options']);
+		$this->assertSame(['a'], array_column($fieldset->toArray()['tabs']['content']['fields']['page']['options'], 'value'));
+	}
+
 	public function testForm(): void
 	{
 		$fieldset = new Fieldset([

@@ -64,6 +64,39 @@ class UploadTest extends TestCase
 		);
 	}
 
+	protected function completeChunkedUpload(
+		string $id,
+		string $filename,
+		string $first,
+		string $second
+	): string|null {
+		$total = strlen($first . $second);
+
+		$source = static::TMP . '/' . $id . '-chunk';
+		F::write($source, $first);
+		$this->upload([
+			'requestData' => [
+				'headers' => [
+					'Upload-Length' => $total,
+					'Upload-Offset' => 0,
+					'Upload-Id'     => $id
+				]
+			]
+		])->processChunk($source, $filename);
+
+		$source = static::TMP . '/' . $id . '-chunk';
+		F::write($source, $second);
+		return $this->upload([
+			'requestData' => [
+				'headers' => [
+					'Upload-Length' => $total,
+					'Upload-Offset' => strlen($first),
+					'Upload-Id'     => $id
+				]
+			]
+		])->processChunk($source, $filename);
+	}
+
 	public function testChunkId(): void
 	{
 		$this->assertSame('abcd', Upload::chunkId('abcd'));
@@ -486,11 +519,27 @@ class UploadTest extends TestCase
 			]
 		]);
 
-		$file = static::TMP . '/site/cache/.uploads/test.md';
-		$this->assertSame($file, $upload->processChunk($source, 'test.md'));
+		$dir  = static::TMP . '/site/cache/.uploads';
+		$file = $upload->processChunk($source, 'test.md');
+
+		// the completed file keeps a unique component in its tmp path, so it
+		// cannot be clobbered by another upload of the same filename
+		$this->assertMatchesRegularExpression('!^' . preg_quote($dir, '!') . '/[^/]+\-test\.md$!', $file);
 		$this->assertFileExists($file);
-		$this->assertFileDoesNotExist('abcd-' . $file);
+		$this->assertFileDoesNotExist($dir . '/abcd-test.md');
 		$this->assertSame('abcdef', F::read($file));
+	}
+
+	public function testProcessChunkCompletesToUniquePath(): void
+	{
+		// two uploads that share a filename under different upload ids must
+		// not converge on the same final path; otherwise a second upload can
+		// rename its own bytes over the file a first upload already validated
+		// and is about to move (TOCTOU: stored file != validated file)
+		$completeA = $this->completeChunkedUpload('aaaa', 'x.svg', 'aaa', 'AAA');
+		$completeB = $this->completeChunkedUpload('bbbb', 'x.svg', 'bbb', 'BBB');
+
+		$this->assertNotSame($completeA, $completeB);
 	}
 
 	public function testResponse(): void

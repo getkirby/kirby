@@ -782,6 +782,8 @@
 
 	"type": "Tür",
 
+	"unknown": "unknown",
+
 	"upload": "Yükle",
 	"upload.error.cantMove": "Yüklenen dosya taşınamadı",
 	"upload.error.cantWrite": "Dosya diske yazılamadı",

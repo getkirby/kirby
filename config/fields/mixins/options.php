@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Field\FieldOptions;
+use Kirby\Toolkit\Str;
 
 return [
 	'props' => [
@@ -28,14 +29,36 @@ return [
 	],
 	'computed' => [
 		'options' => function (): array {
-			return $this->optionsCache ??= $this->getOptions();
+			$options = $this->optionsCache ??= $this->getOptions();
+
+			// values missing from the options might belong to models the
+			// current user must not list; keep those as placeholders
+			// to not drop them from the value on save
+			$split = fn ($value) => match (true) {
+				is_array($value) => $value,
+				is_string($value) && $this->separator !== null
+					=> Str::split($value, $this->separator),
+				default => [$value]
+			};
+
+			$keep = array_diff(
+				[...$split($this->value), ...$split($this->default)],
+				array_column($options, 'value'),
+				['']
+			);
+
+			if ($keep === []) {
+				return $options;
+			}
+
+			return $this->getOptions(array_values($keep));
 		}
 	],
 	'methods' => [
-		'getOptions' => function () {
+		'getOptions' => function (array $keep = []) {
 			$props   = FieldOptions::polyfill($this->props);
 			$options = FieldOptions::factory($props['options']);
-			return $options->render($this->model());
+			return $options->render($this->model(), $keep);
 		},
 		'sanitizeOption' => function ($value) {
 			$options = array_column($this->options(), 'value');

@@ -85,29 +85,6 @@ return [
 		'files' => function () {
 			return $this->models;
 		},
-		'data' => function () {
-			$data               = [];
-			$dragTextIsAbsolute = $this->model->is($this->parent) === false;
-
-			foreach ($this->modelsPaginated() as $file) {
-				$item = (new FileItem(
-					file: $file,
-					dragTextIsAbsolute: $dragTextIsAbsolute,
-					image: $this->image,
-					layout: $this->layout,
-					info: $this->info,
-					text: $this->text,
-				))->props();
-
-				if ($this->layout === 'table') {
-					$item = $this->columnsValues($item, $file);
-				}
-
-				$data[] = $item;
-			}
-
-			return $data;
-		},
 		'total' => function () {
 			return $this->models()->count();
 		},
@@ -163,6 +140,31 @@ return [
 			return $settings->props();
 		}
 	],
+	'methods' => [
+		'data' => function () {
+			$data               = [];
+			$dragTextIsAbsolute = $this->model->is($this->parent) === false;
+
+			foreach ($this->modelsPaginated() as $file) {
+				$item = (new FileItem(
+					file: $file,
+					dragTextIsAbsolute: $dragTextIsAbsolute,
+					image: $this->image,
+					layout: $this->layout,
+					info: $this->info,
+					text: $this->text,
+				))->props();
+
+				if ($this->layout === 'table') {
+					$item = $this->columnsValues($item, $file);
+				}
+
+				$data[] = $item;
+			}
+
+			return $data;
+		},
+	],
 	// @codeCoverageIgnoreStart
 	'api' => function () {
 		return [
@@ -192,7 +194,7 @@ return [
 	// @codeCoverageIgnoreEnd
 	'toArray' => function () {
 		return [
-			'data'    => $this->data,
+			'data'    => $this->data(),
 			'errors'  => $this->errors,
 			'options' => [
 				'accept'   => $this->accept,

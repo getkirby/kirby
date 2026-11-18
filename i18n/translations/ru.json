@@ -782,6 +782,8 @@
 
 	"type": "Введите",
 
+	"unknown": "unknown",
+
 	"upload": "Загрузить",
 	"upload.error.cantMove": "Не удалось переместить загруженный файл",
 	"upload.error.cantWrite": "Не получилось записать файл на диск",

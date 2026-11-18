@@ -782,6 +782,8 @@
 
 	"type": "Type",
 
+	"unknown": "unknown",
+
 	"upload": "Carregar",
 	"upload.error.cantMove": "El fitxer carregat no s'ha pogut moure",
 	"upload.error.cantWrite": "No s'ha pogut escriure el fitxer al disc",

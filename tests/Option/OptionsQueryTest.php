@@ -203,6 +203,8 @@ class OptionsQueryTest extends TestCase
 			]
 		]);
 
+		$app->impersonate('kirby');
+
 		$options = new OptionsQuery(
 			query: 'site.children',
 			text: '{{ page.slug }}'
@@ -227,6 +229,8 @@ class OptionsQueryTest extends TestCase
 			]
 		]);
 
+		$app->impersonate('kirby');
+
 		$options = new OptionsQuery(
 			query: 'site.files',
 		);
@@ -245,6 +249,8 @@ class OptionsQueryTest extends TestCase
 			]
 		]);
 
+		$app->impersonate('kirby');
+
 		$options = new OptionsQuery(
 			query: 'kirby.users',
 		);
@@ -253,6 +259,138 @@ class OptionsQueryTest extends TestCase
 
 		$this->assertSame('homer@simpson.com', $options[0]['value']);
 		$this->assertSame('homer', $options[0]['text']);
+	}
+
+	public function testResolveForProtectedFiles(): void
+	{
+		// the permission cache is keyed by template and role,
+		// so both need to be unique for this test
+		$uuid = uuid();
+
+		$app = new App([
+			'blueprints' => [
+				'files/secret-' . $uuid => [
+					'options' => ['list' => false]
+				]
+			],
+			'roles' => [
+				['name' => 'editor-' . $uuid]
+			],
+			'site' => [
+				'files' => [
+					['filename' => 'a.jpg'],
+					[
+						'filename' => 'b.jpg',
+						'template' => 'secret-' . $uuid
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor-' . $uuid
+				]
+			],
+			'user' => 'editor@getkirby.com'
+		]);
+
+		$options = (new OptionsQuery('site.files'))->render($app->site());
+
+		$this->assertCount(1, $options);
+		$this->assertSame('a.jpg', $options[0]['text']);
+	}
+
+	public function testResolveForProtectedPages(): void
+	{
+		// the permission cache is keyed by template and role,
+		// so both need to be unique for this test
+		$uuid = uuid();
+
+		$app = new App([
+			'blueprints' => [
+				'pages/secret-' . $uuid => [
+					'options' => ['list' => false]
+				]
+			],
+			'roles' => [
+				['name' => 'editor-' . $uuid]
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'a'],
+					[
+						'slug'     => 'b',
+						'template' => 'secret-' . $uuid
+					],
+					[
+						'slug'     => 'c',
+						'template' => 'secret-' . $uuid
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor-' . $uuid
+				]
+			],
+			'user' => 'editor@getkirby.com'
+		]);
+
+		$query   = new OptionsQuery('site.children');
+		$options = $query->resolve($app->site())->render($app->site());
+
+		$this->assertCount(1, $options);
+		$this->assertSame('a', $options[0]['value']);
+
+		// pages that must not be listed are only kept
+		// as placeholders for the requested values
+		$options = $query->resolve($app->site(), keep: ['b'])->render($app->site());
+
+		$this->assertCount(2, $options);
+		$this->assertSame('a', $options[0]['value']);
+		$this->assertSame([
+			'disabled' => false,
+			'icon'     => null,
+			'info'     => null,
+			'text'     => '[unknown]',
+			'value'    => 'b'
+		], $options[1]);
+	}
+
+	public function testResolveForProtectedUsers(): void
+	{
+		// the permission cache is keyed by role,
+		// so it needs to be unique for this test
+		$uuid = uuid();
+
+		$app = new App([
+			'roles' => [
+				[
+					'name'        => 'editor-' . $uuid,
+					'permissions' => [
+						'users' => ['list' => false]
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor-' . $uuid
+				],
+				[
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin'
+				]
+			],
+			'user' => 'editor@getkirby.com'
+		]);
+
+		$options = (new OptionsQuery('kirby.users'))->render($app->site());
+
+		// the editor may list themselves
+		$this->assertCount(1, $options);
+		$this->assertSame('editor@getkirby.com', $options[0]['value']);
 	}
 
 	public function testResolveForOptions(): void
@@ -284,6 +422,8 @@ class OptionsQueryTest extends TestCase
 				]
 			]
 		]);
+
+		$app->impersonate('kirby');
 
 		$options = (new OptionsQuery('site.children'))->render($app->site());
 

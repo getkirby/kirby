@@ -782,6 +782,8 @@
 
 	"type": "Type",
 
+	"unknown": "unknown",
+
 	"upload": "Unggah",
 	"upload.error.cantMove": "Berkas unggahan tidak dapat dipindahkan",
 	"upload.error.cantWrite": "Gagal menyimpan berkas",

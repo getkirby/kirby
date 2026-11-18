@@ -347,6 +347,49 @@ class BlocksFieldTest extends TestCase
 		$this->assertSame('', $field->toStoredValue());
 	}
 
+	public function testToStoredValueWithProtectedOptions(): void
+	{
+		$app    = $this->appWithProtectedPages();
+		$select = [
+			'type'    => 'select',
+			'options' => 'site.children'
+		];
+
+		$field = $this->field('blocks', [
+			'model'     => $app->site(),
+			'fieldsets' => [
+				'link' => [
+					'fields' => [
+						'page'  => $select,
+						'pages' => [
+							'type'   => 'structure',
+							'fields' => ['page' => $select]
+						]
+					]
+				]
+			],
+			'value' => [
+				[
+					'type'    => 'link',
+					'content' => [
+						'page'  => 'b',
+						'pages' => [['page' => 'c']]
+					]
+				]
+			]
+		]);
+
+		// the Panel only gets the pages the user may list ...
+		$fields = $field->fieldset('link')->toArray()['tabs']['content']['fields'];
+		$this->assertSame(['a'], array_column($fields['page']['options'], 'value'));
+
+		// ... but the stored values of the other pages are kept
+		$content = json_decode($field->toStoredValue(), true)[0]['content'];
+		$this->assertSame('b', $content['page']);
+		$this->assertSame('c', $content['pages'][0]['page']);
+		$this->assertTrue($field->isValid());
+	}
+
 	public function testTranslateField(): void
 	{
 		$app = new App([
@@ -387,17 +430,20 @@ class BlocksFieldTest extends TestCase
 		// default language
 		$app->setCurrentLanguage('en');
 		$field = $this->field('blocks', $props);
+		$text  = $field->fieldset('heading')->toArray()['tabs']['content']['fields']['text'];
 
-		$this->assertFalse($field->fields('heading')['text']['translate']);
-		$this->assertFalse($field->fields('heading')['text']['disabled']);
+		$this->assertFalse($text['translate']);
+		$this->assertFalse($text['disabled']);
 
 		// secondary language
 		$app = $app->clone();
 		$app->setCurrentLanguage('de');
 
 		$field = $this->field('blocks', $props);
-		$this->assertFalse($field->fields('heading')['text']['translate']);
-		$this->assertTrue($field->fields('heading')['text']['disabled']);
+		$text  = $field->fieldset('heading')->toArray()['tabs']['content']['fields']['text'];
+
+		$this->assertFalse($text['translate']);
+		$this->assertTrue($text['disabled']);
 	}
 
 	public function testTranslateFieldset(): void

@@ -782,6 +782,8 @@
 
 	"type": "Tipo",
 
+	"unknown": "unknown",
+
 	"upload": "Carica",
 	"upload.error.cantMove": "Non è stato possibile spostare il file caricato",
 	"upload.error.cantWrite": "Impossibile scrivere il file su disco",

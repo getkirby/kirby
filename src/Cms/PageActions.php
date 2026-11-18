@@ -464,7 +464,8 @@ trait PageActions
 		// Make sure that the page does not already exist at this point.
 		// Otherwise, moving the storage to memory storage, might delete
 		// an existing page before we can even run the checks.
-		PageRules::create($page);
+		// The full create rules incl. content validation run in the commit.
+		PageRules::creatable($page);
 
 		// merge the content with the defaults and run it through
 		// the fields to apply their save handlers
@@ -747,7 +748,17 @@ trait PageActions
 			// derived from the parent and slug. Otherwise the caller could
 			// place the page's content at an arbitrary path on disk.
 			$props['dirname'],
-			$props['root']
+			$props['root'],
+
+			// Prevent injecting in-memory children, drafts and files.
+			// The content validation for public pages renders the
+			// blueprint sections, which store UUIDs for listed pages
+			// and would thus write injected pages to disk (also to an
+			// injected root). Injected files and pages would also count
+			// towards the min/max validation of pages and files sections.
+			$props['children'],
+			$props['drafts'],
+			$props['files']
 		);
 
 		$content  = $props['content']  ?? [];
@@ -757,7 +768,9 @@ trait PageActions
 			...$props,
 			'content'  => $content,
 			'isDraft'  => $props['isDraft'] ?? $props['draft'] ?? true,
-			'model'    => $props['model']   ?? $template,
+			// always derive the model from the template. A custom model
+			// could otherwise bypass the content validation for public pages
+			'model'    => $template,
 			'slug'     => Url::slug($props['slug'] ?? $content['title'] ?? null),
 			'template' => $template,
 		];
