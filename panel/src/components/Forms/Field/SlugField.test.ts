@@ -122,6 +122,11 @@ describe("k-slug-field", () => {
 			const wrapper = mount({ value: "hello-world" });
 			expect(wrapper.vm.preview).toBe(null);
 		});
+
+		it("shows the path without value", () => {
+			const wrapper = mount({ path: "/blog/" });
+			expect(wrapper.attributes("help")).toBe("/blog/");
+		});
 	});
 
 	// watch
