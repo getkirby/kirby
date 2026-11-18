@@ -1,5 +1,5 @@
 <template>
-	<hr class="k-line-field" />
+	<hr :class="['k-line-field', $attrs.class]" :style="$attrs.style" />
 </template>
 
 <script>
@@ -10,7 +10,9 @@
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-export default {};
+export default {
+	inheritAttrs: false
+};
 </script>
 
 <style>
