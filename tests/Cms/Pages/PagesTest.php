@@ -301,6 +301,33 @@ class PagesTest extends TestCase
 		$this->assertDirectoryExists($pages->get('d')->root());
 	}
 
+	public function testDeleteWithBlockingHook(): void
+	{
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'page.delete:before' => function () {
+					throw new Exception('blocked');
+				}
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$a = Page::create(['slug' => 'a', 'draft' => false]);
+		$b = Page::create(['slug' => 'b', 'draft' => false]);
+
+		try {
+			// the same id twice must not bypass the hook either
+			$this->app->site()->children()->delete(['a', 'b', 'b']);
+			$this->fail('The pages should not have been deleted');
+		} catch (Exception $e) {
+			$this->assertSame('Not all pages could be deleted. Try each remaining page individually to see the specific error that prevents deletion.', $e->getMessage());
+		}
+
+		$this->assertDirectoryExists($a->root());
+		$this->assertDirectoryExists($b->root());
+	}
+
 	public function testDeleteWithInvalidIds(): void
 	{
 		$app = new App([

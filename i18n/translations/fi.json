@@ -782,6 +782,8 @@
 
 	"type": "Type",
 
+	"unknown": "unknown",
+
 	"upload": "Lähetä",
 	"upload.error.cantMove": "Lähetettyä tiedostoa ei voitu siirtää",
 	"upload.error.cantWrite": "Tiedoston kirjoitus levylle epäonnistui",

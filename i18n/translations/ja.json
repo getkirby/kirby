@@ -782,6 +782,8 @@
 
 	"type": "タイプ",
 
+	"unknown": "unknown",
+
 	"upload": "アップロード",
 	"upload.error.cantMove": "アップロードされたファイルを移動できませんでした",
 	"upload.error.cantWrite": "ファイルをディスクに書き込めませんでした",

@@ -325,6 +325,43 @@ class PageRulesTest extends ModelTestCase
 		PageRules::changeTitle($page, 'test');
 	}
 
+	public function testCreatableNonDraftWithIncompleteContent(): void
+	{
+		$page = new Page([
+			'slug'      => 'test',
+			'isDraft'   => false,
+			'blueprint' => [
+				'name'   => 'test',
+				'fields' => [
+					'headline' => [
+						'type'     => 'text',
+						'required' => true
+					]
+				]
+			]
+		]);
+
+		$this->expectNotToPerformAssertions();
+
+		// the content is not validated before it has been added
+		PageRules::creatable($page);
+	}
+
+	public function testCreatableWithoutPermissions(): void
+	{
+		$permissions = $this->createStub(PagePermissions::class);
+		$permissions->method('can')->willReturn(false);
+
+		$page = $this->createStub(Page::class);
+		$page->method('slug')->willReturn('test');
+		$page->method('permissions')->willReturn($permissions);
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to create "test"');
+
+		PageRules::creatable($page);
+	}
+
 	public function testCreateWithoutPermissions(): void
 	{
 		$permissions = $this->createMock(PagePermissions::class);
@@ -418,6 +455,49 @@ class PageRulesTest extends ModelTestCase
 
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('The status for this page cannot be changed');
+
+		PageRules::create($page);
+	}
+
+	public function testCreateNonDraftWithIncompleteContent(): void
+	{
+		$page = new Page([
+			'slug'      => 'test',
+			'isDraft'   => false,
+			'blueprint' => [
+				'name'   => 'test',
+				'fields' => [
+					'headline' => [
+						'type'     => 'text',
+						'required' => true
+					]
+				]
+			]
+		]);
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('The page has errors and cannot be published');
+
+		PageRules::create($page);
+	}
+
+	public function testCreateDraftWithIncompleteContent(): void
+	{
+		$page = new Page([
+			'slug'      => 'test',
+			'isDraft'   => true,
+			'blueprint' => [
+				'name'   => 'test',
+				'fields' => [
+					'headline' => [
+						'type'     => 'text',
+						'required' => true
+					]
+				]
+			]
+		]);
+
+		$this->expectNotToPerformAssertions();
 
 		PageRules::create($page);
 	}
@@ -695,6 +775,96 @@ class PageRulesTest extends ModelTestCase
 		$this->expectExceptionMessage('You are not allowed to update "test"');
 
 		PageRules::update($page, []);
+	}
+
+	public function testValidateContent(): void
+	{
+		$page = $this->createStub(Page::class);
+		$page->method('errors')->willReturn([]);
+
+		$this->expectNotToPerformAssertions();
+
+		PageRules::validateContent($page);
+	}
+
+	public function testValidateContentWithCompleteTranslations(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$page = new Page([
+			'slug'      => 'test',
+			'blueprint' => [
+				'name'   => 'test',
+				'fields' => [
+					'headline' => [
+						'type'     => 'text',
+						'required' => true
+					]
+				]
+			]
+		]);
+
+		$page->version()->save(['headline' => 'Headline'], 'en');
+
+		$this->expectNotToPerformAssertions();
+
+		// the missing German translation falls back to the default language
+		PageRules::validateContent($page);
+	}
+
+	public function testValidateContentWithErrors(): void
+	{
+		$errors = [
+			'headline' => [
+				'label'   => 'Headline',
+				'message' => [
+					'required' => 'Please enter something'
+				]
+			]
+		];
+
+		$page = $this->createStub(Page::class);
+		$page->method('errors')->willReturn($errors);
+
+		try {
+			PageRules::validateContent($page);
+			$this->fail('Expected a PermissionException');
+		} catch (PermissionException $e) {
+			$this->assertSame('error.page.changeStatus.incomplete', $e->getKey());
+			$this->assertSame('The page has errors and cannot be published', $e->getMessage());
+			$this->assertSame($errors, $e->getDetails());
+		}
+	}
+
+	public function testValidateContentWithIncompleteTranslation(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$page = new Page([
+			'slug'      => 'test',
+			'blueprint' => [
+				'name'   => 'test',
+				'fields' => [
+					'headline' => [
+						'type'     => 'text',
+						'required' => true
+					]
+				]
+			]
+		]);
+
+		$page->version()->save(['headline' => 'Headline'], 'en');
+		$page->version()->save(['headline' => ''], 'de');
+
+		try {
+			PageRules::validateContent($page);
+			$this->fail('Expected a PermissionException');
+		} catch (PermissionException $e) {
+			$this->assertSame('error.page.changeStatus.incomplete', $e->getKey());
+			$this->assertSame(['headline'], array_keys($e->getDetails()));
+			$this->assertSame('Headline (de)', $e->getDetails()['headline']['label']);
+			$this->assertSame('de', $e->getDetails()['headline']['language']);
+		}
 	}
 
 	public function testValidateSlugMaxlength(): void

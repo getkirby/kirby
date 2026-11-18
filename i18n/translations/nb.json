@@ -782,6 +782,8 @@
 
 	"type": "Type",
 
+	"unknown": "unknown",
+
 	"upload": "Last opp",
 	"upload.error.cantMove": "Den opplastede filen kunne ikke flyttes",
 	"upload.error.cantWrite": "Kunne ikke skrive fil til disk",

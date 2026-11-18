@@ -782,6 +782,8 @@
 
 	"type": "نوع",
 
+	"unknown": "unknown",
+
 	"upload": "بارگذاری",
 	"upload.error.cantMove": "امکان انتقال فایل بارگذاری‌شده وجود ندارد",
 	"upload.error.cantWrite": "نوشتن فایل روی دیسک ناموفق بود",

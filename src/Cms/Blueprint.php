@@ -391,6 +391,16 @@ class Blueprint
 	 */
 	public static function find(string $name): array
 	{
+		// the name can contain user input (e.g. the file template),
+		// so it must not leave the folder of the blueprint type,
+		// e.g. `files/../pages/default`
+		if (str_contains(str_replace('\\', '/', $name), '../') === true) {
+			throw new NotFoundException(
+				key: 'blueprint.notFound',
+				data: ['name' => $name]
+			);
+		}
+
 		if (isset(static::$loaded[$name]) === true) {
 			return static::$loaded[$name];
 		}

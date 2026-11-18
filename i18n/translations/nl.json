@@ -782,6 +782,8 @@
 
 	"type": "Type",
 
+	"unknown": "unknown",
+
 	"upload": "Upload",
 	"upload.error.cantMove": "Het geüploadde bestand kon niet worden verplaatst",
 	"upload.error.cantWrite": "Fout bij het schrijven van het bestand naar de schijf",

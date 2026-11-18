@@ -782,6 +782,8 @@
 
 	"type": "Typ",
 
+	"unknown": "unbekannt",
+
 	"upload": "Hochladen",
 	"upload.error.cantMove": "Die Datei konnte nicht an ihren Zielort bewegt werden",
 	"upload.error.cantWrite": "Die Datei konnte nicht auf der Festplatte gespeichert werden",
