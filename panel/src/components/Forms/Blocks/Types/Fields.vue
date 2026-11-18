@@ -4,7 +4,16 @@
 		@dblclick="!fieldset.wysiwyg ? $emit('open') : null"
 	>
 		<header class="k-block-type-fields-header">
-			<k-block-title :content="values" :fieldset="fieldset" @click="toggle" />
+			<div class="k-block-type-fields-title">
+				<k-button
+					:aria-expanded="String(!collapsed && !isHidden)"
+					:icon="collapsed ? 'angle-down' : 'angle-up'"
+					:aria-label="fieldset.name"
+					class="k-block-type-fields-toggle"
+					@click="toggle"
+				/>
+				<k-block-title :content="values" :fieldset="fieldset" @click="toggle" />
+			</div>
 			<k-drawer-tabs
 				v-if="!collapsed"
 				:tab="tab"
@@ -39,6 +48,7 @@ import Block from "./Default.vue";
 export default {
 	extends: Block,
 	props: {
+		isHidden: Boolean,
 		tabs: Object
 	},
 	emits: ["open", "update"],
@@ -97,6 +107,25 @@ export default {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-between;
+}
+.k-block-type-fields-title {
+	position: relative;
+	min-width: 0;
+}
+.k-block-type-fields-title .k-block-type-fields-toggle {
+	--button-height: auto;
+	--button-rounded: var(--rounded);
+	padding: var(--spacing-1);
+	position: absolute;
+	inset-block-start: calc(var(--spacing-3) - var(--spacing-1));
+	inset-inline-start: calc(-1 * var(--spacing-1));
+}
+.k-block-type-fields-toggle:not(:hover, :focus-visible) .k-icon,
+.k-block-type-fields-title:has(
+		.k-block-type-fields-toggle:is(:hover, :focus-visible)
+	)
+	.k-block-icon {
+	visibility: hidden;
 }
 .k-block-type-fields-header .k-block-title {
 	padding-block: var(--spacing-3);
