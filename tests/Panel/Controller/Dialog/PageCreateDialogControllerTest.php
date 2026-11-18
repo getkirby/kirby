@@ -485,6 +485,41 @@ class PageCreateDialogControllerTest extends TestCase
 		$this->assertSame('Auto title', $page->title()->value());
 	}
 
+	public function testLoadImmediatelySubmitsWithUuidTemplates(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'create' => [
+						'title' => 'Test {{ page.uuid.id }}',
+						'slug'  => '{{ page.uuid.id }}'
+					],
+					'fields' => [
+						'test' => [
+							'type'    => 'text',
+							'default' => '{{ page.uuid.id }}'
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		try {
+			(new PageCreateDialogController())->load();
+			$this->fail('Expected Redirect exception was not thrown');
+		} catch (Redirect) {
+		}
+
+		$page = $this->app->site()->drafts()->first();
+		$uuid = $page->uuid()->id();
+
+		$this->assertSame($uuid, $page->slug());
+		$this->assertSame('Test ' . $uuid, $page->title()->value());
+		$this->assertSame($uuid, $page->test()->value());
+	}
+
 	public function testModel(): void
 	{
 		$this->app = $this->app->clone([
