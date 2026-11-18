@@ -335,7 +335,9 @@ class PageCreateDialogControllerTest extends TestCase
 
 		$props = $dialog->props();
 		$this->assertSame('Title', $props['fields']['title']['label']);
+		$this->assertTrue($props['fields']['title']['preselect']);
 		$this->assertSame('URL appendix', $props['fields']['slug']['label']);
+		$this->assertFalse($props['fields']['slug']['preselect']);
 		$this->assertSame('title', $props['fields']['slug']['sync']);
 
 		// there's only the default template for now

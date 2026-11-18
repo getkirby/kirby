@@ -36,6 +36,7 @@ class SiteChangeTitleDialogControllerTest extends TestCase
 
 		$props = $dialog->props();
 		$this->assertArrayHasKey('title', $props['fields']);
+		$this->assertTrue($props['fields']['title']['preselect']);
 		$this->assertSame('My Site', $props['value']->title);
 	}
 
