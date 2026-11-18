@@ -47,6 +47,7 @@
  * @internal
  */
 export default {
+	inheritAttrs: false,
 	props: {
 		value: [String, Object]
 	}
