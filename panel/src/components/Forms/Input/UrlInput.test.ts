@@ -92,6 +92,14 @@ describe("k-url-input", () => {
 		});
 	});
 
+	// lifecycle
+	describe("mounted hook", () => {
+		it("marks an invalid URL as invalid", () => {
+			const wrapper = mount({ value: "https://getkirby" });
+			expect(wrapper.element.validationMessage).toBe("error.validation.url");
+		});
+	});
+
 	// methods
 	describe("focus()", () => {
 		it("focuses the input", () => {
