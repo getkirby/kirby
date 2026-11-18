@@ -162,9 +162,15 @@ class Escaper implements EscaperInterface
         $this->htmlSpecialCharsFlags = ENT_QUOTES | ENT_SUBSTITUTE;
 
         // set matcher callbacks
-        $this->htmlAttrMatcher = $this->htmlAttrMatcher(...);
-        $this->jsMatcher       = $this->jsMatcher(...);
-        $this->cssMatcher      = $this->cssMatcher(...);
+        $this->htmlAttrMatcher =
+            /** @param array<array-key, string> $matches */
+            fn(array $matches): string => $this->htmlAttrMatcher($matches);
+        $this->jsMatcher       =
+            /** @param array<array-key, string> $matches */
+            fn(array $matches): string => $this->jsMatcher($matches);
+        $this->cssMatcher      =
+            /** @param array<array-key, string> $matches */
+            fn(array $matches): string => $this->cssMatcher($matches);
     }
 
     /**
@@ -191,7 +197,7 @@ class Escaper implements EscaperInterface
             return $string;
         }
 
-        $result = preg_replace_callback('/[^a-z0-9,\.\-_]/iu', $this->htmlAttrMatcher, $string);
+        $result = preg_replace_callback('/[^a-z0-9,\.\-_]/iSu', $this->htmlAttrMatcher, $string);
         assert(is_string($result));
 
         return $this->fromUtf8($result);
@@ -205,7 +211,7 @@ class Escaper implements EscaperInterface
             return $string;
         }
 
-        $result = preg_replace_callback('/[^a-z0-9,\._]/iu', $this->jsMatcher, $string);
+        $result = preg_replace_callback('/[^a-z0-9,\._]/iSu', $this->jsMatcher, $string);
         assert(is_string($result));
 
         return $this->fromUtf8($result);
@@ -225,7 +231,7 @@ class Escaper implements EscaperInterface
             return $string;
         }
 
-        $result = preg_replace_callback('/[^a-z0-9]/iu', $this->cssMatcher, $string);
+        $result = preg_replace_callback('/[^a-z0-9]/iSu', $this->cssMatcher, $string);
         assert(is_string($result));
 
         return $this->fromUtf8($result);
