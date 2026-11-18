@@ -50,8 +50,10 @@ class PageChangeTitleDialogControllerTest extends TestCase
 		$props = $dialog->props();
 		$this->assertSame('Title', $props['fields']['title']['label']);
 		$this->assertFalse($props['fields']['title']['disabled']);
+		$this->assertTrue($props['fields']['title']['preselect']);
 		$this->assertSame('URL appendix', $props['fields']['slug']['label']);
 		$this->assertFalse($props['fields']['slug']['disabled']);
+		$this->assertFalse($props['fields']['slug']['preselect']);
 		$this->assertSame('/', $props['fields']['slug']['path']);
 		$this->assertSame('Create from title', $props['fields']['slug']['wizard']['text']);
 		$this->assertSame('title', $props['fields']['slug']['wizard']['field']);
@@ -60,6 +62,24 @@ class PageChangeTitleDialogControllerTest extends TestCase
 		$this->assertSame('test', $props['value']->slug);
 
 		$this->assertSame('Change', $props['submitButton']);
+	}
+
+	public function testLoadWithSelectSlug(): void
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => ['select' => 'slug']
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page       = $this->app->page('test');
+		$controller = new PageChangeTitleDialogController($page);
+		$props      = $controller->load()->props();
+
+		$this->assertFalse($props['fields']['title']['preselect']);
+		$this->assertTrue($props['fields']['slug']['preselect']);
 	}
 
 	public function testPath(): void

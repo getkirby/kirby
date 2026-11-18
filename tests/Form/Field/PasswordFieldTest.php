@@ -32,6 +32,7 @@ class PasswordFieldTest extends TestCase
 			'name'         => 'password',
 			'pattern'      => null,
 			'placeholder'  => null,
+			'preselect'    => false,
 			'required'     => false,
 			'saveable'     => true,
 			'spellcheck'   => null,

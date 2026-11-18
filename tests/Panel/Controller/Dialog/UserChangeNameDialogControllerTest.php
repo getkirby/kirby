@@ -45,6 +45,7 @@ class UserChangeNameDialogControllerTest extends TestCase
 
 		$props = $dialog->props();
 		$this->assertSame('Name', $props['fields']['name']['label']);
+		$this->assertTrue($props['fields']['name']['preselect']);
 		$this->assertSame('Rename', $props['submitButton']);
 		$this->assertNull($props['value']->name);
 	}
