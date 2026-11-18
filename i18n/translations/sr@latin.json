@@ -547,6 +547,7 @@
 	"license.code.help": "Nakon kupovine dobili ste svoju šifru licence putem email. Molimo vas da je kopirate i nalepite ovde.",
 	"license.code.label": "Licencni kod",
 	"license.remove.text": "<p>Uklanjanje licence će nepovratno izbrisati datoteku licence sa ove stranice. Zatim možete aktivirati ovu stranicu drugim licencnim ključem ili ponovo registrovati isti licencni ključ ako domen ostane isti.</p><p>Da biste promenili domen povezan sa licencom, kontaktirajte Kirby tim. <a href='https://getkirby.com/license'>Pročitajte više &rarr;</a></p>",
+	"license.status": "License status",
 	"license.status.active.info": "Uključuje nove glavne verzije do {date}",
 	"license.status.active.label": "Validna licenca",
 	"license.status.acknowledged.info": "Potvrdili ste da se pridržavate <a href=\"https://getkirby.com/license/free-licenses\">zahteva za besplatnu licencu</a>",
@@ -808,6 +809,8 @@
 	"theme.light": "Svetla",
 	"theme.dark": "Tamna",
 	"theme.automatic": "Podrazumevano podudaranje sistema",
+
+	"time.select": "Select a time",
 
 	"title": "Naslov",
 	"today": "Danas",

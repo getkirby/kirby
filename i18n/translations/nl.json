@@ -547,6 +547,7 @@
 	"license.code.help": "Je hebt de licentiecode via e-mail gekregen nadat je de aankoop hebt gedaan. Kopieer en plak de licentiecode hier.",
 	"license.code.label": "License code",
 	"license.remove.text": "<p>Als je de licentie verwijdert, wordt het licentiebestand onherroepelijk van deze site verwijderd. Je kan deze site vervolgens activeren met een andere licentiesleutel of dezelfde licentiesleutel opnieuw registreren als het domein hetzelfde blijft.</p> <p>Neem contact op met het Kirby-team om het domein dat aan de licentie is gekoppeld te wijzigen. <a href='https://getkirby.com/license'>Lees meer &rarr;</a> </p>",
+	"license.status": "License status",
 	"license.status.active.info": "Inclusief nieuwe major versies tot {date}",
 	"license.status.active.label": "Geldige licentie",
 	"license.status.acknowledged.info": "You confirmed to comply with the <a href=\"https://getkirby.com/license/free-licenses\">free license requirements</a>",
@@ -808,6 +809,8 @@
 	"theme.light": "Lichten aan",
 	"theme.dark": "Lichten uit",
 	"theme.automatic": "Systeemstandaard gebruiken",
+
+	"time.select": "Select a time",
 
 	"title": "Titel",
 	"today": "Vandaag",

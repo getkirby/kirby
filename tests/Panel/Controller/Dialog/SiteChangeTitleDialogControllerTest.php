@@ -84,5 +84,6 @@ class SiteChangeTitleDialogControllerTest extends TestCase
 		$response = $controller->submit();
 		$this->assertSame('My Other Site', $this->app->site()->title()->value());
 		$this->assertSame('site.changeTitle', $response['event']);
+		$this->assertSame(['globals' => ['system']], $response['reload']);
 	}
 }

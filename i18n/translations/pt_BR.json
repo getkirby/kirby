@@ -547,6 +547,7 @@
 	"license.code.help": "Recebeu o seu código de licença por e-mail após a compra. Por favor, copie e cole aqui.",
 	"license.code.label": "Código de licença",
 	"license.remove.text": "<p>A remoção da licença eliminará irreversivelmente o ficheiro de licença deste site. Poderá então ativar este site com uma chave de licença diferente ou voltar a registar a mesma chave de licença, desde que o domínio permaneça o mesmo.</p><p>Para alterar o domínio associado à licença, contacte a equipa do Kirby. <a href='https://getkirby.com/license'>Ler mais &rarr;</a></p>",
+	"license.status": "License status",
 	"license.status.active.info": "Inclui novas versões principais até {date}",
 	"license.status.active.label": "Licença válida",
 	"license.status.acknowledged.info": "Confirmou que irá cumprir os <a href=\"https://getkirby.com/license/free-licenses\">requisitos da licença gratuita</a>",
@@ -808,6 +809,8 @@
 	"theme.light": "Luzes ligadas",
 	"theme.dark": "Luzes desligadas",
 	"theme.automatic": "Ajustar ao tema do sistema",
+
+	"time.select": "Select a time",
 
 	"title": "Título",
 	"today": "Hoje",
