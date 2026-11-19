@@ -125,16 +125,14 @@ describe("k-date-field", () => {
 				wrapper.find(".k-date-field-body").attributes("data-has-time")
 			).toBe("false");
 		});
-	});
 
-	describe("times prop", () => {
 		it("offers time options by default", () => {
 			const wrapper = mount({ time: { display: "HH:mm" } });
 			expect(wrapper.findComponent(Times).props("display")).toBe("HH:mm");
 		});
 
 		it("offers no time options when turned off", () => {
-			const wrapper = mount({ times: false });
+			const wrapper = mount({ time: { times: false } });
 			expect(wrapper.findComponent(Times).exists()).toBe(false);
 		});
 	});

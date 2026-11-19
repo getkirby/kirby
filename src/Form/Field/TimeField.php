@@ -53,6 +53,12 @@ class TimeField extends DateTimeField
 	#[Prop(setter: 'setStep')]
 	protected array $step = ['size' => 5, 'unit' => 'minute'];
 
+	/**
+	 * Activate/deactivate the times dropdown
+	 */
+	#[Prop]
+	protected bool $times = true;
+
 	public function display(): string
 	{
 		if ($this->display) {
@@ -81,6 +87,11 @@ class TimeField extends DateTimeField
 	public function step(): array
 	{
 		return $this->step;
+	}
+
+	public function times(): bool
+	{
+		return $this->times;
 	}
 
 	protected function validations(): array
