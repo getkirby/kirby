@@ -8,6 +8,12 @@
 			</template>
 		</k-header>
 
+		<!--
+			@slot Content between the header and the languages
+			@since 6.0.0
+		-->
+		<slot name="before" />
+
 		<template v-if="languages.length > 0">
 			<k-section :headline="$t('languages.default')">
 				<k-collection :items="primaryLanguage" />
@@ -38,6 +44,12 @@
 				{{ $t("languages.empty") }}
 			</k-empty>
 		</template>
+
+		<!--
+			@slot Content below the languages
+			@since 6.0.0
+		-->
+		<slot name="after" />
 	</k-panel-inside>
 </template>
 
