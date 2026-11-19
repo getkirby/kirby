@@ -103,7 +103,6 @@ export default {
 					type: "select",
 					options: this.translations,
 					icon: "translate",
-					empty: false,
 					required: true
 				}
 			};
