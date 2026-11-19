@@ -145,7 +145,7 @@ jobs:
         run: composer run test -- --configuration phpunit.ci.xml --processes 4 --coverage-clover ${{ github.workspace }}/clover.xml --exclude-source-from-xml-coverage
 
       - name: Upload coverage results to Codecov
-        if: matrix.php == env.COVERAGE_PHP
+        if: env.token != '' && matrix.php == env.COVERAGE_PHP
         uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7
         with:
           # for better reliability if the GitHub API is down
@@ -156,6 +156,7 @@ jobs:
           flags: backend
           env_vars: PHP
         env:
+          token: ${{ secrets.CODECOV_TOKEN }}
           PHP: ${{ matrix.php }}
 
   # ======================== Code Quality ========================

@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Closure;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\Dir;
@@ -46,6 +47,8 @@ class Users extends LazyCollection
 
 	/**
 	 * All registered users methods
+	 *
+	 * @var array<string, Closure>
 	 */
 	public static array $methods = [];
 

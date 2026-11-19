@@ -3,8 +3,10 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\DuplicateException;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
 use PHPUnit\Framework\Attributes\CoversClass;
 use TypeError;
 
@@ -116,6 +118,31 @@ class PageCreateTest extends ModelTestCase
 
 		$this->assertSame('Custom A', $page->a()->value());
 		$this->assertSame('B', $page->b()->value());
+	}
+
+	public function testCreateDraftWithIncompleteContent(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'fields' => [
+						'headline' => [
+							'type'     => 'text',
+							'required' => true
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page = Page::create([
+			'slug' => 'new-page',
+		]);
+
+		$this->assertTrue($page->exists());
+		$this->assertTrue($page->isDraft());
 	}
 
 	/**
@@ -319,6 +346,104 @@ class PageCreateTest extends ModelTestCase
 		$this->assertFalse($page->isListed());
 		$this->assertTrue($page->parentModel()->children()->has($page));
 		$this->assertTrue($site->children()->has($page));
+	}
+
+	public function testCreateUnlistedPageWithCompleteContent(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'fields' => [
+						'headline' => [
+							'type'     => 'text',
+							'required' => true
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page = Page::create([
+			'slug'    => 'new-page',
+			'isDraft' => false,
+			'content' => [
+				'headline' => 'Headline'
+			]
+		]);
+
+		$this->assertTrue($page->exists());
+		$this->assertFalse($page->isDraft());
+		$this->assertSame('Headline', $page->headline()->value());
+	}
+
+	public function testCreateUnlistedPageWithIncompleteContent(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'fields' => [
+						'headline' => [
+							'type'     => 'text',
+							'required' => true
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The page has errors and cannot be published');
+
+		Page::create([
+			'slug'    => 'new-page',
+			'isDraft' => false,
+		]);
+	}
+
+	public function testCreateUnlistedPageWithIncompleteTranslation(): void
+	{
+		$this->setupMultiLanguage();
+
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'fields' => [
+						'headline' => [
+							'type'     => 'text',
+							'required' => true
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The page has errors and cannot be published');
+
+		Page::create([
+			'slug'         => 'new-page',
+			'isDraft'      => false,
+			'translations' => [
+				[
+					'code'    => 'en',
+					'content' => [
+						'headline' => 'Headline'
+					]
+				],
+				[
+					'code'    => 'de',
+					'content' => [
+						'headline' => ''
+					]
+				]
+			]
+		]);
 	}
 
 	public function testCreateWhenDefaultLanguageIsActive(): void
@@ -645,6 +770,112 @@ class PageCreateTest extends ModelTestCase
 				]
 			]
 		]);
+	}
+
+	public function testCreateStripInjectedChildrenAndDrafts(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'sections' => [
+						'pages' => [
+							'type'   => 'pages',
+							'status' => 'all'
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		// existing content file that must not be touched
+		$existing = static::TMP . '/existing';
+		Dir::make($existing);
+		F::write(
+			file: $existing . '/default.txt',
+			content: 'Title: Existing'
+		);
+
+		$page = Page::create([
+			'slug'     => 'new-page',
+			'isDraft'  => false,
+			// would write UUID content files to the injected
+			// roots during the content validation if respected
+			'children' => [
+				[
+					'slug' => 'child',
+					'root' => static::TMP . '/outside-child'
+				],
+				[
+					'slug' => 'existing',
+					'root' => $existing
+				]
+			],
+			'drafts' => [
+				[
+					'slug' => 'draft',
+					'root' => static::TMP . '/outside-draft'
+				]
+			]
+		]);
+
+		$this->assertCount(0, $page->childrenAndDrafts());
+		$this->assertDirectoryDoesNotExist(static::TMP . '/outside-child');
+		$this->assertDirectoryDoesNotExist(static::TMP . '/outside-draft');
+		$this->assertSame('Title: Existing', F::read($existing . '/default.txt'));
+	}
+
+	public function testCreateStripInjectedFiles(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'sections' => [
+						'gallery' => [
+							'type' => 'files',
+							'min'  => 1
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The page has errors and cannot be published');
+
+		// injected in-memory files must not count
+		// towards the files section min validation
+		Page::create([
+			'slug'    => 'new-page',
+			'isDraft' => false,
+			'files'   => [
+				['filename' => 'fake.jpg']
+			]
+		]);
+	}
+
+	public function testCreateStripInjectedModel(): void
+	{
+		$this->app = $this->app->clone([
+			'pageModels' => [
+				'parent' => NewParentPage::class,
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page = Page::create([
+			'slug'     => 'test',
+			'template' => 'default',
+			// would use the model of another template if respected
+			'model'    => 'parent'
+		]);
+
+		$this->assertSame(Page::class, $page::class);
+		$this->assertSame('default', $page->intendedTemplate()->name());
 	}
 
 	public function testCreateStripInjectedRootAndDirname(): void

@@ -36,6 +36,7 @@ class SiteChangeTitleDialogControllerTest extends TestCase
 
 		$props = $dialog->props();
 		$this->assertArrayHasKey('title', $props['fields']);
+		$this->assertTrue($props['fields']['title']['preselect']);
 		$this->assertSame('My Site', $props['value']->title);
 	}
 
@@ -84,5 +85,6 @@ class SiteChangeTitleDialogControllerTest extends TestCase
 		$response = $controller->submit();
 		$this->assertSame('My Other Site', $this->app->site()->title()->value());
 		$this->assertSame('site.changeTitle', $response['event']);
+		$this->assertSame(['globals' => ['system']], $response['reload']);
 	}
 }

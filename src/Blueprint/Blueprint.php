@@ -109,8 +109,8 @@ class Blueprint
 	}
 
 	/**
-	 * Gathers what file templates are allowed in
-	 * a model based on the blueprint
+	 * Collects which blueprints the model's files and
+	 * the pages created through its fields may use
 	 * @since 6.0.0
 	 */
 	public function acceptRules(): AcceptRules
@@ -121,10 +121,13 @@ class Blueprint
 	/**
 	 * Gathers what file templates are allowed in
 	 * this model based on the blueprint
+	 * @deprecated 6.0.0 Use `self::acceptRules()->fileBlueprints()` instead
+	 *
+	 * @return list<string>
 	 */
 	public function acceptedFileTemplates(string|null $inField = null): array
 	{
-		return $this->acceptRules()->fileTemplates($inField);
+		return $this->acceptRules()->fileBlueprints($inField);
 	}
 
 	/**
@@ -273,6 +276,16 @@ class Blueprint
 	 */
 	public static function find(string $name): array
 	{
+		// the name can contain user input (e.g. the file template),
+		// so it must not leave the folder of the blueprint type,
+		// e.g. `files/../pages/default`
+		if (str_contains(str_replace('\\', '/', $name), '../') === true) {
+			throw new NotFoundException(
+				key: 'blueprint.notFound',
+				data: ['name' => $name]
+			);
+		}
+
 		if (isset(static::$loaded[$name]) === true) {
 			return static::$loaded[$name];
 		}

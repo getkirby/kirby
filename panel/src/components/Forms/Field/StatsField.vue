@@ -6,6 +6,7 @@
 		:label="label"
 		:name="name"
 		type="stats"
+		class="k-stats-field"
 	>
 		<k-stats :reports="reports" :size="size" />
 	</k-field>

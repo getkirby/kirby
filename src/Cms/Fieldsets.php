@@ -41,6 +41,8 @@ class Fieldsets extends Items
 
 	/**
 	 * All registered fieldsets methods
+	 *
+	 * @var array<string, Closure>
 	 */
 	public static array $methods = [];
 

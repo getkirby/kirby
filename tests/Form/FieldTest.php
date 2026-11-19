@@ -26,7 +26,7 @@ class OptionsMockField extends Field
 	#[Prop]
 	protected array $settings = ['size' => 'small', 'colors' => ['red', 'blue']];
 
-	#[Prop]
+	#[Prop(aliases: ['keywords', 'labels'])]
 	protected array $tags = ['a', 'b', 'c'];
 
 	public function config(): array
@@ -325,6 +325,35 @@ class FieldTest extends TestCase
 		];
 
 		$this->assertSame($expected, $props);
+	}
+
+	public function testRegisterWithAlias(): void
+	{
+		$field = new OptionsMockField(labels: ['b']);
+		$this->assertSame(['b'], $field->option('tags'));
+	}
+
+	public function testRegisterWithAliasAndName(): void
+	{
+		// the prop's own name wins, also when it comes later
+		$field = new OptionsMockField(labels: ['b'], tags: ['c']);
+		$this->assertSame(['c'], $field->option('tags'));
+
+		// an alias wins over the ones listed after it
+		$field = new OptionsMockField(labels: ['b'], keywords: ['c']);
+		$this->assertSame(['c'], $field->option('tags'));
+
+		// a `null` value doesn't count
+		$field = new OptionsMockField(labels: ['b'], tags: null);
+		$this->assertSame(['b'], $field->option('tags'));
+	}
+
+	public function testRegisterWithAliasAndInvalidType(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Field "test": The option "labels" must be of type array');
+
+		new OptionsMockField(name: 'test', labels: 'b');
 	}
 
 	public function testRegisterWithArrays(): void

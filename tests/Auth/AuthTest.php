@@ -883,6 +883,41 @@ class AuthTest extends TestCase
 		$this->assertSame('marge@simpsons.com', $this->failedEmail);
 	}
 
+	public function testValidatePasswordWithBlockedAccount(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth' => ['debug' => false]
+			]
+		]);
+		$this->auth = $this->app->auth();
+
+		// block the account from another ip
+		$this->app->visitor()->ip('10.1.123.234');
+
+		for ($i = 0; $i < 10; $i++) {
+			$this->auth->limits()->track('marge@simpsons.com', false);
+		}
+
+		$this->app->visitor()->ip('10.3.123.234');
+
+		$thrown = false;
+
+		try {
+			$this->auth->validatePassword('marge@simpsons.com', 'springfield123');
+		} catch (PermissionException $e) {
+			$this->assertSame('Invalid login', $e->getMessage());
+			$thrown = true;
+		}
+
+		$this->assertTrue($thrown);
+
+		// only the ip is counted, not the blocked account
+		$log = $this->auth->limits()->log();
+		$this->assertSame(1, $log['by-ip']['85a06e36d926cb901f05d1167913ebd7ec3d8f5bce4551f5da']['trials']);
+		$this->assertSame(10, $log['by-email']['marge@simpsons.com']['trials']);
+	}
+
 	public function testValidatePasswordWithUnicodeEmail(): void
 	{
 		copy(

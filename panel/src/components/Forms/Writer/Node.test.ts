@@ -55,6 +55,18 @@ describe("Node", () => {
 		});
 	});
 
+	describe("schema", () => {
+		it("returns an empty spec by default", () => {
+			class SchemalessNode extends Node {
+				get name() {
+					return "schemaless";
+				}
+			}
+
+			expect(new SchemalessNode().schema).toStrictEqual({});
+		});
+	});
+
 	describe("type", () => {
 		it("returns 'node'", () => {
 			expect(node.type).toBe("node");

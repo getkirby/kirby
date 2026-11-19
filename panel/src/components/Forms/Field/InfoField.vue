@@ -1,5 +1,5 @@
 <template>
-	<div class="k-field k-info-field">
+	<div :class="['k-field k-info-field', $attrs.class]" :style="$attrs.style">
 		<k-headline v-if="label">{{ label }}</k-headline>
 
 		<k-box :icon="icon" :theme="theme">
@@ -24,6 +24,7 @@ import { help, label } from "@/mixins/props.js";
  */
 export default {
 	mixins: [help, label],
+	inheritAttrs: false,
 	props: {
 		/**
 		 * Sets an icon for the info box.

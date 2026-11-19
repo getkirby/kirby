@@ -59,9 +59,6 @@ class SvgTest extends TestCase
 			'<svg><defs><!--<linearGradient id="x"></linearGradient>--></defs></svg>',
 			// CDATA-wrapped CSS, including a child combinator `>`
 			'<svg><style><![CDATA[.a > .b { fill: red }]]></style></svg>',
-			// `<![CDATA[` keys on the namespace of its parent, so it stays
-			// a real CDATA section in `<desc>`/`<title>` just as elsewhere
-			'<svg><desc><![CDATA[><img src=x onerror=alert(1)>]]></desc></svg>',
 			// SVG `<style>` is a foreign element, not an HTML raw text
 			// element, so a smuggled `</style>` cannot break out of it
 			'<svg><style><![CDATA[</style><img src=x onerror=alert(1)>]]></style></svg>',
@@ -570,6 +567,33 @@ class SvgTest extends TestCase
 		Svg::validate($fixture);
 	}
 
+	public function testDisallowedMutationXssIntegrationPointCdataDirectChild(): void
+	{
+		// older Chromium versions also degrade `<![CDATA[` to a bogus
+		// comment directly inside the integration point itself
+		$fixture   = '<svg><desc><![CDATA[><img src=x onerror=alert(1)>]]></desc></svg>';
+		$sanitized = '<svg><desc>&gt;&lt;img src=x onerror=alert(1)&gt;</desc></svg>';
+
+		$this->assertSame($sanitized, Svg::sanitize($fixture));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The CDATA section (line 1) is not allowed');
+		Svg::validate($fixture);
+	}
+
+	public function testDisallowedMutationXssIntegrationPointCdataDirectChildTitle(): void
+	{
+		// a smuggled `</title>` closes the `<title>` integration point
+		$fixture   = '<svg><title><![CDATA[</title><script>alert(1)</script>]]></title></svg>';
+		$sanitized = '<svg><title>&lt;/title&gt;&lt;script&gt;alert(1)&lt;/script&gt;</title></svg>';
+
+		$this->assertSame($sanitized, Svg::sanitize($fixture));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The CDATA section (line 1) is not allowed');
+		Svg::validate($fixture);
+	}
+
 	public function testDisallowedMutationXssIntegrationPointCdataTitle(): void
 	{
 		// `<title>` is an HTML integration point just like `<desc>`,
@@ -595,6 +619,47 @@ class SvgTest extends TestCase
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessageIs('The CDATA section (line 1) is not allowed');
+		Svg::validate($fixture);
+	}
+
+	public function testDisallowedMutationXssIntegrationPointTitleComment(): void
+	{
+		// below an integration point `<title>` is an HTML RCDATA element,
+		// which a smuggled `</title>` breaks out of
+		$fixture   = '<svg><desc><title><!--</title><img src=x onerror=alert(1)>--></title></desc></svg>';
+		$sanitized = '<svg><desc><title/></desc></svg>';
+
+		$this->assertSame($sanitized, Svg::sanitize($fixture));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The comment (line 1) is not allowed');
+		Svg::validate($fixture);
+	}
+
+	public function testDisallowedMutationXssIntegrationPointTitleCommentNested(): void
+	{
+		// the outermost RCDATA `<title>` holds everything below it as text
+		$fixture   = '<svg><desc><title><title><!--</title><img src=x onerror=alert(1)>--></title></title></desc></svg>';
+		$sanitized = '<svg><desc><title><title/></title></desc></svg>';
+
+		$this->assertSame($sanitized, Svg::sanitize($fixture));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The comment (line 1) is not allowed');
+		Svg::validate($fixture);
+	}
+
+	public function testDisallowedMutationXssIntegrationPointTitleCommentEarlyEnd(): void
+	{
+		// the closing tag of the nested `<title>` ends the RCDATA of the
+		// outer one early, so the comment after it is live markup again
+		$fixture   = '<svg><desc><title><title>x</title><!--><img src=x onerror=alert(1)>--></title></desc></svg>';
+		$sanitized = '<svg><desc><title><title>x</title></title></desc></svg>';
+
+		$this->assertSame($sanitized, Svg::sanitize($fixture));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The comment (line 1) is not allowed');
 		Svg::validate($fixture);
 	}
 

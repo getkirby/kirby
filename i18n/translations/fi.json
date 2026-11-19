@@ -9,8 +9,11 @@
 	"alpha": "Alpha",
 	"author": "Tekijä",
 	"avatar": "Profiilikuva",
+
 	"back": "Takaisin",
+
 	"buttons.empty": "No buttons",
+
 	"cancel": "Peruuta",
 	"change": "Muuta",
 	"close": "Sulje",
@@ -76,7 +79,7 @@
 
 	"environment": "Ympäristö",
 
-	"error": "Error",
+	"error": "Virhe",
 	"error.access.code": "Väärä koodi",
 	"error.access.login": "Kirjautumistiedot eivät kelpaa",
 	"error.access.panel": "Sinulla ei ole oikeutta käyttää paneelia",
@@ -132,8 +135,8 @@
 	"error.file.changeTemplate": "The template for the file \"{id}\" cannot be changed",
 	"error.file.changeTemplate.invalid": "The template for the file \"{id}\" cannot be changed to \"{template}\" (valid: \"{blueprints}\")",
 	"error.file.changeTemplate.permission": "You are not allowed to change the template for the file \"{id}\"",
-	"error.file.create.permission": "The file cannot be created",
 
+	"error.file.create.permission": "The file cannot be created",
 	"error.file.delete.multiple": "Not all files could be deleted. Try each remaining file individually to see the specific error that prevents deletion.",
 	"error.file.delete.permission": "The file cannot be deleted",
 	"error.file.duplicate": "Tiedosto nimeltä \"{filename}\" on jo olemassa",
@@ -197,9 +200,9 @@
 	"error.object.validation": "There’s an error in the \"{label}\" field:\n{message}",
 
 	"error.offline": "Paneeli on offline-tilassa",
+
 	"error.page.changeSlug.errorPage": "The slug of the error page cannot be changed",
 	"error.page.changeSlug.homePage": "The slug of the home page cannot be changed",
-
 	"error.page.changeSlug.permission": "Sinulla ei ole oikeutta muuttaa URL-liitettä sivulle \"{slug}\"",
 	"error.page.changeSlug.reserved": "The path of top-level pages must not start with \"{path}\"",
 	"error.page.changeStatus.errorPage": "The status of the error page cannot be changed",
@@ -258,10 +261,10 @@
 	"error.template.default.notFound": "Oletussivupohjaa ei ole määritetty",
 
 	"error.unexpected": "Pahus, määrittelemätön virhe! Laita virheenkäsittelytila päälle saadaksesi lisätietoja: https://getkirby.com/docs/reference/system/options/debug",
+
 	"error.user.avatar.duplicate": "The avatar already exists",
 	"error.user.avatar.notFound": "The avatar does not exist",
 	"error.user.changeEmail.admin": "You are not allowed to change the email address of an admin",
-
 	"error.user.changeEmail.permission": "Sinulla ei ole oikeutta vaihtaa käyttäjän \"{name}\" sähköpostiosoitetta",
 	"error.user.changeLanguage.permission": "Sinulla ei ole oikeutta vaihtaa käyttäjän \"{name}\" kieltä",
 	"error.user.changeName.permission": "Sinulla ei ole oikeutta vaihtaa käyttäjän \"{name}\" nimeä",
@@ -450,7 +453,7 @@
 
 	"fields.empty": "No fields yet",
 
-	"file": "File",
+	"file": "Tiedosto",
 	"file.blueprint": "Tällä tiedostolla ei ole vielä suunnitelmaa. Voit määrittää suunnitelman tiedostoon <strong>/site/blueprints/files/{blueprint}.yml</strong>",
 	"file.changeTemplate": "Vaihda sivupohja",
 	"file.changeTemplate.notice": "Changing the file's template will remove content for fields that don't match in type. If the new template defines certain rules, e.g. image dimensions, those will also be applied irreversibly. Use with caution.",
@@ -544,6 +547,7 @@
 	"license.code.help": "You received your license code after the purchase via email. Please copy and paste it here.",
 	"license.code.label": "License code",
 	"license.remove.text": "<p>Removing the license will irreversibly delete the license file from this site. You can then activate this site with a different license key or re-register the same license key if the domain remains the same.</p><p>To change the domain associated with the license, please contact the Kirby team. <a href='https://getkirby.com/license'>Read more &rarr;</a></p>",
+	"license.status": "License status",
 	"license.status.active.info": "Includes new major versions until {date}",
 	"license.status.active.label": "Valid license",
 	"license.status.acknowledged.info": "You confirmed to comply with the <a href=\"https://getkirby.com/license/free-licenses\">free license requirements</a>",
@@ -608,8 +612,8 @@
 	"login.email.password-reset.subject": "Salasanan asetuskoodisi",
 	"login.method.code.label": "Login via code",
 	"login.method.code.description": "Login via code lets you sign in without a password. You complete a short verification challenge, e.g. receiving a one-time code via an email or from your authenticator app, and enter it to finish logging in. The code expires quickly and can only be used once, making it a secure login method.",
-	"login.method.password.label": "Login with password",
-	"login.method.password-reset.label": "Forgot your password?",
+	"login.method.password.label": "Kirjaudu salasanalla",
+	"login.method.password-reset.label": "Unohditko salasanasi?",
 	"login.method.password-reset.submit": "Forgot password",
 	"login.method.webauthn.label": "Login with passkey",
 	"login.methods.label": "Sign in methods",
@@ -674,7 +678,7 @@
 	"orientation.portrait": "Pystysuuntainen",
 	"orientation.square": "Neliskulmainen",
 
-	"page": "Page",
+	"page": "Sivu",
 	"page.blueprint": "Tällä sivulla ei ole vielä suunnitelmaa. Voit määrittää suunnitelman tiedostoon <strong>/site/blueprints/pages/{blueprint}.yml</strong>",
 	"page.changeSlug": "Vaihda URL-osoite",
 	"page.changeSlug.fromTitle": "Luo nimen perusteella",
@@ -721,6 +725,7 @@
 	"preview": "Esikatselu",
 	"preview.browser.pin": "Toggle whether preview navigation should be in sync or independent",
 	"preview.browser.scroll": "Sync scroll",
+
 	"progress": "Progress",
 
 	"protected": "Protected",
@@ -804,6 +809,8 @@
 	"theme.light": "Lights on",
 	"theme.dark": "Lights off",
 	"theme.automatic": "Match system default",
+
+	"time.select": "Select a time",
 
 	"title": "Nimi",
 	"today": "Tänään",

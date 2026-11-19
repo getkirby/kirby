@@ -158,6 +158,49 @@ class FilesTest extends TestCase
 		$this->assertFileDoesNotExist($b);
 	}
 
+	public function testDeleteWithBlockingHook(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'hooks' => [
+				'file.delete:before' => function () {
+					throw new Exception('blocked');
+				}
+			],
+			'site' => [
+				'files' => [
+					['filename' => 'b.jpg'],
+					['filename' => 'a.jpg']
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$files = $app->site()->files();
+
+		$a = $files->get('a.jpg')->root();
+		$b = $files->get('b.jpg')->root();
+
+		// pretend the files exist
+		F::write($a, '');
+		F::write($b, '');
+
+		try {
+			$files->delete(['a.jpg', 'b.jpg']);
+			$this->fail('The files should not have been deleted');
+		} catch (Exception $e) {
+			$this->assertSame('Not all files could be deleted. Try each remaining file individually to see the specific error that prevents deletion.', $e->getMessage());
+		}
+
+		$this->assertCount(2, $files);
+
+		$this->assertFileExists($a);
+		$this->assertFileExists($b);
+	}
+
 	public function testDeleteWithUuids(): void
 	{
 		$app = new App([

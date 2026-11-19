@@ -15,6 +15,8 @@ use Kirby\Panel\Ui\Item\FileItem;
  * @since     6.0.0
  *
  * @unstable
+ *
+ * @extends ModelPickerDialogController<File>
  */
 class FilePickerDialogController extends ModelPickerDialogController
 {
@@ -93,9 +95,9 @@ class FilePickerDialogController extends ModelPickerDialogController
 		}
 
 		if ($this->model instanceof File) {
-			return 'file.siblings';
+			return 'file.siblings.sorted';
 		}
 
-		return $this->model::CLASS_ALIAS . '.files';
+		return $this->model::CLASS_ALIAS . '.files.sorted';
 	}
 }

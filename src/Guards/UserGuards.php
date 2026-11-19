@@ -2,7 +2,6 @@
 
 namespace Kirby\Guards;
 
-use Kirby\Cms\Model;
 use Kirby\Cms\User;
 use Kirby\Exception\AbilityException;
 use Kirby\Exception\DuplicateException;
@@ -17,32 +16,10 @@ use SensitiveParameter;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  *
- * @method UserAbilities abilities()
- * @method UserPermissions permissions()
- * @method UserValidators validators()
+ * @extends ModelGuards<User, UserAbilities, UserPermissions, UserValidators>
  */
 class UserGuards extends ModelGuards
 {
-	/**
-	 * @var User
-	 */
-	protected Model $model;
-
-	/**
-	 * @var UserAbilities
-	 */
-	protected ModelAbilities $abilities;
-
-	/**
-	 * @var UserPermissions
-	 */
-	protected ModelPermissions $permissions;
-
-	/**
-	 * @var UserValidators
-	 */
-	protected ModelValidators $validators;
-
 	public function __construct(
 		User $model,
 		User $user

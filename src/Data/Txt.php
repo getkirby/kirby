@@ -26,7 +26,10 @@ class Txt extends Handler
 				continue;
 			}
 
-			$key          = Str::ucfirst(Str::slug($key));
+			$key          = Str::ucfirst(Str::slug(
+				string: $key,
+				language: false
+			));
 			$value        = static::encodeValue($value);
 			$result[$key] = static::encodeResult($key, $value);
 		}

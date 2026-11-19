@@ -10,6 +10,8 @@ use Kirby\Cms\ModelWithContent;
 use Kirby\Content\Field as ContentField;
 use Kirby\Exception\FormValidationException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Form\Interface\ProvidesAcceptedFileBlueprints;
+use Kirby\Form\Interface\ProvidesAcceptedPageBlueprints;
 use Kirby\Form\Interface\ProvidesNestedForm;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
@@ -87,6 +89,54 @@ class Fields extends Collection
 		}
 
 		parent::__set($field->name(), $field);
+	}
+
+	/**
+	 * Collects the accepted file blueprints of all fields
+	 *
+	 * @return list<string>
+	 * @since 6.0.0
+	 */
+	public function acceptedFileBlueprints(): array
+	{
+		$blueprints = [];
+
+		foreach ($this->data as $field) {
+			if ($field instanceof ProvidesAcceptedFileBlueprints) {
+				$blueprints = [...$blueprints, ...$field->acceptedFileBlueprints()];
+			}
+
+			// nested forms also accept what their fields accept
+			if ($field instanceof ProvidesNestedForm) {
+				$blueprints = [...$blueprints, ...$field->form()->fields()->acceptedFileBlueprints()];
+			}
+		}
+
+		return $blueprints;
+	}
+
+	/**
+	 * Collects the accepted page blueprints of all fields
+	 *
+	 * @return list<string>
+	 * @since 6.0.0
+	 */
+	public function acceptedPageBlueprints(): array
+	{
+		$blueprints = [];
+
+		foreach ($this->data as $field) {
+			if ($field instanceof ProvidesAcceptedPageBlueprints) {
+				$blueprints = [...$blueprints, ...$field->acceptedPageBlueprints()];
+			}
+
+			// nested forms also accept what their fields accept
+			if ($field instanceof ProvidesNestedForm) {
+				$blueprints = [...$blueprints, ...$field->form()->fields()->acceptedPageBlueprints()];
+			}
+		}
+
+		return $blueprints;
 	}
 
 	/**
@@ -253,6 +303,33 @@ class Fields extends Collection
 			model: $model,
 			language: $language,
 		);
+	}
+
+	/**
+	 * Whether a field lists child pages of the model,
+	 * optionally only with the given blueprint
+	 * @since 6.0.0
+	 */
+	public function hasPageBlueprint(string|null $blueprint = null): bool
+	{
+		foreach ($this->data as $field) {
+			if (
+				$field instanceof ProvidesAcceptedPageBlueprints &&
+				$field->hasPageBlueprint($blueprint) === true
+			) {
+				return true;
+			}
+
+			// nested forms also list what their fields list
+			if (
+				$field instanceof ProvidesNestedForm &&
+				$field->form()->fields()->hasPageBlueprint($blueprint) === true
+			) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**

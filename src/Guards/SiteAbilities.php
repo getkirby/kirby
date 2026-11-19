@@ -2,7 +2,6 @@
 
 namespace Kirby\Guards;
 
-use Kirby\Cms\Model;
 use Kirby\Cms\Site;
 
 /**
@@ -11,14 +10,11 @@ use Kirby\Cms\Site;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
+ *
+ * @extends ModelAbilities<Site>
  */
 class SiteAbilities extends ModelAbilities
 {
-	/**
-	 * @var Site
-	 */
-	protected Model $model;
-
 	protected function error(
 		string $key,
 		array $data = [],

@@ -43,6 +43,9 @@ export default {
 		hasDropzone() {
 			return !this.disabled && this.more && this.uploads;
 		},
+		modelType() {
+			return "file";
+		},
 		uploadOptions() {
 			return {
 				accept: this.uploads.accept,
@@ -84,12 +87,6 @@ export default {
 				}
 			};
 		}
-	},
-	mounted() {
-		this.$events.on("file.delete", this.removeById);
-	},
-	unmounted() {
-		this.$events.off("file.delete", this.removeById);
 	},
 	methods: {
 		drop(files) {

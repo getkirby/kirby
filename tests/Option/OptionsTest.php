@@ -75,6 +75,18 @@ class OptionsTest extends TestCase
 		$this->assertSame('Option B', $options->last()->text['en']);
 	}
 
+	public function testFactoryWithOptionObjects(): void
+	{
+		$option  = new ProtectedOption('b');
+		$options = Options::factory([
+			'a',
+			$option
+		]);
+
+		$this->assertSame(['a', 'b'], $options->keys());
+		$this->assertSame($option, $options->last());
+	}
+
 	public function testFactoryWithTranslatedOptions(): void
 	{
 		$options = Options::factory([

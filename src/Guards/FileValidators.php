@@ -4,7 +4,6 @@ namespace Kirby\Guards;
 
 use Kirby\Cms\App;
 use Kirby\Cms\File;
-use Kirby\Cms\Model;
 use Kirby\Exception\DuplicateException;
 use Kirby\Filesystem\File as BaseFile;
 use Kirby\Toolkit\Str;
@@ -16,14 +15,11 @@ use Kirby\Toolkit\V;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
+ *
+ * @extends ModelValidators<File>
  */
 class FileValidators extends ModelValidators
 {
-	/**
-	 * @var File
-	 */
-	protected Model $model;
-
 	/**
 	 * Validates the input of the `changeName` action
 	 *

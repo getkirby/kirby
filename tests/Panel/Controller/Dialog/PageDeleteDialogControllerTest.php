@@ -74,10 +74,12 @@ class PageDeleteDialogControllerTest extends TestCase
 		$this->assertCount(2, $this->app->site()->children());
 
 		$page       = $this->app->page('test');
+		$uuid       = $page->uuid()->toString();
 		$controller = new PageDeleteDialogController($page);
 		$response   = $controller->submit();
 
 		$this->assertSame('page.delete', $response['event']);
+		$this->assertSame(['id' => 'test', 'uuid' => $uuid], $response['page']);
 		$this->assertNull($response['redirect']);
 		$this->assertCount(1, $this->app->site()->children());
 	}

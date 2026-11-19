@@ -67,14 +67,23 @@ class StatusTest extends TestCase
 
 	public function testFor(): void
 	{
-		$session = $this->app->session();
-		$user    = $this->app->user('homer@simpsons.com');
-		$status  = Status::for(
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'challenges' => ['email', 'totp']
+				]
+			]
+		]);
+
+		$challenges = $this->app->auth()->challenges();
+		$session    = $this->app->session();
+		$user       = $this->app->user('homer@simpsons.com');
+		$status     = Status::for(
 			kirby: $this->app,
 			user: $user,
 			impersonated: false,
 			session: $session,
-			challenges: ['totp']
+			challenges: $challenges
 		);
 		$this->assertTrue($status->is(State::Active));
 
@@ -89,7 +98,7 @@ class StatusTest extends TestCase
 			user: null,
 			impersonated: false,
 			session: $session,
-			challenges: ['totp', 'email']
+			challenges: $challenges
 		);
 
 		$this->assertTrue($status->is(State::Pending));
@@ -104,7 +113,7 @@ class StatusTest extends TestCase
 			user: null,
 			impersonated: false,
 			session: $session,
-			challenges: []
+			challenges: $challenges
 		);
 		$this->assertTrue($status->is(State::Inactive));
 	}

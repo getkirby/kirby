@@ -141,7 +141,7 @@ class UserPickerFieldTest extends TestCase
 		// the ID that is already stored in the content file
 		$this->assertSame('admin@getkirby.com', $api[1]['id']);
 		$this->assertSame('admin@getkirby.com', $api[1]['uuid']);
-		$this->assertSame('–', $api[1]['text']);
+		$this->assertSame('[unknown]', $api[1]['text']);
 		$this->assertFalse($api[1]['link']);
 	}
 

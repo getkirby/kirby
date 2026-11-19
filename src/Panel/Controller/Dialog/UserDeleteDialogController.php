@@ -32,6 +32,13 @@ class UserDeleteDialogController extends UserDialogController
 		$referrer = $this->kirby->panel()->referrer();
 		$url      = $this->user->panel()->url(true);
 
+		// collect the identifiers before deletion,
+		// so that fields can remove the user from their value
+		$user = [
+			'id'   => $this->user->id(),
+			'uuid' => $this->user->uuid()?->toString()
+		];
+
 		$this->user->delete();
 
 		// redirect to the users view
@@ -47,6 +54,7 @@ class UserDeleteDialogController extends UserDialogController
 
 		return [
 			'event'    => 'user.delete',
+			'user'     => $user,
 			'redirect' => $redirect ?? null
 		];
 	}

@@ -20,6 +20,8 @@ use Kirby\Panel\Ui\Item\PageItem;
  * @since     6.0.0
  *
  * @unstable
+ *
+ * @extends ModelPickerDialogController<Page>
  */
 class PagePickerDialogController extends ModelPickerDialogController
 {

@@ -46,6 +46,11 @@ class Options extends Collection
 		$collection = new static();
 
 		foreach ($items as $key => $option) {
+			if ($option instanceof Option) {
+				$collection->__set($option->id(), $option);
+				continue;
+			}
+
 			// convert an associative value => text array into props;
 			// skip if option is already an array of option props
 			if (

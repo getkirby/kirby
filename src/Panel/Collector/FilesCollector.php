@@ -18,6 +18,7 @@ use Kirby\Cms\Users;
 class FilesCollector extends ModelsCollector
 {
 	public function __construct(
+		protected string|null $blueprint = null,
 		protected bool $flip = false,
 		protected int|null $limit = null,
 		protected int $page = 1,
@@ -25,13 +26,12 @@ class FilesCollector extends ModelsCollector
 		protected string|null $query = null,
 		protected string|null $search = null,
 		protected string|null $sortBy = null,
-		protected string|null $template = null,
 	) {
 	}
 
 	protected function collect(): Files
 	{
-		return $this->parent()->files();
+		return $this->parent()->files()->sorted();
 	}
 
 	protected function collectByQuery(): Files
@@ -47,26 +47,12 @@ class FilesCollector extends ModelsCollector
 				return false;
 			}
 
-			// filter by template
-			if ($this->template !== null && $file->template() !== $this->template) {
+			// filter by blueprint
+			if ($this->blueprint !== null && $file->template() !== $this->blueprint) {
 				return false;
 			}
 
 			return true;
 		});
-	}
-
-	public function isSorting(): bool
-	{
-		return true;
-	}
-
-	protected function sort(Files|Pages|Users $models): Files
-	{
-		if ($this->sortBy === null || $this->isSearching() === true) {
-			return $models->sorted();
-		}
-
-		return parent::sort($models);
 	}
 }

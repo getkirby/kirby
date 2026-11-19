@@ -6,7 +6,7 @@
 		:style="$attrs.style"
 	>
 		<k-empty
-			v-if="!options?.length"
+			v-if="choices.length === 0"
 			:text="$t('options.none')"
 			icon="checklist"
 		/>
@@ -14,7 +14,7 @@
 			v-else
 			ref="input"
 			v-bind="$props"
-			:options="$helper.field.options(options, value)"
+			:options="choices"
 			@input="$emit('input', $event)"
 		/>
 	</k-field>
@@ -35,6 +35,14 @@ export default {
 	mixins: [Field, Input, RadioInput],
 	inheritAttrs: false,
 	emits: ["input"],
+	computed: {
+		/**
+		 * The options with an `[unknown]` option for each value without one
+		 */
+		choices() {
+			return this.$helper.field.options(this.options ?? [], this.value);
+		}
+	},
 	methods: {
 		focus() {
 			this.$refs.input.focus();

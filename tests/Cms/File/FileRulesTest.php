@@ -581,8 +581,8 @@ class FileRulesTest extends ModelTestCase
 				'pages/foo' => [
 					'fields' => [
 						'files' => [
-							'type'     => 'filelist',
-							'template' => 'b'
+							'type'      => 'filelist',
+							'blueprint' => 'b'
 						]
 					]
 				],

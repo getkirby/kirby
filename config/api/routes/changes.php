@@ -3,6 +3,7 @@
 use Kirby\Api\Controller\Changes;
 use Kirby\Cms\App;
 use Kirby\Cms\Find;
+use Kirby\Exception\NotFoundException;
 
 return [
 	[
@@ -38,9 +39,17 @@ return [
 		'pattern' => '(:all)/changes/unlock',
 		'method'  => 'POST',
 		'action'  => function (string $path) {
-			return Changes::unlock(
-				model: Find::parent($path),
-			);
+			try {
+				$model = Find::parent($path);
+			} catch (NotFoundException) {
+				// the model has been deleted, moved or renamed
+				// in the meantime, so there's no lock left to release
+				return [
+					'status' => 'ok'
+				];
+			}
+
+			return Changes::unlock(model: $model);
 		}
 	],
 ];

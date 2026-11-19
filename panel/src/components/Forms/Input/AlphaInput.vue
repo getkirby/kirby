@@ -1,9 +1,10 @@
 <template>
 	<k-range-input
 		v-bind="$props"
+		:class="['k-alpha-input', $attrs.class]"
 		:min="0"
 		:max="1"
-		class="k-alpha-input"
+		:style="$attrs.style"
 		@input="$emit('input', $event)"
 	/>
 </template>

@@ -44,42 +44,17 @@ class ColorField extends OptionField
 		return $this->alpha;
 	}
 
-	protected function fetchOptions(): array
+	protected function fieldOptions(): FieldOptions
 	{
 		// resolve options to support manual arrays
 		// alongside api and query options
-		$props   = FieldOptions::polyfill(['options' => $this->options ?? []]);
-		$options = FieldOptions::factory([
+		$props = FieldOptions::polyfill(['options' => $this->options ?? []]);
+
+		return FieldOptions::factory([
 			'text'  => '{{ item.value }}',
 			'value' => '{{ item.key }}',
 			...$props['options'] ?? []
 		]);
-
-		$options = $options->render($this->model());
-
-		if ($options === []) {
-			return [];
-		}
-
-		if (
-			is_numeric($options[0]['value']) === true ||
-			$options[0]['value'] === (string)$options[0]['text']
-		) {
-			// simple array of values
-			// or value=text (from Options class).
-			// the text is trusted HTML, the value must stay a plain string
-			$options = A::map($options, fn ($option) => [
-				'value' => (string)$option['text']
-			]);
-
-		} else {
-			$options = A::map($options, fn ($option) => [
-				'value' => $option['value'],
-				'text'  => $option['text']
-			]);
-		}
-
-		return $options;
 	}
 
 	/**
@@ -133,6 +108,38 @@ class ColorField extends OptionField
 		throw new InvalidArgumentException(
 			message: 'Invalid mode "' . $this->mode . '" in color field' . ($this->name ? ' "' . $this->name . '"' : null)
 		);
+	}
+
+	/**
+	 * @return list<array<string, mixed>>
+	 */
+	public function options(): array
+	{
+		$options = parent::options();
+
+		if ($options === []) {
+			return [];
+		}
+
+		if (
+			is_numeric($options[0]['value']) === true ||
+			$options[0]['value'] === (string)$options[0]['text']
+		) {
+			// simple array of values
+			// or value=text (from Options class).
+			// the text is trusted HTML, the value must stay a plain string
+			$options = A::map($options, fn ($option) => [
+				'value' => (string)$option['text']
+			]);
+
+		} else {
+			$options = A::map($options, fn ($option) => [
+				'value' => $option['value'],
+				'text'  => $option['text']
+			]);
+		}
+
+		return $options;
 	}
 
 	protected function validations(): array

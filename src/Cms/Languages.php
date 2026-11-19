@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Closure;
 use Kirby\Exception\DuplicateException;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\Str;
@@ -18,6 +19,8 @@ class Languages extends Collection
 {
 	/**
 	 * All registered languages methods
+	 *
+	 * @var array<string, Closure>
 	 */
 	public static array $methods = [];
 

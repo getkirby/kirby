@@ -21,7 +21,7 @@ class PropsTestClass
 	/**
 	 * The label of the field
 	 */
-	#[Prop]
+	#[Prop(aliases: ['title', 'text'])]
 	protected string|null $label = 'label';
 
 	/**
@@ -239,6 +239,29 @@ class PropsTest extends TestCase
 		$this->assertTrue($props->has('hidden'));
 		$this->assertFalse($props->has('cache'));
 		$this->assertFalse($props->has('foo'));
+
+		// aliases are no prop names
+		$this->assertFalse($props->has('title'));
+	}
+
+	public function testName(): void
+	{
+		$props = new Props(PropsTestClass::class);
+
+		$this->assertSame('label', $props->name('label'));
+		$this->assertSame('label', $props->name('title'));
+		$this->assertSame('label', $props->name('text'));
+		$this->assertNull($props->name('cache'));
+		$this->assertNull($props->name('foo'));
+	}
+
+	public function testNames(): void
+	{
+		$props = new Props(PropsTestClass::class);
+
+		$this->assertSame(['label', 'title', 'text'], $props->names('label'));
+		$this->assertSame(['width'], $props->names('width'));
+		$this->assertSame([], $props->names('title'));
 	}
 
 	public function testSet(): void
@@ -308,6 +331,7 @@ class PropsTest extends TestCase
 
 		$this->assertSame([
 			'name'        => 'width',
+			'aliases'     => [],
 			'type'        => 'string',
 			'computed'    => false,
 			'default'     => '1/1',
@@ -316,6 +340,8 @@ class PropsTest extends TestCase
 
 		// props that are not exported are still documented
 		$this->assertSame('Only used in the backend', $props['hidden']['description']);
+
+		$this->assertSame(['title', 'text'], $props['label']['aliases']);
 	}
 
 	public function testToArrayWithComputedProp(): void

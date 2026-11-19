@@ -1,9 +1,10 @@
 <template>
 	<k-string-input
 		v-bind="$props"
+		:class="['k-search-input', $attrs.class]"
 		:spellcheck="false"
+		:style="$attrs.style"
 		autocomplete="off"
-		class="k-search-input"
 		type="search"
 		@input="$emit('input', $event)"
 	/>

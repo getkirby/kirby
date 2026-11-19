@@ -1,5 +1,10 @@
 <template>
-	<div :data-can-add="canAdd" :data-disabled="disabled" class="k-tags-input">
+	<div
+		:class="['k-tags-input', $attrs.class]"
+		:data-can-add="canAdd"
+		:data-disabled="disabled"
+		:style="$attrs.style"
+	>
 		<k-input-validator
 			v-bind="{ min, max, required }"
 			:value="JSON.stringify(value)"
@@ -156,12 +161,19 @@ export default {
 			const tags = this.$helper.object.clone(this.value);
 
 			for (let tag of inputs) {
+				// no new tags if this is full
+				if (this.max && tags.length >= this.max) {
+					break;
+				}
+
 				// convert input to tag object
 				tag = this.$refs.tags.tag(tag, this.separator);
 
-				// no new tags if this is full,
-				// check if the tag is accepted
-				if (this.isAllowed(tag) === true) {
+				// check if the tag is accepted and not added yet
+				if (
+					this.isAllowed(tag) === true &&
+					tags.includes(tag.value) === false
+				) {
 					tags.push(tag.value);
 				}
 			}

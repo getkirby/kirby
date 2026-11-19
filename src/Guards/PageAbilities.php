@@ -2,7 +2,6 @@
 
 namespace Kirby\Guards;
 
-use Kirby\Cms\Model;
 use Kirby\Cms\Page;
 
 /**
@@ -11,14 +10,11 @@ use Kirby\Cms\Page;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
+ *
+ * @extends ModelAbilities<Page>
  */
 class PageAbilities extends ModelAbilities
 {
-	/**
-	 * @var Page
-	 */
-	protected Model $model;
-
 	protected function error(
 		string $key,
 		array $data = [],
@@ -99,19 +95,6 @@ class PageAbilities extends ModelAbilities
 	protected function ensureToPublish(): void
 	{
 		$this->ensureToChangeStatus();
-
-		if ($this->model->isDraft() === false) {
-			return;
-		}
-
-		// the field errors are passed on as details, so that
-		// the Panel can show which fields are still incomplete
-		if ($errors = $this->model->errors()) {
-			$this->error(
-				key: 'changeStatus.incomplete',
-				details: $errors
-			);
-		}
 	}
 
 	protected function ensureToSort(): void

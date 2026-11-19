@@ -12,6 +12,8 @@ use Kirby\Cms\User;
  * @since     6.0.0
  *
  * @unstable
+ *
+ * @extends ModelSettingsDropdownController<User>
  */
 class UserSettingsDropdownController extends ModelSettingsDropdownController
 {

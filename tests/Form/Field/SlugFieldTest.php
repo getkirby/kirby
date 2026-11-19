@@ -34,6 +34,7 @@ class SlugFieldTest extends TestCase
 			'path'         => null,
 			'pattern'      => null,
 			'placeholder'  => null,
+			'preselect'    => false,
 			'required'     => false,
 			'saveable'     => true,
 			'spellcheck'   => null,

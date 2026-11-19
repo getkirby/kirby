@@ -9,8 +9,11 @@
 	"alpha": "Альфа",
 	"author": "Автор",
 	"avatar": "Фото профілю",
+
 	"back": "Назад",
+
 	"buttons.empty": "No buttons",
+
 	"cancel": "Скасувати",
 	"change": "Змінити",
 	"close": "Закрити",
@@ -132,8 +135,8 @@
 	"error.file.changeTemplate": "The template for the file \"{id}\" cannot be changed",
 	"error.file.changeTemplate.invalid": "Шаблон для файлу \"{id}\" не можна змінити на \"{template}\" (допустимі: \"{blueprints}\")",
 	"error.file.changeTemplate.permission": "Вам заборонено змінювати шаблон для файлу \"{id}\"",
-	"error.file.create.permission": "The file cannot be created",
 
+	"error.file.create.permission": "The file cannot be created",
 	"error.file.delete.multiple": "Не всі файли вдалося видалити. Спробуйте видалити кожен залишений файл окремо, щоб побачити конкретну помилку, яка заважає видаленню.",
 	"error.file.delete.permission": "The file cannot be deleted",
 	"error.file.duplicate": "Файл з іменем \"{filename}\" вже існує",
@@ -197,9 +200,9 @@
 	"error.object.validation": "Сталася помилка у полі \"{label}\":\n{message}",
 
 	"error.offline": "Панель наразі недоступна",
+
 	"error.page.changeSlug.errorPage": "The slug of the error page cannot be changed",
 	"error.page.changeSlug.homePage": "The slug of the home page cannot be changed",
-
 	"error.page.changeSlug.permission": "Вам заборонено змінювати URL-суфікс для \"{slug}\"",
 	"error.page.changeSlug.reserved": "Шлях сторінок верхнього рівня не повинен починатися з \"{path}\"",
 	"error.page.changeStatus.errorPage": "The status of the error page cannot be changed",
@@ -258,10 +261,10 @@
 	"error.template.default.notFound": "Шаблон за замовчуванням не існує",
 
 	"error.unexpected": "Сталася неочікувана помилка! Увімкніть режим налагодження для додаткової інформації: https://getkirby.com/docs/reference/system/options/debug",
+
 	"error.user.avatar.duplicate": "The avatar already exists",
 	"error.user.avatar.notFound": "The avatar does not exist",
 	"error.user.changeEmail.admin": "You are not allowed to change the email address of an admin",
-
 	"error.user.changeEmail.permission": "Вам заборонено змінювати email користувача \"{name}\"",
 	"error.user.changeLanguage.permission": "Вам заборонено змінювати мову для користувача \"{name}\"",
 	"error.user.changeName.permission": "Вам заборонено змінювати ім'я користувача \"{name}\"",
@@ -544,6 +547,7 @@
 	"license.code.help": "Ви отримали код ліцензії після покупки на email. Будь ласка, скопіюйте та вставте його тут.",
 	"license.code.label": "License code",
 	"license.remove.text": "<p>Removing the license will irreversibly delete the license file from this site. You can then activate this site with a different license key or re-register the same license key if the domain remains the same.</p><p>To change the domain associated with the license, please contact the Kirby team. <a href='https://getkirby.com/license'>Read more &rarr;</a></p>",
+	"license.status": "License status",
 	"license.status.active.info": "Включає нові основні версії до {date}",
 	"license.status.active.label": "Дійсна ліцензія",
 	"license.status.acknowledged.info": "You confirmed to comply with the <a href=\"https://getkirby.com/license/free-licenses\">free license requirements</a>",
@@ -608,15 +612,15 @@
 	"login.email.password-reset.subject": "Ваш код для скидання пароля",
 	"login.method.code.label": "Login via code",
 	"login.method.code.description": "Login via code lets you sign in without a password. You complete a short verification challenge, e.g. receiving a one-time code via an email or from your authenticator app, and enter it to finish logging in. The code expires quickly and can only be used once, making it a secure login method.",
-	"login.method.password.label": "Login with password",
-	"login.method.password-reset.label": "Forgot your password?",
+	"login.method.password.label": "Вхід за паролем",
+	"login.method.password-reset.label": "Забули пароль?",
 	"login.method.password-reset.submit": "Forgot password",
 	"login.method.webauthn.label": "Login with passkey",
 	"login.methods.label": "Sign in methods",
 	"login.or": "or",
 	"login.remember": "Запам'ятати мене",
 	"login.reset": "Скинути пароль",
-	"login.totp.description": "Authenticator apps can generate one‑time codes that are used as a second factor when signing into your account.",
+	"login.totp.description": "Додатки-аутентифікатори можуть генерувати одноразові коди, які використовуються як другий фактор при вході у ваш обліковий запис.",
 	"login.totp.enable.qr.label": "1. Скануйте цей QR-код",
 	"login.totp.enable.qr.help": "Не вдається сканувати? Додайте ключ налаштування <code>{secret}</code> вручну у ваш додаток-аутентифікатор.",
 	"login.totp.enable.confirm.headline": "2. Підтвердіть згенерованим кодом",
@@ -721,6 +725,7 @@
 	"preview": "Попередній перегляд",
 	"preview.browser.pin": "Toggle whether preview navigation should be in sync or independent",
 	"preview.browser.scroll": "Sync scroll",
+
 	"progress": "Progress",
 
 	"protected": "Protected",
@@ -804,6 +809,8 @@
 	"theme.light": "Світла тема",
 	"theme.dark": "Темна тема",
 	"theme.automatic": "Як у системі",
+
+	"time.select": "Select a time",
 
 	"title": "Заголовок",
 	"today": "Сьогодні",
@@ -891,7 +898,7 @@
 	"version.form": "Live editor",
 	"version.latest": "Остання версія",
 	"versionInformation": "Інформація про версію",
-	"video": "Video",
+	"video": "Відео",
 
 	"view": "Перегляд",
 	"view.account": "Ваш обліковий запис",

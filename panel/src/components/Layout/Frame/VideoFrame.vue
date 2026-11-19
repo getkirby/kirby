@@ -53,7 +53,7 @@ export const props = {
  * or internal file UUID in a fixed ratio with background etc.
  *
  * @example
- * <k-video-frame src="file://my-video" ratio="16/9" />
+ * <k-video-frame file="file://my-video" ratio="16/9" />
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license

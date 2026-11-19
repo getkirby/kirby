@@ -3,13 +3,11 @@
 namespace Kirby\Guards;
 
 use Kirby\Cms\App;
-use Kirby\Cms\Model;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
-use Kirby\Form\Field\PageListField;
 use Kirby\Form\Fields;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
@@ -20,14 +18,11 @@ use Kirby\Toolkit\Str;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
+ *
+ * @extends ModelValidators<Page>
  */
 class PageValidators extends ModelValidators
 {
-	/**
-	 * @var Page
-	 */
-	protected Model $model;
-
 	/**
 	 * Validates the input of the `changeNum` action
 	 */
@@ -80,13 +75,18 @@ class PageValidators extends ModelValidators
 	}
 
 	/**
-	 * Validates the page that is about to be created
+	 * Validates the page that is about to be created,
+	 * including its content
 	 */
 	protected function ensureToCreate(): void
 	{
-		$this->validateSlug($this->model->slug());
-		$this->validateDoesNotExist();
-		$this->validateDuplicate($this->model->slug(), strict: true);
+		$this->validateToBeCreatable();
+
+		// a non-draft page must have complete content,
+		// just like a draft that gets published
+		if ($this->model->isDraft() === false) {
+			$this->validateContent();
+		}
 	}
 
 	/**
@@ -115,6 +115,54 @@ class PageValidators extends ModelValidators
 	protected function ensureToMove(Site|Page $parent): void
 	{
 		$this->validateMoveTo($parent);
+	}
+
+	/**
+	 * Validates the page that is about to be published
+	 */
+	protected function ensureToPublish(): void
+	{
+		if ($this->model->isDraft() === true) {
+			$this->validateContent();
+		}
+	}
+
+	/**
+	 * Validates that the page content has no errors in any language
+	 */
+	public function validateContent(): void
+	{
+		$errors = $this->model->errors();
+
+		// the errors above only cover the current language,
+		// so the content of all other languages must be validated too
+		if ($errors === [] && $this->model->kirby()->multilang() === true) {
+			foreach ($this->model->kirby()->languages() as $language) {
+				$errors = $this->model->version()->errors($language);
+
+				if ($errors !== []) {
+					// add the language to the error details
+					// to make clear which translation is incomplete
+					foreach ($errors as $name => $error) {
+						$label = $error['label'] ?? $name;
+
+						$errors[$name]['label']    = $label . ' (' . $language->name() . ')';
+						$errors[$name]['language'] = $language->code();
+					}
+
+					break;
+				}
+			}
+		}
+
+		// the field errors are passed on as details, so that
+		// the Panel can show which fields are still incomplete
+		if ($errors !== []) {
+			$this->error(
+				key: 'page.changeStatus.incomplete',
+				details: $errors
+			);
+		}
 	}
 
 	/**
@@ -204,49 +252,27 @@ class PageValidators extends ModelValidators
 	}
 
 	/**
-	 * Validates if the template of the page is accepted
-	 * as a subpage template of the given parent
+	 * Validates that a pages field of the given
+	 * parent lists pages with the page's blueprint
 	 */
 	public function validateMoveToTemplate(Site|Page $parent): void
 	{
-		$allowed = [];
+		$fields = Fields::for($parent);
 
-		// collect all allowed subpage templates from all page list
-		// fields in the blueprint (only consider fields that list
-		// pages of the targeted new parent page)
-		$found = false;
-
-		foreach (Fields::for($parent) as $field) {
-			if (
-				$field instanceof PageListField === false ||
-				$field->parentModel()->is($parent) === false
-			) {
-				continue;
-			}
-
-			$found = true;
-
-			foreach ($field->templates() as $template) {
-				$allowed[] = $template;
-			}
-		}
-
-		if ($found === false) {
+		if ($fields->hasPageBlueprint() === false) {
 			throw new LogicException(
 				key: 'page.move.noBlueprints',
 				data: ['parent' => $parent->id() ?? '/']
 			);
 		}
 
-		// an empty allowlist accepts every template
-		if (
-			$allowed !== [] &&
-			in_array($this->model->intendedTemplate()->name(), $allowed, true) === false
-		) {
+		$template = $this->model->intendedTemplate()->name();
+
+		if ($fields->hasPageBlueprint($template) === false) {
 			throw new PermissionException(
 				key: 'page.move.template',
 				data: [
-					'template' => $this->model->intendedTemplate()->name(),
+					'template' => $template,
 					'parent'   => $parent->id() ?? '/',
 				]
 			);
@@ -379,5 +405,16 @@ class PageValidators extends ModelValidators
 				key: 'page.changeTitle.empty'
 			);
 		}
+	}
+
+	/**
+	 * Validates the page that is about to be created
+	 * before its content has been added.
+	 */
+	public function validateToBeCreatable(): void
+	{
+		$this->validateSlug($this->model->slug());
+		$this->validateDoesNotExist();
+		$this->validateDuplicate($this->model->slug(), strict: true);
 	}
 }

@@ -13,6 +13,8 @@ class RouterTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.Panel';
 
+	public bool $submitted = false;
+
 	protected function call(
 		string $path,
 		array $query = [],
@@ -21,9 +23,17 @@ class RouterTest extends TestCase
 	): Response {
 		$_SERVER['SERVER_SOFTWARE'] = 'php';
 
+		$test = $this;
+
 		$this->app = $this->app->clone([
 			'areas' => [
 				'test' => fn () => [
+					'dialogs' => [
+						'test' => [
+							'load'   => fn () => ['component' => 'k-test-dialog'],
+							'submit' => fn () => $test->submitted = true
+						]
+					],
 					'requests' => [
 						'test' => [
 							'pattern' => 'test/request',
@@ -65,6 +75,13 @@ class RouterTest extends TestCase
 		$this->assertSame('Done', json_decode($response->body(), true)['message']);
 	}
 
+	public function testCallWithCsrfForDialogSubmit(): void
+	{
+		$response = $this->call('dialogs/test', ['csrf' => 'test-csrf'], 'POST');
+		$this->assertSame(200, $response->code());
+		$this->assertTrue($this->submitted);
+	}
+
 	public function testCallWithCsrfViaPost(): void
 	{
 		$response = $this->call('test/request', ['csrf' => 'test-csrf'], 'POST');
@@ -79,6 +96,17 @@ class RouterTest extends TestCase
 			'Invalid CSRF token',
 			json_decode($response->body(), true)['message']
 		);
+	}
+
+	public function testCallWithoutCsrfForDialogSubmit(): void
+	{
+		$response = $this->call('dialogs/test', [], 'POST');
+		$this->assertSame(400, $response->code());
+		$this->assertSame(
+			'Invalid CSRF token',
+			json_decode($response->body(), true)['message']
+		);
+		$this->assertFalse($this->submitted);
 	}
 
 	public function testCallWithoutCsrfForLogin(): void

@@ -9,8 +9,11 @@
 	"alpha": "알파",
 	"author": "저자",
 	"avatar": "프로필 이미지",
+
 	"back": "뒤로",
+
 	"buttons.empty": "No buttons",
+
 	"cancel": "\ucde8\uc18c",
 	"change": "\ubcc0\uacbd",
 	"close": "\ub2eb\uae30",
@@ -132,8 +135,8 @@
 	"error.file.changeTemplate": "The template for the file \"{id}\" cannot be changed",
 	"error.file.changeTemplate.invalid": "파일({id}) 템플릿을 다음 템플릿({template})으로 변경할 수 없습니다. (valid: \"{blueprints}\")",
 	"error.file.changeTemplate.permission": "파일({id}) 템플릿을 변경할 수 없습니다.",
-	"error.file.create.permission": "The file cannot be created",
 
+	"error.file.create.permission": "The file cannot be created",
 	"error.file.delete.multiple": "모든 파일을 삭제할 수 없습니다. 각 파일을 확인하세요.",
 	"error.file.delete.permission": "The file cannot be deleted",
 	"error.file.duplicate": "파일명이 같은 파일({filename})이 있습니다.",
@@ -197,9 +200,9 @@
 	"error.object.validation": "필드({label})에 오류가 있습니다.\n{message}",
 
 	"error.offline": "패널이 오프라인 상태입니다.",
+
 	"error.page.changeSlug.errorPage": "The slug of the error page cannot be changed",
 	"error.page.changeSlug.homePage": "The slug of the home page cannot be changed",
-
 	"error.page.changeSlug.permission": "고유 주소({slug})를 변경할 권한이 없습니다.",
 	"error.page.changeSlug.reserved": "상위 페이지는 이 경로({path})로 시작할 수 없습니다.",
 	"error.page.changeStatus.errorPage": "The status of the error page cannot be changed",
@@ -258,10 +261,10 @@
 	"error.template.default.notFound": "기본 템플릿이 없습니다.",
 
 	"error.unexpected": "오류가 발생했습니다. 디버그 모드를 활성화해 오류를 확인하세요. https://getkirby.com/docs/reference/system/options/debug",
+
 	"error.user.avatar.duplicate": "The avatar already exists",
 	"error.user.avatar.notFound": "The avatar does not exist",
 	"error.user.changeEmail.admin": "You are not allowed to change the email address of an admin",
-
 	"error.user.changeEmail.permission": "사용자({name})의 이메일 주소를 변경할 권한이 없습니다.",
 	"error.user.changeLanguage.permission": "사용자({name})의 언어를 변경할 권한이 없습니다.",
 	"error.user.changeName.permission": "사용자명({name})을 변경할 권한이 없습니다.",
@@ -544,6 +547,7 @@
 	"license.code.help": "이메일로 전송된 라이선스 코드를 복사해 붙여넣으세요.",
 	"license.code.label": "라이선스 코드",
 	"license.remove.text": "<p>라이선스를 제거하면 이 사이트에서 라이선스 파일이 삭제됩니다. 도메인이 동일한 경우 다른 라이선스 키로 이 사이트를 활성화하거나 동일한 라이선스 키를 다시 등록할 수 있습니다.</p><p>라이선스와 연결된 도메인을 변경하려면 Kirby 팀에 문의하십시오.<a href='https://getkirby.com/license'>자세히 보기 &rarr;</a></p>",
+	"license.status": "License status",
 	"license.status.active.info": "새로운 메이저 버전은 {date}까지 포함됩니다.",
 	"license.status.active.label": "유효한 라이선스",
 	"license.status.acknowledged.info": "You confirmed to comply with the <a href=\"https://getkirby.com/license/free-licenses\">free license requirements</a>",
@@ -721,6 +725,7 @@
 	"preview": "미리 보기",
 	"preview.browser.pin": "Toggle whether preview navigation should be in sync or independent",
 	"preview.browser.scroll": "스크롤 동기화",
+
 	"progress": "Progress",
 
 	"protected": "Protected",
@@ -804,6 +809,8 @@
 	"theme.light": "밝게",
 	"theme.dark": "어둡게",
 	"theme.automatic": "시스템 기본값과 일치",
+
+	"time.select": "Select a time",
 
 	"title": "제목",
 	"today": "오늘",

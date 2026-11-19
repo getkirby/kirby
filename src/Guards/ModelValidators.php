@@ -18,11 +18,16 @@ use SensitiveParameter;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
+ *
+ * @template TModel of Model
  */
 abstract class ModelValidators
 {
 	use HasActions;
 
+	/**
+	 * @param TModel $model
+	 */
 	public function __construct(
 		protected Model $model,
 		protected User $user
@@ -50,11 +55,15 @@ abstract class ModelValidators
 	 *
 	 * @throws InvalidArgumentException
 	 */
-	protected function error(string $key, array $data = []): never
-	{
+	protected function error(
+		string $key,
+		array $data = [],
+		array $details = []
+	): never {
 		throw new InvalidArgumentException(
 			key: $key,
-			data: $data
+			data: $data,
+			details: $details
 		);
 	}
 

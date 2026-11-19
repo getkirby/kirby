@@ -95,6 +95,28 @@ class EntriesFieldTest extends TestCase
 		$this->assertArrayNotHasKey('counter', $field->field());
 	}
 
+	public function testFieldPropsDefault(): void
+	{
+		$field = $this->field('entries', [
+			'field' => [
+				'type'    => 'text',
+				'default' => 'Some default text'
+			]
+		]);
+
+		$this->assertSame('Some default text', $field->fieldProps()['default']);
+		$this->assertSame('Some default text', $field->props()['field']['default']);
+	}
+
+	public function testFieldPropsWithoutDefault(): void
+	{
+		$field = $this->field('entries', [
+			'field' => 'text'
+		]);
+
+		$this->assertSame('', $field->fieldProps()['default']);
+	}
+
 	public static function supportsProvider(): array
 	{
 		return [

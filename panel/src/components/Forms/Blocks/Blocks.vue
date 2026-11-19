@@ -385,7 +385,7 @@ export default {
 		},
 		focus(block) {
 			const ref = this.ref(block);
-			this.selected = [block?.id ?? this.blocks[0]];
+			this.selected = [block?.id ?? this.blocks[0]?.id];
 			ref?.focus();
 			ref?.$el.scrollIntoView({ block: "nearest" });
 		},
@@ -621,7 +621,7 @@ export default {
 
 			// don't add blocks that exceed the maximum limit
 			if (this.max) {
-				const max = this.max - this.blocks.length;
+				const max = Math.max(this.max - this.blocks.length, 0);
 				blocks = blocks.slice(0, max);
 			}
 

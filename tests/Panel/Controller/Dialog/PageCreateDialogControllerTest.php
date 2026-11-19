@@ -16,6 +16,45 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(PageCreateDialogController::class)]
 class PageCreateDialogControllerTest extends TestCase
 {
+	public function testConstructWithBlueprints(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/album'  => ['title' => 'Album'],
+				'pages/broken' => [
+					'title'  => 'Not used',
+					// a scalar instead of a list of fields
+					// breaks the blueprint
+					'fields' => 'text'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PageCreateDialogController(
+			blueprints: ['album', 'broken', 'does-not-exist']
+		);
+
+		// blueprints that cannot be created or loaded
+		// still get an entry, based on their name
+		$this->assertSame([
+			['name' => 'album', 'title' => 'Album'],
+			['name' => 'broken', 'title' => 'Broken'],
+			['name' => 'does-not-exist', 'title' => 'Does-not-exist']
+		], $controller->blueprints());
+	}
+
+	public function testConstructWithoutBlueprints(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('No new pages can be created here');
+
+		new PageCreateDialogController(blueprints: []);
+	}
+
 	public function testCoreFields(): void
 	{
 		$this->app = $this->app->clone([
@@ -221,8 +260,8 @@ class PageCreateDialogControllerTest extends TestCase
 				'pages/parent' => [
 					'fields' => [
 						'kids' => [
-							'type'      => 'pagelist',
-							'templates' => ['child']
+							'type'       => 'pagelist',
+							'blueprints' => ['child']
 						]
 					]
 				],
@@ -296,7 +335,9 @@ class PageCreateDialogControllerTest extends TestCase
 
 		$props = $dialog->props();
 		$this->assertSame('Title', $props['fields']['title']['label']);
+		$this->assertTrue($props['fields']['title']['preselect']);
 		$this->assertSame('URL appendix', $props['fields']['slug']['label']);
+		$this->assertFalse($props['fields']['slug']['preselect']);
 		$this->assertSame('title', $props['fields']['slug']['sync']);
 
 		// there's only the default template for now
@@ -444,6 +485,41 @@ class PageCreateDialogControllerTest extends TestCase
 		$page = $this->app->page('auto-slug');
 		$this->assertSame('auto-slug', $page->slug());
 		$this->assertSame('Auto title', $page->title()->value());
+	}
+
+	public function testLoadImmediatelySubmitsWithUuidTemplates(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'create' => [
+						'title' => 'Test {{ page.uuid.id }}',
+						'slug'  => '{{ page.uuid.id }}'
+					],
+					'fields' => [
+						'test' => [
+							'type'    => 'text',
+							'default' => '{{ page.uuid.id }}'
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		try {
+			new PageCreateDialogController()->load();
+			$this->fail('Expected Redirect exception was not thrown');
+		} catch (Redirect) {
+		}
+
+		$page = $this->app->site()->drafts()->first();
+		$uuid = $page->uuid()->id();
+
+		$this->assertSame($uuid, $page->slug());
+		$this->assertSame('Test ' . $uuid, $page->title()->value());
+		$this->assertSame($uuid, $page->test()->value());
 	}
 
 	public function testModel(): void

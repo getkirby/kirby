@@ -122,9 +122,9 @@ class AccountRoutesTest extends TestCase
 					'title'  => 'Admin',
 					'fields' => [
 						'test' => [
-							'type'      => 'pagelist',
-							'parent'    => 'site',
-							'templates' => [
+							'type'       => 'pagelist',
+							'parent'     => 'site',
+							'blueprints' => [
 								'foo',
 								'bar'
 							]

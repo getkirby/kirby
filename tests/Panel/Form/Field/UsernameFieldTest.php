@@ -33,6 +33,7 @@ class UsernameFieldTest extends TestCase
 			'name'         => 'username',
 			'pattern'      => null,
 			'placeholder'  => null,
+			'preselect'    => false,
 			'required'     => false,
 			'saveable'     => true,
 			'spellcheck'   => null,

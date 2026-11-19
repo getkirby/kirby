@@ -32,6 +32,7 @@ class UrlFieldTest extends TestCase
 			'name'         => 'url',
 			'pattern'      => null,
 			'placeholder'  => 'https://example.com',
+			'preselect'    => false,
 			'required'     => false,
 			'saveable'     => true,
 			'spellcheck'   => null,

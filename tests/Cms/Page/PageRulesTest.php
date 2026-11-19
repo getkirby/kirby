@@ -403,6 +403,49 @@ class PageRulesTest extends ModelTestCase
 		PageRules::create($page);
 	}
 
+	public function testCreateNonDraftWithIncompleteContent(): void
+	{
+		$page = new Page([
+			'slug'      => 'test',
+			'isDraft'   => false,
+			'blueprint' => [
+				'name'   => 'test',
+				'fields' => [
+					'headline' => [
+						'type'     => 'text',
+						'required' => true
+					]
+				]
+			]
+		]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The page has errors and cannot be published');
+
+		PageRules::create($page);
+	}
+
+	public function testCreateDraftWithIncompleteContent(): void
+	{
+		$page = new Page([
+			'slug'      => 'test',
+			'isDraft'   => true,
+			'blueprint' => [
+				'name'   => 'test',
+				'fields' => [
+					'headline' => [
+						'type'     => 'text',
+						'required' => true
+					]
+				]
+			]
+		]);
+
+		$this->expectNotToPerformAssertions();
+
+		PageRules::create($page);
+	}
+
 	public function testDelete(): void
 	{
 		$page = new Page([
@@ -756,8 +799,8 @@ class PageRulesTest extends ModelTestCase
 				'pages/parent' => [
 					'fields' => [
 						'subpages' => [
-							'type'     => 'pagelist',
-							'template' => 'child'
+							'type'       => 'pagelist',
+							'blueprints' => 'child'
 						]
 					]
 				]
@@ -838,8 +881,8 @@ class PageRulesTest extends ModelTestCase
 				'pages/parent' => [
 					'fields' => [
 						'subpages' => [
-							'type'     => 'pagelist',
-							'template' => 'child'
+							'type'       => 'pagelist',
+							'blueprints' => 'child'
 						]
 					]
 				]
@@ -918,14 +961,14 @@ class PageRulesTest extends ModelTestCase
 				'pages/photography' => [
 					'fields' => [
 						'albums' => [
-							'type'      => 'pagelist',
-							'templates' => ['album']
+							'type'       => 'pagelist',
+							'blueprints' => ['album']
 						],
 						'related' => [
-							'type'      => 'pagelist',
-							'parent'    => 'site.find("parent-a")',
-							'create'    => 'album',
-							'templates' => ['article']
+							'type'       => 'pagelist',
+							'parent'     => 'site.find("parent-a")',
+							'create'     => 'album',
+							'blueprints' => ['article']
 						]
 					]
 				]

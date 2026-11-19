@@ -3,9 +3,11 @@
 namespace Kirby\Form;
 
 use Kirby\Cms\Page;
+use Kirby\Option\Option;
 use Kirby\Option\Options;
 use Kirby\Option\OptionsApi;
 use Kirby\Option\OptionsQuery;
+use Kirby\Option\ProtectedOption;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -71,6 +73,20 @@ class FieldOptionsTest extends TestCase
 
 		$props = FieldOptions::polyfill(['options' => $options = ['a' => 'Option A', 'b' => 'Option B']]);
 		$this->assertSame(['options' => ['type' => 'array', 'options' => $options]], $props);
+	}
+
+	public function testRenderWithProtectedOptions(): void
+	{
+		$model   = new Page(['slug' => 'test']);
+		$options = new FieldOptions(new Options([
+			new Option('a'),
+			new ProtectedOption('b'),
+			new ProtectedOption('c')
+		]));
+
+		// placeholders only show up for the given values
+		$this->assertSame(['a'], array_column($options->render($model), 'value'));
+		$this->assertSame(['a', 'c'], array_column($options->render($model, ['c']), 'value'));
 	}
 
 	public function testResolveRender(): void

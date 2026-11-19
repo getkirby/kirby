@@ -233,7 +233,7 @@ class FilePickerFieldTest extends TestCase
 		// the ID that is already stored in the content file
 		$this->assertSame('file://my-b', $api[1]['id']);
 		$this->assertSame('file://my-b', $api[1]['uuid']);
-		$this->assertSame('–', $api[1]['text']);
+		$this->assertSame('[unknown]', $api[1]['text']);
 		$this->assertFalse($api[1]['link']);
 	}
 
@@ -259,6 +259,16 @@ class FilePickerFieldTest extends TestCase
 		]);
 
 		$this->assertSame('Test', $field->empty());
+	}
+
+	public function testAcceptedFileBlueprints(): void
+	{
+		$field = $this->field('filepicker', [
+			'model'   => $this->model(),
+			'uploads' => 'a'
+		]);
+
+		$this->assertSame(['a'], $field->acceptedFileBlueprints());
 	}
 
 	public function testFillWithFile(): void

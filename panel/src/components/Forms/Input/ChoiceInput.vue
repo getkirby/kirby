@@ -15,9 +15,8 @@
 				type,
 				value
 			}"
-			:class="[variant === 'invisible' ? 'sr-only' : null, $attrs.class]"
+			:class="variant === 'invisible' ? 'sr-only' : null"
 			:data-variant="variant"
-			:style="$attrs.style"
 			@click="$emit('click', $event)"
 			@input="$emit('input', $event.target.checked)"
 		/>

@@ -107,6 +107,7 @@ import { IsoDateProps } from "./DateInput.vue";
  */
 export default {
 	mixins: [InputProps, IsoDateProps],
+	inheritAttrs: false,
 	emits: ["input"],
 	data() {
 		const today = this.$library.dayjs();
@@ -306,8 +307,8 @@ export default {
 		/**
 		 * Creates a dayjs object for a specified day and
 		 * optional month
-		 * @param {number} day
-		 * @param {number} month
+		 * @param {number} [day]
+		 * @param {number} [month]
 		 */
 		toDate(day = 1, month) {
 			return this.$library.dayjs(

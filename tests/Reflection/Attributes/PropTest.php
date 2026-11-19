@@ -27,11 +27,19 @@ class PropTest extends TestCase
 	{
 		$attribute = new Prop();
 
+		$this->assertSame([], $attribute->aliases);
 		$this->assertFalse($attribute->computed);
 		$this->assertNull($attribute->default);
 		$this->assertTrue($attribute->export);
 		$this->assertNull($attribute->getter);
 		$this->assertNull($attribute->setter);
+	}
+
+	public function testConstructWithAliases(): void
+	{
+		$attribute = new Prop(aliases: ['template', 'templates']);
+
+		$this->assertSame(['template', 'templates'], $attribute->aliases);
 	}
 
 	public function testConstructWithComputed(): void

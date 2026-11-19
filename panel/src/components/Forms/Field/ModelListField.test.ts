@@ -97,6 +97,8 @@ describe("k-model-list-field", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "K-FIELD", "k-modellist-field");
+		it.acceptsClass(mount);
+		it.acceptsStyle(mount);
 		it.inheritsNoAttrs(mount);
 	});
 

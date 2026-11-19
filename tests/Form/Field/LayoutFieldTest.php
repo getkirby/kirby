@@ -216,6 +216,50 @@ class LayoutFieldTest extends TestCase
 		$this->assertInstanceOf(Fieldsets::class, $field->fieldsets());
 	}
 
+	public function testAcceptedFileBlueprints(): void
+	{
+		$field = $this->field('layout', [
+			'fieldsets' => [
+				'cover' => [
+					'fields' => [
+						'image' => [
+							'type'    => 'filepicker',
+							'uploads' => 'cover'
+						]
+					]
+				]
+			],
+			'settings' => [
+				'fields' => [
+					'background' => [
+						'type'    => 'filepicker',
+						'uploads' => 'background'
+					]
+				]
+			]
+		]);
+
+		$this->assertSame(['cover', 'background'], $field->acceptedFileBlueprints());
+	}
+
+	public function testAcceptedFileBlueprintsWithoutSettings(): void
+	{
+		$field = $this->field('layout', [
+			'fieldsets' => [
+				'cover' => [
+					'fields' => [
+						'image' => [
+							'type'    => 'filepicker',
+							'uploads' => 'cover'
+						]
+					]
+				]
+			]
+		]);
+
+		$this->assertSame(['cover'], $field->acceptedFileBlueprints());
+	}
+
 	public function testFillWithLayouts(): void
 	{
 		$layouts = Layouts::factory([
@@ -528,6 +572,33 @@ class LayoutFieldTest extends TestCase
 
 		$field->fill([]);
 		$this->assertSame('', $field->toStoredValue());
+	}
+
+	public function testToStoredValueWithProtectedOptions(): void
+	{
+		$app   = $this->appWithProtectedPages();
+		$field = $this->field('layout', [
+			'model'    => $app->site(),
+			'settings' => [
+				'fields' => [
+					'page' => [
+						'type'    => 'select',
+						'options' => 'site.children'
+					]
+				]
+			],
+			'value' => [
+				[
+					'attrs'   => ['page' => 'b'],
+					'columns' => []
+				]
+			]
+		]);
+
+		// the stored value of a page the user must not list is kept
+		$result = json_decode($field->toStoredValue(), true);
+		$this->assertSame(['page' => 'b'], $result[0]['attrs']);
+		$this->assertTrue($field->isValid());
 	}
 
 	public function testValidations(): void

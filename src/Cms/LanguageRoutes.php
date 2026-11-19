@@ -105,17 +105,15 @@ class LanguageRoutes
 						$lang = $kirby->detectedLanguage()->code();
 
 						if (
-							$kirby->option('languages.detect') === true &&
-							$page->translation($lang)->exists() === true
+							$kirby->option('languages.detect') !== true ||
+							$page->translation($lang)->exists() === false
 						) {
-							return $kirby
-								->response()
-								->redirect($page->url($lang));
+							$lang = null;
 						}
 
 						return $kirby
 							->response()
-							->redirect($page->url());
+							->redirect($page->url($lang), inherit: true);
 					}
 				}
 
@@ -147,7 +145,7 @@ class LanguageRoutes
 				if ($languages->count() === 0) {
 					return $kirby
 						->response()
-						->redirect($kirby->defaultLanguage()->url());
+						->redirect($kirby->defaultLanguage()->url(), inherit: true);
 				}
 
 				// if there's just one language,
@@ -159,15 +157,14 @@ class LanguageRoutes
 
 				// language detection on the home page with / as URL
 				if ($kirby->url() !== $currentLanguage->url()) {
-					if ($kirby->option('languages.detect') === true) {
-						return $kirby
-							->response()
-							->redirect($kirby->detectedLanguage()->url());
-					}
+					$language = match ($kirby->option('languages.detect')) {
+						true    => $kirby->detectedLanguage(),
+						default => $currentLanguage
+					};
 
 					return $kirby
 						->response()
-						->redirect($currentLanguage->url());
+						->redirect($language->url(), inherit: true);
 				}
 
 				// render the home page of the current language

@@ -4,8 +4,8 @@
 		:data-translate="translate"
 		:class="[
 			'k-field',
-			`k-field-name-${name}`,
-			`k-field-type-${type}`,
+			name ? `k-field-name-${name}` : null,
+			type ? `k-field-type-${type}` : null,
 			$attrs.class
 		]"
 		:style="$attrs.style"
@@ -92,7 +92,7 @@ export default {
 }
 .k-field-header {
 	display: flex;
-	justify-content: space-between;
+	justify-content: flex-end;
 	align-items: center;
 	gap: var(--spacing-6);
 	position: relative;

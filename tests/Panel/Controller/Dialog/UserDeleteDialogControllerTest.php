@@ -65,11 +65,13 @@ class UserDeleteDialogControllerTest extends TestCase
 		$this->assertCount(2, $this->app->users());
 
 		$user       = $this->app->user('test');
+		$uuid       = $user->uuid()->toString();
 		$controller = new UserDeleteDialogController($user);
 		$response   = $controller->submit();
 
 		$this->assertCount(1, $this->app->users());
 		$this->assertSame('user.delete', $response['event']);
+		$this->assertSame(['id' => 'test', 'uuid' => $uuid], $response['user']);
 		$this->assertNull($response['redirect']);
 	}
 

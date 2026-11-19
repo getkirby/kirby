@@ -67,6 +67,7 @@ class EmailFieldTest extends TestCase
 			'name'         => 'email',
 			'pattern'      => null,
 			'placeholder'  => 'mail@example.com',
+			'preselect'    => false,
 			'required'     => false,
 			'saveable'     => true,
 			'spellcheck'   => null,
