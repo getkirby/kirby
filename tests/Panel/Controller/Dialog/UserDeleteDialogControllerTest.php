@@ -75,26 +75,6 @@ class UserDeleteDialogControllerTest extends TestCase
 		$this->assertNull($response['redirect']);
 	}
 
-	public function testSubmitWithReferrer(): void
-	{
-		$this->app = $this->app->clone([
-			'request' => [
-				'query' => [
-					'_referrer' => '/users/test'
-				]
-			]
-		]);
-
-		$this->app->impersonate('kirby');
-
-		$user = $this->app->user('test');
-		$controller = new UserDeleteDialogController($user);
-		$response   = $controller->submit();
-
-		$this->assertSame('user.delete', $response['event']);
-		$this->assertSame('/users', $response['redirect']);
-	}
-
 	public function testSubmitWithOwnAccount(): void
 	{
 		$this->app = $this->app->clone([
@@ -115,5 +95,25 @@ class UserDeleteDialogControllerTest extends TestCase
 
 		$this->assertSame('user.delete', $response['event']);
 		$this->assertSame('/logout', $response['redirect']);
+	}
+
+	public function testSubmitWithReferrer(): void
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'_referrer' => '/users/test'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$user = $this->app->user('test');
+		$controller = new UserDeleteDialogController($user);
+		$response   = $controller->submit();
+
+		$this->assertSame('user.delete', $response['event']);
+		$this->assertSame('/users', $response['redirect']);
 	}
 }

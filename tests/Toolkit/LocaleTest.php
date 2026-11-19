@@ -131,16 +131,6 @@ class LocaleTest extends TestCase
 		Locale::normalize(123);
 	}
 
-	public function testSetString(): void
-	{
-		$this->assertSame('C', setlocale(LC_ALL, '0'));
-		$this->assertSame('en-US', locale_get_default());
-
-		Locale::set('de_DE.' . $this->localeSuffix);
-		$this->assertSame('de_DE.' . $this->localeSuffix, setlocale(LC_ALL, '0'));
-		$this->assertSame('de_DE.' . $this->localeSuffix, locale_get_default());
-	}
-
 	public function testSetArray1(): void
 	{
 		$this->assertSame('C', setlocale(LC_ALL, '0'));
@@ -172,5 +162,15 @@ class LocaleTest extends TestCase
 		$this->assertSame('de_AT.' . $this->localeSuffix, setlocale(LC_NUMERIC, '0'));
 		$this->assertSame('de_AT.' . $this->localeSuffix, setlocale(LC_COLLATE, '0'));
 		$this->assertSame('de_CH.' . $this->localeSuffix, locale_get_default());
+	}
+
+	public function testSetString(): void
+	{
+		$this->assertSame('C', setlocale(LC_ALL, '0'));
+		$this->assertSame('en-US', locale_get_default());
+
+		Locale::set('de_DE.' . $this->localeSuffix);
+		$this->assertSame('de_DE.' . $this->localeSuffix, setlocale(LC_ALL, '0'));
+		$this->assertSame('de_DE.' . $this->localeSuffix, locale_get_default());
 	}
 }

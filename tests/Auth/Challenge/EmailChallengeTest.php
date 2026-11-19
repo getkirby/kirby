@@ -21,11 +21,6 @@ class EmailChallengeTest extends TestCase
 
 	protected static string $password;
 
-	public static function setUpBeforeClass(): void
-	{
-		self::$password = User::hashPassword('123456');
-	}
-
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -49,6 +44,11 @@ class EmailChallengeTest extends TestCase
 		]);
 
 		$this->user = $this->app->user('marge');
+	}
+
+	public static function setUpBeforeClass(): void
+	{
+		self::$password = User::hashPassword('123456');
 	}
 
 	public function testCreate(): void
@@ -97,37 +97,6 @@ class EmailChallengeTest extends TestCase
 
 		$this->assertStringContainsString('login code', $body);
 		$this->assertStringContainsString('7 minutes', $body);
-	}
-
-	public function testCreatePasswordReset(): void
-	{
-		$challenge = new EmailChallenge($this->user, 'email', 'password-reset', 7.3 * 60);
-		$pending   = $challenge->create();
-
-		$this->assertCount(1, Email::$emails);
-
-		$email = Email::$emails[0];
-
-		$this->assertSame('Your password reset code', $email->subject());
-
-		$body  = $email->body()->text();
-		preg_match('/[0-9]{3} [0-9]{3}/', $body, $code);
-		$this->assertNotEmpty($code[0]);
-		$code = str_replace(' ', '', $code[0]);
-		$this->assertTrue(password_verify($code, $pending->secret()));
-
-		$this->assertStringContainsString('password reset code', $body);
-		$this->assertStringContainsString('7 minutes', $body);
-	}
-
-	public function testCreateResetUserLanguage(): void
-	{
-		$user = $this->app->user('bart@simpsons.com');
-		$challenge = new EmailChallenge($user, 'email', 'password-reset', 7.3 * 60);
-		$challenge->create();
-
-		$email = Email::$emails[0];
-		$this->assertSame('Dein Anmeldecode', $email->subject());
 	}
 
 	public function testCreateCustom(): void
@@ -184,6 +153,37 @@ class EmailChallengeTest extends TestCase
 			"HTML: marge@simpsons.com\nTest Site\n7\n",
 			$email->body()->html()
 		);
+	}
+
+	public function testCreatePasswordReset(): void
+	{
+		$challenge = new EmailChallenge($this->user, 'email', 'password-reset', 7.3 * 60);
+		$pending   = $challenge->create();
+
+		$this->assertCount(1, Email::$emails);
+
+		$email = Email::$emails[0];
+
+		$this->assertSame('Your password reset code', $email->subject());
+
+		$body  = $email->body()->text();
+		preg_match('/[0-9]{3} [0-9]{3}/', $body, $code);
+		$this->assertNotEmpty($code[0]);
+		$code = str_replace(' ', '', $code[0]);
+		$this->assertTrue(password_verify($code, $pending->secret()));
+
+		$this->assertStringContainsString('password reset code', $body);
+		$this->assertStringContainsString('7 minutes', $body);
+	}
+
+	public function testCreateResetUserLanguage(): void
+	{
+		$user = $this->app->user('bart@simpsons.com');
+		$challenge = new EmailChallenge($user, 'email', 'password-reset', 7.3 * 60);
+		$challenge->create();
+
+		$email = Email::$emails[0];
+		$this->assertSame('Dein Anmeldecode', $email->subject());
 	}
 
 	public function testForm(): void
@@ -295,13 +295,12 @@ class EmailChallengeTest extends TestCase
 		$this->assertTrue($challenge->verify(123456, $data));
 	}
 
-	public function testVerifyWithInvalidInput(): void
+	public function testVerifyMismatch(): void
 	{
 		$challenge = new EmailChallenge($this->user, 'email', 'login', 600);
 		$data      = new Pending(secret: self::$password);
 
-		$this->assertFalse($challenge->verify(null, $data));
-		$this->assertFalse($challenge->verify(['123456'], $data));
+		$this->assertFalse($challenge->verify('654 321', $data));
 	}
 
 	public function testVerifyWithInvalidHash(): void
@@ -312,11 +311,12 @@ class EmailChallengeTest extends TestCase
 		$this->assertFalse($challenge->verify('1234', $data));
 	}
 
-	public function testVerifyMismatch(): void
+	public function testVerifyWithInvalidInput(): void
 	{
 		$challenge = new EmailChallenge($this->user, 'email', 'login', 600);
 		$data      = new Pending(secret: self::$password);
 
-		$this->assertFalse($challenge->verify('654 321', $data));
+		$this->assertFalse($challenge->verify(null, $data));
+		$this->assertFalse($challenge->verify(['123456'], $data));
 	}
 }

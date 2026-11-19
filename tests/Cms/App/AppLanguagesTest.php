@@ -19,49 +19,6 @@ class AppLanguagesTest extends TestCase
 		$_SERVER['HTTP_ACCEPT_LANGUAGE'] = $this->acceptLang;
 	}
 
-	public function testLanguages(): void
-	{
-		$app = new App([
-			'languages' => [
-				[
-					'code'    => 'en',
-					'name'    => 'English',
-					'default' => true
-				],
-				[
-					'code'    => 'de',
-					'name'    => 'Deutsch'
-				]
-			]
-		]);
-
-		$this->assertTrue($app->multilang());
-		$this->assertCount(2, $app->languages());
-		$this->assertSame('en', $app->languageCode());
-	}
-
-	public function testLanguageCode(): void
-	{
-		$app = new App([
-			'languages' => [
-				[
-					'code'    => 'en',
-					'name'    => 'English',
-					'default' => true
-				],
-				[
-					'code'    => 'de',
-					'name'    => 'Deutsch'
-				]
-			]
-		]);
-
-		$this->assertSame('de', $app->languageCode('de'));
-		$this->assertSame('en', $app->languageCode('en'));
-		$this->assertSame('en', $app->languageCode());
-		$this->assertNull($app->languageCode('fr'));
-	}
-
 	public static function detectedLanguageProvider(): array
 	{
 		return [
@@ -170,5 +127,48 @@ class AppLanguagesTest extends TestCase
 		]);
 
 		$this->assertSame($expected, $app->detectedLanguage()->code());
+	}
+
+	public function testLanguageCode(): void
+	{
+		$app = new App([
+			'languages' => [
+				[
+					'code'    => 'en',
+					'name'    => 'English',
+					'default' => true
+				],
+				[
+					'code'    => 'de',
+					'name'    => 'Deutsch'
+				]
+			]
+		]);
+
+		$this->assertSame('de', $app->languageCode('de'));
+		$this->assertSame('en', $app->languageCode('en'));
+		$this->assertSame('en', $app->languageCode());
+		$this->assertNull($app->languageCode('fr'));
+	}
+
+	public function testLanguages(): void
+	{
+		$app = new App([
+			'languages' => [
+				[
+					'code'    => 'en',
+					'name'    => 'English',
+					'default' => true
+				],
+				[
+					'code'    => 'de',
+					'name'    => 'Deutsch'
+				]
+			]
+		]);
+
+		$this->assertTrue($app->multilang());
+		$this->assertCount(2, $app->languages());
+		$this->assertSame('en', $app->languageCode());
 	}
 }

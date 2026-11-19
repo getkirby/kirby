@@ -61,13 +61,6 @@ class UsersCollectorTest extends TestCase
 		$this->assertCollectUnauthenticated(UsersCollector::class);
 	}
 
-	public function testCollectWithoutAccess(): void
-	{
-		$this->setUpUsers();
-		$this->app->impersonate('nobody');
-		$this->assertCollectUnauthenticated(UsersCollector::class);
-	}
-
 	public function testCollectWithNonListableUsers(): void
 	{
 		// use a uuid-based role to avoid static permission cache
@@ -110,6 +103,13 @@ class UsersCollectorTest extends TestCase
 		// manager only sees users whose blueprint allows listing
 		$this->app->impersonate('a@getkirby.com');
 		$this->assertCollect(UsersCollector::class, ['a']);
+	}
+
+	public function testCollectWithoutAccess(): void
+	{
+		$this->setUpUsers();
+		$this->app->impersonate('nobody');
+		$this->assertCollectUnauthenticated(UsersCollector::class);
 	}
 
 	public function testFilterByRole(): void

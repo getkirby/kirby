@@ -14,14 +14,6 @@ use Kirby\Toolkit\Xml as XmlConverter;
 class Xml extends Handler
 {
 	/**
-	 * Converts an array to an encoded XML string
-	 */
-	public static function encode($data): string
-	{
-		return XmlConverter::create($data, 'data');
-	}
-
-	/**
 	 * Parses an encoded XML string and returns a multi-dimensional array
 	 */
 	public static function decode($string): array
@@ -53,5 +45,13 @@ class Xml extends Handler
 		}
 
 		throw new InvalidArgumentException(message: 'XML string is invalid');
+	}
+
+	/**
+	 * Converts an array to an encoded XML string
+	 */
+	public static function encode($data): string
+	{
+		return XmlConverter::create($data, 'data');
 	}
 }

@@ -16,19 +16,19 @@ class SystemTest extends TestCase
 	public const string FIXTURES = __DIR__ . '/fixtures/SystemTest';
 	public const string TMP      = KIRBY_TMP_DIR . '/Cms.System';
 
-	protected static string $updateStatusHost;
-
 	protected string|null $subTmp = null;
 
-	public static function setUpBeforeClass(): void
-	{
-		static::$updateStatusHost = UpdateStatus::$host;
-		UpdateStatus::$host = 'file://' . static::FIXTURES;
-	}
+	protected static string $updateStatusHost;
 
-	public static function tearDownAfterClass(): void
+	public static function providerForServerNames(): array
 	{
-		UpdateStatus::$host = static::$updateStatusHost;
+		return [
+			['localhost', true],
+			['mydomain.local', true],
+			['mydomain.test', true],
+			['mydomain.com', false],
+			['mydomain.dev', false],
+		];
 	}
 
 	protected function setUp(): void
@@ -45,6 +45,12 @@ class SystemTest extends TestCase
 		]);
 	}
 
+	public static function setUpBeforeClass(): void
+	{
+		static::$updateStatusHost = UpdateStatus::$host;
+		UpdateStatus::$host = 'file://' . static::FIXTURES;
+	}
+
 	protected function tearDown(): void
 	{
 		if ($this->subTmp !== null) {
@@ -55,90 +61,9 @@ class SystemTest extends TestCase
 		parent::tearDown();
 	}
 
-	public static function providerForIndexUrls(): array
+	public static function tearDownAfterClass(): void
 	{
-		return [
-			['http://getkirby.com', 'getkirby.com'],
-			['https://getkirby.com', 'getkirby.com'],
-			['https://getkirby.com/test', 'getkirby.com/test'],
-			['/', '/'],
-			['/test', '/test']
-		];
-	}
-
-	public static function providerForLoginMethods(): array
-	{
-		return [
-			[
-				'password',
-				['password' => []]
-			],
-			[
-				'password-reset',
-				['password-reset' => []]
-			],
-			[
-				['password-reset'],
-				['password-reset' => []]
-			],
-			[
-				['password-reset' => true],
-				['password-reset' => []]
-			],
-			[
-				['password-reset' => []],
-				['password-reset' => []]
-			],
-			[
-				['password-reset' => ['option' => 'test']],
-				['password-reset' => ['option' => 'test']]
-			],
-			[
-				['password', 'password-reset'],
-				['password' => [], 'password-reset' => []]
-			],
-			[
-				['code', 'password'],
-				['code' => [], 'password' => []]
-			],
-			[
-				['code', 'password-reset'],
-				['password-reset' => []]
-			],
-			[
-				['password' => ['2fa' => true], 'code'],
-				['password' => ['2fa' => true]]
-			],
-			[
-				['password' => ['2fa' => true], 'password-reset'],
-				['password' => ['2fa' => true]]
-			],
-			[
-				['password' => ['2fa' => true], 'code', 'password-reset'],
-				['password' => ['2fa' => true]]
-			]
-		];
-	}
-
-	public static function providerForRoots(): array
-	{
-		return [
-			['accounts'],
-			['content'],
-			['media'],
-			['sessions'],
-		];
-	}
-
-	public static function providerForServerNames(): array
-	{
-		return [
-			['localhost', true],
-			['mydomain.local', true],
-			['mydomain.test', true],
-			['mydomain.com', false],
-			['mydomain.dev', false],
-		];
+		UpdateStatus::$host = static::$updateStatusHost;
 	}
 
 	public function testExtensions(): void
@@ -282,6 +207,17 @@ class SystemTest extends TestCase
 		$this->assertNull($system->exposedFileUrl('unknown'));
 	}
 
+	public static function providerForIndexUrls(): array
+	{
+		return [
+			['http://getkirby.com', 'getkirby.com'],
+			['https://getkirby.com', 'getkirby.com'],
+			['https://getkirby.com/test', 'getkirby.com/test'],
+			['/', '/'],
+			['/test', '/test']
+		];
+	}
+
 	#[DataProvider('providerForIndexUrls')]
 	public function testIndexUrl($indexUrl, $expected): void
 	{
@@ -291,6 +227,33 @@ class SystemTest extends TestCase
 			]
 		]));
 		$this->assertSame($expected, $system->indexUrl($indexUrl));
+	}
+
+	public function testInfo(): void
+	{
+		$app = $this->app->clone([
+			'languages' => [
+				'en' => [
+					'code' => 'en'
+				],
+				'de' => [
+					'code' => 'de'
+				]
+			],
+		]);
+		$system = new System($app);
+		$info   = $system->info();
+		$this->assertSame(['en', 'de'], $info['languages']);
+	}
+
+	public static function providerForRoots(): array
+	{
+		return [
+			['accounts'],
+			['content'],
+			['media'],
+			['sessions'],
+		];
 	}
 
 	/**
@@ -319,23 +282,6 @@ class SystemTest extends TestCase
 		$this->expectExceptionMessage('The ' . $root . ' directory could not be created');
 
 		new System($app);
-	}
-
-	public function testInfo(): void
-	{
-		$app = $this->app->clone([
-			'languages' => [
-				'en' => [
-					'code' => 'en'
-				],
-				'de' => [
-					'code' => 'de'
-				]
-			],
-		]);
-		$system = new System($app);
-		$info   = $system->info();
-		$this->assertSame(['en', 'de'], $info['languages']);
 	}
 
 	public function testIs2FA(): void
@@ -550,6 +496,60 @@ class SystemTest extends TestCase
 		$this->assertSame(['password' => []], $this->app->system()->loginMethods());
 	}
 
+	public static function providerForLoginMethods(): array
+	{
+		return [
+			[
+				'password',
+				['password' => []]
+			],
+			[
+				'password-reset',
+				['password-reset' => []]
+			],
+			[
+				['password-reset'],
+				['password-reset' => []]
+			],
+			[
+				['password-reset' => true],
+				['password-reset' => []]
+			],
+			[
+				['password-reset' => []],
+				['password-reset' => []]
+			],
+			[
+				['password-reset' => ['option' => 'test']],
+				['password-reset' => ['option' => 'test']]
+			],
+			[
+				['password', 'password-reset'],
+				['password' => [], 'password-reset' => []]
+			],
+			[
+				['code', 'password'],
+				['code' => [], 'password' => []]
+			],
+			[
+				['code', 'password-reset'],
+				['password-reset' => []]
+			],
+			[
+				['password' => ['2fa' => true], 'code'],
+				['password' => ['2fa' => true]]
+			],
+			[
+				['password' => ['2fa' => true], 'password-reset'],
+				['password' => ['2fa' => true]]
+			],
+			[
+				['password' => ['2fa' => true], 'code', 'password-reset'],
+				['password' => ['2fa' => true]]
+			]
+		];
+	}
+
 	#[DataProvider('providerForLoginMethods')]
 	public function testLoginMethodsCustom($option, $expected): void
 	{
@@ -726,6 +726,38 @@ class SystemTest extends TestCase
 		$this->assertSame('88888.8.8', $updateStatus->targetVersion());
 	}
 
+	public function testUpdateStatusCustomData(): void
+	{
+		$system       = new System($this->app);
+		$updateStatus = $system->updateStatus([
+			'latest' => '87654.3.2',
+			'versions' => [
+				'*' => [
+					'latest' => $this->app->version(),
+					'status' => 'active-support'
+				]
+			],
+			'urls' => [
+				'*' => [
+					'changes' => 'https://other-domain.com/releases/{{ version }}',
+					'upgrade' => 'https://other-domain.com/releases/87654'
+				]
+			],
+			'incidents' => [],
+			'messages' => []
+		]);
+
+		$this->assertInstanceOf(UpdateStatus::class, $updateStatus);
+
+		// instance should be cached
+		$this->assertSame($updateStatus, $system->updateStatus());
+
+		// should use the passed data
+		$this->assertSame('upgrade', $updateStatus->status());
+		$this->assertSame('87654.3.2', $updateStatus->targetVersion());
+		$this->assertSame('https://other-domain.com/releases/87654', $updateStatus->url());
+	}
+
 	public function testUpdateStatusDisabled1(): void
 	{
 		$app = $this->app->clone([
@@ -800,37 +832,5 @@ class SystemTest extends TestCase
 		// only suggest security updates
 		$this->assertSame('not-vulnerable', $updateStatus->status());
 		$this->assertNull($updateStatus->targetVersion());
-	}
-
-	public function testUpdateStatusCustomData(): void
-	{
-		$system       = new System($this->app);
-		$updateStatus = $system->updateStatus([
-			'latest' => '87654.3.2',
-			'versions' => [
-				'*' => [
-					'latest' => $this->app->version(),
-					'status' => 'active-support'
-				]
-			],
-			'urls' => [
-				'*' => [
-					'changes' => 'https://other-domain.com/releases/{{ version }}',
-					'upgrade' => 'https://other-domain.com/releases/87654'
-				]
-			],
-			'incidents' => [],
-			'messages' => []
-		]);
-
-		$this->assertInstanceOf(UpdateStatus::class, $updateStatus);
-
-		// instance should be cached
-		$this->assertSame($updateStatus, $system->updateStatus());
-
-		// should use the passed data
-		$this->assertSame('upgrade', $updateStatus->status());
-		$this->assertSame('87654.3.2', $updateStatus->targetVersion());
-		$this->assertSame('https://other-domain.com/releases/87654', $updateStatus->url());
 	}
 }

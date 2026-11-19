@@ -31,13 +31,6 @@ abstract class ModelGuards
 	use HasActions;
 
 	/**
-	 * Guards of each model, see `::for()`
-	 *
-	 * @var WeakMap<Model, ModelGuards>|null
-	 */
-	protected static WeakMap|null $cache = null;
-
-	/**
 	 * @var TAbilities
 	 */
 	protected ModelAbilities $abilities;
@@ -51,6 +44,13 @@ abstract class ModelGuards
 	 * @var TValidators
 	 */
 	protected ModelValidators $validators;
+
+	/**
+	 * Guards of each model, see `::for()`
+	 *
+	 * @var WeakMap<Model, ModelGuards>|null
+	 */
+	protected static WeakMap|null $cache = null;
 
 	/**
 	 * Child classes create their abilities, permissions

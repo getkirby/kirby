@@ -81,6 +81,14 @@ class FileUuid extends ModelUuid
 	}
 
 	/**
+	 * Returns permalink url
+	 */
+	public function toPermalink(): string
+	{
+		return (new Permalink($this))->url();
+	}
+
+	/**
 	 * Returns value to be stored in cache
 	 */
 	public function value(): array
@@ -96,13 +104,5 @@ class FileUuid extends ModelUuid
 			'parent'   => $parent->toString(),
 			'filename' => $model->filename()
 		];
-	}
-
-	/**
-	 * Returns permalink url
-	 */
-	public function toPermalink(): string
-	{
-		return (new Permalink($this))->url();
 	}
 }

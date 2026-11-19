@@ -15,7 +15,9 @@ use Generator;
  */
 class Tokenizer
 {
-	private int $length = 0;
+	private const string DOUBLEQUOTE_STRING_REGEX = <<<'REGEX'
+	"([^"\\]*(?:\\.[^"\\]*)*)"
+	REGEX;
 
 	/**
 	 * Identifiers can contain letters, numbers and underscores.
@@ -29,9 +31,8 @@ class Tokenizer
 	private const string SINGLEQUOTE_STRING_REGEX = <<<'REGEX'
 	'([^'\\]*(?:\\.[^'\\]*)*)'
 	REGEX;
-	private const string DOUBLEQUOTE_STRING_REGEX = <<<'REGEX'
-	"([^"\\]*(?:\\.[^"\\]*)*)"
-	REGEX;
+
+	private int $length = 0;
 
 	public function __construct(
 		private readonly string $query,

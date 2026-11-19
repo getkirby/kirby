@@ -76,37 +76,6 @@ class SystemViewControllerTest extends TestCase
 
 	protected static string $host;
 
-	public static function setUpBeforeClass(): void
-	{
-		static::$host = UpdateStatus::$host;
-		UpdateStatus::$host = 'file://' . static::FIXTURES;
-	}
-
-	public static function tearDownAfterClass(): void
-	{
-		UpdateStatus::$host = static::$host;
-	}
-
-	protected function setUp(): void
-	{
-		parent::setUp();
-
-		$this->app = $this->app->clone([
-			'options' => [
-				'url' => 'https://example.com',
-				// the fixtures are served from the local filesystem,
-				// which the default protocol allowlist blocks
-				'remote' => ['protocols' => CURLPROTO_FILE]
-			]
-		]);
-	}
-
-	protected function tearDown(): void
-	{
-		Cookie::$key = 'KirbyHttpCookieKey';
-		parent::tearDown();
-	}
-
 	protected function installPlugins(): void
 	{
 		App::plugin(
@@ -141,6 +110,37 @@ class SystemViewControllerTest extends TestCase
 		);
 	}
 
+	protected function setUp(): void
+	{
+		parent::setUp();
+
+		$this->app = $this->app->clone([
+			'options' => [
+				'url' => 'https://example.com',
+				// the fixtures are served from the local filesystem,
+				// which the default protocol allowlist blocks
+				'remote' => ['protocols' => CURLPROTO_FILE]
+			]
+		]);
+	}
+
+	public static function setUpBeforeClass(): void
+	{
+		static::$host = UpdateStatus::$host;
+		UpdateStatus::$host = 'file://' . static::FIXTURES;
+	}
+
+	protected function tearDown(): void
+	{
+		Cookie::$key = 'KirbyHttpCookieKey';
+		parent::tearDown();
+	}
+
+	public static function tearDownAfterClass(): void
+	{
+		UpdateStatus::$host = static::$host;
+	}
+
 	public function testButtons(): void
 	{
 		$controller = new SystemViewController();
@@ -154,6 +154,18 @@ class SystemViewControllerTest extends TestCase
 		$exceptions = $controller->exceptions();
 		$this->assertIsArray($exceptions);
 		$this->assertCount(0, $exceptions);
+	}
+
+	public function testExceptionsLocal(): void
+	{
+		$this->app = $this->app->clone([
+			'server' => [
+				'REMOTE_ADDR' => '127.0.0.1',
+			]
+		]);
+
+		$controller = new SystemViewController();
+		$this->assertSame([], $controller->exceptions());
 	}
 
 	public function testExceptionsPlugins(): void
@@ -190,18 +202,6 @@ class SystemViewControllerTest extends TestCase
 			'Could not load update data for plugin getkirby/unknown: Couldn\'t open file ' .
 			static::FIXTURES . '/plugins/getkirby/unknown.json',
 		], $exceptions);
-	}
-
-	public function testExceptionsLocal(): void
-	{
-		$this->app = $this->app->clone([
-			'server' => [
-				'REMOTE_ADDR' => '127.0.0.1',
-			]
-		]);
-
-		$controller = new SystemViewController();
-		$this->assertSame([], $controller->exceptions());
 	}
 
 	public function testLoad(): void
@@ -367,22 +367,6 @@ class SystemViewControllerTest extends TestCase
 		], $security);
 	}
 
-	public function testSecurityWithoutUpdate(): void
-	{
-		$this->app = $this->app->clone([
-			'options' => [
-				'updates' => false
-			]
-		]);
-
-		$controller = new SystemViewController();
-		$security   = $controller->security();
-		$this->assertSame([
-			SystemMock::contentSaltWarning(),
-			SystemMock::cookieKeyWarning()
-		], $security);
-	}
-
 	public function testSecurityMissingHttps(): void
 	{
 		$this->app = $this->app->clone([
@@ -405,13 +389,6 @@ class SystemViewControllerTest extends TestCase
 		], $security);
 	}
 
-	public function testSecurityWithoutContentSalt(): void
-	{
-		$controller = new SystemViewController();
-		$security   = $controller->security();
-		$this->assertContains(SystemMock::contentSaltWarning(), $security);
-	}
-
 	public function testSecurityWithContentSalt(): void
 	{
 		$this->app = $this->app->clone([
@@ -423,13 +400,6 @@ class SystemViewControllerTest extends TestCase
 		$controller = new SystemViewController();
 		$security   = $controller->security();
 		$this->assertNotContains(SystemMock::contentSaltWarning(), $security);
-	}
-
-	public function testSecurityWithoutCustomCookieKey(): void
-	{
-		$controller = new SystemViewController();
-		$security   = $controller->security();
-		$this->assertContains(SystemMock::cookieKeyWarning(), $security);
 	}
 
 	public function testSecurityWithCustomCookieKey(): void
@@ -454,6 +424,36 @@ class SystemViewControllerTest extends TestCase
 		$controller = new SystemViewController();
 		$security   = $controller->security();
 		$this->assertNotContains(SystemMock::cookieKeyWarning(), $security);
+	}
+
+	public function testSecurityWithoutContentSalt(): void
+	{
+		$controller = new SystemViewController();
+		$security   = $controller->security();
+		$this->assertContains(SystemMock::contentSaltWarning(), $security);
+	}
+
+	public function testSecurityWithoutCustomCookieKey(): void
+	{
+		$controller = new SystemViewController();
+		$security   = $controller->security();
+		$this->assertContains(SystemMock::cookieKeyWarning(), $security);
+	}
+
+	public function testSecurityWithoutUpdate(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'updates' => false
+			]
+		]);
+
+		$controller = new SystemViewController();
+		$security   = $controller->security();
+		$this->assertSame([
+			SystemMock::contentSaltWarning(),
+			SystemMock::cookieKeyWarning()
+		], $security);
 	}
 
 	public function testStats(): void

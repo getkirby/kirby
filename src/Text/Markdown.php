@@ -26,6 +26,15 @@ class Markdown
 	protected array $options = [];
 
 	/**
+	 * Creates a new Markdown parser
+	 * with the given options
+	 */
+	public function __construct(array $options = [])
+	{
+		$this->options = [...$this->defaults(), ...$options];
+	}
+
+	/**
 	 * Returns default values for all
 	 * available parser options
 	 *
@@ -38,15 +47,6 @@ class Markdown
 			'extra'  => false,
 			'safe'   => false
 		];
-	}
-
-	/**
-	 * Creates a new Markdown parser
-	 * with the given options
-	 */
-	public function __construct(array $options = [])
-	{
-		$this->options = [...$this->defaults(), ...$options];
 	}
 
 	/**

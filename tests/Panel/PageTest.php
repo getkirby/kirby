@@ -30,6 +30,12 @@ class PageTest extends TestCase
 	public const string FIXTURES = __DIR__ . '/fixtures';
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.Page';
 
+	protected function panel(array $props = [])
+	{
+		$page = new ModelPage(['slug' => 'test', ...$props]);
+		return new Page($page);
+	}
+
 	protected function setUp(): void
 	{
 		$this->app = new App([
@@ -44,12 +50,6 @@ class PageTest extends TestCase
 	protected function tearDown(): void
 	{
 		Dir::remove(static::TMP);
-	}
-
-	protected function panel(array $props = [])
-	{
-		$page = new ModelPage(['slug' => 'test', ...$props]);
-		return new Page($page);
 	}
 
 	public function testCrumb(): void
@@ -120,36 +120,32 @@ class PageTest extends TestCase
 		$this->assertSame('(link: page://test-page text: Test Title)', $panel->dragText());
 	}
 
-	public function testDragTextMarkdown(): void
+	public function testDragTextCustomKirbytext(): void
 	{
 		$app = $this->app->clone([
 			'options' => [
 				'panel' => [
-					'kirbytext' => false
+					'kirbytext' => [
+						'pageDragText' => function (ModelPage $page) {
+							return sprintf('Links sind toll: %s', $page->url());
+						},
+					]
 				]
 			],
 			'site' => [
 				'children' => [
 					[
-						'slug' => 'a',
-						'content' => ['uuid' => 'my-a']
-					],
-					[
-						'slug' => 'b',
+						'slug' => 'test',
 						'content' => [
-							'title' => 'Test Title',
-							'uuid'  => 'my-b'
+							'title' => 'Test Title'
 						]
 					]
 				]
 			]
 		]);
 
-		$panel = new Page($app->page('a'));
-		$this->assertSame('[a](//@/page/my-a)', $panel->dragText());
-
-		$panel = new Page($app->page('b'));
-		$this->assertSame('[Test Title](//@/page/my-b)', $panel->dragText());
+		$panel = new Page($app->page('test'));
+		$this->assertSame('Links sind toll: /test', $panel->dragText());
 	}
 
 	public function testDragTextCustomMarkdown(): void
@@ -181,32 +177,36 @@ class PageTest extends TestCase
 		$this->assertSame('Links sind toll: /test', $panel->dragText());
 	}
 
-	public function testDragTextCustomKirbytext(): void
+	public function testDragTextMarkdown(): void
 	{
 		$app = $this->app->clone([
 			'options' => [
 				'panel' => [
-					'kirbytext' => [
-						'pageDragText' => function (ModelPage $page) {
-							return sprintf('Links sind toll: %s', $page->url());
-						},
-					]
+					'kirbytext' => false
 				]
 			],
 			'site' => [
 				'children' => [
 					[
-						'slug' => 'test',
+						'slug' => 'a',
+						'content' => ['uuid' => 'my-a']
+					],
+					[
+						'slug' => 'b',
 						'content' => [
-							'title' => 'Test Title'
+							'title' => 'Test Title',
+							'uuid'  => 'my-b'
 						]
 					]
 				]
 			]
 		]);
 
-		$panel = new Page($app->page('test'));
-		$this->assertSame('Links sind toll: /test', $panel->dragText());
+		$panel = new Page($app->page('a'));
+		$this->assertSame('[a](//@/page/my-a)', $panel->dragText());
+
+		$panel = new Page($app->page('b'));
+		$this->assertSame('[Test Title](//@/page/my-b)', $panel->dragText());
 	}
 
 	public function testIconFromBlueprint(): void

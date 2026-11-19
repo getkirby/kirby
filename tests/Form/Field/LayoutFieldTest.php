@@ -10,6 +10,50 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(LayoutField::class)]
 class LayoutFieldTest extends TestCase
 {
+	public function testAcceptedFileBlueprints(): void
+	{
+		$field = $this->field('layout', [
+			'fieldsets' => [
+				'cover' => [
+					'fields' => [
+						'image' => [
+							'type'    => 'filepicker',
+							'uploads' => 'cover'
+						]
+					]
+				]
+			],
+			'settings' => [
+				'fields' => [
+					'background' => [
+						'type'    => 'filepicker',
+						'uploads' => 'background'
+					]
+				]
+			]
+		]);
+
+		$this->assertSame(['cover', 'background'], $field->acceptedFileBlueprints());
+	}
+
+	public function testAcceptedFileBlueprintsWithoutSettings(): void
+	{
+		$field = $this->field('layout', [
+			'fieldsets' => [
+				'cover' => [
+					'fields' => [
+						'image' => [
+							'type'    => 'filepicker',
+							'uploads' => 'cover'
+						]
+					]
+				]
+			]
+		]);
+
+		$this->assertSame(['cover'], $field->acceptedFileBlueprints());
+	}
+
 	public function testApi(): void
 	{
 		$field = $this->field('layout');
@@ -214,50 +258,6 @@ class LayoutFieldTest extends TestCase
 	{
 		$field = $this->field('layout', []);
 		$this->assertInstanceOf(Fieldsets::class, $field->fieldsets());
-	}
-
-	public function testAcceptedFileBlueprints(): void
-	{
-		$field = $this->field('layout', [
-			'fieldsets' => [
-				'cover' => [
-					'fields' => [
-						'image' => [
-							'type'    => 'filepicker',
-							'uploads' => 'cover'
-						]
-					]
-				]
-			],
-			'settings' => [
-				'fields' => [
-					'background' => [
-						'type'    => 'filepicker',
-						'uploads' => 'background'
-					]
-				]
-			]
-		]);
-
-		$this->assertSame(['cover', 'background'], $field->acceptedFileBlueprints());
-	}
-
-	public function testAcceptedFileBlueprintsWithoutSettings(): void
-	{
-		$field = $this->field('layout', [
-			'fieldsets' => [
-				'cover' => [
-					'fields' => [
-						'image' => [
-							'type'    => 'filepicker',
-							'uploads' => 'cover'
-						]
-					]
-				]
-			]
-		]);
-
-		$this->assertSame(['cover'], $field->acceptedFileBlueprints());
 	}
 
 	public function testFillWithLayouts(): void
@@ -680,20 +680,6 @@ class LayoutFieldTest extends TestCase
 		], $field->errors());
 	}
 
-	public function testValidationsWithInvalidBlockType(): void
-	{
-		$field = $this->field('layout', [
-			'value' => [
-				[
-					'type' => 'does-not-exist',
-				],
-			],
-		]);
-
-		$this->assertTrue($field->isValid());
-		$this->assertSame([], $field->errors());
-	}
-
 	public function testValidationsSettings(): void
 	{
 		$field = $this->field('layout', [
@@ -718,5 +704,19 @@ class LayoutFieldTest extends TestCase
 
 		$this->assertFalse($field->isValid());
 		$this->assertSame(['layout' => 'There\'s an error in layout 1 settings'], $field->errors());
+	}
+
+	public function testValidationsWithInvalidBlockType(): void
+	{
+		$field = $this->field('layout', [
+			'value' => [
+				[
+					'type' => 'does-not-exist',
+				],
+			],
+		]);
+
+		$this->assertTrue($field->isValid());
+		$this->assertSame([], $field->errors());
 	}
 }

@@ -40,6 +40,16 @@ class ChallengeTest extends TestCase
 
 	protected User $user;
 
+	protected function challenge(): AttemptChallenge
+	{
+		return new AttemptChallenge(
+			user:    $this->user,
+			type:    'attempt',
+			mode:    '2fa',
+			timeout: 600
+		);
+	}
+
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -62,16 +72,6 @@ class ChallengeTest extends TestCase
 
 		AttemptChallenge::$singleUse = false;
 		AttemptChallenge::$throws    = false;
-	}
-
-	protected function challenge(): AttemptChallenge
-	{
-		return new AttemptChallenge(
-			user:    $this->user,
-			type:    'attempt',
-			mode:    '2fa',
-			timeout: 600
-		);
 	}
 
 	public function testAttempt(): void

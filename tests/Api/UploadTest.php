@@ -19,47 +19,9 @@ class UploadTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Api.Upload';
 
-	protected function setUp(): void
-	{
-		Dir::make(static::TMP);
-
-		$this->app = new App([
-			'roots' => [
-				'index' => static::TMP
-			],
-		]);
-
-		$this->app->impersonate('kirby');
-	}
-
-	protected function tearDown(): void
-	{
-		ini_restore('upload_max_filesize');
-		ini_restore('post_max_size');
-		unset($_SERVER['HTTP_CF_CONNECTING_IP']);
-		Dir::remove(static::TMP);
-		App::destroy();
-	}
-
 	protected function api(array $props = []): Api
 	{
 		return new Api($props);
-	}
-
-	protected function upload(
-		array $api = [],
-		bool $single = true,
-		bool $debug = false,
-		string|null $template = null,
-		Closure|null $preflight = null
-	): Upload {
-		return new Upload(
-			api:       $this->api($api),
-			single:    $single,
-			debug:     $debug,
-			template:  $template,
-			preflight: $preflight
-		);
 	}
 
 	protected function completeChunkedUpload(
@@ -93,6 +55,28 @@ class UploadTest extends TestCase
 				]
 			]
 		])->processChunk($source, $filename);
+	}
+
+	protected function setUp(): void
+	{
+		Dir::make(static::TMP);
+
+		$this->app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+		]);
+
+		$this->app->impersonate('kirby');
+	}
+
+	protected function tearDown(): void
+	{
+		ini_restore('upload_max_filesize');
+		ini_restore('post_max_size');
+		unset($_SERVER['HTTP_CF_CONNECTING_IP']);
+		Dir::remove(static::TMP);
+		App::destroy();
 	}
 
 	public function testChunkId(): void
@@ -191,78 +175,141 @@ class UploadTest extends TestCase
 		]));
 	}
 
-	public function testProcessSingle(): void
+	public function testProcessChunkCompletesToUniquePath(): void
 	{
-		$upload = $this->upload([
-			'requestMethod' => 'POST',
-			'requestData' => [
-				'files' => [
-					[
-						'name'     => 'test.txt',
-						'tmp_name' => static::TMP . '/abc',
-						'size'     => 123,
-						'error'    => 0
-					]
-				]
-			]
-		], true, true);
+		// two uploads that share a filename under different upload ids must
+		// not converge on the same final path; otherwise a second upload can
+		// rename its own bytes over the file a first upload already validated
+		// and is about to move (TOCTOU: stored file != validated file)
+		$completeA = $this->completeChunkedUpload('aaaa', 'x.svg', 'aaa', 'AAA');
+		$completeB = $this->completeChunkedUpload('bbbb', 'x.svg', 'bbb', 'BBB');
 
-		$phpunit = $this;
-		$uploads = [];
-		$data = $upload->process(function ($source, $filename) use ($phpunit, &$uploads) {
-			// can't test souce path with dynamic uniqid
-			// $phpunit->assertSame('uniqid.test.txt', $source);
-			$phpunit->assertSame('test.txt', $filename);
-
-			return $uploads = [
-				'filename' => $filename
-			];
-		});
-
-		$this->assertSame([
-			'status' => 'ok',
-			'data' => $uploads
-		], $data);
+		$this->assertNotSame($completeA, $completeB);
 	}
 
-	public function testProcessMultiple(): void
+	public function testProcessChunkFilenameNoDirectoryTraversal(): void
 	{
+		$source = static::TMP . '/test.md';
+		F::write($source, 'abcdef');
 		$upload = $this->upload([
-			'requestMethod' => 'POST',
 			'requestData' => [
-				'files' => [
-					[
-						'name'     => 'foo.txt',
-						'tmp_name' => static::TMP . '/foo',
-						'size'     => 123,
-						'error'    => 0
-					],
-					[
-						'name'     => 'bar.txt',
-						'tmp_name' => static::TMP . '/bar',
-						'size'     => 123,
-						'error'    => 0
-					],
-					[
-						'name'     => 'invalid.txt',
-					]
+				'headers' => [
+					'Upload-Length' => 3000,
+					'Upload-Offset' => 0,
+					'Upload-Id'     => 'abcd'
 				]
 			]
-		], false, true);
+		]);
 
-		$data = $upload->process(function ($source, $filename) {
-			return [
-				'filename' => $filename
-			];
-		});
+		$dir = static::TMP . '/site/cache/.uploads';
+		$this->assertNull($upload->processChunk($source, '../../test.md'));
+		$this->assertFileDoesNotExist($dir . '/test.md');
+		$this->assertFileExists($dir . '/abcd-test.md');
+	}
 
-		$this->assertSame([
-			'status' => 'ok',
-			'data' => [
-				'foo.txt' => ['filename' => 'foo.txt'],
-				'bar.txt' => ['filename' => 'bar.txt'],
+	public function testProcessChunkFirstChunkFullLength(): void
+	{
+		$source = static::TMP . '/test.md';
+		F::write($source, 'abcdef');
+		$size   = F::size($source);
+		$upload = $this->upload([
+			'requestData' => [
+				'headers' => [
+					'Upload-Length' => $size,
+					'Upload-Offset' => 0,
+					'Upload-Id'     => 'abcd'
+				]
 			]
-		], $data);
+		]);
+
+		// a first chunk that already completes the file is used
+		// directly and never buffered in the tmp upload directory
+		$this->assertSame(
+			$source,
+			$upload->processChunk($source, basename($source))
+		);
+		$this->assertFileExists($source);
+		$this->assertFileDoesNotExist(static::TMP . '/site/cache/.uploads/test.md');
+		$this->assertFileDoesNotExist(static::TMP . '/site/cache/.uploads/abcd-test.md');
+	}
+
+	public function testProcessChunkFirstChunkPartialLength(): void
+	{
+		$source = static::TMP . '/test.md';
+		F::write($source, 'abcdef');
+		$upload = $this->upload([
+			'requestData' => [
+				'headers' => [
+					'Upload-Length' => 3000,
+					'Upload-Offset' => 0,
+					'Upload-Id'     => 'abcd'
+				]
+			]
+		]);
+
+		$dir = static::TMP . '/site/cache/.uploads';
+		$this->assertNull($upload->processChunk($source, basename($source)));
+		$this->assertFileDoesNotExist($dir . '/test.md');
+		$this->assertFileExists($dir . '/abcd-test.md');
+	}
+
+	public function testProcessChunkIdRemoveUnallowedCharacters(): void
+	{
+		$source = static::TMP . '/test.md';
+		F::write($source, 'abcdef');
+		$upload = $this->upload([
+			'requestData' => [
+				'headers' => [
+					'Upload-Length' => 3000,
+					'Upload-Offset' => 0,
+					'Upload-Id'     => '../a/b!!cd'
+				]
+			]
+		]);
+
+		$dir = static::TMP . '/site/cache/.uploads';
+		$this->assertNull($upload->processChunk($source, basename($source)));
+		$this->assertFileDoesNotExist($dir . '/test.md');
+		$this->assertFileExists($dir . '/abcd-test.md');
+	}
+
+	public function testProcessChunkSuccesfulAll(): void
+	{
+		$source = static::TMP . '/test.md';
+		F::write($source, 'abc');
+		$upload = $this->upload([
+			'requestData' => [
+				'headers' => [
+					'Upload-Length' => 6,
+					'Upload-Offset' => 0,
+					'Upload-Id'     => 'abcd'
+				]
+			]
+		]);
+
+		$this->assertNull($upload->processChunk($source, basename($source)));
+
+		$source = static::TMP . '/test.md';
+		F::write($source, 'def');
+		$upload = $this->upload([
+			'requestData' => [
+				'headers' => [
+					'Upload-Length' => 6,
+					'Upload-Offset' => 3,
+					'Upload-Id'     => 'abcd'
+				]
+			]
+		]);
+
+		$dir  = static::TMP . '/site/cache/.uploads';
+		$file = $upload->processChunk($source, 'test.md');
+
+		// the completed file keeps a unique component in its tmp path, so it
+		// cannot be clobbered by another upload of the same filename
+		$this->assertMatchesRegularExpression('!^' . preg_quote($dir, '!') . '/[^/]+\-test\.md$!', $file);
+		$this->assertFileExists($file);
+		$this->assertFileDoesNotExist($dir . '/abcd-test.md');
+		$this->assertSame('abcdef', F::read($file));
 	}
 
 	public function testProcessError(): void
@@ -321,6 +368,80 @@ class UploadTest extends TestCase
 			'message' => 'The uploaded file could not be moved'
 		], $data);
 		$this->assertFalse(F::exists($tmp));
+	}
+
+	public function testProcessMultiple(): void
+	{
+		$upload = $this->upload([
+			'requestMethod' => 'POST',
+			'requestData' => [
+				'files' => [
+					[
+						'name'     => 'foo.txt',
+						'tmp_name' => static::TMP . '/foo',
+						'size'     => 123,
+						'error'    => 0
+					],
+					[
+						'name'     => 'bar.txt',
+						'tmp_name' => static::TMP . '/bar',
+						'size'     => 123,
+						'error'    => 0
+					],
+					[
+						'name'     => 'invalid.txt',
+					]
+				]
+			]
+		], false, true);
+
+		$data = $upload->process(function ($source, $filename) {
+			return [
+				'filename' => $filename
+			];
+		});
+
+		$this->assertSame([
+			'status' => 'ok',
+			'data' => [
+				'foo.txt' => ['filename' => 'foo.txt'],
+				'bar.txt' => ['filename' => 'bar.txt'],
+			]
+		], $data);
+	}
+
+	public function testProcessSingle(): void
+	{
+		$upload = $this->upload([
+			'requestMethod' => 'POST',
+			'requestData' => [
+				'files' => [
+					[
+						'name'     => 'test.txt',
+						'tmp_name' => static::TMP . '/abc',
+						'size'     => 123,
+						'error'    => 0
+					]
+				]
+			]
+		], true, true);
+
+		$phpunit = $this;
+		$uploads = [];
+		$data = $upload->process(function ($source, $filename) use ($phpunit, &$uploads) {
+			// can't test souce path with dynamic uniqid
+			// $phpunit->assertSame('uniqid.test.txt', $source);
+			$phpunit->assertSame('test.txt', $filename);
+
+			return $uploads = [
+				'filename' => $filename
+			];
+		});
+
+		$this->assertSame([
+			'status' => 'ok',
+			'data' => $uploads
+		], $data);
 	}
 
 	public function testProcessWithChunk(): void
@@ -403,143 +524,6 @@ class UploadTest extends TestCase
 		$this->assertFileDoesNotExist($dir . '/abcd-test.md');
 	}
 
-	public function testProcessChunkFirstChunkFullLength(): void
-	{
-		$source = static::TMP . '/test.md';
-		F::write($source, 'abcdef');
-		$size   = F::size($source);
-		$upload = $this->upload([
-			'requestData' => [
-				'headers' => [
-					'Upload-Length' => $size,
-					'Upload-Offset' => 0,
-					'Upload-Id'     => 'abcd'
-				]
-			]
-		]);
-
-		// a first chunk that already completes the file is used
-		// directly and never buffered in the tmp upload directory
-		$this->assertSame(
-			$source,
-			$upload->processChunk($source, basename($source))
-		);
-		$this->assertFileExists($source);
-		$this->assertFileDoesNotExist(static::TMP . '/site/cache/.uploads/test.md');
-		$this->assertFileDoesNotExist(static::TMP . '/site/cache/.uploads/abcd-test.md');
-	}
-
-	public function testProcessChunkFirstChunkPartialLength(): void
-	{
-		$source = static::TMP . '/test.md';
-		F::write($source, 'abcdef');
-		$upload = $this->upload([
-			'requestData' => [
-				'headers' => [
-					'Upload-Length' => 3000,
-					'Upload-Offset' => 0,
-					'Upload-Id'     => 'abcd'
-				]
-			]
-		]);
-
-		$dir = static::TMP . '/site/cache/.uploads';
-		$this->assertNull($upload->processChunk($source, basename($source)));
-		$this->assertFileDoesNotExist($dir . '/test.md');
-		$this->assertFileExists($dir . '/abcd-test.md');
-	}
-
-	public function testProcessChunkIdRemoveUnallowedCharacters(): void
-	{
-		$source = static::TMP . '/test.md';
-		F::write($source, 'abcdef');
-		$upload = $this->upload([
-			'requestData' => [
-				'headers' => [
-					'Upload-Length' => 3000,
-					'Upload-Offset' => 0,
-					'Upload-Id'     => '../a/b!!cd'
-				]
-			]
-		]);
-
-		$dir = static::TMP . '/site/cache/.uploads';
-		$this->assertNull($upload->processChunk($source, basename($source)));
-		$this->assertFileDoesNotExist($dir . '/test.md');
-		$this->assertFileExists($dir . '/abcd-test.md');
-	}
-
-	public function testProcessChunkFilenameNoDirectoryTraversal(): void
-	{
-		$source = static::TMP . '/test.md';
-		F::write($source, 'abcdef');
-		$upload = $this->upload([
-			'requestData' => [
-				'headers' => [
-					'Upload-Length' => 3000,
-					'Upload-Offset' => 0,
-					'Upload-Id'     => 'abcd'
-				]
-			]
-		]);
-
-		$dir = static::TMP . '/site/cache/.uploads';
-		$this->assertNull($upload->processChunk($source, '../../test.md'));
-		$this->assertFileDoesNotExist($dir . '/test.md');
-		$this->assertFileExists($dir . '/abcd-test.md');
-	}
-
-	public function testProcessChunkSuccesfulAll(): void
-	{
-		$source = static::TMP . '/test.md';
-		F::write($source, 'abc');
-		$upload = $this->upload([
-			'requestData' => [
-				'headers' => [
-					'Upload-Length' => 6,
-					'Upload-Offset' => 0,
-					'Upload-Id'     => 'abcd'
-				]
-			]
-		]);
-
-		$this->assertNull($upload->processChunk($source, basename($source)));
-
-		$source = static::TMP . '/test.md';
-		F::write($source, 'def');
-		$upload = $this->upload([
-			'requestData' => [
-				'headers' => [
-					'Upload-Length' => 6,
-					'Upload-Offset' => 3,
-					'Upload-Id'     => 'abcd'
-				]
-			]
-		]);
-
-		$dir  = static::TMP . '/site/cache/.uploads';
-		$file = $upload->processChunk($source, 'test.md');
-
-		// the completed file keeps a unique component in its tmp path, so it
-		// cannot be clobbered by another upload of the same filename
-		$this->assertMatchesRegularExpression('!^' . preg_quote($dir, '!') . '/[^/]+\-test\.md$!', $file);
-		$this->assertFileExists($file);
-		$this->assertFileDoesNotExist($dir . '/abcd-test.md');
-		$this->assertSame('abcdef', F::read($file));
-	}
-
-	public function testProcessChunkCompletesToUniquePath(): void
-	{
-		// two uploads that share a filename under different upload ids must
-		// not converge on the same final path; otherwise a second upload can
-		// rename its own bytes over the file a first upload already validated
-		// and is about to move (TOCTOU: stored file != validated file)
-		$completeA = $this->completeChunkedUpload('aaaa', 'x.svg', 'aaa', 'AAA');
-		$completeB = $this->completeChunkedUpload('bbbb', 'x.svg', 'bbb', 'BBB');
-
-		$this->assertNotSame($completeA, $completeB);
-	}
-
 	public function testResponse(): void
 	{
 		// nothing
@@ -590,6 +574,24 @@ class UploadTest extends TestCase
 		$this->assertNull($upload->processChunk($source, basename($source)));
 		$this->expectException(DuplicateException::class);
 		$this->expectExceptionMessage('A tmp file upload with the same filename and upload id already exists: abcd-test.md');
+		$upload->processChunk($source, basename($source));
+	}
+
+	public function testValidateChunkInvalidExtension(): void
+	{
+		$source = static::TMP . '/a.php';
+		$upload = $this->upload([
+			'requestData' => [
+				'headers' => [
+					'Upload-Length' => 3000,
+					'Upload-Offset' => 0,
+					'Upload-Id'     => 'abcd'
+				]
+			]
+		]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('You are not allowed to upload PHP files');
 		$upload->processChunk($source, basename($source));
 	}
 
@@ -695,143 +697,6 @@ class UploadTest extends TestCase
 		$upload->processChunk($source, basename($source));
 	}
 
-	public function testValidateChunkTotalMustNotChangeBetweenChunks(): void
-	{
-		// first chunk announces a total length of 6
-		$source = static::TMP . '/test.md';
-		F::write($source, 'abc');
-		$upload = $this->upload([
-			'requestData' => [
-				'headers' => [
-					'Upload-Length' => 6,
-					'Upload-Offset' => 0,
-					'Upload-Id'     => 'abcd'
-				]
-			]
-		]);
-		$this->assertNull($upload->processChunk($source, basename($source)));
-
-		// a later chunk must not change the announced total length
-		$source = static::TMP . '/test.md';
-		F::write($source, 'def');
-		$upload = $this->upload([
-			'requestData' => [
-				'headers' => [
-					'Upload-Length' => 9,
-					'Upload-Offset' => 3,
-					'Upload-Id'     => 'abcd'
-				]
-			]
-		]);
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The file template and upload length must not change between chunks');
-		$upload->processChunk($source, basename($source));
-	}
-
-	public function testValidateChunkInvalidExtension(): void
-	{
-		$source = static::TMP . '/a.php';
-		$upload = $this->upload([
-			'requestData' => [
-				'headers' => [
-					'Upload-Length' => 3000,
-					'Upload-Offset' => 0,
-					'Upload-Id'     => 'abcd'
-				]
-			]
-		]);
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('You are not allowed to upload PHP files');
-		$upload->processChunk($source, basename($source));
-	}
-
-	public function testValidateChunkTooLargeTotal(): void
-	{
-		$source = static::TMP . '/a.md';
-		$app    = $this->app->clone([
-			'blueprints' => [
-				'files/test' => [
-					'name'   => 'test',
-					'accept' => ['maxsize' => 100]
-				]
-			]
-		]);
-		$upload = $this->upload([
-			'requestData' => [
-				'body' => [
-					'template' => 'test'
-				],
-				'headers' => [
-					'Upload-Length' => 120,
-					'Upload-Offset' => 0,
-					'Upload-Id'     => 'abcd'
-				]
-			]
-		]);
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionCode('error.file.maxsize');
-		$upload->processChunk($source, basename($source));
-	}
-
-	public function testValidateChunkWithTemplate(): void
-	{
-		$source = static::TMP . '/a.md';
-		$this->app->clone([
-			'blueprints' => [
-				'files/test' => [
-					'name'   => 'test',
-					'accept' => ['maxsize' => 100]
-				]
-			]
-		]);
-		$upload = $this->upload([
-			'requestData' => [
-				'headers' => [
-					'Upload-Length' => 120,
-					'Upload-Offset' => 0,
-					'Upload-Id'     => 'abcd'
-				]
-			]
-		], template: 'test');
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionCode('error.file.maxsize');
-		$upload->processChunk($source, basename($source));
-	}
-
-	public function testValidateChunkWithCustomTemplate(): void
-	{
-		$source = static::TMP . '/a.md';
-		F::write($source, 'abcdef');
-
-		$this->app->clone([
-			'blueprints' => [
-				'files/default' => [
-					'name'   => 'default',
-					'accept' => ['maxsize' => 100]
-				],
-				'files/custom' => [
-					'name'   => 'custom',
-					'accept' => ['maxsize' => 200]
-				]
-			]
-		]);
-		$upload = $this->upload([
-			'requestData' => [
-				'headers' => [
-					'Upload-Length' => 120,
-					'Upload-Offset' => 0,
-					'Upload-Id'     => 'abcd'
-				]
-			]
-		], template: 'custom');
-
-		$this->assertNull($upload->processChunk($source, basename($source)));
-	}
-
 	public function testValidateChunkTemplatePriority(): void
 	{
 		$source = static::TMP . '/a.md';
@@ -898,6 +763,125 @@ class UploadTest extends TestCase
 		$upload->processChunk($source, basename($source));
 	}
 
+	public function testValidateChunkTooLargeTotal(): void
+	{
+		$source = static::TMP . '/a.md';
+		$app    = $this->app->clone([
+			'blueprints' => [
+				'files/test' => [
+					'name'   => 'test',
+					'accept' => ['maxsize' => 100]
+				]
+			]
+		]);
+		$upload = $this->upload([
+			'requestData' => [
+				'body' => [
+					'template' => 'test'
+				],
+				'headers' => [
+					'Upload-Length' => 120,
+					'Upload-Offset' => 0,
+					'Upload-Id'     => 'abcd'
+				]
+			]
+		]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.file.maxsize');
+		$upload->processChunk($source, basename($source));
+	}
+
+	public function testValidateChunkTotalMustNotChangeBetweenChunks(): void
+	{
+		// first chunk announces a total length of 6
+		$source = static::TMP . '/test.md';
+		F::write($source, 'abc');
+		$upload = $this->upload([
+			'requestData' => [
+				'headers' => [
+					'Upload-Length' => 6,
+					'Upload-Offset' => 0,
+					'Upload-Id'     => 'abcd'
+				]
+			]
+		]);
+		$this->assertNull($upload->processChunk($source, basename($source)));
+
+		// a later chunk must not change the announced total length
+		$source = static::TMP . '/test.md';
+		F::write($source, 'def');
+		$upload = $this->upload([
+			'requestData' => [
+				'headers' => [
+					'Upload-Length' => 9,
+					'Upload-Offset' => 3,
+					'Upload-Id'     => 'abcd'
+				]
+			]
+		]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The file template and upload length must not change between chunks');
+		$upload->processChunk($source, basename($source));
+	}
+
+	public function testValidateChunkWithCustomTemplate(): void
+	{
+		$source = static::TMP . '/a.md';
+		F::write($source, 'abcdef');
+
+		$this->app->clone([
+			'blueprints' => [
+				'files/default' => [
+					'name'   => 'default',
+					'accept' => ['maxsize' => 100]
+				],
+				'files/custom' => [
+					'name'   => 'custom',
+					'accept' => ['maxsize' => 200]
+				]
+			]
+		]);
+		$upload = $this->upload([
+			'requestData' => [
+				'headers' => [
+					'Upload-Length' => 120,
+					'Upload-Offset' => 0,
+					'Upload-Id'     => 'abcd'
+				]
+			]
+		], template: 'custom');
+
+		$this->assertNull($upload->processChunk($source, basename($source)));
+	}
+
+	public function testValidateChunkWithTemplate(): void
+	{
+		$source = static::TMP . '/a.md';
+		$this->app->clone([
+			'blueprints' => [
+				'files/test' => [
+					'name'   => 'test',
+					'accept' => ['maxsize' => 100]
+				]
+			]
+		]);
+		$upload = $this->upload([
+			'requestData' => [
+				'headers' => [
+					'Upload-Length' => 120,
+					'Upload-Offset' => 0,
+					'Upload-Id'     => 'abcd'
+				]
+			]
+		], template: 'test');
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.file.maxsize');
+		$upload->processChunk($source, basename($source));
+	}
+
 	public function testValidateFilesEmpty(): void
 	{
 		ini_set('upload_max_filesize', '10M');
@@ -922,5 +906,21 @@ class UploadTest extends TestCase
 		$upload = $this->upload();
 		$upload->process(function () {
 		});
+	}
+
+	protected function upload(
+		array $api = [],
+		bool $single = true,
+		bool $debug = false,
+		string|null $template = null,
+		Closure|null $preflight = null
+	): Upload {
+		return new Upload(
+			api:       $this->api($api),
+			single:    $single,
+			debug:     $debug,
+			template:  $template,
+			preflight: $preflight
+		);
 	}
 }

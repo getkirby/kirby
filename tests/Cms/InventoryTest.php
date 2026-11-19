@@ -14,19 +14,6 @@ class InventoryTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.Inventory';
 
-	protected function setUp(): void
-	{
-		static::setUpTmp();
-	}
-
-	protected function tearDown(): void
-	{
-		parent::tearDown();
-		static::tearDownTmp();
-		Inventory::$numSeparator = '_';
-		Page::$models = [];
-	}
-
 	protected function create(array $items): void
 	{
 		foreach ($items as $item) {
@@ -39,6 +26,19 @@ class InventoryTest extends TestCase
 				Dir::make($root);
 			}
 		}
+	}
+
+	protected function setUp(): void
+	{
+		static::setUpTmp();
+	}
+
+	protected function tearDown(): void
+	{
+		parent::tearDown();
+		static::tearDownTmp();
+		Inventory::$numSeparator = '_';
+		Page::$models = [];
 	}
 
 	public function testChildren(): void
@@ -115,163 +115,6 @@ class InventoryTest extends TestCase
 		$this->assertSame('projects', $inventory['template']);
 	}
 
-	public function testForWithSkippedFiles(): void
-	{
-		$this->create([
-			'valid.jpg',
-			'skipped.html',
-			'skipped.htm',
-			'skipped.php'
-		]);
-
-		$inventory = Inventory::for(static::TMP);
-
-		$this->assertSame(['valid.jpg'], A::pluck($inventory['files'], 'filename'));
-	}
-
-	public function testForChildSorting(): void
-	{
-		$this->create([
-			'1_project-c',
-			'10_project-b',
-			'11_project-a',
-		]);
-
-		$inventory = Inventory::for(static::TMP);
-
-		$this->assertSame('project-c', $inventory['children'][0]['slug']);
-		$this->assertSame('project-b', $inventory['children'][1]['slug']);
-		$this->assertSame('project-a', $inventory['children'][2]['slug']);
-	}
-
-	public function testForChildWithLeadingZero(): void
-	{
-		$this->create([
-			'01_project-c',
-			'02_project-b',
-			'03_project-a',
-		]);
-
-		$inventory = Inventory::for(static::TMP);
-
-		$this->assertSame('project-c', $inventory['children'][0]['slug']);
-		$this->assertSame(1, $inventory['children'][0]['num']);
-
-		$this->assertSame('project-b', $inventory['children'][1]['slug']);
-		$this->assertSame(2, $inventory['children'][1]['num']);
-
-		$this->assertSame('project-a', $inventory['children'][2]['slug']);
-		$this->assertSame(3, $inventory['children'][2]['num']);
-	}
-
-	public function testForFileSorting(): void
-	{
-		$this->create([
-			'1-c.jpg',
-			'10-b.jpg',
-			'11-a.jpg',
-		]);
-
-		$inventory = Inventory::for(static::TMP);
-		$files     = array_values($inventory['files']);
-
-		$this->assertSame('1-c.jpg', $files[0]['filename']);
-		$this->assertSame('10-b.jpg', $files[1]['filename']);
-		$this->assertSame('11-a.jpg', $files[2]['filename']);
-	}
-
-	public function testForMissingTemplate(): void
-	{
-		$this->create([
-			'cover.jpg',
-			'cover.jpg.txt'
-		]);
-
-		$inventory = Inventory::for(static::TMP);
-
-		$this->assertSame('cover.jpg', $inventory['files']['cover.jpg']['filename']);
-		$this->assertSame('default', $inventory['template']);
-	}
-
-	public function testForTemplateWithDotInFilename(): void
-	{
-		$this->create([
-			'cover.jpg',
-			'cover.jpg.txt',
-			'article.video.txt'
-		]);
-
-		$inventory = Inventory::for(static::TMP);
-
-		$this->assertSame('cover.jpg', $inventory['files']['cover.jpg']['filename']);
-		$this->assertSame('article.video', $inventory['template']);
-	}
-
-	public function testForExtension(): void
-	{
-		$this->create([
-			'cover.jpg',
-			'cover.jpg.md',
-			'article.md'
-		]);
-
-		$inventory = Inventory::for(static::TMP, 'md');
-
-		$this->assertSame('cover.jpg', $inventory['files']['cover.jpg']['filename']);
-		$this->assertSame('article', $inventory['template']);
-	}
-
-	public function testForIgnore(): void
-	{
-		$this->create([
-			'cover.jpg',
-			'article.txt'
-		]);
-
-		$inventory = Inventory::for(static::TMP, 'txt', ['cover.jpg']);
-
-		$this->assertCount(0, $inventory['files']);
-		$this->assertSame('article', $inventory['template']);
-	}
-
-	public function testForMultilang(): void
-	{
-		$this->create([
-			'cover.jpg',
-			'cover.jpg.en.txt',
-			'article.en.txt',
-			'article.de.txt'
-		]);
-
-		$inventory = Inventory::for(static::TMP, 'txt', null, true);
-
-		$this->assertSame('cover.jpg', $inventory['files']['cover.jpg']['filename']);
-		$this->assertSame('article', $inventory['template']);
-	}
-
-	public function testForMultilangWithoutChildren(): void
-	{
-		// the default language is only needed to match children
-		new App([
-			'roots' => [
-				'index' => '/dev/null'
-			]
-		]);
-
-		Page::$models = [
-			'article' => 'A'
-		];
-
-		$this->create([
-			'article.en.txt'
-		]);
-
-		$inventory = Inventory::for(static::TMP, 'txt', null, true);
-
-		$this->assertSame([], $inventory['children']);
-		$this->assertSame('article', $inventory['template']);
-	}
-
 	public function testForChildModels(): void
 	{
 		Page::$models = [
@@ -319,44 +162,6 @@ class InventoryTest extends TestCase
 		);
 	}
 
-	public function testForNonExistingDir(): void
-	{
-		$inventory = Inventory::for('/does-not-exist-' . uniqid());
-
-		$this->assertSame([
-			'children' => [],
-			'files'    => [],
-			'template' => 'default',
-		], $inventory);
-	}
-
-	public function testForChildWithoutNum(): void
-	{
-		$this->create([
-			'about/about.txt',
-		]);
-
-		$inventory = Inventory::for(static::TMP);
-
-		$this->assertSame('about', $inventory['children'][0]['dirname']);
-		$this->assertSame('about', $inventory['children'][0]['slug']);
-		$this->assertNull($inventory['children'][0]['num']);
-	}
-
-	public function testForTemplateLastWins(): void
-	{
-		// when multiple content files have no matching file in $files,
-		// the last one wins (historical behaviour)
-		$this->create([
-			'article.txt',
-			'note.txt',
-		]);
-
-		$inventory = Inventory::for(static::TMP);
-
-		$this->assertSame('note', $inventory['template']);
-	}
-
 	public function testForChildMultilangModels(): void
 	{
 		new App([
@@ -397,6 +202,54 @@ class InventoryTest extends TestCase
 		$this->assertNull($inventory['children'][2]['model']);
 	}
 
+	public function testForChildSorting(): void
+	{
+		$this->create([
+			'1_project-c',
+			'10_project-b',
+			'11_project-a',
+		]);
+
+		$inventory = Inventory::for(static::TMP);
+
+		$this->assertSame('project-c', $inventory['children'][0]['slug']);
+		$this->assertSame('project-b', $inventory['children'][1]['slug']);
+		$this->assertSame('project-a', $inventory['children'][2]['slug']);
+	}
+
+	public function testForChildWithLeadingZero(): void
+	{
+		$this->create([
+			'01_project-c',
+			'02_project-b',
+			'03_project-a',
+		]);
+
+		$inventory = Inventory::for(static::TMP);
+
+		$this->assertSame('project-c', $inventory['children'][0]['slug']);
+		$this->assertSame(1, $inventory['children'][0]['num']);
+
+		$this->assertSame('project-b', $inventory['children'][1]['slug']);
+		$this->assertSame(2, $inventory['children'][1]['num']);
+
+		$this->assertSame('project-a', $inventory['children'][2]['slug']);
+		$this->assertSame(3, $inventory['children'][2]['num']);
+	}
+
+	public function testForChildWithoutNum(): void
+	{
+		$this->create([
+			'about/about.txt',
+		]);
+
+		$inventory = Inventory::for(static::TMP);
+
+		$this->assertSame('about', $inventory['children'][0]['dirname']);
+		$this->assertSame('about', $inventory['children'][0]['slug']);
+		$this->assertNull($inventory['children'][0]['num']);
+	}
+
 	public function testForDirectoryWithContentExtension(): void
 	{
 		// content files are never directories
@@ -409,6 +262,153 @@ class InventoryTest extends TestCase
 
 		$this->assertSame([], $inventory['children']);
 		$this->assertSame('notes', $inventory['template']);
+	}
+
+	public function testForExtension(): void
+	{
+		$this->create([
+			'cover.jpg',
+			'cover.jpg.md',
+			'article.md'
+		]);
+
+		$inventory = Inventory::for(static::TMP, 'md');
+
+		$this->assertSame('cover.jpg', $inventory['files']['cover.jpg']['filename']);
+		$this->assertSame('article', $inventory['template']);
+	}
+
+	public function testForFileSorting(): void
+	{
+		$this->create([
+			'1-c.jpg',
+			'10-b.jpg',
+			'11-a.jpg',
+		]);
+
+		$inventory = Inventory::for(static::TMP);
+		$files     = array_values($inventory['files']);
+
+		$this->assertSame('1-c.jpg', $files[0]['filename']);
+		$this->assertSame('10-b.jpg', $files[1]['filename']);
+		$this->assertSame('11-a.jpg', $files[2]['filename']);
+	}
+
+	public function testForIgnore(): void
+	{
+		$this->create([
+			'cover.jpg',
+			'article.txt'
+		]);
+
+		$inventory = Inventory::for(static::TMP, 'txt', ['cover.jpg']);
+
+		$this->assertCount(0, $inventory['files']);
+		$this->assertSame('article', $inventory['template']);
+	}
+
+	public function testForMissingTemplate(): void
+	{
+		$this->create([
+			'cover.jpg',
+			'cover.jpg.txt'
+		]);
+
+		$inventory = Inventory::for(static::TMP);
+
+		$this->assertSame('cover.jpg', $inventory['files']['cover.jpg']['filename']);
+		$this->assertSame('default', $inventory['template']);
+	}
+
+	public function testForMultilang(): void
+	{
+		$this->create([
+			'cover.jpg',
+			'cover.jpg.en.txt',
+			'article.en.txt',
+			'article.de.txt'
+		]);
+
+		$inventory = Inventory::for(static::TMP, 'txt', null, true);
+
+		$this->assertSame('cover.jpg', $inventory['files']['cover.jpg']['filename']);
+		$this->assertSame('article', $inventory['template']);
+	}
+
+	public function testForMultilangWithoutChildren(): void
+	{
+		// the default language is only needed to match children
+		new App([
+			'roots' => [
+				'index' => '/dev/null'
+			]
+		]);
+
+		Page::$models = [
+			'article' => 'A'
+		];
+
+		$this->create([
+			'article.en.txt'
+		]);
+
+		$inventory = Inventory::for(static::TMP, 'txt', null, true);
+
+		$this->assertSame([], $inventory['children']);
+		$this->assertSame('article', $inventory['template']);
+	}
+
+	public function testForNonExistingDir(): void
+	{
+		$inventory = Inventory::for('/does-not-exist-' . uniqid());
+
+		$this->assertSame([
+			'children' => [],
+			'files'    => [],
+			'template' => 'default',
+		], $inventory);
+	}
+
+	public function testForTemplateLastWins(): void
+	{
+		// when multiple content files have no matching file in $files,
+		// the last one wins (historical behaviour)
+		$this->create([
+			'article.txt',
+			'note.txt',
+		]);
+
+		$inventory = Inventory::for(static::TMP);
+
+		$this->assertSame('note', $inventory['template']);
+	}
+
+	public function testForTemplateWithDotInFilename(): void
+	{
+		$this->create([
+			'cover.jpg',
+			'cover.jpg.txt',
+			'article.video.txt'
+		]);
+
+		$inventory = Inventory::for(static::TMP);
+
+		$this->assertSame('cover.jpg', $inventory['files']['cover.jpg']['filename']);
+		$this->assertSame('article.video', $inventory['template']);
+	}
+
+	public function testForWithSkippedFiles(): void
+	{
+		$this->create([
+			'valid.jpg',
+			'skipped.html',
+			'skipped.htm',
+			'skipped.php'
+		]);
+
+		$inventory = Inventory::for(static::TMP);
+
+		$this->assertSame(['valid.jpg'], A::pluck($inventory['files'], 'filename'));
 	}
 
 	public static function templateProvider(): array

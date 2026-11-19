@@ -36,13 +36,6 @@ class SiteRoutesTest extends TestCase
 		App::destroy();
 	}
 
-	public function testGet(): void
-	{
-		$response = $this->app->api()->call('site', 'GET');
-
-		$this->assertSame('Test Site', $response['data']['title']);
-	}
-
 	public function testChildren(): void
 	{
 		$app = $this->app->clone([
@@ -134,6 +127,25 @@ class SiteRoutesTest extends TestCase
 		$this->assertSame('draft-a', $response['data'][0]['id']);
 	}
 
+	public function testFile(): void
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'files' => [
+					[
+						'filename' => 'a.jpg',
+					],
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$response = $app->api()->call('site/files/a.jpg');
+
+		$this->assertSame('a.jpg', $response['data']['filename']);
+	}
+
 	public function testFiles(): void
 	{
 		$app = $this->app->clone([
@@ -189,25 +201,6 @@ class SiteRoutesTest extends TestCase
 
 		$this->assertSame('b.jpg', $response['data'][0]['filename']);
 		$this->assertSame('a.jpg', $response['data'][1]['filename']);
-	}
-
-	public function testFile(): void
-	{
-		$app = $this->app->clone([
-			'site' => [
-				'files' => [
-					[
-						'filename' => 'a.jpg',
-					],
-				]
-			]
-		]);
-
-		$app->impersonate('kirby');
-
-		$response = $app->api()->call('site/files/a.jpg');
-
-		$this->assertSame('a.jpg', $response['data']['filename']);
 	}
 
 	public function testFind(): void
@@ -330,6 +323,13 @@ class SiteRoutesTest extends TestCase
 		$this->assertSame('a', $result['data'][0]['id']);
 		$this->assertSame('a/aa', $result['data'][1]['id']);
 		$this->assertSame('b', $result['data'][2]['id']);
+	}
+
+	public function testGet(): void
+	{
+		$response = $this->app->api()->call('site', 'GET');
+
+		$this->assertSame('Test Site', $response['data']['title']);
 	}
 
 	public function testSearchWithGetRequest(): void

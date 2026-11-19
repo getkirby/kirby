@@ -107,32 +107,6 @@ class MethodsTest extends TestCase
 		$this->assertSame('marge', $result->id());
 	}
 
-	public function testAuthenticateUnavailable(): void
-	{
-		$this->app = $this->app->clone([
-			'options' => [
-				'auth' => [
-					'methods' => ['password' => ['2fa' => true], 'code']
-				]
-			]
-		]);
-
-		$methods = $this->app->auth()->methods();
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Auth method "code" is not enabled');
-		$methods->authenticate('code', 'marge@simpsons.com', 'secret123');
-	}
-
-	public function testAuthenticateInvalid(): void
-	{
-		$methods = $this->app->auth()->methods();
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Auth method "foo" is not enabled');
-		$methods->authenticate('foo', 'marge@simpsons.com', 'secret123');
-	}
-
 	public function testAuthenticateBlockedIp(): void
 	{
 		$accounts = static::TMP . '/site/accounts';
@@ -147,6 +121,15 @@ class MethodsTest extends TestCase
 
 		$this->expectException(RateLimitException::class);
 		$methods->authenticate('password', 'marge@simpsons.com', 'secret123');
+	}
+
+	public function testAuthenticateInvalid(): void
+	{
+		$methods = $this->app->auth()->methods();
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Auth method "foo" is not enabled');
+		$methods->authenticate('foo', 'marge@simpsons.com', 'secret123');
 	}
 
 	public function testAuthenticateNotBlockedBelowLimit(): void
@@ -164,6 +147,48 @@ class MethodsTest extends TestCase
 
 		$this->assertInstanceOf(User::class, $result);
 		$this->assertSame('marge', $result->id());
+	}
+
+	public function testAuthenticateUnavailable(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'methods' => ['password' => ['2fa' => true], 'code']
+				]
+			]
+		]);
+
+		$methods = $this->app->auth()->methods();
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Auth method "code" is not enabled');
+		$methods->authenticate('code', 'marge@simpsons.com', 'secret123');
+	}
+
+	public function testClass(): void
+	{
+		$methods = $this->app->auth()->methods();
+		$this->assertSame(PasswordMethod::class, $methods->class('password'));
+	}
+
+	public function testClassInvalid(): void
+	{
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('No auth method class for: unknown');
+
+		$methods = $this->app->auth()->methods();
+		$methods->class('unknown');
+	}
+
+	public function testClear(): void
+	{
+		$session = $this->app->session();
+		$session->set('kirby.method.data', 'nonce');
+
+		$this->app->auth()->methods()->clear($session);
+
+		$this->assertNull($session->get('kirby.method.data'));
 	}
 
 	public function testConfigDefaults(): void
@@ -195,31 +220,6 @@ class MethodsTest extends TestCase
 		], $methods->config());
 	}
 
-	public function testClass(): void
-	{
-		$methods = $this->app->auth()->methods();
-		$this->assertSame(PasswordMethod::class, $methods->class('password'));
-	}
-
-	public function testClassInvalid(): void
-	{
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('No auth method class for: unknown');
-
-		$methods = $this->app->auth()->methods();
-		$methods->class('unknown');
-	}
-
-	public function testClear(): void
-	{
-		$session = $this->app->session();
-		$session->set('kirby.method.data', 'nonce');
-
-		$this->app->auth()->methods()->clear($session);
-
-		$this->assertNull($session->get('kirby.method.data'));
-	}
-
 	public function testConfigWithFalse(): void
 	{
 		$app = $this->app->clone([
@@ -239,23 +239,6 @@ class MethodsTest extends TestCase
 		// a disabled method doesn't block the conflicting `password-reset`
 		$this->assertSame(['password' => [], 'password-reset' => []], $methods->config());
 		$this->assertSame(['password' => [], 'password-reset' => []], $methods->enabled());
-	}
-
-	public function testEnabledWith2FA(): void
-	{
-		$this->app = $this->app->clone([
-			'options' => [
-				'auth' => [
-					'methods' => [
-						'password' => ['2fa' => true],
-						'code'     => []
-					]
-				]
-			]
-		]);
-
-		$methods = $this->app->auth()->methods()->enabled();
-		$this->assertSame(['password' => ['2fa' => true]], $methods);
 	}
 
 	public function testEnabledCodePasswordResetConflict(): void
@@ -414,6 +397,23 @@ class MethodsTest extends TestCase
 		$this->expectExceptionMessage('No auth method class for: pasword');
 
 		$app->auth()->methods()->enabled();
+	}
+
+	public function testEnabledWith2FA(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'methods' => [
+						'password' => ['2fa' => true],
+						'code'     => []
+					]
+				]
+			]
+		]);
+
+		$methods = $this->app->auth()->methods()->enabled();
+		$this->assertSame(['password' => ['2fa' => true]], $methods);
 	}
 
 	public function testFirstEnabled(): void

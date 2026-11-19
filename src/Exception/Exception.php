@@ -19,6 +19,11 @@ use Throwable;
 class Exception extends \Exception
 {
 	/**
+	 * Prefix for the exception key (e.g. 'error.general')
+	 */
+	protected const PREFIX = 'error.';
+
+	/**
 	 * Data variables that can be used inside the exception message
 	 *
 	 * @var array<string, mixed>
@@ -31,6 +36,11 @@ class Exception extends \Exception
 	protected array $details;
 
 	/**
+	 * Message used when the key has no translation
+	 */
+	protected string|null $fallback = null;
+
+	/**
 	 * HTTP code that corresponds with the exception
 	 */
 	protected int $httpCode;
@@ -39,11 +49,6 @@ class Exception extends \Exception
 	 * Key to resolve the translated message from i18n strings
 	 */
 	protected string|null $key = null;
-
-	/**
-	 * Message used when the key has no translation
-	 */
-	protected string|null $fallback = null;
 
 	/**
 	 * Whether to resolve the message from the key
@@ -58,11 +63,6 @@ class Exception extends \Exception
 	protected static string $defaultFallback = 'An error occurred';
 	protected static int $defaultHttpCode = 500;
 	protected static string $defaultKey = 'general';
-
-	/**
-	 * Prefix for the exception key (e.g. 'error.general')
-	 */
-	protected const PREFIX = 'error.';
 
 	public function __construct(
 		string|null $message = null,

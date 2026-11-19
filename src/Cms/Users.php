@@ -29,6 +29,13 @@ class Users extends LazyCollection
 	use HasUuids;
 
 	/**
+	 * All registered users methods
+	 *
+	 * @var array<string, Closure>
+	 */
+	public static array $methods = [];
+
+	/**
 	 * Creates a new Collection with the given objects
 	 *
 	 * @param iterable<TValue> $objects
@@ -43,23 +50,6 @@ class Users extends LazyCollection
 		protected array $inject = []
 	) {
 		parent::__construct($objects, $parent);
-	}
-
-	/**
-	 * All registered users methods
-	 *
-	 * @var array<string, Closure>
-	 */
-	public static array $methods = [];
-
-	/**
-	 * Creates a new user from the given props
-	 *
-	 * @param array<string, mixed> $data
-	 */
-	public function create(array $data): User
-	{
-		return User::create($data);
 	}
 
 	/**
@@ -97,6 +87,16 @@ class Users extends LazyCollection
 		}
 
 		return $this;
+	}
+
+	/**
+	 * Creates a new user from the given props
+	 *
+	 * @param array<string, mixed> $data
+	 */
+	public function create(array $data): User
+	{
+		return User::create($data);
 	}
 
 	/**

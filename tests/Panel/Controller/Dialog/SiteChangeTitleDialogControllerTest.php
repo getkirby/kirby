@@ -27,19 +27,6 @@ class SiteChangeTitleDialogControllerTest extends TestCase
 		$this->app->impersonate('kirby');
 	}
 
-	public function testLoad(): void
-	{
-		$controller = new SiteChangeTitleDialogController();
-		$dialog     = $controller->load();
-
-		$this->assertInstanceOf(FormDialog::class, $dialog);
-
-		$props = $dialog->props();
-		$this->assertArrayHasKey('title', $props['fields']);
-		$this->assertTrue($props['fields']['title']['preselect']);
-		$this->assertSame('My Site', $props['value']->title);
-	}
-
 	public function testConstructNotAccessible(): void
 	{
 		$this->app = $this->app->clone([
@@ -65,6 +52,19 @@ class SiteChangeTitleDialogControllerTest extends TestCase
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The site is not accessible');
 		new SiteChangeTitleDialogController();
+	}
+
+	public function testLoad(): void
+	{
+		$controller = new SiteChangeTitleDialogController();
+		$dialog     = $controller->load();
+
+		$this->assertInstanceOf(FormDialog::class, $dialog);
+
+		$props = $dialog->props();
+		$this->assertArrayHasKey('title', $props['fields']);
+		$this->assertTrue($props['fields']['title']['preselect']);
+		$this->assertSame('My Site', $props['value']->title);
 	}
 
 	public function testSubmit(): void

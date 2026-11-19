@@ -17,66 +17,13 @@ use PHPUnit\Framework\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
-	protected App $app;
 	protected int $activeErrorHandlers = 0;
-	protected string|Closure|null $i18nLocale;
+	protected App $app;
 	protected string|array|Closure|null $i18nFallback;
 	protected Closure|null $i18nLoad;
+	protected string|Closure|null $i18nLocale;
 	protected array $i18nTranslations;
 	protected array|string $localeBackup;
-
-	protected function setUp(): void
-	{
-		App::destroy();
-
-		$translationRoot = dirname(__DIR__) . '/i18n/translations';
-
-		$this->localeBackup = Locale::get();
-		Locale::set('C');
-
-		$this->i18nLocale = I18n::$locale;
-		$this->i18nFallback = I18n::$fallback;
-		$this->i18nLoad = I18n::$load;
-		$this->i18nTranslations = I18n::$translations;
-
-		I18n::$locale = 'en';
-		I18n::$fallback = 'en';
-		I18n::$load = function (string $locale) use ($translationRoot): array {
-			$file = $translationRoot . '/' . basename($locale) . '.json';
-			return Data::read($file, fail: false);
-		};
-		I18n::$translations = [];
-
-		Str::$language = [];
-	}
-
-	protected function tearDown(): void
-	{
-		if (isset($this->localeBackup) === true) {
-			Locale::set($this->localeBackup);
-		}
-
-		if (isset($this->i18nLocale) === true) {
-			I18n::$locale = $this->i18nLocale;
-		}
-
-		if (isset($this->i18nFallback) === true) {
-			I18n::$fallback = $this->i18nFallback;
-		}
-
-		if (isset($this->i18nLoad) === true) {
-			I18n::$load = $this->i18nLoad;
-		}
-
-		if (isset($this->i18nTranslations) === true) {
-			I18n::$translations = $this->i18nTranslations;
-		}
-
-		while ($this->activeErrorHandlers > 0) {
-			restore_error_handler();
-			$this->activeErrorHandlers--;
-		}
-	}
 
 	public function assertError(
 		int $expectedErrorType,
@@ -184,6 +131,31 @@ abstract class TestCase extends BaseTestCase
 		return defined(static::class . '::TMP');
 	}
 
+	protected function setUp(): void
+	{
+		App::destroy();
+
+		$translationRoot = dirname(__DIR__) . '/i18n/translations';
+
+		$this->localeBackup = Locale::get();
+		Locale::set('C');
+
+		$this->i18nLocale = I18n::$locale;
+		$this->i18nFallback = I18n::$fallback;
+		$this->i18nLoad = I18n::$load;
+		$this->i18nTranslations = I18n::$translations;
+
+		I18n::$locale = 'en';
+		I18n::$fallback = 'en';
+		I18n::$load = function (string $locale) use ($translationRoot): array {
+			$file = $translationRoot . '/' . basename($locale) . '.json';
+			return Data::read($file, fail: false);
+		};
+		I18n::$translations = [];
+
+		Str::$language = [];
+	}
+
 	/**
 	 * Set up a new multi language app instance with
 	 * English and German pre-installed
@@ -226,6 +198,34 @@ abstract class TestCase extends BaseTestCase
 	{
 		if ($this->hasTmp() === true) {
 			Dir::make(static::TMP);
+		}
+	}
+
+	protected function tearDown(): void
+	{
+		if (isset($this->localeBackup) === true) {
+			Locale::set($this->localeBackup);
+		}
+
+		if (isset($this->i18nLocale) === true) {
+			I18n::$locale = $this->i18nLocale;
+		}
+
+		if (isset($this->i18nFallback) === true) {
+			I18n::$fallback = $this->i18nFallback;
+		}
+
+		if (isset($this->i18nLoad) === true) {
+			I18n::$load = $this->i18nLoad;
+		}
+
+		if (isset($this->i18nTranslations) === true) {
+			I18n::$translations = $this->i18nTranslations;
+		}
+
+		while ($this->activeErrorHandlers > 0) {
+			restore_error_handler();
+			$this->activeErrorHandlers--;
 		}
 	}
 

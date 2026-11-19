@@ -14,17 +14,6 @@ use Kirby\Exception\InvalidArgumentException;
 class Yaml extends Handler
 {
 	/**
-	 * Converts an array to an encoded YAML string
-	 */
-	public static function encode($data): string
-	{
-		return match (static::handler()) {
-			'spyc'  => YamlSpyc::encode($data),
-			default => YamlSymfony::encode($data),
-		};
-	}
-
-	/**
 	 * Parses an encoded YAML string and returns a multi-dimensional array
 	 */
 	public static function decode($string): array
@@ -46,6 +35,17 @@ class Yaml extends Handler
 		return match (static::handler()) {
 			'spyc'  => YamlSpyc::decode($string),
 			default => YamlSymfony::decode($string),
+		};
+	}
+
+	/**
+	 * Converts an array to an encoded YAML string
+	 */
+	public static function encode($data): string
+	{
+		return match (static::handler()) {
+			'spyc'  => YamlSpyc::encode($data),
+			default => YamlSymfony::encode($data),
 		};
 	}
 

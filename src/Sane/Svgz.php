@@ -37,23 +37,6 @@ class Svgz extends Svg
 	}
 
 	/**
-	 * Validates file contents
-	 *
-	 * @param $isExternal Whether the string is from an external file
-	 *                   that may be accessed directly
-	 *
-	 * @throws InvalidArgumentException If the file couldn't be parsed
-	 * @throws InvalidArgumentException If the file didn't pass validation
-	 */
-	public static function validate(
-		string $string,
-		bool $isExternal = false
-	): void {
-		$string = static::uncompress($string);
-		parent::validate($string, $isExternal);
-	}
-
-	/**
 	 * Uncompresses the SVGZ data
 	 */
 	protected static function uncompress(string $string): string
@@ -69,5 +52,22 @@ class Svgz extends Svg
 		}
 
 		return $string;
+	}
+
+	/**
+	 * Validates file contents
+	 *
+	 * @param $isExternal Whether the string is from an external file
+	 *                   that may be accessed directly
+	 *
+	 * @throws InvalidArgumentException If the file couldn't be parsed
+	 * @throws InvalidArgumentException If the file didn't pass validation
+	 */
+	public static function validate(
+		string $string,
+		bool $isExternal = false
+	): void {
+		$string = static::uncompress($string);
+		parent::validate($string, $isExternal);
 	}
 }

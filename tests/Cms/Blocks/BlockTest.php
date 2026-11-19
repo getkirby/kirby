@@ -13,6 +13,56 @@ class BlockTest extends TestCase
 
 	protected Page $page;
 
+	public function samplePrevNextBlocks()
+	{
+		return Blocks::factory([
+			[
+				'type' => 'code',
+				'isHidden' => true
+			],
+			[
+				'type' => 'gallery',
+				'isHidden' => true
+			],
+			[
+				'type' => 'heading',
+				'isHidden' => false
+			],
+			[
+				'type' => 'image',
+				'isHidden' => false
+			],
+			[
+				'type' => 'line',
+				'isHidden' => false
+			],
+			[
+				'type' => 'list',
+				'isHidden' => true
+			],
+			[
+				'type' => 'markdown',
+				'isHidden' => false
+			],
+			[
+				'type' => 'quote',
+				'isHidden' => true
+			],
+			[
+				'type' => 'table',
+				'isHidden' => false
+			],
+			[
+				'type' => 'text',
+				'isHidden' => true
+			],
+			[
+				'type' => 'video',
+				'isHidden' => false
+			],
+		]);
+	}
+
 	protected function setUp(): void
 	{
 		$this->app = new App([
@@ -93,6 +143,21 @@ class BlockTest extends TestCase
 		$this->assertNull($block->controller()['next']);
 	}
 
+	public function testExcerpt(): void
+	{
+		$block = new Block([
+			'content' => [
+				'text' => $expected = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+			],
+			'type' => 'text',
+		]);
+
+		$this->assertSame($expected, $block->toHtml());
+		$this->assertSame($expected, $block->excerpt());
+		$this->assertSame('Lorem ipsum dolor …', $block->excerpt(20));
+		$this->assertSame($expected, (string)$block);
+	}
+
 	public function testFactory(): void
 	{
 		$block = Block::factory([
@@ -100,6 +165,65 @@ class BlockTest extends TestCase
 		]);
 
 		$this->assertInstanceOf(Block::class, $block);
+	}
+
+	public function testHiddenSiblings(): void
+	{
+		$blocks = $this->samplePrevNextBlocks();
+		$block = $blocks->first();
+
+		$this->assertSame(
+			['code', 'gallery', 'list', 'quote', 'text'],
+			$block->siblings()->values(fn ($block) => $block->type())
+		);
+		$this->assertNull($block->prev());
+	}
+
+	public function testImageBlock(): void
+	{
+		$this->app = new App([
+			'roots' => [
+				'index'   => static::TMP,
+				'content' => static::FIXTURES . '/files'
+			]
+		]);
+
+		// no alt
+		$block = new Block([
+			'type'    => 'image',
+			'content' => [
+				'image' => 'foo.jpg'
+			]
+		]);
+
+		$image = $block->image()->toFile();
+		$expected = '<img src="/media/site/' . $image->mediaHash() . '/foo.jpg" alt="">';
+		$this->assertStringContainsString($expected, $block->toHtml());
+
+		// image alt
+		$block = new Block([
+			'type'    => 'image',
+			'content' => [
+				'image' => 'bar.jpg'
+			]
+		]);
+
+		$image = $block->image()->toFile();
+		$expected = '<img src="/media/site/' . $image->mediaHash() . '/bar.jpg" alt="Sample alt text">';
+		$this->assertStringContainsString($expected, $block->toHtml());
+
+		// custom alt
+		$block = new Block([
+			'type'    => 'image',
+			'content' => [
+				'alt'   => 'Custom image alt text',
+				'image' => 'bar.jpg'
+			]
+		]);
+
+		$image = $block->image()->toFile();
+		$expected = '<img src="/media/site/' . $image->mediaHash() . '/bar.jpg" alt="Custom image alt text">';
+		$this->assertStringContainsString($expected, $block->toHtml());
 	}
 
 	public function testIsEmpty(): void
@@ -140,6 +264,28 @@ class BlockTest extends TestCase
 		]);
 
 		$this->assertIsPage($page, $block->content()->parent());
+	}
+
+	public function testPrevNextHidden(): void
+	{
+		$blocks = $this->samplePrevNextBlocks();
+		$block = $blocks->nth(5);
+
+		$this->assertSame('list', $block->type());
+		$this->assertTrue($block->isHidden());
+		$this->assertSame('gallery', $block->prev()->type());
+		$this->assertSame('quote', $block->next()->type());
+	}
+
+	public function testPrevNextVisible(): void
+	{
+		$blocks = $this->samplePrevNextBlocks();
+		$block = $blocks->nth(4);
+
+		$this->assertSame('line', $block->type());
+		$this->assertFalse($block->isHidden());
+		$this->assertSame('image', $block->prev()->type());
+		$this->assertSame('markdown', $block->next()->type());
 	}
 
 	public function testToArray(): void
@@ -263,83 +409,6 @@ class BlockTest extends TestCase
 		$this->assertSame($expected, (string)$block);
 	}
 
-	public function testExcerpt(): void
-	{
-		$block = new Block([
-			'content' => [
-				'text' => $expected = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-			],
-			'type' => 'text',
-		]);
-
-		$this->assertSame($expected, $block->toHtml());
-		$this->assertSame($expected, $block->excerpt());
-		$this->assertSame('Lorem ipsum dolor …', $block->excerpt(20));
-		$this->assertSame($expected, (string)$block);
-	}
-
-	public function samplePrevNextBlocks()
-	{
-		return Blocks::factory([
-			[
-				'type' => 'code',
-				'isHidden' => true
-			],
-			[
-				'type' => 'gallery',
-				'isHidden' => true
-			],
-			[
-				'type' => 'heading',
-				'isHidden' => false
-			],
-			[
-				'type' => 'image',
-				'isHidden' => false
-			],
-			[
-				'type' => 'line',
-				'isHidden' => false
-			],
-			[
-				'type' => 'list',
-				'isHidden' => true
-			],
-			[
-				'type' => 'markdown',
-				'isHidden' => false
-			],
-			[
-				'type' => 'quote',
-				'isHidden' => true
-			],
-			[
-				'type' => 'table',
-				'isHidden' => false
-			],
-			[
-				'type' => 'text',
-				'isHidden' => true
-			],
-			[
-				'type' => 'video',
-				'isHidden' => false
-			],
-		]);
-	}
-
-	public function testHiddenSiblings(): void
-	{
-		$blocks = $this->samplePrevNextBlocks();
-		$block = $blocks->first();
-
-		$this->assertSame(
-			['code', 'gallery', 'list', 'quote', 'text'],
-			$block->siblings()->values(fn ($block) => $block->type())
-		);
-		$this->assertNull($block->prev());
-	}
-
 	public function testVisibleSiblings(): void
 	{
 		$blocks = $this->samplePrevNextBlocks();
@@ -350,74 +419,5 @@ class BlockTest extends TestCase
 			$block->siblings()->values(fn ($block) => $block->type())
 		);
 		$this->assertNull($block->next());
-	}
-
-	public function testPrevNextVisible(): void
-	{
-		$blocks = $this->samplePrevNextBlocks();
-		$block = $blocks->nth(4);
-
-		$this->assertSame('line', $block->type());
-		$this->assertFalse($block->isHidden());
-		$this->assertSame('image', $block->prev()->type());
-		$this->assertSame('markdown', $block->next()->type());
-	}
-
-	public function testPrevNextHidden(): void
-	{
-		$blocks = $this->samplePrevNextBlocks();
-		$block = $blocks->nth(5);
-
-		$this->assertSame('list', $block->type());
-		$this->assertTrue($block->isHidden());
-		$this->assertSame('gallery', $block->prev()->type());
-		$this->assertSame('quote', $block->next()->type());
-	}
-
-	public function testImageBlock(): void
-	{
-		$this->app = new App([
-			'roots' => [
-				'index'   => static::TMP,
-				'content' => static::FIXTURES . '/files'
-			]
-		]);
-
-		// no alt
-		$block = new Block([
-			'type'    => 'image',
-			'content' => [
-				'image' => 'foo.jpg'
-			]
-		]);
-
-		$image = $block->image()->toFile();
-		$expected = '<img src="/media/site/' . $image->mediaHash() . '/foo.jpg" alt="">';
-		$this->assertStringContainsString($expected, $block->toHtml());
-
-		// image alt
-		$block = new Block([
-			'type'    => 'image',
-			'content' => [
-				'image' => 'bar.jpg'
-			]
-		]);
-
-		$image = $block->image()->toFile();
-		$expected = '<img src="/media/site/' . $image->mediaHash() . '/bar.jpg" alt="Sample alt text">';
-		$this->assertStringContainsString($expected, $block->toHtml());
-
-		// custom alt
-		$block = new Block([
-			'type'    => 'image',
-			'content' => [
-				'alt'   => 'Custom image alt text',
-				'image' => 'bar.jpg'
-			]
-		]);
-
-		$image = $block->image()->toFile();
-		$expected = '<img src="/media/site/' . $image->mediaHash() . '/bar.jpg" alt="Custom image alt text">';
-		$this->assertStringContainsString($expected, $block->toHtml());
 	}
 }

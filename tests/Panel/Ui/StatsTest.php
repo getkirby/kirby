@@ -133,14 +133,15 @@ class StatsTest extends TestCase
 		], $stats->reports());
 	}
 
-	public function testReportsWithStatObject(): void
+	public function testReportsWithModel(): void
 	{
 		$stats = new Stats(
+			model: $this->model,
 			reports: [
-				new Stat(
-					label: 'test',
-					value: 'test',
-				),
+				[
+					'label' => 'test',
+					'value' => 'test',
+				],
 			],
 			size: 'medium'
 		);
@@ -159,15 +160,14 @@ class StatsTest extends TestCase
 		], $stats->reports());
 	}
 
-	public function testReportsWithModel(): void
+	public function testReportsWithStatObject(): void
 	{
 		$stats = new Stats(
-			model: $this->model,
 			reports: [
-				[
-					'label' => 'test',
-					'value' => 'test',
-				],
+				new Stat(
+					label: 'test',
+					value: 'test',
+				),
 			],
 			size: 'medium'
 		);

@@ -29,6 +29,12 @@ class UserTest extends TestCase
 	public const string FIXTURES = __DIR__ . '/fixtures';
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.User';
 
+	protected function panel(array $props = [])
+	{
+		$user = new ModelUser(['id' => 'test', ...$props]);
+		return new User($user);
+	}
+
 	protected function setUp(): void
 	{
 		$this->app = new App([
@@ -44,12 +50,6 @@ class UserTest extends TestCase
 	{
 		$this->app->session()->destroy();
 		Dir::remove(static::TMP);
-	}
-
-	protected function panel(array $props = [])
-	{
-		$user = new ModelUser(['id' => 'test', ...$props]);
-		return new User($user);
 	}
 
 	public function testHome(): void
@@ -124,17 +124,6 @@ class UserTest extends TestCase
 		$this->assertFalse(isset($image['url']));
 	}
 
-	public function testImageStringQuery(): void
-	{
-		$user = new ModelUser([
-			'email' => 'test@getkirby.com',
-		]);
-
-		// fallback to model itself
-		$image = (new User($user))->image('foo.bar');
-		$this->assertNotEmpty($image);
-	}
-
 	public function testImageCover(): void
 	{
 		$app = $this->app->clone([
@@ -184,6 +173,17 @@ class UserTest extends TestCase
 			'src'    => Model::imagePlaceholder(),
 			'srcset' => $mediaUrl . '/test-36x36-crop.jpg 1x, ' . $mediaUrl . '/test-96x96-crop.jpg 2x'
 		], $panel->image(['cover' => true]));
+	}
+
+	public function testImageStringQuery(): void
+	{
+		$user = new ModelUser([
+			'email' => 'test@getkirby.com',
+		]);
+
+		// fallback to model itself
+		$image = (new User($user))->image('foo.bar');
+		$this->assertNotEmpty($image);
 	}
 
 	public function testInfo(): void

@@ -148,13 +148,6 @@ class LinkField extends InputField
 		return $this->options;
 	}
 
-	public function validations(): array
-	{
-		return [
-			'option' => fn ($value) => $this->validateOption($value)
-		];
-	}
-
 	protected function validateOption(string|null $value): void
 	{
 		if (empty($value) === true) {
@@ -184,5 +177,12 @@ class LinkField extends InputField
 				key: 'validation.linkType'
 			);
 		}
+	}
+
+	public function validations(): array
+	{
+		return [
+			'option' => fn ($value) => $this->validateOption($value)
+		];
 	}
 }

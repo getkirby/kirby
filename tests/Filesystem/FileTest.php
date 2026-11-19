@@ -29,6 +29,13 @@ class FileTest extends TestCase
 	public static array $block = [];
 	public static array $mocks = [];
 
+	protected function _file($file = 'test.js')
+	{
+		return new File([
+			'root' => static::TMP . '/' . $file
+		]);
+	}
+
 	protected function setUp(): void
 	{
 		Dir::copy(static::FIXTURES, static::TMP);
@@ -49,11 +56,11 @@ class FileTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	protected function _file($file = 'test.js')
+	public function testBase64(): void
 	{
-		return new File([
-			'root' => static::TMP . '/' . $file
-		]);
+		$file   = $this->_file('real.svg');
+		$base64 = file_get_contents(static::TMP . '/real.svg.base64');
+		$this->assertSame($base64, $file->base64());
 	}
 
 	public function testConstruct(): void
@@ -69,23 +76,6 @@ class FileTest extends TestCase
 		$file = new File('/dev/null/test.js');
 		$this->assertSame('/dev/null/test.js', $file->root());
 		$this->assertNull($file->url());
-	}
-
-	public function testLegacyConstruct(): void
-	{
-		$file = new File(
-			'/dev/null/test.pdf',
-			'https://home.io/test.pdf'
-		);
-		$this->assertSame('/dev/null/test.pdf', $file->root());
-		$this->assertSame('https://home.io/test.pdf', $file->url());
-	}
-
-	public function testBase64(): void
-	{
-		$file   = $this->_file('real.svg');
-		$base64 = file_get_contents(static::TMP . '/real.svg.base64');
-		$this->assertSame($base64, $file->base64());
 	}
 
 	public function testCopy(): void
@@ -108,13 +98,14 @@ class FileTest extends TestCase
 		$this->assertSame($newRoot, $new->root());
 	}
 
-	public function testCopyToExisting(): void
+	public function testCopyFail(): void
 	{
 		$this->expectException(GlobalException::class);
 		$this->expectExceptionMessage('could not be copied');
 
-		$file = $this->_file();
-		$file->copy(static::TMP . '/folder/b.txt');
+		static::$block[] = 'copy';
+		$file = new File(static::TMP . '/awesome.txt');
+		$file->copy(static::TMP . '/copied.txt');
 	}
 
 	public function testCopyNonExisting(): void
@@ -126,14 +117,13 @@ class FileTest extends TestCase
 		$file->copy(static::TMP . '/b.txt');
 	}
 
-	public function testCopyFail(): void
+	public function testCopyToExisting(): void
 	{
 		$this->expectException(GlobalException::class);
 		$this->expectExceptionMessage('could not be copied');
 
-		static::$block[] = 'copy';
-		$file = new File(static::TMP . '/awesome.txt');
-		$file->copy(static::TMP . '/copied.txt');
+		$file = $this->_file();
+		$file->copy(static::TMP . '/folder/b.txt');
 	}
 
 	public function testDataUri(): void
@@ -161,13 +151,6 @@ class FileTest extends TestCase
 		$this->assertFalse($file->exists());
 	}
 
-	public function testDeleteNotExisting(): void
-	{
-		$file = new File('test.txt');
-		$this->assertFalse($file->exists());
-		$this->assertTrue($file->delete());
-	}
-
 	public function testDeleteFail(): void
 	{
 		$this->expectException(GlobalException::class);
@@ -176,6 +159,13 @@ class FileTest extends TestCase
 		static::$block[] = 'unlink';
 		$file = $this->_file();
 		$file->delete();
+	}
+
+	public function testDeleteNotExisting(): void
+	{
+		$file = new File('test.txt');
+		$this->assertFalse($file->exists());
+		$this->assertTrue($file->delete());
 	}
 
 	public function testDownload(): void
@@ -233,6 +223,17 @@ class FileTest extends TestCase
 		$this->assertSame('<a href="https://foo.bar/blank.pdf">foo.bar/blank.pdf</a>', $file->html());
 	}
 
+	public function testInvalidModel(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The model object must use the "Kirby\Filesystem\IsFile" trait');
+
+		new File([
+			'root' => static::TMP . '/test.js',
+			'model' => new InvalidFileModel()
+		]);
+	}
+
 	public function testIs(): void
 	{
 		$file = $this->_file();
@@ -283,6 +284,16 @@ class FileTest extends TestCase
 		$this->assertInstanceOf(App::class, $file->kirby());
 	}
 
+	public function testLegacyConstruct(): void
+	{
+		$file = new File(
+			'/dev/null/test.pdf',
+			'https://home.io/test.pdf'
+		);
+		$this->assertSame('/dev/null/test.pdf', $file->root());
+		$this->assertSame('https://home.io/test.pdf', $file->url());
+	}
+
 	public function testMatch(): void
 	{
 		$rules = [
@@ -296,12 +307,15 @@ class FileTest extends TestCase
 		$this->assertTrue($this->_file('cat.jpg')->match($rules));
 	}
 
-	public function testMatchMimeMissing(): void
+	public function testMatchExtensionException(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('The media type for "doesnotexist.invalid" cannot be detected');
+		$this->expectExceptionMessage('Invalid extension: js');
 
-		$this->_file('doesnotexist.invalid')->match(['mime' => ['image/png', 'application/pdf']]);
+		// load translations to get the correct exception message
+		App::instance();
+
+		$this->_file()->match(['extension' => ['png', 'pdf']]);
 	}
 
 	public function testMatchMimeInvalid(): void
@@ -315,15 +329,12 @@ class FileTest extends TestCase
 		$this->_file()->match(['mime' => ['image/png', 'application/pdf']]);
 	}
 
-	public function testMatchExtensionException(): void
+	public function testMatchMimeMissing(): void
 	{
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Invalid extension: js');
+		$this->expectExceptionMessage('The media type for "doesnotexist.invalid" cannot be detected');
 
-		// load translations to get the correct exception message
-		App::instance();
-
-		$this->_file()->match(['extension' => ['png', 'pdf']]);
+		$this->_file('doesnotexist.invalid')->match(['mime' => ['image/png', 'application/pdf']]);
 	}
 
 	public function testMatchTypeException(): void
@@ -360,37 +371,6 @@ class FileTest extends TestCase
 		$this->assertSame($model, $file->model());
 	}
 
-	public function testParentModel(): void
-	{
-		$parent = Page::factory([
-			'slug' => 'test',
-			'files' => [
-				['filename' => 'a.jpg'],
-				['filename' => 'b.jpg'],
-				['filename' => 'c.jpg'],
-			]
-		]);
-
-		$file = $parent->file('a.jpg');
-		$asset = $file->asset();
-
-		$this->assertTrue(in_array(IsFile::class, class_uses($asset->model())));
-		$this->assertSame($file, $asset->model());
-		$this->assertSame($file->url(), $asset->url());
-		$this->assertSame($file->root(), $asset->root());
-	}
-
-	public function testInvalidModel(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The model object must use the "Kirby\Filesystem\IsFile" trait');
-
-		new File([
-			'root' => static::TMP . '/test.js',
-			'model' => new InvalidFileModel()
-		]);
-	}
-
 	public function testModified(): void
 	{
 		// existing file
@@ -423,13 +403,14 @@ class FileTest extends TestCase
 		$this->assertSame($newRoot, $moved->root());
 	}
 
-	public function testMoveToExisting(): void
+	public function testMoveFail(): void
 	{
 		$this->expectException(GlobalException::class);
 		$this->expectExceptionMessage('could not be moved');
 
-		$file = $this->_file();
-		$file->move(static::TMP . '/folder/b.txt');
+		static::$block[] = 'rename';
+		$file = new File(static::TMP . '/awesome.txt');
+		$file->move(static::TMP . '/moved.txt');
 	}
 
 	public function testMoveNonExisting(): void
@@ -441,14 +422,13 @@ class FileTest extends TestCase
 		$file->move(static::TMP . '/b.txt');
 	}
 
-	public function testMoveFail(): void
+	public function testMoveToExisting(): void
 	{
 		$this->expectException(GlobalException::class);
 		$this->expectExceptionMessage('could not be moved');
 
-		static::$block[] = 'rename';
-		$file = new File(static::TMP . '/awesome.txt');
-		$file->move(static::TMP . '/moved.txt');
+		$file = $this->_file();
+		$file->move(static::TMP . '/folder/b.txt');
 	}
 
 	public function testName(): void
@@ -466,6 +446,26 @@ class FileTest extends TestCase
 		// non-existing file
 		$file = $this->_file('does/not/exist.js');
 		$this->assertSame('0 KB', $file->niceSize());
+	}
+
+	public function testParentModel(): void
+	{
+		$parent = Page::factory([
+			'slug' => 'test',
+			'files' => [
+				['filename' => 'a.jpg'],
+				['filename' => 'b.jpg'],
+				['filename' => 'c.jpg'],
+			]
+		]);
+
+		$file = $parent->file('a.jpg');
+		$asset = $file->asset();
+
+		$this->assertTrue(in_array(IsFile::class, class_uses($asset->model())));
+		$this->assertSame($file, $asset->model());
+		$this->assertSame($file->url(), $asset->url());
+		$this->assertSame($file->root(), $asset->root());
 	}
 
 	public function testRead(): void
@@ -528,6 +528,20 @@ class FileTest extends TestCase
 		$this->assertSame(static::TMP . '/test.js', $file->root());
 	}
 
+	public function testSanitizeContentsMissingHandler(): void
+	{
+		$file = new File(static::TMP . '/test.js');
+
+		// lazy mode
+		$file->sanitizeContents(true);
+
+		// default mode
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('Missing handler for type: "js"');
+
+		$file->sanitizeContents();
+	}
+
 	public function testSanitizeContentsValid(): void
 	{
 		$fixture = static::TMP . '/clean.svg';
@@ -554,26 +568,6 @@ class FileTest extends TestCase
 		$this->assertFileEquals(static::TMP . '/real.sanitized.svg', $tmp);
 	}
 
-	public function testSanitizeContentsMissingHandler(): void
-	{
-		$file = new File(static::TMP . '/test.js');
-
-		// lazy mode
-		$file->sanitizeContents(true);
-
-		// default mode
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Missing handler for type: "js"');
-
-		$file->sanitizeContents();
-	}
-
-	public function testSize(): void
-	{
-		$file = $this->_file('test.js');
-		$this->assertSame(14, $file->size());
-	}
-
 	public function testSha1(): void
 	{
 		$file = $this->_file('test.js');
@@ -588,6 +582,12 @@ class FileTest extends TestCase
 		$this->expectExceptionMessage('could not be hashed');
 
 		$file->sha1();
+	}
+
+	public function testSize(): void
+	{
+		$file = $this->_file('test.js');
+		$this->assertSame(14, $file->size());
 	}
 
 	public function testToArray(): void
@@ -650,6 +650,20 @@ class FileTest extends TestCase
 		$this->assertNull($file->type());
 	}
 
+	public function testValidateContentsMissingHandler(): void
+	{
+		$file = new File(static::TMP . '/test.js');
+
+		// lazy mode
+		$file->validateContents(true);
+
+		// default mode
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('Missing handler for type: "js"');
+
+		$file->validateContents();
+	}
+
 	public function testValidateContentsValid(): void
 	{
 		$file = new File(static::TMP . '/real.svg');
@@ -667,20 +681,6 @@ class FileTest extends TestCase
 		$file->validateContents('xml');
 	}
 
-	public function testValidateContentsMissingHandler(): void
-	{
-		$file = new File(static::TMP . '/test.js');
-
-		// lazy mode
-		$file->validateContents(true);
-
-		// default mode
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Missing handler for type: "js"');
-
-		$file->validateContents();
-	}
-
 	public function testWrite(): void
 	{
 		$root = static::TMP . '/test.txt';
@@ -693,6 +693,16 @@ class FileTest extends TestCase
 		$this->assertSame('test', file_get_contents($file->root()));
 	}
 
+	public function testWriteFail(): void
+	{
+		$this->expectException(GlobalException::class);
+		$this->expectExceptionMessage('could not be written');
+
+		static::$block[] = 'file_put_contents';
+		$file = new File(static::TMP . '/test.txt');
+		$file->write('test');
+	}
+
 	public function testWriteUnwritable(): void
 	{
 		$this->expectException(GlobalException::class);
@@ -702,15 +712,5 @@ class FileTest extends TestCase
 		$file->write('test');
 		chmod($file->root(), 0o555);
 		$file->write('kirby');
-	}
-
-	public function testWriteFail(): void
-	{
-		$this->expectException(GlobalException::class);
-		$this->expectExceptionMessage('could not be written');
-
-		static::$block[] = 'file_put_contents';
-		$file = new File(static::TMP . '/test.txt');
-		$file->write('test');
 	}
 }

@@ -9,16 +9,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(LazyValue::class)]
 class LazyValueTest extends TestCase
 {
-	public function testValue(): void
-	{
-		$expected = 'test';
-		$value    = new LazyValue(fn () => $expected);
-		$this->assertInstanceOf(LazyValue::class, $value);
-		$this->assertNotInstanceOf(Closure::class, $value);
-		$this->assertIsNotCallable($value);
-		$this->assertSame($expected, $value->resolve());
-	}
-
 	public function testUnwrap(): void
 	{
 		$value = LazyValue::unwrap($expected = 'a');
@@ -51,5 +41,15 @@ class LazyValueTest extends TestCase
 
 		$result = LazyValue::unwrap([[$lazy, 'plain']], 'deep');
 		$this->assertSame([['deep-resolved', 'plain']], $result);
+	}
+
+	public function testValue(): void
+	{
+		$expected = 'test';
+		$value    = new LazyValue(fn () => $expected);
+		$this->assertInstanceOf(LazyValue::class, $value);
+		$this->assertNotInstanceOf(Closure::class, $value);
+		$this->assertIsNotCallable($value);
+		$this->assertSame($expected, $value->resolve());
 	}
 }

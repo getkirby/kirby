@@ -307,20 +307,6 @@ class Collection extends Iterator implements Stringable
 		return $this->filter(...$args);
 	}
 
-	protected function filterMatchesAny(
-		callable $validator,
-		array $values,
-		$test
-	): bool {
-		foreach ($values as $value) {
-			if ($validator($value, $test) !== false) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
 	protected function filterMatchesAll(
 		callable $validator,
 		array $values,
@@ -333,6 +319,20 @@ class Collection extends Iterator implements Stringable
 		}
 
 		return true;
+	}
+
+	protected function filterMatchesAny(
+		callable $validator,
+		array $values,
+		$test
+	): bool {
+		foreach ($values as $value) {
+			if ($validator($value, $test) !== false) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	protected function filterMatchesNone(
@@ -717,16 +717,6 @@ class Collection extends Iterator implements Stringable
 	}
 
 	/**
-	 * Returns the nth element from the collection
-	 *
-	 * @return TValue|null
-	 */
-	public function nth(int $n)
-	{
-		return array_values($this->data)[$n] ?? null;
-	}
-
-	/**
 	 * Returns a Collection without the given element(s)
 	 *
 	 * @param ...$keys any number of keys, passed as individual arguments
@@ -742,6 +732,16 @@ class Collection extends Iterator implements Stringable
 		}
 
 		return $collection;
+	}
+
+	/**
+	 * Returns the nth element from the collection
+	 *
+	 * @return TValue|null
+	 */
+	public function nth(int $n)
+	{
+		return array_values($this->data)[$n] ?? null;
 	}
 
 	/**
@@ -976,31 +976,6 @@ class Collection extends Iterator implements Stringable
 	}
 
 	/**
-	 * Get sort arguments from a string
-	 */
-	public static function sortArgs(string $sort): array
-	{
-		// if there are commas in the sortBy argument, removes it
-		if (Str::contains($sort, ',') === true) {
-			$sort = Str::replace($sort, ',', '');
-		}
-
-		$args = Str::split($sort, ' ');
-
-		// fill in PHP constants
-		array_walk($args, function (string &$value) {
-			if (
-				Str::startsWith($value, 'SORT_') === true &&
-				defined($value) === true
-			) {
-				$value = constant($value);
-			}
-		});
-
-		return $args;
-	}
-
-	/**
 	 * Sorts the elements by any number of fields
 	 *
 	 * ```php
@@ -1130,6 +1105,31 @@ class Collection extends Iterator implements Stringable
 		$collection->data = $array;
 
 		return $collection;
+	}
+
+	/**
+	 * Get sort arguments from a string
+	 */
+	public static function sortArgs(string $sort): array
+	{
+		// if there are commas in the sortBy argument, removes it
+		if (Str::contains($sort, ',') === true) {
+			$sort = Str::replace($sort, ',', '');
+		}
+
+		$args = Str::split($sort, ' ');
+
+		// fill in PHP constants
+		array_walk($args, function (string &$value) {
+			if (
+				Str::startsWith($value, 'SORT_') === true &&
+				defined($value) === true
+			) {
+				$value = constant($value);
+			}
+		});
+
+		return $args;
 	}
 
 	/**

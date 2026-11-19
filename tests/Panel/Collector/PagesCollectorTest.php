@@ -39,6 +39,13 @@ class PagesCollectorTest extends TestCase
 		$this->assertCollect(PagesCollector::class, ['a', 'b', 'c']);
 	}
 
+	public function testCollectByQuery(): void
+	{
+		$this->setUpPages();
+		$this->app->impersonate('kirby');
+		$this->assertCollectByQuery(PagesCollector::class, 'site.children.filterBy("intendedTemplate", "article")', ['b', 'c']);
+	}
+
 	public function testCollectByStatus(): void
 	{
 		$this->app = $this->app->clone([
@@ -87,13 +94,6 @@ class PagesCollectorTest extends TestCase
 		);
 
 		$this->assertModelsInCollector($collector, ['a'], );
-	}
-
-	public function testCollectByQuery(): void
-	{
-		$this->setUpPages();
-		$this->app->impersonate('kirby');
-		$this->assertCollectByQuery(PagesCollector::class, 'site.children.filterBy("intendedTemplate", "article")', ['b', 'c']);
 	}
 
 	public function testCollectUnauthenticated(): void

@@ -8,17 +8,6 @@ class RootsTest extends TestCase
 {
 	protected string|null $indexRoot;
 
-	protected function setUp(): void
-	{
-		$this->indexRoot = Core::$indexRoot;
-	}
-
-	protected function tearDown(): void
-	{
-		// ensure that the index root used for testing is reset
-		Core::$indexRoot = $this->indexRoot;
-	}
-
 	protected static function rootProvider(string $index): array
 	{
 		$kirby = realpath(__DIR__ . '/../../..');
@@ -52,20 +41,15 @@ class RootsTest extends TestCase
 		];
 	}
 
-	public static function defaultRootProvider(): array
+	protected function setUp(): void
 	{
-		return static::rootProvider(realpath(__DIR__ . '/../../../../'));
+		$this->indexRoot = Core::$indexRoot;
 	}
 
-	#[DataProvider('defaultRootProvider')]
-	public function testDefaultRoot($root, $method): void
+	protected function tearDown(): void
 	{
-		// fake the default behavior for this test
-		Core::$indexRoot = null;
-
-		$roots = (new App())->roots();
-
-		$this->assertSame($root, $roots->$method());
+		// ensure that the index root used for testing is reset
+		Core::$indexRoot = $this->indexRoot;
 	}
 
 	public static function customIndexRootProvider(): array
@@ -118,6 +102,22 @@ class RootsTest extends TestCase
 		]);
 
 		$roots = $app->roots();
+
+		$this->assertSame($root, $roots->$method());
+	}
+
+	public static function defaultRootProvider(): array
+	{
+		return static::rootProvider(realpath(__DIR__ . '/../../../../'));
+	}
+
+	#[DataProvider('defaultRootProvider')]
+	public function testDefaultRoot($root, $method): void
+	{
+		// fake the default behavior for this test
+		Core::$indexRoot = null;
+
+		$roots = (new App())->roots();
 
 		$this->assertSame($root, $roots->$method());
 	}

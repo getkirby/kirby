@@ -33,20 +33,6 @@ class UserDeleteTest extends ModelTestCase
 		$this->assertFileDoesNotExist($user->root() . '/user.txt');
 	}
 
-	public function testDeleteWithFiles(): void
-	{
-		$user = User::create(['email' => 'editor@domain.com']);
-
-		touch($user->root() . '/test.jpg');
-
-		$this->assertCount(1, $user->files());
-
-		$user->delete();
-
-		$this->assertFileDoesNotExist($user->root() . '/test.jpg');
-		$this->assertDirectoryDoesNotExist($user->root());
-	}
-
 	public function testDeleteHooks(): void
 	{
 		$calls = 0;
@@ -97,5 +83,19 @@ class UserDeleteTest extends ModelTestCase
 		$user->delete();
 
 		$this->assertFileDoesNotExist($contentFile);
+	}
+
+	public function testDeleteWithFiles(): void
+	{
+		$user = User::create(['email' => 'editor@domain.com']);
+
+		touch($user->root() . '/test.jpg');
+
+		$this->assertCount(1, $user->files());
+
+		$user->delete();
+
+		$this->assertFileDoesNotExist($user->root() . '/test.jpg');
+		$this->assertDirectoryDoesNotExist($user->root());
 	}
 }

@@ -71,17 +71,17 @@ class ParsleyTest extends TestCase
 		$this->assertFalse($this->parser()->containsBlock($element));
 	}
 
+	public function testFallbackWithEmptyInput(): void
+	{
+		$this->assertNull($this->parser()->fallback(''));
+	}
+
 	public static function isBlockProvider(): array
 	{
 		return [
 			['<h1>Test</h1>', '/html/body/h1', true],
 			['<span>Test</span>', '/html/body/span', false],
 		];
-	}
-
-	public function testFallbackWithEmptyInput(): void
-	{
-		$this->assertNull($this->parser()->fallback(''));
 	}
 
 	#[DataProvider('isBlockProvider')]
@@ -120,34 +120,6 @@ class ParsleyTest extends TestCase
 		$this->assertFalse($this->parser()->isInline($comment));
 	}
 
-	public function testMergeOrAppendExpectMerge(): void
-	{
-		$parser = $this->parser();
-
-		$parser->setBlocks([
-			[
-				'content' => ['text' => '<p>A</p>'],
-				'type'    => 'text',
-			]
-		]);
-
-		$parser->mergeOrAppend([
-			'content' => ['text' => '<p>B</p>'],
-			'type'    => 'text'
-		]);
-
-		$expected = [
-			[
-				'content' => [
-					'text' => '<p>A</p> <p>B</p>'
-				],
-				'type' => 'text'
-			]
-		];
-
-		$this->assertSame($expected, $parser->blocks());
-	}
-
 	public function testMergeOrAppendExpectAppend(): void
 	{
 		$parser = $this->parser();
@@ -174,6 +146,34 @@ class ParsleyTest extends TestCase
 			[
 				'content' => [
 					'text' => '<p>B</p>'
+				],
+				'type' => 'text'
+			]
+		];
+
+		$this->assertSame($expected, $parser->blocks());
+	}
+
+	public function testMergeOrAppendExpectMerge(): void
+	{
+		$parser = $this->parser();
+
+		$parser->setBlocks([
+			[
+				'content' => ['text' => '<p>A</p>'],
+				'type'    => 'text',
+			]
+		]);
+
+		$parser->mergeOrAppend([
+			'content' => ['text' => '<p>B</p>'],
+			'type'    => 'text'
+		]);
+
+		$expected = [
+			[
+				'content' => [
+					'text' => '<p>A</p> <p>B</p>'
 				],
 				'type' => 'text'
 			]

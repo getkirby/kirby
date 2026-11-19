@@ -16,9 +16,9 @@ use Kirby\Toolkit\Str;
  */
 class FileStore extends Store
 {
-	protected string $path;
 	protected array $handles  = [];
 	protected array $isLocked = [];
+	protected string $path;
 
 	/**
 	 * Creates a new instance of the file session store

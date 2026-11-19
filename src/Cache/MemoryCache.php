@@ -24,27 +24,13 @@ class MemoryCache extends Cache
 	}
 
 	/**
-	 * Writes an item to the cache for a given number of minutes and
-	 * returns whether the operation was successful
-	 *
-	 * ```php
-	 * // put an item in the cache for 15 minutes
-	 * $cache->set('value', 'my value', 15);
-	 * ```
+	 * Flushes the entire cache and returns
+	 * whether the operation was successful
 	 */
-	public function set(string $key, $value, int $minutes = 0): bool
+	public function flush(): bool
 	{
-		$this->store[$key] = new Value($value, $minutes);
+		$this->store = [];
 		return true;
-	}
-
-	/**
-	 * Internal method to retrieve the raw cache value;
-	 * needs to return a Value object or null if not found
-	 */
-	public function retrieve(string $key): Value|null
-	{
-		return $this->store[$key] ?? null;
 	}
 
 	/**
@@ -62,12 +48,26 @@ class MemoryCache extends Cache
 	}
 
 	/**
-	 * Flushes the entire cache and returns
-	 * whether the operation was successful
+	 * Internal method to retrieve the raw cache value;
+	 * needs to return a Value object or null if not found
 	 */
-	public function flush(): bool
+	public function retrieve(string $key): Value|null
 	{
-		$this->store = [];
+		return $this->store[$key] ?? null;
+	}
+
+	/**
+	 * Writes an item to the cache for a given number of minutes and
+	 * returns whether the operation was successful
+	 *
+	 * ```php
+	 * // put an item in the cache for 15 minutes
+	 * $cache->set('value', 'my value', 15);
+	 * ```
+	 */
+	public function set(string $key, $value, int $minutes = 0): bool
+	{
+		$this->store[$key] = new Value($value, $minutes);
 		return true;
 	}
 }

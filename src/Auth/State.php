@@ -13,6 +13,6 @@ enum State: string
 {
 	case Active       = 'active';
 	case Impersonated = 'impersonated';
-	case Pending      = 'pending';
 	case Inactive     = 'inactive';
+	case Pending      = 'pending';
 }

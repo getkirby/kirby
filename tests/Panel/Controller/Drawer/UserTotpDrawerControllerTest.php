@@ -17,6 +17,16 @@ class UserTotpDrawerControllerTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Drawer.UserTotpDrawerController';
 
+	/**
+	 * Enables TOTP for the test user and returns a currently valid code
+	 */
+	protected function enableTotp(): string
+	{
+		$secret = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+		$this->app->user('test')->changeSecret('totp', $secret);
+		return (new Totp($secret))->generate();
+	}
+
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -43,16 +53,6 @@ class UserTotpDrawerControllerTest extends TestCase
 		]);
 
 		$this->app->impersonate('kirby');
-	}
-
-	/**
-	 * Enables TOTP for the test user and returns a currently valid code
-	 */
-	protected function enableTotp(): string
-	{
-		$secret = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
-		$this->app->user('test')->changeSecret('totp', $secret);
-		return (new Totp($secret))->generate();
 	}
 
 	public function testFactory(): void
@@ -141,20 +141,6 @@ class UserTotpDrawerControllerTest extends TestCase
 		}
 	}
 
-	public function testSubmitCreateWithMissingConfirm(): void
-	{
-		$this->setRequest([
-			'action' => 'create',
-			'secret' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'
-		]);
-		$this->app->impersonate('test');
-
-		$this->expectException(InvalidArgumentException::class);
-
-		$controller = new UserTotpDrawerController($this->app->user('test'));
-		$controller->submit();
-	}
-
 	public function testSubmitCreateWithInvalidConfirm(): void
 	{
 		$this->setRequest([
@@ -166,6 +152,20 @@ class UserTotpDrawerControllerTest extends TestCase
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionCode('error.login.totp.confirm.invalid');
+
+		$controller = new UserTotpDrawerController($this->app->user('test'));
+		$controller->submit();
+	}
+
+	public function testSubmitCreateWithMissingConfirm(): void
+	{
+		$this->setRequest([
+			'action' => 'create',
+			'secret' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'
+		]);
+		$this->app->impersonate('test');
+
+		$this->expectException(InvalidArgumentException::class);
 
 		$controller = new UserTotpDrawerController($this->app->user('test'));
 		$controller->submit();

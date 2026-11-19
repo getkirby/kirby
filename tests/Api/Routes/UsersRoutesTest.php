@@ -19,12 +19,6 @@ class UsersRoutesTest extends TestCase
 	protected static string $passwordA;
 	protected static string $passwordB;
 
-	public static function setUpBeforeClass(): void
-	{
-		self::$passwordA = User::hashPassword('12345678');
-		self::$passwordB = User::hashPassword('87654321');
-	}
-
 	protected function setUp(): void
 	{
 		$this->app = new App([
@@ -61,14 +55,6 @@ class UsersRoutesTest extends TestCase
 		$this->app->impersonate('kirby');
 	}
 
-	protected function tearDown(): void
-	{
-		$this->app->session()->destroy();
-		App::destroy();
-		Field::$types = [];
-		Dir::remove(static::TMP);
-	}
-
 	protected function setUpAppWithoutUserAccess(): App
 	{
 		$app = $this->app->clone([
@@ -100,6 +86,20 @@ class UsersRoutesTest extends TestCase
 		$app->impersonate('admin@getkirby.com');
 
 		return $app;
+	}
+
+	public static function setUpBeforeClass(): void
+	{
+		self::$passwordA = User::hashPassword('12345678');
+		self::$passwordB = User::hashPassword('87654321');
+	}
+
+	protected function tearDown(): void
+	{
+		$this->app->session()->destroy();
+		App::destroy();
+		Field::$types = [];
+		Dir::remove(static::TMP);
 	}
 
 	public function testAvatar(): void
@@ -184,23 +184,6 @@ class UsersRoutesTest extends TestCase
 		$this->assertSame('Bar', $response[1]['title']);
 	}
 
-	public function testCreate(): void
-	{
-		$app = $this->app;
-
-		$response = $app->api()->call('users', 'POST', [
-			'body' => [
-				'email' => 'test@getkirby.com',
-				'role'  => 'admin'
-			]
-		]);
-
-		$this->assertSame('ok', $response['status']);
-		$this->assertSame('model', $response['type']);
-		$this->assertSame('admin', $response['data']['role']['name']);
-		$this->assertSame('test@getkirby.com', $response['data']['username']);
-	}
-
 	public function testChangeEmail(): void
 	{
 		$response = $this->app->api()->call('users/admin@getkirby.com/email', 'PATCH', [
@@ -266,21 +249,6 @@ class UsersRoutesTest extends TestCase
 		]);
 	}
 
-	public function testChangePasswordWrongCurrentPassword(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Wrong password');
-
-		$this->app->impersonate('admin@getkirby.com');
-
-		$this->app->api()->call('users/editor@getkirby.com/password', 'PATCH', [
-			'body' => [
-				'currentPassword' => 'definitely-not-correct',
-				'password'        => 'super-secure-new-password'
-			]
-		]);
-	}
-
 	public function testChangePasswordReset(): void
 	{
 		// the password reset mode of the acting user must not take effect when
@@ -302,6 +270,21 @@ class UsersRoutesTest extends TestCase
 		]);
 	}
 
+	public function testChangePasswordWrongCurrentPassword(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Wrong password');
+
+		$this->app->impersonate('admin@getkirby.com');
+
+		$this->app->api()->call('users/editor@getkirby.com/password', 'PATCH', [
+			'body' => [
+				'currentPassword' => 'definitely-not-correct',
+				'password'        => 'super-secure-new-password'
+			]
+		]);
+	}
+
 	public function testChangeRole(): void
 	{
 		$response = $this->app->api()->call('users/editor@getkirby.com/role', 'PATCH', [
@@ -312,6 +295,23 @@ class UsersRoutesTest extends TestCase
 
 		$this->assertSame('ok', $response['status']);
 		$this->assertSame('editor', $response['data']['role']['name']);
+	}
+
+	public function testCreate(): void
+	{
+		$app = $this->app;
+
+		$response = $app->api()->call('users', 'POST', [
+			'body' => [
+				'email' => 'test@getkirby.com',
+				'role'  => 'admin'
+			]
+		]);
+
+		$this->assertSame('ok', $response['status']);
+		$this->assertSame('model', $response['type']);
+		$this->assertSame('admin', $response['data']['role']['name']);
+		$this->assertSame('test@getkirby.com', $response['data']['username']);
 	}
 
 	public function testDelete(): void
@@ -563,42 +563,16 @@ class UsersRoutesTest extends TestCase
 		$this->assertCount(2, $response['data']);
 	}
 
-	public function testSearchWithPostRequestIgnoresSortBy(): void
+	public function testSearchWithPostRequestIgnoresNotKey(): void
 	{
-		// sortBy in the body is stripped; default order (alphabetical asc) is preserved
+		// the 'not' key is stripped; both users are returned
 		$response = $this->app->api()->call('users/search', 'POST', [
 			'body' => [
-				'sortBy' => 'email desc'
+				'not' => ['admin@getkirby.com'],
 			]
 		]);
 
 		$this->assertCount(2, $response['data']);
-		$this->assertSame('admin@getkirby.com', $response['data'][0]['email']);
-		$this->assertSame('editor@getkirby.com', $response['data'][1]['email']);
-	}
-
-	public function testSearchWithPostRequestWithoutAccess(): void
-	{
-		$app = $this->setUpAppWithoutUserAccess();
-
-		$response = $app->api()->call('users/search', 'POST', [
-			'body' => [
-				'search' => 'Restricted'
-			]
-		]);
-
-		$this->assertCount(0, $response['data']);
-	}
-
-	public function testSearchWithPostRequestRespectsLimit(): void
-	{
-		$response = $this->app->api()->call('users/search', 'POST', [
-			'body' => [
-				'limit' => 1,
-			]
-		]);
-
-		$this->assertCount(1, $response['data']);
 	}
 
 	public function testSearchWithPostRequestIgnoresNullValues(): void
@@ -613,16 +587,42 @@ class UsersRoutesTest extends TestCase
 		$this->assertCount(2, $response['data']);
 	}
 
-	public function testSearchWithPostRequestIgnoresNotKey(): void
+	public function testSearchWithPostRequestIgnoresSortBy(): void
 	{
-		// the 'not' key is stripped; both users are returned
+		// sortBy in the body is stripped; default order (alphabetical asc) is preserved
 		$response = $this->app->api()->call('users/search', 'POST', [
 			'body' => [
-				'not' => ['admin@getkirby.com'],
+				'sortBy' => 'email desc'
 			]
 		]);
 
 		$this->assertCount(2, $response['data']);
+		$this->assertSame('admin@getkirby.com', $response['data'][0]['email']);
+		$this->assertSame('editor@getkirby.com', $response['data'][1]['email']);
+	}
+
+	public function testSearchWithPostRequestRespectsLimit(): void
+	{
+		$response = $this->app->api()->call('users/search', 'POST', [
+			'body' => [
+				'limit' => 1,
+			]
+		]);
+
+		$this->assertCount(1, $response['data']);
+	}
+
+	public function testSearchWithPostRequestWithoutAccess(): void
+	{
+		$app = $this->setUpAppWithoutUserAccess();
+
+		$response = $app->api()->call('users/search', 'POST', [
+			'body' => [
+				'search' => 'Restricted'
+			]
+		]);
+
+		$this->assertCount(0, $response['data']);
 	}
 
 	public function testUpdate(): void

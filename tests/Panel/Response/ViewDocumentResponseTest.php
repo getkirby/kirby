@@ -14,6 +14,30 @@ class ViewDocumentResponseTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.Response.ViewDocumentResponse';
 
+	public function testBody(): void
+	{
+		$response = new ViewDocumentResponse();
+		$this->assertNotNull($response->body());
+	}
+
+	public function testBodyEscapesTagsInState(): void
+	{
+		// `<!--<script>` would keep the inline script open
+		// until the end of the document
+		$response = new ViewDocumentResponse(
+			view: ['title' => '<!--<script></script>']
+		);
+
+		$state = Str::after($response->body(), 'window.panelState = ');
+		$state = rtrim(trim(Str::before($state, '</script>')), ';');
+
+		$this->assertStringNotContainsString('<', $state);
+		$this->assertSame(
+			'<!--<script></script>',
+			json_decode($state, true)['view']['title']
+		);
+	}
+
 	public function testCors(): void
 	{
 		$response = new ViewDocumentResponse();
@@ -51,30 +75,6 @@ class ViewDocumentResponseTest extends TestCase
 
 		$response = new ViewDocumentResponse();
 		$this->assertSame('frame-ancestors *.example.com https://example.com', $response->cors());
-	}
-
-	public function testBody(): void
-	{
-		$response = new ViewDocumentResponse();
-		$this->assertNotNull($response->body());
-	}
-
-	public function testBodyEscapesTagsInState(): void
-	{
-		// `<!--<script>` would keep the inline script open
-		// until the end of the document
-		$response = new ViewDocumentResponse(
-			view: ['title' => '<!--<script></script>']
-		);
-
-		$state = Str::after($response->body(), 'window.panelState = ');
-		$state = rtrim(trim(Str::before($state, '</script>')), ';');
-
-		$this->assertStringNotContainsString('<', $state);
-		$this->assertSame(
-			'<!--<script></script>',
-			json_decode($state, true)['view']['title']
-		);
 	}
 
 	public function testData(): void

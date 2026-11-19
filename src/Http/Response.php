@@ -20,15 +20,14 @@ use Stringable;
 class Response implements Stringable
 {
 	/**
-	 * Store for all registered headers,
-	 * which will be sent with the response
-	 */
-	protected array $headers = [];
-
-	/**
 	 * The response body
 	 */
 	protected string $body;
+
+	/**
+	 * The content type charset
+	 */
+	protected string $charset = 'UTF-8';
 
 	/**
 	 * The HTTP response code
@@ -36,14 +35,15 @@ class Response implements Stringable
 	protected int $code;
 
 	/**
+	 * Store for all registered headers,
+	 * which will be sent with the response
+	 */
+	protected array $headers = [];
+
+	/**
 	 * The content type for the response
 	 */
 	protected string $type;
-
-	/**
-	 * The content type charset
-	 */
-	protected string $charset = 'UTF-8';
 
 	/**
 	 * Creates a new response object

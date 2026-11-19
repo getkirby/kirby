@@ -7,6 +7,15 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(SlugField::class)]
 class SlugFieldTest extends TestCase
 {
+	public function testLabel(): void
+	{
+		$field = $this->field('slug', [
+			'label' => 'Test'
+		]);
+
+		$this->assertSame('Test', $field->label());
+	}
+
 	public function testProps(): void
 	{
 		$field = $this->field('slug');
@@ -47,14 +56,5 @@ class SlugFieldTest extends TestCase
 		];
 
 		$this->assertSame($expected, $props);
-	}
-
-	public function testLabel(): void
-	{
-		$field = $this->field('slug', [
-			'label' => 'Test'
-		]);
-
-		$this->assertSame('Test', $field->label());
 	}
 }

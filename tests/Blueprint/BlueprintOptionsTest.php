@@ -16,6 +16,14 @@ class BlueprintOptionsTest extends TestCase
 
 	protected ModelWithContent $model;
 
+	protected function blueprint(array $options): Blueprint
+	{
+		return new Blueprint([
+			'model'   => $this->model,
+			'options' => $options
+		]);
+	}
+
 	protected function setUp(): void
 	{
 		$this->app = new App([
@@ -35,17 +43,36 @@ class BlueprintOptionsTest extends TestCase
 		$this->model = new Page(['slug' => 'test']);
 	}
 
-	protected function blueprint(array $options): Blueprint
+	public function testOptionForUserWithFalse(): void
 	{
-		return new Blueprint([
-			'model'   => $this->model,
-			'options' => $options
-		]);
+		$blueprint = $this->blueprint(['update' => false]);
+
+		$this->assertFalse($blueprint->optionForUser($this->user('admin'), 'update'));
+		$this->assertFalse($blueprint->optionForUser($this->user('editor'), 'update'));
 	}
 
-	protected function user(string $role): User
+	public function testOptionForUserWithList(): void
 	{
-		return $this->app->user($role . '@getkirby.com');
+		// a non-associative array is not a set of role rules
+		$blueprint = $this->blueprint([
+			'changeTemplate' => ['article', 'note']
+		]);
+
+		$this->assertNull(
+			$blueprint->optionForUser($this->user('admin'), 'changeTemplate')
+		);
+	}
+
+	public function testOptionForUserWithMissingRole(): void
+	{
+		$blueprint = $this->blueprint([
+			'update' => [
+				'admin' => true
+			]
+		]);
+
+		$this->assertTrue($blueprint->optionForUser($this->user('admin'), 'update'));
+		$this->assertNull($blueprint->optionForUser($this->user('editor'), 'update'));
 	}
 
 	public function testOptionForUserWithoutOptions(): void
@@ -53,29 +80,6 @@ class BlueprintOptionsTest extends TestCase
 		$blueprint = new Blueprint(['model' => $this->model]);
 
 		$this->assertNull($blueprint->optionForUser($this->user('editor'), 'update'));
-	}
-
-	public function testOptionForUserWithUndefinedOption(): void
-	{
-		$blueprint = $this->blueprint(['update' => true]);
-
-		$this->assertNull($blueprint->optionForUser($this->user('editor'), 'delete'));
-	}
-
-	public function testOptionForUserWithTrue(): void
-	{
-		$blueprint = $this->blueprint(['update' => true]);
-
-		$this->assertTrue($blueprint->optionForUser($this->user('admin'), 'update'));
-		$this->assertTrue($blueprint->optionForUser($this->user('editor'), 'update'));
-	}
-
-	public function testOptionForUserWithFalse(): void
-	{
-		$blueprint = $this->blueprint(['update' => false]);
-
-		$this->assertFalse($blueprint->optionForUser($this->user('admin'), 'update'));
-		$this->assertFalse($blueprint->optionForUser($this->user('editor'), 'update'));
 	}
 
 	public function testOptionForUserWithRoles(): void
@@ -91,6 +95,21 @@ class BlueprintOptionsTest extends TestCase
 		$this->assertFalse($blueprint->optionForUser($this->user('editor'), 'update'));
 	}
 
+	public function testOptionForUserWithTrue(): void
+	{
+		$blueprint = $this->blueprint(['update' => true]);
+
+		$this->assertTrue($blueprint->optionForUser($this->user('admin'), 'update'));
+		$this->assertTrue($blueprint->optionForUser($this->user('editor'), 'update'));
+	}
+
+	public function testOptionForUserWithUndefinedOption(): void
+	{
+		$blueprint = $this->blueprint(['update' => true]);
+
+		$this->assertNull($blueprint->optionForUser($this->user('editor'), 'delete'));
+	}
+
 	public function testOptionForUserWithWildcard(): void
 	{
 		$blueprint = $this->blueprint([
@@ -104,27 +123,8 @@ class BlueprintOptionsTest extends TestCase
 		$this->assertFalse($blueprint->optionForUser($this->user('editor'), 'update'));
 	}
 
-	public function testOptionForUserWithMissingRole(): void
+	protected function user(string $role): User
 	{
-		$blueprint = $this->blueprint([
-			'update' => [
-				'admin' => true
-			]
-		]);
-
-		$this->assertTrue($blueprint->optionForUser($this->user('admin'), 'update'));
-		$this->assertNull($blueprint->optionForUser($this->user('editor'), 'update'));
-	}
-
-	public function testOptionForUserWithList(): void
-	{
-		// a non-associative array is not a set of role rules
-		$blueprint = $this->blueprint([
-			'changeTemplate' => ['article', 'note']
-		]);
-
-		$this->assertNull(
-			$blueprint->optionForUser($this->user('admin'), 'changeTemplate')
-		);
+		return $this->app->user($role . '@getkirby.com');
 	}
 }

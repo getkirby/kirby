@@ -14,14 +14,14 @@ abstract class TestCase extends BaseTestCase
 
 	protected ModelWithContent $model;
 
-	public function assertContentFileExists(string|null $language = null, VersionId|null $versionId = null): void
-	{
-		$this->assertFileExists($this->contentFile($language, $versionId));
-	}
-
 	public function assertContentFileDoesNotExist(string|null $language = null, VersionId|null $versionId = null): void
 	{
 		$this->assertFileDoesNotExist($this->contentFile($language, $versionId));
+	}
+
+	public function assertContentFileExists(string|null $language = null, VersionId|null $versionId = null): void
+	{
+		$this->assertFileExists($this->contentFile($language, $versionId));
 	}
 
 	public function contentFile(string|null $language = null, VersionId|null $versionId = null): string

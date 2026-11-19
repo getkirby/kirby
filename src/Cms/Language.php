@@ -330,6 +330,15 @@ class Language extends Model
 	}
 
 	/**
+	 * The id is required for collections
+	 * to work properly. The code is used as id
+	 */
+	public function id(): string
+	{
+		return $this->code;
+	}
+
+	/**
 	 * Checks if the language is the same
 	 * as the given language or language code
 	 * @since 5.0.0
@@ -371,15 +380,6 @@ class Language extends Model
 	public function isSingle(): bool
 	{
 		return $this->single;
-	}
-
-	/**
-	 * The id is required for collections
-	 * to work properly. The code is used as id
-	 */
-	public function id(): string
-	{
-		return $this->code;
 	}
 
 	/**
@@ -595,15 +595,6 @@ class Language extends Model
 	}
 
 	/**
-	 * Returns the absolute Url for the language
-	 */
-	public function url(): string
-	{
-		$url = $this->url ?? '/' . $this->code;
-		return Url::makeAbsolute($url, $this->kirby()->url());
-	}
-
-	/**
 	 * Update language properties and save them
 	 *
 	 * @param array<string, mixed>|null $props
@@ -663,6 +654,15 @@ class Language extends Model
 		);
 
 		return $language;
+	}
+
+	/**
+	 * Returns the absolute Url for the language
+	 */
+	public function url(): string
+	{
+		$url = $this->url ?? '/' . $this->code;
+		return Url::makeAbsolute($url, $this->kirby()->url());
 	}
 
 	/**

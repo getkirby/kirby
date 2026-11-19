@@ -62,14 +62,6 @@ abstract class Sql
 	}
 
 	/**
-	 * Returns a query to list the columns of a specified table;
-	 * the query needs to return rows with a column `name`
-	 *
-	 * @return array{query: string, bindings: array}
-	 */
-	abstract public function columns(string $table): array;
-
-	/**
 	 * Returns a query snippet for a column default value
 	 *
 	 * @param $name Column name
@@ -122,6 +114,14 @@ abstract class Sql
 		// the table or column does not exist
 		return null;
 	}
+
+	/**
+	 * Returns a query to list the columns of a specified table;
+	 * the query needs to return rows with a column `name`
+	 *
+	 * @return array{query: string, bindings: array}
+	 */
+	abstract public function columns(string $table): array;
 
 	/**
 	 * Abstracted column types to simplify table
@@ -257,6 +257,40 @@ abstract class Sql
 	}
 
 	/**
+	 * Creates a CREATE TABLE query
+	 *
+	 * @param $columns Array of column definition arrays, see `Kirby\Database\Sql::createColumn()`
+	 * @return array{query: string, bindings: array<string, mixed>}
+	 */
+	public function createTable(string $table, array $columns = []): array
+	{
+		$inner = $this->createTableInner($columns);
+
+		// add keys
+		foreach ($inner['keys'] as $key => $columns) {
+			// quote each column name and make a list string out of the column names
+			$columns = implode(', ', array_map(
+				fn (string $name) => $this->quoteIdentifier($name),
+				$columns
+			));
+
+			if ($key === 'primary') {
+				$key = 'PRIMARY KEY';
+			} else {
+				$unique = isset($inner['unique'][$key]) ? 'UNIQUE ' : '';
+				$key    = $unique . 'INDEX ' . $this->quoteIdentifier($key);
+			}
+
+			$inner['query'] .= ',' . PHP_EOL . $key . ' (' . $columns . ')';
+		}
+
+		return [
+			'query'    => 'CREATE TABLE ' . $this->quoteIdentifier($table) . ' (' . PHP_EOL . $inner['query'] . PHP_EOL . ')',
+			'bindings' => $inner['bindings']
+		];
+	}
+
+	/**
 	 * Creates the inner query for the columns in a CREATE TABLE query
 	 *
 	 * @param $columns Array of column definition arrays, see `Kirby\Database\Sql::createColumn()`
@@ -295,40 +329,6 @@ abstract class Sql
 			'bindings' => $bindings,
 			'keys'     => $keys,
 			'unique'   => $unique
-		];
-	}
-
-	/**
-	 * Creates a CREATE TABLE query
-	 *
-	 * @param $columns Array of column definition arrays, see `Kirby\Database\Sql::createColumn()`
-	 * @return array{query: string, bindings: array<string, mixed>}
-	 */
-	public function createTable(string $table, array $columns = []): array
-	{
-		$inner = $this->createTableInner($columns);
-
-		// add keys
-		foreach ($inner['keys'] as $key => $columns) {
-			// quote each column name and make a list string out of the column names
-			$columns = implode(', ', array_map(
-				fn (string $name) => $this->quoteIdentifier($name),
-				$columns
-			));
-
-			if ($key === 'primary') {
-				$key = 'PRIMARY KEY';
-			} else {
-				$unique = isset($inner['unique'][$key]) ? 'UNIQUE ' : '';
-				$key    = $unique . 'INDEX ' . $this->quoteIdentifier($key);
-			}
-
-			$inner['query'] .= ',' . PHP_EOL . $key . ' (' . $columns . ')';
-		}
-
-		return [
-			'query'    => 'CREATE TABLE ' . $this->quoteIdentifier($table) . ' (' . PHP_EOL . $inner['query'] . PHP_EOL . ')',
-			'bindings' => $inner['bindings']
 		];
 	}
 
@@ -719,14 +719,6 @@ abstract class Sql
 	}
 
 	/**
-	 * Returns a query to list the tables of the current database;
-	 * the query needs to return rows with a column `name`
-	 *
-	 * @return array{query: string, bindings: array}
-	 */
-	abstract public function tables(): array;
-
-	/**
 	 * Validates and quotes a table name
 	 *
 	 * @throws InvalidArgumentException if an invalid table name is given
@@ -742,6 +734,14 @@ abstract class Sql
 
 		return $this->quoteIdentifier($table);
 	}
+
+	/**
+	 * Returns a query to list the tables of the current database;
+	 * the query needs to return rows with a column `name`
+	 *
+	 * @return array{query: string, bindings: array}
+	 */
+	abstract public function tables(): array;
 
 	/**
 	 * Unquotes an identifier (table *or* column)
@@ -825,46 +825,6 @@ abstract class Sql
 	}
 
 	/**
-	 * Builds a safe list of values for insert, select or update queries
-	 *
-	 * @param $values A value string or array of values
-	 * @param $separator A separator which should be used to join values
-	 * @param $set If true builds a set list of values for update clauses
-	 * @param $enforceQualified Always use fully qualified column names
-	 * @return array{query: mixed, bindings: array<string, mixed>}
-	 */
-	public function values(
-		string $table,
-		$values,
-		string $separator = ', ',
-		bool $set = true,
-		bool $enforceQualified = false
-	): array {
-		if (is_array($values) === false) {
-			return [
-				'query' => $values,
-				'bindings' => []
-			];
-		}
-
-		if ($set === true) {
-			return $this->valueSet(
-				$table,
-				$values,
-				$separator,
-				$enforceQualified
-			);
-		}
-
-		return $this->valueList(
-			$table,
-			$values,
-			$separator,
-			$enforceQualified
-		);
-	}
-
-	/**
 	 * Creates a list of fields and values
 	 *
 	 * @return array{query: string, bindings: array<string, mixed>}
@@ -906,6 +866,46 @@ abstract class Sql
 			'query'    => '(' . implode($separator, $fields) . ') VALUES (' . implode($separator, $query) . ')',
 			'bindings' => $bindings
 		];
+	}
+
+	/**
+	 * Builds a safe list of values for insert, select or update queries
+	 *
+	 * @param $values A value string or array of values
+	 * @param $separator A separator which should be used to join values
+	 * @param $set If true builds a set list of values for update clauses
+	 * @param $enforceQualified Always use fully qualified column names
+	 * @return array{query: mixed, bindings: array<string, mixed>}
+	 */
+	public function values(
+		string $table,
+		$values,
+		string $separator = ', ',
+		bool $set = true,
+		bool $enforceQualified = false
+	): array {
+		if (is_array($values) === false) {
+			return [
+				'query' => $values,
+				'bindings' => []
+			];
+		}
+
+		if ($set === true) {
+			return $this->valueSet(
+				$table,
+				$values,
+				$separator,
+				$enforceQualified
+			);
+		}
+
+		return $this->valueList(
+			$table,
+			$values,
+			$separator,
+			$enforceQualified
+		);
 	}
 
 	/**

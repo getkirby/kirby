@@ -52,6 +52,21 @@ class ImageTest extends TestCase
 		$this->assertInstanceOf(Dimensions::class, $file->dimensions());
 	}
 
+	public function testDimensionsDoesNotReadHeaderWithoutImageSignature(): void
+	{
+		foreach (['circle.svg' => 50, 'invalid.jpg' => 0] as $filename => $size) {
+			$file = new class (['root' => static::FIXTURES . '/image/' . $filename]) extends Image {
+				public function imagesize(): array|false
+				{
+					throw new LogicException('imagesize() must not be called');
+				}
+			};
+
+			$this->assertSame($size, $file->dimensions()->width());
+			$this->assertSame($size, $file->dimensions()->height());
+		}
+	}
+
 	public function testDimensionsReadsTypeFromImageHeader(): void
 	{
 		$file = new class (['root' => static::FIXTURES . '/image/cat.jpg']) extends Image {
@@ -83,33 +98,18 @@ class ImageTest extends TestCase
 		$this->assertFalse($file->isResizable());
 	}
 
-	public function testDimensionsDoesNotReadHeaderWithoutImageSignature(): void
+	public function testDimensionsWithInvalidGif(): void
 	{
-		foreach (['circle.svg' => 50, 'invalid.jpg' => 0] as $filename => $size) {
-			$file = new class (['root' => static::FIXTURES . '/image/' . $filename]) extends Image {
-				public function imagesize(): array|false
-				{
-					throw new LogicException('imagesize() must not be called');
-				}
-			};
-
-			$this->assertSame($size, $file->dimensions()->width());
-			$this->assertSame($size, $file->dimensions()->height());
-		}
-	}
-
-	public function testDimensionsWithInvalidPngChunk(): void
-	{
-		$file = $this->_image('invalid-chunk.png');
+		$file = $this->_image('invalid.gif');
 
 		$this->assertSame(0, $file->dimensions()->width());
 		$this->assertSame(0, $file->dimensions()->height());
 		$this->assertFalse($file->isResizable());
 	}
 
-	public function testDimensionsWithInvalidGif(): void
+	public function testDimensionsWithInvalidPngChunk(): void
 	{
-		$file = $this->_image('invalid.gif');
+		$file = $this->_image('invalid-chunk.png');
 
 		$this->assertSame(0, $file->dimensions()->width());
 		$this->assertSame(0, $file->dimensions()->height());
@@ -180,28 +180,16 @@ class ImageTest extends TestCase
 		$this->assertFalse($file->imagesize());
 	}
 
-	public function testIsResizableWithInvalidImage(): void
-	{
-		$file = $this->_image('invalid.jpg');
-		$this->assertFalse($file->isResizable());
-	}
-
-	public function testIsPortrait(): void
-	{
-		$file = $this->_image();
-		$this->assertFalse($file->isPortrait());
-	}
-
 	public function testIsLandscape(): void
 	{
 		$file = $this->_image();
 		$this->assertFalse($file->isLandscape());
 	}
 
-	public function testIsSquare(): void
+	public function testIsPortrait(): void
 	{
 		$file = $this->_image();
-		$this->assertTrue($file->isSquare());
+		$this->assertFalse($file->isPortrait());
 	}
 
 	public function testIsResizable(): void
@@ -211,6 +199,18 @@ class ImageTest extends TestCase
 
 		$file = $this->_image('test.heic');
 		$this->assertFalse($file->isResizable());
+	}
+
+	public function testIsResizableWithInvalidImage(): void
+	{
+		$file = $this->_image('invalid.jpg');
+		$this->assertFalse($file->isResizable());
+	}
+
+	public function testIsSquare(): void
+	{
+		$file = $this->_image();
+		$this->assertTrue($file->isSquare());
 	}
 
 	public function testIsViewable(): void

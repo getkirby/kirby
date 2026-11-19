@@ -16,32 +16,15 @@ class LicenseTest extends TestCase
 	public const string FIXTURES = __DIR__ . '/fixtures/LicenseTest';
 	public const string TMP      = KIRBY_TMP_DIR . '/Cms.License';
 
-	protected function setUp(): void
-	{
-		parent::setUp();
-		MockTime::reset();
-	}
-
 	public function code(LicenseType $type = LicenseType::Basic): string
 	{
 		return $type->prefix() . '1234' . Str::random(28);
 	}
 
-	public static function providerForLicenseUrls(): array
+	protected function setUp(): void
 	{
-		return [
-			['example.com', 'example.com'],
-			['www.example.com', 'example.com'],
-			['dev.example.com', 'example.com'],
-			['test.example.com', 'example.com'],
-			['staging.example.com', 'example.com'],
-			['sub.example.com', 'sub.example.com'],
-			['www.example.com/test', 'www.example.com/test'],
-			['dev.example.com/test', 'dev.example.com/test'],
-			['test.example.com/test', 'test.example.com/test'],
-			['staging.example.com/test', 'staging.example.com/test'],
-			['sub.example.com/test', 'sub.example.com/test'],
-		];
+		parent::setUp();
+		MockTime::reset();
 	}
 
 	public function testActivation(): void
@@ -438,6 +421,23 @@ class LicenseTest extends TestCase
 
 		$this->assertSame($code, $license->code());
 		$this->assertSame('mail@getkirby.com', $license->email());
+	}
+
+	public static function providerForLicenseUrls(): array
+	{
+		return [
+			['example.com', 'example.com'],
+			['www.example.com', 'example.com'],
+			['dev.example.com', 'example.com'],
+			['test.example.com', 'example.com'],
+			['staging.example.com', 'example.com'],
+			['sub.example.com', 'sub.example.com'],
+			['www.example.com/test', 'www.example.com/test'],
+			['dev.example.com/test', 'dev.example.com/test'],
+			['test.example.com/test', 'test.example.com/test'],
+			['staging.example.com/test', 'staging.example.com/test'],
+			['sub.example.com/test', 'sub.example.com/test'],
+		];
 	}
 
 	#[DataProvider('providerForLicenseUrls')]

@@ -11,36 +11,6 @@ class FileVersionTest extends ModelTestCase
 	public const string FIXTURES = __DIR__ . '/fixtures/files';
 	public const string TMP      = KIRBY_TMP_DIR . '/Cms.FileVersion';
 
-	public function testConstruct(): void
-	{
-		$page = new Page([
-			'slug' => 'test'
-		]);
-
-		$original = new File([
-			'filename' => 'test.jpg',
-			'parent' => $page,
-			'content' => [
-				'title' => 'Test Title'
-			]
-		]);
-
-		$version = new FileVersion([
-			'original'      => $original,
-			'url'           => $url = 'https://assets.getkirby.com/test-200x200.jpg',
-			'modifications' => $mods = [
-				'width' => 200,
-				'height' => 200
-			]
-		]);
-
-		$this->assertSame($url, $version->url());
-		$this->assertSame('Test Title', $version->title()->value());
-		$this->assertSame($mods, $version->modifications());
-		$this->assertSame($original, $version->original());
-		$this->assertSame($original->kirby(), $version->kirby());
-	}
-
 	public function testCall(): void
 	{
 		$page = new Page(['slug' => 'test']);
@@ -72,6 +42,36 @@ class FileVersionTest extends ModelTestCase
 			'url'      => 'https://example.com/test.jpg'
 		]);
 		$this->assertNull($assetVersion->title());
+	}
+
+	public function testConstruct(): void
+	{
+		$page = new Page([
+			'slug' => 'test'
+		]);
+
+		$original = new File([
+			'filename' => 'test.jpg',
+			'parent' => $page,
+			'content' => [
+				'title' => 'Test Title'
+			]
+		]);
+
+		$version = new FileVersion([
+			'original'      => $original,
+			'url'           => $url = 'https://assets.getkirby.com/test-200x200.jpg',
+			'modifications' => $mods = [
+				'width' => 200,
+				'height' => 200
+			]
+		]);
+
+		$this->assertSame($url, $version->url());
+		$this->assertSame('Test Title', $version->title()->value());
+		$this->assertSame($mods, $version->modifications());
+		$this->assertSame($original, $version->original());
+		$this->assertSame($original->kirby(), $version->kirby());
 	}
 
 	public function testExists(): void

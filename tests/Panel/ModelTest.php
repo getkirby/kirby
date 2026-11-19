@@ -31,14 +31,14 @@ class CustomPanelModel extends Model
 
 class ModelSiteWithImageMethod extends ModelSite
 {
-	public function panelBack()
-	{
-		return 'blue';
-	}
-
 	public function cover()
 	{
 		return new Asset('tmp/test.svg');
+	}
+
+	public function panelBack()
+	{
+		return 'blue';
 	}
 }
 
@@ -47,6 +47,12 @@ class ModelTest extends TestCase
 {
 	public const string FIXTURES = __DIR__ . '/fixtures';
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.Model';
+
+	protected function panel(array $props = [])
+	{
+		$site = new ModelSite($props);
+		return new CustomPanelModel($site);
+	}
 
 	protected function setUp(): void
 	{
@@ -62,52 +68,6 @@ class ModelTest extends TestCase
 	protected function tearDown(): void
 	{
 		Dir::remove(static::TMP);
-	}
-
-	protected function panel(array $props = [])
-	{
-		$site = new ModelSite($props);
-		return new CustomPanelModel($site);
-	}
-
-	public function testDragTextFromCallbackMarkdown(): void
-	{
-		$app = $this->app->clone([
-			'options' => [
-				'panel' => [
-					'markdown' => [
-						'fileDragText' => function (ModelFile $file, string $url) {
-							if ($file->extension() === 'heic') {
-								return sprintf('![](%s)', $file->id());
-							}
-
-							return null;
-						},
-					]
-				]
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'test',
-						'files' => [
-							['filename' => 'test.heic'],
-							['filename' => 'test.jpg']
-						]
-					]
-				]
-			]
-		]);
-
-		// Custom function does not match and returns null, default case
-		$file  = $app->page('test')->file('test.jpg');
-		$panel = new CustomPanelModel($file);
-		$this->assertNull($panel->dragTextFromCallback('markdown', $file, $file->filename()));
-
-		// Custom function should return image tag for heic
-		$file  = $app->page('test')->file('test.heic');
-		$panel = new CustomPanelModel($file);
-		$this->assertSame('![](test/test.heic)', $panel->dragTextFromCallback('markdown', $file, $file->filename()));
 	}
 
 	public function testDragTextFromCallbackKirbytext(): void
@@ -148,6 +108,46 @@ class ModelTest extends TestCase
 		$file  = $app->page('test')->file('test.heic');
 		$panel = new CustomPanelModel($file);
 		$this->assertSame('(image: test/test.heic)', $panel->dragTextFromCallback('kirbytext', $file, $file->filename()));
+	}
+
+	public function testDragTextFromCallbackMarkdown(): void
+	{
+		$app = $this->app->clone([
+			'options' => [
+				'panel' => [
+					'markdown' => [
+						'fileDragText' => function (ModelFile $file, string $url) {
+							if ($file->extension() === 'heic') {
+								return sprintf('![](%s)', $file->id());
+							}
+
+							return null;
+						},
+					]
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+						'files' => [
+							['filename' => 'test.heic'],
+							['filename' => 'test.jpg']
+						]
+					]
+				]
+			]
+		]);
+
+		// Custom function does not match and returns null, default case
+		$file  = $app->page('test')->file('test.jpg');
+		$panel = new CustomPanelModel($file);
+		$this->assertNull($panel->dragTextFromCallback('markdown', $file, $file->filename()));
+
+		// Custom function should return image tag for heic
+		$file  = $app->page('test')->file('test.heic');
+		$panel = new CustomPanelModel($file);
+		$this->assertSame('![](test/test.heic)', $panel->dragTextFromCallback('markdown', $file, $file->filename()));
 	}
 
 	public function testDragTextType(): void
@@ -275,13 +275,10 @@ class ModelTest extends TestCase
 		$this->assertStringContainsString('test-1600x1067-crop.jpg 1600w', $image['srcset']);
 	}
 
-	public function testImageWithNonResizableAsset(): void
+	public function testImagePlaceholder(): void
 	{
-		$site  = new ModelSiteWithImageMethod([]);
-		$panel = new CustomPanelModel($site);
-		$image = $panel->image('site.cover');
-		$this->assertSame('/tmp/test.svg', $image['url']);
-		$this->assertSame('/tmp/test.svg', $image['src']);
+		$this->assertIsString(Model::imagePlaceholder());
+		$this->assertStringStartsWith('data:image/gif;base64,', Model::imagePlaceholder());
 	}
 
 	public function testImageWithBlueprint(): void
@@ -373,6 +370,15 @@ class ModelTest extends TestCase
 		$this->assertStringEndsWith('test.jpg', $image['url']);
 	}
 
+	public function testImageWithNonResizableAsset(): void
+	{
+		$site  = new ModelSiteWithImageMethod([]);
+		$panel = new CustomPanelModel($site);
+		$image = $panel->image('site.cover');
+		$this->assertSame('/tmp/test.svg', $image['url']);
+		$this->assertSame('/tmp/test.svg', $image['src']);
+	}
+
 	public function testImageWithQuery(): void
 	{
 		$site  = new ModelSiteWithImageMethod();
@@ -415,12 +421,6 @@ class ModelTest extends TestCase
 		$this->assertStringContainsString('test-400x400-crop.jpg 400w', $image['srcset']);
 		$this->assertStringContainsString('test-800x800-crop.jpg 800w', $image['srcset']);
 		$this->assertStringContainsString('test-1600x1600-crop.jpg 1600w', $image['srcset']);
-	}
-
-	public function testImagePlaceholder(): void
-	{
-		$this->assertIsString(Model::imagePlaceholder());
-		$this->assertStringStartsWith('data:image/gif;base64,', Model::imagePlaceholder());
 	}
 
 	public function testModel(): void

@@ -13,6 +13,11 @@ class PagePickerFieldTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Form.Fields.PagePickerField';
 
+	public function model()
+	{
+		return $this->app->page('a');
+	}
+
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -44,11 +49,6 @@ class PagePickerFieldTest extends TestCase
 				]
 			]
 		]);
-	}
-
-	public function model()
-	{
-		return $this->app->page('a');
 	}
 
 	public function testApiItems(): void

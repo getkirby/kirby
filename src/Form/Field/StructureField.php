@@ -108,15 +108,6 @@ class StructureField extends InputField implements ProvidesNestedForm
 		return $data;
 	}
 
-	protected function validations(): array
-	{
-		return [
-			'min',
-			'max',
-			'structure' => fn ($value) => $this->validateRows($value)
-		];
-	}
-
 	protected function validateRows(array $value): void
 	{
 		if ($value === []) {
@@ -140,5 +131,14 @@ class StructureField extends InputField implements ProvidesNestedForm
 				}
 			}
 		}
+	}
+
+	protected function validations(): array
+	{
+		return [
+			'min',
+			'max',
+			'structure' => fn ($value) => $this->validateRows($value)
+		];
 	}
 }

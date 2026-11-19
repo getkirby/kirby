@@ -11,6 +11,19 @@ class DocsTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.Lab.Docs';
 
+	public function setDevMode(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'panel' => [
+					'dev' => true
+				]
+			]
+		]);
+
+		touch(static::TMP . '/panel/.vite-running');
+	}
+
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -23,19 +36,6 @@ class DocsTest extends TestCase
 
 		Data::write(static::TMP . '/panel/dist/ui/Box.json', ['sourceFile' => 'dist/Box.vue']);
 		Data::write(static::TMP . '/panel/tmp/Draft.json', ['sourceFile' => 'tmp/Draft.vue']);
-	}
-
-	public function setDevMode(): void
-	{
-		$this->app = $this->app->clone([
-			'options' => [
-				'panel' => [
-					'dev' => true
-				]
-			]
-		]);
-
-		touch(static::TMP . '/panel/.vite-running');
 	}
 
 	public function testAll(): void

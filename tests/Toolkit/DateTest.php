@@ -19,9 +19,9 @@ class DateTest extends TestCase
 		App::destroy();
 	}
 
-	public function test__constructWithString(): void
+	public function test__constructWithDate(): void
 	{
-		$date = new Date('2021-12-12');
+		$date = new Date(new Date('2021-12-12'));
 		$this->assertSame('2021-12-12', $date->format('Y-m-d'));
 	}
 
@@ -31,9 +31,9 @@ class DateTest extends TestCase
 		$this->assertSame('2021-12-12', $date->format('Y-m-d'));
 	}
 
-	public function test__constructWithDate(): void
+	public function test__constructWithString(): void
 	{
-		$date = new Date(new Date('2021-12-12'));
+		$date = new Date('2021-12-12');
 		$this->assertSame('2021-12-12', $date->format('Y-m-d'));
 	}
 
@@ -146,14 +146,6 @@ class DateTest extends TestCase
 		$date->floor('foo');
 	}
 
-	public function testHour(): void
-	{
-		$date = new Date('12:12');
-		$this->assertSame(12, $date->hour());
-		$this->assertSame(13, $date->hour(13));
-		$this->assertSame('13:12', $date->format('H:i'));
-	}
-
 	public function testFormatWithHandler(): void
 	{
 		$date = new Date('2020-01-29 01:01');
@@ -197,6 +189,14 @@ class DateTest extends TestCase
 		// `strftime` handler
 		$this->assertSame($date->timestamp(), $date->formatWithHandler(null, 'strftime'));
 		$this->assertSame('29.01.2020', $date->formatWithHandler('%d.%m.%Y', 'strftime'));
+	}
+
+	public function testHour(): void
+	{
+		$date = new Date('12:12');
+		$this->assertSame(12, $date->hour());
+		$this->assertSame(13, $date->hour(13));
+		$this->assertSame('13:12', $date->format('H:i'));
 	}
 
 	public function testIs(): void
@@ -313,14 +313,6 @@ class DateTest extends TestCase
 		$this->assertSame(0, Date::optional(0)->timestamp());
 	}
 
-	#[DataProvider('roundProvider')]
-	public function testRound(string $unit, int $size, string $input, string $expected, string $timezone)
-	{
-		$date = new Date($input, new DateTimeZone($timezone));
-		$this->assertSame($date, $date->round($unit, $size));
-		$this->assertSame($expected, $date->format('Y-m-d H:i:s'));
-	}
-
 	public static function roundProvider(): array
 	{
 		$timezones = [
@@ -373,14 +365,34 @@ class DateTest extends TestCase
 		return $data;
 	}
 
-	#[DataProvider('roundUnsupportedSizeProvider')]
-	public function testRoundUnsupportedSize(string $unit, int $size): void
+	#[DataProvider('roundProvider')]
+	public function testRound(string $unit, int $size, string $input, string $expected, string $timezone)
 	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid rounding size for ' . $unit);
+		$date = new Date($input, new DateTimeZone($timezone));
+		$this->assertSame($date, $date->round($unit, $size));
+		$this->assertSame($expected, $date->format('Y-m-d H:i:s'));
+	}
 
-		$date = new Date('2020-01-01');
-		$date->round($unit, $size);
+	public function testRoundedTimestamp(): void
+	{
+		$result = Date::roundedTimestamp('2021-12-12 12:12:12');
+		$this->assertSame('2021-12-12 12:12:12', date('Y-m-d H:i:s', $result));
+	}
+
+	public function testRoundedTimestampWithInvalidDate(): void
+	{
+		$result = Date::roundedTimestamp('invalid date');
+		$this->assertNull($result);
+	}
+
+	public function testRoundedTimestampWithStep(): void
+	{
+		$result = Date::roundedTimestamp('2021-12-12 12:12:12', [
+			'unit' => 'minute',
+			'size' => 5
+		]);
+
+		$this->assertSame('2021-12-12 12:10:00', date('Y-m-d H:i:s', $result));
 	}
 
 	public static function roundUnsupportedSizeProvider(): array
@@ -395,6 +407,16 @@ class DateTest extends TestCase
 		];
 	}
 
+	#[DataProvider('roundUnsupportedSizeProvider')]
+	public function testRoundUnsupportedSize(string $unit, int $size): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid rounding size for ' . $unit);
+
+		$date = new Date('2020-01-01');
+		$date->round($unit, $size);
+	}
+
 	public function testRoundUnsupportedUnit(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -402,28 +424,6 @@ class DateTest extends TestCase
 
 		$date = new Date('2020-01-01');
 		$date->round('foo', 1);
-	}
-
-	public function testRoundedTimestamp(): void
-	{
-		$result = Date::roundedTimestamp('2021-12-12 12:12:12');
-		$this->assertSame('2021-12-12 12:12:12', date('Y-m-d H:i:s', $result));
-	}
-
-	public function testRoundedTimestampWithStep(): void
-	{
-		$result = Date::roundedTimestamp('2021-12-12 12:12:12', [
-			'unit' => 'minute',
-			'size' => 5
-		]);
-
-		$this->assertSame('2021-12-12 12:10:00', date('Y-m-d H:i:s', $result));
-	}
-
-	public function testRoundedTimestampWithInvalidDate(): void
-	{
-		$result = Date::roundedTimestamp('invalid date');
-		$this->assertNull($result);
 	}
 
 	public function testSecond(): void
@@ -475,6 +475,34 @@ class DateTest extends TestCase
 		], $config);
 	}
 
+	public function testStepConfigWithCustomDefault(): void
+	{
+		$config = Date::stepConfig(null, $default = [
+			'size' => 5,
+			'unit' => 'month'
+		]);
+
+		$this->assertSame($default, $config);
+	}
+
+	public function testStepConfigWithInt(): void
+	{
+		$config = Date::stepConfig(5);
+
+		$this->assertSame([
+			'size' => 5,
+			'unit' => 'day'
+		], $config);
+	}
+
+	public function testStepConfigWithInvalidInput(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid input');
+
+		Date::stepConfig(new Date());
+	}
+
 	public function testStepConfigWithPartialArray(): void
 	{
 		// array with only size must fall back to default unit
@@ -496,24 +524,6 @@ class DateTest extends TestCase
 		);
 	}
 
-	public function testStepConfigWithInt(): void
-	{
-		$config = Date::stepConfig(5);
-
-		$this->assertSame([
-			'size' => 5,
-			'unit' => 'day'
-		], $config);
-	}
-
-	public function testStepConfigWithInvalidInput(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid input');
-
-		Date::stepConfig(new Date());
-	}
-
 	public function testStepConfigWithString(): void
 	{
 		$config = Date::stepConfig('Minute');
@@ -522,16 +532,6 @@ class DateTest extends TestCase
 			'size' => 1,
 			'unit' => 'minute'
 		], $config);
-	}
-
-	public function testStepConfigWithCustomDefault(): void
-	{
-		$config = Date::stepConfig(null, $default = [
-			'size' => 5,
-			'unit' => 'month'
-		]);
-
-		$this->assertSame($default, $config);
 	}
 
 	public function testTime(): void

@@ -66,6 +66,14 @@ class HasActionsTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Guards.HasActions';
 
+	protected function object(string $class): object
+	{
+		return new $class(
+			model: new Page(['slug' => 'test']),
+			user: new User(['id' => 'test'])
+		);
+	}
+
 	public static function classProvider(): array
 	{
 		return [
@@ -74,14 +82,6 @@ class HasActionsTest extends ModelTestCase
 			'permissions' => [HasActionsPermissions::class],
 			'validators'  => [HasActionsValidators::class]
 		];
-	}
-
-	protected function object(string $class): object
-	{
-		return new $class(
-			model: new Page(['slug' => 'test']),
-			user: new User(['id' => 'test'])
-		);
 	}
 
 	#[DataProvider('classProvider')]
@@ -100,6 +100,18 @@ class HasActionsTest extends ModelTestCase
 		$this->assertTrue($object->has('archive'));
 		$this->assertFalse($object->has('Archive'));
 		$this->assertFalse($object->has('ARCHIVE'));
+	}
+
+	public function testHasWithInheritedAction(): void
+	{
+		// actions of a core class are still found in a
+		// custom child class that does not redeclare them
+		$abilities = $this->object(HasActionsCustomAbilities::class);
+
+		$this->assertTrue($abilities->has('changeSlug'));
+		$this->assertFalse($abilities->has('changeslug'));
+		$this->assertFalse($abilities->has('ChangeSlug'));
+		$this->assertFalse($abilities->has('error'));
 	}
 
 	#[DataProvider('classProvider')]
@@ -125,17 +137,5 @@ class HasActionsTest extends ModelTestCase
 	public function testHasWithUndefinedAction(string $class): void
 	{
 		$this->assertFalse($this->object($class)->has('does-not-exist'));
-	}
-
-	public function testHasWithInheritedAction(): void
-	{
-		// actions of a core class are still found in a
-		// custom child class that does not redeclare them
-		$abilities = $this->object(HasActionsCustomAbilities::class);
-
-		$this->assertTrue($abilities->has('changeSlug'));
-		$this->assertFalse($abilities->has('changeslug'));
-		$this->assertFalse($abilities->has('ChangeSlug'));
-		$this->assertFalse($abilities->has('error'));
 	}
 }

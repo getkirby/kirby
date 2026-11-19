@@ -25,6 +25,36 @@ class MockObjectString extends MockObject
 
 class CollectionSorterTest extends TestCase
 {
+	public function testFlip(): void
+	{
+		$collection = new Collection([
+			['name' => 'img12.png'],
+			['name' => 'img10.png'],
+			['name' => 'img2.png']
+		]);
+
+		$this->assertSame('img12.png', $collection->nth(0)['name']);
+		$this->assertSame('img10.png', $collection->nth(1)['name']);
+		$this->assertSame('img2.png', $collection->nth(2)['name']);
+
+		$flipped = $collection->flip();
+		$this->assertSame('img2.png', $flipped->nth(0)['name']);
+		$this->assertSame('img10.png', $flipped->nth(1)['name']);
+		$this->assertSame('img12.png', $flipped->nth(2)['name']);
+	}
+
+	public function testShuffle(): void
+	{
+		$collection = new Collection([
+			['name' => 'img12.png'],
+			['name' => 'img10.png'],
+			['name' => 'img2.png']
+		]);
+
+		$shuffled = $collection->shuffle();
+		$this->assertCount(3, $shuffled);
+	}
+
 	public function testSort(): void
 	{
 		$collection = new Collection([
@@ -69,94 +99,6 @@ class CollectionSorterTest extends TestCase
 		$this->assertSame('blue', $sorted->nth(2)['color']);
 	}
 
-	public function testSortFlags(): void
-	{
-		$collection = new Collection([
-			['name' => 'img12.png'],
-			['name' => 'img10.png'],
-			['name' => 'img2.png'],
-			['name' => 'img1.png']
-		]);
-
-		$sorted = $collection->sort('name', 'asc', SORT_REGULAR);
-		$this->assertSame('img1.png', $sorted->nth(0)['name']);
-		$this->assertSame('img10.png', $sorted->nth(1)['name']);
-		$this->assertSame('img12.png', $sorted->nth(2)['name']);
-		$this->assertSame('img2.png', $sorted->nth(3)['name']);
-
-		$sorted = $collection->sort('name', SORT_NATURAL);
-		$this->assertSame('img1.png', $sorted->nth(0)['name']);
-		$this->assertSame('img2.png', $sorted->nth(1)['name']);
-		$this->assertSame('img10.png', $sorted->nth(2)['name']);
-		$this->assertSame('img12.png', $sorted->nth(3)['name']);
-
-		$sorted = $collection->sort('name', SORT_NATURAL, 'desc');
-		$this->assertSame('img12.png', $sorted->nth(0)['name']);
-		$this->assertSame('img10.png', $sorted->nth(1)['name']);
-		$this->assertSame('img2.png', $sorted->nth(2)['name']);
-		$this->assertSame('img1.png', $sorted->nth(3)['name']);
-	}
-
-	public function testSortCases(): void
-	{
-		$collection = new Collection([
-			['name' => 'a'],
-			['name' => 'c'],
-			['name' => 'A'],
-			['name' => 'b']
-		]);
-
-		$sorted = $collection->sort('name', 'asc');
-		$this->assertSame('A', $sorted->nth(0)['name']);
-		$this->assertSame('a', $sorted->nth(1)['name']);
-		$this->assertSame('b', $sorted->nth(2)['name']);
-		$this->assertSame('c', $sorted->nth(3)['name']);
-	}
-
-	public function testSortIntegers(): void
-	{
-		$collection = new Collection([
-			['number' => 12],
-			['number' => 1],
-			['number' => 10],
-			['number' => 2]
-		]);
-
-		$sorted = $collection->sort('number', 'asc');
-		$this->assertSame(1, $sorted->nth(0)['number']);
-		$this->assertSame(2, $sorted->nth(1)['number']);
-		$this->assertSame(10, $sorted->nth(2)['number']);
-		$this->assertSame(12, $sorted->nth(3)['number']);
-	}
-
-	public function testSortZeros(): void
-	{
-		$collection = new Collection([
-			[
-				'title'  => '1',
-				'number' => 0
-			],
-			[
-				'title'  => '2',
-				'number' => 0
-			],
-			[
-				'title'  => '3',
-				'number' => 0
-			],
-			[
-				'title'  => '4',
-				'number' => 0
-			]
-		]);
-
-		$sorted = $collection->sort('number', 'asc');
-		$this->assertSame('1', $sorted->nth(0)['title']);
-		$this->assertSame('2', $sorted->nth(1)['title']);
-		$this->assertSame('3', $sorted->nth(2)['title']);
-		$this->assertSame('4', $sorted->nth(3)['title']);
-	}
-
 	public function testSortCallable(): void
 	{
 		$collection = new Collection([
@@ -196,28 +138,70 @@ class CollectionSorterTest extends TestCase
 		$this->assertSame('First Article', $sorted->nth(2)['title']);
 	}
 
+	public function testSortCases(): void
+	{
+		$collection = new Collection([
+			['name' => 'a'],
+			['name' => 'c'],
+			['name' => 'A'],
+			['name' => 'b']
+		]);
+
+		$sorted = $collection->sort('name', 'asc');
+		$this->assertSame('A', $sorted->nth(0)['name']);
+		$this->assertSame('a', $sorted->nth(1)['name']);
+		$this->assertSame('b', $sorted->nth(2)['name']);
+		$this->assertSame('c', $sorted->nth(3)['name']);
+	}
+
 	public function testSortEmpty(): void
 	{
 		$collection = new Collection();
 		$this->assertSame($collection, $collection->sort());
 	}
 
-	public function testSortObjects(): void
+	public function testSortFlags(): void
 	{
-		$bastian = new MockObjectString('Bastian');
-		$nico    = new MockObjectString('Nico');
-		$sonja   = new MockObjectString('Sonja');
-
 		$collection = new Collection([
-			['name' => $nico],
-			['name' => $bastian],
-			['name' => $sonja]
+			['name' => 'img12.png'],
+			['name' => 'img10.png'],
+			['name' => 'img2.png'],
+			['name' => 'img1.png']
 		]);
 
-		$sorted = $collection->sort('name', 'asc');
-		$this->assertSame($bastian, $sorted->nth(0)['name']);
-		$this->assertSame($nico, $sorted->nth(1)['name']);
-		$this->assertSame($sonja, $sorted->nth(2)['name']);
+		$sorted = $collection->sort('name', 'asc', SORT_REGULAR);
+		$this->assertSame('img1.png', $sorted->nth(0)['name']);
+		$this->assertSame('img10.png', $sorted->nth(1)['name']);
+		$this->assertSame('img12.png', $sorted->nth(2)['name']);
+		$this->assertSame('img2.png', $sorted->nth(3)['name']);
+
+		$sorted = $collection->sort('name', SORT_NATURAL);
+		$this->assertSame('img1.png', $sorted->nth(0)['name']);
+		$this->assertSame('img2.png', $sorted->nth(1)['name']);
+		$this->assertSame('img10.png', $sorted->nth(2)['name']);
+		$this->assertSame('img12.png', $sorted->nth(3)['name']);
+
+		$sorted = $collection->sort('name', SORT_NATURAL, 'desc');
+		$this->assertSame('img12.png', $sorted->nth(0)['name']);
+		$this->assertSame('img10.png', $sorted->nth(1)['name']);
+		$this->assertSame('img2.png', $sorted->nth(2)['name']);
+		$this->assertSame('img1.png', $sorted->nth(3)['name']);
+	}
+
+	public function testSortIntegers(): void
+	{
+		$collection = new Collection([
+			['number' => 12],
+			['number' => 1],
+			['number' => 10],
+			['number' => 2]
+		]);
+
+		$sorted = $collection->sort('number', 'asc');
+		$this->assertSame(1, $sorted->nth(0)['number']);
+		$this->assertSame(2, $sorted->nth(1)['number']);
+		$this->assertSame(10, $sorted->nth(2)['number']);
+		$this->assertSame(12, $sorted->nth(3)['number']);
 	}
 
 	public function testSortNoRecursiveDependencyError(): void
@@ -269,33 +253,49 @@ class CollectionSorterTest extends TestCase
 		$this->assertSame($sonja, $sorted->nth(3));
 	}
 
-	public function testFlip(): void
+	public function testSortObjects(): void
 	{
+		$bastian = new MockObjectString('Bastian');
+		$nico    = new MockObjectString('Nico');
+		$sonja   = new MockObjectString('Sonja');
+
 		$collection = new Collection([
-			['name' => 'img12.png'],
-			['name' => 'img10.png'],
-			['name' => 'img2.png']
+			['name' => $nico],
+			['name' => $bastian],
+			['name' => $sonja]
 		]);
 
-		$this->assertSame('img12.png', $collection->nth(0)['name']);
-		$this->assertSame('img10.png', $collection->nth(1)['name']);
-		$this->assertSame('img2.png', $collection->nth(2)['name']);
-
-		$flipped = $collection->flip();
-		$this->assertSame('img2.png', $flipped->nth(0)['name']);
-		$this->assertSame('img10.png', $flipped->nth(1)['name']);
-		$this->assertSame('img12.png', $flipped->nth(2)['name']);
+		$sorted = $collection->sort('name', 'asc');
+		$this->assertSame($bastian, $sorted->nth(0)['name']);
+		$this->assertSame($nico, $sorted->nth(1)['name']);
+		$this->assertSame($sonja, $sorted->nth(2)['name']);
 	}
 
-	public function testShuffle(): void
+	public function testSortZeros(): void
 	{
 		$collection = new Collection([
-			['name' => 'img12.png'],
-			['name' => 'img10.png'],
-			['name' => 'img2.png']
+			[
+				'title'  => '1',
+				'number' => 0
+			],
+			[
+				'title'  => '2',
+				'number' => 0
+			],
+			[
+				'title'  => '3',
+				'number' => 0
+			],
+			[
+				'title'  => '4',
+				'number' => 0
+			]
 		]);
 
-		$shuffled = $collection->shuffle();
-		$this->assertCount(3, $shuffled);
+		$sorted = $collection->sort('number', 'asc');
+		$this->assertSame('1', $sorted->nth(0)['title']);
+		$this->assertSame('2', $sorted->nth(1)['title']);
+		$this->assertSame('3', $sorted->nth(2)['title']);
+		$this->assertSame('4', $sorted->nth(3)['title']);
 	}
 }

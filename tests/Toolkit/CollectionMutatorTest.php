@@ -4,6 +4,18 @@ namespace Kirby\Toolkit;
 
 class CollectionMutatorTest extends TestCase
 {
+	public function testAppend(): void
+	{
+		$collection = new Collection([
+			'one' => 'eins'
+		]);
+
+		$this->assertSame('eins', $collection->last());
+
+		$collection->append('two', 'zwei');
+		$this->assertSame('zwei', $collection->last());
+	}
+
 	public function testData(): void
 	{
 		$collection = new Collection();
@@ -42,48 +54,6 @@ class CollectionMutatorTest extends TestCase
 		$this->assertSame([], $collection->empty()->data());
 	}
 
-	public function testSet(): void
-	{
-		$collection = new Collection();
-		$this->assertNull($collection->one);
-		$this->assertNull($collection->two);
-
-		$collection->one = 'eins';
-		$this->assertSame('eins', $collection->one);
-
-		$collection->set('two', 'zwei');
-		$this->assertSame('zwei', $collection->two);
-
-		$collection->set([
-			'three' => 'drei'
-		]);
-		$this->assertSame('drei', $collection->three);
-	}
-
-	public function testAppend(): void
-	{
-		$collection = new Collection([
-			'one' => 'eins'
-		]);
-
-		$this->assertSame('eins', $collection->last());
-
-		$collection->append('two', 'zwei');
-		$this->assertSame('zwei', $collection->last());
-	}
-
-	public function testPrepend(): void
-	{
-		$collection = new Collection([
-			'one' => 'eins'
-		]);
-
-		$this->assertSame('eins', $collection->first());
-
-		$collection->prepend('zero', 'null');
-		$this->assertSame('null', $collection->zero());
-	}
-
 	public function testExtend(): void
 	{
 		$collection = new Collection([
@@ -96,30 +66,6 @@ class CollectionMutatorTest extends TestCase
 
 		$this->assertSame('eins', $result->one());
 		$this->assertSame('zwei', $result->two());
-	}
-
-	public function testRemove(): void
-	{
-		$collection = new Collection([
-			'one' => 'eins',
-			'two' => 'zwei'
-		]);
-
-		$this->assertSame('zwei', $collection->two());
-		$collection->remove('two');
-		$this->assertNull($collection->two());
-	}
-
-	public function testUnset(): void
-	{
-		$collection = new Collection([
-			'one' => 'eins',
-			'two' => 'zwei'
-		]);
-
-		$this->assertSame('zwei', $collection->two());
-		unset($collection->two);
-		$this->assertNull($collection->two());
 	}
 
 	public function testMap(): void
@@ -183,5 +129,59 @@ class CollectionMutatorTest extends TestCase
 		$expected = ['homer', 'marge'];
 
 		$this->assertSame($expected, $collection->pluck('user', null, true));
+	}
+
+	public function testPrepend(): void
+	{
+		$collection = new Collection([
+			'one' => 'eins'
+		]);
+
+		$this->assertSame('eins', $collection->first());
+
+		$collection->prepend('zero', 'null');
+		$this->assertSame('null', $collection->zero());
+	}
+
+	public function testRemove(): void
+	{
+		$collection = new Collection([
+			'one' => 'eins',
+			'two' => 'zwei'
+		]);
+
+		$this->assertSame('zwei', $collection->two());
+		$collection->remove('two');
+		$this->assertNull($collection->two());
+	}
+
+	public function testSet(): void
+	{
+		$collection = new Collection();
+		$this->assertNull($collection->one);
+		$this->assertNull($collection->two);
+
+		$collection->one = 'eins';
+		$this->assertSame('eins', $collection->one);
+
+		$collection->set('two', 'zwei');
+		$this->assertSame('zwei', $collection->two);
+
+		$collection->set([
+			'three' => 'drei'
+		]);
+		$this->assertSame('drei', $collection->three);
+	}
+
+	public function testUnset(): void
+	{
+		$collection = new Collection([
+			'one' => 'eins',
+			'two' => 'zwei'
+		]);
+
+		$this->assertSame('zwei', $collection->two());
+		unset($collection->two);
+		$this->assertNull($collection->two());
 	}
 }

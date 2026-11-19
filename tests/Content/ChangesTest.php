@@ -65,6 +65,19 @@ class ChangesTest extends TestCase
 		$this->assertInstanceOf(Cache::class, $cache);
 	}
 
+	public function testCacheKey(): void
+	{
+		$changes = new Changes();
+
+		$page = $this->app->page('test');
+		$file = $this->app->file('test/test.jpg');
+		$user = $this->app->user('test');
+
+		$this->assertSame('pages', $changes->cacheKey($page));
+		$this->assertSame('files', $changes->cacheKey($file));
+		$this->assertSame('users', $changes->cacheKey($user));
+	}
+
 	public function testFiles(): void
 	{
 		$this->app->cache('changes')->set('files', $cache = [
@@ -91,19 +104,6 @@ class ChangesTest extends TestCase
 		$this->assertSame($cache, $this->app->cache('changes')->get('files'));
 		$this->assertCount(1, $changes->files());
 		$this->assertSame('test/test.jpg', $changes->files()->first()->id());
-	}
-
-	public function testCacheKey(): void
-	{
-		$changes = new Changes();
-
-		$page = $this->app->page('test');
-		$file = $this->app->file('test/test.jpg');
-		$user = $this->app->user('test');
-
-		$this->assertSame('pages', $changes->cacheKey($page));
-		$this->assertSame('files', $changes->cacheKey($file));
-		$this->assertSame('users', $changes->cacheKey($user));
 	}
 
 	public function testGenerateCache(): void
@@ -238,35 +238,6 @@ class ChangesTest extends TestCase
 		$this->assertSame('test', $users[0]);
 	}
 
-	public function testUpdate(): void
-	{
-		$changes = new Changes();
-
-		$changes->update('files', [
-			$this->app->file('test/test.jpg')->uuid()->toString(),
-		]);
-
-		$changes->update('pages', [
-			$this->app->page('test')->uuid()->toString(),
-		]);
-
-		$changes->update('users', [
-			$this->app->user('test')->uuid()->toString()
-		]);
-
-		$this->assertCount(1, $changes->read('files'));
-		$this->assertCount(1, $changes->read('pages'));
-		$this->assertCount(1, $changes->read('users'));
-
-		$changes->update('files', []);
-		$changes->update('pages', []);
-		$changes->update('users', []);
-
-		$this->assertCount(0, $changes->read('files'));
-		$this->assertCount(0, $changes->read('pages'));
-		$this->assertCount(0, $changes->read('users'));
-	}
-
 	public function testUntrack(): void
 	{
 		$changes = new Changes();
@@ -311,6 +282,35 @@ class ChangesTest extends TestCase
 		$changes->untrack($this->app->page('test'));
 		$changes->untrack($this->app->file('test/test.jpg'));
 		$changes->untrack($this->app->user('test'));
+
+		$this->assertCount(0, $changes->read('files'));
+		$this->assertCount(0, $changes->read('pages'));
+		$this->assertCount(0, $changes->read('users'));
+	}
+
+	public function testUpdate(): void
+	{
+		$changes = new Changes();
+
+		$changes->update('files', [
+			$this->app->file('test/test.jpg')->uuid()->toString(),
+		]);
+
+		$changes->update('pages', [
+			$this->app->page('test')->uuid()->toString(),
+		]);
+
+		$changes->update('users', [
+			$this->app->user('test')->uuid()->toString()
+		]);
+
+		$this->assertCount(1, $changes->read('files'));
+		$this->assertCount(1, $changes->read('pages'));
+		$this->assertCount(1, $changes->read('users'));
+
+		$changes->update('files', []);
+		$changes->update('pages', []);
+		$changes->update('users', []);
 
 		$this->assertCount(0, $changes->read('files'));
 		$this->assertCount(0, $changes->read('pages'));

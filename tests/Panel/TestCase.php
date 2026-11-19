@@ -10,6 +10,15 @@ abstract class TestCase extends BaseTestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Panel';
 
+	public function setRequest(array $data = []): App
+	{
+		return $this->app = $this->app->clone([
+			'request' => [
+				'query' => $data
+			]
+		]);
+	}
+
 	protected function setUp(): void
 	{
 		Dir::make(static::TMP);
@@ -39,14 +48,5 @@ abstract class TestCase extends BaseTestCase
 		);
 
 		App::destroy();
-	}
-
-	public function setRequest(array $data = []): App
-	{
-		return $this->app = $this->app->clone([
-			'request' => [
-				'query' => $data
-			]
-		]);
 	}
 }

@@ -26,6 +26,15 @@ class Slots implements Countable
 	}
 
 	/**
+	 * Magic getter method for slots;
+	 * e.g. `$slots->heading()`
+	 */
+	public function __call(string $name, array $args): Slot|null
+	{
+		return $this->__get($name);
+	}
+
+	/**
 	 * Magic getter for slots;
 	 * e.g. `$slots->heading`
 	 */
@@ -41,15 +50,6 @@ class Slots implements Countable
 	public function __isset(string $name): bool
 	{
 		return isset($this->slots[$name]);
-	}
-
-	/**
-	 * Magic getter method for slots;
-	 * e.g. `$slots->heading()`
-	 */
-	public function __call(string $name, array $args): Slot|null
-	{
-		return $this->__get($name);
 	}
 
 	/**

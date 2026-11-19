@@ -14,6 +14,14 @@ class TabTest extends TestCase
 {
 	protected ModelWithContent $model;
 
+	protected function fields(): Fields
+	{
+		return new Fields(
+			fields: ['title' => ['type' => 'text']],
+			model: $this->model
+		);
+	}
+
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -25,14 +33,6 @@ class TabTest extends TestCase
 		]);
 
 		$this->model = new Page(['slug' => 'a']);
-	}
-
-	protected function fields(): Fields
-	{
-		return new Fields(
-			fields: ['title' => ['type' => 'text']],
-			model: $this->model
-		);
 	}
 
 	protected function tab(array $props = []): Tab

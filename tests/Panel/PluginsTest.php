@@ -17,17 +17,12 @@ class PluginsTest extends TestCase
 	protected string $devCssA;
 	protected string $devCssB;
 	protected string $devCssC;
-	protected string $jsA;
-	protected string $jsB;
-	protected string $jsC;
 	protected string $devJsA;
 	protected string $devJsB;
 	protected string $devJsC;
-
-	protected function tearDown(): void
-	{
-		Dir::remove(static::TMP);
-	}
+	protected string $jsA;
+	protected string $jsB;
+	protected string $jsC;
 
 	public function createPlugins(): void
 	{
@@ -48,6 +43,11 @@ class PluginsTest extends TestCase
 		F::write($this->jsC = static::TMP . '/site/plugins/c/index.js', 'c');
 		$this->devCssC = static::TMP . '/site/plugins/c/index.dev.css';
 		$this->devJsC  = static::TMP . '/site/plugins/c/index.dev.js';
+	}
+
+	protected function tearDown(): void
+	{
+		Dir::remove(static::TMP);
 	}
 
 	public function testCss(): void

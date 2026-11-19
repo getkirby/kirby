@@ -58,14 +58,14 @@ class DummyUserCredentialDrawerController extends UserCredentialDrawerController
 		parent::authorize();
 	}
 
-	public function create(): User
-	{
-		return parent::create();
-	}
-
 	public function challenge(): Challenge
 	{
 		return parent::challenge();
+	}
+
+	public function create(): User
+	{
+		return parent::create();
 	}
 
 	public function isCurrentUser(): bool
@@ -83,6 +83,13 @@ class DummyUserCredentialDrawerController extends UserCredentialDrawerController
 class UserCredentialDrawerControllerTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Drawer.UserCredentialDrawerController';
+
+	protected function enableTotp(): string
+	{
+		$secret = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+		$this->app->user('test')->changeSecret('totp', $secret);
+		return (new Totp($secret))->generate();
+	}
 
 	protected function setUp(): void
 	{
@@ -114,13 +121,6 @@ class UserCredentialDrawerControllerTest extends TestCase
 		]);
 
 		$this->app->impersonate('kirby');
-	}
-
-	protected function enableTotp(): string
-	{
-		$secret = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
-		$this->app->user('test')->changeSecret('totp', $secret);
-		return (new Totp($secret))->generate();
 	}
 
 	public function testAuthorization(): void
@@ -255,19 +255,30 @@ class UserCredentialDrawerControllerTest extends TestCase
 		$this->assertNull($this->app->session()->get('kirby.security.authorize.test'));
 	}
 
-	public function testAuthorizeAsCurrentUserWithInvalidCode(): void
+	public function testAuthorizeAsCurrentUserClearsSingleUseCodeOnFailure(): void
 	{
-		$this->enableTotp();
-
-		$this->setRequest(['authorization' => '000000']);
+		// a single-use nonce must be invalidated even after a failed
+		// attempt so that it cannot be replayed within its lifetime
+		$this->setRequest(['authorization' => 'wrong-secret']);
 		$this->app->impersonate('test');
 
-		$controller = new DummyUserCredentialDrawerController($this->app->user('test'), 'totp');
+		$this->app->session()->set('kirby.security.authorize.test', [
+			'public' => null,
+			'secret' => 'pending-secret'
+		]);
 
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionCode('error.access.code');
+		$controller = new DummyUserCredentialDrawerController($this->app->user('test'), 'dummy-single-use');
 
-		$controller->authorize();
+		try {
+			$controller->authorize();
+			$this->fail('Expected PermissionException was not thrown');
+		} catch (PermissionException) {
+			// expected
+		}
+
+		$this->assertNull(
+			$this->app->session()->get('kirby.security.authorize.test')
+		);
 	}
 
 	public function testAuthorizeAsCurrentUserKeepsReusableCodeOnFailure(): void
@@ -299,30 +310,28 @@ class UserCredentialDrawerControllerTest extends TestCase
 		);
 	}
 
-	public function testAuthorizeAsCurrentUserClearsSingleUseCodeOnFailure(): void
+	public function testAuthorizeAsCurrentUserRateLimited(): void
 	{
-		// a single-use nonce must be invalidated even after a failed
-		// attempt so that it cannot be replayed within its lifetime
-		$this->setRequest(['authorization' => 'wrong-secret']);
+		// once the shared auth rate limit is hit, no further code
+		// can be tried until the limit resets
+		$this->app = $this->app->clone([
+			'options' => ['auth' => ['trials' => 1]]
+		]);
+		$this->setRequest(['authorization' => 'pending-secret']);
 		$this->app->impersonate('test');
+
+		// exhaust the limit for this visitor
+		$this->app->auth()->limits()->track('test@getkirby.com');
 
 		$this->app->session()->set('kirby.security.authorize.test', [
 			'public' => null,
 			'secret' => 'pending-secret'
 		]);
 
-		$controller = new DummyUserCredentialDrawerController($this->app->user('test'), 'dummy-single-use');
+		$controller = new DummyUserCredentialDrawerController($this->app->user('test'), 'dummy');
 
-		try {
-			$controller->authorize();
-			$this->fail('Expected PermissionException was not thrown');
-		} catch (PermissionException) {
-			// expected
-		}
-
-		$this->assertNull(
-			$this->app->session()->get('kirby.security.authorize.test')
-		);
+		$this->expectException(RateLimitException::class);
+		$controller->authorize();
 	}
 
 	public function testAuthorizeAsCurrentUserWithExpiredCode(): void
@@ -352,27 +361,18 @@ class UserCredentialDrawerControllerTest extends TestCase
 		);
 	}
 
-	public function testAuthorizeAsCurrentUserRateLimited(): void
+	public function testAuthorizeAsCurrentUserWithInvalidCode(): void
 	{
-		// once the shared auth rate limit is hit, no further code
-		// can be tried until the limit resets
-		$this->app = $this->app->clone([
-			'options' => ['auth' => ['trials' => 1]]
-		]);
-		$this->setRequest(['authorization' => 'pending-secret']);
+		$this->enableTotp();
+
+		$this->setRequest(['authorization' => '000000']);
 		$this->app->impersonate('test');
 
-		// exhaust the limit for this visitor
-		$this->app->auth()->limits()->track('test@getkirby.com');
+		$controller = new DummyUserCredentialDrawerController($this->app->user('test'), 'totp');
 
-		$this->app->session()->set('kirby.security.authorize.test', [
-			'public' => null,
-			'secret' => 'pending-secret'
-		]);
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionCode('error.access.code');
 
-		$controller = new DummyUserCredentialDrawerController($this->app->user('test'), 'dummy');
-
-		$this->expectException(RateLimitException::class);
 		$controller->authorize();
 	}
 

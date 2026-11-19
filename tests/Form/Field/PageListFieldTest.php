@@ -13,6 +13,36 @@ class PageListFieldTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Form.Fields.PageListField';
 
+	protected function pagelist(array $attr = []): PageListField
+	{
+		return new PageListField(...[
+			'model' => $this->app->page('photography'),
+			'name'  => 'albums',
+			...$attr
+		]);
+	}
+
+	protected function pagelistWithInvalidBlueprint(array $attr = []): PageListField
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/broken' => [
+					// title and status would be used
+					// if the blueprint could be created
+					'title'  => 'Not used',
+					'create' => ['status' => 'listed'],
+					// a scalar instead of a list of fields
+					// breaks the blueprint
+					'fields' => 'text'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		return $this->pagelist(['blueprints' => ['broken'], ...$attr]);
+	}
+
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -62,67 +92,164 @@ class PageListFieldTest extends TestCase
 		App::destroy();
 	}
 
-	protected function pagelist(array $attr = []): PageListField
+	public function testAcceptedPageBlueprints(): void
 	{
-		return new PageListField(...[
-			'model' => $this->app->page('photography'),
-			'name'  => 'albums',
-			...$attr
+		// the blueprints of the list
+		$field = $this->pagelist(['blueprints' => ['album', 'note']]);
+		$this->assertSame(['album', 'note'], $field->acceptedPageBlueprints());
+
+		// `create` wins over the blueprints
+		$field = $this->pagelist([
+			'create'     => 'note',
+			'blueprints' => ['album']
 		]);
+		$this->assertSame(['note'], $field->acceptedPageBlueprints());
 	}
 
-	protected function pagelistWithInvalidBlueprint(array $attr = []): PageListField
-	{
-		$this->app = $this->app->clone([
-			'blueprints' => [
-				'pages/broken' => [
-					// title and status would be used
-					// if the blueprint could be created
-					'title'  => 'Not used',
-					'create' => ['status' => 'listed'],
-					// a scalar instead of a list of fields
-					// breaks the blueprint
-					'fields' => 'text'
-				]
-			]
-		]);
-
-		$this->app->impersonate('kirby');
-
-		return $this->pagelist(['blueprints' => ['broken'], ...$attr]);
-	}
-
-	public function testType(): void
-	{
-		$this->assertSame('pagelist', $this->pagelist()->type());
-	}
-
-	public function testHasNoValue(): void
-	{
-		$field = $this->pagelist();
-
-		$this->assertFalse($field->hasValue());
-		$this->assertFalse($field->props()['saveable']);
-	}
-
-	public function testPropsWithoutBackendOptions(): void
+	public function testAcceptedPageBlueprintsWithCreateDisabled(): void
 	{
 		$field = $this->pagelist([
-			'limit'    => 5,
-			'sortable' => false,
-			'sortBy'   => 'title desc'
+			'create'     => false,
+			'blueprints' => ['album']
+		]);
+		$this->assertSame([], $field->acceptedPageBlueprints());
+
+		$this->assertSame([], $this->pagelist(['create' => false])->acceptedPageBlueprints());
+	}
+
+	public function testAcceptedPageBlueprintsWithCreateEnabled(): void
+	{
+		// `create: true` only enables creating pages
+		$field = $this->pagelist([
+			'create'     => true,
+			'blueprints' => ['album']
+		]);
+		$this->assertSame(['album'], $field->acceptedPageBlueprints());
+
+		$field = $this->pagelist(['create' => true]);
+		$this->assertSame(['album', 'default', 'note'], $field->acceptedPageBlueprints());
+	}
+
+	public function testAcceptedPageBlueprintsWithExcept(): void
+	{
+		$field = $this->pagelist(['blueprints' => ['except' => 'note']]);
+		$this->assertSame(['album', 'default'], $field->acceptedPageBlueprints());
+
+		// the remaining blueprints are re-indexed
+		$field = $this->pagelist(['blueprints' => ['except' => 'album']]);
+		$this->assertSame(['default', 'note'], $field->acceptedPageBlueprints());
+
+		// the aliases can still combine both
+		$field = $this->pagelist([
+			'templates'       => ['album', 'note'],
+			'templatesIgnore' => ['note']
+		]);
+		$this->assertSame(['album'], $field->acceptedPageBlueprints());
+	}
+
+	public function testAcceptedPageBlueprintsWithoutBlueprints(): void
+	{
+		// without any blueprint, every blueprint can be created
+		$field = $this->pagelist();
+
+		$this->assertSame(['album', 'default', 'note'], $field->acceptedPageBlueprints());
+	}
+
+	public function testAddDisabled(): void
+	{
+		$this->assertFalse($this->pagelist(['create' => false])->add());
+	}
+
+	public function testAddWhenFull(): void
+	{
+		$this->assertFalse($this->pagelist(['max' => 4])->add());
+	}
+
+	public function testAddWithAllStatuses(): void
+	{
+		$this->assertTrue($this->pagelist()->add());
+	}
+
+	public function testAddWithDifferentStatus(): void
+	{
+		// new notes are drafts and would not show up in a listed list
+		$field = $this->pagelist([
+			'status'     => 'listed',
+			'blueprints' => ['note']
 		]);
 
-		// limit and sorting are applied by the backend
-		$props = $field->props();
-		$this->assertArrayNotHasKey('limit', $props);
-		$this->assertArrayNotHasKey('sortable', $props);
-		$this->assertArrayNotHasKey('sortBy', $props);
+		$this->assertFalse($field->add());
+	}
 
-		// but the options are still set
-		$this->assertSame(5, $field->limit());
-		$this->assertFalse($field->sortable());
-		$this->assertSame('title desc', $field->sortBy());
+	public function testAddWithInvalidBlueprint(): void
+	{
+		// a blueprint that cannot be created creates a draft,
+		// even though it defines a listed status
+		$field = $this->pagelistWithInvalidBlueprint(['status' => 'draft']);
+		$this->assertTrue($field->add());
+
+		$field = $this->pagelistWithInvalidBlueprint(['status' => 'listed']);
+		$this->assertFalse($field->add());
+	}
+
+	public function testAddWithMatchingStatus(): void
+	{
+		// the album blueprint creates listed pages
+		$field = $this->pagelist([
+			'status'     => 'listed',
+			'blueprints' => ['album']
+		]);
+
+		$this->assertTrue($field->add());
+	}
+
+	public function testAddWithMissingBlueprint(): void
+	{
+		// a blueprint that cannot be loaded creates a draft
+		$field = $this->pagelist([
+			'status'     => 'draft',
+			'blueprints' => ['does-not-exist']
+		]);
+
+		$this->assertTrue($field->add());
+
+		$field = $this->pagelist([
+			'status'     => 'listed',
+			'blueprints' => ['does-not-exist']
+		]);
+
+		$this->assertFalse($field->add());
+	}
+
+	public function testAddWithMixedStatuses(): void
+	{
+		$field = $this->pagelist([
+			'status'     => 'listed',
+			'blueprints' => ['album', 'note']
+		]);
+
+		$this->assertFalse($field->add());
+	}
+
+	public function testApi(): void
+	{
+		$patterns = array_column($this->pagelist()->api(), 'pattern');
+		$this->assertSame(['', 'delete'], $patterns);
+	}
+
+	public function testColumnsWithoutTableLayout(): void
+	{
+		$this->assertSame([], $this->pagelist()->columns());
+	}
+
+	public function testColumnsWithStatusFlag(): void
+	{
+		$field = $this->pagelist(['layout' => 'table']);
+
+		$this->assertSame(
+			['image', 'title', 'flag'],
+			array_keys($field->columns())
+		);
 	}
 
 	public function testData(): void
@@ -134,65 +261,22 @@ class PageListFieldTest extends TestCase
 		$this->assertSame('photography/trees', $data[0]['id']);
 	}
 
-	public function testImage(): void
+	public function testErrorsMin(): void
 	{
-		$field = $this->pagelist(['image' => ['back' => 'black']]);
+		$field = $this->pagelist(['min' => 10]);
 
-		$this->assertSame(['back' => 'black'], $field->image());
-		$this->assertSame('black', $field->data()[0]['image']['back']);
-	}
-
-	public function testImageDisabled(): void
-	{
-		$this->assertFalse($this->pagelist(['image' => false])->image());
-	}
-
-	public function testImageQuery(): void
-	{
-		// a query string is a shortcut for the image source
-		$field = $this->pagelist(['image' => 'page.image("cover.jpg")']);
-
-		$this->assertSame(['query' => 'page.image("cover.jpg")'], $field->image());
-
-		// the query is resolved per entry
-		$this->assertStringContainsString(
-			'cover.jpg',
-			$field->data()[0]['image']['url']
+		$this->assertSame(
+			'The "Albums" field requires at least 10 pages',
+			$field->errors()['min']
 		);
 	}
 
-	public function testTextDefault(): void
+	public function testHasNoValue(): void
 	{
-		$this->assertSame('{{ model.title }}', $this->pagelist()->text());
-	}
+		$field = $this->pagelist();
 
-	public static function statusProvider(): array
-	{
-		return [
-			[null, 'all'],
-			['', 'all'],
-			['does-not-exist', 'all'],
-			['drafts', 'draft'],
-			['draft', 'draft'],
-			['listed', 'listed'],
-			['published', 'published'],
-			['unlisted', 'unlisted']
-		];
-	}
-
-	#[DataProvider('statusProvider')]
-	public function testStatus(string|null $status, string $expected): void
-	{
-		$field = $this->pagelist(['status' => $status]);
-		$this->assertSame($expected, $field->status());
-	}
-
-	public function testStatusFilter(): void
-	{
-		$this->assertCount(2, $this->pagelist(['status' => 'listed'])->data());
-		$this->assertCount(1, $this->pagelist(['status' => 'draft'])->data());
-		$this->assertCount(1, $this->pagelist(['status' => 'unlisted'])->data());
-		$this->assertCount(3, $this->pagelist(['status' => 'published'])->data());
+		$this->assertFalse($field->hasValue());
+		$this->assertFalse($field->props()['saveable']);
 	}
 
 	public function testHasPageBlueprint(): void
@@ -288,175 +372,31 @@ class PageListFieldTest extends TestCase
 		$this->assertFalse($field->hasPageBlueprint('album'));
 	}
 
-	public function testAcceptedPageBlueprints(): void
+	public function testImage(): void
 	{
-		// the blueprints of the list
-		$field = $this->pagelist(['blueprints' => ['album', 'note']]);
-		$this->assertSame(['album', 'note'], $field->acceptedPageBlueprints());
+		$field = $this->pagelist(['image' => ['back' => 'black']]);
 
-		// `create` wins over the blueprints
-		$field = $this->pagelist([
-			'create'     => 'note',
-			'blueprints' => ['album']
-		]);
-		$this->assertSame(['note'], $field->acceptedPageBlueprints());
+		$this->assertSame(['back' => 'black'], $field->image());
+		$this->assertSame('black', $field->data()[0]['image']['back']);
 	}
 
-	public function testAcceptedPageBlueprintsWithCreateDisabled(): void
+	public function testImageDisabled(): void
 	{
-		$field = $this->pagelist([
-			'create'     => false,
-			'blueprints' => ['album']
-		]);
-		$this->assertSame([], $field->acceptedPageBlueprints());
-
-		$this->assertSame([], $this->pagelist(['create' => false])->acceptedPageBlueprints());
+		$this->assertFalse($this->pagelist(['image' => false])->image());
 	}
 
-	public function testAcceptedPageBlueprintsWithCreateEnabled(): void
+	public function testImageQuery(): void
 	{
-		// `create: true` only enables creating pages
-		$field = $this->pagelist([
-			'create'     => true,
-			'blueprints' => ['album']
-		]);
-		$this->assertSame(['album'], $field->acceptedPageBlueprints());
+		// a query string is a shortcut for the image source
+		$field = $this->pagelist(['image' => 'page.image("cover.jpg")']);
 
-		$field = $this->pagelist(['create' => true]);
-		$this->assertSame(['album', 'default', 'note'], $field->acceptedPageBlueprints());
-	}
+		$this->assertSame(['query' => 'page.image("cover.jpg")'], $field->image());
 
-	public function testAcceptedPageBlueprintsWithExcept(): void
-	{
-		$field = $this->pagelist(['blueprints' => ['except' => 'note']]);
-		$this->assertSame(['album', 'default'], $field->acceptedPageBlueprints());
-
-		// the remaining blueprints are re-indexed
-		$field = $this->pagelist(['blueprints' => ['except' => 'album']]);
-		$this->assertSame(['default', 'note'], $field->acceptedPageBlueprints());
-
-		// the aliases can still combine both
-		$field = $this->pagelist([
-			'templates'       => ['album', 'note'],
-			'templatesIgnore' => ['note']
-		]);
-		$this->assertSame(['album'], $field->acceptedPageBlueprints());
-	}
-
-	public function testAcceptedPageBlueprintsWithoutBlueprints(): void
-	{
-		// without any blueprint, every blueprint can be created
-		$field = $this->pagelist();
-
-		$this->assertSame(['album', 'default', 'note'], $field->acceptedPageBlueprints());
-	}
-
-	public function testAddWithAllStatuses(): void
-	{
-		$this->assertTrue($this->pagelist()->add());
-	}
-
-	public function testAddDisabled(): void
-	{
-		$this->assertFalse($this->pagelist(['create' => false])->add());
-	}
-
-	public function testAddWhenFull(): void
-	{
-		$this->assertFalse($this->pagelist(['max' => 4])->add());
-	}
-
-	public function testAddWithMatchingStatus(): void
-	{
-		// the album blueprint creates listed pages
-		$field = $this->pagelist([
-			'status'     => 'listed',
-			'blueprints' => ['album']
-		]);
-
-		$this->assertTrue($field->add());
-	}
-
-	public function testAddWithDifferentStatus(): void
-	{
-		// new notes are drafts and would not show up in a listed list
-		$field = $this->pagelist([
-			'status'     => 'listed',
-			'blueprints' => ['note']
-		]);
-
-		$this->assertFalse($field->add());
-	}
-
-	public function testAddWithMixedStatuses(): void
-	{
-		$field = $this->pagelist([
-			'status'     => 'listed',
-			'blueprints' => ['album', 'note']
-		]);
-
-		$this->assertFalse($field->add());
-	}
-
-	public function testAddWithInvalidBlueprint(): void
-	{
-		// a blueprint that cannot be created creates a draft,
-		// even though it defines a listed status
-		$field = $this->pagelistWithInvalidBlueprint(['status' => 'draft']);
-		$this->assertTrue($field->add());
-
-		$field = $this->pagelistWithInvalidBlueprint(['status' => 'listed']);
-		$this->assertFalse($field->add());
-	}
-
-	public function testAddWithMissingBlueprint(): void
-	{
-		// a blueprint that cannot be loaded creates a draft
-		$field = $this->pagelist([
-			'status'     => 'draft',
-			'blueprints' => ['does-not-exist']
-		]);
-
-		$this->assertTrue($field->add());
-
-		$field = $this->pagelist([
-			'status'     => 'listed',
-			'blueprints' => ['does-not-exist']
-		]);
-
-		$this->assertFalse($field->add());
-	}
-
-	public function testColumnsWithoutTableLayout(): void
-	{
-		$this->assertSame([], $this->pagelist()->columns());
-	}
-
-	public function testColumnsWithStatusFlag(): void
-	{
-		$field = $this->pagelist(['layout' => 'table']);
-
-		$this->assertSame(
-			['image', 'title', 'flag'],
-			array_keys($field->columns())
+		// the query is resolved per entry
+		$this->assertStringContainsString(
+			'cover.jpg',
+			$field->data()[0]['image']['url']
 		);
-	}
-
-	public function testSortableDefault(): void
-	{
-		$this->assertTrue($this->pagelist()->sortable());
-	}
-
-	public function testSortableWithUnsortableStatus(): void
-	{
-		$this->assertFalse($this->pagelist(['status' => 'draft'])->sortable());
-		$this->assertFalse($this->pagelist(['status' => 'unlisted'])->sortable());
-	}
-
-	public function testSortableWithSortableStatus(): void
-	{
-		$this->assertTrue($this->pagelist(['status' => 'listed'])->sortable());
-		$this->assertTrue($this->pagelist(['status' => 'published'])->sortable());
 	}
 
 	public function testParentModelInvalid(): void
@@ -470,20 +410,41 @@ class PageListFieldTest extends TestCase
 		$field->parentModel();
 	}
 
-	public function testErrorsMin(): void
+	public function testPropsWithoutBackendOptions(): void
 	{
-		$field = $this->pagelist(['min' => 10]);
+		$field = $this->pagelist([
+			'limit'    => 5,
+			'sortable' => false,
+			'sortBy'   => 'title desc'
+		]);
 
-		$this->assertSame(
-			'The "Albums" field requires at least 10 pages',
-			$field->errors()['min']
-		);
+		// limit and sorting are applied by the backend
+		$props = $field->props();
+		$this->assertArrayNotHasKey('limit', $props);
+		$this->assertArrayNotHasKey('sortable', $props);
+		$this->assertArrayNotHasKey('sortBy', $props);
+
+		// but the options are still set
+		$this->assertSame(5, $field->limit());
+		$this->assertFalse($field->sortable());
+		$this->assertSame('title desc', $field->sortBy());
 	}
 
-	public function testApi(): void
+	public function testSortableDefault(): void
 	{
-		$patterns = array_column($this->pagelist()->api(), 'pattern');
-		$this->assertSame(['', 'delete'], $patterns);
+		$this->assertTrue($this->pagelist()->sortable());
+	}
+
+	public function testSortableWithSortableStatus(): void
+	{
+		$this->assertTrue($this->pagelist(['status' => 'listed'])->sortable());
+		$this->assertTrue($this->pagelist(['status' => 'published'])->sortable());
+	}
+
+	public function testSortableWithUnsortableStatus(): void
+	{
+		$this->assertFalse($this->pagelist(['status' => 'draft'])->sortable());
+		$this->assertFalse($this->pagelist(['status' => 'unlisted'])->sortable());
 	}
 
 	public function testState(): void
@@ -495,5 +456,44 @@ class PageListFieldTest extends TestCase
 		$this->assertArrayHasKey('pagination', $state);
 		$this->assertArrayHasKey('sortable', $state);
 		$this->assertCount(4, $state['models']);
+	}
+
+	public static function statusProvider(): array
+	{
+		return [
+			[null, 'all'],
+			['', 'all'],
+			['does-not-exist', 'all'],
+			['drafts', 'draft'],
+			['draft', 'draft'],
+			['listed', 'listed'],
+			['published', 'published'],
+			['unlisted', 'unlisted']
+		];
+	}
+
+	#[DataProvider('statusProvider')]
+	public function testStatus(string|null $status, string $expected): void
+	{
+		$field = $this->pagelist(['status' => $status]);
+		$this->assertSame($expected, $field->status());
+	}
+
+	public function testStatusFilter(): void
+	{
+		$this->assertCount(2, $this->pagelist(['status' => 'listed'])->data());
+		$this->assertCount(1, $this->pagelist(['status' => 'draft'])->data());
+		$this->assertCount(1, $this->pagelist(['status' => 'unlisted'])->data());
+		$this->assertCount(3, $this->pagelist(['status' => 'published'])->data());
+	}
+
+	public function testTextDefault(): void
+	{
+		$this->assertSame('{{ model.title }}', $this->pagelist()->text());
+	}
+
+	public function testType(): void
+	{
+		$this->assertSame('pagelist', $this->pagelist()->type());
 	}
 }

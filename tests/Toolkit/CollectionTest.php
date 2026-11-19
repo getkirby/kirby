@@ -70,6 +70,12 @@ class CollectionTest extends TestCase
 	protected Collection $collection;
 	protected array $sampleData;
 
+	protected function assertIsUntouched(): void
+	{
+		// the original collection must to be untouched
+		$this->assertSame($this->sampleData, $this->collection->toArray());
+	}
+
 	protected function setUp(): void
 	{
 		$this->sampleData = [
@@ -79,12 +85,6 @@ class CollectionTest extends TestCase
 		];
 
 		$this->collection = new Collection($this->sampleData);
-	}
-
-	protected function assertIsUntouched(): void
-	{
-		// the original collection must to be untouched
-		$this->assertSame($this->sampleData, $this->collection->toArray());
 	}
 
 	public function test__debuginfo(): void
@@ -359,16 +359,6 @@ class CollectionTest extends TestCase
 		$this->assertCount(1, $groups->client());
 	}
 
-	public function testGroupWithInvalidKey(): void
-	{
-		$collection = new Collection(['a' => 'A']);
-
-		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Invalid grouping value for key: a');
-
-		$collection->group(fn ($item) => false);
-	}
-
 	public function testGroupArray(): void
 	{
 		$collection = new Collection(['a' => 'A']);
@@ -377,6 +367,82 @@ class CollectionTest extends TestCase
 		$this->expectExceptionMessage('You cannot group by arrays or objects');
 
 		$collection->group(fn ($item) => ['a' => 'b']);
+	}
+
+	public function testGroupBy(): void
+	{
+		$collection = new Collection();
+
+		$collection->user1 = [
+			'username' => 'peter',
+			'group'    => 'admin'
+		];
+
+		$collection->user2 = [
+			'username' => 'paul',
+			'group'    => 'admin'
+		];
+
+		$collection->user3 = [
+			'username' => 'mary',
+			'group'    => 'client'
+		];
+
+		$groups = $collection->group('group');
+
+		$this->assertCount(2, $groups->admin());
+		$this->assertCount(1, $groups->client());
+
+		$firstAdmin = $groups->admin()->first();
+		$this->assertSame('peter', $firstAdmin['username']);
+	}
+
+	public function testGroupByCallableCaseSensitive(): void
+	{
+		$collection = new Collection();
+
+		$collection->taylor = [
+			'name' => 'Taylor',
+			'genre' => 'Pop',
+		];
+
+		$collection->justin = [
+			'name' => 'Justin',
+			'genre' => 'Pop',
+		];
+
+		$collection->aubrey = [
+			'name' => 'Aubrey',
+			'genre' => 'Hip-Hop',
+		];
+
+		$collection->kayne = [
+			'name' => 'kayne',
+			'genre' => 'hip-hop',
+		];
+
+		$groupsCaseInsensitive = $collection->group(fn (array $item) => $item['genre'], true);
+
+		$this->assertCount(2, $groupsCaseInsensitive);
+		$this->assertTrue($groupsCaseInsensitive->has('pop'));
+		$this->assertTrue($groupsCaseInsensitive->has('hip-hop'));
+
+		$groupsCaseSensitive = $collection->group(fn (array $item) => $item['genre'], false);
+
+		$this->assertCount(3, $groupsCaseSensitive);
+		$this->assertTrue($groupsCaseSensitive->has('Pop'));
+		$this->assertTrue($groupsCaseSensitive->has('Hip-Hop'));
+		$this->assertTrue($groupsCaseSensitive->has('hip-hop'));
+	}
+
+	public function testGroupByWithInvalidKey(): void
+	{
+		$collection = new Collection(['a' => 'A']);
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Can only group by string values or by providing a callback function');
+
+		$collection->group(1);
 	}
 
 	public function testGroupObject(): void
@@ -416,80 +482,14 @@ class CollectionTest extends TestCase
 		$this->assertSame('peter', $firstAdmin['username']);
 	}
 
-	public function testGroupBy(): void
-	{
-		$collection = new Collection();
-
-		$collection->user1 = [
-			'username' => 'peter',
-			'group'    => 'admin'
-		];
-
-		$collection->user2 = [
-			'username' => 'paul',
-			'group'    => 'admin'
-		];
-
-		$collection->user3 = [
-			'username' => 'mary',
-			'group'    => 'client'
-		];
-
-		$groups = $collection->group('group');
-
-		$this->assertCount(2, $groups->admin());
-		$this->assertCount(1, $groups->client());
-
-		$firstAdmin = $groups->admin()->first();
-		$this->assertSame('peter', $firstAdmin['username']);
-	}
-
-	public function testGroupByWithInvalidKey(): void
+	public function testGroupWithInvalidKey(): void
 	{
 		$collection = new Collection(['a' => 'A']);
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Can only group by string values or by providing a callback function');
+		$this->expectExceptionMessage('Invalid grouping value for key: a');
 
-		$collection->group(1);
-	}
-
-	public function testGroupByCallableCaseSensitive(): void
-	{
-		$collection = new Collection();
-
-		$collection->taylor = [
-			'name' => 'Taylor',
-			'genre' => 'Pop',
-		];
-
-		$collection->justin = [
-			'name' => 'Justin',
-			'genre' => 'Pop',
-		];
-
-		$collection->aubrey = [
-			'name' => 'Aubrey',
-			'genre' => 'Hip-Hop',
-		];
-
-		$collection->kayne = [
-			'name' => 'kayne',
-			'genre' => 'hip-hop',
-		];
-
-		$groupsCaseInsensitive = $collection->group(fn (array $item) => $item['genre'], true);
-
-		$this->assertCount(2, $groupsCaseInsensitive);
-		$this->assertTrue($groupsCaseInsensitive->has('pop'));
-		$this->assertTrue($groupsCaseInsensitive->has('hip-hop'));
-
-		$groupsCaseSensitive = $collection->group(fn (array $item) => $item['genre'], false);
-
-		$this->assertCount(3, $groupsCaseSensitive);
-		$this->assertTrue($groupsCaseSensitive->has('Pop'));
-		$this->assertTrue($groupsCaseSensitive->has('Hip-Hop'));
-		$this->assertTrue($groupsCaseSensitive->has('hip-hop'));
+		$collection->group(fn ($item) => false);
 	}
 
 	public function testIndexOf(): void
@@ -746,26 +746,6 @@ class CollectionTest extends TestCase
 		])->toArray());
 	}
 
-	public function testQueryPaginate(): void
-	{
-		$collection = new Collection([
-			'one'   => 'eins',
-			'two'   => 'zwei',
-			'three' => 'drei',
-			'four'  => 'vier'
-		]);
-
-		$this->assertSame([
-			'three' => 'drei',
-			'four'  => 'vier'
-		], $collection->query([
-			'paginate' => [
-				'limit' => 2,
-				'page'  => 2
-			]
-		])->toArray());
-	}
-
 	public function testQueryFilter(): void
 	{
 		$collection = new Collection([
@@ -791,6 +771,26 @@ class CollectionTest extends TestCase
 					'operator' => '*=',
 					'value'    => 'Bast'
 				]
+			]
+		])->toArray());
+	}
+
+	public function testQueryPaginate(): void
+	{
+		$collection = new Collection([
+			'one'   => 'eins',
+			'two'   => 'zwei',
+			'three' => 'drei',
+			'four'  => 'vier'
+		]);
+
+		$this->assertSame([
+			'three' => 'drei',
+			'four'  => 'vier'
+		], $collection->query([
+			'paginate' => [
+				'limit' => 2,
+				'page'  => 2
 			]
 		])->toArray());
 	}

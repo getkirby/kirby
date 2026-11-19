@@ -54,6 +54,14 @@ class Inline
 	}
 
 	/**
+	 * Returns the HTML contents of the element
+	 */
+	public function innerHtml(): string
+	{
+		return $this->html;
+	}
+
+	/**
 	 * Get all allowed attributes for a DOMElement
 	 * as clean array
 	 *
@@ -162,13 +170,5 @@ class Inline
 		}
 
 		return null;
-	}
-
-	/**
-	 * Returns the HTML contents of the element
-	 */
-	public function innerHtml(): string
-	{
-		return $this->html;
 	}
 }

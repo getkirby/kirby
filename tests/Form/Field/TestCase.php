@@ -10,28 +10,6 @@ use Kirby\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
-	protected function setUp(): void
-	{
-		// start with a fresh set of fields
-		Field::$types = [];
-
-		$this->setUpTmp();
-
-		$this->app = new App([
-			'roots' => [
-				'index' => $this->hasTmp() ? static::TMP : '/dev/null'
-			],
-			'urls' => [
-				'index' => 'https://getkirby.com/subfolder'
-			]
-		]);
-	}
-
-	protected function tearDown(): void
-	{
-		$this->tearDownTmp();
-	}
-
 	public function app()
 	{
 		return $this->app;
@@ -91,5 +69,27 @@ abstract class TestCase extends BaseTestCase
 			...$attr,
 			'siblings' => $formFields
 		]);
+	}
+
+	protected function setUp(): void
+	{
+		// start with a fresh set of fields
+		Field::$types = [];
+
+		$this->setUpTmp();
+
+		$this->app = new App([
+			'roots' => [
+				'index' => $this->hasTmp() ? static::TMP : '/dev/null'
+			],
+			'urls' => [
+				'index' => 'https://getkirby.com/subfolder'
+			]
+		]);
+	}
+
+	protected function tearDown(): void
+	{
+		$this->tearDownTmp();
 	}
 }

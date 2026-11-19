@@ -14,6 +14,34 @@ class QrCodeTest extends TestCase
 	public const string FIXTURES = __DIR__ . '/fixtures/qr';
 	public const string TMP      = KIRBY_TMP_DIR . '/Image.QrCode';
 
+	protected function assertSameDataUri(string $expected, string $actual): void
+	{
+		$prefix = 'data:image/png;base64,';
+		$this->assertStringStartsWith($prefix, $actual);
+		$this->assertSame(
+			$this->png(base64_decode(substr($expected, strlen($prefix)))),
+			$this->png(base64_decode(substr($actual, strlen($prefix))))
+		);
+	}
+
+	protected function imageContent(GdImage $image): string
+	{
+		ob_start();
+		imagepng($image);
+		$data = ob_get_contents();
+		ob_end_clean();
+		return $data;
+	}
+
+	/**
+	 * Re-encodes PNG data with the installed GD version, as the
+	 * PNG compression differs between versions (e.g. PHP 8.6)
+	 */
+	protected function png(string $data): string
+	{
+		return $this->imageContent(imagecreatefromstring($data));
+	}
+
 	protected function tearDown(): void
 	{
 		Dir::remove(static::TMP);
@@ -53,12 +81,12 @@ class QrCodeTest extends TestCase
 		$this->assertSame($this->png($expected), $data);
 	}
 
-	public function testToImageSize(): void
+	public function testToImageBorder(): void
 	{
 		$qr       = new QrCode('https://getkirby.com');
-		$image    = $qr->toImage(750);
+		$image    = $qr->toImage(null, '#000000', '#ffffff', 0);
 		$data     = $this->imageContent($image);
-		$expected = F::read(static::FIXTURES . '/image-size.png');
+		$expected = F::read(static::FIXTURES . '/image-border.png');
 		$this->assertSame($this->png($expected), $data);
 	}
 
@@ -71,13 +99,19 @@ class QrCodeTest extends TestCase
 		$this->assertSame($this->png($expected), $data);
 	}
 
-	public function testToImageBorder(): void
+	public function testToImageSize(): void
 	{
 		$qr       = new QrCode('https://getkirby.com');
-		$image    = $qr->toImage(null, '#000000', '#ffffff', 0);
+		$image    = $qr->toImage(750);
 		$data     = $this->imageContent($image);
-		$expected = F::read(static::FIXTURES . '/image-border.png');
+		$expected = F::read(static::FIXTURES . '/image-size.png');
 		$this->assertSame($this->png($expected), $data);
+	}
+
+	public function testToString(): void
+	{
+		$qr = new QrCode('https://getkirby.com');
+		$this->assertSame($qr->toSvg(), (string)$qr);
 	}
 
 	public function testToSvg(): void
@@ -138,12 +172,6 @@ class QrCodeTest extends TestCase
 		$svg = $qr->toSvg(color: 'rgb(255, 0, 0)', back: 'hsl(120, 100%, 50%)');
 		$this->assertStringContainsString('fill="rgb(255, 0, 0)"', $svg);
 		$this->assertStringContainsString('fill="hsl(120, 100%, 50%)"', $svg);
-	}
-
-	public function testToString(): void
-	{
-		$qr = new QrCode('https://getkirby.com');
-		$this->assertSame($qr->toSvg(), (string)$qr);
 	}
 
 	public function testVersionDataExceedsCapacity(): void
@@ -223,33 +251,5 @@ class QrCodeTest extends TestCase
 		// raster formats need a pixel size
 		$qr->write($file = static::TMP . '/test.png', '100');
 		$this->assertSame(100, getimagesize($file)[0]);
-	}
-
-	protected function assertSameDataUri(string $expected, string $actual): void
-	{
-		$prefix = 'data:image/png;base64,';
-		$this->assertStringStartsWith($prefix, $actual);
-		$this->assertSame(
-			$this->png(base64_decode(substr($expected, strlen($prefix)))),
-			$this->png(base64_decode(substr($actual, strlen($prefix))))
-		);
-	}
-
-	protected function imageContent(GdImage $image): string
-	{
-		ob_start();
-		imagepng($image);
-		$data = ob_get_contents();
-		ob_end_clean();
-		return $data;
-	}
-
-	/**
-	 * Re-encodes PNG data with the installed GD version, as the
-	 * PNG compression differs between versions (e.g. PHP 8.6)
-	 */
-	protected function png(string $data): string
-	{
-		return $this->imageContent(imagecreatefromstring($data));
 	}
 }

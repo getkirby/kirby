@@ -21,30 +21,6 @@ class WebauthnChallengeTest extends TestCase
 
 	protected User $user;
 
-	protected function setUp(): void
-	{
-		parent::setUp();
-
-		$this->app = $this->app->clone([
-			'users' => [
-				[
-					'email' => 'marge@simpsons.com',
-					'id'    => 'marge',
-				],
-			]
-		]);
-
-		$this->user = $this->app->user('marge');
-	}
-
-	protected function writeCredentials(mixed $webauthn): void
-	{
-		F::write(
-			static::TMP . '/site/accounts/marge/.htpasswd',
-			"\n" . json_encode(['webauthn' => $webauthn])
-		);
-	}
-
 	/**
 	 * @return array{0: string, 1: string}
 	 */
@@ -63,6 +39,22 @@ class WebauthnChallengeTest extends TestCase
 		]]);
 
 		return [json_encode($assert['payload']), $assert['challenge']];
+	}
+
+	protected function setUp(): void
+	{
+		parent::setUp();
+
+		$this->app = $this->app->clone([
+			'users' => [
+				[
+					'email' => 'marge@simpsons.com',
+					'id'    => 'marge',
+				],
+			]
+		]);
+
+		$this->user = $this->app->user('marge');
 	}
 
 	public function testCreate(): void
@@ -176,6 +168,14 @@ class WebauthnChallengeTest extends TestCase
 		$this->assertSame(
 			9,
 			$this->app->user('marge')->secret('webauthn')[0]['counter']
+		);
+	}
+
+	protected function writeCredentials(mixed $webauthn): void
+	{
+		F::write(
+			static::TMP . '/site/accounts/marge/.htpasswd',
+			"\n" . json_encode(['webauthn' => $webauthn])
 		);
 	}
 }

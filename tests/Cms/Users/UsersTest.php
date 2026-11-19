@@ -9,42 +9,6 @@ class UsersTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.Users';
 
-	public function testAddUser(): void
-	{
-		$users = Users::factory([
-			['email' => 'a@getkirby.com']
-		]);
-
-		$user = new User([
-			'email' => 'b@getkirby.com'
-		]);
-
-		$result = $users->add($user);
-
-		$this->assertCount(2, $result);
-		$this->assertSame('a@getkirby.com', $result->nth(0)->email());
-		$this->assertSame('b@getkirby.com', $result->nth(1)->email());
-	}
-
-	public function testAddCollection(): void
-	{
-		$a = Users::factory([
-			['email' => 'a@getkirby.com']
-		]);
-
-		$b = Users::factory([
-			['email' => 'b@getkirby.com'],
-			['email' => 'c@getkirby.com']
-		]);
-
-		$c = $a->add($b);
-
-		$this->assertCount(3, $c);
-		$this->assertSame('a@getkirby.com', $c->nth(0)->email());
-		$this->assertSame('b@getkirby.com', $c->nth(1)->email());
-		$this->assertSame('c@getkirby.com', $c->nth(2)->email());
-	}
-
 	public function testAddById(): void
 	{
 		$app = new App([
@@ -71,14 +35,23 @@ class UsersTest extends TestCase
 		$this->assertSame('c@getkirby.com', $users->nth(2)->email());
 	}
 
-	public function testAddNull(): void
+	public function testAddCollection(): void
 	{
-		$users = new Users();
-		$this->assertCount(0, $users);
+		$a = Users::factory([
+			['email' => 'a@getkirby.com']
+		]);
 
-		$users->add(null);
+		$b = Users::factory([
+			['email' => 'b@getkirby.com'],
+			['email' => 'c@getkirby.com']
+		]);
 
-		$this->assertCount(0, $users);
+		$c = $a->add($b);
+
+		$this->assertCount(3, $c);
+		$this->assertSame('a@getkirby.com', $c->nth(0)->email());
+		$this->assertSame('b@getkirby.com', $c->nth(1)->email());
+		$this->assertSame('c@getkirby.com', $c->nth(2)->email());
 	}
 
 	public function testAddFalse(): void
@@ -99,6 +72,55 @@ class UsersTest extends TestCase
 		$site  = new Site();
 		$users = new Users();
 		$users->add($site);
+	}
+
+	public function testAddNull(): void
+	{
+		$users = new Users();
+		$this->assertCount(0, $users);
+
+		$users->add(null);
+
+		$this->assertCount(0, $users);
+	}
+
+	public function testAddUser(): void
+	{
+		$users = Users::factory([
+			['email' => 'a@getkirby.com']
+		]);
+
+		$user = new User([
+			'email' => 'b@getkirby.com'
+		]);
+
+		$result = $users->add($user);
+
+		$this->assertCount(2, $result);
+		$this->assertSame('a@getkirby.com', $result->nth(0)->email());
+		$this->assertSame('b@getkirby.com', $result->nth(1)->email());
+	}
+
+	public function testCustomMethods(): void
+	{
+		Users::$methods = [
+			'test' => function () {
+				$i = 0;
+				foreach ($this as $user) {
+					$i++;
+				}
+				return $i;
+			}
+		];
+
+		$users = new Users([
+			new User(['email' => 'a@getkirby.com']),
+			new User(['email' => 'B@getKirby.com']),
+		]);
+
+		$this->assertSame(2, $users->test());
+
+		Users::$methods = [];
 	}
 
 	public function testFiles(): void
@@ -272,28 +294,6 @@ class UsersTest extends TestCase
 
 		// block path traversal outside of the `accounts` directory
 		$this->assertNull($users->find('..'));
-	}
-
-	public function testCustomMethods(): void
-	{
-		Users::$methods = [
-			'test' => function () {
-				$i = 0;
-				foreach ($this as $user) {
-					$i++;
-				}
-				return $i;
-			}
-		];
-
-		$users = new Users([
-			new User(['email' => 'a@getkirby.com']),
-			new User(['email' => 'B@getKirby.com']),
-		]);
-
-		$this->assertSame(2, $users->test());
-
-		Users::$methods = [];
 	}
 
 	public function testRoles(): void

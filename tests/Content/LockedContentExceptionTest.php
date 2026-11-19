@@ -8,6 +8,21 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(LockedContentException::class)]
 class LockedContentExceptionTest extends TestCase
 {
+	public function testCustomMessage(): void
+	{
+		$lock = new Lock(
+			user: new User(['username' => 'test']),
+			modified: $time = time()
+		);
+
+		$exception = new LockedContentException(
+			lock: $lock,
+			message: $message = 'The version is locked and cannot be deleted'
+		);
+
+		$this->assertSame($message, $exception->getMessage());
+	}
+
 	public function testException(): void
 	{
 		$lock = new Lock(
@@ -23,20 +38,5 @@ class LockedContentExceptionTest extends TestCase
 		$this->assertSame($lock->toArray(), $exception->getDetails());
 		$this->assertSame(423, $exception->getHttpCode());
 		$this->assertSame('error.content.lock', $exception->getKey());
-	}
-
-	public function testCustomMessage(): void
-	{
-		$lock = new Lock(
-			user: new User(['username' => 'test']),
-			modified: $time = time()
-		);
-
-		$exception = new LockedContentException(
-			lock: $lock,
-			message: $message = 'The version is locked and cannot be deleted'
-		);
-
-		$this->assertSame($message, $exception->getMessage());
 	}
 }

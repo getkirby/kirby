@@ -35,6 +35,26 @@ class ViewButtonTest extends AreaTestCase
 		], array_filter($button->props()));
 	}
 
+	public function testFactoryFromBooleanButton(): void
+	{
+		// Default
+		$button = ViewButton::factory(
+			button: true,
+			name: 'foo',
+			view: 'test'
+		);
+		$this->assertInstanceOf(ViewButton::class, $button);
+		$this->assertSame('k-foo-view-button', $button->component);
+
+		// Disable the button
+		$button = ViewButton::factory(
+			button: false,
+			name: 'foo',
+			view: 'test'
+		);
+		$this->assertNull($button);
+	}
+
 	public function testFactoryFromClosure(): void
 	{
 		$button = ViewButton::factory(
@@ -99,26 +119,6 @@ class ViewButtonTest extends AreaTestCase
 
 		$this->assertInstanceOf(ViewButton::class, $button);
 		$this->assertSame('k-foo-view-button', $button->component);
-	}
-
-	public function testFactoryFromBooleanButton(): void
-	{
-		// Default
-		$button = ViewButton::factory(
-			button: true,
-			name: 'foo',
-			view: 'test'
-		);
-		$this->assertInstanceOf(ViewButton::class, $button);
-		$this->assertSame('k-foo-view-button', $button->component);
-
-		// Disable the button
-		$button = ViewButton::factory(
-			button: false,
-			name: 'foo',
-			view: 'test'
-		);
-		$this->assertNull($button);
 	}
 
 	public function testFind(): void
@@ -240,6 +240,22 @@ class ViewButtonTest extends AreaTestCase
 		], $component->props());
 	}
 
+	public function testPropsRejectsDangerousLinkScheme(): void
+	{
+		$model = new Page([
+			'slug'    => 'test',
+			'content' => ['cta' => 'javascript://%0aalert(document.domain)']
+		]);
+
+		$component = new ViewButton(
+			model: $model,
+			text: 'Open',
+			link: '{{ page.cta }}'
+		);
+
+		$this->assertNull($component->props()['link']);
+	}
+
 	public function testPropsWithLanguageModel(): void
 	{
 		$component = new ViewButton(
@@ -255,22 +271,6 @@ class ViewButtonTest extends AreaTestCase
 		$this->assertSame('https://getkirby.com', $props['link']);
 		$this->assertSame('my/options', $props['options']);
 		$this->assertSame('Docs', $props['text']);
-	}
-
-	public function testPropsRejectsDangerousLinkScheme(): void
-	{
-		$model = new Page([
-			'slug'    => 'test',
-			'content' => ['cta' => 'javascript://%0aalert(document.domain)']
-		]);
-
-		$component = new ViewButton(
-			model: $model,
-			text: 'Open',
-			link: '{{ page.cta }}'
-		);
-
-		$this->assertNull($component->props()['link']);
 	}
 
 	public function testPropsWithQueries(): void

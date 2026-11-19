@@ -30,6 +30,11 @@ class Permissions
 	public static array $extendedAreas = [];
 
 	/**
+	 * @var array<string, array>
+	 */
+	protected array $actions;
+
+	/**
 	 * @var array<string, array<string, bool>>
 	 */
 	protected array $defaults = [
@@ -104,11 +109,6 @@ class Permissions
 			'update'         => true
 		]
 	];
-
-	/**
-	 * @var array<string, array>
-	 */
-	protected array $actions;
 
 	/**
 	 * Permissions constructor

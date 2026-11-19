@@ -10,9 +10,9 @@ use Kirby\Exception\LogicException;
  */
 class LockedContentException extends LogicException
 {
-	protected static string $defaultKey = 'content.lock';
 	protected static string $defaultFallback = 'The version is locked';
 	protected static int $defaultHttpCode = 423;
+	protected static string $defaultKey = 'content.lock';
 
 	public function __construct(
 		Lock $lock,

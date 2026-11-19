@@ -24,63 +24,6 @@ class BlueprintFieldTest extends TestCase
 		]);
 	}
 
-	public function testFieldPropsDefaults(): void
-	{
-		$props = Blueprint::fieldProps([
-			'name' => 'test',
-			'type' => 'text'
-		]);
-
-		$this->assertSame('test', $props['name']);
-		$this->assertSame('text', $props['type']);
-		$this->assertSame('Test', $props['label']);
-		$this->assertSame('1/1', $props['width']);
-	}
-
-	public function testFieldTypeFromName(): void
-	{
-		$props = Blueprint::fieldProps([
-			'name' => 'text',
-		]);
-
-		$this->assertSame('text', $props['name']);
-		$this->assertSame('text', $props['type']);
-		$this->assertSame('Text', $props['label']);
-	}
-
-	public function testMissingFieldName(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The field name is missing');
-
-		$props = Blueprint::fieldProps([]);
-	}
-
-	public function testInvalidFieldType(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid field type ("test")');
-
-		$props = Blueprint::fieldProps([
-			'name' => 'test',
-			'type' => 'test'
-		]);
-	}
-
-	public function testFieldError(): void
-	{
-		$props = Blueprint::fieldError('test', 'something went wrong');
-		$expected = [
-			'label' => 'Error',
-			'name'  => 'test',
-			'text'  => 'something went wrong',
-			'theme' => 'negative',
-			'type'  => 'info'
-		];
-
-		$this->assertSame($expected, $props);
-	}
-
 	public function testExtendField(): void
 	{
 		$props = Blueprint::fieldProps([
@@ -144,22 +87,18 @@ class BlueprintFieldTest extends TestCase
 		$this->assertEquals($expected, $props); // cannot use strict assertion (array order)
 	}
 
-	public function testNestedFields(): void
+	public function testFieldError(): void
 	{
-		$props = Blueprint::fieldProps([
-			'name'   => 'test',
-			'type'   => 'structure',
-			'fields' => [
-				'headline' => [
-					'type' => 'text'
-				]
-			]
-		]);
+		$props = Blueprint::fieldError('test', 'something went wrong');
+		$expected = [
+			'label' => 'Error',
+			'name'  => 'test',
+			'text'  => 'something went wrong',
+			'theme' => 'negative',
+			'type'  => 'info'
+		];
 
-		$this->assertSame('headline', $props['fields']['headline']['name']);
-		$this->assertSame('Headline', $props['fields']['headline']['label']);
-		$this->assertSame('text', $props['fields']['headline']['type']);
-		$this->assertSame('1/1', $props['fields']['headline']['width']);
+		$this->assertSame($expected, $props);
 	}
 
 	public function testFieldGroup(): void
@@ -263,5 +202,66 @@ class BlueprintFieldTest extends TestCase
 		];
 
 		$this->assertEquals($expected, $props); // cannot use strict assertion (array order)
+	}
+
+	public function testFieldPropsDefaults(): void
+	{
+		$props = Blueprint::fieldProps([
+			'name' => 'test',
+			'type' => 'text'
+		]);
+
+		$this->assertSame('test', $props['name']);
+		$this->assertSame('text', $props['type']);
+		$this->assertSame('Test', $props['label']);
+		$this->assertSame('1/1', $props['width']);
+	}
+
+	public function testFieldTypeFromName(): void
+	{
+		$props = Blueprint::fieldProps([
+			'name' => 'text',
+		]);
+
+		$this->assertSame('text', $props['name']);
+		$this->assertSame('text', $props['type']);
+		$this->assertSame('Text', $props['label']);
+	}
+
+	public function testInvalidFieldType(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid field type ("test")');
+
+		$props = Blueprint::fieldProps([
+			'name' => 'test',
+			'type' => 'test'
+		]);
+	}
+
+	public function testMissingFieldName(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The field name is missing');
+
+		$props = Blueprint::fieldProps([]);
+	}
+
+	public function testNestedFields(): void
+	{
+		$props = Blueprint::fieldProps([
+			'name'   => 'test',
+			'type'   => 'structure',
+			'fields' => [
+				'headline' => [
+					'type' => 'text'
+				]
+			]
+		]);
+
+		$this->assertSame('headline', $props['fields']['headline']['name']);
+		$this->assertSame('Headline', $props['fields']['headline']['label']);
+		$this->assertSame('text', $props['fields']['headline']['type']);
+		$this->assertSame('1/1', $props['fields']['headline']['width']);
 	}
 }

@@ -51,6 +51,47 @@ class UserModelTest extends ModelTestCase
 		$this->assertSame($expected, $image);
 	}
 
+	public function testInaccessibleRole(): void
+	{
+		$uuid = uuid();
+
+		$this->app = new App([
+			'roots' => ['index' => static::TMP],
+			'blueprints' => [
+				'users/restricted-' . $uuid => [
+					'options' => [
+						'access' => [
+							'editor-' . $uuid => true,
+							'*'      => false
+						]
+					]
+				]
+			],
+			'roles' => [
+				['name' => 'editor-' . $uuid],
+				['name' => 'restricted-' . $uuid],
+			],
+			'users' => [
+				['email' => 'editor@test.com', 'role' => 'editor-' . $uuid],
+				['email' => 'restricted@test.com', 'role' => 'restricted-' . $uuid],
+			]
+		]);
+
+		$this->api = $this->app->api();
+
+		$restrictedUser = $this->app->user('restricted@test.com');
+
+		// editor can see the restricted role
+		$this->app->impersonate('editor@test.com');
+		$model = $this->api->resolve($restrictedUser)->select('role')->toArray();
+		$this->assertNotNull($model['role']);
+
+		// restricted user cannot see their own role
+		$this->app->impersonate('restricted@test.com');
+		$model = $this->api->resolve($restrictedUser)->select('role')->toArray();
+		$this->assertNull($model['role']);
+	}
+
 	public function testInaccessibleRolePermissions(): void
 	{
 		$uuid = uuid();
@@ -122,47 +163,6 @@ class UserModelTest extends ModelTestCase
 		$result = $app->api()->resolve($user)->select('next')->toArray();
 
 		$this->assertSame('D User', $result['next']['name']);
-	}
-
-	public function testInaccessibleRole(): void
-	{
-		$uuid = uuid();
-
-		$this->app = new App([
-			'roots' => ['index' => static::TMP],
-			'blueprints' => [
-				'users/restricted-' . $uuid => [
-					'options' => [
-						'access' => [
-							'editor-' . $uuid => true,
-							'*'      => false
-						]
-					]
-				]
-			],
-			'roles' => [
-				['name' => 'editor-' . $uuid],
-				['name' => 'restricted-' . $uuid],
-			],
-			'users' => [
-				['email' => 'editor@test.com', 'role' => 'editor-' . $uuid],
-				['email' => 'restricted@test.com', 'role' => 'restricted-' . $uuid],
-			]
-		]);
-
-		$this->api = $this->app->api();
-
-		$restrictedUser = $this->app->user('restricted@test.com');
-
-		// editor can see the restricted role
-		$this->app->impersonate('editor@test.com');
-		$model = $this->api->resolve($restrictedUser)->select('role')->toArray();
-		$this->assertNotNull($model['role']);
-
-		// restricted user cannot see their own role
-		$this->app->impersonate('restricted@test.com');
-		$model = $this->api->resolve($restrictedUser)->select('role')->toArray();
-		$this->assertNull($model['role']);
 	}
 
 	public function testPrevSkipsInaccessibleUser(): void

@@ -7,18 +7,6 @@ use Kirby\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
-	protected function setUp(): void
-	{
-		$this->app = $this->app();
-		$this->setUpTmp();
-	}
-
-	protected function tearDown(): void
-	{
-		$this->tearDownTmp();
-		Uuids::cache()->flush();
-	}
-
 	protected function app(): App
 	{
 		return new App([
@@ -114,5 +102,17 @@ abstract class TestCase extends BaseTestCase
 				]
 			],
 		]);
+	}
+
+	protected function setUp(): void
+	{
+		$this->app = $this->app();
+		$this->setUpTmp();
+	}
+
+	protected function tearDown(): void
+	{
+		$this->tearDownTmp();
+		Uuids::cache()->flush();
 	}
 }

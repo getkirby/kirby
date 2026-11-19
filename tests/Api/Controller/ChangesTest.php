@@ -286,6 +286,14 @@ class ChangesTest extends TestCase
 		$this->assertFileDoesNotExist($this->page->root() . '/_changes/article.txt');
 	}
 
+	public function testSaveWithoutPermissions(): void
+	{
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to change this version');
+
+		Changes::save($this->page, []);
+	}
+
 	/**
 	 * @todo We want to ignore undefined fields later in v7. This needs to be
 	 * refactored at that point to make sure that undefined fields are not saved.
@@ -315,14 +323,6 @@ class ChangesTest extends TestCase
 			'undefined' => 'This should be passed through',
 			'lock'      => 'kirby'
 		], $changes);
-	}
-
-	public function testSaveWithoutPermissions(): void
-	{
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to change this version');
-
-		Changes::save($this->page, []);
 	}
 
 	public function testUnlock(): void

@@ -12,15 +12,6 @@ class ChangesRoutesTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Api.ChangesRoutes';
 
-	public static function missingModelProvider(): array
-	{
-		return [
-			'file' => ['pages/a/files/missing.jpg'],
-			'page' => ['pages/missing'],
-			'user' => ['users/missing'],
-		];
-	}
-
 	protected function setUp(): void
 	{
 		$this->app = new App([
@@ -68,6 +59,15 @@ class ChangesRoutesTest extends TestCase
 			path: 'foo/bar/changes/unlock',
 			method: 'POST'
 		);
+	}
+
+	public static function missingModelProvider(): array
+	{
+		return [
+			'file' => ['pages/a/files/missing.jpg'],
+			'page' => ['pages/missing'],
+			'user' => ['users/missing'],
+		];
 	}
 
 	#[DataProvider('missingModelProvider')]

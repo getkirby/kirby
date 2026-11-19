@@ -30,6 +30,17 @@ class FileTest extends TestCase
 	public const string FIXTURES = __DIR__ . '/fixtures';
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.File';
 
+	protected function panel(array $props = [])
+	{
+		$page = new ModelPage([
+			'slug'  => 'test',
+			'files' => [
+				['filename' => 'test.jpg', ...$props],
+			]
+		]);
+		return new File($page->file('test.jpg'));
+	}
+
 	protected function setUp(): void
 	{
 		$this->app = new App([
@@ -44,17 +55,6 @@ class FileTest extends TestCase
 	protected function tearDown(): void
 	{
 		Dir::remove(static::TMP);
-	}
-
-	protected function panel(array $props = [])
-	{
-		$page = new ModelPage([
-			'slug'  => 'test',
-			'files' => [
-				['filename' => 'test.jpg', ...$props],
-			]
-		]);
-		return new File($page->file('test.jpg'));
 	}
 
 	public function testDragText(): void
@@ -87,12 +87,20 @@ class FileTest extends TestCase
 		$this->assertSame('(image: file://test-jpg)', $panel->dragText());
 	}
 
-	public function testDragTextMarkdown(): void
+	public function testDragTextCustomKirbytext(): void
 	{
 		$app = $this->app->clone([
 			'options' => [
 				'panel' => [
-					'kirbytext' => false
+					'kirbytext' => [
+						'fileDragText' => function (ModelFile $file, string $url) {
+							if ($file->extension() === 'heic') {
+								return sprintf('(image: %s)', $url);
+							}
+
+							return null;
+						},
+					]
 				]
 			],
 			'site' => [
@@ -101,16 +109,12 @@ class FileTest extends TestCase
 						'slug' => 'test',
 						'files' => [
 							[
+								'filename' => 'test.heic',
+								'content'  => ['uuid' => 'test-heic']
+							],
+							[
 								'filename' => 'test.jpg',
 								'content'  => ['uuid' => 'test-jpg']
-							],
-							[
-								'filename' => 'test.mp4',
-								'content'  => ['uuid' => 'test-mp4']
-							],
-							[
-								'filename' => 'test.pdf',
-								'content'  => ['uuid' => 'test-pdf']
 							]
 						]
 					]
@@ -118,14 +122,13 @@ class FileTest extends TestCase
 			]
 		]);
 
-		$file = $app->page('test')->file('test.jpg');
-		$this->assertSame('![](//@/file/test-jpg)', $file->panel()->dragText());
+		// Custom function does not match and returns null, default case
+		$panel = new File($app->page('test')->file('test.jpg'));
+		$this->assertSame('(image: file://test-jpg)', $panel->dragText());
 
-		$file = $app->page('test')->file('test.mp4');
-		$this->assertSame('[test.mp4](//@/file/test-mp4)', $file->panel()->dragText());
-
-		$file = $app->page('test')->file('test.pdf');
-		$this->assertSame('[test.pdf](//@/file/test-pdf)', $file->panel()->dragText());
+		// Custom function should return image tag for heic
+		$panel = new File($app->page('test')->file('test.heic'));
+		$this->assertSame('(image: file://test-heic)', $panel->dragText());
 	}
 
 	public function testDragTextCustomMarkdown(): void
@@ -173,20 +176,12 @@ class FileTest extends TestCase
 		$this->assertSame('![](//@/file/test-heic)', $panel->dragText());
 	}
 
-	public function testDragTextCustomKirbytext(): void
+	public function testDragTextMarkdown(): void
 	{
 		$app = $this->app->clone([
 			'options' => [
 				'panel' => [
-					'kirbytext' => [
-						'fileDragText' => function (ModelFile $file, string $url) {
-							if ($file->extension() === 'heic') {
-								return sprintf('(image: %s)', $url);
-							}
-
-							return null;
-						},
-					]
+					'kirbytext' => false
 				]
 			],
 			'site' => [
@@ -195,12 +190,16 @@ class FileTest extends TestCase
 						'slug' => 'test',
 						'files' => [
 							[
-								'filename' => 'test.heic',
-								'content'  => ['uuid' => 'test-heic']
-							],
-							[
 								'filename' => 'test.jpg',
 								'content'  => ['uuid' => 'test-jpg']
+							],
+							[
+								'filename' => 'test.mp4',
+								'content'  => ['uuid' => 'test-mp4']
+							],
+							[
+								'filename' => 'test.pdf',
+								'content'  => ['uuid' => 'test-pdf']
 							]
 						]
 					]
@@ -208,13 +207,14 @@ class FileTest extends TestCase
 			]
 		]);
 
-		// Custom function does not match and returns null, default case
-		$panel = new File($app->page('test')->file('test.jpg'));
-		$this->assertSame('(image: file://test-jpg)', $panel->dragText());
+		$file = $app->page('test')->file('test.jpg');
+		$this->assertSame('![](//@/file/test-jpg)', $file->panel()->dragText());
 
-		// Custom function should return image tag for heic
-		$panel = new File($app->page('test')->file('test.heic'));
-		$this->assertSame('(image: file://test-heic)', $panel->dragText());
+		$file = $app->page('test')->file('test.mp4');
+		$this->assertSame('[test.mp4](//@/file/test-mp4)', $file->panel()->dragText());
+
+		$file = $app->page('test')->file('test.pdf');
+		$this->assertSame('[test.pdf](//@/file/test-pdf)', $file->panel()->dragText());
 	}
 
 	public function testImage(): void
@@ -233,6 +233,31 @@ class FileTest extends TestCase
 		$this->assertSame('orange-500', $image['color']);
 		$this->assertSame('pattern', $image['back']);
 		$this->assertArrayHasKey('url', $image);
+	}
+
+	public function testImageColor(): void
+	{
+		$page = new ModelPage(['slug' => 'test']);
+		$file = new ModelFile([
+			'filename' => 'something.doc',
+			'parent'   => $page
+		]);
+
+		$this->assertSame('blue-500', $file->panel()->image()['color']);
+
+		$file = new ModelFile([
+			'filename' => 'something.mp4',
+			'parent'   => $page
+		]);
+
+		$this->assertSame('yellow-500', $file->panel()->image()['color']);
+
+		$file = new ModelFile([
+			'filename' => 'something.foo',
+			'parent'   => $page
+		]);
+
+		$this->assertSame('gray-500', $file->panel()->image()['color']);
 	}
 
 	public function testImageCover(): void
@@ -277,46 +302,6 @@ class FileTest extends TestCase
 		], $panel->image(['cover' => true]));
 	}
 
-	public function testImageStringQuery(): void
-	{
-		$page = new ModelPage([
-			'slug'  => 'test',
-			'files' => [
-				['filename' => 'test.jpg'],
-				['filename' => 'foo.pdf']
-			]
-		]);
-
-		// fallback to model itself
-		$image = (new File($page->file()))->image('foo.bar');
-		$this->assertNotEmpty($image);
-	}
-
-	public function testImageColor(): void
-	{
-		$page = new ModelPage(['slug' => 'test']);
-		$file = new ModelFile([
-			'filename' => 'something.doc',
-			'parent'   => $page
-		]);
-
-		$this->assertSame('blue-500', $file->panel()->image()['color']);
-
-		$file = new ModelFile([
-			'filename' => 'something.mp4',
-			'parent'   => $page
-		]);
-
-		$this->assertSame('yellow-500', $file->panel()->image()['color']);
-
-		$file = new ModelFile([
-			'filename' => 'something.foo',
-			'parent'   => $page
-		]);
-
-		$this->assertSame('gray-500', $file->panel()->image()['color']);
-	}
-
 	public function testImageIcon(): void
 	{
 		$page = new ModelPage(['slug' => 'test']);
@@ -340,6 +325,21 @@ class FileTest extends TestCase
 		]);
 
 		$this->assertSame('file', $file->panel()->image()['icon']);
+	}
+
+	public function testImageStringQuery(): void
+	{
+		$page = new ModelPage([
+			'slug'  => 'test',
+			'files' => [
+				['filename' => 'test.jpg'],
+				['filename' => 'foo.pdf']
+			]
+		]);
+
+		// fallback to model itself
+		$image = (new File($page->file()))->image('foo.bar');
+		$this->assertNotEmpty($image);
 	}
 
 	public function testIsFocusable(): void
@@ -448,82 +448,6 @@ class FileTest extends TestCase
 		$this->assertSame($expected, $panel->options());
 	}
 
-	public function testOptionsWithLockedFile(): void
-	{
-		$page = new ModelPage([
-			'slug' => 'test'
-		]);
-
-		$file = new FileForceLocked([
-			'filename' => 'test.jpg',
-			'parent'   => $page
-		]);
-
-		$file->kirby()->impersonate('kirby');
-
-		// without override
-		$expected = [
-			'access'     	 => false,
-			'changeName'     => false,
-			'changeTemplate' => false,
-			'create'         => false,
-			'delete'         => false,
-			'list'           => false,
-			'read'           => false,
-			'replace'        => false,
-			'sort'           => false,
-			'update'         => false,
-		];
-
-		$panel = new File($file);
-		$this->assertSame($expected, $panel->options());
-
-		// with override
-		$expected = [
-			'access'     	 => false,
-			'changeName'     => false,
-			'changeTemplate' => false,
-			'create'         => false,
-			'delete'         => true,
-			'list'           => false,
-			'read'           => false,
-			'replace'        => false,
-			'sort'           => false,
-			'update'         => false,
-		];
-
-		$this->assertSame($expected, $panel->options(['delete']));
-	}
-
-	public function testOptionsDefaultReplaceOption(): void
-	{
-		$page = new ModelPage([
-			'slug' => 'test'
-		]);
-
-		$file = new ModelFile([
-			'filename' => 'test.js',
-			'parent'   => $page
-		]);
-		$file->kirby()->impersonate('kirby');
-
-		$expected = [
-			'access'     	 => true,
-			'changeName'     => true,
-			'changeTemplate' => false,
-			'create'         => true,
-			'delete'         => true,
-			'list'           => true,
-			'read'           => true,
-			'replace'        => false,
-			'sort'           => true,
-			'update'         => true,
-		];
-
-		$panel = new File($file);
-		$this->assertSame($expected, $panel->options());
-	}
-
 	public function testOptionsAllowedReplaceOption(): void
 	{
 		$this->app->clone([
@@ -556,6 +480,35 @@ class FileTest extends TestCase
 			'list'           => true,
 			'read'           => true,
 			'replace'        => true,
+			'sort'           => true,
+			'update'         => true,
+		];
+
+		$panel = new File($file);
+		$this->assertSame($expected, $panel->options());
+	}
+
+	public function testOptionsDefaultReplaceOption(): void
+	{
+		$page = new ModelPage([
+			'slug' => 'test'
+		]);
+
+		$file = new ModelFile([
+			'filename' => 'test.js',
+			'parent'   => $page
+		]);
+		$file->kirby()->impersonate('kirby');
+
+		$expected = [
+			'access'     	 => true,
+			'changeName'     => true,
+			'changeTemplate' => false,
+			'create'         => true,
+			'delete'         => true,
+			'list'           => true,
+			'read'           => true,
+			'replace'        => false,
 			'sort'           => true,
 			'update'         => true,
 		];
@@ -606,6 +559,53 @@ class FileTest extends TestCase
 		$this->assertSame($expected, $panel->options());
 	}
 
+	public function testOptionsWithLockedFile(): void
+	{
+		$page = new ModelPage([
+			'slug' => 'test'
+		]);
+
+		$file = new FileForceLocked([
+			'filename' => 'test.jpg',
+			'parent'   => $page
+		]);
+
+		$file->kirby()->impersonate('kirby');
+
+		// without override
+		$expected = [
+			'access'     	 => false,
+			'changeName'     => false,
+			'changeTemplate' => false,
+			'create'         => false,
+			'delete'         => false,
+			'list'           => false,
+			'read'           => false,
+			'replace'        => false,
+			'sort'           => false,
+			'update'         => false,
+		];
+
+		$panel = new File($file);
+		$this->assertSame($expected, $panel->options());
+
+		// with override
+		$expected = [
+			'access'     	 => false,
+			'changeName'     => false,
+			'changeTemplate' => false,
+			'create'         => false,
+			'delete'         => true,
+			'list'           => false,
+			'read'           => false,
+			'replace'        => false,
+			'sort'           => false,
+			'update'         => false,
+		];
+
+		$this->assertSame($expected, $panel->options(['delete']));
+	}
+
 	public function testPath(): void
 	{
 		$panel = $this->panel();
@@ -634,6 +634,41 @@ class FileTest extends TestCase
 		$this->assertSame('test.jpg', (string)$data['text']);
 	}
 
+	public function testPickerDataDifferentModel(): void
+	{
+		$page = new ModelPage([
+			'slug'  => 'test',
+			'files' => [
+				['filename' => 'test.jpg', 'content' => ['uuid' => 'test-file']]
+			]
+		]);
+
+		$model = new ModelPage(['slug'  => 'foo']);
+		$panel = new File($page->file('test.jpg'));
+		$data  = $panel->pickerData(['model' => $model]);
+
+		$this->assertSame('(image: file://test-file)', $data['dragText']);
+	}
+
+	public function testPickerDataSameModel(): void
+	{
+		$page = new ModelPage([
+			'slug'  => 'test',
+			'files' => [
+				[
+					'filename' => 'test.jpg',
+					'content'  => ['uuid' => 'test-file']
+				]
+			]
+		]);
+
+		$panel = new File($page->file('test.jpg'));
+		$data  = $panel->pickerData(['model' => $page]);
+
+		$this->assertSame('(image: file://test-file)', $data['dragText']);
+		$this->assertSame('test.jpg', $data['id']);
+	}
+
 	public function testPickerDataWithParams(): void
 	{
 		$page = new ModelPage([
@@ -659,41 +694,6 @@ class FileTest extends TestCase
 		$this->assertSame('test/test.jpg', $data['id']);
 		$this->assertSame('1/1', $data['image']['ratio']);
 		$this->assertSame('From foo to the bar', (string)$data['text']);
-	}
-
-	public function testPickerDataSameModel(): void
-	{
-		$page = new ModelPage([
-			'slug'  => 'test',
-			'files' => [
-				[
-					'filename' => 'test.jpg',
-					'content'  => ['uuid' => 'test-file']
-				]
-			]
-		]);
-
-		$panel = new File($page->file('test.jpg'));
-		$data  = $panel->pickerData(['model' => $page]);
-
-		$this->assertSame('(image: file://test-file)', $data['dragText']);
-		$this->assertSame('test.jpg', $data['id']);
-	}
-
-	public function testPickerDataDifferentModel(): void
-	{
-		$page = new ModelPage([
-			'slug'  => 'test',
-			'files' => [
-				['filename' => 'test.jpg', 'content' => ['uuid' => 'test-file']]
-			]
-		]);
-
-		$model = new ModelPage(['slug'  => 'foo']);
-		$panel = new File($page->file('test.jpg'));
-		$data  = $panel->pickerData(['model' => $model]);
-
-		$this->assertSame('(image: file://test-file)', $data['dragText']);
 	}
 
 	public function testUrl(): void

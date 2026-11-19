@@ -153,6 +153,28 @@ class CoreTest extends TestCase
 		$this->assertCount(4, $previews);
 	}
 
+	public function testKirbyTagAliases(): void
+	{
+		$aliases = $this->core->kirbyTagAliases();
+
+		$this->assertArrayHasKey('youtube', $aliases);
+		$this->assertArrayHasKey('vimeo', $aliases);
+	}
+
+	public function testKirbyTags(): void
+	{
+		$tags = $this->core->kirbyTags();
+
+		$this->assertArrayHasKey('date', $tags);
+		$this->assertArrayHasKey('email', $tags);
+		$this->assertArrayHasKey('file', $tags);
+		$this->assertArrayHasKey('gist', $tags);
+		$this->assertArrayHasKey('image', $tags);
+		$this->assertArrayHasKey('link', $tags);
+		$this->assertArrayHasKey('tel', $tags);
+		$this->assertArrayHasKey('video', $tags);
+	}
+
 	public function testLoad(): void
 	{
 		$loader = $this->core->load();
@@ -216,28 +238,6 @@ class CoreTest extends TestCase
 		$this->assertArrayHasKey('blocks/table', $snippets);
 		$this->assertArrayHasKey('blocks/text', $snippets);
 		$this->assertArrayHasKey('blocks/video', $snippets);
-	}
-
-	public function testKirbyTagAliases(): void
-	{
-		$aliases = $this->core->kirbyTagAliases();
-
-		$this->assertArrayHasKey('youtube', $aliases);
-		$this->assertArrayHasKey('vimeo', $aliases);
-	}
-
-	public function testKirbyTags(): void
-	{
-		$tags = $this->core->kirbyTags();
-
-		$this->assertArrayHasKey('date', $tags);
-		$this->assertArrayHasKey('email', $tags);
-		$this->assertArrayHasKey('file', $tags);
-		$this->assertArrayHasKey('gist', $tags);
-		$this->assertArrayHasKey('image', $tags);
-		$this->assertArrayHasKey('link', $tags);
-		$this->assertArrayHasKey('tel', $tags);
-		$this->assertArrayHasKey('video', $tags);
 	}
 
 	public function testTemplates(): void

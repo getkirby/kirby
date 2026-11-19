@@ -10,58 +10,6 @@ abstract class TestCase extends BaseTestCase
 {
 	protected Page|null $page = null;
 
-	protected function setUp(): void
-	{
-		parent::setUp();
-
-		$this->app = new App([
-			'roots' => [
-				'index' => $this->hasTmp() ? static::TMP : '/dev/null'
-			]
-		]);
-
-		I18n::$locale = null;
-	}
-
-	protected function tearDown(): void
-	{
-		parent::tearDown();
-		App::destroy();
-
-		$this->tearDownTmp();
-
-		// mock class
-		ErrorLog::$log = '';
-	}
-
-	public function kirby($props = [])
-	{
-		return new App($props);
-	}
-
-	public function site()
-	{
-		return $this->kirby()->site();
-	}
-
-	public function pages()
-	{
-		return $this->site()->children();
-	}
-
-	public function page(string|null $id = null)
-	{
-		if ($id !== null) {
-			return $this->site()->find($id);
-		}
-
-		if ($this->page !== null) {
-			return $this->site()->find($this->page);
-		}
-
-		return $this->site()->homePage();
-	}
-
 	public function assertHooks(
 		array $hooks,
 		Closure $action,
@@ -94,5 +42,57 @@ abstract class TestCase extends BaseTestCase
 
 		$action->call($this, $app);
 		$this->assertSame(count($hooks), $triggered);
+	}
+
+	public function kirby($props = [])
+	{
+		return new App($props);
+	}
+
+	public function page(string|null $id = null)
+	{
+		if ($id !== null) {
+			return $this->site()->find($id);
+		}
+
+		if ($this->page !== null) {
+			return $this->site()->find($this->page);
+		}
+
+		return $this->site()->homePage();
+	}
+
+	public function pages()
+	{
+		return $this->site()->children();
+	}
+
+	protected function setUp(): void
+	{
+		parent::setUp();
+
+		$this->app = new App([
+			'roots' => [
+				'index' => $this->hasTmp() ? static::TMP : '/dev/null'
+			]
+		]);
+
+		I18n::$locale = null;
+	}
+
+	public function site()
+	{
+		return $this->kirby()->site();
+	}
+
+	protected function tearDown(): void
+	{
+		parent::tearDown();
+		App::destroy();
+
+		$this->tearDownTmp();
+
+		// mock class
+		ErrorLog::$log = '';
 	}
 }

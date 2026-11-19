@@ -17,6 +17,12 @@ class SiteTest extends TestCase
 	public const string FIXTURES = __DIR__ . '/fixtures';
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.Site';
 
+	protected function panel(array $props = [])
+	{
+		$site = new ModelSite($props);
+		return new Site($site);
+	}
+
 	protected function setUp(): void
 	{
 		$this->app = new App([
@@ -31,12 +37,6 @@ class SiteTest extends TestCase
 	protected function tearDown(): void
 	{
 		Dir::remove(static::TMP);
-	}
-
-	protected function panel(array $props = [])
-	{
-		$site = new ModelSite($props);
-		return new Site($site);
 	}
 
 	public function testImage(): void
@@ -104,13 +104,6 @@ class SiteTest extends TestCase
 		$this->assertSame('site', $this->panel()->path());
 	}
 
-	public function testPreviewPermissionsWithoutHomePage(): void
-	{
-		$props = $this->panel()->props();
-
-		$this->assertFalse($props['permissions']['preview']);
-	}
-
 	public function testPreviewPermissionsWithHomePage(): void
 	{
 		$this->app = $this->app->clone([
@@ -132,6 +125,13 @@ class SiteTest extends TestCase
 		$props = $this->app->site()->panel()->props();
 
 		$this->assertTrue($props['permissions']['preview']);
+	}
+
+	public function testPreviewPermissionsWithoutHomePage(): void
+	{
+		$props = $this->panel()->props();
+
+		$this->assertFalse($props['permissions']['preview']);
 	}
 
 	public function testPreviewPermissionsWithoutSitePermission(): void

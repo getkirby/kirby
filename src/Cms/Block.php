@@ -33,19 +33,6 @@ class Block extends Item implements Stringable
 	protected string $type;
 
 	/**
-	 * Proxy for content fields
-	 */
-	public function __call(string $method, array $args = []): mixed
-	{
-		// block methods
-		if ($this->hasMethod($method) === true) {
-			return $this->callMethod($method, $args);
-		}
-
-		return $this->content()->get($method);
-	}
-
-	/**
 	 * Creates a new block object
 	 *
 	 * @param array<string, mixed> $params
@@ -79,6 +66,19 @@ class Block extends Item implements Stringable
 
 		// create the content object
 		$this->content = new Content($params['content'], $this->parent);
+	}
+
+	/**
+	 * Proxy for content fields
+	 */
+	public function __call(string $method, array $args = []): mixed
+	{
+		// block methods
+		if ($this->hasMethod($method) === true) {
+			return $this->callMethod($method, $args);
+		}
+
+		return $this->content()->get($method);
 	}
 
 	/**
@@ -175,14 +175,6 @@ class Block extends Item implements Stringable
 	}
 
 	/**
-	 * Returns the block type
-	 */
-	public function type(): string
-	{
-		return $this->type;
-	}
-
-	/**
 	 * The result is being sent to the editor
 	 * via the API in the panel
 	 *
@@ -233,5 +225,13 @@ class Block extends Item implements Stringable
 
 			return '';
 		}
+	}
+
+	/**
+	 * Returns the block type
+	 */
+	public function type(): string
+	{
+		return $this->type;
 	}
 }

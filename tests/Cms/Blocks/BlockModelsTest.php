@@ -64,15 +64,6 @@ class BlockModelsTest extends TestCase
 		$this->assertSame($block->id(), $block->test());
 	}
 
-	public function testMissingBlockModel(): void
-	{
-		$block = Block::factory(['type' => 'image']);
-
-		$this->assertArrayNotHasKey('image', Block::$models);
-		$this->assertInstanceOf(Block::class, $block);
-		$this->assertFalse(method_exists($block, 'test'));
-	}
-
 	public function testDefaultBlockModel(): void
 	{
 		new App([
@@ -99,5 +90,14 @@ class BlockModelsTest extends TestCase
 		$block = Block::factory(['type' => 'gallery']);
 		$this->assertInstanceOf(DefaultBlock::class, $block);
 		$this->assertSame($block->id(), $block->test());
+	}
+
+	public function testMissingBlockModel(): void
+	{
+		$block = Block::factory(['type' => 'image']);
+
+		$this->assertArrayNotHasKey('image', Block::$models);
+		$this->assertInstanceOf(Block::class, $block);
+		$this->assertFalse(method_exists($block, 'test'));
 	}
 }

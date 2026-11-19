@@ -29,19 +29,6 @@ class PermalinkTest extends TestCase
 		$this->assertNull($permalink);
 	}
 
-	public function testParse(): void
-	{
-		$permalink = Permalink::from('https://getkirby.com/@/page/my-page');
-		$this->assertInstanceOf(Permalink::class, $permalink);
-		$this->assertInstanceOf(PageUuid::class, $permalink->uuid());
-	}
-
-	public function testParseWithoutId(): void
-	{
-		$this->assertNull(Permalink::from('https://getkirby.com/@/page'));
-		$this->assertNull(Permalink::from('https://getkirby.com/@/page/'));
-	}
-
 	public function testModel(): void
 	{
 		$permalink = Permalink::for('page://my-page');
@@ -54,6 +41,19 @@ class PermalinkTest extends TestCase
 
 		$permalink = Permalink::for('page://my-page');
 		$this->assertNull($permalink->model(true));
+	}
+
+	public function testParse(): void
+	{
+		$permalink = Permalink::from('https://getkirby.com/@/page/my-page');
+		$this->assertInstanceOf(Permalink::class, $permalink);
+		$this->assertInstanceOf(PageUuid::class, $permalink->uuid());
+	}
+
+	public function testParseWithoutId(): void
+	{
+		$this->assertNull(Permalink::from('https://getkirby.com/@/page'));
+		$this->assertNull(Permalink::from('https://getkirby.com/@/page/'));
 	}
 
 	public function testUrl(): void

@@ -142,13 +142,6 @@ class ColorField extends OptionField
 		return $options;
 	}
 
-	protected function validations(): array
-	{
-		return [
-			'color' => fn ($value) => $this->validateColor($value)
-		];
-	}
-
 	protected function validateColor(string|null $value): void
 	{
 		if ($this->isEmptyValue($value) === true) {
@@ -164,5 +157,12 @@ class ColorField extends OptionField
 				data: ['format' => $format]
 			);
 		}
+	}
+
+	protected function validations(): array
+	{
+		return [
+			'color' => fn ($value) => $this->validateColor($value)
+		];
 	}
 }

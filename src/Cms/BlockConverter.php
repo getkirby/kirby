@@ -46,6 +46,16 @@ class BlockConverter
 		return static::editorCustom($params);
 	}
 
+	public static function editorBlockquote(array $params): array
+	{
+		return [
+			'content' => [
+				'text' => $params['content']
+			],
+			'type' => 'quote'
+		];
+	}
+
 	/**
 	 * @param list<array> $blocks
 	 */
@@ -108,16 +118,6 @@ class BlockConverter
 		return array_values(array_filter($blocks));
 	}
 
-	public static function editorBlockquote(array $params): array
-	{
-		return [
-			'content' => [
-				'text' => $params['content']
-			],
-			'type' => 'quote'
-		];
-	}
-
 	public static function editorCode(array $params): array
 	{
 		return [
@@ -170,14 +170,6 @@ class BlockConverter
 		return static::editorHeading($params, 'h6');
 	}
 
-	public static function editorHr(array $params): array
-	{
-		return [
-			'content' => [],
-			'type'    => 'line'
-		];
-	}
-
 	public static function editorHeading(array $params, string $level = 'h1'): array
 	{
 		return [
@@ -186,6 +178,14 @@ class BlockConverter
 				'text'  => $params['content']
 			],
 			'type' => 'heading'
+		];
+	}
+
+	public static function editorHr(array $params): array
+	{
+		return [
+			'content' => [],
+			'type'    => 'line'
 		];
 	}
 

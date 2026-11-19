@@ -123,6 +123,36 @@ class StateTest extends TestCase
 		$this->assertSame($data, $result);
 	}
 
+	public function testFilterGlobalsRequest(): void
+	{
+		// not included
+		$data = (new State())->filter([]);
+		$this->assertArrayNotHasKey('translation', $data);
+
+		// empty globals
+		$data = ['foo' => 'bar'];
+		$result = (new State())->filter($data);
+		$this->assertSame($data, $result);
+
+		// via query
+		$this->setRequest(['_globals' => 'translation']);
+
+		$data = (new State())->filter([]);
+		$this->assertArrayHasKey('translation', $data);
+
+		// via header
+		$this->app = $this->app->clone([
+			'request' => [
+				'headers' => [
+					'X-Panel-Globals' => 'translation'
+				]
+			]
+		]);
+
+		$data = (new State())->filter([]);
+		$this->assertArrayHasKey('translation', $data);
+	}
+
 	public function testFilterOnlyRequest(): void
 	{
 		// empty only
@@ -229,36 +259,6 @@ class StateTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	public function testFilterGlobalsRequest(): void
-	{
-		// not included
-		$data = (new State())->filter([]);
-		$this->assertArrayNotHasKey('translation', $data);
-
-		// empty globals
-		$data = ['foo' => 'bar'];
-		$result = (new State())->filter($data);
-		$this->assertSame($data, $result);
-
-		// via query
-		$this->setRequest(['_globals' => 'translation']);
-
-		$data = (new State())->filter([]);
-		$this->assertArrayHasKey('translation', $data);
-
-		// via header
-		$this->app = $this->app->clone([
-			'request' => [
-				'headers' => [
-					'X-Panel-Globals' => 'translation'
-				]
-			]
-		]);
-
-		$data = (new State())->filter([]);
-		$this->assertArrayHasKey('translation', $data);
-	}
-
 	public function testFilterTranslation(): void
 	{
 		// the Panel still holds the translation of the current user
@@ -346,6 +346,42 @@ class StateTest extends TestCase
 		$this->assertSame('de', $globals['translation']['code']);
 	}
 
+	public function testLanguageHasCustomDomain(): void
+	{
+		$this->app = $this->app->clone([
+			'languages' => [
+				['code' => 'en', 'name' => 'English', 'default' => true],
+				['code' => 'de', 'name' => 'Deutsch']
+			],
+			'options' => [
+				'languages' => true
+			]
+		]);
+
+		$state    = new State();
+		$language = $state->language();
+
+		$this->assertFalse($language['hasCustomDomain']);
+	}
+
+	public function testLanguageHasCustomDomainWithUrl(): void
+	{
+		$this->app = $this->app->clone([
+			'languages' => [
+				['code' => 'en', 'name' => 'English', 'default' => true, 'url' => 'https://en.example.com'],
+				['code' => 'de', 'name' => 'Deutsch', 'url' => 'https://de.example.com']
+			],
+			'options' => [
+				'languages' => true
+			]
+		]);
+
+		$state    = new State();
+		$language = $state->language();
+
+		$this->assertTrue($language['hasCustomDomain']);
+	}
+
 	public function testLanguages(): void
 	{
 		$this->app = $this->app->clone([
@@ -394,42 +430,6 @@ class StateTest extends TestCase
 		$this->assertSame($expected, $languages);
 		$this->assertSame($expected[0], $language);
 		$this->assertNull($direction);
-	}
-
-	public function testLanguageHasCustomDomain(): void
-	{
-		$this->app = $this->app->clone([
-			'languages' => [
-				['code' => 'en', 'name' => 'English', 'default' => true],
-				['code' => 'de', 'name' => 'Deutsch']
-			],
-			'options' => [
-				'languages' => true
-			]
-		]);
-
-		$state    = new State();
-		$language = $state->language();
-
-		$this->assertFalse($language['hasCustomDomain']);
-	}
-
-	public function testLanguageHasCustomDomainWithUrl(): void
-	{
-		$this->app = $this->app->clone([
-			'languages' => [
-				['code' => 'en', 'name' => 'English', 'default' => true, 'url' => 'https://en.example.com'],
-				['code' => 'de', 'name' => 'Deutsch', 'url' => 'https://de.example.com']
-			],
-			'options' => [
-				'languages' => true
-			]
-		]);
-
-		$state    = new State();
-		$language = $state->language();
-
-		$this->assertTrue($language['hasCustomDomain']);
 	}
 
 	public function testLanguagesHasCustomDomain(): void

@@ -129,6 +129,24 @@ class Locale
 	}
 
 	/**
+	 * Tries to convert an `LC_*` constant name
+	 * to its constant value
+	 */
+	protected static function normalizeConstant(
+		int|string $constant
+	): int|string {
+		if (
+			is_string($constant) === true &&
+			Str::startsWith($constant, 'LC_') === true
+		) {
+			return constant($constant);
+		}
+
+		// already an int or we cannot convert it safely
+		return $constant;
+	}
+
+	/**
 	 * Sets the PHP locale with a locale string or
 	 * an array with constant or string keys
 	 *
@@ -150,24 +168,6 @@ class Locale
 		) {
 			locale_set_default($timeLocale);
 		}
-	}
-
-	/**
-	 * Tries to convert an `LC_*` constant name
-	 * to its constant value
-	 */
-	protected static function normalizeConstant(
-		int|string $constant
-	): int|string {
-		if (
-			is_string($constant) === true &&
-			Str::startsWith($constant, 'LC_') === true
-		) {
-			return constant($constant);
-		}
-
-		// already an int or we cannot convert it safely
-		return $constant;
 	}
 
 	/**

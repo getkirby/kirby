@@ -27,6 +27,19 @@ class CsrfTest extends TestCase
 		$this->assertNull($session->get('kirby.csrf'));
 	}
 
+	public function testCsrfFromSessionPanelDevOption(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'panel.dev' => true
+			]
+		]);
+
+		$this->csrf = new Csrf($this->app);
+
+		$this->assertFalse($this->csrf->get());
+	}
+
 	public function testFromSession1(): void
 	{
 		$this->app->session()->set('kirby.csrf', 'session-csrf');
@@ -116,19 +129,6 @@ class CsrfTest extends TestCase
 		$this->app->session()->set('kirby.csrf', 'session-csrf');
 
 		$_GET = ['csrf' => 'invalid-csrf'];
-		$this->assertFalse($this->csrf->get());
-	}
-
-	public function testCsrfFromSessionPanelDevOption(): void
-	{
-		$this->app = $this->app->clone([
-			'options' => [
-				'panel.dev' => true
-			]
-		]);
-
-		$this->csrf = new Csrf($this->app);
-
 		$this->assertFalse($this->csrf->get());
 	}
 }

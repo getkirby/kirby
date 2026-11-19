@@ -13,47 +13,6 @@ class FilesTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Cms.Files';
 
-	public function testAddFile(): void
-	{
-		$parent = new Page(['slug' => 'test']);
-
-		$files = Files::factory([
-			['filename' => 'a.jpg']
-		], $parent);
-
-		$file = new File([
-			'filename' => 'b.jpg',
-			'parent'   => $parent
-		]);
-
-		$result = $files->add($file);
-
-		$this->assertCount(2, $result);
-		$this->assertSame('a.jpg', $result->nth(0)->filename());
-		$this->assertSame('b.jpg', $result->nth(1)->filename());
-	}
-
-	public function testAddCollection(): void
-	{
-		$parent = new Page(['slug' => 'test']);
-
-		$a = Files::factory([
-			['filename' => 'a.jpg']
-		], $parent);
-
-		$b = Files::factory([
-			['filename' => 'b.jpg'],
-			['filename' => 'c.jpg']
-		], $parent);
-
-		$c = $a->add($b);
-
-		$this->assertCount(3, $c);
-		$this->assertSame('a.jpg', $c->nth(0)->filename());
-		$this->assertSame('b.jpg', $c->nth(1)->filename());
-		$this->assertSame('c.jpg', $c->nth(2)->filename());
-	}
-
 	public function testAddById(): void
 	{
 		$app = new App([
@@ -87,14 +46,25 @@ class FilesTest extends TestCase
 		$this->assertSame('b/a.jpg', $files->nth(2)->id());
 	}
 
-	public function testAddNull(): void
+	public function testAddCollection(): void
 	{
-		$files = new Files();
-		$this->assertCount(0, $files);
+		$parent = new Page(['slug' => 'test']);
 
-		$files->add(null);
+		$a = Files::factory([
+			['filename' => 'a.jpg']
+		], $parent);
 
-		$this->assertCount(0, $files);
+		$b = Files::factory([
+			['filename' => 'b.jpg'],
+			['filename' => 'c.jpg']
+		], $parent);
+
+		$c = $a->add($b);
+
+		$this->assertCount(3, $c);
+		$this->assertSame('a.jpg', $c->nth(0)->filename());
+		$this->assertSame('b.jpg', $c->nth(1)->filename());
+		$this->assertSame('c.jpg', $c->nth(2)->filename());
 	}
 
 	public function testAddFalse(): void
@@ -107,6 +77,26 @@ class FilesTest extends TestCase
 		$this->assertCount(0, $files);
 	}
 
+	public function testAddFile(): void
+	{
+		$parent = new Page(['slug' => 'test']);
+
+		$files = Files::factory([
+			['filename' => 'a.jpg']
+		], $parent);
+
+		$file = new File([
+			'filename' => 'b.jpg',
+			'parent'   => $parent
+		]);
+
+		$result = $files->add($file);
+
+		$this->assertCount(2, $result);
+		$this->assertSame('a.jpg', $result->nth(0)->filename());
+		$this->assertSame('b.jpg', $result->nth(1)->filename());
+	}
+
 	public function testAddInvalidObject(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -115,6 +105,16 @@ class FilesTest extends TestCase
 		$site  = new Site();
 		$files = new Files();
 		$files->add($site);
+	}
+
+	public function testAddNull(): void
+	{
+		$files = new Files();
+		$this->assertCount(0, $files);
+
+		$files->add(null);
+
+		$this->assertCount(0, $files);
 	}
 
 	public function testDelete(): void
@@ -199,44 +199,6 @@ class FilesTest extends TestCase
 
 		$this->assertFileExists($a);
 		$this->assertFileExists($b);
-	}
-
-	public function testDeleteWithUuids(): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => static::TMP
-			],
-			'site' => [
-				'files' => [
-					['filename' => 'a.jpg', 'content' => ['uuid' => 'test-a']],
-					['filename' => 'b.jpg', 'content' => ['uuid' => 'test-b']]
-				]
-			]
-		]);
-
-		$app->impersonate('kirby');
-
-		$files = $app->site()->files();
-
-		$a = $files->get('a.jpg')->root();
-		$b = $files->get('b.jpg')->root();
-
-		// pretend the files exist
-		F::write($a, '');
-		F::write($b, '');
-
-		// the Panel sends the selection as UUIDs
-		$files->delete([
-			'file://test-a',
-			'file://test-b',
-		]);
-
-		$this->assertCount(0, $files);
-		$this->assertFileDoesNotExist($a);
-		$this->assertFileDoesNotExist($b);
-
-		Uuids::cache()->flush();
 	}
 
 	public function testDeleteWithForeignUuid(): void
@@ -326,6 +288,44 @@ class FilesTest extends TestCase
 
 		$this->assertFileDoesNotExist($a);
 		$this->assertFileExists($b);
+	}
+
+	public function testDeleteWithUuids(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'site' => [
+				'files' => [
+					['filename' => 'a.jpg', 'content' => ['uuid' => 'test-a']],
+					['filename' => 'b.jpg', 'content' => ['uuid' => 'test-b']]
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$files = $app->site()->files();
+
+		$a = $files->get('a.jpg')->root();
+		$b = $files->get('b.jpg')->root();
+
+		// pretend the files exist
+		F::write($a, '');
+		F::write($b, '');
+
+		// the Panel sends the selection as UUIDs
+		$files->delete([
+			'file://test-a',
+			'file://test-b',
+		]);
+
+		$this->assertCount(0, $files);
+		$this->assertFileDoesNotExist($a);
+		$this->assertFileDoesNotExist($b);
+
+		Uuids::cache()->flush();
 	}
 
 	public function testFindByUuid(): void

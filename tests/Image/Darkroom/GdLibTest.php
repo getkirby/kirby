@@ -10,8 +10,8 @@ use ReflectionMethod;
 
 class SimpleImageMock extends SimpleImage
 {
-	public int $sharpen = 50;
 	public array $crops = [];
+	public int $sharpen = 50;
 
 	public function crop(int|float $x1, int|float $y1, int|float $x2, int|float $y2): static
 	{
@@ -87,36 +87,6 @@ class GdLibTest extends TestCase
 		$this->assertSame([200, 150], array_slice(getimagesize($file), 0, 2));
 	}
 
-	public function testResizeWithFocusPoint(): void
-	{
-		$gd = new GdLib([
-			'crop'   => '25% 0%',
-			'width'  => 200,
-			'height' => 150
-		]);
-
-		copy(static::FIXTURES . '/cat.jpg', $file = static::TMP . '/cat.jpg');
-
-		$gd->process($file);
-
-		$this->assertSame([200, 150], array_slice(getimagesize($file), 0, 2));
-	}
-
-	public function testResizeWithCropRounding(): void
-	{
-		$gd = new GdLib([
-			'crop'   => true,
-			'width'  => 200,
-			'height' => 289
-		]);
-
-		copy(static::FIXTURES . '/../orientation/Landscape_0.jpg', $file = static::TMP . '/landscape.jpg');
-
-		$gd->process($file);
-
-		$this->assertSame([200, 289], array_slice(getimagesize($file), 0, 2));
-	}
-
 	public function testResizeCropsAfterDownscaling(): void
 	{
 		$gd = new GdLib();
@@ -161,6 +131,36 @@ class GdLibTest extends TestCase
 		$this->assertSame(536, $result->getHeight());
 
 		$this->assertSame([0, 0, 300, 536], $result->crops[0]);
+	}
+
+	public function testResizeWithCropRounding(): void
+	{
+		$gd = new GdLib([
+			'crop'   => true,
+			'width'  => 200,
+			'height' => 289
+		]);
+
+		copy(static::FIXTURES . '/../orientation/Landscape_0.jpg', $file = static::TMP . '/landscape.jpg');
+
+		$gd->process($file);
+
+		$this->assertSame([200, 289], array_slice(getimagesize($file), 0, 2));
+	}
+
+	public function testResizeWithFocusPoint(): void
+	{
+		$gd = new GdLib([
+			'crop'   => '25% 0%',
+			'width'  => 200,
+			'height' => 150
+		]);
+
+		copy(static::FIXTURES . '/cat.jpg', $file = static::TMP . '/cat.jpg');
+
+		$gd->process($file);
+
+		$this->assertSame([200, 150], array_slice(getimagesize($file), 0, 2));
 	}
 
 	public function testSharpen(): void

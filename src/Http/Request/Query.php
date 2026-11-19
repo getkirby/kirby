@@ -41,6 +41,14 @@ class Query implements Stringable
 	}
 
 	/**
+	 * Magic string converter
+	 */
+	public function __toString(): string
+	{
+		return $this->toString();
+	}
+
+	/**
 	 * Returns the Query data as array
 	 */
 	public function data(): array
@@ -71,13 +79,5 @@ class Query implements Stringable
 	public function toString(): string
 	{
 		return http_build_query($this->data());
-	}
-
-	/**
-	 * Magic string converter
-	 */
-	public function __toString(): string
-	{
-		return $this->toString();
 	}
 }
