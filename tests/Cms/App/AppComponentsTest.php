@@ -52,6 +52,35 @@ class AppComponentsTest extends TestCase
 		$this->assertSame($expected, css('something.css'));
 	}
 
+	public function testEmail(): void
+	{
+		$app = $this->app->clone([
+			'components' => [
+				'email' => function ($kirby, $props, $debug) {
+					return new CustomEmailProvider($props, $debug);
+				}
+			]
+		]);
+
+		$email = $app->email([
+			'from' => 'no-reply@supercompany.com',
+			'to' => 'someone@gmail.com',
+			'subject' => 'Thank you for your contact request',
+			'body' => 'We will never reply'
+		], ['debug' => true]);
+
+		$this->assertInstanceOf(CustomEmailProvider::class, $email);
+		$this->assertTrue(property_exists($email, 'apiKey'));
+		$this->assertSame('no-reply@supercompany.com', $email->from());
+		$this->assertSame(['someone@gmail.com' => null], $email->to());
+		$this->assertSame('Thank you for your contact request', $email->subject());
+		$this->assertSame('We will never reply', $email->body()->text());
+
+		$this->assertNull($email::$apiKey);
+		$email->send();
+		$this->assertSame('KIRBY', $email::$apiKey);
+	}
+
 	public function testJsPlugin(): void
 	{
 		$this->app->clone([
@@ -88,6 +117,18 @@ class AppComponentsTest extends TestCase
 		$this->assertSame($expected, $this->app->kirbytext($text));
 	}
 
+	public function testKirbytextInline(): void
+	{
+		$text     = 'Test';
+		$expected = 'Test';
+
+		$this->assertSame($expected, $this->app->kirbytext($text, [
+			'markdown' => [
+				'inline' => true
+			]
+		], true));
+	}
+
 	public function testKirbytextWithSafeMode(): void
 	{
 		$text     = '<h1>**Test**</h1>';
@@ -101,40 +142,12 @@ class AppComponentsTest extends TestCase
 		]));
 	}
 
-	public function testKirbytextInline(): void
-	{
-		$text     = 'Test';
-		$expected = 'Test';
-
-		$this->assertSame($expected, $this->app->kirbytext($text, [
-			'markdown' => [
-				'inline' => true
-			]
-		], true));
-	}
-
 	public function testMarkdown(): void
 	{
 		$text     = 'Test';
 		$expected = '<p>Test</p>';
 
 		$this->assertSame($expected, $this->app->markdown($text));
-	}
-
-	public function testMarkdownInline(): void
-	{
-		$text     = 'Test';
-		$expected = 'Test';
-
-		$this->assertSame($expected, $this->app->markdown($text, ['inline' => true]));
-	}
-
-	public function testMarkdownWithSafeMode(): void
-	{
-		$text     = '<div>Test</div>';
-		$expected = '<p>&lt;div&gt;Test&lt;/div&gt;</p>';
-
-		$this->assertSame($expected, $this->app->markdown($text, ['safe' => true]));
 	}
 
 	public function testMarkdownCachedInstance(): void
@@ -149,6 +162,14 @@ class AppComponentsTest extends TestCase
 		$expected = '<p>1st line
 2nd line</p>';
 		$this->assertSame($expected, $this->app->component('markdown')($this->app, $text, ['breaks' => false]));
+	}
+
+	public function testMarkdownInline(): void
+	{
+		$text     = 'Test';
+		$expected = 'Test';
+
+		$this->assertSame($expected, $this->app->markdown($text, ['inline' => true]));
 	}
 
 	public function testMarkdownPlugin(): void
@@ -176,8 +197,57 @@ class AppComponentsTest extends TestCase
 		$this->assertSame($expected, $this->app->markdown($text, ['inline' => true]));
 	}
 
+	public function testMarkdownWithSafeMode(): void
+	{
+		$text     = '<div>Test</div>';
+		$expected = '<p>&lt;div&gt;Test&lt;/div&gt;</p>';
+
+		$this->assertSame($expected, $this->app->markdown($text, ['safe' => true]));
+	}
+
 	public function testSmartypants(): void
 	{
+		$text     = '"Test"';
+		$expected = '“Test”';
+
+		$this->assertSame($expected, $this->app->smartypants($text));
+	}
+
+	public function testSmartypantsCachedInstance(): void
+	{
+		$text     = '"Test"';
+		$expected = '“Test”';
+
+		$this->assertSame($expected, $this->app->component('smartypants')($this->app, $text, []));
+
+		$expected = 'TestTest”';
+		$this->assertSame($expected, $this->app->component('smartypants')($this->app, $text, ['doublequote.open' => 'Test']));
+	}
+
+	public function testSmartypantsDefaultOptionsOnMultiLang(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'languages'     => true,
+				'smartypants'   => true
+			],
+			'languages' => [
+				[
+					'code'          => 'en',
+					'name'          => 'English',
+					'default'       => true,
+					'locale'        => 'en_US',
+					'url'           => '/'
+				],
+				[
+					'code'          => 'de',
+					'name'          => 'Deutsch',
+					'locale'        => 'de_DE',
+					'url'           => '/de'
+				]
+			]
+		]);
+
 		$text     = '"Test"';
 		$expected = '“Test”';
 
@@ -199,24 +269,6 @@ class AppComponentsTest extends TestCase
 
 		// null text is coerced to empty string
 		$this->assertSame('', $this->app->smartypants(null));
-	}
-
-	public function testSmartypantsOptions(): void
-	{
-		$this->app = $this->app->clone([
-			'options' => [
-				'languages'   => true,
-				'smartypants' => [
-					'doublequote.open'  => '<',
-					'doublequote.close' => '>'
-				]
-			]
-		]);
-
-		$text     = '"Test"';
-		$expected = '<Test>';
-
-		$this->assertSame($expected, $this->app->smartypants($text));
 	}
 
 	public function testSmartypantsMultiLang(): void
@@ -257,45 +309,22 @@ class AppComponentsTest extends TestCase
 		$this->assertSame($expected, $this->app->smartypants($text));
 	}
 
-	public function testSmartypantsDefaultOptionsOnMultiLang(): void
+	public function testSmartypantsOptions(): void
 	{
 		$this->app = $this->app->clone([
 			'options' => [
-				'languages'     => true,
-				'smartypants'   => true
-			],
-			'languages' => [
-				[
-					'code'          => 'en',
-					'name'          => 'English',
-					'default'       => true,
-					'locale'        => 'en_US',
-					'url'           => '/'
-				],
-				[
-					'code'          => 'de',
-					'name'          => 'Deutsch',
-					'locale'        => 'de_DE',
-					'url'           => '/de'
+				'languages'   => true,
+				'smartypants' => [
+					'doublequote.open'  => '<',
+					'doublequote.close' => '>'
 				]
 			]
 		]);
 
 		$text     = '"Test"';
-		$expected = '“Test”';
+		$expected = '<Test>';
 
 		$this->assertSame($expected, $this->app->smartypants($text));
-	}
-
-	public function testSmartypantsCachedInstance(): void
-	{
-		$text     = '"Test"';
-		$expected = '“Test”';
-
-		$this->assertSame($expected, $this->app->component('smartypants')($this->app, $text, []));
-
-		$expected = 'TestTest”';
-		$this->assertSame($expected, $this->app->component('smartypants')($this->app, $text, ['doublequote.open' => 'Test']));
 	}
 
 	public function testSnippet(): void
@@ -387,6 +416,49 @@ class AppComponentsTest extends TestCase
 		$this->assertInstanceOf(Template::class, $this->app->template('default'));
 	}
 
+	public function testUrlInvalidUuid(): void
+	{
+		$this->app->clone([
+			'roots' => [
+				'index' => static::TMP,
+			]
+		]);
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The model could not be found for "page://invalid" uuid');
+
+		url('page://invalid');
+	}
+
+	public function testUrlPlugin(): void
+	{
+		$this->app->clone([
+			'components' => [
+				'url' => fn ($kirby, $path, $options) => 'test'
+			]
+		]);
+
+		$this->assertSame('test', url('anything'));
+	}
+
+	public function testUrlPluginWithNativeComponent(): void
+	{
+		$this->app->clone([
+			'components' => [
+				'url' => function ($kirby, $path, $options) {
+					if ($path === 'test') {
+						return 'test-path';
+					}
+
+					return $kirby->nativeComponent('url')($kirby, $path, $options);
+				}
+			]
+		]);
+
+		$this->assertSame('test-path', url('test'));
+		$this->assertSame('/any/page', url('any/page'));
+	}
+
 	public function testUrlPreservesExtensionOnMultilangSite(): void
 	{
 		$this->app->clone([
@@ -436,77 +508,5 @@ class AppComponentsTest extends TestCase
 			'https://getkirby.com/articles.xml#section',
 			url('articles.xml#section')
 		);
-	}
-
-	public function testUrlPlugin(): void
-	{
-		$this->app->clone([
-			'components' => [
-				'url' => fn ($kirby, $path, $options) => 'test'
-			]
-		]);
-
-		$this->assertSame('test', url('anything'));
-	}
-
-	public function testUrlPluginWithNativeComponent(): void
-	{
-		$this->app->clone([
-			'components' => [
-				'url' => function ($kirby, $path, $options) {
-					if ($path === 'test') {
-						return 'test-path';
-					}
-
-					return $kirby->nativeComponent('url')($kirby, $path, $options);
-				}
-			]
-		]);
-
-		$this->assertSame('test-path', url('test'));
-		$this->assertSame('/any/page', url('any/page'));
-	}
-
-	public function testUrlInvalidUuid(): void
-	{
-		$this->app->clone([
-			'roots' => [
-				'index' => static::TMP,
-			]
-		]);
-
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The model could not be found for "page://invalid" uuid');
-
-		url('page://invalid');
-	}
-
-	public function testEmail(): void
-	{
-		$app = $this->app->clone([
-			'components' => [
-				'email' => function ($kirby, $props, $debug) {
-					return new CustomEmailProvider($props, $debug);
-				}
-			]
-		]);
-
-		$email = $app->email([
-			'from' => 'no-reply@supercompany.com',
-			'to' => 'someone@gmail.com',
-			'subject' => 'Thank you for your contact request',
-			'body' => 'We will never reply'
-		], ['debug' => true]);
-
-		$this->assertInstanceOf(CustomEmailProvider::class, $email);
-		$this->assertTrue(property_exists($email, 'apiKey'));
-		$this->assertSame('no-reply@supercompany.com', $email->from());
-		$this->assertSame(['someone@gmail.com' => null], $email->to());
-		$this->assertSame('Thank you for your contact request', $email->subject());
-		$this->assertSame('We will never reply', $email->body()->text());
-
-		$this->assertNull($email::$apiKey);
-		$email->send();
-		$this->assertSame('KIRBY', $email::$apiKey);
 	}
 }

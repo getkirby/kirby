@@ -23,6 +23,14 @@ class Asset implements Stringable
 	) {
 	}
 
+	/**
+	 * @see self::url()
+	 */
+	public function __toString(): string
+	{
+		return $this->url();
+	}
+
 	public function extension(): string
 	{
 		return F::extension($this->path());
@@ -115,13 +123,5 @@ class Asset implements Stringable
 	public function url(): string
 	{
 		return $this->mediaUrl();
-	}
-
-	/**
-	 * @see self::url()
-	 */
-	public function __toString(): string
-	{
-		return $this->url();
 	}
 }

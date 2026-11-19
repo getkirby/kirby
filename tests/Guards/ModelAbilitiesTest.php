@@ -59,16 +59,6 @@ class ModelAbilitiesTest extends ModelTestCase
 		$this->assertNull($this->abilities()->ensure('does-not-exist'));
 	}
 
-	public function testMay(): void
-	{
-		$this->assertTrue($this->abilities()->may('delete'));
-	}
-
-	public function testMayWithFailingAbility(): void
-	{
-		$this->assertFalse($this->abilities()->may('update'));
-	}
-
 	public function testError(): void
 	{
 		$abilities = $this->abilities();
@@ -78,6 +68,16 @@ class ModelAbilitiesTest extends ModelTestCase
 
 		$method = new ReflectionMethod($abilities, 'error');
 		$method->invoke($abilities, 'error.test');
+	}
+
+	public function testMay(): void
+	{
+		$this->assertTrue($this->abilities()->may('delete'));
+	}
+
+	public function testMayWithFailingAbility(): void
+	{
+		$this->assertFalse($this->abilities()->may('update'));
 	}
 
 	protected function user(): User

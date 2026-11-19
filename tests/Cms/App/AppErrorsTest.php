@@ -47,6 +47,24 @@ class AppErrorsTest extends TestCase
 		App::$enableWhoops = false;
 	}
 
+	/**
+	 * Convert output to returned variable
+	 */
+	protected function _getBufferedContent(string|CallbackHandler $path): false|string
+	{
+		ob_start();
+
+		if ($path instanceof CallbackHandler) {
+			$path->handle();
+		} else {
+			F::load($path);
+		}
+
+		$response = ob_get_clean();
+
+		return $response;
+	}
+
 	public function testExceptionHook(): void
 	{
 		$result = null;
@@ -463,23 +481,5 @@ class AppErrorsTest extends TestCase
 		$whoops2 = $whoopsMethod->invoke($app);
 		$this->assertInstanceOf('Whoops\Run', $whoops2);
 		$this->assertSame($whoops1, $whoops2);
-	}
-
-	/**
-	 * Convert output to returned variable
-	 */
-	protected function _getBufferedContent(string|CallbackHandler $path): false|string
-	{
-		ob_start();
-
-		if ($path instanceof CallbackHandler) {
-			$path->handle();
-		} else {
-			F::load($path);
-		}
-
-		$response = ob_get_clean();
-
-		return $response;
 	}
 }

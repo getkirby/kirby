@@ -46,7 +46,6 @@ export default {
 		 * Whether the form is disabled
 		 */
 		disabled: Boolean,
-		config: Object,
 		fields: {
 			type: [Array, Object],
 			default: () => []
@@ -73,7 +72,7 @@ export default {
 		/**
 		 * Focus a specific field in the form or the first one if no name is given
 		 * @public
-		 * @param  {string} name field name to focus
+		 * @param  {string} [name] field name to focus
 		 */
 		focus(name) {
 			this.$refs.fields?.focus?.(name);

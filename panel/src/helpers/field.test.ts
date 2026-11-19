@@ -156,6 +156,10 @@ describe("$helper.field", () => {
 			expect(options(list, undefined)).toStrictEqual(list);
 			expect(options(list, [])).toStrictEqual(list);
 		});
+
+		it("should ignore a missing value cast to false", () => {
+			expect(options(list, false)).toStrictEqual(list);
+		});
 	});
 
 	describe("subfields()", () => {

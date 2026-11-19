@@ -137,6 +137,7 @@ export default {
 				this.html = newValue;
 				this.editor.setContent(this.html);
 				this.isEmpty = this.editor.isEmpty();
+				this.validate();
 			}
 		}
 	},

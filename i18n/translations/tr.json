@@ -9,8 +9,11 @@
 	"alpha": "Alfa",
 	"author": "Yazar",
 	"avatar": "Profil resmi",
+
 	"back": "Geri",
+
 	"buttons.empty": "No buttons",
+
 	"cancel": "\u0130ptal",
 	"change": "De\u011fi\u015ftir",
 	"close": "Kapat",
@@ -132,8 +135,8 @@
 	"error.file.changeTemplate": "The template for the file \"{id}\" cannot be changed",
 	"error.file.changeTemplate.invalid": "\"{id}\" dosyası için şablon \"{template}\" olarak değiştirilemez (geçerli: \"{blueprints}\")",
 	"error.file.changeTemplate.permission": "\"{id}\" dosyası için şablonu değiştirmenize izin verilmiyor",
-	"error.file.create.permission": "The file cannot be created",
 
+	"error.file.create.permission": "The file cannot be created",
 	"error.file.delete.multiple": "Tüm dosyalar silinemedi. Silinmeyi engelleyen belirli hatayı görmek için kalan her dosyayı ayrı ayrı deneyin.",
 	"error.file.delete.permission": "The file cannot be deleted",
 	"error.file.duplicate": "\"{filename}\" isimli bir dosya zaten var",
@@ -197,9 +200,9 @@
 	"error.object.validation": "\"{label}\" alanında bir hata var:\n{message}",
 
 	"error.offline": "Panel şu anda çevrimdışı",
+
 	"error.page.changeSlug.errorPage": "The slug of the error page cannot be changed",
 	"error.page.changeSlug.homePage": "The slug of the home page cannot be changed",
-
 	"error.page.changeSlug.permission": "\"{slug}\" uzantısına sahip bu sayfanın adresini değiştirilemez",
 	"error.page.changeSlug.reserved": "Üst düzey sayfaların yolu \"{path}\" ile başlamamalıdır",
 	"error.page.changeStatus.errorPage": "The status of the error page cannot be changed",
@@ -258,10 +261,10 @@
 	"error.template.default.notFound": "Varsayılan şablon yok",
 
 	"error.unexpected": "Beklenmeyen bir hata oluştu! Daha fazla bilgi için hata ayıklama modunu etkinleştirin: https://getkirby.com/docs/reference/system/options/debug",
+
 	"error.user.avatar.duplicate": "The avatar already exists",
 	"error.user.avatar.notFound": "The avatar does not exist",
 	"error.user.changeEmail.admin": "You are not allowed to change the email address of an admin",
-
 	"error.user.changeEmail.permission": "\"{name}\" kullanıcısı için e-postayı değiştiremezsiniz",
 	"error.user.changeLanguage.permission": "\"{name}\" kullanıcısının dilini değiştiremezsin",
 	"error.user.changeName.permission": "\"{name}\" kullanıcısının adını değiştiremezsiniz",
@@ -544,6 +547,7 @@
 	"license.code.help": "Lisans kodunuzu satın alma işleminden sonra e-posta yoluyla aldınız. Lütfen kopyalayıp buraya yapıştırın.",
 	"license.code.label": "Lisans kodu",
 	"license.remove.text": "<p>Lisansın kaldırılması, lisans dosyasını bu siteden geri alınamaz bir şekilde silecektir. Daha sonra bu siteyi farklı bir lisans anahtarıyla etkinleştirebilir veya alan adı aynı kalırsa aynı lisans anahtarını yeniden kaydedebilirsiniz.</p> <p>Lisansla ilişkili alan adını değiştirmek için lütfen Kirby ekibiyle iletişime geçin. <a href='https://getkirby.com/license'>Devamını okuyun &rarr;</a></p>",
+	"license.status": "License status",
 	"license.status.active.info": "{date} tarihine kadar yeni ana sürümleri içerir",
 	"license.status.active.label": "Geçerli lisans",
 	"license.status.acknowledged.info": "<a href=\"https://getkirby.com/license/free-licenses\">Ücretsiz lisans şartlarına</a> uyacağınızı onayladınız.",
@@ -721,6 +725,7 @@
 	"preview": "Önizle",
 	"preview.browser.pin": "Toggle whether preview navigation should be in sync or independent",
 	"preview.browser.scroll": "Senkronize kaydırma",
+
 	"progress": "Progress",
 
 	"protected": "Korumalı",
@@ -804,6 +809,8 @@
 	"theme.light": "Açık mod",
 	"theme.dark": "Koyu mod",
 	"theme.automatic": "Sistem varsayılanı",
+
+	"time.select": "Select a time",
 
 	"title": "Başlık",
 	"today": "Bugün",

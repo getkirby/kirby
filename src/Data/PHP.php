@@ -15,6 +15,16 @@ use Kirby\Filesystem\F;
 class PHP extends Handler
 {
 	/**
+	 * PHP strings shouldn't be decoded manually
+	 */
+	public static function decode($string): array
+	{
+		throw new BadMethodCallException(
+			message: 'The PHP::decode() method is not implemented'
+		);
+	}
+
+	/**
 	 * Converts data to PHP file content
 	 *
 	 * @param $indent For internal use only
@@ -51,16 +61,6 @@ class PHP extends Handler
 		}
 
 		return "[\n" . implode(",\n", $lines) . "\n" . $indent . ']';
-	}
-
-	/**
-	 * PHP strings shouldn't be decoded manually
-	 */
-	public static function decode($string): array
-	{
-		throw new BadMethodCallException(
-			message: 'The PHP::decode() method is not implemented'
-		);
 	}
 
 	/**

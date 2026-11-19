@@ -22,6 +22,13 @@ class Uri implements Stringable
 	public static Uri|null $current = null;
 
 	/**
+	 * Supported schemes
+	 *
+	 * @var list<string>
+	 */
+	protected static array $schemes = ['http', 'https', 'ftp'];
+
+	/**
 	 * The fragment after the hash
 	 */
 	protected string|null $fragment;
@@ -32,14 +39,14 @@ class Uri implements Stringable
 	protected string|null $host;
 
 	/**
-	 * The optional password for basic authentication
-	 */
-	protected string|false|null $password;
-
-	/**
 	 * The optional list of params
 	 */
 	protected Params $params;
+
+	/**
+	 * The optional password for basic authentication
+	 */
+	protected string|false|null $password;
 
 	/**
 	 * The optional path
@@ -65,14 +72,6 @@ class Uri implements Stringable
 	 * https or http
 	 */
 	protected string|null $scheme;
-
-	/**
-	 * Supported schemes
-	 *
-	 * @var list<string>
-	 */
-	protected static array $schemes = ['http', 'https', 'ftp'];
-
 	protected bool $slash;
 
 	/**
@@ -252,6 +251,15 @@ class Uri implements Stringable
 		return $domain;
 	}
 
+	/**
+	 * Returns the fragment after the hash
+	 * @since 5.1.0
+	 */
+	public function fragment(): string|null
+	{
+		return $this->fragment;
+	}
+
 	public function hasFragment(): bool
 	{
 		return $this->fragment !== null && $this->fragment !== '';
@@ -338,12 +346,31 @@ class Uri implements Stringable
 	}
 
 	/**
-	 * Returns the fragment after the hash
-	 * @since 5.1.0
+	 * Parses the path inside the props and extracts
+	 * the params unless disabled
+	 *
+	 * @return array<string, mixed> Modified props array
 	 */
-	public function fragment(): string|null
+	protected static function parsePath(array $props): array
 	{
-		return $this->fragment;
+		// extract params, the rest is the path;
+		// only do this if not explicitly disabled (set to `false`)
+		if (isset($props['params']) === false || $props['params'] !== false) {
+			$extract           = Params::extract($props['path']);
+			$props['params'] ??= $extract['params'];
+			$props['path']     = $extract['path'];
+			$props['slash']  ??= $extract['slash'];
+
+			return $props;
+		}
+
+		// use the full path;
+		// automatically detect the trailing slash from it if possible
+		if (is_string($props['path']) === true) {
+			$props['slash'] = str_ends_with($props['path'], '/') === true;
+		}
+
+		return $props;
 	}
 
 	/**
@@ -560,33 +587,5 @@ class Uri implements Stringable
 		}
 
 		return $this;
-	}
-
-	/**
-	 * Parses the path inside the props and extracts
-	 * the params unless disabled
-	 *
-	 * @return array<string, mixed> Modified props array
-	 */
-	protected static function parsePath(array $props): array
-	{
-		// extract params, the rest is the path;
-		// only do this if not explicitly disabled (set to `false`)
-		if (isset($props['params']) === false || $props['params'] !== false) {
-			$extract           = Params::extract($props['path']);
-			$props['params'] ??= $extract['params'];
-			$props['path']     = $extract['path'];
-			$props['slash']  ??= $extract['slash'];
-
-			return $props;
-		}
-
-		// use the full path;
-		// automatically detect the trailing slash from it if possible
-		if (is_string($props['path']) === true) {
-			$props['slash'] = str_ends_with($props['path'], '/') === true;
-		}
-
-		return $props;
 	}
 }

@@ -62,16 +62,6 @@ class PagePermissionsTest extends ModelTestCase
 		$this->assertNull($this->permissions()->ensure('changeStatus'));
 	}
 
-	public function testChangeStatusWithoutPermission(): void
-	{
-		$permissions = $this->permissions(['changeStatus' => false]);
-
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionCode('error.page.changeStatus.permission');
-
-		$permissions->ensure('changeStatus');
-	}
-
 	public function testChangeStatusToDraft(): void
 	{
 		$this->assertNull($this->permissions()->ensure('changeStatusToDraft'));
@@ -85,6 +75,16 @@ class PagePermissionsTest extends ModelTestCase
 		$this->expectExceptionCode('error.page.changeStatus.permission');
 
 		$permissions->ensure('changeStatusToDraft');
+	}
+
+	public function testChangeStatusWithoutPermission(): void
+	{
+		$permissions = $this->permissions(['changeStatus' => false]);
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionCode('error.page.changeStatus.permission');
+
+		$permissions->ensure('changeStatus');
 	}
 
 	public function testChangeTemplate(): void

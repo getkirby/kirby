@@ -15,12 +15,10 @@ use Closure;
  */
 class Events
 {
-	protected int $level = 0;
-
 	/**
 	 * @var array<string, list<Closure>>
 	 */
-	protected array $processed = [];
+	protected array $running = [];
 
 	public function __construct(
 		protected App $app
@@ -88,30 +86,25 @@ class Events
 		$event = new Event($name, $args);
 		$hooks = $this->hooks($event);
 
-		$this->level++;
-
 		foreach ($hooks as $hook) {
-			// skip hooks that have already been processed
-			if (in_array($hook, $this->processed[$name] ?? []) === true) {
+			// skip hooks that are already running for this event,
+			// to avoid endless loops
+			if (in_array($hook, $this->running[$name] ?? [], true) === true) {
 				continue;
 			}
 
-			// mark the hook as processed, to avoid endless loops
-			$this->processed[$name][] = $hook;
+			$this->running[$name][] = $hook;
 
-			// bind the Kirby instance to the hook and run it
-			$result = $event->call($this->app, $hook);
+			try {
+				// bind the Kirby instance to the hook and run it
+				$result = $event->call($this->app, $hook);
+			} finally {
+				array_pop($this->running[$name]);
+			}
 
 			if ($afterEach !== null) {
 				$afterEach($event, $result);
 			}
-		}
-
-		$this->level--;
-
-		// reset the protection after the last nesting level has been closed
-		if ($this->level === 0) {
-			$this->processed = [];
 		}
 
 		if ($return !== null) {

@@ -9,8 +9,11 @@
 	"alpha": "Alfa",
 	"author": "Autor",
 	"avatar": "Imagine de profil",
+
 	"back": "Înapoi",
+
 	"buttons.empty": "No buttons",
+
 	"cancel": "Anulează",
 	"change": "Modific\u0103",
 	"close": "\u00cenchide",
@@ -132,8 +135,8 @@
 	"error.file.changeTemplate": "The template for the file \"{id}\" cannot be changed",
 	"error.file.changeTemplate.invalid": "Șablonul pentru fișierul \"{id}\" nu poate fi schimbat la \"{template}\" (valide: \"{blueprints}\")",
 	"error.file.changeTemplate.permission": "Nu ai voie să schimbi șablonul pentru fișierul \"{id}\"",
-	"error.file.create.permission": "The file cannot be created",
 
+	"error.file.create.permission": "The file cannot be created",
 	"error.file.delete.multiple": "Nu toate fișierele s-au putut șterge. Încearcă, pe rând, fiecare fișier rămas pentru a vedea eroarea specifică ce-i împiedică ștergerea.",
 	"error.file.delete.permission": "The file cannot be deleted",
 	"error.file.duplicate": "Există deja un fișier cu numele \"{filename}\"",
@@ -197,9 +200,9 @@
 	"error.object.validation": "Există o eroare la câmpul \"{label}\":\n{message}",
 
 	"error.offline": "Panoul este momentan offline",
+
 	"error.page.changeSlug.errorPage": "The slug of the error page cannot be changed",
 	"error.page.changeSlug.homePage": "The slug of the home page cannot be changed",
-
 	"error.page.changeSlug.permission": "Nu ai voie să schimbi apendicele URL pentru \"{slug}\"",
 	"error.page.changeSlug.reserved": "Calea paginilor de la primul nivel nu poate să înceapă cu \"{path}\"",
 	"error.page.changeStatus.errorPage": "The status of the error page cannot be changed",
@@ -258,10 +261,10 @@
 	"error.template.default.notFound": "Șablonul implicit nu există",
 
 	"error.unexpected": "S-a produs o eroare neașteptată! Activează modul depanare pentru mai multe informații: https://getkirby.com/docs/reference/system/options/debug",
+
 	"error.user.avatar.duplicate": "The avatar already exists",
 	"error.user.avatar.notFound": "The avatar does not exist",
 	"error.user.changeEmail.admin": "You are not allowed to change the email address of an admin",
-
 	"error.user.changeEmail.permission": "Nu ai voie să schimbi adresa de e-mail a utilizatorului \"{name}\"",
 	"error.user.changeLanguage.permission": "Nu ai voie să schimbi limba utilizatorului \"{name}\"",
 	"error.user.changeName.permission": "Nu ai voie să schimbi numele utilizatorului \"{name}\"",
@@ -544,6 +547,7 @@
 	"license.code.help": "Ați primit codul de licență după achiziție prin e-mail. Vă rugăm să-l copiați și să-l inserezi aici.",
 	"license.code.label": "License code",
 	"license.remove.text": "<p>Prin înlăturarea licenței se va șterge în mod ireversibil fișierul de licență de pe acest site. Vei putea apoi activa site-ul cu o altă cheie de licență sau să folosești din nou aceeași cheie în caz că domeniul rămâne același.</p><p>Pentru a schimba domeniul asociat licenței, contactează te rog echipa Kirby. <a href='https://getkirby.com/license'>Citește mai multe &rarr;</a></p>",
+	"license.status": "License status",
 	"license.status.active.info": "Include noi versiuni majore până la data de {date}",
 	"license.status.active.label": "Licență validă",
 	"license.status.acknowledged.info": "You confirmed to comply with the <a href=\"https://getkirby.com/license/free-licenses\">free license requirements</a>",
@@ -721,6 +725,7 @@
 	"preview": "Previzualizează",
 	"preview.browser.pin": "Toggle whether preview navigation should be in sync or independent",
 	"preview.browser.scroll": "Sync scroll",
+
 	"progress": "Progress",
 
 	"protected": "Protected",
@@ -805,6 +810,8 @@
 	"theme.dark": "Lumina stinsă",
 	"theme.automatic": "Aceeași cu sistemul",
 
+	"time.select": "Select a time",
+
 	"title": "Titlu",
 	"today": "Astăzi",
 
@@ -823,7 +830,7 @@
 	"toolbar.button.file": "Fișier",
 	"toolbar.button.file.select": "Alege un fișier",
 	"toolbar.button.file.upload": "Încarcă un fișier",
-	"toolbar.button.link": "Link",
+	"toolbar.button.link": "Legătură",
 	"toolbar.button.paragraph": "Paragraf",
 	"toolbar.button.strike": "Tăiat",
 	"toolbar.button.sub": "Indice",

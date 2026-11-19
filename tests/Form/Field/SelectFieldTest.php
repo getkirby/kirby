@@ -109,7 +109,7 @@ class SelectFieldTest extends TestCase
 
 	public function testOptionsQueryAdditionalData(): void
 	{
-		$this->app()->clone([
+		$app = $this->app()->clone([
 			'site' => [
 				'children' => [
 					[
@@ -139,6 +139,8 @@ class SelectFieldTest extends TestCase
 				]
 			]
 		]);
+
+		$app->impersonate('kirby');
 
 		$expected = [
 			[
@@ -176,6 +178,49 @@ class SelectFieldTest extends TestCase
 		]);
 
 		$this->assertSame($expected, $field->options());
+	}
+
+	public function testOptionsQueryWithProtectedPages(): void
+	{
+		$app   = $this->appWithProtectedPages();
+		$field = $this->field('select', [
+			'model'   => $app->site(),
+			'options' => 'site.children'
+		]);
+
+		// pages that must not be listed are hidden
+		$this->assertSame(['a'], array_column($field->options(), 'value'));
+
+		// ... unless they are in the value, then they are kept as placeholder
+		$field->fill('b');
+
+		$this->assertSame(['a', 'b'], array_column($field->options(), 'value'));
+		$this->assertSame([
+			'disabled' => false,
+			'icon'     => null,
+			'info'     => null,
+			'text'     => '[unknown]',
+			'value'    => 'b'
+		], $field->options()[1]);
+		$this->assertTrue($field->isValid());
+		$this->assertSame('b', $field->toStoredValue());
+
+		// the placeholder follows the value
+		$field->fill('a');
+		$this->assertSame(['a'], array_column($field->options(), 'value'));
+
+		// unknown values stay invalid
+		$field->fill('x');
+		$this->assertFalse($field->isValid());
+
+		// the default value keeps its placeholder as well
+		$field = $this->field('select', [
+			'model'   => $app->site(),
+			'options' => 'site.children',
+			'default' => 'c'
+		]);
+
+		$this->assertSame(['a', 'c'], array_column($field->options(), 'value'));
 	}
 
 	public function testProps(): void

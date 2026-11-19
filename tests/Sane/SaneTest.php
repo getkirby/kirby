@@ -27,6 +27,14 @@ class SaneTest extends TestCase
 		$this->assertInstanceOf(CustomHandler::class, Sane::handler('test'));
 	}
 
+	public function testDefaultAliases(): void
+	{
+		$this->assertInstanceOf(Html::class, Sane::handler('text/html'));
+		$this->assertInstanceOf(Svg::class, Sane::handler('image/svg+xml'));
+		$this->assertInstanceOf(Xml::class, Sane::handler('application/xml'));
+		$this->assertInstanceOf(Xml::class, Sane::handler('text/xml'));
+	}
+
 	public function testDefaultHandlers(): void
 	{
 		$this->assertInstanceOf(Html::class, Sane::handler('html'));
@@ -42,14 +50,6 @@ class SaneTest extends TestCase
 		$this->assertInstanceOf(Svg::class, Sane::handler('svg', true));
 		$this->assertInstanceOf(Svg::class, Sane::handler('SvG', true));
 		$this->assertInstanceOf(Svg::class, Sane::handler('svG', true));
-	}
-
-	public function testDefaultAliases(): void
-	{
-		$this->assertInstanceOf(Html::class, Sane::handler('text/html'));
-		$this->assertInstanceOf(Svg::class, Sane::handler('image/svg+xml'));
-		$this->assertInstanceOf(Xml::class, Sane::handler('application/xml'));
-		$this->assertInstanceOf(Xml::class, Sane::handler('text/xml'));
 	}
 
 	public function testMissingHandler(): void
@@ -165,14 +165,6 @@ class SaneTest extends TestCase
 		Sane::validate('<html></html>', 'svg');
 	}
 
-	public function testValidateMissingHandler(): void
-	{
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Missing handler for type: "foo"');
-
-		Sane::validate('foo', 'foo');
-	}
-
 	public function testValidateFile(): void
 	{
 		$file = $this->fixture('doctype-valid.svg');
@@ -263,5 +255,13 @@ class SaneTest extends TestCase
 	public function testValidateFileMissingHandler4(): void
 	{
 		$this->assertNull(Sane::validateFile($this->fixture('unknown.xyz'), true));
+	}
+
+	public function testValidateMissingHandler(): void
+	{
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('Missing handler for type: "foo"');
+
+		Sane::validate('foo', 'foo');
 	}
 }

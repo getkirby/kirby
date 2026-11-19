@@ -3,7 +3,9 @@
 		<component
 			:is="`k-${currentType}s-field-preview`"
 			v-if="value"
+			:class="$attrs.class"
 			:removable="removable"
+			:style="$attrs.style"
 			:value="[value]"
 			@remove="$emit('remove', $event)"
 		/>

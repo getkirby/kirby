@@ -27,7 +27,6 @@ class UserChangeSecretTest extends ModelTestCase
 
 		$this->app->users()->add($this->admin);
 
-
 		$this->editor = new User([
 			'id'    => 'editor',
 			'email' => 'editor@domain.com',

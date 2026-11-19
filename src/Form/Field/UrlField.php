@@ -14,9 +14,6 @@ use Kirby\Reflection\Attributes\Prop;
 class UrlField extends TextField
 {
 	#[Prop]
-	protected array|string|null $placeholder = 'https://example.com';
-
-	#[Prop]
 	protected string|null $autocomplete = 'url';
 
 	#[Prop]
@@ -24,6 +21,9 @@ class UrlField extends TextField
 
 	#[Prop]
 	protected string|null $icon = 'url';
+
+	#[Prop]
+	protected array|string|null $placeholder = 'https://example.com';
 
 	protected function validations(): array
 	{

@@ -1,8 +1,9 @@
 <template>
 	<k-string-input
 		v-bind="$props"
+		:class="['k-url-input', $attrs.class]"
+		:style="$attrs.style"
 		type="url"
-		class="k-url-input"
 		@input="$emit('input', $event)"
 	/>
 </template>
@@ -35,12 +36,12 @@ export default {
 	mixins: [StringInput, props],
 	emits: ["input"],
 	watch: {
-		value: {
-			handler() {
-				this.validate();
-			},
-			immediate: true
+		value() {
+			this.validate();
 		}
+	},
+	mounted() {
+		this.validate();
 	},
 	methods: {
 		validate() {

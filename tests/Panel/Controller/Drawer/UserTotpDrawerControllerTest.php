@@ -141,20 +141,6 @@ class UserTotpDrawerControllerTest extends TestCase
 		}
 	}
 
-	public function testSubmitCreateWithMissingConfirm(): void
-	{
-		$this->setRequest([
-			'action' => 'create',
-			'secret' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'
-		]);
-		$this->app->impersonate('test');
-
-		$this->expectException(InvalidArgumentException::class);
-
-		$controller = new UserTotpDrawerController($this->app->user('test'));
-		$controller->submit();
-	}
-
 	public function testSubmitCreateWithInvalidConfirm(): void
 	{
 		$this->setRequest([
@@ -166,6 +152,20 @@ class UserTotpDrawerControllerTest extends TestCase
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionCode('error.login.totp.confirm.invalid');
+
+		$controller = new UserTotpDrawerController($this->app->user('test'));
+		$controller->submit();
+	}
+
+	public function testSubmitCreateWithMissingConfirm(): void
+	{
+		$this->setRequest([
+			'action' => 'create',
+			'secret' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'
+		]);
+		$this->app->impersonate('test');
+
+		$this->expectException(InvalidArgumentException::class);
 
 		$controller = new UserTotpDrawerController($this->app->user('test'));
 		$controller->submit();

@@ -4,6 +4,7 @@ namespace Kirby\Form\Mixin;
 
 use Kirby\Form\FieldOptions;
 use Kirby\Reflection\Attributes\Prop;
+use Kirby\Toolkit\A;
 
 /**
  * Provides options loading and resolution for choice-based fields
@@ -20,29 +21,35 @@ trait Options
 	protected array|string|null $options = null;
 
 	/**
-	 * Cache for the resolved options
-	 *
-	 * @var list<array<string, mixed>>|null
+	 * Cache for the source of the options
 	 */
-	protected array|null $optionsCache = null;
+	protected FieldOptions|null $optionsCache = null;
 
 	/**
-	 * @return list<array<string, mixed>>
+	 * Creates the source of the options
 	 */
-	protected function fetchOptions(): array
+	protected function fieldOptions(): FieldOptions
 	{
-		$props   = FieldOptions::polyfill(['options' => $this->options ?? []]);
-		$options = FieldOptions::factory($props['options']);
-		return $options->render($this->model());
+		$props = FieldOptions::polyfill(['options' => $this->options ?? []]);
+		return FieldOptions::factory($props['options']);
 	}
 
 	/**
-	 * Returns the resolved options
+	 * Returns the resolved options; models that the current user
+	 * must not list only show up as placeholders for the field's values
 	 *
 	 * @return list<array<string, mixed>>
 	 */
 	public function options(): array
 	{
-		return $this->optionsCache ??= $this->fetchOptions();
+		$this->optionsCache ??= $this->fieldOptions();
+
+		return $this->optionsCache->render(
+			model: $this->model(),
+			values: [
+				...A::wrap($this->toFormValue()),
+				...A::wrap($this->default())
+			]
+		);
 	}
 }

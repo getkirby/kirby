@@ -37,7 +37,9 @@ export default abstract class Mark<
 		this.editor.removeMark(this.name);
 	}
 
-	abstract get schema(): MarkSpec;
+	get schema(): MarkSpec {
+		return {};
+	}
 
 	toggle(): void {
 		this.editor.toggleMark(this.name);

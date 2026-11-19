@@ -135,10 +135,13 @@ class FilenameTest extends TestCase
 		$this->assertSame($expected, $name->crop());
 	}
 
-	public function testCropEmpty(): void
+	public function testCropCustom(): void
 	{
-		$name = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}');
-		$this->assertFalse($name->crop());
+		$name = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}', [
+			'crop' => 'something'
+		]);
+
+		$this->assertSame('something', $name->crop());
 	}
 
 	public function testCropDisabled(): void
@@ -150,13 +153,10 @@ class FilenameTest extends TestCase
 		$this->assertFalse($name->crop());
 	}
 
-	public function testCropCustom(): void
+	public function testCropEmpty(): void
 	{
-		$name = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}', [
-			'crop' => 'something'
-		]);
-
-		$this->assertSame('something', $name->crop());
+		$name = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}');
+		$this->assertFalse($name->crop());
 	}
 
 	public function testDimensions(): void
@@ -176,18 +176,6 @@ class FilenameTest extends TestCase
 		$this->assertSame([], $name->dimensions());
 	}
 
-	public function testDimensionsWithoutWidth(): void
-	{
-		$name = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}', [
-			'height' => 300
-		]);
-
-		$this->assertSame([
-			'width'  => null,
-			'height' => 300
-		], $name->dimensions());
-	}
-
 	public function testDimensionsWithoutHeight(): void
 	{
 		$name = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}', [
@@ -200,21 +188,33 @@ class FilenameTest extends TestCase
 		], $name->dimensions());
 	}
 
+	public function testDimensionsWithoutWidth(): void
+	{
+		$name = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}', [
+			'height' => 300
+		]);
+
+		$this->assertSame([
+			'width'  => null,
+			'height' => 300
+		], $name->dimensions());
+	}
+
 	public function testExtension(): void
 	{
 		$name = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}');
 		$this->assertSame('jpg', $name->extension());
 	}
 
-	public function testExtensionUppercase(): void
-	{
-		$name = new Filename('/test/some-file.JPG', '{{ name }}.{{ extension }}');
-		$this->assertSame('jpg', $name->extension());
-	}
-
 	public function testExtensionJpeg(): void
 	{
 		$name = new Filename('/test/some-file.jpeg', '{{ name }}.{{ extension }}');
+		$this->assertSame('jpg', $name->extension());
+	}
+
+	public function testExtensionUppercase(): void
+	{
+		$name = new Filename('/test/some-file.JPG', '{{ name }}.{{ extension }}');
 		$this->assertSame('jpg', $name->extension());
 	}
 

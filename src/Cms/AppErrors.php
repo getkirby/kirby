@@ -61,6 +61,38 @@ trait AppErrors
 	}
 
 	/**
+	 * Whoops callback handler for additional error handling
+	 * (`system.exception` hook and output to error log)
+	 */
+	protected function getAdditionalWhoopsHandler(): CallbackHandler
+	{
+		// Whoops keeps every `Run` instance alive for the rest of the process
+		// via `register_shutdown_function()`. A handler closure that captured
+		// `$this` strongly would pin $app, potentially incl. site tree forever.
+		// Referencing the app weakly allows it to be garbage collected.
+		$app = WeakReference::create($this);
+
+		return new CallbackHandler(static function ($exception, $inspector, $run) use ($app) {
+			/** @var App $kirby */
+			$kirby    = $app->get() ?? App::instance();
+			$isLogged = true;
+
+			// allow hook to modify whether the exception should be logged
+			$isLogged = $kirby->apply(
+				'system.exception',
+				compact('exception', 'isLogged'),
+				'isLogged'
+			);
+
+			if ($isLogged !== false) {
+				error_log($exception);
+			}
+
+			return Handler::DONE;
+		});
+	}
+
+	/**
 	 * Registers the PHP error handler for CLI usage
 	 */
 	protected function handleCliErrors(): void
@@ -214,6 +246,18 @@ trait AppErrors
 	}
 
 	/**
+	 * Enables Whoops with the specified handler
+	 */
+	protected function setWhoopsHandler(callable|HandlerInterface $handler): void
+	{
+		$whoops = $this->whoops();
+		$whoops->clearHandlers();
+		$whoops->pushHandler($handler);
+		$whoops->pushHandler($this->getAdditionalWhoopsHandler());
+		$whoops->register(); // will only do something if not already registered
+	}
+
+	/**
 	 * Returns the exception's stack trace with disguised
 	 * file paths, editor URLs and without arguments
 	 * @since 6.0.0
@@ -233,50 +277,6 @@ trait AppErrors
 			unset($item['args']);
 			return $item;
 		}, $exception->getTrace());
-	}
-
-	/**
-	 * Enables Whoops with the specified handler
-	 */
-	protected function setWhoopsHandler(callable|HandlerInterface $handler): void
-	{
-		$whoops = $this->whoops();
-		$whoops->clearHandlers();
-		$whoops->pushHandler($handler);
-		$whoops->pushHandler($this->getAdditionalWhoopsHandler());
-		$whoops->register(); // will only do something if not already registered
-	}
-
-	/**
-	 * Whoops callback handler for additional error handling
-	 * (`system.exception` hook and output to error log)
-	 */
-	protected function getAdditionalWhoopsHandler(): CallbackHandler
-	{
-		// Whoops keeps every `Run` instance alive for the rest of the process
-		// via `register_shutdown_function()`. A handler closure that captured
-		// `$this` strongly would pin $app, potentially incl. site tree forever.
-		// Referencing the app weakly allows it to be garbage collected.
-		$app = WeakReference::create($this);
-
-		return new CallbackHandler(static function ($exception, $inspector, $run) use ($app) {
-			/** @var App $kirby */
-			$kirby    = $app->get() ?? App::instance();
-			$isLogged = true;
-
-			// allow hook to modify whether the exception should be logged
-			$isLogged = $kirby->apply(
-				'system.exception',
-				compact('exception', 'isLogged'),
-				'isLogged'
-			);
-
-			if ($isLogged !== false) {
-				error_log($exception);
-			}
-
-			return Handler::DONE;
-		});
 	}
 
 	/**

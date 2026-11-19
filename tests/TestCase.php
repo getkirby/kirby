@@ -17,11 +17,11 @@ use PHPUnit\Framework\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
-	protected App $app;
 	protected int $activeErrorHandlers = 0;
-	protected string|Closure|null $i18nLocale;
+	protected App $app;
 	protected string|array|Closure|null $i18nFallback;
 	protected Closure|null $i18nLoad;
+	protected string|Closure|null $i18nLocale;
 	protected array $i18nTranslations;
 	protected array|string $localeBackup;
 

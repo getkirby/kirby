@@ -75,13 +75,18 @@ class PageValidators extends ModelValidators
 	}
 
 	/**
-	 * Validates the page that is about to be created
+	 * Validates the page that is about to be created,
+	 * including its content
 	 */
 	protected function ensureToCreate(): void
 	{
-		$this->validateSlug($this->model->slug());
-		$this->validateDoesNotExist();
-		$this->validateDuplicate($this->model->slug(), strict: true);
+		$this->validateToBeCreatable();
+
+		// a non-draft page must have complete content,
+		// just like a draft that gets published
+		if ($this->model->isDraft() === false) {
+			$this->validateContent();
+		}
 	}
 
 	/**
@@ -110,6 +115,54 @@ class PageValidators extends ModelValidators
 	protected function ensureToMove(Site|Page $parent): void
 	{
 		$this->validateMoveTo($parent);
+	}
+
+	/**
+	 * Validates the page that is about to be published
+	 */
+	protected function ensureToPublish(): void
+	{
+		if ($this->model->isDraft() === true) {
+			$this->validateContent();
+		}
+	}
+
+	/**
+	 * Validates that the page content has no errors in any language
+	 */
+	public function validateContent(): void
+	{
+		$errors = $this->model->errors();
+
+		// the errors above only cover the current language,
+		// so the content of all other languages must be validated too
+		if ($errors === [] && $this->model->kirby()->multilang() === true) {
+			foreach ($this->model->kirby()->languages() as $language) {
+				$errors = $this->model->version()->errors($language);
+
+				if ($errors !== []) {
+					// add the language to the error details
+					// to make clear which translation is incomplete
+					foreach ($errors as $name => $error) {
+						$label = $error['label'] ?? $name;
+
+						$errors[$name]['label']    = $label . ' (' . $language->name() . ')';
+						$errors[$name]['language'] = $language->code();
+					}
+
+					break;
+				}
+			}
+		}
+
+		// the field errors are passed on as details, so that
+		// the Panel can show which fields are still incomplete
+		if ($errors !== []) {
+			$this->error(
+				key: 'page.changeStatus.incomplete',
+				details: $errors
+			);
+		}
 	}
 
 	/**
@@ -352,5 +405,16 @@ class PageValidators extends ModelValidators
 				key: 'page.changeTitle.empty'
 			);
 		}
+	}
+
+	/**
+	 * Validates the page that is about to be created
+	 * before its content has been added.
+	 */
+	public function validateToBeCreatable(): void
+	{
+		$this->validateSlug($this->model->slug());
+		$this->validateDoesNotExist();
+		$this->validateDuplicate($this->model->slug(), strict: true);
 	}
 }

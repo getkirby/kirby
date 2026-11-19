@@ -32,10 +32,22 @@ class DateKirbyTagTest extends TestCase
 		$this->assertSame(date('Y'), $this->app->kirbytags('(date: year)'));
 	}
 
+	public function testDateWithCustomExpiry(): void
+	{
+		$this->assertSame(date('d.m.Y'), $this->app->kirbytags('(date: d.m.Y expiry: tomorrow)'));
+		$this->assertSame(strtotime('tomorrow'), $this->app->response()->expires());
+	}
+
 	public function testDateWithHtml(): void
 	{
 		// HTML special characters in the format must be escaped
 		$this->assertSame('&lt;b&gt;', $this->app->kirbytags('(date: <b>)'));
+	}
+
+	public function testDateWithoutExpiry(): void
+	{
+		$this->assertSame(date('d.m.Y'), $this->app->kirbytags('(date: d.m.Y)'));
+		$this->assertNull($this->app->response()->expires());
 	}
 
 	public function testDateYearSetsCacheExpiry(): void
@@ -50,18 +62,6 @@ class DateKirbyTagTest extends TestCase
 	public function testDateYearWithCustomExpiry(): void
 	{
 		$this->assertSame(date('Y'), $this->app->kirbytags('(date: year expiry: tomorrow)'));
-		$this->assertSame(strtotime('tomorrow'), $this->app->response()->expires());
-	}
-
-	public function testDateWithoutExpiry(): void
-	{
-		$this->assertSame(date('d.m.Y'), $this->app->kirbytags('(date: d.m.Y)'));
-		$this->assertNull($this->app->response()->expires());
-	}
-
-	public function testDateWithCustomExpiry(): void
-	{
-		$this->assertSame(date('d.m.Y'), $this->app->kirbytags('(date: d.m.Y expiry: tomorrow)'));
 		$this->assertSame(strtotime('tomorrow'), $this->app->response()->expires());
 	}
 }

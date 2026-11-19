@@ -16,30 +16,6 @@ use Kirby\Toolkit\BlockCollectionAccess;
 trait SiteActions
 {
 	/**
-	 * Commits a site action, by following these steps
-	 *
-	 * 1. checks the action guards
-	 * 2. applies the `before` hook
-	 * 3. checks the action guards again
-	 * 4. runs the action callback
-	 * 5. updates the app-wide model state
-	 * 6. applies the `after` hook, flushes the pages cache
-	 *    and returns the result of the hook
-	 */
-	protected function commit(
-		string $action,
-		array $arguments,
-		Closure $callback
-	): mixed {
-		$commit = new ModelCommit(
-			model: $this,
-			action: $action
-		);
-
-		return $commit->call($arguments, $callback);
-	}
-
-	/**
 	 * Change the site title
 	 */
 	#[BlockCollectionAccess]
@@ -74,6 +50,30 @@ trait SiteActions
 				return $site->save(['title' => $title], $language->code());
 			}
 		);
+	}
+
+	/**
+	 * Commits a site action, by following these steps
+	 *
+	 * 1. checks the action guards
+	 * 2. applies the `before` hook
+	 * 3. checks the action guards again
+	 * 4. runs the action callback
+	 * 5. updates the app-wide model state
+	 * 6. applies the `after` hook, flushes the pages cache
+	 *    and returns the result of the hook
+	 */
+	protected function commit(
+		string $action,
+		array $arguments,
+		Closure $callback
+	): mixed {
+		$commit = new ModelCommit(
+			model: $this,
+			action: $action
+		);
+
+		return $commit->call($arguments, $callback);
 	}
 
 	/**

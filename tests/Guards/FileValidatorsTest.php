@@ -19,6 +19,39 @@ class FileValidatorsTest extends ModelTestCase
 	public const FIXTURES = __DIR__ . '/../Cms/File/fixtures/files';
 	public const TMP      = KIRBY_TMP_DIR . '/Guards.FileValidators';
 
+	protected function file(string $filename): File
+	{
+		return new File([
+			'filename' => $filename,
+			'parent'   => new Page(['slug' => 'test'])
+		]);
+	}
+
+	protected function fileOnDisk(string $filename): File
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					['slug' => 'test']
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page = $this->app->page('test');
+
+		F::copy(
+			source: static::FIXTURES . '/' . $filename,
+			target: $page->root() . '/' . $filename
+		);
+
+		return new File([
+			'filename' => $filename,
+			'parent'   => $page
+		]);
+	}
+
 	public function testDoesNotExist(): void
 	{
 		$validators = $this->validators($this->file('test.jpg'));
@@ -157,24 +190,14 @@ class FileValidatorsTest extends ModelTestCase
 		$this->assertNull($validators->validateExtension('jpg'));
 	}
 
-	public function testExtensionWithMissingExtension(): void
+	public function testExtensionWithForbiddenExtension(): void
 	{
 		$validators = $this->validators($this->file('test.jpg'));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionCode('error.file.extension.missing');
+		$this->expectExceptionCode('error.file.extension.forbidden');
 
-		$validators->validateExtension('');
-	}
-
-	public function testExtensionWithForbiddenPhpExtension(): void
-	{
-		$validators = $this->validators($this->file('test.jpg'));
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionCode('error.file.type.forbidden');
-
-		$validators->validateExtension('php');
+		$validators->validateExtension('exe');
 	}
 
 	public function testExtensionWithForbiddenHtmlExtension(): void
@@ -187,14 +210,24 @@ class FileValidatorsTest extends ModelTestCase
 		$validators->validateExtension('html');
 	}
 
-	public function testExtensionWithForbiddenExtension(): void
+	public function testExtensionWithForbiddenPhpExtension(): void
 	{
 		$validators = $this->validators($this->file('test.jpg'));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionCode('error.file.extension.forbidden');
+		$this->expectExceptionCode('error.file.type.forbidden');
 
-		$validators->validateExtension('exe');
+		$validators->validateExtension('php');
+	}
+
+	public function testExtensionWithMissingExtension(): void
+	{
+		$validators = $this->validators($this->file('test.jpg'));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.file.extension.missing');
+
+		$validators->validateExtension('');
 	}
 
 	public function testFile(): void
@@ -204,45 +237,11 @@ class FileValidatorsTest extends ModelTestCase
 		$this->assertNull($validators->validateFile('image/jpeg'));
 	}
 
-	public function testFileWithDetectedMime(): void
-	{
-		$validators = $this->validators($this->fileOnDisk('test.jpg'));
-
-		$this->assertNull($validators->validateFile());
-	}
-
-	public function testFileWithSkippedMime(): void
-	{
-		$validators = $this->validators($this->file('test.jpg'));
-
-		$this->assertNull($validators->validateFile(false));
-	}
-
-	public function testFileWithForbiddenMime(): void
-	{
-		$validators = $this->validators($this->file('test.jpg'));
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionCode('error.file.mime.forbidden');
-
-		$validators->validateFile('text/html');
-	}
-
 	public function testFilename(): void
 	{
 		$validators = $this->validators($this->file('test.jpg'));
 
 		$this->assertNull($validators->validateFilename('test.jpg'));
-	}
-
-	public function testFilenameWithMissingFilename(): void
-	{
-		$validators = $this->validators($this->file('test.jpg'));
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionCode('error.file.name.missing');
-
-		$validators->validateFilename('');
 	}
 
 	public function testFilenameWithApacheConfig(): void
@@ -265,6 +264,40 @@ class FileValidatorsTest extends ModelTestCase
 		$validators->validateFilename('.gitignore');
 	}
 
+	public function testFilenameWithMissingFilename(): void
+	{
+		$validators = $this->validators($this->file('test.jpg'));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.file.name.missing');
+
+		$validators->validateFilename('');
+	}
+
+	public function testFileWithDetectedMime(): void
+	{
+		$validators = $this->validators($this->fileOnDisk('test.jpg'));
+
+		$this->assertNull($validators->validateFile());
+	}
+
+	public function testFileWithForbiddenMime(): void
+	{
+		$validators = $this->validators($this->file('test.jpg'));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.file.mime.forbidden');
+
+		$validators->validateFile('text/html');
+	}
+
+	public function testFileWithSkippedMime(): void
+	{
+		$validators = $this->validators($this->file('test.jpg'));
+
+		$this->assertNull($validators->validateFile(false));
+	}
+
 	public function testMime(): void
 	{
 		$validators = $this->validators($this->file('test.jpg'));
@@ -272,14 +305,14 @@ class FileValidatorsTest extends ModelTestCase
 		$this->assertNull($validators->validateMime('image/jpeg'));
 	}
 
-	public function testMimeWithMissingMime(): void
+	public function testMimeWithForbiddenMime(): void
 	{
 		$validators = $this->validators($this->file('test.jpg'));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionCode('error.file.mime.missing');
+		$this->expectExceptionCode('error.file.mime.forbidden');
 
-		$validators->validateMime('');
+		$validators->validateMime('text/html');
 	}
 
 	public function testMimeWithForbiddenPhpMime(): void
@@ -292,14 +325,14 @@ class FileValidatorsTest extends ModelTestCase
 		$validators->validateMime('application/php');
 	}
 
-	public function testMimeWithForbiddenMime(): void
+	public function testMimeWithMissingMime(): void
 	{
 		$validators = $this->validators($this->file('test.jpg'));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionCode('error.file.mime.forbidden');
+		$this->expectExceptionCode('error.file.mime.missing');
 
-		$validators->validateMime('text/html');
+		$validators->validateMime('');
 	}
 
 	public function testName(): void
@@ -380,25 +413,6 @@ class FileValidatorsTest extends ModelTestCase
 		$validators->validateUpload($upload);
 	}
 
-	public function testUploadWithUnacceptedMime(): void
-	{
-		$this->app = $this->app->clone([
-			'blueprints' => [
-				'files/default' => [
-					'accept' => ['mime' => 'image/jpeg']
-				]
-			]
-		]);
-
-		$validators = $this->validators($this->fileOnDisk('test.jpg'));
-		$upload     = new Upload(static::FIXTURES . '/doc.pdf');
-
-		$this->expectException(Exception::class);
-		$this->expectExceptionCode('error.file.mime.invalid');
-
-		$validators->validateUpload($upload);
-	}
-
 	public function testUploadWithSameType(): void
 	{
 		$validators = $this->validators($this->fileOnDisk('test.jpg'));
@@ -418,37 +432,23 @@ class FileValidatorsTest extends ModelTestCase
 		$validators->validateUploadWithSameType($upload);
 	}
 
-	protected function file(string $filename): File
-	{
-		return new File([
-			'filename' => $filename,
-			'parent'   => new Page(['slug' => 'test'])
-		]);
-	}
-
-	protected function fileOnDisk(string $filename): File
+	public function testUploadWithUnacceptedMime(): void
 	{
 		$this->app = $this->app->clone([
-			'site' => [
-				'children' => [
-					['slug' => 'test']
+			'blueprints' => [
+				'files/default' => [
+					'accept' => ['mime' => 'image/jpeg']
 				]
 			]
 		]);
 
-		$this->app->impersonate('kirby');
+		$validators = $this->validators($this->fileOnDisk('test.jpg'));
+		$upload     = new Upload(static::FIXTURES . '/doc.pdf');
 
-		$page = $this->app->page('test');
+		$this->expectException(Exception::class);
+		$this->expectExceptionCode('error.file.mime.invalid');
 
-		F::copy(
-			source: static::FIXTURES . '/' . $filename,
-			target: $page->root() . '/' . $filename
-		);
-
-		return new File([
-			'filename' => $filename,
-			'parent'   => $page
-		]);
+		$validators->validateUpload($upload);
 	}
 
 	protected function user(): User

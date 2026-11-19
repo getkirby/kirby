@@ -147,6 +147,32 @@ class FieldsetTest extends TestCase
 		$this->assertFalse($fieldset->editable());
 	}
 
+	public function testFieldsWithQueryOptions(): void
+	{
+		$app = new App([
+			'roots' => ['index' => '/dev/null'],
+			'site'  => ['children' => [['slug' => 'a']]]
+		]);
+
+		$app->impersonate('kirby');
+
+		$fieldset = new Fieldset([
+			'type'   => 'test',
+			'fields' => [
+				'page' => [
+					'type'    => 'select',
+					'options' => 'site.children'
+				]
+			]
+		]);
+
+		// forms resolve the options for their own values,
+		// only the Panel gets them rendered
+		$this->assertSame('site.children', $fieldset->fields()['page']['options']);
+		$this->assertSame('site.children', $fieldset->tabs()['content']['fields']['page']['options']);
+		$this->assertSame(['a'], array_column($fieldset->toArray()['tabs']['content']['fields']['page']['options'], 'value'));
+	}
+
 	public function testForm(): void
 	{
 		$fieldset = new Fieldset([
@@ -215,19 +241,6 @@ class FieldsetTest extends TestCase
 		$this->assertSame('test', $fieldset->name());
 	}
 
-	public function testNameTranslated(): void
-	{
-		$fieldset = new Fieldset([
-			'type'  => 'test',
-			'name'  => [
-				'en' => 'English name',
-				'de' => 'Deutscher Name',
-			]
-		]);
-
-		$this->assertSame('English name', $fieldset->name());
-	}
-
 	public function testNameFallbackType(): void
 	{
 		$fieldset = new Fieldset([
@@ -268,6 +281,19 @@ class FieldsetTest extends TestCase
 		]);
 
 		$this->assertSame('Test fieldset', $fieldset->name());
+	}
+
+	public function testNameTranslated(): void
+	{
+		$fieldset = new Fieldset([
+			'type'  => 'test',
+			'name'  => [
+				'en' => 'English name',
+				'de' => 'Deutscher Name',
+			]
+		]);
+
+		$this->assertSame('English name', $fieldset->name());
 	}
 
 	public function testPreview(): void
@@ -311,25 +337,6 @@ class FieldsetTest extends TestCase
 		$this->assertSame('Settings tab', $fieldset->tabs()['settingsTab']['label']);
 	}
 
-	public function testTranslate(): void
-	{
-		$fieldset = new Fieldset([
-			'type'      => 'test',
-			'translate' => false
-		]);
-
-		$this->assertFalse($fieldset->translate());
-	}
-
-	public function testType(): void
-	{
-		$fieldset = new Fieldset([
-			'type' => 'test',
-		]);
-
-		$this->assertSame('test', $fieldset->type());
-	}
-
 	public function testToArray(): void
 	{
 		$fieldset = new Fieldset([
@@ -355,6 +362,25 @@ class FieldsetTest extends TestCase
 		];
 
 		$this->assertSame($expected, $fieldset->toArray());
+	}
+
+	public function testTranslate(): void
+	{
+		$fieldset = new Fieldset([
+			'type'      => 'test',
+			'translate' => false
+		]);
+
+		$this->assertFalse($fieldset->translate());
+	}
+
+	public function testType(): void
+	{
+		$fieldset = new Fieldset([
+			'type' => 'test',
+		]);
+
+		$this->assertSame('test', $fieldset->type());
 	}
 
 	public function testUnset(): void

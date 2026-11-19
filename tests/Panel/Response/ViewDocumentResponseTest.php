@@ -6,12 +6,37 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Panel\State;
 use Kirby\Panel\TestCase;
+use Kirby\Toolkit\Str;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(ViewDocumentResponse::class)]
 class ViewDocumentResponseTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.Response.ViewDocumentResponse';
+
+	public function testBody(): void
+	{
+		$response = new ViewDocumentResponse();
+		$this->assertNotNull($response->body());
+	}
+
+	public function testBodyEscapesTagsInState(): void
+	{
+		// `<!--<script>` would keep the inline script open
+		// until the end of the document
+		$response = new ViewDocumentResponse(
+			view: ['title' => '<!--<script></script>']
+		);
+
+		$state = Str::after($response->body(), 'window.panelState = ');
+		$state = rtrim(trim(Str::before($state, '</script>')), ';');
+
+		$this->assertStringNotContainsString('<', $state);
+		$this->assertSame(
+			'<!--<script></script>',
+			json_decode($state, true)['view']['title']
+		);
+	}
 
 	public function testCors(): void
 	{
@@ -50,12 +75,6 @@ class ViewDocumentResponseTest extends TestCase
 
 		$response = new ViewDocumentResponse();
 		$this->assertSame('frame-ancestors *.example.com https://example.com', $response->cors());
-	}
-
-	public function testBody(): void
-	{
-		$response = new ViewDocumentResponse();
-		$this->assertNotNull($response->body());
 	}
 
 	public function testData(): void

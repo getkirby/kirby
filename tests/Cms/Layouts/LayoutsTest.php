@@ -68,6 +68,26 @@ class LayoutsTest extends TestCase
 		$this->assertFalse($layouts->hasBlockType('code'));
 	}
 
+	public function testHiddenBlocks(): void
+	{
+		$data = [
+			[
+				'type'     => 'heading',
+				'content'  => ['text' => 'Heading'],
+			],
+			[
+				'type'     => 'text',
+				'content'  => ['text' => 'Text'],
+				'isHidden' => true,
+			]
+		];
+
+		$layouts = Layouts::factory($data);
+
+		$this->assertCount(1, $layouts->toBlocks());
+		$this->assertCount(2, $layouts->toBlocks(true));
+	}
+
 	public function testParse(): void
 	{
 		$data = [
@@ -138,25 +158,5 @@ class LayoutsTest extends TestCase
 
 		$this->assertCount(2, $blocks);
 		$this->assertInstanceOf(Blocks::class, $blocks);
-	}
-
-	public function testHiddenBlocks(): void
-	{
-		$data = [
-			[
-				'type'     => 'heading',
-				'content'  => ['text' => 'Heading'],
-			],
-			[
-				'type'     => 'text',
-				'content'  => ['text' => 'Text'],
-				'isHidden' => true,
-			]
-		];
-
-		$layouts = Layouts::factory($data);
-
-		$this->assertCount(1, $layouts->toBlocks());
-		$this->assertCount(2, $layouts->toBlocks(true));
 	}
 }

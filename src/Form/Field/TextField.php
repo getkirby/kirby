@@ -21,6 +21,7 @@ class TextField extends StringField
 	use Mixin\Font;
 	use Mixin\Icon;
 	use Mixin\Pattern;
+	use Mixin\Preselect;
 
 	public function default(): string
 	{

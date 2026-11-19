@@ -12,12 +12,17 @@ class LayoutColumnTest extends TestCase
 		LayoutColumn::$methods = [];
 	}
 
-	public function testConstruct(): void
+	public function testBlocks(): void
 	{
-		$column = new LayoutColumn();
-		$this->assertInstanceOf(Blocks::class, $column->blocks());
-		$this->assertSame('1/1', $column->width());
-		$this->assertSame(12, $column->span());
+		$column = new LayoutColumn([
+			'blocks' => [
+				['type' => 'heading'],
+				['type' => 'text'],
+			]
+		]);
+		$this->assertCount(2, $column->blocks());
+		$this->assertSame('heading', $column->blocks()->first()->type());
+		$this->assertSame('text', $column->blocks()->last()->type());
 	}
 
 	public function testCall(): void
@@ -35,17 +40,12 @@ class LayoutColumnTest extends TestCase
 		$this->assertNull($column->unknown());
 	}
 
-	public function testBlocks(): void
+	public function testConstruct(): void
 	{
-		$column = new LayoutColumn([
-			'blocks' => [
-				['type' => 'heading'],
-				['type' => 'text'],
-			]
-		]);
-		$this->assertCount(2, $column->blocks());
-		$this->assertSame('heading', $column->blocks()->first()->type());
-		$this->assertSame('text', $column->blocks()->last()->type());
+		$column = new LayoutColumn();
+		$this->assertInstanceOf(Blocks::class, $column->blocks());
+		$this->assertSame('1/1', $column->width());
+		$this->assertSame(12, $column->span());
 	}
 
 	public function testHiddenBlocks(): void
@@ -61,25 +61,6 @@ class LayoutColumnTest extends TestCase
 		$this->assertTrue($column->isNotEmpty());
 		$this->assertCount(1, $column->blocks());
 		$this->assertCount(2, $column->blocks(true));
-	}
-
-	public function testSpan(): void
-	{
-		$column = new LayoutColumn([
-			'width' => '1/2'
-		]);
-
-		$this->assertSame(6, $column->span());
-		$this->assertSame(3, $column->span(6));
-	}
-
-	public function testWidth(): void
-	{
-		$column = new LayoutColumn([
-			'width' => '1/2'
-		]);
-
-		$this->assertSame('1/2', $column->width());
 	}
 
 	public function testIsEmpty(): void
@@ -103,5 +84,24 @@ class LayoutColumnTest extends TestCase
 
 		$this->assertFalse($column->isEmpty());
 		$this->assertTrue($column->isNotEmpty());
+	}
+
+	public function testSpan(): void
+	{
+		$column = new LayoutColumn([
+			'width' => '1/2'
+		]);
+
+		$this->assertSame(6, $column->span());
+		$this->assertSame(3, $column->span(6));
+	}
+
+	public function testWidth(): void
+	{
+		$column = new LayoutColumn([
+			'width' => '1/2'
+		]);
+
+		$this->assertSame('1/2', $column->width());
 	}
 }

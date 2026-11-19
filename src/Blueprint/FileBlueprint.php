@@ -17,14 +17,14 @@ use Kirby\Toolkit\Str;
  */
 class FileBlueprint extends Blueprint
 {
-	/** @var File */
-	protected ModelWithContent $model;
-
 	/**
 	 * `true` if the default accepted
 	 * types are being used
 	 */
 	protected bool $defaultTypes = false;
+
+	/** @var File */
+	protected ModelWithContent $model;
 
 	public function __construct(array $props)
 	{

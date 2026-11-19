@@ -52,25 +52,6 @@ class Blocks extends Items
 	}
 
 	/**
-	 * Wrapper around the factory to
-	 * catch blocks from layouts
-	 */
-	public static function factory(
-		array|null $items = null,
-		array $params = []
-	): static {
-		$items = static::extractFromLayouts($items ?? []);
-
-		// @deprecated old editor format
-		// @todo block.converter remove eventually
-		// @codeCoverageIgnoreStart
-		$items = BlockConverter::editorBlocks($items);
-		// @codeCoverageIgnoreEnd
-
-		return parent::factory($items, $params);
-	}
-
-	/**
 	 * Pull out blocks from layouts
 	 */
 	protected static function extractFromLayouts(array $input): array
@@ -100,6 +81,25 @@ class Blocks extends Items
 		}
 
 		return $blocks;
+	}
+
+	/**
+	 * Wrapper around the factory to
+	 * catch blocks from layouts
+	 */
+	public static function factory(
+		array|null $items = null,
+		array $params = []
+	): static {
+		$items = static::extractFromLayouts($items ?? []);
+
+		// @deprecated old editor format
+		// @todo block.converter remove eventually
+		// @codeCoverageIgnoreStart
+		$items = BlockConverter::editorBlocks($items);
+		// @codeCoverageIgnoreEnd
+
+		return parent::factory($items, $params);
 	}
 
 	/**

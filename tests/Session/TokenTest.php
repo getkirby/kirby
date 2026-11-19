@@ -97,15 +97,13 @@ class TokenTest extends TestCase
 		$this->assertSame('1234567890.thisIsMyAwesomeId.' . $this->store->validKey, $token->toString());
 	}
 
-	public function testParseWithoutKey(): void
+	public function testParseReassemblyMismatch(): void
 	{
-		$token = Token::parse('1234567890.thisIsMyAwesomeId', key: false);
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid argument "$token" in method "Token::parse"');
 
-		$this->assertSame(1234567890, $token->expiry);
-		$this->assertSame('thisIsMyAwesomeId', $token->id);
-		$this->assertNull($token->key);
-		$this->assertTrue($token->isReadonly());
-		$this->assertSame('1234567890.thisIsMyAwesomeId', $token->toString());
+		// the expiry part is not a clean integer, so reassembly fails
+		Token::parse('something.thisIsNotAValidToken.abcdefabcdef');
 	}
 
 	public function testParseTooFewParts(): void
@@ -124,13 +122,15 @@ class TokenTest extends TestCase
 		Token::parse('1234567890.thisIsMyAwesomeId.' . $this->store->validKey, key: false);
 	}
 
-	public function testParseReassemblyMismatch(): void
+	public function testParseWithoutKey(): void
 	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid argument "$token" in method "Token::parse"');
+		$token = Token::parse('1234567890.thisIsMyAwesomeId', key: false);
 
-		// the expiry part is not a clean integer, so reassembly fails
-		Token::parse('something.thisIsNotAValidToken.abcdefabcdef');
+		$this->assertSame(1234567890, $token->expiry);
+		$this->assertSame('thisIsMyAwesomeId', $token->id);
+		$this->assertNull($token->key);
+		$this->assertTrue($token->isReadonly());
+		$this->assertSame('1234567890.thisIsMyAwesomeId', $token->toString());
 	}
 
 	public function testToString(): void

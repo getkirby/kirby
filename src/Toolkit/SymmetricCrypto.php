@@ -55,19 +55,6 @@ class SymmetricCrypto
 	}
 
 	/**
-	 * Hide values of secrets when printing the object
-	 *
-	 * @return array{hasPassword: bool, hasSecretKey: bool}
-	 */
-	public function __debugInfo(): array
-	{
-		return [
-			'hasPassword'  => isset($this->password),
-			'hasSecretKey' => isset($this->secretKey),
-		];
-	}
-
-	/**
 	 * Wipes the secrets from memory when they are no longer needed
 	 */
 	public function __destruct()
@@ -79,6 +66,19 @@ class SymmetricCrypto
 			$this->memzero($value);
 			unset($this->secretKeysByOptions[$key]);
 		}
+	}
+
+	/**
+	 * Hide values of secrets when printing the object
+	 *
+	 * @return array{hasPassword: bool, hasSecretKey: bool}
+	 */
+	public function __debugInfo(): array
+	{
+		return [
+			'hasPassword'  => isset($this->password),
+			'hasSecretKey' => isset($this->secretKey),
+		];
 	}
 
 	/**
@@ -185,6 +185,17 @@ class SymmetricCrypto
 	}
 
 	/**
+	 * Wipes a variable from memory if it is a string
+	 */
+	protected function memzero(mixed &$value): void
+	{
+		if (is_string($value) === true) {
+			sodium_memzero($value);
+			$value = '';
+		}
+	}
+
+	/**
 	 * Returns the binary secret key, optionally derived from the password
 	 * or randomly generated
 	 *
@@ -224,16 +235,5 @@ class SymmetricCrypto
 		}
 
 		return $this->secretKey = random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES);
-	}
-
-	/**
-	 * Wipes a variable from memory if it is a string
-	 */
-	protected function memzero(mixed &$value): void
-	{
-		if (is_string($value) === true) {
-			sodium_memzero($value);
-			$value = '';
-		}
 	}
 }

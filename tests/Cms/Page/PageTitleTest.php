@@ -18,18 +18,6 @@ class PageTitleTest extends ModelTestCase
 		$this->assertSame('test', $page->title()->value());
 	}
 
-	public function testTitleInSingleLanguageMode(): void
-	{
-		$page = new Page([
-			'slug'    => 'test',
-			'content' => [
-				'title' => 'Test Title'
-			]
-		]);
-
-		$this->assertSame('Test Title', $page->title()->value());
-	}
-
 	public function testTitleInMultiLanguageMode(): void
 	{
 		$this->setUpMultiLanguage();
@@ -58,5 +46,17 @@ class PageTitleTest extends ModelTestCase
 		$this->app->setCurrentLanguage('de');
 
 		$this->assertSame('Test Title DE', $page->title()->value());
+	}
+
+	public function testTitleInSingleLanguageMode(): void
+	{
+		$page = new Page([
+			'slug'    => 'test',
+			'content' => [
+				'title' => 'Test Title'
+			]
+		]);
+
+		$this->assertSame('Test Title', $page->title()->value());
 	}
 }

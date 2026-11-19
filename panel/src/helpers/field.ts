@@ -132,6 +132,8 @@ export function options(options: Option[], value: unknown): Option[] {
 			value !== null &&
 			value !== undefined &&
 			value !== "" &&
+			// inputs with a Boolean value prop cast a missing value to `false`
+			value !== false &&
 			known.includes(String(value)) === false
 	);
 

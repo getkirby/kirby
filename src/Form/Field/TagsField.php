@@ -101,15 +101,6 @@ class TagsField extends OptionsField
 		return A::join($this->value, $this->separator() . ' ');
 	}
 
-	protected function validations(): array
-	{
-		return [
-			'max',
-			'min',
-			'accepted' => fn ($value) => $this->validateAcceptedOptions($value)
-		];
-	}
-
 	protected function validateAcceptedOptions(array $value): void
 	{
 		if ($this->accept() === 'all' || $value === []) {
@@ -117,5 +108,14 @@ class TagsField extends OptionsField
 		}
 
 		Validations::options($this, $value);
+	}
+
+	protected function validations(): array
+	{
+		return [
+			'max',
+			'min',
+			'accepted' => fn ($value) => $this->validateAcceptedOptions($value)
+		];
 	}
 }

@@ -15,21 +15,6 @@ use Kirby\Cms\Page;
  */
 class PageAbilities extends ModelAbilities
 {
-	protected function error(
-		string $key,
-		array $data = [],
-		array $details = []
-	): never {
-		parent::error(
-			key: 'page.' . $key,
-			data: [
-				'slug' => $this->model->slug(),
-				...$data
-			],
-			details: $details
-		);
-	}
-
 	protected function ensureToChangeSlug(): void
 	{
 		if ($this->model->isHomePage() === true) {
@@ -95,19 +80,6 @@ class PageAbilities extends ModelAbilities
 	protected function ensureToPublish(): void
 	{
 		$this->ensureToChangeStatus();
-
-		if ($this->model->isDraft() === false) {
-			return;
-		}
-
-		// the field errors are passed on as details, so that
-		// the Panel can show which fields are still incomplete
-		if ($errors = $this->model->errors()) {
-			$this->error(
-				key: 'changeStatus.incomplete',
-				details: $errors
-			);
-		}
 	}
 
 	protected function ensureToSort(): void
@@ -123,5 +95,20 @@ class PageAbilities extends ModelAbilities
 		if ($this->model->blueprint()->num() !== 'default') {
 			$this->error(key: 'sort.mode');
 		}
+	}
+
+	protected function error(
+		string $key,
+		array $data = [],
+		array $details = []
+	): never {
+		parent::error(
+			key: 'page.' . $key,
+			data: [
+				'slug' => $this->model->slug(),
+				...$data
+			],
+			details: $details
+		);
 	}
 }

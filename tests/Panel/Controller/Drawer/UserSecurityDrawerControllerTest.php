@@ -65,7 +65,6 @@ class UserSecurityDrawerControllerTest extends TestCase
 		$this->assertCount(1, $challenges);
 		$this->assertSame('qr-code', $challenges[0]['icon']);
 
-
 		$this->app = $this->app->clone([
 			'options' => [
 				'auth' => [

@@ -276,7 +276,7 @@ class PageCreateDialogController extends ModelCreateDialogController
 		$input   = $this->resolveFieldTemplates($input, ['title', 'slug']);
 		$content = [
 			'title' => trim($input['title'] ?? ''),
-			'uuid'  => $input['uuid'] ?? null
+			'uuid'  => $input['uuid'] ?? $this->model()->uuid()?->id()
 		];
 
 		foreach ($this->customFields() as $name => $field) {

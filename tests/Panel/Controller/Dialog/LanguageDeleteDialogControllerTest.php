@@ -48,7 +48,6 @@ class LanguageDeleteDialogControllerTest extends TestCase
 		$this->assertInstanceOf(RemoveDialog::class, $dialog);
 		$this->assertSame('k-remove-dialog', $dialog->component);
 
-
 		$props = $dialog->props();
 		$this->assertSame('Do you really want to delete the language <strong>Deutsch</strong> including all translations? This cannot be undone!', (string)$props['text']);
 	}

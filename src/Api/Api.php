@@ -46,11 +46,6 @@ class Api
 	protected Closure|null $authentication = null;
 
 	/**
-	 * Debugging flag
-	 */
-	protected bool $debug = false;
-
-	/**
 	 * Collection definitions
 	 *
 	 * @var array<string, array>
@@ -63,6 +58,11 @@ class Api
 	 * @var array<string, mixed>
 	 */
 	protected array $data = [];
+
+	/**
+	 * Debugging flag
+	 */
+	protected bool $debug = false;
 	protected App $kirby;
 
 	/**
@@ -71,6 +71,18 @@ class Api
 	 * @var array<string, array>
 	 */
 	protected array $models = [];
+
+	/**
+	 * Request data
+	 * [query, body, files]
+	 */
+	protected array $requestData = [];
+
+	/**
+	 * The applied request method
+	 * (GET, POST, PATCH, etc.)
+	 */
+	protected string|null $requestMethod = null;
 
 	/**
 	 * The current route
@@ -86,18 +98,6 @@ class Api
 	 * Route definition
 	 */
 	protected array $routes = [];
-
-	/**
-	 * Request data
-	 * [query, body, files]
-	 */
-	protected array $requestData = [];
-
-	/**
-	 * The applied request method
-	 * (GET, POST, PATCH, etc.)
-	 */
-	protected string|null $requestMethod = null;
 
 	/**
 	 * Creates a new API instance
@@ -469,6 +469,63 @@ class Api
 	}
 
 	/**
+	 * Renders the API call
+	 */
+	public function render(
+		string $path,
+		string $method = 'GET',
+		array $requestData = []
+	): mixed {
+		try {
+			$result = $this->call($path, $method, $requestData);
+		} catch (Throwable $e) {
+			$result = $this->responseForException($e);
+		}
+
+		$result = match ($result) {
+			null    => $this->responseFor404(),
+			false   => $this->responseFor400(),
+			true    => $this->responseFor200(),
+			default => $result
+		};
+
+		if (is_array($result) === false) {
+			return $result;
+		}
+
+		// pretty print json data
+		$pretty = (bool)($requestData['query']['pretty'] ?? false) === true;
+		$code   = 200;
+
+		if (($result['status'] ?? 'ok') === 'error') {
+			$code = $result['code'] ?? 400;
+
+			// sanitize the error code
+			if ($code < 400 || $code > 599) {
+				$code = 500;
+			}
+		}
+
+		// mark trusted HTML for the Panel, but never for the public
+		// API, where the marked keys would be a breaking change
+		if ((bool)$this->requestHeaders('x-panel') === true) {
+			$result = HtmlString::resolve($result);
+		}
+
+		return Response::json($result, $code, $pretty);
+	}
+
+	/**
+	 * Returns the request body if available
+	 */
+	public function requestBody(
+		string|null $key = null,
+		mixed $default = null
+	): mixed {
+		return $this->requestData('body', $key, $default);
+	}
+
+	/**
 	 * Getter for request data
 	 * Can either get all the data
 	 * or certain parts of it.
@@ -490,16 +547,6 @@ class Api
 		$key  = strtolower($key);
 
 		return $data[$key] ?? $default;
-	}
-
-	/**
-	 * Returns the request body if available
-	 */
-	public function requestBody(
-		string|null $key = null,
-		mixed $default = null
-	): mixed {
-		return $this->requestData('body', $key, $default);
 	}
 
 	/**
@@ -566,61 +613,6 @@ class Api
 		throw new NotFoundException(
 			message: sprintf('The object "%s" cannot be resolved', $object::class)
 		);
-	}
-
-	/**
-	 * Returns all defined routes
-	 */
-	public function routes(): array
-	{
-		return $this->routes;
-	}
-
-	/**
-	 * Renders the API call
-	 */
-	public function render(
-		string $path,
-		string $method = 'GET',
-		array $requestData = []
-	): mixed {
-		try {
-			$result = $this->call($path, $method, $requestData);
-		} catch (Throwable $e) {
-			$result = $this->responseForException($e);
-		}
-
-		$result = match ($result) {
-			null    => $this->responseFor404(),
-			false   => $this->responseFor400(),
-			true    => $this->responseFor200(),
-			default => $result
-		};
-
-		if (is_array($result) === false) {
-			return $result;
-		}
-
-		// pretty print json data
-		$pretty = (bool)($requestData['query']['pretty'] ?? false) === true;
-		$code   = 200;
-
-		if (($result['status'] ?? 'ok') === 'error') {
-			$code = $result['code'] ?? 400;
-
-			// sanitize the error code
-			if ($code < 400 || $code > 599) {
-				$code = 500;
-			}
-		}
-
-		// mark trusted HTML for the Panel, but never for the public
-		// API, where the marked keys would be a breaking change
-		if ((bool)$this->requestHeaders('x-panel') === true) {
-			$result = HtmlString::resolve($result);
-		}
-
-		return Response::json($result, $code, $pretty);
 	}
 
 	/**
@@ -727,6 +719,14 @@ class Api
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Returns all defined routes
+	 */
+	public function routes(): array
+	{
+		return $this->routes;
 	}
 
 	/**

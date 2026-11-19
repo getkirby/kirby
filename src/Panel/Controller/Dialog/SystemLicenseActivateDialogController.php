@@ -80,7 +80,7 @@ class SystemLicenseActivateDialogController extends DialogController
 				'counter'     => false,
 				'placeholder' => 'K-',
 				// the link is appended by us, the translation is plain
-				'help'        => new HtmlString($this->i18n('license.code.help') . ' ' . '<a href="https://getkirby.com/buy" target="_blank">' . $this->i18n('license.buy') . ' &rarr;</a>')
+				'help'        => new HtmlString($this->i18n('license.code.help') . ' <a href="https://getkirby.com/buy" target="_blank">' . $this->i18n('license.buy') . ' &rarr;</a>')
 			],
 			'email' => Field::email([
 				'when'     => ['type' => 'regular'],

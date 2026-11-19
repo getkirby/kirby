@@ -10,6 +10,11 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(Tokenizer::class)]
 class TokenizerTest extends TestCase
 {
+	public static function stringProvider(): string
+	{
+		return 'site.method?.([\'number\' => 3], null) ? (true ?: 4.1) : ("fox" ?? false)';
+	}
+
 	public function testMatch(): void
 	{
 		$string = 'Find ?? a TRUE';
@@ -19,11 +24,6 @@ class TokenizerTest extends TestCase
 
 		$this->assertNull(Tokenizer::match($string, 10, 'true'));
 		$this->assertSame('TRUE', Tokenizer::match($string, 10, 'true', true));
-	}
-
-	public static function stringProvider(): string
-	{
-		return 'site.method?.([\'number\' => 3], null) ? (true ?: 4.1) : ("fox" ?? false)';
 	}
 
 	public static function tokenProvider(): array
@@ -70,26 +70,6 @@ class TokenizerTest extends TestCase
 		$this->assertSame($type, $token->type);
 		$this->assertSame($lexeme, $token->lexeme);
 		$this->assertSame($literal, $token->literal);
-	}
-
-	public static function stringEscapeProvider(): array
-	{
-		return [
-			'regex pattern'               => ["'\\d+'", '\d+'],
-			'no control characters'       => ['"line\nbreak"', 'line\nbreak'],
-			'escaped single quote'        => ["'it\\'s'", "it's"],
-			'escaped double quote'        => ['"say \"hi\""', 'say "hi"'],
-			'escaped backslash'           => ["'a\\\\'", 'a\\'],
-			'other quote needs no escape' => ["'say \"hi\"'", 'say "hi"'],
-		];
-	}
-
-	#[DataProvider('stringEscapeProvider')]
-	public function testTokenWithStringEscapes(string $query, string $expected): void
-	{
-		$token = Tokenizer::token($query, 0);
-		$this->assertSame(TokenType::T_STRING, $token->type);
-		$this->assertSame($expected, $token->literal);
 	}
 
 	public function testTokenInvalidCharacter(): void
@@ -185,60 +165,54 @@ class TokenizerTest extends TestCase
 		$this->assertSame($expectedLexeme, $token->lexeme);
 	}
 
-	public function testTokensWithLogicalOperatorsAndMemberAccess(): void
+	public function testTokensWithComparisonOperatorsPrecedence(): void
 	{
-		$query 	   = 'user.isAdmin && user.hasPermission';
-		$tokenizer = new Tokenizer($query);
-		$tokens    = iterator_to_array($tokenizer->tokens());
-
-		$expected = [
-			TokenType::T_IDENTIFIER,
-			TokenType::T_DOT,
-			TokenType::T_IDENTIFIER,
-			TokenType::T_AND,
-			TokenType::T_IDENTIFIER,
-			TokenType::T_DOT,
-			TokenType::T_IDENTIFIER,
-			TokenType::T_EOF,
-		];
-
-		$this->assertSame($expected, array_map(fn ($t) => $t->type, $tokens));
-	}
-
-	public function testTokensWithNotOperator(): void
-	{
-		$query 	   = '!user.isAdmin';
-		$tokenizer = new Tokenizer($query);
-		$tokens    = iterator_to_array($tokenizer->tokens());
-
-		$expected = [
-			TokenType::T_NOT,
-			TokenType::T_IDENTIFIER,
-			TokenType::T_DOT,
-			TokenType::T_IDENTIFIER,
-			TokenType::T_EOF,
-		];
-
-		$this->assertSame($expected, array_map(fn ($t) => $t->type, $tokens));
-		$this->assertSame('!', $tokens[0]->lexeme);
-	}
-
-	public function testTokensWithNotOperatorPrecedence(): void
-	{
-		$query = 'a != b';
+		// Test that longer operators are matched before shorter ones
+		$query = 'a === b';
 		$token = Tokenizer::token($query, 2);
-		$this->assertSame(TokenType::T_NOT_EQUAL, $token->type);
-		$this->assertSame('!=', $token->lexeme);
+		$this->assertSame(TokenType::T_IDENTICAL, $token->type);
+		$this->assertSame('===', $token->lexeme);
 
 		$query = 'a !== b';
 		$token = Tokenizer::token($query, 2);
 		$this->assertSame(TokenType::T_NOT_IDENTICAL, $token->type);
 		$this->assertSame('!==', $token->lexeme);
 
-		$query = 'a && !b';
-		$token = Tokenizer::token($query, 5);
-		$this->assertSame(TokenType::T_NOT, $token->type);
-		$this->assertSame('!', $token->lexeme);
+		$query = 'a <= b';
+		$token = Tokenizer::token($query, 2);
+		$this->assertSame(TokenType::T_LESS_EQUAL, $token->type);
+		$this->assertSame('<=', $token->lexeme);
+
+		$query = 'a >= b';
+		$token = Tokenizer::token($query, 2);
+		$this->assertSame(TokenType::T_GREATER_EQUAL, $token->type);
+		$this->assertSame('>=', $token->lexeme);
+	}
+
+	public function testTokensWithComparisonOperatorsSequence(): void
+	{
+		$query = 'a == b != c < d <= e > f >= g';
+		$tokenizer = new Tokenizer($query);
+		$tokens = iterator_to_array($tokenizer->tokens());
+
+		$expected = [
+			TokenType::T_IDENTIFIER,
+			TokenType::T_EQUAL,
+			TokenType::T_IDENTIFIER,
+			TokenType::T_NOT_EQUAL,
+			TokenType::T_IDENTIFIER,
+			TokenType::T_LESS_THAN,
+			TokenType::T_IDENTIFIER,
+			TokenType::T_LESS_EQUAL,
+			TokenType::T_IDENTIFIER,
+			TokenType::T_GREATER_THAN,
+			TokenType::T_IDENTIFIER,
+			TokenType::T_GREATER_EQUAL,
+			TokenType::T_IDENTIFIER,
+			TokenType::T_EOF,
+		];
+
+		$this->assertSame($expected, array_map(fn ($t) => $t->type, $tokens));
 	}
 
 	public static function literalKeywordProvider(): array
@@ -337,78 +311,24 @@ class TokenizerTest extends TestCase
 		);
 	}
 
-	public function testTokensWithComparisonOperatorsPrecedence(): void
+	public function testTokensWithLogicalOperatorsAndMemberAccess(): void
 	{
-		// Test that longer operators are matched before shorter ones
-		$query = 'a === b';
-		$token = Tokenizer::token($query, 2);
-		$this->assertSame(TokenType::T_IDENTICAL, $token->type);
-		$this->assertSame('===', $token->lexeme);
-
-		$query = 'a !== b';
-		$token = Tokenizer::token($query, 2);
-		$this->assertSame(TokenType::T_NOT_IDENTICAL, $token->type);
-		$this->assertSame('!==', $token->lexeme);
-
-		$query = 'a <= b';
-		$token = Tokenizer::token($query, 2);
-		$this->assertSame(TokenType::T_LESS_EQUAL, $token->type);
-		$this->assertSame('<=', $token->lexeme);
-
-		$query = 'a >= b';
-		$token = Tokenizer::token($query, 2);
-		$this->assertSame(TokenType::T_GREATER_EQUAL, $token->type);
-		$this->assertSame('>=', $token->lexeme);
-	}
-
-	public function testTokensWithComparisonOperatorsSequence(): void
-	{
-		$query = 'a == b != c < d <= e > f >= g';
+		$query 	   = 'user.isAdmin && user.hasPermission';
 		$tokenizer = new Tokenizer($query);
-		$tokens = iterator_to_array($tokenizer->tokens());
+		$tokens    = iterator_to_array($tokenizer->tokens());
 
 		$expected = [
 			TokenType::T_IDENTIFIER,
-			TokenType::T_EQUAL,
+			TokenType::T_DOT,
 			TokenType::T_IDENTIFIER,
-			TokenType::T_NOT_EQUAL,
+			TokenType::T_AND,
 			TokenType::T_IDENTIFIER,
-			TokenType::T_LESS_THAN,
-			TokenType::T_IDENTIFIER,
-			TokenType::T_LESS_EQUAL,
-			TokenType::T_IDENTIFIER,
-			TokenType::T_GREATER_THAN,
-			TokenType::T_IDENTIFIER,
-			TokenType::T_GREATER_EQUAL,
+			TokenType::T_DOT,
 			TokenType::T_IDENTIFIER,
 			TokenType::T_EOF,
 		];
 
 		$this->assertSame($expected, array_map(fn ($t) => $t->type, $tokens));
-	}
-
-	public static function mathTokenProvider(): array
-	{
-		return [
-			['a + b',  2, TokenType::T_PLUS, '+'],
-			['a - b',  2, TokenType::T_MINUS, '-'],
-			['a * b',  2, TokenType::T_MULTIPLY, '*'],
-			['a / b',  2, TokenType::T_DIVIDE, '/'],
-			['a % b',  2, TokenType::T_MODULO, '%'],
-		];
-	}
-
-	#[DataProvider('mathTokenProvider')]
-	public function testTokenWithMathOperators(
-		string $query,
-		int $offset,
-		TokenType $expectedType,
-		string $expectedLexeme
-	): void {
-		$token = Tokenizer::token($query, $offset);
-		$this->assertSame($expectedType, $token->type);
-		$this->assertSame($expectedLexeme, $token->lexeme);
-
 	}
 
 	public static function minusTokenProvider(): array
@@ -464,5 +384,85 @@ class TokenizerTest extends TestCase
 
 		$this->assertSame($expected, array_map(fn ($t) => $t->type, $tokens));
 		$this->assertSame('Questions fréquentes', $tokens[4]->literal);
+	}
+
+	public function testTokensWithNotOperator(): void
+	{
+		$query 	   = '!user.isAdmin';
+		$tokenizer = new Tokenizer($query);
+		$tokens    = iterator_to_array($tokenizer->tokens());
+
+		$expected = [
+			TokenType::T_NOT,
+			TokenType::T_IDENTIFIER,
+			TokenType::T_DOT,
+			TokenType::T_IDENTIFIER,
+			TokenType::T_EOF,
+		];
+
+		$this->assertSame($expected, array_map(fn ($t) => $t->type, $tokens));
+		$this->assertSame('!', $tokens[0]->lexeme);
+	}
+
+	public function testTokensWithNotOperatorPrecedence(): void
+	{
+		$query = 'a != b';
+		$token = Tokenizer::token($query, 2);
+		$this->assertSame(TokenType::T_NOT_EQUAL, $token->type);
+		$this->assertSame('!=', $token->lexeme);
+
+		$query = 'a !== b';
+		$token = Tokenizer::token($query, 2);
+		$this->assertSame(TokenType::T_NOT_IDENTICAL, $token->type);
+		$this->assertSame('!==', $token->lexeme);
+
+		$query = 'a && !b';
+		$token = Tokenizer::token($query, 5);
+		$this->assertSame(TokenType::T_NOT, $token->type);
+		$this->assertSame('!', $token->lexeme);
+	}
+
+	public static function mathTokenProvider(): array
+	{
+		return [
+			['a + b',  2, TokenType::T_PLUS, '+'],
+			['a - b',  2, TokenType::T_MINUS, '-'],
+			['a * b',  2, TokenType::T_MULTIPLY, '*'],
+			['a / b',  2, TokenType::T_DIVIDE, '/'],
+			['a % b',  2, TokenType::T_MODULO, '%'],
+		];
+	}
+
+	#[DataProvider('mathTokenProvider')]
+	public function testTokenWithMathOperators(
+		string $query,
+		int $offset,
+		TokenType $expectedType,
+		string $expectedLexeme
+	): void {
+		$token = Tokenizer::token($query, $offset);
+		$this->assertSame($expectedType, $token->type);
+		$this->assertSame($expectedLexeme, $token->lexeme);
+
+	}
+
+	public static function stringEscapeProvider(): array
+	{
+		return [
+			'regex pattern'               => ["'\\d+'", '\d+'],
+			'no control characters'       => ['"line\nbreak"', 'line\nbreak'],
+			'escaped single quote'        => ["'it\\'s'", "it's"],
+			'escaped double quote'        => ['"say \"hi\""', 'say "hi"'],
+			'escaped backslash'           => ["'a\\\\'", 'a\\'],
+			'other quote needs no escape' => ["'say \"hi\"'", 'say "hi"'],
+		];
+	}
+
+	#[DataProvider('stringEscapeProvider')]
+	public function testTokenWithStringEscapes(string $query, string $expected): void
+	{
+		$token = Tokenizer::token($query, 0);
+		$this->assertSame(TokenType::T_STRING, $token->type);
+		$this->assertSame($expected, $token->literal);
 	}
 }

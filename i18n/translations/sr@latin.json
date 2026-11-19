@@ -9,8 +9,11 @@
 	"alpha": "Alfa",
 	"author": "Autor",
 	"avatar": "Profilna slika",
+
 	"back": "Nazad",
+
 	"buttons.empty": "No buttons",
+
 	"cancel": "Otkažite",
 	"change": "Promenite",
 	"close": "Zatvorite",
@@ -132,8 +135,8 @@
 	"error.file.changeTemplate": "The template for the file \"{id}\" cannot be changed",
 	"error.file.changeTemplate.invalid": "Šablon za datoteku \"{id}\" se ne može promeniti u \"{template}\" (valid: \"{blueprints}\")",
 	"error.file.changeTemplate.permission": "Nije vam dozvoljeno da menjate šablon za datoteku \"{id}\"",
-	"error.file.create.permission": "The file cannot be created",
 
+	"error.file.create.permission": "The file cannot be created",
 	"error.file.delete.multiple": "Nije bilo moguće obrisati sve fajlove. Probajte brisati svaki fajl individualno da vidite specifičnu grešku koja onemogućava brisanje.",
 	"error.file.delete.permission": "The file cannot be deleted",
 	"error.file.duplicate": "Fajl sa nazivom \"{filename}\" već postoji",
@@ -197,9 +200,9 @@
 	"error.object.validation": "Postoji greška u \"{label}\" polju: {message}",
 
 	"error.offline": "Panel je trenutno van mreže",
+
 	"error.page.changeSlug.errorPage": "The slug of the error page cannot be changed",
 	"error.page.changeSlug.homePage": "The slug of the home page cannot be changed",
-
 	"error.page.changeSlug.permission": "Nije Vam dozvoljeno da promenite URL appendix za \"{slug}\"",
 	"error.page.changeSlug.reserved": "Putanja stranica najvišeg nivoa ne sme da počinje sa \"{path}\"",
 	"error.page.changeStatus.errorPage": "The status of the error page cannot be changed",
@@ -258,10 +261,10 @@
 	"error.template.default.notFound": "Podrazumevani template ne postoji",
 
 	"error.unexpected": "Došlo je do neočekivane greške! Omogućite režim za otklanjanje grešaka za više informacija: https://getkirby.com/docs/reference/system/options/debug",
+
 	"error.user.avatar.duplicate": "The avatar already exists",
 	"error.user.avatar.notFound": "The avatar does not exist",
 	"error.user.changeEmail.admin": "You are not allowed to change the email address of an admin",
-
 	"error.user.changeEmail.permission": "Nije Vam dozvoljeno da promenite email za korisnika \"{name}\"",
 	"error.user.changeLanguage.permission": "Nije Vam dozvoljeno da promenite jezik za korisnika \"{name}\"",
 	"error.user.changeName.permission": "Nije Vam dozvoljeno da promenite ima za korisnika \"{name}\"",
@@ -544,6 +547,7 @@
 	"license.code.help": "Nakon kupovine dobili ste svoju šifru licence putem email. Molimo vas da je kopirate i nalepite ovde.",
 	"license.code.label": "Licencni kod",
 	"license.remove.text": "<p>Uklanjanje licence će nepovratno izbrisati datoteku licence sa ove stranice. Zatim možete aktivirati ovu stranicu drugim licencnim ključem ili ponovo registrovati isti licencni ključ ako domen ostane isti.</p><p>Da biste promenili domen povezan sa licencom, kontaktirajte Kirby tim. <a href='https://getkirby.com/license'>Pročitajte više &rarr;</a></p>",
+	"license.status": "Status licence",
 	"license.status.active.info": "Uključuje nove glavne verzije do {date}",
 	"license.status.active.label": "Validna licenca",
 	"license.status.acknowledged.info": "Potvrdili ste da se pridržavate <a href=\"https://getkirby.com/license/free-licenses\">zahteva za besplatnu licencu</a>",
@@ -721,6 +725,7 @@
 	"preview": "Pregled",
 	"preview.browser.pin": "Toggle whether preview navigation should be in sync or independent",
 	"preview.browser.scroll": "Sinhronizacija skrolovanja",
+
 	"progress": "Progress",
 
 	"protected": "Zaštićeno",
@@ -804,6 +809,8 @@
 	"theme.light": "Svetla",
 	"theme.dark": "Tamna",
 	"theme.automatic": "Podrazumevano podudaranje sistema",
+
+	"time.select": "Izaberite vreme",
 
 	"title": "Naslov",
 	"today": "Danas",

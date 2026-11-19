@@ -16,7 +16,7 @@ export default {
 			return this.$library.dayjs.iso(this.value, "time");
 		},
 		text() {
-			return this.parsed?.format(this.format);
+			return this.parsed?.format(this.format) ?? this.value;
 		}
 	}
 };

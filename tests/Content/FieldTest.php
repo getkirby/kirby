@@ -97,19 +97,19 @@ class FieldTest extends TestCase
 		$this->assertSame('Title', $field->value());
 	}
 
-	public function testValueSetter(): void
-	{
-		$field = $this->field('Title');
-		$this->assertSame('Title', $field->value());
-		$field = $field->value('Modified');
-		$this->assertSame('Modified', $field->value());
-	}
-
 	public function testValueCallbackSetter(): void
 	{
 		$field = $this->field('Title');
 		$this->assertSame('Title', $field->value());
 		$field = $field->value(fn ($value) => 'Modified');
+		$this->assertSame('Modified', $field->value());
+	}
+
+	public function testValueSetter(): void
+	{
+		$field = $this->field('Title');
+		$this->assertSame('Title', $field->value());
+		$field = $field->value('Modified');
 		$this->assertSame('Modified', $field->value());
 	}
 }

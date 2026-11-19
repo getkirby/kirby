@@ -58,6 +58,14 @@ class Email
 	}
 
 	/**
+	 * Returns an email template by name and type
+	 */
+	protected function getTemplate(string $name, string|null $type = null): Template
+	{
+		return App::instance()->template('emails/' . $name, $type, 'text');
+	}
+
+	/**
 	 * Grabs a preset from the options; supports fixed
 	 * prop arrays in case a preset is not needed
 	 *
@@ -115,14 +123,6 @@ class Email
 		throw new NotFoundException(
 			message: 'The email template "' . $this->props['template'] . '" cannot be found'
 		);
-	}
-
-	/**
-	 * Returns an email template by name and type
-	 */
-	protected function getTemplate(string $name, string|null $type = null): Template
-	{
-		return App::instance()->template('emails/' . $name, $type, 'text');
 	}
 
 	/**
@@ -193,6 +193,22 @@ class Email
 	}
 
 	/**
+	 * Transforms user object(s) to the email address(es) and name(s);
+	 * supports simple strings, user objects or collections/arrays of either
+	 *
+	 * @param $prop Prop to transform
+	 */
+	protected function transformUserMultiple(string $prop): void
+	{
+		$this->props[$prop] = $this->transformModel(
+			$prop,
+			User::class,
+			'name',
+			'email'
+		);
+	}
+
+	/**
 	 * Transforms a user object to the email address and name;
 	 * supports simple strings, user objects or collections/arrays of either
 	 * (note: only the first item in a collection/array will be used)
@@ -220,21 +236,5 @@ class Email
 
 		// only use the name from the user if no custom name was set
 		$this->props[$nameProp] ??= $name;
-	}
-
-	/**
-	 * Transforms user object(s) to the email address(es) and name(s);
-	 * supports simple strings, user objects or collections/arrays of either
-	 *
-	 * @param $prop Prop to transform
-	 */
-	protected function transformUserMultiple(string $prop): void
-	{
-		$this->props[$prop] = $this->transformModel(
-			$prop,
-			User::class,
-			'name',
-			'email'
-		);
 	}
 }

@@ -26,6 +26,16 @@ use Stringable;
 class File implements Stringable
 {
 	/**
+	 * Validation rules to be used for `::match()`
+	 *
+	 * @var array<string, array{0: string, 1: string}>
+	 */
+	public static array $validations = [
+		'maxsize' => ['size', 'max'],
+		'minsize' => ['size', 'min']
+	];
+
+	/**
 	 * Parent file model
 	 * The model object must use the `\Kirby\Filesystem\IsFile` trait
 	 */
@@ -40,16 +50,6 @@ class File implements Stringable
 	 * Absolute file URL
 	 */
 	protected string|null $url;
-
-	/**
-	 * Validation rules to be used for `::match()`
-	 *
-	 * @var array<string, array{0: string, 1: string}>
-	 */
-	public static array $validations = [
-		'maxsize' => ['size', 'max'],
-		'minsize' => ['size', 'min']
-	];
 
 	/**
 	 * Constructor sets all file properties
@@ -465,17 +465,6 @@ class File implements Stringable
 	}
 
 	/**
-	 * Returns the absolute url for the file
-	 */
-	public function url(): string|null
-	{
-		// lazily determine the URL from the model object
-		// only if it's needed to avoid breaking custom file::url
-		// components that rely on `$cmsFile->asset()` methods
-		return $this->url ??= $this->model?->url();
-	}
-
-	/**
 	 * Sanitizes the file contents depending on the file type
 	 * by overwriting the file with the sanitized version
 	 * @since 3.6.0
@@ -573,6 +562,17 @@ class File implements Stringable
 	public function type(): string|null
 	{
 		return F::type($this->root());
+	}
+
+	/**
+	 * Returns the absolute url for the file
+	 */
+	public function url(): string|null
+	{
+		// lazily determine the URL from the model object
+		// only if it's needed to avoid breaking custom file::url
+		// components that rely on `$cmsFile->asset()` methods
+		return $this->url ??= $this->model?->url();
 	}
 
 	/**

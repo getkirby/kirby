@@ -36,6 +36,138 @@ class FieldsTest extends TestCase
 		$this->model = new Page(['slug' => 'test']);
 	}
 
+	public static function modelProvider(): array
+	{
+		return [
+			[new Page(['slug' => 'test']), true],
+			[new Site(), true],
+			[new User(['email' => 'test@getkirby.com']), false],
+			[new File(['filename' => 'test.jpg', 'parent' => new Site()]), false],
+		];
+	}
+
+	public function test__call(): void
+	{
+		$fields = new Fields([
+			'title' => [
+				'type' => 'text',
+			],
+		], $this->model);
+
+		// `$fields->fieldName()` resolves to the field stored under that key
+		$this->assertSame('title', $fields->title()->name());
+
+		// unknown field falls through to null
+		$this->assertNull($fields->unknown());
+	}
+
+	public function testAcceptedFileBlueprints(): void
+	{
+		$fields = new Fields([
+			'text' => [
+				'type' => 'text',
+			],
+			'textarea' => [
+				'type'    => 'textarea',
+				'uploads' => 'a'
+			],
+			'files' => [
+				'type'      => 'filelist',
+				'blueprint' => 'b'
+			],
+		], $this->model);
+
+		$this->assertSame(['a', 'b'], $fields->acceptedFileBlueprints());
+	}
+
+	public function testAcceptedFileBlueprintsInNestedForms(): void
+	{
+		$fields = new Fields([
+			'structure' => [
+				'type'   => 'structure',
+				'fields' => [
+					'image' => [
+						'type'    => 'filepicker',
+						'uploads' => 'a'
+					],
+					'object' => [
+						'type'   => 'object',
+						'fields' => [
+							'text' => [
+								'type'    => 'textarea',
+								'uploads' => 'b'
+							]
+						]
+					]
+				]
+			],
+			'entries' => [
+				'type' => 'entries'
+			],
+		], $this->model);
+
+		$this->assertSame(['a', 'b'], $fields->acceptedFileBlueprints());
+	}
+
+	public function testAcceptedFileBlueprintsInNestedFormWithOwnTemplates(): void
+	{
+		$field = new class (
+			model: $this->model,
+			name: 'object',
+			fields: [
+				'text' => [
+					'type'    => 'textarea',
+					'uploads' => 'a'
+				]
+			]
+		) extends ObjectField implements ProvidesAcceptedFileBlueprints {
+			public function acceptedFileBlueprints(): array
+			{
+				return ['b'];
+			}
+		};
+
+		$fields = new Fields(['object' => $field], $this->model);
+
+		$this->assertSame(['b', 'a'], $fields->acceptedFileBlueprints());
+	}
+
+	public function testAcceptedFileBlueprintsWithoutFields(): void
+	{
+		$fields = new Fields([], $this->model);
+		$this->assertSame([], $fields->acceptedFileBlueprints());
+	}
+
+	public function testAcceptedPageBlueprints(): void
+	{
+		$fields = new Fields([
+			'text' => [
+				'type' => 'text',
+			],
+			'albums' => [
+				'type'       => 'pagelist',
+				'blueprints' => 'album'
+			],
+			'object' => [
+				'type'   => 'object',
+				'fields' => [
+					'events' => [
+						'type'       => 'pagelist',
+						'blueprints' => 'event'
+					]
+				]
+			],
+		], $this->model);
+
+		$this->assertSame(['album', 'event'], $fields->acceptedPageBlueprints());
+	}
+
+	public function testAcceptedPageBlueprintsWithoutFields(): void
+	{
+		$fields = new Fields([], $this->model);
+		$this->assertSame([], $fields->acceptedPageBlueprints());
+	}
+
 	public function testConstruct(): void
 	{
 		$fields = new Fields(
@@ -54,23 +186,6 @@ class FieldsTest extends TestCase
 		$this->assertSame($this->model, $fields->first()->model());
 		$this->assertSame('b', $fields->last()->name());
 		$this->assertSame($this->model, $fields->last()->model());
-	}
-
-	public function testConstructWithoutModel(): void
-	{
-		$fields = new Fields(
-			fields: [
-				'a' => [
-					'type'  => 'text',
-				],
-				'b' => [
-					'type'  => 'text',
-				],
-			]
-		);
-
-		$this->assertSame($this->app->site(), $fields->first()->model());
-		$this->assertSame($this->app->site(), $fields->last()->model());
 	}
 
 	public function testConstructWithBrokenField(): void
@@ -118,6 +233,23 @@ class FieldsTest extends TestCase
 		);
 
 		$this->assertInstanceOf(InfoField::class, $fields->get('a'));
+	}
+
+	public function testConstructWithoutModel(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+				],
+				'b' => [
+					'type'  => 'text',
+				],
+			]
+		);
+
+		$this->assertSame($this->app->site(), $fields->first()->model());
+		$this->assertSame($this->app->site(), $fields->last()->model());
 	}
 
 	public function testConstructWithRegisteredType(): void
@@ -260,21 +392,6 @@ class FieldsTest extends TestCase
 		$this->assertSame('test', $fields->field('test')->name());
 	}
 
-	public function test__call(): void
-	{
-		$fields = new Fields([
-			'title' => [
-				'type' => 'text',
-			],
-		], $this->model);
-
-		// `$fields->fieldName()` resolves to the field stored under that key
-		$this->assertSame('title', $fields->title()->name());
-
-		// unknown field falls through to null
-		$this->assertNull($fields->unknown());
-	}
-
 	public function testFieldWithMissingField(): void
 	{
 		$fields = new Fields([
@@ -287,113 +404,6 @@ class FieldsTest extends TestCase
 		$this->expectExceptionMessage('The field could not be found');
 
 		$fields->field('missing');
-	}
-
-	public function testAcceptedFileBlueprints(): void
-	{
-		$fields = new Fields([
-			'text' => [
-				'type' => 'text',
-			],
-			'textarea' => [
-				'type'    => 'textarea',
-				'uploads' => 'a'
-			],
-			'files' => [
-				'type'      => 'filelist',
-				'blueprint' => 'b'
-			],
-		], $this->model);
-
-		$this->assertSame(['a', 'b'], $fields->acceptedFileBlueprints());
-	}
-
-	public function testAcceptedFileBlueprintsInNestedForms(): void
-	{
-		$fields = new Fields([
-			'structure' => [
-				'type'   => 'structure',
-				'fields' => [
-					'image' => [
-						'type'    => 'filepicker',
-						'uploads' => 'a'
-					],
-					'object' => [
-						'type'   => 'object',
-						'fields' => [
-							'text' => [
-								'type'    => 'textarea',
-								'uploads' => 'b'
-							]
-						]
-					]
-				]
-			],
-			'entries' => [
-				'type' => 'entries'
-			],
-		], $this->model);
-
-		$this->assertSame(['a', 'b'], $fields->acceptedFileBlueprints());
-	}
-
-	public function testAcceptedFileBlueprintsInNestedFormWithOwnTemplates(): void
-	{
-		$field = new class (
-			model: $this->model,
-			name: 'object',
-			fields: [
-				'text' => [
-					'type'    => 'textarea',
-					'uploads' => 'a'
-				]
-			]
-		) extends ObjectField implements ProvidesAcceptedFileBlueprints {
-			public function acceptedFileBlueprints(): array
-			{
-				return ['b'];
-			}
-		};
-
-		$fields = new Fields(['object' => $field], $this->model);
-
-		$this->assertSame(['b', 'a'], $fields->acceptedFileBlueprints());
-	}
-
-	public function testAcceptedFileBlueprintsWithoutFields(): void
-	{
-		$fields = new Fields([], $this->model);
-		$this->assertSame([], $fields->acceptedFileBlueprints());
-	}
-
-	public function testAcceptedPageBlueprints(): void
-	{
-		$fields = new Fields([
-			'text' => [
-				'type' => 'text',
-			],
-			'albums' => [
-				'type'       => 'pagelist',
-				'blueprints' => 'album'
-			],
-			'object' => [
-				'type'   => 'object',
-				'fields' => [
-					'events' => [
-						'type'       => 'pagelist',
-						'blueprints' => 'event'
-					]
-				]
-			],
-		], $this->model);
-
-		$this->assertSame(['album', 'event'], $fields->acceptedPageBlueprints());
-	}
-
-	public function testAcceptedPageBlueprintsWithoutFields(): void
-	{
-		$fields = new Fields([], $this->model);
-		$this->assertSame([], $fields->acceptedPageBlueprints());
 	}
 
 	public function testFill(): void
@@ -591,17 +601,6 @@ class FieldsTest extends TestCase
 		$this->assertNull($fields->find('mother+missing-child'));
 	}
 
-	public function testFindWhenFieldHasNoForm(): void
-	{
-		$fields = new Fields([
-			'mother' => [
-				'type'  => 'text',
-			],
-		], $this->model);
-
-		$this->assertNull($fields->find('mother+child'));
-	}
-
 	public function testFindWhenFieldHasFieldsetForms(): void
 	{
 		// blocks have one form per fieldset, not a single nested
@@ -609,6 +608,17 @@ class FieldsTest extends TestCase
 		$fields = new Fields([
 			'mother' => [
 				'type' => 'blocks',
+			],
+		], $this->model);
+
+		$this->assertNull($fields->find('mother+child'));
+	}
+
+	public function testFindWhenFieldHasNoForm(): void
+	{
+		$fields = new Fields([
+			'mother' => [
+				'type'  => 'text',
 			],
 		], $this->model);
 
@@ -754,6 +764,27 @@ class FieldsTest extends TestCase
 		], $fields->passthrough());
 	}
 
+	public function testPassthroughWithClosureValues(): void
+	{
+		$fields = new Fields([], $this->model);
+
+		$fields->passthrough([
+			'test' => 'Test', // should be ignored
+		]);
+
+		$this->assertSame([
+			'test' => 'Test',
+		], $fields->toFormValues());
+
+		$fields->passthrough([
+			'test' => fn ($value) => $value . ' updated'
+		]);
+
+		$this->assertSame([
+			'test' => 'Test updated'
+		], $fields->toFormValues());
+	}
+
 	public function testPassthroughWithExistingField(): void
 	{
 		$fields = new Fields([
@@ -771,52 +802,6 @@ class FieldsTest extends TestCase
 		$this->assertSame([
 			'a' => 'a',
 			'b' => 'B'
-		], $fields->toFormValues());
-	}
-
-	public function testPassthroughWithClosureValues(): void
-	{
-		$fields = new Fields([], $this->model);
-
-		$fields->passthrough([
-			'test' => 'Test', // should be ignored
-		]);
-
-		$this->assertSame([
-			'test' => 'Test',
-		], $fields->toFormValues());
-
-
-		$fields->passthrough([
-			'test' => fn ($value) => $value . ' updated'
-		]);
-
-		$this->assertSame([
-			'test' => 'Test updated'
-		], $fields->toFormValues());
-	}
-
-	public function testPassthroughWithUpperAndLowerCases(): void
-	{
-		$fields = new Fields([
-			'a' => [
-				'type'  => 'text',
-				'value' => 'a'
-			],
-		], $this->model);
-
-		$fields->passthrough([
-			'A' => 'A', // should be ignored even with the wrong case
-			'b' => 'B',
-		]);
-
-		$fields->passthrough([
-			'B' => 'B changed' // should be stored with the lower case 'b' key
-		]);
-
-		$this->assertSame([
-			'a' => 'a',
-			'b' => 'B changed'
 		], $fields->toFormValues());
 	}
 
@@ -871,6 +856,30 @@ class FieldsTest extends TestCase
 			'a' => 'A',
 			'b' => 'B',
 			'c' => 'C',
+		], $fields->toFormValues());
+	}
+
+	public function testPassthroughWithUpperAndLowerCases(): void
+	{
+		$fields = new Fields([
+			'a' => [
+				'type'  => 'text',
+				'value' => 'a'
+			],
+		], $this->model);
+
+		$fields->passthrough([
+			'A' => 'A', // should be ignored even with the wrong case
+			'b' => 'B',
+		]);
+
+		$fields->passthrough([
+			'B' => 'B changed' // should be stored with the lower case 'b' key
+		]);
+
+		$this->assertSame([
+			'a' => 'a',
+			'b' => 'B changed'
 		], $fields->toFormValues());
 	}
 
@@ -1018,66 +1027,6 @@ class FieldsTest extends TestCase
 		], $fields->toFormValues());
 	}
 
-	public function testSubmitWithForceAndANoValueField(): void
-	{
-		$fields = new Fields(
-			fields: [
-				'a' => [
-					'type'  => 'text',
-					'value' => 'A',
-				],
-				'b' => [
-					'type'  => 'info',
-					'value' => 'B',
-				],
-			],
-			model: $this->model
-		);
-
-		$fields->submit(
-			input: [
-				'a' => 'A updated',
-				'b' => 'B updated',
-			],
-			force: true
-		);
-
-		$this->assertSame([
-			'a' => 'A updated',
-		], $fields->toStoredValues(), 'The info field can never be submitted. It has no value.');
-	}
-
-	public function testSubmitWithForceAndAComplexDisabledField(): void
-	{
-		$fields = new Fields(
-			fields: [
-				'a' => [
-					'type'  => 'text',
-					'value' => 'A',
-				],
-				'b' => [
-					'type'     => 'date',
-					'disabled' => true,
-					'value'    => '2025-01-01',
-				],
-			],
-			model: $this->model
-		);
-
-		$fields->submit(
-			input: [
-				'a' => 'A updated',
-				'b' => '03.04.2025',
-			],
-			force: true
-		);
-
-		$this->assertSame([
-			'a' => 'A updated',
-			'b' => '2025-04-03',
-		], $fields->toStoredValues(), 'The date field should still be able to format the value correctly even if it was disabled.');
-	}
-
 	public function testSubmitWithClosureValues(): void
 	{
 		$fields = new Fields(
@@ -1153,6 +1102,66 @@ class FieldsTest extends TestCase
 			'a' => 'A updated',
 			'b' => 'B updated'
 		], $fields->toStoredValues());
+	}
+
+	public function testSubmitWithForceAndAComplexDisabledField(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+					'value' => 'A',
+				],
+				'b' => [
+					'type'     => 'date',
+					'disabled' => true,
+					'value'    => '2025-01-01',
+				],
+			],
+			model: $this->model
+		);
+
+		$fields->submit(
+			input: [
+				'a' => 'A updated',
+				'b' => '03.04.2025',
+			],
+			force: true
+		);
+
+		$this->assertSame([
+			'a' => 'A updated',
+			'b' => '2025-04-03',
+		], $fields->toStoredValues(), 'The date field should still be able to format the value correctly even if it was disabled.');
+	}
+
+	public function testSubmitWithForceAndANoValueField(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+					'value' => 'A',
+				],
+				'b' => [
+					'type'  => 'info',
+					'value' => 'B',
+				],
+			],
+			model: $this->model
+		);
+
+		$fields->submit(
+			input: [
+				'a' => 'A updated',
+				'b' => 'B updated',
+			],
+			force: true
+		);
+
+		$this->assertSame([
+			'a' => 'A updated',
+		], $fields->toStoredValues(), 'The info field can never be submitted. It has no value.');
 	}
 
 	public function testSubmitWithPassthrough(): void
@@ -1261,6 +1270,7 @@ class FieldsTest extends TestCase
 				'hidden'     => false,
 				'label'      => 'A',
 				'name'       => 'a',
+				'preselect'  => false,
 				'required'   => false,
 				'saveable'   => true,
 				'translate'  => true,
@@ -1268,68 +1278,6 @@ class FieldsTest extends TestCase
 				'width'      => '1/1',
 			],
 		], $fields->toProps());
-	}
-
-	public function testToPropsWithDefaults(): void
-	{
-		$this->setUpSingleLanguage();
-		$this->app->impersonate('kirby');
-
-		$fields = new Fields(
-			fields: [
-				'a' => [
-					'type'    => 'text',
-					'value'   => 'A',
-					'default' => 'Default A',
-				]
-			],
-			model: $this->model
-		);
-
-		$this->assertSame([
-			'a' => [
-				'autofocus'  => false,
-				'counter'    => true,
-				'disabled'   => false,
-				'font'       => 'sans-serif',
-				'hidden'     => false,
-				'label'      => 'A',
-				'name'       => 'a',
-				'required'   => false,
-				'saveable'   => true,
-				'translate'  => true,
-				'type'       => 'text',
-				'width'      => '1/1',
-				'default'    => 'Default A',
-			],
-		], $fields->toProps(defaults: true));
-	}
-
-	public static function modelProvider(): array
-	{
-		return [
-			[new Page(['slug' => 'test']), true],
-			[new Site(), true],
-			[new User(['email' => 'test@getkirby.com']), false],
-			[new File(['filename' => 'test.jpg', 'parent' => new Site()]), false],
-		];
-	}
-
-	public function testToPropsWithoutUpdatePermission(): void
-	{
-		$this->setUpSingleLanguage();
-
-		$fields = new Fields(
-			fields: [
-				'a' => [
-					'type'  => 'text',
-					'value' => 'A'
-				]
-			],
-			model: $this->model
-		);
-
-		$this->assertTrue($fields->toProps()['a']['disabled']);
 	}
 
 	public function testToPropsForNonTranslatableField(): void
@@ -1360,6 +1308,59 @@ class FieldsTest extends TestCase
 
 		$this->assertFalse($props['b']['disabled']);
 		$this->assertTrue($props['b']['translate']);
+	}
+
+	public function testToPropsWithDefaults(): void
+	{
+		$this->setUpSingleLanguage();
+		$this->app->impersonate('kirby');
+
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'    => 'text',
+					'value'   => 'A',
+					'default' => 'Default A',
+				]
+			],
+			model: $this->model
+		);
+
+		$this->assertSame([
+			'a' => [
+				'autofocus'  => false,
+				'counter'    => true,
+				'disabled'   => false,
+				'font'       => 'sans-serif',
+				'hidden'     => false,
+				'label'      => 'A',
+				'name'       => 'a',
+				'preselect'  => false,
+				'required'   => false,
+				'saveable'   => true,
+				'translate'  => true,
+				'type'       => 'text',
+				'width'      => '1/1',
+				'default'    => 'Default A',
+			],
+		], $fields->toProps(defaults: true));
+	}
+
+	public function testToPropsWithoutUpdatePermission(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+					'value' => 'A'
+				]
+			],
+			model: $this->model
+		);
+
+		$this->assertTrue($fields->toProps()['a']['disabled']);
 	}
 
 	public function testToStoredValues(): void

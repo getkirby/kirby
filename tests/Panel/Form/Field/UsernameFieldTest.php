@@ -8,6 +8,15 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(UsernameField::class)]
 class UsernameFieldTest extends TestCase
 {
+	public function testLabel(): void
+	{
+		$field = new UsernameField(
+			label: 'Test'
+		);
+
+		$this->assertSame('Test', $field->label());
+	}
+
 	public function testProps(): void
 	{
 		$field = new UsernameField();
@@ -33,6 +42,7 @@ class UsernameFieldTest extends TestCase
 			'name'         => 'username',
 			'pattern'      => null,
 			'placeholder'  => null,
+			'preselect'    => false,
 			'required'     => false,
 			'saveable'     => true,
 			'spellcheck'   => null,
@@ -43,14 +53,5 @@ class UsernameFieldTest extends TestCase
 		];
 
 		$this->assertSame($expected, $props);
-	}
-
-	public function testLabel(): void
-	{
-		$field = new UsernameField(
-			label: 'Test'
-		);
-
-		$this->assertSame('Test', $field->label());
 	}
 }

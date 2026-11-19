@@ -85,6 +85,37 @@ class Parser
 	}
 
 	/**
+	 * Parses a list of arguments
+	 */
+	protected function argumentList(): ArgumentListNode
+	{
+		return new ArgumentListNode(
+			arguments: $this->consumeList(TokenType::T_CLOSE_PAREN)
+		);
+	}
+
+	/**
+	 * Parses arithmetic expressions with proper precedence
+	 */
+	protected function arithmetic(): Node
+	{
+		$left = $this->term();
+
+		while ($token = $this->consumeAny([
+			TokenType::T_PLUS,
+			TokenType::T_MINUS
+		])) {
+			$left = new ArithmeticNode(
+				left: $left,
+				operator: $token->lexeme,
+				right: $this->term()
+			);
+		}
+
+		return $left;
+	}
+
+	/**
 	 * Parses an array
 	 */
 	protected function array(): ArrayListNode|null
@@ -96,16 +127,6 @@ class Parser
 		}
 
 		return null;
-	}
-
-	/**
-	 * Parses a list of arguments
-	 */
-	protected function argumentList(): ArgumentListNode
-	{
-		return new ArgumentListNode(
-			arguments: $this->consumeList(TokenType::T_CLOSE_PAREN)
-		);
 	}
 
 	/**
@@ -140,6 +161,33 @@ class Parser
 		}
 
 		return $node;
+	}
+
+	/**
+	 * Parses comparison expressions with proper precedence
+	 */
+	protected function comparison(): Node
+	{
+		$left = $this->arithmetic();
+
+		while ($token = $this->consumeAny([
+			TokenType::T_EQUAL,
+			TokenType::T_IDENTICAL,
+			TokenType::T_NOT_EQUAL,
+			TokenType::T_NOT_IDENTICAL,
+			TokenType::T_LESS_THAN,
+			TokenType::T_LESS_EQUAL,
+			TokenType::T_GREATER_THAN,
+			TokenType::T_GREATER_EQUAL
+		])) {
+			$left = new ComparisonNode(
+				left: $left,
+				operator: $token->lexeme,
+				right: $this->arithmetic()
+			);
+		}
+
+		return $left;
 	}
 
 	/**
@@ -219,33 +267,6 @@ class Parser
 	{
 		// Top-level expression should be ternary
 		return $this->ternary();
-	}
-
-	/**
-	 * Parses comparison expressions with proper precedence
-	 */
-	protected function comparison(): Node
-	{
-		$left = $this->arithmetic();
-
-		while ($token = $this->consumeAny([
-			TokenType::T_EQUAL,
-			TokenType::T_IDENTICAL,
-			TokenType::T_NOT_EQUAL,
-			TokenType::T_NOT_IDENTICAL,
-			TokenType::T_LESS_THAN,
-			TokenType::T_LESS_EQUAL,
-			TokenType::T_GREATER_THAN,
-			TokenType::T_GREATER_EQUAL
-		])) {
-			$left = new ComparisonNode(
-				left: $left,
-				operator: $token->lexeme,
-				right: $this->arithmetic()
-			);
-		}
-
-		return $left;
 	}
 
 	/**
@@ -373,49 +394,6 @@ class Parser
 	}
 
 	/**
-	 * Parses arithmetic expressions with proper precedence
-	 */
-	protected function arithmetic(): Node
-	{
-		$left = $this->term();
-
-		while ($token = $this->consumeAny([
-			TokenType::T_PLUS,
-			TokenType::T_MINUS
-		])) {
-			$left = new ArithmeticNode(
-				left: $left,
-				operator: $token->lexeme,
-				right: $this->term()
-			);
-		}
-
-		return $left;
-	}
-
-	/**
-	 * Parses multiplication, division, and modulo expressions
-	 */
-	protected function term(): Node
-	{
-		$left = $this->unary();
-
-		while ($token = $this->consumeAny([
-			TokenType::T_MULTIPLY,
-			TokenType::T_DIVIDE,
-			TokenType::T_MODULO
-		])) {
-			$left = new ArithmeticNode(
-				left: $left,
-				operator: $token->lexeme,
-				right: $this->unary()
-			);
-		}
-
-		return $left;
-	}
-
-	/**
 	 * Parses logical OR expressions,
 	 * which bind looser than logical AND
 	 * @since 5.7.0
@@ -465,6 +443,28 @@ class Parser
 		}
 
 		return null;
+	}
+
+	/**
+	 * Parses multiplication, division, and modulo expressions
+	 */
+	protected function term(): Node
+	{
+		$left = $this->unary();
+
+		while ($token = $this->consumeAny([
+			TokenType::T_MULTIPLY,
+			TokenType::T_DIVIDE,
+			TokenType::T_MODULO
+		])) {
+			$left = new ArithmeticNode(
+				left: $left,
+				operator: $token->lexeme,
+				right: $this->unary()
+			);
+		}
+
+		return $left;
 	}
 
 	/**

@@ -28,15 +28,15 @@ class User
 	protected CmsUser|false|null $current = false;
 
 	/**
-	 * Currently impersonated user
-	 */
-	protected CmsUser|null $impersonate = null;
-
-	/**
 	 * Exception that was thrown while
 	 * determining the current user
 	 */
 	protected Throwable|null $exception = null;
+
+	/**
+	 * Currently impersonated user
+	 */
+	protected CmsUser|null $impersonate = null;
 
 	public function __construct(
 		protected Auth $auth,

@@ -47,14 +47,6 @@ class Route
 	];
 
 	/**
-	 * Magic getter for route attributes
-	 */
-	public function __call(string $key, array|null $args = null): mixed
-	{
-		return $this->attributes[$key] ?? null;
-	}
-
-	/**
 	 * Creates a new Route object for the given
 	 * pattern(s), method(s) and the callback action
 	 */
@@ -65,6 +57,14 @@ class Route
 		protected array $attributes = []
 	) {
 		$this->pattern = $this->regex(ltrim($pattern, '/'));
+	}
+
+	/**
+	 * Magic getter for route attributes
+	 */
+	public function __call(string $key, array|null $args = null): mixed
+	{
+		return $this->attributes[$key] ?? null;
 	}
 
 	/**
@@ -120,35 +120,6 @@ class Route
 	}
 
 	/**
-	 * Getter for the pattern
-	 */
-	public function pattern(): string
-	{
-		return $this->pattern;
-	}
-
-	/**
-	 * Converts the pattern into a full regular
-	 * expression by replacing all the wildcards
-	 */
-	public function regex(string $pattern): string
-	{
-		$search  = array_keys($this->wildcards['optional']);
-		$replace = array_values($this->wildcards['optional']);
-
-		// For optional parameters, first translate the wildcards to their
-		// regex equivalent, sans the ")?" ending. We'll add the endings
-		// back on when we know the replacement count.
-		$pattern = str_replace($search, $replace, $pattern, $count);
-
-		if ($count > 0) {
-			$pattern .= str_repeat(')?', $count);
-		}
-
-		return strtr($pattern, $this->wildcards['required']);
-	}
-
-	/**
 	 * Tries to match the path with the regular expression and
 	 * extracts all arguments for the Route action
 	 *
@@ -175,5 +146,34 @@ class Route
 		}
 
 		return false;
+	}
+
+	/**
+	 * Getter for the pattern
+	 */
+	public function pattern(): string
+	{
+		return $this->pattern;
+	}
+
+	/**
+	 * Converts the pattern into a full regular
+	 * expression by replacing all the wildcards
+	 */
+	public function regex(string $pattern): string
+	{
+		$search  = array_keys($this->wildcards['optional']);
+		$replace = array_values($this->wildcards['optional']);
+
+		// For optional parameters, first translate the wildcards to their
+		// regex equivalent, sans the ")?" ending. We'll add the endings
+		// back on when we know the replacement count.
+		$pattern = str_replace($search, $replace, $pattern, $count);
+
+		if ($count > 0) {
+			$pattern .= str_repeat(')?', $count);
+		}
+
+		return strtr($pattern, $this->wildcards['required']);
 	}
 }

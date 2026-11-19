@@ -54,6 +54,16 @@ class Header
 	];
 
 	/**
+	 * Sends a 202 header
+	 *
+	 * @return string|void
+	 */
+	public static function accepted(bool $send = true)
+	{
+		return static::status(202, $send);
+	}
+
+	/**
 	 * Sends a content type header
 	 *
 	 * @return string|void
@@ -103,16 +113,125 @@ class Header
 	}
 
 	/**
-	 * Shortcut for static::contentType()
+	 * Sends a 201 header
 	 *
 	 * @return string|void
 	 */
-	public static function type(
-		string $mime,
-		string $charset = 'UTF-8',
+	public static function created(bool $send = true)
+	{
+		return static::status(201, $send);
+	}
+
+	/**
+	 * Sends download headers for anything that is downloadable
+	 *
+	 * @param $params Check out the defaults array for available parameters
+	 */
+	public static function download(array $params = []): void
+	{
+		$options = [
+			'name'     => 'download',
+			'size'     => false,
+			'mime'     => 'application/force-download',
+			'modified' => time(),
+			...$params
+		];
+
+		header('Pragma: public');
+		header('Cache-Control: no-cache, no-store, must-revalidate');
+		header('Last-Modified: ' . gmdate('D, d M Y H:i:s', $options['modified']) . ' GMT');
+		header('Content-Disposition: attachment; filename="' . $options['name'] . '"');
+		header('Content-Transfer-Encoding: binary');
+
+		static::contentType($options['mime']);
+
+		if ($options['size']) {
+			header('Content-Length: ' . $options['size']);
+		}
+
+		header('Connection: close');
+	}
+
+	/**
+	 * Sends a 400 header
+	 *
+	 * @return string|void
+	 */
+	public static function error(bool $send = true)
+	{
+		return static::status(400, $send);
+	}
+
+	/**
+	 * Sends a 403 header
+	 *
+	 * @return string|void
+	 */
+	public static function forbidden(bool $send = true)
+	{
+		return static::status(403, $send);
+	}
+
+	/**
+	 * Sends a 410 header
+	 *
+	 * @return string|void
+	 */
+	public static function gone(bool $send = true)
+	{
+		return static::status(410, $send);
+	}
+
+	/**
+	 * Sends a 404 header
+	 *
+	 * @return string|void
+	 */
+	public static function missing(bool $send = true)
+	{
+		return static::status(404, $send);
+	}
+
+	/**
+	 * Sends a 404 header
+	 *
+	 * @return string|void
+	 */
+	public static function notfound(bool $send = true)
+	{
+		return static::status(404, $send);
+	}
+
+	/**
+	 * Sends a 500 header
+	 *
+	 * @return string|void
+	 */
+	public static function panic(bool $send = true)
+	{
+		return static::status(500, $send);
+	}
+
+	/**
+	 * Sends a redirect header
+	 *
+	 * @return string|void
+	 */
+	public static function redirect(
+		string $url,
+		int $code = 302,
 		bool $send = true
 	) {
-		return static::contentType($mime, $charset, $send);
+		$status   = static::status($code, false);
+		$location = 'Location:' . Url::unIdn($url);
+
+		if ($send !== true) {
+			return $status . "\r\n" . $location;
+		}
+
+		header($status);
+		header($location);
+		exit();
 	}
 
 	/**
@@ -169,83 +288,16 @@ class Header
 	}
 
 	/**
-	 * Sends a 201 header
+	 * Shortcut for static::contentType()
 	 *
 	 * @return string|void
 	 */
-	public static function created(bool $send = true)
-	{
-		return static::status(201, $send);
-	}
-
-	/**
-	 * Sends a 202 header
-	 *
-	 * @return string|void
-	 */
-	public static function accepted(bool $send = true)
-	{
-		return static::status(202, $send);
-	}
-
-	/**
-	 * Sends a 400 header
-	 *
-	 * @return string|void
-	 */
-	public static function error(bool $send = true)
-	{
-		return static::status(400, $send);
-	}
-
-	/**
-	 * Sends a 403 header
-	 *
-	 * @return string|void
-	 */
-	public static function forbidden(bool $send = true)
-	{
-		return static::status(403, $send);
-	}
-
-	/**
-	 * Sends a 404 header
-	 *
-	 * @return string|void
-	 */
-	public static function notfound(bool $send = true)
-	{
-		return static::status(404, $send);
-	}
-
-	/**
-	 * Sends a 404 header
-	 *
-	 * @return string|void
-	 */
-	public static function missing(bool $send = true)
-	{
-		return static::status(404, $send);
-	}
-
-	/**
-	 * Sends a 410 header
-	 *
-	 * @return string|void
-	 */
-	public static function gone(bool $send = true)
-	{
-		return static::status(410, $send);
-	}
-
-	/**
-	 * Sends a 500 header
-	 *
-	 * @return string|void
-	 */
-	public static function panic(bool $send = true)
-	{
-		return static::status(500, $send);
+	public static function type(
+		string $mime,
+		string $charset = 'UTF-8',
+		bool $send = true
+	) {
+		return static::contentType($mime, $charset, $send);
 	}
 
 	/**
@@ -256,57 +308,5 @@ class Header
 	public static function unavailable(bool $send = true)
 	{
 		return static::status(503, $send);
-	}
-
-	/**
-	 * Sends a redirect header
-	 *
-	 * @return string|void
-	 */
-	public static function redirect(
-		string $url,
-		int $code = 302,
-		bool $send = true
-	) {
-		$status   = static::status($code, false);
-		$location = 'Location:' . Url::unIdn($url);
-
-		if ($send !== true) {
-			return $status . "\r\n" . $location;
-		}
-
-		header($status);
-		header($location);
-		exit();
-	}
-
-	/**
-	 * Sends download headers for anything that is downloadable
-	 *
-	 * @param $params Check out the defaults array for available parameters
-	 */
-	public static function download(array $params = []): void
-	{
-		$options = [
-			'name'     => 'download',
-			'size'     => false,
-			'mime'     => 'application/force-download',
-			'modified' => time(),
-			...$params
-		];
-
-		header('Pragma: public');
-		header('Cache-Control: no-cache, no-store, must-revalidate');
-		header('Last-Modified: ' . gmdate('D, d M Y H:i:s', $options['modified']) . ' GMT');
-		header('Content-Disposition: attachment; filename="' . $options['name'] . '"');
-		header('Content-Transfer-Encoding: binary');
-
-		static::contentType($options['mime']);
-
-		if ($options['size']) {
-			header('Content-Length: ' . $options['size']);
-		}
-
-		header('Connection: close');
 	}
 }

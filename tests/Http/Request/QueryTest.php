@@ -26,19 +26,6 @@ class QueryTest extends TestCase
 		$this->assertSame($data, $query->data());
 	}
 
-	public function testIsEmpty(): void
-	{
-		// without data
-		$query = new Query();
-		$this->assertTrue($query->isEmpty());
-		$this->assertFalse($query->isNotEmpty());
-
-		// with data
-		$query = new Query(['foo' => 'bar']);
-		$this->assertFalse($query->isEmpty());
-		$this->assertTrue($query->isNotEmpty());
-	}
-
 	public function testGet(): void
 	{
 		// default
@@ -54,19 +41,17 @@ class QueryTest extends TestCase
 		$this->assertSame(['a' => 'a', 'b' => 'b', 'c' => null], $query->get(['a', 'b', 'c']));
 	}
 
-	public function testToString(): void
+	public function testIsEmpty(): void
 	{
-		// default
+		// without data
 		$query = new Query();
-		$this->assertSame('', $query->toString());
-		$this->assertSame('', $query->__toString());
-		$this->assertEquals('', $query); // cannot use strict assertion (string conversion)
+		$this->assertTrue($query->isEmpty());
+		$this->assertFalse($query->isNotEmpty());
 
-		// custom
+		// with data
 		$query = new Query(['foo' => 'bar']);
-		$this->assertSame('foo=bar', $query->toString());
-		$this->assertSame('foo=bar', $query->__toString());
-		$this->assertEquals('foo=bar', $query); // cannot use strict assertion (string conversion)
+		$this->assertFalse($query->isEmpty());
+		$this->assertTrue($query->isNotEmpty());
 	}
 
 	public function testToArrayAndDebuginfo(): void
@@ -82,5 +67,20 @@ class QueryTest extends TestCase
 		$data  = ['a' => 'a'];
 		$query = new Query($data);
 		$this->assertSame(json_encode($data), $query->toJson());
+	}
+
+	public function testToString(): void
+	{
+		// default
+		$query = new Query();
+		$this->assertSame('', $query->toString());
+		$this->assertSame('', $query->__toString());
+		$this->assertEquals('', $query); // cannot use strict assertion (string conversion)
+
+		// custom
+		$query = new Query(['foo' => 'bar']);
+		$this->assertSame('foo=bar', $query->toString());
+		$this->assertSame('foo=bar', $query->__toString());
+		$this->assertEquals('foo=bar', $query); // cannot use strict assertion (string conversion)
 	}
 }

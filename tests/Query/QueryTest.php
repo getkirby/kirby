@@ -24,20 +24,6 @@ class QueryTest extends TestCase
 		$this->assertInstanceOf(DefaultRunner::class, $query->runner);
 	}
 
-	public function test__ConstructWitoutConfig(): void
-	{
-		new App([
-			'options' => [
-				'query' => [
-					'runner' => null
-				]
-			]
-		]);
-
-		$query = new Query('');
-		$this->assertInstanceOf(DefaultRunner::class, $query->runner);
-	}
-
 	public function test__ConstructWithInvalidConfig(): void
 	{
 		new App([
@@ -52,6 +38,33 @@ class QueryTest extends TestCase
 		$this->expectExceptionMessage('Query runner "foo" must extend Kirby\Query\Runners\Runner');
 
 		new Query('');
+	}
+
+	public function test__ConstructWitoutConfig(): void
+	{
+		new App([
+			'options' => [
+				'query' => [
+					'runner' => null
+				]
+			]
+		]);
+
+		$query = new Query('');
+		$this->assertInstanceOf(DefaultRunner::class, $query->runner);
+	}
+
+	public function testDefaultEntries(): void
+	{
+		$expectedEntries = [
+			'kirby', 'collection', 'file', 'page', 'qr',
+			'site', 't', 'user', 'users'
+		];
+
+		foreach ($expectedEntries as $entryName) {
+			$this->assertArrayHasKey($entryName, Query::$entries);
+			$this->assertInstanceOf(Closure::class, Query::$entries[$entryName]);
+		}
 	}
 
 	public function testFactory(): void
@@ -240,18 +253,5 @@ class QueryTest extends TestCase
 		// not the one of the most recently created query
 		$this->assertSame('homer', $a->resolve(['a' => ['name' => 'homer']]));
 		$this->assertSame(['a'], $log);
-	}
-
-	public function testDefaultEntries(): void
-	{
-		$expectedEntries = [
-			'kirby', 'collection', 'file', 'page', 'qr',
-			'site', 't', 'user', 'users'
-		];
-
-		foreach ($expectedEntries as $entryName) {
-			$this->assertArrayHasKey($entryName, Query::$entries);
-			$this->assertInstanceOf(Closure::class, Query::$entries[$entryName]);
-		}
 	}
 }

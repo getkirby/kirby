@@ -10,6 +10,22 @@ class UserPermissionsTest extends ModelTestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Cms.UserPermissions';
 
+	public function testChangeSingleRole(): void
+	{
+		$this->app = $this->app->clone([
+			'roles' => [
+				['name' => 'admin']
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$user  = new User(['email' => 'test@getkirby.com', 'role' => 'admin']);
+		$perms = $user->permissions();
+
+		$this->assertFalse($perms->can('changeRole'));
+	}
+
 	public static function actionProvider(): array
 	{
 		return [
@@ -43,22 +59,6 @@ class UserPermissionsTest extends ModelTestCase
 		$perms = $user->permissions();
 
 		$this->assertTrue($perms->can($action));
-	}
-
-	#[DataProvider('actionProvider')]
-	public function testWithNobody(string $action): void
-	{
-		$this->app = $this->app->clone([
-			'roles' => [
-				['name' => 'admin'],
-				['name' => 'editor']
-			]
-		]);
-
-		$user        = new User(['email' => 'test@getkirby.com']);
-		$permissions = $user->permissions();
-
-		$this->assertFalse($permissions->can($action));
 	}
 
 	#[DataProvider('actionProvider')]
@@ -117,19 +117,19 @@ class UserPermissionsTest extends ModelTestCase
 		$user1->logout();
 	}
 
-	public function testChangeSingleRole(): void
+	#[DataProvider('actionProvider')]
+	public function testWithNobody(string $action): void
 	{
 		$this->app = $this->app->clone([
 			'roles' => [
-				['name' => 'admin']
+				['name' => 'admin'],
+				['name' => 'editor']
 			]
 		]);
 
-		$this->app->impersonate('kirby');
+		$user        = new User(['email' => 'test@getkirby.com']);
+		$permissions = $user->permissions();
 
-		$user  = new User(['email' => 'test@getkirby.com', 'role' => 'admin']);
-		$perms = $user->permissions();
-
-		$this->assertFalse($perms->can('changeRole'));
+		$this->assertFalse($permissions->can($action));
 	}
 }

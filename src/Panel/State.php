@@ -21,8 +21,8 @@ use Kirby\Toolkit\Str;
 class State
 {
 	protected App $kirby;
-	protected bool $multilang;
 	protected Language|null $language;
+	protected bool $multilang;
 	protected Panel $panel;
 	protected array $permissions;
 	protected User|null $user;

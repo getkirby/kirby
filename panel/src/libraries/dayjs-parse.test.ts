@@ -1,6 +1,5 @@
 import {
 	afterAll,
-	afterEach,
 	beforeAll,
 	describe,
 	expect,
@@ -273,8 +272,6 @@ describe("dayjs.parse() with a pattern", () => {
 				.parse("5 de septiembre de 2021", { pattern, strict: true })
 				?.toISO("date")
 		).toBe("2021-09-05");
-
-		dayjs.locale("en");
 	});
 
 	it("returns null for a pattern with an unsupported unit", () => {
@@ -455,10 +452,6 @@ describe("dayjs.parse() with strict", () => {
 });
 
 describe("dayjs.parse() with month names", () => {
-	afterEach(() => {
-		dayjs.locale("en");
-	});
-
 	describe("english", () => {
 		const full: [string, number][] = [
 			["January", 1],
@@ -669,10 +662,6 @@ describe("dayjs.parse() with month names", () => {
 });
 
 describe("dayjs.parse() with day periods", () => {
-	afterEach(() => {
-		dayjs.locale("en");
-	});
-
 	describe("english", () => {
 		const data: [string, number][] = [
 			["a", 6],
@@ -811,10 +800,6 @@ describe("dayjs.parse() in every locale", () => {
 		"uk",
 		"zh_TW"
 	];
-
-	afterAll(() => {
-		dayjs.locale("en");
-	});
 
 	it.each(codes)("%s", (code) => {
 		dayjs.locale(code);

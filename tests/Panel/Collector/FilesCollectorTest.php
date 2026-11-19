@@ -86,7 +86,7 @@ class FilesCollectorTest extends TestCase
 			blueprint: 'hero'
 		);
 
-		$this->assertModelsInCollector($collector, ['image-b.jpg', 'image-c.jpg'], );
+		$this->assertModelsInCollector($collector, ['image-b.jpg', 'image-c.jpg']);
 	}
 
 	public function testFlip(): void

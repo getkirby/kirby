@@ -67,22 +67,14 @@ class ToggleField extends InputField
 		);
 	}
 
-	public function toFormValue(): bool
-	{
-		return $this->value ?? $this->default();
-	}
-
 	public static function toBool(mixed $value): bool
 	{
 		return in_array($value, [true, 'true', 1, '1', 'on'], true) === true;
 	}
 
-	protected function validations(): array
+	public function toFormValue(): bool
 	{
-		return [
-			'boolean',
-			'required' => fn () => $this->validateRequired()
-		];
+		return $this->value ?? $this->default();
 	}
 
 	protected function validateRequired(): void
@@ -102,5 +94,13 @@ class ToggleField extends InputField
 				message: $this->i18n('field.required')
 			);
 		}
+	}
+
+	protected function validations(): array
+	{
+		return [
+			'boolean',
+			'required' => fn () => $this->validateRequired()
+		];
 	}
 }

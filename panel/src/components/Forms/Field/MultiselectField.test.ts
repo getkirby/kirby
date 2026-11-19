@@ -56,6 +56,14 @@ describe("k-multiselect-field", () => {
 			expect(wrapper.findComponent(Input).exists()).toBe(false);
 		});
 
+		it("renders the input for a value without options when accepting only options", () => {
+			const wrapper = mount({ accept: "options", options: [], value: ["b"] });
+			expect(wrapper.find("k-empty").exists()).toBe(false);
+			expect(wrapper.findComponent(Input).props("options")).toStrictEqual([
+				{ text: "[unknown]", value: "b" }
+			]);
+		});
+
 		it("renders the input without options when accepting all", () => {
 			const wrapper = mount({ accept: "all", options: [] });
 			expect(wrapper.find("k-empty").exists()).toBe(false);

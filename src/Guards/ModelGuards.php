@@ -175,7 +175,7 @@ abstract class ModelGuards
 			$this->ensureAvailable($action, $default);
 
 			return true;
-		} catch (AbilityException | PermissionException) {
+		} catch (AbilityException|PermissionException) {
 			return false;
 		}
 	}

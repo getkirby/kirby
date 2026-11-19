@@ -17,6 +17,22 @@ class PermissionsTest extends TestCase
 		Permissions::$extendedAreas = [];
 	}
 
+	public function testActionIsolation(): void
+	{
+		// disabling a single action leaves the rest of the category intact
+		$p = new Permissions(['pages' => ['delete' => false]]);
+		$this->assertFalse($p->for('pages', 'delete'));
+		$this->assertTrue($p->for('pages', 'read'));
+		$this->assertTrue($p->for('pages', 'update'));
+		$this->assertTrue($p->for('pages', 'create'));
+
+		// disabling an entire category does not affect other categories
+		$p = new Permissions(['pages' => false]);
+		$this->assertFalse($p->for('pages', 'read'));
+		$this->assertTrue($p->for('files', 'read'));
+		$this->assertTrue($p->for('site', 'update'));
+	}
+
 	public static function actionsProvider(): array
 	{
 		return [
@@ -75,22 +91,6 @@ class PermissionsTest extends TestCase
 			['user', 'list'],
 			['user', 'update'],
 		];
-	}
-
-	public function testActionIsolation(): void
-	{
-		// disabling a single action leaves the rest of the category intact
-		$p = new Permissions(['pages' => ['delete' => false]]);
-		$this->assertFalse($p->for('pages', 'delete'));
-		$this->assertTrue($p->for('pages', 'read'));
-		$this->assertTrue($p->for('pages', 'update'));
-		$this->assertTrue($p->for('pages', 'create'));
-
-		// disabling an entire category does not affect other categories
-		$p = new Permissions(['pages' => false]);
-		$this->assertFalse($p->for('pages', 'read'));
-		$this->assertTrue($p->for('files', 'read'));
-		$this->assertTrue($p->for('site', 'update'));
 	}
 
 	#[DataProvider('actionsProvider')]
@@ -338,19 +338,6 @@ class PermissionsTest extends TestCase
 		$this->assertTrue($array['pages']['read']);
 	}
 
-	public function testUnknownCategoryDeprecated(): void
-	{
-		$this->assertError(
-			E_USER_DEPRECATED,
-			'Setting undefined permission category "nonexistent" is deprecated and will be ignored in a future version. Please use https://getkirby.com/docs/reference/plugins/extensions/permissions to register custom permissions.',
-			function () {
-				$p = new Permissions(['nonexistent' => false]);
-				$this->assertTrue($p->for('pages', 'read'));
-				$this->assertTrue($p->for('files', 'update'));
-			}
-		);
-	}
-
 	public function testUnknownActionDeprecated(): void
 	{
 		$this->assertError(
@@ -373,5 +360,18 @@ class PermissionsTest extends TestCase
 		);
 
 		new Permissions(['access' => ['user' => ['changeRole' => false]]]);
+	}
+
+	public function testUnknownCategoryDeprecated(): void
+	{
+		$this->assertError(
+			E_USER_DEPRECATED,
+			'Setting undefined permission category "nonexistent" is deprecated and will be ignored in a future version. Please use https://getkirby.com/docs/reference/plugins/extensions/permissions to register custom permissions.',
+			function () {
+				$p = new Permissions(['nonexistent' => false]);
+				$this->assertTrue($p->for('pages', 'read'));
+				$this->assertTrue($p->for('files', 'update'));
+			}
+		);
 	}
 }

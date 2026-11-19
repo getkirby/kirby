@@ -33,6 +33,24 @@ class PageModifiedTest extends ModelTestCase
 		$this->assertSame($modified, $page->modified());
 	}
 
+	public function testModifiedInMultiLanguageModeSpecifyingLanguage(): void
+	{
+		$this->setUpMultiLanguage();
+
+		// create the english page
+		F::write($file = static::TMP . '/content/test/test.en.txt', 'test');
+		touch($file, $modifiedEnContent = \time() + 2);
+
+		// create the german page
+		F::write($file = static::TMP . '/content/test/test.de.txt', 'test');
+		touch($file, $modifiedDeContent = \time() + 5);
+
+		$page = $this->app->page('test');
+
+		$this->assertSame($modifiedEnContent, $page->modified(null, null, 'en'));
+		$this->assertSame($modifiedDeContent, $page->modified(null, null, 'de'));
+	}
+
 	public function testModifiedInSingleLanguageMode(): void
 	{
 		// create a page
@@ -53,23 +71,5 @@ class PageModifiedTest extends ModelTestCase
 		// custom date handler with format
 		$format = '%d.%m.%Y';
 		$this->assertSame(@strftime($format, $modified), $page->modified($format, 'strftime'));
-	}
-
-	public function testModifiedInMultiLanguageModeSpecifyingLanguage(): void
-	{
-		$this->setUpMultiLanguage();
-
-		// create the english page
-		F::write($file = static::TMP . '/content/test/test.en.txt', 'test');
-		touch($file, $modifiedEnContent = \time() + 2);
-
-		// create the german page
-		F::write($file = static::TMP . '/content/test/test.de.txt', 'test');
-		touch($file, $modifiedDeContent = \time() + 5);
-
-		$page = $this->app->page('test');
-
-		$this->assertSame($modifiedEnContent, $page->modified(null, null, 'en'));
-		$this->assertSame($modifiedDeContent, $page->modified(null, null, 'de'));
 	}
 }

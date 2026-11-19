@@ -47,25 +47,6 @@ class Blueprint
 	protected Tabs|null $tabs = null;
 
 	/**
-	 * Magic getter/caller for any blueprint prop
-	 */
-	public function __call(string $key, array|null $arguments = null): mixed
-	{
-		return $this->props[$key] ?? null;
-	}
-
-	/**
-	 * Resets all caches that are bound to a single model
-	 *
-	 * @since 6.0.0
-	 */
-	public function __clone()
-	{
-		$this->acceptRules = null;
-		$this->tabs        = null;
-	}
-
-	/**
 	 * Creates a new blueprint object with the given props
 	 *
 	 * @throws InvalidArgumentException If the blueprint model is missing
@@ -99,6 +80,25 @@ class Blueprint
 	}
 
 	/**
+	 * Magic getter/caller for any blueprint prop
+	 */
+	public function __call(string $key, array|null $arguments = null): mixed
+	{
+		return $this->props[$key] ?? null;
+	}
+
+	/**
+	 * Resets all caches that are bound to a single model
+	 *
+	 * @since 6.0.0
+	 */
+	public function __clone()
+	{
+		$this->acceptRules = null;
+		$this->tabs        = null;
+	}
+
+	/**
 	 * Improved `var_dump` output
 	 *
 	 * @codeCoverageIgnore
@@ -106,16 +106,6 @@ class Blueprint
 	public function __debugInfo(): array
 	{
 		return $this->props;
-	}
-
-	/**
-	 * Collects which blueprints the model's files and
-	 * the pages created through its fields may use
-	 * @since 6.0.0
-	 */
-	public function acceptRules(): AcceptRules
-	{
-		return $this->acceptRules ??= new AcceptRules($this);
 	}
 
 	/**
@@ -128,6 +118,16 @@ class Blueprint
 	public function acceptedFileTemplates(string|null $inField = null): array
 	{
 		return $this->acceptRules()->fileBlueprints($inField);
+	}
+
+	/**
+	 * Collects which blueprints the model's files and
+	 * the pages created through its fields may use
+	 * @since 6.0.0
+	 */
+	public function acceptRules(): AcceptRules
+	{
+		return $this->acceptRules ??= new AcceptRules($this);
 	}
 
 	/**
@@ -276,6 +276,16 @@ class Blueprint
 	 */
 	public static function find(string $name): array
 	{
+		// the name can contain user input (e.g. the file template),
+		// so it must not leave the folder of the blueprint type,
+		// e.g. `files/../pages/default`
+		if (str_contains(str_replace('\\', '/', $name), '../') === true) {
+			throw new NotFoundException(
+				key: 'blueprint.notFound',
+				data: ['name' => $name]
+			);
+		}
+
 		if (isset(static::$loaded[$name]) === true) {
 			return static::$loaded[$name];
 		}

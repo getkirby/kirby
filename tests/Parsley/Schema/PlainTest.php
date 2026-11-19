@@ -30,11 +30,6 @@ class PlainTest extends TestCase
 		$this->assertSame($expected, $this->schema->fallback('Test'));
 	}
 
-	public function testFallbackForEmptyContent(): void
-	{
-		$this->assertNull($this->schema->fallback(''));
-	}
-
 	public function testFallbackForDomElement(): void
 	{
 		$dom      = new Dom('<p>Test</p>');
@@ -50,6 +45,11 @@ class PlainTest extends TestCase
 		];
 
 		$this->assertSame($expected, $fallback);
+	}
+
+	public function testFallbackForEmptyContent(): void
+	{
+		$this->assertNull($this->schema->fallback(''));
 	}
 
 	public function testFallbackForInvalidContent(): void

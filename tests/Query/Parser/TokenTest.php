@@ -8,6 +8,17 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Token::class)]
 class TokenTest extends TestCase
 {
+	public function testIs(): void
+	{
+		$token = new Token(
+			type: TokenType::T_FLOAT,
+			lexeme: '4.3',
+		);
+
+		$this->assertTrue($token->is(TokenType::T_FLOAT));
+		$this->assertFalse($token->is(TokenType::T_INTEGER));
+	}
+
 	public function testToken(): void
 	{
 		$token = new Token(
@@ -28,16 +39,5 @@ class TokenTest extends TestCase
 		$this->assertSame($type, $token->type);
 		$this->assertSame($lexeme, $token->lexeme);
 		$this->assertNull($token->literal);
-	}
-
-	public function testIs(): void
-	{
-		$token = new Token(
-			type: TokenType::T_FLOAT,
-			lexeme: '4.3',
-		);
-
-		$this->assertTrue($token->is(TokenType::T_FLOAT));
-		$this->assertFalse($token->is(TokenType::T_INTEGER));
 	}
 }

@@ -30,6 +30,42 @@ class LanguageRouter
 	}
 
 	/**
+	 * Wrapper around the Router::call method
+	 * that injects the Language instance and
+	 * if needed also the Page as arguments.
+	 */
+	public function call(string|null $path = null): mixed
+	{
+		$language       = $this->language;
+		$kirby          = $language->kirby();
+		$this->router ??= new Router($this->routes());
+
+		try {
+			return $this->router->call($path, $kirby->request()->method(), function ($route) use ($kirby, $language) {
+				$kirby->setCurrentTranslation($language);
+				$kirby->setCurrentLanguage($language);
+
+				if ($page = $route->page()) {
+					return $route->action()->call(
+						$route,
+						$language,
+						$page,
+						...$route->arguments()
+					);
+				}
+
+				return $route->action()->call(
+					$route,
+					$language,
+					...$route->arguments()
+				);
+			});
+		} catch (Exception) {
+			return $kirby->resolve($path, $language->code());
+		}
+	}
+
+	/**
 	 * Fetches all scoped routes for the
 	 * current language from the Kirby instance
 	 *
@@ -115,41 +151,5 @@ class LanguageRouter
 		];
 
 		return $routes;
-	}
-
-	/**
-	 * Wrapper around the Router::call method
-	 * that injects the Language instance and
-	 * if needed also the Page as arguments.
-	 */
-	public function call(string|null $path = null): mixed
-	{
-		$language       = $this->language;
-		$kirby          = $language->kirby();
-		$this->router ??= new Router($this->routes());
-
-		try {
-			return $this->router->call($path, $kirby->request()->method(), function ($route) use ($kirby, $language) {
-				$kirby->setCurrentTranslation($language);
-				$kirby->setCurrentLanguage($language);
-
-				if ($page = $route->page()) {
-					return $route->action()->call(
-						$route,
-						$language,
-						$page,
-						...$route->arguments()
-					);
-				}
-
-				return $route->action()->call(
-					$route,
-					$language,
-					...$route->arguments()
-				);
-			});
-		} catch (Exception) {
-			return $kirby->resolve($path, $language->code());
-		}
 	}
 }

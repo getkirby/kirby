@@ -45,6 +45,11 @@ class ModelItem extends Item
 		$this->panel = $model->panel();
 	}
 
+	protected function image(): array|null
+	{
+		return $this->panel->image($this->image, $this->layout);
+	}
+
 	protected function info(): string|HtmlString|null
 	{
 		// an empty template, not null: null would render the model id
@@ -55,11 +60,6 @@ class ModelItem extends Item
 		}
 
 		return $this->model->toSafeHtmlString($info);
-	}
-
-	protected function image(): array|null
-	{
-		return $this->panel->image($this->image, $this->layout);
 	}
 
 	protected function link(): string

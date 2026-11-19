@@ -74,6 +74,21 @@ class OptionsQuery extends OptionsProvider
 	}
 
 	/**
+	 * Whether the current user may list the item
+	 * if it is a model with permissions
+	 * @since 5.6.4
+	 */
+	protected function isListable(array|object $item): bool
+	{
+		return match (true) {
+			$item instanceof File,
+			$item instanceof Page,
+			$item instanceof User => $item->isListable(),
+			default               => true
+		};
+	}
+
+	/**
 	 * Returns defaults for the following based on item type:
 	 * [query entry alias, default text query, default value query]
 	 *
@@ -198,6 +213,13 @@ class OptionsQuery extends OptionsProvider
 
 			// value is always a raw string
 			$value = $model->toString($this->value ?? $value, $data);
+
+			// never disclose a model the current user must not list,
+			// but keep its value to not drop it from stored content
+			if ($this->isListable($item) === false) {
+				return new ProtectedOption($value);
+			}
+
 			$text  = $model->$method($this->text ?? $text, $data);
 			$icon  = $this->icon !== null ? $model->toString($this->icon, $data) : null;
 			$info  = $this->info !== null ? $model->$method($this->info, $data) : null;

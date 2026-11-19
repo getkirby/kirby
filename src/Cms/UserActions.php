@@ -81,7 +81,7 @@ trait UserActions
 	#[BlockCollectionAccess]
 	public function changeName(string $name): static
 	{
-		$name = trim($name);
+		$name = trim(strip_tags($name));
 
 		return $this->commit(
 			action:    'changeName',
@@ -151,20 +151,6 @@ trait UserActions
 	}
 
 	/**
-	 * Changes the user's TOTP secret
-	 * @since 4.0.0
-	 * @deprecated 6.0.0 Use `self::changeSecret('totp')` instead
-	 */
-	#[BlockCollectionAccess]
-	public function changeTotp(
-		#[SensitiveParameter]
-		string|null $secret
-	): static {
-		$this->guards()->ensureExecutable('changeSecret', 'totp', $secret);
-		return $this->changeSecret('totp', $secret);
-	}
-
-	/**
 	 * Stores secrets for the user
 	 * @since 6.0.0
 	 */
@@ -197,6 +183,20 @@ trait UserActions
 				return $user;
 			}
 		);
+	}
+
+	/**
+	 * Changes the user's TOTP secret
+	 * @since 4.0.0
+	 * @deprecated 6.0.0 Use `self::changeSecret('totp')` instead
+	 */
+	#[BlockCollectionAccess]
+	public function changeTotp(
+		#[SensitiveParameter]
+		string|null $secret
+	): static {
+		$this->guards()->ensureExecutable('changeSecret', 'totp', $secret);
+		return $this->changeSecret('totp', $secret);
 	}
 
 	/**

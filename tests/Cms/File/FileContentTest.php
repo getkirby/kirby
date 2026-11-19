@@ -36,6 +36,36 @@ class FileContentTest extends ModelTestCase
 		$this->assertSame(['foo' => 'bar'], $file->contentFileData(['foo' => 'bar']));
 	}
 
+	public function testContentFileDataInMultiLanguageMode(): void
+	{
+		$this->setupMultiLanguage();
+
+		$file = new File([
+			'filename' => 'test.jpg',
+			'parent'   => $this->app->site(),
+		]);
+
+		// ignore the template in non-default languages
+		$this->assertSame(['template' => 'test'], $file->contentFileData(['template' => 'test']));
+		$this->assertSame(['template' => 'test'], $file->contentFileData(['template' => 'test'], 'en'));
+		$this->assertSame([], $file->contentFileData(['template' => 'test'], 'de'));
+
+		// ignore the sort in non-default languages
+		$this->assertSame(['sort' => 1], $file->contentFileData(['sort' => 1]));
+		$this->assertSame(['sort' => 1], $file->contentFileData(['sort' => 1], 'en'));
+		$this->assertSame([], $file->contentFileData(['sort' => 1], 'de'));
+	}
+
+	public function testContentFileDataWithDefaultTemplate(): void
+	{
+		$file = new File([
+			'filename' => 'test.jpg',
+			'parent'   => $this->app->site(),
+		]);
+
+		$this->assertSame([], $file->contentFileData(['template' => 'default']));
+	}
+
 	public function testContentFileDataWithExistingTemplate(): void
 	{
 		$file = new File([
@@ -67,35 +97,5 @@ class FileContentTest extends ModelTestCase
 		]);
 
 		$this->assertSame(['template' => null], $file->contentFileData(['template' => null]));
-	}
-
-	public function testContentFileDataWithDefaultTemplate(): void
-	{
-		$file = new File([
-			'filename' => 'test.jpg',
-			'parent'   => $this->app->site(),
-		]);
-
-		$this->assertSame([], $file->contentFileData(['template' => 'default']));
-	}
-
-	public function testContentFileDataInMultiLanguageMode(): void
-	{
-		$this->setupMultiLanguage();
-
-		$file = new File([
-			'filename' => 'test.jpg',
-			'parent'   => $this->app->site(),
-		]);
-
-		// ignore the template in non-default languages
-		$this->assertSame(['template' => 'test'], $file->contentFileData(['template' => 'test']));
-		$this->assertSame(['template' => 'test'], $file->contentFileData(['template' => 'test'], 'en'));
-		$this->assertSame([], $file->contentFileData(['template' => 'test'], 'de'));
-
-		// ignore the sort in non-default languages
-		$this->assertSame(['sort' => 1], $file->contentFileData(['sort' => 1]));
-		$this->assertSame(['sort' => 1], $file->contentFileData(['sort' => 1], 'en'));
-		$this->assertSame([], $file->contentFileData(['sort' => 1], 'de'));
 	}
 }

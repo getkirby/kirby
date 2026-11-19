@@ -139,14 +139,13 @@ export default {
 		}
 	},
 	watch: {
-		value: {
-			handler() {
-				this.validate();
-			},
-			immediate: true
+		value() {
+			this.validate();
 		}
 	},
 	mounted() {
+		this.validate();
+
 		if (this.$props.autofocus) {
 			this.focus();
 		}

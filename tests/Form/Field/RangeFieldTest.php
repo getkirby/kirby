@@ -99,7 +99,6 @@ class RangeFieldTest extends TestCase
 		$this->assertSame('per', $tooltip['before']);
 		$this->assertSame('months', $tooltip['after']);
 
-
 		I18n::$locale = 'de';
 		$tooltip = $this->field('range', $props)->tooltip();
 		$this->assertIsArray($tooltip);

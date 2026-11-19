@@ -54,16 +54,16 @@ use SensitiveParameter;
 class Passwords
 {
 	/**
-	 * Absolute minimum length that is enforced
-	 */
-	public const MINLENGTH = 8;
-
-	/**
 	 * Absolute maximum length that is enforced;
 	 * longer passwords can cause DoS attacks and
 	 * are therefore blocked in the auth system
 	 */
 	public const MAXLENGTH = 1000;
+
+	/**
+	 * Absolute minimum length that is enforced
+	 */
+	public const MINLENGTH = 8;
 
 	/**
 	 * @param $rules Preset rules, a regex or a callback

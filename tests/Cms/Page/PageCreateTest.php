@@ -3,8 +3,10 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\DuplicateException;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
 use PHPUnit\Framework\Attributes\CoversClass;
 use TypeError;
 
@@ -41,6 +43,141 @@ class PageCreateTest extends ModelTestCase
 		parent::tearDown();
 
 		Page::$models = [];
+	}
+
+	/**
+	 * Changing status in page.create:after should not recreate the draft.
+	 */
+	public function testAfterCreateHookChangeStatusDoesNotDuplicateDraft(): void
+	{
+		$app = $this->app->clone([
+			'hooks' => [
+				'page.create:after' => function (Page $page) {
+					$page->changeStatus('listed');
+				}
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		Page::create(['slug' => 'test']);
+
+		// the draft directory must not be recreated after being moved by publish()
+		$this->assertDirectoryDoesNotExist(static::TMP . '/content/_drafts/test');
+
+		// exactly one page should exist — no duplicate
+		$this->assertCount(1, $app->site()->childrenAndDrafts());
+		$this->assertCount(0, $app->site()->drafts());
+		$this->assertCount(1, $app->site()->children());
+	}
+
+	/**
+	 * Changing status in page.create:after should keep UUID cache valid.
+	 */
+	public function testAfterCreateHookChangeStatusKeepsUuidCacheValid(): void
+	{
+		$uuidWasCachedInAfterHook = false;
+
+		$app = $this->app->clone([
+			'hooks' => [
+				'page.create:after' => function (Page $page) use (&$uuidWasCachedInAfterHook) {
+					$uuidWasCachedInAfterHook = $page->uuid()->isCached();
+					$page->changeStatus('listed');
+				}
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		Page::create(['slug' => 'test']);
+
+		$this->assertTrue($uuidWasCachedInAfterHook);
+
+		// get the actual listed page
+		$page = $app->site()->children()->first();
+
+		// UUID cache must be populated with the listed page's UUID
+		$this->assertTrue($page->uuid()->isCached());
+
+		// resolving the cached UUID must return the same page
+		$this->assertSame($page->id(), $page->uuid()->model()->id());
+	}
+
+	public function testCreateChild(): void
+	{
+		Dir::make($this->app->root('content'));
+
+		$mother = Page::create([
+			'slug' => 'mother'
+		]);
+
+		$child = $mother->createChild([
+			'slug'     => 'child',
+			'template' => 'the-template'
+		]);
+
+		$this->assertTrue($child->exists());
+		$this->assertSame('the-template', $child->intendedTemplate()->name());
+		$this->assertSame('child', $child->slug());
+		$this->assertSame('mother/child', $child->id());
+		$this->assertTrue($mother->drafts()->has($child->id()));
+	}
+
+	public function testCreateChildWithCustomModel(): void
+	{
+		Page::$models['uncreatable-page'] = NewUncreatablePage::class;
+
+		$mother = Page::create([
+			'slug' => 'mother'
+		]);
+
+		try {
+			$mother->createChild([
+				'slug'     => 'child',
+				'template' => 'uncreatable-page'
+			]);
+		} catch (TypeError) {
+		}
+
+		$this->assertTrue($mother->drafts()->isEmpty());
+	}
+
+	public function testCreateChildWithPathTraversalTemplate(): void
+	{
+		Dir::make($this->app->root('content'));
+
+		$mother = Page::create([
+			'slug' => 'mother'
+		]);
+
+		// a malicious template name must not escape the page folder
+		$child = $mother->createChild([
+			'slug'     => 'child',
+			'template' => '../../other/default'
+		]);
+
+		$this->assertSame('other-default', $child->intendedTemplate()->name());
+		$this->assertSame(
+			$child->root() . '/other-default.txt',
+			$child->version()->contentFile('default')
+		);
+	}
+
+	public function testCreateChildWithTemplateWithDot(): void
+	{
+		Dir::make($this->app->root('content'));
+
+		$mother = Page::create([
+			'slug' => 'mother'
+		]);
+
+		// single dots are still allowed in template names
+		$child = $mother->createChild([
+			'slug'     => 'child',
+			'template' => 'foo.bar'
+		]);
+
+		$this->assertSame('foo.bar', $child->intendedTemplate()->name());
 	}
 
 	public function testCreateDraft(): void
@@ -118,6 +255,31 @@ class PageCreateTest extends ModelTestCase
 		$this->assertSame('B', $page->b()->value());
 	}
 
+	public function testCreateDraftWithIncompleteContent(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'fields' => [
+						'headline' => [
+							'type'     => 'text',
+							'required' => true
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page = Page::create([
+			'slug' => 'new-page',
+		]);
+
+		$this->assertTrue($page->exists());
+		$this->assertTrue($page->isDraft());
+	}
+
 	/**
 	 * @see https://github.com/getkirby/kirby/issues/8411
 	 */
@@ -148,83 +310,6 @@ class PageCreateTest extends ModelTestCase
 		// just like it would be in `$page->update()`
 		$this->assertSame('one, two', $page->version()->read()['categories']);
 		$this->assertSame(['one', 'two'], $page->categories()->split());
-	}
-
-	public function testCreateChild(): void
-	{
-		Dir::make($this->app->root('content'));
-
-		$mother = Page::create([
-			'slug' => 'mother'
-		]);
-
-		$child = $mother->createChild([
-			'slug'     => 'child',
-			'template' => 'the-template'
-		]);
-
-		$this->assertTrue($child->exists());
-		$this->assertSame('the-template', $child->intendedTemplate()->name());
-		$this->assertSame('child', $child->slug());
-		$this->assertSame('mother/child', $child->id());
-		$this->assertTrue($mother->drafts()->has($child->id()));
-	}
-
-	public function testCreateChildWithPathTraversalTemplate(): void
-	{
-		Dir::make($this->app->root('content'));
-
-		$mother = Page::create([
-			'slug' => 'mother'
-		]);
-
-		// a malicious template name must not escape the page folder
-		$child = $mother->createChild([
-			'slug'     => 'child',
-			'template' => '../../other/default'
-		]);
-
-		$this->assertSame('other-default', $child->intendedTemplate()->name());
-		$this->assertSame(
-			$child->root() . '/other-default.txt',
-			$child->version()->contentFile('default')
-		);
-	}
-
-	public function testCreateChildWithTemplateWithDot(): void
-	{
-		Dir::make($this->app->root('content'));
-
-		$mother = Page::create([
-			'slug' => 'mother'
-		]);
-
-		// single dots are still allowed in template names
-		$child = $mother->createChild([
-			'slug'     => 'child',
-			'template' => 'foo.bar'
-		]);
-
-		$this->assertSame('foo.bar', $child->intendedTemplate()->name());
-	}
-
-	public function testCreateChildWithCustomModel(): void
-	{
-		Page::$models['uncreatable-page'] = NewUncreatablePage::class;
-
-		$mother = Page::create([
-			'slug' => 'mother'
-		]);
-
-		try {
-			$mother->createChild([
-				'slug'     => 'child',
-				'template' => 'uncreatable-page'
-			]);
-		} catch (TypeError) {
-		}
-
-		$this->assertTrue($mother->drafts()->isEmpty());
 	}
 
 	public function testCreateDuplicate(): void
@@ -288,6 +373,160 @@ class PageCreateTest extends ModelTestCase
 		$this->assertTrue($site->children()->has($page));
 	}
 
+	public function testCreateStripInjectedBlueprint(): void
+	{
+		$this->app = $this->app->clone([
+			'roles' => [
+				[
+					'name'        => 'editor',
+					'permissions' => [
+						'pages' => [
+							'create' => false,
+						]
+					]
+				]
+			],
+			'user'  => 'editor@domain.com',
+			'users' => [
+				['email' => 'editor@domain.com', 'role' => 'editor']
+			]
+		]);
+
+		$this->expectException(PermissionException::class);
+
+		Page::create([
+			'slug'      => 'new-page',
+			'blueprint' => [
+				'options' => [
+					// would allow creation if respected, must be stripped
+					'create' => true
+				]
+			]
+		]);
+	}
+
+	public function testCreateStripInjectedChildrenAndDrafts(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'sections' => [
+						'pages' => [
+							'type'   => 'pages',
+							'status' => 'all'
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		// existing content file that must not be touched
+		$existing = static::TMP . '/existing';
+		Dir::make($existing);
+		F::write(
+			file: $existing . '/default.txt',
+			content: 'Title: Existing'
+		);
+
+		$page = Page::create([
+			'slug'     => 'new-page',
+			'isDraft'  => false,
+			// would write UUID content files to the injected
+			// roots during the content validation if respected
+			'children' => [
+				[
+					'slug' => 'child',
+					'root' => static::TMP . '/outside-child'
+				],
+				[
+					'slug' => 'existing',
+					'root' => $existing
+				]
+			],
+			'drafts' => [
+				[
+					'slug' => 'draft',
+					'root' => static::TMP . '/outside-draft'
+				]
+			]
+		]);
+
+		$this->assertCount(0, $page->childrenAndDrafts());
+		$this->assertDirectoryDoesNotExist(static::TMP . '/outside-child');
+		$this->assertDirectoryDoesNotExist(static::TMP . '/outside-draft');
+		$this->assertSame('Title: Existing', F::read($existing . '/default.txt'));
+	}
+
+	public function testCreateStripInjectedFiles(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'sections' => [
+						'gallery' => [
+							'type' => 'files',
+							'min'  => 1
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The page has errors and cannot be published');
+
+		// injected in-memory files must not count
+		// towards the files section min validation
+		Page::create([
+			'slug'    => 'new-page',
+			'isDraft' => false,
+			'files'   => [
+				['filename' => 'fake.jpg']
+			]
+		]);
+	}
+
+	public function testCreateStripInjectedModel(): void
+	{
+		$this->app = $this->app->clone([
+			'pageModels' => [
+				'parent' => NewParentPage::class,
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page = Page::create([
+			'slug'     => 'test',
+			'template' => 'default',
+			// would use the model of another template if respected
+			'model'    => 'parent'
+		]);
+
+		$this->assertSame(Page::class, $page::class);
+		$this->assertSame('default', $page->intendedTemplate()->name());
+	}
+
+	public function testCreateStripInjectedRootAndDirname(): void
+	{
+		$page = Page::create([
+			'slug'    => 'new-page',
+			// would escape the content directory if respected
+			'dirname' => '../escaped',
+			'root'    => '/tmp/escaped'
+		]);
+
+		$this->assertSame('new-page', $page->dirname());
+		$this->assertSame(
+			static::TMP . '/content/_drafts/new-page',
+			$page->root()
+		);
+	}
+
 	public function testCreateUnlistedPageDraftProp(): void
 	{
 		$site = $this->app->site();
@@ -319,6 +558,104 @@ class PageCreateTest extends ModelTestCase
 		$this->assertFalse($page->isListed());
 		$this->assertTrue($page->parentModel()->children()->has($page));
 		$this->assertTrue($site->children()->has($page));
+	}
+
+	public function testCreateUnlistedPageWithCompleteContent(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'fields' => [
+						'headline' => [
+							'type'     => 'text',
+							'required' => true
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page = Page::create([
+			'slug'    => 'new-page',
+			'isDraft' => false,
+			'content' => [
+				'headline' => 'Headline'
+			]
+		]);
+
+		$this->assertTrue($page->exists());
+		$this->assertFalse($page->isDraft());
+		$this->assertSame('Headline', $page->headline()->value());
+	}
+
+	public function testCreateUnlistedPageWithIncompleteContent(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'fields' => [
+						'headline' => [
+							'type'     => 'text',
+							'required' => true
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The page has errors and cannot be published');
+
+		Page::create([
+			'slug'    => 'new-page',
+			'isDraft' => false,
+		]);
+	}
+
+	public function testCreateUnlistedPageWithIncompleteTranslation(): void
+	{
+		$this->setupMultiLanguage();
+
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'fields' => [
+						'headline' => [
+							'type'     => 'text',
+							'required' => true
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The page has errors and cannot be published');
+
+		Page::create([
+			'slug'         => 'new-page',
+			'isDraft'      => false,
+			'translations' => [
+				[
+					'code'    => 'en',
+					'content' => [
+						'headline' => 'Headline'
+					]
+				],
+				[
+					'code'    => 'de',
+					'content' => [
+						'headline' => ''
+					]
+				]
+			]
+		]);
 	}
 
 	public function testCreateWhenDefaultLanguageIsActive(): void
@@ -394,6 +731,43 @@ class PageCreateTest extends ModelTestCase
 		$this->assertSame($value, $page->content('de')->toArray());
 	}
 
+	public function testCreateWhenSecondaryLanguageIsActiveAndThePageHasDefaultValues(): void
+	{
+		$this->setupMultiLanguage();
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'title'  => 'test',
+					'fields' => [
+						'headline' => ['type' => 'text',     'translate' => false, 'default' => 'A headline'],
+						'text'     => ['type' => 'textarea', 'default' => 'Any text'],
+					]
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+		$this->app->setCurrentLanguage('de');
+
+		$this->assertSame('de', $this->app->language()->code());
+
+		Page::create([
+			'slug'    => 'test',
+			'content' => ['title' => 'Test page'],
+		]);
+
+		$page = $this->app->page('test');
+
+		$expected = [
+			'title'    => 'Test page',
+			'headline' => 'A headline',
+			'text'     => 'Any text',
+			'uuid'     =>  $page->content()->get('uuid')->value(),
+		];
+
+		$this->assertSame($expected, $page->content('en')->toArray());
+		$this->assertSame($expected, $page->content('de')->toArray());
+	}
+
 	public function testCreateWhenSecondaryLanguageIsActiveAndThePageHasUntranslatableFields(): void
 	{
 		$this->setupMultiLanguage();
@@ -432,41 +806,34 @@ class PageCreateTest extends ModelTestCase
 		$this->assertSame($value, $page->content('de')->toArray());
 	}
 
-	public function testCreateWhenSecondaryLanguageIsActiveAndThePageHasDefaultValues(): void
+	/**
+	 * Issue: https://github.com/getkirby/kirby/issues/7084
+	 */
+	public function testCreateWithCustomModel(): void
 	{
-		$this->setupMultiLanguage();
+		$this->setupSingleLanguage();
+
 		$this->app = $this->app->clone([
-			'blueprints' => [
-				'pages/default' => [
-					'title'  => 'test',
-					'fields' => [
-						'headline' => ['type' => 'text',     'translate' => false, 'default' => 'A headline'],
-						'text'     => ['type' => 'textarea', 'default' => 'Any text'],
-					]
-				]
+			'pageModels' => [
+				'default' => NewDefaultPage::class,
+				'parent'  => NewParentPage::class,
 			]
 		]);
+
 		$this->app->impersonate('kirby');
-		$this->app->setCurrentLanguage('de');
 
-		$this->assertSame('de', $this->app->language()->code());
-
-		Page::create([
-			'slug'    => 'test',
-			'content' => ['title' => 'Test page'],
+		$parent = $this->app->site()->createChild([
+			'slug'     => 'parent',
+			'template' => 'parent',
 		]);
 
-		$page = $this->app->page('test');
+		$child = $parent->createChild([
+			'slug'     => 'test',
+			'parent'   => $parent,
+		]);
 
-		$expected = [
-			'title'    => 'Test page',
-			'headline' => 'A headline',
-			'text'     => 'Any text',
-			'uuid'     =>  $page->content()->get('uuid')->value(),
-		];
-
-		$this->assertSame($expected, $page->content('en')->toArray());
-		$this->assertSame($expected, $page->content('de')->toArray());
+		$this->assertInstanceOf(NewParentPage::class, $parent);
+		$this->assertInstanceOf(NewDefaultPage::class, $child);
 	}
 
 	public function testCreateWithTranslations(): void
@@ -583,141 +950,5 @@ class PageCreateTest extends ModelTestCase
 			['title', 'categories'],
 			array_keys($page->version()->read('de'))
 		);
-	}
-
-	/**
-	 * Issue: https://github.com/getkirby/kirby/issues/7084
-	 */
-	public function testCreateWithCustomModel(): void
-	{
-		$this->setupSingleLanguage();
-
-		$this->app = $this->app->clone([
-			'pageModels' => [
-				'default' => NewDefaultPage::class,
-				'parent'  => NewParentPage::class,
-			]
-		]);
-
-		$this->app->impersonate('kirby');
-
-		$parent = $this->app->site()->createChild([
-			'slug'     => 'parent',
-			'template' => 'parent',
-		]);
-
-		$child = $parent->createChild([
-			'slug'     => 'test',
-			'parent'   => $parent,
-		]);
-
-		$this->assertInstanceOf(NewParentPage::class, $parent);
-		$this->assertInstanceOf(NewDefaultPage::class, $child);
-	}
-
-	public function testCreateStripInjectedBlueprint(): void
-	{
-		$this->app = $this->app->clone([
-			'roles' => [
-				[
-					'name'        => 'editor',
-					'permissions' => [
-						'pages' => [
-							'create' => false,
-						]
-					]
-				]
-			],
-			'user'  => 'editor@domain.com',
-			'users' => [
-				['email' => 'editor@domain.com', 'role' => 'editor']
-			]
-		]);
-
-		$this->expectException(PermissionException::class);
-
-		Page::create([
-			'slug'      => 'new-page',
-			'blueprint' => [
-				'options' => [
-					// would allow creation if respected, must be stripped
-					'create' => true
-				]
-			]
-		]);
-	}
-
-	public function testCreateStripInjectedRootAndDirname(): void
-	{
-		$page = Page::create([
-			'slug'    => 'new-page',
-			// would escape the content directory if respected
-			'dirname' => '../escaped',
-			'root'    => '/tmp/escaped'
-		]);
-
-		$this->assertSame('new-page', $page->dirname());
-		$this->assertSame(
-			static::TMP . '/content/_drafts/new-page',
-			$page->root()
-		);
-	}
-
-	/**
-	 * Changing status in page.create:after should not recreate the draft.
-	 */
-	public function testAfterCreateHookChangeStatusDoesNotDuplicateDraft(): void
-	{
-		$app = $this->app->clone([
-			'hooks' => [
-				'page.create:after' => function (Page $page) {
-					$page->changeStatus('listed');
-				}
-			]
-		]);
-
-		$app->impersonate('kirby');
-
-		Page::create(['slug' => 'test']);
-
-		// the draft directory must not be recreated after being moved by publish()
-		$this->assertDirectoryDoesNotExist(static::TMP . '/content/_drafts/test');
-
-		// exactly one page should exist — no duplicate
-		$this->assertCount(1, $app->site()->childrenAndDrafts());
-		$this->assertCount(0, $app->site()->drafts());
-		$this->assertCount(1, $app->site()->children());
-	}
-
-	/**
-	 * Changing status in page.create:after should keep UUID cache valid.
-	 */
-	public function testAfterCreateHookChangeStatusKeepsUuidCacheValid(): void
-	{
-		$uuidWasCachedInAfterHook = false;
-
-		$app = $this->app->clone([
-			'hooks' => [
-				'page.create:after' => function (Page $page) use (&$uuidWasCachedInAfterHook) {
-					$uuidWasCachedInAfterHook = $page->uuid()->isCached();
-					$page->changeStatus('listed');
-				}
-			]
-		]);
-
-		$app->impersonate('kirby');
-
-		Page::create(['slug' => 'test']);
-
-		$this->assertTrue($uuidWasCachedInAfterHook);
-
-		// get the actual listed page
-		$page = $app->site()->children()->first();
-
-		// UUID cache must be populated with the listed page's UUID
-		$this->assertTrue($page->uuid()->isCached());
-
-		// resolving the cached UUID must return the same page
-		$this->assertSame($page->id(), $page->uuid()->model()->id());
 	}
 }

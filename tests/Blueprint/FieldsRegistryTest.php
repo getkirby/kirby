@@ -8,20 +8,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(FieldsRegistry::class)]
 class FieldsRegistryTest extends TestCase
 {
-	public function testConstruct(): void
-	{
-		$fields = new FieldsRegistry([
-			'alpha' => ['type' => 'text'],
-			'beta'  => false
-		]);
-
-		// the props are claimed as they are and only normalized later
-		$this->assertSame(
-			['alpha' => ['type' => 'text'], 'beta' => false],
-			$fields->toArray()
-		);
-	}
-
 	public function testAdd(): void
 	{
 		$fields = new FieldsRegistry();
@@ -85,6 +71,20 @@ class FieldsRegistryTest extends TestCase
 
 		$this->assertSame(['alpha-duplicate-2'], array_keys($added));
 		$this->assertSame('date', $fields->get('alpha-duplicate-1')['type']);
+	}
+
+	public function testConstruct(): void
+	{
+		$fields = new FieldsRegistry([
+			'alpha' => ['type' => 'text'],
+			'beta'  => false
+		]);
+
+		// the props are claimed as they are and only normalized later
+		$this->assertSame(
+			['alpha' => ['type' => 'text'], 'beta' => false],
+			$fields->toArray()
+		);
 	}
 
 	public function testGet(): void

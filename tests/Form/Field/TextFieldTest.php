@@ -104,6 +104,15 @@ class TextFieldTest extends TestCase
 		$this->assertArrayHasKey('minlength', $field->errors());
 	}
 
+	public function testPreselect(): void
+	{
+		$field = $this->field('text');
+		$this->assertFalse($field->preselect());
+
+		$field = $this->field('text', ['preselect' => true]);
+		$this->assertTrue($field->preselect());
+	}
+
 	public function testProps(): void
 	{
 		$field = $this->field('text');
@@ -129,6 +138,7 @@ class TextFieldTest extends TestCase
 			'name'         => 'text',
 			'pattern'      => null,
 			'placeholder'  => null,
+			'preselect'    => false,
 			'required'     => false,
 			'saveable'     => true,
 			'spellcheck'   => null,

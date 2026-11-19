@@ -553,6 +553,57 @@ class File extends ModelWithContent
 	}
 
 	/**
+	 * Clean file URL that uses the parent page URL
+	 * and the filename as a more stable alternative
+	 * for the media URLs if available. The `content.fileRedirects`
+	 * option is used to disable this behavior or enable it
+	 * on a per-file basis.
+	 */
+	#[BlockCollectionAccess]
+	public function previewUrl(): string|null
+	{
+		// check if the clean file URL is accessible,
+		// otherwise we need to fall back to the media URL
+		if ($this->kirby()->resolveFile($this) === null) {
+			return $this->url();
+		}
+
+		$parent = $this->parent();
+		$url    = Url::to($this->id());
+
+		switch ($parent::CLASS_ALIAS) {
+			case 'page':
+				$preview = $parent->blueprint()->preview();
+
+				// the page has a custom preview setting,
+				// thus the file is only accessible through
+				// the direct media URL
+				if ($preview !== true) {
+					return $this->url();
+				}
+
+				// it's more stable to access files for drafts
+				// through their direct URL to avoid conflicts
+				// with draft token verification
+				if ($parent->isDraft() === true) {
+					return $this->url();
+				}
+
+				// checks `file::url` component is extended
+				if ($this->kirby()->isNativeComponent('file::url') === false) {
+					return $this->url();
+				}
+
+				return $url;
+			case 'user':
+				// there are no clean URL routes for user files
+				return $this->url();
+			default:
+				return $url;
+		}
+	}
+
+	/**
 	 * Returns the absolute root to the file
 	 */
 	#[BlockCollectionAccess]
@@ -647,56 +698,5 @@ class File extends ModelWithContent
 	public function url(): string
 	{
 		return $this->url ??= ($this->kirby()->component('file::url'))($this->kirby(), $this);
-	}
-
-	/**
-	 * Clean file URL that uses the parent page URL
-	 * and the filename as a more stable alternative
-	 * for the media URLs if available. The `content.fileRedirects`
-	 * option is used to disable this behavior or enable it
-	 * on a per-file basis.
-	 */
-	#[BlockCollectionAccess]
-	public function previewUrl(): string|null
-	{
-		// check if the clean file URL is accessible,
-		// otherwise we need to fall back to the media URL
-		if ($this->kirby()->resolveFile($this) === null) {
-			return $this->url();
-		}
-
-		$parent = $this->parent();
-		$url    = Url::to($this->id());
-
-		switch ($parent::CLASS_ALIAS) {
-			case 'page':
-				$preview = $parent->blueprint()->preview();
-
-				// the page has a custom preview setting,
-				// thus the file is only accessible through
-				// the direct media URL
-				if ($preview !== true) {
-					return $this->url();
-				}
-
-				// it's more stable to access files for drafts
-				// through their direct URL to avoid conflicts
-				// with draft token verification
-				if ($parent->isDraft() === true) {
-					return $this->url();
-				}
-
-				// checks `file::url` component is extended
-				if ($this->kirby()->isNativeComponent('file::url') === false) {
-					return $this->url();
-				}
-
-				return $url;
-			case 'user':
-				// there are no clean URL routes for user files
-				return $this->url();
-			default:
-				return $url;
-		}
 	}
 }

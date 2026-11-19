@@ -28,22 +28,25 @@ class BlueprintFieldsTest extends TestCase
 		$this->assertSame([], $fields);
 	}
 
-	public function testNameOnlyField(): void
+	public function testFieldError(): void
 	{
-		$fields = Blueprint::fieldsProps([
-			'text' => true
+		$props = Blueprint::fieldsProps([
+			'test' => [
+				'type' => 'invalid'
+			]
 		]);
 
 		$expected = [
-			'text' => [
-				'label' => 'Text',
-				'name'  => 'text',
-				'type'  => 'text',
-				'width' => '1/1'
+			'test' => [
+				'label' => 'Error',
+				'name'  => 'test',
+				'text'  => 'Invalid field type ("invalid")',
+				'theme' => 'negative',
+				'type'  => 'info'
 			]
 		];
 
-		$this->assertEquals($expected, $fields); // cannot use strict assertion (array order)
+		$this->assertSame($expected, $props);
 	}
 
 	public function testFieldFromString(): void
@@ -164,24 +167,21 @@ class BlueprintFieldsTest extends TestCase
 		$this->assertEquals($expected, $fields); // cannot use strict assertion (array order)
 	}
 
-	public function testFieldError(): void
+	public function testNameOnlyField(): void
 	{
-		$props = Blueprint::fieldsProps([
-			'test' => [
-				'type' => 'invalid'
-			]
+		$fields = Blueprint::fieldsProps([
+			'text' => true
 		]);
 
 		$expected = [
-			'test' => [
-				'label' => 'Error',
-				'name'  => 'test',
-				'text'  => 'Invalid field type ("invalid")',
-				'theme' => 'negative',
-				'type'  => 'info'
+			'text' => [
+				'label' => 'Text',
+				'name'  => 'text',
+				'type'  => 'text',
+				'width' => '1/1'
 			]
 		];
 
-		$this->assertSame($expected, $props);
+		$this->assertEquals($expected, $fields); // cannot use strict assertion (array order)
 	}
 }

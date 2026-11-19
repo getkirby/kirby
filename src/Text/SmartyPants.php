@@ -29,6 +29,45 @@ class SmartyPants
 	protected SmartyPantsTypographer $parser;
 
 	/**
+	 * Creates a new SmartyPants parser
+	 * with the given options
+	 */
+	public function __construct(array $options = [])
+	{
+		$this->options = [...$this->defaults(), ...$options];
+		$this->parser  = new SmartyPantsTypographer($this->options['attr']);
+
+		// configuration
+		$this->parser->convert_quot               = $this->options['convert.quot'];
+		$this->parser->smart_doublequote_open     = $this->options['doublequote.open'];
+		$this->parser->smart_doublequote_close    = $this->options['doublequote.close'];
+		$this->parser->smart_singlequote_open     = $this->options['singlequote.open'];
+		$this->parser->smart_singlequote_close    = $this->options['singlequote.close'];
+		$this->parser->backtick_doublequote_open  = $this->options['backtick.doublequote.open'];
+		$this->parser->backtick_doublequote_close = $this->options['backtick.doublequote.close'];
+		$this->parser->backtick_singlequote_open  = $this->options['backtick.singlequote.open'];
+		$this->parser->backtick_singlequote_close = $this->options['backtick.singlequote.close'];
+		$this->parser->em_dash                    = $this->options['emdash'];
+		$this->parser->en_dash                    = $this->options['endash'];
+		$this->parser->ellipsis                   = $this->options['ellipsis'];
+		$this->parser->tags_to_skip               = $this->options['skip'];
+		$this->parser->space_emdash               = $this->options['space.emdash'];
+		$this->parser->space_endash               = $this->options['space.endash'];
+		$this->parser->space_colon                = $this->options['space.colon'];
+		$this->parser->space_semicolon            = $this->options['space.semicolon'];
+		$this->parser->space_marks                = $this->options['space.marks'];
+		$this->parser->space_frenchquote          = $this->options['space.frenchquote'];
+		$this->parser->space_thousand             = $this->options['space.thousand'];
+		$this->parser->space_unit                 = $this->options['space.unit'];
+		$this->parser->doublequote_low            = $this->options['doublequote.low'];
+		$this->parser->guillemet_leftpointing     = $this->options['guillemet.leftpointing'];
+		$this->parser->guillemet_rightpointing    = $this->options['guillemet.rightpointing'];
+		$this->parser->geresh                     = $this->options['geresh'];
+		$this->parser->gershayim                  = $this->options['gershayim'];
+		$this->parser->space                      = $this->options['space'];
+	}
+
+	/**
 	 * Returns default values for all
 	 * available parser options
 	 *
@@ -66,45 +105,6 @@ class SmartyPants
 			'gershayim'                  => '״',
 			'skip'                       => 'pre|code|kbd|script|style|math',
 		];
-	}
-
-	/**
-	 * Creates a new SmartyPants parser
-	 * with the given options
-	 */
-	public function __construct(array $options = [])
-	{
-		$this->options = [...$this->defaults(), ...$options];
-		$this->parser  = new SmartyPantsTypographer($this->options['attr']);
-
-		// configuration
-		$this->parser->convert_quot               = $this->options['convert.quot'];
-		$this->parser->smart_doublequote_open     = $this->options['doublequote.open'];
-		$this->parser->smart_doublequote_close    = $this->options['doublequote.close'];
-		$this->parser->smart_singlequote_open     = $this->options['singlequote.open'];
-		$this->parser->smart_singlequote_close    = $this->options['singlequote.close'];
-		$this->parser->backtick_doublequote_open  = $this->options['backtick.doublequote.open'];
-		$this->parser->backtick_doublequote_close = $this->options['backtick.doublequote.close'];
-		$this->parser->backtick_singlequote_open  = $this->options['backtick.singlequote.open'];
-		$this->parser->backtick_singlequote_close = $this->options['backtick.singlequote.close'];
-		$this->parser->em_dash                    = $this->options['emdash'];
-		$this->parser->en_dash                    = $this->options['endash'];
-		$this->parser->ellipsis                   = $this->options['ellipsis'];
-		$this->parser->tags_to_skip               = $this->options['skip'];
-		$this->parser->space_emdash               = $this->options['space.emdash'];
-		$this->parser->space_endash               = $this->options['space.endash'];
-		$this->parser->space_colon                = $this->options['space.colon'];
-		$this->parser->space_semicolon            = $this->options['space.semicolon'];
-		$this->parser->space_marks                = $this->options['space.marks'];
-		$this->parser->space_frenchquote          = $this->options['space.frenchquote'];
-		$this->parser->space_thousand             = $this->options['space.thousand'];
-		$this->parser->space_unit                 = $this->options['space.unit'];
-		$this->parser->doublequote_low            = $this->options['doublequote.low'];
-		$this->parser->guillemet_leftpointing     = $this->options['guillemet.leftpointing'];
-		$this->parser->guillemet_rightpointing    = $this->options['guillemet.rightpointing'];
-		$this->parser->geresh                     = $this->options['geresh'];
-		$this->parser->gershayim                  = $this->options['gershayim'];
-		$this->parser->space                      = $this->options['space'];
 	}
 
 	/**

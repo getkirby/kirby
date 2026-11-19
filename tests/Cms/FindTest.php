@@ -191,6 +191,14 @@ class FindTest extends TestCase
 		$this->assertSame($b, Find::page('page://my-uuid'));
 	}
 
+	public function testPageNotFound(): void
+	{
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The page "does-not-exist" cannot be found');
+
+		Find::page('does-not-exist');
+	}
+
 	public function testPageNotReadable(): void
 	{
 		$app = $this->app->clone([
@@ -217,12 +225,141 @@ class FindTest extends TestCase
 		Find::page('a');
 	}
 
-	public function testPageNotFound(): void
+	public function testParent(): void
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'a',
+						'children' => [
+							[
+								'slug' => 'aa'
+							],
+						],
+						'files' => [
+							['filename' => 'a-regular-file.jpg']
+						]
+					],
+					[
+						'slug' => 'files',
+						'files' => [
+							['filename' => 'file-in-files-page.jpg']
+						]
+					]
+				],
+				'files' => [
+					['filename' => 'sitefile.jpg']
+				]
+			],
+			'users' => [
+				[
+					'email' => 'current@getkirby.com',
+					'role'  => 'admin'
+				],
+				[
+					'email' => 'test@getkirby.com',
+					'files' => [
+						['filename' => 'userfile.jpg']
+					]
+				]
+			],
+			'options' => [
+				'api' => [
+					'allowImpersonation' => true,
+				]
+			]
+		]);
+
+		$app->impersonate('current@getkirby.com');
+
+		$this->assertIsUser(Find::parent('account'));
+		$this->assertIsUser(Find::parent('users/test@getkirby.com'));
+		$this->assertIsSite(Find::parent('site'));
+		$this->assertIsSite(Find::parent('/site'));
+		$this->assertIsPage(Find::parent('pages/a+aa'));
+		$this->assertIsPage(Find::parent('pages/a aa'));
+		$this->assertIsFile(Find::parent('site/files/sitefile.jpg'));
+		$this->assertIsFile(Find::parent('pages/a/files/a-regular-file.jpg'));
+		$this->assertIsFile(Find::parent('pages/files/files/file-in-files-page.jpg'));
+		$this->assertIsFile(Find::parent('users/test@getkirby.com/files/userfile.jpg'));
+	}
+
+	public function testParentNotFound(): void
 	{
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The page "does-not-exist" cannot be found');
+		$this->assertNull(Find::parent('pages/does-not-exist'));
+	}
 
-		Find::page('does-not-exist');
+	public function testParentSiteNotAccessible(): void
+	{
+		$app = $this->app->clone([
+			'roles' => [
+				[
+					'name'        => 'editor',
+					'permissions' => [
+						'site' => ['access' => false]
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor'
+				]
+			]
+		]);
+
+		$app->impersonate('editor@getkirby.com');
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The site is not accessible');
+
+		Find::parent('site');
+	}
+
+	public function testParentUndefined(): void
+	{
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The user "does-not-exist" cannot be found');
+		$this->assertNull(Find::parent('users/does-not-exist'));
+	}
+
+	public function testParentUserNotAccessible(): void
+	{
+		$app = $this->app->clone([
+			'blueprints' => [
+				'users/admin' => [
+					'name'    => 'admin',
+					'options' => ['access' => false]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin'
+				],
+				[
+					'email' => 'test@getkirby.com',
+					'role'  => 'editor'
+				]
+			]
+		]);
+
+		$app->impersonate('test@getkirby.com');
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The user "admin@getkirby.com" cannot be found');
+
+		Find::parent('users/admin@getkirby.com');
+	}
+
+	public function testParentWithInvalidModelType(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid model type: something');
+		$this->assertNull(Find::parent('something/something'));
 	}
 
 	public function testRole(): void
@@ -243,35 +380,6 @@ class FindTest extends TestCase
 
 		$app->impersonate('admin@getkirby.com');
 		$this->assertSame('editor-' . $uuid, Find::role('editor-' . $uuid)->name());
-	}
-
-	public function testRoleNotAccessibleForOwnRole(): void
-	{
-		$uuid = uuid();
-
-		$app = $this->app->clone([
-			'roles' => [
-				[
-					'name'        => 'editor-' . $uuid,
-					'permissions' => [
-						'user' => ['access' => false]
-					]
-				]
-			],
-			'users' => [
-				[
-					'email' => 'editor@getkirby.com',
-					'role'  => 'editor-' . $uuid
-				]
-			]
-		]);
-
-		$app->impersonate('editor@getkirby.com');
-
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The role "editor-' . $uuid . '" cannot be found');
-
-		Find::role('editor-' . $uuid);
 	}
 
 	public function testRoleNotAccessibleForOtherRole(): void
@@ -299,6 +407,35 @@ class FindTest extends TestCase
 		]);
 
 		$app->impersonate('author@getkirby.com');
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The role "editor-' . $uuid . '" cannot be found');
+
+		Find::role('editor-' . $uuid);
+	}
+
+	public function testRoleNotAccessibleForOwnRole(): void
+	{
+		$uuid = uuid();
+
+		$app = $this->app->clone([
+			'roles' => [
+				[
+					'name'        => 'editor-' . $uuid,
+					'permissions' => [
+						'user' => ['access' => false]
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor-' . $uuid
+				]
+			]
+		]);
+
+		$app->impersonate('editor@getkirby.com');
 
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The role "editor-' . $uuid . '" cannot be found');
@@ -394,114 +531,6 @@ class FindTest extends TestCase
 		$this->assertSame(0, Find::roles()->count());
 	}
 
-	public function testParent(): void
-	{
-		$app = $this->app->clone([
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'a',
-						'children' => [
-							[
-								'slug' => 'aa'
-							],
-						],
-						'files' => [
-							['filename' => 'a-regular-file.jpg']
-						]
-					],
-					[
-						'slug' => 'files',
-						'files' => [
-							['filename' => 'file-in-files-page.jpg']
-						]
-					]
-				],
-				'files' => [
-					['filename' => 'sitefile.jpg']
-				]
-			],
-			'users' => [
-				[
-					'email' => 'current@getkirby.com',
-					'role'  => 'admin'
-				],
-				[
-					'email' => 'test@getkirby.com',
-					'files' => [
-						['filename' => 'userfile.jpg']
-					]
-				]
-			],
-			'options' => [
-				'api' => [
-					'allowImpersonation' => true,
-				]
-			]
-		]);
-
-		$app->impersonate('current@getkirby.com');
-
-		$this->assertIsUser(Find::parent('account'));
-		$this->assertIsUser(Find::parent('users/test@getkirby.com'));
-		$this->assertIsSite(Find::parent('site'));
-		$this->assertIsSite(Find::parent('/site'));
-		$this->assertIsPage(Find::parent('pages/a+aa'));
-		$this->assertIsPage(Find::parent('pages/a aa'));
-		$this->assertIsFile(Find::parent('site/files/sitefile.jpg'));
-		$this->assertIsFile(Find::parent('pages/a/files/a-regular-file.jpg'));
-		$this->assertIsFile(Find::parent('pages/files/files/file-in-files-page.jpg'));
-		$this->assertIsFile(Find::parent('users/test@getkirby.com/files/userfile.jpg'));
-	}
-
-	public function testParentWithInvalidModelType(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid model type: something');
-		$this->assertNull(Find::parent('something/something'));
-	}
-
-	public function testParentNotFound(): void
-	{
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The page "does-not-exist" cannot be found');
-		$this->assertNull(Find::parent('pages/does-not-exist'));
-	}
-
-	public function testParentSiteNotAccessible(): void
-	{
-		$app = $this->app->clone([
-			'roles' => [
-				[
-					'name'        => 'editor',
-					'permissions' => [
-						'site' => ['access' => false]
-					]
-				]
-			],
-			'users' => [
-				[
-					'email' => 'editor@getkirby.com',
-					'role'  => 'editor'
-				]
-			]
-		]);
-
-		$app->impersonate('editor@getkirby.com');
-
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The site is not accessible');
-
-		Find::parent('site');
-	}
-
-	public function testParentUndefined(): void
-	{
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The user "does-not-exist" cannot be found');
-		$this->assertNull(Find::parent('users/does-not-exist'));
-	}
-
 	public function testSite(): void
 	{
 		$this->app->impersonate('kirby');
@@ -535,35 +564,6 @@ class FindTest extends TestCase
 		Find::site();
 	}
 
-	public function testParentUserNotAccessible(): void
-	{
-		$app = $this->app->clone([
-			'blueprints' => [
-				'users/admin' => [
-					'name'    => 'admin',
-					'options' => ['access' => false]
-				]
-			],
-			'users' => [
-				[
-					'email' => 'admin@getkirby.com',
-					'role'  => 'admin'
-				],
-				[
-					'email' => 'test@getkirby.com',
-					'role'  => 'editor'
-				]
-			]
-		]);
-
-		$app->impersonate('test@getkirby.com');
-
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The user "admin@getkirby.com" cannot be found');
-
-		Find::parent('users/admin@getkirby.com');
-	}
-
 	public function testUser(): void
 	{
 		$app = $this->app->clone([
@@ -577,76 +577,6 @@ class FindTest extends TestCase
 
 		$app->impersonate('kirby');
 		$this->assertSame('test@getkirby.com', Find::user('test@getkirby.com')->email());
-	}
-
-	public function testUserWithAuthentication(): void
-	{
-		$app = $this->app->clone([
-			'users' => [
-				[
-					'email' => 'test@getkirby.com',
-					'role'  => 'admin'
-				]
-			],
-			'options' => [
-				'api' => [
-					'allowImpersonation' => true,
-				]
-			]
-		]);
-
-		$app->impersonate('test@getkirby.com');
-		$this->assertSame('test@getkirby.com', Find::user()->email());
-	}
-
-	public function testUserWithAuthenticationNotAccessible(): void
-	{
-		$app = $this->app->clone([
-			'roles' => [
-				[
-					'name'        => 'editor',
-					'permissions' => [
-						'user' => ['access' => false]
-					]
-				]
-			],
-			'users' => [
-				[
-					'email' => 'test@getkirby.com',
-					'role'  => 'editor'
-				]
-			],
-			'options' => [
-				'api' => [
-					'allowImpersonation' => true,
-				]
-			]
-		]);
-
-		$app->impersonate('test@getkirby.com');
-
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The user cannot be found');
-
-		Find::user();
-	}
-
-	public function testUserWithoutAllowedImpersonation(): void
-	{
-		$app = $this->app->clone([
-			'users' => [
-				[
-					'email' => 'test@getkirby.com',
-				]
-			]
-		]);
-
-		$app->impersonate('test@getkirby.com');
-
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The user cannot be found');
-
-		Find::user()->email();
 	}
 
 	public function testUserForAccountArea(): void
@@ -760,10 +690,79 @@ class FindTest extends TestCase
 		$this->assertSame(2, $app->users()->count());
 		$this->assertSame(2, Find::users()->count());
 
-
 		$app->impersonate('editor@getkirby.com');
 		$this->assertSame(2, $app->users()->count());
 		$this->assertSame(1, Find::users()->count());
 		$this->assertSame('editor-' . $uuid, Find::users()->first()->role()->name());
+	}
+
+	public function testUserWithAuthentication(): void
+	{
+		$app = $this->app->clone([
+			'users' => [
+				[
+					'email' => 'test@getkirby.com',
+					'role'  => 'admin'
+				]
+			],
+			'options' => [
+				'api' => [
+					'allowImpersonation' => true,
+				]
+			]
+		]);
+
+		$app->impersonate('test@getkirby.com');
+		$this->assertSame('test@getkirby.com', Find::user()->email());
+	}
+
+	public function testUserWithAuthenticationNotAccessible(): void
+	{
+		$app = $this->app->clone([
+			'roles' => [
+				[
+					'name'        => 'editor',
+					'permissions' => [
+						'user' => ['access' => false]
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'test@getkirby.com',
+					'role'  => 'editor'
+				]
+			],
+			'options' => [
+				'api' => [
+					'allowImpersonation' => true,
+				]
+			]
+		]);
+
+		$app->impersonate('test@getkirby.com');
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The user cannot be found');
+
+		Find::user();
+	}
+
+	public function testUserWithoutAllowedImpersonation(): void
+	{
+		$app = $this->app->clone([
+			'users' => [
+				[
+					'email' => 'test@getkirby.com',
+				]
+			]
+		]);
+
+		$app->impersonate('test@getkirby.com');
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The user cannot be found');
+
+		Find::user()->email();
 	}
 }

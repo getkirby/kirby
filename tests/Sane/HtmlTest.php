@@ -16,6 +16,11 @@ class HtmlTest extends TestCase
 
 	protected static string $type = 'html';
 
+	public static function allowedProvider(): array
+	{
+		return static::fixtureList('allowed', 'html');
+	}
+
 	#[DataProvider('allowedProvider')]
 	public function testAllowed(string $file): void
 	{
@@ -25,11 +30,6 @@ class HtmlTest extends TestCase
 
 		$sanitized = Html::sanitize(file_get_contents($fixture));
 		$this->assertStringEqualsFile($fixture, $sanitized);
-	}
-
-	public static function allowedProvider(): array
-	{
-		return static::fixtureList('allowed', 'html');
 	}
 
 	public function testDisallowedExternalFile(): void

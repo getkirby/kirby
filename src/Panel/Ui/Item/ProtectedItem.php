@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Ui\Item;
 
 use Kirby\Panel\Ui\Item;
+use Kirby\Toolkit\I18n;
 
 /**
  * Stand-in for a model that exists, but that the current user is not
@@ -21,7 +22,7 @@ class ProtectedItem extends Item
 		string|null $layout = null,
 	) {
 		parent::__construct(
-			text: '–',
+			text: '[' . I18n::translate('unknown', 'unknown') . ']',
 			image: [
 				'back'  => 'pattern',
 				'color' => 'gray-500',

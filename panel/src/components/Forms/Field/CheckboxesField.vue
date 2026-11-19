@@ -26,7 +26,7 @@
 					{{ $t("deselect.all") }}
 				</k-button>
 				<k-button
-					:disabled="value.length >= options.length"
+					:disabled="value.length >= choices.length"
 					:responsive="true"
 					icon="select-all"
 					size="xs"
@@ -39,7 +39,7 @@
 		</template>
 
 		<k-empty
-			v-if="!options?.length"
+			v-if="choices.length === 0"
 			:text="$t('options.none')"
 			icon="checklist"
 		/>
@@ -47,7 +47,7 @@
 			v-else
 			ref="input"
 			v-bind="$props"
-			:options="$helper.field.options(options, value)"
+			:options="choices"
 			@input="$emit('input', $event)"
 		/>
 	</k-field>
@@ -73,6 +73,14 @@ export default {
 		batch: Boolean
 	},
 	emits: ["input"],
+	computed: {
+		/**
+		 * The options with an `[unknown]` option for each value without one
+		 */
+		choices() {
+			return this.$helper.field.options(this.options ?? [], this.value);
+		}
+	},
 	methods: {
 		deselectAll() {
 			this.$refs.input.deselectAll();

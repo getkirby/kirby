@@ -19,17 +19,6 @@ class UserUpdateTest extends ModelTestCase
 		$this->assertSame($url, $user->website()->value());
 	}
 
-	public function testUpdateWithAuthUser(): void
-	{
-		$user = new User(['email' => 'admin@domain.com', 'role' => 'admin']);
-		$user->loginPasswordless();
-		$user->update([
-			'website' => $url = 'https://getkirby.com'
-		]);
-		$this->assertSame($url, $this->app->user()->website()->value());
-		$user->logout();
-	}
-
 	public function testUpdateHooks(): void
 	{
 		$calls = 0;
@@ -60,5 +49,16 @@ class UserUpdateTest extends ModelTestCase
 		$user->update($input);
 
 		$this->assertSame(2, $calls);
+	}
+
+	public function testUpdateWithAuthUser(): void
+	{
+		$user = new User(['email' => 'admin@domain.com', 'role' => 'admin']);
+		$user->loginPasswordless();
+		$user->update([
+			'website' => $url = 'https://getkirby.com'
+		]);
+		$this->assertSame($url, $this->app->user()->website()->value());
+		$user->logout();
 	}
 }

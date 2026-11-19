@@ -24,6 +24,11 @@ class Query extends Obj implements Stringable
 		parent::__construct($query ?? []);
 	}
 
+	public function __toString(): string
+	{
+		return $this->toString();
+	}
+
 	public function isEmpty(): bool
 	{
 		return (array)$this === [];
@@ -64,10 +69,5 @@ class Query extends Obj implements Stringable
 		}
 
 		return $query;
-	}
-
-	public function __toString(): string
-	{
-		return $this->toString();
 	}
 }

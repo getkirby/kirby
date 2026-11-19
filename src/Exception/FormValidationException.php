@@ -11,8 +11,8 @@ namespace Kirby\Exception;
  */
 class FormValidationException extends InvalidArgumentException
 {
-	protected static string $defaultKey = 'form.incomplete';
+	protected static array $defaultData = [];
 	protected static string $defaultFallback = 'Form validation failed';
 	protected static int $defaultHttpCode = 400;
-	protected static array $defaultData = [];
+	protected static string $defaultKey = 'form.incomplete';
 }
