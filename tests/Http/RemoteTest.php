@@ -57,6 +57,18 @@ class RemoteTest extends TestCase
 		], $request->curlopt[CURLOPT_HTTPHEADER]);
 	}
 
+	public function testOptionsEncoding(): void
+	{
+		// default: accept all encodings curl supports
+		$request = Remote::get('https://getkirby.com');
+		$this->assertSame('', $request->curlopt[CURLOPT_ENCODING]);
+
+		$request = Remote::get('https://getkirby.com', [
+			'encoding' => 'gzip'
+		]);
+		$this->assertSame('gzip', $request->curlopt[CURLOPT_ENCODING]);
+	}
+
 	public function testOptionsBasicAuth(): void
 	{
 		$request = Remote::get('https://getkirby.com', [
