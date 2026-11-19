@@ -1,6 +1,7 @@
 <template>
 	<component
 		:is="element"
+		:id="input ? input + '-label' : undefined"
 		:for="element === 'label' ? input : undefined"
 		:class="'k-' + type + '-label'"
 		:data-has-diff="hasDiff"
