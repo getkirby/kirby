@@ -23,6 +23,13 @@ describe("k-stat", () => {
 
 	// props
 	describe("click prop", () => {
+		it("renders the stat as button", () => {
+			const wrapper = mount({ click: vi.fn() });
+			expect(wrapper.element.tagName).toBe("BUTTON");
+			expect(wrapper.attributes("type")).toBe("button");
+			expect(wrapper.attributes("href")).toBeUndefined();
+		});
+
 		it("is called when the stat is clicked", async () => {
 			const click = vi.fn();
 			const wrapper = mount({ click });
@@ -32,6 +39,11 @@ describe("k-stat", () => {
 	});
 
 	describe("dialog prop", () => {
+		it("renders the stat as button", () => {
+			const wrapper = mount({ dialog: "pages/create" });
+			expect(wrapper.element.tagName).toBe("BUTTON");
+		});
+
 		it("opens the dialog when the stat is clicked", async () => {
 			const open = vi.fn();
 			const wrapper = mount(
@@ -44,6 +56,11 @@ describe("k-stat", () => {
 	});
 
 	describe("drawer prop", () => {
+		it("renders the stat as button", () => {
+			const wrapper = mount({ drawer: "pages/preview" });
+			expect(wrapper.element.tagName).toBe("BUTTON");
+		});
+
 		it("opens the drawer when the stat is clicked", async () => {
 			const open = vi.fn();
 			const wrapper = mount(
@@ -96,6 +113,14 @@ describe("k-stat", () => {
 			const wrapper = mount({ link: "https://getkirby.com" });
 			expect(wrapper.element.tagName).toBe("A");
 			expect(wrapper.attributes("href")).toBe("https://getkirby.com");
+		});
+
+		it("prefers the link over the click handler", async () => {
+			const click = vi.fn();
+			const wrapper = mount({ link: "https://getkirby.com", click });
+			expect(wrapper.element.tagName).toBe("A");
+			await wrapper.trigger("click");
+			expect(click).not.toHaveBeenCalled();
 		});
 	});
 

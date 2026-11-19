@@ -1,5 +1,12 @@
 <template>
-	<component :is="component" :data-theme="theme" :to="target" class="k-stat">
+	<component
+		:is="component"
+		:data-theme="theme"
+		:to="link"
+		:type="type"
+		class="k-stat"
+		@click="onClick"
+	>
 		<dt v-if="label" class="k-stat-label">
 			<k-icon v-if="icon" :type="icon" />
 
@@ -71,17 +78,17 @@ export default {
 	},
 	computed: {
 		component() {
-			if (this.target !== null) {
+			if (this.link) {
 				return "k-link";
+			}
+
+			if (this.target !== null) {
+				return "button";
 			}
 
 			return "div";
 		},
 		target() {
-			if (this.link) {
-				return this.link;
-			}
-
 			if (this.click) {
 				return this.click;
 			}
@@ -95,6 +102,16 @@ export default {
 			}
 
 			return null;
+		},
+		type() {
+			return this.component === "button" ? "button" : null;
+		}
+	},
+	methods: {
+		onClick() {
+			if (this.component === "button") {
+				this.target();
+			}
 		}
 	}
 };
@@ -114,13 +131,15 @@ export default {
 .k-stat {
 	display: flex;
 	flex-direction: column;
+	width: 100%;
 	padding: var(--spacing-3) var(--spacing-6);
 	background: var(--stat-color-back);
 	border-radius: var(--rounded);
 	box-shadow: var(--shadow);
 	line-height: var(--leading-normal);
+	text-align: start;
 }
-.k-stat.k-link:hover {
+.k-stat:is(.k-link, button):hover {
 	cursor: pointer;
 	background: var(--stat-color-hover-back);
 }
