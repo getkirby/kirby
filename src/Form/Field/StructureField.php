@@ -99,9 +99,6 @@ class StructureField extends InputField implements ProvidesNestedForm
 				)
 				->toStoredValues();
 
-			// remove frontend helper id
-			unset($row['_id']);
-
 			$data[] = $row;
 		}
 

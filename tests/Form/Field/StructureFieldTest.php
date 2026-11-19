@@ -639,6 +639,29 @@ class StructureFieldTest extends TestCase
 		$this->assertSame(['a', 'b'], $field->toFormValue()[0]['tags']);
 	}
 
+	public function testToStoredValueWithRowIds(): void
+	{
+		$field = $this->field('structure', [
+			'fields' => [
+				'text' => [
+					'type' => 'text'
+				]
+			],
+			'value' => [
+				['text' => 'A', '_id' => 'a'],
+				['text' => 'B', '_id' => 'b']
+			]
+		]);
+
+		$expected = [
+			['text' => 'A', '_id' => 'a'],
+			['text' => 'B', '_id' => 'b']
+		];
+
+		$this->assertSame($expected, $field->toFormValue());
+		$this->assertSame($expected, $field->toStoredValue());
+	}
+
 	public function testTranslate(): void
 	{
 		$app = new App([

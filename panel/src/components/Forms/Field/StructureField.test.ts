@@ -94,6 +94,17 @@ describe("k-structure-field", () => {
 			expect(wrapper.vm.items).toStrictEqual([{ _id: "uuid", title: "A" }]);
 		});
 
+		it("keeps the key order of the rows", () => {
+			const wrapper = mount({
+				value: [{ title: "A", _id: "a" }, { title: "B" }]
+			});
+
+			expect(rows(wrapper).map((row) => Object.keys(row))).toStrictEqual([
+				["title", "_id"],
+				["title", "_id"]
+			]);
+		});
+
 		it("syncs rows that are updated in place", async () => {
 			// a new row gets added in the block drawer and its items
 			// are passed on as value to the field in the block preview
