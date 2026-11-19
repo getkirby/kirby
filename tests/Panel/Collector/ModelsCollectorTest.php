@@ -42,14 +42,14 @@ class ModelsCollectorMock extends ModelsCollector
 		return $models;
 	}
 
-	public function queryModel(): ModelWithContent
-	{
-		return $this->model();
-	}
-
 	public function parentModel(): Site|Page|User
 	{
 		return $this->parent();
+	}
+
+	public function queryModel(): ModelWithContent
+	{
+		return $this->model();
 	}
 }
 
