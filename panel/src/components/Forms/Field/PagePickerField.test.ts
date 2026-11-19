@@ -7,6 +7,7 @@ const Collection = { props: ["empty"], template: "<div />" };
 
 const api = { get: vi.fn() };
 const dialog = { close: vi.fn(), open: vi.fn() };
+const events = { off: vi.fn(), on: vi.fn() };
 const panel = { api, dialog };
 
 function mount(props = {}, attrs = {}) {
@@ -21,6 +22,7 @@ function mount(props = {}, attrs = {}) {
 		global: {
 			components: { "k-collection": Collection },
 			mocks: {
+				$events: events,
 				$panel: panel
 			}
 		}
@@ -79,7 +81,29 @@ describe("k-pagepicker-field", () => {
 		});
 	});
 
+	// lifecycle
+	describe("mounted hook", () => {
+		it("listens to deleted pages until unmounted", () => {
+			const wrapper = mount();
+			const handler = wrapper.vm.onDelete;
+			expect(events.on).toHaveBeenCalledWith("page.delete", handler);
+			wrapper.unmount();
+			expect(events.off).toHaveBeenCalledWith("page.delete", handler);
+		});
+	});
+
 	// methods
+	describe("onDelete()", () => {
+		it("removes the deleted page", () => {
+			const wrapper = mount({ value: ["page://a", "page://b"] });
+			wrapper.vm.onDelete({
+				event: "page.delete",
+				page: { id: "a", uuid: "page://a" }
+			});
+			expect(wrapper.emitted("input")).toStrictEqual([[["page://b"]]]);
+		});
+	});
+
 	describe("open()", () => {
 		it("opens the picker dialog with the value", () => {
 			const wrapper = mount();

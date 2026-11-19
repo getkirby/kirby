@@ -33,11 +33,14 @@ class FileDeleteDialogControllerTest extends FileDialogControllerTestCase
 	): void {
 		$this->assertCount(3, $parent->files());
 
+		$id         = $file->id();
+		$uuid       = $file->uuid()->toString();
 		$controller = new FileDeleteDialogController($file);
 		$response   = $controller->submit();
 
 		$this->assertCount(2, $parent->files());
 		$this->assertSame('file.delete', $response['event']);
+		$this->assertSame(['id' => $id, 'uuid' => $uuid], $response['file']);
 
 		if ($redirect === false) {
 			$this->assertNull($response['redirect']);

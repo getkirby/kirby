@@ -62,6 +62,13 @@ class PageDeleteDialogController extends PageDialogController
 			throw new InvalidArgumentException(key: 'page.delete.confirm');
 		}
 
+		// collect the identifiers before deletion,
+		// so that fields can remove the page from their value
+		$page = [
+			'id'   => $this->page->id(),
+			'uuid' => $this->page->uuid()?->toString()
+		];
+
 		$this->page->delete(true);
 
 		// redirect to the parent model URL
@@ -72,6 +79,7 @@ class PageDeleteDialogController extends PageDialogController
 
 		return [
 			'event'    => 'page.delete',
+			'page'     => $page,
 			'redirect' => $redirect ?? null
 		];
 	}
