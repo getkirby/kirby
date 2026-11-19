@@ -162,6 +162,33 @@ class PageChangeStatusDialogControllerTest extends TestCase
 		$this->assertSame('Error description 2', $props['details'][1]['message']);
 	}
 
+	public function testLoadForStatusMissingInBlueprint(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/article' => [
+					'status' => [
+						'draft'    => ['label' => 'Idea'],
+						'unlisted' => ['label' => 'In review']
+					]
+				]
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'test', 'template' => 'article', 'num' => 1]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PageChangeStatusDialogController($this->app->page('test'));
+		$props      = $controller->load()->props();
+
+		$this->assertSame(['draft', 'unlisted'], array_column($props['fields']['status']['options'], 'value'));
+		$this->assertNull($props['value']->status);
+	}
+
 	public function testSubmit(): void
 	{
 		$this->app = $this->app->clone([
