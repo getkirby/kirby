@@ -807,10 +807,17 @@ class ChallengesTest extends TestCase
 		$session->set('kirby.challenge.mode', 'login');
 		$session->set('kirby.challenge.type', 'dummy');
 		$session->set('kirby.challenge.timeout', time() + 1000);
+		$session->set('kirby.challenge.data', ['public' => 'x', 'secret' => 'y']);
 
-		$this->expectException(InvalidArgumentException::class);
-
-		$this->challenges->switch($session, 'dummy2');
+		// an unavailable challenge must behave exactly like a missing
+		// user (see `::testSwitchUserNotFound()`), otherwise the two
+		// cases would reveal whether the user exists
+		$this->assertNull($this->challenges->switch($session, 'dummy2'));
+		$this->assertSame('marge@simpsons.com', $session->get('kirby.challenge.email'));
+		$this->assertSame('login', $session->get('kirby.challenge.mode'));
+		$this->assertSame(MockTime::$time + $this->challenges->timeout(), $session->get('kirby.challenge.timeout'));
+		$this->assertNull($session->get('kirby.challenge.type'));
+		$this->assertNull($session->get('kirby.challenge.data'));
 	}
 
 	#[DataProvider('unknownUserProvider')]

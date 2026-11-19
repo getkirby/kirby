@@ -13,6 +13,7 @@ use Kirby\Panel\Redirect;
 use Kirby\Panel\TestCase;
 use Kirby\Panel\Ui\Component;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class SwitchTestChallenge extends Challenge
 {
@@ -215,6 +216,61 @@ class LoginRequestControllerTest extends TestCase
 		$this->assertInstanceOf(Redirect::class, $exception);
 		$this->assertStringEndsWith('login/challenge/switch-test2', $exception->location());
 		$this->assertSame('switch-test2', $session->get('kirby.challenge.type'));
+	}
+
+	public static function switchUnavailableProvider(): array
+	{
+		return [
+			['test@example.com'],
+			['unknown@example.com'],
+		];
+	}
+
+	#[DataProvider('switchUnavailableProvider')]
+	public function testSwitchUnavailable(string $email): void
+	{
+		// switching to an unavailable challenge must give the same
+		// response for existing and missing users
+		$this->app = $this->app->clone([
+			'options' => [
+				'api.csrf'   => 'test-csrf',
+				'auth.debug' => false,
+				'auth' => [
+					'challenges' => ['switch-test', 'switch-test2']
+				]
+			],
+			'request' => [
+				'query' => [
+					'csrf' => 'test-csrf'
+				]
+			],
+			'users' => [
+				[
+					'email' => 'test@example.com',
+					'role'  => 'admin'
+				]
+			]
+		]);
+
+		$session = $this->app->session();
+		$session->set('kirby.challenge.email', $email);
+		$session->set('kirby.challenge.type', 'switch-test');
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.timeout', time() + 600);
+
+		$exception = null;
+
+		try {
+			$controller = new LoginRequestController('switch', 'totp');
+			$controller->load();
+		} catch (Redirect $e) {
+			$exception = $e;
+		}
+
+		$this->assertInstanceOf(Redirect::class, $exception);
+		$this->assertStringEndsWith('login/challenge/totp', $exception->location());
+		$this->assertSame($email, $session->get('kirby.challenge.email'));
+		$this->assertNull($session->get('kirby.challenge.type'));
 	}
 
 	public function testSwitchWithoutName(): void

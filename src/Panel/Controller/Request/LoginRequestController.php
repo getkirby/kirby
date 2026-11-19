@@ -78,10 +78,7 @@ class LoginRequestController extends RequestController
 			);
 		}
 
-		$auth->challenges()->switch(
-			$this->kirby->session(),
-			$this->name
-		);
+		$auth->switchChallenge($this->name);
 
 		Panel::go('login/challenge/' . $this->name);
 	}
