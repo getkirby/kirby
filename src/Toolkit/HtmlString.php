@@ -114,6 +114,14 @@ class HtmlString implements JsonSerializable, Stringable
 				continue;
 			}
 
+			// a marked key without a trusted value can only come
+			// from untrusted data (e.g. content fields), as `resolve()`
+			// never creates one itself. Passing it on would let the
+			// frontend treat the value as trusted HTML.
+			if (static::isMarked($key) === true) {
+				continue;
+			}
+
 			if (is_array($value) === true) {
 				$result[$key] = static::resolve($value);
 				continue;

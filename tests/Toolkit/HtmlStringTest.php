@@ -60,6 +60,25 @@ class HtmlStringTest extends TestCase
 		$this->assertArrayNotHasKey('<body>', $data);
 	}
 
+	public function testResolveDropsFakeMarkedKeys(): void
+	{
+		$resolved = HtmlString::resolve([
+			'row' => [
+				'name'    => 'Row',
+				'<name>'  => '<b>x</b>',
+				'<image>' => [
+					['<filename>' => '<b class="audit">x</b>']
+				]
+			],
+			'<title>' => '<script>alert(1)</script>',
+			'<list>'  => ['<b>a</b>', '<b>b</b>'],
+			'<empty>' => []
+		]);
+
+		// marked keys with untrusted values must never be passed on
+		$this->assertSame(['row' => ['name' => 'Row']], $resolved);
+	}
+
 	public function testResolveIsIdempotent(): void
 	{
 		$data = [
