@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "@test/unit";
-import { flushPromises, mount as vueMount } from "@vue/test-utils";
+import { mount as vueMount } from "@vue/test-utils";
 import Draggable from "./Draggable.vue";
 
 // the options and callbacks Sortable was created with
@@ -33,9 +33,10 @@ function link(wrapper: ReturnType<typeof mount>) {
 	return wrapper;
 }
 
-// the Sortable instance is created after a dynamic import
+// the Sortable instance is created after a dynamic import,
+// which can take longer than a tick before the module is cached
 async function sortable(wrapper: ReturnType<typeof mount>) {
-	await flushPromises();
+	await vi.waitUntil(() => wrapper.vm.sortable !== null);
 	return wrapper.vm.sortable as unknown as Sortable;
 }
 
