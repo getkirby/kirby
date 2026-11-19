@@ -40,7 +40,9 @@ abstract class ModelUuid extends Uuid
 	 */
 	public function id(): string
 	{
-		if ($id = $this->uri->host()) {
+		$id = $this->uri->host();
+
+		if ($id !== null && $id !== '') {
 			return $id;
 		}
 
