@@ -33,6 +33,7 @@
 			ref="options"
 			:align-x="align"
 			:options="options"
+			:theme="theme"
 			class="k-options-dropdown-content"
 			@action="onAction"
 		/>

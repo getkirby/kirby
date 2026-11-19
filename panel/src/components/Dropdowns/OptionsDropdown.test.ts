@@ -10,7 +10,7 @@ const Button = {
 };
 const Dropdown = {
 	name: "k-dropdown",
-	props: ["alignX", "options"],
+	props: ["alignX", "options", "theme"],
 	emits: ["action"],
 	methods: { toggle: vi.fn() },
 	template: "<div />"
@@ -85,7 +85,7 @@ describe("k-options-dropdown", () => {
 	describe("align prop", () => {
 		it("aligns the options to the right by default", () => {
 			const wrapper = mount();
-			expect(wrapper.findComponent(Dropdown).props()).toStrictEqual({
+			expect(wrapper.findComponent(Dropdown).props()).toMatchObject({
 				alignX: "right",
 				options
 			});
@@ -184,6 +184,17 @@ describe("k-options-dropdown", () => {
 		it("hides the text of a single option", () => {
 			const wrapper = mount({ options: [options[0]], text: false });
 			expect(toggle(wrapper).text()).toBe("");
+		});
+	});
+
+	describe("theme prop", () => {
+		it("shows the options in the dark theme by default", () => {
+			expect(mount().findComponent(Dropdown).props("theme")).toBe("dark");
+		});
+
+		it("shows the options in the theme", () => {
+			const wrapper = mount({ theme: "light" });
+			expect(wrapper.findComponent(Dropdown).props("theme")).toBe("light");
 		});
 	});
 
