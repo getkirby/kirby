@@ -14,6 +14,19 @@ class InventoryTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.Inventory';
 
+	protected function setUp(): void
+	{
+		static::setUpTmp();
+	}
+
+	protected function tearDown(): void
+	{
+		parent::tearDown();
+		static::tearDownTmp();
+		Inventory::$numSeparator = '_';
+		Page::$models = [];
+	}
+
 	protected function create(array $items): void
 	{
 		foreach ($items as $item) {
@@ -26,19 +39,6 @@ class InventoryTest extends TestCase
 				Dir::make($root);
 			}
 		}
-	}
-
-	protected function setUp(): void
-	{
-		static::setUpTmp();
-	}
-
-	protected function tearDown(): void
-	{
-		parent::tearDown();
-		static::tearDownTmp();
-		Inventory::$numSeparator = '_';
-		Page::$models = [];
 	}
 
 	public function testChildren(): void

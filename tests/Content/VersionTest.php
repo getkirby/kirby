@@ -1179,7 +1179,6 @@ class VersionTest extends TestCase
 			'subtitle' => 'Subtitle DE'
 		], 'de');
 
-
 		$this->assertSame($contentEN, $version->read('en'));
 		$this->assertSame(['subtitle' => 'Subtitle DE'], $version->read('de'));
 	}

@@ -14,6 +14,19 @@ abstract class TestCase extends BaseTestCase
 
 	protected ModelWithContent $model;
 
+	protected function setUp(): void
+	{
+		$this->setUpTmp();
+	}
+
+	protected function tearDown(): void
+	{
+		DiscardingStorage::$discard = false;
+
+		App::destroy();
+		$this->tearDownTmp();
+	}
+
 	public function assertContentFileDoesNotExist(string|null $language = null, VersionId|null $versionId = null): void
 	{
 		$this->assertFileDoesNotExist($this->contentFile($language, $versionId));
@@ -74,11 +87,6 @@ abstract class TestCase extends BaseTestCase
 		];
 	}
 
-	protected function setUp(): void
-	{
-		$this->setUpTmp();
-	}
-
 	public function setUpMultiLanguage(
 		array|null $site = null
 	): void {
@@ -133,13 +141,5 @@ abstract class TestCase extends BaseTestCase
 		$this->model = $this->app->page('a-page');
 
 		Dir::make($this->model->root());
-	}
-
-	protected function tearDown(): void
-	{
-		DiscardingStorage::$discard = false;
-
-		App::destroy();
-		$this->tearDownTmp();
 	}
 }

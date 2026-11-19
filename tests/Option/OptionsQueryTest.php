@@ -175,7 +175,6 @@ class OptionsQueryTest extends TestCase
 		);
 		$options = $options->render($app->site());
 
-
 		$this->assertSame('a.jpg', (string)$options[0]['text']);
 		$this->assertSame('b.pdf', (string)$options[1]['text']);
 	}
@@ -211,7 +210,6 @@ class OptionsQueryTest extends TestCase
 			text: '{{ page.slug }}'
 		);
 		$options = $options->render($app->site());
-
 
 		$this->assertSame('a', (string)$options[0]['text']);
 		$this->assertSame('a', $options[0]['value']);
@@ -390,7 +388,6 @@ class OptionsQueryTest extends TestCase
 			query: 'kirby.users',
 		);
 		$options = $options->render($app->site());
-
 
 		$this->assertSame('homer@simpson.com', $options[0]['value']);
 		$this->assertSame('homer', (string)$options[0]['text']);

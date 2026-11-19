@@ -30,12 +30,6 @@ class PageTest extends TestCase
 	public const string FIXTURES = __DIR__ . '/fixtures';
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.Page';
 
-	protected function panel(array $props = [])
-	{
-		$page = new ModelPage(['slug' => 'test', ...$props]);
-		return new Page($page);
-	}
-
 	protected function setUp(): void
 	{
 		$this->app = new App([
@@ -50,6 +44,12 @@ class PageTest extends TestCase
 	protected function tearDown(): void
 	{
 		Dir::remove(static::TMP);
+	}
+
+	protected function panel(array $props = [])
+	{
+		$page = new ModelPage(['slug' => 'test', ...$props]);
+		return new Page($page);
 	}
 
 	public function testCrumb(): void

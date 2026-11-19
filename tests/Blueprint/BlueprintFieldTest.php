@@ -66,7 +66,6 @@ class BlueprintFieldTest extends TestCase
 			]
 		]);
 
-
 		$props = Blueprint::fieldProps([
 			'extends' => 'fields/another-test',
 			'buttons' => [

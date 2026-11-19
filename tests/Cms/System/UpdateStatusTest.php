@@ -20,6 +20,22 @@ class UpdateStatusTest extends TestCase
 	protected static array $data = [];
 	protected static string $host;
 
+	public static function setUpBeforeClass(): void
+	{
+		static::$host = UpdateStatus::$host;
+		UpdateStatus::$host = 'file://' . static::FIXTURES . '/getkirby.com';
+	}
+
+	public static function tearDownAfterClass(): void
+	{
+		UpdateStatus::$host = static::$host;
+	}
+
+	protected function tearDown(): void
+	{
+		Dir::remove(static::TMP);
+	}
+
 	protected function app(string $version, string|null $activation = null): MockApp
 	{
 		MockApp::$version = $version;
@@ -70,22 +86,6 @@ class UpdateStatusTest extends TestCase
 				'version' => $version
 			]
 		);
-	}
-
-	public static function setUpBeforeClass(): void
-	{
-		static::$host = UpdateStatus::$host;
-		UpdateStatus::$host = 'file://' . static::FIXTURES . '/getkirby.com';
-	}
-
-	protected function tearDown(): void
-	{
-		Dir::remove(static::TMP);
-	}
-
-	public static function tearDownAfterClass(): void
-	{
-		UpdateStatus::$host = static::$host;
 	}
 
 	public function testLoadData(): void

@@ -29,13 +29,6 @@ class FileTest extends TestCase
 	public static array $block = [];
 	public static array $mocks = [];
 
-	protected function _file($file = 'test.js')
-	{
-		return new File([
-			'root' => static::TMP . '/' . $file
-		]);
-	}
-
 	protected function setUp(): void
 	{
 		Dir::copy(static::FIXTURES, static::TMP);
@@ -54,6 +47,13 @@ class FileTest extends TestCase
 		static::$mocks = [];
 		App::destroy();
 		Dir::remove(static::TMP);
+	}
+
+	protected function _file($file = 'test.js')
+	{
+		return new File([
+			'root' => static::TMP . '/' . $file
+		]);
 	}
 
 	public function testBase64(): void

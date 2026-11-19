@@ -9,7 +9,6 @@ class IniStore
 	public static array $data = [];
 }
 
-
 /**
  * Mock for the PHP ini_get() function to ensure reliable testing
  */

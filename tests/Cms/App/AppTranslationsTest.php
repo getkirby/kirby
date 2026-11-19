@@ -17,11 +17,6 @@ class AppTranslationsTest extends TestCase
 	protected array $locale = [];
 	protected string|null $localeSuffix = null;
 
-	public function app()
-	{
-		return $this->app;
-	}
-
 	protected function setUp(): void
 	{
 		$this->locale = Locale::get();
@@ -68,6 +63,11 @@ class AppTranslationsTest extends TestCase
 
 		Locale::set($this->locale);
 		$this->locale = [];
+	}
+
+	public function app()
+	{
+		return $this->app;
 	}
 
 	public function testExceptionInvalidKey(): void
@@ -182,7 +182,6 @@ class AppTranslationsTest extends TestCase
 		$this->assertSame('kompanija', Str::slug('Компания'));
 		$this->assertSame('Knopf', t('button'));
 		$this->assertSame('kompanija', Str::slug('Компания'));
-
 
 		$result = $app->render('en/test');
 		$this->assertSame('Button', $result->body());

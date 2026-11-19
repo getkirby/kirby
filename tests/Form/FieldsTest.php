@@ -26,16 +26,6 @@ class FieldsTest extends TestCase
 	protected App $app;
 	protected Page $model;
 
-	public static function modelProvider(): array
-	{
-		return [
-			[new Page(['slug' => 'test']), true],
-			[new Site(), true],
-			[new User(['email' => 'test@getkirby.com']), false],
-			[new File(['filename' => 'test.jpg', 'parent' => new Site()]), false],
-		];
-	}
-
 	protected function setUp(): void
 	{
 		$this->app = new App([
@@ -44,6 +34,16 @@ class FieldsTest extends TestCase
 			]
 		]);
 		$this->model = new Page(['slug' => 'test']);
+	}
+
+	public static function modelProvider(): array
+	{
+		return [
+			[new Page(['slug' => 'test']), true],
+			[new Site(), true],
+			[new User(['email' => 'test@getkirby.com']), false],
+			[new File(['filename' => 'test.jpg', 'parent' => new Site()]), false],
+		];
 	}
 
 	public function test__call(): void
@@ -775,7 +775,6 @@ class FieldsTest extends TestCase
 		$this->assertSame([
 			'test' => 'Test',
 		], $fields->toFormValues());
-
 
 		$fields->passthrough([
 			'test' => fn ($value) => $value . ' updated'

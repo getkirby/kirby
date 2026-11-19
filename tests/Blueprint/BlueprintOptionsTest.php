@@ -16,14 +16,6 @@ class BlueprintOptionsTest extends TestCase
 
 	protected ModelWithContent $model;
 
-	protected function blueprint(array $options): Blueprint
-	{
-		return new Blueprint([
-			'model'   => $this->model,
-			'options' => $options
-		]);
-	}
-
 	protected function setUp(): void
 	{
 		$this->app = new App([
@@ -41,6 +33,14 @@ class BlueprintOptionsTest extends TestCase
 		]);
 
 		$this->model = new Page(['slug' => 'test']);
+	}
+
+	protected function blueprint(array $options): Blueprint
+	{
+		return new Blueprint([
+			'model'   => $this->model,
+			'options' => $options
+		]);
 	}
 
 	public function testOptionForUserWithFalse(): void

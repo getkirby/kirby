@@ -13,36 +13,6 @@ class PageListFieldTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Form.Fields.PageListField';
 
-	protected function pagelist(array $attr = []): PageListField
-	{
-		return new PageListField(...[
-			'model' => $this->app->page('photography'),
-			'name'  => 'albums',
-			...$attr
-		]);
-	}
-
-	protected function pagelistWithInvalidBlueprint(array $attr = []): PageListField
-	{
-		$this->app = $this->app->clone([
-			'blueprints' => [
-				'pages/broken' => [
-					// title and status would be used
-					// if the blueprint could be created
-					'title'  => 'Not used',
-					'create' => ['status' => 'listed'],
-					// a scalar instead of a list of fields
-					// breaks the blueprint
-					'fields' => 'text'
-				]
-			]
-		]);
-
-		$this->app->impersonate('kirby');
-
-		return $this->pagelist(['blueprints' => ['broken'], ...$attr]);
-	}
-
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -90,6 +60,36 @@ class PageListFieldTest extends TestCase
 		unset($_GET['page'], $_GET['searchterm']);
 		parent::tearDown();
 		App::destroy();
+	}
+
+	protected function pagelist(array $attr = []): PageListField
+	{
+		return new PageListField(...[
+			'model' => $this->app->page('photography'),
+			'name'  => 'albums',
+			...$attr
+		]);
+	}
+
+	protected function pagelistWithInvalidBlueprint(array $attr = []): PageListField
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/broken' => [
+					// title and status would be used
+					// if the blueprint could be created
+					'title'  => 'Not used',
+					'create' => ['status' => 'listed'],
+					// a scalar instead of a list of fields
+					// breaks the blueprint
+					'fields' => 'text'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		return $this->pagelist(['blueprints' => ['broken'], ...$attr]);
 	}
 
 	public function testAcceptedPageBlueprints(): void

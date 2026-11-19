@@ -24,6 +24,11 @@ class PluginsTest extends TestCase
 	protected string $jsB;
 	protected string $jsC;
 
+	protected function tearDown(): void
+	{
+		Dir::remove(static::TMP);
+	}
+
 	public function createPlugins(): void
 	{
 		F::write(static::TMP . '/site/plugins/a/index.php', '<?php Kirby::plugin("test/a", []);');
@@ -43,11 +48,6 @@ class PluginsTest extends TestCase
 		F::write($this->jsC = static::TMP . '/site/plugins/c/index.js', 'c');
 		$this->devCssC = static::TMP . '/site/plugins/c/index.dev.css';
 		$this->devJsC  = static::TMP . '/site/plugins/c/index.dev.js';
-	}
-
-	protected function tearDown(): void
-	{
-		Dir::remove(static::TMP);
 	}
 
 	public function testCss(): void

@@ -19,6 +19,28 @@ class UploadTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Api.Upload';
 
+	protected function setUp(): void
+	{
+		Dir::make(static::TMP);
+
+		$this->app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+		]);
+
+		$this->app->impersonate('kirby');
+	}
+
+	protected function tearDown(): void
+	{
+		ini_restore('upload_max_filesize');
+		ini_restore('post_max_size');
+		unset($_SERVER['HTTP_CF_CONNECTING_IP']);
+		Dir::remove(static::TMP);
+		App::destroy();
+	}
+
 	protected function api(array $props = []): Api
 	{
 		return new Api($props);
@@ -55,28 +77,6 @@ class UploadTest extends TestCase
 				]
 			]
 		])->processChunk($source, $filename);
-	}
-
-	protected function setUp(): void
-	{
-		Dir::make(static::TMP);
-
-		$this->app = new App([
-			'roots' => [
-				'index' => static::TMP
-			],
-		]);
-
-		$this->app->impersonate('kirby');
-	}
-
-	protected function tearDown(): void
-	{
-		ini_restore('upload_max_filesize');
-		ini_restore('post_max_size');
-		unset($_SERVER['HTTP_CF_CONNECTING_IP']);
-		Dir::remove(static::TMP);
-		App::destroy();
 	}
 
 	public function testChunkId(): void

@@ -17,16 +17,6 @@ class UserTotpDrawerControllerTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Drawer.UserTotpDrawerController';
 
-	/**
-	 * Enables TOTP for the test user and returns a currently valid code
-	 */
-	protected function enableTotp(): string
-	{
-		$secret = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
-		$this->app->user('test')->changeSecret('totp', $secret);
-		return (new Totp($secret))->generate();
-	}
-
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -53,6 +43,16 @@ class UserTotpDrawerControllerTest extends TestCase
 		]);
 
 		$this->app->impersonate('kirby');
+	}
+
+	/**
+	 * Enables TOTP for the test user and returns a currently valid code
+	 */
+	protected function enableTotp(): string
+	{
+		$secret = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+		$this->app->user('test')->changeSecret('totp', $secret);
+		return (new Totp($secret))->generate();
 	}
 
 	public function testFactory(): void

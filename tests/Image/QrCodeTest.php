@@ -14,6 +14,11 @@ class QrCodeTest extends TestCase
 	public const string FIXTURES = __DIR__ . '/fixtures/qr';
 	public const string TMP      = KIRBY_TMP_DIR . '/Image.QrCode';
 
+	protected function tearDown(): void
+	{
+		Dir::remove(static::TMP);
+	}
+
 	protected function assertSameDataUri(string $expected, string $actual): void
 	{
 		$prefix = 'data:image/png;base64,';
@@ -40,11 +45,6 @@ class QrCodeTest extends TestCase
 	protected function png(string $data): string
 	{
 		return $this->imageContent(imagecreatefromstring($data));
-	}
-
-	protected function tearDown(): void
-	{
-		Dir::remove(static::TMP);
 	}
 
 	public function testToDataUri(): void

@@ -26,7 +26,6 @@ class SimpleImageMock extends SimpleImage
 	}
 }
 
-
 #[CoversClass(GdLib::class)]
 class GdLibTest extends TestCase
 {

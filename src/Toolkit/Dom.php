@@ -122,7 +122,6 @@ class Dom
 			$xml  = 'encoding="UTF-8" id="' . Str::random(10) . '"';
 			$load = $this->doc->loadHTML('<?xml ' . $xml . '>' . $code);
 
-
 			// Newer libxml2 versions may not attach the injected XML node
 			// inside <html>. Instead, they may convert it into a top-level
 			// comment node that sits before <html>:

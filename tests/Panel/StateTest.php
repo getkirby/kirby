@@ -637,7 +637,6 @@ class StateTest extends TestCase
 
 		$this->assertSame($expected, $user);
 
-
 		// permissions;
 		$permissions = $state->permissions();
 		$permissions = A::apply($permissions);

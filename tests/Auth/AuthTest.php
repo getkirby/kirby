@@ -21,10 +21,18 @@ class AuthTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Auth.Auth';
 
-	public string|null $failedEmail = null;
-
 	protected static string $passwordA;
 	protected static string $passwordB;
+
+	public string|null $failedEmail = null;
+
+	public static function setUpBeforeClass(): void
+	{
+		parent::setUpBeforeClass();
+
+		static::$passwordA = User::hashPassword('springfield123');
+		static::$passwordB = User::hashPassword('somewhere-in-japan');
+	}
 
 	protected function setUp(): void
 	{
@@ -71,14 +79,6 @@ class AuthTest extends TestCase
 		F::write(static::TMP . '/site/accounts/homer/.htpasswd', self::$passwordA);
 
 		$this->auth = $this->app->auth();
-	}
-
-	public static function setUpBeforeClass(): void
-	{
-		parent::setUpBeforeClass();
-
-		static::$passwordA = User::hashPassword('springfield123');
-		static::$passwordB = User::hashPassword('somewhere-in-japan');
 	}
 
 	public function testAuthenticate(): void

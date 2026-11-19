@@ -14,15 +14,6 @@ class FieldTest extends TestCase
 	public const string FIXTURES = __DIR__ . '/fixtures';
 	public const string TMP      = KIRBY_TMP_DIR . '/Content.Field';
 
-	protected function field($value = '', $parent = null): Field
-	{
-		return new Field(
-			key:   'test',
-			value:  $value,
-			parent: $parent
-		);
-	}
-
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -42,6 +33,15 @@ class FieldTest extends TestCase
 		parent::tearDown();
 		Dir::remove(static::TMP);
 		App::destroy();
+	}
+
+	protected function field($value = '', $parent = null): Field
+	{
+		return new Field(
+			key:   'test',
+			value:  $value,
+			parent: $parent
+		);
 	}
 
 	public function test__debugInfo(): void

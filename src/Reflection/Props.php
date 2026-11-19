@@ -21,13 +21,6 @@ use ReflectionProperty;
 class Props
 {
 	/**
-	 * The prop definitions for this instance
-	 *
-	 * @var array<string, array>|null
-	 */
-	protected array|null $props = null;
-
-	/**
 	 * Cache for the prop definitions per class
 	 *
 	 * @var array<string, array<string, array>>
@@ -48,6 +41,13 @@ class Props
 	 * @var array<string, array<string, array{string|null, string}>>
 	 */
 	protected static array $exports = [];
+
+	/**
+	 * The prop definitions for this instance
+	 *
+	 * @var array<string, array>|null
+	 */
+	protected array|null $props = null;
 
 	public function __construct(
 		protected object|string $objectOrClass

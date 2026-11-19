@@ -121,7 +121,7 @@ class UsersCollectorTest extends TestCase
 			role: 'editor'
 		);
 
-		$this->assertModelsInCollector($collector, ['b', 'c'], );
+		$this->assertModelsInCollector($collector, ['b', 'c']);
 	}
 
 	public function testFlip(): void

@@ -12,13 +12,6 @@ class UserAvatarTest extends ModelTestCase
 	public const FIXTURES = __DIR__ . '/../../Api/Routes/fixtures';
 	public const TMP = KIRBY_TMP_DIR . '/Cms.UserAvatar';
 
-	protected function avatarSource(): string
-	{
-		$source = static::TMP . '/tmp-avatar.jpg';
-		$this->assertTrue(F::copy(static::FIXTURES . '/avatar.jpg', $source, true));
-		return $source;
-	}
-
 	public function setUp(): void
 	{
 		parent::setUp();
@@ -32,6 +25,13 @@ class UserAvatarTest extends ModelTestCase
 			],
 			'user' => 'admin@getkirby.com'
 		]);
+	}
+
+	protected function avatarSource(): string
+	{
+		$source = static::TMP . '/tmp-avatar.jpg';
+		$this->assertTrue(F::copy(static::FIXTURES . '/avatar.jpg', $source, true));
+		return $source;
 	}
 
 	public function testCreateAvatar(): void

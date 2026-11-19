@@ -10,6 +10,30 @@ abstract class TestCase extends BaseTestCase
 {
 	protected Page|null $page = null;
 
+	protected function setUp(): void
+	{
+		parent::setUp();
+
+		$this->app = new App([
+			'roots' => [
+				'index' => $this->hasTmp() ? static::TMP : '/dev/null'
+			]
+		]);
+
+		I18n::$locale = null;
+	}
+
+	protected function tearDown(): void
+	{
+		parent::tearDown();
+		App::destroy();
+
+		$this->tearDownTmp();
+
+		// mock class
+		ErrorLog::$log = '';
+	}
+
 	public function assertHooks(
 		array $hooks,
 		Closure $action,
@@ -67,32 +91,8 @@ abstract class TestCase extends BaseTestCase
 		return $this->site()->children();
 	}
 
-	protected function setUp(): void
-	{
-		parent::setUp();
-
-		$this->app = new App([
-			'roots' => [
-				'index' => $this->hasTmp() ? static::TMP : '/dev/null'
-			]
-		]);
-
-		I18n::$locale = null;
-	}
-
 	public function site()
 	{
 		return $this->kirby()->site();
-	}
-
-	protected function tearDown(): void
-	{
-		parent::tearDown();
-		App::destroy();
-
-		$this->tearDownTmp();
-
-		// mock class
-		ErrorLog::$log = '';
 	}
 }

@@ -164,11 +164,6 @@ class ChallengesTest extends TestCase
 	protected Challenges $challenges;
 	protected array $original;
 
-	protected function session(): Session
-	{
-		return $this->app->session();
-	}
-
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -221,6 +216,11 @@ class ChallengesTest extends TestCase
 			Challenges::$challenges['sms-vonage']
 		);
 
+	}
+
+	protected function session(): Session
+	{
+		return $this->app->session();
 	}
 
 	public function testAvailable(): void

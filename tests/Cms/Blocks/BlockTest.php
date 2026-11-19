@@ -13,6 +13,17 @@ class BlockTest extends TestCase
 
 	protected Page $page;
 
+	protected function setUp(): void
+	{
+		$this->app = new App([
+			'roots' => [
+				'index' => '/dev/null',
+			],
+		]);
+
+		$this->page = new Page(['slug' => 'test']);
+	}
+
 	public function samplePrevNextBlocks()
 	{
 		return Blocks::factory([
@@ -61,17 +72,6 @@ class BlockTest extends TestCase
 				'isHidden' => false
 			],
 		]);
-	}
-
-	protected function setUp(): void
-	{
-		$this->app = new App([
-			'roots' => [
-				'index' => '/dev/null',
-			],
-		]);
-
-		$this->page = new Page(['slug' => 'test']);
 	}
 
 	public function testConstruct(): void

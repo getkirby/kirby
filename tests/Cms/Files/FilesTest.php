@@ -376,7 +376,6 @@ class FilesTest extends TestCase
 			['filename' => 'b.txt', 'root' => $b]
 		], $app->page('test'));
 
-
 		$this->assertSame(6, $files->size());
 		$this->assertSame('6 B', $files->niceSize());
 	}

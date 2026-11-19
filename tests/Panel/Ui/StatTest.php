@@ -14,6 +14,19 @@ class StatTest extends TestCase
 {
 	protected ModelWithContent $model;
 
+	protected function setUp(): void
+	{
+		$this->model = new class (['slug' => 'test']) extends Page {
+			public function report(): array
+			{
+				return [
+					'label' => 'Test Query Label',
+					'value' => 'Test Query Value',
+				];
+			}
+		};
+	}
+
 	public function assertProp(
 		string $prop,
 		bool $translatable = true,
@@ -80,19 +93,6 @@ class StatTest extends TestCase
 			]
 		);
 		$this->assertSame('A & B', $stat->$prop());
-	}
-
-	protected function setUp(): void
-	{
-		$this->model = new class (['slug' => 'test']) extends Page {
-			public function report(): array
-			{
-				return [
-					'label' => 'Test Query Label',
-					'value' => 'Test Query Value',
-				];
-			}
-		};
 	}
 
 	public function testComponent(): void
@@ -182,7 +182,6 @@ class StatTest extends TestCase
 		$this->assertSame('Test Label', $stat->label());
 		$this->assertSame('Test Value', $stat->value());
 		$this->assertSame($this->model, $stat->model);
-
 
 		// from array without model
 		$stat = Stat::from(

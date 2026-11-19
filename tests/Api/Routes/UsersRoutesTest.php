@@ -19,6 +19,12 @@ class UsersRoutesTest extends TestCase
 	protected static string $passwordA;
 	protected static string $passwordB;
 
+	public static function setUpBeforeClass(): void
+	{
+		self::$passwordA = User::hashPassword('12345678');
+		self::$passwordB = User::hashPassword('87654321');
+	}
+
 	protected function setUp(): void
 	{
 		$this->app = new App([
@@ -55,6 +61,14 @@ class UsersRoutesTest extends TestCase
 		$this->app->impersonate('kirby');
 	}
 
+	protected function tearDown(): void
+	{
+		$this->app->session()->destroy();
+		App::destroy();
+		Field::$types = [];
+		Dir::remove(static::TMP);
+	}
+
 	protected function setUpAppWithoutUserAccess(): App
 	{
 		$app = $this->app->clone([
@@ -86,20 +100,6 @@ class UsersRoutesTest extends TestCase
 		$app->impersonate('admin@getkirby.com');
 
 		return $app;
-	}
-
-	public static function setUpBeforeClass(): void
-	{
-		self::$passwordA = User::hashPassword('12345678');
-		self::$passwordB = User::hashPassword('87654321');
-	}
-
-	protected function tearDown(): void
-	{
-		$this->app->session()->destroy();
-		App::destroy();
-		Field::$types = [];
-		Dir::remove(static::TMP);
 	}
 
 	public function testAvatar(): void

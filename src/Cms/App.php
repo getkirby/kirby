@@ -65,6 +65,9 @@ class App
 
 	public const string CLASS_ALIAS = 'kirby';
 
+	protected static App|null $instance = null;
+	protected static string|null $version = null;
+
 	/**
 	 * @var array<string, mixed>
 	 */
@@ -103,9 +106,6 @@ class App
 	protected System|null $system = null;
 	protected Ingredients $urls;
 	protected Visitor|null $visitor = null;
-
-	protected static App|null $instance = null;
-	protected static string|null $version = null;
 
 	/**
 	 * Creates a new App instance

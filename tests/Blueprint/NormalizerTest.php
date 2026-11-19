@@ -12,11 +12,6 @@ class NormalizerTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Blueprint.Normalizer';
 
-	protected function normalizer(array $props = []): Normalizer
-	{
-		return new Normalizer(props: $props);
-	}
-
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -37,6 +32,11 @@ class NormalizerTest extends TestCase
 		$this->tearDownTmp();
 
 		parent::tearDown();
+	}
+
+	protected function normalizer(array $props = []): Normalizer
+	{
+		return new Normalizer(props: $props);
 	}
 
 	public function testColumnsWithEmptyFields(): void

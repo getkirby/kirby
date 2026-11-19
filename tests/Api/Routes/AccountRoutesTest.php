@@ -18,6 +18,11 @@ class AccountRoutesTest extends TestCase
 
 	protected static string $password;
 
+	public static function setUpBeforeClass(): void
+	{
+		self::$password = User::hashPassword('12345678');
+	}
+
 	protected function setUp(): void
 	{
 		$this->app = new App([
@@ -50,11 +55,6 @@ class AccountRoutesTest extends TestCase
 
 		$this->app->impersonate('test@getkirby.com');
 		Dir::make(static::TMP);
-	}
-
-	public static function setUpBeforeClass(): void
-	{
-		self::$password = User::hashPassword('12345678');
 	}
 
 	protected function tearDown(): void

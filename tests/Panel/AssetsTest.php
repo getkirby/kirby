@@ -16,6 +16,29 @@ class AssetsTest extends TestCase
 
 	protected bool $hadViteRunning;
 
+	protected function setUp(): void
+	{
+		parent::setUp();
+
+		// initialize development mode to a known state
+		$this->hadViteRunning = is_file(static::VITE_RUNNING_PATH);
+		F::remove(static::VITE_RUNNING_PATH);
+
+		Dir::make(static::TMP);
+	}
+
+	protected function tearDown(): void
+	{
+		parent::tearDown();
+
+		// reset development mode
+		if ($this->hadViteRunning === true) {
+			touch(static::VITE_RUNNING_PATH);
+		} else {
+			F::remove(static::VITE_RUNNING_PATH);
+		}
+	}
+
 	public function setCustomUrl()
 	{
 		// dev mode with custom url
@@ -55,29 +78,6 @@ class AssetsTest extends TestCase
 
 		// app must be created again to load the new plugin
 		$this->app->clone();
-	}
-
-	protected function setUp(): void
-	{
-		parent::setUp();
-
-		// initialize development mode to a known state
-		$this->hadViteRunning = is_file(static::VITE_RUNNING_PATH);
-		F::remove(static::VITE_RUNNING_PATH);
-
-		Dir::make(static::TMP);
-	}
-
-	protected function tearDown(): void
-	{
-		parent::tearDown();
-
-		// reset development mode
-		if ($this->hadViteRunning === true) {
-			touch(static::VITE_RUNNING_PATH);
-		} else {
-			F::remove(static::VITE_RUNNING_PATH);
-		}
 	}
 
 	public function testCss(): void
@@ -464,7 +464,6 @@ class AssetsTest extends TestCase
 		$assets = new Assets();
 		$assets = $assets->custom('panel.js');
 		$this->assertStringContainsString('/panel.js', $assets['custom-0']);
-
 
 		// multiple
 		$this->app->clone([

@@ -17,9 +17,14 @@ class EmailChallengeTest extends TestCase
 	public const string FIXTURES = __DIR__ . '/../fixtures';
 	public const string TMP = KIRBY_TMP_DIR . '/Auth.EmailChallenge';
 
+	protected static string $password;
+
 	protected User $user;
 
-	protected static string $password;
+	public static function setUpBeforeClass(): void
+	{
+		self::$password = User::hashPassword('123456');
+	}
 
 	protected function setUp(): void
 	{
@@ -44,11 +49,6 @@ class EmailChallengeTest extends TestCase
 		]);
 
 		$this->user = $this->app->user('marge');
-	}
-
-	public static function setUpBeforeClass(): void
-	{
-		self::$password = User::hashPassword('123456');
 	}
 
 	public function testCreate(): void

@@ -711,7 +711,6 @@ class ATest extends TestCase
 		$result   = A::merge($a, $b, A::MERGE_OVERWRITE);
 		$this->assertSame($expected, $result);
 
-
 		// recursive merging
 		$a        = ['a' => [1 => 'b', 4 => 'c']];
 		$b        = ['a' => [1 => 'c', 3 => 'd', 5 => 'a']];
@@ -731,7 +730,6 @@ class ATest extends TestCase
 		$this->assertSame($expected, $result);
 		$result   = A::merge($a, $b, A::MERGE_OVERWRITE);
 		$this->assertSame($expected, $result);
-
 
 		// A::MERGE_REPLACE
 		$a        = ['a' => ['a', 'b', 'c']];
@@ -1183,7 +1181,7 @@ class ATest extends TestCase
 		$this->assertSame(0, array_search('sonja', array_column($sorted, 'username')));
 		$this->assertSame(1, array_search('lukas', array_column($sorted, 'username')));
 
-		//SORT_NATURAL
+		// SORT_NATURAL
 		$array = [
 			['file' => 'img12.png'],
 			['file' => 'img10.png'],

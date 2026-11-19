@@ -12,6 +12,21 @@ class FileIsTest extends ModelTestCase
 	public const string FIXTURES = __DIR__ . '/fixtures/files';
 	public const string TMP      = KIRBY_TMP_DIR . '/Cms.FileIs';
 
+	protected function setUp(): void
+	{
+		parent::setUp();
+
+		$this->app = $this->app->clone([
+			'users' => [
+				[
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin'
+				]
+			],
+			'user' => 'admin@getkirby.com'
+		]);
+	}
+
 	/**
 	 * Creates a page with a real file on disk,
 	 * so that the file can be compared with an upload
@@ -40,21 +55,6 @@ class FileIsTest extends ModelTestCase
 		F::write($page->root() . '/test.jpg.txt', 'Template: ' . $template);
 
 		return $page;
-	}
-
-	protected function setUp(): void
-	{
-		parent::setUp();
-
-		$this->app = $this->app->clone([
-			'users' => [
-				[
-					'email' => 'admin@getkirby.com',
-					'role'  => 'admin'
-				]
-			],
-			'user' => 'admin@getkirby.com'
-		]);
 	}
 
 	public function testIsAccessible(): void

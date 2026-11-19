@@ -12,23 +12,6 @@ abstract class FileDialogControllerTestCase extends TestCase
 {
 	public const string CONTROLLER = FileDialogController::class;
 
-	protected function assertFactory(
-		File $file,
-		string $parent
-	): void {
-		$controller = static::CONTROLLER::factory($parent, $file->filename());
-		$this->assertInstanceOf(static::CONTROLLER, $controller);
-		$this->assertSame($file, $controller->file);
-	}
-
-	abstract protected function assertLoad(File $file): void;
-
-	abstract protected function assertSubmit(
-		File $file,
-		Page|Site|User|null $parent = null,
-		bool|string $redirect = false
-	): void;
-
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -74,6 +57,23 @@ abstract class FileDialogControllerTestCase extends TestCase
 
 		$this->app->impersonate('kirby');
 	}
+
+	protected function assertFactory(
+		File $file,
+		string $parent
+	): void {
+		$controller = static::CONTROLLER::factory($parent, $file->filename());
+		$this->assertInstanceOf(static::CONTROLLER, $controller);
+		$this->assertSame($file, $controller->file);
+	}
+
+	abstract protected function assertLoad(File $file): void;
+
+	abstract protected function assertSubmit(
+		File $file,
+		Page|Site|User|null $parent = null,
+		bool|string $redirect = false
+	): void;
 
 	public function testFactoryForPage(): void
 	{

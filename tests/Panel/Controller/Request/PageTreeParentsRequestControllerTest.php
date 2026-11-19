@@ -64,7 +64,6 @@ class PageTreeParentsRequestControllerTest extends TestCase
 			'page://article'
 		], $data['data']);
 
-
 		$this->app = $this->app->clone([
 			'request' => [
 				'query' => [
@@ -145,7 +144,6 @@ class PageTreeParentsRequestControllerTest extends TestCase
 			'articles',
 			'articles/article'
 		], $data['data']);
-
 
 		$this->app = $this->app->clone([
 			'options' => [

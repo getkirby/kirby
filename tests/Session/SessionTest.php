@@ -20,19 +20,6 @@ class SessionTest extends TestCase
 	protected Sessions $sessions;
 	protected Store $store;
 
-	/**
-	 * Asserts the state of the write mode of the given session
-	 *
-	 * @param $expected Whether the write mode should be true or false right now
-	 */
-	protected function assertWriteMode(bool $expected, Session $session): void
-	{
-		$reflector = new ReflectionClass(Session::class);
-		$writeModeProperty = $reflector->getProperty('writeMode');
-
-		$this->assertSame($expected, $writeModeProperty->getValue($session));
-	}
-
 	protected function setUp(): void
 	{
 		$this->store    = new TestStore();
@@ -44,6 +31,19 @@ class SessionTest extends TestCase
 	protected function tearDown(): void
 	{
 		unset($this->sessions, $this->store);
+	}
+
+	/**
+	 * Asserts the state of the write mode of the given session
+	 *
+	 * @param $expected Whether the write mode should be true or false right now
+	 */
+	protected function assertWriteMode(bool $expected, Session $session): void
+	{
+		$reflector = new ReflectionClass(Session::class);
+		$writeModeProperty = $reflector->getProperty('writeMode');
+
+		$this->assertSame($expected, $writeModeProperty->getValue($session));
 	}
 
 	public function testCommit(): void

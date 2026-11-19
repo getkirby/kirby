@@ -63,7 +63,6 @@ class PermalinkTest extends TestCase
 		$this->assertSame($url, $permalink->url());
 		$this->assertSame($url, (string)$permalink);
 
-
 		$permalink = Permalink::for('file://my-file');
 		$url       = 'https://getkirby.com/@/file/my-file';
 		$this->assertSame($url, $permalink->url());

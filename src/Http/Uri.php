@@ -22,6 +22,13 @@ class Uri implements Stringable
 	public static Uri|null $current = null;
 
 	/**
+	 * Supported schemes
+	 *
+	 * @var list<string>
+	 */
+	protected static array $schemes = ['http', 'https', 'ftp'];
+
+	/**
 	 * The fragment after the hash
 	 */
 	protected string|null $fragment;
@@ -71,13 +78,6 @@ class Uri implements Stringable
 	 * The optional username for basic authentication
 	 */
 	protected string|false|null $username = null;
-
-	/**
-	 * Supported schemes
-	 *
-	 * @var list<string>
-	 */
-	protected static array $schemes = ['http', 'https', 'ftp'];
 
 	/**
 	 * Creates a new URI object

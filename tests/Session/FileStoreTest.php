@@ -21,6 +21,42 @@ class FileStoreTest extends TestCase
 	protected ReflectionProperty $storeHandles;
 	protected ReflectionProperty $storeIsLocked;
 
+	protected function setUp(): void
+	{
+		$this->store = new FileStore(static::TMP);
+		$this->assertDirectoryExists(static::TMP);
+
+		// make internal data accessible
+		$reflector = new ReflectionClass(FileStore::class);
+		$this->storeHandles = $reflector->getProperty('handles');
+		$this->storeIsLocked = $reflector->getProperty('isLocked');
+
+		// demo files
+		F::write(static::TMP . '/.gitignore', "*\n!.gitignore");
+		F::write(static::TMP . '/1234567890.abcdefghijabcdefghij.sess', '1234567890');
+		F::write(static::TMP . '/1357913579.abcdefghijabcdefghij.sess', '1357913579');
+		F::write(static::TMP . '/7777777777.abcdefghijabcdefghij.sess', '7777777777');
+		F::write(static::TMP . '/8888888888.abcdefghijabcdefghij.sess', '');
+		F::write(static::TMP . '/9999999999.abcdefghijabcdefghij.sess', '9999999999');
+	}
+
+	protected function tearDown(): void
+	{
+		// let the store __destruct() itself
+		unset($this->store);
+
+		// make sure the directory and in files are writable before trying to delete
+		chmod(static::TMP, 0o777);
+
+		$files = array_diff(scandir(static::TMP) ?? [], ['.', '..']);
+		foreach ($files as $file) {
+			chmod(static::TMP . '/' . $file, 0o777);
+		}
+
+		Dir::remove(static::TMP);
+		$this->assertDirectoryDoesNotExist(static::TMP);
+	}
+
 	/**
 	 * Asserts that the given session currently has an open handle
 	 *
@@ -81,42 +117,6 @@ class FileStoreTest extends TestCase
 			flock($handle, LOCK_UN);
 			fclose($handle);
 		}
-	}
-
-	protected function setUp(): void
-	{
-		$this->store = new FileStore(static::TMP);
-		$this->assertDirectoryExists(static::TMP);
-
-		// make internal data accessible
-		$reflector = new ReflectionClass(FileStore::class);
-		$this->storeHandles = $reflector->getProperty('handles');
-		$this->storeIsLocked = $reflector->getProperty('isLocked');
-
-		// demo files
-		F::write(static::TMP . '/.gitignore', "*\n!.gitignore");
-		F::write(static::TMP . '/1234567890.abcdefghijabcdefghij.sess', '1234567890');
-		F::write(static::TMP . '/1357913579.abcdefghijabcdefghij.sess', '1357913579');
-		F::write(static::TMP . '/7777777777.abcdefghijabcdefghij.sess', '7777777777');
-		F::write(static::TMP . '/8888888888.abcdefghijabcdefghij.sess', '');
-		F::write(static::TMP . '/9999999999.abcdefghijabcdefghij.sess', '9999999999');
-	}
-
-	protected function tearDown(): void
-	{
-		// let the store __destruct() itself
-		unset($this->store);
-
-		// make sure the directory and in files are writable before trying to delete
-		chmod(static::TMP, 0o777);
-
-		$files = array_diff(scandir(static::TMP) ?? [], ['.', '..']);
-		foreach ($files as $file) {
-			chmod(static::TMP . '/' . $file, 0o777);
-		}
-
-		Dir::remove(static::TMP);
-		$this->assertDirectoryDoesNotExist(static::TMP);
 	}
 
 	public function testAccessAfterDestroy(): void

@@ -16,6 +16,21 @@ abstract class TestCase extends BaseTestCase
 
 	protected static string $type;
 
+	protected function setUp(): void
+	{
+		new App([
+			'urls' => [
+				'index' => 'https://getkirby.com/subfolder'
+			]
+		]);
+	}
+
+	protected function tearDown(): void
+	{
+		App::destroy();
+		Dir::remove(static::TMP);
+	}
+
 	/**
 	 * Returns the path to a test fixture file
 	 *
@@ -63,20 +78,5 @@ abstract class TestCase extends BaseTestCase
 		}
 
 		return $results;
-	}
-
-	protected function setUp(): void
-	{
-		new App([
-			'urls' => [
-				'index' => 'https://getkirby.com/subfolder'
-			]
-		]);
-	}
-
-	protected function tearDown(): void
-	{
-		App::destroy();
-		Dir::remove(static::TMP);
 	}
 }

@@ -18,7 +18,6 @@ class TestableParsley extends Parsley
 	}
 }
 
-
 #[CoversClass(Parsley::class)]
 class ParsleyTest extends TestCase
 {

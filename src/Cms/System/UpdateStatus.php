@@ -25,6 +25,12 @@ class UpdateStatus
 	 */
 	public static string $host = 'https://getkirby.com';
 
+	/**
+	 * Marker that stores whether a previous remote
+	 * request timed out
+	 */
+	protected static bool $timedOut = false;
+
 	protected App $app;
 	protected string|null $currentVersion;
 	protected array|null $data;
@@ -40,12 +46,6 @@ class UpdateStatus
 	protected array|null $targetData = null;
 	protected array|false|null $versionEntry = null;
 	protected array|null $vulnerabilities = null;
-
-	/**
-	 * Marker that stores whether a previous remote
-	 * request timed out
-	 */
-	protected static bool $timedOut = false;
 
 	/**
 	 * @param $data Custom override for the getkirby.com update data

@@ -16,22 +16,6 @@ class UserValidatorsTest extends ModelTestCase
 	public const FIXTURES = __DIR__ . '/../Api/Routes/fixtures';
 	public const TMP = KIRBY_TMP_DIR . '/Guards.UserValidators';
 
-	/**
-	 * Creates a fresh installation without any users.
-	 * `App::clone()` merges props recursively and could
-	 * not remove the users of the default setup.
-	 */
-	protected function appWithoutUsers(): App
-	{
-		return $this->app = new App([
-			'roots' => ['index' => static::TMP],
-			'roles' => [
-				['name' => 'admin'],
-				['name' => 'editor']
-			]
-		]);
-	}
-
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -48,6 +32,22 @@ class UserValidatorsTest extends ModelTestCase
 		]);
 
 		$this->app->impersonate('admin@getkirby.com');
+	}
+
+	/**
+	 * Creates a fresh installation without any users.
+	 * `App::clone()` merges props recursively and could
+	 * not remove the users of the default setup.
+	 */
+	protected function appWithoutUsers(): App
+	{
+		return $this->app = new App([
+			'roots' => ['index' => static::TMP],
+			'roles' => [
+				['name' => 'admin'],
+				['name' => 'editor']
+			]
+		]);
 	}
 
 	public function testAssignableRole(): void

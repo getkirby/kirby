@@ -15,16 +15,16 @@ class BlocksTest extends TestCase
 	/** @var Blocks */
 	protected Schema $schema;
 
+	protected function setUp(): void
+	{
+		$this->schema = new Blocks();
+	}
+
 	protected function element($html, $query): Element
 	{
 		$dom  = new Dom($html);
 		$node = $dom->query($query)[0];
 		return new Element($node);
-	}
-
-	protected function setUp(): void
-	{
-		$this->schema = new Blocks();
 	}
 
 	public function testBlockquote(): void

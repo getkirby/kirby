@@ -10,6 +10,22 @@ abstract class TestCase extends BaseTestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.Collector.ModelsCollector';
 
+	protected function setUp(): void
+	{
+		parent::setUpTmp();
+
+		$this->app = new App([
+			'roots' => [
+				'index' => static::TMP,
+			]
+		]);
+	}
+
+	protected function tearDown(): void
+	{
+		parent::tearDownTmp();
+	}
+
 	public function assertCollect(string $collectorClass, array $expectedKeys): void
 	{
 		$collector = new $collectorClass();
@@ -185,21 +201,5 @@ abstract class TestCase extends BaseTestCase
 		);
 
 		$this->assertModelsInCollector($collector, $expectedKeys);
-	}
-
-	protected function setUp(): void
-	{
-		parent::setUpTmp();
-
-		$this->app = new App([
-			'roots' => [
-				'index' => static::TMP,
-			]
-		]);
-	}
-
-	protected function tearDown(): void
-	{
-		parent::tearDownTmp();
 	}
 }

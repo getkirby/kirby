@@ -24,6 +24,15 @@ class Exception extends \Exception
 	protected const PREFIX = 'error.';
 
 	/**
+	 * Defaults that can be overridden by specific exception classes
+	 */
+	protected static array $defaultData = [];
+	protected static array $defaultDetails = [];
+	protected static string $defaultFallback = 'An error occurred';
+	protected static int $defaultHttpCode = 500;
+	protected static string $defaultKey = 'general';
+
+	/**
 	 * Data variables that can be used inside the exception message
 	 *
 	 * @var array<string, mixed>
@@ -54,15 +63,6 @@ class Exception extends \Exception
 	 * Whether to resolve the message from the key
 	 */
 	protected bool $translate = true;
-
-	/**
-	 * Defaults that can be overridden by specific exception classes
-	 */
-	protected static array $defaultData = [];
-	protected static array $defaultDetails = [];
-	protected static string $defaultFallback = 'An error occurred';
-	protected static int $defaultHttpCode = 500;
-	protected static string $defaultKey = 'general';
 
 	public function __construct(
 		string|null $message = null,

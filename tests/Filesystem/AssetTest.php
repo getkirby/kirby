@@ -11,11 +11,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Asset::class)]
 class AssetTest extends TestCase
 {
-	protected function _asset($file = 'images/logo.svg'): Asset
-	{
-		return new Asset($file);
-	}
-
 	protected function setUp(): void
 	{
 		$this->app = new App([
@@ -29,6 +24,11 @@ class AssetTest extends TestCase
 				'test' => fn () => 'asset method'
 			]
 		]);
+	}
+
+	protected function _asset($file = 'images/logo.svg'): Asset
+	{
+		return new Asset($file);
 	}
 
 	public function testCall(): void

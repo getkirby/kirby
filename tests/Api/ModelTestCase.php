@@ -9,16 +9,6 @@ class ModelTestCase extends TestCase
 {
 	protected Api $api;
 
-	public function assertAttr($object, $attr, $value): void
-	{
-		$this->assertSame($this->attr($object, $attr), $value);
-	}
-
-	public function attr($object, $attr)
-	{
-		return $this->api->resolve($object)->select($attr)->toArray()[$attr];
-	}
-
 	protected function setUp(): void
 	{
 		$this->app = new App([
@@ -34,5 +24,15 @@ class ModelTestCase extends TestCase
 	{
 		App::destroy();
 		$this->tearDownTmp();
+	}
+
+	public function assertAttr($object, $attr, $value): void
+	{
+		$this->assertSame($this->attr($object, $attr), $value);
+	}
+
+	public function attr($object, $attr)
+	{
+		return $this->api->resolve($object)->select($attr)->toArray()[$attr];
 	}
 }

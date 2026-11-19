@@ -16,16 +16,6 @@ class ImagickTest extends TestCase
 	public const string FIXTURES = __DIR__ . '/../fixtures';
 	public const string TMP      = KIRBY_TMP_DIR . '/Image.Darkroom.Imagick';
 
-	protected function call(
-		object $object,
-		string $method,
-		...$args
-	): mixed {
-		$class  = new ReflectionClass($object);
-		$method = $class->getMethod($method);
-		return $method->invokeArgs($object, $args);
-	}
-
 	protected function setUp(): void
 	{
 		Dir::make(static::TMP);
@@ -34,6 +24,16 @@ class ImagickTest extends TestCase
 	protected function tearDown(): void
 	{
 		Dir::remove(static::TMP);
+	}
+
+	protected function call(
+		object $object,
+		string $method,
+		...$args
+	): mixed {
+		$class  = new ReflectionClass($object);
+		$method = $class->getMethod($method);
+		return $method->invokeArgs($object, $args);
 	}
 
 	public static function orientationProvider(): array

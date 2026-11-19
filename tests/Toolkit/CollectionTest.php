@@ -70,12 +70,6 @@ class CollectionTest extends TestCase
 	protected Collection $collection;
 	protected array $sampleData;
 
-	protected function assertIsUntouched(): void
-	{
-		// the original collection must to be untouched
-		$this->assertSame($this->sampleData, $this->collection->toArray());
-	}
-
 	protected function setUp(): void
 	{
 		$this->sampleData = [
@@ -85,6 +79,12 @@ class CollectionTest extends TestCase
 		];
 
 		$this->collection = new Collection($this->sampleData);
+	}
+
+	protected function assertIsUntouched(): void
+	{
+		// the original collection must to be untouched
+		$this->assertSame($this->sampleData, $this->collection->toArray());
 	}
 
 	public function test__debuginfo(): void

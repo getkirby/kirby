@@ -21,15 +21,6 @@ class SessionsTest extends TestCase
 	protected Sessions $sessions;
 	protected Store $store;
 
-	protected function setAuthorization(string $value): void
-	{
-		new App([
-			'server' => [
-				'HTTP_AUTHORIZATION' => $value
-			]
-		]);
-	}
-
 	protected function setUp(): void
 	{
 		$this->store    = new TestStore();
@@ -42,6 +33,15 @@ class SessionsTest extends TestCase
 	{
 		unset($this->sessions, $this->store);
 		App::destroy();
+	}
+
+	protected function setAuthorization(string $value): void
+	{
+		new App([
+			'server' => [
+				'HTTP_AUTHORIZATION' => $value
+			]
+		]);
 	}
 
 	public function testCollectGarbage(): void

@@ -11,14 +11,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Query::class)]
 class QueryTest extends TestCase
 {
-	/**
-	 * Helper function for testFetch()
-	 */
-	public function fetchTestCallable(array $row, $key = null)
-	{
-		return $row['fname'] . ' ' . $row['lname'];
-	}
-
 	protected function setUp(): void
 	{
 		$this->database = new Database([
@@ -118,13 +110,20 @@ class QueryTest extends TestCase
 		]);
 	}
 
+	/**
+	 * Helper function for testFetch()
+	 */
+	public function fetchTestCallable(array $row, $key = null)
+	{
+		return $row['fname'] . ' ' . $row['lname'];
+	}
+
 	public function testAggregateAndDebug(): void
 	{
 		$result = $this->database
 			->table('users')
 			->debug(true)
 			->aggregate('avg', 'balance');
-
 
 		$this->assertArrayHasKey('query', $result);
 		$this->assertArrayHasKey('bindings', $result);

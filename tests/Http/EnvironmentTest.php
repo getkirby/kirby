@@ -790,12 +790,10 @@ class EnvironmentTest extends TestCase
 
 		$this->assertSame($_SERVER, $env->info());
 
-
 		// empty info
 		$env = new Environment(null, []);
 
 		$this->assertSame([], $env->info());
-
 
 		// custom info
 		$env = new Environment(null, $info = [

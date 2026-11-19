@@ -8,6 +8,17 @@ class RootsTest extends TestCase
 {
 	protected string|null $indexRoot;
 
+	protected function setUp(): void
+	{
+		$this->indexRoot = Core::$indexRoot;
+	}
+
+	protected function tearDown(): void
+	{
+		// ensure that the index root used for testing is reset
+		Core::$indexRoot = $this->indexRoot;
+	}
+
 	protected static function rootProvider(string $index): array
 	{
 		$kirby = realpath(__DIR__ . '/../../..');
@@ -39,17 +50,6 @@ class RootsTest extends TestCase
 			[$site . '/templates', 'templates'],
 			[$site . '/blueprints/users', 'roles'],
 		];
-	}
-
-	protected function setUp(): void
-	{
-		$this->indexRoot = Core::$indexRoot;
-	}
-
-	protected function tearDown(): void
-	{
-		// ensure that the index root used for testing is reset
-		Core::$indexRoot = $this->indexRoot;
 	}
 
 	public static function customIndexRootProvider(): array

@@ -29,12 +29,6 @@ class UserTest extends TestCase
 	public const string FIXTURES = __DIR__ . '/fixtures';
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.User';
 
-	protected function panel(array $props = [])
-	{
-		$user = new ModelUser(['id' => 'test', ...$props]);
-		return new User($user);
-	}
-
 	protected function setUp(): void
 	{
 		$this->app = new App([
@@ -50,6 +44,12 @@ class UserTest extends TestCase
 	{
 		$this->app->session()->destroy();
 		Dir::remove(static::TMP);
+	}
+
+	protected function panel(array $props = [])
+	{
+		$user = new ModelUser(['id' => 'test', ...$props]);
+		return new User($user);
 	}
 
 	public function testHome(): void

@@ -13,15 +13,6 @@ class UserFileViewControllerTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.View.UserFileViewController';
 
-	public function assertFactory(
-		File $file,
-		string $parent
-	): void {
-		$controller = FileViewController::factory($parent, 'test.jpg');
-		$this->assertInstanceOf(FileViewController::class, $controller);
-		$this->assertSame($file, $controller->model());
-	}
-
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -39,6 +30,15 @@ class UserFileViewControllerTest extends TestCase
 		]);
 
 		$this->app->impersonate('kirby');
+	}
+
+	public function assertFactory(
+		File $file,
+		string $parent
+	): void {
+		$controller = FileViewController::factory($parent, 'test.jpg');
+		$this->assertInstanceOf(FileViewController::class, $controller);
+		$this->assertSame($file, $controller->model());
 	}
 
 	public function testBreadcrumb(): void

@@ -283,7 +283,6 @@ class RouterTest extends TestCase
 			]
 		]);
 
-
 		// fr
 		$page = $app->call('fr');
 

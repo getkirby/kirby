@@ -140,7 +140,7 @@ class Responder implements Stringable
 	 *
 	 * @param int|string|null $expires Timestamp, number of minutes or time string to parse
 	 * @param $override If `true`, the already defined timestamp will be overridden
-	 * @return int|null|$this
+	 * @return int|$this|null
 	 */
 	public function expires($expires = null, bool $override = false): static|int|null
 	{

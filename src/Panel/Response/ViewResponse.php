@@ -18,9 +18,9 @@ use Kirby\Panel\State;
  */
 class ViewResponse extends JsonResponse
 {
-	protected State $state;
-
 	protected static string $key = 'view';
+
+	protected State $state;
 
 	public function __construct(
 		protected array $view = [],

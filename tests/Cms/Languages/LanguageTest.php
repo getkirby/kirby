@@ -207,7 +207,6 @@ class LanguageTest extends TestCase
 		]);
 		$language->delete();
 
-
 		$this->assertSame(2, $calls);
 	}
 
@@ -253,7 +252,7 @@ class LanguageTest extends TestCase
 
 	public function testDirection(): void
 	{
-		//default
+		// default
 		$language = new Language([
 			'code'      => 'en'
 		]);
@@ -775,7 +774,6 @@ class LanguageTest extends TestCase
 		$this->assertSame([], $data['translations']);
 		$this->assertNull($data['url'] ?? null);
 
-
 		// custom url
 		$language = new Language([
 			'code' => 'de',
@@ -787,7 +785,6 @@ class LanguageTest extends TestCase
 		$data = include $file;
 
 		$this->assertSame('/', $data['url']);
-
 
 		// custom translations
 		$language = new Language([
@@ -802,7 +799,6 @@ class LanguageTest extends TestCase
 		$data = include $file;
 
 		$this->assertSame(['foo' => 'bar'], $data['translations']);
-
 
 		// custom props in file
 		Data::write($file, ['custom' => 'test']);

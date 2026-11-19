@@ -446,7 +446,6 @@ class StorageTest extends TestCase
 		// realistic, testable results for this test
 		$handler = new PlainTextStorage(model: $this->model);
 
-
 		Data::write($fileLatest = $this->model->root() . '/article.en.txt', []);
 		Data::write($fileChanges   = $this->model->root() . '/_changes/article.en.txt', []);
 
@@ -470,7 +469,6 @@ class StorageTest extends TestCase
 		$this->setUpSingleLanguage();
 
 		$handler = new TestStorage(model: $this->model);
-
 
 		$handler->create(VersionId::latest(), Language::single(), []);
 

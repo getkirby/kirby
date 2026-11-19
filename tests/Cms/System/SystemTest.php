@@ -16,19 +16,19 @@ class SystemTest extends TestCase
 	public const string FIXTURES = __DIR__ . '/fixtures/SystemTest';
 	public const string TMP      = KIRBY_TMP_DIR . '/Cms.System';
 
-	protected string|null $subTmp = null;
-
 	protected static string $updateStatusHost;
 
-	public static function providerForServerNames(): array
+	protected string|null $subTmp = null;
+
+	public static function setUpBeforeClass(): void
 	{
-		return [
-			['localhost', true],
-			['mydomain.local', true],
-			['mydomain.test', true],
-			['mydomain.com', false],
-			['mydomain.dev', false],
-		];
+		static::$updateStatusHost = UpdateStatus::$host;
+		UpdateStatus::$host = 'file://' . static::FIXTURES;
+	}
+
+	public static function tearDownAfterClass(): void
+	{
+		UpdateStatus::$host = static::$updateStatusHost;
 	}
 
 	protected function setUp(): void
@@ -45,12 +45,6 @@ class SystemTest extends TestCase
 		]);
 	}
 
-	public static function setUpBeforeClass(): void
-	{
-		static::$updateStatusHost = UpdateStatus::$host;
-		UpdateStatus::$host = 'file://' . static::FIXTURES;
-	}
-
 	protected function tearDown(): void
 	{
 		if ($this->subTmp !== null) {
@@ -61,9 +55,15 @@ class SystemTest extends TestCase
 		parent::tearDown();
 	}
 
-	public static function tearDownAfterClass(): void
+	public static function providerForServerNames(): array
 	{
-		UpdateStatus::$host = static::$updateStatusHost;
+		return [
+			['localhost', true],
+			['mydomain.local', true],
+			['mydomain.test', true],
+			['mydomain.com', false],
+			['mydomain.dev', false],
+		];
 	}
 
 	public function testExtensions(): void

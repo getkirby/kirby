@@ -35,6 +35,12 @@ class Snippet extends Tpl
 	public static self|null $current = null;
 
 	/**
+	 * An empty dummy slots object used for snippets
+	 * that were loaded without passing slots
+	 */
+	protected static Slots|null $dummySlots = null;
+
+	/**
 	 * Contains all slots that are opened
 	 * but not yet closed
 	 *
@@ -59,12 +65,6 @@ class Snippet extends Tpl
 	 * @var array<string, Slot>
 	 */
 	protected array $slots = [];
-
-	/**
-	 * An empty dummy slots object used for snippets
-	 * that were loaded without passing slots
-	 */
-	protected static Slots|null $dummySlots = null;
 
 	/**
 	 * Creates a new snippet

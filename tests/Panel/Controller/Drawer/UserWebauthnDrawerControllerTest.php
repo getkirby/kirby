@@ -18,30 +18,6 @@ class UserWebauthnDrawerControllerTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Drawer.UserWebauthnDrawerController';
 
-	protected function controller(): UserWebauthnDrawerController
-	{
-		return new UserWebauthnDrawerController($this->app->user('test'));
-	}
-
-	/**
-	 * Registers a passkey for the test user and returns the assertion that
-	 * re-completes the challenge (the account owner's removal confirmation),
-	 * together with the id of a second passkey left in place to remove.
-	 *
-	 * @return array{0: string, 1: string}
-	 */
-	protected function passkeyAndConfirm(): array
-	{
-		$assert = WebauthnTest::assertion(Webauthn::for($this->app->user('test')));
-
-		$this->app->user('test')->changeSecret('webauthn', [
-			['id' => $assert['id'], 'publicKey' => $assert['publicKey'], 'counter' => 0],
-			['id' => 'bbb', 'name' => 'Key 2']
-		]);
-
-		return [json_encode($assert['payload']), $assert['challenge']];
-	}
-
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -78,6 +54,30 @@ class UserWebauthnDrawerControllerTest extends TestCase
 		]);
 
 		$this->app->impersonate('kirby');
+	}
+
+	protected function controller(): UserWebauthnDrawerController
+	{
+		return new UserWebauthnDrawerController($this->app->user('test'));
+	}
+
+	/**
+	 * Registers a passkey for the test user and returns the assertion that
+	 * re-completes the challenge (the account owner's removal confirmation),
+	 * together with the id of a second passkey left in place to remove.
+	 *
+	 * @return array{0: string, 1: string}
+	 */
+	protected function passkeyAndConfirm(): array
+	{
+		$assert = WebauthnTest::assertion(Webauthn::for($this->app->user('test')));
+
+		$this->app->user('test')->changeSecret('webauthn', [
+			['id' => $assert['id'], 'publicKey' => $assert['publicKey'], 'counter' => 0],
+			['id' => 'bbb', 'name' => 'Key 2']
+		]);
+
+		return [json_encode($assert['payload']), $assert['challenge']];
 	}
 
 	public function testConstructWithoutPermission(): void

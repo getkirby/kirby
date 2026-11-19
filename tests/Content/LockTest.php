@@ -13,6 +13,32 @@ class LockTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Content.LockTest';
 
+	protected function setUp(): void
+	{
+		$this->app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test'
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'admin@getkirby.com',
+					'id'    => 'admin',
+				],
+				[
+					'email' => 'editor@getkirby.com',
+					'id'    => 'editor',
+				]
+			]
+		]);
+	}
+
 	protected function createChangesVersion(
 		Language|string $language = 'default'
 	): Version {
@@ -41,32 +67,6 @@ class LockTest extends TestCase
 		], $language);
 
 		return $latest;
-	}
-
-	protected function setUp(): void
-	{
-		$this->app = new App([
-			'roots' => [
-				'index' => static::TMP
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'test'
-					]
-				]
-			],
-			'users' => [
-				[
-					'email' => 'admin@getkirby.com',
-					'id'    => 'admin',
-				],
-				[
-					'email' => 'editor@getkirby.com',
-					'id'    => 'editor',
-				]
-			]
-		]);
 	}
 
 	public function testForWithAuthenticatedUser(): void

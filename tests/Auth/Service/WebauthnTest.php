@@ -13,6 +13,18 @@ class WebauthnTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Auth.Webauthn';
 
+	protected function setUp(): void
+	{
+		parent::setUp();
+		Dir::make(static::TMP);
+	}
+
+	protected function tearDown(): void
+	{
+		parent::tearDown();
+		Dir::remove(static::TMP);
+	}
+
 	protected function app(array $props = []): App
 	{
 		return new App([
@@ -161,18 +173,6 @@ class WebauthnTest extends TestCase
 		$len  = strlen($value);
 		$head = $len < 24 ? chr(($major << 5) | $len) : chr(($major << 5) | 24) . chr($len);
 		return $head . $value;
-	}
-
-	protected function setUp(): void
-	{
-		parent::setUp();
-		Dir::make(static::TMP);
-	}
-
-	protected function tearDown(): void
-	{
-		parent::tearDown();
-		Dir::remove(static::TMP);
 	}
 
 	public function testDecodeHandlesEmptyInput(): void

@@ -26,13 +26,13 @@ use Throwable;
  */
 class JsonResponse extends Response
 {
+	protected static string $key = 'response';
+
 	// context properties can be set with the context method
 	protected Area|null $area = null;
 	protected string|null $path = null;
 	protected array $query = [];
 	protected string $referrer = '/';
-
-	protected static string $key = 'response';
 
 	public function __construct(
 		protected array $data = [],

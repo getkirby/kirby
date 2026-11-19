@@ -29,6 +29,13 @@ use Kirby\Toolkit\V;
 trait AppPlugins
 {
 	/**
+	 * A list of all registered plugins
+	 *
+	 * @var array<string, Plugin>
+	 */
+	protected static array $plugins = [];
+
+	/**
 	 * The extension registry
 	 */
 	protected array $extensions = [
@@ -87,13 +94,6 @@ trait AppPlugins
 	 * to not load them again
 	 */
 	protected bool $pluginsAreLoaded = false;
-
-	/**
-	 * A list of all registered plugins
-	 *
-	 * @var array<string, Plugin>
-	 */
-	protected static array $plugins = [];
 
 	/**
 	 * Register all given extensions

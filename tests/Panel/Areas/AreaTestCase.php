@@ -13,6 +13,40 @@ abstract class AreaTestCase extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.Areas.AreaTestCase';
 
+	protected function setUp(): void
+	{
+		$this->app = new App([
+			'roots' => [
+				'index' => static::TMP,
+			],
+			'request' => [
+				'query' => [
+					'_json' => true,
+				]
+			],
+			'options' => [
+				'api' => [
+					'allowImpersonation' => true
+				]
+			]
+		]);
+
+		Dir::make(static::TMP);
+	}
+
+	protected function tearDown(): void
+	{
+		// clear session file first
+		$this->app->session()->destroy();
+
+		Dir::remove(static::TMP);
+
+		// clean up server fakes
+		unset($_SERVER['SERVER_SOFTWARE'], $_SERVER['HTTP_X_PANEL_TRANSLATION']);
+
+		App::destroy();
+	}
+
 	protected function app(array $params): App
 	{
 		return $this->app = $this->app->clone($params);
@@ -177,27 +211,6 @@ abstract class AreaTestCase extends TestCase
 		return $this->response('search/' . $path, true)['search'];
 	}
 
-	protected function setUp(): void
-	{
-		$this->app = new App([
-			'roots' => [
-				'index' => static::TMP,
-			],
-			'request' => [
-				'query' => [
-					'_json' => true,
-				]
-			],
-			'options' => [
-				'api' => [
-					'allowImpersonation' => true
-				]
-			]
-		]);
-
-		Dir::make(static::TMP);
-	}
-
 	protected function submit(array $data): void
 	{
 		$this->app([
@@ -209,19 +222,6 @@ abstract class AreaTestCase extends TestCase
 
 		// re-authenticate after cloning the app
 		$this->login();
-	}
-
-	protected function tearDown(): void
-	{
-		// clear session file first
-		$this->app->session()->destroy();
-
-		Dir::remove(static::TMP);
-
-		// clean up server fakes
-		unset($_SERVER['SERVER_SOFTWARE'], $_SERVER['HTTP_X_PANEL_TRANSLATION']);
-
-		App::destroy();
 	}
 
 	protected function view(string|null $path = null): array

@@ -20,6 +20,11 @@ class AuthChallengeTest extends TestCase
 
 	protected static string $password;
 
+	public static function setUpBeforeClass(): void
+	{
+		self::$password = User::hashPassword('12345678');
+	}
+
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -56,11 +61,6 @@ class AuthChallengeTest extends TestCase
 		);
 
 		$this->auth = $this->app->auth();
-	}
-
-	public static function setUpBeforeClass(): void
-	{
-		self::$password = User::hashPassword('12345678');
 	}
 
 	public function testCreateChallenge(): void

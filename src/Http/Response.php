@@ -218,7 +218,7 @@ class Response implements Stringable
 		int $code = 302,
 		bool $inherit = false
 	): never {
-		die(static::redirect($url, $code, $inherit));
+		exit(static::redirect($url, $code, $inherit));
 	}
 
 	/**

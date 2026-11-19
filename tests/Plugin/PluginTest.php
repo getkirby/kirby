@@ -19,6 +19,22 @@ class PluginTest extends TestCase
 	protected static ClassLoader $classLoader;
 	protected static string $updateStatusHost;
 
+	public static function setUpBeforeClass(): void
+	{
+		static::$updateStatusHost = UpdateStatus::$host;
+		UpdateStatus::$host = 'file://' . static::FIXTURES . '/updateStatus';
+
+		static::$classLoader = new ClassLoader(static::FIXTURES . '/vendor');
+		static::$classLoader->register();
+	}
+
+	public static function tearDownAfterClass(): void
+	{
+		UpdateStatus::$host = static::$updateStatusHost;
+
+		static::$classLoader->unregister();
+	}
+
 	protected function setUp(): void
 	{
 		App::destroy();
@@ -37,26 +53,10 @@ class PluginTest extends TestCase
 		]);
 	}
 
-	public static function setUpBeforeClass(): void
-	{
-		static::$updateStatusHost = UpdateStatus::$host;
-		UpdateStatus::$host = 'file://' . static::FIXTURES . '/updateStatus';
-
-		static::$classLoader = new ClassLoader(static::FIXTURES . '/vendor');
-		static::$classLoader->register();
-	}
-
 	protected function tearDown(): void
 	{
 		App::destroy();
 		Dir::remove(static::TMP);
-	}
-
-	public static function tearDownAfterClass(): void
-	{
-		UpdateStatus::$host = static::$updateStatusHost;
-
-		static::$classLoader->unregister();
 	}
 
 	public function test__call(): void

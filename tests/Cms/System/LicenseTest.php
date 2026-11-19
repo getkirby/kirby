@@ -16,15 +16,15 @@ class LicenseTest extends TestCase
 	public const string FIXTURES = __DIR__ . '/fixtures/LicenseTest';
 	public const string TMP      = KIRBY_TMP_DIR . '/Cms.License';
 
-	public function code(LicenseType $type = LicenseType::Basic): string
-	{
-		return $type->prefix() . '1234' . Str::random(28);
-	}
-
 	protected function setUp(): void
 	{
 		parent::setUp();
 		MockTime::reset();
+	}
+
+	public function code(LicenseType $type = LicenseType::Basic): string
+	{
+		return $type->prefix() . '1234' . Str::random(28);
 	}
 
 	public function testActivation(): void
@@ -766,7 +766,6 @@ class LicenseTest extends TestCase
 			'order'      => '123456',
 			'expires'    => '2025-01-01 00:00:00',
 		], $license->signatureData());
-
 
 		// without expiry
 		$license = new License(

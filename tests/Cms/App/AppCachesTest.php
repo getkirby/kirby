@@ -11,6 +11,13 @@ class AppCachesTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Cms.AppCaches';
 
+	protected function tearDown(): void
+	{
+		parent::tearDown();
+
+		Dir::remove(static::TMP);
+	}
+
 	public function app(array $props = [])
 	{
 		return new App([
@@ -19,13 +26,6 @@ class AppCachesTest extends TestCase
 			],
 			...$props
 		]);
-	}
-
-	protected function tearDown(): void
-	{
-		parent::tearDown();
-
-		Dir::remove(static::TMP);
 	}
 
 	public function testDefaultCacheTypeClasses(): void

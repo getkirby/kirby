@@ -690,7 +690,6 @@ class FindTest extends TestCase
 		$this->assertSame(2, $app->users()->count());
 		$this->assertSame(2, Find::users()->count());
 
-
 		$app->impersonate('editor@getkirby.com');
 		$this->assertSame(2, $app->users()->count());
 		$this->assertSame(1, Find::users()->count());

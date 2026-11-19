@@ -68,6 +68,13 @@ class LoginRequestControllerTest extends TestCase
 	protected static string $code;
 	protected static string $password;
 
+	public static function setUpBeforeClass(): void
+	{
+		parent::setUpBeforeClass();
+		static::$password = User::hashPassword('secret123');
+		static::$code = User::hashPassword('123456');
+	}
+
 	public function setUp(): void
 	{
 		parent::setUp();
@@ -92,13 +99,6 @@ class LoginRequestControllerTest extends TestCase
 				]
 			]
 		]);
-	}
-
-	public static function setUpBeforeClass(): void
-	{
-		parent::setUpBeforeClass();
-		static::$password = User::hashPassword('secret123');
-		static::$code = User::hashPassword('123456');
 	}
 
 	public function tearDown(): void

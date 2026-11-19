@@ -15,6 +15,22 @@ class UserAbilitiesTest extends ModelTestCase
 	public const FIXTURES = __DIR__ . '/../Api/Routes/fixtures';
 	public const TMP = KIRBY_TMP_DIR . '/Guards.UserAbilities';
 
+	protected function setUp(): void
+	{
+		parent::setUp();
+
+		$this->app = $this->app->clone([
+			'roles' => [
+				['name' => 'admin'],
+				['name' => 'editor']
+			],
+			'users' => [
+				['email' => 'admin@getkirby.com', 'role' => 'admin'],
+				['email' => 'editor@getkirby.com', 'role' => 'editor']
+			]
+		]);
+	}
+
 	protected function abilities(string $email): UserAbilities
 	{
 		return new UserAbilities(
@@ -39,22 +55,6 @@ class UserAbilitiesTest extends ModelTestCase
 			source: $source,
 			extension: 'jpg'
 		);
-	}
-
-	protected function setUp(): void
-	{
-		parent::setUp();
-
-		$this->app = $this->app->clone([
-			'roles' => [
-				['name' => 'admin'],
-				['name' => 'editor']
-			],
-			'users' => [
-				['email' => 'admin@getkirby.com', 'role' => 'admin'],
-				['email' => 'editor@getkirby.com', 'role' => 'editor']
-			]
-		]);
 	}
 
 	public function testChangeEmailForAdminAsAdmin(): void

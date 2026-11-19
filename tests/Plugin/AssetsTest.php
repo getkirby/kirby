@@ -248,7 +248,6 @@ class AssetsTest extends TestCase
 		$this->assertSame(200, $response->code());
 		$this->assertSame('text/css', $response->type());
 
-
 		$media    = static::TMP . '/media/plugins/getkirby/a/3526409702-1337000000/assets/test.css';
 		$response = Assets::resolve(
 			'getkirby/a',

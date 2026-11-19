@@ -15,24 +15,6 @@ class AppErrorsTest extends TestCase
 {
 	protected App|null $originalApp;
 
-	/**
-	 * Convert output to returned variable
-	 */
-	protected function _getBufferedContent(string|CallbackHandler $path): false|string
-	{
-		ob_start();
-
-		if ($path instanceof CallbackHandler) {
-			$path->handle();
-		} else {
-			F::load($path);
-		}
-
-		$response = ob_get_clean();
-
-		return $response;
-	}
-
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -63,6 +45,24 @@ class AppErrorsTest extends TestCase
 
 		// reset to the value set by tests/bootstrap.php
 		App::$enableWhoops = false;
+	}
+
+	/**
+	 * Convert output to returned variable
+	 */
+	protected function _getBufferedContent(string|CallbackHandler $path): false|string
+	{
+		ob_start();
+
+		if ($path instanceof CallbackHandler) {
+			$path->handle();
+		} else {
+			F::load($path);
+		}
+
+		$response = ob_get_clean();
+
+		return $response;
 	}
 
 	public function testExceptionHook(): void

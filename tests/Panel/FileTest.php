@@ -30,17 +30,6 @@ class FileTest extends TestCase
 	public const string FIXTURES = __DIR__ . '/fixtures';
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.File';
 
-	protected function panel(array $props = [])
-	{
-		$page = new ModelPage([
-			'slug'  => 'test',
-			'files' => [
-				['filename' => 'test.jpg', ...$props],
-			]
-		]);
-		return new File($page->file('test.jpg'));
-	}
-
 	protected function setUp(): void
 	{
 		$this->app = new App([
@@ -55,6 +44,17 @@ class FileTest extends TestCase
 	protected function tearDown(): void
 	{
 		Dir::remove(static::TMP);
+	}
+
+	protected function panel(array $props = [])
+	{
+		$page = new ModelPage([
+			'slug'  => 'test',
+			'files' => [
+				['filename' => 'test.jpg', ...$props],
+			]
+		]);
+		return new File($page->file('test.jpg'));
 	}
 
 	public function testDragText(): void
@@ -352,7 +352,6 @@ class FileTest extends TestCase
 			]
 		]);
 
-
 		$page = new ModelPage(['slug' => 'test']);
 
 		// no update permission
@@ -407,7 +406,6 @@ class FileTest extends TestCase
 		]);
 
 		$app->setCurrentLanguage('de');
-
 
 		$file = new ModelFile([
 			'filename' => 'test.jpg',

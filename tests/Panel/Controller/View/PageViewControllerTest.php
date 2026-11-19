@@ -544,7 +544,6 @@ class PageViewControllerTest extends TestCase
 			'template' => ['c']
 		], $navigation);
 
-
 		$controller = new PageViewController($page);
 		$this->assertNotNull($controller->prev());
 		$this->assertNotNull($controller->next());

@@ -21,6 +21,22 @@ class WebauthnChallengeTest extends TestCase
 
 	protected User $user;
 
+	protected function setUp(): void
+	{
+		parent::setUp();
+
+		$this->app = $this->app->clone([
+			'users' => [
+				[
+					'email' => 'marge@simpsons.com',
+					'id'    => 'marge',
+				],
+			]
+		]);
+
+		$this->user = $this->app->user('marge');
+	}
+
 	/**
 	 * @return array{0: string, 1: string}
 	 */
@@ -39,22 +55,6 @@ class WebauthnChallengeTest extends TestCase
 		]]);
 
 		return [json_encode($assert['payload']), $assert['challenge']];
-	}
-
-	protected function setUp(): void
-	{
-		parent::setUp();
-
-		$this->app = $this->app->clone([
-			'users' => [
-				[
-					'email' => 'marge@simpsons.com',
-					'id'    => 'marge',
-				],
-			]
-		]);
-
-		$this->user = $this->app->user('marge');
 	}
 
 	public function testCreate(): void

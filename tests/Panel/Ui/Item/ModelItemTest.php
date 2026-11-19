@@ -14,18 +14,18 @@ class ModelItemTest extends TestCase
 
 	protected Page $model;
 
+	protected function setUp(): void
+	{
+		parent::setUp();
+		$this->model = new Page(['slug' => 'test']);
+	}
+
 	protected function escapable(): Page
 	{
 		return new Page([
 			'slug'    => 'test',
 			'content' => ['title' => 'Fish <b>&</b> Chips']
 		]);
-	}
-
-	protected function setUp(): void
-	{
-		parent::setUp();
-		$this->model = new Page(['slug' => 'test']);
 	}
 
 	public function testComponent(): void

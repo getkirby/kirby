@@ -76,6 +76,37 @@ class SystemViewControllerTest extends TestCase
 
 	protected static string $host;
 
+	public static function setUpBeforeClass(): void
+	{
+		static::$host = UpdateStatus::$host;
+		UpdateStatus::$host = 'file://' . static::FIXTURES;
+	}
+
+	public static function tearDownAfterClass(): void
+	{
+		UpdateStatus::$host = static::$host;
+	}
+
+	protected function setUp(): void
+	{
+		parent::setUp();
+
+		$this->app = $this->app->clone([
+			'options' => [
+				'url' => 'https://example.com',
+				// the fixtures are served from the local filesystem,
+				// which the default protocol allowlist blocks
+				'remote' => ['protocols' => CURLPROTO_FILE]
+			]
+		]);
+	}
+
+	protected function tearDown(): void
+	{
+		Cookie::$key = 'KirbyHttpCookieKey';
+		parent::tearDown();
+	}
+
 	protected function installPlugins(): void
 	{
 		App::plugin(
@@ -108,37 +139,6 @@ class SystemViewControllerTest extends TestCase
 				'version' => '1.0.0'
 			]
 		);
-	}
-
-	protected function setUp(): void
-	{
-		parent::setUp();
-
-		$this->app = $this->app->clone([
-			'options' => [
-				'url' => 'https://example.com',
-				// the fixtures are served from the local filesystem,
-				// which the default protocol allowlist blocks
-				'remote' => ['protocols' => CURLPROTO_FILE]
-			]
-		]);
-	}
-
-	public static function setUpBeforeClass(): void
-	{
-		static::$host = UpdateStatus::$host;
-		UpdateStatus::$host = 'file://' . static::FIXTURES;
-	}
-
-	protected function tearDown(): void
-	{
-		Cookie::$key = 'KirbyHttpCookieKey';
-		parent::tearDown();
-	}
-
-	public static function tearDownAfterClass(): void
-	{
-		UpdateStatus::$host = static::$host;
 	}
 
 	public function testButtons(): void

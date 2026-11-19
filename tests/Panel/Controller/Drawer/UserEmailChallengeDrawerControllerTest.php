@@ -17,14 +17,6 @@ class UserEmailChallengeDrawerControllerTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Drawer.UserEmailChallengeDrawerController';
 
-	/**
-	 * Opts the test user into the email challenge
-	 */
-	protected function enableEmailChallenge(): void
-	{
-		$this->app->user('test')->changeSecret('email', true);
-	}
-
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -60,6 +52,22 @@ class UserEmailChallengeDrawerControllerTest extends TestCase
 		$this->app->impersonate('kirby');
 	}
 
+	protected function tearDown(): void
+	{
+		Email::$debug  = false;
+		Email::$emails = [];
+
+		parent::tearDown();
+	}
+
+	/**
+	 * Opts the test user into the email challenge
+	 */
+	protected function enableEmailChallenge(): void
+	{
+		$this->app->user('test')->changeSecret('email', true);
+	}
+
 	/**
 	 * Stores a pending challenge for the test user, just like
 	 * the `code` action would have done before the user submits
@@ -70,14 +78,6 @@ class UserEmailChallengeDrawerControllerTest extends TestCase
 			'public' => null,
 			'secret' => User::hashPassword($code)
 		]);
-	}
-
-	protected function tearDown(): void
-	{
-		Email::$debug  = false;
-		Email::$emails = [];
-
-		parent::tearDown();
 	}
 
 	public function testFactory(): void

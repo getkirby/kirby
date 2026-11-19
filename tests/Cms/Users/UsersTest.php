@@ -22,7 +22,6 @@ class UsersTest extends TestCase
 			]
 		]);
 
-
 		$users = $app->users()->limit(2);
 
 		$this->assertCount(2, $users);

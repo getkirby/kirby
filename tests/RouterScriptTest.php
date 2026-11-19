@@ -15,21 +15,6 @@ class RouterScriptTest extends TestCase
 
 	protected array $server;
 
-	/**
-	 * Who answers the request: PHP's built-in server
-	 * as a static file (`server`) or Kirby's `index.php` (`kirby`)
-	 */
-	protected function route(string $uri): string
-	{
-		// PHP's built-in server passes the resolved document root
-		$_SERVER['DOCUMENT_ROOT'] = realpath(static::TMP . '/site');
-		$_SERVER['REQUEST_URI']   = $uri;
-
-		$result = (static fn () => include KIRBY_DIR . '/router.php')();
-
-		return $result === false ? 'server' : 'kirby';
-	}
-
 	protected function setUp(): void
 	{
 		$this->server = $_SERVER;
@@ -46,6 +31,21 @@ class RouterScriptTest extends TestCase
 		$_SERVER = $this->server;
 		$this->tearDownTmp();
 		parent::tearDown();
+	}
+
+	/**
+	 * Who answers the request: PHP's built-in server
+	 * as a static file (`server`) or Kirby's `index.php` (`kirby`)
+	 */
+	protected function route(string $uri): string
+	{
+		// PHP's built-in server passes the resolved document root
+		$_SERVER['DOCUMENT_ROOT'] = realpath(static::TMP . '/site');
+		$_SERVER['REQUEST_URI']   = $uri;
+
+		$result = (static fn () => include KIRBY_DIR . '/router.php')();
+
+		return $result === false ? 'server' : 'kirby';
 	}
 
 	public function testFileInDocumentRoot(): void

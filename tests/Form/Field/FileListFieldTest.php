@@ -16,15 +16,6 @@ class FileListFieldTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Form.Fields.FileListField';
 
-	protected function filelist(array $attr = []): FileListField
-	{
-		return new FileListField(...[
-			'model' => $this->app->page('photography'),
-			'name'  => 'gallery',
-			...$attr
-		]);
-	}
-
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -79,6 +70,15 @@ class FileListFieldTest extends TestCase
 		unset($_GET['page'], $_GET['searchterm']);
 		parent::tearDown();
 		App::destroy();
+	}
+
+	protected function filelist(array $attr = []): FileListField
+	{
+		return new FileListField(...[
+			'model' => $this->app->page('photography'),
+			'name'  => 'gallery',
+			...$attr
+		]);
 	}
 
 	public function testAccept(): void

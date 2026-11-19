@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Page Routes
  */

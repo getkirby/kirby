@@ -21,6 +21,34 @@ class WebauthnMethodTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Auth.Method.Webauthn';
 
+	protected function setUp(): void
+	{
+		parent::setUp();
+
+		$this->app = new App([
+			'roots'   => ['index' => static::TMP],
+			'urls'    => ['index' => 'https://example.com'],
+			'users'   => [
+				['id' => 'marge', 'email' => 'marge@simpsons.com'],
+				['id' => 'homer', 'email' => 'homer@simpsons.com']
+			],
+			'site'    => ['content' => ['title' => 'Example Site']],
+			// surface the real underlying error instead of the generic
+			// fallback so failure tests can assert the actual cause;
+			// masking behaviour is covered separately with debug off
+			'options' => ['auth' => ['debug' => true]]
+		]);
+
+		Dir::make(static::TMP);
+	}
+
+	protected function tearDown(): void
+	{
+		$this->app->session()->destroy();
+		Dir::remove(static::TMP);
+		App::destroy();
+	}
+
 	protected function method(): WebauthnMethod
 	{
 		return new WebauthnMethod(auth: $this->app->auth(), type: 'webauthn');
@@ -66,34 +94,6 @@ class WebauthnMethodTest extends TestCase
 		}
 
 		return json_encode($payload);
-	}
-
-	protected function setUp(): void
-	{
-		parent::setUp();
-
-		$this->app = new App([
-			'roots'   => ['index' => static::TMP],
-			'urls'    => ['index' => 'https://example.com'],
-			'users'   => [
-				['id' => 'marge', 'email' => 'marge@simpsons.com'],
-				['id' => 'homer', 'email' => 'homer@simpsons.com']
-			],
-			'site'    => ['content' => ['title' => 'Example Site']],
-			// surface the real underlying error instead of the generic
-			// fallback so failure tests can assert the actual cause;
-			// masking behaviour is covered separately with debug off
-			'options' => ['auth' => ['debug' => true]]
-		]);
-
-		Dir::make(static::TMP);
-	}
-
-	protected function tearDown(): void
-	{
-		$this->app->session()->destroy();
-		Dir::remove(static::TMP);
-		App::destroy();
 	}
 
 	public function testAuthenticate(): void

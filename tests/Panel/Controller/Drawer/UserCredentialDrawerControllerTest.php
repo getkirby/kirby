@@ -84,13 +84,6 @@ class UserCredentialDrawerControllerTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Drawer.UserCredentialDrawerController';
 
-	protected function enableTotp(): string
-	{
-		$secret = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
-		$this->app->user('test')->changeSecret('totp', $secret);
-		return (new Totp($secret))->generate();
-	}
-
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -121,6 +114,13 @@ class UserCredentialDrawerControllerTest extends TestCase
 		]);
 
 		$this->app->impersonate('kirby');
+	}
+
+	protected function enableTotp(): string
+	{
+		$secret = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+		$this->app->user('test')->changeSecret('totp', $secret);
+		return (new Totp($secret))->generate();
 	}
 
 	public function testAuthorization(): void

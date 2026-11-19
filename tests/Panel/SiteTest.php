@@ -17,12 +17,6 @@ class SiteTest extends TestCase
 	public const string FIXTURES = __DIR__ . '/fixtures';
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.Site';
 
-	protected function panel(array $props = [])
-	{
-		$site = new ModelSite($props);
-		return new Site($site);
-	}
-
 	protected function setUp(): void
 	{
 		$this->app = new App([
@@ -37,6 +31,12 @@ class SiteTest extends TestCase
 	protected function tearDown(): void
 	{
 		Dir::remove(static::TMP);
+	}
+
+	protected function panel(array $props = [])
+	{
+		$site = new ModelSite($props);
+		return new Site($site);
 	}
 
 	public function testImage(): void

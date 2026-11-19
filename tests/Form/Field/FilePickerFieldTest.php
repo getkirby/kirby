@@ -53,11 +53,6 @@ class FilePickerFieldTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Form.Fields.FilePickerField';
 
-	public function model()
-	{
-		return $this->app->page('test');
-	}
-
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -107,6 +102,11 @@ class FilePickerFieldTest extends TestCase
 				]
 			]
 		]);
+	}
+
+	public function model()
+	{
+		return $this->app->page('test');
 	}
 
 	public function testAcceptedFileBlueprints(): void

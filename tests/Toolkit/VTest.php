@@ -83,7 +83,6 @@ class VTest extends TestCase
 		$this->assertTrue(V::alphanum('abc1234'));
 		$this->assertTrue(V::alphanum('0123456789'));
 
-
 		$this->assertFalse(V::alphanum('äöüß'));
 		$this->assertFalse(V::alphanum('abc"§$%&/()=?'));
 
