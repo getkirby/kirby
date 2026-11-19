@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "@test/unit";
 import { mount as vueMount } from "@vue/test-utils";
+import { nextTick } from "vue";
 import SearchBar from "./SearchBar.vue";
 
 const Button = {
@@ -39,7 +40,7 @@ const results = [
 
 function mount(props = {}, attrs = {}) {
 	return vueMount(SearchBar, {
-		// no debounce, searches run right after a tick
+		// shortest debounce, searches still wait for a timer
 		props: { delay: 0, types, ...props },
 		attrs,
 		global: {
@@ -69,7 +70,9 @@ function selected(wrapper: ReturnType<typeof mount>) {
 		.map((item) => item.attributes("data-selected") ?? null);
 }
 
+// runs the watchers first, so their search timer is due before ours
 async function debounce() {
+	await nextTick();
 	await new Promise((resolve) => setTimeout(resolve, 5));
 }
 
