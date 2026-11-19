@@ -33,6 +33,11 @@ describe("k-label", () => {
 			expect(wrapper.attributes("for")).toBe("my-field");
 		});
 
+		it("gets an id for toolbars and other parts of the input", () => {
+			const wrapper = mount({ input: "my-field" });
+			expect(wrapper.attributes("id")).toBe("my-field-label");
+		});
+
 		it("renders as h2 when input is false", () => {
 			const wrapper = mount({ input: false });
 			expect(wrapper.element.tagName).toBe("H2");

@@ -201,6 +201,14 @@ describe("k-block", () => {
 			expect(options.nextElementSibling?.classList).toContain("k-block");
 		});
 
+		it("names the options after the block type", async () => {
+			const wrapper = mount();
+			await wrapper.setProps({ isLastSelected: true } as never);
+			expect(wrapper.findComponent(Options).attributes("aria-label")).toBe(
+				"Text"
+			);
+		});
+
 		it("shows no options by default", () => {
 			const wrapper = mount();
 			expect(wrapper.findComponent(Options).exists()).toBe(false);

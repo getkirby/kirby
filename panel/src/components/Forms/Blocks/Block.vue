@@ -28,6 +28,7 @@
 		<k-block-options
 			v-if="isLastSelected && !isDisabled"
 			ref="options"
+			:aria-label="fieldset.name"
 			v-bind="{
 				isBatched,
 				isEditable,
