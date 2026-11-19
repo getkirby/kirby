@@ -5,7 +5,7 @@
 		class="k-upload-item-preview"
 		target="_blank"
 	>
-		<k-image
+		<k-image-frame
 			v-if="isPreviewable"
 			:cover="cover"
 			:src="url"
