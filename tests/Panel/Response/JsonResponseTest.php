@@ -226,6 +226,19 @@ class JsonResponseTest extends TestCase
 		$this->assertSame($expected, $response->headers());
 	}
 
+	public function testHeadersWithFallbacks(): void
+	{
+		$response = new JsonResponse();
+		$response->setHeaderFallbacks([
+			'Cache-Control' => 'public',
+			'X-Test'        => 'test'
+		]);
+
+		$this->assertSame('test', $response->headers()['X-Test']);
+		$this->assertSame('true', $response->headers()['X-Panel']);
+		$this->assertSame('no-store, private', $response->headers()['Cache-Control']);
+	}
+
 	public function testKey(): void
 	{
 		$response = new JsonResponse();
