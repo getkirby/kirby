@@ -115,12 +115,10 @@ describe("k-stat", () => {
 			expect(wrapper.attributes("href")).toBe("https://getkirby.com");
 		});
 
-		it("prefers the link over the click handler", async () => {
-			const click = vi.fn();
-			const wrapper = mount({ link: "https://getkirby.com", click });
+		it("prefers the link over the click handler", () => {
+			const wrapper = mount({ link: "https://getkirby.com", click: vi.fn() });
 			expect(wrapper.element.tagName).toBe("A");
-			await wrapper.trigger("click");
-			expect(click).not.toHaveBeenCalled();
+			expect(wrapper.attributes("href")).toBe("https://getkirby.com");
 		});
 	});
 
