@@ -2,6 +2,7 @@
 	<k-string-input
 		v-bind="$props"
 		:class="['k-text-input', $attrs.class]"
+		:style="$attrs.style"
 		type="text"
 		@input="$emit('input', $event)"
 	/>

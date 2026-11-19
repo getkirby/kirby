@@ -6,41 +6,19 @@ use Exception;
 
 class TestUser
 {
-	public function username()
-	{
-		return 'homer';
-	}
-
-	public function profiles(): array
-	{
-		return [
-			'mastodon' => '@homer'
-		];
-	}
-
-	public function says(...$message)
-	{
-		return implode(' : ', $message);
-	}
-
 	public function age(int $years)
 	{
 		return $years;
 	}
 
-	public function isYello(bool $answer)
+	public function array(...$args)
 	{
-		return $answer;
+		return ['args' => $args];
 	}
 
 	public function brainDump($dump)
 	{
 		return $dump;
-	}
-
-	public function array(...$args)
-	{
-		return ['args' => $args];
 	}
 
 	public function check($needle1, $needle2, $array)
@@ -53,9 +31,9 @@ class TestUser
 		return ['gin', 'tonic', 'cucumber'];
 	}
 
-	public function self()
+	public function isYello(bool $answer)
 	{
-		return $this;
+		return $answer;
 	}
 
 	public function likes(array $arguments)
@@ -72,5 +50,27 @@ class TestUser
 	public function nothing()
 	{
 		return null;
+	}
+
+	public function profiles(): array
+	{
+		return [
+			'mastodon' => '@homer'
+		];
+	}
+
+	public function says(...$message)
+	{
+		return implode(' : ', $message);
+	}
+
+	public function self()
+	{
+		return $this;
+	}
+
+	public function username()
+	{
+		return 'homer';
 	}
 }

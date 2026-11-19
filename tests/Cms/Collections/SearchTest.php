@@ -7,6 +7,47 @@ use PHPUnit\Framework\Attributes\DataProvider;
 
 class SearchTest extends TestCase
 {
+	public function app(): App
+	{
+		return new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'categories',
+						'files' => [
+							['filename' => 'phone.jpg'],
+							['filename' => 'cell-phone.jpg'],
+							['filename' => 'computer.jpg']
+						]
+					],
+					[
+						'slug'  => 'products',
+						'files' => [
+							['filename' => 'apple.jpg'],
+							['filename' => 'samsung.jpg']
+						]
+					],
+					[
+						'slug' => 'contact'
+					]
+				],
+				'files' => [
+					['filename' => 'website.jpg']
+				]
+			],
+			'users' => [
+				['email' => 'admin@getkirby.com'],
+				['email' => 'editor@getkirby.com'],
+				['email' => 'user1@getkirby.com'],
+				['email' => 'user2@getkirby.com'],
+				['email' => 'user3@getkirby.com']
+			],
+		]);
+	}
+
 	public function testCollection(): void
 	{
 		$collection = Pages::factory([
@@ -77,39 +118,11 @@ class SearchTest extends TestCase
 		Search::collection($collection, 'homer', [$option => 'invalid']);
 	}
 
-	public function testIgnoreFieldCase(): void
+	public function testFiles(): void
 	{
-		$collection = Pages::factory([
-			[
-				'slug'    => 'homer',
-				'content' => ['firstname' => 'Homer']
-			],
-			[
-				'slug'    => 'marge',
-				'content' => ['firstname' => 'Marge']
-			],
-			[
-				'slug'    => 'maggie',
-				'content' => ['firstname' => 'Maggie']
-			],
-			[
-				'slug'    => 'lisa',
-				'content' => ['firstname' => 'Lisa']
-			],
-			[
-				'slug'    => 'snowball',
-				'content' => ['firstname' => 'Šnowball']
-			]
-		]);
-
-		$search = Search::collection($collection, 'ma', ['fields' => ['FirstName']]);
-		$this->assertCount(2, $search);
-
-		$search = Search::collection($collection, 'Ho', ['fields' => ['FirstName']]);
-		$this->assertCount(1, $search);
-
-		$search = Search::collection($collection, 'm', ['minlength' => 1, 'fields' => ['FirstName']]);
-		$this->assertCount(3, $search);
+		$this->assertCount(5, $this->app()->site()->index()->files());
+		$this->assertInstanceOf(Files::class, $files = Search::files('phone'));
+		$this->assertCount(2, $files);
 	}
 
 	public function testIgnoreCaseI18n(): void
@@ -145,52 +158,39 @@ class SearchTest extends TestCase
 		$this->assertCount(1, $search);
 	}
 
-	public function app(): App
+	public function testIgnoreFieldCase(): void
 	{
-		return new App([
-			'roots' => [
-				'index' => '/dev/null'
+		$collection = Pages::factory([
+			[
+				'slug'    => 'homer',
+				'content' => ['firstname' => 'Homer']
 			],
-			'site' => [
-				'children' => [
-					[
-						'slug'  => 'categories',
-						'files' => [
-							['filename' => 'phone.jpg'],
-							['filename' => 'cell-phone.jpg'],
-							['filename' => 'computer.jpg']
-						]
-					],
-					[
-						'slug'  => 'products',
-						'files' => [
-							['filename' => 'apple.jpg'],
-							['filename' => 'samsung.jpg']
-						]
-					],
-					[
-						'slug' => 'contact'
-					]
-				],
-				'files' => [
-					['filename' => 'website.jpg']
-				]
+			[
+				'slug'    => 'marge',
+				'content' => ['firstname' => 'Marge']
 			],
-			'users' => [
-				['email' => 'admin@getkirby.com'],
-				['email' => 'editor@getkirby.com'],
-				['email' => 'user1@getkirby.com'],
-				['email' => 'user2@getkirby.com'],
-				['email' => 'user3@getkirby.com']
+			[
+				'slug'    => 'maggie',
+				'content' => ['firstname' => 'Maggie']
 			],
+			[
+				'slug'    => 'lisa',
+				'content' => ['firstname' => 'Lisa']
+			],
+			[
+				'slug'    => 'snowball',
+				'content' => ['firstname' => 'Šnowball']
+			]
 		]);
-	}
 
-	public function testFiles(): void
-	{
-		$this->assertCount(5, $this->app()->site()->index()->files());
-		$this->assertInstanceOf(Files::class, $files = Search::files('phone'));
-		$this->assertCount(2, $files);
+		$search = Search::collection($collection, 'ma', ['fields' => ['FirstName']]);
+		$this->assertCount(2, $search);
+
+		$search = Search::collection($collection, 'Ho', ['fields' => ['FirstName']]);
+		$this->assertCount(1, $search);
+
+		$search = Search::collection($collection, 'm', ['minlength' => 1, 'fields' => ['FirstName']]);
+		$this->assertCount(3, $search);
 	}
 
 	public function testPages(): void

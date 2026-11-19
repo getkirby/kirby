@@ -142,26 +142,6 @@ class ToggleFieldTest extends TestCase
 		$this->assertSame('Yay test', (string)$field->text());
 	}
 
-	public function testTextWithTranslation(): void
-	{
-		$props = [
-			'text' => [
-				'en' => 'Yay {{ page.slug }}',
-				'de' => 'Ja {{ page.slug }}'
-			]
-		];
-
-		I18n::$locale = 'en';
-
-		$field = $this->field('toggle', $props);
-		$this->assertSame('Yay test', (string)$field->text());
-
-		I18n::$locale = 'de';
-
-		$field = $this->field('toggle', $props);
-		$this->assertSame('Ja test', (string)$field->text());
-	}
-
 	public function testTextToggle(): void
 	{
 		$field = $this->field('toggle', [
@@ -201,6 +181,26 @@ class ToggleFieldTest extends TestCase
 			['Ja test', 'Nein test'],
 			array_map(strval(...), $field->text())
 		);
+	}
+
+	public function testTextWithTranslation(): void
+	{
+		$props = [
+			'text' => [
+				'en' => 'Yay {{ page.slug }}',
+				'de' => 'Ja {{ page.slug }}'
+			]
+		];
+
+		I18n::$locale = 'en';
+
+		$field = $this->field('toggle', $props);
+		$this->assertSame('Yay test', (string)$field->text());
+
+		I18n::$locale = 'de';
+
+		$field = $this->field('toggle', $props);
+		$this->assertSame('Ja test', (string)$field->text());
 	}
 
 	public function testWhen(): void

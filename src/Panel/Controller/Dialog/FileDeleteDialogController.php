@@ -30,6 +30,13 @@ class FileDeleteDialogController extends FileDialogController
 		$referrer = $this->kirby->panel()->referrer();
 		$url      = $this->file->panel()->url(true);
 
+		// collect the identifiers before deletion,
+		// so that fields can remove the file from their value
+		$file = [
+			'id'   => $this->file->id(),
+			'uuid' => $this->file->uuid()?->toString()
+		];
+
 		$this->file->delete();
 
 		// Redirect to the parent model URL
@@ -40,6 +47,7 @@ class FileDeleteDialogController extends FileDialogController
 
 		return [
 			'event'    => 'file.delete',
+			'file'     => $file,
 			'redirect' => $redirect ?? null
 		];
 	}

@@ -1,9 +1,10 @@
 <template>
 	<k-range-input
 		v-bind="$props"
+		:class="['k-hue-input', $attrs.class]"
 		:min="0"
 		:max="360"
-		class="k-hue-input"
+		:style="$attrs.style"
 		@input="$emit('input', $event)"
 	/>
 </template>

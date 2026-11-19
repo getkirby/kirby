@@ -13,20 +13,6 @@ use Kirby\Exception\InvalidArgumentException;
 class Json extends Handler
 {
 	/**
-	 * Converts an array to an encoded JSON string
-	 */
-	public static function encode($data, bool $pretty = false): string
-	{
-		$flags = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR;
-
-		if ($pretty === true) {
-			$flags |= JSON_PRETTY_PRINT;
-		}
-
-		return json_encode($data, $flags);
-	}
-
-	/**
 	 * Parses an encoded JSON string and returns a multi-dimensional array
 	 */
 	public static function decode($string): array
@@ -54,5 +40,19 @@ class Json extends Handler
 		throw new InvalidArgumentException(
 			message: 'JSON string is invalid'
 		);
+	}
+
+	/**
+	 * Converts an array to an encoded JSON string
+	 */
+	public static function encode($data, bool $pretty = false): string
+	{
+		$flags = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR;
+
+		if ($pretty === true) {
+			$flags |= JSON_PRETTY_PRINT;
+		}
+
+		return json_encode($data, $flags);
 	}
 }

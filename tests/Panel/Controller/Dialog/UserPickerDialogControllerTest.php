@@ -79,7 +79,6 @@ class UserPickerDialogControllerTest extends TestCase
 			model: $this->app->site()
 		);
 
-
 		$item = $controller->item($this->app->user('test'));
 		$this->assertArrayHasKey('image', $item);
 		$this->assertSame('', (string)$item['info']);

@@ -25,9 +25,31 @@ class HeaderTest extends TestCase
 		503 => 'HTTP/1.1 503 Service Unavailable'
 	];
 
-	public function testCreateSingle(): void
+	public function testContentType(): void
 	{
-		$this->assertSame('Key: Value', Header::create('Key', 'Value'));
+		$this->assertSame(
+			'Content-type: video/webm',
+			Header::contentType('webm', '', false),
+			'Can send Content-type header with no encoding'
+		);
+
+		$this->assertSame(
+			'Content-type: video/webm',
+			Header::type('webm', '', false),
+			'Can send Content-type header with no encoding'
+		);
+
+		$this->assertSame(
+			'Content-type: application/json; charset=ISO-8859-1',
+			Header::contentType('json', 'ISO-8859-1', false),
+			'Can send Content-type header with custom charset'
+		);
+
+		$this->assertSame(
+			'Content-type: application/json; charset=ISO-8859-1',
+			Header::type('json', 'ISO-8859-1', false),
+			'Can send Content-type header with custom charset'
+		);
 	}
 
 	public function testCreateMultiple(): void
@@ -45,6 +67,11 @@ class HeaderTest extends TestCase
 		$this->assertSame(implode("\r\n", $expected), Header::create($input));
 	}
 
+	public function testCreateSingle(): void
+	{
+		$this->assertSame('Key: Value', Header::create('Key', 'Value'));
+	}
+
 	public function testNamedStatuses(): void
 	{
 		$h = $this->statusHeaders;
@@ -58,6 +85,21 @@ class HeaderTest extends TestCase
 		$this->assertSame($h[410], Header::gone(false), 'gone status should be 410');
 		$this->assertSame($h[500], Header::panic(false), 'panic status should be 500');
 		$this->assertSame($h[503], Header::unavailable(false), 'unavailable status should be 503');
+	}
+
+	public function testRedirect(): void
+	{
+		$h = $this->statusHeaders;
+		$this->assertSame(
+			$h[301] . "\r\nLocation:/x",
+			Header::redirect('/x', 301, false),
+			'Can send a 301 redirect'
+		);
+		$this->assertSame(
+			$h[302] . "\r\nLocation:/x",
+			Header::redirect('/x', 302, false),
+			'Can send a 302 redirect'
+		);
 	}
 
 	public function testStatusCodeOnly(): void
@@ -106,48 +148,6 @@ class HeaderTest extends TestCase
 			$h[500],
 			Header::status("999 This is\nNOT OKAY", false),
 			'Newlines inside of reason results in a 500 code'
-		);
-	}
-
-	public function testRedirect(): void
-	{
-		$h = $this->statusHeaders;
-		$this->assertSame(
-			$h[301] . "\r\nLocation:/x",
-			Header::redirect('/x', 301, false),
-			'Can send a 301 redirect'
-		);
-		$this->assertSame(
-			$h[302] . "\r\nLocation:/x",
-			Header::redirect('/x', 302, false),
-			'Can send a 302 redirect'
-		);
-	}
-
-	public function testContentType(): void
-	{
-		$this->assertSame(
-			'Content-type: video/webm',
-			Header::contentType('webm', '', false),
-			'Can send Content-type header with no encoding'
-		);
-
-		$this->assertSame(
-			'Content-type: video/webm',
-			Header::type('webm', '', false),
-			'Can send Content-type header with no encoding'
-		);
-
-		$this->assertSame(
-			'Content-type: application/json; charset=ISO-8859-1',
-			Header::contentType('json', 'ISO-8859-1', false),
-			'Can send Content-type header with custom charset'
-		);
-
-		$this->assertSame(
-			'Content-type: application/json; charset=ISO-8859-1',
-			Header::type('json', 'ISO-8859-1', false),
-			'Can send Content-type header with custom charset'
 		);
 	}
 }

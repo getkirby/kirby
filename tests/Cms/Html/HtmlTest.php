@@ -34,10 +34,15 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	public function testCssWithMediaOption(): void
+	public function testCssWithArray(): void
 	{
-		$result   = Html::css('assets/css/index.css', 'print');
-		$expected = '<link href="https://getkirby.com/assets/css/index.css" media="print" rel="stylesheet">';
+		$result = Html::css([
+			'assets/css/a.css',
+			'assets/css/b.css'
+		]);
+
+		$expected  = '<link href="https://getkirby.com/assets/css/a.css" rel="stylesheet">' . PHP_EOL;
+		$expected .= '<link href="https://getkirby.com/assets/css/b.css" rel="stylesheet">';
 
 		$this->assertSame($expected, $result);
 	}
@@ -50,14 +55,6 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	public function testCssWithValidRelAttr(): void
-	{
-		$result   = Html::css('assets/css/index.css', ['rel' => 'alternate stylesheet', 'title' => 'High contrast']);
-		$expected = '<link href="https://getkirby.com/assets/css/index.css" rel="alternate stylesheet" title="High contrast">';
-
-		$this->assertSame($expected, $result);
-	}
-
 	public function testCssWithInvalidRelAttr(): void
 	{
 		$result   = Html::css('assets/css/index.css', ['rel' => 'alternate', 'title' => 'High contrast']);
@@ -66,23 +63,10 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	public function testCssWithRelAttrButNoTitle(): void
+	public function testCssWithMediaOption(): void
 	{
-		$result   = Html::css('assets/css/index.css', ['rel' => 'alternate stylesheet']);
-		$expected = '<link href="https://getkirby.com/assets/css/index.css" rel="stylesheet">';
-
-		$this->assertSame($expected, $result);
-	}
-
-	public function testCssWithArray(): void
-	{
-		$result = Html::css([
-			'assets/css/a.css',
-			'assets/css/b.css'
-		]);
-
-		$expected  = '<link href="https://getkirby.com/assets/css/a.css" rel="stylesheet">' . PHP_EOL;
-		$expected .= '<link href="https://getkirby.com/assets/css/b.css" rel="stylesheet">';
+		$result   = Html::css('assets/css/index.css', 'print');
+		$expected = '<link href="https://getkirby.com/assets/css/index.css" media="print" rel="stylesheet">';
 
 		$this->assertSame($expected, $result);
 	}
@@ -101,10 +85,39 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
+	public function testCssWithRelAttrButNoTitle(): void
+	{
+		$result   = Html::css('assets/css/index.css', ['rel' => 'alternate stylesheet']);
+		$expected = '<link href="https://getkirby.com/assets/css/index.css" rel="stylesheet">';
+
+		$this->assertSame($expected, $result);
+	}
+
+	public function testCssWithValidRelAttr(): void
+	{
+		$result   = Html::css('assets/css/index.css', ['rel' => 'alternate stylesheet', 'title' => 'High contrast']);
+		$expected = '<link href="https://getkirby.com/assets/css/index.css" rel="alternate stylesheet" title="High contrast">';
+
+		$this->assertSame($expected, $result);
+	}
+
 	public function testJs(): void
 	{
 		$result   = Html::js('assets/js/index.js');
 		$expected = '<script src="https://getkirby.com/assets/js/index.js"></script>';
+
+		$this->assertSame($expected, $result);
+	}
+
+	public function testJsWithArray(): void
+	{
+		$result = Html::js([
+			'assets/js/a.js',
+			'assets/js/b.js'
+		]);
+
+		$expected  = '<script src="https://getkirby.com/assets/js/a.js"></script>' . PHP_EOL;
+		$expected .= '<script src="https://getkirby.com/assets/js/b.js"></script>';
 
 		$this->assertSame($expected, $result);
 	}
@@ -121,19 +134,6 @@ class HtmlTest extends TestCase
 	{
 		$result   = Html::js('assets/js/index.js', ['integrity' => 'nope']);
 		$expected = '<script integrity="nope" src="https://getkirby.com/assets/js/index.js"></script>';
-
-		$this->assertSame($expected, $result);
-	}
-
-	public function testJsWithArray(): void
-	{
-		$result = Html::js([
-			'assets/js/a.js',
-			'assets/js/b.js'
-		]);
-
-		$expected  = '<script src="https://getkirby.com/assets/js/a.js"></script>' . PHP_EOL;
-		$expected .= '<script src="https://getkirby.com/assets/js/b.js"></script>';
 
 		$this->assertSame($expected, $result);
 	}
@@ -164,16 +164,6 @@ class HtmlTest extends TestCase
 		$this->assertSame('<svg>test</svg>', trim($result));
 	}
 
-	public function testSvgWithInvalidFileType(): void
-	{
-		$this->assertFalse(Html::svg(123));
-	}
-
-	public function testSvgWithMissingFile(): void
-	{
-		$this->assertFalse(Html::svg('somefile.svg'));
-	}
-
 	public function testSvgWithFileObject(): void
 	{
 		$file = $this->createStub(File::class);
@@ -184,5 +174,15 @@ class HtmlTest extends TestCase
 			});
 
 		$this->assertSame('test', Html::svg($file));
+	}
+
+	public function testSvgWithInvalidFileType(): void
+	{
+		$this->assertFalse(Html::svg(123));
+	}
+
+	public function testSvgWithMissingFile(): void
+	{
+		$this->assertFalse(Html::svg('somefile.svg'));
 	}
 }

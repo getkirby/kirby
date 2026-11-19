@@ -45,6 +45,8 @@ abstract class ModelWithContent extends Model implements Identifiable
 	 */
 	public const string|null CLASS_ALIAS = null;
 
+	public static App|null $kirby = null;
+
 	/**
 	 * Cached array of valid blueprints
 	 * that could be used for the model
@@ -53,15 +55,12 @@ abstract class ModelWithContent extends Model implements Identifiable
 	 */
 	public array|null $blueprints = null;
 
-	public static App|null $kirby = null;
-
-	protected Site|null $site;
-	protected Storage|null $storage = null;
-
 	/**
 	 * Store values used to initialize object
 	 */
 	protected array $propertyData = [];
+	protected Site|null $site;
+	protected Storage|null $storage = null;
 
 	public function __construct(array $props = [])
 	{
@@ -71,6 +70,15 @@ abstract class ModelWithContent extends Model implements Identifiable
 		$this->setTranslations($props['translations'] ?? null);
 
 		$this->propertyData = $props;
+	}
+
+	/**
+	 * Makes it possible to convert the entire model
+	 * to a string. Mostly useful for debugging
+	 */
+	public function __toString(): string
+	{
+		return (string)$this->id();
 	}
 
 	/**
@@ -711,15 +719,6 @@ abstract class ModelWithContent extends Model implements Identifiable
 			'model'             => $this,
 			static::CLASS_ALIAS => $this,
 		], $data), ['fallback' => $fallback]);
-	}
-
-	/**
-	 * Makes it possible to convert the entire model
-	 * to a string. Mostly useful for debugging
-	 */
-	public function __toString(): string
-	{
-		return (string)$this->id();
 	}
 
 	/**

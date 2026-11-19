@@ -1,8 +1,9 @@
 <template>
 	<k-string-input
 		v-bind="$props"
+		:class="['k-tel-input', $attrs.class]"
+		:style="$attrs.style"
 		type="tel"
-		class="k-tel-input"
 		@input="$emit('input', $event)"
 	/>
 </template>

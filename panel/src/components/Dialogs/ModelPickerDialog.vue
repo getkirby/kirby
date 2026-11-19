@@ -141,7 +141,7 @@ export default {
 					...this.pagination
 				},
 				selecting: true,
-				selectmode: this.multiple ? "multiple" : "single",
+				selectmode: this.multiple && this.max !== 1 ? "multiple" : "single",
 				selected: this.selected,
 				sortable: false,
 				onPaginate: this.paginate,

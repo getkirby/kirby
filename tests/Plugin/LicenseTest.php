@@ -51,18 +51,18 @@ class LicenseTest extends TestCase
 		$this->assertSame('active', $license->status()->value());
 	}
 
-	public function testFromString(): void
-	{
-		$license = License::from($this->plugin(), 'Custom license');
-		$this->assertSame('Custom license', $license->name());
-		$this->assertSame('active', $license->status()->value());
-	}
-
 	public function testFromNull(): void
 	{
 		$license = License::from($this->plugin(), null);
 		$this->assertSame('-', $license->name());
 		$this->assertSame('unknown', $license->status()->value());
+	}
+
+	public function testFromString(): void
+	{
+		$license = License::from($this->plugin(), 'Custom license');
+		$this->assertSame('Custom license', $license->name());
+		$this->assertSame('active', $license->status()->value());
 	}
 
 	public function testLink(): void

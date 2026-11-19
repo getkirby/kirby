@@ -113,6 +113,15 @@ class Panel
 	}
 
 	/**
+	 * Checks if the given URL is a Panel Url
+	 * @since 6.0.0
+	 */
+	public function isPanelUrl(string $url): bool
+	{
+		return Str::startsWith($url, $this->kirby->url('panel'));
+	}
+
+	/**
 	 * Checks for a Panel request via get parameters or headers
 	 */
 	public function isStateRequest(): bool
@@ -126,15 +135,6 @@ class Panel
 		}
 
 		return false;
-	}
-
-	/**
-	 * Checks if the given URL is a Panel Url
-	 * @since 6.0.0
-	 */
-	public function isPanelUrl(string $url): bool
-	{
-		return Str::startsWith($url, $this->kirby->url('panel'));
 	}
 
 	/**

@@ -50,6 +50,50 @@ class StrTest extends TestCase
 		], Str::accepted('image/png;q=0, text/html'));
 	}
 
+	public function testAfter(): void
+	{
+		$string = 'Hellö Wörld';
+
+		// case sensitive
+		$this->assertSame(' Wörld', Str::after($string, 'ö'));
+		$this->assertSame('', Str::after($string, 'Ö'));
+		$this->assertSame('', Str::after($string, 'x'));
+
+		// case insensitive
+		$this->assertSame(' Wörld', Str::after($string, 'ö', true));
+		$this->assertSame(' Wörld', Str::after($string, 'Ö', true));
+		$this->assertSame('', Str::after($string, 'x', true));
+
+		// non existing chars
+		$this->assertSame('', Str::after('string', '.'), 'string with non-existing character should return false');
+	}
+
+	public function testAfterStart(): void
+	{
+		$string = 'Hellö Wörld';
+
+		// case sensitive
+		$this->assertSame(' Wörld', Str::afterStart($string, 'Hellö'));
+		$this->assertSame('Hellö Wörld', Str::afterStart($string, 'HELLÖ'));
+		$this->assertSame('Hellö Wörld', Str::afterStart($string, 'Wörld'));
+		$this->assertSame('Hellö Wörld', Str::afterStart($string, 'x'));
+		$this->assertSame('Hellö Wörld', Str::afterStart($string, ''));
+
+		// case insensitive
+		$this->assertSame(' Wörld', Str::afterStart($string, 'Hellö', true));
+		$this->assertSame(' Wörld', Str::afterStart($string, 'HELLÖ', true));
+		$this->assertSame('Hellö Wörld', Str::afterStart($string, 'Wörld', true));
+		$this->assertSame('Hellö Wörld', Str::afterStart($string, 'x', true));
+		$this->assertSame('Hellö Wörld', Str::afterStart($string, '', true));
+	}
+
+	public function testAfterWithEmptyNeedle(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The needle must not be empty');
+		Str::after('test', '');
+	}
+
 	public function testAscii(): void
 	{
 		// clean ASCII
@@ -64,6 +108,26 @@ class StrTest extends TestCase
 
 		// strips control characters
 		$this->assertSame('abc', Str::ascii("a\x00b\x01c"));
+	}
+
+	public function testAsciiMutatedMap(): void
+	{
+		$original = Str::$ascii;
+
+		try {
+			Str::$ascii = $original + ['☃' => 'snowman'];
+			$this->assertSame('a snowman b', Str::ascii('a ☃ b'));
+			$this->assertSame('-', Str::ascii('€-¥'));
+
+			Str::$ascii = Str::$ascii + ['€|¥' => 'currency'];
+			$this->assertSame('currency-currency', Str::ascii('€-¥'));
+
+			// legacy plugin shape with PCRE delimiters
+			Str::$ascii = Str::$ascii + ['/£|¤/' => 'money'];
+			$this->assertSame('money-money', Str::ascii('£-¤'));
+		} finally {
+			Str::$ascii = $original;
+		}
 	}
 
 	public function testAsciiUsesLanguageRules(): void
@@ -120,70 +184,6 @@ class StrTest extends TestCase
 		}
 	}
 
-	public function testAsciiMutatedMap(): void
-	{
-		$original = Str::$ascii;
-
-		try {
-			Str::$ascii = $original + ['☃' => 'snowman'];
-			$this->assertSame('a snowman b', Str::ascii('a ☃ b'));
-			$this->assertSame('-', Str::ascii('€-¥'));
-
-			Str::$ascii = Str::$ascii + ['€|¥' => 'currency'];
-			$this->assertSame('currency-currency', Str::ascii('€-¥'));
-
-			// legacy plugin shape with PCRE delimiters
-			Str::$ascii = Str::$ascii + ['/£|¤/' => 'money'];
-			$this->assertSame('money-money', Str::ascii('£-¤'));
-		} finally {
-			Str::$ascii = $original;
-		}
-	}
-
-	public function testAfter(): void
-	{
-		$string = 'Hellö Wörld';
-
-		// case sensitive
-		$this->assertSame(' Wörld', Str::after($string, 'ö'));
-		$this->assertSame('', Str::after($string, 'Ö'));
-		$this->assertSame('', Str::after($string, 'x'));
-
-		// case insensitive
-		$this->assertSame(' Wörld', Str::after($string, 'ö', true));
-		$this->assertSame(' Wörld', Str::after($string, 'Ö', true));
-		$this->assertSame('', Str::after($string, 'x', true));
-
-		// non existing chars
-		$this->assertSame('', Str::after('string', '.'), 'string with non-existing character should return false');
-	}
-
-	public function testAfterWithEmptyNeedle(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The needle must not be empty');
-		Str::after('test', '');
-	}
-
-	public function testAfterStart(): void
-	{
-		$string = 'Hellö Wörld';
-
-		// case sensitive
-		$this->assertSame(' Wörld', Str::afterStart($string, 'Hellö'));
-		$this->assertSame('Hellö Wörld', Str::afterStart($string, 'HELLÖ'));
-		$this->assertSame('Hellö Wörld', Str::afterStart($string, 'Wörld'));
-		$this->assertSame('Hellö Wörld', Str::afterStart($string, 'x'));
-		$this->assertSame('Hellö Wörld', Str::afterStart($string, ''));
-
-		// case insensitive
-		$this->assertSame(' Wörld', Str::afterStart($string, 'Hellö', true));
-		$this->assertSame(' Wörld', Str::afterStart($string, 'HELLÖ', true));
-		$this->assertSame('Hellö Wörld', Str::afterStart($string, 'Wörld', true));
-		$this->assertSame('Hellö Wörld', Str::afterStart($string, 'x', true));
-		$this->assertSame('Hellö Wörld', Str::afterStart($string, '', true));
-	}
-
 	public function testBefore(): void
 	{
 		$string = 'Hellö Wörld';
@@ -197,13 +197,6 @@ class StrTest extends TestCase
 		$this->assertSame('Hell', Str::before($string, 'ö', true));
 		$this->assertSame('Hell', Str::before($string, 'Ö', true));
 		$this->assertSame('', Str::before($string, 'x', true));
-	}
-
-	public function testBeforeWithEmptyNeedle(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The needle must not be empty');
-		Str::before('test', '');
 	}
 
 	public function testBeforeEnd(): void
@@ -223,6 +216,13 @@ class StrTest extends TestCase
 		$this->assertSame('Hellö Wörld', Str::beforeEnd($string, 'Hellö', true));
 		$this->assertSame('Hellö Wörld', Str::beforeEnd($string, 'x', true));
 		$this->assertSame('Hellö Wörld', Str::beforeEnd($string, '', true));
+	}
+
+	public function testBeforeWithEmptyNeedle(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The needle must not be empty');
+		Str::before('test', '');
 	}
 
 	public function testBetween(): void
@@ -289,6 +289,29 @@ class StrTest extends TestCase
 		$this->assertTrue(Str::contains($string, ''));
 	}
 
+	public function testConvert(): void
+	{
+		$source = 'ÖÄÜ';
+
+		// same encoding
+		$result = Str::convert($source, 'UTF-8');
+		$this->assertSame('UTF-8', Str::encoding($source));
+		$this->assertSame('UTF-8', Str::encoding($result));
+
+		// different  encoding
+		$result = Str::convert($source, 'ISO-8859-1');
+		$this->assertSame('UTF-8', Str::encoding($source));
+		$this->assertSame('ISO-8859-1', Str::encoding($result));
+	}
+
+	public function testConvertInvalid(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Could not convert string "ÖÄÜ" from "UTF-8" to "ASCII"');
+
+		Str::convert('ÖÄÜ', 'ASCII', 'UTF-8');
+	}
+
 	public function testDate(): void
 	{
 		$time = mktime(1, 1, 1, 1, 29, 2020);
@@ -339,29 +362,6 @@ class StrTest extends TestCase
 		$this->assertSame(date('Y', MockTime::$time), Str::date(null, 'Y'));
 	}
 
-	public function testConvert(): void
-	{
-		$source = 'ÖÄÜ';
-
-		// same encoding
-		$result = Str::convert($source, 'UTF-8');
-		$this->assertSame('UTF-8', Str::encoding($source));
-		$this->assertSame('UTF-8', Str::encoding($result));
-
-		// different  encoding
-		$result = Str::convert($source, 'ISO-8859-1');
-		$this->assertSame('UTF-8', Str::encoding($source));
-		$this->assertSame('ISO-8859-1', Str::encoding($result));
-	}
-
-	public function testConvertInvalid(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Could not convert string "ÖÄÜ" from "UTF-8" to "ASCII"');
-
-		Str::convert('ÖÄÜ', 'ASCII', 'UTF-8');
-	}
-
 	public function testEncode(): void
 	{
 		$email = 'test@getkirby.com';
@@ -405,55 +405,11 @@ class StrTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	public function testExcerptWithoutChars(): void
-	{
-		$string   = 'This is a long text<br>with some html';
-		$expected = 'This is a long text with some html';
-		$result   = Str::excerpt($string);
-
-		$this->assertSame($expected, $result);
-	}
-
-	public function testExcerptWithZeroLength(): void
-	{
-		$string = 'This is a long text with some html';
-		$result = Str::excerpt($string, 0);
-
-		$this->assertSame($string, $result);
-	}
-
-	public function testExcerptWithoutStripping(): void
-	{
-		$string   = 'This is a long text<br>with some html';
-		$expected = 'This is a long text<br>with …';
-		$result   = Str::excerpt($string, 30, false);
-
-		$this->assertSame($expected, $result);
-	}
-
 	public function testExcerptWithDifferentReplacement(): void
 	{
 		$string   = 'This is a long text<br>with some html';
 		$expected = 'This is a long text with ...';
 		$result   = Str::excerpt($string, 27, true, ' ...');
-
-		$this->assertSame($expected, $result);
-	}
-
-	public function testExcerptWithSpaces(): void
-	{
-		$string   = 'This is a long text   <br>with some html';
-		$expected = 'This is a long text with …';
-		$result   = Str::excerpt($string, 27);
-
-		$this->assertSame($expected, $result);
-	}
-
-	public function testExcerptWithoutSpaces(): void
-	{
-		$string   = 'ThisIsALongTextWithSomeHtml';
-		$expected = 'ThisIsALongText …';
-		$result   = Str::excerpt($string, 15);
 
 		$this->assertSame($expected, $result);
 	}
@@ -467,11 +423,38 @@ class StrTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	public function testExcerptWithUnicodeChars(): void
+	public function testExcerptWithoutChars(): void
 	{
-		$string   = 'Hellö Wörld text<br>with söme htmäl';
-		$expected = 'Hellö Wörld text …';
-		$result   = Str::excerpt($string, 20);
+		$string   = 'This is a long text<br>with some html';
+		$expected = 'This is a long text with some html';
+		$result   = Str::excerpt($string);
+
+		$this->assertSame($expected, $result);
+	}
+
+	public function testExcerptWithoutSpaces(): void
+	{
+		$string   = 'ThisIsALongTextWithSomeHtml';
+		$expected = 'ThisIsALongText …';
+		$result   = Str::excerpt($string, 15);
+
+		$this->assertSame($expected, $result);
+	}
+
+	public function testExcerptWithoutStripping(): void
+	{
+		$string   = 'This is a long text<br>with some html';
+		$expected = 'This is a long text<br>with …';
+		$result   = Str::excerpt($string, 30, false);
+
+		$this->assertSame($expected, $result);
+	}
+
+	public function testExcerptWithSpaces(): void
+	{
+		$string   = 'This is a long text   <br>with some html';
+		$expected = 'This is a long text with …';
+		$result   = Str::excerpt($string, 27);
 
 		$this->assertSame($expected, $result);
 	}
@@ -481,6 +464,15 @@ class StrTest extends TestCase
 		$string   = 'Why not <a href="https://getkirby.com/">Get Kirby</a>?';
 		$expected = 'Why not Get Kirby?';
 		$result   = Str::excerpt($string, 100);
+
+		$this->assertSame($expected, $result);
+	}
+
+	public function testExcerptWithUnicodeChars(): void
+	{
+		$string   = 'Hellö Wörld text<br>with söme htmäl';
+		$expected = 'Hellö Wörld text …';
+		$result   = Str::excerpt($string, 20);
 
 		$this->assertSame($expected, $result);
 	}
@@ -504,6 +496,14 @@ class StrTest extends TestCase
 		$expected = '(Link)';
 		$result   = Str::excerpt($string, 200);
 		$this->assertSame($expected, $result);
+	}
+
+	public function testExcerptWithZeroLength(): void
+	{
+		$string = 'This is a long text with some html';
+		$result = Str::excerpt($string, 0);
+
+		$this->assertSame($string, $result);
 	}
 
 	public function testFloat(): void
@@ -649,12 +649,6 @@ class StrTest extends TestCase
 		$this->assertNull(Str::match('one two three', '/(four)/'));
 	}
 
-	public function testMatches(): void
-	{
-		$this->assertTrue(Str::matches('test', '/t(es)t/'));
-		$this->assertFalse(Str::matches('one two three', '/(four)/'));
-	}
-
 	public function testMatchAll(): void
 	{
 		$longText = <<<TEXT
@@ -669,6 +663,12 @@ class StrTest extends TestCase
 		$this->assertSame(['something else to match', 'another thing to match', 'yet another match'], $matches[2]);
 		$this->assertNull(Str::matchAll($longText, '/(miao)/'));
 		$this->assertNull(Str::matchAll('one two three', '/(four)/'));
+	}
+
+	public function testMatches(): void
+	{
+		$this->assertTrue(Str::matches('test', '/t(es)t/'));
+		$this->assertFalse(Str::matches('one two three', '/(four)/'));
 	}
 
 	public function testPool(): void

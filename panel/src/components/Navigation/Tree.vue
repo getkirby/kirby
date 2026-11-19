@@ -59,10 +59,6 @@ export default {
 	name: "k-tree",
 	inheritAttrs: false,
 	props: {
-		element: {
-			type: String,
-			default: "k-tree"
-		},
 		current: {
 			type: String
 		},

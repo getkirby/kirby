@@ -73,21 +73,6 @@ class Html extends BaseHtml
 	}
 
 	/**
-	 * Generates an `a` tag with an absolute Url
-	 *
-	 * @param $href Relative or absolute Url
-	 * @param $text If `null`, the link will be used as link text. If an array is passed, each element will be added unencoded
-	 * @param $attr Additional attributes for the a tag.
-	 */
-	public static function link(
-		string|null $href = null,
-		string|array|null $text = null,
-		array $attr = []
-	): string {
-		return parent::link(Url::to($href), $text, $attr);
-	}
-
-	/**
 	 * Creates a script tag to load a javascript file
 	 * @since 3.7.0
 	 */
@@ -127,6 +112,21 @@ class Html extends BaseHtml
 		$attr = [...$options ?? [], 'src' => $url];
 
 		return '<script ' . static::attr($attr) . '></script>';
+	}
+
+	/**
+	 * Generates an `a` tag with an absolute Url
+	 *
+	 * @param $href Relative or absolute Url
+	 * @param $text If `null`, the link will be used as link text. If an array is passed, each element will be added unencoded
+	 * @param $attr Additional attributes for the a tag.
+	 */
+	public static function link(
+		string|null $href = null,
+		string|array|null $text = null,
+		array $attr = []
+	): string {
+		return parent::link(Url::to($href), $text, $attr);
 	}
 
 	/**

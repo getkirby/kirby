@@ -31,22 +31,18 @@ class UpdateStatus
 	 */
 	protected static bool $timedOut = false;
 
-	// props set in constructor
 	protected App $app;
 	protected string|null $currentVersion;
 	protected array|null $data;
-	protected string|null $pluginName;
-	protected bool $securityOnly;
 
-	// props updated throughout the class
 	/**
 	 * @var list<KirbyException>
 	 */
 	protected array $exceptions = [];
-	protected bool|null $noVulns = null;
-
-	// caches
 	protected array|null $messages = null;
+	protected bool|null $noVulns = null;
+	protected string|null $pluginName;
+	protected bool $securityOnly;
 	protected array|null $targetData = null;
 	protected array|false|null $versionEntry = null;
 	protected array|null $vulnerabilities = null;
@@ -74,277 +70,6 @@ class UpdateStatus
 	}
 
 	/**
-	 * Returns the currently installed version
-	 */
-	public function currentVersion(): string|null
-	{
-		return $this->currentVersion;
-	}
-
-	/**
-	 * Returns the list of exception objects that were
-	 * collected during data fetching and processing
-	 *
-	 * @return list<KirbyException>
-	 */
-	public function exceptions(): array
-	{
-		return $this->exceptions;
-	}
-
-	/**
-	 * Returns the list of exception message strings that
-	 * were collected during data fetching and processing
-	 *
-	 * @return list<string>
-	 */
-	public function exceptionMessages(): array
-	{
-		return array_map(fn ($e) => $e->getMessage(), $this->exceptions());
-	}
-
-	/**
-	 * Returns the Panel icon for the status value
-	 *
-	 * @return 'check'|'alert'|'info'|'question'
-	 */
-	public function icon(): string
-	{
-		return match ($this->status()) {
-			'up-to-date', 'not-vulnerable'        => 'check',
-			'security-update', 'security-upgrade' => 'alert',
-			'update', 'upgrade'                   => 'info',
-			default                               => 'question'
-		};
-	}
-
-	/**
-	 * Returns the human-readable and translated label
-	 * for the update status
-	 */
-	public function label(): string
-	{
-		return I18n::template(
-			'system.updateStatus.' . $this->status(),
-			'?',
-			['version' => $this->targetVersion() ?? '?']
-		);
-	}
-
-	/**
-	 * Returns the latest available version
-	 */
-	public function latestVersion(): string|null
-	{
-		return $this->data['latest'] ?? null;
-	}
-
-	/**
-	 * Returns all security messages unless no data
-	 * is available
-	 */
-	public function messages(): array|null
-	{
-		if (isset($this->messages) === true) {
-			return $this->messages;
-		}
-
-		if (
-			$this->data === null ||
-			$this->currentVersion === null ||
-			$this->currentVersion === ''
-		) {
-			return null;
-		}
-
-		$type = $this->pluginName ? 'plugin' : 'kirby';
-
-		// collect all matching custom messages
-		$filters = [
-			'kirby' => $this->app->version(),
-			// some PHP version strings contain extra info that makes them
-			// invalid so we need to strip it off
-			'php'   => preg_replace('/^([^~+-]+).*$/', '$1', phpversion())
-		];
-
-		if ($type === 'plugin') {
-			$filters['plugin'] = $this->currentVersion;
-		}
-
-		$messages = $this->filterArrayByVersion(
-			$this->data['messages'] ?? [],
-			$filters,
-			'while filtering messages'
-		);
-
-		// add a message for each vulnerability
-		// the current version is affected by
-		foreach ($this->vulnerabilities() as $vulnerability) {
-			if ($type === 'plugin') {
-				$vulnerability['plugin'] = $this->pluginName;
-			}
-
-			$messages[] = [
-				'text' => I18n::template(
-					'system.issues.vulnerability.' . $type,
-					null,
-					$vulnerability
-				),
-				'link' => $vulnerability['link'] ?? null,
-				'icon' => 'bug'
-			];
-		}
-
-		// add special message for end-of-life versions
-		$versionEntry = $this->versionEntry();
-		if (($versionEntry['status'] ?? null) === 'end-of-life') {
-			$messages[] = [
-				'text' => match ($type) {
-					'plugin' => I18n::template(
-						'system.issues.eol.plugin',
-						null,
-						['plugin' => $this->pluginName]
-					),
-					default => I18n::translate('system.issues.eol.kirby')
-				},
-				'link' => $versionEntry['status-link'] ?? 'https://getkirby.com/security/end-of-life',
-				'icon' => 'bell'
-			];
-		}
-
-		// add special message for end-of-life PHP versions
-		$phpMajor = PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION;
-		$phpEol   = $this->data['php'][$phpMajor] ?? null;
-		if (is_string($phpEol) === true && $eolTime = strtotime($phpEol)) {
-			// the timestamp is available and valid, now check if it is in the past
-			if ($eolTime < time()) {
-				$messages[] = [
-					'text' => I18n::template('system.issues.eol.php', null, ['release' => $phpMajor]),
-					'link' => 'https://getkirby.com/security/php-end-of-life',
-					'icon' => 'bell'
-				];
-			}
-		}
-
-		return $this->messages = $messages;
-	}
-
-	/**
-	 * Returns the raw status value
-	 *
-	 * @return 'up-to-date'|'not-vulnerable'|'security-update'|'security-upgrade'|'update'|'upgrade'|'unreleased'|'error'
-	 */
-	public function status(): string
-	{
-		return $this->targetData()['status'];
-	}
-
-	/**
-	 * Version that is suggested for the update/upgrade
-	 */
-	public function targetVersion(): string|null
-	{
-		return $this->targetData()['version'];
-	}
-
-	/**
-	 * Returns the Panel theme for the status value
-	 *
-	 * @return 'positive'|'negative'|'info'|'passive'
-	 */
-	public function theme(): string
-	{
-		return match ($this->status()) {
-			'up-to-date', 'not-vulnerable'        => 'positive',
-			'security-update', 'security-upgrade' => 'negative',
-			'update', 'upgrade'                   => 'info',
-			default                               => 'passive'
-		};
-	}
-
-	/**
-	 * Returns the most important human-readable
-	 * status information as array
-	 *
-	 * @return array{currentVersion: string, icon: string, label: string, latestVersion: string, pluginName: string|null, theme: string, url: string|null}
-	 */
-	public function toArray(): array
-	{
-		return [
-			'currentVersion' => $this->currentVersion() ?? '?',
-			'icon'           => $this->icon(),
-			'label'          => $this->label(),
-			'latestVersion'  => $this->latestVersion() ?? '?',
-			'pluginName'     => $this->pluginName,
-			'theme'          => $this->theme(),
-			'url'            => $this->url(),
-		];
-	}
-
-	/**
-	 * URL of the target version with fallback
-	 * to the URL of the current version;
-	 * `null` is returned if no URL is known
-	 */
-	public function url(): string|null
-	{
-		return $this->targetData()['url'];
-	}
-
-	/**
-	 * Returns all vulnerabilities the current version
-	 * is affected by unless no data is available
-	 */
-	public function vulnerabilities(): array|null
-	{
-		if (isset($this->vulnerabilities) === true) {
-			return $this->vulnerabilities;
-		}
-
-		if (
-			$this->data === null ||
-			$this->currentVersion === null ||
-			$this->currentVersion === ''
-		) {
-			return null;
-		}
-
-		// shortcut for versions without vulnerabilities
-		$this->versionEntry();
-		if ($this->noVulns === true) {
-			return $this->vulnerabilities = [];
-		}
-
-		// unstable releases are released before their respective
-		// stable release and would not be matched by the constraints,
-		// but they will likely also contain the same vulnerabilities;
-		// so we strip off any non-numeric version modifiers from the end
-		preg_match('/^([0-9.]+)/', $this->currentVersion, $matches);
-		$currentVersion = $matches[1];
-
-		$vulnerabilities = $this->filterArrayByVersion(
-			$this->data['incidents'] ?? [],
-			['affected' => $currentVersion],
-			'while filtering incidents'
-		);
-
-		// sort the vulnerabilities by severity (with critical first)
-		$severities = array_map(
-			fn ($vulnerability) => match ($vulnerability['severity'] ?? null) {
-				'critical' => 4,
-				'high'     => 3,
-				'medium'   => 2,
-				'low'      => 1,
-				default    => 0
-			},
-			$vulnerabilities
-		);
-		array_multisort($severities, SORT_DESC, $vulnerabilities);
-
-		return $this->vulnerabilities = $vulnerabilities;
-	}
-
-	/**
 	 * Compares a version against a Composer version constraint
 	 * and returns whether the constraint is satisfied
 	 *
@@ -362,6 +87,36 @@ class UpdateStatus
 
 			return false;
 		}
+	}
+
+	/**
+	 * Returns the currently installed version
+	 */
+	public function currentVersion(): string|null
+	{
+		return $this->currentVersion;
+	}
+
+	/**
+	 * Returns the list of exception message strings that
+	 * were collected during data fetching and processing
+	 *
+	 * @return list<string>
+	 */
+	public function exceptionMessages(): array
+	{
+		return array_map(fn ($e) => $e->getMessage(), $this->exceptions());
+	}
+
+	/**
+	 * Returns the list of exception objects that were
+	 * collected during data fetching and processing
+	 *
+	 * @return list<KirbyException>
+	 */
+	public function exceptions(): array
+	{
+		return $this->exceptions;
 	}
 
 	/**
@@ -516,6 +271,42 @@ class UpdateStatus
 	}
 
 	/**
+	 * Returns the Panel icon for the status value
+	 *
+	 * @return 'check'|'alert'|'info'|'question'
+	 */
+	public function icon(): string
+	{
+		return match ($this->status()) {
+			'up-to-date', 'not-vulnerable'        => 'check',
+			'security-update', 'security-upgrade' => 'alert',
+			'update', 'upgrade'                   => 'info',
+			default                               => 'question'
+		};
+	}
+
+	/**
+	 * Returns the human-readable and translated label
+	 * for the update status
+	 */
+	public function label(): string
+	{
+		return I18n::template(
+			'system.updateStatus.' . $this->status(),
+			'?',
+			['version' => $this->targetVersion() ?? '?']
+		);
+	}
+
+	/**
+	 * Returns the latest available version
+	 */
+	public function latestVersion(): string|null
+	{
+		return $this->data['latest'] ?? null;
+	}
+
+	/**
 	 * Loads the getkirby.com update data
 	 * from cache or via HTTP
 	 */
@@ -621,11 +412,111 @@ class UpdateStatus
 	}
 
 	/**
+	 * Returns all security messages unless no data
+	 * is available
+	 */
+	public function messages(): array|null
+	{
+		if (isset($this->messages) === true) {
+			return $this->messages;
+		}
+
+		if (
+			$this->data === null ||
+			$this->currentVersion === null ||
+			$this->currentVersion === ''
+		) {
+			return null;
+		}
+
+		$type = $this->pluginName ? 'plugin' : 'kirby';
+
+		// collect all matching custom messages
+		$filters = [
+			'kirby' => $this->app->version(),
+			// some PHP version strings contain extra info that makes them
+			// invalid so we need to strip it off
+			'php'   => preg_replace('/^([^~+-]+).*$/', '$1', phpversion())
+		];
+
+		if ($type === 'plugin') {
+			$filters['plugin'] = $this->currentVersion;
+		}
+
+		$messages = $this->filterArrayByVersion(
+			$this->data['messages'] ?? [],
+			$filters,
+			'while filtering messages'
+		);
+
+		// add a message for each vulnerability
+		// the current version is affected by
+		foreach ($this->vulnerabilities() as $vulnerability) {
+			if ($type === 'plugin') {
+				$vulnerability['plugin'] = $this->pluginName;
+			}
+
+			$messages[] = [
+				'text' => I18n::template(
+					'system.issues.vulnerability.' . $type,
+					null,
+					$vulnerability
+				),
+				'link' => $vulnerability['link'] ?? null,
+				'icon' => 'bug'
+			];
+		}
+
+		// add special message for end-of-life versions
+		$versionEntry = $this->versionEntry();
+		if (($versionEntry['status'] ?? null) === 'end-of-life') {
+			$messages[] = [
+				'text' => match ($type) {
+					'plugin' => I18n::template(
+						'system.issues.eol.plugin',
+						null,
+						['plugin' => $this->pluginName]
+					),
+					default => I18n::translate('system.issues.eol.kirby')
+				},
+				'link' => $versionEntry['status-link'] ?? 'https://getkirby.com/security/end-of-life',
+				'icon' => 'bell'
+			];
+		}
+
+		// add special message for end-of-life PHP versions
+		$phpMajor = PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION;
+		$phpEol   = $this->data['php'][$phpMajor] ?? null;
+		if (is_string($phpEol) === true && $eolTime = strtotime($phpEol)) {
+			// the timestamp is available and valid, now check if it is in the past
+			if ($eolTime < time()) {
+				$messages[] = [
+					'text' => I18n::template('system.issues.eol.php', null, ['release' => $phpMajor]),
+					'link' => 'https://getkirby.com/security/php-end-of-life',
+					'icon' => 'bell'
+				];
+			}
+		}
+
+		return $this->messages = $messages;
+	}
+
+	/**
 	 * Returns the human-readable package name for error messages
 	 */
 	protected function packageName(): string
 	{
 		return $this->pluginName ? 'plugin ' . $this->pluginName : 'Kirby';
+	}
+
+	/**
+	 * Returns the raw status value
+	 *
+	 * @return 'up-to-date'|'not-vulnerable'|'security-update'|'security-upgrade'|'update'|'upgrade'|'unreleased'|'error'
+	 */
+	public function status(): string
+	{
+		return $this->targetData()['status'];
 	}
 
 	/**
@@ -730,6 +621,58 @@ class UpdateStatus
 			'url'     => $this->urlFor($this->currentVersion, 'upgrade'),
 			'version' => $this->data['latest'] ?? null
 		];
+	}
+
+	/**
+	 * Version that is suggested for the update/upgrade
+	 */
+	public function targetVersion(): string|null
+	{
+		return $this->targetData()['version'];
+	}
+
+	/**
+	 * Returns the Panel theme for the status value
+	 *
+	 * @return 'positive'|'negative'|'info'|'passive'
+	 */
+	public function theme(): string
+	{
+		return match ($this->status()) {
+			'up-to-date', 'not-vulnerable'        => 'positive',
+			'security-update', 'security-upgrade' => 'negative',
+			'update', 'upgrade'                   => 'info',
+			default                               => 'passive'
+		};
+	}
+
+	/**
+	 * Returns the most important human-readable
+	 * status information as array
+	 *
+	 * @return array{currentVersion: string, icon: string, label: string, latestVersion: string, pluginName: string|null, theme: string, url: string|null}
+	 */
+	public function toArray(): array
+	{
+		return [
+			'currentVersion' => $this->currentVersion() ?? '?',
+			'icon'           => $this->icon(),
+			'label'          => $this->label(),
+			'latestVersion'  => $this->latestVersion() ?? '?',
+			'pluginName'     => $this->pluginName,
+			'theme'          => $this->theme(),
+			'url'            => $this->url(),
+		];
+	}
+
+	/**
+	 * URL of the target version with fallback
+	 * to the URL of the current version;
+	 * `null` is returned if no URL is known
+	 */
+	public function url(): string|null
+	{
+		return $this->targetData()['url'];
 	}
 
 	/**
@@ -839,5 +782,58 @@ class UpdateStatus
 
 		$this->versionEntry = $versionEntry ?? false;
 		return $versionEntry;
+	}
+
+	/**
+	 * Returns all vulnerabilities the current version
+	 * is affected by unless no data is available
+	 */
+	public function vulnerabilities(): array|null
+	{
+		if (isset($this->vulnerabilities) === true) {
+			return $this->vulnerabilities;
+		}
+
+		if (
+			$this->data === null ||
+			$this->currentVersion === null ||
+			$this->currentVersion === ''
+		) {
+			return null;
+		}
+
+		// shortcut for versions without vulnerabilities
+		$this->versionEntry();
+		if ($this->noVulns === true) {
+			return $this->vulnerabilities = [];
+		}
+
+		// unstable releases are released before their respective
+		// stable release and would not be matched by the constraints,
+		// but they will likely also contain the same vulnerabilities;
+		// so we strip off any non-numeric version modifiers from the end
+		preg_match('/^([0-9.]+)/', $this->currentVersion, $matches);
+		$currentVersion = $matches[1];
+
+		$vulnerabilities = $this->filterArrayByVersion(
+			$this->data['incidents'] ?? [],
+			['affected' => $currentVersion],
+			'while filtering incidents'
+		);
+
+		// sort the vulnerabilities by severity (with critical first)
+		$severities = array_map(
+			fn ($vulnerability) => match ($vulnerability['severity'] ?? null) {
+				'critical' => 4,
+				'high'     => 3,
+				'medium'   => 2,
+				'low'      => 1,
+				default    => 0
+			},
+			$vulnerabilities
+		);
+		array_multisort($severities, SORT_DESC, $vulnerabilities);
+
+		return $this->vulnerabilities = $vulnerabilities;
 	}
 }

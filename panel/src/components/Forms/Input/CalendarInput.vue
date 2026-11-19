@@ -13,7 +13,6 @@
 					:aria-label="$t('month')"
 					:autofocus="autofocus"
 					:options="months"
-					:empty="false"
 					:required="true"
 					:value="month"
 					@input="month = Number($event)"
@@ -21,7 +20,6 @@
 				<k-select-input
 					:aria-label="$t('year')"
 					:options="years"
-					:empty="false"
 					:required="true"
 					:value="year"
 					@input="year = Number($event)"
@@ -107,6 +105,7 @@ import { IsoDateProps } from "./DateInput.vue";
  */
 export default {
 	mixins: [InputProps, IsoDateProps],
+	inheritAttrs: false,
 	emits: ["input"],
 	data() {
 		const today = this.$library.dayjs();
@@ -306,8 +305,8 @@ export default {
 		/**
 		 * Creates a dayjs object for a specified day and
 		 * optional month
-		 * @param {number} day
-		 * @param {number} month
+		 * @param {number} [day]
+		 * @param {number} [month]
 		 */
 		toDate(day = 1, month) {
 			return this.$library.dayjs(

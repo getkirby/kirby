@@ -50,8 +50,10 @@ class PageChangeTitleDialogControllerTest extends TestCase
 		$props = $dialog->props();
 		$this->assertSame('Title', $props['fields']['title']['label']);
 		$this->assertFalse($props['fields']['title']['disabled']);
+		$this->assertTrue($props['fields']['title']['preselect']);
 		$this->assertSame('URL appendix', $props['fields']['slug']['label']);
 		$this->assertFalse($props['fields']['slug']['disabled']);
+		$this->assertFalse($props['fields']['slug']['preselect']);
 		$this->assertSame('/', $props['fields']['slug']['path']);
 		$this->assertSame('Create from title', $props['fields']['slug']['wizard']['text']);
 		$this->assertSame('title', $props['fields']['slug']['wizard']['field']);
@@ -60,6 +62,24 @@ class PageChangeTitleDialogControllerTest extends TestCase
 		$this->assertSame('test', $props['value']->slug);
 
 		$this->assertSame('Change', $props['submitButton']);
+	}
+
+	public function testLoadWithSelectSlug(): void
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => ['select' => 'slug']
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page       = $this->app->page('test');
+		$controller = new PageChangeTitleDialogController($page);
+		$props      = $controller->load()->props();
+
+		$this->assertFalse($props['fields']['title']['preselect']);
+		$this->assertTrue($props['fields']['slug']['preselect']);
 	}
 
 	public function testPath(): void
@@ -87,28 +107,6 @@ class PageChangeTitleDialogControllerTest extends TestCase
 		$this->assertSame('en/test/', $controller->path());
 	}
 
-	public function testSubmitWithChangedTitle(): void
-	{
-		$this->app = $this->app->clone([
-			'request' => [
-				'query' => [
-					'title' => 'New title',
-					'slug'  => 'test'
-				]
-			]
-		]);
-
-		$this->app->impersonate('kirby');
-
-		$page       = $this->app->page('test');
-		$controller = new PageChangeTitleDialogController($page);
-		$response   = $controller->submit();
-		$this->assertSame(['page.changeTitle'], $response['event']);
-
-		$page = $this->app->page('test');
-		$this->assertSame('New title', $page->title()->value());
-	}
-
 	public function testSubmitWithChangedSlug(): void
 	{
 		$this->app = $this->app->clone([
@@ -129,6 +127,28 @@ class PageChangeTitleDialogControllerTest extends TestCase
 
 		$page = $this->app->page('new-test');
 		$this->assertSame('new-test', $page->slug());
+	}
+
+	public function testSubmitWithChangedTitle(): void
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'title' => 'New title',
+					'slug'  => 'test'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page       = $this->app->page('test');
+		$controller = new PageChangeTitleDialogController($page);
+		$response   = $controller->submit();
+		$this->assertSame(['page.changeTitle'], $response['event']);
+
+		$page = $this->app->page('test');
+		$this->assertSame('New title', $page->title()->value());
 	}
 
 	public function testSubmitWithChangedTitleAndSlug(): void
@@ -174,27 +194,6 @@ class PageChangeTitleDialogControllerTest extends TestCase
 		$this->assertSame([], $response['event']);
 	}
 
-	public function testSubmitWithoutTitle(): void
-	{
-		$this->app = $this->app->clone([
-			'request' => [
-				'query' => [
-					'slug' => 'new-test'
-				]
-			]
-		]);
-
-		$this->app->impersonate('kirby');
-
-		$page       = $this->app->page('test');
-		$controller = new PageChangeTitleDialogController($page);
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionCode('error.page.changeTitle.empty');
-
-		$controller->submit();
-	}
-
 	public function testSubmitWithoutSlug(): void
 	{
 		$this->app = $this->app->clone([
@@ -212,6 +211,27 @@ class PageChangeTitleDialogControllerTest extends TestCase
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionCode('error.page.slug.invalid');
+
+		$controller->submit();
+	}
+
+	public function testSubmitWithoutTitle(): void
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'slug' => 'new-test'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page       = $this->app->page('test');
+		$controller = new PageChangeTitleDialogController($page);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.page.changeTitle.empty');
 
 		$controller->submit();
 	}

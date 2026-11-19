@@ -25,60 +25,6 @@ class PagePositionFieldTest extends TestCase
 		$this->app->impersonate('kirby');
 	}
 
-	public function testProps(): void
-	{
-		$field = new PagePositionField(
-			page: $this->app->page('b')
-		);
-
-		$props = $field->props();
-
-		ksort($props);
-
-		$expected = [
-			'autofocus'   => false,
-			'disabled'    => false,
-			'help'        => null,
-			'hidden'      => false,
-			'icon'        => null,
-			'label'       => 'Please select a position',
-			'name'        => 'position',
-			'options'     => [
-				[
-					'value' => 1,
-					'text'  => 1
-				],
-				[
-					'value'    => 'a',
-					'text'     => 'a',
-					'disabled' => true
-				],
-				[
-					'value' => 2,
-					'text'  => 2
-				],
-				[
-					'value'    => 'c',
-					'text'     => 'c',
-					'disabled' => true
-				],
-				[
-					'value' => 3,
-					'text'  => 3
-				],
-			],
-			'placeholder' => '—',
-			'required'    => false,
-			'saveable'    => true,
-			'translate'   => true,
-			'type'        => 'select',
-			'when'        => null,
-			'width'       => '1/1',
-		];
-
-		$this->assertSame($expected, $props);
-	}
-
 	public function testLabel(): void
 	{
 		$field = new PagePositionField(
@@ -140,5 +86,59 @@ class PagePositionFieldTest extends TestCase
 		$this->assertTrue($options[3]['disabled']);
 
 		$this->assertSame(3, $options[4]['value']);
+	}
+
+	public function testProps(): void
+	{
+		$field = new PagePositionField(
+			page: $this->app->page('b')
+		);
+
+		$props = $field->props();
+
+		ksort($props);
+
+		$expected = [
+			'autofocus'   => false,
+			'disabled'    => false,
+			'help'        => null,
+			'hidden'      => false,
+			'icon'        => null,
+			'label'       => 'Please select a position',
+			'name'        => 'position',
+			'options'     => [
+				[
+					'value' => 1,
+					'text'  => 1
+				],
+				[
+					'value'    => 'a',
+					'text'     => 'a',
+					'disabled' => true
+				],
+				[
+					'value' => 2,
+					'text'  => 2
+				],
+				[
+					'value'    => 'c',
+					'text'     => 'c',
+					'disabled' => true
+				],
+				[
+					'value' => 3,
+					'text'  => 3
+				],
+			],
+			'placeholder' => '—',
+			'required'    => false,
+			'saveable'    => true,
+			'translate'   => true,
+			'type'        => 'select',
+			'when'        => null,
+			'width'       => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
 	}
 }

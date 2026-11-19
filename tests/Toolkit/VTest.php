@@ -38,24 +38,6 @@ class VTest extends TestCase
 		V::$validators = [];
 	}
 
-	public function testCallCustomValidator(): void
-	{
-		V::$validators['me'] =
-			fn ($name): bool => V::in($name, ['I', 'me', 'myself']);
-
-		$this->assertTrue(V::me('I'));
-		$this->assertTrue(V::me('me'));
-		$this->assertTrue(V::me('myself'));
-		$this->assertFalse(V::me('you'));
-	}
-
-	public function testCallInvalidMethod(): void
-	{
-		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('The validator does not exist: fool');
-		V::fool('me');
-	}
-
 	public function testAccepted(): void
 	{
 		$this->assertTrue(V::accepted(true));
@@ -101,7 +83,6 @@ class VTest extends TestCase
 		$this->assertTrue(V::alphanum('abc1234'));
 		$this->assertTrue(V::alphanum('0123456789'));
 
-
 		$this->assertFalse(V::alphanum('äöüß'));
 		$this->assertFalse(V::alphanum('abc"§$%&/()=?'));
 
@@ -126,6 +107,24 @@ class VTest extends TestCase
 		$this->assertFalse(V::callback('bar', fn ($value) => $value === 'foo'));
 	}
 
+	public function testCallCustomValidator(): void
+	{
+		V::$validators['me'] =
+			fn ($name): bool => V::in($name, ['I', 'me', 'myself']);
+
+		$this->assertTrue(V::me('I'));
+		$this->assertTrue(V::me('me'));
+		$this->assertTrue(V::me('myself'));
+		$this->assertFalse(V::me('you'));
+	}
+
+	public function testCallInvalidMethod(): void
+	{
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('The validator does not exist: fool');
+		V::fool('me');
+	}
+
 	public function testContains(): void
 	{
 		$this->assertTrue(V::contains('word', 'or'));
@@ -141,15 +140,6 @@ class VTest extends TestCase
 		$this->assertFalse(V::date('äöüß'));
 		$this->assertFalse(V::date('2017-02-31'));
 		$this->assertFalse(V::date('January 32, 1989'));
-	}
-
-	public function testDateWithoutOperatorOrTest(): void
-	{
-		// no operator means a simple date validation
-		$this->assertTrue(V::date('2017-12-24', null, null));
-
-		// missing comparison value
-		$this->assertFalse(V::date('2345-01-01', '<'));
 	}
 
 	public function testDateComparison(): void
@@ -180,6 +170,15 @@ class VTest extends TestCase
 		$this->expectExceptionMessage('Invalid date comparison operator: "<>". Allowed operators: "==", "!=", "<", "<=", ">", ">="');
 
 		V::date('2345-01-01', '<>', '2345-01-01');
+	}
+
+	public function testDateWithoutOperatorOrTest(): void
+	{
+		// no operator means a simple date validation
+		$this->assertTrue(V::date('2017-12-24', null, null));
+
+		// missing comparison value
+		$this->assertFalse(V::date('2345-01-01', '<'));
 	}
 
 	public function testDenied(): void
@@ -442,12 +441,34 @@ class VTest extends TestCase
 		$this->assertSame([], $result);
 	}
 
-	public function testInvalidSimple(): void
+	public function testInvalidOptions(): void
 	{
-		$data   = ['homer', null];
-		$rules  = [['alpha'], ['required']];
-		$result = V::invalid($data, $rules);
-		$this->assertSame(1, $result[1]);
+		$rules = [
+			'username' => ['min' => 6]
+		];
+
+		$messages = [
+			'username' => ''
+		];
+
+		$result = V::invalid(['username' => 'homer'], $rules, $messages);
+		$this->assertSame($messages, $result);
+
+		$result = V::invalid(['username' => 'homersimpson'], $rules, $messages);
+		$this->assertSame([], $result);
+
+		$rules = [
+			'username' => ['between' => [3, 6]]
+		];
+
+		$result = V::invalid(['username' => 'ho'], $rules, $messages);
+		$this->assertSame($messages, $result);
+
+		$result = V::invalid(['username' => 'homersimpson'], $rules, $messages);
+		$this->assertSame($messages, $result);
+
+		$result = V::invalid(['username' => 'homer'], $rules, $messages);
+		$this->assertSame([], $result);
 	}
 
 	public function testInvalidRequired(): void
@@ -480,34 +501,12 @@ class VTest extends TestCase
 		$this->assertSame([], $result);
 	}
 
-	public function testInvalidOptions(): void
+	public function testInvalidSimple(): void
 	{
-		$rules = [
-			'username' => ['min' => 6]
-		];
-
-		$messages = [
-			'username' => ''
-		];
-
-		$result = V::invalid(['username' => 'homer'], $rules, $messages);
-		$this->assertSame($messages, $result);
-
-		$result = V::invalid(['username' => 'homersimpson'], $rules, $messages);
-		$this->assertSame([], $result);
-
-		$rules = [
-			'username' => ['between' => [3, 6]]
-		];
-
-		$result = V::invalid(['username' => 'ho'], $rules, $messages);
-		$this->assertSame($messages, $result);
-
-		$result = V::invalid(['username' => 'homersimpson'], $rules, $messages);
-		$this->assertSame($messages, $result);
-
-		$result = V::invalid(['username' => 'homer'], $rules, $messages);
-		$this->assertSame([], $result);
+		$data   = ['homer', null];
+		$rules  = [['alpha'], ['required']];
+		$result = V::invalid($data, $rules);
+		$this->assertSame(1, $result[1]);
 	}
 
 	public function testInvalidWithMultipleMessages(): void
@@ -628,18 +627,18 @@ class VTest extends TestCase
 		$this->assertSame('Error message for same: b', $message);
 	}
 
-	public function testMessageInvalidValidator(): void
-	{
-		$message = V::message('foo', 'a', 'b');
-		$this->assertNull($message);
-	}
-
 	public function testMessageCustomValidator(): void
 	{
 		V::$validators['foo'] = fn (string $bar) => false;
 
 		$message = V::message('foo', 'bar');
 		$this->assertSame('The "foo" validation failed', $message);
+	}
+
+	public function testMessageInvalidValidator(): void
+	{
+		$message = V::message('foo', 'a', 'b');
+		$this->assertNull($message);
 	}
 
 	public function testMinLength(): void
@@ -821,6 +820,26 @@ class VTest extends TestCase
 		$this->assertFalse(V::time('24:24:24'));
 	}
 
+	public function testUrl(): void
+	{
+		$urls = Data::read(__DIR__ . '/fixtures/urls.json');
+
+		foreach ($urls['valid'] as $url) {
+			$this->assertTrue(V::url($url), "Expected valid: $url");
+		}
+
+		foreach ($urls['invalid'] as $url) {
+			$this->assertFalse(V::url($url), "Expected invalid: $url");
+		}
+	}
+
+	public function testUrlWithInvalidUtf8(): void
+	{
+		$this->assertFalse(V::url("not a url \xff"));
+		$this->assertFalse(V::url("javascript:alert(1)//\xff"));
+		$this->assertFalse(V::url("https://getkirby.com/\xff"));
+	}
+
 	public function testUuid(): void
 	{
 		$this->assertTrue(V::uuid('site://'));
@@ -848,19 +867,6 @@ class VTest extends TestCase
 		$this->assertFalse(V::uuid('page//something'));
 		$this->assertFalse(V::uuid('page//something', 'page'));
 		$this->assertFalse(V::uuid('not a page://something'));
-	}
-
-	public function testUrl(): void
-	{
-		$urls = Data::read(__DIR__ . '/fixtures/urls.json');
-
-		foreach ($urls['valid'] as $url) {
-			$this->assertTrue(V::url($url), "Expected valid: $url");
-		}
-
-		foreach ($urls['invalid'] as $url) {
-			$this->assertFalse(V::url($url), "Expected invalid: $url");
-		}
 	}
 
 	public function testValidators(): void

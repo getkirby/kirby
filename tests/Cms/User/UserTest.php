@@ -84,6 +84,21 @@ class UserTest extends ModelTestCase
 		$this->assertSame('test', $user->id());
 	}
 
+	public function testQuery(): void
+	{
+		$user = new User([
+			'email' => 'test@getkirby.com',
+			'name'  => 'Test User'
+		]);
+
+		$this->assertSame('Test User', $user->query('user.name')->value());
+		$this->assertSame('test@getkirby.com', $user->query('user.email'));
+
+		// also test with `model` key
+		$this->assertSame('Test User', $user->query('model.name')->value());
+		$this->assertSame('test@getkirby.com', $user->query('model.email'));
+	}
+
 	public function testSiblings(): void
 	{
 		$user = new User(['email' => 'user@domain.com']);
@@ -110,20 +125,5 @@ class UserTest extends ModelTestCase
 			'Email: test@getkirby.com',
 			$user->toString('Email: {{ user.email }}')
 		);
-	}
-
-	public function testQuery(): void
-	{
-		$user = new User([
-			'email' => 'test@getkirby.com',
-			'name'  => 'Test User'
-		]);
-
-		$this->assertSame('Test User', $user->query('user.name')->value());
-		$this->assertSame('test@getkirby.com', $user->query('user.email'));
-
-		// also test with `model` key
-		$this->assertSame('Test User', $user->query('model.name')->value());
-		$this->assertSame('test@getkirby.com', $user->query('model.email'));
 	}
 }

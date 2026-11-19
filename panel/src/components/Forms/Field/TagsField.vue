@@ -11,6 +11,7 @@
 			v-else
 			v-bind="$props"
 			ref="input"
+			:options="choices"
 			type="tags"
 			@input="$emit('input', $event)"
 		/>
@@ -34,8 +35,19 @@ export default {
 	inheritAttrs: false,
 	emits: ["input"],
 	computed: {
+		/**
+		 * The options with an `[unknown]` option for each value without one,
+		 * unless any value is accepted as custom tag
+		 */
+		choices() {
+			if (this.accept === "all") {
+				return this.options;
+			}
+
+			return this.$helper.field.options(this.options, this.value);
+		},
 		hasNoOptions() {
-			return this.options.length === 0 && this.accept === "options";
+			return this.choices.length === 0 && this.accept === "options";
 		}
 	},
 	methods: {

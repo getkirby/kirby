@@ -109,6 +109,16 @@ class FilePickerFieldTest extends TestCase
 		return $this->app->page('test');
 	}
 
+	public function testAcceptedFileBlueprints(): void
+	{
+		$field = $this->field('filepicker', [
+			'model'   => $this->model(),
+			'uploads' => 'a'
+		]);
+
+		$this->assertSame(['a'], $field->acceptedFileBlueprints());
+	}
+
 	public function testApiItems(): void
 	{
 		$app = new App([
@@ -233,7 +243,7 @@ class FilePickerFieldTest extends TestCase
 		// the ID that is already stored in the content file
 		$this->assertSame('file://my-b', $api[1]['id']);
 		$this->assertSame('file://my-b', $api[1]['uuid']);
-		$this->assertSame('–', $api[1]['text']);
+		$this->assertSame('[unknown]', $api[1]['text']);
 		$this->assertFalse($api[1]['link']);
 	}
 
@@ -259,16 +269,6 @@ class FilePickerFieldTest extends TestCase
 		]);
 
 		$this->assertSame('Test', $field->empty());
-	}
-
-	public function testAcceptedFileBlueprints(): void
-	{
-		$field = $this->field('filepicker', [
-			'model'   => $this->model(),
-			'uploads' => 'a'
-		]);
-
-		$this->assertSame(['a'], $field->acceptedFileBlueprints());
 	}
 
 	public function testFillWithFile(): void
@@ -378,6 +378,22 @@ class FilePickerFieldTest extends TestCase
 		$this->assertArrayHasKey('min', $field->errors());
 	}
 
+	public function testParentModel(): void
+	{
+		$field = $this->field('filepicker', [
+			'model' => $this->model()
+		]);
+
+		$this->assertSame($this->model(), $field->parentModel());
+
+		$field = $this->field('filepicker', [
+			'model'  => $this->model(),
+			'parent' => 'site'
+		]);
+
+		$this->assertSame($this->app->site(), $field->parentModel());
+	}
+
 	public function testProps(): void
 	{
 		$field = $this->field('filepicker', [
@@ -418,70 +434,6 @@ class FilePickerFieldTest extends TestCase
 		];
 
 		$this->assertSame($expected, $props);
-	}
-
-	public function testUploadPassesTemplateToApi(): void
-	{
-		$this->app = $this->app->clone([
-			'blueprints' => [
-				'files/custom' => [
-					'name'   => 'custom',
-					'accept' => ['extension' => 'txt']
-				]
-			]
-		]);
-		$this->app->impersonate('kirby');
-
-		$parent = new FilePickerFieldTestPage(['slug' => 'test']);
-
-		$field = $this->field('filepicker', [
-			'model'   => $parent,
-			'uploads' => 'custom'
-		]);
-		$this->assertSame('.txt', $field->uploads()['accept']);
-
-		$api = new FilePickerFieldTestApi(['kirby' => $this->app]);
-
-		$result = $field->upload(
-			$api,
-			$field->uploads(),
-			fn ($file) => $file->template()
-		);
-
-		$this->assertSame('custom', $api->template);
-		$this->assertSame('custom', $parent->createdFile['template']);
-		$this->assertSame('custom', $result['data']);
-	}
-
-	public function testUploadWithInvalidParentQuery(): void
-	{
-		$field = $this->field('filepicker', [
-			'model'   => new FilePickerFieldTestPage(['slug' => 'test']),
-			'uploads' => ['parent' => 'site.title']
-		]);
-
-		$api = new FilePickerFieldTestApi(['kirby' => $this->app]);
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('"site.title" could not be resolved as a valid parent for the upload');
-
-		$field->upload($api, $field->uploads(), fn ($file) => $file);
-	}
-
-	public function testParentModel(): void
-	{
-		$field = $this->field('filepicker', [
-			'model' => $this->model()
-		]);
-
-		$this->assertSame($this->model(), $field->parentModel());
-
-		$field = $this->field('filepicker', [
-			'model'  => $this->model(),
-			'parent' => 'site'
-		]);
-
-		$this->assertSame($this->app->site(), $field->parentModel());
 	}
 
 	public function testRequired(): void
@@ -573,6 +525,54 @@ class FilePickerFieldTest extends TestCase
 
 		// files of the model itself are stored by filename
 		$this->assertSame(['a.jpg', 'test-draft/b.jpg'], $field->toStoredValue());
+	}
+
+	public function testUploadPassesTemplateToApi(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'files/custom' => [
+					'name'   => 'custom',
+					'accept' => ['extension' => 'txt']
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$parent = new FilePickerFieldTestPage(['slug' => 'test']);
+
+		$field = $this->field('filepicker', [
+			'model'   => $parent,
+			'uploads' => 'custom'
+		]);
+		$this->assertSame('.txt', $field->uploads()['accept']);
+
+		$api = new FilePickerFieldTestApi(['kirby' => $this->app]);
+
+		$result = $field->upload(
+			$api,
+			$field->uploads(),
+			fn ($file) => $file->template()
+		);
+
+		$this->assertSame('custom', $api->template);
+		$this->assertSame('custom', $parent->createdFile['template']);
+		$this->assertSame('custom', $result['data']);
+	}
+
+	public function testUploadWithInvalidParentQuery(): void
+	{
+		$field = $this->field('filepicker', [
+			'model'   => new FilePickerFieldTestPage(['slug' => 'test']),
+			'uploads' => ['parent' => 'site.title']
+		]);
+
+		$api = new FilePickerFieldTestApi(['kirby' => $this->app]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('"site.title" could not be resolved as a valid parent for the upload');
+
+		$field->upload($api, $field->uploads(), fn ($file) => $file);
 	}
 
 	public function testValue(): void

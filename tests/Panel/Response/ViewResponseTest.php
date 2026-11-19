@@ -31,12 +31,6 @@ class ViewResponseTest extends TestCase
 		$this->assertSame(403, $error->code());
 	}
 
-	public function testState(): void
-	{
-		$response = new ViewResponse();
-		$this->assertInstanceOf(State::class, $response->state());
-	}
-
 	public function testFrom(): void
 	{
 		$input    = new Redirect('https://getkirby.com');
@@ -69,6 +63,12 @@ class ViewResponseTest extends TestCase
 	{
 		$response = new ViewResponse();
 		$this->assertSame('view', $response->key());
+	}
+
+	public function testState(): void
+	{
+		$response = new ViewResponse();
+		$this->assertInstanceOf(State::class, $response->state());
 	}
 
 	public function testView(): void

@@ -34,6 +34,29 @@ class PageGuards extends ModelGuards
 	}
 
 	/**
+	 * Checks if the page can be created before its content
+	 * has been added. The full checks incl. the content
+	 * validation run in the `create` action.
+	 *
+	 * @throws AbilityException If a listed or unlisted page cannot be published, e.g. the error page
+	 * @throws DuplicateException If the same page or a draft already exists
+	 * @throws InvalidArgumentException If the slug is invalid
+	 * @throws PermissionException If the user is not allowed to create this page or to publish it
+	 */
+	public function ensureToBeCreatable(): void
+	{
+		$this->ensureAvailable('create');
+
+		// creating a non-draft bypasses the normal publish flow;
+		// enforce the same rules
+		if ($this->model->isDraft() === false) {
+			$this->ensureToPublish();
+		}
+
+		$this->validators()->validateToBeCreatable();
+	}
+
+	/**
 	 * Checks if the sorting number of the page can be changed
 	 *
 	 * @throws InvalidArgumentException If the given number is invalid
@@ -111,11 +134,11 @@ class PageGuards extends ModelGuards
 	}
 
 	/**
-	 * Checks if the page can be created
+	 * Checks if the page can be created, including its content
 	 *
 	 * @throws AbilityException If a listed or unlisted page cannot be published, e.g. the error page
 	 * @throws DuplicateException If the same page or a draft already exists
-	 * @throws InvalidArgumentException If the slug is invalid
+	 * @throws InvalidArgumentException If the slug is invalid or the content of a non-draft is incomplete
 	 * @throws PermissionException If the user is not allowed to create this page or to publish it
 	 */
 	protected function ensureToCreate(): void
@@ -178,11 +201,13 @@ class PageGuards extends ModelGuards
 	 * Checks if the page can be published
 	 * (status change from draft to listed or unlisted)
 	 *
-	 * @throws AbilityException If the page is incomplete or its status cannot be changed by any user
+	 * @throws AbilityException If the status of the page cannot be changed by any user
+	 * @throws InvalidArgumentException If the content of a draft is incomplete
 	 * @throws PermissionException If the user is not allowed to change the status
 	 */
 	protected function ensureToPublish(): void
 	{
 		$this->ensureAvailable('publish');
+		$this->validators()->ensure('publish');
 	}
 }

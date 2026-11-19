@@ -9,8 +9,11 @@
 	"alpha": "Alpha",
 	"author": "Autor",
 	"avatar": "Profilbild",
+
 	"back": "Zurück",
+
 	"buttons.empty": "No buttons",
+
 	"cancel": "Abbrechen",
 	"change": "\u00c4ndern",
 	"close": "Schlie\u00dfen",
@@ -132,8 +135,8 @@
 	"error.file.changeTemplate": "The template for the file \"{id}\" cannot be changed",
 	"error.file.changeTemplate.invalid": "Die Vorlage für die Datei \"{id}\" kann nicht zu \"{template}\" geändert werden (gültig: \"{blueprints}\")",
 	"error.file.changeTemplate.permission": "Du kannst die Vorlage für die Datei \"{id}\" nicht ändern",
-	"error.file.create.permission": "The file cannot be created",
 
+	"error.file.create.permission": "The file cannot be created",
 	"error.file.delete.multiple": "Es konnten nicht alle Dateien gelöscht werden. Versuche verbleibende Dateien einzeln zu löschen, um die Ursachen festzustellen.",
 	"error.file.delete.permission": "The file cannot be deleted",
 	"error.file.duplicate": "Eine Datei mit dem Dateinamen \"{filename}\" besteht bereits",
@@ -197,9 +200,9 @@
 	"error.object.validation": "Fehler im \"{label}\" Feld:\n{message}",
 
 	"error.offline": "Das Panel ist zur Zeit offline",
+
 	"error.page.changeSlug.errorPage": "The slug of the error page cannot be changed",
 	"error.page.changeSlug.homePage": "The slug of the home page cannot be changed",
-
 	"error.page.changeSlug.permission": "Du darfst die URL der Seite \"{slug}\" nicht ändern",
 	"error.page.changeSlug.reserved": "Der Pfad für Top-Level Seiten darf nicht mit \"{path}\" beginnen.",
 	"error.page.changeStatus.errorPage": "The status of the error page cannot be changed",
@@ -258,10 +261,10 @@
 	"error.template.default.notFound": "Die \"Default\"-Vorlage existiert nicht",
 
 	"error.unexpected": "Ein unerwarteter Fehler ist aufgetreten. Aktiviere den Debug-Modus für weitere Informationen: https://getkirby.com/docs/reference/system/options/debug",
+
 	"error.user.avatar.duplicate": "The avatar already exists",
 	"error.user.avatar.notFound": "The avatar does not exist",
 	"error.user.changeEmail.admin": "You are not allowed to change the email address of an admin",
-
 	"error.user.changeEmail.permission": "Du kannst die E-Mailadresse für den Account \"{name}\" nicht ändern",
 	"error.user.changeLanguage.permission": "Du kannst die Sprache für den Account \"{name}\" nicht ändern",
 	"error.user.changeName.permission": "Du kannst den Namen für den Account \"{name}\" nicht ändern",
@@ -544,6 +547,7 @@
 	"license.code.help": "Du hast deinen Lizenzschlüssel nach dem Kauf per E-Mail bekommen. Bitte kopiere ihn aus der E-Mail und füge ihn hier ein. ",
 	"license.code.label": "Lizenz-Code",
 	"license.remove.text": "<p>Durch das Entfernen der Lizenz wird die Lizenzdatei unwiderruflich von dieser Website gelöscht. Du kannst diese Website dann mit einem anderen Lizenzschlüssel aktivieren oder denselben Lizenzschlüssel erneut registrieren, wenn die Domain unverändert bleibt.</p> <p>Um die mit der Lizenz verknüpfte Domain zu ändern, wende dich bitte an das Kirby-Team. <a href='https://getkirby.com/license'>Weiterlesen &rarr;</a></p>",
+	"license.status": "Lizenzstatus",
 	"license.status.active.info": "Beinhaltet neue Major Versionen bis {date}",
 	"license.status.active.label": "Gültige Lizenz",
 	"license.status.acknowledged.info": "Du hast bestätigt, dass die <a href=\"https://getkirby.com/license/free-licenses\">Anforderungen für kostenlose Lizenzen</a> erfüllt werden.",
@@ -721,6 +725,7 @@
 	"preview": "Vorschau",
 	"preview.browser.pin": "Toggle whether preview navigation should be in sync or independent",
 	"preview.browser.scroll": "Scrollen synchronisieren",
+
 	"progress": "Progress",
 
 	"protected": "Geschützt",
@@ -805,6 +810,8 @@
 	"theme.dark": "Licht aus",
 	"theme.automatic": "Systemeinstellung übernehmen",
 
+	"time.select": "Zeit auswählen",
+
 	"title": "Titel",
 	"today": "Heute",
 
@@ -839,7 +846,7 @@
 
 	"type": "Typ",
 
-	"unknown": "unknown",
+	"unknown": "unbekannt",
 
 	"upload": "Hochladen",
 	"upload.error.cantMove": "Die Datei konnte nicht an ihren Zielort bewegt werden",

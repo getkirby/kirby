@@ -22,6 +22,23 @@ class Camera implements Stringable
 	}
 
 	/**
+	 * Improved `var_dump` output
+	 * @codeCoverageIgnore
+	 */
+	public function __debugInfo(): array
+	{
+		return $this->toArray();
+	}
+
+	/**
+	 * Returns the full make + model name
+	 */
+	public function __toString(): string
+	{
+		return trim($this->make . ' ' . $this->model);
+	}
+
+	/**
 	 * Returns the make of the camera
 	 */
 	public function make(): string|null
@@ -46,22 +63,5 @@ class Camera implements Stringable
 			'make'  => $this->make,
 			'model' => $this->model
 		];
-	}
-
-	/**
-	 * Returns the full make + model name
-	 */
-	public function __toString(): string
-	{
-		return trim($this->make . ' ' . $this->model);
-	}
-
-	/**
-	 * Improved `var_dump` output
-	 * @codeCoverageIgnore
-	 */
-	public function __debugInfo(): array
-	{
-		return $this->toArray();
 	}
 }

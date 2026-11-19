@@ -9,8 +9,11 @@
 	"alpha": "Alpha",
 	"author": "Penulis",
 	"avatar": "Gambar profil",
+
 	"back": "Kembali",
+
 	"buttons.empty": "No buttons",
+
 	"cancel": "Batal",
 	"change": "Ubah",
 	"close": "Tutup",
@@ -132,8 +135,8 @@
 	"error.file.changeTemplate": "The template for the file \"{id}\" cannot be changed",
 	"error.file.changeTemplate.invalid": "Templat untuk berkas \"{id}\" tidak dapat diubah menjadi \"{template}\" (valid: \"{blueprints}\")",
 	"error.file.changeTemplate.permission": "Anda tidak diizinkan mengubah templat untuk berkas \"{id}\"",
-	"error.file.create.permission": "The file cannot be created",
 
+	"error.file.create.permission": "The file cannot be created",
 	"error.file.delete.multiple": "Not all files could be deleted. Try each remaining file individually to see the specific error that prevents deletion.",
 	"error.file.delete.permission": "The file cannot be deleted",
 	"error.file.duplicate": "Berkas dengan nama \"{filename}\" sudah ada",
@@ -197,9 +200,9 @@
 	"error.object.validation": "Ada kesalahan di bidang \"{label}\":\n{message}",
 
 	"error.offline": "Panel saat ini luring",
+
 	"error.page.changeSlug.errorPage": "The slug of the error page cannot be changed",
 	"error.page.changeSlug.homePage": "The slug of the home page cannot be changed",
-
 	"error.page.changeSlug.permission": "Anda tidak diizinkan mengubah akhiran URL untuk \"{slug}\"",
 	"error.page.changeSlug.reserved": "Alur halaman-halaman level atas tidak boleh diawali dengan \"{path}\"",
 	"error.page.changeStatus.errorPage": "The status of the error page cannot be changed",
@@ -258,10 +261,10 @@
 	"error.template.default.notFound": "Templat bawaan tidak ada",
 
 	"error.unexpected": "Kesalahan tidak terduga terjadi! Hidupkan mode debug untuk informasi lebih lanjut: https://getkirby.com/docs/reference/system/options/debug",
+
 	"error.user.avatar.duplicate": "The avatar already exists",
 	"error.user.avatar.notFound": "The avatar does not exist",
 	"error.user.changeEmail.admin": "You are not allowed to change the email address of an admin",
-
 	"error.user.changeEmail.permission": "Anda tidak diizinkan mengubah surel dari pengguna \"{name}\"",
 	"error.user.changeLanguage.permission": "Anda tidak diizinkan mengubah bahasa dari pengguna \"{name}\"",
 	"error.user.changeName.permission": "Anda tidak diizinkan mengubah nama dari pengguna \"{name}\"",
@@ -544,6 +547,7 @@
 	"license.code.help": "You received your license code after the purchase via email. Please copy and paste it here.",
 	"license.code.label": "License code",
 	"license.remove.text": "<p>Removing the license will irreversibly delete the license file from this site. You can then activate this site with a different license key or re-register the same license key if the domain remains the same.</p><p>To change the domain associated with the license, please contact the Kirby team. <a href='https://getkirby.com/license'>Read more &rarr;</a></p>",
+	"license.status": "License status",
 	"license.status.active.info": "Includes new major versions until {date}",
 	"license.status.active.label": "Valid license",
 	"license.status.acknowledged.info": "You confirmed to comply with the <a href=\"https://getkirby.com/license/free-licenses\">free license requirements</a>",
@@ -608,8 +612,8 @@
 	"login.email.password-reset.subject": "Kode atur ulang sandi Anda",
 	"login.method.code.label": "Login via code",
 	"login.method.code.description": "Login via code lets you sign in without a password. You complete a short verification challenge, e.g. receiving a one-time code via an email or from your authenticator app, and enter it to finish logging in. The code expires quickly and can only be used once, making it a secure login method.",
-	"login.method.password.label": "Login with password",
-	"login.method.password-reset.label": "Forgot your password?",
+	"login.method.password.label": "Masuk dengan sandi",
+	"login.method.password-reset.label": "Lupa sandi Anda?",
 	"login.method.password-reset.submit": "Forgot password",
 	"login.method.webauthn.label": "Login with passkey",
 	"login.methods.label": "Sign in methods",
@@ -721,6 +725,7 @@
 	"preview": "Pratinjau",
 	"preview.browser.pin": "Toggle whether preview navigation should be in sync or independent",
 	"preview.browser.scroll": "Sync scroll",
+
 	"progress": "Progress",
 
 	"protected": "Protected",
@@ -804,6 +809,8 @@
 	"theme.light": "Lights on",
 	"theme.dark": "Lights off",
 	"theme.automatic": "Match system default",
+
+	"time.select": "Select a time",
 
 	"title": "Judul",
 	"today": "Hari ini",

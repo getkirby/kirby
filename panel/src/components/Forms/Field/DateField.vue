@@ -23,7 +23,7 @@
 						@click="$refs.calendar.toggle()"
 					/>
 					<k-dropdown ref="calendar" align-x="end">
-						<k-calendar
+						<k-calendar-input
 							:value="iso.date"
 							:min="min"
 							:max="max"
@@ -47,7 +47,7 @@
 				@input="onTimeInput"
 				@submit="$emit('submit')"
 			>
-				<template v-if="times && !disabled" #icon>
+				<template v-if="time.times !== false && !disabled" #icon>
 					<k-button
 						:icon="time.icon ?? 'clock'"
 						:title="$t('time.select')"
@@ -75,11 +75,11 @@ import { props as DateInput } from "../Input/DateInput.vue";
 /**
  * Form field to handle a date/datetime value.
  *
- * Bundles `k-date-input` with `k-calendar` and, optionally,
- * `k-time-input` with `k-times`.
+ * Bundles `k-date-input` with `k-calendar-input` and, optionally,
+ * `k-time-input` with `k-timeoptions-input`.
  *
  * Have a look at `<k-field>`, `<k-input>`
- * and `<k-datetime-input>` for additional information.
+ * and `<k-date-input>` for additional information.
  *
  * @example
  * <k-date-field :value="date" name="date" label="Date" @input="$emit('input', $event)" />
@@ -106,20 +106,13 @@ export default {
 			default: "calendar"
 		},
 		/**
-		 * Time options (e.g. `display`, `icon`, `step`).
+		 * Time options (e.g. `display`, `icon`, `step`, `times`).
 		 * Please check docs for `k-time-input` props.
 		 * @example { display: 'HH:mm', step: { unit: "minute", size: 30 } }
 		 */
 		time: {
 			type: [Boolean, Object],
 			default: () => ({})
-		},
-		/**
-		 * Deactivate the times dropdown or not
-		 */
-		times: {
-			type: Boolean,
-			default: true
 		}
 	},
 	emits: ["input", "submit"],

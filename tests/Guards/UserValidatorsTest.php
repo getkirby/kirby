@@ -57,6 +57,16 @@ class UserValidatorsTest extends ModelTestCase
 		$this->assertNull($validators->validateAssignableRole('editor'));
 	}
 
+	public function testAssignableRoleWithInvalidRole(): void
+	{
+		$validators = $this->validators();
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.user.role.invalid');
+
+		$validators->validateAssignableRole('rockstar');
+	}
+
 	public function testAssignableRoleWithUnassignableRole(): void
 	{
 		// a role blueprint without a `permissions` key grants every
@@ -85,16 +95,6 @@ class UserValidatorsTest extends ModelTestCase
 		$this->expectExceptionCode('error.user.role.invalid');
 
 		$validators->validateAssignableRole('manager');
-	}
-
-	public function testAssignableRoleWithInvalidRole(): void
-	{
-		$validators = $this->validators();
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionCode('error.user.role.invalid');
-
-		$validators->validateAssignableRole('rockstar');
 	}
 
 	public function testAvatar(): void
@@ -179,6 +179,16 @@ class UserValidatorsTest extends ModelTestCase
 		$validators->validateCreatableRole('editor');
 	}
 
+	public function testCreatableRoleWithInvalidRole(): void
+	{
+		$validators = $this->validators();
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.user.role.invalid');
+
+		$validators->validateCreatableRole('rockstar');
+	}
+
 	public function testCreatableRoleWithUncheckedRole(): void
 	{
 		$validators = $this->validators();
@@ -188,16 +198,6 @@ class UserValidatorsTest extends ModelTestCase
 		$this->assertNull($validators->validateCreatableRole(''));
 		$this->assertNull($validators->validateCreatableRole('default'));
 		$this->assertNull($validators->validateCreatableRole('nobody'));
-	}
-
-	public function testCreatableRoleWithInvalidRole(): void
-	{
-		$validators = $this->validators();
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionCode('error.user.role.invalid');
-
-		$validators->validateCreatableRole('rockstar');
 	}
 
 	public function testEmail(): void
@@ -341,16 +341,6 @@ class UserValidatorsTest extends ModelTestCase
 		$this->assertNull($validators->validateId('new-user'));
 	}
 
-	public function testIdWithReservedId(): void
-	{
-		$validators = $this->validators();
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionCode('error.user.id.reserved');
-
-		$validators->validateId('kirby');
-	}
-
 	public function testIdWithExistingId(): void
 	{
 		$validators = $this->validators();
@@ -359,6 +349,16 @@ class UserValidatorsTest extends ModelTestCase
 		$this->expectExceptionMessage('A user with this id exists');
 
 		$validators->validateId('admin');
+	}
+
+	public function testIdWithReservedId(): void
+	{
+		$validators = $this->validators();
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.user.id.reserved');
+
+		$validators->validateId('kirby');
 	}
 
 	public static function unsafeIdProvider(): array
@@ -469,13 +469,6 @@ class UserValidatorsTest extends ModelTestCase
 		);
 	}
 
-	public function testTotpWithNull(): void
-	{
-		$validators = $this->validators();
-
-		$this->assertNull($validators->validateTotp(null));
-	}
-
 	public function testTotpWithInvalidSecret(): void
 	{
 		$validators = $this->validators();
@@ -484,6 +477,13 @@ class UserValidatorsTest extends ModelTestCase
 		$this->expectExceptionMessage('TOTP secrets should be 32 Base32 digits (= 20 bytes)');
 
 		$validators->validateTotp('foo');
+	}
+
+	public function testTotpWithNull(): void
+	{
+		$validators = $this->validators();
+
+		$this->assertNull($validators->validateTotp(null));
 	}
 
 	protected function user(): User

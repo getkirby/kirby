@@ -10,36 +10,6 @@ use TypeError;
 #[CoversClass(Value::class)]
 class ValueTest extends TestCase
 {
-	public function testCreated(): void
-	{
-		$value = new Value('foo');
-		$this->assertSame(time(), $value->created());
-
-		$value = new Value('foo', 0, 1000);
-		$this->assertSame(1000, $value->created());
-	}
-
-	public function testExpires(): void
-	{
-		$value = new Value('foo');
-		$this->assertNull($value->expires());
-
-		$value = new Value('foo', 0, 10000);
-		$this->assertNull($value->expires());
-
-		$value = new Value('foo', 1000, 0);
-		$this->assertSame(1000 * 60, $value->expires());
-
-		$value = new Value('foo', 1000, 10000);
-		$this->assertSame(10000 + 1000 * 60, $value->expires());
-
-		$value = new Value('foo', 1234567890, 0);
-		$this->assertSame(1234567890, $value->expires());
-
-		$value = new Value('foo', 1234567890, 10000);
-		$this->assertSame(1234567890, $value->expires());
-	}
-
 	public function testArrayConversion(): void
 	{
 		$data = [
@@ -94,6 +64,36 @@ class ValueTest extends TestCase
 			'minutes' => 0,
 			'value'   => 'foo'
 		], $value->toArray());
+	}
+
+	public function testCreated(): void
+	{
+		$value = new Value('foo');
+		$this->assertSame(time(), $value->created());
+
+		$value = new Value('foo', 0, 1000);
+		$this->assertSame(1000, $value->created());
+	}
+
+	public function testExpires(): void
+	{
+		$value = new Value('foo');
+		$this->assertNull($value->expires());
+
+		$value = new Value('foo', 0, 10000);
+		$this->assertNull($value->expires());
+
+		$value = new Value('foo', 1000, 0);
+		$this->assertSame(1000 * 60, $value->expires());
+
+		$value = new Value('foo', 1000, 10000);
+		$this->assertSame(10000 + 1000 * 60, $value->expires());
+
+		$value = new Value('foo', 1234567890, 0);
+		$this->assertSame(1234567890, $value->expires());
+
+		$value = new Value('foo', 1234567890, 10000);
+		$this->assertSame(1234567890, $value->expires());
 	}
 
 	public function testFromArrayInvalid(): void

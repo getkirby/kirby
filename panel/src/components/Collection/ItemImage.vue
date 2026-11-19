@@ -32,7 +32,6 @@ export default {
 	computed: {
 		attrs() {
 			return {
-				back: this.image.back,
 				cover: true,
 				...this.image,
 				ratio: this.layout === "list" ? "auto" : this.image.ratio

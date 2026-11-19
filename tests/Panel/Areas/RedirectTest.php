@@ -4,20 +4,15 @@ namespace Kirby\Panel\Areas;
 
 class RedirectTest extends AreaTestCase
 {
-	public function testAccountWithoutInstallation(): void
-	{
-		$this->assertRedirect('account', 'installation');
-	}
-
 	public function testAccountWithoutAuthentication(): void
 	{
 		$this->install();
 		$this->assertRedirect('account', 'login');
 	}
 
-	public function testInstallationRedirectFromHome(): void
+	public function testAccountWithoutInstallation(): void
 	{
-		$this->assertRedirect('/', 'installation');
+		$this->assertRedirect('account', 'installation');
 	}
 
 	public function testInstallationRedirectFromAnywhere(): void
@@ -25,10 +20,9 @@ class RedirectTest extends AreaTestCase
 		$this->assertRedirect('somewhere', 'installation');
 	}
 
-	public function testInstallationWhenInstalled(): void
+	public function testInstallationRedirectFromHome(): void
 	{
-		$this->install();
-		$this->assertRedirect('installation', 'login');
+		$this->assertRedirect('/', 'installation');
 	}
 
 	public function testInstallationWhenAuthenticated(): void
@@ -38,14 +32,10 @@ class RedirectTest extends AreaTestCase
 		$this->assertRedirect('installation', 'site');
 	}
 
-	public function testLoginRedirectFromHome(): void
+	public function testInstallationWhenInstalled(): void
 	{
 		$this->install();
-
-		$this->assertRedirect('/', 'login');
-
-		// last path gets remembered
-		$this->assertSame('', $this->app->session()->get('panel.path'));
+		$this->assertRedirect('installation', 'login');
 	}
 
 	public function testLoginRedirectFromAnywhere(): void
@@ -58,21 +48,14 @@ class RedirectTest extends AreaTestCase
 		$this->assertSame('somewhere', $this->app->session()->get('panel.path'));
 	}
 
-	public function testLogoutGuest(): void
+	public function testLoginRedirectFromHome(): void
 	{
 		$this->install();
-		$this->assertRedirect('logout', 'login?_globals=system');
-	}
 
-	public function testLogoutUser(): void
-	{
-		$this->install();
-		$this->login('test@getkirby.com');
-		$this->assertSame('test@getkirby.com', $this->app->user()->email());
+		$this->assertRedirect('/', 'login');
 
-		$this->assertRedirect('logout', 'login?_globals=system');
-
-		$this->assertNull($this->app->user());
+		// last path gets remembered
+		$this->assertSame('', $this->app->session()->get('panel.path'));
 	}
 
 	public function testLogoutChallenge(): void
@@ -114,6 +97,12 @@ class RedirectTest extends AreaTestCase
 		$this->assertNotSame($token, $login['system']['csrf']);
 	}
 
+	public function testLogoutGuest(): void
+	{
+		$this->install();
+		$this->assertRedirect('logout', 'login?_globals=system');
+	}
+
 	public function testLogoutTranslation(): void
 	{
 		// the Panel follows the redirects in place and
@@ -130,10 +119,15 @@ class RedirectTest extends AreaTestCase
 		$this->assertSame('en', $login['translation']['code']);
 	}
 
-	public function testPageWithoutAuthentication(): void
+	public function testLogoutUser(): void
 	{
 		$this->install();
-		$this->assertRedirect('pages/home', 'login');
+		$this->login('test@getkirby.com');
+		$this->assertSame('test@getkirby.com', $this->app->user()->email());
+
+		$this->assertRedirect('logout', 'login?_globals=system');
+
+		$this->assertNull($this->app->user());
 	}
 
 	public function testPageWithMissingModel(): void
@@ -143,10 +137,10 @@ class RedirectTest extends AreaTestCase
 		$this->assertErrorView('pages/does-not-exist', 'The page "does-not-exist" cannot be found');
 	}
 
-	public function testSiteWithoutAuthentication(): void
+	public function testPageWithoutAuthentication(): void
 	{
 		$this->install();
-		$this->assertRedirect('site', 'login');
+		$this->assertRedirect('pages/home', 'login');
 	}
 
 	public function testSiteRedirectFromHome(): void
@@ -154,5 +148,11 @@ class RedirectTest extends AreaTestCase
 		$this->install();
 		$this->login();
 		$this->assertRedirect('/', 'site');
+	}
+
+	public function testSiteWithoutAuthentication(): void
+	{
+		$this->install();
+		$this->assertRedirect('site', 'login');
 	}
 }

@@ -9,8 +9,11 @@
 	"alpha": "Alfa",
 	"author": "Autor",
 	"avatar": "Profilov\u00fd obr\u00e1zek",
+
 	"back": "Zpět",
+
 	"buttons.empty": "No buttons",
+
 	"cancel": "Zru\u0161it",
 	"change": "Zm\u011bnit",
 	"close": "Zavřít",
@@ -132,8 +135,8 @@
 	"error.file.changeTemplate": "The template for the file \"{id}\" cannot be changed",
 	"error.file.changeTemplate.invalid": "Šablonu souboru \"{id}\" nelze změnit na \"{template}\" (platné: \"{blueprints}\")",
 	"error.file.changeTemplate.permission": "Nemáte dovoleno změnit šablonu souboru \"{id}\"",
-	"error.file.create.permission": "The file cannot be created",
 
+	"error.file.create.permission": "The file cannot be created",
 	"error.file.delete.multiple": "Nebylo možné vymazat všechny soubory. Zkuste zbývající soubory vymazat postupně, abyste nalezli chybu, která bránila hromadnému smazání.",
 	"error.file.delete.permission": "The file cannot be deleted",
 	"error.file.duplicate": "Soubor s názvem \"{filename}\" již existuje",
@@ -197,9 +200,9 @@
 	"error.object.validation": "V poli \"{label}\" je chyba:\n{message}",
 
 	"error.offline": "Panel je v současnosti off-line",
+
 	"error.page.changeSlug.errorPage": "The slug of the error page cannot be changed",
 	"error.page.changeSlug.homePage": "The slug of the home page cannot be changed",
-
 	"error.page.changeSlug.permission": "Nem\u016f\u017eete zm\u011bnit URL t\u00e9to str\u00e1nky",
 	"error.page.changeSlug.reserved": "Cesta k stránkám na nevyšší úrovni nesmí začínat jako \"{path}\"",
 	"error.page.changeStatus.errorPage": "The status of the error page cannot be changed",
@@ -258,10 +261,10 @@
 	"error.template.default.notFound": "Výchozí šablona neexistuje",
 
 	"error.unexpected": "Vyskytla se neočekávaná chyba! Pro více informací povolte debug mód, viz: https://getkirby.com/docs/reference/system/options/debug",
+
 	"error.user.avatar.duplicate": "The avatar already exists",
 	"error.user.avatar.notFound": "The avatar does not exist",
 	"error.user.changeEmail.admin": "You are not allowed to change the email address of an admin",
-
 	"error.user.changeEmail.permission": "Nemáte dovoleno měnit email uživatele \"{name}\"",
 	"error.user.changeLanguage.permission": "Nemáte dovoleno změnit jazyk uživatele \"{name}\"",
 	"error.user.changeName.permission": "Nemáte dovoleno změnit jméno uživatele \"{name}\"",
@@ -544,6 +547,7 @@
 	"license.code.help": "Licenční kód jste po zakoupení obdrželi na email. Vložte prosím kód a zaregistrujte Vaší kopii.",
 	"license.code.label": "License code",
 	"license.remove.text": "<p>Removing the license will irreversibly delete the license file from this site. You can then activate this site with a different license key or re-register the same license key if the domain remains the same.</p><p>To change the domain associated with the license, please contact the Kirby team. <a href='https://getkirby.com/license'>Read more &rarr;</a></p>",
+	"license.status": "Stav licence",
 	"license.status.active.info": "Platí pro nové verze až do {date}",
 	"license.status.active.label": "Platná licence",
 	"license.status.acknowledged.info": "You confirmed to comply with the <a href=\"https://getkirby.com/license/free-licenses\">free license requirements</a>",
@@ -721,6 +725,7 @@
 	"preview": "Náhled",
 	"preview.browser.pin": "Toggle whether preview navigation should be in sync or independent",
 	"preview.browser.scroll": "Sync scroll",
+
 	"progress": "Progress",
 
 	"protected": "Protected",
@@ -804,6 +809,8 @@
 	"theme.light": "Světlý motiv",
 	"theme.dark": "Tmavý motiv",
 	"theme.automatic": "Podle nastavení systému",
+
+	"time.select": "Vybrat čas",
 
 	"title": "Název",
 	"today": "Dnes",

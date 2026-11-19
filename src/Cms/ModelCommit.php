@@ -66,6 +66,32 @@ class ModelCommit
 
 	/**
 	 * Returns the appropriate arguments for the `after` hook
+	 * for the given file action.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function afterHookArgumentsForFileActions(
+		File $model,
+		string $action,
+		mixed $state
+	): array {
+		return match ($action) {
+			'create' => [
+				'file' => $state
+			],
+			'delete' => [
+				'status' => $state,
+				'file'   => $model
+			],
+			default  => [
+				'newFile' => $state,
+				'oldFile' => $model
+			]
+		};
+	}
+
+	/**
+	 * Returns the appropriate arguments for the `after` hook
 	 * for the given page action.
 	 *
 	 * @return array<string, mixed>
@@ -90,32 +116,6 @@ class ModelCommit
 			default => [
 				'newPage' => $state,
 				'oldPage' => $model
-			]
-		};
-	}
-
-	/**
-	 * Returns the appropriate arguments for the `after` hook
-	 * for the given file action.
-	 *
-	 * @return array<string, mixed>
-	 */
-	protected function afterHookArgumentsForFileActions(
-		File $model,
-		string $action,
-		mixed $state
-	): array {
-		return match ($action) {
-			'create' => [
-				'file' => $state
-			],
-			'delete' => [
-				'status' => $state,
-				'file'   => $model
-			],
-			default  => [
-				'newFile' => $state,
-				'oldFile' => $model
 			]
 		};
 	}

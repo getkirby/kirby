@@ -54,10 +54,6 @@
 export default {
 	props: {
 		/**
-		 * @internal
-		 */
-		config: Object,
-		/**
 		 * If `true`, all fields in the fieldset are disabled
 		 */
 		disabled: Boolean,
@@ -82,7 +78,7 @@ export default {
 		/**
 		 * Focus a specific field in the fieldset or the first one if no name is given
 		 * @public
-		 * @param  {string} name field name to focus
+		 * @param  {string} [name] field name to focus
 		 */
 		focus(name) {
 			if (name) {

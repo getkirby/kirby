@@ -10,8 +10,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Cookie::class)]
 class CookieTest extends TestCase
 {
-	protected string $key;
 	protected array $cookies;
+	protected string $key;
 
 	protected function setUp(): void
 	{

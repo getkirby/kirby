@@ -8,6 +8,15 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(TranslationField::class)]
 class TranslationFieldTest extends TestCase
 {
+	public function testLabel(): void
+	{
+		$field = new TranslationField(
+			label: 'Test'
+		);
+
+		$this->assertSame('Test', $field->label());
+	}
+
 	public function testProps(): void
 	{
 		$field = new TranslationField();
@@ -37,14 +46,5 @@ class TranslationFieldTest extends TestCase
 
 		$this->assertSame($expected, $props);
 		$this->assertCount($this->app->translations()->count(), $field->options());
-	}
-
-	public function testLabel(): void
-	{
-		$field = new TranslationField(
-			label: 'Test'
-		);
-
-		$this->assertSame('Test', $field->label());
 	}
 }

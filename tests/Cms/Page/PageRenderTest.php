@@ -132,58 +132,45 @@ class PageRenderTest extends ModelTestCase
 		);
 	}
 
-	public static function requestMethodProvider(): array
+	public function testIsCacheableDisabledCache(): void
 	{
-		return [
-			['GET', true],
-			['HEAD', true],
-			['POST', false],
-			['DELETE', false],
-			['PATCH', false],
-			['PUT', false],
-		];
-	}
-
-	#[DataProvider('requestMethodProvider')]
-	public function testIsCacheableRequestMethod(
-		string $method,
-		bool $expected
-	): void {
+		// deactivate on top level
 		$app = $this->app->clone([
-			'request' => [
-				'method' => $method
+			'options' => [
+				'cache.pages' => false
 			]
 		]);
 
-		$this->assertSame($expected, $app->page('default')->isCacheable());
-		$this->assertSame($expected, $app->page('default')->isCacheable(VersionId::latest()));
+		$this->assertFalse($app->page('default')->isCacheable());
+
+		// deactivate in array
+		$app = $this->app->clone([
+			'options' => [
+				'cache.pages' => [
+					'active' => false
+				]
+			]
+		]);
+
+		$this->assertFalse($app->page('default')->isCacheable());
+	}
+
+	public function testIsCacheableIgnoreCallback(): void
+	{
+		$app = $this->app->clone([
+			'options' => [
+				'cache.pages' => [
+					'ignore' => fn ($page) => $page->id() === 'default'
+				]
+			]
+		]);
+
+		$this->assertFalse($app->page('default')->isCacheable());
+		$this->assertFalse($app->page('default')->isCacheable(VersionId::latest()));
 		$this->assertFalse($app->page('default')->isCacheable(VersionId::changes()));
-	}
-
-	#[DataProvider('requestMethodProvider')]
-	public function testIsCacheableRequestData(
-		string $method,
-		bool $expected
-	): void {
-		$app = $this->app->clone([
-			'request' => [
-				'method' => $method,
-				'query'  => ['foo' => 'bar']
-			]
-		]);
-
-		$this->assertFalse($app->page('default')->isCacheable());
-	}
-
-	public function testIsCacheableRequestParams(): void
-	{
-		$app = $this->app->clone([
-			'request' => [
-				'url' => 'https://getkirby.com/blog/page:2'
-			]
-		]);
-
-		$this->assertFalse($app->page('default')->isCacheable());
+		$this->assertTrue($app->page('data')->isCacheable());
+		$this->assertTrue($app->page('data')->isCacheable(VersionId::latest()));
+		$this->assertFalse($app->page('data')->isCacheable(VersionId::changes()));
 	}
 
 	public function testIsCacheableIgnoreId(): void
@@ -206,41 +193,54 @@ class PageRenderTest extends ModelTestCase
 		$this->assertFalse($app->page('data')->isCacheable(VersionId::changes()));
 	}
 
-	public function testIsCacheableIgnoreCallback(): void
+	public static function requestMethodProvider(): array
 	{
-		$app = $this->app->clone([
-			'options' => [
-				'cache.pages' => [
-					'ignore' => fn ($page) => $page->id() === 'default'
-				]
-			]
-		]);
-
-		$this->assertFalse($app->page('default')->isCacheable());
-		$this->assertFalse($app->page('default')->isCacheable(VersionId::latest()));
-		$this->assertFalse($app->page('default')->isCacheable(VersionId::changes()));
-		$this->assertTrue($app->page('data')->isCacheable());
-		$this->assertTrue($app->page('data')->isCacheable(VersionId::latest()));
-		$this->assertFalse($app->page('data')->isCacheable(VersionId::changes()));
+		return [
+			['GET', true],
+			['HEAD', true],
+			['POST', false],
+			['DELETE', false],
+			['PATCH', false],
+			['PUT', false],
+		];
 	}
 
-	public function testIsCacheableDisabledCache(): void
-	{
-		// deactivate on top level
+	#[DataProvider('requestMethodProvider')]
+	public function testIsCacheableRequestData(
+		string $method,
+		bool $expected
+	): void {
 		$app = $this->app->clone([
-			'options' => [
-				'cache.pages' => false
+			'request' => [
+				'method' => $method,
+				'query'  => ['foo' => 'bar']
 			]
 		]);
 
 		$this->assertFalse($app->page('default')->isCacheable());
+	}
 
-		// deactivate in array
+	#[DataProvider('requestMethodProvider')]
+	public function testIsCacheableRequestMethod(
+		string $method,
+		bool $expected
+	): void {
 		$app = $this->app->clone([
-			'options' => [
-				'cache.pages' => [
-					'active' => false
-				]
+			'request' => [
+				'method' => $method
+			]
+		]);
+
+		$this->assertSame($expected, $app->page('default')->isCacheable());
+		$this->assertSame($expected, $app->page('default')->isCacheable(VersionId::latest()));
+		$this->assertFalse($app->page('default')->isCacheable(VersionId::changes()));
+	}
+
+	public function testIsCacheableRequestParams(): void
+	{
+		$app = $this->app->clone([
+			'request' => [
+				'url' => 'https://getkirby.com/blog/page:2'
 			]
 		]);
 
@@ -281,31 +281,42 @@ class PageRenderTest extends ModelTestCase
 		$this->assertSame((int)$time, $value->expires());
 	}
 
-	public function testRenderCacheMetadata(): void
+	public function testRenderCacheDataInitial(): void
 	{
 		$cache = $this->app->cache('pages');
-		$page  = $this->app->page('metadata');
+		$page  = $this->app->page('data');
 
-		$this->assertNull($cache->retrieve('metadata.latest.html'));
+		$this->assertNull($cache->retrieve('data.latest.html'));
+
+		$html = $page->render(['test' => 'custom test']);
+		$this->assertStringStartsWith('This is a custom test:', $html);
+
+		$this->assertNull($cache->retrieve('data.latest.html'));
+	}
+
+	public function testRenderCacheDataPreCached(): void
+	{
+		$cache = $this->app->cache('pages');
+		$page  = $this->app->page('data');
+
+		$this->assertNull($cache->retrieve('data.latest.html'));
 
 		$html1 = $page->render();
 		$this->assertStringStartsWith('This is a test:', $html1);
-		$this->assertSame(202, $this->app->response()->code());
-		$this->assertSame(['Cache-Control' => 'private'], $this->app->response()->headers());
-		$this->assertSame('text/plain', $this->app->response()->type());
 
-		// reset the Kirby Responder object
-		$this->setUp();
-		$this->assertNull($this->app->response()->code());
-		$this->assertSame([], $this->app->response()->headers());
-		$this->assertNull($this->app->response()->type());
+		$value = $cache->retrieve('data.latest.html');
+		$this->assertInstanceOf(Value::class, $value);
+		$this->assertSame($html1, $value->value()['html']);
+		$this->assertNull($value->expires());
 
-		// ensure the Responder object is restored from cache
-		$html2 = $this->app->page('metadata')->render();
-		$this->assertSame($html1, $html2);
-		$this->assertSame(202, $this->app->response()->code());
-		$this->assertSame(['Cache-Control' => 'private'], $this->app->response()->headers());
-		$this->assertSame('text/plain', $this->app->response()->type());
+		$html2 = $page->render(['test' => 'custom test']);
+		$this->assertStringStartsWith('This is a custom test:', $html2);
+
+		// cache still stores the non-custom result
+		$value = $cache->retrieve('data.latest.html');
+		$this->assertInstanceOf(Value::class, $value);
+		$this->assertSame($html1, $value->value()['html']);
+		$this->assertNull($value->expires());
 	}
 
 	public function testRenderCacheDisabled(): void
@@ -333,36 +344,6 @@ class PageRenderTest extends ModelTestCase
 			['dynamic-session', ['session']],
 			['dynamic-auth-session', ['auth', 'session']],
 		];
-	}
-
-	#[DataProvider('dynamicProvider')]
-	public function testRenderCacheDynamicNonActive(
-		string $slug,
-		array $dynamicElements
-	): void {
-		$cache = $this->app->cache('pages');
-		$page  = $this->app->page($slug);
-
-		$this->assertNull($cache->retrieve($slug . '.latest.html'));
-
-		$html1 = $page->render();
-		$this->assertStringStartsWith('This is a test:', $html1);
-
-		$cacheValue = $cache->retrieve($slug . '.latest.html');
-		$this->assertNotNull($cacheValue);
-		$this->assertSame(in_array('auth', $dynamicElements), $cacheValue->value()['usesAuth']);
-		if (in_array('cookie', $dynamicElements)) {
-			$this->assertSame(['foo'], $cacheValue->value()['usesCookies']);
-		} elseif (in_array('session', $dynamicElements)) {
-			$this->assertSame(['kirby_session'], $cacheValue->value()['usesCookies']);
-		} else {
-			$this->assertSame([], $cacheValue->value()['usesCookies']);
-		}
-
-		// reset the Kirby Responder object
-		$this->setUp();
-		$html2 = $page->render();
-		$this->assertSame($html1, $html2);
 	}
 
 	#[DataProvider('dynamicProvider')]
@@ -429,75 +410,61 @@ class PageRenderTest extends ModelTestCase
 		$this->assertNotSame($html1, $html2);
 	}
 
-	public function testRenderCacheDataInitial(): void
-	{
+	#[DataProvider('dynamicProvider')]
+	public function testRenderCacheDynamicNonActive(
+		string $slug,
+		array $dynamicElements
+	): void {
 		$cache = $this->app->cache('pages');
-		$page  = $this->app->page('data');
+		$page  = $this->app->page($slug);
 
-		$this->assertNull($cache->retrieve('data.latest.html'));
-
-		$html = $page->render(['test' => 'custom test']);
-		$this->assertStringStartsWith('This is a custom test:', $html);
-
-		$this->assertNull($cache->retrieve('data.latest.html'));
-	}
-
-	public function testRenderCacheDataPreCached(): void
-	{
-		$cache = $this->app->cache('pages');
-		$page  = $this->app->page('data');
-
-		$this->assertNull($cache->retrieve('data.latest.html'));
+		$this->assertNull($cache->retrieve($slug . '.latest.html'));
 
 		$html1 = $page->render();
 		$this->assertStringStartsWith('This is a test:', $html1);
 
-		$value = $cache->retrieve('data.latest.html');
-		$this->assertInstanceOf(Value::class, $value);
-		$this->assertSame($html1, $value->value()['html']);
-		$this->assertNull($value->expires());
+		$cacheValue = $cache->retrieve($slug . '.latest.html');
+		$this->assertNotNull($cacheValue);
+		$this->assertSame(in_array('auth', $dynamicElements), $cacheValue->value()['usesAuth']);
+		if (in_array('cookie', $dynamicElements)) {
+			$this->assertSame(['foo'], $cacheValue->value()['usesCookies']);
+		} elseif (in_array('session', $dynamicElements)) {
+			$this->assertSame(['kirby_session'], $cacheValue->value()['usesCookies']);
+		} else {
+			$this->assertSame([], $cacheValue->value()['usesCookies']);
+		}
 
-		$html2 = $page->render(['test' => 'custom test']);
-		$this->assertStringStartsWith('This is a custom test:', $html2);
-
-		// cache still stores the non-custom result
-		$value = $cache->retrieve('data.latest.html');
-		$this->assertInstanceOf(Value::class, $value);
-		$this->assertSame($html1, $value->value()['html']);
-		$this->assertNull($value->expires());
+		// reset the Kirby Responder object
+		$this->setUp();
+		$html2 = $page->render();
+		$this->assertSame($html1, $html2);
 	}
 
-	public function testRenderRepresentationDefault(): void
+	public function testRenderCacheMetadata(): void
 	{
-		$page = $this->app->page('representation');
+		$cache = $this->app->cache('pages');
+		$page  = $this->app->page('metadata');
 
-		$this->assertSame('<html>Some HTML: representation</html>', $page->render());
-	}
+		$this->assertNull($cache->retrieve('metadata.latest.html'));
 
-	public function testRenderRepresentationOverride(): void
-	{
-		$page = $this->app->page('representation');
+		$html1 = $page->render();
+		$this->assertStringStartsWith('This is a test:', $html1);
+		$this->assertSame(202, $this->app->response()->code());
+		$this->assertSame(['Cache-Control' => 'private'], $this->app->response()->headers());
+		$this->assertSame('text/plain', $this->app->response()->type());
 
-		$this->assertSame('<html>Some HTML: representation</html>', $page->render(contentType: 'html'));
-		$this->assertSame('{"some json": "representation"}', $page->render(contentType: 'json'));
-	}
+		// reset the Kirby Responder object
+		$this->setUp();
+		$this->assertNull($this->app->response()->code());
+		$this->assertSame([], $this->app->response()->headers());
+		$this->assertNull($this->app->response()->type());
 
-	public function testRenderRepresentationMissing(): void
-	{
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The content representation cannot be found');
-
-		$page = $this->app->page('representation');
-		$page->render(contentType: 'txt');
-	}
-
-	public function testRenderTemplateMissing(): void
-	{
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The default template does not exist');
-
-		$page = $this->app->page('invalid');
-		$page->render();
+		// ensure the Responder object is restored from cache
+		$html2 = $this->app->page('metadata')->render();
+		$this->assertSame($html1, $html2);
+		$this->assertSame(202, $this->app->response()->code());
+		$this->assertSame(['Cache-Control' => 'private'], $this->app->response()->headers());
+		$this->assertSame('text/plain', $this->app->response()->type());
 	}
 
 	public function testRenderController(): void
@@ -506,6 +473,20 @@ class PageRenderTest extends ModelTestCase
 
 		$this->assertSame('Data says TEST: controller and default!', $page->render());
 		$this->assertSame('Data says TEST: controller and custom!', $page->render(['test' => 'override', 'test2' => 'custom']));
+	}
+
+	public function testRenderHookAfter(): void
+	{
+		$app = $this->app->clone([
+			'hooks' => [
+				'page.render:after' => function ($contentType, $data, $html, $page) {
+					return str_replace(':', '-', $html);
+				}
+			]
+		]);
+
+		$page = $app->page('foo');
+		$this->assertSame('foo - Foo Title', $page->render());
 	}
 
 	public function testRenderHookBefore(): void
@@ -523,18 +504,37 @@ class PageRenderTest extends ModelTestCase
 		$this->assertSame('Bar Title : Test', $page->render());
 	}
 
-	public function testRenderHookAfter(): void
+	public function testRenderRepresentationDefault(): void
 	{
-		$app = $this->app->clone([
-			'hooks' => [
-				'page.render:after' => function ($contentType, $data, $html, $page) {
-					return str_replace(':', '-', $html);
-				}
-			]
-		]);
+		$page = $this->app->page('representation');
 
-		$page = $app->page('foo');
-		$this->assertSame('foo - Foo Title', $page->render());
+		$this->assertSame('<html>Some HTML: representation</html>', $page->render());
+	}
+
+	public function testRenderRepresentationMissing(): void
+	{
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The content representation cannot be found');
+
+		$page = $this->app->page('representation');
+		$page->render(contentType: 'txt');
+	}
+
+	public function testRenderRepresentationOverride(): void
+	{
+		$page = $this->app->page('representation');
+
+		$this->assertSame('<html>Some HTML: representation</html>', $page->render(contentType: 'html'));
+		$this->assertSame('{"some json": "representation"}', $page->render(contentType: 'json'));
+	}
+
+	public function testRenderTemplateMissing(): void
+	{
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The default template does not exist');
+
+		$page = $this->app->page('invalid');
+		$page->render();
 	}
 
 	public function testRenderVersionDetectedFromRequest(): void
@@ -603,20 +603,6 @@ class PageRenderTest extends ModelTestCase
 		$this->assertSame("<recursive>\nVersion: latest\nContent: Latest Title\n</recursive>", $page->render(versionId: 'latest'));
 	}
 
-	public function testRenderVersionManual(): void
-	{
-		$page = $this->app->page('version');
-		$page->version('latest')->save(['title' => 'Latest Title']);
-		$page->version('changes')->save(['title' => 'Changes Title']);
-
-		$this->assertSame("Version: latest\nContent: Latest Title", $page->render(versionId: 'latest'));
-		$this->assertSame("Version: latest\nContent: Latest Title", $page->render(versionId: VersionId::latest()));
-		$this->assertSame("Version: changes\nContent: Changes Title", $page->render(versionId: 'changes'));
-		$this->assertSame("Version: changes\nContent: Changes Title", $page->render(versionId: VersionId::changes()));
-
-		$this->assertNull(VersionId::$render);
-	}
-
 	public function testRenderVersionException(): void
 	{
 		$page = $this->app->page('version-exception');
@@ -634,6 +620,33 @@ class PageRenderTest extends ModelTestCase
 	public function testRenderVersionFromRequestAuthenticated(): void
 	{
 		$page = $this->app->page('default');
+
+		$this->app->clone([
+			'request' => [
+				'query' => [
+					'_token'   => $page->version('latest')->previewToken(),
+					'_version' => 'latest'
+				]
+			]
+		]);
+
+		$this->assertSame('latest', $page->renderVersionFromRequest()->value());
+
+		$this->app->clone([
+			'request' => [
+				'query' => [
+					'_token'   => $page->version('changes')->previewToken(),
+					'_version' => 'changes'
+				]
+			]
+		]);
+
+		$this->assertSame('changes', $page->renderVersionFromRequest()->value());
+	}
+
+	public function testRenderVersionFromRequestAuthenticatedDraft(): void
+	{
+		$page = $this->app->page('version-draft');
 
 		$this->app->clone([
 			'request' => [
@@ -697,31 +710,44 @@ class PageRenderTest extends ModelTestCase
 		$this->assertSame('changes', $page->renderVersionFromRequest()->value());
 	}
 
-	public function testRenderVersionFromRequestAuthenticatedDraft(): void
+	public function testRenderVersionFromRequestInvalidId(): void
 	{
-		$page = $this->app->page('version-draft');
-
-		$this->app->clone([
-			'request' => [
-				'query' => [
-					'_token'   => $page->version('latest')->previewToken(),
-					'_version' => 'latest'
-				]
-			]
-		]);
-
-		$this->assertSame('latest', $page->renderVersionFromRequest()->value());
+		$page       = $this->app->page('default');
+		$draft      = $this->app->page('version-draft');
+		$draftChild = $this->app->page('version-draft/a-child');
 
 		$this->app->clone([
 			'request' => [
 				'query' => [
 					'_token'   => $page->version('changes')->previewToken(),
+					'_version' => 'some-gibberish'
+				]
+			]
+		]);
+
+		$this->assertSame('latest', $page->renderVersionFromRequest()->value());
+		$this->assertNull($draft->renderVersionFromRequest());
+		$this->assertNull($draftChild->renderVersionFromRequest());
+	}
+
+	public function testRenderVersionFromRequestInvalidToken(): void
+	{
+		$page       = $this->app->page('default');
+		$draft      = $this->app->page('version-draft');
+		$draftChild = $this->app->page('version-draft/a-child');
+
+		$this->app->clone([
+			'request' => [
+				'query' => [
+					'_token'   => 'some-gibberish',
 					'_version' => 'changes'
 				]
 			]
 		]);
 
-		$this->assertSame('changes', $page->renderVersionFromRequest()->value());
+		$this->assertSame('latest', $page->renderVersionFromRequest()->value());
+		$this->assertNull($draft->renderVersionFromRequest());
+		$this->assertNull($draftChild->renderVersionFromRequest());
 	}
 
 	public function testRenderVersionFromRequestMismatch(): void
@@ -749,26 +775,6 @@ class PageRenderTest extends ModelTestCase
 		]);
 
 		$this->assertSame('latest', $page->renderVersionFromRequest()->value());
-	}
-
-	public function testRenderVersionFromRequestInvalidId(): void
-	{
-		$page       = $this->app->page('default');
-		$draft      = $this->app->page('version-draft');
-		$draftChild = $this->app->page('version-draft/a-child');
-
-		$this->app->clone([
-			'request' => [
-				'query' => [
-					'_token'   => $page->version('changes')->previewToken(),
-					'_version' => 'some-gibberish'
-				]
-			]
-		]);
-
-		$this->assertSame('latest', $page->renderVersionFromRequest()->value());
-		$this->assertNull($draft->renderVersionFromRequest());
-		$this->assertNull($draftChild->renderVersionFromRequest());
 	}
 
 	public function testRenderVersionFromRequestMissingId(): void
@@ -818,23 +824,17 @@ class PageRenderTest extends ModelTestCase
 		$this->assertNull($draftChild->renderVersionFromRequest());
 	}
 
-	public function testRenderVersionFromRequestInvalidToken(): void
+	public function testRenderVersionManual(): void
 	{
-		$page       = $this->app->page('default');
-		$draft      = $this->app->page('version-draft');
-		$draftChild = $this->app->page('version-draft/a-child');
+		$page = $this->app->page('version');
+		$page->version('latest')->save(['title' => 'Latest Title']);
+		$page->version('changes')->save(['title' => 'Changes Title']);
 
-		$this->app->clone([
-			'request' => [
-				'query' => [
-					'_token'   => 'some-gibberish',
-					'_version' => 'changes'
-				]
-			]
-		]);
+		$this->assertSame("Version: latest\nContent: Latest Title", $page->render(versionId: 'latest'));
+		$this->assertSame("Version: latest\nContent: Latest Title", $page->render(versionId: VersionId::latest()));
+		$this->assertSame("Version: changes\nContent: Changes Title", $page->render(versionId: 'changes'));
+		$this->assertSame("Version: changes\nContent: Changes Title", $page->render(versionId: VersionId::changes()));
 
-		$this->assertSame('latest', $page->renderVersionFromRequest()->value());
-		$this->assertNull($draft->renderVersionFromRequest());
-		$this->assertNull($draftChild->renderVersionFromRequest());
+		$this->assertNull(VersionId::$render);
 	}
 }

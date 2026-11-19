@@ -110,98 +110,12 @@ class QueryTest extends TestCase
 		]);
 	}
 
-	public function testJoin(): void
+	/**
+	 * Helper function for testFetch()
+	 */
+	public function fetchTestCallable(array $row, $key = null)
 	{
-		$user = $this->database
-			->table('users')
-			->join('roles', 'roles.id = users.role_id')
-			->where([
-				'username' => 'john'
-			])
-			->first();
-
-		$this->assertSame('admin', $user->role());
-	}
-
-	public function testInnerJoin(): void
-	{
-		$user = $this->database
-			->table('users')
-			->innerJoin('roles', 'roles.id = users.role_id')
-			->where([
-				'username' => 'john'
-			])
-			->first();
-
-		$this->assertSame('admin', $user->role());
-	}
-
-	public function testLeftJoin(): void
-	{
-		$user = $this->database
-			->table('users')
-			->leftJoin('roles', 'roles.id = users.role_id')
-			->where([
-				'username' => 'john'
-			])
-			->first();
-
-		$this->assertSame('admin', $user->role());
-	}
-
-	public function testRightJoin(): void
-	{
-		$query = $this->database
-			->table('users')
-			->rightJoin('roles', 'users.role_id = roles.id')
-			->build('select');
-
-		// the result of the query should be correct, but we cannot
-		// test it directly against SQLite because it does not support
-		// right joins
-		$expected = 'SELECT * FROM "users" RIGHT JOIN "roles" ON users.role_id = roles.id';
-
-		$this->assertSame($expected, $query['query']);
-	}
-
-	public function testBuildInvalidType(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid query type: foo');
-
-		$this->database->table('users')->build('foo');
-	}
-
-	public function testOrder(): void
-	{
-		$user = $this->database
-			->table('users')
-			->order('username desc')
-			->first();
-
-		$this->assertSame('paul', $user->username());
-	}
-
-	public function testGroup(): void
-	{
-		$sum = $this->database
-			->table('users')
-			->group('role_id')
-			->where([
-				'role_id' => 3
-			])
-			->sum('balance');
-
-		$this->assertSame((float)150, $sum);
-	}
-
-	public function testSum(): void
-	{
-		$sum = $this->database
-			->table('users')
-			->sum('balance');
-
-		$this->assertSame((float)470, $sum);
+		return $row['fname'] . ' ' . $row['lname'];
 	}
 
 	public function testAggregateAndDebug(): void
@@ -211,10 +125,42 @@ class QueryTest extends TestCase
 			->debug(true)
 			->aggregate('avg', 'balance');
 
-
 		$this->assertArrayHasKey('query', $result);
 		$this->assertArrayHasKey('bindings', $result);
 		$this->assertArrayHasKey('options', $result);
+	}
+
+	public function testAndWhere(): void
+	{
+		$count = $this->database
+			->table('users')
+			->where([
+				'role_id' => 3
+			])
+			->andWhere('balance > 50')
+			->count();
+
+		$this->assertSame(1, $count);
+
+		// with value 0
+		$count = $this->database
+			->table('users')
+			->where([
+				'role_id' => 3
+			])
+			->andWhere('balance', '>', 0)
+			->count();
+
+		$this->assertSame(2, $count);
+
+		// 'AND' as value
+		$count = $this->database
+			->table('users')
+			->where('fname', '=', 'Mark')
+			->andWhere('password', '=', 'AND')
+			->count();
+
+		$this->assertSame(1, $count);
 	}
 
 	public function testAvg(): void
@@ -228,6 +174,37 @@ class QueryTest extends TestCase
 			->avg('balance');
 
 		$this->assertSame((float)75, $balance);
+	}
+
+	public function testBindings(): void
+	{
+		$query = $this->database
+			->table('users')
+			->where('role_id = :role', ['role' => 3]);
+
+		$this->assertSame(['role' => 3], $query->bindings());
+	}
+
+	public function testBuildInvalidType(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid query type: foo');
+
+		$this->database->table('users')->build('foo');
+	}
+
+	public function testColumn(): void
+	{
+		$users = $this->database
+			->table('users')
+			->where([
+				'role_id' => 3
+			])
+			->column('username');
+
+		$this->assertInstanceOf(Collection::class, $users);
+		$this->assertCount(2, $users->data());
+		$this->assertSame(['george', 'mark'], $users->data());
 	}
 
 	public function testCount(): void
@@ -296,32 +273,6 @@ class QueryTest extends TestCase
 		$this->assertSame(4, $users()->distinct()->group('role_id')->count());
 	}
 
-	public function testQuery(): void
-	{
-		$result = $this->database
-			->query('SELECT * FROM users WHERE role_id = :role', ['role' => 3]);
-
-		$this->assertCount(2, $result->data());
-	}
-
-	public function testUpdate(): void
-	{
-		// update
-		$update = $this->database
-			->table('users')
-			->update(['balance' => 250], ['id' => 1]);
-
-		$this->assertTrue($update);
-
-		// check updated user value
-		$user = $this->database
-			->table('users')
-			->where(['id' => 1])
-			->first();
-
-		$this->assertSame('250', $user->balance());
-	}
-
 	public function testDelete(): void
 	{
 		$delete = $this->database
@@ -355,13 +306,16 @@ class QueryTest extends TestCase
 		$this->assertCount(5, $this->database->table('users')->all());
 	}
 
-	public function testMagicCall(): void
+	public function testDistinct(): void
 	{
-		$user = $this->database
+		$users = $this->database
 			->table('users')
-			->findByUsername('george');
+			->distinct(true)
+			->select('password')
+			->all();
 
-		$this->assertSame('george', $user->username());
+		// there are two different passwords in use
+		$this->assertCount(2, $users);
 	}
 
 	public function testFail(): void
@@ -451,59 +405,11 @@ class QueryTest extends TestCase
 		);
 	}
 
-	/**
-	 * Helper function for testFetch()
-	 */
-	public function fetchTestCallable(array $row, $key = null)
-	{
-		return $row['fname'] . ' ' . $row['lname'];
-	}
-
 	public function testFind(): void
 	{
 		$user = $this->database
 			->table('users')
 			->find(2);
-
-		$this->assertSame('paul', $user->username());
-	}
-
-	public function testDistinct(): void
-	{
-		$users = $this->database
-			->table('users')
-			->distinct(true)
-			->select('password')
-			->all();
-
-		// there are two different passwords in use
-		$this->assertCount(2, $users);
-	}
-
-	public function testMin(): void
-	{
-		$balance = $this->database
-			->table('users')
-			->min('balance');
-
-		$this->assertSame((float)-30, $balance);
-	}
-
-	public function testMax(): void
-	{
-		$balance = $this->database
-			->table('users')
-			->max('balance');
-
-		$this->assertSame((float)200, $balance);
-	}
-
-	public function testPrimaryKeyName(): void
-	{
-		$user = $this->database
-			->table('users')
-			->primaryKeyName('username')
-			->find('paul');
 
 		$this->assertSame('paul', $user->username());
 	}
@@ -521,27 +427,17 @@ class QueryTest extends TestCase
 		$this->assertSame('John', $query->One()->fname());
 	}
 
-	public function testColumn(): void
+	public function testGroup(): void
 	{
-		$users = $this->database
+		$sum = $this->database
 			->table('users')
+			->group('role_id')
 			->where([
 				'role_id' => 3
 			])
-			->column('username');
+			->sum('balance');
 
-		$this->assertInstanceOf(Collection::class, $users);
-		$this->assertCount(2, $users->data());
-		$this->assertSame(['george', 'mark'], $users->data());
-	}
-
-	public function testBindings(): void
-	{
-		$query = $this->database
-			->table('users')
-			->where('role_id = :role', ['role' => 3]);
-
-		$this->assertSame(['role' => 3], $query->bindings());
+		$this->assertSame((float)150, $sum);
 	}
 
 	public function testHaving(): void
@@ -572,6 +468,249 @@ class QueryTest extends TestCase
 			->table('users')
 			->having('foo', '>', 1)
 			->count();
+	}
+
+	public function testInnerJoin(): void
+	{
+		$user = $this->database
+			->table('users')
+			->innerJoin('roles', 'roles.id = users.role_id')
+			->where([
+				'username' => 'john'
+			])
+			->first();
+
+		$this->assertSame('admin', $user->role());
+	}
+
+	public function testJoin(): void
+	{
+		$user = $this->database
+			->table('users')
+			->join('roles', 'roles.id = users.role_id')
+			->where([
+				'username' => 'john'
+			])
+			->first();
+
+		$this->assertSame('admin', $user->role());
+	}
+
+	public function testLeftJoin(): void
+	{
+		$user = $this->database
+			->table('users')
+			->leftJoin('roles', 'roles.id = users.role_id')
+			->where([
+				'username' => 'john'
+			])
+			->first();
+
+		$this->assertSame('admin', $user->role());
+	}
+
+	public function testMagicCall(): void
+	{
+		$user = $this->database
+			->table('users')
+			->findByUsername('george');
+
+		$this->assertSame('george', $user->username());
+	}
+
+	public function testMax(): void
+	{
+		$balance = $this->database
+			->table('users')
+			->max('balance');
+
+		$this->assertSame((float)200, $balance);
+	}
+
+	public function testMin(): void
+	{
+		$balance = $this->database
+			->table('users')
+			->min('balance');
+
+		$this->assertSame((float)-30, $balance);
+	}
+
+	public function testOrder(): void
+	{
+		$user = $this->database
+			->table('users')
+			->order('username desc')
+			->first();
+
+		$this->assertSame('paul', $user->username());
+	}
+
+	public function testOrWhere(): void
+	{
+		$count = $this->database
+			->table('users')
+			->where([
+				'role_id' => 1
+			])
+			->orWhere('balance <= 100')
+			->count();
+
+		$this->assertSame(4, $count);
+
+		// with value 0
+		$count = $this->database
+			->table('users')
+			->where([
+				'role_id' => 1
+			])
+			->orWhere('balance', '<=', 0)
+			->count();
+
+		$this->assertSame(2, $count);
+
+		// 'AND' as value
+		$count = $this->database
+			->table('users')
+			->where('balance', '>=', 100)
+			->orWhere('password', '=', 'AND')
+			->count();
+
+		$this->assertSame(4, $count);
+	}
+
+	public function testPage(): void
+	{
+		$query = $this->database->table('users');
+
+		// example one
+		$results = $query->page(1, 10);
+		$pagination = $results->pagination();
+
+		$this->assertCount(5, $results);
+		$this->assertSame('John', $results->first()->fname());
+		$this->assertTrue($pagination instanceof Pagination);
+		$this->assertSame(1, $pagination->pages());
+		$this->assertSame(5, $pagination->total());
+		$this->assertSame(1, $pagination->page());
+		$this->assertSame(1, $pagination->start());
+		$this->assertSame(5, $pagination->end());
+		$this->assertSame(10, $pagination->limit());
+
+		// example two
+		$results = $query->page(3, 1);
+		$pagination = $results->pagination();
+
+		$this->assertCount(1, $results);
+		$this->assertSame('George', $results->first()->fname());
+		$this->assertTrue($pagination instanceof Pagination);
+		$this->assertSame(5, $pagination->pages());
+		$this->assertSame(5, $pagination->total());
+		$this->assertSame(3, $pagination->page());
+		$this->assertSame(3, $pagination->start());
+		$this->assertSame(3, $pagination->end());
+		$this->assertSame(1, $pagination->limit());
+
+		// example three
+		$results = $query->page(2, 3);
+		$pagination = $results->pagination();
+
+		$this->assertCount(2, $results);
+		$this->assertSame('Mark', $results->first()->fname());
+		$this->assertTrue($pagination instanceof Pagination);
+		$this->assertSame(2, $pagination->pages());
+		$this->assertSame(5, $pagination->total());
+		$this->assertSame(2, $pagination->page());
+		$this->assertSame(4, $pagination->start());
+		$this->assertSame(5, $pagination->end());
+		$this->assertSame(3, $pagination->limit());
+	}
+
+	public function testPageGrouped(): void
+	{
+		$results = $this->database
+			->table('users')
+			->select('role_id')
+			->group('role_id')
+			->page(1, 3);
+
+		$pagination = $results->pagination();
+
+		$this->assertCount(3, $results);
+		$this->assertSame(4, $pagination->total());
+		$this->assertSame(2, $pagination->pages());
+	}
+
+	public function testPrimaryKeyName(): void
+	{
+		$user = $this->database
+			->table('users')
+			->primaryKeyName('username')
+			->find('paul');
+
+		$this->assertSame('paul', $user->username());
+	}
+
+	public function testQuery(): void
+	{
+		$result = $this->database
+			->query('SELECT * FROM users WHERE role_id = :role', ['role' => 3]);
+
+		$this->assertCount(2, $result->data());
+	}
+
+	public function testRightJoin(): void
+	{
+		$query = $this->database
+			->table('users')
+			->rightJoin('roles', 'users.role_id = roles.id')
+			->build('select');
+
+		// the result of the query should be correct, but we cannot
+		// test it directly against SQLite because it does not support
+		// right joins
+		$expected = 'SELECT * FROM "users" RIGHT JOIN "roles" ON users.role_id = roles.id';
+
+		$this->assertSame($expected, $query['query']);
+	}
+
+	public function testSum(): void
+	{
+		$sum = $this->database
+			->table('users')
+			->sum('balance');
+
+		$this->assertSame((float)470, $sum);
+	}
+
+	public function testTable(): void
+	{
+		// should not throw an exception
+		$this->database->table('users');
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid table: accounts');
+
+		// should throw an exception
+		$this->database->table('accounts');
+	}
+
+	public function testUpdate(): void
+	{
+		// update
+		$update = $this->database
+			->table('users')
+			->update(['balance' => 250], ['id' => 1]);
+
+		$this->assertTrue($update);
+
+		// check updated user value
+		$user = $this->database
+			->table('users')
+			->where(['id' => 1])
+			->first();
+
+		$this->assertSame('250', $user->balance());
 	}
 
 	public function testWhere(): void
@@ -673,6 +812,39 @@ class QueryTest extends TestCase
 		$this->assertSame(1, $count);
 	}
 
+	public function testWhereCallback(): void
+	{
+		$count = $this->database
+			->table('users')
+			->where('balance', '>', 75)
+			->where(fn ($q) => $q->where('role_id', '=', 3))
+			->count();
+
+		$this->assertSame(1, $count);
+	}
+
+	public function testWhereInvalidColumn(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid column "foo" in clause');
+
+		$this->database
+			->table('users')
+			->where('foo', '=', 'whatever')
+			->count();
+	}
+
+	public function testWhereInvalidColumnArray(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid column "foo" in clause');
+
+		$this->database
+			->table('users')
+			->where(['foo' => 'whatever'])
+			->count();
+	}
+
 	public function testWhereInvalidPredicate(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -693,178 +865,5 @@ class QueryTest extends TestCase
 			->table('users')
 			->where('username', '<!>', 'john')
 			->count();
-	}
-
-	public function testWhereInvalidColumnArray(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid column "foo" in clause');
-
-		$this->database
-			->table('users')
-			->where(['foo' => 'whatever'])
-			->count();
-	}
-
-	public function testWhereInvalidColumn(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid column "foo" in clause');
-
-		$this->database
-			->table('users')
-			->where('foo', '=', 'whatever')
-			->count();
-	}
-
-	public function testAndWhere(): void
-	{
-		$count = $this->database
-			->table('users')
-			->where([
-				'role_id' => 3
-			])
-			->andWhere('balance > 50')
-			->count();
-
-		$this->assertSame(1, $count);
-
-		// with value 0
-		$count = $this->database
-			->table('users')
-			->where([
-				'role_id' => 3
-			])
-			->andWhere('balance', '>', 0)
-			->count();
-
-		$this->assertSame(2, $count);
-
-		// 'AND' as value
-		$count = $this->database
-			->table('users')
-			->where('fname', '=', 'Mark')
-			->andWhere('password', '=', 'AND')
-			->count();
-
-		$this->assertSame(1, $count);
-	}
-
-	public function testOrWhere(): void
-	{
-		$count = $this->database
-			->table('users')
-			->where([
-				'role_id' => 1
-			])
-			->orWhere('balance <= 100')
-			->count();
-
-		$this->assertSame(4, $count);
-
-		// with value 0
-		$count = $this->database
-			->table('users')
-			->where([
-				'role_id' => 1
-			])
-			->orWhere('balance', '<=', 0)
-			->count();
-
-		$this->assertSame(2, $count);
-
-		// 'AND' as value
-		$count = $this->database
-			->table('users')
-			->where('balance', '>=', 100)
-			->orWhere('password', '=', 'AND')
-			->count();
-
-		$this->assertSame(4, $count);
-	}
-
-	public function testWhereCallback(): void
-	{
-		$count = $this->database
-			->table('users')
-			->where('balance', '>', 75)
-			->where(fn ($q) => $q->where('role_id', '=', 3))
-			->count();
-
-		$this->assertSame(1, $count);
-	}
-
-	public function testPage(): void
-	{
-		$query = $this->database->table('users');
-
-		// example one
-		$results = $query->page(1, 10);
-		$pagination = $results->pagination();
-
-		$this->assertCount(5, $results);
-		$this->assertSame('John', $results->first()->fname());
-		$this->assertTrue($pagination instanceof Pagination);
-		$this->assertSame(1, $pagination->pages());
-		$this->assertSame(5, $pagination->total());
-		$this->assertSame(1, $pagination->page());
-		$this->assertSame(1, $pagination->start());
-		$this->assertSame(5, $pagination->end());
-		$this->assertSame(10, $pagination->limit());
-
-		// example two
-		$results = $query->page(3, 1);
-		$pagination = $results->pagination();
-
-		$this->assertCount(1, $results);
-		$this->assertSame('George', $results->first()->fname());
-		$this->assertTrue($pagination instanceof Pagination);
-		$this->assertSame(5, $pagination->pages());
-		$this->assertSame(5, $pagination->total());
-		$this->assertSame(3, $pagination->page());
-		$this->assertSame(3, $pagination->start());
-		$this->assertSame(3, $pagination->end());
-		$this->assertSame(1, $pagination->limit());
-
-		// example three
-		$results = $query->page(2, 3);
-		$pagination = $results->pagination();
-
-		$this->assertCount(2, $results);
-		$this->assertSame('Mark', $results->first()->fname());
-		$this->assertTrue($pagination instanceof Pagination);
-		$this->assertSame(2, $pagination->pages());
-		$this->assertSame(5, $pagination->total());
-		$this->assertSame(2, $pagination->page());
-		$this->assertSame(4, $pagination->start());
-		$this->assertSame(5, $pagination->end());
-		$this->assertSame(3, $pagination->limit());
-	}
-
-	public function testPageGrouped(): void
-	{
-		$results = $this->database
-			->table('users')
-			->select('role_id')
-			->group('role_id')
-			->page(1, 3);
-
-		$pagination = $results->pagination();
-
-		$this->assertCount(3, $results);
-		$this->assertSame(4, $pagination->total());
-		$this->assertSame(2, $pagination->pages());
-	}
-
-	public function testTable(): void
-	{
-		// should not throw an exception
-		$this->database->table('users');
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid table: accounts');
-
-		// should throw an exception
-		$this->database->table('accounts');
 	}
 }

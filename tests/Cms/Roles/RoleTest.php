@@ -19,17 +19,23 @@ class RoleTest extends TestCase
 		]);
 	}
 
-	public function testProps(): void
+	public function testDefaultAdmin(): void
 	{
-		$role = new Role([
-			'description' => 'Test',
-			'name'  => 'admin',
-			'title' => 'Admin'
-		]);
+		$app  = $this->app();
+		$role = Role::defaultAdmin();
 
 		$this->assertSame('admin', $role->name());
 		$this->assertSame('Admin', $role->title());
-		$this->assertSame('Test', $role->description());
+	}
+
+	public function testDefaultNobody(): void
+	{
+		$app  = $this->app();
+		$role = Role::defaultNobody();
+
+		$this->assertSame('nobody', $role->name());
+		$this->assertSame('Nobody', $role->title());
+		$this->assertTrue($role->isNobody());
 	}
 
 	public function testFactory(): void
@@ -40,14 +46,6 @@ class RoleTest extends TestCase
 		$this->assertSame('editor', $role->name());
 		$this->assertSame('Editor', $role->title());
 		$this->assertSame('This should be inherited', $role->description());
-	}
-
-	public function testMissingRole(): void
-	{
-		$this->expectException(Exception::class);
-
-		$this->app();
-		Role::load('does-not-exist');
 	}
 
 	public function testIs(): void
@@ -181,23 +179,25 @@ class RoleTest extends TestCase
 		$this->assertFalse($role->isAccessible());
 	}
 
-	public function testDefaultAdmin(): void
+	public function testMissingRole(): void
 	{
-		$app  = $this->app();
-		$role = Role::defaultAdmin();
+		$this->expectException(Exception::class);
+
+		$this->app();
+		Role::load('does-not-exist');
+	}
+
+	public function testProps(): void
+	{
+		$role = new Role([
+			'description' => 'Test',
+			'name'  => 'admin',
+			'title' => 'Admin'
+		]);
 
 		$this->assertSame('admin', $role->name());
 		$this->assertSame('Admin', $role->title());
-	}
-
-	public function testDefaultNobody(): void
-	{
-		$app  = $this->app();
-		$role = Role::defaultNobody();
-
-		$this->assertSame('nobody', $role->name());
-		$this->assertSame('Nobody', $role->title());
-		$this->assertTrue($role->isNobody());
+		$this->assertSame('Test', $role->description());
 	}
 
 	public function testTitleFromName(): void
@@ -207,32 +207,6 @@ class RoleTest extends TestCase
 		]);
 
 		$this->assertSame('Editor in chief', $role->title());
-	}
-
-	public function testTranslateTitle(): void
-	{
-		$role = new Role([
-			'name' => 'editor',
-			'title' => [
-				'en' => 'Editor',
-				'de' => 'Bearbeiter'
-			]
-		]);
-
-		$this->assertSame('Editor', $role->title());
-	}
-
-	public function testTranslateDescription(): void
-	{
-		$role = new Role([
-			'name' => 'editor',
-			'description' => [
-				'en' => 'Editor',
-				'de' => 'Bearbeiter'
-			]
-		]);
-
-		$this->assertSame('Editor', $role->title());
 	}
 
 	public function testToArrayAndDebugInfo(): void
@@ -252,5 +226,31 @@ class RoleTest extends TestCase
 
 		$this->assertSame($expected, $role->toArray());
 		$this->assertSame($expected, $role->__debugInfo());
+	}
+
+	public function testTranslateDescription(): void
+	{
+		$role = new Role([
+			'name' => 'editor',
+			'description' => [
+				'en' => 'Editor',
+				'de' => 'Bearbeiter'
+			]
+		]);
+
+		$this->assertSame('Editor', $role->title());
+	}
+
+	public function testTranslateTitle(): void
+	{
+		$role = new Role([
+			'name' => 'editor',
+			'title' => [
+				'en' => 'Editor',
+				'de' => 'Bearbeiter'
+			]
+		]);
+
+		$this->assertSame('Editor', $role->title());
 	}
 }

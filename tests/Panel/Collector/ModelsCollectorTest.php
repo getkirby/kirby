@@ -42,11 +42,6 @@ class ModelsCollectorMock extends ModelsCollector
 		return $models;
 	}
 
-	public function queryModel(): ModelWithContent
-	{
-		return $this->model();
-	}
-
 	public function parentModel(): Site|Page|User
 	{
 		return $this->parent();
@@ -56,6 +51,11 @@ class ModelsCollectorMock extends ModelsCollector
 	{
 		return $this->queryData();
 	}
+
+	public function queryModel(): ModelWithContent
+	{
+		return $this->model();
+	}
 }
 
 #[CoversClass(ModelsCollector::class)]
@@ -63,14 +63,14 @@ class ModelsCollectorTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.Collector.ModelsCollector';
 
-	public function testFlip(): void
-	{
-		$this->assertFlip(ModelsCollectorMock::class, ['c', 'b', 'a']);
-	}
-
 	public function testCollectByQuery(): void
 	{
 		$this->assertCollectByQuery(ModelsCollectorMock::class, 'test', ['a', 'b']);
+	}
+
+	public function testFlip(): void
+	{
+		$this->assertFlip(ModelsCollectorMock::class, ['c', 'b', 'a']);
 	}
 
 	public function testIsFlipping(): void
@@ -119,6 +119,11 @@ class ModelsCollectorTest extends TestCase
 		$this->assertModels(ModelsCollectorMock::class, Pages::class);
 	}
 
+	public function testPagination(): void
+	{
+		$this->assertPagination(ModelsCollectorMock::class);
+	}
+
 	public function testParent(): void
 	{
 		$collector = new ModelsCollectorMock();
@@ -128,11 +133,6 @@ class ModelsCollectorTest extends TestCase
 		$collector = new ModelsCollectorMock(parent: new Page(['slug' => 'test']));
 
 		$this->assertInstanceOf(Page::class, $collector->parentModel());
-	}
-
-	public function testPagination(): void
-	{
-		$this->assertPagination(ModelsCollectorMock::class);
 	}
 
 	public function testQueryData(): void

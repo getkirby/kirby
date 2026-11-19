@@ -15,15 +15,15 @@ class TimeField extends DateTimeField
 {
 	public const ISO = 'H:i:s';
 
-	#[Prop]
-	protected string|null $format = self::ISO;
-
 	/**
 	 * Custom format (dayjs tokens: `HH`, `hh`, `mm`, `ss`, `a`) that is
 	 * used to display the field in the Panel
 	 */
 	#[Prop(computed: true)]
 	protected string|null $display = null;
+
+	#[Prop]
+	protected string|null $format = self::ISO;
 
 	#[Prop]
 	protected string|null $icon = 'clock';
@@ -53,6 +53,12 @@ class TimeField extends DateTimeField
 	#[Prop(setter: 'setStep')]
 	protected array $step = ['size' => 5, 'unit' => 'minute'];
 
+	/**
+	 * Activate/deactivate the times dropdown
+	 */
+	#[Prop]
+	protected bool $times = true;
+
 	public function display(): string
 	{
 		if ($this->display) {
@@ -81,6 +87,11 @@ class TimeField extends DateTimeField
 	public function step(): array
 	{
 		return $this->step;
+	}
+
+	public function times(): bool
+	{
+		return $this->times;
 	}
 
 	protected function validations(): array

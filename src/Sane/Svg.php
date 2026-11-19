@@ -394,6 +394,46 @@ class Svg extends Xml
 	];
 
 	/**
+	 * Returns the sanitization options for the handler
+	 * @internal
+	 *
+	 * @param $isExternal Whether the string is from an external file
+	 *                   that may be accessed directly
+	 * @return array<string, mixed>
+	 */
+	public static function options(bool $isExternal): array
+	{
+		return [
+			...parent::options($isExternal),
+			'allowedAttrPrefixes' => static::$allowedAttrPrefixes,
+			'allowedAttrs'        => static::$allowedAttrs,
+			'allowedNamespaces'   => static::$allowedNamespaces,
+			'allowedTags'         => static::$allowedTags,
+			'disallowedTags'      => static::$disallowedTags,
+		];
+	}
+
+	/**
+	 * Parses the given string into a `Toolkit\Dom` object
+	 *
+	 * @throws InvalidArgumentException If the file couldn't be parsed
+	 */
+	protected static function parse(string $string): Dom
+	{
+		$svg  = parent::parse($string);
+		$root = $svg->document()->documentElement->nodeName;
+
+		// basic validation before we continue sanitizing/validating
+		if ($root !== 'svg') {
+			throw new InvalidArgumentException(
+				message: 'The file is not a SVG (got <' . $root . '>)'
+			);
+		}
+
+		return $svg;
+	}
+
+	/**
 	 * Custom callback for additional attribute sanitization
 	 * @internal
 	 *
@@ -472,45 +512,5 @@ class Svg extends Xml
 		if (mb_strtolower($doctype->name) !== 'svg') {
 			throw new InvalidArgumentException(message: 'Invalid doctype');
 		}
-	}
-
-	/**
-	 * Returns the sanitization options for the handler
-	 * @internal
-	 *
-	 * @param $isExternal Whether the string is from an external file
-	 *                   that may be accessed directly
-	 * @return array<string, mixed>
-	 */
-	public static function options(bool $isExternal): array
-	{
-		return [
-			...parent::options($isExternal),
-			'allowedAttrPrefixes' => static::$allowedAttrPrefixes,
-			'allowedAttrs'        => static::$allowedAttrs,
-			'allowedNamespaces'   => static::$allowedNamespaces,
-			'allowedTags'         => static::$allowedTags,
-			'disallowedTags'      => static::$disallowedTags,
-		];
-	}
-
-	/**
-	 * Parses the given string into a `Toolkit\Dom` object
-	 *
-	 * @throws InvalidArgumentException If the file couldn't be parsed
-	 */
-	protected static function parse(string $string): Dom
-	{
-		$svg  = parent::parse($string);
-		$root = $svg->document()->documentElement->nodeName;
-
-		// basic validation before we continue sanitizing/validating
-		if ($root !== 'svg') {
-			throw new InvalidArgumentException(
-				message: 'The file is not a SVG (got <' . $root . '>)'
-			);
-		}
-
-		return $svg;
 	}
 }

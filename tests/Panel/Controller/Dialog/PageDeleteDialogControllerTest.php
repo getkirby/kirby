@@ -74,23 +74,14 @@ class PageDeleteDialogControllerTest extends TestCase
 		$this->assertCount(2, $this->app->site()->children());
 
 		$page       = $this->app->page('test');
+		$uuid       = $page->uuid()->toString();
 		$controller = new PageDeleteDialogController($page);
 		$response   = $controller->submit();
 
 		$this->assertSame('page.delete', $response['event']);
+		$this->assertSame(['id' => 'test', 'uuid' => $uuid], $response['page']);
 		$this->assertNull($response['redirect']);
 		$this->assertCount(1, $this->app->site()->children());
-	}
-
-	public function testSubmitWithChildrenUnchecked(): void
-	{
-		$page = $this->app->page('test-with-children');
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionCode('error.page.delete.confirm');
-
-		$controller = new PageDeleteDialogController($page);
-		$controller->submit();
 	}
 
 	public function testSubmitWithChildrenChecked(): void
@@ -113,6 +104,17 @@ class PageDeleteDialogControllerTest extends TestCase
 
 		$this->assertSame('page.delete', $response['event']);
 		$this->assertCount(1, $this->app->site()->children());
+	}
+
+	public function testSubmitWithChildrenUnchecked(): void
+	{
+		$page = $this->app->page('test-with-children');
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.page.delete.confirm');
+
+		$controller = new PageDeleteDialogController($page);
+		$controller->submit();
 	}
 
 	public function testSubmitWithReferrer(): void

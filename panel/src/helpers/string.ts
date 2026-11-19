@@ -296,13 +296,18 @@ export function slug(
 
 	let str = String(string).trim().toLowerCase();
 
-	// replace according to language and ascii rules
+	// replace according to language and ascii rules,
+	// whose keys list characters separated by `|` (like `Str::ascii()`)
 	for (const ruleset of rules) {
 		for (const rule in ruleset) {
-			const isTrimmed = rule.slice(0, 1) !== "/";
-			const trimmed = rule.slice(1, rule.length - 1);
-			const regex = isTrimmed ? rule : trimmed;
-			str = str.replace(new RegExp(RegExp.escape(regex), "g"), ruleset[rule]);
+			// remove legacy '/.../' delimiters
+			const group = rule.startsWith("/") === true ? rule.slice(1, -1) : rule;
+
+			for (const char of group.split("|")) {
+				if (char !== "") {
+					str = str.replaceAll(char, ruleset[rule]);
+				}
+			}
 		}
 	}
 

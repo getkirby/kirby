@@ -19,78 +19,6 @@ class MockCollectionEntry
 
 class CollectionFilterTest extends TestCase
 {
-	public function testFilterArray(): void
-	{
-		$collection = new Collection([
-			[
-				'name'  => 'Bastian',
-				'role'  => 'developer',
-				'color' => 'red'
-			],
-			[
-				'name' => 'Nico',
-				'role' => 'developer',
-				'color' => 'green'
-			],
-			[
-				'name'  => 'Sonja',
-				'role'  => 'support',
-				'color' => 'red'
-			]
-		]);
-
-		$expected = [
-			[
-				'name'  => 'Bastian',
-				'role'  => 'developer',
-				'color' => 'red'
-			]
-		];
-
-		$result = $collection->filter([
-			['role', '==', 'developer'],
-			['color', '==', 'red']
-		]);
-		$this->assertInstanceOf(Collection::class, $result);
-		$this->assertSame($expected, $result->data());
-
-		$result = $collection->filterBy([
-			['role', '==', 'developer'],
-			['color', '==', 'red']
-		]);
-		$this->assertInstanceOf(Collection::class, $result);
-		$this->assertSame($expected, $result->data());
-	}
-
-	public function testFilterClosure(): void
-	{
-		$collection = new Collection([
-			[
-				'name'  => 'Bastian',
-				'role'  => 'founder'
-			],
-			[
-				'name' => 'Nico',
-				'role' => 'developer'
-			]
-		]);
-
-		$expected = [
-			[
-				'name'  => 'Bastian',
-				'role'  => 'founder'
-			]
-		];
-
-		$result = $collection->filter(fn ($item) => $item['role'] === 'founder');
-		$this->assertInstanceOf(Collection::class, $result);
-		$this->assertSame($expected, $result->data());
-
-		$result = $collection->filterBy(fn ($item) => $item['role'] === 'founder');
-		$this->assertInstanceOf(Collection::class, $result);
-		$this->assertSame($expected, $result->data());
-	}
-
 	public static function filterDataProvider(): array
 	{
 		return [
@@ -691,6 +619,78 @@ class CollectionFilterTest extends TestCase
 		$result     = $collection->filter('attribute', $operator, $test, $split);
 
 		$this->assertSame($expected, $result->keys(), $operator);
+	}
+
+	public function testFilterArray(): void
+	{
+		$collection = new Collection([
+			[
+				'name'  => 'Bastian',
+				'role'  => 'developer',
+				'color' => 'red'
+			],
+			[
+				'name' => 'Nico',
+				'role' => 'developer',
+				'color' => 'green'
+			],
+			[
+				'name'  => 'Sonja',
+				'role'  => 'support',
+				'color' => 'red'
+			]
+		]);
+
+		$expected = [
+			[
+				'name'  => 'Bastian',
+				'role'  => 'developer',
+				'color' => 'red'
+			]
+		];
+
+		$result = $collection->filter([
+			['role', '==', 'developer'],
+			['color', '==', 'red']
+		]);
+		$this->assertInstanceOf(Collection::class, $result);
+		$this->assertSame($expected, $result->data());
+
+		$result = $collection->filterBy([
+			['role', '==', 'developer'],
+			['color', '==', 'red']
+		]);
+		$this->assertInstanceOf(Collection::class, $result);
+		$this->assertSame($expected, $result->data());
+	}
+
+	public function testFilterClosure(): void
+	{
+		$collection = new Collection([
+			[
+				'name'  => 'Bastian',
+				'role'  => 'founder'
+			],
+			[
+				'name' => 'Nico',
+				'role' => 'developer'
+			]
+		]);
+
+		$expected = [
+			[
+				'name'  => 'Bastian',
+				'role'  => 'founder'
+			]
+		];
+
+		$result = $collection->filter(fn ($item) => $item['role'] === 'founder');
+		$this->assertInstanceOf(Collection::class, $result);
+		$this->assertSame($expected, $result->data());
+
+		$result = $collection->filterBy(fn ($item) => $item['role'] === 'founder');
+		$this->assertInstanceOf(Collection::class, $result);
+		$this->assertSame($expected, $result->data());
 	}
 
 	public function testNot(): void

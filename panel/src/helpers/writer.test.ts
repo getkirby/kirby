@@ -264,6 +264,22 @@ describe("createExtensionsFromPlugins", () => {
 		const result = createExtensionsFromPlugins(plugins, Mark.prototype);
 		expect(Object.keys(result)).toEqual(["foo", "bar"]);
 	});
+
+	it("should fall back to an empty schema for plugins without one", () => {
+		const plugins = {
+			marker: {
+				commands() {
+					return () => {};
+				}
+			}
+		};
+
+		const marks = createExtensionsFromPlugins(plugins, Mark.prototype);
+		const nodes = createExtensionsFromPlugins(plugins, Node.prototype);
+
+		expect(marks.marker.schema).toStrictEqual({});
+		expect(nodes.marker.schema).toStrictEqual({});
+	});
 });
 
 describe("filterExtensions", () => {

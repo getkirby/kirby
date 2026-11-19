@@ -57,206 +57,26 @@ class FileStoreTest extends TestCase
 		$this->assertDirectoryDoesNotExist(static::TMP);
 	}
 
-	public function testConstructorNotWritable(): void
+	/**
+	 * Asserts that the given session currently has an open handle
+	 *
+	 * @param $name Combined name
+	 */
+	protected function assertHandleExists(string $name): void
 	{
-		$this->expectException(Exception::class);
-		$this->expectExceptionCode('error.session.filestore.dirNotWritable');
-
-		Dir::make(static::TMP, true);
-		chmod(static::TMP, 0o555);
-
-		new FileStore(static::TMP);
+		$handles = $this->storeHandles->getValue($this->store);
+		$this->assertTrue(isset($handles[$name]));
 	}
 
-	public function testCreateId(): void
+	/**
+	 * Asserts that the given session currently has no open handle
+	 *
+	 * @param $name Combined name
+	 */
+	protected function assertHandleNotExists(string $name): void
 	{
-		$id = $this->store->createId(1234567890);
-
-		$this->assertStringMatchesFormat('%x', $id);
-		$this->assertSame(20, strlen($id));
-		$this->assertFileExists(static::TMP . '/1234567890.' . $id . '.sess');
-		$this->assertHandleExists('1234567890.' . $id);
-		$this->assertLocked('1234567890.' . $id);
-	}
-
-	public function testExists(): void
-	{
-		$this->assertTrue($this->store->exists(1234567890, 'abcdefghijabcdefghij'));
-		$this->assertTrue($this->store->exists(1357913579, 'abcdefghijabcdefghij'));
-		$this->assertTrue($this->store->exists(7777777777, 'abcdefghijabcdefghij'));
-		$this->assertTrue($this->store->exists(8888888888, 'abcdefghijabcdefghij'));
-		$this->assertTrue($this->store->exists(9999999999, 'abcdefghijabcdefghij'));
-		$this->assertFalse($this->store->exists(1234567890, 'someotherid'));
-
-		$this->assertHandleNotExists('1234567890.abcdefghijabcdefghij');
-		$this->assertHandleNotExists('1357913579.abcdefghijabcdefghij');
-		$this->assertHandleNotExists('7777777777.abcdefghijabcdefghij');
-		$this->assertHandleNotExists('8888888888.abcdefghijabcdefghij');
-		$this->assertHandleNotExists('9999999999.abcdefghijabcdefghij');
-	}
-
-	public function testLock(): void
-	{
-		$this->store->lock(1234567890, 'abcdefghijabcdefghij');
-		$this->assertLocked('1234567890.abcdefghijabcdefghij');
-		$this->assertHandleExists('1234567890.abcdefghijabcdefghij');
-
-		// lock an already locked file
-		$this->store->lock(1234567890, 'abcdefghijabcdefghij');
-		$this->assertLocked('1234567890.abcdefghijabcdefghij');
-		$this->assertHandleExists('1234567890.abcdefghijabcdefghij');
-	}
-
-	public function testLockNonExistingFile(): void
-	{
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionCode('error.session.filestore.notFound');
-
-		$this->store->lock(1234567890, 'someotherid');
-	}
-
-	public function testUnlock(): void
-	{
-		// unlock an unlocked file
-		$this->assertNotLocked('1234567890.abcdefghijabcdefghij');
-		$this->store->unlock(1234567890, 'abcdefghijabcdefghij');
-		$this->assertNotLocked('1234567890.abcdefghijabcdefghij');
-		$this->assertHandleNotExists('1234567890.abcdefghijabcdefghij');
-
-		// lock and then unlock again
-		$this->store->lock(1357913579, 'abcdefghijabcdefghij');
-		$this->assertLocked('1357913579.abcdefghijabcdefghij');
-		$this->store->unlock(1357913579, 'abcdefghijabcdefghij');
-		$this->assertNotLocked('1357913579.abcdefghijabcdefghij');
-
-		// non-existing file: *not* supposed to throw an Exception
-		$this->store->unlock(1234567890, 'someotherid');
-
-		// locked file that doesn't exist anymore
-		$this->store->lock(1357913579, 'abcdefghijabcdefghij');
-		$this->assertLocked('1357913579.abcdefghijabcdefghij');
-		unlink(static::TMP . '/1357913579.abcdefghijabcdefghij.sess');
-		$this->store->unlock(1357913579, 'abcdefghijabcdefghij');
-		$this->assertNotLocked('1357913579.abcdefghijabcdefghij');
-	}
-
-	public function testGet(): void
-	{
-		$this->assertSame('1234567890', $this->store->get(1234567890, 'abcdefghijabcdefghij'));
-		$this->assertHandleExists('1234567890.abcdefghijabcdefghij');
-
-		$this->assertSame('', $this->store->get(8888888888, 'abcdefghijabcdefghij'));
-	}
-
-	public function testGetNonExistingFile(): void
-	{
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionCode('error.session.filestore.notFound');
-
-		$this->store->get(1234567890, 'someotherid');
-	}
-
-	public function testGetUnreadableFile(): void
-	{
-		$this->expectException(Exception::class);
-		$this->expectExceptionCode('error.session.filestore.notOpened');
-
-		// session files need to have read and write permissions even for reading
-		chmod(static::TMP . '/1234567890.abcdefghijabcdefghij.sess', 0o444);
-		$this->store->get(1234567890, 'abcdefghijabcdefghij');
-	}
-
-	public function testSet(): void
-	{
-		$this->assertSame('1234567890', $this->store->get(1234567890, 'abcdefghijabcdefghij'));
-
-		$this->store->lock(1234567890, 'abcdefghijabcdefghij');
-		$this->store->set(1234567890, 'abcdefghijabcdefghij', 'some other data');
-
-		$this->assertLocked('1234567890.abcdefghijabcdefghij');
-		$this->assertHandleExists('1234567890.abcdefghijabcdefghij');
-		$this->assertSame('some other data', F::read(static::TMP . '/1234567890.abcdefghijabcdefghij.sess'));
-		$this->assertSame('some other data', $this->store->get(1234567890, 'abcdefghijabcdefghij'));
-	}
-
-	public function testSetNonExistingFile(): void
-	{
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionCode('error.session.filestore.notFound');
-
-		$this->store->set(1234567890, 'someotherid', 'some other data');
-	}
-
-	public function testSetWithoutLock(): void
-	{
-		$this->expectException(LogicException::class);
-		$this->expectExceptionCode('error.session.filestore.notLocked');
-
-		$this->assertSame('1234567890', $this->store->get(1234567890, 'abcdefghijabcdefghij'));
-
-		$this->store->set(1234567890, 'abcdefghijabcdefghij', 'some other data');
-	}
-
-	public function testDestroy(): void
-	{
-		$this->assertFileExists(static::TMP . '/1234567890.abcdefghijabcdefghij.sess');
-		$this->assertNotLocked('1234567890.abcdefghijabcdefghij');
-		$this->assertHandleNotExists('1234567890.abcdefghijabcdefghij');
-
-		$this->store->destroy(1234567890, 'abcdefghijabcdefghij');
-
-		$this->assertFileDoesNotExist(static::TMP . '/1234567890.abcdefghijabcdefghij.sess');
-		$this->assertNotLocked('1234567890.abcdefghijabcdefghij');
-		$this->assertHandleNotExists('1234567890.abcdefghijabcdefghij');
-	}
-
-	public function testDestroyAlreadyDestroyed(): void
-	{
-		// make sure we get a handle
-		$this->assertSame('1234567890', $this->store->get(1234567890, 'abcdefghijabcdefghij'));
-		$this->assertHandleExists('1234567890.abcdefghijabcdefghij');
-
-		// simulate that another thread deleted the file
-		unlink(static::TMP . '/1234567890.abcdefghijabcdefghij.sess');
-
-		// shouldn't throw an Exception
-		$this->store->destroy(1234567890, 'abcdefghijabcdefghij');
-	}
-
-	public function testAccessAfterDestroy(): void
-	{
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionCode('error.session.filestore.notFound');
-
-		// make sure we get a handle
-		$this->assertSame('1234567890', $this->store->get(1234567890, 'abcdefghijabcdefghij'));
-		$this->store->lock(1234567890, 'abcdefghijabcdefghij');
-		$this->assertHandleExists('1234567890.abcdefghijabcdefghij');
-
-		// simulate that another thread deleted the file
-		unlink(static::TMP . '/1234567890.abcdefghijabcdefghij.sess');
-
-		// now it should throw even if there is already a handle
-		$this->store->set(1234567890, 'abcdefghijabcdefghij', 'something else');
-	}
-
-	public function testCollectGarbage(): void
-	{
-		$this->assertFileExists(static::TMP . '/.gitignore');
-		$this->assertFileExists(static::TMP . '/1234567890.abcdefghijabcdefghij.sess');
-		$this->assertFileExists(static::TMP . '/1357913579.abcdefghijabcdefghij.sess');
-		$this->assertFileExists(static::TMP . '/7777777777.abcdefghijabcdefghij.sess');
-		$this->assertFileExists(static::TMP . '/8888888888.abcdefghijabcdefghij.sess');
-		$this->assertFileExists(static::TMP . '/9999999999.abcdefghijabcdefghij.sess');
-
-		$this->store->collectGarbage();
-
-		$this->assertFileExists(static::TMP . '/.gitignore');
-		$this->assertFileDoesNotExist(static::TMP . '/1234567890.abcdefghijabcdefghij.sess');
-		$this->assertFileExists(static::TMP . '/1357913579.abcdefghijabcdefghij.sess');
-		$this->assertFileExists(static::TMP . '/7777777777.abcdefghijabcdefghij.sess');
-		$this->assertFileExists(static::TMP . '/8888888888.abcdefghijabcdefghij.sess');
-		$this->assertFileExists(static::TMP . '/9999999999.abcdefghijabcdefghij.sess');
+		$handles = $this->storeHandles->getValue($this->store);
+		$this->assertFalse(isset($handles[$name]));
 	}
 
 	/**
@@ -299,25 +119,205 @@ class FileStoreTest extends TestCase
 		}
 	}
 
-	/**
-	 * Asserts that the given session currently has an open handle
-	 *
-	 * @param $name Combined name
-	 */
-	protected function assertHandleExists(string $name): void
+	public function testAccessAfterDestroy(): void
 	{
-		$handles = $this->storeHandles->getValue($this->store);
-		$this->assertTrue(isset($handles[$name]));
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionCode('error.session.filestore.notFound');
+
+		// make sure we get a handle
+		$this->assertSame('1234567890', $this->store->get(1234567890, 'abcdefghijabcdefghij'));
+		$this->store->lock(1234567890, 'abcdefghijabcdefghij');
+		$this->assertHandleExists('1234567890.abcdefghijabcdefghij');
+
+		// simulate that another thread deleted the file
+		unlink(static::TMP . '/1234567890.abcdefghijabcdefghij.sess');
+
+		// now it should throw even if there is already a handle
+		$this->store->set(1234567890, 'abcdefghijabcdefghij', 'something else');
 	}
 
-	/**
-	 * Asserts that the given session currently has no open handle
-	 *
-	 * @param $name Combined name
-	 */
-	protected function assertHandleNotExists(string $name): void
+	public function testCollectGarbage(): void
 	{
-		$handles = $this->storeHandles->getValue($this->store);
-		$this->assertFalse(isset($handles[$name]));
+		$this->assertFileExists(static::TMP . '/.gitignore');
+		$this->assertFileExists(static::TMP . '/1234567890.abcdefghijabcdefghij.sess');
+		$this->assertFileExists(static::TMP . '/1357913579.abcdefghijabcdefghij.sess');
+		$this->assertFileExists(static::TMP . '/7777777777.abcdefghijabcdefghij.sess');
+		$this->assertFileExists(static::TMP . '/8888888888.abcdefghijabcdefghij.sess');
+		$this->assertFileExists(static::TMP . '/9999999999.abcdefghijabcdefghij.sess');
+
+		$this->store->collectGarbage();
+
+		$this->assertFileExists(static::TMP . '/.gitignore');
+		$this->assertFileDoesNotExist(static::TMP . '/1234567890.abcdefghijabcdefghij.sess');
+		$this->assertFileExists(static::TMP . '/1357913579.abcdefghijabcdefghij.sess');
+		$this->assertFileExists(static::TMP . '/7777777777.abcdefghijabcdefghij.sess');
+		$this->assertFileExists(static::TMP . '/8888888888.abcdefghijabcdefghij.sess');
+		$this->assertFileExists(static::TMP . '/9999999999.abcdefghijabcdefghij.sess');
+	}
+
+	public function testConstructorNotWritable(): void
+	{
+		$this->expectException(Exception::class);
+		$this->expectExceptionCode('error.session.filestore.dirNotWritable');
+
+		Dir::make(static::TMP, true);
+		chmod(static::TMP, 0o555);
+
+		new FileStore(static::TMP);
+	}
+
+	public function testCreateId(): void
+	{
+		$id = $this->store->createId(1234567890);
+
+		$this->assertStringMatchesFormat('%x', $id);
+		$this->assertSame(20, strlen($id));
+		$this->assertFileExists(static::TMP . '/1234567890.' . $id . '.sess');
+		$this->assertHandleExists('1234567890.' . $id);
+		$this->assertLocked('1234567890.' . $id);
+	}
+
+	public function testDestroy(): void
+	{
+		$this->assertFileExists(static::TMP . '/1234567890.abcdefghijabcdefghij.sess');
+		$this->assertNotLocked('1234567890.abcdefghijabcdefghij');
+		$this->assertHandleNotExists('1234567890.abcdefghijabcdefghij');
+
+		$this->store->destroy(1234567890, 'abcdefghijabcdefghij');
+
+		$this->assertFileDoesNotExist(static::TMP . '/1234567890.abcdefghijabcdefghij.sess');
+		$this->assertNotLocked('1234567890.abcdefghijabcdefghij');
+		$this->assertHandleNotExists('1234567890.abcdefghijabcdefghij');
+	}
+
+	public function testDestroyAlreadyDestroyed(): void
+	{
+		// make sure we get a handle
+		$this->assertSame('1234567890', $this->store->get(1234567890, 'abcdefghijabcdefghij'));
+		$this->assertHandleExists('1234567890.abcdefghijabcdefghij');
+
+		// simulate that another thread deleted the file
+		unlink(static::TMP . '/1234567890.abcdefghijabcdefghij.sess');
+
+		// shouldn't throw an Exception
+		$this->store->destroy(1234567890, 'abcdefghijabcdefghij');
+	}
+
+	public function testExists(): void
+	{
+		$this->assertTrue($this->store->exists(1234567890, 'abcdefghijabcdefghij'));
+		$this->assertTrue($this->store->exists(1357913579, 'abcdefghijabcdefghij'));
+		$this->assertTrue($this->store->exists(7777777777, 'abcdefghijabcdefghij'));
+		$this->assertTrue($this->store->exists(8888888888, 'abcdefghijabcdefghij'));
+		$this->assertTrue($this->store->exists(9999999999, 'abcdefghijabcdefghij'));
+		$this->assertFalse($this->store->exists(1234567890, 'someotherid'));
+
+		$this->assertHandleNotExists('1234567890.abcdefghijabcdefghij');
+		$this->assertHandleNotExists('1357913579.abcdefghijabcdefghij');
+		$this->assertHandleNotExists('7777777777.abcdefghijabcdefghij');
+		$this->assertHandleNotExists('8888888888.abcdefghijabcdefghij');
+		$this->assertHandleNotExists('9999999999.abcdefghijabcdefghij');
+	}
+
+	public function testGet(): void
+	{
+		$this->assertSame('1234567890', $this->store->get(1234567890, 'abcdefghijabcdefghij'));
+		$this->assertHandleExists('1234567890.abcdefghijabcdefghij');
+
+		$this->assertSame('', $this->store->get(8888888888, 'abcdefghijabcdefghij'));
+	}
+
+	public function testGetNonExistingFile(): void
+	{
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionCode('error.session.filestore.notFound');
+
+		$this->store->get(1234567890, 'someotherid');
+	}
+
+	public function testGetUnreadableFile(): void
+	{
+		$this->expectException(Exception::class);
+		$this->expectExceptionCode('error.session.filestore.notOpened');
+
+		// session files need to have read and write permissions even for reading
+		chmod(static::TMP . '/1234567890.abcdefghijabcdefghij.sess', 0o444);
+		$this->store->get(1234567890, 'abcdefghijabcdefghij');
+	}
+
+	public function testLock(): void
+	{
+		$this->store->lock(1234567890, 'abcdefghijabcdefghij');
+		$this->assertLocked('1234567890.abcdefghijabcdefghij');
+		$this->assertHandleExists('1234567890.abcdefghijabcdefghij');
+
+		// lock an already locked file
+		$this->store->lock(1234567890, 'abcdefghijabcdefghij');
+		$this->assertLocked('1234567890.abcdefghijabcdefghij');
+		$this->assertHandleExists('1234567890.abcdefghijabcdefghij');
+	}
+
+	public function testLockNonExistingFile(): void
+	{
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionCode('error.session.filestore.notFound');
+
+		$this->store->lock(1234567890, 'someotherid');
+	}
+
+	public function testSet(): void
+	{
+		$this->assertSame('1234567890', $this->store->get(1234567890, 'abcdefghijabcdefghij'));
+
+		$this->store->lock(1234567890, 'abcdefghijabcdefghij');
+		$this->store->set(1234567890, 'abcdefghijabcdefghij', 'some other data');
+
+		$this->assertLocked('1234567890.abcdefghijabcdefghij');
+		$this->assertHandleExists('1234567890.abcdefghijabcdefghij');
+		$this->assertSame('some other data', F::read(static::TMP . '/1234567890.abcdefghijabcdefghij.sess'));
+		$this->assertSame('some other data', $this->store->get(1234567890, 'abcdefghijabcdefghij'));
+	}
+
+	public function testSetNonExistingFile(): void
+	{
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionCode('error.session.filestore.notFound');
+
+		$this->store->set(1234567890, 'someotherid', 'some other data');
+	}
+
+	public function testSetWithoutLock(): void
+	{
+		$this->expectException(LogicException::class);
+		$this->expectExceptionCode('error.session.filestore.notLocked');
+
+		$this->assertSame('1234567890', $this->store->get(1234567890, 'abcdefghijabcdefghij'));
+
+		$this->store->set(1234567890, 'abcdefghijabcdefghij', 'some other data');
+	}
+
+	public function testUnlock(): void
+	{
+		// unlock an unlocked file
+		$this->assertNotLocked('1234567890.abcdefghijabcdefghij');
+		$this->store->unlock(1234567890, 'abcdefghijabcdefghij');
+		$this->assertNotLocked('1234567890.abcdefghijabcdefghij');
+		$this->assertHandleNotExists('1234567890.abcdefghijabcdefghij');
+
+		// lock and then unlock again
+		$this->store->lock(1357913579, 'abcdefghijabcdefghij');
+		$this->assertLocked('1357913579.abcdefghijabcdefghij');
+		$this->store->unlock(1357913579, 'abcdefghijabcdefghij');
+		$this->assertNotLocked('1357913579.abcdefghijabcdefghij');
+
+		// non-existing file: *not* supposed to throw an Exception
+		$this->store->unlock(1234567890, 'someotherid');
+
+		// locked file that doesn't exist anymore
+		$this->store->lock(1357913579, 'abcdefghijabcdefghij');
+		$this->assertLocked('1357913579.abcdefghijabcdefghij');
+		unlink(static::TMP . '/1357913579.abcdefghijabcdefghij.sess');
+		$this->store->unlock(1357913579, 'abcdefghijabcdefghij');
+		$this->assertNotLocked('1357913579.abcdefghijabcdefghij');
 	}
 }

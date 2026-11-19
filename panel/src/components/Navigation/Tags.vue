@@ -204,7 +204,7 @@ export default {
 		},
 		/**
 		 * Get corresponding option for a tag value
-		 * @param {String} tag
+		 * @param {Object} tag
 		 * @returns {text: String, value: String}
 		 * @public
 		 */

@@ -15,16 +15,17 @@ use Throwable;
  */
 class Sessions
 {
-	public const MODES = ['cookie', 'header', 'manual'];
-	public const DURATION_NORMAL = 7200;
 	public const DURATION_LONG = 1209600;
+	public const DURATION_NORMAL = 7200;
+	public const MODES = ['cookie', 'header', 'manual'];
 	public const TIMEOUT = 1800;
+
+	protected Session|null $autoSession = null;
 
 	/**
 	 * @var array<string, Session>
 	 */
 	protected array $cache = [];
-	protected Session|null $autoSession = null;
 	protected Header|null $header = null;
 
 	/**

@@ -67,7 +67,7 @@ export default {
 			}
 
 			if (this.path !== undefined) {
-				return this.path + this.value;
+				return this.path + (this.value ?? "");
 			}
 
 			return null;

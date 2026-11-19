@@ -24,7 +24,7 @@ if (
 	)
 ) {
 	http_response_code(503);
-	die(include __DIR__ . '/views/php.php');
+	exit(include __DIR__ . '/views/php.php');
 }
 
 if (is_file($autoloader = dirname(__DIR__) . '/vendor/autoload.php')) {

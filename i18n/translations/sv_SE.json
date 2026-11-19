@@ -9,8 +9,11 @@
 	"alpha": "Alpha",
 	"author": "Författare",
 	"avatar": "Profilbild",
+
 	"back": "Tillbaka",
+
 	"buttons.empty": "No buttons",
+
 	"cancel": "Avbryt",
 	"change": "\u00c4ndra",
 	"close": "St\u00e4ng",
@@ -132,8 +135,8 @@
 	"error.file.changeTemplate": "The template for the file \"{id}\" cannot be changed",
 	"error.file.changeTemplate.invalid": "Mallen för filen \"{id}\" kan inte ändras till \"{template}\" (giltiga mallar: \"{blueprints}\")",
 	"error.file.changeTemplate.permission": "Du saknar behörighet för att ändra mallen för filen \"{id}\"",
-	"error.file.create.permission": "The file cannot be created",
 
+	"error.file.create.permission": "The file cannot be created",
 	"error.file.delete.multiple": "Alla filer kunde inte raderas. Prova varje återstående fil individuellt för att se det specifika felet som förhindrar radering.",
 	"error.file.delete.permission": "The file cannot be deleted",
 	"error.file.duplicate": "En fil med namnet \"{filename}\" existerar redan",
@@ -197,9 +200,9 @@
 	"error.object.validation": "Det finns ett fel i fältet \"{label}\":\n{message}",
 
 	"error.offline": "Panelen är för närvarande offline",
+
 	"error.page.changeSlug.errorPage": "The slug of the error page cannot be changed",
 	"error.page.changeSlug.homePage": "The slug of the home page cannot be changed",
-
 	"error.page.changeSlug.permission": "Du har inte behörighet att ändra URL-appendixen för \"{slug}\"",
 	"error.page.changeSlug.reserved": "Sökvägen till sidor på toppnivå får inte börja med \"{path}\"",
 	"error.page.changeStatus.errorPage": "The status of the error page cannot be changed",
@@ -258,10 +261,10 @@
 	"error.template.default.notFound": "Standardmallen finns inte",
 
 	"error.unexpected": "Ett oväntat fel uppstod! Aktivera felsökningsläge för mer information: https://getkirby.com/docs/reference/system/options/debug",
+
 	"error.user.avatar.duplicate": "The avatar already exists",
 	"error.user.avatar.notFound": "The avatar does not exist",
 	"error.user.changeEmail.admin": "You are not allowed to change the email address of an admin",
-
 	"error.user.changeEmail.permission": "Du har inte behörighet att ändra e-postadressen för användaren \"{name}\"",
 	"error.user.changeLanguage.permission": "Du har inte behörighet att ändra språket för användaren \"{name}\"",
 	"error.user.changeName.permission": "Du har inte behörighet att ändra namnet för användaren \"{name}\"",
@@ -544,6 +547,7 @@
 	"license.code.help": "Du fick din licenskod efter köpet via e-post. Kopiera och klistra in det här.",
 	"license.code.label": "License code",
 	"license.remove.text": "<p>Om du tar bort licensen raderas licensfilen permanent från webbplatsen. Du kan sedan aktivera webbplatsen med en annan licensnyckel eller omregistrera samma licensnyckel om domänen förblir densamma.</p><p>För att ändra domänen som är kopplad till licensen, vänligen kontakta Kirby-teamet. <a href='https://getkirby.com/license'>Läs mer &rarr;</a></p>",
+	"license.status": "License status",
 	"license.status.active.info": "Inkluderar nya större versioner fram till {date}",
 	"license.status.active.label": "Giltig licens",
 	"license.status.acknowledged.info": "You confirmed to comply with the <a href=\"https://getkirby.com/license/free-licenses\">free license requirements</a>",
@@ -721,6 +725,7 @@
 	"preview": "Förhandsgranska",
 	"preview.browser.pin": "Toggle whether preview navigation should be in sync or independent",
 	"preview.browser.scroll": "Synkronisera skrollning",
+
 	"progress": "Progress",
 
 	"protected": "Protected",
@@ -804,6 +809,8 @@
 	"theme.light": "Ljus på",
 	"theme.dark": "Ljus av",
 	"theme.automatic": "Matcha systemstandard",
+
+	"time.select": "Select a time",
 
 	"title": "Titel",
 	"today": "Idag",

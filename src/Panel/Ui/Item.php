@@ -24,14 +24,14 @@ class Item extends Component
 		$this->layout = $layout ?? 'list';
 	}
 
-	protected function info(): string|HtmlString|null
-	{
-		return $this->info;
-	}
-
 	protected function image(): string|array|false|null
 	{
 		return $this->image;
+	}
+
+	protected function info(): string|HtmlString|null
+	{
+		return $this->info;
 	}
 
 	public function props(): array

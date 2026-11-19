@@ -18,8 +18,8 @@ use Kirby\Content\Field;
  */
 class BlockUuid extends FieldUuid
 {
-	protected const string TYPE  = 'block';
 	protected const string FIELD = 'blocks';
+	protected const string TYPE  = 'block';
 
 	/**
 	 * Converts content field to a Blocks collection

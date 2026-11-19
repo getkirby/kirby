@@ -69,6 +69,18 @@ describe("Mark", () => {
 		});
 	});
 
+	describe("schema", () => {
+		it("returns an empty spec by default", () => {
+			class SchemalessMark extends Mark {
+				get name() {
+					return "schemaless";
+				}
+			}
+
+			expect(new SchemalessMark().schema).toStrictEqual({});
+		});
+	});
+
 	describe("toggle", () => {
 		it("calls editor.toggleMark with the mark name", () => {
 			mark.toggle();

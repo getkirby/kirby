@@ -18,9 +18,9 @@ class Component
 {
 	use HasI18n;
 
-	protected string|null $key = null;
-
 	public array $attrs = [];
+
+	protected string|null $key = null;
 
 	public function __construct(
 		public string $component,

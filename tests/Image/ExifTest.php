@@ -8,15 +8,30 @@ use ReflectionClass;
 #[CoversClass(Exif::class)]
 class ExifTest extends TestCase
 {
+	protected function _exif($filename = 'image/cat.jpg')
+	{
+		$image = $this->_image($filename);
+		return new Exif($image);
+	}
+
 	protected function _image($filename = 'image/cat.jpg')
 	{
 		return new Image(static::FIXTURES . '/' . $filename);
 	}
 
-	protected function _exif($filename = 'image/cat.jpg')
+	public function testAperture(): void
 	{
-		$image = $this->_image($filename);
-		return new Exif($image);
+		$exif  = $this->_exif();
+		$this->assertNull($exif->aperture());
+	}
+
+	public function testCamera(): void
+	{
+		$exif = $this->_exif();
+		$this->assertInstanceOf(Camera::class, $exif->camera());
+
+		// from cache
+		$this->assertInstanceOf(Camera::class, $exif->camera());
 	}
 
 	public function testData(): void
@@ -38,40 +53,28 @@ class ExifTest extends TestCase
 		], $exif->data());
 	}
 
-	public function testCamera(): void
-	{
-		$exif = $this->_exif();
-		$this->assertInstanceOf(Camera::class, $exif->camera());
-
-		// from cache
-		$this->assertInstanceOf(Camera::class, $exif->camera());
-	}
-
-	public function testLocation(): void
-	{
-		$exif = $this->_exif();
-		$this->assertInstanceOf(Location::class, $exif->location());
-
-		// from cache
-		$this->assertInstanceOf(Location::class, $exif->location());
-	}
-
-	public function testTimestamp(): void
-	{
-		$exif  = $this->_exif();
-		$this->assertSame((string)exif_read_data(static::FIXTURES . '/image/cat.jpg')['FileDateTime'], $exif->timestamp());
-	}
-
 	public function testExposure(): void
 	{
 		$exif  = $this->_exif();
 		$this->assertNull($exif->exposure());
 	}
 
-	public function testAperture(): void
+	public function testFocalLength(): void
 	{
 		$exif  = $this->_exif();
-		$this->assertNull($exif->aperture());
+		$this->assertNull($exif->focalLength());
+	}
+
+	public function testIsBw(): void
+	{
+		$exif  = $this->_exif();
+		$this->assertFalse($exif->isBw());
+	}
+
+	public function testIsColor(): void
+	{
+		$exif  = $this->_exif();
+		$this->assertTrue($exif->isColor());
 	}
 
 	public function testIso(): void
@@ -112,22 +115,13 @@ class ExifTest extends TestCase
 		$this->assertNull($exif->iso());
 	}
 
-	public function testIsColor(): void
+	public function testLocation(): void
 	{
-		$exif  = $this->_exif();
-		$this->assertTrue($exif->isColor());
-	}
+		$exif = $this->_exif();
+		$this->assertInstanceOf(Location::class, $exif->location());
 
-	public function testIsBw(): void
-	{
-		$exif  = $this->_exif();
-		$this->assertFalse($exif->isBw());
-	}
-
-	public function testFocalLength(): void
-	{
-		$exif  = $this->_exif();
-		$this->assertNull($exif->focalLength());
+		// from cache
+		$this->assertInstanceOf(Location::class, $exif->location());
 	}
 
 	public function testOrientation(): void
@@ -156,23 +150,6 @@ class ExifTest extends TestCase
 		$this->assertSame((string)strtotime('11.12.2016 11:13:14'), $parse->invoke($exif));
 	}
 
-	public function testParseTimestampFileDateTime(): void
-	{
-		$exif = $this->_exif();
-
-		// strip DateTimeOriginal so the FileDateTime branch is reached;
-		// FileDateTime is already present from exif_read_data
-		$ref     = new ReflectionClass($exif);
-		$data    = $ref->getProperty('data');
-		$options = $data->getValue($exif);
-		unset($options['DateTimeOriginal']);
-		$data->setValue($exif, $options);
-
-		$parse = $ref->getMethod('parseTimestamp');
-
-		$this->assertSame((string)$options['FileDateTime'], $parse->invoke($exif));
-	}
-
 	public function testParseTimestampFallsBackToImageModified(): void
 	{
 		$exif = $this->_exif();
@@ -190,6 +167,23 @@ class ExifTest extends TestCase
 		);
 	}
 
+	public function testParseTimestampFileDateTime(): void
+	{
+		$exif = $this->_exif();
+
+		// strip DateTimeOriginal so the FileDateTime branch is reached;
+		// FileDateTime is already present from exif_read_data
+		$ref     = new ReflectionClass($exif);
+		$data    = $ref->getProperty('data');
+		$options = $data->getValue($exif);
+		unset($options['DateTimeOriginal']);
+		$data->setValue($exif, $options);
+
+		$parse = $ref->getMethod('parseTimestamp');
+
+		$this->assertSame((string)$options['FileDateTime'], $parse->invoke($exif));
+	}
+
 	public function testParseTimestampReturnsNullWhenUnavailable(): void
 	{
 		// image pointing at a non-existent file makes modified() return false
@@ -203,6 +197,12 @@ class ExifTest extends TestCase
 		$parse = $ref->getMethod('parseTimestamp');
 
 		$this->assertNull($parse->invoke($exif));
+	}
+
+	public function testTimestamp(): void
+	{
+		$exif  = $this->_exif();
+		$this->assertSame((string)exif_read_data(static::FIXTURES . '/image/cat.jpg')['FileDateTime'], $exif->timestamp());
 	}
 
 	public function testToArray(): void

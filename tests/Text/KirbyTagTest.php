@@ -42,32 +42,6 @@ class KirbyTagTest extends TestCase
 		App::destroy();
 	}
 
-	public function testConstruct(): void
-	{
-		KirbyTag::$aliases = [];
-		$tag = KirbyTag::parse('test: foo a: attrA b: attrB c: attrC');
-		$this->assertSame('test', $tag->type);
-		$this->assertSame('foo', $tag->test);
-		$this->assertSame(['a' => 'attrA', 'b' => 'attrB c: attrC'], $tag->attrs);
-		$this->assertSame([], $tag->data);
-		$this->assertSame('foo', $tag->value);
-	}
-
-	public function testConstructAliasedTagType(): void
-	{
-		KirbyTag::$aliases = ['foo' => 'test'];
-		$tag = KirbyTag::parse('foo: bar');
-		$this->assertSame('test', $tag->type);
-		$this->assertSame('bar', $tag->test);
-	}
-
-	public function testConstructMissingTagType(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Undefined tag type: invalid');
-		KirbyTag::parse('invalid: test');
-	}
-
 	public function test__call(): void
 	{
 		$attr = [
@@ -85,6 +59,17 @@ class KirbyTagTest extends TestCase
 		$this->assertSame('dataA', $tag->a());
 		$this->assertSame('attrB', $tag->b());
 		$this->assertSame('dataC', $tag->c());
+	}
+
+	public function test__callStatic(): void
+	{
+		$attr = [
+			'a' => 'attrA',
+			'b' => 'attrB'
+		];
+
+		$result = KirbyTag::test('test value', $attr);
+		$this->assertSame('test: test value-attrA-attrB', $result);
 	}
 
 	public function test__get(): void
@@ -119,17 +104,6 @@ class KirbyTagTest extends TestCase
 		$this->assertSame('My Caption', $tag->attr('caption'));
 	}
 
-	public function test__callStatic(): void
-	{
-		$attr = [
-			'a' => 'attrA',
-			'b' => 'attrB'
-		];
-
-		$result = KirbyTag::test('test value', $attr);
-		$this->assertSame('test: test value-attrA-attrB', $result);
-	}
-
 	public function testAttr(): void
 	{
 		$tag = new KirbyTag('test', 'test value', [
@@ -154,6 +128,32 @@ class KirbyTagTest extends TestCase
 
 		$this->assertNull($tag->b);
 		$this->assertSame('fallback', $tag->attr('b', 'fallback'));
+	}
+
+	public function testConstruct(): void
+	{
+		KirbyTag::$aliases = [];
+		$tag = KirbyTag::parse('test: foo a: attrA b: attrB c: attrC');
+		$this->assertSame('test', $tag->type);
+		$this->assertSame('foo', $tag->test);
+		$this->assertSame(['a' => 'attrA', 'b' => 'attrB c: attrC'], $tag->attrs);
+		$this->assertSame([], $tag->data);
+		$this->assertSame('foo', $tag->value);
+	}
+
+	public function testConstructAliasedTagType(): void
+	{
+		KirbyTag::$aliases = ['foo' => 'test'];
+		$tag = KirbyTag::parse('foo: bar');
+		$this->assertSame('test', $tag->type);
+		$this->assertSame('bar', $tag->test);
+	}
+
+	public function testConstructMissingTagType(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Undefined tag type: invalid');
+		KirbyTag::parse('invalid: test');
 	}
 
 	public function testFactory(): void
@@ -193,62 +193,6 @@ class KirbyTagTest extends TestCase
 		$this->assertSame($file, $tag->file('a/a.jpg'));
 	}
 
-	public function testFileInParent(): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => static::TMP
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'a',
-						'files' => [
-							[
-								'filename' => 'a.jpg'
-							]
-						]
-					]
-				]
-			]
-		]);
-
-		$page = $app->page('a');
-		$file = $page->file('a.jpg');
-		$tag  = new KirbyTag('image', 'foo', [], [
-			'parent' => $page,
-		]);
-		$this->assertSame($file, $tag->file('a.jpg'));
-	}
-
-	public function testFileInFileParent(): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => static::TMP
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'a',
-						'files' => [
-							[
-								'filename' => 'a.jpg'
-							]
-						]
-					]
-				]
-			]
-		]);
-
-		$page = $app->page('a');
-		$file = $page->file('a.jpg');
-		$tag  = new KirbyTag('image', 'foo', [], [
-			'parent' => $file,
-		]);
-		$this->assertSame($file, $tag->file('a.jpg'));
-	}
-
 	public function testFileFromUuid(): void
 	{
 		$app = new App([
@@ -280,6 +224,62 @@ class KirbyTagTest extends TestCase
 			'parent' => $page,
 		]);
 		$this->assertSame($file, $tag->file('file://image-uuid'));
+	}
+
+	public function testFileInFileParent(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'a',
+						'files' => [
+							[
+								'filename' => 'a.jpg'
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$page = $app->page('a');
+		$file = $page->file('a.jpg');
+		$tag  = new KirbyTag('image', 'foo', [], [
+			'parent' => $file,
+		]);
+		$this->assertSame($file, $tag->file('a.jpg'));
+	}
+
+	public function testFileInParent(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'a',
+						'files' => [
+							[
+								'filename' => 'a.jpg'
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$page = $app->page('a');
+		$file = $page->file('a.jpg');
+		$tag  = new KirbyTag('image', 'foo', [], [
+			'parent' => $page,
+		]);
+		$this->assertSame($file, $tag->file('a.jpg'));
 	}
 
 	public function testKirby(): void
@@ -486,24 +486,24 @@ class KirbyTagTest extends TestCase
 		$this->assertSame('test: -attrA-', $tag->render());
 	}
 
-	public function testRenderNoHtml(): void
-	{
-		$this->expectException(BadMethodCallException::class);
-		$this->expectExceptionMessage('Invalid tag render function in tag: noHtml');
-
-		$tag = new KirbyTag('noHtml', 'test value', [
-			'a' => 'attrA',
-			'b' => 'attrB'
-		]);
-		$tag->render();
-	}
-
 	public function testRenderInvalidHtml(): void
 	{
 		$this->expectException(BadMethodCallException::class);
 		$this->expectExceptionMessage('Invalid tag render function in tag: invalidHtml');
 
 		$tag = new KirbyTag('invalidHtml', 'test value', [
+			'a' => 'attrA',
+			'b' => 'attrB'
+		]);
+		$tag->render();
+	}
+
+	public function testRenderNoHtml(): void
+	{
+		$this->expectException(BadMethodCallException::class);
+		$this->expectExceptionMessage('Invalid tag render function in tag: noHtml');
+
+		$tag = new KirbyTag('noHtml', 'test value', [
 			'a' => 'attrA',
 			'b' => 'attrB'
 		]);

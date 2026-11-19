@@ -18,6 +18,11 @@ class XmlTest extends TestCase
 		Xml::$allowedDomains = true;
 	}
 
+	public static function allowedProvider(): array
+	{
+		return static::fixtureList('allowed', 'xml');
+	}
+
 	#[DataProvider('allowedProvider')]
 	public function testAllowed(string $file): void
 	{
@@ -27,11 +32,6 @@ class XmlTest extends TestCase
 
 		$sanitized = Xml::sanitize(file_get_contents($fixture));
 		$this->assertStringEqualsFile($fixture, $sanitized);
-	}
-
-	public static function allowedProvider(): array
-	{
-		return static::fixtureList('allowed', 'xml');
 	}
 
 	public function testAllowedCustomDomainAllowlist(): void
@@ -44,62 +44,6 @@ class XmlTest extends TestCase
 
 		$sanitized = Xml::sanitize(file_get_contents($fixture));
 		$this->assertStringEqualsFile($fixture, $sanitized);
-	}
-
-	#[DataProvider('invalidProvider')]
-	public function testInvalid(string $file): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The markup could not be parsed');
-
-		Xml::validateFile($this->fixture($file));
-	}
-
-	public static function invalidProvider(): array
-	{
-		return static::fixtureList('invalid', 'xml');
-	}
-
-	public function testDisallowedJavascriptUrl(): void
-	{
-		$fixture   = "<xml>\n<a href='javascript:alert(1)'></a>\n</xml>";
-		$sanitized = "<xml>\n<a/>\n</xml>";
-
-		$this->assertSame($sanitized, Xml::sanitize($fixture));
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The URL is not allowed in attribute "href" (line 2): Unknown URL type');
-		Xml::validate($fixture);
-	}
-
-	public function testDisallowedJavascriptUrlWithUnicodeLS(): void
-	{
-		/**
-		 * Test fixture inspired by DOMPurify
-		 * @link https://github.com/cure53/DOMPurify
-		 * @copyright 2015 Mario Heiderich
-		 * @license https://www.apache.org/licenses/LICENSE-2.0
-		 */
-		$fixture   = '<xml>123<a href="\u2028javascript:alert(1)">I am a dolphin!</a></xml>';
-		$sanitized = '<xml>123<a>I am a dolphin!</a></xml>';
-
-		$this->assertSame($sanitized, Xml::sanitize($fixture));
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The URL is not allowed in attribute "href" (line 1): Unknown URL type');
-		Xml::validate($fixture);
-	}
-
-	public function testDisallowedXlinkAttack(): void
-	{
-		$fixture   = $this->fixture('disallowed/xlink-attack.xml');
-		$sanitized = $this->fixture('sanitized/xlink-attack.xml');
-
-		$this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The URL is not allowed in attribute "xlink:href" (line 2): Unknown URL type');
-		Xml::validateFile($fixture);
 	}
 
 	public function testDisallowedDataUriSvg1(): void
@@ -123,6 +67,66 @@ class XmlTest extends TestCase
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The URL is not allowed in attribute "filter" (line 7): Invalid data URI');
+		Xml::validateFile($fixture);
+	}
+
+	public function testDisallowedDoctypeEntityAttack(): void
+	{
+		$fixture   = $this->fixture('disallowed/doctype-entity-attack.xml');
+		$sanitized = $this->fixture('sanitized/doctype-entity-attack.xml');
+
+		$this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The doctype must not define a subset');
+		Xml::validateFile($fixture);
+	}
+
+	public function testDisallowedDoctypeExternal1(): void
+	{
+		$fixture   = $this->fixture('disallowed/doctype-external-1.xml');
+		$sanitized = $this->fixture('sanitized/doctype-external-1.xml');
+
+		$this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The doctype must not reference external files');
+		Xml::validateFile($fixture);
+	}
+
+	public function testDisallowedDoctypeExternal2(): void
+	{
+		$fixture   = $this->fixture('disallowed/doctype-external-2.xml');
+		$sanitized = $this->fixture('sanitized/doctype-external-2.xml');
+
+		$this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The doctype must not reference external files');
+		Xml::validateFile($fixture);
+	}
+
+	public function testDisallowedDoctypeSvg(): void
+	{
+		$fixture   = $this->fixture('disallowed/doctype-svg.xml');
+		$sanitized = $this->fixture('sanitized/doctype-svg.xml');
+
+		$this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The doctype is not allowed in XML files');
+		Xml::validateFile($fixture);
+	}
+
+	public function testDisallowedDoctypeXhtml(): void
+	{
+		$fixture   = $this->fixture('disallowed/doctype-xhtml.xml');
+		$sanitized = $this->fixture('sanitized/doctype-xhtml.xml');
+
+		$this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The doctype is not allowed in XML files');
 		Xml::validateFile($fixture);
 	}
 
@@ -181,6 +185,64 @@ class XmlTest extends TestCase
 		Xml::validateFile($fixture);
 	}
 
+	public function testDisallowedJavascriptUrl(): void
+	{
+		$fixture   = "<xml>\n<a href='javascript:alert(1)'></a>\n</xml>";
+		$sanitized = "<xml>\n<a/>\n</xml>";
+
+		$this->assertSame($sanitized, Xml::sanitize($fixture));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The URL is not allowed in attribute "href" (line 2): Unknown URL type');
+		Xml::validate($fixture);
+	}
+
+	public function testDisallowedJavascriptUrlWithUnicodeLS(): void
+	{
+		/**
+		 * Test fixture inspired by DOMPurify
+		 * @link https://github.com/cure53/DOMPurify
+		 * @copyright 2015 Mario Heiderich
+		 * @license https://www.apache.org/licenses/LICENSE-2.0
+		 */
+		$fixture   = '<xml>123<a href="\u2028javascript:alert(1)">I am a dolphin!</a></xml>';
+		$sanitized = '<xml>123<a>I am a dolphin!</a></xml>';
+
+		$this->assertSame($sanitized, Xml::sanitize($fixture));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The URL is not allowed in attribute "href" (line 1): Unknown URL type');
+		Xml::validate($fixture);
+	}
+
+	public function testDisallowedMutationXssRcdataComment(): void
+	{
+		// `<textarea>` is an HTML RCDATA element once the XML is embedded
+		// in an HTML page, which a smuggled `</textarea>` breaks out of
+		$fixture   = '<root><textarea><!--</textarea><img src=x onerror=alert(1)>--></textarea></root>';
+		$sanitized = '<root><textarea/></root>';
+
+		$this->assertSame($sanitized, Xml::sanitize($fixture));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The comment (line 1) is not allowed');
+		Xml::validate($fixture);
+	}
+
+	public function testDisallowedMutationXssSelectComment(): void
+	{
+		// inside a `<select>` an HTML parser ignores the `<title>` start
+		// tag, so the comment closes itself and `<input>` ends the select
+		$fixture   = '<root><select><title><!--><input><img src=x onerror=alert(1)>--></title></select></root>';
+		$sanitized = '<root><select><title/></select></root>';
+
+		$this->assertSame($sanitized, Xml::sanitize($fixture));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The comment (line 1) is not allowed');
+		Xml::validate($fixture);
+	}
+
 	public function testDisallowedNamespaceSvg(): void
 	{
 		$fixture   = $this->fixture('disallowed/namespace-svg.xml');
@@ -217,66 +279,6 @@ class XmlTest extends TestCase
 		Xml::validateFile($fixture);
 	}
 
-	public function testDisallowedDoctypeExternal1(): void
-	{
-		$fixture   = $this->fixture('disallowed/doctype-external-1.xml');
-		$sanitized = $this->fixture('sanitized/doctype-external-1.xml');
-
-		$this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The doctype must not reference external files');
-		Xml::validateFile($fixture);
-	}
-
-	public function testDisallowedDoctypeExternal2(): void
-	{
-		$fixture   = $this->fixture('disallowed/doctype-external-2.xml');
-		$sanitized = $this->fixture('sanitized/doctype-external-2.xml');
-
-		$this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The doctype must not reference external files');
-		Xml::validateFile($fixture);
-	}
-
-	public function testDisallowedDoctypeEntityAttack(): void
-	{
-		$fixture   = $this->fixture('disallowed/doctype-entity-attack.xml');
-		$sanitized = $this->fixture('sanitized/doctype-entity-attack.xml');
-
-		$this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The doctype must not define a subset');
-		Xml::validateFile($fixture);
-	}
-
-	public function testDisallowedDoctypeSvg(): void
-	{
-		$fixture   = $this->fixture('disallowed/doctype-svg.xml');
-		$sanitized = $this->fixture('sanitized/doctype-svg.xml');
-
-		$this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The doctype is not allowed in XML files');
-		Xml::validateFile($fixture);
-	}
-
-	public function testDisallowedDoctypeXhtml(): void
-	{
-		$fixture   = $this->fixture('disallowed/doctype-xhtml.xml');
-		$sanitized = $this->fixture('sanitized/doctype-xhtml.xml');
-
-		$this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The doctype is not allowed in XML files');
-		Xml::validateFile($fixture);
-	}
-
 	public function testDisallowedStylesheet(): void
 	{
 		$fixture   = $this->fixture('disallowed/stylesheet.xml');
@@ -287,5 +289,31 @@ class XmlTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The "xml-stylesheet" processing instruction (line 6) is not allowed');
 		Xml::validateFile($fixture);
+	}
+
+	public function testDisallowedXlinkAttack(): void
+	{
+		$fixture   = $this->fixture('disallowed/xlink-attack.xml');
+		$sanitized = $this->fixture('sanitized/xlink-attack.xml');
+
+		$this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The URL is not allowed in attribute "xlink:href" (line 2): Unknown URL type');
+		Xml::validateFile($fixture);
+	}
+
+	public static function invalidProvider(): array
+	{
+		return static::fixtureList('invalid', 'xml');
+	}
+
+	#[DataProvider('invalidProvider')]
+	public function testInvalid(string $file): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The markup could not be parsed');
+
+		Xml::validateFile($this->fixture($file));
 	}
 }

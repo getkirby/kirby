@@ -18,16 +18,6 @@ trait Min
 	#[Prop]
 	protected int|null $min = null;
 
-	public function min(): int|null
-	{
-		// required fields need at least 1 item by default
-		if ($this->required === true) {
-			return $this->min ?? 1;
-		}
-
-		return $this->min;
-	}
-
 	public function isRequired(): bool
 	{
 		// set required to true if min is set
@@ -36,5 +26,15 @@ trait Min
 		}
 
 		return $this->required();
+	}
+
+	public function min(): int|null
+	{
+		// required fields need at least 1 item by default
+		if ($this->required === true) {
+			return $this->min ?? 1;
+		}
+
+		return $this->min;
 	}
 }

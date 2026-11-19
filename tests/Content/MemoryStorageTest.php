@@ -107,21 +107,6 @@ class MemoryStorageTest extends TestCase
 		$this->assertCreateAndRead($versionId, $language);
 	}
 
-	public function testDeleteNonExisting(): void
-	{
-		$this->setUpSingleLanguage();
-
-		$versionId = VersionId::latest();
-		$language  = Language::single();
-
-		$this->assertFalse($this->storage->exists($versionId, $language));
-
-		// test idempotency
-		$this->storage->delete($versionId, $language);
-
-		$this->assertFalse($this->storage->exists($versionId, $language));
-	}
-
 	public function testDeleteChangesMultiLang(): void
 	{
 		$this->setUpMultiLanguage();
@@ -162,6 +147,21 @@ class MemoryStorageTest extends TestCase
 		$this->assertCreateAndDelete($versionId, $language);
 	}
 
+	public function testDeleteNonExisting(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$versionId = VersionId::latest();
+		$language  = Language::single();
+
+		$this->assertFalse($this->storage->exists($versionId, $language));
+
+		// test idempotency
+		$this->storage->delete($versionId, $language);
+
+		$this->assertFalse($this->storage->exists($versionId, $language));
+	}
+
 	public function testExistsMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
@@ -178,20 +178,6 @@ class MemoryStorageTest extends TestCase
 		$this->assertTrue($this->storage->exists($versionId, $this->app->language('de')));
 	}
 
-	public function testExistsSingleLanguage(): void
-	{
-		$this->setUpSingleLanguage();
-
-		$versionId = VersionId::latest();
-		$language  = Language::single();
-
-		$this->assertFalse($this->storage->exists($versionId, $language));
-
-		$this->storage->create($versionId, $language, []);
-
-		$this->assertTrue($this->storage->exists($versionId, $language));
-	}
-
 	public function testExistsNoneExistingMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
@@ -205,6 +191,20 @@ class MemoryStorageTest extends TestCase
 		$this->setUpSingleLanguage();
 
 		$this->assertFalse($this->storage->exists(VersionId::changes(), Language::single()));
+	}
+
+	public function testExistsSingleLanguage(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$versionId = VersionId::latest();
+		$language  = Language::single();
+
+		$this->assertFalse($this->storage->exists($versionId, $language));
+
+		$this->storage->create($versionId, $language, []);
+
+		$this->assertTrue($this->storage->exists($versionId, $language));
 	}
 
 	public function testModifiedNoneExistingMultiLanguage(): void

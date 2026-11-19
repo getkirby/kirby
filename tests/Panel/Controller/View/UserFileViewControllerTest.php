@@ -32,6 +32,15 @@ class UserFileViewControllerTest extends TestCase
 		$this->app->impersonate('kirby');
 	}
 
+	public function assertFactory(
+		File $file,
+		string $parent
+	): void {
+		$controller = FileViewController::factory($parent, 'test.jpg');
+		$this->assertInstanceOf(FileViewController::class, $controller);
+		$this->assertSame($file, $controller->model());
+	}
+
 	public function testBreadcrumb(): void
 	{
 		$file       = $this->app->user('test')->file('test.jpg');
@@ -47,15 +56,6 @@ class UserFileViewControllerTest extends TestCase
 				'link'  => '/users/test/files/test.jpg',
 			],
 		], $breadcrumb);
-	}
-
-	public function assertFactory(
-		File $file,
-		string $parent
-	): void {
-		$controller = FileViewController::factory($parent, 'test.jpg');
-		$this->assertInstanceOf(FileViewController::class, $controller);
-		$this->assertSame($file, $controller->model());
 	}
 
 	public function testFactoryForUserFile(): void

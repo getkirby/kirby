@@ -7,6 +7,18 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Slots::class)]
 class SlotsTest extends TestCase
 {
+	public function testIsset(): void
+	{
+		$slots = new Slots([
+			'header' => new Slot('header')
+		]);
+
+		$this->assertTrue(isset($slots->header));
+		$this->assertFalse(empty($slots->header));
+		$this->assertFalse(isset($slots->footer));
+		$this->assertTrue(empty($slots->footer));
+	}
+
 	public function testSlots(): void
 	{
 		$header = new Slot('header');
@@ -21,17 +33,5 @@ class SlotsTest extends TestCase
 		$this->assertSame($footer, $slots->footer);
 		$this->assertSame($footer, $slots->footer());
 		$this->assertCount(2, $slots);
-	}
-
-	public function testIsset(): void
-	{
-		$slots = new Slots([
-			'header' => new Slot('header')
-		]);
-
-		$this->assertTrue(isset($slots->header));
-		$this->assertFalse(empty($slots->header));
-		$this->assertFalse(isset($slots->footer));
-		$this->assertTrue(empty($slots->footer));
 	}
 }

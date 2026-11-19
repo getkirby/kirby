@@ -18,9 +18,9 @@ use Kirby\Panel\State;
  */
 class ViewResponse extends JsonResponse
 {
-	protected State $state;
-
 	protected static string $key = 'view';
+
+	protected State $state;
 
 	public function __construct(
 		protected array $view = [],
@@ -81,17 +81,6 @@ class ViewResponse extends JsonResponse
 	}
 
 	/**
-	 * Provides access to state object
-	 */
-	public function state(): State
-	{
-		return new State(
-			area: $this->area,
-			view: $this->view(),
-		);
-	}
-
-	/**
 	 * Renders the main panel view either as
 	 * JSON response or full HTML document based
 	 * on the request header or query params
@@ -109,6 +98,17 @@ class ViewResponse extends JsonResponse
 		}
 
 		return parent::from($data);
+	}
+
+	/**
+	 * Provides access to state object
+	 */
+	public function state(): State
+	{
+		return new State(
+			area: $this->area,
+			view: $this->view(),
+		);
 	}
 
 	/**

@@ -49,6 +49,19 @@ class Url extends BaseUrl
 	}
 
 	/**
+	 * Smart resolver for internal and external urls
+	 *
+	 * @param $options Either an array of options for the Uri class or a language string
+	 */
+	public static function to(
+		string|null $path = null,
+		array|string|null $options = null
+	): string {
+		$kirby = App::instance();
+		return ($kirby->component('url'))($kirby, $path, $options);
+	}
+
+	/**
 	 * Creates an absolute Url to a template asset if it exists.
 	 * This is used in the `css()` and `js()` helpers
 	 */
@@ -64,18 +77,5 @@ class Url extends BaseUrl
 		$url   = $kirby->url('assets') . '/' . $path;
 
 		return F::exists($file, $root) === true ? $url : null;
-	}
-
-	/**
-	 * Smart resolver for internal and external urls
-	 *
-	 * @param $options Either an array of options for the Uri class or a language string
-	 */
-	public static function to(
-		string|null $path = null,
-		array|string|null $options = null
-	): string {
-		$kirby = App::instance();
-		return ($kirby->component('url'))($kirby, $path, $options);
 	}
 }

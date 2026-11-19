@@ -98,23 +98,6 @@ class StackTest extends TestCase
 		$this->assertSame('', Stack::render('missing'));
 	}
 
-	public function testIsRendering(): void
-	{
-		$this->assertFalse(Stack::isRendering());
-
-		Stack::open();
-		$this->assertTrue(Stack::isRendering());
-
-		Stack::open();
-		$this->assertTrue(Stack::isRendering());
-
-		Stack::close();
-		$this->assertTrue(Stack::isRendering());
-
-		Stack::close();
-		$this->assertFalse(Stack::isRendering());
-	}
-
 	public function testHelpers(): void
 	{
 		push('head');
@@ -132,6 +115,23 @@ class StackTest extends TestCase
 		ob_start();
 		stack('body');
 		$this->assertSame('Content', ob_get_clean());
+	}
+
+	public function testIsRendering(): void
+	{
+		$this->assertFalse(Stack::isRendering());
+
+		Stack::open();
+		$this->assertTrue(Stack::isRendering());
+
+		Stack::open();
+		$this->assertTrue(Stack::isRendering());
+
+		Stack::close();
+		$this->assertTrue(Stack::isRendering());
+
+		Stack::close();
+		$this->assertFalse(Stack::isRendering());
 	}
 
 	public function testPushAndRenderClears(): void

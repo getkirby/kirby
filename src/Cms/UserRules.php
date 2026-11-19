@@ -98,17 +98,17 @@ class UserRules
 		$user->guards()->ensureExecutable('update', $values, $strings);
 	}
 
+	public static function validAvatar(User $user, string $source, string $extension): void
+	{
+		$user->guards()->validators()->validateAvatar($source, $extension);
+	}
+
 	public static function validEmail(
 		User $user,
 		string $email,
 		bool $strict = false
 	): void {
 		$user->guards()->validators()->validateEmail($email, $strict);
-	}
-
-	public static function validAvatar(User $user, string $source, string $extension): void
-	{
-		$user->guards()->validators()->validateAvatar($source, $extension);
 	}
 
 	public static function validId(User $user, string $id): void

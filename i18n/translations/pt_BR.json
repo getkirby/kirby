@@ -9,8 +9,11 @@
 	"alpha": "Alpha",
 	"author": "Autor",
 	"avatar": "Foto do perfil",
+
 	"back": "Voltar",
+
 	"buttons.empty": "No buttons",
+
 	"cancel": "Cancelar",
 	"change": "Alterar",
 	"close": "Fechar",
@@ -132,8 +135,8 @@
 	"error.file.changeTemplate": "The template for the file \"{id}\" cannot be changed",
 	"error.file.changeTemplate.invalid": "O template para o ficheiro \"{id}\" não pode ser alterado para \"{template}\" (válido: \"{blueprints}\")",
 	"error.file.changeTemplate.permission": "Não tem permissão para alterar o template do ficheiro \"{id}\"",
-	"error.file.create.permission": "The file cannot be created",
 
+	"error.file.create.permission": "The file cannot be created",
 	"error.file.delete.multiple": "Nem todos os ficheiros puderam ser eliminados. Experimente cada ficheiro restante individualmente para ver o erro específico que impede a sua eliminação.",
 	"error.file.delete.permission": "The file cannot be deleted",
 	"error.file.duplicate": "Um arquivo com o nome \"{filename}\" já existe",
@@ -197,9 +200,9 @@
 	"error.object.validation": "Há um erro no campo \"{label}\":\n{message}",
 
 	"error.offline": "O painel está offline no momento",
+
 	"error.page.changeSlug.errorPage": "The slug of the error page cannot be changed",
 	"error.page.changeSlug.homePage": "The slug of the home page cannot be changed",
-
 	"error.page.changeSlug.permission": "Você não tem permissão para alterar o anexo de URL de \"{slug}\"",
 	"error.page.changeSlug.reserved": "O caminho das páginas de nível superior não deve começar com \"{path}\"",
 	"error.page.changeStatus.errorPage": "The status of the error page cannot be changed",
@@ -258,10 +261,10 @@
 	"error.template.default.notFound": "O tema padrão não existe",
 
 	"error.unexpected": "Ocorreu um erro inesperado! Ative o modo de debug para obter mais informações: https://getkirby.com/docs/reference/system/options/debug",
+
 	"error.user.avatar.duplicate": "The avatar already exists",
 	"error.user.avatar.notFound": "The avatar does not exist",
 	"error.user.changeEmail.admin": "You are not allowed to change the email address of an admin",
-
 	"error.user.changeEmail.permission": "Você não tem permissão para alterar o email do usuário \"{name}\"",
 	"error.user.changeLanguage.permission": "Você não tem permissão para alterar o idioma do usuário \"{name}\"",
 	"error.user.changeName.permission": "Você não tem permissão para alterar o nome do usuário \"{name}\"",
@@ -544,6 +547,7 @@
 	"license.code.help": "Recebeu o seu código de licença por e-mail após a compra. Por favor, copie e cole aqui.",
 	"license.code.label": "Código de licença",
 	"license.remove.text": "<p>A remoção da licença eliminará irreversivelmente o ficheiro de licença deste site. Poderá então ativar este site com uma chave de licença diferente ou voltar a registar a mesma chave de licença, desde que o domínio permaneça o mesmo.</p><p>Para alterar o domínio associado à licença, contacte a equipa do Kirby. <a href='https://getkirby.com/license'>Ler mais &rarr;</a></p>",
+	"license.status": "License status",
 	"license.status.active.info": "Inclui novas versões principais até {date}",
 	"license.status.active.label": "Licença válida",
 	"license.status.acknowledged.info": "Confirmou que irá cumprir os <a href=\"https://getkirby.com/license/free-licenses\">requisitos da licença gratuita</a>",
@@ -721,6 +725,7 @@
 	"preview": "Visualizar",
 	"preview.browser.pin": "Toggle whether preview navigation should be in sync or independent",
 	"preview.browser.scroll": "Sincronizar scroll",
+
 	"progress": "Progress",
 
 	"protected": "Protegida",
@@ -804,6 +809,8 @@
 	"theme.light": "Luzes ligadas",
 	"theme.dark": "Luzes desligadas",
 	"theme.automatic": "Ajustar ao tema do sistema",
+
+	"time.select": "Select a time",
 
 	"title": "Título",
 	"today": "Hoje",

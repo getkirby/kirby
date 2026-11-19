@@ -1,14 +1,16 @@
 <template>
 	<k-string-input
 		v-bind="$props"
+		:class="['k-colorname-input', $attrs.class]"
 		:spellcheck="false"
+		:style="$attrs.style"
 		autocomplete="off"
-		class="k-colorname-input"
 		type="text"
 		@blur="onBlur"
 		@input="$emit('input', $event)"
 		@paste="onPaste"
 		@keydown.meta.s.stop.prevent="onSave"
+		@keydown.ctrl.s.stop.prevent="onSave"
 		@keydown.enter="onSave"
 	/>
 </template>

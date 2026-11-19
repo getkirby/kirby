@@ -15,6 +15,19 @@ class FileAbilitiesTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Guards.FileAbilities';
 
+	protected function abilities(): FileAbilities
+	{
+		$file = new File([
+			'filename' => 'test.jpg',
+			'parent'   => new Page(['slug' => 'test'])
+		]);
+
+		return new FileAbilities(
+			model: $file,
+			user: $this->user()
+		);
+	}
+
 	public function testChangeTemplateWithMultipleBlueprints(): void
 	{
 		$this->app = $this->app->clone([
@@ -90,19 +103,6 @@ class FileAbilitiesTest extends ModelTestCase
 
 		$method = new ReflectionMethod($abilities, 'error');
 		$method->invoke($abilities, 'test');
-	}
-
-	protected function abilities(): FileAbilities
-	{
-		$file = new File([
-			'filename' => 'test.jpg',
-			'parent'   => new Page(['slug' => 'test'])
-		]);
-
-		return new FileAbilities(
-			model: $file,
-			user: $this->user()
-		);
 	}
 
 	protected function user(): User

@@ -1,8 +1,9 @@
 <template>
 	<k-string-input
 		v-bind="$props"
+		:class="['k-password-input', $attrs.class]"
+		:style="$attrs.style"
 		type="password"
-		class="k-password-input"
 		@input="$emit('input', $event)"
 	/>
 </template>

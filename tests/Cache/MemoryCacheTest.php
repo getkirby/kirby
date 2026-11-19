@@ -15,50 +15,6 @@ class MemoryCacheTest extends TestCase
 		$this->assertTrue($cache->enabled());
 	}
 
-	public function testOperations(): void
-	{
-		$cache = new MemoryCache();
-
-		$time = time();
-		$this->assertTrue($cache->set('foo', 'A basic value', 10));
-
-		$this->assertTrue($cache->exists('foo'));
-		$this->assertSame('A basic value', $cache->retrieve('foo')->value());
-		$this->assertSame($time, $cache->created('foo'));
-		$this->assertSame($time + 600, $cache->expires('foo'));
-
-		$this->assertTrue($cache->remove('foo'));
-		$this->assertFalse($cache->exists('foo'));
-		$this->assertNull($cache->retrieve('foo'));
-
-		$this->assertFalse($cache->remove('doesnotexist'));
-	}
-
-	public function testOperationsWithMultipleInstances(): void
-	{
-		$cache1 = new MemoryCache();
-		$cache2 = new MemoryCache();
-
-		$time = time();
-		$this->assertTrue($cache1->set('foo', 'A basic value', 10));
-
-		$this->assertTrue($cache1->exists('foo'));
-		$this->assertFalse($cache2->exists('foo'));
-		$this->assertSame('A basic value', $cache1->retrieve('foo')->value());
-		$this->assertSame($time, $cache1->created('foo'));
-		$this->assertSame($time + 600, $cache1->expires('foo'));
-
-		$this->assertTrue($cache2->set('foo', 'Another basic value'));
-		$this->assertTrue($cache2->exists('foo'));
-
-		$this->assertSame('A basic value', $cache1->retrieve('foo')->value());
-		$this->assertTrue($cache1->remove('foo'));
-		$this->assertFalse($cache1->exists('foo'));
-		$this->assertNull($cache1->retrieve('foo'));
-		$this->assertTrue($cache2->exists('foo'));
-		$this->assertSame('Another basic value', $cache2->retrieve('foo')->value());
-	}
-
 	public function testFlush(): void
 	{
 		$cache = new MemoryCache();
@@ -106,5 +62,49 @@ class MemoryCacheTest extends TestCase
 		$cache->set('a', 'A basic value');
 
 		$this->assertGreaterThanOrEqual($time, $cache->modified('a'));
+	}
+
+	public function testOperations(): void
+	{
+		$cache = new MemoryCache();
+
+		$time = time();
+		$this->assertTrue($cache->set('foo', 'A basic value', 10));
+
+		$this->assertTrue($cache->exists('foo'));
+		$this->assertSame('A basic value', $cache->retrieve('foo')->value());
+		$this->assertSame($time, $cache->created('foo'));
+		$this->assertSame($time + 600, $cache->expires('foo'));
+
+		$this->assertTrue($cache->remove('foo'));
+		$this->assertFalse($cache->exists('foo'));
+		$this->assertNull($cache->retrieve('foo'));
+
+		$this->assertFalse($cache->remove('doesnotexist'));
+	}
+
+	public function testOperationsWithMultipleInstances(): void
+	{
+		$cache1 = new MemoryCache();
+		$cache2 = new MemoryCache();
+
+		$time = time();
+		$this->assertTrue($cache1->set('foo', 'A basic value', 10));
+
+		$this->assertTrue($cache1->exists('foo'));
+		$this->assertFalse($cache2->exists('foo'));
+		$this->assertSame('A basic value', $cache1->retrieve('foo')->value());
+		$this->assertSame($time, $cache1->created('foo'));
+		$this->assertSame($time + 600, $cache1->expires('foo'));
+
+		$this->assertTrue($cache2->set('foo', 'Another basic value'));
+		$this->assertTrue($cache2->exists('foo'));
+
+		$this->assertSame('A basic value', $cache1->retrieve('foo')->value());
+		$this->assertTrue($cache1->remove('foo'));
+		$this->assertFalse($cache1->exists('foo'));
+		$this->assertNull($cache1->retrieve('foo'));
+		$this->assertTrue($cache2->exists('foo'));
+		$this->assertSame('Another basic value', $cache2->retrieve('foo')->value());
 	}
 }

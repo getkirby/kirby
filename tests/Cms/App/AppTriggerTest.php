@@ -41,6 +41,27 @@ class AppTriggerTest extends TestCase
 		$this->app->trigger('test', ['a' => 5, 'b' => 6, 'c' => 4]);
 	}
 
+	public function testTriggerWithNestedRecursiveTriggerCall(): void
+	{
+		$calls = 0;
+
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'test' => function () use (&$calls) {
+					$calls++;
+
+					// should not call the same hook again
+					// to avoid infinite loops
+					$this->trigger('test');
+				}
+			]
+		]);
+
+		$this->app->trigger('test');
+
+		$this->assertSame(1, $calls);
+	}
+
 	public function testTriggerWithNestedTriggerCall(): void
 	{
 		$calls = 0;
@@ -62,25 +83,24 @@ class AppTriggerTest extends TestCase
 		$this->assertSame(2, $calls);
 	}
 
-	public function testTriggerWithNestedRecursiveTriggerCall(): void
+	public function testTriggerWithoutArguments(): void
 	{
-		$calls = 0;
+		$self = $this;
 
 		$this->app = $this->app->clone([
 			'hooks' => [
-				'test' => function () use (&$calls) {
-					$calls++;
-
-					// should not call the same hook again
-					// to avoid infinite loops
-					$this->trigger('test');
+				'test' => function (Event $event) use ($self) {
+					$self->assertCount(0, $event->arguments());
 				}
 			]
 		]);
 
 		$this->app->trigger('test');
+	}
 
-		$this->assertSame(1, $calls);
+	public function testTriggerWithoutHandler(): void
+	{
+		$this->assertNull($this->app->trigger('does-not-exist', ['value' => 10]));
 	}
 
 	public function testTriggerWithSingleParameter(): void
@@ -133,25 +153,5 @@ class AppTriggerTest extends TestCase
 
 		$this->app->trigger('test.event:after');
 		$this->assertSame(4, $calls);
-	}
-
-	public function testTriggerWithoutArguments(): void
-	{
-		$self = $this;
-
-		$this->app = $this->app->clone([
-			'hooks' => [
-				'test' => function (Event $event) use ($self) {
-					$self->assertCount(0, $event->arguments());
-				}
-			]
-		]);
-
-		$this->app->trigger('test');
-	}
-
-	public function testTriggerWithoutHandler(): void
-	{
-		$this->assertNull($this->app->trigger('does-not-exist', ['value' => 10]));
 	}
 }

@@ -179,6 +179,47 @@ class PlainTextStorage extends Storage
 	}
 
 	/**
+	 * Prevents stale page instances from recreating moved page directories.
+	 *
+	 * During a concurrent reorder, a page directory may be moved while another
+	 * stale page instance still points to the old root path. If that stale
+	 * instance writes content afterwards, the write path may recreate the missing
+	 * directory and produce a ghost or duplicate page folder.
+	 *
+	 * To avoid that, this method re-resolves the page from the current app state
+	 * when the expected root no longer exists. If the page was moved in the
+	 * meantime, the write is aborted instead of recreating the old path.
+	 */
+	protected function ensureCurrentPageRoot(VersionId $versionId): void
+	{
+		if (
+			$this->model instanceof Page === false ||
+			$versionId->is('latest') === false
+		) {
+			return;
+		}
+
+		$staleRoot = $this->contentDirectory($versionId);
+
+		if (is_dir($staleRoot) === true) {
+			return;
+		}
+
+		// `$this->model` may still point to a stale root after a concurrent move,
+		// so we re-resolve the page from the current app state.
+		$currentPage = $this->model->kirby()->page($this->model->id());
+
+		if (
+			$currentPage !== null &&
+			$currentPage->root() !== $staleRoot
+		) {
+			throw new LogicException(
+				message: 'The page was moved during a concurrent operation. Please retry the write with a fresh page instance.'
+			);
+		}
+	}
+
+	/**
 	 * Checks if a version exists
 	 */
 	public function exists(VersionId $versionId, Language $language): bool
@@ -257,47 +298,6 @@ class PlainTextStorage extends Storage
 		}
 
 		return null;
-	}
-
-	/**
-	 * Prevents stale page instances from recreating moved page directories.
-	 *
-	 * During a concurrent reorder, a page directory may be moved while another
-	 * stale page instance still points to the old root path. If that stale
-	 * instance writes content afterwards, the write path may recreate the missing
-	 * directory and produce a ghost or duplicate page folder.
-	 *
-	 * To avoid that, this method re-resolves the page from the current app state
-	 * when the expected root no longer exists. If the page was moved in the
-	 * meantime, the write is aborted instead of recreating the old path.
-	 */
-	protected function ensureCurrentPageRoot(VersionId $versionId): void
-	{
-		if (
-			$this->model instanceof Page === false ||
-			$versionId->is('latest') === false
-		) {
-			return;
-		}
-
-		$staleRoot = $this->contentDirectory($versionId);
-
-		if (is_dir($staleRoot) === true) {
-			return;
-		}
-
-		// `$this->model` may still point to a stale root after a concurrent move,
-		// so we re-resolve the page from the current app state.
-		$currentPage = $this->model->kirby()->page($this->model->id());
-
-		if (
-			$currentPage !== null &&
-			$currentPage->root() !== $staleRoot
-		) {
-			throw new LogicException(
-				message: 'The page was moved during a concurrent operation. Please retry the write with a fresh page instance.'
-			);
-		}
 	}
 
 	/**

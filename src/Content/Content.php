@@ -38,14 +38,6 @@ class Content
 	protected ModelWithContent|null $parent;
 
 	/**
-	 * Magic getter for content fields
-	 */
-	public function __call(string $name, array $arguments = []): Field
-	{
-		return $this->get($name);
-	}
-
-	/**
 	 * Creates a new Content object
 	 *
 	 * @param $normalize Set to `false` if the input field keys are already lowercase
@@ -61,6 +53,14 @@ class Content
 
 		$this->data   = $data;
 		$this->parent = $parent;
+	}
+
+	/**
+	 * Magic getter for content fields
+	 */
+	public function __call(string $name, array $arguments = []): Field
+	{
+		return $this->get($name);
 	}
 
 	/**

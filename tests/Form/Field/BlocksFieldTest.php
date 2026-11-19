@@ -15,6 +15,44 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(BlocksField::class)]
 class BlocksFieldTest extends TestCase
 {
+	public function testAcceptedFileBlueprints(): void
+	{
+		$field = $this->field('blocks', [
+			'fieldsets' => [
+				'a' => [
+					'fields' => [
+						'image' => [
+							'type'    => 'filepicker',
+							'uploads' => 'a'
+						]
+					]
+				],
+				'b' => [
+					'fields' => [
+						'text' => [
+							'type' => 'text'
+						]
+					]
+				],
+				'c' => [
+					'fields' => [
+						'images' => [
+							'type'   => 'structure',
+							'fields' => [
+								'image' => [
+									'type'    => 'filepicker',
+									'uploads' => 'c'
+								]
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$this->assertSame(['a', 'c'], $field->acceptedFileBlueprints());
+	}
+
 	public function testApi(): void
 	{
 		$field  = $this->field('blocks');
@@ -24,14 +62,16 @@ class BlocksFieldTest extends TestCase
 		$this->assertCount(4, $api);
 	}
 
-	public function testApiUUID(): void
+	public function testApiFieldset(): void
 	{
 		$field    = $this->field('blocks');
-		$api      = $field->api()[0];
-		$response = $api['action']();
+		$api      = $field->api()[2];
+		$response = $api['action']('text');
 
-		$this->assertIsArray($response);
-		$this->assertArrayHasKey('uuid', $response);
+		$this->assertSame(['text' => ''], $response['content']);
+		$this->assertArrayHasKey('id', $response);
+		$this->assertFalse($response['isHidden']);
+		$this->assertSame('text', $response['type']);
 	}
 
 	public function testApiPaste(): void
@@ -75,16 +115,14 @@ class BlocksFieldTest extends TestCase
 		$this->assertSame('heading', $response[1]['type']);
 	}
 
-	public function testApiFieldset(): void
+	public function testApiUUID(): void
 	{
 		$field    = $this->field('blocks');
-		$api      = $field->api()[2];
-		$response = $api['action']('text');
+		$api      = $field->api()[0];
+		$response = $api['action']();
 
-		$this->assertSame(['text' => ''], $response['content']);
-		$this->assertArrayHasKey('id', $response);
-		$this->assertFalse($response['isHidden']);
-		$this->assertSame('text', $response['type']);
+		$this->assertIsArray($response);
+		$this->assertArrayHasKey('uuid', $response);
 	}
 
 	public function testDefault(): void
@@ -139,44 +177,6 @@ class BlocksFieldTest extends TestCase
 		]);
 
 		$this->assertSame($value, $field->empty());
-	}
-
-	public function testAcceptedFileBlueprints(): void
-	{
-		$field = $this->field('blocks', [
-			'fieldsets' => [
-				'a' => [
-					'fields' => [
-						'image' => [
-							'type'    => 'filepicker',
-							'uploads' => 'a'
-						]
-					]
-				],
-				'b' => [
-					'fields' => [
-						'text' => [
-							'type' => 'text'
-						]
-					]
-				],
-				'c' => [
-					'fields' => [
-						'images' => [
-							'type'   => 'structure',
-							'fields' => [
-								'image' => [
-									'type'    => 'filepicker',
-									'uploads' => 'c'
-								]
-							]
-						]
-					]
-				]
-			]
-		]);
-
-		$this->assertSame(['a', 'c'], $field->acceptedFileBlueprints());
 	}
 
 	public function testFillWithBlocks(): void
@@ -466,6 +466,49 @@ class BlocksFieldTest extends TestCase
 		$this->assertSame('', $field->toStoredValue());
 	}
 
+	public function testToStoredValueWithProtectedOptions(): void
+	{
+		$app    = $this->appWithProtectedPages();
+		$select = [
+			'type'    => 'select',
+			'options' => 'site.children'
+		];
+
+		$field = $this->field('blocks', [
+			'model'     => $app->site(),
+			'fieldsets' => [
+				'link' => [
+					'fields' => [
+						'page'  => $select,
+						'pages' => [
+							'type'   => 'structure',
+							'fields' => ['page' => $select]
+						]
+					]
+				]
+			],
+			'value' => [
+				[
+					'type'    => 'link',
+					'content' => [
+						'page'  => 'b',
+						'pages' => [['page' => 'c']]
+					]
+				]
+			]
+		]);
+
+		// the Panel only gets the pages the user may list ...
+		$fields = $field->fieldset('link')->toArray()['tabs']['content']['fields'];
+		$this->assertSame(['a'], array_column($fields['page']['options'], 'value'));
+
+		// ... but the stored values of the other pages are kept
+		$content = json_decode($field->toStoredValue(), true)[0]['content'];
+		$this->assertSame('b', $content['page']);
+		$this->assertSame('c', $content['pages'][0]['page']);
+		$this->assertTrue($field->isValid());
+	}
+
 	public function testTranslateField(): void
 	{
 		$app = new App([
@@ -506,17 +549,20 @@ class BlocksFieldTest extends TestCase
 		// default language
 		$app->setCurrentLanguage('en');
 		$field = $this->field('blocks', $props);
+		$text  = $field->fieldset('heading')->toArray()['tabs']['content']['fields']['text'];
 
-		$this->assertFalse($field->fields('heading')['text']['translate']);
-		$this->assertFalse($field->fields('heading')['text']['disabled']);
+		$this->assertFalse($text['translate']);
+		$this->assertFalse($text['disabled']);
 
 		// secondary language
 		$app = $app->clone();
 		$app->setCurrentLanguage('de');
 
 		$field = $this->field('blocks', $props);
-		$this->assertFalse($field->fields('heading')['text']['translate']);
-		$this->assertTrue($field->fields('heading')['text']['disabled']);
+		$text  = $field->fieldset('heading')->toArray()['tabs']['content']['fields']['text'];
+
+		$this->assertFalse($text['translate']);
+		$this->assertTrue($text['disabled']);
 	}
 
 	public function testTranslateFieldset(): void
@@ -674,6 +720,20 @@ class BlocksFieldTest extends TestCase
 		], $field->errors());
 	}
 
+	public function testValidationsWithInvalidBlockType(): void
+	{
+		$field = $this->field('blocks', [
+			'value' => [
+				[
+					'type' => 'not-exists',
+				]
+			]
+		]);
+
+		$this->assertTrue($field->isValid());
+		$this->assertSame([], $field->errors());
+	}
+
 	public function testValueInvalidType(): void
 	{
 		$field = $this->field('blocks', [
@@ -704,20 +764,6 @@ class BlocksFieldTest extends TestCase
 		$this->assertSame('not-exists', $field->value()[1]['type']);
 		$this->assertSame(['text' => 'b'], $field->value()[1]['content']);
 		$this->assertSame('text', $field->value()[2]['type']);
-	}
-
-	public function testValidationsWithInvalidBlockType(): void
-	{
-		$field = $this->field('blocks', [
-			'value' => [
-				[
-					'type' => 'not-exists',
-				]
-			]
-		]);
-
-		$this->assertTrue($field->isValid());
-		$this->assertSame([], $field->errors());
 	}
 
 	public function testWhen(): void

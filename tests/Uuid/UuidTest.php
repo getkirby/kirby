@@ -22,13 +22,77 @@ class UuidTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Uuid.Uuid';
 
-	public function testConstructUuidString(): void
+	public function testCache(): void
 	{
-		$uuid = new TestUuid($uri = 'page://my-page-uuid');
-		$this->assertInstanceOf(Uri::class, $uuid->uri);
-		$this->assertSame($uri, $uuid->uri->toString());
-		$this->assertNull($uuid->model);
-		$this->assertNull($uuid->context);
+		$page    = $this->app->page('page-a');
+		$subpage = $page->children()->find('subpage-a');
+
+		$page    = $page->uuid();
+		$subpage = $subpage->uuid();
+
+		// not cached so far
+		$this->assertFalse($page->isCached());
+		$this->assertFalse($subpage->isCached());
+
+		// cache them
+		$this->assertTrue($page->populate());
+		$this->assertTrue($subpage->populate());
+		$this->assertTrue($page->isCached());
+		$this->assertTrue($subpage->isCached());
+		$this->assertTrue($page->populate());
+
+		// clear only page
+		$page->clear();
+		$this->assertFalse($page->isCached());
+		$this->assertTrue($subpage->isCached());
+
+		// clear recursively
+		$page->clear(true);
+		$this->assertFalse($page->isCached());
+		$this->assertFalse($subpage->isCached());
+	}
+
+	public function testCacheInvalidModelId(): void
+	{
+		$page = $this->app->page('page-a');
+		$key  = 'page/my/-page';
+		$id   = 'page://my-page';
+		$uuid = Uuid::from($id);
+
+		$this->assertFalse($uuid->isCached());
+		$this->assertSame($key, $uuid->key());
+		$this->assertSame($uuid->toString(), $id);
+		$this->assertTrue($uuid->isCached());
+		$this->assertSame(Uuids::cache()->get($key), 'page-a');
+		$this->assertSame($page, $this->app->page($id));
+
+		// modify cache data manually to something invalid
+		Uuids::cache()->set($key, 'invalid-id');
+
+		$uuid = Uuid::from($id);
+		$this->assertSame(Uuids::cache()->get($key), 'invalid-id');
+		$this->assertNull($uuid->model(true));
+		$this->assertSame(Uuids::cache()->get($key), 'invalid-id');
+		$this->assertIsPage($page, $uuid->model());
+		$this->assertSame(Uuids::cache()->get($key), 'page-a');
+	}
+
+	public function testClearNotGenerate(): void
+	{
+		$page = $this->app->page('page-b');
+		$uuid = $page->uuid();
+		$this->assertNull($uuid->key());
+		$this->assertNull($page->content()->get('uuid')->value());
+		$this->assertTrue($uuid->clear());
+		$this->assertNull($page->content()->get('uuid')->value());
+	}
+
+	public function testConstructConfigDisabled(): void
+	{
+		$this->app->clone(['options' => ['content' => ['uuid' => false]]]);
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('UUIDs have been disabled via the `content.uuid` config option.');
+		new TestUuid('page://my-page-uuid');
 	}
 
 	public function testConstructModel(): void
@@ -65,52 +129,13 @@ class UuidTest extends TestCase
 		);
 	}
 
-	public function testConstructConfigDisabled(): void
+	public function testConstructUuidString(): void
 	{
-		$this->app->clone(['options' => ['content' => ['uuid' => false]]]);
-		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('UUIDs have been disabled via the `content.uuid` config option.');
-		new TestUuid('page://my-page-uuid');
-	}
-
-	public function testCache(): void
-	{
-		$page    = $this->app->page('page-a');
-		$subpage = $page->children()->find('subpage-a');
-
-		$page    = $page->uuid();
-		$subpage = $subpage->uuid();
-
-		// not cached so far
-		$this->assertFalse($page->isCached());
-		$this->assertFalse($subpage->isCached());
-
-		// cache them
-		$this->assertTrue($page->populate());
-		$this->assertTrue($subpage->populate());
-		$this->assertTrue($page->isCached());
-		$this->assertTrue($subpage->isCached());
-		$this->assertTrue($page->populate());
-
-		// clear only page
-		$page->clear();
-		$this->assertFalse($page->isCached());
-		$this->assertTrue($subpage->isCached());
-
-		// clear recursively
-		$page->clear(true);
-		$this->assertFalse($page->isCached());
-		$this->assertFalse($subpage->isCached());
-	}
-
-	public function testClearNotGenerate(): void
-	{
-		$page = $this->app->page('page-b');
-		$uuid = $page->uuid();
-		$this->assertNull($uuid->key());
-		$this->assertNull($page->content()->get('uuid')->value());
-		$this->assertTrue($uuid->clear());
-		$this->assertNull($page->content()->get('uuid')->value());
+		$uuid = new TestUuid($uri = 'page://my-page-uuid');
+		$this->assertInstanceOf(Uri::class, $uuid->uri);
+		$this->assertSame($uri, $uuid->uri->toString());
+		$this->assertNull($uuid->model);
+		$this->assertNull($uuid->context);
 	}
 
 	public function testContext(): void
@@ -162,11 +187,10 @@ class UuidTest extends TestCase
 		// $this->assertInstanceOf(StructureUuid::class, Uuid::from('struct://my-id'));
 	}
 
-	public function testFromUuidInvalid(): void
+	public function testFromDisabled(): void
 	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid UUID type "foo" in foo://my-id');
-		Uuid::from('foo://my-id');
+		$this->app->clone(['options' => ['content' => ['uuid' => false]]]);
+		$this->assertNull(Uuid::from('page://my-page-uuid'));
 	}
 
 	public function testFromInvalid(): void
@@ -176,10 +200,11 @@ class UuidTest extends TestCase
 		Uuid::from('foo˜bar');
 	}
 
-	public function testFromDisabled(): void
+	public function testFromUuidInvalid(): void
 	{
-		$this->app->clone(['options' => ['content' => ['uuid' => false]]]);
-		$this->assertNull(Uuid::from('page://my-page-uuid'));
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid UUID type "foo" in foo://my-id');
+		Uuid::from('foo://my-id');
 	}
 
 	public function testGenerate(): void
@@ -453,30 +478,5 @@ class UuidTest extends TestCase
 	{
 		$page = $this->app->page($dir = 'page-a/subpage-a');
 		$this->assertSame($dir, $page->uuid()->value());
-	}
-
-	public function testCacheInvalidModelId(): void
-	{
-		$page = $this->app->page('page-a');
-		$key  = 'page/my/-page';
-		$id   = 'page://my-page';
-		$uuid = Uuid::from($id);
-
-		$this->assertFalse($uuid->isCached());
-		$this->assertSame($key, $uuid->key());
-		$this->assertSame($uuid->toString(), $id);
-		$this->assertTrue($uuid->isCached());
-		$this->assertSame(Uuids::cache()->get($key), 'page-a');
-		$this->assertSame($page, $this->app->page($id));
-
-		// modify cache data manually to something invalid
-		Uuids::cache()->set($key, 'invalid-id');
-
-		$uuid = Uuid::from($id);
-		$this->assertSame(Uuids::cache()->get($key), 'invalid-id');
-		$this->assertNull($uuid->model(true));
-		$this->assertSame(Uuids::cache()->get($key), 'invalid-id');
-		$this->assertIsPage($page, $uuid->model());
-		$this->assertSame(Uuids::cache()->get($key), 'page-a');
 	}
 }

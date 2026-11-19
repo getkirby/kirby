@@ -16,16 +16,16 @@ use Stringable;
 class Stack
 {
 	/**
-	 * Render depth counter
-	 */
-	protected static int $depths = 0;
-
-	/**
 	 * Stacks currently capturing output
 	 *
 	 * @var list<array{name: string, unique: bool, level: int}>
 	 */
 	protected static array $active = [];
+
+	/**
+	 * Render depth counter
+	 */
+	protected static int $depths = 0;
 
 	/**
 	 * Deferred stack placeholders by their token

@@ -21,14 +21,14 @@ use PHPUnit\Framework\Attributes\CoversClass;
 
 class DummyChallenge extends Challenge
 {
-	public function isAvailable(): bool
-	{
-		return true;
-	}
-
 	public function create(): Pending|null
 	{
 		return new Pending(secret: password_hash('test', PASSWORD_DEFAULT));
+	}
+
+	public function isAvailable(): bool
+	{
+		return true;
 	}
 
 	public function verify(mixed $input, Pending $data): bool
@@ -96,57 +96,6 @@ class AppPluginsTest extends TestCase
 
 		$kirby->impersonate('kirby');
 		$this->assertSame('nice', $kirby->call('api/awesome'));
-	}
-
-	public function testApiRoutePlugins(): void
-	{
-		App::plugin('test/a', [
-			'api' => [
-				'routes' => [
-					[
-						'pattern' => 'a',
-						'action'  => fn () => 'a'
-					]
-				]
-			]
-		]);
-
-		App::plugin('test/b', [
-			'api' => [
-				'routes' => [
-					[
-						'pattern' => 'b',
-						'action'  => fn () => 'b'
-					]
-				]
-			]
-		]);
-
-		App::plugin('test/c', [
-			'api' => [
-				'routes' => [
-					[
-						'pattern' => 'c',
-						'action'  => fn () => 'c'
-					]
-				]
-			]
-		]);
-
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'api' => [
-				'authentication' => fn () => true
-			],
-		]);
-
-		$app->impersonate('kirby');
-
-		$this->assertSame('a', $app->api()->call('a'));
-		$this->assertSame('b', $app->api()->call('b'));
-		$this->assertSame('c', $app->api()->call('c'));
 	}
 
 	public function testApiRouteCallbackPlugins(): void
@@ -227,6 +176,75 @@ class AppPluginsTest extends TestCase
 
 		$app->impersonate('kirby');
 		$this->assertSame('Test', $app->api()->call('test'));
+	}
+
+	public function testApiRoutePlugins(): void
+	{
+		App::plugin('test/a', [
+			'api' => [
+				'routes' => [
+					[
+						'pattern' => 'a',
+						'action'  => fn () => 'a'
+					]
+				]
+			]
+		]);
+
+		App::plugin('test/b', [
+			'api' => [
+				'routes' => [
+					[
+						'pattern' => 'b',
+						'action'  => fn () => 'b'
+					]
+				]
+			]
+		]);
+
+		App::plugin('test/c', [
+			'api' => [
+				'routes' => [
+					[
+						'pattern' => 'c',
+						'action'  => fn () => 'c'
+					]
+				]
+			]
+		]);
+
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'api' => [
+				'authentication' => fn () => true
+			],
+		]);
+
+		$app->impersonate('kirby');
+
+		$this->assertSame('a', $app->api()->call('a'));
+		$this->assertSame('b', $app->api()->call('b'));
+		$this->assertSame('c', $app->api()->call('c'));
+	}
+
+	public function testAreas(): void
+	{
+		$kirby = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'areas' => [
+				'todos' => fn () => []
+			]
+		]);
+
+		$areas = $kirby->extensions('areas');
+
+		$this->assertCount(1, $areas);
+		$this->assertArrayHasKey('todos', $areas);
+		$this->assertInstanceOf('Closure', $areas['todos'][0]);
 	}
 
 	public function testAuthChallenge(): void
@@ -401,221 +419,6 @@ class AppPluginsTest extends TestCase
 		$this->assertSame(['foo' => 'bar'], $kirby->controller('test'));
 	}
 
-	public function testFieldMethod(): void
-	{
-		$kirby = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'fieldMethods' => [
-				'test' => fn () => 'test'
-			]
-		]);
-
-		$page = new Page(['slug' => 'test']);
-		$this->assertSame('test', $page->customField()->test());
-
-		// reset methods
-		Field::$methods = [];
-	}
-
-	public function testField(): void
-	{
-		require_once static::FIXTURES . '/fields/DummyField.php';
-
-		new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'fields' => [
-				'dummy' => DummyField::class
-			]
-		]);
-
-		$page  = new Page(['slug' => 'test']);
-		$class = FormField::resolve('dummy');
-		$field = new $class(
-			name: 'dummy',
-			peter: 'shaw',
-			model: $page
-		);
-
-		$this->assertInstanceOf(DummyField::class, $field);
-		$this->assertSame('simpson', $field->homer());
-		$this->assertSame('shaw', $field->peter());
-	}
-
-	public function testFilePreviews(): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'filePreviews' => [
-				DummyFilePreview::class
-			]
-		]);
-
-		$this->assertCount(5, $app->extensions('filePreviews'));
-	}
-
-	public function testKirbyTag(): void
-	{
-		$kirby = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'tags' => [
-				'test' => [
-					'html' => fn () => 'test'
-				],
-				'FoO' => [
-					'html' => fn () => 'test'
-				]
-			]
-		]);
-
-		$this->assertSame('test', $kirby->kirbytags('(test: foo)'));
-		$this->assertSame('test', $kirby->kirbytags('(TEST: foo)'));
-
-		$this->assertSame('test', $kirby->kirbytags('(foo: bar)'));
-		$this->assertSame('test', $kirby->kirbytags('(FOO: bar)'));
-	}
-
-	public function testPageMethod(): void
-	{
-		$kirby = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'pageMethods' => [
-				'test' => fn () => 'test'
-			]
-		]);
-
-		$page = new Page(['slug' => 'test']);
-		$this->assertSame('test', $page->test());
-
-		// reset methods
-		Page::$methods = [];
-	}
-
-	public function testPagesMethod(): void
-	{
-		$kirby = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'pagesMethods' => [
-				'test' => fn () => 'test'
-			]
-		]);
-
-		$pages = new Pages([]);
-		$this->assertSame('test', $pages->test());
-
-		// reset methods
-		Pages::$methods = [];
-	}
-
-	public function testPageModel(): void
-	{
-		$kirby = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'pageModels' => [
-				'dummy' => DummyPage::class
-			]
-		]);
-
-		$page = Page::factory([
-			'slug'  => 'test',
-			'model' => 'dummy'
-		]);
-
-		$this->assertInstanceOf(DummyPage::class, $page);
-	}
-
-	public function testPageModelFromFolder(): void
-	{
-		$kirby = new App([
-			'roots' => [
-				'index'  => '/dev/null',
-				'models' => static::FIXTURES . '/models'
-			]
-		]);
-
-		$page = Page::factory([
-			'slug' => 'test',
-			'model' => 'test'
-		]);
-
-		$this->assertInstanceOf('TestPage', $page);
-	}
-
-	public function testPermission(): void
-	{
-		$kirby = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'permissions' => [
-				'test-category' => [
-					'test-action' => true,
-					'another'     => false
-				]
-			]
-		]);
-
-		$permissions = new Permissions([]);
-		$this->assertTrue($permissions->for('test-category', 'test-action'));
-		$this->assertFalse($permissions->for('test-category', 'another'));
-
-		// reset actions
-		Permissions::$extendedActions = [];
-	}
-
-	public function testPermissionPlugin(): void
-	{
-		$kirby = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			]
-		]);
-
-		$plugin = new Plugin('kirby/manual', [
-			'permissions' => [
-				'test-action' => true,
-				'another'     => false
-			]
-		]);
-
-		$kirby->extend($plugin->extends(), $plugin);
-
-		$permissions = new Permissions([]);
-		$this->assertTrue($permissions->for('kirby.manual', 'test-action'));
-		$this->assertFalse($permissions->for('kirby.manual', 'another'));
-
-		// reset actions
-		Permissions::$extendedActions = [];
-	}
-
-	public function testOption(): void
-	{
-		// simple
-		$kirby = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'options' => [
-				'testOption' => 'testValue'
-			]
-		]);
-
-		$this->assertSame('testValue', $kirby->option('testOption'));
-	}
-
 	public function testExtensionsFromFolders(): void
 	{
 		Page::$models = [];
@@ -666,6 +469,371 @@ class AppPluginsTest extends TestCase
 		$this->assertTrue($calledHook);
 	}
 
+	public function testField(): void
+	{
+		require_once static::FIXTURES . '/fields/DummyField.php';
+
+		new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'fields' => [
+				'dummy' => DummyField::class
+			]
+		]);
+
+		$page  = new Page(['slug' => 'test']);
+		$class = FormField::resolve('dummy');
+		$field = new $class(
+			name: 'dummy',
+			peter: 'shaw',
+			model: $page
+		);
+
+		$this->assertInstanceOf(DummyField::class, $field);
+		$this->assertSame('simpson', $field->homer());
+		$this->assertSame('shaw', $field->peter());
+	}
+
+	public function testFieldMethod(): void
+	{
+		$kirby = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'fieldMethods' => [
+				'test' => fn () => 'test'
+			]
+		]);
+
+		$page = new Page(['slug' => 'test']);
+		$this->assertSame('test', $page->customField()->test());
+
+		// reset methods
+		Field::$methods = [];
+	}
+
+	public function testFilePreviews(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'filePreviews' => [
+				DummyFilePreview::class
+			]
+		]);
+
+		$this->assertCount(5, $app->extensions('filePreviews'));
+	}
+
+	public function testFileTypes(): void
+	{
+		$kirby = new App([
+			'roots' => [
+				'index' => '/dev/null',
+			],
+			'fileTypes' => [
+				'm4p' => [
+					'mime' => 'video/m4p',
+					'type' => 'video',
+				],
+				'heif' => [
+					'mime' => ['image/heic', 'image/heif'],
+					'type' => 'image',
+					'resizable' => true,
+					'viewable' => true,
+				],
+				'test' => [
+					'extension' => 'kql',
+					'type' => 'code'
+				],
+				'midi' => [
+					'mime' => 'audio/x-midi'
+				],
+				'ttf' => [
+					'type' => 'font'
+				]
+			]
+		]);
+
+		$fileTypes = $kirby->extensions('fileTypes');
+		$this->assertSame($fileTypes['type'], F::$types);
+		$this->assertSame($fileTypes['mime'], Mime::$types);
+		$this->assertSame($fileTypes['resizable'], Image::$resizableTypes);
+		$this->assertSame($fileTypes['viewable'], Image::$viewableTypes);
+
+		$this->assertContains('m4p', F::$types['video']);
+		$this->assertArrayHasKey('m4p', Mime::$types);
+		$this->assertSame('video/m4p', Mime::$types['m4p']);
+		$this->assertNotContains('m4p', Image::$resizableTypes);
+		$this->assertNotContains('m4p', Image::$viewableTypes);
+
+		$this->assertContains('heif', F::$types['image']);
+		$this->assertArrayHasKey('heif', Mime::$types);
+		$this->assertSame(['image/heif', 'image/heic'], Mime::$types['heif']);
+		$this->assertContains('heif', Image::$resizableTypes);
+		$this->assertContains('heif', Image::$viewableTypes);
+
+		$this->assertContains('kql', F::$types['code']);
+		$this->assertNotContains('kql', Image::$resizableTypes);
+		$this->assertNotContains('kql', Image::$viewableTypes);
+
+		$this->assertArrayHasKey('midi', Mime::$types);
+		$this->assertSame(['audio/midi', 'audio/x-midi'], Mime::$types['midi']);
+		$this->assertNotContains('midi', Image::$resizableTypes);
+		$this->assertNotContains('midi', Image::$viewableTypes);
+
+		$this->assertArrayHasKey('font', F::$types);
+		$this->assertContains('ttf', F::$types['font']);
+		$this->assertNotContains('ttf', Image::$resizableTypes);
+		$this->assertNotContains('ttf', Image::$viewableTypes);
+	}
+
+	public function testKirbyTag(): void
+	{
+		$kirby = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'tags' => [
+				'test' => [
+					'html' => fn () => 'test'
+				],
+				'FoO' => [
+					'html' => fn () => 'test'
+				]
+			]
+		]);
+
+		$this->assertSame('test', $kirby->kirbytags('(test: foo)'));
+		$this->assertSame('test', $kirby->kirbytags('(TEST: foo)'));
+
+		$this->assertSame('test', $kirby->kirbytags('(foo: bar)'));
+		$this->assertSame('test', $kirby->kirbytags('(FOO: bar)'));
+	}
+
+	public function testNativeComponents(): void
+	{
+		$kirby = new App([
+			'roots' => [
+				'index' => '/dev/null',
+			],
+			'urls' => [
+				'index' => 'https://getkirby.com'
+			],
+			'components' => [
+				'url' => function ($kirby, $path) {
+					return 'https://rewritten.getkirby.com/' . $path;
+				},
+			]
+		]);
+
+		$this->assertSame('https://rewritten.getkirby.com/test', $kirby->component('url')($kirby, 'test'));
+		$this->assertSame('https://getkirby.com/test', $kirby->nativeComponent('url')($kirby, 'test'));
+	}
+
+	public function testOption(): void
+	{
+		// simple
+		$kirby = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'options' => [
+				'testOption' => 'testValue'
+			]
+		]);
+
+		$this->assertSame('testValue', $kirby->option('testOption'));
+	}
+
+	public function testPageMethod(): void
+	{
+		$kirby = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'pageMethods' => [
+				'test' => fn () => 'test'
+			]
+		]);
+
+		$page = new Page(['slug' => 'test']);
+		$this->assertSame('test', $page->test());
+
+		// reset methods
+		Page::$methods = [];
+	}
+
+	public function testPageModel(): void
+	{
+		$kirby = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'pageModels' => [
+				'dummy' => DummyPage::class
+			]
+		]);
+
+		$page = Page::factory([
+			'slug'  => 'test',
+			'model' => 'dummy'
+		]);
+
+		$this->assertInstanceOf(DummyPage::class, $page);
+	}
+
+	public function testPageModelFromFolder(): void
+	{
+		$kirby = new App([
+			'roots' => [
+				'index'  => '/dev/null',
+				'models' => static::FIXTURES . '/models'
+			]
+		]);
+
+		$page = Page::factory([
+			'slug' => 'test',
+			'model' => 'test'
+		]);
+
+		$this->assertInstanceOf('TestPage', $page);
+	}
+
+	public function testPagesMethod(): void
+	{
+		$kirby = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'pagesMethods' => [
+				'test' => fn () => 'test'
+			]
+		]);
+
+		$pages = new Pages([]);
+		$this->assertSame('test', $pages->test());
+
+		// reset methods
+		Pages::$methods = [];
+	}
+
+	public function testPermission(): void
+	{
+		$kirby = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'permissions' => [
+				'test-category' => [
+					'test-action' => true,
+					'another'     => false
+				]
+			]
+		]);
+
+		$permissions = new Permissions([]);
+		$this->assertTrue($permissions->for('test-category', 'test-action'));
+		$this->assertFalse($permissions->for('test-category', 'another'));
+
+		// reset actions
+		Permissions::$extendedActions = [];
+	}
+
+	public function testPermissionPlugin(): void
+	{
+		$kirby = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			]
+		]);
+
+		$plugin = new Plugin('kirby/manual', [
+			'permissions' => [
+				'test-action' => true,
+				'another'     => false
+			]
+		]);
+
+		$kirby->extend($plugin->extends(), $plugin);
+
+		$permissions = new Permissions([]);
+		$this->assertTrue($permissions->for('kirby.manual', 'test-action'));
+		$this->assertFalse($permissions->for('kirby.manual', 'another'));
+
+		// reset actions
+		Permissions::$extendedActions = [];
+	}
+
+	public function testPluginLoader(): void
+	{
+		$phpUnit  = $this;
+		$executed = 0;
+
+		Dir::copy(static::FIXTURES . '/AppPluginsTest', $tmp = static::TMP);
+
+		$kirby = new App([
+			'roots' => [
+				'index'   => static::TMP,
+				'plugins' => static::TMP . '/site/plugins-loader'
+			],
+			'hooks' => [
+				'system.loadPlugins:after' => function () use ($phpUnit, &$executed, $tmp) {
+					$plugins = $this->plugins();
+
+					if (count($plugins) === 2) {
+						$phpUnit->assertSame([
+							'kirby/manual1' => new Plugin('kirby/manual1', []),
+							'kirby/manual2' => new Plugin('kirby/manual2', [])
+						], $plugins);
+					} else {
+						$phpUnit->assertInstanceOf(Plugin::class, $plugins['kirby/test1']);
+						$phpUnit->assertSame($tmp . '/site/plugins-loader/test1', $plugins['kirby/test1']->root());
+					}
+
+					$executed++;
+				}
+			]
+		]);
+
+		// the hook defined inside the test1 plugin should also have been called
+		$this->assertTrue(static::$calledPluginsLoadedHook);
+
+		// try loading again (which should *not* trigger the hooks again)
+		$kirby->plugins();
+
+		// overwrite plugins with a custom array
+		$expected = [
+			'kirby/manual1' => new Plugin('kirby/manual1', []),
+			'kirby/manual2' => new Plugin('kirby/manual2', [])
+		];
+		$this->assertSame($expected, $kirby->plugins($expected));
+
+		// hook should have been called only once after the first initialization
+		$this->assertSame(1, $executed);
+	}
+
+	public function testPluginLoaderAnonymous(): void
+	{
+		Dir::copy(static::FIXTURES . '/AppPluginsTest', static::TMP);
+
+		$kirby = new App([
+			'roots' => [
+				'index'   => static::TMP,
+				'plugins' => $dir = static::TMP . '/site/plugins-loader-anonymous'
+			]
+		]);
+
+		$plugins = $kirby->plugins();
+		$this->assertCount(1, $plugins);
+
+		$plugin = array_pop($plugins);
+		$this->assertSame('plugins/test5', $plugin->name());
+		$this->assertSame($dir . '/test5', $plugin->root());
+	}
+
 	public function testPluginOptions(): void
 	{
 		App::plugin('test/plugin', [
@@ -688,29 +856,6 @@ class AppPluginsTest extends TestCase
 
 		$this->assertSame('another-bar', $kirby->option('test.plugin.foo'));
 		$this->assertSame(['foo' => 'another-bar'], $kirby->option('test.plugin'));
-	}
-
-	public function testPluginOptionsWithNonAssociativeArray(): void
-	{
-		// non-associative
-		App::plugin('test/plugin', [
-			'options' => [
-				'foo' => ['one', 'two']
-			]
-		]);
-
-		$kirby = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'options' => [
-				'test.plugin' => [
-					'foo' => ['three']
-				]
-			]
-		]);
-
-		$this->assertSame(['three'], $kirby->option('test.plugin.foo'));
 	}
 
 	public function testPluginOptionsWithAssociativeArray(): void
@@ -739,6 +884,29 @@ class AppPluginsTest extends TestCase
 		]);
 
 		$this->assertSame(['a' => 'Custom A', 'b' => 'B'], $kirby->option('test.plugin.foo'));
+	}
+
+	public function testPluginOptionsWithNonAssociativeArray(): void
+	{
+		// non-associative
+		App::plugin('test/plugin', [
+			'options' => [
+				'foo' => ['one', 'two']
+			]
+		]);
+
+		$kirby = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'options' => [
+				'test.plugin' => [
+					'foo' => ['three']
+				]
+			]
+		]);
+
+		$this->assertSame(['three'], $kirby->option('test.plugin.foo'));
 	}
 
 	public function testRoutes(): void
@@ -801,6 +969,28 @@ class AppPluginsTest extends TestCase
 		]);
 
 		$this->assertSame($file, $kirby->extension('templates', 'project'));
+	}
+
+	public function testThirdPartyExtensions(): void
+	{
+		$kirby = new App([
+			'roots' => [
+				'index' => '/dev/null',
+			],
+			'tags' => [
+				'test' => $testTag = function () {
+				},
+			],
+			'thirdParty' => [
+				'blocks' => [
+					'test' => $testBlock = function () {
+					}
+				]
+			]
+		]);
+
+		$this->assertSame($testTag, $kirby->extensions('tags')['test']);
+		$this->assertSame($testBlock, $kirby->extensions('thirdParty')['blocks']['test']);
 	}
 
 	public function testTranslation(): void
@@ -939,195 +1129,5 @@ class AppPluginsTest extends TestCase
 
 		// reset methods
 		Users::$methods = [];
-	}
-
-	public function testPluginLoader(): void
-	{
-		$phpUnit  = $this;
-		$executed = 0;
-
-		Dir::copy(static::FIXTURES . '/AppPluginsTest', $tmp = static::TMP);
-
-		$kirby = new App([
-			'roots' => [
-				'index'   => static::TMP,
-				'plugins' => static::TMP . '/site/plugins-loader'
-			],
-			'hooks' => [
-				'system.loadPlugins:after' => function () use ($phpUnit, &$executed, $tmp) {
-					$plugins = $this->plugins();
-
-					if (count($plugins) === 2) {
-						$phpUnit->assertSame([
-							'kirby/manual1' => new Plugin('kirby/manual1', []),
-							'kirby/manual2' => new Plugin('kirby/manual2', [])
-						], $plugins);
-					} else {
-						$phpUnit->assertInstanceOf(Plugin::class, $plugins['kirby/test1']);
-						$phpUnit->assertSame($tmp . '/site/plugins-loader/test1', $plugins['kirby/test1']->root());
-					}
-
-					$executed++;
-				}
-			]
-		]);
-
-		// the hook defined inside the test1 plugin should also have been called
-		$this->assertTrue(static::$calledPluginsLoadedHook);
-
-		// try loading again (which should *not* trigger the hooks again)
-		$kirby->plugins();
-
-		// overwrite plugins with a custom array
-		$expected = [
-			'kirby/manual1' => new Plugin('kirby/manual1', []),
-			'kirby/manual2' => new Plugin('kirby/manual2', [])
-		];
-		$this->assertSame($expected, $kirby->plugins($expected));
-
-		// hook should have been called only once after the first initialization
-		$this->assertSame(1, $executed);
-	}
-
-	public function testPluginLoaderAnonymous(): void
-	{
-		Dir::copy(static::FIXTURES . '/AppPluginsTest', static::TMP);
-
-		$kirby = new App([
-			'roots' => [
-				'index'   => static::TMP,
-				'plugins' => $dir = static::TMP . '/site/plugins-loader-anonymous'
-			]
-		]);
-
-		$plugins = $kirby->plugins();
-		$this->assertCount(1, $plugins);
-
-		$plugin = array_pop($plugins);
-		$this->assertSame('plugins/test5', $plugin->name());
-		$this->assertSame($dir . '/test5', $plugin->root());
-	}
-
-	public function testThirdPartyExtensions(): void
-	{
-		$kirby = new App([
-			'roots' => [
-				'index' => '/dev/null',
-			],
-			'tags' => [
-				'test' => $testTag = function () {
-				},
-			],
-			'thirdParty' => [
-				'blocks' => [
-					'test' => $testBlock = function () {
-					}
-				]
-			]
-		]);
-
-		$this->assertSame($testTag, $kirby->extensions('tags')['test']);
-		$this->assertSame($testBlock, $kirby->extensions('thirdParty')['blocks']['test']);
-	}
-
-	public function testNativeComponents(): void
-	{
-		$kirby = new App([
-			'roots' => [
-				'index' => '/dev/null',
-			],
-			'urls' => [
-				'index' => 'https://getkirby.com'
-			],
-			'components' => [
-				'url' => function ($kirby, $path) {
-					return 'https://rewritten.getkirby.com/' . $path;
-				},
-			]
-		]);
-
-		$this->assertSame('https://rewritten.getkirby.com/test', $kirby->component('url')($kirby, 'test'));
-		$this->assertSame('https://getkirby.com/test', $kirby->nativeComponent('url')($kirby, 'test'));
-	}
-
-	public function testAreas(): void
-	{
-		$kirby = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'areas' => [
-				'todos' => fn () => []
-			]
-		]);
-
-		$areas = $kirby->extensions('areas');
-
-		$this->assertCount(1, $areas);
-		$this->assertArrayHasKey('todos', $areas);
-		$this->assertInstanceOf('Closure', $areas['todos'][0]);
-	}
-
-	public function testFileTypes(): void
-	{
-		$kirby = new App([
-			'roots' => [
-				'index' => '/dev/null',
-			],
-			'fileTypes' => [
-				'm4p' => [
-					'mime' => 'video/m4p',
-					'type' => 'video',
-				],
-				'heif' => [
-					'mime' => ['image/heic', 'image/heif'],
-					'type' => 'image',
-					'resizable' => true,
-					'viewable' => true,
-				],
-				'test' => [
-					'extension' => 'kql',
-					'type' => 'code'
-				],
-				'midi' => [
-					'mime' => 'audio/x-midi'
-				],
-				'ttf' => [
-					'type' => 'font'
-				]
-			]
-		]);
-
-		$fileTypes = $kirby->extensions('fileTypes');
-		$this->assertSame($fileTypes['type'], F::$types);
-		$this->assertSame($fileTypes['mime'], Mime::$types);
-		$this->assertSame($fileTypes['resizable'], Image::$resizableTypes);
-		$this->assertSame($fileTypes['viewable'], Image::$viewableTypes);
-
-		$this->assertContains('m4p', F::$types['video']);
-		$this->assertArrayHasKey('m4p', Mime::$types);
-		$this->assertSame('video/m4p', Mime::$types['m4p']);
-		$this->assertNotContains('m4p', Image::$resizableTypes);
-		$this->assertNotContains('m4p', Image::$viewableTypes);
-
-		$this->assertContains('heif', F::$types['image']);
-		$this->assertArrayHasKey('heif', Mime::$types);
-		$this->assertSame(['image/heif', 'image/heic'], Mime::$types['heif']);
-		$this->assertContains('heif', Image::$resizableTypes);
-		$this->assertContains('heif', Image::$viewableTypes);
-
-		$this->assertContains('kql', F::$types['code']);
-		$this->assertNotContains('kql', Image::$resizableTypes);
-		$this->assertNotContains('kql', Image::$viewableTypes);
-
-		$this->assertArrayHasKey('midi', Mime::$types);
-		$this->assertSame(['audio/midi', 'audio/x-midi'], Mime::$types['midi']);
-		$this->assertNotContains('midi', Image::$resizableTypes);
-		$this->assertNotContains('midi', Image::$viewableTypes);
-
-		$this->assertArrayHasKey('font', F::$types);
-		$this->assertContains('ttf', F::$types['font']);
-		$this->assertNotContains('ttf', Image::$resizableTypes);
-		$this->assertNotContains('ttf', Image::$viewableTypes);
 	}
 }

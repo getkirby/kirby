@@ -13,6 +13,8 @@ class RouterTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.Panel';
 
+	public bool $submitted = false;
+
 	protected function call(
 		string $path,
 		array $query = [],
@@ -21,9 +23,17 @@ class RouterTest extends TestCase
 	): Response {
 		$_SERVER['SERVER_SOFTWARE'] = 'php';
 
+		$test = $this;
+
 		$this->app = $this->app->clone([
 			'areas' => [
 				'test' => fn () => [
+					'dialogs' => [
+						'test' => [
+							'load'   => fn () => ['component' => 'k-test-dialog'],
+							'submit' => fn () => $test->submitted = true
+						]
+					],
 					'requests' => [
 						'test' => [
 							'pattern' => 'test/request',
@@ -65,6 +75,13 @@ class RouterTest extends TestCase
 		$this->assertSame('Done', json_decode($response->body(), true)['message']);
 	}
 
+	public function testCallWithCsrfForDialogSubmit(): void
+	{
+		$response = $this->call('dialogs/test', ['csrf' => 'test-csrf'], 'POST');
+		$this->assertSame(200, $response->code());
+		$this->assertTrue($this->submitted);
+	}
+
 	public function testCallWithCsrfViaPost(): void
 	{
 		$response = $this->call('test/request', ['csrf' => 'test-csrf'], 'POST');
@@ -79,6 +96,17 @@ class RouterTest extends TestCase
 			'Invalid CSRF token',
 			json_decode($response->body(), true)['message']
 		);
+	}
+
+	public function testCallWithoutCsrfForDialogSubmit(): void
+	{
+		$response = $this->call('dialogs/test', [], 'POST');
+		$this->assertSame(400, $response->code());
+		$this->assertSame(
+			'Invalid CSRF token',
+			json_decode($response->body(), true)['message']
+		);
+		$this->assertFalse($this->submitted);
 	}
 
 	public function testCallWithoutCsrfForLogin(): void
@@ -205,35 +233,6 @@ class RouterTest extends TestCase
 		$routes[3]['action']('foo');
 	}
 
-	public function testSetLanguageWithoutRequest(): void
-	{
-		$this->app = $this->app->clone([
-			'options' => [
-				'languages' => true,
-			],
-			'languages' => [
-				[
-					'code' => 'en',
-					'name' => 'English',
-					'default' => true
-				],
-				[
-					'code' => 'de',
-					'name' => 'Deutsch',
-				]
-			]
-		]);
-
-		// set for the first time
-		$language = $this->app->panel()->router()->setLanguage();
-
-		$this->assertSame('en', $language);
-		$this->assertSame('en', $this->app->language()->code());
-
-		// language is not stored in the session yet
-		$this->assertNull($this->app->session()->get('panel.language'));
-	}
-
 	public function testSetLanguage(): void
 	{
 		$this->app = $this->app->clone([
@@ -268,30 +267,12 @@ class RouterTest extends TestCase
 		$this->assertSame('de', $this->app->session()->get('panel.language'));
 	}
 
-	public function testSetLanguageWithCustomDefault(): void
+	public function testSetLanguageInSingleLanguageSite(): void
 	{
-		$this->app = $this->app->clone([
-			'languages' => [
-				[
-					'code' => 'de',
-					'name' => 'Deutsch',
-					'default' => true
-				],
-				[
-					'code' => 'en',
-					'name' => 'English',
-				],
-			],
-			'options' => [
-				'languages' => true,
-			]
-		]);
-
-		// set for the first time
 		$language = $this->app->panel()->router()->setLanguage();
 
-		$this->assertSame('de', $language);
-		$this->assertSame('de', $this->app->language()->code());
+		$this->assertNull($language);
+		$this->assertNull($this->app->language());
 	}
 
 	public function testSetLanguageViaGet(): void
@@ -318,6 +299,37 @@ class RouterTest extends TestCase
 		]);
 
 		// set for the first time
+		$language = $this->app->panel()->router()->setLanguage();
+
+		$this->assertSame('de', $language);
+		$this->assertSame('de', $this->app->session()->get('panel.language'));
+		$this->assertSame('de', $this->app->language()->code());
+	}
+
+	public function testSetLanguageViaGetOverridesHeader(): void
+	{
+		// the query parameter switches the language, so it has to
+		// win over the language the tab is currently on
+		$_GET['language'] = 'de';
+		$_SERVER['HTTP_X_LANGUAGE'] = 'en';
+
+		$this->app = $this->app->clone([
+			'options' => [
+				'languages' => true,
+			],
+			'languages' => [
+				[
+					'code' => 'en',
+					'name' => 'English',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+					'name' => 'Deutsch',
+				]
+			]
+		]);
+
 		$language = $this->app->panel()->router()->setLanguage();
 
 		$this->assertSame('de', $language);
@@ -388,37 +400,6 @@ class RouterTest extends TestCase
 		$this->assertSame('en', $this->app->language()->code());
 	}
 
-	public function testSetLanguageViaGetOverridesHeader(): void
-	{
-		// the query parameter switches the language, so it has to
-		// win over the language the tab is currently on
-		$_GET['language'] = 'de';
-		$_SERVER['HTTP_X_LANGUAGE'] = 'en';
-
-		$this->app = $this->app->clone([
-			'options' => [
-				'languages' => true,
-			],
-			'languages' => [
-				[
-					'code' => 'en',
-					'name' => 'English',
-					'default' => true
-				],
-				[
-					'code' => 'de',
-					'name' => 'Deutsch',
-				]
-			]
-		]);
-
-		$language = $this->app->panel()->router()->setLanguage();
-
-		$this->assertSame('de', $language);
-		$this->assertSame('de', $this->app->session()->get('panel.language'));
-		$this->assertSame('de', $this->app->language()->code());
-	}
-
 	public function testSetLanguageViaSession(): void
 	{
 		$this->app = $this->app->clone([
@@ -448,12 +429,59 @@ class RouterTest extends TestCase
 		$this->assertSame('de', $this->app->language()->code());
 	}
 
-	public function testSetLanguageInSingleLanguageSite(): void
+	public function testSetLanguageWithCustomDefault(): void
 	{
+		$this->app = $this->app->clone([
+			'languages' => [
+				[
+					'code' => 'de',
+					'name' => 'Deutsch',
+					'default' => true
+				],
+				[
+					'code' => 'en',
+					'name' => 'English',
+				],
+			],
+			'options' => [
+				'languages' => true,
+			]
+		]);
+
+		// set for the first time
 		$language = $this->app->panel()->router()->setLanguage();
 
-		$this->assertNull($language);
-		$this->assertNull($this->app->language());
+		$this->assertSame('de', $language);
+		$this->assertSame('de', $this->app->language()->code());
+	}
+
+	public function testSetLanguageWithoutRequest(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'languages' => true,
+			],
+			'languages' => [
+				[
+					'code' => 'en',
+					'name' => 'English',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+					'name' => 'Deutsch',
+				]
+			]
+		]);
+
+		// set for the first time
+		$language = $this->app->panel()->router()->setLanguage();
+
+		$this->assertSame('en', $language);
+		$this->assertSame('en', $this->app->language()->code());
+
+		// language is not stored in the session yet
+		$this->assertNull($this->app->session()->get('panel.language'));
 	}
 
 	public function testSetTranslation(): void

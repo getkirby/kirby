@@ -22,6 +22,25 @@ class LayoutTest extends TestCase
 		$this->assertFalse($layout->isNotEmpty());
 	}
 
+	public function testIsEmptyWithHidden(): void
+	{
+		$layout = new Layout([
+			'columns' => [
+				[
+					'blocks' => [
+						[
+							'type' => 'heading',
+							'isHidden' => true
+						]
+					]
+				]
+			]
+		]);
+
+		$this->assertTrue($layout->isEmpty());
+		$this->assertFalse($layout->isNotEmpty());
+	}
+
 	public function testIsNotEmpty(): void
 	{
 		$layout = new Layout([
@@ -43,24 +62,5 @@ class LayoutTest extends TestCase
 
 		$this->assertFalse($layout->isEmpty());
 		$this->assertTrue($layout->isNotEmpty());
-	}
-
-	public function testIsEmptyWithHidden(): void
-	{
-		$layout = new Layout([
-			'columns' => [
-				[
-					'blocks' => [
-						[
-							'type' => 'heading',
-							'isHidden' => true
-						]
-					]
-				]
-			]
-		]);
-
-		$this->assertTrue($layout->isEmpty());
-		$this->assertFalse($layout->isNotEmpty());
 	}
 }

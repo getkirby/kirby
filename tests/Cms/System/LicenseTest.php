@@ -27,23 +27,6 @@ class LicenseTest extends TestCase
 		return $type->prefix() . '1234' . Str::random(28);
 	}
 
-	public static function providerForLicenseUrls(): array
-	{
-		return [
-			['example.com', 'example.com'],
-			['www.example.com', 'example.com'],
-			['dev.example.com', 'example.com'],
-			['test.example.com', 'example.com'],
-			['staging.example.com', 'example.com'],
-			['sub.example.com', 'sub.example.com'],
-			['www.example.com/test', 'www.example.com/test'],
-			['dev.example.com/test', 'dev.example.com/test'],
-			['test.example.com/test', 'test.example.com/test'],
-			['staging.example.com/test', 'staging.example.com/test'],
-			['sub.example.com/test', 'sub.example.com/test'],
-		];
-	}
-
 	public function testActivation(): void
 	{
 		$license = new License(
@@ -440,6 +423,23 @@ class LicenseTest extends TestCase
 		$this->assertSame('mail@getkirby.com', $license->email());
 	}
 
+	public static function providerForLicenseUrls(): array
+	{
+		return [
+			['example.com', 'example.com'],
+			['www.example.com', 'example.com'],
+			['dev.example.com', 'example.com'],
+			['test.example.com', 'example.com'],
+			['staging.example.com', 'example.com'],
+			['sub.example.com', 'sub.example.com'],
+			['www.example.com/test', 'www.example.com/test'],
+			['dev.example.com/test', 'dev.example.com/test'],
+			['test.example.com/test', 'test.example.com/test'],
+			['staging.example.com/test', 'staging.example.com/test'],
+			['sub.example.com/test', 'sub.example.com/test'],
+		];
+	}
+
 	#[DataProvider('providerForLicenseUrls')]
 	public function testNormalizeDomain(string $domain, string $expected): void
 	{
@@ -766,7 +766,6 @@ class LicenseTest extends TestCase
 			'order'      => '123456',
 			'expires'    => '2025-01-01 00:00:00',
 		], $license->signatureData());
-
 
 		// without expiry
 		$license = new License(

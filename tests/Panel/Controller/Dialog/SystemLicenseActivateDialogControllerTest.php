@@ -28,19 +28,6 @@ class SystemLicenseActivateDialogControllerTest extends TestCase
 		$this->assertNull($props['value']->email);
 	}
 
-	public function testSubmitWithInvalidLicense(): void
-	{
-		$this->setRequest([
-			'license' => 'K2-1234'
-		]);
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Please enter a valid license code');
-
-		$controller = new SystemLicenseActivateDialogController();
-		$controller->submit();
-	}
-
 	public function testSubmitWithInvalidEmail(): void
 	{
 		$this->setRequest([
@@ -50,6 +37,19 @@ class SystemLicenseActivateDialogControllerTest extends TestCase
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Please enter a valid email address');
+
+		$controller = new SystemLicenseActivateDialogController();
+		$controller->submit();
+	}
+
+	public function testSubmitWithInvalidLicense(): void
+	{
+		$this->setRequest([
+			'license' => 'K2-1234'
+		]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Please enter a valid license code');
 
 		$controller = new SystemLicenseActivateDialogController();
 		$controller->submit();

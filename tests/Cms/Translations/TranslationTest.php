@@ -9,6 +9,20 @@ class TranslationTest extends TestCase
 {
 	public const string FIXTURES = __DIR__ . '/fixtures';
 
+	public function testLoad(): void
+	{
+		$translation = Translation::load('de', static::FIXTURES . '/translations/de.json');
+
+		$this->assertSame('de', $translation->code());
+		$this->assertSame('Deutsch', $translation->name());
+
+		// invalid
+		$translation = Translation::load('zz', static::FIXTURES . '/translations/zz.json');
+
+		$this->assertSame('zz', $translation->code());
+		$this->assertSame([], $translation->data());
+	}
+
 	public function testProps(): void
 	{
 		$translation = new Translation('en', [
@@ -24,20 +38,6 @@ class TranslationTest extends TestCase
 		$this->assertSame('ltr', $translation->direction());
 		$this->assertSame('en_GB', $translation->locale());
 		$this->assertSame('Test', $translation->get('test'));
-	}
-
-	public function testLoad(): void
-	{
-		$translation = Translation::load('de', static::FIXTURES . '/translations/de.json');
-
-		$this->assertSame('de', $translation->code());
-		$this->assertSame('Deutsch', $translation->name());
-
-		// invalid
-		$translation = Translation::load('zz', static::FIXTURES . '/translations/zz.json');
-
-		$this->assertSame('zz', $translation->code());
-		$this->assertSame([], $translation->data());
 	}
 
 	public function testToArray(): void

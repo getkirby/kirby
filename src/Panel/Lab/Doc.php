@@ -74,7 +74,6 @@ class Doc
 			return null;
 		}
 
-
 		// filter internal components
 		if (isset($data['tags']['internal']) === true) {
 			return null;

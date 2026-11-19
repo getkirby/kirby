@@ -5,6 +5,7 @@ import Panel from "@/panel/panel";
 import Helpers from "@/helpers";
 import html from "@/panel/html";
 import Libraries from "@/libraries";
+import dayjs from "@/libraries/dayjs";
 import SafeHtml from "@/config/safeHtml";
 import Translation from "@/panel/translation";
 
@@ -64,9 +65,13 @@ beforeEach(() => {
 });
 
 /**
- * Tests share one document per worker (`isolate: false`),
- * so markup must not leak into the next test.
+ * Tests share one document and module scope per worker
+ * (`isolate: false`), so neither markup nor the interface
+ * language must leak into the next test.
  */
 afterEach(() => {
 	document.body.innerHTML = "";
+	document.body.dir = "";
+	document.documentElement.lang = "";
+	dayjs.locale("en");
 });

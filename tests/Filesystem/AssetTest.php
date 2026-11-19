@@ -31,6 +31,25 @@ class AssetTest extends TestCase
 		return new Asset($file);
 	}
 
+	public function testCall(): void
+	{
+		$asset = $this->_asset($file = 'images/logo.svg');
+
+		// property access
+		$this->assertSame('images', $asset->path());
+
+		// asset method
+		$this->assertSame('image/svg+xml', $asset->mime());
+
+		// custom method
+		$this->assertSame('asset method', $asset->test());
+
+		// invalid
+		$this->expectException(BadMethodCallException::class);
+		$this->expectExceptionMessage('The method: "foo" does not exist');
+		$asset->foo();
+	}
+
 	public function testConstruct(): void
 	{
 		$asset = $this->_asset($file = 'images/logo.svg');
@@ -70,25 +89,6 @@ class AssetTest extends TestCase
 		$this->_asset('images\..\..\logo.svg');
 	}
 
-	public function testCall(): void
-	{
-		$asset = $this->_asset($file = 'images/logo.svg');
-
-		// property access
-		$this->assertSame('images', $asset->path());
-
-		// asset method
-		$this->assertSame('image/svg+xml', $asset->mime());
-
-		// custom method
-		$this->assertSame('asset method', $asset->test());
-
-		// invalid
-		$this->expectException(BadMethodCallException::class);
-		$this->expectExceptionMessage('The method: "foo" does not exist');
-		$asset->foo();
-	}
-
 	public function testMedia(): void
 	{
 		$asset = $this->_asset();
@@ -110,17 +110,17 @@ class AssetTest extends TestCase
 		$this->assertSame(dirname($mediaUrl) . '/test.jpg', $asset->mediaUrl('test.jpg'));
 	}
 
-	public function testToString(): void
-	{
-		$asset = $this->_asset();
-		$this->assertSame('<img alt="" src="https://getkirby.com/images/logo.svg">', $asset->__toString());
-	}
-
 	public function testNonExistingMethod(): void
 	{
 		$asset = $this->_asset();
 		$this->expectException(BadMethodCallException::class);
 		$this->expectExceptionMessage('The method: "nonexists" does not exist');
 		$asset->nonexists();
+	}
+
+	public function testToString(): void
+	{
+		$asset = $this->_asset();
+		$this->assertSame('<img alt="" src="https://getkirby.com/images/logo.svg">', $asset->__toString());
 	}
 }

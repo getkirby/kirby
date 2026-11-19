@@ -30,6 +30,11 @@ class Params extends Obj implements Stringable
 		parent::__construct($params ?? []);
 	}
 
+	public function __toString(): string
+	{
+		return $this->toString();
+	}
+
 	/**
 	 * Extract the params from a string or array
 	 */
@@ -160,10 +165,5 @@ class Params extends Obj implements Stringable
 		$trailingSlash = $trailingSlash === true ? '/' : null;
 
 		return $leadingSlash . $params . $trailingSlash;
-	}
-
-	public function __toString(): string
-	{
-		return $this->toString();
 	}
 }

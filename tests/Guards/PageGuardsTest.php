@@ -90,11 +90,6 @@ class PageGuardsTest extends ModelTestCase
 		return $this->app->page('parent-a/child');
 	}
 
-	protected function user(): User
-	{
-		return $this->app->user() ?? new User(['id' => 'test']);
-	}
-
 	public function testChangeNum(): void
 	{
 		$this->assertNull($this->guards()->ensureExecutable('changeNum', 1));
@@ -162,6 +157,15 @@ class PageGuardsTest extends ModelTestCase
 		);
 	}
 
+	public function testChangeStatusToListedWithoutPosition(): void
+	{
+		$guards = $this->guards();
+
+		$this->assertNull($guards->ensureExecutable('changeStatus', 'listed'));
+		$this->assertNull($guards->ensureExecutable('changeStatusToListed'));
+		$this->assertTrue($guards->isExecutable('changeStatus', 'listed'));
+	}
+
 	public function testChangeStatusToListedWithUnsortablePage(): void
 	{
 		$this->app = $this->app->clone([
@@ -182,15 +186,6 @@ class PageGuardsTest extends ModelTestCase
 		$this->expectExceptionCode('error.page.sort.mode');
 
 		$this->guards($page)->ensureExecutable('changeStatus', 'listed', 2);
-	}
-
-	public function testChangeStatusToListedWithoutPosition(): void
-	{
-		$guards = $this->guards();
-
-		$this->assertNull($guards->ensureExecutable('changeStatus', 'listed'));
-		$this->assertNull($guards->ensureExecutable('changeStatusToListed'));
-		$this->assertTrue($guards->isExecutable('changeStatus', 'listed'));
 	}
 
 	public function testChangeStatusToUnlisted(): void
@@ -250,6 +245,47 @@ class PageGuardsTest extends ModelTestCase
 		]);
 
 		$this->expectExceptionCode('error.page.duplicate');
+
+		$this->guards($page)->ensureExecutable('create');
+	}
+
+	public function testCreateWithIncompleteDraft(): void
+	{
+		$page = new Page([
+			'slug'      => 'test',
+			'isDraft'   => true,
+			'blueprint' => [
+				'name'   => 'test',
+				'fields' => [
+					'headline' => [
+						'type'     => 'text',
+						'required' => true
+					]
+				]
+			]
+		]);
+
+		$this->assertNull($this->guards($page)->ensureExecutable('create'));
+	}
+
+	public function testCreateWithIncompletePublishedPage(): void
+	{
+		$page = new Page([
+			'slug'      => 'test',
+			'isDraft'   => false,
+			'blueprint' => [
+				'name'   => 'test',
+				'fields' => [
+					'headline' => [
+						'type'     => 'text',
+						'required' => true
+					]
+				]
+			]
+		]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.page.changeStatus.incomplete');
 
 		$this->guards($page)->ensureExecutable('create');
 	}
@@ -334,6 +370,56 @@ class PageGuardsTest extends ModelTestCase
 		$this->guards($this->app->page('test'))->ensureExecutable('delete');
 	}
 
+	public function testEnsureToBeCreatable(): void
+	{
+		$page = new Page([
+			'slug'    => 'test',
+			'isDraft' => true
+		]);
+
+		$this->assertNull($this->guards($page)->ensureToBeCreatable());
+	}
+
+	public function testEnsureToBeCreatableWithDuplicate(): void
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [['slug' => 'test']]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page = new Page([
+			'slug'    => 'test',
+			'isDraft' => true
+		]);
+
+		$this->expectExceptionCode('error.page.duplicate');
+
+		$this->guards($page)->ensureToBeCreatable();
+	}
+
+	public function testEnsureToBeCreatableWithIncompletePublishedPage(): void
+	{
+		// the content is not validated before it has been added
+		$page = new Page([
+			'slug'      => 'test',
+			'isDraft'   => false,
+			'blueprint' => [
+				'name'   => 'test',
+				'fields' => [
+					'headline' => [
+						'type'     => 'text',
+						'required' => true
+					]
+				]
+			]
+		]);
+
+		$this->assertNull($this->guards($page)->ensureToBeCreatable());
+	}
+
 	public function testMove(): void
 	{
 		$page = $this->movable();
@@ -400,5 +486,10 @@ class PageGuardsTest extends ModelTestCase
 		$this->expectExceptionCode('error.page.changeStatus.errorPage');
 
 		$this->guards($this->app->page('error'))->ensureExecutable('publish');
+	}
+
+	protected function user(): User
+	{
+		return $this->app->user() ?? new User(['id' => 'test']);
 	}
 }

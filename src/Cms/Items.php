@@ -20,14 +20,14 @@ class Items extends Collection
 {
 	public const string ITEM_CLASS = Item::class;
 
-	protected Field|null $field;
-
 	/**
 	 * All registered items methods
 	 *
 	 * @var array<string, Closure>
 	 */
 	public static array $methods = [];
+
+	protected Field|null $field;
 
 	/**
 	 * @var array<string, mixed>

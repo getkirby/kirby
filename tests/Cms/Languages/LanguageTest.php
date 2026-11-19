@@ -33,14 +33,6 @@ class LanguageTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	public function testConstructNoCode(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The property "code" is required');
-
-		new Language([]);
-	}
-
 	public static function baseUrlProvider(): array
 	{
 		return [
@@ -76,6 +68,21 @@ class LanguageTest extends TestCase
 		$this->assertSame($expected, $language->baseUrl());
 	}
 
+	public function testCodeAndId(): void
+	{
+		$language = new Language(['code' => 'en']);
+		$this->assertSame('en', $language->code());
+		$this->assertSame('en', $language->id());
+	}
+
+	public function testConstructNoCode(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The property "code" is required');
+
+		new Language([]);
+	}
+
 	public function testCreate(): void
 	{
 		$this->app->impersonate('kirby');
@@ -89,6 +96,37 @@ class LanguageTest extends TestCase
 		$this->assertSame('ltr', $language->direction());
 		$this->assertSame('en', $language->name());
 		$this->assertSame('/en', $language->url());
+	}
+
+	public function testCreateHooks(): void
+	{
+		$calls = 0;
+		$phpunit = $this;
+
+		$app = $this->app->clone([
+			'hooks' => [
+				'language.create:before' => function (Language $language, array $input) use ($phpunit, &$calls) {
+					$phpunit->assertInstanceOf(Language::class, $language);
+					$phpunit->assertSame('de', $input['code']);
+					$phpunit->assertTrue($input['default']);
+					$calls++;
+				},
+				'language.create:after' => function (Language $language, array $input) use ($phpunit, &$calls) {
+					$phpunit->assertInstanceOf(Language::class, $language);
+					$phpunit->assertSame('de', $input['code']);
+					$phpunit->assertTrue($input['default']);
+					$calls++;
+				}
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		Language::create([
+			'code' => 'de'
+		]);
+
+		$this->assertSame(2, $calls);
 	}
 
 	public function testCreateNoPermissions(): void
@@ -128,23 +166,34 @@ class LanguageTest extends TestCase
 		]);
 	}
 
-	public function testCreateHooks(): void
+	public function testDelete(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$language = Language::create(['code' => 'en']);
+		$this->assertTrue($language->delete());
+	}
+
+	public function testDeleteHooks(): void
 	{
 		$calls = 0;
 		$phpunit = $this;
 
-		$app = $this->app->clone([
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP,
+			],
 			'hooks' => [
-				'language.create:before' => function (Language $language, array $input) use ($phpunit, &$calls) {
+				'language.delete:before' => function (Language $language) use ($phpunit, &$calls) {
 					$phpunit->assertInstanceOf(Language::class, $language);
-					$phpunit->assertSame('de', $input['code']);
-					$phpunit->assertTrue($input['default']);
+					$phpunit->assertSame('en', $language->code());
+					$phpunit->assertSame('English', $language->name());
 					$calls++;
 				},
-				'language.create:after' => function (Language $language, array $input) use ($phpunit, &$calls) {
+				'language.delete:after' => function (Language $language) use ($phpunit, &$calls) {
 					$phpunit->assertInstanceOf(Language::class, $language);
-					$phpunit->assertSame('de', $input['code']);
-					$phpunit->assertTrue($input['default']);
+					$phpunit->assertSame('en', $language->code());
+					$phpunit->assertSame('English', $language->name());
 					$calls++;
 				}
 			]
@@ -152,26 +201,13 @@ class LanguageTest extends TestCase
 
 		$app->impersonate('kirby');
 
-		Language::create([
-			'code' => 'de'
+		$language = Language::create([
+			'code' => 'en',
+			'name' => 'English'
 		]);
+		$language->delete();
 
 		$this->assertSame(2, $calls);
-	}
-
-	public function testCodeAndId(): void
-	{
-		$language = new Language(['code' => 'en']);
-		$this->assertSame('en', $language->code());
-		$this->assertSame('en', $language->id());
-	}
-
-	public function testDelete(): void
-	{
-		$this->app->impersonate('kirby');
-
-		$language = Language::create(['code' => 'en']);
-		$this->assertTrue($language->delete());
 	}
 
 	public function testDeleteNoPermissions(): void
@@ -214,46 +250,9 @@ class LanguageTest extends TestCase
 		$language->delete();
 	}
 
-	public function testDeleteHooks(): void
-	{
-		$calls = 0;
-		$phpunit = $this;
-
-		$app = new App([
-			'roots' => [
-				'index' => static::TMP,
-			],
-			'hooks' => [
-				'language.delete:before' => function (Language $language) use ($phpunit, &$calls) {
-					$phpunit->assertInstanceOf(Language::class, $language);
-					$phpunit->assertSame('en', $language->code());
-					$phpunit->assertSame('English', $language->name());
-					$calls++;
-				},
-				'language.delete:after' => function (Language $language) use ($phpunit, &$calls) {
-					$phpunit->assertInstanceOf(Language::class, $language);
-					$phpunit->assertSame('en', $language->code());
-					$phpunit->assertSame('English', $language->name());
-					$calls++;
-				}
-			]
-		]);
-
-		$app->impersonate('kirby');
-
-		$language = Language::create([
-			'code' => 'en',
-			'name' => 'English'
-		]);
-		$language->delete();
-
-
-		$this->assertSame(2, $calls);
-	}
-
 	public function testDirection(): void
 	{
-		//default
+		// default
 		$language = new Language([
 			'code'      => 'en'
 		]);
@@ -351,6 +350,50 @@ class LanguageTest extends TestCase
 		F::write($language->root(), 'test');
 
 		$this->assertTrue($language->exists());
+	}
+
+	public function testHasCustomDomain(): void
+	{
+		// default
+		$language = new Language([
+			'code' => 'en',
+			'url'  => null
+		]);
+		$this->assertFalse($language->hasCustomDomain());
+
+		// relative url - false
+		$language = new Language([
+			'code' => 'en',
+			'url'  => '/en'
+		]);
+		$this->assertFalse($language->hasCustomDomain());
+
+		// root url - false
+		$language = new Language([
+			'code' => 'en',
+			'url'  => '/'
+		]);
+		$this->assertFalse($language->hasCustomDomain());
+
+		// absolute http url - true
+		$language = new Language([
+			'code' => 'en',
+			'url'  => 'http://example.com'
+		]);
+		$this->assertTrue($language->hasCustomDomain());
+
+		// absolute https url - true
+		$language = new Language([
+			'code' => 'en',
+			'url'  => 'https://example.com/en'
+		]);
+		$this->assertTrue($language->hasCustomDomain());
+
+		// no url - false
+		$language = new Language([
+			'code' => 'en'
+		]);
+		$this->assertFalse($language->hasCustomDomain());
 	}
 
 	public function testIs(): void
@@ -578,6 +621,15 @@ class LanguageTest extends TestCase
 		$this->assertSame('en_US', $language->locale(LC_MONETARY));
 	}
 
+	public function testLocaleDefault(): void
+	{
+		$language = new Language([
+			'code' => 'en',
+		]);
+
+		$this->assertSame('en', $language->locale(LC_ALL));
+	}
+
 	public function testLocaleInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -586,15 +638,6 @@ class LanguageTest extends TestCase
 			'code' => 'en',
 			'locale' => 123
 		]);
-	}
-
-	public function testLocaleDefault(): void
-	{
-		$language = new Language([
-			'code' => 'en',
-		]);
-
-		$this->assertSame('en', $language->locale(LC_ALL));
 	}
 
 	public function testName(): void
@@ -731,7 +774,6 @@ class LanguageTest extends TestCase
 		$this->assertSame([], $data['translations']);
 		$this->assertNull($data['url'] ?? null);
 
-
 		// custom url
 		$language = new Language([
 			'code' => 'de',
@@ -743,7 +785,6 @@ class LanguageTest extends TestCase
 		$data = include $file;
 
 		$this->assertSame('/', $data['url']);
-
 
 		// custom translations
 		$language = new Language([
@@ -758,7 +799,6 @@ class LanguageTest extends TestCase
 		$data = include $file;
 
 		$this->assertSame(['foo' => 'bar'], $data['translations']);
-
 
 		// custom props in file
 		Data::write($file, ['custom' => 'test']);
@@ -803,89 +843,6 @@ class LanguageTest extends TestCase
 
 		$this->assertSame($expected, $language->toArray());
 		$this->assertSame($expected, $language->__debugInfo());
-	}
-
-	public function testUrlWithRelativeValue(): void
-	{
-		$language = new Language([
-			'code' => 'en',
-			'url'  => 'super'
-		]);
-
-		$this->assertSame('/super', $language->url());
-	}
-
-	public function testUrlWithAbsoluteValue(): void
-	{
-		$language = new Language([
-			'code' => 'en',
-			'url'  => 'https://en.getkirby.com'
-		]);
-
-		$this->assertSame('https://en.getkirby.com', $language->url());
-	}
-
-	public function testUrlWithDash(): void
-	{
-		$language = new Language([
-			'code' => 'en',
-			'url'  => '/'
-		]);
-
-		$this->assertSame('/', $language->url());
-	}
-
-	public function testUrlDefault(): void
-	{
-		$language = new Language([
-			'code' => 'en',
-		]);
-
-		$this->assertSame('/en', $language->url());
-	}
-
-	public function testHasCustomDomain(): void
-	{
-		// default
-		$language = new Language([
-			'code' => 'en',
-			'url'  => null
-		]);
-		$this->assertFalse($language->hasCustomDomain());
-
-		// relative url - false
-		$language = new Language([
-			'code' => 'en',
-			'url'  => '/en'
-		]);
-		$this->assertFalse($language->hasCustomDomain());
-
-		// root url - false
-		$language = new Language([
-			'code' => 'en',
-			'url'  => '/'
-		]);
-		$this->assertFalse($language->hasCustomDomain());
-
-		// absolute http url - true
-		$language = new Language([
-			'code' => 'en',
-			'url'  => 'http://example.com'
-		]);
-		$this->assertTrue($language->hasCustomDomain());
-
-		// absolute https url - true
-		$language = new Language([
-			'code' => 'en',
-			'url'  => 'https://example.com/en'
-		]);
-		$this->assertTrue($language->hasCustomDomain());
-
-		// no url - false
-		$language = new Language([
-			'code' => 'en'
-		]);
-		$this->assertFalse($language->hasCustomDomain());
 	}
 
 	public function testUpdate(): void
@@ -1033,6 +990,45 @@ class LanguageTest extends TestCase
 		// unimpersonate and test the method
 		$this->app->impersonate();
 		$language->update(['name' => 'English']);
+	}
+
+	public function testUrlDefault(): void
+	{
+		$language = new Language([
+			'code' => 'en',
+		]);
+
+		$this->assertSame('/en', $language->url());
+	}
+
+	public function testUrlWithAbsoluteValue(): void
+	{
+		$language = new Language([
+			'code' => 'en',
+			'url'  => 'https://en.getkirby.com'
+		]);
+
+		$this->assertSame('https://en.getkirby.com', $language->url());
+	}
+
+	public function testUrlWithDash(): void
+	{
+		$language = new Language([
+			'code' => 'en',
+			'url'  => '/'
+		]);
+
+		$this->assertSame('/', $language->url());
+	}
+
+	public function testUrlWithRelativeValue(): void
+	{
+		$language = new Language([
+			'code' => 'en',
+			'url'  => 'super'
+		]);
+
+		$this->assertSame('/super', $language->url());
 	}
 
 	public function testVariable(): void

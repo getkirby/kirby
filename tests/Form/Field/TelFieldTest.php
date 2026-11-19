@@ -32,6 +32,7 @@ class TelFieldTest extends TestCase
 			'name'         => 'tel',
 			'pattern'      => null,
 			'placeholder'  => null,
+			'preselect'    => false,
 			'required'     => false,
 			'saveable'     => true,
 			'spellcheck'   => null,

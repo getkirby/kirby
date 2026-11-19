@@ -142,49 +142,6 @@ class Validations
 	}
 
 	/**
-	 * Validates if the field value matches defined pattern
-	 *
-	 * @throws InvalidArgumentException
-	 */
-	public static function pattern(ValueField $field, mixed $value): void
-	{
-		if (
-			$field->isEmptyValue($value) === false &&
-			method_exists($field, 'pattern') === true &&
-			($pattern = $field->pattern())
-		) {
-			// ensure that that pattern needs to match the whole
-			// input value from start to end, not just a partial match
-			// https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/pattern#overview
-			$pattern = '^(?:' . $pattern . ')$';
-
-			if (V::match($value, '/' . $pattern . '/i') === false) {
-				throw new InvalidArgumentException(
-					message: V::message('match')
-				);
-			}
-		}
-	}
-
-	/**
-	 * Validates if the field value is required
-	 *
-	 * @throws InvalidArgumentException
-	 */
-	public static function required(ValueField $field, mixed $value): void
-	{
-		if (
-			method_exists($field, 'isRequired') === true &&
-			$field->isRequired() === true &&
-			$field->isEmptyValue($value) === true
-		) {
-			throw new InvalidArgumentException(
-				key: 'validation.required'
-			);
-		}
-	}
-
-	/**
 	 * Validates if the field value is in defined options
 	 *
 	 * @throws InvalidArgumentException
@@ -225,6 +182,49 @@ class Validations
 					);
 				}
 			}
+		}
+	}
+
+	/**
+	 * Validates if the field value matches defined pattern
+	 *
+	 * @throws InvalidArgumentException
+	 */
+	public static function pattern(ValueField $field, mixed $value): void
+	{
+		if (
+			$field->isEmptyValue($value) === false &&
+			method_exists($field, 'pattern') === true &&
+			($pattern = $field->pattern())
+		) {
+			// ensure that that pattern needs to match the whole
+			// input value from start to end, not just a partial match
+			// https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/pattern#overview
+			$pattern = '^(?:' . $pattern . ')$';
+
+			if (V::match($value, '/' . $pattern . '/i') === false) {
+				throw new InvalidArgumentException(
+					message: V::message('match')
+				);
+			}
+		}
+	}
+
+	/**
+	 * Validates if the field value is required
+	 *
+	 * @throws InvalidArgumentException
+	 */
+	public static function required(ValueField $field, mixed $value): void
+	{
+		if (
+			method_exists($field, 'isRequired') === true &&
+			$field->isRequired() === true &&
+			$field->isEmptyValue($value) === true
+		) {
+			throw new InvalidArgumentException(
+				key: 'validation.required'
+			);
 		}
 	}
 

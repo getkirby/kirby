@@ -44,13 +44,6 @@ class DomHandler extends Handler
 	public static array|true $allowedDomains = true;
 
 	/**
-	 * Whether URLs that begin with `/` should be allowed even if the
-	 * site index URL is in a subfolder (useful when using the HTML
-	 * `<base>` element where the sanitized code will be rendered)
-	 */
-	public static bool $allowHostRelativeUrls = true;
-
-	/**
 	 * Names of allowed XML processing instructions
 	 *
 	 * @var list<string>
@@ -58,88 +51,17 @@ class DomHandler extends Handler
 	public static array $allowedPIs = [];
 
 	/**
+	 * Whether URLs that begin with `/` should be allowed even if the
+	 * site index URL is in a subfolder (useful when using the HTML
+	 * `<base>` element where the sanitized code will be rendered)
+	 */
+	public static bool $allowHostRelativeUrls = true;
+
+	/**
 	 * The document type (`'HTML'` or `'XML'`)
 	 * (to be set in child classes)
 	 */
 	protected static string $type = 'XML';
-
-	/**
-	 * Sanitizes the given string
-	 *
-	 * @param $isExternal Whether the string is from an external file
-	 *                   that may be accessed directly
-	 *
-	 * @throws InvalidArgumentException If the file couldn't be parsed
-	 */
-	public static function sanitize(
-		string $string,
-		bool $isExternal = false
-	): string {
-		$dom = static::parse($string);
-		$dom->sanitize(static::options($isExternal));
-		return $dom->toString();
-	}
-
-	/**
-	 * Validates file contents
-	 *
-	 * @param $isExternal Whether the string is from an external file
-	 *                   that may be accessed directly
-	 *
-	 * @throws InvalidArgumentException If the file couldn't be parsed
-	 * @throws InvalidArgumentException If the file didn't pass validation
-	 */
-	public static function validate(
-		string $string,
-		bool $isExternal = false
-	): void {
-		$dom    = static::parse($string);
-		$errors = $dom->sanitize(static::options($isExternal));
-
-		// there may be multiple errors, we can only throw one of them at a time
-		if ($errors !== []) {
-			throw $errors[0];
-		}
-	}
-
-	/**
-	 * Custom callback for additional attribute sanitization
-	 * @internal
-	 *
-	 * @return list<InvalidArgumentException> Exceptions for each modification
-	 */
-	public static function sanitizeAttr(
-		DOMAttr $attr,
-		array $options
-	): array {
-		// to be extended in child classes
-		return [];
-	}
-
-	/**
-	 * Custom callback for additional element sanitization
-	 * @internal
-	 *
-	 * @return list<InvalidArgumentException> Exceptions for each modification
-	 */
-	public static function sanitizeElement(
-		DOMElement $element,
-		array $options
-	): array {
-		// to be extended in child classes
-		return [];
-	}
-
-	/**
-	 * Custom callback for additional doctype validation
-	 * @internal
-	 */
-	public static function validateDoctype(
-		DOMDocumentType $doctype,
-		array $options
-	): void {
-		// to be extended in child classes
-	}
 
 	/**
 	 * Returns the sanitization options for the handler
@@ -179,5 +101,83 @@ class DomHandler extends Handler
 	protected static function parse(string $string): Dom
 	{
 		return new Dom($string, static::$type);
+	}
+
+	/**
+	 * Sanitizes the given string
+	 *
+	 * @param $isExternal Whether the string is from an external file
+	 *                   that may be accessed directly
+	 *
+	 * @throws InvalidArgumentException If the file couldn't be parsed
+	 */
+	public static function sanitize(
+		string $string,
+		bool $isExternal = false
+	): string {
+		$dom = static::parse($string);
+		$dom->sanitize(static::options($isExternal));
+		return $dom->toString();
+	}
+
+	/**
+	 * Custom callback for additional attribute sanitization
+	 * @internal
+	 *
+	 * @return list<InvalidArgumentException> Exceptions for each modification
+	 */
+	public static function sanitizeAttr(
+		DOMAttr $attr,
+		array $options
+	): array {
+		// to be extended in child classes
+		return [];
+	}
+
+	/**
+	 * Custom callback for additional element sanitization
+	 * @internal
+	 *
+	 * @return list<InvalidArgumentException> Exceptions for each modification
+	 */
+	public static function sanitizeElement(
+		DOMElement $element,
+		array $options
+	): array {
+		// to be extended in child classes
+		return [];
+	}
+
+	/**
+	 * Validates file contents
+	 *
+	 * @param $isExternal Whether the string is from an external file
+	 *                   that may be accessed directly
+	 *
+	 * @throws InvalidArgumentException If the file couldn't be parsed
+	 * @throws InvalidArgumentException If the file didn't pass validation
+	 */
+	public static function validate(
+		string $string,
+		bool $isExternal = false
+	): void {
+		$dom    = static::parse($string);
+		$errors = $dom->sanitize(static::options($isExternal));
+
+		// there may be multiple errors, we can only throw one of them at a time
+		if ($errors !== []) {
+			throw $errors[0];
+		}
+	}
+
+	/**
+	 * Custom callback for additional doctype validation
+	 * @internal
+	 */
+	public static function validateDoctype(
+		DOMDocumentType $doctype,
+		array $options
+	): void {
+		// to be extended in child classes
 	}
 }

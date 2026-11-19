@@ -31,6 +31,14 @@ class StatsField extends DisplayField
 	 */
 	protected Stats|null $stats = null;
 
+	public function props(): array
+	{
+		return [
+			...parent::props(),
+			...$this->stats()->props()
+		];
+	}
+
 	public function reports(): array
 	{
 		return $this->stats()->reports();
@@ -48,13 +56,5 @@ class StatsField extends DisplayField
 			reports: $this->reports,
 			size:    $this->size
 		);
-	}
-
-	public function props(): array
-	{
-		return [
-			...parent::props(),
-			...$this->stats()->props()
-		];
 	}
 }

@@ -71,6 +71,16 @@ class PageTemplateTest extends ModelTestCase
 		$this->assertSame('article', $page->intendedTemplate()->name());
 	}
 
+	public function testIntendedTemplateWithoutValue(): void
+	{
+		$page = new Page([
+			'slug' => 'test',
+		]);
+
+		$this->assertInstanceOf(Template::class, $page->intendedTemplate());
+		$this->assertSame('default', $page->intendedTemplate()->name());
+	}
+
 	public function testIntendedTemplateWithWrongCase(): void
 	{
 		$page = new Page([
@@ -80,16 +90,6 @@ class PageTemplateTest extends ModelTestCase
 
 		$this->assertInstanceOf(Template::class, $page->intendedTemplate());
 		$this->assertSame('test', $page->intendedTemplate()->name());
-	}
-
-	public function testIntendedTemplateWithoutValue(): void
-	{
-		$page = new Page([
-			'slug' => 'test',
-		]);
-
-		$this->assertInstanceOf(Template::class, $page->intendedTemplate());
-		$this->assertSame('default', $page->intendedTemplate()->name());
 	}
 
 	public function testInvalidTemplateValue(): void

@@ -35,6 +35,43 @@ class AppTest extends TestCase
 		$_SERVER = $this->_SERVER;
 	}
 
+	public function testBlueprints(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null',
+				'blueprints' => static::TMP,
+			],
+			'blueprints' => [
+				'pages/a' => ['title' => 'A'],
+				'pages/d' => ['title' => 'C'],
+				'files/a' => ['title' => 'File A']
+			]
+		]);
+
+		Data::write(static::TMP . '/pages/b.yml', ['title' => 'B']);
+		Data::write(static::TMP . '/pages/c.yml', ['title' => 'C']);
+		Data::write(static::TMP . '/files/b.yml', ['title' => 'File B']);
+
+		$expected = [
+			'a',
+			'b',
+			'c',
+			'd',
+			'default'
+		];
+
+		$this->assertSame($expected, $app->blueprints());
+
+		$expected = [
+			'a',
+			'b',
+			'default'
+		];
+
+		$this->assertSame($expected, $app->blueprints('files'));
+	}
+
 	public function testClone(): void
 	{
 		$app = new App();
@@ -198,6 +235,129 @@ class AppTest extends TestCase
 		$this->assertSame(hash_hmac('sha1', 'test', $real . '/some-id'), $app->contentToken($model, 'test'));
 	}
 
+	public function testController(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null',
+				'controllers' => static::FIXTURES . '/controllers'
+			]
+		]);
+
+		Page::factory([
+			'slug'     => 'test',
+			'template' => 'test'
+		]);
+
+		$this->assertSame([
+			'site' => 'html',
+			'test' => 'html'
+		], $app->controller('test'));
+	}
+
+	public function testControllerCallback(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'controllers' => [
+				'test' => fn () => ['homer' => 'simpson']
+
+			]
+		]);
+
+		Page::factory([
+			'slug'     => 'test',
+			'template' => 'test'
+		]);
+
+		$this->assertSame(
+			['homer' => 'simpson'],
+			$app->controller('test')
+		);
+	}
+
+	public function testControllerHtmlForMissingRepresentation(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null',
+				'controllers' => static::FIXTURES . '/controllers'
+			]
+		]);
+
+		Page::factory([
+			'slug'     => 'test',
+			'template' => 'foo'
+		]);
+
+		$this->assertSame([
+			'site' => 'json',
+			'test' => 'html'
+		], $app->controller('test', contentType: 'json'));
+	}
+
+	public function testControllerMissing(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null',
+				'controllers' => static::FIXTURES . '/controllers'
+			]
+		]);
+
+		Page::factory([
+			'slug'     => 'test',
+			'template' => 'none'
+		]);
+
+		$this->assertSame(
+			['site' => 'html'],
+			$app->controller('none')
+		);
+	}
+
+	public function testControllerMissingRepresentation(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null',
+				'controllers' => static::FIXTURES . '/controllers'
+			]
+		]);
+
+		Page::factory([
+			'slug'     => 'test',
+			'template' => 'none'
+		]);
+
+		$this->assertSame(
+			['site' => 'json'],
+			$app->controller('none', contentType: 'json')
+		);
+	}
+
+	public function testControllerRepresentation(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null',
+				'controllers' => static::FIXTURES . '/controllers'
+			]
+		]);
+
+		Page::factory([
+			'slug'     => 'test',
+			'template' => 'another'
+		]);
+
+		$this->assertSame([
+			'site'    => 'json',
+			'another' => 'json'
+		], $app->controller('another', contentType: 'json'));
+	}
+
 	public function testCsrf(): void
 	{
 		$app = new App([
@@ -321,6 +481,155 @@ class AppTest extends TestCase
 		]);
 	}
 
+	public function testFindFileByDeadUuidNoIndex(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'options' => [
+				'content' => [
+					'uuid' => [
+						'index' => false
+					]
+				]
+			]
+		]);
+
+		$this->assertNull($app->file('file://does-not-exist'));
+	}
+
+	public function testFindFileByUUID(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'test',
+						'files' => [
+							[
+								'filename' => 'test-a.jpg',
+								'content'  => ['uuid' => 'my-file']
+							]
+						]
+					],
+				]
+			]
+		]);
+
+		$page = $app->page('test');
+		$file = $page->file('test-a.jpg');
+
+		$this->assertIsFile($file, $app->file('file://my-file'));
+	}
+
+	public function testFindPageFile(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'test',
+						'files' => [
+							['filename' => 'test-a.jpg']
+						]
+					],
+				]
+			]
+		]);
+
+		$page  = $app->page('test');
+		$fileA = $page->file('test-a.jpg');
+		$fileB = $page->file('test-b.jpg');
+
+		// plain
+		$this->assertSame($fileA, $app->file('test/test-a.jpg'));
+
+		// with page parent
+		$this->assertSame($fileA, $app->file('test-a.jpg', $page));
+
+		// with file parent
+		$this->assertSame($fileB, $app->file('test-b.jpg', $fileA));
+	}
+
+	public function testFindSiteFile(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'site' => [
+				'files' => [
+					['filename' => 'test-a.jpg'],
+					['filename' => 'test-b.jpg']
+				],
+				'children' => [
+					[
+						'slug'  => 'home',
+						'files' => [
+							['filename' => 'test-c.jpg']
+						]
+					],
+				]
+			]
+		]);
+
+		$site  = $app->site();
+		$page  = $site->find('home');
+		$fileA = $site->file('test-a.jpg');
+		$fileB = $site->file('test-b.jpg');
+		$fileC = $page->file('test-c.jpg');
+
+		// plain
+		$this->assertSame($fileA, $app->file('test-a.jpg'));
+
+		// with page parent
+		$this->assertSame($fileA, $app->file('test-a.jpg', $site));
+
+		// with subpage parent
+		$this->assertSame($fileC, $app->file('home/test-c.jpg'));
+		$this->assertSame($fileC, $app->file('home/test-c.jpg', $site));
+		$this->assertSame($fileC, $app->file('test-c.jpg', $page));
+
+		// with file parent
+		$this->assertSame($fileB, $app->file('test-b.jpg', $fileA));
+		$this->assertSame($fileC, $app->file('test-c.jpg', $fileC));
+	}
+
+	public function testFindUserFile(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'users' => [
+				[
+					'email' => 'test@getkirby.com',
+					'files' => [
+						['filename' => 'test-a.jpg'],
+						['filename' => 'test-b.jpg']
+					]
+				]
+			]
+		]);
+
+		$user  = $app->user('test@getkirby.com');
+		$fileA = $user->file('test-a.jpg');
+		$fileB = $user->file('test-b.jpg');
+
+		// with user parent
+		$this->assertSame($fileA, $app->file('test-a.jpg', $user));
+
+		// with file parent
+		$this->assertSame($fileB, $app->file('test-b.jpg', $fileA));
+	}
+
 	public function testImage(): void
 	{
 		$app = new App([
@@ -358,6 +667,23 @@ class AppTest extends TestCase
 
 		$image = $app->image('does-not-exist.jpg');
 		$this->assertNull($image);
+	}
+
+	public function testInstance(): void
+	{
+		$this->assertNull(App::instance(lazy: true));
+
+		$instance1 = new App();
+		$this->assertSame($instance1, App::instance());
+
+		$instance2 = new App();
+		$this->assertSame($instance2, App::instance());
+		$this->assertSame($instance1, App::instance($instance1));
+		$this->assertSame($instance1, App::instance());
+
+		$instance3 = new App([], false);
+		$this->assertSame($instance1, App::instance());
+		$this->assertNotSame($instance3, App::instance());
 	}
 
 	public function testModels(): void
@@ -435,22 +761,6 @@ class AppTest extends TestCase
 		]);
 
 		$this->assertSame('bar', $app->option('foo'));
-	}
-
-	public function testOptionWithDotNotation(): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'options' => [
-				'mother' => [
-					'child' => 'test'
-				]
-			]
-		]);
-
-		$this->assertSame('test', $app->option('mother.child'));
 	}
 
 	public function testOptionFromPlugin(): void
@@ -640,6 +950,117 @@ class AppTest extends TestCase
 		restore_exception_handler();
 	}
 
+	public function testOptionWithDotNotation(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'options' => [
+				'mother' => [
+					'child' => 'test'
+				]
+			]
+		]);
+
+		$this->assertSame('test', $app->option('mother.child'));
+	}
+
+	public function testPageWithUUID(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'test',
+						'content'  => ['uuid' => 'my-page']
+					],
+				]
+			]
+		]);
+
+		$page = $app->page('test');
+		$this->assertIsPage($page, $app->page('page://my-page'));
+	}
+
+	public function testPath(): void
+	{
+		$app = new App();
+		$this->assertSame('', $app->path());
+
+		// with custom request
+		$app = new App([
+			'request' => [
+				'url' => [
+					'path' => '/foo/bar'
+				]
+			]
+		]);
+
+		$this->assertSame('foo/bar', $app->path());
+
+		// from request uri
+		$app = new App([
+			'server' => [
+				'REQUEST_URI' => '/foo/bar'
+			]
+		]);
+
+		$this->assertSame('foo/bar', $app->path());
+
+		// with params
+		$app = new App([
+			'request' => [
+				'url' => [
+					'path' => '/foo/bar/page:1'
+				]
+			]
+		]);
+
+		$this->assertSame('foo/bar', $app->path());
+	}
+
+	public function testRender(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP,
+				'templates' => static::TMP
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'home',
+					]
+				]
+			]
+		]);
+
+		F::write(static::TMP . '/default.php', 'Hello');
+
+		$this->assertSame('Hello', $app->render()->body());
+
+		$_ENV['KIRBY_RENDER'] = false;
+		$this->assertNull($app->render());
+
+		$_ENV['KIRBY_RENDER'] = '0';
+		$this->assertNull($app->render());
+
+		$_ENV['KIRBY_RENDER'] = 'false';
+		$this->assertNull($app->render());
+
+		$_ENV['KIRBY_RENDER'] = '1';
+		$this->assertNotNull($app->render());
+
+		$_ENV['KIRBY_RENDER'] = 'true';
+		$this->assertNotNull($app->render());
+
+		unset($_ENV['KIRBY_RENDER']);
+	}
+
 	public function testRolesFromFixtures(): void
 	{
 		$app = new App([
@@ -721,207 +1142,41 @@ class AppTest extends TestCase
 		$this->assertSame(['Vary' => 'Cookie', 'Cache-Control' => 'custom'], $app->response()->headers());
 	}
 
-	public function testInstance(): void
+	public function testSlugsOption(): void
 	{
-		$this->assertNull(App::instance(lazy: true));
-
-		$instance1 = new App();
-		$this->assertSame($instance1, App::instance());
-
-		$instance2 = new App();
-		$this->assertSame($instance2, App::instance());
-		$this->assertSame($instance1, App::instance($instance1));
-		$this->assertSame($instance1, App::instance());
-
-		$instance3 = new App([], false);
-		$this->assertSame($instance1, App::instance());
-		$this->assertNotSame($instance3, App::instance());
-	}
-
-	public function testFindPageFile(): void
-	{
+		// string option
 		$app = new App([
 			'roots' => [
 				'index' => '/dev/null'
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug'  => 'test',
-						'files' => [
-							['filename' => 'test-a.jpg']
-						]
-					],
-				]
-			]
-		]);
-
-		$page  = $app->page('test');
-		$fileA = $page->file('test-a.jpg');
-		$fileB = $page->file('test-b.jpg');
-
-		// plain
-		$this->assertSame($fileA, $app->file('test/test-a.jpg'));
-
-		// with page parent
-		$this->assertSame($fileA, $app->file('test-a.jpg', $page));
-
-		// with file parent
-		$this->assertSame($fileB, $app->file('test-b.jpg', $fileA));
-	}
-
-	public function testFindSiteFile(): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'site' => [
-				'files' => [
-					['filename' => 'test-a.jpg'],
-					['filename' => 'test-b.jpg']
-				],
-				'children' => [
-					[
-						'slug'  => 'home',
-						'files' => [
-							['filename' => 'test-c.jpg']
-						]
-					],
-				]
-			]
-		]);
-
-		$site  = $app->site();
-		$page  = $site->find('home');
-		$fileA = $site->file('test-a.jpg');
-		$fileB = $site->file('test-b.jpg');
-		$fileC = $page->file('test-c.jpg');
-
-		// plain
-		$this->assertSame($fileA, $app->file('test-a.jpg'));
-
-		// with page parent
-		$this->assertSame($fileA, $app->file('test-a.jpg', $site));
-
-		// with subpage parent
-		$this->assertSame($fileC, $app->file('home/test-c.jpg'));
-		$this->assertSame($fileC, $app->file('home/test-c.jpg', $site));
-		$this->assertSame($fileC, $app->file('test-c.jpg', $page));
-
-		// with file parent
-		$this->assertSame($fileB, $app->file('test-b.jpg', $fileA));
-		$this->assertSame($fileC, $app->file('test-c.jpg', $fileC));
-	}
-
-	public function testFindUserFile(): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'users' => [
-				[
-					'email' => 'test@getkirby.com',
-					'files' => [
-						['filename' => 'test-a.jpg'],
-						['filename' => 'test-b.jpg']
-					]
-				]
-			]
-		]);
-
-		$user  = $app->user('test@getkirby.com');
-		$fileA = $user->file('test-a.jpg');
-		$fileB = $user->file('test-b.jpg');
-
-		// with user parent
-		$this->assertSame($fileA, $app->file('test-a.jpg', $user));
-
-		// with file parent
-		$this->assertSame($fileB, $app->file('test-b.jpg', $fileA));
-	}
-
-	public function testFindFileByUUID(): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => static::TMP
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug'  => 'test',
-						'files' => [
-							[
-								'filename' => 'test-a.jpg',
-								'content'  => ['uuid' => 'my-file']
-							]
-						]
-					],
-				]
-			]
-		]);
-
-		$page = $app->page('test');
-		$file = $page->file('test-a.jpg');
-
-		$this->assertIsFile($file, $app->file('file://my-file'));
-	}
-
-	public function testFindFileByDeadUuidNoIndex(): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => static::TMP
 			],
 			'options' => [
-				'content' => [
-					'uuid' => [
-						'index' => false
-					]
+				'slugs' => 'fr'
+			]
+		]);
+
+		$this->assertSame(['slugs' => 'fr'], $app->options());
+		$this->assertSame('fr', $app->option('slugs'));
+		$this->assertSame('AE', Str::$language['Æ']);
+
+		// array option
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'options' => [
+				'slugs' => [
+					'language' => 'de'
 				]
 			]
 		]);
 
-		$this->assertNull($app->file('file://does-not-exist'));
-	}
-
-	public function testBlueprints(): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null',
-				'blueprints' => static::TMP,
-			],
-			'blueprints' => [
-				'pages/a' => ['title' => 'A'],
-				'pages/d' => ['title' => 'C'],
-				'files/a' => ['title' => 'File A']
+		$this->assertSame([
+			'slugs' => [
+				'language' => 'de'
 			]
-		]);
-
-		Data::write(static::TMP . '/pages/b.yml', ['title' => 'B']);
-		Data::write(static::TMP . '/pages/c.yml', ['title' => 'C']);
-		Data::write(static::TMP . '/files/b.yml', ['title' => 'File B']);
-
-		$expected = [
-			'a',
-			'b',
-			'c',
-			'd',
-			'default'
-		];
-
-		$this->assertSame($expected, $app->blueprints());
-
-		$expected = [
-			'a',
-			'b',
-			'default'
-		];
-
-		$this->assertSame($expected, $app->blueprints('files'));
+		], $app->options());
+		$this->assertSame(['language' => 'de'], $app->option('slugs'));
+		$this->assertSame('ss', Str::$language['ß']);
 	}
 
 	public static function urlProvider(): array
@@ -993,260 +1248,5 @@ class AppTest extends TestCase
 	public function testVersionHash(): void
 	{
 		$this->assertSame(md5(App::version()), App::versionHash());
-	}
-
-	public function testSlugsOption(): void
-	{
-		// string option
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'options' => [
-				'slugs' => 'fr'
-			]
-		]);
-
-		$this->assertSame(['slugs' => 'fr'], $app->options());
-		$this->assertSame('fr', $app->option('slugs'));
-		$this->assertSame('AE', Str::$language['Æ']);
-
-		// array option
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'options' => [
-				'slugs' => [
-					'language' => 'de'
-				]
-			]
-		]);
-
-		$this->assertSame([
-			'slugs' => [
-				'language' => 'de'
-			]
-		], $app->options());
-		$this->assertSame(['language' => 'de'], $app->option('slugs'));
-		$this->assertSame('ss', Str::$language['ß']);
-	}
-
-	public function testController(): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null',
-				'controllers' => static::FIXTURES . '/controllers'
-			]
-		]);
-
-		Page::factory([
-			'slug'     => 'test',
-			'template' => 'test'
-		]);
-
-		$this->assertSame([
-			'site' => 'html',
-			'test' => 'html'
-		], $app->controller('test'));
-	}
-
-	public function testControllerCallback(): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'controllers' => [
-				'test' => fn () => ['homer' => 'simpson']
-
-			]
-		]);
-
-		Page::factory([
-			'slug'     => 'test',
-			'template' => 'test'
-		]);
-
-		$this->assertSame(
-			['homer' => 'simpson'],
-			$app->controller('test')
-		);
-	}
-
-	public function testControllerRepresentation(): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null',
-				'controllers' => static::FIXTURES . '/controllers'
-			]
-		]);
-
-		Page::factory([
-			'slug'     => 'test',
-			'template' => 'another'
-		]);
-
-		$this->assertSame([
-			'site'    => 'json',
-			'another' => 'json'
-		], $app->controller('another', contentType: 'json'));
-	}
-
-	public function testControllerHtmlForMissingRepresentation(): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null',
-				'controllers' => static::FIXTURES . '/controllers'
-			]
-		]);
-
-		Page::factory([
-			'slug'     => 'test',
-			'template' => 'foo'
-		]);
-
-		$this->assertSame([
-			'site' => 'json',
-			'test' => 'html'
-		], $app->controller('test', contentType: 'json'));
-	}
-
-	public function testControllerMissing(): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null',
-				'controllers' => static::FIXTURES . '/controllers'
-			]
-		]);
-
-		Page::factory([
-			'slug'     => 'test',
-			'template' => 'none'
-		]);
-
-		$this->assertSame(
-			['site' => 'html'],
-			$app->controller('none')
-		);
-	}
-
-	public function testControllerMissingRepresentation(): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null',
-				'controllers' => static::FIXTURES . '/controllers'
-			]
-		]);
-
-		Page::factory([
-			'slug'     => 'test',
-			'template' => 'none'
-		]);
-
-		$this->assertSame(
-			['site' => 'json'],
-			$app->controller('none', contentType: 'json')
-		);
-	}
-
-	public function testPath(): void
-	{
-		$app = new App();
-		$this->assertSame('', $app->path());
-
-		// with custom request
-		$app = new App([
-			'request' => [
-				'url' => [
-					'path' => '/foo/bar'
-				]
-			]
-		]);
-
-		$this->assertSame('foo/bar', $app->path());
-
-		// from request uri
-		$app = new App([
-			'server' => [
-				'REQUEST_URI' => '/foo/bar'
-			]
-		]);
-
-		$this->assertSame('foo/bar', $app->path());
-
-		// with params
-		$app = new App([
-			'request' => [
-				'url' => [
-					'path' => '/foo/bar/page:1'
-				]
-			]
-		]);
-
-		$this->assertSame('foo/bar', $app->path());
-	}
-
-	public function testPageWithUUID(): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => static::TMP
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug'  => 'test',
-						'content'  => ['uuid' => 'my-page']
-					],
-				]
-			]
-		]);
-
-		$page = $app->page('test');
-		$this->assertIsPage($page, $app->page('page://my-page'));
-	}
-
-	public function testRender(): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => static::TMP,
-				'templates' => static::TMP
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug'  => 'home',
-					]
-				]
-			]
-		]);
-
-		F::write(static::TMP . '/default.php', 'Hello');
-
-		$this->assertSame('Hello', $app->render()->body());
-
-		$_ENV['KIRBY_RENDER'] = false;
-		$this->assertNull($app->render());
-
-		$_ENV['KIRBY_RENDER'] = '0';
-		$this->assertNull($app->render());
-
-		$_ENV['KIRBY_RENDER'] = 'false';
-		$this->assertNull($app->render());
-
-		$_ENV['KIRBY_RENDER'] = '1';
-		$this->assertNotNull($app->render());
-
-		$_ENV['KIRBY_RENDER'] = 'true';
-		$this->assertNotNull($app->render());
-
-		unset($_ENV['KIRBY_RENDER']);
 	}
 }

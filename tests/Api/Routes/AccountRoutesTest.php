@@ -208,40 +208,6 @@ class AccountRoutesTest extends TestCase
 		]);
 	}
 
-	public function testChangePasswordWrongCurrentPassword(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Wrong password');
-
-		$this->app->api()->call('account/password', 'PATCH', [
-			'body' => [
-				'currentPassword' => 'definitely-not-correct',
-				'password'        => 'super-secure-new-password'
-			]
-		]);
-	}
-
-	public function testChangePasswordWrongCurrentPasswordConsumesRateLimit(): void
-	{
-		try {
-			$this->app->api()->call('account/password', 'PATCH', [
-				'body' => [
-					'currentPassword' => 'definitely-not-correct',
-					'password'        => 'super-secure-new-password'
-				]
-			]);
-
-			$this->fail('Expected InvalidArgumentException');
-		} catch (InvalidArgumentException) {
-			// expected
-		}
-
-		// the guess must count against the shared auth budget, so that a
-		// hijacked session cannot brute-force the current password here
-		$log = $this->app->auth()->limits()->log();
-		$this->assertSame(1, $log['by-email'][$this->app->user()->email()]['trials']);
-	}
-
 	public function testChangePasswordRateLimited(): void
 	{
 		$this->app = $this->app->clone([
@@ -298,6 +264,40 @@ class AccountRoutesTest extends TestCase
 				'password' => 'super-secure-new-password'
 			]
 		]);
+	}
+
+	public function testChangePasswordWrongCurrentPassword(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Wrong password');
+
+		$this->app->api()->call('account/password', 'PATCH', [
+			'body' => [
+				'currentPassword' => 'definitely-not-correct',
+				'password'        => 'super-secure-new-password'
+			]
+		]);
+	}
+
+	public function testChangePasswordWrongCurrentPasswordConsumesRateLimit(): void
+	{
+		try {
+			$this->app->api()->call('account/password', 'PATCH', [
+				'body' => [
+					'currentPassword' => 'definitely-not-correct',
+					'password'        => 'super-secure-new-password'
+				]
+			]);
+
+			$this->fail('Expected InvalidArgumentException');
+		} catch (InvalidArgumentException) {
+			// expected
+		}
+
+		// the guess must count against the shared auth budget, so that a
+		// hijacked session cannot brute-force the current password here
+		$log = $this->app->auth()->limits()->log();
+		$this->assertSame(1, $log['by-email'][$this->app->user()->email()]['trials']);
 	}
 
 	public function testChangeRole(): void

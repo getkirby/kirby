@@ -142,6 +142,14 @@ class PanelTest extends TestCase
 		$this->assertInstanceOf(Home::class, $panel->home());
 	}
 
+	public function testIsPanelUrl(): void
+	{
+		$panel = $this->app->panel();
+		$this->assertTrue($panel->isPanelUrl('/panel'));
+		$this->assertTrue($panel->isPanelUrl('/panel/pages/test'));
+		$this->assertFalse($panel->isPanelUrl('test'));
+	}
+
 	public function testIsStateRequest(): void
 	{
 		// standard request
@@ -177,14 +185,6 @@ class PanelTest extends TestCase
 		$this->assertFalse($result);
 	}
 
-	public function testIsPanelUrl(): void
-	{
-		$panel = $this->app->panel();
-		$this->assertTrue($panel->isPanelUrl('/panel'));
-		$this->assertTrue($panel->isPanelUrl('/panel/pages/test'));
-		$this->assertFalse($panel->isPanelUrl('test'));
-	}
-
 	public function testJson(): void
 	{
 		$response = Panel::json($data = ['foo' => 'bar']);
@@ -212,6 +212,12 @@ class PanelTest extends TestCase
 		$this->assertTrue($panel->multilang());
 	}
 
+	public function testMultilangDisabled(): void
+	{
+		$panel = $this->app->panel();
+		$this->assertFalse($panel->multilang());
+	}
+
 	public function testMultilangWithImplicitLanguageInstallation(): void
 	{
 		$this->app = $this->app->clone([
@@ -228,12 +234,6 @@ class PanelTest extends TestCase
 
 		$panel = $this->app->panel();
 		$this->assertTrue($panel->multilang());
-	}
-
-	public function testMultilangDisabled(): void
-	{
-		$panel = $this->app->panel();
-		$this->assertFalse($panel->multilang());
 	}
 
 	public function testPath(): void

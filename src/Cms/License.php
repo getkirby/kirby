@@ -23,7 +23,7 @@ class License
 		'3' => '2019-02-05',
 		'4' => '2023-11-28',
 		'5' => '2025-06-24',
-		'6' => '2025-12-09'
+		'6' => '2026-11-24'
 	];
 
 	/**
@@ -361,15 +361,6 @@ class License
 	}
 
 	/**
-	 * Prepares the email address to be make sure it
-	 * does not have trailing spaces and is lowercase.
-	 */
-	protected function normalizeEmail(string $email): string
-	{
-		return Str::lower(trim($email));
-	}
-
-	/**
 	 * Prepares the domain to be comparable
 	 */
 	protected function normalizeDomain(string $domain): string
@@ -397,6 +388,15 @@ class License
 		}
 
 		return $domain;
+	}
+
+	/**
+	 * Prepares the email address to be make sure it
+	 * does not have trailing spaces and is lowercase.
+	 */
+	protected function normalizeEmail(string $email): string
+	{
+		return Str::lower(trim($email));
 	}
 
 	/**

@@ -36,30 +36,6 @@ class LanguagesRoutesTest extends TestCase
 		$this->app->impersonate('kirby');
 	}
 
-	public function testList(): void
-	{
-		$app = $this->app;
-
-		$response = $app->api()->call('languages');
-
-		$this->assertSame('en', $response['data'][0]['code']);
-		$this->assertSame('de', $response['data'][1]['code']);
-	}
-
-	public function testListDisabled(): void
-	{
-		$app = $this->app->clone([
-			'options' => [
-				'languages' => false
-			]
-		]);
-
-		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('No route found for path: "languages" and request method: "GET"');
-
-		$response = $app->api()->call('languages');
-	}
-
 	public function testCreateDisabled(): void
 	{
 		$app = $this->app->clone([
@@ -72,6 +48,20 @@ class LanguagesRoutesTest extends TestCase
 		$this->expectExceptionMessage('No route found for path: "languages" and request method: "POST"');
 
 		$response = $app->api()->call('languages', 'POST');
+	}
+
+	public function testDeleteDisabled(): void
+	{
+		$app = $this->app->clone([
+			'options' => [
+				'languages' => false
+			]
+		]);
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('No route found for path: "languages/de" and request method: "DELETE"');
+
+		$response = $app->api()->call('languages/de', 'DELETE');
 	}
 
 	public function testGet(): void
@@ -97,6 +87,30 @@ class LanguagesRoutesTest extends TestCase
 		$response = $app->api()->call('languages/de');
 	}
 
+	public function testList(): void
+	{
+		$app = $this->app;
+
+		$response = $app->api()->call('languages');
+
+		$this->assertSame('en', $response['data'][0]['code']);
+		$this->assertSame('de', $response['data'][1]['code']);
+	}
+
+	public function testListDisabled(): void
+	{
+		$app = $this->app->clone([
+			'options' => [
+				'languages' => false
+			]
+		]);
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('No route found for path: "languages" and request method: "GET"');
+
+		$response = $app->api()->call('languages');
+	}
+
 	public function testUpdateDisabled(): void
 	{
 		$app = $this->app->clone([
@@ -109,19 +123,5 @@ class LanguagesRoutesTest extends TestCase
 		$this->expectExceptionMessage('No route found for path: "languages/de" and request method: "PATCH"');
 
 		$response = $app->api()->call('languages/de', 'PATCH');
-	}
-
-	public function testDeleteDisabled(): void
-	{
-		$app = $this->app->clone([
-			'options' => [
-				'languages' => false
-			]
-		]);
-
-		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('No route found for path: "languages/de" and request method: "DELETE"');
-
-		$response = $app->api()->call('languages/de', 'DELETE');
 	}
 }

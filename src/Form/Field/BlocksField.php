@@ -247,18 +247,18 @@ class BlocksField extends InputField implements ProvidesAcceptedFileBlueprints
 		return $this->forms[$type] ??= $this->form($this->fields($type));
 	}
 
+	public function fieldsetGroups(): array|null
+	{
+		$groups = $this->fieldsets()->groups();
+		return $groups === [] ? null : $groups;
+	}
+
 	public function fieldsets(): Fieldsets
 	{
 		return $this->fieldsetsCollection ??= Fieldsets::factory(
 			$this->fieldsets,
 			['parent' => $this->model()]
 		);
-	}
-
-	public function fieldsetGroups(): array|null
-	{
-		$groups = $this->fieldsets()->groups();
-		return $groups === [] ? null : $groups;
 	}
 
 	#[BlockCollectionAccess]
@@ -282,14 +282,14 @@ class BlocksField extends InputField implements ProvidesAcceptedFileBlueprints
 		);
 	}
 
-	public function isEmpty(): bool
-	{
-		return count($this->value()) === 0;
-	}
-
 	public function group(): string
 	{
 		return $this->group;
+	}
+
+	public function isEmpty(): bool
+	{
+		return count($this->value()) === 0;
 	}
 
 	/**

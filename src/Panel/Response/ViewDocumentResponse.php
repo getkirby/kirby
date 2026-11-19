@@ -38,6 +38,18 @@ class ViewDocumentResponse extends ViewResponse
 		$this->assets = $this->kirby->panel()->assets();
 	}
 
+	public function body(): string
+	{
+		$template = $this->kirby->root('kirby') . '/views/panel.php';
+
+		return Tpl::load($template, [
+			'assets'     => $this->assets->external(),
+			'nonce'      => $this->kirby->nonce(),
+			'state'      => $this->payload(),
+			'panelUrl'   => $this->url(),
+		]);
+	}
+
 	/**
 	 * Returns Content-Security-Policy header
 	 */
@@ -51,18 +63,6 @@ class ViewDocumentResponse extends ViewResponse
 			is_string($ancestors) => $ancestors,
 			default               => "'none'"
 		};
-	}
-
-	public function body(): string
-	{
-		$template = $this->kirby->root('kirby') . '/views/panel.php';
-
-		return Tpl::load($template, [
-			'assets'     => $this->assets->external(),
-			'nonce'      => $this->kirby->nonce(),
-			'state'      => $this->payload(),
-			'panelUrl'   => $this->url(),
-		]);
 	}
 
 	/**

@@ -18,8 +18,8 @@ use Kirby\Content\Field;
  */
 class StructureUuid extends FieldUuid
 {
-	protected const string TYPE  = 'struct';
 	protected const string FIELD = 'structure';
+	protected const string TYPE  = 'struct';
 
 	/**
 	 * Converts content field to a Structure collection

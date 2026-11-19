@@ -39,7 +39,12 @@ class SiteChangeTitleDialogController extends SiteDialogController
 		$this->site = $this->site->changeTitle($title);
 
 		return [
-			'event' => 'site.changeTitle'
+			'event'  => 'site.changeTitle',
+			// reload the system state as well to update
+			// the site title in the document title
+			'reload' => [
+				'globals' => ['system']
+			]
 		];
 	}
 }

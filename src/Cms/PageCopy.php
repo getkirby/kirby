@@ -32,43 +32,6 @@ class PageCopy
 	}
 
 	/**
-	 * Converts UUIDs for copied pages,
-	 * replacing the old UUID with a newly generated one
-	 * for all newly generated pages and files
-	 */
-	public function convertUuids(Language|null $language): void
-	{
-		if (Uuids::enabled() === false) {
-			return;
-		}
-
-		if (
-			$language instanceof Language &&
-			$language->isDefault() === false
-		) {
-			return;
-		}
-
-		// don't use `toString()` here: $this->copy still holds the original's
-		// UUID, so it would cache that UUID as pointing to the copy
-		$old = ModelUuid::retrieveId($this->copy);
-
-		// re-generate UUID for the page
-		$this->copy = $this->copy->save(
-			['uuid' => Uuid::generate()],
-			$language?->code()
-		);
-
-		// track UUID change
-		if ($old !== null) {
-			$this->uuids['page://' . $old] = $this->copy->uuid()->toString();
-		}
-
-		$this->convertFileUuids($language);
-		$this->convertChildrenUuids($language);
-	}
-
-	/**
 	 * Re-generate UUIDs for each child recursively
 	 * and merge with the tracked changed UUIDs
 	 */
@@ -132,6 +95,43 @@ class PageCopy
 				$this->uuids[$file->uuid()->toString()] = '';
 			}
 		}
+	}
+
+	/**
+	 * Converts UUIDs for copied pages,
+	 * replacing the old UUID with a newly generated one
+	 * for all newly generated pages and files
+	 */
+	public function convertUuids(Language|null $language): void
+	{
+		if (Uuids::enabled() === false) {
+			return;
+		}
+
+		if (
+			$language instanceof Language &&
+			$language->isDefault() === false
+		) {
+			return;
+		}
+
+		// don't use `toString()` here: $this->copy still holds the original's
+		// UUID, so it would cache that UUID as pointing to the copy
+		$old = ModelUuid::retrieveId($this->copy);
+
+		// re-generate UUID for the page
+		$this->copy = $this->copy->save(
+			['uuid' => Uuid::generate()],
+			$language?->code()
+		);
+
+		// track UUID change
+		if ($old !== null) {
+			$this->uuids['page://' . $old] = $this->copy->uuid()->toString();
+		}
+
+		$this->convertFileUuids($language);
+		$this->convertChildrenUuids($language);
 	}
 
 	/**

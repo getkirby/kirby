@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div :class="$attrs.class" :style="$attrs.style">
 		<template v-if="hasFieldsets && rows.length">
 			<k-draggable v-bind="draggableOptions" class="k-layouts" @sort="save">
 				<k-layout
@@ -73,6 +73,7 @@ export const props = {
  */
 export default {
 	mixins: [props],
+	inheritAttrs: false,
 	emits: ["input"],
 	data() {
 		return {
@@ -217,10 +218,9 @@ export default {
 						return column;
 					});
 
-					// add row only if any of its columns has any blocks
-					if (copy.columns.filter((column) => column?.blocks?.length).length) {
-						rows.push(copy);
-					}
+					// the chunks only reach as far as the filled columns,
+					// so each row gets at least one of them
+					rows.push(copy);
 				}
 			}
 

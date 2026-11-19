@@ -82,301 +82,6 @@ class DomTest extends TestCase
 		];
 	}
 
-	public static function parseSaveProvider(): array
-	{
-		return [
-			// full document with doctype
-			[
-				'html',
-				'<!DOCTYPE html><html><body><p>Lorem ipsum</p></body></html>',
-				"<!DOCTYPE html>\n<html><body><p>Lorem ipsum</p></body></html>"
-			],
-
-			// full document with lowercase doctype
-			[
-				'html',
-				'<!doctype html><html><body><p>Lorem ipsum</p></body></html>',
-				"<!DOCTYPE html>\n<html><body><p>Lorem ipsum</p></body></html>"
-			],
-
-			// full document with doctype (with whitespace)
-			[
-				'html',
-				"<!DOCTYPE html>\n\n<html><body><p>Lorem ipsum</p></body></html>\n\n",
-				"<!DOCTYPE html>\n<html><body><p>Lorem ipsum</p></body></html>\n"
-			],
-
-			// Unicode string
-			[
-				'html',
-				'<html><body><p>TEST — jūsų šildymo sistemai</p></body></html>'
-			],
-
-			// Unicode string with entities
-			[
-				'html',
-				'<html><body><p>TEST &mdash;&nbsp;jūs&#371; &scaron;ildymo sistemai</p></body></html>',
-				'<html><body><p>TEST — jūsų šildymo sistemai</p></body></html>',
-			],
-
-			// weird whitespace
-			[
-				'html',
-				"<html>\n  <body>\n    <p>Lorem ipsum\n</p>\n  </body>\n</html>\n"
-			],
-
-			// TODO: activate again, once it produces reliable results in
-			// CI and all local setups
-			// HTML snippet with syntax issue
-			// [
-			// 	'html',
-			// 	'<p>This is <strong>important</strong!</p>',
-			// 	'<p>This is <strong>important</strong>!</p>'
-			// ],
-
-			// HTML snippet with doctype
-			[
-				'html',
-				'<!DOCTYPE html><p>This is <strong>important</strong>!</p>',
-				"<!DOCTYPE html>\n<html><body><p>This is <strong>important</strong>!</p></body></html>"
-			],
-
-			// HTML snippet without wrapper tag
-			[
-				'html',
-				'This is <em>very</em> <strong>important</strong>!',
-				'This is <em>very</em> <strong>important</strong>!'
-			],
-
-			// just a <body>
-			[
-				'html',
-				'<body><p>This is <strong>important</strong>!</p></body>',
-				'<body><p>This is <strong>important</strong>!</p></body>'
-			],
-
-			// just a <body> with attributes
-			[
-				'html',
-				'<body id="test"><p>This is <strong>important</strong>!</p></body>',
-				'<body id="test"><p>This is <strong>important</strong>!</p></body>'
-			],
-
-			// full document, but without body
-			[
-				'html',
-				'<html><p>This is <strong>important</strong>!</p><html>',
-				'<html><body><p>This is <strong>important</strong>!</p></body></html>'
-			],
-
-			// full document, but without body; <html> with attributes
-			[
-				'html',
-				'<html id="test"><p>This is <strong>important</strong>!</p><html>',
-				'<html id="test"><body><p>This is <strong>important</strong>!</p></body></html>'
-			],
-
-			// document with doctype
-			[
-				'xml',
-				'<!DOCTYPE svg><svg><text>Lorem ipsum</text></svg>',
-				"<!DOCTYPE svg>\n<svg><text>Lorem ipsum</text></svg>"
-			],
-
-			// document with doctype (with whitespace)
-			[
-				'xml',
-				"<!DOCTYPE svg>\n\n<svg><text>Lorem ipsum</text></svg>",
-				"<!DOCTYPE svg>\n<svg><text>Lorem ipsum</text></svg>"
-			],
-
-			// document with XML declaration
-			[
-				'xml',
-				'<?xml version="1.0"?><svg><text>Lorem ipsum</text></svg>',
-				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg><text>Lorem ipsum</text></svg>"
-			],
-
-			// document with XML declaration and doctype
-			[
-				'xml',
-				'<?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg><svg><text>Lorem ipsum</text></svg>',
-				"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<!DOCTYPE svg>\n<svg><text>Lorem ipsum</text></svg>"
-			],
-
-			// Unicode string
-			[
-				'xml',
-				'<xml>TEST — jūsų šildymo sistemai</xml>'
-			],
-
-			// Unicode string with entities
-			[
-				'xml',
-				'<svg><text>TEST &#x2014; jūs&#371; šildymo sistemai</text></svg>',
-				'<svg><text>TEST — jūsų šildymo sistemai</text></svg>',
-			],
-
-			// weird whitespace
-			[
-				'xml',
-				"<svg>\n  <text>\n    Lorem ipsum\n</text>\n  </svg>"
-			],
-		];
-	}
-
-	#[DataProvider('parseSaveProvider')]
-	public function testParseSave(
-		string $type,
-		string $code,
-		string|null $expected = null
-	): void {
-		$dom = new Dom($code, $type);
-		$this->assertSame($expected ?? $code, $dom->toString());
-	}
-
-	public static function parseSaveNormalizeProvider(): array
-	{
-		return [
-			// full document with doctype
-			[
-				'html',
-				'<!DOCTYPE html><html><body><p>Lorem ipsum</p></body></html>',
-				"<!DOCTYPE html>\n<html><body><p>Lorem ipsum</p></body></html>"
-			],
-
-			// Unicode string with entities
-			[
-				'html',
-				'<html><body><p>TEST &mdash;&nbsp;jūs&#371; &scaron;ildymo sistemai</p></body></html>',
-				'<html><body><p>TEST — jūsų šildymo sistemai</p></body></html>',
-			],
-
-			// weird whitespace
-			[
-				'html',
-				"<html>\n  <body>\n    <p>Lorem ipsum\n</p>\n  </body>\n</html>\n"
-			],
-
-			// TODO: activate again, once it produces reliable results in
-			// CI and all local setups
-			// HTML snippet with syntax issue
-			// [
-			// 	'html',
-			// 	'<p>This is <strong>important</strong!</p>',
-			// 	'<html><body><p>This is <strong>important</strong>!</p></body></html>'
-			// ],
-
-			// HTML snippet with doctype
-			[
-				'html',
-				'<!DOCTYPE html><p>This is <strong>important</strong>!</p>',
-				"<!DOCTYPE html>\n<html><body><p>This is <strong>important</strong>!</p></body></html>"
-			],
-
-			// just a <body>
-			[
-				'html',
-				'<body><p>This is <strong>important</strong>!</p></body>',
-				'<html><body><p>This is <strong>important</strong>!</p></body></html>'
-			],
-
-			// just a <body> with attributes
-			[
-				'html',
-				'<body id="test"><p>This is <strong>important</strong>!</p></body>',
-				'<html><body id="test"><p>This is <strong>important</strong>!</p></body></html>'
-			],
-
-			// full document, but without body
-			[
-				'html',
-				'<html><p>This is <strong>important</strong>!</p><html>',
-				'<html><body><p>This is <strong>important</strong>!</p></body></html>'
-			],
-
-			// full document, but without body; <html> with attributes
-			[
-				'html',
-				'<html id="test"><p>This is <strong>important</strong>!</p><html>',
-				'<html id="test"><body><p>This is <strong>important</strong>!</p></body></html>'
-			],
-
-			// document with doctype
-			[
-				'xml',
-				'<!DOCTYPE svg><svg><text>Lorem ipsum</text></svg>',
-				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE svg>\n<svg><text>Lorem ipsum</text></svg>"
-			],
-
-			// document with doctype (with whitespace)
-			[
-				'xml',
-				"<!DOCTYPE svg>\n\n<svg><text>Lorem ipsum</text></svg>",
-				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE svg>\n<svg><text>Lorem ipsum</text></svg>"
-			],
-
-			// document with XML declaration
-			[
-				'xml',
-				'<?xml version="1.0"?><svg><text>Lorem ipsum</text></svg>',
-				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg><text>Lorem ipsum</text></svg>"
-			],
-
-			// document with XML declaration and doctype
-			[
-				'xml',
-				'<?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg><svg><text>Lorem ipsum</text></svg>',
-				"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<!DOCTYPE svg>\n<svg><text>Lorem ipsum</text></svg>"
-			],
-
-			// Unicode string
-			[
-				'xml',
-				'<xml>TEST — jūsų šildymo sistemai</xml>',
-				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<xml>TEST — jūsų šildymo sistemai</xml>"
-			],
-
-			// Unicode string with UTF-8 XML declaration
-			[
-				'xml',
-				'<?xml version="1.0" encoding="utf-8"?><xml>TEST — jūsų šildymo sistemai</xml>',
-				"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<xml>TEST — jūsų šildymo sistemai</xml>"
-			],
-
-			// weird whitespace
-			[
-				'xml',
-				"<svg>\n  <text>\n    Lorem ipsum\n</text>\n  </svg>\n",
-				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg>\n  <text>\n    Lorem ipsum\n</text>\n  </svg>\n"
-			],
-
-			// weird whitespace with XML declaration
-			[
-				'xml',
-				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg>\n  <text>\n    Lorem ipsum\n</text>\n  </svg>\n"
-			],
-		];
-	}
-
-	#[DataProvider('parseSaveNormalizeProvider')]
-	public function testParseSaveNormalize(
-		string $type,
-		string $code,
-		string|null $expected = null
-	): void {
-		$dom = new Dom($code, $type);
-		$this->assertSame($expected ?? $code, $dom->toString(true));
-	}
-
-	public function testParseInvalid(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage("The markup could not be parsed: Start tag expected, '<' not found");
-
-		new Dom('{"this": "is not XML"}', 'XML');
-	}
-
 	public function testBody(): void
 	{
 		// with full document input
@@ -570,6 +275,19 @@ class DomTest extends TestCase
 	public function testExtractUrls(string $url, array $expected): void
 	{
 		$this->assertSame($expected, Dom::extractUrls($url));
+	}
+
+	public function testInnerMarkup(): void
+	{
+		// XML markup
+		$dom  = new Dom('<xml><test>Test <testtest>Test test</testtest>!</test></xml>', 'XML');
+		$node = $dom->document()->getElementsByTagName('test')[0];
+		$this->assertSame('Test <testtest>Test test</testtest>!', $dom->innerMarkup($node));
+
+		// HTML markup
+		$dom  = new Dom('<p id="test">Test <strong>Test test</strong>!</p>', 'HTML');
+		$node = $dom->document()->getElementById('test');
+		$this->assertSame('Test <strong>Test test</strong>!', $dom->innerMarkup($node));
 	}
 
 	public static function isAllowedAttrProvider(): array
@@ -1209,19 +927,6 @@ class DomTest extends TestCase
 		}
 	}
 
-	public function testInnerMarkup(): void
-	{
-		// XML markup
-		$dom  = new Dom('<xml><test>Test <testtest>Test test</testtest>!</test></xml>', 'XML');
-		$node = $dom->document()->getElementsByTagName('test')[0];
-		$this->assertSame('Test <testtest>Test test</testtest>!', $dom->innerMarkup($node));
-
-		// HTML markup
-		$dom  = new Dom('<p id="test">Test <strong>Test test</strong>!</p>', 'HTML');
-		$node = $dom->document()->getElementById('test');
-		$this->assertSame('Test <strong>Test test</strong>!', $dom->innerMarkup($node));
-	}
-
 	public static function listContainsNameProvider(): array
 	{
 		return [
@@ -1483,12 +1188,299 @@ class DomTest extends TestCase
 		$this->assertSame($expected, Dom::listContainsName($list, $element, $options, $compare));
 	}
 
-	public function testRemove(): void
+	public function testParseInvalid(): void
 	{
-		$dom = new Dom('<p>Test <strong id="strong">Test test</strong>!</p>', 'HTML');
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage("The markup could not be parsed: Start tag expected, '<' not found");
 
-		Dom::remove($dom->document()->getElementById('strong'));
-		$this->assertSame('<p>Test !</p>', $dom->toString());
+		new Dom('{"this": "is not XML"}', 'XML');
+	}
+
+	public static function parseSaveProvider(): array
+	{
+		return [
+			// full document with doctype
+			[
+				'html',
+				'<!DOCTYPE html><html><body><p>Lorem ipsum</p></body></html>',
+				"<!DOCTYPE html>\n<html><body><p>Lorem ipsum</p></body></html>"
+			],
+
+			// full document with lowercase doctype
+			[
+				'html',
+				'<!doctype html><html><body><p>Lorem ipsum</p></body></html>',
+				"<!DOCTYPE html>\n<html><body><p>Lorem ipsum</p></body></html>"
+			],
+
+			// full document with doctype (with whitespace)
+			[
+				'html',
+				"<!DOCTYPE html>\n\n<html><body><p>Lorem ipsum</p></body></html>\n\n",
+				"<!DOCTYPE html>\n<html><body><p>Lorem ipsum</p></body></html>\n"
+			],
+
+			// Unicode string
+			[
+				'html',
+				'<html><body><p>TEST — jūsų šildymo sistemai</p></body></html>'
+			],
+
+			// Unicode string with entities
+			[
+				'html',
+				'<html><body><p>TEST &mdash;&nbsp;jūs&#371; &scaron;ildymo sistemai</p></body></html>',
+				'<html><body><p>TEST — jūsų šildymo sistemai</p></body></html>',
+			],
+
+			// weird whitespace
+			[
+				'html',
+				"<html>\n  <body>\n    <p>Lorem ipsum\n</p>\n  </body>\n</html>\n"
+			],
+
+			// TODO: activate again, once it produces reliable results in
+			// CI and all local setups
+			// HTML snippet with syntax issue
+			// [
+			// 	'html',
+			// 	'<p>This is <strong>important</strong!</p>',
+			// 	'<p>This is <strong>important</strong>!</p>'
+			// ],
+
+			// HTML snippet with doctype
+			[
+				'html',
+				'<!DOCTYPE html><p>This is <strong>important</strong>!</p>',
+				"<!DOCTYPE html>\n<html><body><p>This is <strong>important</strong>!</p></body></html>"
+			],
+
+			// HTML snippet without wrapper tag
+			[
+				'html',
+				'This is <em>very</em> <strong>important</strong>!',
+				'This is <em>very</em> <strong>important</strong>!'
+			],
+
+			// just a <body>
+			[
+				'html',
+				'<body><p>This is <strong>important</strong>!</p></body>',
+				'<body><p>This is <strong>important</strong>!</p></body>'
+			],
+
+			// just a <body> with attributes
+			[
+				'html',
+				'<body id="test"><p>This is <strong>important</strong>!</p></body>',
+				'<body id="test"><p>This is <strong>important</strong>!</p></body>'
+			],
+
+			// full document, but without body
+			[
+				'html',
+				'<html><p>This is <strong>important</strong>!</p><html>',
+				'<html><body><p>This is <strong>important</strong>!</p></body></html>'
+			],
+
+			// full document, but without body; <html> with attributes
+			[
+				'html',
+				'<html id="test"><p>This is <strong>important</strong>!</p><html>',
+				'<html id="test"><body><p>This is <strong>important</strong>!</p></body></html>'
+			],
+
+			// document with doctype
+			[
+				'xml',
+				'<!DOCTYPE svg><svg><text>Lorem ipsum</text></svg>',
+				"<!DOCTYPE svg>\n<svg><text>Lorem ipsum</text></svg>"
+			],
+
+			// document with doctype (with whitespace)
+			[
+				'xml',
+				"<!DOCTYPE svg>\n\n<svg><text>Lorem ipsum</text></svg>",
+				"<!DOCTYPE svg>\n<svg><text>Lorem ipsum</text></svg>"
+			],
+
+			// document with XML declaration
+			[
+				'xml',
+				'<?xml version="1.0"?><svg><text>Lorem ipsum</text></svg>',
+				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg><text>Lorem ipsum</text></svg>"
+			],
+
+			// document with XML declaration and doctype
+			[
+				'xml',
+				'<?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg><svg><text>Lorem ipsum</text></svg>',
+				"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<!DOCTYPE svg>\n<svg><text>Lorem ipsum</text></svg>"
+			],
+
+			// Unicode string
+			[
+				'xml',
+				'<xml>TEST — jūsų šildymo sistemai</xml>'
+			],
+
+			// Unicode string with entities
+			[
+				'xml',
+				'<svg><text>TEST &#x2014; jūs&#371; šildymo sistemai</text></svg>',
+				'<svg><text>TEST — jūsų šildymo sistemai</text></svg>',
+			],
+
+			// weird whitespace
+			[
+				'xml',
+				"<svg>\n  <text>\n    Lorem ipsum\n</text>\n  </svg>"
+			],
+		];
+	}
+
+	#[DataProvider('parseSaveProvider')]
+	public function testParseSave(
+		string $type,
+		string $code,
+		string|null $expected = null
+	): void {
+		$dom = new Dom($code, $type);
+		$this->assertSame($expected ?? $code, $dom->toString());
+	}
+
+	public static function parseSaveNormalizeProvider(): array
+	{
+		return [
+			// full document with doctype
+			[
+				'html',
+				'<!DOCTYPE html><html><body><p>Lorem ipsum</p></body></html>',
+				"<!DOCTYPE html>\n<html><body><p>Lorem ipsum</p></body></html>"
+			],
+
+			// Unicode string with entities
+			[
+				'html',
+				'<html><body><p>TEST &mdash;&nbsp;jūs&#371; &scaron;ildymo sistemai</p></body></html>',
+				'<html><body><p>TEST — jūsų šildymo sistemai</p></body></html>',
+			],
+
+			// weird whitespace
+			[
+				'html',
+				"<html>\n  <body>\n    <p>Lorem ipsum\n</p>\n  </body>\n</html>\n"
+			],
+
+			// TODO: activate again, once it produces reliable results in
+			// CI and all local setups
+			// HTML snippet with syntax issue
+			// [
+			// 	'html',
+			// 	'<p>This is <strong>important</strong!</p>',
+			// 	'<html><body><p>This is <strong>important</strong>!</p></body></html>'
+			// ],
+
+			// HTML snippet with doctype
+			[
+				'html',
+				'<!DOCTYPE html><p>This is <strong>important</strong>!</p>',
+				"<!DOCTYPE html>\n<html><body><p>This is <strong>important</strong>!</p></body></html>"
+			],
+
+			// just a <body>
+			[
+				'html',
+				'<body><p>This is <strong>important</strong>!</p></body>',
+				'<html><body><p>This is <strong>important</strong>!</p></body></html>'
+			],
+
+			// just a <body> with attributes
+			[
+				'html',
+				'<body id="test"><p>This is <strong>important</strong>!</p></body>',
+				'<html><body id="test"><p>This is <strong>important</strong>!</p></body></html>'
+			],
+
+			// full document, but without body
+			[
+				'html',
+				'<html><p>This is <strong>important</strong>!</p><html>',
+				'<html><body><p>This is <strong>important</strong>!</p></body></html>'
+			],
+
+			// full document, but without body; <html> with attributes
+			[
+				'html',
+				'<html id="test"><p>This is <strong>important</strong>!</p><html>',
+				'<html id="test"><body><p>This is <strong>important</strong>!</p></body></html>'
+			],
+
+			// document with doctype
+			[
+				'xml',
+				'<!DOCTYPE svg><svg><text>Lorem ipsum</text></svg>',
+				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE svg>\n<svg><text>Lorem ipsum</text></svg>"
+			],
+
+			// document with doctype (with whitespace)
+			[
+				'xml',
+				"<!DOCTYPE svg>\n\n<svg><text>Lorem ipsum</text></svg>",
+				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE svg>\n<svg><text>Lorem ipsum</text></svg>"
+			],
+
+			// document with XML declaration
+			[
+				'xml',
+				'<?xml version="1.0"?><svg><text>Lorem ipsum</text></svg>',
+				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg><text>Lorem ipsum</text></svg>"
+			],
+
+			// document with XML declaration and doctype
+			[
+				'xml',
+				'<?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg><svg><text>Lorem ipsum</text></svg>',
+				"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<!DOCTYPE svg>\n<svg><text>Lorem ipsum</text></svg>"
+			],
+
+			// Unicode string
+			[
+				'xml',
+				'<xml>TEST — jūsų šildymo sistemai</xml>',
+				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<xml>TEST — jūsų šildymo sistemai</xml>"
+			],
+
+			// Unicode string with UTF-8 XML declaration
+			[
+				'xml',
+				'<?xml version="1.0" encoding="utf-8"?><xml>TEST — jūsų šildymo sistemai</xml>',
+				"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<xml>TEST — jūsų šildymo sistemai</xml>"
+			],
+
+			// weird whitespace
+			[
+				'xml',
+				"<svg>\n  <text>\n    Lorem ipsum\n</text>\n  </svg>\n",
+				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg>\n  <text>\n    Lorem ipsum\n</text>\n  </svg>\n"
+			],
+
+			// weird whitespace with XML declaration
+			[
+				'xml',
+				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg>\n  <text>\n    Lorem ipsum\n</text>\n  </svg>\n"
+			],
+		];
+	}
+
+	#[DataProvider('parseSaveNormalizeProvider')]
+	public function testParseSaveNormalize(
+		string $type,
+		string $code,
+		string|null $expected = null
+	): void {
+		$dom = new Dom($code, $type);
+		$this->assertSame($expected ?? $code, $dom->toString(true));
 	}
 
 	public function testQuery(): void
@@ -1512,6 +1504,14 @@ class DomTest extends TestCase
 		$this->expectExceptionMessage('Invalid XPath query: //[invalid');
 
 		$dom->query('//[invalid');
+	}
+
+	public function testRemove(): void
+	{
+		$dom = new Dom('<p>Test <strong id="strong">Test test</strong>!</p>', 'HTML');
+
+		Dom::remove($dom->document()->getElementById('strong'));
+		$this->assertSame('<p>Test !</p>', $dom->toString());
 	}
 
 	public static function sanitizeProvider(): array
@@ -2092,8 +2092,8 @@ class DomTest extends TestCase
 		// a comment whose data closes it early is removed: the tokenizer
 		// ends it there, so the rest would re-parse as live markup
 		$this->assertSame(
-			['<root><title/></root>', ['The comment (line 1) is not allowed']],
-			$sanitize('<root><title><!--><img src=x onerror=alert(1)>--></title></root>')
+			['<root><p/></root>', ['The comment (line 1) is not allowed']],
+			$sanitize('<root><p><!--><img src=x onerror=alert(1)>--></p></root>')
 		);
 
 		// the `<!--->` spelling closes the comment just the same
@@ -2170,6 +2170,16 @@ class DomTest extends TestCase
 			$sanitize('<root><svg><desc><g><![CDATA[><img src=x>]]></g></desc></svg></root>')
 		);
 
+		// ...and older Chromium versions already treat the content of the
+		// integration point itself like that
+		$this->assertSame(
+			[
+				'<root><svg><desc>&gt;&lt;img src=x&gt;</desc></svg></root>',
+				['The CDATA section (line 1) is not allowed']
+			],
+			$sanitize('<root><svg><desc><![CDATA[><img src=x>]]></desc></svg></root>')
+		);
+
 		// ...but `<svg>` re-enters foreign content below one of them
 		$this->assertSame(
 			['<root><svg><desc><svg><![CDATA[><img src=x>]]></svg></desc></svg></root>', []],
@@ -2185,6 +2195,14 @@ class DomTest extends TestCase
 			$sanitize('<root><math><mtext><b><![CDATA[><img src=x>]]></b></mtext></math></root>')
 		);
 
+		$this->assertSame(
+			[
+				'<root><math><mtext>&gt;&lt;img src=x&gt;</mtext></math></root>',
+				['The CDATA section (line 1) is not allowed']
+			],
+			$sanitize('<root><math><mtext><![CDATA[><img src=x>]]></mtext></math></root>')
+		);
+
 		// HTML elements that break a parser out of foreign content leave
 		// the whole subtree below them in the HTML namespace
 		$this->assertSame(
@@ -2195,11 +2213,145 @@ class DomTest extends TestCase
 			$sanitize('<root><svg><b><![CDATA[><img src=x>]]></b></svg></root>')
 		);
 
+		// RCDATA, the other raw text elements and plaintext are read as
+		// text just the same, so their closing tag is what breaks out
+		foreach (['iframe', 'noembed', 'noframes', 'noscript', 'plaintext', 'textarea', 'title', 'xmp'] as $name) {
+			$this->assertSame(
+				['<root><' . $name . '/></root>', ['The comment (line 1) is not allowed']],
+				$sanitize('<root><' . $name . '><!--</' . $name . '><img src=x>--></' . $name . '></root>')
+			);
+
+			if ($name !== 'noscript') {
+				$this->assertSame(
+					['<root><' . $name . '><!--><img src=x>--></' . $name . '></root>', []],
+					$sanitize('<root><' . $name . '><!--><img src=x>--></' . $name . '></root>')
+				);
+			}
+
+			$this->assertSame(
+				[
+					'<root><' . $name . '>&lt;/' . $name . '&gt;&lt;img src=x&gt;</' . $name . '></root>',
+					['The CDATA section (line 1) is not allowed']
+				],
+				$sanitize('<root><' . $name . '><![CDATA[</' . $name . '><img src=x>]]></' . $name . '></root>')
+			);
+		}
+
+		// `<noscript>` is only raw text while scripting is enabled,
+		// otherwise its content is read as markup
+		$this->assertSame(
+			['<root><noscript/></root>', ['The comment (line 1) is not allowed']],
+			$sanitize('<root><noscript><!--><img src=x>--></noscript></root>')
+		);
+
+		$this->assertSame(
+			['<root><noscript>&lt;img src=x&gt;</noscript></root>', ['The CDATA section (line 1) is not allowed']],
+			$sanitize('<root><noscript><![CDATA[<img src=x>]]></noscript></root>')
+		);
+
+		$this->assertSame(
+			['<root><noscript><style/></noscript></root>', ['The comment (line 1) is not allowed']],
+			$sanitize('<root><noscript><style><!--</style><img src=x>--></style></noscript></root>')
+		);
+
+		$this->assertSame(
+			['<root><noscript><!-- comment --></noscript></root>', []],
+			$sanitize('<root><noscript><!-- comment --></noscript></root>')
+		);
+
+		// inside a `<select>` the parser ignores the start tag of most raw
+		// text elements, so their content is read as markup as well
+		foreach (['style', 'title', 'xmp'] as $name) {
+			$this->assertSame(
+				['<root><select><' . $name . '/></select></root>', ['The comment (line 1) is not allowed']],
+				$sanitize('<root><select><' . $name . '><!--><input><img src=x>--></' . $name . '></select></root>')
+			);
+		}
+
+		$this->assertSame(
+			['<root><select><title>&lt;input&gt;&lt;img src=x&gt;</title></select></root>', ['The CDATA section (line 1) is not allowed']],
+			$sanitize('<root><select><title><![CDATA[<input><img src=x>]]></title></select></root>')
+		);
+
+		// a foreign `<select>` is no HTML `<select>`
+		$this->assertSame(
+			['<root><svg><select><foreignObject><title><!--><img src=x>--></title></foreignObject></select></svg></root>', []],
+			$sanitize('<root><svg><select><foreignObject><title><!--><img src=x>--></title></foreignObject></select></svg></root>')
+		);
+
+		// the closing tag is matched case-insensitively
+		$this->assertSame(
+			['<root><title/></root>', ['The comment (line 1) is not allowed']],
+			$sanitize('<root><title><!--</TITLE><img src=x>--></title></root>')
+		);
+
 		// raw text starts at the outermost such element, so this comment
 		// needs the `</script>` and not the `</style>` to break out
 		$this->assertSame(
 			['<root><script><style/></script></root>', ['The comment (line 1) is not allowed']],
 			$sanitize('<root><script><style><!--</script><img src=x>--></style></script></root>')
+		);
+
+		$this->assertSame(
+			['<root><title><title/></title></root>', ['The comment (line 1) is not allowed']],
+			$sanitize('<root><title><title><!--</title><img src=x>--></title></title></root>')
+		);
+
+		// a nested element of the same name ends the raw text early with
+		// its closing tag, so what follows is live markup again
+		foreach (['script', 'style', 'textarea', 'title'] as $name) {
+			$this->assertSame(
+				[
+					'<root><' . $name . '><' . $name . '>x</' . $name . '></' . $name . '></root>',
+					['The comment (line 1) is not allowed']
+				],
+				$sanitize('<root><' . $name . '><' . $name . '>x</' . $name . '><!--><img src=x>--></' . $name . '></root>')
+			);
+		}
+
+		$this->assertSame(
+			[
+				'<root><title><title>x</title>&lt;img src=x&gt;</title></root>',
+				['The CDATA section (line 1) is not allowed']
+			],
+			$sanitize('<root><title><title>x</title><![CDATA[<img src=x>]]></title></root>')
+		);
+
+		// the outer closing tag still breaks out as well...
+		$this->assertSame(
+			['<root><title><style/><title>x</title></title></root>', ['The comment (line 1) is not allowed']],
+			$sanitize('<root><title><style><!--</title><img src=x>--></style><title>x</title></title></root>')
+		);
+
+		// ...and so does the one of a raw text element after the early end
+		$this->assertSame(
+			['<root><title><title>x</title><style/></title></root>', ['The comment (line 1) is not allowed']],
+			$sanitize('<root><title><title>x</title><style><!--</style><img src=x>--></style></title></root>')
+		);
+
+		// any child element is treated as one that may end the raw text
+		$this->assertSame(
+			['<root><title><b>x</b></title></root>', ['The comment (line 1) is not allowed']],
+			$sanitize('<root><title><b>x</b><!--><img src=x>--></title></root>')
+		);
+
+		// without one, the comment is just text in the raw text element
+		$this->assertSame(
+			['<root><title>x<!--><img src=x>--></title></root>', []],
+			$sanitize('<root><title>x<!--><img src=x>--></title></root>')
+		);
+
+		// a foreign `<title>` is no RCDATA element, so a comment directly
+		// below it must not close itself early...
+		$this->assertSame(
+			['<root><svg><title/></svg></root>', ['The comment (line 1) is not allowed']],
+			$sanitize('<root><svg><title><!--><img src=x>--></title></svg></root>')
+		);
+
+		// ...but an HTML `<title>` below the integration point is
+		$this->assertSame(
+			['<root><svg><desc><title/></desc></svg></root>', ['The comment (line 1) is not allowed']],
+			$sanitize('<root><svg><desc><title><!--</title><img src=x>--></title></desc></svg></root>')
 		);
 
 		// a foreign `<style>` is no raw text element, so a comment below
@@ -2242,6 +2394,20 @@ class DomTest extends TestCase
 			['<root><math><annotation-xml><style/></annotation-xml></math></root>', ['The comment (line 1) is not allowed']],
 			$sanitize('<root><math><annotation-xml><style><!--><img src=x>--></style></annotation-xml></math></root>')
 		);
+	}
+
+	public function testSanitizeCharacterDataWithEntityReferences(): void
+	{
+		$dom    = new Dom('<!DOCTYPE xml [<!ENTITY a "a"><!ENTITY b "&a;">]><xml>&b;<!--><img src=x>--></xml>', 'XML');
+		$errors = $dom->sanitize([]);
+
+		// the references point into the declarations of the removed
+		// doctype, the comment after them must still be found
+		$this->assertSame(
+			['The doctype must not define a subset', 'The comment (line 1) is not allowed'],
+			array_map(fn ($error) => $error->getMessage(), $errors)
+		);
+		$this->assertSame('<xml>&b;</xml>', $dom->toString());
 	}
 
 	public function testSanitizeDoctypeCallbackException(): void

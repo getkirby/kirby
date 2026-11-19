@@ -1,14 +1,15 @@
 <template>
 	<k-field
 		:id="id"
+		:class="['k-modellist-field', $attrs.class]"
 		:help="help"
 		:input="false"
 		:label="label"
 		:link="link"
 		:name="name"
 		:required="Boolean(min)"
+		:style="$attrs.style"
 		:type="type"
-		class="k-modellist-field"
 	>
 		<template v-if="buttons.length > 0" #options>
 			<k-button-group :buttons="buttons" size="xs" variant="filled" />

@@ -39,56 +39,6 @@ class PagesCollectorTest extends TestCase
 		$this->assertCollect(PagesCollector::class, ['a', 'b', 'c']);
 	}
 
-	public function testCollectByStatus(): void
-	{
-		$this->app = $this->app->clone([
-			'site' => [
-				'children' => [
-					['slug' => 'b', 'num' => 1],
-					['slug' => 'c'],
-				],
-				'drafts' => [
-					['slug' => 'a'],
-				]
-			]
-		]);
-
-		$this->app->impersonate('kirby');
-
-		// all
-		$collector = new PagesCollector();
-
-		$this->assertModelsInCollector($collector, ['b', 'c', 'a'], );
-
-		// listed
-		$collector = new PagesCollector(
-			status: 'listed'
-		);
-
-		$this->assertModelsInCollector($collector, ['b'], );
-
-		// unlisted
-		$collector = new PagesCollector(
-			status: 'unlisted'
-		);
-
-		$this->assertModelsInCollector($collector, ['c'], );
-
-		// published
-		$collector = new PagesCollector(
-			status: 'published'
-		);
-
-		$this->assertModelsInCollector($collector, ['b', 'c'], );
-
-		// drafts
-		$collector = new PagesCollector(
-			status: 'draft'
-		);
-
-		$this->assertModelsInCollector($collector, ['a'], );
-	}
-
 	public function testCollectByQuery(): void
 	{
 		$this->setUpPages();
@@ -126,6 +76,56 @@ class PagesCollectorTest extends TestCase
 		$this->assertModelsInCollector($collector, ['b', 'c']);
 	}
 
+	public function testCollectByStatus(): void
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					['slug' => 'b', 'num' => 1],
+					['slug' => 'c'],
+				],
+				'drafts' => [
+					['slug' => 'a'],
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		// all
+		$collector = new PagesCollector();
+
+		$this->assertModelsInCollector($collector, ['b', 'c', 'a']);
+
+		// listed
+		$collector = new PagesCollector(
+			status: 'listed'
+		);
+
+		$this->assertModelsInCollector($collector, ['b']);
+
+		// unlisted
+		$collector = new PagesCollector(
+			status: 'unlisted'
+		);
+
+		$this->assertModelsInCollector($collector, ['c']);
+
+		// published
+		$collector = new PagesCollector(
+			status: 'published'
+		);
+
+		$this->assertModelsInCollector($collector, ['b', 'c']);
+
+		// drafts
+		$collector = new PagesCollector(
+			status: 'draft'
+		);
+
+		$this->assertModelsInCollector($collector, ['a']);
+	}
+
 	public function testCollectUnauthenticated(): void
 	{
 		$this->setUpPages();
@@ -141,7 +141,7 @@ class PagesCollectorTest extends TestCase
 			blueprints: ['only' => ['article']]
 		);
 
-		$this->assertModelsInCollector($collector, ['b', 'c'], );
+		$this->assertModelsInCollector($collector, ['b', 'c']);
 	}
 
 	public function testFilterByBlueprintsExcept(): void
@@ -153,14 +153,14 @@ class PagesCollectorTest extends TestCase
 			blueprints: ['except' => ['article']]
 		);
 
-		$this->assertModelsInCollector($collector, ['a'], );
+		$this->assertModelsInCollector($collector, ['a']);
 
 		// `except` also applies to the `only` list
 		$collector = new PagesCollector(
 			blueprints: ['only' => ['article', 'default'], 'except' => ['article']]
 		);
 
-		$this->assertModelsInCollector($collector, ['a'], );
+		$this->assertModelsInCollector($collector, ['a']);
 	}
 
 	public function testFlip(): void
